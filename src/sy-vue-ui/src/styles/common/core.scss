@@ -1,0 +1,15 @@
+@import "normalize";
+@include normalize();
+@import './variables.scss';
+@import './composes/texts.scss';
+
+html, body {
+  font-family: $theme-font-family-default;
+  font-size: 16PX;
+  letter-spacing: $theme-letter-spacing-regular;
+  line-height: 1.5;
+}
+
+* {
+  box-sizing: border-box;
+}

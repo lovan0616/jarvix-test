@@ -1,0 +1,36 @@
+@import '../../../sy-vue-ui/src/styles/common/variables.scss';
+@import '../../../sy-vue-ui/src/styles/common/composes/texts.scss';
+@import '../common/mixins.scss';
+
+.container-card {
+  padding: 6px 6px;
+  border-radius: $theme-border-radius-base;
+  box-shadow: $theme-box-shadow-m;
+  
+  @include response('sm') {
+    padding: 10px 10px;
+  }
+
+  .card-title {
+    margin-bottom: 8px;
+    @extend %h2;
+  }
+
+  .card-title.align-left {
+    text-align: left;
+  }
+
+  .card-title.align-center {
+    text-align: center;
+  }
+
+  .card-title.align-right {
+    text-align: right;
+  }
+}
+
+.container-card.is-full-height {
+  height: 100%;
+}
+
+

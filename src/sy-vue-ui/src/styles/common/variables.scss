@@ -1,0 +1,140 @@
+
+$theme-color-primary: #0F9696 !default;
+$theme-color-primary-dark: #006464 !default;
+$theme-color-success: #67c23a !default;
+$theme-color-warning: #edcd36 !default;
+$theme-color-danger: #f0644b !default;
+$theme-color-info: #4bc8c8 !default;
+
+$theme-color-white: #fff !default;
+$theme-color-black: #000 !default;
+
+$theme-color-primary-light-1: mix($theme-color-white, $theme-color-primary, 10%) !default; /* 53a8ff */
+$theme-color-primary-light-2: mix($theme-color-white, $theme-color-primary, 20%) !default; /* 66b1ff */
+$theme-color-primary-light-3: mix($theme-color-white, $theme-color-primary, 30%) !default; /* 79bbff */
+$theme-color-primary-light-4: mix($theme-color-white, $theme-color-primary, 40%) !default; /* 8cc5ff */
+$theme-color-primary-light-5: mix($theme-color-white, $theme-color-primary, 50%) !default; /* a0cfff */
+$theme-color-primary-light-6: mix($theme-color-white, $theme-color-primary, 60%) !default; /* b3d8ff */
+$theme-color-primary-light-7: mix($theme-color-white, $theme-color-primary, 70%) !default; /* c6e2ff */
+$theme-color-primary-light-8: mix($theme-color-white, $theme-color-primary, 80%) !default; /* d9ecff */
+$theme-color-primary-light-9: mix($theme-color-white, $theme-color-primary, 90%) !default; /* ecf5ff */
+
+$theme-color-danger-light-1: mix($theme-color-white, $theme-color-danger, 10%) !default;
+$theme-color-danger-light-2: mix($theme-color-white, $theme-color-danger, 20%) !default;
+$theme-color-danger-light-3: mix($theme-color-white, $theme-color-danger, 30%) !default;
+$theme-color-danger-light-4: mix($theme-color-white, $theme-color-danger, 40%) !default;
+$theme-color-danger-light-5: mix($theme-color-white, $theme-color-danger, 50%) !default;
+$theme-color-danger-light-6: mix($theme-color-white, $theme-color-danger, 60%) !default;
+$theme-color-danger-light-7: mix($theme-color-white, $theme-color-danger, 70%) !default;
+$theme-color-danger-light-8: mix($theme-color-white, $theme-color-danger, 80%) !default;
+$theme-color-danger-light-9: mix($theme-color-white, $theme-color-danger, 90%) !default;
+
+$theme-color-gs-black: #000000;
+$theme-color-gs-dark: #2E2E2E;
+$theme-color-gs-middle: #646464;
+$theme-color-gs-light: #969696;
+$theme-color-gs-bright: #FAFAFA;
+$theme-color-gs-white: #FFFFFF;
+
+$theme-font-family-default: 'Open Sans', 'Roboto', 'PingFang TC', 'Microsolft JhengHei', 'Microsoft YaHei', 'Arial';
+
+$theme-font-size-x-huge: 36px;
+$theme-font-size-huge: 32px;
+$theme-font-size-xxx-large: 28px;
+$theme-font-size-xx-large: 24px;
+$theme-font-size-extra-large: 20px;
+$theme-font-size-large: 18px;
+$theme-font-size-medium: 16px;
+$theme-font-size-small: 14px;
+$theme-font-size-extra-small: 13px;
+$theme-font-size-xx-small: 12px;
+
+$theme-font-weight-extra-light: 200;
+$theme-font-weight-light: 300;
+$theme-font-weight-regular: 400;
+$theme-font-weight-semi-bold: 600;
+$theme-font-weight-bold: 700;
+$theme-font-weight-black: 900;
+
+$theme-letter-spacing-small: 0.5px;
+$theme-letter-spacing-regular: 1px;
+$theme-letter-spacing-semi-wide: 1.5px;
+$theme-letter-spacing-wide: 2px;
+$theme-letter-spacing-extra-wide: 3px;
+$theme-letter-spacing-extra2-wide: 4px;
+
+$theme-border-radius-small: 2px;
+$theme-border-radius-base: 4px;
+$theme-border-radius-large: 8px;
+$theme-border-radius-extra-large: 12px;
+
+$theme-box-shadow-s: 0 4px 8px rgba(0, 0, 0, .08);
+$theme-box-shadow-h: 0 8px 16px rgba(0, 0, 0, .08), 0 0 36px rgba(0, 0, 0, .04);
+$theme-box-shadow-m: 0 4px 8px rgba(0, 0, 0, .08), 0 0 24px rgba(0, 0, 0, .04);
+$theme-box-shadow-l: 0 8px 16px rgba(0, 0, 0, .12), 0 0 36px rgba(0, 0, 0, .08);
+
+$theme-breakpoint-sm: 768px !default;
+$theme-breakpoint-md: 992px !default;
+$theme-breakpoint-lg: 1200px !default;
+$theme-breakpoint-xl: 1920px !default;
+$theme-breakpoint-4k: 3840px !default;
+
+$theme-breakpoints-spec: (
+  'xs' : (max-width: #{$theme-breakpoint-sm - 1}),
+  'sm' : (min-width: $theme-breakpoint-sm),
+  'md' : (min-width: $theme-breakpoint-md),
+  'lg' : (min-width: $theme-breakpoint-lg),
+  'xl' : (min-width: $theme-breakpoint-xl),
+  '4k' : (min-width: $theme-breakpoint-4k),
+  'xs-only' : (max-width: #{$theme-breakpoint-sm - 1}),
+  'sm-and-up' : (min-width: $theme-breakpoint-sm),
+  'sm-only': "(min-width: #{$theme-breakpoint-sm}) and (max-width: #{$theme-breakpoint-md - 1})",
+  'sm-and-down': (max-width: #{$theme-breakpoint-md - 1}),
+  'md-and-up' : (min-width: $theme-breakpoint-md),
+  'md-only': "(min-width: #{$theme-breakpoint-md}) and (max-width: #{$theme-breakpoint-lg - 1})",
+  'md-and-down': (max-width: #{$theme-breakpoint-lg - 1}),
+  'lg-and-up' : (min-width: $theme-breakpoint-lg),
+  'lg-only': "(min-width: #{$theme-breakpoint-lg}) and (max-width: #{$theme-breakpoint-xl - 1})",
+  'lg-and-down': (max-width: #{$theme-breakpoint-xl - 1}),
+  'xl-only' : "(min-width: #{$theme-breakpoint-xl}) and (max-width: #{$theme-breakpoint-4k - 1})",
+  '4k-only' : (min-width: $theme-breakpoint-4k),
+);
+
+:export {
+  theme-color-primary: $theme-color-primary;
+  theme-color-primary-dark: $theme-color-primary-dark;
+  theme-color-success: $theme-color-success;
+  theme-color-warning: $theme-color-warning;
+  theme-color-danger: $theme-color-danger;
+  theme-color-info: $theme-color-info;
+
+  theme-color-white: $theme-color-white;
+  theme-color-black: $theme-color-black;
+
+  theme-color-primary-light-1: $theme-color-primary-light-1;
+  theme-color-primary-light-2: $theme-color-primary-light-2;
+  theme-color-primary-light-3: $theme-color-primary-light-3;
+  theme-color-primary-light-4: $theme-color-primary-light-4;
+  theme-color-primary-light-5: $theme-color-primary-light-5;
+  theme-color-primary-light-6: $theme-color-primary-light-6;
+  theme-color-primary-light-7: $theme-color-primary-light-7;
+  theme-color-primary-light-8: $theme-color-primary-light-8;
+  theme-color-primary-light-9: $theme-color-primary-light-9;
+
+  theme-color-danger-light-1: $theme-color-danger-light-1;
+  theme-color-danger-light-2: $theme-color-danger-light-2;
+  theme-color-danger-light-3: $theme-color-danger-light-3;
+  theme-color-danger-light-4: $theme-color-danger-light-4;
+  theme-color-danger-light-5: $theme-color-danger-light-5;
+  theme-color-danger-light-6: $theme-color-danger-light-6;
+  theme-color-danger-light-7: $theme-color-danger-light-7;
+  theme-color-danger-light-8: $theme-color-danger-light-8;
+  theme-color-danger-light-9: $theme-color-danger-light-9;
+
+  theme-color-gs-black: $theme-color-gs-black;
+  theme-color-gs-dark: $theme-color-gs-dark;
+  theme-color-gs-middle: $theme-color-gs-middle;
+  theme-color-gs-light: $theme-color-gs-light;
+  theme-color-gs-bright: $theme-color-gs-bright;
+  theme-color-gs-white: $theme-color-gs-white;
+}

@@ -1,0 +1,23 @@
+@import '../../../sy-vue-ui/src/styles/common/variables.scss';
+@import '../../../sy-vue-ui/src/styles/common/composes/texts.scss';
+
+.display-index-number {
+  p {
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  .index-numbers-label {
+    display: flex;
+    align-items: center;
+    min-height: 42px;
+  }
+
+  .index-numbers-value {
+    margin-top: 8px;
+    margin-right: 5px;
+    color: $theme-color-primary;
+    font-size: $theme-font-size-xxx-large;
+    font-weight: $theme-font-weight-bold;
+  }
+}

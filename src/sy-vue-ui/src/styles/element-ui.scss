@@ -1,0 +1,6 @@
+/* 引入element 自定義變數表 */
+@import './element-ui/element-variables.scss';
+/* 改變element icon字體路徑 必須 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+/* 引入element 全部樣式 */
+@import '~element-theme-chalk/src/index';

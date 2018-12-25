@@ -1,0 +1,171 @@
+@import '../variables.scss';
+
+%h1 {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-extra-large;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-wide;
+  &:lang(zh-cn) {
+    font-size: $theme-font-size-large;  
+  }
+}
+
+%h2 {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-large;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-wide;
+  &:lang(zh-cn) {
+    font-size: $theme-font-size-medium;  
+  }
+}
+
+/* H3, chart title, card title */
+%h3 {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-medium;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-regular;
+  &:lang(zh-cn) {
+    font-size: $theme-font-size-small;  
+  }
+}
+/* the main table title */
+%t1 {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-large;
+  font-weight: $theme-font-weight-semi-bold;
+  letter-spacing: $theme-letter-spacing-regular;
+}
+/* for table title */
+%t2 {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-medium;
+  font-weight: $theme-font-weight-semi-bold;
+  letter-spacing: $theme-letter-spacing-regular;
+}
+
+%t3 {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-small;
+  font-weight: $theme-font-weight-semi-bold;
+  letter-spacing: $theme-letter-spacing-small;
+  &:lang(zh-cn) {
+    font-size: $theme-font-size-extra-small;
+    letter-spacing: $theme-letter-spacing-regular;
+  }
+}
+/* body fontsize */
+%body {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-small;
+  font-weight: $theme-font-weight-regular;
+  letter-spacing: $theme-letter-spacing-small;
+  &:lang(zh-cn) {
+    font-size: $theme-font-size-extra-small;  
+    font-weight: $theme-font-weight-extra-light;
+    letter-spacing: $theme-letter-spacing-regular;
+  }
+}
+/*customize for quickstart*/
+%qs {
+  fill: $theme-color-primary-dark;
+  color: $theme-color-primary-dark;
+  font-size: $theme-font-size-small;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-small;
+  &:lang(zh-cn) {
+    font-size: $theme-font-size-extra-small;  
+    font-weight: $theme-font-weight-semi-bold;
+    letter-spacing: $theme-letter-spacing-regular;
+  }
+}
+
+
+/* Font Size -- Chart */
+
+/*Impressive content*/
+%cl {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-small;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-regular;
+}
+/* Main content */
+%cm {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-extra-small;
+  font-weight: $theme-font-weight-semi-bold;
+  letter-spacing: $theme-letter-spacing-small;
+}
+/* Ps. */
+%cs {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-xx-small;
+  font-weight: $theme-font-weight-regular;
+  letter-spacing: $theme-letter-spacing-small;
+}
+
+/* PieNum */
+%piNum {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-xx-large;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-extra-wide;
+}
+
+%piTxt {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-small;
+  font-weight: $theme-font-weight-semi-bold;
+  letter-spacing: $theme-letter-spacing-regular;
+  &:lang(zh-cn) {
+    font-size: $theme-font-size-extra-small;  
+    font-weight: $theme-font-weight-extra-light;
+    letter-spacing: $theme-letter-spacing-regular;
+  }
+}
+
+%wxl {
+  fill: $theme-color-gs-white;
+  color: $theme-color-gs-white;
+  font-size: $theme-font-size-xxx-large;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-extra-wide;
+}
+
+%wl {
+  fill: $theme-color-gs-white;
+  color: $theme-color-gs-white;
+  font-size: $theme-font-size-xx-large;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-wide;
+}
+
+%w1 {
+  fill: $theme-color-gs-white;
+  color: $theme-color-gs-white;
+  font-size: $theme-font-size-extra-large;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-wide;
+}
+
+%xxl {
+  fill: $theme-color-gs-dark;
+  color: $theme-color-gs-dark;
+  font-size: $theme-font-size-x-huge;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-wide;
+}
