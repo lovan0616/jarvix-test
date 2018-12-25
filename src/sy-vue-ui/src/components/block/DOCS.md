@@ -1,5 +1,0 @@
-# Sy Block
-
-<!-- STORY -->
-
-## docs

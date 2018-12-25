@@ -1,3 +1,0 @@
-# Sy Landing Page
-
-## readme

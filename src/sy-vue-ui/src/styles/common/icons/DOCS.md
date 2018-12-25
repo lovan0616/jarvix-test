@@ -1,5 +1,0 @@
-# Icons
-
-<!-- STORY -->
-
-## docs

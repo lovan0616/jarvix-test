@@ -1,3 +1,0 @@
-# Sy Holy-grail
-
-## readme

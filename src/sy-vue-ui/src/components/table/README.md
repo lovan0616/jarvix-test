@@ -1,3 +1,0 @@
-# Sy Table
-
-## readme

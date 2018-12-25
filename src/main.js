@@ -5,9 +5,6 @@ import App from './App'
 import router from './router'
 import VueEvents from 'vue-events'
 
-import './sy-vue-ui/src/styles/element-ui.scss'
-import './sy-vue-ui/src/styles/sy-ui.scss'
-
 import './styles/components/task.scss'
 import './styles/components/container/container-block.scss'
 import './styles/components/container/container-card.scss'
@@ -23,8 +20,6 @@ import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/markLine'
 
-import { SyBlock, SySection, SyHolyGrail, SyTable } from './sy-vue-ui/src/components'
-
 import Layout from './components/Layout.vue'
 import Task from './components/Task.vue'
 import ContainerBlock from './components/container/Container-block.vue'
@@ -33,6 +28,11 @@ import DisplayIndexNumber from './components/display/Display-index-number.vue'
 import DisplayIndexNumberDiff from './components/display/Display-index-number-diff.vue'
 import DisplayBasicChart from './components/display/Display-basic-chart.vue'
 import DisplayProcessFlowChart from './components/display/Display-process-flow-chart.vue'
+
+import SyTable from './components/sy/Sy-table.vue'
+import SyHolyGrail from './components/sy/Sy-holy-grail.vue'
+import SySection from './components/sy/Sy-section.vue'
+import SyBlock from './components/sy/Sy-block.vue'
 
 Vue.use(VueEvents)
 Vue.use(ElementUI)

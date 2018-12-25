@@ -1,4 +1,4 @@
-import { mergeDeep, isArray, isObject } from '../../../sy-vue-ui/src/utils/general'
+import { mergeDeep, isArray, isObject } from '../../../utils/general'
 
 export function emitter (options) {
   if (isArray(options)) return e => options.forEach(o => emit.bind(this)(o, e))

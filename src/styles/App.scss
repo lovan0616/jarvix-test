@@ -1,5 +1,29 @@
+/* 引入element 自定義變數表 */
+@import './element-ui/element-variables.scss';
+/* 改變element icon字體路徑 必須 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+/* 引入element 全部樣式 */
+@import '~element-theme-chalk/src/index';
+/* 改變ionicons 字體路徑 必須 */
+$ionicons-font-path: '~ionicons/dist/fonts';
+@import '~ionicons/dist/scss/ionicons.scss';
+/* 改變 字體路徑 必須 */
+$--font-path: '../assets/fonts/Open_Sans';
+@import './common/fonts/OpenSans.scss';
+$--font-path: '../assets/fonts/Roboto';
+@import './common/fonts/Roboto.scss';
+
+@import './common/core.scss';
+@import './components/sy/block.scss';
+@import './components/sy/section.scss';
+@import './components/sy/holy-grail.scss';
+@import './components/sy/table.scss';
+@import './components/sy/question-list.scss';
+@import './components/sy/speech-autocomplete-input.scss';
+@import './components/templates/landing-page.scss';
+
 // ---- Global Variables ----
-@import '../sy-vue-ui/src/styles/common/variables.scss';
+@import '@/styles/common/variables.scss';
 
 // Overwite ElementUI default input placeholder styles
 .el-input__inner::placeholder {

@@ -1,5 +1,5 @@
 
-import variables from '@/sy-vue-ui/src/styles/common/variables.scss'
+import variables from '@/styles/common/variables.scss'
 
 const colorListDefault = [variables['theme-color-primary-dark'], variables['theme-color-primary'], '#71CBFF', '#B5F0FF', '#71F4FF']
 const colorListOnly2 = [variables['theme-color-primary'], '#B5F0FF']

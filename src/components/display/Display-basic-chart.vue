@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import EchartAddon from '../../sy-vue-ui/src/components/echarts/common/addon.js'
+import EchartAddon from './common/addon.js'
 import {
   colorDefault,
   colorOnly2,

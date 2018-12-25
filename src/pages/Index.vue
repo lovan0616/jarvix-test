@@ -88,7 +88,7 @@ export default {
 
 <style scoped lang="scss">
 // Import global styles
-@import '../sy-vue-ui/src/styles/common/variables.scss';
+@import '../styles/common/variables.scss';
 @import '../styles/App.scss';
 
 .page-index {

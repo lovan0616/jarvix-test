@@ -1,0 +1,60 @@
+@import '../../common/variables.scss';
+@import '../../common/composes/texts.scss';
+
+$gutter: 5px;
+
+.sy-question-list {
+  width: calc(100% + #{$gutter} * 2);
+  margin-left: -$gutter;
+  margin-right: -$gutter;
+
+  .question-list-btn {
+    display: flex;
+    max-width: 100%;
+    margin-left: $gutter;
+    margin-right: $gutter;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    border-radius: $theme-border-radius-base;
+    cursor: pointer;
+
+    &:first-child {
+      margin-left: $gutter;
+    }
+
+    &:last-child {
+      margin-right: $gutter;
+    }
+  }
+
+  .question-list-icon {
+    width: 24px;
+  }
+
+  .question-list-text {
+    width: 100%;
+    @extend %qs;
+  }
+}
+
+.sy-question-list.primary {
+  .question-list-btn {
+    background: $theme-color-white;
+    box-shadow: $theme-box-shadow-m;
+  }
+  .question-list-icon {
+    color: $theme-color-primary;
+  }
+  .question-list-btn:hover {
+    box-shadow: $theme-box-shadow-l;
+    .question-list-text {
+      color: $theme-color-primary;
+    }
+  }
+
+  .question-list-btn:focus {
+    .question-list-text {
+      color: $theme-color-primary;
+    }
+  }
+}

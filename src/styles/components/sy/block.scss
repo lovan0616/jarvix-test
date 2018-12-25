@@ -1,0 +1,16 @@
+@import '../../common/variables.scss';
+@import '../../common/composes/texts.scss';
+
+.sy-block {
+  flex-grow: 1;
+  flex-basis: 100%;
+  max-width: 100%;
+  margin-bottom: 24px;
+  padding: 24px 24px;
+  text-align: left;
+  border-radius: $theme-border-radius-base;
+  background: $theme-color-gs-white;
+  
+  // TEMP: hard code shadow style for temp
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
+}

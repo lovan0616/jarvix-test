@@ -1,5 +1,0 @@
-# Sy Table
-
-<!-- STORY -->
-
-## docs

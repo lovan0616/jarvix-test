@@ -1,3 +1,0 @@
-# Sy Question List
-
-## readme

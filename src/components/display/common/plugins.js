@@ -1,4 +1,4 @@
-import variables from '@/sy-vue-ui/src/styles/common/variables.scss'
+import variables from '@/styles/common/variables.scss'
 
 export function changeItemStyleByKpi (kpi) {
   return function (params) {

@@ -1,3 +1,0 @@
-# Echart Bar Chart
-
-## readme

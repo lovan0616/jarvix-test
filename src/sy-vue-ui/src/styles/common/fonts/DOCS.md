@@ -1,5 +1,0 @@
-# Fonts
-
-<!-- STORY -->
-
-## docs

@@ -1,5 +1,0 @@
-# Sy Section
-
-<!-- STORY -->
-
-## docs
