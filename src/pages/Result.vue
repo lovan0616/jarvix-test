@@ -10,7 +10,7 @@
         <div class="header-logo"
           @click="onLogoClick"
         >
-          <img src="@/assets/images/synergieslogo.svg">
+          <img src="@/assets/images/synergies_logo_white.svg">
         </div>
         <el-autocomplete class="search-input"
           ref="autocomplete"

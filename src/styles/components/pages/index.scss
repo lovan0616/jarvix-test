@@ -1,0 +1,42 @@
+@import '../../common/variables.scss';
+@import '../../common/composes/bg.scss';
+@import '../../common/functions.scss';
+
+.page-index {
+  width: 100%;
+
+  .bg {
+    @extend %default-bg;
+  }
+
+  .container {
+    width: 100%;
+    max-width: rem(800px);
+    margin: rem(60px) auto;
+  }
+
+  .center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .logo {
+    width: rem(185px);
+    margin-top: rem(20px);
+    margin-bottom: rem(80px);
+  }
+
+  .title {
+    margin-bottom: rem(40px);
+  }
+
+  .description {
+    max-width: 82.5%;
+    margin-bottom: rem(80px);
+    // 36 / 16
+    line-height: 2.25;
+    color: #1F2D3D;
+  }
+}
