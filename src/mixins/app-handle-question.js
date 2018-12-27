@@ -2,7 +2,7 @@ const suggestions = [
   { value: '什么产品销售热门' },
   { value: '什么产品常被订购' },
   { value: '什么产品被订购最多次' },
-  { value: '我想知道訂單的产品价格情況' },
+  { value: '我想知道订单的产品价格情况' },
   { value: '什么产品价格最贵' },
   { value: '订单的交货状况' },
   { value: '有多少司机正在执行送货任务' },
@@ -16,7 +16,7 @@ export default {
   data () {
     return {
       app_question: '',
-      app_question_placeholder: `例如： ${suggestions[0].value}`,
+      app_question_placeholder: `范例：${suggestions[0].value}`,
       app_suggestions: suggestions
     }
   },

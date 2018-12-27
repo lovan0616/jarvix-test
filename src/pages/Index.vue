@@ -6,13 +6,14 @@
       <h1 class="title">{{ title }}</h1>
       <p class="description">{{ description }}</p>
       <!-- Search Input -->
-      <el-autocomplete class="search-input"
+      <el-autocomplete class="question-input"
         ref="autocomplete"
         v-model="app_question"
         :fetch-suggestions="app_querySearch"
         :placeholder="app_question_placeholder"
         @keypress.enter.native="app_onEnterQuestion"
         @select="app_onEnterQuestion"
+        prefix-icon="el-icon-search"
       ></el-autocomplete>
     </main>
   </div>
