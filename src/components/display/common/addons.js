@@ -212,7 +212,7 @@ export function yAxisDefault () {
     nameLocation: 'middle',
     nameGap: config.nameGap,
     splitLine: {
-      show: false
+      show: true
     },
     axisTick: {
       show: false
