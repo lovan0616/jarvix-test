@@ -46,7 +46,7 @@ export default {
     height: { type: String, default: 'auto' },
     minHeight: { type: String, default: 'auto' },
     noPadding: { type: Boolean, default: false },
-    bg: { type: Boolean, default: true },
+    bg: { type: Boolean, default: false },
     innerBg: { type: Boolean, default: false },
     innerPadding: { type: Boolean, default: false },
     noHeaderPadding: { type: Boolean, default: false },
