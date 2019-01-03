@@ -24,10 +24,11 @@ import Layout from './components/Layout.vue'
 import Task from './components/Task.vue'
 import ContainerBlock from './components/container/Container-block.vue'
 import ContainerCard from './components/container/Container-card.vue'
-import DisplayIndexNumber from './components/display/Display-index-number.vue'
-import DisplayIndexNumberDiff from './components/display/Display-index-number-diff.vue'
 import DisplayBasicChart from './components/display/Display-basic-chart.vue'
-import DisplayProcessFlowChart from './components/display/Display-process-flow-chart.vue'
+import DisplayBasicIndicator from './components/display/Display-basic-indicator.vue'
+// import DisplayIndexNumber from './components/display/Display-index-number.vue'
+// import DisplayIndexNumberDiff from './components/display/Display-index-number-diff.vue'
+// import DisplayProcessFlowChart from './components/display/Display-process-flow-chart.vue'
 
 import SyTable from './components/sy/Sy-table.vue'
 import SyHolyGrail from './components/sy/Sy-holy-grail.vue'
@@ -47,10 +48,11 @@ Vue.component(Layout.name, Layout)
 Vue.component(Task.name, Task)
 Vue.component(ContainerBlock.name, ContainerBlock)
 Vue.component(ContainerCard.name, ContainerCard)
-Vue.component(DisplayIndexNumber.name, DisplayIndexNumber)
-Vue.component(DisplayIndexNumberDiff.name, DisplayIndexNumberDiff)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
-Vue.component(DisplayProcessFlowChart.name, DisplayProcessFlowChart)
+Vue.component(DisplayBasicIndicator.name, DisplayBasicIndicator)
+// Vue.component(DisplayIndexNumber.name, DisplayIndexNumber)
+// Vue.component(DisplayIndexNumberDiff.name, DisplayIndexNumberDiff)
+// Vue.component(DisplayProcessFlowChart.name, DisplayProcessFlowChart)
 
 Vue.config.productionTip = false
 
