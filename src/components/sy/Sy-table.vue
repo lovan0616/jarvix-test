@@ -6,7 +6,7 @@
       v-for="(col, i) in data.columns"
       :key="i"
       :prop="i.toString()"
-      :label="col"
+      :label="(typeof col === 'number') ? col.toString() : col"
     />
   </el-table>
 </template>
