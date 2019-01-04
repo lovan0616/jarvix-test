@@ -1,0 +1,19 @@
+@import '@/styles/common/variables.scss';
+@import '@/styles/common/composes/texts.scss';
+
+.display-basic-indicator {
+  text-align: center;
+
+  .indicator-title {
+    color: #444444;
+    @extend %p2;
+  }
+
+  .indicator-value {
+    margin-bottom: rem(12px);
+    color: $theme-color-primary;
+    font-size: $theme-font-size-x-huge;
+    font-weight: $theme-font-weight-bold;
+    letter-spacing: $theme-letter-spacing-x-wide;
+  }
+}

@@ -5,7 +5,18 @@ const colorListDefault = [variables['theme-color-primary-dark'], variables['them
 const colorListOnly2 = [variables['theme-color-primary'], '#B5F0FF']
 const colorList3 = ['#004F93', '#0069B6', '#1193F1']
 const colorList5 = ['#004F93', '#005AAD', '#0069B6', '#0982D9', '#1193F1']
-const colorList10 = [variables['theme-color-primary'], variables['theme-color-primary-light-1'], variables['theme-color-primary-light-2'], variables['theme-color-primary-light-3'], variables['theme-color-primary-light-4'], variables['theme-color-primary-light-5'], variables['theme-color-primary-light-6'], variables['theme-color-primary-light-7'], variables['theme-color-primary-light-8'], variables['theme-color-primary-light-9']]
+const colorList10 = [
+  '#334457',
+  '#39566B',
+  '#3E697E',
+  '#407C91',
+  '#4290A3',
+  '#42A5B3',
+  '#43BAC3',
+  '#44D0D1',
+  '#49E6DE',
+  '#51FCE8'
+]
 
 export function colorDefault () {
   return colorListDefault
@@ -201,7 +212,7 @@ export function yAxisDefault () {
     nameLocation: 'middle',
     nameGap: config.nameGap,
     splitLine: {
-      show: false
+      show: true
     },
     axisTick: {
       show: false

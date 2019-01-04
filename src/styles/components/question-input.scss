@@ -1,0 +1,35 @@
+.question-input {
+  width: 100%;
+  padding: rem(16px) 0;
+  font-size: $theme-font-size-x-large;
+  color: #323232;
+
+  .el-input {
+    & > * {
+      height: rem(60px);
+    }
+  }
+
+  .el-input__inner {
+    border: 0;
+    border-bottom: 1px solid $theme-color-black;
+    border-radius: 0;
+    background-color: transparent;
+    @extend %h3;
+
+    &::placeholder {
+      color: #b5b5b5;
+    }
+  }
+
+  .el-input__icon {
+    color: #7D7E7E;
+    font-size: $theme-font-size-large;
+  }
+
+  .el-input--prefix {
+    .el-input__inner {
+      padding-left: rem(40px);
+    }
+  }
+}

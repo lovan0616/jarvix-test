@@ -1,5 +1,6 @@
 <template>
   <div class="page-result">
+    <div class="bg"></div>
     <sy-holy-grail
       :header="{ type: 'fixed' }"
       :footer="{ active: false }"
@@ -10,20 +11,21 @@
         <div class="header-logo"
           @click="onLogoClick"
         >
-          <img src="@/assets/images/synergieslogo.svg">
+          <img src="@/assets/images/synergies_logo_white.svg">
         </div>
-        <el-autocomplete class="search-input"
+      </div>
+      <div class="top-area">
+        <el-autocomplete class="question-input"
           ref="autocomplete"
           v-model="app_question"
           :fetch-suggestions="app_querySearch"
           :placeholder="app_question_placeholder"
           @keypress.enter.native="app_onEnterQuestion"
           @select="app_onEnterQuestion"
+          prefix-icon="el-icon-search"
         ></el-autocomplete>
       </div>
-      <div class="result-area">
-        <layout v-bind="layout"></layout>
-      </div>
+      <layout v-bind="layout"></layout>
     </sy-holy-grail>
   </div>
 </template>
@@ -69,31 +71,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-
-.header-root {
-  height: 100%;
-  display: flex;
-  align-items: center;
-
-  & > *:not(.search-input) {
-    margin-right: 24px;
-  }
-
-  .header-logo {
-    height: 32px;
-    cursor: pointer;
-    img {
-      height: 100%;
-    }
-  }
-
-  .search-input {
-    width: 100%;
-  }
-}
-
-.result-area {
-  margin: 20px 0 10px 0;
-}
-</style>

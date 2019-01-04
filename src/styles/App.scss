@@ -1,3 +1,5 @@
+// ---- Global Variables ----
+@import '@/styles/common/variables.scss';
 /* 引入element 自定義變數表 */
 @import './element-ui/element-variables.scss';
 /* 改變element icon字體路徑 必須 */
@@ -13,6 +15,7 @@ $--font-path: '../assets/fonts/Open_Sans';
 $--font-path: '../assets/fonts/Roboto';
 @import './common/fonts/Roboto.scss';
 
+/* components */
 @import './common/core.scss';
 @import './components/sy/block.scss';
 @import './components/sy/section.scss';
@@ -21,28 +24,12 @@ $--font-path: '../assets/fonts/Roboto';
 @import './components/sy/question-list.scss';
 @import './components/sy/speech-autocomplete-input.scss';
 @import './components/templates/landing-page.scss';
+@import './components/question-input.scss';
 
-// ---- Global Variables ----
-@import '@/styles/common/variables.scss';
+@import './components/display/display-basic-indicator.scss';
 
-// Overwite ElementUI default input placeholder styles
-.el-input__inner::placeholder {
-  color: rgb(187, 206, 208);
-  letter-spacing: 1px;
-}
-
-// ---- Search Input ----
-.search-input {
-  width: 100%;
-  border-radius: $theme-border-radius-base;
-  padding: 12px 0;
-  font-size: 16px;
-  color: rgb(31, 58, 61);
-
-  input {
-    letter-spacing: 1.2px;
-  }
-}
+@import './components/pages/index.scss';
+@import './components/pages/result.scss';
 
 .table-title {
   font-size: 22px;

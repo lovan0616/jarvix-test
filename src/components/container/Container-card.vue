@@ -1,5 +1,5 @@
 <template>
-  <div :class="['container-card', { 'is-full-height': fullHeight }]">
+  <div :class="['container-card', { 'is-full-height': fullHeight, 'is-bg': bg }]">
     <div :class="['card-title', `align-${titleAlign}`]" v-if="title !== undefined">
       {{ title }}
     </div>
@@ -14,7 +14,8 @@ export default {
   props: {
     fullHeight: { type: Boolean, default: false },
     title: { type: [String, Number], default: undefined },
-    titleAlign: { type: String, default: 'left' }
+    titleAlign: { type: String, default: 'left' },
+    bg: { type: Boolean, default: true }
   }
 }
 </script>

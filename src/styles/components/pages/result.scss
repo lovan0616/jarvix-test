@@ -1,0 +1,33 @@
+@import '../../common/variables.scss';
+@import '../../common/composes/bg.scss';
+@import '../../common/functions.scss';
+
+.page-result {
+  .header-root {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    .header-logo {
+      height: 32px;
+      cursor: pointer;
+      img {
+        height: 100%;
+      }
+    }
+  }
+
+  .bg {
+    @extend %default-bg;
+  }
+
+  .top-area {
+    margin-bottom: 12px;
+  }
+
+  .question-input {
+    .el-input__inner {
+      color: #48666A;
+    }
+  }
+}

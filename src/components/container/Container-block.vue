@@ -44,9 +44,10 @@ export default {
     flexible: { type: Boolean, default: false },
     fullHeight: { type: Boolean, default: false },
     height: { type: String, default: 'auto' },
+    minWidth: { type: String, default: 'auto' },
     minHeight: { type: String, default: 'auto' },
     noPadding: { type: Boolean, default: false },
-    bg: { type: Boolean, default: true },
+    bg: { type: Boolean, default: false },
     innerBg: { type: Boolean, default: false },
     innerPadding: { type: Boolean, default: false },
     noHeaderPadding: { type: Boolean, default: false },
@@ -65,6 +66,7 @@ export default {
       return {
         width: (this.size) ? `${this.size}%` : '',
         height: this.height,
+        minWidth: this.minWidth,
         minHeight: this.minHeight
       }
     }
