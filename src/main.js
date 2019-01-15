@@ -5,6 +5,8 @@ import App from './App'
 import router from './router'
 import VueEvents from 'vue-events'
 
+import store from './store'
+
 import './styles/components/task.scss'
 import './styles/components/container/container-block.scss'
 import './styles/components/container/container-card.scss'
@@ -59,6 +61,7 @@ Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   components: { App },
   template: '<App/>'

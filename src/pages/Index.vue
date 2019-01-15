@@ -4,8 +4,7 @@
     <main class="container center">
       <img class="logo" src="@/assets/images/synergies_logo.svg" alt="Synergies" />
       <h1 class="title">{{ title }}</h1>
-      <p class="description">{{ description }}</p>
-      <!-- Search Input -->
+      <select-bookmark></select-bookmark>
       <el-autocomplete class="question-input"
         ref="autocomplete"
         v-model="app_question"
@@ -21,16 +20,19 @@
 
 <script>
 import appHandleQuestion from '../mixins/app-handle-question.js'
+import SelectBookmark from '../components/Select-bookmark'
 
 export default {
   name: 'PageIndex',
   mixins: [
     appHandleQuestion
   ],
+  components: {
+    SelectBookmark
+  },
   data () {
     return {
-      title: 'SyGPS',
-      description: '我是系統說明文字，還是一堆系統說明文字，看我看我。我是系統說明文字，還是一堆系統說明文字，看我看我。我是系統說明文字，還是一堆系統說明文字，看我看我。'
+      title: 'SyGPS'
     }
   }
 }
