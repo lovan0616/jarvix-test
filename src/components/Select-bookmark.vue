@@ -20,12 +20,14 @@ import co from 'co'
 export default {
   name: 'SelectBookmark',
   created () {
-    this.$store.dispatch('bookmark/init')
     // this.$store.dispatch('bookmark/setBookmarkById', 1)
+    this.$store.dispatch('bookmark/init').then(() => {
+      if (this.bookmark) this.selectedBookmarkId = this.bookmark.id
+    })
   },
   data () {
     return {
-      selectedBookmarkId: ''
+      selectedBookmarkId: undefined
     }
   },
   computed: {
@@ -39,6 +41,7 @@ export default {
       co(function* () {
         yield self.$store.dispatch('bookmark/setBookmarkById', bookmarkId)
         yield self.$store.dispatch('bookmark/getSuggestions')
+        self.$emit('change')
       })
     }
   }
