@@ -1,0 +1,12 @@
+import * as types from './mutation_type'
+export default {
+  [types.SET_BOOKMARK] (state, bookmark) {
+    state.bookmark = bookmark || undefined
+  },
+  [types.SET_BOOKMARKS] (state, bookmarks) {
+    state.bookmarks = bookmarks || []
+  },
+  [types.SET_SUGGESTIONS] (state, suggestions) {
+    state.suggestions = suggestions || []
+  }
+}

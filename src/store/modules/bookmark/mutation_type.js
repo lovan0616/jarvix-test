@@ -1,0 +1,3 @@
+export const SET_BOOKMARK = 'SET_BOOKMARK'
+export const SET_BOOKMARKS = 'SET_BOOKMARKS'
+export const SET_SUGGESTIONS = 'SET_SUGGESTIONS'
