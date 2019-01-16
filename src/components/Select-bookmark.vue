@@ -20,9 +20,8 @@ import co from 'co'
 export default {
   name: 'SelectBookmark',
   created () {
-    // this.$store.dispatch('bookmark/setBookmarkById', 1)
-    this.$store.dispatch('bookmark/init').then(() => {
-      if (this.bookmark) this.selectedBookmarkId = this.bookmark.id
+    this.$store.dispatch('bookmark/init').then(({ bookmark, bookmarks }) => {
+      if (bookmark && bookmarks.length) this.selectedBookmarkId = bookmark.id
     })
   },
   data () {

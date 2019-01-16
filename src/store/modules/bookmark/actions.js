@@ -17,7 +17,7 @@ export default {
         dispatch('getSuggestions')
       ]
       commit(types.SET_ISINIT, true)
-      return yield Promise.resolve()
+      return yield Promise.resolve(state)
     })
   },
   getBookmark ({ commit, state }) {
