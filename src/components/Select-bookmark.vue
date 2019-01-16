@@ -1,5 +1,5 @@
 <template>
-  <el-select
+  <el-select :class="['select-bookmark', `theme-${theme}`]"
     v-model="selectedBookmarkId"
     placeholder="请选择bookmark"
     @change="onBookmarkChange"
@@ -19,6 +19,9 @@ import co from 'co'
 
 export default {
   name: 'SelectBookmark',
+  props: {
+    theme: { type: String, default: 'default' }
+  },
   created () {
     this.$store.dispatch('bookmark/init').then(({ bookmark, bookmarks }) => {
       if (bookmark && bookmarks.length) this.selectedBookmarkId = bookmark.id
