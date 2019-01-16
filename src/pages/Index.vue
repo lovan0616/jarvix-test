@@ -4,8 +4,13 @@
     <main class="container center">
       <img class="logo" src="@/assets/images/synergies_logo.svg" alt="Synergies" />
       <h1 class="title">{{ title }}</h1>
-      <select-bookmark></select-bookmark>
-      <el-autocomplete v-show="app_bookmark" class="question-input"
+      <div class="select-bookmark-area">
+        <span>我想在</span>
+        <select-bookmark></select-bookmark>
+        <span>询问问题</span>
+      </div>
+      <el-autocomplete class="question-input"
+        v-show="app_bookmark"
         ref="autocomplete"
         v-model="app_question"
         :fetch-suggestions="app_querySearch"

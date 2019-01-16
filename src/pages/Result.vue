@@ -13,8 +13,9 @@
         >
           <img src="@/assets/images/synergies_logo_white.svg">
         </div>
-        <select-bookmark
+        <select-bookmark class="header-right"
           @change="onBookmarkChange"
+          theme="dark"
         ></select-bookmark>
       </div>
       <div class="top-area">

@@ -1,13 +1,12 @@
 @import '../common/variables.scss';
 @import '../common/composes/bg.scss';
+@import '../common/composes/texts.scss';
 @import '../common/functions.scss';
 
 .page-index {
   display: flex;
   width: 100%;
-  min-height: 100vh;
   justify-content: center;
-  align-items: center;
 
   .bg {
     @extend %default-bg;
@@ -16,7 +15,8 @@
   .container {
     width: 100%;
     max-width: rem(800px);
-    margin-bottom: 20%;
+    margin-bottom: rem(400px);
+    padding: 0 rem(36px);
   }
 
   .center {
@@ -28,19 +28,20 @@
 
   .logo {
     width: rem(185px);
-    margin-top: rem(20px);
-    margin-bottom: rem(80px);
+    margin-top: rem(100px);
+    margin-bottom: rem(60px);
   }
 
   .title {
     margin-bottom: rem(40px);
   }
 
-  .description {
-    max-width: 82.5%;
-    margin-bottom: rem(68px);
-    // 36 / 16
-    line-height: 2.25;
-    color: #1F2D3D;
+  .select-bookmark-area {
+    margin: rem(60px) 0;
+    @extend %p;
+
+    .select-bookmark {
+      margin: 0 rem(12px);
+    }
   }
 }

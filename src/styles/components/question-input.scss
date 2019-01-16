@@ -2,7 +2,7 @@
   width: 100%;
   padding: rem(16px) 0;
   font-size: $theme-font-size-x-large;
-  color: #323232;
+  color: #48666A;
 
   .el-input {
     & > * {
@@ -18,7 +18,7 @@
     @extend %h3;
 
     &::placeholder {
-      color: #b5b5b5;
+      color: #D8D8D8;
     }
   }
 
