@@ -13,6 +13,10 @@
         >
           <img src="@/assets/images/synergies_logo_white.svg">
         </div>
+        <select-bookmark class="header-right"
+          @change="onBookmarkChange"
+          theme="dark"
+        ></select-bookmark>
       </div>
       <div class="top-area">
         <el-autocomplete class="question-input"
@@ -25,7 +29,7 @@
           prefix-icon="el-icon-search"
         ></el-autocomplete>
       </div>
-      <layout v-bind="layout"></layout>
+      <layout v-if="showLayout" v-bind="layout"></layout>
     </sy-holy-grail>
   </div>
 </template>
@@ -33,15 +37,20 @@
 <script>
 import axios from 'axios'
 import appHandleQuestion from '../mixins/app-handle-question.js'
+import SelectBookmark from '../components/Select-bookmark'
 
 export default {
   name: 'PageResult',
   mixins: [
     appHandleQuestion
   ],
+  components: {
+    SelectBookmark
+  },
   data () {
     return {
-      layout: undefined
+      layout: undefined,
+      showLayout: true
     }
   },
   watch: {
@@ -57,16 +66,25 @@ export default {
     }
   },
   methods: {
+    clearLayout () {
+      this.layout = undefined
+    },
     onLogoClick () {
       this.$router.push('/')
     },
     fetchApiAsk (data) {
-      this.layout = undefined
+      this.showLayout = true
+      this.clearLayout()
       const path = window.env.API_ROOT_URL + 'api/ask'
       axios.post(path, data)
         .then(res => {
           this.layout = res.data.data
         })
+    },
+    onBookmarkChange () {
+      this.clearLayout()
+      this.app_setQuestion('')
+      this.showLayout = false
     }
   }
 }

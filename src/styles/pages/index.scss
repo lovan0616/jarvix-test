@@ -1,0 +1,47 @@
+@import '../common/variables.scss';
+@import '../common/composes/bg.scss';
+@import '../common/composes/texts.scss';
+@import '../common/functions.scss';
+
+.page-index {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+
+  .bg {
+    @extend %default-bg;
+  }
+
+  .container {
+    width: 100%;
+    max-width: rem(800px);
+    margin-bottom: rem(400px);
+    padding: 0 rem(36px);
+  }
+
+  .center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .logo {
+    width: rem(185px);
+    margin-top: rem(100px);
+    margin-bottom: rem(60px);
+  }
+
+  .title {
+    margin-bottom: rem(40px);
+  }
+
+  .select-bookmark-area {
+    margin: rem(60px) 0;
+    @extend %p;
+
+    .select-bookmark {
+      margin: 0 rem(12px);
+    }
+  }
+}

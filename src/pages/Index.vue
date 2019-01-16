@@ -4,9 +4,13 @@
     <main class="container center">
       <img class="logo" src="@/assets/images/synergies_logo.svg" alt="Synergies" />
       <h1 class="title">{{ title }}</h1>
-      <p class="description">{{ description }}</p>
-      <!-- Search Input -->
+      <div class="select-bookmark-area">
+        <span>我想在</span>
+        <select-bookmark></select-bookmark>
+        <span>询问问题</span>
+      </div>
       <el-autocomplete class="question-input"
+        v-show="app_bookmark"
         ref="autocomplete"
         v-model="app_question"
         :fetch-suggestions="app_querySearch"
@@ -21,17 +25,26 @@
 
 <script>
 import appHandleQuestion from '../mixins/app-handle-question.js'
+import SelectBookmark from '../components/Select-bookmark'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PageIndex',
   mixins: [
     appHandleQuestion
   ],
+  components: {
+    SelectBookmark
+  },
   data () {
     return {
-      title: 'SyGPS',
-      description: '我是系統說明文字，還是一堆系統說明文字，看我看我。我是系統說明文字，還是一堆系統說明文字，看我看我。我是系統說明文字，還是一堆系統說明文字，看我看我。'
+      title: 'SyGPS'
     }
+  },
+  computed: {
+    ...mapGetters('bookmark', {
+      app_bookmark: 'bookmark'
+    })
   }
 }
 </script>

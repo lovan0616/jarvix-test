@@ -1,12 +1,13 @@
-@import '../../common/variables.scss';
-@import '../../common/composes/bg.scss';
-@import '../../common/functions.scss';
+@import '../common/variables.scss';
+@import '../common/composes/bg.scss';
+@import '../common/functions.scss';
 
 .page-result {
   .header-root {
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     .header-logo {
       height: 32px;
@@ -14,6 +15,10 @@
       img {
         height: 100%;
       }
+    }
+
+    .header-right {
+      margin-right: 30px;
     }
   }
 

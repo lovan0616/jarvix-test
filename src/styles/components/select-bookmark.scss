@@ -1,0 +1,53 @@
+@import '../common/composes/texts.scss';
+@import '../common/variables.scss';
+
+.select-bookmark {
+
+}
+
+.select-bookmark.theme-default {
+  .el-input__inner {
+    border: 0;
+    border-bottom: 1px solid #7E7F7F;
+    border-radius: 0;
+    color: $theme-color-primary;
+    background: transparent;
+    @extend %p;
+
+    &::placeholder {
+      color: #D8D8D8;
+    }
+  }
+
+  &.el-select:hover .el-input__inner,
+  &.el-select .el-input__inner:focus,
+  &.el-select .el-input.is-focus .el-input__inner {
+    border-color: #7E7F7F;
+  }
+}
+
+.select-bookmark.theme-dark {
+  .el-input__inner {
+    border: 0;
+    border-bottom: 1px solid #ffffff;
+    border-radius: 0;
+    color: #ffffff;
+    background: transparent;
+    @extend %p;
+
+    &::placeholder {
+      color: #ffffff;
+    }
+  }
+
+  &.el-select .el-input .el-select__caret {
+    color: #ffffff;
+  }
+
+  &.el-select:hover .el-input__inner,
+  &.el-select .el-input__inner:focus,
+  &.el-select .el-input.is-focus .el-input__inner {
+    border-color: #ffffff;
+  }
+
+}
