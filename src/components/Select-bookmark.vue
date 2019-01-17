@@ -25,6 +25,7 @@ export default {
   created () {
     this.$store.dispatch('bookmark/init').then(({ bookmark, bookmarks }) => {
       if (bookmark && bookmarks.length) this.selectedBookmarkId = bookmark.id
+      this.$emit('created')
     })
   },
   data () {

@@ -15,6 +15,7 @@
         </div>
         <select-bookmark class="header-right"
           @change="onBookmarkChange"
+          @created="onBookmarkCreated"
           theme="dark"
         ></select-bookmark>
       </div>
@@ -58,14 +59,14 @@ export default {
       this.fetchApiAsk({ question })
     }
   },
-  created () {
-    let question = this.$route.query.question
-    if (question) {
-      this.app_setQuestion(question)
-      this.fetchApiAsk({ question })
-    }
-  },
   methods: {
+    start () {
+      let question = this.$route.query.question
+      if (question) {
+        this.app_setQuestion(question)
+        this.fetchApiAsk({ question })
+      }
+    },
     clearLayout () {
       this.layout = undefined
     },
@@ -80,6 +81,9 @@ export default {
         .then(res => {
           this.layout = res.data.data
         })
+    },
+    onBookmarkCreated () {
+      this.start()
     },
     onBookmarkChange () {
       this.clearLayout()
