@@ -9,13 +9,11 @@ function handleByStatus ({ handlers, status, defaultValue }) {
 
 export default {
   init ({ commit, dispatch, state }) {
-    if (state.isInit) return Promise.resolve()
+    if (state.isInit) return Promise.resolve(state)
     return co(function* () {
-      yield [
-        dispatch('getBookmark'),
-        dispatch('getBookmarks'),
-        dispatch('getSuggestions')
-      ]
+      yield dispatch('getBookmark')
+      yield dispatch('getBookmarks')
+      yield dispatch('getSuggestions')
       commit(types.SET_ISINIT, true)
       return yield Promise.resolve(state)
     })
