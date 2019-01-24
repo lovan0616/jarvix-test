@@ -123,7 +123,8 @@ export default {
       addonOptions: echartAddon.options,
       addonSeriesItem: echartAddon.seriesItem,
       addonSeriesData: echartAddon.seriesData,
-      addonSeriesDataFns: echartAddon.seriesDataFns
+      addonSeriesDataFns: echartAddon.seriesDataFns,
+      addonSeriesItems: echartAddon.seriesItems
     }
   },
   computed: {
@@ -161,10 +162,10 @@ export default {
             return result
           }, [])
         }
-
         return {
           name: v,
           ...this.addonSeriesItem,
+          ...this.addonSeriesItems[colIndex],
           data
         }
       })

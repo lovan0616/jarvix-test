@@ -6,8 +6,9 @@ export default class EchartAddon {
     this._seriesItem = {}
     this._seriesData = {}
     this._seriesDataFns = []
-    this.specialList = ['seriesItem', 'seriesData', 'seriesDataFns']
-    this.specialDefaults = [{}, {}, []]
+    this._seriesItems = []
+    this.specialList = ['seriesItem', 'seriesData', 'seriesDataFns', 'seriesItems']
+    this.specialDefaults = [{}, {}, [], []]
     this.plugins = plugins
     this.fns = fns
   }
@@ -30,6 +31,14 @@ export default class EchartAddon {
 
   get seriesItem () {
     return this._seriesItem
+  }
+
+  set seriesItems (v) {
+    this._seriesItems = v
+  }
+
+  get seriesItems () {
+    return this._seriesItems
   }
 
   set seriesData (v) {
@@ -77,6 +86,10 @@ export default class EchartAddon {
     return this.specialValueHandler(key, mappingResult)
   }
 
+  seriesItemsHandler (key, mappingResult) {
+    this[key] = this[key].concat(mappingResult[key])
+  }
+
   seriesDataHandler (key, mappingResult) {
     return this.specialValueHandler(key, mappingResult)
   }
@@ -110,9 +123,13 @@ export default class EchartAddon {
   mappingWithString (target, mixin) {
     mixin = this.handlePlugin(mixin)
     const { key, name } = this.getKeyAndName(target)
-    const value = this.isObject(this._map[name])
-      ? this.mergeDeep(this._map[name], mixin) || mixin
-      : this._map[name] || mixin
+    let value
+    if (this.isObject(this._map[name]) && this.isObject(mixin)) {
+      value = this.mergeDeep(this._map[name], mixin) || mixin
+    } else {
+      if (!this.isObject(mixin)) value = mixin || this._map[name]
+      else value = this._map[name] || mixin
+    }
     return {
       [key]: value
     }
@@ -120,9 +137,18 @@ export default class EchartAddon {
 
   mappingWithObject (target) {
     return Object.keys(target).reduce((accu, curr) => {
-      const d = this.mappingWithString(curr, target[curr])
-      return this.mergeDeep(accu, d)
+      if (curr === 'seriesItems') {
+        accu['seriesItems'] = this.mappingWithSeriesItems(target[curr])
+        return accu
+      } else {
+        const d = this.mappingWithString(curr, target[curr])
+        return this.mergeDeep(accu, d)
+      }
     }, {})
+  }
+
+  mappingWithSeriesItems (target) {
+    return target.map(t => this.mappingWithObject(t)['seriesItem'])
   }
 
   mappingWithArray (target) {
