@@ -15,7 +15,6 @@
   .container {
     width: 100%;
     max-width: rem(800px);
-    margin-bottom: rem(400px);
     padding: 0 rem(36px);
   }
 
@@ -43,5 +42,9 @@
     .select-bookmark {
       margin: 0 rem(12px);
     }
+  }
+
+  .sub-title {
+    margin-top: rem(44px);
   }
 }
