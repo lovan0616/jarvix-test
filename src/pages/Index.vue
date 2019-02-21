@@ -19,6 +19,12 @@
         @select="app_onEnterQuestion"
         prefix-icon="el-icon-search"
       ></el-autocomplete>
+      <h2 class="sub-title">Quick Start</h2>
+      <quick-starts
+        :items="app_quickstartWithDefaults"
+        @clickItem="app_setAndEnterQuestion"
+      >
+      </quick-starts>
     </main>
   </div>
 </template>
@@ -26,6 +32,7 @@
 <script>
 import appHandleQuestion from '../mixins/app-handle-question.js'
 import SelectBookmark from '../components/Select-bookmark'
+import QuickStarts from '../components/Quick-starts'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -34,7 +41,8 @@ export default {
     appHandleQuestion
   ],
   components: {
-    SelectBookmark
+    SelectBookmark,
+    QuickStarts
   },
   data () {
     return {
@@ -43,7 +51,8 @@ export default {
   },
   computed: {
     ...mapGetters('bookmark', {
-      app_bookmark: 'bookmark'
+      app_bookmark: 'bookmark',
+      app_quickstartWithDefaults: 'quickstartWithDefaults'
     })
   }
 }

@@ -14,14 +14,22 @@ export default {
   methods: {
     app_setQuestion (d) {
       this.app_question = d
+      return this
     },
     app_onEnterQuestion (e) {
       this.$refs.autocomplete.close()
       this.$refs.autocomplete.$refs.input.$refs.input.blur()
-      this.$router.push({ name: 'PageResult', query: { question: this.app_question, '_': new Date().getTime() } })
+      return this.app_enterQuestion()
     },
     app_querySearch (queryString, cb) {
       cb(this.app_suggestions.map(value => ({ value })))
+    },
+    app_enterQuestion () {
+      this.$router.push({ name: 'PageResult', query: { question: this.app_question, '_': new Date().getTime() } })
+      return this
+    },
+    app_setAndEnterQuestion (question) {
+      return this.app_setQuestion(question).app_enterQuestion()
     }
   }
 }
