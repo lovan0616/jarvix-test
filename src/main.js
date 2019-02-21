@@ -9,6 +9,7 @@ import store from './store'
 
 import './styles/components/task.scss'
 import './styles/components/select-bookmark.scss'
+import './styles/components/page-guiding.scss'
 import './styles/components/container/container-block.scss'
 import './styles/components/container/container-card.scss'
 import './styles/components/display/display-index-number.scss'

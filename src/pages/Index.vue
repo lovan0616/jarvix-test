@@ -19,6 +19,10 @@
         @select="app_onEnterQuestion"
         prefix-icon="el-icon-search"
       ></el-autocomplete>
+      <page-guiding v-if="guiding"></page-guiding>
+      <div @click="toggle" class="teaching-button">
+        <span>觀看教學</span>
+      </div>
     </main>
   </div>
 </template>
@@ -26,6 +30,7 @@
 <script>
 import appHandleQuestion from '../mixins/app-handle-question.js'
 import SelectBookmark from '../components/Select-bookmark'
+import PageGuiding from '../components/Page-guiding'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -34,17 +39,24 @@ export default {
     appHandleQuestion
   ],
   components: {
-    SelectBookmark
+    SelectBookmark,
+    PageGuiding
   },
   data () {
     return {
-      title: 'SyGPS'
+      title: 'SyGPS',
+      guiding: false
     }
   },
   computed: {
     ...mapGetters('bookmark', {
       app_bookmark: 'bookmark'
     })
+  },
+  methods: {
+    toggle: function () {
+      this.guiding = !this.guiding
+    }
   }
 }
 </script>
