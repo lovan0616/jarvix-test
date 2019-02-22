@@ -16,4 +16,9 @@
     font-weight: $theme-font-weight-bold;
     letter-spacing: $theme-letter-spacing-x-wide;
   }
+
+  .indicator-sub-title {
+    color: $theme-color-gs-light;
+    @extend %p2;
+  }
 }
