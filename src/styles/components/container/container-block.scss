@@ -9,10 +9,7 @@
   }
 
   > .block-header {
-    display: flex;
-    justify-content: space-between;
     padding: 0 0 6px 0;
-    @extend %h2;
 
     @include response('sm') {
       padding: 0 0 10px 0;
@@ -29,6 +26,16 @@
 
   > .block-body {
     border-radius: $theme-border-radius-base;
+  }
+
+  .block-title {
+    margin-bottom: rem(4px);
+    @extend %h2;
+  }
+
+  .block-sub-title {
+    color: $theme-color-gs-light;
+    @extend %p;
   }
 }
 
