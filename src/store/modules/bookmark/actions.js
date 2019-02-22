@@ -14,8 +14,17 @@ export default {
       yield dispatch('getBookmark')
       yield dispatch('getBookmarks')
       yield dispatch('getSuggestions')
+      yield dispatch('getQuickstarts')
       commit(types.SET_ISINIT, true)
-      return yield Promise.resolve(state)
+      return Promise.resolve(state)
+    })
+  },
+  changeBookmarkById ({ dispatch, state }, bookmarkId) {
+    return co(function* () {
+      yield dispatch('setBookmarkById', bookmarkId)
+      yield dispatch('getSuggestions')
+      yield dispatch('getQuickstarts')
+      return Promise.resolve(state)
     })
   },
   getBookmark ({ commit, state }) {
@@ -73,6 +82,20 @@ export default {
         },
         status: res.status,
         defaultValue: state.suggestions
+      })
+    })
+  },
+  getQuickstarts ({ commit, state }) {
+    return axios.get(`${rootUrl}api/quickstarts`).then(res => {
+      return handleByStatus({
+        handlers: {
+          200: function () {
+            commit(types.SET_QUICKSTART_RESULT, res.data.data)
+            return res.data.data
+          }
+        },
+        status: res.status,
+        defaultValue: state.quickstartResult
       })
     })
   }

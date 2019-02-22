@@ -23,6 +23,12 @@
       <div @click="toggle" class="teaching-button">
         <span>觀看教學</span>
       </div>
+      <h2 class="sub-title">Quick Start</h2>
+      <quick-starts
+        :items="app_quickstartWithDefaults"
+        @clickItem="app_setAndEnterQuestion"
+      >
+      </quick-starts>
     </main>
   </div>
 </template>
@@ -31,6 +37,7 @@
 import appHandleQuestion from '../mixins/app-handle-question.js'
 import SelectBookmark from '../components/Select-bookmark'
 import PageGuiding from '../components/Page-guiding'
+import QuickStarts from '../components/Quick-starts'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -40,7 +47,8 @@ export default {
   ],
   components: {
     SelectBookmark,
-    PageGuiding
+    PageGuiding,
+    QuickStarts
   },
   data () {
     return {
@@ -50,7 +58,8 @@ export default {
   },
   computed: {
     ...mapGetters('bookmark', {
-      app_bookmark: 'bookmark'
+      app_bookmark: 'bookmark',
+      app_quickstartWithDefaults: 'quickstartWithDefaults'
     })
   },
   methods: {

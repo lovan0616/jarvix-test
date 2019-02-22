@@ -15,7 +15,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import co from 'co'
 
 export default {
   name: 'SelectBookmark',
@@ -34,17 +33,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('bookmark', [
-      'bookmark', 'bookmarks', 'suggestions'
-    ])
+    ...mapGetters('bookmark', ['bookmarks'])
   },
   methods: {
     onBookmarkChange (bookmarkId) {
-      let self = this
-      co(function* () {
-        yield self.$store.dispatch('bookmark/setBookmarkById', bookmarkId)
-        yield self.$store.dispatch('bookmark/getSuggestions')
-        self.$emit('change')
+      this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId).then(state => {
+        this.$emit('change')
       })
     }
   }

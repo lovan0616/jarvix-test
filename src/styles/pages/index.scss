@@ -15,7 +15,6 @@
   .container {
     width: 100%;
     max-width: rem(800px);
-    margin-bottom: rem(400px);
     padding: 0 rem(36px);
   }
 
@@ -49,5 +48,8 @@
     width: 100%;
     text-align: right;
     cursor: pointer;
+  }
+  .sub-title {
+    margin-top: rem(44px);
   }
 }
