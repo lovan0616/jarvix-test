@@ -9,22 +9,23 @@
         <select-bookmark></select-bookmark>
         <span>询问问题</span>
       </div>
-      <el-autocomplete class="question-input"
-        v-show="app_bookmark"
-        ref="autocomplete"
-        v-model="app_question"
-        :fetch-suggestions="app_querySearch"
-        :placeholder="app_question_placeholder"
-        @keypress.enter.native="app_onEnterQuestion"
-        @select="app_onEnterQuestion"
-        prefix-icon="el-icon-search"
-      ></el-autocomplete>
-      <h2 class="sub-title">Quick Start</h2>
-      <quick-starts
-        :items="app_quickstartWithDefaults"
-        @clickItem="app_setAndEnterQuestion"
-      >
-      </quick-starts>
+      <span v-show="app_bookmark">
+        <el-autocomplete class="question-input"
+          ref="autocomplete"
+          v-model="app_question"
+          :fetch-suggestions="app_querySearch"
+          :placeholder="app_question_placeholder"
+          @keypress.enter.native="app_onEnterQuestion"
+          @select="app_onEnterQuestion"
+          prefix-icon="el-icon-search"
+        ></el-autocomplete>
+        <h2 class="sub-title">Quick Start</h2>
+        <quick-starts
+          :items="app_quickstartWithDefaults"
+          @clickItem="app_setAndEnterQuestion"
+        >
+        </quick-starts>
+      </span>
     </main>
   </div>
 </template>
