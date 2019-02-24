@@ -1,11 +1,8 @@
 import * as types from './mutation_type'
 import co from 'co'
 import axios from 'axios'
+import { handleByStatus } from '../../common/helper'
 const rootUrl = window.env.API_ROOT_URL
-function handleByStatus ({ handlers, status, defaultValue }) {
-  const handler = handlers[status]
-  return handler ? handler() || defaultValue : defaultValue
-}
 
 export default {
   init ({ commit, dispatch, state }) {
