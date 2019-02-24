@@ -15,8 +15,8 @@
         </div>
         <sy-select class="header-right"
           theme="dark"
-          :selected="app_bookmarkId"
-          :items="app_bookmarks"
+          :selected="bookmarkId"
+          :items="bookmarks"
           placeholder="请选择bookmark"
           @update:selected="onBookmarkChange"
         ></sy-select>
@@ -68,10 +68,7 @@ export default {
     })
   },
   computed: {
-    ...mapGetters('bookmark', {
-      app_bookmarkId: 'bookmarkId',
-      app_bookmarks: 'bookmarks'
-    })
+    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks'])
   },
   methods: {
     start () {

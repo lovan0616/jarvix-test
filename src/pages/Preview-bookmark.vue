@@ -1,8 +1,8 @@
 <template>
   <div class="page-preview-bookmark">
-    <span v-show="app_bookmark">
+    <span v-show="bookmark">
       <quick-starts
-        :items="app_quickstartWithoutDefaults"
+        :items="quickstartWithoutDefaults"
         @clickItem="app_setAndEnterQuestion"
       >
       </quick-starts>
@@ -18,7 +18,7 @@
         <sy-table :data="bookmarkTableData && bookmarkTableData.dataset"></sy-table>
       </container-card>
     </span>
-    <span v-show="!app_bookmark">bookmark no set yet</span>
+    <span v-show="!bookmark">bookmark no set yet</span>
   </div>
 </template>
 
@@ -42,10 +42,7 @@ export default {
       .catch(err => err)
   },
   computed: {
-    ...mapGetters('bookmark', {
-      app_bookmark: 'bookmark',
-      app_quickstartWithoutDefaults: 'quickstartWithoutDefaults'
-    }),
+    ...mapGetters('bookmark', ['bookmark', 'quickstartWithoutDefaults']),
     ...mapGetters('previewBookmark', ['bookmarkTableId', 'bookmarkTables', 'bookmarkTableData'])
   },
   methods: {

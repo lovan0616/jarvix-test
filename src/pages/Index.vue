@@ -7,14 +7,14 @@
       <div class="select-bookmark-area">
         <span>我想在</span>
         <sy-select
-          :selected="app_bookmarkId"
-          :items="app_bookmarks"
+          :selected="bookmarkId"
+          :items="bookmarks"
           placeholder="请选择bookmark"
           @update:selected="onBookmarkChange"
         ></sy-select>
         <span>询问问题</span>
       </div>
-      <span v-show="app_bookmarkId">
+      <span v-show="bookmarkId">
         <el-autocomplete class="question-input"
           ref="autocomplete"
           v-model="app_question"
@@ -26,7 +26,7 @@
         ></el-autocomplete>
         <h2 class="sub-title">Quick Start</h2>
         <quick-starts
-          :items="app_quickstartWithDefaults"
+          :items="quickstartWithDefaults"
           @clickItem="app_setAndEnterQuestion"
         >
         </quick-starts>
@@ -59,11 +59,7 @@ export default {
     this.$store.dispatch('bookmark/init')
   },
   computed: {
-    ...mapGetters('bookmark', {
-      app_bookmarkId: 'bookmarkId',
-      app_bookmarks: 'bookmarks',
-      app_quickstartWithDefaults: 'quickstartWithDefaults'
-    })
+    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'quickstartWithDefaults'])
   },
   methods: {
     onBookmarkChange (bookmarkId) {
