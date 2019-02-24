@@ -8,18 +8,12 @@
       </quick-starts>
       <h2>资料集介绍</h2>
       <container-card>
-        <el-select
-          v-model="selectedBookmarkTableId"
-          placeholder="请选择table"
-          @change="onBookmarkTableChange"
-        >
-          <el-option
-            v-for="item in bookmarkTables"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
-        </el-select>
+        <sy-select
+          :selected="bookmarkTableId"
+          :items="bookmarkTables"
+          placeholder="请选择bookmark"
+          @update:selected="onBookmarkTableChange"
+        ></sy-select>
         <br>
         <sy-table :data="bookmarkTableData && bookmarkTableData.dataset"></sy-table>
       </container-card>
@@ -32,6 +26,7 @@
 import { mapGetters } from 'vuex'
 import appHandleQuestion from '../mixins/app-handle-question.js'
 import QuickStarts from '../components/Quick-starts'
+import SySelect from '../components/sy/Sy-select'
 
 export default {
   name: 'PagePreviewBookmark',
@@ -39,24 +34,19 @@ export default {
     appHandleQuestion
   ],
   components: {
+    SySelect,
     QuickStarts
   },
-  data () {
-    return {
-      selectedBookmarkTableId: undefined
-    }
-  },
   created () {
-    this.$store.dispatch('previewBookmark/init').then(({ bookmarkTable, bookmarkTables }) => {
-      if (bookmarkTable && bookmarkTables.length) this.selectedBookmarkTableId = bookmarkTable.id
-    }).catch(err => err)
+    this.$store.dispatch('previewBookmark/init')
+      .catch(err => err)
   },
   computed: {
     ...mapGetters('bookmark', {
       app_bookmark: 'bookmark',
       app_quickstartWithoutDefaults: 'quickstartWithoutDefaults'
     }),
-    ...mapGetters('previewBookmark', ['bookmarkTables', 'bookmarkTableData'])
+    ...mapGetters('previewBookmark', ['bookmarkTableId', 'bookmarkTables', 'bookmarkTableData'])
   },
   methods: {
     onBookmarkTableChange (id) {
