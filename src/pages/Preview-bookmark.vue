@@ -8,9 +8,20 @@
       </quick-starts>
       <h2>资料集介绍</h2>
       <container-card>
-        selector
+        <el-select
+          v-model="selectedBookmarkTableId"
+          placeholder="请选择table"
+          @change="onBookmarkTableChange"
+        >
+          <el-option
+            v-for="item in bookmarkTables"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
         <br>
-        table
+        <sy-table :data="bookmarkTableData && bookmarkTableData.dataset"></sy-table>
       </container-card>
     </span>
     <span v-show="!app_bookmark">bookmark no set yet</span>
@@ -32,13 +43,26 @@ export default {
   },
   data () {
     return {
+      selectedBookmarkTableId: undefined
     }
+  },
+  created () {
+    this.$store.dispatch('previewBookmark/init').then(({ bookmarkTable, bookmarkTables }) => {
+      if (bookmarkTable && bookmarkTables.length) this.selectedBookmarkTableId = bookmarkTable.id
+    }).catch(err => err)
   },
   computed: {
     ...mapGetters('bookmark', {
       app_bookmark: 'bookmark',
       app_quickstartWithoutDefaults: 'quickstartWithoutDefaults'
-    })
+    }),
+    ...mapGetters('previewBookmark', ['bookmarkTables', 'bookmarkTableData'])
+  },
+  methods: {
+    onBookmarkTableChange (id) {
+      this.$store.dispatch('previewBookmark/changeBookmarkTableById', id)
+        .catch(err => err)
+    }
   }
 }
 </script>
