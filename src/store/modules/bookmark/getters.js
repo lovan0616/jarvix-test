@@ -4,7 +4,6 @@ export default {
   },
   bookmarkId (state) {
     if (state.bookmark) return state.bookmark.id
-    else return undefined
   },
   bookmarks (state) {
     return state.bookmarks

@@ -18,7 +18,7 @@
           <sy-meta-table class="preview-bookmark-table"
             :rightText="metaTableRightText"
             :max-height="500"
-            :data="bookmarkTableData && bookmarkTableData.dataset"
+            :data="bookmarkTableDataDataset"
           ></sy-meta-table>
         </div>
       </container-card>
@@ -50,11 +50,11 @@ export default {
   },
   computed: {
     ...mapGetters('bookmark', ['bookmark', 'quickstartWithoutDefaults']),
-    ...mapGetters('previewBookmark', ['bookmarkTableId', 'bookmarkTables', 'bookmarkTableData']),
+    ...mapGetters('previewBookmark', ['bookmarkTableId', 'bookmarkTables', 'bookmarkTableDataMeta', 'bookmarkTableDataDataset']),
     metaTableRightText () {
-      if (!this.bookmarkTableData || !this.bookmarkTableData.meta) return ''
-      const rowNum = this.bookmarkTableData.meta.rows_num || '' + ''
-      const colNum = this.bookmarkTableData.meta.columns_num || '' + ''
+      if (!this.bookmarkTableDataMeta) return ''
+      const rowNum = this.bookmarkTableDataMeta.rows_num || '' + ''
+      const colNum = this.bookmarkTableDataMeta.columns_num || '' + ''
       let result = ''
       if (rowNum && colNum) result = `${rowNum} rows x ${colNum} columns`
       else {
