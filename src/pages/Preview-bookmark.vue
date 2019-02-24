@@ -8,17 +8,19 @@
       </quick-starts>
       <h2>资料集介绍</h2>
       <container-card>
-        <sy-select class="preview-bookmark-select"
-          :selected="bookmarkTableId"
-          :items="bookmarkTables"
-          placeholder="请选择bookmark"
-          @update:selected="onBookmarkTableChange"
-        ></sy-select>
-        <sy-meta-table class="preview-bookmark-table"
-          :rightText="metaTableRightText"
-          :max-height="500"
-          :data="bookmarkTableData && bookmarkTableData.dataset"
-        ></sy-meta-table>
+        <div class="preview-bookmark-card-inner">
+          <sy-select class="preview-bookmark-select"
+            :selected="bookmarkTableId"
+            :items="bookmarkTables"
+            placeholder="请选择bookmark"
+            @update:selected="onBookmarkTableChange"
+          ></sy-select>
+          <sy-meta-table class="preview-bookmark-table"
+            :rightText="metaTableRightText"
+            :max-height="500"
+            :data="bookmarkTableData && bookmarkTableData.dataset"
+          ></sy-meta-table>
+        </div>
       </container-card>
     </span>
     <span v-show="!bookmark">bookmark no set yet</span>
