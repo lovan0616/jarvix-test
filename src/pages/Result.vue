@@ -13,11 +13,13 @@
         >
           <img src="@/assets/images/synergies_logo_white.svg">
         </div>
-        <select-bookmark class="header-right"
-          @change="onBookmarkChange"
-          @created="onBookmarkCreated"
+        <sy-select class="header-right"
           theme="dark"
-        ></select-bookmark>
+          :selected="app_bookmarkId"
+          :items="app_bookmarks"
+          placeholder="请选择bookmark"
+          @update:selected="onBookmarkChange"
+        ></sy-select>
       </div>
       <div class="top-area">
         <el-autocomplete class="question-input"
@@ -38,7 +40,8 @@
 <script>
 import axios from 'axios'
 import appHandleQuestion from '../mixins/app-handle-question.js'
-import SelectBookmark from '../components/Select-bookmark'
+import SySelect from '../components/sy/Sy-select'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PageResult',
@@ -46,7 +49,7 @@ export default {
     appHandleQuestion
   ],
   components: {
-    SelectBookmark
+    SySelect
   },
   data () {
     return {
@@ -58,6 +61,17 @@ export default {
     '$route.query': function ({ question }) {
       this.fetchApiAsk({ question })
     }
+  },
+  created () {
+    this.$store.dispatch('bookmark/init').then(state => {
+      this.start()
+    })
+  },
+  computed: {
+    ...mapGetters('bookmark', {
+      app_bookmarkId: 'bookmarkId',
+      app_bookmarks: 'bookmarks'
+    })
   },
   methods: {
     start () {
@@ -82,13 +96,12 @@ export default {
           this.layout = res.data.data
         })
     },
-    onBookmarkCreated () {
-      this.start()
-    },
-    onBookmarkChange () {
-      this.clearLayout()
-      this.app_setQuestion('')
-      this.showLayout = false
+    onBookmarkChange (bookmarkId) {
+      this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId).then(state => {
+        this.clearLayout()
+        this.app_setQuestion('')
+        this.showLayout = false
+      })
     }
   }
 }
