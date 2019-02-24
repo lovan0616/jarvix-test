@@ -6,10 +6,15 @@
       <h1 class="title">{{ title }}</h1>
       <div class="select-bookmark-area">
         <span>我想在</span>
-        <select-bookmark></select-bookmark>
+        <sy-select
+          :selected="bookmarkId"
+          :items="bookmarks"
+          placeholder="请选择bookmark"
+          @update:selected="onBookmarkChange"
+        ></sy-select>
         <span>询问问题</span>
       </div>
-      <span v-show="app_bookmark">
+      <span v-show="bookmarkId">
         <el-autocomplete class="question-input"
           ref="autocomplete"
           v-model="app_question"
@@ -21,7 +26,7 @@
         ></el-autocomplete>
         <h2 class="sub-title">Quick Start</h2>
         <quick-starts
-          :items="app_quickstartWithDefaults"
+          :items="quickstartWithDefaults"
           @clickItem="app_setAndEnterQuestion"
         >
         </quick-starts>
@@ -32,7 +37,7 @@
 
 <script>
 import appHandleQuestion from '../mixins/app-handle-question.js'
-import SelectBookmark from '../components/Select-bookmark'
+import SySelect from '../components/sy/Sy-select'
 import QuickStarts from '../components/Quick-starts'
 import { mapGetters } from 'vuex'
 
@@ -42,7 +47,7 @@ export default {
     appHandleQuestion
   ],
   components: {
-    SelectBookmark,
+    SySelect,
     QuickStarts
   },
   data () {
@@ -50,11 +55,16 @@ export default {
       title: 'SyGPS'
     }
   },
+  created () {
+    this.$store.dispatch('bookmark/init')
+  },
   computed: {
-    ...mapGetters('bookmark', {
-      app_bookmark: 'bookmark',
-      app_quickstartWithDefaults: 'quickstartWithDefaults'
-    })
+    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'quickstartWithDefaults'])
+  },
+  methods: {
+    onBookmarkChange (bookmarkId) {
+      this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
+    }
   }
 }
 </script>

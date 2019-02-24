@@ -1,0 +1,22 @@
+@import '../common/variables.scss';
+@import '../common/functions.scss';
+@import '../common/mixins.scss';
+
+.page-preview-bookmark {
+  
+  .preview-bookmark-select {
+    margin-bottom: rem(20px);
+  }
+
+  .preview-bookmark-table {
+
+  }
+
+  .preview-bookmark-card-inner {
+    padding: 6px 6px;
+
+    @include response('sm') {
+      padding: 10px 10px;
+    }
+  }
+}
