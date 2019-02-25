@@ -2,6 +2,9 @@ export default {
   bookmark (state) {
     return state.bookmark
   },
+  bookmarkId (state) {
+    if (state.bookmark) return state.bookmark.id
+  },
   bookmarks (state) {
     return state.bookmarks
   },

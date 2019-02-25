@@ -21,9 +21,9 @@
     ]"
     :style="rootStyle"
   >
-    <div v-if="title" :class="['block-header', `align-${titleAlign}`]">
+    <div v-if="title || subTitle" :class="['block-header', `align-${titleAlign}`]">
       <div v-if="title" class="block-title">{{title}}</div>
-      <div v-if="rightTitle" class="block-right-title">{{rightTitle}}</div>
+      <div v-if="subTitle" class="block-sub-title">{{subTitle}}</div>
     </div>
     <div :class="['block-body', `flex-direct-${bodyFlexDirection}`]">
       <div v-if="flexible" class="block-row">
@@ -40,6 +40,7 @@ export default {
   name: 'ContainerBlock',
   props: {
     title: { type: String, default: '' },
+    subTitle: { type: String, default: '' },
     size: { type: Number, default: 100 },
     flexible: { type: Boolean, default: false },
     fullHeight: { type: Boolean, default: false },
@@ -56,7 +57,6 @@ export default {
     bodyFlexible: { type: Boolean, default: false },
     bodyFlexDirection: { type: String, default: 'row' },
     flowReverse: { type: Boolean, default: false },
-    rightTitle: { type: String, default: '' },
     flexDirection: { type: String, default: 'column' },
     outspread: { type: Boolean, default: false },
     sameHeight: { type: Boolean, default: false }

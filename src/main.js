@@ -8,7 +8,6 @@ import VueEvents from 'vue-events'
 import store from './store'
 
 import './styles/components/task.scss'
-import './styles/components/select-bookmark.scss'
 import './styles/components/page-guiding.scss'
 import './styles/components/container/container-block.scss'
 import './styles/components/container/container-card.scss'
@@ -39,6 +38,8 @@ import SyHolyGrail from './components/sy/Sy-holy-grail.vue'
 import SySection from './components/sy/Sy-section.vue'
 import SyBlock from './components/sy/Sy-block.vue'
 
+import PreviewBookmark from './pages/Preview-bookmark.vue'
+
 Vue.use(VueEvents)
 Vue.use(ElementUI)
 
@@ -57,6 +58,8 @@ Vue.component(DisplayBasicIndicator.name, DisplayBasicIndicator)
 // Vue.component(DisplayIndexNumber.name, DisplayIndexNumber)
 // Vue.component(DisplayIndexNumberDiff.name, DisplayIndexNumberDiff)
 // Vue.component(DisplayProcessFlowChart.name, DisplayProcessFlowChart)
+
+Vue.component(PreviewBookmark.name, PreviewBookmark)
 
 Vue.config.productionTip = false
 

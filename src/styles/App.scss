@@ -23,6 +23,8 @@ $--font-path: '../assets/fonts/Roboto';
 @import './components/sy/table.scss';
 @import './components/sy/question-list.scss';
 @import './components/sy/speech-autocomplete-input.scss';
+@import './components/sy/select.scss';
+@import './components/sy/meta-table.scss';
 @import './components/templates/landing-page.scss';
 @import './components/question-input.scss';
 @import './components/quick-starts.scss';
@@ -31,6 +33,7 @@ $--font-path: '../assets/fonts/Roboto';
 
 @import './pages/index.scss';
 @import './pages/result.scss';
+@import './pages/preview-bookmark.scss';
 
 .table-title {
   font-size: 22px;

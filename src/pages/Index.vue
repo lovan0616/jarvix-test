@@ -6,40 +6,46 @@
       <h1 class="title">{{ title }}</h1>
       <div class="select-bookmark-area">
         <span>我想在</span>
-        <select-bookmark></select-bookmark>
+        <sy-select
+          :selected="bookmarkId"
+          :items="bookmarks"
+          placeholder="请选择bookmark"
+          @update:selected="onBookmarkChange"
+        ></sy-select>
         <span>询问问题</span>
       </div>
-      <el-autocomplete class="question-input"
-        v-show="app_bookmark"
-        ref="autocomplete"
-        v-model="app_question"
-        :fetch-suggestions="app_querySearch"
-        :placeholder="app_question_placeholder"
-        @keypress.enter.native="app_onEnterQuestion"
-        @select="app_onEnterQuestion"
-        prefix-icon="el-icon-search"
-      ></el-autocomplete>
+      <span v-show="bookmarkId">
+        <el-autocomplete class="question-input"
+          ref="autocomplete"
+          v-model="app_question"
+          :fetch-suggestions="app_querySearch"
+          :placeholder="app_question_placeholder"
+          @keypress.enter.native="app_onEnterQuestion"
+          @select="app_onEnterQuestion"
+          prefix-icon="el-icon-search"
+        ></el-autocomplete>
+        <h2 class="sub-title">Quick Start</h2>
+        <quick-starts
+          :items="quickstartWithDefaults"
+          @clickItem="app_setAndEnterQuestion"
+        >
+        </quick-starts>
+      </span>
       <page-guiding :popup="popup"></page-guiding>
       <div @click="toggle"
        class="teaching-button">
         <span>觀看教學</span>
       </div>
-      <h2 class="sub-title">Quick Start</h2>
-      <quick-starts
-        :items="app_quickstartWithDefaults"
-        @clickItem="app_setAndEnterQuestion"
-      >
-      </quick-starts>
     </main>
   </div>
 </template>
 
 <script>
 import appHandleQuestion from '../mixins/app-handle-question.js'
-import SelectBookmark from '../components/Select-bookmark'
-import PageGuiding from '../components/Page-guiding'
+import SySelect from '../components/sy/Sy-select'
 import QuickStarts from '../components/Quick-starts'
 import { mapGetters } from 'vuex'
+import PageGuiding from '../components/Page-guiding'
 
 export default {
   name: 'PageIndex',
@@ -47,8 +53,8 @@ export default {
     appHandleQuestion
   ],
   components: {
-    SelectBookmark,
     PageGuiding,
+    SySelect,
     QuickStarts
   },
   data () {
@@ -57,15 +63,18 @@ export default {
       popup: false
     }
   },
+  created () {
+    this.$store.dispatch('bookmark/init')
+  },
   computed: {
-    ...mapGetters('bookmark', {
-      app_bookmark: 'bookmark',
-      app_quickstartWithDefaults: 'quickstartWithDefaults'
-    })
+    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'quickstartWithDefaults'])
   },
   methods: {
     toggle: function () {
       this.popup = !this.popup
+    },
+    onBookmarkChange (bookmarkId) {
+      this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
     }
   }
 }
