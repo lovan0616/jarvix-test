@@ -45,8 +45,10 @@
   }
 
   .teaching-button {
-    width: 100%;
-    text-align: right;
+    position: fixed;
+    z-index: 1;
+    bottom: 30px;
+    right: 30px;
     cursor: pointer;
   }
   .sub-title {

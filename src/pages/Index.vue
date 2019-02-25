@@ -19,8 +19,9 @@
         @select="app_onEnterQuestion"
         prefix-icon="el-icon-search"
       ></el-autocomplete>
-      <page-guiding v-if="guiding"></page-guiding>
-      <div @click="toggle" class="teaching-button">
+      <page-guiding :popup="popup"></page-guiding>
+      <div @click="toggle"
+       class="teaching-button">
         <span>觀看教學</span>
       </div>
       <h2 class="sub-title">Quick Start</h2>
@@ -53,7 +54,7 @@ export default {
   data () {
     return {
       title: 'SyGPS',
-      guiding: false
+      popup: false
     }
   },
   computed: {
@@ -64,7 +65,7 @@ export default {
   },
   methods: {
     toggle: function () {
-      this.guiding = !this.guiding
+      this.popup = !this.popup
     }
   }
 }
