@@ -31,6 +31,11 @@
         >
         </quick-starts>
       </span>
+      <popup-guiding :popup="popup" @update:popup="toggle"></popup-guiding>
+      <div @click="toggle"
+       class="teaching-button">
+        <span>觀看教學</span>
+      </div>
     </main>
   </div>
 </template>
@@ -40,6 +45,7 @@ import appHandleQuestion from '../mixins/app-handle-question.js'
 import SySelect from '../components/sy/Sy-select'
 import QuickStarts from '../components/Quick-starts'
 import { mapGetters } from 'vuex'
+import PopupGuiding from '../components/Popup-guiding'
 
 export default {
   name: 'PageIndex',
@@ -47,12 +53,14 @@ export default {
     appHandleQuestion
   ],
   components: {
+    PopupGuiding,
     SySelect,
     QuickStarts
   },
   data () {
     return {
-      title: 'SyGPS'
+      title: 'SyGPS',
+      popup: false
     }
   },
   created () {
@@ -62,6 +70,9 @@ export default {
     ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'quickstartWithDefaults'])
   },
   methods: {
+    toggle: function () {
+      this.popup = !this.popup
+    },
     onBookmarkChange (bookmarkId) {
       this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
     }
