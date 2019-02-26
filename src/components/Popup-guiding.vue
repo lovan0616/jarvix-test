@@ -92,6 +92,7 @@ export default {
       }
     },
     close () {
+      this.step = 1
       this.$emit('update:popup')
     }
   }
