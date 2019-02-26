@@ -31,7 +31,7 @@
         >
         </quick-starts>
       </span>
-      <page-guiding :popup="popup"></page-guiding>
+      <popup-guiding :popup="popup" @update:popup="toggle"></popup-guiding>
       <div @click="toggle"
        class="teaching-button">
         <span>觀看教學</span>
@@ -45,7 +45,7 @@ import appHandleQuestion from '../mixins/app-handle-question.js'
 import SySelect from '../components/sy/Sy-select'
 import QuickStarts from '../components/Quick-starts'
 import { mapGetters } from 'vuex'
-import PageGuiding from '../components/Page-guiding'
+import PopupGuiding from '../components/Popup-guiding'
 
 export default {
   name: 'PageIndex',
@@ -53,7 +53,7 @@ export default {
     appHandleQuestion
   ],
   components: {
-    PageGuiding,
+    PopupGuiding,
     SySelect,
     QuickStarts
   },

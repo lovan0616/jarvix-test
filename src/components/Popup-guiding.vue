@@ -1,25 +1,25 @@
 <template>
   <div>
     <template v-if="popup">
-      <div class="page-guiding">
-        <div class="main">
-          <div class="top">
+      <div class="popup-guiding">
+        <div class="popup-guiding-main">
+          <div class="popup-guiding-top">
             <div :class="['question', { 'is-actived': index + 1 === step }]"
-              v-for="(question, index) in questions" :key="question.id"
+              v-for="(question, index) in questions" :key="question.index"
             >
               <div class="circle">{{ index + 1 }}</div>
               <div>{{ question.word }}</div>
             </div>
           </div>
-          <div class="center">
+          <div class="popup-guiding-center">
             <div :class="['pic', { 'is-actived': index + 1 === step }]"
               v-for="(question, index) in questions" :key="question.id"
             >
               {{ question.pic }}
             </div>
           </div>
-          <div class="line"></div>
-          <div class="bottom">
+          <div class="popup-guiding-line"></div>
+          <div class="popup-guiding-bottom">
             <div :class="['back', { 'is-actived': step > min }]"
               @click="back"
             >
@@ -39,7 +39,7 @@
               下一步 &gt;
             </div>
             <div :class="['understand', { 'is-actived': step === questions.length }]"
-              @click='close'
+              @click="close"
             >
               我知道了
             </div>
@@ -53,7 +53,7 @@
 <script>
 
 export default {
-  name: 'PageGuiding',
+  name: 'PopupGuiding',
   props: {
     popup: { type: Boolean, default: false }
   },
@@ -92,7 +92,7 @@ export default {
       }
     },
     close () {
-      this.popup = !this.popup
+      this.$emit('update:popup')
     }
   }
 }

@@ -1,6 +1,6 @@
 @import '../common/variables.scss';
 
-.page-guiding{
+.popup-guiding{
     position: fixed;
     display: flex;
     justify-content: center;
@@ -12,7 +12,7 @@
     right: 0;
     bottom: 0;
 
-    .main {
+    .popup-guiding-main {
         display: flex;
         align-items: center;
         flex-direction: column;
@@ -21,7 +21,7 @@
         height: 90%;
     }
 
-    .top {
+    .popup-guiding-top {
         display: flex;
         width: 100%;
         height: 18.125%;
@@ -52,7 +52,7 @@
         }
     }
 
-    .center {
+    .popup-guiding-center {
         width: 100%;
         height: 67.5%;
         padding: 0px 100px;
@@ -68,13 +68,13 @@
         }
     }
     
-    .line {
+    .popup-guiding-line {
         width: 100%;
         height: 3.6%;
         border-bottom: 1px solid #BDBDBD;
     }
 
-    .bottom {
+    .popup-guiding-bottom {
         display: flex;
         justify-content: space-between;
         align-items: center;
