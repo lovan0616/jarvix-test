@@ -6,6 +6,7 @@ import router from './router'
 import VueEvents from 'vue-events'
 
 import store from './store'
+import '@/icons'
 
 import './styles/components/task.scss'
 import './styles/components/popup-guiding.scss'
