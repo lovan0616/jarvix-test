@@ -8,24 +8,7 @@
         href="javascript:void(0)"
       ><span class="pin-slash"><svg-icon icon-class="pin" class="pin-icon"></svg-icon></span></a>
     </div>
-    <div class="board-body">
-      <div class="section-left">
-        <div class="indicators-board"
-          v-for="n in 3"
-          :key="n"
-        >
-          <div class="board-label">價格最高的地區</div>
-          <div class="board-content">5666000</div>
-        </div>
-      </div>
-      <div class="section-right"></div>
-    </div>
-    <div class="board-footer">
-      <div class="insights-info"
-        v-for="n in 3"
-        :key="n"
-      >2017年6月的銷售額高於平均21%($11,025 Million NTD)，佔全年金額7%；貢獻最多的產品是AXSGS111，佔了該月金額約36%</div>
-    </div>
+    <slot name="ResultBoardBody"></slot>
   </div>
 </template>
 <script>
@@ -113,58 +96,6 @@ export default {
     .pin-icon {
       font-size: 16px;
       margin-right: 9px;
-    }
-  }
-  .board-body {
-    padding: 40px 30px 30px;
-    display: flex;
-    justify-content: space-between;
-
-    .section-left {
-
-    }
-
-    .section-right {
-      width: 69.44%;
-    }
-  }
-  .indicators-board {
-
-    &:not(:last-child) {
-      margin-bottom: 32px;
-    }
-
-    .board-label {
-      font-size: 13px;
-      line-height: 2px;
-      letter-spacing: 0.05em;
-      color: #444;
-      margin-bottom: 10px;
-    }
-    .board-content {
-      font-size: 28px;
-      line-height: 1;
-      letter-spacing: 0.05em;
-      color: #2E2E2E;
-    }
-  }
-  .board-footer {
-    background: #F1F7F7;
-    border-radius: 8px;
-    padding: 15px 30px;
-    font-size: 13px;
-    line-height: 22px;
-    letter-spacing: 0.05em;
-    color: #2E2E2E;
-
-    .insights-info {
-      font-size: 13px;
-      line-height: 20px;
-      letter-spacing: 0.05em;
-
-      &:not(:last-child) {
-        margin-bottom: 10px;
-      }
     }
   }
 }

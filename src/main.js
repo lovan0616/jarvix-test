@@ -40,6 +40,10 @@ import SySection from './components/sy/Sy-section.vue'
 import SyBlock from './components/sy/Sy-block.vue'
 
 import PreviewBookmark from './pages/Preview-bookmark.vue'
+import InsightsInfo from '@/pages/result/components/InsightsInfo'
+import IndicatorsInfo from '@/pages/result/components/IndicatorsInfo'
+import ResultBoardBody from '@/pages/result/components/ResultBoardBody'
+import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 
 Vue.use(VueEvents)
 Vue.use(ElementUI)
@@ -49,6 +53,10 @@ Vue.component(SyBlock.name, SyBlock)
 Vue.component(SySection.name, SySection)
 Vue.component(SyHolyGrail.name, SyHolyGrail)
 Vue.component(SyTable.name, SyTable)
+Vue.component(InsightsInfo.name, InsightsInfo)
+Vue.component(IndicatorsInfo.name, IndicatorsInfo)
+Vue.component(ResultBoardBody.name, ResultBoardBody)
+Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
 
 Vue.component(Layout.name, Layout)
 Vue.component(Task.name, Task)

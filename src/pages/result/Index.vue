@@ -32,17 +32,23 @@
           prefix-icon="el-icon-search"
         ></el-autocomplete>
       </div>
-      <div class="result-layout">
+      <div class="result-layout"
+        v-if="showLayout"
+      >
         <section class="section-left-side">
           <recommend-question-list></recommend-question-list>
-          <result-board></result-board>
+          <result-board>
+            <layout
+              slot="ResultBoardBody"
+              v-bind="layout"
+            ></layout>
+          </result-board>
         </section>
         <section class="section-right-side">
           <div class="seciotn-title">歷史問題</div>
           <history-question-list></history-question-list>
         </section>
       </div>
-      <layout v-if="showLayout" v-bind="layout"></layout>
     </sy-holy-grail>
   </div>
 </template>
@@ -55,7 +61,7 @@ import { mapGetters } from 'vuex'
 
 import HistoryQuestionList from '@/pages/result/components/HistoryQuestionList'
 import RecommendQuestionList from '@/pages/result/components/RecommendQuestionList'
-import ResultBoard from '@/pages/result/components/ResultBoard'
+import ResultBoard from './components/ResultBoard'
 
 export default {
   name: 'PageResult',
