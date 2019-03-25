@@ -77,7 +77,8 @@ export default {
   data () {
     return {
       layout: undefined,
-      showLayout: true
+      showLayout: true,
+      historyQuestionList: []
     }
   },
   watch: {
@@ -96,6 +97,7 @@ export default {
   methods: {
     start () {
       let question = this.$route.query.question
+      let bookmarkId = this.$route.query.bookmarkId
       if (question) {
         this.app_setQuestion(question)
         this.fetchApiAsk({ question })
@@ -114,6 +116,15 @@ export default {
       axios.post(path, data)
         .then(res => {
           this.layout = res.data.data
+          this.fetchHistoryQuestionList()
+        })
+    },
+    fetchHistoryQuestionList () {
+      const path = window.env.API_ROOT_URL + 'api/history'
+      axios.get(path)
+        .then(res => {
+          console.log(res)
+          this.historyQuestionList = res.data.data
         })
     },
     onBookmarkChange (bookmarkId) {

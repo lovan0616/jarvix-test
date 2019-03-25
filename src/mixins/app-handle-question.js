@@ -9,7 +9,7 @@ export default {
   computed: {
     ...mapGetters('bookmark', {
       app_suggestions: 'suggestions'
-    })
+    }, ['bookmarkId'])
   },
   methods: {
     app_setQuestion (d) {
@@ -25,7 +25,13 @@ export default {
       cb(this.app_suggestions.map(value => ({ value })))
     },
     app_enterQuestion () {
-      this.$router.push({ name: 'PageResult', query: { question: this.app_question, '_': new Date().getTime() } })
+      this.$router.push({ name: 'PageResult',
+        query: {
+          question: this.app_question,
+          '_': new Date().getTime(),
+          bookmarkId: this.bookmarkId
+        }
+      })
       return this
     },
     app_setAndEnterQuestion (question) {
