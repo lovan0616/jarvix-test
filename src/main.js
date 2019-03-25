@@ -42,6 +42,7 @@ import SyBlock from './components/sy/Sy-block.vue'
 import PreviewBookmark from './pages/Preview-bookmark.vue'
 import InsightsInfo from '@/pages/result/components/InsightsInfo'
 import IndicatorsInfo from '@/pages/result/components/IndicatorsInfo'
+import ResultBoard from '@/pages/result/components/ResultBoard'
 import ResultBoardHeader from '@/pages/result/components/ResultBoardHeader'
 import ResultBoardBody from '@/pages/result/components/ResultBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
@@ -56,6 +57,7 @@ Vue.component(SyHolyGrail.name, SyHolyGrail)
 Vue.component(SyTable.name, SyTable)
 Vue.component(InsightsInfo.name, InsightsInfo)
 Vue.component(IndicatorsInfo.name, IndicatorsInfo)
+Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
 Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
