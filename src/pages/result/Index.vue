@@ -46,7 +46,9 @@
         </section>
         <section class="section-right-side">
           <div class="seciotn-title">歷史問題</div>
-          <history-question-list></history-question-list>
+          <history-question-list
+            :question-list="historyQuestionList"
+          ></history-question-list>
         </section>
       </div>
     </sy-holy-grail>
@@ -100,7 +102,7 @@ export default {
       let bookmarkId = this.$route.query.bookmarkId
       if (question) {
         this.app_setQuestion(question)
-        this.fetchApiAsk({ question })
+        this.fetchApiAsk({ question, 'bookmark_Id': bookmarkId })
       }
     },
     clearLayout () {
@@ -120,11 +122,10 @@ export default {
         })
     },
     fetchHistoryQuestionList () {
-      const path = window.env.API_ROOT_URL + 'api/history'
+      const path = window.env.API_ROOT_URL + 'api/ask/history'
       axios.get(path)
         .then(res => {
-          console.log(res)
-          this.historyQuestionList = res.data.data
+          this.historyQuestionList = res.data.data.history
         })
     },
     onBookmarkChange (bookmarkId) {

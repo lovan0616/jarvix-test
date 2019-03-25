@@ -1,17 +1,35 @@
 <template>
   <div class="history-question-list">
     <div class="single-history-question"
-      v-for="n in 10"
-      :key="n"
+      v-for="singleQuestion in questionList"
+      :key="singleQuestion.id"
     >
-      <div class="question-database">database-00{{n}}</div>
-      <div class="question-name">深圳與其他地區的價格比較</div>
+      <div class="question-database">{{ findBookmarkById(singleQuestion.bookmark_id) }}</div>
+      <div class="question-name">{{ singleQuestion.question }}</div>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 export default {
-  name: 'HistoryQuestionList'
+  name: 'HistoryQuestionList',
+  props: {
+    questionList: {
+      type: Array,
+      default: () => []
+    }
+  },
+  methods: {
+    findBookmarkById (bookmarkId) {
+      if (!bookmarkId) return false
+      return this.bookmarks.find(element => {
+        return element.id === bookmarkId
+      }).name
+    }
+  },
+  computed: {
+    ...mapGetters('bookmark', ['bookmarks'])
+  }
 }
 </script>
 <style lang="scss" scoped>
