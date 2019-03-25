@@ -1,8 +1,7 @@
 <template>
   <div class="result-board">
     <div class="board-header">
-      <div class="board-name">不同地區價格的比較測試文字</div>
-      <div class="board-period">2016-01 ~ 2017-12</div>
+      <slot name="ResultBoardHeader"></slot>
       <a class="pin-button"
         :class="['is-pinned']"
         href="javascript:void(0)"
@@ -12,6 +11,7 @@
   </div>
 </template>
 <script>
+
 export default {
   name: 'ResultBoard'
 }
@@ -26,20 +26,6 @@ export default {
     position: relative;
     padding: 15px 30px;
     border-bottom: 1px solid #D8D8D8;
-
-    .board-name {
-      font-size: 18px;
-      line-height: 26px;
-      letter-spacing: 0.1em;
-      color: #2E2E2E;
-      margin-bottom: 5px;
-    }
-    .board-period {
-      font-size: 14px;
-      line-height: 14px;
-      letter-spacing: 0.05em;
-      color: #979797;
-    }
   }
   .pin-button {
     display: flex;
