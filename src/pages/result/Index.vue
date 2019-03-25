@@ -37,12 +37,7 @@
       >
         <section class="section-left-side">
           <recommend-question-list></recommend-question-list>
-          <result-board>
-            <layout
-              slot="ResultBoardBody"
-              v-bind="layout"
-            ></layout>
-          </result-board>
+          <layout v-bind="layout"></layout>
         </section>
         <section class="section-right-side">
           <div class="seciotn-title">歷史問題</div>
