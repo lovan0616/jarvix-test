@@ -513,6 +513,9 @@ export function seriesItemMarkLine () {
 
 export function tooltipDefault () {
   return {
+    tooltip: {
+      trigger: 'axis'
+    }
   }
 }
 
