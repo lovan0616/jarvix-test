@@ -26,5 +26,10 @@ export default {
       if (quickstarts[currIndex]) result.push(quickstarts[currIndex])
       return result
     }, [])
+  },
+  findBookmarkById (state) {
+    return keyword => state.bookmarks.find(element => {
+      return element.id === keyword
+    }).name
   }
 }

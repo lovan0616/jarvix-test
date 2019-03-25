@@ -22,13 +22,8 @@ export default {
   methods: {
     findBookmarkById (bookmarkId) {
       if (!bookmarkId) return false
-      return this.bookmarks.find(element => {
-        return element.id === bookmarkId
-      }).name
+      return this.$store.getters['bookmark/findBookmarkById'](bookmarkId)
     }
-  },
-  computed: {
-    ...mapGetters('bookmark', ['bookmarks'])
   }
 }
 </script>
