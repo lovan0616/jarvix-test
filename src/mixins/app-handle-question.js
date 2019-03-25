@@ -25,7 +25,8 @@ export default {
       cb(this.app_suggestions.map(value => ({ value })))
     },
     app_enterQuestion () {
-      this.$router.push({ name: 'PageResult',
+      this.$router.push({
+        name: 'PageResult',
         query: {
           question: this.app_question,
           '_': new Date().getTime(),
