@@ -33,9 +33,10 @@ export default {
   border-radius: 4px;
 
   .single-history-question {
+    padding: 15px;
+
     &:not(:last-child) {
       border-bottom: 0.75px solid #D8D8D8;
-      padding: 15px;
     }
 
     .question-database {

@@ -10,100 +10,52 @@
 </template>
 
 <script>
+import chartAddon from '@/components/display/common/chart-addon.js'
+let scatterChartConfig = {
+  chartData: {
+    type: 'bar',
+    itemStyle: {
+      color: '#E0E0E0'
+    },
+    legendHoverLink: false,
+    emphasis: {
+      itemStyle: {
+        color: '#E0E0E0'
+      }
+    },
+    barWidth: 20,
+    markLine: {
+      symbol: ['none', 'none'],
+      lineStyle: {
+        color: '#006464'
+      },
+      data: [
+        {
+          type: 'average',
+          name: '平均值',
+          symbol: 'none',
+          label: {
+            position: 'start',
+            formatter: 'AVG'
+          }
+        }
+      ]
+    }
+  }
+}
+
 export default {
   name: 'DisplayAverageBarChart',
   props: {
     dataset: { type: Object, default: () => ([]) }
-  },
-  data () {
-    return {
-      options: {
-        tooltip: {
-          trigger: 'axis'
-        },
-        xAxis: {
-          type: 'category',
-          // name: '地區',
-          nameLocation: 'middle',
-          nameGap: 40,
-          nameTextStyle: {
-            fontWeight: 'bold',
-            fontSize: 16,
-            color: '#444'
-          },
-          data: [],
-          axisLabel: {
-            rotate: 45,
-            color: '#979797'
-          },
-          // 刻度
-          axisTick: {
-            show: false
-          }
-        },
-        yAxis: {
-          type: 'value',
-          // name: '(1000RMB)價格',
-          nameGap: 58,
-          nameLocation: 'middle',
-          nameTextStyle: {
-            fontWeight: 'bold',
-            fontSize: 16,
-            color: '#444'
-          },
-          axisLabel: {
-            color: '#999999'
-          },
-          axisLine: {
-            show: false
-          },
-          axisTick: {
-            show: false
-          }
-        },
-        series: [
-          {
-            // name:'地區',
-            type: 'bar',
-            itemStyle: {
-              color: '#E0E0E0'
-            },
-            legendHoverLink: false,
-            emphasis: {
-              itemStyle: {
-                color: '#E0E0E0'
-              }
-            },
-            barWidth: 20,
-            markLine: {
-              symbol: ['none', 'none'],
-              lineStyle: {
-                color: '#006464'
-              },
-              data: [
-                {
-                  type: 'average',
-                  name: '平均值',
-                  symbol: 'none',
-                  label: {
-                    position: 'start',
-                    formatter: 'AVG'
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    }
   },
   mounted () {
     this.setOptions()
   },
   methods: {
     setOptions () {
-      this.options.xAxis.data = this.dataset.index
-      this.options.yAxis.name = this.dataset.columns
+      chartAddon.xAxis.data = this.dataset.index
+      chartAddon.yAxis.name = this.dataset.columns
     }
   },
   computed: {
@@ -137,9 +89,10 @@ export default {
           return element
         }
       })
-      this.$set(this.options.series[0], 'data', seriesArray)
+      scatterChartConfig.chartData.data = seriesArray
+      chartAddon.series[0] = scatterChartConfig.chartData
 
-      return this.options
+      return chartAddon
     }
   }
 }
