@@ -17,7 +17,6 @@ $container-vertical-padding: 0;
 $center-horizontal-padding: 30px;
 $center-vertical-padding: 0;
 $bg: transparent;
-$header-bg: radial-gradient(circle at center, #315658 0%,#213939 50%);
 $header-extend-bg: $theme-color-white;
 $footer-bg: transparent;
 $main-bg: transparent;
@@ -26,7 +25,7 @@ $aside-left-bg: transparent;
 $aside-left-padding-right: 30px;
 $aside-right-bg: transparent;
 $aside-right-padding-left: 30px;
-$shadow: 0 4px 8px rgba(0, 0, 0, .08), 0 0 24px rgba(0, 0, 0, .04);
+
 /* composes ----------------------------- */
 
 %maxWidth {
@@ -46,16 +45,6 @@ $shadow: 0 4px 8px rgba(0, 0, 0, .08), 0 0 24px rgba(0, 0, 0, .04);
     background: $bg;
     background-size: cover;
     background-repeat: no-repeat;
-  }
-
-  .header {
-    position: relative;
-    width: 100%;
-    height: auto;
-    height: $header-height;
-    z-index: $header-z-index; /* make sure content will uper than asign left and right */
-    background: $header-bg;
-    box-shadow: $shadow;
   }
 
   .footer {

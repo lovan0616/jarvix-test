@@ -1,52 +1,44 @@
 <template>
-  <div class="page-result">
-    <div class="bg"></div>
-    <sy-holy-grail
-      :header="{ type: 'fixed' }"
-      :footer="{ active: false }"
-      :asideLeft="{ active: false }"
-      :asideRight="{ active: false }"
-    >
-      <div slot="header" class="header-root">
-        <div class="header-logo"
-          @click="onLogoClick"
-        >
-          <img src="@/assets/images/synergies_logo_white.svg">
-        </div>
-        <sy-select class="header-right"
-          theme="dark"
-          :selected="bookmarkId"
-          :items="bookmarks"
-          placeholder="请选择bookmark"
-          @update:selected="onBookmarkChange"
-        ></sy-select>
-      </div>
-      <div class="top-area">
-        <el-autocomplete class="question-input"
-          ref="autocomplete"
-          v-model="app_question"
-          :fetch-suggestions="app_querySearch"
-          :placeholder="app_question_placeholder"
-          @keypress.enter.native="app_onEnterQuestion"
-          @select="app_onEnterQuestion"
-          prefix-icon="el-icon-search"
-        ></el-autocomplete>
-      </div>
-      <div class="result-layout"
-        v-if="showLayout"
+  <div>
+    <!-- <div slot="header" class="header-root">
+      <div class="header-logo"
+        @click="onLogoClick"
       >
-        <section class="section-left-side">
-          <recommend-question-list></recommend-question-list>
-          <layout v-bind="layout"></layout>
-        </section>
-        <section class="section-right-side">
-          <div class="seciotn-title">歷史問題</div>
-          <history-question-list
-            :question-list="historyQuestionList"
-          ></history-question-list>
-        </section>
+        <img src="@/assets/images/synergies_logo_white.svg">
       </div>
-    </sy-holy-grail>
+      <sy-select class="header-right"
+        theme="dark"
+        :selected="bookmarkId"
+        :items="bookmarks"
+        placeholder="请选择bookmark"
+        @update:selected="onBookmarkChange"
+      ></sy-select>
+    </div> -->
+    <div class="top-area">
+      <el-autocomplete class="question-input"
+        ref="autocomplete"
+        v-model="app_question"
+        :fetch-suggestions="app_querySearch"
+        :placeholder="app_question_placeholder"
+        @keypress.enter.native="app_onEnterQuestion"
+        @select="app_onEnterQuestion"
+        prefix-icon="el-icon-search"
+      ></el-autocomplete>
+    </div>
+    <div class="result-layout"
+      v-if="showLayout"
+    >
+      <section class="section-left-side">
+        <recommend-question-list></recommend-question-list>
+        <layout v-bind="layout"></layout>
+      </section>
+      <section class="section-right-side">
+        <div class="seciotn-title">歷史問題</div>
+        <history-question-list
+          :question-list="historyQuestionList"
+        ></history-question-list>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -102,9 +94,6 @@ export default {
     },
     clearLayout () {
       this.layout = undefined
-    },
-    onLogoClick () {
-      this.$router.push('/')
     },
     fetchApiAsk (data) {
       this.showLayout = true

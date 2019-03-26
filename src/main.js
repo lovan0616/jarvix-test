@@ -21,6 +21,7 @@ import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/pie'
+import 'echarts/lib/chart/scatter'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/markLine'
 
@@ -46,6 +47,7 @@ import ResultBoard from '@/pages/result/components/ResultBoard'
 import ResultBoardHeader from '@/pages/result/components/ResultBoardHeader'
 import ResultBoardBody from '@/pages/result/components/ResultBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
+import DisplayScatterChart from '@/components/display/DisplayScatterChart'
 
 Vue.use(VueEvents)
 Vue.use(ElementUI)
@@ -61,6 +63,7 @@ Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
 Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
+Vue.component(DisplayScatterChart.name, DisplayScatterChart)
 
 Vue.component(Layout.name, Layout)
 Vue.component(Task.name, Task)
