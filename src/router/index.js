@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import AppLayout from '@/components/layout/Applayout'
 
 Vue.use(Router)
 
@@ -12,8 +13,14 @@ export default new Router({
     },
     {
       path: '/result',
-      name: 'PageResult',
-      component: () => import('@/pages/result/Index')
+      component: AppLayout,
+      children: [
+        {
+          path: '/',
+          name: 'PageResult',
+          component: () => import('@/pages/result/Index')
+        }
+      ]
     }
   ]
 })
