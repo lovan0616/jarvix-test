@@ -1,5 +1,5 @@
 <template>
-  <div class="sy-holy-grail" >
+  <div class="sy-holy-grail">
     <div class="wrapper">
       <app-header></app-header>
       <main class="main">

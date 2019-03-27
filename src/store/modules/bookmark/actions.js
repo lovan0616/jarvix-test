@@ -25,6 +25,8 @@ export default {
     })
   },
   getBookmark ({ commit, state }) {
+    // test
+    axios.defaults.withCredentials = true
     return axios.get(`${rootUrl}api/bookmark`).then(res => {
       return handleByStatus({
         handlers: {

@@ -1,4 +1,5 @@
 @import '../../common/variables.scss';
+@import '../../common/composes/bg.scss';
 
 /* variables ----------------------------- */
 
@@ -40,6 +41,10 @@ $aside-right-padding-left: 30px;
   display: flex;
   flex-direction: column;
 
+  .bg {
+    @extend %default-bg;
+  }
+
   .wrapper {
     min-height: 100vh;
     background: $bg;
@@ -68,6 +73,7 @@ $aside-right-padding-left: 30px;
     min-height: calc(100vh - #{$header-height});
     // padding: $container-vertical-padding $container-horizontal-padding;
     @extend %maxWidth;
+    margin-top: $header-height;
   }
 
   .container {

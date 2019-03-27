@@ -1,11 +1,5 @@
-@import '../common/variables.scss';
-@import '../common/composes/bg.scss';
-@import '../common/functions.scss';
-
 .page-result {
-  .bg {
-    @extend %default-bg;
-  }
+  
 
   .top-area {
     margin-bottom: 12px;
