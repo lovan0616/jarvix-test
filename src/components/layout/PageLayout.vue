@@ -1,0 +1,32 @@
+<template>
+  <div class="sy-holy-grail page-layout">
+    <div class="wrapper">
+      <AppHeader/>
+      <main class="main">
+        <div class="bg"></div>
+        <slot></slot>
+      </main>
+    </div>
+  </div>
+</template>
+<script>
+import AppHeader from './AppHeader'
+
+export default {
+  name: 'PageLayout',
+  components: {
+    AppHeader
+  }
+}
+</script>
+<style lang="scss" scoped>
+@import '../../../src/styles/common/variables.scss';
+
+.page-layout {
+  .main {
+    margin-top: $header-height;
+    justify-content: center;
+    text-align: center;
+  }
+}
+</style>

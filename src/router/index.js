@@ -21,6 +21,11 @@ export default new Router({
           component: () => import('@/pages/result/Index')
         }
       ]
+    },
+    {
+      path: '/login',
+      name: 'PageLogin',
+      component: () => import('@/pages/login/Index')
     }
   ]
 })

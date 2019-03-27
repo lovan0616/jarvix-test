@@ -5,34 +5,14 @@
         <router-link class="header-logo" to="/">
           <img src="@/assets/images/synergies_logo_white.svg">
         </router-link>
-        <sy-select class="header-right"
-          theme="dark"
-          :selected="bookmarkId"
-          :items="bookmarks"
-          placeholder="请选择bookmark"
-          @update:selected="onBookmarkChange"
-        ></sy-select>
+        <slot name="nav"></slot>
       </div>
     </div>
   </header>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import SySelect from '@/components/sy/Sy-select'
 export default {
-  name: 'AppHeader',
-  components: {
-    SySelect
-  },
-  methods: {
-    onBookmarkChange (bookmarkId) {
-      this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId).then(state => {
-      })
-    }
-  },
-  computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks'])
-  }
+  name: 'AppHeader'
 }
 </script>
 <style lang="scss" scoped>
