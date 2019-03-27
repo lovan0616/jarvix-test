@@ -8,15 +8,15 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'PageIndex',
-      component: () => import('@/pages/Index')
-    },
-    {
-      path: '/result',
       component: AppLayout,
       children: [
         {
           path: '/',
+          name: 'PageIndex',
+          component: () => import('@/pages/Index')
+        },
+        {
+          path: 'result',
           name: 'PageResult',
           component: () => import('@/pages/result/Index')
         }
