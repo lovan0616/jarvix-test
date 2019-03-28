@@ -1,6 +1,7 @@
 import * as types from './mutation_type'
 import co from 'co'
 import axios from 'axios'
+import router from '../../../router'
 import { handleByStatus } from '../../common/helper'
 const rootUrl = window.env.API_ROOT_URL
 
@@ -26,7 +27,6 @@ export default {
   },
   getBookmark ({ commit, state }) {
     // test
-    axios.defaults.withCredentials = true
     return axios.get(`${rootUrl}api/bookmark`).then(res => {
       return handleByStatus({
         handlers: {
@@ -96,6 +96,17 @@ export default {
         status: res.status,
         defaultValue: state.quickstartResult
       })
+    })
+  },
+  setQuestionResult ({commit, getters}, data) {
+    commit('setAppQuestion', data)
+    router.push({
+      name: 'PageResult',
+      query: {
+        question: data,
+        '_': new Date().getTime(),
+        bookmarkId: getters.bookmarkId
+      }
     })
   }
 }

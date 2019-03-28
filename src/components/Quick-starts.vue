@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     onItemClick (e, item) {
-      this.$emit('clickItem', item)
+      this.$store.dispatch('bookmark/setQuestionResult', item)
     }
   }
 }

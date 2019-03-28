@@ -10,13 +10,22 @@
     border: 0;
     border-bottom: 1px solid #7E7F7F;
     border-radius: 0;
-    color: $theme-color-primary;
+    color: #444;
     background: transparent;
     @extend %p;
+    padding-left: 37px;
 
     &::placeholder {
       color: #D8D8D8;
     }
+  }
+
+  &.el-select .el-input .el-select__caret {
+    color: #444;
+  }
+
+  .el-input__suffix {
+    right: 0;
   }
 
   &.el-select:hover .el-input__inner,

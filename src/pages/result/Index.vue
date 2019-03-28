@@ -1,30 +1,7 @@
 <template>
-  <div>
-    <!-- <div slot="header" class="header-root">
-      <div class="header-logo"
-        @click="onLogoClick"
-      >
-        <img src="@/assets/images/synergies_logo_white.svg">
-      </div>
-      <sy-select class="header-right"
-        theme="dark"
-        :selected="bookmarkId"
-        :items="bookmarks"
-        placeholder="请选择bookmark"
-        @update:selected="onBookmarkChange"
-      ></sy-select>
-    </div> -->
-    <div class="top-area">
-      <el-autocomplete class="question-input"
-        ref="autocomplete"
-        v-model="app_question"
-        :fetch-suggestions="app_querySearch"
-        :placeholder="app_question_placeholder"
-        @keypress.enter.native="app_onEnterQuestion"
-        @select="app_onEnterQuestion"
-        prefix-icon="el-icon-search"
-      ></el-autocomplete>
-    </div>
+  <div class="result-page">
+    <question-select class="result-question-select-block"
+    ></question-select>
     <div class="result-layout"
       v-if="showLayout"
     >
@@ -44,24 +21,20 @@
 
 <script>
 import axios from 'axios'
-import appHandleQuestion from '@/mixins/app-handle-question.js'
-import SySelect from '@/components/sy/Sy-select'
 import { mapGetters } from 'vuex'
 
+import QuestionSelect from '@/components/QuestionSelect'
 import HistoryQuestionList from '@/pages/result/components/HistoryQuestionList'
 import RecommendQuestionList from '@/pages/result/components/RecommendQuestionList'
 import ResultBoard from './components/ResultBoard'
 
 export default {
   name: 'PageResult',
-  mixins: [
-    appHandleQuestion
-  ],
   components: {
-    SySelect,
     HistoryQuestionList,
     RecommendQuestionList,
-    ResultBoard
+    ResultBoard,
+    QuestionSelect
   },
   data () {
     return {
@@ -88,7 +61,7 @@ export default {
       let question = this.$route.query.question
       let bookmarkId = this.$route.query.bookmarkId
       if (question) {
-        this.app_setQuestion(question)
+        this.$store.commit('bookmark/setAppQuestion', question)
         this.fetchApiAsk({ question, 'bookmark_Id': bookmarkId })
       }
     },
@@ -115,7 +88,7 @@ export default {
     onBookmarkChange (bookmarkId) {
       this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId).then(state => {
         this.clearLayout()
-        this.app_setQuestion('')
+        this.$store.commit('bookmark/setAppQuestion', '')
         this.showLayout = false
       })
     }
@@ -123,6 +96,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.result-page {
+  .result-question-select-block {
+    margin: 23px 0 20px;
+  }
+}
 .result-layout {
   display: flex;
   justify-content: space-between;

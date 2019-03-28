@@ -14,5 +14,8 @@ export default {
   },
   [types.SET_QUICKSTART_RESULT] (state, result) {
     state.quickstartResult = result || {}
+  },
+  setAppQuestion (state, data) {
+    state.appQuestion = data
   }
 }

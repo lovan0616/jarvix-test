@@ -1,18 +1,21 @@
 <template>
-  <div class="search-block">
-    <sy-select class="bookmark-select"
-      :selected="bookmarkId"
-      :items="bookmarks"
-      placeholder="请选择bookmark"
-      @update:selected="onBookmarkChange"
-    ></sy-select>
+  <div class="question-search-block">
+    <div class="bookmark-select-block">
+      <svg-icon icon-class="folder" class="bookmark-select-icon"></svg-icon>
+      <sy-select class="bookmark-select"
+        :selected="bookmarkId"
+        :items="bookmarks"
+        placeholder="请选择bookmark"
+        @update:selected="onBookmarkChange"
+      ></sy-select>
+    </div>
     <el-autocomplete class="question-input"
       ref="autocomplete"
-      v-model="app_question"
-      :fetch-suggestions="app_querySearch"
-      :placeholder="app_question_placeholder"
-      @keypress.enter.native="app_onEnterQuestion"
-      @select="app_onEnterQuestion"
+      v-model="appQuestion"
+      :fetch-suggestions="appQuerySearch"
+      :placeholder="appQuestionPlaceholder"
+      @keypress.enter.native="enterQuestion"
+      @select="enterQuestion"
     ></el-autocomplete>
   </div>
 </template>
@@ -27,32 +30,71 @@ export default {
   },
   data () {
     return {
-      app_question: '',
-      app_question_placeholder: '请输入想问的问题'
+      appQuestionPlaceholder: '请输入想问的问题'
     }
   },
   methods: {
     onBookmarkChange (bookmarkId) {
       this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
+    },
+    enterQuestion (e) {
+      this.$refs.autocomplete.close()
+      this.$refs.autocomplete.$refs.input.$refs.input.blur()
+      this.setResultRouter()
+    },
+    appQuerySearch (queryString, cb) {
+      cb(this.suggestions.map(value => ({ value })))
+    },
+    setResultRouter () {
+      this.$router.push({
+        name: 'PageResult',
+        query: {
+          question: this.appQuestion,
+          '_': new Date().getTime(),
+          bookmarkId: this.bookmarkId
+        }
+      })
     }
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks'])
+    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'suggestions']),
+    appQuestion: {
+      get () {
+        return this.$store.getters['bookmark/appQuestion']
+      },
+      set (value) {
+        this.$store.commit('bookmark/setAppQuestion', value)
+      }
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
+.question-search-block {
+  display: flex;
+
+  .bookmark-select-block {
+    width: 21.25%;
+    position: relative;
+
+    .bookmark-select-icon {
+      position: absolute;
+      top: 12px;
+      left: 4px;
+    }
+
+    .bookmark-select {
+      width: 100%;
+    }
+  }
+}
+</style>
+<style lang="scss">
 @import '../../src/styles/common/variables.scss';
 @import '../../src/styles/common/composes/texts.scss';
 
-.search-block {
-  display: flex;
-  .bookmark-select {
-    width: 20.625%;
-  }
-}
 .question-input {
-  width: 100%;
+  flex: 1;
   padding: 0;
   font-size: $theme-font-size-x-large;
   color: #48666A;
@@ -63,7 +105,7 @@ export default {
 
   .el-input__inner {
     border: 0;
-    border-bottom: 1px solid $theme-color-black;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 0;
     background-color: transparent;
     @extend %h3;
@@ -71,11 +113,6 @@ export default {
     &::placeholder {
       color: #D8D8D8;
     }
-  }
-
-  .el-input__icon {
-    color: #7D7E7E;
-    font-size: $theme-font-size-large;
   }
 
   .el-input--prefix {

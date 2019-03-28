@@ -2,43 +2,30 @@
   <div class="page-index">
     <h1 class="page-title">{{ title }}</h1>
     <div class="page-sub-title">請選擇資料集開始詢問</div>
-    <div class="search-block">
-      <sy-select class="bookmark-select"
-        :selected="bookmarkId"
-        :items="bookmarks"
-        placeholder="请选择bookmark"
-        @update:selected="onBookmarkChange"
-      ></sy-select>
-      <el-autocomplete class="question-input"
-        ref="autocomplete"
-        v-model="app_question"
-        :fetch-suggestions="app_querySearch"
-        :placeholder="app_question_placeholder"
-        @keypress.enter.native="app_onEnterQuestion"
-        @select="app_onEnterQuestion"
-      ></el-autocomplete>
-    </div>
+    <question-select class="index-question-select-block"
+    ></question-select>
     <div class="quick-start-block"
       v-show="bookmarkId"
     >
       <h2 class="sub-title">Quick Start</h2>
       <quick-starts
         :items="quickstartWithDefaults"
-        @clickItem="app_setAndEnterQuestion"
       >
       </quick-starts>
     </div>
-    <popup-guiding :popup="popup" @update:popup="toggle"></popup-guiding>
-    <div @click="toggle"
-      class="teaching-button">
+    <popup-guiding
+      :popup="popup"
+      @update:popup="toggle"
+    ></popup-guiding>
+    <div class="teaching-button"
+      @click="toggle"
+    >
       <span>觀看教學</span>
     </div>
   </div>
 </template>
 
 <script>
-import appHandleQuestion from '../mixins/app-handle-question.js'
-import SySelect from '../components/sy/Sy-select'
 import QuestionSelect from '@/components/QuestionSelect'
 import QuickStarts from '../components/Quick-starts'
 import { mapGetters } from 'vuex'
@@ -46,12 +33,8 @@ import PopupGuiding from '../components/Popup-guiding'
 
 export default {
   name: 'PageIndex',
-  mixins: [
-    appHandleQuestion
-  ],
   components: {
     PopupGuiding,
-    SySelect,
     QuickStarts,
     QuestionSelect
   },
@@ -65,20 +48,19 @@ export default {
     this.$store.dispatch('bookmark/init')
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'quickstartWithDefaults'])
+    ...mapGetters('bookmark', ['bookmarkId', 'quickstartWithDefaults'])
   },
   methods: {
     toggle: function () {
       this.popup = !this.popup
-    },
-    onBookmarkChange (bookmarkId) {
-      this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .page-index {
+  width: 800px;
+  margin: 0 auto;
   text-align: center;
 
   .page-title {
@@ -91,6 +73,10 @@ export default {
     letter-spacing: 0.1em;
     color: #1F2D3D;
     margin-bottom: 70px;
+  }
+
+  .index-question-select-block {
+    margin-bottom: 60px;
   }
 
   .teaching-button {
