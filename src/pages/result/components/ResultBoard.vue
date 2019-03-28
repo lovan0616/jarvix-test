@@ -3,17 +3,57 @@
     <div class="board-header">
       <slot name="ResultBoardHeader"></slot>
       <a class="pin-button"
-        :class="['is-pinned']"
+        :class="{'is-pinned': pinStatus}"
         href="javascript:void(0)"
+        @click="pinToBoard"
       ><span class="pin-slash"><svg-icon icon-class="pin" class="pin-icon"></svg-icon></span></a>
     </div>
     <slot name="ResultBoardBody"></slot>
   </div>
 </template>
 <script>
-
+import axios from 'axios'
 export default {
-  name: 'ResultBoard'
+  name: 'ResultBoard',
+  props: {
+    resultInfo: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  data () {
+    return {
+      isPinned: false,
+      pinBoardId: null
+    }
+  },
+  methods: {
+    pinToBoard () {
+      if (this.isPinned) {
+        const path = window.env.API_ROOT_URL + 'api/pin/report'
+        axios.delete(path, this.pinBoardId)
+          .then(res => {
+            this.pinBoardId = null
+            this.updatePinnedStatus()
+          })
+      } else {
+        const path = window.env.API_ROOT_URL + 'api/pin/report'
+        axios.put(path, {report: this.resultInfo})
+          .then(res => {
+            this.pinBoardId = res.data.data.pin_report_id
+            this.updatePinnedStatus()
+          })
+      }
+    },
+    updatePinnedStatus () {
+      this.isPinned = !this.isPinned
+    }
+  },
+  computed: {
+    pinStatus () {
+      return this.isPinned || this.$route.name === 'PagePinboard'
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
