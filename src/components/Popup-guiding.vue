@@ -1,52 +1,55 @@
 <template>
   <div>
-    <template v-if="popup">
-      <div class="popup-guiding">
-        <div class="popup-guiding-main">
-          <div class="popup-guiding-top">
-            <div :class="['question', { 'is-actived': index + 1 === step }]"
-              v-for="(question, index) in questions" :key="question.index"
-            >
-              <div class="circle">{{ index + 1 }}</div>
-              <div>{{ question.word }}</div>
-            </div>
-          </div>
-          <div class="popup-guiding-center">
-            <div :class="['pic', { 'is-actived': index + 1 === step }]"
-              v-for="(question, index) in questions" :key="question.id"
-            >
-              {{ question.pic }}
-            </div>
-          </div>
-          <div class="popup-guiding-line"></div>
-          <div class="popup-guiding-bottom">
-            <div :class="['back', { 'is-actived': step > min }]"
-              @click="back"
-            >
-              &lt; 上一步
-            </div>
-            <div>
-              <div :class="[ 'middle-top', { 'is-actived': index + 1 === step }]"
-                v-for="(question, index) in questions" :key="question.id"
+    <transition name="popup">
+      <template v-if="popup">
+        <div class="popup-guiding">
+          <div class="popup-guiding-main">
+            <div class="popup-guiding-top">
+              <div :class="['question', { 'is-actived': index + 1 === step }]"
+                v-for="(question, index) in questions" :key="question.index"
               >
-                {{ question.hint }}
+                <div class="circle">{{ index + 1 }}</div>
+                <div>{{ question.word }}</div>
               </div>
-              <div class='middle-bottom'> {{ step }}/{{ questions.length }} </div>
             </div>
-            <div :class="['next', { 'is-actived': step < questions.length }]"
-              @click="next"
-            >
-              下一步 &gt;
+            <div class="popup-guiding-center">
+              <img :class="['pic', { 'is-actived': 1 === step }]" src="@/assets/images/step_1.jpg"/>
+              <img :class="['pic', { 'is-actived': 2 === step }]" src="@/assets/images/step_2.jpg"/>
+              <img :class="['pic', { 'is-actived': 3 === step }]" src="@/assets/images/step_3.jpg"/>
+              <!-- <img :src="question.src" :class="['pic', { 'is-actived': index + 1 === step }]"
+                v-for="(question, index) in questions" :key="question.id"
+              > -->
             </div>
-            <div :class="['understand', { 'is-actived': step === questions.length }]"
-              @click="close"
-            >
-              我知道了
+            <div class="popup-guiding-line"></div>
+            <div class="popup-guiding-bottom">
+              <div :class="['back', { 'is-actived': step > min }]"
+                @click="back"
+              >
+                &lt; 上一步
+              </div>
+              <div>
+                <div :class="[ 'middle-top', { 'is-actived': index + 1 === step }]"
+                  v-for="(question, index) in questions" :key="question.id"
+                >
+                  {{ question.hint }}
+                </div>
+                <div class='middle-bottom'> {{ step }}/{{ questions.length }} </div>
+              </div>
+              <div :class="['next', { 'is-actived': step < questions.length }]"
+                @click="next"
+              >
+                下一步 &gt;
+              </div>
+              <div :class="['understand', { 'is-actived': step === questions.length }]"
+                @click="close"
+              >
+                我知道了
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </template>
+    </transition>
   </div>
 </template>
 
@@ -62,18 +65,18 @@ export default {
       questions: [
         {
           word: '選擇資料集',
-          hint: '選擇想要分析的資料集',
-          pic: 'pic1'
+          hint: '選擇想要分析的資料集'
+          // src: '@/assets/images/step_1.jpg'
         },
         {
           word: '使用推薦問題',
-          hint: '透過推薦問題，了解問題類型以及問法',
-          pic: 'pic2'
+          hint: '透過推薦問題，了解問題類型以及問法'
+          // src: '@/assets/images/step_2.jpg'
         },
         {
           word: '查看快速指引',
-          hint: '你也可以使用「介紹資料集」，來查看資料並找出想問的問題',
-          pic: 'pic3'
+          hint: '你也可以使用「介紹資料集」，來查看資料並找出想問的問題'
+          // src: '@/assets/images/step_3.jpg'
         }
       ],
       step: 1,
