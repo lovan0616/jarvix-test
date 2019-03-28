@@ -3,7 +3,7 @@ export default {
   data () {
     return {
       app_question: '',
-      app_question_placeholder: '请输入你想问的问题'
+      app_question_placeholder: '请输入想问的问题'
     }
   },
   computed: {

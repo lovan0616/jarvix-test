@@ -8,6 +8,9 @@ export default {
   bookmarks (state) {
     return state.bookmarks
   },
+  appQuestion (state) {
+    return state.appQuestion
+  },
   suggestions (state) {
     return state.suggestions
   },

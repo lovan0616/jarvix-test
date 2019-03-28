@@ -8,17 +8,22 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'PageIndex',
-      component: () => import('@/pages/Index')
-    },
-    {
-      path: '/result',
       component: AppLayout,
       children: [
         {
           path: '/',
+          name: 'PageIndex',
+          component: () => import('@/pages/Index')
+        },
+        {
+          path: 'result',
           name: 'PageResult',
           component: () => import('@/pages/result/Index')
+        },
+        {
+          path: 'pinboard',
+          name: 'PagePinboard',
+          component: () => import('@/pages/pinboard/Index')
         }
       ]
     },
@@ -27,5 +32,13 @@ export default new Router({
       name: 'PageLogin',
       component: () => import('@/pages/login/Index')
     }
-  ]
+  ],
+  linkActiveClass: 'active',
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 })

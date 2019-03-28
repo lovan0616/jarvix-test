@@ -39,6 +39,9 @@ export default {
   mounted () {
     this.sliderInit()
   },
+  destroyed () {
+    this.mySlider.destroy()
+  },
   methods: {
     sliderInit () {
       this.mySlider = tns({

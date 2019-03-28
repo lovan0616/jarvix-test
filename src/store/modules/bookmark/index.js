@@ -10,7 +10,8 @@ export default {
     bookmarks: [],
     suggestions: [],
     quickstartNum: 3,
-    quickstartResult: {}
+    quickstartResult: {},
+    appQuestion: ''
   },
   actions,
   mutations,
