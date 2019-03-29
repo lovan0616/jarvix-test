@@ -27,10 +27,18 @@ export default {
     }
   },
   watch: {
-    template (e) {
-      if (e === undefined) this.destoryLayout()
-      else this.createLayout(this.$props)
+    template: {
+      handler (e) {
+        if (e === undefined) this.destoryLayout()
+        else this.createLayout(this.$props)
+      },
+      immediate: true
     },
+    // template (e) {
+    //   console.log(e, 'watch template')
+    //   if (e === undefined) this.destoryLayout()
+    //   else this.createLayout(this.$props)
+    // },
     data (e) {
       this.createLayout(this.$props)
     }

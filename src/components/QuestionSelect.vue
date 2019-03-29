@@ -74,7 +74,7 @@ export default {
   display: flex;
 
   .bookmark-select-block {
-    width: 21.25%;
+    width: 25%;
     position: relative;
 
     .bookmark-select-icon {

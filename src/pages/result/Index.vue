@@ -26,14 +26,12 @@ import { mapGetters } from 'vuex'
 import QuestionSelect from '@/components/QuestionSelect'
 import HistoryQuestionList from '@/pages/result/components/HistoryQuestionList'
 import RecommendQuestionList from '@/pages/result/components/RecommendQuestionList'
-import ResultBoard from './components/ResultBoard'
 
 export default {
   name: 'PageResult',
   components: {
     HistoryQuestionList,
     RecommendQuestionList,
-    ResultBoard,
     QuestionSelect
   },
   data () {
