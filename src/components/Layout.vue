@@ -34,11 +34,6 @@ export default {
       },
       immediate: true
     },
-    // template (e) {
-    //   console.log(e, 'watch template')
-    //   if (e === undefined) this.destoryLayout()
-    //   else this.createLayout(this.$props)
-    // },
     data (e) {
       this.createLayout(this.$props)
     }

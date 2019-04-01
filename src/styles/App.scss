@@ -31,6 +31,8 @@ $--font-path: '../assets/fonts/Roboto';
 @import './pages/preview-bookmark.scss';
 @import './components/slide';
 
+@import '/common/animation';
+
 .table-title {
   font-size: 22px;
   margin: 0;
