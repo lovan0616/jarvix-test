@@ -38,7 +38,7 @@ export default {
   data () {
     return {
       layout: undefined,
-      showLayout: true,
+      showLayout: false,
       historyQuestionList: []
     }
   },
