@@ -2,9 +2,9 @@
 import variables from '@/styles/common/variables.scss'
 
 const colorListDefault = [variables['theme-color-primary-dark'], variables['theme-color-primary'], '#71CBFF', '#B5F0FF', '#71F4FF']
-const colorListOnly2 = [variables['theme-color-primary'], '#B5F0FF']
-const colorList3 = ['#004F93', '#0069B6', '#1193F1']
-const colorList5 = ['#004F93', '#005AAD', '#0069B6', '#0982D9', '#1193F1']
+const colorListOnly2 = ['#3F5669', '#6DCDCF']
+const colorList3 = ['#3F5669', '#558FA1', '#6DCDCF']
+const colorList5 = ['#3F5669', '#558FA1', '#6DCDCF', '#49E6DE', '#51FCE8']
 const colorList10 = [
   '#334457',
   '#39566B',
@@ -157,7 +157,9 @@ export function xAxisDefault () {
       textStyle: {
         color: variables['theme-color-gs-dark'],
         fontSize: config.axisLabelFontSize
-      }
+      },
+      rotate: 45,
+      color: '#979797'
     }
   }
 }
@@ -225,7 +227,8 @@ export function yAxisDefault () {
       textStyle: {
         color: variables['theme-color-gs-dark'],
         fontSize: config.axisLabelFontSize
-      }
+      },
+      color: '#999999'
     }
   }
 }

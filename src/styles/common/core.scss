@@ -8,6 +8,8 @@ html, body {
   font-size: 16PX;
   letter-spacing: $theme-letter-spacing-semi-wide;
   line-height: 1.5;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 * {

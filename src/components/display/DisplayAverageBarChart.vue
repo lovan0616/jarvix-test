@@ -23,7 +23,7 @@ let scatterChartConfig = {
         color: '#E0E0E0'
       }
     },
-    barWidth: 20,
+    barMaxWidth: '18',
     markLine: {
       symbol: ['none', 'none'],
       lineStyle: {
@@ -55,7 +55,7 @@ export default {
   methods: {
     setOptions () {
       chartAddon.xAxis.data = this.dataset.index
-      chartAddon.yAxis.name = this.dataset.columns
+      // chartAddon.yAxis.name = this.dataset.columns
     }
   },
   computed: {

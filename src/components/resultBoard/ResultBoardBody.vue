@@ -23,6 +23,10 @@ export default {
     display: flex;
     justify-content: space-between;
 
+    .section-left {
+      width: 25%;
+    }
+
     .section-right {
       width: 69.44%;
     }
