@@ -26,6 +26,11 @@ export default new Router({
           component: () => import('@/pages/pinboard/Index')
         }
       ]
+    },
+    {
+      path: '/login',
+      name: 'PageLogin',
+      component: () => import('@/pages/login/Index')
     }
   ],
   linkActiveClass: 'active',

@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { mapGetters } from 'vuex'
+import { askQuestion, getHistoryQuestionList } from '@/API/Ask'
 
 import QuestionSelect from '@/components/QuestionSelect'
 import HistoryQuestionList from '@/pages/result/components/HistoryQuestionList'
@@ -69,18 +69,16 @@ export default {
     fetchApiAsk (data) {
       this.showLayout = true
       this.clearLayout()
-      const path = window.env.API_ROOT_URL + 'api/ask'
-      axios.post(path, data)
+      askQuestion(data)
         .then(res => {
-          this.layout = res.data.data
+          this.layout = res
           this.fetchHistoryQuestionList()
         })
     },
     fetchHistoryQuestionList () {
-      const path = window.env.API_ROOT_URL + 'api/ask/history'
-      axios.get(path)
+      getHistoryQuestionList()
         .then(res => {
-          this.historyQuestionList = res.data.data.history
+          this.historyQuestionList = res.history
         })
     },
     onBookmarkChange (bookmarkId) {

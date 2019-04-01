@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     findBookmarkById (bookmarkId) {
-      if (!bookmarkId) return false
+      if (!bookmarkId) return 'no bookmark'
       return this.$store.getters['bookmark/findBookmarkById'](bookmarkId)
     }
   }

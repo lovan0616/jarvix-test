@@ -1,9 +1,8 @@
 import * as types from './mutation_type'
 import co from 'co'
-import axios from 'axios'
 import router from '../../../router'
-import { handleByStatus } from '../../common/helper'
-const rootUrl = window.env.API_ROOT_URL
+import { getBookmark, setBookmarkById, getBookmarks, getSuggestions, getQuickstarts } from '@/API/Bookmark'
+// import { handleByStatus } from '../../common/helper'
 
 export default {
   init ({ commit, dispatch, state }) {
@@ -27,75 +26,32 @@ export default {
   },
   getBookmark ({ commit, state }) {
     // test
-    return axios.get(`${rootUrl}api/bookmark`).then(res => {
-      return handleByStatus({
-        handlers: {
-          200: function () {
-            commit(types.SET_BOOKMARK, res.data.data)
-            return res.data.data
-          }
-        },
-        status: res.status,
-        defaultValue: state.bookmark
-      })
+    return getBookmark().then(res => {
+      commit(types.SET_BOOKMARK, res)
+    }).catch(error => {
+      console.log(error)
     })
   },
   setBookmarkById ({ commit, state }, bookmarkId) {
-    return axios.put(`${rootUrl}api/bookmark`, {
+    return setBookmarkById({
       id: bookmarkId
     }).then(res => {
-      return handleByStatus({
-        handlers: {
-          200: function () {
-            commit(types.SET_BOOKMARK, res.data.data)
-            return res.data.data
-          }
-        },
-        status: res.status,
-        defaultValue: state.bookmark
-      })
+      commit(types.SET_BOOKMARK, res)
     })
   },
   getBookmarks ({ commit, state }) {
-    return axios.get(`${rootUrl}api/bookmarks`).then(res => {
-      return handleByStatus({
-        handlers: {
-          200: function () {
-            commit(types.SET_BOOKMARKS, res.data.data)
-            return res.data.data
-          }
-        },
-        status: res.status,
-        defaultValue: state.bookmarks
-      })
+    return getBookmarks().then(res => {
+      commit(types.SET_BOOKMARKS, res)
     })
   },
   getSuggestions ({ commit, state }) {
-    return axios.get(`${rootUrl}api/suggestions`).then(res => {
-      return handleByStatus({
-        handlers: {
-          200: function () {
-            commit(types.SET_SUGGESTIONS, res.data.data)
-            return res.data.data
-          }
-        },
-        status: res.status,
-        defaultValue: state.suggestions
-      })
+    return getSuggestions().then(res => {
+      commit(types.SET_SUGGESTIONS, res)
     })
   },
   getQuickstarts ({ commit, state }) {
-    return axios.get(`${rootUrl}api/quickstarts`).then(res => {
-      return handleByStatus({
-        handlers: {
-          200: function () {
-            commit(types.SET_QUICKSTART_RESULT, res.data.data)
-            return res.data.data
-          }
-        },
-        status: res.status,
-        defaultValue: state.quickstartResult
-      })
+    return getQuickstarts().then(res => {
+      commit(types.SET_QUICKSTART_RESULT, res)
     })
   },
   setQuestionResult ({commit, getters}, data) {

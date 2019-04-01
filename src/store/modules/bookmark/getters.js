@@ -31,8 +31,10 @@ export default {
     }, [])
   },
   findBookmarkById (state) {
-    return keyword => state.bookmarks.find(element => {
-      return element.id === keyword
-    }).name
+    return keyword => {
+      return state.bookmarks.find(element => {
+        return element.id === parseInt(keyword)
+      }).name
+    }
   }
 }

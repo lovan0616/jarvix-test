@@ -23,7 +23,7 @@
   </page-layout>
 </template>
 <script>
-import axios from 'axios'
+import { login } from '@/API/User'
 import PageLayout from '@/components/layout/PageLayout'
 export default {
   name: 'PageLogin',
@@ -40,13 +40,13 @@ export default {
   },
   methods: {
     submitForm () {
-      const path = window.env.API_ROOT_URL + 'api/login'
-      axios.post(path, {
+      login({
         user_name: this.userInfo.account,
         password: this.userInfo.password
       })
         .then(res => {
-          console.log(res.headers['set-cookie'], document.cookie)
+          localStorage.setItem('token', res.user.token)
+          this.$router.push('/')
         })
     }
   }

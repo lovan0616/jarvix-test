@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import { updatePinboard } from '@/API/Pinboard'
 export default {
   name: 'ResultBoard',
   props: {
@@ -27,19 +27,29 @@ export default {
       pinBoardId: null
     }
   },
+  mounted () {
+    // Pinboard 頁預設全都是 pin 完的狀態
+    if (this.isPinboardPage) {
+      this.updatePinnedStatus()
+      this.pinBoardId = this.$parent.$parent.$attrs.id
+    }
+  },
   methods: {
     pinToBoard () {
-      const path = window.env.API_ROOT_URL + 'api/pin/report'
       if (this.isPinned) {
-        axios.delete(path, {id: this.pinBoardId})
+        this.$store.dispatch('pinboard/deletePinboard', {id: this.pinBoardId})
           .then(res => {
-            this.pinBoardId = null
-            this.updatePinnedStatus()
+            if (this.isPinboardPage) {
+              this.$store.commit('pinboard/deletePinboard', this.pinBoardId)
+            } else {
+              this.pinBoardId = null
+              this.updatePinnedStatus()
+            }
           })
       } else {
-        axios.put(path, {report: this.resultInfo})
+        updatePinboard({report: this.resultInfo})
           .then(res => {
-            this.pinBoardId = res.data.data.pin_report_id
+            this.pinBoardId = res.pin_report_id
             this.updatePinnedStatus()
           })
       }
@@ -49,6 +59,9 @@ export default {
     }
   },
   computed: {
+    isPinboardPage () {
+      return this.$route.name === 'PagePinboard'
+    },
     pinStatus () {
       // 目前 pinboard 頁，只會有 pinned 的狀態
       return this.isPinned || this.$route.name === 'PagePinboard'

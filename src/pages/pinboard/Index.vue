@@ -2,21 +2,18 @@
   <div class="page-pinboard">
     <h1 class="page-title">Pinboard</h1>
     <layout class="single-pinboard"
-      v-if="layout"
-      v-for="(template, index) in layout"
+      v-if="pinboardList"
+      v-for="(template, index) in pinboardList"
       :key="index"
       v-bind="template"
     ></layout>
   </div>
 </template>
 <script>
-import axios from 'axios'
-
 export default {
   name: 'PagePinboard',
   data () {
     return {
-      layout: null
     }
   },
   mounted () {
@@ -24,11 +21,12 @@ export default {
   },
   methods: {
     getPinboardInfo () {
-      const path = window.env.API_ROOT_URL + 'api/pin/reports'
-      axios.get(path)
-        .then(res => {
-          this.layout = res.data.data.reports
-        })
+      this.$store.dispatch('pinboard/getPinboardList')
+    }
+  },
+  computed: {
+    pinboardList () {
+      return this.$store.state.pinboard.pinboardList
     }
   }
 }
