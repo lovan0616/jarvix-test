@@ -11,20 +11,29 @@
     ><svg-icon icon-class="arrow-right"></svg-icon></div>
     <div class="suggest-question-list">
       <div class="suggest-question-item"
-        v-for="n in 10"
-        :key="n"
+        v-for="(question, index) in questionList"
+        :key="index"
       >
-        <div class="question-category">比較類</div>
-        <div class="question-name">test{{n}}</div>
+        <div class="question-category">{{ index === 0 ? '比較類' : ''}}</div>
+        <div class="question-name"
+          @click="chooseRelatedQuestion(question)"
+        >{{ question }}</div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import { tns } from '../../../../node_modules/tiny-slider/src/tiny-slider'
 
 export default {
   name: 'RecommendQuestionList',
+  props: {
+    questionList: {
+      type: Array,
+      default: () => []
+    }
+  },
   data () {
     return {
       mySlider: null,
@@ -36,11 +45,21 @@ export default {
       ]
     }
   },
-  mounted () {
-    this.sliderInit()
-  },
   destroyed () {
     this.mySlider.destroy()
+  },
+  watch: {
+    questionList: {
+      handler (e) {
+        if (e.length) {
+          console.log(e.length)
+          this.$nextTick(() => {
+            this.sliderInit()
+          })
+        }
+      },
+      immediate: true
+    }
   },
   methods: {
     sliderInit () {
@@ -63,7 +82,13 @@ export default {
     },
     moveNext () {
       this.mySlider.goTo('next')
+    },
+    chooseRelatedQuestion (question) {
+      this.$emit('choose', { question, 'bookmark_Id': parseInt(this.bookmarkId) })
     }
+  },
+  computed: {
+    ...mapGetters('bookmark', ['bookmarkId'])
   }
 }
 </script>
@@ -91,7 +116,8 @@ export default {
     width: 20px;
     line-height: 100px;
     color: #444;
-    background: #F9F9F9;
+    background: #fff;
+    opacity: 0.9;
     text-align: center;
     z-index: 1;
     cursor: pointer;
@@ -117,6 +143,7 @@ export default {
       line-height: 1;
       letter-spacing: 0.1em;
       color: #444;
+      height: 18px;
     }
     .question-name {
       display: flex;
@@ -131,6 +158,7 @@ export default {
       line-height: 21px;
       letter-spacing: 0.5px;
       padding: 0 10px;
+      cursor: pointer;
 
       &:hover {
         transform: translate3d(0,-5px,0);

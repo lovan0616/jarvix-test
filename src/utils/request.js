@@ -28,7 +28,7 @@ service.interceptors.response.use(
       case 200:
         return res.data
       default:
-        return Promise.reject(res)
+        return Promise.reject(response)
     }
   },
   error => {

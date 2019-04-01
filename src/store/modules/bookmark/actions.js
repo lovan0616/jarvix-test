@@ -29,7 +29,9 @@ export default {
     return getBookmark().then(res => {
       commit(types.SET_BOOKMARK, res)
     }).catch(error => {
-      console.log(error)
+      if (error.status) {
+        router.push('/')
+      }
     })
   },
   setBookmarkById ({ commit, state }, bookmarkId) {

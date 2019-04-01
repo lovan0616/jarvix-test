@@ -6,7 +6,10 @@
       v-if="showLayout"
     >
       <section class="section-left-side">
-        <recommend-question-list></recommend-question-list>
+        <recommend-question-list
+          :question-list="relatedQuestionList"
+          @choose="fetchApiAsk"
+        ></recommend-question-list>
         <layout v-bind="layout"></layout>
       </section>
       <section class="section-right-side">
@@ -39,7 +42,8 @@ export default {
     return {
       layout: undefined,
       showLayout: false,
-      historyQuestionList: []
+      historyQuestionList: [],
+      relatedQuestionList: []
     }
   },
   watch: {
@@ -88,6 +92,8 @@ export default {
       askQuestion(data)
         .then(res => {
           this.layout = res
+          let relatedQuestions = res.related_questions
+          this.relatedQuestionList = relatedQuestions.vertical.concat(relatedQuestions.horizontal)
           this.fetchHistoryQuestionList()
         })
     },
