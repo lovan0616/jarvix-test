@@ -3,6 +3,7 @@
     <div class="single-history-question"
       v-for="singleQuestion in questionList"
       :key="singleQuestion.id"
+      @click="chooseHistoryQuestion(singleQuestion.bookmark_id, singleQuestion.question)"
     >
       <div class="question-database">{{ findBookmarkById(singleQuestion.bookmark_id) }}</div>
       <div class="question-name">{{ singleQuestion.question }}</div>
@@ -22,6 +23,9 @@ export default {
     findBookmarkById (bookmarkId) {
       if (!bookmarkId) return 'no bookmark'
       return this.$store.getters['bookmark/findBookmarkById'](bookmarkId)
+    },
+    chooseHistoryQuestion (bookmarkId, question) {
+      this.$emit('choose', { question, 'bookmark_Id': parseInt(bookmarkId) })
     }
   }
 }
@@ -34,6 +38,7 @@ export default {
 
   .single-history-question {
     padding: 15px;
+    cursor: pointer;
 
     &:not(:last-child) {
       border-bottom: 0.75px solid #D8D8D8;

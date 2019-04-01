@@ -13,6 +13,7 @@
         <div class="seciotn-title">歷史問題</div>
         <history-question-list
           :question-list="historyQuestionList"
+          @choose="fetchApiAsk"
         ></history-question-list>
       </section>
     </div>
@@ -42,8 +43,9 @@ export default {
     }
   },
   watch: {
-    '$route.query': function ({ question }) {
-      this.fetchApiAsk({ question })
+    '$route.query' ({ question }) {
+      if (!question) return false
+      this.fetchApiAsk({ question, 'bookmark_Id': this.bookmarkId })
     }
   },
   created () {
@@ -51,15 +53,27 @@ export default {
       this.start()
     })
   },
+  activated () {
+    // 從個人釘板回到搜尋結果，如果有記錄先組回原有的 router path
+    if (this.appQuestion && !this.$route.query.question) {
+      this.$router.push({
+        name: 'PageResult',
+        query: {
+          question: this.appQuestion,
+          '_': new Date().getTime(),
+          bookmarkId: this.bookmarkId
+        }
+      })
+    }
+  },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks'])
+    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion'])
   },
   methods: {
     start () {
       let question = this.$route.query.question
-      let bookmarkId = this.$route.query.bookmarkId
+      let bookmarkId = parseInt(this.$route.query.bookmarkId)
       if (question) {
-        this.$store.commit('bookmark/setAppQuestion', question)
         this.fetchApiAsk({ question, 'bookmark_Id': bookmarkId })
       }
     },
@@ -69,6 +83,8 @@ export default {
     fetchApiAsk (data) {
       this.showLayout = true
       this.clearLayout()
+      this.$store.commit('bookmark/setAppQuestion', data.question)
+      this.$store.commit('bookmark/setBookmarkId', data.bookmark_Id)
       askQuestion(data)
         .then(res => {
           this.layout = res

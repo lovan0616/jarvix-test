@@ -17,5 +17,8 @@ export default {
   },
   setAppQuestion (state, data) {
     state.appQuestion = data
+  },
+  setBookmarkId (state, data) {
+    state.bookmark.id = data
   }
 }
