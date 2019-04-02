@@ -173,6 +173,17 @@ export default {
     options () {
       return {
         ...this.addonOptions,
+        tooltip: {
+          trigger: 'axis',
+          backgroundColor: '#fff',
+          borderWidth: 1,
+          borderColor: '#d8d8d8',
+          padding: 10,
+          textStyle: {
+            color: '#444444'
+          },
+          extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);'
+        },
         dataset: {
           source: this.data
         },

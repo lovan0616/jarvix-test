@@ -40,20 +40,10 @@ export default {
     enterQuestion (e) {
       this.$refs.autocomplete.close()
       this.$refs.autocomplete.$refs.input.$refs.input.blur()
-      this.setResultRouter()
+      this.$store.dispatch('bookmark/updateResultRouter')
     },
     appQuerySearch (queryString, cb) {
       cb(this.suggestions.map(value => ({ value })))
-    },
-    setResultRouter () {
-      this.$router.push({
-        name: 'PageResult',
-        query: {
-          question: this.appQuestion,
-          '_': new Date().getTime(),
-          bookmarkId: this.bookmarkId
-        }
-      })
     }
   },
   computed: {

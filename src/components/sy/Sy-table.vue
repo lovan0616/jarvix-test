@@ -1,7 +1,16 @@
 <template>
   <el-table class="sy-table"
-    v-bind="tableProps"
+    :data="tableData"
+    style="width: 100%;"
+    max-height="300"
   >
+    <el-table-column
+      fixed
+      type="index"
+      width="120"
+      :index="getTableIndex"
+    >
+    </el-table-column>
     <el-table-column
       v-for="(col, i) in data.columns"
       :key="i"
@@ -30,6 +39,11 @@ export default {
     },
     autoMerge: { type: Boolean, default: false }
   },
+  methods: {
+    getTableIndex (index) {
+      return this.data.index[index]
+    }
+  },
   computed: {
     tableData () {
       if (typeof this.data !== 'object') return []
@@ -46,10 +60,10 @@ export default {
         return []
       }
     },
-    tableProps () {
-      if (this.autoMerge) return { ...this.$props, data: this.tableData, spanMethod: this.tableSpanMethod }
-      else return { ...this.$props, data: this.tableData }
-    },
+    // tableProps () {
+    //   if (this.autoMerge) return { ...this.$props, data: this.tableData, spanMethod: this.tableSpanMethod }
+    //   else return { ...this.$props, data: this.tableData }
+    // },
     tableSpanMethod () {
       let result = []
       let rowCounter = 1

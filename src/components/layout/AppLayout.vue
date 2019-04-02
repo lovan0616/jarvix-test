@@ -34,5 +34,6 @@ export default {
 
 .main {
   margin-top: $header-height;
+  margin-bottom: 64px;
 }
 </style>

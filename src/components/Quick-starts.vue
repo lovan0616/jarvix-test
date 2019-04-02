@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     onItemClick (e, item) {
-      this.$store.dispatch('bookmark/setQuestionResult', item)
+      this.$store.dispatch('bookmark/updateResultRouter', item)
     }
   }
 }
