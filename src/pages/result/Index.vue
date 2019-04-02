@@ -111,20 +111,15 @@ export default {
           this.relatedQuestionList = relatedQuestions.vertical.concat(relatedQuestions.horizontal)
           this.fetchHistoryQuestionList()
         }).catch(error => {
-          this.showLayout = false
-          this.isNoResult = true
-
-          if (axios.isCancel(error)) {
-            console.log('Rquest canceled', error.message)
-          } else {
-            // handle error
-            console.log(error)
+          if (error.response && error.response.status === 500) {
+            this.showLayout = false
+            this.isNoResult = true
           }
         })
     },
     cancelRequest () {
       if (typeof this.askCancelFunction === 'function') {
-        this.askCancelFunction()
+        this.askCancelFunction('cancel request')
       }
     },
     selectQuestion (data) {

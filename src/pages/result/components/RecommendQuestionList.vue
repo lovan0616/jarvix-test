@@ -49,7 +49,9 @@ export default {
     }
   },
   destroyed () {
-    this.mySlider.destroy()
+    if (this.mySlider) {
+      this.mySlider.destroy()
+    }
   },
   watch: {
     questionList: {
