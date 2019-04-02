@@ -52,7 +52,6 @@ export default {
     questionList: {
       handler (e) {
         if (e.length) {
-          console.log(e.length)
           this.$nextTick(() => {
             this.sliderInit()
           })
