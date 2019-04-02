@@ -1,12 +1,14 @@
 <template>
   <div class="suggest-question-block">
     <div class="arrow arrow-left"
+      v-if="questionList.length > maxDisplaySlide"
       @click="movePrev"
     ><svg-icon
       icon-class="arrow-right"
       class="arrow-icon"
     ></svg-icon></div>
     <div class="arrow arrow-right"
+      v-if="questionList.length > maxDisplaySlide"
       @click="moveNext"
     ><svg-icon icon-class="arrow-right"></svg-icon></div>
     <div class="suggest-question-list">
@@ -38,6 +40,7 @@ export default {
     return {
       mySlider: null,
       currentIndex: 0,
+      maxDisplaySlide: 4,
       categoryColor: [
         '#48666A',
         '#78A5A9',
@@ -69,7 +72,6 @@ export default {
         fixedWidth: 152,
         controls: false,
         nav: false,
-        mouseDrag: true,
         swipeAngle: false,
         loop: false,
         gutter: 15,

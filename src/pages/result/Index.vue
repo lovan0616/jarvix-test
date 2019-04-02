@@ -8,7 +8,7 @@
       <section class="section-left-side">
         <recommend-question-list
           :question-list="relatedQuestionList"
-          @choose="fetchApiAsk"
+          @choose="selectQuestion"
         ></recommend-question-list>
         <layout v-bind="layout"></layout>
       </section>
@@ -16,10 +16,13 @@
         <div class="seciotn-title">歷史問題</div>
         <history-question-list
           :question-list="historyQuestionList"
-          @choose="fetchApiAsk"
+          @choose="selectQuestion"
         ></history-question-list>
       </section>
     </div>
+    <empty-result
+      v-if="isNoResult"
+    ></empty-result>
   </div>
 </template>
 
@@ -30,24 +33,28 @@ import { askQuestion, getHistoryQuestionList } from '@/API/Ask'
 import QuestionSelect from '@/components/QuestionSelect'
 import HistoryQuestionList from '@/pages/result/components/HistoryQuestionList'
 import RecommendQuestionList from '@/pages/result/components/RecommendQuestionList'
+import EmptyResult from '@/pages/result/components/EmptyResult'
 
 export default {
   name: 'PageResult',
   components: {
     HistoryQuestionList,
     RecommendQuestionList,
-    QuestionSelect
+    QuestionSelect,
+    EmptyResult
   },
   data () {
     return {
       layout: undefined,
       showLayout: false,
+      isNoResult: false,
       historyQuestionList: [],
       relatedQuestionList: []
     }
   },
   watch: {
     '$route.query' ({ question }) {
+      console.log('watch')
       if (!question) return false
       this.fetchApiAsk({ question, 'bookmark_Id': this.bookmarkId })
     }
@@ -78,6 +85,8 @@ export default {
       let question = this.$route.query.question
       let bookmarkId = parseInt(this.$route.query.bookmarkId)
       if (question) {
+        this.$store.commit('bookmark/setAppQuestion', question)
+        this.$store.commit('bookmark/setBookmarkId', bookmarkId)
         this.fetchApiAsk({ question, 'bookmark_Id': bookmarkId })
       }
     },
@@ -85,17 +94,25 @@ export default {
       this.layout = undefined
     },
     fetchApiAsk (data) {
+      this.isNoResult = false
       this.showLayout = true
       this.clearLayout()
-      this.$store.commit('bookmark/setAppQuestion', data.question)
-      this.$store.commit('bookmark/setBookmarkId', data.bookmark_Id)
+
       askQuestion(data)
         .then(res => {
           this.layout = res
           let relatedQuestions = res.related_questions
           this.relatedQuestionList = relatedQuestions.vertical.concat(relatedQuestions.horizontal)
           this.fetchHistoryQuestionList()
+        }).catch(error => {
+          this.showLayout = false
+          this.isNoResult = true
         })
+    },
+    selectQuestion (data) {
+      this.$store.commit('bookmark/setAppQuestion', data.question)
+      this.$store.commit('bookmark/setBookmarkId', data.bookmark_Id)
+      this.$store.dispatch('bookmark/updateResultRouter')
     },
     fetchHistoryQuestionList () {
       getHistoryQuestionList()
@@ -108,6 +125,7 @@ export default {
         this.clearLayout()
         this.$store.commit('bookmark/setAppQuestion', '')
         this.showLayout = false
+        this.isNoResult = false
       })
     }
   }

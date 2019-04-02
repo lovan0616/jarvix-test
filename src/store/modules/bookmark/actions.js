@@ -56,12 +56,11 @@ export default {
       commit(types.SET_QUICKSTART_RESULT, res)
     })
   },
-  setQuestionResult ({commit, getters}, data) {
-    commit('setAppQuestion', data)
+  updateResultRouter ({commit, getters}, data) {
     router.push({
       name: 'PageResult',
       query: {
-        question: data,
+        question: data || getters.appQuestion,
         '_': new Date().getTime(),
         bookmarkId: getters.bookmarkId
       }
