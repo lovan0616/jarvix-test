@@ -3,11 +3,12 @@ import request from '@/utils/request'
 /**
  * ask question
  */
-export function askQuestion (question) {
+export function askQuestion (question, cancelFunction) {
   return request({
     url: '/ask',
     method: 'POST',
-    data: question
+    data: question,
+    cancelToken: cancelFunction
   })
 }
 

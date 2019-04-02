@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { mapGetters } from 'vuex'
 import { askQuestion, getHistoryQuestionList } from '@/API/Ask'
 
@@ -49,12 +50,12 @@ export default {
       showLayout: false,
       isNoResult: false,
       historyQuestionList: [],
-      relatedQuestionList: []
+      relatedQuestionList: [],
+      askCancelFunction: null
     }
   },
   watch: {
     '$route.query' ({ question }) {
-      console.log('watch')
       if (!question) return false
       this.fetchApiAsk({ question, 'bookmark_Id': this.bookmarkId })
     }
@@ -98,7 +99,12 @@ export default {
       this.showLayout = true
       this.clearLayout()
 
-      askQuestion(data)
+      const _this = this
+      this.cancelRequest()
+
+      askQuestion(data, new axios.CancelToken(function executor (c) {
+        _this.askCancelFunction = c
+      }))
         .then(res => {
           this.layout = res
           let relatedQuestions = res.related_questions
@@ -107,7 +113,19 @@ export default {
         }).catch(error => {
           this.showLayout = false
           this.isNoResult = true
+
+          if (axios.isCancel(error)) {
+            console.log('Rquest canceled', error.message)
+          } else {
+            // handle error
+            console.log(error)
+          }
         })
+    },
+    cancelRequest () {
+      if (typeof this.askCancelFunction === 'function') {
+        this.askCancelFunction()
+      }
     },
     selectQuestion (data) {
       this.$store.commit('bookmark/setAppQuestion', data.question)
