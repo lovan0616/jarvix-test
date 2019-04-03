@@ -1,7 +1,7 @@
 <template>
   <div class="page-index">
     <h1 class="page-title">{{ title }}</h1>
-    <div class="page-sub-title">請選擇資料集開始詢問</div>
+    <div class="page-sub-title">请选择资料集开始询问</div>
     <question-select class="index-question-select-block"
     ></question-select>
     <div class="quick-start-block"
@@ -20,7 +20,7 @@
     <div class="teaching-button"
       @click="toggle"
     >
-      <span>觀看教學</span>
+      <span>观看教学</span>
     </div>
   </div>
 </template>

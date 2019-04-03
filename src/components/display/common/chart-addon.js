@@ -1,4 +1,4 @@
-export default {
+export const chartOptions = {
   tooltip: {
     trigger: 'axis',
     backgroundColor: '#fff',

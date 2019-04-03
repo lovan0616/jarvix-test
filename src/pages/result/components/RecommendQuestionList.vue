@@ -16,7 +16,7 @@
         v-for="(question, index) in questionList"
         :key="index"
       >
-        <div class="question-category">{{ index === 0 ? '比較類' : ''}}</div>
+        <div class="question-category">{{ index === 0 ? '比较类' : ''}}</div>
         <div class="question-name"
           @click="chooseRelatedQuestion(question)"
         >{{ question }}</div>

@@ -24,6 +24,7 @@ import 'echarts/lib/chart/pie'
 import 'echarts/lib/chart/scatter'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/markLine'
+import 'echarts/lib/component/legend'
 
 import Layout from './components/Layout.vue'
 import Task from './components/Task.vue'

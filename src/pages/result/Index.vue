@@ -13,7 +13,7 @@
         <layout v-bind="layout"></layout>
       </section>
       <section class="section-right-side">
-        <div class="seciotn-title">歷史問題</div>
+        <div class="seciotn-title">历史问题</div>
         <history-question-list
           :question-list="historyQuestionList"
           @choose="selectQuestion"
