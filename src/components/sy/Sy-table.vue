@@ -1,8 +1,7 @@
 <template>
   <el-table class="sy-table"
-    :data="tableData"
+    v-bind="tableProps"
     style="width: 100%;"
-    max-height="300"
   >
     <el-table-column
       fixed
@@ -61,10 +60,16 @@ export default {
         return []
       }
     },
-    // tableProps () {
-    //   if (this.autoMerge) return { ...this.$props, data: this.tableData, spanMethod: this.tableSpanMethod }
-    //   else return { ...this.$props, data: this.tableData }
-    // },
+    tableProps () {
+      if (this.autoMerge) return { ...this.$props, data: this.tableData, spanMethod: this.tableSpanMethod }
+      else {
+        let tableProps = { ...this.$props, data: this.tableData }
+        if (!this.$props.maxHeight) {
+          this.$set(tableProps, 'maxHeight', 300)
+        }
+        return tableProps
+      }
+    },
     tableSpanMethod () {
       let result = []
       let rowCounter = 1
