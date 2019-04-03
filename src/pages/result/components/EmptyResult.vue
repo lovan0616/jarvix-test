@@ -17,6 +17,7 @@ export default {
   border-radius: 4px;
   border: 1px solid #eaeaea;
   padding: 64px;
+  margin-top: 4px;
 
   .empty-result-title {
     font-size: 24px;
