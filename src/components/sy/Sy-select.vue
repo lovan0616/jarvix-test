@@ -35,3 +35,40 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.el-select-dropdown {
+  border: none !important;
+
+  &.el-popper[x-placement^="bottom"] {
+    margin-top: -1px;
+
+    .popper__arrow {
+      display: none;
+    }
+  }
+  &.el-popper[x-placement^="top"] {
+    margin-bottom: 0;
+
+    .popper__arrow {
+      display: none;
+    }
+  }
+
+  .el-select-dropdown__wrap {
+    background-color: #D1E3E5;
+    box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+  }
+  .el-select-dropdown__item {
+    color: #444;
+
+    &.hover, &:hover, &.selected {
+      background-color: #78A5A9;
+    }
+
+    &.selected {
+      color: #fff;
+    }
+  }
+}
+</style>

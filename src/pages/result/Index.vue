@@ -7,6 +7,7 @@
     >
       <section class="section-left-side">
         <recommend-question-list
+          v-if="relatedQuestionList.length > 0"
           :question-list="relatedQuestionList"
           @choose="selectQuestion"
         ></recommend-question-list>
