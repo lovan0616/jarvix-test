@@ -9,7 +9,8 @@
   </div>
 </template>
 <script>
-import chartAddon from '@/components/display/common/chart-addon.js'
+import { chartOptions } from '@/components/display/common/chart-addon.js'
+let chartAddon = JSON.parse(JSON.stringify(chartOptions))
 let scatterChartConfig = {
   tooltip: {
     trigger: 'item'

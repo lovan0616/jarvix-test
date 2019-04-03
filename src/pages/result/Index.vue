@@ -7,22 +7,26 @@
     >
       <section class="section-left-side">
         <recommend-question-list
+          v-if="relatedQuestionList.length > 0"
           :question-list="relatedQuestionList"
           @choose="selectQuestion"
         ></recommend-question-list>
-        <layout v-bind="layout"></layout>
+        <empty-result
+          v-if="isNoResult"
+        ></empty-result>
+        <layout
+          v-else
+          v-bind="layout"
+        ></layout>
       </section>
       <section class="section-right-side">
-        <div class="seciotn-title">歷史問題</div>
+        <div class="seciotn-title">历史问题</div>
         <history-question-list
           :question-list="historyQuestionList"
           @choose="selectQuestion"
         ></history-question-list>
       </section>
     </div>
-    <empty-result
-      v-if="isNoResult"
-    ></empty-result>
   </div>
 </template>
 
@@ -108,23 +112,25 @@ export default {
         .then(res => {
           this.layout = res
           let relatedQuestions = res.related_questions
-          this.relatedQuestionList = relatedQuestions.vertical.concat(relatedQuestions.horizontal)
-          this.fetchHistoryQuestionList()
-        }).catch(error => {
-          this.showLayout = false
-          this.isNoResult = true
 
-          if (axios.isCancel(error)) {
-            console.log('Rquest canceled', error.message)
+          // 這邊後端要調整，資料集會返回空陣列
+          if (relatedQuestions.vertical) {
+            this.relatedQuestionList = relatedQuestions.vertical.concat(relatedQuestions.horizontal)
           } else {
-            // handle error
-            console.log(error)
+            this.relatedQuestionList = []
           }
+        }).catch(error => {
+          if (error.response && error.response.status === 500) {
+            this.isNoResult = true
+            this.relatedQuestionList = []
+          }
+        }).then(() => {
+          this.fetchHistoryQuestionList()
         })
     },
     cancelRequest () {
       if (typeof this.askCancelFunction === 'function') {
-        this.askCancelFunction()
+        this.askCancelFunction('cancel request')
       }
     },
     selectQuestion (data) {

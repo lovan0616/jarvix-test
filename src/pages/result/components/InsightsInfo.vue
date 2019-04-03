@@ -20,7 +20,7 @@ export default {
 <style lang="scss" scoped>
 .insights-info-block {
   background: #F1F7F7;
-  border-radius: 8px;
+  border-radius: 0 0 8px 8px;
   padding: 20px 30px 20px 50px;
   font-size: 13px;
   line-height: 22px;

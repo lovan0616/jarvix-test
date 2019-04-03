@@ -1,7 +1,7 @@
 <template>
   <nav class="nav-header">
-    <router-link class="nav-item" v-show="$route.name !== 'PageIndex'" to="/result">搜尋</router-link>
-    <router-link class="nav-item" to="/pinboard">個人釘板</router-link>
+    <router-link class="nav-item" v-show="$route.name !== 'PageIndex'" to="/result">搜寻</router-link>
+    <router-link class="nav-item" to="/pinboard">个人钉板</router-link>
   </nav>
 </template>
 <script>

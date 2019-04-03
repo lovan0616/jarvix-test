@@ -16,6 +16,7 @@
       :key="i"
       :prop="i.toString()"
       :label="(typeof col === 'number') ? col.toString() : col"
+      min-width="120"
     />
   </el-table>
 </template>

@@ -33,6 +33,7 @@ export default {
 <style lang="scss" scoped>
 .history-question-list {
   background: #FFF;
+  border: 1px solid #eaeaea;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
 

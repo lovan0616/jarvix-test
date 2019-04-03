@@ -77,6 +77,7 @@ export default {
     input {
       width: 100%;
       height: 40px;
+      padding: 0 8px;
     }
   }
   .btn-submit {

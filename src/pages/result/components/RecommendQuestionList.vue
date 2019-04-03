@@ -16,10 +16,18 @@
         v-for="(question, index) in questionList"
         :key="index"
       >
-        <div class="question-category">{{ index === 0 ? '比較類' : ''}}</div>
+        <div class="question-category">{{ index === 0 ? '比较类' : ''}}</div>
         <div class="question-name"
           @click="chooseRelatedQuestion(question)"
         >{{ question }}</div>
+      </div>
+      <div class="suggest-question-item"
+        v-if="fakeItemLength > 0"
+        v-for="index in fakeItemLength"
+        :key="'n'+index"
+      >
+        <div class="question-category"></div>
+        <div class="question-name fake-item"></div>
       </div>
     </div>
   </div>
@@ -49,7 +57,9 @@ export default {
     }
   },
   destroyed () {
-    this.mySlider.destroy()
+    if (this.mySlider) {
+      this.mySlider.destroy()
+    }
   },
   watch: {
     questionList: {
@@ -89,7 +99,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId'])
+    ...mapGetters('bookmark', ['bookmarkId']),
+    fakeItemLength () {
+      if (this.questionList.length < this.maxDisplaySlide + 1) {
+        return this.maxDisplaySlide + 1 - this.questionList.length
+      } else {
+        return 0
+      }
+    }
   }
 }
 </script>
@@ -164,6 +181,10 @@ export default {
       &:hover {
         transform: translate3d(0,-5px,0);
         box-shadow: 0 20px 35px -20px rgba(0,0,0,0.4);
+      }
+
+      &.fake-item {
+        background-color: #f4f4f4;
       }
     }
   }

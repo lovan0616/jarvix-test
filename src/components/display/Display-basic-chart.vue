@@ -14,6 +14,7 @@
 import EchartAddon from './common/addon.js'
 import {
   colorDefault,
+  colorOnly1,
   colorOnly2,
   color3,
   color5,
@@ -187,7 +188,28 @@ export default {
         dataset: {
           source: this.data
         },
-        series: this.series
+        series: this.series,
+        color: this.colorList,
+        legend: {
+          itemWidth: 12,
+          itemHeight: 12,
+          icon: 'circle',
+          itemGap: 20
+        }
+      }
+    },
+    colorList () {
+      switch (this.data[0].length) {
+        case 2:
+          return colorOnly1()
+        case 3:
+          return colorOnly2()
+        case 4:
+          return color3()
+        case 6:
+          return color5()
+        default:
+          return color10()
       }
     },
     eventHandlers () {

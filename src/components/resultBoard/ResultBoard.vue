@@ -72,6 +72,7 @@ export default {
 <style lang="scss" scoped>
 .result-board {
   background: #FFF;
+  border: 1px solid #eaeaea;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
 
@@ -101,13 +102,16 @@ export default {
       background: #78A5A9;
       color: #fff;
       border-radius: 30px;
-      padding: 0 15px;
+      padding-left: 15px;
+      transition: all 0.3s;
 
       &:after {
         content: 'pinned';
       }
 
       &:hover {
+        background-color: #67888E;
+
         &:after {
           content: 'unpin';
         }

@@ -2,6 +2,7 @@
 import variables from '@/styles/common/variables.scss'
 
 const colorListDefault = [variables['theme-color-primary-dark'], variables['theme-color-primary'], '#71CBFF', '#B5F0FF', '#71F4FF']
+const colorListOnly1 = ['#6DCDCF']
 const colorListOnly2 = ['#3F5669', '#6DCDCF']
 const colorList3 = ['#3F5669', '#558FA1', '#6DCDCF']
 const colorList5 = ['#3F5669', '#558FA1', '#6DCDCF', '#49E6DE', '#51FCE8']
@@ -20,6 +21,10 @@ const colorList10 = [
 
 export function colorDefault () {
   return colorListDefault
+}
+
+export function colorOnly1 () {
+  return colorListOnly1
 }
 
 export function colorOnly2 () {
@@ -393,7 +398,7 @@ export function seriesItemSmoothLine () {
 
 export function seriesItemBar () {
   const defaultConfig = {
-    barMaxWidth: 24
+    barMaxWidth: 18
   }
   const config = defaultConfig
   return {
@@ -404,7 +409,7 @@ export function seriesItemBar () {
 
 export function seriesItemStackBar () {
   const defaultConfig = {
-    barMaxWidth: 24
+    barMaxWidth: 18
   }
   const config = defaultConfig
   return {
