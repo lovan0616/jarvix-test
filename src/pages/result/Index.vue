@@ -112,7 +112,13 @@ export default {
         .then(res => {
           this.layout = res
           let relatedQuestions = res.related_questions
-          this.relatedQuestionList = relatedQuestions.vertical.concat(relatedQuestions.horizontal)
+
+          // 這邊後端要調整，資料集會返回空陣列
+          if (relatedQuestions.vertical) {
+            this.relatedQuestionList = relatedQuestions.vertical.concat(relatedQuestions.horizontal)
+          } else {
+            this.relatedQuestionList = []
+          }
         }).catch(error => {
           if (error.response && error.response.status === 500) {
             this.isNoResult = true
