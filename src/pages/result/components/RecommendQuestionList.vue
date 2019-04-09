@@ -18,7 +18,9 @@
       >
         <div class="question-category">{{ index === 0 ? '比较类' : ''}}</div>
         <div class="question-name"
-          @click="chooseRelatedQuestion(question)"
+          @mousedown="onDrag = false"
+          @mousemove="onDrag = true"
+          @mouseup="chooseRelatedQuestion(question)"
         >{{ question }}</div>
       </div>
       <div class="suggest-question-item"
@@ -46,6 +48,7 @@ export default {
   },
   data () {
     return {
+      onDrag: false,
       mySlider: null,
       currentIndex: 0,
       maxDisplaySlide: 4,
@@ -85,7 +88,8 @@ export default {
         swipeAngle: false,
         loop: false,
         gutter: 15,
-        speed: 500
+        speed: 500,
+        mouseDrag: true
       })
     },
     movePrev () {
@@ -95,7 +99,9 @@ export default {
       this.mySlider.goTo('next')
     },
     chooseRelatedQuestion (question) {
-      this.$emit('choose', { question, 'bookmark_Id': parseInt(this.bookmarkId) })
+      if (!this.onDrag) {
+        this.$emit('choose', { question, 'bookmark_Id': parseInt(this.bookmarkId) })
+      }
     }
   },
   computed: {
@@ -177,6 +183,7 @@ export default {
       letter-spacing: 0.5px;
       padding: 0 10px;
       cursor: pointer;
+      user-select: none;
 
       &:hover {
         transform: translate3d(0,-5px,0);
