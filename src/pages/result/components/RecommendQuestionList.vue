@@ -59,7 +59,7 @@ export default {
       ]
     }
   },
-  destroyed () {
+  beforeDestroy () {
     if (this.mySlider) {
       this.mySlider.destroy()
     }

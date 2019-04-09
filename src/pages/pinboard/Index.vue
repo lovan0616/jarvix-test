@@ -19,6 +19,9 @@ export default {
   mounted () {
     this.getPinboardInfo()
   },
+  beforeDestroy () {
+    this.$store.commit('pinboard/setPinboardList', [])
+  },
   methods: {
     getPinboardInfo () {
       this.$store.dispatch('pinboard/getPinboardList')
@@ -34,6 +37,8 @@ export default {
 <style lang="scss" scoped>
 .page-pinboard {
   .single-pinboard {
+    transition: all 0.3s;
+
     &:not(:last-child) {
       margin-bottom: 30px;
     }
