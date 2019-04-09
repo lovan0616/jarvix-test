@@ -21,7 +21,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import SySelect from '@/components/sy/Sy-select'
+import SySelect from '@/components/sy/SySelect'
 
 export default {
   name: 'QuestionSelect',
@@ -80,9 +80,6 @@ export default {
 }
 </style>
 <style lang="scss">
-@import '../../src/styles/common/variables.scss';
-@import '../../src/styles/common/composes/texts.scss';
-
 .question-input {
   flex: 1;
   padding: 0;
@@ -98,7 +95,8 @@ export default {
     border-bottom: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 0;
     background-color: transparent;
-    @extend %h3;
+    font-size: 20px;
+    letter-spacing: 2px;
 
     &::placeholder {
       color: #D8D8D8;

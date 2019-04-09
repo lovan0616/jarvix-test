@@ -16,8 +16,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import '../../../src/styles/common/variables.scss';
-
 .app-header {
   position: fixed;
   top: 0;
@@ -25,7 +23,7 @@ export default {
   width: 100%;
   height: auto;
   height: $header-height;
-  z-index: $header-z-index; /* make sure content will uper than asign left and right */
+  z-index: $header-z-index;
   background: $header-bg;
   box-shadow: $header-shadow;
 

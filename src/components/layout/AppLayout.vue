@@ -30,8 +30,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import '../../../src/styles/common/variables.scss';
-
 .main {
   margin-top: $header-height;
   margin-bottom: 64px;

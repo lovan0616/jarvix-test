@@ -1,4 +1,4 @@
-import variables from '@/styles/common/variables.scss'
+import variables from '@/styles/App.scss'
 
 const colorListDanger10 = [variables['theme-color-danger'], variables['theme-color-danger-light-1'], variables['theme-color-danger-light-2'], variables['theme-color-danger-light-3'], variables['theme-color-danger-light-4'], variables['theme-color-danger-light-5'], variables['theme-color-danger-light-6'], variables['theme-color-danger-light-7'], variables['theme-color-danger-light-8'], variables['theme-color-danger-light-9']]
 

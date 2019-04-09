@@ -1,0 +1,56 @@
+/* variables ----------------------------- */
+$footer-height: 50px;
+$container-max-width: 980px;
+$bg: transparent;
+$footer-bg: transparent;
+$main-bg: transparent;
+$center-bg: transparent;
+
+
+/* composes ----------------------------- */
+
+%maxWidth {
+  max-width: $container-max-width;
+  margin: 0 auto;
+}
+
+/* styles ----------------------------- */
+
+.sy-holy-grail {
+  display: flex;
+  flex-direction: column;
+
+  .bg {
+    @extend %default-bg;
+  }
+
+  .wrapper {
+    min-height: 100vh;
+    background: $bg;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: row;
+    background: $main-bg;
+    width: 100%;
+    min-height: calc(100vh - #{$header-height});
+    @extend %maxWidth;
+    margin-top: $header-height;
+  }
+
+  .container {
+    width: 100%;
+    height: 100%;
+    @extend %maxWidth;
+  }
+
+  .center {
+    flex: 1;
+    margin: 0;
+    background: $center-bg;
+    width: 100%;
+  }
+}

@@ -27,9 +27,9 @@
 
 <script>
 import QuestionSelect from '@/components/QuestionSelect'
-import QuickStarts from '../components/Quick-starts'
+import QuickStarts from '../components/QuickStarts'
 import { mapGetters } from 'vuex'
-import PopupGuiding from '../components/Popup-guiding'
+import PopupGuiding from '../components/PopupGuiding'
 
 export default {
   name: 'PageIndex',

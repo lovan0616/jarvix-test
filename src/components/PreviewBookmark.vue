@@ -30,9 +30,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import appHandleQuestion from '../mixins/app-handle-question.js'
-import QuickStarts from '../components/Quick-starts'
-import SySelect from '../components/sy/Sy-select'
-import SyMetaTable from '../components/sy/Sy-meta-table'
+import QuickStarts from '../components/QuickStarts'
+import SySelect from '../components/sy/SySelect'
+import SyMetaTable from '../components/sy/SyMetaTable'
 
 export default {
   name: 'PagePreviewBookmark',

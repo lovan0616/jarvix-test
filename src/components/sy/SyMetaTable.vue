@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import SyTable from './Sy-table'
+import SyTable from './SyTable'
 
 export default {
   name: 'SyMetaTable',

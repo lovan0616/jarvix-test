@@ -1,5 +1,5 @@
 
-import variables from '@/styles/common/variables.scss'
+import variables from '@/styles/App.scss'
 
 const colorListDefault = [variables['theme-color-primary-dark'], variables['theme-color-primary'], '#71CBFF', '#B5F0FF', '#71F4FF']
 const colorListOnly1 = ['#6DCDCF']
