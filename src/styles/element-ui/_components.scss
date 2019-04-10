@@ -5,3 +5,40 @@
 .el-loading-fade-leave-active {
   display: none;
 }
+
+.question-select {
+  width: 100%;
+  flex: 1;
+  padding: 0;
+  font-size: $theme-font-size-x-large;
+  color: #006464;
+
+  .el-input, .el-input__inner {
+    height: rem(40px);
+  }
+
+  .el-input__inner {
+    border: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 0;
+    background-color: transparent;
+    font-size: 20px;
+    letter-spacing: 2px;
+
+    &::placeholder {
+      color: $theme-placeholder-color;
+      font-weight: lighter;
+    }
+  }
+
+  .el-input__prefix {
+    display: flex;
+    align-items: center;
+  }
+
+  .el-input--prefix {
+    .el-input__inner {
+      padding-left: rem(40px);
+    }
+  }
+}

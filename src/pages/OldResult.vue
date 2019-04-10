@@ -40,7 +40,7 @@
 <script>
 import axios from 'axios'
 import appHandleQuestion from '../mixins/app-handle-question.js'
-import SySelect from '../components/sy/SySelect'
+import SySelect from '../components/select/SySelect'
 import { mapGetters } from 'vuex'
 
 export default {

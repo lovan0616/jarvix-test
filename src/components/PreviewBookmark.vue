@@ -31,7 +31,7 @@
 import { mapGetters } from 'vuex'
 import appHandleQuestion from '../mixins/app-handle-question.js'
 import QuickStarts from '../components/QuickStarts'
-import SySelect from '../components/sy/SySelect'
+import SySelect from '../components/select/SySelect'
 import SyMetaTable from '../components/sy/SyMetaTable'
 
 export default {

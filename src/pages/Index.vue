@@ -1,15 +1,20 @@
 <template>
   <div class="page-index">
     <h1 class="page-title">{{ title }}</h1>
-    <div class="page-sub-title">请选择资料集开始询问</div>
+    <div class="bookmark-select-region">
+      我想在<bookmark-select class="index-bookmark-select"></bookmark-select>询问问题
+    </div>
     <question-select class="index-question-select-block"
-    ></question-select>
+      icon="search"
+    >
+    </question-select>
     <div class="quick-start-block"
       v-show="bookmarkId"
     >
       <h2 class="sub-title">Quick Start</h2>
       <quick-starts
         :items="quickstartWithDefaults"
+        hasDefault
       >
       </quick-starts>
     </div>
@@ -26,7 +31,8 @@
 </template>
 
 <script>
-import QuestionSelect from '@/components/QuestionSelect'
+import BookmarkSelect from '@/components/select/BookmarkSelect'
+import QuestionSelect from '@/components/select/QuestionSelect'
 import QuickStarts from '../components/QuickStarts'
 import { mapGetters } from 'vuex'
 import PopupGuiding from '../components/PopupGuiding'
@@ -36,7 +42,8 @@ export default {
   components: {
     PopupGuiding,
     QuickStarts,
-    QuestionSelect
+    QuestionSelect,
+    BookmarkSelect
   },
   data () {
     return {
@@ -67,12 +74,15 @@ export default {
     margin: 121px 0 130px;
   }
 
-  .page-sub-title {
-    font-size: 18px;
-    line-height: 26px;
-    letter-spacing: 0.1em;
-    color: #1F2D3D;
-    margin-bottom: 70px;
+  .bookmark-select-region {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 64px;
+  }
+
+  .index-bookmark-select {
+    margin: 0 16px;
   }
 
   .index-question-select-block {
@@ -88,6 +98,7 @@ export default {
   }
   .sub-title {
     margin-top: rem(44px);
+    font-weight: 600;
   }
 }
 </style>

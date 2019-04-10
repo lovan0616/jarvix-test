@@ -1,7 +1,9 @@
 <template>
   <div class="result-page">
-    <question-select class="result-question-select-block"
-    ></question-select>
+    <div class="result-question-select-block">
+      <bookmark-select></bookmark-select>
+      <question-select></question-select>
+    </div>
     <div class="result-layout"
       v-if="showLayout"
     >
@@ -34,8 +36,8 @@
 import axios from 'axios'
 import { mapGetters } from 'vuex'
 import { askQuestion, getHistoryQuestionList } from '@/API/Ask'
-
-import QuestionSelect from '@/components/QuestionSelect'
+import BookmarkSelect from '@/components/select/BookmarkSelect'
+import QuestionSelect from '@/components/select/QuestionSelect'
 import HistoryQuestionList from '@/pages/result/components/HistoryQuestionList'
 import RecommendQuestionList from '@/pages/result/components/RecommendQuestionList'
 import EmptyResult from '@/pages/result/components/EmptyResult'
@@ -45,6 +47,7 @@ export default {
   components: {
     HistoryQuestionList,
     RecommendQuestionList,
+    BookmarkSelect,
     QuestionSelect,
     EmptyResult
   },
@@ -158,6 +161,7 @@ export default {
 <style lang="scss" scoped>
 .result-page {
   .result-question-select-block {
+    display: flex;
     margin: 23px 0 20px;
   }
 }
