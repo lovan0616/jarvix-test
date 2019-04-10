@@ -91,7 +91,7 @@ export default {
   .board-header {
     position: relative;
     padding: 15px 30px;
-    border-bottom: 1px solid #D8D8D8;
+    border-bottom: 1px solid $theme-line-color;
   }
   .pin-button {
     display: flex;
@@ -103,7 +103,7 @@ export default {
     font-size: 13px;
     line-height: 26px;
     letter-spacing: 0.02em;
-    color: #0F9696;
+    color: $theme-color-primary;
 
     &:after {
       content: 'pin to board';

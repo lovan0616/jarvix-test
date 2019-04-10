@@ -25,14 +25,14 @@ export default {
     font-size: 18px;
     line-height: 26px;
     letter-spacing: 0.1em;
-    color: #2E2E2E;
+    color: $theme-text-color-dark;
     margin-bottom: 5px;
   }
   .board-period {
     font-size: 14px;
     line-height: 14px;
     letter-spacing: 0.05em;
-    color: #979797;
+    color: $theme-text-color-light;
   }
 }
 </style>

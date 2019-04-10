@@ -42,14 +42,14 @@ export default {
     cursor: pointer;
 
     &:not(:last-child) {
-      border-bottom: 0.75px solid #D8D8D8;
+      border-bottom: 0.75px solid $theme-line-color;
     }
 
     .question-database {
       font-size: 12px;
       line-height: normal;
       letter-spacing: 0.05em;
-      color: #979797;
+      color: $theme-text-color-light;
       margin-bottom: 10px;
     }
 
@@ -58,7 +58,6 @@ export default {
       font-size: 14px;
       line-height: normal;
       letter-spacing: 0.05em;
-      color: #444;
     }
   }
 }

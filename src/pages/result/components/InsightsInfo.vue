@@ -19,13 +19,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .insights-info-block {
-  background: #F1F7F7;
+  background: $theme-secondary-bg-color;
   border-radius: 0 0 8px 8px;
   padding: 20px 30px 20px 50px;
   font-size: 13px;
   line-height: 22px;
   letter-spacing: 0.05em;
-  color: #2E2E2E;
+  color: $theme-text-color-dark;
 
   .insights-info {
     position: relative;
@@ -42,7 +42,7 @@ export default {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      border: 1px solid #0F9696;
+      border: 1px solid $theme-color-primary;
     }
 
     &:not(:last-child) {

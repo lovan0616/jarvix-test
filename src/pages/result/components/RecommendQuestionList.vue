@@ -147,7 +147,6 @@ export default {
     top: 0;
     width: 20px;
     line-height: 100px;
-    color: #444;
     background: #fff;
     opacity: 0.9;
     text-align: center;
@@ -174,7 +173,6 @@ export default {
       font-size: 18px;
       line-height: 1;
       letter-spacing: 0.1em;
-      color: #444;
       height: 18px;
     }
     .question-name {

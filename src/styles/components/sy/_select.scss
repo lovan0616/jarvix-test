@@ -1,20 +1,20 @@
 .sy-select.theme-default {
   .el-input__inner {
     border: 0;
-    border-bottom: 1px solid #7E7F7F;
+    border-bottom: 1px solid $theme-text-color-light;
     border-radius: 0;
-    color: #444;
+    color: $theme-text-color;
     background: transparent;
     @extend %p;
     padding-left: 37px;
 
     &::placeholder {
-      color: #D8D8D8;
+      color: $theme-placeholder-color;
     }
   }
 
   &.el-select .el-input .el-select__caret {
-    color: #444;
+    color: $theme-text-color;
   }
 
   .el-input__suffix {
@@ -24,7 +24,7 @@
   &.el-select:hover .el-input__inner,
   &.el-select .el-input__inner:focus,
   &.el-select .el-input.is-focus .el-input__inner {
-    border-color: #7E7F7F;
+    border-color: $theme-text-color-light;
   }
 }
 
@@ -82,7 +82,7 @@
     border-radius: 4px;
   }
   .el-select-dropdown__item {
-    color: #2E2E2E;
+    color: $theme-text-color-dark;
 
     &.hover, &:hover, &.selected {
       background-color: #EFF5F6;

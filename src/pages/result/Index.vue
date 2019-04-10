@@ -177,7 +177,6 @@ export default {
     font-size: 18px;
     line-height: 26px;
     letter-spacing: 0.1em;
-    color: #444;
     margin-bottom: 10px;
   }
 }

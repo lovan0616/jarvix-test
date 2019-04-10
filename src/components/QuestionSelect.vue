@@ -84,7 +84,7 @@ export default {
   flex: 1;
   padding: 0;
   font-size: $theme-font-size-x-large;
-  color: #48666A;
+  color: #006464;
 
   .el-input, .el-input__inner {
     height: rem(40px);
@@ -99,7 +99,7 @@ export default {
     letter-spacing: 2px;
 
     &::placeholder {
-      color: #D8D8D8;
+      color: $theme-placeholder-color;
     }
   }
 
