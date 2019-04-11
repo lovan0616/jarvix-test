@@ -2,7 +2,6 @@ import * as types from './mutation_type'
 import co from 'co'
 import router from '../../../router'
 import { getBookmark, setBookmarkById, getBookmarks, getSuggestions, getQuickstarts } from '@/API/Bookmark'
-// import { handleByStatus } from '../../common/helper'
 
 export default {
   init ({ commit, dispatch, state }) {

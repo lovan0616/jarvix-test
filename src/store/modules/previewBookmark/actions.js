@@ -1,8 +1,6 @@
 import * as types from './mutation_type'
 import co from 'co'
-import axios from 'axios'
-import { handleByStatus } from '../../common/helper'
-const rootUrl = window.env.API_ROOT_URL
+import { getBookmarkTablesById, getBookmarkTableDataById } from '@/API/Bookmark'
 
 export default {
   init ({ commit, dispatch, state }) {
@@ -15,17 +13,8 @@ export default {
   getBookmarkTables ({ commit, state, rootState }) {
     if (rootState.bookmark.bookmark === undefined) return Promise.reject(new Error('bookmark not set yet'))
     const bookmarkId = rootState.bookmark.bookmark.id
-    return axios.get(`${rootUrl}api/bookmarks/${bookmarkId}/tables`).then(res => {
-      return handleByStatus({
-        handlers: {
-          200: function () {
-            commit(types.SET_BOOKMARK_TABLES, res.data.data)
-            return res.data.data
-          }
-        },
-        status: res.status,
-        defaultValue: state.bookmarkTables
-      })
+    return getBookmarkTablesById(bookmarkId).then(res => {
+      commit(types.SET_BOOKMARK_TABLES, res)
     })
   },
   changeBookmarkTableByIndex ({ dispatch, state }, index) {
@@ -56,17 +45,8 @@ export default {
     if (state.bookmarkTable === undefined) return Promise.reject(new Error('bookmarkTable not set yet'))
     const bookmarkId = rootState.bookmark.bookmark.id
     const bookmarkTableId = state.bookmarkTable.id
-    return axios.get(`${rootUrl}api/bookmarks/${bookmarkId}/tables/${bookmarkTableId}`).then(res => {
-      return handleByStatus({
-        handlers: {
-          200: function () {
-            commit(types.SET_BOOKMARK_TABLE_DATA, res.data.data)
-            return res.data.data
-          }
-        },
-        status: res.status,
-        defaultValue: state.bookmarkTableData
-      })
+    return getBookmarkTableDataById(bookmarkId, bookmarkTableId).then(res => {
+      commit(types.SET_BOOKMARK_TABLE_DATA, res)
     })
   }
 }

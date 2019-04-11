@@ -50,3 +50,23 @@ export function getQuickstarts () {
     method: 'GET'
   })
 }
+
+/**
+ * get bookmarks table by id
+ */
+export function getBookmarkTablesById (bookmarkId) {
+  return request({
+    url: `/bookmarks/${bookmarkId}/tables`,
+    method: 'GET'
+  })
+}
+
+/**
+ * get bookmarks table data
+ */
+export function getBookmarkTableDataById (bookmarkId, bookmarkTableId) {
+  return request({
+    url: `/bookmarks/${bookmarkId}/tables/${bookmarkTableId}`,
+    method: 'GET'
+  })
+}
