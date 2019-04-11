@@ -1,22 +1,4 @@
-/* variables ----------------------------- */
-$footer-height: 50px;
-$container-max-width: 980px;
-$bg: transparent;
-$footer-bg: transparent;
-$main-bg: transparent;
-$center-bg: transparent;
-
-
-/* composes ----------------------------- */
-
-%maxWidth {
-  max-width: $container-max-width;
-  margin: 0 auto;
-}
-
-/* styles ----------------------------- */
-
-.sy-holy-grail {
+.app-layout {
   display: flex;
   flex-direction: column;
 
@@ -26,7 +8,7 @@ $center-bg: transparent;
 
   .wrapper {
     min-height: 100vh;
-    background: $bg;
+    background: transparent;
     background-size: cover;
     background-repeat: no-repeat;
   }
@@ -34,7 +16,7 @@ $center-bg: transparent;
   .main {
     display: flex;
     flex-direction: row;
-    background: $main-bg;
+    background: transparent;
     width: 100%;
     min-height: calc(100vh - #{$header-height});
     @extend %maxWidth;
@@ -50,7 +32,7 @@ $center-bg: transparent;
   .center {
     flex: 1;
     margin: 0;
-    background: $center-bg;
+    background: transparent;
     width: 100%;
   }
 }

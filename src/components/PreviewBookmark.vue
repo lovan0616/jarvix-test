@@ -32,7 +32,7 @@ import { mapGetters } from 'vuex'
 import appHandleQuestion from '../mixins/app-handle-question.js'
 import QuickStarts from '../components/QuickStarts'
 import SySelect from '../components/select/SySelect'
-import SyMetaTable from '../components/sy/SyMetaTable'
+import SyMetaTable from '../components/table/SyMetaTable'
 
 export default {
   name: 'PagePreviewBookmark',
@@ -72,3 +72,18 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.page-preview-bookmark {
+  .preview-bookmark-select {
+    margin-bottom: rem(20px);
+  }
+
+  .preview-bookmark-card-inner {
+    padding: 6px 6px;
+
+    @include response('sm') {
+      padding: 10px 10px;
+    }
+  }
+}
+</style>

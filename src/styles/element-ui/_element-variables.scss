@@ -3,9 +3,6 @@
 * copy from element-theme-chalk@2.3.3/src/common/var.scss
 */
 
-/* 引入預設主題樣式表 */
-@import '../common/variables.scss';
-
 /* Transition
 -------------------------- */
 $--all-transition: all .3s cubic-bezier(.645,.045,.355,1) !default;

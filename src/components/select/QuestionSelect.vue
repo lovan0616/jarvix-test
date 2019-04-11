@@ -36,9 +36,6 @@ export default {
     }
   },
   methods: {
-    onBookmarkChange (bookmarkId) {
-      this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
-    },
     enterQuestion (e) {
       this.$refs.autocomplete.close()
       this.$refs.autocomplete.$refs.input.$refs.input.blur()
@@ -49,7 +46,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'suggestions']),
+    ...mapGetters('bookmark', ['suggestions']),
     appQuestion: {
       get () {
         return this.$store.getters['bookmark/appQuestion']

@@ -1,5 +1,5 @@
 <template>
-  <div class="sy-holy-grail page-layout">
+  <div class="app-layout page-layout">
     <div class="wrapper">
       <AppHeader/>
       <main class="main">

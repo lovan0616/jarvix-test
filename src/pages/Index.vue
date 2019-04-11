@@ -33,9 +33,9 @@
 <script>
 import BookmarkSelect from '@/components/select/BookmarkSelect'
 import QuestionSelect from '@/components/select/QuestionSelect'
-import QuickStarts from '../components/QuickStarts'
+import QuickStarts from '@/components/QuickStarts'
+import PopupGuiding from '@/components/dialog/PopupGuiding'
 import { mapGetters } from 'vuex'
-import PopupGuiding from '../components/PopupGuiding'
 
 export default {
   name: 'PageIndex',

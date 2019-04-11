@@ -1,5 +1,5 @@
 <template>
-  <div class="sy-holy-grail">
+  <div class="app-layout">
     <div class="wrapper">
       <app-header>
         <HeaderNav slot="nav" />

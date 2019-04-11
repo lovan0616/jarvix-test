@@ -9,6 +9,7 @@
   </div>
 </template>
 <script>
+import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 let chartAddon = JSON.parse(JSON.stringify(chartOptions))
 let scatterChartConfig = {
@@ -26,7 +27,7 @@ let scatterChartConfig = {
   chartData: {
     symbolSize: 8,
     itemStyle: {
-      color: '#3F5669'
+      color: chartVariable['basicChartColor']
     },
     data: [],
     type: 'scatter'

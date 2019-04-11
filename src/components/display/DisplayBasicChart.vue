@@ -11,13 +11,13 @@
 </template>
 
 <script>
+import chartVariable from '@/styles/chart/variables.scss'
 import EchartAddon from './common/addon.js'
 import {
   colorDefault,
   colorOnly1,
   colorOnly2,
   color3,
-  color5,
   color10,
   gridDefault,
   gridInner,
@@ -50,30 +50,18 @@ import {
   seriesItemMarkLine,
   seriesItemLabel,
   seriesItemInsideLabel,
-  seriesDataColorDanger,
   seriesItemPieLabelWithValue
 } from './common/addons'
-
-import * as echartAddonPlugins from './common/plugins'
 
 import {
   emitter
 } from './common/events'
-
-import {
-  setSeriesDataColorDangerByIndex
-} from './common/fns'
 
 const eventHandlerGenerators = {
   click: emitter
 }
 
 const echartAddon = new EchartAddon({
-  'color:default': colorDefault(),
-  'color:only2': colorOnly2(),
-  'color:3': color3(),
-  'color:5': color5(),
-  'color:10': color10(),
   'grid:default': gridDefault(),
   'grid:inner': gridInner(),
   'grid:innerWithLegend': gridInnerWithLegend(),
@@ -105,10 +93,7 @@ const echartAddon = new EchartAddon({
   'seriesItem:label': seriesItemLabel(),
   'seriesItem:insideLabel': seriesItemInsideLabel(),
   'seriesItem:hideSymbol': seriesItemHideSymbol(),
-  'seriesItem:markLine': seriesItemMarkLine(),
-  'seriesData:colorDanger': seriesDataColorDanger()
-}, echartAddonPlugins, {
-  'setColorDangerByIndex': setSeriesDataColorDangerByIndex
+  'seriesItem:markLine': seriesItemMarkLine()
 })
 
 export default {
@@ -124,7 +109,6 @@ export default {
       addonOptions: echartAddon.options,
       addonSeriesItem: echartAddon.seriesItem,
       addonSeriesData: echartAddon.seriesData,
-      addonSeriesDataFns: echartAddon.seriesDataFns,
       addonSeriesItems: echartAddon.seriesItems
     }
   },
@@ -148,17 +132,13 @@ export default {
     series () {
       return this._dataset.columns.map((v, colIndex) => {
         let data
-        const needSeriesData = Object.keys(this.addonSeriesData).length > 0 || this.addonSeriesDataFns.length > 0
+        const needSeriesData = Object.keys(this.addonSeriesData).length > 0
         const isStack = (this.addonSeriesItem.stack)
         if (needSeriesData && isStack) {
           data = this._dataset.data.reduce((result, row, rowIndex) => {
             result.push({
               value: row[colIndex],
-              ...this.addonSeriesData,
-              ...this.addonSeriesDataFns.reduce((result, fn) => {
-                result = { ...result, ...fn({ colIndex, rowIndex }) }
-                return result
-              }, {})
+              ...this.addonSeriesData
             })
             return result
           }, [])
@@ -176,12 +156,12 @@ export default {
         ...this.addonOptions,
         tooltip: {
           trigger: 'axis',
-          backgroundColor: '#fff',
+          backgroundColor: chartVariable['backgroundColor'],
           borderWidth: 1,
-          borderColor: '#d8d8d8',
+          borderColor: chartVariable['borderColor'],
           padding: 10,
           textStyle: {
-            color: '#444444'
+            color: chartVariable['textColor']
           },
           extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);'
         },
@@ -201,15 +181,15 @@ export default {
     colorList () {
       switch (this.data[0].length) {
         case 2:
-          return colorOnly1()
+          return colorOnly1
         case 3:
-          return colorOnly2()
+          return colorOnly2
         case 4:
-          return color3()
+          return color3
         case 6:
-          return color5()
+          return colorDefault
         default:
-          return color10()
+          return color10
       }
     },
     eventHandlers () {
