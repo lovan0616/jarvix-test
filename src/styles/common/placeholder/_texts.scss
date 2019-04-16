@@ -1,0 +1,136 @@
+%h1 {
+  font-size: $theme-font-size-huge;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-wide;
+}
+// title
+%h3 {
+  font-size: $theme-font-size-x-large;
+  font-weight: $theme-font-weight-regular;
+  letter-spacing: $theme-letter-spacing-wide;
+}
+
+%p {
+  font-size: $theme-font-size-medium;
+  font-weight: $theme-font-weight-regular;
+  letter-spacing: $theme-letter-spacing-regular;
+}
+
+%p2 {
+  font-size: $theme-font-size-small;
+  font-weight: $theme-font-weight-regular;
+  letter-spacing: $theme-letter-spacing-regular;
+}
+
+// FIXME old guideline ------------------
+
+%h2 {
+  font-size: $theme-font-size-x-medium;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-wide;
+}
+
+/* the main table title */
+%t1 {
+  font-size: $theme-font-size-x-medium;
+  font-weight: $theme-font-weight-semi-bold;
+  letter-spacing: $theme-letter-spacing-regular;
+}
+/* for table title */
+%t2 {
+  font-size: $theme-font-size-medium;
+  font-weight: $theme-font-weight-semi-bold;
+  letter-spacing: $theme-letter-spacing-regular;
+}
+
+%t3 {
+  font-size: $theme-font-size-small;
+  font-weight: $theme-font-weight-semi-bold;
+  letter-spacing: $theme-letter-spacing-small;
+}
+/* body fontsize */
+%body {
+  font-size: $theme-font-size-small;
+  font-weight: $theme-font-weight-regular;
+  letter-spacing: $theme-letter-spacing-small;
+  &:lang(zh-cn) {
+    font-size: $theme-font-size-x-small;  
+    font-weight: $theme-font-weight-thin;
+    letter-spacing: $theme-letter-spacing-regular;
+  }
+}
+/*customize for quickstart*/
+%qs {
+  font-size: $theme-font-size-small;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-small;
+  &:lang(zh-cn) {
+    font-size: $theme-font-size-x-small;  
+    font-weight: $theme-font-weight-semi-bold;
+    letter-spacing: $theme-letter-spacing-regular;
+  }
+}
+
+
+/* Font Size -- Chart */
+
+/*Impressive content*/
+%cl {
+  font-size: $theme-font-size-small;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-regular;
+}
+/* Main content */
+%cm {
+  font-size: $theme-font-size-x-small;
+  font-weight: $theme-font-weight-semi-bold;
+  letter-spacing: $theme-letter-spacing-small;
+}
+/* Ps. */
+%cs {
+  font-size: $theme-font-size-xx-small;
+  font-weight: $theme-font-weight-regular;
+  letter-spacing: $theme-letter-spacing-small;
+}
+
+/* PieNum */
+%piNum {
+  font-size: $theme-font-size-xx-large;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-x-wide;
+}
+
+%piTxt {
+  font-size: $theme-font-size-small;
+  font-weight: $theme-font-weight-semi-bold;
+  letter-spacing: $theme-letter-spacing-regular;
+  &:lang(zh-cn) {
+    font-size: $theme-font-size-x-small;  
+    font-weight: $theme-font-weight-thin;
+    letter-spacing: $theme-letter-spacing-regular;
+  }
+}
+
+%wxl {
+  font-size: $theme-font-size-xxx-large;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-x-wide;
+}
+
+%wl {
+  font-size: $theme-font-size-xx-large;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-wide;
+}
+
+%w1 {
+  font-size: $theme-font-size-x-large;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-wide;
+}
+
+%xxl {
+  font-size: $theme-font-size-x-huge;
+  font-weight: $theme-font-weight-bold;
+  letter-spacing: $theme-letter-spacing-wide;
+}

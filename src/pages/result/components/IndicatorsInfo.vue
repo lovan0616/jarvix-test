@@ -30,14 +30,13 @@ export default {
       font-size: 13px;
       line-height: 22px;
       letter-spacing: 0.05em;
-      color: #444;
       margin-bottom: 10px;
     }
     .board-content {
       font-size: 28px;
       line-height: 1;
       letter-spacing: 0.05em;
-      color: #2E2E2E;
+      color: $theme-text-color-dark;
     }
   }
 }

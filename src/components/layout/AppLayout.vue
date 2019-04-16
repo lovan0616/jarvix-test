@@ -1,5 +1,5 @@
 <template>
-  <div class="sy-holy-grail">
+  <div class="app-layout">
     <div class="wrapper">
       <app-header>
         <HeaderNav slot="nav" />
@@ -30,8 +30,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import '../../../src/styles/common/variables.scss';
-
 .main {
   margin-top: $header-height;
   margin-bottom: 64px;

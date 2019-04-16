@@ -7,16 +7,16 @@ import VueEvents from 'vue-events'
 
 import store from './store'
 import '@/icons'
-
-import './styles/components/task.scss'
-import './styles/components/popup-guiding.scss'
-import './styles/components/container/container-block.scss'
-import './styles/components/container/container-card.scss'
-import './styles/components/display/display-index-number.scss'
-import './styles/components/display/display-index-number-diff.scss'
 import './styles/App.scss'
 
-import ElementUI from 'element-ui'
+import {
+  Select,
+  Option,
+  Table,
+  Autocomplete,
+  TableColumn,
+  Loading
+} from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
@@ -28,20 +28,11 @@ import 'echarts/lib/component/legend'
 
 import Layout from './components/Layout.vue'
 import Task from './components/Task.vue'
-import ContainerBlock from './components/container/Container-block.vue'
-import ContainerCard from './components/container/Container-card.vue'
-import DisplayBasicChart from './components/display/Display-basic-chart.vue'
-import DisplayBasicIndicator from './components/display/Display-basic-indicator.vue'
-// import DisplayIndexNumber from './components/display/Display-index-number.vue'
-// import DisplayIndexNumberDiff from './components/display/Display-index-number-diff.vue'
-// import DisplayProcessFlowChart from './components/display/Display-process-flow-chart.vue'
-
-import SyTable from './components/sy/Sy-table.vue'
-import SyHolyGrail from './components/sy/Sy-holy-grail.vue'
-import SySection from './components/sy/Sy-section.vue'
-import SyBlock from './components/sy/Sy-block.vue'
-
-import PreviewBookmark from './pages/Preview-bookmark.vue'
+import ContainerBlock from './components/container/ContainerBlock.vue'
+import ContainerCard from './components/container/ContainerCard.vue'
+import DisplayBasicChart from './components/display/DisplayBasicChart.vue'
+import SyTable from './components/table/SyTable.vue'
+import PreviewBookmark from './components/PreviewBookmark.vue'
 import InsightsInfo from '@/pages/result/components/InsightsInfo'
 import IndicatorsInfo from '@/pages/result/components/IndicatorsInfo'
 import ResultBoard from '@/components/resultBoard/ResultBoard'
@@ -51,12 +42,15 @@ import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
 
 Vue.use(VueEvents)
-Vue.use(ElementUI)
+// Element UI components
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Autocomplete)
+Vue.use(Loading)
 
 Vue.component('echart', ECharts)
-Vue.component(SyBlock.name, SyBlock)
-Vue.component(SySection.name, SySection)
-Vue.component(SyHolyGrail.name, SyHolyGrail)
 Vue.component(SyTable.name, SyTable)
 Vue.component(InsightsInfo.name, InsightsInfo)
 Vue.component(IndicatorsInfo.name, IndicatorsInfo)
@@ -65,17 +59,11 @@ Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
 Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
 Vue.component(DisplayScatterChart.name, DisplayScatterChart)
-
 Vue.component(Layout.name, Layout)
 Vue.component(Task.name, Task)
 Vue.component(ContainerBlock.name, ContainerBlock)
 Vue.component(ContainerCard.name, ContainerCard)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
-Vue.component(DisplayBasicIndicator.name, DisplayBasicIndicator)
-// Vue.component(DisplayIndexNumber.name, DisplayIndexNumber)
-// Vue.component(DisplayIndexNumberDiff.name, DisplayIndexNumberDiff)
-// Vue.component(DisplayProcessFlowChart.name, DisplayProcessFlowChart)
-
 Vue.component(PreviewBookmark.name, PreviewBookmark)
 
 Vue.config.productionTip = false

@@ -175,3 +175,9 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.task-root {
+  width: 100%;
+  min-height: 20px;
+}
+</style>

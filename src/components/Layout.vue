@@ -10,7 +10,7 @@
 
 <script>
 import Vue from 'vue'
-import axios from 'axios'
+import { queryResultData } from '@/API/Result'
 
 export default {
   name: 'Layout',
@@ -132,13 +132,8 @@ export default {
       return result
     },
     createExtendLayout (data) {
-      return this.fetchApiQuery(data)
+      return queryResultData(data)
         .then(d => this.createExtendLayoutComp(d))
-    },
-    fetchApiQuery (data) {
-      const path = window.env.API_ROOT_URL + 'api/query'
-      return axios.post(path, data)
-        .then(res => res.data.data)
     },
     createExtendLayoutComp ({ template, data = {} }) {
       if (!template) return

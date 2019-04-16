@@ -1,0 +1,38 @@
+.app-layout {
+  display: flex;
+  flex-direction: column;
+
+  .bg {
+    @extend %default-bg;
+  }
+
+  .wrapper {
+    min-height: 100vh;
+    background: transparent;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: row;
+    background: transparent;
+    width: 100%;
+    min-height: calc(100vh - #{$header-height});
+    @extend %maxWidth;
+    margin-top: $header-height;
+  }
+
+  .container {
+    width: 100%;
+    height: 100%;
+    @extend %maxWidth;
+  }
+
+  .center {
+    flex: 1;
+    margin: 0;
+    background: transparent;
+    width: 100%;
+  }
+}

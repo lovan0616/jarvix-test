@@ -10,25 +10,26 @@
 </template>
 
 <script>
+import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 let chartAddon = JSON.parse(JSON.stringify(chartOptions))
 let scatterChartConfig = {
   chartData: {
     type: 'bar',
     itemStyle: {
-      color: '#E0E0E0'
+      color: chartVariable['averageBarColor']
     },
     legendHoverLink: false,
     emphasis: {
       itemStyle: {
-        color: '#E0E0E0'
+        color: chartVariable['averageBarColor']
       }
     },
     barMaxWidth: '18',
     markLine: {
       symbol: ['none', 'none'],
       lineStyle: {
-        color: '#006464'
+        color: chartVariable['averageLineColor']
       },
       data: [
         {
@@ -78,11 +79,11 @@ export default {
           return {
             value: element,
             itemStyle: {
-              color: element === maxValue ? '#09B8C3' : '#F1616D'
+              color: element === maxValue ? chartVariable['maxValueColor'] : chartVariable['minValueColor']
             },
             emphasis: {
               itemStyle: {
-                color: element === maxValue ? '#09B8C3' : '#F1616D'
+                color: element === maxValue ? chartVariable['maxValueColor'] : chartVariable['minValueColor']
               }
             }
           }

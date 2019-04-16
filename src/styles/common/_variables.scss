@@ -1,0 +1,105 @@
+// basic
+$theme-color-white: #fff !default;
+$theme-color-black: #000 !default;
+// primary
+$theme-color-primary: #0F9696 !default;
+$theme-color-primary-dark: #006464 !default;
+// primary lighter mix
+$theme-color-primary-light-1: mix($theme-color-white, $theme-color-primary, 10%) !default; /* 53a8ff */
+$theme-color-primary-light-2: mix($theme-color-white, $theme-color-primary, 20%) !default; /* 66b1ff */
+$theme-color-primary-light-3: mix($theme-color-white, $theme-color-primary, 30%) !default; /* 79bbff */
+$theme-color-primary-light-4: mix($theme-color-white, $theme-color-primary, 40%) !default; /* 8cc5ff */
+$theme-color-primary-light-5: mix($theme-color-white, $theme-color-primary, 50%) !default; /* a0cfff */
+$theme-color-primary-light-6: mix($theme-color-white, $theme-color-primary, 60%) !default; /* b3d8ff */
+$theme-color-primary-light-7: mix($theme-color-white, $theme-color-primary, 70%) !default; /* c6e2ff */
+$theme-color-primary-light-8: mix($theme-color-white, $theme-color-primary, 80%) !default; /* d9ecff */
+$theme-color-primary-light-9: mix($theme-color-white, $theme-color-primary, 90%) !default; /* ecf5ff */
+// status
+$theme-color-success: #58D297 !default;
+$theme-color-warning: #FFDF6F !default;
+$theme-color-danger: #EB5959 !default;
+$theme-color-info: #5AD0F5 !default;
+// bg color
+$theme-secondary-bg-color: #F1F7F7;
+// line
+$theme-line-color: #d8d8d8;
+// placeholder
+$theme-placeholder-color: #d8d8d8;
+// text
+$theme-text-color-light: #979797;
+$theme-text-color: #444444;
+$theme-text-color-dark: #2e2e2e;
+// font style
+$theme-font-family-default: 'Open Sans', 'Roboto', 'PingFang TC', 'Microsolft JhengHei', 'Microsoft YaHei', 'Arial';
+// font-size
+$theme-font-size-x-huge: rem(36px);
+$theme-font-size-huge: rem(32px);
+$theme-font-size-xxx-large: rem(28px);
+$theme-font-size-xx-large: rem(24px);
+$theme-font-size-x-large: rem(22px);
+$theme-font-size-large: rem(20px);
+$theme-font-size-x-medium: rem(18px);
+$theme-font-size-medium: rem(16px);
+$theme-font-size-small: rem(14px);
+$theme-font-size-x-small: rem(13px);
+$theme-font-size-xx-small: rem(12px);
+// font-weight
+$theme-font-weight-thin: 200;
+$theme-font-weight-light: 300;
+$theme-font-weight-regular: 400;
+$theme-font-weight-semi-bold: 600;
+$theme-font-weight-bold: 700;
+$theme-font-weight-black: 900;
+// letter-space
+$theme-letter-spacing-small: 0.5px;
+$theme-letter-spacing-regular: 1px;
+$theme-letter-spacing-semi-wide: 1.5px;
+$theme-letter-spacing-wide: 2px;
+$theme-letter-spacing-x-wide: 3px;
+$theme-letter-spacing-xx-wide: 4px;
+// border-radius
+$theme-border-radius-small: 2px;
+$theme-border-radius-base: 4px;
+$theme-border-radius-large: 8px;
+$theme-border-radius-x-large: 12px;
+// box-shadow
+$theme-box-shadow-s: 0 4px 8px rgba(0, 0, 0, .08);
+$theme-box-shadow-h: 0 8px 16px rgba(0, 0, 0, .08), 0 0 36px rgba(0, 0, 0, .04);
+$theme-box-shadow-m: 0 4px 8px rgba(0, 0, 0, .08), 0 0 24px rgba(0, 0, 0, .04);
+$theme-box-shadow-l: 0 8px 16px rgba(0, 0, 0, .12), 0 0 36px rgba(0, 0, 0, .08);
+// breakpoint
+$theme-breakpoint-sm: 768px !default;
+$theme-breakpoint-md: 992px !default;
+$theme-breakpoint-lg: 1200px !default;
+$theme-breakpoint-xl: 1920px !default;
+$theme-breakpoint-4k: 3840px !default;
+
+$theme-breakpoints-spec: (
+  'xs' : (max-width: #{$theme-breakpoint-sm - 1}),
+  'sm' : (min-width: $theme-breakpoint-sm),
+  'md' : (min-width: $theme-breakpoint-md),
+  'lg' : (min-width: $theme-breakpoint-lg),
+  'xl' : (min-width: $theme-breakpoint-xl),
+  '4k' : (min-width: $theme-breakpoint-4k),
+  'xs-only' : (max-width: #{$theme-breakpoint-sm - 1}),
+  'sm-and-up' : (min-width: $theme-breakpoint-sm),
+  'sm-only': "(min-width: #{$theme-breakpoint-sm}) and (max-width: #{$theme-breakpoint-md - 1})",
+  'sm-and-down': (max-width: #{$theme-breakpoint-md - 1}),
+  'md-and-up' : (min-width: $theme-breakpoint-md),
+  'md-only': "(min-width: #{$theme-breakpoint-md}) and (max-width: #{$theme-breakpoint-lg - 1})",
+  'md-and-down': (max-width: #{$theme-breakpoint-lg - 1}),
+  'lg-and-up' : (min-width: $theme-breakpoint-lg),
+  'lg-only': "(min-width: #{$theme-breakpoint-lg}) and (max-width: #{$theme-breakpoint-xl - 1})",
+  'lg-and-down': (max-width: #{$theme-breakpoint-xl - 1}),
+  'xl-only' : "(min-width: #{$theme-breakpoint-xl}) and (max-width: #{$theme-breakpoint-4k - 1})",
+  '4k-only' : (min-width: $theme-breakpoint-4k),
+);
+
+// container
+$container-max-width: 980px;
+
+// header
+$header-z-index: 2001;
+$header-height: 54px;
+$header-bg: radial-gradient(circle at center, #315658 0%,#213939 50%);
+$header-shadow: 0 4px 8px rgba(0, 0, 0, .08), 0 0 24px rgba(0, 0, 0, .04);

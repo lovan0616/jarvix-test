@@ -1,12 +1,13 @@
+import chartVariable from '@/styles/chart/variables.scss'
 export const chartOptions = {
   tooltip: {
     trigger: 'axis',
-    backgroundColor: '#fff',
+    backgroundColor: chartVariable['backgroundColor'],
     borderWidth: 1,
-    borderColor: '#d8d8d8',
+    borderColor: chartVariable['borderColor'],
     padding: 10,
     textStyle: {
-      color: '#444444'
+      color: chartVariable['textColor']
     },
     extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);'
   },
@@ -21,11 +22,11 @@ export const chartOptions = {
     nameTextStyle: {
       fontWeight: 'bold',
       fontSize: 16,
-      color: '#444'
+      color: chartVariable['textColor']
     },
     axisLabel: {
       rotate: 45,
-      color: '#979797'
+      color: chartVariable['xAxisLabelColor']
     },
     // 刻度
     axisTick: {
@@ -40,10 +41,10 @@ export const chartOptions = {
     nameTextStyle: {
       fontWeight: 'bold',
       fontSize: 16,
-      color: '#444'
+      color: chartVariable['textColor']
     },
     axisLabel: {
-      color: '#999999'
+      color: chartVariable['yAxisLabelColor']
     },
     axisLine: {
       show: false

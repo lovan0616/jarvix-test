@@ -1,0 +1,34 @@
+:export {
+  // chart basic setting
+  textColor: $theme-text-color;
+  xAxisLabelColor: $theme-text-color-light;
+  yAxisLabelColor: #999999;
+  borderColor: $theme-line-color;
+  backgroundColor: $theme-color-white;
+  markLineColor: #006464;
+
+  // average-bar-chart
+  minValueColor: #EB5959;
+  maxValueColor: #6DCDCF;
+  averageBarColor: #E0E0E0;
+  averageLineColor: #006464;
+  
+  // chart fill color ( 3 - 5 group)
+  basicChartColor: #6DCDCF;
+  lighterChartColor: #49E6DE;
+  lightestChartColor: #51FCE8;
+  darkerChartColor: #558FA1;
+  darkestChartColor: #3F5669;
+
+  // chart color list (more than 5 group)
+  chartColorList-1: #334457;
+  chartColorList-2: #39566B;
+  chartColorList-3: #3E697E;
+  chartColorList-4: #407C91;
+  chartColorList-5: #4290A3;
+  chartColorList-6: #42A5B3;
+  chartColorList-7: #43BAC3;
+  chartColorList-8: #44D0D1;
+  chartColorList-9: #49E6DE;
+  chartColorList-10: #51FCE8;
+}

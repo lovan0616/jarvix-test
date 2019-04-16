@@ -1,16 +1,13 @@
 
 export default class EchartAddon {
-  constructor (map, plugins, fns) {
+  constructor (map) {
     this._map = { ...map, empty: {} }
     this._options = {}
     this._seriesItem = {}
     this._seriesData = {}
-    this._seriesDataFns = []
     this._seriesItems = []
-    this.specialList = ['seriesItem', 'seriesData', 'seriesDataFns', 'seriesItems']
+    this.specialList = ['seriesItem', 'seriesData', 'seriesItems']
     this.specialDefaults = [{}, {}, [], []]
-    this.plugins = plugins
-    this.fns = fns
   }
 
   get map () {
@@ -47,14 +44,6 @@ export default class EchartAddon {
 
   get seriesData () {
     return this._seriesData
-  }
-
-  set seriesDataFns (v) {
-    this._seriesDataFns = v
-  }
-
-  get seriesDataFns () {
-    return this._seriesDataFns
   }
 
   save (mappingResult) {
@@ -94,22 +83,12 @@ export default class EchartAddon {
     return this.specialValueHandler(key, mappingResult)
   }
 
-  seriesDataFnsHandler (key, mappingResult) {
-    return this.specialFnsHandler(key, mappingResult)
-  }
-
   specialValueHandler (key, mappingResult) {
     if (this.isObject(this[key]) && this.isObject(mappingResult[key])) {
       this[key] = this.mergeDeep(this[key], mappingResult[key])
     } else {
       this[key] = mappingResult[key]
     }
-  }
-
-  specialFnsHandler (key, mappingResult) {
-    this[key] = this[key].concat(mappingResult[key].map(config => {
-      return this.fns[config.handler](...config.args)
-    }))
   }
 
   mapping (target) {
@@ -214,10 +193,6 @@ export default class EchartAddon {
       value.forEach((item, index) => {
         value[index] = this.handlePlugin(item)
       })
-    } else if (typeof value === 'string' && value.indexOf('this.plugins.') > -1) {
-      /* eslint-disable */
-      value = eval(value)
-      /* eslint-enable */
     }
     return value
   }

@@ -40,7 +40,19 @@ export default {
         this.$store.dispatch('pinboard/deletePinboard', {id: this.pinBoardId})
           .then(res => {
             if (this.isPinboardPage) {
-              this.$store.commit('pinboard/deletePinboard', this.pinBoardId)
+              /**
+               * 這邊為了避免因為資料刪除後造成畫面重新 render，所以只用 css 將物件藏起來
+               */
+              let elem = document.getElementById(this.pinBoardId)
+              // 這邊是為了 transition 所以先抓高度
+              elem.style.height = elem.offsetHeight + 'px'
+
+              window.setTimeout(() => {
+                elem.style.height = 0
+                elem.style.overflow = 'hidden'
+                elem.style.padding = 0
+                elem.style.margin = 0
+              }, 300)
             } else {
               this.pinBoardId = null
               this.updatePinnedStatus()
@@ -79,7 +91,7 @@ export default {
   .board-header {
     position: relative;
     padding: 15px 30px;
-    border-bottom: 1px solid #D8D8D8;
+    border-bottom: 1px solid $theme-line-color;
   }
   .pin-button {
     display: flex;
@@ -91,7 +103,7 @@ export default {
     font-size: 13px;
     line-height: 26px;
     letter-spacing: 0.02em;
-    color: #0F9696;
+    color: $theme-color-primary;
 
     &:after {
       content: 'pin to board';

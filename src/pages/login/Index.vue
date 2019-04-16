@@ -83,7 +83,7 @@ export default {
   .btn-submit {
     width: 120px;
     height: 40px;
-    background-color: #0F9696;
+    background-color: $theme-color-primary;
     color: #fff;
     margin-top: 32px;
     border: none;

@@ -1,0 +1,42 @@
+/**
+ * style for cover element-ui component style
+ */
+.el-loading-spinner {
+  margin-top: -12px;
+}
+
+.el-loading-fade-leave-active {
+  display: none;
+}
+
+.el-select-dropdown, .el-autocomplete-suggestion {
+  border: 1px solid #EAEAEA !important;
+
+  &.el-popper[x-placement^="bottom"] {
+    margin-top: -1px;
+
+    .popper__arrow {
+      display: none;
+    }
+  }
+  &.el-popper[x-placement^="top"] {
+    margin-bottom: 0;
+
+    .popper__arrow {
+      display: none;
+    }
+  }
+
+  .el-select-dropdown__wrap {
+    background-color: #FFFFFF;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+  }
+  .el-select-dropdown__item {
+    color: $theme-text-color-dark;
+
+    &.hover, &:hover, &.selected {
+      background-color: #EFF5F6;
+    }
+  }
+}

@@ -1,14 +1,14 @@
 <template>
   <div class="suggest-question-block">
     <div class="arrow arrow-left"
-      v-if="questionList.length > maxDisplaySlide"
+      v-if="questionList.length > maxDisplaySlide && currentIndex > 1"
       @click="movePrev"
     ><svg-icon
       icon-class="arrow-right"
       class="arrow-icon"
     ></svg-icon></div>
     <div class="arrow arrow-right"
-      v-if="questionList.length > maxDisplaySlide"
+      v-if="questionList.length > maxDisplaySlide && currentIndex < 3"
       @click="moveNext"
     ><svg-icon icon-class="arrow-right"></svg-icon></div>
     <div class="suggest-question-list">
@@ -18,7 +18,9 @@
       >
         <div class="question-category">{{ index === 0 ? '比较类' : ''}}</div>
         <div class="question-name"
-          @click="chooseRelatedQuestion(question)"
+          @mousedown="onDrag = false"
+          @mousemove="onDrag = true"
+          @mouseup="chooseRelatedQuestion(question)"
         >{{ question }}</div>
       </div>
       <div class="suggest-question-item"
@@ -46,6 +48,7 @@ export default {
   },
   data () {
     return {
+      onDrag: false,
       mySlider: null,
       currentIndex: 0,
       maxDisplaySlide: 4,
@@ -56,7 +59,7 @@ export default {
       ]
     }
   },
-  destroyed () {
+  beforeDestroy () {
     if (this.mySlider) {
       this.mySlider.destroy()
     }
@@ -75,18 +78,27 @@ export default {
   },
   methods: {
     sliderInit () {
-      this.mySlider = tns({
-        container: '.suggest-question-list',
-        items: 5,
-        slideBy: 'page',
-        fixedWidth: 152,
-        controls: false,
-        nav: false,
-        swipeAngle: false,
-        loop: false,
-        gutter: 15,
-        speed: 500
-      })
+      if (this.mySlider) {
+        this.mySlider.rebuild()
+      } else {
+        this.mySlider = tns({
+          container: '.suggest-question-list',
+          items: 5,
+          slideBy: 'page',
+          fixedWidth: 152,
+          controls: false,
+          nav: false,
+          swipeAngle: false,
+          loop: false,
+          gutter: 15,
+          speed: 500,
+          mouseDrag: true
+        })
+        this.mySlider.events.on('indexChanged', this.updateCurrentIndex)
+      }
+    },
+    updateCurrentIndex (info, eventName) {
+      this.currentIndex = info.displayIndex
     },
     movePrev () {
       this.mySlider.goTo('prev')
@@ -95,7 +107,9 @@ export default {
       this.mySlider.goTo('next')
     },
     chooseRelatedQuestion (question) {
-      this.$emit('choose', { question, 'bookmark_Id': parseInt(this.bookmarkId) })
+      if (!this.onDrag) {
+        this.$emit('choose', { question, 'bookmark_Id': parseInt(this.bookmarkId) })
+      }
     }
   },
   computed: {
@@ -133,7 +147,6 @@ export default {
     top: 0;
     width: 20px;
     line-height: 100px;
-    color: #444;
     background: #fff;
     opacity: 0.9;
     text-align: center;
@@ -160,7 +173,6 @@ export default {
       font-size: 18px;
       line-height: 1;
       letter-spacing: 0.1em;
-      color: #444;
       height: 18px;
     }
     .question-name {
@@ -177,6 +189,7 @@ export default {
       letter-spacing: 0.5px;
       padding: 0 10px;
       cursor: pointer;
+      user-select: none;
 
       &:hover {
         transform: translate3d(0,-5px,0);

@@ -1,5 +1,5 @@
 <template>
-  <div class="sy-holy-grail page-layout">
+  <div class="app-layout page-layout">
     <div class="wrapper">
       <AppHeader/>
       <main class="main">
@@ -20,8 +20,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import '../../../src/styles/common/variables.scss';
-
 .page-layout {
   .main {
     margin-top: $header-height;
