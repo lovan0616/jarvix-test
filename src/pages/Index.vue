@@ -1,6 +1,6 @@
 <template>
   <div class="page-index">
-    <h1 class="page-title">{{ title }}</h1>
+    <img src="../assets/images/sygps_logo.png" alt="sygps-logo" class="index-logo">
     <div class="bookmark-select-region">
       我想在<bookmark-select class="index-bookmark-select"></bookmark-select>询问问题
     </div>
@@ -22,11 +22,11 @@
       :popup="popup"
       @update:popup="toggle"
     ></popup-guiding>
-    <div class="teaching-button"
+    <a class="teaching-button" href="javascript:void(0)"
       @click="toggle"
     >
-      <span>观看教学</span>
-    </div>
+      观看教学
+    </a>
   </div>
 </template>
 
@@ -47,7 +47,6 @@ export default {
   },
   data () {
     return {
-      title: 'SyGPS',
       popup: false
     }
   },
@@ -69,6 +68,12 @@ export default {
   width: 800px;
   margin: 0 auto;
   text-align: center;
+
+  .index-logo {
+    width: 220px;
+    height: auto;
+    margin: 138px 0 64px;
+  }
 
   .page-title {
     margin: 121px 0 130px;
@@ -94,7 +99,7 @@ export default {
     z-index: 1;
     bottom: 30px;
     right: 30px;
-    cursor: pointer;
+    color: $theme-text-color;
   }
   .sub-title {
     margin-top: rem(44px);

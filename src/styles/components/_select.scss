@@ -6,7 +6,7 @@
     color: $theme-text-color;
     background: transparent;
     @extend %p;
-    padding-left: 37px;
+    padding-left: 30px;
 
     &::placeholder {
       color: $theme-placeholder-color;
