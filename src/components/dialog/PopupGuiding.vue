@@ -1,8 +1,8 @@
 <template>
   <transition name="popup">
-    <div class="popup-guiding" v-if="popup">
+    <div class="popup-guiding" v-if="showDialog">
       <div class="popup-guiding-main">
-        <a href="javascript:void(0)" class="btn close-button"
+        <a href="javascript:void(0)" class="btn-close"
           @click="closePopup"
         >
           <svg-icon icon-class="close" class="close-icon"></svg-icon>
@@ -24,9 +24,8 @@
         </div>
         <div class="popup-guiding-center">
           <div class="step-control-block">
-            <a href="javasctipt:void(0)"
-              class="step-control"
-              :class="{ 'is-actived': currentStep > min }"
+            <a class="step-control" href="javasctipt:void(0)"
+              v-if="currentStep > min"
               @click="chooseStep(currentStep - 1)"
             >上一步</a>
           </div>
@@ -37,19 +36,16 @@
               v-for="(step, index) in stepList"
               :key="index"
             >
-            <div class="bottom-close-button"
-              :class="{ 'is-actived': currentStep === stepList.length }"
-              @click="closePopup"
-            >
-              我知道了
-            </div>
           </div>
           <div class="step-control-block">
-            <a href="javasctipt:void(0)"
-              class="step-control"
-              :class="{ 'is-actived': currentStep < stepList.length }"
+            <a class="step-control" href="javasctipt:void(0)"
+              v-if="currentStep < stepList.length"
               @click="chooseStep(currentStep + 1)"
             >下一步</a>
+            <button class="btn-finish"
+              v-else
+              @click="closePopup"
+            >结束</button>
           </div>
         </div>
       </div>
@@ -61,9 +57,6 @@
 
 export default {
   name: 'PopupGuiding',
-  props: {
-    popup: { type: Boolean, default: false }
-  },
   data () {
     return {
       stepList: [
@@ -84,16 +77,33 @@ export default {
         }
       ],
       currentStep: 1,
-      min: 1
+      min: 1,
+      // 為了 transition
+      showDialog: false
     }
   },
+  mounted () {
+    this.showDialog = true
+    document.getElementsByTagName('body')[0].style.overflow = 'hidden'
+    document.addEventListener('click', this.autoHide, false)
+  },
+  destroyed () {
+    this.showDialog = false
+    document.getElementsByTagName('body')[0].removeAttribute('style')
+    document.removeEventListener('click', this.autoHide, false)
+  },
   methods: {
+    autoHide (evt) {
+      if (!this.$el.firstElementChild.contains(evt.target)) {
+        this.closePopup()
+      }
+    },
     chooseStep (num) {
       this.currentStep = num
     },
     closePopup () {
       this.currentStep = 1
-      this.$emit('update:popup')
+      this.$emit('update')
     }
   }
 }

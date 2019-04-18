@@ -19,8 +19,8 @@
       </quick-starts>
     </div>
     <popup-guiding
-      :popup="popup"
-      @update:popup="toggle"
+      v-if="isDisplayGuide"
+      @update="toggle"
     ></popup-guiding>
     <a class="teaching-button" href="javascript:void(0)"
       @click="toggle"
@@ -47,7 +47,7 @@ export default {
   },
   data () {
     return {
-      popup: false
+      isDisplayGuide: false
     }
   },
   created () {
@@ -57,8 +57,8 @@ export default {
     ...mapGetters('bookmark', ['bookmarkId', 'quickstartWithDefaults'])
   },
   methods: {
-    toggle: function () {
-      this.popup = !this.popup
+    toggle () {
+      this.isDisplayGuide = !this.isDisplayGuide
     }
   }
 }
@@ -91,7 +91,7 @@ export default {
   }
 
   .index-question-select-block {
-    margin-bottom: 60px;
+    margin-bottom: 40px;
   }
 
   .teaching-button {
@@ -102,7 +102,8 @@ export default {
     color: $theme-text-color;
   }
   .sub-title {
-    margin-top: rem(44px);
+    margin-top: 0;
+    line-height: 40px;
     font-weight: 600;
   }
 }
