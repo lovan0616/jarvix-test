@@ -13,11 +13,21 @@
 @import './common/animation';
 @import './common/layout';
 
-/* 引入element 自定義變數表 */
-@import './element-ui/element-variables';
-/* 改變element icon字體路徑 必須 */
-$--font-path: '~element-ui/lib/theme-chalk/fonts';
 @import './element-ui/components';
+
+/**
+ * element-ui 的載入方式是參考下方連結，主要是希望按需載入同時不需要重新 build theme
+ * https://segmentfault.com/a/1190000014510062
+ */
+/* 改變element icon字體路徑 必須 */
+@import './element-ui/element-variables';
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+@import '~element-ui/packages/theme-chalk/src/autocomplete.scss';
+@import '~element-ui/packages/theme-chalk/src/loading.scss';
+@import '~element-ui/packages/theme-chalk/src/option.scss';
+@import '~element-ui/packages/theme-chalk/src/table.scss';
+@import '~element-ui/packages/theme-chalk/src/table-column.scss';
 
 /* 改變 字體路徑 必須 */
 $--font-path: '../assets/fonts/Open_Sans';

@@ -16,7 +16,6 @@
   "dependencies": {
     "axios": "^0.18.0",
     "co": "^4.6.0",
-    "element-theme-chalk": "^2.4.1",
     "element-ui": "^2.4.1",
     "fuzzball": "^1.1.2",
     "normalize-scss": "^7.0.1",
