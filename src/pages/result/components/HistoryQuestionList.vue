@@ -54,7 +54,7 @@ export default {
     }
 
     .question-name {
-      font-weight: 300;
+      font-weight: 400;
       font-size: 14px;
       line-height: normal;
       letter-spacing: 0.05em;
