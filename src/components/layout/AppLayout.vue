@@ -31,7 +31,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .main {
-  margin-top: $header-height;
+  margin-top: 72px;
   margin-bottom: 64px;
 }
 </style>

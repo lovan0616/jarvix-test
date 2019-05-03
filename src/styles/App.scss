@@ -10,10 +10,14 @@
 @import './common/placeholder/common';
 @import './common/placeholder/bg';
 @import './common/placeholder/texts';
+@import './common/button';
 @import './common/animation';
 @import './common/layout';
 
 @import './element-ui/components';
+
+// page
+@import './pages/data-management';
 
 /**
  * element-ui 的載入方式是參考下方連結，主要是希望按需載入同時不需要重新 build theme

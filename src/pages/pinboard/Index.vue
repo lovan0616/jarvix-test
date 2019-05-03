@@ -36,6 +36,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-pinboard {
+  .page-title {
+    margin-top: 0;
+  }
   .single-pinboard {
     transition: all 0.3s;
 

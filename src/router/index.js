@@ -24,6 +24,22 @@ export default new Router({
           path: 'pinboard',
           name: 'PagePinboard',
           component: () => import('@/pages/pinboard/Index')
+        },
+        {
+          path: 'data-management',
+          component: () => import('@/pages/dataManagement/Index'),
+          children: [
+            {
+              path: '/',
+              name: 'DataSourceList',
+              component: () => import('@/pages/dataManagement/DataSourceList')
+            },
+            {
+              path: ':id',
+              name: 'DataFileList',
+              component: () => import('@/pages/dataManagement/DataFileList')
+            }
+          ]
         }
       ]
     },

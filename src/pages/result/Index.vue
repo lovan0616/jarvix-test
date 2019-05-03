@@ -162,7 +162,7 @@ export default {
 .result-page {
   .result-question-select-block {
     display: flex;
-    margin: 23px 0 20px;
+    margin-bottom: 20px;
   }
 }
 .result-layout {
