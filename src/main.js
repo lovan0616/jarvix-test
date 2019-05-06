@@ -33,13 +33,13 @@ import ContainerCard from './components/container/ContainerCard.vue'
 import DisplayBasicChart from './components/display/DisplayBasicChart.vue'
 import SyTable from './components/table/SyTable.vue'
 import PreviewBookmark from './components/PreviewBookmark.vue'
-import InsightsInfo from '@/pages/result/components/InsightsInfo'
-import IndicatorsInfo from '@/pages/result/components/IndicatorsInfo'
 import ResultBoard from '@/components/resultBoard/ResultBoard'
 import ResultBoardHeader from '@/components/resultBoard/ResultBoardHeader'
 import ResultBoardBody from '@/components/resultBoard/ResultBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
+import InsightsInfo from '@/components/display/InsightsInfo'
+import IndicatorsInfo from '@/components/display/IndicatorsInfo'
 
 Vue.use(VueEvents)
 // Element UI components

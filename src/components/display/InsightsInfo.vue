@@ -22,14 +22,13 @@ export default {
   background: $theme-secondary-bg-color;
   border-radius: 0 0 8px 8px;
   padding: 20px 30px 20px 50px;
-  font-size: 13px;
   line-height: 22px;
   letter-spacing: 0.05em;
   color: $theme-text-color-dark;
 
   .insights-info {
     position: relative;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.05em;
 
