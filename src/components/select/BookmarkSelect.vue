@@ -43,3 +43,10 @@ export default {
   }
 }
 </style>
+<style lang="scss">
+.bookmark-select.sy-select.theme-default {
+  .el-input__inner {
+    padding-left: 30px;
+  }
+}
+</style>

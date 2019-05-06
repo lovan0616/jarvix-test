@@ -6,8 +6,9 @@
       v-if="topMessage"
     >{{ topMessage }}</div>
     <div class="upload-icon-container">
-      <svg-icon icon-class="folder" class="upload-icon"></svg-icon>
+      <img src="../../../assets/images/file-upload.png" class="upload-img" alt="">
     </div>
+    
     <div class="upload-message bottom"
       v-if="bottomMessage"
     >{{ bottomMessage }}</div>
@@ -41,18 +42,12 @@ export default {
   cursor: pointer;
 
   .upload-icon-container {
-    display: flex;
     width: 120px;
-    height: 120px;
-    justify-content: center;
-    align-items: center;
-    background: #EFF5F6;
-    border: 1px dashed #78A5A9;
     margin: 0 auto;
   }
-  .upload-icon {
-    font-size: 48px;
-    color: #78A5A9;
+  .upload-img {
+    width: 100%;
+    height: auto;
   }
   .upload-message {
     font-size: 14px;

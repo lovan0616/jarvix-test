@@ -5,7 +5,7 @@
       <button type="button" class="btn btn-create"
         @click="createDataSource"
       >
-        <svg-icon icon-class="folder" class="icon"></svg-icon>新增資料源
+        <svg-icon icon-class="folder-plus" class="icon"></svg-icon>新增資料源
       </button>
     </div>
     <div class="data-table data-source-list-table">
@@ -48,16 +48,20 @@
         </div>
       </div>
     </div>
+    <file-upload-dialog></file-upload-dialog>
   </div>
 </template>
 <script>
 import UploadBlock from './components/UploadBlock'
 import ToolTip from './components/ToolTip'
+import FileUploadDialog from './components/FileUploadDialog'
+
 export default {
   name: 'DataSourceList',
   components: {
     UploadBlock,
-    ToolTip
+    ToolTip,
+    FileUploadDialog
   },
   data () {
     return {

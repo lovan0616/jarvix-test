@@ -1,3 +1,16 @@
 .btn {
   border-radius: 4px;
+  padding: 10px 15px;
+}
+
+.btn-default {
+  color: #fff;
+  background-color: #43BAC3;
+  border: 1px solid #43BAC3;
+}
+
+.btn-outline {
+  border: 1px solid #43BAC3;
+  background-color: #fff;
+  color: #43BAC3;
 }
