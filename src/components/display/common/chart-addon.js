@@ -13,7 +13,14 @@ export const chartOptions = {
   },
   grid: {
     containLabel: true,
-    right: 0
+    right: 0,
+    left: '5%'
+  },
+  legend: {
+    itemWidth: 12,
+    itemHeight: 12,
+    icon: 'circle',
+    itemGap: 20
   },
   xAxis: {
     name: '',

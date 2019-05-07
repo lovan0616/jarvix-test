@@ -30,7 +30,8 @@ let scatterChartConfig = {
       color: chartVariable['basicChartColor']
     },
     data: [],
-    type: 'scatter'
+    type: 'scatter',
+    large: true
   }
 }
 

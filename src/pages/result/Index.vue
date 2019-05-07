@@ -170,11 +170,11 @@ export default {
   justify-content: space-between;
 
   .section-left-side {
-    width: 79.59%;
+    width: 82.84%;
   }
 
   .section-right-side {
-    width: 18.37%;
+    width: 15.67%;
   }
 
   .seciotn-title {
