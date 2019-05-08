@@ -13,16 +13,16 @@
         :class="{ 'is-scrolling': tableScrolling }"
       >
         <div class="data-table-row table-head">
-          <div class="data-table-cell name">資料源名稱
-            <button class="control-block" @click="ranking(status[0].name, status[0].type, 0)">{{ status[0].value }}</button>
+          <div class="data-table-cell name" @click="rankingData(tableHeadStatus[0].name, tableHeadStatus[0].type, 0)">資料源名稱
+            <img :class="{ 'arrowUp': tableHeadStatus[0].arrowUp }" src="@/assets/images/arrow_down.svg" class="control-block">
           </div>
           <div class="data-table-cell type">資料類型</div>
           <div class="data-table-cell user">上傳者</div>
-          <div class="data-table-cell date-create">建立日期
-            <button class="control-block" @click="ranking(status[1].name, status[1].type, 1)">{{ status[1].value }}</button>
+          <div class="data-table-cell date-create" @click="rankingData(tableHeadStatus[1].name, tableHeadStatus[1].type, 1)">建立日期
+            <img :class="{ 'arrowUp': tableHeadStatus[1].arrowUp }" src="@/assets/images/arrow_down.svg" class="control-block">
           </div>
-          <div class="data-table-cell date-modify">修改日期
-            <button class="control-block" @click="ranking(status[2].name, status[2].type, 2)">{{ status[2].value }}</button>
+          <div class="data-table-cell date-modify" @click="rankingData(tableHeadStatus[2].name, tableHeadStatus[2].type, 2)">修改日期
+            <img :class="{ 'arrowUp': tableHeadStatus[2].arrowUp }" src="@/assets/images/arrow_down.svg" class="control-block">
           </div>
           <div class="data-table-cell count">資料表數</div>
           <div class="data-table-cell action">操作</div>
@@ -101,7 +101,7 @@ export default {
           count: 4
         },
         {
-          name: 'testtesttesttesttesttesttesttesttesttesttest',
+          name: 124,
           type: 'CSV',
           user: 'frank',
           date: '2018-05-01',
@@ -205,10 +205,10 @@ export default {
           count: 6
         }
       ],
-      status: [
-        {name: 'name', type: 'asc', value: '^'},
-        {name: 'date', type: 'asc', value: '^'},
-        {name: 'modifyDate', type: 'asc', value: '^'}
+      tableHeadStatus: [
+        {name: 'name', type: 'desc', arrowUp: false},
+        {name: 'date', type: 'desc', arrowUp: false},
+        {name: 'modifyDate', type: 'desc', arrowUp: false}
       ]
     }
   },
@@ -231,14 +231,14 @@ export default {
       return this.$store.state.dataManagement.showCreateDataSourceDialog
 
     },
-    ranking (name, value, active) {
+    rankingData (name, value, active) {
       this.dataList = orderBy(this.dataList, [name], [value])
-      if (this.status[active].type === 'desc') {
-        this.status[active].type = 'asc'
-        this.status[active].value = '^'
+      if (!this.tableHeadStatus[active].arrowUp) {
+        this.tableHeadStatus[active].type = 'asc'
+        this.tableHeadStatus[active].arrowUp = true
       } else {
-        this.status[active].type = 'desc'
-        this.status[active].value = 'v'
+        this.tableHeadStatus[active].type = 'desc'
+        this.tableHeadStatus[active].arrowUp = false
       }
     },
     detectScroll () {
@@ -260,12 +260,18 @@ export default {
     .control-block {
       background-color: white;
       border: none;
+      width: 8px;
+      opacity: 0.4;
+    }
+    .arrowUp {
+      transform: rotate(180deg);
     }
     &.name {
       position: relative;
       width: 16.3%;
 
       &:hover {
+        cursor: pointer;
         .hidden-name {
           display: block;
         }
@@ -279,9 +285,15 @@ export default {
     }
     &.date-create {
       width: 15.22%;
+      &:hover {
+        cursor: pointer;
+      }
     }
     &.date-modify {
       width: 15.22%;
+      &:hover {
+        cursor: pointer;
+      }
     }
     &.count {
       width: 6.53%;
