@@ -9,20 +9,24 @@
       </button>
     </div>
     <div class="data-table data-source-list-table">
-      <div class="data-table-row table-head">
-        <div class="data-table-cell name" >資料源名稱
-          <button class="control-block" @click="ranking(status[0].name, status[0].type, 0)">{{ status[0].value }}</button>
+      <div class="data-table-head"
+        :class="{ 'is-scrolling': tableScrolling }"
+      >
+        <div class="data-table-row table-head">
+          <div class="data-table-cell name">資料源名稱
+            <button class="control-block" @click="ranking(status[0].name, status[0].type, 0)">{{ status[0].value }}</button>
+          </div>
+          <div class="data-table-cell type">資料類型</div>
+          <div class="data-table-cell user">上傳者</div>
+          <div class="data-table-cell date-create">建立日期
+            <button class="control-block" @click="ranking(status[1].name, status[1].type, 1)">{{ status[1].value }}</button>
+          </div>
+          <div class="data-table-cell date-modify">修改日期
+            <button class="control-block" @click="ranking(status[2].name, status[2].type, 2)">{{ status[2].value }}</button>
+          </div>
+          <div class="data-table-cell count">資料表數</div>
+          <div class="data-table-cell action">操作</div>
         </div>
-        <div class="data-table-cell type">資料類型</div>
-        <div class="data-table-cell user">上傳者</div>
-        <div class="data-table-cell date-create">建立日期
-          <button class="control-block" @click="ranking(status[1].name, status[1].type, 1)">{{ status[1].value }}</button>
-        </div>
-        <div class="data-table-cell date-modify">修改日期
-          <button class="control-block" @click="ranking(status[2].name, status[2].type, 2)">{{ status[2].value }}</button>
-        </div>
-        <div class="data-table-cell count">資料表數</div>
-        <div class="data-table-cell action">操作</div>
       </div>
       <!-- <upload-block
         v-if="dataList.length > 0"
@@ -30,7 +34,7 @@
         bottom-message="點擊建立您的資料源"
         @create="createDataSource"
       ></upload-block> -->
-      <div class="data-table-body">
+      <div class="data-table-body" ref="dataTableBody">
         <div
           class="data-table-row"
           v-for="(data, index) in dataList"
@@ -86,6 +90,7 @@ export default {
     return {
       showConfirmDeleteDialog: false,
       showConfirmNameChangeDialog: false,
+      tableScrolling: false,
       dataList: [
         {
           name: 123,
@@ -96,7 +101,7 @@ export default {
           count: 4
         },
         {
-          name: 124,
+          name: 'testtesttesttesttesttesttesttesttesttesttest',
           type: 'CSV',
           user: 'frank',
           date: '2018-05-01',
@@ -207,6 +212,12 @@ export default {
       ]
     }
   },
+  mounted () {
+    document.addEventListener('scroll', this.detectScroll, true)
+  },
+  destroyed () {
+    document.removeEventListener('scroll', this.detectScroll, true)
+  },
   methods: {
     createDataSource () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
@@ -229,6 +240,12 @@ export default {
         this.status[active].type = 'desc'
         this.status[active].value = 'v'
       }
+    },
+    detectScroll () {
+      let dataTableBody = this.$refs.dataTableBody
+      let firstChild = dataTableBody.childNodes[0]
+
+      this.tableScrolling = firstChild.getBoundingClientRect().top - dataTableBody.getBoundingClientRect().top !== 0
     }
   }
 }
@@ -237,13 +254,6 @@ export default {
 .data-source-list-table {
   .empty-status {
     padding-top: 50px;
-  }
-
-  .data-table-body {
-    height: 660px;
-  }
-  .scroll {
-    overflow: auto;
   }
 
   .data-table-cell {
