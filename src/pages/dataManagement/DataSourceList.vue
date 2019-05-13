@@ -224,12 +224,6 @@ export default {
     },
     closeFileUploadDialog () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-    }
-  },
-  computed: {
-    showCreateDataSourceDialog () {
-      return this.$store.state.dataManagement.showCreateDataSourceDialog
-
     },
     rankingData (name, value, active) {
       this.dataList = orderBy(this.dataList, [name], [value])
@@ -246,6 +240,11 @@ export default {
       let firstChild = dataTableBody.childNodes[0]
 
       this.tableScrolling = firstChild.getBoundingClientRect().top - dataTableBody.getBoundingClientRect().top !== 0
+    }
+  },
+  computed: {
+    showCreateDataSourceDialog () {
+      return this.$store.state.dataManagement.showCreateDataSourceDialog
     }
   }
 }
