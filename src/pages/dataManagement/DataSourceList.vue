@@ -26,15 +26,10 @@
         bottom-message="點擊建立您的資料源"
         @create="createDataSource"
       ></upload-block> -->
-      <div class="data-table-body"
-      >
+      <div class="data-table-body">
         <div class="data-table-row">
           <div class="data-table-cell name">
             <a href="" class="name-link">名稱123</a>
-            <tool-tip
-              class="hidden-name"
-              content="testtestetsttets"
-            ></tool-tip>
           </div>
           <div class="data-table-cell type">CSV</div>
           <div class="data-table-cell user">username</div>
@@ -48,29 +43,53 @@
         </div>
       </div>
     </div>
-    <file-upload-dialog></file-upload-dialog>
+    <file-upload-dialog
+      v-if="showCreateDataSourceDialog"
+      @close="closeFileUploadDialog"
+    ></file-upload-dialog>
+    <confirm-delete-dialog
+      v-if="showConfirmDeleteDialog"
+      title="刪除資料源"
+      content="您確認要刪除此資料表?"
+    ></confirm-delete-dialog>
+    <confirm-change-name-dialog
+      v-if="showConfirmNameChangeDialog"
+      title="重新命名資料源"
+    ></confirm-change-name-dialog>
   </div>
 </template>
 <script>
 import UploadBlock from './components/UploadBlock'
-import ToolTip from './components/ToolTip'
 import FileUploadDialog from './components/FileUploadDialog'
+import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
+import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
 
 export default {
   name: 'DataSourceList',
   components: {
     UploadBlock,
-    ToolTip,
-    FileUploadDialog
+    FileUploadDialog,
+    ConfirmDeleteDialog,
+    ConfirmChangeNameDialog
   },
   data () {
     return {
-      dataList: []
+      dataList: [],
+      showConfirmDeleteDialog: false,
+      showConfirmNameChangeDialog: false
     }
   },
   methods: {
     createDataSource () {
-
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
+    },
+    closeFileUploadDialog () {
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    }
+  },
+  computed: {
+    showCreateDataSourceDialog () {
+      return this.$store.state.dataManagement.showCreateDataSourceDialog
     }
   }
 }

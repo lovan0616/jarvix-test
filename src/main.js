@@ -6,6 +6,8 @@ import router from './router'
 import VueEvents from 'vue-events'
 
 import store from './store'
+import '@/utils/filters'
+import '@/utils/mixins'
 import '@/icons'
 import './styles/App.scss'
 

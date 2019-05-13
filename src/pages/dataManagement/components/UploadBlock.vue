@@ -8,7 +8,6 @@
     <div class="upload-icon-container">
       <img src="../../../assets/images/file-upload.png" class="upload-img" alt="">
     </div>
-    
     <div class="upload-message bottom"
       v-if="bottomMessage"
     >{{ bottomMessage }}</div>
@@ -52,7 +51,6 @@ export default {
   .upload-message {
     font-size: 14px;
     letter-spacing: 0.5px;
-    color: #444444;
 
     &.top {
       margin-bottom: 10px;

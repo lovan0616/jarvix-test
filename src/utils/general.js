@@ -56,3 +56,17 @@ export function isObject (target) {
 export function isArray (target) {
   return Array.isArray(target)
 }
+
+// 檔案狀態
+export const fileStatus = {
+  // 等待上傳
+  wait: 'wait',
+  // 禁止上傳
+  forbidden: 'forbidden',
+  // 上傳中
+  uploading: 'uploading',
+  // 上傳成功
+  success: 'success',
+  // 上傳失敗
+  fail: 'fail'
+}
