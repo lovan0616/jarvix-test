@@ -34,10 +34,13 @@ export function getBookmarks () {
 /**
  * suggestions
  */
-export function getSuggestions () {
+export function getSuggestions (id) {
   return request({
     url: '/suggestions',
-    method: 'GET'
+    method: 'GET',
+    params: {
+      bookmark_id: id
+    }
   })
 }
 

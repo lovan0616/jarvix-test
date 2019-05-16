@@ -55,6 +55,9 @@ export default {
     },
     dataPath () {
       return this.urlRoot + this.dataUrl
+    },
+    bookmarkId () {
+      return this.$store.getters['bookmark/bookmarkId']
     }
   },
   methods: {
@@ -99,9 +102,13 @@ export default {
     },
     genTaskByTemplateAndData () {
       if (!this.cancelLoading && this.intervalLoading) this.loading = true
+      // api/task/<task>/data 需要多帶 bookmark_id 給他
+      let dataTaskParams = JSON.parse(JSON.stringify(this.params))
+      dataTaskParams['bookmark_id'] = this.bookmarkId
+
       Promise.all([
         axios.post(this.templatePath, this.params).then(res => res.data.data),
-        axios.post(this.dataPath, this.params).then(res => res.data.data)
+        axios.post(this.dataPath, dataTaskParams).then(res => res.data.data)
       ]).then(res => {
         const template = res[0]
         const data = res[1]

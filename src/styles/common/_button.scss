@@ -1,0 +1,33 @@
+.btn {
+  font-size: 14px;
+  font-weight: 300;
+  border-radius: 4px;
+  padding: 10px 15px;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.15;
+  }
+}
+
+.btn-default {
+  color: #fff;
+  background-color: #43BAC3;
+  border: 1px solid #43BAC3;
+
+  &:hover, &:active {
+    background-color: #42A5B3;
+    border-color: #42A5B3;
+  }
+}
+
+.btn-outline {
+  border: 1px solid #43BAC3;
+  background-color: #fff;
+  color: #43BAC3;
+
+  &:hover, &:active {
+    color: #42A5B3;
+    border-color: #42A5B3;
+  }
+}

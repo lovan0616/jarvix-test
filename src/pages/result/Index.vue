@@ -162,7 +162,7 @@ export default {
 .result-page {
   .result-question-select-block {
     display: flex;
-    margin: 23px 0 20px;
+    margin-bottom: 20px;
   }
 }
 .result-layout {
@@ -170,11 +170,11 @@ export default {
   justify-content: space-between;
 
   .section-left-side {
-    width: 79.59%;
+    width: 82.84%;
   }
 
   .section-right-side {
-    width: 18.37%;
+    width: 15.67%;
   }
 
   .seciotn-title {

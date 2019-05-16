@@ -10,10 +10,17 @@
 @import './common/placeholder/common';
 @import './common/placeholder/bg';
 @import './common/placeholder/texts';
+@import './common/common';
+@import './common/button';
+@import './common/link';
+@import './common/input';
 @import './common/animation';
 @import './common/layout';
 
 @import './element-ui/components';
+
+// page
+@import './pages/data-management';
 
 /**
  * element-ui 的載入方式是參考下方連結，主要是希望按需載入同時不需要重新 build theme
@@ -34,6 +41,8 @@ $--font-path: '../assets/fonts/Open_Sans';
 @import './common/fonts/OpenSans';
 $--font-path: '../assets/fonts/Roboto';
 @import './common/fonts/Roboto';
+$--font-path: '../assets/fonts/Oswald';
+@import './common/fonts/Oswald';
 
 /* components */
 @import './components/task-container/container-block';
@@ -42,3 +51,4 @@ $--font-path: '../assets/fonts/Roboto';
 @import './components/slide';
 @import './components/select';
 @import './components/meta-table';
+@import './components/dialog';

@@ -46,7 +46,7 @@ export default {
     })
   },
   getSuggestions ({ commit, state }) {
-    return getSuggestions().then(res => {
+    return getSuggestions(state.bookmark.id).then(res => {
       commit(types.SET_SUGGESTIONS, res)
     })
   },

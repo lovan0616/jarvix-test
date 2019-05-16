@@ -4,8 +4,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueEvents from 'vue-events'
-
+import VeeValidate from 'vee-validate'
 import store from './store'
+import '@/utils/filters'
+import '@/utils/mixins'
 import '@/icons'
 import './styles/App.scss'
 
@@ -39,7 +41,8 @@ import ResultBoardBody from '@/components/resultBoard/ResultBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
 import InsightsInfo from '@/components/display/InsightsInfo'
-import IndicatorsInfo from '@/components/display/IndicatorsInfo'
+import IndicatorInfo from '@/components/display/IndicatorInfo'
+import IndicatorsList from '@/components/display/IndicatorsList'
 
 Vue.use(VueEvents)
 // Element UI components
@@ -53,7 +56,8 @@ Vue.use(Loading)
 Vue.component('echart', ECharts)
 Vue.component(SyTable.name, SyTable)
 Vue.component(InsightsInfo.name, InsightsInfo)
-Vue.component(IndicatorsInfo.name, IndicatorsInfo)
+Vue.component(IndicatorInfo.name, IndicatorInfo)
+Vue.component(IndicatorsList.name, IndicatorsList)
 Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
@@ -65,6 +69,29 @@ Vue.component(ContainerBlock.name, ContainerBlock)
 Vue.component(ContainerCard.name, ContainerCard)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
 Vue.component(PreviewBookmark.name, PreviewBookmark)
+Vue.use(VeeValidate, {
+  // 語系
+  locale: 'zh_TW',
+  // 驗證字串
+  dictionary: {
+    zh_TW: {
+      messages: {
+        required () {
+          return '欄位不得空白'
+        },
+        email () {
+          return '信箱格式錯誤'
+        },
+        numeric () {
+          return '請輸入數字'
+        },
+        max (field, length) {
+          return `最多${length}個字元`
+        }
+      }
+    }
+  }
+})
 
 Vue.config.productionTip = false
 
