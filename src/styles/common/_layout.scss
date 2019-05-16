@@ -13,14 +13,6 @@
     background-repeat: no-repeat;
   }
 
-  .main {
-    display: flex;
-    flex-direction: row;
-    background: transparent;
-    min-height: calc(100vh - #{$header-height});
-    @extend %maxWidth;
-  }
-
   .container {
     @extend %maxWidth;
     height: 100%;
@@ -32,4 +24,12 @@
     background: transparent;
     width: 100%;
   }
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  background: transparent;
+  min-height: calc(100vh - #{$header-height});
+  @extend %maxWidth;
 }

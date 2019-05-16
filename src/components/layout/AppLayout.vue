@@ -30,9 +30,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.main {
-  margin-top: 72px;
-  margin-bottom: 64px;
-  min-height: calc(100vh - 136px);
+.app-layout {
+  .main {
+    margin-top: 72px;
+    margin-bottom: 64px;
+    min-height: calc(100vh - 136px);
+  }
 }
 </style>
