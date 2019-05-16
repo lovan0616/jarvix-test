@@ -41,7 +41,8 @@ import ResultBoardBody from '@/components/resultBoard/ResultBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
 import InsightsInfo from '@/components/display/InsightsInfo'
-import IndicatorsInfo from '@/components/display/IndicatorsInfo'
+import IndicatorInfo from '@/components/display/IndicatorInfo'
+import IndicatorsList from '@/components/display/IndicatorsList'
 
 Vue.use(VueEvents)
 // Element UI components
@@ -55,7 +56,8 @@ Vue.use(Loading)
 Vue.component('echart', ECharts)
 Vue.component(SyTable.name, SyTable)
 Vue.component(InsightsInfo.name, InsightsInfo)
-Vue.component(IndicatorsInfo.name, IndicatorsInfo)
+Vue.component(IndicatorInfo.name, IndicatorInfo)
+Vue.component(IndicatorsList.name, IndicatorsList)
 Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
