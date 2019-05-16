@@ -17,7 +17,9 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-default">我知道了</button>
+        <button class="btn btn-default"
+          @click="cancelFileUpload"
+        >我知道了</button>
       </div>
     </div>
   </div>
@@ -29,6 +31,11 @@ export default {
   name: 'FileUploadFinished',
   components: {
     FileListBlock
+  },
+  methods: {
+    cancelFileUpload () {
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    }
   }
 }
 </script>

@@ -10,7 +10,7 @@ export default {
     state.bookmarks = bookmarks || []
   },
   [types.SET_SUGGESTIONS] (state, suggestions) {
-    state.suggestions = suggestions || []
+    state.suggestions = suggestions || {}
   },
   [types.SET_QUICKSTART_RESULT] (state, result) {
     state.quickstartResult = result || {}

@@ -6,7 +6,9 @@ export default {
   namespaced: true,
   state: {
     uploadFileList: [],
-    showCreateDataSourceDialog: false
+    showCreateDataSourceDialog: false,
+    fileTypeChosen: false,
+    fileLoaded: false
   },
   actions,
   mutations,

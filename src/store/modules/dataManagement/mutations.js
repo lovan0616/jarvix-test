@@ -7,5 +7,11 @@ export default {
   },
   updateShowCreateDataSourceDialog (state, data) {
     state.showCreateDataSourceDialog = data
+  },
+  updateFileTypeChosen (state, data) {
+    state.fileTypeChosen = data
+  },
+  updateFileLoaded (state, data) {
+    state.fileLoaded = data
   }
 }

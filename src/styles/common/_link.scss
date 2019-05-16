@@ -1,0 +1,23 @@
+.link {
+  font-size: 14px;
+  color: #43BAC3;
+
+  &:hover, &:active {
+    color: #42A5B3;
+    text-decoration-line: underline;
+  }
+
+  &:disabled {
+    opacity: 0.15;
+    cursor: not-allowed;
+  }
+}
+
+.link-with-icon {
+  display: flex;
+  align-items: center;
+
+  .icon {
+    margin-right: 10px;
+  }
+}

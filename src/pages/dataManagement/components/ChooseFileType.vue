@@ -2,48 +2,105 @@
   <div class="choose-file-type">
     <div class="dialog-title">新增資料</div>
     <div class="dialog-body">
-      <div class="file-type-select-block">
-        <label for="" class="upload-input-label">選擇資料類型</label>
-        <sy-select
-          :selected="fileInfo.fileType"
-          :items="fileTypsList"
-          placeholder="選擇資料類型"
-          @update:selected="fileTypsChange"
-        ></sy-select>
-        <div class="error-text">請先選擇資料類型</div>
-      </div>
-      <div class="file-source-input-block">
-        <label for="" class="upload-input-label">輸入資料源名稱</label>
-        <input type="text" class="input file-source-input"
-          placeholder="輸入資料源名稱"
+      <div class="input-block-container">
+        <div class="input-block file-type-select-block"
+          :class="{'has-error': errors.has('fileTypeSelect')}"
         >
-        <div class="error-text">請先選擇資料類型</div>
+          <sy-select class="file-type-select"
+            name="fileTypeSelect"
+            :selected="fileInfo.fileType"
+            :items="fileTypeList"
+            placeholder="選擇資料類型"
+            @update:selected="fileTypsChange"
+            v-validate="'required'"
+          ></sy-select>
+          <div class="error-text">請先選擇資料類型</div>
+        </div>
+        <div class="input-block file-info-input-block"
+          :class="{'has-error': errors.has('dataSourceName')}"
+        >
+          <input type="text" class="input file-source-input"
+            name="dataSourceName"
+            placeholder="輸入資料源名稱"
+            v-validate="'required'"
+          >
+          <div class="error-text">請先選擇資料類型</div>
+        </div>
       </div>
     </div>
     <div class="dialog-footer">
-      <button class="btn btn-outline">取消</button>
-      <button class="btn btn-default">下一步</button>
+      <div class="dialog-button-block">
+        <button class="btn btn-outline"
+          @click="cancelFileUpload"
+        >取消</button>
+        <button class="btn btn-default"
+          @click="nextStep"
+        >下一步</button>
+      </div>
     </div>
-  </div>  
+  </div>
 </template>
 <script>
+import SySelect from '@/components/select/SySelect'
 export default {
-  name: 'ChooseFileType'
+  inject: ['$validator'],
+  name: 'ChooseFileType',
+  components: {
+    SySelect
+  },
+  data () {
+    return {
+      fileInfo: {
+        fileType: null
+      },
+      fileTypeList: [
+        {
+          name: 'CSV',
+          id: '1'
+        }
+      ]
+    }
+  },
+  methods: {
+    fileTypsChange () {
+
+    },
+    cancelFileUpload () {
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    },
+    nextStep () {
+      this.$validator.validateAll().then(result => {
+        if (result) {
+          this.$store.commit('dataManagement/updateFileTypeChosen', true)
+        }
+      })
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
 .choose-file-type {
-  .upload-file-info-block {
-    display: flex;
-    margin-bottom: 35px;
+  .dialog-body {
+    background: #FAFAFA;
+    margin-bottom: 16px;
+  }
+
+  .input-block-container {
+    width: 53.41%;
+    margin: 0 auto;
+    padding: 52px 0 176px;
   }
 
   .file-type-select-block {
     position: relative;
-    margin-right: 30px;
+    margin-bottom: 92px;
   }
 
-  .file-source-input-block {
+  .file-type-select {
+    width: 100%;
+  }
+
+  .file-info-input-block {
     position: relative;
     flex: 1;
 
@@ -59,10 +116,6 @@ export default {
     line-height: normal;
     letter-spacing: 0.5px;
     color: #979797;
-  }
-  .error-text {
-    position: absolute;
-    bottom: -26px;
   }
 }
 </style>

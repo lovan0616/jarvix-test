@@ -8,7 +8,7 @@ export default {
     isInit: false,
     bookmark: undefined,
     bookmarks: [],
-    suggestions: [],
+    suggestions: {},
     quickstartNum: 3,
     quickstartResult: {},
     appQuestion: ''

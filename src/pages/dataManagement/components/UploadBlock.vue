@@ -49,13 +49,13 @@ export default {
     height: auto;
   }
   .upload-message {
-    font-size: 14px;
-    letter-spacing: 0.5px;
-
     &.top {
+      letter-spacing: 2px;
       margin-bottom: 10px;
     }
     &.bottom {
+      font-size: 14px;
+      letter-spacing: 0.5px;
       margin-top: 10px;
     }
   }

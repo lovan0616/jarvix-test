@@ -2,11 +2,12 @@
   <div class="data-management">
     <div class="page-title-row">
       <h1 class="title">資料源</h1>
-      <button type="button" class="btn btn-create"
+      <a class="link link-with-icon"
+        href="javascript:void(0)"
         @click="createDataSource"
       >
         <svg-icon icon-class="folder-plus" class="icon"></svg-icon>新增資料源
-      </button>
+      </a>
     </div>
     <div class="data-table data-source-list-table">
       <div class="data-table-head"
@@ -16,7 +17,7 @@
           <div class="data-table-cell name" @click="rankingData(tableHeadStatus[0].name, tableHeadStatus[0].type, 0)">資料源名稱
             <img :class="{ 'arrowUp': tableHeadStatus[0].arrowUp }" src="@/assets/images/arrow_down.svg" class="control-block">
           </div>
-          <div class="data-table-cell type">資料類型</div>
+          <div class="data-table-cell type">資料來源</div>
           <div class="data-table-cell user">上傳者</div>
           <div class="data-table-cell date-create" @click="rankingData(tableHeadStatus[1].name, tableHeadStatus[1].type, 1)">建立日期
             <img :class="{ 'arrowUp': tableHeadStatus[1].arrowUp }" src="@/assets/images/arrow_down.svg" class="control-block">
@@ -76,8 +77,8 @@ import UploadBlock from './components/UploadBlock'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
+import orderBy from 'lodash.orderby'
 
-import { orderBy } from 'lodash'
 export default {
   name: 'DataSourceList',
   components: {

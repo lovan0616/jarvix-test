@@ -9,3 +9,13 @@
 .hidden {
   display: none !important;
 }
+
+// 欄位驗證錯誤樣式
+.has-error {
+  input {
+    border-color: $theme-color-danger !important;
+  }
+  .error-text {
+    color: $theme-color-danger;
+  }
+}

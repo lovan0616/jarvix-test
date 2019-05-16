@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueEvents from 'vue-events'
-
+import VeeValidate from 'vee-validate'
 import store from './store'
 import '@/utils/filters'
 import '@/utils/mixins'
@@ -67,6 +67,29 @@ Vue.component(ContainerBlock.name, ContainerBlock)
 Vue.component(ContainerCard.name, ContainerCard)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
 Vue.component(PreviewBookmark.name, PreviewBookmark)
+Vue.use(VeeValidate, {
+  // 語系
+  locale: 'zh_TW',
+  // 驗證字串
+  dictionary: {
+    zh_TW: {
+      messages: {
+        required () {
+          return '欄位不得空白'
+        },
+        email () {
+          return '信箱格式錯誤'
+        },
+        numeric () {
+          return '請輸入數字'
+        },
+        max (field, length) {
+          return `最多${length}個字元`
+        }
+      }
+    }
+  }
+})
 
 Vue.config.productionTip = false
 
