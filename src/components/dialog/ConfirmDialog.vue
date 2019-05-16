@@ -59,7 +59,7 @@ export default {
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 3000;
+  z-index: 1020;
   overflow: auto;
 
   &:before {
