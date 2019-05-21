@@ -24,11 +24,13 @@ service.interceptors.response.use(
   response => {
     const res = response.data
 
-    switch (res.status) {
-      case 200:
-        return res.data
+    if (!res.error) return res.data
+
+    switch (res.error.code) {
+      case 'APPWARN0003':
+        return router.push('/login')
       default:
-        return Promise.reject(response)
+        // return Promise.reject(response)
     }
   },
   error => {

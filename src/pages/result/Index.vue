@@ -35,7 +35,7 @@
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
-import { askQuestion, getHistoryQuestionList } from '@/API/Ask'
+import { askQuestion, relateQuestions, getHistoryQuestionList } from '@/API/Ask'
 import BookmarkSelect from '@/components/select/BookmarkSelect'
 import QuestionSelect from '@/components/select/QuestionSelect'
 import HistoryQuestionList from '@/pages/result/components/HistoryQuestionList'
@@ -63,13 +63,16 @@ export default {
   },
   watch: {
     '$route.query' ({ question }) {
+      console.log('watch')
       if (!question) return false
-      this.fetchApiAsk({ question, 'bookmark_Id': this.bookmarkId })
+      this.fetchApiAsk({ question, 'bookmark_id': this.bookmarkId })
     }
   },
   created () {
+    console.log('created')
     this.$store.dispatch('bookmark/init').then(state => {
-      this.start()
+      console.log('then')
+      this.fetchData()
     })
   },
   activated () {
@@ -89,13 +92,14 @@ export default {
     ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion'])
   },
   methods: {
-    start () {
+    fetchData () {
+      console.log('start')
       let question = this.$route.query.question
       let bookmarkId = parseInt(this.$route.query.bookmarkId)
       if (question) {
         this.$store.commit('bookmark/setAppQuestion', question)
         this.$store.commit('bookmark/setBookmarkId', bookmarkId)
-        this.fetchApiAsk({ question, 'bookmark_Id': bookmarkId })
+        this.fetchApiAsk({ question, 'bookmark_id': bookmarkId })
       }
     },
     clearLayout () {
@@ -114,21 +118,25 @@ export default {
       }))
         .then(res => {
           this.layout = res
-          let relatedQuestions = res.related_questions
-
-          // 這邊後端要調整，資料集會返回空陣列
-          if (relatedQuestions.vertical) {
-            this.relatedQuestionList = relatedQuestions.vertical.concat(relatedQuestions.horizontal)
-          } else {
-            this.relatedQuestionList = []
-          }
         }).catch(error => {
           if (error.response && error.response.status === 500) {
             this.isNoResult = true
             this.relatedQuestionList = []
           }
         }).then(() => {
-          this.fetchHistoryQuestionList()
+          
+        })
+      this.fetchHistoryQuestionList()
+      relateQuestions(data, new axios.CancelToken(function executor (c) {
+        _this.askCancelFunction = c
+      }))
+        .then(res => {
+          // 這邊後端要調整，資料集會返回空陣列
+          if (res.vertical) {
+            this.relatedQuestionList = res.vertical.concat(res.horizontal)
+          } else {
+            this.relatedQuestionList = []
+          }
         })
     },
     cancelRequest () {
@@ -142,8 +150,10 @@ export default {
       this.$store.dispatch('bookmark/updateResultRouter')
     },
     fetchHistoryQuestionList () {
+      
       getHistoryQuestionList()
         .then(res => {
+          console.log('history')
           this.historyQuestionList = res.history
         })
     },

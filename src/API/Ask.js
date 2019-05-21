@@ -13,6 +13,18 @@ export function askQuestion (question, cancelFunction) {
 }
 
 /**
+ * relate question
+ */
+export function relateQuestions (question, cancelFunction) {
+  return request({
+    url: '/relateQuestions',
+    method: 'POST',
+    data: question,
+    cancelToken: cancelFunction
+  })
+}
+
+/**
  * get history question list
  */
 export function getHistoryQuestionList () {

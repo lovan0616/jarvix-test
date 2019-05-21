@@ -19,7 +19,7 @@
 <script>
 import ConfirmDialog from '@/components/dialog/ConfirmDialog'
 export default {
-  name: 'ConfirmDeleteDialog',
+  name: 'ConfirmChangeNameDialog',
   components: {
     ConfirmDialog
   },
