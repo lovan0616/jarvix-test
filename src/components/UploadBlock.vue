@@ -6,7 +6,7 @@
       v-if="topMessage"
     >{{ topMessage }}</div>
     <div class="upload-icon-container">
-      <img src="../../../assets/images/file-upload.png" class="upload-img" alt="">
+      <img src="../assets/images/file-upload.png" class="upload-img" alt="">
     </div>
     <div class="upload-message bottom"
       v-if="bottomMessage"

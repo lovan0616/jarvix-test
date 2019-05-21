@@ -49,7 +49,7 @@
 </template>
 <script>
 import { fileStatus } from '@/utils/general'
-import UploadBlock from './UploadBlock'
+import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
 
 export default {
