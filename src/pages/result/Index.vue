@@ -63,15 +63,12 @@ export default {
   },
   watch: {
     '$route.query' ({ question }) {
-      console.log('watch')
       if (!question) return false
       this.fetchApiAsk({ question, 'bookmark_id': this.bookmarkId })
     }
   },
   created () {
-    console.log('created')
     this.$store.dispatch('bookmark/init').then(state => {
-      console.log('then')
       this.fetchData()
     })
   },
@@ -93,7 +90,6 @@ export default {
   },
   methods: {
     fetchData () {
-      console.log('start')
       let question = this.$route.query.question
       let bookmarkId = parseInt(this.$route.query.bookmarkId)
       if (question) {
@@ -123,10 +119,12 @@ export default {
             this.isNoResult = true
             this.relatedQuestionList = []
           }
-        }).then(() => {
-          
         })
       this.fetchHistoryQuestionList()
+      this.getRelatedQuestions(data)
+    },
+    getRelatedQuestions (data) {
+      const _this = this
       relateQuestions(data, new axios.CancelToken(function executor (c) {
         _this.askCancelFunction = c
       }))
@@ -150,10 +148,8 @@ export default {
       this.$store.dispatch('bookmark/updateResultRouter')
     },
     fetchHistoryQuestionList () {
-      
       getHistoryQuestionList()
         .then(res => {
-          console.log('history')
           this.historyQuestionList = res.history
         })
     },

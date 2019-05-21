@@ -52,6 +52,8 @@ export default {
   },
   created () {
     this.$store.dispatch('bookmark/init')
+    // 因為 result page 會 keep-alive，所以才會在這邊做清除資料的動作
+    this.$store.commit('bookmark/setAppQuestion', '')
   },
   computed: {
     ...mapGetters('bookmark', ['bookmarkId', 'quickstartWithDefaults'])
