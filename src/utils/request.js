@@ -1,5 +1,7 @@
 import axios from 'axios'
 import router from '../router'
+import { Message } from 'element-ui'
+import { errorsMessage } from './errorsMessage.js'
 
 /**
  * 注意這邊 headers 取 token 的寫法
@@ -23,15 +25,20 @@ const service = axios.create({
 service.interceptors.response.use(
   response => {
     const res = response.data
-
     if (!res.error) return res.data
+
+    Message({
+      message: errorsMessage[res.error.code],
+      type: 'error',
+      duration: 3 * 1000
+    })
 
     switch (res.error.code) {
       case 'APPWARN0003':
-        return router.push('/login')
-      default:
-        // return Promise.reject(response)
+        router.push('/login')
+        break
     }
+    return Promise.reject(res)
   },
   error => {
     if (!error.response.status) return Promise.reject(error)

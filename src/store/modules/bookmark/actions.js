@@ -33,7 +33,7 @@ export default {
     })
   },
   getQuickstarts ({ commit, state }) {
-    return getQuickstarts().then(res => {
+    return getQuickstarts(state.bookmark.id).then(res => {
       commit(types.SET_QUICKSTART_RESULT, res)
     })
   },

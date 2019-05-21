@@ -26,10 +26,13 @@ export function getSuggestions (id) {
 /**
  * quickstarts
  */
-export function getQuickstarts () {
+export function getQuickstarts (id) {
   return request({
     url: '/quickstarts',
-    method: 'GET'
+    method: 'GET',
+    params: {
+      bookmark_id: id
+    }
   })
 }
 
