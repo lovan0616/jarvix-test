@@ -32,6 +32,7 @@ export default {
   destroyed () {
     this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     this.$store.commit('dataManagement/updateUploadFileList', [])
+    this.$store.commit('dataManagement/updateFileTypeChosen', false)
   },
   methods: {
   },

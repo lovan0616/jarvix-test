@@ -55,3 +55,14 @@ export function getBookmarkTableDataById (bookmarkId, bookmarkTableId) {
     method: 'GET'
   })
 }
+
+/**
+ * create bookmark
+ */
+export function createBookmark (bookmarkInfo) {
+  return request({
+    url: '/bookmarks',
+    method: 'POST',
+    data: bookmarkInfo
+  })
+}

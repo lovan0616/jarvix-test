@@ -8,10 +8,10 @@
         >
           <sy-select class="file-type-select"
             name="fileTypeSelect"
-            :selected="fileInfo.fileType"
+            :selected="bookmarkInfo.type"
             :items="fileTypeList"
             placeholder="選擇資料類型"
-            @update:selected="fileTypsChange"
+            @update:selected="bookmarkTypeChange"
             v-validate="'required'"
           ></sy-select>
           <div class="error-text">請先選擇資料類型</div>
@@ -21,6 +21,7 @@
         >
           <input type="text" class="input file-source-input"
             name="dataSourceName"
+            v-model.trim="bookmarkInfo.name"
             placeholder="輸入資料源名稱"
             v-validate="'required'"
           >
@@ -42,6 +43,8 @@
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
+import { createBookmark } from '@/API/Bookmark'
+
 export default {
   inject: ['$validator'],
   name: 'ChooseFileType',
@@ -50,20 +53,26 @@ export default {
   },
   data () {
     return {
-      fileInfo: {
-        fileType: null
+      bookmarkInfo: {
+        name: null,
+        type: null
       },
       fileTypeList: [
         {
           name: 'CSV',
-          id: '1'
+          id: 'CSV'
         }
       ]
     }
   },
+  watch: {
+    'bookmarkInfo.type' (value) {
+      this.$validator.validate('fileTypeSelect', value)
+    }
+  },
   methods: {
-    fileTypsChange () {
-
+    bookmarkTypeChange (id) {
+      this.bookmarkInfo.type = id
     },
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
@@ -71,6 +80,21 @@ export default {
     nextStep () {
       this.$validator.validateAll().then(result => {
         if (result) {
+          // 新增bookmark
+          // createBookmark(this.bookmarkInfo)
+          //   .then(res => {
+          //     this.$store.commit('dataManagement/updateBookmarkInfo', {
+          //       bookmarkId: res.bookmark,
+          //       storageId: res.storage,
+          //       ...this.bookmarkInfo
+          //     })
+          //     this.$store.commit('dataManagement/updateFileTypeChosen', true)
+          //   })
+          this.$store.commit('dataManagement/updateBookmarkInfo', {
+            bookmarkId: '1',
+            storageId: '2',
+            ...this.bookmarkInfo
+          })
           this.$store.commit('dataManagement/updateFileTypeChosen', true)
         }
       })

@@ -38,6 +38,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .file-list-block {
+  &.forbidden {
+    .file-list {
+      min-height: 90px;
+      background-color: #F9F9F9;
+    }
+  }
+
   &:not(:last-child) {
     margin-bottom: 15px;
   }
@@ -45,7 +52,6 @@ export default {
   .block-title-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     margin-bottom: 10px;
 
     .block-title {
@@ -57,6 +63,7 @@ export default {
   .file-list {
     background: #FAFAFA;
     border-radius: 4px;
+    min-height: 300px;
   }
 }
 </style>

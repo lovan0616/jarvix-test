@@ -44,6 +44,7 @@
 </template>
 <script>
 import { fileStatus } from '@/utils/general'
+import { uploadCSV } from '@/API/Upload'
 import ToolTip from './ToolTip'
 
 export default {
@@ -78,7 +79,7 @@ export default {
   },
   methods: {
     uploadFile () {
-      console.log('uploading')
+      uploadCSV()
     },
     removeFile () {
       this.$store.commit('dataManagement/removeUploadFile', this.index)
@@ -86,7 +87,7 @@ export default {
   },
   computed: {
     formDataInfo () {
-      return this.singleFile.data.get('inputFile')
+      return this.singleFile.data.get('file')
     },
     statusClass () {
       switch (this.singleFile.status) {
@@ -101,6 +102,9 @@ export default {
         case this.fileStatus.fail:
           return 'fail'
       }
+    },
+    storageId () {
+      return this.$store.state.dataManagement.currentUploadInfo.storageId
     }
   }
 }

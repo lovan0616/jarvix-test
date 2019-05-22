@@ -2,9 +2,11 @@
   <div class="local-file-upload">
     <div class="dialog-title">新增資料</div>
     <div class="dialog-body">
+      <div class="data-source-name"
+      >資料源名稱：{{ currentUploadInfo.name }}</div>
       <input type="file" class="hidden" name="fileUploadInput"
         ref="fileUploadInput"
-        accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        accept=".csv"
         multiple="multiple"
         @change="fileImport"
       >
@@ -21,15 +23,12 @@
           title="可以上傳"
           :file-list="uploadFileList"
         >
+        </file-list-block>
+        <div class="choose-file-block">
           <a href="javascript:void(0)" class="choose-file"
-            slot="fileListTitle"
             @click="chooseFile"
           >+ 選取檔案</a>
-        </file-list-block>
-        <!-- <file-list-block
-          title="無法上傳"
-        >
-        </file-list-block> -->
+        </div>
       </div>
     </div>
     <div class="dialog-footer">
@@ -41,6 +40,7 @@
           @click="cancelFileUpload"
         >取消</button>
         <button class="btn btn-default"
+          :disabled="uploadFileList.length === 0"
           @click="fileUpload"
         >確認上傳</button>
       </div>
@@ -49,6 +49,7 @@
 </template>
 <script>
 import { fileStatus } from '@/utils/general'
+import { mapState } from 'vuex'
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
 
@@ -60,6 +61,7 @@ export default {
   },
   data () {
     return {
+      uploadStatus: false
     }
   },
   methods: {
@@ -76,10 +78,11 @@ export default {
       if (uploadInput.files) {
         for (let i = 0; i < uploadInput.files.length; i++) {
           let formData = new FormData()
-          formData.append('inputFile', uploadInput.files[i])
+          formData.append('file', uploadInput.files[i])
           fileList.push({
             data: formData,
-            status: fileStatus.wait
+            status: fileStatus.wait,
+            id: new Date().getTime() + i
           })
         }
         this.$store.commit('dataManagement/updateUploadFileList', this.uploadFileList.concat(fileList))
@@ -97,12 +100,13 @@ export default {
     }
   },
   computed: {
+    ...mapState('dataManagement', ['currentUploadInfo']),
     uploadFileList () {
       return this.$store.state.dataManagement.uploadFileList
     },
     totalTransmitDataAmount () {
       return this.uploadFileList.reduce((acc, cur) => {
-        return acc + cur.data.get('inputFile').size
+        return acc + cur.data.get('file').size
       }, 0)
     }
   }
@@ -115,9 +119,22 @@ export default {
     height: 400px;
   }
 
+  .data-source-name {
+    position: absolute;
+    top: 0;
+    right: 0;
+    line-height: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .choose-file-block {
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .choose-file {
     font-size: 12px;
-    line-height: 21px;
+    line-height: 17px;
     letter-spacing: 0.5px;
     color: #43BAC3;
   }
