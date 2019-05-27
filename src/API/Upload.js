@@ -3,10 +3,20 @@ import request from '@/utils/request'
 /**
  * upload csv
  */
-export function uploadCSV (storageId, uploadId) {
+export function uploadCSV (storageId, uploadId, data, onProgress, cancelFunction) {
   return request({
     url: `/storages/${storageId}/CSV/upload/${uploadId}`,
-    method: 'POST'
+    method: 'POST',
+    data,
+    onUploadProgress (progressEvent) {
+      let percentCompleted = Math.round((progressEvent.loaded * 100) /
+        progressEvent.total)
+
+      // execute the callback
+      if (onProgress) onProgress(percentCompleted)
+      return percentCompleted
+    },
+    cancelToken: cancelFunction
   })
 }
 

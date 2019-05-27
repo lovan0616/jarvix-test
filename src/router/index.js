@@ -31,12 +31,12 @@ export default new Router({
           children: [
             {
               path: '/',
-              name: 'DataSourceList',
+              name: 'PageDataSourceList',
               component: () => import('@/pages/dataManagement/DataSourceList')
             },
             {
               path: ':id',
-              name: 'DataFileList',
+              name: 'PageDataFileList',
               component: () => import('@/pages/dataManagement/DataFileList')
             }
           ]

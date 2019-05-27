@@ -8,3 +8,17 @@
 .fade-leave-to {
   opacity: 0
 }
+
+// slide-down
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all .3s ;
+}
+.slide-down-enter {
+  height: auto;
+  transform: translateY(-100%);
+}
+.slide-down-leave-to {
+  height: 0;
+  transform: translateY(-100%);
+}

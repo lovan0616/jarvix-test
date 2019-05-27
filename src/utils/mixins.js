@@ -19,6 +19,19 @@ Vue.mixin({
     // byte 轉 MB
     byteToMB (value) {
       return (value / (1024 * 1024)).toFixed(4)
+    },
+    // timeStamp 轉成 YYYY-MM-DD
+    timeStampToDate (time) {
+      let datetime = new Date()
+      datetime.setTime(time * 1000)
+      let year = datetime.getFullYear()
+      let month = datetime.getMonth() + 1
+      let date = datetime.getDate()
+      return year + '-' + this.paddingZero(month) + '-' + this.paddingZero(date)
+    },
+    // 時間補十分位，為了滿足 YYYY-MM-DD 格式
+    paddingZero (n) {
+      return n < 10 ? '0' + n : n
     }
   }
 })

@@ -4,15 +4,21 @@
     @close="cancel"
   >
     <div class="content" slot="dialogBody">
-      <input type="text" class="input">
+      <input type="text" class="input" name="newDataSourceName"
+        v-model="newName"
+      >
     </div>
     <template class="dialog-btn-block" slot="dialogFooter">
       <button type="button" class="btn btn-outline"
         @click="cancel"
       >取消</button>
       <button type="button" class="btn btn-default"
+        :disabled="isProcessing"
         @click="confirm"
-      >確認</button>
+      >
+        <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>處理中...</span>
+        <span v-else>确认</span>
+      </button>
     </template>
   </confirm-dialog>
 </template>
@@ -27,11 +33,25 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    source: {
+      type: String,
+      default: ''
+    }
+  },
+  data () {
+    return {
+      newName: this.source,
+      isProcessing: false
     }
   },
   methods: {
     confirm () {
-      this.$emit('confirm')
+      this.isProcessing = true
+      let result = new Promise(resolve => this.$emit('confirm', {resolve, name: this.newName}))
+      result.then(() => {
+        this.isProcessing = false
+      })
     },
     cancel () {
       this.$emit('cancel')

@@ -66,3 +66,26 @@ export function createBookmark (bookmarkInfo) {
     data: bookmarkInfo
   })
 }
+
+/**
+ * create bookmark
+ */
+export function deleteBookmark (bookmarkId) {
+  return request({
+    url: `/bookmarks/${bookmarkId}`,
+    method: 'DELETE'
+  })
+}
+
+/**
+ * change bookmark name
+ */
+export function renameBookmark (bookmarkId, name) {
+  return request({
+    url: `/bookmarks/${bookmarkId}`,
+    method: 'PUT',
+    data: {
+      name
+    }
+  })
+}

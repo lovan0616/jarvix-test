@@ -2,8 +2,7 @@
   <div class="local-file-upload">
     <div class="dialog-title">新增資料</div>
     <div class="dialog-body">
-      <div class="data-source-name"
-      >資料源名稱：{{ currentUploadInfo.name }}</div>
+      <div class="data-source-name">資料源名稱：{{ currentUploadInfo.name }}</div>
       <input type="file" class="hidden" name="fileUploadInput"
         ref="fileUploadInput"
         accept=".csv"
@@ -16,7 +15,7 @@
         @create="chooseFile"
       >
       </upload-block>
-      <div
+      <div class="file-list-container"
         v-else
       >
         <file-list-block
@@ -26,29 +25,38 @@
         </file-list-block>
         <div class="choose-file-block">
           <a href="javascript:void(0)" class="choose-file"
+            v-show="currntUploadStatus === uploadStatus.wait"
             @click="chooseFile"
           >+ 選取檔案</a>
         </div>
       </div>
     </div>
     <div class="dialog-footer">
-      <div class="file-chosen-info"
-        v-if="uploadFileList.length > 0"
-      >已選取 {{ uploadFileList.length }} 項資料表，總和 {{ byteToMB(totalTransmitDataAmount) | formatComma }} MB，可進行上傳 </div>
+      <div class="file-chosen-info">
+        <span v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait">已選取 {{ uploadFileList.length }} 項資料表，總和 {{ byteToMB(totalTransmitDataAmount) | formatComma }} MB，可進行上傳</span>
+        <span v-if="currntUploadStatus !== uploadStatus.wait">上傳過程中請勿關閉瀏覽器視窗，以免上傳作業失敗</span>
+      </div>
       <div class="dialog-button-block">
         <button class="btn btn-outline"
+          v-if="currntUploadStatus === uploadStatus.wait"
           @click="cancelFileUpload"
         >取消</button>
         <button class="btn btn-default"
-          :disabled="uploadFileList.length === 0"
+          v-if="currntUploadStatus !== uploadStatus.finish"
+          :disabled="uploadFileList.length === 0 || currntUploadStatus !== uploadStatus.wait"
           @click="fileUpload"
-        >確認上傳</button>
+        >
+          <span v-show="currntUploadStatus === uploadStatus.wait">確認上傳</span>
+          <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner"></svg-icon>上傳中...</span>
+          <span v-show="currntUploadStatus === uploadStatus.processing"><svg-icon icon-class="spinner"></svg-icon>資料處理中...</span>
+        </button>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { fileStatus } from '@/utils/general'
+import { uploadStatus } from '@/utils/general'
+import { publishStorage } from '@/API/Upload'
 import { mapState } from 'vuex'
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
@@ -61,7 +69,17 @@ export default {
   },
   data () {
     return {
-      uploadStatus: false
+      uploadStatus,
+      currntUploadStatus: uploadStatus.wait
+    }
+  },
+  watch: {
+    uploadFileStatusList (value) {
+      if (this.currntUploadStatus !== uploadStatus.uploading) return
+      if (value.findIndex(element => { return element === uploadStatus.wait || element === uploadStatus.uploading }) === -1) {
+        this.processData()
+        this.currntUploadStatus = uploadStatus.processing
+      }
     }
   },
   methods: {
@@ -81,7 +99,7 @@ export default {
           formData.append('file', uploadInput.files[i])
           fileList.push({
             data: formData,
-            status: fileStatus.wait,
+            status: uploadStatus.wait,
             id: new Date().getTime() + i
           })
         }
@@ -90,19 +108,30 @@ export default {
     },
     fileUpload () {
       let fileList = this.uploadFileList.map(element => {
-        element.status = fileStatus.uploading
+        element.status = uploadStatus.uploading
         return element
       })
       this.$store.commit('dataManagement/updateUploadFileList', fileList)
+      this.currntUploadStatus = uploadStatus.uploading
+    },
+    processData () {
+      publishStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.bookmarkId)
+        .then(response => {
+          if (response) {
+            this.$store.commit('dataManagement/updateFileLoaded', true)
+          }
+        })
     },
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     }
   },
   computed: {
-    ...mapState('dataManagement', ['currentUploadInfo']),
-    uploadFileList () {
-      return this.$store.state.dataManagement.uploadFileList
+    ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
+    uploadFileStatusList () {
+      return this.uploadFileList.map(element => {
+        return element.status
+      })
     },
     totalTransmitDataAmount () {
       return this.uploadFileList.reduce((acc, cur) => {
@@ -120,11 +149,15 @@ export default {
   }
 
   .data-source-name {
-    position: absolute;
-    top: 0;
-    right: 0;
+    text-align: right;
+    margin-bottom: 8px;
     line-height: 20px;
     letter-spacing: 0.5px;
+  }
+
+  // 為了讓右上角的資料源名稱共用
+  .file-list-container {
+    margin-top: -28px;
   }
 
   .choose-file-block {

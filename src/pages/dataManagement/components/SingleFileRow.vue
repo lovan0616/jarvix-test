@@ -6,7 +6,7 @@
       <div class="file-info name">{{ formDataInfo.name }}</div>
       <div class="file-info size">{{ byteToMB(formDataInfo.size) | formatComma }}MB</div>
       <div class="single-file-progress"
-        v-if="singleFile.status === fileStatus.uploading && progress < 100"
+        v-if="singleFile.status === uploadStatus.uploading && progress < 100"
       >
         <div class="progress-bar"
           :style="{ width: progress + '%' }"
@@ -14,15 +14,15 @@
       </div>
     </div>
     <div class="file-status"
-      :class="{finished: singleFile.status === fileStatus.success || singleFile.status === fileStatus.fail}"
+      :class="{finished: singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail}"
     >
       <svg-icon
-        v-if="singleFile.status === fileStatus.success || singleFile.status === fileStatus.fail"
-        :class="singleFile.status === fileStatus.success ? 'success' : 'fail'"
-        :icon-class="singleFile.status === fileStatus.success ? 'checked' : 'alert'"
+        v-if="singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail"
+        :class="singleFile.status === uploadStatus.success ? 'success' : 'fail'"
+        :icon-class="singleFile.status === uploadStatus.success ? 'checked' : 'alert'"
       ></svg-icon>
       <div class="warning"
-        v-else-if="singleFile.status === fileStatus.forbidden"
+        v-else-if="singleFile.status === uploadStatus.forbidden"
       >
         檔案過大
         <tool-tip
@@ -31,7 +31,8 @@
         ></tool-tip>
       </div>
       <a class="action-link cancel"
-        v-else-if="singleFile.status === fileStatus.uploading"
+        v-else-if="singleFile.status === uploadStatus.uploading"
+        @click="cancelUpload"
         href="javascript:void(0)"
       >取消</a>
       <a class="action-link"
@@ -43,7 +44,8 @@
   </div>
 </template>
 <script>
-import { fileStatus } from '@/utils/general'
+import axios from 'axios'
+import { uploadStatus } from '@/utils/general'
 import { uploadCSV } from '@/API/Upload'
 import ToolTip from './ToolTip'
 
@@ -66,23 +68,44 @@ export default {
   },
   data () {
     return {
-      fileStatus,
-      progress: 0
+      uploadStatus,
+      progress: 0,
+      askCancelFunction: null
     }
   },
   watch: {
     'singleFile.status' (value) {
-      if (value === fileStatus.uploading) {
+      if (value === uploadStatus.uploading) {
         this.uploadFile()
       }
     }
   },
   methods: {
     uploadFile () {
-      uploadCSV()
+      let _this = this
+      uploadCSV(this.storageId, this.singleFile.id, this.singleFile.data, this.onProgress, new axios.CancelToken(function executor (c) {
+        _this.askCancelFunction = c
+      }))
+        .then(response => {
+          if (response) {
+            this.singleFile.status = uploadStatus.success
+          } else {
+            this.singleFile.status = uploadStatus.fail
+          }
+        }).catch(() => {
+          this.singleFile.status = uploadStatus.fail
+        })
+    },
+    onProgress (percent) {
+      this.progress = percent
     },
     removeFile () {
       this.$store.commit('dataManagement/removeUploadFile', this.index)
+    },
+    cancelUpload () {
+      if (typeof this.askCancelFunction === 'function') {
+        this.askCancelFunction('cancel request')
+      }
     }
   },
   computed: {
@@ -91,15 +114,15 @@ export default {
     },
     statusClass () {
       switch (this.singleFile.status) {
-        case this.fileStatus.wait:
+        case this.uploadStatus.wait:
           return 'wait'
-        case this.fileStatus.forbidden:
+        case this.uploadStatus.forbidden:
           return 'forbidden'
-        case this.fileStatus.uploading:
+        case this.uploadStatus.uploading:
           return 'uploading'
-        case this.fileStatus.success:
+        case this.uploadStatus.success:
           return 'success'
-        case this.fileStatus.fail:
+        case this.uploadStatus.fail:
           return 'fail'
       }
     },

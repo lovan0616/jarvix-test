@@ -81,21 +81,15 @@ export default {
       this.$validator.validateAll().then(result => {
         if (result) {
           // 新增bookmark
-          // createBookmark(this.bookmarkInfo)
-          //   .then(res => {
-          //     this.$store.commit('dataManagement/updateBookmarkInfo', {
-          //       bookmarkId: res.bookmark,
-          //       storageId: res.storage,
-          //       ...this.bookmarkInfo
-          //     })
-          //     this.$store.commit('dataManagement/updateFileTypeChosen', true)
-          //   })
-          this.$store.commit('dataManagement/updateBookmarkInfo', {
-            bookmarkId: '1',
-            storageId: '2',
-            ...this.bookmarkInfo
-          })
-          this.$store.commit('dataManagement/updateFileTypeChosen', true)
+          createBookmark(this.bookmarkInfo)
+            .then(res => {
+              this.$store.commit('dataManagement/updateBookmarkInfo', {
+                bookmarkId: res.bookmark.id,
+                storageId: res.storage.id,
+                ...this.bookmarkInfo
+              })
+              this.$store.commit('dataManagement/updateFileTypeChosen', true)
+            })
         }
       })
     }

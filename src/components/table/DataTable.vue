@@ -50,9 +50,9 @@
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
             :key="action.name"
-            @click="$emit(action.value, data.id)"
+            @click="$emit(action.value, data)"
           >{{ action.name }}</a>
-          <span v-else>{{ data[headInfo.value] }}</span>
+          <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
       </div>
     </div>
@@ -62,6 +62,32 @@
 import UploadBlock from '@/components/UploadBlock'
 import orderBy from 'lodash.orderby'
 
+/**
+ * Data table 可傳入屬性
+ * {
+      // 欄位名稱
+      text: '資料源名稱',
+      // 屬性名稱
+      value: 'name',
+      // 排序
+      sort: true,
+      // 欄位寬度
+      width: '16.3%',
+      // 是否有連接
+      link: true,
+      // 時間格式
+      time: 'YYYY-MM-DD'
+      // 是否有功能
+      action: [
+        {
+          // 功能名稱
+          name: '重新命名',
+          // emit function name
+          value: 'rename'
+        }
+      ]
+    }
+ */
 export default {
   name: 'DataTable',
   components: {
@@ -70,22 +96,7 @@ export default {
   props: {
     headers: {
       type: Array,
-      default: () => [
-        // {
-        //   // 欄位名稱
-        //   text: '資料源名稱',
-        //   // 屬性名稱
-        //   value: 'name',
-        //   // 排序
-        //   sort: true,
-        //   // 欄位寬度
-        //   width: '16.3%',
-        //   // 是否有連接
-        //   link: true
-        //   // 是否有功能
-        //   action
-        // }
-      ]
+      default: () => []
     },
     dataList: {
       type: Array,
@@ -154,6 +165,12 @@ export default {
           id
         }
       })
+    },
+    timeFormat (value, format) {
+      switch (format) {
+        case 'YYYY-MM-DD':
+          return this.timeStampToDate(value)
+      }
     }
   },
   computed: {

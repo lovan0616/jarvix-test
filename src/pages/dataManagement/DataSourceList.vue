@@ -1,18 +1,18 @@
 <template>
   <div class="data-management">
     <div class="page-title-row">
-      <h1 class="title">資料源</h1>
+      <h1 class="title">资料源</h1>
       <a class="link link-with-icon"
         href="javascript:void(0)"
         @click="createDataSource"
       >
-        <svg-icon icon-class="folder-plus" class="icon"></svg-icon>新增資料源
+        <svg-icon icon-class="folder-plus" class="icon"></svg-icon>新增资料源
       </a>
     </div>
     <data-table
       :headers="tableHeaders"
       :data-list.sync="dataList"
-      empty-message="點擊建立您的資料源"
+      empty-message="点击建立您的资料源"
       @create="createDataSource"
       @rename="confirmRename"
       @delete="confirmDelete"
@@ -20,16 +20,22 @@
     </data-table>
     <file-upload-dialog
       v-if="showCreateDataSourceDialog"
+      @success="fetchData"
       @close="closeFileUploadDialog"
     ></file-upload-dialog>
     <confirm-delete-dialog
       v-if="showConfirmDeleteDialog"
-      title="刪除資料源"
-      content="您確認要刪除此資料表?"
+      title="删除资料源"
+      content="您确认要删除此资料源吗?"
+      @confirm="deleteBookmark"
+      @cancel="cancelDelete"
     ></confirm-delete-dialog>
     <confirm-change-name-dialog
-      v-if="showConfirmNameChangeDialog"
-      title="重新命名資料源"
+      v-if="showConfirmRenameDialog"
+      title="重新命名资料源"
+      :source="renameDataSource.name"
+      @confirm="renameBookmark"
+      @cancel="cancelRename"
     ></confirm-change-name-dialog>
   </div>
 </template>
@@ -38,6 +44,7 @@ import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
+import { getBookmarks, deleteBookmark, renameBookmark } from '@/API/Bookmark'
 
 export default {
   name: 'DataSourceList',
@@ -50,75 +57,14 @@ export default {
   data () {
     return {
       showConfirmDeleteDialog: false,
-      showConfirmNameChangeDialog: false,
-      dataList: [
-        {
-          id: 1,
-          name: '123',
-          type: 'CSV',
-          user: 'christan',
-          createDate: '2018-04-16',
-          modifyDate: '2018-05-06',
-          count: 4
-        },
-        {
-          id: 2,
-          name: '124',
-          type: 'CSV',
-          user: 'frank',
-          createDate: '2018-05-01',
-          modifyDate: '2018-05-02',
-          count: 6
-        },
-        {
-          id: 3,
-          name: 'test',
-          type: 'CSV',
-          user: 'Karl',
-          createDate: '2018-05-05',
-          modifyDate: '2018-05-15',
-          count: 10
-        },
-        {
-          id: 4,
-          name: 'test1',
-          type: 'CSV',
-          user: 'Karl1',
-          createDate: '2018-05-15',
-          modifyDate: '2018-05-15',
-          count: 10
-        },
-        {
-          id: 5,
-          name: 'test3',
-          type: 'CSV',
-          user: 'Karl3',
-          createDate: '2018-05-25',
-          modifyDate: '2018-06-15',
-          count: 10
-        },
-        {
-          id: 6,
-          name: 'test4',
-          type: 'CSV',
-          user: 'Karl',
-          createDate: '2018-05-05',
-          modifyDate: '2018-05-15',
-          count: 10
-        },
-        {
-          id: 7,
-          name: 'test5',
-          type: 'CSV',
-          user: 'Karl',
-          createDate: '2018-05-05',
-          modifyDate: '2018-05-15',
-          count: 10
-        }
-      ],
+      showConfirmRenameDialog: false,
+      deleteId: null,
+      renameDataSource: null,
+      dataList: [],
+      // 用來生成 data table
       tableHeaders: [
         {
-          text: '資料源名稱',
+          text: '资料源名称',
           value: 'name',
           sort: true,
           width: '16.3%',
@@ -126,11 +72,23 @@ export default {
             name: 'DataFileList'
           }
         },
-        {text: '資料來源', value: 'type'},
-        {text: '上傳者', value: 'user', width: '13.04%'},
-        {text: '建立日期', value: 'createDate', sort: true, width: '15.22%'},
-        {text: '修改日期', value: 'modifyDate', sort: true, width: '15.22%'},
-        {text: '資料表數', value: 'count', align: 'right', width: '6.53%'},
+        {text: '资料来源', value: 'type'},
+        {text: '上传者', value: 'create_user', width: '13.04%'},
+        {
+          text: '建立日期',
+          value: 'create_date',
+          sort: true,
+          width: '15.22%',
+          time: 'YYYY-MM-DD'
+        },
+        {
+          text: '修改日期',
+          value: 'update_date',
+          sort: true,
+          width: '15.22%',
+          time: 'YYYY-MM-DD'
+        },
+        {text: '资料表数', value: 'count', align: 'right', width: '6.53%'},
         {
           text: '操作',
           value: 'action',
@@ -149,24 +107,86 @@ export default {
     }
   },
   mounted () {
+    this.fetchData()
+  },
+  watch: {
+    fileLoaded (value) {
+      if (value) {
+        this.fetchData()
+      }
+    }
   },
   methods: {
+    fetchData () {
+      return getBookmarks().then(response => {
+        this.dataList = response.map(dataInfo => {
+          // 注意！這邊只會做資料表數計算，時間的顯示在 DataTable 處理，主要是為了時間排序的準確
+          dataInfo.count = dataInfo.config ? Object.keys(dataInfo.config.uploads).length : 0
+          return dataInfo
+        })
+      })
+    },
     createDataSource () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
     },
     closeFileUploadDialog () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
-    confirmRename (id) {
-      console.log(id)
+    confirmRename (dataInfo) {
+      this.renameDataSource = dataInfo
+      this.showConfirmRenameDialog = true
     },
-    confirmDelete (id) {
-      console.log(id)
+    confirmDelete (dataObj) {
+      this.deleteId = dataObj.id
+      this.showConfirmDeleteDialog = true
+    },
+    deleteBookmark (resolve) {
+      deleteBookmark(this.deleteId)
+        .then(response => {
+          if (response) {
+            this.fetchData()
+              .then(() => {
+                this.cancelDelete()
+                resolve()
+              })
+          } else {
+            resolve()
+          }
+        }).catch(() => {
+          resolve()
+        })
+    },
+    cancelDelete () {
+      this.deleteId = null
+      this.showConfirmDeleteDialog = false
+    },
+    renameBookmark ({resolve, name}) {
+      renameBookmark(this.renameDataSource.id, name)
+        .then(response => {
+          if (response) {
+            this.fetchData()
+              .then(() => {
+                this.cancelRename()
+                resolve()
+              })
+          } else {
+            resolve()
+          }
+        }).catch(() => {
+          resolve()
+        })
+    },
+    cancelRename () {
+      this.renameDataSource = null
+      this.showConfirmRenameDialog = false
     }
   },
   computed: {
     showCreateDataSourceDialog () {
       return this.$store.state.dataManagement.showCreateDataSourceDialog
+    },
+    fileLoaded () {
+      return this.$store.state.dataManagement.fileLoaded
     }
   }
 }
