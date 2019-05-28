@@ -11,6 +11,16 @@ export function getBookmarks () {
 }
 
 /**
+ * get bookmark by id
+ */
+export function getBookmarkById (bookmarkId) {
+  return request({
+    url: `/bookmarks/${bookmarkId}`,
+    method: 'GET'
+  })
+}
+
+/**
  * suggestions
  */
 export function getSuggestions (id) {
@@ -86,6 +96,19 @@ export function renameBookmark (bookmarkId, name) {
     method: 'PUT',
     data: {
       name
+    }
+  })
+}
+
+/**
+ * create bookmark storage
+ */
+export function createBookmarkStorage (bookmarkId, type) {
+  return request({
+    url: `/bookmarks/${bookmarkId}/edit`,
+    method: 'POST',
+    data: {
+      type
     }
   })
 }

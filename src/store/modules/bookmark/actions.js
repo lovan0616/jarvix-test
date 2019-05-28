@@ -14,7 +14,10 @@ export default {
       return Promise.resolve(state)
     })
   },
-  changeBookmarkById ({ dispatch, state }, bookmarkId) {
+  changeBookmarkById ({ dispatch, commit, state }, bookmarkId) {
+    // 更新 Bookmark 資料
+    commit(types.SET_BOOKMARK, state.bookmarks.find(element => element.id === bookmarkId))
+
     return co(function* () {
       yield dispatch('getSuggestions')
       yield dispatch('getQuickstarts')

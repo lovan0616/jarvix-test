@@ -27,15 +27,13 @@ export default {
     LocalFileUpload,
     FileUploadFinished
   },
-  data () {
-    return {
-    }
-  },
   destroyed () {
+    // 還原狀態
     this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     this.$store.commit('dataManagement/updateUploadFileList', [])
     this.$store.commit('dataManagement/updateFileTypeChosen', false)
     this.$store.commit('dataManagement/updateFileLoaded', false)
+    this.$store.commit('dataManagement/clearCurrentUploadInfo')
   },
   methods: {
   },
