@@ -3,28 +3,35 @@
     <div class="dialog-title">上傳完成</div>
     <div class="finished-img-block">
       <img src="../../../assets/images/upload-done.svg" alt="上傳成功" class="finished-img">
-      <div class="finished-file-info">總共 5 項資料表，4 項上傳成功， 1 項未上傳</div>
+      <div class="finished-file-info">總共 {{uploadFileList.length}} 項資料表，{{ successList.length }} 項上傳成功， {{ failList.length }} 項未上傳</div>
     </div>
     <div class="dialog-body">
       <file-list-block
+        v-if="successList.length > 0"
         title="已上傳"
+        :file-list="successList"
       >
-        <div class="uploaded-data-info" slot="fileListTitle">資料類型：CSV 資料源名稱：XXXXX 資料11</div>
+        <div class="uploaded-data-info" slot="fileListTitle">資料類型：{{ currentUploadInfo.type }} 資料源名稱：{{ currentUploadInfo.name }}</div>
       </file-list-block>
       <file-list-block
+        v-if="failList.length > 0"
         title="未上傳"
+        type="fail"
+        :file-list="failList"
       ></file-list-block>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-default"
-          @click="cancelFileUpload"
+          @click="closeFileUploadDialog"
         >我知道了</button>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { uploadStatus } from '@/utils/general'
+import { mapState } from 'vuex'
 import FileListBlock from './FileListBlock'
 
 export default {
@@ -32,9 +39,27 @@ export default {
   components: {
     FileListBlock
   },
+  data () {
+    return {
+      uploadStatus
+    }
+  },
   methods: {
-    cancelFileUpload () {
+    closeFileUploadDialog () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    }
+  },
+  computed: {
+    ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
+    successList () {
+      return this.uploadFileList.filter(element => {
+        return element.status === uploadStatus.success
+      })
+    },
+    failList () {
+      return this.uploadFileList.filter(element => {
+        return element.status === uploadStatus.fail
+      })
     }
   }
 }

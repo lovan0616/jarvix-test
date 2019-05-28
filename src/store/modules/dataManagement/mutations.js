@@ -13,5 +13,8 @@ export default {
   },
   updateFileLoaded (state, data) {
     state.fileLoaded = data
+  },
+  updateBookmarkInfo (state, data) {
+    state.currentUploadInfo = data
   }
 }

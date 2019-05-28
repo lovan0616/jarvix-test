@@ -4,7 +4,9 @@
       <div class="block-title">{{ title }}</div>
       <slot name="fileListTitle"></slot>
     </div>
-    <div class="file-list">
+    <div class="file-list"
+      :class="{fail: type === 'fail'}"
+    >
       <single-file-row
         v-for="(singleFile, index) in fileList"
         :key="index"
@@ -32,12 +34,23 @@ export default {
       default: () => {
         return []
       }
+    },
+    type: {
+      type: String,
+      required: false
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .file-list-block {
+  &.forbidden {
+    .file-list {
+      min-height: 90px;
+      background-color: #F9F9F9;
+    }
+  }
+
   &:not(:last-child) {
     margin-bottom: 15px;
   }
@@ -45,7 +58,6 @@ export default {
   .block-title-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     margin-bottom: 10px;
 
     .block-title {
@@ -57,6 +69,12 @@ export default {
   .file-list {
     background: #FAFAFA;
     border-radius: 4px;
+    height: 300px;
+    overflow: auto;
+
+    &.fail {
+      height: 100px;
+    }
   }
 }
 </style>

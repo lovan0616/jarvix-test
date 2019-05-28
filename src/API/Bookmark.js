@@ -55,3 +55,37 @@ export function getBookmarkTableDataById (bookmarkId, bookmarkTableId) {
     method: 'GET'
   })
 }
+
+/**
+ * create bookmark
+ */
+export function createBookmark (bookmarkInfo) {
+  return request({
+    url: '/bookmarks',
+    method: 'POST',
+    data: bookmarkInfo
+  })
+}
+
+/**
+ * create bookmark
+ */
+export function deleteBookmark (bookmarkId) {
+  return request({
+    url: `/bookmarks/${bookmarkId}`,
+    method: 'DELETE'
+  })
+}
+
+/**
+ * change bookmark name
+ */
+export function renameBookmark (bookmarkId, name) {
+  return request({
+    url: `/bookmarks/${bookmarkId}`,
+    method: 'PUT',
+    data: {
+      name
+    }
+  })
+}

@@ -58,7 +58,7 @@ export function isArray (target) {
 }
 
 // 檔案狀態
-export const fileStatus = {
+export const uploadStatus = {
   // 等待上傳
   wait: 'wait',
   // 禁止上傳
@@ -68,5 +68,9 @@ export const fileStatus = {
   // 上傳成功
   success: 'success',
   // 上傳失敗
-  fail: 'fail'
+  fail: 'fail',
+  // 資料處理中
+  processing: 'processing',
+  // 上傳結束
+  finished: 'finished'
 }

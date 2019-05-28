@@ -9,8 +9,12 @@
         @click="cancel"
       >取消</button>
       <button type="button" class="btn btn-default"
+        :disabled="isProcessing"
         @click="confirm"
-      >確認刪除</button>
+      >
+        <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>處理中...</span>
+        <span v-else>确认删除</span>
+      </button>
     </template>
   </confirm-dialog>
 </template>
@@ -28,12 +32,21 @@ export default {
     },
     content: {
       type: String,
-      default: '確認刪除？'
+      default: '确认删除？'
+    }
+  },
+  data () {
+    return {
+      isProcessing: false
     }
   },
   methods: {
     confirm () {
-      this.$emit('confirm')
+      this.isProcessing = true
+      let result = new Promise(resolve => this.$emit('confirm', resolve))
+      result.then(() => {
+        this.isProcessing = false
+      })
     },
     cancel () {
       this.$emit('cancel')
