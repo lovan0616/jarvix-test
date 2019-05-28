@@ -170,6 +170,8 @@ export default {
       switch (format) {
         case 'YYYY-MM-DD':
           return this.timeStampToDate(value)
+        case 'YYYY-MM-DD HH:mm':
+          return this.timeStampToDateTime(value)
       }
     }
   },

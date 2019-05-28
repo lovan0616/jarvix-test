@@ -5,6 +5,8 @@ import getters from './getters'
 export default {
   namespaced: true,
   state: {
+    // 在資料表清單時，提供資料表上傳使用
+    currentBookmarkInfo: null,
     currentUploadInfo: {
       bookmarkId: null,
       storageId: null,

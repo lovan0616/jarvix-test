@@ -14,7 +14,16 @@ export default {
   updateFileLoaded (state, data) {
     state.fileLoaded = data
   },
-  updateBookmarkInfo (state, data) {
+  updateCurrentUploadInfo (state, data) {
     state.currentUploadInfo = data
+  },
+  updateCurrentBookmarkInfo (state, data) {
+    state.currentBookmarkInfo = data
+  },
+  clearCurrentUploadInfo (state) {
+    state.currentUploadInfo.bookmarkId = null
+    state.currentUploadInfo.storageId = null
+    state.currentUploadInfo.type = null
+    state.currentUploadInfo.name = null
   }
 }

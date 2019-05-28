@@ -17,6 +17,7 @@
           <div class="error-text">請先選擇資料類型</div>
         </div>
         <div class="input-block file-info-input-block"
+          v-if="!currentBookmarkInfo"
           :class="{'has-error': errors.has('dataSourceName')}"
         >
           <input type="text" class="input file-source-input"
@@ -43,7 +44,7 @@
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
-import { createBookmark } from '@/API/Bookmark'
+import { createBookmark, createBookmarkStorage } from '@/API/Bookmark'
 
 export default {
   inject: ['$validator'],
@@ -80,18 +81,32 @@ export default {
     nextStep () {
       this.$validator.validateAll().then(result => {
         if (result) {
-          // 新增bookmark
-          createBookmark(this.bookmarkInfo)
-            .then(res => {
-              this.$store.commit('dataManagement/updateBookmarkInfo', {
-                bookmarkId: res.bookmark.id,
-                storageId: res.storage.id,
-                ...this.bookmarkInfo
-              })
-              this.$store.commit('dataManagement/updateFileTypeChosen', true)
+          let promise
+          if (this.currentBookmarkInfo) {
+            // 編輯 bookmark 取得 storageId
+            promise = createBookmarkStorage(this.currentBookmarkInfo.id, this.bookmarkInfo.type)
+            // 將 name 塞進去
+            this.bookmarkInfo.name = this.currentBookmarkInfo.name
+          } else {
+            // 新增bookmark
+            promise = createBookmark(this.bookmarkInfo)
+          }
+
+          promise.then(res => {
+            this.$store.commit('dataManagement/updateCurrentUploadInfo', {
+              bookmarkId: res.bookmark.id,
+              storageId: res.storage.id,
+              ...this.bookmarkInfo
             })
+            this.$store.commit('dataManagement/updateFileTypeChosen', true)
+          })
         }
       })
+    }
+  },
+  computed: {
+    currentBookmarkInfo () {
+      return this.$store.state.dataManagement.currentBookmarkInfo
     }
   }
 }
@@ -106,12 +121,23 @@ export default {
   .input-block-container {
     width: 53.41%;
     margin: 0 auto;
-    padding: 52px 0 176px;
+    // padding: 52px 0 176px;
+
+    padding-bottom: 176px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    .input-block {
+      &:not(:last-child) {
+        margin-bottom: 92px;
+      }
+    }
   }
 
   .file-type-select-block {
     position: relative;
-    margin-bottom: 92px;
   }
 
   .file-type-select {
@@ -120,7 +146,6 @@ export default {
 
   .file-info-input-block {
     position: relative;
-    flex: 1;
 
     .file-source-input {
       height: 40px;

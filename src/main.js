@@ -70,6 +70,8 @@ Vue.component(ContainerCard.name, ContainerCard)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
 Vue.component(PreviewBookmark.name, PreviewBookmark)
 Vue.use(VeeValidate, {
+  // 避免自動 inject 到所有 component
+  inject: false,
   // 語系
   locale: 'zh_TW',
   // 驗證字串

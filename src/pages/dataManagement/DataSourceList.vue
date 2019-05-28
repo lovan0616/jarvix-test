@@ -69,7 +69,7 @@ export default {
           sort: true,
           width: '16.3%',
           link: {
-            name: 'DataFileList'
+            name: 'PageDataFileList'
           }
         },
         {text: '资料来源', value: 'type'},
