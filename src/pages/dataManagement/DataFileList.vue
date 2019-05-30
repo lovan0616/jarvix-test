@@ -30,7 +30,7 @@
       v-if="showConfirmDeleteDialog"
       title="删除资料表"
       content="您确认要删除此资料表吗?"
-      @confirm="deleteCSV"
+      @confirm="deleteFile"
       @cancel="cancelDelete"
     ></confirm-delete-dialog>
     <confirm-change-name-dialog
@@ -70,27 +70,23 @@ export default {
       tableHeaders: [
         {
           text: '资料表名称',
-          value: 'name',
+          value: 'filename',
           sort: true,
-          width: '19.57%',
-          link: {
-            name: 'PageDataFileList'
-          }
+          width: '19.57%'
         },
-        {text: '资料来源', value: 'type'},
         {
           text: '建立日期',
           value: 'create_date',
           sort: true,
           width: '25.54%',
-          time: 'YYYY-MM-DD'
+          time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: '修改日期',
           value: 'update_date',
           sort: true,
           width: '25.54%',
-          time: 'YYYY-MM-DD'
+          time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: '操作',
@@ -125,6 +121,14 @@ export default {
   methods: {
     fetchData () {
       return getBookmarkById(this.currentBookmarkId).then(response => {
+        let uploadInfo = response.config.uploads
+        let newDataList = []
+
+        Object.keys(response.config.uploads).forEach(element => {
+          uploadInfo[element].id = element
+          newDataList.push(uploadInfo[element])
+        })
+        this.dataList = newDataList
         this.$store.commit('dataManagement/updateCurrentBookmarkInfo', response)
       })
     },
@@ -142,23 +146,19 @@ export default {
       this.deleteId = dataObj.id
       this.showConfirmDeleteDialog = true
     },
-    /**
-     * 要調整！
-     */
-    deleteCSV (resolve) {
+    deleteFile (resolve) {
       // 先去取得 stoarge id
-      createBookmarkStorage(this.currentBookmarkId, 'CSV')
+      createBookmarkStorage(this.currentBookmarkId, this.currentBookmarkInfo.type)
         .then(res => {
-          deleteCSV(res.storage.id, this.deleteId)
-            .then(response => {
-              this.fetchData()
-                .then(() => {
-                  this.cancelDelete()
-                  resolve()
-                })
-            }).catch(() => {
-              resolve()
-            })
+          deleteCSV(res.storage.id, this.deleteId).then(response => {
+            this.fetchData()
+              .then(() => {
+                this.cancelDelete()
+                resolve()
+              })
+          }).catch(() => {
+            resolve()
+          })
         })
     },
     cancelDelete () {
