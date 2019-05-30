@@ -24,9 +24,12 @@ import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/chart/scatter'
+import 'echarts/lib/chart/boxplot'
+import 'echarts/lib/chart/custom'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/markLine'
 import 'echarts/lib/component/legend'
+import 'echarts-stat'
 
 import Layout from './components/Layout.vue'
 import Task from './components/Task.vue'
@@ -40,6 +43,8 @@ import ResultBoardHeader from '@/components/resultBoard/ResultBoardHeader'
 import ResultBoardBody from '@/components/resultBoard/ResultBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
+import DisplayHistogramChart from '@/components/display/DisplayHistogramChart'
+import DisplayBoxPlotChart from '@/components/display/DisplayBoxPlotChart'
 import InsightsInfo from '@/components/display/InsightsInfo'
 import IndicatorInfo from '@/components/display/IndicatorInfo'
 import IndicatorsList from '@/components/display/IndicatorsList'
@@ -63,6 +68,8 @@ Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
 Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
 Vue.component(DisplayScatterChart.name, DisplayScatterChart)
+Vue.component(DisplayHistogramChart.name, DisplayHistogramChart)
+Vue.component(DisplayBoxPlotChart.name, DisplayBoxPlotChart)
 Vue.component(Layout.name, Layout)
 Vue.component(Task.name, Task)
 Vue.component(ContainerBlock.name, ContainerBlock)

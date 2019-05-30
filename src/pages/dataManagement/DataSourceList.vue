@@ -143,15 +143,11 @@ export default {
     deleteBookmark (resolve) {
       deleteBookmark(this.deleteId)
         .then(response => {
-          if (response) {
-            this.fetchData()
-              .then(() => {
-                this.cancelDelete()
-                resolve()
-              })
-          } else {
-            resolve()
-          }
+          this.fetchData()
+            .then(() => {
+              this.cancelDelete()
+              resolve()
+            })
         }).catch(() => {
           resolve()
         })
@@ -163,15 +159,11 @@ export default {
     renameBookmark ({resolve, name}) {
       renameBookmark(this.renameDataSource.id, name)
         .then(response => {
-          if (response) {
-            this.fetchData()
-              .then(() => {
-                this.cancelRename()
-                resolve()
-              })
-          } else {
-            resolve()
-          }
+          this.fetchData()
+            .then(() => {
+              this.cancelRename()
+              resolve()
+            })
         }).catch(() => {
           resolve()
         })

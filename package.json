@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "co": "^4.6.0",
+    "echarts-stat": "1.1.0",
     "element-ui": "^2.4.1",
     "fuzzball": "^1.1.2",
     "lodash.orderby": "^4.6.0",
