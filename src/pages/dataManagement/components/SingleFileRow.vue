@@ -87,11 +87,7 @@ export default {
         _this.askCancelFunction = c
       }))
         .then(response => {
-          if (response) {
-            this.singleFile.status = uploadStatus.success
-          } else {
-            this.singleFile.status = uploadStatus.fail
-          }
+          this.singleFile.status = uploadStatus.success
         }).catch(() => {
           this.singleFile.status = uploadStatus.fail
         })

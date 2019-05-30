@@ -30,14 +30,14 @@
       v-if="showConfirmDeleteDialog"
       title="删除资料表"
       content="您确认要删除此资料表吗?"
-      @confirm="deleteBookmark"
+      @confirm="deleteCSV"
       @cancel="cancelDelete"
     ></confirm-delete-dialog>
     <confirm-change-name-dialog
       v-if="showConfirmRenameDialog"
       title="重新命名资料表"
       :source="renameDataSource.name"
-      @confirm="renameBookmark"
+      @confirm="renameCSV"
       @cancel="cancelRename"
     ></confirm-change-name-dialog>
   </div>
@@ -47,7 +47,8 @@ import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
-import { getBookmarkById, deleteBookmark, renameBookmark } from '@/API/Bookmark'
+import { getBookmarkById, renameCSV, createBookmarkStorage } from '@/API/Bookmark'
+import { deleteCSV } from '@/API/Upload'
 
 export default {
   name: 'DataFileList',
@@ -111,6 +112,9 @@ export default {
   mounted () {
     this.fetchData()
   },
+  destroyed () {
+    this.$store.commit('dataManagement/updateCurrentBookmarkInfo', null)
+  },
   watch: {
     fileLoaded (value) {
       if (value) {
@@ -138,38 +142,37 @@ export default {
       this.deleteId = dataObj.id
       this.showConfirmDeleteDialog = true
     },
-    deleteBookmark (resolve) {
-      deleteBookmark(this.deleteId)
-        .then(response => {
-          if (response) {
-            this.fetchData()
-              .then(() => {
-                this.cancelDelete()
-                resolve()
-              })
-          } else {
-            resolve()
-          }
-        }).catch(() => {
-          resolve()
+    /**
+     * 要調整！
+     */
+    deleteCSV (resolve) {
+      // 先去取得 stoarge id
+      createBookmarkStorage(this.currentBookmarkId, 'CSV')
+        .then(res => {
+          deleteCSV(res.storage.id, this.deleteId)
+            .then(response => {
+              this.fetchData()
+                .then(() => {
+                  this.cancelDelete()
+                  resolve()
+                })
+            }).catch(() => {
+              resolve()
+            })
         })
     },
     cancelDelete () {
       this.deleteId = null
       this.showConfirmDeleteDialog = false
     },
-    renameBookmark ({resolve, name}) {
-      renameBookmark(this.renameDataSource.id, name)
+    renameCSV ({resolve, name}) {
+      renameCSV(this.currentBookmarkId, this.renameDataSource.id, name)
         .then(response => {
-          if (response) {
-            this.fetchData()
-              .then(() => {
-                this.cancelRename()
-                resolve()
-              })
-          } else {
-            resolve()
-          }
+          this.fetchData()
+            .then(() => {
+              this.cancelRename()
+              resolve()
+            })
         }).catch(() => {
           resolve()
         })

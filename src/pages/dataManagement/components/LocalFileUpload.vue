@@ -117,9 +117,7 @@ export default {
     processData () {
       publishStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.bookmarkId)
         .then(response => {
-          if (response) {
-            this.$store.commit('dataManagement/updateFileLoaded', true)
-          }
+          this.$store.commit('dataManagement/updateFileLoaded', true)
         })
     },
     cancelFileUpload () {
