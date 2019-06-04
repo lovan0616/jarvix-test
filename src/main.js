@@ -45,6 +45,8 @@ import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
 import DisplayHistogramChart from '@/components/display/DisplayHistogramChart'
 import DisplayBoxPlotChart from '@/components/display/DisplayBoxPlotChart'
+import DisplayTreeMapChart from '@/components/display/DisplayTreeMapChart'
+import DisplayBubbleScatterChart from '@/components/display/DisplayBubbleScatterChart'
 import InsightsInfo from '@/components/display/InsightsInfo'
 import IndicatorInfo from '@/components/display/IndicatorInfo'
 import IndicatorsList from '@/components/display/IndicatorsList'
@@ -70,6 +72,8 @@ Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
 Vue.component(DisplayScatterChart.name, DisplayScatterChart)
 Vue.component(DisplayHistogramChart.name, DisplayHistogramChart)
 Vue.component(DisplayBoxPlotChart.name, DisplayBoxPlotChart)
+Vue.component(DisplayBubbleScatterChart.name, DisplayBubbleScatterChart)
+Vue.component(DisplayTreeMapChart.name, DisplayTreeMapChart)
 Vue.component(Layout.name, Layout)
 Vue.component(Task.name, Task)
 Vue.component(ContainerBlock.name, ContainerBlock)
@@ -80,7 +84,7 @@ Vue.use(VeeValidate, {
   // 避免自動 inject 到所有 component
   inject: false,
   // 語系
-  locale: 'zh_TW',
+  locale: 'zh_CN',
   // 驗證字串
   dictionary: {
     zh_TW: {
@@ -96,6 +100,22 @@ Vue.use(VeeValidate, {
         },
         max (field, length) {
           return `最多${length}個字元`
+        }
+      }
+    },
+    zh_CN: {
+      messages: {
+        required () {
+          return '栏位不得空白'
+        },
+        email () {
+          return '信箱格式错误'
+        },
+        numeric () {
+          return '请输入数字'
+        },
+        max (field, length) {
+          return `最多${length}个字元`
         }
       }
     }
