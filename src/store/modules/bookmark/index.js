@@ -11,7 +11,9 @@ export default {
     suggestions: {},
     quickstartNum: 3,
     quickstartResult: {},
-    appQuestion: ''
+    appQuestion: '',
+    // 歷史問題清單
+    historyQuestionList: []
   },
   actions,
   mutations,

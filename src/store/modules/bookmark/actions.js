@@ -2,6 +2,7 @@ import * as types from './mutation_type'
 import co from 'co'
 import router from '../../../router'
 import { getBookmarks, getSuggestions, getQuickstarts } from '@/API/Bookmark'
+import { getHistoryQuestionList } from '@/API/Ask'
 
 export default {
   init ({ commit, dispatch, state }) {
@@ -42,12 +43,17 @@ export default {
   },
   updateResultRouter ({commit, getters}, data) {
     router.push({
-      name: 'PageResult',
+      name: 'PageResultPreview',
       query: {
         question: data || getters.appQuestion,
         '_': new Date().getTime(),
         bookmarkId: getters.bookmarkId
       }
+    })
+  },
+  getHistoryQuestionList ({commit}) {
+    return getHistoryQuestionList().then(res => {
+      commit('setHistoryQuestionList', res.history)
     })
   }
 }
