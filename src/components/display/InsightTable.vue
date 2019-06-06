@@ -7,38 +7,54 @@
           v-if="info.nTable.length > 0"
         >
           <div class="insight-table-row table-head">
-            <div class="insight-table-cell"
-              v-for="(value, key, index) in info.nTable[0]"
-              :key="index"
-            >{{ key }}</div>
+            <div class="insight-table-cell"></div>
+            <div class="insight-table-cell">總和</div>
+            <div class="insight-table-cell">總數量</div>
+            <div class="insight-table-cell">最大數值</div>
+            <div class="insight-table-cell">最小數值</div>
+            <div class="insight-table-cell">平均值</div>
+            <div class="insight-table-cell">標準差</div>
+            <div class="insight-table-cell">備註</div>
           </div>
           <div class="insight-table-row"
             v-for="(tableInfo, index) in info.nTable"
             :key="index"
           >
-            <div class="insight-table-cell"
-              v-for="(tableCell, cellIndex) in tableInfo"
-              :key="cellIndex"
-            >{{ tableCell }}</div>
+            <div class="insight-table-cell">{{ tableInfo.name }}</div>
+            <div class="insight-table-cell">{{ tableInfo.sum }}</div>
+            <div class="insight-table-cell">{{ tableInfo.count }}</div>
+            <div class="insight-table-cell">{{ tableInfo.max }}</div>
+            <div class="insight-table-cell">{{ tableInfo.min }}</div>
+            <div class="insight-table-cell">{{ tableInfo.avg }}</div>
+            <div class="insight-table-cell">{{ tableInfo.sd }}</div>
+            <div class="insight-table-cell">{{ tableInfo.comment }}</div>
           </div>
         </div>
         <div class="insight-table"
           v-if="info.cTable.length > 0"
         >
           <div class="insight-table-row table-head">
-            <div class="insight-table-cell"
-              v-for="(value, key, index) in info.cTable[0]"
-              :key="index"
-            >{{ key }}</div>
+            <div class="insight-table-cell"></div>
+            <div class="insight-table-cell">總數量</div>
+            <div class="insight-table-cell">最大類別</div>
+            <div class="insight-table-cell">最大類別數量</div>
+            <div class="insight-table-cell">最小類別</div>
+            <div class="insight-table-cell">最小類別數量</div>
+            <div class="insight-table-cell">數量平均值</div>
+            <div class="insight-table-cell">數量標準差</div>
           </div>
           <div class="insight-table-row"
             v-for="(tableInfo, index) in info.cTable"
             :key="index"
           >
-            <div class="insight-table-cell"
-              v-for="(tableCell, cellIndex) in tableInfo"
-              :key="cellIndex"
-            >{{ tableCell }}</div>
+            <div class="insight-table-cell">{{ tableInfo.name }}</div>
+            <div class="insight-table-cell">{{ tableInfo.total }}</div>
+            <div class="insight-table-cell">{{ tableInfo.max }}</div>
+            <div class="insight-table-cell">{{ tableInfo.max_n }}</div>
+            <div class="insight-table-cell">{{ tableInfo.min }}</div>
+            <div class="insight-table-cell">{{ tableInfo.min_n }}</div>
+            <div class="insight-table-cell">{{ tableInfo.avg }}</div>
+            <div class="insight-table-cell">{{ tableInfo.sd }}</div>
           </div>
         </div>
       </div>
@@ -99,6 +115,7 @@ export default {
     font-size: 14px;
     line-height: 24px;
     padding: 4px 0;
+    margin-right: 10px;
 
     &:first-child {
       width: 7%;
@@ -116,6 +133,9 @@ export default {
       width: 10.66%;
     }
     &:nth-child(6) {
+      width: 10.66%;
+    }
+    &:nth-child(7) {
       width: 10.66%;
     }
     &:last-child {
