@@ -16,12 +16,7 @@ export default {
     info: {
       type: Object,
       default () {
-        return {
-          'rootCause': [  
-            '當customer_id等於PNMS時，資料筆數為2229，佔整體7.0%，price的平均為267.17，高於整體平均(52.83)405.75%。',
-            '當customer_id等於FOXBORO時，資料筆數為1022，佔整體3.0%，price的平均為251.7，高於整體平均(52.83)376.46%。'
-          ]
-        }
+        return {}
       }
     }
   }

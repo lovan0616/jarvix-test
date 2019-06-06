@@ -14,7 +14,6 @@
       v-else
       v-bind="layout"
     ></layout>
-    <insight-list></insight-list>
   </div>
 </template>
 
@@ -40,30 +39,28 @@ export default {
       askCancelFunction: null
     }
   },
-  watch: {
-    '$route.query' ({ question }) {
-      if (!question) return false
-      this.fetchApiAsk({ question, 'bookmark_id': this.bookmarkId })
-    }
+  // watch: {
+  //   '$route.query' ({ question }) {
+  //     if (!question) return false
+  //     this.fetchApiAsk({ question, 'bookmark_id': this.bookmarkId })
+  //   }
+  // },
+  mounted () {
+    this.fetchData()
   },
-  created () {
-    this.$store.dispatch('bookmark/init').then(state => {
-      this.fetchData()
-    })
-  },
-  activated () {
-    // 從個人釘板回到搜尋結果，如果有記錄先組回原有的 router path
-    if (this.appQuestion && !this.$route.query.question) {
-      this.$router.push({
-        name: 'PageResultDisplay',
-        query: {
-          question: this.appQuestion,
-          '_': new Date().getTime(),
-          bookmarkId: this.bookmarkId
-        }
-      })
-    }
-  },
+  // activated () {
+  //   // 從個人釘板回到搜尋結果，如果有記錄先組回原有的 router path
+  //   if (this.appQuestion && !this.$route.query.question) {
+  //     this.$router.push({
+  //       name: 'PageResultDisplay',
+  //       query: {
+  //         question: this.appQuestion,
+  //         '_': new Date().getTime(),
+  //         bookmarkId: this.bookmarkId
+  //       }
+  //     })
+  //   }
+  // },
   computed: {
     ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion'])
   },
@@ -72,8 +69,6 @@ export default {
       let question = this.$route.query.question
       let bookmarkId = parseInt(this.$route.query.bookmarkId)
       if (question) {
-        this.$store.commit('bookmark/setAppQuestion', question)
-        this.$store.commit('bookmark/setBookmarkId', bookmarkId)
         this.fetchApiAsk({ question, 'bookmark_id': bookmarkId })
       }
     },

@@ -4,7 +4,9 @@
   >
     <div class="board-title">{{ question }}</div>
     <div class="board-img"></div>
-    <div class="board-indicators">
+    <div class="board-indicators"
+      v-loading="isLoading"
+    >
       <div class="single-indicator"
         v-for="(indicator, index) in indicators"
         :key="index"
@@ -28,7 +30,8 @@ export default {
   data () {
     return {
       dataType: null,
-      indicators: []
+      indicators: [],
+      isLoading: false
     }
   },
   mounted () {
@@ -36,6 +39,7 @@ export default {
   },
   methods: {
     fetechData () {
+      this.isLoading = true
       getQuestionPreview({'question': this.question, 'bookmark_id': this.bookmarkId})
         .then(response => {
           this.dataType = response.pictype
@@ -46,6 +50,7 @@ export default {
             getTaskData(element.intent, element.entities)
               .then(res => {
                 this.$set(this.indicators, index, res)
+                this.isLoading = false
               })
           })
         })
@@ -56,7 +61,7 @@ export default {
         name: 'PageResultDisplay',
         query: {
           question: this.question,
-          bookmark_id: this.bookmarkId
+          bookmarkId: this.bookmarkId
         }
       })
     }
@@ -89,6 +94,7 @@ export default {
   .board-indicators {
     display: flex;
     justify-content: space-between;
+    min-height: 77px;
   }
   .single-indicator {
     width: 47.37%;
