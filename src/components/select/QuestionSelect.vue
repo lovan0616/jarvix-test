@@ -5,7 +5,7 @@
       v-model="appQuestion"
       :placeholder="appQuestionPlaceholder"
       @click="toggleDropdown"
-      @keyup.enter="enterQuestion"
+      @keypress.enter="enterQuestion"
     >
     <div class="option-list"
       v-show="isDropdownOpen"

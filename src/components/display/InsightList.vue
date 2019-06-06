@@ -1,9 +1,9 @@
 <template>
-  <div class="insight-info-block">
-    <div class="insight-title">{{ info.title }}</div>
-    <div class="insight-info-list">
+  <div class="insights-info root-cause">
+    <div class="insighs-info-title">資料探勘</div>
+    <div class="insights-info-block">
       <div class="insight-info"
-        v-for="(insight, index) in info.value"
+        v-for="(insight, index) in info.rootCause"
         :key="index"
       >{{ insight }}</div>
     </div>
@@ -11,33 +11,30 @@
 </template>
 <script>
 export default {
-  name: 'InsightInfoBlock',
+  name: 'InsightList',
   props: {
     info: {
       type: Object,
       default () {
-        return {}
+        return {
+          'rootCause': [  
+            '當customer_id等於PNMS時，資料筆數為2229，佔整體7.0%，price的平均為267.17，高於整體平均(52.83)405.75%。',
+            '當customer_id等於FOXBORO時，資料筆數為1022，佔整體3.0%，price的平均為251.7，高於整體平均(52.83)376.46%。'
+          ]
+        }
       }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.insight-info-block {
-  .insight-title {
-    font-size: 18px;
-    line-height: 26px;
-    letter-spacing: 0.1em;
-    color: #000000;
-    margin-bottom: 6px;
-  }
-  .insight-info-list {
-    background: #F5FBFB;
-    border-radius: 8px;
+.insights-info.root-cause {
+  .insights-info-block {
     padding: 15px 20px;
 
     .insight-info {
       display: flex;
+      font-size: 14px;
       line-height: 20px;
       letter-spacing: 0.05em;
 

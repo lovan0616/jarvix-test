@@ -14,6 +14,7 @@
       v-else
       v-bind="layout"
     ></layout>
+    <insight-list></insight-list>
   </div>
 </template>
 
@@ -118,6 +119,11 @@ export default {
       if (typeof this.askCancelFunction === 'function') {
         this.askCancelFunction('cancel request')
       }
+    },
+    selectQuestion (data) {
+      this.$store.commit('bookmark/setAppQuestion', data.question)
+      this.$store.commit('bookmark/setBookmarkId', data.bookmark_Id)
+      this.$store.dispatch('bookmark/updateResultRouter')
     }
   }
 }
