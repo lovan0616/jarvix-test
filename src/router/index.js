@@ -17,8 +17,19 @@ export default new Router({
         },
         {
           path: 'result',
-          name: 'PageResult',
-          component: () => import('@/pages/result/Index')
+          component: () => import('@/pages/result/Index'),
+          children: [
+            {
+              path: 'preview',
+              name: 'PageResultPreview',
+              component: () => import('@/pages/result/ResultPreview')
+            },
+            {
+              path: 'display',
+              name: 'PageResultDisplay',
+              component: () => import('@/pages/result/ResultDisplay')
+            }
+          ]
         },
         {
           path: 'pinboard',

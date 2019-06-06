@@ -58,22 +58,36 @@ export default {
     dataset: {
       type: Object,
       default () {
-        return {}
+        return {
+          data: [
+            [
+              [10, 20, 500],
+              [30, 50, 20000],
+              [50, 10, 300],
+              [0, 50, 5000],
+              [70, 0, 20]
+            ],
+            [
+              [10, 0, 3300],
+              [60, 20, 2000],
+              [20, 60, 300],
+              [40, 50, 5000],
+              [50, 0, 2000]
+            ]
+          ],
+          index: [
+            '1e',
+            '2e',
+            '3e',
+            '4e',
+            '5e'
+          ],
+          columns: [
+            '2011',
+            '2012'
+          ]
+        }
       }
-    }
-  },
-  data () {
-    return {
-      maxValue: null,
-      minValue: null,
-      maxXaxis: null,
-      maxYaxis: null
-    }
-  },
-  methods: {
-    bubbleSize (data) {
-      // 先 normalize 到 1 - 10
-      return  data[2]*(10 - 1)/(this.maxValue - this.minValue)*(this.maxXaxis/4)
     }
   },
   computed: {
@@ -91,10 +105,10 @@ export default {
     },
     chartOption () {
       chartAddon.series = []
-      this.maxValue = -Infinity
-      this.minValue = Infinity
-      this.maxXaxis = -Infinity
-      this.maxYaxis = -Infinity
+      let maxValue = -Infinity
+      let minValue = Infinity
+      let maxXaxis = -Infinity
+      let maxYaxis = -Infinity
 
       for (let i = 0; i < this.dataset.data.length; i++) {
         this.dataset.data[i].forEach((element, index) => {
@@ -103,25 +117,23 @@ export default {
           // 塞入類別（組別）名稱
           element[4] = this.dataset.columns[i]
           // x軸最大值
-          if (element[0] > this.maxXaxis) {
-            this.maxXaxis = element[0]
-          }
+          maxXaxis = Math.max(maxXaxis, element[0])
           // y軸最大值
-          if (element[1] > this.maxYaxis) {
-            this.maxYaxis = element[1]
-          }
+          maxYaxis = Math.max(maxYaxis, element[1])
           // 資料最大值
-          if (element[2] > this.maxValue) {
-            this.maxValue = element[2]
-          }
+          maxValue = Math.max(maxValue, element[2])
           // 資料最小值
-          if (element[2] < this.minValue) {
-            this.minValue = element[2]
-          }
+          minValue = Math.min(minValue, element[2])
         })
 
         let config = JSON.parse(JSON.stringify(scatterBubleChartConfig))
-        config.chartData.symbolSize = this.bubbleSize
+        config.chartData.symbolSize = function (data) {
+          // 先 normalize 到 1 - 10
+          return data[2] * (10 - 1) / (maxValue - minValue) * (maxXaxis / 4)
+        }
+        config.chartData.label.emphasis.formatter = function (param) {
+          return param.data[3]
+        }
         config.chartData.name = this.dataset.columns[i]
         config.chartData.itemStyle.color = this.colorList[i] || this.colorList[i % 10]
         config.chartData.data = this.dataset.data[i]

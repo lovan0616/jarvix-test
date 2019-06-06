@@ -2,74 +2,32 @@
   <div class="result-page">
     <div class="result-question-select-block">
       <bookmark-select></bookmark-select>
-      <question-select></question-select>
+      <question-select class="question-select"></question-select>
+      <history-question-list></history-question-list>
     </div>
-    <div class="result-layout"
-      v-if="showLayout"
-    >
-      <section class="section-left-side">
-        <recommend-question-list
-          v-if="relatedQuestionList.length > 0"
-          :question-list="relatedQuestionList"
-          @choose="selectQuestion"
-        ></recommend-question-list>
-        <empty-result
-          v-if="isNoResult"
-        ></empty-result>
-        <layout
-          v-else
-          v-bind="layout"
-        ></layout>
-      </section>
-      <section class="section-right-side">
-        <div class="seciotn-title">历史问题</div>
-        <history-question-list
-          :question-list="historyQuestionList"
-          @choose="selectQuestion"
-        ></history-question-list>
-      </section>
-    </div>
+    <transition name="fade" mode="out-in">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import { mapGetters } from 'vuex'
-import { askQuestion, relateQuestions, getHistoryQuestionList } from '@/API/Ask'
 import BookmarkSelect from '@/components/select/BookmarkSelect'
 import QuestionSelect from '@/components/select/QuestionSelect'
 import HistoryQuestionList from '@/pages/result/components/HistoryQuestionList'
-import RecommendQuestionList from '@/pages/result/components/RecommendQuestionList'
-import EmptyResult from '@/pages/result/components/EmptyResult'
 
 export default {
   name: 'PageResult',
   components: {
     HistoryQuestionList,
-    RecommendQuestionList,
     BookmarkSelect,
-    QuestionSelect,
-    EmptyResult
-  },
-  data () {
-    return {
-      layout: undefined,
-      showLayout: false,
-      isNoResult: false,
-      historyQuestionList: [],
-      relatedQuestionList: [],
-      askCancelFunction: null
-    }
-  },
-  watch: {
-    '$route.query' ({ question }) {
-      if (!question) return false
-      this.fetchApiAsk({ question, 'bookmark_id': this.bookmarkId })
-    }
+    QuestionSelect
   },
   created () {
     this.$store.dispatch('bookmark/init').then(state => {
       this.fetchData()
+      this.$store.dispatch('bookmark/getHistoryQuestionList')
     })
   },
   activated () {
@@ -95,71 +53,7 @@ export default {
       if (question) {
         this.$store.commit('bookmark/setAppQuestion', question)
         this.$store.commit('bookmark/setBookmarkId', bookmarkId)
-        this.fetchApiAsk({ question, 'bookmark_id': bookmarkId })
       }
-    },
-    clearLayout () {
-      this.layout = undefined
-    },
-    fetchApiAsk (data) {
-      this.isNoResult = false
-      this.showLayout = true
-      this.clearLayout()
-
-      const _this = this
-      this.cancelRequest()
-
-      askQuestion(data, new axios.CancelToken(function executor (c) {
-        _this.askCancelFunction = c
-      }))
-        .then(res => {
-          this.layout = res
-        }).catch(error => {
-          if (error.response && error.response.status === 500) {
-            this.isNoResult = true
-            this.relatedQuestionList = []
-          }
-        })
-      this.fetchHistoryQuestionList()
-      this.getRelatedQuestions(data)
-    },
-    getRelatedQuestions (data) {
-      const _this = this
-      relateQuestions(data, new axios.CancelToken(function executor (c) {
-        _this.askCancelFunction = c
-      }))
-        .then(res => {
-          // 這邊後端要調整，資料集會返回空陣列
-          if (res.vertical) {
-            this.relatedQuestionList = res.vertical.concat(res.horizontal)
-          } else {
-            this.relatedQuestionList = []
-          }
-        })
-    },
-    cancelRequest () {
-      if (typeof this.askCancelFunction === 'function') {
-        this.askCancelFunction('cancel request')
-      }
-    },
-    selectQuestion (data) {
-      this.$store.commit('bookmark/setAppQuestion', data.question)
-      this.$store.commit('bookmark/setBookmarkId', data.bookmark_Id)
-      this.$store.dispatch('bookmark/updateResultRouter')
-    },
-    fetchHistoryQuestionList () {
-      getHistoryQuestionList()
-        .then(res => {
-          this.historyQuestionList = res.history
-        })
-    },
-    onBookmarkChange (bookmarkId) {
-      this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId).then(state => {
-        this.clearLayout()
-        this.$store.commit('bookmark/setAppQuestion', '')
-        this.showLayout = false
-        this.isNoResult = false
-      })
     }
   }
 }
@@ -170,18 +64,11 @@ export default {
     display: flex;
     margin-bottom: 20px;
   }
+  .question-select {
+    margin-right: 30px;
+  }
 }
 .result-layout {
-  display: flex;
-  justify-content: space-between;
-
-  .section-left-side {
-    width: 82.84%;
-  }
-
-  .section-right-side {
-    width: 15.67%;
-  }
 
   .seciotn-title {
     font-size: 18px;

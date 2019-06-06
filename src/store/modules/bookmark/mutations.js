@@ -20,5 +20,8 @@ export default {
   },
   setBookmarkId (state, data) {
     state.bookmark.id = data
+  },
+  setHistoryQuestionList (state, data) {
+    state.historyQuestionList = data
   }
 }
