@@ -52,7 +52,6 @@
       >{{ commentInfo }}</div>
     </div>
   </div>
-  
 </template>
 <script>
 export default {
@@ -60,7 +59,7 @@ export default {
   props: {
     info: {
       type: Object,
-      default() {
+      default () {
         return {}
       }
     }
