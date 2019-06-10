@@ -30,6 +30,11 @@ export default {
       isDropdownOpen: false
     }
   },
+  watch: {
+    '$route.path' () {
+      this.isDropdownOpen = false
+    }
+  },
   mounted () {
     document.addEventListener('click', this.autoHide, false)
   },
@@ -52,8 +57,9 @@ export default {
     },
     chooseHistoryQuestion (bookmarkId, question) {
       this.$store.commit('bookmark/setAppQuestion', question)
-      this.$store.commit('bookmark/setBookmarkId', bookmarkId)
+      this.$store.commit('bookmark/setBookmarkById', bookmarkId)
       this.$store.dispatch('bookmark/updateResultRouter')
+      this.isDropdownOpen = false
     }
   },
   computed: {
@@ -101,6 +107,7 @@ export default {
   background: #FFF;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
+  z-index: 990;
 
   .single-history-question {
     padding: 15px;

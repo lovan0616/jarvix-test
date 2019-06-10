@@ -1,4 +1,5 @@
 import * as types from './mutation_type'
+import { stat } from 'fs';
 export default {
   [types.SET_ISINIT] (state, value) {
     state.isInit = value || false
@@ -18,8 +19,8 @@ export default {
   setAppQuestion (state, data) {
     state.appQuestion = data
   },
-  setBookmarkId (state, data) {
-    state.bookmark.id = data
+  setBookmarkById (state, data) {
+    state.bookmark = state.bookmarks.find(element => element.id === data)
   },
   setHistoryQuestionList (state, data) {
     state.historyQuestionList = data

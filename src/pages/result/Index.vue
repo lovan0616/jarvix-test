@@ -52,7 +52,7 @@ export default {
       let bookmarkId = parseInt(this.$route.query.bookmarkId)
       if (question) {
         this.$store.commit('bookmark/setAppQuestion', question)
-        this.$store.commit('bookmark/setBookmarkId', bookmarkId)
+        this.$store.commit('bookmark/setBookmarkById', bookmarkId)
       }
     }
   }
