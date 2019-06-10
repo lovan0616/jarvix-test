@@ -1,19 +1,23 @@
 .data-management {
   .page-title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
 
     .title {
       font-size: 16px;
       line-height: 20px;
       letter-spacing: 1px;
+      margin-bottom: 32px;
     }
+    .button-block {
+      display: flex;
 
-    .link {
+      .btn:not(:last-child) {
+        margin-right: 16px;
+      }
+
       .icon {
-        font-size: 22px;
+        font-size: 18px;
+        margin-right: 10px;
       }
     }
   }
@@ -102,6 +106,12 @@
 
     &:not(:last-child) {
       margin-right: 15px;
+    }
+
+    &.checkbox {
+      flex: initial;
+      width: 34px;
+      text-align: center;
     }
 
     &.right {
