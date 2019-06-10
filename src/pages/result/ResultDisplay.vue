@@ -117,7 +117,7 @@ export default {
     },
     selectQuestion (data) {
       this.$store.commit('bookmark/setAppQuestion', data.question)
-      this.$store.commit('bookmark/setBookmarkId', data.bookmark_Id)
+      this.$store.commit('bookmark/setBookmarkById', data.bookmark_Id)
       this.$store.dispatch('bookmark/updateResultRouter')
     }
   }
