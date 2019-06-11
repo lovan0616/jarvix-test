@@ -76,6 +76,16 @@
     padding: 0 30px 20px;
     overflow: auto;
 
+    .data-table-row {
+      &:hover {
+        background-color: #f5fbfb;
+      }
+  
+      &.selected {
+        background-color: #F9F9F9;
+      }
+    }
+
     .data-table-cell {
       padding: 15px 0;
     }
@@ -137,6 +147,11 @@
 
     &:not(:last-child) {
       border-right: 1px solid #E0E0E0;
+    }
+
+    &[disabled] {
+      opacity: 0.25;
+      cursor: not-allowed;
     }
   }
 }

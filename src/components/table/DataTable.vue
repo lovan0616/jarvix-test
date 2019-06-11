@@ -7,9 +7,12 @@
         <div class="data-table-cell checkbox"
           v-if="selection !== undefined"
         >
-          <label class="checkbox-label">
+          <label class="checkbox-label"
+            :class="{indeterminate: selectList.length > 0 && selectList.length < dataList.length}"
+          >
             <input type="checkbox" name="selectAll"
               v-model="selectAll"
+              :disabled="isProcessing"
             >
             <div class="checkbox-square"></div>
           </label>
@@ -42,6 +45,7 @@
         v-else
         v-for="(data, index) in dataList"
         :key="index"
+        :class="{selected: selectList.indexOf(data) > -1}"
       >
         <div class="data-table-cell checkbox"
           v-if="selection !== undefined"
@@ -50,6 +54,7 @@
             <input type="checkbox" name="fileChosen"
               v-model="selectList"
               :value="data"
+              :disabled="isProcessing"
             >
             <div class="checkbox-square"></div>
           </label>
@@ -71,7 +76,8 @@
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
             :key="action.name"
-            @click="$emit(action.value, data)"
+            :disabled="isProcessing"
+            @click="doAction(action.value, data)"
           >{{ action.name }}</a>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
@@ -122,7 +128,7 @@ export default {
     // 第一欄是否有 checkbox
     selection: {
       type: Array,
-      required: false
+      default: () => []
     },
     dataList: {
       type: Array,
@@ -131,6 +137,10 @@ export default {
     emptyMessage: {
       type: String,
       default: '目前沒有資料'
+    },
+    isProcessing: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -199,6 +209,10 @@ export default {
         case 'YYYY-MM-DD HH:mm':
           return this.timeStampToDateTime(value)
       }
+    },
+    doAction (actionName, data) {
+      if (this.isProcessing) return false
+      this.$emit(actionName, data)
     }
   },
   computed: {

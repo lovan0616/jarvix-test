@@ -8,12 +8,14 @@
       v-loading="isLoading"
     >
       <div class="single-indicator"
+        v-if="indicators.length > 0"
         v-for="(indicator, index) in indicators"
         :key="index"
       >
         <div class="indicator-title">{{ indicator.title }}</div>
         <div class="indicator-value">{{ indicator.value }}</div>
       </div>
+      <div v-else class="no-result"></div>
     </div>
   </div>
 </template>
@@ -43,16 +45,22 @@ export default {
       getQuestionPreview({'question': this.question, 'bookmark_id': this.bookmarkId})
         .then(response => {
           this.dataType = response.pictype
-          response.task.forEach((element, index) => {
-            element.entities['bookmark_id'] = this.bookmarkId
-            // path
-            this.indicators = []
-            getTaskData(element.intent, element.entities)
-              .then(res => {
-                this.$set(this.indicators, index, res)
-                this.isLoading = false
-              })
-          })
+          if (response.task.length > 0) {
+            response.task.forEach((element, index) => {
+              element.entities['bookmark_id'] = this.bookmarkId
+              // path
+              this.indicators = []
+              getTaskData(element.intent, element.entities)
+                .then(res => {
+                  this.$set(this.indicators, index, res)
+                  this.isLoading = false
+                })
+            })
+          } else {
+            this.isLoading = false
+          }
+        }).catch(() => {
+          this.isLoading = false
         })
     },
     linkToResult () {
