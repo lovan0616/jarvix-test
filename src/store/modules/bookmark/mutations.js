@@ -1,5 +1,5 @@
 import * as types from './mutation_type'
-import { stat } from 'fs';
+
 export default {
   [types.SET_ISINIT] (state, value) {
     state.isInit = value || false

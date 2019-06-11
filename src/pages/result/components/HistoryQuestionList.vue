@@ -4,7 +4,7 @@
       :class="{active: isDropdownOpen}"
       @click="toggleListDisplay"
     >
-      <svg-icon icon-class="circle-outline" class="icon"></svg-icon>
+      <svg-icon icon-class="clock" class="icon"></svg-icon>
     </div>
     <transition name="fade">
       <div class="history-question-list"

@@ -2,12 +2,13 @@
   <div class="data-management">
     <div class="page-title-row">
       <h1 class="title">资料源</h1>
-      <a class="link link-with-icon"
-        href="javascript:void(0)"
-        @click="createDataSource"
-      >
-        <svg-icon icon-class="folder-plus" class="icon"></svg-icon>新增资料源
-      </a>
+      <div class="button-block">
+        <button class="btn btn-default"
+          @click="createDataSource"
+        >
+          <svg-icon icon-class="folder-plus" class="icon"></svg-icon>新增资料源
+        </button>
+      </div>
     </div>
     <data-table
       :headers="tableHeaders"

@@ -4,6 +4,16 @@
       :class="{ 'is-scrolling': tableScrolling }"
     >
       <div class="data-table-row table-head">
+        <div class="data-table-cell checkbox"
+          v-if="selection !== undefined"
+        >
+          <label class="checkbox-label">
+            <input type="checkbox" name="selectAll"
+              v-model="selectAll"
+            >
+            <div class="checkbox-square"></div>
+          </label>
+        </div>
         <div class="data-table-cell"
           v-for="headInfo in headers"
           :key="headInfo.value"
@@ -33,6 +43,17 @@
         v-for="(data, index) in dataList"
         :key="index"
       >
+        <div class="data-table-cell checkbox"
+          v-if="selection !== undefined"
+        >
+          <label class="checkbox-label">
+            <input type="checkbox" name="fileChosen"
+              v-model="selectList"
+              :value="data"
+            >
+            <div class="checkbox-square"></div>
+          </label>
+        </div>
         <div class="data-table-cell"
           v-for="headInfo in headers"
           :class="{action: headInfo.action}"
@@ -97,6 +118,11 @@ export default {
     headers: {
       type: Array,
       default: () => []
+    },
+    // 第一欄是否有 checkbox
+    selection: {
+      type: Array,
+      required: false
     },
     dataList: {
       type: Array,
@@ -178,6 +204,27 @@ export default {
   computed: {
     showCreateDataSourceDialog () {
       return this.$store.state.dataManagement.showCreateDataSourceDialog
+    },
+    // 目前所選擇的項目
+    selectList: {
+      get () {
+        return this.selection
+      },
+      set (value) {
+        this.$emit('update:selection', value)
+      }
+    },
+    selectAll: {
+      get () {
+        return this.selectList.length === this.dataList.length
+      },
+      set (value) {
+        if (value) {
+          this.selectList = this.dataList
+        } else {
+          this.selectList = []
+        }
+      }
     }
   }
 }

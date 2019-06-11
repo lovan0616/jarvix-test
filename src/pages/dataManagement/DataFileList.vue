@@ -5,16 +5,23 @@
         <router-link to="/data-management" class="title-link">资料源</router-link>
         <span class="divider">/</span>{{ currentBookmarkInfo ? currentBookmarkInfo.name : '' }}
       </h1>
-      <a class="link link-with-icon"
-        href="javascript:void(0)"
-        @click="createDataSource"
-      >
-        <svg-icon icon-class="file-plus" class="icon"></svg-icon>新增资料表
-      </a>
+      <div class="button-block">
+        <button class="btn btn-default"
+          @click="createDataSource"
+        >
+          <svg-icon icon-class="file-plus" class="icon"></svg-icon>新增资料表
+        </button>
+        <button class="btn btn-outline"
+          @click="confirmDelete()"
+        >
+          <svg-icon icon-class="delete" class="icon"></svg-icon>刪除
+        </button>
+      </div>
     </div>
     <data-table
       :headers="tableHeaders"
       :data-list.sync="dataList"
+      :selection.sync="selectList"
       empty-message="点击上传您的资料表"
       @create="createDataSource"
       @rename="confirmRename"
@@ -26,13 +33,13 @@
       @success="fetchData"
       @close="closeFileUploadDialog"
     ></file-upload-dialog>
-    <confirm-delete-dialog
+    <confirm-delete-file-dialog
       v-if="showConfirmDeleteDialog"
       title="删除资料表"
-      content="您确认要删除此资料表吗?"
+      :file-list="selectList"
       @confirm="deleteFile"
       @cancel="cancelDelete"
-    ></confirm-delete-dialog>
+    ></confirm-delete-file-dialog>
     <confirm-change-name-dialog
       v-if="showConfirmRenameDialog"
       title="重新命名资料表"
@@ -45,7 +52,7 @@
 <script>
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
-import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
+import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
 import { getBookmarkById, renameCSV, createBookmarkStorage } from '@/API/Bookmark'
 import { deleteCSV } from '@/API/Upload'
@@ -55,7 +62,7 @@ export default {
   components: {
     DataTable,
     FileUploadDialog,
-    ConfirmDeleteDialog,
+    ConfirmDeleteFileDialog,
     ConfirmChangeNameDialog
   },
   data () {
@@ -66,6 +73,8 @@ export default {
       deleteId: null,
       renameDataSource: null,
       dataList: [],
+      // checkbox 所選擇的檔案列表
+      selectList: [],
       // 用來生成 data table
       tableHeaders: [
         {
@@ -143,7 +152,9 @@ export default {
       this.showConfirmRenameDialog = true
     },
     confirmDelete (dataObj) {
-      this.deleteId = dataObj.id
+      if (dataObj) {
+        this.selectList = [dataObj]
+      }
       this.showConfirmDeleteDialog = true
     },
     deleteFile (resolve) {

@@ -1,5 +1,7 @@
 <template>
-  <div class="confirm-dialog" tabindex="-1" role="dialog">
+  <div class="confirm-dialog" tabindex="-1" role="dialog"
+    :class="name"
+  >
     <transition name="slide-down">
       <div v-if="showDialog" class="dialog-container" role="document">
         <div class="dialog-title-block">
@@ -27,6 +29,10 @@ export default {
   name: 'ConfirmDialog',
   props: {
     title: {
+      type: String,
+      default: ''
+    },
+    name: {
       type: String,
       default: ''
     }
@@ -61,6 +67,18 @@ export default {
   left: 0;
   z-index: 1020;
   overflow: auto;
+
+  // 確認刪除資料表彈出視窗
+  &.confirm-delet-file {
+    .dialog-body-block {
+      width: 84%;
+    }
+
+    .dialog-content-block {
+      text-align: left;
+      padding: 36px 0 40px;
+    }
+  }
 
   &:before {
     position: fixed;

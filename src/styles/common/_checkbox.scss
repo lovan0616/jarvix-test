@@ -1,0 +1,66 @@
+/**
+ * checkbox
+ */
+$checkbox-color: #43BAC3;
+$checkbox-size: 14px;
+// Basic control styles
+.checkbox-label {
+  display: block;
+  width: $checkbox-size;
+  height: $checkbox-size;
+  position: relative;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+  }
+ 
+  input:checked ~ .checkbox-square {
+    background: $checkbox-color;
+    border-color: $checkbox-color;
+
+    &:after {
+      display: block;
+    }
+  }
+ 
+  &:hover input:not([disabled]):checked ~ .checkbox-square,
+  input:checked:focus ~ .checkbox-square {
+    background: $checkbox-color;
+  }
+ 
+  input:disabled ~ .checkbox-square {
+    background: #e6e6e6;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+ 
+  .checkbox-square:after {
+    content: "";
+    color: #fff;
+    left: 3px;
+    top: 0px;
+    width: 4px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+}
+ 
+.checkbox-square {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: inherit;
+  width: inherit;
+  background: #fff;
+  border: 1px solid #C3C3C3;
+
+  &:after {
+    position: absolute;
+    display: none;
+  }
+}
