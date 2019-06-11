@@ -47,6 +47,7 @@ import DisplayHistogramChart from '@/components/display/DisplayHistogramChart'
 import DisplayBoxPlotChart from '@/components/display/DisplayBoxPlotChart'
 import DisplayTreeMapChart from '@/components/display/DisplayTreeMapChart'
 import DisplayBubbleScatterChart from '@/components/display/DisplayBubbleScatterChart'
+import DisplayGroupScatterChart from '@/components/display/DisplayGroupScatterChart'
 import InsightsInfo from '@/components/display/InsightsInfo'
 import InsightList from '@/components/display/InsightList'
 import InsightTable from '@/components/display/InsightTable'
@@ -74,6 +75,7 @@ Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
 Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
 Vue.component(DisplayScatterChart.name, DisplayScatterChart)
+Vue.component(DisplayGroupScatterChart.name, DisplayGroupScatterChart)
 Vue.component(DisplayHistogramChart.name, DisplayHistogramChart)
 Vue.component(DisplayBoxPlotChart.name, DisplayBoxPlotChart)
 Vue.component(DisplayBubbleScatterChart.name, DisplayBubbleScatterChart)
