@@ -112,16 +112,3 @@ export function createBookmarkStorage (bookmarkId, type) {
     }
   })
 }
-
-/**
- * change csv file name
- */
-export function renameCSV (bookmarkId, uploadId, filename) {
-  return request({
-    url: `/bookmarks/${bookmarkId}/CSV/upload/${uploadId}`,
-    method: 'PUT',
-    data: {
-      filename
-    }
-  })
-}

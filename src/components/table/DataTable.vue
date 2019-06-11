@@ -128,7 +128,7 @@ export default {
     // 第一欄是否有 checkbox
     selection: {
       type: Array,
-      required: false
+      default: () => []
     },
     dataList: {
       type: Array,

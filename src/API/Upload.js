@@ -52,3 +52,16 @@ export function publishStorage (storageId, bookmarkId) {
     }
   })
 }
+
+/**
+ * change csv file name
+ */
+export function renameCSV (storageId, uploadId, filename) {
+  return request({
+    url: `/storages/${storageId}/CSV/upload/${uploadId}`,
+    method: 'PUT',
+    data: {
+      filename
+    }
+  })
+}
