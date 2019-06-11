@@ -7,14 +7,19 @@
       </h1>
       <div class="button-block">
         <button class="btn btn-default"
+          :disabled="isProcessing"
           @click="createDataSource"
         >
           <svg-icon icon-class="file-plus" class="icon"></svg-icon>新增资料表
         </button>
         <button class="btn btn-outline"
+          v-if="selectList.length > 0"
+          :disabled="isProcessing"
           @click="confirmDelete()"
         >
-          <svg-icon icon-class="delete" class="icon"></svg-icon>刪除
+          <svg-icon class="icon"
+            :icon-class="isProcessing ? 'spinner' : 'delete'"
+          ></svg-icon>刪除
         </button>
       </div>
     </div>
@@ -22,6 +27,7 @@
       :headers="tableHeaders"
       :data-list.sync="dataList"
       :selection.sync="selectList"
+      :is-processing="isProcessing"
       empty-message="点击上传您的资料表"
       @create="createDataSource"
       @rename="confirmRename"
@@ -55,7 +61,7 @@ import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
 import { getBookmarkById, renameCSV, createBookmarkStorage } from '@/API/Bookmark'
-import { deleteCSV } from '@/API/Upload'
+import { deleteCSV, publishStorage } from '@/API/Upload'
 
 export default {
   name: 'DataFileList',
@@ -67,11 +73,13 @@ export default {
   },
   data () {
     return {
-      currentBookmarkId: this.$route.params.id,
+      currentBookmarkId: parseInt(this.$route.params.id),
       showConfirmDeleteDialog: false,
       showConfirmRenameDialog: false,
       deleteId: null,
       renameDataSource: null,
+      // 資料處理中
+      isProcessing: false,
       dataList: [],
       // checkbox 所選擇的檔案列表
       selectList: [],
@@ -157,23 +165,39 @@ export default {
       }
       this.showConfirmDeleteDialog = true
     },
-    deleteFile (resolve) {
+    deleteFile () {
+      this.showConfirmDeleteDialog = false
+      this.isProcessing = true
       // 先去取得 stoarge id
       createBookmarkStorage(this.currentBookmarkId, this.currentBookmarkInfo.type)
         .then(res => {
-          deleteCSV(res.storage.id, this.deleteId).then(response => {
-            this.fetchData()
+          let deleteList = []
+          for (let i = 0; i < this.selectList.length; i++) {
+            deleteList.push(deleteCSV(res.storage.id, this.selectList[i].id))
+          }
+
+          Promise.all(deleteList).then(() => {
+            publishStorage(res.storage.id, this.currentBookmarkId)
               .then(() => {
-                this.cancelDelete()
-                resolve()
+                this.fetchData()
+                  .then(() => {
+                    this.deleteFinish()
+                  })
               })
-          }).catch(() => {
-            resolve()
+              .catch(() => {
+                this.deleteFinish()
+              })
+          }, () => {
+            this.deleteFinish()
           })
         })
     },
+    deleteFinish () {
+      this.selectList = []
+      this.isProcessing = false
+    },
     cancelDelete () {
-      this.deleteId = null
+      this.selectList = []
       this.showConfirmDeleteDialog = false
     },
     renameCSV ({resolve, name}) {

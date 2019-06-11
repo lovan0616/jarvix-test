@@ -9,7 +9,23 @@ $checkbox-size: 14px;
   width: $checkbox-size;
   height: $checkbox-size;
   position: relative;
-  cursor: pointer;
+
+  // 部分勾選的狀態
+  &.indeterminate {
+    .checkbox-square:after {
+      display: block;
+      top: 3px;
+      width: 6px;
+      height: 6px;
+      transform: none;
+      border: none;
+      background-color: $checkbox-color;
+    }
+
+    input:disabled ~ .checkbox-square:after {
+      background-color: #E0E0E0;
+    }
+  }
 
   input[type='checkbox'] {
     position: absolute;
@@ -32,21 +48,13 @@ $checkbox-size: 14px;
   }
  
   input:disabled ~ .checkbox-square {
-    background: #e6e6e6;
-    opacity: 0.6;
-    pointer-events: none;
-  }
- 
-  .checkbox-square:after {
-    content: "";
-    color: #fff;
-    left: 3px;
-    top: 0px;
-    width: 4px;
-    height: 8px;
-    border: solid #fff;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
+    background: #F2F2F2;
+    border-color: #E0E0E0;
+    cursor: not-allowed;
+
+    &:after {
+      border-color: #E0E0E0;
+    }
   }
 }
  
@@ -58,9 +66,19 @@ $checkbox-size: 14px;
   width: inherit;
   background: #fff;
   border: 1px solid #C3C3C3;
+  cursor: pointer;
 
   &:after {
-    position: absolute;
     display: none;
+    content: "";
+    color: #fff;
+    position: absolute;
+    left: 3px;
+    top: 1px;
+    width: 4px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 1px 1px 0;
+    transform: rotate(45deg);
   }
 }

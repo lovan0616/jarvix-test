@@ -6,7 +6,6 @@
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.15;
   }
 }
 
@@ -19,6 +18,10 @@
     background-color: #42A5B3;
     border-color: #42A5B3;
   }
+
+  &:disabled {
+    opacity: 0.25;
+  }
 }
 
 .btn-outline {
@@ -29,5 +32,11 @@
   &:hover, &:active {
     color: #42A5B3;
     border-color: #42A5B3;
+  }
+
+  &:disabled {
+    background-color: #F2F2F2;
+    border-color: #E0E0E0;
+    color: #CCCCCC;
   }
 }

@@ -119,6 +119,9 @@ export default {
         .then(response => {
           this.$store.commit('dataManagement/updateFileLoaded', true)
         })
+        .catch(() => {
+          this.cancelFileUpload()
+        })
     },
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
