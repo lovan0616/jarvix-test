@@ -60,8 +60,8 @@ import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
-import { getBookmarkById, createBookmarkStorage } from '@/API/Bookmark'
-import { deleteCSV, publishStorage, renameCSV } from '@/API/Upload'
+import { getBookmarkById, createBookmarkStorage, renameCSV } from '@/API/Bookmark'
+import { deleteCSV, publishStorage } from '@/API/Upload'
 
 export default {
   name: 'DataFileList',
@@ -201,30 +201,16 @@ export default {
       this.showConfirmDeleteDialog = false
     },
     renameCSV ({resolve, name}) {
-      this.isProcessing = true
-      this.showConfirmRenameDialog = false
-      // 先去取得 stoarge id
-      createBookmarkStorage(this.currentBookmarkId, this.currentBookmarkInfo.type)
-        .then(res => {
-          renameCSV(res.storage.id, this.renameDataSource.id, name)
-            .then(response => {
-              publishStorage(res.storage.id, this.currentBookmarkId)
-                .then(() => {
-                  this.fetchData()
-                    .then(() => {
-                      this.renameFinish()
-                    })
-                }).catch(() => {
-                  this.renameFinish()
-                })
-            }).catch(() => {
-              this.renameFinish()
+      renameCSV(this.currentBookmarkId, this.renameDataSource.id, name)
+        .then(() => {
+          this.fetchData()
+            .then(() => {
+              this.cancelRename()
+              resolve()
             })
+        }).catch(() => {
+          this.cancelRename()
         })
-    },
-    renameFinish () {
-      this.isProcessing = false
-      this.renameDataSource = null
     },
     cancelRename () {
       this.renameDataSource = null
