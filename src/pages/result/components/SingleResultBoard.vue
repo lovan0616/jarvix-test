@@ -15,7 +15,6 @@
         <div class="indicator-title">{{ indicator.title }}</div>
         <div class="indicator-value">{{ indicator.value }}</div>
       </div>
-      <div v-else class="no-result"></div>
     </div>
   </div>
 </template>
@@ -46,15 +45,26 @@ export default {
         .then(response => {
           this.dataType = response.pictype
           if (response.task.length > 0) {
+            let promiseList = []
+            /**
+             * indicatorList 會將 indicator 的資料全都收集完再 assign 給 indicators
+             * 主要是因為 request 回來的 response 不會依序回來，但是希望順序是固定的
+             **/
+            let indicatorList = []
             response.task.forEach((element, index) => {
               element.entities['bookmark_id'] = this.bookmarkId
-              // path
-              this.indicators = []
-              getTaskData(element.intent, element.entities)
+              let getTaskPromise = getTaskData(element.intent, element.entities)
                 .then(res => {
-                  this.$set(this.indicators, index, res)
-                  this.isLoading = false
+                  indicatorList[index] = res
                 })
+              // 收集所有 promise 送進 promiseAll
+              promiseList.push(getTaskPromise)
+            })
+            Promise.all(promiseList).then(() => {
+              this.indicators = indicatorList
+              this.isLoading = false
+            }, () => {
+              this.isLoading = false
             })
           } else {
             this.isLoading = false
@@ -90,6 +100,12 @@ export default {
   border-radius: 8px;
   margin-bottom: 40px;
   cursor: pointer;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: translate3d(0,-5px,0);
+    box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.12);
+  }
 
   .board-title {
     font-size: 20px;

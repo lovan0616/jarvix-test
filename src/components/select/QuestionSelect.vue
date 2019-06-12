@@ -69,7 +69,7 @@ export default {
     },
     enterQuestion (e) {
       this.$refs.questionInput.blur()
-      this.$store.dispatch('bookmark/updateResultRouter')
+      this.$store.dispatch('bookmark/updateResultPreviewRouter')
       this.isDropdownOpen = false
     },
     toggleDropdown () {

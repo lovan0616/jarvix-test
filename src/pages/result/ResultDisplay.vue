@@ -39,12 +39,12 @@ export default {
       askCancelFunction: null
     }
   },
-  // watch: {
-  //   '$route.query' ({ question }) {
-  //     if (!question) return false
-  //     this.fetchApiAsk({ question, 'bookmark_id': this.bookmarkId })
-  //   }
-  // },
+  watch: {
+    '$route.query' ({ question }) {
+      if (!question) return false
+      this.fetchApiAsk({ question, 'bookmark_id': this.bookmarkId })
+    }
+  },
   mounted () {
     this.fetchData()
   },
