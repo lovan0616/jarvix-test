@@ -58,7 +58,7 @@ export default {
     chooseHistoryQuestion (bookmarkId, question) {
       this.$store.commit('bookmark/setAppQuestion', question)
       this.$store.commit('bookmark/setBookmarkById', bookmarkId)
-      this.$store.dispatch('bookmark/updateResultRouter')
+      this.$store.dispatch('bookmark/updateResultPreviewRouter')
       this.isDropdownOpen = false
     }
   },
@@ -115,6 +115,12 @@ export default {
 
     &:not(:last-child) {
       border-bottom: 0.75px solid $theme-line-color;
+    }
+
+    &:hover {
+      .question-name {
+        color: #43BAC3;
+      }
     }
 
     .question-database {

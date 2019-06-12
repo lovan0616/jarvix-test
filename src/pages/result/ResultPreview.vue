@@ -1,6 +1,10 @@
 <template>
-  <div class="result-preview">
-    <div class="serch-result-container">
+  <div class="result-preview"
+    v-loading="isLoading"
+  >
+    <div class="serch-result-container"
+      v-if="!isLoading"
+    >
       <div class="search-result-block most-related">
         <div class="search-result-title">最相關結果</div>
         <div class="search-result-list">
@@ -44,7 +48,8 @@ export default {
       layout: undefined,
       showLayout: false,
       isNoResult: false,
-      cancelFunction: null
+      cancelFunction: null,
+      isLoading: false
     }
   },
   mounted () {
@@ -73,6 +78,7 @@ export default {
     fetchApiAsk (data) {
       const _this = this
       this.cancelRequest()
+      this.isLoading = true
 
       getPreviewQuestions(data, new axios.CancelToken(function executor (c) {
         _this.cancelFunction = c
@@ -80,6 +86,10 @@ export default {
         .then(res => {
           this.currentQuestion = res.origin
           this.relatedQuestions = res.relates
+          this.isLoading = false
+        })
+        .catch(() => {
+          this.isLoading = false
         })
     },
     cancelRequest () {
@@ -92,6 +102,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .result-preview {
+  min-height: 100px;
+
   .search-result-block {
     &.most-related {
       padding-bottom: 40px;

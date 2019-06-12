@@ -41,9 +41,19 @@ export default {
       commit(types.SET_QUICKSTART_RESULT, res)
     })
   },
-  updateResultRouter ({commit, getters}, data) {
+  updateResultPreviewRouter ({commit, getters}, data) {
     router.push({
       name: 'PageResultPreview',
+      query: {
+        question: data || getters.appQuestion,
+        '_': new Date().getTime(),
+        bookmarkId: getters.bookmarkId
+      }
+    })
+  },
+  updateResultRouter ({commit, getters}, data) {
+    router.push({
+      name: 'PageResultDisplay',
       query: {
         question: data || getters.appQuestion,
         '_': new Date().getTime(),
