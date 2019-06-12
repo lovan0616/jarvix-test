@@ -11,6 +11,7 @@
         <file-upload-finished
           v-else
         ></file-upload-finished>
+        <!-- <remote-connection></remote-connection> -->
       </transition>
     </div>
   </div>
@@ -18,6 +19,7 @@
 <script>
 import ChooseFileType from './ChooseFileType'
 import LocalFileUpload from './LocalFileUpload'
+import RemoteConnection from './RemoteConnection'
 import FileUploadFinished from './FileUploadFinished'
 
 export default {
@@ -25,6 +27,7 @@ export default {
   components: {
     ChooseFileType,
     LocalFileUpload,
+    RemoteConnection,
     FileUploadFinished
   },
   destroyed () {

@@ -25,10 +25,12 @@ export default {
       return Promise.resolve(state)
     })
   },
-  getBookmarks ({ commit }) {
+  getBookmarks ({ commit, state }) {
     return getBookmarks().then(res => {
       commit(types.SET_BOOKMARKS, res)
-      commit(types.SET_BOOKMARK, res[0])
+      if (!state.bookmark) {
+        commit(types.SET_BOOKMARK, res[0])
+      }
     })
   },
   getSuggestions ({ commit, state }) {

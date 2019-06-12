@@ -62,6 +62,10 @@ export default {
         {
           name: 'CSV',
           id: 'CSV'
+        },
+        {
+          name: 'MySQL',
+          id: 'mysql'
         }
       ]
     }
@@ -121,8 +125,6 @@ export default {
   .input-block-container {
     width: 53.41%;
     margin: 0 auto;
-    // padding: 52px 0 176px;
-
     padding-bottom: 176px;
     height: 400px;
     display: flex;

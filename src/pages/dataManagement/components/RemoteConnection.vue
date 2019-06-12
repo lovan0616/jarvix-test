@@ -1,0 +1,107 @@
+<template>
+  <div class="remote-connection">
+    <div class="dialog-title">連結MySQL資料庫</div>
+    <div class="dialog-body">
+      <div class="loading-block"
+        v-if="isLoading"
+      >
+        <svg-icon icon-class="spinner" class="loading-icon"></svg-icon>
+        <div class="loading-text">連結資料庫中</div>
+      </div>
+      <div class="input-block-container"
+        v-else
+      >
+        <input-block class="dialog-input"
+          label="IP位址"
+          name="dataBase"
+          v-model="connectionInfo.database"
+          v-validate="'required'"
+        ></input-block>
+        <input-block class="dialog-input"
+          label="帳號"
+          name="userName"
+          v-model="connectionInfo.userName"
+          v-validate="'required'"
+        ></input-block>
+        <input-block class="dialog-input"
+          label="密碼"
+          name="password"
+          type="password"
+          v-model="connectionInfo.password"
+          v-validate="'required'"
+        ></input-block>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <div class="dialog-button-block">
+        <button class="btn btn-outline"
+          @click="cancelFileUpload"
+        >取消</button>
+        <button class="btn btn-default"
+          @click="nextStep"
+        >連線</button>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import InputBlock from '@/components/InputBlock'
+export default {
+  inject: ['$validator'],
+  name: 'RemoteConnection',
+  components: {
+    InputBlock
+  },
+  data () {
+    return {
+      connectionInfo: {
+        database: null,
+        username: null,
+        pasword: null
+      },
+      isLoading: true
+    }
+  },
+  methods: {
+    cancelFileUpload () {
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    },
+    nextStep () {
+
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.remote-connection {
+  .dialog-body {
+    background: #FAFAFA;
+    margin-bottom: 16px;
+  }
+  .input-block-container {
+    width: 53.41%;
+    margin: 0 auto;
+    padding: 48px 0 80px;
+  }
+  .dialog-input {
+    &:not(:last-child) {
+      margin-bottom: 68px;
+    }
+  }
+  .loading-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+
+    .loading-icon {
+      font-size: 65px;
+      margin-bottom: 48px;
+    }
+    .loading-text {
+      color: #444;
+    }
+  }
+}
+</style>
