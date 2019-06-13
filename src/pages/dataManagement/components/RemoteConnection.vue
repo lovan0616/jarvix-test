@@ -76,8 +76,11 @@ export default {
             .then(() => {
               buildStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.bookmarkId)
                 .then(() => {
-                  
+                  this.$store.commit('dataManagement/updateConnectionStatus', true)
                 })
+            })
+            .catch(() => {
+              this.$store.commit('dataManagement/updateConnectionStatus', false)
             })
         }
       })

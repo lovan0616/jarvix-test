@@ -35,7 +35,7 @@ import { mapState } from 'vuex'
 import FileListBlock from './FileListBlock'
 
 export default {
-  name: 'FileUploadFinished',
+  name: 'LocalFileUploadFinished',
   components: {
     FileListBlock
   },

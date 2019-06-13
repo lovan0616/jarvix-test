@@ -15,8 +15,10 @@ export default {
     },
     uploadFileList: [],
     showCreateDataSourceDialog: false,
-    fileTypeChosen: false,
-    fileLoaded: false
+    // 檔案已上傳
+    fileLoaded: false,
+    // 資料庫連結狀態
+    connectionStatus: null
   },
   actions,
   mutations,
