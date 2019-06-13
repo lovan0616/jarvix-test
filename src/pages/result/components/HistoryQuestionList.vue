@@ -57,7 +57,7 @@ export default {
     },
     chooseHistoryQuestion (bookmarkId, question) {
       this.$store.commit('bookmark/setAppQuestion', question)
-      this.$store.commit('bookmark/setBookmarkById', bookmarkId)
+      this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
       this.$store.dispatch('bookmark/updateResultPreviewRouter')
       this.isDropdownOpen = false
     }

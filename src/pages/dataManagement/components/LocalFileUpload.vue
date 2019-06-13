@@ -56,7 +56,7 @@
 </template>
 <script>
 import { uploadStatus } from '@/utils/general'
-import { publishStorage } from '@/API/Upload'
+import { buildStorage } from '@/API/Upload'
 import { mapState } from 'vuex'
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
@@ -76,8 +76,9 @@ export default {
   watch: {
     uploadFileStatusList (value) {
       if (this.currntUploadStatus !== uploadStatus.uploading) return
+      // 當所有的檔案都已經上傳完畢，則進行 build bookmark
       if (value.findIndex(element => { return element === uploadStatus.wait || element === uploadStatus.uploading }) === -1) {
-        this.processData()
+        this.buildBookmark()
         this.currntUploadStatus = uploadStatus.processing
       }
     }
@@ -114,8 +115,8 @@ export default {
       this.$store.commit('dataManagement/updateUploadFileList', fileList)
       this.currntUploadStatus = uploadStatus.uploading
     },
-    processData () {
-      publishStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.bookmarkId)
+    buildBookmark () {
+      buildStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.bookmarkId)
         .then(response => {
           this.$store.commit('dataManagement/updateFileLoaded', true)
         })
@@ -134,6 +135,7 @@ export default {
         return element.status
       })
     },
+    // 總資料傳輸量
     totalTransmitDataAmount () {
       return this.uploadFileList.reduce((acc, cur) => {
         return acc + cur.data.get('file').size

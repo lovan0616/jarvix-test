@@ -43,6 +43,15 @@ Vue.mixin({
     // 時間補十分位，為了滿足 YYYY-MM-DD 格式
     paddingZero (n) {
       return n < 10 ? '0' + n : n
+    },
+    getStorageType (value) {
+      switch (value) {
+        case 'CSV':
+          return 'CSV'
+        case 'mysql':
+        case 'SQLITE':
+          return 'SQLITE'
+      }
     }
   }
 })

@@ -1,6 +1,6 @@
 <template>
   <div class="choose-file-type">
-    <div class="dialog-title">新增資料</div>
+    <div class="dialog-title">新增资料</div>
     <div class="dialog-body">
       <div class="input-block-container">
         <div class="input-block file-type-select-block"
@@ -10,24 +10,19 @@
             name="fileTypeSelect"
             :selected="bookmarkInfo.type"
             :items="fileTypeList"
-            placeholder="選擇資料類型"
+            placeholder="选择资料类型"
             @update:selected="bookmarkTypeChange"
             v-validate="'required'"
           ></sy-select>
-          <div class="error-text">請先選擇資料類型</div>
+          <div class="error-text">请先选择资料类型</div>
         </div>
-        <div class="input-block file-info-input-block"
+        <input-block class="file-info-input-block"
           v-if="!currentBookmarkInfo"
-          :class="{'has-error': errors.has('dataSourceName')}"
-        >
-          <input type="text" class="input file-source-input"
-            name="dataSourceName"
-            v-model.trim="bookmarkInfo.name"
-            placeholder="輸入資料源名稱"
-            v-validate="'required'"
-          >
-          <div class="error-text">請先選擇資料類型</div>
-        </div>
+          label="资料源名称"
+          name="dataSourceName"
+          v-model="bookmarkInfo.name"
+          v-validate="'required'"
+        ></input-block>
       </div>
     </div>
     <div class="dialog-footer">
@@ -44,13 +39,15 @@
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
+import InputBlock from '@/components/InputBlock'
 import { createBookmark, createBookmarkStorage } from '@/API/Bookmark'
 
 export default {
   inject: ['$validator'],
   name: 'ChooseFileType',
   components: {
-    SySelect
+    SySelect,
+    InputBlock
   },
   data () {
     return {
@@ -58,10 +55,14 @@ export default {
         name: null,
         type: null
       },
-      fileTypeList: [
+      typeList: [
         {
           name: 'CSV',
           id: 'CSV'
+        },
+        {
+          name: 'MySQL',
+          id: 'mysql'
         }
       ]
     }
@@ -84,12 +85,19 @@ export default {
           let promise
           if (this.currentBookmarkInfo) {
             // 編輯 bookmark 取得 storageId
-            promise = createBookmarkStorage(this.currentBookmarkInfo.id, this.bookmarkInfo.type)
+            let storageType = this.getStorageType(this.bookmarkInfo.type)
+            promise = createBookmarkStorage(this.currentBookmarkInfo.id, storageType)
             // 將 name 塞進去
             this.bookmarkInfo.name = this.currentBookmarkInfo.name
           } else {
-            // 新增bookmark
-            promise = createBookmark(this.bookmarkInfo)
+            /**
+             * 新增bookmark
+             * 這邊得這樣處理是因為，後端 MySQL 跟 SQLITE 在這邊送一樣的值，但是在後面連線的時候又要區分開來
+             **/
+            promise = createBookmark({
+              name: this.bookmarkInfo.name,
+              type: this.getStorageType(this.bookmarkInfo.type)
+            })
           }
 
           promise.then(res => {
@@ -98,7 +106,6 @@ export default {
               storageId: res.storage.id,
               ...this.bookmarkInfo
             })
-            this.$store.commit('dataManagement/updateFileTypeChosen', true)
           })
         }
       })
@@ -107,6 +114,15 @@ export default {
   computed: {
     currentBookmarkInfo () {
       return this.$store.state.dataManagement.currentBookmarkInfo
+    },
+    fileTypeList () {
+      if (this.currentBookmarkInfo) {
+        return this.typeList.filter(element => {
+          return element.id === this.currentBookmarkInfo.type
+        })
+      } else {
+        return this.typeList
+      }
     }
   }
 }
@@ -121,8 +137,6 @@ export default {
   .input-block-container {
     width: 53.41%;
     margin: 0 auto;
-    // padding: 52px 0 176px;
-
     padding-bottom: 176px;
     height: 400px;
     display: flex;

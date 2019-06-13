@@ -8,9 +8,6 @@ export default {
   updateShowCreateDataSourceDialog (state, data) {
     state.showCreateDataSourceDialog = data
   },
-  updateFileTypeChosen (state, data) {
-    state.fileTypeChosen = data
-  },
   updateFileLoaded (state, data) {
     state.fileLoaded = data
   },
@@ -25,5 +22,8 @@ export default {
     state.currentUploadInfo.storageId = null
     state.currentUploadInfo.type = null
     state.currentUploadInfo.name = null
+  },
+  updateConnectionStatus (state, data) {
+    state.connectionStatus = data
   }
 }

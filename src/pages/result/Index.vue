@@ -25,10 +25,9 @@ export default {
     QuestionSelect
   },
   created () {
-    this.$store.dispatch('bookmark/init').then(state => {
-      this.fetchData()
-      this.$store.dispatch('bookmark/getHistoryQuestionList')
-    })
+    this.fetchData()
+    this.$store.dispatch('bookmark/init')
+    this.$store.dispatch('bookmark/getHistoryQuestionList')
   },
   activated () {
     // 從個人釘板回到搜尋結果，如果有記錄先組回原有的 router path

@@ -89,6 +89,9 @@ export default {
           this.isLoading = false
         })
         .catch(() => {
+          // 會遇到沒拿到資訊的時候，所以要將問題清空
+          this.currentQuestion = null
+          this.relatedQuestions = null
           this.isLoading = false
         })
     },
