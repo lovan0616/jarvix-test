@@ -61,7 +61,7 @@ import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
 import { getBookmarkById, createBookmarkStorage, renameCSV } from '@/API/Bookmark'
-import { deleteCSV, publishStorage } from '@/API/Upload'
+import { deleteCSV, buildStorage } from '@/API/Upload'
 
 export default {
   name: 'DataFileList',
@@ -177,7 +177,7 @@ export default {
           }
 
           Promise.all(deleteList).then(() => {
-            publishStorage(res.storage.id, this.currentBookmarkId)
+            buildStorage(res.storage.id, this.currentBookmarkId)
               .then(() => {
                 this.fetchData()
                   .then(() => {

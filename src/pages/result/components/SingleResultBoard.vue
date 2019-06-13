@@ -2,8 +2,12 @@
   <div class="single-result-board"
     @click="linkToResult"
   >
-    <div class="board-title">{{ question }}</div>
-    <div class="board-img"></div>
+    <div class="board-top-section">
+      <div class="board-title">{{ question }}</div>
+      <img alt="chart-img" class="board-img"
+        :src="imgPath"
+      >
+    </div>
     <div class="board-indicators"
       v-loading="isLoading"
     >
@@ -30,7 +34,7 @@ export default {
   },
   data () {
     return {
-      dataType: null,
+      picType: null,
       indicators: [],
       isLoading: false
     }
@@ -43,7 +47,7 @@ export default {
       this.isLoading = true
       getQuestionPreview({'question': this.question, 'bookmark_id': this.bookmarkId})
         .then(response => {
-          this.dataType = response.pictype
+          this.picType = response.pictype
           if (response.task.length > 0) {
             let promiseList = []
             /**
@@ -87,6 +91,14 @@ export default {
   computed: {
     bookmarkId () {
       return this.$store.getters['bookmark/bookmarkId']
+    },
+    imgPath () {
+      switch (this.picType) {
+        case 'bar_chart':
+          return require('@/assets/images/bar_chart.png')
+        default:
+          return require('@/assets/images/line_chart.png')
+      }
     }
   }
 }
@@ -94,8 +106,7 @@ export default {
 <style lang="scss" scoped>
 .single-result-board {
   width: 31.34%;
-  padding: 15px 20px;
-  background: #FFFFFF;
+  background-color: #F5FBFB;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   margin-bottom: 40px;
@@ -107,18 +118,28 @@ export default {
     box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.12);
   }
 
+  .board-top-section {
+    padding: 15px 20px 0;
+    background-color: #fff;
+    border-radius: 8px 8px 0 0;
+  }
+
   .board-title {
     font-size: 20px;
     line-height: 26px;
     letter-spacing: 0.1em;
+    margin-bottom: 16px;
   }
   .board-img {
-    margin-bottom: 24px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 16px;
   }
   .board-indicators {
     display: flex;
     justify-content: space-between;
     min-height: 77px;
+    padding: 15px 20px;
   }
   .single-indicator {
     width: 47.37%;

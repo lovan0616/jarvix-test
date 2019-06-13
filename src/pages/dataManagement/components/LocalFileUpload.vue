@@ -56,7 +56,7 @@
 </template>
 <script>
 import { uploadStatus } from '@/utils/general'
-import { publishStorage } from '@/API/Upload'
+import { buildStorage } from '@/API/Upload'
 import { mapState } from 'vuex'
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
@@ -115,7 +115,7 @@ export default {
       this.currntUploadStatus = uploadStatus.uploading
     },
     processData () {
-      publishStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.bookmarkId)
+      buildStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.bookmarkId)
         .then(response => {
           this.$store.commit('dataManagement/updateFileLoaded', true)
         })

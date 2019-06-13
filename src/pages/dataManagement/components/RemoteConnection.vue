@@ -45,6 +45,7 @@
   </div>
 </template>
 <script>
+import { dbConnect, buildStorage } from '@/API/Upload'
 import InputBlock from '@/components/InputBlock'
 export default {
   inject: ['$validator'],
@@ -55,11 +56,12 @@ export default {
   data () {
     return {
       connectionInfo: {
+        connection_type: null,
         database: null,
         username: null,
         pasword: null
       },
-      isLoading: true
+      isLoading: false
     }
   },
   methods: {
@@ -67,7 +69,21 @@ export default {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     nextStep () {
-
+      this.$validator.validateAll().then(result => {
+        if (result) {
+          this.connectionInfo.connection_type = this.currentUploadInfo.type
+          dbConnect(this.currentUploadInfo.storageId, this.connectionInfo)
+            .then(() => {
+              buildStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.bookmarkId)
+                .then(() => {
+                  
+                })
+            })
+        }
+      })
+    },
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
     }
   }
 }

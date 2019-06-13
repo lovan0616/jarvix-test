@@ -41,9 +41,9 @@ export function getStorage (bookmarkId) {
 }
 
 /**
- * publish storage
+ * build storage
  */
-export function publishStorage (storageId, bookmarkId) {
+export function buildStorage (storageId, bookmarkId) {
   return request({
     url: `/storages/${storageId}/build`,
     method: 'POST',
@@ -63,5 +63,16 @@ export function renameCSV (storageId, uploadId, filename) {
     data: {
       filename
     }
+  })
+}
+
+/**
+ * connect remote database
+ */
+export function dbConnect (storageId, connectInfo) {
+  return request({
+    url: `/storages/${storageId}/SQLITE/db`,
+    method: 'PUT',
+    data: connectInfo
   })
 }
