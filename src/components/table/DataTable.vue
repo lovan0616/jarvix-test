@@ -5,7 +5,7 @@
     >
       <div class="data-table-row table-head">
         <div class="data-table-cell checkbox"
-          v-if="selection !== undefined"
+          v-if="hasCheckbox"
         >
           <label class="checkbox-label"
             :class="{indeterminate: selectList.length > 0 && selectList.length < dataList.length}"
@@ -48,7 +48,7 @@
         :class="{selected: selectList.indexOf(data) > -1}"
       >
         <div class="data-table-cell checkbox"
-          v-if="selection !== undefined"
+          v-if="hasCheckbox"
         >
           <label class="checkbox-label">
             <input type="checkbox" name="fileChosen"
@@ -69,7 +69,7 @@
           }"
         >
           <a href="javascript:void(0)" class="name-link"
-            v-if="headInfo.link"
+            v-if="headInfo.link && checkLinkEnable(headInfo, data)"
             @click="linkTo(headInfo.link, data.id)"
           >{{ data[headInfo.value] }}</a>
           <a href="javascript:void(0)" class="action-link"
@@ -141,6 +141,10 @@ export default {
     isProcessing: {
       type: Boolean,
       default: false
+    },
+    hasCheckbox: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -201,6 +205,18 @@ export default {
           id
         }
       })
+    },
+    // 檢查 link 是否可以點擊
+    checkLinkEnable (info, data) {
+      let status = true
+      if (info.link.disabled) {
+        for (let i = 0; i < info.link.disabled.value.length; i++) {
+          if (data[info.link.disabled.name] === info.link.disabled.value[i]) {
+            status = false
+          }
+        }
+      }
+      return status
     },
     timeFormat (value, format) {
       switch (format) {

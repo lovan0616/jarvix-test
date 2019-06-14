@@ -24,6 +24,7 @@
       </div>
     </div>
     <data-table
+      hasCheckbox
       :headers="tableHeaders"
       :data-list.sync="dataList"
       :selection.sync="selectList"

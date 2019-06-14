@@ -22,13 +22,11 @@ import axios from 'axios'
 import { mapGetters } from 'vuex'
 import { askQuestion, relateQuestions } from '@/API/Ask'
 import RecommendQuestionList from '@/pages/result/components/RecommendQuestionList'
-import EmptyResult from '@/pages/result/components/EmptyResult'
 
 export default {
   name: 'ResultDisplay',
   components: {
-    RecommendQuestionList,
-    EmptyResult
+    RecommendQuestionList
   },
   data () {
     return {
@@ -62,7 +60,10 @@ export default {
   //   }
   // },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion'])
+    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion']),
+    questionResult () {
+      return this.$store.state.bookmark.questionResult
+    }
   },
   methods: {
     fetchData () {
@@ -82,17 +83,18 @@ export default {
 
       const _this = this
       this.cancelRequest()
-
+      // question result 是 preview 時塞的資料，如果有的話就塞進去，為了加快分析時間
+      if (this.questionResult) {
+        data = {...data, result: this.questionResult}
+      }
       askQuestion(data, new axios.CancelToken(function executor (c) {
         _this.askCancelFunction = c
       }))
         .then(res => {
           this.layout = res
-        }).catch(error => {
-          if (error.response && error.response.status === 500) {
-            this.isNoResult = true
-            this.relatedQuestionList = []
-          }
+        }).catch(() => {
+          this.isNoResult = true
+          this.relatedQuestionList = []
         })
       this.getRelatedQuestions(data)
     },
