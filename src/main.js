@@ -53,6 +53,7 @@ import InsightList from '@/components/display/InsightList'
 import InsightTable from '@/components/display/InsightTable'
 import IndicatorInfo from '@/components/display/IndicatorInfo'
 import IndicatorsList from '@/components/display/IndicatorsList'
+import EmptyResult from '@/pages/result/components/EmptyResult'
 
 Vue.use(VueEvents)
 // Element UI components
@@ -86,6 +87,7 @@ Vue.component(ContainerBlock.name, ContainerBlock)
 Vue.component(ContainerCard.name, ContainerCard)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
 Vue.component(PreviewBookmark.name, PreviewBookmark)
+Vue.component(EmptyResult.name, EmptyResult)
 Vue.use(VeeValidate, {
   // 避免自動 inject 到所有 component
   inject: false,

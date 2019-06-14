@@ -70,7 +70,11 @@ export default {
           sort: true,
           width: '16.3%',
           link: {
-            name: 'PageDataFileList'
+            name: 'PageDataFileList',
+            disabled: {
+              name: 'type',
+              value: ['SQLITE']
+            }
           }
         },
         {text: '资料来源', value: 'type'},

@@ -35,6 +35,7 @@ export default {
   data () {
     return {
       picType: null,
+      questionResult: null,
       indicators: [],
       isLoading: false
     }
@@ -49,6 +50,7 @@ export default {
         .then(response => {
           this.picType = response.pictype
           if (response.task.length > 0) {
+            this.questionResult = response.result
             let promiseList = []
             /**
              * indicatorList 會將 indicator 的資料全都收集完再 assign 給 indicators
@@ -78,6 +80,7 @@ export default {
         })
     },
     linkToResult () {
+      this.$store.commit('bookmark/setQuestionResult', this.questionResult)
       this.$store.commit('bookmark/setAppQuestion', this.question)
       this.$router.push({
         name: 'PageResultDisplay',

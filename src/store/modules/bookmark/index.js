@@ -12,6 +12,7 @@ export default {
     quickstartNum: 3,
     quickstartResult: {},
     appQuestion: '',
+    questionResult: null,
     // 歷史問題清單
     historyQuestionList: []
   },

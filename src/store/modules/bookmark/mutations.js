@@ -19,6 +19,9 @@ export default {
   setAppQuestion (state, data) {
     state.appQuestion = data
   },
+  setQuestionResult (state, data) {
+    state.questionResult = data
+  },
   setBookmarkById (state, data) {
     state.bookmark = state.bookmarks.find(element => element.id === data)
   },
