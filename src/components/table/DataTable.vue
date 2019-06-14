@@ -5,7 +5,7 @@
     >
       <div class="data-table-row table-head">
         <div class="data-table-cell checkbox"
-          v-if="selection !== undefined"
+          v-if="hasCheckbox"
         >
           <label class="checkbox-label"
             :class="{indeterminate: selectList.length > 0 && selectList.length < dataList.length}"
@@ -48,7 +48,7 @@
         :class="{selected: selectList.indexOf(data) > -1}"
       >
         <div class="data-table-cell checkbox"
-          v-if="selection !== undefined"
+          v-if="hasCheckbox"
         >
           <label class="checkbox-label">
             <input type="checkbox" name="fileChosen"
@@ -139,6 +139,10 @@ export default {
       default: '目前沒有資料'
     },
     isProcessing: {
+      type: Boolean,
+      default: false
+    },
+    hasCheckbox: {
       type: Boolean,
       default: false
     }
