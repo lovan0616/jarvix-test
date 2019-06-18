@@ -41,13 +41,21 @@ service.interceptors.response.use(
     return Promise.reject(res)
   },
   error => {
-    if (!error.response.status) return Promise.reject(error)
-    switch (error.response.status) {
-      case 403:
-        return router.push('/login')
-      default:
-        return Promise.reject(error)
+    if (error.response) {
+      Message({
+        message: error.response.status + '-系统发生错误',
+        type: 'error',
+        duration: 3 * 1000
+      })
+    } else {
+      Message({
+        message: '系统发生错误',
+        type: 'error',
+        duration: 3 * 1000
+      })
     }
+
+    return Promise.reject(error)
   }
 )
 

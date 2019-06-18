@@ -92,6 +92,7 @@ export default {
       }))
         .then(res => {
           this.layout = res
+          this.$store.dispatch('bookmark/getHistoryQuestionList')
         }).catch(() => {
           this.isNoResult = true
           this.relatedQuestionList = []

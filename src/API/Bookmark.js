@@ -78,7 +78,7 @@ export function createBookmark (bookmarkInfo) {
 }
 
 /**
- * create bookmark
+ * delete bookmark
  */
 export function deleteBookmark (bookmarkId) {
   return request({

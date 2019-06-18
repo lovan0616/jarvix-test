@@ -19,8 +19,10 @@
         <div class="search-result-list">
           <single-result-board
             v-for="(question, index) in relatedQuestions"
-            :key="index"
+            :key="question"
+            :index="index"
             :question="question"
+            @remove="removeQuestion"
           ></single-result-board>
         </div>
       </div>
@@ -87,6 +89,7 @@ export default {
           this.currentQuestion = res.origin
           this.relatedQuestions = res.relates
           this.isLoading = false
+          this.$store.dispatch('bookmark/getHistoryQuestionList')
         })
         .catch(() => {
           // 會遇到沒拿到資訊的時候，所以要將問題清空
@@ -99,6 +102,9 @@ export default {
       if (typeof this.cancelFunction === 'function') {
         this.cancelFunction('cancel request')
       }
+    },
+    removeQuestion (index) {
+      this.relatedQuestions.splice(index, 1)
     }
   }
 }
@@ -125,7 +131,6 @@ export default {
     .search-result-list {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
     }
   }
 }

@@ -13,7 +13,7 @@
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 let chartAddon = JSON.parse(JSON.stringify(chartOptions))
-let scatterChartConfig = {
+let averageBarChartConfig = {
   chartData: {
     type: 'bar',
     itemStyle: {
@@ -91,8 +91,8 @@ export default {
           return element
         }
       })
-      scatterChartConfig.chartData.data = seriesArray
-      chartAddon.series[0] = scatterChartConfig.chartData
+      averageBarChartConfig.chartData.data = seriesArray
+      chartAddon.series[0] = averageBarChartConfig.chartData
 
       return chartAddon
     }
