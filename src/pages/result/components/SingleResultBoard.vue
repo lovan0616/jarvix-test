@@ -4,9 +4,14 @@
   >
     <div class="board-top-section">
       <div class="board-title">{{ question }}</div>
-      <img alt="chart-img" class="board-img"
-        :src="imgPath"
+      <div class="board-img-block"
+        v-loading="!imgPath"
       >
+        <img class="board-img" alt="chart-img"
+          v-if="imgPath"
+          :src="imgPath"
+        >
+      </div>
     </div>
     <div class="board-indicators"
       v-loading="isLoading"
@@ -30,6 +35,10 @@ export default {
     question: {
       type: String,
       default: ''
+    },
+    index: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -73,6 +82,8 @@ export default {
               this.isLoading = false
             })
           } else {
+            // 如果沒有 task，就從清單中移除
+            this.$emit('remove', this.index)
             this.isLoading = false
           }
         }).catch(() => {
@@ -97,6 +108,9 @@ export default {
     },
     imgPath () {
       switch (this.picType) {
+        // 如果是 null 就讓 spinner 出現，除了 bar_chart 暫時都用 line_chart 的圖片
+        case null:
+          return null
         case 'bar_chart':
           return require('@/assets/images/bar_chart.png')
         default:
@@ -116,6 +130,10 @@ export default {
   cursor: pointer;
   transition: transform 0.3s;
 
+  &:not(:nth-child(3n)) {
+    margin-right: 2.99%;
+  }
+
   &:hover {
     transform: translate3d(0,-5px,0);
     box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.12);
@@ -133,10 +151,14 @@ export default {
     letter-spacing: 0.1em;
     margin-bottom: 16px;
   }
+  .board-img-block {
+    width: 100%;
+    min-height: 105px;
+    margin-bottom: 16px;
+  }
   .board-img {
     width: 100%;
     height: auto;
-    margin-bottom: 16px;
   }
   .board-indicators {
     display: flex;
@@ -158,6 +180,14 @@ export default {
     font-size: 28px;
     line-height: 163.42%;
     letter-spacing: 0.05em;
+  }
+}
+</style>
+<style lang="scss">
+// spinner 的底色調整
+.board-indicators {
+  .el-loading-mask {
+    background-color: #F5FBFB;
   }
 }
 </style>

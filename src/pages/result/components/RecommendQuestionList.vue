@@ -59,7 +59,7 @@ export default {
       ]
     }
   },
-  beforeDestroy () {
+  destroyed () {
     if (this.mySlider) {
       this.mySlider.destroy()
     }
@@ -92,7 +92,12 @@ export default {
           loop: false,
           gutter: 15,
           speed: 500,
-          mouseDrag: true
+          mouseDrag: true,
+          responsive: {
+            760: {
+              items: 3
+            }
+          }
         })
         this.mySlider.events.on('indexChanged', this.updateCurrentIndex)
       }
@@ -169,6 +174,12 @@ export default {
   }
 
   .suggest-question-list {
+    .suggest-question-item {
+      display: inline-block;
+      width: 167px;
+      padding-right: 15px;
+      vertical-align: top;
+    }
     .question-category {
       font-size: 18px;
       line-height: 1;
