@@ -6,7 +6,12 @@
       <history-question-list></history-question-list>
     </div>
     <transition name="fade" mode="out-in">
-      <router-view/>
+      <result-preview
+        v-if="$route.query.type === 'preview'"
+      ></result-preview>
+      <result-display
+        v-else-if="$route.query.type === 'display'"
+      ></result-display>
     </transition>
   </div>
 </template>
@@ -16,13 +21,17 @@ import { mapGetters } from 'vuex'
 import BookmarkSelect from '@/components/select/BookmarkSelect'
 import QuestionSelect from '@/components/select/QuestionSelect'
 import HistoryQuestionList from '@/pages/result/components/HistoryQuestionList'
+import ResultDisplay from './ResultDisplay'
+import ResultPreview from './ResultPreview'
 
 export default {
   name: 'PageResult',
   components: {
     HistoryQuestionList,
     BookmarkSelect,
-    QuestionSelect
+    QuestionSelect,
+    ResultDisplay,
+    ResultPreview
   },
   created () {
     this.fetchData()
@@ -32,26 +41,29 @@ export default {
   activated () {
     // 從個人釘板回到搜尋結果，如果有記錄先組回原有的 router path
     if (this.appQuestion && !this.$route.query.question) {
-      this.$router.push({
-        name: 'PageResult',
-        query: {
-          question: this.appQuestion,
-          '_': new Date().getTime(),
-          bookmarkId: this.bookmarkId
-        }
-      })
+      if (this.currentResultDisplayType === 'display') {
+        this.$store.dispatch('bookmark/updateResultRouter')
+      } else {
+        this.$store.dispatch('bookmark/updateResultPreviewRouter')
+      }
     }
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion'])
+    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion']),
+    currentResultDisplayType () {
+      return this.$store.state.bookmark.currentResultDisplayType
+    }
   },
   methods: {
     fetchData () {
       let question = this.$route.query.question
+      let type = this.$route.query.type
       let bookmarkId = parseInt(this.$route.query.bookmarkId)
+
       if (question) {
         this.$store.commit('bookmark/setAppQuestion', question)
         this.$store.commit('bookmark/setBookmarkById', bookmarkId)
+        this.$store.commit('bookmark/setCurrentResultDisplayType', type)
       }
     }
   }

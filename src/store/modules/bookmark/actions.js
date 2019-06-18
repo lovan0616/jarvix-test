@@ -44,22 +44,28 @@ export default {
     })
   },
   updateResultPreviewRouter ({commit, getters}, data) {
+    commit('setCurrentResultDisplayType', 'preview')
+
     router.push({
-      name: 'PageResultPreview',
+      name: 'PageResult',
       query: {
         question: data || getters.appQuestion,
         '_': new Date().getTime(),
-        bookmarkId: getters.bookmarkId
+        bookmarkId: getters.bookmarkId,
+        type: 'preview'
       }
     })
   },
   updateResultRouter ({commit, getters}, data) {
+    commit('setCurrentResultDisplayType', 'display')
+
     router.push({
-      name: 'PageResultDisplay',
+      name: 'PageResult',
       query: {
         question: data || getters.appQuestion,
         '_': new Date().getTime(),
-        bookmarkId: getters.bookmarkId
+        bookmarkId: getters.bookmarkId,
+        type: 'display'
       }
     })
   },

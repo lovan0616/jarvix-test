@@ -46,19 +46,6 @@ export default {
   mounted () {
     this.fetchData()
   },
-  // activated () {
-  //   // 從個人釘板回到搜尋結果，如果有記錄先組回原有的 router path
-  //   if (this.appQuestion && !this.$route.query.question) {
-  //     this.$router.push({
-  //       name: 'PageResultDisplay',
-  //       query: {
-  //         question: this.appQuestion,
-  //         '_': new Date().getTime(),
-  //         bookmarkId: this.bookmarkId
-  //       }
-  //     })
-  //   }
-  // },
   computed: {
     ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion']),
     questionResult () {
@@ -97,6 +84,8 @@ export default {
           this.isNoResult = true
           this.relatedQuestionList = []
         })
+      // 清空 question result
+      this.$store.commit('bookmark/setQuestionResult', null)
       this.getRelatedQuestions(data)
     },
     getRelatedQuestions (data) {

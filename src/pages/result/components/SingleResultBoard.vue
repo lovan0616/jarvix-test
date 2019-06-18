@@ -93,13 +93,7 @@ export default {
     linkToResult () {
       this.$store.commit('bookmark/setQuestionResult', this.questionResult)
       this.$store.commit('bookmark/setAppQuestion', this.question)
-      this.$router.push({
-        name: 'PageResultDisplay',
-        query: {
-          question: this.question,
-          bookmarkId: this.bookmarkId
-        }
-      })
+      this.$store.dispatch('bookmark/updateResultRouter')
     }
   },
   computed: {

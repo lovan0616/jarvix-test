@@ -14,7 +14,9 @@ export default {
     appQuestion: '',
     questionResult: null,
     // 歷史問題清單
-    historyQuestionList: []
+    historyQuestionList: [],
+    // 目前 result 頁面的狀態
+    currentResultDisplayType: null
   },
   actions,
   mutations,
