@@ -27,5 +27,8 @@ export default {
   },
   setHistoryQuestionList (state, data) {
     state.historyQuestionList = data
+  },
+  setCurrentResultDisplayType (state, data) {
+    state.currentResultDisplayType = data
   }
 }

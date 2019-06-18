@@ -8,7 +8,7 @@
         <div class="center">
           <div class="bg"></div>
           <transition name="fade" mode="out-in">
-            <keep-alive include="ResultDisplay">
+            <keep-alive include="PageResult">
               <router-view ></router-view>
             </keep-alive>
           </transition>
