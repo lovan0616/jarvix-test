@@ -30,7 +30,7 @@
 <script>
 import { getQuestionPreview, getTaskData } from '@/API/Ask'
 export default {
-  name: 'SingleResultBoard',
+  name: 'PreviewResultBoard',
   props: {
     question: {
       type: String,
@@ -116,17 +116,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .single-result-board {
-  width: 31.34%;
   background-color: #F5FBFB;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   margin-bottom: 40px;
   cursor: pointer;
   transition: transform 0.3s;
-
-  &:not(:nth-child(3n)) {
-    margin-right: 2.99%;
-  }
 
   &:hover {
     transform: translate3d(0,-5px,0);

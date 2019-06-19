@@ -19,7 +19,7 @@ export default {
     const quickstarts = state.quickstartResult.quickstarts || []
     const all = defaults.concat(quickstarts)
 
-    return all.slice(0, state.quickstartNum)
+    return all
   },
   quickstartWithoutDefaults (state) {
     const quickstarts = state.quickstartResult.quickstarts || []
