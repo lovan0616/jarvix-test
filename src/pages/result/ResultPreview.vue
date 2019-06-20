@@ -19,7 +19,7 @@
         <div class="search-result-list">
           <preview-result-board class="result-board"
             v-for="(question, index) in relatedQuestions"
-            :key="question"
+            :key="question + index"
             :index="index"
             :question="question"
             @remove="removeQuestion"
@@ -124,7 +124,6 @@ export default {
       font-size: 24px;
       line-height: 1;
       letter-spacing: 0.1em;
-      color: #444444;
       margin-bottom: 16px;
     }
 

@@ -34,7 +34,7 @@ export default {
     ResultPreview
   },
   created () {
-    this.fetchData()
+    this.getQueryInfo()
     this.$store.dispatch('bookmark/init')
     this.$store.dispatch('bookmark/getHistoryQuestionList')
   },
@@ -48,6 +48,24 @@ export default {
       }
     }
   },
+  // 主要針對瀏覽器上下頁、從 preview 回到 searchbar 的一些處理
+  watch: {
+    '$route.query.type' (value) {
+      if (this.$route.name === 'PageResult') {
+        this.$store.commit('bookmark/setCurrentResultDisplayType', value)
+      }
+    },
+    '$route.query.bookmarkId' (value) {
+      if (this.$route.name === 'PageResult' && value) {
+        this.$store.dispatch('bookmark/changeBookmarkById', parseInt(value))
+      }
+    },
+    '$route.query.question' (value) {
+      if (this.$route.name === 'PageResult') {
+        this.$store.commit('bookmark/setAppQuestion', value)
+      }
+    }
+  },
   computed: {
     ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion']),
     currentResultDisplayType () {
@@ -55,7 +73,7 @@ export default {
     }
   },
   methods: {
-    fetchData () {
+    getQueryInfo () {
       let question = this.$route.query.question
       let type = this.$route.query.type
       let bookmarkId = parseInt(this.$route.query.bookmarkId)

@@ -13,6 +13,7 @@ export const errorsMessage = {
   SYWARN0004: '储存空间建置中',
   SYWARN0005: '储存空间不存在',
   SYWARN0006: '资料源不存在',
+  SYWARN0007: '查询时间格式错误',
   // app error
   APPERR0001: '系统发生非预期错误',
   APPWARN0001: '帐号密码错误',

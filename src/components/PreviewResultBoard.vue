@@ -5,7 +5,7 @@
     <div class="board-top-section">
       <div class="board-title">{{ question }}</div>
       <div class="board-img-block"
-        v-loading="!imgPath"
+        v-loading="imgLoading"
       >
         <img class="board-img" alt="chart-img"
           v-if="imgPath"
@@ -46,7 +46,8 @@ export default {
       picType: null,
       questionResult: null,
       indicators: [],
-      isLoading: false
+      isLoading: false,
+      imgLoading: false
     }
   },
   mounted () {
@@ -55,9 +56,11 @@ export default {
   methods: {
     fetechData () {
       this.isLoading = true
+      this.imgLoading = true
       getQuestionPreview({'question': this.question, 'bookmark_id': this.bookmarkId})
         .then(response => {
           this.picType = response.pictype
+          this.imgLoading = false
           if (response.task.length > 0) {
             this.questionResult = response.result
             let promiseList = []
@@ -88,6 +91,7 @@ export default {
           }
         }).catch(() => {
           this.isLoading = false
+          this.imgLoading = false
         })
     },
     linkToResult () {

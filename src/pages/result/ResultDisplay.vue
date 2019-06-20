@@ -2,11 +2,6 @@
   <div class="result-layout"
     v-if="showLayout"
   >
-    <recommend-question-list
-      v-if="relatedQuestionList.length > 0"
-      :question-list="relatedQuestionList"
-      @choose="selectQuestion"
-    ></recommend-question-list>
     <empty-result
       v-if="isNoResult"
     ></empty-result>
@@ -14,6 +9,21 @@
       v-else
       v-bind="layout"
     ></layout>
+    <div class="recommend-question-list-block"
+      v-if="relatedQuestionList.length > 0"
+    >
+      <div class="block-title">推荐语句</div>
+      <div class="category-title">比较类</div>
+      <div class="category-question-list">
+        <preview-result-board class="result-board"
+          v-for="(question, index) in relatedQuestionList"
+          :key="question + index"
+          :index="index"
+          :question="question"
+          @remove="removeQueston"
+        ></preview-result-board>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -21,12 +31,12 @@
 import axios from 'axios'
 import { mapGetters } from 'vuex'
 import { askQuestion, relateQuestions } from '@/API/Ask'
-import RecommendQuestionList from '@/pages/result/components/RecommendQuestionList'
+import PreviewResultBoard from '@/components/PreviewResultBoard'
 
 export default {
   name: 'ResultDisplay',
   components: {
-    RecommendQuestionList
+    PreviewResultBoard
   },
   data () {
     return {
@@ -96,7 +106,7 @@ export default {
         .then(res => {
           // 這邊後端要調整，資料集會返回空陣列
           if (res.vertical) {
-            this.relatedQuestionList = res.vertical.concat(res.horizontal)
+            this.relatedQuestionList = res.vertical.concat(res.horizontal, res.backward)
           } else {
             this.relatedQuestionList = []
           }
@@ -111,6 +121,9 @@ export default {
       this.$store.commit('bookmark/setAppQuestion', data.question)
       this.$store.commit('bookmark/setBookmarkById', data.bookmark_Id)
       this.$store.dispatch('bookmark/updateResultRouter')
+    },
+    removeQueston (index) {
+      this.relatedQuestionList.splice(index, 1)
     }
   }
 }
@@ -130,6 +143,35 @@ export default {
     line-height: 26px;
     letter-spacing: 0.1em;
     margin-bottom: 10px;
+  }
+  .recommend-question-list-block {
+    margin-top: 64px;
+
+    .block-title {
+      font-size: 24px;
+      line-height: 40px;
+      letter-spacing: 0.1em;
+      margin-bottom: 48px;
+    }
+
+    .category-title {
+      font-size: 18px;
+      line-height: 26px;
+      margin-bottom: 12px;
+    }
+  }
+
+  .category-question-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    .result-board {
+      width: 31.34%;
+
+      &:not(:nth-child(3n)) {
+        margin-right: 2.99%;
+      }
+    }
   }
 }
 </style>

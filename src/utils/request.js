@@ -27,8 +27,9 @@ service.interceptors.response.use(
     const res = response.data
     if (!res.error) return res.data
 
+    // 如果 mapping 不到錯誤訊息，就顯示制式文字
     Message({
-      message: errorsMessage[res.error.code],
+      message: errorsMessage[res.error.code] || '系统发生错误',
       type: 'error',
       duration: 3 * 1000
     })
@@ -41,6 +42,12 @@ service.interceptors.response.use(
     return Promise.reject(res)
   },
   error => {
+    // cancel request
+    if (axios.isCancel(error)) {
+      console.log('Request canceled', error.message)
+      return Promise.reject(error)
+    }
+
     if (error.response) {
       Message({
         message: error.response.status + '-系统发生错误',

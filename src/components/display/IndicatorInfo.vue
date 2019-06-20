@@ -30,7 +30,7 @@ export default {
     line-height: 22px;
     letter-spacing: 0.05em;
     margin-bottom: 10px;
-    color: #444444;
+    color: $theme-text-color;
   }
   .info-content {
     font-size: 28px;
