@@ -8,22 +8,22 @@
       <div class="search-result-block most-related">
         <div class="search-result-title">最相關結果</div>
         <div class="search-result-list">
-          <single-result-board
+          <preview-result-board class="result-board"
             v-if="currentQuestion"
             :question="currentQuestion"
-          ></single-result-board>
+          ></preview-result-board>
         </div>
       </div>
       <div class="search-result-block">
         <div class="search-result-title">其他結果</div>
         <div class="search-result-list">
-          <single-result-board
+          <preview-result-board class="result-board"
             v-for="(question, index) in relatedQuestions"
-            :key="question"
+            :key="question + index"
             :index="index"
             :question="question"
             @remove="removeQuestion"
-          ></single-result-board>
+          ></preview-result-board>
         </div>
       </div>
     </div>
@@ -35,13 +35,13 @@ import axios from 'axios'
 import { mapGetters } from 'vuex'
 import { getPreviewQuestions } from '@/API/Ask'
 import EmptyResult from '@/pages/result/components/EmptyResult'
-import SingleResultBoard from './components/SingleResultBoard'
+import PreviewResultBoard from '@/components/PreviewResultBoard'
 
 export default {
   name: 'ResultPreview',
   components: {
     EmptyResult,
-    SingleResultBoard
+    PreviewResultBoard
   },
   data () {
     return {
@@ -124,13 +124,20 @@ export default {
       font-size: 24px;
       line-height: 1;
       letter-spacing: 0.1em;
-      color: #444444;
       margin-bottom: 16px;
     }
 
     .search-result-list {
       display: flex;
       flex-wrap: wrap;
+
+      .result-board {
+        width: 31.34%;
+
+        &:not(:nth-child(3n)) {
+          margin-right: 2.99%;
+        }
+      }
     }
   }
 }

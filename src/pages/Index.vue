@@ -1,22 +1,22 @@
 <template>
   <div class="page-index">
     <img src="../assets/images/sygps_logo.png" alt="sygps-logo" class="index-logo">
-    <div class="bookmark-select-region">
-      我想在<bookmark-select class="index-bookmark-select"></bookmark-select>询问问题
+    <div class="question-select-block">
+      <bookmark-select></bookmark-select>
+      <question-select></question-select>
     </div>
-    <question-select class="index-question-select-block"
-      icon="search"
-    >
-    </question-select>
     <div class="quick-start-block"
       v-show="bookmarkId"
     >
-      <h2 class="sub-title">Quick Start</h2>
-      <quick-starts
-        :items="quickstartWithDefaults"
-        hasDefault
-      >
-      </quick-starts>
+      <h2 class="sub-title">推荐语句</h2>
+      <div class="quick-start-question-block">
+        <preview-result-board class="result-board"
+          v-for="(question, index) in quickstartWithDefaults"
+          :key="question"
+          :index="index"
+          :question="question"
+        ></preview-result-board>
+      </div>
     </div>
     <popup-guiding
       v-if="isDisplayGuide"
@@ -25,7 +25,7 @@
     <a class="teaching-button" href="javascript:void(0)"
       @click="toggle"
     >
-      观看教学
+      ?
     </a>
   </div>
 </template>
@@ -33,7 +33,7 @@
 <script>
 import BookmarkSelect from '@/components/select/BookmarkSelect'
 import QuestionSelect from '@/components/select/QuestionSelect'
-import QuickStarts from '@/components/QuickStarts'
+import PreviewResultBoard from '@/components/PreviewResultBoard'
 import PopupGuiding from '@/components/dialog/PopupGuiding'
 import { mapGetters } from 'vuex'
 
@@ -41,9 +41,9 @@ export default {
   name: 'PageIndex',
   components: {
     PopupGuiding,
-    QuickStarts,
     QuestionSelect,
-    BookmarkSelect
+    BookmarkSelect,
+    PreviewResultBoard
   },
   data () {
     return {
@@ -67,33 +67,23 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-index {
-  width: 800px;
   margin: 0 auto;
   text-align: center;
 
   .index-logo {
     width: 220px;
     height: auto;
-    margin: 138px 0 64px;
+    margin: 66px 0 64px;
   }
 
   .page-title {
     margin: 121px 0 130px;
   }
 
-  .bookmark-select-region {
+  .question-select-block {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-bottom: 64px;
-  }
-
-  .index-bookmark-select {
-    margin: 0 16px;
-  }
-
-  .index-question-select-block {
-    margin-bottom: 40px;
+    margin-bottom: 140px;
   }
 
   .teaching-button {
@@ -101,12 +91,28 @@ export default {
     z-index: 1;
     bottom: 30px;
     right: 30px;
-    color: $theme-text-color;
+    color: #0F9696;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.12);
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    font-size: 36px;
   }
   .sub-title {
     margin-top: 0;
     line-height: 40px;
     font-weight: 600;
+    text-align: left;
+  }
+  .quick-start-question-block {
+    display: flex;
+    justify-content: space-between;
+
+    .result-board {
+      width: 23.88%;
+    }
   }
 }
 </style>
