@@ -5,7 +5,10 @@
       <div class="insight-info"
         v-for="(insight, index) in info.rootCause"
         :key="index"
-      >{{ insight }}</div>
+      >
+        <div class="dot"></div>
+        <div class="insight-text">{{ insight }}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -33,15 +36,18 @@ export default {
       line-height: 20px;
       letter-spacing: 0.05em;
 
-      &:before {
-        content: '';
-        display: block;
+      .dot {
+        flex: initial;
         width: 8px;
         height: 8px;
         border-radius: 50%;
         border: 1px solid $theme-color-primary;
         margin-top: 6px;
         margin-right: 10px;
+      }
+
+      .insight-text {
+        flex: 1;
       }
 
       &:not(:last-child) {

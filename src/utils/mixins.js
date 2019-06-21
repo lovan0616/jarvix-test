@@ -18,7 +18,7 @@ Vue.mixin({
     },
     // byte 轉 MB
     byteToMB (value) {
-      return (value / (1024 * 1024)).toFixed(4)
+      return (value / (1024 * 1024)).toFixed(2)
     },
     // timeStamp 轉成 YYYY-MM-DD
     timeStampToDate (time) {

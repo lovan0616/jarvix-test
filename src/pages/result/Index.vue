@@ -12,6 +12,18 @@
       <result-display
         v-else-if="$route.query.type === 'display'"
       ></result-display>
+      <div class="search-guide-block"
+        v-else
+      >
+        <div class="search-guide-step"
+          v-for="(searchStep, index) in searchGuide"
+          :key="index"
+        >
+          <div class="step-count">{{ index + 1 }}.</div>
+          <div class="step-text">{{ searchStep.text }}</div>
+          <img :src="require(`@/assets/images/result/${searchStep.img}`)" class="search-img">
+        </div>
+      </div>
     </transition>
   </div>
 </template>
@@ -32,6 +44,24 @@ export default {
     QuestionSelect,
     ResultDisplay,
     ResultPreview
+  },
+  data () {
+    return {
+      searchGuide: [
+        {
+          text: '输入问题',
+          img: 'step1.svg'
+        },
+        {
+          text: '分析结果',
+          img: 'step2.svg'
+        },
+        {
+          text: '资料探勘',
+          img: 'step3.svg'
+        }
+      ]
+    }
   },
   created () {
     this.getQueryInfo()
@@ -96,14 +126,34 @@ export default {
   .question-select {
     margin-right: 30px;
   }
-}
-.result-layout {
 
-  .seciotn-title {
-    font-size: 18px;
-    line-height: 26px;
-    letter-spacing: 0.1em;
-    margin-bottom: 10px;
+  .search-guide-block {
+    display: flex;
+    justify-content: space-around;
+
+    .search-guide-step {
+      width: 24.85%;
+      text-align: center;
+
+      .step-count {
+        font-weight: bold;
+        font-size: 44px;
+        line-height: 60px;
+        color: #9FC2C6;
+      }
+      .step-text {
+        font-size: 28px;
+        line-height: 39px;
+        letter-spacing: 10px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid #9FC2C6;
+        margin-bottom: 40px;
+      }
+      .search-img {
+        width: 100%;
+        height: auto;
+      }
+    }
   }
 }
 </style>

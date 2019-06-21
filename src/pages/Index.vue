@@ -111,7 +111,7 @@ export default {
     justify-content: space-between;
 
     .result-board {
-      width: 23.88%;
+      width: 31.34%;
     }
   }
 }

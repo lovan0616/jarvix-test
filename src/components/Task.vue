@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { getTask } from '@/API/Ask'
 import Vue from 'vue'
 
 export default {
@@ -90,13 +90,14 @@ export default {
     },
     genTask (path, params) {
       if (!this.cancelLoading && this.intervalLoading) this.loading = true
-      return axios.post(path, params)
+      return getTask(path, params)
         .then(res => {
           this.destroyTaskVm()
-          this.createTask(res.data.data)
+          this.createTask(res)
           this.genTaskAfterTimeout()
         })
         .catch(err => {
+          this.loading = false
           console.log(err)
         })
     },
@@ -107,13 +108,15 @@ export default {
       dataTaskParams['bookmark_id'] = this.bookmarkId
 
       Promise.all([
-        axios.post(this.templatePath, this.params).then(res => res.data.data),
-        axios.post(this.dataPath, dataTaskParams).then(res => res.data.data)
+        getTask(this.templatePath, this.params).then(res => res),
+        getTask(this.dataPath, dataTaskParams).then(res => res)
       ]).then(res => {
         const template = res[0]
         const data = res[1]
         this.destroyTaskVm()
         this.createTaskByTemplateAndData({ template, data })
+      }).catch(() => {
+        this.loading = false
       })
     },
     createTask ({ template = '', data = {} }) {
@@ -147,10 +150,9 @@ export default {
         },
         methods: {
           getData (path, params) {
-            return axios.post(path, params).then(res => {
-              const result = res.data.data
-              Object.keys(result).forEach(key => {
-                this[key] = result[key]
+            return getTask(path, params).then(res => {
+              Object.keys(res).forEach(key => {
+                this[key] = res[key]
               })
             })
           },

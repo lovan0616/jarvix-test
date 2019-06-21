@@ -66,3 +66,14 @@ export function getTaskData (intent, entities) {
     data: entities
   })
 }
+
+/**
+ * get task
+ */
+export function getTask (path, data) {
+  return request({
+    url: path,
+    method: 'POST',
+    data
+  })
+}
