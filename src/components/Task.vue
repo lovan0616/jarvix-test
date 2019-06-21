@@ -97,6 +97,7 @@ export default {
           this.genTaskAfterTimeout()
         })
         .catch(err => {
+          this.loading = false
           console.log(err)
         })
     },
@@ -114,6 +115,8 @@ export default {
         const data = res[1]
         this.destroyTaskVm()
         this.createTaskByTemplateAndData({ template, data })
+      }).catch(() => {
+        this.loading = false
       })
     },
     createTask ({ template = '', data = {} }) {
