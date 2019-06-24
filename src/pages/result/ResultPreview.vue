@@ -5,17 +5,29 @@
     <div class="serch-result-container"
       v-if="!isLoading"
     >
-      <div class="search-result-block most-related">
-        <div class="search-result-title">最相關結果</div>
+      <div class="empty-result"
+        v-if="isNoMainResult"
+      >
+        <img class="empty-result-img"
+          src="../../assets/images/result/no-main-result.svg"
+          alt="未能找到最相关结果"
+        >
+        <div class="empty-result-text">未能找到最相关结果</div>
+      </div>
+      <div class="search-result-block most-related"
+        v-else
+      >
+        <div class="search-result-title">最相关结果</div>
         <div class="search-result-list">
           <preview-result-board class="result-board"
             v-if="currentQuestion"
             :question="currentQuestion"
+            @remove="noMainResult"
           ></preview-result-board>
         </div>
       </div>
       <div class="search-result-block">
-        <div class="search-result-title">其他結果</div>
+        <div class="search-result-title">其他结果</div>
         <div class="search-result-list">
           <preview-result-board class="result-board"
             v-for="(question, index) in relatedQuestions"
@@ -51,7 +63,8 @@ export default {
       showLayout: false,
       isNoResult: false,
       cancelFunction: null,
-      isLoading: false
+      isLoading: false,
+      isNoMainResult: false
     }
   },
   mounted () {
@@ -81,6 +94,7 @@ export default {
       const _this = this
       this.cancelRequest()
       this.isLoading = true
+      this.isNoMainResult = false
 
       getPreviewQuestions(data, new axios.CancelToken(function executor (c) {
         _this.cancelFunction = c
@@ -105,6 +119,9 @@ export default {
     },
     removeQuestion (index) {
       this.relatedQuestions.splice(index, 1)
+    },
+    noMainResult () {
+      this.isNoMainResult = true
     }
   }
 }
@@ -138,6 +155,21 @@ export default {
           margin-right: 2.99%;
         }
       }
+    }
+  }
+  .empty-result {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 48px;
+
+    .empty-result-img {
+      width: 170px;
+      height: auto;
+      margin-bottom: 24px;
+    }
+    .empty-result-text {
+      font-size: 18px;
+      line-height: 26px;
     }
   }
 }

@@ -13,10 +13,14 @@
         <div class="single-history-question"
           v-for="singleQuestion in questionList"
           :key="singleQuestion.id"
-          @click="chooseHistoryQuestion(singleQuestion.bookmark_id, singleQuestion.question)"
+          @click="chooseHistoryQuestion(singleQuestion)"
         >
           <div class="question-database">{{ findBookmarkById(singleQuestion.bookmark_id) }}</div>
           <div class="question-name">{{ singleQuestion.question }}</div>
+          <div class="ask-time">{{ timeStampToDateTime2(singleQuestion.askDate) }}</div>
+          <div class="ask-type"
+            :class="{preview: singleQuestion.askType === 'Preview'}"
+          >{{ singleQuestion.askType }}</div>
         </div>
       </div>
     </transition>
@@ -55,10 +59,15 @@ export default {
       if (!bookmarkId) return 'no bookmark'
       return this.$store.getters['bookmark/findBookmarkById'](bookmarkId)
     },
-    chooseHistoryQuestion (bookmarkId, question) {
-      this.$store.commit('bookmark/setAppQuestion', question)
-      this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
-      this.$store.dispatch('bookmark/updateResultPreviewRouter')
+    chooseHistoryQuestion (questionInfo) {
+      this.$store.commit('bookmark/setAppQuestion', questionInfo.question)
+      this.$store.dispatch('bookmark/changeBookmarkById', questionInfo.bookmark_id)
+      // 依據 askType 來決定到 preview 頁或是 rsult 頁
+      if (questionInfo.askType === 'Preview') {
+        this.$store.dispatch('bookmark/updateResultPreviewRouter')
+      } else {
+        this.$store.dispatch('bookmark/updateResultRouter')
+      }
       this.isDropdownOpen = false
     }
   },
@@ -110,6 +119,7 @@ export default {
   z-index: 990;
 
   .single-history-question {
+    position: relative;
     padding: 15px;
     cursor: pointer;
 
@@ -136,6 +146,28 @@ export default {
       font-size: 14px;
       line-height: normal;
       letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .ask-time {
+      font-size: 12px;
+      color: $theme-text-color-light;
+    }
+
+    .ask-type {
+      position: absolute;
+      top: 9px;
+      right: 12px;
+      background-color: #9FC2C6;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 16px;
+      padding: 0 8px;
+      color: #fff;
+
+      &.preview {
+        background-color: #48666A;
+      }
     }
   }
 }
