@@ -40,6 +40,17 @@ Vue.mixin({
       let minute = datetime.getMinutes()
       return `${year}-${this.paddingZero(month)}-${this.paddingZero(date)} ${this.paddingZero(hour)}:${this.paddingZero(minute)}`
     },
+    // timeStamp 轉成 YYYY/MM/DD HH:mm
+    timeStampToDateTime2 (time) {
+      let datetime = new Date()
+      datetime.setTime(time * 1000)
+      let year = datetime.getFullYear()
+      let month = datetime.getMonth() + 1
+      let date = datetime.getDate()
+      let hour = datetime.getHours()
+      let minute = datetime.getMinutes()
+      return `${year}/${this.paddingZero(month)}/${this.paddingZero(date)} ${this.paddingZero(hour)}:${this.paddingZero(minute)}`
+    },
     // 時間補十分位，為了滿足 YYYY-MM-DD 格式
     paddingZero (n) {
       return n < 10 ? '0' + n : n
