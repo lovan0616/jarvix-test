@@ -63,6 +63,33 @@ Vue.mixin({
         case 'SQLITE':
           return 'SQLITE'
       }
+    },
+    // 藉由後端的 template 名稱對應到前端的 component name
+    getChartTemplate (value) {
+      switch (value) {
+        case 'bar_chart':
+          return 'DisplayBarChart'
+        case 'bar_chart_average':
+          return 'DisplayAverageBarChart'
+        case 'box_plot':
+          return 'DisplayBoxPlotChart'
+        case 'bubble_scatter_chart':
+          return 'DisplayBubbleScatterChart'
+        case 'color_scatter_chart':
+          return 'DisplayGroupScatterChart'
+        case 'histogram':
+          return 'DisplayHistogramChart'
+        case 'line_chart':
+          return 'DisplayLineChart'
+        case 'pie_chart':
+          return 'DisplayPieChart'
+        case 'scatter_chart':
+          return 'DisplayScatterChart'
+        case 'table':
+          return 'SyTable'
+        case 'tree_map':
+          return 'DisplayTreeMapChart'
+      }
     }
   }
 })

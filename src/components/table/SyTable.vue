@@ -11,7 +11,7 @@
     >
     </el-table-column>
     <el-table-column
-      v-for="(col, i) in data.columns"
+      v-for="(col, i) in dataset.columns"
       :key="i"
       :prop="i.toString()"
       :label="(typeof col === 'number') ? col.toString() : col"
@@ -27,7 +27,7 @@ export default {
   name: 'SyTable',
   props: {
     ...Table.props,
-    data: {
+    dataset: {
       type: [ Object, Array ],
       validator: value => {
         if (typeof value !== 'object') return false
@@ -41,16 +41,16 @@ export default {
   },
   methods: {
     getTableIndex (index) {
-      return this.data.index[index]
+      return this.dataset.index[index]
     }
   },
   computed: {
     tableData () {
-      if (typeof this.data !== 'object') return []
-      if (!(this.data instanceof Array)) {
+      if (typeof this.dataset !== 'object') return []
+      if (!(this.dataset instanceof Array)) {
         // is object
-        return this.data.data.map(row => {
-          return this.data.columns.reduce((accu, curr, currIndex) => {
+        return this.dataset.data.map(row => {
+          return this.dataset.columns.reduce((accu, curr, currIndex) => {
             accu[currIndex.toString()] = row[currIndex]
             return accu
           }, {})
@@ -73,8 +73,8 @@ export default {
     tableSpanMethod () {
       let result = []
       let rowCounter = 1
-      let colCounters = [...Array(this.data.columns.length)].fill(1)
-      this.data.data.forEach((row, rowIndex) => {
+      let colCounters = [...Array(this.dataset.columns.length)].fill(1)
+      this.dataset.data.forEach((row, rowIndex) => {
         result[rowIndex] = []
         row.forEach((col, colIndex) => {
           result[rowIndex][colIndex] = [1, 1]
@@ -86,7 +86,7 @@ export default {
             })
             rowCounter = 1
           }
-          if (this.data.data[rowIndex + 1] && col === this.data.data[rowIndex + 1][colIndex]) colCounters[colIndex]++
+          if (this.dataset.data[rowIndex + 1] && col === this.dataset.data[rowIndex + 1][colIndex]) colCounters[colIndex]++
           else {
             [...Array(colCounters[colIndex])].forEach((n, i) => {
               if (i === colCounters[colIndex] - 1) result[rowIndex - i][colIndex][0] = colCounters[colIndex]
@@ -105,3 +105,8 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.sy-table {
+  margin-bottom: 32px;
+}
+</style>

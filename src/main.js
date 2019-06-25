@@ -48,6 +48,9 @@ import DisplayBoxPlotChart from '@/components/display/DisplayBoxPlotChart'
 import DisplayTreeMapChart from '@/components/display/DisplayTreeMapChart'
 import DisplayBubbleScatterChart from '@/components/display/DisplayBubbleScatterChart'
 import DisplayGroupScatterChart from '@/components/display/DisplayGroupScatterChart'
+import DisplayLineChart from '@/components/display/DisplayLineChart'
+import DisplayPieChart from '@/components/display/DisplayPieChart'
+import DisplayBarChart from '@/components/display/DisplayBarChart'
 import InsightsInfo from '@/components/display/InsightsInfo'
 import InsightList from '@/components/display/InsightList'
 import InsightTable from '@/components/display/InsightTable'
@@ -81,6 +84,9 @@ Vue.component(DisplayHistogramChart.name, DisplayHistogramChart)
 Vue.component(DisplayBoxPlotChart.name, DisplayBoxPlotChart)
 Vue.component(DisplayBubbleScatterChart.name, DisplayBubbleScatterChart)
 Vue.component(DisplayTreeMapChart.name, DisplayTreeMapChart)
+Vue.component(DisplayLineChart.name, DisplayLineChart)
+Vue.component(DisplayPieChart.name, DisplayPieChart)
+Vue.component(DisplayBarChart.name, DisplayBarChart)
 Vue.component(Layout.name, Layout)
 Vue.component(Task.name, Task)
 Vue.component(ContainerBlock.name, ContainerBlock)

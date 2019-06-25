@@ -49,13 +49,18 @@ let averageBarChartConfig = {
 export default {
   name: 'DisplayAverageBarChart',
   props: {
-    dataset: { type: Object, default: () => ([]) }
+    dataset: { type: Object, default: () => ([]) },
+    isPreview: {
+      type: Boolean,
+      default: false
+    }
   },
   mounted () {
     this.setOptions()
   },
   methods: {
     setOptions () {
+      chartAddon.legend.show = !this.isPreview
       chartAddon.xAxis.data = this.dataset.index
       // chartAddon.yAxis.name = this.dataset.columns
     }

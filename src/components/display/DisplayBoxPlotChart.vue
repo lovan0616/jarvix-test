@@ -56,6 +56,10 @@ export default {
     dataset: {
       type: Object,
       default: null
+    },
+    isPreview: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -63,6 +67,7 @@ export default {
       return dataTool.prepareBoxplotData(this.dataset.data)
     },
     chartOption () {
+      chartAddon.legend.show = !this.isPreview
       chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotChartConfig.xAxis}
       chartAddon.tooltip = boxPlotChartConfig.tooltip
       chartAddon.xAxis.data = this.dataset.index

@@ -4,13 +4,15 @@
   >
     <div class="board-top-section">
       <div class="board-title">{{ question }}</div>
-      <div class="board-img-block"
-        v-loading="imgLoading"
+      <div class="board-chart-block"
+        v-loading="isChartLoading"
       >
-        <img class="board-img" alt="chart-img"
-          v-if="imgPath"
-          :src="imgPath"
-        >
+        <component
+          v-if="questionInfo.template"
+          :is="getChartTemplate(questionInfo.template)"
+          :dataset="questionInfo.data.dataset"
+          isPreview
+        ></component>
       </div>
     </div>
     <div class="board-indicators"
@@ -43,11 +45,17 @@ export default {
   },
   data () {
     return {
-      picType: null,
-      questionResult: null,
+      questionInfo: {
+        data: null,
+        picType: null,
+        question: null,
+        result: null,
+        task: [],
+        template: null
+      },
       indicators: [],
-      isLoading: false,
-      imgLoading: false
+      isChartLoading: false,
+      isLoading: false
     }
   },
   mounted () {
@@ -56,13 +64,12 @@ export default {
   methods: {
     fetechData () {
       this.isLoading = true
-      this.imgLoading = true
+      this.isChartLoading = true
       getQuestionPreview({'question': this.question, 'bookmark_id': this.bookmarkId})
         .then(response => {
-          this.picType = response.pictype
-          this.imgLoading = false
+          this.questionInfo = response
+          this.isChartLoading = false
           if (response.task.length > 0) {
-            this.questionResult = response.result
             let promiseList = []
             /**
              * indicatorList 會將 indicator 的資料全都收集完再 assign 給 indicators
@@ -91,11 +98,11 @@ export default {
           }
         }).catch(() => {
           this.isLoading = false
-          this.imgLoading = false
+          this.isChartLoading = false
         })
     },
     linkToResult () {
-      this.$store.commit('bookmark/setQuestionResult', this.questionResult)
+      this.$store.commit('bookmark/setQuestionResult', this.questionInfo.result)
       this.$store.commit('bookmark/setAppQuestion', this.question)
       this.$store.dispatch('bookmark/updateResultRouter')
     }
@@ -103,17 +110,6 @@ export default {
   computed: {
     bookmarkId () {
       return this.$store.getters['bookmark/bookmarkId']
-    },
-    imgPath () {
-      switch (this.picType) {
-        // 如果是 null 就讓 spinner 出現，除了 bar_chart 暫時都用 line_chart 的圖片
-        case null:
-          return null
-        case 'bar_chart':
-          return require('@/assets/images/bar_chart.png')
-        default:
-          return require('@/assets/images/line_chart.png')
-      }
     }
   }
 }
@@ -133,7 +129,7 @@ export default {
   }
 
   .board-top-section {
-    padding: 15px 20px 0;
+    padding: 15px 20px 16px;
     background-color: #fff;
     border-radius: 8px 8px 0 0;
   }
@@ -142,16 +138,11 @@ export default {
     font-size: 20px;
     line-height: 26px;
     letter-spacing: 0.1em;
-    margin-bottom: 16px;
+    padding-bottom: 16px;
   }
-  .board-img-block {
+  .board-chart-block {
     width: 100%;
     min-height: 105px;
-    margin-bottom: 16px;
-  }
-  .board-img {
-    width: 100%;
-    height: auto;
   }
   .board-indicators {
     display: flex;
