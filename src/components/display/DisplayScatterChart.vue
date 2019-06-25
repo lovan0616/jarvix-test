@@ -32,6 +32,10 @@ let scatterChartConfig = {
     data: [],
     type: 'scatter',
     large: true
+  },
+  isPreview: {
+    type: Boolean,
+    default: false
   }
 }
 
@@ -51,6 +55,7 @@ export default {
       this.$set(chartAddon.xAxis, 'splitLine', scatterChartConfig.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterChartConfig.yAxisSplitLine)
       chartAddon.tooltip = scatterChartConfig.tooltip
+      chartAddon.legend.show = !this.isPreview
     },
     dotSize (dataLength) {
       if (dataLength > 500 && dataLength < 1999) {

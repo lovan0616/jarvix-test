@@ -56,38 +56,11 @@ export default {
   name: 'DisplayBubbleScatterChart',
   props: {
     dataset: {
-      type: Object,
-      default () {
-        return {
-          data: [
-            [
-              [10, 20, 500],
-              [30, 50, 20000],
-              [50, 10, 300],
-              [0, 50, 5000],
-              [70, 0, 20]
-            ],
-            [
-              [10, 0, 3300],
-              [60, 20, 2000],
-              [20, 60, 300],
-              [40, 50, 5000],
-              [50, 0, 2000]
-            ]
-          ],
-          index: [
-            '1e',
-            '2e',
-            '3e',
-            '4e',
-            '5e'
-          ],
-          columns: [
-            '2011',
-            '2012'
-          ]
-        }
-      }
+      type: Object
+    },
+    isPreview: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -140,7 +113,7 @@ export default {
 
         chartAddon.series.push(config.chartData)
       }
-
+      chartAddon.legend.show = !this.isPreview
       chartAddon.xAxis = {...chartAddon.xAxis, ...scatterBubleChartConfig.xAxis}
       chartAddon.yAxis = {...chartAddon.yAxis, ...scatterBubleChartConfig.yAxis}
       chartAddon.tooltip = scatterBubleChartConfig.tooltip

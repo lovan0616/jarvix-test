@@ -56,6 +56,10 @@ export default {
       default () {
         return {}
       }
+    },
+    isPreview: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -99,6 +103,7 @@ export default {
       chartAddon.xAxis.min = min
       chartAddon.xAxis.max = max
       chartAddon.xAxis.name = this.dataset.columns[0]
+      chartAddon.legend.show = !this.isPreview
 
       return chartData
     },

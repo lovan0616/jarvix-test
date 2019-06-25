@@ -12,7 +12,7 @@
       :style="[dropdownPosition, {'max-height': optionListMaxHeight + 'px'}]"
     >
       <div class="option default"
-        @click="chooseOption(suggestions.default)"
+        @click="selectDefault(suggestions.default)"
       >
         <svg-icon
           icon-class="folder"
@@ -80,6 +80,13 @@ export default {
     chooseOption (value) {
       this.$store.commit('bookmark/setAppQuestion', value)
       this.enterQuestion()
+    },
+    // 點選介紹資料集直接到結果頁
+    selectDefault (value) {
+      this.$store.commit('bookmark/setAppQuestion', value)
+      this.$refs.questionInput.blur()
+      this.$store.dispatch('bookmark/updateResultRouter')
+      this.isDropdownOpen = false
     },
     adjestPosition () {
       if (!this.isDropdownOpen) return

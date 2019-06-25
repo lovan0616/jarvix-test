@@ -1,11 +1,6 @@
 <template>
   <div class="page-preview-bookmark">
     <span v-show="bookmark">
-      <quick-starts
-        :items="quickstartWithoutDefaults"
-        @clickItem="app_setAndEnterQuestion"
-      >
-      </quick-starts>
       <h2>资料集介绍</h2>
       <container-card>
         <div class="preview-bookmark-card-inner">
@@ -18,7 +13,7 @@
           <sy-meta-table class="preview-bookmark-table"
             :rightText="metaTableRightText"
             :max-height="500"
-            :data="bookmarkTableDataDataset"
+            :dataset="bookmarkTableDataDataset"
           ></sy-meta-table>
         </div>
       </container-card>
@@ -29,19 +24,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import appHandleQuestion from '../mixins/app-handle-question.js'
-import QuickStarts from '../components/QuickStarts'
 import SySelect from '../components/select/SySelect'
 import SyMetaTable from '../components/table/SyMetaTable'
 
 export default {
   name: 'PagePreviewBookmark',
-  mixins: [
-    appHandleQuestion
-  ],
   components: {
     SySelect,
-    QuickStarts,
     SyMetaTable
   },
   created () {
@@ -49,7 +38,7 @@ export default {
       .catch(err => err)
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmark', 'quickstartWithoutDefaults']),
+    ...mapGetters('bookmark', ['bookmark']),
     ...mapGetters('previewBookmark', ['bookmarkTableId', 'bookmarkTables', 'bookmarkTableDataMeta', 'bookmarkTableDataDataset']),
     metaTableRightText () {
       if (!this.bookmarkTableDataMeta) return ''

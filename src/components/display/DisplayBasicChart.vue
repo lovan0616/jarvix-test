@@ -101,7 +101,11 @@ export default {
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     addons: { type: [Object, Array], default: () => ([]) },
-    events: { type: Object, default: () => ({}) }
+    events: { type: Object, default: () => ({}) },
+    isPreview: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     echartAddon.mapping(this.addons)
@@ -174,7 +178,8 @@ export default {
           itemWidth: 12,
           itemHeight: 12,
           icon: 'circle',
-          itemGap: 20
+          itemGap: 20,
+          show: !this.isPreview
         }
       }
     },
