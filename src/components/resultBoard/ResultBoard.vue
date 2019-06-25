@@ -3,10 +3,10 @@
     <div class="board-header">
       <slot name="ResultBoardHeader"></slot>
       <a class="pin-button"
-        :class="{'is-pinned': pinStatus}"
+        :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
         href="javascript:void(0)"
         @click="pinToBoard"
-      ><span class="pin-slash"><svg-icon icon-class="pin" class="pin-icon"></svg-icon></span></a>
+      ><span class="pin-slash"><svg-icon :icon-class="isLoading  ? 'spinner' : 'pin'" class="pin-icon"></svg-icon></span></a>
     </div>
     <slot name="ResultBoardBody"></slot>
   </div>
@@ -24,6 +24,7 @@ export default {
   data () {
     return {
       isPinned: false,
+      isLoading: false,
       pinBoardId: null
     }
   },
@@ -36,9 +37,12 @@ export default {
   },
   methods: {
     pinToBoard () {
+      if (this.isLoading) return false
+      this.isLoading = true
       if (this.isPinned) {
         this.$store.dispatch('pinboard/deletePinboard', {id: this.pinBoardId})
           .then(res => {
+            this.isLoading = false
             if (this.isPinboardPage) {
               /**
                * 這邊為了避免因為資料刪除後造成畫面重新 render，所以只用 css 將物件藏起來
@@ -57,12 +61,17 @@ export default {
               this.pinBoardId = null
               this.updatePinnedStatus()
             }
+          }).catch(() => {
+            this.isLoading = false
           })
       } else {
         updatePinboard({report: this.resultInfo})
           .then(res => {
             this.pinBoardId = res.pin_report_id
             this.updatePinnedStatus()
+            this.isLoading = false
+          }).catch(() => {
+            this.isLoading = false
           })
       }
     },
@@ -107,6 +116,20 @@ export default {
 
     &:after {
       content: 'pin to board';
+    }
+
+    &.is-loading {
+      cursor: not-allowed;
+      width: 120px;
+      background: #43BAC3;
+      opacity: 0.5;
+      color: #fff;
+      border-radius: 30px;
+      padding-left: 15px;
+
+      &:after {
+        content: 'loading...';
+      }
     }
 
     &.is-pinned {

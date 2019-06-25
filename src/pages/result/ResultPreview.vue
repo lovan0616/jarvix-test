@@ -28,13 +28,25 @@
       </div>
       <div class="search-result-block">
         <div class="search-result-title">其他结果</div>
-        <div class="search-result-list">
+        <div class="search-result-list"
+          v-if="relatedQuestions.length > 0"
+        >
           <preview-result-board class="result-board"
             v-for="(question, index) in relatedQuestions"
             :key="question + index"
             :index="index"
             :question="question"
             @remove="removeQuestion"
+          ></preview-result-board>
+        </div>
+        <div class="search-result-list"
+          v-else
+        >
+          <preview-result-board class="result-board"
+            v-for="(question, index) in quickstartWithoutDefaults"
+            :key="question + index"
+            :index="index"
+            :question="question"
           ></preview-result-board>
         </div>
       </div>
@@ -77,7 +89,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion']),
+    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion', 'quickstartWithoutDefaults']),
     historyQuestionList () {
       return this.$store.state.bookmark.historyQuestionList
     }
