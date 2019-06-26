@@ -20,7 +20,7 @@
           <div class="ask-time">{{ timeStampToDateTime2(singleQuestion.askDate) }}</div>
           <div class="ask-type"
             :class="{preview: singleQuestion.askType === 'Preview'}"
-          >{{ singleQuestion.askType }}</div>
+          >{{ typeTransform(singleQuestion.askType) }}</div>
         </div>
       </div>
     </transition>
@@ -69,6 +69,14 @@ export default {
         this.$store.dispatch('bookmark/updateResultRouter')
       }
       this.isDropdownOpen = false
+    },
+    typeTransform (value) {
+      switch (value) {
+        case 'Preview':
+          return '预览'
+        case 'Result':
+          return '结果'
+      }
     }
   },
   computed: {

@@ -139,6 +139,7 @@ export default {
     line-height: 26px;
     letter-spacing: 0.1em;
     padding-bottom: 16px;
+    text-align: left;
   }
   .board-chart-block {
     width: 100%;
