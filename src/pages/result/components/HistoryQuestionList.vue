@@ -15,12 +15,13 @@
           :key="singleQuestion.id"
           @click="chooseHistoryQuestion(singleQuestion)"
         >
-          <div class="question-database">{{ findBookmarkById(singleQuestion.bookmark_id) }}</div>
-          <div class="question-name">{{ singleQuestion.question }}</div>
           <div class="ask-time">{{ timeStampToDateTime2(singleQuestion.askDate) }}</div>
-          <div class="ask-type"
-            :class="{preview: singleQuestion.askType === 'Preview'}"
-          >{{ typeTransform(singleQuestion.askType) }}</div>
+          <div class="question-name">{{ singleQuestion.question }}</div>
+          <div class="ask-type-block">
+            <div class="ask-type"
+              :class="{preview: singleQuestion.askType === 'Preview'}"
+            >{{ typeTransform(singleQuestion.askType) }}</div>
+          </div>
         </div>
       </div>
     </transition>
@@ -54,10 +55,6 @@ export default {
     },
     toggleListDisplay () {
       this.isDropdownOpen = !this.isDropdownOpen
-    },
-    findBookmarkById (bookmarkId) {
-      if (!bookmarkId) return 'no bookmark'
-      return this.$store.getters['bookmark/findBookmarkById'](bookmarkId)
     },
     chooseHistoryQuestion (questionInfo) {
       this.$store.commit('bookmark/setAppQuestion', questionInfo.question)
@@ -127,7 +124,6 @@ export default {
   z-index: 990;
 
   .single-history-question {
-    position: relative;
     padding: 15px;
     cursor: pointer;
 
@@ -136,15 +132,15 @@ export default {
     }
 
     &:hover {
+      background-color: #F5FBFB;
       .question-name {
-        color: #43BAC3;
+        color: $theme-text-color-dark;
       }
     }
 
-    .question-database {
+    .ask-time {
       font-size: 12px;
-      line-height: normal;
-      letter-spacing: 0.05em;
+      line-height: 16px;
       color: $theme-text-color-light;
       margin-bottom: 10px;
     }
@@ -157,15 +153,11 @@ export default {
       margin-bottom: 10px;
     }
 
-    .ask-time {
-      font-size: 12px;
-      color: $theme-text-color-light;
+    .ask-type-block {
+      display: flex;
     }
 
     .ask-type {
-      position: absolute;
-      top: 9px;
-      right: 12px;
       background-color: #9FC2C6;
       border-radius: 10px;
       font-size: 12px;

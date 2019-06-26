@@ -20,7 +20,7 @@
         <input-block class="dialog-input"
           label="帳號"
           name="userName"
-          v-model="connectionInfo.userName"
+          v-model="connectionInfo.username"
           v-validate="'required'"
         ></input-block>
         <input-block class="dialog-input"
@@ -59,7 +59,7 @@ export default {
         connection_type: null,
         database: null,
         username: null,
-        pasword: null
+        password: null
       },
       isLoading: false
     }
@@ -84,7 +84,9 @@ export default {
             })
         }
       })
-    },
+    }
+  },
+  computed: {
     currentUploadInfo () {
       return this.$store.state.dataManagement.currentUploadInfo
     }
