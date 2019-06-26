@@ -1,6 +1,6 @@
 <template>
   <nav class="nav-header">
-    <router-link class="nav-item" v-show="$route.name !== 'PageIndex'" to="/result">搜寻</router-link>
+    <router-link class="nav-item" to="/result">搜寻</router-link>
     <router-link class="nav-item" to="/pinboard">个人钉板</router-link>
     <router-link class="nav-item" to="/data-management">资料管理</router-link>
   </nav>

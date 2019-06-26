@@ -1,6 +1,6 @@
 <template>
   <div class="insights-info root-cause">
-    <div class="insighs-info-title">資料探勘</div>
+    <div class="insighs-info-title">资料洞察</div>
     <div class="insights-info-block">
       <div class="insight-info"
         v-for="(insight, index) in info.rootCause"

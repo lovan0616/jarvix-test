@@ -1,6 +1,6 @@
 <template>
   <div class="insights-info basic-insights">
-    <div class="insighs-info-title">基本資料</div>
+    <div class="insighs-info-title">基本资料</div>
     <div class="insights-info-block">
       <div class="insight-tabl-list">
         <div class="insight-table"
@@ -8,13 +8,13 @@
         >
           <div class="insight-table-row table-head">
             <div class="insight-table-cell"></div>
-            <div class="insight-table-cell">總和</div>
-            <div class="insight-table-cell">總數量</div>
-            <div class="insight-table-cell">最大數值</div>
-            <div class="insight-table-cell">最小數值</div>
+            <div class="insight-table-cell">总和</div>
+            <div class="insight-table-cell">总数量</div>
+            <div class="insight-table-cell">最大数值</div>
+            <div class="insight-table-cell">最小数值</div>
             <div class="insight-table-cell">平均值</div>
-            <div class="insight-table-cell">標準差</div>
-            <div class="insight-table-cell">備註</div>
+            <div class="insight-table-cell">标准差</div>
+            <div class="insight-table-cell">备注</div>
           </div>
           <div class="insight-table-row"
             v-for="(tableInfo, index) in info.nTable"
@@ -35,13 +35,13 @@
         >
           <div class="insight-table-row table-head">
             <div class="insight-table-cell"></div>
-            <div class="insight-table-cell">總數量</div>
-            <div class="insight-table-cell">最大類別</div>
-            <div class="insight-table-cell">最大類別數量</div>
-            <div class="insight-table-cell">最小類別</div>
-            <div class="insight-table-cell">最小類別數量</div>
-            <div class="insight-table-cell">數量平均值</div>
-            <div class="insight-table-cell">數量標準差</div>
+            <div class="insight-table-cell">总数量</div>
+            <div class="insight-table-cell">最大类别</div>
+            <div class="insight-table-cell">最大类别数量</div>
+            <div class="insight-table-cell">最小类别</div>
+            <div class="insight-table-cell">最小类别数量</div>
+            <div class="insight-table-cell">数量平均值</div>
+            <div class="insight-table-cell">数量标准差</div>
           </div>
           <div class="insight-table-row"
             v-for="(tableInfo, index) in info.cTable"

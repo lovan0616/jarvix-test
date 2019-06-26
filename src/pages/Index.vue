@@ -88,7 +88,7 @@ export default {
 
   .teaching-button {
     position: fixed;
-    z-index: 1;
+    z-index: 20;
     bottom: 30px;
     right: 30px;
     color: #0F9696;
