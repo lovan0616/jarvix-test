@@ -14,20 +14,20 @@
         <input-block class="dialog-input"
           label="IP位址"
           name="dataBase"
-          v-model="connectionInfo.database"
+          v-model="database"
           v-validate="'required'"
         ></input-block>
         <input-block class="dialog-input"
           label="帳號"
           name="userName"
-          v-model="connectionInfo.username"
+          v-model="username"
           v-validate="'required'"
         ></input-block>
         <input-block class="dialog-input"
           label="密碼"
           name="password"
           type="password"
-          v-model="connectionInfo.password"
+          v-model="password"
           v-validate="'required'"
         ></input-block>
       </div>
@@ -35,11 +35,13 @@
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
+          :disabled="isLoading"
           @click="cancelFileUpload"
         >取消</button>
         <button class="btn btn-default"
+          :disabled="isLoading"
           @click="nextStep"
-        >連線</button>
+        >{{isLoading ? '連線中' : '連線'}}</button>
       </div>
     </div>
   </div>
@@ -55,12 +57,6 @@ export default {
   },
   data () {
     return {
-      connectionInfo: {
-        connection_type: null,
-        database: null,
-        username: null,
-        password: null
-      },
       isLoading: false
     }
   },
@@ -71,7 +67,8 @@ export default {
     nextStep () {
       this.$validator.validateAll().then(result => {
         if (result) {
-          this.connectionInfo.connection_type = this.currentUploadInfo.type
+          this.isLoading = true
+          this.$store.commit('dataManagement/updateConnectionType', this.currentUploadInfo.type)
           dbConnect(this.currentUploadInfo.storageId, this.connectionInfo)
             .then(() => {
               buildStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.bookmarkId)
@@ -87,6 +84,33 @@ export default {
     }
   },
   computed: {
+    database: {
+      get () {
+        return this.connectionInfo.database
+      },
+      set (value) {
+        this.$store.commit('dataManagement/updateConnectionDataBase', value)
+      }
+    },
+    username: {
+      get () {
+        return this.connectionInfo.username
+      },
+      set (value) {
+        this.$store.commit('dataManagement/updateConnectionUserName', value)
+      }
+    },
+    password: {
+      get () {
+        return this.connectionInfo.password
+      },
+      set (value) {
+        this.$store.commit('dataManagement/updateConnectionPassword', value)
+      }
+    },
+    connectionInfo () {
+      return this.$store.state.dataManagement.connectionInfo
+    },
     currentUploadInfo () {
       return this.$store.state.dataManagement.currentUploadInfo
     }
