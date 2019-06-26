@@ -13,6 +13,13 @@ export default {
       type: null,
       name: null
     },
+    // 連線資訊
+    connectionInfo: {
+      connection_type: null,
+      database: null,
+      username: null,
+      password: null
+    },
     uploadFileList: [],
     showCreateDataSourceDialog: false,
     // 檔案已上傳

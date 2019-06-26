@@ -34,6 +34,7 @@ export default {
     this.$store.commit('dataManagement/updateFileLoaded', false)
     this.$store.commit('dataManagement/updateConnectionStatus', null)
     this.$store.commit('dataManagement/clearCurrentUploadInfo')
+    this.$store.commit('dataManagement/clearConnectionInfo')
   },
   methods: {
   },

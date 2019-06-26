@@ -25,5 +25,23 @@ export default {
   },
   updateConnectionStatus (state, data) {
     state.connectionStatus = data
+  },
+  updateConnectionType (state, data) {
+    state.connectionInfo.connection_type = data
+  },
+  updateConnectionDataBase (state, data) {
+    state.connectionInfo.database = data
+  },
+  updateConnectionUserName (state, data) {
+    state.connectionInfo.username = data
+  },
+  updateConnectionPassword (state, data) {
+    state.connectionInfo.password = data
+  },
+  clearConnectionInfo (state) {
+    state.connectionInfo.connection_type = null
+    state.connectionInfo.database = null
+    state.connectionInfo.username = null
+    state.connectionInfo.password = null
   }
 }
