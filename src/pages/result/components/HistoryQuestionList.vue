@@ -121,6 +121,8 @@ export default {
   background: #FFF;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
+  max-height: 75vh;
+  overflow: auto;
   z-index: 990;
 
   .single-history-question {

@@ -62,18 +62,18 @@ export default {
     chartOption () {
       this.$set(chartAddon.xAxis, 'splitLine', groupScatterChartConfig.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', groupScatterChartConfig.yAxisSplitLine)
-      chartAddon.tooltip = groupScatterChartConfig.tooltip
+      chartAddon.tooltip.trigger = groupScatterChartConfig.tooltip.trigger
       chartAddon.xAxis.name = this.dataset.columns[0]
       chartAddon.yAxis.name = this.dataset.columns[1]
       groupScatterChartConfig.chartData.data = this.dataset.data
       groupScatterChartConfig.chartData.symbolSize = this.dotSize(this.dataset.data.length)
-      chartAddon.legend.show = !this.isPreview
       chartAddon.series = this.groupDataList.map(dataSet => {
         let chartConfig = JSON.parse(JSON.stringify(groupScatterChartConfig.chartData))
         chartConfig.data = dataSet.data
         chartConfig.name = dataSet.name
         return chartConfig
       })
+      if (this.isPreview) this.previewChartSetting(chartAddon)
 
       return chartAddon
     },

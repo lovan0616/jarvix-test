@@ -110,10 +110,10 @@ export default {
   data () {
     echartAddon.mapping(this.addons)
     return {
-      addonOptions: echartAddon.options,
-      addonSeriesItem: echartAddon.seriesItem,
-      addonSeriesData: echartAddon.seriesData,
-      addonSeriesItems: echartAddon.seriesItems
+      addonOptions: JSON.parse(JSON.stringify(echartAddon.options)),
+      addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
+      addonSeriesData: JSON.parse(JSON.stringify(echartAddon.seriesData)),
+      addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems))
     }
   },
   computed: {
@@ -156,7 +156,7 @@ export default {
       })
     },
     options () {
-      return {
+      let config = {
         ...this.addonOptions,
         tooltip: {
           trigger: 'axis',
@@ -178,10 +178,12 @@ export default {
           itemWidth: 12,
           itemHeight: 12,
           icon: 'circle',
-          itemGap: 20,
-          show: !this.isPreview
+          itemGap: 20
         }
       }
+
+      if (this.isPreview) this.previewChartSetting(config)
+      return config
     },
     colorList () {
       switch (this.data[0].length) {

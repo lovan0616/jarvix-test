@@ -12,7 +12,7 @@
 import dataTool from 'echarts/dist/extension/dataTool'
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
-let chartAddon = JSON.parse(JSON.stringify(chartOptions))
+
 let boxPlotChartConfig = {
   tooltip: {
     trigger: 'item'
@@ -67,9 +67,9 @@ export default {
       return dataTool.prepareBoxplotData(this.dataset.data)
     },
     chartOption () {
-      chartAddon.legend.show = !this.isPreview
+      let chartAddon = JSON.parse(JSON.stringify(chartOptions))
       chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotChartConfig.xAxis}
-      chartAddon.tooltip = boxPlotChartConfig.tooltip
+      chartAddon.tooltip.trigger = boxPlotChartConfig.tooltip.trigger
       chartAddon.xAxis.data = this.dataset.index
       chartAddon.xAxis.name = this.dataset.columns[0]
       chartAddon.yAxis.name = this.dataset.columns[1]
@@ -77,6 +77,7 @@ export default {
       boxPlotChartConfig.outlier.data = this.chartData.outliers
       chartAddon.series[0] = boxPlotChartConfig.chartData
       chartAddon.series[1] = boxPlotChartConfig.outlier
+      if (this.isPreview) this.previewChartSetting(chartAddon)
 
       return chartAddon
     },
