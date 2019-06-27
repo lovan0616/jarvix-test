@@ -11,7 +11,6 @@
 <script>
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
-let chartAddon = JSON.parse(JSON.stringify(chartOptions))
 let scatterChartConfig = {
   tooltip: {
     trigger: 'item'
@@ -45,18 +44,13 @@ export default {
     dataset: {
       type: Object,
       default: null
+    },
+    isPreview: {
+      type: Boolean,
+      default: false
     }
   },
-  mounted () {
-    this.setOptions()
-  },
   methods: {
-    setOptions () {
-      this.$set(chartAddon.xAxis, 'splitLine', scatterChartConfig.xAxisSplitLine)
-      this.$set(chartAddon.yAxis, 'splitLine', scatterChartConfig.yAxisSplitLine)
-      chartAddon.tooltip = scatterChartConfig.tooltip
-      chartAddon.legend.show = !this.isPreview
-    },
     dotSize (dataLength) {
       if (dataLength > 500 && dataLength < 1999) {
         return 4
@@ -71,11 +65,17 @@ export default {
   },
   computed: {
     chartOption () {
+      let chartAddon = JSON.parse(JSON.stringify(chartOptions))
+      this.$set(chartAddon.xAxis, 'splitLine', scatterChartConfig.xAxisSplitLine)
+      this.$set(chartAddon.yAxis, 'splitLine', scatterChartConfig.yAxisSplitLine)
+      chartAddon.tooltip.trigger = scatterChartConfig.tooltip.trigger
       chartAddon.xAxis.name = this.dataset.columns[0]
       chartAddon.yAxis.name = this.dataset.columns[1]
       scatterChartConfig.chartData.data = this.dataset.data
       scatterChartConfig.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.series[0] = scatterChartConfig.chartData
+
+      if (this.isPreview) this.previewChartSetting(chartAddon)
 
       return chartAddon
     },

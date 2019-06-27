@@ -103,7 +103,7 @@ export default {
       chartAddon.xAxis.min = min
       chartAddon.xAxis.max = max
       chartAddon.xAxis.name = this.dataset.columns[0]
-      chartAddon.legend.show = !this.isPreview
+      if (this.isPreview) this.previewChartSetting(chartAddon)
 
       return chartData
     },

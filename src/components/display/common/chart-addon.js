@@ -1,6 +1,7 @@
 import chartVariable from '@/styles/chart/variables.scss'
 export const chartOptions = {
   tooltip: {
+    show: true,
     trigger: 'axis',
     backgroundColor: chartVariable['backgroundColor'],
     borderWidth: 1,

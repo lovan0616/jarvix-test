@@ -113,10 +113,10 @@ export default {
 
         chartAddon.series.push(config.chartData)
       }
-      chartAddon.legend.show = !this.isPreview
       chartAddon.xAxis = {...chartAddon.xAxis, ...scatterBubleChartConfig.xAxis}
       chartAddon.yAxis = {...chartAddon.yAxis, ...scatterBubleChartConfig.yAxis}
-      chartAddon.tooltip = scatterBubleChartConfig.tooltip
+      chartAddon.tooltip.trigger = scatterBubleChartConfig.tooltip.trigger
+      if (this.isPreview) this.previewChartSetting(chartAddon)
 
       return chartAddon
     },

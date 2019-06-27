@@ -90,6 +90,17 @@ Vue.mixin({
         case 'tree_map':
           return 'DisplayTreeMapChart'
       }
+    },
+    previewChartSetting (config) {
+      config.legend.show = false
+      config.tooltip.show = false
+      config.xAxis.show = false
+      // config.xAxis.axisLabel.show = false
+      // config.xAxis.name = null
+      config.yAxis.axisLabel.show = false
+      config.yAxis.name = null
+
+      return config
     }
   }
 })

@@ -2,7 +2,7 @@
   <div class="display-average-bar-chart">
     <echart
       :style="chartStyle"
-      :options="chartOptions"
+      :options="chartOption"
       auto-resize
     >
     </echart>
@@ -60,9 +60,7 @@ export default {
   },
   methods: {
     setOptions () {
-      chartAddon.legend.show = !this.isPreview
       chartAddon.xAxis.data = this.dataset.index
-      // chartAddon.yAxis.name = this.dataset.columns
     }
   },
   computed: {
@@ -72,7 +70,7 @@ export default {
         height: '280px'
       }
     },
-    chartOptions () {
+    chartOption () {
       let seriesArray = this.dataset.data.map(element => {
         return element[0]
       })
@@ -98,6 +96,7 @@ export default {
       })
       averageBarChartConfig.chartData.data = seriesArray
       chartAddon.series[0] = averageBarChartConfig.chartData
+      if (this.isPreview) this.previewChartSetting(chartAddon)
 
       return chartAddon
     }
