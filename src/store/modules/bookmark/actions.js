@@ -25,7 +25,7 @@ export default {
       return Promise.resolve(state)
     })
   },
-  getBookmarks ({ commit, state }) {
+  getBookmarks ({ commit, state }, data) {
     return getBookmarks().then(res => {
       commit(types.SET_BOOKMARKS, res)
       if (!state.bookmark) {

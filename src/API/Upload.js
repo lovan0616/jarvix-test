@@ -43,12 +43,13 @@ export function getStorage (bookmarkId) {
 /**
  * build storage
  */
-export function buildStorage (storageId, bookmarkId) {
+export function buildStorage (storageId, bookmarkId, syncable = true) {
   return request({
     url: `/storages/${storageId}/build`,
     method: 'POST',
     data: {
-      bookmark_id: bookmarkId
+      bookmark_id: bookmarkId,
+      syncable: syncable
     }
   })
 }

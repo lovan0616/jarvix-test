@@ -1,6 +1,9 @@
 <template>
   <div class="remote-connection">
     <div class="dialog-title">連結MySQL資料庫</div>
+    <upload-process-block
+      :step="isLoading ? 3 : 2"
+    ></upload-process-block>
     <div class="dialog-body">
       <div class="loading-block"
         v-if="isLoading"
@@ -49,11 +52,14 @@
 <script>
 import { dbConnect, buildStorage } from '@/API/Upload'
 import InputBlock from '@/components/InputBlock'
+import UploadProcessBlock from './UploadProcessBlock'
+
 export default {
   inject: ['$validator'],
   name: 'RemoteConnection',
   components: {
-    InputBlock
+    InputBlock,
+    UploadProcessBlock
   },
   data () {
     return {
@@ -120,7 +126,7 @@ export default {
 <style lang="scss" scoped>
 .remote-connection {
   .dialog-body {
-    background: #FAFAFA;
+    background: #F8F8F8;
     margin-bottom: 16px;
   }
   .input-block-container {

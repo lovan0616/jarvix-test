@@ -2,11 +2,15 @@ import request from '@/utils/request'
 
 /**
  * get bookmarks
+ * build = true 撈回所有狀態的 bookmark
  */
-export function getBookmarks () {
+export function getBookmarks (data = true) {
   return request({
     url: '/bookmarks',
-    method: 'GET'
+    method: 'GET',
+    params: {
+      build: data
+    }
   })
 }
 

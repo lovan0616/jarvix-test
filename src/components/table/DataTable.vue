@@ -45,7 +45,7 @@
         v-else
         v-for="(data, index) in dataList"
         :key="index"
-        :class="{selected: selectList.indexOf(data) > -1}"
+        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': data['build_status']}"
       >
         <div class="data-table-cell checkbox"
           v-if="hasCheckbox"
@@ -76,9 +76,18 @@
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
             :key="action.name"
-            :disabled="isProcessing"
+            :disabled="isProcessing || data['build_status']"
             @click="doAction(action.value, data)"
           >{{ action.name }}</a>
+          <span v-else-if="headInfo.value === 'build_status'"
+            :class="{'is-processing': data[headInfo.value]}"
+          >
+            <svg-icon
+              v-if="data[headInfo.value]"
+              icon-class="spinner"
+            ></svg-icon>
+            {{ data[headInfo.value] ? '资料处里中' : '可管理' }}
+          </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
       </div>
@@ -270,6 +279,14 @@ export default {
     display: inline-block;
     width: 100%;
     color: #42A5B3;
+  }
+  .data-table-row.is-processing {
+    background-color: #F9F9F9;
+  }
+  .data-table-cell {
+    .is-processing {
+      color: #ccc;
+    }
   }
 }
 </style>

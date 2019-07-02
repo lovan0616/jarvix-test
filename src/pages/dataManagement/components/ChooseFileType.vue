@@ -1,6 +1,7 @@
 <template>
   <div class="choose-file-type">
     <div class="dialog-title">新增资料</div>
+    <upload-process-block></upload-process-block>
     <div class="dialog-body">
       <div class="input-block-container">
         <div class="input-block file-type-select-block"
@@ -40,6 +41,7 @@
 <script>
 import SySelect from '@/components/select/SySelect'
 import InputBlock from '@/components/InputBlock'
+import UploadProcessBlock from './UploadProcessBlock'
 import { createBookmark, createBookmarkStorage } from '@/API/Bookmark'
 
 export default {
@@ -47,7 +49,8 @@ export default {
   name: 'ChooseFileType',
   components: {
     SySelect,
-    InputBlock
+    InputBlock,
+    UploadProcessBlock
   },
   data () {
     return {
@@ -130,7 +133,7 @@ export default {
 <style lang="scss" scoped>
 .choose-file-type {
   .dialog-body {
-    background: #FAFAFA;
+    background: #F8F8F8;
     margin-bottom: 16px;
   }
 

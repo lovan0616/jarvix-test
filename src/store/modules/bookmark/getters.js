@@ -28,11 +28,12 @@ export default {
       return result
     }, [])
   },
-  findBookmarkById (state) {
-    return keyword => {
-      return state.bookmarks.find(element => {
-        return element.id === parseInt(keyword)
-      }).name
-    }
+  // 是否有資料源正在處理中
+  isBookmarkBuilding (state) {
+    let isBuilding = false
+    state.bookmarks.forEach(element => {
+      if (element.build_status) isBuilding = true
+    })
+    return isBuilding
   }
 }
