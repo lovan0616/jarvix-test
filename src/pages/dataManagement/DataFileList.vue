@@ -129,13 +129,6 @@ export default {
   destroyed () {
     this.$store.commit('dataManagement/updateCurrentBookmarkInfo', null)
   },
-  watch: {
-    fileLoaded (value) {
-      if (value) {
-        this.fetchData()
-      }
-    }
-  },
   methods: {
     fetchData () {
       return getBookmarkById(this.currentBookmarkId).then(response => {
@@ -221,9 +214,6 @@ export default {
   computed: {
     showCreateDataSourceDialog () {
       return this.$store.state.dataManagement.showCreateDataSourceDialog
-    },
-    fileLoaded () {
-      return this.$store.state.dataManagement.fileLoaded
     },
     currentBookmarkInfo () {
       return this.$store.state.dataManagement.currentBookmarkInfo

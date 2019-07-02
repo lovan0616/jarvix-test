@@ -1,6 +1,9 @@
 <template>
   <div class="local-file-upload">
-    <div class="dialog-title">新增資料</div>
+    <div class="dialog-title">新增资料</div>
+    <upload-process-block
+      :step="currntUploadStatus === uploadStatus.uploading ? 3 : 2"
+    ></upload-process-block>
     <div class="dialog-body">
       <div class="data-source-name">資料源名稱：{{ currentUploadInfo.name }}</div>
       <input type="file" class="hidden" name="fileUploadInput"
@@ -48,7 +51,6 @@
         >
           <span v-show="currntUploadStatus === uploadStatus.wait">確認上傳</span>
           <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner"></svg-icon>上傳中...</span>
-          <span v-show="currntUploadStatus === uploadStatus.processing"><svg-icon icon-class="spinner"></svg-icon>資料處理中...</span>
         </button>
       </div>
     </div>
@@ -56,16 +58,17 @@
 </template>
 <script>
 import { uploadStatus } from '@/utils/general'
-import { buildStorage } from '@/API/Upload'
 import { mapState } from 'vuex'
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
+import UploadProcessBlock from './UploadProcessBlock'
 
 export default {
   name: 'LocalFileUpload',
   components: {
     UploadBlock,
-    FileListBlock
+    FileListBlock,
+    UploadProcessBlock
   },
   data () {
     return {
@@ -76,10 +79,9 @@ export default {
   watch: {
     uploadFileStatusList (value) {
       if (this.currntUploadStatus !== uploadStatus.uploading) return
-      // 當所有的檔案都已經上傳完畢，則進行 build bookmark
+      // 所有的檔案都已經上傳完畢
       if (value.findIndex(element => { return element === uploadStatus.wait || element === uploadStatus.uploading }) === -1) {
         this.buildBookmark()
-        this.currntUploadStatus = uploadStatus.processing
       }
     }
   },
@@ -116,7 +118,7 @@ export default {
       this.currntUploadStatus = uploadStatus.uploading
     },
     buildBookmark () {
-      buildStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.bookmarkId)
+      this.$store.dispatch('dataManagement/buildStorage', false)
         .then(response => {
           this.$store.commit('dataManagement/updateFileLoaded', true)
         })

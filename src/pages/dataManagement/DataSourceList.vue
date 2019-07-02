@@ -45,7 +45,7 @@ import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
-import { getBookmarks, deleteBookmark, renameBookmark } from '@/API/Bookmark'
+import { deleteBookmark, renameBookmark } from '@/API/Bookmark'
 
 export default {
   name: 'DataSourceList',
@@ -62,13 +62,15 @@ export default {
       deleteId: null,
       renameDataSource: null,
       dataList: [],
+      // 資料處理中
+      isProcessing: false,
       // 用來生成 data table
       tableHeaders: [
         {
           text: '资料源名称',
           value: 'name',
           sort: true,
-          width: '16.3%',
+          width: '11.71%',
           link: {
             name: 'PageDataFileList',
             disabled: {
@@ -77,27 +79,27 @@ export default {
             }
           }
         },
-        {text: '资料来源', value: 'type'},
-        {text: '上传者', value: 'create_user', width: '13.04%'},
+        {text: '资料来源', value: 'type', width: '8.82%'},
+        {text: '上传者', value: 'create_user', width: '12.96%'},
         {
           text: '建立日期',
           value: 'create_date',
           sort: true,
-          width: '15.22%',
+          width: '14.53%',
           time: 'YYYY-MM-DD'
         },
         {
           text: '修改日期',
           value: 'update_date',
           sort: true,
-          width: '15.22%',
+          width: '14.53%',
           time: 'YYYY-MM-DD'
         },
+        {text: '状态', value: 'build_status', width: '7.26%'},
         {text: '资料表数', value: 'count', align: 'right', width: '6.53%'},
         {
           text: '操作',
           value: 'action',
-          width: '15.13%',
           action: [
             {
               name: '重新命名',
@@ -115,21 +117,28 @@ export default {
     this.fetchData()
   },
   watch: {
-    fileLoaded (value) {
-      if (value) {
+    isBookmarkBuilding (value, oldValue) {
+      if (!value && oldValue) {
         this.fetchData()
       }
-    }
-  },
-  methods: {
-    fetchData () {
-      return getBookmarks().then(response => {
-        this.dataList = response.map(dataInfo => {
+    },
+    bookmarkList: {
+      handler () {
+        /**
+         * 注意！這邊要重新 assign 是因為頁面上有排序功能，不希望排序時影響到 bookmark select 的順序
+         */
+        this.dataList = this.bookmarkList.map(dataInfo => {
           // 注意！這邊只會做資料表數計算，時間的顯示在 DataTable 處理，主要是為了時間排序的準確
           dataInfo.count = dataInfo.config ? Object.keys(dataInfo.config.uploads).length : 0
           return dataInfo
         })
-      })
+      },
+      immediate: true
+    }
+  },
+  methods: {
+    fetchData () {
+      return this.$store.dispatch('bookmark/getBookmarks')
     },
     createDataSource () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
@@ -179,11 +188,14 @@ export default {
     }
   },
   computed: {
+    bookmarkList () {
+      return this.$store.state.bookmark.bookmarks
+    },
     showCreateDataSourceDialog () {
       return this.$store.state.dataManagement.showCreateDataSourceDialog
     },
-    fileLoaded () {
-      return this.$store.state.dataManagement.fileLoaded
+    isBookmarkBuilding () {
+      return this.$store.getters['bookmark/isBookmarkBuilding']
     }
   }
 }

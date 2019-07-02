@@ -55,6 +55,7 @@ Vue.mixin({
     paddingZero (n) {
       return n < 10 ? '0' + n : n
     },
+    // 後端設計 MySQL/SQLITE 的 storage type 都叫 SQLITE，不得以只好前端自己轉換
     getStorageType (value) {
       switch (value) {
         case 'CSV':
@@ -91,12 +92,11 @@ Vue.mixin({
           return 'DisplayTreeMapChart'
       }
     },
+    // 圖表在preview 時，不顯示 legend、tootltip、 X\Y 軸的label
     previewChartSetting (config) {
       config.legend.show = false
       config.tooltip.show = false
       config.xAxis.show = false
-      // config.xAxis.axisLabel.show = false
-      // config.xAxis.name = null
       config.yAxis.axisLabel.show = false
       config.yAxis.name = null
 

@@ -3,7 +3,7 @@
     <svg-icon icon-class="folder" class="bookmark-select-icon"></svg-icon>
     <sy-select class="bookmark-select"
       :selected="bookmarkId"
-      :items="bookmarks"
+      :items="buildBookmarkList"
       placeholder="请选择bookmark"
       @update:selected="onBookmarkChange"
     ></sy-select>
@@ -18,7 +18,13 @@ export default {
     SySelect
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks'])
+    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks']),
+    // 過濾掉正在 build 的 bookmark
+    buildBookmarkList () {
+      return this.bookmarks.filter(bookmark => {
+        return !bookmark.build_status
+      })
+    }
   },
   methods: {
     onBookmarkChange (bookmarkId) {

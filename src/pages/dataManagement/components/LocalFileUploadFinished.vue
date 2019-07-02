@@ -23,7 +23,7 @@
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-default"
-          @click="closeFileUploadDialog"
+          @click="buildBookmark"
         >我知道了</button>
       </div>
     </div>
@@ -45,8 +45,10 @@ export default {
     }
   },
   methods: {
-    closeFileUploadDialog () {
+    buildBookmark () {
+      // close fileUploadDialog
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+      this.$store.dispatch('bookmark/getBookmarks')
     }
   },
   computed: {
