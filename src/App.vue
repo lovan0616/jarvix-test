@@ -21,13 +21,12 @@ export default {
     isBookmarkBuilding (value, oldValue) {
       if (value) {
         this.intervalFunction = window.setInterval(() => {
-          this.$store.dispatch('bookmark/getBookmarks')
+          this.$store.dispatch('bookmark/getBookmarkList')
         }, 30000)
       }
       // 建置完成
       if (!value && oldValue) {
         window.clearInterval(this.intervalFunction)
-        this.$store.dispatch('bookmark/getBookmarks')
         Message({
           message: '资料源建立完成',
           type: 'success',

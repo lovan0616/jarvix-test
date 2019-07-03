@@ -159,6 +159,7 @@ export default {
       let config = {
         ...this.addonOptions,
         tooltip: {
+          confine: true,
           trigger: 'axis',
           backgroundColor: chartVariable['backgroundColor'],
           borderWidth: 1,
@@ -167,7 +168,10 @@ export default {
           textStyle: {
             color: chartVariable['textColor']
           },
-          extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);'
+          // extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);'
+          // tooltip 固定高度，且可滾動
+          enterable: true,
+          extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08); max-height: 200px; overflow: auto'
         },
         dataset: {
           source: this.data
@@ -175,6 +179,7 @@ export default {
         series: this.series,
         color: this.colorList,
         legend: {
+          type: 'scroll',
           itemWidth: 12,
           itemHeight: 12,
           icon: 'circle',

@@ -1,4 +1,3 @@
-import * as types from './mutation_type'
 import co from 'co'
 import router from '../../../router'
 import { getBookmarks, getSuggestions, getQuickstarts } from '@/API/Bookmark'
@@ -8,16 +7,14 @@ export default {
   init ({ commit, dispatch, state }) {
     if (state.isInit) return Promise.resolve(state)
     return co(function* () {
-      yield dispatch('getBookmarks')
-      yield dispatch('getSuggestions')
-      yield dispatch('getQuickstarts')
-      commit(types.SET_ISINIT, true)
+      yield dispatch('getBookmarkList')
+      commit('setIsInit', true)
       return Promise.resolve(state)
     })
   },
   changeBookmarkById ({ dispatch, commit, state }, bookmarkId) {
     // 更新 Bookmark 資料
-    commit(types.SET_BOOKMARK, state.bookmarks.find(element => element.id === bookmarkId))
+    commit('setBookmarkId', bookmarkId)
 
     return co(function* () {
       yield dispatch('getSuggestions')
@@ -25,22 +22,22 @@ export default {
       return Promise.resolve(state)
     })
   },
-  getBookmarks ({ commit, state }, data) {
+  getBookmarkList ({ dispatch, commit, state }, data) {
     return getBookmarks().then(res => {
-      commit(types.SET_BOOKMARKS, res)
-      if (!state.bookmark) {
-        commit(types.SET_BOOKMARK, res[0])
+      commit('setBookmarkList', res)
+      if (!state.bookmarkId) {
+        dispatch('changeBookmarkById', res[0].id)
       }
     })
   },
   getSuggestions ({ commit, state }) {
-    return getSuggestions(state.bookmark.id).then(res => {
-      commit(types.SET_SUGGESTIONS, res)
+    return getSuggestions(state.bookmarkId).then(res => {
+      commit('setSuggestions', res)
     })
   },
   getQuickstarts ({ commit, state }) {
-    return getQuickstarts(state.bookmark.id).then(res => {
-      commit(types.SET_QUICKSTART_RESULT, res)
+    return getQuickstarts(state.bookmarkId).then(res => {
+      commit('setQuickStart', res)
     })
   },
   updateResultPreviewRouter ({commit, getters}, data) {

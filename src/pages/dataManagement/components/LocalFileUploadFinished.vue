@@ -48,7 +48,7 @@ export default {
     buildBookmark () {
       // close fileUploadDialog
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-      this.$store.dispatch('bookmark/getBookmarks')
+      this.$store.dispatch('bookmark/getBookmarkList')
     }
   },
   computed: {
