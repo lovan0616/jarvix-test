@@ -103,13 +103,10 @@ export default {
     },
     genTaskByTemplateAndData () {
       if (!this.cancelLoading && this.intervalLoading) this.loading = true
-      // api/task/<task>/data 需要多帶 bookmark_id 給他
-      let dataTaskParams = JSON.parse(JSON.stringify(this.params))
-      dataTaskParams['bookmark_id'] = this.bookmarkId
 
       Promise.all([
         getTask(this.templatePath, this.params).then(res => res),
-        getTask(this.dataPath, dataTaskParams).then(res => res)
+        getTask(this.dataPath, this.params).then(res => res)
       ]).then(res => {
         const template = res[0]
         const data = res[1]

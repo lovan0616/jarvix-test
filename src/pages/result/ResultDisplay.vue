@@ -16,10 +16,10 @@
       <div class="category-title">比较类</div>
       <div class="category-question-list">
         <preview-result-board class="result-board"
-          v-for="(question, index) in relatedQuestionList"
-          :key="question + index"
+          v-for="(questionInfo, index) in relatedQuestionList"
+          :key="questionInfo + index"
           :index="index"
-          :question="question"
+          :question-info="questionInfo"
           @remove="removeQueston"
         ></preview-result-board>
       </div>
@@ -104,12 +104,7 @@ export default {
         _this.askCancelFunction = c
       }))
         .then(res => {
-          // 這邊後端要調整，資料集會返回空陣列
-          if (res.vertical) {
-            this.relatedQuestionList = res.vertical.concat(res.horizontal, res.backward)
-          } else {
-            this.relatedQuestionList = []
-          }
+          this.relatedQuestionList = res
         })
     },
     cancelRequest () {

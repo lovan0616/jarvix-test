@@ -11,10 +11,10 @@
       <h2 class="sub-title">推荐语句</h2>
       <div class="quick-start-question-block">
         <preview-result-board class="result-board"
-          v-for="(question, index) in quickstartWithDefaults"
-          :key="question"
+          v-for="(questionInfo, index) in quickstartWithDefaults"
+          :key="questionInfo"
           :index="index"
-          :question="question"
+          :question-info="questionInfo"
         ></preview-result-board>
       </div>
     </div>
