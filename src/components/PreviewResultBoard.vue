@@ -3,9 +3,9 @@
     @click="linkToResult"
   >
     <div class="board-top-section">
-      <div class="board-title">{{ question }}</div>
+      <div class="board-title">{{ questionInfo.question }}</div>
       <div class="board-chart-block"
-        v-loading="isChartLoading"
+        v-loading="isLoading"
       >
         <component
           v-if="questionInfo.template"
@@ -30,13 +30,21 @@
   </div>
 </template>
 <script>
-import { getQuestionPreview, getTaskData } from '@/API/Ask'
+import { getTaskData } from '@/API/Ask'
 export default {
   name: 'PreviewResultBoard',
   props: {
-    question: {
-      type: String,
-      default: ''
+    questionInfo: {
+      type: Object,
+      default () {
+        return {
+          data: null,
+          question: null,
+          result: null,
+          task: [],
+          template: null
+        }
+      }
     },
     index: {
       type: Number,
@@ -45,16 +53,7 @@ export default {
   },
   data () {
     return {
-      questionInfo: {
-        data: null,
-        picType: null,
-        question: null,
-        result: null,
-        task: [],
-        template: null
-      },
       indicators: [],
-      isChartLoading: false,
       isLoading: false
     }
   },
@@ -64,46 +63,31 @@ export default {
   methods: {
     fetechData () {
       this.isLoading = true
-      this.isChartLoading = true
-      getQuestionPreview({'question': this.question, 'bookmark_id': this.bookmarkId})
-        .then(response => {
-          this.questionInfo = response
-          this.isChartLoading = false
-          if (response.task.length > 0) {
-            let promiseList = []
-            /**
-             * indicatorList 會將 indicator 的資料全都收集完再 assign 給 indicators
-             * 主要是因為 request 回來的 response 不會依序回來，但是希望順序是固定的
-             **/
-            let indicatorList = []
-            response.task.forEach((element, index) => {
-              element.entities['bookmark_id'] = this.bookmarkId
-              let getTaskPromise = getTaskData(element.intent, element.entities)
-                .then(res => {
-                  indicatorList[index] = res
-                })
-              // 收集所有 promise 送進 promiseAll
-              promiseList.push(getTaskPromise)
-            })
-            Promise.all(promiseList).then(() => {
-              this.indicators = indicatorList
-              this.isLoading = false
-            }, () => {
-              this.isLoading = false
-            })
-          } else {
-            // 如果沒有 task，就從清單中移除
-            this.$emit('remove', this.index)
-            this.isLoading = false
-          }
-        }).catch(() => {
-          this.isLoading = false
-          this.isChartLoading = false
-        })
+      let promiseList = []
+      /**
+       * indicatorList 會將 indicator 的資料全都收集完再 assign 給 indicators
+       * 主要是因為 request 回來的 response 不會依序回來，但是希望順序是固定的
+       **/
+      let indicatorList = []
+      this.questionInfo.task.forEach((element, index) => {
+        element.entities['bookmark_id'] = this.bookmarkId
+        let getTaskPromise = getTaskData(element.intent, element.entities)
+          .then(res => {
+            indicatorList[index] = res
+          })
+        // 收集所有 promise 送進 promiseAll
+        promiseList.push(getTaskPromise)
+      })
+      Promise.all(promiseList).then(() => {
+        this.indicators = indicatorList
+        this.isLoading = false
+      }, () => {
+        this.isLoading = false
+      })
     },
     linkToResult () {
       this.$store.commit('bookmark/setQuestionResult', this.questionInfo.result)
-      this.$store.commit('bookmark/setAppQuestion', this.question)
+      this.$store.commit('bookmark/setAppQuestion', this.questionInfo.question)
       this.$store.dispatch('bookmark/updateResultRouter')
     }
   },

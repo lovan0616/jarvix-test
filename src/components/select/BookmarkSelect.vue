@@ -22,7 +22,7 @@ export default {
     // 過濾掉正在 build 的 bookmark
     buildBookmarkList () {
       return this.bookmarkList.filter(bookmark => {
-        return !bookmark.build_status
+        return bookmark.enable
       })
     }
   },

@@ -21,8 +21,7 @@
         <div class="search-result-list">
           <preview-result-board class="result-board"
             v-if="currentQuestion"
-            :question="currentQuestion"
-            @remove="noMainResult"
+            :question-info="currentQuestion"
           ></preview-result-board>
         </div>
       </div>
@@ -32,21 +31,20 @@
           v-if="relatedQuestions.length > 0"
         >
           <preview-result-board class="result-board"
-            v-for="(question, index) in relatedQuestions"
-            :key="question + index"
+            v-for="(questionInfo, index) in relatedQuestions"
+            :key="questionInfo + index"
             :index="index"
-            :question="question"
-            @remove="removeQuestion"
+            :question-info="questionInfo"
           ></preview-result-board>
         </div>
         <div class="search-result-list"
           v-else
         >
           <preview-result-board class="result-board"
-            v-for="(question, index) in quickstartWithoutDefaults"
-            :key="question + index"
+            v-for="(questionInfo, index) in quickstartWithoutDefaults"
+            :key="questionInfo + index"
             :index="index"
-            :question="question"
+            :question-info="questionInfo"
           ></preview-result-board>
         </div>
       </div>
@@ -112,7 +110,7 @@ export default {
         _this.cancelFunction = c
       }))
         .then(res => {
-          this.currentQuestion = res.origin
+          this.currentQuestion = res.origin[0]
           this.relatedQuestions = res.relates
           this.isLoading = false
           this.$store.dispatch('bookmark/getHistoryQuestionList')
@@ -128,9 +126,6 @@ export default {
       if (typeof this.cancelFunction === 'function') {
         this.cancelFunction('cancel request')
       }
-    },
-    removeQuestion (index) {
-      this.relatedQuestions.splice(index, 1)
     },
     noMainResult () {
       this.isNoMainResult = true
