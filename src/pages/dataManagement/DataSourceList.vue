@@ -138,7 +138,7 @@ export default {
   },
   methods: {
     fetchData () {
-      return this.$store.dispatch('bookmark/getBookmarks')
+      return this.$store.dispatch('bookmark/getBookmarkList')
     },
     createDataSource () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
@@ -189,7 +189,7 @@ export default {
   },
   computed: {
     bookmarkList () {
-      return this.$store.state.bookmark.bookmarks
+      return this.$store.state.bookmark.bookmarkList
     },
     showCreateDataSourceDialog () {
       return this.$store.state.dataManagement.showCreateDataSourceDialog

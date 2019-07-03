@@ -11,8 +11,8 @@ export default {
     })
   },
   getBookmarkTables ({ commit, state, rootState }) {
-    if (rootState.bookmark.bookmark === undefined) return Promise.reject(new Error('bookmark not set yet'))
-    const bookmarkId = rootState.bookmark.bookmark.id
+    if (rootState.bookmark.bookmarkId === null) return Promise.reject(new Error('bookmark not set yet'))
+    const bookmarkId = rootState.bookmark.bookmarkId
     return getBookmarkTablesById(bookmarkId).then(res => {
       commit(types.SET_BOOKMARK_TABLES, res)
     })
@@ -41,9 +41,9 @@ export default {
     commit(types.SET_BOOKMARK_TABLE, bookmarkTable)
   },
   getBookmarkTableData ({ commit, state, rootState }) {
-    if (rootState.bookmark.bookmark === undefined) return Promise.reject(new Error('bookmark not set yet'))
+    if (rootState.bookmark.bookmarkId === null) return Promise.reject(new Error('bookmark not set yet'))
     if (state.bookmarkTable === undefined) return Promise.reject(new Error('bookmarkTable not set yet'))
-    const bookmarkId = rootState.bookmark.bookmark.id
+    const bookmarkId = rootState.bookmark.bookmarkId
     const bookmarkTableId = state.bookmarkTable.id
     return getBookmarkTableDataById(bookmarkId, bookmarkTableId).then(res => {
       commit(types.SET_BOOKMARK_TABLE_DATA, res)

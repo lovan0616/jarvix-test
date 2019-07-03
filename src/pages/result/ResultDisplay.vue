@@ -57,7 +57,7 @@ export default {
     this.fetchData()
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion']),
+    ...mapGetters('bookmark', ['bookmarkId', 'appQuestion']),
     questionResult () {
       return this.$store.state.bookmark.questionResult
     }
@@ -119,7 +119,7 @@ export default {
     },
     selectQuestion (data) {
       this.$store.commit('bookmark/setAppQuestion', data.question)
-      this.$store.commit('bookmark/setBookmarkById', data.bookmark_Id)
+      this.$store.dispatch('bookmark/changeBookmarkById', data.bookmark_Id)
       this.$store.dispatch('bookmark/updateResultRouter')
     },
     removeQueston (index) {

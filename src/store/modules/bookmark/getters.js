@@ -1,12 +1,9 @@
 export default {
-  bookmark (state) {
-    return state.bookmark
-  },
   bookmarkId (state) {
-    if (state.bookmark) return state.bookmark.id
+    return state.bookmarkId
   },
-  bookmarks (state) {
-    return state.bookmarks
+  bookmarkList (state) {
+    return state.bookmarkList
   },
   appQuestion (state) {
     return state.appQuestion
@@ -31,7 +28,7 @@ export default {
   // 是否有資料源正在處理中
   isBookmarkBuilding (state) {
     let isBuilding = false
-    state.bookmarks.forEach(element => {
+    state.bookmarkList.forEach(element => {
       if (element.build_status) isBuilding = true
     })
     return isBuilding

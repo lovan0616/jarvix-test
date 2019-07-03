@@ -89,7 +89,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion', 'quickstartWithoutDefaults']),
+    ...mapGetters('bookmark', ['bookmarkId', 'appQuestion', 'quickstartWithoutDefaults']),
     historyQuestionList () {
       return this.$store.state.bookmark.historyQuestionList
     }

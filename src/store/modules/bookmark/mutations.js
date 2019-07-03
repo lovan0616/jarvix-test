@@ -1,19 +1,17 @@
-import * as types from './mutation_type'
-
 export default {
-  [types.SET_ISINIT] (state, value) {
+  setIsInit (state, value) {
     state.isInit = value || false
   },
-  [types.SET_BOOKMARK] (state, bookmark) {
-    state.bookmark = bookmark || undefined
+  setBookmarkId (state, id) {
+    state.bookmarkId = id
   },
-  [types.SET_BOOKMARKS] (state, bookmarks) {
-    state.bookmarks = bookmarks || []
+  setBookmarkList (state, bookmarks) {
+    state.bookmarkList = bookmarks || []
   },
-  [types.SET_SUGGESTIONS] (state, suggestions) {
+  setSuggestions (state, suggestions) {
     state.suggestions = suggestions || {}
   },
-  [types.SET_QUICKSTART_RESULT] (state, result) {
+  setQuickStart (state, result) {
     state.quickstartResult = result || {}
   },
   setAppQuestion (state, data) {
@@ -21,9 +19,6 @@ export default {
   },
   setQuestionResult (state, data) {
     state.questionResult = data
-  },
-  setBookmarkById (state, data) {
-    state.bookmark = state.bookmarks.find(element => element.id === data)
   },
   setHistoryQuestionList (state, data) {
     state.historyQuestionList = data

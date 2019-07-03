@@ -18,6 +18,7 @@ export const chartOptions = {
     left: '5%'
   },
   legend: {
+    type: 'scroll',
     itemWidth: 12,
     itemHeight: 12,
     icon: 'circle',

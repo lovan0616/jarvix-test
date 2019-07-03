@@ -97,7 +97,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks', 'appQuestion']),
+    ...mapGetters('bookmark', ['bookmarkId', 'appQuestion']),
     currentResultDisplayType () {
       return this.$store.state.bookmark.currentResultDisplayType
     }
@@ -110,7 +110,7 @@ export default {
 
       if (question) {
         this.$store.commit('bookmark/setAppQuestion', question)
-        this.$store.commit('bookmark/setBookmarkById', bookmarkId)
+        this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
         this.$store.commit('bookmark/setCurrentResultDisplayType', type)
       }
     }

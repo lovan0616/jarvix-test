@@ -18,10 +18,10 @@ export default {
     SySelect
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarks']),
+    ...mapGetters('bookmark', ['bookmarkId', 'bookmarkList']),
     // 過濾掉正在 build 的 bookmark
     buildBookmarkList () {
-      return this.bookmarks.filter(bookmark => {
+      return this.bookmarkList.filter(bookmark => {
         return !bookmark.build_status
       })
     }

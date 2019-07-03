@@ -6,8 +6,8 @@ export default {
   namespaced: true,
   state: {
     isInit: false,
-    bookmark: undefined,
-    bookmarks: [],
+    bookmarkId: null,
+    bookmarkList: [],
     suggestions: {},
     quickstartNum: 3,
     quickstartResult: {},
