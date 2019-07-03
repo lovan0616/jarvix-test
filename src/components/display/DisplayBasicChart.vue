@@ -121,6 +121,14 @@ export default {
       let result
       if (typeof this.dataset === 'string') result = JSON.parse(this.dataset)
       else result = this.dataset
+
+      // 如果有 column 為 0，echart 會畫不出來，所以補個空格給他
+      if (result.columns) {
+        result.columns = result.columns.map(element => {
+          return element === '0' ? ' 0' : element
+        })
+      }
+
       return result
     },
     chartStyle () {
