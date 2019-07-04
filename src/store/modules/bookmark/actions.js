@@ -8,6 +8,8 @@ export default {
     if (state.isInit) return Promise.resolve(state)
     return co(function* () {
       yield dispatch('getBookmarkList')
+      yield dispatch('getSuggestions')
+      yield dispatch('getQuickstarts')
       commit('setIsInit', true)
       return Promise.resolve(state)
     })
@@ -26,7 +28,7 @@ export default {
     return getBookmarks().then(res => {
       commit('setBookmarkList', res)
       if (!state.bookmarkId) {
-        dispatch('changeBookmarkById', res[0].id)
+        commit('setBookmarkId', res[0].id)
       }
     })
   },

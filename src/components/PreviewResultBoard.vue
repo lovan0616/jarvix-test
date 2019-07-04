@@ -46,9 +46,9 @@ export default {
         }
       }
     },
-    index: {
-      type: Number,
-      default: 0
+    id: {
+      type: [String, Number],
+      default: null
     }
   },
   data () {
@@ -60,6 +60,11 @@ export default {
   mounted () {
     this.fetechData()
   },
+  watch: {
+    'questionInfo.result.entities.bookmark_id' () {
+      this.fetechData()
+    }
+  },
   methods: {
     fetechData () {
       this.isLoading = true
@@ -70,7 +75,7 @@ export default {
        **/
       let indicatorList = []
       this.questionInfo.task.forEach((element, index) => {
-        element.entities['bookmark_id'] = this.bookmarkId
+        // element.entities['bookmark_id'] = this.bookmarkId
         let getTaskPromise = getTaskData(element.intent, element.entities)
           .then(res => {
             indicatorList[index] = res
