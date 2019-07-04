@@ -1,8 +1,6 @@
 <template>
-  <div :class="['layout-root', { 'is-loading': loading }]"
+  <div class="layout-root"
     v-loading="loading"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(255, 255, 255, 0.75)"
   >
     <component ref="content" v-bind:is="content"></component>
   </div>

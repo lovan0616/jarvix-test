@@ -1,8 +1,8 @@
 <template>
-  <div :class="['task-root', { 'is-full-height': fullHeight, 'is-loading': loading }]"
+  <div :class="['task-root', { 'is-full-height': fullHeight }]"
     v-loading="loading"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(255, 255, 255, 0.75)"
+    element-loading-background="transparent"
   >
   </div>
 </template>
