@@ -1,7 +1,7 @@
 <template>
   <div class="empty-result">
-    <div class="empty-result-title">沒有相關資料</div>
-    <div class="empty-result-sub-title">您所輸入的問題，無法找到相關聯的數據進行分析，請重新輸入語句搜尋，或使用下列系統建議語句</div>
+    <div class="empty-result-title">没有相关资料</div>
+    <div class="empty-result-sub-title">您所输入的问题，无法找到相关联的数据进行分析，请重新输入语句搜寻，或使用下列系统建议语句</div>
     <quick-starts
       :items="quickstartWithoutDefaults"
     ></quick-starts>
