@@ -15,7 +15,7 @@
         ></component>
       </div>
     </div>
-    <div class="board-indicators"
+    <!-- <div class="board-indicators"
       v-loading="isLoading"
     >
       <div class="single-indicator"
@@ -26,7 +26,7 @@
         <div class="indicator-title">{{ indicator.title }}</div>
         <div class="indicator-value">{{ indicator.value }}</div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -57,14 +57,14 @@ export default {
       isLoading: false
     }
   },
-  mounted () {
-    this.fetechData()
-  },
-  watch: {
-    'questionInfo.result.entities.bookmark_id' () {
-      this.fetechData()
-    }
-  },
+  // mounted () {
+  //   this.fetechData()
+  // },
+  // watch: {
+  //   'questionInfo.result.entities.bookmark_id' () {
+  //     this.fetechData()
+  //   }
+  // },
   methods: {
     fetechData () {
       this.isLoading = true
@@ -105,7 +105,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .single-result-board {
-  background-color: #F5FBFB;
+  background-color: #fff;
+  // background-color: #F5FBFB;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   margin-bottom: 40px;
@@ -119,8 +120,8 @@ export default {
 
   .board-top-section {
     padding: 15px 20px 16px;
-    background-color: #fff;
-    border-radius: 8px 8px 0 0;
+    // background-color: #fff;
+    // border-radius: 8px 8px 0 0;
   }
 
   .board-title {
