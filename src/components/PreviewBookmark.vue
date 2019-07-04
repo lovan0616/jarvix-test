@@ -1,6 +1,6 @@
 <template>
   <div class="page-preview-bookmark">
-    <span v-show="bookmark">
+    <span v-show="bookmarkId">
       <h2>资料集介绍</h2>
       <container-card>
         <div class="preview-bookmark-card-inner">
@@ -18,7 +18,7 @@
         </div>
       </container-card>
     </span>
-    <span v-show="!bookmark">bookmark no set yet</span>
+    <span v-show="!bookmarkId">bookmark no set yet</span>
   </div>
 </template>
 
@@ -38,7 +38,7 @@ export default {
       .catch(err => err)
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmark']),
+    ...mapGetters('bookmark', ['bookmarkId']),
     ...mapGetters('previewBookmark', ['bookmarkTableId', 'bookmarkTables', 'bookmarkTableDataMeta', 'bookmarkTableDataDataset']),
     metaTableRightText () {
       if (!this.bookmarkTableDataMeta) return ''
