@@ -16,7 +16,7 @@
         :disabled="isProcessing"
         @click="confirm"
       >
-        <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>處理中...</span>
+        <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>处理中...</span>
         <span v-else>确认</span>
       </button>
     </template>

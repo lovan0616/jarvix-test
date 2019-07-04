@@ -86,7 +86,7 @@
               v-if="data[headInfo.value]"
               icon-class="spinner"
             ></svg-icon>
-            {{ data[headInfo.value] ? '资料处里中' : '可管理' }}
+            {{ data[headInfo.value] ? '资料处理中' : '可管理' }}
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>

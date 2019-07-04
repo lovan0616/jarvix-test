@@ -12,8 +12,7 @@
       <div class="quick-start-question-block">
         <preview-result-board class="result-board"
           v-for="(questionInfo, index) in quickstartWithDefaults"
-          :key="questionInfo"
-          :index="index"
+          :key="bookmarkId + '-' + index"
           :question-info="questionInfo"
         ></preview-result-board>
       </div>

@@ -18,9 +18,7 @@
         <preview-result-board class="result-board"
           v-for="(questionInfo, index) in relatedQuestionList"
           :key="questionInfo + index"
-          :index="index"
           :question-info="questionInfo"
-          @remove="removeQueston"
         ></preview-result-board>
       </div>
     </div>
@@ -116,9 +114,6 @@ export default {
       this.$store.commit('bookmark/setAppQuestion', data.question)
       this.$store.dispatch('bookmark/changeBookmarkById', data.bookmark_Id)
       this.$store.dispatch('bookmark/updateResultRouter')
-    },
-    removeQueston (index) {
-      this.relatedQuestionList.splice(index, 1)
     }
   }
 }

@@ -19,7 +19,7 @@
         >
           <svg-icon class="icon"
             :icon-class="isProcessing ? 'spinner' : 'delete'"
-          ></svg-icon>刪除
+          ></svg-icon>删除
         </button>
       </div>
     </div>
@@ -115,7 +115,7 @@ export default {
               name: '重新命名',
               value: 'rename'
             }, {
-              name: '刪除',
+              name: '删除',
               value: 'delete'
             }
           ]

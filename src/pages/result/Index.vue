@@ -68,6 +68,18 @@ export default {
     this.$store.dispatch('bookmark/init')
     this.$store.dispatch('bookmark/getHistoryQuestionList')
   },
+  mounted () {
+    // 如果 bookmark 切換時，畫面還原成空狀態
+    this.$store.watch(
+      (state, getters) => getters['bookmark/bookmarkId'],
+      () => {
+        this.$store.commit('bookmark/setAppQuestion', null)
+        this.$router.replace({
+          router: {}
+        })
+      }
+    )
+  },
   activated () {
     // 從個人釘板回到搜尋結果，如果有記錄先組回原有的 router path
     if (this.appQuestion && !this.$route.query.question) {

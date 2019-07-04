@@ -105,7 +105,7 @@ export default {
               name: '重新命名',
               value: 'rename'
             }, {
-              name: '刪除',
+              name: '删除',
               value: 'delete'
             }
           ]

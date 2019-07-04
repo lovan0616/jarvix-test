@@ -1,21 +1,21 @@
 <template>
   <div class="file-upload-finished">
-    <div class="dialog-title">上傳完成</div>
+    <div class="dialog-title">上传完成</div>
     <div class="finished-img-block">
-      <img src="../../../assets/images/upload-done.svg" alt="上傳成功" class="finished-img">
-      <div class="finished-file-info">總共 {{uploadFileList.length}} 項資料表，{{ successList.length }} 項上傳成功， {{ failList.length }} 項未上傳</div>
+      <img src="../../../assets/images/upload-done.svg" alt="上传成功" class="finished-img">
+      <div class="finished-file-info">总共 {{uploadFileList.length}} 项资料表，{{ successList.length }} 项上传成功， {{ failList.length }} 项未上传</div>
     </div>
     <div class="dialog-body">
       <file-list-block
         v-if="successList.length > 0"
-        title="已上傳"
+        title="已上传"
         :file-list="successList"
       >
-        <div class="uploaded-data-info" slot="fileListTitle">資料類型：{{ currentUploadInfo.type }} 資料源名稱：{{ currentUploadInfo.name }}</div>
+        <div class="uploaded-data-info" slot="fileListTitle">资料类型：{{ currentUploadInfo.type }} 资料源名称：{{ currentUploadInfo.name }}</div>
       </file-list-block>
       <file-list-block
         v-if="failList.length > 0"
-        title="未上傳"
+        title="未上传"
         type="fail"
         :file-list="failList"
       ></file-list-block>

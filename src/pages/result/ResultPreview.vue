@@ -33,7 +33,6 @@
           <preview-result-board class="result-board"
             v-for="(questionInfo, index) in relatedQuestions"
             :key="questionInfo + index"
-            :index="index"
             :question-info="questionInfo"
           ></preview-result-board>
         </div>
@@ -43,7 +42,6 @@
           <preview-result-board class="result-board"
             v-for="(questionInfo, index) in quickstartWithoutDefaults"
             :key="questionInfo + index"
-            :index="index"
             :question-info="questionInfo"
           ></preview-result-board>
         </div>

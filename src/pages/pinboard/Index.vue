@@ -1,6 +1,6 @@
 <template>
   <div class="page-pinboard">
-    <h1 class="page-title">Pinboard</h1>
+    <h1 class="page-title">个人钉板</h1>
     <layout class="single-pinboard"
       v-if="pinboardList"
       v-for="(template, index) in pinboardList"

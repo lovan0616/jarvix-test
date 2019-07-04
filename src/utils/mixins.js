@@ -92,13 +92,14 @@ Vue.mixin({
           return 'DisplayTreeMapChart'
       }
     },
-    // 圖表在preview 時，不顯示 legend、tootltip、 X\Y 軸的label
+    // 圖表在preview 時，不顯示 legend、tootltip
     previewChartSetting (config) {
       config.legend.show = false
       config.tooltip.show = false
-      config.xAxis.show = false
-      config.yAxis.axisLabel.show = false
-      config.yAxis.name = null
+      //  X\Y 軸的label
+      // config.xAxis.show = false
+      // config.yAxis.axisLabel.show = false
+      // config.yAxis.name = null
 
       return config
     }
