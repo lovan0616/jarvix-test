@@ -9,12 +9,33 @@
         <div class="dot"></div>
         <div class="insight-text">{{ insight }}</div>
       </div>
+      <div class="insight-table">
+        <div class="insight-table-row table-head">
+          <div class="insight-table-cell">筛选栏位</div>
+          <div class="insight-table-cell">筛选数值</div>
+          <div class="insight-table-cell">资料笔数</div>
+          <div class="insight-table-cell">总占比</div>
+          <div class="insight-table-cell">平均值</div>
+          <div class="insight-table-cell">备注</div>
+        </div>
+        <div class="insight-table-row"
+          v-for="(tableInfo, index) in info.rootCause"
+          :key="index"
+        >
+          <div class="insight-table-cell">{{ tableInfo.columnName }}</div>
+          <div class="insight-table-cell">{{ tableInfo.columnValue }}</div>
+          <div class="insight-table-cell">{{ tableInfo.count }}</div>
+          <div class="insight-table-cell">{{ tableInfo.percent }}</div>
+          <div class="insight-table-cell">{{ tableInfo.average }}</div>
+          <div class="insight-table-cell">{{ tableInfo.remark }}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: 'InsightList',
+  name: 'RootCauseInfo',
   props: {
     info: {
       type: Object,
