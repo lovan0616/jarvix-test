@@ -52,7 +52,7 @@ import DisplayLineChart from '@/components/display/DisplayLineChart'
 import DisplayPieChart from '@/components/display/DisplayPieChart'
 import DisplayBarChart from '@/components/display/DisplayBarChart'
 import InsightsInfo from '@/components/display/InsightsInfo'
-import InsightList from '@/components/display/InsightList'
+import RootCauseInfo from '@/components/display/RootCauseInfo'
 import InsightTable from '@/components/display/InsightTable'
 import IndicatorInfo from '@/components/display/IndicatorInfo'
 import IndicatorsList from '@/components/display/IndicatorsList'
@@ -70,7 +70,7 @@ Vue.use(Loading)
 Vue.component('echart', ECharts)
 Vue.component(SyTable.name, SyTable)
 Vue.component(InsightsInfo.name, InsightsInfo)
-Vue.component(InsightList.name, InsightList)
+Vue.component(RootCauseInfo.name, RootCauseInfo)
 Vue.component(InsightTable.name, InsightTable)
 Vue.component(IndicatorInfo.name, IndicatorInfo)
 Vue.component(IndicatorsList.name, IndicatorsList)

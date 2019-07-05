@@ -2,7 +2,7 @@
   <div class="insights-info basic-insights">
     <div class="insighs-info-title">基本资料</div>
     <div class="insights-info-block">
-      <div class="insight-tabl-list">
+      <div class="insight-table-list">
         <div class="insight-table"
           v-if="info.nTable.length > 0"
         >
@@ -89,59 +89,10 @@ export default {
   .insights-info-block {
     padding: 32px 16px 16px;
   }
-  .insight-tabl-list {
+  .insight-table-list {
     margin-bottom: 16px;
   }
-  .insight-table {
-    width: 100%;
-
-    &:not(:last-child) {
-      border-bottom: 1px solid #CCCCCC;
-    }
-  }
-
-  .insight-table-row {
-    display: flex;
-    justify-content: space-between;
-
-    &.table-head {
-      font-size: 13px;
-      line-height: 20px;
-      color: #979797;
-      margin-bottom: 8px;
-    }
-  }
-  .insight-table-cell {
-    font-size: 14px;
-    line-height: 24px;
-    padding: 4px 0;
-    margin-right: 10px;
-
-    &:first-child {
-      width: 7%;
-    }
-    &:nth-child(2) {
-      width: 11.36%;
-    }
-    &:nth-child(3) {
-      width: 10.66%;
-    }
-    &:nth-child(4) {
-      width: 10.66%;
-    }
-    &:nth-child(5) {
-      width: 10.66%;
-    }
-    &:nth-child(6) {
-      width: 10.66%;
-    }
-    &:nth-child(7) {
-      width: 10.66%;
-    }
-    &:last-child {
-      flex: 1;
-    }
-  }
+  
   .insights-info {
     font-size: 14px;
     line-height: 20px;
