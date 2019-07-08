@@ -17,7 +17,9 @@ import {
   Table,
   Autocomplete,
   TableColumn,
-  Loading
+  Loading,
+  Tabs,
+  TabPane
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -66,6 +68,8 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Autocomplete)
 Vue.use(Loading)
+Vue.use(Tabs)
+Vue.use(TabPane)
 
 Vue.component('echart', ECharts)
 Vue.component(SyTable.name, SyTable)

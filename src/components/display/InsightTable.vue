@@ -92,7 +92,7 @@ export default {
   .insight-table-list {
     margin-bottom: 16px;
   }
-  
+
   .insights-info {
     font-size: 14px;
     line-height: 20px;
@@ -101,6 +101,33 @@ export default {
 
     &:not(:last-child) {
       margin-bottom: 4px;
+    }
+  }
+
+  .insight-table-cell {
+    &:first-child {
+      width: 7%;
+    }
+    &:nth-child(2) {
+      width: 11.36%;
+    }
+    &:nth-child(3) {
+      width: 10.66%;
+    }
+    &:nth-child(4) {
+      width: 10.66%;
+    }
+    &:nth-child(5) {
+      width: 10.66%;
+    }
+    &:nth-child(6) {
+      width: 10.66%;
+    }
+    &:nth-child(7) {
+      width: 10.66%;
+    }
+    &:last-child {
+      flex: 1;
     }
   }
 }
