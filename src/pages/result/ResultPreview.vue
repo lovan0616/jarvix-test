@@ -27,14 +27,22 @@
       </div>
       <div class="search-result-block">
         <div class="search-result-title">其他结果</div>
-        <div class="search-result-list"
+        <div
           v-if="relatedQuestions.length > 0"
         >
-          <preview-result-board class="result-board"
-            v-for="(questionInfo, index) in relatedQuestions"
-            :key="questionInfo + index"
-            :question-info="questionInfo"
-          ></preview-result-board>
+          <div class="category-block"
+            v-for="(categories, index) in relatedQuestions"
+            :key="index"
+          >
+            <div class="category-title">{{ categories.category }}</div>
+            <div class="search-result-list">
+              <preview-result-board class="result-board"
+                v-for="(questionInfo, previewIndex) in categories.result"
+                :key="index + '-' + previewIndex"
+                :question-info="questionInfo"
+              ></preview-result-board>
+            </div>
+          </div>
         </div>
         <div class="search-result-list"
           v-else
@@ -136,17 +144,22 @@ export default {
   min-height: 100px;
 
   .search-result-block {
+    // 最相關結果
     &.most-related {
       padding-bottom: 40px;
       margin-bottom: 80px;
       border-bottom: 1px solid #979797;
+
+      .search-result-title {
+        margin-bottom: 16px;
+      }
     }
 
     .search-result-title {
       font-size: 24px;
       line-height: 1;
       letter-spacing: 0.1em;
-      margin-bottom: 16px;
+      margin-bottom: 40px;
     }
 
     .search-result-list {
@@ -162,6 +175,14 @@ export default {
       }
     }
   }
+
+  .category-block {
+    .category-title {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+  }
+
   .empty-result {
     width: 100%;
     text-align: center;

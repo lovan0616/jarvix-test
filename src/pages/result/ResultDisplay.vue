@@ -13,13 +13,18 @@
       v-if="relatedQuestionList.length > 0"
     >
       <div class="block-title">推荐语句</div>
-      <div class="category-title">比较类</div>
-      <div class="category-question-list">
-        <preview-result-board class="result-board"
-          v-for="(questionInfo, index) in relatedQuestionList"
-          :key="questionInfo + index"
-          :question-info="questionInfo"
-        ></preview-result-board>
+      <div class="category-block"
+        v-for="(categories, index) in relatedQuestionList"
+        :key="index"
+      >
+        <div class="category-title">{{ categories.category }}</div>
+        <div class="category-question-list">
+          <preview-result-board class="result-board"
+            v-for="(questionInfo, questionIndex) in categories.result"
+            :key="index + questionIndex"
+            :question-info="questionInfo"
+          ></preview-result-board>
+        </div>
       </div>
     </div>
   </div>
@@ -70,6 +75,7 @@ export default {
     },
     clearLayout () {
       this.layout = undefined
+      this.relatedQuestionList = []
     },
     fetchApiAsk (data) {
       this.isNoResult = false
@@ -88,13 +94,13 @@ export default {
         .then(res => {
           this.layout = res
           this.$store.dispatch('bookmark/getHistoryQuestionList')
+          this.getRelatedQuestions(data)
         }).catch(() => {
           this.isNoResult = true
-          this.relatedQuestionList = []
+          this.getRelatedQuestions(data)
         })
       // 清空 question result
       this.$store.commit('bookmark/setQuestionResult', null)
-      this.getRelatedQuestions(data)
     },
     getRelatedQuestions (data) {
       const _this = this
