@@ -5,7 +5,7 @@
       v-model="activeTab"
     >
       <el-tab-pane
-        v-for="(rootCauseInfo, index) in info.rootCause"
+        v-for="(rootCauseInfo, index) in rootCauseInfoList"
         :key="index"
         :label="rootCauseInfo.name"
         :name="rootCauseInfo.name"
@@ -29,7 +29,9 @@
               <div class="insight-table-cell">{{ tableInfo.count }}</div>
               <div class="insight-table-cell">{{ tableInfo.percent }}</div>
               <div class="insight-table-cell">{{ tableInfo.average }}</div>
-              <div class="insight-table-cell remark">{{ tableInfo.remark }}</div>
+              <div class="insight-table-cell"
+                :class="{active: tableInfo.unusual}"
+              >{{ tableInfo.remark }}</div>
             </div>
           </div>
         </div>
@@ -55,6 +57,25 @@ export default {
   },
   mounted () {
     this.activeTab = this.info.rootCause[0].name
+  },
+  computed: {
+    // 遇到同名稱的 column 就將其合併
+    rootCauseInfoList () {
+      let info = []
+      this.info.rootCause.forEach(rootCauseInfo => {
+        let hasProperty = false
+        for (let i = 0; i < info.length; i++) {
+          if (info[i].name === rootCauseInfo.name) {
+            hasProperty = true
+            info[i].content = info[i].content.concat(rootCauseInfo.content)
+          }
+        }
+        if (!hasProperty) {
+          info.push(rootCauseInfo)
+        }
+      })
+      return info
+    }
   }
 }
 </script>
@@ -108,7 +129,7 @@ export default {
         flex: 1;
       }
 
-      &.remark {
+      &.active {
         color: #42A5B3;
       }
     }
