@@ -14,6 +14,7 @@
     >
       <div class="block-title">推荐语句</div>
       <div class="category-block"
+        v-if="categories.result.length > 0"
         v-for="(categories, index) in relatedQuestionList"
         :key="index"
       >

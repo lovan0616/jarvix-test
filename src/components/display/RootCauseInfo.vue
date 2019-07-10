@@ -38,7 +38,9 @@
         </div>
       </el-tab-pane>
     </el-tabs>
-    <div class="empty-info">目前暂无相关资讯</div>
+    <div class="empty-info"
+      v-else
+    >目前暂无相关资讯</div>
   </div>
 </template>
 <script>
