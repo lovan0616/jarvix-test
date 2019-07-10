@@ -49,7 +49,7 @@
         >
           <preview-result-board class="result-board"
             v-for="(questionInfo, index) in quickstartWithoutDefaults"
-            :key="questionInfo + index"
+            :key="new Date().valueOf() + index"
             :question-info="questionInfo"
           ></preview-result-board>
         </div>

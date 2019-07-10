@@ -137,7 +137,7 @@ export default {
         height: '300px'
       }
     },
-    data () {
+    dataList () {
       if ((this._dataset instanceof Array)) return this._dataset
       else return this.tobeDataset(this._dataset)
     },
@@ -179,7 +179,7 @@ export default {
           extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);'
         },
         dataset: {
-          source: this.data
+          source: this.dataList
         },
         series: this.series,
         color: this.colorList,
@@ -196,7 +196,7 @@ export default {
       return config
     },
     colorList () {
-      switch (this.data[0].length) {
+      switch (this.dataList[0].length) {
         case 2:
           return colorOnly1
         case 3:

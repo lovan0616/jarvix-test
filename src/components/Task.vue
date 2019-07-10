@@ -55,9 +55,6 @@ export default {
     },
     dataPath () {
       return this.urlRoot + this.dataUrl
-    },
-    bookmarkId () {
-      return this.$store.getters['bookmark/bookmarkId']
     }
   },
   methods: {
