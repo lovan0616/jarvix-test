@@ -182,7 +182,7 @@ export function yAxisDefault () {
     axisLabelFontSize: 10
   }
   return {
-    nameLocation: 'middle',
+    // nameLocation: 'middle',
     nameGap: config.nameGap,
     splitLine: {
       show: true
@@ -257,7 +257,7 @@ export function yAxisName () {
     axisLabelFontSize: 10
   }
   return {
-    nameLocation: 'middle',
+    // nameLocation: 'middle',
     nameTextStyle: {
       color: chartVariable['textColor'],
       fontSize: config.nameTextFontSize
@@ -318,7 +318,7 @@ export function yAxisHorizontalBar () {
   }
   return {
     type: 'category',
-    nameLocation: 'middle',
+    // nameLocation: 'middle',
     nameGap: config.nameGap,
     splitLine: {
       show: false

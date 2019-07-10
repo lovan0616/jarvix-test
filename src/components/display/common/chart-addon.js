@@ -46,8 +46,8 @@ export const chartOptions = {
   yAxis: {
     type: 'value',
     name: '',
-    nameGap: 58,
-    nameLocation: 'middle',
+    // nameGap: 58,
+    // nameLocation: 'middle',
     nameTextStyle: {
       fontWeight: 'bold',
       fontSize: 16,

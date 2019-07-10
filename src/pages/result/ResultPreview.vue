@@ -31,6 +31,7 @@
           v-if="relatedQuestions.length > 0"
         >
           <div class="category-block"
+            v-if="categories.result.length > 0"
             v-for="(categories, index) in relatedQuestions"
             :key="index"
           >
