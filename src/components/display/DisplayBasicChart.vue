@@ -100,6 +100,15 @@ export default {
   name: 'DisplayBasicChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
+    title: {
+      type: Object,
+      default: () => {
+        return {
+          xAxis: null,
+          yAxis: null
+        }
+      }
+    },
     addons: { type: [Object, Array], default: () => ([]) },
     events: { type: Object, default: () => ({}) },
     isPreview: {
@@ -191,6 +200,8 @@ export default {
           itemGap: 20
         }
       }
+      config.xAxis.name = this.title.xAxis
+      config.yAxis.name = this.title.yAxis
 
       if (this.isPreview) this.previewChartSetting(config)
       return config

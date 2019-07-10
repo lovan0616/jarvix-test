@@ -1,6 +1,7 @@
 <template>
   <display-basic-chart
     :dataset="dataset"
+    :title="title"
     :addons="{
       'seriesItem:pie': {},
       'seriesItem:pieLabelWithValue': {},
@@ -16,6 +17,15 @@ export default {
   props: {
     dataset: {
       type: Object
+    },
+    title: {
+      type: Object,
+      default: () => {
+        return {
+          xAxis: null,
+          yAxis: null
+        }
+      }
     },
     isPreview: {
       type: Boolean,

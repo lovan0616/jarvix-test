@@ -45,6 +45,15 @@ export default {
       type: Object,
       default: null
     },
+    title: {
+      type: Object,
+      default: () => {
+        return {
+          xAxis: null,
+          yAxis: null
+        }
+      }
+    },
     isPreview: {
       type: Boolean,
       default: false
@@ -69,8 +78,8 @@ export default {
       this.$set(chartAddon.xAxis, 'splitLine', scatterChartConfig.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterChartConfig.yAxisSplitLine)
       chartAddon.tooltip.trigger = scatterChartConfig.tooltip.trigger
-      chartAddon.xAxis.name = this.dataset.columns[0]
-      chartAddon.yAxis.name = this.dataset.columns[1]
+      chartAddon.xAxis.name = this.dataset.xAxis
+      chartAddon.yAxis.name = this.dataset.yAxis
       scatterChartConfig.chartData.data = this.dataset.data
       scatterChartConfig.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.series[0] = scatterChartConfig.chartData

@@ -58,6 +58,15 @@ export default {
     dataset: {
       type: Object
     },
+    title: {
+      type: Object,
+      default: () => {
+        return {
+          xAxis: null,
+          yAxis: null
+        }
+      }
+    },
     isPreview: {
       type: Boolean,
       default: false
@@ -114,7 +123,9 @@ export default {
         chartAddon.series.push(config.chartData)
       }
       chartAddon.xAxis = {...chartAddon.xAxis, ...scatterBubleChartConfig.xAxis}
+      chartAddon.xAxis.name = this.title.xAxis
       chartAddon.yAxis = {...chartAddon.yAxis, ...scatterBubleChartConfig.yAxis}
+      chartAddon.yAxis.name = this.title.yAxis
       chartAddon.tooltip.trigger = scatterBubleChartConfig.tooltip.trigger
       if (this.isPreview) this.previewChartSetting(chartAddon)
 

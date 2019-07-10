@@ -57,6 +57,15 @@ export default {
       type: Object,
       default: null
     },
+    title: {
+      type: Object,
+      default: () => {
+        return {
+          xAxis: null,
+          yAxis: null
+        }
+      }
+    },
     isPreview: {
       type: Boolean,
       default: false
@@ -71,8 +80,8 @@ export default {
       chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotChartConfig.xAxis}
       chartAddon.tooltip.trigger = boxPlotChartConfig.tooltip.trigger
       chartAddon.xAxis.data = this.dataset.index
-      chartAddon.xAxis.name = this.dataset.columns[0]
-      chartAddon.yAxis.name = this.dataset.columns[1]
+      chartAddon.xAxis.name = this.title.xAxis
+      chartAddon.yAxis.name = this.title.yAxis
       boxPlotChartConfig.chartData.data = this.chartData.boxData
       boxPlotChartConfig.outlier.data = this.chartData.outliers
       chartAddon.series[0] = boxPlotChartConfig.chartData
