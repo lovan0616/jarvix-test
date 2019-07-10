@@ -50,6 +50,15 @@ export default {
   name: 'DisplayAverageBarChart',
   props: {
     dataset: { type: Object, default: () => ([]) },
+    title: {
+      type: Object,
+      default: () => {
+        return {
+          xAxis: null,
+          yAxis: null
+        }
+      }
+    },
     isPreview: {
       type: Boolean,
       default: false
@@ -61,6 +70,8 @@ export default {
   methods: {
     setOptions () {
       chartAddon.xAxis.data = this.dataset.index
+      chartAddon.xAxis.name = this.title.xAxis
+      chartAddon.yAxis.name = this.title.yAxis
     }
   },
   computed: {

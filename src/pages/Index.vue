@@ -9,7 +9,10 @@
       v-show="bookmarkId"
     >
       <h2 class="sub-title">推荐语句</h2>
-      <div class="quick-start-question-block">
+      <div class="quick-start-question-block"
+        v-loading="isLoadingQucikStart"
+        element-loading-background="transparent"
+      >
         <preview-result-board class="result-board"
           v-for="(questionInfo, index) in quickstartWithDefaults"
           :key="bookmarkId + '-' + index"
@@ -19,10 +22,10 @@
     </div>
     <popup-guiding
       v-if="isDisplayGuide"
-      @update="toggle"
+      @update="toggleDisplayGuide"
     ></popup-guiding>
     <a class="teaching-button" href="javascript:void(0)"
-      @click="toggle"
+      @click="toggleDisplayGuide"
     >
       ?
     </a>
@@ -46,7 +49,8 @@ export default {
   },
   data () {
     return {
-      isDisplayGuide: false
+      isDisplayGuide: false,
+      isLoadingQucikStart: false
     }
   },
   created () {
@@ -54,11 +58,19 @@ export default {
     // 因為 result page 會 keep-alive，所以才會在這邊做清除資料的動作
     this.$store.commit('bookmark/setAppQuestion', '')
   },
+  watch: {
+    'quickstartWithDefaults.length': {
+      handler (value) {
+        this.isLoadingQucikStart = (value === 0)
+      },
+      immediate: true
+    }
+  },
   computed: {
     ...mapGetters('bookmark', ['bookmarkId', 'quickstartWithDefaults'])
   },
   methods: {
-    toggle () {
+    toggleDisplayGuide () {
       this.isDisplayGuide = !this.isDisplayGuide
     }
   }
@@ -108,6 +120,7 @@ export default {
   .quick-start-question-block {
     display: flex;
     justify-content: space-between;
+    min-height: 50px;
 
     .result-board {
       width: 31.34%;

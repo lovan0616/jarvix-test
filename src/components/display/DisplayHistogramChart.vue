@@ -57,6 +57,15 @@ export default {
         return {}
       }
     },
+    title: {
+      type: Object,
+      default: () => {
+        return {
+          xAxis: null,
+          yAxis: null
+        }
+      }
+    },
     isPreview: {
       type: Boolean,
       default: false
@@ -98,11 +107,13 @@ export default {
 
       // set histogram xAxis
       chartAddon.xAxis = {...chartAddon.xAxis, ...histogramChartConfig.xAxis}
-      chartAddon.yAxis = {...chartAddon.yAxis, ...histogramChartConfig.yAxis}
       chartAddon.xAxis.interval = interval
       chartAddon.xAxis.min = min
       chartAddon.xAxis.max = max
-      chartAddon.xAxis.name = this.dataset.columns[0]
+      chartAddon.xAxis.name = this.title.xAxis
+      chartAddon.yAxis = {...chartAddon.yAxis, ...histogramChartConfig.yAxis}
+      chartAddon.yAxis.name = this.title.yAxis
+
       if (this.isPreview) this.previewChartSetting(chartAddon)
 
       return chartData

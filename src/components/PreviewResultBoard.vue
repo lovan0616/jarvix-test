@@ -45,10 +45,6 @@ export default {
           template: null
         }
       }
-    },
-    id: {
-      type: [String, Number],
-      default: null
     }
   },
   data () {

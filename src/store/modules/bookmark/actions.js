@@ -8,8 +8,8 @@ export default {
     if (state.isInit) return Promise.resolve(state)
     return co(function* () {
       yield dispatch('getBookmarkList')
-      yield dispatch('getSuggestions')
-      yield dispatch('getQuickstarts')
+      yield dispatch('getSuggestionList')
+      yield dispatch('getQuickstartList')
       commit('setIsInit', true)
       return Promise.resolve(state)
     })
@@ -19,8 +19,8 @@ export default {
     commit('setBookmarkId', bookmarkId)
 
     return co(function* () {
-      yield dispatch('getSuggestions')
-      yield dispatch('getQuickstarts')
+      yield dispatch('getSuggestionList')
+      yield dispatch('getQuickstartList')
       return Promise.resolve(state)
     })
   },
@@ -32,12 +32,12 @@ export default {
       }
     })
   },
-  getSuggestions ({ commit, state }) {
+  getSuggestionList ({ commit, state }) {
     return getSuggestions(state.bookmarkId).then(res => {
       commit('setSuggestions', res)
     })
   },
-  getQuickstarts ({ commit, state }) {
+  getQuickstartList ({ commit, state }) {
     return getQuickstarts(state.bookmarkId).then(res => {
       commit('setQuickStart', res)
     })

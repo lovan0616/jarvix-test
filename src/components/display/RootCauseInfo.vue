@@ -2,6 +2,7 @@
   <div class="insights-info root-cause">
     <div class="insighs-info-title">资料洞察</div>
     <el-tabs
+      v-if="this.info.rootCause.length > 0"
       v-model="activeTab"
     >
       <el-tab-pane
@@ -37,6 +38,7 @@
         </div>
       </el-tab-pane>
     </el-tabs>
+    <div class="empty-info">目前暂无相关资讯</div>
   </div>
 </template>
 <script>
@@ -56,7 +58,9 @@ export default {
     }
   },
   mounted () {
-    this.activeTab = this.info.rootCause[0].name
+    if (this.info.rootCause.length > 0) {
+      this.activeTab = this.info.rootCause[0].name
+    }
   },
   computed: {
     // 遇到同名稱的 column 就將其合併
@@ -133,6 +137,12 @@ export default {
         color: #42A5B3;
       }
     }
+  }
+
+  .empty-info {
+    padding: 15px 20px;
+    background-color: #F5FBFB;
+    text-align: center;
   }
 }
 </style>
