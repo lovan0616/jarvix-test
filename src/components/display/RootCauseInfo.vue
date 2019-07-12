@@ -4,6 +4,7 @@
     <el-tabs
       v-if="this.info.rootCause.length > 0"
       v-model="activeTab"
+      type="card"
     >
       <el-tab-pane
         v-for="(rootCauseInfo, index) in rootCauseInfoList"
@@ -153,11 +154,35 @@ export default {
   .el-tabs__header {
     margin-bottom: 0;
   }
-  .el-tabs__active-bar {
-    background-color: #43BAC3;
+  .el-tabs--card>.el-tabs__header {
+    border: none;
+
+    .el-tabs__nav {
+      border: none;
+    }
   }
-  .el-tabs__item.is-active {
-    color: #43BAC3;
+
+  .el-tabs--top.el-tabs--card .el-tabs__item {
+    &:last-child {
+      padding-right: 30px;
+    }
+    &:nth-child(2) {
+      padding-left: 30px;
+    }
+  }
+
+  .el-tabs__item {
+    padding: 0 30px;
+    border: none;
+    transition: border 0.3s;
+
+    &:hover, &.is-active {
+      color: #43BAC3;
+    }
+
+    &.is-active {
+      border-bottom: 2px solid #43BAC3;
+    }
   }
 }
 </style>

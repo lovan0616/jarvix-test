@@ -126,7 +126,6 @@ export default {
       this.$nextTick(() => {
         this.$el.appendChild(this.childVm.$mount().$el)
         this.loading = false
-        // this.$events.$emit('taskUpdated')
       })
     },
     createTaskByTemplateAndData ({ template = '', data = {} }) {
@@ -163,7 +162,6 @@ export default {
       this.$nextTick(() => {
         this.$el.appendChild(this.childVm.$mount().$el)
         this.loading = false
-        // this.$events.$emit('taskUpdated')
       })
     },
     destroyTaskVm () {
