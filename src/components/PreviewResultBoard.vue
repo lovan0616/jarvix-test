@@ -6,6 +6,7 @@
       <div class="board-title">{{ questionInfo.question }}</div>
       <div class="board-chart-block"
         v-loading="isLoading"
+        element-loading-background="transparent"
       >
         <component
           v-if="questionInfo.template"
@@ -102,7 +103,7 @@ export default {
 <style lang="scss" scoped>
 .single-result-board {
   background-color: #fff;
-  // background-color: #F5FBFB;
+  background: rgba(0, 0, 0, 0.35);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   margin-bottom: 40px;
@@ -126,6 +127,7 @@ export default {
     letter-spacing: 0.1em;
     padding-bottom: 16px;
     text-align: left;
+    color: $theme-text-color;
   }
   .board-chart-block {
     width: 100%;

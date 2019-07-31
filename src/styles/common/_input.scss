@@ -3,6 +3,11 @@
   border: none;
   background-color: transparent;
   border-bottom: 1px solid #979797;
+  color: $theme-text-color;
+
+  &::-webkit-input-placeholder {
+    color: $theme-placeholder-color;
+  }
 
   /**
    * 注意這邊是 .valid, 不是 :valid
@@ -15,7 +20,7 @@
       transform: translate3d(0, -28px, 0);
       font-size: 14px;
       letter-spacing: 0.5px;
-      color: #979797;
+      color: $theme-text-color;
     }
   }
 }
@@ -47,7 +52,7 @@
     font-size: 16px;
     line-height: 20px;
     letter-spacing: 2px;
-    color: #d8d8d8;
+    color: $theme-placeholder-color;
     cursor: text;
     pointer-events: none;
   }

@@ -1,6 +1,7 @@
 <template>
   <div class="layout-root"
     v-loading="loading"
+    element-loading-background="transparent"
   >
     <component ref="content" v-bind:is="content"></component>
   </div>

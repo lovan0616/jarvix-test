@@ -38,6 +38,11 @@ export const chartOptions = {
       rotate: 45,
       color: chartVariable['xAxisLabelColor']
     },
+    axisLine: {
+      lineStyle: {
+        color: chartVariable['textColor']
+      }
+    },
     // 刻度
     axisTick: {
       show: false

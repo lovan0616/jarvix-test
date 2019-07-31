@@ -115,6 +115,9 @@ export function xAxisDefault () {
     type: 'category',
     nameLocation: 'middle',
     nameGap: config.nameGap,
+    nameTextStyle: {
+      color: chartVariable['textColor']
+    },
     splitLine: {
       show: false
     },
@@ -122,7 +125,10 @@ export function xAxisDefault () {
       show: false
     },
     axisLine: {
-      show: true
+      show: true,
+      lineStyle: {
+        color: chartVariable['textColor']
+      }
     },
     axisLabel: {
       show: true,
@@ -184,6 +190,9 @@ export function yAxisDefault () {
   return {
     // nameLocation: 'middle',
     nameGap: config.nameGap,
+    nameTextStyle: {
+      color: chartVariable['textColor']
+    },
     splitLine: {
       show: true
     },

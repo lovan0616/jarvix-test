@@ -1,10 +1,10 @@
 :export {
   // chart basic setting
   textColor: $theme-text-color;
-  xAxisLabelColor: $theme-text-color-light;
-  yAxisLabelColor: #999999;
+  xAxisLabelColor: $theme-text-color;
+  yAxisLabelColor: $theme-text-color;
   borderColor: $theme-line-color;
-  backgroundColor: $theme-color-white;
+  backgroundColor: rgba(0, 0, 0, 0.75);
   markLineColor: #006464;
 
   // average-bar-chart

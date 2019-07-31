@@ -1,6 +1,7 @@
 <template>
   <div class="result-preview"
     v-loading="isLoading"
+    element-loading-background="transparent"
   >
     <div class="serch-result-container"
       v-if="!isLoading"

@@ -1,9 +1,11 @@
 <template>
-  <header class="app-header">
+  <header class="app-header"
+    :class="{'isShowChatRoom': isShowChatRoom}"
+  >
     <div class="container">
       <div class="header-root">
         <router-link class="header-logo" to="/">
-          <img src="@/assets/images/synergies_logo_white.svg">
+          <img src="@/assets/images/logo_white.svg">
         </router-link>
         <slot name="nav"></slot>
       </div>
@@ -12,7 +14,12 @@
 </template>
 <script>
 export default {
-  name: 'AppHeader'
+  name: 'AppHeader',
+  computed: {
+    isShowChatRoom () {
+      return this.$store.state.isShowChatRoom
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -24,8 +31,25 @@ export default {
   height: auto;
   height: $header-height;
   z-index: $header-z-index;
-  background: $header-bg;
   box-shadow: $header-shadow;
+  transition: all 0.3s;
+  
+  &:after {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    content: "";
+    display: block;
+    width: 100%;
+    height: $header-height;
+    filter: blur(8px);
+    z-index: -1;
+  }
+
+  &.isShowChatRoom {
+    left: $chat-room-width;
+    width: calc(100% - #{$chat-room-width});
+  }
 
   .header-root {
     height: 100%;

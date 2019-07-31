@@ -6,7 +6,8 @@
       :items="buildBookmarkList"
       placeholder="请选择bookmark"
       @update:selected="onBookmarkChange"
-    ></sy-select>
+    >
+    </sy-select>
   </div>
 </template>
 <script>
@@ -35,24 +36,23 @@ export default {
 </script>
 <style lang="scss" scoped>
 .bookmark-select-block {
-  width: 25%;
+  display: inline-block;
   position: relative;
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-radius: 4px;
 
   .bookmark-select-icon {
     position: absolute;
     top: 12px;
-    left: 0px;
-  }
-
-  .bookmark-select {
-    width: 100%;
+    left: 8px;
   }
 }
 </style>
 <style lang="scss">
 .bookmark-select.sy-select.theme-default {
   .el-input__inner {
-    padding-left: 30px;
+    padding-left: 36px;
   }
 }
 </style>

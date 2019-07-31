@@ -13,5 +13,13 @@ export default new Vuex.Store({
     previewBookmark,
     pinboard,
     dataManagement
+  },
+  state: {
+    isShowChatRoom: false
+  },
+  mutations: {
+    updateChatRoomStatus (state, data) {
+      state.isShowChatRoom = data
+    }
   }
 })

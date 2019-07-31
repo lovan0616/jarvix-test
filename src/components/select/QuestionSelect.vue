@@ -134,13 +134,14 @@ export default {
     padding: 8px 20px;
     font-size: 20px;
     line-height: 23px;
+    color: $theme-text-color;
   }
 
   .option-list {
     width: 100%;
     position: absolute;
     left: 0;
-    background: #FFFFFF;
+    background: rgba(0, 0, 0, 0.75);
     border-radius: 4px;
     overflow: auto;
     padding: 10px 0;
@@ -160,10 +161,11 @@ export default {
     font-size: 14px;
     padding: 10px 15px;
     line-height: 16px;
+    color: $theme-text-color;
     cursor: pointer;
 
     &:hover {
-      background-color: #EFF5F6;
+      background-color: $theme-bg-color;
     }
 
      &.default {

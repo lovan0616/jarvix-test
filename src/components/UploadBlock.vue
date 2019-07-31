@@ -36,7 +36,7 @@ export default {
 <style lang="scss" scoped>
 .upload-block {
   flex: 1;
-  background-color: #F8F8F8;
+  background-color: rgba(255, 255, 255, 0.15);
   text-align: center;
   cursor: pointer;
 

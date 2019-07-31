@@ -281,7 +281,7 @@ export default {
     color: #42A5B3;
   }
   .data-table-row.is-processing {
-    background-color: #F9F9F9;
+    background-color: rgba(0, 0, 0, 0.35);
   }
   .data-table-cell {
     .is-processing {

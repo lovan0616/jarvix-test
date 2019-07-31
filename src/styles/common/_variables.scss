@@ -20,6 +20,7 @@ $theme-color-warning: #FFDF6F !default;
 $theme-color-danger: #EB5959 !default;
 $theme-color-info: #5AD0F5 !default;
 // bg color
+$theme-bg-color: rgba(0, 0, 0, 0.45);
 $theme-secondary-bg-color: #F1F7F7;
 // line
 $theme-line-color: #d8d8d8;
@@ -27,8 +28,10 @@ $theme-line-color: #d8d8d8;
 $theme-placeholder-color: #d8d8d8;
 // text
 $theme-text-color-light: #979797;
-$theme-text-color: #444444;
+$theme-text-color: #fff;
 $theme-text-color-dark: #2e2e2e;
+//chat-room
+$chat-room-width: 480px;
 // font style
 $theme-font-family-default: 'Open Sans', 'Roboto', 'PingFang TC', 'Microsolft JhengHei', 'Microsoft YaHei', 'Arial';
 // font-size

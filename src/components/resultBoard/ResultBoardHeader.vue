@@ -25,7 +25,7 @@ export default {
     font-size: 18px;
     line-height: 26px;
     letter-spacing: 0.1em;
-    color: $theme-text-color-dark;
+    color: $theme-text-color;
     margin-bottom: 5px;
   }
   .board-period {

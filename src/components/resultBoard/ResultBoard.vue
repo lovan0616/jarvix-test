@@ -92,15 +92,23 @@ export default {
 </script>
 <style lang="scss" scoped>
 .result-board {
-  background: #FFF;
-  border: 1px solid #eaeaea;
+  background: rgba(0, 0, 0, 0.35);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
 
   .board-header {
     position: relative;
     padding: 15px 30px;
-    border-bottom: 1px solid $theme-line-color;
+
+    &:after {
+      position: absolute;
+      left: 0;
+      bottom: -3px;
+      display: block;
+      content: "";
+      width: 140px;
+      border: 3px solid #8EF5FF;
+    }
   }
   .pin-button {
     display: flex;

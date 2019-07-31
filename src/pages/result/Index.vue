@@ -1,7 +1,6 @@
 <template>
   <div class="result-page">
     <div class="result-question-select-block">
-      <bookmark-select></bookmark-select>
       <question-select class="question-select"></question-select>
       <history-question-list></history-question-list>
     </div>
@@ -30,7 +29,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import BookmarkSelect from '@/components/select/BookmarkSelect'
 import QuestionSelect from '@/components/select/QuestionSelect'
 import HistoryQuestionList from '@/pages/result/components/HistoryQuestionList'
 import ResultDisplay from './ResultDisplay'
@@ -40,7 +38,6 @@ export default {
   name: 'PageResult',
   components: {
     HistoryQuestionList,
-    BookmarkSelect,
     QuestionSelect,
     ResultDisplay,
     ResultPreview

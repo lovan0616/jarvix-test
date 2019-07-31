@@ -67,7 +67,7 @@ export default {
   }
 
   .file-list {
-    background: #F8F8F8;
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 4px;
     height: 300px;
     overflow: auto;

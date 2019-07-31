@@ -2,15 +2,9 @@
   display: flex;
   flex-direction: column;
 
-  .bg {
-    @extend %default-bg;
-  }
-
   .wrapper {
-    min-height: 100vh;
-    background: transparent;
-    background-size: cover;
-    background-repeat: no-repeat;
+    height: 100vh;
+    overflow: auto;
   }
 
   .container {
@@ -25,10 +19,11 @@
   }
 }
 
+.app-bg {
+  @extend %default-bg;
+}
+
 .main {
-  display: flex;
-  flex-direction: row;
-  background: transparent;
   min-height: calc(100vh - #{$header-height});
   @extend %maxWidth;
 }

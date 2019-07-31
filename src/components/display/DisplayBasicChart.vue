@@ -13,9 +13,9 @@
 <script>
 import chartVariable from '@/styles/chart/variables.scss'
 import EchartAddon from './common/addon.js'
+import { graphic } from 'echarts/lib/export'
 import {
   colorDefault,
-  colorOnly1,
   colorOnly2,
   color3,
   color10,
@@ -179,7 +179,6 @@ export default {
           confine: true,
           trigger: 'item',
           backgroundColor: chartVariable['backgroundColor'],
-          borderWidth: 1,
           borderColor: chartVariable['borderColor'],
           padding: 10,
           textStyle: {
@@ -197,7 +196,10 @@ export default {
           itemWidth: 12,
           itemHeight: 12,
           icon: 'circle',
-          itemGap: 20
+          itemGap: 20,
+          textStyle: {
+            color: chartVariable['textColor']
+          }
         }
       }
       config.xAxis.name = this.title.xAxis
@@ -209,7 +211,11 @@ export default {
     colorList () {
       switch (this.dataList[0].length) {
         case 2:
-          return colorOnly1
+          return new graphic.LinearGradient(0, 0, 0, 1, [{
+            offset: 0, color: '#71E2ED'
+          }, {
+            offset: 1, color: '#CFFBFF'
+          }], false)
         case 3:
           return colorOnly2
         case 4:
