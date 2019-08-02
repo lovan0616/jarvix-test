@@ -48,29 +48,31 @@ export default {
         &:after {
           display: block;
           content: "";
-          border-bottom: 1px solid #43BAC3;
+          border-bottom: 1px solid $theme-color-primary;
           flex: 1;
           margin: 0 10px;
         }
       }
 
-      &.current, &.active {
-        .step {
-          color: #fff;
-          background-color: #43BAC3;
-          border-color: #43BAC3;
-        }
-      }
-
       &.current {
+        .step {
+          color: #000;
+          background-color: $theme-color-primary;
+          border-color: $theme-color-primary;
+        }
         .step-level {
-          color: #43BAC3;
+          color: $theme-color-primary;
         }
       }
 
       &.active {
+        .step {
+          color: #fff;
+          background-color: transparent;
+          border-color: #fff;
+        }
         .step-level {
-          color: #444;
+          color: #fff;
         }
       }
     }

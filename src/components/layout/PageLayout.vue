@@ -1,7 +1,7 @@
 <template>
   <div class="app-layout page-layout">
     <div class="wrapper">
-      <AppHeader/>
+      <img src="@/assets/images/logo_white.svg" alt="logo" class="page-logo-img">
       <main class="main">
         <div class="bg"></div>
         <slot></slot>
@@ -21,9 +21,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-layout {
+  .page-logo-img {
+    margin: 60px 0 100px;
+  }
+  .wrapper {
+    text-align: center;
+  }
   .main {
-    margin-top: $header-height;
-    justify-content: center;
     text-align: center;
   }
 }

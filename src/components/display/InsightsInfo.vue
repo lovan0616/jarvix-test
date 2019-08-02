@@ -19,12 +19,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .insights-info-block {
-  background: $theme-secondary-bg-color;
+  background: rgba(101, 207, 217, 0.45);
   border-radius: 0 0 8px 8px;
   padding: 20px 30px 20px 50px;
   line-height: 22px;
   letter-spacing: 0.05em;
-  color: $theme-text-color-dark;
+  color: $theme-text-color;
 
   .insights-info {
     position: relative;

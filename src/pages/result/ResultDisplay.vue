@@ -9,45 +9,21 @@
       v-else
       v-bind="layout"
     ></layout>
-    <div class="recommend-question-list-block"
-      v-if="relatedQuestionList.length > 0"
-    >
-      <div class="block-title">推荐语句</div>
-      <div class="category-block"
-        v-if="categories.result.length > 0"
-        v-for="(categories, index) in relatedQuestionList"
-        :key="index"
-      >
-        <div class="category-title">{{ categories.category }}</div>
-        <div class="category-question-list">
-          <preview-result-board class="result-board"
-            v-for="(questionInfo, questionIndex) in categories.result"
-            :key="index + questionIndex"
-            :question-info="questionInfo"
-          ></preview-result-board>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
-import { askQuestion, relateQuestions } from '@/API/Ask'
-import PreviewResultBoard from '@/components/PreviewResultBoard'
+import { askChatBot } from '@/API/chatBot'
 
 export default {
   name: 'ResultDisplay',
-  components: {
-    PreviewResultBoard
-  },
   data () {
     return {
       layout: undefined,
       showLayout: false,
       isNoResult: false,
-      relatedQuestionList: [],
       askCancelFunction: null
     }
   },
@@ -61,10 +37,7 @@ export default {
     this.fetchData()
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'appQuestion']),
-    questionResult () {
-      return this.$store.state.bookmark.questionResult
-    }
+    ...mapGetters('bookmark', ['bookmarkId', 'appQuestion'])
   },
   methods: {
     fetchData () {
@@ -76,40 +49,26 @@ export default {
     },
     clearLayout () {
       this.layout = undefined
-      this.relatedQuestionList = []
     },
     fetchApiAsk (data) {
       this.isNoResult = false
       this.showLayout = true
-      this.clearLayout()
+      this.$store.commit('chatBot/addUserConversation', data.question)
+      this.$store.commit('chatBot/updateAnalyzeStatus', true)
 
       const _this = this
       this.cancelRequest()
-      // question result 是 preview 時塞的資料，如果有的話就塞進去，為了加快分析時間
-      if (this.questionResult) {
-        data = {...data, result: this.questionResult}
-      }
-      askQuestion(data, new axios.CancelToken(function executor (c) {
+      askChatBot(data, new axios.CancelToken(function executor (c) {
         _this.askCancelFunction = c
       }))
         .then(res => {
-          this.layout = res
-          this.$store.dispatch('bookmark/getHistoryQuestionList')
-          this.getRelatedQuestions(data)
+          if (res.content.changed) {
+            this.layout = res.content
+          }
+          this.$store.commit('chatBot/updateAnalyzeStatus', false)
+          this.$store.commit('chatBot/addSystemConversation', res.respond)
         }).catch(() => {
           this.isNoResult = true
-          this.getRelatedQuestions(data)
-        })
-      // 清空 question result
-      this.$store.commit('bookmark/setQuestionResult', null)
-    },
-    getRelatedQuestions (data) {
-      const _this = this
-      relateQuestions(data, new axios.CancelToken(function executor (c) {
-        _this.askCancelFunction = c
-      }))
-        .then(res => {
-          this.relatedQuestionList = res
         })
     },
     cancelRequest () {

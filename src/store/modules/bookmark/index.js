@@ -12,11 +12,8 @@ export default {
     quickstartNum: 3,
     quickstartResult: {},
     appQuestion: '',
-    questionResult: null,
     // 歷史問題清單
-    historyQuestionList: [],
-    // 目前 result 頁面的狀態
-    currentResultDisplayType: null
+    historyQuestionList: []
   },
   actions,
   mutations,

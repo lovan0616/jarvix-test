@@ -40,7 +40,7 @@
         <span v-if="currntUploadStatus !== uploadStatus.wait">上传过程中请勿关闭浏览器视窗，以免上传作业失败</span>
       </div>
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button class="btn btn-secondary"
           v-if="currntUploadStatus === uploadStatus.wait"
           @click="cancelFileUpload"
         >取消</button>
@@ -156,6 +156,7 @@ export default {
   .data-source-name {
     text-align: right;
     margin-bottom: 8px;
+    font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.5px;
   }
@@ -171,10 +172,10 @@ export default {
   }
 
   .choose-file {
-    font-size: 12px;
-    line-height: 17px;
+    font-size: 18px;
+    line-height: 1;
     letter-spacing: 0.5px;
-    color: #43BAC3;
+    color: $theme-color-primary;
   }
 
   .file-chosen-info {

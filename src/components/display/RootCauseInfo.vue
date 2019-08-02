@@ -137,7 +137,7 @@ export default {
       }
 
       &.active {
-        color: #42A5B3;
+        color: $theme-color-primary;
       }
     }
   }
@@ -175,13 +175,14 @@ export default {
     padding: 0 30px;
     border: none;
     transition: border 0.3s;
+    color: #ddd;
 
     &:hover, &.is-active {
-      color: #43BAC3;
+      color: $theme-text-color;
     }
 
     &.is-active {
-      border-bottom: 2px solid #43BAC3;
+      border-bottom: 2px solid $theme-text-color;
     }
   }
 }

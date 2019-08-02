@@ -4,14 +4,12 @@
   >
     <div class="board-top-section">
       <div class="board-title">{{ questionInfo.question }}</div>
-      <div class="board-chart-block"
-        v-loading="isLoading"
-      >
+      <div class="board-chart-block">
         <component
           v-if="questionInfo.template"
           :is="getChartTemplate(questionInfo.template)"
           :dataset="questionInfo.data.dataset"
-          isPreview
+          :is-preview="true"
         ></component>
       </div>
     </div>
@@ -87,7 +85,6 @@ export default {
       })
     },
     linkToResult () {
-      this.$store.commit('bookmark/setQuestionResult', this.questionInfo.result)
       this.$store.commit('bookmark/setAppQuestion', this.questionInfo.question)
       this.$store.dispatch('bookmark/updateResultRouter')
     }
@@ -102,7 +99,7 @@ export default {
 <style lang="scss" scoped>
 .single-result-board {
   background-color: #fff;
-  // background-color: #F5FBFB;
+  background: rgba(0, 0, 0, 0.35);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   margin-bottom: 40px;
@@ -126,6 +123,7 @@ export default {
     letter-spacing: 0.1em;
     padding-bottom: 16px;
     text-align: left;
+    color: $theme-text-color;
   }
   .board-chart-block {
     width: 100%;

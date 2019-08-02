@@ -224,7 +224,7 @@ export default {
 <style lang="scss" scoped>
 .data-management {
   .title-link {
-    color: #43BAC3;
+    color: $theme-color-primary;
   }
   .divider {
     margin: 0 4px;

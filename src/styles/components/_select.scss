@@ -1,7 +1,6 @@
 .sy-select.theme-default {
   .el-input__inner {
     border: 0;
-    border-bottom: 1px solid $theme-text-color-light;
     border-radius: 0;
     color: $theme-text-color;
     background: transparent;
@@ -31,7 +30,6 @@
 .sy-select.theme-dark {
   .el-input__inner {
     border: 0;
-    border-bottom: 1px solid #ffffff;
     border-radius: 0;
     color: #ffffff;
     background: transparent;

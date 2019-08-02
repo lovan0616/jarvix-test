@@ -23,7 +23,10 @@ export const chartOptions = {
     itemWidth: 12,
     itemHeight: 12,
     icon: 'circle',
-    itemGap: 20
+    itemGap: 20,
+    textStyle: {
+      color: chartVariable['textColor']
+    }
   },
   xAxis: {
     name: '',
@@ -37,6 +40,11 @@ export const chartOptions = {
     axisLabel: {
       rotate: 45,
       color: chartVariable['xAxisLabelColor']
+    },
+    axisLine: {
+      lineStyle: {
+        color: chartVariable['textColor']
+      }
     },
     // 刻度
     axisTick: {

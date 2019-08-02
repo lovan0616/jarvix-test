@@ -17,13 +17,7 @@ export default {
   setAppQuestion (state, data) {
     state.appQuestion = data
   },
-  setQuestionResult (state, data) {
-    state.questionResult = data
-  },
   setHistoryQuestionList (state, data) {
     state.historyQuestionList = data
-  },
-  setCurrentResultDisplayType (state, data) {
-    state.currentResultDisplayType = data
   }
 }

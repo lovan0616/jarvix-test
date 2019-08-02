@@ -28,7 +28,7 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button class="btn btn-secondary"
           @click="cancelFileUpload"
         >取消</button>
         <button class="btn btn-default"
@@ -133,7 +133,7 @@ export default {
 <style lang="scss" scoped>
 .choose-file-type {
   .dialog-body {
-    background: #F8F8F8;
+    background: rgba(255, 255, 255, 0.15);
     margin-bottom: 16px;
   }
 
@@ -159,6 +159,7 @@ export default {
 
   .file-type-select {
     width: 100%;
+    border-bottom: 1px solid #979797;
   }
 
   .file-info-input-block {

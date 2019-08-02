@@ -2,13 +2,11 @@
   position: relative;
   overflow: auto;
   z-index: 100;
-  border: 1px solid #d4d4d4;
   border-radius: $theme-border-radius-base;
 
   .meta-table-top-area {
     padding: rem(16px);
     overflow: auto;
-    background: #FAFAFA;;
   }
 
   .meta-table-top-area-right {
@@ -18,12 +16,21 @@
   .sy-table {
     border-top: 1px solid #d4d4d4;
 
+    &.el-table {
+      background-color: transparent;
+    }
+
     &.el-table th {
+      background: rgba(0, 0, 0, 0.35);
       border-bottom: 2px solid #d4d4d4;
     }
 
     &.el-table td {
       border-bottom: 1px solid #d4d4d4;
+    }
+
+    .el-table__fixed {
+      background-color: rgba(0, 0, 0, 0.6);
     }
   }
 }

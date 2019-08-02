@@ -59,12 +59,7 @@ export default {
     chooseHistoryQuestion (questionInfo) {
       this.$store.commit('bookmark/setAppQuestion', questionInfo.question)
       this.$store.dispatch('bookmark/changeBookmarkById', questionInfo.bookmark_id)
-      // 依據 askType 來決定到 preview 頁或是 rsult 頁
-      if (questionInfo.askType === 'Preview') {
-        this.$store.dispatch('bookmark/updateResultPreviewRouter')
-      } else {
-        this.$store.dispatch('bookmark/updateResultRouter')
-      }
+      this.$store.dispatch('bookmark/updateResultRouter')
       this.isDropdownOpen = false
     },
     typeTransform (value) {
@@ -93,7 +88,7 @@ export default {
     align-items: center;
     width: 60px;
     height: 60px;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.15);
     box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.12);
     border-radius: 50%;
     margin-bottom: 16px;
@@ -108,7 +103,7 @@ export default {
     }
 
     .icon {
-      color: #42A5B3;
+      color: #fff;
       font-size: 30px;
     }
   }
@@ -118,7 +113,7 @@ export default {
   top: auto;
   right: 0;
   width: 210px;
-  background: #FFF;
+  background: rgba(0, 0, 0, 0.95);
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
   max-height: 75vh;
@@ -134,9 +129,8 @@ export default {
     }
 
     &:hover {
-      background-color: #F5FBFB;
       .question-name {
-        color: $theme-text-color-dark;
+        color: #9FC2C6;
       }
     }
 

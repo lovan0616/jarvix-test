@@ -47,3 +47,14 @@ button {
     outline: none !important;
   }
 }
+
+textarea {
+  background-color: transparent;
+  resize: none;
+  border: none;
+  color: $theme-text-color;
+
+  &:focus, &:active {
+    outline: none;
+  }
+}

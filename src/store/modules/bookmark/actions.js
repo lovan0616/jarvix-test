@@ -9,7 +9,6 @@ export default {
     return co(function* () {
       yield dispatch('getBookmarkList')
       yield dispatch('getSuggestionList')
-      yield dispatch('getQuickstartList')
       commit('setIsInit', true)
       return Promise.resolve(state)
     })
@@ -20,7 +19,6 @@ export default {
 
     return co(function* () {
       yield dispatch('getSuggestionList')
-      yield dispatch('getQuickstartList')
       return Promise.resolve(state)
     })
   },
@@ -42,29 +40,13 @@ export default {
       commit('setQuickStart', res)
     })
   },
-  updateResultPreviewRouter ({commit, getters}, data) {
-    commit('setCurrentResultDisplayType', 'preview')
-
-    router.push({
-      name: 'PageResult',
-      query: {
-        question: data || getters.appQuestion,
-        '_': new Date().getTime(),
-        bookmarkId: getters.bookmarkId,
-        type: 'preview'
-      }
-    })
-  },
   updateResultRouter ({commit, getters}, data) {
-    commit('setCurrentResultDisplayType', 'display')
-
     router.push({
       name: 'PageResult',
       query: {
         question: data || getters.appQuestion,
         '_': new Date().getTime(),
-        bookmarkId: getters.bookmarkId,
-        type: 'display'
+        bookmarkId: getters.bookmarkId
       }
     })
   },

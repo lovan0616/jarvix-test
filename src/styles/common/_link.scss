@@ -1,9 +1,9 @@
 .link {
   font-size: 14px;
-  color: #43BAC3;
+  color: $theme-color-primary;
 
   &:hover, &:active {
-    color: #42A5B3;
+    color: $theme-color-primary;
     text-decoration-line: underline;
   }
 
