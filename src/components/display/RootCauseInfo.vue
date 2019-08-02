@@ -137,7 +137,7 @@ export default {
       }
 
       &.active {
-        color: #42A5B3;
+        color: $theme-color-primary;
       }
     }
   }

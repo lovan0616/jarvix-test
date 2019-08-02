@@ -61,6 +61,7 @@ export default {
     margin-bottom: 10px;
 
     .block-title {
+      font-size: 14px;
       line-height: 21px;
       letter-spacing: 0.5px;
     }

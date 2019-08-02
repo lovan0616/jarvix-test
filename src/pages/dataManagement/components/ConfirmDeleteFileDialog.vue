@@ -15,7 +15,7 @@
       </div>
     </div>
     <template class="dialog-btn-block" slot="dialogFooter">
-      <button type="button" class="btn btn-outline"
+      <button type="button" class="btn btn-secondary"
         @click="cancel"
       >取消</button>
       <button type="button" class="btn btn-default"
@@ -68,7 +68,7 @@ export default {
   .single-file {
     line-height: 1;
     letter-spacing: 2px;
-    color: #43BAC3;
+    color: $theme-color-primary;
 
     &:not(:last-child) {
       margin-bottom: 16px;

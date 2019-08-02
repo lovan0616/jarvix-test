@@ -4,7 +4,9 @@
   >
     <div class="container">
       <div class="header-root">
-        <router-link class="header-logo" to="/">
+        <router-link class="header-logo" to="/"
+          v-show="!isShowChatRoom"
+        >
           <img src="@/assets/images/logo_white.svg">
         </router-link>
         <slot name="nav"></slot>
@@ -33,18 +35,6 @@ export default {
   z-index: $header-z-index;
   box-shadow: $header-shadow;
   transition: all 0.3s;
-  
-  &:after {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    content: "";
-    display: block;
-    width: 100%;
-    height: $header-height;
-    filter: blur(8px);
-    z-index: -1;
-  }
 
   &.isShowChatRoom {
     left: $chat-room-width;

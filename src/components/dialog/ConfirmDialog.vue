@@ -100,7 +100,7 @@ export default {
     bottom: 0;
     margin: 0 auto;
     position: relative;
-    background-color: #fff;
+    background-color: $theme-bg-darker-color;
     text-align: center;
     box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
@@ -114,13 +114,12 @@ export default {
     position: relative;
     padding: 16px 30px;
     text-align: center;
-    border-bottom: 1px solid #D8D8D8;
 
     .dialog-title {
       font-size: 18px;
       line-height: 26px;
       letter-spacing: 0.1em;
-      color: #000000;
+      color: $theme-text-color;
     }
   }
 
@@ -128,7 +127,7 @@ export default {
     position: absolute;
     top: 16px;
     right: 20px;
-    color: #828282;
+    color: $theme-text-color;
   }
 
   .dialog-body-block {

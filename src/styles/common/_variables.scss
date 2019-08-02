@@ -2,7 +2,7 @@
 $theme-color-white: #fff !default;
 $theme-color-black: #000 !default;
 // primary
-$theme-color-primary: #0F9696 !default;
+$theme-color-primary: #65cfd9 !default;
 $theme-color-primary-dark: #006464 !default;
 // primary lighter mix
 $theme-color-primary-light-1: mix($theme-color-white, $theme-color-primary, 10%) !default; /* 53a8ff */
@@ -22,8 +22,9 @@ $theme-color-info: #5AD0F5 !default;
 // bg color
 $theme-bg-color: rgba(0, 0, 0, 0.45);
 $theme-secondary-bg-color: #F1F7F7;
+$theme-bg-darker-color: rgba(0, 0, 0, 0.85);
 // line
-$theme-line-color: #d8d8d8;
+$theme-line-color: rgba(216, 216, 216, 0.5);
 // placeholder
 $theme-placeholder-color: #d8d8d8;
 // text
@@ -31,7 +32,7 @@ $theme-text-color-light: #979797;
 $theme-text-color: #fff;
 $theme-text-color-dark: #2e2e2e;
 //chat-room
-$chat-room-width: 480px;
+$chat-room-width: 400px;
 // font style
 $theme-font-family-default: 'Open Sans', 'Roboto', 'PingFang TC', 'Microsolft JhengHei', 'Microsoft YaHei', 'Arial';
 // font-size

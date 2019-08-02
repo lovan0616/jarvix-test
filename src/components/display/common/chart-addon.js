@@ -23,7 +23,10 @@ export const chartOptions = {
     itemWidth: 12,
     itemHeight: 12,
     icon: 'circle',
-    itemGap: 20
+    itemGap: 20,
+    textStyle: {
+      color: chartVariable['textColor']
+    }
   },
   xAxis: {
     name: '',

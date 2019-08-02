@@ -129,7 +129,7 @@ export default {
     &.is-loading {
       cursor: not-allowed;
       width: 120px;
-      background: #43BAC3;
+      background: $theme-color-primary;
       opacity: 0.5;
       color: #fff;
       border-radius: 30px;

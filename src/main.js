@@ -59,6 +59,7 @@ import InsightTable from '@/components/display/InsightTable'
 import IndicatorInfo from '@/components/display/IndicatorInfo'
 import IndicatorsList from '@/components/display/IndicatorsList'
 import EmptyResult from '@/pages/result/components/EmptyResult'
+import PreviewResultBoard from '@/components/PreviewResultBoard'
 
 Vue.use(VueEvents)
 // Element UI components
@@ -71,7 +72,8 @@ Vue.use(Loading)
 Vue.use(Tabs)
 Vue.use(TabPane)
 
-Vue.component('echart', ECharts)
+Vue.component('v-echart', ECharts)
+Vue.component(PreviewBookmark.name, PreviewBookmark)
 Vue.component(SyTable.name, SyTable)
 Vue.component(InsightsInfo.name, InsightsInfo)
 Vue.component(RootCauseInfo.name, RootCauseInfo)
@@ -81,6 +83,11 @@ Vue.component(IndicatorsList.name, IndicatorsList)
 Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
+Vue.component(Layout.name, Layout)
+Vue.component(Task.name, Task)
+Vue.component(ContainerBlock.name, ContainerBlock)
+Vue.component(ContainerCard.name, ContainerCard)
+Vue.component(DisplayBasicChart.name, DisplayBasicChart)
 Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
 Vue.component(DisplayScatterChart.name, DisplayScatterChart)
 Vue.component(DisplayGroupScatterChart.name, DisplayGroupScatterChart)
@@ -91,13 +98,9 @@ Vue.component(DisplayTreeMapChart.name, DisplayTreeMapChart)
 Vue.component(DisplayLineChart.name, DisplayLineChart)
 Vue.component(DisplayPieChart.name, DisplayPieChart)
 Vue.component(DisplayBarChart.name, DisplayBarChart)
-Vue.component(Layout.name, Layout)
-Vue.component(Task.name, Task)
-Vue.component(ContainerBlock.name, ContainerBlock)
-Vue.component(ContainerCard.name, ContainerCard)
-Vue.component(DisplayBasicChart.name, DisplayBasicChart)
-Vue.component(PreviewBookmark.name, PreviewBookmark)
 Vue.component(EmptyResult.name, EmptyResult)
+Vue.component(PreviewResultBoard.name, PreviewResultBoard)
+
 Vue.use(VeeValidate, {
   // 避免自動 inject 到所有 component
   inject: false,

@@ -1,12 +1,12 @@
 <template>
   <div class="display-basic-chart">
-    <echart
+    <v-echart
       :style="chartStyle"
       :options="options"
       auto-resize
       v-on="eventHandlers"
     >
-    </echart>
+    </v-echart>
   </div>
 </template>
 

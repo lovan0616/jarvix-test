@@ -7,12 +7,11 @@
     >
       <svg-icon icon-class="double-arrow-left" class="arrow-icon"></svg-icon>
     </a>
-    <img src="@/assets/images/logo_white.svg" alt="sygps-logo" class="chat-bot-logo">
-    <bookmark-select></bookmark-select>
-    <div class="system-bot-block">
-      <ChatBotbtn class="system-bot" />
-      <div class="system-bot-msg">廠長您好，有什麼特別需要關注的資訊嗎？</div>
+    <div class="chat-room-header">
+      <img src="@/assets/images/logo_white.svg" alt="sygps-logo" class="chat-bot-logo">
+      <bookmark-select class="bookmark-select"></bookmark-select>
     </div>
+    <conversation-block></conversation-block>
     <div class="user-input-block">
       <div class="user-question-block">
         <textarea name="question" class="question-input"
@@ -20,6 +19,7 @@
           ref="questionInput"
           @input="textareaResize"
           v-model="userQuestion"
+          @keypress.enter="enterQuestion"
         ></textarea>
         <img src="@/assets/images/input.svg" class="question-input-img" alt="">
       </div>
@@ -27,14 +27,14 @@
   </div>
 </template>
 <script>
-import ChatBotbtn from './ChatBotBtn'
+import ConversationBlock from './ConversationBlock'
 import BookmarkSelect from '@/components/select/BookmarkSelect'
 
 export default {
   name: 'ChatRoomBlock',
   components: {
     BookmarkSelect,
-    ChatBotbtn
+    ConversationBlock
   },
   data () {
     return {
@@ -51,6 +51,12 @@ export default {
     textareaResize () {
       this.$refs.questionInput.style.height = 'auto'
       this.$refs.questionInput.style.height = this.$refs.questionInput.scrollHeight + 'px'
+    },
+    enterQuestion () {
+      this.$store.commit('bookmark/setAppQuestion', this.userQuestion)
+      this.$refs.questionInput.blur()
+      this.$store.dispatch('bookmark/updateResultRouter')
+      this.userQuestion = null
     }
   },
   computed: {
@@ -63,13 +69,12 @@ export default {
 <style lang="scss" scoped>
 .chat-room-block {
   position: relative;
-  flex: initial;
   width: $chat-room-width;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   text-align: center;
   overflow: auto;
-  padding: 36px 32px 32px;
+  padding: 24px 32px 32px;
   transform: translateX(-$chat-room-width);
   transition: transform 0.3s;
 
@@ -93,25 +98,17 @@ export default {
     }
   }
 
-  .chat-bot-logo {
-    margin-bottom: 8px;
-  }
+  .chat-room-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
 
-  .system-bot-block {
-    position: absolute;
-    top: 40%;
-    left: 0;
-    right: 0;
-    margin: auto;
-    padding: 0 40px;
-
-    .system-bot {
-      margin-bottom: 32px;
+    .chat-bot-logo {
+      width: 120px;
     }
 
-    .system-bot-msg {
-      font-size: 24px;
-      line-height: 44px;
+    .bookmark-select {
+      width: 150px;
     }
   }
 
@@ -132,7 +129,10 @@ export default {
       line-height: 36px;
       height: auto;
       min-height: 48px;
+      max-height: 76px;
+      overflow: auto;
     }
+
     .question-input-img {
       position: absolute;
       right: 0;

@@ -29,7 +29,7 @@ export default {
   methods: {
     onItemClick (e, item) {
       this.$store.commit('bookmark/setAppQuestion', item)
-      this.$store.dispatch('bookmark/updateResultPreviewRouter', item)
+      this.$store.dispatch('bookmark/updateResultRouter', item)
     }
   }
 }

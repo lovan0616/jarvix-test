@@ -16,9 +16,27 @@ $default-btn-color: rgba(255, 255, 255, 0.16);
   color: #fff;
   background-color: $default-btn-color;
   border: none;
+  transition: background-color 0.3s;
 
   &:hover, &:active {
-    background-color: #42A5B3;
+    background-color: $theme-color-primary;
+    color: #444;
+  }
+
+  &:disabled {
+    opacity: 0.25;
+  }
+}
+
+.btn-secondary {
+  color: #fff;
+  background-color: $default-btn-color;
+  border: none;
+  transition: background-color 0.3s;
+
+  &:hover, &:active {
+    background-color: #c7c7c7;
+    color: #000;
   }
 
   &:disabled {
@@ -30,10 +48,11 @@ $default-btn-color: rgba(255, 255, 255, 0.16);
   border: 1px solid $theme-text-color;
   background-color: transparent;
   color: $theme-text-color;
+  transition: color 0.3s;
 
   &:hover, &:active {
-    color: #42A5B3;
-    border-color: #42A5B3;
+    color: $theme-color-primary;
+    border-color: $theme-color-primary;
   }
 
   &:disabled {

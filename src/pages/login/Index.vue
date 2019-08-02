@@ -5,30 +5,35 @@
       <form
         @submit.prevent="submitForm"
       >
-        <div class="input-block">
-          <label class="input-label" for="user_name">帳號</label>
-          <input type="text" name="user_name" required
+        <div class="login-form">
+          <input-block class="login-input-block"
+            label="帐号"
+            name="userName"
             v-model="userInfo.account"
-          />
-        </div>
-        <div class="input-block last">
-          <label class="input-label" for="password">密碼</label>
-          <input type="password" name="password" required
+            v-validate="'required'"
+          ></input-block>
+          <input-block class="login-input-block"
+            label="密码"
+            name="userPassword"
             v-model="userInfo.password"
-          />
+            v-validate="'required'"
+          ></input-block>
         </div>
-        <button type="submit" class="btn btn-submit">登入</button>
+        <button type="submit" class="btn btn-default btn-submit">登入</button>
       </form>
     </div>
   </page-layout>
 </template>
 <script>
 import { login } from '@/API/User'
+import InputBlock from '@/components/InputBlock'
 import PageLayout from '@/components/layout/PageLayout'
 export default {
+  inject: ['$validator'],
   name: 'PageLogin',
   components: {
-    PageLayout
+    PageLayout,
+    InputBlock
   },
   data () {
     return {
@@ -38,16 +43,23 @@ export default {
       }
     }
   },
+  mounted () {
+    this.$store.commit('updateChatRoomStatus', false)
+  },
   methods: {
     submitForm () {
-      login({
-        user_name: this.userInfo.account,
-        password: this.userInfo.password
+      this.$validator.validateAll().then(result => {
+        if (result) {
+          login({
+            user_name: this.userInfo.account,
+            password: this.userInfo.password
+          })
+            .then(res => {
+              localStorage.setItem('token', res.user.token)
+              this.$router.push('/kyc')
+            })
+        }
       })
-        .then(res => {
-          localStorage.setItem('token', res.user.token)
-          this.$router.push('/')
-        })
     }
   }
 }
@@ -55,36 +67,28 @@ export default {
 <style lang="scss" scoped>
 .login-page {
   width: 360px;
+  margin: 0 auto;
 
   .page-title {
-    margin: 120px 0 64px;
+    margin-top: 0;
+    margin-bottom: 32px;
   }
 
-  .input-block {
+  .login-form {
     text-align: left;
-    margin-bottom: 16px;
+    background-color: $theme-bg-color;
+    padding: 40px;
+    border-radius: 8px;
 
-    &.last {
-      margin-bottom: 3px;
-    }
-
-    .input-label {
-      display: block;
-      margin-bottom: 4px;
-      font-weight: bold;
-    }
-
-    input {
-      width: 100%;
-      height: 40px;
-      padding: 0 8px;
+    .login-input-block {
+      &:not(:last-child) {
+        margin-bottom: 40px;
+      }
     }
   }
+
   .btn-submit {
     width: 120px;
-    height: 40px;
-    background-color: $theme-color-primary;
-    color: #fff;
     margin-top: 32px;
     border: none;
     border-radius: 4px;

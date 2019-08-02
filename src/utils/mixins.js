@@ -102,6 +102,60 @@ Vue.mixin({
       // config.yAxis.name = null
 
       return config
+    },
+    // 參考： https://gist.github.com/joshcanhelp/a3a669df80898d4097a1e2c01dea52c1
+    // https://stackoverflow.com/questions/21474678/scrolltop-animation-without-jquery
+    scrollTo (scrollToObj, scrollDuration) {
+      // Set a default for where we're scrolling to
+      let scrollDistance = 0
+      // Assuming this is a selector we can use to find an element
+      // var scrollToObj = document.getElementById(scrollTo)
+      if (scrollToObj && typeof scrollToObj.getBoundingClientRect === 'function') {
+        scrollDistance = window.pageYOffset + scrollToObj.getBoundingClientRect().top - 80
+      }
+
+      // Set this a bit higher
+      var anchorHeightAdjust = 30
+      if (scrollDistance > anchorHeightAdjust) {
+        scrollDistance = scrollDistance - anchorHeightAdjust
+      }
+
+      // Set a default for the duration
+      if (typeof scrollDuration !== 'number' || scrollDuration < 0) {
+        scrollDuration = 1000
+      }
+
+      // Declarations
+      var cosParameter = (window.pageYOffset - scrollDistance) / 2
+      var scrollCount = 0
+      var oldTimestamp = window.performance.now()
+
+      function step (newTimestamp) {
+        var tsDiff = newTimestamp - oldTimestamp
+
+        // Performance.now() polyfill loads late so passed-in timestamp is a larger offset
+        // on the first go-through than we want so I'm adjusting the difference down here.
+        // Regardless, we would rather have a slightly slower animation than a big jump so a good
+        // safeguard, even if we're not using the polyfill.
+        if (tsDiff > 100) {
+          tsDiff = 30
+        }
+
+        scrollCount += Math.PI / (scrollDuration / tsDiff)
+
+        // As soon as we cross over Pi, we're about where we need to be
+        if (scrollCount >= Math.PI) {
+          return
+        }
+
+        var moveStep = Math.round(scrollDistance + cosParameter + cosParameter * Math.cos(scrollCount))
+        console.log(moveStep)
+        window.scrollTo(0, moveStep)
+        oldTimestamp = newTimestamp
+        window.requestAnimationFrame(step)
+      }
+
+      window.requestAnimationFrame(step)
     }
   }
 })

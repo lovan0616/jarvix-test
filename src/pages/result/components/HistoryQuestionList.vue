@@ -59,12 +59,7 @@ export default {
     chooseHistoryQuestion (questionInfo) {
       this.$store.commit('bookmark/setAppQuestion', questionInfo.question)
       this.$store.dispatch('bookmark/changeBookmarkById', questionInfo.bookmark_id)
-      // 依據 askType 來決定到 preview 頁或是 rsult 頁
-      if (questionInfo.askType === 'Preview') {
-        this.$store.dispatch('bookmark/updateResultPreviewRouter')
-      } else {
-        this.$store.dispatch('bookmark/updateResultRouter')
-      }
+      this.$store.dispatch('bookmark/updateResultRouter')
       this.isDropdownOpen = false
     },
     typeTransform (value) {

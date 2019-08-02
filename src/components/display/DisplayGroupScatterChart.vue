@@ -1,11 +1,11 @@
 <template>
   <div class="display-group-scatter-chart">
-    <echart
+    <v-echart
       :style="chartStyle"
       :options="chartOption"
       auto-resize
     >
-    </echart>
+    </v-echart>
   </div>
 </template>
 <script>

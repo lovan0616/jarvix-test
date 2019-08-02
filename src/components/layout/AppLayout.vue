@@ -26,8 +26,8 @@
 <script>
 import AppHeader from './AppHeader'
 import HeaderNav from './HeaderNav'
-import ChatRoomBlock from '../ChatRoom'
-import ChatBotBtn from '../ChatBotBtn'
+import ChatRoomBlock from '@/components/chatBot/ChatRoom'
+import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
 
 export default {
   name: 'AppLayout',
@@ -57,7 +57,7 @@ export default {
   .wrapper {
     width: 100%;
     position: absolute;
-    top: 0;
+    top: $header-height;
     right: 0;
     transition: width 0.3s;
 
@@ -77,6 +77,7 @@ export default {
     bottom: 16px;
     left: 20px;
     z-index: 999;
+    cursor: pointer;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div :class="['task-root', { 'is-full-height': fullHeight }]"
+  <div class="task-root"
     v-loading="loading"
     element-loading-spinner="el-icon-loading"
     element-loading-background="transparent"
@@ -18,12 +18,10 @@ export default {
     dataUrl: { type: String, default: '' },
     templateUrl: { type: String, default: '' },
     params: { type: Object, default: () => ({}) },
-    fullHeight: { type: Boolean, default: false },
     cancelLoading: { type: Boolean, default: false },
     intervalPull: { type: Boolean, default: false },
     intervalTime: { type: Number, default: 10 },
-    intervalLoading: { type: Boolean, default: false },
-    listeners: { type: Object, default: () => ({}) }
+    intervalLoading: { type: Boolean, default: false }
   },
   data () {
     return {
@@ -33,17 +31,9 @@ export default {
       childVm: undefined
     }
   },
-  created () {
-    Object.keys(this.listeners).forEach(key => {
-      this.$events.$on(key, this[this.listeners[key]])
-    })
-  },
-  destroyed () {
-    Object.keys(this.listeners).forEach(key => {
-      this.$events.$off(key)
-    })
-  },
   mounted () {
+    console.log(this.$props, 'task props')
+
     this.init()
   },
   computed: {
@@ -59,6 +49,7 @@ export default {
   },
   methods: {
     init () {
+      console.log('init')
       if (this.url) this.genTask(this.path, this.params)
       if (this.templateUrl && this.dataUrl) this.genTaskByTemplateAndData()
     },
@@ -180,5 +171,6 @@ export default {
 .task-root {
   width: 100%;
   min-height: 20px;
+  overflow: hidden;
 }
 </style>

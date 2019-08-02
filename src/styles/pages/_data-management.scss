@@ -63,7 +63,7 @@
       }
 
       &.active {
-        color: #43BAC3;
+        color: $theme-color-primary;
       }
     }
 
@@ -134,7 +134,7 @@
   }
 
   .action-link {
-    color: #43BAC3;
+    color: $theme-color-primary;
     padding: 0 15px;
 
     &:first-child {

@@ -97,7 +97,7 @@ export default {
     font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.5px;
-    color: #43BAC3;
+    color: $theme-color-primary;
 
     &:not(:last-child) {
       margin-bottom: 4px;

@@ -187,14 +187,14 @@ export default {
     .action-link {
       line-height: 19px;
       letter-spacing: 0.5px;
-      color: #43BAC3;
+      color: $theme-color-primary;
 
       &.cancel {
         display: none;
       }
     }
     .success {
-      color: #43BAC3;
+      color: $theme-color-primary;
     }
     .fail {
       color: #F1616D;

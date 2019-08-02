@@ -1,9 +1,6 @@
 .app-layout {
-  display: flex;
-  flex-direction: column;
-
   .wrapper {
-    height: 100vh;
+    height: calc(100vh - #{$header-height});
     overflow: auto;
   }
 

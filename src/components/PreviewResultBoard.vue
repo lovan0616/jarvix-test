@@ -4,15 +4,12 @@
   >
     <div class="board-top-section">
       <div class="board-title">{{ questionInfo.question }}</div>
-      <div class="board-chart-block"
-        v-loading="isLoading"
-        element-loading-background="transparent"
-      >
+      <div class="board-chart-block">
         <component
           v-if="questionInfo.template"
           :is="getChartTemplate(questionInfo.template)"
           :dataset="questionInfo.data.dataset"
-          isPreview
+          :is-preview="true"
         ></component>
       </div>
     </div>
@@ -88,7 +85,6 @@ export default {
       })
     },
     linkToResult () {
-      this.$store.commit('bookmark/setQuestionResult', this.questionInfo.result)
       this.$store.commit('bookmark/setAppQuestion', this.questionInfo.question)
       this.$store.dispatch('bookmark/updateResultRouter')
     }
