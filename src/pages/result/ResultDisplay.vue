@@ -15,7 +15,7 @@
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
-import { askChatBot } from '@/API/chatBot'
+import { askChatBot } from '@/API/ChatBot'
 
 export default {
   name: 'ResultDisplay',

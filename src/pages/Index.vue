@@ -8,7 +8,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { askChatBot } from '@/API/chatBot'
+import { askChatBot } from '@/API/ChatBot'
 
 export default {
   name: 'PageIndex',
