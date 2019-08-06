@@ -18,9 +18,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .bot-btn {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+
   .bot-img {
-    width: 100px;
-    height: 100px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
   }
 }

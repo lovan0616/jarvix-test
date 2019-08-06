@@ -83,7 +83,7 @@ export default {
     letter-spacing: 0.05em;
     cursor: pointer;
     font-size: 14px;
-    transition: color 0.3s;
+    transition: background-color 0.3s;
 
     &:hover {
       background-color: rgba(101, 207, 217, 0.45);

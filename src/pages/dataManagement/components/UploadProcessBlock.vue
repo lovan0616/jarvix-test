@@ -48,7 +48,7 @@ export default {
         &:after {
           display: block;
           content: "";
-          border-bottom: 1px solid $theme-color-primary;
+          border-bottom: 1px solid #a7a7a7;
           flex: 1;
           margin: 0 10px;
         }
@@ -66,6 +66,12 @@ export default {
       }
 
       &.active {
+        &:not(:last-child) {
+          &:after {
+            border-color: #fff;
+          }
+        }
+
         .step {
           color: #fff;
           background-color: transparent;

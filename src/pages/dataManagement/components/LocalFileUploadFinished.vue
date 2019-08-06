@@ -1,8 +1,13 @@
 <template>
   <div class="file-upload-finished">
-    <div class="dialog-title">上传完成</div>
+    <div class="dialog-title">
+      <span v-if="uploadFileList.length === successList.length">上传成功</span>
+      <span v-else-if="uploadFileList.length === failList.length">上传失败</span>
+      <span v-else>上传完成</span>
+    </div>
     <div class="finished-img-block">
-      <img src="../../../assets/images/upload-done.svg" alt="上传成功" class="finished-img">
+      <img v-if="uploadFileList.length === successList.length" src="../../../assets/images/success.gif" alt="上传成功" class="finished-img">
+      <img v-if="uploadFileList.length === failList.length" src="../../../assets/images/error.gif" alt="上传失敗" class="finished-img">
       <div class="finished-file-info">总共 {{uploadFileList.length}} 项资料表，{{ successList.length }} 项上传成功， {{ failList.length }} 项未上传</div>
     </div>
     <div class="dialog-body">
@@ -69,15 +74,15 @@ export default {
 <style lang="scss" scoped>
 .file-upload-finished {
   .dialog-title {
-    margin-bottom: 18px;
+    margin-bottom: 32px;
   }
   .finished-img-block {
     text-align: center;
     margin-bottom: 44px;
   }
   .finished-img {
-    width: 152px;
-    margin-bottom: 24px;
+    width: 70px;
+    margin-bottom: 32px;
   }
   .finished-file-info {
     line-height: 20px;

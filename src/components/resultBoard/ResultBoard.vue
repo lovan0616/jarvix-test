@@ -123,7 +123,7 @@ export default {
     color: $theme-color-primary;
 
     &:after {
-      content: 'pin to board';
+      content: '加入钉板';
     }
 
     &.is-loading {
@@ -136,7 +136,7 @@ export default {
       padding-left: 15px;
 
       &:after {
-        content: 'loading...';
+        content: '处理中...';
       }
     }
 
@@ -149,14 +149,14 @@ export default {
       transition: all 0.3s;
 
       &:after {
-        content: 'pinned';
+        content: '已钉板';
       }
 
       &:hover {
         background-color: #67888E;
 
         &:after {
-          content: 'unpin';
+          content: '取消钉板';
         }
 
         // unpin icon 的斜線
