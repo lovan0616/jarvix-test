@@ -58,3 +58,29 @@ textarea {
     outline: none;
   }
 }
+
+// scrollbar 樣式
+::-webkit-scrollbar {
+  width: 10px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #000;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.45);
+}
+
+::-webkit-scrollbar-button {
+  background-color: transparent;
+  color: #000;
+}
+
+::-webkit-scrollbar-track-piece {}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}

@@ -58,11 +58,11 @@
           </div>
         </div>
       </div>
-      <div class="insights-info"
+      <div class="insights-info-text"
         v-for="(commentInfo, index) in info.nComment"
         :key="index"
       >{{ commentInfo }}</div>
-      <div class="insights-info"
+      <div class="insights-info-text"
         v-for="(commentInfo, index) in info.cComment"
         :key="index"
       >{{ commentInfo }}</div>
@@ -84,29 +84,17 @@ export default {
 </script>
 <style lang="scss" scoped>
 .basic-insights.insights-info {
-  margin-bottom: 16px;
-
-  .insights-info-block {
-    padding: 32px 16px 16px;
-  }
-  .insight-table-list {
-    margin-bottom: 16px;
-  }
-
-  .insights-info {
+  .insights-info-text {
     font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.5px;
-    color: $theme-color-primary;
-
-    &:not(:last-child) {
-      margin-bottom: 4px;
-    }
+    color: #eddb45;
+    padding: 12px 15px;
   }
 
   .insight-table-cell {
     &:first-child {
-      width: 7%;
+      width: 9%;
     }
     &:nth-child(2) {
       width: 11.36%;
@@ -118,7 +106,7 @@ export default {
       width: 10.66%;
     }
     &:nth-child(5) {
-      width: 10.66%;
+      width: 8.66%;
     }
     &:nth-child(6) {
       width: 10.66%;

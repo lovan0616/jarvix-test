@@ -1,7 +1,7 @@
 <template>
   <div class="result-page">
     <div class="result-question-select-block">
-      <question-select class="question-select"></question-select>
+      <question-select class="question-select hidden"></question-select>
     </div>
     <result-display></result-display>
   </div>
@@ -23,8 +23,6 @@ export default {
   },
   created () {
     this.getQueryInfo()
-    this.$store.dispatch('bookmark/init')
-    this.$store.dispatch('bookmark/getHistoryQuestionList')
   },
   mounted () {
     // 如果 bookmark 切換時，畫面還原成空狀態
@@ -63,11 +61,9 @@ export default {
   methods: {
     getQueryInfo () {
       let question = this.$route.query.question
-      let bookmarkId = parseInt(this.$route.query.bookmarkId)
 
       if (question) {
         this.$store.commit('bookmark/setAppQuestion', question)
-        this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
       } else {
         this.$router.push('/')
       }
@@ -79,7 +75,6 @@ export default {
 .result-page {
   .result-question-select-block {
     display: flex;
-    margin-bottom: 20px;
   }
   .question-select {
     margin-right: 30px;

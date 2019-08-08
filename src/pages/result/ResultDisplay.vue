@@ -65,8 +65,13 @@ export default {
           if (res.content.changed) {
             this.layout = res.content
           }
-          this.$store.commit('chatBot/updateAnalyzeStatus', false)
-          this.$store.commit('chatBot/addSystemConversation', res.respond)
+
+          this.$nextTick(() => {
+            window.setTimeout(() => {
+              this.$store.commit('chatBot/updateAnalyzeStatus', false)
+              this.$store.commit('chatBot/addSystemConversation', res.respond)
+            }, 2000)
+          })
         }).catch(() => {
           this.isNoResult = true
         })
@@ -75,11 +80,6 @@ export default {
       if (typeof this.askCancelFunction === 'function') {
         this.askCancelFunction('cancel request')
       }
-    },
-    selectQuestion (data) {
-      this.$store.commit('bookmark/setAppQuestion', data.question)
-      this.$store.dispatch('bookmark/changeBookmarkById', data.bookmark_Id)
-      this.$store.dispatch('bookmark/updateResultRouter')
     }
   }
 }

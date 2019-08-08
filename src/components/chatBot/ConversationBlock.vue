@@ -50,7 +50,7 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: auto;
-  height: 58vh;
+  height: 60vh;
   padding-bottom: 30vh;
 
   .system-bot-block {
@@ -74,7 +74,7 @@ export default {
     .system-bot {
       width: 70px;
       height: 70px;
-      margin-bottom: 16px;
+      margin-bottom: 8px;
     }
   }
 }

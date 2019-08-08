@@ -17,13 +17,17 @@ export default {
       intervalFunction: null
     }
   },
+  created () {
+    this.getQueryInfo()
+    this.$store.dispatch('bookmark/init')
+  },
   watch: {
     // 監聽 bookmark 清單是否有 bookmark 正在建置中
     isBookmarkBuilding (value, oldValue) {
       if (value) {
         this.intervalFunction = window.setInterval(() => {
           this.$store.dispatch('bookmark/getBookmarkList')
-        }, 30000)
+        }, 5000)
       }
       // 建置完成
       if (!value && oldValue) {
@@ -37,6 +41,13 @@ export default {
     }
   },
   methods: {
+    getQueryInfo () {
+      let bookmarkId = parseInt(this.$route.query.bookmarkId)
+
+      if (bookmarkId) {
+        this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
+      }
+    }
   },
   computed: {
     isBookmarkBuilding () {

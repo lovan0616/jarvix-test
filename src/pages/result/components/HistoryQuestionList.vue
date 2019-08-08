@@ -88,7 +88,7 @@ export default {
     align-items: center;
     width: 60px;
     height: 60px;
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: $theme-bg-lighter-color;
     box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.12);
     border-radius: 50%;
     margin-bottom: 16px;

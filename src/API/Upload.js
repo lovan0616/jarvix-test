@@ -77,3 +77,26 @@ export function dbConnect (storageId, connectInfo) {
     data: connectInfo
   })
 }
+
+/**
+ * update column setting
+ * 欄位前後有可能有空白，所以先用 encodeURIComponent 處理空白編碼
+ */
+export function updateCSVColumnSetting (storageId, tableId, columnKey, columnInfo) {
+  return request({
+    url: `/storages/${storageId}/CSV/tables/${tableId}/columns/${encodeURIComponent(columnKey)}`,
+    method: 'PUT',
+    data: columnInfo
+  })
+}
+
+/**
+ * set CSV join
+ */
+export function setCSVJoin (storageId, joinInfo) {
+  return request({
+    url: `/storages/${storageId}/CSV/joins`,
+    method: 'POST',
+    data: joinInfo
+  })
+}

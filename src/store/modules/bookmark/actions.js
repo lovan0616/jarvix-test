@@ -16,6 +16,9 @@ export default {
   changeBookmarkById ({ dispatch, commit, state }, bookmarkId) {
     // 更新 Bookmark 資料
     commit('setBookmarkId', bookmarkId)
+    // 清空對話紀錄
+    commit('chatBot/clearConversation', null, {root: true})
+    // router.push('/')
 
     return co(function* () {
       yield dispatch('getSuggestionList')

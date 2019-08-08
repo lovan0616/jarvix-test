@@ -17,6 +17,7 @@
         <textarea name="question" class="question-input"
           rows="1"
           ref="questionInput"
+          placeholder="请输入您的问题"
           @input="textareaResize"
           v-model="userQuestion"
           @keypress.enter="enterQuestion"
@@ -62,6 +63,14 @@ export default {
   computed: {
     isShowChatRoom () {
       return this.$store.state.isShowChatRoom
+    }
+  },
+  watch: {
+    // 判斷關閉時機
+    '$route.name' (value) {
+      if (value === 'PageDataSourceList' || value === 'PagePinboard') {
+        this.$store.commit('updateChatRoomStatus', false)
+      }
     }
   }
 }

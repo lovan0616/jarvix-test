@@ -99,40 +99,37 @@ export default {
   .board-header {
     position: relative;
     padding: 15px 30px;
-
-    &:after {
-      position: absolute;
-      left: 0;
-      bottom: -3px;
-      display: block;
-      content: "";
-      width: 140px;
-      border: 3px solid #8EF5FF;
-    }
   }
   .pin-button {
     display: flex;
     align-items: center;
     position: absolute;
+    top: 24px;
     right: 30px;
-    bottom: 15px;
     height: 30px;
     font-size: 13px;
     line-height: 26px;
     letter-spacing: 0.02em;
     color: $theme-color-primary;
+    background-color: rgba(255, 255, 255, 0.16);
+    padding: 15px 12px;
+    border-radius: 4px;
 
     &:after {
       content: '加入钉板';
     }
 
+    &:hover {
+      background-color: #63cbd5;
+      color: #fff;
+    }
+
     &.is-loading {
       cursor: not-allowed;
-      width: 120px;
+      min-width: 120px;
       background: $theme-color-primary;
       opacity: 0.5;
       color: #fff;
-      border-radius: 30px;
       padding-left: 15px;
 
       &:after {
@@ -141,10 +138,9 @@ export default {
     }
 
     &.is-pinned {
-      width: 100px;
+      min-width: 100px;
       background: #78A5A9;
       color: #fff;
-      border-radius: 30px;
       padding-left: 15px;
       transition: all 0.3s;
 

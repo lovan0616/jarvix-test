@@ -25,6 +25,7 @@ export default {
     this.$store.commit('bookmark/setAppQuestion', '')
   },
   mounted () {
+    this.$store.commit('updateChatRoomStatus', true)
   },
   computed: {
     ...mapGetters('bookmark', ['bookmarkId'])
@@ -37,6 +38,11 @@ export default {
         }
         this.$store.commit('chatBot/addSystemConversation', res.respond)
       })
+    }
+  },
+  watch: {
+    bookmarkId () {
+      this.getLandingInfo()
     }
   }
 }

@@ -38,7 +38,7 @@ export default {
 .bookmark-select-block {
   display: inline-block;
   position: relative;
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: $theme-bg-lighter-color;
   color: #fff;
   border-radius: 4px;
 

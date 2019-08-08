@@ -1,5 +1,5 @@
 //btn variable
-$default-btn-color: rgba(255, 255, 255, 0.16);
+$default-btn-color: $theme-bg-lighter-color;
 
 .btn {
   font-size: 14px;

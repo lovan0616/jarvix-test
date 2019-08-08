@@ -21,12 +21,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .result-board-title {
+  border-left: 2px solid #8ef5ff;
+  padding-left: 16px;
+
   .board-name {
-    font-size: 18px;
-    line-height: 26px;
+    font-size: 20px;
+    line-height: 34px;
     letter-spacing: 0.1em;
     color: $theme-text-color;
-    margin-bottom: 5px;
   }
   .board-period {
     font-size: 14px;

@@ -57,7 +57,9 @@ export default {
           })
             .then(res => {
               localStorage.setItem('token', res.user.token)
-              this.$router.push('/kyc')
+              // 暫時取消 kyc
+              // this.$router.push('/kyc')
+              this.$router.push('/')
             })
         }
       })

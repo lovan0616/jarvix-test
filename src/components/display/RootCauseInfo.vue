@@ -27,7 +27,14 @@
               :key="index +'-'+ contentIndex"
             >
               <div class="insight-table-cell">{{ tableInfo.columnName }}</div>
-              <div class="insight-table-cell">{{ tableInfo.columnValue }}</div>
+              <div class="insight-table-cell">
+                <a class="drill-down-link"
+                  href="javascript:void(0)"
+                  v-if="tableInfo.link"
+                  @click="drillDown(tableInfo.link.question)"
+                >{{ tableInfo.columnValue }}</a>
+                <span v-else>{{ tableInfo.columnValue }}</span>
+              </div>
               <div class="insight-table-cell">{{ tableInfo.count }}</div>
               <div class="insight-table-cell">{{ tableInfo.percent }}</div>
               <div class="insight-table-cell">{{ tableInfo.average }}</div>
@@ -65,6 +72,12 @@ export default {
       this.activeTab = this.info.rootCause[0].name
     }
   },
+  methods: {
+    drillDown (question) {
+      this.$store.commit('bookmark/setAppQuestion', question)
+      this.$store.dispatch('bookmark/updateResultRouter')
+    }
+  },
   computed: {
     // 遇到同名稱的 column 就將其合併
     rootCauseInfoList () {
@@ -88,8 +101,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .insights-info.root-cause {
+  margin-bottom: 48px;
+
   .insights-info-block {
-    padding: 15px 20px;
 
     .insight-info {
       display: flex;
@@ -118,10 +132,10 @@ export default {
 
     .insight-table-cell {
       &:first-child {
-        width: 10.42%;
+        width: 15%;
       }
       &:nth-child(2) {
-        width: 9.48%;
+        width: 15%;
       }
       &:nth-child(3) {
         width: 9.87%;
@@ -140,6 +154,11 @@ export default {
         color: $theme-color-primary;
       }
     }
+
+    .drill-down-link {
+      color: $theme-color-primary;
+      text-decoration: underline;
+    }
   }
 
   .empty-info {
@@ -152,7 +171,7 @@ export default {
 <style lang="scss">
 .insights-info.root-cause {
   .el-tabs__header {
-    margin-bottom: 0;
+    margin-bottom: 8px;
   }
   .el-tabs--card>.el-tabs__header {
     border: none;
@@ -176,6 +195,8 @@ export default {
     border: none;
     transition: border 0.3s;
     color: #ddd;
+    text-transform: uppercase;
+    font-weight: bold;
 
     &:hover, &.is-active {
       color: $theme-text-color;

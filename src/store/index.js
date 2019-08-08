@@ -17,7 +17,7 @@ export default new Vuex.Store({
     chatBot
   },
   state: {
-    isShowChatRoom: true
+    isShowChatRoom: false
   },
   mutations: {
     updateChatRoomStatus (state, data) {

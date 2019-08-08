@@ -12,6 +12,10 @@
         >
           <svg-icon icon-class="file-plus" class="icon"></svg-icon>新增资料表
         </button>
+        <!-- <button class="btn btn-default"
+          :disabled="isProcessing"
+          @click="editJoinTable"
+        >资料表关联</button> -->
         <button class="btn btn-outline"
           v-if="selectList.length > 0"
           :disabled="isProcessing"
@@ -21,6 +25,10 @@
             :icon-class="isProcessing ? 'spinner' : 'delete'"
           ></svg-icon>删除
         </button>
+        <!-- <button class="btn btn-default"
+          @click="buildDataSource"
+          :disabled="isProcessing"
+        >建置资料源</button> -->
       </div>
     </div>
     <data-table
@@ -33,6 +41,7 @@
       @create="createDataSource"
       @rename="confirmRename"
       @delete="confirmDelete"
+      @edit="editTableColumn"
     >
     </data-table>
     <file-upload-dialog
@@ -54,6 +63,15 @@
       @confirm="renameCSV"
       @cancel="cancelRename"
     ></confirm-change-name-dialog>
+    <edit-table-join-relation-dialog
+      v-if="showJoinTableDialog"
+      @cancel="toggleJoinTableDialog"
+    ></edit-table-join-relation-dialog>
+    <edit-column-dialog
+      v-if="showEditColumnDialog"
+      :table-info="currentEditTableInfo"
+      @close="closeEditColumnDialog"
+    ></edit-column-dialog>
   </div>
 </template>
 <script>
@@ -61,6 +79,8 @@ import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
+import EditTableJoinRelationDialog from './components/EditTableJoinRelationDialog'
+import EditColumnDialog from './components/EditColumnDialog'
 import { getBookmarkById, createBookmarkStorage, renameCSV } from '@/API/Bookmark'
 import { deleteCSV, buildStorage } from '@/API/Upload'
 
@@ -70,13 +90,17 @@ export default {
     DataTable,
     FileUploadDialog,
     ConfirmDeleteFileDialog,
-    ConfirmChangeNameDialog
+    ConfirmChangeNameDialog,
+    EditTableJoinRelationDialog,
+    EditColumnDialog
   },
   data () {
     return {
       currentBookmarkId: parseInt(this.$route.params.id),
       showConfirmDeleteDialog: false,
       showConfirmRenameDialog: false,
+      showJoinTableDialog: false,
+      showEditColumnDialog: false,
       deleteId: null,
       renameDataSource: null,
       // 資料處理中
@@ -88,7 +112,7 @@ export default {
       tableHeaders: [
         {
           text: '资料表名称',
-          value: 'filename',
+          value: 'tablename',
           sort: true,
           width: '19.57%'
         },
@@ -111,6 +135,10 @@ export default {
           value: 'action',
           width: '15.13%',
           action: [
+            // {
+            //   name: '编辑栏位',
+            //   value: 'edit'
+            // },
             {
               name: '重新命名',
               value: 'rename'
@@ -120,7 +148,9 @@ export default {
             }
           ]
         }
-      ]
+      ],
+      // 目前正在編輯的資料表
+      currentEditTableInfo: null
     }
   },
   mounted () {
@@ -132,10 +162,10 @@ export default {
   methods: {
     fetchData () {
       return getBookmarkById(this.currentBookmarkId).then(response => {
-        let uploadInfo = response.config.uploads
+        let uploadInfo = response.config.tables
         let newDataList = []
 
-        Object.keys(response.config.uploads).forEach(element => {
+        Object.keys(response.config.tables).forEach(element => {
           uploadInfo[element].id = element
           newDataList.push(uploadInfo[element])
         })
@@ -209,6 +239,39 @@ export default {
     cancelRename () {
       this.renameDataSource = null
       this.showConfirmRenameDialog = false
+    },
+    toggleJoinTableDialog () {
+      this.showJoinTableDialog = !this.showJoinTableDialog
+    },
+    toggleEditColumnDialog () {
+      this.showEditColumnDialog = !this.showEditColumnDialog
+    },
+    editJoinTable () {
+      this.toggleJoinTableDialog()
+    },
+    editTableColumn (dataInfo) {
+      this.currentEditTableInfo = dataInfo
+      this.toggleEditColumnDialog()
+    },
+    closeEditColumnDialog () {
+      this.currentEditTableInfo = []
+      this.toggleEditColumnDialog()
+    },
+    // 建置資料源
+    buildDataSource () {
+      createBookmarkStorage(this.currentBookmarkId, this.currentBookmarkInfo.type)
+        .then(res => {
+          buildStorage(res.storage.id, this.currentBookmarkId)
+            .then(() => {
+              this.fetchData()
+                .then(() => {
+                  this.deleteFinish()
+                })
+            })
+            .catch(() => {
+              this.deleteFinish()
+            })
+        })
     }
   },
   computed: {
