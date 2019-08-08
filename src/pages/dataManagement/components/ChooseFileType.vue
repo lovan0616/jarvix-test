@@ -133,7 +133,7 @@ export default {
 <style lang="scss" scoped>
 .choose-file-type {
   .dialog-body {
-    background: rgba(255, 255, 255, 0.15);
+    background: $theme-bg-lighter-color;
     margin-bottom: 16px;
   }
 

@@ -15,6 +15,7 @@
           <input-block class="login-input-block"
             label="密码"
             name="userPassword"
+            type="password"
             v-model="userInfo.password"
             v-validate="'required'"
           ></input-block>
@@ -56,7 +57,9 @@ export default {
           })
             .then(res => {
               localStorage.setItem('token', res.user.token)
-              this.$router.push('/kyc')
+              // 暫時取消 kyc
+              // this.$router.push('/kyc')
+              this.$router.push('/')
             })
         }
       })

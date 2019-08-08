@@ -32,8 +32,8 @@
   }
 
   .el-select-dropdown__wrap {
-    background-color: rgba(0, 0, 0, 0.75);
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12);
+    background-color: #303435;
+    box-shadow: 0px 4px 12px rgba(73, 128, 132, 0.48);
     border-radius: 4px;
   }
   .el-select-dropdown__item {
@@ -64,5 +64,11 @@
 
   thead {
     color: $theme-text-color;
+  }
+
+  .el-table__fixed {
+    &::before {
+      background-color: transparent;
+    }
   }
 }

@@ -56,6 +56,7 @@ export default {
 
   .wrapper {
     width: 100%;
+    height: calc(100vh - #{$header-height});
     position: absolute;
     top: $header-height;
     right: 0;
@@ -67,9 +68,10 @@ export default {
   }
 
   .main {
-    margin-top: 72px;
+    margin-top: 32px;
     margin-bottom: 64px;
     min-height: calc(100vh - 136px);
+    min-height: calc(100vh - #{$header-height});
   }
 
   .chat-bot-btn {

@@ -68,7 +68,7 @@ export default {
   }
 
   .file-list {
-    background: rgba(255, 255, 255, 0.15);
+    background: $theme-bg-lighter-color;
     border-radius: 4px;
     height: 300px;
     overflow: auto;

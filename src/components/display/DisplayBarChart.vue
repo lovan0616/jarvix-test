@@ -1,6 +1,7 @@
 <template>
   <display-basic-chart
     :dataset="dataset"
+    :title="title"
     :addons="{
       'seriesItem:bar': {
         'large': true
@@ -19,6 +20,15 @@ export default {
   props: {
     dataset: {
       type: Object
+    },
+    title: {
+      type: Object,
+      default: () => {
+        return {
+          xAxis: null,
+          yAxis: null
+        }
+      }
     },
     isPreview: {
       type: Boolean,

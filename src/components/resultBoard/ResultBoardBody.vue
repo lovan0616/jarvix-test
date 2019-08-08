@@ -2,8 +2,8 @@
   <div class="result-board-body">
     <slot name="ResultBoardBodyLeft"></slot>
     <slot name="ResultBoardBodyright"></slot>
-    <slot name="InsightBasicInfo"></slot>
     <slot name="InsightRootCause"></slot>
+    <slot name="InsightBasicInfo"></slot>
   </div>
 </template>
 <script>

@@ -3,7 +3,9 @@
     :class="[{'is-default': isDefault}, content.type === 'System' ? 'system' : 'user']"
   >
     <div class="response">{{ content.text }}</div>
-    <div class="option-list">
+    <div class="option-list"
+      v-show="content.options"
+    >
       <div class="option"
         v-for="(option, index) in content.options"
         :key="index + '-option-' + new Date().getTime()"
@@ -32,7 +34,11 @@ export default {
     }
   },
   mounted () {
-    this.$el.scrollIntoView({behavior: 'smooth', block: 'start'})
+    if (this.content.type === 'System') {
+      this.$el.scrollIntoView({behavior: 'smooth', block: 'center'})
+    } else {
+      this.$el.scrollIntoView({behavior: 'smooth', block: 'start'})
+    }
   },
   methods: {
     askChatBot (value) {
@@ -47,12 +53,16 @@ export default {
   text-align: left;
   line-height: 28px;
   margin-bottom: 32px;
-  width: 240px;
+  max-width: 240px;
 
   &.user {
     text-align: right;
     align-self: flex-end;
     color: #98FFFF;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    padding: 5px 16px;
+    box-shadow: 0 0 1px 1px #679ca0 inset;
   }
 
   &.is-default {
@@ -77,13 +87,13 @@ export default {
   }
 
   .option {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
+    background-color: $theme-bg-lighter-color;
+    border-radius: 5px;
     padding: 5px 16px;
     letter-spacing: 0.05em;
     cursor: pointer;
     font-size: 14px;
-    transition: color 0.3s;
+    transition: background-color 0.3s;
 
     &:hover {
       background-color: rgba(101, 207, 217, 0.45);

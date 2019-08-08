@@ -50,8 +50,8 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: auto;
-  height: 51vh;
-  padding-bottom: 40vh;
+  height: 60vh;
+  padding-bottom: 30vh;
 
   .system-bot-block {
     position: absolute;
@@ -64,10 +64,17 @@ export default {
 
     &.default-position {
       bottom: 150px;
+
+      .system-bot {
+        width: 100px;
+        height: 100px;
+      }
     }
 
     .system-bot {
-      margin-bottom: 32px;
+      width: 70px;
+      height: 70px;
+      margin-bottom: 8px;
     }
   }
 }
