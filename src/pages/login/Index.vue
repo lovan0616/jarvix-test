@@ -85,7 +85,7 @@ export default {
 
     .login-input-block {
       &:not(:last-child) {
-        margin-bottom: 40px;
+        margin-bottom: 52px;
       }
     }
   }

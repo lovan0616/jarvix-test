@@ -172,7 +172,7 @@ export default {
   }
 
   .choose-file {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1;
     letter-spacing: 0.5px;
     color: $theme-color-primary;

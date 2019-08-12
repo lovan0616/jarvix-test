@@ -18,7 +18,6 @@ export default {
     commit('setBookmarkId', bookmarkId)
     // 清空對話紀錄
     commit('chatBot/clearConversation', null, {root: true})
-    // router.push('/')
 
     return co(function* () {
       yield dispatch('getSuggestionList')
