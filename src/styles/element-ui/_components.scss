@@ -13,6 +13,10 @@
   background-color: rgba(0, 0, 0, 0.75);
 }
 
+.el-select-dropdown__list {
+  padding: 0;
+}
+
 .el-select-dropdown, .el-autocomplete-suggestion {
   border: none !important;
 
@@ -34,7 +38,6 @@
   .el-select-dropdown__wrap {
     background-color: #303435;
     box-shadow: 0px 4px 12px rgba(73, 128, 132, 0.48);
-    border-radius: 4px;
   }
   .el-select-dropdown__item {
     color: #A7A7A7;

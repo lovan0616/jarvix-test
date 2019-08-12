@@ -136,7 +136,7 @@ export function xAxisDefault () {
         color: chartVariable['textColor'],
         fontSize: config.axisLabelFontSize
       },
-      rotate: 45,
+      // rotate: 45,
       color: chartVariable['xAxisLabelColor']
     }
   }
@@ -351,13 +351,7 @@ export function yAxisHorizontalBar () {
 export function seriesItemLine () {
   return {
     type: 'line',
-    symbol: 'circle',
-    itemStyle: {
-      color: chartVariable['basicChartColor']
-    },
-    lineStyle: {
-      color: chartVariable['borderColor']
-    }
+    symbol: 'circle'
   }
 }
 
