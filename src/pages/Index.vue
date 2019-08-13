@@ -17,15 +17,12 @@ export default {
       layout: null
     }
   },
-  created () {
-    this.$store.dispatch('bookmark/init').then(() => {
-      this.getLandingInfo()
-    })
-    // 因為 result page 會 keep-alive，所以才會在這邊做清除資料的動作
-    this.$store.commit('bookmark/setAppQuestion', '')
-  },
   mounted () {
     this.$store.commit('updateChatRoomStatus', true)
+    // 變更 bookmark 從其他頁回到首頁的時候，如果是 null 代表如果是直接進首頁的話，會藉由 watch 觸發
+    if (this.bookmarkId !== null) {
+      this.getLandingInfo()
+    }
   },
   computed: {
     ...mapGetters('bookmark', ['bookmarkId'])

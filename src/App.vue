@@ -18,8 +18,7 @@ export default {
     }
   },
   created () {
-    this.getQueryInfo()
-    this.$store.dispatch('bookmark/init')
+    this.setBookmarkInfo()
   },
   watch: {
     // 監聽 bookmark 清單是否有 bookmark 正在建置中
@@ -41,11 +40,13 @@ export default {
     }
   },
   methods: {
-    getQueryInfo () {
+    setBookmarkInfo () {
       let bookmarkId = parseInt(this.$route.query.bookmarkId)
 
       if (bookmarkId) {
         this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
+      } else {
+        this.$store.dispatch('bookmark/init')
       }
     }
   },
