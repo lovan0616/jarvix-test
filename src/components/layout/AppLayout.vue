@@ -14,9 +14,7 @@
       <main class="main">
         <div class="center">
           <transition name="fade" mode="out-in">
-            <keep-alive include="PageResult">
-              <router-view ></router-view>
-            </keep-alive>
+            <router-view ></router-view>
           </transition>
         </div>
       </main>

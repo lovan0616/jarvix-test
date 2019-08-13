@@ -107,13 +107,13 @@ export function gridMini () {
 
 export function xAxisDefault () {
   const config = {
-    nameGap: 24,
+    nameGap: 5,
     fontSize: 14,
     axisLabelFontSize: 10
   }
   return {
     type: 'category',
-    nameLocation: 'middle',
+    nameLocation: 'end',
     nameGap: config.nameGap,
     nameTextStyle: {
       color: chartVariable['textColor']
@@ -136,7 +136,7 @@ export function xAxisDefault () {
         color: chartVariable['textColor'],
         fontSize: config.axisLabelFontSize
       },
-      // rotate: 45,
+      rotate: 45,
       color: chartVariable['xAxisLabelColor']
     }
   }

@@ -30,15 +30,15 @@ export const chartOptions = {
   },
   xAxis: {
     name: '',
-    nameLocation: 'middle',
-    nameGap: 40,
+    nameLocation: 'end',
+    nameGap: 5,
     nameTextStyle: {
       fontWeight: 'bold',
       fontSize: 16,
       color: chartVariable['textColor']
     },
     axisLabel: {
-      // rotate: 45,
+      rotate: 45,
       color: chartVariable['xAxisLabelColor']
     },
     axisLine: {

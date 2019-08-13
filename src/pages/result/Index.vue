@@ -24,12 +24,6 @@ export default {
   created () {
     this.getQueryInfo()
   },
-  activated () {
-    // 從個人釘板回到搜尋結果，如果有記錄先組回原有的 router path
-    if (this.appQuestion && !this.$route.query.question) {
-      this.$store.dispatch('bookmark/updateResultRouter')
-    }
-  },
   // 主要針對瀏覽器上下頁、從 preview 回到 searchbar 的一些處理
   watch: {
     '$route.query.bookmarkId' (value) {
