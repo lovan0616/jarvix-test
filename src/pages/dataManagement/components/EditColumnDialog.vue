@@ -55,7 +55,7 @@
 </template>
 <script>
 import { createBookmarkStorage } from '@/API/Bookmark'
-import { updateCSVColumnSetting } from '@/API/Upload'
+import { updateCSVColumnSetting } from '@/API/Storage'
 import { Message } from 'element-ui'
 
 export default {

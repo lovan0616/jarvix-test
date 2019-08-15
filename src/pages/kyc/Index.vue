@@ -95,6 +95,23 @@ export default {
 .page-kyc {
   .chat-bot-btn {
     margin-bottom: 32px;
+
+    &:after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      content: "";
+      display: block;
+      width: 80px;
+      height: 80px;
+      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.7);
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 50%;
+      z-index: -1;
+    }
   }
   .question-title {
     font-size: 32px;

@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import chartVariable from '@/styles/chart/variables.scss'
 import EchartAddon from './common/addon.js'
 import { graphic } from 'echarts/lib/export'
+import { commonChartOptions } from '@/components/display/common/chart-addon'
 import {
   colorDefault,
   colorOnly2,
@@ -175,32 +175,12 @@ export default {
     options () {
       let config = {
         ...this.addonOptions,
-        tooltip: {
-          confine: true,
-          trigger: 'item',
-          backgroundColor: chartVariable['backgroundColor'],
-          borderColor: chartVariable['borderColor'],
-          padding: 10,
-          textStyle: {
-            color: chartVariable['textColor']
-          },
-          extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);'
-        },
+        ...JSON.parse(JSON.stringify(commonChartOptions)),
         dataset: {
           source: this.dataList
         },
         series: this.series,
-        color: this.colorList,
-        legend: {
-          type: 'scroll',
-          itemWidth: 12,
-          itemHeight: 12,
-          icon: 'circle',
-          itemGap: 20,
-          textStyle: {
-            color: chartVariable['textColor']
-          }
-        }
+        color: this.colorList
       }
       config.xAxis.name = this.title.xAxis
       config.yAxis.name = this.title.yAxis

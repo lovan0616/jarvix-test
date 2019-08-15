@@ -12,10 +12,10 @@
         >
           <svg-icon icon-class="file-plus" class="icon"></svg-icon>新增资料表
         </button>
-        <!-- <button class="btn btn-default"
+        <button class="btn btn-default"
           :disabled="isProcessing"
           @click="editJoinTable"
-        >资料表关联</button> -->
+        >资料表关联</button>
         <button class="btn btn-outline"
           v-if="selectList.length > 0"
           :disabled="isProcessing"
@@ -79,10 +79,10 @@ import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
-import EditTableJoinRelationDialog from './components/EditTableJoinRelationDialog'
+import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
 import { getBookmarkById, createBookmarkStorage, renameCSV } from '@/API/Bookmark'
-import { deleteCSV, buildStorage } from '@/API/Upload'
+import { deleteCSV, buildStorage } from '@/API/Storage'
 
 export default {
   name: 'DataFileList',
@@ -106,13 +106,14 @@ export default {
       // 資料處理中
       isProcessing: false,
       dataList: [],
+      tableList: [],
       // checkbox 所選擇的檔案列表
       selectList: [],
       // 用來生成 data table
       tableHeaders: [
         {
           text: '资料表名称',
-          value: 'tablename',
+          value: 'filename',
           sort: true,
           width: '19.57%'
         },
@@ -135,10 +136,10 @@ export default {
           value: 'action',
           width: '15.13%',
           action: [
-            // {
-            //   name: '编辑栏位',
-            //   value: 'edit'
-            // },
+            {
+              name: '编辑栏位',
+              value: 'edit'
+            },
             {
               name: '重新命名',
               value: 'rename'
@@ -162,14 +163,10 @@ export default {
   methods: {
     fetchData () {
       return getBookmarkById(this.currentBookmarkId).then(response => {
-        let uploadInfo = response.config.tables
-        let newDataList = []
+        this.tableList = response.config.tables
+        let uploadInfo = response.config.uploads
+        this.dataList = this.objectToArray(uploadInfo)
 
-        Object.keys(response.config.tables).forEach(element => {
-          uploadInfo[element].id = element
-          newDataList.push(uploadInfo[element])
-        })
-        this.dataList = newDataList
         this.$store.commit('dataManagement/updateCurrentBookmarkInfo', response)
       })
     },
@@ -250,7 +247,8 @@ export default {
       this.toggleJoinTableDialog()
     },
     editTableColumn (dataInfo) {
-      this.currentEditTableInfo = dataInfo
+      // 利用 id 去 tableList 裡面找對應的 table 資訊
+      this.currentEditTableInfo = this.tableList[dataInfo.id]
       this.toggleEditColumnDialog()
     },
     closeEditColumnDialog () {

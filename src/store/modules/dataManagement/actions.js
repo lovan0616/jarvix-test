@@ -1,4 +1,4 @@
-import { buildStorage } from '@/API/Upload'
+import { buildStorage } from '@/API/Storage'
 
 export default {
   // build storage

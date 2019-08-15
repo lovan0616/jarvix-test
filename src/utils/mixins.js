@@ -96,12 +96,19 @@ Vue.mixin({
     previewChartSetting (config) {
       config.legend.show = false
       config.tooltip.show = false
+      config.toolbox.show = false
       //  X\Y 軸的label
       // config.xAxis.show = false
       // config.yAxis.axisLabel.show = false
       // config.yAxis.name = null
 
       return config
+    },
+    objectToArray (obj) {
+      return Object.keys(obj).map(element => {
+        obj[element].id = element
+        return obj[element]
+      })
     },
     // 參考： https://gist.github.com/joshcanhelp/a3a669df80898d4097a1e2c01dea52c1
     // https://stackoverflow.com/questions/21474678/scrolltop-animation-without-jquery

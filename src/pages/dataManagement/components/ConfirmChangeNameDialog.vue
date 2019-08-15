@@ -9,7 +9,7 @@
       >
     </div>
     <template class="dialog-btn-block" slot="dialogFooter">
-      <button type="button" class="btn btn-secondary"
+      <button type="button" class="btn btn-outline"
         @click="cancel"
       >取消</button>
       <button type="button" class="btn btn-default"

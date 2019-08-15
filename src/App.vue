@@ -17,9 +17,6 @@ export default {
       intervalFunction: null
     }
   },
-  created () {
-    this.setBookmarkInfo()
-  },
   watch: {
     // 監聽 bookmark 清單是否有 bookmark 正在建置中
     isBookmarkBuilding (value, oldValue) {
@@ -36,17 +33,6 @@ export default {
           type: 'success',
           duration: 3 * 1000
         })
-      }
-    }
-  },
-  methods: {
-    setBookmarkInfo () {
-      let bookmarkId = parseInt(this.$route.query.bookmarkId)
-
-      if (bookmarkId) {
-        this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
-      } else {
-        this.$store.dispatch('bookmark/init')
       }
     }
   },

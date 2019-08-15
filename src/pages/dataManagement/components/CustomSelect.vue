@@ -4,17 +4,21 @@
       @click="toggleDropdown"
     >
       <svg-icon :icon-class="icon" class="type-icon"></svg-icon>
-      <div class="selected-option">{{ defaultMsg }}</div>
-      <svg-icon icon-class="dropdown" class="arrow-icon"></svg-icon>
+      <div class="selected-option">{{ value ? selectedOption : defaultMsg }}</div>
+      <svg-icon icon-class="dropdown" class="arrow-icon"
+        :class="{'is-open': isDropdownOpen}"
+      ></svg-icon>
     </div>
     <div class="option-list-block"
       v-show="isDropdownOpen"
       :style="[dropdownPosition, {'max-height': optionListMaxHeight + 'px'}]"
     >
-      <div class="option">欄位XXXX</div>
-      <div class="option">欄位XXXX</div>
-      <div class="option">欄位XXXX</div>
-      <div class="option">欄位XXXX</div>
+      <div class="option"
+        v-for="option in optionList"
+        :key="option.id"
+        @click="chooseOption(option.id)"
+        :class="{active: option.id === value}"
+      >{{ option.name }}</div>
     </div>
   </div>
 </template>
@@ -22,6 +26,9 @@
 export default {
   name: 'CustomSelect',
   props: {
+    value: {
+      type: String
+    },
     icon: {
       type: String
     },
@@ -58,6 +65,8 @@ export default {
       this.adjestPosition()
     },
     chooseOption (value) {
+      this.$emit('input', value)
+      this.toggleDropdown()
     },
     adjestPosition () {
       if (!this.isDropdownOpen) return
@@ -70,6 +79,9 @@ export default {
     }
   },
   computed: {
+    selectedOption () {
+      return this.optionList.find(element => element.id === this.value).name
+    },
     dropdownPosition () {
       if (this.onTop) {
         // 減 1 是為了蓋在 border 上
@@ -116,14 +128,28 @@ export default {
     position: absolute;
     left: 0;
     width: 100%;
-    background-color: $theme-bg-darker-color;
+    background-color: #303435;
     border-radius: 4px;
     z-index: 50;
+    overflow: auto;
 
     .option {
       padding: 8px 16px;
       font-size: 14px;
       line-height: 24px;
+      cursor: pointer;
+
+      &:hover, &.active {
+        background-color: $theme-bg-darker-color;
+      }
+    }
+  }
+
+  .arrow-icon {
+    transition: transform 0.3s;
+
+    &.is-open {
+      transform: rotate(180deg);
     }
   }
 }

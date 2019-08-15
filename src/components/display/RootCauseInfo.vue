@@ -163,7 +163,8 @@ export default {
 
   .empty-info {
     padding: 15px 20px;
-    background-color: #F5FBFB;
+    background-color: $theme-bg-darker-color;
+    color: #fff;
     text-align: center;
   }
 }

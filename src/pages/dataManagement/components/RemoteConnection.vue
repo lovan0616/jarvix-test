@@ -50,7 +50,7 @@
   </div>
 </template>
 <script>
-import { dbConnect, buildStorage } from '@/API/Upload'
+import { dbConnect, buildStorage } from '@/API/Storage'
 import InputBlock from '@/components/InputBlock'
 import UploadProcessBlock from './UploadProcessBlock'
 

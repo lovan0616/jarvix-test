@@ -31,6 +31,7 @@ import 'echarts/lib/chart/custom'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/markLine'
 import 'echarts/lib/component/legend'
+import 'echarts/lib/component/toolbox'
 import 'echarts-stat'
 
 import Layout from './components/Layout.vue'
