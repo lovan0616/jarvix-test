@@ -1,5 +1,5 @@
 //btn variable
-$default-btn-color: $theme-bg-lighter-color;
+$default-btn-color: #1EB8C7;
 
 .btn {
   font-size: 14px;
@@ -19,7 +19,7 @@ $default-btn-color: $theme-bg-lighter-color;
   transition: background-color 0.3s;
 
   &:hover, &:active {
-    background-color: $theme-color-primary;
+    background-color: #4DE2F0;
     color: #444;
   }
 
@@ -45,9 +45,9 @@ $default-btn-color: $theme-bg-lighter-color;
 }
 
 .btn-outline {
-  border: 1px solid $theme-text-color;
+  border: 1px solid $default-btn-color;
   background-color: transparent;
-  color: $theme-text-color;
+  color: $default-btn-color;
   transition: color 0.3s;
 
   &:hover, &:active {

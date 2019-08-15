@@ -139,7 +139,7 @@ export default {
 
     &.is-pinned {
       min-width: 100px;
-      background: #78A5A9;
+      background: #57B4BD;
       color: #fff;
       padding-left: 15px;
       transition: all 0.3s;

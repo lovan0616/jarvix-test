@@ -23,7 +23,7 @@ $checkbox-size: 14px;
     }
 
     input:disabled ~ .checkbox-square:after {
-      background-color: #E0E0E0;
+      background-color: $theme-bg-darker-color;
     }
   }
 
@@ -48,12 +48,12 @@ $checkbox-size: 14px;
   }
  
   input:disabled ~ .checkbox-square {
-    background: #F2F2F2;
-    border-color: #E0E0E0;
+    background: $theme-bg-darker-color;
+    border-color: $theme-bg-darker-color;
     cursor: not-allowed;
 
     &:after {
-      border-color: #E0E0E0;
+      border-color: $theme-bg-darker-color;
     }
   }
 }

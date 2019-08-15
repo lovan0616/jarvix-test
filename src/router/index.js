@@ -5,6 +5,7 @@ import AppLayout from '@/components/layout/Applayout'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',

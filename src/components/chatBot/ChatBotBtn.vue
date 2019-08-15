@@ -11,13 +11,14 @@ export default {
       return this.$store.state.chatBot.isAnalyzing
     },
     filePath () {
-      return this.isAnalyzing ? require('@/assets/images/bot-speak.gif') : require('@/assets/images/bot.gif')
+      return this.isAnalyzing ? require('@/assets/images/bot.gif') : require('@/assets/images/bot.gif')
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .bot-btn {
+  position: relative;
   width: 100px;
   height: 100px;
   margin: 0 auto;

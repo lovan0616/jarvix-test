@@ -1,5 +1,32 @@
 import chartVariable from '@/styles/chart/variables.scss'
-export const chartOptions = {
+// 與 DisplayBasicChart 共用的部分
+export const commonChartOptions = {
+  legend: {
+    show: true,
+    type: 'scroll',
+    width: '80%',
+    top: 0,
+    left: 0,
+    align: 'left',
+    itemWidth: 12,
+    itemHeight: 12,
+    icon: 'circle',
+    itemGap: 20,
+    textStyle: {
+      color: chartVariable['textColor']
+    }
+  },
+  toolbox: {
+    show: true,
+    feature: {
+      dataZoom: {},
+      magicType: {type: ['line', 'bar']},
+      restore: {}
+    },
+    iconStyle: {
+      borderColor: '#fff'
+    }
+  },
   tooltip: {
     show: true,
     trigger: 'axis',
@@ -11,22 +38,14 @@ export const chartOptions = {
       color: chartVariable['textColor']
     },
     extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);'
-  },
+  }
+}
+export const chartOptions = {
+  ...commonChartOptions,
   grid: {
     containLabel: true,
     right: 0,
     left: '5%'
-  },
-  legend: {
-    show: true,
-    type: 'scroll',
-    itemWidth: 12,
-    itemHeight: 12,
-    icon: 'circle',
-    itemGap: 20,
-    textStyle: {
-      color: chartVariable['textColor']
-    }
   },
   xAxis: {
     name: '',

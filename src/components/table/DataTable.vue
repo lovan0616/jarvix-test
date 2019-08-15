@@ -140,7 +140,7 @@ export default {
       default: () => []
     },
     dataList: {
-      type: Array,
+      type: [Array, Object],
       default: () => []
     },
     emptyMessage: {

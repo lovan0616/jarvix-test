@@ -35,9 +35,19 @@ export default {
     ChatRoomBlock,
     ChatBotBtn
   },
+  mounted () {
+    this.setBookmarkInfo()
+  },
   methods: {
     showChatRoom () {
       this.$store.commit('updateChatRoomStatus', true)
+    },
+    setBookmarkInfo () {
+      let bookmarkId = parseInt(this.$route.query.bookmarkId)
+      if (bookmarkId) {
+        this.$store.commit('bookmark/setBookmarkId', bookmarkId)
+      }
+      this.$store.dispatch('bookmark/init')
     }
   },
   computed: {
@@ -78,6 +88,25 @@ export default {
     left: 20px;
     z-index: 999;
     cursor: pointer;
+    width: 80px;
+    height: 80px;
+
+     &:after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      content: "";
+      display: block;
+      width: 70px;
+      height: 70px;
+      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.5);
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      z-index: -1;
+    }
   }
 }
 </style>
