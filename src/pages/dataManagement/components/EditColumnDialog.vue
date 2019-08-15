@@ -54,9 +54,7 @@
   </div>
 </template>
 <script>
-import { createBookmarkStorage } from '@/API/Bookmark'
-import { updateCSVColumnSetting } from '@/API/Storage'
-import { Message } from 'element-ui'
+import { createStorage, buildStorage, updateCSVColumnSetting } from '@/API/Storage'
 
 export default {
   name: 'EditColumnDialog',
@@ -84,13 +82,10 @@ export default {
       storageId: null
     }
   },
-  mounted () {
-    this.getStorageId()
-  },
   methods: {
     getStorageId () {
       // 先去取得 stoarge id
-      createBookmarkStorage(parseInt(this.$route.params.id), this.currentBookmarkInfo.type)
+      return createStorage(parseInt(this.$route.params.id), this.currentBookmarkInfo.type)
         .then(res => {
           this.storageId = res.storage.id
         })
@@ -103,13 +98,12 @@ export default {
       this.tempRowInfo.alias = JSON.parse(JSON.stringify(columnInfo.alias))
     },
     save () {
-      updateCSVColumnSetting(this.storageId, this.tableId, this.currentEditColumn, this.tempRowInfo).then(() => {
-        Message({
-          message: '变更成功，需要重新建置资料源变更才会生效',
-          type: 'success',
-          duration: 3 * 1000
+      this.getStorageId().then(() => {
+        updateCSVColumnSetting(this.storageId, this.tableId, this.currentEditColumn, this.tempRowInfo).then(() => {
+          this.cancel()
+          buildStorage(this.storageId, this.currentBookmarkInfo.id)
+          this.$router.push('/data-management')
         })
-        this.cancel()
       })
     },
     cancel () {

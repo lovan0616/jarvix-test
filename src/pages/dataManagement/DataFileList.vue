@@ -163,9 +163,12 @@ export default {
   methods: {
     fetchData () {
       return getBookmarkById(this.currentBookmarkId).then(response => {
-        this.tableList = response.config.tables
-        let uploadInfo = response.config.uploads
-        this.dataList = this.objectToArray(uploadInfo)
+        this.tableList = this.objectToArray(response.config.tables)
+        this.dataList = this.objectToArray(response.config.uploads)
+
+        if (response.build_status) {
+          this.isProcessing = true
+        }
 
         this.$store.commit('dataManagement/updateCurrentBookmarkInfo', response)
       })
@@ -248,7 +251,7 @@ export default {
     },
     editTableColumn (dataInfo) {
       // 利用 id 去 tableList 裡面找對應的 table 資訊
-      this.currentEditTableInfo = this.tableList[dataInfo.id]
+      this.currentEditTableInfo = this.tableList.find(element => element.id === dataInfo.id)
       this.toggleEditColumnDialog()
     },
     closeEditColumnDialog () {
