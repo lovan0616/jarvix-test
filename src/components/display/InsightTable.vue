@@ -1,6 +1,6 @@
 <template>
   <div class="insights-info basic-insights">
-    <div class="insighs-info-title">基本资料</div>
+    <div class="insights-info-title">基本资料</div>
     <div class="insights-info-block">
       <div class="insight-table-list">
         <div class="insight-table"

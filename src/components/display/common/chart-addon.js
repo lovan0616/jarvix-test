@@ -4,17 +4,16 @@ export const commonChartOptions = {
   legend: {
     show: true,
     type: 'scroll',
-    width: '80%',
     top: 0,
-    left: 0,
-    align: 'left',
     itemWidth: 12,
     itemHeight: 12,
     icon: 'circle',
     itemGap: 20,
     textStyle: {
       color: chartVariable['textColor']
-    }
+    },
+    pageButtonPosition: 'start',
+    pageButtonGap: '130'
   },
   toolbox: {
     show: true,

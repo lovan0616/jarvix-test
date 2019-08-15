@@ -1,6 +1,6 @@
 <template>
   <div class="insights-info root-cause">
-    <div class="insighs-info-title">资料洞察</div>
+    <div class="insights-info-title">资料洞察</div>
     <el-tabs
       v-if="this.info.rootCause.length > 0"
       v-model="activeTab"

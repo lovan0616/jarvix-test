@@ -25,10 +25,6 @@
             :icon-class="isProcessing ? 'spinner' : 'delete'"
           ></svg-icon>删除
         </button>
-        <!-- <button class="btn btn-default"
-          @click="buildDataSource"
-          :disabled="isProcessing"
-        >建置资料源</button> -->
       </div>
     </div>
     <data-table
@@ -201,12 +197,10 @@ export default {
           }
 
           Promise.all(deleteList).then(() => {
-            buildStorage(res.storage.id, this.currentBookmarkId)
+            buildStorage(res.storage.id, this.currentBookmarkId, false)
               .then(() => {
-                this.fetchData()
-                  .then(() => {
-                    this.deleteFinish()
-                  })
+                this.deleteFinish()
+                this.$router.push('/data-management')
               })
               .catch(() => {
                 this.deleteFinish()
@@ -257,22 +251,6 @@ export default {
     closeEditColumnDialog () {
       this.currentEditTableInfo = []
       this.toggleEditColumnDialog()
-    },
-    // 建置資料源
-    buildDataSource () {
-      createBookmarkStorage(this.currentBookmarkId, this.currentBookmarkInfo.type)
-        .then(res => {
-          buildStorage(res.storage.id, this.currentBookmarkId)
-            .then(() => {
-              this.fetchData()
-                .then(() => {
-                  this.deleteFinish()
-                })
-            })
-            .catch(() => {
-              this.deleteFinish()
-            })
-        })
     }
   },
   computed: {

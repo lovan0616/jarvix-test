@@ -101,8 +101,9 @@ export default {
       this.getStorageId().then(() => {
         updateCSVColumnSetting(this.storageId, this.tableId, this.currentEditColumn, this.tempRowInfo).then(() => {
           this.cancel()
-          buildStorage(this.storageId, this.currentBookmarkInfo.id)
-          this.$router.push('/data-management')
+          buildStorage(this.storageId, this.currentBookmarkInfo.id, false).then(() => {
+            this.$router.push('/data-management')
+          })
         })
       })
     },
