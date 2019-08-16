@@ -70,7 +70,7 @@ export default {
   .file-list {
     background: $theme-bg-lighter-color;
     border-radius: 4px;
-    height: 300px;
+    height: 280px;
     overflow: auto;
 
     &.fail {

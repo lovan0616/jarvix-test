@@ -36,7 +36,8 @@ export const commonChartOptions = {
     textStyle: {
       color: chartVariable['textColor']
     },
-    extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);'
+    extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);',
+    confine: true
   }
 }
 export const chartOptions = {

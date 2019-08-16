@@ -107,8 +107,8 @@ export default {
       display: block;
       width: 80px;
       height: 80px;
-      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.7);
-      background-color: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.5);
+      background-color: rgba(0, 0, 0, 0.5);
       border-radius: 50%;
       z-index: -1;
     }

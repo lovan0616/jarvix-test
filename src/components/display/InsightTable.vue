@@ -1,63 +1,81 @@
 <template>
   <div class="insights-info basic-insights">
-    <div class="insights-info-title">基本资料</div>
+    <el-tabs
+      v-model="activeTab"
+    >
+      <el-tab-pane
+        v-for="(singleBasicInfo, index) in basicInfo"
+        :key="index"
+        :label="singleBasicInfo.name"
+        :name="singleBasicInfo.name"
+      >
+        <div class="insight-vertical-table"
+          v-if="singleBasicInfo['sum']"
+        >
+          <div class="insight-table-row">
+            <div class="insight-table-head">总和</div>
+            <div class="insight-table-content">{{ singleBasicInfo.sum }}</div>
+          </div>
+          <div class="insight-table-row">
+            <div class="insight-table-head">总数量</div>
+            <div class="insight-table-content">{{ singleBasicInfo.count }}</div>
+          </div>
+          <div class="insight-table-row">
+            <div class="insight-table-head">最大数值</div>
+            <div class="insight-table-content">{{ singleBasicInfo.max }}</div>
+          </div>
+          <div class="insight-table-row">
+            <div class="insight-table-head">最小数值</div>
+            <div class="insight-table-content">{{ singleBasicInfo.min }}</div>
+          </div>
+          <div class="insight-table-row">
+            <div class="insight-table-head">平均值</div>
+            <div class="insight-table-content">{{ singleBasicInfo.avg }}</div>
+          </div>
+          <div class="insight-table-row">
+            <div class="insight-table-head">标准差</div>
+            <div class="insight-table-content">{{ singleBasicInfo.sd }}</div>
+          </div>
+          <div class="insight-table-row">
+            <div class="insight-table-head">备注</div>
+            <div class="insight-table-content">{{ singleBasicInfo.comment }}</div>
+          </div>
+        </div>
+        <div class="insight-vertical-table"
+          v-else
+        >
+          <div class="insight-table-row">
+            <div class="insight-table-head">总数量</div>
+            <div class="insight-table-content">{{ singleBasicInfo.total }}</div>
+          </div>
+          <div class="insight-table-row">
+            <div class="insight-table-head">最大类别</div>
+            <div class="insight-table-content">{{ singleBasicInfo.max }}</div>
+          </div>
+          <div class="insight-table-row">
+            <div class="insight-table-head">最大类别数量</div>
+            <div class="insight-table-content">{{ singleBasicInfo.max_n }}</div>
+          </div>
+          <div class="insight-table-row">
+            <div class="insight-table-head">最小类别</div>
+            <div class="insight-table-content">{{ singleBasicInfo.min }}</div>
+          </div>
+          <div class="insight-table-row">
+            <div class="insight-table-head">最小类别数量</div>
+            <div class="insight-table-content">{{ singleBasicInfo.min_n }}</div>
+          </div>
+          <div class="insight-table-row">
+            <div class="insight-table-head">数量平均值</div>
+            <div class="insight-table-content">{{ singleBasicInfo.avg }}</div>
+          </div>
+          <div class="insight-table-row">
+            <div class="insight-table-head">数量标准差</div>
+            <div class="insight-table-content">{{ singleBasicInfo.sd }}</div>
+          </div>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
     <div class="insights-info-block">
-      <div class="insight-table-list">
-        <div class="insight-table"
-          v-if="info.nTable.length > 0"
-        >
-          <div class="insight-table-row table-head">
-            <div class="insight-table-cell"></div>
-            <div class="insight-table-cell">总和</div>
-            <div class="insight-table-cell">总数量</div>
-            <div class="insight-table-cell">最大数值</div>
-            <div class="insight-table-cell">最小数值</div>
-            <div class="insight-table-cell">平均值</div>
-            <div class="insight-table-cell">标准差</div>
-            <div class="insight-table-cell">备注</div>
-          </div>
-          <div class="insight-table-row"
-            v-for="(tableInfo, index) in info.nTable"
-            :key="index"
-          >
-            <div class="insight-table-cell">{{ tableInfo.name }}</div>
-            <div class="insight-table-cell">{{ tableInfo.sum }}</div>
-            <div class="insight-table-cell">{{ tableInfo.count }}</div>
-            <div class="insight-table-cell">{{ tableInfo.max }}</div>
-            <div class="insight-table-cell">{{ tableInfo.min }}</div>
-            <div class="insight-table-cell">{{ tableInfo.avg }}</div>
-            <div class="insight-table-cell">{{ tableInfo.sd }}</div>
-            <div class="insight-table-cell">{{ tableInfo.comment }}</div>
-          </div>
-        </div>
-        <div class="insight-table"
-          v-if="info.cTable.length > 0"
-        >
-          <div class="insight-table-row table-head">
-            <div class="insight-table-cell"></div>
-            <div class="insight-table-cell">总数量</div>
-            <div class="insight-table-cell">最大类别</div>
-            <div class="insight-table-cell">最大类别数量</div>
-            <div class="insight-table-cell">最小类别</div>
-            <div class="insight-table-cell">最小类别数量</div>
-            <div class="insight-table-cell">数量平均值</div>
-            <div class="insight-table-cell">数量标准差</div>
-          </div>
-          <div class="insight-table-row"
-            v-for="(tableInfo, index) in info.cTable"
-            :key="index"
-          >
-            <div class="insight-table-cell">{{ tableInfo.name }}</div>
-            <div class="insight-table-cell">{{ tableInfo.total }}</div>
-            <div class="insight-table-cell">{{ tableInfo.max }}</div>
-            <div class="insight-table-cell">{{ tableInfo.max_n }}</div>
-            <div class="insight-table-cell">{{ tableInfo.min }}</div>
-            <div class="insight-table-cell">{{ tableInfo.min_n }}</div>
-            <div class="insight-table-cell">{{ tableInfo.avg }}</div>
-            <div class="insight-table-cell">{{ tableInfo.sd }}</div>
-          </div>
-        </div>
-      </div>
       <div class="insights-info-text"
         v-for="(commentInfo, index) in info.nComment"
         :key="index"
@@ -79,6 +97,16 @@ export default {
         return {}
       }
     }
+  },
+  data () {
+    return {
+      basicInfo: [],
+      activeTab: null
+    }
+  },
+  mounted () {
+    this.basicInfo = this.info.nTable.concat(this.info.cTable)
+    this.activeTab = this.basicInfo[0].name
   }
 }
 </script>
@@ -92,31 +120,27 @@ export default {
     padding: 12px 15px;
   }
 
-  .insight-table-cell {
-    &:first-child {
-      width: 9%;
+  .insight-vertical-table {
+    font-size: 14px;
+    line-height: 26px;
+  }
+
+  .insight-table-row {
+    display: flex;
+    flex-wrap: wrap;
+
+    &:not(:last-child) {
+      margin-bottom: 8px;
     }
-    &:nth-child(2) {
-      width: 11.36%;
-    }
-    &:nth-child(3) {
-      width: 10.66%;
-    }
-    &:nth-child(4) {
-      width: 10.66%;
-    }
-    &:nth-child(5) {
-      width: 8.66%;
-    }
-    &:nth-child(6) {
-      width: 10.66%;
-    }
-    &:nth-child(7) {
-      width: 10.66%;
-    }
-    &:last-child {
-      flex: 1;
-    }
+  }
+
+  .insight-table-head {
+    width: 30%;
+    font-weight: bold;
+  }
+
+  .insight-table-content {
+    flex: 1;
   }
 }
 </style>

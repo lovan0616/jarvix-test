@@ -4,6 +4,9 @@
       <local-file-upload
         v-if="!fileLoaded"
       ></local-file-upload>
+      <!-- <first-time-set-table-join
+        v-else-if="showSetTableJoin"
+      ></first-time-set-table-join> -->
       <local-file-upload-finished
         v-else
       ></local-file-upload-finished>
@@ -13,15 +16,21 @@
 <script>
 import LocalFileUpload from './LocalFileUpload'
 import LocalFileUploadFinished from './LocalFileUploadFinished'
+import FirstTimeSetTableJoin from './tableJoin/FirstTimeSetTableJoin'
+
 export default {
   name: 'LocalFileUploadFlow',
   components: {
     LocalFileUpload,
-    LocalFileUploadFinished
+    LocalFileUploadFinished,
+    FirstTimeSetTableJoin
   },
   computed: {
     fileLoaded () {
       return this.$store.state.dataManagement.fileLoaded
+    },
+    showSetTableJoin () {
+      return this.$store.state.dataManagement.showSetTableJoin
     }
   }
 }

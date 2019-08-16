@@ -1,7 +1,9 @@
 <template>
   <div class="result-board">
     <div class="board-header">
-      <slot name="ResultBoardHeader"></slot>
+      <div class="header-block">
+        <slot name="ResultBoardHeader"></slot>
+      </div>
       <a class="pin-button"
         :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
         href="javascript:void(0)"
@@ -98,16 +100,20 @@ export default {
 
   .board-header {
     position: relative;
-    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    padding: 20px 28px;
+    background-color: rgba(0, 0, 0, 0.35);
   }
+  .header-block {
+    flex: 1;
+  }
+
   .pin-button {
     display: flex;
     align-items: center;
-    position: absolute;
-    top: 24px;
-    right: 30px;
-    height: 30px;
-    font-size: 13px;
+    height: 32px;
+    font-size: 14px;
     line-height: 26px;
     letter-spacing: 0.02em;
     color: $theme-color-primary;

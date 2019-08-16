@@ -4,7 +4,6 @@
     <el-tabs
       v-if="this.info.rootCause.length > 0"
       v-model="activeTab"
-      type="card"
     >
       <el-tab-pane
         v-for="(rootCauseInfo, index) in rootCauseInfoList"
@@ -26,14 +25,14 @@
               <div class="amount-block"
                 :class="{'is-special': tableInfo.unusual}"
               >
-                <div class="count">{{ tableInfo.diffAverageRate + '%' }}</div>
+                <div class="count">{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
                 <div class="hight-light-label"
                   v-show="tableInfo.unusual"
                 >关键洞察</div>
               </div>
             </div>
             <div class="detail-info">
-              <div class="title">整体{{ rootCauseInfo.name }}平均值为{{ tableInfo.totalAverage }}，{{ tableInfo.columnName }}的{{ tableInfo.columnValue }}{{ tableInfo.diffAverageRate > 0 ? '高于' : '低于' }}平均值{{ tableInfo.diffAverageRate + '%' }}</div>
+              <div class="title">整体{{ rootCauseInfo.name }}平均值为{{ tableInfo.totalAverage }}，<span class="column-name">{{ tableInfo.columnName }}的{{ tableInfo.columnValue }}</span>{{ tableInfo.diffAverageRate > 0 ? '高于' : '低于' }}平均值{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
               <div class="info-block">
                 <div class="single-info">
                   <div class="info-label">资料笔数</div>
@@ -111,8 +110,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .insights-info.root-cause {
-  margin-bottom: 48px;
-
   .root-cause-container {
     display: flex;
     flex-wrap: wrap;
@@ -152,9 +149,6 @@ export default {
       padding: 0 24px;
       width: 32%;
 
-      .column-title {
-
-      }
       .sub-title {
         font-size: 14px;
         line-height: 26px;
@@ -181,6 +175,10 @@ export default {
         border-radius: 4px;
         padding: 6px 6px;
       }
+    }
+
+    .column-name {
+      text-decoration: underline;
     }
 
     .detail-info {
@@ -216,46 +214,6 @@ export default {
     background-color: $theme-bg-darker-color;
     color: #fff;
     text-align: center;
-  }
-}
-</style>
-<style lang="scss">
-.insights-info.root-cause {
-  .el-tabs__header {
-    margin-bottom: 8px;
-  }
-  .el-tabs--card>.el-tabs__header {
-    border: none;
-
-    .el-tabs__nav {
-      border: none;
-    }
-  }
-
-  .el-tabs--top.el-tabs--card .el-tabs__item {
-    &:last-child {
-      padding-right: 30px;
-    }
-    &:nth-child(2) {
-      padding-left: 30px;
-    }
-  }
-
-  .el-tabs__item {
-    padding: 0 30px;
-    border: none;
-    transition: border 0.3s;
-    color: #ddd;
-    text-transform: uppercase;
-    font-weight: bold;
-
-    &:hover, &.is-active {
-      color: $theme-text-color;
-    }
-
-    &.is-active {
-      border-bottom: 2px solid $theme-text-color;
-    }
   }
 }
 </style>
