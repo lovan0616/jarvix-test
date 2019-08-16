@@ -25,7 +25,9 @@ export default {
     // 檔案已上傳
     fileLoaded: false,
     // 資料庫連結狀態
-    connectionStatus: null
+    connectionStatus: null,
+    // 設 tabe join
+    showSetTableJoin: false
   },
   actions,
   mutations,

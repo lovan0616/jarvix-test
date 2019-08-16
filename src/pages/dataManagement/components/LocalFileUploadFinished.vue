@@ -27,9 +27,12 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-default"
+        <button class="btn btn-outline"
           @click="buildBookmark"
-        >我知道了</button>
+        >完成</button>
+        <!-- <button class="btn btn-default"
+          @click="toSetJoinTable"
+        >关联资料表</button> -->
       </div>
     </div>
   </div>
@@ -54,6 +57,9 @@ export default {
       // close fileUploadDialog
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
       this.$store.dispatch('bookmark/getBookmarkList')
+    },
+    toSetJoinTable () {
+
     }
   },
   computed: {

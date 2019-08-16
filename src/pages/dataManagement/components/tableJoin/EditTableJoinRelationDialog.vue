@@ -104,8 +104,9 @@ export default {
       }, {})
 
       setCSVJoin(this.storageId, joinInfo).then(() => {
-        buildStorage(this.storageId, this.currentBookmarkInfo.id)
-        this.$router.push('/data-management')
+        buildStorage(this.storageId, this.currentBookmarkInfo.id, false).then(() => {
+          this.$router.push('/data-management')
+        })
       })
     }
   },

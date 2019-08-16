@@ -4,17 +4,16 @@ export const commonChartOptions = {
   legend: {
     show: true,
     type: 'scroll',
-    width: '80%',
     top: 0,
-    left: 0,
-    align: 'left',
     itemWidth: 12,
     itemHeight: 12,
     icon: 'circle',
     itemGap: 20,
     textStyle: {
       color: chartVariable['textColor']
-    }
+    },
+    pageButtonPosition: 'start',
+    pageButtonGap: '130'
   },
   toolbox: {
     show: true,
@@ -37,7 +36,8 @@ export const commonChartOptions = {
     textStyle: {
       color: chartVariable['textColor']
     },
-    extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);'
+    extraCssText: 'box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);',
+    confine: true
   }
 }
 export const chartOptions = {

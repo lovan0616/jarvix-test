@@ -6,7 +6,7 @@
   >
     <div class="content" slot="dialogBody">
       <div class="main-content">您确认要删除以下 {{ fileList.length }} 个资料表吗？</div>
-      <div class="sub-content">删除过程会进行资料处理，花费时间约 10-15 分钟，在此期间您依然可以浏览所有资料源内容，但无法进行新增、删除资料...等任何资料管理的操作。</div>
+      <div class="sub-content">删除过程会进行资料处理，在此期间您依然可以浏览所有资料源内容，但无法进行新增、删除资料...等任何资料管理的操作。</div>
       <div class="file-list">
         <div class="single-file"
           v-for="file in fileList"
@@ -56,7 +56,7 @@ export default {
 <style lang="scss" scoped>
 .confirm-delete-file-dialog {
   .content {
-    color: #444;
+    color: $theme-text-color;
     line-height: 28px;
   }
   .main-content {

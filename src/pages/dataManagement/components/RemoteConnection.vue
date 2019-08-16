@@ -151,7 +151,7 @@ export default {
       margin-bottom: 48px;
     }
     .loading-text {
-      color: #444;
+      color: $theme-text-color;
     }
   }
 }
