@@ -129,7 +129,7 @@ export default {
          */
         this.dataList = this.bookmarkList.map(dataInfo => {
           // 注意！這邊只會做資料表數計算，時間的顯示在 DataTable 處理，主要是為了時間排序的準確
-          dataInfo.count = dataInfo.config ? Object.keys(dataInfo.config.uploads).length : 0
+          dataInfo.count = dataInfo.edit_config ? Object.keys(dataInfo.edit_config.uploads).length : 0
           return dataInfo
         })
       },

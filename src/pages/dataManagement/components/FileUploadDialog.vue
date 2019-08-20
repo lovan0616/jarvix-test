@@ -35,6 +35,7 @@ export default {
     this.$store.commit('dataManagement/updateConnectionStatus', null)
     this.$store.commit('dataManagement/clearCurrentUploadInfo')
     this.$store.commit('dataManagement/clearConnectionInfo')
+    this.$store.commit('dataManagement/updateShowSetTableJoin', false)
   },
   methods: {
   },

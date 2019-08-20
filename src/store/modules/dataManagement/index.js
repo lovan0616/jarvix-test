@@ -27,7 +27,9 @@ export default {
     // 資料庫連結狀態
     connectionStatus: null,
     // 設 tabe join
-    showSetTableJoin: false
+    showSetTableJoin: false,
+    // 為了讓資料清單頁面可以重新刷新資料
+    fileUploadSuccess: false
   },
   actions,
   mutations,

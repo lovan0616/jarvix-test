@@ -54,7 +54,7 @@
   </div>
 </template>
 <script>
-import { createStorage, buildStorage, updateCSVColumnSetting } from '@/API/Storage'
+import { getBookmarkStorage, buildStorage, updateCSVColumnSetting } from '@/API/Storage'
 
 export default {
   name: 'EditColumnDialog',
@@ -85,7 +85,7 @@ export default {
   methods: {
     getStorageId () {
       // 先去取得 stoarge id
-      return createStorage(parseInt(this.$route.params.id), this.currentBookmarkInfo.type)
+      return getBookmarkStorage(parseInt(this.$route.params.id), this.currentBookmarkInfo.type)
         .then(res => {
           this.storageId = res.storage.id
         })

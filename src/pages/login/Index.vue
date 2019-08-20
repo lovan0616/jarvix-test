@@ -27,6 +27,7 @@
 </template>
 <script>
 import { login } from '@/API/User'
+import { answerKYC } from '@/API/KYC'
 import InputBlock from '@/components/InputBlock'
 import PageLayout from '@/components/layout/PageLayout'
 export default {
@@ -57,9 +58,14 @@ export default {
           })
             .then(res => {
               localStorage.setItem('token', res.user.token)
-              // 暫時取消 kyc
-              // this.$router.push('/kyc')
-              this.$router.push('/')
+              // 確認 kyc 是否已回答完成
+              answerKYC().then(response => {
+                if (response) {
+                  this.$router.push('/kyc')
+                } else {
+                  this.$router.push('/')
+                }
+              })
             })
         }
       })

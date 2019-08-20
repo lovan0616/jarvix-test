@@ -1,5 +1,10 @@
 <template>
   <div class="data-management">
+    <div class="status-block"
+      v-show="isProcessing"
+    >
+      <svg-icon icon-class="spinner" class="spinner-icon"></svg-icon>资料处理中
+    </div>
     <div class="page-title-row">
       <h1 class="title">
         <router-link to="/data-management" class="title-link">资料源</router-link>
@@ -13,6 +18,7 @@
           <svg-icon icon-class="file-plus" class="icon"></svg-icon>新增资料表
         </button>
         <button class="btn btn-default"
+          v-if="dataList.length > 1"
           :disabled="isProcessing"
           @click="editJoinTable"
         >资料表关联</button>
@@ -147,24 +153,59 @@ export default {
         }
       ],
       // 目前正在編輯的資料表
-      currentEditTableInfo: null
+      currentEditTableInfo: null,
+      intervalFunction: null
     }
   },
   mounted () {
     this.fetchData()
   },
+  beforeDestroy () {
+    if (this.intervalFunction) {
+      window.clearInterval(this.intervalFunction)
+    }
+  },
   destroyed () {
     this.$store.commit('dataManagement/updateCurrentBookmarkInfo', null)
+  },
+  watch: {
+    isBookmarkBuilding (value, oldValue) {
+      if (!value && oldValue) {
+        this.fetchData()
+        this.isProcessing = false
+      } else if (value) {
+        this.isProcessing = true
+      }
+    },
+    fileUploadSuccess (value) {
+      if (value) {
+        this.fetchData()
+        this.$store.commit('dataManagement/updateFileUploadSuccess', false)
+      }
+    },
+    isProcessing (value) {
+      if (value) {
+        this.intervalFunction = window.setInterval(() => {
+          this.fetchData()
+        }, 5000)
+      }
+      // 建置完成
+      if (!value) {
+        window.clearInterval(this.intervalFunction)
+      }
+    }
   },
   methods: {
     fetchData () {
       return getBookmarkById(this.currentBookmarkId).then(response => {
-        this.tableList = this.objectToArray(response.config.tables)
-        this.dataList = this.objectToArray(response.config.uploads)
+        this.tableList = this.objectToArray(response.edit_config.tables)
+        // 檔案名稱在 config 裡面
+        this.dataList = this.objectToArray(response.edit_config.uploads).map(element => {
+          element.filename = response.config.uploads[element.id] ? response.config.uploads[element.id].filename : element.filename
+          return element
+        })
 
-        if (response.build_status) {
-          this.isProcessing = true
-        }
+        this.isProcessing = response.build_status
 
         this.$store.commit('dataManagement/updateCurrentBookmarkInfo', response)
       })
@@ -259,18 +300,44 @@ export default {
     },
     currentBookmarkInfo () {
       return this.$store.state.dataManagement.currentBookmarkInfo
+    },
+    isBookmarkBuilding () {
+      return this.$store.getters['bookmark/isBookmarkBuilding']
+    },
+    fileUploadSuccess () {
+      return this.$store.state.dataManagement.fileUploadSuccess
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .data-management {
+  position: relative;
+
   .title-link {
     color: $theme-color-primary;
   }
   .divider {
     margin: 0 4px;
     color: #979797;
+  }
+
+  .status-block {
+    width: 140px;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    left: 0;
+    margin: auto;
+    padding: 6px 0;
+    border-radius: 8px;
+    background-color: $theme-bg-darker-color;
+    box-shadow:  0px 4px 24px rgba(26, 56, 62, 0.5);
+    text-align: center;
+
+    .spinner-icon {
+      margin-right: 8px;
+    }
   }
 }
 </style>

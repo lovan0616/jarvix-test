@@ -3,7 +3,7 @@ import request from '@/utils/request'
 /**
  * get storage
  */
-export function createStorage (bookmarkId, type) {
+export function getBookmarkStorage (bookmarkId, type) {
   return request({
     url: `/bookmarks/${bookmarkId}/edit`,
     method: 'POST',

@@ -43,5 +43,11 @@ export default {
     state.connectionInfo.database = null
     state.connectionInfo.username = null
     state.connectionInfo.password = null
+  },
+  updateShowSetTableJoin (state, data) {
+    state.showSetTableJoin = data
+  },
+  updateFileUploadSuccess (state, data) {
+    state.fileUploadSuccess = data
   }
 }

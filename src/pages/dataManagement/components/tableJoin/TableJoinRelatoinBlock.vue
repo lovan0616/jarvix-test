@@ -91,6 +91,14 @@ export default {
       }).columns
       return this.objectToArray(columnObject)
     }
+  },
+  watch: {
+    'relationInfo.left_tbl' () {
+      this.relationInfo.foreign_keys[0].left_column = null
+    },
+    'relationInfo.right_tbl' () {
+      this.relationInfo.foreign_keys[0].right_column = null
+    }
   }
 }
 </script>

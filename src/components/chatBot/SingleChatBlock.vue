@@ -2,7 +2,9 @@
   <div class="conversation-block"
     :class="[{'is-default': isDefault}, content.type === 'System' ? 'system' : 'user']"
   >
-    <div class="response">{{ content.text }}</div>
+    <div class="response"
+      @click="askAgain(content.text)"
+    >{{ content.text }}</div>
     <div class="option-list"
       v-show="content.options"
     >
@@ -41,6 +43,12 @@ export default {
     }
   },
   methods: {
+    // 點擊使用者問的問題
+    askAgain (value) {
+      if (this.content.type === 'System') return false
+      this.$store.commit('bookmark/setAppQuestion', value)
+      this.$store.dispatch('bookmark/updateResultRouter')
+    },
     askChatBot (value) {
       this.$store.commit('bookmark/setAppQuestion', value)
       this.$store.dispatch('bookmark/updateResultRouter')
@@ -63,6 +71,10 @@ export default {
     border-radius: 5px;
     padding: 5px 16px;
     box-shadow: 0 0 1px 1px #679ca0 inset;
+
+    .response {
+      cursor: pointer;
+    }
   }
 
   &.is-default {
