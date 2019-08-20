@@ -47,7 +47,7 @@ export default {
       name: 'PageResult',
       query: {
         question: data || getters.appQuestion,
-        '_': new Date().getTime(),
+        stamp: new Date().getTime(),
         bookmarkId: getters.bookmarkId
       }
     })

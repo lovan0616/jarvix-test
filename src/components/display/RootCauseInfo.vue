@@ -143,6 +143,14 @@ export default {
     width: 48%;
     cursor: pointer;
 
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
     .abstract-info {
       text-align: center;
       border-right: 1px solid  #2E2E2E;

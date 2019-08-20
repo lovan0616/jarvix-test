@@ -76,8 +76,8 @@ export default {
   }
 
   .main {
-    margin-top: 32px;
-    margin-bottom: 64px;
+    padding-top: 32px;
+    padding-bottom: 64px;
     min-height: calc(100vh - 136px);
     min-height: calc(100vh - #{$header-height});
   }

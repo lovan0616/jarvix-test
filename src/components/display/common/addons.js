@@ -2,9 +2,9 @@
 import chartVariable from '@/styles/chart/variables.scss'
 
 export const colorDefault = [chartVariable['darkestChartColor'], chartVariable['darkerChartColor'], chartVariable['basicChartColor'], chartVariable['lighterChartColor'], chartVariable['lightestChartColor']]
-export const colorOnly1 = [chartVariable['basicChartColor']]
-export const colorOnly2 = [chartVariable['darkestChartColor'], chartVariable['basicChartColor']]
-export const color3 = [chartVariable['darkestChartColor'], chartVariable['darkerChartColor'], chartVariable['basicChartColor']]
+export const colorOnly1 = [chartVariable['lightestChartColor']]
+export const colorOnly2 = [chartVariable['lightestChartColor'], chartVariable['chartCoupleColor']]
+export const color3 = [chartVariable['darkestChartColor'], chartVariable['basicChartColor'], chartVariable['lightestChartColor']]
 export const color10 = [
   chartVariable['chartColorList-1'],
   chartVariable['chartColorList-2'],
