@@ -5,14 +5,6 @@
       <button type="button" class="btn btn-default"
         @click="addNewRelations"
       >新增关联</button>
-      <div class="control-button-block">
-        <button type="button" class="btn btn-outline"
-          @click="closeDialog"
-        >取消</button>
-        <button type="button" class="btn btn-default"
-          @click="saveRelations"
-        >储存</button>
-      </div>
     </div>
     <div class="empty-info-block"
       v-if="joinRelations.length === 0"
@@ -25,11 +17,21 @@
       :table-list="tableList"
       @deleteRelations="deleteRelations"
     ></table-join-relatoin-block>
+    <div class="dialog-footer">
+      <div class="dialog-button-block">
+        <button type="button" class="btn btn-outline"
+          @click="buildBookmarkStorage"
+        >略过</button>
+        <button type="button" class="btn btn-default"
+          @click="saveRelations"
+        >储存</button>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import TableJoinRelatoinBlock from './TableJoinRelatoinBlock'
-import { buildStorage, setCSVJoin } from '@/API/Storage'
+import { getBookmarkStorage, buildStorage, setCSVJoin } from '@/API/Storage'
 
 export default {
   name: 'FirstTimeSetTableJoin',
@@ -60,30 +62,21 @@ export default {
     }
   },
   mounted () {
-    this.fetchData()
     this.getStorageId()
   },
   methods: {
     getStorageId () {
       let storageType = this.getStorageType(this.currentUploadInfo.type)
-      createStorage(this.currentUploadInfo.bookmarkId, storageType).then(response => {
+      getBookmarkStorage(this.currentUploadInfo.bookmarkId, storageType).then(response => {
         this.storageId = response.storage.id
-      })
-    },
-    fetchData () {
-      getBookmarkById(this.currentUploadInfo.bookmarkId).then(response => {
-        // 目前的 join 關係，將 object 轉為 Array
-        this.joinRelations = this.objectToArray(response.config.joins)
+        let storageTablesConfig = response.storage.config.tables
         // 目前的 table 清單，將 object 轉為 Array，同時補足 select 需要的 key
-        this.tableList = Object.keys(response.config.tables).map(element => {
-          response.config.tables[element].id = element
-          response.config.tables[element].name = response.config.tables[element].tablename
-          return response.config.tables[element]
+        this.tableList = Object.keys(storageTablesConfig).map(element => {
+          storageTablesConfig[element].id = element
+          storageTablesConfig[element].name = storageTablesConfig[element].tablename
+          return storageTablesConfig[element]
         })
       })
-    },
-    closeDialog () {
-      
     },
     // 新增關聯性
     addNewRelations () {
@@ -101,9 +94,17 @@ export default {
       }, {})
 
       setCSVJoin(this.storageId, joinInfo).then(() => {
-        buildStorage(this.storageId, this.currentBookmarkInfo.id, false).then(() => {
-          this.$router.push('/data-management')
-        })
+        this.buildBookmarkStorage()
+      })
+    },
+    buildBookmarkStorage () {
+      buildStorage(this.storageId, this.currentUploadInfo.bookmarkId, false).then(() => {
+        this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+        if (this.$route.name === 'PageDataSourceList') {
+          this.$store.dispatch('bookmark/getBookmarkList')
+        } else {
+          this.$store.commit('dataManagement/updateFileUploadSuccess', true)
+        }
       })
     }
   },
@@ -114,3 +115,18 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.set-table-join {
+  .button-block {
+    margin-bottom: 32px;
+  }
+
+  .empty-info-block {
+    padding: 24px 0;
+    border-radius: 4px;
+    background-color: $theme-bg-lighter-color;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+}
+</style>

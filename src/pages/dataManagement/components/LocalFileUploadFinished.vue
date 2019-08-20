@@ -30,9 +30,9 @@
         <button class="btn btn-outline"
           @click="buildBookmark"
         >完成</button>
-        <!-- <button class="btn btn-default"
+        <button class="btn btn-default"
           @click="toSetJoinTable"
-        >关联资料表</button> -->
+        >关联资料表</button>
       </div>
     </div>
   </div>
@@ -54,12 +54,19 @@ export default {
   },
   methods: {
     buildBookmark () {
-      // close fileUploadDialog
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-      this.$store.dispatch('bookmark/getBookmarkList')
+      this.$store.dispatch('dataManagement/buildStorage', false)
+        .then(response => {
+          if (this.$route.name === 'PageDataSourceList') {
+            this.$store.dispatch('bookmark/getBookmarkList')
+          } else {
+            this.$store.commit('dataManagement/updateFileUploadSuccess', true)
+          }
+          // close fileUploadDialog
+          this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+        })
     },
     toSetJoinTable () {
-
+      this.$store.commit('dataManagement/updateShowSetTableJoin', true)
     }
   },
   computed: {

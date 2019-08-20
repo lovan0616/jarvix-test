@@ -19,7 +19,7 @@ export const commonChartOptions = {
     show: true,
     feature: {
       dataZoom: {},
-      magicType: {type: ['line', 'bar']},
+      magicType: {},
       restore: {}
     },
     iconStyle: {

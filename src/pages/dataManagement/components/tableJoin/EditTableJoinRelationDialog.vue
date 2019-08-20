@@ -31,8 +31,7 @@
 </template>
 <script>
 import TableJoinRelatoinBlock from './TableJoinRelatoinBlock'
-import { getBookmarkById } from '@/API/Bookmark'
-import { createStorage, buildStorage, setCSVJoin } from '@/API/Storage'
+import { getBookmarkStorage, buildStorage, setCSVJoin } from '@/API/Storage'
 
 export default {
   name: 'EditTableJoinRelationDialog',
@@ -63,25 +62,22 @@ export default {
     }
   },
   mounted () {
-    this.fetchData()
     this.getStorageId()
   },
   methods: {
     getStorageId () {
       let storageType = this.getStorageType(this.currentBookmarkInfo.type)
-      createStorage(this.currentBookmarkInfo.id, storageType).then(response => {
+      getBookmarkStorage(this.currentBookmarkInfo.id, storageType).then(response => {
         this.storageId = response.storage.id
-      })
-    },
-    fetchData () {
-      getBookmarkById(this.currentBookmarkId).then(response => {
+
+        let storageConfig = response.storage.config
         // 目前的 join 關係，將 object 轉為 Array
-        this.joinRelations = this.objectToArray(response.config.joins)
+        this.joinRelations = this.objectToArray(storageConfig.joins)
         // 目前的 table 清單，將 object 轉為 Array，同時補足 select 需要的 key
-        this.tableList = Object.keys(response.config.tables).map(element => {
-          response.config.tables[element].id = element
-          response.config.tables[element].name = response.config.tables[element].tablename
-          return response.config.tables[element]
+        this.tableList = Object.keys(storageConfig.tables).map(element => {
+          storageConfig.tables[element].id = element
+          storageConfig.tables[element].name = storageConfig.tables[element].tablename
+          return storageConfig.tables[element]
         })
       })
     },

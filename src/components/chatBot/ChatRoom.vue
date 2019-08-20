@@ -14,13 +14,14 @@
     <conversation-block></conversation-block>
     <div class="user-input-block">
       <div class="user-question-block">
+        <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
         <textarea name="question" class="question-input"
           rows="1"
           ref="questionInput"
           placeholder="请输入您的问题"
           @input="textareaResize"
           v-model="userQuestion"
-          @keypress.enter="enterQuestion"
+          @keypress.enter.prevent="enterQuestion"
         ></textarea>
         <img src="@/assets/images/input.svg" class="question-input-img" alt="">
       </div>

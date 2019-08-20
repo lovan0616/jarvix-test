@@ -81,7 +81,7 @@ export default {
       if (this.currntUploadStatus !== uploadStatus.uploading) return
       // 所有的檔案都已經上傳完畢
       if (value.findIndex(element => { return element === uploadStatus.wait || element === uploadStatus.uploading }) === -1) {
-        this.buildBookmark()
+        this.$store.commit('dataManagement/updateFileLoaded', true)
       }
     }
   },
@@ -116,15 +116,6 @@ export default {
       })
       this.$store.commit('dataManagement/updateUploadFileList', fileList)
       this.currntUploadStatus = uploadStatus.uploading
-    },
-    buildBookmark () {
-      this.$store.dispatch('dataManagement/buildStorage', false)
-        .then(response => {
-          this.$store.commit('dataManagement/updateFileLoaded', true)
-        })
-        .catch(() => {
-          this.cancelFileUpload()
-        })
     },
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)

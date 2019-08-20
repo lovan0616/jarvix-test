@@ -4,14 +4,15 @@
       <ChatBotBtn class="chat-bot-btn" />
       <transition name="fade" mode="out-in">
         <div class="question-block"
-          v-for="(question, index) in questionList"
+          v-if="currentQuestion === index + 1"
+          v-for="(singleQuestion, index) in questionList"
           :key="index"
-          v-if="index + 1 === currentQuestion"
         >
-          <div class="question-title">{{ question.text }}</div>
+          <div class="question-title">{{ singleQuestion.question }}</div>
           <div class="kyc-select-block">
             <sy-select class="kyc-select"
-              :items="question.options"
+              :items="singleQuestion.option"
+              :selected="response"
               placeholder="请选择"
               @update:selected="onOptionChange"
             >
@@ -27,6 +28,7 @@
 import PageLayout from '@/components/layout/PageLayout'
 import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
 import SySelect from '@/components/select/SySelect'
+import { answerKYC, cleanKYC } from '@/API/KYC'
 
 export default {
   name: 'PageKYC',
@@ -37,56 +39,44 @@ export default {
   },
   data () {
     return {
-      currentQuestion: 1,
-      questionList: [
-        {
-          text: '请选择您的职务类别',
-          options: [
-            {
-              name: '管理阶层',
-              id: 'manager'
-            },
-            {
-              name: '一般员工',
-              id: 'employee'
-            }
-          ]
-        },
-        {
-          text: '请选择您感兴趣的主题',
-          options: [
-            {
-              name: '销售',
-              id: 'business'
-            },
-            {
-              name: '运营',
-              id: 'operation'
-            },
-            {
-              name: '生产',
-              id: 'production'
-            }
-          ]
-        }
-      ],
-      responseList: []
+      questionList: [],
+      currentQuestion: 0,
+      response: null
     }
+  },
+  mounted () {
+    cleanKYC()
+    this.responseData()
   },
   methods: {
-    onOptionChange (value) {
-      this.responseList.push(value)
-
-      window.setTimeout(() => {
-        this.currentQuestion += 1
-      }, 500)
-    }
-  },
-  watch: {
-    currentQuestion (value) {
-      if (value > this.questionList.length) {
-        this.$router.push('/')
+    responseData (question, answers) {
+      let promise
+      if (question && answers) {
+        promise = answerKYC({question, answers})
+      } else {
+        promise = answerKYC()
       }
+      promise.then(response => {
+        if (response) {
+          response.option = response.option.map(item => {
+            return {
+              name: item,
+              id: item
+            }
+          })
+          this.questionList.push(response)
+          window.setTimeout(() => {
+            this.currentQuestion += 1
+            this.response = null
+          }, 500)
+        } else {
+          this.$router.push('/')
+        }
+      })
+    },
+    onOptionChange (value) {
+      this.response = value
+      this.responseData(this.questionList[this.currentQuestion - 1].question, value)
     }
   }
 }

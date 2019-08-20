@@ -4,9 +4,9 @@
       <local-file-upload
         v-if="!fileLoaded"
       ></local-file-upload>
-      <!-- <first-time-set-table-join
+      <first-time-set-table-join
         v-else-if="showSetTableJoin"
-      ></first-time-set-table-join> -->
+      ></first-time-set-table-join>
       <local-file-upload-finished
         v-else
       ></local-file-upload-finished>
