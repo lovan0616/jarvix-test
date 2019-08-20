@@ -1,12 +1,11 @@
 <template>
-  <div class="result-layout"
-    v-if="showLayout"
-  >
+  <div class="result-layout">
     <empty-result
       v-if="isNoResult"
     ></empty-result>
     <layout
       v-else
+      :key="timeStamp"
       v-bind="layout"
     ></layout>
   </div>
@@ -21,10 +20,10 @@ export default {
   name: 'ResultDisplay',
   data () {
     return {
-      layout: undefined,
-      showLayout: false,
+      layout: null,
       isNoResult: false,
-      askCancelFunction: null
+      askCancelFunction: null,
+      timeStamp: this.$route.query.stamp
     }
   },
   watch: {
@@ -52,7 +51,6 @@ export default {
     },
     fetchApiAsk (data) {
       this.isNoResult = false
-      this.showLayout = true
       this.$store.commit('chatBot/addUserConversation', data.question)
       this.$store.commit('chatBot/updateAnalyzeStatus', true)
 
@@ -62,10 +60,10 @@ export default {
         _this.askCancelFunction = c
       }))
         .then(res => {
+          this.timeStamp = this.$route.query.stamp
           if (res.content.changed) {
             this.layout = res.content
           }
-
           this.$nextTick(() => {
             window.setTimeout(() => {
               this.$store.commit('chatBot/updateAnalyzeStatus', false)

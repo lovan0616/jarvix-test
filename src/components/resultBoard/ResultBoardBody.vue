@@ -19,6 +19,10 @@
       </div>
     </div>
     <slot name="InsightRootCause"></slot>
+    <slot name="CorrelationAnalysis"></slot>
+    <div class="related-question-list">
+      <slot name="RelatedQuestions"></slot>
+    </div>
   </div>
 </template>
 <script>
@@ -107,6 +111,18 @@ export default {
       right: 0;
       padding: 7px 15px;
     }
+  }
+  .related-question-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+</style>
+<style lang="scss">
+.related-question-list {
+  .result-board {
+    width: 31.33%;
   }
 }
 </style>

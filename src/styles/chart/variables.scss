@@ -13,23 +13,26 @@
   maxValueColor: #6DCDCF;
   averageBarColor: #E0E0E0;
   averageLineColor: #006464;
-  
+
+  // chart fill color (2 color)
+  chartCoupleColor: #498BF5;
+
   // chart fill color ( 3 - 5 group)
-  basicChartColor: #6DCDCF;
-  lighterChartColor: #49E6DE;
-  lightestChartColor: #51FCE8;
-  darkerChartColor: #558FA1;
-  darkestChartColor: #3F5669;
+  darkestChartColor: #6245FF;
+  darkerChartColor: #4F7BF7;
+  basicChartColor: #4A9FF4;
+  lighterChartColor: #4BCBF1;
+  lightestChartColor: #78F5F7;
 
   // chart color list (more than 5 group)
-  chartColorList-1: #334457;
-  chartColorList-2: #39566B;
-  chartColorList-3: #3E697E;
-  chartColorList-4: #407C91;
-  chartColorList-5: #4290A3;
-  chartColorList-6: #42A5B3;
-  chartColorList-7: #43BAC3;
-  chartColorList-8: #44D0D1;
-  chartColorList-9: #49E6DE;
-  chartColorList-10: #51FCE8;
+  chartColorList-1: #6245FF;
+  chartColorList-2: #5568FA;
+  chartColorList-3: #4F7BF7;
+  chartColorList-4: #498BF5;
+  chartColorList-5: #4A9FF4;
+  chartColorList-6: #4AB4F3;
+  chartColorList-7: #4BCBF1;
+  chartColorList-8: #4CE2F0;
+  chartColorList-9: #78F5F7;
+  chartColorList-10: #95FAF2;
 }
