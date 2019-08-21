@@ -17,6 +17,7 @@ export const commonChartOptions = {
   },
   toolbox: {
     show: true,
+    orient: 'vertical',
     feature: {
       dataZoom: {},
       magicType: {},
