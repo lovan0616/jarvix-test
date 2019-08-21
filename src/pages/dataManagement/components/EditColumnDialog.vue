@@ -13,6 +13,7 @@
               <div class="data-table-cell name">栏位名称</div>
               <div class="data-table-cell alias">别名</div>
               <div class="data-table-cell tag">标签</div>
+              <div class="data-table-cell domain">领域</div>
               <div class="data-table-cell action">操作</div>
             </div>
           </div>
@@ -32,6 +33,15 @@
                 >
               </div>
               <div class="data-table-cell tag">{{ column.tag }}</div>
+              <div class="data-table-cell domain">
+                <span
+                  v-if="currentEditColumn !== column.name"
+                >{{ column.domain ? column.domain : '-' }}</span>
+                <input type="text" class="input"
+                  v-else
+                  v-model="tempRowInfo.domain"
+                >
+              </div>
               <div class="data-table-cell action">
                 <a class="action-link" href="javascript:void(0)"
                   v-if="currentEditColumn !== column.name"
@@ -96,6 +106,7 @@ export default {
     edit (columnInfo) {
       this.currentEditColumn = columnInfo.name
       this.tempRowInfo.alias = JSON.parse(JSON.stringify(columnInfo.alias))
+      this.tempRowInfo.domain = JSON.parse(JSON.stringify(columnInfo.domain))
     },
     save () {
       this.getStorageId().then(() => {
@@ -110,6 +121,7 @@ export default {
     cancel () {
       this.currentEditColumn = null
       this.tempRowInfo.alias = null
+      this.tempRowInfo.domain = null
     }
   },
   computed: {
@@ -138,6 +150,9 @@ export default {
   }
   .tag {
     width: 15%;
+  }
+  .domain {
+    width: 30%;
   }
   .action {
     width: 20%;

@@ -13,7 +13,9 @@
       </div>
       <slot name="ResultBoardBody"></slot>
     </div>
-    <div class="related-question-block">
+    <div class="related-question-block"
+      v-if="$slots.RelatedQuestions"
+    >
       <div class="block-title">关联问题</div>
       <div class="related-question-list">
         <slot name="RelatedQuestions"></slot>
