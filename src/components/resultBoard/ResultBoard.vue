@@ -1,16 +1,24 @@
 <template>
-  <div class="result-board">
-    <div class="board-header">
-      <div class="header-block">
-        <slot name="ResultBoardHeader"></slot>
+  <div class="result-board-container">
+    <div class="result-board">
+      <div class="board-header">
+        <div class="header-block">
+          <slot name="ResultBoardHeader"></slot>
+        </div>
+        <a class="pin-button"
+          :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
+          href="javascript:void(0)"
+          @click="pinToBoard"
+        ><span class="pin-slash"><svg-icon :icon-class="isLoading  ? 'spinner' : 'pin'" class="pin-icon"></svg-icon></span></a>
       </div>
-      <a class="pin-button"
-        :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
-        href="javascript:void(0)"
-        @click="pinToBoard"
-      ><span class="pin-slash"><svg-icon :icon-class="isLoading  ? 'spinner' : 'pin'" class="pin-icon"></svg-icon></span></a>
+      <slot name="ResultBoardBody"></slot>
     </div>
-    <slot name="ResultBoardBody"></slot>
+    <div class="related-question-block">
+      <div class="block-title">关联问题</div>
+      <div class="related-question-list">
+        <slot name="RelatedQuestions"></slot>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -97,6 +105,7 @@ export default {
   background: rgba(0, 0, 0, 0.35);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
+  margin-bottom: 48px;
 
   .board-header {
     position: relative;
@@ -185,6 +194,31 @@ export default {
       font-size: 16px;
       margin-right: 9px;
     }
+  }
+}
+.related-question-block {
+  background-color: rgba(0, 0, 0, 0.35);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  padding: 28px;
+
+  .block-title {
+    font-size: 24px;
+    line-height: 32px;
+    margin-bottom: 18px;
+  }
+
+  .related-question-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+</style>
+<style lang="scss">
+.related-question-list {
+  .result-board {
+    width: 31.33%;
   }
 }
 </style>
