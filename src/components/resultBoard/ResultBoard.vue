@@ -3,7 +3,7 @@
     <div class="result-board">
       <div class="board-header">
         <div class="header-block">
-          <slot name="ResultBoardHeader"></slot>
+          <slot name="PageResultBoardHeader"></slot>
         </div>
         <a class="pin-button"
           :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
@@ -11,7 +11,7 @@
           @click="pinToBoard"
         ><span class="pin-slash"><svg-icon :icon-class="isLoading  ? 'spinner' : 'pin'" class="pin-icon"></svg-icon></span></a>
       </div>
-      <slot name="ResultBoardBody"></slot>
+      <slot name="PageResultBoardBody"></slot>
     </div>
     <div class="related-question-block"
       v-if="$slots.RelatedQuestions"
