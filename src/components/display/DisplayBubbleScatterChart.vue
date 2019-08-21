@@ -11,6 +11,7 @@
 <script>
 import { colorOnly1, colorOnly2, color3, color10 } from './common/addons'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
+import chartVariable from '@/styles/chart/variables.scss'
 let chartAddon = JSON.parse(JSON.stringify(chartOptions))
 let scatterBubleChartConfig = {
   tooltip: {
@@ -26,7 +27,8 @@ let scatterBubleChartConfig = {
   yAxis: {
     splitLine: {
       lineStyle: {
-        type: 'dashed'
+        type: 'dashed',
+        color: chartVariable['splitLineColor']
       }
     },
     scale: true

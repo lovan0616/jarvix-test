@@ -2,8 +2,10 @@
   themeColor: $theme-color-primary;
   // chart basic setting
   textColor: $theme-text-color;
-  xAxisLabelColor: #a7a7a7;
-  yAxisLabelColor: #a7a7a7;
+  xAxisLabelColor: $theme-text-color;
+  yAxisLabelColor: $theme-text-color;
+  splitLineColor: #52696A;
+  xAxisColor: #cccccc;
   borderColor: $theme-line-color;
   backgroundColor: rgba(0, 0, 0, 0.75);
   markLineColor: #006464;
