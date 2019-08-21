@@ -12,10 +12,10 @@
 
 <script>
 import EchartAddon from './common/addon.js'
-import { graphic } from 'echarts/lib/export'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import {
   colorDefault,
+  colorOnly1,
   colorOnly2,
   color3,
   color10,
@@ -183,7 +183,7 @@ export default {
         color: this.colorList
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
-      config.toolbox.feature.magicType = {type: ['line', 'bar']}
+      config.toolbox.feature.magicType.show = true
       config.xAxis.name = this.title.xAxis
       config.yAxis.name = this.title.yAxis
 
@@ -193,11 +193,7 @@ export default {
     colorList () {
       switch (this.dataList[0].length) {
         case 2:
-          return new graphic.LinearGradient(0, 0, 0, 1, [{
-            offset: 0, color: '#71E2ED'
-          }, {
-            offset: 1, color: '#CFFBFF'
-          }], false)
+          return colorOnly1
         case 3:
           return colorOnly2
         case 4:

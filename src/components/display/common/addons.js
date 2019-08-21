@@ -127,7 +127,7 @@ export function xAxisDefault () {
     axisLine: {
       show: true,
       lineStyle: {
-        color: chartVariable['textColor']
+        color: chartVariable['xAxisColor']
       }
     },
     axisLabel: {
@@ -194,7 +194,10 @@ export function yAxisDefault () {
       color: chartVariable['textColor']
     },
     splitLine: {
-      show: true
+      show: true,
+      lineStyle: {
+        color: chartVariable['splitLineColor']
+      }
     },
     axisTick: {
       show: false

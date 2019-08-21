@@ -9,6 +9,7 @@
   </div>
 </template>
 <script>
+import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 let chartAddon = JSON.parse(JSON.stringify(chartOptions))
 let groupScatterChartConfig = {
@@ -20,7 +21,8 @@ let groupScatterChartConfig = {
   },
   yAxisSplitLine: {
     lineStyle: {
-      type: 'dashed'
+      type: 'dashed',
+      color: chartVariable['splitLineColor']
     }
   },
   chartData: {

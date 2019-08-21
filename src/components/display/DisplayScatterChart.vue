@@ -20,7 +20,8 @@ let scatterChartConfig = {
   },
   yAxisSplitLine: {
     lineStyle: {
-      type: 'dashed'
+      type: 'dashed',
+      color: chartVariable['splitLineColor']
     }
   },
   chartData: {
