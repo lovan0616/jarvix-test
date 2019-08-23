@@ -27,7 +27,7 @@ let scatterChartConfig = {
   chartData: {
     symbolSize: 8,
     itemStyle: {
-      color: chartVariable['basicChartColor']
+      color: chartVariable['lightestChartColor']
     },
     data: [],
     type: 'scatter',
@@ -92,7 +92,7 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: '300px'
+        height: this.isPreview ? '200px' : '380px'
       }
     }
   }

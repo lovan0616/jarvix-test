@@ -86,7 +86,7 @@ export default {
   overflow: auto;
   padding: 24px 32px 32px;
   transform: translateX(-$chat-room-width);
-  transition: transform 0.3s;
+  // transition: transform 0.1s;
 
   &.is-show {
     transform: translateX(0);

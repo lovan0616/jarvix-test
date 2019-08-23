@@ -71,6 +71,17 @@ export default {
     border-radius: 5px;
     padding: 5px 16px;
     box-shadow: 0 0 1px 1px #679ca0 inset;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: #4DE2F0;
+      color: #fff;
+    }
+
+    &:active {
+      background-color: #42A5B3;
+      color: #fff;
+    }
 
     .response {
       cursor: pointer;

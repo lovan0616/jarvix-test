@@ -27,6 +27,8 @@ service.interceptors.response.use(
     const res = response.data
     if (!res.error) return res.data
 
+    if (res.error.code === 'APPERR0001' || res.error.code === 'SYERR0001' || res.error.code === 'SYWARN0001') return Promise.reject(res)
+
     // 如果 mapping 不到錯誤訊息，就顯示制式文字
     Message({
       message: errorsMessage[res.error.code] || '系统发生错误',
@@ -56,7 +58,7 @@ service.interceptors.response.use(
       })
     } else {
       Message({
-        message: '系统发生错误',
+        message: error.message,
         type: 'error',
         duration: 3 * 1000
       })

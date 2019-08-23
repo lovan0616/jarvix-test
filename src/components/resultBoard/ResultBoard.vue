@@ -115,7 +115,9 @@ export default {
     align-items: center;
     padding: 20px 28px;
     background-color: rgba(0, 0, 0, 0.35);
+    border-radius: 8px 8px 0 0;
   }
+
   .header-block {
     flex: 1;
   }
@@ -202,7 +204,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.35);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
-  padding: 28px;
+  padding: 28px 28px 4px;
 
   .block-title {
     font-size: 24px;
@@ -213,14 +215,17 @@ export default {
   .related-question-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
   }
 }
 </style>
 <style lang="scss">
 .related-question-list {
   .result-board {
-    width: 31.33%;
+    width: 32%;
+
+    &:not(:nth-child(3n)) {
+      margin-right: 2%;
+    }
   }
 }
 </style>

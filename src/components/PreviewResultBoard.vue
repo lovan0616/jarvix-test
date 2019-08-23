@@ -3,7 +3,7 @@
     @click="linkToResult"
   >
     <div class="board-top-section">
-      <div class="board-title">{{ questionInfo.question }}</div>
+      <div class="board-title"><span class="question-mark">Q:</span>{{ questionInfo.question }}</div>
       <div class="board-chart-block">
         <component
           v-if="questionInfo.template"
@@ -13,9 +13,7 @@
         ></component>
       </div>
     </div>
-    <!-- <div class="board-indicators"
-      v-loading="isLoading"
-    >
+    <!-- <div class="board-indicators">
       <div class="single-indicator"
         v-if="indicators.length > 0"
         v-for="(indicator, index) in indicators"
@@ -102,7 +100,7 @@ export default {
   background: rgba(0, 0, 0, 0.35);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
   cursor: pointer;
   transition: transform 0.3s;
 
@@ -112,18 +110,20 @@ export default {
   }
 
   .board-top-section {
-    padding: 15px 20px 16px;
-    // background-color: #fff;
-    // border-radius: 8px 8px 0 0;
+    padding: 24px;
   }
 
   .board-title {
     font-size: 20px;
     line-height: 26px;
     letter-spacing: 0.1em;
-    padding-bottom: 16px;
     text-align: left;
     color: $theme-text-color;
+
+    .question-mark {
+      color: #4DE2F0;
+      margin-right: 4px;
+    }
   }
   .board-chart-block {
     width: 100%;

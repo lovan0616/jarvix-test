@@ -20,7 +20,7 @@
             @click="drillDown(tableInfo.link.question)"
           >
             <div class="abstract-info">
-              <div class="column-title">{{ tableInfo.columnName }}的{{ tableInfo.columnValue }}</div>
+              <div class="column-title">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</div>
               <div class="sub-title">{{ rootCauseInfo.name }}{{ tableInfo.diffAverageRate > 0 ? '高于' : '低于' }}平均值</div>
               <div class="amount-block"
                 :class="{'is-special': tableInfo.unusual}"
@@ -32,7 +32,7 @@
               </div>
             </div>
             <div class="detail-info">
-              <div class="title">整体{{ rootCauseInfo.name }}平均值为{{ tableInfo.totalAverage }}，<span class="column-name">{{ tableInfo.columnName }}的{{ tableInfo.columnValue }}</span>{{ tableInfo.diffAverageRate > 0 ? '高于' : '低于' }}平均值{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
+              <div class="title">整体{{ rootCauseInfo.name }}平均值为{{ tableInfo.totalAverage }}，<span class="column-name">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</span>{{ tableInfo.diffAverageRate > 0 ? '高于' : '低于' }}平均值{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
               <div class="info-block">
                 <div class="single-info">
                   <div class="info-label">资料笔数</div>
@@ -52,9 +52,9 @@
         </div>
       </el-tab-pane>
     </el-tabs>
-    <div class="empty-info"
+    <no-result
       v-else
-    >目前暂无相关资讯</div>
+    ></no-result>
   </div>
 </template>
 <script>
@@ -64,7 +64,9 @@ export default {
     info: {
       type: Object,
       default () {
-        return {}
+        return {
+          rootCause: []
+        }
       }
     }
   },
@@ -139,16 +141,22 @@ export default {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     padding: 24px 0;
-    margin-bottom: 24px;
     width: 48%;
     cursor: pointer;
+    transition: all 0.3s;
 
     &:hover {
       background-color: rgba(0, 0, 0, 0.6);
+      transform: translate3d(0,-5px,0);
+      box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.12);
     }
 
     &:active {
       background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 24px;
     }
 
     .abstract-info {
@@ -215,13 +223,6 @@ export default {
         line-height: 26px;
       }
     }
-  }
-
-  .empty-info {
-    padding: 15px 20px;
-    background-color: $theme-bg-darker-color;
-    color: #fff;
-    text-align: center;
   }
 }
 </style>

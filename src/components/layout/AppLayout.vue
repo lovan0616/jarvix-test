@@ -68,7 +68,7 @@ export default {
     position: absolute;
     top: $header-height;
     right: 0;
-    transition: width 0.3s;
+    // transition: width 0.1s;
 
     &.is-open {
       width: calc(100% - #{$chat-room-width});

@@ -19,7 +19,9 @@ export const color10 = [
 ]
 
 export function gridDefault () {
-  return {}
+  return {
+    // containLabel: true
+  }
 }
 
 export function gridInner () {

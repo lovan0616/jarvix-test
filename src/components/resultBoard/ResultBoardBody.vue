@@ -56,6 +56,7 @@ export default {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+    margin-bottom: 32px;
 
     &.is-open {
       .chart-block {

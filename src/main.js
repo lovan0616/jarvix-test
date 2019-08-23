@@ -59,6 +59,7 @@ import RootCauseInfo from '@/components/display/RootCauseInfo'
 import InsightTable from '@/components/display/InsightTable'
 import IndicatorInfo from '@/components/display/IndicatorInfo'
 import IndicatorsList from '@/components/display/IndicatorsList'
+import NoResult from '@/components/display/NoResult'
 import EmptyResult from '@/pages/result/components/EmptyResult'
 import PreviewResultBoard from '@/components/PreviewResultBoard'
 
@@ -74,6 +75,8 @@ Vue.use(Tabs)
 Vue.use(TabPane)
 
 Vue.component('v-echart', ECharts)
+Vue.component(Layout.name, Layout)
+Vue.component(Task.name, Task)
 Vue.component(PreviewBookmark.name, PreviewBookmark)
 Vue.component(SyTable.name, SyTable)
 Vue.component(InsightsInfo.name, InsightsInfo)
@@ -84,8 +87,6 @@ Vue.component(IndicatorsList.name, IndicatorsList)
 Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
-Vue.component(Layout.name, Layout)
-Vue.component(Task.name, Task)
 Vue.component(ContainerBlock.name, ContainerBlock)
 Vue.component(ContainerCard.name, ContainerCard)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
@@ -99,6 +100,7 @@ Vue.component(DisplayTreeMapChart.name, DisplayTreeMapChart)
 Vue.component(DisplayLineChart.name, DisplayLineChart)
 Vue.component(DisplayPieChart.name, DisplayPieChart)
 Vue.component(DisplayBarChart.name, DisplayBarChart)
+Vue.component(NoResult.name, NoResult)
 Vue.component(EmptyResult.name, EmptyResult)
 Vue.component(PreviewResultBoard.name, PreviewResultBoard)
 

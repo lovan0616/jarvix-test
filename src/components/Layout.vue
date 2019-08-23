@@ -1,28 +1,35 @@
 <template>
-  <div class="layout-root"
-    v-loading="loading"
-    element-loading-background="transparent"
-  >
+  <div class="layout-root">
+    <spinner class="layout-spinner"
+      v-if="loading"
+      title="分析处理中"
+      size="50"
+    ></spinner>
     <component
-      ref="content"
+      v-else
       :is="content"
-      :key="new Date().getTime()"
     ></component>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
+import Spinner from '@/components/Spinner'
 
 export default {
   name: 'Layout',
   props: {
-    template: { type: String, default: undefined }
+    template: {
+      type: String,
+      default: null
+    }
+  },
+  components: {
+    Spinner
   },
   data () {
     return {
       loading: true,
-      content: undefined
+      content: null
     }
   },
   watch: {
@@ -37,18 +44,25 @@ export default {
   methods: {
     destoryLayout () {
       this.loading = true
-      this.content = undefined
+      this.content = null
     },
     createLayout () {
       if (!this.template) return
-      this.content = Vue.extend({
+
+      this.content = {
         template: this.template,
         data () {
           return {}
         }
-      })
+      }
+
       this.loading = false
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.layout-spinner {
+  height: calc(100vh - 150px);
+}
+</style>
