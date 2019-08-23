@@ -48,10 +48,12 @@
                   @click="edit(column)"
                 >编辑</a>
                 <a class="action-link" href="javascript:void(0)"
+                  :disabled="isProcessing"
                   v-if="currentEditColumn === column.name"
                   @click="save"
                 >储存</a>
                 <a class="action-link" href="javascript:void(0)"
+                  :disabled="isProcessing"
                   v-if="currentEditColumn === column.name"
                   @click="cancel"
                 >取消</a>
@@ -89,7 +91,8 @@ export default {
         domain: null,
         enable: null
       },
-      storageId: null
+      storageId: null,
+      isProcessing: false
     }
   },
   methods: {
@@ -109,19 +112,24 @@ export default {
       this.tempRowInfo.domain = JSON.parse(JSON.stringify(columnInfo.domain))
     },
     save () {
+      if (this.isProcessing) return
+      this.isProcessing = true
       this.getStorageId().then(() => {
         updateCSVColumnSetting(this.storageId, this.tableId, this.currentEditColumn, this.tempRowInfo).then(() => {
-          this.cancel()
           buildStorage(this.storageId, this.currentBookmarkInfo.id, false).then(() => {
             this.$router.push('/data-management')
+          }).catch(() => {
+            this.cancel()
           })
         })
       })
     },
     cancel () {
+      if (this.isProcessing) return
       this.currentEditColumn = null
       this.tempRowInfo.alias = null
       this.tempRowInfo.domain = null
+      this.isProcessing = false
     }
   },
   computed: {

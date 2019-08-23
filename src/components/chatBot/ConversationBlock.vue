@@ -1,14 +1,19 @@
 <template>
-  <div class="conversation-container">
-    <single-chat-block
+  <div class="conversation-container"
+    :class="{'default-position': showBotIndefaultPosition}"
+  >
+    <div class="conversation-list"
       v-if="!showBotIndefaultPosition"
-      v-for="(conversation, index) in conversationList"
-      :key="index"
-      :content="conversation"
-    ></single-chat-block>
-    <chat-spinner
-      v-if="isAnalyzing"
-    ></chat-spinner>
+    >
+      <single-chat-block
+        v-for="(conversation, index) in conversationList"
+        :key="index"
+        :content="conversation"
+      ></single-chat-block>
+      <chat-spinner
+        v-if="isAnalyzing"
+      ></chat-spinner>
+    </div>
     <div class="system-bot-block"
       :class="{'default-position': showBotIndefaultPosition}"
     >
@@ -47,23 +52,28 @@ export default {
 </script>
 <style lang="scss" scoped>
 .conversation-container {
+  flex: 1;
+  position: relative;
   display: flex;
   flex-direction: column;
-  overflow: auto;
-  height: 60vh;
-  padding-bottom: 30vh;
+
+  &.default-position {
+    align-items: center;
+  }
+
+  .conversation-list {
+    flex: 1;
+    overflow: auto;
+    padding-bottom: 30vh;
+    display: flex;
+    flex-direction: column;
+  }
 
   .system-bot-block {
-    position: absolute;
-    right: 0;
-    left: 0;
-    bottom: 120px;
     margin: auto;
-    padding: 0 40px;
     transition: all 0.3s;
 
     &.default-position {
-      bottom: 150px;
 
       .system-bot {
         width: 100px;
