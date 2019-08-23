@@ -56,6 +56,7 @@ export default {
   position: relative;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 
   &.default-position {
     align-items: center;
