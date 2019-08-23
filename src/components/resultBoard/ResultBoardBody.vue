@@ -1,7 +1,7 @@
 <template>
   <div class="result-board-body">
     <!-- indicator -->
-    <slot name="ResultBoardBodyLeft"></slot>
+    <slot name="PageResultBoardIndicator"></slot>
     <div class="chart-container"
       :class="{'is-open': isShowChatRoom}"
     >
@@ -10,7 +10,7 @@
         @click="toggleBasicInfoDialog"
       >基本资料</button>
       <div class="chart-block">
-        <slot name="ResultBoardBodyright"></slot>
+        <slot name="PageResultBoardChart"></slot>
       </div>
       <div class="basic-info-container"
         v-if="showBasicInfo || !isShowChatRoom"
@@ -42,7 +42,6 @@ export default {
   },
   watch: {
     isShowChatRoom (value, oldValue) {
-      console.log(value, oldValue)
       this.showBasicInfo = false
     }
   }
@@ -57,6 +56,7 @@ export default {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+    margin-bottom: 32px;
 
     &.is-open {
       .chart-block {
@@ -70,7 +70,7 @@ export default {
         right: 0;
         border: 1px solid #4DE2F0;
         background-color: rgba(24, 24, 24, 0.95);
-        z-index: 10000000;
+        z-index: 10000000; // echart 裡面的 tooltip z-index 給 9999999，逼不得已給這麼大
 
         &:before {
           position: absolute;

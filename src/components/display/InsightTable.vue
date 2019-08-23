@@ -117,7 +117,7 @@ export default {
     line-height: 20px;
     letter-spacing: 0.5px;
     color: #eddb45;
-    padding: 12px 15px;
+    padding: 12px 0;
   }
 
   .insight-vertical-table {

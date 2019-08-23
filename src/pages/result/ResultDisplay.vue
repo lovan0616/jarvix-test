@@ -47,12 +47,13 @@ export default {
       }
     },
     clearLayout () {
-      this.layout = undefined
+      this.layout = null
     },
     fetchApiAsk (data) {
       this.isNoResult = false
       this.$store.commit('chatBot/addUserConversation', data.question)
       this.$store.commit('chatBot/updateAnalyzeStatus', true)
+      this.clearLayout()
 
       const _this = this
       this.cancelRequest()

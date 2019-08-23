@@ -27,7 +27,7 @@ let histogramChartConfig = {
   chartData: {
     symbolSize: 8,
     itemStyle: {
-      color: chartVariable['basicChartColor']
+      color: chartVariable['lightestChartColor']
     },
     data: [],
     type: 'custom',

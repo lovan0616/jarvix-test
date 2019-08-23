@@ -34,7 +34,7 @@ export default {
   height: $header-height;
   z-index: $header-z-index;
   box-shadow: $header-shadow;
-  transition: all 0.3s;
+  // transition: all 0.1s;
 
   &.isShowChatRoom {
     left: $chat-room-width;

@@ -143,7 +143,7 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: '300px'
+        height: this.isPreview ? '200px' : '380px'
       }
     },
     dataList () {
@@ -184,7 +184,7 @@ export default {
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      config.xAxis.name = this.title.xAxis
+      config.xAxis.name = this.title.xAxis ? this.title.xAxis.replace(/ /g, '\r\n') : this.title.xAxis
       config.yAxis.name = this.title.yAxis
 
       if (this.isPreview) this.previewChartSetting(config)

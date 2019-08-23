@@ -29,7 +29,7 @@ let boxPlotChartConfig = {
     type: 'boxplot',
     data: [],
     itemStyle: {
-      color: chartVariable['basicChartColor']
+      color: chartVariable['lightestChartColor']
     },
     tooltip: {
       formatter (param) {
