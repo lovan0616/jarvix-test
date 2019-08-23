@@ -8,23 +8,20 @@
       <svg-icon icon-class="double-arrow-left" class="arrow-icon"></svg-icon>
     </a>
     <div class="chat-room-header">
-      <img src="@/assets/images/logo_white.svg" alt="sygps-logo" class="chat-bot-logo">
+      <router-link to="/" class="chat-bot-link"><img src="@/assets/images/logo_white.svg" alt="sygps-logo" class="chat-bot-logo"></router-link>
       <bookmark-select class="bookmark-select"></bookmark-select>
     </div>
     <conversation-block></conversation-block>
-    <div class="user-input-block">
-      <div class="user-question-block">
-        <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
-        <textarea name="question" class="question-input"
-          rows="1"
-          ref="questionInput"
-          placeholder="请输入您的问题"
-          @input="textareaResize"
-          v-model="userQuestion"
-          @keypress.enter.prevent="enterQuestion"
-        ></textarea>
-        <img src="@/assets/images/input.svg" class="question-input-img" alt="">
-      </div>
+    <div class="user-question-block">
+      <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
+      <textarea name="question" class="question-input"
+        rows="1"
+        ref="questionInput"
+        placeholder="请输入您的问题"
+        @input="textareaResize"
+        v-model="userQuestion"
+        @keypress.enter.prevent="enterQuestion"
+      ></textarea>
     </div>
   </div>
 </template>
@@ -79,6 +76,8 @@ export default {
 <style lang="scss" scoped>
 .chat-room-block {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: $chat-room-width;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
@@ -113,8 +112,12 @@ export default {
     justify-content: space-between;
     margin-bottom: 16px;
 
-    .chat-bot-logo {
+    .chat-bot-link {
       width: 120px;
+    }
+
+    .chat-bot-logo {
+      width: 100%;
     }
 
     .bookmark-select {
@@ -122,16 +125,16 @@ export default {
     }
   }
 
-  .user-input-block {
-    position: absolute;
-    right: 0;
-    bottom: 48px;
-    left: 0;
-    margin: auto;
-    padding: 0 40px;
-  }
   .user-question-block {
     position: relative;
+
+    &:after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 2px;
+      background-image: linear-gradient(90deg, #4DE2F0 0%, rgba(77, 226, 240, 0.2) 100%);
+    }
 
     .question-input {
       width: 100%;
@@ -141,16 +144,6 @@ export default {
       min-height: 48px;
       max-height: 76px;
       overflow: auto;
-    }
-
-    .question-input-img {
-      position: absolute;
-      right: 0;
-      bottom: -42px;
-      left: 0;
-      margin: auto;
-      width: 100%;
-      z-index: -1;
     }
   }
 }

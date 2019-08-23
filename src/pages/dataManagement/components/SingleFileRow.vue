@@ -170,10 +170,7 @@ export default {
   .file-status {
     position: relative;
     width: 52px;
-
-    &.finished {
-      text-align: center;
-    }
+    text-align: center;
 
     .warning {
       font-size: 12px;

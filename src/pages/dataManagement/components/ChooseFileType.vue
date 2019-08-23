@@ -140,11 +140,10 @@ export default {
   .input-block-container {
     width: 53.41%;
     margin: 0 auto;
-    padding-bottom: 176px;
     height: 400px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: center;
 
     .input-block {
       &:not(:last-child) {
