@@ -1,109 +1,36 @@
 
 import chartVariable from '@/styles/chart/variables.scss'
+import { graphic } from 'echarts/lib/export'
 
-export const colorDefault = [chartVariable['darkestChartColor'], chartVariable['darkerChartColor'], chartVariable['basicChartColor'], chartVariable['lighterChartColor'], chartVariable['lightestChartColor']]
-export const colorOnly1 = [chartVariable['lightestChartColor']]
-export const colorOnly2 = [chartVariable['lightestChartColor'], chartVariable['chartCoupleColor']]
-export const color3 = [chartVariable['darkestChartColor'], chartVariable['basicChartColor'], chartVariable['lightestChartColor']]
+// 圖表的漸層色
+export function linearGradient (colorStart, colorEnd) {
+  return new graphic.LinearGradient(0, 0, 0, 1, [{
+    offset: 0, color: colorStart
+  }, {
+    offset: 1, color: colorEnd
+  }], false)
+}
+
+export const colorDefault = [linearGradient('#95FAF2', '#559BD5'), linearGradient('#4CE2F0', '#438AF8'), linearGradient('#76CCFF', '#3E52F9'), linearGradient('#79ACFF', '#5A3FFA'), linearGradient('#698DF3', '#7544FC')]
+export const colorOnly1 = [linearGradient('#95FAF2', '#559BD5')]
+export const colorOnly2 = [linearGradient('#95FAF2', '#559BD5'), linearGradient('#4BCBF1', '#416DF9')]
+export const color3 = [linearGradient('#95FAF2', '#559BD5'), linearGradient('#76CCFF', '#3E52F9'), linearGradient('#698DF3', '#7544FC')]
 export const color10 = [
-  chartVariable['chartColorList-1'],
-  chartVariable['chartColorList-2'],
-  chartVariable['chartColorList-3'],
-  chartVariable['chartColorList-4'],
-  chartVariable['chartColorList-5'],
-  chartVariable['chartColorList-6'],
-  chartVariable['chartColorList-7'],
-  chartVariable['chartColorList-8'],
-  chartVariable['chartColorList-9'],
-  chartVariable['chartColorList-10']
+  linearGradient('#95FAF2', '#559BD5'),
+  linearGradient('#78F5F7', '#5596E4'),
+  linearGradient('#4CE2F0', '#438AF8'),
+  linearGradient('#4BCBF1', '#416DF9'),
+  linearGradient('#76CCFF', '#3E52F9'),
+  linearGradient('#79BCFF', '#443FFA'),
+  linearGradient('#79ACFF', '#5A3FFA'),
+  linearGradient('#698DF3', '#7544FC'),
+  linearGradient('#5568FA', '#9549FD'),
+  linearGradient('#6245FF', '#C238FF')
 ]
 
 export function gridDefault () {
   return {
     // containLabel: true
-  }
-}
-
-export function gridInner () {
-  const config = {
-    x: 10,
-    y: 20,
-    x2: 10,
-    y2: 10
-  }
-  return {
-    ...config,
-    containLabel: true
-  }
-}
-
-export function gridHorizontalSpace () {
-  const config = {
-    x: 30,
-    x2: 30
-  }
-  return {
-    ...config,
-    containLabel: true
-  }
-}
-
-export function gridInnerWithLegend () {
-  const config = {
-    x: 0,
-    y: 30,
-    x2: 30,
-    y2: 10
-  }
-  return {
-    ...config,
-    containLabel: true
-  }
-}
-
-export function gridNarrow () {
-  const config = {
-    x: 6,
-    y: 20,
-    x2: 6,
-    y2: 20
-  }
-  return {
-    ...config
-  }
-}
-
-export function gridYname () {
-  const config = {
-    x: 80,
-    y: 50,
-    x2: 20,
-    y2: 50
-  }
-  return {
-    ...config
-  }
-}
-
-export function gridXname () {
-  const config = {
-    y: 20,
-    y2: 60
-  }
-  return {
-    ...config
-  }
-}
-
-export function gridMini () {
-  const config = {
-    x: 0,
-    y: 10,
-    x2: 0,
-    y2: 10
-  }
-  return {
-    ...config
   }
 }
 
@@ -144,46 +71,6 @@ export function xAxisDefault () {
   }
 }
 
-export function xAxisLabelRotate () {
-  return {
-    axisLabel: {
-      show: true,
-      rotate: 35
-    }
-  }
-}
-
-export function xAxisSplitLine () {
-  return {
-    splitLine: {
-      show: true,
-      lineStyle: {
-        color: chartVariable['textColor'],
-        opacity: 0.1
-      }
-    },
-    splitNumber: 4
-  }
-}
-
-export function xAxisNone () {
-  return {
-    type: 'category',
-    splitLine: {
-      show: false
-    },
-    axisLine: {
-      show: false
-    },
-    axisTick: {
-      show: false
-    },
-    axisLabel: {
-      show: false
-    }
-  }
-}
-
 export function yAxisDefault () {
   const config = {
     nameGap: 24,
@@ -218,152 +105,10 @@ export function yAxisDefault () {
   }
 }
 
-export function yAxisAutoMaxMin () {
-  return {
-    max: 'dataMax',
-    min: 'dataMin'
-  }
-}
-
-export function yAxisNone () {
-  return {
-    splitLine: {
-      show: false
-    },
-    axisTick: {
-      show: false
-    },
-    axisLine: {
-      show: false
-    },
-    axisLabel: {
-      show: false
-    }
-  }
-}
-
-export function yAxisOnlySplitLine () {
-  return {
-    splitLine: {
-      show: true,
-      lineStyle: {
-        color: chartVariable['textColor'],
-        opacity: 0.1
-      }
-    },
-    splitNumber: 3,
-    axisTick: {
-      show: false
-    },
-    axisLine: {
-      show: false
-    },
-    axisLabel: {
-      show: false
-    }
-  }
-}
-
-export function yAxisName () {
-  const config = {
-    nameGap: 40,
-    nameTextFontSize: 14,
-    axisLabelFontSize: 10
-  }
-  return {
-    // nameLocation: 'middle',
-    nameTextStyle: {
-      color: chartVariable['textColor'],
-      fontSize: config.nameTextFontSize
-    },
-    nameRotate: 0,
-    nameGap: config.nameGap,
-    splitLine: {
-      show: false
-    },
-    axisTick: {
-      show: false
-    },
-    axisLine: {
-      show: false
-    },
-    axisLabel: {
-      show: true,
-      textStyle: {
-        color: chartVariable['textColor'],
-        fontSize: config.axisLabelFontSize
-      }
-    }
-  }
-}
-
-export function xAxisHorizontalBar () {
-  const config = {
-    nameGap: 24,
-    axisLabelFontSize: 10
-  }
-  return {
-    type: 'value',
-    nameLocation: 'middle',
-    nameGap: config.nameGap,
-    splitLine: {
-      show: false
-    },
-    axisTick: {
-      show: false
-    },
-    axisLine: {
-      show: false
-    },
-    axisLabel: {
-      show: true,
-      textStyle: {
-        color: chartVariable['textColor'],
-        fontSize: config.axisLabelFontSize
-      }
-    }
-  }
-}
-
-export function yAxisHorizontalBar () {
-  const config = {
-    nameGap: 24,
-    axisLabelFontSize: 10
-  }
-  return {
-    type: 'category',
-    // nameLocation: 'middle',
-    nameGap: config.nameGap,
-    splitLine: {
-      show: false
-    },
-    axisTick: {
-      show: false
-    },
-    axisLine: {
-      show: false
-    },
-    axisLabel: {
-      show: true,
-      textStyle: {
-        color: chartVariable['textColor'],
-        fontSize: config.axisLabelFontSize
-      }
-    }
-  }
-}
-
 export function seriesItemLine () {
   return {
     type: 'line',
     symbol: 'circle'
-  }
-}
-
-export function seriesItemSmoothLine () {
-  return {
-    type: 'line',
-    smooth: true
   }
 }
 
@@ -373,17 +118,6 @@ export function seriesItemBar () {
   }
   return {
     type: 'bar',
-    barMaxWidth: config.barMaxWidth
-  }
-}
-
-export function seriesItemStackBar () {
-  const config = {
-    barMaxWidth: 18
-  }
-  return {
-    type: 'bar',
-    stack: 'all',
     barMaxWidth: config.barMaxWidth
   }
 }
@@ -439,34 +173,6 @@ export function seriesItemDoughnut () {
   }
 }
 
-export function seriesItemInsideLabel () {
-  return {
-    label: {
-      normal: {
-        show: true,
-        position: 'top',
-        color: chartVariable['textColor']
-      }
-    }
-  }
-}
-
-export function seriesItemLabel () {
-  return {
-    label: {
-      normal: {
-        show: true
-      }
-    }
-  }
-}
-
-export function seriesItemHideSymbol () {
-  return {
-    showSymbol: false
-  }
-}
-
 export function seriesItemMarkLine () {
   return {
     markLine: {
@@ -484,32 +190,6 @@ export function seriesItemMarkLine () {
           position: 'end'
         }
       }
-    }
-  }
-}
-
-export function tooltipDefault () {
-  return {
-    tooltip: {
-      trigger: 'axis'
-    }
-  }
-}
-
-export function legendDefault () {
-  const config = {
-    fontSize: 12,
-    itemWidth: 18,
-    itemHeight: 12
-  }
-  return {
-    left: 'right',
-    padding: [0, 10, 0, 10],
-    itemWidth: config.itemWidth,
-    itemHeight: config.itemHeight,
-    textStyle: {
-      color: chartVariable['textColor'],
-      fontSize: config.fontSize
     }
   }
 }

@@ -13,7 +13,11 @@ export const commonChartOptions = {
       color: chartVariable['textColor']
     },
     pageButtonPosition: 'start',
-    pageButtonGap: '130'
+    pageButtonGap: 16,
+    pageIconColor: chartVariable['textColor'],
+    pageTextStyle: {
+      color: chartVariable['textColor']
+    }
   },
   toolbox: {
     show: true,

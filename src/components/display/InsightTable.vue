@@ -135,7 +135,7 @@ export default {
   }
 
   .insight-table-head {
-    width: 30%;
+    width: 32%;
     font-weight: bold;
   }
 

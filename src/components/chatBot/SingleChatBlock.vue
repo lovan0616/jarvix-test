@@ -46,8 +46,7 @@ export default {
     // 點擊使用者問的問題
     askAgain (value) {
       if (this.content.type === 'System') return false
-      this.$store.commit('bookmark/setAppQuestion', value)
-      this.$store.dispatch('bookmark/updateResultRouter')
+      this.askChatBot(value)
     },
     askChatBot (value) {
       this.$store.commit('bookmark/setAppQuestion', value)

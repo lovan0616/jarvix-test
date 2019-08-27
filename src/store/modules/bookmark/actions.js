@@ -43,12 +43,18 @@ export default {
     })
   },
   updateResultRouter ({commit, getters}, data) {
+    /**
+     * 這邊的 Bookmark 需要轉成字串的原因是：
+     * 今天如果直接在結果頁重新整理，我如果直接從 router 進來
+     * 從 $route 拿的 query 資訊會是字串形式，為了避免資料的格式不同觸發了 Result 頁 watch 的 function
+     * 所以需要做一次型別的轉換
+     **/
     router.push({
       name: 'PageResult',
       query: {
         question: data || getters.appQuestion,
         stamp: new Date().getTime(),
-        bookmarkId: getters.bookmarkId
+        bookmarkId: String(getters.bookmarkId)
       }
     })
   },
