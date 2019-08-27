@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import axios from 'axios'
 import router from '../router'
 import { Message } from 'element-ui'
@@ -26,6 +27,8 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     if (!res.error) return res.data
+    // roolbar 留存
+    Vue.rollbar.error(JSON.stringify(res))
 
     if (res.error.code === 'APPERR0001' || res.error.code === 'SYERR0001' || res.error.code === 'SYWARN0001') return Promise.reject(res)
 
@@ -49,6 +52,8 @@ service.interceptors.response.use(
       console.log('Request canceled', error.message)
       return Promise.reject(error)
     }
+    // roolbar 留存
+    Vue.rollbar.error(JSON.stringify(error))
 
     if (error.response) {
       Message({

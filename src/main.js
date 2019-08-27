@@ -62,6 +62,7 @@ import IndicatorsList from '@/components/display/IndicatorsList'
 import NoResult from '@/components/display/NoResult'
 import EmptyResult from '@/pages/result/components/EmptyResult'
 import PreviewResultBoard from '@/components/PreviewResultBoard'
+var Rollbar = require('vue-rollbar')
 
 Vue.use(VueEvents)
 // Element UI components
@@ -146,7 +147,31 @@ Vue.use(VeeValidate, {
   }
 })
 
+// rollbar error tracking
+Vue.use(Rollbar, {
+  accessToken: process.env.ROLL_BAR,
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+  enabled: true,
+  environment: process.env.NODE_ENV,
+  payload: {
+    client: {
+      javascript: {
+        code_version: '1.0',
+        source_map_enabled: true,
+        guess_uncaught_frames: true
+      }
+    },
+    server: {
+      host: window.location.host
+    }
+  }
+})
+
 Vue.config.productionTip = false
+Vue.config.errorHandler = err => {
+  Vue.rollbar.error(err)
+}
 
 /* eslint-disable no-new */
 new Vue({
