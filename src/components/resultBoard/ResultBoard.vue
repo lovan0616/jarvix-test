@@ -16,6 +16,7 @@
           <pinboard-dialog
             v-if="showPinboardList"
             @pin="selectPinboard"
+            @close="closePinboardList"
           ></pinboard-dialog>
         </div>
       </div>
@@ -117,6 +118,9 @@ export default {
     },
     updatePinnedStatus () {
       this.isPinned = !this.isPinned
+    },
+    closePinboardList () {
+      this.showPinboardList = false
     }
   },
   computed: {
