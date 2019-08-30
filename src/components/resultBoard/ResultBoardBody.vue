@@ -13,7 +13,7 @@
         <slot name="PageResultBoardChart"></slot>
       </div>
       <div class="basic-info-container"
-        v-if="showBasicInfo || !isShowChatRoom"
+        v-show="showBasicInfo || !isShowChatRoom"
       >
         <slot name="InsightBasicInfo"></slot>
       </div>

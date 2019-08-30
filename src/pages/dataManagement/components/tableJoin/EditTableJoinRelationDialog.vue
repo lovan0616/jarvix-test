@@ -15,9 +15,11 @@
           >储存</button>
         </div>
       </div>
-      <div class="empty-info-block"
+      <empty-info-block
+        class="empty-info-block"
         v-if="joinRelations.length === 0"
-      >此资料表未建立任何关联</div>
+        msg="此资料表未建立任何关联"
+      ></empty-info-block>
       <table-join-relatoin-block
         v-else
         v-for="relation in joinRelations"
@@ -30,13 +32,15 @@
   </div>
 </template>
 <script>
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import TableJoinRelatoinBlock from './TableJoinRelatoinBlock'
 import { getBookmarkStorage, buildStorage, setCSVJoin } from '@/API/Storage'
 
 export default {
   name: 'EditTableJoinRelationDialog',
   components: {
-    TableJoinRelatoinBlock
+    TableJoinRelatoinBlock,
+    EmptyInfoBlock
   },
   data () {
     return {
@@ -128,10 +132,6 @@ export default {
   }
 
   .empty-info-block {
-    padding: 24px 0;
-    border-radius: 4px;
-    background-color: $theme-bg-lighter-color;
-    text-align: center;
     margin-bottom: 16px;
   }
 }

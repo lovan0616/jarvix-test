@@ -5,11 +5,19 @@
         <div class="header-block">
           <slot name="PageResultBoardHeader"></slot>
         </div>
-        <a class="pin-button"
-          :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
-          href="javascript:void(0)"
-          @click="pinToBoard"
-        ><span class="pin-slash"><svg-icon :icon-class="isLoading  ? 'spinner' : 'pin'" class="pin-icon"></svg-icon></span></a>
+        <div class="pin-button-block">
+          <a class="pin-button"
+            :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
+            href="javascript:void(0)"
+            @click="pinToBoard"
+          >
+            <span class="pin-slash"><svg-icon :icon-class="isLoading  ? 'spinner' : 'pin'" class="pin-icon"></svg-icon></span>
+          </a>
+          <pinboard-dialog
+            v-if="showPinboardList"
+            @pin="selectPinboard"
+          ></pinboard-dialog>
+        </div>
       </div>
       <slot name="PageResultBoardBody"></slot>
     </div>
@@ -24,9 +32,12 @@
   </div>
 </template>
 <script>
-import { updatePinboard } from '@/API/Pinboard'
+import PinboardDialog from './PinboradDialog'
 export default {
   name: 'ResultBoard',
+  components: {
+    PinboardDialog
+  },
   props: {
     resultInfo: {
       type: Object,
@@ -37,22 +48,29 @@ export default {
     return {
       isPinned: false,
       isLoading: false,
-      pinBoardId: null
+      pinBoardId: null,
+      showPinboardList: false
     }
   },
   mounted () {
     // Pinboard 頁預設全都是 pin 完的狀態
     if (this.isPinboardPage) {
       this.updatePinnedStatus()
+      /**
+       * 因為組件在結果頁跟 pinboard 頁共用，因此這邊在 pinboard 會去抓上上層的 id，準備 unpin 使用
+       */
       this.pinBoardId = this.$parent.$parent.$attrs.id
     }
   },
   methods: {
     pinToBoard () {
       if (this.isLoading) return false
-      this.isLoading = true
       if (this.isPinned) {
-        this.$store.dispatch('pinboard/deletePinboard', {id: this.pinBoardId})
+        this.isLoading = true
+
+        console.log(this.pinBoardId)
+
+        this.$store.dispatch('pinboard/unPinById', this.pinBoardId)
           .then(res => {
             this.isLoading = false
             if (this.isPinboardPage) {
@@ -77,15 +95,27 @@ export default {
             this.isLoading = false
           })
       } else {
-        updatePinboard({report: this.resultInfo})
-          .then(res => {
-            this.pinBoardId = res.pin_report_id
-            this.updatePinnedStatus()
-            this.isLoading = false
-          }).catch(() => {
-            this.isLoading = false
-          })
+        if (this.showPinboardList) {
+          this.showPinboardList = false
+          return false
+        }
+        this.$store.dispatch('pinboard/getPinboardList').then(() => {
+          this.showPinboardList = true
+        })
       }
+    },
+    selectPinboard (id) {
+      this.isLoading = true
+      this.$store.dispatch('pinboard/pinToBoard', {id, report: this.resultInfo})
+        .then(res => {
+          this.pinBoardId = res
+          this.updatePinnedStatus()
+          this.isLoading = false
+          this.showPinboardList = false
+        }).catch(() => {
+          this.isLoading = false
+          this.showPinboardList = false
+        })
     },
     updatePinnedStatus () {
       this.isPinned = !this.isPinned
@@ -98,6 +128,9 @@ export default {
     pinStatus () {
       // 目前 pinboard 頁，只會有 pinned 的狀態
       return this.isPinned || this.$route.name === 'PagePinboard'
+    },
+    pinboardList () {
+      return this.$store.state.pinboard.pinboardList
     }
   }
 }
@@ -120,6 +153,10 @@ export default {
 
   .header-block {
     flex: 1;
+  }
+
+  .pin-button-block {
+    position: relative;
   }
 
   .pin-button {

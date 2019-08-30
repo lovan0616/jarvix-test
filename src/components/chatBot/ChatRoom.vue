@@ -66,7 +66,7 @@ export default {
   watch: {
     // 判斷關閉時機
     '$route.name' (value) {
-      if (value === 'PageDataSourceList' || value === 'PagePinboard') {
+      if (value !== 'PageIndex' || value !== 'PageResult') {
         this.$store.commit('updateChatRoomStatus', false)
       }
     }

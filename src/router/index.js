@@ -23,8 +23,13 @@ export default new Router({
         },
         {
           path: 'pinboard',
-          name: 'PagePinboard',
+          name: 'PagePinboardList',
           component: () => import('@/pages/pinboard/Index')
+        },
+        {
+          path: 'pinboard/:id',
+          name: 'PagePinboard',
+          component: () => import('@/pages/pinboard/Pinboard')
         },
         {
           path: 'data-management',
