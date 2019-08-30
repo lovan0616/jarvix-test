@@ -68,7 +68,7 @@ export default {
           window.setTimeout(() => {
             this.currentQuestion += 1
             this.response = null
-          }, 500)
+          }, 300)
         } else {
           this.$router.push('/')
         }

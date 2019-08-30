@@ -68,8 +68,6 @@ export default {
       if (this.isPinned) {
         this.isLoading = true
 
-        console.log(this.pinBoardId)
-
         this.$store.dispatch('pinboard/unPinById', this.pinBoardId)
           .then(res => {
             this.isLoading = false
