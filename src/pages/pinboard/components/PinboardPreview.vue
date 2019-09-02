@@ -103,8 +103,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.single-pinboard-preview {
-
-}
-</style>

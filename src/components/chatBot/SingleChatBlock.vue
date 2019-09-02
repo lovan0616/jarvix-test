@@ -50,7 +50,8 @@ export default {
     },
     askChatBot (value) {
       this.$store.commit('bookmark/setAppQuestion', value)
-      this.$store.dispatch('bookmark/updateResultRouter')
+      // 區分使用者是點擊推薦問句或是點擊過往的問句
+      this.$store.dispatch('bookmark/updateResultRouter', this.content.type === 'System' ? 'click_recommend_chatbot' : 'click_history')
     }
   }
 }

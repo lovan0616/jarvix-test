@@ -27,23 +27,27 @@ export default {
     }
   },
   watch: {
-    '$route.query' ({ question }) {
+    '$route.query' ({ question, action }) {
       if (!question) return false
-      this.fetchApiAsk({ question, 'bookmark_id': this.bookmarkId })
+      this.fetchApiAsk({question, 'bookmark_id': this.bookmarkId, 'action_tag': action, 'chatbot_id': this.chatBotId})
     }
   },
   mounted () {
     this.fetchData()
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'appQuestion'])
+    ...mapGetters('bookmark', ['bookmarkId', 'appQuestion']),
+    chatBotId () {
+      return this.$store.state.chatBot.chatBotId
+    }
   },
   methods: {
     fetchData () {
       let question = this.$route.query.question
       let bookmarkId = parseInt(this.$route.query.bookmarkId)
+      let actionTag = this.$route.query.action
       if (question) {
-        this.fetchApiAsk({ question, 'bookmark_id': bookmarkId })
+        this.fetchApiAsk({question, 'bookmark_id': bookmarkId, 'action_tag': actionTag, 'chatbot_id': this.chatBotId})
       }
     },
     clearLayout () {
@@ -61,6 +65,7 @@ export default {
         _this.askCancelFunction = c
       }))
         .then(res => {
+          this.$store.commit('chatBot/updateChatBotId', res.chatbot_id)
           this.timeStamp = this.$route.query.stamp
           if (res.content.changed) {
             this.layout = res.content

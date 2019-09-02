@@ -71,25 +71,26 @@ export default {
 
         this.$store.dispatch('pinboard/unPinById', this.pinBoardId)
           .then(res => {
-            this.isLoading = false
             if (this.isPinboardPage) {
-              /**
-               * 這邊為了避免因為資料刪除後造成畫面重新 render，所以只用 css 將物件藏起來
-               */
-              let elem = document.getElementById(this.pinBoardId)
               // 這邊是為了 transition 所以先抓高度
+              let elem = document.getElementById(this.pinBoardId)
               elem.style.height = elem.offsetHeight + 'px'
-
               window.setTimeout(() => {
                 elem.style.height = 0
                 elem.style.overflow = 'hidden'
                 elem.style.padding = 0
                 elem.style.margin = 0
               }, 300)
+              window.setTimeout(() => {
+                this.isLoading = false
+                this.$store.commit('pinboard/unPinById', this.pinBoardId)
+              }, 900)
             } else {
+              this.isLoading = false
               this.pinBoardId = null
-              this.updatePinnedStatus()
             }
+            // 更新 pinned 狀態
+            this.updatePinnedStatus()
           }).catch(() => {
             this.isLoading = false
           })
@@ -98,6 +99,7 @@ export default {
           this.showPinboardList = false
           return false
         }
+        // 取得最新的 pinboardList
         this.$store.dispatch('pinboard/getPinboardList').then(() => {
           this.showPinboardList = true
         })
@@ -172,6 +174,7 @@ export default {
     background-color: rgba(255, 255, 255, 0.16);
     padding: 15px 12px;
     border-radius: 4px;
+    transition: all 0.3s;
 
     &:after {
       content: '加入钉板';
@@ -195,7 +198,7 @@ export default {
       }
     }
 
-    &.is-pinned {
+    &.is-pinned:not(.is-loading) {
       min-width: 100px;
       background: #57B4BD;
       color: #fff;

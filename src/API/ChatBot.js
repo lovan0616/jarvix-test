@@ -11,3 +11,16 @@ export function askChatBot (data, cancelFunction) {
     cancelToken: cancelFunction
   })
 }
+
+/**
+ * 取得對話紀錄
+ */
+export function getChatHistory (id) {
+  return request({
+    url: '/chatbot/history',
+    method: 'GET',
+    params: {
+      chatbot_id: id
+    }
+  })
+}
