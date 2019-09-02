@@ -18,7 +18,9 @@ export default {
     return getPinboardById(data)
   },
   getPinboardTemplate ({commit}, data) {
-    return getPinboardTemplate(data)
+    return getPinboardTemplate(data).then(res => {
+      commit('setPinboardInfo', res)
+    })
   },
   updatePinboardName ({dispatch}, data) {
     return updatePinboardName(data.id, data.name).then(() => {

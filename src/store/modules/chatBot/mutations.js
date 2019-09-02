@@ -20,5 +20,8 @@ export default {
   },
   updateAnalyzeStatus (state, data) {
     state.isAnalyzing = data
+  },
+  updateChatBotId (state, data) {
+    state.chatBotId = data
   }
 }

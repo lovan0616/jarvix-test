@@ -30,6 +30,8 @@ export default {
   methods: {
     getLandingInfo () {
       askChatBot({'question': null, 'bookmark_id': this.bookmarkId}).then(res => {
+        // 取得對話紀錄用的 chtabot id
+        this.$store.commit('chatBot/updateChatBotId', res.chatbot_id)
         if (res.content.changed) {
           this.layout = res.content
         }

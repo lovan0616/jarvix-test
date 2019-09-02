@@ -83,7 +83,7 @@ export default {
   methods: {
     drillDown (question) {
       this.$store.commit('bookmark/setAppQuestion', question)
-      this.$store.dispatch('bookmark/updateResultRouter')
+      this.$store.dispatch('bookmark/updateResultRouter', this.$route.name === 'PageResult' ? 'click_rootcause' : 'click_rootcause_pinboard')
     }
   },
   computed: {
@@ -137,23 +137,10 @@ export default {
 
   .root-cause-card {
     display: flex;
-    background-color: rgba(0, 0, 0, 0.35);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
-    border-radius: 8px;
     padding: 24px 0;
     width: 48%;
     cursor: pointer;
-    transition: all 0.3s;
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.6);
-      transform: translate3d(0,-5px,0);
-      box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.12);
-    }
-
-    &:active {
-      background-color: rgba(0, 0, 0, 0.8);
-    }
+    @include card();
 
     &:not(:last-child) {
       margin-bottom: 24px;

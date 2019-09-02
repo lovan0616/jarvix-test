@@ -6,25 +6,35 @@
       :class="{'is-open': isShowChatRoom}"
     >
       <button type="button" class="btn btn-default control-btn"
+        :class="{active: showBasicInfo}"
         v-show="isShowChatRoom"
         @click="toggleBasicInfoDialog"
       >基本资料</button>
       <div class="chart-block">
         <slot name="PageResultBoardChart"></slot>
       </div>
-      <div class="basic-info-container"
+      <slot-dialog class="basic-info-container"
         v-show="showBasicInfo || !isShowChatRoom"
+        :show="showBasicInfo"
+        @close="closeBasicInfoDialog"
       >
-        <slot name="InsightBasicInfo"></slot>
-      </div>
+        <template slot="SlotDialog">
+          <slot name="InsightBasicInfo"></slot>
+        </template>
+      </slot-dialog>
     </div>
     <slot name="InsightRootCause"></slot>
     <slot name="CorrelationAnalysis"></slot>
   </div>
 </template>
 <script>
+import SlotDialog from '@/components/dialog/SlotDialog'
+
 export default {
   name: 'ResultBoardBody',
+  components: {
+    SlotDialog
+  },
   data () {
     return {
       showBasicInfo: false
@@ -33,6 +43,9 @@ export default {
   methods: {
     toggleBasicInfoDialog () {
       this.showBasicInfo = !this.showBasicInfo
+    },
+    closeBasicInfoDialog () {
+      this.showBasicInfo = false
     }
   },
   computed: {
@@ -42,7 +55,7 @@ export default {
   },
   watch: {
     isShowChatRoom (value, oldValue) {
-      this.showBasicInfo = false
+      this.closeBasicInfoDialog()
     }
   }
 }
@@ -107,6 +120,10 @@ export default {
       top: -36px;
       right: 0;
       padding: 7px 15px;
+
+      &.active {
+        background-color: #42A5B3;
+      }
     }
   }
 }

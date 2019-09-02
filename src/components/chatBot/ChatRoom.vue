@@ -54,7 +54,7 @@ export default {
     enterQuestion () {
       this.$store.commit('bookmark/setAppQuestion', this.userQuestion)
       this.$refs.questionInput.blur()
-      this.$store.dispatch('bookmark/updateResultRouter')
+      this.$store.dispatch('bookmark/updateResultRouter', 'key_in')
       this.userQuestion = null
     }
   },
