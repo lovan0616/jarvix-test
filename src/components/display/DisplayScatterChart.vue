@@ -79,8 +79,8 @@ export default {
       this.$set(chartAddon.xAxis, 'splitLine', scatterChartConfig.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterChartConfig.yAxisSplitLine)
       chartAddon.tooltip.trigger = scatterChartConfig.tooltip.trigger
-      chartAddon.xAxis.name = this.dataset.xAxis
-      chartAddon.yAxis.name = this.dataset.yAxis
+      chartAddon.xAxis.name = this.title.xAxis
+      chartAddon.yAxis.name = this.title.yAxis
       scatterChartConfig.chartData.data = this.dataset.data
       scatterChartConfig.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.series[0] = scatterChartConfig.chartData
