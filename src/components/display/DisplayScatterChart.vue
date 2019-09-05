@@ -12,9 +12,6 @@
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 let scatterChartConfig = {
-  tooltip: {
-    trigger: 'item'
-  },
   xAxisSplitLine: {
     show: false
   },
@@ -36,6 +33,17 @@ let scatterChartConfig = {
   isPreview: {
     type: Boolean,
     default: false
+  }
+}
+
+let tooltipFormatterWrapper = function ({xAxis, yAxis}) {
+  return function (params, ticket, callback) {
+    return params.reduce((res, item, index) => {
+      return `
+        ${xAxis}: ${item.data[0]}<br/>
+        ${yAxis}: ${item.data[1]}<br/>
+      `
+    }, '')
   }
 }
 
@@ -78,7 +86,7 @@ export default {
       let chartAddon = JSON.parse(JSON.stringify(chartOptions))
       this.$set(chartAddon.xAxis, 'splitLine', scatterChartConfig.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterChartConfig.yAxisSplitLine)
-      chartAddon.tooltip.trigger = scatterChartConfig.tooltip.trigger
+      chartAddon.tooltip.formatter = tooltipFormatterWrapper(this.title)
       chartAddon.xAxis.name = this.title.xAxis
       chartAddon.yAxis.name = this.title.yAxis
       scatterChartConfig.chartData.data = this.dataset.data
