@@ -107,7 +107,7 @@ export default {
       else {
         let tableProps = { ...this.$props, data: this.tableData }
         if (!this.$props.maxHeight) {
-          this.$set(tableProps, 'maxHeight', this.$route.name === 'PageIndex' ? 300 : 200)
+          this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 400)
         }
         return tableProps
       }

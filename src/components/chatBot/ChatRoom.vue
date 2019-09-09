@@ -12,50 +12,24 @@
       <bookmark-select class="bookmark-select"></bookmark-select>
     </div>
     <conversation-block></conversation-block>
-    <div class="user-question-block">
-      <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
-      <textarea name="question" class="question-input"
-        rows="1"
-        ref="questionInput"
-        placeholder="请输入您的问题"
-        @input="textareaResize"
-        v-model="userQuestion"
-        @keypress.enter.prevent="enterQuestion"
-      ></textarea>
-    </div>
+    <ask-block></ask-block>
   </div>
 </template>
 <script>
 import ConversationBlock from './ConversationBlock'
+import AskBlock from './AskBlock'
 import BookmarkSelect from '@/components/select/BookmarkSelect'
 
 export default {
   name: 'ChatRoomBlock',
   components: {
     BookmarkSelect,
-    ConversationBlock
-  },
-  data () {
-    return {
-      userQuestion: null
-    }
-  },
-  mounted () {
-    this.$refs.questionInput.focus()
+    ConversationBlock,
+    AskBlock
   },
   methods: {
     closeChatRoom () {
       this.$store.commit('updateChatRoomStatus', false)
-    },
-    textareaResize () {
-      this.$refs.questionInput.style.height = 'auto'
-      this.$refs.questionInput.style.height = this.$refs.questionInput.scrollHeight + 'px'
-    },
-    enterQuestion () {
-      this.$store.commit('bookmark/setAppQuestion', this.userQuestion)
-      this.$refs.questionInput.blur()
-      this.$store.dispatch('bookmark/updateResultRouter', 'key_in')
-      this.userQuestion = null
     }
   },
   computed: {
@@ -122,28 +96,6 @@ export default {
 
     .bookmark-select {
       width: 150px;
-    }
-  }
-
-  .user-question-block {
-    position: relative;
-
-    &:after {
-      content: '';
-      display: block;
-      width: 100%;
-      height: 2px;
-      background-image: linear-gradient(90deg, #4DE2F0 0%, rgba(77, 226, 240, 0.2) 100%);
-    }
-
-    .question-input {
-      width: 100%;
-      font-size: 24px;
-      line-height: 36px;
-      height: auto;
-      min-height: 48px;
-      max-height: 76px;
-      overflow: auto;
     }
   }
 }

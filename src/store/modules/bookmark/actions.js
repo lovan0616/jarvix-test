@@ -8,7 +8,7 @@ export default {
     if (state.isInit) return Promise.resolve(state)
     return co(function* () {
       yield dispatch('getBookmarkList')
-      yield dispatch('getSuggestionList')
+      yield dispatch('getHistoryQuestionList')
       commit('setIsInit', true)
       return Promise.resolve(state)
     })
@@ -20,7 +20,7 @@ export default {
     commit('chatBot/clearConversation', null, {root: true})
 
     return co(function* () {
-      yield dispatch('getSuggestionList')
+      yield dispatch('getHistoryQuestionList')
       return Promise.resolve(state)
     })
   },
