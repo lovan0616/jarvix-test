@@ -54,6 +54,8 @@ import DisplayGroupScatterChart from '@/components/display/DisplayGroupScatterCh
 import DisplayLineChart from '@/components/display/DisplayLineChart'
 import DisplayPieChart from '@/components/display/DisplayPieChart'
 import DisplayBarChart from '@/components/display/DisplayBarChart'
+import DisplayPivot from '@/components/display/DisplayPivot'
+import PreviewPivot from '@/components/display/PreviewPivot'
 import InsightsInfo from '@/components/display/InsightsInfo'
 import RootCauseInfo from '@/components/display/RootCauseInfo'
 import InsightTable from '@/components/display/InsightTable'
@@ -62,6 +64,7 @@ import IndicatorsList from '@/components/display/IndicatorsList'
 import NoResult from '@/components/display/NoResult'
 import EmptyResult from '@/pages/result/components/EmptyResult'
 import PreviewResultBoard from '@/components/PreviewResultBoard'
+
 var Rollbar = require('vue-rollbar')
 
 Vue.use(VueEvents)
@@ -101,6 +104,8 @@ Vue.component(DisplayTreeMapChart.name, DisplayTreeMapChart)
 Vue.component(DisplayLineChart.name, DisplayLineChart)
 Vue.component(DisplayPieChart.name, DisplayPieChart)
 Vue.component(DisplayBarChart.name, DisplayBarChart)
+Vue.component(DisplayPivot.name, DisplayPivot)
+Vue.component(PreviewPivot.name, PreviewPivot)
 Vue.component(NoResult.name, NoResult)
 Vue.component(EmptyResult.name, EmptyResult)
 Vue.component(PreviewResultBoard.name, PreviewResultBoard)

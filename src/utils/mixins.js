@@ -90,6 +90,8 @@ Vue.mixin({
           return 'SyTable'
         case 'tree_map':
           return 'DisplayTreeMapChart'
+        case 'pivot_table':
+          return 'preview-pivot'
       }
     },
     // 圖表在preview 時，不顯示 legend、tootltip
