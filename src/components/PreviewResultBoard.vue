@@ -72,16 +72,16 @@ export default {
      * 因為 echarts 的圖表有 inline cursor: default，為了看出可以點擊
      * 所以用偽元素覆蓋一層上去
      */
-    &:after {
-      position: absolute;
-      top: 0;
-      left: 0;
-      display: block;
-      content: "";
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
+    // &:after {
+    //   position: absolute;
+    //   top: 0;
+    //   left: 0;
+    //   display: block;
+    //   content: "";
+    //   width: 100%;
+    //   height: 100%;
+    //   cursor: pointer;
+    // }
   }
 }
 </style>
