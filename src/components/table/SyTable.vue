@@ -169,7 +169,7 @@ export default {
       background-color: rgba(0, 0, 0, 0.35);
     }
     .el-pager li:not(.disabled).active {
-      color: #4DE2F0;
+      background-color: #4DE2F0;
     }
   }
 }
