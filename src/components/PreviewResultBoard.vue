@@ -8,7 +8,7 @@
         <component
           v-if="questionInfo.template"
           :is="getChartTemplate(questionInfo.template)"
-          :dataset="questionInfo.data.dataset"
+          v-bind="questionInfo.data"
           :is-preview="true"
         ></component>
       </div>
