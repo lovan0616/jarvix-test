@@ -92,6 +92,8 @@ Vue.mixin({
           return 'DisplayTreeMapChart'
         case 'pivot_table':
           return 'preview-pivot'
+        case 'world_map':
+          return 'DisplayWorldMap'
       }
     },
     // 圖表在preview 時，不顯示 legend、tootltip

@@ -7,6 +7,7 @@
     >
       <button type="button" class="btn btn-default control-btn"
         :class="{active: showBasicInfo}"
+        v-if="$slots.InsightBasicInfo"
         v-show="isShowChatRoom"
         @click="toggleBasicInfoDialog"
       >基本资料</button>
@@ -14,6 +15,7 @@
         <slot name="PageResultBoardChart"></slot>
       </div>
       <slot-dialog class="basic-info-container"
+        v-if="$slots.InsightBasicInfo"
         v-show="showBasicInfo || !isShowChatRoom"
         :show="showBasicInfo"
         @close="closeBasicInfoDialog"

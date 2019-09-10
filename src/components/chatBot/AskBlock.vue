@@ -33,7 +33,7 @@ export default {
     }
   },
   mounted () {
-    this.$refs.questionInput.focus()
+    // this.$refs.questionInput.focus()
     document.addEventListener('click', this.autoHide, false)
   },
   destroyed () {
