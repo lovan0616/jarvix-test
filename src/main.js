@@ -19,7 +19,8 @@ import {
   TableColumn,
   Loading,
   Tabs,
-  TabPane
+  TabPane,
+  Pagination
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -27,11 +28,15 @@ import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/chart/scatter'
 import 'echarts/lib/chart/boxplot'
+import 'echarts/lib/chart/map'
 import 'echarts/lib/chart/custom'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/markLine'
 import 'echarts/lib/component/legend'
+import 'echarts/lib/component/visualMap'
+import 'echarts/lib/component/dataset'
 import 'echarts/lib/component/toolbox'
+import 'echarts/lib/component/geo'
 import 'echarts-stat'
 
 import Layout from './components/Layout.vue'
@@ -77,6 +82,7 @@ Vue.use(Autocomplete)
 Vue.use(Loading)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Pagination)
 
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)
@@ -157,7 +163,7 @@ Vue.use(Rollbar, {
   accessToken: process.env.ROLL_BAR,
   captureUncaught: true,
   captureUnhandledRejections: true,
-  enabled: true,
+  enabled: process.env.NODE_ENV === 'production',
   environment: process.env.NODE_ENV,
   payload: {
     client: {

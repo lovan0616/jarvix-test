@@ -1,23 +1,36 @@
 <template>
-  <el-table class="sy-table"
-    v-bind="tableProps"
-    style="width: 100%;"
-  >
-    <el-table-column
-      fixed
-      type="index"
-      width="120"
-      :index="getTableIndex"
+  <div class="sy-table-block">
+    <el-table class="sy-table"
+      v-bind="tableProps"
+      style="width: 100%;"
     >
-    </el-table-column>
-    <el-table-column
-      v-for="(col, i) in dataset.columns"
-      :key="i"
-      :prop="i.toString()"
-      :label="(typeof col === 'number') ? col.toString() : col"
-      min-width="120"
-    />
-  </el-table>
+      <el-table-column
+        fixed
+        type="index"
+        width="120"
+        :index="getTableIndex"
+      >
+      </el-table-column>
+      <el-table-column
+        v-for="(col, i) in dataset.columns"
+        :key="i"
+        :prop="i.toString()"
+        :label="(typeof col === 'number') ? col.toString() : col"
+        min-width="120"
+      />
+    </el-table>
+    <el-pagination class="table-pagination"
+      v-if="totalPage > 1"
+      background
+      layout="prev, pager, next"
+      :total="dataset.data.length"
+      :page-size="countPerPage"
+      :current-page="currentPage"
+      @current-change="changePage"
+      @prev-click="prevPage"
+      @next-click="nextPage"
+    ></el-pagination>
+  </div>
 </template>
 
 <script>
@@ -39,22 +52,51 @@ export default {
     },
     autoMerge: { type: Boolean, default: false }
   },
+  data () {
+    return {
+      currentPage: 1,
+      countPerPage: 20
+    }
+  },
   methods: {
     getTableIndex (index) {
       return this.dataset.index[index]
+    },
+    changePage (value) {
+      this.currentPage = value
+    },
+    nextPage () {
+      if (this.currentPage + 1 <= this.totalPage) {
+        this.currentPage += 1
+      }
+    },
+    prevPage () {
+      if (this.currentPage - 1 > 0) {
+        this.currentPage -= 1
+      }
     }
   },
   computed: {
+    totalPage () {
+      return Math.ceil(this.dataset.data.length / this.countPerPage)
+    },
     tableData () {
       if (typeof this.dataset !== 'object') return []
       if (!(this.dataset instanceof Array)) {
         // is object
-        return this.dataset.data.map(row => {
-          return this.dataset.columns.reduce((accu, curr, currIndex) => {
-            accu[currIndex.toString()] = row[currIndex]
-            return accu
-          }, {})
-        })
+        let minIndex = (this.currentPage - 1) * this.countPerPage
+        let maxIndex = this.currentPage * this.countPerPage - 1
+        let columnLength = this.dataset.columns.length
+        let displayData = []
+        for (let i = minIndex; i <= maxIndex; i++) {
+          let newData = {}
+          if (!this.dataset.data[i]) break
+          for (let j = 0; j < columnLength; j++) {
+            newData[j.toString()] = this.dataset.data[i][j]
+          }
+          displayData.push(newData)
+        }
+        return displayData
       } else {
         // is array
         return []
@@ -65,12 +107,13 @@ export default {
       else {
         let tableProps = { ...this.$props, data: this.tableData }
         if (!this.$props.maxHeight) {
-          this.$set(tableProps, 'maxHeight', this.$route.name === 'PageIndex' ? 300 : 200)
+          this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 400)
         }
         return tableProps
       }
     },
     tableSpanMethod () {
+      if (!this.autoMerge) return false
       let result = []
       let rowCounter = 1
       let colCounters = [...Array(this.dataset.columns.length)].fill(1)
@@ -106,7 +149,28 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.sy-table {
+.sy-table-block {
+  width: 100%;
+  height: auto;
   margin-bottom: 32px;
+
+  .sy-table {
+    margin-bottom: 32px;
+  }
+}
+</style>
+<style lang="scss">
+.table-pagination {
+  text-align: center;
+
+  &.el-pagination.is-background {
+    .btn-next, .btn-prev, .el-pager li {
+      color: #fff;
+      background-color: rgba(0, 0, 0, 0.35);
+    }
+    .el-pager li:not(.disabled).active {
+      background-color: #4DE2F0;
+    }
+  }
 }
 </style>

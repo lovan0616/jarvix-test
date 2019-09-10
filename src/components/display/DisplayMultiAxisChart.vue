@@ -1,5 +1,5 @@
 <template>
-  <div class="display-basic-chart">
+  <div class="display-multi-axis-chart">
     <v-echart
       :style="chartStyle"
       :options="options"
@@ -53,7 +53,7 @@ const echartAddon = new EchartAddon({
 })
 
 export default {
-  name: 'DisplayBasicChart',
+  name: 'DisplayMultiAxisChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     title: {
