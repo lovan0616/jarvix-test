@@ -70,6 +70,7 @@ import IndicatorsList from '@/components/display/IndicatorsList'
 import NoResult from '@/components/display/NoResult'
 import EmptyResult from '@/pages/result/components/EmptyResult'
 import PreviewResultBoard from '@/components/PreviewResultBoard'
+import TrendRootCause from '@/components/display/TrendRootCause'
 
 var Rollbar = require('vue-rollbar')
 
@@ -117,6 +118,7 @@ Vue.component(PreviewPivot.name, PreviewPivot)
 Vue.component(NoResult.name, NoResult)
 Vue.component(EmptyResult.name, EmptyResult)
 Vue.component(PreviewResultBoard.name, PreviewResultBoard)
+Vue.component(TrendRootCause.name, TrendRootCause)
 
 Vue.use(VeeValidate, {
   // 避免自動 inject 到所有 component
