@@ -1,25 +1,80 @@
 <template>
   <div class="display-pivot-table">
-    <pivot v-bind="$props">
+    <div class="button-block">
+      <button class="btn btn-default"
+        v-show="!isShowChart"
+        @click="showChart"
+      >显示图表</button>
+      <button class="btn btn-default"
+        v-show="isShowChart"
+        @click="showData"
+      >显示数据</button>
+    </div>
+    <pivot-table
+      :data="Object.freeze(dataset)"
+      :fields="availableFields.map(field => ({
+        getter: item => item[field],
+        label: field
+      }))"
+      :row-fields="rowFields.map(field => ({
+        getter: item => item[field],
+        label: field
+      }))"
+      :col-fields="colFields.map(field => ({
+        getter: item => item[field],
+        label: field
+      }))"
+      :val-fields="valFields"
+      :aggregate="aggregate"
+      :is-show-chart="isShowChart"
+    >
       <!-- Optional slots can be used for formatting table headers and values, see documentation below -->
       <template slot="value" slot-scope="{ value }">
         <div class="empty-content" v-if="value == 0">--</div>
-        <div class="td-content" v-else v-html="value"></div>
+        <div class="td-content" v-else>{{ value }}</div>
       </template>
-    </pivot>
+    </pivot-table>
   </div>
 </template>
 <script>
-import Pivot from '@marketconnect/vue-pivot-table'
+import PivotTable from '@/components/PivotTable'
 
 export default {
   name: 'DisplayPivot',
-  components: { Pivot },
-  props: Pivot.props
+  components: {
+    PivotTable
+  },
+  props: [
+    'dataset',
+    'availableFields',
+    'rowFields',
+    'colFields',
+    'valFields',
+    'aggregate',
+    'defaultShowSettings'
+  ],
+  data () {
+    return {
+      isShowChart: false,
+      tempArray: []
+    }
+  },
+  methods: {
+    showChart () {
+      this.isShowChart = true
+    },
+    showData () {
+      this.isShowChart = false
+    }
+  }
 }
 </script>
 <style lang="scss">
 .display-pivot-table {
+  .button-block {
+    margin-bottom: 32px;
+    text-align: right;
+  }
   .table-responsive {
     overflow: auto;
 

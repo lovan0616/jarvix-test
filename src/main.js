@@ -59,6 +59,7 @@ import DisplayGroupScatterChart from '@/components/display/DisplayGroupScatterCh
 import DisplayLineChart from '@/components/display/DisplayLineChart'
 import DisplayPieChart from '@/components/display/DisplayPieChart'
 import DisplayBarChart from '@/components/display/DisplayBarChart'
+import DisplayPredictChart from '@/components/display/DisplayPredictChart'
 import DisplayPivot from '@/components/display/DisplayPivot'
 import PreviewPivot from '@/components/display/PreviewPivot'
 import InsightsInfo from '@/components/display/InsightsInfo'
@@ -110,6 +111,7 @@ Vue.component(DisplayTreeMapChart.name, DisplayTreeMapChart)
 Vue.component(DisplayLineChart.name, DisplayLineChart)
 Vue.component(DisplayPieChart.name, DisplayPieChart)
 Vue.component(DisplayBarChart.name, DisplayBarChart)
+Vue.component(DisplayPredictChart.name, DisplayPredictChart)
 Vue.component(DisplayPivot.name, DisplayPivot)
 Vue.component(PreviewPivot.name, PreviewPivot)
 Vue.component(NoResult.name, NoResult)
