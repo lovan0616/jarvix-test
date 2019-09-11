@@ -24,3 +24,16 @@ export function getChatHistory (id) {
     }
   })
 }
+
+/**
+ * 取得問過的問題
+ */
+export function getQuestionHistory (id) {
+  return request({
+    url: '/chatbot/asked_questions',
+    method: 'GET',
+    params: {
+      bookmark_id: id
+    }
+  })
+}

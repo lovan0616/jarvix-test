@@ -65,7 +65,7 @@ export default {
         _this.askCancelFunction = c
       }))
         .then(res => {
-          this.$store.dispatch('bookmark/getHistoryQuestionList')
+          this.$store.dispatch('bookmark/getHistoryQuestionList', this.bookmarkId)
           this.$store.commit('chatBot/updateChatBotId', res.chatbot_id)
           this.timeStamp = this.$route.query.stamp
           if (res.content.changed) {

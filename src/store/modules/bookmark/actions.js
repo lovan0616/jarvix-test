@@ -1,7 +1,7 @@
 import co from 'co'
 import router from '../../../router'
 import { getBookmarks, getSuggestions, getQuickstarts } from '@/API/Bookmark'
-import { getHistoryQuestionList } from '@/API/Ask'
+import { getQuestionHistory } from '@/API/ChatBot'
 
 export default {
   init ({ commit, dispatch, state }) {
@@ -59,9 +59,9 @@ export default {
       }
     })
   },
-  getHistoryQuestionList ({commit}) {
-    return getHistoryQuestionList().then(res => {
-      commit('setHistoryQuestionList', res.history)
+  getHistoryQuestionList ({commit, getters}) {
+    return getQuestionHistory(getters.bookmarkId).then(res => {
+      commit('setHistoryQuestionList', res)
     })
   }
 }
