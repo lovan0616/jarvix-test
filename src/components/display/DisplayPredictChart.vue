@@ -24,15 +24,15 @@ export default {
   name: 'DisplayPredictChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
-    // title: {
-    //   type: Object,
-    //   default: () => {
-    //     return {
-    //       xAxis: null,
-    //       yAxis: null
-    //     }
-    //   }
-    // },
+    title: {
+      type: Object,
+      default: () => {
+        return {
+          xAxis: null,
+          yAxis: null
+        }
+      }
+    },
     isPreview: {
       type: Boolean,
       default: false
@@ -118,11 +118,10 @@ export default {
         series: this.series,
         color: this.colorList
       }
-      console.log(config)
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      // config.xAxis.name = this.title.xAxis ? this.title.xAxis.replace(/ /g, '\r\n') : this.title.xAxis
-      // config.yAxis.name = this.title.yAxis
+      config.xAxis.name = this.title.xAxis ? this.title.xAxis.replace(/ /g, '\r\n') : this.title.xAxis
+      config.yAxis.name = this.title.yAxis
 
       if (this.isPreview) this.previewChartSetting(config)
       return config
