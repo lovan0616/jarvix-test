@@ -5,7 +5,23 @@
         <div class="header-block">
           <slot name="PageResultBoardHeader"></slot>
         </div>
-        <div class="pin-button-block">
+        <div class="pin-button-block"
+          v-if="isPinboardPage"
+        >
+          <a class="head-btn share"
+            href="javascript:void(0)"
+          >
+            <svg-icon icon-class="share" class="icon"></svg-icon>分享
+          </a>
+          <a class="head-btn delete"
+            href="javascript:void(0)"
+          >
+            <svg-icon icon-class="delete" class="icon"></svg-icon>移除
+          </a>
+        </div>
+        <div class="pin-button-block"
+          v-else
+        >
           <a class="pin-button"
             :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
             href="javascript:void(0)"
@@ -162,6 +178,31 @@ export default {
 
   .pin-button-block {
     position: relative;
+
+    .head-btn {
+      font-size: 14px;
+      line-height: 26px;
+      color: $theme-text-color;
+      padding: 4px 12px;
+      border-radius: 4px;
+
+      &.share {
+        background-color: #1EB8C7;
+        margin-right: 12px;
+      }
+      &.delete {
+        border: 1px solid #fff;
+      }
+
+      &:hover {
+        background-color: #63cbd5;
+        color: #fff;
+      }
+
+      .icon {
+        margin-right: 8px;
+      }
+    }
   }
 
   .pin-button {
