@@ -17,11 +17,11 @@
           v-for="(singleInfo, index) in info"
           :key="index"
         >
-          <div class="info-target">{{ singleInfo.time }}</div>
-          <div class=""><span class="info-title">预测最大值</span><span class="info-content">{{ singleInfo.max }}</span></div>
-          <div class=""><span class="info-title">预测最小值</span><span class="info-content">{{ singleInfo.min }}</span></div>
-          <div class=""><span class="info-title">误差区间</span><span class="info-content">{{ singleInfo.diff }}</span></div>
-          <div class=""><span class="info-title">信心指数</span><span class="info-content confidence">{{ singleInfo.conf }}</span></div>
+          <div class="info-target">{{ singleInfo.time }}的预测区间</div>
+          <div class="info-detail"><div class="info-title">预测最大值</div><div class="info-content">{{ singleInfo.max }}</div></div>
+          <div class="info-detail"><div class="info-title">预测最小值</div><div class="info-content">{{ singleInfo.min }}</div></div>
+          <div class="info-detail"><div class="info-title">误差区间</div><div class="info-content">{{ singleInfo.diff }}</div></div>
+          <div class="info-detail"><div class="info-title">信心指数</div><div class="info-content confidence">{{ singleInfo.conf }}</div></div>
         </div>
       </dov>
     </div>
@@ -209,16 +209,20 @@ export default {
     }
   }
   .info-title {
-    display: inline-block;
     width: 100px;
   }
-  .info-target {
-    margin-bottom: 8px;
+  .info-detail {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
   }
   .info-content {
-    &.confidence {
-      color: #4DE2F0;
-    }
+    // flex: 1;
   }
+  .info-target {
+    color: #4DE2F0;
+    margin-bottom: 8px;
+  }
+  
 }
 </style>
