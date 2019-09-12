@@ -21,6 +21,7 @@
         </div>
       </div>
       <slot name="PageResultBoardBody"></slot>
+      <slot name="RootCauseResultBoardBody"></slot>
     </div>
     <div class="related-question-block"
       v-if="$slots.RelatedQuestions"
