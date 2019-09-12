@@ -4,7 +4,11 @@
     <div class="single-root-cause"
       v-for="(singleInfo, index) in info"
       :key="index"
-    ><span class="index">{{ index + 1 }}</span> {{singleInfo}}</div>
+      @click="linkTo(singleInfo.next_question)"
+    >
+      <span class="info-index">{{ index + 1 }}</span>
+      <div class="info-content">{{singleInfo.information}}</div>
+    </div>
   </div>
 </template>
 <script>
@@ -16,6 +20,13 @@ export default {
       default () {
         return []
       }
+    }
+  },
+  methods: {
+    linkTo (value) {
+      this.$store.commit('bookmark/setAppQuestion', value)
+      // 區分使用者是點擊推薦問句或是點擊過往的問句
+      this.$store.dispatch('bookmark/updateResultRouter', 'trend_root_cause')
     }
   }
 }
@@ -33,20 +44,25 @@ export default {
   }
 
   .single-root-cause {
-    background: rgba(0, 0, 0, 0.35);
-    border-radius: 8px;
-    padding: 12px;
+    @include card();
     display: flex;
     align-items: center;
+    padding: 12px;
+    cursor: pointer;
 
-    .index {
+    .info-index {
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      border: 1px solid #fff;
+      border: 1px solid #4DE2F0;
       margin-right: 12px;
       text-align: center;
       line-height: 30px;
+      color: #4DE2F0;
+    }
+
+    .info-content {
+      flex: 1;
     }
 
     &:not(:last-child) {
