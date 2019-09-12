@@ -1,11 +1,30 @@
 <template>
-  <div class="display-predict-chart">
-    <v-echart
-      :style="chartStyle"
-      :options="options"
-      auto-resize
+  <div class="predict-question-block">
+    <div class="display-predict-chart">
+      <v-echart
+        :style="chartStyle"
+        :options="options"
+        auto-resize
+      >
+      </v-echart>
+    </div>
+    <div class="predict-detail-region"
+      v-if="info.length > 0"
     >
-    </v-echart>
+      <div class="block-title">预测资讯</div>
+      <dov class="predict-detail-block">
+        <div class="single-info-block"
+          v-for="(singleInfo, index) in info"
+          :key="index"
+        >
+          <div class="info-target">{{ singleInfo.time }}</div>
+          <div class=""><span class="info-title">预测最大值</span><span class="info-content">{{ singleInfo.max }}</span></div>
+          <div class=""><span class="info-title">预测最小值</span><span class="info-content">{{ singleInfo.min }}</span></div>
+          <div class=""><span class="info-title">误差区间</span><span class="info-content">{{ singleInfo.diff }}</span></div>
+          <div class=""><span class="info-title">信心指数</span><span class="info-content confidence">{{ singleInfo.conf }}</span></div>
+        </div>
+      </dov>
+    </div>
   </div>
 </template>
 <script>
@@ -31,6 +50,12 @@ export default {
           xAxis: null,
           yAxis: null
         }
+      }
+    },
+    info: {
+      type: Array,
+      default () {
+        return []
       }
     },
     isPreview: {
@@ -155,6 +180,45 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.display-predict-chart {
+.predict-question-block {
+  .display-predict-chart {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  .predict-detail-region {
+    .block-title {
+      font-size: 24px;
+      margin-bottom: 24px;
+      font-weight: 600;
+    }
+  }
+  .predict-detail-block {
+    display: flex;
+    flex-wrap: wrap;
+
+    .single-info-block {
+      width: 24.25%;
+      background-color: rgba(0, 0, 0, 0.35);
+      border-radius: 8px;
+      padding: 20px;
+      margin-right: 1%;
+
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
+    }
+  }
+  .info-title {
+    display: inline-block;
+    width: 100px;
+  }
+  .info-target {
+    margin-bottom: 8px;
+  }
+  .info-content {
+    &.confidence {
+      color: #4DE2F0;
+    }
+  }
 }
 </style>
