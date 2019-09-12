@@ -45,6 +45,11 @@
       >
         <svg-icon icon-class="edit"></svg-icon>
       </div>
+      <div class="single-action"
+        @click.stop="share"
+      >
+        <svg-icon icon-class="share"></svg-icon>
+      </div>
     </div>
   </div>
 </div>
