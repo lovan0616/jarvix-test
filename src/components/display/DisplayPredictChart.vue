@@ -12,7 +12,7 @@
       v-if="info.length > 0"
     >
       <div class="block-title">预测资讯</div>
-      <dov class="predict-detail-block">
+      <div class="predict-detail-block">
         <div class="single-info-block"
           v-for="(singleInfo, index) in info"
           :key="index"
@@ -23,7 +23,7 @@
           <div class="info-detail"><div class="info-title">误差区间</div><div class="info-content">{{ singleInfo.diff }}</div></div>
           <div class="info-detail"><div class="info-title">信心指数</div><div class="info-content confidence">{{ singleInfo.conf }}</div></div>
         </div>
-      </dov>
+      </div>
     </div>
   </div>
 </template>
@@ -216,13 +216,10 @@ export default {
     justify-content: space-between;
     font-size: 14px;
   }
-  .info-content {
-    // flex: 1;
-  }
+
   .info-target {
     color: #4DE2F0;
     margin-bottom: 8px;
   }
-  
 }
 </style>
