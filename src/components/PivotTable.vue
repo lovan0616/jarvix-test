@@ -10,7 +10,10 @@
           data: chartData,
           columns: chartColumns
         }"
-        :title="chartInfo.title"
+        :title="{
+          xAxis: rowFields.reduce((acc, item) => acc + item.label, ''),
+          yAxis: valFields[0]
+        }"
         :addons="{
           'seriesItem:bar': {
             'large': true
@@ -18,7 +21,7 @@
           'color:10': {},
           'grid:default': {},
           'xAxis:default': {},
-          'yAxis:default': {},
+          'yAxis:default': {}
         }"
       ></display-basic-chart>
     </div>

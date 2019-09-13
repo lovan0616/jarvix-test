@@ -44,24 +44,31 @@ export default {
     chartOption () {
       return {
         tooltip: {
-          formatter: '{a}<br/>{b}:{c}'
+          // formatter: '{a}<br/>{b}:{c}'
+          formatter: params => params.name ? `<p>${params.marker}${params.name}: ${params.value || 0}</p>` : null
         },
         visualMap: {
           align: 'left',
           min: 0,
           max: this.maxValue,
-          text: ['High', 'Low'],
+          text: ['高', '低'],
           calculable: true,
           inRange: {
             color: ['#95FAF2', '#6245FF']
           },
           textStyle: {
             color: '#fff'
-          }
+          },
+          padding: 0
         },
         series: [{
           name: 'china',
           type: 'map',
+          roam: true,
+          left: 'center',
+          top: 'middle',
+          layoutCenter: ['50%', '50%'],
+          layoutSize: 600,
           mapType: 'china',
           label: {
             normal: {
@@ -74,6 +81,11 @@ export default {
           itemStyle: {
             borderColor: '#4DD5DE',
             color: '#78F5F7'
+          },
+          emphasis: {
+            itemStyle: {
+              areaColor: '#6245FF'
+            }
           },
           data: this.dataset.data
         }]
