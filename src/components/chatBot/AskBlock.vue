@@ -69,11 +69,19 @@ export default {
     bookmarkId () {
       return this.$store.state.bookmark.bookmarkId
     },
+    appQuestion () {
+      return this.$store.state.bookmark.appQuestion
+    },
     historyQuestionList () {
       // 過濾 boomark 以及 問題字串
       return this.userQuestion
         ? this.$store.state.bookmark.historyQuestionList.filter(d => { return d.question.indexOf(this.userQuestion) > -1 && d.bookmark_id === this.bookmarkId })
         : this.$store.state.bookmark.historyQuestionList.filter(d => { return d.bookmark_id === this.bookmarkId })
+    }
+  },
+  watch: {
+    appQuestion (value) {
+      this.copyQuestion(value)
     }
   }
 }

@@ -27,6 +27,20 @@ export const color10 = [
   linearGradient('#5568FA', '#9549FD'),
   linearGradient('#6245FF', '#C238FF')
 ]
+export const color12 = [
+  chartVariable['chartColorList-1'],
+  chartVariable['chartColorList-2'],
+  chartVariable['chartColorList-3'],
+  chartVariable['chartColorList-4'],
+  chartVariable['chartColorList-5'],
+  chartVariable['chartColorList-6'],
+  chartVariable['chartColorList-7'],
+  chartVariable['chartColorList-8'],
+  chartVariable['chartColorList-9'],
+  chartVariable['chartColorList-10'],
+  chartVariable['chartColorList-11'],
+  chartVariable['chartColorList-12']
+]
 
 export function gridDefault () {
   return {

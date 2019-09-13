@@ -31,7 +31,7 @@
       <!-- Optional slots can be used for formatting table headers and values, see documentation below -->
       <template slot="value" slot-scope="{ value }">
         <div class="empty-content" v-if="value == 0">--</div>
-        <div class="td-content" v-else>{{ value }}</div>
+        <div class="td-content" v-else>{{ roundDecimal(value, 3) }}</div>
       </template>
     </pivot-table>
   </div>
@@ -55,7 +55,7 @@ export default {
   ],
   data () {
     return {
-      isShowChart: false,
+      isShowChart: true,
       tempArray: []
     }
   },
@@ -65,6 +65,9 @@ export default {
     },
     showData () {
       this.isShowChart = false
+    },
+    roundDecimal (val, precision) {
+      return Math.round(Math.round(val * Math.pow(10, (precision || 0) + 1)) / 10) / Math.pow(10, (precision || 0))
     }
   }
 }
@@ -79,11 +82,14 @@ export default {
     overflow: auto;
 
     table {
+      width: 100%;
       border-collapse: collapse;
     }
 
     th, td {
       border: 1px solid rgba(#fff, 0.3);
+      max-width: 100%;
+      white-space: nowrap;
     }
 
     th {

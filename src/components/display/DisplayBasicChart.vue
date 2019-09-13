@@ -18,7 +18,7 @@ import {
   colorOnly1,
   colorOnly2,
   color3,
-  color10,
+  color12,
   gridDefault,
   xAxisDefault,
   yAxisDefault,
@@ -154,10 +154,11 @@ export default {
           return colorOnly2
         case 4:
           return color3
+        case 5:
         case 6:
           return colorDefault
         default:
-          return color10
+          return color12
       }
     },
     eventHandlers () {
