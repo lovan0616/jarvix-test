@@ -10,7 +10,10 @@
           data: chartData,
           columns: chartColumns
         }"
-        :title="chartInfo.title"
+        :title="{
+          xAxis: rowFields.reduce((acc, item) => acc + item.label, ''),
+          yAxis: valFields[0]
+        }"
         :addons="{
           'seriesItem:bar': {
             'large': true
