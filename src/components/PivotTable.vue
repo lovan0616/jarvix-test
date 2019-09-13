@@ -21,7 +21,7 @@
           'color:10': {},
           'grid:default': {},
           'xAxis:default': {},
-          'yAxis:default': {},
+          'yAxis:default': {}
         }"
       ></display-basic-chart>
     </div>

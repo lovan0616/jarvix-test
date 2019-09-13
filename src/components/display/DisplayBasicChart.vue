@@ -138,6 +138,16 @@ export default {
         series: this.series,
         color: this.colorList
       }
+      // 移除 null 值
+      config.tooltip.formatter = (datas) => {
+        let res = datas[0].name + '<br/>'
+        for (let i = 0, length = datas.length; i < length; i++) {
+          if (datas[i].value[i + 1] === null) continue
+          let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
+          res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '<br/>'
+        }
+        return res
+      }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
       config.xAxis.name = this.title.xAxis ? this.title.xAxis.replace(/ /g, '\r\n') : this.title.xAxis
