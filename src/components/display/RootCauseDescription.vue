@@ -50,7 +50,7 @@ export default {
   }
 
   .cause-item {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
 
   .cause-item-header {
@@ -71,7 +71,7 @@ export default {
     }
   }
   .cause-item-description {
-    font-size: 13px;
+    font-size: 14px;
   }
 }
 </style>

@@ -55,13 +55,17 @@ export default {
     }
 
     > .chart-description-block {
-      width: 60%;
+      width: 58%;
+      margin-right: 2%;
     }
 
     > .chart-block {
       width: 40%;
       display: flex;
       align-items: center;
+      padding: 10px 14px;
+      background-color: rgba(0, 0, 0, .35);
+      border-radius: 8px;
     }
   }
 }

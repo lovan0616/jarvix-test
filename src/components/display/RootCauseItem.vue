@@ -1,9 +1,9 @@
 <template>
   <div class="root-cause-item">
     <div class="chart-block">
-      <display-line-chart v-bind="chartData" v-if="chartType === 'line'">
+      <display-line-chart height="280px" v-bind="chartData" v-if="chartType === 'line'">
       </display-line-chart>
-      <display-bar-chart v-bind="chartData" v-else>
+      <display-bar-chart height="280px" v-bind="chartData" v-else>
       </display-bar-chart>
     </div>
     <div class="chart-description">
@@ -48,6 +48,9 @@ export default {
 
   .chart-description {
     width: 30%;
+    padding: 24px;
+    letter-spacing: 0.2em;
+    font-size: 14px;
   }
 }
 </style>
