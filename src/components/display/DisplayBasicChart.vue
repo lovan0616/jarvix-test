@@ -70,7 +70,8 @@ export default {
     isPreview: {
       type: Boolean,
       default: false
-    }
+    },
+    height: {type: String, default: '380px'}
   },
   data () {
     echartAddon.mapping(this.addons)
@@ -99,7 +100,7 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: this.isPreview ? '200px' : '380px'
+        height: this.isPreview ? '200px' : this.height
       }
     },
     dataList () {

@@ -49,6 +49,7 @@ import PreviewBookmark from './components/PreviewBookmark.vue'
 import ResultBoard from '@/components/resultBoard/ResultBoard'
 import ResultBoardHeader from '@/components/resultBoard/ResultBoardHeader'
 import ResultBoardBody from '@/components/resultBoard/ResultBoardBody'
+import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
 import DisplayHistogramChart from '@/components/display/DisplayHistogramChart'
@@ -73,6 +74,8 @@ import NoResult from '@/components/display/NoResult'
 import EmptyResult from '@/pages/result/components/EmptyResult'
 import PreviewResultBoard from '@/components/PreviewResultBoard'
 import TrendRootCause from '@/components/display/TrendRootCause'
+import RootCauseItem from '@/components/display/RootCauseItem'
+import RootCauseDescription from '@/components/display/RootCauseDescription'
 
 var Rollbar = require('vue-rollbar')
 
@@ -101,6 +104,7 @@ Vue.component(IndicatorsList.name, IndicatorsList)
 Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
+Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
 Vue.component(ContainerBlock.name, ContainerBlock)
 Vue.component(ContainerCard.name, ContainerCard)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
@@ -123,6 +127,8 @@ Vue.component(NoResult.name, NoResult)
 Vue.component(EmptyResult.name, EmptyResult)
 Vue.component(PreviewResultBoard.name, PreviewResultBoard)
 Vue.component(TrendRootCause.name, TrendRootCause)
+Vue.component(RootCauseItem.name, RootCauseItem)
+Vue.component(RootCauseDescription.name, RootCauseDescription)
 
 Vue.use(VeeValidate, {
   // 避免自動 inject 到所有 component
