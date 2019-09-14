@@ -29,6 +29,23 @@
       >确认</button>
     </div>
   </div>
+  <div class="action-block edit"
+    v-else-if="isShare"
+  >
+    <input type="text" class="input" ref="shareInput"
+      :value="shareUrl"
+      @click="inputSelect"
+      readOnly
+    >
+    <div class="button-block">
+      <button class="btn btn-outline"
+        @click="cancelShare"
+      >取消</button>
+      <button class="btn btn-default"
+        @click="copy"
+      >复制</button>
+    </div>
+  </div>
   <div class="action-block"
     v-else
     @click="goToBoard"
@@ -45,11 +62,18 @@
       >
         <svg-icon icon-class="edit"></svg-icon>
       </div>
+      <div class="single-action"
+        @click.stop="share"
+      >
+        <svg-icon icon-class="share"></svg-icon>
+      </div>
     </div>
   </div>
 </div>
 </template>
 <script>
+import { Message } from 'element-ui'
+
 export default {
   name: 'PinboardPreview',
   props: {
@@ -61,6 +85,7 @@ export default {
     return {
       isEdit: false,
       isAskDelete: false,
+      isShare: false,
       tempEditInfo: {
         name: null,
         id: null
@@ -99,6 +124,39 @@ export default {
           id: this.boardInfo.id
         }
       })
+    },
+    inputSelect () {
+      this.$refs.shareInput.select()
+    },
+    share () {
+      this.isShare = true
+      this.$nextTick(() => {
+        this.inputSelect()
+      })
+    },
+    cancelShare () {
+      this.isShare = false
+    },
+    copy () {
+      let input = this.$refs.shareInput
+      input.select()
+      /* For mobile devices */
+      input.setSelectionRange(0, 99999)
+      document.execCommand('copy')
+
+      Message({
+        message: '已复制至剪贴簿',
+        type: 'success',
+        duration: 3 * 1000
+      })
+      this.$nextTick(() => {
+        this.cancelShare()
+      })
+    }
+  },
+  computed: {
+    shareUrl () {
+      return `${window.location.origin}/pinboard/${this.boardInfo.id}`
     }
   }
 }

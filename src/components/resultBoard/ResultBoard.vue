@@ -5,7 +5,30 @@
         <div class="header-block">
           <slot name="PageResultBoardHeader"></slot>
         </div>
-        <div class="pin-button-block">
+        <div class="pin-button-block"
+          v-if="isPinboardPage"
+        >
+          <a class="head-btn share"
+            href="javascript:void(0)"
+            @click="showShareDialog"
+          >
+            <svg-icon icon-class="share" class="icon"></svg-icon>分享
+            <share-dialog
+              v-if="isShowShareDialog"
+             :share-url="shareUrl"
+             @cancel="closeShareDialog"
+            ></share-dialog>
+          </a>
+          <a class="head-btn delete"
+            href="javascript:void(0)"
+            @click="unPin"
+          >
+            <svg-icon icon-class="delete" class="icon"></svg-icon>移除
+          </a>
+        </div>
+        <div class="pin-button-block"
+          v-else
+        >
           <a class="pin-button"
             :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
             href="javascript:void(0)"
@@ -35,10 +58,12 @@
 </template>
 <script>
 import PinboardDialog from './PinboradDialog'
+import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 export default {
   name: 'ResultBoard',
   components: {
-    PinboardDialog
+    PinboardDialog,
+    ShareDialog
   },
   props: {
     resultInfo: {
@@ -51,17 +76,14 @@ export default {
       isPinned: false,
       isLoading: false,
       pinBoardId: null,
-      showPinboardList: false
+      showPinboardList: false,
+      isShowShareDialog: false
     }
   },
   mounted () {
     // Pinboard 頁預設全都是 pin 完的狀態
     if (this.isPinboardPage) {
-      this.updatePinnedStatus()
-      /**
-       * 因為組件在結果頁跟 pinboard 頁共用，因此這邊在 pinboard 會去抓上上層的 id，準備 unpin 使用
-       */
-      this.pinBoardId = this.$parent.$parent.$attrs.id
+      this.pinBoardId = this.$route.params.id
     }
   },
   methods: {
@@ -124,6 +146,37 @@ export default {
     },
     closePinboardList () {
       this.showPinboardList = false
+    },
+    unPin () {
+      this.$store.dispatch('pinboard/unPinById', this.pinBoardId)
+        .then(res => {
+          if (this.isPinboardPage) {
+            // 這邊是為了 transition 所以先抓高度
+            let elem = document.getElementById(this.pinBoardId)
+            elem.style.height = elem.offsetHeight + 'px'
+            window.setTimeout(() => {
+              elem.style.height = 0
+              elem.style.overflow = 'hidden'
+              elem.style.padding = 0
+              elem.style.margin = 0
+            }, 300)
+            window.setTimeout(() => {
+              this.isLoading = false
+              this.$store.commit('pinboard/unPinById', this.pinBoardId)
+            }, 900)
+          } else {
+            this.isLoading = false
+            this.pinBoardId = null
+          }
+        }).catch(() => {
+          this.isLoading = false
+        })
+    },
+    showShareDialog () {
+      this.isShowShareDialog = true
+    },
+    closeShareDialog () {
+      this.isShowShareDialog = false
     }
   },
   computed: {
@@ -136,6 +189,9 @@ export default {
     },
     pinboardList () {
       return this.$store.state.pinboard.pinboardList
+    },
+    shareUrl () {
+      return `${window.location.origin}/result?question=${this.resultInfo.tasks[0].entities.question}&stamp=${new Date().getTime()}&bookmarkId=${this.resultInfo.tasks[0].entities.bookmark_id}&action=share`
     }
   }
 }
@@ -162,6 +218,32 @@ export default {
 
   .pin-button-block {
     position: relative;
+
+    .head-btn {
+      position: relative;
+      font-size: 14px;
+      line-height: 26px;
+      color: $theme-text-color;
+      padding: 4px 12px;
+      border-radius: 4px;
+
+      &.share {
+        background-color: #1EB8C7;
+        margin-right: 12px;
+      }
+      &.delete {
+        border: 1px solid #fff;
+      }
+
+      &:hover {
+        background-color: #63cbd5;
+        color: #fff;
+      }
+
+      .icon {
+        margin-right: 8px;
+      }
+    }
   }
 
   .pin-button {
