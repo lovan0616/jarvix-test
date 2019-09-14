@@ -1,6 +1,7 @@
 <template>
   <display-basic-chart
     :dataset="dataset"
+    :height="height"
     :title="title"
     :addons="{
       'seriesItem:line': {
@@ -33,6 +34,10 @@ export default {
     isPreview: {
       type: Boolean,
       default: false
+    },
+    height: {
+      type: String,
+      default: '380px'
     }
   }
 }
