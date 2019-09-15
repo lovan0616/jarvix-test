@@ -9,6 +9,11 @@
       <span class="info-index">{{ index + 1 }}</span>
       <div class="info-content">{{singleInfo.information}}</div>
     </div>
+    <div class="empty-info"
+      v-if="info.length === 0"
+    >
+      暂无侦测出任何趋势异常
+    </div>
   </div>
 </template>
 <script>
@@ -68,6 +73,13 @@ export default {
     &:not(:last-child) {
       margin-bottom: 16px;
     }
+  }
+
+  .empty-info {
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
   }
 }
 </style>

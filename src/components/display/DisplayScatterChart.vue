@@ -84,14 +84,15 @@ export default {
   computed: {
     chartOption () {
       let chartAddon = JSON.parse(JSON.stringify(chartOptions))
-      this.$set(chartAddon.xAxis, 'splitLine', scatterChartConfig.xAxisSplitLine)
-      this.$set(chartAddon.yAxis, 'splitLine', scatterChartConfig.yAxisSplitLine)
+      let scatterOptions = JSON.parse(JSON.stringify(scatterChartConfig))
+      this.$set(chartAddon.xAxis, 'splitLine', scatterOptions.xAxisSplitLine)
+      this.$set(chartAddon.yAxis, 'splitLine', scatterOptions.yAxisSplitLine)
       chartAddon.tooltip.formatter = tooltipFormatterWrapper(this.title)
       chartAddon.xAxis.name = this.title.xAxis
       chartAddon.yAxis.name = this.title.yAxis
-      scatterChartConfig.chartData.data = this.dataset.data
-      scatterChartConfig.chartData.symbolSize = this.dotSize(this.dataset.data.length)
-      chartAddon.series[0] = scatterChartConfig.chartData
+      scatterOptions.chartData.data = this.dataset.data
+      scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)
+      chartAddon.series[0] = scatterOptions.chartData
 
       if (this.isPreview) this.previewChartSetting(chartAddon)
 

@@ -125,6 +125,7 @@ export default {
           name: v,
           ...this.addonSeriesItem,
           ...this.addonSeriesItems[colIndex],
+          connectNulls: true,
           data
         }
       })
