@@ -82,6 +82,10 @@ export default {
   watch: {
     appQuestion (value) {
       this.copyQuestion(value)
+    },
+    bookmarkId (value, oldValue) {
+      if (!oldValue) return
+      this.userQuestion = null
     }
   }
 }
