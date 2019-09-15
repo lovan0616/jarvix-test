@@ -36,6 +36,7 @@ export default {
     linkToResult () {
       this.$store.commit('bookmark/setAppQuestion', this.questionInfo.question)
       this.$store.dispatch('bookmark/updateResultRouter', this.$route.name === 'PageResult' ? 'click_recommend_result' : 'click_recommend_index')
+      this.$events.emit('cleanPreview')
     }
   }
 }

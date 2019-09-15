@@ -37,3 +37,14 @@ export function getQuestionHistory (id) {
     }
   })
 }
+
+/**
+ * 取得關聯問題
+ */
+export function getRelatedQuestions (data) {
+  return request({
+    url: '/chatbot/related_questions',
+    method: 'POST',
+    data
+  })
+}
