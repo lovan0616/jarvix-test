@@ -8,22 +8,39 @@
       :key="timeStamp"
       v-bind="layout"
     ></layout>
+    <div class="related-question-block" v-if="previews.length || previewLoading">
+      <spinner v-if="previewLoading" style="margin-bottom:24px;"></spinner>
+      <div v-else>
+        <div class="block-title">关联问题</div>
+        <div class="related-question-list">
+          <preview-result-board class="result-board" v-for="(preview, index) in previews" v-bind:key="index"
+            :question-info="preview"
+          ></preview-result-board>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
-import { askChatBot } from '@/API/ChatBot'
+import { askChatBot, getRelatedQuestions } from '@/API/ChatBot'
+import spinner from '@/components/Spinner'
 
 export default {
   name: 'ResultDisplay',
+  components: {
+    spinner
+  },
   data () {
     return {
       layout: null,
       isNoResult: false,
       askCancelFunction: null,
-      timeStamp: this.$route.query.stamp
+      timeStamp: this.$route.query.stamp,
+      previews: [],
+      previewLoading: false
     }
   },
   watch: {
@@ -34,6 +51,10 @@ export default {
   },
   mounted () {
     this.fetchData()
+    this.$events.on('cleanPreview', () => {
+      this.previewLoading = false
+      this.previews = []
+    })
   },
   computed: {
     ...mapGetters('bookmark', ['bookmarkId', 'appQuestion']),
@@ -55,6 +76,7 @@ export default {
     },
     fetchApiAsk (data) {
       this.isNoResult = false
+      this.previews = []
       this.$store.commit('chatBot/addUserConversation', data.question)
       this.$store.commit('chatBot/updateAnalyzeStatus', true)
       this.clearLayout()
@@ -71,10 +93,20 @@ export default {
           if (res.content.changed) {
             this.layout = res.content
           }
+          this.previewLoading = true
           this.$nextTick(() => {
             window.setTimeout(() => {
               this.$store.commit('chatBot/updateAnalyzeStatus', false)
               this.$store.commit('chatBot/addSystemConversation', res.respond)
+              getRelatedQuestions(data).then(res => {
+                this.previews = res.previews || []
+                this.previewLoading = false
+              }).catch(() => {
+                window.setTimeout(() => {
+                  this.previews = []
+                  this.previewLoading = false
+                }, 100)
+              })
             }, 2000)
           })
         }).catch(() => {
@@ -133,6 +165,23 @@ export default {
       &:not(:nth-child(3n)) {
         margin-right: 2.99%;
       }
+    }
+  }
+  .related-question-block {
+    background-color: rgba(0, 0, 0, 0.35);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    padding: 28px 28px 4px;
+
+    .block-title {
+      font-size: 24px;
+      line-height: 32px;
+      margin-bottom: 18px;
+    }
+
+    .related-question-list {
+      display: flex;
+      flex-wrap: wrap;
     }
   }
 }
