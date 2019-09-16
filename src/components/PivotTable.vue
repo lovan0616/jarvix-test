@@ -10,9 +10,10 @@
           data: chartData,
           columns: chartColumns
         }"
+        height="450px"
         :title="{
           xAxis: rowFields.reduce((acc, item) => acc + item.label, ''),
-          yAxis: valFields[0]
+          yAxis: valFields[0] + '的' + aggregate_naming[aggregate]
         }"
         :addons="{
           'seriesItem:bar': {
@@ -154,7 +155,8 @@ export default {
   },
   props: {
     aggregate: {
-      type: String
+      type: String,
+      default: 'mean'
     },
     valFields: {
       type: Array,
@@ -208,6 +210,15 @@ export default {
           xAxis: null,
           yAxis: null
         }
+      },
+      aggregate_naming: {
+        mean: '平均',
+        count: '总数',
+        sum: '总合',
+        max: '最大值',
+        min: '最小值',
+        std: '标准差',
+        median: '中位数'
       }
     }
   },
@@ -228,7 +239,7 @@ export default {
       for (let i = 0; i < this.sortedRows.length; i++) {
         chartDataList.push([])
         for (let j = 0; j < this.sortedCols.length; j++) {
-          let objValue = this.valuesHashTable.get({...this.sortedRows[i], ...this.sortedCols[j]}) || null
+          let objValue = this.value(this.sortedRows[i], this.sortedCols[j])
           chartDataList[i].push(objValue)
         }
       }
@@ -298,7 +309,32 @@ export default {
   methods: {
     // Get value from valuesHashTable
     value (row, col) {
-      return this.valuesHashTable.get({...row, ...col}) || 0
+      let data = this.valuesHashTable.get({...row, ...col}) || []
+      let result = 0
+      if (this.aggregate === 'sum') {
+        result = data.reduce((a, b) => a + b, 0)
+      } else if (this.aggregate === 'count') {
+        result = data.length
+      } else if (this.aggregate === 'max') {
+        result = Math.max.apply(Math, data)
+      } else if (this.aggregate === 'min') {
+        result = Math.min.apply(Math, data)
+      } else if (this.aggregate === 'std') {
+        const usePopulation = false
+        const mean = data.reduce((acc, val) => acc + val, 0) / data.length
+        result = Math.sqrt(
+          data.reduce((acc, val) => acc.concat((val - mean) ** 2), []).reduce((acc, val) => acc + val, 0) /
+            (data.length - (usePopulation ? 0 : 1))
+        )
+      } else if (this.aggregate === 'median') {
+        const mid = Math.floor(data.length / 2)
+        const nums = [...data].sort((a, b) => a - b)
+        result = data.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2
+      } else { // mean
+        result = data.reduce((a, b) => a + b, 0) / data.length
+      }
+      result = Math.round(result * 100) / 100
+      return result
     },
     // Get colspan/rowspan size
     spanSize (type, values, valueIndex, fieldIndex) {
@@ -357,10 +393,10 @@ export default {
 
         // Update valuesHashTable
         const key = { ...colKey, ...rowKey }
-        const previousValue = valuesHashTable.get(key) || 0
+        const previousValue = valuesHashTable.get(key) || []
         const previousCount = countTable.get(key) || 0
 
-        valuesHashTable.set(key, this.reducer(previousValue, item, dataIndex, previousCount))
+        valuesHashTable.set(key, this.collector(previousValue, item[this.valFields[0]], previousCount))
         countTable.set(key, previousCount + 1)
       })
 
@@ -368,38 +404,9 @@ export default {
       this.rows = rows
       this.valuesHashTable = valuesHashTable
     },
-    reducer (data, item, index, count) {
-      if (index === 0) {
-        return item[this.valFields[0]]
-      } else {
-        // let n = 0
-        // if (this.aggregate === 'sum') {
-        //   n = data + item[this.valFields[0]]
-        // } else if (this.aggregate === 'count') {
-        //   n = data + 1
-        // } else if (this.aggregate === 'max') {
-        //   // n = Math.max.apply(Math, curr)
-        // } else if (this.aggregate === 'min') {
-        //   // n = Math.min.apply(Math, curr)
-        // } else if (this.aggregate === 'std') {
-        //   // const usePopulation = false
-        //   // const mean = curr.reduce((acc, val) => acc + val, 0) / curr.length
-        //   // n = Math.sqrt(
-        //   //   curr.reduce((acc, val) => acc.concat((val - mean) ** 2), []).reduce((acc, val) => acc + val, 0) /
-        //   //     (curr.length - (usePopulation ? 0 : 1))
-        //   // )
-        // } else if (this.aggregate === 'median') {
-        //   // const mid = Math.floor(curr.length / 2)
-        //   // const nums = [...curr].sort((a, b) => a - b)
-        //   // n = curr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2
-        // } else {
-        //   n = (data + item[this.valFields[0]]) / (count + 1)
-        // }
-        // n = Math.round(n * 100) / 100
-        // return n
-
-        return data + item[this.valFields[0]]
-      }
+    collector (previous, data, previousCount) {
+      previous.push(data)
+      return previous
     }
   },
   watch: {
