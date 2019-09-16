@@ -55,11 +55,12 @@ export default {
 <style lang="scss">
 .quick-start-list {
   display: flex;
-  justify-content: space-between;
   min-height: 50px;
+  margin-right: -3%;
 
   .single-result-board {
     width: 31.34%;
+    margin-right: 3%;
   }
 }
 </style>

@@ -4,7 +4,7 @@
   >
     <div class="board-top-section">
       <div class="board-title"><span class="question-mark">Q:</span>{{ questionInfo.question }}</div>
-      <div class="board-chart-block">
+      <div class="board-chart-block" v-if="questionInfo.template">
         <component
           v-if="questionInfo.template"
           :is="getChartTemplate(questionInfo.template)"
