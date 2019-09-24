@@ -5,6 +5,7 @@ import previewBookmark from './modules/previewBookmark'
 import pinboard from './modules/pinboard'
 import dataManagement from './modules/dataManagement'
 import chatBot from './modules/chatBot'
+import profile from './modules/profile'
 
 Vue.use(Vuex)
 
@@ -14,7 +15,8 @@ export default new Vuex.Store({
     previewBookmark,
     pinboard,
     dataManagement,
-    chatBot
+    chatBot,
+    profile
   },
   state: {
     isShowChatRoom: false

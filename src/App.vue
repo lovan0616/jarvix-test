@@ -17,6 +17,9 @@ export default {
       intervalFunction: null
     }
   },
+  created () {
+    this.$store.dispatch('profile/initProfile')
+  },
   watch: {
     // 監聽 bookmark 清單是否有 bookmark 正在建置中
     isBookmarkBuilding (value, oldValue) {
@@ -34,11 +37,17 @@ export default {
           duration: 3 * 1000
         })
       }
+    },
+    language (lang, oldLang) {
+      // TODO: change display by language
     }
   },
   computed: {
     isBookmarkBuilding () {
       return this.$store.getters['bookmark/isBookmarkBuilding']
+    },
+    language () {
+      return this.$store.getters['profile/language']
     }
   }
 }
