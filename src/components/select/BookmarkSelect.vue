@@ -4,7 +4,7 @@
     <sy-select class="bookmark-select"
       :selected="bookmarkId"
       :items="buildBookmarkList"
-      placeholder="请选择bookmark"
+      :placeholder="$t('editing.choiceDataSource')"
       @update:selected="onBookmarkChange"
     >
     </sy-select>

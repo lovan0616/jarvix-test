@@ -65,9 +65,9 @@ export default {
     typeTransform (value) {
       switch (value) {
         case 'Preview':
-          return '预览'
+          return this.$t('editing.preview')
         case 'Result':
-          return '结果'
+          return this.$t('editing.result')
       }
     }
   },

@@ -3,11 +3,11 @@
     <div class="status-block"
       v-show="isProcessing"
     >
-      <svg-icon icon-class="spinner" class="spinner-icon"></svg-icon>资料处理中
+      <svg-icon icon-class="spinner" class="spinner-icon"></svg-icon>{{ $t('editing.dataProcessing') }}
     </div>
     <div class="page-title-row">
       <h1 class="title">
-        <router-link to="/data-management" class="title-link">资料源</router-link>
+        <router-link to="/data-management" class="title-link">{{ $t('editing.dataSource') }}</router-link>
         <span class="divider">/</span>{{ currentBookmarkInfo ? currentBookmarkInfo.name : '' }}
       </h1>
       <div class="button-block">
@@ -15,13 +15,13 @@
           :disabled="isProcessing"
           @click="createDataSource"
         >
-          <svg-icon icon-class="file-plus" class="icon"></svg-icon>新增资料表
+          <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
         </button>
         <button class="btn btn-default"
           v-if="dataList.length > 1"
           :disabled="isProcessing"
           @click="editJoinTable"
-        >资料表关联</button>
+        >{{ $t('editing.foreignTable') }}</button>
         <button class="btn btn-outline"
           v-if="selectList.length > 0"
           :disabled="isProcessing"
@@ -29,7 +29,7 @@
         >
           <svg-icon class="icon"
             :icon-class="isProcessing ? 'spinner' : 'delete'"
-          ></svg-icon>删除
+          ></svg-icon>{{ $t('button.delete') }}
         </button>
       </div>
     </div>
@@ -39,7 +39,7 @@
       :data-list.sync="dataList"
       :selection.sync="selectList"
       :is-processing="isProcessing"
-      empty-message="点击上传您的资料表"
+      :empty-message="$t('editing.clickToUploadTable')"
       @create="createDataSource"
       @rename="confirmRename"
       @delete="confirmDelete"
@@ -53,14 +53,14 @@
     ></file-upload-dialog>
     <confirm-delete-file-dialog
       v-if="showConfirmDeleteDialog"
-      title="删除资料表"
+      :title="$t('editing.deleteTable')"
       :file-list="selectList"
       @confirm="deleteFile"
       @cancel="cancelDelete"
     ></confirm-delete-file-dialog>
     <confirm-change-name-dialog
       v-if="showConfirmRenameDialog"
-      title="重新命名资料表"
+      :title="$t('editing.renameTable')"
       :source="renameDataSource.filename"
       @confirm="renameCSV"
       @cancel="cancelRename"
@@ -111,47 +111,6 @@ export default {
       tableList: [],
       // checkbox 所選擇的檔案列表
       selectList: [],
-      // 用來生成 data table
-      tableHeaders: [
-        {
-          text: '资料表名称',
-          value: 'filename',
-          sort: true,
-          width: '19.57%'
-        },
-        {
-          text: '建立日期',
-          value: 'create_date',
-          sort: true,
-          width: '25.54%',
-          time: 'YYYY-MM-DD HH:mm'
-        },
-        {
-          text: '修改日期',
-          value: 'update_date',
-          sort: true,
-          width: '25.54%',
-          time: 'YYYY-MM-DD HH:mm'
-        },
-        {
-          text: '操作',
-          value: 'action',
-          width: '15.13%',
-          action: [
-            {
-              name: '编辑栏位',
-              value: 'edit'
-            },
-            {
-              name: '重新命名',
-              value: 'rename'
-            }, {
-              name: '删除',
-              value: 'delete'
-            }
-          ]
-        }
-      ],
       // 目前正在編輯的資料表
       currentEditTableInfo: null,
       intervalFunction: null
@@ -295,6 +254,49 @@ export default {
     }
   },
   computed: {
+    // 用來生成 data table
+    tableHeaders () {
+      return [
+        {
+          text: this.$t('editing.tableName'),
+          value: 'filename',
+          sort: true,
+          width: '19.57%'
+        },
+        {
+          text: this.$t('editing.createDate'),
+          value: 'create_date',
+          sort: true,
+          width: '25.54%',
+          time: 'YYYY-MM-DD HH:mm'
+        },
+        {
+          text: this.$t('editing.updateDate'),
+          value: 'update_date',
+          sort: true,
+          width: '25.54%',
+          time: 'YYYY-MM-DD HH:mm'
+        },
+        {
+          text: this.$t('editing.action'),
+          value: 'action',
+          width: '15.13%',
+          action: [
+            {
+              name: this.$t('button.editColumn'),
+              value: 'edit'
+            },
+            {
+              name: this.$t('button.rename'),
+              value: 'rename'
+            }, {
+              name: this.$t('button.delete'),
+              value: 'delete'
+            }
+          ]
+        }
+      ]
+    },
     showCreateDataSourceDialog () {
       return this.$store.state.dataManagement.showCreateDataSourceDialog
     },

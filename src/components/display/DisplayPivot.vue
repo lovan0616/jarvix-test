@@ -4,11 +4,11 @@
       <button class="btn btn-default"
         v-show="!isShowChart"
         @click="showChart"
-      >显示图表</button>
+      >{{ $t('resultDescription.displayChart') }}</button>
       <button class="btn btn-default"
         v-show="isShowChart"
         @click="showData"
-      >显示数据</button>
+      >{{ $t('resultDescription.displayData') }}</button>
     </div>
     <pivot-table
       :data="Object.freeze(dataset)"

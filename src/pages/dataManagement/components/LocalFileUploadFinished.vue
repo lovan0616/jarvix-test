@@ -1,26 +1,30 @@
 <template>
   <div class="file-upload-finished">
     <div class="dialog-title">
-      <span v-if="uploadFileList.length === successList.length">上传成功</span>
-      <span v-else-if="uploadFileList.length === failList.length">上传失败</span>
-      <span v-else>上传完成</span>
+      <span v-if="uploadFileList.length === successList.length">{{ $t('editing.uploadSuccess') }}</span>
+      <span v-else-if="uploadFileList.length === failList.length">{{ $t('editing.uploadFailure') }}</span>
+      <span v-else>{{ $t('editing.uploadFinish') }}</span>
     </div>
     <div class="finished-img-block">
-      <img v-if="uploadFileList.length === successList.length" src="../../../assets/images/success.gif" alt="上传成功" class="finished-img">
-      <img v-if="uploadFileList.length === failList.length" src="../../../assets/images/error.gif" alt="上传失敗" class="finished-img">
-      <div class="finished-file-info">总共 {{uploadFileList.length}} 项资料表，{{ successList.length }} 项上传成功， {{ failList.length }} 项未上传</div>
+      <img v-if="uploadFileList.length === successList.length" src="../../../assets/images/success.gif" :alt="$t('editing.uploadSuccess')" class="finished-img">
+      <img v-if="uploadFileList.length === failList.length" src="../../../assets/images/error.gif" :alt="$t('editing.uploadFailure')" class="finished-img">
+      <div class="finished-file-info">
+        {{ $t('editing.uploadStatus', {total: uploadFileList.length, success: successList.length, pedding: failList.length}) }}
+      </div>
     </div>
     <div class="dialog-body">
       <file-list-block
         v-if="successList.length > 0"
-        title="已上传"
+        :title="$t('editing.uploaded')"
         :file-list="successList"
       >
-        <div class="uploaded-data-info" slot="fileListTitle">资料类型：{{ currentUploadInfo.type }} 资料源名称：{{ currentUploadInfo.name }}</div>
+        <div class="uploaded-data-info" slot="fileListTitle">
+          {{ $t('editing.dataSourceInfo', {type: currentUploadInfo.type, dataSourceName: currentUploadInfo.name}) }}
+        </div>
       </file-list-block>
       <file-list-block
         v-if="failList.length > 0"
-        title="未上传"
+        title="$t('editing.unuploaded')"
         type="fail"
         :file-list="failList"
       ></file-list-block>
@@ -29,10 +33,10 @@
       <div class="dialog-button-block">
         <button class="btn btn-outline"
           @click="buildBookmark"
-        >完成</button>
+        >{{ $t('button.finish') }}</button>
         <button class="btn btn-default"
           @click="toSetJoinTable"
-        >关联资料表</button>
+        >{{ $t('button.toForeignTable') }}</button>
       </div>
     </div>
   </div>

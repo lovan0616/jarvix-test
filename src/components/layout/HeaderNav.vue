@@ -1,10 +1,10 @@
 <template>
   <nav class="nav-header">
-    <router-link class="nav-item" to="/" exact>首页</router-link>
-    <router-link class="nav-item" to="/pinboard">个人钉板</router-link>
-    <router-link class="nav-item" to="/data-management">资料管理</router-link>
+    <router-link class="nav-item" to="/" exact>{{ $t('nav.index') }}</router-link>
+    <router-link class="nav-item" to="/pinboard">{{ $t('nav.pinboard') }}</router-link>
+    <router-link class="nav-item" to="/data-management">{{ $t('nav.dataManagement') }}</router-link>
     <sy-select class="nav-select"
-      placeholder="语系"
+      :placeholder="$t('nav.languagePlaceholder')"
       :selected="language"
       :items="selectItems"
       v-on:update:selected="onSelected"

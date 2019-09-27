@@ -3,7 +3,7 @@
     <div class="action-block">
       <a href="javascript:void(0)" class="link"
         @click="checkDeleteRelations(relationInfo.id)"
-      ><svg-icon icon-class="delete" class="delete-icon"></svg-icon>删除关联</a>
+      ><svg-icon icon-class="delete" class="delete-icon"></svg-icon>{{ $t('editing.deletForeign') }}</a>
       <tooltip-dialog
         v-if="deleteJoinId"
         @cancel="cancelDelete"
@@ -13,14 +13,14 @@
     <div class="inline-select-block">
       <custom-select
         icon="table"
-        default-msg="选择关联资料表"
+        :default-msg="$t('editing.selectForeign')"
         :option-list="tableList"
         v-model="relationInfo.left_tbl"
       ></custom-select>
       <svg-icon icon-class="link" class="join-icon"></svg-icon>
       <custom-select
         icon="table"
-        default-msg="选择关联资料表"
+        :default-msg="$t('editing.selectForeign')"
         :option-list="tableList"
         v-model="relationInfo.right_tbl"
       ></custom-select>
@@ -28,14 +28,14 @@
     <div class="inline-select-block">
       <custom-select
         icon="column"
-        default-msg="选择栏位"
+        :default-msg="$t('editing.selectColumn')"
         :option-list="leftTableColumnList"
         v-model="relationInfo.foreign_keys[0].left_column"
       ></custom-select>
       <svg-icon icon-class="equal" class="join-icon"></svg-icon>
       <custom-select
         icon="column"
-        default-msg="选择栏位"
+        :default-msg="$t('editing.selectColumn')"
         :option-list="rightTableColumnList"
         v-model="relationInfo.foreign_keys[0].right_column"
       ></custom-select>

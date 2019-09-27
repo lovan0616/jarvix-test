@@ -1,6 +1,6 @@
 <template>
   <div class="no-result-block">
-    目前暂无相关资讯
+    {{ $t('message.noResult') }}
   </div>
 </template>
 <script>

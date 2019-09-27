@@ -20,12 +20,12 @@ export default {
       default: 1
     }
   },
-  data () {
-    return {
-      processText: [
-        '选择资料类型',
-        '上传资料/连结资料库',
-        '开始新增'
+  computed: {
+    processText () {
+      return [
+        this.$t('editing.processStep1'),
+        this.$t('editing.processStep2'),
+        this.$t('editing.processStep3')
       ]
     }
   }

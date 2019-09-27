@@ -11,13 +11,13 @@
     <template class="dialog-btn-block" slot="dialogFooter">
       <button type="button" class="btn btn-outline"
         @click="cancel"
-      >取消</button>
+      >{{ $t('button.cancel') }}</button>
       <button type="button" class="btn btn-default"
         :disabled="isProcessing"
         @click="confirm"
       >
-        <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>处理中...</span>
-        <span v-else>确认</span>
+        <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>{{ $t('button.processing') }}</span>
+        <span v-else>{{ $t('button.confirm') }}</span>
       </button>
     </template>
   </confirm-dialog>

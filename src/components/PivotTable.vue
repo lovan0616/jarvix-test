@@ -13,7 +13,7 @@
         height="450px"
         :title="{
           xAxis: rowFields.reduce((acc, item) => acc + item.label, ''),
-          yAxis: valFields[0] + '的' + aggregate_naming[aggregate]
+          yAxis: valFields[0] + this.$t('resultDescription.of') + aggregateNaming(aggregate)
         }"
         :addons="{
           'seriesItem:bar': {
@@ -182,10 +182,6 @@ export default {
         return []
       }
     },
-    noDataWarningText: {
-      type: String,
-      default: 'No data to display.'
-    },
     isDataLoading: {
       type: Boolean,
       default: false
@@ -210,15 +206,6 @@ export default {
           xAxis: null,
           yAxis: null
         }
-      },
-      aggregate_naming: {
-        mean: '平均',
-        count: '总数',
-        sum: '总合',
-        max: '最大值',
-        min: '最小值',
-        std: '标准差',
-        median: '中位数'
       }
     }
   },
@@ -226,6 +213,9 @@ export default {
     this.computeData()
   },
   computed: {
+    aggregateNaming (aggr) {
+      return this.$t(`aggregation.${aggr}`)
+    },
     chartColumns () {
       return this.sortedCols.map(element => element['col-0'])
     },

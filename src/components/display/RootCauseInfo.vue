@@ -1,6 +1,6 @@
 <template>
   <div class="insights-info root-cause">
-    <div class="insights-info-title">资料洞察</div>
+    <div class="insights-info-title">{{ $t('resultDescription.dataInsight') }}</div>
     <el-tabs
       v-if="this.info.rootCause.length > 0"
       v-model="activeTab"
@@ -21,29 +21,29 @@
           >
             <div class="abstract-info">
               <div class="column-title">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</div>
-              <div class="sub-title">{{ rootCauseInfo.name }}{{ tableInfo.diffAverageRate > 0 ? '高于' : '低于' }}平均值</div>
+              <div class="sub-title">{{ rootCauseInfo.name }}{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') + $t('aggregatedValue.mean')}}</div>
               <div class="amount-block"
                 :class="{'is-special': tableInfo.unusual}"
               >
                 <div class="count">{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
                 <div class="hight-light-label"
                   v-show="tableInfo.unusual"
-                >关键洞察</div>
+                >{{ $t('resultDescription.keyInsight') }}</div>
               </div>
             </div>
             <div class="detail-info">
-              <div class="title">整体{{ rootCauseInfo.name }}平均值为{{ tableInfo.totalAverage }}，<span class="column-name">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</span>{{ tableInfo.diffAverageRate > 0 ? '高于' : '低于' }}平均值{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
+              <div class="title">{{ $t('resultDescription.total') + rootCauseInfo.name + $t('aggregatedValue.mean') + $t('resultDescription.is') + tableInfo.totalAverage }}，<span class="column-name">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</span>{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') + $t('aggregatedValue.mean') + Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
               <div class="info-block">
                 <div class="single-info">
-                  <div class="info-label">资料笔数</div>
+                  <div class="info-label">{{ $t('resultDescription.dataRowCount') }}</div>
                   <div class="info-content">{{ tableInfo.count }}</div>
                 </div>
                 <div class="single-info">
-                  <div class="info-label">总占比</div>
+                  <div class="info-label">{{ $t('resultDescription.totalPercentage') }}</div>
                   <div class="info-content">{{ tableInfo.percent }}</div>
                 </div>
                 <div class="single-info">
-                  <div class="info-label">平均值</div>
+                  <div class="info-label">{{ $t('aggregatedValue.mean') }}</div>
                   <div class="info-content">{{ tableInfo.average }}</div>
                 </div>
               </div>

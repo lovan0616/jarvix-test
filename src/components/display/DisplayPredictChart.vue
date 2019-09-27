@@ -11,17 +11,17 @@
     <div class="predict-detail-region"
       v-if="info.length > 0"
     >
-      <div class="block-title">预测资讯</div>
+      <div class="block-title">{{ $t('resultDescription.predictionInfo') }}</div>
       <div class="predict-detail-block">
         <div class="single-info-block"
           v-for="(singleInfo, index) in info"
           :key="index"
         >
-          <div class="info-target">{{ singleInfo.time }}的预测区间</div>
-          <div class="info-detail"><div class="info-title">预测最大值</div><div class="info-content">{{ singleInfo.max }}</div></div>
-          <div class="info-detail"><div class="info-title">预测最小值</div><div class="info-content">{{ singleInfo.min }}</div></div>
-          <div class="info-detail"><div class="info-title">误差区间</div><div class="info-content">{{ singleInfo.diff }}</div></div>
-          <div class="info-detail"><div class="info-title">信心指数</div><div class="info-content confidence">{{ singleInfo.conf }}</div></div>
+          <div class="info-target">{{ $t("resultDescription.timeOfPredictionInterval", {time: singleInfo.time}) }}</div>
+          <div class="info-detail"><div class="info-title">{{ $t('resultDescription.predictionMax') }}</div><div class="info-content">{{ singleInfo.max }}</div></div>
+          <div class="info-detail"><div class="info-title">{{ $t('resultDescription.predictionMin') }}</div><div class="info-content">{{ singleInfo.min }}</div></div>
+          <div class="info-detail"><div class="info-title">{{ $t('resultDescription.confidenceInterval') }}</div><div class="info-content">{{ singleInfo.diff }}</div></div>
+          <div class="info-detail"><div class="info-title">{{ $t('resultDescription.confidenceIndex') }}</div><div class="info-content confidence">{{ singleInfo.conf }}</div></div>
         </div>
       </div>
     </div>

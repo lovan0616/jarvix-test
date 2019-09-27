@@ -2,7 +2,7 @@
   <div class="layout-root">
     <spinner class="layout-spinner"
       v-if="loading"
-      title="分析处理中"
+      :title="$t('resultDescription.analysisProcessing')"
       size="50"
     ></spinner>
     <component

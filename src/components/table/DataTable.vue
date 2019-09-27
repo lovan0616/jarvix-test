@@ -86,7 +86,7 @@
               v-if="data[headInfo.value]"
               icon-class="spinner"
             ></svg-icon>
-            {{ data[headInfo.value] ? '资料处理中' : '可管理' }}
+            {{ data[headInfo.value] ? $t('editing.dataBuilding') : $t('editing.dataManageable') }}
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
@@ -124,6 +124,8 @@ import orderBy from 'lodash.orderby'
       ]
     }
  */
+import i18n from '@/lang/index.js'
+
 export default {
   name: 'DataTable',
   components: {
@@ -145,7 +147,7 @@ export default {
     },
     emptyMessage: {
       type: String,
-      default: '目前沒有資料'
+      default: i18n.t('message.noData')
     },
     isProcessing: {
       type: Boolean,

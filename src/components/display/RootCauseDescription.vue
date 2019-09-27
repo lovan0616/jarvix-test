@@ -7,7 +7,7 @@
       <div class="cause-item" v-for="(cause, index) in causes" v-bind:key="index">
         <div class="cause-item-header">
           <div class="cause-item-column">{{cause.column}}</div>
-          <div class="cause-item-weight">权重: {{cause.weight}}</div>
+          <div class="cause-item-weight">{{ $t('resultDescription.weight') }}: {{cause.weight}}</div>
         </div>
         <div class="cause-item-description">{{cause.description}}</div>
       </div>

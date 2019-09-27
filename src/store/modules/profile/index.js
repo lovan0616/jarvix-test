@@ -1,15 +1,15 @@
 import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
-
+import i18n from '@/lang/index.js'
 export default {
   namespaced: true,
   state: {
     profile: {},
     languageDefault: 'zh-hant',
     languages: {
-      'zh-hans': '简中',
-      'zh-hant': '繁中'
+      'zh-hans': i18n.t('lang', 'zh-hans'),
+      'zh-hant': i18n.t('lang', 'zh-hant')
     }
   },
   actions,

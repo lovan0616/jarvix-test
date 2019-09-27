@@ -5,8 +5,8 @@
     @close="cancel"
   >
     <div class="content" slot="dialogBody">
-      <div class="main-content">您确认要删除以下 {{ fileList.length }} 个资料表吗？</div>
-      <div class="sub-content">删除过程会进行资料处理，在此期间您依然可以浏览所有资料源内容，但无法进行新增、删除资料...等任何资料管理的操作。</div>
+      <div class="main-content">{{ $t('editing.confirmDeleteNTables', { max: fileList.length }) }}</div>
+      <div class="sub-content">{{ $t('editing.describeDeleteNTables') }}</div>
       <div class="file-list">
         <div class="single-file"
           v-for="file in fileList"
@@ -17,10 +17,10 @@
     <template class="dialog-btn-block" slot="dialogFooter">
       <button type="button" class="btn btn-secondary"
         @click="cancel"
-      >取消</button>
+      >{{ $t('button.cancel') }}</button>
       <button type="button" class="btn btn-default"
         @click="confirm"
-      >确认删除</button>
+      >{{ $t('button.confirmDelete') }}</button>
     </template>
   </confirm-dialog>
 </template>

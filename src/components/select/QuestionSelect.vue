@@ -50,7 +50,6 @@ export default {
     return {
       isDropdownOpen: false,
       onTop: false,
-      appQuestionPlaceholder: '请输入问题，例如：价格和成本的相关性',
       optionListMaxHeight: 320
     }
   },
@@ -59,6 +58,11 @@ export default {
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
+  },
+  computed: {
+    appQuestionPlaceholder () {
+      return this.$t('editing.questionPlaceHolder')
+    }
   },
   methods: {
     autoHide (evt) {

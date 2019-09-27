@@ -9,7 +9,7 @@
     </div>
     <button class="btn btn-copy"
       @click="copyInput"
-    >复制</button>
+    >{{ $t('button.copy') }}</button>
   </div>
 </template>
 <script>
@@ -46,7 +46,7 @@ export default {
       document.execCommand('copy')
 
       Message({
-        message: '已复制至剪贴簿',
+        message: this.$t('message.copiedToBoard'),
         type: 'success',
         duration: 3 * 1000
       })

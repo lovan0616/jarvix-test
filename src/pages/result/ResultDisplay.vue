@@ -11,7 +11,7 @@
     <div class="related-question-block" v-if="previews.length || previewLoading">
       <spinner v-if="previewLoading" style="margin-bottom:24px;"></spinner>
       <div v-else>
-        <div class="block-title">关联问题</div>
+        <div class="block-title">{{ $t('editing.relatedQuesion') }}</div>
         <div class="related-question-list">
           <preview-result-board class="result-board" v-for="(preview, index) in previews" v-bind:key="index"
             :question-info="preview"

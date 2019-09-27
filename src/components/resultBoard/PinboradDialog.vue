@@ -5,7 +5,7 @@
     >
       <div class="single-board default"
         @click="editBoard"
-      ><span class="add-icon">+</span>建立新板</div>
+      ><span class="add-icon">+</span>{{ $t('editing.createBoard') }}</div>
       <div class="single-board"
         v-for="pinboardInfo in pinboardList"
         :key="pinboardInfo.id"
@@ -21,10 +21,10 @@
       <div class="button-block">
         <button class="btn btn-outline"
           @click="cancelCreate"
-        >取消</button>
+        >{{ $t('button.cancel') }}</button>
         <button class="btn btn-default"
           @click="createPinboard"
-        >确认</button>
+        >{{ $t('button.confirm') }}</button>
       </div>
     </div>
   </div>

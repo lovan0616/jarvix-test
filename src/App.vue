@@ -32,14 +32,14 @@ export default {
       if (!value && oldValue) {
         window.clearInterval(this.intervalFunction)
         Message({
-          message: '资料源建立完成',
+          message: this.$t('message.builded'),
           type: 'success',
           duration: 3 * 1000
         })
       }
     },
     language (lang, oldLang) {
-      // TODO: change display by language
+      this.$i18n.locale = lang
     }
   },
   computed: {

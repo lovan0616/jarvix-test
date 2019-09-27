@@ -10,7 +10,7 @@
         v-if="$slots.InsightBasicInfo"
         v-show="isShowChatRoom"
         @click="toggleBasicInfoDialog"
-      >基本资料</button>
+      >{{ $t('resultDescription.basicInfo') }}</button>
       <div class="chart-block">
         <slot name="PageResultBoardChart"></slot>
       </div>
