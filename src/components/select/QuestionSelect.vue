@@ -3,7 +3,7 @@
     <input type="text" class="input question-input"
       ref="questionInput"
       v-model="appQuestion"
-      :placeholder="appQuestionPlaceholder"
+      :placeholder="$t('editing.questionPlaceHolder')"
       @click="toggleDropdown"
       @keypress.enter="enterQuestion"
     >
@@ -58,11 +58,6 @@ export default {
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
-  },
-  computed: {
-    appQuestionPlaceholder () {
-      return this.$t('editing.questionPlaceHolder')
-    }
   },
   methods: {
     autoHide (evt) {
