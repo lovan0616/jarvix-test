@@ -2,7 +2,7 @@
   <div id="app">
     <div class="app-bg"></div>
     <transition name="fade" mode="out-in">
-      <router-view/>
+      <router-view :key="language"/>
     </transition>
   </div>
 </template>
@@ -14,7 +14,8 @@ export default {
   name: 'App',
   data () {
     return {
-      intervalFunction: null
+      intervalFunction: null,
+      renderKey: 0
     }
   },
   created () {
