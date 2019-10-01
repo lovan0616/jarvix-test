@@ -2,7 +2,7 @@
   <div id="app">
     <div class="app-bg"></div>
     <transition name="fade" mode="out-in">
-      <router-view :key="language"/>
+      <router-view v-if="language" :key="language"/>
     </transition>
   </div>
 </template>
