@@ -3,7 +3,7 @@ export default {
     return state.profile
   },
   language (state) {
-    return state.profile.language
+    return state.profile.language || state.languageDefault
   },
   languages (state) {
     return state.languages
