@@ -2,24 +2,35 @@
   <div id="app">
     <div class="app-bg"></div>
     <transition name="fade" mode="out-in">
-      <router-view v-if="language" :key="language"/>
+      <router-view v-if="init" :key="language"/>
+      <spinner v-else style="height: 100vh;"></spinner>
     </transition>
   </div>
 </template>
 
 <script>
 import { Message } from 'element-ui'
+import Spinner from '@/components/Spinner'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'App',
+  components: {
+    Spinner
+  },
   data () {
     return {
       intervalFunction: null,
-      renderKey: 0
+      renderKey: 0,
+      init: false
     }
   },
   created () {
-    this.$store.dispatch('profile/initProfile')
+    this.$store.dispatch('profile/initProfile').then(res => {
+      this.init = true
+    }).catch(() => {
+      this.init = true
+    })
   },
   watch: {
     // 監聽 bookmark 清單是否有 bookmark 正在建置中
@@ -44,11 +55,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('profile', ['language']),
     isBookmarkBuilding () {
       return this.$store.getters['bookmark/isBookmarkBuilding']
-    },
-    language () {
-      return this.$store.getters['profile/language']
     }
   }
 }
