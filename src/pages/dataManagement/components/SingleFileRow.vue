@@ -4,7 +4,7 @@
   >
     <div class="single-file-info">
       <div class="file-info name">{{ formDataInfo.name }}</div>
-      <div class="file-info size">{{ byteToMB(formDataInfo.size) | formatComma }}MB</div>
+      <div class="file-info size">{{ formatComma(byteToMB(formDataInfo.size)) + 'MB' }}</div>
       <div class="single-file-progress"
         v-if="singleFile.status === uploadStatus.uploading && progress < 100"
       >

@@ -37,7 +37,7 @@
     <div class="dialog-footer">
       <div class="file-chosen-info">
         <span v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait">
-          {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadFileList.length, mb: byteToMB(totalTransmitDataAmount) | formatComma}) }}
+          {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadFileList.length, mb: formatComma(byteToMB(totalTransmitDataAmount))}) }}
         </span>
         <span v-if="currntUploadStatus !== uploadStatus.wait">{{ $t('editing.uploading') }}</span>
       </div>
