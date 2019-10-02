@@ -1,19 +1,19 @@
 <template>
   <div class="data-management">
     <div class="page-title-row">
-      <h1 class="title">资料源</h1>
+      <h1 class="title">{{ $t('editing.dataSource') }}</h1>
       <div class="button-block">
         <button class="btn btn-default"
           @click="createDataSource"
         >
-          <svg-icon icon-class="folder-plus" class="icon"></svg-icon>新增资料源
+          <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('editing.newDataSource') }}
         </button>
       </div>
     </div>
     <data-table
       :headers="tableHeaders"
       :data-list.sync="dataList"
-      empty-message="点击建立您的资料源"
+      :empty-message="$t('editing.clickToCreateDataSource')"
       @create="createDataSource"
       @rename="confirmRename"
       @delete="confirmDelete"
@@ -26,14 +26,14 @@
     ></file-upload-dialog>
     <confirm-delete-dialog
       v-if="showConfirmDeleteDialog"
-      title="删除资料源"
-      content="您确认要删除此资料源吗?"
+      :title="$t('editing.deleteDataSource')"
+      :content="$t('editing.confirmDeleteDataSourceOrNot')"
       @confirm="deleteBookmark"
       @cancel="cancelDelete"
     ></confirm-delete-dialog>
     <confirm-change-name-dialog
       v-if="showConfirmRenameDialog"
-      title="重新命名资料源"
+      :title="$t('editing.renameDataSource')"
       :source="renameDataSource.name"
       @confirm="renameBookmark"
       @cancel="cancelRename"
@@ -63,54 +63,8 @@ export default {
       renameDataSource: null,
       dataList: [],
       // 資料處理中
-      isProcessing: false,
+      isProcessing: false
       // 用來生成 data table
-      tableHeaders: [
-        {
-          text: '资料源名称',
-          value: 'name',
-          sort: true,
-          width: '11.71%',
-          link: {
-            name: 'PageDataFileList',
-            disabled: {
-              name: 'type',
-              value: ['SQLITE']
-            }
-          }
-        },
-        {text: '资料来源', value: 'type', width: '8.82%'},
-        {text: '上传者', value: 'create_user', width: '12.96%'},
-        {
-          text: '建立日期',
-          value: 'create_date',
-          sort: true,
-          width: '14.53%',
-          time: 'YYYY-MM-DD'
-        },
-        {
-          text: '修改日期',
-          value: 'update_date',
-          sort: true,
-          width: '14.53%',
-          time: 'YYYY-MM-DD'
-        },
-        {text: '状态', value: 'build_status', width: '7.26%'},
-        {text: '资料表数', value: 'count', align: 'right', width: '6.53%'},
-        {
-          text: '操作',
-          value: 'action',
-          action: [
-            {
-              name: '重新命名',
-              value: 'rename'
-            }, {
-              name: '删除',
-              value: 'delete'
-            }
-          ]
-        }
-      ]
     }
   },
   mounted () {
@@ -188,6 +142,54 @@ export default {
     }
   },
   computed: {
+    tableHeaders () {
+      return [
+        {
+          text: this.$t('editing.dataSourceName'),
+          value: 'name',
+          sort: true,
+          width: '11.71%',
+          link: {
+            name: 'PageDataFileList',
+            disabled: {
+              name: 'type',
+              value: ['SQLITE']
+            }
+          }
+        },
+        {text: this.$t('editing.sourceOfData'), value: 'type', width: '8.82%'},
+        {text: this.$t('editing.uploadUser'), value: 'create_user', width: '12.96%'},
+        {
+          text: this.$t('editing.createDate'),
+          value: 'create_date',
+          sort: true,
+          width: '14.53%',
+          time: 'YYYY-MM-DD'
+        },
+        {
+          text: this.$t('editing.updateDate'),
+          value: 'update_date',
+          sort: true,
+          width: '14.53%',
+          time: 'YYYY-MM-DD'
+        },
+        {text: this.$t('editing.status'), value: 'build_status', width: '7.26%'},
+        {text: this.$t('editing.countOfTable'), value: 'count', align: 'right', width: '6.53%'},
+        {
+          text: this.$t('editing.action'),
+          value: 'action',
+          action: [
+            {
+              name: this.$t('button.rename'),
+              value: 'rename'
+            }, {
+              name: this.$t('button.delete'),
+              value: 'delete'
+            }
+          ]
+        }
+      ]
+    },
     bookmarkList () {
       return this.$store.state.bookmark.bookmarkList
     },

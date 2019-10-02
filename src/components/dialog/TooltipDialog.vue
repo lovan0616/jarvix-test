@@ -1,13 +1,13 @@
 <template>
   <div class="tooltip-dialog">
-    <div class="text-block">确认删除此关联吗？</div>
+    <div class="text-block">{{ $t('editing.confirmDeleteForeign') }}</div>
     <div class="button-block">
       <a href="javascript:void(0)" class="link"
         @click="cancel"
-      >取消</a>
+      >{{ $t('button.cancel') }}</a>
       <a href="javascript:void(0)" class="link"
         @click="confirm"
-      >删除</a>
+      >{{ $t('button.delete') }}</a>
     </div>
   </div>
 </template>

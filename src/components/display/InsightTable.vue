@@ -13,31 +13,31 @@
           v-if="singleBasicInfo['sum']"
         >
           <div class="insight-table-row">
-            <div class="insight-table-head">总和</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.sum') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.sum }}</div>
           </div>
           <div class="insight-table-row">
-            <div class="insight-table-head">总数量</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.count') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.count }}</div>
           </div>
           <div class="insight-table-row">
-            <div class="insight-table-head">最大数值</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.max') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.max }}</div>
           </div>
           <div class="insight-table-row">
-            <div class="insight-table-head">最小数值</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.min') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.min }}</div>
           </div>
           <div class="insight-table-row">
-            <div class="insight-table-head">平均值</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.mean') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.avg }}</div>
           </div>
           <div class="insight-table-row">
-            <div class="insight-table-head">标准差</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.std') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.sd }}</div>
           </div>
           <div class="insight-table-row">
-            <div class="insight-table-head">备注</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.note') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.comment }}</div>
           </div>
         </div>
@@ -45,31 +45,31 @@
           v-else
         >
           <div class="insight-table-row">
-            <div class="insight-table-head">总数量</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.count') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.total }}</div>
           </div>
           <div class="insight-table-row">
-            <div class="insight-table-head">最大类别</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.maxCategory') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.max }}</div>
           </div>
           <div class="insight-table-row">
-            <div class="insight-table-head">最大类别数量</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.maxCategoryCount') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.max_n }}</div>
           </div>
           <div class="insight-table-row">
-            <div class="insight-table-head">最小类别</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.minCategory') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.min }}</div>
           </div>
           <div class="insight-table-row">
-            <div class="insight-table-head">最小类别数量</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.minCategoryCount') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.min_n }}</div>
           </div>
           <div class="insight-table-row">
-            <div class="insight-table-head">数量平均值</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.countMean') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.avg }}</div>
           </div>
           <div class="insight-table-row">
-            <div class="insight-table-head">数量标准差</div>
+            <div class="insight-table-head">{{ $t('aggregatedValue.countStd') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.sd }}</div>
           </div>
         </div>

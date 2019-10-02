@@ -1,15 +1,15 @@
 <template>
   <div class="set-table-join">
-    <div class="dialog-title">编辑资料表</div>
+    <div class="dialog-title">{{ $t('editing.editTable') }}</div>
     <div class="button-block">
       <button type="button" class="btn btn-default"
         @click="addNewRelations"
-      >新增关联</button>
+      >{{ $t('button.newForeign') }}</button>
     </div>
     <empty-info-block
       class="empty-info-block"
       v-if="joinRelations.length === 0"
-      msg="此资料表未建立任何关联"
+      :msg="$t('editing.emptyForeign')"
     ></empty-info-block>
     <table-join-relatoin-block
       v-else
@@ -23,10 +23,10 @@
       <div class="dialog-button-block">
         <button type="button" class="btn btn-outline"
           @click="buildBookmarkStorage"
-        >略过</button>
+        >{{ $t('button.skip') }}</button>
         <button type="button" class="btn btn-default"
           @click="saveRelations"
-        >储存</button>
+        >{{ $t('button.save') }}</button>
       </div>
     </div>
   </div>

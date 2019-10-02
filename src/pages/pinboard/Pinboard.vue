@@ -7,7 +7,7 @@
       v-else
     >
       <div class="bread-crumb-block">
-        <router-link class="page root" to="/pinboard">个人钉板</router-link>
+        <router-link class="page root" to="/pinboard">{{ $t('editing.pinboard') }}</router-link>
         <span class="divider">/</span>
         <span class="page">{{ pinboardInfo.name }}</span>
       </div>
@@ -20,7 +20,7 @@
       ></layout>
       <empty-info-block
         v-if="pinboardInfo.templates.length === 0"
-        msg="暂无钉板资讯，请先去询问问题"
+        :msg="$t('editing.emptyPinboard')"
       ></empty-info-block>
     </div>
   </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="page-pinboard">
-    <h1 class="page-title">个人钉板</h1>
+    <h1 class="page-title">{{ $t('editing.pinboard') }}</h1>
     <div class="pinboard-list">
       <div class="single-pinboard-preview default">
         <div class="action-block add"
@@ -16,11 +16,11 @@
           <div class="button-block">
             <button class="btn btn-outline"
               @click="cancelCreate"
-            >取消</button>
+            >{{ $t('button.cancel') }}</button>
             <button class="btn btn-default"
               @click="createBoard"
               :disabled="!newBoardName"
-            >确认</button>
+            >{{ $t('button.confirm') }}</button>
           </div>
         </div>
       </div>

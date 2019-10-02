@@ -1,11 +1,11 @@
 <template>
   <div class="local-file-upload">
-    <div class="dialog-title">新增资料</div>
+    <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="currntUploadStatus === uploadStatus.uploading ? 3 : 2"
     ></upload-process-block>
     <div class="dialog-body">
-      <div class="data-source-name">资料源名称：{{ currentUploadInfo.name }}</div>
+      <div class="data-source-name">{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
       <input type="file" class="hidden" name="fileUploadInput"
         ref="fileUploadInput"
         accept=".csv"
@@ -13,7 +13,7 @@
         @change="fileImport"
       >
       <upload-block class="empty-upload-block"
-        top-message="点击此选择资料表档案"
+        :top-message="$t('editing.ClickToSelectFiles')"
         v-if="uploadFileList.length === 0"
         @create="chooseFile"
       >
@@ -22,7 +22,7 @@
         v-else
       >
         <file-list-block
-          title="可以上传"
+          :title="$t('editing.canUpload')"
           :file-list="uploadFileList"
         >
         </file-list-block>
@@ -30,27 +30,29 @@
           <a href="javascript:void(0)" class="choose-file"
             v-show="currntUploadStatus === uploadStatus.wait"
             @click="chooseFile"
-          >+ 选取档案</a>
+          >{{ $t('editing.addFile') }}</a>
         </div>
       </div>
     </div>
     <div class="dialog-footer">
       <div class="file-chosen-info">
-        <span v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait">已选取 {{ uploadFileList.length }} 项资料表，总和 {{ byteToMB(totalTransmitDataAmount) | formatComma }} MB，可进行上传</span>
-        <span v-if="currntUploadStatus !== uploadStatus.wait">上传过程中请勿关闭浏览器视窗，以免上传作业失败</span>
+        <span v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait">
+          {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadFileList.length, mb: formatComma(byteToMB(totalTransmitDataAmount))}) }}
+        </span>
+        <span v-if="currntUploadStatus !== uploadStatus.wait">{{ $t('editing.uploading') }}</span>
       </div>
       <div class="dialog-button-block">
         <button class="btn btn-secondary"
           v-if="currntUploadStatus === uploadStatus.wait"
           @click="cancelFileUpload"
-        >取消</button>
+        >{{ $t('button.cancel') }}</button>
         <button class="btn btn-default"
           v-if="currntUploadStatus !== uploadStatus.finish"
           :disabled="uploadFileList.length === 0 || currntUploadStatus !== uploadStatus.wait"
           @click="fileUpload"
         >
-          <span v-show="currntUploadStatus === uploadStatus.wait">确认上传</span>
-          <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner"></svg-icon>上传中...</span>
+          <span v-show="currntUploadStatus === uploadStatus.wait">{{ $t('button.confirmUpload') }}</span>
+          <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner"></svg-icon>{{ $t('button.uploading') }}</span>
         </button>
       </div>
     </div>

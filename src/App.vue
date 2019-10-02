@@ -2,20 +2,35 @@
   <div id="app">
     <div class="app-bg"></div>
     <transition name="fade" mode="out-in">
-      <router-view/>
+      <router-view v-if="init" :key="language"/>
+      <spinner v-else style="height: 100vh;"></spinner>
     </transition>
   </div>
 </template>
 
 <script>
 import { Message } from 'element-ui'
+import Spinner from '@/components/Spinner'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'App',
+  components: {
+    Spinner
+  },
   data () {
     return {
-      intervalFunction: null
+      intervalFunction: null,
+      renderKey: 0,
+      init: false
     }
+  },
+  created () {
+    this.$store.dispatch('profile/initProfile').then(res => {
+      this.init = true
+    }).catch(() => {
+      this.init = true
+    })
   },
   watch: {
     // 監聽 bookmark 清單是否有 bookmark 正在建置中
@@ -29,14 +44,18 @@ export default {
       if (!value && oldValue) {
         window.clearInterval(this.intervalFunction)
         Message({
-          message: '资料源建立完成',
+          message: this.$t('message.builded'),
           type: 'success',
           duration: 3 * 1000
         })
       }
+    },
+    language (lang, oldLang) {
+      this.$i18n.locale = lang
     }
   },
   computed: {
+    ...mapGetters('profile', ['language']),
     isBookmarkBuilding () {
       return this.$store.getters['bookmark/isBookmarkBuilding']
     }

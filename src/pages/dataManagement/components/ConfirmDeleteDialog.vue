@@ -7,19 +7,20 @@
     <template class="dialog-btn-block" slot="dialogFooter">
       <button type="button" class="btn btn-secondary"
         @click="cancel"
-      >取消</button>
+      >{{ $t('button.cancel') }}</button>
       <button type="button" class="btn btn-default"
         :disabled="isProcessing"
         @click="confirm"
       >
-        <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>处理中...</span>
-        <span v-else>确认删除</span>
+        <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>{{ $t('button.processing') }}</span>
+        <span v-else>{{ $t('button.confirmDelete') }}</span>
       </button>
     </template>
   </confirm-dialog>
 </template>
 <script>
 import ConfirmDialog from '@/components/dialog/ConfirmDialog'
+import i18n from '@/lang/index.js'
 export default {
   name: 'ConfirmDeleteDialog',
   components: {
@@ -32,7 +33,7 @@ export default {
     },
     content: {
       type: String,
-      default: '确认删除？'
+      default: i18n.t('button.confirmDeleteOrNot')
     }
   },
   data () {

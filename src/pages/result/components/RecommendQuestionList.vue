@@ -16,7 +16,7 @@
         v-for="(question, index) in questionList"
         :key="index"
       >
-        <div class="question-category">{{ index === 0 ? '比较类' : ''}}</div>
+        <div class="question-category">{{ index === 0 ? $t('editing.comparisonCategory') : ''}}</div>
         <div class="question-name"
           @mousedown="onDrag = false"
           @mousemove="onDrag = true"

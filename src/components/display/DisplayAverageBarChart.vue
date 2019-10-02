@@ -13,35 +13,38 @@
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 let chartAddon = JSON.parse(JSON.stringify(chartOptions))
-let averageBarChartConfig = {
-  chartData: {
-    type: 'bar',
-    itemStyle: {
-      color: chartVariable['averageBarColor']
-    },
-    legendHoverLink: false,
-    emphasis: {
+
+function averageBarChartConfig (t) {
+  return {
+    chartData: {
+      type: 'bar',
       itemStyle: {
         color: chartVariable['averageBarColor']
-      }
-    },
-    barMaxWidth: '18',
-    markLine: {
-      symbol: ['none', 'none'],
-      lineStyle: {
-        color: chartVariable['averageLineColor']
       },
-      data: [
-        {
-          type: 'average',
-          name: '平均值',
-          symbol: 'none',
-          label: {
-            position: 'start',
-            formatter: 'AVG'
-          }
+      legendHoverLink: false,
+      emphasis: {
+        itemStyle: {
+          color: chartVariable['averageBarColor']
         }
-      ]
+      },
+      barMaxWidth: '18',
+      markLine: {
+        symbol: ['none', 'none'],
+        lineStyle: {
+          color: chartVariable['averageLineColor']
+        },
+        data: [
+          {
+            type: 'average',
+            name: t('aggregatedValue.mean'),
+            symbol: 'none',
+            label: {
+              position: 'start',
+              formatter: 'AVG'
+            }
+          }
+        ]
+      }
     }
   }
 }
@@ -105,8 +108,9 @@ export default {
           return element
         }
       })
-      averageBarChartConfig.chartData.data = seriesArray
-      chartAddon.series[0] = averageBarChartConfig.chartData
+      let config = averageBarChartConfig(this.$t)
+      config.chartData.data = seriesArray
+      chartAddon.series[0] = config.chartData
       if (this.isPreview) this.previewChartSetting(chartAddon)
 
       return chartAddon

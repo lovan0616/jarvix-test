@@ -1,7 +1,7 @@
 <template>
   <div class="edit-column-dialog full-page-dialog">
     <div class="dialog-container">
-      <div class="dialog-title">编辑资料表栏位
+      <div class="dialog-title">{{ $t('editing.editTableColumn') }}
          <a href="javascript:void(0)" class="close-btn"
           @click="closeDialog"
          ><svg-icon icon-class="close"></svg-icon></a>
@@ -10,11 +10,11 @@
         <div class="data-table">
           <div class="data-table-head is-scrolling">
             <div class="data-table-row table-head">
-              <div class="data-table-cell name">栏位名称</div>
-              <div class="data-table-cell alias">别名</div>
-              <div class="data-table-cell tag">标签</div>
-              <div class="data-table-cell domain">领域</div>
-              <div class="data-table-cell action">操作</div>
+              <div class="data-table-cell name">{{ $t('editing.columnName') }}</div>
+              <div class="data-table-cell alias">{{ $t('editing.columnAlias') }}</div>
+              <div class="data-table-cell tag">{{ $t('editing.columnTag') }}</div>
+              <div class="data-table-cell domain">{{ $t('editing.columnDomain') }}</div>
+              <div class="data-table-cell action">{{ $t('editing.action') }}</div>
             </div>
           </div>
           <div class="data-table-body" ref="dataTableBody">
@@ -46,17 +46,17 @@
                 <a class="action-link" href="javascript:void(0)"
                   v-if="currentEditColumn !== column.name"
                   @click="edit(column)"
-                >编辑</a>
+                >{{ $t('button.edit') }}</a>
                 <a class="action-link" href="javascript:void(0)"
                   :disabled="isProcessing"
                   v-if="currentEditColumn === column.name"
                   @click="save"
-                >储存</a>
+                >{{ $t('button.save') }}</a>
                 <a class="action-link" href="javascript:void(0)"
                   :disabled="isProcessing"
                   v-if="currentEditColumn === column.name"
                   @click="cancel"
-                >取消</a>
+                >{{ $t('button.cancel') }}</a>
               </div>
             </div>
           </div>

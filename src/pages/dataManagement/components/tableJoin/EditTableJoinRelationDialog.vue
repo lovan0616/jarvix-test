@@ -1,24 +1,24 @@
 <template>
   <div class="edit-table-join-relation-dialog full-page-dialog">
     <div class="dialog-container">
-      <div class="dialog-title">资料表关联</div>
+      <div class="dialog-title">{{ $t('editing.foreignTable') }}</div>
       <div class="button-block">
         <button type="button" class="btn btn-default"
           @click="addNewRelations"
-        >新增关联</button>
+        >{{ $t('button.newForeign') }}</button>
         <div class="control-button-block">
           <button type="button" class="btn btn-outline"
             @click="closeDialog"
-          >取消</button>
+          >{{ $t('button.cancel') }}</button>
           <button type="button" class="btn btn-default"
             @click="saveRelations"
-          >储存</button>
+          >{{ $t('button.save') }}</button>
         </div>
       </div>
       <empty-info-block
         class="empty-info-block"
         v-if="joinRelations.length === 0"
-        msg="此资料表未建立任何关联"
+        :msg="$t('editing.emptyForeign')"
       ></empty-info-block>
       <table-join-relatoin-block
         v-else

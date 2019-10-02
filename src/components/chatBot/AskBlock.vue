@@ -5,7 +5,7 @@
       <input class="question-input input"
         ref="questionInput"
         :name="new Date().getTime()"
-        placeholder="请输入您的问题"
+        :placeholder="$t('editing.askPlaceHolder')"
         autocomplete="off"
         v-model="userQuestion"
         @keypress.enter.prevent="enterQuestion"

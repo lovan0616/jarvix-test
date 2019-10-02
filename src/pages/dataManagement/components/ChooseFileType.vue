@@ -1,6 +1,6 @@
 <template>
   <div class="choose-file-type">
-    <div class="dialog-title">新增资料</div>
+    <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block></upload-process-block>
     <div class="dialog-body">
       <div class="input-block-container">
@@ -11,15 +11,15 @@
             name="fileTypeSelect"
             :selected="bookmarkInfo.type"
             :items="fileTypeList"
-            placeholder="选择资料类型"
+            :placeholder="$t('editing.selectDataType')"
             @update:selected="bookmarkTypeChange"
             v-validate="'required'"
           ></sy-select>
-          <div class="error-text">请先选择资料类型</div>
+          <div class="error-text">{{ $t('editing.choiceDataTypeFirst') }}</div>
         </div>
         <input-block class="file-info-input-block"
           v-if="!currentBookmarkInfo"
-          label="资料源名称"
+          :label="$t('editing.dataSourceName')"
           name="dataSourceName"
           v-model="bookmarkInfo.name"
           v-validate="'required'"
@@ -30,10 +30,10 @@
       <div class="dialog-button-block">
         <button class="btn btn-secondary"
           @click="cancelFileUpload"
-        >取消</button>
+        >{{ $t('button.cancel') }}</button>
         <button class="btn btn-default"
           @click="nextStep"
-        >下一步</button>
+        >{{ $t('button.nextStep') }}</button>
       </div>
     </div>
   </div>

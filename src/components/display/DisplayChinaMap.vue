@@ -51,7 +51,7 @@ export default {
           align: 'left',
           min: 0,
           max: this.maxValue,
-          text: ['高', '低'],
+          text: [this.$t('resultDescription.high'), this.$t('resultDescription.low')],
           calculable: true,
           inRange: {
             color: ['#95FAF2', '#6245FF']

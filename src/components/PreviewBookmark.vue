@@ -1,13 +1,13 @@
 <template>
   <div class="page-preview-bookmark">
     <span v-show="bookmarkId">
-      <h2>资料集介绍</h2>
+      <h2>{{ $t('resultDescription.dataSourceIntro') }}</h2>
       <container-card>
         <div class="preview-bookmark-card-inner">
           <sy-select class="preview-bookmark-select"
             :selected="bookmarkTableId"
             :items="bookmarkTables"
-            placeholder="请选择bookmark"
+            :placeholder="$t('editing.choiceDataSource')"
             @update:selected="onBookmarkTableChange"
           ></sy-select>
           <sy-meta-table class="preview-bookmark-table"

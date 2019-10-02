@@ -1,6 +1,6 @@
 <template>
   <div class="remote-connection">
-    <div class="dialog-title">連結MySQL資料庫</div>
+    <div class="dialog-title">{{ $t('editing.connectMySQL') }}</div>
     <upload-process-block
       :step="isLoading ? 3 : 2"
     ></upload-process-block>
@@ -9,25 +9,25 @@
         v-if="isLoading"
       >
         <svg-icon icon-class="spinner" class="loading-icon"></svg-icon>
-        <div class="loading-text">連結資料庫中</div>
+        <div class="loading-text">{{ $t('editing.DBconnecting') }}</div>
       </div>
       <div class="input-block-container"
         v-else
       >
         <input-block class="dialog-input"
-          label="IP位址"
+          :label="$t('editing.IPaddress')"
           name="dataBase"
           v-model="database"
           v-validate="'required'"
         ></input-block>
         <input-block class="dialog-input"
-          label="帳號"
+          :label="$t('editing.username')"
           name="userName"
           v-model="username"
           v-validate="'required'"
         ></input-block>
         <input-block class="dialog-input"
-          label="密碼"
+          :label="$t('editing.password')"
           name="password"
           type="password"
           v-model="password"
@@ -40,11 +40,11 @@
         <button class="btn btn-outline"
           :disabled="isLoading"
           @click="cancelFileUpload"
-        >取消</button>
+        >{{ $t('button.cancel') }}</button>
         <button class="btn btn-default"
           :disabled="isLoading"
           @click="nextStep"
-        >{{isLoading ? '連線中' : '連線'}}</button>
+        >{{isLoading ? $t('button.connecting') : $t('button.connect')}}</button>
       </div>
     </div>
   </div>

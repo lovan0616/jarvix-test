@@ -3,6 +3,7 @@ import axios from 'axios'
 import router from '../router'
 import { Message } from 'element-ui'
 import { errorsMessage } from './errorsMessage.js'
+import i18n from '@/lang/index.js'
 
 /**
  * 注意這邊 headers 取 token 的寫法
@@ -34,7 +35,7 @@ service.interceptors.response.use(
 
     // 如果 mapping 不到錯誤訊息，就顯示制式文字
     Message({
-      message: errorsMessage[res.error.code] || '系统发生错误',
+      message: errorsMessage[res.error.code] || i18n.t('message.systemIsError'),
       type: 'error',
       duration: 3 * 1000
     })
@@ -57,7 +58,7 @@ service.interceptors.response.use(
 
     if (error.response) {
       Message({
-        message: error.response.status + '-系统发生错误',
+        message: error.response.status + '-' + i18n.t('message.systemIsError'),
         type: 'error',
         duration: 3 * 1000
       })

@@ -1,18 +1,18 @@
 <template>
   <div class="remote-connection-finished file-upload-finished">
-    <div class="dialog-title">连接MySQL资料库</div>
+    <div class="dialog-title">{{ $t('editing.connectMySQL') }}</div>
       <div class="finished-img-block">
-        <img :src="require(`@/assets/images/${statusImg}.svg`)" alt="连线成功" class="finished-img">
+        <img :src="require(`@/assets/images/${statusImg}.svg`)" :alt="$t('editing.connectSuccess')" class="finished-img">
         <div class="finished-file-info">{{ statusTitle }}</div>
       </div>
       <div class="dialog-footer">
         <div class="dialog-button-block">
           <button class="btn btn-outline"
             @click="goBack"
-          >返回修正</button>
+          >{{ $t('button.backToEdit') }}</button>
           <button class="btn btn-default"
             @click="closeFileUploadDialog"
-          >我知道了</button>
+          >{{ $t('button.gotIt') }}</button>
         </div>
       </div>
   </div>
@@ -41,9 +41,9 @@ export default {
     },
     statusTitle () {
       if (this.connectionStatus) {
-        return '连线成功'
+        return this.$t('editing.connectSuccess')
       } else {
-        return '连线失败，请检查设定是否正确'
+        return this.$t('editing.connectFailure')
       }
     }
   }

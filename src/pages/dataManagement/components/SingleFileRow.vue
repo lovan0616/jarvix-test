@@ -4,7 +4,7 @@
   >
     <div class="single-file-info">
       <div class="file-info name">{{ formDataInfo.name }}</div>
-      <div class="file-info size">{{ byteToMB(formDataInfo.size) | formatComma }}MB</div>
+      <div class="file-info size">{{ formatComma(byteToMB(formDataInfo.size)) + 'MB' }}</div>
       <div class="single-file-progress"
         v-if="singleFile.status === uploadStatus.uploading && progress < 100"
       >
@@ -24,22 +24,22 @@
       <div class="warning"
         v-else-if="singleFile.status === uploadStatus.forbidden"
       >
-        檔案過大
+        {{ $t('editing.fileOverSize') }}
         <tool-tip
           class="warning-tool-tip"
-          content="單一檔案大小不超過 100MB"
+          :content="$t('editing.singlefileSizeTip')"
         ></tool-tip>
       </div>
       <a class="action-link cancel"
         v-else-if="singleFile.status === uploadStatus.uploading"
         @click="cancelUpload"
         href="javascript:void(0)"
-      >取消</a>
+      >{{ $t('button.cancel') }}</a>
       <a class="action-link"
         v-else
         href="javascript:void(0)"
         @click="removeFile"
-      >移除</a>
+      >{{ $t('button.delete') }}</a>
     </div>
   </div>
 </template>

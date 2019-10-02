@@ -3,14 +3,14 @@
   <div class="confirm-delete"
     v-if="isAskDelete"
   >
-    <div class="confirm-content">确认删除此钉板？</div>
+    <div class="confirm-content">{{ $t('editing.confirmDeleteBoardOrNot') }}</div>
     <div class="button-block">
       <button class="btn btn-outline"
         @click="cancelDelete"
-      >取消</button>
+      >{{ $t('button.cancel') }}</button>
       <button class="btn btn-default"
         @click="deletePinboard"
-      >确认</button>
+      >{{ $t('button.confirm') }}</button>
     </div>
   </div>
   <div class="action-block edit"
@@ -22,11 +22,11 @@
     <div class="button-block">
       <button class="btn btn-outline"
         @click="cancelEdit"
-      >取消</button>
+      >{{ $t('button.cancel') }}</button>
       <button class="btn btn-default"
         @click="confirmEdit"
         :disabled="!tempEditInfo.name"
-      >确认</button>
+      >{{ $t('button.confirm') }}</button>
     </div>
   </div>
   <div class="action-block edit"
@@ -40,10 +40,10 @@
     <div class="button-block">
       <button class="btn btn-outline"
         @click="cancelShare"
-      >取消</button>
+      >{{ $t('button.cancel') }}</button>
       <button class="btn btn-default"
         @click="copy"
-      >复制</button>
+      >{{ $t('button.copy') }}</button>
     </div>
   </div>
   <div class="action-block"
@@ -145,7 +145,7 @@ export default {
       document.execCommand('copy')
 
       Message({
-        message: '已复制至剪贴簿',
+        message: this.$t('message.copiedToBoard'),
         type: 'success',
         duration: 3 * 1000
       })

@@ -12,7 +12,7 @@
             href="javascript:void(0)"
             @click="showShareDialog"
           >
-            <svg-icon icon-class="share" class="icon"></svg-icon>分享
+            <svg-icon icon-class="share" class="icon"></svg-icon>{{ $t('button.share') }}
             <share-dialog
               v-if="isShowShareDialog"
              :share-url="shareUrl"
@@ -23,7 +23,7 @@
             href="javascript:void(0)"
             @click="unPin"
           >
-            <svg-icon icon-class="delete" class="icon"></svg-icon>移除
+            <svg-icon icon-class="delete" class="icon"></svg-icon>{{ $t('button.delete') }}
           </a>
         </div>
         <div class="pin-button-block"
@@ -33,6 +33,9 @@
             :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
             href="javascript:void(0)"
             @click="pinToBoard"
+            @mouseover="isMouseoverPinButton = true"
+            @mouseleave="isMouseoverPinButton = false"
+            :data-text="pinButtonText"
           >
             <span class="pin-slash"><svg-icon :icon-class="isLoading  ? 'spinner' : 'pin'" class="pin-icon"></svg-icon></span>
           </a>
@@ -49,7 +52,7 @@
     <div class="related-question-block"
       v-if="$slots.RelatedQuestions"
     >
-      <div class="block-title">关联问题</div>
+      <div class="block-title">{{ $t('resultDescription.relatedQuestion') }}</div>
       <div class="related-question-list">
         <slot name="RelatedQuestions"></slot>
       </div>
@@ -77,7 +80,8 @@ export default {
       isLoading: false,
       pinBoardId: null,
       showPinboardList: false,
-      isShowShareDialog: false
+      isShowShareDialog: false,
+      isMouseoverPinButton: false
     }
   },
   mounted () {
@@ -180,6 +184,12 @@ export default {
     }
   },
   computed: {
+    pinButtonText () {
+      if (this.isLoading) return this.$t('button.processing')
+      if (this.isPinned && !this.isMouseoverPinButton) return this.$t('button.pinned')
+      if (this.isPinned && this.isMouseoverPinButton) return this.$t('button.cancelPinned')
+      return this.$t('button.pinToBoard')
+    },
     isPinboardPage () {
       return this.$route.name === 'PagePinboard'
     },
@@ -260,7 +270,7 @@ export default {
     transition: all 0.3s;
 
     &:after {
-      content: '加入钉板';
+      content: attr(data-text);
     }
 
     &:hover {
@@ -275,10 +285,6 @@ export default {
       opacity: 0.5;
       color: #fff;
       padding-left: 15px;
-
-      &:after {
-        content: '处理中...';
-      }
     }
 
     &.is-pinned:not(.is-loading) {
@@ -288,16 +294,8 @@ export default {
       padding-left: 15px;
       transition: all 0.3s;
 
-      &:after {
-        content: '已钉板';
-      }
-
       &:hover {
         background-color: #67888E;
-
-        &:after {
-          content: '取消钉板';
-        }
 
         // unpin icon 的斜線
         .pin-slash {

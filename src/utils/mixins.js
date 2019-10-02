@@ -20,6 +20,10 @@ Vue.mixin({
     byteToMB (value) {
       return (value / (1024 * 1024)).toFixed(2)
     },
+    // 標註千分位
+    formatComma (str) {
+      return str ? str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : str
+    },
     // timeStamp 轉成 YYYY-MM-DD
     timeStampToDate (time) {
       let datetime = new Date()

@@ -27,7 +27,7 @@
             <a class="step-control" href="javasctipt:void(0)"
               v-if="currentStep > min"
               @click="chooseStep(currentStep - 1)"
-            >上一步</a>
+            >{{ $t('guiding.preStep') }}</a>
           </div>
           <div class="img-block popup-container">
             <img class="pic"
@@ -41,11 +41,11 @@
             <a class="step-control" href="javasctipt:void(0)"
               v-if="currentStep < stepList.length"
               @click="chooseStep(currentStep + 1)"
-            >下一步</a>
+            >{{ $t('guiding.nextStep') }}</a>
             <button class="btn-finish"
               v-else
               @click="closePopup"
-            >结束</button>
+            >{{ $t('guiding.endStep') }}</button>
           </div>
         </div>
       </div>
@@ -59,23 +59,6 @@ export default {
   name: 'PopupGuiding',
   data () {
     return {
-      stepList: [
-        {
-          name: '选择资料集',
-          hint: '选择想要分析的资料集',
-          imgSrc: 'step_1.jpg'
-        },
-        {
-          name: '使用推荐语句',
-          hint: '使用介绍资料集了解资料，并透过依照建议问句进行询问',
-          imgSrc: 'step_2.jpg'
-        },
-        {
-          name: '看快速指引',
-          hint: '你也可以使用快速指引，一键开始进行搜寻分析',
-          imgSrc: 'step_3.jpg'
-        }
-      ],
       currentStep: 1,
       min: 1,
       // 為了 transition
@@ -91,6 +74,27 @@ export default {
     this.showDialog = false
     document.getElementsByTagName('body')[0].removeAttribute('style')
     document.removeEventListener('click', this.autoHide, false)
+  },
+  computed: {
+    stepList () {
+      return [
+        {
+          name: this.$t('guiding.step1.name'),
+          hint: this.$t('guiding.step1.hint'),
+          imgSrc: 'step_1.jpg'
+        },
+        {
+          name: this.$t('guiding.step2.name'),
+          hint: this.$t('guiding.step2.hint'),
+          imgSrc: 'step_2.jpg'
+        },
+        {
+          name: this.$t('guiding.step3.name'),
+          hint: this.$t('guiding.step3.hint'),
+          imgSrc: 'step_3.jpg'
+        }
+      ]
+    }
   },
   methods: {
     autoHide (evt) {

@@ -1,6 +1,6 @@
 <template>
   <div class="result-board-body root-cause-board-body">
-    <div class="title-block">摘要報告</div>
+    <div class="title-block">{{ $t('resultDescription.summaryReport') }}</div>
     <div class="main-chart-container">
       <div class="chart-description-block">
         <slot name="RootCauseDescription"></slot>
@@ -9,7 +9,7 @@
         <slot name="PageResultBoardChart"></slot>
       </div>
     </div>
-    <div class="title-block">重要因素变化比较</div>
+    <div class="title-block">{{ $t('resultDescription.importantFeatureChanging') }}</div>
     <div class="root-cause-item-block">
       <slot name="RootCauseItem"></slot>
     </div>

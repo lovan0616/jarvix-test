@@ -1,26 +1,26 @@
 <template>
   <page-layout>
     <div class="login-page">
-      <h1 class="page-title">使用者登入</h1>
+      <h1 class="page-title">{{ $t('editing.userLogin') }}</h1>
       <form
         @submit.prevent="submitForm"
       >
         <div class="login-form">
           <input-block class="login-input-block"
-            label="帐号"
+            :label="$t('editing.username')"
             name="userName"
             v-model="userInfo.account"
             v-validate="'required'"
           ></input-block>
           <input-block class="login-input-block"
-            label="密码"
+            :label="$t('editing.password')"
             name="userPassword"
             type="password"
             v-model="userInfo.password"
             v-validate="'required'"
           ></input-block>
         </div>
-        <button type="submit" class="btn btn-default btn-submit">登入</button>
+        <button type="submit" class="btn btn-default btn-submit">{{ $t('button.login') }}</button>
       </form>
     </div>
   </page-layout>

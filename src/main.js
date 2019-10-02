@@ -10,6 +10,7 @@ import '@/utils/filters'
 import '@/utils/mixins'
 import '@/icons'
 import './styles/App.scss'
+import i18n from './lang/index.js'
 
 import {
   Select,
@@ -140,32 +141,32 @@ Vue.use(VeeValidate, {
     zh_TW: {
       messages: {
         required () {
-          return '欄位不得空白'
+          return i18n.t('message.formColumnEmpty', 'zh-hant')
         },
         email () {
-          return '信箱格式錯誤'
+          return i18n.t('message.formMailWrong', 'zh-hant')
         },
         numeric () {
-          return '請輸入數字'
+          return i18n.t('message.formNumberEmpty', 'zh-hant')
         },
         max (field, length) {
-          return `最多${length}個字元`
+          return i18n.t('message.formCharacterOverMax', { max: length }, 'zh-hant')
         }
       }
     },
     zh_CN: {
       messages: {
         required () {
-          return '栏位不得空白'
+          return i18n.t('message.formColumnEmpty', 'zh-hans')
         },
         email () {
-          return '信箱格式错误'
+          return i18n.t('message.formMailWrong', 'zh-hans')
         },
         numeric () {
-          return '请输入数字'
+          return i18n.t('message.formNumberEmpty', 'zh-hans')
         },
         max (field, length) {
-          return `最多${length}个字元`
+          return i18n.t('message.formCharacterOverMax', { max: length }, 'zh-hans')
         }
       }
     }
@@ -201,6 +202,7 @@ Vue.config.errorHandler = err => {
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  i18n,
   store,
   router,
   components: { App },

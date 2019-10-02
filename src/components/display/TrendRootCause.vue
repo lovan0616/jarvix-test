@@ -1,6 +1,6 @@
 <template>
   <div class="trend-root-cause">
-    <div class="block-title">趋势洞察</div>
+    <div class="block-title">{{ $t('resultDescription.trendInsight') }}</div>
     <div class="single-root-cause"
       v-for="(singleInfo, index) in info"
       :key="index"
@@ -12,7 +12,7 @@
     <div class="empty-info"
       v-if="info.length === 0"
     >
-      暂无侦测出任何趋势异常
+      {{ $t('resultDescription.trendInsightNoData') }}
     </div>
   </div>
 </template>

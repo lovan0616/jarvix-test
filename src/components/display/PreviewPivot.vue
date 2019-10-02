@@ -1,6 +1,6 @@
 <template>
   <div class="preview-pivot">
-    <span>枢纽分析</span>
+    <span>{{ $t('resultDescription.pivotTable') }}</span>
   </div>
 </template>
 <script>

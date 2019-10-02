@@ -3,7 +3,7 @@
     <input type="text" class="input question-input"
       ref="questionInput"
       v-model="appQuestion"
-      :placeholder="appQuestionPlaceholder"
+      :placeholder="$t('editing.questionPlaceHolder')"
       @click="toggleDropdown"
       @keypress.enter="enterQuestion"
     >
@@ -50,7 +50,6 @@ export default {
     return {
       isDropdownOpen: false,
       onTop: false,
-      appQuestionPlaceholder: '请输入问题，例如：价格和成本的相关性',
       optionListMaxHeight: 320
     }
   },
