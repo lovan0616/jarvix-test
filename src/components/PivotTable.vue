@@ -13,7 +13,7 @@
         height="450px"
         :title="{
           xAxis: rowFields.reduce((acc, item) => acc + item.label, ''),
-          yAxis: valFields[0] + this.$t('resultDescription.of') + aggregateNaming(aggregate)
+          yAxis: valFields[0] + $t('resultDescription.of') + aggregateNaming(aggregate)
         }"
         :addons="{
           'seriesItem:bar': {
@@ -213,9 +213,6 @@ export default {
     this.computeData()
   },
   computed: {
-    aggregateNaming (aggr) {
-      return this.$t(`aggregation.${aggr}`)
-    },
     chartColumns () {
       return this.sortedCols.map(element => element['col-0'])
     },
@@ -297,6 +294,9 @@ export default {
     }
   },
   methods: {
+    aggregateNaming (aggr) {
+      return this.$t(`aggregation.${aggr}`)
+    },
     // Get value from valuesHashTable
     value (row, col) {
       let data = this.valuesHashTable.get({...row, ...col}) || []
