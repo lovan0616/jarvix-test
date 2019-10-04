@@ -53,11 +53,6 @@ export default new Router({
       path: '/login',
       name: 'PageLogin',
       component: () => import('@/pages/login/Index')
-    },
-    {
-      path: '/kyc',
-      name: 'PageKYC',
-      component: () => import('@/pages/kyc/Index')
     }
   ],
   linkActiveClass: 'active',

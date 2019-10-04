@@ -59,14 +59,7 @@ export default {
           })
             .then(res => {
               localStorage.setItem('token', res.user.token)
-              // 確認 kyc 是否已回答完成
-              answerKYC().then(response => {
-                if (response) {
-                  this.$router.push('/kyc')
-                } else {
-                  this.$router.push('/')
-                }
-              })
+              this.$router.push('/')
             })
         }
       })
