@@ -24,7 +24,7 @@
       </file-list-block>
       <file-list-block
         v-if="failList.length > 0"
-        title="$t('editing.unuploaded')"
+        :title="$t('editing.unuploaded')"
         type="fail"
         :file-list="failList"
       ></file-list-block>
