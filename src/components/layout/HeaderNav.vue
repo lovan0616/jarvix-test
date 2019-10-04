@@ -9,6 +9,11 @@
       :items="selectItems"
       v-on:update:selected="onSelected"
     ></sy-select>
+    <div class="btn-exit"
+      @click="onBtnExitClick"
+    >
+      <svg-icon icon-class="exit" class="icon"></svg-icon>
+    </div>
   </nav>
 </template>
 <script>
@@ -34,6 +39,10 @@ export default {
   methods: {
     onSelected (item) {
       this.$store.dispatch('profile/updateLanguage', item)
+    },
+    onBtnExitClick () {
+      localStorage.removeItem('token')
+      this.$router.push('/login')
     }
   }
 }
@@ -66,8 +75,16 @@ export default {
 
   .nav-select {
     display: flex;
-    width: 100px;
+    width: 70px;
     align-items: center;
+  }
+
+  .btn-exit {
+    display: flex;
+    width: 50px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
   }
 }
 </style>
