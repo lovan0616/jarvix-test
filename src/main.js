@@ -77,6 +77,7 @@ import PreviewResultBoard from '@/components/PreviewResultBoard'
 import TrendRootCause from '@/components/display/TrendRootCause'
 import RootCauseItem from '@/components/display/RootCauseItem'
 import RootCauseDescription from '@/components/display/RootCauseDescription'
+import QuickStart from '@/components/display/QuickStart'
 
 var Rollbar = require('vue-rollbar')
 
@@ -130,6 +131,7 @@ Vue.component(PreviewResultBoard.name, PreviewResultBoard)
 Vue.component(TrendRootCause.name, TrendRootCause)
 Vue.component(RootCauseItem.name, RootCauseItem)
 Vue.component(RootCauseDescription.name, RootCauseDescription)
+Vue.component(QuickStart.name, QuickStart)
 
 Vue.use(VeeValidate, {
   // 避免自動 inject 到所有 component

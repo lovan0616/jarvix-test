@@ -200,7 +200,8 @@
     "basicInfo": "基本资料",
     "summaryReport": "摘要报告",
     "importantFeatureChanging": "重要因素变化比较",
-    "analysisProcessing": "分析处理中"
+    "analysisProcessing": "分析处理中",
+    "quickStart": "常用问题"
   },
   "errorMessage": {
     "SYERR0001": "系统发生非预期错误",

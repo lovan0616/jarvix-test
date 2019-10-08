@@ -200,7 +200,8 @@
     "basicInfo": "基本資料",
     "summaryReport": "摘要報告",
     "importantFeatureChanging": "重要因素變化比較",
-    "analysisProcessing": "分析處理中"
+    "analysisProcessing": "分析處理中",
+    "quickStart": "常用問題"
   },
   "errorMessage": {
     "SYERR0001": "系統發生非預期錯誤",
