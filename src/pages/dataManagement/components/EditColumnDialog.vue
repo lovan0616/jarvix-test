@@ -13,7 +13,6 @@
               <div class="data-table-cell name">{{ $t('editing.columnName') }}</div>
               <div class="data-table-cell alias">{{ $t('editing.columnAlias') }}</div>
               <div class="data-table-cell tag">{{ $t('editing.columnTag') }}</div>
-              <div class="data-table-cell domain">{{ $t('editing.columnDomain') }}</div>
               <div class="data-table-cell action">{{ $t('editing.action') }}</div>
             </div>
           </div>
@@ -32,15 +31,15 @@
                   v-model="tempRowInfo.alias"
                 >
               </div>
-              <div class="data-table-cell tag">{{ column.tag }}</div>
-              <div class="data-table-cell domain">
+              <div class="data-table-cell tag">
                 <span
                   v-if="currentEditColumn !== column.name"
-                >{{ column.domain ? column.domain : '-' }}</span>
-                <input type="text" class="input"
+                >{{ column.tag }}</span>
+                <default-select
                   v-else
-                  v-model="tempRowInfo.domain"
-                >
+                  v-model="column.tag"
+                  :option-list=""
+                ></default-select>
               </div>
               <div class="data-table-cell action">
                 <a class="action-link" href="javascript:void(0)"
@@ -67,9 +66,13 @@
 </template>
 <script>
 import { getBookmarkStorage, buildStorage, updateCSVColumnSetting } from '@/API/Storage'
+import DefaultSelect from '@/components/select/DefaultSelect'
 
 export default {
   name: 'EditColumnDialog',
+  components: {
+    DefaultSelect
+  },
   props: {
     tableInfo: {
       type: Object,
@@ -88,7 +91,6 @@ export default {
       tempRowInfo: {
         alias: null,
         tag: null,
-        domain: null,
         enable: null
       },
       storageId: null,
@@ -109,7 +111,6 @@ export default {
     edit (columnInfo) {
       this.currentEditColumn = columnInfo.name
       this.tempRowInfo.alias = JSON.parse(JSON.stringify(columnInfo.alias))
-      this.tempRowInfo.domain = JSON.parse(JSON.stringify(columnInfo.domain))
     },
     save () {
       if (this.isProcessing) return
@@ -128,13 +129,15 @@ export default {
       if (this.isProcessing) return
       this.currentEditColumn = null
       this.tempRowInfo.alias = null
-      this.tempRowInfo.domain = null
       this.isProcessing = false
     }
   },
   computed: {
     currentBookmarkInfo () {
       return this.$store.state.dataManagement.currentBookmarkInfo
+    },
+    test (value) {
+      return value
     }
   }
 }
@@ -158,9 +161,6 @@ export default {
   }
   .tag {
     width: 15%;
-  }
-  .domain {
-    width: 30%;
   }
   .action {
     width: 20%;

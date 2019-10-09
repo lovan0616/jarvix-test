@@ -52,15 +52,3 @@ export default {
   text-align: center;
 }
 </style>
-<style lang="scss">
-.quick-start-list {
-  display: flex;
-  min-height: 50px;
-  margin-right: -3%;
-
-  .single-result-board {
-    width: 31.34%;
-    margin-right: 3%;
-  }
-}
-</style>
