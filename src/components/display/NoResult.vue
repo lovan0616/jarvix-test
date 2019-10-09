@@ -1,11 +1,20 @@
 <template>
   <div class="no-result-block">
-    {{ $t('message.noResult') }}
+    {{ displayMessage }}
   </div>
 </template>
 <script>
 export default {
-  name: 'NoResult'
+  name: 'NoResult',
+  props: {
+    message: { type: String, default: '' }
+  },
+  computed: {
+    displayMessage () {
+      if (!this.message) return this.$t('message.noResult')
+      else return this.message
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
