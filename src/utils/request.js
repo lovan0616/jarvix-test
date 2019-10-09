@@ -2,7 +2,6 @@ import Vue from 'vue'
 import axios from 'axios'
 import router from '../router'
 import { Message } from 'element-ui'
-import { errorsMessage } from './errorsMessage.js'
 import i18n from '@/lang/index.js'
 
 /**
@@ -35,7 +34,7 @@ service.interceptors.response.use(
 
     // 如果 mapping 不到錯誤訊息，就顯示制式文字
     Message({
-      message: errorsMessage[res.error.code] || i18n.t('message.systemIsError'),
+      message: i18n.t(`errorMessage.${res.error.code}`) || i18n.t('message.systemIsError'),
       type: 'error',
       duration: 3 * 1000
     })
