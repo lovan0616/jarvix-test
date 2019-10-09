@@ -27,7 +27,6 @@
 </template>
 <script>
 import { login } from '@/API/User'
-import { answerKYC } from '@/API/KYC'
 import InputBlock from '@/components/InputBlock'
 import PageLayout from '@/components/layout/PageLayout'
 export default {
