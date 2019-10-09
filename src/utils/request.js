@@ -56,19 +56,20 @@ service.interceptors.response.use(
     // roolbar 留存
     Vue.rollbar.error(JSON.stringify(error))
 
-    if (error.response) {
-      Message({
-        message: error.response.status + '-' + i18n.t('message.systemIsError'),
-        type: 'error',
-        duration: 3 * 1000
-      })
-    } else {
-      Message({
-        message: error.message,
-        type: 'error',
-        duration: 3 * 1000
-      })
-    }
+    // 先不秀 http error
+    // if (error.response) {
+    //   Message({
+    //     message: error.response.status + '-' + i18n.t('message.systemIsError'),
+    //     type: 'error',
+    //     duration: 3 * 1000
+    //   })
+    // } else {
+    //   Message({
+    //     message: error.message,
+    //     type: 'error',
+    //     duration: 3 * 1000
+    //   })
+    // }
 
     return Promise.reject(error)
   }
