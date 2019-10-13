@@ -4,9 +4,10 @@
       v-if="loading"
     ></spinner>
     <component ref="taskComponent"
-      v-else
+      v-else-if="!isError"
       :is="childContent"
     ></component>
+    <no-result v-else :message="errorMessage"></no-result>
   </div>
 </template>
 
@@ -29,7 +30,9 @@ export default {
     return {
       loading: true,
       urlRoot: window.env.API_ROOT_URL,
-      childContent: undefined
+      childContent: undefined,
+      isError: false,
+      errorMessage: ''
     }
   },
   mounted () {
@@ -52,10 +55,13 @@ export default {
       ]).then(res => {
         const template = res[0]
         const data = res[1]
-
         this.createTaskByTemplateAndData({ template, data })
-      }).catch(() => {
-        this.createTaskByTemplateAndData({ template: '<NoResult />', data: {} })
+      }).catch(err => {
+        this.isError = true
+        if (err.error.code === 'TASKWARN0002') this.errorMessage = this.$t('errorMessage.TASKWARN0002')
+        else if (err.error.code === 'TASKWARN0003') this.errorMessage = this.$t('errorMessage.TASKWARN0003')
+        else this.errorMessage = this.$t('message.noResult')
+        this.loading = false
       })
 
       // 為了顯示上的友善，就算資料拿不回來，template也還是要顯示
