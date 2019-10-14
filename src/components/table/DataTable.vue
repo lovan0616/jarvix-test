@@ -20,7 +20,7 @@
         <div class="data-table-cell"
           v-for="headInfo in headers"
           :key="headInfo.value"
-          :class="{sort: headInfo.sort}"
+          :class="{sort: headInfo.sort, hasWidth: headInfo.width}"
           :style="{
             width: headInfo.width,
             'text-align': headInfo.align
@@ -61,7 +61,7 @@
         </div>
         <div class="data-table-cell"
           v-for="headInfo in headers"
-          :class="{action: headInfo.action}"
+          :class="{action: headInfo.action, hasWidth: headInfo.width}"
           :key="headInfo.value"
           :style="{
             width: headInfo.width,
@@ -72,7 +72,7 @@
             v-if="headInfo.link && checkLinkEnable(headInfo, data)"
             @click="linkTo(headInfo.link, data.id)"
           >{{ data[headInfo.value] }}</a>
-          <a href="javascript:void(0)" class="action-link"
+          <a href="javascript:void(0)" class="link action-link"
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
             :key="action.name"
@@ -289,6 +289,9 @@ export default {
     .is-processing {
       color: #ccc;
     }
+  }
+  .hasWidth {
+    flex: initial;
   }
 }
 </style>

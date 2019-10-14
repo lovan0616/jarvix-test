@@ -30,12 +30,12 @@
           :content="$t('editing.singlefileSizeTip')"
         ></tool-tip>
       </div>
-      <a class="action-link cancel"
+      <a class="link action-link cancel"
         v-else-if="singleFile.status === uploadStatus.uploading"
         @click="cancelUpload"
         href="javascript:void(0)"
       >{{ $t('button.cancel') }}</a>
-      <a class="action-link"
+      <a class="link action-link"
         v-else
         href="javascript:void(0)"
         @click="removeFile"

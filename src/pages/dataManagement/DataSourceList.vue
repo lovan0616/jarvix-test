@@ -1,24 +1,35 @@
 <template>
   <div class="data-management">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('editing.dataSource') }}</h1>
-      <div class="button-block">
-        <button class="btn btn-default"
-          @click="createDataSource"
-        >
-          <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('editing.newDataSource') }}
-        </button>
+      <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
+      <div class="bread-crumb">
+        {{ $t('editing.dataSource') }}
       </div>
     </div>
-    <data-table
-      :headers="tableHeaders"
-      :data-list.sync="dataList"
-      :empty-message="$t('editing.clickToCreateDataSource')"
-      @create="createDataSource"
-      @rename="confirmRename"
-      @delete="confirmDelete"
-    >
-    </data-table>
+    <div class="table-board">
+      <div class="board-title-row">
+        <div class="button-block">
+          <button class="btn btn-default btn-has-icon btn-m"
+            @click="createDataSource"
+          >
+            <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('editing.newDataSource') }}
+          </button>
+          <div class="reach-limit"
+            v-if="dataList.length >= dataSourceLimitCount"
+          >{{ $t('notification.uploadLimitNotification') }}</div>
+        </div>
+        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: dataSourceLimitCount}) }}</div>
+      </div>
+      <data-table
+        :headers="tableHeaders"
+        :data-list.sync="dataList"
+        :empty-message="$t('editing.clickToCreateDataSource')"
+        @create="createDataSource"
+        @rename="confirmRename"
+        @delete="confirmDelete"
+      >
+      </data-table>
+    </div>
     <file-upload-dialog
       v-if="showCreateDataSourceDialog"
       @success="fetchData"
@@ -63,8 +74,8 @@ export default {
       renameDataSource: null,
       dataList: [],
       // 資料處理中
-      isProcessing: false
-      // 用來生成 data table
+      isProcessing: false,
+      dataSourceLimitCount: 5
     }
   },
   mounted () {
@@ -148,7 +159,6 @@ export default {
           text: this.$t('editing.dataSourceName'),
           value: 'name',
           sort: true,
-          width: '11.71%',
           link: {
             name: 'PageDataFileList',
             disabled: {
@@ -158,26 +168,27 @@ export default {
           }
         },
         {text: this.$t('editing.sourceOfData'), value: 'type', width: '8.82%'},
-        {text: this.$t('editing.uploadUser'), value: 'create_user', width: '12.96%'},
+        {text: this.$t('editing.uploadUser'), value: 'create_user', width: '9.96%'},
         {
           text: this.$t('editing.createDate'),
           value: 'create_date',
           sort: true,
-          width: '14.53%',
+          width: '90px',
           time: 'YYYY-MM-DD'
         },
         {
           text: this.$t('editing.updateDate'),
           value: 'update_date',
           sort: true,
-          width: '14.53%',
+          width: '90px',
           time: 'YYYY-MM-DD'
         },
         {text: this.$t('editing.status'), value: 'build_status', width: '7.26%'},
-        {text: this.$t('editing.countOfTable'), value: 'count', align: 'right', width: '6.53%'},
+        {text: this.$t('editing.countOfTable'), value: 'count', align: 'right', width: '65px'},
         {
           text: this.$t('editing.action'),
           value: 'action',
+          width: '140px',
           action: [
             {
               name: this.$t('button.rename'),

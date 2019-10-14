@@ -1,6 +1,7 @@
 .link {
   font-size: 14px;
   color: $theme-color-primary;
+  text-decoration: underline;
 
   &:hover, &:active {
     color: $theme-color-primary;

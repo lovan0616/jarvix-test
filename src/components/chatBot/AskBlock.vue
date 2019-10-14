@@ -92,6 +92,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .ask-block {
+  padding: 0 32px;
+
   .user-question-block {
     position: relative;
     margin-bottom: 16px;

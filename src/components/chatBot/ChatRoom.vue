@@ -8,7 +8,7 @@
       <svg-icon icon-class="double-arrow-left" class="arrow-icon"></svg-icon>
     </a>
     <div class="chat-room-header">
-      <router-link to="/" class="chat-bot-link"><img src="@/assets/images/logo_white.svg" alt="sygps-logo" class="chat-bot-logo"></router-link>
+      <chat-bot-btn class="chat-bot-link"></chat-bot-btn>
       <bookmark-select class="bookmark-select"></bookmark-select>
     </div>
     <conversation-block></conversation-block>
@@ -18,6 +18,7 @@
 <script>
 import ConversationBlock from './ConversationBlock'
 import AskBlock from './AskBlock'
+import ChatBotBtn from './ChatBotBtn'
 import BookmarkSelect from '@/components/select/BookmarkSelect'
 
 export default {
@@ -25,7 +26,8 @@ export default {
   components: {
     BookmarkSelect,
     ConversationBlock,
-    AskBlock
+    AskBlock,
+    ChatBotBtn
   },
   methods: {
     closeChatRoom () {
@@ -57,7 +59,6 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
   text-align: center;
   overflow: auto;
-  padding: 24px 32px 32px;
   transform: translateX(-$chat-room-width);
   // transition: transform 0.1s;
 
@@ -84,18 +85,19 @@ export default {
   .chat-room-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 20px 32px 0;
     margin-bottom: 16px;
 
     .chat-bot-link {
-      width: 120px;
-    }
-
-    .chat-bot-logo {
-      width: 100%;
+      width: 70px;
+      height: 70px;
+      margin: initial;
     }
 
     .bookmark-select {
       width: 150px;
+      height: 36px;
     }
   }
 }

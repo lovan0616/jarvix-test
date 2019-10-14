@@ -6,6 +6,8 @@
     background: transparent;
     @extend %p;
     padding-left: 0;
+    height: 36px;
+    line-height: 36px;
 
     &::placeholder {
       color: $theme-placeholder-color;
@@ -18,6 +20,7 @@
 
   .el-input__suffix {
     right: 0;
+    top: 3px;
   }
 
   &.el-select:hover .el-input__inner,

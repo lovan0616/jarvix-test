@@ -12,7 +12,7 @@
       'xAxis:default': {},
       'yAxis:default': {},
     }"
-    isPreview
+    :is-preview="isPreview"
   ></display-basic-chart>
 </template>
 <script>

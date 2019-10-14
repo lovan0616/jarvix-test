@@ -13,7 +13,6 @@
               <div class="data-table-cell name">{{ $t('editing.columnName') }}</div>
               <div class="data-table-cell alias">{{ $t('editing.columnAlias') }}</div>
               <div class="data-table-cell tag">{{ $t('editing.columnTag') }}</div>
-              <div class="data-table-cell domain">{{ $t('editing.columnDomain') }}</div>
               <div class="data-table-cell action">{{ $t('editing.action') }}</div>
             </div>
           </div>
@@ -27,32 +26,32 @@
                 <span
                   v-if="currentEditColumn !== column.name"
                 >{{ column.alias }}</span>
-                <input type="text" class="input"
+                <input type="text" class="input alias-input"
                   v-else
                   v-model="tempRowInfo.alias"
                 >
               </div>
-              <div class="data-table-cell tag">{{ column.tag }}</div>
-              <div class="data-table-cell domain">
+              <div class="data-table-cell tag">
                 <span
                   v-if="currentEditColumn !== column.name"
-                >{{ column.domain ? column.domain : '-' }}</span>
-                <input type="text" class="input"
+                >{{ column.tag }}</span>
+                <default-select class="tag-select input"
                   v-else
-                  v-model="tempRowInfo.domain"
-                >
+                  v-model="tempRowInfo.tag"
+                  :option-list="tagOption(column.tag)"
+                ></default-select>
               </div>
               <div class="data-table-cell action">
-                <a class="action-link" href="javascript:void(0)"
+                <a class="link action-link" href="javascript:void(0)"
                   v-if="currentEditColumn !== column.name"
                   @click="edit(column)"
                 >{{ $t('button.edit') }}</a>
-                <a class="action-link" href="javascript:void(0)"
+                <a class="link action-link" href="javascript:void(0)"
                   :disabled="isProcessing"
                   v-if="currentEditColumn === column.name"
                   @click="save"
                 >{{ $t('button.save') }}</a>
-                <a class="action-link" href="javascript:void(0)"
+                <a class="link action-link" href="javascript:void(0)"
                   :disabled="isProcessing"
                   v-if="currentEditColumn === column.name"
                   @click="cancel"
@@ -67,9 +66,13 @@
 </template>
 <script>
 import { getBookmarkStorage, buildStorage, updateCSVColumnSetting } from '@/API/Storage'
+import DefaultSelect from '@/components/select/DefaultSelect'
 
 export default {
   name: 'EditColumnDialog',
+  components: {
+    DefaultSelect
+  },
   props: {
     tableInfo: {
       type: Object,
@@ -88,7 +91,6 @@ export default {
       tempRowInfo: {
         alias: null,
         tag: null,
-        domain: null,
         enable: null
       },
       storageId: null,
@@ -103,13 +105,35 @@ export default {
           this.storageId = res.storage.id
         })
     },
+    tagOption (tagName) {
+      if (tagName !== 'category') {
+        return [
+          {
+            name: tagName,
+            value: tagName
+          },
+          {
+            name: 'category',
+            value: 'category'
+          }
+        ]
+      } else {
+        return [
+          {
+            name: 'category',
+            value: 'category'
+          }
+        ]
+      }
+    },
     closeDialog () {
       this.$emit('close')
     },
     edit (columnInfo) {
       this.currentEditColumn = columnInfo.name
       this.tempRowInfo.alias = JSON.parse(JSON.stringify(columnInfo.alias))
-      this.tempRowInfo.domain = JSON.parse(JSON.stringify(columnInfo.domain))
+      this.tempRowInfo.tag = JSON.parse(JSON.stringify(columnInfo.tag))
+      this.tempRowInfo.type = JSON.parse(JSON.stringify(columnInfo.type))
     },
     save () {
       if (this.isProcessing) return
@@ -119,6 +143,7 @@ export default {
           buildStorage(this.storageId, this.currentBookmarkInfo.id, false).then(() => {
             this.$router.push('/data-management')
           }).catch(() => {
+            this.isProcessing = true
             this.cancel()
           })
         })
@@ -127,14 +152,21 @@ export default {
     cancel () {
       if (this.isProcessing) return
       this.currentEditColumn = null
-      this.tempRowInfo.alias = null
-      this.tempRowInfo.domain = null
+      this.tempRowInfo = {
+        alias: null,
+        tag: null,
+        type: null,
+        enable: null
+      }
       this.isProcessing = false
     }
   },
   computed: {
     currentBookmarkInfo () {
       return this.$store.state.dataManagement.currentBookmarkInfo
+    },
+    test (value) {
+      return value
     }
   }
 }
@@ -159,11 +191,24 @@ export default {
   .tag {
     width: 15%;
   }
-  .domain {
-    width: 30%;
-  }
   .action {
     width: 20%;
+  }
+
+  .alias-input {
+    line-height: 24px;
+  }
+}
+</style>
+<style lang="scss">
+.tag-select.el-select {
+  .el-input__inner {
+    height: 24px;
+    line-height: 24px;
+    font-size: 14px;
+  }
+  .el-input__icon {
+
   }
 }
 </style>
