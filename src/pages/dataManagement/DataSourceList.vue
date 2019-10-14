@@ -9,7 +9,7 @@
     <div class="table-board">
       <div class="board-title-row">
         <div class="button-block">
-          <button class="btn btn-default"
+          <button class="btn btn-default btn-has-icon btn-m"
             @click="createDataSource"
           >
             <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('editing.newDataSource') }}
@@ -159,7 +159,6 @@ export default {
           text: this.$t('editing.dataSourceName'),
           value: 'name',
           sort: true,
-          width: '11.71%',
           link: {
             name: 'PageDataFileList',
             disabled: {
@@ -169,26 +168,27 @@ export default {
           }
         },
         {text: this.$t('editing.sourceOfData'), value: 'type', width: '8.82%'},
-        {text: this.$t('editing.uploadUser'), value: 'create_user', width: '12.96%'},
+        {text: this.$t('editing.uploadUser'), value: 'create_user', width: '9.96%'},
         {
           text: this.$t('editing.createDate'),
           value: 'create_date',
           sort: true,
-          width: '14.53%',
+          width: '90px',
           time: 'YYYY-MM-DD'
         },
         {
           text: this.$t('editing.updateDate'),
           value: 'update_date',
           sort: true,
-          width: '14.53%',
+          width: '90px',
           time: 'YYYY-MM-DD'
         },
         {text: this.$t('editing.status'), value: 'build_status', width: '7.26%'},
-        {text: this.$t('editing.countOfTable'), value: 'count', align: 'right', width: '6.53%'},
+        {text: this.$t('editing.countOfTable'), value: 'count', align: 'right', width: '65px'},
         {
           text: this.$t('editing.action'),
           value: 'action',
+          width: '140px',
           action: [
             {
               name: this.$t('button.rename'),

@@ -15,7 +15,7 @@
     <div class="table-board">
       <div class="board-title-row">
         <div class="button-block">
-          <button class="btn btn-default"
+          <button class="btn btn-default btn-m btn-has-icon"
             :disabled="isProcessing"
             @click="createDataSource"
           >

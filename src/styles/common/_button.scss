@@ -66,3 +66,12 @@ $default-btn-color: #1EB8C7;
     color: #CCCCCC;
   }
 }
+
+.btn-has-icon {
+  display: flex;
+  align-items: center;
+
+  .icon {
+    margin-right: 10px;
+  }
+}
