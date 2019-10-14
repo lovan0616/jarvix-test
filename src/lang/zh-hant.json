@@ -86,7 +86,7 @@
     "processStep3": "開始新增",
     "dataProcessing": "資料處理中",
     "dataSource": "資料源",
-    "newDataSource": "資料源",
+    "newDataSource": "新增資料源",
     "newTable": "新增資料表",
     "clickToCreateDataSource": "點擊建立您的資料源",
     "clickToUploadTable": "點擊上傳您的資料表",
@@ -202,6 +202,10 @@
     "importantFeatureChanging": "重要因素變化比較",
     "analysisProcessing": "分析處理中",
     "quickStart": "常用問題"
+  },
+  "notification": {
+    "uploadLimitNotification": "資料數量已達上限",
+    "uploadLimit": "資料表限制：最多{count}筆"
   },
   "errorMessage": {
     "SYERR0001": "系統發生非預期錯誤",

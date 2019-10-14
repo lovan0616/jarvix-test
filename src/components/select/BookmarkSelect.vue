@@ -47,7 +47,7 @@ export default {
 
   .bookmark-select-icon {
     position: absolute;
-    top: 12px;
+    top: 10px;
     left: 8px;
   }
 }

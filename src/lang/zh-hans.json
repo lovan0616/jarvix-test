@@ -86,7 +86,7 @@
     "processStep3": "开始新增",
     "dataProcessing": "资料处理中",
     "dataSource": "资料源",
-    "newDataSource": "资料源",
+    "newDataSource": "新增资料源",
     "newTable": "新增资料表",
     "clickToCreateDataSource": "点击建立您的资料源",
     "clickToUploadTable": "点击上传您的资料表",
@@ -202,6 +202,10 @@
     "importantFeatureChanging": "重要因素变化比较",
     "analysisProcessing": "分析处理中",
     "quickStart": "常用问题"
+  },
+  "notification": {
+    "uploadLimitNotification": "资料数量已达上限",
+    "uploadLimit": "资料表限制：最多{count}笔"
   },
   "errorMessage": {
     "SYERR0001": "系统发生非预期错误",

@@ -1,5 +1,5 @@
 <template>
-  <el-select class="sy-select"
+  <el-select class="sy-select theme-dark"
     v-model="selectedValue"
     :placeholder="placeholder"
   >

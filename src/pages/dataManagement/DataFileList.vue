@@ -6,46 +6,55 @@
       <svg-icon icon-class="spinner" class="spinner-icon"></svg-icon>{{ $t('editing.dataProcessing') }}
     </div>
     <div class="page-title-row">
-      <h1 class="title">
+      <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
+      <div class="bread-crumb">
         <router-link to="/data-management" class="title-link">{{ $t('editing.dataSource') }}</router-link>
         <span class="divider">/</span>{{ currentBookmarkInfo ? currentBookmarkInfo.name : '' }}
-      </h1>
-      <div class="button-block">
-        <button class="btn btn-default"
-          :disabled="isProcessing"
-          @click="createDataSource"
-        >
-          <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
-        </button>
-        <button class="btn btn-default"
-          v-if="dataList.length > 1"
-          :disabled="isProcessing"
-          @click="editJoinTable"
-        >{{ $t('editing.foreignTable') }}</button>
-        <button class="btn btn-outline"
-          v-if="selectList.length > 0"
-          :disabled="isProcessing"
-          @click="confirmDelete()"
-        >
-          <svg-icon class="icon"
-            :icon-class="isProcessing ? 'spinner' : 'delete'"
-          ></svg-icon>{{ $t('button.delete') }}
-        </button>
       </div>
     </div>
-    <data-table
-      hasCheckbox
-      :headers="tableHeaders"
-      :data-list.sync="dataList"
-      :selection.sync="selectList"
-      :is-processing="isProcessing"
-      :empty-message="$t('editing.clickToUploadTable')"
-      @create="createDataSource"
-      @rename="confirmRename"
-      @delete="confirmDelete"
-      @edit="editTableColumn"
-    >
-    </data-table>
+    <div class="table-board">
+      <div class="board-title-row">
+        <div class="button-block">
+          <button class="btn btn-default"
+            :disabled="isProcessing"
+            @click="createDataSource"
+          >
+            <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
+          </button>
+          <button class="btn btn-default"
+            v-if="dataList.length > 1"
+            :disabled="isProcessing"
+            @click="editJoinTable"
+          >{{ $t('editing.foreignTable') }}</button>
+          <button class="btn btn-outline"
+            v-if="selectList.length > 0"
+            :disabled="isProcessing"
+            @click="confirmDelete()"
+          >
+            <svg-icon class="icon"
+              :icon-class="isProcessing ? 'spinner' : 'delete'"
+            ></svg-icon>{{ $t('button.delete') }}
+          </button>
+          <div class="reach-limit"
+            v-if="dataList.length >= fileLimitCount"
+          >{{ $t('notification.uploadLimitNotification') }}</div>
+        </div>
+        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileLimitCount}) }}</div>
+      </div>
+      <data-table
+        hasCheckbox
+        :headers="tableHeaders"
+        :data-list.sync="dataList"
+        :selection.sync="selectList"
+        :is-processing="isProcessing"
+        :empty-message="$t('editing.clickToUploadTable')"
+        @create="createDataSource"
+        @rename="confirmRename"
+        @delete="confirmDelete"
+        @edit="editTableColumn"
+      >
+      </data-table>
+    </div>
     <file-upload-dialog
       v-if="showCreateDataSourceDialog"
       @success="fetchData"
@@ -113,7 +122,8 @@ export default {
       selectList: [],
       // 目前正在編輯的資料表
       currentEditTableInfo: null,
-      intervalFunction: null
+      intervalFunction: null,
+      fileLimitCount: 5
     }
   },
   mounted () {
@@ -260,27 +270,26 @@ export default {
         {
           text: this.$t('editing.tableName'),
           value: 'filename',
-          sort: true,
-          width: '19.57%'
+          sort: true
         },
         {
           text: this.$t('editing.createDate'),
           value: 'create_date',
           sort: true,
-          width: '25.54%',
+          width: '200px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: this.$t('editing.updateDate'),
           value: 'update_date',
           sort: true,
-          width: '25.54%',
+          width: '200px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '15.13%',
+          width: '240px',
           action: [
             {
               name: this.$t('button.editColumn'),
@@ -318,9 +327,10 @@ export default {
 
   .title-link {
     color: $theme-color-primary;
+    text-decoration: underline;
   }
   .divider {
-    margin: 0 4px;
+    margin: 0 8px;
     color: #979797;
   }
 

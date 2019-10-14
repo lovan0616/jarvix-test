@@ -5,11 +5,16 @@ $default-btn-color: #1EB8C7;
   font-size: 14px;
   font-weight: 300;
   border-radius: 4px;
-  padding: 10px 15px;
+  padding: 0 15px;
+  height: 36px;
 
   &:disabled {
     cursor: not-allowed;
   }
+}
+
+.btn-m {
+  height: 30px;
 }
 
 .btn-default {

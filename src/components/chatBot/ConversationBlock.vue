@@ -1,33 +1,17 @@
 <template>
-  <div class="conversation-container"
-    :class="{'default-position': showBotIndefaultPosition}"
-  >
-    <div class="conversation-list"
-      v-if="!showBotIndefaultPosition"
-    >
-      <single-chat-block
-        v-for="(conversation, index) in conversationList"
-        :key="index"
-        :content="conversation"
-      ></single-chat-block>
-      <chat-spinner
-        v-if="isAnalyzing"
-      ></chat-spinner>
-    </div>
-    <div class="system-bot-block"
-      :class="{'default-position': showBotIndefaultPosition}"
-    >
-      <ChatBotbtn class="system-bot" />
-      <single-chat-block
-        v-if="showBotIndefaultPosition"
-        :content="conversationList[0]"
-        isDefault
-      ></single-chat-block>
-    </div>
+  <div class="conversation-container">
+    <single-chat-block
+      v-for="(conversation, index) in conversationList"
+      :key="index"
+      :content="conversation"
+    ></single-chat-block>
+    <chat-spinner
+      v-if="isAnalyzing"
+    ></chat-spinner>
   </div>
 </template>
 <script>
-import ChatBotbtn from './ChatBotBtn'
+import ChatBotBtn from './ChatBotBtn'
 import SingleChatBlock from './SingleChatBlock'
 import ChatSpinner from './ChatSpinner'
 export default {
@@ -35,7 +19,7 @@ export default {
   components: {
     ChatSpinner,
     SingleChatBlock,
-    ChatBotbtn
+    ChatBotBtn
   },
   computed: {
     conversationList () {
@@ -43,9 +27,6 @@ export default {
     },
     isAnalyzing () {
       return this.$store.state.chatBot.isAnalyzing
-    },
-    showBotIndefaultPosition () {
-      return this.conversationList.length === 1 && this.conversationList[0].type === 'System'
     }
   }
 }
@@ -57,30 +38,11 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: auto;
-
-  &.default-position {
-    align-items: center;
-  }
-
-  .conversation-list {
-    flex: 1;
-    overflow: auto;
-    padding-bottom: 30vh;
-    display: flex;
-    flex-direction: column;
-  }
+  padding: 0 32px;
 
   .system-bot-block {
     margin: auto;
     transition: all 0.3s;
-
-    &.default-position {
-
-      .system-bot {
-        width: 100px;
-        height: 100px;
-      }
-    }
 
     .system-bot {
       width: 70px;

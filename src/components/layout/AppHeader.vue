@@ -4,9 +4,7 @@
   >
     <div class="container">
       <div class="header-root">
-        <router-link class="header-logo" to="/"
-          v-show="!isShowChatRoom"
-        >
+        <router-link class="header-logo" to="/">
           <img src="@/assets/images/logo_white.svg">
         </router-link>
         <slot name="nav"></slot>

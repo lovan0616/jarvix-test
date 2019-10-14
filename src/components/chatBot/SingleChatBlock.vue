@@ -1,10 +1,14 @@
 <template>
   <div class="conversation-block"
-    :class="[{'is-default': isDefault}, content.type === 'System' ? 'system' : 'user']"
+    :class="[content.type === 'System' ? 'system' : 'user']"
   >
     <div class="response"
       @click="askAgain(content.text)"
-    >{{ content.text }}</div>
+    >
+      <svg-icon icon-class="triangle" class="icon"
+        v-if="content.type === 'System'"
+      ></svg-icon>
+      {{ content.text }}</div>
     <div class="option-list"
       v-show="content.options"
     >
@@ -29,10 +33,6 @@ export default {
           options: []
         }
       }
-    },
-    isDefault: {
-      type: Boolean,
-      default: false
     }
   },
   mounted () {
@@ -88,16 +88,8 @@ export default {
     }
   }
 
-  &.is-default {
-    width: 100%;
-    text-align: center;
-    margin: 0 auto;
+  &.system {
 
-    .response {
-      font-size: 18px;
-      line-height: 32px;
-      text-align: center;
-    }
   }
 
   .option-list {
@@ -105,8 +97,17 @@ export default {
   }
 
   .response {
+    position: relative;
     display: inline-block;
     text-align: left;
+
+    .icon {
+      position: absolute;
+      transform: rotate(90deg);
+      top: 6px;
+      left: -12px;
+      width: 10px;
+    }
   }
 
   .option {

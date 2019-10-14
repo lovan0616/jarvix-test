@@ -26,7 +26,7 @@
                 <span
                   v-if="currentEditColumn !== column.name"
                 >{{ column.alias }}</span>
-                <input type="text" class="input"
+                <input type="text" class="input alias-input"
                   v-else
                   v-model="tempRowInfo.alias"
                 >
@@ -35,23 +35,23 @@
                 <span
                   v-if="currentEditColumn !== column.name"
                 >{{ column.tag }}</span>
-                <default-select
+                <default-select class="tag-select input"
                   v-else
-                  v-model="column.tag"
-                  :option-list=""
+                  v-model="tempRowInfo.tag"
+                  :option-list="tagOption(column.tag)"
                 ></default-select>
               </div>
               <div class="data-table-cell action">
-                <a class="action-link" href="javascript:void(0)"
+                <a class="link action-link" href="javascript:void(0)"
                   v-if="currentEditColumn !== column.name"
                   @click="edit(column)"
                 >{{ $t('button.edit') }}</a>
-                <a class="action-link" href="javascript:void(0)"
+                <a class="link action-link" href="javascript:void(0)"
                   :disabled="isProcessing"
                   v-if="currentEditColumn === column.name"
                   @click="save"
                 >{{ $t('button.save') }}</a>
-                <a class="action-link" href="javascript:void(0)"
+                <a class="link action-link" href="javascript:void(0)"
                   :disabled="isProcessing"
                   v-if="currentEditColumn === column.name"
                   @click="cancel"
@@ -105,12 +105,35 @@ export default {
           this.storageId = res.storage.id
         })
     },
+    tagOption (tagName) {
+      if (tagName !== 'category') {
+        return [
+          {
+            name: tagName,
+            value: tagName
+          },
+          {
+            name: 'category',
+            value: 'category'
+          }
+        ]
+      } else {
+        return [
+          {
+            name: 'category',
+            value: 'category'
+          }
+        ]
+      }
+    },
     closeDialog () {
       this.$emit('close')
     },
     edit (columnInfo) {
       this.currentEditColumn = columnInfo.name
       this.tempRowInfo.alias = JSON.parse(JSON.stringify(columnInfo.alias))
+      this.tempRowInfo.tag = JSON.parse(JSON.stringify(columnInfo.tag))
+      this.tempRowInfo.type = JSON.parse(JSON.stringify(columnInfo.type))
     },
     save () {
       if (this.isProcessing) return
@@ -120,6 +143,7 @@ export default {
           buildStorage(this.storageId, this.currentBookmarkInfo.id, false).then(() => {
             this.$router.push('/data-management')
           }).catch(() => {
+            this.isProcessing = true
             this.cancel()
           })
         })
@@ -128,7 +152,12 @@ export default {
     cancel () {
       if (this.isProcessing) return
       this.currentEditColumn = null
-      this.tempRowInfo.alias = null
+      this.tempRowInfo = {
+        alias: null,
+        tag: null,
+        type: null,
+        enable: null
+      }
       this.isProcessing = false
     }
   },
@@ -164,6 +193,22 @@ export default {
   }
   .action {
     width: 20%;
+  }
+
+  .alias-input {
+    line-height: 24px;
+  }
+}
+</style>
+<style lang="scss">
+.tag-select.el-select {
+  .el-input__inner {
+    height: 24px;
+    line-height: 24px;
+    font-size: 14px;
+  }
+  .el-input__icon {
+
   }
 }
 </style>
