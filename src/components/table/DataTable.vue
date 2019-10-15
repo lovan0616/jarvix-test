@@ -68,7 +68,7 @@
             'text-align': headInfo.align
           }"
         >
-          <a href="javascript:void(0)" class="name-link"
+          <a href="javascript:void(0)" class="link name-link"
             v-if="headInfo.link && checkLinkEnable(headInfo, data)"
             @click="linkTo(headInfo.link, data.id)"
           >{{ data[headInfo.value] }}</a>

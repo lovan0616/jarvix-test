@@ -39,7 +39,7 @@
     "choiceDataSource": "请选择资料源",
     "createBoard": "建立新版",
     "questionPlaceHolder": "请输入问题，例如：价格和成本的相关性",
-    "askPlaceHolder": "请输入您的问题",
+    "askPlaceHolder": "请输入问句后按Enter送出",
     "dataBuilding": "资料处理中",
     "dataManageable": "可管理",
     "newData": "新增资料",
@@ -169,6 +169,10 @@
     "minCategoryCount": "最小类别数量",
     "countMean": "数量平均值",
     "countStd": "数量标准差"
+  },
+  "askHelper": {
+    "title": "问句说明",
+    "historyTitle": "历史问句"
   },
   "resultDescription": {
     "high": "高",

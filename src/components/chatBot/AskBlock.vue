@@ -13,19 +13,26 @@
       >
     </div>
     <div class="history-question-block"
-      :class="{show: showHistoryQuestion && historyQuestionList.length > 1}"
+      :class="{show: showHistoryQuestion && historyQuestionList.length > 0}"
     >
+      <div class="title">{{ $t('askHelper.historyTitle') }}</div>
       <div class="history-question"
         v-for="singleHistory in historyQuestionList"
         :key="singleHistory.id"
         @click="copyQuestion(singleHistory.question)"
       ><svg-icon icon-class="clock" class="icon"></svg-icon> {{ singleHistory.question }}</div>
     </div>
+    <ask-helper-dialog></ask-helper-dialog>
   </div>
 </template>
 <script>
+import AskHelperDialog from './AskHelperDialog'
+
 export default {
   name: 'AskBlock',
+  components: {
+    AskHelperDialog
+  },
   data () {
     return {
       userQuestion: null,
@@ -92,12 +99,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .ask-block {
+  position: relative;
   padding: 16px 32px;
   background-color: rgba(35, 61, 64, 0.6);
 
   .user-question-block {
     position: relative;
     margin-bottom: 16px;
+    z-index: 999;
 
     &:after {
       content: '';
@@ -119,18 +128,31 @@ export default {
   }
 
   .history-question-block {
+    position: absolute;
     text-align: left;
+    left: 0;
+    bottom: 0;
+    width: 100%;
     height: 0;
     overflow: hidden;
+    padding: 0 32px;
     transition: height 0.3s;
+    z-index: 90;
+    background-color: rgba(40, 71, 74, 0.95);
+    border-top: 1px solid #415E60;
 
     &.show {
-      height: 145px;
+      bottom: 110px;
+      height: 250px;
       overflow: auto;
     }
 
+    .title {
+      line-height: 50px;
+    }
+
     .history-question {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 5px;
       padding: 12px;
       color: #4DE2F0;
