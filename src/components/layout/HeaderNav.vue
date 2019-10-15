@@ -3,27 +3,32 @@
     <router-link class="nav-item" to="/" exact>{{ $t('nav.index') }}</router-link>
     <router-link class="nav-item" to="/pinboard">{{ $t('nav.pinboard') }}</router-link>
     <router-link class="nav-item" to="/data-management">{{ $t('nav.dataManagement') }}</router-link>
-    <sy-select class="nav-select"
+    <set-select class="nav-select">
+
+    </set-select>
+    <!-- <sy-select class="nav-select"
       :placeholder="$t('nav.languagePlaceholder')"
       :selected="language"
       :items="selectItems"
       v-on:update:selected="onSelected"
-    ></sy-select>
-    <div class="btn-exit"
+    ></sy-select> -->
+    <!-- <div class="btn-exit"
       @click="onBtnExitClick"
     >
       <svg-icon icon-class="exit" class="icon"></svg-icon>
-    </div>
+    </div> -->
   </nav>
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
+import SetSelect from '@/components/select/SetSelect'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'HeaderNav',
   components: {
-    SySelect
+    SySelect,
+    SetSelect
   },
   computed: {
     ...mapGetters('profile', ['language', 'languages']),
