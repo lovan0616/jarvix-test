@@ -92,7 +92,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .ask-block {
-  padding: 0 32px;
+  padding: 16px 32px;
+  background-color: rgba(35, 61, 64, 0.6);
 
   .user-question-block {
     position: relative;
