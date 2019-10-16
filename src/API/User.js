@@ -10,3 +10,13 @@ export function login (loginInfo) {
     data: loginInfo
   })
 }
+
+/**
+ * 登出
+ */
+export function logout () {
+  return request({
+    url: '/logout',
+    method: 'GET'
+  })
+}
