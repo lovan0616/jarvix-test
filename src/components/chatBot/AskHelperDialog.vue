@@ -18,7 +18,7 @@
         :label="$t('askHelper.tabToken')"
         :name="$t('askHelper.tabToken')"
       >
-
+        <column-info></column-info>
       </el-tab-pane>
       <el-tab-pane
         :label="$t('askHelper.tabSample')"
@@ -31,11 +31,13 @@
 </template>
 <script>
 import QuestionSample from './QuestionSample'
+import ColumnInfo from './ColumnInfo'
 
 export default {
   name: 'AskHelperDialog',
   components: {
-    QuestionSample
+    QuestionSample,
+    ColumnInfo
   },
   props: {
     show: {

@@ -129,3 +129,13 @@ export function renameCSV (bookmarkId, uploadId, filename) {
     }
   })
 }
+
+/**
+ * get bookmark column
+ */
+export function getBookmarkColumn (bookmarkId) {
+  return request({
+    url: `bookmarks/${bookmarkId}/tokens`,
+    method: 'GET'
+  })
+}

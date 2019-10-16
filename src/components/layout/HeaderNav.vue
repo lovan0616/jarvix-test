@@ -19,6 +19,7 @@
 <script>
 import SySelect from '@/components/select/SySelect'
 import { mapGetters } from 'vuex'
+import { logout } from '@/API/User'
 
 export default {
   name: 'HeaderNav',
@@ -41,8 +42,11 @@ export default {
       this.$store.dispatch('profile/updateLanguage', item)
     },
     onBtnExitClick () {
-      localStorage.removeItem('token')
-      this.$router.push('/login')
+      logout().then(() => {
+        localStorage.removeItem('token')
+        this.$router.push('/login')
+        this.$store.commit('bookmark/setIsInit', false)
+      })
     }
   }
 }
