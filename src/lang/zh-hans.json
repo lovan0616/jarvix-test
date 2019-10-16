@@ -4,7 +4,8 @@
     "index": "首页",
     "pinboard": "个人钉板",
     "dataManagement": "资料管理",
-    "languagePlaceholder": "语系"
+    "languagePlaceholder": "语系",
+    "setting": "设定"
   },
   "message": {
     "builded": "资料源建立完成",
@@ -112,7 +113,9 @@
     "preview": "预览",
     "result": "结果",
     "relatedQuesion": "关联问题",
-    "comparisonCategory": "比较类"
+    "comparisonCategory": "比较类",
+    "languageSetting": "语言设定",
+    "sureLogout": "您确认要登出帐号？"
   },
   "button": {
     "cancel": "取消",
@@ -140,6 +143,8 @@
     "editColumn": "编辑栏位",
     "rename": "重新命名",
     "login": "登入",
+    "logout": "登出",
+    "change": "变更",
     "copy": "复制",
     "pinToBoard": "加入钉板",
     "pinned": "已钉板",
