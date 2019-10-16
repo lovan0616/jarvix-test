@@ -31,15 +31,16 @@ service.interceptors.response.use(
     Vue.rollbar.error(JSON.stringify(res))
 
     // 除了這些以外都不需要在這層級處理
-    const messageCodeType = ['APPERR', 'SYERR', 'SYWARN']
-    const needMessage = messageCodeType.reduce((count, type) => {
-      count += res.error.code.indexOf(type) > -1 ? 1 : 0
-      return count
-    }, 0)
+    // const messageCodeType = ['APPERR', 'SYERR', 'SYWARN']
+    // const needMessage = messageCodeType.reduce((count, type) => {
+    //   count += res.error.code.indexOf(type) > -1 ? 1 : 0
+    //   return count
+    // }, 0)
     // if (!needMessage) return Promise.reject(res)
 
     // 這些也不用顯示message
-    if (res.error.code === 'APPERR0001' || res.error.code === 'SYERR0001' || res.error.code === 'SYWARN0001') return Promise.reject(res)
+    if (res.error.code === 'APPERR0001' || res.error.code === 'SYERR0001' || res.error.code === 'SYWARN0001' || res.error.code.indexOf('TASKWARN') > -1
+    ) return Promise.reject(res)
 
     // 如果 mapping 不到錯誤訊息，就顯示制式文字
     Message({

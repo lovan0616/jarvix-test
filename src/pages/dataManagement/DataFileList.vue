@@ -264,6 +264,9 @@ export default {
     }
   },
   computed: {
+    reachLimit () {
+      return this.dataList.length >= this.fileLimitCount
+    },
     // 用來生成 data table
     tableHeaders () {
       return [
