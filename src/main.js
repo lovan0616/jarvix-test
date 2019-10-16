@@ -21,7 +21,9 @@ import {
   Loading,
   Tabs,
   TabPane,
-  Pagination
+  Pagination,
+  Collapse,
+  CollapseItem
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -92,6 +94,8 @@ Vue.use(Loading)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Pagination)
+Vue.use(Collapse)
+Vue.use(CollapseItem)
 
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)

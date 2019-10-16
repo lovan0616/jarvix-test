@@ -57,7 +57,6 @@ export default {
   width: $chat-room-width;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
-  text-align: center;
   overflow: auto;
   transform: translateX(-$chat-room-width);
   // transition: transform 0.1s;

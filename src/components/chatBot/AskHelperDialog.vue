@@ -1,18 +1,58 @@
 <template>
-  <div class="ask-helper-dialog">
+  <div class="ask-helper-dialog"
+    :class="{show}"
+  >
     <div class="title-block">
       <div class="dialog-title">{{ $t('askHelper.title') }}</div>
-      <a href="javascript:void(0)" class="close-btn">
+      <a href="javascript:void(0)" class="close-btn"
+        @click="closeDialog"
+      >
         <svg-icon icon-class="close"></svg-icon>
       </a>
     </div>
-    
-    
+    <el-tabs class="ask-helper-tab"
+      type="card"
+      v-model="activeTab"
+    >
+      <el-tab-pane
+        :label="$t('askHelper.tabToken')"
+        :name="$t('askHelper.tabToken')"
+      >
+
+      </el-tab-pane>
+      <el-tab-pane
+        :label="$t('askHelper.tabSample')"
+        :name="$t('askHelper.tabSample')"
+      >
+        <question-sample></question-sample>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 <script>
+import QuestionSample from './QuestionSample'
+
 export default {
-  name: 'AskHelperDialog'
+  name: 'AskHelperDialog',
+  components: {
+    QuestionSample
+  },
+  props: {
+    show: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+      activeTab: this.$t('askHelper.tabToken')
+    }
+  },
+  methods: {
+    closeDialog () {
+      this.$emit('close')
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -21,23 +61,62 @@ export default {
   bottom: 110px;
   left: 0;
   width: 100%;
-  height: calc(100vh - 110px);
+  height: 0;
+  overflow: hidden;
   background-color: rgba(35, 61, 64, 0.97);
-  padding: 24px 32px;
+  transition: height 0.3s;
+
+  &.show {
+    overflow: auto;
+    height: calc(100vh - 110px);
+    padding: 24px 32px;
+  }
 
   .title-block {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 8px;
 
     .dialog-title {
       font-size: 20px;
-      line-height: 36px;
+      line-height: 50px;
     }
 
     .close-btn {
       color: #fff;
     }
+  }
+}
+</style>
+<style lang="scss">
+.ask-helper-tab.el-tabs--card {
+  &>.el-tabs__header {
+    border: none;
+
+    .el-tabs__nav {
+      width: 100%;
+      border: none;
+    }
+
+    .el-tabs__item {
+      border: none;
+      width: 50%;
+      color:  #AAAAAA;
+      border-bottom: 3px solid #324B4E;
+      text-align: center;
+
+      &.is-active {
+        color: #fff;
+        background: linear-gradient(360deg, #324B4E 0%, rgba(50, 75, 78, 0) 100%);
+        border-bottom: 3px solid #4DE2F0;
+      }
+    }
+  }
+
+  .el-tabs__content {
+    overflow-y: auto;
+    height: calc(100vh - 280px);
   }
 }
 </style>

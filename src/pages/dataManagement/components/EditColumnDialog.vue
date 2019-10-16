@@ -61,6 +61,12 @@
           </div>
         </div>
       </div>
+      <div class="dialog-button-block">
+        <button class="btn btn-default"
+          :disabled="isProcessing"
+          @click="buildBookmark"
+        >{{ $t('button.build') }}</button>
+      </div>
     </div>
   </div>
 </template>
@@ -135,22 +141,35 @@ export default {
       this.tempRowInfo.tag = JSON.parse(JSON.stringify(columnInfo.tag))
       this.tempRowInfo.type = JSON.parse(JSON.stringify(columnInfo.type))
     },
+    buildBookmark () {
+      this.isProcessing = true
+
+      buildStorage(this.storageId, this.currentBookmarkInfo.id, false).then(() => {
+        this.$router.push('/data-management')
+      }).catch(() => {
+        this.cancel()
+      })
+    },
     save () {
       if (this.isProcessing) return
       this.isProcessing = true
+
       this.getStorageId().then(() => {
         updateCSVColumnSetting(this.storageId, this.tableId, this.currentEditColumn, this.tempRowInfo).then(() => {
-          buildStorage(this.storageId, this.currentBookmarkInfo.id, false).then(() => {
-            this.$router.push('/data-management')
-          }).catch(() => {
-            this.isProcessing = true
-            this.cancel()
+          // 儲存成功不重新取，將 temp 資料塞回去就好
+          let currentColumn = this.columnList.find(element => {
+            return element.name === this.currentEditColumn
           })
+          currentColumn.alias = this.tempRowInfo.alias
+          currentColumn.tag = this.tempRowInfo.tag
+
+          this.cancel()
+        }).catch(() => {
+          this.cancel()
         })
       })
     },
     cancel () {
-      if (this.isProcessing) return
       this.currentEditColumn = null
       this.tempRowInfo = {
         alias: null,
@@ -176,6 +195,9 @@ export default {
   .dialog-title {
     position: relative;
   }
+  .edit-table-block {
+    margin-bottom: 32px;
+  }
   .close-btn {
     position: absolute;
     top: -8px;
@@ -197,6 +219,10 @@ export default {
 
   .alias-input {
     line-height: 24px;
+  }
+
+  .dialog-button-block {
+    text-align: right;
   }
 }
 </style>
