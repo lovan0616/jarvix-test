@@ -50,9 +50,9 @@ $default-btn-color: #1EB8C7;
 }
 
 .btn-outline {
-  border: 1px solid $default-btn-color;
+  border: 1px solid $theme-text-color;
   background-color: transparent;
-  color: $default-btn-color;
+  color: $theme-text-color;
   transition: color 0.3s;
 
   &:hover, &:active {

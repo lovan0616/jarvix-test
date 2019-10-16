@@ -28,7 +28,7 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-secondary"
+        <button class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-default"
@@ -62,11 +62,11 @@ export default {
         {
           name: 'CSV',
           id: 'CSV'
-        },
-        {
-          name: 'MySQL',
-          id: 'mysql'
         }
+        // {
+        //   name: 'MySQL',
+        //   id: 'mysql'
+        // }
       ]
     }
   },
@@ -133,7 +133,7 @@ export default {
 <style lang="scss" scoped>
 .choose-file-type {
   .dialog-body {
-    background: $theme-bg-lighter-color;
+    background-color: rgba(50, 58, 58, 0.95);
     margin-bottom: 16px;
   }
 

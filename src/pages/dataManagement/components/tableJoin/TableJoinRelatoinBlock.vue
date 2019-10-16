@@ -106,7 +106,7 @@ export default {
 .single-relation-block {
   padding: 24px 32px;
   border-radius: 4px;
-  background-color: $theme-bg-lighter-color;
+  background-color: rgba(50, 58, 58, 0.95);
 
   &:not(:last-child) {
     margin-bottom: 32px;

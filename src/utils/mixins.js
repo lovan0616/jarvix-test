@@ -18,7 +18,14 @@ Vue.mixin({
     },
     // byte 轉 MB
     byteToMB (value) {
-      return (value / (1024 * 1024)).toFixed(2)
+      let result
+      if (value / (1024 * 1024) * 100 < 1) {
+        result = this.formatComma((value / 1024).toFixed(2)) + 'KB'
+      } else {
+        result = this.formatComma((value / (1024 * 1024)).toFixed(2)) + 'MB'
+      }
+
+      return result
     },
     // 標註千分位
     formatComma (str) {
