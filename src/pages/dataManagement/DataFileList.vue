@@ -21,18 +21,19 @@
           >
             <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
           </button>
-          <button class="btn btn-default"
+          <button class="btn btn-default btn-m"
             v-if="dataList.length > 1"
             :disabled="isProcessing"
             @click="editJoinTable"
           >{{ $t('editing.foreignTable') }}</button>
-          <button class="btn btn-outline"
+          <button class="btn btn-outline btn-m btn-has-icon"
             v-if="selectList.length > 0"
             :disabled="isProcessing"
             @click="confirmDelete()"
           >
             <svg-icon class="icon"
-              :icon-class="isProcessing ? 'spinner' : 'delete'"
+              v-if="isProcessing"
+              :icon-class="spinner"
             ></svg-icon>{{ $t('button.delete') }}
           </button>
           <div class="reach-limit"

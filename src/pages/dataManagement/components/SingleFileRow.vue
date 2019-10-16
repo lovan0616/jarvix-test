@@ -1,59 +1,52 @@
 <template>
-  <div class="single-file-row"
-    :class="statusClass"
-  >
-    <div class="single-file-info">
-      <div class="file-info name">{{ formDataInfo.name }}</div>
-      <div class="file-info size">{{ formatComma(byteToMB(formDataInfo.size)) + 'MB' }}</div>
-      <div class="single-file-progress"
-        v-if="singleFile.status === uploadStatus.uploading && progress < 100"
-      >
-        <div class="progress-bar"
-          :style="{ width: progress + '%' }"
-        ></div>
-      </div>
-    </div>
-    <div class="file-status"
-      :class="{finished: singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail}"
+  <div class="single-file-row-container">
+    <div class="single-file-row"
+      :class="statusClass"
     >
-      <svg-icon
-        v-if="singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail"
-        :class="singleFile.status === uploadStatus.success ? 'success' : 'fail'"
-        :icon-class="singleFile.status === uploadStatus.success ? 'checked' : 'alert'"
-      ></svg-icon>
-      <div class="warning"
-        v-else-if="singleFile.status === uploadStatus.forbidden"
-      >
-        {{ $t('editing.fileOverSize') }}
-        <tool-tip
-          class="warning-tool-tip"
-          :content="$t('editing.singlefileSizeTip')"
-        ></tool-tip>
+      <div class="single-file-info">
+        <div class="file-info name">{{ formDataInfo.name }}</div>
+        <div class="file-info size">{{ byteToMB(formDataInfo.size) }}</div>
+        <div class="single-file-progress"
+          v-if="singleFile.status === uploadStatus.uploading && progress < 100"
+        >
+          <div class="progress-bar"
+            :style="{ width: progress + '%' }"
+          ></div>
+        </div>
       </div>
-      <a class="link action-link cancel"
-        v-else-if="singleFile.status === uploadStatus.uploading"
-        @click="cancelUpload"
-        href="javascript:void(0)"
-      >{{ $t('button.cancel') }}</a>
-      <a class="link action-link"
-        v-else
-        href="javascript:void(0)"
-        @click="removeFile"
-      >{{ $t('button.delete') }}</a>
+      <div class="file-status"
+        :class="{finished: singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail}"
+      >
+        <svg-icon
+          v-if="singleFile.status === uploadStatus.success || singleFile.status === uploadStatus.fail || singleFile.status === uploadStatus.forbidden"
+          :class="singleFile.status === uploadStatus.success ? 'success' : 'fail'"
+          :icon-class="singleFile.status === uploadStatus.success ? 'checked' : 'alert'"
+        ></svg-icon>
+        <a class="link action-link cancel"
+          v-else-if="singleFile.status === uploadStatus.uploading"
+          @click="cancelUpload"
+          href="javascript:void(0)"
+        >{{ $t('button.cancel') }}</a>
+        <a class="link action-link"
+          v-else
+          href="javascript:void(0)"
+          @click="removeFile"
+        >{{ $t('button.delete') }}</a>
+      </div>
     </div>
+    <div class="error-notification"
+      v-if="singleFile.status === uploadStatus.forbidden"
+    >
+      <svg-icon icon-class="alert" class="alert-icon"></svg-icon>{{ singleFile.msg }}</div>
   </div>
 </template>
 <script>
 import axios from 'axios'
 import { uploadStatus } from '@/utils/general'
 import { uploadCSV } from '@/API/Storage'
-import ToolTip from './ToolTip'
 
 export default {
   name: 'SingleFileRow',
-  components: {
-    ToolTip
-  },
   props: {
     singleFile: {
       type: Object,
@@ -129,10 +122,29 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.single-file-row-container {
+  &:not(:last-child) {
+    margin-bottom: 12px;
+  }
+
+  .error-notification {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 18px;
+    color: #FF574C;
+
+    .alert-icon {
+      margin-right: 6px;
+    }
+  }
+}
+
 .single-file-row {
   display: flex;
   padding: 10px 20px;
   font-size: 14px;
+  background-color: rgba(67, 76, 76, 0.95);
+  border-radius: 5px;
 
   &:hover {
     .file-status .action-link.cancel {
@@ -174,12 +186,6 @@ export default {
 
     .warning {
       font-size: 12px;
-
-      &:hover {
-        .warning-tool-tip {
-          display: block;
-        }
-      }
     }
     .action-link {
       line-height: 19px;
@@ -196,12 +202,6 @@ export default {
     .fail {
       color: #F1616D;
     }
-  }
-  .warning-tool-tip {
-    display: none;
-    width: 196px;
-    top: -30px;
-    right: -60%;
   }
 }
 </style>

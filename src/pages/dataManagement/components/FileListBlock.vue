@@ -68,10 +68,11 @@ export default {
   }
 
   .file-list {
-    background: $theme-bg-lighter-color;
+    background: rgba(50, 58, 58, 0.95);
     border-radius: 4px;
-    height: 280px;
+    max-height: 280px;
     overflow: auto;
+    padding: 24px;
 
     &.fail {
       height: 100px;

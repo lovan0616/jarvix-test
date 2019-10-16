@@ -93,7 +93,7 @@ export default {
 <style lang="scss" scoped>
 .file-upload-finished {
   .dialog-title {
-    margin-bottom: 32px;
+    margin-bottom: 16px;
   }
   .finished-img-block {
     text-align: center;

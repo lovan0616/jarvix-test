@@ -2,26 +2,25 @@
   <div class="upload-block"
     @click="clickBlock"
   >
-    <div class="upload-message top"
-      v-if="topMessage"
-    >{{ topMessage }}</div>
-    <div class="upload-icon-container">
-      <img src="../assets/images/file-upload.svg" class="upload-img" alt="">
+    <div class="upload-text-container">
+      <svg-icon icon-class="file-plus" class="upload-icon"></svg-icon>
+      <div class="upload-message bottom"
+        v-if="bottomMessage"
+      >{{ bottomMessage }}</div>
+      <slot name="uploadLimit"></slot>
     </div>
-    <div class="upload-message bottom"
-      v-if="bottomMessage"
-    >{{ bottomMessage }}</div>
+    
   </div>
 </template>
 <script>
 export default {
   name: 'UploadBlock',
   props: {
-    topMessage: {
+    bottomMessage: {
       default: null,
       type: String
     },
-    bottomMessage: {
+    remarkMessage: {
       default: null,
       type: String
     }
@@ -36,32 +35,20 @@ export default {
 <style lang="scss" scoped>
 .upload-block {
   flex: 1;
-  background-color: $theme-bg-lighter-color;
+  background-color: rgba(50, 58, 58, 0.95);
   text-align: center;
   cursor: pointer;
 
-  .upload-icon-container {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px dashed #fff;
+  .upload-icon {
+    font-size: 52px;
+    margin-bottom: 16px;
   }
-  .upload-img {
-    width: 45%;
-    height: auto;
-  }
+
   .upload-message {
-    &.top {
-      letter-spacing: 2px;
-      margin-bottom: 10px;
-    }
     &.bottom {
       font-size: 14px;
-      letter-spacing: 0.5px;
-      margin-top: 10px;
+      line-height: 20px;
+      letter-spacing: 0.01em;
     }
   }
 }
