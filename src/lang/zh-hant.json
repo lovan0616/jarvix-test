@@ -4,7 +4,8 @@
     "index": "首頁",
     "pinboard": "個人釘板",
     "dataManagement": "資料管理",
-    "languagePlaceholder": "語系"
+    "languagePlaceholder": "語系",
+    "setting": "設定"
   },
   "message": {
     "builded": "資料源建立完成",
@@ -116,7 +117,9 @@
     "preview": "預覽",
     "result": "結果",
     "relatedQuesion": "關聯問題",
-    "comparisonCategory": "比較類"
+    "comparisonCategory": "比較類",
+    "languageSetting": "語言設定",
+    "sureLogout": "您確認要登出帳號？"
   },
   "button": {
     "build": "建置",
@@ -145,7 +148,9 @@
     "editColumn": "編輯欄位",
     "rename": "重新命名",
     "login": "登入",
+    "logout": "登出",
     "copy": "複製",
+    "change": "變更",
     "pinToBoard": "加入釘板",
     "pinned": "已釘板",
     "cancelPinned": "取消釘板"
