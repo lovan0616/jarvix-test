@@ -1,7 +1,7 @@
 <template>
   <div class="empty-result">
-    <div class="empty-result-title">{{ $t('editing.emptyResult') }}</div>
-    <div class="empty-result-sub-title">{{ $t('editing.emptyResultDescription') }}</div>
+    <div class="empty-result-title">{{ displayTitle }}</div>
+    <div class="empty-result-sub-title">{{ displayDescription }}</div>
     <quick-starts
       :items="quickstartWithoutDefaults"
     ></quick-starts>
@@ -12,11 +12,27 @@ import { mapGetters } from 'vuex'
 import QuickStarts from '@/components/QuickStarts'
 export default {
   name: 'EmptyResult',
+  props: {
+    title: {type: String, default: ''},
+    description: {type: String, default: ''}
+  },
   components: {
     QuickStarts
   },
   computed: {
-    ...mapGetters('bookmark', ['quickstartWithoutDefaults'])
+    ...mapGetters('bookmark', ['quickstartWithoutDefaults']),
+    displayTitle () {
+      if (!this.title) {
+        return this.$t('editing.emptyResult')
+      }
+      return this.title
+    },
+    displayDescription () {
+      if (!this.description) {
+        return this.$t('editing.emptyResultDescription')
+      }
+      return this.description
+    }
   }
 }
 </script>
