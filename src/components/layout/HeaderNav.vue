@@ -19,7 +19,6 @@
 <script>
 import SySelect from '@/components/select/SySelect'
 import { mapGetters } from 'vuex'
-import { logout } from '@/API/User'
 
 export default {
   name: 'HeaderNav',
@@ -42,10 +41,8 @@ export default {
       this.$store.dispatch('profile/updateLanguage', item)
     },
     onBtnExitClick () {
-      logout().then(() => {
-        localStorage.removeItem('token')
+      this.$store.dispatch('userManagement/logout').then(() => {
         this.$router.push('/login')
-        this.$store.commit('bookmark/setIsInit', false)
       })
     }
   }

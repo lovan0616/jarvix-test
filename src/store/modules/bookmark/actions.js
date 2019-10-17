@@ -1,6 +1,6 @@
 import co from 'co'
 import router from '../../../router'
-import { getBookmarks, getSuggestions, getQuickstarts } from '@/API/Bookmark'
+import { getBookmarks, getSuggestions, getQuickstarts, getBookmarkColumn } from '@/API/Bookmark'
 import { getQuestionHistory } from '@/API/ChatBot'
 
 export default {
@@ -21,6 +21,7 @@ export default {
 
     return co(function* () {
       yield dispatch('getHistoryQuestionList')
+      yield dispatch('getBookmarkColumnInfo')
       return Promise.resolve(state)
     })
   },
@@ -29,7 +30,13 @@ export default {
       commit('setBookmarkList', res)
       if (!state.bookmarkId) {
         commit('setBookmarkId', res[0].id)
+        dispatch('getBookmarkColumnInfo')
       }
+    })
+  },
+  getBookmarkColumnInfo ({ commit, state }) {
+    return getBookmarkColumn(state.bookmarkId).then(response => {
+      commit('setBookmarkCloumnInfoList', response)
     })
   },
   getSuggestionList ({ commit, state }) {
