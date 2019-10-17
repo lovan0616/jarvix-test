@@ -16,7 +16,7 @@
       <div class="board-title-row">
         <div class="button-block">
           <button class="btn btn-default btn-m btn-has-icon"
-            :disabled="isProcessing"
+            :disabled="isProcessing || reachLimit"
             @click="createDataSource"
           >
             <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
@@ -37,7 +37,7 @@
             ></svg-icon>{{ $t('button.delete') }}
           </button>
           <div class="reach-limit"
-            v-if="dataList.length >= fileLimitCount"
+            v-if="reachLimit"
           >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
         <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileLimitCount}) }}</div>

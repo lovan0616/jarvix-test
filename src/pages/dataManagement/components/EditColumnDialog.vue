@@ -2,7 +2,13 @@
   <div class="edit-column-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="dialog-title">{{ $t('editing.editTableColumn') }}
-         <a href="javascript:void(0)" class="close-btn"
+         <button class="btn btn-default btn-m build-btn"
+          v-if="isSaved"
+          :disabled="isProcessing"
+          @click="buildBookmark"
+        >{{ $t('button.build') }}</button>
+        <a href="javascript:void(0)" class="close-btn"
+          v-else
           @click="closeDialog"
          ><svg-icon icon-class="close"></svg-icon></a>
       </div>
@@ -61,12 +67,6 @@
           </div>
         </div>
       </div>
-      <div class="dialog-button-block">
-        <button class="btn btn-default"
-          :disabled="isProcessing"
-          @click="buildBookmark"
-        >{{ $t('button.build') }}</button>
-      </div>
     </div>
   </div>
 </template>
@@ -100,7 +100,9 @@ export default {
         enable: null
       },
       storageId: null,
-      isProcessing: false
+      isProcessing: false,
+      // 是否已經進行過儲存
+      isSaved: false
     }
   },
   methods: {
@@ -162,6 +164,8 @@ export default {
           })
           currentColumn.alias = this.tempRowInfo.alias
           currentColumn.tag = this.tempRowInfo.tag
+          // 如果有儲存過，就變更狀態
+          this.isSaved = true
 
           this.cancel()
         }).catch(() => {
@@ -200,9 +204,15 @@ export default {
   }
   .close-btn {
     position: absolute;
-    top: -8px;
-    right: -8px;
+    top: 0;
+    right: 0;
     color: #fff;
+    font-size: 14px;
+  }
+  .build-btn {
+    position: absolute;
+    top: 4px;
+    right: 0;
   }
   .name {
     width: 30%;
@@ -220,10 +230,6 @@ export default {
   .alias-input {
     line-height: 24px;
   }
-
-  .dialog-button-block {
-    text-align: right;
-  }
 }
 </style>
 <style lang="scss">
@@ -234,7 +240,7 @@ export default {
     font-size: 14px;
   }
   .el-input__icon {
-
+    line-height: 24px;
   }
 }
 </style>
