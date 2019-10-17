@@ -15,27 +15,29 @@
         >
         </set-select>
     </div>
-
-    <setting-dialog @closeDialog="closeLangDialog" v-if="isShowLanguage" ref="langDialog">
-        <div class="popup-lang-text">{{ $t('editing.languageSetting') }}</div>
-        <sy-select class="popup-lang-select"
+    <select-dialog 
+    v-if="isShowLanguage"
+    :title="$t('editing.languageSetting')"
+    :button="$t('button.change')"
+    @closeDialog="closeLangDialog"
+    @confirmBtn="changeLang"
+    :showBoth="true"
+    >
+        <sy-select class="dialog-select"
         :placeholder="$t('nav.languagePlaceholder')"
         :selected="language"
         :items="selectItems"
         v-on:update:selected="onSelected"
         ></sy-select>
-        <div class="popup-lang-flex">
-            <div @click="closeLangDialog" class="btn popup-cancel">{{ $t('button.cancel') }}</div>
-            <div @click="changeLang" class="btn btn-default popup-logout">{{ $t('button.change') }}</div>
-        </div>
-    </setting-dialog>
+    </select-dialog>
 
-    <setting-dialog @closeDialog="closeLogoutDialog" v-if="isShowLogout" ref="logoutDialog">
-        <div class="popup-text">{{ $t('editing.sureLogout') }}</div>
-        <div class="popup-flex">
-            <div @click="closeLogoutDialog" class="btn popup-cancel">{{ $t('button.cancel') }}</div>
-            <div @click="onBtnExitClick" class="btn btn-default popup-logout">{{ $t('button.logout') }}</div>
-        </div>
+    <setting-dialog
+    v-if="isShowLogout"
+    :title="$t('editing.sureLogout')"
+    :type="'logout'"
+    @closeDialog="closeLogoutDialog"
+    @confirmBtn="onBtnExitClick"
+    >
     </setting-dialog>
   </nav>
 </template>
@@ -43,6 +45,7 @@
 import SySelect from '@/components/select/SySelect'
 import SetSelect from '@/components/select/SetSelect'
 import SettingDialog from '@/components/dialog/SettingDialog'
+import SelectDialog from '@/components/dialog/SelectDialog'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -50,7 +53,8 @@ export default {
   components: {
     SySelect,
     SetSelect,
-    SettingDialog
+    SettingDialog,
+    SelectDialog
   },
   data () {
     return {
@@ -158,6 +162,10 @@ export default {
       margin-left: 6px;
       width: 12px;
       text-align: center;
+    }
+
+    .nav-set-icon:hover{
+      color: #fff;
     }
 
     .setRotate{
