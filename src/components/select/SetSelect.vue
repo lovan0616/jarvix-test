@@ -1,7 +1,7 @@
 <template>
     <div class="set-select">
          <div class="set-select-box">
-            <div @click="showLang" class="set-flex">
+            <div @click="showLang" class="set-flex set-border-line">
                 <svg-icon icon-class="language" class="icon set-icon"></svg-icon>
                 <div>{{ $t('editing.languageSetting') }}: {{ $t('lang') }}</div>
             </div>
@@ -14,31 +14,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import SySelect from '@/components/select/SySelect'
 
 export default {
   name: 'SetSelect',
-  components: {
-    SySelect
-  },
   methods: {
     showLang () {
       this.$emit('showLang')
     },
     showLogout () {
       this.$emit('showLogout')
-    }
-  },
-  computed: {
-    ...mapGetters('profile', ['language', 'languages']),
-    selectItems () {
-      return Object.keys(this.languages).map(key => {
-        return {
-          id: key,
-          name: this.languages[key]
-        }
-      })
     }
   }
 }
@@ -59,7 +43,6 @@ export default {
         height: 50%;
         align-items: center;
         display: flex;
-        border-bottom: 1px solid #384545;
         color: #a7a7a7;
     }
 
@@ -67,8 +50,12 @@ export default {
         color: #fff;
     }
 
+    .set-border-line{
+        border-bottom: 1px solid #384545;
+    }
+
     .set-icon{
-        margin: 0px 6px;
+        margin: 12px;
     }
 }
 
