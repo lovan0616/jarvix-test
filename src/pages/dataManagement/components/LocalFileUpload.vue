@@ -13,17 +13,28 @@
         @change="fileImport"
       >
       <upload-block class="empty-upload-block"
-        :top-message="$t('editing.ClickToSelectFiles')"
-        v-if="uploadFileList.length === 0"
+        :bottom-message="$t('editing.clickToSelectFiles')"
+        v-if="uploadFileList.length === 0 && unableFileList.length === 0"
         @create="chooseFile"
       >
+        <div class="upload-remark" slot="uploadLimit">
+          <div class="title">【{{ $t('editing.uploadLimitTitle') }}】</div>
+          <div class="content">{{ $t('editing.uploadLimitContent', {limitSize: uploadFileSizeLimit}) }}</div>
+        </div>
       </upload-block>
       <div class="file-list-container"
         v-else
       >
         <file-list-block
+          v-if="uploadFileList.length > 0"
           :title="$t('editing.canUpload')"
           :file-list="uploadFileList"
+        >
+        </file-list-block>
+        <file-list-block
+          v-if="unableFileList.length > 0"
+          :title="$t('editing.unableUpload')"
+          :file-list="unableFileList"
         >
         </file-list-block>
         <div class="choose-file-block">
@@ -37,12 +48,12 @@
     <div class="dialog-footer">
       <div class="file-chosen-info">
         <span v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait">
-          {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadFileList.length, mb: formatComma(byteToMB(totalTransmitDataAmount))}) }}
+          {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadFileList.length, size: byteToMB(totalTransmitDataAmount)}) }}
         </span>
         <span v-if="currntUploadStatus !== uploadStatus.wait">{{ $t('editing.uploading') }}</span>
       </div>
       <div class="dialog-button-block">
-        <button class="btn btn-secondary"
+        <button class="btn btn-outline"
           v-if="currntUploadStatus === uploadStatus.wait"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
@@ -75,7 +86,9 @@ export default {
   data () {
     return {
       uploadStatus,
-      currntUploadStatus: uploadStatus.wait
+      currntUploadStatus: uploadStatus.wait,
+      uploadFileSizeLimit: 100,
+      unableFileList: []
     }
   },
   watch: {
@@ -102,11 +115,22 @@ export default {
         for (let i = 0; i < uploadInput.files.length; i++) {
           let formData = new FormData()
           formData.append('file', uploadInput.files[i])
-          fileList.push({
-            data: formData,
-            status: uploadStatus.wait,
-            id: new Date().getTime() + i
-          })
+
+          // 判斷是否有檔案超過大小限制
+          if (uploadInput.files[i].size > this.uploadFileSizeLimit * 1024 * 1024) {
+            this.unableFileList.push({
+              data: formData,
+              status: uploadStatus.forbidden,
+              id: new Date().getTime() + i,
+              msg: this.$t('editing.reachUploadSizeLimit', {limitSize: this.uploadFileSizeLimit})
+            })
+          } else {
+            fileList.push({
+              data: formData,
+              status: uploadStatus.wait,
+              id: new Date().getTime() + i
+            })
+          }
         }
         this.$store.commit('dataManagement/updateUploadFileList', this.uploadFileList.concat(fileList))
       }
@@ -142,8 +166,21 @@ export default {
 <style lang="scss" scoped>
 .local-file-upload {
   .empty-upload-block {
-    padding-top: 100px;
+    display: flex;
     height: 400px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .upload-remark {
+    color: #FFDF6F;
+    line-height: 20px;
+    font-size: 14px;
+    margin-top: 12px;
+
+    .title {
+      margin-bottom: 4px;
+    }
   }
 
   .data-source-name {

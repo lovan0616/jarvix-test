@@ -1,35 +1,62 @@
 <template>
-  <div class="ask-block">
-    <div class="user-question-block">
-      <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
-      <input class="question-input input"
-        ref="questionInput"
-        :name="new Date().getTime()"
-        :placeholder="$t('editing.askPlaceHolder')"
-        autocomplete="off"
-        v-model="userQuestion"
-        @keypress.enter.prevent="enterQuestion"
-        @focus="focusInput"
-      >
+  <div class="ask-container">
+    <div class="ask-block">
+      <div class="user-question-block">
+        <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
+        <input class="question-input input"
+          ref="questionInput"
+          :name="new Date().getTime()"
+          :placeholder="$t('editing.askPlaceHolder')"
+          autocomplete="off"
+          v-model="userQuestion"
+          @keypress.enter.prevent="enterQuestion"
+          @focus="showHistory"
+        >
+        <a href="javascript:void(0);" class="clean-btn"
+          @click="cleanQuestion"
+        >
+          <svg-icon icon-class="remove-circle"></svg-icon>
+        </a>
+        <a href="javascript:void(0);" class="ask-btn"
+          @click="enterQuestion"
+        >
+          <svg-icon icon-class="go-right"></svg-icon>
+        </a>
+      </div>
+      <div class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}<a href="javascript:void(0)" class="link help-link"
+        @click="showHelper"
+      >{{ $t('askHelper.helpLink') }}</a> </div>
     </div>
     <div class="history-question-block"
-      :class="{show: showHistoryQuestion && historyQuestionList.length > 1}"
+      :class="{show: showHistoryQuestion && historyQuestionList.length > 0}"
     >
+      <div class="title">{{ $t('askHelper.historyTitle') }}</div>
       <div class="history-question"
         v-for="singleHistory in historyQuestionList"
         :key="singleHistory.id"
         @click="copyQuestion(singleHistory.question)"
       ><svg-icon icon-class="clock" class="icon"></svg-icon> {{ singleHistory.question }}</div>
     </div>
+    <ask-helper-dialog
+      ref="helperDialog"
+      :show="showAskHelper"
+      @close="closeHelper"
+    ></ask-helper-dialog>
   </div>
 </template>
 <script>
+import AskHelperDialog from './AskHelperDialog'
+
 export default {
   name: 'AskBlock',
+  components: {
+    AskHelperDialog
+  },
   data () {
     return {
       userQuestion: null,
-      showHistoryQuestion: false
+      showHistoryQuestion: false,
+      showAskHelper: false
     }
   },
   mounted () {
@@ -41,28 +68,46 @@ export default {
   },
   methods: {
     autoHide (evt) {
-      if (this.showHistoryQuestion && !this.$el.contains(evt.target)) {
+      let clickInside = this.$el.contains(evt.target)
+      if (this.showHistoryQuestion && !clickInside) {
+        this.showHistoryQuestion = false
+      }
+      if (this.showAskHelper && !clickInside) {
+        this.showAskHelper = false
+      }
+      // 歷史問句與問句提示同時顯示時，若是點擊到問句提示則關閉歷史問句
+      if (this.showHistoryQuestion && this.$refs.helperDialog.$el.contains(evt.target)) {
         this.showHistoryQuestion = false
       }
     },
+    cleanQuestion () {
+      this.userQuestion = null
+    },
     enterQuestion () {
       this.$store.commit('bookmark/setAppQuestion', this.userQuestion)
-      this.$refs.questionInput.select()
+      // this.$refs.questionInput.select()
       this.$store.dispatch('bookmark/updateResultRouter', 'key_in')
       this.hideHistory()
+      this.closeHelper()
     },
     copyQuestion (value) {
       this.userQuestion = value
-      this.$nextTick(() => {
-        this.$refs.questionInput.select()
-      })
+      // this.$nextTick(() => {
+      //   this.$refs.questionInput.select()
+      // })
     },
-    focusInput () {
+    showHistory () {
       if (this.showHistoryQuestion) return
       this.showHistoryQuestion = true
     },
     hideHistory () {
       this.showHistoryQuestion = false
+    },
+    showHelper () {
+      this.showAskHelper = true
+    },
+    closeHelper () {
+      this.showAskHelper = false
     }
   },
   computed: {
@@ -80,6 +125,11 @@ export default {
     }
   },
   watch: {
+    userQuestion () {
+      if (document.activeElement === this.$refs.questionInput) {
+        this.showHistory()
+      }
+    },
     appQuestion (value) {
       this.copyQuestion(value)
     },
@@ -91,12 +141,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.ask-block {
-  padding: 0 32px;
+.ask-container {
+  position: relative;
+  padding: 16px 32px;
+  background-color: rgba(35, 61, 64, 0.6);
 
   .user-question-block {
     position: relative;
-    margin-bottom: 16px;
+    z-index: 999;
 
     &:after {
       content: '';
@@ -108,28 +160,67 @@ export default {
 
     .question-input {
       width: 100%;
-      font-size: 24px;
+      font-size: 20px;
       line-height: 36px;
-      height: auto;
-      min-height: 48px;
-      max-height: 76px;
+      height: 48px;
       overflow: auto;
+      padding-right: 74px;
+    }
+
+    .clean-btn {
+      position: absolute;
+      top: 14px;
+      right: 44px;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .ask-btn {
+      position: absolute;
+      top: 11px;
+      right: 2px;
+      font-size: 20px;
+      color: #4DE2F0;
+    }
+  }
+
+  .ask-remark-block {
+    font-size: 13px;
+    line-height: 30px;
+    text-align: left;
+    letter-spacing: 0.05em;
+
+    .help-link {
+      font-size: 13px;
+      margin-left: 4px;
     }
   }
 
   .history-question-block {
+    position: absolute;
     text-align: left;
+    left: 0;
+    bottom: 110px;
+    width: 100%;
     height: 0;
     overflow: hidden;
+    padding: 0 32px;
     transition: height 0.3s;
+    z-index: 90;
+    background-color: rgba(40, 71, 74, 0.95);
+    border-top: 1px solid #415E60;
 
     &.show {
-      height: 145px;
+      height: 250px;
       overflow: auto;
     }
 
+    .title {
+      line-height: 50px;
+    }
+
     .history-question {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 5px;
       padding: 12px;
       color: #4DE2F0;

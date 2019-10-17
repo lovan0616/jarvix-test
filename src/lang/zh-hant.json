@@ -40,7 +40,7 @@
     "choiceDataSource": "請選擇資料源",
     "createBoard": "建立新版",
     "questionPlaceHolder": "請輸入問題，例如：價格和成本的相關性",
-    "askPlaceHolder": "請輸入您的問題",
+    "askPlaceHolder": "請輸入問句後按Enter送出",
     "dataBuilding": "資料處理中",
     "dataManageable": "可管理",
     "newData":"新增資料",
@@ -56,10 +56,14 @@
     "action": "操作",
     "dataSourceName": "資料源名稱",
     "selectDataType": "選擇資料類型",
-    "ClickToSelectFiles": "點擊此選擇資料表檔案",
+    "clickToSelectFiles": "點擊此區塊，選擇資料表檔案",
+    "uploadLimitTitle": "檔案上傳限制說明",
+    "uploadLimitContent": "檔案大小限制：{limitSize}MB",
+    "reachUploadSizeLimit": "資料表欄位超過{limitSize}MB",
     "canUpload": "可以上傳",
+    "unableUpload": "無法上傳",
     "addFile": "+ 選取檔案",
-    "selectedTablesWaitingToUpload": "選取{num}項資料表，總和{mb}MB，可進行上傳",
+    "selectedTablesWaitingToUpload": "選取{num}項資料表，總和{size}，可進行上傳",
     "uploading": "上傳過程中請勿關閉瀏覽器視窗，以免上傳作業失敗",
     "uploadSuccess":"上傳成功",
     "uploadFailure":"上傳失敗",
@@ -76,7 +80,6 @@
     "connectSuccess": "連線成功",
     "connectFailure": "連線失敗，請檢查設定是否正確",
     "fileOverSize": "檔案過大",
-    "singlefileSizeTip": "單一檔案大小不超過 100MB",
     "foreignTable": "資料表關聯",
     "emptyForeign": "此資料表未建立任何關聯",
     "deleteForeign": "刪除關聯",
@@ -118,6 +121,7 @@
     "sureLogout": "您確認要登出帳號？"
   },
   "button": {
+    "build": "建置",
     "cancel": "取消",
     "delete": "刪除",
     "confirm": "確認",
@@ -175,6 +179,99 @@
     "countMean": "數量平均值",
     "countStd": "數量標準差"
   },
+  "askHelper": {
+    "title": "問句說明",
+    "historyTitle": "歷史問句",
+    "askHelpRemark": "問句提示請查看",
+    "helpLink": "問句說明",
+    "tabToken": "詞彙總覽",
+    "tabSample": "問句範例",
+    "questionSampleList": [
+      {
+        "name": "一般問句(general)",
+        "questionList": [
+          "成本",
+          "成本的平均",
+          "成本的總合",
+          "成本的總數",
+          "成本的最大值",
+          "成本的最小值",
+          "成本的標準差",
+          "成本的中位數",
+          "國家",
+          "國家的總數",
+          "各國家的成本",
+          "各國家的成本的總合",
+          "價格和成本",
+          "成本和價格的平均",
+          "各國家的成本和價格",
+          "各國家的成本和價格的平均"
+        ]
+      },
+      {
+        "name": "樞紐分析問句(pivot_table)",
+        "questionList": [
+          "國家和地區",
+          "國家和地區和貨幣",
+          "國家和地區的成本",
+          "國家和地區的成本的總合",
+          "國家和地區的成本和價格",
+          "國家和地區的成本和價格的總合",
+          "國家和地區和貨幣的成本和價格",
+          "國家和地區和貨幣的成本和價格的總合"
+        ]
+      },
+      {
+        "name": "趨勢分析問句(trend)",
+        "questionList": [
+          "成本的趨勢",
+          "每日的成本",
+          "每週的成本",
+          "每月的成本",
+          "每季的成本",
+          "每年的成本",
+          "每月的成本總合",
+          "每月的成本和價格",
+          "每月的成本和價格總合",
+          "每月各地區的成本",
+          "每月各地區的成本總合",
+          "每月各地區的成本和價格",
+          "每月各地區的成本和價格總合"
+        ]
+      },
+      {
+        "name": "比較分析問句(comparison)",
+        "questionList": [
+          "2010年和2011年的成本比較",
+          "2010年的第一季和第二季的成本比較",
+          "2010年的七月和六月的成本比較",
+          "EROP和ASIA的成本比較",
+          "每年EROP和ASIA的成本比較"
+        ]
+      },
+      {
+        "name": "原因分析問句(root_cause)",
+        "questionList": [
+          "為什麼2010年的成本上升",
+          "為什麼2010年的成本下降",
+          "2010年成本的根因分析",
+          "2010年第三季成本的根因分析",
+          "2010年7月成本的根因分析",
+          "2010年7月到12月的成本的根因分析",
+          "2010年7月比12月的成本高的根因分析"
+        ]
+      },
+      {
+        "name": "預測分析問句(prediction)",
+        "questionList": [
+          "每年成本的預測",
+          "每季成本的預測",
+          "每月成本的預測",
+          "每週成本的預測"
+        ]
+      }
+    ]
+  },
   "resultDescription": {
     "high": "高",
     "low": "低",
@@ -223,6 +320,17 @@
     "SYERR0008": "無法操作已經取消的上傳",
     "SYERR0009": "建置失敗",
     "SYERR0010": "資料庫未設定",
+    "SYERR0011": "資料表關聯已存在",
+    "SYERR0012": "資料表關聯不存在",
+    "SYERR0013": "資料表關聯已存在",
+    "SYERR0014": "資料表目前無法使用",
+    "SYERR0015": "資料表欄位無法使用",
+    "SYERR0016": "無法關聯相同資料表",
+    "SYERR0017": "資料表不存在",
+    "SYERR0018": "資料表不存在關聯鍵值",
+    "SYERR0019": "資料表不存在欄位",
+    "SYERR0101": "檔案無法解碼",
+    "SYERR0102": "檔案無法解析",
     "SYWARN0001": "警告!!",
     "SYWARN0002": "資料源已存在",
     "SYWARN0003": "資料源目前無法編輯",
@@ -232,6 +340,9 @@
     "SYWARN0007": "查詢時間格式錯誤",
     "SYWARN0008": "table名稱已存在",
     "SYWARN0009": "檔案名稱已存在",
+    "SYWARN0010": "資料源欄位不存在",
+    "SYWARN0011": "欄位別名已存在",
+    "SYWARN0012": "不合法的欄位標籤",
     "APPERR0001": "系統發生非預期錯誤",
     "APPWARN0001": "帳號密碼錯誤",
     "APPWARN0002": "使用者已存在",

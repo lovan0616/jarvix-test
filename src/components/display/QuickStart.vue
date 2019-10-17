@@ -38,7 +38,7 @@ export default {
     display: flex;
     min-height: 50px;
   }
-  
+
   .single-result-board {
     width: 32%;
 

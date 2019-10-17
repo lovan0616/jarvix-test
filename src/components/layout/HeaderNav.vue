@@ -47,6 +47,7 @@ import SetSelect from '@/components/select/SetSelect'
 import SettingDialog from '@/components/dialog/SettingDialog'
 import SelectDialog from '@/components/dialog/SelectDialog'
 import { mapGetters } from 'vuex'
+import { logout } from '@/API/User'
 
 export default {
   name: 'HeaderNav',
@@ -104,6 +105,11 @@ export default {
     },
     closeLogoutDialog () {
       this.isShowLogout = false
+      logout().then(() => {
+        localStorage.removeItem('token')
+        this.$router.push('/login')
+        this.$store.commit('bookmark/setIsInit', false)
+      })
     }
   }
 }
