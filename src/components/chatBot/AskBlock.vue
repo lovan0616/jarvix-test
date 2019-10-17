@@ -85,16 +85,16 @@ export default {
     },
     enterQuestion () {
       this.$store.commit('bookmark/setAppQuestion', this.userQuestion)
-      this.$refs.questionInput.select()
+      // this.$refs.questionInput.select()
       this.$store.dispatch('bookmark/updateResultRouter', 'key_in')
       this.hideHistory()
       this.closeHelper()
     },
     copyQuestion (value) {
       this.userQuestion = value
-      this.$nextTick(() => {
-        this.$refs.questionInput.select()
-      })
+      // this.$nextTick(() => {
+      //   this.$refs.questionInput.select()
+      // })
     },
     showHistory () {
       if (this.showHistoryQuestion) return
