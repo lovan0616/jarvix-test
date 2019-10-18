@@ -40,7 +40,7 @@
             v-if="reachLimit"
           >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
-        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileLimitCount}) }}</div>
+        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
       </div>
       <data-table
         hasCheckbox
@@ -123,8 +123,7 @@ export default {
       selectList: [],
       // 目前正在編輯的資料表
       currentEditTableInfo: null,
-      intervalFunction: null,
-      fileLimitCount: 5
+      intervalFunction: null
     }
   },
   mounted () {
@@ -265,8 +264,11 @@ export default {
     }
   },
   computed: {
+    fileCountLimit () {
+      return this.$store.state.dataManagement.fileCountLimit
+    },
     reachLimit () {
-      return this.dataList.length >= this.fileLimitCount
+      return this.dataList.length >= this.fileCountLimit
     },
     // 用來生成 data table
     tableHeaders () {

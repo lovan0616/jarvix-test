@@ -29,7 +29,8 @@ export default {
     // 設 tabe join
     showSetTableJoin: false,
     // 為了讓資料清單頁面可以重新刷新資料
-    fileUploadSuccess: false
+    fileUploadSuccess: false,
+    fileCountLimit: 5
   },
   actions,
   mutations,

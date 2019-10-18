@@ -71,6 +71,7 @@
 </template>
 <script>
 import { uploadStatus } from '@/utils/general'
+import { Message } from 'element-ui'
 import { mapState } from 'vuex'
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
@@ -112,6 +113,17 @@ export default {
 
       // 有選到檔案才執行
       if (uploadInput.files) {
+        // 判斷數量是否超過限制
+        if (uploadInput.files.length + this.currentUploadInfo.fileCount + this.uploadFileList.length > this.fileCountLimit) {
+          Message({
+            message: this.$t('editing.reachUploadCountLimit', {countLimit: this.fileCountLimit}),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+
+          return false
+        }
+
         for (let i = 0; i < uploadInput.files.length; i++) {
           let formData = new FormData()
           formData.append('file', uploadInput.files[i])
@@ -149,6 +161,9 @@ export default {
   },
   computed: {
     ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
+    fileCountLimit () {
+      return this.$store.state.dataManagement.fileCountLimit
+    },
     uploadFileStatusList () {
       return this.uploadFileList.map(element => {
         return element.status
