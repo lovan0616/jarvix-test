@@ -81,8 +81,7 @@ export const chartOptions = {
     nameLocation: 'end',
     nameGap: 5,
     nameTextStyle: {
-      fontWeight: 'bold',
-      fontSize: 16,
+      fontSize: 12,
       color: chartVariable['textColor']
     },
     axisLabel: {
@@ -105,8 +104,7 @@ export const chartOptions = {
     // nameGap: 58,
     // nameLocation: 'middle',
     nameTextStyle: {
-      fontWeight: 'bold',
-      fontSize: 16,
+      fontSize: 12,
       color: chartVariable['textColor']
     },
     axisLabel: {

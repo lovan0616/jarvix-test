@@ -1,7 +1,7 @@
 <template>
   <div class="empty-result">
-    <div class="empty-result-title">{{ title }}</div>
-    <div class="empty-result-sub-title">{{ description }}</div>
+    <div class="empty-result-title">{{ title || this.$t('editing.emptyResult') }}</div>
+    <div class="empty-result-sub-title">{{ description || this.$t('editing.emptyResultDescription') }}</div>
     <quick-starts
       :items="quickstartWithoutDefaults"
     ></quick-starts>
