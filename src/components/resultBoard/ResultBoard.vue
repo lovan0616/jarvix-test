@@ -87,7 +87,7 @@ export default {
   mounted () {
     // Pinboard 頁預設全都是 pin 完的狀態
     if (this.isPinboardPage) {
-      this.pinBoardId = this.$route.params.id
+      this.pinBoardId = this.$parent.$attrs.id
     }
   },
   methods: {
