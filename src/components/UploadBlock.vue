@@ -9,7 +9,6 @@
       >{{ bottomMessage }}</div>
       <slot name="uploadLimit"></slot>
     </div>
-    
   </div>
 </template>
 <script>

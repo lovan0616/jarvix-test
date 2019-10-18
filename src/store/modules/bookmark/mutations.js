@@ -19,5 +19,8 @@ export default {
   },
   setHistoryQuestionList (state, data) {
     state.historyQuestionList = data
+  },
+  setBookmarkCloumnInfoList (state, data) {
+    state.bookmarkCloumnInfoList = data
   }
 }

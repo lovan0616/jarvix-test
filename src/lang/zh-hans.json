@@ -59,6 +59,7 @@
     "uploadLimitTitle": "档案上传限制说明",
     "uploadLimitContent": "档案大小限制{limitSize}MB",
     "reachUploadSizeLimit": "资料表栏位超过{limitSize}MB",
+    "reachUploadCountLimit": "资料表不得多于{countLimit}个",
     "canUpload": "可以上传",
     "unableUpload": "无法上传",
     "addFile": "+ 选取档案",

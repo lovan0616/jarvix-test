@@ -1,36 +1,17 @@
 <template>
   <div class="column-info-block">
     <div class="single-column"
-      v-for="(columnInfo, index) in cloumnInfoList"
+      v-for="(columnInfo, index) in bookmarkCloumnInfoList"
       :key="index"
     >{{ columnInfo.name }}</div>
   </div>
 </template>
 <script>
-import { getBookmarkColumn } from '@/API/Bookmark'
-
 export default {
   name: 'ColumnInfo',
-  data () {
-    return {
-      cloumnInfoList: []
-    }
-  },
-  methods: {
-    fetchData () {
-      getBookmarkColumn(this.bookmarkId).then(response => {
-        this.cloumnInfoList = response
-      })
-    }
-  },
   computed: {
-    bookmarkId () {
-      return this.$store.state.bookmark.bookmarkId
-    }
-  },
-  watch: {
-    bookmarkId () {
-      this.fetchData()
+    bookmarkCloumnInfoList () {
+      return this.$store.state.bookmark.bookmarkCloumnInfoList
     }
   }
 }

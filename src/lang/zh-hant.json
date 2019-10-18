@@ -59,6 +59,7 @@
     "uploadLimitTitle": "檔案上傳限制說明",
     "uploadLimitContent": "檔案大小限制：{limitSize}MB",
     "reachUploadSizeLimit": "資料表欄位超過{limitSize}MB",
+    "reachUploadCountLimit": "資料表不得多於{countLimit}個",
     "canUpload": "可以上傳",
     "unableUpload": "無法上傳",
     "addFile": "+ 選取檔案",

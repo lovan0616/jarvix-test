@@ -10,7 +10,6 @@
           autocomplete="off"
           v-model="userQuestion"
           @keypress.enter.prevent="enterQuestion"
-          @focus="showHistory"
         >
         <a href="javascript:void(0);" class="clean-btn"
           @click="cleanQuestion"
@@ -30,6 +29,11 @@
     <div class="history-question-block"
       :class="{show: showHistoryQuestion && historyQuestionList.length > 0}"
     >
+      <a href="javascript:void(0)" class="close-btn"
+        @click="hideHistory"
+      >
+        <svg-icon icon-class="close"></svg-icon>
+      </a>
       <div class="title">{{ $t('askHelper.historyTitle') }}</div>
       <div class="history-question"
         v-for="singleHistory in historyQuestionList"
@@ -85,19 +89,15 @@ export default {
     },
     enterQuestion () {
       this.$store.commit('bookmark/setAppQuestion', this.userQuestion)
-      // this.$refs.questionInput.select()
       this.$store.dispatch('bookmark/updateResultRouter', 'key_in')
       this.hideHistory()
       this.closeHelper()
     },
     copyQuestion (value) {
       this.userQuestion = value
-      // this.$nextTick(() => {
-      //   this.$refs.questionInput.select()
-      // })
     },
     showHistory () {
-      if (this.showHistoryQuestion) return
+      if (this.showHistoryQuestion || this.showAskHelper) return
       this.showHistoryQuestion = true
     },
     hideHistory () {
@@ -105,6 +105,7 @@ export default {
     },
     showHelper () {
       this.showAskHelper = true
+      this.hideHistory()
     },
     closeHelper () {
       this.showAskHelper = false
@@ -121,7 +122,7 @@ export default {
       // 過濾 boomark 以及 問題字串
       return this.userQuestion
         ? this.$store.state.bookmark.historyQuestionList.filter(d => { return d.question.indexOf(this.userQuestion) > -1 && d.bookmark_id === this.bookmarkId })
-        : this.$store.state.bookmark.historyQuestionList.filter(d => { return d.bookmark_id === this.bookmarkId })
+        : []
     }
   },
   watch: {
@@ -211,8 +212,16 @@ export default {
     border-top: 1px solid #415E60;
 
     &.show {
-      height: 250px;
+      height: 160px;
       overflow: auto;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      color: #fff;
+      font-size: 14px;
     }
 
     .title {
@@ -222,7 +231,9 @@ export default {
     .history-question {
       background: rgba(255, 255, 255, 0.1);
       border-radius: 5px;
-      padding: 12px;
+      font-size: 14px;
+      line-height: 20px;
+      padding: 8px 12px;
       color: #4DE2F0;
       cursor: pointer;
 

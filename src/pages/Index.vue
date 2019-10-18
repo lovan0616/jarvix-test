@@ -36,6 +36,8 @@ export default {
           this.layout = res.content
         }
         this.$store.commit('chatBot/addSystemConversation', res.respond)
+      }).then(() => {
+
       })
     }
   },

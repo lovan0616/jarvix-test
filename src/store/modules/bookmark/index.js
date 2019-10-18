@@ -13,7 +13,8 @@ export default {
     quickstartResult: {},
     appQuestion: '',
     // 歷史問題清單
-    historyQuestionList: []
+    historyQuestionList: [],
+    bookmarkCloumnInfoList: []
   },
   actions,
   mutations,

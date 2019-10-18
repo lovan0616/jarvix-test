@@ -6,6 +6,7 @@ import pinboard from './modules/pinboard'
 import dataManagement from './modules/dataManagement'
 import chatBot from './modules/chatBot'
 import profile from './modules/profile'
+import userManagement from './modules/userManagement'
 
 Vue.use(Vuex)
 
@@ -16,7 +17,8 @@ export default new Vuex.Store({
     pinboard,
     dataManagement,
     chatBot,
-    profile
+    profile,
+    userManagement
   },
   state: {
     isShowChatRoom: false

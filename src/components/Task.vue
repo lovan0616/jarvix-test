@@ -57,11 +57,13 @@ export default {
         const data = res[1]
         this.createTaskByTemplateAndData({ template, data })
       }).catch(err => {
-        this.isError = true
-        if (err.error.code === 'TASKWARN0002') this.errorMessage = this.$t('errorMessage.TASKWARN0002')
-        else if (err.error.code === 'TASKWARN0003') this.errorMessage = this.$t('errorMessage.TASKWARN0003')
-        else this.errorMessage = this.$t('message.noResult')
         this.loading = false
+        this.isError = true
+        if (err.error) {
+          if (err.error.code === 'TASKWARN0002') this.errorMessage = this.$t('errorMessage.TASKWARN0002')
+          else if (err.error.code === 'TASKWARN0003') this.errorMessage = this.$t('errorMessage.TASKWARN0003')
+          else this.errorMessage = this.$t('message.noResult')
+        }
       })
 
       // 為了顯示上的友善，就算資料拿不回來，template也還是要顯示

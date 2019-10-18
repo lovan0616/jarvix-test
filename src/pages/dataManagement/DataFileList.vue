@@ -16,7 +16,7 @@
       <div class="board-title-row">
         <div class="button-block">
           <button class="btn btn-default btn-m btn-has-icon"
-            :disabled="isProcessing"
+            :disabled="isProcessing || reachLimit"
             @click="createDataSource"
           >
             <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
@@ -37,10 +37,10 @@
             ></svg-icon>{{ $t('button.delete') }}
           </button>
           <div class="reach-limit"
-            v-if="dataList.length >= fileLimitCount"
+            v-if="reachLimit"
           >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
-        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileLimitCount}) }}</div>
+        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
       </div>
       <data-table
         hasCheckbox
@@ -123,8 +123,7 @@ export default {
       selectList: [],
       // 目前正在編輯的資料表
       currentEditTableInfo: null,
-      intervalFunction: null,
-      fileLimitCount: 5
+      intervalFunction: null
     }
   },
   mounted () {
@@ -265,8 +264,11 @@ export default {
     }
   },
   computed: {
+    fileCountLimit () {
+      return this.$store.state.dataManagement.fileCountLimit
+    },
     reachLimit () {
-      return this.dataList.length >= this.fileLimitCount
+      return this.dataList.length >= this.fileCountLimit
     },
     // 用來生成 data table
     tableHeaders () {

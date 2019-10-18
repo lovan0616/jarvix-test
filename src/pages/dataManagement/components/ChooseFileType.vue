@@ -107,6 +107,7 @@ export default {
             this.$store.commit('dataManagement/updateCurrentUploadInfo', {
               bookmarkId: res.bookmark.id,
               storageId: res.storage.id,
+              fileCount: res.bookmark.config ? Object.keys(res.bookmark.config.tables).length : 0,
               ...this.bookmarkInfo
             })
           })
