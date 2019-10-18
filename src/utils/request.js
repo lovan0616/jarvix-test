@@ -28,7 +28,9 @@ service.interceptors.response.use(
     const res = response.data
     if (!res.error) return res.data
     // roolbar 留存
-    Vue.rollbar.error(JSON.stringify(res))
+    if (!window.location.hostname === 'localhost') {
+      Vue.rollbar.error(JSON.stringify(res))
+    }
 
     // 除了這些以外都不需要在這層級處理
     // const messageCodeType = ['APPERR', 'SYERR', 'SYWARN']

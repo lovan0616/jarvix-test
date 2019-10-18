@@ -29,8 +29,8 @@ export default {
     return getBookmarks().then(res => {
       commit('setBookmarkList', res)
       if (!state.bookmarkId) {
-        commit('setBookmarkId', res[0].id)
-        dispatch('getBookmarkColumnInfo')
+        dispatch('changeBookmarkById', res[0].id)
+        // commit('setBookmarkId', res[0].id)
       }
     })
   },
