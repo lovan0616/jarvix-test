@@ -7,6 +7,7 @@
     ></spinner>
     <component
       v-else
+      :id="id"
       :is="content"
     ></component>
   </div>
@@ -20,6 +21,10 @@ export default {
   props: {
     template: {
       type: String,
+      default: null
+    },
+    id: {
+      type: [Number, String],
       default: null
     }
   },
