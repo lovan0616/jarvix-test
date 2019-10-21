@@ -44,7 +44,7 @@
                 <default-select class="tag-select input"
                   v-else
                   v-model="tempRowInfo.tag"
-                  :option-list="tagOption(column.tag)"
+                  :option-list="tagOption(column.type)"
                 ></default-select>
               </div>
               <div class="data-table-cell action">
@@ -113,25 +113,73 @@ export default {
           this.storageId = res.storage.id
         })
     },
-    tagOption (tagName) {
-      if (tagName !== 'category') {
-        return [
-          {
-            name: tagName,
-            value: tagName
-          },
-          {
-            name: 'category',
-            value: 'category'
-          }
-        ]
-      } else {
-        return [
-          {
-            name: 'category',
-            value: 'category'
-          }
-        ]
+    // 依據 type 決定選單選項
+    tagOption (typeName) {
+      switch (typeName) {
+        case 'int':
+        case 'float':
+          return [
+            {
+              name: 'category',
+              value: 'category'
+            },
+            {
+              name: 'numeric',
+              value: 'numeric'
+            },
+            {
+              name: 'id',
+              value: 'id'
+            }
+          ]
+        case 'object':
+          return [
+            {
+              name: 'category',
+              value: 'category'
+            },
+            {
+              name: 'id',
+              value: 'id'
+            }
+          ]
+        case 'datetime':
+          return [
+            {
+              name: 'category',
+              value: 'category'
+            },
+            {
+              name: 'datetime',
+              value: 'datetime'
+            }
+          ]
+        case 'timedelta':
+          return [
+            {
+              name: 'category',
+              value: 'category'
+            },
+            {
+              name: 'timedelta',
+              value: 'timedelta'
+            }
+          ]
+        default:
+          return [
+            {
+              name: 'id',
+              value: 'id'
+            },
+            {
+              name: 'numeric',
+              value: 'numeric'
+            },
+            {
+              name: 'category',
+              value: 'category'
+            }
+          ]
       }
     },
     closeDialog () {
