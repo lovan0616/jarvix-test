@@ -182,6 +182,10 @@
     "helpLink": "问句说明",
     "tabToken": "词汇总览",
     "tabSample": "问句范例",
+    "columnTitle": "资料栏位名称",
+    "categoryTitle": "Category 类型",
+    "numericTitle": "Numeric 类型",
+    "datavalueTitle": "常见栏位数值",
     "questionSampleList": [
       {
         "name": "一般问句(general)",

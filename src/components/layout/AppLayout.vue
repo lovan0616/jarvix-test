@@ -43,10 +43,6 @@ export default {
       this.$store.commit('updateChatRoomStatus', true)
     },
     setBookmarkInfo () {
-      let bookmarkId = parseInt(this.$route.query.bookmarkId)
-      if (bookmarkId) {
-        this.$store.commit('bookmark/setBookmarkId', bookmarkId)
-      }
       this.$store.dispatch('bookmark/init')
     }
   },

@@ -6,12 +6,10 @@ import { getQuestionHistory } from '@/API/ChatBot'
 export default {
   init ({ commit, dispatch, state }) {
     if (state.isInit) return Promise.resolve(state)
-    return co(function* () {
-      yield dispatch('getBookmarkList')
-      yield dispatch('getHistoryQuestionList')
-      commit('setIsInit', true)
-      return Promise.resolve(state)
-    })
+
+    let queryBookmark = parseInt(router.app.$route.query.bookmarkId)
+    dispatch('getBookmarkList', queryBookmark)
+    commit('setIsInit', true)
   },
   changeBookmarkById ({ dispatch, commit, state }, bookmarkId) {
     // 更新 Bookmark 資料
@@ -28,9 +26,23 @@ export default {
   getBookmarkList ({ dispatch, commit, state }, data) {
     return getBookmarks().then(res => {
       commit('setBookmarkList', res)
-      if (!state.bookmarkId) {
-        dispatch('changeBookmarkById', res[0].id)
-        // commit('setBookmarkId', res[0].id)
+
+      if (data) {
+        let hasBookmark = false
+        res.forEach(element => {
+          if (element.id === data) hasBookmark = true
+        })
+        // 判斷路由的 bookmark 是否存在
+        if (hasBookmark) {
+          dispatch('changeBookmarkById', data)
+        } else {
+          dispatch('changeBookmarkById', res[0].id)
+          router.push('/')
+        }
+      } else {
+        if (!state.bookmarkId) {
+          dispatch('changeBookmarkById', res[0].id)
+        }
       }
     })
   },

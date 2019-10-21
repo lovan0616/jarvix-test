@@ -182,6 +182,10 @@
     "helpLink": "問句說明",
     "tabToken": "詞彙總覽",
     "tabSample": "問句範例",
+    "columnTitle": "資料欄位名稱",
+    "categoryTitle": "Category 類型",
+    "numericTitle": "Numeric 類型",
+    "datavalueTitle": "常見欄位數值",
     "questionSampleList": [
       {
         "name": "一般問句(general)",

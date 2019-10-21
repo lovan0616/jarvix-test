@@ -10,6 +10,7 @@
           autocomplete="off"
           v-model="userQuestion"
           @keypress.enter.prevent="enterQuestion"
+          @keyup.ctrl.72="toggleHelper()"
         >
         <a href="javascript:void(0);" class="clean-btn"
           @click="cleanQuestion"
@@ -109,6 +110,13 @@ export default {
     },
     closeHelper () {
       this.showAskHelper = false
+    },
+    toggleHelper () {
+      if (this.showAskHelper) {
+        this.closeHelper()
+      } else {
+        this.showHelper()
+      }
     }
   },
   computed: {
