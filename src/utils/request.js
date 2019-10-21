@@ -28,7 +28,7 @@ service.interceptors.response.use(
     const res = response.data
     if (!res.error) return res.data
     // roolbar 留存
-    if (!window.location.hostname === 'localhost') {
+    if (window.location.hostname !== 'localhost') {
       Vue.rollbar.error(JSON.stringify(res))
     }
 
@@ -65,7 +65,9 @@ service.interceptors.response.use(
       return Promise.reject(error)
     }
     // roolbar 留存
-    Vue.rollbar.error(JSON.stringify(error))
+    if (window.location.hostname !== 'localhost') {
+      Vue.rollbar.error(JSON.stringify(error))
+    }
 
     // 先不秀 http error
     // if (error.response) {

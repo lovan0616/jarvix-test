@@ -7,7 +7,7 @@
       v-else-if="!isError"
       :is="childContent"
     ></component>
-    <no-result v-else :message="errorMessage"></no-result>
+    <!-- <no-result v-else :message="errorMessage"></no-result> -->
   </div>
 </template>
 
@@ -92,7 +92,7 @@ export default {
 <style lang="scss" scoped>
 .task-root {
   width: 100%;
-  min-height: 20px;
+  // min-height: 20px;
   overflow: hidden;
 }
 </style>
