@@ -10,7 +10,7 @@
           autocomplete="off"
           v-model="userQuestion"
           @keypress.enter.prevent="enterQuestion"
-          @keyup.ctrl.72="toggleHelper()"
+          @keyup.shift.ctrl.72="toggleHelper()"
         >
         <a href="javascript:void(0);" class="clean-btn"
           @click="cleanQuestion"
