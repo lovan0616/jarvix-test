@@ -44,6 +44,7 @@
     </div>
     <ask-helper-dialog
       ref="helperDialog"
+      :key="bookmarkId"
       :show="showAskHelper"
       @close="closeHelper"
     ></ask-helper-dialog>
