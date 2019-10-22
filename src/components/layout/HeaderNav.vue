@@ -3,40 +3,44 @@
     <router-link class="nav-item" to="/" exact>{{ $t('nav.index') }}</router-link>
     <router-link class="nav-item" to="/pinboard">{{ $t('nav.pinboard') }}</router-link>
     <router-link class="nav-item" to="/data-management">{{ $t('nav.dataManagement') }}</router-link>
-    <div @mouseover="openSet" @mouseleave="closeSet" class="nav-item nav-set">
-        <div class="nav-set-flex">
-          <div>{{ $t('nav.setting') }}</div>
-          <svg-icon icon-class="dropdown" :class="{setRotate: isShow}" class="icon nav-set-icon"></svg-icon>
-        </div>
-        <set-select
+    <div class="nav-item nav-set"
+      @mouseover="openSet"
+      @mouseleave="closeSet"
+    >
+      <div class="nav-set-flex">
+        <div>{{ $t('nav.setting') }}</div>
+        <svg-icon icon-class="dropdown" class="icon nav-set-icon"
+          :class="{'is-rotate': isShow}"
+        ></svg-icon>
+      </div>
+      <set-select
         v-if="isShow"
         @showLang="showLangDialog"
         @showLogout="showLogoutDialog"
-        >
-        </set-select>
+      >
+      </set-select>
     </div>
     <select-dialog 
-    v-if="isShowLanguage"
-    :title="$t('editing.languageSetting')"
-    :button="$t('button.change')"
-    @closeDialog="closeLangDialog"
-    @confirmBtn="changeLang"
-    :showBoth="true"
+      v-if="isShowLanguage"
+      :title="$t('editing.languageSetting')"
+      :button="$t('button.change')"
+      @closeDialog="closeLangDialog"
+      @confirmBtn="changeLang"
+      :showBoth="true"
     >
-        <sy-select class="dialog-select"
+      <sy-select class="dialog-select"
         :placeholder="$t('nav.languagePlaceholder')"
         :selected="language"
         :items="selectItems"
         v-on:update:selected="onSelected"
-        ></sy-select>
+      ></sy-select>
     </select-dialog>
-
     <setting-dialog
-    v-if="isShowLogout"
-    :title="$t('editing.sureLogout')"
-    :type="'logout'"
-    @closeDialog="closeLogoutDialog"
-    @confirmBtn="onBtnExitClick"
+      v-if="isShowLogout"
+      :title="$t('editing.sureLogout')"
+      :type="'logout'"
+      @closeDialog="closeLogoutDialog"
+      @confirmBtn="onBtnExitClick"
     >
     </setting-dialog>
   </nav>
@@ -153,24 +157,24 @@ export default {
     position: relative;
     cursor: pointer;
 
-    .nav-set-flex{
+    .nav-set-flex {
       display: flex;
       align-items: center;
     }
 
-    .nav-set-icon{
+    .nav-set-icon {
       margin-left: 6px;
-      width: 12px;
+      width: 8px;
       text-align: center;
-    }
-
-    .nav-set-icon:hover{
-      color: #fff;
-    }
-
-    .setRotate{
-      transform: rotate(180deg);
       transition: all 0.3s;
+
+      &:hover {
+        color: #fff;
+      }
+
+      &.is-rotate {
+        transform: rotate(180deg);
+      }
     }
   }
 }
