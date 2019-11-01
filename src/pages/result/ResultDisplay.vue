@@ -155,20 +155,8 @@ export default {
     }
   }
 
-  .category-question-list {
-    display: flex;
-    flex-wrap: wrap;
-
-    .result-board {
-      width: 31.34%;
-
-      &:not(:nth-child(3n)) {
-        margin-right: 2.99%;
-      }
-    }
-  }
   .related-question-block {
-    background-color: rgba(0, 0, 0, 0.35);
+    background-color: $theme-bg-color;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     padding: 28px 28px 4px;

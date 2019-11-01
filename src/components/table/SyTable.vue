@@ -5,9 +5,8 @@
       style="width: 100%;"
     >
       <el-table-column
-        fixed
         type="index"
-        width="120"
+        width="80"
         :index="getTableIndex"
       >
       </el-table-column>
@@ -152,24 +151,28 @@ export default {
 .sy-table-block {
   width: 100%;
   height: auto;
-  margin-bottom: 32px;
 
   .sy-table {
-    margin-bottom: 32px;
+    margin-bottom: 16px;
   }
 }
 </style>
 <style lang="scss">
-.table-pagination {
+.table-pagination.el-pagination {
   text-align: center;
 
-  &.el-pagination.is-background {
+  button, .el-pager li {
+    height: 30px;
+    border-radius: 4px;
+  }
+
+  &.is-background {
     .btn-next, .btn-prev, .el-pager li {
       color: #fff;
-      background-color: rgba(0, 0, 0, 0.35);
+      background-color: rgba(255, 255, 255, 0.16);
     }
     .el-pager li:not(.disabled).active {
-      background-color: #4DE2F0;
+      background-color: $theme-color-primary;
     }
   }
 }

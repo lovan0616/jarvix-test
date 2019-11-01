@@ -3,7 +3,7 @@
     @click="linkToResult"
   >
     <div class="board-top-section">
-      <div class="board-title"><span class="question-mark">Q:</span>{{ questionInfo.question }}</div>
+      <div class="board-title"><span class="question-mark">Q</span>{{ questionInfo.question }}</div>
       <div class="board-chart-block" v-if="questionInfo.template">
         <component
           v-if="questionInfo.template"
@@ -50,6 +50,8 @@ export default {
 
   .board-top-section {
     padding: 24px;
+    border-top: 5px solid $theme-color-primary;
+    border-radius: 5px 5px 0 0;
   }
 
   .board-title {
@@ -60,8 +62,16 @@ export default {
     color: $theme-text-color;
 
     .question-mark {
-      color: #4DE2F0;
-      margin-right: 4px;
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      background-color: $theme-color-primary;
+      color: #fff;
+      margin-right: 8px;
+      border-radius: 8px;
+      text-align: center;
+      line-height: 30px;
+      font-weight: bold;
     }
   }
   .board-chart-block {

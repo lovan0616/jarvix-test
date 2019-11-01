@@ -106,7 +106,7 @@ export default {
   }
 
   .single-board {
-    background-color: rgba(0, 0, 0, 0.35);
+    background-color: $theme-bg-color;
     padding: 4px 12px;
     border-radius: 8px;
     font-size: 14px;

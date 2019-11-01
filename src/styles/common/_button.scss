@@ -2,29 +2,23 @@
 $default-btn-color: #1EB8C7;
 
 .btn {
-  font-size: 14px;
-  font-weight: 300;
-  border-radius: 4px;
-  padding: 0 15px;
+  @include btn();
   height: 36px;
-
-  &:disabled {
-    cursor: not-allowed;
-  }
 }
 
 .btn-m {
+  @include btn();
   height: 30px;
 }
 
 .btn-default {
   color: #fff;
-  background-color: $default-btn-color;
+  background-color: $button-color;
   border: none;
   transition: background-color 0.3s;
 
   &:hover, &:active {
-    background-color: #4DE2F0;
+    background-color: $theme-color-primary;
     color: #444;
   }
 

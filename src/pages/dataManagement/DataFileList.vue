@@ -15,18 +15,18 @@
     <div class="table-board">
       <div class="board-title-row">
         <div class="button-block">
-          <button class="btn btn-default btn-m btn-has-icon"
+          <button class="btn-m btn-default btn-has-icon"
             :disabled="isProcessing || reachLimit"
             @click="createDataSource"
           >
             <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
           </button>
-          <button class="btn btn-default btn-m"
+          <button class="btn-m btn-default"
             v-if="dataList.length > 1"
             :disabled="isProcessing"
             @click="editJoinTable"
           >{{ $t('editing.foreignTable') }}</button>
-          <button class="btn btn-outline btn-m btn-has-icon"
+          <button class="btn-m btn-outline btn-has-icon"
             v-if="selectList.length > 0"
             :disabled="isProcessing"
             @click="confirmDelete()"

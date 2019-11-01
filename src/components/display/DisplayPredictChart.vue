@@ -198,7 +198,7 @@ export default {
 
     .single-info-block {
       width: 24.25%;
-      background-color: rgba(0, 0, 0, 0.35);
+      background-color: $theme-bg-color;
       border-radius: 8px;
       padding: 20px;
       margin-right: 1%;
@@ -218,7 +218,7 @@ export default {
   }
 
   .info-target {
-    color: #4DE2F0;
+    color: $theme-color-primary;
     margin-bottom: 8px;
   }
 }

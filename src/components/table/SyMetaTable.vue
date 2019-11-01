@@ -1,5 +1,5 @@
 <template>
-  <div class="sy-meta-table">
+  <div>
     <div class="meta-table-top-area">
       <div class="meta-table-top-area-right">{{rightText}}</div>
     </div>
