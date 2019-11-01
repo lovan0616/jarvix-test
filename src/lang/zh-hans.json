@@ -78,6 +78,7 @@
     "IPaddress": "IP位址",
     "username": "帐号",
     "password": "密码",
+    "changePassword": "密码变更",
     "connectSuccess": "连线成功",
     "connectFailure": "连线失败，请检查设定是否正确",
     "fileOverSize": "档案过大",
@@ -109,6 +110,7 @@
     "countOfTable": "资料表数",
     "choice": "请选择",
     "userLogin": "使用者登入",
+    "userManage": "使用者管理",
     "confirmDeleteBoardOrNot": "确认删除此钉板？",
     "pinboard": "个人钉板",
     "emptyPinboard": "暂无钉板资讯，请先去询问问题",
@@ -118,8 +120,10 @@
     "result": "结果",
     "relatedQuesion": "关联问题",
     "comparisonCategory": "比较类",
-    "languageSetting": "语言设定",
-    "sureLogout": "您确认要登出帐号？"
+    "languageSetting": "语言设定: 簡中",
+    "sureLogout": "您确认要登出帐号？",
+    "questionFeedback": "问题/建议回馈",
+    "functionDescription": "功能说明"
   },
   "button": {
     "build": "建置",

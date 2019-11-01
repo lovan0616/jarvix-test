@@ -78,6 +78,7 @@
     "IPaddress": "IP位址",
     "username": "帳號",
     "password": "密碼",
+    "changePassword": "密碼變更",
     "connectSuccess": "連線成功",
     "connectFailure": "連線失敗，請檢查設定是否正確",
     "fileOverSize": "檔案過大",
@@ -109,6 +110,7 @@
     "countOfTable": "資料表數",
     "choice": "請選擇",
     "userLogin": "使用者登入",
+    "userManage": "使用者管理",
     "confirmDeleteBoardOrNot": "確認刪除此釘板？",
     "pinboard": "個人釘板",
     "emptyPinboard": "暫無釘板資訊，請先去詢問問題",
@@ -118,8 +120,10 @@
     "result": "結果",
     "relatedQuesion": "關聯問題",
     "comparisonCategory": "比較類",
-    "languageSetting": "語言設定",
-    "sureLogout": "您確認要登出帳號？"
+    "languageSetting": "語言設定: 繁中",
+    "sureLogout": "您確認要登出帳號？",
+    "questionFeedback": "問題/建議回饋",
+    "functionDescription": "功能說明"
   },
   "button": {
     "build": "建置",

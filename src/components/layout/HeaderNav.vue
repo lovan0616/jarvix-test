@@ -2,29 +2,35 @@
   <nav class="nav-header">
     <router-link class="nav-item" to="/" exact>{{ $t('nav.index') }}</router-link>
     <router-link class="nav-item" to="/pinboard">{{ $t('nav.pinboard') }}</router-link>
-    <router-link class="nav-item" to="/data-management">{{ $t('nav.dataManagement') }}</router-link>
-    <div class="nav-item nav-set"
-      @mouseover="openSet"
-      @mouseleave="closeSet"
-    >
+    <div class="nav-item nav-item-dropdown nav-set">
       <div class="nav-set-flex">
         <div>{{ $t('nav.setting') }}</div>
-        <svg-icon icon-class="dropdown" class="icon nav-set-icon"
-          :class="{'is-rotate': isShow}"
-        ></svg-icon>
+        <svg-icon icon-class="dropdown" class="icon nav-dropdown-icon is-rotate"></svg-icon>
       </div>
-      <set-select
-        v-if="isShow"
-        @showLang="showLangDialog"
-        @showLogout="showLogoutDialog"
+      <dropdown-select
+        class="nav-set-dropdown"
+        @showDialog="showSetDialog"
+        :barData="settingData"
       >
-      </set-select>
+      </dropdown-select>
     </div>
-    <select-dialog 
+    <div class="nav-item nav-item-dropdown nav-account">
+      <div class="nav-set-flex">
+        <div>{{ $t('editing.username') }}</div>
+        <svg-icon icon-class="dropdown" class="icon nav-dropdown-icon is-rotate"></svg-icon>
+      </div>
+      <dropdown-select
+        class="nav-account-dropdown"
+        @showDialog="showSetDialog"
+        :barData="accountData"
+      >
+      </dropdown-select>
+    </div>
+    <select-dialog
       v-if="isShowLanguage"
       :title="$t('editing.languageSetting')"
       :button="$t('button.change')"
-      @closeDialog="closeLangDialog"
+      @closeDialog="isShowLanguage = false"
       @confirmBtn="changeLang"
       :showBoth="true"
     >
@@ -35,20 +41,20 @@
         v-on:update:selected="onSelected"
       ></sy-select>
     </select-dialog>
-    <setting-dialog
+    <decide-dialog
       v-if="isShowLogout"
       :title="$t('editing.sureLogout')"
       :type="'logout'"
-      @closeDialog="closeLogoutDialog"
+      @closeDialog="isShowLogout = false"
       @confirmBtn="onBtnExitClick"
     >
-    </setting-dialog>
+    </decide-dialog>
   </nav>
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
-import SetSelect from '@/components/select/SetSelect'
-import SettingDialog from '@/components/dialog/SettingDialog'
+import DropdownSelect from '@/components/select/DropdownSelect'
+import DecideDialog from '@/components/dialog/DecideDialog'
 import SelectDialog from '@/components/dialog/SelectDialog'
 import { mapGetters } from 'vuex'
 
@@ -56,16 +62,26 @@ export default {
   name: 'HeaderNav',
   components: {
     SySelect,
-    SetSelect,
-    SettingDialog,
+    DropdownSelect,
+    DecideDialog,
     SelectDialog
   },
   data () {
     return {
-      isShow: false,
       isShowLanguage: false,
       isShowLogout: false,
-      selectedLanguage: this.language
+      selectedLanguage: this.language,
+      settingData: [
+        {icon: 'database', title: 'nav.dataManagement'},
+        {icon: 'language', title: 'editing.languageSetting'},
+        // {icon: 'feedback', title: 'editing.questionFeedback'},
+        {icon: 'description', title: 'editing.functionDescription'}
+      ],
+      accountData: [
+        {icon: 'changePassword', title: 'editing.changePassword'},
+        {icon: 'userManage', title: 'editing.userManage'},
+        {icon: 'logout', title: 'button.logout'}
+      ]
     }
   },
   computed: {
@@ -80,12 +96,6 @@ export default {
     }
   },
   methods: {
-    openSet () {
-      this.isShow = true
-    },
-    closeSet () {
-      this.isShow = false
-    },
     onSelected (item) {
       this.selectedLanguage = item
     },
@@ -94,21 +104,18 @@ export default {
         this.$router.push('/login')
       })
     },
-    showLangDialog () {
-      this.isShowLanguage = true
-    },
-    closeLangDialog () {
-      this.isShowLanguage = false
-    },
     changeLang () {
       this.$store.dispatch('profile/updateLanguage', this.selectedLanguage)
       this.isShowLanguage = false
     },
-    showLogoutDialog () {
-      this.isShowLogout = true
-    },
-    closeLogoutDialog () {
-      this.isShowLogout = false
+    showSetDialog (name) {
+      if (name === 'database') {
+        this.$router.push({ path: 'data-management' })
+      } else if (name === 'language') {
+        this.isShowLanguage = true
+      } else if (name === 'logout') {
+        this.isShowLogout = true
+      }
     }
   }
 }
@@ -153,7 +160,7 @@ export default {
     cursor: pointer;
   }
 
-  .nav-set {
+  .nav-item-dropdown {
     position: relative;
     cursor: pointer;
 
@@ -161,8 +168,7 @@ export default {
       display: flex;
       align-items: center;
     }
-
-    .nav-set-icon {
+    .nav-dropdown-icon {
       margin-left: 6px;
       width: 8px;
       text-align: center;
@@ -172,10 +178,37 @@ export default {
         color: #fff;
       }
 
-      &.is-rotate {
-        transform: rotate(180deg);
-      }
     }
+  }
+  .nav-set {
+      &:hover {
+        .nav-set-dropdown {
+          visibility: visible;
+        }
+
+        .is-rotate {
+          transform: rotate(180deg);
+        }
+      }
+
+      &-dropdown {
+        visibility: hidden;
+      }
+  }
+  .nav-account {
+      &:hover {
+        .nav-account-dropdown {
+          visibility: visible;
+        }
+
+        .is-rotate {
+          transform: rotate(180deg);
+        }
+      }
+
+      &-dropdown {
+        visibility: hidden;
+      }
   }
 }
 </style>
