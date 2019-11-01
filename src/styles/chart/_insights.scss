@@ -8,7 +8,7 @@
   }
 
   .el-tabs__active-bar {
-    background-color: #4DE2F0;
+    background-color: $theme-color-primary;
   }
   .el-tabs__nav-wrap::after {
     background-color: #2E2E2E;
@@ -23,7 +23,7 @@
     font-weight: bold;
 
     &:hover, &.is-active {
-      color: #4DE2F0;
+      color: $theme-color-primary;
     }
   }
 

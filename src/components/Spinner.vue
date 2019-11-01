@@ -50,7 +50,7 @@ export default {
 .spinner-block {
   display: flex;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.35);
+  background-color: $theme-bg-color;
   border-radius: 8px;
   padding: 48px 0;
 

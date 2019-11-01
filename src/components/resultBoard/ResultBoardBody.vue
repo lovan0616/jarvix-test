@@ -5,7 +5,7 @@
     <div class="chart-container"
       :class="{'is-open': isShowChatRoom}"
     >
-      <button type="button" class="btn btn-default control-btn"
+      <button type="button" class="btn-m btn-default control-btn"
         :class="{active: showBasicInfo}"
         v-if="$slots.InsightBasicInfo"
         v-show="isShowChatRoom"
@@ -83,7 +83,7 @@ export default {
         position: absolute;
         top: 0;
         right: 0;
-        border: 1px solid #4DE2F0;
+        border: 1px solid $theme-color-primary;
         background-color: rgba(24, 24, 24, 0.95);
         z-index: 10000000; // echart 裡面的 tooltip z-index 給 9999999，逼不得已給這麼大
 
@@ -97,7 +97,7 @@ export default {
           height: 0;
           width: 0;
           pointer-events: none;
-          border-bottom-color: #4DE2F0;
+          border-bottom-color: $theme-color-primary;
           border-width: 10px;
         }
       }
@@ -114,12 +114,12 @@ export default {
       width: 28.5%;
       padding: 20px;
       border-radius: 8px;
-      background-color: rgba(0, 0, 0, 0.35);
+      background-color: $theme-bg-color;
     }
 
     .control-btn {
       position: absolute;
-      top: -36px;
+      top: -30px;
       right: 0;
       padding: 7px 15px;
 

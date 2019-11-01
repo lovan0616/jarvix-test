@@ -158,7 +158,7 @@ export default {
         margin-bottom: 6px;
       }
       .amount-block {
-        color: #4DE2F0;
+        color: $theme-color-primary;
 
         &.is-special {
           color: #FFDF6F;

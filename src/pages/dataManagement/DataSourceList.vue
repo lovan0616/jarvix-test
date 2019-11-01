@@ -9,7 +9,7 @@
     <div class="table-board">
       <div class="board-title-row">
         <div class="button-block">
-          <button class="btn btn-default btn-has-icon btn-m"
+          <button class="btn-m btn-default btn-has-icon"
             :disabled="reachUploadLimit"
             @click="createDataSource"
           >

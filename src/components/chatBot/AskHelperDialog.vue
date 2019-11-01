@@ -111,7 +111,7 @@ export default {
       &.is-active {
         color: #fff;
         background: linear-gradient(360deg, #324B4E 0%, rgba(50, 75, 78, 0) 100%);
-        border-bottom: 3px solid #4DE2F0;
+        border-bottom: 3px solid $theme-color-primary;
       }
     }
   }

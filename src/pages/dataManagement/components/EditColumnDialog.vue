@@ -2,7 +2,7 @@
   <div class="edit-column-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="dialog-title">{{ $t('editing.editTableColumn') }}
-         <button class="btn btn-default btn-m build-btn"
+         <button class="btn-m btn-default build-btn"
           v-if="isSaved"
           :disabled="isProcessing"
           @click="buildBookmark"

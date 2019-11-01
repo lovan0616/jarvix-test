@@ -165,7 +165,7 @@ export default {
       display: block;
       width: 100%;
       height: 2px;
-      background-image: linear-gradient(90deg, #4DE2F0 0%, rgba(77, 226, 240, 0.2) 100%);
+      background-image: linear-gradient(90deg, $theme-color-primary 0%, rgba(77, 226, 240, 0.2) 100%);
     }
 
     .question-input {
@@ -190,7 +190,7 @@ export default {
       top: 11px;
       right: 2px;
       font-size: 20px;
-      color: #4DE2F0;
+      color: $theme-color-primary;
     }
   }
 
@@ -243,7 +243,7 @@ export default {
       font-size: 14px;
       line-height: 20px;
       padding: 8px 12px;
-      color: #4DE2F0;
+      color: $theme-color-primary;
       cursor: pointer;
 
       &:not(:last-child) {

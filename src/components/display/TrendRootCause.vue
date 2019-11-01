@@ -40,7 +40,7 @@ export default {
 .trend-root-cause {
   border-radius: 8px;
   padding: 20px;
-  background-color: rgba(0, 0, 0, 0.35);
+  background-color: $theme-bg-color;
 
   .block-title {
     font-size: 24px;
@@ -59,11 +59,11 @@ export default {
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      border: 1px solid #4DE2F0;
+      border: 1px solid $theme-color-primary;
       margin-right: 12px;
       text-align: center;
       line-height: 30px;
-      color: #4DE2F0;
+      color: $theme-color-primary;
     }
 
     .info-content {
@@ -76,7 +76,7 @@ export default {
   }
 
   .empty-info {
-    background: rgba(0, 0, 0, 0.35);
+    background: $theme-bg-color;
     border-radius: 8px;
     padding: 20px;
     text-align: center;

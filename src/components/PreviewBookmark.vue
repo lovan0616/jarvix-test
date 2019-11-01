@@ -1,37 +1,39 @@
 <template>
   <div class="page-preview-bookmark">
-    <span v-show="bookmarkId">
-      <h2>{{ $t('resultDescription.dataSourceIntro') }}</h2>
-      <container-card>
-        <div class="preview-bookmark-card-inner">
+    <div class="result-board"
+      v-show="bookmarkId"
+    >
+      <div class="board-header">
+        <result-board-header
+          :question="$t('resultDescription.dataSourceIntro')"
+        ></result-board-header>
+      </div>
+      <div class="board-body">
+        <div class="dataset-info">
           <sy-select class="preview-bookmark-select"
             :selected="bookmarkTableId"
             :items="bookmarkTables"
             :placeholder="$t('editing.choiceDataSource')"
             @update:selected="onBookmarkTableChange"
           ></sy-select>
-          <sy-meta-table class="preview-bookmark-table"
-            :rightText="metaTableRightText"
-            :max-height="500"
-            :dataset="bookmarkTableDataDataset"
-          ></sy-meta-table>
+          <div class="data-count">{{ metaTableRightText }}</div>
         </div>
-      </container-card>
-    </span>
+        <sy-table
+          :dataset="bookmarkTableDataDataset"
+        ></sy-table>
+      </div>
+    </div>
     <span v-show="!bookmarkId">bookmark no set yet</span>
   </div>
 </template>
-
 <script>
 import { mapGetters } from 'vuex'
 import SySelect from '../components/select/SySelect'
-import SyMetaTable from '../components/table/SyMetaTable'
 
 export default {
   name: 'PagePreviewBookmark',
   components: {
-    SySelect,
-    SyMetaTable
+    SySelect
   },
   created () {
     this.$store.dispatch('previewBookmark/init')
@@ -63,16 +65,21 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-preview-bookmark {
-  .preview-bookmark-select {
-    margin-bottom: rem(20px);
+  .dataset-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
   }
+}
+</style>
+<style lang="scss">
+.preview-bookmark-select.sy-select.theme-default {
+  border-bottom: 1px solid #fff;
 
-  .preview-bookmark-card-inner {
-    padding: 6px 6px;
-
-    @include response('sm') {
-      padding: 10px 10px;
-    }
+  .el-input__inner {
+    height: 40px;
+    line-height: 40px;
   }
 }
 </style>

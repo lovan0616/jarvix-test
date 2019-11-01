@@ -90,7 +90,7 @@ export default {
 
   .btn-copy {
     background-color: rgba(255, 255, 255, 0.16);
-    color: #4DE2F0;
+    color: $theme-color-primary;
     border: none;
   }
 }

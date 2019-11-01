@@ -20,7 +20,7 @@ export default {
 <style lang="scss" scoped>
 .no-result-block {
   padding: 15px 20px;
-  background-color: rgba(0, 0, 0, 0.35);
+  background-color: $theme-bg-color;
   color: #fff;
   text-align: center;
 }

@@ -74,7 +74,7 @@ export default {
     transition: all 0.3s;
 
     &:hover {
-      background-color: #4DE2F0;
+      background-color: $theme-color-primary;
       color: #fff;
     }
 
@@ -113,11 +113,13 @@ export default {
   .option {
     background-color: $theme-bg-lighter-color;
     border-radius: 5px;
-    padding: 5px 16px;
+    padding: 8px 16px;
     letter-spacing: 0.05em;
     cursor: pointer;
     font-size: 14px;
+    line-height: 28px;
     transition: background-color 0.3s;
+    border: 1px solid #9DBDBD;
 
     &:hover {
       background-color: rgba(101, 207, 217, 0.45);

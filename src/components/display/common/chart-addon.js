@@ -46,7 +46,7 @@ export const commonChartOptions = {
       }
     },
     iconStyle: {
-      color: '#4DE2F0',
+      color: chartVariable['themeColor'],
       borderWidth: 0
     },
     emphasis: {

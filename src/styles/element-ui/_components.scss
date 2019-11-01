@@ -57,11 +57,39 @@
   background-color: transparent;
   color: $theme-text-color;
 
-  tr, th {
+  &::before {
     background-color: transparent;
   }
 
+  tr, th {
+    background-color: transparent;
+
+    &.is-leaf {
+      border-bottom: none;
+    }
+  }
+
+  thead {
+    background: rgba(50, 75, 78, 0.6);
+  }
+
+  tr {
+    &:nth-child(even) {
+      background: rgba(50, 75, 78, 0.6);
+    }
+    &:nth-child(odd) {
+      background: rgba(35, 61, 64, 0.6);
+    }
+  }
+
+  td {
+    border-bottom: none;
+  }
+
   tr.el-table__row.hover-row > td {
+    background-color: transparent;
+  }
+  &.el-table--enable-row-hover .el-table__body tr:hover > td {
     background-color: transparent;
   }
 
