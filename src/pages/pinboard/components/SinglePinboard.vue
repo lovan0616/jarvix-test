@@ -5,7 +5,7 @@
         </div>
         <div class="pinboard-flex">
             <div class="pinboard-name">{{ boardInfo.name }}</div>
-            <div class="pinboard-count">{{ $t('editing.pinboardNum') }}：1</div>
+            <!-- <div class="pinboard-count">{{ $t('editing.pinboardNum') }}：1</div> -->
         </div>
         <div class="pinboad-hover-box">
             <svg-icon icon-class="hover" class="icon hover-icon"></svg-icon>
