@@ -2,28 +2,87 @@
   <nav class="nav-header">
     <router-link class="nav-item" to="/" exact>{{ $t('nav.index') }}</router-link>
     <router-link class="nav-item" to="/pinboard">{{ $t('nav.pinboard') }}</router-link>
-    <router-link class="nav-item" to="/data-management">{{ $t('nav.dataManagement') }}</router-link>
-    <sy-select class="nav-select"
-      :placeholder="$t('nav.languagePlaceholder')"
-      :selected="language"
-      :items="selectItems"
-      v-on:update:selected="onSelected"
-    ></sy-select>
-    <div class="btn-exit"
-      @click="onBtnExitClick"
-    >
-      <svg-icon icon-class="exit" class="icon"></svg-icon>
+    <div class="nav-item nav-item-dropdown nav-set">
+      <div class="nav-set-flex">
+        <div>{{ $t('nav.setting') }}</div>
+        <svg-icon icon-class="dropdown" class="icon nav-dropdown-icon is-rotate"></svg-icon>
+      </div>
+      <dropdown-select
+        class="nav-set-dropdown"
+        @showDialog="showSetDialog"
+        :barData="settingData"
+      >
+      </dropdown-select>
     </div>
+    <div class="nav-item nav-item-dropdown nav-account">
+      <div class="nav-set-flex">
+        <div>{{ $t('editing.username') }}</div>
+        <svg-icon icon-class="dropdown" class="icon nav-dropdown-icon is-rotate"></svg-icon>
+      </div>
+      <dropdown-select
+        class="nav-account-dropdown"
+        @showDialog="showSetDialog"
+        :barData="accountData"
+      >
+      </dropdown-select>
+    </div>
+    <select-dialog
+      v-if="isShowLanguage"
+      :title="$t('editing.languageSetting')"
+      :button="$t('button.change')"
+      @closeDialog="isShowLanguage = false"
+      @confirmBtn="changeLang"
+      :showBoth="true"
+    >
+      <sy-select class="dialog-select"
+        :placeholder="$t('nav.languagePlaceholder')"
+        :selected="language"
+        :items="selectItems"
+        v-on:update:selected="onSelected"
+      ></sy-select>
+    </select-dialog>
+    <decide-dialog
+      v-if="isShowLogout"
+      :title="$t('editing.sureLogout')"
+      :type="'logout'"
+      @closeDialog="isShowLogout = false"
+      @confirmBtn="onBtnExitClick"
+    >
+    </decide-dialog>
   </nav>
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
+import DropdownSelect from '@/components/select/DropdownSelect'
+import DecideDialog from '@/components/dialog/DecideDialog'
+import SelectDialog from '@/components/dialog/SelectDialog'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'HeaderNav',
   components: {
-    SySelect
+    SySelect,
+    DropdownSelect,
+    DecideDialog,
+    SelectDialog
+  },
+  data () {
+    return {
+      isShowLanguage: false,
+      isShowLogout: false,
+      selectedLanguage: this.language,
+      settingData: [
+        {icon: 'database', title: 'nav.dataManagement'},
+        {icon: 'language', title: 'editing.languageSetting'},
+        // {icon: 'feedback', title: 'editing.questionFeedback'},
+        {icon: 'description', title: 'editing.functionDescription'}
+      ],
+      accountData: [
+        {icon: 'changePassword', title: 'editing.changePassword'},
+        {icon: 'userManage', title: 'editing.userManage'},
+        {icon: 'logout', title: 'button.logout'}
+      ]
+    }
   },
   computed: {
     ...mapGetters('profile', ['language', 'languages']),
@@ -38,12 +97,25 @@ export default {
   },
   methods: {
     onSelected (item) {
-      this.$store.dispatch('profile/updateLanguage', item)
+      this.selectedLanguage = item
     },
     onBtnExitClick () {
       this.$store.dispatch('userManagement/logout').then(() => {
         this.$router.push('/login')
       })
+    },
+    changeLang () {
+      this.$store.dispatch('profile/updateLanguage', this.selectedLanguage)
+      this.isShowLanguage = false
+    },
+    showSetDialog (name) {
+      if (name === 'database') {
+        this.$router.push({ path: 'data-management' })
+      } else if (name === 'language') {
+        this.isShowLanguage = true
+      } else if (name === 'logout') {
+        this.isShowLogout = true
+      }
     }
   }
 }
@@ -86,6 +158,57 @@ export default {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+  }
+
+  .nav-item-dropdown {
+    position: relative;
+    cursor: pointer;
+
+    .nav-set-flex {
+      display: flex;
+      align-items: center;
+    }
+    .nav-dropdown-icon {
+      margin-left: 6px;
+      width: 8px;
+      text-align: center;
+      transition: all 0.3s;
+
+      &:hover {
+        color: #fff;
+      }
+
+    }
+  }
+  .nav-set {
+      &:hover {
+        .nav-set-dropdown {
+          visibility: visible;
+        }
+
+        .is-rotate {
+          transform: rotate(180deg);
+        }
+      }
+
+      &-dropdown {
+        visibility: hidden;
+      }
+  }
+  .nav-account {
+      &:hover {
+        .nav-account-dropdown {
+          visibility: visible;
+        }
+
+        .is-rotate {
+          transform: rotate(180deg);
+        }
+      }
+
+      &-dropdown {
+        visibility: hidden;
+      }
   }
 }
 </style>
