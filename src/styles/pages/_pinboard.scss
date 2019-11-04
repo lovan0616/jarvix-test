@@ -32,7 +32,7 @@
     border-radius: 0 8px 8px 0;
     overflow: hidden;
     z-index: -1;
-    visibility: hidden;
+    // visibility: hidden;
     opacity: 0;
     transition: all 0.3s;
 
@@ -42,7 +42,7 @@
       cursor: pointer;
 
       &:hover {
-        background-color: $theme-color-primary;
+        background-color: #4DE2F0;
       }
     }
   }
@@ -78,4 +78,147 @@
       margin-bottom: 16px;
     }
   }
+}
+
+.single-pinboard{
+  position: relative;
+  width: 330px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.55);
+  border-radius: 8px;
+  padding: 24px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, .35);
+  transition: all 0.3s;
+  margin: 0px 12px 12px 0px;
+
+  &::before{
+    content: '';
+    width: 5px;
+    height: 108px;
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: #4DE2F0;
+    border-radius: 5px 0px 0px 5px;
+
+  }
+
+  .pinboad-pin-box{
+    width: 50px;
+    height: 50px;
+    border: 1.4px solid #4DE2F0;
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pin-icon{
+    width: auto !important;
+    height: 20px !important;
+    color: #1EB8C7;
+  }
+
+  .pinboard-flex{
+
+  }
+
+  .pinboard-name{
+    font-size: 18px;
+  }
+
+  .pinboard-count{
+    font-size: 14px;
+    color: #DDDDDD;
+  }
+
+  .pinboad-hover-box{
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.16);
+    border-radius: 5px;
+    align-self: flex-end;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover{
+      .pinboard-popup{
+        visibility: visible;
+      }
+    }
+  }
+
+  .hover-icon{
+    width: 22px;
+    height: 22px;
+    color: #1EB8C7;
+    cursor: pointer;
+  }
+
+  &:hover{
+    background: rgba(0, 0, 0, 0.55);
+    transform: translateY(-2px);
+  }
+}
+
+.pinboard-popup{
+  visibility: hidden;
+  width: 160px;
+  position: absolute;
+  top: -128px;
+  right: -20px;
+  background: #233131;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 24px;
+    bottom: -10px;
+    width: 0px;
+    height: 0px;
+    border-top: 10px solid #233131;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent; 
+  }
+
+  .popup-flex{
+    display: flex;
+    height: 40px;
+    align-items: center;
+    color: #a7a7a7;
+
+    &:hover{
+      color: #fff;
+    }
+  }
+
+  .border-line{
+    border-top: 1px solid #384545;
+    border-bottom: 1px solid #384545; 
+  }
+
+  .popup-icon{
+    height: 12px;
+    width: 12px;
+    margin: 14px;
+    color: #1EB8C7;
+  }
+
+  .popup-text{
+    font-size: 14px;
+  }
+}
+
+.pinboard-name-input{
+  margin: 24px 0px;
+  padding-bottom: 8px;
 }

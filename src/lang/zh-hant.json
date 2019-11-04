@@ -113,7 +113,7 @@
     "userManage": "使用者管理",
     "confirmDeleteBoardOrNot": "確認刪除此釘板？",
     "pinboard": "個人釘板",
-    "emptyPinboard": "暫無釘板資訊，請先去詢問問題",
+    "emptyPinboard": "目前無任何內容",
     "emptyResult": "沒有相關資料",
     "emptyResultDescription": "您所輸入的問題，無法找到相關聯的數據進行分析，請重新輸入語句搜尋，或使用系統建議語句",
     "preview": "預覽",
@@ -123,7 +123,12 @@
     "languageSetting": "語言設定: 繁中",
     "sureLogout": "您確認要登出帳號？",
     "questionFeedback": "問題/建議回饋",
-    "functionDescription": "功能說明"
+    "functionDescription": "功能說明",
+    "confirmDelete": "您確定要刪除",
+    "allCategory": "所有分類",
+    "inputCategoryName": "請輸入分類名稱",
+    "editingName": "編輯名稱",
+    "pinboardNum": "釘板數量"
   },
   "button": {
     "build": "建置",
@@ -131,6 +136,7 @@
     "delete": "刪除",
     "confirm": "確認",
     "share": "分享",
+    "shareLink": "分享連結",
     "edit": "編輯",
     "save": "儲存",
     "skip": "略過",
@@ -157,7 +163,8 @@
     "change": "變更",
     "pinToBoard": "加入釘板",
     "pinned": "已釘板",
-    "cancelPinned": "取消釘板"
+    "cancelPinned": "取消釘板",
+    "addNewCategory": "新增分類"
   },
   "aggregation": {
     "mean": "平均",
