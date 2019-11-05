@@ -10,18 +10,18 @@
         >
           <a class="head-btn share"
             href="javascript:void(0)"
-            @click="showShareDialog"
+            @click="showShare"
           >
             <svg-icon icon-class="share" class="icon"></svg-icon>{{ $t('button.share') }}
             <share-dialog
               v-if="isShowShareDialog"
-             :share-url="shareUrl"
-             @cancel="closeShareDialog"
+              :share-url="shareUrl"
+              @cancel="closeShareDialog"
             ></share-dialog>
           </a>
           <a class="head-btn delete"
             href="javascript:void(0)"
-            @click="unPin"
+            @click="showDelete"
           >
             <svg-icon icon-class="delete" class="icon"></svg-icon>{{ $t('button.delete') }}
           </a>
@@ -57,16 +57,40 @@
         <slot name="RelatedQuestions"></slot>
       </div>
     </div>
+
+    <writing-dialog
+      v-if="isShowShare"
+      :title="$t('button.shareLink')"
+      :button="$t('button.copy')"
+      @closeDialog="closeShare"
+      @confirmBtn="confirmShare"
+      :showBoth="false"
+    >
+      <input type="text" class="input pinboard-name-input" :value="shareUrl" ref="shareInput">
+    </writing-dialog>
+    <decide-dialog
+      v-if="isShowDelete"
+      :title="`${confirmDeleteText} ${resultInfo.tasks[0].entities.question}？`"
+      :type="'delete'"
+      @closeDialog="closeDelete"
+      @confirmBtn="confirmDelete"
+    >
+    </decide-dialog>
+
   </div>
 </template>
 <script>
 import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
+import DecideDialog from '@/components/dialog/DecideDialog'
+import WritingDialog from '@/components/dialog/WritingDialog'
 export default {
   name: 'ResultBoard',
   components: {
     PinboardDialog,
-    ShareDialog
+    ShareDialog,
+    DecideDialog,
+    WritingDialog
   },
   props: {
     resultInfo: {
@@ -81,7 +105,10 @@ export default {
       pinBoardId: null,
       showPinboardList: false,
       isShowShareDialog: false,
-      isMouseoverPinButton: false
+      isMouseoverPinButton: false,
+      isShowDelete: false,
+      isShowShare: false,
+      confirmDeleteText: this.$t('editing.confirmDelete')
     }
   },
   mounted () {
@@ -181,6 +208,38 @@ export default {
     },
     closeShareDialog () {
       this.isShowShareDialog = false
+    },
+    confirmShare () {
+      let input = this.$refs.shareInput
+      input.select()
+      /* For mobile devices */
+      input.setSelectionRange(0, 99999)
+      document.execCommand('copy')
+
+      Message({
+        message: this.$t('message.copiedToBoard'),
+        type: 'success',
+        duration: 3 * 1000
+      })
+      this.$nextTick(() => {
+
+      })
+    },
+    confirmDelete () {
+      this.unPin()
+      this.isShowDelete = false
+    },
+    showShare () {
+      this.isShowShare = true
+    },
+    closeShare () {
+      this.isShowShare = false
+    },
+    showDelete () {
+      this.isShowDelete = true
+    },
+    closeDelete () {
+      this.isShowDelete = false      
     }
   },
   computed: {
@@ -208,7 +267,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .result-board {
-  background: $theme-bg-color;
+  background: rgba(0, 0, 0, 0.35);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   margin-bottom: 48px;
@@ -218,9 +277,8 @@ export default {
     display: flex;
     align-items: center;
     padding: 20px 28px;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 5px 5px 0 0;
-    border-top: 5px solid $theme-color-primary;
+    background-color: rgba(0, 0, 0, 0.35);
+    border-radius: 8px 8px 0 0;
   }
 
   .header-block {
@@ -325,7 +383,7 @@ export default {
   }
 }
 .related-question-block {
-  background-color: $theme-bg-color;
+  background-color: rgba(0, 0, 0, 0.35);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   padding: 28px 28px 4px;
@@ -346,6 +404,14 @@ export default {
 .related-question-list {
   .result-board {
     width: 32%;
+
+    &::before {
+      content: '';
+      width: 100%;
+      height: 5px;
+      background-color: #4DE2F0;
+      border-radius: 5px 5px 0px 0px;
+    }
 
     &:not(:nth-child(3n)) {
       margin-right: 2%;

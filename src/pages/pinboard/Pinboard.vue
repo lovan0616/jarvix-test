@@ -6,12 +6,12 @@
     <div
       v-else
     >
+      <h1 class="page-title">{{ $t('editing.pinboard') }}</h1>
       <div class="bread-crumb-block">
-        <router-link class="page root" to="/pinboard">{{ $t('editing.pinboard') }}</router-link>
+        <router-link class="page root" to="/pinboard">{{ $t('editing.allCategory') }}</router-link>
         <span class="divider">/</span>
         <span class="page">{{ pinboardInfo.name }}</span>
       </div>
-      <h1 class="page-title">{{ pinboardInfo.name }}</h1>
       <layout
         v-for="pinboard in pinboardInfo.templates"
         :key="pinboard.id"
@@ -69,6 +69,7 @@ export default {
     .page {
       &.root {
         color: #65cfd9;
+        text-decoration: underline;
       }
     }
     .divider {

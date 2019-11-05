@@ -19,7 +19,8 @@ export default {
 .empty-info-block {
   padding: 24px 0;
   border-radius: 4px;
-  background-color: $theme-bg-lighter-color;
+  background-color: rgba(0, 0, 0, 0.55);
   text-align: center;
+  color: #CCCCCC;
 }
 </style>
