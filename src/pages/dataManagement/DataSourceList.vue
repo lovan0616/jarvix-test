@@ -83,19 +83,19 @@ export default {
     this.fetchData()
   },
   watch: {
-    isBookmarkBuilding (value, oldValue) {
+    isDataSourceBuilding (value, oldValue) {
       if (!value && oldValue) {
         this.fetchData()
       }
     },
-    bookmarkList: {
+    dataSourceList: {
       handler () {
         /**
          * 注意！這邊要重新 assign 是因為頁面上有排序功能，不希望排序時影響到 bookmark select 的順序
          */
-        this.dataList = this.bookmarkList.map(dataInfo => {
+        this.dataList = this.dataSourceList.map(dataInfo => {
           // 注意！這邊只會做資料表數計算，時間的顯示在 DataTable 處理，主要是為了時間排序的準確
-          dataInfo.count = dataInfo.edit_config ? Object.keys(dataInfo.edit_config.uploads).length : 0
+          dataInfo.dataFrameCount = dataInfo.dataFrameCount || 0
           return dataInfo
         })
       },
@@ -164,31 +164,26 @@ export default {
           value: 'name',
           sort: true,
           link: {
-            name: 'PageDataFileList',
-            disabled: {
-              name: 'type',
-              value: ['SQLITE']
-            }
+            name: 'PageDataFileList'
           }
         },
-        {text: this.$t('editing.sourceOfData'), value: 'type', width: '8.82%'},
-        {text: this.$t('editing.uploadUser'), value: 'create_user', width: '9.96%'},
+        {text: this.$t('editing.uploadUser'), value: 'creator', width: '9.96%'},
         {
           text: this.$t('editing.createDate'),
-          value: 'create_date',
+          value: 'createDate',
           sort: true,
           width: '90px',
           time: 'YYYY-MM-DD'
         },
         {
           text: this.$t('editing.updateDate'),
-          value: 'update_date',
+          value: 'updateDate',
           sort: true,
           width: '90px',
           time: 'YYYY-MM-DD'
         },
-        {text: this.$t('editing.status'), value: 'build_status', width: '7.26%'},
-        {text: this.$t('editing.countOfTable'), value: 'count', width: '65px'},
+        {text: this.$t('editing.status'), value: 'state', width: '7.26%'},
+        {text: this.$t('editing.countOfTable'), value: 'dataFrameCount', width: '65px'},
         {
           text: this.$t('editing.action'),
           value: 'action',
@@ -205,14 +200,14 @@ export default {
         }
       ]
     },
-    bookmarkList () {
-      return this.$store.state.bookmark.bookmarkList
+    dataSourceList () {
+      return this.$store.state.dataSource.dataSourceList
     },
     showCreateDataSourceDialog () {
       return this.$store.state.dataManagement.showCreateDataSourceDialog
     },
-    isBookmarkBuilding () {
-      return this.$store.getters['bookmark/isBookmarkBuilding']
+    isDataSourceBuilding () {
+      return this.$store.getters['dataSource/isDataSourceBuilding']
     }
   }
 }

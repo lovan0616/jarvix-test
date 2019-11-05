@@ -4,24 +4,24 @@
     <upload-process-block></upload-process-block>
     <div class="dialog-body">
       <div class="input-block-container">
-        <div class="input-block file-type-select-block"
+        <!-- <div class="input-block file-type-select-block"
           :class="{'has-error': errors.has('fileTypeSelect')}"
         >
           <sy-select class="file-type-select"
             name="fileTypeSelect"
-            :selected="bookmarkInfo.type"
+            :selected="dataSourceInfo.type"
             :items="fileTypeList"
             :placeholder="$t('editing.selectDataType')"
             @update:selected="bookmarkTypeChange"
             v-validate="'required'"
           ></sy-select>
           <div class="error-text">{{ $t('editing.choiceDataTypeFirst') }}</div>
-        </div>
+        </div> -->
         <input-block class="file-info-input-block"
           v-if="!currentDataSourceInfo"
           :label="$t('editing.dataSourceName')"
           name="dataSourceName"
-          v-model="bookmarkInfo.name"
+          v-model="dataSourceInfo.name"
           v-validate="'required'"
         ></input-block>
       </div>
@@ -42,7 +42,6 @@
 import SySelect from '@/components/select/SySelect'
 import InputBlock from '@/components/InputBlock'
 import UploadProcessBlock from './UploadProcessBlock'
-import { createBookmark } from '@/API/Bookmark'
 import { createDataSource } from '@/API/DataSource'
 
 export default {
@@ -55,9 +54,9 @@ export default {
   },
   data () {
     return {
-      bookmarkInfo: {
+      dataSourceInfo: {
         name: null,
-        type: null
+        // type: null
       },
       typeList: [
         {
@@ -71,40 +70,31 @@ export default {
       ]
     }
   },
-  watch: {
-    'bookmarkInfo.type' (value) {
-      this.$validator.validate('fileTypeSelect', value)
-    }
-  },
+  // watch: {
+  //   'dataSourceInfo.type' (value) {
+  //     this.$validator.validate('fileTypeSelect', value)
+  //   }
+  // },
   methods: {
-    bookmarkTypeChange (id) {
-      this.bookmarkInfo.type = id
-    },
+    // bookmarkTypeChange (id) {
+    //   this.dataSourceInfo.type = id
+    // },
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     nextStep () {
       this.$validator.validateAll().then(result => {
         if (result) {
-          let promise
           if (this.currentDataSourceInfo) {
             // 將 name 塞進去
-            this.bookmarkInfo.name = this.currentDataSourceInfo.name
-          } else {
-            /**
-             * 新增bookmark
-             * 這邊得這樣處理是因為，後端 MySQL 跟 SQLITE 在這邊送一樣的值，但是在後面連線的時候又要區分開來
-             **/
-            promise = createBookmark({
-              name: this.bookmarkInfo.name
-            })
+            this.dataSourceInfo.name = this.currentDataSourceInfo.name
           }
 
-          promise.then(res => {
+          createDataSource(this.dataSourceInfo.name).then(res => {
             this.$store.commit('dataManagement/updateCurrentUploadInfo', {
-              dataSourceId: res.bookmark.id,
-              fileCount: res.bookmark.config ? Object.keys(res.bookmark.config.tables).length : 0,
-              ...this.bookmarkInfo
+              dataSourceId: res.dataSourceId,
+              // fileCount: res.bookmark.config ? Object.keys(res.bookmark.config.tables).length : 0,
+              ...this.dataSourceInfo
             })
           })
         }
@@ -115,15 +105,15 @@ export default {
     currentDataSourceInfo () {
       return this.$store.state.dataManagement.currentDataSourceInfo
     },
-    fileTypeList () {
-      if (this.currentDataSourceInfo) {
-        return this.typeList.filter(element => {
-          return element.id === this.currentDataSourceInfo.type
-        })
-      } else {
-        return this.typeList
-      }
-    }
+    // fileTypeList () {
+    //   if (this.currentDataSourceInfo) {
+    //     return this.typeList.filter(element => {
+    //       return element.id === this.currentDataSourceInfo.type
+    //     })
+    //   } else {
+    //     return this.typeList
+    //   }
+    // }
   }
 }
 </script>

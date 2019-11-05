@@ -126,10 +126,13 @@ export default {
 
         for (let i = 0; i < uploadInput.files.length; i++) {
           let formData = new FormData()
-          formData.append('file', uploadInput.files[i])
+          let file = uploadInput.files[i]
+          formData.append('file', file)
+          formData.append('dataSourceId', this.currentUploadInfo.dataSourceId)
+          formData.append('fileFullName', file.name)
 
           // 判斷是否有檔案超過大小限制
-          if (uploadInput.files[i].size > this.uploadFileSizeLimit * 1024 * 1024) {
+          if (file.size > this.uploadFileSizeLimit * 1024 * 1024) {
             this.unableFileList.push({
               data: formData,
               status: uploadStatus.forbidden,

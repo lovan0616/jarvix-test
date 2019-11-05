@@ -44,6 +44,7 @@
 import axios from 'axios'
 import { uploadStatus } from '@/utils/general'
 import { uploadCSV } from '@/API/Storage'
+import { fileUpload } from '@/API/File'
 
 export default {
   name: 'SingleFileRow',
@@ -76,7 +77,7 @@ export default {
   methods: {
     uploadFile () {
       let _this = this
-      uploadCSV(this.storageId, this.singleFile.id, this.singleFile.data, this.onProgress, new axios.CancelToken(function executor (c) {
+      fileUpload(this.singleFile.data, this.onProgress, new axios.CancelToken(function executor (c) {
         _this.askCancelFunction = c
       }))
         .then(response => {

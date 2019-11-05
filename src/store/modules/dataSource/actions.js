@@ -1,8 +1,17 @@
 import co from 'co'
 import { getDataSourceList, createDataSource, getDataSourceById, checkDataSourceStatusById } from '@/API/DataSource'
+import { getSuggestions, getQuickstarts, getBookmarkColumn } from '@/API/Bookmark'
+import { getQuestionHistory } from '@/API/ChatBot'
 import router from '../../../router'
 
 export default {
+  init ({ commit, dispatch, state }) {
+    if (state.isInit) return Promise.resolve(state)
+
+    let queryBookmark = parseInt(router.app.$route.query.bookmarkId)
+    dispatch('getDataSourceList', queryBookmark)
+    commit('setIsInit', true)
+  },
   getDataSourceList ({ dispatch, commit, state }, data) {
     return getDataSourceList().then(res => {
       commit('setDataSourceList', res)
@@ -14,14 +23,14 @@ export default {
         })
         // 判斷路由的 bookmark 是否存在
         if (hasBookmark) {
-          dispatch('changeBookmarkById', data)
+          dispatch('changeDataSourceById', data)
         } else {
-          dispatch('changeBookmarkById', res[0].id)
+          dispatch('changeDataSourceById', res[0].id)
           router.push('/')
         }
       } else {
-        if (!state.bookmarkId) {
-          dispatch('changeBookmarkById', res[0].id)
+        if (!state.dataSourceId) {
+          dispatch('changeDataSourceById', res[0].id)
         }
       }
     })

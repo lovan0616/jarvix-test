@@ -45,7 +45,7 @@
         v-else
         v-for="(data, index) in dataList"
         :key="index"
-        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': data['build_status']}"
+        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': data['state'] === 'PROCESSING'}"
       >
         <div class="data-table-cell checkbox"
           v-if="hasCheckbox"
@@ -76,17 +76,17 @@
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
             :key="action.name"
-            :disabled="isProcessing || data['build_status']"
+            :disabled="isProcessing || data['state'] === 'PROCESSING'"
             @click="doAction(action.value, data)"
           >{{ action.name }}</a>
-          <span v-else-if="headInfo.value === 'build_status'"
-            :class="{'is-processing': data[headInfo.value]}"
+          <span v-else-if="headInfo.value === 'state'"
+            :class="{'is-processing': data[headInfo.value] === 'PROCESSING'}"
           >
             <svg-icon
-              v-if="data[headInfo.value]"
+              v-if="data[headInfo.value] === 'PROCESSING'"
               icon-class="spinner"
             ></svg-icon>
-            {{ data[headInfo.value] ? $t('editing.dataBuilding') : $t('editing.dataManageable') }}
+            {{ buildStatus(data[headInfo.value]) }}
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
@@ -232,7 +232,7 @@ export default {
     timeFormat (value, format) {
       switch (format) {
         case 'YYYY-MM-DD':
-          return this.timeStampToDate(value)
+          return this.timeToDate(value)
         case 'YYYY-MM-DD HH:mm':
           return this.timeStampToDateTime(value)
       }
@@ -240,6 +240,16 @@ export default {
     doAction (actionName, data) {
       if (this.isProcessing) return false
       this.$emit(actionName, data)
+    },
+    buildStatus (value) {
+      switch (value) {
+        case 'ENABLE':
+          return i18n.t('editing.dataManageable')
+        case 'DISABLE':
+          return i18n.t('editing.dataDisable')
+        case 'PROCESSING':
+          return i18n.t('editing.dataBuilding')
+      }
     }
   },
   computed: {
