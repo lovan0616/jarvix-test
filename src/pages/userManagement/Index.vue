@@ -6,15 +6,15 @@
     </div>
     <!-- <div class="user-default">尚未建立使用者</div> -->
     <div class="user-row">
-      <SingleUser></SingleUser>
+      <SingleUser ref="singleUser"></SingleUser>
     </div>
     <div @click="closeCreateUser" class="full-create-dialog" v-if="isShowCreateUser">
       <h2>建立使用者</h2>
       <div @click.stop class="full-create-dialog-box">
         <input v-model="userData.username" class="dialog-input" type="text" placeholder="使用者名稱">
         <input v-model="userData.email" class="dialog-input" type="text" placeholder="使用者帳號">
-        <input v-model="userData.password" class="dialog-input" type="text" placeholder="登入密碼">
-        <input class="dialog-input" type="text" placeholder="確認密碼">
+        <input v-model="userData.password" class="dialog-input" type="password" placeholder="登入密碼">
+        <input v-model="verifyPassword" class="dialog-input" type="password" placeholder="確認密碼">
       </div>
       <div @click.stop class="dialog-btn-row">
         <button @click="closeCreateUser" class="dialog-btn">取消</button>
@@ -38,7 +38,8 @@ export default {
         username: '',
         email: '',
         password: ''
-      }
+      },
+      verifyPassword: ''
     }
   },
   mounted () {
@@ -52,15 +53,22 @@ export default {
       this.isShowCreateUser = false
     },
     createSingleUser () {
-      createUser(
-        this.userData
-      )
-        .then(response => {
-          console.log(response)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      if (this.userData.password === this.verifyPassword) {
+        createUser(
+          this.userData
+        )
+          .then(response => {
+            this.isShowCreateUser = false
+            this.$refs.singleUser.getUserList()
+            console.log(response)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      } else {
+        alert('請確認密碼')
+      }
+
     }
   },
   computed: {

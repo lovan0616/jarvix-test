@@ -115,6 +115,8 @@ export default {
         this.isShowLanguage = true
       } else if (name === 'logout') {
         this.isShowLogout = true
+      } else if (name === 'userManage') {
+        this.$router.push('/user-management')
       }
     }
   }

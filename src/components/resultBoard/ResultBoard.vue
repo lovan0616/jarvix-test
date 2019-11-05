@@ -239,7 +239,7 @@ export default {
       this.isShowDelete = true
     },
     closeDelete () {
-      this.isShowDelete = false      
+      this.isShowDelete = false
     }
   },
   computed: {

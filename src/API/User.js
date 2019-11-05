@@ -45,9 +45,9 @@ export function createUser (userInfo) {
 /**
  * 更新使用者
  */
-export function updateUser (userInfo) {
+export function updateUser (userInfo, id) {
   return request({
-    url: '/users',
+    url: `/users/${id}`,
     method: 'PUT',
     data: userInfo
   })
@@ -56,10 +56,9 @@ export function updateUser (userInfo) {
 /**
  * 刪除使用者
  */
-export function deleteUser (userInfo, id) {
+export function deleteUser (id) {
   return request({
     url: `/users/${id}`,
-    method: 'DELETE',
-    data: userInfo
+    method: 'DELETE'
   })
 }

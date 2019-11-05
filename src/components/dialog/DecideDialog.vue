@@ -8,6 +8,7 @@
             <div class="dialog-decide-flex">
                 <div @click="closeDialog" class="btn dialog-decide-cancel">{{ $t('button.cancel') }}</div>
                 <div v-if="type==='logout'" @click="confirmBtn" class="btn btn-default dialog-decide-change-logout">{{ $t('button.logout') }}</div>
+                <div v-if="type==='confirm'" @click="confirmBtn" class="btn btn-default dialog-decide-change-logout">{{ $t('button.confirm') }}</div>
                 <div v-else-if="type==='delete'" @click="confirmBtn" class="btn btn-default dialog-decide-change-delete">{{ $t('button.delete') }}</div>
             </div>
         </div>
