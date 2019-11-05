@@ -11,10 +11,10 @@ import i18n from '@/lang/index.js'
  * 避免 token 過期了，結果還在拿 instance 建立時的 token 使用
  */
 const service = axios.create({
-  baseURL: window.env.API_ROOT_URL + 'api/', // api 的 base_url
+  baseURL: 'https://public.dev.sis.ai/', // api 的 base_url
   // timeout: 15000,
   headers: {
-    token: {
+    access_token: {
       toString () {
         return localStorage.getItem('token')
       }
@@ -26,63 +26,46 @@ const service = axios.create({
 service.interceptors.response.use(
   response => {
     const res = response.data
-    if (!res.error) return res.data
-    // roolbar 留存
+    if (res.success) return res.data
+
+    // rollbar 留存
     if (window.location.hostname !== 'localhost') {
       Vue.rollbar.error(JSON.stringify(res))
     }
 
-    // 除了這些以外都不需要在這層級處理
-    // const messageCodeType = ['APPERR', 'SYERR', 'SYWARN']
-    // const needMessage = messageCodeType.reduce((count, type) => {
-    //   count += res.error.code.indexOf(type) > -1 ? 1 : 0
-    //   return count
-    // }, 0)
-    // if (!needMessage) return Promise.reject(res)
-
     // 這些也不用顯示message
-    if (res.error.code === 'APPERR0001' || res.error.code === 'SYERR0001' || res.error.code === 'SYWARN0001' || res.error.code.indexOf('TASKWARN') > -1
-    ) return Promise.reject(res)
+    // if (res.error.code === 'APPERR0001' || res.error.code === 'SYERR0001' || res.error.code === 'SYWARN0001' || res.error.code.indexOf('TASKWARN') > -1
+    // ) return Promise.reject(res)
 
     // 如果 mapping 不到錯誤訊息，就顯示制式文字
     Message({
-      message: i18n.t(`errorMessage.${res.error.code}`) || i18n.t('message.systemIsError'),
-      type: 'error',
+      message: res.error.message,
+      type: res.error.type,
       duration: 3 * 1000
     })
 
-    switch (res.error.code) {
-      case 'APPWARN0003':
-        router.push('/login')
-        break
-    }
     return Promise.reject(res)
   },
   error => {
+    if (error.response.status === 401) {
+      router.push('/login')
+
+      Message({
+        message: i18n.t('errorMessage.authFail'),
+        type: 'error',
+        duration: 3 * 1000
+      })
+    }
+
     // cancel request
     if (axios.isCancel(error)) {
       console.log('Request canceled', error.message)
       return Promise.reject(error)
     }
-    // roolbar 留存
+    // rollbar 留存
     if (window.location.hostname !== 'localhost') {
       Vue.rollbar.error(JSON.stringify(error))
     }
-
-    // 先不秀 http error
-    // if (error.response) {
-    //   Message({
-    //     message: error.response.status + '-' + i18n.t('message.systemIsError'),
-    //     type: 'error',
-    //     duration: 3 * 1000
-    //   })
-    // } else {
-    //   Message({
-    //     message: error.message,
-    //     type: 'error',
-    //     duration: 3 * 1000
-    //   })
-    // }
 
     return Promise.reject(error)
   }

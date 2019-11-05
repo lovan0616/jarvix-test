@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function login (loginInfo) {
   return request({
-    url: '/login',
+    url: 'auth/login',
     method: 'POST',
     data: loginInfo
   })
@@ -16,7 +16,7 @@ export function login (loginInfo) {
  */
 export function logout () {
   return request({
-    url: '/logout',
+    url: 'auth/logout',
     method: 'GET'
   })
 }

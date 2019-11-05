@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import dataSource from './modules/dataSource'
 import bookmark from './modules/bookmark'
 import previewBookmark from './modules/previewBookmark'
 import pinboard from './modules/pinboard'
@@ -12,6 +13,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
+    dataSource,
     bookmark,
     previewBookmark,
     pinboard,
