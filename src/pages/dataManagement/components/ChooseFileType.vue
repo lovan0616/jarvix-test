@@ -18,7 +18,7 @@
           <div class="error-text">{{ $t('editing.choiceDataTypeFirst') }}</div>
         </div>
         <input-block class="file-info-input-block"
-          v-if="!currentBookmarkInfo"
+          v-if="!currentDataSourceInfo"
           :label="$t('editing.dataSourceName')"
           name="dataSourceName"
           v-model="bookmarkInfo.name"
@@ -42,7 +42,8 @@
 import SySelect from '@/components/select/SySelect'
 import InputBlock from '@/components/InputBlock'
 import UploadProcessBlock from './UploadProcessBlock'
-import { createBookmark, createBookmarkStorage } from '@/API/Bookmark'
+import { createBookmark } from '@/API/Bookmark'
+import { createDataSource } from '@/API/DataSource'
 
 export default {
   inject: ['$validator'],
@@ -86,27 +87,22 @@ export default {
       this.$validator.validateAll().then(result => {
         if (result) {
           let promise
-          if (this.currentBookmarkInfo) {
-            // 編輯 bookmark 取得 storageId
-            let storageType = this.getStorageType(this.bookmarkInfo.type)
-            promise = createBookmarkStorage(this.currentBookmarkInfo.id, storageType)
+          if (this.currentDataSourceInfo) {
             // 將 name 塞進去
-            this.bookmarkInfo.name = this.currentBookmarkInfo.name
+            this.bookmarkInfo.name = this.currentDataSourceInfo.name
           } else {
             /**
              * 新增bookmark
              * 這邊得這樣處理是因為，後端 MySQL 跟 SQLITE 在這邊送一樣的值，但是在後面連線的時候又要區分開來
              **/
             promise = createBookmark({
-              name: this.bookmarkInfo.name,
-              type: this.getStorageType(this.bookmarkInfo.type)
+              name: this.bookmarkInfo.name
             })
           }
 
           promise.then(res => {
             this.$store.commit('dataManagement/updateCurrentUploadInfo', {
-              bookmarkId: res.bookmark.id,
-              storageId: res.storage.id,
+              dataSourceId: res.bookmark.id,
               fileCount: res.bookmark.config ? Object.keys(res.bookmark.config.tables).length : 0,
               ...this.bookmarkInfo
             })
@@ -116,13 +112,13 @@ export default {
     }
   },
   computed: {
-    currentBookmarkInfo () {
-      return this.$store.state.dataManagement.currentBookmarkInfo
+    currentDataSourceInfo () {
+      return this.$store.state.dataManagement.currentDataSourceInfo
     },
     fileTypeList () {
-      if (this.currentBookmarkInfo) {
+      if (this.currentDataSourceInfo) {
         return this.typeList.filter(element => {
-          return element.id === this.currentBookmarkInfo.type
+          return element.id === this.currentDataSourceInfo.type
         })
       } else {
         return this.typeList

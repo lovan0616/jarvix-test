@@ -77,7 +77,7 @@ export default {
           this.$store.commit('dataManagement/updateConnectionType', this.currentUploadInfo.type)
           dbConnect(this.currentUploadInfo.storageId, this.connectionInfo)
             .then(() => {
-              buildStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.bookmarkId)
+              buildStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.dataSourceId)
                 .then(() => {
                   this.$store.commit('dataManagement/updateConnectionStatus', true)
                 })

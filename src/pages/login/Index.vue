@@ -53,11 +53,11 @@ export default {
       this.$validator.validateAll().then(result => {
         if (result) {
           login({
-            user_name: this.userInfo.account,
+            email: this.userInfo.account,
             password: this.userInfo.password
           })
             .then(res => {
-              localStorage.setItem('token', res.user.token)
+              localStorage.setItem('token', res.accessToken)
               this.$router.push('/')
             })
         }

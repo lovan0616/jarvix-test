@@ -71,7 +71,7 @@ export default {
   methods: {
     getStorageId () {
       let storageType = this.getStorageType(this.currentUploadInfo.type)
-      getBookmarkStorage(this.currentUploadInfo.bookmarkId, storageType).then(response => {
+      getBookmarkStorage(this.currentUploadInfo.dataSourceId, storageType).then(response => {
         this.storageId = response.storage.id
         let storageTablesConfig = response.storage.config.tables
         // 目前的 table 清單，將 object 轉為 Array，同時補足 select 需要的 key
@@ -102,7 +102,7 @@ export default {
       })
     },
     buildBookmarkStorage () {
-      buildStorage(this.storageId, this.currentUploadInfo.bookmarkId, false).then(() => {
+      buildStorage(this.storageId, this.currentUploadInfo.dataSourceId, false).then(() => {
         this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
         if (this.$route.name === 'PageDataSourceList') {
           this.$store.dispatch('bookmark/getBookmarkList')

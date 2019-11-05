@@ -18,8 +18,7 @@ export default {
     state.currentBookmarkInfo = data
   },
   clearCurrentUploadInfo (state) {
-    state.currentUploadInfo.bookmarkId = null
-    state.currentUploadInfo.storageId = null
+    state.currentUploadInfo.dataSourceId = null
     state.currentUploadInfo.type = null
     state.currentUploadInfo.name = null
   },
