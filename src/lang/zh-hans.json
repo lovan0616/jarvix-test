@@ -113,7 +113,7 @@
     "userManage": "使用者管理",
     "confirmDeleteBoardOrNot": "确认删除此钉板？",
     "pinboard": "个人钉板",
-    "emptyPinboard": "暂无钉板资讯，请先去询问问题",
+    "emptyPinboard": "目前无任何内容",
     "emptyResult": "没有相关资料",
     "emptyResultDescription": "您所输入的问题，无法找到相关联的数据进行分析，请重新输入语句搜寻，或使用系统建议语句",
     "preview": "预览",
@@ -137,7 +137,11 @@
     "newPassword": "新密码",
     "confirmNewPassword": "确认新密码",
     "unableLogin": "将无法正常登入，确定关闭",
-    "confirmDeleteAccount": "您确定要删除"
+    "confirmDelete": "您确定要删除",
+    "allCategory": "所有分类",
+    "inputCategoryName": "请输入分类名称",
+    "editingName": "编辑名称",
+    "pinboardNum": "钉板数量"
   },
   "button": {
     "build": "建置",
@@ -145,6 +149,7 @@
     "delete": "删除",
     "confirm": "确认",
     "share": "分享",
+    "shareLink": "分享连结",
     "edit": "编辑",
     "save": "储存",
     "skip": "略过",
@@ -173,7 +178,8 @@
     "pinned": "已钉板",
     "cancelPinned": "取消钉板",
     "built": "建立",
-    "editName": "编辑名称"
+    "editName": "编辑名称",
+    "addNewCategory": "新增分类"
   },
   "aggregation": {
     "mean": "平均",
@@ -374,6 +380,7 @@
     "APPWARN0003": "权限失效请重新登入",
     "APPWARN0004": "查无推荐问句",
     "TASKWARN0002": "此条件获取不到任何资料来进行处理",
-    "TASKWARN0003": "计算结果为空"
+    "TASKWARN0003": "计算结果为空",
+    "authFail": "权限失效请重新登入"
   }
 }

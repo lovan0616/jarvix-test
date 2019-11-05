@@ -113,7 +113,7 @@
     "userManage": "使用者管理",
     "confirmDeleteBoardOrNot": "確認刪除此釘板？",
     "pinboard": "個人釘板",
-    "emptyPinboard": "暫無釘板資訊，請先去詢問問題",
+    "emptyPinboard": "目前無任何內容",
     "emptyResult": "沒有相關資料",
     "emptyResultDescription": "您所輸入的問題，無法找到相關聯的數據進行分析，請重新輸入語句搜尋，或使用系統建議語句",
     "preview": "預覽",
@@ -137,7 +137,11 @@
     "newPassword": "新密碼",
     "confirmNewPassword": "確認新密碼",
     "unableLogin": "將無法正常登入，確定關閉",
-    "confirmDeleteAccount": "您確定要刪除"
+    "confirmDelete": "您確定要刪除",
+    "allCategory": "所有分類",
+    "inputCategoryName": "請輸入分類名稱",
+    "editingName": "編輯名稱",
+    "pinboardNum": "釘板數量"
   },
   "button": {
     "build": "建置",
@@ -145,6 +149,7 @@
     "delete": "刪除",
     "confirm": "確認",
     "share": "分享",
+    "shareLink": "分享連結",
     "edit": "編輯",
     "save": "儲存",
     "skip": "略過",
@@ -173,7 +178,8 @@
     "pinned": "已釘板",
     "cancelPinned": "取消釘板",
     "built": "建立",
-    "editName": "編輯名稱"
+    "editName": "編輯名稱",
+    "addNewCategory": "新增分類"
   },
   "aggregation": {
     "mean": "平均",
@@ -374,6 +380,7 @@
     "APPWARN0003": "權限失效請重新登入",
     "APPWARN0004": "查無推薦問句",
     "TASKWARN0002": "此條件獲取不到任何資料來進行處理",
-    "TASKWARN0003": "計算結果為空"
+    "TASKWARN0003": "計算結果為空",
+    "authFail": "權限失效請重新登入"
   }
 }

@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     fetchData () {
-      return this.$store.dispatch('bookmark/getBookmarkList')
+      return this.$store.dispatch('dataSource/getDataSourceList')
     },
     createDataSource () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
