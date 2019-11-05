@@ -17,7 +17,7 @@
 <script>
 
 export default {
-  name: 'SelectDialog',
+  name: 'WritingDialog',
   props: {
     title: { type: String, default: '' },
     button: { type: String, default: '' },

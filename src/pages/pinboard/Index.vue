@@ -20,7 +20,7 @@
       </single-pinboard>
     </div>
 
-    <select-dialog
+    <writing-dialog
       v-if="isShowAdd"
       :title="$t('button.addNewCategory')"
       :button="$t('button.change')"
@@ -29,9 +29,9 @@
       :showBoth="true"
     >
       <input v-model="newBoardName" type="text" class="input pinboard-name-input" :placeholder="$t('editing.inputCategoryName')">
-    </select-dialog>
+    </writing-dialog>
 
-    <select-dialog
+    <writing-dialog
       v-if="isShowEdit"
       :title="$t('editing.editingName')"
       :button="$t('button.change')"
@@ -40,7 +40,7 @@
       :showBoth="true"
     >
       <input type="text" class="input pinboard-name-input" v-model="tempEditInfo.name">
-    </select-dialog>
+    </writing-dialog>
     <decide-dialog
       v-if="isShowDelete"
       :title="`${confirmDeleteText} ${tempEditInfo.name}？`"
@@ -49,7 +49,7 @@
       @confirmBtn="confirmDelete"
     >
     </decide-dialog>
-    <select-dialog
+    <writing-dialog
       v-if="isShowShare"
       :title="$t('button.shareLink')"
       :button="$t('button.copy')"
@@ -58,19 +58,19 @@
       :showBoth="false"
     >
       <input type="text" class="input pinboard-name-input" v-model="shareLink" ref="shareInput">
-    </select-dialog>
+    </writing-dialog>
   </div>
 </template>
 <script>
 import SinglePinboard from './components/SinglePinboard'
 import DecideDialog from '@/components/dialog/DecideDialog'
-import SelectDialog from '@/components/dialog/SelectDialog'
+import WritingDialog from '@/components/dialog/WritingDialog'
 
 export default {
   name: 'PagePinboardList',
   components: {
     DecideDialog,
-    SelectDialog,
+    WritingDialog,
     SinglePinboard
   },
   data () {

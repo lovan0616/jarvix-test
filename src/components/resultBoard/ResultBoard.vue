@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <select-dialog
+    <writing-dialog
       v-if="isShowShare"
       :title="$t('button.shareLink')"
       :button="$t('button.copy')"
@@ -67,7 +67,7 @@
       :showBoth="false"
     >
       <input type="text" class="input pinboard-name-input" :value="shareUrl" ref="shareInput">
-    </select-dialog>
+    </writing-dialog>
     <decide-dialog
       v-if="isShowDelete"
       :title="`${confirmDeleteText} ${resultInfo.tasks[0].entities.question}？`"
@@ -83,14 +83,14 @@
 import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
-import SelectDialog from '@/components/dialog/SelectDialog'
+import WritingDialog from '@/components/dialog/WritingDialog'
 export default {
   name: 'ResultBoard',
   components: {
     PinboardDialog,
     ShareDialog,
     DecideDialog,
-    SelectDialog
+    WritingDialog
   },
   props: {
     resultInfo: {

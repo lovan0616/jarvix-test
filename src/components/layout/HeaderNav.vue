@@ -26,7 +26,7 @@
       >
       </dropdown-select>
     </div>
-    <select-dialog
+    <writing-dialog
       v-if="isShowLanguage"
       :title="$t('editing.languageSetting')"
       :button="$t('button.change')"
@@ -40,7 +40,7 @@
         :items="selectItems"
         v-on:update:selected="onSelected"
       ></sy-select>
-    </select-dialog>
+    </writing-dialog>
     <decide-dialog
       v-if="isShowLogout"
       :title="$t('editing.sureLogout')"
@@ -55,7 +55,7 @@
 import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
-import SelectDialog from '@/components/dialog/SelectDialog'
+import WritingDialog from '@/components/dialog/WritingDialog'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -64,7 +64,7 @@ export default {
     SySelect,
     DropdownSelect,
     DecideDialog,
-    SelectDialog
+    WritingDialog
   },
   data () {
     return {
