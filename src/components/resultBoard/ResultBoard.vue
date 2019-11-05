@@ -10,18 +10,18 @@
         >
           <a class="head-btn share"
             href="javascript:void(0)"
-            @click="isShowShare = true"
+            @click="showShare"
           >
             <svg-icon icon-class="share" class="icon"></svg-icon>{{ $t('button.share') }}
             <share-dialog
               v-if="isShowShareDialog"
-             :share-url="shareUrl"
-             @cancel="closeShareDialog"
+              :share-url="shareUrl"
+              @cancel="closeShareDialog"
             ></share-dialog>
           </a>
           <a class="head-btn delete"
             href="javascript:void(0)"
-            @click="isShowDelete = true"
+            @click="showDelete"
           >
             <svg-icon icon-class="delete" class="icon"></svg-icon>{{ $t('button.delete') }}
           </a>
@@ -59,21 +59,21 @@
     </div>
 
     <select-dialog
-    v-if="isShowShare"
-    :title="$t('button.shareLink')"
-    :button="$t('button.copy')"
-    @closeDialog="isShowShare = false"
-    @confirmBtn="confirmShare"
-    :showBoth="false"
+      v-if="isShowShare"
+      :title="$t('button.shareLink')"
+      :button="$t('button.copy')"
+      @closeDialog="closeShare"
+      @confirmBtn="confirmShare"
+      :showBoth="false"
     >
       <input type="text" class="input pinboard-name-input" :value="shareUrl" ref="shareInput">
     </select-dialog>
     <decide-dialog
-    v-if="isShowDelete"
-    :title="`${confirmDeleteText} ${resultInfo.tasks[0].entities.question}？`"
-    :type="'delete'"
-    @closeDialog="isShowDelete = false"
-    @confirmBtn="confirmDelete"
+      v-if="isShowDelete"
+      :title="`${confirmDeleteText} ${resultInfo.tasks[0].entities.question}？`"
+      :type="'delete'"
+      @closeDialog="closeDelete"
+      @confirmBtn="confirmDelete"
     >
     </decide-dialog>
 
@@ -222,12 +222,24 @@ export default {
         duration: 3 * 1000
       })
       this.$nextTick(() => {
-        this.isShowShare = false
+
       })
     },
     confirmDelete () {
       this.unPin()
       this.isShowDelete = false
+    },
+    showShare () {
+      this.isShowShare = true
+    },
+    closeShare () {
+      this.isShowShare = false
+    },
+    showDelete () {
+      this.isShowDelete = true
+    },
+    closeDelete () {
+      this.isShowDelete = false      
     }
   },
   computed: {

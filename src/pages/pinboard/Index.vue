@@ -3,7 +3,7 @@
     <h1 class="page-title">{{ $t('editing.pinboard') }}</h1>
 
     <div class="page-category">{{ $t('editing.allCategory') }}</div>
-    <div @click="isShowAdd = true" class="page-add-category">
+    <div @click="showAdd" class="page-add-category">
       <svg-icon icon-class="add" class="icon"></svg-icon>
       {{ $t('button.addNewCategory') }}
       </div>
@@ -21,41 +21,41 @@
     </div>
 
     <select-dialog
-    v-if="isShowAdd"
-    :title="$t('button.addNewCategory')"
-    :button="$t('button.change')"
-    @closeDialog="isShowAdd = false"
-    @confirmBtn="addCategory"
-    :showBoth="true"
+      v-if="isShowAdd"
+      :title="$t('button.addNewCategory')"
+      :button="$t('button.change')"
+      @closeDialog="closeAdd"
+      @confirmBtn="addCategory"
+      :showBoth="true"
     >
       <input v-model="newBoardName" type="text" class="input pinboard-name-input" :placeholder="$t('editing.inputCategoryName')">
     </select-dialog>
 
     <select-dialog
-    v-if="isShowEdit"
-    :title="$t('editing.editingName')"
-    :button="$t('button.change')"
-    @closeDialog="isShowEdit = false"
-    @confirmBtn="confirmEdit"
-    :showBoth="true"
+      v-if="isShowEdit"
+      :title="$t('editing.editingName')"
+      :button="$t('button.change')"
+      @closeDialog="closeEdit"
+      @confirmBtn="confirmEdit"
+      :showBoth="true"
     >
       <input type="text" class="input pinboard-name-input" v-model="tempEditInfo.name">
     </select-dialog>
     <decide-dialog
-    v-if="isShowDelete"
-    :title="`${confirmDeleteText} ${tempEditInfo.name}？`"
-    :type="'delete'"
-    @closeDialog="isShowDelete = false"
-    @confirmBtn="confirmDelete"
+      v-if="isShowDelete"
+      :title="`${confirmDeleteText} ${tempEditInfo.name}？`"
+      :type="'delete'"
+      @closeDialog="closeDelete"
+      @confirmBtn="confirmDelete"
     >
     </decide-dialog>
     <select-dialog
-    v-if="isShowShare"
-    :title="$t('button.shareLink')"
-    :button="$t('button.copy')"
-    @closeDialog="isShowShare = false"
-    @confirmBtn="confirmShare"
-    :showBoth="false"
+      v-if="isShowShare"
+      :title="$t('button.shareLink')"
+      :button="$t('button.copy')"
+      @closeDialog="closeShare"
+      @confirmBtn="confirmShare"
+      :showBoth="false"
     >
       <input type="text" class="input pinboard-name-input" v-model="shareLink" ref="shareInput">
     </select-dialog>
@@ -147,6 +147,21 @@ export default {
       this.$nextTick(() => {
         this.isShowShare = false
       })
+    },
+    showAdd () {
+      this.isShowAdd = true
+    },
+    closeAdd () {
+      this.isShowAdd = false
+    },
+    closeEdit () {
+      this.isShowEdit = false
+    },
+    closeDelete () {
+      this.isShowDelete = false
+    },
+    closeShare () {
+      this.isShowShare = false
     }
   },
   computed: {
@@ -161,11 +176,11 @@ export default {
   .page-title {
     margin-top: 0;
   }
-  .page-category{
+  .page-category {
     margin-bottom: 16px;
     color: #DDDDDD;
   }
-  .page-add-category{
+  .page-add-category {
     width: 105px;
     height: 30px;
     font-size: 14px;
