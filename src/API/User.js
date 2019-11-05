@@ -34,7 +34,7 @@ export function getUsers () {
 /**
  * 新增使用者
  */
-export function addUser (userInfo) {
+export function createUser (userInfo) {
   return request({
     url: '/users',
     method: 'POST',

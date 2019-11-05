@@ -1,30 +1,30 @@
 <template>
   <div class="user-management">
-    <div @click="isShowCreateUser = true" class="user-add">
-      <svg-icon icon-class="triangle" class="icon"></svg-icon>
+    <div @click="showCreateUser" class="user-add">
+      <svg-icon icon-class="user" class="icon"></svg-icon>
       建立使用者
     </div>
     <!-- <div class="user-default">尚未建立使用者</div> -->
     <div class="user-row">
       <SingleUser></SingleUser>
     </div>
-    <div @click="isShowCreateUser = false" class="full-create-dialog" v-if="isShowCreateUser">
+    <div @click="closeCreateUser" class="full-create-dialog" v-if="isShowCreateUser">
       <h2>建立使用者</h2>
       <div @click.stop class="full-create-dialog-box">
-        <input class="dialog-input" type="text" placeholder="使用者名稱">
-        <input class="dialog-input" type="text" placeholder="使用者帳號">
-        <input class="dialog-input" type="text" placeholder="登入密碼">
+        <input v-model="userData.username" class="dialog-input" type="text" placeholder="使用者名稱">
+        <input v-model="userData.email" class="dialog-input" type="text" placeholder="使用者帳號">
+        <input v-model="userData.password" class="dialog-input" type="text" placeholder="登入密碼">
         <input class="dialog-input" type="text" placeholder="確認密碼">
       </div>
-      <div class="dialog-btn-row">
-        <button class="dialog-btn">取消</button>
-        <button class="dialog-btn dialog-create">建立</button>
+      <div @click.stop class="dialog-btn-row">
+        <button @click="closeCreateUser" class="dialog-btn">取消</button>
+        <button @click="createSingleUser" class="dialog-btn dialog-create">建立</button>
       </div>
     </div>
   </div>
 </template>
 <script>
-
+import { createUser } from '@/API/User'
 import SingleUser from './components/SingleUser'
 export default {
   name: 'UserManagement',
@@ -33,14 +33,35 @@ export default {
   },
   data () {
     return {
-      isShowCreateUser: false
+      isShowCreateUser: false,
+      userData: {
+        username: '',
+        email: '',
+        password: ''
+      }
     }
   },
   mounted () {
 
   },
   methods: {
-
+    showCreateUser () {
+      this.isShowCreateUser = true
+    },
+    closeCreateUser () {
+      this.isShowCreateUser = false
+    },
+    createSingleUser () {
+      createUser(
+        this.userData
+      )
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
   },
   computed: {
 

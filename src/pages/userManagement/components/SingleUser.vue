@@ -1,79 +1,83 @@
 <template>
-    <div class="single-user">
-        <div class="single-row single-nav">
-            <div class="single-item">使用者名稱</div>
-            <div class="single-item">使用者帳號</div>
-            <div class="single-item single-status">啟用狀態</div>
-            <div class="single-item">操作</div>
-        </div>
-        <div
-        v-for="(user, index) in userData"
-        :key="index"
-        class="single-row"
-        :class="{'single-row-first-type': index % 2 === 0, 'single-row-second-type': index % 2 === 1}"
-        >
-            <div class="single-item">{{user.name}}</div>
-            <div class="single-item">{{user.uid}}</div>
-            <div v-if="user.active === true" class="single-item single-status">開啟</div>
-            <div v-else-if="user.active === false" class="single-item single-status single-status-close">關閉</div>
-            <div class="single-item">
-                <span @click="isShowPassword = true" class="single-manipulate-item single-manipulate-col">密碼變更</span>
-                <span @click="isShowEditName = true" class="single-manipulate-item single-manipulate-col">編輯名稱</span>
-                <span @click="isShowStatusChange = true" class="single-manipulate-item single-manipulate-col">關閉</span>
-                <span @click="isShowDeleteAccount = true" class="single-manipulate-item">刪除</span>
-            </div>
-        </div>
-
-    <select-dialog
-      v-if="isShowPassword"
-      title="密碼變更"
-      button="建立"
-      @closeDialog="isShowPassword = false"
-      @confirmBtn="createPassword"
-      :showBoth="true"
-    >
-        <div class="dialog-select-input-box">
-            <input class="dialog-select-input" type="text" placeholder="原密碼">
-            <input class="dialog-select-input" type="text" placeholder="新密碼">
-            <input class="dialog-select-input" type="text" placeholder="確認新密碼">
-        </div>
-    </select-dialog>
-
-    <select-dialog
-      v-if="isShowEditName"
-      title="編輯名稱"
-      button="儲存"
-      @closeDialog="isShowEditName = false"
-      @confirmBtn="editName"
-      :showBoth="true"
-    >
-        <div class="dialog-select-input-box">
-            <input class="dialog-select-input" type="text" placeholder="">
-        </div>
-    </select-dialog>
-
-    <decide-dialog
-      v-if="isShowStatusChange"
-      title="關閉 王大明 將無法正常登入，確定關閉？"
-      :type="'logout'"
-      @closeDialog="isShowStatusChange = false"
-      @confirmBtn="changeStatus"
-    >
-    </decide-dialog>
-
-    <decide-dialog
-      v-if="isShowDeleteAccount"
-      title="您確定要刪除 王大明 ？"
-      :type="'delete'"
-      @closeDialog="isShowDeleteAccount = false"
-      @confirmBtn="deleteAccount"
-    >
-    </decide-dialog>
-
+  <div class="single-user">
+    <div class="single-row single-nav">
+      <div class="single-item">使用者名稱</div>
+      <div class="single-item">使用者帳號</div>
+      <div class="single-item single-status">啟用狀態</div>
+      <div class="single-item">操作</div>
     </div>
+    <div
+    v-for="(user, index) in userData"
+    :key="index"
+    class="single-row"
+    :class="{'single-row-first-type': index % 2 === 0, 'single-row-second-type': index % 2 === 1}"
+    >
+      <div class="single-item">{{user.name}}</div>
+      <div class="single-item">{{user.uid}}</div>
+      <div v-if="user.active === true" class="single-item single-status">開啟</div>
+      <div v-else-if="user.active === false" class="single-item single-status single-status-close">關閉</div>
+      <div class="single-item">
+        <span @click="showPassword(user)" class="single-manipulate-item">密碼變更</span>
+        <span class="single-line"></span>
+        <span @click="showEditName(user)" class="single-manipulate-item">編輯名稱</span>
+        <span class="single-line"></span>
+        <span v-if="user.active === true" @click="showStatusChange(user)" class="single-manipulate-item">關閉</span>
+        <span v-if="user.active === false" @click="showStatusChange(user)" class="single-manipulate-item">開啟</span>
+        <span class="single-line"></span>
+        <span @click="showDeleteAccount(user)" class="single-manipulate-item">刪除</span>
+      </div>
+    </div>
+
+  <select-dialog
+    v-if="isShowPassword"
+    title="密碼變更"
+    button="建立"
+    @closeDialog="closePassword"
+    @confirmBtn="createPassword"
+    :showBoth="true"
+  >
+    <div class="dialog-select-input-box">
+      <input class="dialog-select-input" type="text" placeholder="原密碼">
+      <input class="dialog-select-input" type="text" placeholder="新密碼">
+      <input class="dialog-select-input" type="text" placeholder="確認新密碼">
+    </div>
+  </select-dialog>
+
+  <select-dialog
+    v-if="isShowEditName"
+    title="編輯名稱"
+    button="儲存"
+    @closeDialog="closeEditName"
+    @confirmBtn="editName"
+    :showBoth="true"
+  >
+    <div class="dialog-select-input-box">
+        <input class="dialog-select-input" type="text" placeholder="">
+    </div>
+  </select-dialog>
+
+  <decide-dialog
+    v-if="isShowStatusChange"
+    title="關閉 王大明 將無法正常登入，確定關閉？"
+    :type="'logout'"
+    @closeDialog="closeStatusChange"
+    @confirmBtn="changeStatus"
+  >
+  </decide-dialog>
+
+  <decide-dialog
+    v-if="isShowDeleteAccount"
+    title="您確定要刪除 王大明 ？"
+    :type="'delete'"
+    @closeDialog="closeDeleteAccount"
+    @confirmBtn="deleteAccount"
+  >
+  </decide-dialog>
+
+  </div>
 </template>
 <script>
-import { users } from '@/API/User'
+import { getUsers, updateUser, deleteUser } from '@/API/User'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import SelectDialog from '@/components/dialog/SelectDialog'
 
@@ -93,7 +97,13 @@ export default {
       isShowPassword: false,
       isShowEditName: false,
       isShowStatusChange: false,
-      isShowDeleteAccount: false
+      isShowDeleteAccount: false,
+      currentUser: {
+        username: '',
+        email: '',
+        password: ''
+      },
+      currentId: ''
     }
   },
   mounted () {
@@ -118,6 +128,30 @@ export default {
     },
     deleteAccount () {
 
+    },
+    showPassword (user) {
+      this.isShowPassword = true
+    },
+    closePassword () {
+      this.isShowPassword = false
+    },
+    showEditName (user) {
+      this.isShowEditName = true
+    },
+    closeEditName () {
+      this.isShowEditName = false
+    },
+    showStatusChange (user) {
+      this.isShowStatusChange = true
+    },
+    closeStatusChange () {
+      this.isShowStatusChange = false
+    },
+    showDeleteAccount (user) {
+      this.isShowDeleteAccount = true
+    },
+    closeDeleteAccount () {
+      this.isShowDeleteAccount = false
     }
   },
   computed: {
@@ -152,13 +186,19 @@ export default {
 
         .single-manipulate-item {
             color: #4DE2F0;
-            text-decoration: underline;
-            padding: 0px 10px;
+            border-bottom: 1px solid;
             cursor: pointer;
+
+            &:hover {
+              opacity: 0.8;
+            }
         }
 
-        .single-manipulate-col {
-            border-right: 1px solid;
+        .single-line {
+          color: #9DBDBD;
+          margin: 0px 10px 0px 8px;
+          border-right: 1px solid #9DBDBD;
+          font-size: 12px;
         }
     }
 
