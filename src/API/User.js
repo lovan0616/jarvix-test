@@ -20,3 +20,46 @@ export function logout () {
     method: 'GET'
   })
 }
+
+/**
+ * 取得所有使用者
+ */
+export function getUsers () {
+  return request({
+    url: '/users',
+    method: 'GET'
+  })
+}
+
+/**
+ * 新增使用者
+ */
+export function addUser (userInfo) {
+  return request({
+    url: '/users',
+    method: 'POST',
+    data: userInfo
+  })
+}
+
+/**
+ * 更新使用者
+ */
+export function updateUser (userInfo) {
+  return request({
+    url: '/users',
+    method: 'PUT',
+    data: userInfo
+  })
+}
+
+/**
+ * 刪除使用者
+ */
+export function deleteUser (userInfo, id) {
+  return request({
+    url: `/users/${id}`,
+    method: 'DELETE',
+    data: userInfo
+  })
+}

@@ -43,6 +43,25 @@ export default {
     letter-spacing: 3px;
 }
 
+.dialog-select-input-box {
+    padding-top: 24px;
+}
+
+.dialog-select-input {
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    color: #aaa;
+    margin-bottom: 36px;
+    background-color: transparent;
+    border: 0px;
+    border-bottom: 1px solid #fff;
+
+    &:focus {
+      outline: none;
+    }
+}
+
 .dialog-select{
     height: 36px;
     width: 100%;

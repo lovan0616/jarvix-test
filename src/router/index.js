@@ -46,6 +46,11 @@ export default new Router({
               component: () => import('@/pages/dataManagement/DataFileList')
             }
           ]
+        },
+        {
+          path: 'user-management',
+          name: 'UserManagement',
+          component: () => import('@/pages/userManagement/Index')
         }
       ]
     },
