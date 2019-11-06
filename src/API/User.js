@@ -33,6 +33,10 @@ export function getUsers () {
 
 /**
  * 新增使用者
+ * @param {Object} userInfo - 使用者資訊
+ * @param {String} userInfo.email - 使用者郵件
+ * @param {String} userInfo.password - 使用者密碼
+ * @param {String} userInfo.username - 使用者名稱
  */
 export function createUser (userInfo) {
   return request({
@@ -44,6 +48,11 @@ export function createUser (userInfo) {
 
 /**
  * 更新使用者
+ * @param {Object} userInfo - 使用者資訊
+ * @param {String} userInfo.email - 使用者郵件
+ * @param {String} userInfo.password - 使用者密碼
+ * @param {String} userInfo.username - 使用者名稱
+ * @param {Number} id - 使用者 ID
  */
 export function updateUser (userInfo, id) {
   return request({
@@ -55,6 +64,7 @@ export function updateUser (userInfo, id) {
 
 /**
  * 刪除使用者
+ * @param {Number} id - 使用者 ID
  */
 export function deleteUser (id) {
   return request({

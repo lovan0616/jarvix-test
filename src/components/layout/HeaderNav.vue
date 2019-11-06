@@ -9,7 +9,7 @@
       </div>
       <dropdown-select
         class="nav-set-dropdown"
-        @showDialog="showSetDialog"
+        @switchDialogName="switchDialogName"
         :barData="settingData"
       >
       </dropdown-select>
@@ -21,7 +21,7 @@
       </div>
       <dropdown-select
         class="nav-account-dropdown"
-        @showDialog="showSetDialog"
+        @switchDialogName="switchDialogName"
         :barData="accountData"
       >
       </dropdown-select>
@@ -44,7 +44,8 @@
     <decide-dialog
       v-if="isShowLogout"
       :title="$t('editing.sureLogout')"
-      :type="'logout'"
+      :type="'confirm'"
+      :btnText="$t('button.logout')"
       @closeDialog="isShowLogout = false"
       @confirmBtn="onBtnExitClick"
     >
@@ -72,15 +73,15 @@ export default {
       isShowLogout: false,
       selectedLanguage: this.language,
       settingData: [
-        {icon: 'database', title: 'nav.dataManagement'},
-        {icon: 'language', title: 'editing.languageSetting'},
+        {icon: 'database', title: 'nav.dataManagement', event: 'transferPage', path: '/data-management'},
+        {icon: 'language', title: 'editing.languageSetting', event: 'switchDialog', dialogName: 'isShowLanguage'},
         // {icon: 'feedback', title: 'editing.questionFeedback'},
         {icon: 'description', title: 'editing.functionDescription'}
       ],
       accountData: [
         {icon: 'changePassword', title: 'editing.changePassword'},
-        {icon: 'userManage', title: 'editing.userManage'},
-        {icon: 'logout', title: 'button.logout'}
+        {icon: 'userManage', title: 'editing.userManage', event: 'transferPage', path: '/user-management'},
+        {icon: 'logout', title: 'button.logout', event: 'switchDialog', dialogName: 'isShowLogout'}
       ]
     }
   },
@@ -108,16 +109,8 @@ export default {
       this.$store.dispatch('profile/updateLanguage', this.selectedLanguage)
       this.isShowLanguage = false
     },
-    showSetDialog (name) {
-      if (name === 'database') {
-        this.$router.push({ path: 'data-management' })
-      } else if (name === 'language') {
-        this.isShowLanguage = true
-      } else if (name === 'logout') {
-        this.isShowLogout = true
-      } else if (name === 'userManage') {
-        this.$router.push('/user-management')
-      }
+    switchDialogName (dialog) {
+      this[dialog] = true
     }
   }
 }
