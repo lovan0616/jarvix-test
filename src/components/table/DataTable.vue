@@ -283,7 +283,9 @@ export default {
 <style lang="scss" scoped>
 .data-source-list-table {
   .empty-status {
-    padding-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 240px;
   }
 

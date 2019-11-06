@@ -45,3 +45,17 @@ export function checkDataSourceStatusById (dataSourceId) {
     method: 'GET'
   })
 }
+
+/**
+ * get data frame by dataSourceId
+ * @param {Number} dataSourceId - 欲檢查的資料源 ID
+ */
+export function getDataFrameById (dataSourceId) {
+  return request({
+    url: '/dataFrame',
+    method: 'GET',
+    data: {
+      dataSourceId
+    }
+  })
+}

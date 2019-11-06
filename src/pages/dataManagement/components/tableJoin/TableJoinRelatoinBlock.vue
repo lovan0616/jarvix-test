@@ -3,7 +3,7 @@
     <div class="action-block">
       <a href="javascript:void(0)" class="link"
         @click="checkDeleteRelations(relationInfo.id)"
-      ><svg-icon icon-class="delete" class="delete-icon"></svg-icon>{{ $t('editing.deletForeign') }}</a>
+      ><svg-icon icon-class="delete" class="delete-icon"></svg-icon>{{ $t('editing.deleteForeign') }}</a>
       <tooltip-dialog
         v-if="deleteJoinId"
         @cancel="cancelDelete"
