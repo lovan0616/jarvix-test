@@ -103,6 +103,9 @@ export default {
         },
         color: this.colorList
       }
+      // tooltip
+      config.tooltip.trigger = 'item'
+      config.tooltip.formatter = params => `<p>${params.marker}${params.name}: ${params.value[1]}（${params.percent}%）</p>`
 
       if (this.isPreview) {
         config.legend.show = false
