@@ -5,7 +5,9 @@ import getters from './getters'
 export default {
   namespaced: true,
   state: {
-    dataSourceList: []
+    isInit: false,
+    dataSourceList: [],
+    dataSourceId: null
   },
   actions,
   mutations,

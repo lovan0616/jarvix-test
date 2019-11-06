@@ -36,14 +36,14 @@ export default {
     ChatBotBtn
   },
   mounted () {
-    this.setBookmarkInfo()
+    this.setDataSourceInfo()
   },
   methods: {
     showChatRoom () {
       this.$store.commit('updateChatRoomStatus', true)
     },
-    setBookmarkInfo () {
-      this.$store.dispatch('bookmark/init')
+    setDataSourceInfo () {
+      this.$store.dispatch('dataSource/init')
     }
   },
   computed: {

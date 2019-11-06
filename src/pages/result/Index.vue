@@ -26,7 +26,7 @@ export default {
   },
   // 主要針對瀏覽器上下頁、從 preview 回到 searchbar 的一些處理
   watch: {
-    '$route.query.bookmarkId' (value) {
+    '$route.query.dataSourceId' (value) {
       if (this.$route.name === 'PageResult' && value) {
         this.$store.dispatch('bookmark/changeBookmarkById', parseInt(value))
       }
@@ -38,7 +38,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'appQuestion'])
+    ...mapGetters('bookmark', ['appQuestion'])
   },
   methods: {
     getQueryInfo () {

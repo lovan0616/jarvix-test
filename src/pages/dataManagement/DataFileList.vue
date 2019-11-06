@@ -9,7 +9,7 @@
       <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
       <div class="bread-crumb">
         <router-link to="/data-management" class="title-link">{{ $t('editing.dataSource') }}</router-link>
-        <span class="divider">/</span>{{ currentBookmarkInfo ? currentBookmarkInfo.name : '' }}
+        <span class="divider">/</span>{{ currentDataSourceInfo ? currentDataSourceInfo.name : '' }}
       </div>
     </div>
     <div class="table-board">
@@ -93,8 +93,9 @@ import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
-import { getBookmarkById, createBookmarkStorage, renameCSV } from '@/API/Bookmark'
+import { createBookmarkStorage, renameCSV } from '@/API/Bookmark'
 import { deleteCSV, buildStorage } from '@/API/Storage'
+import { getDataFrameById, checkDataSourceStatusById } from '@/API/DataSource'
 
 export default {
   name: 'DataFileList',
@@ -108,7 +109,7 @@ export default {
   },
   data () {
     return {
-      currentBookmarkId: parseInt(this.$route.params.id),
+      currentDataSourceId: parseInt(this.$route.params.id),
       showConfirmDeleteDialog: false,
       showConfirmRenameDialog: false,
       showJoinTableDialog: false,
@@ -128,6 +129,7 @@ export default {
   },
   mounted () {
     this.fetchData()
+    this.checkDataSourceStatus()
   },
   beforeDestroy () {
     if (this.intervalFunction) {
@@ -135,17 +137,9 @@ export default {
     }
   },
   destroyed () {
-    this.$store.commit('dataManagement/updateCurrentBookmarkInfo', null)
+    this.$store.commit('dataManagement/updateCurrentDataSourceInfo', null)
   },
   watch: {
-    isBookmarkBuilding (value, oldValue) {
-      if (!value && oldValue) {
-        this.fetchData()
-        this.isProcessing = false
-      } else if (value) {
-        this.isProcessing = true
-      }
-    },
     fileUploadSuccess (value) {
       if (value) {
         this.fetchData()
@@ -155,7 +149,7 @@ export default {
     isProcessing (value) {
       if (value) {
         this.intervalFunction = window.setInterval(() => {
-          this.fetchData()
+          this.checkDataSourceStatus()
         }, 5000)
       }
       // 建置完成
@@ -166,17 +160,13 @@ export default {
   },
   methods: {
     fetchData () {
-      return getBookmarkById(this.currentBookmarkId).then(response => {
-        this.tableList = this.objectToArray(response.edit_config.tables)
-        // 檔案名稱在 config 裡面
-        this.dataList = this.objectToArray(response.edit_config.uploads).map(element => {
-          element.filename = response.config.uploads[element.id] ? response.config.uploads[element.id].filename : element.filename
-          return element
-        })
-
-        this.isProcessing = response.build_status
-
-        this.$store.commit('dataManagement/updateCurrentBookmarkInfo', response)
+      return getDataFrameById(this.currentDataSourceId).then(response => {
+        this.dataList = response
+      })
+    },
+    checkDataSourceStatus () {
+      return checkDataSourceStatusById(this.currentDataSourceId).then(response => {
+        this.isProcessing = response.state === 'PROCESSING'
       })
     },
     createDataSource () {
@@ -199,7 +189,7 @@ export default {
       this.showConfirmDeleteDialog = false
       this.isProcessing = true
       // 先去取得 stoarge id
-      createBookmarkStorage(this.currentBookmarkId, this.currentBookmarkInfo.type)
+      createBookmarkStorage(this.currentDataSourceId, this.currentDataSourceInfo.type)
         .then(res => {
           let deleteList = []
           for (let i = 0; i < this.selectList.length; i++) {
@@ -207,7 +197,7 @@ export default {
           }
 
           Promise.all(deleteList).then(() => {
-            buildStorage(res.storage.id, this.currentBookmarkId, false)
+            buildStorage(res.storage.id, this.currentDataSourceId, false)
               .then(() => {
                 this.deleteFinish()
                 this.$router.push('/data-management')
@@ -229,7 +219,7 @@ export default {
       this.showConfirmDeleteDialog = false
     },
     renameCSV ({resolve, name}) {
-      renameCSV(this.currentBookmarkId, this.renameDataSource.id, name)
+      renameCSV(this.currentDataSourceId, this.renameDataSource.id, name)
         .then(() => {
           this.fetchData()
             .then(() => {
@@ -315,11 +305,8 @@ export default {
     showCreateDataSourceDialog () {
       return this.$store.state.dataManagement.showCreateDataSourceDialog
     },
-    currentBookmarkInfo () {
-      return this.$store.state.dataManagement.currentBookmarkInfo
-    },
-    isBookmarkBuilding () {
-      return this.$store.getters['bookmark/isBookmarkBuilding']
+    currentDataSourceInfo () {
+      return this.$store.state.dataManagement.currentDataSourceInfo
     },
     fileUploadSuccess () {
       return this.$store.state.dataManagement.fileUploadSuccess

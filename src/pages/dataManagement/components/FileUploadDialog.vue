@@ -3,14 +3,14 @@
     <div class="dialog-container">
       <transition name="fade" mode="out-in">
         <choose-file-type
-          v-if="!currentUploadInfo.type"
+          v-if="!currentUploadInfo.name"
         ></choose-file-type>
         <local-file-upload-flow
-          v-if="currentUploadInfo.type === 'CSV'"
+          v-else
         ></local-file-upload-flow>
-        <remote-connection-flow
+        <!-- <remote-connection-flow
           v-if="currentUploadInfo.type === 'mysql'"
-        ></remote-connection-flow>
+        ></remote-connection-flow> -->
       </transition>
     </div>
   </div>

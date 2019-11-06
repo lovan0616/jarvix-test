@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/utils/publicRequest'
 
 /**
  * get data source list
@@ -43,5 +43,19 @@ export function checkDataSourceStatusById (dataSourceId) {
   return request({
     url: `/datasources/${dataSourceId}`,
     method: 'GET'
+  })
+}
+
+/**
+ * get data frame by dataSourceId
+ * @param {Number} dataSourceId - 欲檢查的資料源 ID
+ */
+export function getDataFrameById (dataSourceId) {
+  return request({
+    url: '/dataFrame',
+    method: 'GET',
+    params: {
+      dataSourceId
+    }
   })
 }

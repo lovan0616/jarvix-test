@@ -2,16 +2,15 @@
   <div class="bookmark-select-block">
     <svg-icon icon-class="folder" class="bookmark-select-icon"></svg-icon>
     <sy-select class="bookmark-select"
-      :selected="bookmarkId"
-      :items="buildBookmarkList"
+      :selected="dataSourceId"
+      :items="buildDataSourceList"
       :placeholder="$t('editing.choiceDataSource')"
-      @update:selected="onBookmarkChange"
+      @update:selected="onDataSourceChange"
     >
     </sy-select>
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 import SySelect from '@/components/select/SySelect'
 export default {
   name: 'BookmarkSelect',
@@ -19,17 +18,22 @@ export default {
     SySelect
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'bookmarkList']),
+    dataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
+    },
+    dataSourceList () {
+      return this.$store.state.dataSource.dataSourceList
+    },
     // 過濾掉正在 build 的 bookmark
-    buildBookmarkList () {
-      return this.bookmarkList.filter(bookmark => {
-        return bookmark.enable
+    buildDataSourceList () {
+      return this.dataSourceList.filter(dataSource => {
+        return dataSource.state === 'ENABLE'
       })
     }
   },
   methods: {
-    onBookmarkChange (bookmarkId) {
-      this.$store.dispatch('bookmark/changeBookmarkById', bookmarkId)
+    onDataSourceChange (dataSourceId) {
+      this.$store.dispatch('dataSource/changeDataSourceById', dataSourceId)
         .then(() => {
           this.$router.push('/')
         })

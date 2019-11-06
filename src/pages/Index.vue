@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { askChatBot } from '@/API/ChatBot'
 
 export default {
@@ -20,16 +19,18 @@ export default {
   mounted () {
     this.$store.commit('updateChatRoomStatus', true)
     // 變更 bookmark 從其他頁回到首頁的時候，如果是 null 代表如果是直接進首頁的話，會藉由 watch 觸發
-    if (this.bookmarkId !== null) {
+    if (this.dataSourceId !== null) {
       this.getLandingInfo()
     }
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId'])
+    dataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
+    }
   },
   methods: {
     getLandingInfo () {
-      askChatBot({'question': null, 'bookmark_id': this.bookmarkId}).then(res => {
+      askChatBot({'question': null, 'bookmark_id': this.dataSourceId}).then(res => {
         // 取得對話紀錄用的 chtabot id
         this.$store.commit('chatBot/updateChatBotId', res.chatbot_id)
         if (res.content.changed) {
@@ -42,7 +43,7 @@ export default {
     }
   },
   watch: {
-    bookmarkId () {
+    dataSourceId () {
       this.getLandingInfo()
     }
   }

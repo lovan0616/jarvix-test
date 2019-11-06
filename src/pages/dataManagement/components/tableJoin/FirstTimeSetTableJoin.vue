@@ -44,7 +44,6 @@ export default {
   },
   data () {
     return {
-      currentBookmarkId: parseInt(this.$route.params.id),
       joinRelations: [],
       tableList: [],
       singleJoinRelations: {

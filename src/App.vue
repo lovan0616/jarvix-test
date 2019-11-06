@@ -26,18 +26,19 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('profile/initProfile').then(res => {
-      this.init = true
-    }).catch(() => {
-      this.init = true
-    })
+    // this.$store.dispatch('profile/initProfile').then(res => {
+    //   this.init = true
+    // }).catch(() => {
+    //   this.init = true
+    // })
+    this.init = true
   },
   watch: {
     // 監聽 bookmark 清單是否有 bookmark 正在建置中
-    isBookmarkBuilding (value, oldValue) {
+    isDataSourceBuilding (value, oldValue) {
       if (value) {
         this.intervalFunction = window.setInterval(() => {
-          this.$store.dispatch('bookmark/getBookmarkList')
+          this.$store.dispatch('dataSource/getDataSourceList')
         }, 5000)
       }
       // 建置完成
@@ -56,8 +57,8 @@ export default {
   },
   computed: {
     ...mapGetters('profile', ['language']),
-    isBookmarkBuilding () {
-      return this.$store.getters['bookmark/isBookmarkBuilding']
+    isDataSourceBuilding () {
+      return this.$store.getters['dataSource/isDataSourceBuilding']
     }
   }
 }

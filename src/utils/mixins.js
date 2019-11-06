@@ -31,6 +31,13 @@ Vue.mixin({
     formatComma (str) {
       return str ? str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : str
     },
+    timeToDate (time) {
+      let datetime = new Date(time)
+      let year = datetime.getFullYear()
+      let month = datetime.getMonth() + 1
+      let date = datetime.getDate()
+      return year + '-' + this.paddingZero(month) + '-' + this.paddingZero(date)
+    },
     // timeStamp 轉成 YYYY-MM-DD
     timeStampToDate (time) {
       let datetime = new Date()

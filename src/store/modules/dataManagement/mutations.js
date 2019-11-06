@@ -14,8 +14,8 @@ export default {
   updateCurrentUploadInfo (state, data) {
     state.currentUploadInfo = data
   },
-  updateCurrentBookmarkInfo (state, data) {
-    state.currentBookmarkInfo = data
+  updateCurrentDataSourceInfo (state, data) {
+    state.currentDataSourcInfo = data
   },
   clearCurrentUploadInfo (state) {
     state.currentUploadInfo.dataSourceId = null
