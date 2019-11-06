@@ -12,6 +12,7 @@
 <script>
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { color12 } from './common/addons'
+import chartVariable from '@/styles/chart/variables.scss'
 
 export default {
   name: 'DisplayPieChart',
@@ -84,7 +85,6 @@ export default {
     },
     options () {
       let config = {
-        ...this.addonOptions,
         ...JSON.parse(JSON.stringify(commonChartOptions)),
         dataset: {
           source: this.dataList
@@ -103,9 +103,8 @@ export default {
         },
         color: this.colorList
       }
-      // tooltip
       config.tooltip.trigger = 'item'
-      config.tooltip.formatter = params => `<p>${params.marker}${params.name}: ${params.value[1]}（${params.percent}%）</p>`
+      config.tooltip.formatter = params => `${this.dataset.column[0]}<br>${params.marker}${params.name}: ${params.value[1]}（${params.percent}%）`
 
       if (this.isPreview) {
         config.legend.show = false
