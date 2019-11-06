@@ -73,15 +73,15 @@ export default {
       isShowLogout: false,
       selectedLanguage: this.language,
       settingData: [
-        {icon: 'database', title: 'nav.dataManagement', event: 'transferPage', path: '/data-management'},
-        {icon: 'language', title: 'editing.languageSetting', event: 'switchDialog', dialogName: 'isShowLanguage'},
+        {icon: 'database', title: 'nav.dataManagement', path: '/data-management'},
+        {icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'},
         // {icon: 'feedback', title: 'editing.questionFeedback'},
         {icon: 'description', title: 'editing.functionDescription'}
       ],
       accountData: [
         {icon: 'changePassword', title: 'editing.changePassword'},
-        {icon: 'userManage', title: 'editing.userManage', event: 'transferPage', path: '/user-management'},
-        {icon: 'logout', title: 'button.logout', event: 'switchDialog', dialogName: 'isShowLogout'}
+        {icon: 'userManage', title: 'editing.userManage', path: '/user-management'},
+        {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
       ]
     }
   },

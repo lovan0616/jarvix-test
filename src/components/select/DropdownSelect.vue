@@ -27,10 +27,10 @@ export default {
   },
   methods: {
     dialogEvent (bar) {
-      if (bar.event === 'switchDialog') {
-        this.$emit('switchDialogName', bar.dialogName)
-      } else {
+      if (bar.path) {
         this.$router.push(bar.path)
+      } else {
+        this.$emit('switchDialogName', bar.dialogName)
       }
     }
   }
