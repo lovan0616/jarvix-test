@@ -113,12 +113,14 @@ export default {
     },
     chooseRelatedQuestion (question) {
       if (!this.onDrag) {
-        this.$emit('choose', { question, 'bookmark_Id': parseInt(this.bookmarkId) })
+        this.$emit('choose', { question, 'bookmark_Id': parseInt(this.dataSourceId) })
       }
     }
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId']),
+    dataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
+    },
     fakeItemLength () {
       if (this.questionList.length < this.maxDisplaySlide + 1) {
         return this.maxDisplaySlide + 1 - this.questionList.length

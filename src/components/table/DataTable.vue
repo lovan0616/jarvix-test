@@ -267,7 +267,7 @@ export default {
     },
     selectAll: {
       get () {
-        return this.selectList.length === this.dataList.length
+        return this.selectList.length === this.dataList.length && this.dataList.length > 0
       },
       set (value) {
         if (value) {

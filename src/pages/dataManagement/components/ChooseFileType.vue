@@ -55,7 +55,7 @@ export default {
   data () {
     return {
       dataSourceInfo: {
-        name: null,
+        name: null
         // type: null
       },
       typeList: [
@@ -104,7 +104,7 @@ export default {
   computed: {
     currentDataSourceInfo () {
       return this.$store.state.dataManagement.currentDataSourceInfo
-    },
+    }
     // fileTypeList () {
     //   if (this.currentDataSourceInfo) {
     //     return this.typeList.filter(element => {

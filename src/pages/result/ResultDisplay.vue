@@ -46,7 +46,7 @@ export default {
   watch: {
     '$route.query' ({ question, action }) {
       if (!question) return false
-      this.fetchApiAsk({question, 'bookmark_id': this.bookmarkId, 'action_tag': action, 'chatbot_id': this.chatBotId})
+      this.fetchApiAsk({question, 'bookmark_id': this.dataSourceId, 'action_tag': action, 'chatbot_id': this.chatBotId})
     }
   },
   mounted () {
@@ -57,7 +57,10 @@ export default {
     })
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId', 'appQuestion']),
+    ...mapGetters('bookmark', ['appQuestion']),
+    dataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
+    },
     chatBotId () {
       return this.$store.state.chatBot.chatBotId
     }
@@ -65,10 +68,10 @@ export default {
   methods: {
     fetchData () {
       let question = this.$route.query.question
-      let bookmarkId = parseInt(this.$route.query.bookmarkId)
+      let dataSourceId = parseInt(this.$route.query.dataSourceId)
       let actionTag = this.$route.query.action
       if (question) {
-        this.fetchApiAsk({question, 'bookmark_id': bookmarkId, 'action_tag': actionTag, 'chatbot_id': this.chatBotId})
+        this.fetchApiAsk({question, 'bookmark_id': dataSourceId, 'action_tag': actionTag, 'chatbot_id': this.chatBotId})
       }
     },
     clearLayout () {
@@ -87,7 +90,7 @@ export default {
         _this.askCancelFunction = c
       }))
         .then(res => {
-          this.$store.dispatch('bookmark/getHistoryQuestionList', this.bookmarkId)
+          this.$store.dispatch('bookmark/getHistoryQuestionList', this.dataSourceId)
           this.$store.commit('chatBot/updateChatBotId', res.chatbot_id)
           this.timeStamp = this.$route.query.stamp
           if (res.content.changed) {

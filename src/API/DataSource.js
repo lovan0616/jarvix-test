@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/utils/publicRequest'
 
 /**
  * get data source list
@@ -54,7 +54,7 @@ export function getDataFrameById (dataSourceId) {
   return request({
     url: '/dataFrame',
     method: 'GET',
-    data: {
+    params: {
       dataSourceId
     }
   })

@@ -43,7 +43,6 @@
 <script>
 import axios from 'axios'
 import { uploadStatus } from '@/utils/general'
-import { uploadCSV } from '@/API/Storage'
 import { fileUpload } from '@/API/File'
 
 export default {

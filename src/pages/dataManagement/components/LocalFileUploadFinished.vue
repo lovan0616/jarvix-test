@@ -58,18 +58,13 @@ export default {
   },
   methods: {
     buildBookmark () {
-      this.$store.dispatch('dataManagement/buildStorage', false)
-        .then(response => {
-          if (this.$route.name === 'PageDataSourceList') {
-            this.$store.dispatch('bookmark/getBookmarkList')
-          } else {
-            this.$store.commit('dataManagement/updateFileUploadSuccess', true)
-          }
-          // close fileUploadDialog
-          this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-        }).catch(() => {
-          this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-        })
+      if (this.$route.name === 'PageDataSourceList') {
+        this.$store.dispatch('dataSource/getDataSourceList')
+      } else {
+        this.$store.commit('dataManagement/updateFileUploadSuccess', true)
+      }
+      // close fileUploadDialog
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     toSetJoinTable () {
       this.$store.commit('dataManagement/updateShowSetTableJoin', true)

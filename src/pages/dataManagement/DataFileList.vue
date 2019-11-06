@@ -93,7 +93,7 @@ import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
-import { getBookmarkById, createBookmarkStorage, renameCSV } from '@/API/Bookmark'
+import { createBookmarkStorage, renameCSV } from '@/API/Bookmark'
 import { deleteCSV, buildStorage } from '@/API/Storage'
 import { getDataFrameById, checkDataSourceStatusById } from '@/API/DataSource'
 
@@ -140,42 +140,32 @@ export default {
     this.$store.commit('dataManagement/updateCurrentDataSourceInfo', null)
   },
   watch: {
-    // isBookmarkBuilding (value, oldValue) {
-    //   if (!value && oldValue) {
-    //     this.fetchData()
-    //     this.isProcessing = false
-    //   } else if (value) {
-    //     this.isProcessing = true
-    //   }
-    // },
-    // fileUploadSuccess (value) {
-    //   if (value) {
-    //     this.fetchData()
-    //     this.$store.commit('dataManagement/updateFileUploadSuccess', false)
-    //   }
-    // },
-    // isProcessing (value) {
-    //   if (value) {
-    //     this.intervalFunction = window.setInterval(() => {
-    //       this.fetchData()
-    //     }, 5000)
-    //   }
-    //   // 建置完成
-    //   if (!value) {
-    //     window.clearInterval(this.intervalFunction)
-    //   }
-    // }
+    fileUploadSuccess (value) {
+      if (value) {
+        this.fetchData()
+        this.$store.commit('dataManagement/updateFileUploadSuccess', false)
+      }
+    },
+    isProcessing (value) {
+      if (value) {
+        this.intervalFunction = window.setInterval(() => {
+          this.checkDataSourceStatus()
+        }, 5000)
+      }
+      // 建置完成
+      if (!value) {
+        window.clearInterval(this.intervalFunction)
+      }
+    }
   },
   methods: {
     fetchData () {
       return getDataFrameById(this.currentDataSourceId).then(response => {
-        this.tableList = response
-
-        this.isProcessing = response.build_status
+        this.dataList = response
       })
     },
     checkDataSourceStatus () {
-      checkDataSourceStatusById(this.currentDataSourceId).then(response => {
+      return checkDataSourceStatusById(this.currentDataSourceId).then(response => {
         this.isProcessing = response.state === 'PROCESSING'
       })
     },
@@ -317,9 +307,6 @@ export default {
     },
     currentDataSourceInfo () {
       return this.$store.state.dataManagement.currentDataSourceInfo
-    },
-    isBookmarkBuilding () {
-      return this.$store.getters['bookmark/isBookmarkBuilding']
     },
     fileUploadSuccess () {
       return this.$store.state.dataManagement.fileUploadSuccess

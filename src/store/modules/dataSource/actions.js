@@ -8,7 +8,7 @@ export default {
   init ({ commit, dispatch, state }) {
     if (state.isInit) return Promise.resolve(state)
 
-    let queryBookmark = parseInt(router.app.$route.query.bookmarkId)
+    let queryBookmark = parseInt(router.app.$route.query.dataSourceId)
     dispatch('getDataSourceList', queryBookmark)
     commit('setIsInit', true)
   },
@@ -17,12 +17,12 @@ export default {
       commit('setDataSourceList', res)
 
       if (data) {
-        let hasBookmark = false
+        let hasDataSource = false
         res.forEach(element => {
-          if (element.id === data) hasBookmark = true
+          if (element.id === data) hasDataSource = true
         })
         // 判斷路由的 bookmark 是否存在
-        if (hasBookmark) {
+        if (hasDataSource) {
           dispatch('changeDataSourceById', data)
         } else {
           dispatch('changeDataSourceById', res[0].id)
@@ -42,24 +42,24 @@ export default {
     commit('chatBot/clearConversation', null, {root: true})
 
     return co(function* () {
-      yield dispatch('getHistoryQuestionList')
-      yield dispatch('getBookmarkColumnInfo')
+      // yield dispatch('getHistoryQuestionList')
+      // yield dispatch('getBookmarkColumnInfo')
       return Promise.resolve(state)
     })
   },
 
   getBookmarkColumnInfo ({ commit, state }) {
-    return getBookmarkColumn(state.bookmarkId).then(response => {
+    return getBookmarkColumn(state.dataSourceId).then(response => {
       commit('setBookmarkCloumnInfoList', response)
     })
   },
   getSuggestionList ({ commit, state }) {
-    return getSuggestions(state.bookmarkId).then(res => {
+    return getSuggestions(state.dataSourceId).then(res => {
       commit('setSuggestions', res)
     })
   },
   getQuickstartList ({ commit, state }) {
-    return getQuickstarts(state.bookmarkId).then(res => {
+    return getQuickstarts(state.dataSourceId).then(res => {
       commit('setQuickStart', res)
     })
   },
@@ -75,13 +75,13 @@ export default {
       query: {
         question: getters.appQuestion,
         stamp: new Date().getTime(),
-        bookmarkId: String(getters.bookmarkId),
+        dataSourceId: String(getters.dataSourceId),
         action: actionTag
       }
     })
   },
-  getHistoryQuestionList ({commit, getters}) {
-    return getQuestionHistory(getters.bookmarkId).then(res => {
+  getHistoryQuestionList ({commit, state}) {
+    return getQuestionHistory(state.dataSourceId).then(res => {
       commit('setHistoryQuestionList', res)
     })
   }

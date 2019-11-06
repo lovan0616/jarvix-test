@@ -44,7 +44,7 @@
     </div>
     <ask-helper-dialog
       ref="helperDialog"
-      :key="bookmarkId"
+      :key="dataSourceId"
       :show="showAskHelper"
       @close="closeHelper"
     ></ask-helper-dialog>
@@ -121,8 +121,8 @@ export default {
     }
   },
   computed: {
-    bookmarkId () {
-      return this.$store.state.bookmark.bookmarkId
+    dataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
     },
     appQuestion () {
       return this.$store.state.bookmark.appQuestion
@@ -130,7 +130,7 @@ export default {
     historyQuestionList () {
       // 過濾 boomark 以及 問題字串
       return this.userQuestion
-        ? this.$store.state.bookmark.historyQuestionList.filter(d => { return d.question.indexOf(this.userQuestion) > -1 && d.bookmark_id === this.bookmarkId })
+        ? this.$store.state.bookmark.historyQuestionList.filter(d => { return d.question.indexOf(this.userQuestion) > -1 && d.bookmark_id === this.dataSourceId })
         : []
     }
   },
@@ -143,7 +143,7 @@ export default {
     appQuestion (value) {
       this.copyQuestion(value)
     },
-    bookmarkId (value, oldValue) {
+    dataSourceId (value, oldValue) {
       if (!oldValue) return
       this.userQuestion = null
     }

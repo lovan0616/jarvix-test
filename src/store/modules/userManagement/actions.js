@@ -3,8 +3,8 @@ import { logout } from '@/API/User'
 export default {
   logout ({ commit }) {
     return logout().then(() => {
-      commit('bookmark/setIsInit', false, {root: true})
-      commit('bookmark/setBookmarkId', null, {root: true})
+      commit('dataSource/setIsInit', false, {root: true})
+      commit('dataSource/setDataSourceId', null, {root: true})
       localStorage.removeItem('token')
     })
   }

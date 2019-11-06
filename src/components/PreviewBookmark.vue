@@ -1,7 +1,7 @@
 <template>
   <div class="page-preview-bookmark">
     <div class="result-board"
-      v-show="bookmarkId"
+      v-show="dataSourceId"
     >
       <div class="board-header">
         <result-board-header
@@ -23,7 +23,7 @@
         ></sy-table>
       </div>
     </div>
-    <span v-show="!bookmarkId">bookmark no set yet</span>
+    <span v-show="!dataSourceId">bookmark no set yet</span>
   </div>
 </template>
 <script>
@@ -40,8 +40,10 @@ export default {
       .catch(err => err)
   },
   computed: {
-    ...mapGetters('bookmark', ['bookmarkId']),
     ...mapGetters('previewBookmark', ['bookmarkTableId', 'bookmarkTables', 'bookmarkTableDataMeta', 'bookmarkTableDataDataset']),
+    dataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
+    },
     metaTableRightText () {
       if (!this.bookmarkTableDataMeta) return ''
       const rowNum = this.bookmarkTableDataMeta.rows_num || '' + ''

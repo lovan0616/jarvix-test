@@ -262,7 +262,7 @@ export default {
       return this.$store.state.pinboard.pinboardList
     },
     shareUrl () {
-      return `${window.location.origin}/result?question=${this.resultInfo.tasks[0].entities.question}&stamp=${new Date().getTime()}&bookmarkId=${this.resultInfo.tasks[0].entities.bookmark_id}&action=share`
+      return `${window.location.origin}/result?question=${this.resultInfo.tasks[0].entities.question}&stamp=${new Date().getTime()}&dataSourceId=${this.resultInfo.tasks[0].entities.bookmark_id}&action=share`
     }
   }
 }
