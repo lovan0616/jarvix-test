@@ -84,6 +84,8 @@ import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import { Message } from 'element-ui'
+
 export default {
   name: 'ResultBoard',
   components: {

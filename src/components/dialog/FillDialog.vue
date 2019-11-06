@@ -14,7 +14,7 @@
 <script>
 
 export default {
-  name: 'DecideSelect',
+  name: 'FillDialog',
   methods: {
     closeDialog () {
       this.$emit('closeDialog')
