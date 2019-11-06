@@ -3,7 +3,7 @@
          <div class="dropdwon-select-box">
             <div :class="['dropdwon-flex', { 'dropdwon-border-line': index !== barData.length - 1 }]"
             v-for="(bar, index) in barData"
-            @click="showDialog(bar.icon)"
+            @click="dialogEvent(bar)"
             :key="index"
              >
                 <svg-icon :icon-class="bar.icon" class="icon dropdwon-icon"></svg-icon>
@@ -18,15 +18,20 @@
 export default {
   name: 'DropdownSelect',
   props: {
-    barData: { type: Array,
+    barData: {
+      type: Array,
       default () {
         return {}
       }
     }
   },
   methods: {
-    showDialog (name) {
-      this.$emit('showDialog', name)
+    dialogEvent (bar) {
+      if (bar.path) {
+        this.$router.push(bar.path)
+      } else {
+        this.$emit('switchDialogName', bar.dialogName)
+      }
     }
   }
 }

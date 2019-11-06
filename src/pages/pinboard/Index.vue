@@ -65,6 +65,7 @@
 import SinglePinboard from './components/SinglePinboard'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import { Message } from 'element-ui'
 
 export default {
   name: 'PagePinboardList',
