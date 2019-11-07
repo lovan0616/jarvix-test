@@ -5,7 +5,7 @@ import i18n from '@/lang/index.js'
 export default {
   namespaced: true,
   state: {
-    profile: {},
+    locale: null,
     languageDefault: 'zh-hant',
     languages: {
       'zh-hans': i18n.t('lang', 'zh-hans'),

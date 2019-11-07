@@ -2,7 +2,7 @@
   <div id="app">
     <div class="app-bg"></div>
     <transition name="fade" mode="out-in">
-      <router-view v-if="init" :key="language"/>
+      <router-view v-if="init" :key="locale"/>
       <spinner v-else style="height: 100vh;"></spinner>
     </transition>
   </div>
@@ -11,7 +11,6 @@
 <script>
 import { Message } from 'element-ui'
 import Spinner from '@/components/Spinner'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'App',
@@ -26,14 +25,27 @@ export default {
     }
   },
   created () {
-    // this.$store.dispatch('profile/initProfile').then(res => {
-    //   this.init = true
-    // }).catch(() => {
-    //   this.init = true
-    // })
+    this.checkLocale()
+  },
+  mounted () {
     this.init = true
   },
+  methods: {
+    checkLocale () {
+      let locale = localStorage.getItem('locale')
+      let browserScale = (navigator.language || navigator.browserLanguage).toLowerCase()
+      if (locale) {
+        this.$store.commit('setting/setLocale', locale)
+      } else {
+        this.$store.commit('setting/setLocale', browserScale === 'zh-tw' ? 'zh-hant' : 'zh-hans')
+      }
+    }
+  },
   watch: {
+    locale (value) {
+      // 更新 i18n
+      this.$i18n.locale = value
+    },
     // 監聽 bookmark 清單是否有 bookmark 正在建置中
     isDataSourceBuilding (value, oldValue) {
       if (value) {
@@ -50,13 +62,12 @@ export default {
           duration: 3 * 1000
         })
       }
-    },
-    language (lang, oldLang) {
-      this.$i18n.locale = lang
     }
   },
   computed: {
-    ...mapGetters('profile', ['language']),
+    locale () {
+      return this.$store.state.setting.locale
+    },
     isDataSourceBuilding () {
       return this.$store.getters['dataSource/isDataSourceBuilding']
     }

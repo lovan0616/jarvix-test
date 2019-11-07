@@ -1,6 +1,6 @@
 import co from 'co'
 import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById } from '@/API/DataSource'
-import { getSuggestions, getQuickstarts, getBookmarkColumn } from '@/API/Bookmark'
+import { getSuggestions, getQuickstarts } from '@/API/Bookmark'
 import { getQuestionHistory } from '@/API/ChatBot'
 import router from '../../../router'
 

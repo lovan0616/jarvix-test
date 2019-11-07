@@ -48,8 +48,6 @@ $checkbox-size: 14px;
   }
  
   input:disabled ~ .checkbox-square {
-    background: $theme-bg-darker-color;
-    border-color: $theme-bg-darker-color;
     cursor: not-allowed;
 
     &:after {

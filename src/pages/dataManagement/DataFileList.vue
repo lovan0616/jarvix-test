@@ -169,6 +169,12 @@ export default {
       })
     },
     createDataSource () {
+      // 為了資料表上傳
+      this.$store.commit('dataManagement/updateCurrentUploadInfo', {
+        dataSourceId: this.currentDataSourceId,
+        name: this.dataSourceName
+      })
+
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
     },
     closeFileUploadDialog () {

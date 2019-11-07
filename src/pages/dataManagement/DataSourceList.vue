@@ -46,7 +46,7 @@
     <confirm-change-name-dialog
       v-if="showConfirmRenameDialog"
       :title="$t('editing.renameDataSource')"
-      :source="renameDataSource.name"
+      :source="editDataSource.name"
       @confirm="renameDataSource"
       @cancel="cancelRename"
     ></confirm-change-name-dialog>
@@ -72,7 +72,7 @@ export default {
       showConfirmDeleteDialog: false,
       showConfirmRenameDialog: false,
       deleteId: null,
-      renameDataSource: null,
+      editDataSource: null,
       dataList: [],
       // 資料處理中
       isProcessing: false,
@@ -113,7 +113,7 @@ export default {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     confirmRename (dataInfo) {
-      this.renameDataSource = dataInfo
+      this.editDataSource = dataInfo
       this.showConfirmRenameDialog = true
     },
     confirmDelete (dataObj) {
@@ -137,7 +137,7 @@ export default {
       this.showConfirmDeleteDialog = false
     },
     renameDataSource ({resolve, name}) {
-      renameDataSourceById(this.renameDataSource.id, name)
+      renameDataSourceById(this.editDataSource.id, name)
         .then(response => {
           this.fetchData()
             .then(() => {
@@ -149,7 +149,7 @@ export default {
         })
     },
     cancelRename () {
-      this.renameDataSource = null
+      this.editDataSource = null
       this.showConfirmRenameDialog = false
     }
   },

@@ -6,7 +6,7 @@ import previewBookmark from './modules/previewBookmark'
 import pinboard from './modules/pinboard'
 import dataManagement from './modules/dataManagement'
 import chatBot from './modules/chatBot'
-import profile from './modules/profile'
+import setting from './modules/setting'
 import userManagement from './modules/userManagement'
 
 Vue.use(Vuex)
@@ -19,7 +19,7 @@ export default new Vuex.Store({
     pinboard,
     dataManagement,
     chatBot,
-    profile,
+    setting,
     userManagement
   },
   state: {

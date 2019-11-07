@@ -3,17 +3,9 @@
     <div class="dialog-container">
       <div class="dialog-title">{{ $t('editing.foreignTable') }}</div>
       <div class="button-block">
-        <button type="button" class="btn btn-default"
+        <button type="button" class="btn btn-secondary btn-has-icon"
           @click="addNewRelations"
-        >{{ $t('button.newForeign') }}</button>
-        <div class="control-button-block">
-          <button type="button" class="btn btn-outline"
-            @click="closeDialog"
-          >{{ $t('button.cancel') }}</button>
-          <button type="button" class="btn btn-default"
-            @click="saveRelations"
-          >{{ $t('button.save') }}</button>
-        </div>
+        ><svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('button.newForeign') }}</button>
       </div>
       <empty-info-block
         class="empty-info-block"
@@ -28,6 +20,16 @@
         :table-list="tableList"
         @deleteRelations="deleteRelations"
       ></table-join-relatoin-block>
+      <div class="button-block footer-button-block">
+        <div class="control-button-block">
+          <button type="button" class="btn btn-outline"
+            @click="closeDialog"
+          >{{ $t('button.cancel') }}</button>
+          <button type="button" class="btn btn-default"
+            @click="saveRelations"
+          >{{ $t('button.save') }}</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -121,7 +123,11 @@ export default {
   .button-block {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
+
+    &.footer-button-block {
+      justify-content: flex-end;
+    }
 
     .control-button-block {
       .btn:not(:last-child) {
