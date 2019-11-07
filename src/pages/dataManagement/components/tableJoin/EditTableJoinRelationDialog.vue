@@ -37,6 +37,7 @@
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import TableJoinRelatoinBlock from './TableJoinRelatoinBlock'
 import { getBookmarkStorage, buildStorage, setCSVJoin } from '@/API/Storage'
+import { getDataFrameRelationById } from '@/API/DataSource'
 
 export default {
   name: 'EditTableJoinRelationDialog',
@@ -46,6 +47,7 @@ export default {
   },
   data () {
     return {
+      currentDataSourceId: parseInt(this.$route.params.id),
       joinRelations: [],
       tableList: [],
       singleJoinRelations: {
@@ -70,6 +72,9 @@ export default {
     this.getStorageId()
   },
   methods: {
+    getRelation () {
+      getDataFrameRelationById()
+    },
     getStorageId () {
       let storageType = this.getStorageType(this.currentBookmarkInfo.type)
       getBookmarkStorage(this.currentBookmarkInfo.id, storageType).then(response => {

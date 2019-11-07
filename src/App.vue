@@ -37,7 +37,7 @@ export default {
       if (locale) {
         this.$store.commit('setting/setLocale', locale)
       } else {
-        this.$store.commit('setting/setLocale', browserScale === 'zh-tw' ? 'zh-hant' : 'zh-hans')
+        this.$store.commit('setting/setLocale', browserScale === 'zh-tw' ? 'zh-TW' : 'zh-CN')
       }
     }
   },
@@ -46,7 +46,7 @@ export default {
       // 更新 i18n
       this.$i18n.locale = value
     },
-    // 監聽 bookmark 清單是否有 bookmark 正在建置中
+    // 監聽 dataSource 清單是否有 dataSource 正在建置中
     isDataSourceBuilding (value, oldValue) {
       if (value) {
         this.intervalFunction = window.setInterval(() => {

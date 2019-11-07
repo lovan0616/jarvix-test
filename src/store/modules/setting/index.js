@@ -6,10 +6,10 @@ export default {
   namespaced: true,
   state: {
     locale: null,
-    languageDefault: 'zh-hant',
+    languageDefault: 'zh-CN',
     languages: {
-      'zh-hans': i18n.t('lang', 'zh-hans'),
-      'zh-hant': i18n.t('lang', 'zh-hant')
+      'zh-TW': i18n.t('lang', 'zh-TW'),
+      'zh-CN': i18n.t('lang', 'zh-CN')
     }
   },
   actions,

@@ -68,7 +68,7 @@ export default {
     },
     enterQuestion (e) {
       this.$refs.questionInput.blur()
-      this.$store.dispatch('bookmark/updateResultRouter')
+      this.$store.dispatch('dataSource/updateResultRouter')
       this.isDropdownOpen = false
     },
     toggleDropdown () {
@@ -78,13 +78,15 @@ export default {
     },
     chooseOption (value) {
       this.$store.commit('bookmark/setAppQuestion', value)
+      this.$store.commit('dataSource/setAppQuestion', value)
       this.enterQuestion()
     },
     // 點選介紹資料集直接到結果頁
     selectDefault (value) {
       this.$store.commit('bookmark/setAppQuestion', value)
+      this.$store.commit('dataSource/setAppQuestion', value)
       this.$refs.questionInput.blur()
-      this.$store.dispatch('bookmark/updateResultRouter')
+      this.$store.dispatch('dataSource/updateResultRouter')
       this.isDropdownOpen = false
     },
     adjestPosition () {
@@ -105,6 +107,7 @@ export default {
       },
       set (value) {
         this.$store.commit('bookmark/setAppQuestion', value)
+        this.$store.commit('dataSource/setAppQuestion', value)
       }
     },
     dropdownPosition () {

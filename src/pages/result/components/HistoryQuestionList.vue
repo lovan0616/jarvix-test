@@ -58,8 +58,9 @@ export default {
     },
     chooseHistoryQuestion (questionInfo) {
       this.$store.commit('bookmark/setAppQuestion', questionInfo.question)
+      this.$store.commit('dataSource/setAppQuestion', questionInfo.question)
       this.$store.dispatch('bookmark/changeBookmarkById', questionInfo.bookmark_id)
-      this.$store.dispatch('bookmark/updateResultRouter')
+      this.$store.dispatch('dataSource/updateResultRouter')
       this.isDropdownOpen = false
     },
     typeTransform (value) {
@@ -73,7 +74,7 @@ export default {
   },
   computed: {
     questionList () {
-      return this.$store.state.bookmark.historyQuestionList
+      return this.$store.state.dataSource.historyQuestionList
     }
   }
 }

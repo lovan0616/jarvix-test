@@ -81,7 +81,7 @@
     ></edit-table-join-relation-dialog>
     <edit-column-dialog
       v-if="showEditColumnDialog"
-      :table-info="currentEditTableInfo"
+      :table-info="currentEditDataFrameInfo"
       @close="closeEditColumnDialog"
     ></edit-column-dialog>
   </div>
@@ -124,7 +124,7 @@ export default {
       // checkbox 所選擇的檔案列表
       selectList: [],
       // 目前正在編輯的資料表
-      currentEditTableInfo: null,
+      currentEditDataFrameInfo: null,
       intervalFunction: null
     }
   },
@@ -249,12 +249,15 @@ export default {
       this.toggleJoinTableDialog()
     },
     editTableColumn (dataInfo) {
+
       // 利用 id 去 tableList 裡面找對應的 table 資訊
-      this.currentEditTableInfo = this.tableList.find(element => element.id === dataInfo.id)
+      this.currentEditDataFrameInfo = dataInfo
+
+      
       this.toggleEditColumnDialog()
     },
     closeEditColumnDialog () {
-      this.currentEditTableInfo = []
+      this.currentEditDataFrameInfo = null
       this.toggleEditColumnDialog()
     }
   },

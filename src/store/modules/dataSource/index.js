@@ -9,7 +9,9 @@ export default {
     dataSourceList: [],
     dataSourceId: null,
     dataSourceCloumnInfoList: [],
-    dataSourceDataValueList: []
+    dataSourceDataValueList: [],
+    appQuestion: null,
+    historyQuestionList: []
   },
   actions,
   mutations,

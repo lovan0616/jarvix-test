@@ -47,17 +47,6 @@ export function checkDataSourceStatusById (dataSourceId) {
 }
 
 /**
- * get data frame by dataSourceId
- * @param {Number} dataSourceId - 欲檢查的資料源 ID
- */
-export function getDataFrameById (dataSourceId) {
-  return request({
-    url: `/dataFrame/dataSource/${dataSourceId}`,
-    method: 'GET'
-  })
-}
-
-/**
  * delete dataSource by id
  * @param {Number} dataSourceId - 欲刪除的資料源 ID
  */
@@ -105,5 +94,56 @@ export function getDataSourceDataValueById (dataSourceId, size = 50) {
     params: {
       size: size
     }
+  })
+}
+
+/**
+ * get data frame by dataSourceId
+ * @param {Number} dataSourceId - 欲檢查的資料源 ID
+ */
+export function getDataFrameById (dataSourceId) {
+  return request({
+    url: `/dataFrame/dataSource/${dataSourceId}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * get dataFrame relation by dataFrameId
+ * @param {Number} dataFrameId - 欲檢查的資料表 ID
+ */
+export function getDataFrameRelationById (dataFrameId) {
+  return request({
+    url: `/dataFrame/relation`,
+    method: 'GET',
+    params: {
+      dataFrameId
+    }
+  })
+}
+
+/**
+ * get data column by dataFrameId
+ * @param {Number} dataFrameId - 欲檢查的資料表 ID
+ */
+export function getDataFrameColumnInfoById (dataFrameId) {
+  return request({
+    url: `/dataColumn/dataFrame/${dataFrameId}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * update dataFrame alias
+ * @param {Object} userEditedInput - 欲更新的資料
+ * @param {Number} userEditedInput.dataFrameId - dataFrameId
+ * @param {Number} userEditedInput.dataSourceId - dataSourceId
+ * @param {Array} userEditedInput.userEditedColumnInputList - 欄位清單
+ */
+export function updateDataFrameAlias (userEditedInput) {
+  return request({
+    url: `/datasources/userEdited`,
+    method: 'POST',
+    data: userEditedInput
   })
 }

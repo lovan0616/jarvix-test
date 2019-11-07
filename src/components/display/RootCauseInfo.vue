@@ -83,7 +83,8 @@ export default {
   methods: {
     drillDown (question) {
       this.$store.commit('bookmark/setAppQuestion', question)
-      this.$store.dispatch('bookmark/updateResultRouter', this.$route.name === 'PageResult' ? 'click_rootcause' : 'click_rootcause_pinboard')
+      this.$store.commit('dataSource/setAppQuestion', question)
+      this.$store.dispatch('dataSource/updateResultRouter', this.$route.name === 'PageResult' ? 'click_rootcause' : 'click_rootcause_pinboard')
     }
   },
   computed: {

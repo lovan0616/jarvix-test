@@ -42,7 +42,7 @@ export default {
     commit('chatBot/clearConversation', null, {root: true})
 
     return co(function* () {
-      // yield dispatch('getHistoryQuestionList')
+      yield dispatch('getHistoryQuestionList')
       yield dispatch('getDataSourceColumnInfo')
       yield dispatch('getDataSourceDataValue')
       return Promise.resolve(state)
@@ -69,7 +69,7 @@ export default {
       commit('setQuickStart', res)
     })
   },
-  updateResultRouter ({commit, getters}, actionTag) {
+  updateResultRouter ({commit, state}, actionTag) {
     /**
      * 這邊的 Bookmark 需要轉成字串的原因是：
      * 今天如果直接在結果頁重新整理，我如果直接從 router 進來
@@ -79,9 +79,9 @@ export default {
     router.push({
       name: 'PageResult',
       query: {
-        question: getters.appQuestion,
+        question: state.appQuestion,
         stamp: new Date().getTime(),
-        dataSourceId: String(getters.dataSourceId),
+        dataSourceId: String(state.dataSourceId),
         action: actionTag
       }
     })

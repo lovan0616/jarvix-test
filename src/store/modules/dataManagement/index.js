@@ -8,7 +8,7 @@ export default {
     // 在資料表清單時，提供資料表上傳使用
     currentDataSourceInfo: null,
     currentUploadInfo: {
-      bookmarkId: null,
+      dataSourceId: null,
       storageId: null,
       type: null,
       name: null
