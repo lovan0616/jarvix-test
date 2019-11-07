@@ -9,6 +9,7 @@
           <input-block class="login-input-block"
             :label="$t('editing.username')"
             name="userName"
+            type="email"
             v-model="userInfo.account"
             v-validate="'required'"
           ></input-block>

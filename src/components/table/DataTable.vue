@@ -230,11 +230,15 @@ export default {
       return status
     },
     timeFormat (value, format) {
-      switch (format) {
-        case 'YYYY-MM-DD':
-          return this.timeToDate(value)
-        case 'YYYY-MM-DD HH:mm':
-          return this.timeStampToDateTime(value)
+      if (value) {
+        switch (format) {
+          case 'YYYY-MM-DD':
+            return this.timeToDate(value)
+          case 'YYYY-MM-DD HH:mm':
+            return this.timeToDateTime(value)
+        }
+      } else {
+        return '-'
       }
     },
     doAction (actionName, data) {

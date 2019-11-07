@@ -1,5 +1,5 @@
 import co from 'co'
-import { getDataSourceList, createDataSource, getDataSourceById, checkDataSourceStatusById } from '@/API/DataSource'
+import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById } from '@/API/DataSource'
 import { getSuggestions, getQuickstarts, getBookmarkColumn } from '@/API/Bookmark'
 import { getQuestionHistory } from '@/API/ChatBot'
 import router from '../../../router'
@@ -43,14 +43,20 @@ export default {
 
     return co(function* () {
       // yield dispatch('getHistoryQuestionList')
-      // yield dispatch('getBookmarkColumnInfo')
+      yield dispatch('getDataSourceColumnInfo')
+      yield dispatch('getDataSourceDataValue')
       return Promise.resolve(state)
     })
   },
 
-  getBookmarkColumnInfo ({ commit, state }) {
-    return getBookmarkColumn(state.dataSourceId).then(response => {
-      commit('setBookmarkCloumnInfoList', response)
+  getDataSourceColumnInfo ({ commit, state }) {
+    return getDataSourceColumnInfoById(state.dataSourceId).then(response => {
+      commit('setDataSourceCloumnInfoList', response)
+    })
+  },
+  getDataSourceDataValue ({ commit, state }) {
+    return getDataSourceDataValueById(state.dataSourceId).then(response => {
+      commit('setDataSourceDataValueList', response)
     })
   },
   getSuggestionList ({ commit, state }) {

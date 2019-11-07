@@ -38,6 +38,16 @@ Vue.mixin({
       let date = datetime.getDate()
       return year + '-' + this.paddingZero(month) + '-' + this.paddingZero(date)
     },
+    // 轉成 YYYY-MM-DD HH:mm
+    timeToDateTime (time) {
+      let datetime = new Date(time)
+      let year = datetime.getFullYear()
+      let month = datetime.getMonth() + 1
+      let date = datetime.getDate()
+      let hour = datetime.getHours()
+      let minute = datetime.getMinutes()
+      return `${year}-${this.paddingZero(month)}-${this.paddingZero(date)} ${this.paddingZero(hour)}:${this.paddingZero(minute)}`
+    },
     // timeStamp 轉成 YYYY-MM-DD
     timeStampToDate (time) {
       let datetime = new Date()

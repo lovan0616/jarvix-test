@@ -52,10 +52,58 @@ export function checkDataSourceStatusById (dataSourceId) {
  */
 export function getDataFrameById (dataSourceId) {
   return request({
-    url: '/dataFrame',
+    url: `/dataFrame/dataSource/${dataSourceId}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * delete dataSource by id
+ * @param {Number} dataSourceId - 欲刪除的資料源 ID
+ */
+export function deleteDataSourceById (dataSourceId) {
+  return request({
+    url: `/datasources/${dataSourceId}`,
+    method: 'DELETE'
+  })
+}
+
+/**
+ * rename dataSource by id
+ * @param {Number} dataSourceId - 欲刪除的資料源 ID
+ * @param {String} name - dataSource new name
+ */
+export function renameDataSourceById (dataSourceId, name) {
+  return request({
+    url: `/datasources/${dataSourceId}/name`,
+    method: 'PUT',
+    data: {
+      name
+    }
+  })
+}
+
+/**
+ * get dataSource column info
+ * @param {Number} dataSourceId - 資料源 ID
+ */
+export function getDataSourceColumnInfoById (dataSourceId) {
+  return request({
+    url: `/datasources/${dataSourceId}/datacolumns/name`,
+    method: 'GET'
+  })
+}
+
+/**
+ * get dataSource data value
+ * @param {Number} dataSourceId - 資料源 ID
+ */
+export function getDataSourceDataValueById (dataSourceId, size = 50) {
+  return request({
+    url: `/datasources/${dataSourceId}/datavalue`,
     method: 'GET',
     params: {
-      dataSourceId
+      size: size
     }
   })
 }

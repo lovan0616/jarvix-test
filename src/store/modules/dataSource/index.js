@@ -7,7 +7,9 @@ export default {
   state: {
     isInit: false,
     dataSourceList: [],
-    dataSourceId: null
+    dataSourceId: null,
+    dataSourceCloumnInfoList: [],
+    dataSourceDataValueList: []
   },
   actions,
   mutations,
