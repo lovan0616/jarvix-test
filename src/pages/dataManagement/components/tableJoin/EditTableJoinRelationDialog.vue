@@ -3,17 +3,9 @@
     <div class="dialog-container">
       <div class="dialog-title">{{ $t('editing.foreignTable') }}</div>
       <div class="button-block">
-        <button type="button" class="btn btn-default"
+        <button type="button" class="btn btn-secondary btn-has-icon"
           @click="addNewRelations"
-        >{{ $t('button.newForeign') }}</button>
-        <div class="control-button-block">
-          <button type="button" class="btn btn-outline"
-            @click="closeDialog"
-          >{{ $t('button.cancel') }}</button>
-          <button type="button" class="btn btn-default"
-            @click="saveRelations"
-          >{{ $t('button.save') }}</button>
-        </div>
+        ><svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('button.newForeign') }}</button>
       </div>
       <empty-info-block
         class="empty-info-block"
@@ -28,6 +20,16 @@
         :table-list="tableList"
         @deleteRelations="deleteRelations"
       ></table-join-relatoin-block>
+      <div class="button-block footer-button-block">
+        <div class="control-button-block">
+          <button type="button" class="btn btn-outline"
+            @click="closeDialog"
+          >{{ $t('button.cancel') }}</button>
+          <button type="button" class="btn btn-default"
+            @click="saveRelations"
+          >{{ $t('button.save') }}</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -35,6 +37,7 @@
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import TableJoinRelatoinBlock from './TableJoinRelatoinBlock'
 import { getBookmarkStorage, buildStorage, setCSVJoin } from '@/API/Storage'
+import { getDataFrameRelationById, getDataFrameById } from '@/API/DataSource'
 
 export default {
   name: 'EditTableJoinRelationDialog',
@@ -44,18 +47,15 @@ export default {
   },
   data () {
     return {
+      currentDataSourceId: parseInt(this.$route.params.id),
       joinRelations: [],
       tableList: [],
       singleJoinRelations: {
         id: null,
-        left_tbl: null,
-        right_tbl: null,
-        foreign_keys: [
-          {
-            left_column: null,
-            right_column: null
-          }
-        ]
+        leftDataFrameId: null,
+        leftDataColumnId: null,
+        rightDataFrameId: null,
+        rightDataColumnId: null
       },
       singleForeignKey: {
         left_column: null,
@@ -65,25 +65,36 @@ export default {
     }
   },
   mounted () {
-    this.getStorageId()
+    this.getRelation()
+    this.getDataFrameList()
   },
   methods: {
-    getStorageId () {
-      let storageType = this.getStorageType(this.currentBookmarkInfo.type)
-      getBookmarkStorage(this.currentBookmarkInfo.id, storageType).then(response => {
-        this.storageId = response.storage.id
-
-        let storageConfig = response.storage.config
-        // 目前的 join 關係，將 object 轉為 Array
-        this.joinRelations = this.objectToArray(storageConfig.joins)
-        // 目前的 table 清單，將 object 轉為 Array，同時補足 select 需要的 key
-        this.tableList = Object.keys(storageConfig.tables).map(element => {
-          storageConfig.tables[element].id = element
-          storageConfig.tables[element].name = storageConfig.tables[element].tablename
-          return storageConfig.tables[element]
-        })
+    getRelation () {
+      getDataFrameRelationById(this.currentDataSourceId).then(response => {
+        this.joinRelations = response
       })
     },
+    getDataFrameList () {
+      getDataFrameById(this.currentDataSourceId).then(response => {
+        this.tableList = response
+      })
+    },
+    // getStorageId () {
+    //   let storageType = this.getStorageType(this.currentBookmarkInfo.type)
+    //   getBookmarkStorage(this.currentBookmarkInfo.id, storageType).then(response => {
+    //     this.storageId = response.storage.id
+
+    //     let storageConfig = response.storage.config
+    //     // 目前的 join 關係，將 object 轉為 Array
+    //     this.joinRelations = this.objectToArray(storageConfig.joins)
+    //     // 目前的 table 清單，將 object 轉為 Array，同時補足 select 需要的 key
+    //     this.tableList = Object.keys(storageConfig.tables).map(element => {
+    //       storageConfig.tables[element].id = element
+    //       storageConfig.tables[element].name = storageConfig.tables[element].tablename
+    //       return storageConfig.tables[element]
+    //     })
+    //   })
+    // },
     closeDialog () {
       this.$emit('cancel')
     },
@@ -121,7 +132,11 @@ export default {
   .button-block {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
+
+    &.footer-button-block {
+      justify-content: flex-end;
+    }
 
     .control-button-block {
       .btn:not(:last-child) {

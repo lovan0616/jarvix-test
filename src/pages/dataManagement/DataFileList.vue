@@ -9,7 +9,7 @@
       <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
       <div class="bread-crumb">
         <router-link to="/data-management" class="title-link">{{ $t('editing.dataSource') }}</router-link>
-        <span class="divider">/</span>{{ currentDataSourceInfo ? currentDataSourceInfo.name : '' }}
+        <span class="divider">/</span>{{ dataSourceName }}
       </div>
     </div>
     <div class="table-board">
@@ -81,7 +81,7 @@
     ></edit-table-join-relation-dialog>
     <edit-column-dialog
       v-if="showEditColumnDialog"
-      :table-info="currentEditTableInfo"
+      :table-info="currentEditDataFrameInfo"
       @close="closeEditColumnDialog"
     ></edit-column-dialog>
   </div>
@@ -110,6 +110,7 @@ export default {
   data () {
     return {
       currentDataSourceId: parseInt(this.$route.params.id),
+      dataSourceName: null,
       showConfirmDeleteDialog: false,
       showConfirmRenameDialog: false,
       showJoinTableDialog: false,
@@ -123,7 +124,7 @@ export default {
       // checkbox 所選擇的檔案列表
       selectList: [],
       // 目前正在編輯的資料表
-      currentEditTableInfo: null,
+      currentEditDataFrameInfo: null,
       intervalFunction: null
     }
   },
@@ -135,9 +136,6 @@ export default {
     if (this.intervalFunction) {
       window.clearInterval(this.intervalFunction)
     }
-  },
-  destroyed () {
-    this.$store.commit('dataManagement/updateCurrentDataSourceInfo', null)
   },
   watch: {
     fileUploadSuccess (value) {
@@ -167,9 +165,16 @@ export default {
     checkDataSourceStatus () {
       return checkDataSourceStatusById(this.currentDataSourceId).then(response => {
         this.isProcessing = response.state === 'PROCESSING'
+        this.dataSourceName = response.name
       })
     },
     createDataSource () {
+      // 為了資料表上傳
+      this.$store.commit('dataManagement/updateCurrentUploadInfo', {
+        dataSourceId: this.currentDataSourceId,
+        name: this.dataSourceName
+      })
+
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
     },
     closeFileUploadDialog () {
@@ -186,29 +191,29 @@ export default {
       this.showConfirmDeleteDialog = true
     },
     deleteFile () {
-      this.showConfirmDeleteDialog = false
-      this.isProcessing = true
-      // 先去取得 stoarge id
-      createBookmarkStorage(this.currentDataSourceId, this.currentDataSourceInfo.type)
-        .then(res => {
-          let deleteList = []
-          for (let i = 0; i < this.selectList.length; i++) {
-            deleteList.push(deleteCSV(res.storage.id, this.selectList[i].id))
-          }
+      // this.showConfirmDeleteDialog = false
+      // this.isProcessing = true
+      // // 先去取得 stoarge id
+      // createBookmarkStorage(this.currentDataSourceId, this.currentDataSourceInfo.type)
+      //   .then(res => {
+      //     let deleteList = []
+      //     for (let i = 0; i < this.selectList.length; i++) {
+      //       deleteList.push(deleteCSV(res.storage.id, this.selectList[i].id))
+      //     }
 
-          Promise.all(deleteList).then(() => {
-            buildStorage(res.storage.id, this.currentDataSourceId, false)
-              .then(() => {
-                this.deleteFinish()
-                this.$router.push('/data-management')
-              })
-              .catch(() => {
-                this.deleteFinish()
-              })
-          }, () => {
-            this.deleteFinish()
-          })
-        })
+      //     Promise.all(deleteList).then(() => {
+      //       buildStorage(res.storage.id, this.currentDataSourceId, false)
+      //         .then(() => {
+      //           this.deleteFinish()
+      //           this.$router.push('/data-management')
+      //         })
+      //         .catch(() => {
+      //           this.deleteFinish()
+      //         })
+      //     }, () => {
+      //       this.deleteFinish()
+      //     })
+      //   })
     },
     deleteFinish () {
       this.selectList = []
@@ -244,12 +249,15 @@ export default {
       this.toggleJoinTableDialog()
     },
     editTableColumn (dataInfo) {
+
       // 利用 id 去 tableList 裡面找對應的 table 資訊
-      this.currentEditTableInfo = this.tableList.find(element => element.id === dataInfo.id)
+      this.currentEditDataFrameInfo = dataInfo
+
+      
       this.toggleEditColumnDialog()
     },
     closeEditColumnDialog () {
-      this.currentEditTableInfo = []
+      this.currentEditDataFrameInfo = null
       this.toggleEditColumnDialog()
     }
   },
@@ -265,19 +273,19 @@ export default {
       return [
         {
           text: this.$t('editing.tableName'),
-          value: 'filename',
+          value: 'name',
           sort: true
         },
         {
           text: this.$t('editing.createDate'),
-          value: 'create_date',
+          value: 'createDate',
           sort: true,
           width: '200px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: this.$t('editing.updateDate'),
-          value: 'update_date',
+          value: 'updateDate',
           sort: true,
           width: '200px',
           time: 'YYYY-MM-DD HH:mm'
@@ -305,9 +313,6 @@ export default {
     showCreateDataSourceDialog () {
       return this.$store.state.dataManagement.showCreateDataSourceDialog
     },
-    currentDataSourceInfo () {
-      return this.$store.state.dataManagement.currentDataSourceInfo
-    },
     fileUploadSuccess () {
       return this.$store.state.dataManagement.fileUploadSuccess
     }
@@ -325,6 +330,12 @@ export default {
   .divider {
     margin: 0 8px;
     color: #979797;
+  }
+
+  .button-block {
+    .btn-default {
+      margin-right: 16px;
+    }
   }
 
   .status-block {

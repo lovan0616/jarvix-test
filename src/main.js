@@ -147,32 +147,32 @@ Vue.use(VeeValidate, {
     zh_TW: {
       messages: {
         required () {
-          return i18n.t('message.formColumnEmpty', 'zh-hant')
+          return i18n.t('message.formColumnEmpty', 'zh-TW')
         },
         email () {
-          return i18n.t('message.formMailWrong', 'zh-hant')
+          return i18n.t('message.formMailWrong', 'zh-TW')
         },
         numeric () {
-          return i18n.t('message.formNumberEmpty', 'zh-hant')
+          return i18n.t('message.formNumberEmpty', 'zh-TW')
         },
         max (field, length) {
-          return i18n.t('message.formCharacterOverMax', { max: length }, 'zh-hant')
+          return i18n.t('message.formCharacterOverMax', { max: length }, 'zh-TW')
         }
       }
     },
     zh_CN: {
       messages: {
         required () {
-          return i18n.t('message.formColumnEmpty', 'zh-hans')
+          return i18n.t('message.formColumnEmpty', 'zh-CN')
         },
         email () {
-          return i18n.t('message.formMailWrong', 'zh-hans')
+          return i18n.t('message.formMailWrong', 'zh-CN')
         },
         numeric () {
-          return i18n.t('message.formNumberEmpty', 'zh-hans')
+          return i18n.t('message.formNumberEmpty', 'zh-CN')
         },
         max (field, length) {
-          return i18n.t('message.formCharacterOverMax', { max: length }, 'zh-hans')
+          return i18n.t('message.formCharacterOverMax', { max: length }, 'zh-CN')
         }
       }
     }

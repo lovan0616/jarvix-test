@@ -36,7 +36,7 @@
     >
       <sy-select class="dialog-select"
         :placeholder="$t('nav.languagePlaceholder')"
-        :selected="language"
+        :selected="locale"
         :items="selectItems"
         v-on:update:selected="onSelected"
       ></sy-select>
@@ -57,7 +57,6 @@ import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'HeaderNav',
@@ -86,7 +85,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('profile', ['language', 'languages']),
+    locale () {
+      return this.$store.state.setting.locale
+    },
+    languages () {
+      return this.$store.state.setting.languages
+    },
     selectItems () {
       return Object.keys(this.languages).map(key => {
         return {
@@ -106,7 +110,7 @@ export default {
       })
     },
     changeLang () {
-      this.$store.dispatch('profile/updateLanguage', this.selectedLanguage)
+      this.$store.commit('setting/setLocale', this.selectedLanguage)
       this.isShowLanguage = false
     },
     switchDialogName (dialog) {

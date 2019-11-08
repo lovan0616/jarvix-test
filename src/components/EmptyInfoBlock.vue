@@ -18,9 +18,9 @@ export default {
 <style lang="scss" scoped>
 .empty-info-block {
   padding: 24px 0;
-  border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.55);
+  background-color: rgba(29, 30, 30, 0.95);
+  border-radius: 5px;
   text-align: center;
-  color: #CCCCCC;
+  color: #AAAAAA;
 }
 </style>

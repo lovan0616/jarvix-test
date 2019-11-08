@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import zhHant from './zh-hant.json'
-import zhHans from './zh-hans.json'
+import zhCN from './zh-CN.json'
+import zhTW from './zh-TW.json'
 
 Vue.use(VueI18n)
-const locale = 'zh-hant'
+const locale = 'zh-CN'
 const messages = {
-  'zh-hant': zhHant,
-  'zh-hans': zhHans
+  'zh-CN': zhCN,
+  'zh-TW': zhTW
 }
 
 const i18n = new VueI18n({

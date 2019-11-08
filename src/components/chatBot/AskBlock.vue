@@ -91,7 +91,8 @@ export default {
     },
     enterQuestion () {
       this.$store.commit('bookmark/setAppQuestion', this.userQuestion)
-      this.$store.dispatch('bookmark/updateResultRouter', 'key_in')
+      this.$store.commit('dataSource/setAppQuestion', this.userQuestion)
+      this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
       this.hideHistory()
       this.closeHelper()
     },
@@ -130,7 +131,7 @@ export default {
     historyQuestionList () {
       // 過濾 boomark 以及 問題字串
       return this.userQuestion
-        ? this.$store.state.bookmark.historyQuestionList.filter(d => { return d.question.indexOf(this.userQuestion) > -1 && d.bookmark_id === this.dataSourceId })
+        ? this.$store.state.dataSource.historyQuestionList.filter(d => { return d.question.indexOf(this.userQuestion) > -1 && d.bookmark_id === this.dataSourceId })
         : []
     }
   },

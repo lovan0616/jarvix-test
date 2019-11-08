@@ -1,6 +1,6 @@
 import co from 'co'
-import { getDataSourceList, createDataSource, getDataSourceById, checkDataSourceStatusById } from '@/API/DataSource'
-import { getSuggestions, getQuickstarts, getBookmarkColumn } from '@/API/Bookmark'
+import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById } from '@/API/DataSource'
+import { getSuggestions, getQuickstarts } from '@/API/Bookmark'
 import { getQuestionHistory } from '@/API/ChatBot'
 import router from '../../../router'
 
@@ -42,15 +42,21 @@ export default {
     commit('chatBot/clearConversation', null, {root: true})
 
     return co(function* () {
-      // yield dispatch('getHistoryQuestionList')
-      // yield dispatch('getBookmarkColumnInfo')
+      yield dispatch('getHistoryQuestionList')
+      yield dispatch('getDataSourceColumnInfo')
+      yield dispatch('getDataSourceDataValue')
       return Promise.resolve(state)
     })
   },
 
-  getBookmarkColumnInfo ({ commit, state }) {
-    return getBookmarkColumn(state.dataSourceId).then(response => {
-      commit('setBookmarkCloumnInfoList', response)
+  getDataSourceColumnInfo ({ commit, state }) {
+    return getDataSourceColumnInfoById(state.dataSourceId).then(response => {
+      commit('setDataSourceCloumnInfoList', response)
+    })
+  },
+  getDataSourceDataValue ({ commit, state }) {
+    return getDataSourceDataValueById(state.dataSourceId).then(response => {
+      commit('setDataSourceDataValueList', response)
     })
   },
   getSuggestionList ({ commit, state }) {
@@ -63,7 +69,7 @@ export default {
       commit('setQuickStart', res)
     })
   },
-  updateResultRouter ({commit, getters}, actionTag) {
+  updateResultRouter ({commit, state}, actionTag) {
     /**
      * 這邊的 Bookmark 需要轉成字串的原因是：
      * 今天如果直接在結果頁重新整理，我如果直接從 router 進來
@@ -73,9 +79,9 @@ export default {
     router.push({
       name: 'PageResult',
       query: {
-        question: getters.appQuestion,
+        question: state.appQuestion,
         stamp: new Date().getTime(),
-        dataSourceId: String(getters.dataSourceId),
+        dataSourceId: String(state.dataSourceId),
         action: actionTag
       }
     })

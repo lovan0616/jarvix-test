@@ -40,14 +40,14 @@
       v-if="showConfirmDeleteDialog"
       :title="$t('editing.deleteDataSource')"
       :content="$t('editing.confirmDeleteDataSourceOrNot')"
-      @confirm="deleteBookmark"
+      @confirm="deleteDataSource"
       @cancel="cancelDelete"
     ></confirm-delete-dialog>
     <confirm-change-name-dialog
       v-if="showConfirmRenameDialog"
       :title="$t('editing.renameDataSource')"
-      :source="renameDataSource.name"
-      @confirm="renameBookmark"
+      :source="editDataSource.name"
+      @confirm="renameDataSource"
       @cancel="cancelRename"
     ></confirm-change-name-dialog>
   </div>
@@ -57,7 +57,7 @@ import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
-import { deleteBookmark, renameBookmark } from '@/API/Bookmark'
+import { deleteDataSourceById, renameDataSourceById } from '@/API/DataSource'
 
 export default {
   name: 'DataSourceList',
@@ -72,7 +72,7 @@ export default {
       showConfirmDeleteDialog: false,
       showConfirmRenameDialog: false,
       deleteId: null,
-      renameDataSource: null,
+      editDataSource: null,
       dataList: [],
       // 資料處理中
       isProcessing: false,
@@ -113,15 +113,15 @@ export default {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     confirmRename (dataInfo) {
-      this.renameDataSource = dataInfo
+      this.editDataSource = dataInfo
       this.showConfirmRenameDialog = true
     },
     confirmDelete (dataObj) {
       this.deleteId = dataObj.id
       this.showConfirmDeleteDialog = true
     },
-    deleteBookmark (resolve) {
-      deleteBookmark(this.deleteId)
+    deleteDataSource (resolve) {
+      deleteDataSourceById(this.deleteId)
         .then(response => {
           this.fetchData()
             .then(() => {
@@ -136,8 +136,8 @@ export default {
       this.deleteId = null
       this.showConfirmDeleteDialog = false
     },
-    renameBookmark ({resolve, name}) {
-      renameBookmark(this.renameDataSource.id, name)
+    renameDataSource ({resolve, name}) {
+      renameDataSourceById(this.editDataSource.id, name)
         .then(response => {
           this.fetchData()
             .then(() => {
@@ -149,7 +149,7 @@ export default {
         })
     },
     cancelRename () {
-      this.renameDataSource = null
+      this.editDataSource = null
       this.showConfirmRenameDialog = false
     }
   },

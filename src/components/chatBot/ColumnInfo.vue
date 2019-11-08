@@ -5,24 +5,24 @@
       <div class="column-list">
         <div class="single-column column-title">{{ $t('askHelper.categoryTitle') }}</div>
         <div class="single-column"
-          v-for="(columnInfo, index) in bookmarkCloumnInfoList.category"
+          v-for="(columnInfo, index) in dataSourceCloumnInfoList.category"
           :key="'category' + index"
-        >{{ columnInfo.name }}</div>
+        >{{ columnInfo ? columnInfo : '-' }}</div>
       </div>
       <div class="column-list">
         <div class="single-column column-title">{{ $t('askHelper.numericTitle') }}</div>
         <div class="single-column"
-          v-for="(columnInfo, index) in bookmarkCloumnInfoList.numeric"
+          v-for="(columnInfo, index) in dataSourceCloumnInfoList.numeric"
           :key="'numeric' + index"
-        >{{ columnInfo.name }}</div>
+        >{{ columnInfo ? columnInfo : '-' }}</div>
       </div>
     </div>
     <div class="category-title">{{ $t('askHelper.datavalueTitle') }}</div>
     <div class="category-list">
       <div class="single-column"
-        v-for="(columnInfo, index) in bookmarkCloumnInfoList.datavalue"
+        v-for="(columnInfo, index) in dataSourceDataValueList"
         :key="'datavalue' + index"
-      >{{ columnInfo.name }}</div>
+      >{{ columnInfo ? columnInfo : '-' }}</div>
     </div>
   </div>
 </template>
@@ -30,8 +30,11 @@
 export default {
   name: 'ColumnInfo',
   computed: {
-    bookmarkCloumnInfoList () {
-      return this.$store.state.bookmark.bookmarkCloumnInfoList
+    dataSourceCloumnInfoList () {
+      return this.$store.state.dataSource.dataSourceCloumnInfoList
+    },
+    dataSourceDataValueList () {
+      return this.$store.state.dataSource.dataSourceDataValueList
     }
   }
 }

@@ -7,7 +7,11 @@ export default {
   state: {
     isInit: false,
     dataSourceList: [],
-    dataSourceId: null
+    dataSourceId: null,
+    dataSourceCloumnInfoList: [],
+    dataSourceDataValueList: [],
+    appQuestion: null,
+    historyQuestionList: []
   },
   actions,
   mutations,

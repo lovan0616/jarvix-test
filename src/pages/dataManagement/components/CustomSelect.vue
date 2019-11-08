@@ -27,7 +27,7 @@ export default {
   name: 'CustomSelect',
   props: {
     value: {
-      type: String
+      type: [String, Number]
     },
     icon: {
       type: String
@@ -109,7 +109,7 @@ export default {
     flex-wrap: nowrap;
     border-radius: 2px;
     padding: 8px 20px;
-    background-color: $theme-bg-color;
+    background-color: #2A3030;
     cursor: pointer;
     overflow: auto;
 

@@ -35,7 +35,8 @@ export default {
   methods: {
     linkToResult () {
       this.$store.commit('bookmark/setAppQuestion', this.questionInfo.question)
-      this.$store.dispatch('bookmark/updateResultRouter', this.$route.name === 'PageResult' ? 'click_recommend_result' : 'click_recommend_index')
+      this.$store.commit('dataSource/setAppQuestion', this.questionInfo.question)
+      this.$store.dispatch('dataSource/updateResultRouter', this.$route.name === 'PageResult' ? 'click_recommend_result' : 'click_recommend_index')
       this.$events.emit('cleanPreview')
     }
   }
@@ -55,11 +56,13 @@ export default {
   }
 
   .board-title {
+    display: flex;
     font-size: 20px;
     line-height: 26px;
     letter-spacing: 0.1em;
     text-align: left;
     color: $theme-text-color;
+    margin-bottom: 14px;
 
     .question-mark {
       display: inline-block;

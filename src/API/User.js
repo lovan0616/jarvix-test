@@ -17,7 +17,7 @@ export function login (loginInfo) {
 export function logout () {
   return request({
     url: 'auth/logout',
-    method: 'GET'
+    method: 'PUT'
   })
 }
 

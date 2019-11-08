@@ -7,5 +7,17 @@ export default {
   },
   setDataSourceId (state, id) {
     state.dataSourceId = id
+  },
+  setDataSourceCloumnInfoList (state, data) {
+    state.dataSourceCloumnInfoList = data
+  },
+  setDataSourceDataValueList (state, data) {
+    state.dataSourceDataValueList = data.values
+  },
+  setAppQuestion (state, data) {
+    state.appQuestion = data
+  },
+  setHistoryQuestionList (state, data) {
+    state.historyQuestionList = data
   }
 }

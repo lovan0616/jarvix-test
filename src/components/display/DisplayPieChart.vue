@@ -12,7 +12,6 @@
 <script>
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { color12 } from './common/addons'
-import chartVariable from '@/styles/chart/variables.scss'
 
 export default {
   name: 'DisplayPieChart',

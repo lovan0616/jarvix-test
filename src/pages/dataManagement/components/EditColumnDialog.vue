@@ -3,9 +3,9 @@
     <div class="dialog-container">
       <div class="dialog-title">{{ $t('editing.editTableColumn') }}
          <button class="btn-m btn-default build-btn"
-          v-if="isSaved"
+          v-if="userEditInfo.userEditedColumnInputList.length > 0"
           :disabled="isProcessing"
-          @click="buildBookmark"
+          @click="updateDataSource"
         >{{ $t('button.build') }}</button>
         <a href="javascript:void(0)" class="close-btn"
           v-else
@@ -24,14 +24,14 @@
           </div>
           <div class="data-table-body" ref="dataTableBody">
             <div class="data-table-row"
-              v-for="(column, index) in columnList"
-              :key="index"
+              v-for="column in columnList"
+              :key="column.id"
             >
               <div class="data-table-cell name">{{ column.name }}</div>
               <div class="data-table-cell alias">
                 <span
-                  v-if="currentEditColumn !== column.name"
-                >{{ column.alias }}</span>
+                  v-if="tempRowInfo.dataColumnId !== column.id"
+                >{{ column.primaryAlias }}</span>
                 <input type="text" class="input alias-input"
                   v-else
                   v-model="tempRowInfo.alias"
@@ -39,27 +39,27 @@
               </div>
               <div class="data-table-cell tag">
                 <span
-                  v-if="currentEditColumn !== column.name"
-                >{{ column.tag }}</span>
+                  v-if="tempRowInfo.dataColumnId !== column.id"
+                >{{ column.statsType }}</span>
                 <default-select class="tag-select input"
                   v-else
-                  v-model="tempRowInfo.tag"
-                  :option-list="tagOption(column.type)"
+                  v-model="tempRowInfo.columnStatsType"
+                  :option-list="typeOptionList(column.statsTypeOptionList)"
                 ></default-select>
               </div>
               <div class="data-table-cell action">
                 <a class="link action-link" href="javascript:void(0)"
-                  v-if="currentEditColumn !== column.name"
+                  v-if="tempRowInfo.dataColumnId !== column.id"
                   @click="edit(column)"
                 >{{ $t('button.edit') }}</a>
                 <a class="link action-link" href="javascript:void(0)"
                   :disabled="isProcessing"
-                  v-if="currentEditColumn === column.name"
+                  v-if="tempRowInfo.dataColumnId === column.id"
                   @click="save"
                 >{{ $t('button.save') }}</a>
                 <a class="link action-link" href="javascript:void(0)"
                   :disabled="isProcessing"
-                  v-if="currentEditColumn === column.name"
+                  v-if="tempRowInfo.dataColumnId === column.id"
                   @click="cancel"
                 >{{ $t('button.cancel') }}</a>
               </div>
@@ -71,7 +71,7 @@
   </div>
 </template>
 <script>
-import { getBookmarkStorage, buildStorage, updateCSVColumnSetting } from '@/API/Storage'
+import { getDataFrameColumnInfoById, updateDataFrameAlias } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
 
 export default {
@@ -89,23 +89,34 @@ export default {
   },
   data () {
     return {
-      columnList: Object.values(this.tableInfo.columns).map(element => element),
+      columnList: [],
       tableId: this.tableInfo.id,
       // 目前編輯的欄位
       currentEditColumn: null,
       // 目前編輯的欄位資訊
       tempRowInfo: {
+        dataColumnId: null,
         alias: null,
-        tag: null,
-        enable: null
+        columnStatsType: null
+      },
+      userEditInfo: {
+        dataFrameId: this.tableInfo.id,
+        dataSourceId: this.tableInfo.dataSourceId,
+        userEditedColumnInputList: []
       },
       storageId: null,
-      isProcessing: false,
-      // 是否已經進行過儲存
-      isSaved: false
+      isProcessing: false
     }
   },
+  mounted () {
+    this.fetchData()
+  },
   methods: {
+    fetchData () {
+      getDataFrameColumnInfoById(this.tableId).then(response => {
+        this.columnList = response
+      })
+    },
     getStorageId () {
       // 先去取得 stoarge id
       return getBookmarkStorage(parseInt(this.$route.params.id), this.currentBookmarkInfo.type)
@@ -114,87 +125,26 @@ export default {
         })
     },
     // 依據 type 決定選單選項
-    tagOption (typeName) {
-      switch (typeName) {
-        case 'int':
-        case 'float':
-          return [
-            {
-              name: 'category',
-              value: 'category'
-            },
-            {
-              name: 'numeric',
-              value: 'numeric'
-            },
-            {
-              name: 'id',
-              value: 'id'
-            }
-          ]
-        case 'object':
-          return [
-            {
-              name: 'category',
-              value: 'category'
-            },
-            {
-              name: 'id',
-              value: 'id'
-            }
-          ]
-        case 'datetime':
-          return [
-            {
-              name: 'category',
-              value: 'category'
-            },
-            {
-              name: 'datetime',
-              value: 'datetime'
-            }
-          ]
-        case 'timedelta':
-          return [
-            {
-              name: 'category',
-              value: 'category'
-            },
-            {
-              name: 'timedelta',
-              value: 'timedelta'
-            }
-          ]
-        default:
-          return [
-            {
-              name: 'id',
-              value: 'id'
-            },
-            {
-              name: 'numeric',
-              value: 'numeric'
-            },
-            {
-              name: 'category',
-              value: 'category'
-            }
-          ]
-      }
+    typeOptionList (optionList) {
+      return optionList.map(option => {
+        return {
+          name: option,
+          value: option
+        }
+      })
     },
     closeDialog () {
       this.$emit('close')
     },
     edit (columnInfo) {
-      this.currentEditColumn = columnInfo.name
-      this.tempRowInfo.alias = JSON.parse(JSON.stringify(columnInfo.alias))
-      this.tempRowInfo.tag = JSON.parse(JSON.stringify(columnInfo.tag))
-      this.tempRowInfo.type = JSON.parse(JSON.stringify(columnInfo.type))
+      this.tempRowInfo.dataColumnId = columnInfo.id
+      this.tempRowInfo.alias = JSON.parse(JSON.stringify(columnInfo.primaryAlias))
+      this.tempRowInfo.columnStatsType = JSON.parse(JSON.stringify(columnInfo.statsType))
     },
-    buildBookmark () {
+    updateDataSource () {
       this.isProcessing = true
 
-      buildStorage(this.storageId, this.currentBookmarkInfo.id, false).then(() => {
+      updateDataFrameAlias(this.userEditInfo).then(() => {
         this.$router.push('/data-management')
       }).catch(() => {
         this.cancel()
@@ -202,32 +152,32 @@ export default {
     },
     save () {
       if (this.isProcessing) return
-      this.isProcessing = true
 
-      this.getStorageId().then(() => {
-        updateCSVColumnSetting(this.storageId, this.tableId, this.currentEditColumn, this.tempRowInfo).then(() => {
-          // 儲存成功不重新取，將 temp 資料塞回去就好
-          let currentColumn = this.columnList.find(element => {
-            return element.name === this.currentEditColumn
-          })
-          currentColumn.alias = this.tempRowInfo.alias
-          currentColumn.tag = this.tempRowInfo.tag
-          // 如果有儲存過，就變更狀態
-          this.isSaved = true
-
-          this.cancel()
-        }).catch(() => {
-          this.cancel()
-        })
+      let currentColumn = this.columnList.find(element => {
+        return element.id === this.tempRowInfo.dataColumnId
       })
+      // 將 temp 資料塞回去
+      currentColumn.primaryAlias = this.tempRowInfo.alias
+      currentColumn.statsType = this.tempRowInfo.columnStatsType
+      // 目前的 id 是否已經存在
+      let hasId = false
+      this.userEditInfo.userEditedColumnInputList.forEach(element => {
+        if (element.dataColumnId === this.tempRowInfo.dataColumnId) {
+          element = this.tempRowInfo
+          hasId = true
+        }
+      })
+      if (!hasId) {
+        this.userEditInfo.userEditedColumnInputList.push(this.tempRowInfo)
+      }
+
+      this.cancel()
     },
     cancel () {
-      this.currentEditColumn = null
       this.tempRowInfo = {
+        dataColumnId: null,
         alias: null,
-        tag: null,
-        type: null,
-        enable: null
+        columnStatsType: null
       }
       this.isProcessing = false
     }
@@ -235,9 +185,6 @@ export default {
   computed: {
     currentBookmarkInfo () {
       return this.$store.state.dataManagement.currentBookmarkInfo
-    },
-    test (value) {
-      return value
     }
   }
 }
@@ -286,6 +233,8 @@ export default {
     height: 24px;
     line-height: 24px;
     font-size: 14px;
+    padding-left: 0;
+    letter-spacing: 0.5px;
   }
   .el-input__icon {
     line-height: 24px;

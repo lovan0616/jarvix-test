@@ -5,11 +5,11 @@ import i18n from '@/lang/index.js'
 export default {
   namespaced: true,
   state: {
-    profile: {},
-    languageDefault: 'zh-hant',
+    locale: null,
+    languageDefault: 'zh-CN',
     languages: {
-      'zh-hans': i18n.t('lang', 'zh-hans'),
-      'zh-hant': i18n.t('lang', 'zh-hant')
+      'zh-TW': i18n.t('lang', 'zh-TW'),
+      'zh-CN': i18n.t('lang', 'zh-CN')
     }
   },
   actions,

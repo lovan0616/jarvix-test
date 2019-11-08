@@ -18,7 +18,8 @@ const service = axios.create({
       toString () {
         return localStorage.getItem('token')
       }
-    }
+    },
+    'Accept-Language': localStorage.getItem('locale')
   }
 })
 

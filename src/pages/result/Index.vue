@@ -34,6 +34,7 @@ export default {
     '$route.query.question' (value) {
       if (this.$route.name === 'PageResult') {
         this.$store.commit('bookmark/setAppQuestion', value)
+        this.$store.commit('dataSource/setAppQuestion', value)
       }
     }
   },
@@ -46,6 +47,7 @@ export default {
 
       if (question) {
         this.$store.commit('bookmark/setAppQuestion', question)
+        this.$store.commit('dataSource/setAppQuestion', question)
       } else {
         this.$router.push('/')
       }
