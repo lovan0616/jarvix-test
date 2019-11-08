@@ -171,7 +171,7 @@ export function saveDataFrameRelation (inputData) {
  */
 export function updateDataFrameRelationById (relationId, inputData) {
   return request({
-    url: `/dataFrame/relation/{relationId}`,
+    url: `/dataFrame/relation/${relationId}`,
     method: 'PUT',
     data: inputData
   })
@@ -186,7 +186,7 @@ export function updateDataFrameRelationById (relationId, inputData) {
  */
 export function deleteDataFrameRelationById (relationId) {
   return request({
-    url: `/dataFrame/relation/{relationId}`,
+    url: `/dataFrame/relation/${relationId}`,
     method: 'DELETE'
   })
 }

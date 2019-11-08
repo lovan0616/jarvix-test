@@ -15,7 +15,7 @@
     >
       <div class="option"
         v-for="option in optionList"
-        :key="option.id"
+        :key="new Date().getTime() + option.id"
         @click="chooseOption(option.id)"
         :class="{active: option.id === value}"
       >{{ option.name }}</div>
@@ -80,7 +80,7 @@ export default {
   },
   computed: {
     selectedOption () {
-      return this.optionList.find(element => element.id === this.value).name
+      return this.optionList.find(element => parseInt(element.id) === parseInt(this.value)).name
     },
     dropdownPosition () {
       if (this.onTop) {

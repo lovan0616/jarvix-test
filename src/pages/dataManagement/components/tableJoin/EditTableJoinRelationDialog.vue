@@ -18,8 +18,9 @@
       ></empty-info-block>
       <table-join-relatoin-block
         v-else
-        v-for="relation in joinRelations"
+        v-for="(relation, index) in joinRelations"
         :key="relation.id"
+        :index="index"
         :relation-info="relation"
         :table-list="tableList"
         @deleteRelations="deleteRelations"
@@ -30,8 +31,9 @@
 <script>
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import TableJoinRelatoinBlock from './TableJoinRelatoinBlock'
-import { buildStorage, setCSVJoin } from '@/API/Storage'
-import { getDataFrameRelationById, getDataFrameById } from '@/API/DataSource'
+// import { buildStorage, setCSVJoin } from '@/API/Storage'
+import { getDataFrameRelationById, getDataFrameById, deleteDataFrameRelationById } from '@/API/DataSource'
+import { Message } from 'element-ui'
 
 export default {
   name: 'EditTableJoinRelationDialog',
@@ -45,6 +47,7 @@ export default {
       joinRelations: [],
       tableList: [],
       singleJoinRelations: {
+        isNew: true,
         id: null,
         leftDataFrameId: null,
         leftDataColumnId: null,
@@ -95,23 +98,23 @@ export default {
     // 新增關聯性
     addNewRelations () {
       let newRelations = JSON.parse(JSON.stringify(this.singleJoinRelations))
-      newRelations.id = new Date().getTime()
+      // newRelations.id = new Date().getTime()
       this.joinRelations.push(newRelations)
     },
-    deleteRelations (id) {
-      this.joinRelations = this.joinRelations.filter(element => element.id !== id)
-    },
-    saveRelations () {
-      let joinInfo = this.joinRelations.reduce((accumulator, currentValue) => {
-        accumulator[currentValue.id] = currentValue
-        return accumulator
-      }, {})
+    deleteRelations (index) {
+      if (this.joinRelations[index].isNew) {
+        this.joinRelations.splice(index, 1)
+      } else {
+        deleteDataFrameRelationById(this.joinRelations[index].id).then(() => {
+          this.getRelation()
 
-      setCSVJoin(this.storageId, joinInfo).then(() => {
-        buildStorage(this.storageId, this.currentBookmarkInfo.id, false).then(() => {
-          this.$router.push('/data-management')
+          Message({
+            message: this.$t('message.correlationDeleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
         })
-      })
+      }
     }
   },
   computed: {

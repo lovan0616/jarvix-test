@@ -174,7 +174,6 @@ export default {
           .then(response => {
             this.isShowCreateUser = false
             this.getUserList()
-            console.log(response)
           })
           .catch(error => {
             console.log(error)
@@ -188,7 +187,6 @@ export default {
         .then(response => {
           this.userData = []
           this.userData = response
-          console.log(response)
         })
         .catch(error => {
           console.log(error)
@@ -203,7 +201,6 @@ export default {
           .then(response => {
             this.closePassword()
             this.getUserList()
-            console.log(response)
           })
           .catch(error => {
             console.log(error)
@@ -220,7 +217,6 @@ export default {
         .then(response => {
           this.closeEditName()
           this.getUserList()
-          console.log(response)
         })
         .catch(error => {
           console.log(error)
@@ -234,7 +230,6 @@ export default {
         .then(response => {
           this.closeStatusChange()
           this.getUserList()
-          console.log(response)
         })
         .catch(error => {
           console.log(error)
@@ -247,7 +242,6 @@ export default {
         .then(response => {
           this.closeDeleteAccount()
           this.getUserList()
-          console.log(response)
         })
         .catch(error => {
           console.log(error)

@@ -65,7 +65,7 @@ export default {
       }
       // close fileUploadDialog
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-    },
+    }
     // toSetJoinTable () {
     //   this.$store.commit('dataManagement/updateShowSetTableJoin', true)
     // }
