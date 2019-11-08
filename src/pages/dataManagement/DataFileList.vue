@@ -293,14 +293,15 @@ export default {
             {
               name: this.$t('button.editColumn'),
               value: 'edit'
-            },
-            {
-              name: this.$t('button.rename'),
-              value: 'rename'
-            }, {
-              name: this.$t('button.delete'),
-              value: 'delete'
             }
+            // {
+            //   name: this.$t('button.rename'),
+            //   value: 'rename'
+            // },
+            // {
+            //   name: this.$t('button.delete'),
+            //   value: 'delete'
+            // }
           ]
         }
       ]
