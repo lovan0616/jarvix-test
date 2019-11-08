@@ -110,14 +110,14 @@ export function getDataFrameById (dataSourceId) {
 
 /**
  * get dataFrame relation by dataFrameId
- * @param {Number} dataFrameId - 欲檢查的資料表 ID
+ * @param {Number} dataSourceId - 欲檢查的資料源 ID
  */
-export function getDataFrameRelationById (dataFrameId) {
+export function getDataFrameRelationById (dataSourceId) {
   return request({
     url: `/dataFrame/relation`,
     method: 'GET',
     params: {
-      dataFrameId
+      dataSourceId
     }
   })
 }

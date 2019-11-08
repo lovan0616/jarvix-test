@@ -5,7 +5,7 @@
       <a href="javascript:void(0)" class="link"
         @click="checkDeleteRelations(relationInfo.id)"
       ><svg-icon icon-class="delete" class="delete-icon"></svg-icon>{{ $t('button.delete') }}</a>
-      <tooltip-dialog
+      <tooltip-dialog class="confirm-delete-dialog"
         v-if="deleteJoinId"
         @cancel="cancelDelete"
         @confirm="deleteRelations"
@@ -17,28 +17,28 @@
           icon="table"
           :default-msg="$t('editing.selectForeign')"
           :option-list="tableList"
-          v-model="relationInfo.left_tbl"
+          v-model="relationInfo.leftDataFrameId"
         ></custom-select>
         <custom-select
           icon="column"
           :default-msg="$t('editing.selectColumn')"
           :option-list="leftTableColumnList"
-          v-model="relationInfo.foreign_keys[0].left_column"
+          v-model="relationInfo.leftDataColumnId"
         ></custom-select>
       </div>
       <svg-icon icon-class="table-correlation" class="correlation-icon"></svg-icon>
       <div class="select-block">
         <custom-select
-          icon="column"
-          :default-msg="$t('editing.selectColumn')"
-          :option-list="rightTableColumnList"
-          v-model="relationInfo.foreign_keys[0].right_column"
-        ></custom-select>
-        <custom-select
           icon="table"
           :default-msg="$t('editing.selectForeign')"
           :option-list="tableList"
-          v-model="relationInfo.right_tbl"
+          v-model="relationInfo.rightDataFrameId"
+        ></custom-select>
+        <custom-select
+          icon="column"
+          :default-msg="$t('editing.selectColumn')"
+          :option-list="rightTableColumnList"
+          v-model="relationInfo.rightDataColumnId"
         ></custom-select>
       </div>
     </div>
@@ -48,6 +48,7 @@
 <script>
 import CustomSelect from '../CustomSelect'
 import TooltipDialog from '@/components/dialog/TooltipDialog'
+import { getDataFrameColumnInfoById } from '@/API/DataSource'
 
 export default {
   name: 'TableJoinRelationBlock',
@@ -65,7 +66,9 @@ export default {
   },
   data () {
     return {
-      deleteJoinId: null
+      deleteJoinId: null,
+      leftTableColumnList: [],
+      rightTableColumnList: []
     }
   },
   methods: {
@@ -79,28 +82,19 @@ export default {
       this.$emit('deleteRelations', this.deleteJoinId)
     }
   },
-  computed: {
-    leftTableColumnList () {
-      if (!this.relationInfo.left_tbl) return []
-      let columnObject = this.tableList.find(element => {
-        return element.id === this.relationInfo.left_tbl
-      }).columns
-      return this.objectToArray(columnObject)
-    },
-    rightTableColumnList () {
-      if (!this.relationInfo.right_tbl) return []
-      let columnObject = this.tableList.find(element => {
-        return element.id === this.relationInfo.right_tbl
-      }).columns
-      return this.objectToArray(columnObject)
-    }
-  },
   watch: {
-    'relationInfo.left_tbl' () {
-      this.relationInfo.foreign_keys[0].left_column = null
+    'relationInfo.leftDataFrameId' (value) {
+      console.log(value, 'value')
+      this.relationInfo.leftDataColumnId = null
+      getDataFrameColumnInfoById(value).then(response => {
+        this.leftTableColumnList = response
+      })
     },
-    'relationInfo.right_tbl' () {
-      this.relationInfo.foreign_keys[0].right_column = null
+    'relationInfo.rightDataFrameId' (value) {
+      this.relationInfo.rightDataColumnId = null
+      getDataFrameColumnInfoById(value).then(response => {
+        this.rightTableColumnList = response
+      })
     }
   }
 }
@@ -132,6 +126,10 @@ export default {
     .delete-icon {
       margin-right: 8px;
     }
+  }
+
+  .confirm-delete-dialog {
+    right: 0;
   }
 
   .correlation-block {

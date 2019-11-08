@@ -37,7 +37,7 @@
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import TableJoinRelatoinBlock from './TableJoinRelatoinBlock'
 import { getBookmarkStorage, buildStorage, setCSVJoin } from '@/API/Storage'
-import { getDataFrameRelationById } from '@/API/DataSource'
+import { getDataFrameRelationById, getDataFrameById } from '@/API/DataSource'
 
 export default {
   name: 'EditTableJoinRelationDialog',
@@ -52,14 +52,10 @@ export default {
       tableList: [],
       singleJoinRelations: {
         id: null,
-        left_tbl: null,
-        right_tbl: null,
-        foreign_keys: [
-          {
-            left_column: null,
-            right_column: null
-          }
-        ]
+        leftDataFrameId: null,
+        leftDataColumnId: null,
+        rightDataFrameId: null,
+        rightDataColumnId: null
       },
       singleForeignKey: {
         left_column: null,
@@ -69,28 +65,36 @@ export default {
     }
   },
   mounted () {
-    this.getStorageId()
+    this.getRelation()
+    this.getDataFrameList()
   },
   methods: {
     getRelation () {
-      getDataFrameRelationById()
-    },
-    getStorageId () {
-      let storageType = this.getStorageType(this.currentBookmarkInfo.type)
-      getBookmarkStorage(this.currentBookmarkInfo.id, storageType).then(response => {
-        this.storageId = response.storage.id
-
-        let storageConfig = response.storage.config
-        // 目前的 join 關係，將 object 轉為 Array
-        this.joinRelations = this.objectToArray(storageConfig.joins)
-        // 目前的 table 清單，將 object 轉為 Array，同時補足 select 需要的 key
-        this.tableList = Object.keys(storageConfig.tables).map(element => {
-          storageConfig.tables[element].id = element
-          storageConfig.tables[element].name = storageConfig.tables[element].tablename
-          return storageConfig.tables[element]
-        })
+      getDataFrameRelationById(this.currentDataSourceId).then(response => {
+        this.joinRelations = response
       })
     },
+    getDataFrameList () {
+      getDataFrameById(this.currentDataSourceId).then(response => {
+        this.tableList = response
+      })
+    },
+    // getStorageId () {
+    //   let storageType = this.getStorageType(this.currentBookmarkInfo.type)
+    //   getBookmarkStorage(this.currentBookmarkInfo.id, storageType).then(response => {
+    //     this.storageId = response.storage.id
+
+    //     let storageConfig = response.storage.config
+    //     // 目前的 join 關係，將 object 轉為 Array
+    //     this.joinRelations = this.objectToArray(storageConfig.joins)
+    //     // 目前的 table 清單，將 object 轉為 Array，同時補足 select 需要的 key
+    //     this.tableList = Object.keys(storageConfig.tables).map(element => {
+    //       storageConfig.tables[element].id = element
+    //       storageConfig.tables[element].name = storageConfig.tables[element].tablename
+    //       return storageConfig.tables[element]
+    //     })
+    //   })
+    // },
     closeDialog () {
       this.$emit('cancel')
     },

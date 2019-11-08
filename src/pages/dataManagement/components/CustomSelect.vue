@@ -27,7 +27,7 @@ export default {
   name: 'CustomSelect',
   props: {
     value: {
-      type: String
+      type: [String, Number]
     },
     icon: {
       type: String
