@@ -16,7 +16,9 @@
     "formNumberEmpty": "请输入数字",
     "formCharacterOverMax": "最多{max}个字元",
     "copiedToBoard": "已复制至剪贴簿",
-    "systemIsError": "系统发生错误"
+    "systemIsError": "系统发生错误",
+    "saveSuccess": "储存成功",
+    "correlationDeleteSuccess": "关联已删除"
   },
   "guiding": {
     "preStep": "上一步",
@@ -121,7 +123,7 @@
     "result": "结果",
     "relatedQuesion": "关联问题",
     "comparisonCategory": "比较类",
-    "languageSetting": "语言设定: 簡中",
+    "languageSetting": "语言设定: 简中",
     "sureLogout": "您确认要登出帐号？",
     "questionFeedback": "问题/建议回馈",
     "functionDescription": "功能说明",
@@ -384,6 +386,7 @@
     "APPWARN0004": "查无推荐问句",
     "TASKWARN0002": "此条件获取不到任何资料来进行处理",
     "TASKWARN0003": "计算结果为空",
-    "authFail": "权限失效请重新登入"
+    "authFail": "权限失效请重新登入",
+    "defaultMsg": "系统发生非预期错误"
   }
 }

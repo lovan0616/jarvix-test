@@ -16,7 +16,9 @@
     "formNumberEmpty": "請輸入數字",
     "formCharacterOverMax": "最多{max}個字元",
     "copiedToBoard": "已複製至剪貼簿",
-    "systemIsError": "系統發生錯誤"
+    "systemIsError": "系統發生錯誤",
+    "saveSuccess": "儲存成功",
+    "correlationDeleteSuccess": "關聯已刪除"
   },
   "guiding": {
     "preStep": "上一步",
@@ -384,6 +386,7 @@
     "APPWARN0004": "查無推薦問句",
     "TASKWARN0002": "此條件獲取不到任何資料來進行處理",
     "TASKWARN0003": "計算結果為空",
-    "authFail": "權限失效請重新登入"
+    "authFail": "權限失效請重新登入",
+    "defaultMsg": "系統發生非預期錯誤"
   }
 }

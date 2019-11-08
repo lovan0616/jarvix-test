@@ -26,6 +26,7 @@ import AppHeader from './AppHeader'
 import HeaderNav from './HeaderNav'
 import ChatRoomBlock from '@/components/chatBot/ChatRoom'
 import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
+import { Message } from 'element-ui'
 
 export default {
   name: 'AppLayout',
@@ -38,6 +39,10 @@ export default {
   mounted () {
     this.setDataSourceInfo()
   },
+  destroyed () {
+    window.clearInterval(this.intervalFunction)
+    this.$store.commit('dataSource/setDataSourceList', [])
+  },
   methods: {
     showChatRoom () {
       this.$store.commit('updateChatRoomStatus', true)
@@ -46,9 +51,31 @@ export default {
       this.$store.dispatch('dataSource/init')
     }
   },
+  watch: {
+    // 監聽 dataSource 清單是否有 dataSource 正在建置中
+    isDataSourceBuilding (value, oldValue) {
+      if (value) {
+        this.intervalFunction = window.setInterval(() => {
+          this.$store.dispatch('dataSource/getDataSourceList')
+        }, 5000)
+      }
+      // 建置完成
+      if (!value && oldValue) {
+        window.clearInterval(this.intervalFunction)
+        Message({
+          message: this.$t('message.builded'),
+          type: 'success',
+          duration: 3 * 1000
+        })
+      }
+    }
+  },
   computed: {
     isShowChatRoom () {
       return this.$store.state.isShowChatRoom
+    },
+    isDataSourceBuilding () {
+      return this.$store.getters['dataSource/isDataSourceBuilding']
     }
   }
 }

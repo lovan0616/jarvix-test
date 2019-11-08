@@ -6,7 +6,7 @@
         @click="checkDeleteRelations(relationInfo.id)"
       ><svg-icon icon-class="delete" class="delete-icon"></svg-icon>{{ $t('button.delete') }}</a>
       <tooltip-dialog class="confirm-delete-dialog"
-        v-if="deleteJoinId"
+        v-if="showConfirmDeleteDialog"
         @cancel="cancelDelete"
         @confirm="deleteRelations"
       ></tooltip-dialog>
@@ -14,12 +14,14 @@
     <div class="correlation-block">
       <div class="select-block">
         <custom-select
+          :key="new Date().getTime()+'-left-top'"
           icon="table"
           :default-msg="$t('editing.selectForeign')"
           :option-list="tableList"
           v-model="relationInfo.leftDataFrameId"
         ></custom-select>
         <custom-select
+          :key="new Date().getTime()+'-left-down'"
           icon="column"
           :default-msg="$t('editing.selectColumn')"
           :option-list="leftTableColumnList"
@@ -29,12 +31,14 @@
       <svg-icon icon-class="table-correlation" class="correlation-icon"></svg-icon>
       <div class="select-block">
         <custom-select
+          :key="new Date().getTime()+'-right-top'"
           icon="table"
           :default-msg="$t('editing.selectForeign')"
           :option-list="tableList"
           v-model="relationInfo.rightDataFrameId"
         ></custom-select>
         <custom-select
+          :key="new Date().getTime()+'-right-down'"
           icon="column"
           :default-msg="$t('editing.selectColumn')"
           :option-list="rightTableColumnList"
@@ -42,13 +46,20 @@
         ></custom-select>
       </div>
     </div>
-    
+    <div class="button-block footer-button-block">
+      <div class="control-button-block">
+        <button type="button" class="btn btn-default"
+          @click="saveRelations"
+        >{{ $t('button.save') }}</button>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import CustomSelect from '../CustomSelect'
 import TooltipDialog from '@/components/dialog/TooltipDialog'
-import { getDataFrameColumnInfoById } from '@/API/DataSource'
+import { getDataFrameColumnInfoById, saveDataFrameRelation, updateDataFrameRelationById } from '@/API/DataSource'
+import { Message } from 'element-ui'
 
 export default {
   name: 'TableJoinRelationBlock',
@@ -62,29 +73,62 @@ export default {
     },
     tableList: {
       type: Array
+    },
+    index: {
+      type: Number
     }
   },
   data () {
     return {
       deleteJoinId: null,
+      showConfirmDeleteDialog: false,
       leftTableColumnList: [],
       rightTableColumnList: []
     }
   },
+  mounted () {
+    if (this.relationInfo.leftDataFrameId) {
+      this.relationInfo.leftDataFrameId = parseInt(this.relationInfo.leftDataFrameId)
+      getDataFrameColumnInfoById(this.relationInfo.leftDataFrameId).then(response => {
+        this.leftTableColumnList = response
+      })
+    }
+    if (this.relationInfo.rightDataFrameId) {
+      this.relationInfo.rightDataFrameId = parseInt(this.relationInfo.rightDataFrameId)
+      getDataFrameColumnInfoById(this.relationInfo.rightDataFrameId).then(response => {
+        this.rightTableColumnList = response
+      })
+    }
+  },
   methods: {
-    checkDeleteRelations (value) {
-      this.deleteJoinId = value
+    checkDeleteRelations () {
+      this.showConfirmDeleteDialog = true
     },
     cancelDelete () {
-      this.deleteJoinId = null
+      this.showConfirmDeleteDialog = false
     },
     deleteRelations () {
-      this.$emit('deleteRelations', this.deleteJoinId)
+      this.$emit('deleteRelations', this.index)
+    },
+    saveRelations () {
+      let promise
+      if (this.relationInfo.id) {
+        promise = updateDataFrameRelationById(this.relationInfo.id, this.relationInfo)
+      } else {
+        promise = saveDataFrameRelation(this.relationInfo)
+      }
+
+      promise.then(() => {
+        Message({
+          message: this.$t('message.saveSuccess'),
+          type: 'success',
+          duration: 3 * 1000
+        })
+      })
     }
   },
   watch: {
     'relationInfo.leftDataFrameId' (value) {
-      console.log(value, 'value')
       this.relationInfo.leftDataColumnId = null
       getDataFrameColumnInfoById(value).then(response => {
         this.leftTableColumnList = response
@@ -136,6 +180,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 16px;
 
     .correlation-icon {
       width: 60px;
@@ -160,6 +205,21 @@ export default {
 
     .join-icon {
       font-size: 24px;
+    }
+  }
+
+  .button-block {
+    display: flex;
+    justify-content: space-between;
+
+    &.footer-button-block {
+      justify-content: flex-end;
+    }
+
+    .control-button-block {
+      .btn:not(:last-child) {
+        margin-right: 16px;
+      }
     }
   }
 }

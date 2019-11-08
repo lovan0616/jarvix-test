@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import router from '../router'
+import store from '../store'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
 
@@ -19,7 +20,11 @@ const service = axios.create({
         return localStorage.getItem('token')
       }
     },
-    'Accept-Language': localStorage.getItem('locale')
+    'Accept-Language': {
+      toString () {
+        return localStorage.getItem('locale')
+      }
+    }
   }
 })
 
@@ -34,13 +39,8 @@ service.interceptors.response.use(
       Vue.rollbar.error(JSON.stringify(res))
     }
 
-    // 這些也不用顯示message
-    // if (res.error.code === 'APPERR0001' || res.error.code === 'SYERR0001' || res.error.code === 'SYWARN0001' || res.error.code.indexOf('TASKWARN') > -1
-    // ) return Promise.reject(res)
-
-    // 如果 mapping 不到錯誤訊息，就顯示制式文字
     Message({
-      message: res.error.message,
+      message: res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg'),
       type: res.error.type,
       duration: 3 * 1000
     })
@@ -49,6 +49,7 @@ service.interceptors.response.use(
   },
   error => {
     if (error.response.status === 401) {
+      store.commit('dataSource/setIsInit', false)
       router.push('/login')
 
       Message({

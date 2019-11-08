@@ -9,7 +9,6 @@
 </template>
 
 <script>
-import { Message } from 'element-ui'
 import Spinner from '@/components/Spinner'
 
 export default {
@@ -45,31 +44,11 @@ export default {
     locale (value) {
       // 更新 i18n
       this.$i18n.locale = value
-    },
-    // 監聽 dataSource 清單是否有 dataSource 正在建置中
-    isDataSourceBuilding (value, oldValue) {
-      if (value) {
-        this.intervalFunction = window.setInterval(() => {
-          this.$store.dispatch('dataSource/getDataSourceList')
-        }, 5000)
-      }
-      // 建置完成
-      if (!value && oldValue) {
-        window.clearInterval(this.intervalFunction)
-        Message({
-          message: this.$t('message.builded'),
-          type: 'success',
-          duration: 3 * 1000
-        })
-      }
     }
   },
   computed: {
     locale () {
       return this.$store.state.setting.locale
-    },
-    isDataSourceBuilding () {
-      return this.$store.getters['dataSource/isDataSourceBuilding']
     }
   }
 }

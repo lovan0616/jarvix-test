@@ -93,8 +93,6 @@ import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
-import { createBookmarkStorage, renameCSV } from '@/API/Bookmark'
-import { deleteCSV, buildStorage } from '@/API/Storage'
 import { getDataFrameById, checkDataSourceStatusById } from '@/API/DataSource'
 
 export default {
@@ -224,16 +222,16 @@ export default {
       this.showConfirmDeleteDialog = false
     },
     renameCSV ({resolve, name}) {
-      renameCSV(this.currentDataSourceId, this.renameDataSource.id, name)
-        .then(() => {
-          this.fetchData()
-            .then(() => {
-              this.cancelRename()
-              resolve()
-            })
-        }).catch(() => {
-          this.cancelRename()
-        })
+      // renameCSV(this.currentDataSourceId, this.renameDataSource.id, name)
+      //   .then(() => {
+      //     this.fetchData()
+      //       .then(() => {
+      //         this.cancelRename()
+      //         resolve()
+      //       })
+      //   }).catch(() => {
+      //     this.cancelRename()
+      //   })
     },
     cancelRename () {
       this.renameDataSource = null
@@ -249,11 +247,8 @@ export default {
       this.toggleJoinTableDialog()
     },
     editTableColumn (dataInfo) {
-
       // 利用 id 去 tableList 裡面找對應的 table 資訊
       this.currentEditDataFrameInfo = dataInfo
-
-      
       this.toggleEditColumnDialog()
     },
     closeEditColumnDialog () {
@@ -298,14 +293,15 @@ export default {
             {
               name: this.$t('button.editColumn'),
               value: 'edit'
-            },
-            {
-              name: this.$t('button.rename'),
-              value: 'rename'
-            }, {
-              name: this.$t('button.delete'),
-              value: 'delete'
             }
+            // {
+            //   name: this.$t('button.rename'),
+            //   value: 'rename'
+            // },
+            // {
+            //   name: this.$t('button.delete'),
+            //   value: 'delete'
+            // }
           ]
         }
       ]
@@ -330,12 +326,6 @@ export default {
   .divider {
     margin: 0 8px;
     color: #979797;
-  }
-
-  .button-block {
-    .btn-default {
-      margin-right: 16px;
-    }
   }
 
   .status-block {

@@ -1,7 +1,11 @@
 <template>
   <div class="edit-table-join-relation-dialog full-page-dialog">
     <div class="dialog-container">
-      <div class="dialog-title">{{ $t('editing.foreignTable') }}</div>
+      <div class="dialog-title">{{ $t('editing.foreignTable') }}
+        <a href="javascript:void(0)" class="close-btn"
+          @click="closeDialog"
+         ><svg-icon icon-class="close"></svg-icon></a>
+      </div>
       <div class="button-block">
         <button type="button" class="btn btn-secondary btn-has-icon"
           @click="addNewRelations"
@@ -14,30 +18,22 @@
       ></empty-info-block>
       <table-join-relatoin-block
         v-else
-        v-for="relation in joinRelations"
+        v-for="(relation, index) in joinRelations"
         :key="relation.id"
+        :index="index"
         :relation-info="relation"
         :table-list="tableList"
         @deleteRelations="deleteRelations"
       ></table-join-relatoin-block>
-      <div class="button-block footer-button-block">
-        <div class="control-button-block">
-          <button type="button" class="btn btn-outline"
-            @click="closeDialog"
-          >{{ $t('button.cancel') }}</button>
-          <button type="button" class="btn btn-default"
-            @click="saveRelations"
-          >{{ $t('button.save') }}</button>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 <script>
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import TableJoinRelatoinBlock from './TableJoinRelatoinBlock'
-import { getBookmarkStorage, buildStorage, setCSVJoin } from '@/API/Storage'
-import { getDataFrameRelationById, getDataFrameById } from '@/API/DataSource'
+// import { buildStorage, setCSVJoin } from '@/API/Storage'
+import { getDataFrameRelationById, getDataFrameById, deleteDataFrameRelationById } from '@/API/DataSource'
+import { Message } from 'element-ui'
 
 export default {
   name: 'EditTableJoinRelationDialog',
@@ -51,6 +47,7 @@ export default {
       joinRelations: [],
       tableList: [],
       singleJoinRelations: {
+        isNew: true,
         id: null,
         leftDataFrameId: null,
         leftDataColumnId: null,
@@ -101,23 +98,23 @@ export default {
     // 新增關聯性
     addNewRelations () {
       let newRelations = JSON.parse(JSON.stringify(this.singleJoinRelations))
-      newRelations.id = new Date().getTime()
+      // newRelations.id = new Date().getTime()
       this.joinRelations.push(newRelations)
     },
-    deleteRelations (id) {
-      this.joinRelations = this.joinRelations.filter(element => element.id !== id)
-    },
-    saveRelations () {
-      let joinInfo = this.joinRelations.reduce((accumulator, currentValue) => {
-        accumulator[currentValue.id] = currentValue
-        return accumulator
-      }, {})
+    deleteRelations (index) {
+      if (this.joinRelations[index].isNew) {
+        this.joinRelations.splice(index, 1)
+      } else {
+        deleteDataFrameRelationById(this.joinRelations[index].id).then(() => {
+          this.getRelation()
 
-      setCSVJoin(this.storageId, joinInfo).then(() => {
-        buildStorage(this.storageId, this.currentBookmarkInfo.id, false).then(() => {
-          this.$router.push('/data-management')
+          Message({
+            message: this.$t('message.correlationDeleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
         })
-      })
+      }
     }
   },
   computed: {
@@ -129,20 +126,20 @@ export default {
 </script>
 <style lang="scss" scoped>
 .edit-table-join-relation-dialog {
+  .dialog-title {
+    position: relative;
+  }
+  .close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #fff;
+    font-size: 14px;
+  }
   .button-block {
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
-
-    &.footer-button-block {
-      justify-content: flex-end;
-    }
-
-    .control-button-block {
-      .btn:not(:last-child) {
-        margin-right: 16px;
-      }
-    }
   }
 
   .empty-info-block {
