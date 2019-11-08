@@ -37,7 +37,8 @@
                   v-model="tempRowInfo.alias"
                 >
               </div>
-              <div class="data-table-cell tag">
+              <div class="data-table-cell tag">{{ column.statsType }}</div>
+              <!-- <div class="data-table-cell tag">
                 <span
                   v-if="tempRowInfo.dataColumnId !== column.id"
                 >{{ column.statsType }}</span>
@@ -46,7 +47,7 @@
                   v-model="tempRowInfo.columnStatsType"
                   :option-list="typeOptionList(column.statsTypeOptionList)"
                 ></default-select>
-              </div>
+              </div> -->
               <div class="data-table-cell action">
                 <a class="link action-link" href="javascript:void(0)"
                   v-if="tempRowInfo.dataColumnId !== column.id"
@@ -116,13 +117,6 @@ export default {
       getDataFrameColumnInfoById(this.tableId).then(response => {
         this.columnList = response
       })
-    },
-    getStorageId () {
-      // 先去取得 stoarge id
-      return getBookmarkStorage(parseInt(this.$route.params.id), this.currentBookmarkInfo.type)
-        .then(res => {
-          this.storageId = res.storage.id
-        })
     },
     // 依據 type 決定選單選項
     typeOptionList (optionList) {

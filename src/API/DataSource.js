@@ -109,20 +109,6 @@ export function getDataFrameById (dataSourceId) {
 }
 
 /**
- * get dataFrame relation by dataFrameId
- * @param {Number} dataSourceId - 欲檢查的資料源 ID
- */
-export function getDataFrameRelationById (dataSourceId) {
-  return request({
-    url: `/dataFrame/relation`,
-    method: 'GET',
-    params: {
-      dataSourceId
-    }
-  })
-}
-
-/**
  * get data column by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
@@ -145,5 +131,62 @@ export function updateDataFrameAlias (userEditedInput) {
     url: `/datasources/userEdited`,
     method: 'POST',
     data: userEditedInput
+  })
+}
+
+/**
+ * get dataFrame relation by dataFrameId
+ * @param {Number} dataSourceId - 欲檢查的資料源 ID
+ */
+export function getDataFrameRelationById (dataSourceId) {
+  return request({
+    url: `/dataFrame/relation`,
+    method: 'GET',
+    params: {
+      dataSourceId
+    }
+  })
+}
+
+/**
+ * save dataFrame relation
+ * @param {Object} inputData
+ * @param {Number} inputData.leftDataColumnId - 左邊 columnID
+ * @param {Number} inputData.rightDataColumnId - 左邊 columnID
+ */
+export function saveDataFrameRelation (inputData) {
+  return request({
+    url: `/dataFrame/relation`,
+    method: 'POST',
+    data: inputData
+  })
+}
+
+/**
+ * update dataFrame relation
+ * @param {Number} relationId
+ * @param {Object} inputData - 送給後端的資料物件
+ * @param {Number} inputData.leftDataColumnId - 左邊 columnID
+ * @param {Number} inputData.rightDataColumnId - 左邊 columnID
+ */
+export function updateDataFrameRelationById (relationId, inputData) {
+  return request({
+    url: `/dataFrame/relation/{relationId}`,
+    method: 'PUT',
+    data: inputData
+  })
+}
+
+/**
+ * delete dataFrame relation
+ * @param {Number} relationId
+ * @param {Object} inputData
+ * @param {Number} inputData.leftDataColumnId - 左邊 columnID
+ * @param {Number} inputData.rightDataColumnId - 左邊 columnID
+ */
+export function deleteDataFrameRelationById (relationId) {
+  return request({
+    url: `/dataFrame/relation/{relationId}`,
+    method: 'DELETE'
   })
 }

@@ -34,9 +34,9 @@
         <button class="btn btn-outline"
           @click="buildBookmark"
         >{{ $t('button.finish') }}</button>
-        <button class="btn btn-default"
+        <!-- <button class="btn btn-default"
           @click="toSetJoinTable"
-        >{{ $t('button.toForeignTable') }}</button>
+        >{{ $t('button.toForeignTable') }}</button> -->
       </div>
     </div>
   </div>
@@ -66,9 +66,9 @@ export default {
       // close fileUploadDialog
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
-    toSetJoinTable () {
-      this.$store.commit('dataManagement/updateShowSetTableJoin', true)
-    }
+    // toSetJoinTable () {
+    //   this.$store.commit('dataManagement/updateShowSetTableJoin', true)
+    // }
   },
   computed: {
     ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),

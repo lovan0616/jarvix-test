@@ -73,12 +73,12 @@ export default {
       selectedLanguage: this.language,
       settingData: [
         {icon: 'database', title: 'nav.dataManagement', path: '/data-management'},
-        {icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'},
+        {icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'}
         // {icon: 'feedback', title: 'editing.questionFeedback'},
-        {icon: 'description', title: 'editing.functionDescription'}
+        // {icon: 'description', title: 'editing.functionDescription'}
       ],
       accountData: [
-        {icon: 'changePassword', title: 'editing.changePassword'},
+        // {icon: 'changePassword', title: 'editing.changePassword'},
         {icon: 'userManage', title: 'editing.userManage', path: '/user-management'},
         {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
       ]
