@@ -37,8 +37,8 @@
                   v-model="tempRowInfo.alias"
                 >
               </div>
-              <div class="data-table-cell tag">{{ column.statsType }}</div>
-              <!-- <div class="data-table-cell tag">
+              <!-- <div class="data-table-cell tag">{{ column.statsType }}</div> -->
+              <div class="data-table-cell tag">
                 <span
                   v-if="tempRowInfo.dataColumnId !== column.id"
                 >{{ column.statsType }}</span>
@@ -47,7 +47,7 @@
                   v-model="tempRowInfo.columnStatsType"
                   :option-list="typeOptionList(column.statsTypeOptionList)"
                 ></default-select>
-              </div> -->
+              </div>
               <div class="data-table-cell action">
                 <a class="link action-link" href="javascript:void(0)"
                   v-if="tempRowInfo.dataColumnId !== column.id"

@@ -268,7 +268,7 @@ export default {
       return [
         {
           text: this.$t('editing.tableName'),
-          value: 'name',
+          value: 'primaryAlias',
           sort: true
         },
         {

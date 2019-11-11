@@ -3,7 +3,10 @@
     @click="linkToResult"
   >
     <div class="board-top-section">
-      <div class="board-title"><span class="question-mark">Q</span>{{ questionInfo.question }}</div>
+      <div class="board-title">
+        <span class="question-mark">Q</span>
+        <span class="question-name">{{ questionInfo.question }}</span>
+      </div>
       <div class="board-chart-block" v-if="questionInfo.template">
         <component
           v-if="questionInfo.template"
@@ -75,6 +78,10 @@ export default {
       text-align: center;
       line-height: 30px;
       font-weight: bold;
+    }
+
+    .question-name {
+      flex: 1;
     }
   }
   .board-chart-block {
