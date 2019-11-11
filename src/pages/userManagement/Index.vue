@@ -161,6 +161,10 @@ export default {
   },
   methods: {
     showCreateUser () {
+      for (let index in this.userInfo) {
+        this.userInfo[index] = ''
+      }
+      this.verifyPassword = ''
       this.isShowCreateUser = true
     },
     closeCreateUser () {
@@ -248,6 +252,8 @@ export default {
         })
     },
     showPassword (id) {
+      this.currentUser.password = ''
+      this.currentUser.verifyPassword = ''
       this.currentId = id
       this.isShowPassword = true
     },
