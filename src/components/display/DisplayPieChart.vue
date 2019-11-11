@@ -1,11 +1,27 @@
 <template>
   <div class="display-basic-chart">
+    <div class="button-block">
+      <button class="btn-m btn-default"
+        v-show="!isShowData"
+        @click="showData"
+      >{{ $t('resultDescription.displayData') }}</button>
+      <button class="btn-m btn-default"
+        v-show="isShowData"
+        @click="showChart"
+      >{{ $t('resultDescription.displayChart') }}</button>
+    </div>
     <v-echart
+      v-show="!isShowData"
       :style="chartStyle"
       :options="options"
       auto-resize
     >
     </v-echart>
+    <sy-table
+      v-show="isShowData"
+      :dataset="dataForTable"
+      :index-width="250"
+    ></sy-table>
   </div>
 </template>
 
@@ -33,7 +49,9 @@ export default {
     height: {type: String, default: '380px'}
   },
   data () {
-    return {}
+    return {
+      isShowData: false
+    }
   },
   computed: {
     _dataset () {
@@ -49,6 +67,18 @@ export default {
       }
 
       return result
+    },
+    dataForTable () {
+      let dataSet = JSON.parse(JSON.stringify(this._dataset))
+      dataSet.columns.push('percentage(%)')
+      let valueSum = dataSet.data.reduce((acc, cur) => {
+        return acc + cur[0]
+      }, 0)
+
+      dataSet.data.map(element => {
+        return element.push((element[0] * 100 / valueSum).toFixed(2))
+      })
+      return dataSet
     },
     chartStyle () {
       return {
@@ -125,7 +155,22 @@ export default {
         result.push(rowData)
       })
       return result
+    },
+    showData () {
+      this.isShowData = true
+    },
+    showChart () {
+      this.isShowData = false
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.display-basic-chart {
+  .button-block {
+    position: absolute;
+    right: 0;
+    top: -36px;
+  }
+}
+</style>

@@ -6,7 +6,7 @@
     >
       <el-table-column
         type="index"
-        width="80"
+        :width="indexWidth"
         :index="getTableIndex"
       >
       </el-table-column>
@@ -49,7 +49,11 @@ export default {
       },
       default: () => []
     },
-    autoMerge: { type: Boolean, default: false }
+    autoMerge: { type: Boolean, default: false },
+    indexWidth: {
+      type: Number,
+      default: 80
+    }
   },
   data () {
     return {
