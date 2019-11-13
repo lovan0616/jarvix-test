@@ -51,6 +51,11 @@ export default new Router({
           path: 'user-management',
           name: 'UserManagement',
           component: () => import('@/pages/userManagement/Index')
+        },
+        {
+          path: 'function-description',
+          name: 'FunctionDescription',
+          component: () => import('@/pages/functionDescription/Index')
         }
       ]
     },
