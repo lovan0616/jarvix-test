@@ -161,13 +161,13 @@ export default {
   },
   methods: {
     showCreateUser () {
+      this.isShowCreateUser = true
+    },
+    closeCreateUser () {
       for (let index in this.userInfo) {
         this.userInfo[index] = ''
       }
       this.verifyPassword = ''
-      this.isShowCreateUser = true
-    },
-    closeCreateUser () {
       this.isShowCreateUser = false
     },
     createSingleUser () {
@@ -252,12 +252,12 @@ export default {
         })
     },
     showPassword (id) {
-      this.currentUser.password = ''
-      this.currentUser.verifyPassword = ''
       this.currentId = id
       this.isShowPassword = true
     },
     closePassword () {
+      this.currentUser.password = ''
+      this.currentUser.verifyPassword = ''
       this.isShowPassword = false
     },
     showEditName (user) {
