@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueEvents from 'vue-events'
-import VeeValidate from 'vee-validate'
+import VeeValidate, { Validator } from 'vee-validate'
 import store from './store'
 import '@/utils/filters'
 import '@/utils/mixins'
@@ -137,6 +137,11 @@ Vue.component(RootCauseItem.name, RootCauseItem)
 Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(QuickStart.name, QuickStart)
 
+/** Custom Rule */
+Validator.extend('requireOneNumeric', function (value) {
+  return /.*[0-9].*/i.test(value)
+})
+
 Vue.use(VeeValidate, {
   // 避免自動 inject 到所有 component
   inject: false,
@@ -157,6 +162,12 @@ Vue.use(VeeValidate, {
         },
         max (field, length) {
           return i18n.t('message.formCharacterOverMax', { max: length }, 'zh-TW')
+        },
+        min (field, length) {
+          return i18n.t('message.formCharacterOverMin', { min: length }, 'zh-TW')
+        },
+        requireOneNumeric (field) {
+          return i18n.t('message.formNumericeOverOne', 'zh-TW')
         }
       }
     },
@@ -173,6 +184,12 @@ Vue.use(VeeValidate, {
         },
         max (field, length) {
           return i18n.t('message.formCharacterOverMax', { max: length }, 'zh-CN')
+        },
+        min (field, length) {
+          return i18n.t('message.formCharacterOverMin', { min: length }, 'zh-CN')
+        },
+        requireOneNumeric (field) {
+          return i18n.t('message.formNumericeOverOne', 'zh-CN')
         }
       }
     }

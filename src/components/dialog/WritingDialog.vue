@@ -47,6 +47,16 @@ export default {
     padding-top: 24px;
 }
 
+.dialog-input-box-check {
+    position: relative;
+
+    .dialog-error {
+        position: absolute;
+        bottom: 12px;
+        text-align: left;
+    }
+}
+
 .dialog-select-input {
     width: 100%;
     height: 40px;
