@@ -7,19 +7,19 @@
           @click="showBasic"
           :class="['function-table-head-cell', { 'head-active': tabBtn.basicBtn === true }]"
         >
-          {{ $t('editing.basicIntroduce') }}
+          {{ $t('description.basicIntroduce') }}
         </div>
         <div
           @click="showQuestion"
           :class="['function-table-head-cell', { 'head-active': tabBtn.questionBtn === true }]"
         >
-          {{ $t('editing.questionAnalyzeUse') }}
+          {{ $t('description.questionAnalyzeUse') }}
         </div>
         <div
           @click="showPinboard"
           :class="['function-table-head-cell', { 'head-active': tabBtn.pinboardBtn === true }]"
         >
-          {{ $t('editing.questionAnalyzeUse') }}
+          {{ $t('description.questionAnalyzeUse') }}
         </div>
         <div
           @click="showData"
@@ -35,7 +35,7 @@
           @click="toggleInterface"
           class="function-content-title"
         >
-          <div>{{ $t('editing.interfaceDescription') }}</div>
+          <div>{{ $t('description.interfaceDescription') }}</div>
           <svg-icon
             :class="['content-icon', { 'rotate': basicContent.isShowInterface === true }]"
             icon-class="dropdown"
@@ -45,7 +45,7 @@
         <transition name="fade" mode="out-in">
           <div class="single-description" v-if="basicContent.isShowInterface">
             <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/basic-interface.png" :alt="$t('editing.interfaceDescription')">
+              <img class="description-image" src="@/assets/images/functionDescription/basic-interface.png" :alt="$t('description.interfaceDescription')">
               <div class="description-square first-interface-square"></div>
               <div class="description-text-box first-interface-box">
                 <div class="description-space">Chatroom</div>
@@ -54,7 +54,7 @@
                 <div class="description-round-full"></div>
               </div>
               <div class="description-text-box second-interface-box">
-                <div class="description-space">{{ $t('editing.hide') }}Chatroom</div>
+                <div class="description-space">{{ $t('description.hide') }}Chatroom</div>
                 <div class="description-round-empty"></div>
                 <div class="description-line second-interface-line"></div>
                 <div class="description-round-full"></div>
@@ -64,14 +64,14 @@
                 <div class="description-round-full"></div>
                 <div class="description-line third-interface-line"></div>
                 <div class="description-round-empty description-space"></div>
-                <div>{{ $t('editing.guidingRow') }}</div>
+                <div>{{ $t('description.guidingRow') }}</div>
               </div>
               <div class="description-square fouth-interface-square"></div>
               <div class="description-text-box fouth-interface-box">
                 <div class="description-round-full"></div>
                 <div class="description-line fouth-interface-line"></div>
                 <div class="description-round-empty description-space"></div>
-                <div>{{ $t('editing.mainLayout') }}</div>
+                <div>{{ $t('description.mainLayout') }}</div>
               </div>
             </div>
           </div>
@@ -80,7 +80,7 @@
           @click="toggleGuiding"
           class="function-content-title"
         >
-          <div>{{ $t('editing.guidingRowIntroduce') }}</div>
+          <div>{{ $t('description.guidingRowIntroduce') }}</div>
           <svg-icon
             :class="['content-icon', { 'rotate': basicContent.isShowGuiding === true }]"
             icon-class="dropdown"
@@ -90,23 +90,23 @@
         <transition name="fade" mode="out-in">
           <div class="single-description" v-if="basicContent.isShowGuiding">
             <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/basic-setting.png" :alt="$t('editing.settingFunctionMenu')">
+              <img class="description-image" src="@/assets/images/functionDescription/basic-setting.png" :alt="$t('description.settingFunctionMenu')">
               <div class="description-square first-menu-square"></div>
               <div class="description-text-box first-menu-box">
                 <div class="description-round-full"></div>
                 <div class="description-line first-menu-line"></div>
                 <div class="description-round-empty description-space"></div>
-                <div>{{ $t('editing.settingFunctionMenu') }}</div>
+                <div>{{ $t('description.settingFunctionMenu') }}</div>
               </div>
             </div>
             <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/basic-account.png" :alt="$t('editing.accountFunctionMenu')">
+              <img class="description-image" src="@/assets/images/functionDescription/basic-account.png" :alt="$t('description.accountFunctionMenu')">
               <div class="description-square second-menu-square"></div>
               <div class="description-text-box second-menu-box">
                 <div class="description-round-full"></div>
                 <div class="description-line second-menu-line"></div>
                 <div class="description-round-empty description-space"></div>
-                <div>{{ $t('editing.accountFunctionMenu') }}</div>
+                <div>{{ $t('description.accountFunctionMenu') }}</div>
               </div>
             </div>
           </div>
@@ -115,7 +115,7 @@
           @click="toggleIndexPageFunction"
           class="function-content-title"
         >
-          <div>{{ $t('editing.indexPageFunctionIntroduce') }}</div>
+          <div>{{ $t('description.indexPageFunctionIntroduce') }}</div>
           <svg-icon
             :class="['content-icon', { 'rotate': basicContent.isShowIndexPageFunction === true }]"
             icon-class="dropdown"
@@ -125,20 +125,20 @@
         <transition name="fade" mode="out-in">
           <div class="single-description" v-if="basicContent.isShowIndexPageFunction">
             <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/basic-interface.png" :alt="$t('editing.checkoutDataSheetDetail')">
+              <img class="description-image" src="@/assets/images/functionDescription/basic-interface.png" :alt="$t('description.checkoutDataSheetDetail')">
               <div class="description-square first-index-square"></div>
               <div class="description-text-box first-index-box">
                 <div class="description-round-full"></div>
                 <div class="description-line first-index-line"></div>
                 <div class="description-round-empty description-space"></div>
-                <div class="description-text">{{ $t('editing.checkoutDataSheetDetail') }}</div>
+                <div class="description-text">{{ $t('description.checkoutDataSheetDetail') }}</div>
               </div>
               <div class="description-square second-index-square"></div>
               <div class="description-text-box second-index-box">
                 <div class="description-round-full"></div>
                 <div class="description-line second-index-line"></div>
                 <div class="description-round-empty description-space"></div>
-                <div class="description-text">{{ $t('editing.systemLogQuestion') }}</div>
+                <div class="description-text">{{ $t('description.systemLogQuestion') }}</div>
               </div>
             </div>
           </div>
@@ -154,7 +154,7 @@
           @click="toggleAddData"
           class="function-content-title"
         >
-          <div>{{ $t('editing.howAddData') }}？</div>
+          <div>{{ $t('description.howAddData') }}？</div>
           <svg-icon
             :class="['content-icon', { 'rotate': dataContent.isShowAddData === true }]"
             icon-class="dropdown"
@@ -164,13 +164,13 @@
         <transition name="fade" mode="out-in">
           <div class="single-description" v-if="dataContent.isShowAddData">
             <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/basic-setting.png" :alt="$t('editing.enterDataManage')">
+              <img class="description-image" src="@/assets/images/functionDescription/basic-setting.png" :alt="$t('description.enterDataManage')">
               <div class="description-square first-data-square"></div>
               <div class="description-text-box first-data-box">
                 <div class="description-round-full"></div>
                 <div class="description-line first-data-line"></div>
                 <div class="description-round-empty description-space"></div>
-                <div class="description-space">Step1:<br>{{ $t('editing.enterDataManage') }}</div>
+                <div class="description-space">Step1:<br>{{ $t('description.enterDataManage') }}</div>
               </div>
             </div>
             <div class="description-image-box">
@@ -189,7 +189,7 @@
           @click="toggleAddSheet"
           class="function-content-title"
         >
-          <div>{{ $t('editing.enterDataManage') }}？</div>
+          <div>{{ $t('description.enterDataManage') }}？</div>
           <svg-icon
             :class="['content-icon', { 'rotate': dataContent.isShowAddSheet === true }]"
             icon-class="dropdown"
@@ -199,10 +199,10 @@
         <transition name="fade" mode="out-in">
           <div class="single-description" v-if="dataContent.isShowAddSheet">
             <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-table-select.png" :alt="$t('editing.pickupData')">
+              <img class="description-image" src="@/assets/images/functionDescription/data-table-select.png" :alt="$t('description.pickupData')">
               <div class="description-square first-sheet-square"></div>
               <div class="description-text-box first-sheet-box">
-                <div class="description-space description-text-right">Step1:<br>{{ $t('editing.pickupData') }}</div>
+                <div class="description-space description-text-right">Step1:<br>{{ $t('description.pickupData') }}</div>
                 <div class="description-round-empty"></div>
                 <div class="description-line first-sheet-line"></div>
                 <div class="description-round-full"></div>
@@ -224,7 +224,7 @@
           @click="toggleEditData"
           class="function-content-title"
         >
-          <div>{{ $t('editing.howEditDataSheet') }}？</div>
+          <div>{{ $t('description.howEditDataSheet') }}？</div>
           <svg-icon
             :class="['content-icon', { 'rotate': dataContent.isShowEditData === true }]"
             icon-class="dropdown"
@@ -234,30 +234,30 @@
         <transition name="fade" mode="out-in">
           <div class="single-description" v-if="dataContent.isShowEditData">
             <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-table.png" :alt="$t('editing.clickEditColumn')">
+              <img class="description-image" src="@/assets/images/functionDescription/data-table.png" :alt="$t('description.clickEditColumn')">
               <div class="description-square first-data-edit-square"></div>
               <div class="description-text-box first-data-edit-box">
                 <div class="description-round-full"></div>
                 <div class="description-line first-data-edit-line"></div>
                 <div class="description-round-empty description-space"></div>
-                <div>Step1:<br>{{ $t('editing.clickEditColumn') }}</div>
+                <div>Step1:<br>{{ $t('description.clickEditColumn') }}</div>
               </div>
             </div>
             <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-table.png" :alt="$t('editing.clickEditColumn')">
+              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-table.png" :alt="$t('description.clickEditColumn')">
               <div class="description-square second-data-edit-square"></div>
               <div class="description-text-box second-data-edit-box">
                 <div class="description-round-full"></div>
                 <div class="description-line second-data-edit-line"></div>
                 <div class="description-round-empty description-space"></div>
-                <div>Step2:<br>{{ $t('editing.clickEditColumn') }}</div>
+                <div>Step2:<br>{{ $t('description.clickEditColumn') }}</div>
               </div>
             </div>
             <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-table-edit.png" :alt="$t('editing.editAlias')">
+              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-table-edit.png" :alt="$t('description.editAlias')">
               <div class="description-square third-data-edit-square"></div>
               <div class="description-text-box third-data-edit-box">
-                <div class="description-space description-text-right">Step3:<br>{{ $t('editing.editAlias') }}</div>
+                <div class="description-space description-text-right">Step3:<br>{{ $t('description.editAlias') }}</div>
                 <div class="description-round-empty"></div>
                 <div class="description-line third-data-edit-line"></div>
                 <div class="description-round-full"></div>
@@ -267,17 +267,17 @@
                 <div class="description-round-full"></div>
                 <div class="description-line forth-data-edit-line"></div>
                 <div   class="description-round-empty description-space"></div>
-                <div>Step3:<br>{{ $t('editing.confirmEdit') }}</div>
+                <div>Step3:<br>{{ $t('description.confirmEdit') }}</div>
               </div>
             </div>
             <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-build.png" :alt="$t('editing.completeBuild')">
+              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-build.png" :alt="$t('description.completeBuild')">
               <div class="description-square fifth-data-edit-square"></div>
               <div class="description-text-box fifth-data-edit-box">
                 <div class="description-round-full"></div>
                 <div class="description-line fifth-data-edit-line"></div>
                 <div class="description-round-empty description-space"></div>
-                <div class="description-space">Step4:<br>{{ $t('editing.completeBuild') }}</div>
+                <div class="description-space">Step4:<br>{{ $t('description.completeBuild') }}</div>
               </div>
             </div>
           </div>
@@ -286,7 +286,7 @@
           @click="toggleConnectData"
           class="function-content-title"
         >
-          <div>{{ $t('editing.howConnectDataSheet') }}？</div>
+          <div>{{ $t('description.howConnectDataSheet') }}？</div>
           <svg-icon
             :class="['content-icon', { 'rotate': dataContent.isShowConnectData === true }]"
             icon-class="dropdown"
@@ -296,43 +296,43 @@
         <transition name="fade" mode="out-in">
           <div class="single-description" v-if="dataContent.isShowConnectData">
             <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-table.png" :alt="$t('editing.clickDataSheetConnect')">
+              <img class="description-image" src="@/assets/images/functionDescription/data-table.png" :alt="$t('description.clickDataSheetConnect')">
               <div class="description-square first-data-connect-square"></div>
               <div class="description-text-box first-data-connect-box">
                 <div class="description-round-full"></div>
                 <div class="description-line first-data-connect-line"></div>
                 <div class="description-round-empty description-space"></div>
-                <div>Step1:<br>{{ $t('editing.clickDataSheetConnect') }}</div>
+                <div>Step1:<br>{{ $t('description.clickDataSheetConnect') }}</div>
               </div>
             </div>
             <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect.png" :alt="$t('editing.addDataSheetConnect')">
+              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect.png" :alt="$t('description.addDataSheetConnect')">
               <div class="description-square second-data-connect-square"></div>
               <div class="description-text-box second-data-connect-box">
-                <div class="description-space description-text-right">Step2:<br>{{ $t('editing.addDataSheetConnect') }}</div>
+                <div class="description-space description-text-right">Step2:<br>{{ $t('description.addDataSheetConnect') }}</div>
                 <div class="description-round-empty"></div>
                 <div class="description-line second-data-connect-line"></div>
                 <div class="description-round-full"></div>
               </div>
             </div>
             <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect-column.png" :alt="$t('editing.andConnectColumn')">
+              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect-column.png" :alt="$t('description.andConnectColumn')">
               <div class="description-square third-data-connect-square"></div>
               <div class="description-text-box third-data-connect-box">
-                <div class="description-space description-text-right">Step3:<br>{{ $t('editing.slectDataSheet') }}<br>{{ $t('editing.andConnectColumn') }}</div>
+                <div class="description-space description-text-right">Step3:<br>{{ $t('description.slectDataSheet') }}<br>{{ $t('description.andConnectColumn') }}</div>
                 <div class="description-round-empty"></div>
                 <div class="description-line third-data-connect-line"></div>
                 <div class="description-round-full"></div>
               </div>
             </div>
             <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect-store.png" :alt="$t('editing.storeSetting')">
+              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect-store.png" :alt="$t('description.storeSetting')">
               <div class="description-square fourth-data-connect-square"></div>
               <div class="description-text-box fourth-data-connect-box">
                 <div class="description-round-full"></div>
                 <div class="description-line fourth-data-connect-line"></div>
                 <div class="description-round-empty description-space"></div>
-                <div>Step4:<br>{{ $t('editing.storeSetting') }}</div>
+                <div>Step4:<br>{{ $t('description.storeSetting') }}</div>
               </div>
             </div>
           </div>

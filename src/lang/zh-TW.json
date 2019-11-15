@@ -146,7 +146,9 @@
     "allCategory": "所有分類",
     "inputCategoryName": "請輸入分類名稱",
     "editingName": "編輯名稱",
-    "pinboardNum": "釘板數量",
+    "pinboardNum": "釘板數量"
+  },
+  "description": {
     "basicIntroduce": "基本介紹",
     "questionAnalyzeUse": "問題分析操作",
     "personalPinboard": "個人釘板使用",

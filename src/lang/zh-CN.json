@@ -146,7 +146,9 @@
     "allCategory": "所有分类",
     "inputCategoryName": "请输入分类名称",
     "editingName": "编辑名称",
-    "pinboardNum": "钉板数量",
+    "pinboardNum": "钉板数量"
+  },
+  "description": {
     "basicIntroduce": "基本介绍",
     "questionAnalyzeUse": "问题分析操作",
     "personalPinboard": "个人钉板使用",
