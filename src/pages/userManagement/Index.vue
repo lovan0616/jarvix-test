@@ -52,40 +52,23 @@
       >
         <div class="dialog-select-input-box">
           <!-- <input class="dialog-select-input" type="text" placeholder="原密碼"> -->
-          <div class="dialog-input-box-check">
-            <input
-              v-model="currentUser.password"
-              class="dialog-select-input"
-              type="password"
-              :placeholder="$t('editing.newPassword')"
-              name="verifyPassword"
-              v-validate="'min:8|requireOneNumeric'"
-            >
-            <div
-              class="dialog-error error-text"
-              v-show="errors.has('verifyPassword')"
-              for="verifyPassword"
-            >
-            {{ errors.first('verifyPassword') }}
-            </div>
-          </div>
-          <div class="dialog-input-box-check">
-            <input
-              v-model="currentUser.verifyPassword"
-              class="dialog-select-input"
-              type="password"
-              :placeholder="$t('editing.confirmNewPassword')"
-              name="verifyPasswordCheck"
-              v-validate="'min:8|requireOneNumeric'"
-            >
-            <div
-              class="dialog-error error-text"
-              v-show="errors.has('verifyPasswordCheck')"
-              for="verifyPasswordCheck"
-            >
-            {{ errors.first('verifyPasswordCheck') }}
-            </div>
-          </div>
+          <input-verify
+            v-model="currentUser.password"
+            type="password"
+            :placeholder="$t('editing.newPassword')"
+            name="verifyNewPassword"
+            v-validate="'required|min:8|requireOneNumeric'"
+            ref="confirmPassword"
+          >
+          </input-verify>
+          <input-verify
+            v-model="currentUser.verifyPassword"
+            type="password"
+            :placeholder="$t('editing.confirmNewPassword')"
+            name="verifyPasswordCheck"
+            v-validate="'required|min:8|requireOneNumeric|confirmed:confirmPassword'"
+          >
+          </input-verify>
         </div>
       </writing-dialog>
 
@@ -98,23 +81,14 @@
         :showBoth="true"
       >
         <div class="dialog-select-input-box">
-          <div class="dialog-input-box-check">
-            <input
-              v-model="currentUser.username"
-              class="dialog-select-input"
-              type="text"
-              :placeholder="currentUser.username"
-              name="editUserName"
-              v-validate="'required'"
-            >
-            <div
-              class="dialog-error error-text"
-              v-show="errors.has('editUserName')"
-              for="editUserName"
-            >
-            {{ errors.first('editUserName') }}
-            </div>
-          </div>
+          <input-verify
+            v-model="currentUser.username"
+            type="text"
+            :placeholder="currentUser.username"
+            name="editUserName"
+            v-validate="'required'"
+          >
+          </input-verify>
         </div>
       </writing-dialog>
 
@@ -143,77 +117,39 @@
       @closeDialog="closeCreateUser"
       @confirmBtn="createSingleUser"
     >
-      <div class="dialog-input-box-check">
-        <input
-          v-model="userInfo.username"
-          class="dialog-input"
-          type="text"
-          :placeholder="$t('editing.userName')"
-          name="createUserName"
-          v-validate="'required'"
-        >
-        <div
-          class="dialog-error error-text"
-          v-show="errors.has('createUserName')"
-          for="createUserName"
-        >
-        {{ errors.first('createUserName') }}
-        </div>
-      </div>
-
-      <div class="dialog-input-box-check">
-        <input
-          v-model="userInfo.email"
-          class="dialog-input"
-          type="text"
-          :placeholder="$t('editing.userAccount')"
-          name="createUserMail"
-          v-validate="'required'"
-        >
-        <div
-          class="dialog-error error-text"
-          v-show="errors.has('createUserMail')"
-          for="createUserMail"
-        >
-        {{ errors.first('createUserMail') }}
-        </div>
-      </div>
-
-      <div class="dialog-input-box-check">
-        <input
-          v-model="userInfo.password"
-          class="dialog-input"
-          type="password"
-          :placeholder="$t('editing.loginPassword')"
-          name="createPassword"
-          v-validate="'min:8|requireOneNumeric'"
-        >
-        <div
-          class="dialog-error error-text"
-          v-show="errors.has('createPassword')"
-          for="createPassword"
-        >
-        {{ errors.first('createPassword') }}
-        </div>
-      </div>
-
-      <div class="dialog-input-box-check">
-        <input
-          v-model="verifyPassword"
-          class="dialog-input"
-          type="password"
-          :placeholder="$t('editing.confirmPassword')"
-          name="createVerifyPassword"
-          v-validate="'min:8|requireOneNumeric'"
-        >
-        <div
-          class="dialog-error error-text"
-          v-show="errors.has('createVerifyPassword')"
-          for="createVerifyPassword"
-        >
-        {{ errors.first('createVerifyPassword') }}
-        </div>
-      </div>
+      <input-verify
+        v-model="userInfo.username"
+        type="text"
+        :placeholder="$t('editing.userName')"
+        name="createUserName"
+        v-validate="'required'"
+      >
+      </input-verify>
+      <input-verify
+        v-model="userInfo.email"
+        type="text"
+        :placeholder="$t('editing.userAccount')"
+        name="createUserMail"
+        v-validate="'required'"
+      >
+      </input-verify>
+      <input-verify
+        v-model="userInfo.password"
+        type="password"
+        :placeholder="$t('editing.loginPassword')"
+        name="createPassword"
+        v-validate="'required|min:8|requireOneNumeric'"
+        ref="loginPassword"
+      >
+      </input-verify>
+      <input-verify
+        v-model="verifyPassword"
+        type="password"
+        :placeholder="$t('editing.confirmPassword')"
+        name="createVerifyPassword"
+        v-validate="'required|min:8|requireOneNumeric|confirmed:loginPassword'"
+      >
+      </input-verify>
     </fill-dialog>
   </div>
 </template>
@@ -221,6 +157,7 @@
 import { createUser, getUsers, updateUser, deleteUser } from '@/API/User'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import InputVerify from '@/components/InputVerify'
 import FillDialog from '@/components/dialog/FillDialog'
 import { Message } from 'element-ui'
 export default {
@@ -229,7 +166,8 @@ export default {
   components: {
     DecideDialog,
     WritingDialog,
-    FillDialog
+    FillDialog,
+    InputVerify
   },
   data () {
     return {
@@ -275,29 +213,21 @@ export default {
     createSingleUser () {
       this.$validator.validateAll().then(result => {
         if (result) {
-          if (this.userInfo.password === this.verifyPassword) {
-            createUser(
-              this.userInfo
-            )
-              .then(response => {
-                this.isShowCreateUser = false
-                this.getUserList()
-                Message({
-                  message: this.$t('message.userCreateSuccess'),
-                  type: 'success',
-                  duration: 3 * 1000
-                })
+          createUser(
+            this.userInfo
+          )
+            .then(response => {
+              this.isShowCreateUser = false
+              this.getUserList()
+              Message({
+                message: this.$t('message.userCreateSuccess'),
+                type: 'success',
+                duration: 3 * 1000
               })
-              .catch(error => {
-                console.log(error)
-              })
-          } else {
-            Message({
-              message: this.$t('message.pleaseConfirmPassword'),
-              type: 'warning',
-              duration: 3 * 1000
             })
-          }
+            .catch(error => {
+              console.log(error)
+            })
         }
       })
     },
@@ -314,30 +244,22 @@ export default {
     changePassword () {
       this.$validator.validateAll().then(result => {
         if (result) {
-          if (this.currentUser.password === this.currentUser.verifyPassword) {
-            updateUser(
-              {password: this.currentUser.password},
-              this.currentId
-            )
-              .then(response => {
-                this.closePassword()
-                this.getUserList()
-                Message({
-                  message: this.$t('message.changePasswordSuccess'),
-                  type: 'success',
-                  duration: 3 * 1000
-                })
+          updateUser(
+            {password: this.currentUser.password},
+            this.currentId
+          )
+            .then(response => {
+              this.closePassword()
+              this.getUserList()
+              Message({
+                message: this.$t('message.changePasswordSuccess'),
+                type: 'success',
+                duration: 3 * 1000
               })
-              .catch(error => {
-                console.log(error)
-              })
-          } else {
-            Message({
-              message: this.$t('message.pleaseConfirmPassword'),
-              type: 'warning',
-              duration: 3 * 1000
             })
-          }
+            .catch(error => {
+              console.log(error)
+            })
         }
       })
     },
