@@ -5,9 +5,11 @@
       :key="index"
       :content="conversation"
     ></single-chat-block>
-    <chat-spinner
+    <div class="spinner-container"
       v-if="isAnalyzing"
-    ></chat-spinner>
+    >
+      <chat-spinner></chat-spinner>
+    </div>
   </div>
 </template>
 <script>
@@ -49,6 +51,10 @@ export default {
       height: 70px;
       margin-bottom: 8px;
     }
+  }
+
+  .spinner-container {
+    text-align: center;
   }
 }
 </style>

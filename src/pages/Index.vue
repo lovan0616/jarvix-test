@@ -1,6 +1,13 @@
 <template>
   <div class="page-index">
+    <empty-result
+      v-if="isNoResult"
+      :title="$t('editing.indexErrorTitle')"
+      :description="$t('editing.indexErrorDescription')"
+    ></empty-result>
     <layout
+      v-else
+      :key="'layout-' + dataSourceId"
       v-bind="layout"
     ></layout>
   </div>
@@ -13,6 +20,7 @@ export default {
   name: 'PageIndex',
   data () {
     return {
+      isNoResult: false,
       layout: null
     }
   },
@@ -30,20 +38,24 @@ export default {
   },
   methods: {
     getLandingInfo () {
+      this.$store.commit('chatBot/updateAnalyzeStatus', true)
       askChatBot({'question': null, 'bookmark_id': this.dataSourceId}).then(res => {
         // 取得對話紀錄用的 chtabot id
         this.$store.commit('chatBot/updateChatBotId', res.chatbot_id)
         if (res.content.changed) {
           this.layout = res.content
         }
+        this.$store.commit('chatBot/updateAnalyzeStatus', false)
         this.$store.commit('chatBot/addSystemConversation', res.respond)
-      }).then(() => {
-
+      }).catch(() => {
+        this.isNoResult = true
       })
     }
   },
   watch: {
     dataSourceId () {
+      this.layout = null
+      this.isNoResult = false
       this.getLandingInfo()
     }
   }
