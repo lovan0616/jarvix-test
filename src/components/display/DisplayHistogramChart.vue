@@ -31,12 +31,7 @@ let histogramChartConfig = {
     },
     data: [],
     type: 'custom',
-    label: {
-      normal: {
-        show: true,
-        position: 'insideTop'
-      }
-    },
+    label: {},
     renderItem: null,
     large: true,
     encode: {
@@ -95,7 +90,12 @@ export default {
       let interval
       let min = Infinity
       let max = -Infinity
-      let bins = ecStat.histogram(this.dataset.data)
+
+      let newData = this.dataset.data.map(element => {
+        return element[1]
+      })
+
+      let bins = ecStat.histogram(newData, 'sturges')
       let chartData = bins.data.map((item, index) => {
         let x0 = bins.bins[index].x0
         let x1 = bins.bins[index].x1
@@ -110,9 +110,9 @@ export default {
       chartAddon.xAxis.interval = interval
       chartAddon.xAxis.min = min
       chartAddon.xAxis.max = max
-      chartAddon.xAxis.name = this.title.xAxis
+      chartAddon.xAxis.name = this.title.yAxis
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramChartConfig.yAxis}
-      chartAddon.yAxis.name = this.title.yAxis
+      chartAddon.yAxis.name = 'count'
 
       if (this.isPreview) this.previewChartSetting(chartAddon)
 
