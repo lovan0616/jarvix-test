@@ -34,12 +34,6 @@ export default {
       type: String
     }
   },
-  mounted () {
-    this.$validator.resume()
-  },
-  beforeDestroy () {
-    this.$validator.pause()
-  },
   computed: {
     inputValue: {
       get () {

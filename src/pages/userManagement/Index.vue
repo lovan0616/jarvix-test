@@ -204,11 +204,14 @@ export default {
       this.isShowCreateUser = true
     },
     closeCreateUser () {
-      for (let index in this.userInfo) {
-        this.userInfo[index] = ''
-      }
-      this.verifyPassword = ''
+      // 關閉 component 後，才清空資料，以免在 function 中觸發 validate 導致錯誤發生
       this.isShowCreateUser = false
+      this.$nextTick(() => {
+        for (let index in this.userInfo) {
+          this.userInfo[index] = ''
+        }
+        this.verifyPassword = ''
+      })
     },
     createSingleUser () {
       this.$validator.validateAll().then(result => {
@@ -320,9 +323,12 @@ export default {
       this.isShowPassword = true
     },
     closePassword () {
-      this.currentUser.password = ''
-      this.currentUser.verifyPassword = ''
+      // 關閉 component 後，才清空資料，以免在 function 中觸發 validate 導致錯誤發生
       this.isShowPassword = false
+      this.$nextTick(() => {
+        this.currentUser.password = ''
+        this.currentUser.verifyPassword = ''
+      })
     },
     showEditName (user) {
       this.currentUser.username = user.name
