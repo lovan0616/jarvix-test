@@ -47,32 +47,35 @@
             <div class="description-image-box">
               <img class="description-image" src="@/assets/images/functionDescription/basic-interface.png" :alt="$t('description.interfaceDescription')">
               <div class="description-square first-interface-square"></div>
-              <div class="description-text-box first-interface-box">
-                <div class="description-space">Chatroom</div>
-                <div class="description-round-empty"></div>
-                <div class="description-line first-interface-line"></div>
-                <div class="description-round-full"></div>
-              </div>
-              <div class="description-text-box second-interface-box">
-                <div class="description-space">{{ $t('description.hide') }}Chatroom</div>
-                <div class="description-round-empty"></div>
-                <div class="description-line second-interface-line"></div>
-                <div class="description-round-full"></div>
-              </div>
+              <row-description
+                :className="'first-interface-box'"
+                :lineClassName="'first-interface-line'"
+                :text="'Chatroom'"
+              >
+              </row-description>
+              <row-description
+                :className="'second-interface-box'"
+                :lineClassName="'second-interface-line'"
+                :text="`${langDescriptionHide}Chatroom`"
+              >
+              </row-description>
+
               <div class="description-square third-interface-square"></div>
-              <div class="description-text-box third-interface-box">
-                <div class="description-round-full"></div>
-                <div class="description-line third-interface-line"></div>
-                <div class="description-round-empty description-space"></div>
-                <div>{{ $t('description.guidingRow') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'third-interface-box'"
+                :lineClassName="'third-interface-line'"
+                :text="$t('description.guidingRow')"
+              >
+              </row-description>
               <div class="description-square fouth-interface-square"></div>
-              <div class="description-text-box fouth-interface-box">
-                <div class="description-round-full"></div>
-                <div class="description-line fouth-interface-line"></div>
-                <div class="description-round-empty description-space"></div>
-                <div>{{ $t('description.mainLayout') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'fouth-interface-box'"
+                :lineClassName="'fouth-interface-line'"
+                :text="$t('description.mainLayout')"
+              >
+              </row-description>
             </div>
           </div>
         </transition>
@@ -92,22 +95,24 @@
             <div class="description-image-box description-space-image">
               <img class="description-image" src="@/assets/images/functionDescription/basic-setting.png" :alt="$t('description.settingFunctionMenu')">
               <div class="description-square first-menu-square"></div>
-              <div class="description-text-box first-menu-box">
-                <div class="description-round-full"></div>
-                <div class="description-line first-menu-line"></div>
-                <div class="description-round-empty description-space"></div>
-                <div>{{ $t('description.settingFunctionMenu') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'first-menu-box'"
+                :lineClassName="'first-menu-line'"
+                :text="$t('description.settingFunctionMenu')"
+              >
+              </row-description>
             </div>
             <div class="description-image-box">
               <img class="description-image" src="@/assets/images/functionDescription/basic-account.png" :alt="$t('description.accountFunctionMenu')">
               <div class="description-square second-menu-square"></div>
-              <div class="description-text-box second-menu-box">
-                <div class="description-round-full"></div>
-                <div class="description-line second-menu-line"></div>
-                <div class="description-round-empty description-space"></div>
-                <div>{{ $t('description.accountFunctionMenu') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'second-menu-box'"
+                :lineClassName="'second-menu-line'"
+                :text="$t('description.accountFunctionMenu')"
+              >
+              </row-description>
             </div>
           </div>
         </transition>
@@ -127,19 +132,23 @@
             <div class="description-image-box">
               <img class="description-image" src="@/assets/images/functionDescription/basic-interface.png" :alt="$t('description.checkoutDataSheetDetail')">
               <div class="description-square first-index-square"></div>
-              <div class="description-text-box first-index-box">
-                <div class="description-round-full"></div>
-                <div class="description-line first-index-line"></div>
-                <div class="description-round-empty description-space"></div>
-                <div class="description-text">{{ $t('description.checkoutDataSheetDetail') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'first-index-box'"
+                :lineClassName="'first-index-line'"
+                :text="$t('description.checkoutDataSheetDetail')"
+                :twoRow="true"
+              >
+              </row-description>
               <div class="description-square second-index-square"></div>
-              <div class="description-text-box second-index-box">
-                <div class="description-round-full"></div>
-                <div class="description-line second-index-line"></div>
-                <div class="description-round-empty description-space"></div>
-                <div class="description-text">{{ $t('description.systemLogQuestion') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'second-index-box'"
+                :lineClassName="'second-index-line'"
+                :text="$t('description.systemLogQuestion')"
+                :twoRow="true"
+              >
+              </row-description>
             </div>
           </div>
         </transition>
@@ -166,22 +175,25 @@
             <div class="description-image-box description-space-image">
               <img class="description-image" src="@/assets/images/functionDescription/basic-setting.png" :alt="$t('description.enterDataManage')">
               <div class="description-square first-data-square"></div>
-              <div class="description-text-box first-data-box">
-                <div class="description-round-full"></div>
-                <div class="description-line first-data-line"></div>
-                <div class="description-round-empty description-space"></div>
-                <div class="description-space">Step1:<br>{{ $t('description.enterDataManage') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'first-data-box'"
+                :lineClassName="'first-data-line'"
+                :text="$t('description.enterDataManage')"
+                :step="'Step1:'"
+              >
+              </row-description>
             </div>
             <div class="description-image-box">
               <img class="description-image" src="@/assets/images/functionDescription/data-table-select.png" :alt="$t('editing.newDataSource')">
               <div class="description-square second-data-square"></div>
-              <div class="description-text-box second-data-box">
-                <div class="description-space description-text-right">Step2:<br>{{ $t('editing.newDataSource') }}</div>
-                <div class="description-round-empty"></div>
-                <div class="description-line second-data-line"></div>
-                <div class="description-round-full"></div>
-              </div>
+              <row-description
+                :className="'second-data-box'"
+                :lineClassName="'second-data-line'"
+                :text="$t('editing.newDataSource')"
+                :step="'Step2:'"
+              >
+              </row-description>
             </div>
           </div>
         </transition>
@@ -201,22 +213,24 @@
             <div class="description-image-box description-space-image">
               <img class="description-image" src="@/assets/images/functionDescription/data-table-select.png" :alt="$t('description.pickupData')">
               <div class="description-square first-sheet-square"></div>
-              <div class="description-text-box first-sheet-box">
-                <div class="description-space description-text-right">Step1:<br>{{ $t('description.pickupData') }}</div>
-                <div class="description-round-empty"></div>
-                <div class="description-line first-sheet-line"></div>
-                <div class="description-round-full"></div>
-              </div>
+              <row-description
+                :className="'first-sheet-box'"
+                :lineClassName="'first-sheet-line'"
+                :text="$t('description.pickupData')"
+                :step="'Step1:'"
+              >
+              </row-description>
             </div>
             <div class="description-image-box">
               <img class="description-image" src="@/assets/images/functionDescription/data-table.png" :alt="$t('editing.newTable')">
               <div class="description-square second-sheet-square"></div>
-              <div class="description-text-box second-sheet-box">
-                <div class="description-space description-text-right">Step2:<br>{{ $t('editing.newTable') }}</div>
-                <div class="description-round-empty"></div>
-                <div class="description-line second-sheet-line"></div>
-                <div class="description-round-full"></div>
-              </div>
+              <row-description
+                :className="'second-sheet-box'"
+                :lineClassName="'second-sheet-line'"
+                :text="$t('editing.newTable')"
+                :step="'Step2:'"
+              >
+              </row-description>
             </div>
           </div>
         </transition>
@@ -236,49 +250,58 @@
             <div class="description-image-box description-space-image">
               <img class="description-image" src="@/assets/images/functionDescription/data-table.png" :alt="$t('description.clickEditColumn')">
               <div class="description-square first-data-edit-square"></div>
-              <div class="description-text-box first-data-edit-box">
-                <div class="description-round-full"></div>
-                <div class="description-line first-data-edit-line"></div>
-                <div class="description-round-empty description-space"></div>
-                <div>Step1:<br>{{ $t('description.clickEditColumn') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'first-data-edit-box'"
+                :lineClassName="'first-data-edit-line'"
+                :text="$t('description.clickEditColumn')"
+                :step="'Step1:'"
+              >
+              </row-description>
             </div>
             <div class="description-image-box description-space-image">
               <img class="description-image" src="@/assets/images/functionDescription/data-sheet-table.png" :alt="$t('description.clickEditColumn')">
               <div class="description-square second-data-edit-square"></div>
-              <div class="description-text-box second-data-edit-box">
-                <div class="description-round-full"></div>
-                <div class="description-line second-data-edit-line"></div>
-                <div class="description-round-empty description-space"></div>
-                <div>Step2:<br>{{ $t('description.clickEditColumn') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'second-data-edit-box'"
+                :lineClassName="'second-data-edit-line'"
+                :text="$t('description.clickEditColumn')"
+                :step="'Step2:'"
+              >
+              </row-description>
             </div>
             <div class="description-image-box description-space-image">
               <img class="description-image" src="@/assets/images/functionDescription/data-sheet-table-edit.png" :alt="$t('description.editAlias')">
               <div class="description-square third-data-edit-square"></div>
-              <div class="description-text-box third-data-edit-box">
-                <div class="description-space description-text-right">Step3:<br>{{ $t('description.editAlias') }}</div>
-                <div class="description-round-empty"></div>
-                <div class="description-line third-data-edit-line"></div>
-                <div class="description-round-full"></div>
-              </div>
+              <row-description
+                :className="'third-data-edit-box'"
+                :lineClassName="'third-data-edit-line'"
+                :text="$t('description.editAlias')"
+                :step="'Step3:'"
+              >
+              </row-description>
               <div class="description-square forth-data-edit-square"></div>
-              <div class="description-text-box forth-data-edit-box">
-                <div class="description-round-full"></div>
-                <div class="description-line forth-data-edit-line"></div>
-                <div   class="description-round-empty description-space"></div>
-                <div>Step3:<br>{{ $t('description.confirmEdit') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'forth-data-edit-box'"
+                :lineClassName="'forth-data-edit-line'"
+                :text="$t('description.confirmEdit')"
+                :step="'Step3:'"
+              >
+              </row-description>
             </div>
             <div class="description-image-box">
               <img class="description-image" src="@/assets/images/functionDescription/data-sheet-build.png" :alt="$t('description.completeBuild')">
               <div class="description-square fifth-data-edit-square"></div>
-              <div class="description-text-box fifth-data-edit-box">
-                <div class="description-round-full"></div>
-                <div class="description-line fifth-data-edit-line"></div>
-                <div class="description-round-empty description-space"></div>
-                <div class="description-space">Step4:<br>{{ $t('description.completeBuild') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'fifth-data-edit-box'"
+                :lineClassName="'fifth-data-edit-line'"
+                :text="$t('description.completeBuild')"
+                :step="'Step4:'"
+              >
+              </row-description>
             </div>
           </div>
         </transition>
@@ -298,42 +321,48 @@
             <div class="description-image-box description-space-image">
               <img class="description-image" src="@/assets/images/functionDescription/data-table.png" :alt="$t('description.clickDataSheetConnect')">
               <div class="description-square first-data-connect-square"></div>
-              <div class="description-text-box first-data-connect-box">
-                <div class="description-round-full"></div>
-                <div class="description-line first-data-connect-line"></div>
-                <div class="description-round-empty description-space"></div>
-                <div>Step1:<br>{{ $t('description.clickDataSheetConnect') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'first-data-connect-box'"
+                :lineClassName="'first-data-connect-line'"
+                :text="$t('description.clickDataSheetConnect')"
+                :step="'Step1:'"
+              >
+              </row-description>
             </div>
             <div class="description-image-box description-space-image">
               <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect.png" :alt="$t('description.addDataSheetConnect')">
               <div class="description-square second-data-connect-square"></div>
-              <div class="description-text-box second-data-connect-box">
-                <div class="description-space description-text-right">Step2:<br>{{ $t('description.addDataSheetConnect') }}</div>
-                <div class="description-round-empty"></div>
-                <div class="description-line second-data-connect-line"></div>
-                <div class="description-round-full"></div>
-              </div>
+              <row-description
+                :className="'second-data-connect-box'"
+                :lineClassName="'second-data-connect-line'"
+                :text="$t('description.addDataSheetConnect')"
+                :step="'Step2:'"
+              >
+              </row-description>
             </div>
             <div class="description-image-box description-space-image">
               <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect-column.png" :alt="$t('description.andConnectColumn')">
               <div class="description-square third-data-connect-square"></div>
-              <div class="description-text-box third-data-connect-box">
-                <div class="description-space description-text-right">Step3:<br>{{ $t('description.slectDataSheet') }}<br>{{ $t('description.andConnectColumn') }}</div>
-                <div class="description-round-empty"></div>
-                <div class="description-line third-data-connect-line"></div>
-                <div class="description-round-full"></div>
-              </div>
+              <row-description
+                :className="'third-data-connect-box'"
+                :lineClassName="'third-data-connect-line'"
+                :text="$t('description.slectDataSheet')"
+                :step="'Step3:'"
+              >
+              </row-description>
             </div>
             <div class="description-image-box description-space-image">
               <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect-store.png" :alt="$t('description.storeSetting')">
               <div class="description-square fourth-data-connect-square"></div>
-              <div class="description-text-box fourth-data-connect-box">
-                <div class="description-round-full"></div>
-                <div class="description-line fourth-data-connect-line"></div>
-                <div class="description-round-empty description-space"></div>
-                <div>Step4:<br>{{ $t('description.storeSetting') }}</div>
-              </div>
+              <row-description
+                :positionLeft="false"
+                :className="'fourth-data-connect-box'"
+                :lineClassName="'fourth-data-connect-line'"
+                :text="$t('description.storeSetting')"
+                :step="'Step4:'"
+              >
+              </row-description>
             </div>
           </div>
         </transition>
@@ -342,11 +371,11 @@
   </div>
 </template>
 <script>
-
+import rowDescription from './components/rowDescription'
 export default {
   name: 'FunctionDescription',
   components: {
-
+    rowDescription
   },
   data () {
     return {
@@ -368,7 +397,8 @@ export default {
         isShowAddSheet: false,
         isShowEditData: false,
         isShowConnectData: false
-      }
+      },
+      langDescriptionHide: this.$t('description.hide')
     }
   },
   mounted () {
@@ -498,13 +528,6 @@ export default {
 
     }
 
-    .description-text-box {
-      position: absolute;
-      display: flex;
-      align-items: center;
-      color: #FFDF6F;
-    }
-
     .description-space {
         margin-right: 4px;
     }
@@ -546,33 +569,11 @@ export default {
     }
 
     // interface
-    .first-interface-box {
-      left: -120px;
-      top: 10px;
-    }
 
     .first-interface-square {
       width: 184px;
       height: 100%;
       left: 0px;
-      top: 0px;
-    }
-
-    .first-interface-line {
-      width: 15px;
-    }
-
-    .second-interface-box {
-      left: -156px;
-      top: 148px;
-    }
-
-    .second-interface-line {
-      width: 185px;
-    }
-
-    .third-interface-box {
-      right: -85px;
       top: 0px;
     }
 
@@ -583,15 +584,6 @@ export default {
       top: 0px;
     }
 
-    .third-interface-line {
-      width: 15px;
-    }
-
-    .fouth-interface-box {
-      right: -84px;
-      top: 68px;
-    }
-
     .fouth-interface-square {
       width: 442px;
       height: 294px;
@@ -599,31 +591,13 @@ export default {
       top: 30px;
     }
 
-    .fouth-interface-line {
-      width: 29px;
-    }
-
     // menu
-
-    .first-menu-box {
-      right: -144px;
-      top: 68px;
-    }
 
     .first-menu-square {
       width: 202px;
       height: 220px;
       right: 105px;
       top: 7px;
-    }
-
-    .first-menu-line {
-      width: 126px;
-    }
-
-    .second-menu-box {
-      right: -138px;
-      top: 55px;
     }
 
     .second-menu-square {
@@ -633,30 +607,13 @@ export default {
       top: 6px;
     }
 
-    .second-menu-line {
-      width: 42px;
-    }
-
     // index page
-    .first-index-box {
-      right: -130px;
-      top: 53px;
-    }
 
     .first-index-square {
       width: 441px;
       height: 113px;
       right: 18px;
       top: 32px;
-    }
-
-    .first-index-line {
-      width: 28px;
-    }
-
-    .second-index-box {
-      right: -131px;
-      top: 183px;
     }
 
     .second-index-square {
@@ -666,30 +623,13 @@ export default {
       top: 153px;
     }
 
-    .second-index-line {
-      width: 28px;
-    }
-
     // data
-    .first-data-box {
-      right: -141px;
-      top: 43px;
-    }
 
     .first-data-square {
       width: 166px;
       height: 43px;
       right: 119px;
       top: 46px;
-    }
-
-    .first-data-line {
-      width: 134px;
-    }
-
-    .second-data-box {
-      left: -122px;
-      top: 63px;
     }
 
     .second-data-square {
@@ -699,29 +639,11 @@ export default {
       top: 74px;
     }
 
-    .second-data-line {
-      width: 40px;
-    }
-
-    .first-sheet-box {
-      left: -125px;
-      top: 179px;
-    }
-
     .first-sheet-square {
       width: 74px;
       height: 27px;
       left: 28px;
       top: 189px;
-    }
-
-    .first-sheet-line {
-      width: 48px;
-    }
-
-    .second-sheet-box {
-      left: -123px;
-      top: 63px;
     }
 
     .second-sheet-square {
@@ -731,29 +653,11 @@ export default {
       top: 74px;
     }
 
-    .second-sheet-line {
-      width: 40px;
-    }
-
-    .first-data-edit-box {
-      right: -137px;
-      top: 105px;
-    }
-
     .first-data-edit-square {
       width: 41px;
       height: 21px;
       right: 116px;
       top: 118px;
-    }
-
-    .first-data-edit-line {
-      width: 131px;
-    }
-
-    .second-data-edit-box {
-      right: -138px;
-      top: 49px;
     }
 
     .second-data-edit-square {
@@ -763,29 +667,11 @@ export default {
       top: 63px;
     }
 
-    .second-data-edit-line {
-      width: 217px;
-    }
-
-    .third-data-edit-box {
-      left: -108px;
-      top: 49px;
-    }
-
     .third-data-edit-square {
       width: 66px;
       height: 22px;
       left: 263px;
       top: 62px;
-    }
-
-    .third-data-edit-line {
-      width: 283px;
-    }
-
-    .forth-data-edit-box {
-      right: -104px;
-      top: 49px;
     }
 
     .forth-data-edit-square {
@@ -795,15 +681,6 @@ export default {
       top: 63px;
     }
 
-    .forth-data-edit-line {
-      width: 222px;
-    }
-
-    .fifth-data-edit-box {
-      right: -110px;
-      top: 4px;
-    }
-
     .fifth-data-edit-square {
       width: 46px;
       height: 25px;
@@ -811,30 +688,13 @@ export default {
       top: 15px;
     }
 
-    .fifth-data-edit-line {
-      width: 191px;
-    }
-
     // connect
-    .first-data-connect-box {
-      right: -158px;
-      top: 64px;
-    }
 
     .first-data-connect-square {
       width: 62px;
       height: 21px;
       right: 96px;
       top: 77px;
-    }
-
-    .first-data-connect-line {
-      width: 112px;
-    }
-
-    .second-data-connect-box {
-      left: -154px;
-      top: 30px;
     }
 
     .second-data-connect-square {
@@ -844,15 +704,6 @@ export default {
       top: 40px;
     }
 
-    .second-data-connect-line {
-      width: 191px;
-    }
-
-    .third-data-connect-box {
-      left: -140px;
-      top: 90px;
-    }
-
     .third-data-connect-square {
       width: 120px;
       height: 51px;
@@ -860,24 +711,11 @@ export default {
       top: 102px;
     }
 
-    .third-data-connect-line {
-      width: 211px;
-    }
-
-    .fourth-data-connect-box {
-      right: -104px;
-      top: 159px;
-    }
-
     .fourth-data-connect-square {
       width: 45px;
       height: 28px;
       right: 174px;
       top: 168px;
-    }
-
-    .fourth-data-connect-line {
-      width: 190px;
     }
   }
 }
