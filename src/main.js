@@ -81,6 +81,7 @@ import TrendRootCause from '@/components/display/TrendRootCause'
 import RootCauseItem from '@/components/display/RootCauseItem'
 import RootCauseDescription from '@/components/display/RootCauseDescription'
 import QuickStart from '@/components/display/QuickStart'
+import Spinner from '@/components/Spinner'
 
 var Rollbar = require('vue-rollbar')
 
@@ -138,6 +139,7 @@ Vue.component(TrendRootCause.name, TrendRootCause)
 Vue.component(RootCauseItem.name, RootCauseItem)
 Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(QuickStart.name, QuickStart)
+Vue.component(Spinner.name, Spinner)
 
 /** Custom Rule */
 Validator.extend('requireOneNumeric', function (value) {
@@ -209,7 +211,7 @@ Vue.use(Rollbar, {
   accessToken: process.env.ROLL_BAR,
   captureUncaught: true,
   captureUnhandledRejections: true,
-  enabled: process.env.NODE_ENV === 'production',
+  // enabled: process.env.NODE_ENV === 'production',
   environment: process.env.NODE_ENV,
   payload: {
     client: {
@@ -219,6 +221,11 @@ Vue.use(Rollbar, {
         guess_uncaught_frames: true
       }
     },
+    // person: {
+    //   id: this.userInfo.account,
+    //   username: res.account,
+    //   email: this.userInfo.account
+    // },
     server: {
       host: window.location.host
     }

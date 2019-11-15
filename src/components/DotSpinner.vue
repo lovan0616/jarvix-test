@@ -7,7 +7,7 @@
 </template>
 <script>
 export default {
-  name: 'ChatSpinner'
+  name: 'DotSpinner'
 }
 </script>
 <style lang="scss" scoped>

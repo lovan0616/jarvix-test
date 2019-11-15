@@ -53,7 +53,8 @@ export default {
     }
   },
   watch: {
-    dataSourceId () {
+    dataSourceId (value) {
+      if (!value) return
       this.layout = null
       this.isNoResult = false
       this.getLandingInfo()
@@ -64,6 +65,5 @@ export default {
 <style lang="scss" scoped>
 .page-index {
   margin: 0 auto;
-  text-align: center;
 }
 </style>

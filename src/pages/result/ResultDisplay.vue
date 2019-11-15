@@ -26,13 +26,9 @@
 import axios from 'axios'
 import { mapGetters } from 'vuex'
 import { askChatBot, getRelatedQuestions } from '@/API/ChatBot'
-import spinner from '@/components/Spinner'
 
 export default {
   name: 'ResultDisplay',
-  components: {
-    spinner
-  },
   data () {
     return {
       layout: null,

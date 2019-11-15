@@ -14,8 +14,6 @@
 </template>
 
 <script>
-import Spinner from '@/components/Spinner'
-
 export default {
   name: 'Layout',
   props: {
@@ -27,9 +25,6 @@ export default {
       type: [Number, String],
       default: null
     }
-  },
-  components: {
-    Spinner
   },
   data () {
     return {

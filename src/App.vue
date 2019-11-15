@@ -9,13 +9,8 @@
 </template>
 
 <script>
-import Spinner from '@/components/Spinner'
-
 export default {
   name: 'App',
-  components: {
-    Spinner
-  },
   data () {
     return {
       intervalFunction: null,
