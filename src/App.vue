@@ -31,13 +31,10 @@ export default {
   },
   methods: {
     checkLocale () {
-      let locale = localStorage.getItem('locale')
+      let prevLocale = localStorage.getItem('locale')
       let browserScale = (navigator.language || navigator.browserLanguage).toLowerCase()
-      if (locale) {
-        this.$store.commit('setting/setLocale', locale)
-      } else {
-        this.$store.commit('setting/setLocale', browserScale === 'zh-tw' ? 'zh-TW' : 'zh-CN')
-      }
+      let locale = prevLocale || browserScale
+      this.$store.commit('setting/setLocale', locale === 'zh-tw' ? 'zh-TW' : 'zh-CN')
     }
   },
   watch: {
