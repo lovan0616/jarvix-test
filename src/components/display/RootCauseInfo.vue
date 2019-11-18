@@ -21,7 +21,7 @@
           >
             <div class="abstract-info">
               <div class="column-title">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</div>
-              <div class="sub-title">{{ rootCauseInfo.name }}{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') + $t('aggregatedValue.mean')}}</div>
+              <div class="sub-title">{{ rootCauseInfo.name }}{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}{{ $t('aggregatedValue.mean')}}</div>
               <div class="amount-block"
                 :class="{'is-special': tableInfo.unusual}"
               >
@@ -32,7 +32,7 @@
               </div>
             </div>
             <div class="detail-info">
-              <div class="title">{{ $t('resultDescription.total') + rootCauseInfo.name + $t('aggregatedValue.mean') + $t('resultDescription.is') + tableInfo.totalAverage }}，<span class="column-name">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</span>{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') + $t('aggregatedValue.mean') + Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
+              <div class="title">{{ $t('resultDescription.total') + rootCauseInfo.name + $t('aggregatedValue.mean') + $t('resultDescription.is') + tableInfo.totalAverage }}，<span class="column-name">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</span>{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}{{ $t('aggregatedValue.mean') + Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
               <div class="info-block">
                 <div class="single-info">
                   <div class="info-label">{{ $t('resultDescription.dataRowCount') }}</div>

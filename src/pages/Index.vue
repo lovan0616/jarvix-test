@@ -49,6 +49,7 @@ export default {
         this.$store.commit('chatBot/addSystemConversation', res.respond)
       }).catch(() => {
         this.isNoResult = true
+        this.$store.commit('chatBot/updateAnalyzeStatus', false)
       })
     }
   },
