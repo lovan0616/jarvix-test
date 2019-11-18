@@ -48,13 +48,13 @@
               <img class="description-image" src="@/assets/images/functionDescription/basic-interface.png" :alt="$t('description.interfaceDescription')">
               <div class="description-square first-interface-square"></div>
               <row-description
-                :className="'first-interface-box'"
+                class="first-interface-box"
                 :lineClassName="'first-interface-line'"
                 :text="'Chatroom'"
               >
               </row-description>
               <row-description
-                :className="'second-interface-box'"
+                class="second-interface-box"
                 :lineClassName="'second-interface-line'"
                 :text="`${langDescriptionHide}Chatroom`"
               >
@@ -63,7 +63,7 @@
               <div class="description-square third-interface-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'third-interface-box'"
+                class="third-interface-box"
                 :lineClassName="'third-interface-line'"
                 :text="$t('description.guidingRow')"
               >
@@ -71,7 +71,7 @@
               <div class="description-square fouth-interface-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'fouth-interface-box'"
+                class="fouth-interface-box"
                 :lineClassName="'fouth-interface-line'"
                 :text="$t('description.mainLayout')"
               >
@@ -97,7 +97,7 @@
               <div class="description-square first-menu-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'first-menu-box'"
+                class="first-menu-box"
                 :lineClassName="'first-menu-line'"
                 :text="$t('description.settingFunctionMenu')"
               >
@@ -108,7 +108,7 @@
               <div class="description-square second-menu-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'second-menu-box'"
+                class="second-menu-box"
                 :lineClassName="'second-menu-line'"
                 :text="$t('description.accountFunctionMenu')"
               >
@@ -134,7 +134,7 @@
               <div class="description-square first-index-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'first-index-box'"
+                class="first-index-box"
                 :lineClassName="'first-index-line'"
                 :text="$t('description.checkoutDataSheetDetail')"
                 :twoRow="true"
@@ -143,7 +143,7 @@
               <div class="description-square second-index-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'second-index-box'"
+                class="second-index-box"
                 :lineClassName="'second-index-line'"
                 :text="$t('description.systemLogQuestion')"
                 :twoRow="true"
@@ -177,10 +177,10 @@
               <div class="description-square first-data-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'first-data-box'"
+                class="first-data-box"
                 :lineClassName="'first-data-line'"
-                :text="$t('description.enterDataManage')"
-                :step="'Step1:'"
+                :text="'Step1:<br>' + $t('description.enterDataManage')"
+
               >
               </row-description>
             </div>
@@ -188,10 +188,9 @@
               <img class="description-image" src="@/assets/images/functionDescription/data-table-select.png" :alt="$t('editing.newDataSource')">
               <div class="description-square second-data-square"></div>
               <row-description
-                :className="'second-data-box'"
+                class="second-data-box"
                 :lineClassName="'second-data-line'"
-                :text="$t('editing.newDataSource')"
-                :step="'Step2:'"
+                :text="'Step2:<br>' + $t('editing.newDataSource')"
               >
               </row-description>
             </div>
@@ -214,10 +213,9 @@
               <img class="description-image" src="@/assets/images/functionDescription/data-table-select.png" :alt="$t('description.pickupData')">
               <div class="description-square first-sheet-square"></div>
               <row-description
-                :className="'first-sheet-box'"
+                class="first-sheet-box"
                 :lineClassName="'first-sheet-line'"
-                :text="$t('description.pickupData')"
-                :step="'Step1:'"
+                :text="'Step1:<br>' + $t('description.pickupData')"
               >
               </row-description>
             </div>
@@ -225,10 +223,9 @@
               <img class="description-image" src="@/assets/images/functionDescription/data-table.png" :alt="$t('editing.newTable')">
               <div class="description-square second-sheet-square"></div>
               <row-description
-                :className="'second-sheet-box'"
+                class="second-sheet-box"
                 :lineClassName="'second-sheet-line'"
-                :text="$t('editing.newTable')"
-                :step="'Step2:'"
+                :text="'Step2:<br>' + $t('editing.newTable')"
               >
               </row-description>
             </div>
@@ -252,10 +249,9 @@
               <div class="description-square first-data-edit-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'first-data-edit-box'"
+                class="first-data-edit-box"
                 :lineClassName="'first-data-edit-line'"
-                :text="$t('description.clickEditColumn')"
-                :step="'Step1:'"
+                :text="'Step1:<br>' + $t('description.clickEditColumn')"
               >
               </row-description>
             </div>
@@ -264,10 +260,9 @@
               <div class="description-square second-data-edit-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'second-data-edit-box'"
+                class="second-data-edit-box"
                 :lineClassName="'second-data-edit-line'"
-                :text="$t('description.clickEditColumn')"
-                :step="'Step2:'"
+                :text="'Step2:<br>' + $t('description.clickEditColumn')"
               >
               </row-description>
             </div>
@@ -275,19 +270,17 @@
               <img class="description-image" src="@/assets/images/functionDescription/data-sheet-table-edit.png" :alt="$t('description.editAlias')">
               <div class="description-square third-data-edit-square"></div>
               <row-description
-                :className="'third-data-edit-box'"
+                class="third-data-edit-box"
                 :lineClassName="'third-data-edit-line'"
-                :text="$t('description.editAlias')"
-                :step="'Step3:'"
+                :text="'Step3:<br>' + $t('description.editAlias')"
               >
               </row-description>
               <div class="description-square forth-data-edit-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'forth-data-edit-box'"
+                class="forth-data-edit-box"
                 :lineClassName="'forth-data-edit-line'"
-                :text="$t('description.confirmEdit')"
-                :step="'Step3:'"
+                :text="'Step3:<br>' + $t('description.confirmEdit')"
               >
               </row-description>
             </div>
@@ -296,10 +289,9 @@
               <div class="description-square fifth-data-edit-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'fifth-data-edit-box'"
+                class="fifth-data-edit-box"
                 :lineClassName="'fifth-data-edit-line'"
-                :text="$t('description.completeBuild')"
-                :step="'Step4:'"
+                :text="'Step4:<br>' + $t('description.completeBuild')"
               >
               </row-description>
             </div>
@@ -323,10 +315,9 @@
               <div class="description-square first-data-connect-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'first-data-connect-box'"
+                class="first-data-connect-box"
                 :lineClassName="'first-data-connect-line'"
-                :text="$t('description.clickDataSheetConnect')"
-                :step="'Step1:'"
+                :text="'Step1:<br>' + $t('description.clickDataSheetConnect')"
               >
               </row-description>
             </div>
@@ -334,10 +325,9 @@
               <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect.png" :alt="$t('description.addDataSheetConnect')">
               <div class="description-square second-data-connect-square"></div>
               <row-description
-                :className="'second-data-connect-box'"
+                class="second-data-connect-box"
                 :lineClassName="'second-data-connect-line'"
-                :text="$t('description.addDataSheetConnect')"
-                :step="'Step2:'"
+                :text="'Step2:<br>' + $t('description.addDataSheetConnect')"
               >
               </row-description>
             </div>
@@ -345,10 +335,9 @@
               <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect-column.png" :alt="$t('description.andConnectColumn')">
               <div class="description-square third-data-connect-square"></div>
               <row-description
-                :className="'third-data-connect-box'"
+                class="third-data-connect-box"
                 :lineClassName="'third-data-connect-line'"
-                :text="$t('description.slectDataSheet')"
-                :step="'Step3:'"
+                :text="'Step3:<br>' + $t('description.slectDataSheet') + '<br>' + $t('description.andConnectColumn')"
               >
               </row-description>
             </div>
@@ -357,10 +346,9 @@
               <div class="description-square fourth-data-connect-square"></div>
               <row-description
                 :positionLeft="false"
-                :className="'fourth-data-connect-box'"
+                class="fourth-data-connect-box"
                 :lineClassName="'fourth-data-connect-line'"
-                :text="$t('description.storeSetting')"
-                :step="'Step4:'"
+                :text="'Step4:<br>' + $t('description.storeSetting')"
               >
               </row-description>
             </div>
@@ -528,10 +516,6 @@ export default {
 
     }
 
-    .description-space {
-        margin-right: 4px;
-    }
-
     .description-space-image {
         margin-bottom: 53px;
     }
@@ -569,6 +553,10 @@ export default {
     }
 
     // interface
+    .first-interface-box {
+      left: -118px;
+      top: 74px;
+    }
 
     .first-interface-square {
       width: 184px;
@@ -577,11 +565,26 @@ export default {
       top: 0px;
     }
 
+    .second-interface-box {
+      left: -156px;
+      top: 148px;
+    }
+
+    .third-interface-box {
+      right: -85px;
+      top: 0px;
+    }
+
     .third-interface-square {
       width: 187px;
       height: 28px;
       right: 0px;
       top: 0px;
+    }
+
+    .fouth-interface-box {
+      right: -84px;
+      top: 68px;
     }
 
     .fouth-interface-square {
@@ -593,11 +596,21 @@ export default {
 
     // menu
 
+    .first-menu-box {
+      right: -144px;
+      top: 68px;
+    }
+
     .first-menu-square {
       width: 202px;
       height: 220px;
       right: 105px;
       top: 7px;
+    }
+
+    .second-menu-box {
+      right: -138px;
+      top: 55px;
     }
 
     .second-menu-square {
@@ -609,11 +622,21 @@ export default {
 
     // index page
 
+    .first-index-box {
+      right: -130px;
+      top: 53px;
+    }
+
     .first-index-square {
       width: 441px;
       height: 113px;
       right: 18px;
       top: 32px;
+    }
+
+    .second-index-box {
+      right: -131px;
+      top: 183px;
     }
 
     .second-index-square {
@@ -625,11 +648,21 @@ export default {
 
     // data
 
+    .first-data-box {
+      right: -136px;
+      top: 43px;
+    }
+
     .first-data-square {
       width: 166px;
       height: 43px;
       right: 119px;
       top: 46px;
+    }
+
+    .second-data-box {
+      left: -122px;
+      top: 63px;
     }
 
     .second-data-square {
@@ -639,11 +672,21 @@ export default {
       top: 74px;
     }
 
+    .first-sheet-box {
+      left: -125px;
+      top: 179px;
+    }
+
     .first-sheet-square {
       width: 74px;
       height: 27px;
       left: 28px;
       top: 189px;
+    }
+
+    .second-sheet-box {
+      left: -123px;
+      top: 63px;
     }
 
     .second-sheet-square {
@@ -653,11 +696,21 @@ export default {
       top: 74px;
     }
 
+    .first-data-edit-box {
+      right: -137px;
+      top: 105px;
+    }
+
     .first-data-edit-square {
       width: 41px;
       height: 21px;
       right: 116px;
       top: 118px;
+    }
+
+    .second-data-edit-box {
+      right: -138px;
+      top: 49px;
     }
 
     .second-data-edit-square {
@@ -667,6 +720,11 @@ export default {
       top: 63px;
     }
 
+    .third-data-edit-box {
+      left: -108px;
+      top: 49px;
+    }
+
     .third-data-edit-square {
       width: 66px;
       height: 22px;
@@ -674,11 +732,21 @@ export default {
       top: 62px;
     }
 
+    .forth-data-edit-box {
+      right: -104px;
+      top: 49px;
+    }
+
     .forth-data-edit-square {
       width: 33px;
       height: 20px;
       right: 206px;
       top: 63px;
+    }
+
+    .fifth-data-edit-box {
+      right: -110px;
+      top: 4px;
     }
 
     .fifth-data-edit-square {
@@ -690,11 +758,21 @@ export default {
 
     // connect
 
+    .first-data-connect-box {
+      right: -158px;
+      top: 64px;
+    }
+
     .first-data-connect-square {
       width: 62px;
       height: 21px;
       right: 96px;
       top: 77px;
+    }
+
+    .second-data-connect-box {
+      left: -154px;
+      top: 30px;
     }
 
     .second-data-connect-square {
@@ -704,11 +782,21 @@ export default {
       top: 40px;
     }
 
+    .third-data-connect-box {
+      left: -123px;
+      top: 90px;
+    }
+
     .third-data-connect-square {
       width: 120px;
       height: 51px;
       left: 194px;
       top: 102px;
+    }
+
+    .fourth-data-connect-box {
+      right: -104px;
+      top: 159px;
     }
 
     .fourth-data-connect-square {
