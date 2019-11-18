@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueEvents from 'vue-events'
-import VeeValidate from 'vee-validate'
+import VeeValidate, { Validator } from 'vee-validate'
 import store from './store'
 import '@/utils/filters'
 import '@/utils/mixins'
@@ -137,6 +137,11 @@ Vue.component(RootCauseItem.name, RootCauseItem)
 Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(QuickStart.name, QuickStart)
 
+/** Custom Rule */
+Validator.extend('requireOneNumeric', function (value) {
+  return /.*[0-9].*/i.test(value)
+})
+
 Vue.use(VeeValidate, {
   // 避免自動 inject 到所有 component
   inject: false,
@@ -147,32 +152,50 @@ Vue.use(VeeValidate, {
     zh_TW: {
       messages: {
         required () {
-          return i18n.t('message.formColumnEmpty', 'zh-TW')
+          return i18n.t('message.formColumnEmpty')
         },
         email () {
-          return i18n.t('message.formMailWrong', 'zh-TW')
+          return i18n.t('message.formMailWrong')
         },
         numeric () {
-          return i18n.t('message.formNumberEmpty', 'zh-TW')
+          return i18n.t('message.formNumberEmpty')
         },
         max (field, length) {
-          return i18n.t('message.formCharacterOverMax', { max: length }, 'zh-TW')
+          return i18n.t('message.formCharacterOverMax', { max: length })
+        },
+        min (field, length) {
+          return i18n.t('message.formCharacterOverMin', { min: length })
+        },
+        requireOneNumeric (field) {
+          return i18n.t('message.formNumericeOverOne')
+        },
+        confirmed () {
+          return i18n.t('message.pleaseConfirmPassword')
         }
       }
     },
     zh_CN: {
       messages: {
         required () {
-          return i18n.t('message.formColumnEmpty', 'zh-CN')
+          return i18n.t('message.formColumnEmpty')
         },
         email () {
-          return i18n.t('message.formMailWrong', 'zh-CN')
+          return i18n.t('message.formMailWrong')
         },
         numeric () {
-          return i18n.t('message.formNumberEmpty', 'zh-CN')
+          return i18n.t('message.formNumberEmpty')
         },
         max (field, length) {
-          return i18n.t('message.formCharacterOverMax', { max: length }, 'zh-CN')
+          return i18n.t('message.formCharacterOverMax', { max: length })
+        },
+        min (field, length) {
+          return i18n.t('message.formCharacterOverMin', {min: length})
+        },
+        requireOneNumeric (field) {
+          return i18n.t('message.formNumericeOverOne')
+        },
+        confirmed () {
+          return i18n.t('message.pleaseConfirmPassword')
         }
       }
     }

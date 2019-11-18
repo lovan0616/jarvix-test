@@ -52,18 +52,23 @@
       >
         <div class="dialog-select-input-box">
           <!-- <input class="dialog-select-input" type="text" placeholder="原密碼"> -->
-          <input
+          <input-verify
             v-model="currentUser.password"
-            class="dialog-select-input"
             type="password"
             :placeholder="$t('editing.newPassword')"
+            name="verifyNewPassword"
+            v-validate="'required|min:8|requireOneNumeric'"
+            ref="confirmPassword"
           >
-          <input
+          </input-verify>
+          <input-verify
             v-model="currentUser.verifyPassword"
-            class="dialog-select-input"
             type="password"
             :placeholder="$t('editing.confirmNewPassword')"
+            name="verifyPasswordCheck"
+            v-validate="'required|min:8|requireOneNumeric|confirmed:confirmPassword'"
           >
+          </input-verify>
         </div>
       </writing-dialog>
 
@@ -76,12 +81,14 @@
         :showBoth="true"
       >
         <div class="dialog-select-input-box">
-          <input
+          <input-verify
             v-model="currentUser.username"
-            class="dialog-select-input"
             type="text"
             :placeholder="currentUser.username"
+            name="editUserName"
+            v-validate="'required'"
           >
+          </input-verify>
         </div>
       </writing-dialog>
 
@@ -110,10 +117,39 @@
       @closeDialog="closeCreateUser"
       @confirmBtn="createSingleUser"
     >
-      <input v-model="userInfo.username" class="dialog-input" type="text" :placeholder="$t('editing.userName')">
-      <input v-model="userInfo.email" class="dialog-input" type="text" :placeholder="$t('editing.userAccount')">
-      <input v-model="userInfo.password" class="dialog-input" type="password" :placeholder="$t('editing.loginPassword')">
-      <input v-model="verifyPassword" class="dialog-input" type="password" :placeholder="$t('editing.confirmPassword')">
+      <input-verify
+        v-model="userInfo.username"
+        type="text"
+        :placeholder="$t('editing.userName')"
+        name="createUserName"
+        v-validate="'required'"
+      >
+      </input-verify>
+      <input-verify
+        v-model="userInfo.email"
+        type="text"
+        :placeholder="$t('editing.userAccount')"
+        name="createUserMail"
+        v-validate="'required'"
+      >
+      </input-verify>
+      <input-verify
+        v-model="userInfo.password"
+        type="password"
+        :placeholder="$t('editing.loginPassword')"
+        name="createPassword"
+        v-validate="'required|min:8|requireOneNumeric'"
+        ref="loginPassword"
+      >
+      </input-verify>
+      <input-verify
+        v-model="verifyPassword"
+        type="password"
+        :placeholder="$t('editing.confirmPassword')"
+        name="createVerifyPassword"
+        v-validate="'required|min:8|requireOneNumeric|confirmed:loginPassword'"
+      >
+      </input-verify>
     </fill-dialog>
   </div>
 </template>
@@ -121,13 +157,17 @@
 import { createUser, getUsers, updateUser, deleteUser } from '@/API/User'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import InputVerify from '@/components/InputVerify'
 import FillDialog from '@/components/dialog/FillDialog'
+import { Message } from 'element-ui'
 export default {
+  inject: ['$validator'],
   name: 'UserManagement',
   components: {
     DecideDialog,
     WritingDialog,
-    FillDialog
+    FillDialog,
+    InputVerify
   },
   data () {
     return {
@@ -164,27 +204,35 @@ export default {
       this.isShowCreateUser = true
     },
     closeCreateUser () {
-      for (let index in this.userInfo) {
-        this.userInfo[index] = ''
-      }
-      this.verifyPassword = ''
+      // 關閉 component 後，才清空資料，以免在 function 中觸發 validate 導致錯誤發生
       this.isShowCreateUser = false
+      this.$nextTick(() => {
+        for (let index in this.userInfo) {
+          this.userInfo[index] = ''
+        }
+        this.verifyPassword = ''
+      })
     },
     createSingleUser () {
-      if (this.userInfo.password === this.verifyPassword) {
-        createUser(
-          this.userInfo
-        )
-          .then(response => {
-            this.isShowCreateUser = false
-            this.getUserList()
-          })
-          .catch(error => {
-            console.log(error)
-          })
-      } else {
-        alert(this.$t('editing.pleaseConfirmPassword'))
-      }
+      this.$validator.validateAll().then(result => {
+        if (result) {
+          createUser(
+            this.userInfo
+          )
+            .then(response => {
+              this.isShowCreateUser = false
+              this.getUserList()
+              Message({
+                message: this.$t('message.userCreateSuccess'),
+                type: 'success',
+                duration: 3 * 1000
+              })
+            })
+            .catch(error => {
+              console.log(error)
+            })
+        }
+      })
     },
     getUserList () {
       getUsers()
@@ -197,34 +245,48 @@ export default {
         })
     },
     changePassword () {
-      if (this.currentUser.password === this.currentUser.verifyPassword) {
-        updateUser(
-          {password: this.currentUser.password},
-          this.currentId
-        )
-          .then(response => {
-            this.closePassword()
-            this.getUserList()
-          })
-          .catch(error => {
-            console.log(error)
-          })
-      } else {
-        alert(this.$t('editing.pleaseConfirmNewPassword'))
-      }
+      this.$validator.validateAll().then(result => {
+        if (result) {
+          updateUser(
+            {password: this.currentUser.password},
+            this.currentId
+          )
+            .then(response => {
+              this.closePassword()
+              this.getUserList()
+              Message({
+                message: this.$t('message.changePasswordSuccess'),
+                type: 'success',
+                duration: 3 * 1000
+              })
+            })
+            .catch(error => {
+              console.log(error)
+            })
+        }
+      })
     },
     editName () {
-      updateUser(
-        {username: this.currentUser.username},
-        this.currentId
-      )
-        .then(response => {
-          this.closeEditName()
-          this.getUserList()
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      this.$validator.validateAll().then(result => {
+        if (result) {
+          updateUser(
+            {username: this.currentUser.username},
+            this.currentId
+          )
+            .then(response => {
+              this.closeEditName()
+              this.getUserList()
+              Message({
+                message: this.$t('message.editNameSuccess'),
+                type: 'success',
+                duration: 3 * 1000
+              })
+            })
+            .catch(error => {
+              console.log(error)
+            })
+        }
+      })
     },
     changeStatus () {
       updateUser(
@@ -234,6 +296,11 @@ export default {
         .then(response => {
           this.closeStatusChange()
           this.getUserList()
+          Message({
+            message: this.$t('message.changeStatusSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
         })
         .catch(error => {
           console.log(error)
@@ -256,9 +323,12 @@ export default {
       this.isShowPassword = true
     },
     closePassword () {
-      this.currentUser.password = ''
-      this.currentUser.verifyPassword = ''
+      // 關閉 component 後，才清空資料，以免在 function 中觸發 validate 導致錯誤發生
       this.isShowPassword = false
+      this.$nextTick(() => {
+        this.currentUser.password = ''
+        this.currentUser.verifyPassword = ''
+      })
     },
     showEditName (user) {
       this.currentUser.username = user.name
