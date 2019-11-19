@@ -67,6 +67,7 @@ import DisplayChinaMap from '@/components/display/DisplayChinaMap'
 import DisplayWorldMap from '@/components/display/DisplayWorldMap'
 import DisplayPredictChart from '@/components/display/DisplayPredictChart'
 import DisplayPivot from '@/components/display/DisplayPivot'
+import DisplayHeatMapChart from '@/components/display/DisplayHeatMapChart'
 import PreviewPivot from '@/components/display/PreviewPivot'
 import InsightsInfo from '@/components/display/InsightsInfo'
 import RootCauseInfo from '@/components/display/RootCauseInfo'
@@ -128,6 +129,7 @@ Vue.component(DisplayChinaMap.name, DisplayChinaMap)
 Vue.component(DisplayWorldMap.name, DisplayWorldMap)
 Vue.component(DisplayPredictChart.name, DisplayPredictChart)
 Vue.component(DisplayPivot.name, DisplayPivot)
+Vue.component(DisplayHeatMapChart.name, DisplayHeatMapChart)
 Vue.component(PreviewPivot.name, PreviewPivot)
 Vue.component(NoResult.name, NoResult)
 Vue.component(EmptyResult.name, EmptyResult)
