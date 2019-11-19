@@ -4,7 +4,7 @@
   >
     <div
       v-html="text"
-      :class="[{'description-space description-text-right': positionLeft, 'description-text': twoRow}]"
+      :class="[{'description-space description-text-right': positionLeft}]"
     >
     </div>
     <div
@@ -28,9 +28,6 @@ export default {
     },
     text: {
       type: String
-    },
-    twoRow: {
-      type: Boolean
     }
   }
 }

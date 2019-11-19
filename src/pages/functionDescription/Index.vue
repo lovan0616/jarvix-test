@@ -137,7 +137,6 @@
                 class="first-index-box"
                 :lineClassName="'first-index-line'"
                 :text="$t('description.checkoutDataSheetDetail')"
-                :twoRow="true"
               >
               </row-description>
               <div class="description-square second-index-square"></div>
@@ -146,7 +145,6 @@
                 class="second-index-box"
                 :lineClassName="'second-index-line'"
                 :text="$t('description.systemLogQuestion')"
-                :twoRow="true"
               >
               </row-description>
             </div>
