@@ -5,39 +5,39 @@
       <div class="function-table-head">
         <div
           @click="showBasic"
-          :class="['function-table-head-cell', { 'head-active': tabBtn.basicBtn === true }]"
+          :class="['function-table-head-cell', { 'head-active': tabBtn.basicBtn }]"
         >
           {{ $t('description.basicIntroduce') }}
         </div>
         <div
           @click="showQuestion"
-          :class="['function-table-head-cell', { 'head-active': tabBtn.questionBtn === true }]"
+          :class="['function-table-head-cell', { 'head-active': tabBtn.questionBtn }]"
         >
           {{ $t('description.questionAnalyzeUse') }}
         </div>
         <div
           @click="showPinboard"
-          :class="['function-table-head-cell', { 'head-active': tabBtn.pinboardBtn === true }]"
+          :class="['function-table-head-cell', { 'head-active': tabBtn.pinboardBtn }]"
         >
           {{ $t('description.personalPinboard') }}
         </div>
         <div
           @click="showData"
-          :class="['function-table-head-cell', { 'head-active': tabBtn.dataBtn === true }]"
+          :class="['function-table-head-cell', { 'head-active': tabBtn.dataBtn }]"
         >
           {{ $t('nav.dataManagement') }}
         </div>
         <div class="function-table-head-cell"></div>
       </div>
 
-      <div v-if="tabBtn.basicBtn === true" class="function-table-body">
+      <div v-if="tabBtn.basicBtn " class="function-table-body">
         <div
           @click="toggleInterface"
           class="function-content-title"
         >
           <div>{{ $t('description.interfaceDescription') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': basicContent.isShowInterface === true }]"
+            :class="['content-icon', { 'rotate': basicContent.isShowInterface }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -85,7 +85,7 @@
         >
           <div>{{ $t('description.guidingRowIntroduce') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': basicContent.isShowGuiding === true }]"
+            :class="['content-icon', { 'rotate': basicContent.isShowGuiding }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -122,7 +122,7 @@
         >
           <div>{{ $t('description.indexPageFunctionIntroduce') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': basicContent.isShowIndexPageFunction === true }]"
+            :class="['content-icon', { 'rotate': basicContent.isShowIndexPageFunction }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -154,14 +154,14 @@
 
       <!-- 問題分析操作 -->
 
-      <div v-if="tabBtn.questionBtn === true" class="function-table-body">
+      <div v-if="tabBtn.questionBtn" class="function-table-body">
         <div
           @click="toggleAskQuestion"
           class="function-content-title"
         >
           <div>{{ $t('description.howToAsk') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': questionContent.isShowAskQuestion === true }]"
+            :class="['content-icon', { 'rotate': questionContent.isShowAskQuestion }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -194,7 +194,7 @@
         >
           <div>{{ $t('description.howToSearchAssist') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': questionContent.isShowSearchQuestion === true }]"
+            :class="['content-icon', { 'rotate': questionContent.isShowSearchQuestion }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -252,7 +252,7 @@
         >
           <div>{{ $t('description.analyzeResultDescription') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': questionContent.isShowAnalyzeResult === true }]"
+            :class="['content-icon', { 'rotate': questionContent.isShowAnalyzeResult }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -286,7 +286,7 @@
         >
           <div>{{ $t('description.howToDeepen') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': questionContent.isShowDeepQuestion === true }]"
+            :class="['content-icon', { 'rotate': questionContent.isShowDeepQuestion }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -325,14 +325,14 @@
 
       <!-- 個人釘板使用 -->
 
-      <div v-if="tabBtn.pinboardBtn === true" class="function-table-body">
+      <div v-if="tabBtn.pinboardBtn" class="function-table-body">
         <div
           @click="toggleAddPinboard"
           class="function-content-title"
         >
           <div>{{ $t('description.howToAddPinboard') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': pinboardContent.isShowAddPinboard === true }]"
+            :class="['content-icon', { 'rotate': pinboardContent.isShowAddPinboard }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -380,7 +380,7 @@
         >
           <div>{{ $t('description.howToClassManage') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': pinboardContent.isShowManageClass === true }]"
+            :class="['content-icon', { 'rotate': pinboardContent.isShowManageClass }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -427,7 +427,7 @@
         >
           <div>{{ $t('description.howToShare') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': pinboardContent.isShowSharePinboard === true }]"
+            :class="['content-icon', { 'rotate': pinboardContent.isShowSharePinboard }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -490,14 +490,14 @@
           </div>
         </transition>
       </div>
-      <div v-if="tabBtn.dataBtn === true" class="function-table-body">
+      <div v-if="tabBtn.dataBtn" class="function-table-body">
         <div
           @click="toggleAddData"
           class="function-content-title"
         >
           <div>{{ $t('description.howAddData') }}？</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': dataContent.isShowAddData === true }]"
+            :class="['content-icon', { 'rotate': dataContent.isShowAddData }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -534,7 +534,7 @@
         >
           <div>{{ $t('description.enterDataManage') }}？</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': dataContent.isShowAddSheet === true }]"
+            :class="['content-icon', { 'rotate': dataContent.isShowAddSheet }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -569,7 +569,7 @@
         >
           <div>{{ $t('description.howEditDataSheet') }}？</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': dataContent.isShowEditData === true }]"
+            :class="['content-icon', { 'rotate': dataContent.isShowEditData }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -635,7 +635,7 @@
         >
           <div>{{ $t('description.howConnectDataSheet') }}？</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': dataContent.isShowConnectData === true }]"
+            :class="['content-icon', { 'rotate': dataContent.isShowConnectData }]"
             icon-class="dropdown"
           >
           </svg-icon>
