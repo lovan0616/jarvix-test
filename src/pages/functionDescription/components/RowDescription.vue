@@ -109,6 +109,107 @@ export default {
   width: 28px;
 }
 
+// question
+
+.first-ask-line {
+  width: 43px;
+}
+
+.second-ask-line {
+  width: 71px;
+}
+
+// assist
+
+.first-assist-line {
+  width: 162px;
+}
+
+.second-assist-line {
+  width: 48px;
+}
+
+.third-assist-line {
+  width: 83px;
+}
+
+.fourth-assist-line {
+  width: 48px;
+}
+
+// result
+
+.first-result-line {
+  width: 20px;
+}
+
+.second-result-line {
+  width: 26px;
+}
+
+// deep
+
+.first-deep-line {
+  width: 22px;
+}
+
+.second-deep-line {
+  width: 26px;
+}
+
+.third-deep-line {
+  width: 26px;
+}
+
+// pinboard
+
+.first-pinboard-line {
+  width: 48px;
+}
+
+.second-pinboard-line {
+  width: 39px;
+}
+
+.third-pinboard-line {
+  width: 39px;
+}
+
+// class manage
+
+.first-class-line {
+  width: 140px;
+}
+
+.second-class-line {
+  width: 30px;
+}
+
+.third-class-line {
+  width: 261px;
+}
+
+// share pinboard
+
+.first-share-line {
+  width: 265px;
+}
+
+.second-share-line {
+  width: 221px;
+}
+
+.third-share-line {
+  width: 30px;
+}
+
+.fourth-share-line {
+  width: 77px;
+}
+
+.fifth-share-line {
+  width: 221px;
+}
 // data
 
 .first-data-line {
@@ -139,7 +240,7 @@ export default {
   width: 283px;
 }
 
-.forth-data-edit-line {
+.fourth-data-edit-line {
   width: 222px;
 }
 

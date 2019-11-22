@@ -5,39 +5,39 @@
       <div class="function-table-head">
         <div
           @click="showBasic"
-          :class="['function-table-head-cell', { 'head-active': tabBtn.basicBtn === true }]"
+          :class="['function-table-head-cell', { 'head-active': tabBtn.basicBtn }]"
         >
           {{ $t('description.basicIntroduce') }}
         </div>
         <div
           @click="showQuestion"
-          :class="['function-table-head-cell', { 'head-active': tabBtn.questionBtn === true }]"
+          :class="['function-table-head-cell', { 'head-active': tabBtn.questionBtn }]"
         >
           {{ $t('description.questionAnalyzeUse') }}
         </div>
         <div
           @click="showPinboard"
-          :class="['function-table-head-cell', { 'head-active': tabBtn.pinboardBtn === true }]"
+          :class="['function-table-head-cell', { 'head-active': tabBtn.pinboardBtn }]"
         >
-          {{ $t('description.questionAnalyzeUse') }}
+          {{ $t('description.personalPinboard') }}
         </div>
         <div
           @click="showData"
-          :class="['function-table-head-cell', { 'head-active': tabBtn.dataBtn === true }]"
+          :class="['function-table-head-cell', { 'head-active': tabBtn.dataBtn }]"
         >
           {{ $t('nav.dataManagement') }}
         </div>
         <div class="function-table-head-cell"></div>
       </div>
 
-      <div v-if="tabBtn.basicBtn === true" class="function-table-body">
+      <div v-if="tabBtn.basicBtn " class="function-table-body">
         <div
           @click="toggleInterface"
           class="function-content-title"
         >
           <div>{{ $t('description.interfaceDescription') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': basicContent.isShowInterface === true }]"
+            :class="['content-icon', { 'rotate': basicContent.isShowInterface }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -85,7 +85,7 @@
         >
           <div>{{ $t('description.guidingRowIntroduce') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': basicContent.isShowGuiding === true }]"
+            :class="['content-icon', { 'rotate': basicContent.isShowGuiding }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -122,7 +122,7 @@
         >
           <div>{{ $t('description.indexPageFunctionIntroduce') }}</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': basicContent.isShowIndexPageFunction === true }]"
+            :class="['content-icon', { 'rotate': basicContent.isShowIndexPageFunction }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -154,16 +154,350 @@
 
       <!-- 問題分析操作 -->
 
+      <div v-if="tabBtn.questionBtn" class="function-table-body">
+        <div
+          @click="toggleAskQuestion"
+          class="function-content-title"
+        >
+          <div>{{ $t('description.howToAsk') }}</div>
+          <svg-icon
+            :class="['content-icon', { 'rotate': questionContent.isShowAskQuestion }]"
+            icon-class="dropdown"
+          >
+          </svg-icon>
+        </div>
+        <transition name="fade" mode="out-in">
+          <div class="single-description" v-if="questionContent.isShowAskQuestion">
+            <div class="description-image-box">
+              <img class="description-image" src="@/assets/images/functionDescription/question-recommend.png" :alt="$t('description.questionClick')">
+              <div class="description-square first-ask-square"></div>
+              <row-description
+                class="first-ask-box"
+                :lineClassName="'first-ask-line'"
+                :text="$t('description.questionClick')"
+              >
+              </row-description>
+              <div class="description-square second-ask-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="second-ask-box"
+                :lineClassName="'second-ask-line'"
+                :text="$t('description.questionInput')"
+              >
+              </row-description>
+            </div>
+          </div>
+        </transition>
+        <div
+          @click="toggleSearchQuestion"
+          class="function-content-title"
+        >
+          <div>{{ $t('description.howToSearchAssist') }}</div>
+          <svg-icon
+            :class="['content-icon', { 'rotate': questionContent.isShowSearchQuestion }]"
+            icon-class="dropdown"
+          >
+          </svg-icon>
+        </div>
+        <transition name="fade" mode="out-in">
+          <div class="single-description" v-if="questionContent.isShowSearchQuestion">
+            <div class="description-inner-text">{{ $t('description.activateHint') }}</div>
+            <div class="description-row-image-box description-space-image">
+              <img class="description-row-image" src="@/assets/images/functionDescription/question-hint.png" :alt="$t('description.howToSearchAssist')">
+              <div class="description-square first-assist-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="first-assist-box"
+                :lineClassName="'first-assist-line'"
+                :text="'Step1:<br>' + $t('description.inputKeyWord')"
+              >
+              </row-description>
+              <img src="@/assets/images/functionDescription/question-hint.png" :alt="$t('description.settingFunctionMenu')">
+              <div class="description-square second-assist-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="second-assist-box"
+                :lineClassName="'second-assist-line'"
+                :text="'Step2:<br>' + $t('description.questionHint')"
+              >
+              </row-description>
+            </div>
+            <div class="description-inner-text">{{ $t('description.openQuestionDescription') }}</div>
+            <div class="description-row-image-box description-space-image">
+              <img class="description-row-image" src="@/assets/images/functionDescription/question-recommend.png" :alt="$t('description.clickOpenQuestion')">
+              <div class="description-square third-assist-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="third-assist-box"
+                :lineClassName="'third-assist-line'"
+                :text="'Step1:<br>' + $t('description.clickOpenQuestion')"
+              >
+              </row-description>
+              <img src="@/assets/images/functionDescription/question-description.png" :alt="$t('description.questionDescriptionContent')">
+              <div class="description-square fourth-assist-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="fourth-assist-box"
+                :lineClassName="'fourth-assist-line'"
+                :text="'Step2:<br>' + $t('description.questionDescriptionContent')"
+              >
+              </row-description>
+            </div>
+
+          </div>
+        </transition>
+        <div
+          @click="toggleAnalyzeResult"
+          class="function-content-title"
+        >
+          <div>{{ $t('description.analyzeResultDescription') }}</div>
+          <svg-icon
+            :class="['content-icon', { 'rotate': questionContent.isShowAnalyzeResult }]"
+            icon-class="dropdown"
+          >
+          </svg-icon>
+        </div>
+        <transition name="fade" mode="out-in">
+          <div class="single-description" v-if="questionContent.isShowAnalyzeResult">
+            <div class="description-image-box">
+              <img class="description-image" src="@/assets/images/functionDescription/question-result.png" :alt="$t('description.analyzeResultDescription')">
+              <div class="description-square first-result-square"></div>
+              <row-description
+                class="first-result-box"
+                :lineClassName="'first-result-line'"
+                :text="$t('description.systemResponseResult')"
+              >
+              </row-description>
+              <div class="description-square second-result-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="second-result-box"
+                :lineClassName="'second-result-line'"
+                :text="$t('description.questionAnalyzeDetail')"
+              >
+              </row-description>
+            </div>
+          </div>
+        </transition>
+
+        <div
+          @click="toggleDeepQuestion"
+          class="function-content-title"
+        >
+          <div>{{ $t('description.howToDeepen') }}</div>
+          <svg-icon
+            :class="['content-icon', { 'rotate': questionContent.isShowDeepQuestion }]"
+            icon-class="dropdown"
+          >
+          </svg-icon>
+        </div>
+        <transition name="fade" mode="out-in">
+          <div class="single-description" v-if="questionContent.isShowDeepQuestion">
+            <div class="description-image-box">
+              <img class="description-image" src="@/assets/images/functionDescription/question-deepen.png" :alt="$t('description.systemRecommendQuestion')">
+              <div class="description-square first-deep-square"></div>
+              <row-description
+                class="first-deep-box"
+                :lineClassName="'first-deep-line'"
+                :text="$t('description.systemRecommendQuestion')"
+              >
+              </row-description>
+              <div class="description-square second-deep-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="second-deep-box"
+                :lineClassName="'second-deep-line'"
+                :text="$t('description.systemTargetFace')"
+              >
+              </row-description>
+              <div class="description-square third-deep-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="third-deep-box"
+                :lineClassName="'third-deep-line'"
+                :text="$t('description.systemRecommendQuestion')"
+              >
+              </row-description>
+            </div>
+          </div>
+        </transition>
+      </div>
+
       <!-- 個人釘板使用 -->
 
-      <div v-if="tabBtn.dataBtn === true" class="function-table-body">
+      <div v-if="tabBtn.pinboardBtn" class="function-table-body">
+        <div
+          @click="toggleAddPinboard"
+          class="function-content-title"
+        >
+          <div>{{ $t('description.howToAddPinboard') }}</div>
+          <svg-icon
+            :class="['content-icon', { 'rotate': pinboardContent.isShowAddPinboard }]"
+            icon-class="dropdown"
+          >
+          </svg-icon>
+        </div>
+        <transition name="fade" mode="out-in">
+          <div class="single-description" v-if="pinboardContent.isShowAddPinboard">
+            <div class="description-image-box description-space-image">
+              <img class="description-image" src="@/assets/images/functionDescription/pinboard-click-board.png" :alt="$t('description.clickPinboard')">
+              <div class="description-square first-pinboard-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="first-pinboard-box"
+                :lineClassName="'first-pinboard-line'"
+                :text="'Step1:<br>' + $t('description.clickPinboard')"
+              >
+              </row-description>
+            </div>
+            <div class="description-image-box description-space-image">
+              <img class="description-image" src="@/assets/images/functionDescription/pinboard-select-class.png" :alt="$t('description.selectPinboardClass')">
+              <div class="description-square second-pinboard-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="second-pinboard-box"
+                :lineClassName="'second-pinboard-line'"
+                :text="'Step2:<br>' + $t('description.selectPinboardClass')"
+              >
+              </row-description>
+            </div>
+            <div class="description-image-box">
+              <img class="description-image" src="@/assets/images/functionDescription/pinboard-complete-cancel.png" :alt="$t('description.pinboardCompleteCancel')">
+              <div class="description-square third-pinboard-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="third-pinboard-box"
+                :lineClassName="'third-pinboard-line'"
+                :text="'Step3:<br>' + $t('description.pinboardCompleteCancel')"
+              >
+              </row-description>
+            </div>
+          </div>
+        </transition>
+        <div
+          @click="toggleManageClass"
+          class="function-content-title"
+        >
+          <div>{{ $t('description.howToClassManage') }}</div>
+          <svg-icon
+            :class="['content-icon', { 'rotate': pinboardContent.isShowManageClass }]"
+            icon-class="dropdown"
+          >
+          </svg-icon>
+        </div>
+        <transition name="fade" mode="out-in">
+          <div class="single-description" v-if="pinboardContent.isShowManageClass">
+            <div class="description-image-box description-space-image">
+              <img class="description-image" src="@/assets/images/functionDescription/pinboard-enter-board.png" :alt="$t('description.enterPersonalPinboard')">
+              <div class="description-square first-class-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="first-class-box"
+                :lineClassName="'first-class-line'"
+                :text="'Step1:<br>' + $t('description.enterPersonalPinboard')"
+              >
+              </row-description>
+            </div>
+            <div class="description-image-box description-space-image">
+              <img class="description-image" src="@/assets/images/functionDescription/pinboard-add-board.png" :alt="$t('description.enableAddClass')">
+              <div class="description-square second-class-square"></div>
+              <row-description
+                class="second-class-box"
+                :lineClassName="'second-class-line'"
+                :text="'Step2:<br>' + $t('description.enableAddClass')"
+              >
+              </row-description>
+            </div>
+            <div class="description-image-box">
+              <img class="description-image" src="@/assets/images/functionDescription/pinboard-select-menu.png" :alt="$t('description.classFunctionMenu')">
+              <div class="description-square third-class-square"></div>
+              <row-description
+                class="third-class-box"
+                :lineClassName="'third-class-line'"
+                :text="'Step3:<br>' + $t('description.classFunctionMenu')"
+              >
+              </row-description>
+            </div>
+          </div>
+        </transition>
+
+        <div
+          @click="toggleSharePinboard"
+          class="function-content-title"
+        >
+          <div>{{ $t('description.howToShare') }}</div>
+          <svg-icon
+            :class="['content-icon', { 'rotate': pinboardContent.isShowSharePinboard }]"
+            icon-class="dropdown"
+          >
+          </svg-icon>
+        </div>
+        <transition name="fade" mode="out-in">
+          <div class="single-description" v-if="pinboardContent.isShowSharePinboard">
+            <div class="description-inner-text">{{ $t('description.sharePinboardContent') }}</div>
+            <div class="description-image-box description-space-image">
+              <img class="description-image" src="@/assets/images/functionDescription/pinboard-select-menu.png" :alt="$t('description.clickMenuShare')">
+              <div class="description-square first-share-square"></div>
+              <row-description
+                class="first-share-box"
+                :lineClassName="'first-share-line'"
+                :text="'Step1:<br>' + $t('description.clickMenuShare')"
+              >
+              </row-description>
+            </div>
+            <div class="description-image-box description-space-image">
+              <img class="description-image" src="@/assets/images/functionDescription/pinboard-share-dialog.png" :alt="$t('description.shareLink')">
+              <div class="description-square second-share-square"></div>
+              <row-description
+                class="second-share-box"
+                :lineClassName="'second-share-line'"
+                :text="'Step2:<br>' + $t('description.shareLink')"
+              >
+              </row-description>
+            </div>
+            <div class="description-inner-text">{{ $t('description.shareSinglePinboard') }}</div>
+            <div class="description-image-box description-space-image">
+              <img class="description-image" src="@/assets/images/functionDescription/pinboard-select-single-class.png" :alt="$t('description.clickSingleClass')">
+              <div class="description-square third-share-square"></div>
+              <row-description
+                class="third-share-box"
+                :lineClassName="'third-share-line'"
+                :text="'Step1:<br>' + $t('description.clickSingleClass')"
+              >
+              </row-description>
+            </div>
+            <div class="description-image-box description-space-image">
+              <img class="description-image" src="@/assets/images/functionDescription/pinboard-click-share.png" :alt="$t('description.clickShare')">
+              <div class="description-square fourth-share-square"></div>
+              <row-description
+                :positionLeft="false"
+                class="fourth-share-box"
+                :lineClassName="'fourth-share-line'"
+                :text="'Step2:<br>' + $t('description.clickShare')"
+              >
+              </row-description>
+            </div>
+            <div class="description-image-box">
+              <img class="description-image" src="@/assets/images/functionDescription/pinboard-share-dialog.png" :alt="$t('description.shareLink')">
+              <div class="description-square fifth-share-square"></div>
+              <row-description
+                class="fifth-share-box"
+                :lineClassName="'fifth-share-line'"
+                :text="'Step3:<br>' + $t('description.shareLink')"
+              >
+              </row-description>
+            </div>
+          </div>
+        </transition>
+      </div>
+      <div v-if="tabBtn.dataBtn" class="function-table-body">
         <div
           @click="toggleAddData"
           class="function-content-title"
         >
           <div>{{ $t('description.howAddData') }}？</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': dataContent.isShowAddData === true }]"
+            :class="['content-icon', { 'rotate': dataContent.isShowAddData }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -200,7 +534,7 @@
         >
           <div>{{ $t('description.enterDataManage') }}？</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': dataContent.isShowAddSheet === true }]"
+            :class="['content-icon', { 'rotate': dataContent.isShowAddSheet }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -235,7 +569,7 @@
         >
           <div>{{ $t('description.howEditDataSheet') }}？</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': dataContent.isShowEditData === true }]"
+            :class="['content-icon', { 'rotate': dataContent.isShowEditData }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -273,11 +607,11 @@
                 :text="'Step3:<br>' + $t('description.editAlias')"
               >
               </row-description>
-              <div class="description-square forth-data-edit-square"></div>
+              <div class="description-square fourth-data-edit-square"></div>
               <row-description
                 :positionLeft="false"
-                class="forth-data-edit-box"
-                :lineClassName="'forth-data-edit-line'"
+                class="fourth-data-edit-box"
+                :lineClassName="'fourth-data-edit-line'"
                 :text="'Step3:<br>' + $t('description.confirmEdit')"
               >
               </row-description>
@@ -301,7 +635,7 @@
         >
           <div>{{ $t('description.howConnectDataSheet') }}？</div>
           <svg-icon
-            :class="['content-icon', { 'rotate': dataContent.isShowConnectData === true }]"
+            :class="['content-icon', { 'rotate': dataContent.isShowConnectData }]"
             icon-class="dropdown"
           >
           </svg-icon>
@@ -376,8 +710,17 @@ export default {
         isShowGuiding: false,
         isShowIndexPageFunction: false
       },
-      questionContent: {},
-      pinboardContent: {},
+      questionContent: {
+        isShowAskQuestion: false,
+        isShowSearchQuestion: false,
+        isShowAnalyzeResult: false,
+        isShowDeepQuestion: false
+      },
+      pinboardContent: {
+        isShowAddPinboard: false,
+        isShowManageClass: false,
+        isShowSharePinboard: false
+      },
       dataContent: {
         isShowAddData: false,
         isShowAddSheet: false,
@@ -412,6 +755,7 @@ export default {
       this.closeTab()
       this.tabBtn.dataBtn = true
     },
+    // 基本介紹
     toggleInterface () {
       this.basicContent.isShowInterface = !this.basicContent.isShowInterface
     },
@@ -422,7 +766,29 @@ export default {
       this.basicContent.isShowIndexPageFunction = !this.basicContent.isShowIndexPageFunction
     },
     // 問題分析操作
+    toggleAskQuestion () {
+      this.questionContent.isShowAskQuestion = !this.questionContent.isShowAskQuestion
+    },
+    toggleSearchQuestion () {
+      this.questionContent.isShowSearchQuestion = !this.questionContent.isShowSearchQuestion
+    },
+    toggleAnalyzeResult () {
+      this.questionContent.isShowAnalyzeResult = !this.questionContent.isShowAnalyzeResult
+    },
+    toggleDeepQuestion () {
+      this.questionContent.isShowDeepQuestion = !this.questionContent.isShowDeepQuestion
+    },
     // 個人釘板使用
+    toggleAddPinboard () {
+      this.pinboardContent.isShowAddPinboard = !this.pinboardContent.isShowAddPinboard
+    },
+    toggleManageClass () {
+      this.pinboardContent.isShowManageClass = !this.pinboardContent.isShowManageClass
+    },
+    toggleSharePinboard () {
+      this.pinboardContent.isShowSharePinboard = !this.pinboardContent.isShowSharePinboard
+    },
+    // 資料管理
     toggleAddData () {
       this.dataContent.isShowAddData = !this.dataContent.isShowAddData
     },
@@ -505,9 +871,26 @@ export default {
     flex-direction: column;
     padding: 37px 0px;
 
+    .description-inner-text {
+      align-self: flex-start;
+      margin-bottom: 17px;
+    }
+
     .description-image-box {
       position: relative;
       width: 660px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .description-row-image-box {
+      position: relative;
+      width: 760px;
+      display: flex;
+    }
+
+    .description-row-image {
+      margin-right: 280px;
     }
 
     .description-image {
@@ -644,6 +1027,281 @@ export default {
       top: 153px;
     }
 
+    // question
+
+    .first-ask-box {
+      left: 4px;
+      top: 67px;
+    }
+
+    .first-ask-square {
+      width: 186px;
+      height: 146px;
+      left: 220px;
+      top: 38px;
+    }
+
+    .second-ask-box {
+      right: 61px;
+      top: 318px;
+    }
+
+    .second-ask-square {
+      width: 186px;
+      height: 38px;
+      right: 254px;
+      top: 309px;
+    }
+
+    // assist
+    .first-assist-box {
+      top: 303px;
+      left: 73px;
+    }
+
+    .first-assist-square {
+      top: 335px;
+      left: 45px;
+      width: 24px;
+    }
+
+    .second-assist-box {
+      top: 185px;
+      right: -92px;
+    }
+
+    .second-assist-square {
+      width: 189px;
+      height: 121px;
+      top: 192px;
+      right: 79px;
+    }
+
+    .third-assist-box {
+      top: 331px;
+      left: 153px;
+    }
+
+    .third-assist-square {
+      top: 352px;
+      left: 114px;
+      width: 32px;
+    }
+
+    .fourth-assist-box {
+      top: 18px;
+      right: -95px;
+    }
+
+    .fourth-assist-square {
+      width: 189px;
+      height: 315px;
+      top: 0px;
+      right: 75px;
+    }
+
+    // result
+
+    .first-result-box {
+      left: -159px;
+      top: 192px;
+    }
+
+    .first-result-square {
+      width: 89px;
+      height: 48px;
+      left: 0px;
+      top: 189px;
+    }
+
+    .second-result-box {
+      right: -142px;
+      top: 71px;
+    }
+
+    .second-result-square {
+      width: 463px;
+      height: 336px;
+      right: 6px;
+      top: 23px;
+    }
+
+    // deep
+
+    .first-deep-box {
+      left: -155px;
+      top: 232px;
+    }
+
+    .first-deep-square {
+      width: 131px;
+      height: 78px;
+      left: 6px;
+      top: 231px;
+    }
+
+    .second-deep-box {
+      top: 74px;
+      right: -155px;
+    }
+
+    .second-deep-square {
+      width: 453px;
+      height: 182px;
+      top: 0px;
+      right: 10px;
+    }
+
+    .third-deep-box {
+      right: -156px;
+      top: 259px;
+    }
+
+    .third-deep-square {
+      width: 454px;
+      height: 178px;
+      right: 9px;
+      top: 185px;
+    }
+
+    // pinboard
+
+    .first-pinboard-box {
+      top: 40px;
+      right: -104px;
+    }
+
+    .first-pinboard-square {
+      height: 31px;
+      width: 58px;
+      top: 48px;
+      right: 32px;
+    }
+
+    .second-pinboard-box {
+      top: 61px;
+      right: -137px;
+    }
+
+    .second-pinboard-square {
+      width: 102px;
+      height: 90px;
+      top: 36px;
+      right: 24px;
+    }
+
+    .third-pinboard-box {
+      top: 14px;
+      right: -154px;
+    }
+
+    .third-pinboard-square {
+      width: 60px;
+      height: 25px;
+      top: 37px;
+      right: 24px;
+    }
+
+    // manage class
+
+    .first-class-box {
+      top: -6px;
+      right: -130px;
+    }
+
+    .first-class-square {
+      width: 59px;
+      height: 27px;
+      top: 3px;
+      right: 132px;
+    }
+
+    .second-class-box {
+      top: 56px;
+      left: -158px;
+    }
+
+    .second-class-square {
+      top: 67px;
+      left: 11px;
+      width: 62px;
+      height: 25px;
+    }
+
+    .third-class-box {
+      top: 55px;
+      left: -139px;
+    }
+
+    .third-class-square {
+      height: 92px;
+      width: 90px;
+      top: 55px;
+      left: 244px;
+    }
+
+    // share pinboard
+
+    .first-share-box {
+      top: 84px;
+      left: -155px;
+    }
+
+    .first-share-square {
+      width: 79px;
+      height: 26px;
+      left: 249px;
+      top: 94px;
+    }
+
+    .second-share-box {
+      left: -102px;
+      top: 98px;
+    }
+
+    .second-share-square {
+      width: 247px;
+      height: 100px;
+      top: 73px;
+      left: 207px;
+    }
+
+    .third-share-box {
+      left: -140px;
+      top: 95px;
+    }
+
+    .third-share-square {
+      width: 163px;
+      height: 58px;
+      left: 12px;
+      top: 90px;
+    }
+
+    .fourth-share-box {
+      top: 62px;
+      right: -104px;
+    }
+
+    .fourth-share-square {
+      width: 46px;
+      height: 26px;
+      top: 73px;
+      right: 61px;
+    }
+
+    .fifth-share-box {
+      top: 99px;
+      left: -104px;
+    }
+
+    .fifth-share-square {
+      width: 247px;
+      height: 100px;
+      top: 73px;
+      left: 205px;
+    }
+
     // data
 
     .first-data-box {
@@ -730,12 +1388,12 @@ export default {
       top: 62px;
     }
 
-    .forth-data-edit-box {
+    .fourth-data-edit-box {
       right: -104px;
       top: 49px;
     }
 
-    .forth-data-edit-square {
+    .fourth-data-edit-square {
       width: 33px;
       height: 20px;
       right: 206px;
