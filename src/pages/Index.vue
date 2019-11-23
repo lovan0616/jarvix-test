@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { askChatBot } from '@/API/ChatBot'
+import { askQuestion } from '@/API/NewAsk'
 
 export default {
   name: 'PageIndex',
@@ -39,7 +39,7 @@ export default {
   methods: {
     getLandingInfo () {
       this.$store.commit('chatBot/updateAnalyzeStatus', true)
-      askChatBot({'question': null, 'bookmark_id': this.dataSourceId}).then(res => {
+      askQuestion({'question': null, 'datasourceId': this.dataSourceId}).then(res => {
         // 取得對話紀錄用的 chtabot id
         this.$store.commit('chatBot/updateChatBotId', res.chatbot_id)
         if (res.content.changed) {

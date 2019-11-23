@@ -89,6 +89,6 @@ export default {
 .task-root {
   width: 100%;
   // min-height: 20px;
-  overflow: hidden;
+  // overflow: hidden;
 }
 </style>

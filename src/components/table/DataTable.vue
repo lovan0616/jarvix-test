@@ -242,7 +242,7 @@ export default {
       }
     },
     doAction (actionName, data) {
-      if (this.isProcessing) return false
+      if (this.isProcessing || data['state'] === 'PROCESSING') return false
       this.$emit(actionName, data)
     },
     buildStatus (value) {

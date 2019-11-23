@@ -25,6 +25,7 @@
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
+import { askQuestion } from '@/API/NewAsk'
 import { askChatBot, getRelatedQuestions } from '@/API/ChatBot'
 
 export default {
@@ -42,7 +43,7 @@ export default {
   watch: {
     '$route.query' ({ question, action }) {
       if (!question) return false
-      this.fetchApiAsk({question, 'bookmark_id': this.dataSourceId, 'action_tag': action, 'chatbot_id': this.chatBotId})
+      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId})
     }
   },
   mounted () {
@@ -67,7 +68,7 @@ export default {
       let dataSourceId = parseInt(this.$route.query.dataSourceId)
       let actionTag = this.$route.query.action
       if (question) {
-        this.fetchApiAsk({question, 'bookmark_id': dataSourceId, 'action_tag': actionTag, 'chatbot_id': this.chatBotId})
+        this.fetchApiAsk({question, 'dataSourceId': dataSourceId})
       }
     },
     clearLayout () {
@@ -82,7 +83,7 @@ export default {
 
       const _this = this
       this.cancelRequest()
-      askChatBot(data, new axios.CancelToken(function executor (c) {
+      askQuestion(data, new axios.CancelToken(function executor (c) {
         _this.askCancelFunction = c
       }))
         .then(res => {

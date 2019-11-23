@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import VueEvents from 'vue-events'
 import VeeValidate, { Validator } from 'vee-validate'
+import VueAnalytics from 'vue-analytics'
 import store from './store'
 import '@/utils/filters'
 import '@/utils/mixins'
@@ -206,13 +207,18 @@ Vue.use(VeeValidate, {
   }
 })
 
+Vue.use(VueAnalytics, {
+  id: 'UA-152823461-1'
+})
+
 // rollbar error tracking
 Vue.use(Rollbar, {
   accessToken: process.env.ROLL_BAR,
   captureUncaught: true,
   captureUnhandledRejections: true,
-  // enabled: process.env.NODE_ENV === 'production',
-  environment: process.env.NODE_ENV,
+  enabled: process.env.NODE_ENV === 'production',
+  // environment: process.env.NODE_ENV,
+  environment: window.location.hostname,
   payload: {
     client: {
       javascript: {

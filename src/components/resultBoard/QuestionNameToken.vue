@@ -1,0 +1,79 @@
+<template>
+  <div class="question-token"
+    :class="nameInfo.type"
+  >
+    {{ nameInfo.text }}
+    <div class="name-info-tooltip">
+      {{ nameInfo.type }}
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  name: 'QuestionNameToken',
+  props: {
+    nameInfo: {
+      type: Object
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.question-token {
+  position: relative;
+  border-bottom: 1px solid;
+
+  &.filter {
+    border-color: #FF9559;
+  }
+  &.category {
+    border-color: #44D2FF;
+
+    .name-info-tooltip {
+      background-color: #44D2FF;
+
+      &:after {
+        border-bottom-color: #44D2FF;
+        box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
+      }
+    }
+  }
+  &.numeric {
+    border-color: #CA66DA;
+  }
+  &.value {
+    border-color: #E05889;
+  }
+
+  .name-info-tooltip {
+    position: absolute;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: auto;
+    width: auto;
+    font-size: 14px;
+    line-height: 32px;
+    // 處理寬度被 parent 限制的問題
+    white-space:nowrap;
+    text-align: center;
+    box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
+    border-radius: 8px;
+    padding: 5px 8px;
+
+    &:after {
+      bottom: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-bottom-color: rgba(50, 58, 58, 0.95);
+      border-width: 7px;
+      margin-left: -7px;
+    }
+  }
+}
+</style>
