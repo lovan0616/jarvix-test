@@ -4,8 +4,11 @@
   >
     <div class="board-top-section">
       <div class="board-title">
-        <span class="question-mark">Q</span>
-        <span class="question-name">{{ questionInfo.question }}</span>
+        <!-- <span class="question-mark">Q</span>
+        <span class="question-name">{{ questionInfo.question }}</span> -->
+        <question-name
+          :question-segmentation="questionInfo.segmentation"
+        ></question-name>
       </div>
       <div class="board-chart-block" v-if="questionInfo.template">
         <component
@@ -19,8 +22,13 @@
   </div>
 </template>
 <script>
+import QuestionName from '@/components/resultBoard/QuestionName'
+
 export default {
   name: 'PreviewResultBoard',
+  components: {
+    QuestionName
+  },
   props: {
     questionInfo: {
       type: Object,
@@ -39,6 +47,7 @@ export default {
     linkToResult () {
       this.$store.commit('bookmark/setAppQuestion', this.questionInfo.question)
       this.$store.commit('dataSource/setAppQuestion', this.questionInfo.question)
+      this.$store.commit('dataSource/setCurrentQuestionInfo', this.questionInfo)
       this.$store.dispatch('dataSource/updateResultRouter', this.$route.name === 'PageResult' ? 'click_recommend_result' : 'click_recommend_index')
       this.$events.emit('cleanPreview')
     }

@@ -66,6 +66,10 @@ export default {
     isPreview: {
       type: Boolean,
       default: false
+    },
+    formula: {
+      type: Object,
+      default: null
     }
   },
   methods: {
@@ -93,6 +97,46 @@ export default {
       scatterOptions.chartData.data = this.dataset.data
       scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.series[0] = scatterOptions.chartData
+
+      if (this.formula) {
+        let gradient = (this.formula.a).toFixed(4)
+        let offset = (this.formula.b).toFixed(4)
+        let expression = `y = ${gradient}x + ${offset}`
+
+        var markLineOpt = {
+          label: {
+            normal: {
+              formatter: expression,
+              textStyle: {
+                align: 'right'
+              }
+            }
+          },
+          lineStyle: {
+            normal: {
+              type: 'solid',
+              color: chartVariable['theme-color']
+            }
+          },
+          tooltip: {
+            formatter: expression
+          },
+          symbol: 'none',
+          data: [
+            [
+              {
+                name: expression,
+                type: 'min'
+              },
+              {
+                type: 'max'
+              }
+            ]
+          ]
+        }
+
+        chartAddon.series[0].markLine = markLineOpt
+      }
 
       if (this.isPreview) this.previewChartSetting(chartAddon)
 

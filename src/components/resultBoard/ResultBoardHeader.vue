@@ -45,6 +45,9 @@ export default {
       type: String,
       default: ''
     }
+    // segmentation: {
+    //   type: Array
+    // }
   }
 }
 </script>

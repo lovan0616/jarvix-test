@@ -58,14 +58,14 @@ export default {
           orient: 'horizontal',
           left: 'center',
           bottom: '15%',
-          inRange : {   
-            color: ['#95FAF2', '#C238FF' ] //From smaller to bigger value ->
+          inRange: {
+            color: ['#95FAF2', '#C238FF']// From smaller to bigger value
           }
         },
         series: [{
           name: this.dataset.columns[2],
           type: 'heatmap',
-          data: data,
+          data: this.dataset.data,
           label: {
             normal: {
               show: true

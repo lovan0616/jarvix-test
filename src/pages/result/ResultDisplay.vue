@@ -35,7 +35,6 @@
 import axios from 'axios'
 import { mapGetters } from 'vuex'
 import { askQuestion } from '@/API/NewAsk'
-import { askChatBot, getRelatedQuestions } from '@/API/ChatBot'
 
 export default {
   name: 'ResultDisplay',
@@ -71,7 +70,6 @@ export default {
     fetchData () {
       let question = this.$route.query.question
       let dataSourceId = parseInt(this.$route.query.dataSourceId)
-      let actionTag = this.$route.query.action
       if (question) {
         this.fetchApiAsk({question, dataSourceId, 'segmentation': this.currentQuestionInfo})
       }
@@ -99,9 +97,6 @@ export default {
           this.timeStamp = this.$route.query.stamp
 
           // checkQuestionList: null
-          // layout: "general"
-          // quickQuestionList: null
-          // relatedQuestionList: null
           // similarQuestionList
 
           this.isLoading = false
@@ -110,31 +105,35 @@ export default {
             case 'general':
               if (res.tasks && res.tasks.length > 1) {
                 this.layout = 'GeneralResult'
+                if (res.relatedQuestionList) {
+                  this.relatedQuestionList = res.relatedQuestionList
+                }
 
                 this.$nextTick(() => {
                   window.setTimeout(() => {
-                    this.$store.commit('chatBot/updateAnalyzeStatus', false)
                     this.$store.commit('chatBot/addSystemConversation', res.relatedQuestionList)
-                    this.relatedQuestionList = res.relatedQuestionList
                   }, 2000)
                 })
-
               } else {
                 this.layout = 'MultiResult'
               }
               this.resultInfo = res
 
-              
-              return
+              break
             case 'no_answer':
               this.layout = 'EmptyResult'
               this.resultInfo = res.tasks[0].entities
-              return
+              break
             case 'preview_datasource':
               this.layout = 'PreviewDataSource'
-              return
+              break
           }
-          
+
+          this.$nextTick(() => {
+            window.setTimeout(() => {
+              this.$store.commit('chatBot/updateAnalyzeStatus', false)
+            }, 2000)
+          })
         }).catch(() => {
           this.isLoading = false
           this.$store.commit('chatBot/updateAnalyzeStatus', false)
