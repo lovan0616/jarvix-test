@@ -17,7 +17,7 @@
 </template>
 <script>
 export default {
-  name: 'rowDescription',
+  name: 'RowDescription',
   props: {
     positionLeft: {
       type: Boolean,
