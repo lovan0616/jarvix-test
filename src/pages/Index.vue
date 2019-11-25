@@ -1,15 +1,20 @@
 <template>
   <div class="page-index">
+    <spinner class="layout-spinner"
+      v-if="isLoading"
+      :title="$t('resultDescription.analysisProcessing')"
+      size="50"
+    ></spinner>
     <empty-result
-      v-if="isNoResult"
+      v-else-if="isNoResult"
       :title="$t('editing.indexErrorTitle')"
       :description="$t('editing.indexErrorDescription')"
     ></empty-result>
-    <layout
-      v-else
-      :key="'layout-' + dataSourceId"
-      v-bind="layout"
-    ></layout>
+    <div class="v-else">
+      <quick-start
+        :question-list="quickStartQuestionList"
+      ></quick-start>
+    </div>
   </div>
 </template>
 
@@ -20,8 +25,10 @@ export default {
   name: 'PageIndex',
   data () {
     return {
+      isLoading: false,
       isNoResult: false,
-      layout: null
+      layout: null,
+      quickStartQuestionList: []
     }
   },
   mounted () {
@@ -38,16 +45,15 @@ export default {
   },
   methods: {
     getLandingInfo () {
+      this.isLoading = true
       this.$store.commit('chatBot/updateAnalyzeStatus', true)
-      askQuestion({'question': null, 'datasourceId': this.dataSourceId}).then(res => {
-        // 取得對話紀錄用的 chtabot id
-        this.$store.commit('chatBot/updateChatBotId', res.chatbot_id)
-        if (res.content.changed) {
-          this.layout = res.content
-        }
+      askQuestion({'question': null, 'dataSourceId': this.dataSourceId}).then(res => {
+        this.isLoading = false
+        this.quickStartQuestionList = res.quickQuestionList
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
-        this.$store.commit('chatBot/addSystemConversation', res.respond)
+        this.$store.commit('chatBot/addSystemConversation', res.quickQuestionList)
       }).catch(() => {
+        this.isLoading = false
         this.isNoResult = true
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
       })

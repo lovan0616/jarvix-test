@@ -18,7 +18,11 @@
           ></sy-select>
           <div class="data-count">{{ metaTableRightText }}</div>
         </div>
+        <spinner
+          v-if="isLoading"
+        ></spinner>
         <sy-table
+          v-else
           :dataset="bookmarkTableDataDataset"
         ></sy-table>
       </div>
@@ -31,11 +35,16 @@ import { mapGetters } from 'vuex'
 import SySelect from '../components/select/SySelect'
 
 export default {
-  name: 'PagePreviewBookmark',
+  name: 'PreviewDataSource',
   components: {
     SySelect
   },
-  created () {
+  data () {
+    return {
+      isLoading: false
+    }
+  },
+  mounted () {
     this.$store.dispatch('previewBookmark/init')
       .catch(err => err)
   },
@@ -59,7 +68,11 @@ export default {
   },
   methods: {
     onBookmarkTableChange (id) {
+      this.isLoading = true
       this.$store.dispatch('previewBookmark/changeBookmarkTableById', id)
+        .then(() => {
+          this.isLoading = false
+        })
         .catch(err => err)
     }
   }

@@ -49,10 +49,12 @@ import ContainerBlock from './components/container/ContainerBlock.vue'
 import ContainerCard from './components/container/ContainerCard.vue'
 import DisplayBasicChart from './components/display/DisplayBasicChart.vue'
 import SyTable from './components/table/SyTable.vue'
-import PreviewBookmark from './components/PreviewBookmark.vue'
+import PreviewDataSource from './components/PreviewDataSource.vue'
 import ResultBoard from '@/components/resultBoard/ResultBoard'
 import ResultBoardHeader from '@/components/resultBoard/ResultBoardHeader'
 import ResultBoardBody from '@/components/resultBoard/ResultBoardBody'
+import GeneralResult from '@/components/resultBoard/GeneralResult'
+import MultiResult from '@/components/resultBoard/MultiResult'
 import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
@@ -103,7 +105,7 @@ Vue.use(CollapseItem)
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)
 Vue.component(Task.name, Task)
-Vue.component(PreviewBookmark.name, PreviewBookmark)
+Vue.component(PreviewDataSource.name, PreviewDataSource)
 Vue.component(SyTable.name, SyTable)
 Vue.component(InsightsInfo.name, InsightsInfo)
 Vue.component(RootCauseInfo.name, RootCauseInfo)
@@ -113,6 +115,8 @@ Vue.component(IndicatorsList.name, IndicatorsList)
 Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
+Vue.component(GeneralResult.name, GeneralResult)
+Vue.component(MultiResult.name, MultiResult)
 Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
 Vue.component(ContainerBlock.name, ContainerBlock)
 Vue.component(ContainerCard.name, ContainerCard)

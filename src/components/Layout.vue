@@ -64,9 +64,5 @@ export default {
 <style lang="scss" scoped>
 .layout-root {
   transition: height 0.3s;
-
-  .layout-spinner {
-    height: calc(100vh - 150px);
-  }
 }
 </style>

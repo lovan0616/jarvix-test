@@ -15,8 +15,8 @@
       <div class="option"
         v-for="(option, index) in content.options"
         :key="index + '-option-' + new Date().getTime()"
-        @click="askChatBot(option.text)"
-      >{{ option.text }}</div>
+        @click="askChatBot(option.question)"
+      >{{ option.question }}</div>
     </div>
   </div>
 </template>

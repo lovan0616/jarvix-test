@@ -1,6 +1,7 @@
 export default {
   // User 問問題
   addUserConversation (state, data) {
+    console.log(state.conversationList, data)
     state.conversationList.push({
       type: 'User',
       text: data
@@ -10,8 +11,8 @@ export default {
   addSystemConversation (state, data) {
     state.conversationList.push({
       type: 'System',
-      text: data.text,
-      options: data.options
+      text: 'test',
+      options: data
     })
   },
   // 清除對話紀錄
@@ -20,8 +21,5 @@ export default {
   },
   updateAnalyzeStatus (state, data) {
     state.isAnalyzing = data
-  },
-  updateChatBotId (state, data) {
-    state.chatBotId = data
   }
 }

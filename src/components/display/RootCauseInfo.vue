@@ -122,6 +122,10 @@ export default {
       .root-cause-card {
         width: 100%;
 
+        &:not(:last-child) {
+          margin-bottom: 24px;
+        }
+
         .abstract-info {
           width: 25%;
         }
@@ -145,6 +149,10 @@ export default {
 
     &:not(:last-child) {
       margin-bottom: 24px;
+    }
+
+    &:nth-last-child(2) {
+      margin-bottom: 0;
     }
 
     .abstract-info {

@@ -1,22 +1,31 @@
 <template>
   <div class="result-layout">
-    <empty-result
-      v-if="isNoResult"
-    ></empty-result>
-    <layout
+    <!-- <layout
       v-else
       :key="timeStamp"
       v-bind="layout"
-    ></layout>
-    <div class="related-question-block" v-if="previews.length || previewLoading">
-      <spinner v-if="previewLoading" style="margin-bottom:24px;"></spinner>
-      <div v-else>
-        <div class="block-title">{{ $t('editing.relatedQuesion') }}</div>
-        <div class="related-question-list">
-          <preview-result-board class="result-board" v-for="(preview, index) in previews" v-bind:key="index"
-            :question-info="preview"
-          ></preview-result-board>
-        </div>
+    ></layout> -->
+    <spinner class="layout-spinner"
+      v-if="isLoading"
+      :title="$t('resultDescription.analysisProcessing')"
+      size="50"
+    ></spinner>
+    <empty-result
+      v-else-if="!layout"
+    ></empty-result>
+    <component
+      v-else
+      :is="layout"
+      :resultInfo="resultInfo"
+    ></component>
+    <div class="related-question-block" v-if="relatedQuestionList.length > 0">
+      <div class="block-title">{{ $t('editing.relatedQuesion') }}</div>
+      <div class="related-question-list">
+        <preview-result-board class="result-board"
+          v-for="(relatedQuestion, index) in relatedQuestionList"
+          :key="index"
+          :question-info="relatedQuestion"
+        ></preview-result-board>
       </div>
     </div>
   </div>
@@ -32,34 +41,27 @@ export default {
   name: 'ResultDisplay',
   data () {
     return {
+      isLoading: false,
       layout: null,
-      isNoResult: false,
+      resultInfo: null,
       askCancelFunction: null,
       timeStamp: this.$route.query.stamp,
-      previews: [],
-      previewLoading: false
+      relatedQuestionList: []
     }
   },
   watch: {
-    '$route.query' ({ question, action }) {
+    '$route.query' ({ question, action, stamp }) {
       if (!question) return false
       this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId})
     }
   },
   mounted () {
     this.fetchData()
-    this.$events.on('cleanPreview', () => {
-      this.previewLoading = false
-      this.previews = []
-    })
   },
   computed: {
     ...mapGetters('bookmark', ['appQuestion']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
-    },
-    chatBotId () {
-      return this.$store.state.chatBot.chatBotId
     }
   },
   methods: {
@@ -68,18 +70,20 @@ export default {
       let dataSourceId = parseInt(this.$route.query.dataSourceId)
       let actionTag = this.$route.query.action
       if (question) {
-        this.fetchApiAsk({question, 'dataSourceId': dataSourceId})
+        this.fetchApiAsk({question, dataSourceId})
       }
     },
     clearLayout () {
       this.layout = null
+      this.resultInfo = null
+      this.relatedQuestionList = []
     },
     fetchApiAsk (data) {
-      this.isNoResult = false
-      this.previews = []
+      console.log(data, data.question)
+      this.clearLayout()
+      this.isLoading = true
       this.$store.commit('chatBot/addUserConversation', data.question)
       this.$store.commit('chatBot/updateAnalyzeStatus', true)
-      this.clearLayout()
 
       const _this = this
       this.cancelRequest()
@@ -88,29 +92,46 @@ export default {
       }))
         .then(res => {
           this.$store.dispatch('dataSource/getHistoryQuestionList', this.dataSourceId)
-          this.$store.commit('chatBot/updateChatBotId', res.chatbot_id)
+
           this.timeStamp = this.$route.query.stamp
-          if (res.content.changed) {
-            this.layout = res.content
+
+          // checkQuestionList: null
+          // layout: "general"
+          // quickQuestionList: null
+          // relatedQuestionList: null
+          // similarQuestionList
+
+          this.isLoading = false
+
+          switch (res.layout) {
+            case 'general':
+              if (res.tasks && res.tasks.length > 1) {
+                this.layout = 'GeneralResult'
+              } else {
+                this.layout = 'MultiResult'
+              }
+              this.resultInfo = res
+              return
+            case 'no_answer':
+              this.layout = 'EmptyResult'
+              this.resultInfo = res.tasks[0].entities
+              return
+            case 'preview_datasource':
+              this.layout = 'PreviewDataSource'
+              return
           }
-          this.previewLoading = true
+
+          
+
           this.$nextTick(() => {
             window.setTimeout(() => {
               this.$store.commit('chatBot/updateAnalyzeStatus', false)
-              this.$store.commit('chatBot/addSystemConversation', res.respond)
-              getRelatedQuestions(data).then(res => {
-                this.previews = res.previews || []
-                this.previewLoading = false
-              }).catch(() => {
-                window.setTimeout(() => {
-                  this.previews = []
-                  this.previewLoading = false
-                }, 100)
-              })
+              this.$store.commit('chatBot/addSystemConversation', res.relatedQuestionList)
+              this.relatedQuestionList = res.relatedQuestionList
             }, 2000)
           })
         }).catch(() => {
-          this.isNoResult = true
+          this.isLoading = false
           this.$store.commit('chatBot/updateAnalyzeStatus', false)
         })
     },
