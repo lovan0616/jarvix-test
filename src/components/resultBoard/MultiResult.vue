@@ -5,6 +5,7 @@
       <div class="single-question"
         v-for="(singleQuestion, index) in questionList"
         :key="index"
+        @click="askQuestion(singleQuestion)"
       >
         <question-name
           :question-segmentation="singleQuestion.segmentation"
@@ -26,6 +27,13 @@ export default {
       type: Object
     }
   },
+  methods: {
+    askQuestion (questionInfo) {
+      this.$store.commit('bookmark/setAppQuestion', this.userQuestion)
+      this.$store.commit('dataSource/setAppQuestion', this.userQuestion)
+      this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
+    }
+  },
   computed: {
     questionList () {
       if (this.resultInfo.checkQuestionList) {
@@ -41,7 +49,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .multi-result {
-  padding: 16px 24px;
+  padding: 16px 24px 24px;
   background-color: $theme-bg-color;
   border-radius: 8px;
 
@@ -56,9 +64,16 @@ export default {
     background: rgba(35, 61, 64, 0.6);
     border: 1px solid #065D68;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
 
     &:not(:last-child) {
       margin-bottom: 12px;
+    }
+
+    &:hover {
+      transform: translate3d(0,-5px,0);
+      box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.12);
     }
   }
 }

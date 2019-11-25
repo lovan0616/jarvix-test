@@ -21,14 +21,14 @@ export default {
 <style lang="scss" scoped>
 .question-token {
   position: relative;
-  border-bottom: 1px solid;
   cursor: pointer;
 
   &.filter {
     border-color: #FF9559;
   }
-  &.category {
-    border-color: #44D2FF;
+
+  &.Datacolumn {
+    border-bottom: 1px solid #44D2FF;
 
     .name-info-tooltip {
       background-color: #44D2FF;
@@ -42,8 +42,22 @@ export default {
   &.numeric {
     border-color: #CA66DA;
   }
-  &.value {
-    border-color: #E05889;
+  &.Datavalue {
+    border-bottom: 1px solid #CA66DA;
+
+    &:hover {
+      background-color: rgba(202, 102, 218, 0.7);
+    }
+
+    .name-info-tooltip {
+      background-color: #CA66DA;
+
+      &:after {
+        border-color: transparent;
+        border-bottom-color: #CA66DA;
+        box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
+      }
+    }
   }
 
   &:hover {

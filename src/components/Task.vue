@@ -40,14 +40,10 @@ export default {
     },
     dataPath () {
       return this.urlRoot + this.dataUrl
-    },
-    currentQuestion () {
-      return this.$store.state.dataSource.appQuestion
     }
   },
   methods: {
     genTaskByTemplateAndData () {
-      this.params.question = this.currentQuestion
       // 同時取得 template && data
       Promise.all([
         getTask(this.templatePath, this.params).then(res => res),
