@@ -19,5 +19,8 @@ export default {
   },
   setHistoryQuestionList (state, data) {
     state.historyQuestionList = data
+  },
+  setCurrentQuestionInfo (state, data) {
+    state.currentQuestionInfo = data
   }
 }

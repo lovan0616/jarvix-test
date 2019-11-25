@@ -139,3 +139,13 @@ export function getBookmarkColumn (bookmarkId) {
     method: 'GET'
   })
 }
+
+/**
+ * quickstarts
+ */
+export function getDataPreviewSample (id) {
+  return request({
+    url: `/bookmarks/${id}/preview-sample`,
+    method: 'GET'
+  })
+}

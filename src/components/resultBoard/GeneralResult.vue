@@ -41,6 +41,20 @@ export default {
     resultInfo: {
       type: Object
     }
+  },
+  methods: {
+    getSlotName (value) {
+      switch (value) {
+        case 'title':
+          return 'PageResultBoardHeader'
+        case 'basic_info':
+          return 'InsightBasicInfo'
+        case 'key_result':
+          return 'PageResultBoardChart'
+        default:
+          return 'InsightRootCause'
+      }
+    }
   }
 }
 </script>

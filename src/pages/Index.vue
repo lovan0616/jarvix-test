@@ -20,6 +20,7 @@
 
 <script>
 import { askQuestion } from '@/API/NewAsk'
+import { getDataPreviewSample } from '@/API/Bookmark'
 
 export default {
   name: 'PageIndex',
@@ -56,6 +57,12 @@ export default {
         this.isLoading = false
         this.isNoResult = true
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
+      })
+      this.getPreviewBookmark()
+    },
+    getPreviewBookmark () {
+      getDataPreviewSample(this.dataSourceId).then(response => {
+        console.log(response)
       })
     }
   },
