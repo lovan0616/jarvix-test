@@ -10,7 +10,7 @@
       :title="$t('editing.indexErrorTitle')"
       :description="$t('editing.indexErrorDescription')"
     ></empty-result>
-    <div class="v-else">
+    <div v-if="quickStartQuestionList.length > 0">
       <quick-start
         :question-list="quickStartQuestionList"
       ></quick-start>

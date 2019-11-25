@@ -1,7 +1,6 @@
 export default {
   // User 問問題
   addUserConversation (state, data) {
-    console.log(state.conversationList, data)
     state.conversationList.push({
       type: 'User',
       text: data
