@@ -290,87 +290,687 @@
     "categoryTitle": "Category 类型",
     "numericTitle": "Numeric 类型",
     "datavalueTitle": "常见栏位数值",
+    "category": "Category类型的栏位，不具有数量单位。",
+    "numeric": "numeric类型的栏位，具有数量单位。",
+    "filter": "时间筛选条件",
+    "value": "value是栏位的资料，不限定数量或其他型态。",
+    "column": "栏位",
+    "type": "类型",
+    "description": "说明",
+    "columnName": "栏位名称",
+    "ask": "问",
+    "example": "范例",
     "questionSampleList": [
       {
-        "name": "一般问句(general)",
+        "name": "一般问句",
         "questionList": [
-          "成本",
-          "成本的平均",
-          "成本的总合",
-          "成本的总数",
-          "成本的最大值",
-          "成本的最小值",
-          "成本的标准差",
-          "成本的中位数",
-          "国家",
-          "国家的总数",
-          "各国家的成本",
-          "各国家的成本的总合",
-          "价格和成本",
-          "成本和价格的平均",
-          "各国家的成本和价格",
-          "各国家的成本和价格的平均"
+          {
+            "questionText": "Numeric 的概况",
+            "questionExample": [
+              [
+                {"text": "利润", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "概况", "type": ""}
+              ],
+              [
+                {"text": "單位價格", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "概况", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 的平均",
+            "questionExample": [
+              [
+                {"text": "利润", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "平均", "type": ""}
+              ],
+              [
+                {"text": "单位价格", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "平均", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 的總和",
+            "questionExample": [
+              [
+                {"text": "利润", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "总和", "type": ""}
+              ],
+              [
+                {"text": "单位价格", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "总和", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 的總數",
+            "questionExample": [
+              [
+                {"text": "利润", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "总数", "type": ""}
+              ],
+              [
+                {"text": "单位价格", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "总数", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 的最大值",
+            "questionExample": [
+              [
+                {"text": "利润", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "最大值", "type": ""}
+              ],
+              [
+                {"text": "单位价格", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "最大值", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 的标准差",
+            "questionExample": [
+              [
+                {"text": "利润", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "标准差", "type": ""}
+              ],
+              [
+                {"text": "单位价格", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "标准差", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 的中位数",
+            "questionExample": [
+              [
+                {"text": "利润", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "中位数", "type": ""}
+              ],
+              [
+                {"text": "单位价格", "type": "numeric"},
+                {"text": "的", "type": ""},
+                {"text": "中位数", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Category",
+            "questionExample": [
+              [
+                {"text": "事件", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "概况", "type": ""}
+              ],
+              [
+                {"text": "國家", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "概况", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Category 的总数",
+            "questionExample": [
+              [
+                {"text": "事件", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "总数", "type": ""}
+              ],
+              [
+                {"text": "國家", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "总数", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "各 Category 的 Numeric 的总合",
+            "questionExample": [
+              [
+                {"text": "各", "type": ""},
+                {"text": "产品", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "利润", "type": "numeric"},
+                {"text": "总合", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 和 Numeric 的平均",
+            "questionExample": [
+              [
+                {"text": "成本", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "利润", "type": "numeric"},
+                {"text": "的平均", "type": ""}
+              ],
+              [
+                {"text": "平均营收", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "成本", "type": "numeric"},
+                {"text": "的关系", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "各 Category 的 Numeric 和 Numeric 的平均",
+            "questionExample": [
+              [
+                {"text": "各", "type": ""},
+                {"text": "产品", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "单位价格", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "利润", "type": "numeric"},
+                {"text": "的平均", "type": ""}
+              ]
+            ]
+          }
         ]
       },
       {
-        "name": "枢纽分析问句(pivot_table)",
+        "name": "枢纽分析问句",
         "questionList": [
-          "国家和地区",
-          "国家和地区和货币",
-          "国家和地区的成本",
-          "国家和地区的成本的总合",
-          "国家和地区的成本和价格",
-          "国家和地区的成本和价格的总合",
-          "国家和地区和货币的成本和价格",
-          "国家和地区和货币的成本和价格的总合"
+          {
+            "questionText": "Category 和 Category",
+            "questionExample": [
+              [
+                {"text": "事件", "type": "category"},
+                {"text": "和", "type": ""},
+                {"text": "产品", "type": "category"}
+              ],
+              [
+                {"text": "部", "type": "category"},
+                {"text": "和", "type": ""},
+                {"text": "商店", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Category 和 Category 的 Numeric 的总合",
+            "questionExample": [
+              [
+                {"text": "客戶性別", "type": "category"},
+                {"text": "和", "type": ""},
+                {"text": "产品", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "单位价格", "type": "numeric"},
+                {"text": "的总合", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Category 和 Category 的 Numeric 和 Numeric 的总合",
+            "questionExample": [
+              [
+                {"text": "客戶性別", "type": "category"},
+                {"text": "和", "type": ""},
+                {"text": "产品", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "单位价格", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "利潤", "type": "numeric"},
+                {"text": "的总合", "type": ""}
+              ],
+              [
+                {"text": "仓库", "type": "category"},
+                {"text": "和", "type": ""},
+                {"text": "采购来源", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "良品", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "不良品", "type": "numeric"},
+                {"text": "的总合", "type": ""}
+              ]
+            ]
+          }
         ]
       },
       {
-        "name": "趋势分析问句(trend)",
+        "name": "趋势类问句",
         "questionList": [
-          "成本的趋势",
-          "每日的成本",
-          "每周的成本",
-          "每月的成本",
-          "每季的成本",
-          "每年的成本",
-          "每月的成本总合",
-          "每月的成本和价格",
-          "每月的成本和价格总合",
-          "每月各地区的成本",
-          "每月各地区的成本总合",
-          "每月各地区的成本和价格",
-          "每月各地区的成本和价格总合"
+          {
+            "questionText": "Numeric 的趋势",
+            "questionExample": [
+              [
+                {"text": "單位價格", "type": "numeric"},
+                {"text": "的趋势", "type": ""}
+              ],
+              [
+                {"text": "採購數量", "type": "numeric"},
+                {"text": "的趋势", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "每月的 Numeric",
+            "questionExample": [
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "单位价格", "type": "numeric"}
+              ],
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "失业率", "type": "numeric"}
+              ]
+            ]
+          },
+          {
+            "questionText": "每月的 Numeric 和 Numeric 总和",
+            "questionExample": [
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "单位价格", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "利润", "type": "numeric"},
+                {"text": "的总和", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "每月各 Category 的 Numeric 总和",
+            "questionExample": [
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "的各", "type": ""},
+                {"text": "产品", "type": "category"},
+                {"text": "和", "type": ""},
+                {"text": "利润", "type": "numeric"},
+                {"text": "的总和", "type": ""}
+              ],
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "各", "type": ""},
+                {"text": "商店", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "销售", "type": "numeric"},
+                {"text": "总和", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "每月各 Category 的 Numeric 和 Numeric ",
+            "questionExample": [
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "各", "type": ""},
+                {"text": "商店", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "销售", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "利润", "type": "numeric"}
+              ],
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "各", "type": ""},
+                {"text": "产品", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "利润", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "单位成本", "type": "numeric"}
+              ]
+            ]
+          },
+          {
+            "questionText": "每月各 Category 的 Numeric 和 Numeric 总和",
+            "questionExample": [
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "各", "type": ""},
+                {"text": "商店", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "銷售", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "利润", "type": "numeric"},
+                {"text": "总和", "type": ""}
+              ],
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "各", "type": ""},
+                {"text": "产品", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "利润", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "单位成本", "type": "numeric"},
+                {"text": "总和", "type": ""}
+              ]
+            ]
+          }
         ]
       },
       {
-        "name": "比较分析问句(comparison)",
+        "name": "比较类问句",
         "questionList": [
-          "2010年和2011年的成本比较",
-          "2010年的第一季和第二季的成本比较",
-          "2010年的七月和六月的成本比较",
-          "EROP和ASIA的成本比较",
-          "每年EROP和ASIA的成本比较"
+          {
+            "questionText": "Y 年和 Y 年的 Numeric 比较",
+            "questionExample": [
+              [
+                {"text": "2017年", "type": "filter"},
+                {"text": "和", "type": ""},
+                {"text": "2018年", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "单位成本", "type": "numeric"},
+                {"text": "比较", "type": ""}
+              ],
+              [
+                {"text": "2010年", "type": "filter"},
+                {"text": "和", "type": ""},
+                {"text": "2011年", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "销售", "type": "numeric"},
+                {"text": "比较", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年的第 X 季和第 X 季的 Numeric 比较",
+            "questionExample": [
+              [
+                {"text": "2010年", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "第一季", "type": "filter"},
+                {"text": "和", "type": ""},
+                {"text": "第三季", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "销售", "type": "numeric"},
+                {"text": "比较", "type": ""}
+              ],
+              [
+                {"text": "2019年", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "第一季", "type": "filter"},
+                {"text": "和", "type": ""},
+                {"text": "第三季", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "单位成本", "type": "numeric"},
+                {"text": "比较", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年的 M 月和 M 月的 Numeric 的比较",
+            "questionExample": [
+              [
+                {"text": "2010年", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "3月", "type": "filter"},
+                {"text": "和", "type": ""},
+                {"text": "5月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "销售", "type": "numeric"},
+                {"text": "比较", "type": ""}
+              ],
+              [
+                {"text": "2019年", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "8月", "type": "filter"},
+                {"text": "和", "type": ""},
+                {"text": "9月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "单位成本", "type": "numeric"},
+                {"text": "比较", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "value 和 value 的 Numeric 比较",
+            "questionExample": [
+              [
+                {"text": "上海", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "北京", "type": "value"},
+                {"text": "单位成本", "type": "numeric"},
+                {"text": "的比较", "type": ""}
+              ],
+              [
+                {"text": "F", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "M", "type": "value"},
+                {"text": "的", "type": ""},
+                {"text": "客户年龄", "type": "numeric"},
+                {"text": "比较", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "每年 value 和 value 的 Numeric 比较",
+            "questionExample": [
+              [
+                {"text": "每年", "type": "filter"},
+                {"text": "上海", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "北京", "type": "value"},
+                {"text": "的", "type": ""},
+                {"text": "单位成本", "type": "numeric"},
+                {"text": "比较", "type": ""}
+              ],
+              [
+                {"text": "每年", "type": "filter"},
+                {"text": "S11", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "S12", "type": "value"},
+                {"text": "的", "type": ""},
+                {"text": "销售", "type": "numeric"},
+                {"text": "比较", "type": ""}
+              ]
+            ]
+          }
         ]
       },
       {
-        "name": "原因分析问句(root_cause)",
+        "name": "根因分析问句",
         "questionList": [
-          "为什么2010年的成本上升",
-          "为什么2010年的成本下降",
-          "2010年成本的根因分析",
-          "2010年第三季成本的根因分析",
-          "2010年7月成本的根因分析",
-          "2010年7月到12月的成本的根因分析"
+          {
+            "questionText": "为什么 Y 年的 Numeric 上升",
+            "questionExample": [
+              [
+                {"text": "为什么", "type": ""},
+                {"text": "2017年11月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "收入", "type": "numeric"},
+                {"text": "上升", "type": ""}
+              ],
+              [
+                {"text": "为什么", "type": ""},
+                {"text": "2011年1月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "采购量", "type": "numeric"},
+                {"text": "下降", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年 M 月 Numeric 的根因分析",
+            "questionExample": [
+              [
+                {"text": "2017年11月", "type": "filter"},
+                {"text": "收入", "type": "numeric"},
+                {"text": "的根因分析", "type": ""}
+              ],
+              [
+                {"text": "2011年1月", "type": "filter"},
+                {"text": "采购量", "type": "numeric"},
+                {"text": "的根因分析", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年 M 月到 M 月的 Numeric 的根因分析",
+            "questionExample": [
+              [
+                {"text": "2017年1月", "type": "filter"},
+                {"text": "至", "type": ""},
+                {"text": "2018年1月", "type": "filter"},
+                {"text": "收入", "type": "numeric"},
+                {"text": "的根因分析", "type": ""}
+              ],
+              [
+                {"text": "2011年1月", "type": "filter"},
+                {"text": "至", "type": ""},
+                {"text": "2012年1月", "type": "filter"},
+                {"text": "销售", "type": "numeric"},
+                {"text": "的根因分析", "type": ""}
+              ]
+            ]
+          }
         ]
       },
       {
-        "name": "预测分析问句(prediction)",
+        "name": "预测分析问句",
         "questionList": [
-          "每年成本的预测",
-          "每季成本的预测",
-          "每月成本的预测",
-          "每周成本的预测"
+          {
+            "questionText": "每月 Numeric 的预测",
+            "questionExample": [
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "收入", "type": "numeric"},
+                {"text": "的预测", "type": ""}
+              ],
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "单位价格", "type": "numeric"},
+                {"text": "的预测", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "每周 Numeric 的预测",
+            "questionExample": [
+              [
+                {"text": "每周", "type": "filter"},
+                {"text": "收入", "type": "numeric"},
+                {"text": "的预测", "type": ""}
+              ],
+              [
+                {"text": "每周", "type": "filter"},
+                {"text": "单位价格", "type": "numeric"},
+                {"text": "的预测", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "比例类型的问句",
+        "questionList": [
+          {
+            "questionText": "各 Category 的比例",
+            "questionExample": [
+              [
+                {"text": "各", "type": ""},
+                {"text": "产品", "type": "category"},
+                {"text": "的比例", "type": ""}
+              ],
+              [
+                {"text": "各", "type": ""},
+                {"text": "商店类型", "type": "category"},
+                {"text": "的比例", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "各 Category 的 Numeric 的比例",
+            "questionExample": [
+              [
+                {"text": "各", "type": ""},
+                {"text": "产品", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "利润", "type": "numeric"},
+                {"text": "的比例", "type": ""}
+              ],
+              [
+                {"text": "各", "type": ""},
+                {"text": "商品", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "销售量", "type": "numeric"},
+                {"text": "的比例", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年各 Category 的 Numeric 的比例",
+            "questionExample": [
+              [
+                {"text": "2018年", "type": "filter"},
+                {"text": "各", "type": ""},
+                {"text": "商品", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "销售量", "type": "numeric"},
+                {"text": "的比例", "type": ""}
+              ],
+              [
+                {"text": "2011年", "type": "filter"},
+                {"text": "各", "type": ""},
+                {"text": "产品", "type": "category"},
+                {"text": "的", "type": ""},
+                {"text": "利润", "type": "numeric"},
+                {"text": "的比例", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "value 和 value 各占 Category 的比例",
+            "questionExample": [
+              [
+                {"text": "S1", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "S2", "type": "value"},
+                {"text": "各占", "type": ""},
+                {"text": "产品", "type": "category"},
+                {"text": "的比例", "type": ""}
+              ],
+              [
+                {"text": "F", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "M", "type": "value"},
+                {"text": "各占", "type": ""},
+                {"text": "顾客", "type": "category"},
+                {"text": "的比例", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "value 和 value 各占 Category 的 Numeric 的比例",
+            "questionExample": [
+              [
+                {"text": "S1", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "S2", "type": "value"},
+                {"text": "各占", "type": ""},
+                {"text": "商店", "type": "category"},
+                {"text": "销售", "type": "numeric"},
+                {"text": "的比例", "type": ""}
+              ],
+              [
+                {"text": "F", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "M", "type": "value"},
+                {"text": "各占", "type": ""},
+                {"text": "顾客", "type": "category"},
+                {"text": "数量", "type": "numeric"},
+                {"text": "的比例", "type": ""}
+              ]
+            ]
+          }
         ]
       }
     ]

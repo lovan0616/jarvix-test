@@ -1,44 +1,44 @@
 <template>
   <div class="column-info-block">
     <div>
-      <div class="column-title">欄位（類型: Category）</div>
+      <div class="column-title">{{$t('askHelper.column')}}（{{$t('askHelper.type')}}: Category）</div>
       <div class="column-subtitle">
         <span class="column-lamp">
           <svg-icon icon-class="lamp"></svg-icon>
-          說明:
+          {{$t('askHelper.description')}}:
         </span>
-        Category）類型的欄位，不具有數量單位。</div>
+        {{$t('askHelper.category')}}</div>
       <div>
-        <div class="column-name">欄位名稱</div>
+        <div class="column-name">{{$t('askHelper.columnName')}}</div>
         <div class="single-column"
           v-for="(columnInfo, index) in dataSourceCloumnInfoList.category"
           :key="'category' + index"
         >{{ columnInfo ? columnInfo : '-' }}</div>
       </div>
-      <div class="column-title">欄位（類型: Numeric）</div>
+      <div class="column-title">{{$t('askHelper.column')}}（{{$t('askHelper.type')}}: Numeric）</div>
       <div class="column-subtitle">
         <span class="column-lamp">
           <svg-icon icon-class="lamp"></svg-icon>
-          說明:
+          {{$t('askHelper.description')}}:
         </span>
-        Numeric類型的欄位，具有數量單位。</div>
+        {{$t('askHelper.numeric')}}</div>
       <div>
-        <div class="column-name">欄位名稱</div>
+        <div class="column-name">{{$t('askHelper.columnName')}}</div>
         <div class="single-column"
           v-for="(columnInfo, index) in dataSourceCloumnInfoList.numeric"
           :key="'numeric' + index"
         >{{ columnInfo ? columnInfo : '-' }}</div>
       </div>
     </div>
-    <div class="column-title">欄位資料（類型: Value）</div>
+    <div class="column-title">{{$t('askHelper.column')}}（{{$t('askHelper.type')}}: Value）</div>
     <div class="column-subtitle">
       <span class="column-lamp">
         <svg-icon icon-class="lamp"></svg-icon>
-        說明:
+        {{$t('askHelper.description')}}:
       </span>
-      Value是欄位的資料，不限定數量或其他型態。</div>
+      {{$t('askHelper.value')}}</div>
     <div class="category-list">
-      <div class="column-name">欄位名稱</div>
+      <div class="column-name">{{$t('askHelper.columnName')}}</div>
       <div class="single-column"
         v-for="(columnInfo, index) in dataSourceDataValueList"
         :key="'datavalue' + index"
