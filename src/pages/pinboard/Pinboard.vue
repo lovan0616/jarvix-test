@@ -26,14 +26,12 @@
   </div>
 </template>
 <script>
-import Spinner from '@/components/Spinner'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 export default {
   name: 'PagePinboard',
   components: {
-    EmptyInfoBlock,
-    Spinner
+    EmptyInfoBlock
   },
   data () {
     return {

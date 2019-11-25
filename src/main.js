@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import VueEvents from 'vue-events'
 import VeeValidate, { Validator } from 'vee-validate'
+import VueAnalytics from 'vue-analytics'
 import store from './store'
 import '@/utils/filters'
 import '@/utils/mixins'
@@ -48,10 +49,12 @@ import ContainerBlock from './components/container/ContainerBlock.vue'
 import ContainerCard from './components/container/ContainerCard.vue'
 import DisplayBasicChart from './components/display/DisplayBasicChart.vue'
 import SyTable from './components/table/SyTable.vue'
-import PreviewBookmark from './components/PreviewBookmark.vue'
+import PreviewDataSource from './components/PreviewDataSource.vue'
 import ResultBoard from '@/components/resultBoard/ResultBoard'
 import ResultBoardHeader from '@/components/resultBoard/ResultBoardHeader'
 import ResultBoardBody from '@/components/resultBoard/ResultBoardBody'
+import GeneralResult from '@/components/resultBoard/GeneralResult'
+import MultiResult from '@/components/resultBoard/MultiResult'
 import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
@@ -81,6 +84,7 @@ import TrendRootCause from '@/components/display/TrendRootCause'
 import RootCauseItem from '@/components/display/RootCauseItem'
 import RootCauseDescription from '@/components/display/RootCauseDescription'
 import QuickStart from '@/components/display/QuickStart'
+import Spinner from '@/components/Spinner'
 
 var Rollbar = require('vue-rollbar')
 
@@ -101,7 +105,7 @@ Vue.use(CollapseItem)
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)
 Vue.component(Task.name, Task)
-Vue.component(PreviewBookmark.name, PreviewBookmark)
+Vue.component(PreviewDataSource.name, PreviewDataSource)
 Vue.component(SyTable.name, SyTable)
 Vue.component(InsightsInfo.name, InsightsInfo)
 Vue.component(RootCauseInfo.name, RootCauseInfo)
@@ -111,6 +115,8 @@ Vue.component(IndicatorsList.name, IndicatorsList)
 Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
+Vue.component(GeneralResult.name, GeneralResult)
+Vue.component(MultiResult.name, MultiResult)
 Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
 Vue.component(ContainerBlock.name, ContainerBlock)
 Vue.component(ContainerCard.name, ContainerCard)
@@ -138,6 +144,7 @@ Vue.component(TrendRootCause.name, TrendRootCause)
 Vue.component(RootCauseItem.name, RootCauseItem)
 Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(QuickStart.name, QuickStart)
+Vue.component(Spinner.name, Spinner)
 
 /** Custom Rule */
 Validator.extend('requireOneNumeric', function (value) {
@@ -204,13 +211,18 @@ Vue.use(VeeValidate, {
   }
 })
 
+Vue.use(VueAnalytics, {
+  id: 'UA-152823461-1'
+})
+
 // rollbar error tracking
 Vue.use(Rollbar, {
   accessToken: process.env.ROLL_BAR,
   captureUncaught: true,
   captureUnhandledRejections: true,
   enabled: process.env.NODE_ENV === 'production',
-  environment: process.env.NODE_ENV,
+  // environment: process.env.NODE_ENV,
+  environment: window.location.hostname,
   payload: {
     client: {
       javascript: {
@@ -219,6 +231,11 @@ Vue.use(Rollbar, {
         guess_uncaught_frames: true
       }
     },
+    // person: {
+    //   id: this.userInfo.account,
+    //   username: res.account,
+    //   email: this.userInfo.account
+    // },
     server: {
       host: window.location.host
     }

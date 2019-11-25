@@ -400,7 +400,7 @@ export default {
 <style lang="scss" scoped>
 .user-management {
   padding: 24px;
-  background: rgba(0, 0, 0, 0.55);
+  background: $theme-bg-color;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
 

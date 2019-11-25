@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import Spinner from '@/components/Spinner'
 import { getTask } from '@/API/Ask'
 
 export default {
@@ -22,9 +21,6 @@ export default {
     templateUrl: { type: String, default: '' },
     // entities
     params: { type: Object, default: () => ({}) }
-  },
-  components: {
-    Spinner
   },
   data () {
     return {
@@ -93,6 +89,6 @@ export default {
 .task-root {
   width: 100%;
   // min-height: 20px;
-  overflow: hidden;
+  // overflow: hidden;
 }
 </style>

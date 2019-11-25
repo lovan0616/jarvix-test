@@ -124,6 +124,13 @@ Vue.mixin({
           return 'DisplayWorldMap'
       }
     },
+    // 整個結果頁的 layout
+    getLayoutTemplate (value) {
+      switch (value) {
+        case 'general':
+          return 'GeneralResult'
+      }
+    },
     // 圖表在preview 時，不顯示 legend、tootltip
     previewChartSetting (config) {
       config.legend.show = false

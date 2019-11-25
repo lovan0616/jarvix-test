@@ -36,7 +36,7 @@ export default {
     ChatRoomBlock,
     ChatBotBtn
   },
-  mounted () {
+  created () {
     this.setDataSourceInfo()
   },
   destroyed () {

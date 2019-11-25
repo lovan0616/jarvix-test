@@ -7,7 +7,7 @@
 </template>
 <script>
 export default {
-  name: 'ChatSpinner'
+  name: 'DotSpinner'
 }
 </script>
 <style lang="scss" scoped>
@@ -25,7 +25,7 @@ export default {
     background: $theme-color-primary;
     border-radius: 50%;
     position: absolute;
-    top: calc(50% - 5px);
+    top: 50%;
   }
 
   @keyframes dot-jump {

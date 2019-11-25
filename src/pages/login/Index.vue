@@ -30,6 +30,7 @@
 import { login } from '@/API/User'
 import InputBlock from '@/components/InputBlock'
 import PageLayout from '@/components/layout/PageLayout'
+
 export default {
   inject: ['$validator'],
   name: 'PageLogin',

@@ -146,13 +146,9 @@
 import HashTable from '@/utils/HashTable'
 import { firstBy } from 'thenby'
 import naturalSort from 'javascript-natural-sort'
-import Spinner from '@/components/Spinner'
 
 export default {
   name: 'PivotTable',
-  components: {
-    Spinner
-  },
   props: {
     aggregate: {
       type: String,

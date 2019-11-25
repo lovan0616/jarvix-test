@@ -1,7 +1,7 @@
 <template>
   <div class="empty-result">
-    <div class="empty-result-title">{{ title || this.$t('editing.emptyResult') }}</div>
-    <div class="empty-result-sub-title">{{ description || this.$t('editing.emptyResultDescription') }}</div>
+    <div class="empty-result-title">{{ resultInfo ? resultInfo.title : this.$t('editing.emptyResult') }}</div>
+    <div class="empty-result-sub-title">{{ resultInfo ? resultInfo.description : this.$t('editing.emptyResultDescription') }}</div>
     <quick-starts
       :items="quickstartWithoutDefaults"
     ></quick-starts>
@@ -13,17 +13,8 @@ import QuickStarts from '@/components/QuickStarts'
 export default {
   name: 'EmptyResult',
   props: {
-    title: {
-      type: String,
-      default () {
-        return this.$t('editing.emptyResult')
-      }
-    },
-    description: {
-      type: String,
-      default () {
-        return this.$t('editing.emptyResultDescription')
-      }
+    resultInfo: {
+      type: Object
     }
   },
   components: {

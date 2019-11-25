@@ -5,19 +5,22 @@
       :key="index"
       :content="conversation"
     ></single-chat-block>
-    <chat-spinner
+    <div class="spinner-container"
       v-if="isAnalyzing"
-    ></chat-spinner>
+    >
+      <dot-spinner></dot-spinner>
+    </div>
   </div>
 </template>
 <script>
 import ChatBotBtn from './ChatBotBtn'
 import SingleChatBlock from './SingleChatBlock'
-import ChatSpinner from './ChatSpinner'
+import DotSpinner from '@/components/DotSpinner'
+
 export default {
   name: 'ConversationBlock',
   components: {
-    ChatSpinner,
+    DotSpinner,
     SingleChatBlock,
     ChatBotBtn
   },
@@ -49,6 +52,10 @@ export default {
       height: 70px;
       margin-bottom: 8px;
     }
+  }
+
+  .spinner-container {
+    text-align: center;
   }
 }
 </style>
