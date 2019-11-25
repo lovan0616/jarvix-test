@@ -52,7 +52,7 @@ export default {
   watch: {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
-      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId})
+      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'segmentation': this.currentQuestionInfo})
     }
   },
   mounted () {
@@ -62,6 +62,9 @@ export default {
     ...mapGetters('bookmark', ['appQuestion']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
+    },
+    currentQuestionInfo () {
+      return this.$store.state.dataSource.currentQuestionInfo
     }
   },
   methods: {
@@ -70,7 +73,7 @@ export default {
       let dataSourceId = parseInt(this.$route.query.dataSourceId)
       let actionTag = this.$route.query.action
       if (question) {
-        this.fetchApiAsk({question, dataSourceId})
+        this.fetchApiAsk({question, dataSourceId, 'segmentation': this.currentQuestionInfo})
       }
     },
     clearLayout () {
@@ -91,6 +94,7 @@ export default {
       }))
         .then(res => {
           this.$store.dispatch('dataSource/getHistoryQuestionList', this.dataSourceId)
+          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
 
           this.timeStamp = this.$route.query.stamp
 
@@ -106,18 +110,21 @@ export default {
             case 'general':
               if (res.tasks && res.tasks.length > 1) {
                 this.layout = 'GeneralResult'
+
+                this.$nextTick(() => {
+                  window.setTimeout(() => {
+                    this.$store.commit('chatBot/updateAnalyzeStatus', false)
+                    this.$store.commit('chatBot/addSystemConversation', res.relatedQuestionList)
+                    this.relatedQuestionList = res.relatedQuestionList
+                  }, 2000)
+                })
+
               } else {
                 this.layout = 'MultiResult'
               }
               this.resultInfo = res
 
-              this.$nextTick(() => {
-                window.setTimeout(() => {
-                  this.$store.commit('chatBot/updateAnalyzeStatus', false)
-                  this.$store.commit('chatBot/addSystemConversation', res.relatedQuestionList)
-                  this.relatedQuestionList = res.relatedQuestionList
-                }, 2000)
-              })
+              
               return
             case 'no_answer':
               this.layout = 'EmptyResult'

@@ -82,6 +82,7 @@ import EmptyResult from '@/pages/result/components/EmptyResult'
 import PreviewResultBoard from '@/components/PreviewResultBoard'
 import TrendRootCause from '@/components/display/TrendRootCause'
 import RootCauseItem from '@/components/display/RootCauseItem'
+import CorrelationInsight from '@/components/display/CorrelationInsight'
 import RootCauseDescription from '@/components/display/RootCauseDescription'
 import QuickStart from '@/components/display/QuickStart'
 import Spinner from '@/components/Spinner'
@@ -142,6 +143,7 @@ Vue.component(EmptyResult.name, EmptyResult)
 Vue.component(PreviewResultBoard.name, PreviewResultBoard)
 Vue.component(TrendRootCause.name, TrendRootCause)
 Vue.component(RootCauseItem.name, RootCauseItem)
+Vue.component(CorrelationInsight.name, CorrelationInsight)
 Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(QuickStart.name, QuickStart)
 Vue.component(Spinner.name, Spinner)

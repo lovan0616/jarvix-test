@@ -29,8 +29,9 @@ export default {
   },
   methods: {
     askQuestion (questionInfo) {
-      this.$store.commit('bookmark/setAppQuestion', this.userQuestion)
-      this.$store.commit('dataSource/setAppQuestion', this.userQuestion)
+      this.$store.commit('bookmark/setAppQuestion', questionInfo.question)
+      this.$store.commit('dataSource/setAppQuestion', questionInfo.question)
+      this.$store.commit('dataSource/setCurrentQuestionInfo', questionInfo)
       this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
     }
   },

@@ -11,6 +11,7 @@ export default {
     dataSourceCloumnInfoList: [],
     dataSourceDataValueList: [],
     appQuestion: null,
+    currentQuestionInfo: null,
     historyQuestionList: []
   },
   actions,
