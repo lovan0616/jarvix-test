@@ -79,7 +79,6 @@ export default {
       this.relatedQuestionList = []
     },
     fetchApiAsk (data) {
-      console.log(data, data.question)
       this.clearLayout()
       this.isLoading = true
       this.$store.commit('chatBot/addUserConversation', data.question)
@@ -111,6 +110,14 @@ export default {
                 this.layout = 'MultiResult'
               }
               this.resultInfo = res
+
+              this.$nextTick(() => {
+                window.setTimeout(() => {
+                  this.$store.commit('chatBot/updateAnalyzeStatus', false)
+                  this.$store.commit('chatBot/addSystemConversation', res.relatedQuestionList)
+                  this.relatedQuestionList = res.relatedQuestionList
+                }, 2000)
+              })
               return
             case 'no_answer':
               this.layout = 'EmptyResult'
@@ -120,16 +127,7 @@ export default {
               this.layout = 'PreviewDataSource'
               return
           }
-
           
-
-          this.$nextTick(() => {
-            window.setTimeout(() => {
-              this.$store.commit('chatBot/updateAnalyzeStatus', false)
-              this.$store.commit('chatBot/addSystemConversation', res.relatedQuestionList)
-              this.relatedQuestionList = res.relatedQuestionList
-            }, 2000)
-          })
         }).catch(() => {
           this.isLoading = false
           this.$store.commit('chatBot/updateAnalyzeStatus', false)

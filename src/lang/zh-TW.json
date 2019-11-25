@@ -155,7 +155,8 @@
     "editingName": "編輯名稱",
     "pinboardNum": "釘板數量",
     "indexErrorTitle": "首頁資料暫時無法取得",
-    "indexErrorDescription": "很抱歉，首頁資料暫時無法取得，請稍後再試"
+    "indexErrorDescription": "很抱歉，首頁資料暫時無法取得，請稍後再試",
+    "multiResultTitle": "問句分析"
   },
   "description": {
     "basicIntroduce": "基本介紹",

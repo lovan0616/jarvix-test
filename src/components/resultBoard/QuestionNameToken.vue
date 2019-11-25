@@ -1,10 +1,10 @@
 <template>
   <div class="question-token"
-    :class="nameInfo.type"
+    :class="tokenInfo.type"
   >
-    {{ nameInfo.text }}
+    {{ tokenInfo.word }}
     <div class="name-info-tooltip">
-      {{ nameInfo.type }}
+      {{ tokenInfo.type }}
     </div>
   </div>
 </template>
@@ -12,7 +12,7 @@
 export default {
   name: 'QuestionNameToken',
   props: {
-    nameInfo: {
+    tokenInfo: {
       type: Object
     }
   }
@@ -22,6 +22,7 @@ export default {
 .question-token {
   position: relative;
   border-bottom: 1px solid;
+  cursor: pointer;
 
   &.filter {
     border-color: #FF9559;
@@ -45,7 +46,14 @@ export default {
     border-color: #E05889;
   }
 
+  &:hover {
+    .name-info-tooltip {
+      display: block;
+    }
+  }
+
   .name-info-tooltip {
+    display: none;
     position: absolute;
     top: 110%;
     left: 50%;
@@ -57,9 +65,11 @@ export default {
     // 處理寬度被 parent 限制的問題
     white-space:nowrap;
     text-align: center;
+    background-color: #000;
     box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
     border-radius: 8px;
     padding: 5px 8px;
+    z-index: 999;
 
     &:after {
       bottom: 100%;

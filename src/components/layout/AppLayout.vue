@@ -55,9 +55,9 @@ export default {
     // 監聽 dataSource 清單是否有 dataSource 正在建置中
     isDataSourceBuilding (value, oldValue) {
       if (value) {
-        // this.intervalFunction = window.setInterval(() => {
-        //   this.$store.dispatch('dataSource/getDataSourceList')
-        // }, 5000)
+        this.intervalFunction = window.setInterval(() => {
+          this.$store.dispatch('dataSource/getDataSourceList')
+        }, 5000)
       }
       // 建置完成
       if (!value && oldValue) {
