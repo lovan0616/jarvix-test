@@ -1,24 +1,44 @@
 <template>
   <div class="column-info-block">
-    <div class="category-title">{{ $t('askHelper.columnTitle') }}</div>
-    <div class="column-table">
-      <div class="column-list">
-        <div class="single-column column-title">{{ $t('askHelper.categoryTitle') }}</div>
+    <div>
+      <div class="column-title">欄位（類型: Category）</div>
+      <div class="column-subtitle">
+        <span class="column-lamp">
+          <svg-icon icon-class="lamp"></svg-icon>
+          說明:
+        </span>
+        Category）類型的欄位，不具有數量單位。</div>
+      <div>
+        <div class="column-name">欄位名稱</div>
         <div class="single-column"
           v-for="(columnInfo, index) in dataSourceCloumnInfoList.category"
           :key="'category' + index"
         >{{ columnInfo ? columnInfo : '-' }}</div>
       </div>
-      <div class="column-list">
-        <div class="single-column column-title">{{ $t('askHelper.numericTitle') }}</div>
+      <div class="column-title">欄位（類型: Numeric）</div>
+      <div class="column-subtitle">
+        <span class="column-lamp">
+          <svg-icon icon-class="lamp"></svg-icon>
+          說明:
+        </span>
+        Numeric類型的欄位，具有數量單位。</div>
+      <div>
+        <div class="column-name">欄位名稱</div>
         <div class="single-column"
           v-for="(columnInfo, index) in dataSourceCloumnInfoList.numeric"
           :key="'numeric' + index"
         >{{ columnInfo ? columnInfo : '-' }}</div>
       </div>
     </div>
-    <div class="category-title">{{ $t('askHelper.datavalueTitle') }}</div>
+    <div class="column-title">欄位資料（類型: Value）</div>
+    <div class="column-subtitle">
+      <span class="column-lamp">
+        <svg-icon icon-class="lamp"></svg-icon>
+        說明:
+      </span>
+      Value是欄位的資料，不限定數量或其他型態。</div>
     <div class="category-list">
+      <div class="column-name">欄位名稱</div>
       <div class="single-column"
         v-for="(columnInfo, index) in dataSourceDataValueList"
         :key="'datavalue' + index"
@@ -42,22 +62,39 @@ export default {
 <style lang="scss" scoped>
 .column-info-block {
   .category-title {
-    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 32px;
+    padding: 4px 16px;
   }
 
-  .column-table {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
+  .column-title {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 32px;
 
-    .column-title {
-      font-weight: bold;
-    }
-
-    .column-list {
-      width: 46%;
+    &:not(:first-child) {
+      padding: 28px 0px 0px;
     }
   }
+
+  .column-subtitle {
+    font-size: 12px;
+    line-height: 32px;
+    padding: 0px 0px 5px;
+  }
+
+  .column-lamp {
+    color: #FFDF6F;
+  }
+
+  .column-name {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 32px;
+    padding: 4px 16px;
+    background: #2B4D51;
+  }
+
   .category-list {
     &:not(:last-child) {
       margin-bottom: 16px;
