@@ -691,11 +691,11 @@
   </div>
 </template>
 <script>
-import rowDescription from './components/rowDescription'
+import RowDescription from './components/RowDescription'
 export default {
   name: 'FunctionDescription',
   components: {
-    rowDescription
+    RowDescription
   },
   data () {
     return {
