@@ -10,7 +10,9 @@
       :title="$t('editing.indexErrorTitle')"
       :description="$t('editing.indexErrorDescription')"
     ></empty-result>
-    
+    <preview-data-source
+      v-if="dataSourceId"
+    ></preview-data-source>
     <div v-if="quickStartQuestionList.length > 0">
       <quick-start
         :question-list="quickStartQuestionList"
@@ -53,18 +55,11 @@ export default {
         this.isLoading = false
         this.quickStartQuestionList = res.quickQuestionList
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
-        this.$store.commit('chatBot/addSystemConversation', res.quickQuestionList)
+        this.$store.commit('chatBot/addSystemConversation', {text: this.$t('bot.welcomeMessage'), options: res.quickQuestionList})
       }).catch(() => {
         this.isLoading = false
         this.isNoResult = true
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
-      })
-      this.getPreviewBookmark()
-    },
-    getPreviewBookmark () {
-      getDataPreviewSample(this.dataSourceId).then(response => {
-        console.log(response)
-        this.dataFrameInfo = response
       })
     }
   },

@@ -157,8 +157,14 @@
     "indexErrorTitle": "首頁資料暫時無法取得",
     "indexErrorDescription": "很抱歉，首頁資料暫時無法取得，請稍後再試",
     "multiResultTitle": "問句分析",
-    "systemUnknownDescription": "系統無法辨識出以下文字：",
-    "similarQuestionDescription": ""
+    "systemUnknownDescription": "系統無法辨識出以下文字："
+  },
+  "bot": {
+    "welcomeMessage": "Hello, 今天想分析什麼樣的資料？可以試試從這些問題開始：",
+    "defaultResponse": "已分析完成，您可能有興趣的關聯問題：",
+    "finish": "已分析完成",
+    "multiplePossibilities": "很抱歉，經系統分析後，發現詞彙具有多重意義，請參考以下項目：",
+    "similarQuestionDescription": "很抱歉，系統沒有找到對應問題的欄位或資料，但有相關詞意的欄位，請參考以下項目："
   },
   "description": {
     "basicIntroduce": "基本介紹",

@@ -7,7 +7,7 @@
       v-else-if="!isError"
       :is="childContent"
     ></component>
-    <!-- <no-result v-else :message="errorMessage"></no-result> -->
+    <no-result v-else :message="errorMessage"></no-result>
   </div>
 </template>
 

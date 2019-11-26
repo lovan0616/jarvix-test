@@ -12,6 +12,7 @@
     <result-board-body slot="PageResultBoardBody">
       <template slot="PageResultBoardChart">
         <task
+          v-if="taskObject.key_result.length > 0"
           v-for="(chartTask, index) in taskObject.key_result"
           :key="'chart-' + index"
           :templateUrl="`api/task/${chartTask.intent}/template`"
@@ -21,6 +22,7 @@
       </template>
       <template slot="InsightBasicInfo">
         <task
+          v-if="taskObject.basic_info.length > 0"
           :templateUrl="`api/task/${taskObject.basic_info[0].intent}/template`"
           :dataUrl="`api/task/${taskObject.basic_info[0].intent}/data`"
           :params="taskObject.basic_info[0].entities"
@@ -28,6 +30,7 @@
       </template>
       <template slot="InsightRootCause">
         <task
+          v-if="taskObject.other.length > 0"
           v-for="(otherTask, index) in taskObject.other"
           :key="'other-' + index"
           :templateUrl="`api/task/${otherTask.intent}/template`"

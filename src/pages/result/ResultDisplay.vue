@@ -107,7 +107,7 @@ export default {
 
                 this.$nextTick(() => {
                   window.setTimeout(() => {
-                    this.$store.commit('chatBot/addSystemConversation', res.relatedQuestionList)
+                    this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
                   }, 2000)
                 })
               } else {
@@ -123,7 +123,7 @@ export default {
 
                 this.$nextTick(() => {
                   window.setTimeout(() => {
-                    this.$store.commit('chatBot/addSystemConversation', chatBotOptionList)
+                    this.$store.commit('chatBot/addSystemConversation', {text: res.similarQuestionList ? this.$t('bot.similarQuestionDescription') : this.$t('bot.multiplePossibilities'), options: chatBotOptionList})
                   }, 2000)
                 })
               }
@@ -132,15 +132,18 @@ export default {
               break
             case 'no_answer':
               this.layout = 'EmptyResult'
-              this.resultInfo = res.tasks[0].entities
-
-              if (res.relatedQuestionList && res.relatedQuestionList.length > 0) {
-                this.$nextTick(() => {
-                  window.setTimeout(() => {
-                    this.$store.commit('chatBot/addSystemConversation', res.relatedQuestionList)
-                  }, 2000)
-                })
+              if (res.tasks) {
+                this.resultInfo = res.tasks[0].entities
               }
+
+              this.$nextTick(() => {
+                window.setTimeout(() => {
+                  this.$store.commit('chatBot/addSystemConversation', {
+                    text: res.tasks ? this.resultInfo.description : this.$t('editing.emptyResultDescription'),
+                    options: res.relatedQuestionList && res.relatedQuestionList.length > 0 ? res.relatedQuestionList : []
+                  })
+                }, 2000)
+              })
 
               break
             case 'preview_datasource':

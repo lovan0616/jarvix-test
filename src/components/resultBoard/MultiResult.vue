@@ -1,6 +1,12 @@
 <template>
   <div class="multi-result">
     <div class="board-title">{{ $t('editing.multiResultTitle') }}</div>
+    <div class="board-description"
+      v-if="resultInfo.similarQuestionList"
+    >{{ $t('bot.similarQuestionDescription') }}</div>
+    <div class="board-description"
+      v-else
+    >{{ $t('bot.multiplePossibilities') }}</div>
     <div class="question-list">
       <div class="single-question"
         v-for="(singleQuestion, index) in questionList"
@@ -39,8 +45,6 @@ export default {
     questionList () {
       if (this.resultInfo.checkQuestionList) {
         return this.resultInfo.checkQuestionList
-      } else if (this.resultInfo.relatedQuestionList) {
-        return this.resultInfo.relatedQuestionList
       } else if (this.resultInfo.similarQuestionList) {
         return this.resultInfo.similarQuestionList
       }
@@ -55,9 +59,14 @@ export default {
   border-radius: 8px;
 
   .board-title {
-    font-size: 18px;
+    font-size: 24px;
     line-height: 32px;
     margin-bottom: 4px;
+  }
+
+  .board-description {
+    line-height: 24px;
+    margin-bottom: 24px;
   }
 
   .single-question {
