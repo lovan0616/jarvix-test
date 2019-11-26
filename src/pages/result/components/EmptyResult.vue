@@ -2,6 +2,14 @@
   <div class="empty-result">
     <div class="empty-result-title">{{ resultInfo ? resultInfo.title : this.$t('editing.emptyResult') }}</div>
     <div class="empty-result-sub-title">{{ resultInfo ? resultInfo.description : this.$t('editing.emptyResultDescription') }}</div>
+    <div class="empty-result-unknown-detail"
+      v-if="resultInfo.unknown && resultInfo.unknown.length > 0"
+    >{{ $t('editing.systemUnknownDescription') }}
+      <span
+        v-for="(unknownText, index) in resultInfo.unknown"
+        :key="index"
+      >{{ unknownText }}<span v-show="index !== resultInfo.unknown.length - 1">、</span></span>  
+    </div>
     <quick-starts
       :items="quickstartWithoutDefaults"
     ></quick-starts>
@@ -37,7 +45,7 @@ export default {
   }
 
   .empty-result-sub-title {
-    margin-bottom: 64px;
+    margin-bottom: 16px;
   }
 }
 </style>

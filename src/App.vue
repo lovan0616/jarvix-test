@@ -28,8 +28,9 @@ export default {
     checkLocale () {
       let prevLocale = localStorage.getItem('locale')
       let browserScale = (navigator.language || navigator.browserLanguage).toLowerCase()
+      browserScale = browserScale === 'zh-tw' ? 'zh-TW' : 'zh-CN'
       let locale = prevLocale || browserScale
-      this.$store.commit('setting/setLocale', locale === 'zh-tw' ? 'zh-TW' : 'zh-CN')
+      this.$store.commit('setting/setLocale', locale)
     }
   },
   watch: {

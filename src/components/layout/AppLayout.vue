@@ -42,6 +42,7 @@ export default {
   destroyed () {
     window.clearInterval(this.intervalFunction)
     this.$store.commit('dataSource/setDataSourceList', [])
+    this.$store.commit('dataSource/setIsInit', false)
   },
   methods: {
     showChatRoom () {

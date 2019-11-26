@@ -10,6 +10,7 @@
       :title="$t('editing.indexErrorTitle')"
       :description="$t('editing.indexErrorDescription')"
     ></empty-result>
+    
     <div v-if="quickStartQuestionList.length > 0">
       <quick-start
         :question-list="quickStartQuestionList"
@@ -28,7 +29,7 @@ export default {
     return {
       isLoading: false,
       isNoResult: false,
-      layout: null,
+      dataFrameInfo: null,
       quickStartQuestionList: []
     }
   },
@@ -63,13 +64,14 @@ export default {
     getPreviewBookmark () {
       getDataPreviewSample(this.dataSourceId).then(response => {
         console.log(response)
+        this.dataFrameInfo = response
       })
     }
   },
   watch: {
     dataSourceId (value) {
       if (!value) return
-      this.layout = null
+      this.dataFrameInfo = null
       this.isNoResult = false
       this.getLandingInfo()
     }
