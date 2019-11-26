@@ -2,33 +2,13 @@
   <div class="result-board-title">
     <div class="board-name">
       <div class="question-mark">Q</div>
-      <!-- <div class="question-name">
+      <div class="question-name">
         <question-name-token
-          :name-info="{
-            text: '123',
-            type: 'category'
-          }"
+          v-for="(tokenInfo, index) in segmentation"
+          :key="index"
+          :token-info="tokenInfo"
         ></question-name-token>
-        <question-name-token
-          :name-info="{
-            text: '123',
-            type: 'category'
-          }"
-        ></question-name-token>
-        <question-name-token
-          :name-info="{
-            text: '123',
-            type: 'category'
-          }"
-        ></question-name-token>
-        <question-name-token
-          :name-info="{
-            text: '123',
-            type: 'category'
-          }"
-        ></question-name-token><div class="token filter">XXXX年</div><div class="token category">測試</div>的<div class="token numeric">問題</div>
-      </div> -->
-      {{ question }}
+      </div>
     </div>
   </div>
 </template>
@@ -44,10 +24,10 @@ export default {
     question: {
       type: String,
       default: ''
+    },
+    segmentation: {
+      type: Array
     }
-    // segmentation: {
-    //   type: Array
-    // }
   }
 }
 </script>
@@ -78,6 +58,7 @@ export default {
 
   .question-name {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     letter-spacing: 0.05em;
   }

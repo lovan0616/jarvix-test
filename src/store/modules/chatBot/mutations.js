@@ -7,11 +7,11 @@ export default {
     })
   },
   // Robot 回覆
-  addSystemConversation (state, data) {
+  addSystemConversation (state, {text, options}) {
     state.conversationList.push({
       type: 'System',
-      text: 'test',
-      options: data
+      text,
+      options
     })
   },
   // 清除對話紀錄

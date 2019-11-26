@@ -11,6 +11,13 @@
 <script>
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
+import {
+  colorDefault,
+  colorOnly1,
+  colorOnly2,
+  color3,
+  color12
+} from './common/addons'
 let chartAddon = JSON.parse(JSON.stringify(chartOptions))
 let groupScatterChartConfig = {
   tooltip: {
@@ -78,6 +85,7 @@ export default {
       chartAddon.yAxis.name = this.title.yAxis
       groupScatterChartConfig.chartData.data = this.dataset.data
       groupScatterChartConfig.chartData.symbolSize = this.dotSize(this.dataset.data.length)
+      chartAddon.color = this.colorList
       chartAddon.series = this.groupDataList.map(dataSet => {
         let chartConfig = JSON.parse(JSON.stringify(groupScatterChartConfig.chartData))
         chartConfig.data = dataSet.data
@@ -91,7 +99,20 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: '300px'
+        height: '380px'
+      }
+    },
+    colorList () {
+      switch (this.groupDataList.length) {
+        case 2:
+          return colorOnly2
+        case 3:
+          return color3
+        case 5:
+        case 6:
+          return colorDefault
+        default:
+          return color12
       }
     },
     groupDataList () {
