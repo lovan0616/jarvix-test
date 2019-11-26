@@ -156,7 +156,8 @@
     "pinboardNum": "钉板数量",
     "indexErrorTitle": "首页资料暂时无法取得",
     "indexErrorDescription": "很抱歉，首页资料暂时无法取得，请稍后再试",
-    "multiResultTitle": "问句分析"
+    "multiResultTitle": "问句分析",
+    "systemUnknownDescription": "系统无法辨识出以下文字："
   },
   "description": {
     "basicIntroduce": "基本介绍",

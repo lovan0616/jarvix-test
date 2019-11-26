@@ -39,8 +39,8 @@
       <div class="history-question"
         v-for="singleHistory in historyQuestionList"
         :key="singleHistory.id"
-        @click="copyQuestion(singleHistory.question)"
-      ><svg-icon icon-class="clock" class="icon"></svg-icon> {{ singleHistory.question }}</div>
+        @click="copyQuestion(singleHistory)"
+      ><svg-icon icon-class="clock" class="icon"></svg-icon> {{ singleHistory }}</div>
     </div>
     <ask-helper-dialog
       ref="helperDialog"
@@ -131,7 +131,7 @@ export default {
     historyQuestionList () {
       // 過濾 boomark 以及 問題字串
       return this.userQuestion
-        ? this.$store.state.dataSource.historyQuestionList.filter(d => { return d.question.indexOf(this.userQuestion) > -1 && d.bookmark_id === this.dataSourceId })
+        ? this.$store.state.dataSource.historyQuestionList.filter(element => { return element.indexOf(this.userQuestion) > -1 })
         : []
     }
   },

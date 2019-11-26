@@ -95,10 +95,6 @@ export default {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
 
           this.timeStamp = this.$route.query.stamp
-
-          // checkQuestionList: null
-          // similarQuestionList
-
           this.isLoading = false
 
           switch (res.layout) {
@@ -116,6 +112,20 @@ export default {
                 })
               } else {
                 this.layout = 'MultiResult'
+                let chatBotOptionList = []
+
+                if (res.checkQuestionList && res.checkQuestionList.length > 0) {
+                  chatBotOptionList = res.checkQuestionList
+                }
+                if (res.similarQuestionList && res.similarQuestionList.length > 0) {
+                  chatBotOptionList = res.similarQuestionList
+                }
+
+                this.$nextTick(() => {
+                  window.setTimeout(() => {
+                    this.$store.commit('chatBot/addSystemConversation', chatBotOptionList)
+                  }, 2000)
+                })
               }
               this.resultInfo = res
 
@@ -123,6 +133,15 @@ export default {
             case 'no_answer':
               this.layout = 'EmptyResult'
               this.resultInfo = res.tasks[0].entities
+
+              if (res.relatedQuestionList && res.relatedQuestionList.length > 0) {
+                this.$nextTick(() => {
+                  window.setTimeout(() => {
+                    this.$store.commit('chatBot/addSystemConversation', res.relatedQuestionList)
+                  }, 2000)
+                })
+              }
+
               break
             case 'preview_datasource':
               this.layout = 'PreviewDataSource'

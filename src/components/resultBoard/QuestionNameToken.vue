@@ -30,6 +30,10 @@ export default {
   &.Datacolumn {
     border-bottom: 1px solid #44D2FF;
 
+    &:hover {
+      background-color: rgba(68, 210, 255, 0.7);
+    }
+
     .name-info-tooltip {
       background-color: #44D2FF;
 
