@@ -8,7 +8,7 @@
       <span
         v-for="(unknownText, index) in resultInfo.unknown"
         :key="index"
-      >{{ unknownText }}<span v-show="index !== resultInfo.unknown.length - 1">、</span></span>  
+      >{{ unknownText }}<span v-show="index !== resultInfo.unknown.length - 1">、</span></span>
     </div>
     <quick-starts
       :items="quickstartWithoutDefaults"

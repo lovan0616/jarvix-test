@@ -54,6 +54,7 @@ import ResultBoard from '@/components/resultBoard/ResultBoard'
 import ResultBoardHeader from '@/components/resultBoard/ResultBoardHeader'
 import ResultBoardBody from '@/components/resultBoard/ResultBoardBody'
 import GeneralResult from '@/components/resultBoard/GeneralResult'
+import RootCauseResult from '@/components/resultBoard/RootCauseResult'
 import MultiResult from '@/components/resultBoard/MultiResult'
 import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
@@ -117,6 +118,7 @@ Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
 Vue.component(GeneralResult.name, GeneralResult)
+Vue.component(RootCauseResult.name, RootCauseResult)
 Vue.component(MultiResult.name, MultiResult)
 Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
 Vue.component(ContainerBlock.name, ContainerBlock)

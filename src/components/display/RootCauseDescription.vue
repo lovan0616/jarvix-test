@@ -24,8 +24,8 @@ export default {
   name: 'RootCauseDescription',
   props: {
     description: {type: String, default: ''},
-    causes: {type: Object, default: () => []},
-    notes: {type: Object, default: () => []}
+    causes: {type: Array, default: () => []},
+    notes: {type: Array, default: () => []}
   }
 }
 </script>

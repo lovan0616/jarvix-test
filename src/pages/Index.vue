@@ -23,7 +23,6 @@
 
 <script>
 import { askQuestion } from '@/API/NewAsk'
-import { getDataPreviewSample } from '@/API/Bookmark'
 
 export default {
   name: 'PageIndex',
