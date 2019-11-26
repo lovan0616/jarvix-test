@@ -58,10 +58,7 @@ export default {
   },
   data () {
     return {
-      activeName: null,
-      position: {
-        class: ''
-      }
+      activeName: null
     }
   },
   computed: {

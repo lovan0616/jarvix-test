@@ -6,7 +6,6 @@
     :key="exampleIndex"
     :class="['question-type-text', example.type ? `question-${example.type}` : '']"
     @mouseover="tooltipOn(example.type, $event)"
-    :name="example.type"
     >
     {{ example.text }}
     <div
@@ -35,8 +34,9 @@ export default {
   },
   methods: {
     tooltipOn (type, event) {
+      // tooltip 在 collapse 最底下的位置要在上面 
       let eventBottom = event.target.getBoundingClientRect().bottom
-      let parentBottom = event.relatedTarget.parentElement.parentElement.getBoundingClientRect().bottom
+      let parentBottom = event.target.parentElement.parentElement.parentElement.getBoundingClientRect().bottom
       let minusBottom = parentBottom - eventBottom
       if (minusBottom > 63) {
         this.position.class = 'question-up-type'
