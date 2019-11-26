@@ -13,7 +13,6 @@ import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 import {
   colorDefault,
-  colorOnly1,
   colorOnly2,
   color3,
   color12

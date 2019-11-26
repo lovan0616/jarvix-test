@@ -130,6 +130,21 @@ export default {
               this.resultInfo = res
 
               break
+            case 'root_cause':
+              this.layout = 'RootCauseResult'
+              this.resultInfo = res
+
+              if (res.relatedQuestionList) {
+                this.relatedQuestionList = res.relatedQuestionList
+              }
+
+              this.$nextTick(() => {
+                window.setTimeout(() => {
+                  this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
+                }, 2000)
+              })
+
+              break
             case 'no_answer':
               this.layout = 'EmptyResult'
               if (res.tasks) {
