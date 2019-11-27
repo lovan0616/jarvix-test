@@ -30,7 +30,7 @@
         >{{ columnInfo ? columnInfo : '-' }}</div>
       </div>
     </div>
-    <div class="column-title">{{$t('askHelper.column')}}（{{$t('askHelper.type')}}: Value）</div>
+    <div class="column-title">{{$t('askHelper.columnValue')}}（{{$t('askHelper.type')}}: Value）</div>
     <div class="column-subtitle">
       <span class="column-lamp">
         <svg-icon icon-class="lamp"></svg-icon>
@@ -38,7 +38,7 @@
       </span>
       {{$t('askHelper.value')}}</div>
     <div class="category-list">
-      <div class="column-name">{{$t('askHelper.columnName')}}</div>
+      <div class="column-name">{{$t('askHelper.datavalueTitle')}}</div>
       <div class="single-column"
         v-for="(columnInfo, index) in dataSourceDataValueList"
         :key="'datavalue' + index"

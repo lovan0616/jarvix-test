@@ -79,7 +79,7 @@ export default {
       ],
       accountData: [
         // {icon: 'changePassword', title: 'editing.changePassword'},
-        {icon: 'userManage', title: 'editing.userManage', path: '/user-management'},
+        // {icon: 'userManage', title: 'editing.userManage', path: '/user-management'},
         {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
       ]
     }
