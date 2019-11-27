@@ -38,7 +38,6 @@ export default {
   changeDataSourceById ({ dispatch, commit, state }, dataSourceId) {
     // 清空對話紀錄
     if (state.dataSourceId) {
-      console.log(state.dataSourceId, 'state.dataSourceId')
       commit('chatBot/clearConversation', null, {root: true})
     }
     // 更新 DataSource 資料
