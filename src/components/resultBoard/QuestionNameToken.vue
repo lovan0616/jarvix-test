@@ -22,6 +22,7 @@ export default {
 .question-token {
   position: relative;
   cursor: pointer;
+  margin-right: 2px;
 
   &.filter {
     border-color: #FF9559;
@@ -59,6 +60,22 @@ export default {
       &:after {
         border-color: transparent;
         border-bottom-color: #CA66DA;
+        box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
+      }
+    }
+  }
+  &.DtToken {
+    border-bottom: 1px solid #FF9559;
+
+    &:hover {
+      background-color: rgba(255, 149, 89, 0.7);
+    }
+
+    .name-info-tooltip {
+      background-color: #FF9559;
+
+      &:after {
+        border-bottom-color: #FF9559;
         box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
       }
     }

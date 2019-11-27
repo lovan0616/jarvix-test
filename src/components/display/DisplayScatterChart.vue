@@ -99,43 +99,51 @@ export default {
       chartAddon.series[0] = scatterOptions.chartData
 
       if (this.formula) {
-        let gradient = (this.formula.a).toFixed(4)
-        let offset = (this.formula.b).toFixed(4)
-        let expression = `y = ${gradient}x + ${offset}`
+        let gradient = Number((this.formula.a).toFixed(4))
+        let offset = Number((this.formula.b).toFixed(4))
+        let expression = `y = ${gradient}x ${offset > 0 ? '+' : '-'}${Math.abs(offset)}`
+        let minX = this.dataset.data[0][0]
+        let maxX = this.dataset.data[0][0]
 
-        var markLineOpt = {
-          label: {
-            normal: {
+        this.dataset.data.forEach(element => {
+          maxX = element[0] > maxX ? element[0] : maxX
+          minX = element[0] < minX ? element[0] : minX
+        })
+
+        let minY = parseInt(gradient * minX + offset)
+        let maxY = parseInt(gradient * maxX + offset)
+
+        // markLine
+        chartAddon.series[1] = {
+          name: '',
+          type: 'line',
+          showSymbol: false,
+          smooth: true,
+          color: chartVariable['themeColor'],
+          symbol: 'none',
+          data: [[minX, minY], [maxX, maxY]],
+          markPoint: {
+            itemStyle: {
+              normal: {
+                color: 'transparent'
+              }
+            },
+            label: {
+              show: true,
+              position: 'left',
               formatter: expression,
               textStyle: {
-                align: 'right'
+                color: chartVariable['themeColor'],
+                fontSize: 14
               }
-            }
-          },
-          lineStyle: {
-            normal: {
-              type: 'solid',
-              color: chartVariable['theme-color']
-            }
-          },
-          tooltip: {
-            formatter: expression
-          },
-          symbol: 'none',
-          data: [
-            [
+            },
+            data: [
               {
-                name: expression,
-                type: 'min'
-              },
-              {
-                type: 'max'
+                coord: [maxX, maxY]
               }
             ]
-          ]
+          }
         }
-
-        chartAddon.series[0].markLine = markLineOpt
       }
 
       if (this.isPreview) this.previewChartSetting(chartAddon)
