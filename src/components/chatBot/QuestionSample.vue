@@ -1,5 +1,24 @@
 <template>
+<div class="question-sample">
   <div class="question-sample-block">
+    <div class="question-description">
+      <span class="question-lamp">
+        <svg-icon icon-class="lamp"></svg-icon>
+        {{$t('askHelper.description')}}:
+      </span>
+      {{$t('askHelper.category')}}</div>
+    <div class="question-description">
+      <span class="question-lamp">
+        <svg-icon icon-class="lamp"></svg-icon>
+        {{$t('askHelper.description')}}:
+      </span>
+      {{$t('askHelper.numeric')}}</div>
+    <div class="question-description">
+      <span class="question-lamp">
+        <svg-icon icon-class="lamp"></svg-icon>
+        {{$t('askHelper.description')}}:
+      </span>
+      {{$t('askHelper.value')}}</div>
     <el-collapse class="question-sample-collapse"
       v-model="activeName"
       accordion
@@ -7,22 +26,36 @@
       <el-collapse-item
         v-for="(questionCategory, index) in $t('askHelper.questionSampleList')"
         :key="index"
+        class="question-title"
         :title="questionCategory.name"
-        :name="index"
       >
-        <div class="question-list"
+        <div
+          class="question-box"
           v-for="(question, questionIndex) in questionCategory.questionList"
           :key="index + '-' + questionIndex"
         >
-          <span class="question-mark">Q:</span>{{ question }}
+          <div class="question-ask">{{$t('askHelper.ask')}}: {{ question.questionText }}</div>
+          <div class="question-example">{{$t('askHelper.example')}}:</div>
+          <single-question
+            :exampleQuestion="exampleQuestion"
+            v-for="(exampleQuestion, exampleQuestionIndex) in question.questionExample"
+            :key="index + '-' + exampleQuestionIndex"
+            class="question-sentence"
+          >
+          </single-question>
         </div>
       </el-collapse-item>
     </el-collapse>
   </div>
+</div>
 </template>
 <script>
+import SingleQuestion from '@/components/chatBot/SingleQuestion'
 export default {
   name: 'QuestionSample',
+  components: {
+    SingleQuestion
+  },
   data () {
     return {
       activeName: null
@@ -47,21 +80,68 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.question-sample-block {
-  .question-list {
-    line-height: 32px;
-    padding: 4px 16px;
+.question-sample {
+  position: relative;
 
-    &:nth-child(odd) {
-      background-color: rgba(50, 75, 78, 0.6);
+  .question-sample-block {
+
+    .question-description {
+      font-size: 12px;
+      line-height: 32px;
+    }
+
+    .question-lamp {
+      color: #FFDF6F;
+    }
+
+    .question-list {
+      line-height: 32px;
+      padding: 4px 16px;
+
+      &:nth-child(odd) {
+        background-color: rgba(50, 75, 78, 0.6);
+      }
+    }
+
+    .question-title {
+      font-size: 14px;
+    }
+
+    .question-ask {
+      padding: 11px 16px;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 22px;
+      background: rgba(50, 75, 78, 0.6);
+      margin-top: 26px;
+
+      &:first-child {
+        margin-top: 0px;
+      }
+    }
+
+    .question-box {
+      padding: 6px 0px;
+    }
+
+    .question-example {
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 26px;
+      padding: 12px 16px 8px;
+      color: #DDDDDD;
+    }
+
+    .question-sentence {
+      display: flex;
+      font-size: 14px;
+      line-height: 18px;
+      color: #DDDDDD;
+      padding: 4px 16px;
     }
   }
-  .question-mark {
-    line-height: 32px;
-    font-weight: bold;
-    margin-right: 4px;
-  }
 }
+
 </style>
 <style lang="scss">
 .question-sample-collapse.el-collapse {
