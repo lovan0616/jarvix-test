@@ -2,13 +2,18 @@
   <div class="result-board-title">
     <div class="board-name">
       <div class="question-mark">Q</div>
-      <div class="question-name">
+      <div class="question-name"
+        v-if="segmentation"
+      >
         <question-name-token
           v-for="(tokenInfo, index) in segmentation"
           :key="index"
           :token-info="tokenInfo"
         ></question-name-token>
       </div>
+      <div class="question-name"
+        v-else
+      >{{ question }}</div>
     </div>
   </div>
 </template>

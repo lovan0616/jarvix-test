@@ -80,6 +80,10 @@ export default {
       this.$set(chartAddon.xAxis, 'splitLine', groupScatterChartConfig.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', groupScatterChartConfig.yAxisSplitLine)
       chartAddon.tooltip.trigger = groupScatterChartConfig.tooltip.trigger
+      chartAddon.tooltip.formatter = params => {
+        let marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params.color.colorStops[0].color};"></span>`
+        return `<p>${marker}${params.value[3]}（${params.value[2]}）<br>${this.title.xAxis}： ${params.value[0]}<br>${this.title.yAxis}： ${params.value[1]}</p>`
+      }
       chartAddon.xAxis.name = this.title.xAxis
       chartAddon.yAxis.name = this.title.yAxis
       groupScatterChartConfig.chartData.data = this.dataset.data
@@ -116,18 +120,21 @@ export default {
     },
     groupDataList () {
       let dataList = []
-      this.dataset.data.forEach(element => {
+      this.dataset.data.forEach((element, arrayIndex) => {
+        let cloneElement = JSON.parse(JSON.stringify(element))
+        // 將 index 對應到的名稱塞進去，為了 tooltip 的顯示
+        cloneElement.push(this.dataset.index[arrayIndex])
         let hasProperty = false
         for (let i = 0; i < dataList.length; i++) {
-          if (dataList[i].name === element[2]) {
-            dataList[i].data.push(element)
+          if (dataList[i].name === cloneElement[2]) {
+            dataList[i].data.push(cloneElement)
             hasProperty = true
           }
         }
         if (!hasProperty) {
           dataList.push({
-            name: element[2],
-            data: [element]
+            name: cloneElement[2],
+            data: [cloneElement]
           })
         }
       })
