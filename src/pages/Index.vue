@@ -11,7 +11,8 @@
       :description="$t('editing.indexErrorDescription')"
     ></empty-result>
     <preview-data-source
-      v-if="dataSourceId"
+      v-else
+      :key="dataSourceId"
     ></preview-data-source>
     <div v-if="quickStartQuestionList.length > 0">
       <quick-start
@@ -66,6 +67,7 @@ export default {
     dataSourceId (value) {
       if (!value) return
       this.dataFrameInfo = null
+      this.quickStartQuestionList = []
       this.isNoResult = false
       this.getLandingInfo()
     }
