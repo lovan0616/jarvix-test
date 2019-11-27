@@ -34,7 +34,10 @@
           v-for="(question, questionIndex) in questionCategory.questionList"
           :key="index + '-' + questionIndex"
         >
-          <div class="question-ask">{{$t('askHelper.ask')}}: {{ question.questionText }}</div>
+          <div class="question-ask">
+            <p class="question-ask-text">{{$t('askHelper.ask')}}: </p>
+            <p>{{ question.questionText }}</p>
+          </div>
           <div class="question-example">{{$t('askHelper.example')}}:</div>
           <single-question
             :exampleQuestion="exampleQuestion"
@@ -108,6 +111,7 @@ export default {
     }
 
     .question-ask {
+      display: flex;
       padding: 11px 16px;
       font-weight: 600;
       font-size: 14px;
@@ -118,6 +122,14 @@ export default {
       &:first-child {
         margin-top: 0px;
       }
+    }
+
+    .question-ask p {
+      margin: 0px;
+    }
+
+    .question-ask-text {
+      padding-right: 4px;
     }
 
     .question-box {
