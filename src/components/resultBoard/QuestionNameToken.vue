@@ -4,7 +4,7 @@
   >
     {{ tokenInfo.word }}
     <div class="name-info-tooltip">
-      {{ tokenInfo.type }}
+      {{ tokenInfo.typeName }}
     </div>
   </div>
 </template>
