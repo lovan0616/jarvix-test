@@ -4,7 +4,7 @@
   >
     {{ tokenInfo.word }}
     <div class="name-info-tooltip">
-      {{ tokenInfo.type === 'Datavalue' ? $t(`segmentationToken.${tokenInfo.type}`, {name: tokenInfo.properties.datacolumnPrimaryAlias}) : $t(`segmentationToken.${tokenInfo.type}`) }}
+      {{ tokenInfo.type === 'Datavalue' || tokenInfo.type === 'Datacolumn' ? $t(`segmentationToken.${tokenInfo.type}`, {name: tokenInfo.properties.datacolumnPrimaryAlias}) : $t(`segmentationToken.${tokenInfo.type}`) }}
     </div>
   </div>
 </template>

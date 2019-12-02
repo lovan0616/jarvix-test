@@ -1022,7 +1022,7 @@
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",
-    "Datacolumn": "资料栏位",
+    "Datacolumn": "资料栏位，目前辨识为'{name}'栏位",
     "Datavalue": "'{name}'栏位的资料",
     "DtToken": "时间范围",
     "FuzzyDtToken": "时间范围",
