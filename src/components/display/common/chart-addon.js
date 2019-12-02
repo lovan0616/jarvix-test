@@ -47,7 +47,7 @@ export const commonChartOptions = {
     },
     iconStyle: {
       color: chartVariable['themeColor'],
-      borderWidth: 0
+      // borderWidth: 0
     },
     emphasis: {
       iconStyle: {
@@ -56,6 +56,9 @@ export const commonChartOptions = {
     },
     showTitle: false,
     top: 54
+  },
+  brush: {
+    toolbox: ['rect', 'polygon', 'lineX', 'lineY', 'keep', 'clear']
   },
   tooltip: {
     show: true,

@@ -3,6 +3,7 @@
     <v-echart
       :style="chartStyle"
       :options="chartOption"
+      @brushselected="brushRegionSelected"
       auto-resize
     >
     </v-echart>
@@ -73,6 +74,9 @@ export default {
       } else {
         return 8
       }
+    },
+    brushRegionSelected (params) {
+      console.log(params, 'brushSelected')
     }
   },
   computed: {
@@ -80,8 +84,10 @@ export default {
       this.$set(chartAddon.xAxis, 'splitLine', groupScatterChartConfig.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', groupScatterChartConfig.yAxisSplitLine)
       chartAddon.tooltip.trigger = groupScatterChartConfig.tooltip.trigger
-      chartAddon.tooltip.formatter = params => {
-        let marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params.color.colorStops[0].color};"></span>`
+      chartAddon.tooltip.formatter = params => {        
+        let marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${
+          params.color.colorStops ? params.color.colorStops[0].color : params.color
+        };"></span>`
         return `<p>${marker}${params.value[3]}（${params.value[2]}）<br>${this.title.xAxis}： ${params.value[0]}<br>${this.title.yAxis}： ${params.value[1]}</p>`
       }
       chartAddon.xAxis.name = this.title.xAxis

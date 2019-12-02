@@ -5,6 +5,7 @@
       :options="options"
       auto-resize
       v-on="eventHandlers"
+      @brushselected="brushRegionSelected"
     >
     </v-echart>
   </div>
@@ -194,6 +195,9 @@ export default {
         result.push(rowData)
       })
       return result
+    },
+    brushRegionSelected (params) {
+      console.log(params, 'brushSelected')
     }
   }
 }
