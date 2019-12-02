@@ -197,6 +197,8 @@ export default {
       return result
     },
     brushRegionSelected (params) {
+      let selectedRegion = params.batch[0].areas.range
+      let selectedData = params.batch[0].selected
       console.log(params, 'brushSelected')
     }
   }
