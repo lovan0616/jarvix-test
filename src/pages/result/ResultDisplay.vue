@@ -96,7 +96,6 @@ export default {
 
           this.timeStamp = this.$route.query.stamp
           this.isLoading = false
-
           switch (res.layout) {
             case 'general':
               if (res.tasks && res.tasks.length > 1) {
@@ -128,6 +127,21 @@ export default {
                 })
               }
               this.resultInfo = res
+
+              break
+            case 'correlation_exploration':
+              this.layout = 'CorrelationExplorationResult'
+              this.resultInfo = res
+
+              if (res.relatedQuestionList) {
+                this.relatedQuestionList = res.relatedQuestionList
+              }
+
+              this.$nextTick(() => {
+                window.setTimeout(() => {
+                  this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
+                }, 2000)
+              })
 
               break
             case 'root_cause':

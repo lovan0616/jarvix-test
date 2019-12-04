@@ -6,6 +6,7 @@
     <component ref="taskComponent"
       v-else-if="!isError"
       :is="childContent"
+      @task-event="onTaskEmitEvent"
     ></component>
     <no-result v-else :message="errorMessage"></no-result>
   </div>
@@ -43,6 +44,9 @@ export default {
     }
   },
   methods: {
+    onTaskEmitEvent (eventName, ...args) {
+      this.$emit(eventName, ...args)
+    },
     genTaskByTemplateAndData () {
       // 同時取得 template && data
       Promise.all([
