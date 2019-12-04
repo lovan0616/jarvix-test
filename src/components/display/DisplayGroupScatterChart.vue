@@ -88,10 +88,10 @@ export default {
         let marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${
           params.color.colorStops ? params.color.colorStops[0].color : params.color
         };"></span>`
-        return `<p>${marker}${params.value[3]}（${params.value[2]}）<br>${this.title.xAxis}： ${params.value[0]}<br>${this.title.yAxis}： ${params.value[1]}</p>`
+        return `<p>${marker}${params.value[3]}（${params.value[2]}）<br>${this.title.x_title.display_name}： ${params.value[0]}<br>${this.title.y_title.display_name}： ${params.value[1]}</p>`
       }
-      chartAddon.xAxis.name = this.title.xAxis
-      chartAddon.yAxis.name = this.title.yAxis
+      chartAddon.xAxis.name = this.title.x_title.display_name
+      chartAddon.yAxis.name = this.title.y_title.display_name
       groupScatterChartConfig.chartData.data = this.dataset.data
       groupScatterChartConfig.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.color = this.colorList

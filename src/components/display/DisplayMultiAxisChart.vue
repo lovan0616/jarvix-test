@@ -140,8 +140,8 @@ export default {
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      config.xAxis.name = this.title.xAxis ? this.title.xAxis.replace(/ /g, '\r\n') : this.title.xAxis
-      config.yAxis.name = this.title.yAxis
+      config.xAxis.name = this.title.x_title.display_name ? this.title.x_title.display_name.replace(/ /g, '\r\n') : this.title.x_title.display_name
+      config.yAxis.name = this.title.y_title.display_name
 
       if (this.isPreview) this.previewChartSetting(config)
       return config

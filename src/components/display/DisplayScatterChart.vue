@@ -26,7 +26,7 @@
 </template>
 <script>
 import chartVariable from '@/styles/chart/variables.scss'
-import { chartOptions } from '@/components/display/common/chart-addon.js'
+import { chartOptions, getDrillDownTool } from '@/components/display/common/chart-addon.js'
 let scatterChartConfig = {
   xAxisSplitLine: {
     show: false
@@ -141,13 +141,13 @@ export default {
   },
   computed: {
     chartOption () {
-      let chartAddon = JSON.parse(JSON.stringify(chartOptions))
+      let chartAddon = {...JSON.parse(JSON.stringify(chartOptions)), ...getDrillDownTool(this.title)}
       let scatterOptions = JSON.parse(JSON.stringify(scatterChartConfig))
       this.$set(chartAddon.xAxis, 'splitLine', scatterOptions.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterOptions.yAxisSplitLine)
       chartAddon.tooltip.formatter = tooltipFormatterWrapper(this.title)
-      chartAddon.xAxis.name = this.title.xAxis
-      chartAddon.yAxis.name = this.title.yAxis
+      chartAddon.xAxis.name = this.title.x_title.display_name
+      chartAddon.yAxis.name = this.title.y_title.display_name
       scatterOptions.chartData.data = this.dataset.data
       scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.series[0] = scatterOptions.chartData

@@ -110,7 +110,7 @@ export default {
       chartAddon.xAxis.interval = interval
       chartAddon.xAxis.min = min
       chartAddon.xAxis.max = max
-      chartAddon.xAxis.name = this.title.yAxis
+      chartAddon.xAxis.name = this.title.y_title.display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramChartConfig.yAxis}
       chartAddon.yAxis.name = 'count'
 

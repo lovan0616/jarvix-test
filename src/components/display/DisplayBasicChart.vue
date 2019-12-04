@@ -39,7 +39,7 @@
 
 <script>
 import EchartAddon from './common/addon.js'
-import { commonChartOptions } from '@/components/display/common/chart-addon'
+import { commonChartOptions, getDrillDownTool } from '@/components/display/common/chart-addon'
 import {
   colorDefault,
   colorOnly1,
@@ -107,8 +107,7 @@ export default {
       addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
       addonSeriesData: JSON.parse(JSON.stringify(echartAddon.seriesData)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
-      selectedData: [],
-      selectedArea: []
+      selectedData: []
     }
   },
   computed: {
@@ -162,6 +161,7 @@ export default {
     options () {
       let config = {
         ...this.addonOptions,
+        ...getDrillDownTool(this.title),
         ...JSON.parse(JSON.stringify(commonChartOptions)),
         dataset: {
           source: this.dataList
@@ -181,8 +181,8 @@ export default {
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      config.xAxis.name = this.title.xAxis ? this.title.xAxis.replace(/ /g, '\r\n') : this.title.xAxis
-      config.yAxis.name = this.title.yAxis
+      config.xAxis.name = this.title.x_title.display_name ? this.title.x_title.display_name.replace(/ /g, '\r\n') : this.title.x_title.display_name
+      config.yAxis.name = this.title.y_title.display_name
 
       if (this.isPreview) this.previewChartSetting(config)
       return config
@@ -236,18 +236,30 @@ export default {
 
       switch (this.series[0].type) {
         case 'line':
+
+          [
+            {
+              type: 'compound',
+              restraints: [
+                {
+                  type: 'enum',
+                }
+              ]
+            }
+          ]
+
           this.selectedArea = params.batch[0].areas.map(areaElement => {
             let coordRange = areaElement.coordRange
             return {
               type: 'area',
               properties: {
                 x: {
-                  dc_name: this.title.xAxis,
+                  dc_name: this.title.x_title.dc_name,
                   start: this.dataset.index[coordRange[0][0]],
                   end: this.dataset.index[coordRange[0][1]]
                 },
                 y: {
-                  dc_name: this.title.yAxis,
+                  dc_name: this.title.y_title.dc_name,
                   start: coordRange[1][0],
                   end: coordRange[1][1]
                 }
@@ -256,9 +268,15 @@ export default {
           })
           break
         case 'bar':
-          this.selectedData = params.batch[0].selected[0].dataIndex.map(element => {
-            return this.dataset.index[element]
-          })
+          this.selectedData = [{
+            type: 'enum',
+            properties: {
+              dc_name: this.title.x_title.dc_name,
+              datavalues: params.batch[0].selected[0].dataIndex.map(element => {
+                return this.dataset.index[element]
+              })
+            }
+          }]
           break
       }
     },
@@ -266,7 +284,7 @@ export default {
       console.log(params, 'selectLegend')
     },
     saveFilter () {
-      this.$store.commit('setFilterList', this.selectedData)
+      this.$store.commit('setFilterList', this.selectedData || this.selectedArea)
     },
     roundNumber (value) {
       return (value).toFixed(2)

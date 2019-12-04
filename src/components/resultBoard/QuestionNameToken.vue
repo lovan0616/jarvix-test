@@ -115,7 +115,7 @@ export default {
       width: 0;
       position: absolute;
       pointer-events: none;
-      border-bottom-color: rgba(50, 58, 58, 0.95);
+      border-bottom-color: #000;
       border-width: 7px;
       margin-left: -7px;
     }

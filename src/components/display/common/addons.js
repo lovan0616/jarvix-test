@@ -216,3 +216,25 @@ export function seriesItemMarkLine () {
     }
   }
 }
+
+// drillDown type
+export function getDrillDownTool (titleObject) {
+  let toolbox
+  if (titleObject.x_title.drillable && titleObject.y_title.drillable) {
+    toolbox = ['rect', 'keep', 'clear']
+  } else if (titleObject.x_title.drillable && !titleObject.y_title.drillable) {
+    toolbox = ['lineX', 'keep', 'clear']
+  } else if (!titleObject.x_title.drillable && titleObject.y_title.drillable) {
+    toolbox = ['lineY', 'keep', 'clear']
+  } else {
+    toolbox = []
+  }
+
+  return toolbox.length === 0 ? {} : {
+    brush: {
+      toolbox: toolbox,
+      xAxisIndex: 0,
+      yAxisindex: 0
+    }
+  }
+}
