@@ -6,8 +6,34 @@
       auto-resize
       v-on="eventHandlers"
       @brushselected="brushRegionSelected"
+      @legendselected="selectLegend"
     >
     </v-echart>
+    <selected-region
+      :title="$t('resultDescription.currentChosenData')"
+      @save="saveFilter"
+    >
+      <div class="filter-description" slot="selectedFilterRegion"
+        v-if="selectedData.length > 0"
+      >
+        <div class="single-filter"
+          v-for="(singleData, index) in selectedData"
+          :key="index"
+        >{{ singleData }}<span v-show="index !== selectedData.length - 1">、</span></div>
+      </div>
+      <div class="region-description" slot="selectedFilterRegion"
+        v-if="selectedArea.length > 0"
+      >
+        <div class="single-area"
+          v-for="(singleData, index) in selectedArea"
+          :key="index"
+        >
+          {{ $t('resultDescription.area') + (index + 1) }}:
+          {{ singleData.properties.x.dc_name }}{{ $t('resultDescription.between', {start: singleData.properties.x.start, end: singleData.properties.x.end }) }}，
+          {{ singleData.properties.y.dc_name }}{{ $t('resultDescription.between', {start: roundNumber(singleData.properties.y.start), end: roundNumber(singleData.properties.y.end) }) }}
+        </div>
+      </div>
+    </selected-region>
   </div>
 </template>
 
@@ -80,7 +106,9 @@ export default {
       addonOptions: JSON.parse(JSON.stringify(echartAddon.options)),
       addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
       addonSeriesData: JSON.parse(JSON.stringify(echartAddon.seriesData)),
-      addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems))
+      addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
+      selectedData: [],
+      selectedArea: []
     }
   },
   computed: {
@@ -197,9 +225,51 @@ export default {
       return result
     },
     brushRegionSelected (params) {
-      let selectedRegion = params.batch[0].areas.range
-      let selectedData = params.batch[0].selected
+      //  多群 的 barchart dataValue
+      // let selectedData = params.batch[0].selected.filter(element => {
+      //   return element.dataIndex.length > 0
+      // }).map(element => {
+      //   return element.seriesName
+      // })
+
       console.log(params, 'brushSelected')
+
+      switch (this.series[0].type) {
+        case 'line':
+          this.selectedArea = params.batch[0].areas.map(areaElement => {
+            let coordRange = areaElement.coordRange
+            return {
+              type: 'area',
+              properties: {
+                x: {
+                  dc_name: this.title.xAxis,
+                  start: this.dataset.index[coordRange[0][0]],
+                  end: this.dataset.index[coordRange[0][1]]
+                },
+                y: {
+                  dc_name: this.title.yAxis,
+                  start: coordRange[1][0],
+                  end: coordRange[1][1]
+                }
+              }
+            }
+          })
+          break
+        case 'bar':
+          this.selectedData = params.batch[0].selected[0].dataIndex.map(element => {
+            return this.dataset.index[element]
+          })
+          break
+      }
+    },
+    selectLegend (params) {
+      console.log(params, 'selectLegend')
+    },
+    saveFilter () {
+      this.$store.commit('setFilterList', this.selectedData)
+    },
+    roundNumber (value) {
+      return (value).toFixed(2)
     }
   }
 }

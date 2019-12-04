@@ -84,7 +84,7 @@ export default {
       this.$set(chartAddon.xAxis, 'splitLine', groupScatterChartConfig.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', groupScatterChartConfig.yAxisSplitLine)
       chartAddon.tooltip.trigger = groupScatterChartConfig.tooltip.trigger
-      chartAddon.tooltip.formatter = params => {        
+      chartAddon.tooltip.formatter = params => {
         let marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${
           params.color.colorStops ? params.color.colorStops[0].color : params.color
         };"></span>`

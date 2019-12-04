@@ -4,8 +4,24 @@
       :style="chartStyle"
       :options="chartOption"
       auto-resize
+      @brushselected="brushRegionSelected"
     >
     </v-echart>
+    <selected-region
+      :title="$t('resultDescription.currentChosenArea')"
+      @save="saveFilter"
+    >
+      <div class="region-description" slot="selectedFilterRegion">
+        <div class="single-area"
+          v-for="(singleData, index) in selectedArea"
+          :key="index"
+        >
+          {{ $t('resultDescription.area') + (index + 1) }}:
+          {{ singleData.properties.x.dc_name }}{{ $t('resultDescription.between', {start: roundNumber(singleData.properties.x.start), end: roundNumber(singleData.properties.x.end) }) }}，
+          {{ singleData.properties.y.dc_name }}{{ $t('resultDescription.between', {start: roundNumber(singleData.properties.y.start), end: roundNumber(singleData.properties.y.end) }) }}
+        </div>
+      </div>
+    </selected-region>
   </div>
 </template>
 <script>
@@ -72,6 +88,11 @@ export default {
       default: null
     }
   },
+  data () {
+    return {
+      selectedArea: []
+    }
+  },
   methods: {
     dotSize (dataLength) {
       if (dataLength > 500 && dataLength < 1999) {
@@ -83,6 +104,39 @@ export default {
       } else {
         return 8
       }
+    },
+    brushRegionSelected (params) {
+      this.selectedArea = params.batch[0].areas.map(areaElement => {
+        let coordRange = areaElement.coordRange
+        return {
+          type: 'area',
+          properties: {
+            x: {
+              dc_name: this.dataset.columns[0],
+              start: coordRange[0][0],
+              end: coordRange[0][1]
+            },
+            y: {
+              dc_name: this.dataset.columns[1],
+              start: coordRange[1][0],
+              end: coordRange[1][1]
+            }
+          }
+        }
+      })
+
+      // this.selectedData = params.batch[0].selected[0].dataIndex.map(element => {
+      //   return this.dataset.index[element]
+      // })
+
+      console.log(params, 'brushSelected')
+      console.log(this.selectedArea, 'selected area')
+    },
+    saveFilter () {
+
+    },
+    roundNumber (value) {
+      return (value).toFixed(2)
     }
   },
   computed: {
@@ -159,3 +213,10 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.selected-region {
+  .single-area {
+
+  }
+}
+</style>

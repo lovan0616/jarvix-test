@@ -1,0 +1,85 @@
+<template>
+  <div class="filter-info-block">
+    <div class="info-title-block">
+      <div class="block-title">
+        <span class="filter-icon"><svg-icon icon-class="filter"></svg-icon></span>
+        <span class="title-text">{{ $t('resultDescription.filterRestrictions') }}</span>
+        <button class="btn btn-m btn-outline">{{ $t('resultDescription.clearAllFilter') }}</button>
+      </div>
+      <div class="remark-info">
+        <span class="remark-title"><svg-icon icon-class="lamp" class="lamp-icon"></svg-icon>{{ $t('resultDescription.prompt') }}：</span>{{ $t('resultDescription.filterRule') }}</div>
+    </div>
+    <div class="info-body-block">
+      <single-filter-block
+      ></single-filter-block>
+    </div>
+  </div>
+</template>
+<script>
+import SingleFilterBlock from './SingleFilterBlock'
+
+export default {
+  name: 'FilterInfo',
+  components: {
+    SingleFilterBlock
+  }
+}
+</script>
+<style lang="scss" scoped>
+.filter-info-block {
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 5px;
+  margin-bottom: 16px;
+  padding: 16px 24px 24px;
+
+  .filter-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: $filter-color;
+    margin-right: 6px;
+    font-size: 12px;
+    line-height: 24px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .info-title-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .block-title {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+
+    .title-text {
+      margin-right: 16px;
+    }
+  }
+
+  .remark-info {
+    display: flex;
+    align-items: center;
+
+    .remark-title {
+      display: inline-flex;
+      align-items: center;
+      color: #FFDF6F;
+    }
+    .lamp-icon {
+      margin-right: 4px;
+    }
+  }
+
+  .info-body-block {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+</style>

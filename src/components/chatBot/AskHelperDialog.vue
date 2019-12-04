@@ -60,7 +60,6 @@ export default {
 <style lang="scss" scoped>
 .ask-helper-dialog {
   position: absolute;
-  bottom: 110px;
   left: 0;
   width: 100%;
   height: 0;

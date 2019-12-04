@@ -22,5 +22,13 @@ export default {
   },
   setCurrentQuestionInfo (state, data) {
     state.currentQuestionInfo = data
+  },
+  setFilterList (state, data) {
+    state.filterList.push(data)
+  },
+  clearFilterList (state) {
+    state.filterList = []
+  },
+  insertFilterList (state) {
   }
 }
