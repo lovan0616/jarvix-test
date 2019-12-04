@@ -54,6 +54,7 @@ import ResultBoard from '@/components/resultBoard/ResultBoard'
 import ResultBoardHeader from '@/components/resultBoard/ResultBoardHeader'
 import ResultBoardBody from '@/components/resultBoard/ResultBoardBody'
 import GeneralResult from '@/components/resultBoard/GeneralResult'
+import CorrelationExplorationResult from '@/components/resultBoard/CorrelationExplorationResult'
 import RootCauseResult from '@/components/resultBoard/RootCauseResult'
 import MultiResult from '@/components/resultBoard/MultiResult'
 import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
@@ -72,6 +73,7 @@ import DisplayWorldMap from '@/components/display/DisplayWorldMap'
 import DisplayPredictChart from '@/components/display/DisplayPredictChart'
 import DisplayPivot from '@/components/display/DisplayPivot'
 import DisplayHeatMapChart from '@/components/display/DisplayHeatMapChart'
+import DisplayCorrelationFeatures from '@/components/display/DisplayCorrelationFeatures'
 import PreviewPivot from '@/components/display/PreviewPivot'
 import InsightsInfo from '@/components/display/InsightsInfo'
 import RootCauseInfo from '@/components/display/RootCauseInfo'
@@ -118,6 +120,7 @@ Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
 Vue.component(GeneralResult.name, GeneralResult)
+Vue.component(CorrelationExplorationResult.name, CorrelationExplorationResult)
 Vue.component(RootCauseResult.name, RootCauseResult)
 Vue.component(MultiResult.name, MultiResult)
 Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
@@ -139,6 +142,7 @@ Vue.component(DisplayWorldMap.name, DisplayWorldMap)
 Vue.component(DisplayPredictChart.name, DisplayPredictChart)
 Vue.component(DisplayPivot.name, DisplayPivot)
 Vue.component(DisplayHeatMapChart.name, DisplayHeatMapChart)
+Vue.component(DisplayCorrelationFeatures.name, DisplayCorrelationFeatures)
 Vue.component(PreviewPivot.name, PreviewPivot)
 Vue.component(NoResult.name, NoResult)
 Vue.component(EmptyResult.name, EmptyResult)
