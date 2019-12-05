@@ -11,7 +11,13 @@ export default {
   filterRestrictionList (state) {
     if (state.filterList.length === 0) return []
     return state.filterList.map(element => {
-      return element.restrictions
+      return element.restriction
+    })
+  },
+  filterStatusList (state) {
+    if (state.filterList.length === 0) return []
+    return state.filterList.map(element => {
+      return element.status
     })
   }
 }

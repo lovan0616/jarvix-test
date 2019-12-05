@@ -29,6 +29,12 @@ export default {
   clearFilterList (state) {
     state.filterList = []
   },
-  insertFilterList (state) {
+  insertFilterList (state, data) {
+    state.filterList.push(data)
+  },
+  setStatusList (state, data) {
+    state.filterList.forEach((filter, index) => {
+      state.filterList[index]['status'] = data[index]
+    })
   }
 }

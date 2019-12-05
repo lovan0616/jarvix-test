@@ -1,19 +1,59 @@
 <template>
-  <div class="single-filter-block">
-    <div class="column-name">test</div>
+  <div :class="['single-filter-block', {checked: checked}]">
+    <!-- <div>{{status}}</div>
+    <div>{{restriction}}</div> -->
+    <div class="column-name">{{columnNames.join(', ')}}</div>
     <label class="checkbox-label filer-checkbox">
-      <input type="checkbox" >
+      <input type="checkbox"
+        v-model="checked"
+        @change="onCheckedChange(checked)"
+      >
       <div class="checkbox-square"></div>
     </label>
     <div class="filter-info-tooltip"></div>
   </div>
 </template>
 <script>
+
 export default {
   name: 'SingleFilterBlock',
   props: {
-    filterInfo: {
-      type: Object
+    status: { type: Boolean },
+    restriction: { type: Array, default: () => [] }
+  },
+  data () {
+    return {
+      checked: this.status
+    }
+  },
+  watch: {
+    status (status) {
+      this.checked = status
+    }
+  },
+  computed: {
+    columnNames () {
+      return this.restriction.reduce((result, curr) => {
+        if (curr.restraints) {
+          curr.restraints.forEach(restraint => {
+            const name = this.getRestraintColumnName(restraint)
+            if (name !== undefined) result.push(name)
+          })
+        } else {
+          const name = this.getRestraintColumnName(curr)
+          if (name !== undefined) result.push(name)
+        }
+        return result
+      }, [])
+    }
+  },
+  methods: {
+    getRestraintColumnName (restraint) {
+      if (!restraint.properties) return
+      return restraint.properties['dc_name']
+    },
+    onCheckedChange (checked) {
+      this.$emit('status-change', checked)
     }
   }
 }
@@ -28,6 +68,7 @@ export default {
   background-color: transparent;
   border-radius: 5px;
   padding: 8px;
+  margin-bottom: 8px;
   border: 1px solid #839699;
   color: #839699;
 
@@ -54,9 +95,16 @@ export default {
 
   &.checked {
     background-color: $filter-color;
+    border-color: $filter-color;
+    color: #fff;
 
     &:not(:first-child):before {
       border-top: 2px solid $filter-color;
+    }
+
+    .checkbox-label.filer-checkbox .checkbox-square {
+      background: #fff;
+      border-color: #fff;
     }
   }
 
@@ -64,6 +112,7 @@ export default {
     font-size: 12px;
     font-weight: 600;
     line-height: 1;
+    margin-right: 8px;
   }
 
   .filter-info-tooltip {
