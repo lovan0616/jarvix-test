@@ -21,7 +21,7 @@
           <div class="region-description">
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-               {{ title.yAxis.display_name }}{{ $t('resultDescription.between', {start: roundNumber(singleType.properties.start), end: roundNumber(singleType.properties.end) }) }}
+               {{ title.xAxis.display_name }}{{ $t('resultDescription.between', {start: roundNumber(singleType.properties.start), end: roundNumber(singleType.properties.end) }) }}
             </div>
           </div>
         </div>
@@ -156,9 +156,9 @@ export default {
       chartAddon.xAxis.interval = interval
       chartAddon.xAxis.min = min
       chartAddon.xAxis.max = max
-      chartAddon.xAxis.name = this.title.yAxis.display_name
+      chartAddon.xAxis.name = this.title.xAxis.display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramChartConfig.yAxis}
-      chartAddon.yAxis.name = 'count'
+      chartAddon.yAxis.name = this.title.yAxis.display_name
 
       if (this.isPreview) this.previewChartSetting(chartAddon)
 

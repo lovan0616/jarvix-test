@@ -5,8 +5,11 @@
       :options="options"
       auto-resize
       v-on="eventHandlers"
+      @click="clickChart"
       @brushselected="brushRegionSelected"
       @legendselected="selectLegend"
+      @legendselectchanged="changeSelectLegend"
+      
     >
     </v-echart>
     <selected-region
@@ -33,7 +36,7 @@
           >
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-               {{ singleType.properties.dc_name }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+              {{ findDisplayName(singleType.properties.dc_name) }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
             </div>
           </div>
         </div>
@@ -270,8 +273,21 @@ export default {
     selectLegend (params) {
       console.log(params, 'selectLegend')
     },
+    changeSelectLegend (params) {
+      console.log(params, 'changeSelectLegend')
+    },
     saveFilter () {
       this.$store.commit('setFilterList', this.selectedData)
+    },
+    findDisplayName (value) {
+      if (value === this.title.xAxis.dc_name) {
+        return this.title.xAxis.display_name
+      } else {
+        return this.title.yAxis.display_name
+      }
+    },
+    clickChart (params) {
+      console.log(params, 'clickchart')
     }
   }
 }
