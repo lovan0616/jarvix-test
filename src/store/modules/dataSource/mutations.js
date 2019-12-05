@@ -24,13 +24,26 @@ export default {
     state.currentQuestionInfo = data
   },
   setFilterList (state, data) {
-    state.filterList.push(data)
+    // 判斷要從哪邊開始取代新的
+    let newRestriction = {
+      status: true,
+      restriction: data
+    }
+    let closeFilterIndex = -1
+    for (let i = 0; i < state.filterList.length; i++) {
+      if (!state.filterList[i].status) {
+        closeFilterIndex = i
+        break
+      }
+    }
+
+    if (closeFilterIndex > -1) {
+      state.filterList = state.filterList.slice(0, closeFilterIndex)
+    }
+    state.filterList.push(newRestriction)
   },
   clearFilterList (state) {
     state.filterList = []
-  },
-  insertFilterList (state, data) {
-    state.filterList.push(data)
   },
   setStatusList (state, data) {
     state.filterList.forEach((filter, index) => {

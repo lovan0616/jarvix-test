@@ -5,51 +5,38 @@
     <div slot="content">
       <div class="tooltip-content-item"
         v-for="(restraint, index) in restriction"
-        v-bind:key="index"
+        :key="index"
       >
-        <template v-if="restraint.type === 'compound'">
+        <template
+          v-if="restraint.type === 'compound'"
+        >
+          {{ $t('resultDescription.restrict') + (index + 1) }}:
           <div
-            v-for="(r, i) in restraint.restraints"
-            v-bind:key="i"
+            v-for="(sub_restraint, restraintsIndex) in restraint.restraints"
+            :key="'restraints-' + index + '-' + restraintsIndex"
           >
-            <div class="tooltip-content-item-condition"
-              v-if="i === 0"
-            >(</div>
-            <div class="tooltip-content-item-title">
-              {{r.properties['dc_name']}} :
-            </div>
-            <div class="tooltip-content-item-description">
-              <template v-if="r.type === 'enum'">
-                {{r.properties['datavalues'].join(', ')}}
-              </template>
-              <template v-if="r.type === 'range'">
-                {{r.properties['start']}} ~ {{r.properties['end']}}
-              </template>
-            </div>
-            <div class="tooltip-content-item-condition"
-              v-if="i < restraint.restraints.length - 1"
-            >&&</div>
-            <div class="tooltip-content-item-condition"
-              v-if="i === restraint.restraints.length - 1"
-            >)</div>
+            {{ sub_restraint.properties.display_name }}{{ $t('resultDescription.between', {
+              start: isNaN(sub_restraint.properties.start) ? sub_restraint.properties.start : roundNumber(sub_restraint.properties.start),
+              end: isNaN(sub_restraint.properties.end) ? sub_restraint.properties.end : roundNumber(sub_restraint.properties.end)
+            }) }}
+            <span class="tooltip-content-item-condition"
+              v-if="restraintsIndex < restraint.restraints.length - 1"
+            >、</span>
           </div>
         </template>
         <template v-else>
           <div class="tooltip-content-item-title">
-            {{restraint.properties['dc_name']}} :
+            {{ $t('resultDescription.restrict') + (index + 1) }}:
           </div>
           <div class="tooltip-content-item-description">
             <template v-if="restraint.type === 'enum'">
-              {{restraint.properties['datavalues'].join(', ')}}
+              {{restraint.properties['display_name']}} = {{restraint.properties['datavalues'].join(', ')}}
             </template>
             <template v-if="restraint.type === 'range'">
-              {{restraint.properties['start']}} ~ {{restraint.properties['end']}}
+              {{restraint.properties['display_name']}} = {{ $t('resultDescription.between', {start: restraint.properties.start, end: restraint.properties.end }) }}
             </template>
           </div>
         </template>
-        <div class="tooltip-content-item-condition"
-          v-if="index < restriction.length - 1"
-        >||</div>
       </div>
     </div>
     <div :class="['single-filter-block', {checked: checked}]">
@@ -106,7 +93,7 @@ export default {
   methods: {
     getRestraintColumnName (restraint) {
       if (!restraint.properties) return
-      return restraint.properties['dc_name']
+      return restraint.properties['display_name']
     },
     onCheckedChange (checked) {
       this.$emit('status-change', checked)
@@ -127,6 +114,7 @@ export default {
   margin-bottom: 8px;
   border: 1px solid #839699;
   color: #839699;
+  cursor: pointer;
 
   &:not(:first-child) {
     margin-left: 12px;
@@ -150,6 +138,10 @@ export default {
 
     &:not(:first-child):before {
       border-top: 2px solid $filter-color;
+    }
+
+    &:hover {
+      background-color: #57A4FF;
     }
 
     .checkbox-label.filer-checkbox .checkbox-square {

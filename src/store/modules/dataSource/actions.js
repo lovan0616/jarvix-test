@@ -100,8 +100,5 @@ export default {
   },
   clearAllFilter ({ commit }) {
     commit('clearFilterList')
-  },
-  insertFliter ({commit}, filter) {
-    commit('insertFilterList', filter)
   }
 }

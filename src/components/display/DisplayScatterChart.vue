@@ -13,7 +13,7 @@
     >
       <div class="region-description" slot="selectedFilterRegion">
         <div class="single-area"
-          v-for="(singleArea, index) in selectedArea"
+          v-for="(singleArea, index) in selectedData"
           :key="index"
         >
           {{ $t('resultDescription.area') + (index + 1) }}:
@@ -21,7 +21,7 @@
             v-for="(singleRestraint, restraintIndex) in singleArea.restraints"
             :key="'restraint' + index + '-' + restraintIndex"
           >
-            {{ findDisplayName(singleRestraint.properties.dc_name) }}{{ $t('resultDescription.between', {start: roundNumber(singleRestraint.properties.start), end: roundNumber(singleRestraint.properties.end) }) }}
+            {{ singleRestraint.properties.display_name }}{{ $t('resultDescription.between', {start: roundNumber(singleRestraint.properties.start), end: roundNumber(singleRestraint.properties.end) }) }}
             <span
               v-show="restraintIndex !== singleArea.restraints.length - 1"
             >、</span>
@@ -98,7 +98,7 @@ export default {
   },
   data () {
     return {
-      selectedArea: []
+      selectedData: []
     }
   },
   methods: {
@@ -114,7 +114,7 @@ export default {
       }
     },
     brushRegionSelected (params) {
-      this.selectedArea = params.batch[0].areas.map(areaElement => {
+      this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
         return {
           type: 'compound',
@@ -123,6 +123,7 @@ export default {
               type: 'range',
               properties: {
                 dc_name: this.title.xAxis.dc_name,
+                display_name: this.title.xAxis.display_name,
                 start: this.title.xAxis.stats_type === 'numeric' ? coordRange[0][0] : this.dataset.index[coordRange[0][0]],
                 end: this.title.xAxis.stats_type === 'numeric' ? coordRange[0][1] : this.dataset.index[coordRange[0][1]]
               }
@@ -131,6 +132,7 @@ export default {
               type: 'range',
               properties: {
                 dc_name: this.title.yAxis.dc_name,
+                display_name: this.title.yAxis.display_name,
                 start: coordRange[1][0],
                 end: coordRange[1][1]
               }
@@ -140,17 +142,10 @@ export default {
       })
 
       console.log(params, 'brushSelected')
-      console.log(this.selectedArea, 'selected area')
-    },
-    findDisplayName (value) {
-      if (value === this.title.xAxis.dc_name) {
-        return this.title.xAxis.display_name
-      } else {
-        return this.title.yAxis.display_name
-      }
+      console.log(this.selectedData, 'selected area')
     },
     saveFilter () {
-      this.$store.commit('setFilterList', this.selectedData)
+      this.$store.commit('dataSource/setFilterList', this.selectedData)
     }
   },
   computed: {

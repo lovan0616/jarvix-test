@@ -21,7 +21,7 @@
           <div class="region-description">
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-               {{ title.xAxis.display_name }}{{ $t('resultDescription.between', {start: roundNumber(singleType.properties.start), end: roundNumber(singleType.properties.end) }) }}
+               {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: roundNumber(singleType.properties.start), end: roundNumber(singleType.properties.end) }) }}
             </div>
           </div>
         </div>
@@ -112,15 +112,13 @@ export default {
       }
     },
     brushRegionSelected (params) {
-
-      console.log(params, 'brushSelected')
-
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
         return {
           type: 'range',
           properties: {
             dc_name: this.title.xAxis.dc_name,
+            display_name: this.title.xAxis.display_name,
             start: coordRange[0],
             end: coordRange[1]
           }
@@ -128,7 +126,7 @@ export default {
       })
     },
     saveFilter () {
-      this.$store.commit('setFilterList', this.selectedData)
+      this.$store.commit('dataSource/setFilterList', this.selectedData)
     }
   },
   computed: {
@@ -169,7 +167,7 @@ export default {
       histogramChartConfig.chartData.data = this.chartData
       chartAddon.series[0] = histogramChartConfig.chartData
 
-      return { ...chartAddon, ...getDrillDownTool(this.title)}
+      return {...chartAddon, ...getDrillDownTool(this.title)}
     },
     chartStyle () {
       return {

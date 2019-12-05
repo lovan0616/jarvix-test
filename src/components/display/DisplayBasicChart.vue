@@ -9,7 +9,6 @@
       @brushselected="brushRegionSelected"
       @legendselected="selectLegend"
       @legendselectchanged="changeSelectLegend"
-      
     >
     </v-echart>
     <selected-region
@@ -36,7 +35,7 @@
           >
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ findDisplayName(singleType.properties.dc_name) }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+              {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
             </div>
           </div>
         </div>
@@ -251,6 +250,7 @@ export default {
               type: 'range',
               properties: {
                 dc_name: this.title.xAxis.dc_name,
+                display_name: this.title.xAxis.display_name,
                 start: this.dataset.index[coordRange[0]],
                 end: this.dataset.index[coordRange[1]]
               }
@@ -262,6 +262,7 @@ export default {
             type: 'enum',
             properties: {
               dc_name: this.title.xAxis.dc_name,
+              display_name: this.title.xAxis.display_name,
               datavalues: params.batch[0].selected[0].dataIndex.map(element => {
                 return this.dataset.index[element]
               })
@@ -277,14 +278,7 @@ export default {
       console.log(params, 'changeSelectLegend')
     },
     saveFilter () {
-      this.$store.commit('setFilterList', this.selectedData)
-    },
-    findDisplayName (value) {
-      if (value === this.title.xAxis.dc_name) {
-        return this.title.xAxis.display_name
-      } else {
-        return this.title.yAxis.display_name
-      }
+      this.$store.commit('dataSource/setFilterList', this.selectedData)
     },
     clickChart (params) {
       console.log(params, 'clickchart')

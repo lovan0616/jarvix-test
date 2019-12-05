@@ -1028,7 +1028,8 @@
     "between": "落在 {start} 到 {end} 之间",
     "filterRestrictions": "过滤条件限制",
     "prompt": "提示",
-    "filterRule": "过滤条件限制将会影响接下来的问句分析结果"
+    "filterRule": "过滤条件限制将会影响接下来的问句分析结果",
+    "restrict": "限制"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",

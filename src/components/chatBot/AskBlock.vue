@@ -133,7 +133,7 @@ export default {
       return this.$store.state.bookmark.appQuestion
     },
     hasFilter () {
-      return this.$store.getters['dataSource/filterRestrictionList'].length > 0
+      return this.$store.state.dataSource.filterList.length > 0
     },
     historyQuestionList () {
       // 過濾 boomark 以及 問題字串
