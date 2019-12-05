@@ -220,11 +220,11 @@ export function seriesItemMarkLine () {
 // drillDown type
 export function getDrillDownTool (titleObject) {
   let toolbox
-  if (titleObject.x_title.drillable && titleObject.y_title.drillable) {
+  if (titleObject.xAxis.drillable && titleObject.yAxis.drillable) {
     toolbox = ['rect', 'keep', 'clear']
-  } else if (titleObject.x_title.drillable && !titleObject.y_title.drillable) {
+  } else if (titleObject.xAxis.drillable && !titleObject.yAxis.drillable) {
     toolbox = ['lineX', 'keep', 'clear']
-  } else if (!titleObject.x_title.drillable && titleObject.y_title.drillable) {
+  } else if (!titleObject.xAxis.drillable && titleObject.yAxis.drillable) {
     toolbox = ['lineY', 'keep', 'clear']
   } else {
     toolbox = []

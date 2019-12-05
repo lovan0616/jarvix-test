@@ -13,12 +13,19 @@
     >
       <div class="region-description" slot="selectedFilterRegion">
         <div class="single-area"
-          v-for="(singleData, index) in selectedArea"
+          v-for="(singleArea, index) in selectedArea"
           :key="index"
         >
           {{ $t('resultDescription.area') + (index + 1) }}:
-          {{ singleData.properties.x.dc_name }}{{ $t('resultDescription.between', {start: roundNumber(singleData.properties.x.start), end: roundNumber(singleData.properties.x.end) }) }}，
-          {{ singleData.properties.y.dc_name }}{{ $t('resultDescription.between', {start: roundNumber(singleData.properties.y.start), end: roundNumber(singleData.properties.y.end) }) }}
+          <span
+            v-for="(singleRestraint, restraintIndex) in singleArea.restraints"
+            :key="'restraint' + index + '-' + restraintIndex"
+          >
+            {{ findDisplayName(singleRestraint.properties.dc_name) }}{{ $t('resultDescription.between', {start: roundNumber(singleRestraint.properties.start), end: roundNumber(singleRestraint.properties.end) }) }}
+            <span
+              v-show="restraintIndex !== singleArea.restraints.length - 1"
+            >、</span>
+          </span>
         </div>
       </div>
     </selected-region>
@@ -26,7 +33,8 @@
 </template>
 <script>
 import chartVariable from '@/styles/chart/variables.scss'
-import { chartOptions, getDrillDownTool } from '@/components/display/common/chart-addon.js'
+import { chartOptions } from '@/components/display/common/chart-addon.js'
+import { getDrillDownTool } from '@/components/display/common/addons.js'
 let scatterChartConfig = {
   xAxisSplitLine: {
     show: false
@@ -56,8 +64,8 @@ let tooltipFormatterWrapper = function ({xAxis, yAxis}) {
   return function (params, ticket, callback) {
     return params.reduce((res, item, index) => {
       return `
-        ${xAxis}: ${item.data[0]}<br/>
-        ${yAxis}: ${item.data[1]}<br/>
+        ${xAxis.display_name}: ${item.data[0]}<br/>
+        ${yAxis.display_name}: ${item.data[1]}<br/>
       `
     }, '')
   }
@@ -109,34 +117,40 @@ export default {
       this.selectedArea = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
         return {
-          type: 'area',
-          properties: {
-            x: {
-              dc_name: this.dataset.columns[0],
-              start: coordRange[0][0],
-              end: coordRange[0][1]
+          type: 'compound',
+          restraints: [
+            {
+              type: 'range',
+              properties: {
+                dc_name: this.title.xAxis.dc_name,
+                start: this.title.xAxis.stats_type === 'numeric' ? coordRange[0][0] : this.dataset.index[coordRange[0][0]],
+                end: this.title.xAxis.stats_type === 'numeric' ? coordRange[0][1] : this.dataset.index[coordRange[0][1]]
+              }
             },
-            y: {
-              dc_name: this.dataset.columns[1],
-              start: coordRange[1][0],
-              end: coordRange[1][1]
+            {
+              type: 'range',
+              properties: {
+                dc_name: this.title.yAxis.dc_name,
+                start: coordRange[1][0],
+                end: coordRange[1][1]
+              }
             }
-          }
+          ]
         }
       })
-
-      // this.selectedData = params.batch[0].selected[0].dataIndex.map(element => {
-      //   return this.dataset.index[element]
-      // })
 
       console.log(params, 'brushSelected')
       console.log(this.selectedArea, 'selected area')
     },
-    saveFilter () {
-
+    findDisplayName (value) {
+      if (value === this.title.xAxis.dc_name) {
+        return this.title.xAxis.display_name
+      } else {
+        return this.title.yAxis.display_name
+      }
     },
-    roundNumber (value) {
-      return (value).toFixed(2)
+    saveFilter () {
+      this.$store.commit('setFilterList', this.selectedData)
     }
   },
   computed: {
@@ -146,8 +160,8 @@ export default {
       this.$set(chartAddon.xAxis, 'splitLine', scatterOptions.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterOptions.yAxisSplitLine)
       chartAddon.tooltip.formatter = tooltipFormatterWrapper(this.title)
-      chartAddon.xAxis.name = this.title.x_title.display_name
-      chartAddon.yAxis.name = this.title.y_title.display_name
+      chartAddon.xAxis.name = this.title.xAxis.display_name
+      chartAddon.yAxis.name = this.title.yAxis.display_name
       scatterOptions.chartData.data = this.dataset.data
       scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.series[0] = scatterOptions.chartData

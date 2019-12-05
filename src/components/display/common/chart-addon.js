@@ -57,11 +57,6 @@ export const commonChartOptions = {
     showTitle: false,
     top: 54
   },
-  brush: {
-    toolbox: ['rect', 'lineX', 'lineY', 'keep', 'clear'],
-    xAxisIndex: 0,
-    yAxisindex: 0
-  },
   tooltip: {
     show: true,
     trigger: 'axis',

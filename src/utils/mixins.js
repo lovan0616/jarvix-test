@@ -131,6 +131,9 @@ Vue.mixin({
           return 'GeneralResult'
       }
     },
+    roundNumber (value, count = 2) {
+      return (value).toFixed(count)
+    },
     // 圖表在preview 時，不顯示 legend、tootltip
     previewChartSetting (config) {
       config.legend.show = false

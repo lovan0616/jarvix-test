@@ -13,24 +13,29 @@
       :title="$t('resultDescription.currentChosenData')"
       @save="saveFilter"
     >
-      <div class="filter-description" slot="selectedFilterRegion"
+      <div slot="selectedFilterRegion"
         v-if="selectedData.length > 0"
       >
-        <div class="single-filter"
-          v-for="(singleData, index) in selectedData"
-          :key="index"
-        >{{ singleData }}<span v-show="index !== selectedData.length - 1">、</span></div>
-      </div>
-      <div class="region-description" slot="selectedFilterRegion"
-        v-if="selectedArea.length > 0"
-      >
-        <div class="single-area"
-          v-for="(singleData, index) in selectedArea"
+        <div
+          v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          {{ $t('resultDescription.area') + (index + 1) }}:
-          {{ singleData.properties.x.dc_name }}{{ $t('resultDescription.between', {start: singleData.properties.x.start, end: singleData.properties.x.end }) }}，
-          {{ singleData.properties.y.dc_name }}{{ $t('resultDescription.between', {start: roundNumber(singleData.properties.y.start), end: roundNumber(singleData.properties.y.end) }) }}
+          <div class="filter-description"
+            v-if="singleType.type === 'enum'"
+          >
+            <div class="single-filter"
+              v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
+              :key="'enum-' + propertiesIndex"
+            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
+          </div>
+          <div class="region-description"
+            v-if="singleType.type === 'range'"
+          >
+            <div class="single-area">
+              {{ $t('resultDescription.area') + (index + 1) }}:
+               {{ singleType.properties.dc_name }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+            </div>
+          </div>
         </div>
       </div>
     </selected-region>
@@ -39,7 +44,8 @@
 
 <script>
 import EchartAddon from './common/addon.js'
-import { commonChartOptions, getDrillDownTool } from '@/components/display/common/chart-addon'
+import { commonChartOptions } from '@/components/display/common/chart-addon'
+import { getDrillDownTool } from '@/components/display/common/addons'
 import {
   colorDefault,
   colorOnly1,
@@ -181,8 +187,8 @@ export default {
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      config.xAxis.name = this.title.x_title.display_name ? this.title.x_title.display_name.replace(/ /g, '\r\n') : this.title.x_title.display_name
-      config.yAxis.name = this.title.y_title.display_name
+      config.xAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
+      config.yAxis.name = this.title.yAxis.display_name
 
       if (this.isPreview) this.previewChartSetting(config)
       return config
@@ -236,33 +242,14 @@ export default {
 
       switch (this.series[0].type) {
         case 'line':
-
-          [
-            {
-              type: 'compound',
-              restraints: [
-                {
-                  type: 'enum',
-                }
-              ]
-            }
-          ]
-
-          this.selectedArea = params.batch[0].areas.map(areaElement => {
+          this.selectedData = params.batch[0].areas.map(areaElement => {
             let coordRange = areaElement.coordRange
             return {
-              type: 'area',
+              type: 'range',
               properties: {
-                x: {
-                  dc_name: this.title.x_title.dc_name,
-                  start: this.dataset.index[coordRange[0][0]],
-                  end: this.dataset.index[coordRange[0][1]]
-                },
-                y: {
-                  dc_name: this.title.y_title.dc_name,
-                  start: coordRange[1][0],
-                  end: coordRange[1][1]
-                }
+                dc_name: this.title.xAxis.dc_name,
+                start: this.dataset.index[coordRange[0]],
+                end: this.dataset.index[coordRange[1]]
               }
             }
           })
@@ -271,7 +258,7 @@ export default {
           this.selectedData = [{
             type: 'enum',
             properties: {
-              dc_name: this.title.x_title.dc_name,
+              dc_name: this.title.xAxis.dc_name,
               datavalues: params.batch[0].selected[0].dataIndex.map(element => {
                 return this.dataset.index[element]
               })
@@ -284,10 +271,7 @@ export default {
       console.log(params, 'selectLegend')
     },
     saveFilter () {
-      this.$store.commit('setFilterList', this.selectedData || this.selectedArea)
-    },
-    roundNumber (value) {
-      return (value).toFixed(2)
+      this.$store.commit('setFilterList', this.selectedData)
     }
   }
 }

@@ -73,8 +73,8 @@ export default {
   methods: {
     setOptions () {
       chartAddon.xAxis.data = this.dataset.index
-      chartAddon.xAxis.name = this.title.x_title.display_name
-      chartAddon.yAxis.name = this.title.y_title.display_name
+      chartAddon.xAxis.name = this.title.xAxis.display_name
+      chartAddon.yAxis.name = this.title.yAxis.display_name
     }
   },
   computed: {
