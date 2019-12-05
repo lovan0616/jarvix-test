@@ -1018,7 +1018,18 @@
     "summaryReport": "摘要报告",
     "importantFeatureChanging": "重要因素变化比较",
     "analysisProcessing": "分析处理中",
-    "quickStart": "常用问题"
+    "quickStart": "常用问题",
+    "clearAllFilter": "清除所有条件",
+    "closeFilter": "关闭条件",
+    "currentChosenData": "目前所选择的资料",
+    "currentChosenArea": "目前所选取的区块",
+    "saveFilterCondition": "保存过滤条件",
+    "area": "区块",
+    "between": "落在 {start} 到 {end} 之间",
+    "filterRestrictions": "过滤条件限制",
+    "prompt": "提示",
+    "filterRule": "过滤条件限制将会影响接下来的问句分析结果",
+    "restrict": "限制"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",

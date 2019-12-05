@@ -125,9 +125,9 @@ export default {
         chartAddon.series.push(config.chartData)
       }
       chartAddon.xAxis = {...chartAddon.xAxis, ...scatterBubleChartConfig.xAxis}
-      chartAddon.xAxis.name = this.title.xAxis
+      chartAddon.xAxis.name = this.title.xAxis.display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...scatterBubleChartConfig.yAxis}
-      chartAddon.yAxis.name = this.title.yAxis
+      chartAddon.yAxis.name = this.title.yAxis.display_name
       chartAddon.tooltip.trigger = scatterBubleChartConfig.tooltip.trigger
       if (this.isPreview) this.previewChartSetting(chartAddon)
 

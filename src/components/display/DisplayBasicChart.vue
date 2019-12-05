@@ -5,14 +5,49 @@
       :options="options"
       auto-resize
       v-on="eventHandlers"
+      @click="clickChart"
+      @brushselected="brushRegionSelected"
+      @legendselected="selectLegend"
+      @legendselectchanged="changeSelectLegend"
     >
     </v-echart>
+    <selected-region
+      :title="$t('resultDescription.currentChosenData')"
+      @save="saveFilter"
+    >
+      <div slot="selectedFilterRegion"
+        v-if="selectedData.length > 0"
+      >
+        <div
+          v-for="(singleType, index) in selectedData"
+          :key="index"
+        >
+          <div class="filter-description"
+            v-if="singleType.type === 'enum'"
+          >
+            <div class="single-filter"
+              v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
+              :key="'enum-' + propertiesIndex"
+            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
+          </div>
+          <div class="region-description"
+            v-if="singleType.type === 'range'"
+          >
+            <div class="single-area">
+              {{ $t('resultDescription.area') + (index + 1) }}:
+              {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </selected-region>
   </div>
 </template>
 
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
+import { getDrillDownTool } from '@/components/display/common/addons'
 import {
   colorDefault,
   colorOnly1,
@@ -79,7 +114,8 @@ export default {
       addonOptions: JSON.parse(JSON.stringify(echartAddon.options)),
       addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
       addonSeriesData: JSON.parse(JSON.stringify(echartAddon.seriesData)),
-      addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems))
+      addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
+      selectedData: []
     }
   },
   computed: {
@@ -133,6 +169,7 @@ export default {
     options () {
       let config = {
         ...this.addonOptions,
+        ...getDrillDownTool(this.title),
         ...JSON.parse(JSON.stringify(commonChartOptions)),
         dataset: {
           source: this.dataList
@@ -152,8 +189,8 @@ export default {
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      config.xAxis.name = this.title.xAxis ? this.title.xAxis.replace(/ /g, '\r\n') : this.title.xAxis
-      config.yAxis.name = this.title.yAxis
+      config.xAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
+      config.yAxis.name = this.title.yAxis.display_name
 
       if (this.isPreview) this.previewChartSetting(config)
       return config
@@ -194,6 +231,57 @@ export default {
         result.push(rowData)
       })
       return result
+    },
+    brushRegionSelected (params) {
+      //  多群 的 barchart dataValue
+      // let selectedData = params.batch[0].selected.filter(element => {
+      //   return element.dataIndex.length > 0
+      // }).map(element => {
+      //   return element.seriesName
+      // })
+
+      console.log(params, 'brushSelected')
+
+      switch (this.series[0].type) {
+        case 'line':
+          this.selectedData = params.batch[0].areas.map(areaElement => {
+            let coordRange = areaElement.coordRange
+            return {
+              type: 'range',
+              properties: {
+                dc_name: this.title.xAxis.dc_name,
+                display_name: this.title.xAxis.display_name,
+                start: this.dataset.index[coordRange[0]],
+                end: this.dataset.index[coordRange[1]]
+              }
+            }
+          })
+          break
+        case 'bar':
+          this.selectedData = [{
+            type: 'enum',
+            properties: {
+              dc_name: this.title.xAxis.dc_name,
+              display_name: this.title.xAxis.display_name,
+              datavalues: params.batch[0].selected[0].dataIndex.map(element => {
+                return this.dataset.index[element]
+              })
+            }
+          }]
+          break
+      }
+    },
+    selectLegend (params) {
+      console.log(params, 'selectLegend')
+    },
+    changeSelectLegend (params) {
+      console.log(params, 'changeSelectLegend')
+    },
+    saveFilter () {
+      this.$store.commit('dataSource/setFilterList', this.selectedData)
+    },
+    clickChart (params) {
+      console.log(params, 'clickchart')
     }
   }
 }

@@ -24,7 +24,8 @@ import {
   TabPane,
   Pagination,
   Collapse,
-  CollapseItem
+  CollapseItem,
+  Tooltip
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -80,6 +81,7 @@ import RootCauseInfo from '@/components/display/RootCauseInfo'
 import InsightTable from '@/components/display/InsightTable'
 import IndicatorInfo from '@/components/display/IndicatorInfo'
 import IndicatorsList from '@/components/display/IndicatorsList'
+import SelectedRegion from '@/components/display/SelectedRegion'
 import NoResult from '@/components/display/NoResult'
 import EmptyResult from '@/pages/result/components/EmptyResult'
 import PreviewResultBoard from '@/components/PreviewResultBoard'
@@ -105,6 +107,7 @@ Vue.use(TabPane)
 Vue.use(Pagination)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
+Vue.use(Tooltip)
 
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)
@@ -144,6 +147,7 @@ Vue.component(DisplayPivot.name, DisplayPivot)
 Vue.component(DisplayHeatMapChart.name, DisplayHeatMapChart)
 Vue.component(DisplayCorrelationFeatures.name, DisplayCorrelationFeatures)
 Vue.component(PreviewPivot.name, PreviewPivot)
+Vue.component(SelectedRegion.name, SelectedRegion)
 Vue.component(NoResult.name, NoResult)
 Vue.component(EmptyResult.name, EmptyResult)
 Vue.component(PreviewResultBoard.name, PreviewResultBoard)

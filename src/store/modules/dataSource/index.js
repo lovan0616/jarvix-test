@@ -12,7 +12,8 @@ export default {
     dataSourceDataValueList: [],
     appQuestion: null,
     currentQuestionInfo: null,
-    historyQuestionList: []
+    historyQuestionList: [],
+    filterList: []
   },
   actions,
   mutations,

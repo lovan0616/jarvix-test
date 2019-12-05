@@ -1018,7 +1018,18 @@
     "summaryReport": "摘要報告",
     "importantFeatureChanging": "重要因素變化比較",
     "analysisProcessing": "分析處理中",
-    "quickStart": "常用問題"
+    "quickStart": "常用問題",
+    "clearAllFilter": "清除所有條件",
+    "closeFilter": "關閉條件",
+    "currentChosenData": "目前所選擇的資料",
+    "currentChosenArea": "目前所選取的區塊",
+    "saveFilterCondition": "保存過濾條件",
+    "area": "區塊",
+    "between": "落在 {start} 到 {end} 之間",
+    "filterRestrictions": "過濾條件限制",
+    "prompt": "提示",
+    "filterRule": "過濾條件限制將會影響接下來的問句分析結果",
+    "restrict": "限制"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",

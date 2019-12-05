@@ -4,13 +4,37 @@
       :style="chartStyle"
       :options="chartOption"
       auto-resize
+      @brushselected="brushRegionSelected"
     >
     </v-echart>
+    <selected-region
+      :title="$t('resultDescription.currentChosenArea')"
+      @save="saveFilter"
+    >
+      <div class="region-description" slot="selectedFilterRegion">
+        <div class="single-area"
+          v-for="(singleArea, index) in selectedData"
+          :key="index"
+        >
+          {{ $t('resultDescription.area') + (index + 1) }}:
+          <span
+            v-for="(singleRestraint, restraintIndex) in singleArea.restraints"
+            :key="'restraint' + index + '-' + restraintIndex"
+          >
+            {{ singleRestraint.properties.display_name }}{{ $t('resultDescription.between', {start: roundNumber(singleRestraint.properties.start), end: roundNumber(singleRestraint.properties.end) }) }}
+            <span
+              v-show="restraintIndex !== singleArea.restraints.length - 1"
+            >、</span>
+          </span>
+        </div>
+      </div>
+    </selected-region>
   </div>
 </template>
 <script>
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
+import { getDrillDownTool } from '@/components/display/common/addons.js'
 let scatterChartConfig = {
   xAxisSplitLine: {
     show: false
@@ -40,8 +64,8 @@ let tooltipFormatterWrapper = function ({xAxis, yAxis}) {
   return function (params, ticket, callback) {
     return params.reduce((res, item, index) => {
       return `
-        ${xAxis}: ${item.data[0]}<br/>
-        ${yAxis}: ${item.data[1]}<br/>
+        ${xAxis.display_name}: ${item.data[0]}<br/>
+        ${yAxis.display_name}: ${item.data[1]}<br/>
       `
     }, '')
   }
@@ -72,6 +96,11 @@ export default {
       default: null
     }
   },
+  data () {
+    return {
+      selectedData: []
+    }
+  },
   methods: {
     dotSize (dataLength) {
       if (dataLength > 500 && dataLength < 1999) {
@@ -83,17 +112,51 @@ export default {
       } else {
         return 8
       }
+    },
+    brushRegionSelected (params) {
+      this.selectedData = params.batch[0].areas.map(areaElement => {
+        let coordRange = areaElement.coordRange
+        return {
+          type: 'compound',
+          restraints: [
+            {
+              type: 'range',
+              properties: {
+                dc_name: this.title.xAxis.dc_name,
+                display_name: this.title.xAxis.display_name,
+                start: this.title.xAxis.stats_type === 'numeric' ? coordRange[0][0] : this.dataset.index[coordRange[0][0]],
+                end: this.title.xAxis.stats_type === 'numeric' ? coordRange[0][1] : this.dataset.index[coordRange[0][1]]
+              }
+            },
+            {
+              type: 'range',
+              properties: {
+                dc_name: this.title.yAxis.dc_name,
+                display_name: this.title.yAxis.display_name,
+                start: coordRange[1][0],
+                end: coordRange[1][1]
+              }
+            }
+          ]
+        }
+      })
+
+      console.log(params, 'brushSelected')
+      console.log(this.selectedData, 'selected area')
+    },
+    saveFilter () {
+      this.$store.commit('dataSource/setFilterList', this.selectedData)
     }
   },
   computed: {
     chartOption () {
-      let chartAddon = JSON.parse(JSON.stringify(chartOptions))
+      let chartAddon = {...JSON.parse(JSON.stringify(chartOptions)), ...getDrillDownTool(this.title)}
       let scatterOptions = JSON.parse(JSON.stringify(scatterChartConfig))
       this.$set(chartAddon.xAxis, 'splitLine', scatterOptions.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterOptions.yAxisSplitLine)
       chartAddon.tooltip.formatter = tooltipFormatterWrapper(this.title)
-      chartAddon.xAxis.name = this.title.xAxis
-      chartAddon.yAxis.name = this.title.yAxis
+      chartAddon.xAxis.name = this.title.xAxis.display_name
+      chartAddon.yAxis.name = this.title.yAxis.display_name
       scatterOptions.chartData.data = this.dataset.data
       scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.series[0] = scatterOptions.chartData
@@ -159,3 +222,10 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.selected-region {
+  .single-area {
+
+  }
+}
+</style>

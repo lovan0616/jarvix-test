@@ -94,5 +94,11 @@ export default {
     return getQuestionHistory(state.dataSourceId).then(res => {
       commit('setHistoryQuestionList', res)
     })
+  },
+  updateFilterStatusList ({commit}, statusList) {
+    commit('setStatusList', statusList)
+  },
+  clearAllFilter ({ commit }) {
+    commit('clearFilterList')
   }
 }

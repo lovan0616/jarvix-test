@@ -34,7 +34,7 @@ export default {
   methods: {
     onClickItem (index) {
       this.changeCursor(index)
-      //FIXME assume this component is created by task
+      // FIXME assume this component is created by task
       this.$parent.$emit('task-event', 'change-cursor', index)
     },
     changeCursor (index) {
