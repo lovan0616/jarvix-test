@@ -4,24 +4,69 @@
       <div class="block-title">
         <span class="filter-icon"><svg-icon icon-class="filter"></svg-icon></span>
         <span class="title-text">{{ $t('resultDescription.filterRestrictions') }}</span>
-        <button class="btn btn-m btn-outline">{{ $t('resultDescription.clearAllFilter') }}</button>
+        <button class="btn btn-m btn-outline"
+          @click="onClearAll"
+        >
+          {{ $t('resultDescription.clearAllFilter') }}
+        </button>
       </div>
       <div class="remark-info">
         <span class="remark-title"><svg-icon icon-class="lamp" class="lamp-icon"></svg-icon>{{ $t('resultDescription.prompt') }}：</span>{{ $t('resultDescription.filterRule') }}</div>
     </div>
     <div class="info-body-block">
       <single-filter-block
+        v-for="(f, index) in filterList"
+        v-bind:key="index"
+        :restriction="f.restriction"
+        v-model="statusList[index]"
+        @status-change="onFilterStatusChange(index, $event)"
       ></single-filter-block>
     </div>
   </div>
 </template>
 <script>
 import SingleFilterBlock from './SingleFilterBlock'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'FilterInfo',
   components: {
     SingleFilterBlock
+  },
+  data () {
+    return {
+      filters: [],
+      statusList: []
+    }
+  },
+  created () {
+    this.statusList = this.filterList.map(filter => filter.status)
+  },
+  watch: {
+    filterStatusList (updated) {
+      this.statusList = updated
+    }
+  },
+  computed: {
+    ...mapState('dataSource', ['filterList']),
+    ...mapGetters('dataSource', ['filterStatusList'])
+  },
+  methods: {
+    onFilterStatusChange (index, updated) {
+      const result = this.statusList.map((status, i) => {
+        if (updated) {
+          if (index >= i) return updated
+          else return !updated
+        } else {
+          if (index <= i) return updated
+          else return !updated
+        }
+      })
+      this.$store.dispatch('dataSource/updateFilterStatusList', result)
+    },
+    onClearAll (e) {
+      this.$store.dispatch('dataSource/clearAllFilter')
+    }
   }
 }
 </script>
