@@ -17,10 +17,6 @@
 
 export default {
   name: 'SingleFilterBlock',
-  model: {
-    prop: 'status',
-    event: 'status-change'
-  },
   props: {
     status: { type: Boolean },
     restriction: { type: Array, default: () => [] }

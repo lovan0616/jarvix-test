@@ -18,7 +18,7 @@
         v-for="(f, index) in filterList"
         v-bind:key="index"
         :restriction="f.restriction"
-        v-model="statusList[index]"
+        :status="filterStatusList[index]"
         @status-change="onFilterStatusChange(index, $event)"
       ></single-filter-block>
     </div>
@@ -33,27 +33,13 @@ export default {
   components: {
     SingleFilterBlock
   },
-  data () {
-    return {
-      filters: [],
-      statusList: []
-    }
-  },
-  created () {
-    this.statusList = this.filterList.map(filter => filter.status)
-  },
-  watch: {
-    filterStatusList (updated) {
-      this.statusList = updated
-    }
-  },
   computed: {
     ...mapState('dataSource', ['filterList']),
     ...mapGetters('dataSource', ['filterStatusList'])
   },
   methods: {
     onFilterStatusChange (index, updated) {
-      const result = this.statusList.map((status, i) => {
+      const result = this.filterStatusList.map((status, i) => {
         if (updated) {
           if (index >= i) return updated
           else return !updated
