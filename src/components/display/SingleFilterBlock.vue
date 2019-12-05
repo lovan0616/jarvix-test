@@ -1,17 +1,68 @@
 <template>
-  <div :class="['single-filter-block', {checked: checked}]">
-    <!-- <div>{{status}}</div>
-    <div>{{restriction}}</div> -->
-    <div class="column-name">{{columnNames.join(', ')}}</div>
-    <label class="checkbox-label filer-checkbox">
-      <input type="checkbox"
-        v-model="checked"
-        @change="onCheckedChange(checked)"
+  <el-tooltip placement="bottom-start"
+    :popper-class="popperClass"
+  >
+    <div slot="content">
+      <div class="tooltip-content-item"
+        v-for="(restraint, index) in restriction"
+        v-bind:key="index"
       >
-      <div class="checkbox-square"></div>
-    </label>
-    <div class="filter-info-tooltip"></div>
-  </div>
+        <template v-if="restraint.type === 'compound'">
+          <div
+            v-for="(r, i) in restraint.restraints"
+            v-bind:key="i"
+          >
+            <div class="tooltip-content-item-condition"
+              v-if="i === 0"
+            >(</div>
+            <div class="tooltip-content-item-title">
+              {{r.properties['dc_name']}} :
+            </div>
+            <div class="tooltip-content-item-description">
+              <template v-if="r.type === 'enum'">
+                {{r.properties['datavalues'].join(', ')}}
+              </template>
+              <template v-if="r.type === 'range'">
+                {{r.properties['start']}} ~ {{r.properties['end']}}
+              </template>
+            </div>
+            <div class="tooltip-content-item-condition"
+              v-if="i < restraint.restraints.length - 1"
+            >&&</div>
+            <div class="tooltip-content-item-condition"
+              v-if="i === restraint.restraints.length - 1"
+            >)</div>
+          </div>
+        </template>
+        <template v-else>
+          <div class="tooltip-content-item-title">
+            {{restraint.properties['dc_name']}} :
+          </div>
+          <div class="tooltip-content-item-description">
+            <template v-if="restraint.type === 'enum'">
+              {{restraint.properties['datavalues'].join(', ')}}
+            </template>
+            <template v-if="restraint.type === 'range'">
+              {{restraint.properties['start']}} ~ {{restraint.properties['end']}}
+            </template>
+          </div>
+        </template>
+        <div class="tooltip-content-item-condition"
+          v-if="index < restriction.length - 1"
+        >||</div>
+      </div>
+    </div>
+    <div :class="['single-filter-block', {checked: checked}]">
+      <div class="column-name">{{columnNames.join(', ')}}</div>
+      <label class="checkbox-label filer-checkbox">
+        <input type="checkbox"
+          v-model="checked"
+          @change="onCheckedChange(checked)"
+        >
+        <div class="checkbox-square"></div>
+      </label>
+    </div>
+  </el-tooltip>
 </template>
 <script>
 
@@ -45,6 +96,11 @@ export default {
         }
         return result
       }, [])
+    },
+    popperClass () {
+      let result = 'filter-block-tooltip'
+      if (!this.checked) result += ' checked'
+      return result
     }
   },
   methods: {
@@ -87,12 +143,6 @@ export default {
     }
   }
 
-  &:hover {
-    .filter-info-tooltip {
-      display: block;
-    }
-  }
-
   &.checked {
     background-color: $filter-color;
     border-color: $filter-color;
@@ -114,40 +164,50 @@ export default {
     line-height: 1;
     margin-right: 8px;
   }
+}
 
-  .filter-info-tooltip {
-    display: none;
-    position: absolute;
-    top: 110%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: auto;
-    width: auto;
-    color: #fff;
-    font-size: 13px;
-    line-height: 1.2;
-    // 處理寬度被 parent 限制的問題
-    white-space: nowrap;
-    text-align: center;
-    background-color: #323A3A;
-    box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
-    border-radius: 8px;
-    padding: 5px 8px;
-    z-index: 999;
+.tooltip-content-item {
+  max-width: 400px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 16px;
 
-    &:after {
-      bottom: 100%;
-      left: 50%;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
-      position: absolute;
-      pointer-events: none;
+  .tooltip-content-item-title {
+    margin-bottom: 4px;
+  }
+
+  .tooltip-content-item-description {
+    margin-left: 16px;
+  }
+
+  .tooltip-content-item-condition {
+    margin: 4px 0;
+    color: #757575;
+  }
+}
+</style>
+
+<style lang="scss">
+.filter-block-tooltip.el-tooltip__popper {
+  background-color: #323A3A;
+  box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
+  border-radius: 8px;
+  padding: 8px;
+
+  &.el-tooltip__popper[x-placement^=top] .popper__arrow:after {
+    border-top-color: #323A3A;
+  }
+
+  &.el-tooltip__popper[x-placement^=top] .popper__arrow {
+      border-top-color: #323A3A;
+  }
+
+  &.el-tooltip__popper[x-placement^=bottom] .popper__arrow:after {
       border-bottom-color: #323A3A;
-      border-width: 7px;
-      margin-left: -7px;
-    }
+  }
+
+  &.el-tooltip__popper[x-placement^=bottom] .popper__arrow {
+      border-bottom-color: #323A3A;
   }
 }
 </style>

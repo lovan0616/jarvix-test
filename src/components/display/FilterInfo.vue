@@ -1,5 +1,5 @@
 <template>
-  <div class="filter-info-block">
+  <div v-show="filterStatusList.length > 0" class="filter-info-block">
     <div class="info-title-block">
       <div class="block-title">
         <span class="filter-icon"><svg-icon icon-class="filter"></svg-icon></span>
@@ -85,7 +85,7 @@ export default {
   .block-title {
     display: flex;
     align-items: center;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 18px;
     line-height: 24px;
 
@@ -97,6 +97,8 @@ export default {
   .remark-info {
     display: flex;
     align-items: center;
+    font-size: 12px;
+    align-self: flex-start;
 
     .remark-title {
       display: inline-flex;
