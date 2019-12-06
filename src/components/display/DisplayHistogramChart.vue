@@ -8,12 +8,11 @@
     >
     </v-echart>
     <selected-region
+      v-if="selectedData.length > 0"
       :title="$t('resultDescription.currentChosenData')"
       @save="saveFilter"
     >
-      <div slot="selectedFilterRegion"
-        v-if="selectedData.length > 0"
-      >
+      <div slot="selectedFilterRegion">
         <div
           v-for="(singleType, index) in selectedData"
           :key="index"

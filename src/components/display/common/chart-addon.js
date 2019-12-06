@@ -51,16 +51,24 @@ export const commonChartOptions = {
           lineY: 'M26.267 8v2h1.733v1.2h2v-3.2h-3.733zM30 12.8v6.4h-2v-6.4h2zM29 20.8h1v3.2h-3.733v-2h1.733v-1.2h1zM24.4 23v1h-2.4v-2h2.4v1zM22 10h2.4v-2h-2.4v2zM10 8h-2.4v2h2.4v-2zM10 22h-2.4v2h2.4v-2zM5.733 23v1h-3.733v-3.2h2v1.2h1.733v1zM3 19.2h-1v-6.4h2v6.4h-1zM3 11.2h-1v-3.2h3.733v2h-1.733v1.2h-1zM15.998 2l3.464 4.5h-6.928l3.464-4.5zM12.537 25.5l3.464 4.5 3.464-4.5h-6.928z',
           keep: 'M2 4v3h2v-1h0.5v-2h-2.5zM6.167 4h5v2h-5v-2zM12.833 6v-2h5v2h-5zM19.5 6v-2h2.5v3h-2v-1h-0.5zM20 9h2v1h8v18h-22v-8h-1.833v-2h1.833v-8h12v-1zM20 12h-10v6h1.167v2h-1.167v6h18v-14h-6v3h-2v-3zM20 17h2v3h-2.5v-2h0.5v-1zM17.833 18v2h-5v-2h5zM4.5 18v2h-2.5v-3h2v1h0.5zM4 15h-2v-6h2v6z',
           clear: 'M2 4v5h2v-3h3.833v-2h-5.833zM10.167 4h11.667v2h-11.667v-2zM24.167 6v-2h5.833v5h-2v-3h-3.833zM28 11h2v10h-2v-10zM28 23h2v5h-5.833v-2h3.833v-3zM21.833 26v2h-11.667v-2h11.667zM7.833 26v2h-5.833v-5h2v3h3.833zM4 21h-2v-10h2v10zM11.252 9.838l4.75 4.75 4.75-4.75 1.414 1.414-4.75 4.75 4.749 4.749-1.414 1.414-4.749-4.749-4.749 4.749-1.414-1.414 4.749-4.749-4.75-4.75 1.414-1.414z'
+        },
+        iconStyle: {
+          color: '#5995B4'
+        },
+        emphasis: {
+          iconStyle: {
+            color: '#00B2FF'
+          }
         }
       }
     },
     iconStyle: {
-      color: chartVariable['themeColor'],
+      color: '#689499',
       borderWidth: 0
     },
     emphasis: {
       iconStyle: {
-        color: '#fff'
+        color: '#4DE2F0'
       }
     },
     showTitle: false,

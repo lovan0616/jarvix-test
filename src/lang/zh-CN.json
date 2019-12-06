@@ -25,7 +25,8 @@
     "changePasswordSuccess": "密码变更成功",
     "editNameSuccess": "编辑名称成功",
     "changeStatusSuccess": "变更状态成功",
-    "pleaseConfirmPassword": "请确认密码是否相同"
+    "pleaseConfirmPassword": "请确认密码是否相同",
+    "addFilter": "保存成功"
   },
   "guiding": {
     "preStep": "上一步",
