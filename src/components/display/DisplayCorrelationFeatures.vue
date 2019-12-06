@@ -5,14 +5,16 @@
         <div class="feature-header-title"><div class="dot"></div>{{$t('resultDescription.featureList')}}</div>
         <div class="feature-header-description">{{$t('resultDescription.hereIsFeatures')}}</div>
       </div>
-      <el-tooltip placement="bottom"
-        :content="$t('resultDescription.modelConfidence')"
-      >
-        <div class="feature-header-confidence">
-          {{confidence}}
-          <span class="unit-icon">%</span>
-        </div>
-      </el-tooltip>
+      <template v-if="!isNaN(confidence)">
+        <el-tooltip placement="bottom"
+          :content="$t('resultDescription.modelConfidence')"
+        >
+          <div class="feature-header-confidence">
+            {{ Math.round(confidence * 100) }}
+            <span class="unit-icon">%</span>
+          </div>
+        </el-tooltip>
+      </template>
     </div>
     <div class="feature-body">
       <div :class="['feature-item', {'selected': index === cursor}]"
@@ -41,7 +43,7 @@ export default {
   name: 'DisplayCorrelationFeatures',
   props: {
     features: { type: Array, default: () => [] },
-    confidence: { type: Number, default: 100 }
+    confidence: { type: Number }
   },
   data () {
     return {
