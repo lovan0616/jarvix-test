@@ -8,6 +8,7 @@
     >
     </v-echart>
     <selected-region
+      v-if="selectedData.length > 0"
       :title="$t('resultDescription.currentChosenArea')"
       @save="saveFilter"
     >

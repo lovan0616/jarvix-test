@@ -1,6 +1,8 @@
 <template>
   <div class="result-board-container">
-    <div class="result-board">
+    <div class="result-board"
+      :class="{'has-filter': hasFilter}"
+    >
       <div class="board-header">
         <div class="header-block">
           <slot name="PageResultBoardHeader"></slot>

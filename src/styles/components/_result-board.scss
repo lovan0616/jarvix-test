@@ -4,6 +4,15 @@
   border-radius: 8px;
   margin-bottom: 48px;
 
+  &.has-filter {
+    .board-header {
+      border-top: 5px solid $filter-color;
+    }
+    .result-board-title .question-mark {
+      background-color: $filter-color;
+    }
+  }
+
   .board-header {
     position: relative;
     display: flex;
