@@ -1,10 +1,12 @@
 <template>
   <div class="ask-container">
     <div class="ask-block">
-      <div class="user-question-block">
-        <div class="filter-block"
-          v-if="hasFilter"
-        ><svg-icon icon-class="filter" class="icon"></svg-icon> {{ $t('resultDescription.filterRestrictions') }}</div>
+      <div class="filter-block"
+        v-if="hasFilter"
+      ><svg-icon icon-class="filter" class="icon"></svg-icon> {{ $t('resultDescription.filterRestrictions') }}</div>
+      <div class="user-question-block"
+        :class="{'has-filter': hasFilter}"
+      >
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
         <input class="question-input input"
           ref="questionInput"
@@ -168,6 +170,15 @@ export default {
     position: relative;
     z-index: 999;
 
+    &.has-filter {
+      &:after {
+        background-image: linear-gradient(90deg, $filter-color 0%, rgba(67, 138, 248, 0.2) 100%);
+      }
+      .ask-btn {
+        color: $filter-color;
+      }
+    }
+
     &:after {
       content: '';
       display: block;
@@ -204,7 +215,8 @@ export default {
   }
 
   .filter-block {
-    background-color: $filter-color;
+    color: $filter-color;
+    border: 1px solid $filter-color;
     border-radius: 5px;
     padding: 6px 10px;
     font-size: 12px;

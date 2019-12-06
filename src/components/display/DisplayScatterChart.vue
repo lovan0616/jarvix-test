@@ -164,7 +164,7 @@ export default {
       if (this.formula) {
         let gradient = Number((this.formula.a).toFixed(4))
         let offset = Number((this.formula.b).toFixed(4))
-        let expression = `y = ${gradient}x ${offset > 0 ? '+' : '-'}${Math.abs(offset)}`
+        let expression = `y = ${gradient}x ${offset > 0 ? '+' : '-'} ${Math.abs(offset)}`
         let minX = this.dataset.data[0][0]
         let maxX = this.dataset.data[0][0]
 
@@ -173,8 +173,8 @@ export default {
           minX = element[0] < minX ? element[0] : minX
         })
 
-        let minY = parseInt(gradient * minX + offset)
-        let maxY = parseInt(gradient * maxX + offset)
+        let minY = this.roundNumber(gradient * minX + offset, 4)
+        let maxY = this.roundNumber(gradient * maxX + offset, 4)
 
         // markLine
         chartAddon.series[1] = {
@@ -182,7 +182,7 @@ export default {
           type: 'line',
           showSymbol: false,
           smooth: true,
-          color: chartVariable['themeColor'],
+          color: '#FF9559',
           symbol: 'none',
           data: [[minX, minY], [maxX, maxY]],
           markPoint: {
@@ -195,10 +195,15 @@ export default {
               show: true,
               position: 'left',
               formatter: expression,
+              width: '100%',
+              lineHeight: 14,
+              padding: [1, 2, 1, 22],
               textStyle: {
-                color: chartVariable['themeColor'],
+                color: '#FF9559',
                 fontSize: 14
-              }
+              },
+              // backgroundColor: '#093B3E'
+              backgroundColor: '#000'
             },
             data: [
               {

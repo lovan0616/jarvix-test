@@ -25,6 +25,7 @@
           <div class="filter-description"
             v-if="singleType.type === 'enum'"
           >
+            <div class="column-name">{{singleType.properties.display_name}} =</div>
             <div class="single-filter"
               v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
               :key="'enum-' + propertiesIndex"
