@@ -1,9 +1,8 @@
 <template>
   <div class="question-token"
     :class="tokenInfo.type"
-  >
-    {{ tokenInfo.word }}
-    <div class="name-info-tooltip">
+  >{{ tokenInfo.word }}<!--
+    --><div class="name-info-tooltip">
       {{ tokenInfo.type === 'Datavalue' || tokenInfo.type === 'Datacolumn' ? $t(`segmentationToken.${tokenInfo.type}`, {name: tokenInfo.properties.datacolumnPrimaryAlias}) : $t(`segmentationToken.${tokenInfo.type}`) }}
     </div>
   </div>
@@ -20,6 +19,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .question-token {
+  display: inline;
   position: relative;
   cursor: pointer;
   margin-right: 2px;
