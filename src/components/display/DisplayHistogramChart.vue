@@ -117,6 +117,7 @@ export default {
           type: 'range',
           properties: {
             dc_name: this.title.xAxis.dc_name,
+            stats_type: this.title.xAxis.stats_type,
             display_name: this.title.xAxis.display_name,
             start: coordRange[0],
             end: coordRange[1]

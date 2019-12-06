@@ -108,6 +108,7 @@ export function yAxisDefault () {
     axisLine: {
       show: false
     },
+    scale: true,
     axisLabel: {
       show: true,
       textStyle: {

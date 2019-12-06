@@ -132,7 +132,8 @@ export const chartOptions = {
     },
     axisTick: {
       show: false
-    }
+    },
+    scale: true
   },
   series: []
 }
