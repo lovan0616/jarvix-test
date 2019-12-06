@@ -117,6 +117,7 @@ export default {
           type: 'range',
           properties: {
             dc_name: this.title.xAxis.dc_name,
+            data_type: this.title.xAxis.data_type,
             display_name: this.title.xAxis.display_name,
             start: coordRange[0],
             end: coordRange[1]
@@ -171,7 +172,7 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: '300px'
+        height: '380px'
       }
     }
   }

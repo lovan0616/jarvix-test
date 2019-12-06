@@ -250,6 +250,7 @@ export default {
               type: 'range',
               properties: {
                 dc_name: this.title.xAxis.dc_name,
+                data_type: this.title.xAxis.data_type,
                 display_name: this.title.xAxis.display_name,
                 start: this.dataset.index[coordRange[0]],
                 end: this.dataset.index[coordRange[1]]
@@ -262,6 +263,7 @@ export default {
             type: 'enum',
             properties: {
               dc_name: this.title.xAxis.dc_name,
+              data_type: this.title.xAxis.data_type,
               display_name: this.title.xAxis.display_name,
               datavalues: params.batch[0].selected[0].dataIndex.map(element => {
                 return this.dataset.index[element]

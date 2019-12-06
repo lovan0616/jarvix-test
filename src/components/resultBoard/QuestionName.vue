@@ -49,8 +49,8 @@ export default {
 
   .question-name {
     flex: 1;
-    display: flex;
-    flex-wrap: wrap;
+    // display: flex;
+    // flex-wrap: wrap;
   }
 }
 </style>
