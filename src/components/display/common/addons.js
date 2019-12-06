@@ -227,10 +227,10 @@ export function getDrillDownTool (titleObject) {
   } else if (!titleObject.xAxis.drillable && titleObject.yAxis.drillable) {
     toolbox = ['lineY', 'keep', 'clear']
   } else {
-    toolbox = []
+    toolbox = ['']
   }
 
-  return toolbox.length === 0 ? {} : {
+  return {
     brush: {
       toolbox: toolbox,
       xAxisIndex: 0,

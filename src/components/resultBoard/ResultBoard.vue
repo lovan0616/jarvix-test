@@ -263,6 +263,9 @@ export default {
     },
     shareUrl () {
       return `${window.location.origin}/result?question=${this.resultInfo.tasks[0].entities.question}&stamp=${new Date().getTime()}&dataSourceId=${this.resultInfo.tasks[0].entities.bookmark_id}&action=share`
+    },
+    hasFilter () {
+      return this.$store.state.dataSource.filterList.length > 0
     }
   }
 }
