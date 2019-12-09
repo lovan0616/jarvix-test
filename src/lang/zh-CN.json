@@ -1030,7 +1030,10 @@
     "filterRestrictions": "过滤条件限制",
     "prompt": "提示",
     "filterRule": "过滤条件限制将会影响接下来的问句分析结果",
-    "restrict": "限制"
+    "restrict": "限制",
+    "featureList": "关连列表",
+    "hereIsFeatures": "以下为关连因子",
+    "modelConfidence": "模型的信心度"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",
