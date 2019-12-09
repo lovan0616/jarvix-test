@@ -22,15 +22,33 @@
           </div>
           <div class="key-result-viewer">
             <keep-alive>
-              <task
-                v-bind:key="cursor"
-                :templateUrl="`api/task/${taskObject.keyResults[cursor].intent}/template`"
-                :dataUrl="`api/task/${taskObject.keyResults[cursor].intent}/data`"
-                :params="taskObject.keyResults[cursor].entities"
+              <task v-if="taskObject.subKeyResults[cursor]"
+                v-bind:key="`sub-key-result-${cursor}`"
+                :templateUrl="`api/task/${taskObject.subKeyResults[cursor].intent}/template`"
+                :dataUrl="`api/task/${taskObject.subKeyResults[cursor].intent}/data`"
+                :params="taskObject.subKeyResults[cursor].entities"
+              ></task>
+            </keep-alive>
+            <keep-alive>
+              <task v-if="taskObject.subCorrelationInsights[cursor]"
+                v-bind:key="`sub-correlation-insight-${cursor}`"
+                :templateUrl="`api/task/${taskObject.subCorrelationInsights[cursor].intent}/template`"
+                :dataUrl="`api/task/${taskObject.subCorrelationInsights[cursor].intent}/data`"
+                :params="taskObject.subCorrelationInsights[cursor].entities"
               ></task>
             </keep-alive>
           </div>
         </div>
+      </template>
+      <template slot="InsightBasicInfo">
+        <keep-alive>
+          <task v-if="taskObject.subBasicInfos[cursor]"
+            v-bind:key="`sub-basic-info-${cursor}`"
+            :templateUrl="`api/task/${taskObject.subBasicInfos[cursor].intent}/template`"
+            :dataUrl="`api/task/${taskObject.subBasicInfos[cursor].intent}/data`"
+            :params="taskObject.subBasicInfos[cursor].entities"
+          ></task>
+        </keep-alive>
       </template>
     </result-board-body>
   </result-board>
@@ -58,7 +76,10 @@ export default {
       let taskObject = {
         title: [],
         keyResultSelector: [],
-        keyResults: [],
+        subTitles: [],
+        subKeyResults: [],
+        subBasicInfos: [],
+        subCorrelationInsights: [],
         other: []
       }
 
@@ -70,14 +91,27 @@ export default {
           case 'key_result_selector':
             taskObject.keyResultSelector.push(element)
             break
-          case 'key_result':
-            taskObject.keyResults.push(element)
+          // case 'sub_title':
+          //   taskObject.subTitles.push(element)
+          //   break
+          case 'sub_key_result':
+            taskObject.subKeyResults[element.entities.sub_task_index] = element
+            break
+          case 'sub_basic_info':
+            taskObject.subBasicInfos[element.entities.sub_task_index] = element
+            break
+          case 'sub_correlation_insight':
+            taskObject.subCorrelationInsights[element.entities.sub_task_index] = element
+            break
+          case 'general_insight':
+            taskObject.subCorrelationInsights[element.entities.sub_task_index] = undefined
             break
           default:
             taskObject.other.push(element)
             break
         }
       })
+      console.log(taskObject)
       return taskObject
     }
   }
@@ -87,11 +121,11 @@ export default {
 .key-result-wrapper {
   display: flex;
   .key-result-selector {
-    width: 220px;
+    min-width: 200px;
   }
 
   .key-result-viewer {
-    width: 100%;
+    min-width: calc(100% - 200px);
     padding-left: 24px;
   }
 }
