@@ -156,6 +156,7 @@ export default {
       chartAddon.xAxis.max = max
       chartAddon.xAxis.name = this.title.xAxis.display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramChartConfig.yAxis}
+      chartAddon.yAxis.scale = false
       chartAddon.yAxis.name = this.title.yAxis.display_name
 
       if (this.isPreview) this.previewChartSetting(chartAddon)

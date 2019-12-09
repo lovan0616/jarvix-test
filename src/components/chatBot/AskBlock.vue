@@ -2,7 +2,7 @@
   <div class="ask-container">
     <div class="ask-block">
       <div class="filter-block"
-        v-if="hasFilter"
+        v-show="hasFilter"
       ><svg-icon icon-class="filter" class="icon"></svg-icon> {{ $t('resultDescription.filterRestrictions') }}</div>
       <div class="user-question-block"
         :class="{'has-filter': hasFilter}"
