@@ -152,11 +152,14 @@ export default {
   }
 
   .item-title {
+    flex: 1;
     margin-bottom: 8px;
   }
 
   .item-importance {
+    width: 50px;
     display: flex;
+    justify-content: flex-end;
     align-items: center;
     font-size: 13px;
   }

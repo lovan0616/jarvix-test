@@ -33,7 +33,10 @@
               {{restraint.properties['display_name']}} = {{restraint.properties['datavalues'].join(', ')}}
             </template>
             <template v-if="restraint.type === 'range'">
-              {{restraint.properties['display_name']}} = {{ $t('resultDescription.between', {start: restraint.properties.start, end: restraint.properties.end }) }}
+              {{restraint.properties['display_name']}} = {{ $t('resultDescription.between', {
+                start: isNaN(restraint.properties.start) ? restraint.properties.start : roundNumber(restraint.properties.start),
+                end: isNaN(restraint.properties.end) ? restraint.properties.end : roundNumber(restraint.properties.end)
+              }) }}
             </template>
           </div>
         </template>
