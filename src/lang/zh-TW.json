@@ -1082,7 +1082,7 @@
     "polygon": "圈選",
     "lineX": "橫向選擇",
     "lineY": "縱向選擇",
-    "keep": "保持選擇",
+    "keep": "保持多個選擇",
     "clear": "清除選擇"
   },
   "errorMessage": {
