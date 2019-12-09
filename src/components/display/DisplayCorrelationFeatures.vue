@@ -10,7 +10,7 @@
           :content="$t('resultDescription.modelConfidence')"
         >
           <div class="feature-header-confidence">
-            {{ Math.round(confidence * 100) }}
+            {{ Math.round( confidence > 0 ? confidence * 100 : 0) }}
             <span class="unit-icon">%</span>
           </div>
         </el-tooltip>

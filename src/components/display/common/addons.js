@@ -79,7 +79,7 @@ export function xAxisDefault () {
         color: chartVariable['textColor'],
         fontSize: config.axisLabelFontSize
       },
-      rotate: 45,
+      rotate: 30,
       color: chartVariable['xAxisLabelColor']
     }
   }

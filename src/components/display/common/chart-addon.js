@@ -102,7 +102,7 @@ export const chartOptions = {
       color: chartVariable['textColor']
     },
     axisLabel: {
-      rotate: 45,
+      rotate: 30,
       color: chartVariable['xAxisLabelColor']
     },
     axisLine: {
