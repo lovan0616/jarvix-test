@@ -39,6 +39,8 @@ export default {
     // 清空對話紀錄
     if (state.dataSourceId) {
       commit('chatBot/clearConversation', null, {root: true})
+      // 清空篩選條件
+      dispatch('clearAllFilter')
     }
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
@@ -94,5 +96,11 @@ export default {
     return getQuestionHistory(state.dataSourceId).then(res => {
       commit('setHistoryQuestionList', res)
     })
+  },
+  updateFilterStatusList ({commit}, statusList) {
+    commit('setStatusList', statusList)
+  },
+  clearAllFilter ({ commit }) {
+    commit('clearFilterList')
   }
 }

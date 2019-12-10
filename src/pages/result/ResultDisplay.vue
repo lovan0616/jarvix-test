@@ -1,10 +1,6 @@
 <template>
   <div class="result-layout">
-    <!-- <layout
-      v-else
-      :key="timeStamp"
-      v-bind="layout"
-    ></layout> -->
+    <filter-info></filter-info>
     <spinner class="layout-spinner"
       v-if="isLoading"
       :title="$t('resultDescription.analysisProcessing')"
@@ -35,9 +31,13 @@
 import axios from 'axios'
 import { mapGetters } from 'vuex'
 import { askQuestion } from '@/API/NewAsk'
+import FilterInfo from '@/components/display/FilterInfo'
 
 export default {
   name: 'ResultDisplay',
+  components: {
+    FilterInfo
+  },
   data () {
     return {
       isLoading: false,
@@ -51,7 +51,7 @@ export default {
   watch: {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
-      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'segmentation': this.currentQuestionInfo})
+      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'segmentation': this.currentQuestionInfo, 'restrictions': this.filterRestrictionList})
     }
   },
   mounted () {
@@ -64,6 +64,9 @@ export default {
     },
     currentQuestionInfo () {
       return this.$store.state.dataSource.currentQuestionInfo
+    },
+    filterRestrictionList () {
+      return this.$store.getters['dataSource/filterRestrictionList']
     }
   },
   methods: {
@@ -71,7 +74,7 @@ export default {
       let question = this.$route.query.question
       let dataSourceId = parseInt(this.$route.query.dataSourceId)
       if (question) {
-        this.fetchApiAsk({question, dataSourceId, 'segmentation': this.currentQuestionInfo})
+        this.fetchApiAsk({question, dataSourceId, 'segmentation': this.currentQuestionInfo, 'restrictions': this.filterRestrictionList})
       }
     },
     clearLayout () {
@@ -96,7 +99,6 @@ export default {
 
           this.timeStamp = this.$route.query.stamp
           this.isLoading = false
-
           switch (res.layout) {
             case 'general':
               if (res.tasks && res.tasks.length > 1) {
@@ -128,6 +130,21 @@ export default {
                 })
               }
               this.resultInfo = res
+
+              break
+            case 'correlation_exploration':
+              this.layout = 'CorrelationExplorationResult'
+              this.resultInfo = res
+
+              if (res.relatedQuestionList) {
+                this.relatedQuestionList = res.relatedQuestionList
+              }
+
+              this.$nextTick(() => {
+                window.setTimeout(() => {
+                  this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
+                }, 2000)
+              })
 
               break
             case 'root_cause':

@@ -1,7 +1,12 @@
 <template>
   <div class="ask-container">
     <div class="ask-block">
-      <div class="user-question-block">
+      <div class="filter-block"
+        v-show="hasFilter"
+      ><svg-icon icon-class="filter" class="icon"></svg-icon> {{ $t('resultDescription.filterRestrictions') }}</div>
+      <div class="user-question-block"
+        :class="{'has-filter': hasFilter}"
+      >
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
         <input class="question-input input"
           ref="questionInput"
@@ -28,7 +33,7 @@
       >{{ $t('askHelper.helpLink') }}</a> </div>
     </div>
     <div class="history-question-block"
-      :class="{show: showHistoryQuestion && historyQuestionList.length > 0}"
+      :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
     >
       <a href="javascript:void(0)" class="close-btn"
         @click="hideHistory"
@@ -42,8 +47,9 @@
         @click="copyQuestion(singleHistory)"
       ><svg-icon icon-class="clock" class="icon"></svg-icon> {{ singleHistory }}</div>
     </div>
-    <ask-helper-dialog
+    <ask-helper-dialog class="ask-helper-dialog"
       ref="helperDialog"
+      :class="{'has-filter': hasFilter}"
       :key="dataSourceId"
       :show="showAskHelper"
       @close="closeHelper"
@@ -128,6 +134,9 @@ export default {
     appQuestion () {
       return this.$store.state.bookmark.appQuestion
     },
+    hasFilter () {
+      return this.$store.state.dataSource.filterList.length > 0
+    },
     historyQuestionList () {
       // 過濾 boomark 以及 問題字串
       return this.userQuestion
@@ -161,6 +170,15 @@ export default {
     position: relative;
     z-index: 999;
 
+    &.has-filter {
+      &:after {
+        background-image: linear-gradient(90deg, $filter-color 0%, rgba(67, 138, 248, 0.2) 100%);
+      }
+      .ask-btn {
+        color: $filter-color;
+      }
+    }
+
     &:after {
       content: '';
       display: block;
@@ -176,6 +194,7 @@ export default {
       height: 48px;
       overflow: auto;
       padding-right: 74px;
+      border-bottom: none;
     }
 
     .clean-btn {
@@ -195,6 +214,21 @@ export default {
     }
   }
 
+  .filter-block {
+    color: $filter-color;
+    border: 1px solid $filter-color;
+    border-radius: 5px;
+    padding: 6px 10px;
+    font-size: 12px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+
+    .icon {
+      margin-right: 4px;
+    }
+  }
+
   .ask-remark-block {
     font-size: 13px;
     line-height: 30px;
@@ -207,11 +241,19 @@ export default {
     }
   }
 
+  .ask-helper-dialog {
+    bottom: 111px;
+
+    &.has-filter {
+      bottom: 137px;
+    }
+  }
+
   .history-question-block {
     position: absolute;
     text-align: left;
     left: 0;
-    bottom: 110px;
+    bottom: 111px;
     width: 100%;
     height: 0;
     overflow: hidden;
@@ -220,6 +262,10 @@ export default {
     z-index: 90;
     background-color: rgba(40, 71, 74, 0.95);
     border-top: 1px solid #415E60;
+
+    &.has-filter {
+      bottom: 137px;
+    }
 
     &.show {
       height: 160px;

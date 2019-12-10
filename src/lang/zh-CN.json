@@ -25,7 +25,8 @@
     "changePasswordSuccess": "密码变更成功",
     "editNameSuccess": "编辑名称成功",
     "changeStatusSuccess": "变更状态成功",
-    "pleaseConfirmPassword": "请确认密码是否相同"
+    "pleaseConfirmPassword": "请确认密码是否相同",
+    "addFilter": "保存成功"
   },
   "guiding": {
     "preStep": "上一步",
@@ -1018,7 +1019,21 @@
     "summaryReport": "摘要报告",
     "importantFeatureChanging": "重要因素变化比较",
     "analysisProcessing": "分析处理中",
-    "quickStart": "常用问题"
+    "quickStart": "常用问题",
+    "clearAllFilter": "清除所有条件",
+    "closeFilter": "关闭条件",
+    "currentChosenData": "目前所选择的资料",
+    "currentChosenArea": "目前所选取的区块",
+    "saveFilterCondition": "保存过滤条件",
+    "area": "区块",
+    "between": "落在 {start} 到 {end} 之间",
+    "filterRestrictions": "过滤条件限制",
+    "prompt": "提示",
+    "filterRule": "过滤条件限制将会影响接下来的问句分析结果",
+    "restrict": "限制",
+    "featureList": "关连列表",
+    "hereIsFeatures": "以下为关连因子",
+    "modelConfidence": "模型的信心度"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",
@@ -1054,6 +1069,21 @@
   "notification": {
     "uploadLimitNotification": "资料数量已达上限",
     "uploadLimit": "资料表限制：最多{count}笔"
+  },
+  "chart": {
+    "zoom": "区域缩放",
+    "back": "区域缩放还原",
+    "stack": "切换为堆叠",
+    "tiled": "切换为平铺",
+    "line": "切换为折线图",
+    "bar": "切换为柱状图",
+    "restore": "还原",
+    "rect": "矩形选择",
+    "polygon": "圈选",
+    "lineX": "横向选择",
+    "lineY": "纵向选择",
+    "keep": "保持多个选择",
+    "clear": "清除选择"
   },
   "errorMessage": {
     "SYERR0001": "系统发生非预期错误",

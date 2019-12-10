@@ -80,3 +80,31 @@ $checkbox-size: 14px;
     transform: rotate(45deg);
   }
 }
+
+.checkbox-label.filer-checkbox {
+  input:checked ~ .checkbox-square {
+    background: #fff;
+    border-color: #fff;
+
+    &:after {
+      color: $filter-color;
+      border-color: $filter-color;
+    }
+  }
+
+  &:hover input:not([disabled]):checked ~ .checkbox-square,
+  input:checked:focus ~ .checkbox-square {
+    background: #fff;
+  }
+
+  .checkbox-square {
+    background: #839699;
+    border-color: #839699;
+    border-radius: 3px;
+
+    &:after {
+      top: 0;
+      border-width: 0 2px 2px 0;
+    }
+  }
+}

@@ -79,7 +79,7 @@ export function xAxisDefault () {
         color: chartVariable['textColor'],
         fontSize: config.axisLabelFontSize
       },
-      rotate: 45,
+      rotate: 30,
       color: chartVariable['xAxisLabelColor']
     }
   }
@@ -108,6 +108,7 @@ export function yAxisDefault () {
     axisLine: {
       show: false
     },
+    scale: true,
     axisLabel: {
       show: true,
       textStyle: {
@@ -213,6 +214,28 @@ export function seriesItemMarkLine () {
           position: 'end'
         }
       }
+    }
+  }
+}
+
+// drillDown type
+export function getDrillDownTool (titleObject) {
+  let toolbox
+  if (titleObject.xAxis.drillable && titleObject.yAxis.drillable) {
+    toolbox = ['rect', 'keep', 'clear']
+  } else if (titleObject.xAxis.drillable && !titleObject.yAxis.drillable) {
+    toolbox = ['lineX', 'keep', 'clear']
+  } else if (!titleObject.xAxis.drillable && titleObject.yAxis.drillable) {
+    toolbox = ['lineY', 'keep', 'clear']
+  } else {
+    toolbox = ['']
+  }
+
+  return {
+    brush: {
+      toolbox: toolbox,
+      xAxisIndex: 0,
+      yAxisindex: 0
     }
   }
 }

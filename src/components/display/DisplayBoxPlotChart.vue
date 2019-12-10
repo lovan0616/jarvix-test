@@ -80,8 +80,8 @@ export default {
       chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotChartConfig.xAxis}
       chartAddon.tooltip.trigger = boxPlotChartConfig.tooltip.trigger
       chartAddon.xAxis.data = this.dataset.index
-      chartAddon.xAxis.name = this.title.xAxis
-      chartAddon.yAxis.name = this.title.yAxis
+      chartAddon.xAxis.name = this.title.xAxis.display_name
+      chartAddon.yAxis.name = this.title.yAxis.display_name
       boxPlotChartConfig.chartData.data = this.chartData.boxData
       boxPlotChartConfig.outlier.data = this.chartData.outliers
       chartAddon.series[0] = boxPlotChartConfig.chartData
@@ -93,7 +93,7 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: '300px'
+        height: '380px'
       }
     }
   }

@@ -1,6 +1,8 @@
 <template>
   <div class="result-board-container">
-    <div class="result-board">
+    <div class="result-board"
+      :class="{'has-filter': hasFilter}"
+    >
       <div class="board-header">
         <div class="header-block">
           <slot name="PageResultBoardHeader"></slot>
@@ -263,6 +265,9 @@ export default {
     },
     shareUrl () {
       return `${window.location.origin}/result?question=${this.resultInfo.tasks[0].entities.question}&stamp=${new Date().getTime()}&dataSourceId=${this.resultInfo.tasks[0].entities.bookmark_id}&action=share`
+    },
+    hasFilter () {
+      return this.$store.state.dataSource.filterList.length > 0
     }
   }
 }

@@ -25,7 +25,8 @@
     "changePasswordSuccess": "密碼變更成功",
     "editNameSuccess": "編輯名稱成功",
     "changeStatusSuccess": "變更狀態成功",
-    "pleaseConfirmPassword": "請確認密碼是否相同"
+    "pleaseConfirmPassword": "請確認密碼是否相同",
+    "addFilter": "保存成功"
   },
   "guiding": {
     "preStep": "上一步",
@@ -1018,7 +1019,21 @@
     "summaryReport": "摘要報告",
     "importantFeatureChanging": "重要因素變化比較",
     "analysisProcessing": "分析處理中",
-    "quickStart": "常用問題"
+    "quickStart": "常用問題",
+    "clearAllFilter": "清除所有條件",
+    "closeFilter": "關閉條件",
+    "currentChosenData": "目前所選擇的資料",
+    "currentChosenArea": "目前所選取的區塊",
+    "saveFilterCondition": "保存過濾條件",
+    "area": "區塊",
+    "between": "落在 {start} 到 {end} 之間",
+    "filterRestrictions": "過濾條件限制",
+    "prompt": "提示",
+    "filterRule": "過濾條件限制將會影響接下來的問句分析結果",
+    "restrict": "限制",
+    "featureList": "關連列表",
+    "hereIsFeatures": "以下為關連因子",
+    "modelConfidence": "模型的信心度"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",
@@ -1054,6 +1069,21 @@
   "notification": {
     "uploadLimitNotification": "資料數量已達上限",
     "uploadLimit": "資料表限制：最多{count}筆"
+  },
+  "chart": {
+    "zoom": "區域縮放",
+    "back": "區域縮放還原",
+    "stack": "切換為堆疊",
+    "tiled": "切換為平鋪",
+    "line": "切換為折線圖",
+    "bar": "切換為柱狀圖",
+    "restore": "還原",
+    "rect": "矩形選擇",
+    "polygon": "圈選",
+    "lineX": "橫向選擇",
+    "lineY": "縱向選擇",
+    "keep": "保持多個選擇",
+    "clear": "清除選擇"
   },
   "errorMessage": {
     "SYERR0001": "系統發生非預期錯誤",

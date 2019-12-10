@@ -1,3 +1,6 @@
+import { Message } from 'element-ui'
+import i18n from '@/lang/index.js'
+
 export default {
   setIsInit (state, value) {
     state.isInit = value || false
@@ -22,5 +25,39 @@ export default {
   },
   setCurrentQuestionInfo (state, data) {
     state.currentQuestionInfo = data
+  },
+  setFilterList (state, data) {
+    if (data.length === 0) return false
+    // 判斷要從哪邊開始取代新的
+    let newRestriction = {
+      status: true,
+      restriction: data
+    }
+    let closeFilterIndex = -1
+    for (let i = 0; i < state.filterList.length; i++) {
+      if (!state.filterList[i].status) {
+        closeFilterIndex = i
+        break
+      }
+    }
+
+    if (closeFilterIndex > -1) {
+      state.filterList = state.filterList.slice(0, closeFilterIndex)
+    }
+    state.filterList.push(newRestriction)
+
+    Message({
+      message: i18n.t('message.addFilter'),
+      type: 'success',
+      duration: 3 * 1000
+    })
+  },
+  clearFilterList (state) {
+    state.filterList = []
+  },
+  setStatusList (state, data) {
+    state.filterList.forEach((filter, index) => {
+      state.filterList[index]['status'] = data[index]
+    })
   }
 }

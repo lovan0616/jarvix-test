@@ -24,7 +24,8 @@ import {
   TabPane,
   Pagination,
   Collapse,
-  CollapseItem
+  CollapseItem,
+  Tooltip
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -54,6 +55,7 @@ import ResultBoard from '@/components/resultBoard/ResultBoard'
 import ResultBoardHeader from '@/components/resultBoard/ResultBoardHeader'
 import ResultBoardBody from '@/components/resultBoard/ResultBoardBody'
 import GeneralResult from '@/components/resultBoard/GeneralResult'
+import CorrelationExplorationResult from '@/components/resultBoard/CorrelationExplorationResult'
 import RootCauseResult from '@/components/resultBoard/RootCauseResult'
 import MultiResult from '@/components/resultBoard/MultiResult'
 import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
@@ -72,12 +74,14 @@ import DisplayWorldMap from '@/components/display/DisplayWorldMap'
 import DisplayPredictChart from '@/components/display/DisplayPredictChart'
 import DisplayPivot from '@/components/display/DisplayPivot'
 import DisplayHeatMapChart from '@/components/display/DisplayHeatMapChart'
+import DisplayCorrelationFeatures from '@/components/display/DisplayCorrelationFeatures'
 import PreviewPivot from '@/components/display/PreviewPivot'
 import InsightsInfo from '@/components/display/InsightsInfo'
 import RootCauseInfo from '@/components/display/RootCauseInfo'
 import InsightTable from '@/components/display/InsightTable'
 import IndicatorInfo from '@/components/display/IndicatorInfo'
 import IndicatorsList from '@/components/display/IndicatorsList'
+import SelectedRegion from '@/components/display/SelectedRegion'
 import NoResult from '@/components/display/NoResult'
 import EmptyResult from '@/pages/result/components/EmptyResult'
 import PreviewResultBoard from '@/components/PreviewResultBoard'
@@ -103,6 +107,7 @@ Vue.use(TabPane)
 Vue.use(Pagination)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
+Vue.use(Tooltip)
 
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)
@@ -118,6 +123,7 @@ Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
 Vue.component(GeneralResult.name, GeneralResult)
+Vue.component(CorrelationExplorationResult.name, CorrelationExplorationResult)
 Vue.component(RootCauseResult.name, RootCauseResult)
 Vue.component(MultiResult.name, MultiResult)
 Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
@@ -139,7 +145,9 @@ Vue.component(DisplayWorldMap.name, DisplayWorldMap)
 Vue.component(DisplayPredictChart.name, DisplayPredictChart)
 Vue.component(DisplayPivot.name, DisplayPivot)
 Vue.component(DisplayHeatMapChart.name, DisplayHeatMapChart)
+Vue.component(DisplayCorrelationFeatures.name, DisplayCorrelationFeatures)
 Vue.component(PreviewPivot.name, PreviewPivot)
+Vue.component(SelectedRegion.name, SelectedRegion)
 Vue.component(NoResult.name, NoResult)
 Vue.component(EmptyResult.name, EmptyResult)
 Vue.component(PreviewResultBoard.name, PreviewResultBoard)

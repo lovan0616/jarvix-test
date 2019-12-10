@@ -45,13 +45,16 @@ export default {
   computed: {
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
+    },
+    filterRestrictionList () {
+      return this.$store.getters['dataSource/filterRestrictionList']
     }
   },
   methods: {
     getLandingInfo () {
       this.isLoading = true
       this.$store.commit('chatBot/updateAnalyzeStatus', true)
-      askQuestion({'question': null, 'dataSourceId': this.dataSourceId}).then(res => {
+      askQuestion({'question': null, 'dataSourceId': this.dataSourceId, 'restrictions': this.filterRestrictionList}).then(res => {
         this.isLoading = false
         this.quickStartQuestionList = res.quickQuestionList
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
