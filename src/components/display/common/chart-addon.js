@@ -94,7 +94,7 @@ export const commonChartOptions = {
         textBackgroundColor: '#0a3c42'
       }
     },
-    showTitle: true,
+    showTitle: false,
     top: 54
   },
   tooltip: {
