@@ -149,6 +149,33 @@ export default {
         return [x0, x1, item[1]]
       })
 
+      // 數據顯示
+      chartAddon.toolbox.feature.dataView.optionToContent = (opt) => {
+        let dataset = opt.series[0].data
+        let table = `<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-secondary" type="button" id="export-btn">${this.$t('chart.export')}</button></div>
+          <table style="margin-top: 16px;width:100%;padding: 0 16px;"><tbody><tr style="background-color:#2B4D51">` +
+          '<td>' + this.title.xAxis.display_name + '</td>' +
+          '<td>' + this.title.yAxis.display_name + '</td>' +
+          '</tr>'
+        for (let i = 1; i < dataset.length; i++) {
+          table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>
+            <td>${dataset[i][0]} ~ ${dataset[i][1]}</td><td>${dataset[i][2]}</td>
+          </tr>`
+        }
+        table += '</tbody></table>'
+        return table
+      }
+      // export data
+      this.$nextTick(() => {
+        this.$el.addEventListener('click', (e) => {
+          if (e.target && e.target.id === 'export-btn') {
+            let exportData = JSON.parse(JSON.stringify(this.chartData))
+            exportData.unshift([this.$t('chart.rangeStart'), this.$t('chart.rangeEnd'), this.$t('chart.count')])
+            this.exportToCSV(this.appQuestion, exportData)
+          }
+        })
+      })
+
       // set histogram xAxis
       chartAddon.xAxis = {...chartAddon.xAxis, ...histogramChartConfig.xAxis}
       chartAddon.xAxis.interval = interval
@@ -175,6 +202,9 @@ export default {
         width: '100%',
         height: '380px'
       }
+    },
+    appQuestion () {
+      return this.$store.state.dataSource.appQuestion
     }
   }
 }

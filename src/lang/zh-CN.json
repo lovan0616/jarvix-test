@@ -264,7 +264,9 @@
     "cancelPinned": "取消钉板",
     "built": "建立",
     "editName": "编辑名称",
-    "addNewCategory": "新增分类"
+    "addNewCategory": "新增分类",
+    "exportData": "输出图表资料",
+    "viewData": "查看图表数据"
   },
   "aggregation": {
     "mean": "平均",
@@ -1060,6 +1062,7 @@
     "PivotTableToken": "问句意图",
     "ProportionToken": "问句意图",
     "CorrelationToken": "问句意图",
+    "CorrVerificationToken": "问句意图",
     "ConjunctionToken": "连接词",
     "PossessionToken": "连接词",
     "ChangeToken": "其他词汇",
@@ -1078,12 +1081,18 @@
     "line": "切换为折线图",
     "bar": "切换为柱状图",
     "restore": "还原",
+    "dataView": "观看原始资料",
+    "dataViewDetail": ["原始资料", "关闭", "刷新"],
     "rect": "矩形选择",
     "polygon": "圈选",
     "lineX": "横向选择",
     "lineY": "纵向选择",
     "keep": "保持多个选择",
-    "clear": "清除选择"
+    "clear": "清除选择",
+    "export": "下载资料 CSV 档案",
+    "rangeStart": "范围起始",
+    "rangeEnd": "范围结束",
+    "count": "统计数量"
   },
   "errorMessage": {
     "SYERR0001": "系统发生非预期错误",

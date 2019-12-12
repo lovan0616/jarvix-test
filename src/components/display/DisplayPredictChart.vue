@@ -5,9 +5,29 @@
         :style="chartStyle"
         :options="options"
         auto-resize
+        @brushselected="brushRegionSelected"
       >
       </v-echart>
     </div>
+    <selected-region
+      v-if="selectedData.length > 0"
+      :title="$t('resultDescription.currentChosenData')"
+      @save="saveFilter"
+    >
+      <div slot="selectedFilterRegion">
+        <div
+          v-for="(singleType, index) in selectedData"
+          :key="index"
+        >
+          <div class="region-description">
+            <div class="single-area">
+              {{ $t('resultDescription.area') + (index + 1) }}:
+              {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </selected-region>
     <div class="predict-detail-region"
       v-if="info.length > 0"
     >
@@ -30,6 +50,7 @@
 <script>
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import {
+  getDrillDownTool,
   colorDefault,
   colorOnly1,
   colorOnly2,
@@ -65,6 +86,7 @@ export default {
   },
   data () {
     return {
+      selectedData: []
     }
   },
   computed: {
@@ -136,7 +158,8 @@ export default {
       let config = {
         xAxis: xAxisDefault(),
         yAxis: yAxisDefault(),
-        ...JSON.parse(JSON.stringify(commonChartOptions)),
+        ...JSON.parse(JSON.stringify(commonChartOptions())),
+        ...getDrillDownTool(this.title),
         dataset: {
           source: this.dataList
         },
@@ -147,6 +170,18 @@ export default {
       config.toolbox.feature.magicType.show = true
       config.xAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
       config.yAxis.name = this.title.yAxis.display_name
+      config.toolbox.feature.dataView.optionToContent = (opt) => {
+        let dataset = opt.dataset[0].source
+        let table = '<table style="width:100%;padding: 0 16px;white-space:nowrap;"><tbody>'
+        for (let i = 0; i < dataset.length; i++) {
+          let tableData = dataset[i].reduce((acc, cur) => {
+            return acc + '<td style="padding: 4px 12px;">' + cur + '</td>'
+          }, '')
+          table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>${tableData}</tr>`
+        }
+        table += '</tbody></table>'
+        return table
+      }
 
       if (this.isPreview) this.previewChartSetting(config)
       return config
@@ -175,6 +210,24 @@ export default {
         result.push(rowData)
       })
       return result
+    },
+    brushRegionSelected (params) {
+      this.selectedData = params.batch[0].areas.map(areaElement => {
+        let coordRange = areaElement.coordRange
+        return {
+          type: 'range',
+          properties: {
+            dc_name: this.title.xAxis.dc_name,
+            data_type: this.title.xAxis.data_type,
+            display_name: this.title.xAxis.display_name,
+            start: this.dataset.index[coordRange[0]],
+            end: this.dataset.index[coordRange[1]]
+          }
+        }
+      })
+    },
+    saveFilter () {
+      this.$store.commit('dataSource/setFilterList', this.selectedData)
     }
   }
 }
