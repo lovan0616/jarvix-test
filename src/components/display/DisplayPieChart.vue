@@ -33,20 +33,6 @@ export default {
     height: {type: String, default: '380px'}
   },
   computed: {
-    _dataset () {
-      let result
-      if (typeof this.dataset === 'string') result = JSON.parse(this.dataset)
-      else result = this.dataset
-
-      // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
-      if (result.columns) {
-        result.columns = result.columns.map(element => {
-          return isNaN(Number(element)) ? element : ' ' + element
-        })
-      }
-
-      return result
-    },
     chartStyle () {
       return {
         width: '100%',
@@ -54,8 +40,7 @@ export default {
       }
     },
     dataList () {
-      if ((this._dataset instanceof Array)) return this._dataset
-      else return this.tobeDataset(this._dataset)
+      return this.tobeDataset(this.dataset)
     },
     options () {
       let config = {
@@ -88,19 +73,30 @@ export default {
           return index === 0 ? acc : acc + cur[1]
         }, 0)
 
-        let table = '<table style="width:100%;padding: 0 16px;"><tbody><tr>' +
+        let table = `<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-secondary" type="button" id="export-btn">${this.$t('chart.export')}</button></div>` +
+          '<table style="margin-top: 16px;width:100%;padding: 0 16px;"><tbody><tr style="background-color:#2B4D51">' +
           '<td>' + dataset[0][0] + '</td>' +
           '<td>' + dataset[0][1] + '</td>' +
           '<td>' + 'percentage(%)' + '</td>' +
           '</tr>'
         for (let i = 1; i < dataset.length; i++) {
-          table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>
+          table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>
             <td>${dataset[i][0]}</td><td>${dataset[i][1]}</td><td>${(dataset[i][1] * 100 / valueSum).toFixed(2)}</td>
           </tr>`
         }
         table += '</tbody></table>'
         return table
       }
+      // export data
+      this.$nextTick(() => {
+        this.$el.addEventListener('click', (e) => {
+          if (e.target && e.target.id === 'export-btn') {
+            // let exportData = JSON.parse(JSON.stringify(this.chartData))
+            // exportData.unshift([this.$t('chart.rangeStart'), this.$t('chart.rangeEnd'), this.$t('chart.count')])
+            this.exportToCSV(this.appQuestion, this.dataList)
+          }
+        })
+      })
 
       if (this.isPreview) {
         config.legend.show = false
@@ -111,6 +107,9 @@ export default {
     },
     colorList () {
       return color12
+    },
+    appQuestion () {
+      return this.$store.state.dataSource.appQuestion
     }
   },
   methods: {

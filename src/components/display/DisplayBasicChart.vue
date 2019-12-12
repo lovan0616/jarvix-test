@@ -176,16 +176,25 @@ export default {
       }
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.dataset[0].source
-        let table = '<table style="width:100%;padding: 0 16px;white-space:nowrap;"><tbody>'
+        let table = '<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-secondary" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="margin-top: 16px;width:100%;padding: 0 16px;white-space:nowrap;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur) => {
             return acc + '<td style="padding: 4px 12px;">' + cur + '</td>'
           }, '')
-          table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>${tableData}</tr>`
+          table += `<tr ${i % 2 === 0 ? (i === 0 ? 'style="background-color:#2B4D51"' : 'style="background-color:rgba(50, 75, 78, 0.6)"') : ''}>${tableData}</tr>`
         }
         table += '</tbody></table>'
         return table
       }
+      // export data
+      this.$nextTick(() => {
+        this.$el.addEventListener('click', (e) => {
+          if (e.target && e.target.id === 'export-btn') {
+            this.exportToCSV(this.appQuestion, this.dataList)
+          }
+        })
+      })
+
       // 移除 null 值
       config.tooltip.formatter = (datas) => {
         let res = datas[0].name + '<br/>'
@@ -229,6 +238,9 @@ export default {
         }
         return result
       }, {})
+    },
+    appQuestion () {
+      return this.$store.state.dataSource.appQuestion
     }
   },
   methods: {
