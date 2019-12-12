@@ -149,6 +149,22 @@ export default {
         return [x0, x1, item[1]]
       })
 
+      // 數據顯示
+      chartAddon.toolbox.feature.dataView.optionToContent = (opt) => {
+        let dataset = opt.series[0].data
+        let table = '<table style="width:100%;padding: 0 16px;"><tbody><tr>' +
+          '<td>' + this.title.xAxis.display_name + '</td>' +
+          '<td>' + this.title.yAxis.display_name + '</td>' +
+          '</tr>'
+        for (let i = 1; i < dataset.length; i++) {
+          table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>
+            <td>${dataset[i][0]} ~ ${dataset[i][1]}</td><td>${dataset[i][2]}</td>
+          </tr>`
+        }
+        table += '</tbody></table>'
+        return table
+      }
+
       // set histogram xAxis
       chartAddon.xAxis = {...chartAddon.xAxis, ...histogramChartConfig.xAxis}
       chartAddon.xAxis.interval = interval

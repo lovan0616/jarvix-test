@@ -131,7 +131,7 @@ export default {
     options () {
       let config = {
         ...this.addonOptions,
-        ...JSON.parse(JSON.stringify(commonChartOptions)),
+        ...JSON.parse(JSON.stringify(commonChartOptions())),
         dataset: {
           source: this.dataList
         },

@@ -5,10 +5,7 @@
       :options="options"
       auto-resize
       v-on="eventHandlers"
-      @click="clickChart"
       @brushselected="brushRegionSelected"
-      @legendselected="selectLegend"
-      @legendselectchanged="changeSelectLegend"
     >
     </v-echart>
     <selected-region
@@ -170,12 +167,24 @@ export default {
       let config = {
         ...this.addonOptions,
         ...getDrillDownTool(this.title),
-        ...JSON.parse(JSON.stringify(commonChartOptions)),
+        ...JSON.parse(JSON.stringify((commonChartOptions()))),
         dataset: {
           source: this.dataList
         },
         series: this.series,
         color: this.colorList
+      }
+      config.toolbox.feature.dataView.optionToContent = (opt) => {
+        let dataset = opt.dataset[0].source
+        let table = '<table style="width:100%;padding: 0 16px;white-space:nowrap;"><tbody>'
+        for (let i = 0; i < dataset.length; i++) {
+          let tableData = dataset[i].reduce((acc, cur) => {
+            return acc + '<td style="padding: 4px 12px;">' + cur + '</td>'
+          }, '')
+          table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>${tableData}</tr>`
+        }
+        table += '</tbody></table>'
+        return table
       }
       // 移除 null 值
       config.tooltip.formatter = (datas) => {
@@ -273,17 +282,8 @@ export default {
           break
       }
     },
-    selectLegend (params) {
-      console.log(params, 'selectLegend')
-    },
-    changeSelectLegend (params) {
-      console.log(params, 'changeSelectLegend')
-    },
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
-    },
-    clickChart (params) {
-      console.log(params, 'clickchart')
     }
   }
 }

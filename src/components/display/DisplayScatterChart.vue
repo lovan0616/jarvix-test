@@ -163,6 +163,20 @@ export default {
       scatterOptions.chartData.data = this.dataset.data
       scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.series[0] = scatterOptions.chartData
+      chartAddon.toolbox.feature.dataView.optionToContent = (opt) => {
+        let dataset = opt.series[0].data
+        let table = '<table style="width:100%;padding: 0 16px;"><tbody><tr>' +
+          '<td style="padding: 4px 12px;">' + this.title.xAxis.display_name + '</td>' +
+          '<td style="padding: 4px 12px;">' + this.title.yAxis.display_name + '</td>' +
+          '</tr>'
+        for (let i = 1; i < dataset.length; i++) {
+          table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>
+            <td style="padding: 4px 12px;">${dataset[i][0]}</td><td style="padding: 4px 12px;">${dataset[i][1]}</td>
+          </tr>`
+        }
+        table += '</tbody></table>'
+        return table
+      }
 
       if (this.formula) {
         let gradient = Number((this.formula.a).toFixed(4))
