@@ -72,7 +72,7 @@ export default {
       isShowLogout: false,
       selectedLanguage: this.language,
       settingData: [
-        {icon: 'database', title: 'nav.dataManagement', path: '/data-management'},
+        // {icon: 'database', title: 'nav.dataManagement', path: '/data-management'},
         {icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'},
         // {icon: 'feedback', title: 'editing.questionFeedback'},
         {icon: 'description', title: 'editing.functionDescription', path: '/function-description'}
