@@ -111,7 +111,6 @@ export default {
             break
         }
       })
-      console.log(taskObject)
       return taskObject
     }
   }

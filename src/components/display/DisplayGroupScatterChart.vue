@@ -77,7 +77,6 @@ export default {
       }
     },
     brushRegionSelected (params) {
-      console.log(params, 'brushSelected')
     }
   },
   computed: {

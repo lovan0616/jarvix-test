@@ -254,15 +254,6 @@ export default {
       return result
     },
     brushRegionSelected (params) {
-      //  多群 的 barchart dataValue
-      // let selectedData = params.batch[0].selected.filter(element => {
-      //   return element.dataIndex.length > 0
-      // }).map(element => {
-      //   return element.seriesName
-      // })
-
-      console.log(params, 'brushSelected')
-
       switch (this.series[0].type) {
         case 'line':
           this.selectedData = params.batch[0].areas.map(areaElement => {
