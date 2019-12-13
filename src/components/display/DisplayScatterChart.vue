@@ -143,9 +143,6 @@ export default {
           ]
         }
       })
-
-      console.log(params, 'brushSelected')
-      console.log(this.selectedData, 'selected area')
     },
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
@@ -163,6 +160,33 @@ export default {
       scatterOptions.chartData.data = this.dataset.data
       scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.series[0] = scatterOptions.chartData
+      chartAddon.toolbox.feature.dataView.optionToContent = (opt) => {
+        let dataset = opt.series[0].data
+        let maxLength = dataset.length > 1000 ? 1000 : dataset.length
+        let table = '<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-secondary" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div>' +
+          `<div style="margin-top: 16px;padding: 0 16px;">${maxLength === 1000 ? this.$t('resultDescription.displayTopData', {count: maxLength}) : this.$t('resultDescription.displayTotalData', {count: maxLength})}</div>` +
+          '<table style="width:100%;padding: 0 16px;"><tbody><tr>' +
+          '<td style="padding: 4px 12px;">' + this.title.xAxis.display_name + '</td>' +
+          '<td style="padding: 4px 12px;">' + this.title.yAxis.display_name + '</td>' +
+          '</tr>'
+        for (let i = 1; i < maxLength; i++) {
+          table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>
+            <td style="padding: 4px 12px;">${dataset[i][0]}</td><td style="padding: 4px 12px;">${dataset[i][1]}</td>
+          </tr>`
+        }
+        table += '</tbody></table>'
+        return table
+      }
+      // export data
+      this.$nextTick(() => {
+        this.$el.addEventListener('click', (e) => {
+          if (e.target && e.target.id === 'export-btn') {
+            let exportData = JSON.parse(JSON.stringify(this.dataset.data))
+            exportData.unshift([this.title.xAxis.display_name, this.title.yAxis.display_name])
+            this.exportToCSV(this.appQuestion, exportData)
+          }
+        })
+      })
 
       if (this.formula) {
         let gradient = Number((this.formula.a).toFixed(4))
@@ -226,6 +250,9 @@ export default {
         width: '100%',
         height: this.isPreview ? '200px' : '380px'
       }
+    },
+    appQuestion () {
+      return this.$store.state.dataSource.appQuestion
     }
   }
 }

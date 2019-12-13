@@ -13,12 +13,13 @@
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 import {
+  getDrillDownTool,
   colorDefault,
   colorOnly2,
   color3,
   color12
 } from './common/addons'
-let chartAddon = JSON.parse(JSON.stringify(chartOptions))
+
 let groupScatterChartConfig = {
   tooltip: {
     trigger: 'item'
@@ -76,11 +77,11 @@ export default {
       }
     },
     brushRegionSelected (params) {
-      console.log(params, 'brushSelected')
     }
   },
   computed: {
     chartOption () {
+      let chartAddon = {...JSON.parse(JSON.stringify(chartOptions)), ...getDrillDownTool(this.title)}
       this.$set(chartAddon.xAxis, 'splitLine', groupScatterChartConfig.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', groupScatterChartConfig.yAxisSplitLine)
       chartAddon.tooltip.trigger = groupScatterChartConfig.tooltip.trigger
@@ -101,6 +102,20 @@ export default {
         chartConfig.name = dataSet.name
         return chartConfig
       })
+      chartAddon.toolbox.feature.dataView.optionToContent = (opt) => {
+        let dataset = opt.series[0].data
+        let table = '<table style="width:100%;padding: 0 16px;"><tbody><tr>' +
+          '<td style="padding: 4px 12px;">' + this.title.xAxis.display_name + '</td>' +
+          '<td style="padding: 4px 12px;">' + this.title.yAxis.display_name + '</td>' +
+          '</tr>'
+        for (let i = 1; i < dataset.length; i++) {
+          table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>
+            <td style="padding: 4px 12px;">${dataset[i][0]}</td><td style="padding: 4px 12px;">${dataset[i][1]}</td>
+          </tr>`
+        }
+        table += '</tbody></table>'
+        return table
+      }
       if (this.isPreview) this.previewChartSetting(chartAddon)
 
       return chartAddon

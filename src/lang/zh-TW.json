@@ -264,7 +264,9 @@
     "cancelPinned": "取消釘板",
     "built": "建立",
     "editName": "編輯名稱",
-    "addNewCategory": "新增分類"
+    "addNewCategory": "新增分類",
+    "exportData": "輸出圖表資料",
+    "viewData": "查看圖表數據"
   },
   "aggregation": {
     "mean": "平均",
@@ -1033,7 +1035,9 @@
     "restrict": "限制",
     "featureList": "關連列表",
     "hereIsFeatures": "以下為關連因子",
-    "modelConfidence": "模型的信心度"
+    "modelConfidence": "模型的信心度",
+    "displayTotalData": "共 {count} 筆資料",
+    "displayTopData": "顯示前 {count} 筆資料"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",
@@ -1060,6 +1064,7 @@
     "PivotTableToken": "問句意圖",
     "ProportionToken": "問句意圖",
     "CorrelationToken": "問句意圖",
+    "CorrVerificationToken": "問句意圖",
     "ConjunctionToken": "連接詞",
     "PossessionToken": "連接詞",
     "ChangeToken": "其他詞彙",
@@ -1078,12 +1083,18 @@
     "line": "切換為折線圖",
     "bar": "切換為柱狀圖",
     "restore": "還原",
+    "dataView": "觀看原始資料",
+    "dataViewDetail": ["原始資料", "關閉", "刷新"],
     "rect": "矩形選擇",
     "polygon": "圈選",
     "lineX": "橫向選擇",
     "lineY": "縱向選擇",
     "keep": "保持多個選擇",
-    "clear": "清除選擇"
+    "clear": "清除選擇",
+    "export": "下載資料 CSV 檔案",
+    "rangeStart": "範圍起始",
+    "rangeEnd": "範圍結束",
+    "count": "統計數量"
   },
   "errorMessage": {
     "SYERR0001": "系統發生非預期錯誤",
