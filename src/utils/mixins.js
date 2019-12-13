@@ -241,7 +241,6 @@ Vue.mixin({
         }
 
         var moveStep = Math.round(scrollDistance + cosParameter + cosParameter * Math.cos(scrollCount))
-        console.log(moveStep)
         window.scrollTo(0, moveStep)
         oldTimestamp = newTimestamp
         window.requestAnimationFrame(step)
