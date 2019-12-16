@@ -30,7 +30,7 @@ export default {
     showSetTableJoin: false,
     // 為了讓資料清單頁面可以重新刷新資料
     fileUploadSuccess: false,
-    fileCountLimit: 5
+    fileCountLimit: 1
   },
   actions,
   mutations,

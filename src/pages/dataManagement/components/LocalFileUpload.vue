@@ -8,8 +8,7 @@
       <div class="data-source-name">{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
       <input type="file" class="hidden" name="fileUploadInput"
         ref="fileUploadInput"
-        accept=".csv"
-        multiple="multiple"
+        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
         @change="fileImport"
       >
       <upload-block class="empty-upload-block"
@@ -39,7 +38,7 @@
         </file-list-block>
         <div class="choose-file-block">
           <a href="javascript:void(0)" class="choose-file"
-            v-show="currntUploadStatus === uploadStatus.wait"
+            v-show="currntUploadStatus === uploadStatus.wait && uploadFileList.length === 0"
             @click="chooseFile"
           >{{ $t('editing.addFile') }}</a>
         </div>
