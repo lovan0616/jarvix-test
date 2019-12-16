@@ -211,7 +211,7 @@
     "systemRecommendQuestion": "系统推荐的相关<br>问题",
     "systemTargetFace": "系统归纳出针对<br>结果可以深入探究<br>究的面向（因不<br>同分析结果而有<br>差异）",
     "activateHint": "1.启用问句提示",
-    "openQuestionDescription": "2.开启问句说明",
+    "openQuestionDescription": "1.开启问句说明",
     "howToAddPinboard": "如何将分析结果加入钉板？",
     "howToClassManage": "如何进行钉板分类管理？",
     "howToShare": "如何将钉板分享给他人？",
@@ -983,6 +983,45 @@
                 {"text": "顾客", "type": "category"},
                 {"text": "数量", "type": "numeric"},
                 {"text": "的比例", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "关系类型问句",
+        "questionList": [
+          {
+            "questionText": "Numeric 和 Numeric 的关系",
+            "questionExample": [
+              [
+                {"text": "成本", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "收入", "type": "numeric"},
+                {"text": "的关系", "type": ""}
+              ],
+              [
+                {"text": "利润", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "成本", "type": "numeric"},
+                {"text": "的关系", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Category 和 Category 的关系",
+            "questionExample": [
+              [
+                {"text": "产品", "type": "category"},
+                {"text": "和", "type": ""},
+                {"text": "国家", "type": "category"},
+                {"text": "的关系", "type": ""}
+              ],
+              [
+                {"text": "产品", "type": "category"},
+                {"text": "和", "type": ""},
+                {"text": "客户性别", "type": "category"},
+                {"text": "的关系", "type": ""}
               ]
             ]
           }

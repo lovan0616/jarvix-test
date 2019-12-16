@@ -211,7 +211,7 @@
     "systemRecommendQuestion": "系統推薦的相關<br>問題",
     "systemTargetFace": "系統歸納出針對<br>結果可以深入探<br>究的面向(因不<br>同分析結果而有<br>差異)",
     "activateHint": "1.啟用問句提示",
-    "openQuestionDescription": "2.開啟問句說明",
+    "openQuestionDescription": "1.開啟問句說明",
     "howToAddPinboard": "如何將分析結果加入釘板？",
     "howToClassManage": "如何進行釘板分類管理？",
     "howToShare": "如何將釘板分享給他人？",
@@ -983,6 +983,45 @@
                 {"text": "顧客", "type": "category"},
                 {"text": "數量", "type": "numeric"},
                 {"text": "的比例", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "關係類型問句",
+        "questionList": [
+          {
+            "questionText": "Numeric 和 Numeric 的關係",
+            "questionExample": [
+              [
+                {"text": "成本", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "收入", "type": "numeric"},
+                {"text": "的關係", "type": ""}
+              ],
+              [
+                {"text": "利潤", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "成本", "type": "numeric"},
+                {"text": "的關係", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Category 和 Category 的關係",
+            "questionExample": [
+              [
+                {"text": "產品", "type": "category"},
+                {"text": "和", "type": ""},
+                {"text": "國家", "type": "category"},
+                {"text": "的關係", "type": ""}
+              ],
+              [
+                {"text": "產品", "type": "category"},
+                {"text": "和", "type": ""},
+                {"text": "客戶性別", "type": "category"},
+                {"text": "的關係", "type": ""}
               ]
             ]
           }
