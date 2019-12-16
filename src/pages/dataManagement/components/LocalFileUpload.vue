@@ -18,7 +18,10 @@
       >
         <div class="upload-remark" slot="uploadLimit">
           <div class="title">【{{ $t('editing.uploadLimitTitle') }}】</div>
-          <div class="content">{{ $t('editing.uploadLimitContent', {limitSize: uploadFileSizeLimit}) }}</div>
+          <div class="content">{{ $t('editing.uploadLimitFileType') }}</div>
+          <div class="content">{{ $t('editing.uploadLimitCount', {countLimit: fileCountLimit}) }}</div>
+          <div class="content">{{ $t('editing.uploadLimitSize', {limitSize: uploadFileSizeLimit}) }}</div>
+          <div class="content">{{ $t('editing.uploadLimitContent') }}</div>
         </div>
       </upload-block>
       <div class="file-list-container"
