@@ -8,8 +8,7 @@
       <div class="data-source-name">{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
       <input type="file" class="hidden" name="fileUploadInput"
         ref="fileUploadInput"
-        accept=".csv"
-        multiple="multiple"
+        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
         @change="fileImport"
       >
       <upload-block class="empty-upload-block"
@@ -19,7 +18,10 @@
       >
         <div class="upload-remark" slot="uploadLimit">
           <div class="title">【{{ $t('editing.uploadLimitTitle') }}】</div>
-          <div class="content">{{ $t('editing.uploadLimitContent', {limitSize: uploadFileSizeLimit}) }}</div>
+          <div class="content">{{ $t('editing.uploadLimitFileType') }}</div>
+          <div class="content">{{ $t('editing.uploadLimitCount', {countLimit: fileCountLimit}) }}</div>
+          <div class="content">{{ $t('editing.uploadLimitSize', {limitSize: uploadFileSizeLimit}) }}</div>
+          <div class="content">{{ $t('editing.uploadLimitContent') }}</div>
         </div>
       </upload-block>
       <div class="file-list-container"
@@ -39,7 +41,7 @@
         </file-list-block>
         <div class="choose-file-block">
           <a href="javascript:void(0)" class="choose-file"
-            v-show="currntUploadStatus === uploadStatus.wait"
+            v-show="currntUploadStatus === uploadStatus.wait && uploadFileList.length === 0"
             @click="chooseFile"
           >{{ $t('editing.addFile') }}</a>
         </div>

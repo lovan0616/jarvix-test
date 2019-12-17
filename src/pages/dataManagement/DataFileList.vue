@@ -16,16 +16,17 @@
       <div class="board-title-row">
         <div class="button-block">
           <button class="btn-m btn-default btn-has-icon"
+            v-if="dataList.length === 0"
             :disabled="isProcessing || reachLimit"
             @click="createDataSource"
           >
             <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
           </button>
-          <button class="btn-m btn-default"
+          <!-- <button class="btn-m btn-default"
             v-if="dataList.length > 1"
             :disabled="isProcessing"
             @click="editJoinTable"
-          >{{ $t('editing.foreignTable') }}</button>
+          >{{ $t('editing.foreignTable') }}</button> -->
           <button class="btn-m btn-outline btn-has-icon"
             v-if="selectList.length > 0"
             :disabled="isProcessing"
@@ -43,7 +44,6 @@
         <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
       </div>
       <data-table
-        hasCheckbox
         :headers="tableHeaders"
         :data-list.sync="dataList"
         :selection.sync="selectList"
@@ -285,6 +285,7 @@ export default {
           width: '200px',
           time: 'YYYY-MM-DD HH:mm'
         },
+        {text: this.$t('editing.status'), value: 'type', width: '7.26%'},
         {
           text: this.$t('editing.action'),
           value: 'action',

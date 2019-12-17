@@ -18,7 +18,7 @@
     "formCharacterOverMin": "最少{min}個字元",
     "formNumericeOverOne": "最少包含1個數字",
     "copiedToBoard": "已複製至剪貼簿",
-    "systemIsError": "系統發生錯誤",
+    "systemIsError": "系統發生異常",
     "saveSuccess": "儲存成功",
     "correlationDeleteSuccess": "關聯已刪除",
     "userCreateSuccess": "建立使用者成功",
@@ -69,7 +69,10 @@
     "selectDataType": "選擇資料類型",
     "clickToSelectFiles": "點擊此區塊，選擇資料表檔案",
     "uploadLimitTitle": "檔案上傳限制說明",
-    "uploadLimitContent": "檔案大小限制：{limitSize}MB",
+    "uploadLimitFileType": "支援格式：.xlsx .xls .csv",
+    "uploadLimitSize": "檔案大小：{limitSize}MB",
+    "uploadLimitCount": "檔案數量：{countLimit}筆",
+    "uploadLimitContent": "內容限制：不可有分頁、不可合併儲存格、標題僅限1行",
     "reachUploadSizeLimit": "資料表欄位超過{limitSize}MB",
     "reachUploadCountLimit": "資料表不得多於{countLimit}個",
     "canUpload": "可以上傳",
@@ -211,7 +214,7 @@
     "systemRecommendQuestion": "系統推薦的相關<br>問題",
     "systemTargetFace": "系統歸納出針對<br>結果可以深入探<br>究的面向(因不<br>同分析結果而有<br>差異)",
     "activateHint": "1.啟用問句提示",
-    "openQuestionDescription": "2.開啟問句說明",
+    "openQuestionDescription": "1.開啟問句說明",
     "howToAddPinboard": "如何將分析結果加入釘板？",
     "howToClassManage": "如何進行釘板分類管理？",
     "howToShare": "如何將釘板分享給他人？",
@@ -983,6 +986,45 @@
                 {"text": "顧客", "type": "category"},
                 {"text": "數量", "type": "numeric"},
                 {"text": "的比例", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "關係類型問句",
+        "questionList": [
+          {
+            "questionText": "Numeric 和 Numeric 的關係",
+            "questionExample": [
+              [
+                {"text": "成本", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "收入", "type": "numeric"},
+                {"text": "的關係", "type": ""}
+              ],
+              [
+                {"text": "利潤", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "成本", "type": "numeric"},
+                {"text": "的關係", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Category 和 Category 的關係",
+            "questionExample": [
+              [
+                {"text": "產品", "type": "category"},
+                {"text": "和", "type": ""},
+                {"text": "國家", "type": "category"},
+                {"text": "的關係", "type": ""}
+              ],
+              [
+                {"text": "產品", "type": "category"},
+                {"text": "和", "type": ""},
+                {"text": "客戶性別", "type": "category"},
+                {"text": "的關係", "type": ""}
               ]
             ]
           }

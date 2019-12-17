@@ -25,17 +25,6 @@ export function createDataSource (name) {
 }
 
 /**
- * get dataSource by id
- * @param {Number} dataSourceId - 欲取得的資料源 ID
- */
-export function getDataSourceById (dataSourceId) {
-  return request({
-    url: `/datasources/${dataSourceId}`,
-    method: 'GET'
-  })
-}
-
-/**
  * check dataSource status by id
  * @param {Number} dataSourceId - 欲檢查的資料源 ID
  */

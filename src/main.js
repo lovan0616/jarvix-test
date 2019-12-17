@@ -237,8 +237,10 @@ Vue.use(Rollbar, {
   accessToken: process.env.ROLL_BAR,
   captureUncaught: true,
   captureUnhandledRejections: true,
-  enabled: process.env.NODE_ENV === 'production',
-  // environment: process.env.NODE_ENV,
+  enabled: process.env.NODE_ENV === 'production' &&
+    window.location.hostname !== 'sygps.qa.sis.ai' &&
+    window.location.hostname !== 'sygps.dev.sis.ai' &&
+    window.location.hostname !== 'localhost',
   environment: window.location.hostname,
   payload: {
     client: {

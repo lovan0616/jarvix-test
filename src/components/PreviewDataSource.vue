@@ -21,6 +21,10 @@
         <spinner
           v-if="isLoading"
         ></spinner>
+        <empty-info-block
+          v-else-if="hasError"
+          :msg="$t('message.systemIsError')"
+        ></empty-info-block>
         <sy-table
           v-else
           :dataset="bookmarkTableDataDataset"
@@ -33,20 +37,33 @@
 <script>
 import { mapGetters } from 'vuex'
 import SySelect from '../components/select/SySelect'
+import EmptyInfoBlock from './EmptyInfoBlock'
 
 export default {
   name: 'PreviewDataSource',
   components: {
-    SySelect
+    SySelect,
+    EmptyInfoBlock
   },
   data () {
     return {
-      isLoading: false
+      isLoading: false,
+      hasError: false
     }
   },
   mounted () {
+    this.isLoading = true
     this.$store.dispatch('previewBookmark/init')
-      .catch(err => err)
+      .then(() => {
+        this.isLoading = false
+      })
+      .catch(() => {
+        this.hasError = true
+        this.isLoading = false
+      })
+  },
+  destroyed () {
+    this.$store.commit('previewBookmark/SET_BOOKMARK_TABLE', [])
   },
   computed: {
     ...mapGetters('previewBookmark', ['bookmarkTableId', 'bookmarkTables', 'bookmarkTableDataMeta', 'bookmarkTableDataDataset']),
@@ -69,11 +86,15 @@ export default {
   methods: {
     onBookmarkTableChange (id) {
       this.isLoading = true
+      this.hasError = false
       this.$store.dispatch('previewBookmark/changeBookmarkTableById', id)
         .then(() => {
           this.isLoading = false
         })
-        .catch(err => err)
+        .catch(() => {
+          this.hasError = true
+          this.isLoading = false
+        })
     }
   }
 }

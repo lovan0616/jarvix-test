@@ -87,6 +87,31 @@
               icon-class="spinner"
             ></svg-icon>
             {{ buildStatus(data[headInfo.value]) }}
+            <el-tooltip class="item"
+              v-if="data.processComment"
+              popper-class="error-tooltip"
+              :content="data.processComment"
+              placement="bottom"
+            >
+              <svg-icon icon-class="alert" class="alert-icon"></svg-icon>
+            </el-tooltip>
+          </span>
+          <span v-else-if="headInfo.value === 'type'"
+            :class="{'is-processing': data[headInfo.value] === 'PROCESS'}"
+          >
+            <svg-icon
+              v-if="data[headInfo.value] === 'PROCESS'"
+              icon-class="spinner"
+            ></svg-icon>
+            {{ buildStatus(data[headInfo.value]) }}
+            <el-tooltip class="item"
+              v-if="data.processComment"
+              popper-class="error-tooltip"
+              :content="data.processComment"
+              placement="bottom"
+            >
+              <svg-icon icon-class="alert" class="alert-icon"></svg-icon>
+            </el-tooltip>
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
@@ -247,10 +272,14 @@ export default {
     },
     buildStatus (value) {
       switch (value) {
+        case 'WARN':
+        case 'READY':
         case 'ENABLE':
           return i18n.t('editing.dataManageable')
+        case 'ERROR':
         case 'DISABLE':
           return i18n.t('editing.dataDisable')
+        case 'PROCESS':
         case 'PROCESSING':
           return i18n.t('editing.dataBuilding')
       }
@@ -308,6 +337,33 @@ export default {
   }
   .hasWidth {
     flex: initial;
+  }
+  .alert-icon {
+    color: #FFDF6F;
+  }
+}
+</style>
+<style lang="scss">
+.error-tooltip.el-tooltip__popper {
+  background-color: #007783;
+  box-shadow: 0px 2px 10px rgba(34, 117, 125, 0.5);
+  border-radius: 8px;
+  padding: 8px;
+
+  &.el-tooltip__popper[x-placement^=top] .popper__arrow:after {
+    border-top-color: #007783;
+  }
+
+  &.el-tooltip__popper[x-placement^=top] .popper__arrow {
+    border-top-color: #007783;
+  }
+
+  &.el-tooltip__popper[x-placement^=bottom] .popper__arrow:after {
+    border-bottom-color: #007783;
+  }
+
+  &.el-tooltip__popper[x-placement^=bottom] .popper__arrow {
+    border-bottom-color: #007783;
   }
 }
 </style>

@@ -201,7 +201,7 @@
         </div>
         <transition name="fade" mode="out-in">
           <div class="single-description" v-if="questionContent.isShowSearchQuestion">
-            <div class="description-inner-text">{{ $t('description.activateHint') }}</div>
+            <!-- <div class="description-inner-text">{{ $t('description.activateHint') }}</div>
             <div class="description-row-image-box description-space-image">
               <img class="description-row-image" src="@/assets/images/functionDescription/question-hint.png" :alt="$t('description.howToSearchAssist')">
               <div class="description-square first-assist-square"></div>
@@ -221,7 +221,7 @@
                 :text="'Step2:<br>' + $t('description.questionHint')"
               >
               </row-description>
-            </div>
+            </div> -->
             <div class="description-inner-text">{{ $t('description.openQuestionDescription') }}</div>
             <div class="description-row-image-box description-space-image">
               <img class="description-row-image" src="@/assets/images/functionDescription/question-recommend.png" :alt="$t('description.clickOpenQuestion')">
@@ -261,13 +261,13 @@
           <div class="single-description" v-if="questionContent.isShowAnalyzeResult">
             <div class="description-image-box">
               <img class="description-image" src="@/assets/images/functionDescription/question-result.png" :alt="$t('description.analyzeResultDescription')">
-              <div class="description-square first-result-square"></div>
+              <!-- <div class="description-square first-result-square"></div>
               <row-description
                 class="first-result-box"
                 :lineClassName="'first-result-line'"
                 :text="$t('description.systemResponseResult')"
               >
-              </row-description>
+              </row-description> -->
               <div class="description-square second-result-square"></div>
               <row-description
                 :positionLeft="false"
@@ -629,7 +629,7 @@
             </div>
           </div>
         </transition>
-        <div
+        <!-- <div
           @click="toggleConnectData"
           class="function-content-title"
         >
@@ -685,7 +685,7 @@
               </row-description>
             </div>
           </div>
-        </transition>
+        </transition> -->
       </div>
     </div>
   </div>
