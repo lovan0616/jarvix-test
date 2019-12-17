@@ -99,6 +99,8 @@ export default {
       let size = api.size([api.value(1) - api.value(0), yValue])
       let style = api.style()
 
+      console.log(api.value(0), api.value(1), api.value(2), start, size, yValue)
+
       return {
         type: 'rect',
         shape: {
@@ -134,12 +136,32 @@ export default {
       let interval
       let min = Infinity
       let max = -Infinity
-
       let newData = this.dataset.data.map(element => {
         return element[1]
       })
+      let arrayFirstItem = newData[0]
+      // 只有一條 bar
+      let allSameValue = newData.every(item => {
+        return item === arrayFirstItem
+      })
+      let bins = {}
+      if (allSameValue) {
+        bins = {
+          bins: [
+            {
+              samples: newData,
+              x0: newData[0],
+              x1: newData[0]
+            }
+          ],
+          data: [
+            [newData[0], newData.length]
+          ]
+        }
+      } else {
+        bins = ecStat.histogram(newData, 'sturges')
+      }
 
-      let bins = ecStat.histogram(newData, 'sturges')
       let chartData = bins.data.map((item, index) => {
         let x0 = bins.bins[index].x0
         let x1 = bins.bins[index].x1
@@ -157,7 +179,7 @@ export default {
           '<td>' + this.title.xAxis.display_name + '</td>' +
           '<td>' + this.title.yAxis.display_name + '</td>' +
           '</tr>'
-        for (let i = 1; i < dataset.length; i++) {
+        for (let i = 0; i < dataset.length; i++) {
           table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>
             <td>${dataset[i][0]} ~ ${dataset[i][1]}</td><td>${dataset[i][2]}</td>
           </tr>`
@@ -178,9 +200,9 @@ export default {
 
       // set histogram xAxis
       chartAddon.xAxis = {...chartAddon.xAxis, ...histogramChartConfig.xAxis}
-      chartAddon.xAxis.interval = interval
-      chartAddon.xAxis.min = min
-      chartAddon.xAxis.max = max
+      chartAddon.xAxis.interval = allSameValue ? 'auto' : interval
+      chartAddon.xAxis.min = allSameValue ? newData[0] / 2 : min
+      chartAddon.xAxis.max = allSameValue ? newData[0] * 2 : max
       chartAddon.xAxis.name = this.title.xAxis.display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramChartConfig.yAxis}
       chartAddon.yAxis.scale = false

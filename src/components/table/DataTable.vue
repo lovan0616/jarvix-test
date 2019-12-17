@@ -87,6 +87,14 @@
               icon-class="spinner"
             ></svg-icon>
             {{ buildStatus(data[headInfo.value]) }}
+            <el-tooltip class="item"
+              v-if="data.processComment"
+              popper-class="error-tooltip"
+              :content="data.processComment"
+              placement="top"
+            >
+              <svg-icon icon-class="alert" class="alert-icon"></svg-icon>
+            </el-tooltip>
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
@@ -308,6 +316,33 @@ export default {
   }
   .hasWidth {
     flex: initial;
+  }
+  .alert-icon {
+    color: #FFDF6F;
+  }
+}
+</style>
+<style lang="scss">
+.error-tooltip.el-tooltip__popper {
+  background-color: #323A3A;
+  box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
+  border-radius: 8px;
+  padding: 8px;
+
+  &.el-tooltip__popper[x-placement^=top] .popper__arrow:after {
+    border-top-color: #323A3A;
+  }
+
+  &.el-tooltip__popper[x-placement^=top] .popper__arrow {
+      border-top-color: #323A3A;
+  }
+
+  &.el-tooltip__popper[x-placement^=bottom] .popper__arrow:after {
+      border-bottom-color: #323A3A;
+  }
+
+  &.el-tooltip__popper[x-placement^=bottom] .popper__arrow {
+      border-bottom-color: #323A3A;
   }
 }
 </style>
