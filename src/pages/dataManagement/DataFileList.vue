@@ -285,6 +285,7 @@ export default {
           width: '200px',
           time: 'YYYY-MM-DD HH:mm'
         },
+        {text: this.$t('editing.status'), value: 'type', width: '7.26%'},
         {
           text: this.$t('editing.action'),
           value: 'action',

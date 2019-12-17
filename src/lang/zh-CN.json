@@ -18,7 +18,7 @@
     "formCharacterOverMin": "最少{min}个字元",
     "formNumericeOverOne": "最少包含1个数字",
     "copiedToBoard": "已复制至剪贴簿",
-    "systemIsError": "系统发生错误",
+    "systemIsError": "系统发生异常",
     "saveSuccess": "储存成功",
     "correlationDeleteSuccess": "关联已删除",
     "userCreateSuccess": "建立使用者成功",
