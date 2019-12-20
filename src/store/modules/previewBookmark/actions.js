@@ -41,6 +41,7 @@ export default {
     commit(types.SET_BOOKMARK_TABLE, bookmarkTable)
   },
   getBookmarkTableData ({ commit, state, rootState }) {
+    // FIXME should implement pagination
     if (rootState.dataSource.dataSourceId === null) return Promise.reject(new Error('bookmark not set yet'))
     if (state.bookmarkTable === undefined) return Promise.reject(new Error('bookmarkTable not set yet'))
     const bookmarkTableId = state.bookmarkTable.id

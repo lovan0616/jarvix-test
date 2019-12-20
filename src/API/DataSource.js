@@ -102,6 +102,7 @@ export function getDataFrameById (dataSourceId) {
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
 export function getDataFrameData (dataFrameId, page = 0, size = 1000) {
+  // FIXME just default a big size, doesn't implement with pagination
   return request({
     url: `/dataFrame/${dataFrameId}/data`,
     method: 'GET',
