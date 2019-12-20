@@ -1,6 +1,6 @@
 import * as types from './mutation_type'
 import co from 'co'
-import { getBookmarkTablesById, getBookmarkTableDataById } from '@/API/Bookmark'
+import { getDataFrameById, getDataFrameData } from '@/API/DataSource'
 
 export default {
   init ({ commit, dispatch, state }) {
@@ -13,7 +13,7 @@ export default {
   getBookmarkTables ({ commit, state, rootState }) {
     if (rootState.dataSource.dataSourceId === null) return Promise.reject(new Error('bookmark not set yet'))
     const dataSourceId = rootState.dataSource.dataSourceId
-    return getBookmarkTablesById(dataSourceId).then(res => {
+    return getDataFrameById(dataSourceId).then(res => {
       commit(types.SET_BOOKMARK_TABLES, res)
     })
   },
@@ -43,9 +43,8 @@ export default {
   getBookmarkTableData ({ commit, state, rootState }) {
     if (rootState.dataSource.dataSourceId === null) return Promise.reject(new Error('bookmark not set yet'))
     if (state.bookmarkTable === undefined) return Promise.reject(new Error('bookmarkTable not set yet'))
-    const dataSourceId = rootState.dataSource.dataSourceId
     const bookmarkTableId = state.bookmarkTable.id
-    return getBookmarkTableDataById(dataSourceId, bookmarkTableId).then(res => {
+    return getDataFrameData(bookmarkTableId).then(res => {
       commit(types.SET_BOOKMARK_TABLE_DATA, res)
     })
   }

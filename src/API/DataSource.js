@@ -98,6 +98,21 @@ export function getDataFrameById (dataSourceId) {
 }
 
 /**
+ * get data of dataframe by dataFrameId
+ * @param {Number} dataFrameId - 欲檢查的資料表 ID
+ */
+export function getDataFrameData (dataFrameId, page = 0, size = 1000) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/data`,
+    method: 'GET',
+    params: {
+      page,
+      size
+    }
+  })
+}
+
+/**
  * get data column by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
