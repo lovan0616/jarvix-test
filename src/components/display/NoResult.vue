@@ -20,8 +20,9 @@ export default {
 <style lang="scss" scoped>
 .no-result-block {
   padding: 15px 20px;
-  background-color: $theme-bg-color;
-  color: #fff;
+  background-color: rgba(35, 61, 64, 0.6);
+  border: 1px solid #05282C;
+  color: #ccc;
   text-align: center;
 }
 </style>

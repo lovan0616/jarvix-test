@@ -8,7 +8,7 @@
       :is="childContent"
       @task-event="onTaskEmitEvent"
     ></component>
-    <no-result v-else :message="errorMessage"></no-result>
+    <no-result v-else-if="isError" :message="errorMessage"></no-result>
   </div>
 </template>
 
@@ -58,8 +58,8 @@ export default {
         this.createTaskByTemplateAndData({ template, data })
       }).catch(err => {
         this.loading = false
-        this.isError = true
-        if (err.error) {
+        if (err.error && this.params.diagram_type === 'key_result') {
+          this.isError = true
           if (err.error.code === 'TASKWARN0002') this.errorMessage = this.$t('errorMessage.TASKWARN0002')
           else if (err.error.code === 'TASKWARN0003') this.errorMessage = this.$t('errorMessage.TASKWARN0003')
           else this.errorMessage = this.$t('message.noResult')
