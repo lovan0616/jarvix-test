@@ -29,7 +29,8 @@ export default {
           router.push('/')
         }
       } else {
-        if (!state.dataSourceId) {
+        // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個
+        if (!state.dataSourceId || res.findIndex(element => element.id === state.dataSourceId) < 0) {
           dispatch('changeDataSourceById', res[0].id)
         }
       }
