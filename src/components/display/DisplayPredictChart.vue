@@ -212,6 +212,7 @@ export default {
       return result
     },
     brushRegionSelected (params) {
+      if (params.batch[0].areas.length === 0) return
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
         return {
