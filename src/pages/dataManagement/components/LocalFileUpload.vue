@@ -78,6 +78,7 @@ import { mapState } from 'vuex'
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
 import UploadProcessBlock from './UploadProcessBlock'
+import { createDataSource } from '@/API/DataSource'
 
 export default {
   name: 'LocalFileUpload',
@@ -111,7 +112,6 @@ export default {
     },
     fileImport (event) {
       let uploadInput = event.target
-      let fileList = []
 
       // 有選到檔案才執行
       if (uploadInput.files) {
@@ -126,31 +126,44 @@ export default {
           return false
         }
 
-        for (let i = 0; i < uploadInput.files.length; i++) {
-          let formData = new FormData()
-          let file = uploadInput.files[i]
-          formData.append('file', file)
-          formData.append('dataSourceId', this.currentUploadInfo.dataSourceId)
-          formData.append('fileFullName', file.name)
-
-          // 判斷是否有檔案超過大小限制
-          if (file.size > this.uploadFileSizeLimit * 1024 * 1024) {
-            this.unableFileList.push({
-              data: formData,
-              status: uploadStatus.forbidden,
-              id: new Date().getTime() + i,
-              msg: this.$t('editing.reachUploadSizeLimit', {limitSize: this.uploadFileSizeLimit})
-            })
-          } else {
-            fileList.push({
-              data: formData,
-              status: uploadStatus.wait,
-              id: new Date().getTime() + i
-            })
-          }
+        // 如果沒有 dataSourceId 就先去建一個
+        if (this.currentUploadInfo.dataSourceId) {
+          this.updateFileList(uploadInput.files)
+        } else {
+          createDataSource(this.currentUploadInfo.name).then(res => {
+            this.$store.commit('dataManagement/updateCurrentUploadDataSourceId', res.dataSourceId)
+            this.updateFileList(uploadInput.files)
+          })
         }
-        this.$store.commit('dataManagement/updateUploadFileList', this.uploadFileList.concat(fileList))
       }
+    },
+    // 將 input 內的檔案塞進 formData，並存到 store 中
+    updateFileList (inputFileList) {
+      let fileList = []
+      for (let i = 0; i < inputFileList.length; i++) {
+        let formData = new FormData()
+        let file = inputFileList[i]
+        formData.append('file', file)
+        formData.append('dataSourceId', this.currentUploadInfo.dataSourceId)
+        formData.append('fileFullName', file.name)
+
+        // 判斷是否有檔案超過大小限制
+        if (file.size > this.uploadFileSizeLimit * 1024 * 1024) {
+          this.unableFileList.push({
+            data: formData,
+            status: uploadStatus.forbidden,
+            id: new Date().getTime() + i,
+            msg: this.$t('editing.reachUploadSizeLimit', {limitSize: this.uploadFileSizeLimit})
+          })
+        } else {
+          fileList.push({
+            data: formData,
+            status: uploadStatus.wait,
+            id: new Date().getTime() + i
+          })
+        }
+      }
+      this.$store.commit('dataManagement/updateUploadFileList', this.uploadFileList.concat(fileList))
     },
     fileUpload () {
       let fileList = this.uploadFileList.map(element => {

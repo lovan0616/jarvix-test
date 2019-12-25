@@ -274,7 +274,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .result-board {
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.55);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   margin-bottom: 48px;
@@ -284,8 +284,7 @@ export default {
     display: flex;
     align-items: center;
     padding: 20px 28px;
-    background-color: rgba(0, 0, 0, 0.35);
-    border-radius: 8px 8px 0 0;
+    background-color: rgba(35, 61, 64, 0.6);
   }
 
   .header-block {

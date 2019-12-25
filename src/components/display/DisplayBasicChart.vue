@@ -209,7 +209,7 @@ export default {
       config.toolbox.feature.magicType.show = true
       config.xAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
       config.yAxis.name = this.title.yAxis.display_name
-      // 如果是 bar chart 
+      // 如果是 bar chart
       config.yAxis.scale = !(this.series[0].type === 'bar')
 
       if (this.isPreview) this.previewChartSetting(config)
@@ -258,6 +258,7 @@ export default {
     brushRegionSelected (params) {
       switch (this.series[0].type) {
         case 'line':
+          if (params.batch[0].areas.length === 0) break
           this.selectedData = params.batch[0].areas.map(areaElement => {
             let coordRange = areaElement.coordRange
             return {
@@ -273,6 +274,7 @@ export default {
           })
           break
         case 'bar':
+          if (params.batch[0].selected[0].index.length === 0) break
           this.selectedData = [{
             type: 'enum',
             properties: {

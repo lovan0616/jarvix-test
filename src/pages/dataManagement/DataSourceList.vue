@@ -76,7 +76,7 @@ export default {
       dataList: [],
       // 資料處理中
       isProcessing: false,
-      dataSourceLimitCount: 20
+      dataSourceLimitCount: 30
     }
   },
   mounted () {
