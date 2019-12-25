@@ -106,7 +106,10 @@ export function yAxisDefault () {
       show: false
     },
     axisLine: {
-      show: false
+      show: false,
+      lineStyle: {
+        color: chartVariable['xAxisColor']
+      }
     },
     scale: true,
     axisLabel: {

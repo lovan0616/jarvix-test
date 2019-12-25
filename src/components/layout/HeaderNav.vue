@@ -70,7 +70,7 @@ export default {
     return {
       isShowLanguage: false,
       isShowLogout: false,
-      selectedLanguage: this.language,
+      selectedLanguage: null,
       settingData: [
         {icon: 'database', title: 'nav.dataManagement', path: '/data-management'},
         {icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'},
@@ -83,6 +83,9 @@ export default {
         {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
       ]
     }
+  },
+  mounted () {
+    this.selectedLanguage = this.locale
   },
   computed: {
     locale () {
