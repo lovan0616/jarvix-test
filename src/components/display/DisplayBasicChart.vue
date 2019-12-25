@@ -209,7 +209,7 @@ export default {
       config.toolbox.feature.magicType.show = true
       config.xAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
       config.yAxis.name = this.title.yAxis.display_name
-      // 如果是 bar chart 
+      // 如果是 bar chart
       config.yAxis.scale = !(this.series[0].type === 'bar')
 
       if (this.isPreview) this.previewChartSetting(config)

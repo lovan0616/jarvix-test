@@ -57,8 +57,7 @@ export default {
       singleForeignKey: {
         left_column: null,
         right_column: null
-      },
-      storageId: null
+      }
     }
   },
   mounted () {
@@ -76,22 +75,6 @@ export default {
         this.tableList = response
       })
     },
-    // getStorageId () {
-    //   let storageType = this.getStorageType(this.currentBookmarkInfo.type)
-    //   getBookmarkStorage(this.currentBookmarkInfo.id, storageType).then(response => {
-    //     this.storageId = response.storage.id
-
-    //     let storageConfig = response.storage.config
-    //     // 目前的 join 關係，將 object 轉為 Array
-    //     this.joinRelations = this.objectToArray(storageConfig.joins)
-    //     // 目前的 table 清單，將 object 轉為 Array，同時補足 select 需要的 key
-    //     this.tableList = Object.keys(storageConfig.tables).map(element => {
-    //       storageConfig.tables[element].id = element
-    //       storageConfig.tables[element].name = storageConfig.tables[element].tablename
-    //       return storageConfig.tables[element]
-    //     })
-    //   })
-    // },
     closeDialog () {
       this.$emit('cancel')
     },
