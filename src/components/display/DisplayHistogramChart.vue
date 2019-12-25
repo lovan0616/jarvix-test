@@ -99,8 +99,6 @@ export default {
       let size = api.size([api.value(1) - api.value(0), yValue])
       let style = api.style()
 
-      console.log(api.value(0), api.value(1), api.value(2), start, size, yValue)
-
       return {
         type: 'rect',
         shape: {
@@ -113,7 +111,10 @@ export default {
       }
     },
     brushRegionSelected (params) {
-      if (params.batch[0].areas.length === 0) return
+      if (params.batch[0].areas.length === 0) {
+        this.selectedData = []
+        return
+      }
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
         return {
