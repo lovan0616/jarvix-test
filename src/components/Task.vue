@@ -1,5 +1,8 @@
 <template>
-  <div class="task-root">
+  <div class="task-root"
+    :data-diagram-type="params.diagram_type"
+    :data-task="dataUrl.split('/')[2]"
+  >
     <spinner class="task-spinner"
       v-if="loading"
     ></spinner>
