@@ -80,7 +80,7 @@ export default {
       editDataSource: null,
       dataList: [],
       // 資料處理中
-      isProcessing: false,
+      isProcessing: false
       // dataSourceLimitCount: 30
     }
   },
