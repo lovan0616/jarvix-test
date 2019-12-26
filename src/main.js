@@ -74,6 +74,7 @@ import DisplayWorldMap from '@/components/display/DisplayWorldMap'
 import DisplayPredictChart from '@/components/display/DisplayPredictChart'
 import DisplayPivot from '@/components/display/DisplayPivot'
 import DisplayHeatMapChart from '@/components/display/DisplayHeatMapChart'
+import DisplaySankeyChart from '@/components/display/DisplaySankeyChart'
 import DisplayCorrelationFeatures from '@/components/display/DisplayCorrelationFeatures'
 import PreviewPivot from '@/components/display/PreviewPivot'
 import InsightsInfo from '@/components/display/InsightsInfo'
@@ -145,6 +146,7 @@ Vue.component(DisplayWorldMap.name, DisplayWorldMap)
 Vue.component(DisplayPredictChart.name, DisplayPredictChart)
 Vue.component(DisplayPivot.name, DisplayPivot)
 Vue.component(DisplayHeatMapChart.name, DisplayHeatMapChart)
+Vue.component(DisplaySankeyChart.name, DisplaySankeyChart)
 Vue.component(DisplayCorrelationFeatures.name, DisplayCorrelationFeatures)
 Vue.component(PreviewPivot.name, PreviewPivot)
 Vue.component(SelectedRegion.name, SelectedRegion)
