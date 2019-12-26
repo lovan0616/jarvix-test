@@ -1108,6 +1108,7 @@
     "ProportionToken": "问句意图",
     "CorrelationToken": "问句意图",
     "CorrVerificationToken": "问句意图",
+    "DiffExplorationToken": "问句意图",
     "ConjunctionToken": "连接词",
     "PossessionToken": "连接词",
     "ChangeToken": "其他词汇",
