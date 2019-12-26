@@ -9,7 +9,6 @@ export default {
     currentDataSourceInfo: null,
     currentUploadInfo: {
       dataSourceId: null,
-      storageId: null,
       type: null,
       name: null
     },

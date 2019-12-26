@@ -58,7 +58,11 @@ export default {
         this.isLoading = false
         this.quickStartQuestionList = res.quickQuestionList
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
-        this.$store.commit('chatBot/addSystemConversation', {text: this.$t('bot.welcomeMessage'), options: res.quickQuestionList})
+        this.$store.commit('chatBot/addSystemConversation',
+          this.quickStartQuestionList.length > 0
+            ? {text: this.$t('bot.welcomeMessageWithSuggestions'), options: res.quickQuestionList}
+            : {text: this.$t('bot.welcomeMessage')}
+        )
       }).catch(() => {
         this.isLoading = false
         this.isNoResult = true

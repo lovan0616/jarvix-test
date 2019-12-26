@@ -114,9 +114,6 @@ export default {
         case this.uploadStatus.fail:
           return 'fail'
       }
-    },
-    storageId () {
-      return this.$store.state.dataManagement.currentUploadInfo.storageId
     }
   }
 }

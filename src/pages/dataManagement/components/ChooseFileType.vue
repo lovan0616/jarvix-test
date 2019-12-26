@@ -42,7 +42,6 @@
 import SySelect from '@/components/select/SySelect'
 import InputBlock from '@/components/InputBlock'
 import UploadProcessBlock from './UploadProcessBlock'
-import { createDataSource } from '@/API/DataSource'
 
 export default {
   inject: ['$validator'],
@@ -89,14 +88,7 @@ export default {
             // 將 name 塞進去
             this.dataSourceInfo.name = this.currentDataSourceInfo.name
           }
-
-          createDataSource(this.dataSourceInfo.name).then(res => {
-            this.$store.commit('dataManagement/updateCurrentUploadInfo', {
-              dataSourceId: res.dataSourceId,
-              // fileCount: res.bookmark.config ? Object.keys(res.bookmark.config.tables).length : 0,
-              ...this.dataSourceInfo
-            })
-          })
+          this.$store.commit('dataManagement/updateCurrentUploadDataSourceName', this.dataSourceInfo.name)
         }
       })
     }

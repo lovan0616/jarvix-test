@@ -103,7 +103,11 @@ export default {
       type: Boolean,
       default: false
     },
-    height: {type: String, default: '380px'}
+    height: {type: String, default: '380px'},
+    isParallel: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     echartAddon.mapping(this.addons)
@@ -207,9 +211,17 @@ export default {
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      config.xAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
-      config.yAxis.name = this.title.yAxis.display_name
-      // 如果是 bar chart 
+      // 圖表是水平或是垂直
+      if (this.isParallel) {
+        config.xAxis = yAxisDefault()
+        config.xAxis.name = this.title.yAxis.display_name
+        config.yAxis = xAxisDefault()
+        config.yAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
+      } else {
+        config.xAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
+        config.yAxis.name = this.title.yAxis.display_name
+      }
+      // 如果是 bar chart
       config.yAxis.scale = !(this.series[0].type === 'bar')
 
       if (this.isPreview) this.previewChartSetting(config)
@@ -258,6 +270,10 @@ export default {
     brushRegionSelected (params) {
       switch (this.series[0].type) {
         case 'line':
+          if (params.batch[0].areas.length === 0) {
+            this.selectedData = []
+            break
+          }
           this.selectedData = params.batch[0].areas.map(areaElement => {
             let coordRange = areaElement.coordRange
             return {
@@ -273,6 +289,10 @@ export default {
           })
           break
         case 'bar':
+          if (params.batch[0].selected[0].dataIndex.length === 0) {
+            this.selectedData = []
+            break
+          }
           this.selectedData = [{
             type: 'enum',
             properties: {

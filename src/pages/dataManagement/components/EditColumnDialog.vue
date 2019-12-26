@@ -105,7 +105,6 @@ export default {
         dataSourceId: this.tableInfo.dataSourceId,
         userEditedColumnInputList: []
       },
-      storageId: null,
       isProcessing: false
     }
   },
