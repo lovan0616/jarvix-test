@@ -164,7 +164,8 @@
     "systemUnknownDescription": "系统无法辨识出以下文字："
   },
   "bot": {
-    "welcomeMessage": "Hello, 今天想分析什么样的资料？可以试试从这些问题开始：",
+    "welcomeMessage": "Hello, 今天想分析什么样的资料？",
+    "welcomeMessageWithSuggestions": "@:bot.welcomeMessage 可以试试从这些问题开始：",
     "defaultResponse": "已分析完成，您可能有兴趣的关联问题：",
     "finish": "已分析完成",
     "multiplePossibilities": "很抱歉，经系统分析后，发现词汇具有多重意义，请参考以下项目：",
