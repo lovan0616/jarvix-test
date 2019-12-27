@@ -48,13 +48,6 @@ let boxPlotChartConfig = {
   tooltip: {
     trigger: 'item'
   },
-  xAxis: {
-    type: 'category',
-    data: [],
-    splitLine: {
-      show: false
-    }
-  },
   chartData: {
     name: 'boxplot',
     type: 'boxplot',
@@ -149,7 +142,81 @@ export default {
       chartAddon.series[1].itemStyle = {
         color: chartVariable['chartColorList-2']
       }
-      chartAddon.toolbox.feature.dataView.show = false
+      // chartAddon.toolbox.feature.dataView.show = false
+      // 數據顯示
+      chartAddon.toolbox.feature.dataView.optionToContent = (opt) => {
+        console.log(opt, 'opt')
+        let dataset = opt.series[0].data
+        let table = `<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-secondary" type="button" id="export-btn">${this.$t('chart.export')}</button></div>
+          <table style="margin-top: 16px;width:100%;padding: 0 16px;"><tbody><tr style="background-color:#2B4D51"><td></td>`
+        for (let i = 0; i < this.dataset.index.length; i++) {
+          table += `<td>${this.dataset.index[i]}</td>`
+        }
+        table += '</tr>'
+        for (let i = 0; i < 5; i++) {
+          table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>`
+          switch (i) {
+            case 0:
+              table += `<td>${this.$t('resultDescription.min')}</td>`
+              break
+            case 1:
+              table += `<td>${this.$t('resultDescription.lowerQuartile')}</td>`
+              break
+            case 2:
+              table += `<td>${this.$t('resultDescription.average')}</td>`
+              break
+            case 3:
+              table += `<td>${this.$t('resultDescription.higherQuartile')}</td>`
+              break
+            case 4:
+              table += `<td>${this.$t('resultDescription.max')}</td>`
+              break
+          }
+          for (let j = 0; j < dataset.length; j++) {
+            table += `<td>${dataset[j][i]}</<td>`
+          }
+          table += `</tr>`
+        }
+        table += '</tbody></table>'
+        return table
+      }
+      // export data
+      this.$nextTick(() => {
+        this.$el.addEventListener('click', (e) => {
+          if (e.target && e.target.id === 'export-btn') {
+            let exportData = []
+            let indexArray = JSON.parse(JSON.stringify(this.dataset.index))
+            indexArray.unshift('')
+            exportData.push(indexArray)
+
+            for (let i = 0; i < 5; i++) {
+              let rowData
+              switch (i) {
+                case 0:
+                  rowData = [this.$t('resultDescription.min')]
+                  break
+                case 1:
+                  rowData = [this.$t('resultDescription.lowerQuartile')]
+                  break
+                case 2:
+                  rowData = [this.$t('resultDescription.average')]
+                  break
+                case 3:
+                  rowData = [this.$t('resultDescription.higherQuartile')]
+                  break
+                case 4:
+                  rowData = [this.$t('resultDescription.max')]
+                  break
+              }
+              for (let j = 0; j < this.chartData.boxData.length; j++) {
+                rowData.push(this.chartData.boxData[j][i])
+              }
+              exportData.push(rowData)
+            }
+            this.exportToCSV(this.appQuestion, exportData)
+          }
+        })
+      })
 
       if (this.isPreview) this.previewChartSetting(chartAddon)
 
@@ -167,6 +234,9 @@ export default {
         width: '100%',
         height: '380px'
       }
+    },
+    appQuestion () {
+      return this.$store.state.dataSource.appQuestion
     }
   }
 }

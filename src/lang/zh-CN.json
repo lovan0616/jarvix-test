@@ -1080,7 +1080,12 @@
     "hereIsFeatures": "以下为关连因子",
     "modelConfidence": "模型的信心度",
     "displayTotalData": "共 {count} 笔资料",
-    "displayTopData": "显示前 {count} 笔资料"
+    "displayTopData": "显示前 {count} 笔资料",
+    "min": "最小值",
+    "lowerQuartile": "下四分位数",
+    "average": "平均值",
+    "higherQuartile": "上四分位数",
+    "max": "最大值"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",
