@@ -1080,7 +1080,12 @@
     "hereIsFeatures": "以下為關連因子",
     "modelConfidence": "模型的信心度",
     "displayTotalData": "共 {count} 筆資料",
-    "displayTopData": "顯示前 {count} 筆資料"
+    "displayTopData": "顯示前 {count} 筆資料",
+    "min": "最小值",
+    "lowerQuartile": "下四分位數",
+    "average": "平均值",
+    "higherQuartile": "上四分位數",
+    "max": "最大值"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",
@@ -1108,6 +1113,7 @@
     "ProportionToken": "問句意圖",
     "CorrelationToken": "問句意圖",
     "CorrVerificationToken": "問句意圖",
+    "DiffExplorationToken": "問句意圖",
     "ConjunctionToken": "連接詞",
     "PossessionToken": "連接詞",
     "ChangeToken": "其他詞彙",

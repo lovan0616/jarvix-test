@@ -10,16 +10,21 @@
       <div class="board-title-row">
         <div class="button-block">
           <button class="btn-m btn-default btn-has-icon"
-            :disabled="reachUploadLimit"
             @click="createDataSource"
           >
             <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('editing.newDataSource') }}
           </button>
-          <div class="reach-limit"
+          <!-- <button class="btn-m btn-default btn-has-icon"
+            :disabled="reachUploadLimit"
+            @click="createDataSource"
+          >
+            <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('editing.newDataSource') }}
+          </button> -->
+          <!-- <div class="reach-limit"
             v-if="reachUploadLimit"
-          >{{ $t('notification.uploadLimitNotification') }}</div>
+          >{{ $t('notification.uploadLimitNotification') }}</div> -->
         </div>
-        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: dataSourceLimitCount}) }}</div>
+        <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: dataSourceLimitCount}) }}</div> -->
       </div>
       <data-table
         :headers="tableHeaders"
@@ -75,8 +80,8 @@ export default {
       editDataSource: null,
       dataList: [],
       // 資料處理中
-      isProcessing: false,
-      dataSourceLimitCount: 30
+      isProcessing: false
+      // dataSourceLimitCount: 30
     }
   },
   mounted () {
@@ -154,9 +159,9 @@ export default {
     }
   },
   computed: {
-    reachUploadLimit () {
-      return this.dataList.length >= this.dataSourceLimitCount
-    },
+    // reachUploadLimit () {
+    //   return this.dataList.length >= this.dataSourceLimitCount
+    // },
     tableHeaders () {
       return [
         {

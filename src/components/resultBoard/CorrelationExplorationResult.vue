@@ -21,34 +21,43 @@
             ></task>
           </div>
           <div class="key-result-viewer">
-            <keep-alive>
-              <task v-if="taskObject.subKeyResults[cursor]"
-                v-bind:key="`sub-key-result-${cursor}`"
-                :templateUrl="`api/task/${taskObject.subKeyResults[cursor].intent}/template`"
-                :dataUrl="`api/task/${taskObject.subKeyResults[cursor].intent}/data`"
-                :params="taskObject.subKeyResults[cursor].entities"
-              ></task>
-            </keep-alive>
-            <keep-alive>
-              <task v-if="taskObject.subCorrelationInsights[cursor]"
-                v-bind:key="`sub-correlation-insight-${cursor}`"
-                :templateUrl="`api/task/${taskObject.subCorrelationInsights[cursor].intent}/template`"
-                :dataUrl="`api/task/${taskObject.subCorrelationInsights[cursor].intent}/data`"
-                :params="taskObject.subCorrelationInsights[cursor].entities"
-              ></task>
-            </keep-alive>
+            <div class="key-result-spinner"
+              v-show="isLoading"
+            >
+              <spinner
+                :title="$t('resultDescription.analysisProcessing')"
+              ></spinner>
+            </div>
+            <div class="chart-block"
+              v-show="!isLoading"
+            >
+               <keep-alive>
+                <task v-if="taskObject.subKeyResults[cursor]"
+                  v-bind:key="`sub-key-result-${cursor}`"
+                  :templateUrl="`api/task/${taskObject.subKeyResults[cursor].intent}/template`"
+                  :dataUrl="`api/task/${taskObject.subKeyResults[cursor].intent}/data`"
+                  :params="taskObject.subKeyResults[cursor].entities"
+                ></task>
+              </keep-alive>
+              <keep-alive>
+                <task v-if="taskObject.subCorrelationInsights[cursor]"
+                  v-bind:key="`sub-correlation-insight-${cursor}`"
+                  :templateUrl="`api/task/${taskObject.subCorrelationInsights[cursor].intent}/template`"
+                  :dataUrl="`api/task/${taskObject.subCorrelationInsights[cursor].intent}/data`"
+                  :params="taskObject.subCorrelationInsights[cursor].entities"
+                ></task>
+              </keep-alive>
+            </div>
           </div>
         </div>
       </template>
       <template slot="InsightBasicInfo">
-        <keep-alive>
-          <task v-if="taskObject.subBasicInfos[cursor]"
-            v-bind:key="`sub-basic-info-${cursor}`"
-            :templateUrl="`api/task/${taskObject.subBasicInfos[cursor].intent}/template`"
-            :dataUrl="`api/task/${taskObject.subBasicInfos[cursor].intent}/data`"
-            :params="taskObject.subBasicInfos[cursor].entities"
-          ></task>
-        </keep-alive>
+        <task v-if="taskObject.subBasicInfos[cursor]"
+          v-bind:key="`sub-basic-info-${cursor}`"
+          :templateUrl="`api/task/${taskObject.subBasicInfos[cursor].intent}/template`"
+          :dataUrl="`api/task/${taskObject.subBasicInfos[cursor].intent}/data`"
+          :params="taskObject.subBasicInfos[cursor].entities"
+        ></task>
       </template>
     </result-board-body>
   </result-board>
@@ -63,12 +72,22 @@ export default {
   },
   data () {
     return {
-      cursor: 0
+      cursor: 0,
+      isLoading: true
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.isLoading = false
+    })
   },
   methods: {
     onChangeCursor (cursor) {
+      this.isLoading = true
       this.cursor = cursor
+      this.$nextTick(() => {
+        this.isLoading = false
+      })
     }
   },
   computed: {
@@ -126,6 +145,13 @@ export default {
   .key-result-viewer {
     min-width: calc(100% - 200px);
     padding-left: 24px;
+  }
+
+  .key-result-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
   }
 }
 </style>
