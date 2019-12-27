@@ -24,9 +24,13 @@
             <div class="key-result-spinner"
               v-show="isLoading"
             >
-              <spinner></spinner>
+              <spinner
+                :title="$t('resultDescription.analysisProcessing')"
+              ></spinner>
             </div>
-            <div class="chart-block">
+            <div class="chart-block"
+              v-show="!isLoading"
+            >
                <keep-alive>
                 <task v-if="taskObject.subKeyResults[cursor]"
                   v-bind:key="`sub-key-result-${cursor}`"
@@ -147,6 +151,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
   }
 }
 </style>
