@@ -6,11 +6,17 @@
     <spinner class="task-spinner"
       v-if="loading"
     ></spinner>
-    <component ref="taskComponent"
-      v-else-if="!isError"
-      :is="childContent"
-      @task-event="onTaskEmitEvent"
-    ></component>
+    <template v-else-if="!isError">
+      <component ref="taskComponent"
+        :is="childContent"
+        @task-event="onTaskEmitEvent"
+      ></component>
+      <div class="task-note"
+        v-for="(note, index) in notes" v-bind:key="index"
+      >
+        {{note}}
+      </div>
+    </template>
     <no-result v-else-if="isError" :message="errorMessage"></no-result>
   </div>
 </template>
@@ -32,7 +38,8 @@ export default {
       urlRoot: window.env.API_ROOT_URL,
       childContent: undefined,
       isError: false,
-      errorMessage: ''
+      errorMessage: '',
+      notes: []
     }
   },
   mounted () {
@@ -59,6 +66,9 @@ export default {
         const template = res[0]
         const data = res[1]
         this.createTaskByTemplateAndData({ template, data })
+        if (data['random_limit']) {
+          this.appendNote(this.genSamplingNote(data['random_limit']))
+        }
       }).catch(err => {
         this.loading = false
         if (err.error && this.params.diagram_type === 'key_result') {
@@ -88,6 +98,12 @@ export default {
         }
       }
       this.loading = false
+    },
+    appendNote (note) {
+      this.notes.push(note)
+    },
+    genSamplingNote (randomLimit) {
+      return this.$t('resultNote.samplingNote', {randomLimit})
     }
   }
 }
@@ -97,5 +113,13 @@ export default {
   width: 100%;
   // min-height: 20px;
   // overflow: hidden;
+
+  .task-note {
+    &::before {
+      content: '#';
+    }
+    color: #A7A7A7;
+    font-size: 12px;
+  }
 }
 </style>
