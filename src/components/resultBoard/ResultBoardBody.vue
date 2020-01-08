@@ -9,7 +9,7 @@
         :class="{active: showBasicInfo}"
         v-if="$slots.InsightBasicInfo"
         v-show="isShowChatRoom"
-        @click="toggleBasicInfoDialog"
+        @click.stop="toggleBasicInfoDialog"
       >{{ $t('resultDescription.basicInfo') }}</button>
       <div class="chart-block">
         <slot name="PageResultBoardChart"></slot>
