@@ -66,16 +66,11 @@ export default {
         const columnValue = item.slice(yStart, yEnd)
         let indexIndex = this.indexOfArrayElement(newIndex, indexValue)
         let columnIndex = this.indexOfArrayElement(newColumn, columnValue)
-        if (columnIndex < 0 && indexIndex >= 0) {
+        if (columnIndex < 0) {
           newColumn.push(columnValue)
           columnIndex = newColumn.length - 1
-        } else if (columnIndex < 0 && indexIndex < 0) {
-          newIndex.push(indexValue)
-          indexIndex = newIndex.length - 1
-          newColumn.push(columnValue)
-          columnIndex = newColumn.length - 1
-          newData[indexIndex] = []
-        } else {
+        }
+        if (indexIndex < 0) {
           newIndex.push(indexValue)
           indexIndex = newIndex.length - 1
           newData[indexIndex] = []
