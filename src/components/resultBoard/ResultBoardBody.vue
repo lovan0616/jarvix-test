@@ -70,7 +70,7 @@ export default {
     position: relative;
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     margin-bottom: 32px;
 
     &.is-open {
@@ -104,6 +104,7 @@ export default {
     }
 
     .chart-block {
+      width: calc(71.5% - 32px);
       flex: 1;
       margin-right: 32px;
     }
