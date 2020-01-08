@@ -38,7 +38,7 @@ export default {
     height: {
       type: String,
       default: '380px'
-    }    
+    }
   },
   data () {
     return {
@@ -88,14 +88,14 @@ export default {
   methods: {
     indexOfArrayElement (array, item) {
       let result = -1
-      for (let i = array.length - 1; i >= 0; i-- ) {
+      for (let i = array.length - 1; i >= 0; i--) {
         if (JSON.stringify(array[i]) === JSON.stringify(item)) {
           result = i
           break
         }
       }
       return result
-    }    
+    }
   }
 }
 </script>
