@@ -1,13 +1,18 @@
 <template>
   <div class="question-name-block">
     <span class="question-mark">Q</span>
-    <span class="question-name">
+    <span class="question-name"
+      v-if="questionSegmentation.length > 0"
+    >
       <question-name-token
         v-for="segmentation in questionSegmentation"
         :key="segmentation.startIndex"
         :token-info="segmentation"
       ></question-name-token>
     </span>
+    <span class="question-name"
+      v-else
+    >{{ question }}</span>
   </div>
 </template>
 <script>
@@ -18,6 +23,9 @@ export default {
   props: {
     questionSegmentation: {
       type: Array
+    },
+    question: {
+      type: String
     }
   },
   components: {

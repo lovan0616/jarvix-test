@@ -14,6 +14,7 @@
         @click="askQuestion(singleQuestion)"
       >
         <question-name
+          :question="singleQuestion.question"
           :question-segmentation="singleQuestion.segmentation"
         ></question-name>
       </div>

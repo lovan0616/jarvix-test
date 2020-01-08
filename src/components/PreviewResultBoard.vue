@@ -7,6 +7,7 @@
         <!-- <span class="question-mark">Q</span>
         <span class="question-name">{{ questionInfo.question }}</span> -->
         <question-name
+          :question="questionInfo.question"
           :question-segmentation="questionInfo.segmentation"
         ></question-name>
       </div>
