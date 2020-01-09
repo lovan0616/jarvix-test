@@ -31,7 +31,10 @@ export default {
       default: ''
     },
     segmentation: {
-      type: Array
+      type: Array,
+      default () {
+        return []
+      }
     }
   }
 }
