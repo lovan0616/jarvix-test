@@ -2,7 +2,7 @@
   <div class="question-name-block">
     <span class="question-mark">Q</span>
     <span class="question-name"
-      v-if="questionSegmentation.length > 0"
+      v-if="questionSegmentation && questionSegmentation.length > 0"
     >
       <question-name-token
         v-for="segmentation in questionSegmentation"
