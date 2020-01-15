@@ -180,10 +180,10 @@ export default {
       }
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.dataset[0].source
-        let table = '<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-secondary" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="margin-top: 16px;width:100%;padding: 0 16px;white-space:nowrap;"><tbody>'
+        let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-secondary" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="margin-top: 16px;width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur) => {
-            return acc + '<td style="padding: 4px 12px;">' + cur + '</td>'
+            return acc + `<td style="padding: 4px 12px;">${cur || ''}</td>`
           }, '')
           table += `<tr ${i % 2 === 0 ? (i === 0 ? 'style="background-color:#2B4D51"' : 'style="background-color:rgba(50, 75, 78, 0.6)"') : ''}>${tableData}</tr>`
         }
@@ -203,7 +203,7 @@ export default {
       config.tooltip.formatter = (datas) => {
         let res = datas[0].name + '<br/>'
         for (let i = 0, length = datas.length; i < length; i++) {
-          if (datas[i].value[i + 1] === null) continue
+          if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined) continue
           let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
           res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '<br/>'
         }
@@ -260,10 +260,17 @@ export default {
   methods: {
     tobeDataset (data) {
       const result = [['index']]
-      result[0] = result[0].concat(data.columns)
-      data.data.forEach((row, rowIndex) => {
-        const rowData = [data.index[rowIndex]].concat(row)
-        result.push(rowData)
+      result[0] = result[0].concat(data.columns.map(column => {
+        if (Array.isArray(column)) return column.join(',')
+        else return column
+      }))
+      data.index.forEach((i, iIndex) => {
+        let row = [data.index[iIndex]]
+        data.columns.forEach((c, cIndex) => {
+          const d = (data.data[iIndex][cIndex] || null)
+          row = row.concat([d])
+        })
+        result.push(row)
       })
       return result
     },

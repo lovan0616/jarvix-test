@@ -9,7 +9,7 @@
         :class="{active: showBasicInfo}"
         v-if="$slots.InsightBasicInfo"
         v-show="isShowChatRoom"
-        @click="toggleBasicInfoDialog"
+        @click.stop="toggleBasicInfoDialog"
       >{{ $t('resultDescription.basicInfo') }}</button>
       <div class="chart-block">
         <slot name="PageResultBoardChart"></slot>
@@ -70,7 +70,7 @@ export default {
     position: relative;
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     margin-bottom: 32px;
 
     &.is-open {
@@ -104,6 +104,7 @@ export default {
     }
 
     .chart-block {
+      width: calc(71.5% - 32px);
       flex: 1;
       margin-right: 32px;
     }

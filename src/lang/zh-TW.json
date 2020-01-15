@@ -1188,5 +1188,8 @@
     "TASKWARN0003": "計算結果為空",
     "authFail": "權限失效請重新登入",
     "defaultMsg": "系統發生非預期錯誤"
+  },
+  "resultNote": {
+    "samplingNote": "此結果為原資料取樣{randomLimit}筆計算得來"
   }
 }
