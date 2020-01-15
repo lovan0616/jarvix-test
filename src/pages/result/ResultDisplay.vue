@@ -130,6 +130,7 @@ export default {
             // 多個結果
             this.layout = 'MultiResult'
             this.resultInfo = segmentationList
+            this.isLoading = false
           }
         }).catch(() => {
           this.isLoading = false
