@@ -1,6 +1,6 @@
 import co from 'co'
 import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById } from '@/API/DataSource'
-import { getQuestionHistory } from '@/API/ChatBot'
+import { getHistoryQuestionList } from '@/API/NewAsk'
 import router from '../../../router'
 
 export default {
@@ -81,7 +81,7 @@ export default {
     })
   },
   getHistoryQuestionList ({commit, state}) {
-    return getQuestionHistory(state.dataSourceId).then(res => {
+    return getHistoryQuestionList(state.dataSourceId).then(res => {
       commit('setHistoryQuestionList', res)
     })
   },

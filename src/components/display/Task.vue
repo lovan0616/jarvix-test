@@ -10,7 +10,9 @@
     <template v-else-if="!isError">
       <component ref="taskComponent"
         :is="componentName"
-        :data="componentData"
+        :dataset="componentData.dataset"
+        :title="componentData.title"
+        :segmentation="componentData.segmentation"
       ></component>
       <div class="task-note"
         v-for="(note, index) in notes" v-bind:key="index"
@@ -33,7 +35,6 @@ export default {
     return {
       resultId: null,
       diagram: null,
-      intervalFunction: null,
       loading: true,
       childContent: undefined,
       componentName: null,
@@ -44,40 +45,32 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('chatBot/getComponentData', this.componentId).then(response => {
-      switch (response.status) {
-        case 'Ready':
-          if (this.intervalFunction !== null) break
-          this.intervalFunction = window.setInterval(() => {
-            this.$store.dispatch('chatBot/getComponentData', this.componentId)
-          }, 1000)
-          break
-        case 'Complete':
-          window.clearInterval(this.intervalFunction)
-          this.diagram = response.diagram
-          this.resultId = response.resultId
-          // this.createTaskByTemplateAndData({template: this.getChartTemplate(this.diagram), data: response.data})
-          this.componentName = this.getChartTemplate(this.diagram)
-          this.componentData = response.data
-          this.loading = false
-
-          break
-        case 'Fail':
-          window.clearInterval(this.intervalFunction)
-          this.loading = false
-          break
-      }
-    })
+    this.fetchData()
   },
   methods: {
-    createTaskByTemplateAndData ({ template = '', data = {} }) {
-      this.childContent = {
-        template,
-        data () {
-          return data
+    fetchData () {
+      this.$store.dispatch('chatBot/getComponentData', this.componentId).then(response => {
+        switch (response.status) {
+          case 'Process':
+          case 'Ready':
+            window.setTimeout(() => {
+              this.fetchData()
+            }, 1000)
+            break
+          case 'Complete':
+            this.diagram = response.diagram
+            this.resultId = response.resultId
+            // this.createTaskByTemplateAndData({template: this.getChartTemplate(this.diagram), data: response.data})
+            this.componentName = this.getChartTemplate(this.diagram)
+            this.componentData = response.data
+            this.loading = false
+
+            break
+          case 'Fail':
+            this.loading = false
+            break
         }
-      }
-      this.loading = false
+      })
     },
     appendNote (note) {
       this.notes.push(note)

@@ -46,12 +46,10 @@ export default {
     // 點擊使用者問的問題
     askAgain (value) {
       if (this.content.type === 'System') return false
-      this.$store.commit('bookmark/setAppQuestion', value)
       this.$store.commit('dataSource/setAppQuestion', value)
       this.$store.dispatch('dataSource/updateResultRouter', 'click_history')
     },
     askChatBot (questionInfo) {
-      this.$store.commit('bookmark/setAppQuestion', questionInfo.question)
       this.$store.commit('dataSource/setAppQuestion', questionInfo.question)
       // this.$store.commit('dataSource/setCurrentQuestionInfo', questionInfo)
       // 區分使用者是點擊推薦問句或是點擊過往的問句

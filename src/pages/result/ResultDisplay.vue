@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import FilterInfo from '@/components/display/FilterInfo'
 
 export default {
@@ -42,8 +41,7 @@ export default {
       layout: null,
       resultInfo: null,
       timeStamp: this.$route.query.stamp,
-      relatedQuestionList: [],
-      intervalFunction: null
+      relatedQuestionList: []
     }
   },
   watch: {
@@ -56,7 +54,6 @@ export default {
     this.fetchData()
   },
   computed: {
-    ...mapGetters('bookmark', ['appQuestion']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
@@ -90,6 +87,8 @@ export default {
 
       this.$store.dispatch('chatBot/askQuestion', data)
         .then(response => {
+          this.$store.dispatch('dataSource/getHistoryQuestionList', this.dataSourceId)
+          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           let questionId = response.questionId
           let segmentationList = response.parseQuestionPayload.segmentations
 
@@ -98,33 +97,7 @@ export default {
               questionId,
               segmentationPayload: segmentationList[0]
             }).then(res => {
-              this.$store.dispatch('chatBot/getComponentList', res.resultId)
-                .then(componentResponse => {
-                  switch (componentResponse.status) {
-                    case 'Ready':
-                      if (this.intervalFunction !== null) break
-                      this.intervalFunction = window.setInterval(() => {
-                        this.$store.dispatch('chatBot/getComponentList', res.resultId)
-                      }, 1000)
-                      break
-                    case 'Complete':
-                      window.clearInterval(this.intervalFunction)
-                      this.resultInfo = componentResponse.componentIds
-
-                      switch (res.layout) {
-                        case 'general':
-                          this.layout = 'GeneralResult'
-                          break
-                      }
-                      this.isLoading = false
-                      break
-                    case 'Fail':
-                      window.clearInterval(this.intervalFunction)
-                      this.layout = 'EmptyResult'
-                      this.isLoading = false
-                      break
-                  }
-                })
+              this.getComponent(res)
             })
           } else {
             // 多個結果
@@ -236,6 +209,31 @@ export default {
       //       }, 2000)
       //     })
       //   })
+    },
+    getComponent (res) {
+      this.$store.dispatch('chatBot/getComponentList', res.resultId)
+        .then(componentResponse => {
+          switch (componentResponse.status) {
+            case 'Process':
+            case 'Ready':
+              window.setTimeout(() => {
+                this.getComponent(res)
+              }, 1000)
+              break
+            case 'Complete':
+              this.resultInfo = componentResponse.componentIds
+              switch (res.layout) {
+                case 'general':
+                  this.layout = 'GeneralResult'
+              }
+              this.isLoading = false
+              break
+            case 'Fail':
+              this.layout = 'EmptyResult'
+              this.isLoading = false
+              break
+          }
+        })
     }
   }
 }

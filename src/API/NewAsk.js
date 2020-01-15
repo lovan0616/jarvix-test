@@ -45,3 +45,26 @@ export function getComponentData (componentId, cancelFunction) {
     cancelToken: cancelFunction
   })
 }
+
+/**
+ * get question history
+ */
+export function getHistoryQuestionList (dataSourceId) {
+  return request({
+    url: `/ask/questionHistoryList/${dataSourceId}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * get related question
+ * @param dataSourceId
+ * @param question
+ */
+export function getRelatedQuestionList (questionInfo) {
+  return request({
+    url: `/ask/relatedQuestionList`,
+    method: 'GET',
+    data: questionInfo
+  })
+}

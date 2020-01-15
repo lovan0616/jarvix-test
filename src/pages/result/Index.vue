@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import ResultDisplay from './ResultDisplay'
 
 export default {
@@ -23,25 +22,20 @@ export default {
   watch: {
     '$route.query.dataSourceId' (value) {
       if (this.$route.name === 'PageResult' && value) {
-        this.$store.dispatch('bookmark/changeBookmarkById', parseInt(value))
+        this.$store.dispatch('dataSource/changeDataSourceById', parseInt(value))
       }
     },
     '$route.query.question' (value) {
       if (this.$route.name === 'PageResult') {
-        this.$store.commit('bookmark/setAppQuestion', value)
         this.$store.commit('dataSource/setAppQuestion', value)
       }
     }
-  },
-  computed: {
-    ...mapGetters('bookmark', ['appQuestion'])
   },
   methods: {
     getQueryInfo () {
       let question = this.$route.query.question
 
       if (question) {
-        this.$store.commit('bookmark/setAppQuestion', question)
         this.$store.commit('dataSource/setAppQuestion', question)
       } else {
         this.$router.push('/')

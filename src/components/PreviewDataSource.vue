@@ -5,7 +5,7 @@
     >
       <div class="board-header">
         <result-board-header
-          :question="$t('resultDescription.dataSourceIntro')"
+          :title="$t('resultDescription.dataSourceIntro')"
         ></result-board-header>
       </div>
       <div class="board-body">

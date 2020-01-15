@@ -28,7 +28,6 @@ export default {
   },
   methods: {
     onItemClick (e, item) {
-      this.$store.commit('bookmark/setAppQuestion', item)
       this.$store.commit('dataSource/setAppQuestion', item)
       this.$store.dispatch('dataSource/updateResultRouter', item)
     }
