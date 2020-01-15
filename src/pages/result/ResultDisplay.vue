@@ -28,9 +28,7 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { mapGetters } from 'vuex'
-import { askQuestion } from '@/API/NewAsk'
 import FilterInfo from '@/components/display/FilterInfo'
 
 export default {
@@ -43,7 +41,6 @@ export default {
       isLoading: false,
       layout: null,
       resultInfo: null,
-      askCancelFunction: null,
       timeStamp: this.$route.query.stamp,
       relatedQuestionList: []
     }
@@ -74,7 +71,7 @@ export default {
       let question = this.$route.query.question
       let dataSourceId = parseInt(this.$route.query.dataSourceId)
       if (question) {
-        this.fetchApiAsk({question, dataSourceId, 'segmentation': this.currentQuestionInfo, 'restrictions': this.filterRestrictionList})
+        this.fetchApiAsk({dataSourceId, question})
       }
     },
     clearLayout () {
@@ -90,116 +87,121 @@ export default {
       // 動態變更 title 為了方便前一頁、下一頁變更時可以快速找到
       document.title = `SyGPS-${data.question}`
 
-      const _this = this
-      this.cancelRequest()
-      askQuestion(data, new axios.CancelToken(function executor (c) {
-        _this.askCancelFunction = c
-      }))
-        .then(res => {
-          this.$store.dispatch('dataSource/getHistoryQuestionList', this.dataSourceId)
-          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+      this.$store.dispatch('chatBot/askQuestion', data).then(response => {
+        let questionId = response.questionId
+        let segmentationList = response.parseQuestionPayload.segmentations
 
-          this.timeStamp = this.$route.query.stamp
-          this.isLoading = false
-          switch (res.layout) {
-            case 'general':
-              if (res.tasks && res.tasks.length > 1) {
-                this.layout = 'GeneralResult'
-                if (res.relatedQuestionList) {
-                  this.relatedQuestionList = res.relatedQuestionList
-                }
-
-                this.$nextTick(() => {
-                  window.setTimeout(() => {
-                    this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
-                  }, 2000)
-                })
-              } else {
-                this.layout = 'MultiResult'
-                let chatBotOptionList = []
-
-                if (res.checkQuestionList && res.checkQuestionList.length > 0) {
-                  chatBotOptionList = res.checkQuestionList
-                }
-                if (res.similarQuestionList && res.similarQuestionList.length > 0) {
-                  chatBotOptionList = res.similarQuestionList
-                }
-
-                this.$nextTick(() => {
-                  window.setTimeout(() => {
-                    this.$store.commit('chatBot/addSystemConversation', {text: res.similarQuestionList ? this.$t('bot.similarQuestionDescription') : this.$t('bot.multiplePossibilities'), options: chatBotOptionList})
-                  }, 2000)
-                })
-              }
-              this.resultInfo = res
-
-              break
-            case 'correlation_exploration':
-              this.layout = 'CorrelationExplorationResult'
-              this.resultInfo = res
-
-              if (res.relatedQuestionList) {
-                this.relatedQuestionList = res.relatedQuestionList
-              }
-
-              this.$nextTick(() => {
-                window.setTimeout(() => {
-                  this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
-                }, 2000)
-              })
-
-              break
-            case 'root_cause':
-              this.layout = 'RootCauseResult'
-              this.resultInfo = res
-
-              if (res.relatedQuestionList) {
-                this.relatedQuestionList = res.relatedQuestionList
-              }
-
-              this.$nextTick(() => {
-                window.setTimeout(() => {
-                  this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
-                }, 2000)
-              })
-
-              break
-            case 'no_answer':
-              this.layout = 'EmptyResult'
-              if (res.tasks) {
-                this.resultInfo = res.tasks[0].entities
-              }
-
-              this.$nextTick(() => {
-                window.setTimeout(() => {
-                  this.$store.commit('chatBot/addSystemConversation', {
-                    text: res.tasks ? this.resultInfo.description : this.$t('editing.emptyResultDescription'),
-                    options: res.relatedQuestionList && res.relatedQuestionList.length > 0 ? res.relatedQuestionList : []
-                  })
-                }, 2000)
-              })
-
-              break
-            case 'preview_datasource':
-              this.layout = 'PreviewDataSource'
-              break
-          }
-
-          this.$nextTick(() => {
-            window.setTimeout(() => {
-              this.$store.commit('chatBot/updateAnalyzeStatus', false)
-            }, 2000)
+        if (segmentationList.length === 1) {
+          this.$store.dispatch('chatBot/askResult', {
+            questionId,
+            segmentationPayload: segmentationList[0]
           })
-        }).catch(() => {
-          this.isLoading = false
-          this.$store.commit('chatBot/updateAnalyzeStatus', false)
-          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
-        })
-    },
-    cancelRequest () {
-      if (typeof this.askCancelFunction === 'function') {
-        this.askCancelFunction('cancel request')
-      }
+        } else {
+        }
+      })
+
+      // askQuestion(data, new axios.CancelToken(function executor (c) {
+      //   _this.askCancelFunction = c
+      // }))
+      //   .then(res => {
+      //     this.$store.dispatch('dataSource/getHistoryQuestionList', this.dataSourceId)
+      //     this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+
+      //     this.timeStamp = this.$route.query.stamp
+      //     this.isLoading = false
+      //     switch (res.layout) {
+      //       case 'general':
+      //         if (res.tasks && res.tasks.length > 1) {
+      //           this.layout = 'GeneralResult'
+      //           if (res.relatedQuestionList) {
+      //             this.relatedQuestionList = res.relatedQuestionList
+      //           }
+
+      //           this.$nextTick(() => {
+      //             window.setTimeout(() => {
+      //               this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
+      //             }, 2000)
+      //           })
+      //         } else {
+      //           this.layout = 'MultiResult'
+      //           let chatBotOptionList = []
+
+      //           if (res.checkQuestionList && res.checkQuestionList.length > 0) {
+      //             chatBotOptionList = res.checkQuestionList
+      //           }
+      //           if (res.similarQuestionList && res.similarQuestionList.length > 0) {
+      //             chatBotOptionList = res.similarQuestionList
+      //           }
+
+      //           this.$nextTick(() => {
+      //             window.setTimeout(() => {
+      //               this.$store.commit('chatBot/addSystemConversation', {text: res.similarQuestionList ? this.$t('bot.similarQuestionDescription') : this.$t('bot.multiplePossibilities'), options: chatBotOptionList})
+      //             }, 2000)
+      //           })
+      //         }
+      //         this.resultInfo = res
+
+      //         break
+      //       case 'correlation_exploration':
+      //         this.layout = 'CorrelationExplorationResult'
+      //         this.resultInfo = res
+
+      //         if (res.relatedQuestionList) {
+      //           this.relatedQuestionList = res.relatedQuestionList
+      //         }
+
+      //         this.$nextTick(() => {
+      //           window.setTimeout(() => {
+      //             this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
+      //           }, 2000)
+      //         })
+
+      //         break
+      //       case 'root_cause':
+      //         this.layout = 'RootCauseResult'
+      //         this.resultInfo = res
+
+      //         if (res.relatedQuestionList) {
+      //           this.relatedQuestionList = res.relatedQuestionList
+      //         }
+
+      //         this.$nextTick(() => {
+      //           window.setTimeout(() => {
+      //             this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
+      //           }, 2000)
+      //         })
+
+      //         break
+      //       case 'no_answer':
+      //         this.layout = 'EmptyResult'
+      //         if (res.tasks) {
+      //           this.resultInfo = res.tasks[0].entities
+      //         }
+
+      //         this.$nextTick(() => {
+      //           window.setTimeout(() => {
+      //             this.$store.commit('chatBot/addSystemConversation', {
+      //               text: res.tasks ? this.resultInfo.description : this.$t('editing.emptyResultDescription'),
+      //               options: res.relatedQuestionList && res.relatedQuestionList.length > 0 ? res.relatedQuestionList : []
+      //             })
+      //           }, 2000)
+      //         })
+
+      //         break
+      //       case 'preview_datasource':
+      //         this.layout = 'PreviewDataSource'
+      //         break
+      //     }
+
+      //     this.$nextTick(() => {
+      //       window.setTimeout(() => {
+      //         this.$store.commit('chatBot/updateAnalyzeStatus', false)
+      //       }, 2000)
+      //     })
+      //   }).catch(() => {
+      //     this.isLoading = false
+      //     this.$store.commit('chatBot/updateAnalyzeStatus', false)
+      //   })
     }
   }
 }
