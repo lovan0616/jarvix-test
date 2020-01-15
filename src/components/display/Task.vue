@@ -47,6 +47,7 @@ export default {
     this.$store.dispatch('chatBot/getComponentData', this.componentId).then(response => {
       switch (response.status) {
         case 'Ready':
+          if (this.intervalFunction !== null) break
           this.intervalFunction = window.setInterval(() => {
             this.$store.dispatch('chatBot/getComponentData', this.componentId)
           }, 1000)

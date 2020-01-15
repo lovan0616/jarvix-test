@@ -102,6 +102,7 @@ export default {
                 .then(componentResponse => {
                   switch (componentResponse.status) {
                     case 'Ready':
+                      if (this.intervalFunction !== null) break
                       this.intervalFunction = window.setInterval(() => {
                         this.$store.dispatch('chatBot/getComponentList', res.resultId)
                       }, 1000)
@@ -109,7 +110,7 @@ export default {
                     case 'Complete':
                       window.clearInterval(this.intervalFunction)
                       this.resultInfo = componentResponse.componentIds
-                      
+
                       switch (res.layout) {
                         case 'general':
                           this.layout = 'GeneralResult'
