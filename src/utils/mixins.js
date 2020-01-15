@@ -122,6 +122,8 @@ Vue.mixin({
           return 'preview-pivot'
         case 'world_map':
           return 'DisplayWorldMap'
+        case 'title':
+          return 'ResultBoardHeader'
       }
     },
     // 整個結果頁的 layout

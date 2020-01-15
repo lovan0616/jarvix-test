@@ -3,17 +3,17 @@
     <div class="board-name">
       <div class="question-mark">Q</div>
       <div class="question-name"
-        v-if="segmentation.length > 0"
+        v-if="data.segmentation.segmentation.length > 0"
       >
         <question-name-token
-          v-for="(tokenInfo, index) in segmentation"
+          v-for="(tokenInfo, index) in data.segmentation.segmentation"
           :key="index"
           :token-info="tokenInfo"
         ></question-name-token>
       </div>
       <div class="question-name"
         v-else
-      >{{ question }}</div>
+      >{{ data.title }}</div>
     </div>
   </div>
 </template>
@@ -26,6 +26,9 @@ export default {
     QuestionNameToken
   },
   props: {
+    data: {
+      type: Object
+    },
     question: {
       type: String,
       default: ''

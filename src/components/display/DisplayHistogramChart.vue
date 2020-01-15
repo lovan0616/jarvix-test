@@ -81,10 +81,6 @@ export default {
           yAxis: null
         }
       }
-    },
-    isPreview: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
@@ -209,8 +205,6 @@ export default {
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramChartConfig.yAxis}
       chartAddon.yAxis.scale = false
       chartAddon.yAxis.name = this.title.yAxis.display_name
-
-      if (this.isPreview) this.previewChartSetting(chartAddon)
 
       return chartData
     },

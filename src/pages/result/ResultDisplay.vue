@@ -42,7 +42,8 @@ export default {
       layout: null,
       resultInfo: null,
       timeStamp: this.$route.query.stamp,
-      relatedQuestionList: []
+      relatedQuestionList: [],
+      intervalFunction: null
     }
   },
   watch: {
@@ -99,19 +100,27 @@ export default {
             }).then(res => {
               this.$store.dispatch('chatBot/getComponentList', res.resultId)
                 .then(componentResponse => {
-                  let componentsIds
                   switch (componentResponse.status) {
                     case 'Ready':
-                      window.setTimeout(() => {
-                        this.$store.dispatch('getComponentList', data)
+                      this.intervalFunction = window.setInterval(() => {
+                        this.$store.dispatch('chatBot/getComponentList', res.resultId)
                       }, 1000)
                       break
                     case 'Complete':
-                      componentsIds = componentResponse.componentIds
-                      this.layout = res.layout
+                      window.clearInterval(this.intervalFunction)
+                      this.resultInfo = componentResponse.componentIds
+                      
+                      switch (res.layout) {
+                        case 'general':
+                          this.layout = 'GeneralResult'
+                          break
+                      }
+                      this.isLoading = false
                       break
                     case 'Fail':
+                      window.clearInterval(this.intervalFunction)
                       this.layout = 'EmptyResult'
+                      this.isLoading = false
                       break
                   }
                 })
