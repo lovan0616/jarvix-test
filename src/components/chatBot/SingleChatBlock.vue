@@ -53,7 +53,7 @@ export default {
     askChatBot (questionInfo) {
       this.$store.commit('bookmark/setAppQuestion', questionInfo.question)
       this.$store.commit('dataSource/setAppQuestion', questionInfo.question)
-      this.$store.commit('dataSource/setCurrentQuestionInfo', questionInfo)
+      // this.$store.commit('dataSource/setCurrentQuestionInfo', questionInfo)
       // 區分使用者是點擊推薦問句或是點擊過往的問句
       this.$store.dispatch('dataSource/updateResultRouter', this.content.type === 'System' ? 'click_recommend_chatbot' : 'click_history')
     }
