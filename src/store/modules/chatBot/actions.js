@@ -1,4 +1,4 @@
-import { askQuestion, askResult } from '@/API/NewAsk'
+import { askQuestion, askResult, getComponentList, getComponentData } from '@/API/NewAsk'
 import axios from 'axios'
 const CancelToken = axios.CancelToken
 let cancelFunction
@@ -18,7 +18,13 @@ export default {
     }))
   },
   askResult ({dispatch}, data) {
-    askResult(data)
+    return askResult(data)
+  },
+  getComponentList ({dispatch, state}, data) {
+    return getComponentList(data)
+  },
+  getComponentData ({dispatch}, data) {
+    return getComponentData(data)
   },
   cancelRequest () {
     if (typeof cancelFunction === 'function') {

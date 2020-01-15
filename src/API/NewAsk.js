@@ -23,3 +23,25 @@ export function askResult (askInfo, cancelFunction) {
     cancelToken: cancelFunction
   })
 }
+
+/**
+ * get component list
+ */
+export function getComponentList (resultId, cancelFunction) {
+  return request({
+    url: `/ask/componentList/${resultId}`,
+    method: 'GET',
+    cancelToken: cancelFunction
+  })
+}
+
+/**
+ * get component data
+ */
+export function getComponentData (componentId, cancelFunction) {
+  return request({
+    url: `/ask/componentData/${componentId}`,
+    method: 'GET',
+    cancelToken: cancelFunction
+  })
+}

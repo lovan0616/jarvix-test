@@ -87,18 +87,44 @@ export default {
       // 動態變更 title 為了方便前一頁、下一頁變更時可以快速找到
       document.title = `SyGPS-${data.question}`
 
-      this.$store.dispatch('chatBot/askQuestion', data).then(response => {
-        let questionId = response.questionId
-        let segmentationList = response.parseQuestionPayload.segmentations
+      this.$store.dispatch('chatBot/askQuestion', data)
+        .then(response => {
+          let questionId = response.questionId
+          let segmentationList = response.parseQuestionPayload.segmentations
 
-        if (segmentationList.length === 1) {
-          this.$store.dispatch('chatBot/askResult', {
-            questionId,
-            segmentationPayload: segmentationList[0]
-          })
-        } else {
-        }
-      })
+          if (segmentationList.length === 1) {
+            this.$store.dispatch('chatBot/askResult', {
+              questionId,
+              segmentationPayload: segmentationList[0]
+            }).then(res => {
+              this.$store.dispatch('chatBot/getComponentList', res.resultId)
+                .then(componentResponse => {
+                  let componentsIds
+                  switch (componentResponse.status) {
+                    case 'Ready':
+                      window.setTimeout(() => {
+                        this.$store.dispatch('getComponentList', data)
+                      }, 1000)
+                      break
+                    case 'Complete':
+                      componentsIds = componentResponse.componentIds
+                      this.layout = res.layout
+                      break
+                    case 'Fail':
+                      this.layout = 'EmptyResult'
+                      break
+                  }
+                })
+            })
+          } else {
+            // 多個結果
+            this.layout = 'MultiResult'
+            this.resultInfo = segmentationList
+          }
+        }).catch(() => {
+          this.isLoading = false
+          this.$store.commit('chatBot/updateAnalyzeStatus', false)
+        })
 
       // askQuestion(data, new axios.CancelToken(function executor (c) {
       //   _this.askCancelFunction = c
@@ -198,21 +224,12 @@ export default {
       //         this.$store.commit('chatBot/updateAnalyzeStatus', false)
       //       }, 2000)
       //     })
-      //   }).catch(() => {
-      //     this.isLoading = false
-      //     this.$store.commit('chatBot/updateAnalyzeStatus', false)
       //   })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.result-page {
-  .result-question-select-block {
-    display: flex;
-    margin-bottom: 20px;
-  }
-}
 .result-layout {
   width: 100%;
 

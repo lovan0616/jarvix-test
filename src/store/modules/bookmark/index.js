@@ -7,8 +7,6 @@ export default {
   state: {
     isInit: false,
     bookmarkId: null,
-    bookmarkList: [],
-    suggestions: {},
     quickstartNum: 3,
     quickstartResult: {},
     appQuestion: '',

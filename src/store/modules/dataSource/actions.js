@@ -1,6 +1,5 @@
 import co from 'co'
 import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById } from '@/API/DataSource'
-import { getSuggestions, getQuickstarts } from '@/API/Bookmark'
 import { getQuestionHistory } from '@/API/ChatBot'
 import router from '../../../router'
 
@@ -62,16 +61,6 @@ export default {
   getDataSourceDataValue ({ commit, state }) {
     return getDataSourceDataValueById(state.dataSourceId).then(response => {
       commit('setDataSourceDataValueList', response)
-    })
-  },
-  getSuggestionList ({ commit, state }) {
-    return getSuggestions(state.dataSourceId).then(res => {
-      commit('setSuggestions', res)
-    })
-  },
-  getQuickstartList ({ commit, state }) {
-    return getQuickstarts(state.dataSourceId).then(res => {
-      commit('setQuickStart', res)
     })
   },
   updateResultRouter ({commit, state}, actionTag) {
