@@ -115,6 +115,14 @@ export default {
   methods: {
     tobeDataset (data) {
       const result = [['index']]
+
+      // 如果有 index 經過 Number() 後為數字 ，echart 會畫不出來，所以補個 [] 給他
+      if (data.index) {
+        data.index = data.index.map(element => {
+          return isNaN(Number(element)) ? element : '[' + element + ']'
+        })
+      }
+
       result[0] = result[0].concat(data.columns)
       data.data.forEach((row, rowIndex) => {
         const rowData = [data.index[rowIndex]].concat(row)
