@@ -1,7 +1,7 @@
 <template>
   <div class="question-token"
     :class="tokenInfo.type"
-  >{{ tokenInfo.word }}<!--
+  >{{ tokenInfo.matchedWord }}<!--
     --><div class="name-info-tooltip">
       {{ tokenInfo.type === 'Datavalue' || tokenInfo.type === 'Datacolumn' ? $t(`segmentationToken.${tokenInfo.type}`, {name: tokenInfo.properties.datacolumnPrimaryAlias}) : $t(`segmentationToken.${tokenInfo.type}`) }}
     </div>
