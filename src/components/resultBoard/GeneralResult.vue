@@ -14,12 +14,14 @@
           v-for="(chartTask, index) in resultInfo.key_result"
           :key="'chart-' + index"
           :component-id="chartTask"
+          intend="key_result"
         ></task>
       </template>
       <template slot="InsightBasicInfo">
         <task
           v-if="resultInfo.basic_info.length > 0"
           :component-id="resultInfo.basic_info[0]"
+          intend="basic_info"
         ></task>
       </template>
       <template slot="InsightRootCause">
@@ -28,12 +30,14 @@
           v-for="(otherTask, index) in resultInfo.general_insight"
           :key="'other-' + index"
           :component-id="otherTask"
+          intend="general_insight"
         ></task>
         <task
           v-if="resultInfo.correlation_insight.length > 0"
           v-for="(otherTask, index) in resultInfo.correlation_insight"
           :key="'other-' + index"
           :component-id="otherTask"
+          intend="correlation_insight"
         ></task>
       </template>
     </result-board-body>
