@@ -35,7 +35,7 @@ export default {
     onDataSourceChange (dataSourceId) {
       this.$store.dispatch('dataSource/changeDataSourceById', dataSourceId)
         .then(() => {
-          this.$router.push('/')
+          if (this.$route.name !== 'PageIndex') this.$router.push('/')
         })
     }
   }

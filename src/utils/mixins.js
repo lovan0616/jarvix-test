@@ -120,7 +120,7 @@ Vue.mixin({
           return 'SyTable'
         case 'tree_map':
           return 'DisplayTreeMapChart'
-        case 'pivot_table':
+        case 'computed_pivot_table':
           return 'DisplayPivotTable'
         case 'world_map':
           return 'DisplayWorldMap'

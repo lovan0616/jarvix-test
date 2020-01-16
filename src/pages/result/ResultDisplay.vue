@@ -95,6 +95,10 @@ export default {
           segmentationPayload: this.currentQuestionInfo
         }).then(res => {
           this.getComponent(res)
+        }).catch(() => {
+          this.isLoading = false
+          this.$store.commit('chatBot/updateAnalyzeStatus', false)
+          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
         return false
       }
@@ -130,7 +134,19 @@ export default {
         question: data.question,
         dataSourceId: data.dataSourceId
       }).then(response => {
-        console.log(response)
+        this.$nextTick(() => {
+          window.setTimeout(() => {
+            this.$store.commit('chatBot/addSystemConversation', {
+              text: response ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: response
+            })
+            this.$store.commit('chatBot/updateAnalyzeStatus', false)
+          }, 2000)
+        })
+      }).catch(() => {
+        this.$store.commit('chatBot/addSystemConversation', {
+          text: this.$t('bot.finish'), options: []
+        })
+        this.$store.commit('chatBot/updateAnalyzeStatus', false)
       })
 
       // askQuestion(data, new axios.CancelToken(function executor (c) {

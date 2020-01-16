@@ -23,8 +23,6 @@
 </template>
 
 <script>
-import { askQuestion } from '@/API/NewAsk'
-
 export default {
   name: 'PageIndex',
   data () {
@@ -54,13 +52,14 @@ export default {
     getLandingInfo () {
       this.isLoading = true
       this.$store.commit('chatBot/updateAnalyzeStatus', true)
-      askQuestion({'question': null, 'dataSourceId': this.dataSourceId, 'restrictions': this.filterRestrictionList}).then(res => {
+
+      this.$store.dispatch('chatBot/getQuickStartQuestion', this.dataSourceId).then(response => {
         this.isLoading = false
-        this.quickStartQuestionList = res.quickQuestionList
+        this.quickStartQuestionList = response
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
         this.$store.commit('chatBot/addSystemConversation',
           this.quickStartQuestionList.length > 0
-            ? {text: this.$t('bot.welcomeMessageWithSuggestions'), options: res.quickQuestionList}
+            ? {text: this.$t('bot.welcomeMessageWithSuggestions'), options: response}
             : {text: this.$t('bot.welcomeMessage')}
         )
       }).catch(() => {
