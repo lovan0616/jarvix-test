@@ -80,8 +80,8 @@ export default {
       }
     })
   },
-  getHistoryQuestionList ({commit, state}) {
-    return getHistoryQuestionList(state.dataSourceId).then(res => {
+  getHistoryQuestionList ({commit, state}, data) {
+    return getHistoryQuestionList(state.dataSourceId || data).then(res => {
       commit('setHistoryQuestionList', res)
     })
   },

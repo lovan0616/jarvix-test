@@ -43,9 +43,6 @@ export default {
   computed: {
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
-    },
-    filterRestrictionList () {
-      return this.$store.getters['dataSource/filterRestrictionList']
     }
   },
   methods: {
