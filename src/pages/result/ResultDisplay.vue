@@ -94,6 +94,7 @@ export default {
           questionId: this.currentQuestionId,
           segmentationPayload: this.currentQuestionInfo
         }).then(res => {
+          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.getComponent(res)
         }).catch(() => {
           this.isLoading = false

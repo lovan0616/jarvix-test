@@ -7,7 +7,7 @@
     <spinner class="task-spinner"
       v-if="loading"
     ></spinner>
-    <template v-else-if="!isError">
+    <template v-else-if="diagram">
       <component ref="taskComponent"
         :is="componentName"
         :dataset="componentData.dataset"
@@ -30,6 +30,9 @@ export default {
   props: {
     componentId: {
       type: Number
+    },
+    intend: {
+      type: String
     }
   },
   data () {
@@ -73,7 +76,7 @@ export default {
           case 'Fail':
             window.clearTimeout(this.timeoutFunction)
             this.loading = false
-            this.isError = true
+            if (this.intend === 'key_result') this.isError = true
             break
         }
       })
