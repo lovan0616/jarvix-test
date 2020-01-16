@@ -37,3 +37,19 @@
     background-color: rgba(0, 0, 0, 0.8);
   }
 }
+
+@mixin tokenTooltip ($tokenColor) {
+  background-color: $tokenColor;
+
+  &.el-tooltip__popper[x-placement^=top] {
+    .popper__arrow, .popper__arrow:after {
+      border-top-color: $tokenColor;
+    }
+  }
+
+  &.el-tooltip__popper[x-placement^=bottom] {
+    .popper__arrow, .popper__arrow:after {
+      border-bottom-color: $tokenColor;
+    }
+  }
+}

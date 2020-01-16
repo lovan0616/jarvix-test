@@ -1,11 +1,13 @@
 <template>
-  <div class="question-token"
-    :class="tokenInfo.type"
-  >{{ tokenInfo.matchedWord }}<!--
-    --><div class="name-info-tooltip">
-      {{ tokenInfo.type === 'Datavalue' || tokenInfo.type === 'Datacolumn' ? $t(`segmentationToken.${tokenInfo.type}`, {name: tokenInfo.properties.datacolumnPrimaryAlias}) : $t(`segmentationToken.${tokenInfo.type}`) }}
-    </div>
-  </div>
+  <el-tooltip placement="bottom"
+    :tabindex="999"
+    :popper-class="tokenInfo.type"
+    :content="tokenInfo.type === 'Datavalue' || tokenInfo.type === 'Datacolumn' ? $t(`segmentationToken.${tokenInfo.type}`, {name: tokenInfo.properties.datacolumnPrimaryAlias, dataFrame: tokenInfo.properties.dataframePrimaryAlias}) : $t(`segmentationToken.${tokenInfo.type}`)"
+  >
+    <span class="question-token"
+      :class="tokenInfo.type"
+    >{{tokenInfo.matchedWord}}</span>
+  </el-tooltip>
 </template>
 <script>
 export default {
@@ -34,15 +36,6 @@ export default {
     &:hover {
       background-color: rgba(68, 210, 255, 0.7);
     }
-
-    .name-info-tooltip {
-      background-color: #44D2FF;
-
-      &:after {
-        border-bottom-color: #44D2FF;
-        box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
-      }
-    }
   }
   &.numeric {
     border-color: #CA66DA;
@@ -53,71 +46,49 @@ export default {
     &:hover {
       background-color: rgba(202, 102, 218, 0.7);
     }
-
-    .name-info-tooltip {
-      background-color: #CA66DA;
-
-      &:after {
-        border-color: transparent;
-        border-bottom-color: #CA66DA;
-        box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
-      }
-    }
   }
-  &.DtToken {
+  &.DtToken, &.FuzzyDtToken, &.TimeScope {
     border-bottom: 1px solid #FF9559;
 
     &:hover {
       background-color: rgba(255, 149, 89, 0.7);
     }
+  }
+}
+</style>
+<style lang="scss">
+.el-tooltip__popper {
+  box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 14px;
+  line-height: 32px;
 
-    .name-info-tooltip {
-      background-color: #FF9559;
-
-      &:after {
-        border-bottom-color: #FF9559;
-        box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
-      }
-    }
+  &.is-dark {
+    @include tokenTooltip(#000);
   }
 
-  &:hover {
-    .name-info-tooltip {
-      display: block;
-    }
-  }
-
-  .name-info-tooltip {
-    display: none;
-    position: absolute;
-    top: 110%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: auto;
-    width: auto;
-    font-size: 14px;
-    line-height: 32px;
-    // 處理寬度被 parent 限制的問題
-    white-space:nowrap;
-    text-align: center;
-    background-color: #000;
-    box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
-    border-radius: 8px;
-    padding: 5px 8px;
-    z-index: 999;
+  &.Datacolumn {
+    @include tokenTooltip(#44D2FF);
 
     &:after {
-      bottom: 100%;
-      left: 50%;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
-      position: absolute;
-      pointer-events: none;
-      border-bottom-color: #000;
-      border-width: 7px;
-      margin-left: -7px;
+      box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
+    }
+  }
+
+  &.Datavalue {
+    @include tokenTooltip(#CA66DA);
+
+    &:after {
+      box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
+    }
+  }
+
+  &.DtToken, &.FuzzyDtToken, &.TimeScope {
+    @include tokenTooltip(#FF9559);
+
+    &:after {
+      box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
     }
   }
 }
