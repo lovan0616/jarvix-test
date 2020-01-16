@@ -48,11 +48,14 @@ export default {
   watch: {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
-      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'segmentation': this.currentQuestionInfo, 'restrictions': this.filterRestrictionList})
+      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId})
     }
   },
   mounted () {
     this.fetchData()
+  },
+  destroyed () {
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   computed: {
     dataSourceId () {
@@ -92,7 +95,8 @@ export default {
       if (this.currentQuestionInfo) {
         this.$store.dispatch('chatBot/askResult', {
           questionId: this.currentQuestionId,
-          segmentationPayload: this.currentQuestionInfo
+          segmentationPayload: this.currentQuestionInfo,
+          restrictions: this.filterRestrictionList
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.getComponent(res)
@@ -115,7 +119,8 @@ export default {
           if (segmentationList.length === 1) {
             this.$store.dispatch('chatBot/askResult', {
               questionId,
-              segmentationPayload: segmentationList[0]
+              segmentationPayload: segmentationList[0],
+              restrictions: this.filterRestrictionList
             }).then(res => {
               this.getComponent(res)
             })
@@ -270,6 +275,9 @@ export default {
               }
               this.isLoading = false
               break
+            case 'Disable':
+            case 'Delete':
+            case 'Warn':
             case 'Fail':
               window.clearTimeout(this.timeoutFunction)
               this.layout = 'EmptyResult'

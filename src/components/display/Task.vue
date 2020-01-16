@@ -52,6 +52,9 @@ export default {
   mounted () {
     this.fetchData()
   },
+  destroyed () {
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+  },
   methods: {
     fetchData () {
       window.clearTimeout(this.timeoutFunction)
@@ -73,6 +76,9 @@ export default {
             this.loading = false
 
             break
+          case 'Disable':
+          case 'Delete':
+          case 'Warn':
           case 'Fail':
             window.clearTimeout(this.timeoutFunction)
             this.loading = false
