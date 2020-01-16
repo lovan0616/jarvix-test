@@ -3,7 +3,7 @@
     <div class="board-name">
       <div class="question-mark">Q</div>
       <div class="question-name"
-        v-if="segmentation.segmentation.length > 0"
+        v-if="segmentation && segmentation.segmentation.length > 0"
       >
         <question-name-token
           v-for="(tokenInfo, index) in segmentation.segmentation"
