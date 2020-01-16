@@ -125,6 +125,13 @@ export default {
           this.$store.commit('chatBot/updateAnalyzeStatus', false)
         })
 
+      this.$store.dispatch('chatBot/getRelatedQuestionList', {
+        question: data.question,
+        dataSourceId: data.dataSourceId
+      }).then(response => {
+        console.log(response)
+      })
+
       // askQuestion(data, new axios.CancelToken(function executor (c) {
       //   _this.askCancelFunction = c
       // }))

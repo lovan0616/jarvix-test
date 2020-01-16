@@ -64,7 +64,17 @@ export function getHistoryQuestionList (dataSourceId) {
 export function getRelatedQuestionList (questionInfo) {
   return request({
     url: `/ask/relatedQuestionList`,
-    method: 'GET',
+    method: 'POST',
     data: questionInfo
+  })
+}
+
+/**
+ * get quick start question
+ */
+export function getQuickStartQuestion (datasourceId) {
+  return request({
+    url: `/ask/quickQuestionList/${datasourceId}`,
+    method: 'GET'
   })
 }

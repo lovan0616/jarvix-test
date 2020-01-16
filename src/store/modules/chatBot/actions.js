@@ -1,4 +1,4 @@
-import { askQuestion, askResult, getComponentList, getComponentData, getRelatedQuestionList } from '@/API/NewAsk'
+import { askQuestion, askResult, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion } from '@/API/NewAsk'
 import axios from 'axios'
 const CancelToken = axios.CancelToken
 let cancelFunction
@@ -28,6 +28,9 @@ export default {
   },
   getRelatedQuestionList ({commit}, data) {
     return getRelatedQuestionList(data)
+  },
+  getQuickStartQuestion ({rootState}, data) {
+    return getQuickStartQuestion(rootState.dataSource.dataSourceId || data)
   },
   cancelRequest () {
     if (typeof cancelFunction === 'function') {
