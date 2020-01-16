@@ -95,6 +95,10 @@ export default {
           segmentationPayload: this.currentQuestionInfo
         }).then(res => {
           this.getComponent(res)
+        }).catch(() => {
+          this.isLoading = false
+          this.$store.commit('chatBot/updateAnalyzeStatus', false)
+          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
         return false
       }
