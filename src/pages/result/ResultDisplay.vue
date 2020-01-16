@@ -41,7 +41,8 @@ export default {
       layout: null,
       resultInfo: null,
       timeStamp: this.$route.query.stamp,
-      relatedQuestionList: []
+      relatedQuestionList: [],
+      timeoutFunction: null
     }
   },
   watch: {
@@ -59,6 +60,9 @@ export default {
     },
     currentQuestionInfo () {
       return this.$store.state.dataSource.currentQuestionInfo
+    },
+    currentQuestionId () {
+      return this.$store.state.dataSource.currentQuestionId
     },
     filterRestrictionList () {
       return this.$store.getters['dataSource/filterRestrictionList']
@@ -85,11 +89,22 @@ export default {
       // 動態變更 title 為了方便前一頁、下一頁變更時可以快速找到
       document.title = `SyGPS-${data.question}`
 
+      if (this.currentQuestionInfo) {
+        this.$store.dispatch('chatBot/askResult', {
+          questionId: this.currentQuestionId,
+          segmentationPayload: this.currentQuestionInfo
+        }).then(res => {
+          this.getComponent(res)
+        })
+        return false
+      }
+
       this.$store.dispatch('chatBot/askQuestion', data)
         .then(response => {
-          this.$store.dispatch('dataSource/getHistoryQuestionList', this.dataSourceId)
+          this.$store.dispatch('dataSource/getHistoryQuestionList', data.dataSourceId)
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           let questionId = response.questionId
+          this.$store.commit('dataSource/setCurrentQuestionId', questionId)
           let segmentationList = response.parseQuestionPayload.segmentations
 
           if (segmentationList.length === 1) {
@@ -102,7 +117,7 @@ export default {
           } else {
             // 多個結果
             this.layout = 'MultiResult'
-            this.resultInfo = segmentationList
+            this.resultInfo = response
             this.isLoading = false
           }
         }).catch(() => {
@@ -211,16 +226,18 @@ export default {
       //   })
     },
     getComponent (res) {
+      window.clearTimeout(this.timeoutFunction)
       this.$store.dispatch('chatBot/getComponentList', res.resultId)
         .then(componentResponse => {
           switch (componentResponse.status) {
             case 'Process':
             case 'Ready':
-              window.setTimeout(() => {
+              this.timeoutFunction = window.setTimeout(() => {
                 this.getComponent(res)
               }, 1000)
               break
             case 'Complete':
+              window.clearTimeout(this.timeoutFunction)
               this.resultInfo = componentResponse.componentIds
               switch (res.layout) {
                 case 'general':
@@ -229,6 +246,7 @@ export default {
               this.isLoading = false
               break
             case 'Fail':
+              window.clearTimeout(this.timeoutFunction)
               this.layout = 'EmptyResult'
               this.isLoading = false
               break

@@ -7,7 +7,7 @@
     <div class="board-description">{{ $t('bot.multiplePossibilities') }}</div>
     <div class="question-list">
       <div class="single-question"
-        v-for="(singleQuestion, index) in resultInfo"
+        v-for="(singleQuestion, index) in resultInfo.parseQuestionPayload.segmentations"
         :key="index"
         @click="askQuestion(singleQuestion)"
       >
@@ -29,7 +29,7 @@ export default {
   },
   props: {
     resultInfo: {
-      type: Array
+      type: Object
     }
   },
   methods: {

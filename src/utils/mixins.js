@@ -110,6 +110,8 @@ Vue.mixin({
           return 'DisplayHistogramChart'
         case 'line_chart':
           return 'DisplayLineChart'
+        case 'line_stack_chart':
+          return 'DisplayPredictChart'
         case 'pie_chart':
           return 'DisplayPieChart'
         case 'scatter_chart':
@@ -119,11 +121,13 @@ Vue.mixin({
         case 'tree_map':
           return 'DisplayTreeMapChart'
         case 'pivot_table':
-          return 'preview-pivot'
+          return 'DisplayPivotTable'
         case 'world_map':
           return 'DisplayWorldMap'
         case 'title':
           return 'ResultBoardHeader'
+        case 'basic_info':
+          return 'InsightTable'
       }
     },
     // 整個結果頁的 layout

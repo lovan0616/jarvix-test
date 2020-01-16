@@ -31,10 +31,7 @@ export default {
       default: ''
     },
     segmentation: {
-      type: Array,
-      default () {
-        return []
-      }
+      type: Object
     }
   }
 }

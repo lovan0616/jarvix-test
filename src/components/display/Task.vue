@@ -13,6 +13,7 @@
         :dataset="componentData.dataset"
         :title="componentData.title"
         :segmentation="componentData.segmentation"
+        :info="componentData.info"
       ></component>
       <div class="task-note"
         v-for="(note, index) in notes" v-bind:key="index"
@@ -41,7 +42,8 @@ export default {
       componentData: null,
       isError: false,
       errorMessage: '',
-      notes: []
+      notes: [],
+      timeoutFunction: null
     }
   },
   mounted () {
@@ -49,15 +51,17 @@ export default {
   },
   methods: {
     fetchData () {
+      window.clearTimeout(this.timeoutFunction)
       this.$store.dispatch('chatBot/getComponentData', this.componentId).then(response => {
         switch (response.status) {
           case 'Process':
           case 'Ready':
-            window.setTimeout(() => {
+            this.timeoutFunction = window.setTimeout(() => {
               this.fetchData()
             }, 1000)
             break
           case 'Complete':
+            window.clearTimeout(this.timeoutFunction)
             this.diagram = response.diagram
             this.resultId = response.resultId
             // this.createTaskByTemplateAndData({template: this.getChartTemplate(this.diagram), data: response.data})
@@ -67,7 +71,9 @@ export default {
 
             break
           case 'Fail':
+            window.clearTimeout(this.timeoutFunction)
             this.loading = false
+            this.isError = true
             break
         }
       })
