@@ -26,6 +26,9 @@ export default {
   setCurrentQuestionInfo (state, data) {
     state.currentQuestionInfo = data
   },
+  setCurrentQuestionId (state, data) {
+    state.currentQuestionId = data
+  },
   setFilterList (state, data) {
     if (data.length === 0) return false
     // 判斷要從哪邊開始取代新的

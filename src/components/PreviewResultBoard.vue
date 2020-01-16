@@ -46,7 +46,6 @@ export default {
   },
   methods: {
     linkToResult () {
-      this.$store.commit('bookmark/setAppQuestion', this.questionInfo.question)
       this.$store.commit('dataSource/setAppQuestion', this.questionInfo.question)
       // this.$store.commit('dataSource/setCurrentQuestionInfo', this.questionInfo)
       this.$store.dispatch('dataSource/updateResultRouter', this.$route.name === 'PageResult' ? 'click_recommend_result' : 'click_recommend_index')

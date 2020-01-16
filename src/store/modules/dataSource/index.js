@@ -12,6 +12,7 @@ export default {
     dataSourceDataValueList: [],
     appQuestion: null,
     currentQuestionInfo: null,
+    currentQuestionId: null,
     historyQuestionList: [],
     filterList: []
   },

@@ -44,8 +44,8 @@
       <div class="history-question"
         v-for="singleHistory in historyQuestionList"
         :key="singleHistory.id"
-        @click="copyQuestion(singleHistory)"
-      ><svg-icon icon-class="clock" class="icon"></svg-icon> {{ singleHistory }}</div>
+        @click="copyQuestion(singleHistory.question)"
+      ><svg-icon icon-class="clock" class="icon"></svg-icon> {{ singleHistory.question }}</div>
     </div>
     <ask-helper-dialog class="ask-helper-dialog"
       ref="helperDialog"
@@ -96,7 +96,6 @@ export default {
       this.userQuestion = null
     },
     enterQuestion () {
-      this.$store.commit('bookmark/setAppQuestion', this.userQuestion)
       this.$store.commit('dataSource/setAppQuestion', this.userQuestion)
       this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
       this.hideHistory()
@@ -132,7 +131,7 @@ export default {
       return this.$store.state.dataSource.dataSourceId
     },
     appQuestion () {
-      return this.$store.state.bookmark.appQuestion
+      return this.$store.state.dataSource.appQuestion
     },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
@@ -140,7 +139,7 @@ export default {
     historyQuestionList () {
       // 過濾 boomark 以及 問題字串
       return this.userQuestion
-        ? this.$store.state.dataSource.historyQuestionList.filter(element => { return element.indexOf(this.userQuestion) > -1 })
+        ? this.$store.state.dataSource.historyQuestionList.filter(element => { return element.question.indexOf(this.userQuestion) > -1 })
         : []
     }
   },

@@ -28,9 +28,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { mapGetters } from 'vuex'
-import { askQuestion } from '@/API/NewAsk'
 import FilterInfo from '@/components/display/FilterInfo'
 
 export default {
@@ -43,9 +40,9 @@ export default {
       isLoading: false,
       layout: null,
       resultInfo: null,
-      askCancelFunction: null,
       timeStamp: this.$route.query.stamp,
-      relatedQuestionList: []
+      relatedQuestionList: [],
+      timeoutFunction: null
     }
   },
   watch: {
@@ -58,12 +55,14 @@ export default {
     this.fetchData()
   },
   computed: {
-    ...mapGetters('bookmark', ['appQuestion']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
     currentQuestionInfo () {
       return this.$store.state.dataSource.currentQuestionInfo
+    },
+    currentQuestionId () {
+      return this.$store.state.dataSource.currentQuestionId
     },
     filterRestrictionList () {
       return this.$store.getters['dataSource/filterRestrictionList']
@@ -74,7 +73,7 @@ export default {
       let question = this.$route.query.question
       let dataSourceId = parseInt(this.$route.query.dataSourceId)
       if (question) {
-        this.fetchApiAsk({question, dataSourceId, 'segmentation': this.currentQuestionInfo, 'restrictions': this.filterRestrictionList})
+        this.fetchApiAsk({dataSourceId, question})
       }
     },
     clearLayout () {
@@ -90,127 +89,182 @@ export default {
       // 動態變更 title 為了方便前一頁、下一頁變更時可以快速找到
       document.title = `SyGPS-${data.question}`
 
-      const _this = this
-      this.cancelRequest()
-      askQuestion(data, new axios.CancelToken(function executor (c) {
-        _this.askCancelFunction = c
-      }))
-        .then(res => {
-          this.$store.dispatch('dataSource/getHistoryQuestionList', this.dataSourceId)
+      if (this.currentQuestionInfo) {
+        this.$store.dispatch('chatBot/askResult', {
+          questionId: this.currentQuestionId,
+          segmentationPayload: this.currentQuestionInfo
+        }).then(res => {
+          this.getComponent(res)
+        })
+        return false
+      }
+
+      this.$store.dispatch('chatBot/askQuestion', data)
+        .then(response => {
+          this.$store.dispatch('dataSource/getHistoryQuestionList', data.dataSourceId)
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+          let questionId = response.questionId
+          this.$store.commit('dataSource/setCurrentQuestionId', questionId)
+          let segmentationList = response.parseQuestionPayload.segmentations
 
-          this.timeStamp = this.$route.query.stamp
-          this.isLoading = false
-          switch (res.layout) {
-            case 'general':
-              if (res.tasks && res.tasks.length > 1) {
-                this.layout = 'GeneralResult'
-                if (res.relatedQuestionList) {
-                  this.relatedQuestionList = res.relatedQuestionList
-                }
-
-                this.$nextTick(() => {
-                  window.setTimeout(() => {
-                    this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
-                  }, 2000)
-                })
-              } else {
-                this.layout = 'MultiResult'
-                let chatBotOptionList = []
-
-                if (res.checkQuestionList && res.checkQuestionList.length > 0) {
-                  chatBotOptionList = res.checkQuestionList
-                }
-                if (res.similarQuestionList && res.similarQuestionList.length > 0) {
-                  chatBotOptionList = res.similarQuestionList
-                }
-
-                this.$nextTick(() => {
-                  window.setTimeout(() => {
-                    this.$store.commit('chatBot/addSystemConversation', {text: res.similarQuestionList ? this.$t('bot.similarQuestionDescription') : this.$t('bot.multiplePossibilities'), options: chatBotOptionList})
-                  }, 2000)
-                })
-              }
-              this.resultInfo = res
-
-              break
-            case 'correlation_exploration':
-              this.layout = 'CorrelationExplorationResult'
-              this.resultInfo = res
-
-              if (res.relatedQuestionList) {
-                this.relatedQuestionList = res.relatedQuestionList
-              }
-
-              this.$nextTick(() => {
-                window.setTimeout(() => {
-                  this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
-                }, 2000)
-              })
-
-              break
-            case 'root_cause':
-              this.layout = 'RootCauseResult'
-              this.resultInfo = res
-
-              if (res.relatedQuestionList) {
-                this.relatedQuestionList = res.relatedQuestionList
-              }
-
-              this.$nextTick(() => {
-                window.setTimeout(() => {
-                  this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
-                }, 2000)
-              })
-
-              break
-            case 'no_answer':
-              this.layout = 'EmptyResult'
-              if (res.tasks) {
-                this.resultInfo = res.tasks[0].entities
-              }
-
-              this.$nextTick(() => {
-                window.setTimeout(() => {
-                  this.$store.commit('chatBot/addSystemConversation', {
-                    text: res.tasks ? this.resultInfo.description : this.$t('editing.emptyResultDescription'),
-                    options: res.relatedQuestionList && res.relatedQuestionList.length > 0 ? res.relatedQuestionList : []
-                  })
-                }, 2000)
-              })
-
-              break
-            case 'preview_datasource':
-              this.layout = 'PreviewDataSource'
-              break
+          if (segmentationList.length === 1) {
+            this.$store.dispatch('chatBot/askResult', {
+              questionId,
+              segmentationPayload: segmentationList[0]
+            }).then(res => {
+              this.getComponent(res)
+            })
+          } else {
+            // 多個結果
+            this.layout = 'MultiResult'
+            this.resultInfo = response
+            this.isLoading = false
           }
-
-          this.$nextTick(() => {
-            window.setTimeout(() => {
-              this.$store.commit('chatBot/updateAnalyzeStatus', false)
-            }, 2000)
-          })
         }).catch(() => {
           this.isLoading = false
           this.$store.commit('chatBot/updateAnalyzeStatus', false)
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
+
+      this.$store.dispatch('chatBot/getRelatedQuestionList', {
+        question: data.question,
+        dataSourceId: data.dataSourceId
+      }).then(response => {
+        console.log(response)
+      })
+
+      // askQuestion(data, new axios.CancelToken(function executor (c) {
+      //   _this.askCancelFunction = c
+      // }))
+      //   .then(res => {
+      //     this.$store.dispatch('dataSource/getHistoryQuestionList', this.dataSourceId)
+      //     this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+
+      //     this.timeStamp = this.$route.query.stamp
+      //     this.isLoading = false
+      //     switch (res.layout) {
+      //       case 'general':
+      //         if (res.tasks && res.tasks.length > 1) {
+      //           this.layout = 'GeneralResult'
+      //           if (res.relatedQuestionList) {
+      //             this.relatedQuestionList = res.relatedQuestionList
+      //           }
+
+      //           this.$nextTick(() => {
+      //             window.setTimeout(() => {
+      //               this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
+      //             }, 2000)
+      //           })
+      //         } else {
+      //           this.layout = 'MultiResult'
+      //           let chatBotOptionList = []
+
+      //           if (res.checkQuestionList && res.checkQuestionList.length > 0) {
+      //             chatBotOptionList = res.checkQuestionList
+      //           }
+      //           if (res.similarQuestionList && res.similarQuestionList.length > 0) {
+      //             chatBotOptionList = res.similarQuestionList
+      //           }
+
+      //           this.$nextTick(() => {
+      //             window.setTimeout(() => {
+      //               this.$store.commit('chatBot/addSystemConversation', {text: res.similarQuestionList ? this.$t('bot.similarQuestionDescription') : this.$t('bot.multiplePossibilities'), options: chatBotOptionList})
+      //             }, 2000)
+      //           })
+      //         }
+      //         this.resultInfo = res
+
+      //         break
+      //       case 'correlation_exploration':
+      //         this.layout = 'CorrelationExplorationResult'
+      //         this.resultInfo = res
+
+      //         if (res.relatedQuestionList) {
+      //           this.relatedQuestionList = res.relatedQuestionList
+      //         }
+
+      //         this.$nextTick(() => {
+      //           window.setTimeout(() => {
+      //             this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
+      //           }, 2000)
+      //         })
+
+      //         break
+      //       case 'root_cause':
+      //         this.layout = 'RootCauseResult'
+      //         this.resultInfo = res
+
+      //         if (res.relatedQuestionList) {
+      //           this.relatedQuestionList = res.relatedQuestionList
+      //         }
+
+      //         this.$nextTick(() => {
+      //           window.setTimeout(() => {
+      //             this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
+      //           }, 2000)
+      //         })
+
+      //         break
+      //       case 'no_answer':
+      //         this.layout = 'EmptyResult'
+      //         if (res.tasks) {
+      //           this.resultInfo = res.tasks[0].entities
+      //         }
+
+      //         this.$nextTick(() => {
+      //           window.setTimeout(() => {
+      //             this.$store.commit('chatBot/addSystemConversation', {
+      //               text: res.tasks ? this.resultInfo.description : this.$t('editing.emptyResultDescription'),
+      //               options: res.relatedQuestionList && res.relatedQuestionList.length > 0 ? res.relatedQuestionList : []
+      //             })
+      //           }, 2000)
+      //         })
+
+      //         break
+      //       case 'preview_datasource':
+      //         this.layout = 'PreviewDataSource'
+      //         break
+      //     }
+
+      //     this.$nextTick(() => {
+      //       window.setTimeout(() => {
+      //         this.$store.commit('chatBot/updateAnalyzeStatus', false)
+      //       }, 2000)
+      //     })
+      //   })
     },
-    cancelRequest () {
-      if (typeof this.askCancelFunction === 'function') {
-        this.askCancelFunction('cancel request')
-      }
+    getComponent (res) {
+      window.clearTimeout(this.timeoutFunction)
+      this.$store.dispatch('chatBot/getComponentList', res.resultId)
+        .then(componentResponse => {
+          switch (componentResponse.status) {
+            case 'Process':
+            case 'Ready':
+              this.timeoutFunction = window.setTimeout(() => {
+                this.getComponent(res)
+              }, 1000)
+              break
+            case 'Complete':
+              window.clearTimeout(this.timeoutFunction)
+              this.resultInfo = componentResponse.componentIds
+              switch (res.layout) {
+                case 'general':
+                  this.layout = 'GeneralResult'
+              }
+              this.isLoading = false
+              break
+            case 'Fail':
+              window.clearTimeout(this.timeoutFunction)
+              this.layout = 'EmptyResult'
+              this.isLoading = false
+              break
+          }
+        })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.result-page {
-  .result-question-select-block {
-    display: flex;
-    margin-bottom: 20px;
-  }
-}
 .result-layout {
   width: 100%;
 

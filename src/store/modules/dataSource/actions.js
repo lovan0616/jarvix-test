@@ -1,7 +1,6 @@
 import co from 'co'
 import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById } from '@/API/DataSource'
-import { getSuggestions, getQuickstarts } from '@/API/Bookmark'
-import { getQuestionHistory } from '@/API/ChatBot'
+import { getHistoryQuestionList } from '@/API/NewAsk'
 import router from '../../../router'
 
 export default {
@@ -64,16 +63,6 @@ export default {
       commit('setDataSourceDataValueList', response)
     })
   },
-  getSuggestionList ({ commit, state }) {
-    return getSuggestions(state.dataSourceId).then(res => {
-      commit('setSuggestions', res)
-    })
-  },
-  getQuickstartList ({ commit, state }) {
-    return getQuickstarts(state.dataSourceId).then(res => {
-      commit('setQuickStart', res)
-    })
-  },
   updateResultRouter ({commit, state}, actionTag) {
     /**
      * 這邊的 DataSource 需要轉成字串的原因是：
@@ -92,7 +81,7 @@ export default {
     })
   },
   getHistoryQuestionList ({commit, state}) {
-    return getQuestionHistory(state.dataSourceId).then(res => {
+    return getHistoryQuestionList(state.dataSourceId).then(res => {
       commit('setHistoryQuestionList', res)
     })
   },

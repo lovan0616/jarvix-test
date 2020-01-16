@@ -45,7 +45,7 @@ import 'echarts/lib/component/geo'
 import 'echarts-stat'
 
 import Layout from './components/Layout.vue'
-import Task from './components/Task.vue'
+import Task from './components/display/Task.vue'
 import ContainerBlock from './components/container/ContainerBlock.vue'
 import ContainerCard from './components/container/ContainerCard.vue'
 import DisplayBasicChart from './components/display/DisplayBasicChart.vue'
