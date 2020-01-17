@@ -1,8 +1,9 @@
 <template>
   <div class="task"
-    :data-id="componentId"
+    :data-component-id="componentId"
     :data-result-id="resultId"
     :data-diagram-type="diagram"
+    :data-intend="intend"
   >
     <spinner class="task-spinner"
       v-if="loading"
