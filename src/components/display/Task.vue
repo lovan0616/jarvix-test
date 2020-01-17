@@ -8,12 +8,15 @@
       v-if="loading"
     ></spinner>
     <template v-else-if="diagram">
-      <component ref="taskComponent"
+      <component
         :is="componentName"
         :dataset="componentData.dataset"
         :title="componentData.title"
         :segmentation="componentData.segmentation"
         :info="componentData.info"
+        :features="componentData.features"
+        :confidence="componentData.confidence"
+        :formula="componentData.ax_b"
       ></component>
       <div class="task-note"
         v-for="(note, index) in notes" v-bind:key="index"
@@ -40,7 +43,6 @@ export default {
       resultId: null,
       diagram: null,
       loading: true,
-      childContent: undefined,
       componentName: null,
       componentData: null,
       isError: false,

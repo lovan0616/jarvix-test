@@ -114,6 +114,7 @@ Vue.mixin({
           return 'DisplayPredictChart'
         case 'pie_chart':
           return 'DisplayPieChart'
+        case 'scatter_correlation_chart':
         case 'scatter_chart':
           return 'DisplayScatterChart'
         case 'table':
@@ -128,6 +129,10 @@ Vue.mixin({
           return 'ResultBoardHeader'
         case 'basic_info':
           return 'InsightTable'
+        case 'feature_importance':
+          return 'DisplayCorrelationFeatures'
+        case 'correlation_insight':
+          return 'CorrelationInsight'
       }
     },
     // 整個結果頁的 layout

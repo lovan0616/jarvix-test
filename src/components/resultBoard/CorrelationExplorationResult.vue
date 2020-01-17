@@ -4,9 +4,8 @@
   >
     <template slot="PageResultBoardHeader">
       <task
-        :templateUrl="`api/task/${taskObject.title[0].intent}/template`"
-        :dataUrl="`api/task/${taskObject.title[0].intent}/data`"
-        :params="taskObject.title[0].entities"
+        :component-id="resultInfo.title[0]"
+        intend="title"
       ></task>
     </template>
     <result-board-body slot="PageResultBoardBody">
@@ -14,10 +13,8 @@
         <div class="key-result-wrapper">
           <div class="key-result-selector">
             <task
-              :templateUrl="`api/task/${taskObject.keyResultSelector[0].intent}/template`"
-              :dataUrl="`api/task/${taskObject.keyResultSelector[0].intent}/data`"
-              :params="taskObject.keyResultSelector[0].entities"
-              @change-cursor="onChangeCursor"
+              :component-id="resultInfo.key_result_selector[0]"
+              intend="key_result_selector"
             ></task>
           </div>
           <div class="key-result-viewer">
@@ -32,19 +29,19 @@
               v-show="!isLoading"
             >
                <keep-alive>
-                <task v-if="taskObject.subKeyResults[cursor]"
-                  v-bind:key="`sub-key-result-${cursor}`"
-                  :templateUrl="`api/task/${taskObject.subKeyResults[cursor].intent}/template`"
-                  :dataUrl="`api/task/${taskObject.subKeyResults[cursor].intent}/data`"
-                  :params="taskObject.subKeyResults[cursor].entities"
+                <task
+                  v-if="resultInfo.sub_key_result[displayFactorIndex]"
+                  v-bind:key="`sub-key-result-${displayFactorIndex}`"
+                  :component-id="resultInfo.sub_key_result[displayFactorIndex]"
+                  intend="sub_key_result"
                 ></task>
               </keep-alive>
               <keep-alive>
-                <task v-if="taskObject.subCorrelationInsights[cursor]"
-                  v-bind:key="`sub-correlation-insight-${cursor}`"
-                  :templateUrl="`api/task/${taskObject.subCorrelationInsights[cursor].intent}/template`"
-                  :dataUrl="`api/task/${taskObject.subCorrelationInsights[cursor].intent}/data`"
-                  :params="taskObject.subCorrelationInsights[cursor].entities"
+                <task
+                  v-if="resultInfo.sub_insight[displayFactorIndex]"
+                  v-bind:key="`sub-insight-${displayFactorIndex}`"
+                  :component-id="resultInfo.sub_insight[displayFactorIndex]"
+                  intend="sub_insight"
                 ></task>
               </keep-alive>
             </div>
@@ -52,11 +49,11 @@
         </div>
       </template>
       <template slot="InsightBasicInfo">
-        <task v-if="taskObject.subBasicInfos[cursor]"
-          v-bind:key="`sub-basic-info-${cursor}`"
-          :templateUrl="`api/task/${taskObject.subBasicInfos[cursor].intent}/template`"
-          :dataUrl="`api/task/${taskObject.subBasicInfos[cursor].intent}/data`"
-          :params="taskObject.subBasicInfos[cursor].entities"
+        <task
+          v-if="resultInfo.sub_basic_info[displayFactorIndex]"
+          v-bind:key="`sub-basic-info-${displayFactorIndex}`"
+          :component-id="resultInfo.sub_basic_info[displayFactorIndex]"
+          intend="sub_basic_info"
         ></task>
       </template>
     </result-board-body>
@@ -72,9 +69,11 @@ export default {
   },
   data () {
     return {
-      cursor: 0,
       isLoading: true
     }
+  },
+  destroyed () {
+    this.$store.commit('result/updateDisplayFactorIndex', 0)
   },
   mounted () {
     this.$nextTick(() => {
@@ -84,47 +83,20 @@ export default {
   methods: {
     onChangeCursor (cursor) {
       this.isLoading = true
-      this.cursor = cursor
+      
       this.$nextTick(() => {
         this.isLoading = false
       })
     }
   },
   computed: {
-    taskObject () {
-      let taskObject = {
-        title: [],
-        keyResultSelector: [],
-        subTitles: [],
-        subKeyResults: [],
-        subBasicInfos: [],
-        subCorrelationInsights: [],
-        other: []
-      }
+    displayFactorIndex () {
+      return this.$store.state.result.displayFactorIndex
+    }
+  },
+  watch: {
+    displayFactorIndex (value) {
 
-      this.resultInfo.tasks.forEach(element => {
-        switch (element.entities.diagram_type) {
-          case 'title':
-            taskObject.title.push(element)
-            break
-          case 'key_result_selector':
-            taskObject.keyResultSelector.push(element)
-            break
-          case 'sub_key_result':
-            taskObject.subKeyResults[element.entities.sub_task_index] = element
-            break
-          case 'sub_basic_info':
-            taskObject.subBasicInfos[element.entities.sub_task_index] = element
-            break
-          case 'sub_insight':
-            taskObject.subCorrelationInsights[element.entities.sub_task_index] = element
-            break
-          default:
-            taskObject.other.push(element)
-            break
-        }
-      })
-      return taskObject
     }
   }
 }
