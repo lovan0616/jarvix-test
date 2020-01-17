@@ -123,6 +123,8 @@ export default {
               restrictions: this.filterRestrictionList
             }).then(res => {
               this.getComponent(res)
+            }).catch(() => {
+              this.isLoading = false
             })
           } else {
             // 多個結果
@@ -132,7 +134,6 @@ export default {
           }
         }).catch(() => {
           this.isLoading = false
-          this.$store.commit('chatBot/updateAnalyzeStatus', false)
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
 
@@ -154,75 +155,6 @@ export default {
         })
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
       })
-
-      // askQuestion(data, new axios.CancelToken(function executor (c) {
-      //   _this.askCancelFunction = c
-      // }))
-      //   .then(res => {
-      //     this.$store.dispatch('dataSource/getHistoryQuestionList', this.dataSourceId)
-      //     this.$store.commit('dataSource/setCurrentQuestionInfo', null)
-
-      //     this.timeStamp = this.$route.query.stamp
-      //     this.isLoading = false
-      //     switch (res.layout) {
-      //       case 'general':
-      //         if (res.tasks && res.tasks.length > 1) {
-      //           this.layout = 'GeneralResult'
-      //           if (res.relatedQuestionList) {
-      //             this.relatedQuestionList = res.relatedQuestionList
-      //           }
-
-      //           this.$nextTick(() => {
-      //             window.setTimeout(() => {
-      //               this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
-      //             }, 2000)
-      //           })
-      //         }
-      //         this.resultInfo = res
-
-      //         break
-      //       case 'root_cause':
-      //         this.layout = 'RootCauseResult'
-      //         this.resultInfo = res
-
-      //         if (res.relatedQuestionList) {
-      //           this.relatedQuestionList = res.relatedQuestionList
-      //         }
-
-      //         this.$nextTick(() => {
-      //           window.setTimeout(() => {
-      //             this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
-      //           }, 2000)
-      //         })
-
-      //         break
-      //       case 'no_answer':
-      //         this.layout = 'EmptyResult'
-      //         if (res.tasks) {
-      //           this.resultInfo = res.tasks[0].entities
-      //         }
-
-      //         this.$nextTick(() => {
-      //           window.setTimeout(() => {
-      //             this.$store.commit('chatBot/addSystemConversation', {
-      //               text: res.tasks ? this.resultInfo.description : this.$t('editing.emptyResultDescription'),
-      //               options: res.relatedQuestionList && res.relatedQuestionList.length > 0 ? res.relatedQuestionList : []
-      //             })
-      //           }, 2000)
-      //         })
-
-      //         break
-      //       case 'preview_datasource':
-      //         this.layout = 'PreviewDataSource'
-      //         break
-      //     }
-
-      //     this.$nextTick(() => {
-      //       window.setTimeout(() => {
-      //         this.$store.commit('chatBot/updateAnalyzeStatus', false)
-      //       }, 2000)
-      //     })
-      //   })
     },
     getComponent (res) {
       window.clearTimeout(this.timeoutFunction)
