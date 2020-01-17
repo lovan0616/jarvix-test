@@ -177,22 +177,6 @@ export default {
       //               this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
       //             }, 2000)
       //           })
-      //         } else {
-      //           this.layout = 'MultiResult'
-      //           let chatBotOptionList = []
-
-      //           if (res.checkQuestionList && res.checkQuestionList.length > 0) {
-      //             chatBotOptionList = res.checkQuestionList
-      //           }
-      //           if (res.similarQuestionList && res.similarQuestionList.length > 0) {
-      //             chatBotOptionList = res.similarQuestionList
-      //           }
-
-      //           this.$nextTick(() => {
-      //             window.setTimeout(() => {
-      //               this.$store.commit('chatBot/addSystemConversation', {text: res.similarQuestionList ? this.$t('bot.similarQuestionDescription') : this.$t('bot.multiplePossibilities'), options: chatBotOptionList})
-      //             }, 2000)
-      //           })
       //         }
       //         this.resultInfo = res
 
@@ -272,6 +256,10 @@ export default {
               switch (res.layout) {
                 case 'general':
                   this.layout = 'GeneralResult'
+                  break
+                case 'correlation_exploration':
+                  this.layout = 'CorrelationExplorationResult'
+                  break
               }
               this.isLoading = false
               break

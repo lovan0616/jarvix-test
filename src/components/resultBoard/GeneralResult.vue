@@ -5,6 +5,7 @@
     <template slot="PageResultBoardHeader">
       <task
         :component-id="resultInfo.title[0]"
+        intend="title"
       ></task>
     </template>
     <result-board-body slot="PageResultBoardBody">

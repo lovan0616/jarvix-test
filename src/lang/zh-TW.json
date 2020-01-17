@@ -1089,7 +1089,7 @@
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",
-    "Datacolumn": "來自 {dataFrame} 的資料欄位，辨識為'{name}'",
+    "Datacolumn": "來自 {dataFrame} 的資料欄位 {dataColumn}，辨識為'{name}'",
     "Datavalue": "'{name}'欄位的資料",
     "DtToken": "時間範圍",
     "FuzzyDtToken": "時間範圍",
