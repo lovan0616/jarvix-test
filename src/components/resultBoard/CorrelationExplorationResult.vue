@@ -110,20 +110,14 @@ export default {
           case 'key_result_selector':
             taskObject.keyResultSelector.push(element)
             break
-          // case 'sub_title':
-          //   taskObject.subTitles.push(element)
-          //   break
           case 'sub_key_result':
             taskObject.subKeyResults[element.entities.sub_task_index] = element
             break
           case 'sub_basic_info':
             taskObject.subBasicInfos[element.entities.sub_task_index] = element
             break
-          case 'sub_correlation_insight':
+          case 'sub_insight':
             taskObject.subCorrelationInsights[element.entities.sub_task_index] = element
-            break
-          case 'general_insight':
-            taskObject.subCorrelationInsights[element.entities.sub_task_index] = undefined
             break
           default:
             taskObject.other.push(element)
