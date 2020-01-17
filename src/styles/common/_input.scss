@@ -12,8 +12,9 @@
   /**
    * 注意這邊是 .valid, 不是 :valid
    * 不用 :valid 是我覺得每次都要在 input 加 required 沒有道理
+   * auto-fill 是為了處理瀏覽器自動帶入帳號密碼的問題
    */
-  &:focus, &.valid {
+  &:focus, &.valid, &:-webkit-autofill {
     outline: none;
 
     & ~ .placeholder {
