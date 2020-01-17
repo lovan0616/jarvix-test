@@ -2,7 +2,7 @@
   <el-tooltip placement="bottom"
     :tabindex="999"
     :popper-class="tokenInfo.type"
-    :content="tokenInfo.type === 'Datavalue' || tokenInfo.type === 'Datacolumn' ? $t(`segmentationToken.${tokenInfo.type}`, {name: tokenInfo.properties.datacolumnPrimaryAlias, dataColumn: tokenInfo.properties.datacolumnName, dataFrame: tokenInfo.properties.dataframePrimaryAlias}) : $t(`segmentationToken.${tokenInfo.type}`)"
+    :content="tokenInfo.type === 'Datavalue' || tokenInfo.type === 'Datacolumn' ? $t(`segmentationToken.${tokenInfo.type}`, {name: tokenInfo.properties.datacolumnPrimaryAlias, dataFrame: tokenInfo.properties.dataframePrimaryAlias}) : $t(`segmentationToken.${tokenInfo.type}`)"
   >
     <span class="question-token"
       :class="tokenInfo.type"

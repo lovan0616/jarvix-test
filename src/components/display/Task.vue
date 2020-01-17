@@ -13,7 +13,7 @@
         :dataset="componentData.dataset"
         :title="componentData.title"
         :segmentation="componentData.segmentation"
-        :info="componentData.info"
+        :info="componentData.info || componentData.data"
         :features="componentData.features"
         :confidence="componentData.confidence"
         :formula="componentData.ax_b"

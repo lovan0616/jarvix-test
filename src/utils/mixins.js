@@ -139,9 +139,12 @@ Vue.mixin({
         case 'root_cause_description':
           return 'RootCauseDescription'
         case 'root_cause_info':
+        case 'general_insight':
           return 'RootCauseInfo'
         case 'sankey_chart':
           return 'DisplaySankeyChart'
+        case 'trend_insight':
+          return 'TrendRootCause'
       }
     },
     // 整個結果頁的 layout
