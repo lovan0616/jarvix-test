@@ -17,7 +17,7 @@
       </template>
     </div>
     <div class="feature-body">
-      <div :class="['feature-item', {'selected': index === cursor}]"
+      <div :class="['feature-item', {'selected': index === displayFactorIndex}]"
         v-for="(item, index) in features"
         v-bind:key="index"
         @click="onClickItem(index)"
