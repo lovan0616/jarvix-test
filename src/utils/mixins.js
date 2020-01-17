@@ -96,6 +96,7 @@ Vue.mixin({
     // 藉由後端的 template 名稱對應到前端的 component name
     getChartTemplate (value) {
       switch (value) {
+        case 'root_cause_chart':
         case 'bar_chart':
           return 'DisplayBarChart'
         case 'bar_chart_average':
@@ -133,6 +134,12 @@ Vue.mixin({
           return 'DisplayCorrelationFeatures'
         case 'correlation_insight':
           return 'CorrelationInsight'
+        case 'root_cause_item':
+          return 'RootCauseItem'
+        case 'root_cause_description':
+          return 'RootCauseDescription'
+        case 'root_cause_info':
+          return 'RootCauseInfo'
       }
     },
     // 整個結果頁的 layout

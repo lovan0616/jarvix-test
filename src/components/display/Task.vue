@@ -17,6 +17,11 @@
         :features="componentData.features"
         :confidence="componentData.confidence"
         :formula="componentData.ax_b"
+        :text="componentData.text"
+        :chart-data="componentData.chart_data"
+        :notes="componentData.notes"
+        :causes="componentData.causes"
+        :description="componentData.description"
       ></component>
       <div class="task-note"
         v-for="(note, index) in notes" v-bind:key="index"

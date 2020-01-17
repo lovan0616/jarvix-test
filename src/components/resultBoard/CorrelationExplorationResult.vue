@@ -80,15 +80,6 @@ export default {
       this.isLoading = false
     })
   },
-  methods: {
-    onChangeCursor (cursor) {
-      this.isLoading = true
-      
-      this.$nextTick(() => {
-        this.isLoading = false
-      })
-    }
-  },
   computed: {
     displayFactorIndex () {
       return this.$store.state.result.displayFactorIndex
@@ -96,7 +87,11 @@ export default {
   },
   watch: {
     displayFactorIndex (value) {
+      this.isLoading = true
 
+      this.$nextTick(() => {
+        this.isLoading = false
+      })
     }
   }
 }
