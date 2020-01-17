@@ -140,6 +140,8 @@ Vue.mixin({
           return 'RootCauseDescription'
         case 'root_cause_info':
           return 'RootCauseInfo'
+        case 'sankey_chart':
+          return 'DisplaySankeyChart'
       }
     },
     // 整個結果頁的 layout

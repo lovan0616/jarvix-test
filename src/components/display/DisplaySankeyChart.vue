@@ -53,16 +53,7 @@ export default {
   name: 'DisplaySankeyChart',
   props: {
     dataset: {
-      type: Array
-    },
-    rowFields: {
-      type: Array
-    },
-    colFields: {
-      type: Array
-    },
-    valFields: {
-      type: Array
+      type: Object
     }
   },
   data () {
@@ -76,45 +67,22 @@ export default {
   },
   methods: {
     dataTransform () {
-      let source = this.rowFields[0]
-      let target = this.colFields[0]
-      let count = this.valFields[0]
-
-      // 組出要送進 echarts 的資料
-      this.dataset.forEach((element, index) => {
-        if (index === 0) {
-          this.dataList.push({
-            name: element[source]
-          })
-          this.dataList.push({
-            name: element[target]
-          })
-          this.linkList.push({
-            source: element[source],
-            target: element[target],
-            value: element[count]
-          })
-        } else {
-          if (this.dataList.findIndex(node => node.name === element[source]) < 0) {
-            this.dataList.push({
-              name: element[source]
-            })
-          }
-          if (this.dataList.findIndex(node => node.name === element[target]) < 0) {
-            this.dataList.push({
-              name: element[target]
-            })
-          }
-          let linkIndex = this.linkList.findIndex(link => link.source === element[source] && link.target === element[target])
-          if (linkIndex < 0) {
+      this.dataset.columns.forEach(element => {
+        for (let column in this.dataset.data[element]) {
+          this.dataset.data[element][column].forEach(singleLink => {
             this.linkList.push({
-              source: element[source],
-              target: element[target],
-              value: element[count]
+              source: singleLink[0],
+              target: singleLink[1],
+              value: singleLink[2]
             })
-          } else {
-            this.linkList[linkIndex].value += 1
-          }
+            for (let i = 0; i < 2; i++) {
+              if (this.dataList.findIndex(node => node.name === singleLink[i]) < 0) {
+                this.dataList.push({
+                  name: singleLink[i]
+                })
+              }
+            }
+          })
         }
       })
     }
@@ -152,7 +120,6 @@ export default {
             let exportData = this.linkList.map(element => {
               return [element.source, element.target, element.value]
             })
-            console.log(exportData)
             exportData.unshift([this.rowFields[0], this.colFields[0], this.valFields[0]])
             this.exportToCSV(this.appQuestion, exportData)
           }
@@ -173,7 +140,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.display-sankey {
-}
-</style>
