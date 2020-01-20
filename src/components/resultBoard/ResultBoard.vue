@@ -165,7 +165,7 @@ export default {
     },
     selectPinboard (id) {
       this.isLoading = true
-      this.$store.dispatch('pinboard/pinToBoard', {id, report: this.resultInfo})
+      this.$store.dispatch('pinboard/pinToBoard', {folderId: id, resultId: this.currentResultId})
         .then(res => {
           this.pinBoardId = res
           this.updatePinnedStatus()
@@ -268,6 +268,9 @@ export default {
     },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
+    },
+    currentResultId () {
+      return this.$store.state.result.currentResultId
     }
   }
 }

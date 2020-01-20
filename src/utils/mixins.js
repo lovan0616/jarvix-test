@@ -93,6 +93,16 @@ Vue.mixin({
           return 'SQLITE'
       }
     },
+    getLayout (value) {
+      switch (value) {
+        case 'general':
+          return 'GeneralResult'
+        case 'correlation_exploration':
+          return 'CorrelationExplorationResult'
+        case 'root_cause':
+          return 'RootCauseResult'
+      }
+    },
     // 藉由後端的 template 名稱對應到前端的 component name
     getChartTemplate (value) {
       switch (value) {

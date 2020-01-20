@@ -9,6 +9,7 @@
       v-if="loading"
     ></spinner>
     <template v-else-if="diagram">
+      <!-- TODO: 調整寫法 -->
       <component
         :is="componentName"
         :dataset="componentData.dataset"

@@ -117,6 +117,13 @@ export default {
           let segmentationList = response.parseQuestionPayload.segmentations
 
           if (segmentationList.length === 1) {
+            // 介紹資料集的處理
+            if (segmentationList[0].implication.intent === 'Introduction') {
+              this.layout = 'PreviewDataSource'
+              this.resultInfo = null
+              this.isLoading = false
+              return false
+            }
             this.$store.dispatch('chatBot/askResult', {
               questionId,
               segmentationPayload: segmentationList[0],
@@ -137,6 +144,36 @@ export default {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
 
+      this.getRelatedQuestion(data)
+    },
+    getComponent (res) {
+      window.clearTimeout(this.timeoutFunction)
+      this.$store.commit('result/updateCurrentResultId', res.resultId)
+      this.$store.dispatch('chatBot/getComponentList', res.resultId)
+        .then(componentResponse => {
+          switch (componentResponse.status) {
+            case 'Process':
+            case 'Ready':
+              this.timeoutFunction = window.setTimeout(() => {
+                this.getComponent(res)
+              }, 1000)
+              break
+            case 'Complete':
+              this.resultInfo = componentResponse.componentIds
+              this.layout = this.getLayout(res.layout)
+              this.isLoading = false
+              break
+            case 'Disable':
+            case 'Delete':
+            case 'Warn':
+            case 'Fail':
+              this.layout = 'EmptyResult'
+              this.isLoading = false
+              break
+          }
+        })
+    },
+    getRelatedQuestion (data) {
       this.$store.dispatch('chatBot/getRelatedQuestionList', {
         question: data.question,
         dataSourceId: data.dataSourceId
@@ -155,44 +192,6 @@ export default {
         })
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
       })
-    },
-    getComponent (res) {
-      window.clearTimeout(this.timeoutFunction)
-      this.$store.dispatch('chatBot/getComponentList', res.resultId)
-        .then(componentResponse => {
-          switch (componentResponse.status) {
-            case 'Process':
-            case 'Ready':
-              this.timeoutFunction = window.setTimeout(() => {
-                this.getComponent(res)
-              }, 1000)
-              break
-            case 'Complete':
-              window.clearTimeout(this.timeoutFunction)
-              this.resultInfo = componentResponse.componentIds
-              switch (res.layout) {
-                case 'general':
-                  this.layout = 'GeneralResult'
-                  break
-                case 'correlation_exploration':
-                  this.layout = 'CorrelationExplorationResult'
-                  break
-                case 'root_cause':
-                  this.layout = 'RootCauseResult'
-                  break
-              }
-              this.isLoading = false
-              break
-            case 'Disable':
-            case 'Delete':
-            case 'Warn':
-            case 'Fail':
-              window.clearTimeout(this.timeoutFunction)
-              this.layout = 'EmptyResult'
-              this.isLoading = false
-              break
-          }
-        })
     }
   }
 }

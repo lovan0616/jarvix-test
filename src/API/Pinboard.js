@@ -1,11 +1,11 @@
-import request from '@/utils/request'
+import request from '@/utils/publicRequest'
 
 /**
  * get pinboard list
  */
 export function getPinboardList () {
   return request({
-    url: '/pinboards/boards',
+    url: '/pinBoard/folder',
     method: 'GET'
   })
 }
@@ -15,17 +15,7 @@ export function getPinboardList () {
  */
 export function getPinboardById (id) {
   return request({
-    url: `/pinboards/boards/${id}`,
-    method: 'GET'
-  })
-}
-
-/**
- * get pinboard template
- */
-export function getPinboardTemplate (id) {
-  return request({
-    url: `/pinboards/boards/${id}/template`,
+    url: `/pinBoard/${id}`,
     method: 'GET'
   })
 }
@@ -35,7 +25,7 @@ export function getPinboardTemplate (id) {
  */
 export function createPinboard (name) {
   return request({
-    url: `/pinboards/boards`,
+    url: `/pinBoard/folder`,
     method: 'POST',
     data: {
       name
@@ -48,9 +38,10 @@ export function createPinboard (name) {
  */
 export function updatePinboardName (id, name) {
   return request({
-    url: `/pinboards/boards/${id}`,
+    url: `/pinBoard/folder`,
     method: 'PUT',
     data: {
+      id,
       name
     }
   })
@@ -61,7 +52,7 @@ export function updatePinboardName (id, name) {
  */
 export function deletePinboard (id) {
   return request({
-    url: `/pinboards/boards/${id}`,
+    url: `/pinBoard/folder/${id}`,
     method: 'DELETE'
   })
 }
@@ -69,11 +60,11 @@ export function deletePinboard (id) {
 /**
  * pin to pinboard
  */
-export function pinToBoard (id, data) {
+export function pinToBoard (data) {
   return request({
-    url: `/pinboards/boards/${id}`,
+    url: `/pinBoard`,
     method: 'POST',
-    data: data
+    data
   })
 }
 
@@ -82,7 +73,7 @@ export function pinToBoard (id, data) {
  */
 export function unPinById (id) {
   return request({
-    url: `/pinboards/pin/${id}`,
+    url: `/pinboards/${id}`,
     method: 'DELETE'
   })
 }
