@@ -12,6 +12,7 @@
     <component
       v-else
       :is="layout"
+      :data-result-id="currentResultId"
       :resultInfo="resultInfo"
     ></component>
     <div class="related-question-block" v-if="relatedQuestionList.length > 0">
@@ -66,6 +67,9 @@ export default {
     },
     currentQuestionId () {
       return this.$store.state.dataSource.currentQuestionId
+    },
+    currentResultId () {
+      return this.$store.state.result.currentResultId
     },
     filterRestrictionList () {
       return this.$store.getters['dataSource/filterRestrictionList']
@@ -149,6 +153,16 @@ export default {
     getComponent (res) {
       window.clearTimeout(this.timeoutFunction)
       this.$store.commit('result/updateCurrentResultId', res.resultId)
+      if (res.layout === 'no_answer') {
+        this.layout = 'EmptyResult'
+        this.resultInfo = {
+          title: res.noAnswerTitle,
+          description: res.noAnswerDescription
+        }
+        this.isLoading = false
+        return false
+      }
+
       this.$store.dispatch('chatBot/getComponentList', res.resultId)
         .then(componentResponse => {
           switch (componentResponse.status) {
