@@ -101,6 +101,8 @@ Vue.mixin({
           return 'CorrelationExplorationResult'
         case 'root_cause':
           return 'RootCauseResult'
+        case 'no_answer':
+          return 'EmptyResult'
       }
     },
     // 藉由後端的 template 名稱對應到前端的 component name

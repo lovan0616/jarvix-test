@@ -1112,6 +1112,7 @@
     "PivotTableToken": "问句意图",
     "ProportionToken": "问句意图",
     "CorrelationToken": "问句意图",
+    "CorrExplorationToken": "问句意图",
     "CorrVerificationToken": "问句意图",
     "DiffExplorationToken": "问句意图",
     "ConjunctionToken": "连接词",

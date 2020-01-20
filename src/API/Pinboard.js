@@ -73,7 +73,7 @@ export function pinToBoard (data) {
  */
 export function unPinById (id) {
   return request({
-    url: `/pinboards/${id}`,
+    url: `/pinBoard/${id}`,
     method: 'DELETE'
   })
 }

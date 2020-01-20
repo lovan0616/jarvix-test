@@ -13,12 +13,14 @@
       v-else-if="boardList.length === 0"
       :msg="$t('editing.emptyPinboard')"
     ></empty-info-block>
-    <component
-      v-for="result in boardList"
-      :key="result.id"
-      :is="result.layout"
-      :resultInfo="result.info"
-    ></component>
+      <component
+        v-for="result in boardList"
+        :key="result.pinboardId"
+        :is="result.layout"
+        :data-pinboard-id="result.pinboardId"
+        :data-data-source-id="result.dataSourceId"
+        :resultInfo="result.info"
+      ></component>
   </div>
 </template>
 <script>
@@ -44,7 +46,9 @@ export default {
       this.$store.dispatch('pinboard/getPinboardById', this.$route.params.id).then(response => {
         response.forEach(element => {
           this.boardList.push({
-            id: element.resultId,
+            pinboardId: element.id,
+            resultId: element.resultId,
+            dataSourceId: element.dataSourceId,
             layout: null,
             info: null
           })
@@ -85,12 +89,15 @@ export default {
         })
     },
     getResult (resultId) {
-      return this.boardList.filter(element => element.id === resultId)[0]
+      return this.boardList.filter(element => element.resultId === resultId)[0]
     }
   },
   computed: {
     pinboardList () {
       return this.$store.state.pinboard.pinboardList
+    },
+    pinboardInfo () {
+      return this.$store.state.pinboard.pinboardInfo
     },
     boardName () {
       if (this.pinboardList.length === 0) {
