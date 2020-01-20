@@ -1,5 +1,5 @@
 import co from 'co'
-import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById } from '@/API/DataSource'
+import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById, getDataFrameById, getDataFrameData } from '@/API/DataSource'
 import { getHistoryQuestionList } from '@/API/NewAsk'
 import router from '../../../router'
 
@@ -52,7 +52,13 @@ export default {
       return Promise.resolve(state)
     })
   },
-
+  getDataSourceTables ({state}) {
+    if (state.dataSourceId === null) return Promise.reject(new Error('dataSource not set yet'))
+    return getDataFrameById(state.dataSourceId)
+  },
+  getDataFrameData ({state}, id) {
+    return getDataFrameData(id)
+  },
   getDataSourceColumnInfo ({ commit, state }) {
     return getDataSourceColumnInfoById(state.dataSourceId).then(response => {
       commit('setDataSourceCloumnInfoList', response)

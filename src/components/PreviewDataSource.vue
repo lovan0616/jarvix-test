@@ -11,10 +11,10 @@
       <div class="board-body">
         <div class="dataset-info">
           <sy-select class="preview-bookmark-select"
-            :selected="bookmarkTableId"
-            :items="bookmarkTables"
+            :selected="dataSourcetableId"
+            :items="dataSourceTables"
             :placeholder="$t('editing.choiceDataSource')"
-            @update:selected="onBookmarkTableChange"
+            @update:selected="onDataSourceTableChange"
           ></sy-select>
           <div class="data-count">{{ metaTableRightText }}</div>
         </div>
@@ -27,15 +27,14 @@
         ></empty-info-block>
         <sy-table
           v-else
-          :dataset="bookmarkTableDataDataset"
+          :dataset="dataSourceTableData"
         ></sy-table>
       </div>
     </div>
-    <span v-show="!dataSourceId">bookmark no set yet</span>
+    <span v-show="!dataSourceId">{{ $t('message.emptyDataSource') }}</span>
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 
@@ -48,27 +47,22 @@ export default {
   data () {
     return {
       isLoading: false,
-      hasError: false
+      hasError: false,
+      dataSourceTables: [],
+      dataSourceTable: null,
+      dataSourceTableData: null
     }
   },
   mounted () {
     this.isLoading = true
-    this.$store.dispatch('previewBookmark/init')
-      .then(() => {
-        this.isLoading = false
-      })
-      .catch(() => {
-        this.hasError = true
-        this.isLoading = false
-      })
-  },
-  destroyed () {
-    this.$store.commit('previewBookmark/SET_BOOKMARK_TABLE', [])
+    this.fetchDataSourceTable()
   },
   computed: {
-    ...mapGetters('previewBookmark', ['bookmarkTableId', 'bookmarkTables', 'bookmarkTableDataMeta', 'bookmarkTableDataDataset']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
+    },
+    dataSourcetableId () {
+      return this.dataSourceTable ? this.dataSourceTable.id : null
     },
     metaTableRightText () {
       if (!this.bookmarkTableDataMeta) return ''
@@ -84,11 +78,39 @@ export default {
     }
   },
   methods: {
-    onBookmarkTableChange (id) {
+    fetchDataSourceTable () {
+      this.$store.dispatch('dataSource/getDataSourceTables')
+        .then(response => {
+          this.dataSourceTables = response.map(element => {
+            return {
+              id: element.id,
+              name: element.primaryAlias
+            }
+          })
+          this.dataSourceTable = response[0]
+          this.fetchDataFrameData(this.dataSourceTable.id)
+        })
+        .catch(() => {
+          this.hasError = true
+          this.isLoading = false
+        })
+    },
+    setDataSourceTableById (id) {
+      this.dataSourceTable = this.dataSourceTables.find(item => item.id === id)
+    },
+    onDataSourceTableChange (id) {
       this.isLoading = true
       this.hasError = false
-      this.$store.dispatch('previewBookmark/changeBookmarkTableById', id)
-        .then(() => {
+      this.setDataSourceTableById(id)
+      this.fetchDataFrameData(id)
+    },
+    fetchDataFrameData (id) {
+      this.$store.dispatch('dataSource/getDataFrameData', id)
+        .then(response => {
+          this.dataSourceTableData = {
+            ...response,
+            index: [...Array(response.data.length)].map((x, i) => i)
+          }
           this.isLoading = false
         })
         .catch(() => {

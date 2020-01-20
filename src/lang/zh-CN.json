@@ -27,7 +27,8 @@
     "changeStatusSuccess": "变更状态成功",
     "pleaseConfirmPassword": "请确认密码是否相同",
     "addFilter": "保存成功",
-    "emptyResult": "此搜寻条件并无对应资料"
+    "emptyResult": "此搜寻条件并无对应资料",
+    "emptyDataSource": "尚未建立资料源"
   },
   "guiding": {
     "preStep": "上一步",
