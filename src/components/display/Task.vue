@@ -8,6 +8,7 @@
     <spinner class="task-spinner"
       v-if="loading"
     ></spinner>
+    <no-result v-else-if="isError" :message="errorMessage"></no-result>
     <template v-else-if="diagram">
       <!-- TODO: 調整寫法 -->
       <component
@@ -31,7 +32,6 @@
         {{note}}
       </div>
     </template>
-    <no-result v-else-if="isError" :message="errorMessage"></no-result>
   </div>
 </template>
 <script>
@@ -79,11 +79,15 @@ export default {
             window.clearTimeout(this.timeoutFunction)
             this.diagram = response.diagram
             this.resultId = response.resultId
-            // this.createTaskByTemplateAndData({template: this.getChartTemplate(this.diagram), data: response.data})
             this.componentName = this.getChartTemplate(this.diagram)
             this.componentData = response.data
             this.loading = false
 
+            // 空資料的處理
+            if (this.componentData.dataset && this.componentData.dataset.data.length === 0) {
+              this.isError = true
+              this.errorMessage = this.$t('message.emptyResult')
+            }
             break
           case 'Disable':
           case 'Delete':

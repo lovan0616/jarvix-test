@@ -44,6 +44,10 @@ export default {
   methods: {
     getPinboardInfo () {
       this.$store.dispatch('pinboard/getPinboardById', this.$route.params.id).then(response => {
+        if (response.length === 0) {
+          this.isLoading = false
+          return false
+        }
         response.forEach(element => {
           this.boardList.push({
             pinboardId: element.id,
