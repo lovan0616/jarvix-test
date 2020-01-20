@@ -1120,7 +1120,8 @@
     "PossessionToken": "连接词",
     "ChangeToken": "其他词汇",
     "ElseToken": "其他词汇",
-    "IgnoreToken": "可忽略的词汇"
+    "IgnoreToken": "可忽略的词汇",
+    "Datarow": "资料列"
   },
   "notification": {
     "uploadLimitNotification": "资料数量已达上限",
@@ -1192,6 +1193,6 @@
     "defaultMsg": "系统发生非预期错误"
   },
   "resultNote": {
-    "samplingNote": "此结果为原资料取样{randomLimit}笔计算得来"
+    "samplingNote": "此结果为原资料取样 {randomLimit} 笔计算得来"
   }
 }
