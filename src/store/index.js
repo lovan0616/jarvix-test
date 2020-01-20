@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import dataSource from './modules/dataSource'
-import previewBookmark from './modules/previewBookmark'
 import pinboard from './modules/pinboard'
 import dataManagement from './modules/dataManagement'
 import chatBot from './modules/chatBot'
@@ -14,7 +13,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
     dataSource,
-    previewBookmark,
     pinboard,
     dataManagement,
     chatBot,

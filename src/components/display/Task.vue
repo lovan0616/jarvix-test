@@ -88,6 +88,10 @@ export default {
               this.isError = true
               this.errorMessage = this.$t('message.emptyResult')
             }
+            // 取樣
+            if (response.data.group_limit) {
+              this.appendNote(this.genSamplingNote(response.data.group_limit))
+            }
             break
           case 'Disable':
           case 'Delete':

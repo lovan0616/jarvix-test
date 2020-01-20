@@ -27,7 +27,8 @@
     "changeStatusSuccess": "变更状态成功",
     "pleaseConfirmPassword": "请确认密码是否相同",
     "addFilter": "保存成功",
-    "emptyResult": "此搜寻条件并无对应资料"
+    "emptyResult": "此搜寻条件并无对应资料",
+    "emptyDataSource": "尚未建立资料源"
   },
   "guiding": {
     "preStep": "上一步",
@@ -1120,7 +1121,8 @@
     "PossessionToken": "连接词",
     "ChangeToken": "其他词汇",
     "ElseToken": "其他词汇",
-    "IgnoreToken": "可忽略的词汇"
+    "IgnoreToken": "可忽略的词汇",
+    "Datarow": "资料列"
   },
   "notification": {
     "uploadLimitNotification": "资料数量已达上限",
@@ -1192,6 +1194,6 @@
     "defaultMsg": "系统发生非预期错误"
   },
   "resultNote": {
-    "samplingNote": "此结果为原资料取样{randomLimit}笔计算得来"
+    "samplingNote": "此结果为原资料取样 {randomLimit} 笔计算得来"
   }
 }
