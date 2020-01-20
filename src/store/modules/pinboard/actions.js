@@ -1,4 +1,4 @@
-import { getPinboardList, getPinboardById, getPinboardTemplate, deletePinboard, createPinboard, updatePinboardName, pinToBoard, unPinById } from '@/API/Pinboard'
+import { getPinboardList, getPinboardById, deletePinboard, createPinboard, updatePinboardName, pinToBoard, unPinById } from '@/API/Pinboard'
 
 export default {
   getPinboardList ({ commit }) {
@@ -17,18 +17,13 @@ export default {
   getPinboardById ({commit}, data) {
     return getPinboardById(data)
   },
-  getPinboardTemplate ({commit}, data) {
-    return getPinboardTemplate(data).then(res => {
-      commit('setPinboardInfo', res)
-    })
-  },
   updatePinboardName ({dispatch}, data) {
     return updatePinboardName(data.id, data.name).then(() => {
       dispatch('getPinboardList')
     })
   },
   pinToBoard ({commit}, data) {
-    return pinToBoard(data.id, data.report)
+    return pinToBoard(data)
   },
   unPinById ({commit}, data) {
     return unPinById(data)
