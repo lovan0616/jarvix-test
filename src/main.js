@@ -63,6 +63,7 @@ import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
 import DisplayHistogramChart from '@/components/display/DisplayHistogramChart'
 import DisplayBoxPlotChart from '@/components/display/DisplayBoxPlotChart'
+import DisplayComputedBoxPlotChart from '@/components/display/DisplayComputedBoxPlotChart'
 import DisplayTreeMapChart from '@/components/display/DisplayTreeMapChart'
 import DisplayBubbleScatterChart from '@/components/display/DisplayBubbleScatterChart'
 import DisplayGroupScatterChart from '@/components/display/DisplayGroupScatterChart'
@@ -137,6 +138,7 @@ Vue.component(DisplayScatterChart.name, DisplayScatterChart)
 Vue.component(DisplayGroupScatterChart.name, DisplayGroupScatterChart)
 Vue.component(DisplayHistogramChart.name, DisplayHistogramChart)
 Vue.component(DisplayBoxPlotChart.name, DisplayBoxPlotChart)
+Vue.component(DisplayComputedBoxPlotChart.name, DisplayComputedBoxPlotChart)
 Vue.component(DisplayBubbleScatterChart.name, DisplayBubbleScatterChart)
 Vue.component(DisplayTreeMapChart.name, DisplayTreeMapChart)
 Vue.component(DisplayLineChart.name, DisplayLineChart)

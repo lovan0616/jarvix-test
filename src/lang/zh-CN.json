@@ -1194,6 +1194,7 @@
     "defaultMsg": "系统发生非预期错误"
   },
   "resultNote": {
+    "groupLimitNote": "此结果为原资料取前 {randomLimit} 笔得来",
     "samplingNote": "此结果为原资料取样 {randomLimit} 笔计算得来"
   }
 }

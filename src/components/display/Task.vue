@@ -89,8 +89,12 @@ export default {
               this.errorMessage = this.$t('message.emptyResult')
             }
             // 取樣
+            if (response.data.sampling) {
+              this.appendNote(this.genSamplingNote(response.data.sampling))
+            }
+            // 取前 n 筆
             if (response.data.group_limit) {
-              this.appendNote(this.genSamplingNote(response.data.group_limit))
+              this.appendNote(this.genGroupLimitNote(response.data.group_limit))
             }
             break
           case 'Disable':
@@ -102,6 +106,9 @@ export default {
             if (this.intend === 'key_result') this.isError = true
             break
         }
+      }).catch(() => {
+        this.loading = false
+        if (this.intend === 'key_result') this.isError = true
       })
     },
     appendNote (note) {
@@ -109,6 +116,9 @@ export default {
     },
     genSamplingNote (randomLimit) {
       return this.$t('resultNote.samplingNote', {randomLimit})
+    },
+    genGroupLimitNote (randomLimit) {
+      return this.$t('resultNote.groupLimitNote', {randomLimit})
     }
   }
 }

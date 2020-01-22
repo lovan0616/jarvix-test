@@ -115,6 +115,8 @@ Vue.mixin({
           return 'DisplayAverageBarChart'
         case 'box_plot':
           return 'DisplayBoxPlotChart'
+        case 'computed_box_plot':
+          return 'DisplayComputedBoxPlotChart'
         case 'bubble_scatter_chart':
           return 'DisplayBubbleScatterChart'
         case 'color_scatter_chart':
