@@ -63,7 +63,7 @@
     "editTable": "编辑资料表",
     "editTableColumn": "编辑资料表栏位",
     "columnName": "栏位名称",
-    "columnAlias": "别名",
+    "alias": "别名",
     "columnTag": "标签",
     "columnDomain": "领域",
     "action": "操作",
@@ -163,7 +163,11 @@
     "indexErrorTitle": "首页资料暂时无法取得",
     "indexErrorDescription": "很抱歉，首页资料暂时无法取得，请稍后再试",
     "multiResultTitle": "问句分析",
-    "systemUnknownDescription": "系统无法辨识出以下文字："
+    "systemUnknownDescription": "系统无法辨识出以下文字：",
+    "dataColumnValue": "资料表数据值",
+    "dataFrame": "资料表",
+    "rebuildRemark": "编辑后需再次建置资料",
+    "dataValue": "数据值"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",

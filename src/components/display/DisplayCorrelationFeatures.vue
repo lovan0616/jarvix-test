@@ -111,9 +111,9 @@ export default {
     justify-content: center;
     width: 60px;
     height: 60px;
-    border: 1px solid #FFDF6F;
+    border: 1px solid $theme-color-warning;
     border-radius: 100%;
-    color: #FFDF6F;
+    color: $theme-color-warning;
     font-size: 20px;
     padding: 4px;
 

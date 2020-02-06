@@ -17,7 +17,7 @@
           <div class="data-table-head is-scrolling">
             <div class="data-table-row table-head">
               <div class="data-table-cell name">{{ $t('editing.columnName') }}</div>
-              <div class="data-table-cell alias">{{ $t('editing.columnAlias') }}</div>
+              <div class="data-table-cell alias">{{ $t('editing.alias') }}</div>
               <div class="data-table-cell tag">{{ $t('editing.columnTag') }}</div>
               <div class="data-table-cell action">{{ $t('editing.action') }}</div>
             </div>

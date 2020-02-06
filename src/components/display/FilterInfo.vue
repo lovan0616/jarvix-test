@@ -103,7 +103,7 @@ export default {
     .remark-title {
       display: inline-flex;
       align-items: center;
-      color: #FFDF6F;
+      color: $theme-color-warning;
     }
     .lamp-icon {
       margin-right: 4px;

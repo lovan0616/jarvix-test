@@ -76,6 +76,7 @@
       :table-info="currentEditDataFrameInfo"
       @close="closeEditColumnDialog"
     ></edit-column-dialog>
+    <value-alias-dialog></value-alias-dialog>
   </div>
 </template>
 <script>
@@ -84,6 +85,7 @@ import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
+import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import { getDataFrameById, checkDataSourceStatusById } from '@/API/DataSource'
 
 export default {
@@ -93,7 +95,8 @@ export default {
     FileUploadDialog,
     ConfirmDeleteFileDialog,
     EditTableJoinRelationDialog,
-    EditColumnDialog
+    EditColumnDialog,
+    ValueAliasDialog
   },
   data () {
     return {

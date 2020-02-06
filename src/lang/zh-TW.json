@@ -63,7 +63,7 @@
     "editTable": "編輯資料表",
     "editTableColumn": "編輯資料表欄位",
     "columnName": "欄位名稱",
-    "columnAlias": "別名",
+    "alias": "別名",
     "columnTag": "標籤",
     "columnDomain": "領域",
     "action": "操作",
@@ -163,7 +163,11 @@
     "indexErrorTitle": "首頁資料暫時無法取得",
     "indexErrorDescription": "很抱歉，首頁資料暫時無法取得，請稍後再試",
     "multiResultTitle": "問句分析",
-    "systemUnknownDescription": "系統無法辨識出以下文字："
+    "systemUnknownDescription": "系統無法辨識出以下文字：",
+    "dataColumnValue": "資料表數據值",
+    "dataFrame": "資料表",
+    "rebuildRemark": "編輯後需再次建置資料",
+    "dataValue": "數據值"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",

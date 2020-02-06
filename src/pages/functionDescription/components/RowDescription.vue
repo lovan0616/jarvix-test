@@ -39,7 +39,7 @@ export default {
     position: absolute;
     display: flex;
     align-items: center;
-    color: #FFDF6F;
+    color: $theme-color-warning;
 }
 
 .description-space {
@@ -49,19 +49,19 @@ export default {
 .description-round-empty {
   width: 8px;
   height: 8px;
-  border: 1px solid #FFDF6F;
+  border: 1px solid $theme-color-warning;
   border-radius: 99px;
 }
 
 .description-line {
   height: 1px;
-  background: #FFDF6F;
+  background: $theme-color-warning;
 }
 
 .description-round-full {
   width: 8px;
   height: 8px;
-  background: #FFDF6F;
+  background: $theme-color-warning;
   border-radius: 99px;
 }
 

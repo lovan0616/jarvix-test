@@ -63,7 +63,7 @@ export default {
     .cause-item-column {
       font-size: 20px;
       margin-right: 20px;
-      color: #FFDF6F;
+      color: $theme-color-warning;
     }
     .cause-item-weight {
       letter-spacing: 0.05em;
