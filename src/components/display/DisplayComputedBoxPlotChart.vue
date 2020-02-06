@@ -49,20 +49,28 @@ export default {
       type: Object,
       default () {
         return {
-          // index: [
-          //   '收入',
-          //   '利潤',
-          //   '盈餘'
-          // ],
-          // boxData: [
-          //   [655, 850, 940, 980, 1070],
-          //   [760, 800, 845, 885, 960],
-          //   [780, 840, 855, 880, 940]
-          // ],
-          // outlier: [
-          //   [0, 200],
-          //   [1, 200]
-          // ]
+          index: [
+            '收入',
+            '利潤'
+          ],
+          data: [
+            {
+              low: 655,
+              q1: 850,
+              q2: 940,
+              q3: 980,
+              high: 1000,
+              outliers: [200, 300]
+            },
+            {
+              low: 760,
+              q1: 800,
+              q2: 845,
+              q3: 885,
+              high: 960,
+              outliers: [100, 1030, 1200]
+            }
+          ]
         }
       }
     },
@@ -84,8 +92,17 @@ export default {
       chartAddon.xAxis.data = this.dataset.index
       chartAddon.xAxis.name = this.title.xAxis.display_name
       chartAddon.yAxis.name = this.title.yAxis.display_name
-      boxPlotChartConfig.chartData.data = this.dataset.boxData
-      boxPlotChartConfig.outlier.data = this.dataset.outlier
+      boxPlotChartConfig.chartData.data = this.dataset.data.map(element => {
+        return [element.low, element.q1, element.q2, element.q3, element.high]
+      })
+      boxPlotChartConfig.outlier.data = this.dataset.data.reduce((acc, cur, index) => {
+        if (cur.outliers.length > 0) {
+          let outliers = cur.outliers.map(element => {
+            return [index, element]
+          })
+          return acc.concat(outliers)
+        }
+      }, [])
       chartAddon.series[0] = boxPlotChartConfig.chartData
       chartAddon.series[0].itemStyle.borderColor = '#4DE2F0'
       chartAddon.series[0].itemStyle.color = '#000'
@@ -93,7 +110,6 @@ export default {
       chartAddon.series[1].itemStyle = {
         color: chartVariable['chartColorList-2']
       }
-      // chartAddon.toolbox.feature.dataView.show = false
       // 數據顯示
       chartAddon.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.series[0].data
@@ -158,8 +174,8 @@ export default {
                   rowData = [this.$t('resultDescription.max')]
                   break
               }
-              for (let j = 0; j < this.dataset.boxData.length; j++) {
-                rowData.push(this.dataset.boxData[j][i])
+              for (let j = 0; j < boxPlotChartConfig.chartData.data.length; j++) {
+                rowData.push(boxPlotChartConfig.chartData.data[j][i])
               }
               exportData.push(rowData)
             }
