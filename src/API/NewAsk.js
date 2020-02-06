@@ -38,10 +38,11 @@ export function getComponentList (resultId, cancelFunction) {
 /**
  * get component data
  */
-export function getComponentData (componentId, cancelFunction) {
+export function getComponentData (componentInfo, cancelFunction) {
   return request({
-    url: `/ask/componentData/${componentId}`,
-    method: 'GET',
+    url: `/ask/componentData`,
+    method: 'POST',
+    data: componentInfo,
     cancelToken: cancelFunction
   })
 }
