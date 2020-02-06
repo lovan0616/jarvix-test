@@ -55,7 +55,8 @@ export default {
       isError: false,
       errorMessage: '',
       notes: [],
-      timeoutFunction: null
+      timeoutFunction: null,
+      page: 0
     }
   },
   mounted () {
@@ -67,7 +68,10 @@ export default {
   methods: {
     fetchData () {
       window.clearTimeout(this.timeoutFunction)
-      this.$store.dispatch('chatBot/getComponentData', this.componentId).then(response => {
+      this.$store.dispatch('chatBot/getComponentData', {
+        id: this.componentId,
+        page: this.page
+      }).then(response => {
         switch (response.status) {
           case 'Process':
           case 'Ready':
