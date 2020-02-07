@@ -5,8 +5,8 @@ export default {
   setPinboardInfo (state, data) {
     state.pinboardInfo = data
   },
-  unPinById (state, data) {
-    state.pinboardInfo.templates = state.pinboardInfo.templates.filter(element => {
+  deletePinboardById (state, data) {
+    state.pinboardInfo = state.pinboardInfo.filter(element => {
       return element.id !== data
     })
   }

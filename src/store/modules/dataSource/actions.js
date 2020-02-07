@@ -1,7 +1,6 @@
 import co from 'co'
-import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById } from '@/API/DataSource'
-import { getSuggestions, getQuickstarts } from '@/API/Bookmark'
-import { getQuestionHistory } from '@/API/ChatBot'
+import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById, getDataFrameById, getDataFrameData } from '@/API/DataSource'
+import { getHistoryQuestionList } from '@/API/NewAsk'
 import router from '../../../router'
 
 export default {
@@ -53,7 +52,13 @@ export default {
       return Promise.resolve(state)
     })
   },
-
+  getDataSourceTables ({state}) {
+    if (state.dataSourceId === null) return Promise.reject(new Error('dataSource not set yet'))
+    return getDataFrameById(state.dataSourceId)
+  },
+  getDataFrameData ({state}, id) {
+    return getDataFrameData(id)
+  },
   getDataSourceColumnInfo ({ commit, state }) {
     return getDataSourceColumnInfoById(state.dataSourceId).then(response => {
       commit('setDataSourceCloumnInfoList', response)
@@ -62,16 +67,6 @@ export default {
   getDataSourceDataValue ({ commit, state }) {
     return getDataSourceDataValueById(state.dataSourceId).then(response => {
       commit('setDataSourceDataValueList', response)
-    })
-  },
-  getSuggestionList ({ commit, state }) {
-    return getSuggestions(state.dataSourceId).then(res => {
-      commit('setSuggestions', res)
-    })
-  },
-  getQuickstartList ({ commit, state }) {
-    return getQuickstarts(state.dataSourceId).then(res => {
-      commit('setQuickStart', res)
     })
   },
   updateResultRouter ({commit, state}, actionTag) {
@@ -91,8 +86,8 @@ export default {
       }
     })
   },
-  getHistoryQuestionList ({commit, state}) {
-    return getQuestionHistory(state.dataSourceId).then(res => {
+  getHistoryQuestionList ({commit, state}, data) {
+    return getHistoryQuestionList(state.dataSourceId || data).then(res => {
       commit('setHistoryQuestionList', res)
     })
   },

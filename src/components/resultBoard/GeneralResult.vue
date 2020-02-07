@@ -4,38 +4,41 @@
   >
     <template slot="PageResultBoardHeader">
       <task
-        :templateUrl="`api/task/${taskObject.title[0].intent}/template`"
-        :dataUrl="`api/task/${taskObject.title[0].intent}/data`"
-        :params="taskObject.title[0].entities"
+        :component-id="resultInfo.title[0]"
+        intend="title"
       ></task>
     </template>
     <result-board-body slot="PageResultBoardBody">
       <template slot="PageResultBoardChart">
         <task
-          v-if="taskObject.key_result.length > 0"
-          v-for="(chartTask, index) in taskObject.key_result"
+          v-if="resultInfo.key_result.length > 0"
+          v-for="(chartTask, index) in resultInfo.key_result"
           :key="'chart-' + index"
-          :templateUrl="`api/task/${chartTask.intent}/template`"
-          :dataUrl="`api/task/${chartTask.intent}/data`"
-          :params="chartTask.entities"
+          :component-id="chartTask"
+          intend="key_result"
         ></task>
       </template>
       <template slot="InsightBasicInfo">
         <task
-          v-if="taskObject.basic_info.length > 0"
-          :templateUrl="`api/task/${taskObject.basic_info[0].intent}/template`"
-          :dataUrl="`api/task/${taskObject.basic_info[0].intent}/data`"
-          :params="taskObject.basic_info[0].entities"
+          v-if="resultInfo.basic_info.length > 0"
+          :component-id="resultInfo.basic_info[0]"
+          intend="basic_info"
         ></task>
       </template>
       <template slot="InsightRootCause">
         <task
-          v-if="taskObject.other.length > 0"
-          v-for="(otherTask, index) in taskObject.other"
+          v-if="resultInfo.general_insight.length > 0"
+          v-for="(otherTask, index) in resultInfo.general_insight"
           :key="'other-' + index"
-          :templateUrl="`api/task/${otherTask.intent}/template`"
-          :dataUrl="`api/task/${otherTask.intent}/data`"
-          :params="otherTask.entities"
+          :component-id="otherTask"
+          intend="general_insight"
+        ></task>
+        <task
+          v-if="resultInfo.correlation_insight.length > 0"
+          v-for="(otherTask, index) in resultInfo.correlation_insight"
+          :key="'other-' + index"
+          :component-id="otherTask"
+          intend="correlation_insight"
         ></task>
       </template>
     </result-board-body>
@@ -49,34 +52,9 @@ export default {
       type: Object
     }
   },
+  mounted () {
+  },
   computed: {
-    taskObject () {
-      let taskObject = {
-        title: [],
-        key_result: [],
-        basic_info: [],
-        other: []
-      }
-
-      this.resultInfo.tasks.forEach(element => {
-        switch (element.entities.diagram_type) {
-          case 'title':
-            taskObject.title.push(element)
-            break
-          case 'key_result':
-            taskObject.key_result.push(element)
-            break
-          case 'basic_info':
-            taskObject.basic_info.push(element)
-            break
-          default:
-            taskObject.other.push(element)
-            break
-        }
-      })
-
-      return taskObject
-    }
   }
 }
 </script>

@@ -29,7 +29,6 @@ export default {
   },
   methods: {
     linkTo (value) {
-      this.$store.commit('bookmark/setAppQuestion', value)
       this.$store.commit('dataSource/setAppQuestion', value)
       // 區分使用者是點擊推薦問句或是點擊過往的問句
       this.$store.dispatch('dataSource/updateResultRouter', 'trend_root_cause')

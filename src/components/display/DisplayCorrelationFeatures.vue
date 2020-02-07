@@ -17,7 +17,7 @@
       </template>
     </div>
     <div class="feature-body">
-      <div :class="['feature-item', {'selected': index === cursor}]"
+      <div :class="['feature-item', {'selected': index === displayFactorIndex}]"
         v-for="(item, index) in features"
         v-bind:key="index"
         @click="onClickItem(index)"
@@ -45,22 +45,17 @@ export default {
     features: { type: Array, default: () => [] },
     confidence: { type: Number }
   },
-  data () {
-    return {
-      cursor: 0
-    }
-  },
   methods: {
     onClickItem (index) {
-      this.changeCursor(index)
-      // FIXME assume this component is created by task
-      this.$parent.$emit('task-event', 'change-cursor', index)
-    },
-    changeCursor (index) {
-      this.cursor = index
+      this.$store.commit('result/updateDisplayFactorIndex', index)
     },
     round (x, n = 2) {
       return Math.round(x * Math.pow(10, n)) / Math.pow(10, n)
+    }
+  },
+  computed: {
+    displayFactorIndex () {
+      return this.$store.state.result.displayFactorIndex
     }
   }
 }

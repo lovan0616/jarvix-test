@@ -1,6 +1,7 @@
 <template>
   <div class="result-board-container">
     <div class="result-board"
+      :id="pinBoardId"
       :class="{'has-filter': hasFilter}"
     >
       <div class="board-header">
@@ -72,13 +73,12 @@
     </writing-dialog>
     <decide-dialog
       v-if="isShowDelete"
-      :title="`${confirmDeleteText} ${resultInfo.tasks[0].entities.question}？`"
+      :title="`${$t('editing.confirmDelete')} ${questionName}？`"
       :type="'delete'"
       @closeDialog="closeDelete"
       @confirmBtn="confirmDelete"
     >
     </decide-dialog>
-
   </div>
 </template>
 <script>
@@ -107,18 +107,19 @@ export default {
       isPinned: false,
       isLoading: false,
       pinBoardId: null,
+      dataSourceId: null,
       showPinboardList: false,
       isShowShareDialog: false,
       isMouseoverPinButton: false,
       isShowDelete: false,
-      isShowShare: false,
-      confirmDeleteText: this.$t('editing.confirmDelete')
+      isShowShare: false
     }
   },
   mounted () {
     // Pinboard 頁預設全都是 pin 完的狀態
     if (this.isPinboardPage) {
-      this.pinBoardId = this.$parent.$attrs.id
+      this.pinBoardId = this.$parent.$attrs['data-pinboard-id']
+      this.dataSourceId = this.$parent.$attrs['data-data-source-id']
     }
   },
   methods: {
@@ -165,9 +166,9 @@ export default {
     },
     selectPinboard (id) {
       this.isLoading = true
-      this.$store.dispatch('pinboard/pinToBoard', {id, report: this.resultInfo})
+      this.$store.dispatch('pinboard/pinToBoard', {folderId: id, resultId: this.currentResultId})
         .then(res => {
-          this.pinBoardId = res
+          this.pinBoardId = res.id
           this.updatePinnedStatus()
           this.isLoading = false
           this.showPinboardList = false
@@ -197,7 +198,7 @@ export default {
             }, 300)
             window.setTimeout(() => {
               this.isLoading = false
-              this.$store.commit('pinboard/unPinById', this.pinBoardId)
+              this.$store.commit('pinboard/deletePinboardById', this.pinBoardId)
             }, 900)
           } else {
             this.isLoading = false
@@ -263,11 +264,18 @@ export default {
     pinboardList () {
       return this.$store.state.pinboard.pinboardList
     },
+    questionName () {
+      let boardHeaderData = this.$children.filter(element => element.componentName === 'ResultBoardHeader')[0].componentData
+      return boardHeaderData ? boardHeaderData.title : ''
+    },
     shareUrl () {
-      return `${window.location.origin}/result?question=${this.resultInfo.tasks[0].entities.question}&stamp=${new Date().getTime()}&dataSourceId=${this.resultInfo.tasks[0].entities.bookmark_id}&action=share`
+      return `${window.location.origin}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&action=share`
     },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
+    },
+    currentResultId () {
+      return this.$store.state.result.currentResultId
     }
   }
 }

@@ -59,7 +59,7 @@ export default {
     },
     createPinboard () {
       this.$store.dispatch('pinboard/createPinboard', this.newBoardName).then(response => {
-        this.$emit('pin', response)
+        this.$emit('pin', response.id)
         this.cancelCreate()
       })
     },

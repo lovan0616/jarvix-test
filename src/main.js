@@ -45,7 +45,7 @@ import 'echarts/lib/component/geo'
 import 'echarts-stat'
 
 import Layout from './components/Layout.vue'
-import Task from './components/Task.vue'
+import Task from './components/display/Task.vue'
 import ContainerBlock from './components/container/ContainerBlock.vue'
 import ContainerCard from './components/container/ContainerCard.vue'
 import DisplayBasicChart from './components/display/DisplayBasicChart.vue'
@@ -63,6 +63,7 @@ import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
 import DisplayHistogramChart from '@/components/display/DisplayHistogramChart'
 import DisplayBoxPlotChart from '@/components/display/DisplayBoxPlotChart'
+import DisplayComputedBoxPlotChart from '@/components/display/DisplayComputedBoxPlotChart'
 import DisplayTreeMapChart from '@/components/display/DisplayTreeMapChart'
 import DisplayBubbleScatterChart from '@/components/display/DisplayBubbleScatterChart'
 import DisplayGroupScatterChart from '@/components/display/DisplayGroupScatterChart'
@@ -72,12 +73,12 @@ import DisplayBarChart from '@/components/display/DisplayBarChart'
 import DisplayChinaMap from '@/components/display/DisplayChinaMap'
 import DisplayWorldMap from '@/components/display/DisplayWorldMap'
 import DisplayPredictChart from '@/components/display/DisplayPredictChart'
-import DisplayPivot from '@/components/display/DisplayPivot'
 import DisplayHeatMapChart from '@/components/display/DisplayHeatMapChart'
 import DisplaySankeyChart from '@/components/display/DisplaySankeyChart'
 import DisplayCorrelationFeatures from '@/components/display/DisplayCorrelationFeatures'
 import DisplayPivotTable from '@/components/display/DisplayPivotTable'
-import PreviewPivot from '@/components/display/PreviewPivot'
+// import PreviewPivot from '@/components/display/PreviewPivot'
+// import DisplayPivot from '@/components/display/DisplayPivot'
 import InsightsInfo from '@/components/display/InsightsInfo'
 import RootCauseInfo from '@/components/display/RootCauseInfo'
 import InsightTable from '@/components/display/InsightTable'
@@ -137,6 +138,7 @@ Vue.component(DisplayScatterChart.name, DisplayScatterChart)
 Vue.component(DisplayGroupScatterChart.name, DisplayGroupScatterChart)
 Vue.component(DisplayHistogramChart.name, DisplayHistogramChart)
 Vue.component(DisplayBoxPlotChart.name, DisplayBoxPlotChart)
+Vue.component(DisplayComputedBoxPlotChart.name, DisplayComputedBoxPlotChart)
 Vue.component(DisplayBubbleScatterChart.name, DisplayBubbleScatterChart)
 Vue.component(DisplayTreeMapChart.name, DisplayTreeMapChart)
 Vue.component(DisplayLineChart.name, DisplayLineChart)
@@ -145,12 +147,12 @@ Vue.component(DisplayBarChart.name, DisplayBarChart)
 Vue.component(DisplayChinaMap.name, DisplayChinaMap)
 Vue.component(DisplayWorldMap.name, DisplayWorldMap)
 Vue.component(DisplayPredictChart.name, DisplayPredictChart)
-Vue.component(DisplayPivot.name, DisplayPivot)
+// Vue.component(DisplayPivot.name, DisplayPivot)
+// Vue.component(PreviewPivot.name, PreviewPivot)
+Vue.component(DisplayPivotTable.name, DisplayPivotTable)
 Vue.component(DisplayHeatMapChart.name, DisplayHeatMapChart)
 Vue.component(DisplaySankeyChart.name, DisplaySankeyChart)
 Vue.component(DisplayCorrelationFeatures.name, DisplayCorrelationFeatures)
-Vue.component(DisplayPivotTable.name, DisplayPivotTable)
-Vue.component(PreviewPivot.name, PreviewPivot)
 Vue.component(SelectedRegion.name, SelectedRegion)
 Vue.component(NoResult.name, NoResult)
 Vue.component(EmptyResult.name, EmptyResult)

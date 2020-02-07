@@ -93,15 +93,30 @@ Vue.mixin({
           return 'SQLITE'
       }
     },
+    getLayout (value) {
+      switch (value) {
+        case 'general':
+          return 'GeneralResult'
+        case 'correlation_exploration':
+          return 'CorrelationExplorationResult'
+        case 'root_cause':
+          return 'RootCauseResult'
+        case 'no_answer':
+          return 'EmptyResult'
+      }
+    },
     // 藉由後端的 template 名稱對應到前端的 component name
     getChartTemplate (value) {
       switch (value) {
+        case 'root_cause_chart':
         case 'bar_chart':
           return 'DisplayBarChart'
         case 'bar_chart_average':
           return 'DisplayAverageBarChart'
         case 'box_plot':
           return 'DisplayBoxPlotChart'
+        case 'computed_box_plot':
+          return 'DisplayComputedBoxPlotChart'
         case 'bubble_scatter_chart':
           return 'DisplayBubbleScatterChart'
         case 'color_scatter_chart':
@@ -110,18 +125,40 @@ Vue.mixin({
           return 'DisplayHistogramChart'
         case 'line_chart':
           return 'DisplayLineChart'
+        case 'line_stack_chart':
+          return 'DisplayPredictChart'
         case 'pie_chart':
           return 'DisplayPieChart'
+        case 'scatter_correlation_chart':
         case 'scatter_chart':
           return 'DisplayScatterChart'
         case 'table':
           return 'SyTable'
         case 'tree_map':
           return 'DisplayTreeMapChart'
-        case 'pivot_table':
-          return 'preview-pivot'
+        case 'computed_pivot_table':
+          return 'DisplayPivotTable'
         case 'world_map':
           return 'DisplayWorldMap'
+        case 'title':
+          return 'ResultBoardHeader'
+        case 'basic_info':
+          return 'InsightTable'
+        case 'feature_importance':
+          return 'DisplayCorrelationFeatures'
+        case 'correlation_insight':
+          return 'CorrelationInsight'
+        case 'root_cause_item':
+          return 'RootCauseItem'
+        case 'root_cause_description':
+          return 'RootCauseDescription'
+        case 'root_cause_info':
+        case 'general_insight':
+          return 'RootCauseInfo'
+        case 'sankey_chart':
+          return 'DisplaySankeyChart'
+        case 'trend_insight':
+          return 'TrendRootCause'
       }
     },
     // 整個結果頁的 layout

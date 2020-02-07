@@ -26,7 +26,9 @@
     "editNameSuccess": "編輯名稱成功",
     "changeStatusSuccess": "變更狀態成功",
     "pleaseConfirmPassword": "請確認密碼是否相同",
-    "addFilter": "保存成功"
+    "addFilter": "保存成功",
+    "emptyResult": "此搜尋條件並無對應資料",
+    "emptyDataSource": "尚未建立資料源"
   },
   "guiding": {
     "preStep": "上一步",
@@ -1089,7 +1091,7 @@
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",
-    "Datacolumn": "來自 {dataFrame} 的資料欄位，辨識為'{name}'",
+    "Datacolumn": "來自 {dataFrame} 的資料欄位 {dataColumn}，辨識為'{name}'",
     "Datavalue": "'{name}'欄位的資料",
     "DtToken": "時間範圍",
     "FuzzyDtToken": "時間範圍",
@@ -1112,13 +1114,15 @@
     "PivotTableToken": "問句意圖",
     "ProportionToken": "問句意圖",
     "CorrelationToken": "問句意圖",
+    "CorrExplorationToken": "問句意圖",
     "CorrVerificationToken": "問句意圖",
     "DiffExplorationToken": "問句意圖",
     "ConjunctionToken": "連接詞",
     "PossessionToken": "連接詞",
     "ChangeToken": "其他詞彙",
     "ElseToken": "其他詞彙",
-    "IgnoreToken": "可忽略的詞彙"
+    "IgnoreToken": "可忽略的詞彙",
+    "Datarow": "資料列"
   },
   "notification": {
     "uploadLimitNotification": "資料數量已達上限",
@@ -1190,6 +1194,7 @@
     "defaultMsg": "系統發生非預期錯誤"
   },
   "resultNote": {
-    "samplingNote": "此結果為原資料取樣{randomLimit}筆計算得來"
+    "groupLimitNote": "此結果為原資料取前 {randomLimit} 筆得來",
+    "samplingNote": "此結果為原資料取樣 {randomLimit} 筆計算得來"
   }
 }

@@ -1,15 +1,13 @@
 <template>
   <div class="multi-result">
     <div class="board-title">{{ $t('editing.multiResultTitle') }}</div>
-    <div class="board-description"
+    <!-- <div class="board-description"
       v-if="resultInfo.similarQuestionList"
-    >{{ $t('bot.similarQuestionDescription') }}</div>
-    <div class="board-description"
-      v-else
-    >{{ $t('bot.multiplePossibilities') }}</div>
+    >{{ $t('bot.similarQuestionDescription') }}</div> -->
+    <div class="board-description">{{ $t('bot.multiplePossibilities') }}</div>
     <div class="question-list">
       <div class="single-question"
-        v-for="(singleQuestion, index) in questionList"
+        v-for="(singleQuestion, index) in resultInfo.parseQuestionPayload.segmentations"
         :key="index"
         @click="askQuestion(singleQuestion)"
       >
@@ -36,19 +34,9 @@ export default {
   },
   methods: {
     askQuestion (questionInfo) {
-      this.$store.commit('bookmark/setAppQuestion', questionInfo.question)
       this.$store.commit('dataSource/setAppQuestion', questionInfo.question)
       this.$store.commit('dataSource/setCurrentQuestionInfo', questionInfo)
       this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
-    }
-  },
-  computed: {
-    questionList () {
-      if (this.resultInfo.checkQuestionList) {
-        return this.resultInfo.checkQuestionList
-      } else if (this.resultInfo.similarQuestionList) {
-        return this.resultInfo.similarQuestionList
-      }
     }
   }
 }

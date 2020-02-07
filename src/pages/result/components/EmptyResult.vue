@@ -10,26 +10,15 @@
         :key="index"
       >{{ unknownText }}<span v-show="index !== resultInfo.unknown.length - 1">、</span></span>
     </div>
-    <quick-starts
-      :items="quickstartWithoutDefaults"
-    ></quick-starts>
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import QuickStarts from '@/components/QuickStarts'
 export default {
   name: 'EmptyResult',
   props: {
     resultInfo: {
       type: Object
     }
-  },
-  components: {
-    QuickStarts
-  },
-  computed: {
-    ...mapGetters('bookmark', ['quickstartWithoutDefaults'])
   }
 }
 </script>

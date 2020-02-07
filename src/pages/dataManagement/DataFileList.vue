@@ -50,7 +50,6 @@
         :is-processing="isProcessing"
         :empty-message="$t('editing.clickToUploadTable')"
         @create="createDataSource"
-        @rename="confirmRename"
         @delete="confirmDelete"
         @edit="editTableColumn"
       >
@@ -68,13 +67,6 @@
       @confirm="deleteFile"
       @cancel="cancelDelete"
     ></confirm-delete-file-dialog>
-    <confirm-change-name-dialog
-      v-if="showConfirmRenameDialog"
-      :title="$t('editing.renameTable')"
-      :source="renameDataSource.filename"
-      @confirm="renameCSV"
-      @cancel="cancelRename"
-    ></confirm-change-name-dialog>
     <edit-table-join-relation-dialog
       v-if="showJoinTableDialog"
       @cancel="toggleJoinTableDialog"
@@ -90,7 +82,6 @@
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
-import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
 import { getDataFrameById, checkDataSourceStatusById } from '@/API/DataSource'
@@ -101,7 +92,6 @@ export default {
     DataTable,
     FileUploadDialog,
     ConfirmDeleteFileDialog,
-    ConfirmChangeNameDialog,
     EditTableJoinRelationDialog,
     EditColumnDialog
   },
@@ -110,7 +100,6 @@ export default {
       currentDataSourceId: parseInt(this.$route.params.id),
       dataSourceName: null,
       showConfirmDeleteDialog: false,
-      showConfirmRenameDialog: false,
       showJoinTableDialog: false,
       showEditColumnDialog: false,
       deleteId: null,
@@ -178,10 +167,6 @@ export default {
     closeFileUploadDialog () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
-    confirmRename (dataInfo) {
-      this.renameDataSource = dataInfo
-      this.showConfirmRenameDialog = true
-    },
     confirmDelete (dataObj) {
       if (dataObj) {
         this.selectList = [dataObj]
@@ -220,22 +205,6 @@ export default {
     cancelDelete () {
       this.selectList = []
       this.showConfirmDeleteDialog = false
-    },
-    renameCSV ({resolve, name}) {
-      // renameCSV(this.currentDataSourceId, this.renameDataSource.id, name)
-      //   .then(() => {
-      //     this.fetchData()
-      //       .then(() => {
-      //         this.cancelRename()
-      //         resolve()
-      //       })
-      //   }).catch(() => {
-      //     this.cancelRename()
-      //   })
-    },
-    cancelRename () {
-      this.renameDataSource = null
-      this.showConfirmRenameDialog = false
     },
     toggleJoinTableDialog () {
       this.showJoinTableDialog = !this.showJoinTableDialog

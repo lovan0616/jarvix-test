@@ -12,6 +12,7 @@
     <component
       v-else
       :is="layout"
+      :data-result-id="currentResultId"
       :resultInfo="resultInfo"
     ></component>
     <div class="related-question-block" v-if="relatedQuestionList.length > 0">
@@ -28,9 +29,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { mapGetters } from 'vuex'
-import { askQuestion } from '@/API/NewAsk'
 import FilterInfo from '@/components/display/FilterInfo'
 
 export default {
@@ -43,27 +41,35 @@ export default {
       isLoading: false,
       layout: null,
       resultInfo: null,
-      askCancelFunction: null,
       timeStamp: this.$route.query.stamp,
-      relatedQuestionList: []
+      relatedQuestionList: [],
+      timeoutFunction: null
     }
   },
   watch: {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
-      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'segmentation': this.currentQuestionInfo, 'restrictions': this.filterRestrictionList})
+      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId})
     }
   },
   mounted () {
     this.fetchData()
   },
+  destroyed () {
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+  },
   computed: {
-    ...mapGetters('bookmark', ['appQuestion']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
     currentQuestionInfo () {
       return this.$store.state.dataSource.currentQuestionInfo
+    },
+    currentQuestionId () {
+      return this.$store.state.dataSource.currentQuestionId
+    },
+    currentResultId () {
+      return this.$store.state.result.currentResultId
     },
     filterRestrictionList () {
       return this.$store.getters['dataSource/filterRestrictionList']
@@ -74,7 +80,7 @@ export default {
       let question = this.$route.query.question
       let dataSourceId = parseInt(this.$route.query.dataSourceId)
       if (question) {
-        this.fetchApiAsk({question, dataSourceId, 'segmentation': this.currentQuestionInfo, 'restrictions': this.filterRestrictionList})
+        this.fetchApiAsk({dataSourceId, question})
       }
     },
     clearLayout () {
@@ -90,127 +96,121 @@ export default {
       // 動態變更 title 為了方便前一頁、下一頁變更時可以快速找到
       document.title = `SyGPS-${data.question}`
 
-      const _this = this
-      this.cancelRequest()
-      askQuestion(data, new axios.CancelToken(function executor (c) {
-        _this.askCancelFunction = c
-      }))
-        .then(res => {
-          this.$store.dispatch('dataSource/getHistoryQuestionList', this.dataSourceId)
+      if (this.currentQuestionInfo) {
+        this.$store.dispatch('chatBot/askResult', {
+          questionId: this.currentQuestionId,
+          segmentationPayload: this.currentQuestionInfo,
+          restrictions: this.filterRestrictionList
+        }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
-
-          this.timeStamp = this.$route.query.stamp
-          this.isLoading = false
-          switch (res.layout) {
-            case 'general':
-              if (res.tasks && res.tasks.length > 1) {
-                this.layout = 'GeneralResult'
-                if (res.relatedQuestionList) {
-                  this.relatedQuestionList = res.relatedQuestionList
-                }
-
-                this.$nextTick(() => {
-                  window.setTimeout(() => {
-                    this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
-                  }, 2000)
-                })
-              } else {
-                this.layout = 'MultiResult'
-                let chatBotOptionList = []
-
-                if (res.checkQuestionList && res.checkQuestionList.length > 0) {
-                  chatBotOptionList = res.checkQuestionList
-                }
-                if (res.similarQuestionList && res.similarQuestionList.length > 0) {
-                  chatBotOptionList = res.similarQuestionList
-                }
-
-                this.$nextTick(() => {
-                  window.setTimeout(() => {
-                    this.$store.commit('chatBot/addSystemConversation', {text: res.similarQuestionList ? this.$t('bot.similarQuestionDescription') : this.$t('bot.multiplePossibilities'), options: chatBotOptionList})
-                  }, 2000)
-                })
-              }
-              this.resultInfo = res
-
-              break
-            case 'correlation_exploration':
-              this.layout = 'CorrelationExplorationResult'
-              this.resultInfo = res
-
-              if (res.relatedQuestionList) {
-                this.relatedQuestionList = res.relatedQuestionList
-              }
-
-              this.$nextTick(() => {
-                window.setTimeout(() => {
-                  this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
-                }, 2000)
-              })
-
-              break
-            case 'root_cause':
-              this.layout = 'RootCauseResult'
-              this.resultInfo = res
-
-              if (res.relatedQuestionList) {
-                this.relatedQuestionList = res.relatedQuestionList
-              }
-
-              this.$nextTick(() => {
-                window.setTimeout(() => {
-                  this.$store.commit('chatBot/addSystemConversation', {text: res.relatedQuestionList ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: res.relatedQuestionList})
-                }, 2000)
-              })
-
-              break
-            case 'no_answer':
-              this.layout = 'EmptyResult'
-              if (res.tasks) {
-                this.resultInfo = res.tasks[0].entities
-              }
-
-              this.$nextTick(() => {
-                window.setTimeout(() => {
-                  this.$store.commit('chatBot/addSystemConversation', {
-                    text: res.tasks ? this.resultInfo.description : this.$t('editing.emptyResultDescription'),
-                    options: res.relatedQuestionList && res.relatedQuestionList.length > 0 ? res.relatedQuestionList : []
-                  })
-                }, 2000)
-              })
-
-              break
-            case 'preview_datasource':
-              this.layout = 'PreviewDataSource'
-              break
-          }
-
-          this.$nextTick(() => {
-            window.setTimeout(() => {
-              this.$store.commit('chatBot/updateAnalyzeStatus', false)
-            }, 2000)
-          })
+          this.getComponent(res)
         }).catch(() => {
           this.isLoading = false
           this.$store.commit('chatBot/updateAnalyzeStatus', false)
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
-    },
-    cancelRequest () {
-      if (typeof this.askCancelFunction === 'function') {
-        this.askCancelFunction('cancel request')
+        return false
       }
+
+      this.$store.dispatch('chatBot/askQuestion', data)
+        .then(response => {
+          this.$store.dispatch('dataSource/getHistoryQuestionList', data.dataSourceId)
+          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+          let questionId = response.questionId
+          this.$store.commit('dataSource/setCurrentQuestionId', questionId)
+          let segmentationList = response.parseQuestionPayload.segmentations
+
+          if (segmentationList.length === 1) {
+            // 介紹資料集的處理
+            if (segmentationList[0].implication.intent === 'Introduction') {
+              this.layout = 'PreviewDataSource'
+              this.resultInfo = null
+              this.isLoading = false
+              return false
+            }
+            this.$store.dispatch('chatBot/askResult', {
+              questionId,
+              segmentationPayload: segmentationList[0],
+              restrictions: this.filterRestrictionList
+            }).then(res => {
+              this.getComponent(res)
+            }).catch(() => {
+              this.isLoading = false
+            })
+          } else {
+            // 多個結果
+            this.layout = 'MultiResult'
+            this.resultInfo = response
+            this.isLoading = false
+          }
+        }).catch(() => {
+          this.isLoading = false
+          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+        })
+
+      this.getRelatedQuestion(data)
+    },
+    getComponent (res) {
+      window.clearTimeout(this.timeoutFunction)
+      this.$store.commit('result/updateCurrentResultId', res.resultId)
+      if (res.layout === 'no_answer') {
+        this.layout = 'EmptyResult'
+        this.resultInfo = {
+          title: res.noAnswerTitle,
+          description: res.noAnswerDescription
+        }
+        this.isLoading = false
+        return false
+      }
+
+      this.$store.dispatch('chatBot/getComponentList', res.resultId)
+        .then(componentResponse => {
+          switch (componentResponse.status) {
+            case 'Process':
+            case 'Ready':
+              this.timeoutFunction = window.setTimeout(() => {
+                this.getComponent(res)
+              }, 1000)
+              break
+            case 'Complete':
+              this.resultInfo = componentResponse.componentIds
+              this.layout = this.getLayout(res.layout)
+              this.isLoading = false
+              break
+            case 'Disable':
+            case 'Delete':
+            case 'Warn':
+            case 'Fail':
+              this.layout = 'EmptyResult'
+              this.isLoading = false
+              break
+          }
+        })
+    },
+    getRelatedQuestion (data) {
+      this.$store.dispatch('chatBot/getRelatedQuestionList', {
+        question: data.question,
+        dataSourceId: data.dataSourceId
+      }).then(response => {
+        this.$nextTick(() => {
+          window.setTimeout(() => {
+            this.$store.commit('chatBot/addSystemConversation', {
+              text: response ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: response
+            })
+            this.$store.commit('chatBot/updateAnalyzeStatus', false)
+          }, 2000)
+        })
+      }).catch(() => {
+        this.$store.commit('chatBot/addSystemConversation', {
+          text: this.$t('bot.finish'), options: []
+        })
+        this.$store.commit('chatBot/updateAnalyzeStatus', false)
+      })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.result-page {
-  .result-question-select-block {
-    display: flex;
-    margin-bottom: 20px;
-  }
-}
 .result-layout {
   width: 100%;
 

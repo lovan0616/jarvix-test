@@ -78,17 +78,6 @@ export default {
           else this.errorMessage = this.$t('message.noResult')
         }
       })
-
-      // 為了顯示上的友善，就算資料拿不回來，template也還是要顯示
-      // getTask(this.templatePath, this.params).then(templateInfo => {
-      //   getTask(this.dataPath, this.params).then(dataInfo => {
-      //     this.createTaskByTemplateAndData({ template: templateInfo, data: dataInfo })
-      //   }).catch(() => {
-      //     this.createTaskByTemplateAndData({ template: templateInfo, data: {} })
-      //   })
-      // }).catch(() => {
-      //   this.loading = false
-      // })
     },
     createTaskByTemplateAndData ({ template = '', data = {} }) {
       this.childContent = {
