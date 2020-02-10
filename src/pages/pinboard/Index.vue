@@ -1,12 +1,11 @@
 <template>
   <div class="page-pinboard">
     <h1 class="page-title">{{ $t('editing.pinboard') }}</h1>
-
     <div class="page-category">{{ $t('editing.allCategory') }}</div>
-    <div @click="showAdd" class="page-add-category">
-      <svg-icon icon-class="add" class="icon"></svg-icon>
+    <button @click="showAdd" class="btn-m btn-default btn-has-icon add-btn">
+      <svg-icon icon-class="plus" class="icon"></svg-icon>
       {{ $t('button.addNewCategory') }}
-      </div>
+      </button>
     <div class="pinboard-list">
       <single-pinboard
         v-if="pinboardList.length > 0"
@@ -181,17 +180,8 @@ export default {
     margin-bottom: 16px;
     color: #DDDDDD;
   }
-  .page-add-category {
-    width: 105px;
-    height: 30px;
-    font-size: 14px;
-    line-height: 30px;
-    text-align: center;
-    color: #fff;
-    background: #1EB8C7;
-    border-radius: 5px;
+  .add-btn {
     margin-bottom: 16px;
-    cursor: pointer;
   }
   .pinboard-list {
     display: flex;

@@ -8,7 +8,7 @@
         ><svg-icon icon-class="close"></svg-icon></a>
       </div>
       <div class="dialog-header-block">
-        <div class="data-frame-name">{{ $t('editing.dataFrame') }}: xxx</div>
+        <div class="data-frame-name">{{ $t('editing.dataFrame') }}：xxx</div>
         <div class="button-block">
           <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
           <button type="button" class="btn btn-default">{{ $t('button.build') }}</button>
@@ -25,7 +25,7 @@
           </div>
         </div>
         <div class="data-value-block">
-          <div class="block-title">{{ $t('editing.columnName') }}: XXX</div>
+          <div class="block-title">{{ $t('editing.columnName') }}：XXX</div>
           <div class="data-value-table data-table">
             <div class="data-table-head is-scrolling">
               <div class="data-table-row table-head">
@@ -40,8 +40,26 @@
                 :key="i"
               >
                 <div class="data-table-cell data-value">test {{i}}</div>
-                <div class="data-table-cell alias">test</div>
-                <div class="data-table-cell action"></div>
+                <div class="data-table-cell alias">
+                  <div class="edit-block">
+                    <div class="input-block edit-alias-input-block">
+                      <input type="text" class="input">
+                      <div class="link">{{ $t('button.remove') }}</div>
+                    </div>
+                    <div class="input-block edit-alias-input-block">
+                      <input type="text" class="input">
+                      <div class="link">{{ $t('button.remove') }}</div>
+                    </div>
+                    <button class="btn btn-secondary">
+                      <svg-icon icon-class="plus"></svg-icon>{{ $t('button.add') }}
+                    </button>
+                  </div>
+                </div>
+                <div class="data-table-cell action">
+                  <a href="javascript:void(0);" class="link action-link">{{ $t('button.edit') }}</a>
+                  <a href="javascript:void(0);" class="link action-link">{{ $t('button.save') }}</a>
+                  <a href="javascript:void(0);" class="link action-link">{{ $t('button.cancel') }}</a>
+                </div>
               </div>
             </div>
           </div>
@@ -93,17 +111,34 @@ export default {
     .data-column-block {
       width: 23%;
 
-      .block-title {
-        background-color: rgba(51, 51, 51, 0.6);
-      }
-
       .data-column-block-body {
         max-height: calc(70vh - 40px);
         overflow: auto;
+
+        .data-column-row {
+          cursor: pointer;
+
+          &:hover {
+            background-color: #2AD2E2;
+            color: #fff;
+
+            &:after {
+              content: "";
+              display: block;
+
+            }
+          }
+        }
       }
 
       .data-column-row {
         padding: 8px 18px;
+        color: #DDD;
+
+        &.block-title {
+          background-color: rgba(51, 51, 51, 0.6);
+          color: #fff;
+        }
       }
     }
 
@@ -117,9 +152,34 @@ export default {
       }
     }
 
-    .data-value-table {
+    .data-value-table.data-table {
       .data-table-body {
         max-height: calc(70vh - 120px);
+      }
+      .data-table-cell {
+        padding: 10px 16px;
+
+        &.data-value {
+          flex: initial;
+          width: 28.3%;
+        }
+        &.alias {
+          flex: initial;
+          width: 48.2%;
+        }
+        &.action {
+          flex: 1;
+        }
+      }
+    }
+
+    .edit-alias-input-block {
+      display: flex;
+      align-items: center;
+
+      .input {
+        width: 105px;
+        margin-right: 12px;
       }
     }
   }

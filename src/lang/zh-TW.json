@@ -276,7 +276,9 @@
     "editName": "編輯名稱",
     "addNewCategory": "新增分類",
     "exportData": "輸出圖表資料",
-    "viewData": "查看圖表數據"
+    "viewData": "查看圖表數據",
+    "remove": "移除",
+    "add": "增加"
   },
   "aggregation": {
     "mean": "平均",
