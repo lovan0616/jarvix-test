@@ -167,7 +167,8 @@
     "dataColumnValue": "资料表数据值",
     "dataFrame": "资料表",
     "rebuildRemark": "编辑后需再次建置资料",
-    "dataValue": "数据值"
+    "dataValue": "数据值",
+    "dataColumn": "资料表栏位"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",

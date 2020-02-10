@@ -167,7 +167,8 @@
     "dataColumnValue": "資料表數據值",
     "dataFrame": "資料表",
     "rebuildRemark": "編輯後需再次建置資料",
-    "dataValue": "數據值"
+    "dataValue": "數據值",
+    "dataColumn": "資料表欄位"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",

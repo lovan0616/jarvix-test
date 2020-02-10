@@ -1,7 +1,7 @@
 <template>
   <div class="edit-column-dialog full-page-dialog">
     <div class="dialog-container">
-      <div class="dialog-title">{{ $t('editing.editTableColumn') }}
+      <div class="dialog-title">{{ $t('editing.dataColumn') }}
          <button class="btn-m btn-default build-btn"
           v-if="userEditInfo.userEditedColumnInputList.length > 0"
           :disabled="isProcessing"
@@ -32,10 +32,19 @@
                 <span
                   v-if="tempRowInfo.dataColumnId !== column.id"
                 >{{ column.primaryAlias }}</span>
-                <input type="text" class="input alias-input"
+                <div class="edit-block"
                   v-else
-                  v-model="tempRowInfo.alias"
                 >
+                  <div class="edit-alias-input-block">
+                    <input type="text" class="input alias-input"
+                      v-model="tempRowInfo.alias"
+                    >
+                    <!-- <a href="javascript:void(0);" class="link">{{ $t('button.remove') }}</a> -->
+                  </div>
+                  <!-- <button class="btn-m btn-secondary btn-add">
+                    <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.add') }}
+                  </button> -->
+                </div>
               </div>
               <!-- <div class="data-table-cell tag">{{ column.statsType }}</div> -->
               <div class="data-table-cell tag">
@@ -216,7 +225,22 @@ export default {
   }
 
   .alias-input {
+    width: 105px;
     line-height: 24px;
+    margin-right: 12px;
+  }
+  .edit-alias-input-block {
+    display: flex;
+    align-items: center;
+
+    &:not(:last-child) {
+      margin-bottom: 12px;
+    }
+  }
+  .btn-add {
+    .icon {
+      margin-right: 5px;
+    }
   }
 }
 </style>

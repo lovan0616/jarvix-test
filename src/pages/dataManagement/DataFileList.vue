@@ -76,7 +76,7 @@
       :table-info="currentEditDataFrameInfo"
       @close="closeEditColumnDialog"
     ></edit-column-dialog>
-    <value-alias-dialog></value-alias-dialog>
+    <!-- <value-alias-dialog></value-alias-dialog> -->
   </div>
 </template>
 <script>

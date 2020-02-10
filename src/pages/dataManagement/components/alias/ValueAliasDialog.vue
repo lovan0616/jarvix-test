@@ -50,8 +50,8 @@
                       <input type="text" class="input">
                       <div class="link">{{ $t('button.remove') }}</div>
                     </div>
-                    <button class="btn btn-secondary">
-                      <svg-icon icon-class="plus"></svg-icon>{{ $t('button.add') }}
+                    <button class="btn-m btn-secondary btn-add">
+                      <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.add') }}
                     </button>
                   </div>
                 </div>
@@ -71,6 +71,14 @@
 <script>
 export default {
   name: 'ValueAliasDialog',
+  data () {
+    return {
+      currentColumn: null
+    }
+  },
+  mounted () {
+
+  },
   methods: {
     closeDialog () {
 
@@ -116,16 +124,23 @@ export default {
         overflow: auto;
 
         .data-column-row {
+          position: relative;
           cursor: pointer;
 
-          &:hover {
+          &:hover, &.active {
             background-color: #2AD2E2;
             color: #fff;
 
             &:after {
+              position: absolute;
+              right: 0;
+              top: calc(50% - 4px);
               content: "";
               display: block;
-
+              width: 0;
+              height: 0;
+              border: 4px solid transparent;
+              border-left-color: #fff;
             }
           }
         }
@@ -177,9 +192,23 @@ export default {
       display: flex;
       align-items: center;
 
+      &:not(:last-child) {
+        margin-bottom: 12px;
+      }
+
       .input {
         width: 105px;
         margin-right: 12px;
+        padding-bottom: 0;
+      }
+    }
+
+    .edit-block {
+      .btn-add {
+
+        .icon {
+          margin-right: 5px;
+        }
       }
     }
   }
