@@ -6,16 +6,31 @@
     >{{ $t('bot.similarQuestionDescription') }}</div> -->
     <div class="board-description">{{ $t('bot.multiplePossibilities') }}</div>
     <div class="question-list">
-      <div class="single-question"
+      <div class="question-block"
         v-for="(singleQuestion, index) in resultInfo.parseQuestionPayload.segmentations"
         :key="index"
-        @click="askQuestion(singleQuestion)"
       >
-        <question-name
-          :question="singleQuestion.question"
-          :question-segmentation="singleQuestion.segmentation"
-        ></question-name>
+        <div class="single-question"
+          @click="askQuestion(singleQuestion)"
+        >
+          <question-name
+            :question="singleQuestion.question"
+            :question-segmentation="singleQuestion.segmentation"
+          ></question-name>
+        </div>
+        <div class="segmentation-info-block">
+          <div class="single-segmentation"
+            v-for="(segmentation, segmentationIndex) in singleQuestion.segmentation"
+            :key="index + '-' + segmentationIndex"
+            v-if="segmentation.properties"
+          >
+            <span class="column-name"
+              :class="segmentation.type"
+            >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from')}}<span class="dataframe-name">{{segmentation.properties.dataframePrimaryAlias}}</span>{{ $t('resultDescription.dataColumnRecognize') }}<b>'{{ segmentation.matchedWord }}'</b><span v-show="segmentation.type === 'Datavalue'">{{ $t('resultDescription.columnValue') }}</span>
+          </div>
+        </div>
       </div>
+      
     </div>
   </div>
 </template>
@@ -58,6 +73,12 @@ export default {
     margin-bottom: 24px;
   }
 
+  .question-block {
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
+  }
+
   .single-question {
     padding: 16px;
     background: rgba(35, 61, 64, 0.6);
@@ -65,14 +86,43 @@ export default {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s;
-
-    &:not(:last-child) {
-      margin-bottom: 12px;
-    }
+    margin-bottom: 8px;
 
     &:hover {
       transform: translate3d(0,-5px,0);
       box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.12);
+    }
+  }
+  .single-segmentation {
+    font-size: 14px;
+    line-height: 26px;
+
+    .column-name {
+      color: #ddd;
+      margin-right: 8px;
+
+      &.filter {
+        color: #FF9559;
+      }
+
+      &.Datacolumn {
+        color: #44D2FF;
+      }
+      &.numeric {
+        color: #CA66DA;
+      }
+      &.Datavalue {
+        color: #CA66DA;
+      }
+      &.DtToken, &.FuzzyDtToken, &.TimeScope {
+        color: #FF9559;
+      }
+    }
+
+    .dataframe-name {
+      display: inline-block;
+      font-weight: bold;
+      margin: 0 8px;
     }
   }
 }
