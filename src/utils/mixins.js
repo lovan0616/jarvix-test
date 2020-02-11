@@ -113,6 +113,12 @@ Vue.mixin({
           return 'DisplayBarChart'
         case 'bar_chart_average':
           return 'DisplayAverageBarChart'
+        case 'multi_axis_bar_chart':
+          return 'DisplayMultiAxisBarChart'
+        case 'multi_axis_line_chart':
+          return 'DisplayMultiAxisLineChart'
+        case 'parallel_bar_chart':
+          return 'ParallelBarChart'
         case 'box_plot':
           return 'DisplayBoxPlotChart'
         case 'computed_box_plot':
@@ -170,6 +176,18 @@ Vue.mixin({
     },
     roundNumber (value, count = 2) {
       return (value).toFixed(count)
+    },
+    // export data
+    exportCSVFile (el, question, data) {
+      let exportFunction = (e) => {
+        if (e.target && e.target.id === 'export-btn') {
+          this.exportToCSV(question, data)
+          // el.removeEventListener('click', exportFunction, false)
+        }
+      }
+      exportFunction.bind(this)
+      el.removeEventListener('click', exportFunction, false)
+      el.addEventListener('click', exportFunction, false)
     },
     exportToCSV (filename, rows) {
       let processRow = (row) => {

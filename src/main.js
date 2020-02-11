@@ -70,6 +70,11 @@ import DisplayGroupScatterChart from '@/components/display/DisplayGroupScatterCh
 import DisplayLineChart from '@/components/display/DisplayLineChart'
 import DisplayPieChart from '@/components/display/DisplayPieChart'
 import DisplayBarChart from '@/components/display/DisplayBarChart'
+// 多 Y 軸
+import DisplayMultiAxisBarChart from '@/components/display/DisplayMultiAxisBarChart'
+import DisplayMultiAxisLineChart from '@/components/display/DisplayMultiAxisLineChart'
+// 水平方向 bar chart
+import DisplayParallelBarChart from '@/components/display/DisplayParallelBarChart'
 import DisplayChinaMap from '@/components/display/DisplayChinaMap'
 import DisplayWorldMap from '@/components/display/DisplayWorldMap'
 import DisplayPredictChart from '@/components/display/DisplayPredictChart'
@@ -144,6 +149,9 @@ Vue.component(DisplayTreeMapChart.name, DisplayTreeMapChart)
 Vue.component(DisplayLineChart.name, DisplayLineChart)
 Vue.component(DisplayPieChart.name, DisplayPieChart)
 Vue.component(DisplayBarChart.name, DisplayBarChart)
+Vue.component(DisplayMultiAxisBarChart.name, DisplayMultiAxisBarChart)
+Vue.component(DisplayMultiAxisLineChart.name, DisplayMultiAxisLineChart)
+Vue.component(DisplayParallelBarChart.name, DisplayParallelBarChart)
 Vue.component(DisplayChinaMap.name, DisplayChinaMap)
 Vue.component(DisplayWorldMap.name, DisplayWorldMap)
 Vue.component(DisplayPredictChart.name, DisplayPredictChart)

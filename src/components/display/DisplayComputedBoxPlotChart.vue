@@ -90,8 +90,8 @@ export default {
       chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotChartConfig.xAxis}
       chartAddon.tooltip.trigger = boxPlotChartConfig.tooltip.trigger
       chartAddon.xAxis.data = this.dataset.index
-      chartAddon.xAxis.name = this.title.xAxis.display_name
-      chartAddon.yAxis.name = this.title.yAxis.display_name
+      chartAddon.xAxis.name = this.title.xAxis[0].display_name
+      chartAddon.yAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
       boxPlotChartConfig.chartData.data = this.dataset.data.map(element => {
         return [element.low, element.q1, element.q2, element.q3, element.high]
       })

@@ -65,8 +65,8 @@ let tooltipFormatterWrapper = function ({xAxis, yAxis}) {
   return function (params, ticket, callback) {
     return params.reduce((res, item, index) => {
       return `
-        ${xAxis.display_name}: ${item.data[0]}<br/>
-        ${yAxis.display_name}: ${item.data[1]}<br/>
+        ${xAxis[0].display_name}: ${item.data[0]}<br/>
+        ${yAxis[0].display_name}: ${item.data[1]}<br/>
       `
     }, '')
   }
@@ -127,19 +127,19 @@ export default {
             {
               type: 'range',
               properties: {
-                dc_name: this.title.xAxis.dc_name,
-                data_type: this.title.xAxis.data_type,
-                display_name: this.title.xAxis.display_name,
-                start: this.title.xAxis.stats_type === 'numeric' ? coordRange[0][0] : this.dataset.index[coordRange[0][0]],
-                end: this.title.xAxis.stats_type === 'numeric' ? coordRange[0][1] : this.dataset.index[coordRange[0][1]]
+                dc_name: this.title.xAxis[0].dc_name,
+                data_type: this.title.xAxis[0].data_type,
+                display_name: this.title.xAxis[0].display_name,
+                start: this.title.xAxis[0].stats_type === 'numeric' ? coordRange[0][0] : this.dataset.index[coordRange[0][0]],
+                end: this.title.xAxis[0].stats_type === 'numeric' ? coordRange[0][1] : this.dataset.index[coordRange[0][1]]
               }
             },
             {
               type: 'range',
               properties: {
-                dc_name: this.title.yAxis.dc_name,
-                data_type: this.title.yAxis.data_type,
-                display_name: this.title.yAxis.display_name,
+                dc_name: this.title.yAxis[0].dc_name,
+                data_type: this.title.yAxis[0].data_type,
+                display_name: this.title.yAxis[0].display_name,
                 start: coordRange[1][0],
                 end: coordRange[1][1]
               }
@@ -159,8 +159,8 @@ export default {
       this.$set(chartAddon.xAxis, 'splitLine', scatterOptions.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterOptions.yAxisSplitLine)
       chartAddon.tooltip.formatter = tooltipFormatterWrapper(this.title)
-      chartAddon.xAxis.name = this.title.xAxis.display_name
-      chartAddon.yAxis.name = this.title.yAxis.display_name
+      chartAddon.xAxis.name = this.title.xAxis[0].display_name
+      chartAddon.yAxis.name = this.title.yAxis[0].display_name
       scatterOptions.chartData.data = this.dataset.data
       scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.series[0] = scatterOptions.chartData
@@ -170,8 +170,8 @@ export default {
         let table = '<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-secondary" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div>' +
           `<div style="margin-top: 16px;padding: 0 16px;">${maxLength === 1000 ? this.$t('resultDescription.displayTopData', {count: maxLength}) : this.$t('resultDescription.displayTotalData', {count: maxLength})}</div>` +
           '<table style="width:100%;padding: 0 16px;"><tbody><tr>' +
-          '<td style="padding: 4px 12px;">' + this.title.xAxis.display_name + '</td>' +
-          '<td style="padding: 4px 12px;">' + this.title.yAxis.display_name + '</td>' +
+          '<td style="padding: 4px 12px;">' + this.title.xAxis[0].display_name + '</td>' +
+          '<td style="padding: 4px 12px;">' + this.title.yAxis[0].display_name + '</td>' +
           '</tr>'
         for (let i = 1; i < maxLength; i++) {
           table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>
@@ -186,7 +186,7 @@ export default {
         this.$el.addEventListener('click', (e) => {
           if (e.target && e.target.id === 'export-btn') {
             let exportData = JSON.parse(JSON.stringify(this.dataset.data))
-            exportData.unshift([this.title.xAxis.display_name, this.title.yAxis.display_name])
+            exportData.unshift([this.title.xAxis[0].display_name, this.title.yAxis[0].display_name])
             this.exportToCSV(this.appQuestion, exportData)
           }
         })

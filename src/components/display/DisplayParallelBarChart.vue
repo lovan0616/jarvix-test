@@ -4,9 +4,25 @@
       :style="chartStyle"
       :options="options"
       auto-resize
+      v-on="eventHandlers"
       @brushselected="brushRegionSelected"
     >
     </v-echart>
+    <display-basic-chart
+      :dataset="transformDataset"
+      :height="height"
+      :title="title"
+      :addIndexToData="false"
+      :addons="{
+        'seriesItem:bar': {
+          'large': true
+        },
+        'color:10': {},
+        'grid:default': {},
+        'xAxis:default': {},
+        'yAxis:default': {}
+      }"
+    ></display-basic-chart>
     <selected-region
       v-if="selectedData.length > 0"
       :title="$t('resultDescription.currentChosenData')"
@@ -53,18 +69,38 @@ import {
   gridDefault,
   xAxisDefault,
   yAxisDefault,
-  seriesItemLine
+  seriesItemLine,
+  seriesItemLineStack,
+  seriesItemBar,
+  seriesItemPie,
+  seriesItemDoughnut,
+  seriesItemMarkLine,
+  seriesItemPieLabelWithValue
 } from './common/addons'
+
+import {
+  emitter
+} from './common/events'
+
+const eventHandlerGenerators = {
+  click: emitter
+}
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
   'xAxis:default': xAxisDefault(),
   'yAxis:default': yAxisDefault(),
-  'seriesItem:line': seriesItemLine()
+  'seriesItem:bar': seriesItemBar(),
+  'seriesItem:line': seriesItemLine(),
+  'seriesItem:lineStack': seriesItemLineStack(),
+  'seriesItem:pie': seriesItemPie(),
+  'seriesItem:pieLabelWithValue': seriesItemPieLabelWithValue(),
+  'seriesItem:doughnut': seriesItemDoughnut(),
+  'seriesItem:markLine': seriesItemMarkLine()
 })
 
 export default {
-  name: 'DisplayLineChart',
+  name: 'DisplayParallelBarChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     title: {
@@ -76,10 +112,13 @@ export default {
         }
       }
     },
-    height: {
-      type: String,
-      default: '380px'
+    addons: { type: [Object, Array], default: () => ([]) },
+    events: { type: Object, default: () => ({}) },
+    isPreview: {
+      type: Boolean,
+      default: false
     },
+    height: {type: String, default: '380px'},
     isParallel: {
       type: Boolean,
       default: false
@@ -87,36 +126,67 @@ export default {
   },
   data () {
     echartAddon.mapping({
-      'seriesItem:line': {
+      'seriesItem:bar': {
         'large': true
       },
       'color:10': {},
       'grid:default': {},
       'xAxis:default': {},
-      'yAxis:default': {}
+      'yAxis:default': {},
     })
     return {
       addonOptions: JSON.parse(JSON.stringify(echartAddon.options)),
       addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
+      addonSeriesData: JSON.parse(JSON.stringify(echartAddon.seriesData)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
       selectedData: []
     }
   },
   computed: {
+    _dataset () {
+      let result
+      if (typeof this.dataset === 'string') result = JSON.parse(this.dataset)
+      else result = this.dataset
+
+      // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
+      if (result.columns) {
+        result.columns = result.columns.map(element => {
+          return isNaN(Number(element)) ? element : ' ' + element
+        })
+      }
+
+      return result
+    },
     chartStyle () {
       return {
         width: '100%',
-        height: this.height
+        height: this.isPreview ? '200px' : this.height
       }
     },
+    dataList () {
+      if ((this._dataset instanceof Array)) return this._dataset
+      else return this.tobeDataset(this._dataset)
+    },
     series () {
-      return this.dataset.columns.map((element, colIndex) => {
+      return this._dataset.columns.map((v, colIndex) => {
+        let data
+        const needSeriesData = Object.keys(this.addonSeriesData).length > 0
+        const isStack = (this.addonSeriesItem.stack)
+        if (needSeriesData && isStack) {
+          data = this._dataset.data.reduce((result, row, rowIndex) => {
+            result.push({
+              value: row[colIndex],
+              ...this.addonSeriesData
+            })
+            return result
+          }, [])
+        }
         return {
-          // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
-          name: isNaN(Number(element)) ? element : ' ' + element,
+          name: v,
           ...this.addonSeriesItem,
           ...this.addonSeriesItems[colIndex],
-          connectNulls: true
+          connectNulls: true,
+          data
         }
       })
     },
@@ -126,7 +196,7 @@ export default {
         ...getDrillDownTool(this.title),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
         dataset: {
-          source: this.tobeDataset(this.dataset)
+          source: this.dataList
         },
         series: this.series,
         color: this.colorList
@@ -143,10 +213,13 @@ export default {
         table += '</tbody></table>'
         return table
       }
-
       // export data
       this.$nextTick(() => {
-        this.exportCSVFile(this.$el, this.appQuestion, config.dataset.source)
+        this.$el.addEventListener('click', (e) => {
+          if (e.target && e.target.id === 'export-btn') {
+            this.exportToCSV(this.appQuestion, this.dataList)
+          }
+        })
       })
 
       // 移除 null 值
@@ -164,18 +237,21 @@ export default {
       // 圖表是水平或是垂直
       if (this.isParallel) {
         config.xAxis = yAxisDefault()
-        config.xAxis.name = this.title.yAxis[0].display_name
+        config.xAxis.name = this.title.yAxis.display_name
         config.yAxis = xAxisDefault()
-        config.yAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
+        config.yAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
       } else {
-        config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
-        config.yAxis.name = this.title.yAxis[0].display_name
+        config.xAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
+        config.yAxis.name = this.title.yAxis.display_name
       }
+      // 如果是 bar chart
+      config.yAxis.scale = !(this.series[0].type === 'bar')
 
+      if (this.isPreview) this.previewChartSetting(config)
       return config
     },
     colorList () {
-      switch (this.dataset.data.length) {
+      switch (this.dataList[0].length) {
         case 2:
           return colorOnly1
         case 3:
@@ -188,6 +264,17 @@ export default {
         default:
           return color12
       }
+    },
+    eventHandlers () {
+      return Object.keys(eventHandlerGenerators).reduce((result, eventName) => {
+        const generator = eventHandlerGenerators[eventName].bind(this)
+        const options = this.events[eventName]
+        if (options) {
+          const handler = generator(options)
+          result[eventName] = handler
+        }
+        return result
+      }, {})
     },
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
@@ -211,23 +298,21 @@ export default {
       return result
     },
     brushRegionSelected (params) {
-      if (params.batch[0].areas.length === 0) {
+      if (params.batch[0].selected[0].dataIndex.length === 0) {
         this.selectedData = []
-        return
+        return false
       }
-      this.selectedData = params.batch[0].areas.map(areaElement => {
-        let coordRange = areaElement.coordRange
-        return {
-          type: 'range',
-          properties: {
-            dc_name: this.title.xAxis[0].dc_name,
-            data_type: this.title.xAxis[0].data_type,
-            display_name: this.title.xAxis[0].display_name,
-            start: this.dataset.index[coordRange[0]],
-            end: this.dataset.index[coordRange[1]]
-          }
+      this.selectedData = [{
+        type: 'enum',
+        properties: {
+          dc_name: this.title.xAxis.dc_name,
+          data_type: this.title.xAxis.data_type,
+          display_name: this.title.xAxis.display_name,
+          datavalues: params.batch[0].selected[0].dataIndex.map(element => {
+            return this.dataset.index[element]
+          })
         }
-      })
+      }]
     },
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)

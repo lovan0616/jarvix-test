@@ -1,5 +1,6 @@
 <template>
   <div class="task"
+    :class="{'task-mask': isGetPagination}"
     :data-component-id="componentId"
     :data-result-id="resultId"
     :data-diagram-type="diagram"
@@ -31,6 +32,16 @@
       >
         {{note}}
       </div>
+      <div class="pagination-block"
+        v-if="pagination.totalPages > 1"
+        :class="{'key-result-pagination': intend === 'key_result'}"
+      >
+        <button class="btn-m btn-default"
+          @click="getNewPageInfo"
+          :disabled="pagination.currentPage + 1 === pagination.totalPages"
+        >{{ $t('resultDescription.getMoreBtn') }}</button>
+        <span class="loading-percentage">{{ $t('resultDescription.loadedRate') }}：{{ roundNumber((pagination.currentPage + 1) / pagination.totalPages * 100) }}%</span>
+      </div>
     </template>
   </div>
 </template>
@@ -56,7 +67,11 @@ export default {
       errorMessage: '',
       notes: [],
       timeoutFunction: null,
-      page: 0
+      pagination: {
+        currentPage: 0,
+        totalPages: 1
+      },
+      isGetPagination: false
     }
   },
   mounted () {
@@ -67,10 +82,13 @@ export default {
   },
   methods: {
     fetchData () {
+      if (this.pagination.currentPage > 0) {
+        this.isGetPagination = true
+      }
       window.clearTimeout(this.timeoutFunction)
       this.$store.dispatch('chatBot/getComponentData', {
         id: this.componentId,
-        page: this.page
+        page: this.pagination.currentPage
       }).then(response => {
         switch (response.status) {
           case 'Process':
@@ -84,8 +102,27 @@ export default {
             this.diagram = response.diagram
             this.resultId = response.resultId
             this.componentName = this.getChartTemplate(this.diagram)
-            this.componentData = response.data
+            // 分頁的資料 push 進去
+            if (this.pagination.totalPages > 1 && this.pagination.currentPage !== 0) {
+              this.componentData.dataset.data = this.componentData.dataset.data.concat(response.data.dataset.data)
+              this.componentData.dataset.index = this.componentData.dataset.index.concat(response.data.dataset.index)
+
+              this.$nextTick(() => {
+                this.isGetPagination = false
+              })
+            } else {
+              this.componentData = response.data
+            }
+            this.pagination = response.pagination
             this.loading = false
+            // 如果有分頁資料還沒取
+            // if (this.pagination.totalPages > 1 && this.pagination.totalPages > this.pagination.currentPage + 1) {
+            //   this.isGetPagination = true
+            //   this.pagination.currentPage += 1
+            //   this.fetchData()
+            // } else if (this.pagination.totalPages > 1 && this.pagination.totalPages === this.pagination.currentPage + 1) {
+            //   this.isGetPagination = false
+            // }
 
             // 空資料的處理
             if (this.componentData.dataset && this.componentData.dataset.data.length === 0) {
@@ -115,6 +152,10 @@ export default {
         if (this.intend === 'key_result') this.isError = true
       })
     },
+    getNewPageInfo () {
+      this.pagination.currentPage += 1
+      this.fetchData()
+    },
     appendNote (note) {
       this.notes.push(note)
     },
@@ -129,6 +170,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .task {
+  position: relative;
   width: 100%;
 
   .task-note {
@@ -137,6 +179,43 @@ export default {
     }
     color: #A7A7A7;
     font-size: 12px;
+  }
+
+  // pagination 遮罩
+  &.task-mask {
+    position: relative;
+    background: repeating-linear-gradient(to right, rgba(34, 64, 68, 0) 0%, rgba(34, 64, 68, 1) 50%, rgba(34, 64, 68, 0) 100%);
+    width: 100%;
+    background-size: 200% auto;
+    background-position: 0 100%;
+    animation: gradient 2s infinite;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+
+    @keyframes gradient {
+      0%   { background-position: 0 0; }
+      100% { background-position: -200% 0; }
+    }
+  }
+
+  .pagination-block {
+    display: flex;
+    align-items: center;
+
+    &.key-result-pagination {
+      position: absolute;
+      top: -30px;
+      left: 0;
+    }
+
+    .btn-m {
+      margin-right: 12px;
+    }
+
+    .loading-percentage {
+      color: #fff;
+      font-size: 12px;
+    }
   }
 }
 </style>

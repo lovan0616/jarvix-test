@@ -1,5 +1,5 @@
 <template>
-  <div class="display-basic-chart">
+  <div class="display-multi-axis-bar-chart">
     <v-echart
       :style="chartStyle"
       :options="options"
@@ -52,19 +52,19 @@ import {
   color12,
   gridDefault,
   xAxisDefault,
-  yAxisDefault,
-  seriesItemLine
+  yAxisMultiple,
+  seriesItemBar
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
   'xAxis:default': xAxisDefault(),
-  'yAxis:default': yAxisDefault(),
-  'seriesItem:line': seriesItemLine()
+  'yAxis:multiple': yAxisMultiple(),
+  'seriesItem:bar': seriesItemBar()
 })
 
 export default {
-  name: 'DisplayLineChart',
+  name: 'DisplayMultiAxisBarChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     title: {
@@ -79,21 +79,17 @@ export default {
     height: {
       type: String,
       default: '380px'
-    },
-    isParallel: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
     echartAddon.mapping({
-      'seriesItem:line': {
+      'seriesItem:bar': {
         'large': true
       },
       'color:10': {},
       'grid:default': {},
       'xAxis:default': {},
-      'yAxis:default': {}
+      'yAxis:multiple': {}
     })
     return {
       addonOptions: JSON.parse(JSON.stringify(echartAddon.options)),
@@ -116,7 +112,8 @@ export default {
           name: isNaN(Number(element)) ? element : ' ' + element,
           ...this.addonSeriesItem,
           ...this.addonSeriesItems[colIndex],
-          connectNulls: true
+          connectNulls: true,
+          yAxisIndex: colIndex
         }
       })
     },
@@ -154,23 +151,38 @@ export default {
         let res = datas[0].name + '<br/>'
         for (let i = 0, length = datas.length; i < length; i++) {
           if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined) continue
-          let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
+          let marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
           res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '<br/>'
         }
         return res
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      // 圖表是水平或是垂直
-      if (this.isParallel) {
-        config.xAxis = yAxisDefault()
-        config.xAxis.name = this.title.yAxis[0].display_name
-        config.yAxis = xAxisDefault()
-        config.yAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
-      } else {
-        config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
-        config.yAxis.name = this.title.yAxis[0].display_name
-      }
+      // 座標軸名稱
+      config.xAxis = this.title.xAxis.map(axis => {
+        return {
+          ...config.xAxis
+        }
+      })
+      config.yAxis = this.title.yAxis.map((axis, index) => {
+        return {
+          ...config.yAxis,
+          type: 'value',
+          name: axis.display_name,
+          offset: parseInt(index % 2) * 35,
+          scale: false,
+          axisLine: {
+            lineStyle: {
+              color: this.colorList[index]
+            }
+          },
+          axisTick: {
+            lineStyle: {
+              color: this.colorList[index]
+            }
+          }
+        }
+      })
 
       return config
     },
@@ -211,23 +223,21 @@ export default {
       return result
     },
     brushRegionSelected (params) {
-      if (params.batch[0].areas.length === 0) {
+      if (params.batch[0].selected[0].dataIndex.length === 0) {
         this.selectedData = []
-        return
+        return false
       }
-      this.selectedData = params.batch[0].areas.map(areaElement => {
-        let coordRange = areaElement.coordRange
-        return {
-          type: 'range',
-          properties: {
-            dc_name: this.title.xAxis[0].dc_name,
-            data_type: this.title.xAxis[0].data_type,
-            display_name: this.title.xAxis[0].display_name,
-            start: this.dataset.index[coordRange[0]],
-            end: this.dataset.index[coordRange[1]]
-          }
+      this.selectedData = [{
+        type: 'enum',
+        properties: {
+          dc_name: this.title.xAxis[0].dc_name,
+          data_type: this.title.xAxis[0].data_type,
+          display_name: this.title.xAxis[0].display_name,
+          datavalues: params.batch[0].selected[0].dataIndex.map(element => {
+            return this.dataset.index[element]
+          })
         }
-      })
+      }]
     },
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)

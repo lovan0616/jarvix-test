@@ -1087,7 +1087,12 @@
     "lowerQuartile": "下四分位數",
     "average": "平均值",
     "higherQuartile": "上四分位數",
-    "max": "最大值"
+    "max": "最大值",
+    "from": "來自",
+    "dataColumnRecognize": "的資料欄位，辨識為",
+    "columnValue": "欄位的資料",
+    "loadedRate": "資料顯示比率",
+    "getMoreBtn": "看更多資料"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",

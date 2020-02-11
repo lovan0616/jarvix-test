@@ -1087,11 +1087,16 @@
     "lowerQuartile": "下四分位数",
     "average": "平均值",
     "higherQuartile": "上四分位数",
-    "max": "最大值"
+    "max": "最大值",
+    "from": "来自",
+    "dataColumnRecognize": "的资料栏位，辨识为",
+    "columnValue": "栏位的资料",
+    "loadedRate": "资料显示比率",
+    "getMoreBtn": "看更多资料"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",
-    "Datacolumn": "來自 {dataFrame} 的资料栏位 {dataColumn}，辨识为'{name}'",
+    "Datacolumn": "来自 {dataFrame} 的资料栏位 {dataColumn}，辨识为'{name}'",
     "Datavalue": "'{name}'栏位的资料",
     "DtToken": "时间范围",
     "FuzzyDtToken": "时间范围",

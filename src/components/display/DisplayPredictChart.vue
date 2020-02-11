@@ -168,8 +168,8 @@ export default {
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      config.xAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
-      config.yAxis.name = this.title.yAxis.display_name
+      config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
+      config.yAxis.name = this.title.yAxis[0].display_name
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.dataset[0].source
         let table = '<table style="width:100%;padding: 0 16px;white-space:nowrap;"><tbody>'
@@ -221,9 +221,9 @@ export default {
         return {
           type: 'range',
           properties: {
-            dc_name: this.title.xAxis.dc_name,
-            data_type: this.title.xAxis.data_type,
-            display_name: this.title.xAxis.display_name,
+            dc_name: this.title.xAxis[0].dc_name,
+            data_type: this.title.xAxis[0].data_type,
+            display_name: this.title.xAxis[0].display_name,
             start: this.dataset.index[coordRange[0]],
             end: this.dataset.index[coordRange[1]]
           }
