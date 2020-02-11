@@ -26,7 +26,6 @@
         :notes="componentData.notes"
         :causes="componentData.causes"
         :description="componentData.description"
-        :pagination="pagination"
       ></component>
       <div class="task-note"
         v-for="(note, index) in notes" v-bind:key="index"
@@ -35,12 +34,13 @@
       </div>
       <div class="pagination-block"
         v-if="pagination.totalPages > 1"
+        :class="{'key-result-pagination': intend === 'key_result'}"
       >
-       <span class="loading-percentage">{{ $t('resultDescription.loadedRate') }}：{{ roundNumber((pagination.currentPage + 1) / pagination.totalPages * 100) }}%</span>
         <button class="btn-m btn-default"
           @click="getNewPageInfo"
           :disabled="pagination.currentPage + 1 === pagination.totalPages"
         >{{ $t('resultDescription.getMoreBtn') }}</button>
+        <span class="loading-percentage">{{ $t('resultDescription.loadedRate') }}：{{ roundNumber((pagination.currentPage + 1) / pagination.totalPages * 100) }}%</span>
       </div>
     </template>
   </div>
@@ -82,6 +82,9 @@ export default {
   },
   methods: {
     fetchData () {
+      if (this.pagination.currentPage > 0) {
+        this.isGetPagination = true
+      }
       window.clearTimeout(this.timeoutFunction)
       this.$store.dispatch('chatBot/getComponentData', {
         id: this.componentId,
@@ -103,6 +106,10 @@ export default {
             if (this.pagination.totalPages > 1 && this.pagination.currentPage !== 0) {
               this.componentData.dataset.data = this.componentData.dataset.data.concat(response.data.dataset.data)
               this.componentData.dataset.index = this.componentData.dataset.index.concat(response.data.dataset.index)
+
+              this.$nextTick(() => {
+                this.isGetPagination = false
+              })
             } else {
               this.componentData = response.data
             }
@@ -163,6 +170,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .task {
+  position: relative;
   width: 100%;
 
   .task-note {
@@ -192,12 +200,20 @@ export default {
 
   .pagination-block {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
+
+    &.key-result-pagination {
+      position: absolute;
+      top: -30px;
+      left: 0;
+    }
+
+    .btn-m {
+      margin-right: 12px;
+    }
 
     .loading-percentage {
       color: #fff;
-      margin-right: 12px;
       font-size: 12px;
     }
   }

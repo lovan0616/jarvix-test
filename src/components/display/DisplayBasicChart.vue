@@ -214,12 +214,12 @@ export default {
       // 圖表是水平或是垂直
       if (this.isParallel) {
         config.xAxis = yAxisDefault()
-        config.xAxis.name = this.title.yAxis.display_name
+        config.xAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
         config.yAxis = xAxisDefault()
-        config.yAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
+        config.yAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : null
       } else {
-        config.xAxis.name = this.title.xAxis.display_name ? this.title.xAxis.display_name.replace(/ /g, '\r\n') : this.title.xAxis.display_name
-        config.yAxis.name = this.title.yAxis.display_name
+        config.xAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : null
+        config.yAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
       }
       // 如果是 bar chart
       config.yAxis.scale = !(this.series[0].type === 'bar')
@@ -286,9 +286,9 @@ export default {
             return {
               type: 'range',
               properties: {
-                dc_name: this.title.xAxis.dc_name,
-                data_type: this.title.xAxis.data_type,
-                display_name: this.title.xAxis.display_name,
+                dc_name: this.title.xAxis[0].dc_name,
+                data_type: this.title.xAxis[0].data_type,
+                display_name: this.title.xAxis[0].display_name,
                 start: this.dataset.index[coordRange[0]],
                 end: this.dataset.index[coordRange[1]]
               }
@@ -303,9 +303,9 @@ export default {
           this.selectedData = [{
             type: 'enum',
             properties: {
-              dc_name: this.title.xAxis.dc_name,
-              data_type: this.title.xAxis.data_type,
-              display_name: this.title.xAxis.display_name,
+              dc_name: this.title.xAxis[0].dc_name,
+              data_type: this.title.xAxis[0].data_type,
+              display_name: this.title.xAxis[0].display_name,
               datavalues: params.batch[0].selected[0].dataIndex.map(element => {
                 return this.dataset.index[element]
               })

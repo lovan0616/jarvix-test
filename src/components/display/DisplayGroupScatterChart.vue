@@ -89,10 +89,10 @@ export default {
         let marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${
           params.color.colorStops ? params.color.colorStops[0].color : params.color
         };"></span>`
-        return `<p>${marker}${params.value[3]}（${params.value[2]}）<br>${this.title.xAxis.display_name}： ${params.value[0]}<br>${this.title.yAxis.display_name}： ${params.value[1]}</p>`
+        return `<p>${marker}${params.value[3]}（${params.value[2]}）<br>${this.title.xAxis[0].display_name}： ${params.value[0]}<br>${this.title.yAxis[0].display_name}： ${params.value[1]}</p>`
       }
-      chartAddon.xAxis.name = this.title.xAxis.display_name
-      chartAddon.yAxis.name = this.title.yAxis.display_name
+      chartAddon.xAxis.name = this.title.xAxis[0].display_name
+      chartAddon.yAxis.name = this.title.yAxis[0].display_name
       groupScatterChartConfig.chartData.data = this.dataset.data
       groupScatterChartConfig.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.color = this.colorList
@@ -105,8 +105,8 @@ export default {
       chartAddon.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.series[0].data
         let table = '<table style="width:100%;padding: 0 16px;"><tbody><tr>' +
-          '<td style="padding: 4px 12px;">' + this.title.xAxis.display_name + '</td>' +
-          '<td style="padding: 4px 12px;">' + this.title.yAxis.display_name + '</td>' +
+          '<td style="padding: 4px 12px;">' + this.title.xAxis[0].display_name + '</td>' +
+          '<td style="padding: 4px 12px;">' + this.title.yAxis[0].display_name + '</td>' +
           '</tr>'
         for (let i = 1; i < dataset.length; i++) {
           table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>

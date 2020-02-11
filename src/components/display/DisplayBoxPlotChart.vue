@@ -109,9 +109,9 @@ export default {
       this.selectedData = [{
         type: 'enum',
         properties: {
-          dc_name: this.title.xAxis.dc_name,
-          data_type: this.title.xAxis.data_type,
-          display_name: this.title.xAxis.display_name,
+          dc_name: this.title.xAxis[0].dc_name,
+          data_type: this.title.xAxis[0].data_type,
+          display_name: this.title.xAxis[0].display_name,
           datavalues: params.batch[0].selected[0].dataIndex.map(element => {
             return this.dataset.index[element]
           })
@@ -131,8 +131,8 @@ export default {
       chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotChartConfig.xAxis}
       chartAddon.tooltip.trigger = boxPlotChartConfig.tooltip.trigger
       chartAddon.xAxis.data = this.dataset.index
-      chartAddon.xAxis.name = this.title.xAxis.display_name
-      chartAddon.yAxis.name = this.title.yAxis.display_name
+      chartAddon.xAxis.name = this.title.xAxis[0].display_name
+      chartAddon.yAxis.name = this.title.yAxis[0].display_name
       boxPlotChartConfig.chartData.data = this.chartData.boxData
       boxPlotChartConfig.outlier.data = this.chartData.outliers
       chartAddon.series[0] = boxPlotChartConfig.chartData
