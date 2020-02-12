@@ -17,22 +17,12 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <div class="filter-description"
-            v-if="singleType.type === 'enum'"
-          >
+          <div class="filter-description">
             <div class="column-name">{{singleType.properties.display_name}} =</div>
             <div class="single-filter"
               v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
               :key="'enum-' + propertiesIndex"
             >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
-          </div>
-          <div class="region-description"
-            v-if="singleType.type === 'range'"
-          >
-            <div class="single-area">
-              {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
-            </div>
           </div>
         </div>
       </div>
@@ -53,18 +43,18 @@ import {
   gridDefault,
   xAxisDefault,
   yAxisDefault,
-  seriesItemLineStack
+  seriesItemBarStack
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
   'xAxis:default': xAxisDefault(),
   'yAxis:default': yAxisDefault(),
-  'seriesItem:lineStack': seriesItemLineStack()
+  'seriesItem:stackBar': seriesItemBarStack()
 })
 
 export default {
-  name: 'DisplayStackLineChart',
+  name: 'DisplayStackBarChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     title: {
@@ -87,7 +77,7 @@ export default {
   },
   data () {
     echartAddon.mapping({
-      'seriesItem:lineStack': {
+      'seriesItem:stackBar': {
         'large': true
       },
       'color:10': {},
@@ -116,7 +106,9 @@ export default {
           name: isNaN(Number(element)) ? element : ' ' + element,
           ...this.addonSeriesItem,
           ...this.addonSeriesItems[colIndex],
-          connectNulls: true
+          connectNulls: true,
+          stack: 'count',
+          areaStyle: {}
         }
       })
     },
@@ -211,23 +203,21 @@ export default {
       return result
     },
     brushRegionSelected (params) {
-      if (params.batch[0].areas.length === 0) {
+      if (params.batch[0].selected[0].dataIndex.length === 0) {
         this.selectedData = []
-        return
+        return false
       }
-      this.selectedData = params.batch[0].areas.map(areaElement => {
-        let coordRange = areaElement.coordRange
-        return {
-          type: 'range',
-          properties: {
-            dc_name: this.title.xAxis[0].dc_name,
-            data_type: this.title.xAxis[0].data_type,
-            display_name: this.title.xAxis[0].display_name,
-            start: this.dataset.index[coordRange[0]],
-            end: this.dataset.index[coordRange[1]]
-          }
+      this.selectedData = [{
+        type: 'enum',
+        properties: {
+          dc_name: this.title.xAxis[0].dc_name,
+          data_type: this.title.xAxis[0].data_type,
+          display_name: this.title.xAxis[0].display_name,
+          datavalues: params.batch[0].selected[0].dataIndex.map(element => {
+            return this.dataset.index[element]
+          })
         }
-      })
+      }]
     },
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)

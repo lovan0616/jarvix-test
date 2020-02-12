@@ -169,8 +169,7 @@ export function seriesItemLine () {
 
 export function seriesItemLineStack () {
   return {
-    type: 'line',
-    symbol: 'circle',
+    ...seriesItemLine(),
     stack: 'stack',
     areaStyle: {}
   }
@@ -183,6 +182,14 @@ export function seriesItemBar () {
   return {
     type: 'bar',
     barMaxWidth: config.barMaxWidth
+  }
+}
+
+export function seriesItemBarStack () {
+  return {
+    ...seriesItemBar(),
+    stack: 'stack',
+    areaStyle: {}
   }
 }
 
