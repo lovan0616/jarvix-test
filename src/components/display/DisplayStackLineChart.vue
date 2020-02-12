@@ -116,7 +116,9 @@ export default {
           name: isNaN(Number(element)) ? element : ' ' + element,
           ...this.addonSeriesItem,
           ...this.addonSeriesItems[colIndex],
-          connectNulls: true
+          connectNulls: true,
+          stack: 'count',
+          areaStyle: {}
         }
       })
     },
