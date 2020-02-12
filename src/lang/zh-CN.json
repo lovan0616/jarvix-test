@@ -1112,7 +1112,7 @@
     "TopBotToken": "筛选条件限制",
     "IntroductionToken": "问句意图",
     "GenericToken": "问句意图",
-    "ComparisonToken": "问句意图",
+    "ComparisonToken": "问句意图，欲处理资料间比较分析",
     "TrendToken": "问句意图",
     "PredictionToken": "问句意图",
     "RootCauseToken": "问句意图",
@@ -1121,13 +1121,15 @@
     "CorrelationToken": "问句意图",
     "CorrExplorationToken": "问句意图",
     "CorrVerificationToken": "问句意图",
-    "DiffExplorationToken": "问句意图",
+    "DiffExplorationToken": "问句意图，欲处理资料间差异分析",
     "ConjunctionToken": "连接词",
     "PossessionToken": "连接词",
     "ChangeToken": "其他词汇",
     "ElseToken": "其他词汇",
     "IgnoreToken": "可忽略的词汇",
-    "Datarow": "资料列"
+    "Datarow": "资料列",
+    "Boolean": "布林值",
+    "Unique": "唯一值"
   },
   "notification": {
     "uploadLimitNotification": "资料数量已达上限",

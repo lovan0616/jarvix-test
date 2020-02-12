@@ -22,11 +22,23 @@
           <div class="single-segmentation"
             v-for="(segmentation, segmentationIndex) in singleQuestion.segmentation"
             :key="index + '-' + segmentationIndex"
-            v-if="segmentation.properties"
           >
-            <span class="column-name"
-              :class="segmentation.type"
-            >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from')}}<span class="dataframe-name">{{segmentation.properties.dataframePrimaryAlias}}</span>{{ $t('resultDescription.dataColumnRecognize') }}<b>'{{ segmentation.matchedWord }}'</b><span v-show="segmentation.type === 'Datavalue'">{{ $t('resultDescription.columnValue') }}</span>
+            <template
+              v-if="segmentation.properties"
+            >
+              <span class="column-name"
+                :class="segmentation.type"
+              >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from')}}<span class="dataframe-name">{{segmentation.properties.dataframePrimaryAlias}}</span>{{ $t('resultDescription.dataColumnRecognize') }}<b>'{{ segmentation.matchedWord }}'</b><span v-show="segmentation.type === 'Datavalue'">{{ $t('resultDescription.columnValue') }}</span>
+            </template>
+            <template
+              v-else-if="isIntend(segmentation.type)"
+            >
+              <div>
+                <span class="column-name"
+                  :class="{intend: isIntend(segmentation.type)}"
+                >[{{ segmentation.word }}]</span>{{ $t(`segmentationToken.${segmentation.type}`)}}
+              </div>
+            </template>
           </div>
         </div>
       </div>
@@ -51,6 +63,25 @@ export default {
       this.$store.commit('dataSource/setAppQuestion', questionInfo.question)
       this.$store.commit('dataSource/setCurrentQuestionInfo', questionInfo)
       this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
+    },
+    isIntend (value) {
+      switch (value) {
+        case 'IntroductionToken':
+        case 'GenericToken':
+        case 'ComparisonToken':
+        case 'TrendToken':
+        case 'PredictionToken':
+        case 'RootCauseToken':
+        case 'PivotTableToken':
+        case 'ProportionToken':
+        case 'CorrelationToken':
+        case 'CorrExplorationToken':
+        case 'CorrVerificationToken':
+        case 'DiffExplorationToken':
+          return true
+        default:
+          return false
+      }
     }
   }
 }
@@ -115,6 +146,9 @@ export default {
       }
       &.DtToken, &.FuzzyDtToken, &.TimeScope {
         color: #FF9559;
+      }
+      &.intend {
+        color: #07E8B2;
       }
     }
 
