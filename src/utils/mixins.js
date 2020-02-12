@@ -118,7 +118,7 @@ Vue.mixin({
         case 'multi_axis_line_chart':
           return 'DisplayMultiAxisLineChart'
         case 'parallel_bar_chart':
-          return 'ParallelBarChart'
+          return 'DisplayParallelBarChart'
         case 'box_plot':
           return 'DisplayBoxPlotChart'
         case 'computed_box_plot':
