@@ -68,6 +68,7 @@ import DisplayTreeMapChart from '@/components/display/DisplayTreeMapChart'
 import DisplayBubbleScatterChart from '@/components/display/DisplayBubbleScatterChart'
 import DisplayGroupScatterChart from '@/components/display/DisplayGroupScatterChart'
 import DisplayLineChart from '@/components/display/DisplayLineChart'
+import DisplayStackLineChart from '@/components/display/DisplayStackLineChart'
 import DisplayPieChart from '@/components/display/DisplayPieChart'
 import DisplayBarChart from '@/components/display/DisplayBarChart'
 // 多 Y 軸
@@ -147,6 +148,7 @@ Vue.component(DisplayComputedBoxPlotChart.name, DisplayComputedBoxPlotChart)
 Vue.component(DisplayBubbleScatterChart.name, DisplayBubbleScatterChart)
 Vue.component(DisplayTreeMapChart.name, DisplayTreeMapChart)
 Vue.component(DisplayLineChart.name, DisplayLineChart)
+Vue.component(DisplayStackLineChart.name, DisplayStackLineChart)
 Vue.component(DisplayPieChart.name, DisplayPieChart)
 Vue.component(DisplayBarChart.name, DisplayBarChart)
 Vue.component(DisplayMultiAxisBarChart.name, DisplayMultiAxisBarChart)
