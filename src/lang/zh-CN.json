@@ -1092,7 +1092,8 @@
     "dataColumnRecognize": "的资料栏位，辨识为",
     "columnValue": "栏位的资料",
     "loadedRate": "资料显示比率",
-    "getMoreBtn": "看更多资料"
+    "getMoreBtn": "看更多资料",
+    "percentage": "百分比(%)"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",

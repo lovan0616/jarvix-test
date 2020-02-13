@@ -133,8 +133,9 @@ Vue.mixin({
           return 'DisplayLineChart'
         case 'stack_line_chart':
           return 'DisplayStackLineChart'
-        // TODO: 讓後端改名字
-        case 'line_stack_chart':
+        case 'composition_line_chart':
+          return 'DisplayCompositionLineChart'
+        case 'predict_line_chart':
           return 'DisplayPredictChart'
         case 'pie_chart':
           return 'DisplayPieChart'
