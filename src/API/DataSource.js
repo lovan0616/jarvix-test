@@ -195,3 +195,25 @@ export function deleteDataFrameRelationById (relationId) {
     method: 'DELETE'
   })
 }
+
+/**
+ * get value alias
+ * 
+ */
+export function getDataValue (relationId) {
+  return request({
+    url: `/alias/get/ValueAlias`,
+    method: 'GET'
+  })
+}
+
+/**
+ * update vlaue alias
+ */
+export function setDataAlias (aliasInfo) {
+  return request({
+    url: `/alias/alter/ValueAlias`,
+    method: 'POST',
+    data: aliasInfo
+  })
+}

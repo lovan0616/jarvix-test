@@ -8,7 +8,7 @@
         ><svg-icon icon-class="close"></svg-icon></a>
       </div>
       <div class="dialog-header-block">
-        <div class="data-frame-name">{{ $t('editing.dataFrame') }}：xxx</div>
+        <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
         <div class="button-block">
           <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
           <button type="button" class="btn btn-default">{{ $t('button.build') }}</button>
@@ -19,13 +19,13 @@
           <div class="data-column-row block-title">{{ $t('editing.columnName') }}</div>
           <div class="data-column-block-body">
             <div class="data-column-row"
-              v-for="i in 20"
-              :key="i"
-            >test {{i}}</div>
+              v-for="column in columnList"
+              :key="column.id"
+            >{{ column.primaryAlias }}</div>
           </div>
         </div>
         <div class="data-value-block">
-          <div class="block-title">{{ $t('editing.columnName') }}：XXX</div>
+          <div class="block-title">{{ $t('editing.columnName') }}：{{ currentColumnInfo.primaryAlias }}</div>
           <div class="data-value-table data-table">
             <div class="data-table-head is-scrolling">
               <div class="data-table-row table-head">
@@ -36,29 +36,55 @@
             </div>
             <div class="data-table-body">
               <div class="data-table-row"
-                v-for="i in 20"
-                :key="i"
+                v-for="(valueInfo, index) in valueAliasList"
+                :key="index"
               >
-                <div class="data-table-cell data-value">test {{i}}</div>
+                <div class="data-table-cell data-value">{{ valueInfo.dataValue }}</div>
                 <div class="data-table-cell alias">
-                  <div class="edit-block">
-                    <div class="input-block edit-alias-input-block">
-                      <input type="text" class="input">
+                  <div class="edit-block"
+                    v-if="valueInfo.isEdit"
+                  >
+                    <div class="input-block edit-alias-input-block"
+                      v-for="(singleAlias, aliasIndex) in tempAliasInfo"
+                      :key="index + '-' + aliasIndex"
+                    >
+                      <input type="text" class="input"
+                        v-model="singleAlias.name"
+                      >
                       <div class="link">{{ $t('button.remove') }}</div>
                     </div>
-                    <div class="input-block edit-alias-input-block">
-                      <input type="text" class="input">
-                      <div class="link">{{ $t('button.remove') }}</div>
-                    </div>
-                    <button class="btn-m btn-secondary btn-add">
+                    <button class="btn-m btn-secondary btn-add"
+                      @click="addAlias"
+                    >
                       <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.add') }}
                     </button>
                   </div>
+                  <div class="display-block"
+                    v-else
+                  >
+                    <div class="alias"
+                      :class="{'is-modified': singleAlias.isModified}"
+                      v-for="(singleAlias, aliasIndex) in valueInfo.alias"
+                      :key="index + '-' + aliasIndex"
+                    >{{ singleAlias.name }}<span v-show="aliasIndex !== valueInfo.alias.length - 1">,</span></div>
+                    <div class="not-set"
+                      v-show="valueInfo.alias.length === 0"
+                    >{{ $t('editing.notSet') }}</div>
+                  </div>
                 </div>
                 <div class="data-table-cell action">
-                  <a href="javascript:void(0);" class="link action-link">{{ $t('button.edit') }}</a>
-                  <a href="javascript:void(0);" class="link action-link">{{ $t('button.save') }}</a>
-                  <a href="javascript:void(0);" class="link action-link">{{ $t('button.cancel') }}</a>
+                  <a href="javascript:void(0);" class="link action-link"
+                    v-if="!valueInfo.isEdit"
+                    @click="editValueAlias(index)"
+                  >{{ $t('button.edit') }}</a>
+                  <template
+                    v-else
+                  >
+                    <a href="javascript:void(0);" class="link action-link"
+                    >{{ $t('button.save') }}</a>
+                    <a href="javascript:void(0);" class="link action-link"
+                    >{{ $t('button.cancel') }}</a>
+                  </template>
                 </div>
               </div>
             </div>
@@ -69,19 +95,107 @@
   </div>
 </template>
 <script>
+import { setDataAlias, getDataFrameColumnInfoById } from '@/API/DataSource'
+
 export default {
   name: 'ValueAliasDialog',
+  props: {
+    dataFrameInfo: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data () {
     return {
-      currentColumn: null
+      columnList: [],
+      valueAliasList: [
+        {
+          dataValue: 'test',
+          alias: [
+            {
+              name: '測試1',
+              isModified: false
+            },
+            {
+              name: '測試2',
+              isModified: false
+            }
+          ],
+          isEdit: false
+        },
+        {
+          dataValue: '美國',
+          alias: [
+            {
+              name: '米國',
+              isModified: false
+            },
+            {
+              name: '米鍋',
+              isModified: false
+            }
+          ],
+          isEdit: false
+        },
+        {
+          dataValue: '美美',
+          alias: [
+            {
+              name: '米米',
+              isModified: false
+            },
+            {
+              name: '妹妹',
+              isModified: false
+            },
+            {
+              name: '秘密',
+              isModified: true
+            }
+          ],
+          isEdit: false
+        },
+        {
+          dataValue: '登登',
+          alias: [],
+          isEdit: false
+        }
+      ],
+      currentColumnInfo: {
+        id: 31042,
+        primaryAlias: '測試欄位'
+      },
+      currentEditValueIndex: null,
+      tempAliasInfo: [],
+      aliasConfig: {
+        name: null,
+        isModified: true
+      } 
     }
   },
   mounted () {
-
+    this.fetchColumnInfo()
   },
   methods: {
-    closeDialog () {
+    fetchColumnInfo () {
+      getDataFrameColumnInfoById(this.dataFrameInfo.id).then(response => {
+        this.columnList = response
 
+        // 取第一個 column 作為預測顯示
+      })
+    },
+    fetchValueInfo (id) {
+    },
+    editValueAlias (index) {
+      if (this.currentEditValueIndex !== null) {
+        this.valueAliasList[this.currentEditValueIndex].isEdit = false
+      }
+      this.currentEditValueIndex = index
+      this.tempAliasInfo = this.valueAliasList[index].alias
+      this.valueAliasList[index].isEdit = true
+    },
+    closeDialog () {
+      this.$emit('close')
     }
   }
 }
@@ -105,6 +219,10 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
+
+    .data-frame-name {
+      font-size: 14px;
+    }
 
     .remark-text {
       color: $theme-color-warning;
@@ -180,11 +298,27 @@ export default {
         }
         &.alias {
           flex: initial;
-          width: 48.2%;
+          width: 41.2%;
         }
         &.action {
           flex: 1;
         }
+      }
+    }
+
+    .display-block {
+      .alias {
+        display: inline-block;
+
+        &:not(:last-child) {
+          margin-right: 4px;
+        }
+        &.is-modified {
+          color: #FFDF6F;
+        }
+      }
+      .not-set {
+        color: #888;
       }
     }
 

@@ -168,7 +168,8 @@
     "dataFrame": "资料表",
     "rebuildRemark": "编辑后需再次建置资料",
     "dataValue": "数据值",
-    "dataColumn": "资料表栏位"
+    "dataColumn": "资料表栏位",
+    "notSet": "未设定"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
@@ -279,7 +280,8 @@
     "exportData": "输出图表资料",
     "viewData": "查看图表数据",
     "remove": "移除",
-    "add": "增加"
+    "add": "增加",
+    "editDataValue": "编辑数据"
   },
   "aggregation": {
     "mean": "平均",
