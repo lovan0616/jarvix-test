@@ -133,6 +133,7 @@ Vue.mixin({
           return 'DisplayLineChart'
         case 'stack_line_chart':
           return 'DisplayStackLineChart'
+        // TODO: 讓後端改名字
         case 'line_stack_chart':
           return 'DisplayPredictChart'
         case 'pie_chart':
@@ -167,6 +168,8 @@ Vue.mixin({
           return 'DisplaySankeyChart'
         case 'trend_insight':
           return 'TrendRootCause'
+        case 'heat_map_chart':
+          return 'DisplayHeatMapChart'
       }
     },
     // 整個結果頁的 layout
