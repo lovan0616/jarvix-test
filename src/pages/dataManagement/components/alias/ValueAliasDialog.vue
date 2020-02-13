@@ -42,7 +42,7 @@
                 <div class="data-table-cell data-value">{{ valueInfo.dataValue }}</div>
                 <div class="data-table-cell alias">
                   <div class="edit-block"
-                    v-if="valueInfo.isEdit"
+                    v-if="currentEditValueIndex === index"
                   >
                     <div class="input-block edit-alias-input-block"
                       v-for="(singleAlias, aliasIndex) in tempAliasInfo"
@@ -51,7 +51,9 @@
                       <input type="text" class="input"
                         v-model="singleAlias.name"
                       >
-                      <div class="link">{{ $t('button.remove') }}</div>
+                      <div class="link"
+                        @click="removeAlias(aliasIndex)"
+                      >{{ $t('button.remove') }}</div>
                     </div>
                     <button class="btn-m btn-secondary btn-add"
                       @click="addAlias"
@@ -74,15 +76,17 @@
                 </div>
                 <div class="data-table-cell action">
                   <a href="javascript:void(0);" class="link action-link"
-                    v-if="!valueInfo.isEdit"
+                    v-if="currentEditValueIndex !== index"
                     @click="editValueAlias(index)"
                   >{{ $t('button.edit') }}</a>
                   <template
                     v-else
                   >
                     <a href="javascript:void(0);" class="link action-link"
+                      @click="saveAlias(index)"
                     >{{ $t('button.save') }}</a>
                     <a href="javascript:void(0);" class="link action-link"
+                      @click="cancelEditAlias"
                     >{{ $t('button.cancel') }}</a>
                   </template>
                 </div>
@@ -121,7 +125,7 @@ export default {
               isModified: false
             }
           ],
-          isEdit: false
+          isSaved: false
         },
         {
           dataValue: '美國',
@@ -135,7 +139,7 @@ export default {
               isModified: false
             }
           ],
-          isEdit: false
+          isSaved: false
         },
         {
           dataValue: '美美',
@@ -153,12 +157,11 @@ export default {
               isModified: true
             }
           ],
-          isEdit: false
+          isSaved: false
         },
         {
           dataValue: '登登',
-          alias: [],
-          isEdit: false
+          alias: []
         }
       ],
       currentColumnInfo: {
@@ -170,7 +173,7 @@ export default {
       aliasConfig: {
         name: null,
         isModified: true
-      } 
+      }
     }
   },
   mounted () {
@@ -187,12 +190,33 @@ export default {
     fetchValueInfo (id) {
     },
     editValueAlias (index) {
-      if (this.currentEditValueIndex !== null) {
-        this.valueAliasList[this.currentEditValueIndex].isEdit = false
-      }
       this.currentEditValueIndex = index
-      this.tempAliasInfo = this.valueAliasList[index].alias
-      this.valueAliasList[index].isEdit = true
+      this.tempAliasInfo = JSON.parse(JSON.stringify(this.valueAliasList[index].alias))
+    },
+    addAlias () {
+      this.tempAliasInfo.push({
+        name: null,
+        isModified: true
+      })
+    },
+    removeAlias (index) {
+      this.tempAliasInfo.splice(index, 1)
+    },
+    cancelEditAlias () {
+      this.currentEditValueIndex = null
+      this.tempAliasInfo = null
+    },
+    saveAlias (index) {
+      console.log(index)
+      // 比較編輯前後是否有差異
+      this.tempAliasInfo.forEach(element => {
+        if (!element.isModified) {
+          element.isModified = this.valueAliasList[index].alias.findIndex(item => item.name === element.name) < 0
+        }
+      })
+      this.valueAliasList[index].alias = this.tempAliasInfo
+      this.valueAliasList[index].isSaved = true
+      this.cancelEditAlias()
     },
     closeDialog () {
       this.$emit('close')
