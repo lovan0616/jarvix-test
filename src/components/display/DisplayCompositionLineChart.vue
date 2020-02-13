@@ -1,5 +1,5 @@
 <template>
-  <div class="display-multi-axis-bar-chart">
+  <div class="display-basic-chart">
     <v-echart
       :style="chartStyle"
       :options="options"
@@ -52,19 +52,19 @@ import {
   color12,
   gridDefault,
   xAxisDefault,
-  yAxisMultiple,
-  seriesItemBar
+  yAxisDefault,
+  seriesItemLineStack
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
   'xAxis:default': xAxisDefault(),
-  'yAxis:multiple': yAxisMultiple(),
-  'seriesItem:bar': seriesItemBar()
+  'yAxis:default': yAxisDefault(),
+  'seriesItem:lineStack': seriesItemLineStack()
 })
 
 export default {
-  name: 'DisplayMultiAxisBarChart',
+  name: 'DisplayCompositionLineChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     title: {
@@ -79,17 +79,21 @@ export default {
     height: {
       type: String,
       default: '380px'
+    },
+    isParallel: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     echartAddon.mapping({
-      'seriesItem:bar': {
+      'seriesItem:lineStack': {
         'large': true
       },
       'color:10': {},
       'grid:default': {},
       'xAxis:default': {},
-      'yAxis:multiple': {}
+      'yAxis:default': {}
     })
     return {
       addonOptions: JSON.parse(JSON.stringify(echartAddon.options)),
@@ -112,8 +116,7 @@ export default {
           name: isNaN(Number(element)) ? element : ' ' + element,
           ...this.addonSeriesItem,
           ...this.addonSeriesItems[colIndex],
-          connectNulls: true,
-          yAxisIndex: colIndex
+          connectNulls: true
         }
       })
     },
@@ -151,38 +154,23 @@ export default {
         let res = datas[0].name + '<br/>'
         for (let i = 0, length = datas.length; i < length; i++) {
           if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined) continue
-          let marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color || datas[i].color.colorStops[0].color};"></span>`
-          res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '<br/>'
+          let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
+          res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '%' + '<br/>'
         }
         return res
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      // 座標軸名稱
-      config.xAxis = this.title.xAxis.map(axis => {
-        return {
-          ...config.xAxis
-        }
-      })
-      config.yAxis = this.title.yAxis.map((axis, index) => {
-        return {
-          ...config.yAxis,
-          type: 'value',
-          name: axis.display_name,
-          offset: parseInt(index % 2) * 35,
-          scale: false,
-          axisLine: {
-            lineStyle: {
-              color: this.colorList[index]
-            }
-          },
-          axisTick: {
-            lineStyle: {
-              color: this.colorList[index]
-            }
-          }
-        }
-      })
+      // 圖表是水平或是垂直
+      if (this.isParallel) {
+        config.xAxis = yAxisDefault()
+        config.xAxis.name = this.$t('resultDescription.percentage')
+        config.yAxis = xAxisDefault()
+        config.yAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
+      } else {
+        config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
+        config.yAxis.name = this.$t('resultDescription.percentage')
+      }
 
       return config
     },
@@ -206,38 +194,47 @@ export default {
     }
   },
   methods: {
-    tobeDataset (data) {
+    tobeDataset (dataset) {
       const result = [['index']]
-      result[0] = result[0].concat(data.columns.map(column => {
+      result[0] = result[0].concat(dataset.columns.map(column => {
         if (Array.isArray(column)) return column.join(',')
         else return column
       }))
-      data.index.forEach((i, iIndex) => {
-        let row = [data.index[iIndex]]
-        data.columns.forEach((c, cIndex) => {
-          const d = (data.data[iIndex][cIndex] || null)
+      // get percentage
+      dataset.data = dataset.data.map(element => {
+        let total = element.reduce((acc, cur) => acc + cur, 0)
+        return element.map(item => this.roundNumber(item * 100 / total))
+      })
+
+      dataset.index.forEach((i, iIndex) => {
+        let row = [dataset.index[iIndex]]
+        dataset.columns.forEach((c, cIndex) => {
+          const d = (dataset.data[iIndex][cIndex] || null)
           row = row.concat([d])
         })
         result.push(row)
       })
+
       return result
     },
     brushRegionSelected (params) {
-      if (params.batch[0].selected[0].dataIndex.length === 0) {
+      if (params.batch[0].areas.length === 0) {
         this.selectedData = []
-        return false
+        return
       }
-      this.selectedData = [{
-        type: 'enum',
-        properties: {
-          dc_name: this.title.xAxis[0].dc_name,
-          data_type: this.title.xAxis[0].data_type,
-          display_name: this.title.xAxis[0].display_name,
-          datavalues: params.batch[0].selected[0].dataIndex.map(element => {
-            return this.dataset.index[element]
-          })
+      this.selectedData = params.batch[0].areas.map(areaElement => {
+        let coordRange = areaElement.coordRange
+        return {
+          type: 'range',
+          properties: {
+            dc_name: this.title.xAxis[0].dc_name,
+            data_type: this.title.xAxis[0].data_type,
+            display_name: this.title.xAxis[0].display_name,
+            start: this.dataset.index[coordRange[0]],
+            end: this.dataset.index[coordRange[1]]
+          }
         }
-      }]
+      })
     },
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)

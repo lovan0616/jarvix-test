@@ -1092,7 +1092,8 @@
     "dataColumnRecognize": "的資料欄位，辨識為",
     "columnValue": "欄位的資料",
     "loadedRate": "資料顯示比率",
-    "getMoreBtn": "看更多資料"
+    "getMoreBtn": "看更多資料",
+    "percentage": "百分比(%)"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",
@@ -1112,7 +1113,7 @@
     "TopBotToken": "篩選條件限制",
     "IntroductionToken": "問句意圖",
     "GenericToken": "問句意圖",
-    "ComparisonToken": "問句意圖，欲處理資料間比較分析",
+    "ComparisonToken": "問句意圖，欲處理資料間 比較分析",
     "TrendToken": "問句意圖",
     "PredictionToken": "問句意圖",
     "RootCauseToken": "問句意圖",
@@ -1121,7 +1122,7 @@
     "CorrelationToken": "問句意圖",
     "CorrExplorationToken": "問句意圖",
     "CorrVerificationToken": "問句意圖",
-    "DiffExplorationToken": "問句意圖，欲處理資料間差異分析",
+    "DiffExplorationToken": "問句意圖，欲處理資料間 差異分析",
     "ConjunctionToken": "連接詞",
     "PossessionToken": "連接詞",
     "ChangeToken": "其他詞彙",

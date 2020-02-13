@@ -4,7 +4,6 @@
       :style="chartStyle"
       :options="options"
       auto-resize
-      v-on="eventHandlers"
       @brushselected="brushRegionSelected"
     >
     </v-echart>
@@ -63,14 +62,6 @@ import {
   seriesItemPieLabelWithValue
 } from './common/addons'
 
-import {
-  emitter
-} from './common/events'
-
-const eventHandlerGenerators = {
-  click: emitter
-}
-
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
   'xAxis:default': xAxisDefault(),
@@ -98,11 +89,6 @@ export default {
       }
     },
     addons: { type: [Object, Array], default: () => ([]) },
-    events: { type: Object, default: () => ({}) },
-    isPreview: {
-      type: Boolean,
-      default: false
-    },
     height: {type: String, default: '380px'},
     isParallel: {
       type: Boolean,
@@ -120,50 +106,20 @@ export default {
     }
   },
   computed: {
-    _dataset () {
-      let result
-      if (typeof this.dataset === 'string') result = JSON.parse(this.dataset)
-      else result = this.dataset
-
-      // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
-      if (result.columns) {
-        result.columns = result.columns.map(element => {
-          return isNaN(Number(element)) ? element : ' ' + element
-        })
-      }
-
-      return result
-    },
     chartStyle () {
       return {
         width: '100%',
         height: this.isPreview ? '200px' : this.height
       }
     },
-    dataList () {
-      if ((this._dataset instanceof Array)) return this._dataset
-      else return this.tobeDataset(this._dataset)
-    },
     series () {
-      return this._dataset.columns.map((v, colIndex) => {
-        let data
-        const needSeriesData = Object.keys(this.addonSeriesData).length > 0
-        const isStack = (this.addonSeriesItem.stack)
-        if (needSeriesData && isStack) {
-          data = this._dataset.data.reduce((result, row, rowIndex) => {
-            result.push({
-              value: row[colIndex],
-              ...this.addonSeriesData
-            })
-            return result
-          }, [])
-        }
+      return this.dataset.columns.map((element, colIndex) => {
         return {
-          name: v,
+          // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
+          name: isNaN(Number(element)) ? element : ' ' + element,
           ...this.addonSeriesItem,
           ...this.addonSeriesItems[colIndex],
-          connectNulls: true,
-          data
+          connectNulls: true
         }
       })
     },
@@ -173,7 +129,7 @@ export default {
         ...getDrillDownTool(this.title),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
         dataset: {
-          source: this.dataList
+          source: this.tobeDataset(this.dataset)
         },
         series: this.series,
         color: this.colorList
@@ -192,11 +148,7 @@ export default {
       }
       // export data
       this.$nextTick(() => {
-        this.$el.addEventListener('click', (e) => {
-          if (e.target && e.target.id === 'export-btn') {
-            this.exportToCSV(this.appQuestion, this.dataList)
-          }
-        })
+        this.exportCSVFile(this.$el, this.appQuestion, config.dataset.source)
       })
 
       // 移除 null 值
@@ -228,7 +180,7 @@ export default {
       return config
     },
     colorList () {
-      switch (this.dataList[0].length) {
+      switch (this.dataset.data.length) {
         case 2:
           return colorOnly1
         case 3:
@@ -241,17 +193,6 @@ export default {
         default:
           return color12
       }
-    },
-    eventHandlers () {
-      return Object.keys(eventHandlerGenerators).reduce((result, eventName) => {
-        const generator = eventHandlerGenerators[eventName].bind(this)
-        const options = this.events[eventName]
-        if (options) {
-          const handler = generator(options)
-          result[eventName] = handler
-        }
-        return result
-      }, {})
     },
     appQuestion () {
       return this.$store.state.dataSource.appQuestion

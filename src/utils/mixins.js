@@ -131,7 +131,11 @@ Vue.mixin({
           return 'DisplayHistogramChart'
         case 'line_chart':
           return 'DisplayLineChart'
-        case 'line_stack_chart':
+        case 'stack_line_chart':
+          return 'DisplayStackLineChart'
+        case 'composition_line_chart':
+          return 'DisplayCompositionLineChart'
+        case 'predict_line_chart':
           return 'DisplayPredictChart'
         case 'pie_chart':
           return 'DisplayPieChart'
@@ -165,6 +169,8 @@ Vue.mixin({
           return 'DisplaySankeyChart'
         case 'trend_insight':
           return 'TrendRootCause'
+        case 'heat_map_chart':
+          return 'DisplayHeatMapChart'
       }
     },
     // 整個結果頁的 layout
@@ -182,12 +188,18 @@ Vue.mixin({
       let exportFunction = (e) => {
         if (e.target && e.target.id === 'export-btn') {
           this.exportToCSV(question, data)
-          // el.removeEventListener('click', exportFunction, false)
         }
       }
-      exportFunction.bind(this)
-      el.removeEventListener('click', exportFunction, false)
-      el.addEventListener('click', exportFunction, false)
+      /**
+       * 注意！！
+       * 這邊是為了避免 pagination 更新後，又重新註冊事件
+       * 所以在 DOM 上面新增屬性，去判斷說是不是已經註冊過事件
+       * 暫時沒想到更好的處理方式
+       **/
+      if (el.getAttribute('listener') !== 'true') {
+        el.addEventListener('click', exportFunction, false)
+        el.setAttribute('listener', true)
+      }
     },
     exportToCSV (filename, rows) {
       let processRow = (row) => {

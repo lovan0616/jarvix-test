@@ -1092,7 +1092,8 @@
     "dataColumnRecognize": "的资料栏位，辨识为",
     "columnValue": "栏位的资料",
     "loadedRate": "资料显示比率",
-    "getMoreBtn": "看更多资料"
+    "getMoreBtn": "看更多资料",
+    "percentage": "百分比(%)"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",
@@ -1112,7 +1113,7 @@
     "TopBotToken": "筛选条件限制",
     "IntroductionToken": "问句意图",
     "GenericToken": "问句意图",
-    "ComparisonToken": "问句意图，欲处理资料间比较分析",
+    "ComparisonToken": "问句意图，欲处理资料间 比较分析",
     "TrendToken": "问句意图",
     "PredictionToken": "问句意图",
     "RootCauseToken": "问句意图",
@@ -1121,7 +1122,7 @@
     "CorrelationToken": "问句意图",
     "CorrExplorationToken": "问句意图",
     "CorrVerificationToken": "问句意图",
-    "DiffExplorationToken": "问句意图，欲处理资料间差异分析",
+    "DiffExplorationToken": "问句意图，欲处理资料间 差异分析",
     "ConjunctionToken": "连接词",
     "PossessionToken": "连接词",
     "ChangeToken": "其他词汇",

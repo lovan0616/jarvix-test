@@ -53,14 +53,14 @@ import {
   gridDefault,
   xAxisDefault,
   yAxisDefault,
-  seriesItemLine
+  seriesItemLineStack
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
   'xAxis:default': xAxisDefault(),
   'yAxis:default': yAxisDefault(),
-  'seriesItem:line': seriesItemLine()
+  'seriesItem:lineStack': seriesItemLineStack()
 })
 
 export default {
@@ -87,7 +87,7 @@ export default {
   },
   data () {
     echartAddon.mapping({
-      'seriesItem:line': {
+      'seriesItem:lineStack': {
         'large': true
       },
       'color:10': {},

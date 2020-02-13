@@ -1,5 +1,5 @@
 <template>
-  <div class="display-multi-axis-bar-chart">
+  <div class="display-basic-chart">
     <v-echart
       :style="chartStyle"
       :options="options"
@@ -17,22 +17,12 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <div class="filter-description"
-            v-if="singleType.type === 'enum'"
-          >
+          <div class="filter-description">
             <div class="column-name">{{singleType.properties.display_name}} =</div>
             <div class="single-filter"
               v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
               :key="'enum-' + propertiesIndex"
             >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
-          </div>
-          <div class="region-description"
-            v-if="singleType.type === 'range'"
-          >
-            <div class="single-area">
-              {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
-            </div>
           </div>
         </div>
       </div>
@@ -52,19 +42,19 @@ import {
   color12,
   gridDefault,
   xAxisDefault,
-  yAxisMultiple,
-  seriesItemBar
+  yAxisDefault,
+  seriesItemBarStack
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
   'xAxis:default': xAxisDefault(),
-  'yAxis:multiple': yAxisMultiple(),
-  'seriesItem:bar': seriesItemBar()
+  'yAxis:default': yAxisDefault(),
+  'seriesItem:stackBar': seriesItemBarStack()
 })
 
 export default {
-  name: 'DisplayMultiAxisBarChart',
+  name: 'DisplayStackBarChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     title: {
@@ -79,17 +69,21 @@ export default {
     height: {
       type: String,
       default: '380px'
+    },
+    isParallel: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     echartAddon.mapping({
-      'seriesItem:bar': {
+      'seriesItem:stackBar': {
         'large': true
       },
       'color:10': {},
       'grid:default': {},
       'xAxis:default': {},
-      'yAxis:multiple': {}
+      'yAxis:default': {}
     })
     return {
       addonOptions: JSON.parse(JSON.stringify(echartAddon.options)),
@@ -113,7 +107,8 @@ export default {
           ...this.addonSeriesItem,
           ...this.addonSeriesItems[colIndex],
           connectNulls: true,
-          yAxisIndex: colIndex
+          stack: 'count',
+          areaStyle: {}
         }
       })
     },
@@ -151,38 +146,23 @@ export default {
         let res = datas[0].name + '<br/>'
         for (let i = 0, length = datas.length; i < length; i++) {
           if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined) continue
-          let marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color || datas[i].color.colorStops[0].color};"></span>`
+          let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
           res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '<br/>'
         }
         return res
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
-      // 座標軸名稱
-      config.xAxis = this.title.xAxis.map(axis => {
-        return {
-          ...config.xAxis
-        }
-      })
-      config.yAxis = this.title.yAxis.map((axis, index) => {
-        return {
-          ...config.yAxis,
-          type: 'value',
-          name: axis.display_name,
-          offset: parseInt(index % 2) * 35,
-          scale: false,
-          axisLine: {
-            lineStyle: {
-              color: this.colorList[index]
-            }
-          },
-          axisTick: {
-            lineStyle: {
-              color: this.colorList[index]
-            }
-          }
-        }
-      })
+      // 圖表是水平或是垂直
+      if (this.isParallel) {
+        config.xAxis = yAxisDefault()
+        config.xAxis.name = this.title.yAxis[0].display_name
+        config.yAxis = xAxisDefault()
+        config.yAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
+      } else {
+        config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
+        config.yAxis.name = this.title.yAxis[0].display_name
+      }
 
       return config
     },
