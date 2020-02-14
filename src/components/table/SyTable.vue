@@ -7,7 +7,6 @@
       <el-table-column
         type="index"
         :width="indexWidth"
-        :index="getTableIndex"
       >
       </el-table-column>
       <el-table-column
@@ -62,9 +61,6 @@ export default {
     }
   },
   methods: {
-    getTableIndex (index) {
-      return this.dataset.index[index]
-    },
     changePage (value) {
       this.currentPage = value
     },

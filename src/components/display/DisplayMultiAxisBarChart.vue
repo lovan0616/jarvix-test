@@ -169,7 +169,7 @@ export default {
           ...config.yAxis,
           type: 'value',
           name: axis.display_name,
-          offset: parseInt(index % 2) * 35,
+          offset: Math.floor(index / 2) * 35,
           scale: false,
           axisLine: {
             lineStyle: {
