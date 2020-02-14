@@ -26,28 +26,21 @@ export default {
         }
       }
     },
-    isPreview: {
-      type: Boolean,
-      default: false
-    },
     height: {type: String, default: '380px'}
   },
   computed: {
     chartStyle () {
       return {
         width: '100%',
-        height: this.isPreview ? '200px' : this.height
+        height: this.height
       }
-    },
-    dataList () {
-      return this.tobeDataset(this.dataset)
     },
     options () {
       let config = {
         ...JSON.parse(JSON.stringify(commonChartOptions())),
         ...getDrillDownTool(this.title),
         dataset: {
-          source: this.dataList
+          source: this.tobeDataset(this.dataset)
         },
         series: {
           type: 'pie',
@@ -89,20 +82,9 @@ export default {
       }
       // export data
       this.$nextTick(() => {
-        this.$el.addEventListener('click', (e) => {
-          if (e.target && e.target.id === 'export-btn') {
-            // let exportData = JSON.parse(JSON.stringify(this.chartData))
-            // exportData.unshift([this.$t('chart.rangeStart'), this.$t('chart.rangeEnd'), this.$t('chart.count')])
-            this.exportToCSV(this.appQuestion, this.dataList)
-          }
-        })
+        this.exportCSVFile(this.$el, this.appQuestion, config.dataset.source)
       })
 
-      if (this.isPreview) {
-        config.legend.show = false
-        config.tooltip.show = false
-        config.toolbox.show = false
-      }
       return config
     },
     colorList () {
