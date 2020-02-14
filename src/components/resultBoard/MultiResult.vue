@@ -144,7 +144,7 @@ export default {
       &.Datavalue {
         color: #CA66DA;
       }
-      &.DtToken, &.FuzzyDtToken, &.TimeScope {
+      &.DtToken, &.FuzzyDtToken, &.TimeScope, &.NumRuleToken {
         color: #FF9559;
       }
       &.intend {
