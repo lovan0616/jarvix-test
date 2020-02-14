@@ -11,7 +11,9 @@
         <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
         <div class="button-block">
           <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
-          <button type="button" class="btn btn-default">{{ $t('button.build') }}</button>
+          <button type="button" class="btn btn-default"
+            @click="buildAlias"
+          >{{ $t('button.build') }}</button>
         </div>
       </div>
       <div class="dialog-content-block">
@@ -99,7 +101,8 @@
   </div>
 </template>
 <script>
-import { setDataAlias, getDataFrameColumnInfoById } from '@/API/DataSource'
+import { getDataFrameColumnInfoById, getDataValue } from '@/API/DataSource'
+import { getValueAlias } from '@/API/Alias'
 
 export default {
   name: 'ValueAliasDialog',
@@ -185,9 +188,13 @@ export default {
         this.columnList = response
 
         // 取第一個 column 作為預測顯示
+        this.fetchValueInfo(response[0].id)
       })
     },
     fetchValueInfo (id) {
+      getDataValue(id).then(response => {
+        console.log(response)
+      })
     },
     editValueAlias (index) {
       this.currentEditValueIndex = index
@@ -207,7 +214,6 @@ export default {
       this.tempAliasInfo = null
     },
     saveAlias (index) {
-      console.log(index)
       // 比較編輯前後是否有差異
       this.tempAliasInfo.forEach(element => {
         if (!element.isModified) {
@@ -217,6 +223,9 @@ export default {
       this.valueAliasList[index].alias = this.tempAliasInfo
       this.valueAliasList[index].isSaved = true
       this.cancelEditAlias()
+    },
+    buildAlias () {
+      
     },
     closeDialog () {
       this.$emit('close')
