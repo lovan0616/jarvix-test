@@ -1,6 +1,6 @@
 <template>
   <div class="task"
-    :class="{'task-mask': isGetPagination}"
+    :class="{'task-mask': isGetPagination, 'has-pagination': pagination.totalPages > 1}"
     :data-component-id="componentId"
     :data-result-id="resultId"
     :data-diagram-type="diagram"
