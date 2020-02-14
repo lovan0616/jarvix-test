@@ -175,13 +175,14 @@ export default {
       return config
     },
     colorList () {
-      switch (this.dataset.data.length) {
-        case 2:
+      switch (this.series.length) {
+        case 1:
           return colorOnly1
-        case 3:
+        case 2:
           return colorOnly2
-        case 4:
+        case 3:
           return color3
+        case 4:
         case 5:
         case 6:
           return colorDefault
