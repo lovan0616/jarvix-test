@@ -52,6 +52,7 @@
         @create="createDataSource"
         @delete="confirmDelete"
         @edit="editTableColumn"
+        @valueAlias="eidtTableValueAlias"
       >
       </data-table>
     </div>
@@ -77,6 +78,7 @@
       @close="closeEditColumnDialog"
     ></edit-column-dialog>
     <value-alias-dialog
+      v-if="showValueAliasDialog"
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeValueAliasDialog"
     ></value-alias-dialog>
@@ -233,6 +235,13 @@ export default {
     closeEditColumnDialog () {
       this.currentEditDataFrameInfo = null
       this.toggleEditColumnDialog()
+    },
+    eidtTableValueAlias (dataInfo) {
+      this.currentEditDataFrameInfo = {
+        id: dataInfo.id,
+        primaryAlias: dataInfo.primaryAlias
+      }
+      this.showValueAliasDialog = true
     },
     closeValueAliasDialog () {
       this.showValueAliasDialog = false

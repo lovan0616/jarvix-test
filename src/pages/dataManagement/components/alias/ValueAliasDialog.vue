@@ -23,6 +23,8 @@
             <div class="data-column-row"
               v-for="column in columnList"
               :key="column.id"
+              :class="{active: currentColumnInfo.id === column.id}"
+              @click="setCurrentColumn(column)"
             >{{ column.primaryAlias }}</div>
           </div>
         </div>
@@ -199,6 +201,11 @@ export default {
       getDataValue(id).then(response => {
         console.log(response)
       })
+    },
+    setCurrentColumn (columnInfo) {
+      this.currentColumnInfo = columnInfo
+
+      
     },
     editValueAlias (index) {
       this.currentEditValueIndex = index
