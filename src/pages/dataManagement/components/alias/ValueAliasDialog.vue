@@ -21,9 +21,9 @@
           <div class="data-column-row block-title">{{ $t('editing.columnName') }}</div>
           <div class="data-column-block-body">
             <div class="data-column-row"
-              v-for="column in columnList"
-              :key="column.id"
-              :class="{active: currentColumnInfo.id === column.id}"
+              v-for="column in dataColumnInfo"
+              :key="column.dataColumnId"
+              :class="{active: currentColumnInfo.dataColumnId === column.dataColumnId}"
               @click="setCurrentColumn(column)"
             >{{ column.primaryAlias }}</div>
           </div>
@@ -116,7 +116,7 @@ export default {
   },
   data () {
     return {
-      dataframeInfo: [
+      dataColumnInfo: [
         {
           dataColumnId: 2,
           primaryAlias: '產品',
@@ -124,6 +124,15 @@ export default {
             'test1',
             'test2',
             'test3'
+          ]
+        },
+        {
+          dataColumnId: 3,
+          primaryAlias: '國家',
+          dataValue: [
+            '中國',
+            '美國',
+            '日本'
           ]
         }
       ],
@@ -201,6 +210,12 @@ export default {
   },
   methods: {
     fetchColumnInfo () {
+
+      this.currentColumnInfo = this.dataColumnInfo
+
+
+
+
       getDataFrameColumnInfoById(this.dataFrameInfo.id).then(response => {
         this.columnList = response
 
