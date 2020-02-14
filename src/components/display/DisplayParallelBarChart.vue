@@ -43,15 +43,15 @@ import {
   color3,
   color12,
   gridDefault,
-  xAxisDefault,
+  yAxisParallel,
   yAxisDefault,
   seriesItemBar
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
-  'xAxis:default': xAxisDefault(),
-  'yAxis:default': yAxisDefault(),
+  'yAxis:parallel': yAxisParallel(),
+  'xAxis:parallel': yAxisDefault(),
   'seriesItem:bar': seriesItemBar()
 })
 
@@ -77,8 +77,8 @@ export default {
       },
       'color:10': {},
       'grid:default': {},
-      'xAxis:default': {},
-      'yAxis:default': {}
+      'xAxis:parallel': {},
+      'yAxis:parallel': {}
     })
     return {
       addonOptions: JSON.parse(JSON.stringify(echartAddon.options)),
@@ -91,7 +91,8 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: this.isPreview ? '200px' : this.height
+        // minHeight: this.height,
+        overflow: 'auto'
       }
     },
     series () {
@@ -149,7 +150,7 @@ export default {
       // 圖表是水平
       config.xAxis = yAxisDefault()
       config.xAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
-      config.yAxis = xAxisDefault()
+      config.yAxis = yAxisParallel()
       config.yAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : null
       // 如果是 bar chart
       config.yAxis.scale = true
