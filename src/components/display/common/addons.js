@@ -44,7 +44,9 @@ export const color12 = [
 
 export function gridDefault () {
   return {
-    // containLabel: true
+    containLabel: true,
+    left: 18,
+    bottom: 18
   }
 }
 
@@ -80,6 +82,43 @@ export function xAxisDefault () {
         fontSize: config.axisLabelFontSize
       },
       rotate: 30,
+      color: chartVariable['xAxisLabelColor']
+    }
+  }
+}
+
+export function yAxisParallel () {
+  const config = {
+    nameGap: 5,
+    fontSize: 14,
+    axisLabelFontSize: 10
+  }
+  return {
+    type: 'category',
+    nameLocation: 'end',
+    nameGap: config.nameGap,
+    nameTextStyle: {
+      color: chartVariable['textColor']
+    },
+    splitLine: {
+      show: false
+    },
+    axisTick: {
+      show: false
+    },
+    axisLine: {
+      show: true,
+      lineStyle: {
+        color: chartVariable['xAxisColor']
+      }
+    },
+    axisLabel: {
+      show: true,
+      textStyle: {
+        color: chartVariable['textColor'],
+        fontSize: config.axisLabelFontSize
+      },
+      rotate: 0,
       color: chartVariable['xAxisLabelColor']
     }
   }
