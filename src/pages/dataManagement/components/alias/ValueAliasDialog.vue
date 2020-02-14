@@ -117,6 +117,7 @@ export default {
       columnList: [],
       valueAliasList: [
         {
+          dataColumnId: 1234,
           dataValue: 'test',
           alias: [
             {
@@ -131,6 +132,7 @@ export default {
           isSaved: false
         },
         {
+          dataColumnId: 1234,
           dataValue: '美國',
           alias: [
             {
@@ -145,6 +147,7 @@ export default {
           isSaved: false
         },
         {
+          dataColumnId: 1234,
           dataValue: '美美',
           alias: [
             {
@@ -163,6 +166,7 @@ export default {
           isSaved: false
         },
         {
+          dataColumnId: 1234,
           dataValue: '登登',
           alias: []
         }
@@ -225,7 +229,9 @@ export default {
       this.cancelEditAlias()
     },
     buildAlias () {
-      
+      this.valueAliasList.reduce((acc, cur) => {
+        
+      }, [])
     },
     closeDialog () {
       this.$emit('close')
