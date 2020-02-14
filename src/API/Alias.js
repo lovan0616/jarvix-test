@@ -9,3 +9,13 @@ export function getValueAlias (columnId) {
     method: 'GET'
   })
 }
+
+/**
+ * 
+ */
+export function getDataFrameInfo (dataFrameId) {
+  return request({
+    url: `/${dataFrameId}/framedata`,
+    method: 'GET'
+  })
+}

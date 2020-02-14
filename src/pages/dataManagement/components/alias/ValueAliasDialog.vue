@@ -116,6 +116,17 @@ export default {
   },
   data () {
     return {
+      dataframeInfo: [
+        {
+          dataColumnId: 2,
+          primaryAlias: '產品',
+          dataValue: [
+            'test1',
+            'test2',
+            'test3'
+          ]
+        }
+      ],
       columnList: [],
       valueAliasList: [
         {
