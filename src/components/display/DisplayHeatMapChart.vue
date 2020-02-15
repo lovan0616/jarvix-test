@@ -41,6 +41,12 @@ export default {
           data: this.dataset.index[0],
           splitArea: {
             show: true
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
           }
         },
         yAxis: {
@@ -49,17 +55,26 @@ export default {
           data: this.dataset.index[1],
           splitArea: {
             show: true
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
           }
         },
         visualMap: {
           min: 0,
-          max: 10,
+          max: this.maxValue,
           calculable: true,
           orient: 'horizontal',
           left: 'center',
           bottom: '15%',
           inRange: {
             color: ['#95FAF2', '#C238FF']// From smaller to bigger value
+          },
+          textStyle: {
+            color: '#fff'
           }
         },
         series: [{
@@ -73,6 +88,16 @@ export default {
           }
         }]
       }
+    },
+    maxValue () {
+      let max = 0
+      this.dataset.data.forEach(element => {
+        if (element[2] > max) {
+          max = element[2]
+        }
+      })
+
+      return max
     },
     chartStyle () {
       return {

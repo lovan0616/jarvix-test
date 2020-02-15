@@ -68,8 +68,16 @@ import DisplayTreeMapChart from '@/components/display/DisplayTreeMapChart'
 import DisplayBubbleScatterChart from '@/components/display/DisplayBubbleScatterChart'
 import DisplayGroupScatterChart from '@/components/display/DisplayGroupScatterChart'
 import DisplayLineChart from '@/components/display/DisplayLineChart'
+import DisplayStackLineChart from '@/components/display/DisplayStackLineChart'
+import DisplayCompositionLineChart from '@/components/display/DisplayCompositionLineChart'
 import DisplayPieChart from '@/components/display/DisplayPieChart'
 import DisplayBarChart from '@/components/display/DisplayBarChart'
+import DisplayStackBarChart from '@/components/display/DisplayStackBarChart'
+// 多 Y 軸
+import DisplayMultiAxisBarChart from '@/components/display/DisplayMultiAxisBarChart'
+import DisplayMultiAxisLineChart from '@/components/display/DisplayMultiAxisLineChart'
+// 水平方向 bar chart
+import DisplayParallelBarChart from '@/components/display/DisplayParallelBarChart'
 import DisplayChinaMap from '@/components/display/DisplayChinaMap'
 import DisplayWorldMap from '@/components/display/DisplayWorldMap'
 import DisplayPredictChart from '@/components/display/DisplayPredictChart'
@@ -142,8 +150,14 @@ Vue.component(DisplayComputedBoxPlotChart.name, DisplayComputedBoxPlotChart)
 Vue.component(DisplayBubbleScatterChart.name, DisplayBubbleScatterChart)
 Vue.component(DisplayTreeMapChart.name, DisplayTreeMapChart)
 Vue.component(DisplayLineChart.name, DisplayLineChart)
+Vue.component(DisplayStackLineChart.name, DisplayStackLineChart)
+Vue.component(DisplayCompositionLineChart.name, DisplayCompositionLineChart)
+Vue.component(DisplayStackBarChart.name, DisplayStackBarChart)
 Vue.component(DisplayPieChart.name, DisplayPieChart)
 Vue.component(DisplayBarChart.name, DisplayBarChart)
+Vue.component(DisplayMultiAxisBarChart.name, DisplayMultiAxisBarChart)
+Vue.component(DisplayMultiAxisLineChart.name, DisplayMultiAxisLineChart)
+Vue.component(DisplayParallelBarChart.name, DisplayParallelBarChart)
 Vue.component(DisplayChinaMap.name, DisplayChinaMap)
 Vue.component(DisplayWorldMap.name, DisplayWorldMap)
 Vue.component(DisplayPredictChart.name, DisplayPredictChart)

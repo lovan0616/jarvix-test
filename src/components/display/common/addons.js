@@ -44,7 +44,9 @@ export const color12 = [
 
 export function gridDefault () {
   return {
-    // containLabel: true
+    containLabel: true,
+    left: 18,
+    bottom: 18
   }
 }
 
@@ -85,13 +87,49 @@ export function xAxisDefault () {
   }
 }
 
+export function yAxisParallel () {
+  const config = {
+    nameGap: 5,
+    fontSize: 14,
+    axisLabelFontSize: 10
+  }
+  return {
+    type: 'category',
+    nameLocation: 'end',
+    nameGap: config.nameGap,
+    nameTextStyle: {
+      color: chartVariable['textColor']
+    },
+    splitLine: {
+      show: false
+    },
+    axisTick: {
+      show: false
+    },
+    axisLine: {
+      show: true,
+      lineStyle: {
+        color: chartVariable['xAxisColor']
+      }
+    },
+    axisLabel: {
+      show: true,
+      textStyle: {
+        color: chartVariable['textColor'],
+        fontSize: config.axisLabelFontSize
+      },
+      rotate: 0,
+      color: chartVariable['xAxisLabelColor']
+    }
+  }
+}
+
 export function yAxisDefault () {
   const config = {
     nameGap: 24,
     axisLabelFontSize: 10
   }
   return {
-    // nameLocation: 'middle',
     nameGap: config.nameGap,
     nameTextStyle: {
       color: chartVariable['textColor']
@@ -123,6 +161,44 @@ export function yAxisDefault () {
   }
 }
 
+export function yAxisMultiple () {
+  const config = {
+    nameGap: 24,
+    axisLabelFontSize: 10
+  }
+  return {
+    nameGap: config.nameGap,
+    nameTextStyle: {
+      color: chartVariable['textColor']
+    },
+    splitLine: {
+      show: true,
+      lineStyle: {
+        color: chartVariable['splitLineColor']
+      }
+    },
+    axisTick: {
+      lineStyle: {
+        color: chartVariable['xAxisColor']
+      }
+    },
+    axisLine: {
+      lineStyle: {
+        color: chartVariable['xAxisColor']
+      }
+    },
+    scale: true,
+    axisLabel: {
+      show: true,
+      textStyle: {
+        color: chartVariable['textColor'],
+        fontSize: config.axisLabelFontSize
+      },
+      color: chartVariable['yAxisLabelColor']
+    }
+  }
+}
+
 export function seriesItemLine () {
   return {
     type: 'line',
@@ -132,8 +208,7 @@ export function seriesItemLine () {
 
 export function seriesItemLineStack () {
   return {
-    type: 'line',
-    symbol: 'circle',
+    ...seriesItemLine(),
     stack: 'stack',
     areaStyle: {}
   }
@@ -146,6 +221,14 @@ export function seriesItemBar () {
   return {
     type: 'bar',
     barMaxWidth: config.barMaxWidth
+  }
+}
+
+export function seriesItemBarStack () {
+  return {
+    ...seriesItemBar(),
+    stack: 'stack',
+    areaStyle: {}
   }
 }
 
@@ -224,14 +307,31 @@ export function seriesItemMarkLine () {
 // drillDown type
 export function getDrillDownTool (titleObject) {
   let toolbox
-  if (titleObject.xAxis.drillable && titleObject.yAxis.drillable) {
-    toolbox = ['rect', 'keep', 'clear']
-  } else if (titleObject.xAxis.drillable && !titleObject.yAxis.drillable) {
-    toolbox = ['lineX', 'keep', 'clear']
-  } else if (!titleObject.xAxis.drillable && titleObject.yAxis.drillable) {
-    toolbox = ['lineY', 'keep', 'clear']
-  } else {
+
+  if (titleObject.xAxis.length === 0 && titleObject.yAxis.length === 0) {
     toolbox = ['']
+  } else if (titleObject.xAxis.length === 0 && titleObject.yAxis.length > 0) {
+    if (titleObject.yAxis[0].drillable) {
+      toolbox = ['lineY', 'keep', 'clear']
+    } else {
+      toolbox = ['']
+    }
+  } else if (titleObject.xAxis.length > 0 && titleObject.yAxis.length === 0) {
+    if (titleObject.xAxis[0].drillable) {
+      toolbox = ['lineX', 'keep', 'clear']
+    } else {
+      toolbox = ['']
+    }
+  } else {
+    if (titleObject.xAxis[0].drillable && titleObject.yAxis[0].drillable) {
+      toolbox = ['rect', 'keep', 'clear']
+    } else if (titleObject.xAxis[0].drillable && !titleObject.yAxis[0].drillable) {
+      toolbox = ['lineX', 'keep', 'clear']
+    } else if (!titleObject.xAxis[0].drillable && titleObject.yAxis[0].drillable) {
+      toolbox = ['lineY', 'keep', 'clear']
+    } else {
+      toolbox = ['']
+    }
   }
 
   return {

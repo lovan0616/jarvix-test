@@ -116,9 +116,9 @@ export default {
         return {
           type: 'range',
           properties: {
-            dc_name: this.title.xAxis.dc_name,
-            data_type: this.title.xAxis.data_type,
-            display_name: this.title.xAxis.display_name,
+            dc_name: this.title.xAxis[0].dc_name,
+            data_type: this.title.xAxis[0].data_type,
+            display_name: this.title.xAxis[0].display_name,
             start: coordRange[0],
             end: coordRange[1]
           }
@@ -174,8 +174,8 @@ export default {
         let dataset = opt.series[0].data
         let table = `<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-secondary" type="button" id="export-btn">${this.$t('chart.export')}</button></div>
           <table style="margin-top: 16px;width:100%;padding: 0 16px;"><tbody><tr style="background-color:#2B4D51">` +
-          '<td>' + this.title.xAxis.display_name + '</td>' +
-          '<td>' + this.title.yAxis.display_name + '</td>' +
+          '<td>' + this.title.xAxis[0].display_name + '</td>' +
+          '<td>' + this.title.yAxis[0].display_name + '</td>' +
           '</tr>'
         for (let i = 0; i < dataset.length; i++) {
           table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>
@@ -201,10 +201,10 @@ export default {
       chartAddon.xAxis.interval = allSameValue ? 'auto' : interval
       chartAddon.xAxis.min = allSameValue ? newData[0] / 2 : min
       chartAddon.xAxis.max = allSameValue ? newData[0] * 2 : max
-      chartAddon.xAxis.name = this.title.xAxis.display_name
+      chartAddon.xAxis.name = this.title.xAxis[0].display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramChartConfig.yAxis}
       chartAddon.yAxis.scale = false
-      chartAddon.yAxis.name = this.title.yAxis.display_name
+      chartAddon.yAxis.name = this.title.yAxis[0].display_name
 
       return chartData
     },

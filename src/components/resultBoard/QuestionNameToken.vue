@@ -47,7 +47,7 @@ export default {
       background-color: rgba(202, 102, 218, 0.7);
     }
   }
-  &.DtToken, &.FuzzyDtToken, &.TimeScope {
+  &.DtToken, &.FuzzyDtToken, &.TimeScope, &.NumRuleToken {
     border-bottom: 1px solid #FF9559;
 
     &:hover {

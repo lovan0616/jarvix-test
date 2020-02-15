@@ -53,30 +53,18 @@ import {
   gridDefault,
   xAxisDefault,
   yAxisDefault,
-  seriesItemLine,
-  seriesItemLineStack,
-  seriesItemBar,
-  seriesItemPie,
-  seriesItemDoughnut,
-  seriesItemMarkLine,
-  seriesItemPieLabelWithValue
+  seriesItemLineStack
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
   'xAxis:default': xAxisDefault(),
   'yAxis:default': yAxisDefault(),
-  'seriesItem:bar': seriesItemBar(),
-  'seriesItem:line': seriesItemLine(),
-  'seriesItem:lineStack': seriesItemLineStack(),
-  'seriesItem:pie': seriesItemPie(),
-  'seriesItem:pieLabelWithValue': seriesItemPieLabelWithValue(),
-  'seriesItem:doughnut': seriesItemDoughnut(),
-  'seriesItem:markLine': seriesItemMarkLine()
+  'seriesItem:lineStack': seriesItemLineStack()
 })
 
 export default {
-  name: 'DisplayBasicChart',
+  name: 'DisplayStackLineChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     title: {
@@ -88,19 +76,28 @@ export default {
         }
       }
     },
-    addons: { type: [Object, Array], default: () => ([]) },
-    height: {type: String, default: '380px'},
+    height: {
+      type: String,
+      default: '380px'
+    },
     isParallel: {
       type: Boolean,
       default: false
     }
   },
   data () {
-    echartAddon.mapping(this.addons)
+    echartAddon.mapping({
+      'seriesItem:lineStack': {
+        'large': true
+      },
+      'color:10': {},
+      'grid:default': {},
+      'xAxis:default': {},
+      'yAxis:default': {}
+    })
     return {
       addonOptions: JSON.parse(JSON.stringify(echartAddon.options)),
       addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
-      addonSeriesData: JSON.parse(JSON.stringify(echartAddon.seriesData)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
       selectedData: []
     }
@@ -109,7 +106,7 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: this.isPreview ? '200px' : this.height
+        height: this.height
       }
     },
     series () {
@@ -146,6 +143,7 @@ export default {
         table += '</tbody></table>'
         return table
       }
+
       // export data
       this.$nextTick(() => {
         this.exportCSVFile(this.$el, this.appQuestion, config.dataset.source)
@@ -166,17 +164,14 @@ export default {
       // 圖表是水平或是垂直
       if (this.isParallel) {
         config.xAxis = yAxisDefault()
-        config.xAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
+        config.xAxis.name = this.title.yAxis[0].display_name
         config.yAxis = xAxisDefault()
-        config.yAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : null
+        config.yAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
       } else {
-        config.xAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : null
-        config.yAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
+        config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
+        config.yAxis.name = this.title.yAxis[0].display_name
       }
-      // 如果是 bar chart
-      config.yAxis.scale = !(this.series[0].type === 'bar')
 
-      if (this.isPreview) this.previewChartSetting(config)
       return config
     },
     colorList () {
@@ -217,44 +212,23 @@ export default {
       return result
     },
     brushRegionSelected (params) {
-      switch (this.series[0].type) {
-        case 'line':
-          if (params.batch[0].areas.length === 0) {
-            this.selectedData = []
-            break
-          }
-          this.selectedData = params.batch[0].areas.map(areaElement => {
-            let coordRange = areaElement.coordRange
-            return {
-              type: 'range',
-              properties: {
-                dc_name: this.title.xAxis[0].dc_name,
-                data_type: this.title.xAxis[0].data_type,
-                display_name: this.title.xAxis[0].display_name,
-                start: this.dataset.index[coordRange[0]],
-                end: this.dataset.index[coordRange[1]]
-              }
-            }
-          })
-          break
-        case 'bar':
-          if (params.batch[0].selected[0].dataIndex.length === 0) {
-            this.selectedData = []
-            break
-          }
-          this.selectedData = [{
-            type: 'enum',
-            properties: {
-              dc_name: this.title.xAxis[0].dc_name,
-              data_type: this.title.xAxis[0].data_type,
-              display_name: this.title.xAxis[0].display_name,
-              datavalues: params.batch[0].selected[0].dataIndex.map(element => {
-                return this.dataset.index[element]
-              })
-            }
-          }]
-          break
+      if (params.batch[0].areas.length === 0) {
+        this.selectedData = []
+        return
       }
+      this.selectedData = params.batch[0].areas.map(areaElement => {
+        let coordRange = areaElement.coordRange
+        return {
+          type: 'range',
+          properties: {
+            dc_name: this.title.xAxis[0].dc_name,
+            data_type: this.title.xAxis[0].data_type,
+            display_name: this.title.xAxis[0].display_name,
+            start: this.dataset.index[coordRange[0]],
+            end: this.dataset.index[coordRange[1]]
+          }
+        }
+      })
     },
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)

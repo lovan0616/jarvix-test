@@ -1087,7 +1087,13 @@
     "lowerQuartile": "下四分位數",
     "average": "平均值",
     "higherQuartile": "上四分位數",
-    "max": "最大值"
+    "max": "最大值",
+    "from": "來自",
+    "dataColumnRecognize": "的資料欄位，辨識為",
+    "columnValue": "欄位的資料",
+    "loadedRate": "資料顯示比率",
+    "getMoreBtn": "看更多資料",
+    "percentage": "百分比(%)"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",
@@ -1107,7 +1113,7 @@
     "TopBotToken": "篩選條件限制",
     "IntroductionToken": "問句意圖",
     "GenericToken": "問句意圖",
-    "ComparisonToken": "問句意圖",
+    "ComparisonToken": "問句意圖，欲處理資料間 比較分析",
     "TrendToken": "問句意圖",
     "PredictionToken": "問句意圖",
     "RootCauseToken": "問句意圖",
@@ -1116,13 +1122,15 @@
     "CorrelationToken": "問句意圖",
     "CorrExplorationToken": "問句意圖",
     "CorrVerificationToken": "問句意圖",
-    "DiffExplorationToken": "問句意圖",
+    "DiffExplorationToken": "問句意圖，欲處理資料間 差異分析",
     "ConjunctionToken": "連接詞",
     "PossessionToken": "連接詞",
     "ChangeToken": "其他詞彙",
     "ElseToken": "其他詞彙",
     "IgnoreToken": "可忽略的詞彙",
-    "Datarow": "資料列"
+    "Datarow": "資料列",
+    "Boolean": "布林值",
+    "Unique": "唯一值"
   },
   "notification": {
     "uploadLimitNotification": "資料數量已達上限",
