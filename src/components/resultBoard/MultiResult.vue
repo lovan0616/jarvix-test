@@ -28,7 +28,10 @@
             >
               <span class="column-name"
                 :class="segmentation.type"
-              >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from')}}<span class="dataframe-name">{{segmentation.properties.dataframePrimaryAlias}}</span>{{ $t('resultDescription.dataColumnRecognize') }}<b>'{{ segmentation.matchedWord }}'</b><span v-show="segmentation.type === 'Datavalue'">{{ $t('resultDescription.columnValue') }}</span>
+              >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from')}}
+              <span class="dataframe-name">{{segmentation.properties.dataframePrimaryAlias}}</span>
+              {{ $t('resultDescription.tokenRecognize', {token: $t(`segmentationToken.${segmentation.type}`)}) }}
+              <b>'{{ segmentation.matchedWord }}'</b>
             </template>
             <template
               v-else-if="isIntend(segmentation.type)"
@@ -81,6 +84,16 @@ export default {
           return true
         default:
           return false
+      }
+    },
+    tooltipContent (tokenInfo) {
+      switch (tokenInfo.type) {
+        case 'Datavalue':
+        case 'Datacolumn':
+        case 'Datarow':
+          return this.$t('resultDescription.recognizeTo', {dataFrame: tokenInfo.properties.dataframePrimaryAlias, token: this.$t(`segmentationToken.${this.tokenInfo.type}`)}) + tokenInfo.matchedWord
+        default:
+          return this.$t(`segmentationToken.${this.tokenInfo.type}`)
       }
     }
   }
