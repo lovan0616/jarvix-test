@@ -205,3 +205,13 @@ export function getDataValue (columnId) {
     method: 'GET'
   })
 }
+
+/**
+ * get dataColumn ans dataValue
+ */
+export function getDataColumnDataValue (dataFrameId) {
+  return request({
+    url: `/dataFrame/FrameNameAndValue/${dataFrameId}`,
+    method: 'GET'
+  })
+}

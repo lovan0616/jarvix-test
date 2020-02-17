@@ -103,7 +103,7 @@
   </div>
 </template>
 <script>
-import { getDataFrameColumnInfoById, getDataValue } from '@/API/DataSource'
+import { getDataFrameColumnInfoById, getDataValue, getDataColumnDataValue } from '@/API/DataSource'
 import { getValueAlias } from '@/API/Alias'
 
 export default {
@@ -214,7 +214,11 @@ export default {
       this.currentColumnInfo = this.dataColumnInfo
 
 
-
+      getDataColumnDataValue(this.dataFrameInfo.id).then(response => {
+        console.log(response, 'data column & data value')
+        this.dataColumnInfo = response
+        this.setColumnInfo(response[0])
+      })
 
       getDataFrameColumnInfoById(this.dataFrameInfo.id).then(response => {
         this.columnList = response
@@ -223,15 +227,22 @@ export default {
         this.fetchValueInfo(response[0].id)
       })
     },
+    setColumnInfo (columnInfo) {
+      this.currentColumnInfo = JSON.parse(JSON.stringify(columnInfo))
+
+      console.log(this.currentColumnInfo.dataColumnId, 'columnId')
+      
+      getValueAlias(this.currentColumnInfo.dataColumnId).then(response => {
+        
+      })
+    },
     fetchValueInfo (id) {
       getDataValue(id).then(response => {
         console.log(response)
       })
     },
     setCurrentColumn (columnInfo) {
-      this.currentColumnInfo = columnInfo
-
-      
+      this.setColumnInfo(columnInfo)
     },
     editValueAlias (index) {
       this.currentEditValueIndex = index
