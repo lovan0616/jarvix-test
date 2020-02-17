@@ -42,6 +42,13 @@
                 >[{{ segmentation.word }}]</span>{{ $t(`segmentationToken.${segmentation.type}`)}}
               </div>
             </template>
+            <template
+              v-else
+            >
+              <span class="column-name"
+                :class="segmentation.type"
+              >[{{ segmentation.word }}]</span>{{ $t(`segmentationToken.${segmentation.type}`)}}
+            </template>
           </div>
         </div>
       </div>
