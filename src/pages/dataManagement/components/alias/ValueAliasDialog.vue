@@ -21,7 +21,7 @@
           <div class="data-column-row block-title">{{ $t('editing.columnName') }}</div>
           <div class="data-column-block-body">
             <div class="data-column-row"
-              v-for="column in dataColumnInfo"
+              v-for="column in dataColumnListInfo"
               :key="column.dataColumnId"
               :class="{active: currentColumnInfo.dataColumnId === column.dataColumnId}"
               @click="setCurrentColumn(column)"
@@ -40,7 +40,7 @@
             </div>
             <div class="data-table-body">
               <div class="data-table-row"
-                v-for="(valueInfo, index) in valueAliasList"
+                v-for="(valueInfo, index) in currentColumnInfo.aliasList"
                 :key="index"
               >
                 <div class="data-table-cell data-value">{{ valueInfo.dataValue }}</div>
@@ -103,8 +103,8 @@
   </div>
 </template>
 <script>
-import { getDataFrameColumnInfoById, getDataValue, getDataColumnDataValue } from '@/API/DataSource'
-import { getValueAlias } from '@/API/Alias'
+import { getDataColumnDataValue } from '@/API/DataSource'
+import { getValueAlias, saveValueAlias } from '@/API/Alias'
 
 export default {
   name: 'ValueAliasDialog',
@@ -116,7 +116,7 @@ export default {
   },
   data () {
     return {
-      dataColumnInfo: [
+      dataColumnListInfo: [
         {
           dataColumnId: 2,
           primaryAlias: '產品',
@@ -210,35 +210,50 @@ export default {
   },
   methods: {
     fetchColumnInfo () {
-
-      this.currentColumnInfo = this.dataColumnInfo
-
-
       getDataColumnDataValue(this.dataFrameInfo.id).then(response => {
         console.log(response, 'data column & data value')
-        this.dataColumnInfo = response
-        this.setColumnInfo(response[0])
-      })
-
-      getDataFrameColumnInfoById(this.dataFrameInfo.id).then(response => {
-        this.columnList = response
+        this.dataColumnListInfo = response
 
         // 取第一個 column 作為預測顯示
-        this.fetchValueInfo(response[0].id)
+        this.setColumnInfo(response[0])
       })
     },
     setColumnInfo (columnInfo) {
-      this.currentColumnInfo = JSON.parse(JSON.stringify(columnInfo))
-
-      console.log(this.currentColumnInfo.dataColumnId, 'columnId')
-      
-      getValueAlias(this.currentColumnInfo.dataColumnId).then(response => {
-        
-      })
-    },
-    fetchValueInfo (id) {
-      getDataValue(id).then(response => {
-        console.log(response)
+      this.currentColumnInfo = columnInfo
+      // 是否已經拿過 alias 資料
+      if (this.currentColumnInfo.aliasList) return
+      // 取得該 column 的 alias
+      getValueAlias(columnInfo.dataColumnId).then(response => {
+        if (response.length === 0) {
+          this.$set(this.currentColumnInfo, 'aliasList', columnInfo.dataValue.map(dataValue => {
+            return {
+              dataValue,
+              dataColumnId: this.currentColumnInfo.dataColumnId,
+              alias: [],
+              isSaved: false
+            }
+          }))
+        } else {
+          this.$set(this.currentColumnInfo, 'aliasList', columnInfo.dataValue.map(dataValue => {
+            let dataValueInfo = response.find(element => element.dataValue === dataValue)
+            if (dataValueInfo) {
+              dataValueInfo = dataValueInfo.alias.map(element => {
+                return {
+                  name: element,
+                  isModified: false
+                }
+              })
+            } else {
+              dataValueInfo = []
+            }
+            return {
+              dataValue,
+              dataColumnId: this.currentColumnInfo.dataColumnId,
+              alias: dataValueInfo,
+              isSaved: false
+            }
+          }))
+        }
       })
     },
     setCurrentColumn (columnInfo) {
@@ -246,7 +261,7 @@ export default {
     },
     editValueAlias (index) {
       this.currentEditValueIndex = index
-      this.tempAliasInfo = JSON.parse(JSON.stringify(this.valueAliasList[index].alias))
+      this.tempAliasInfo = JSON.parse(JSON.stringify(this.currentColumnInfo.aliasList[index].alias))
     },
     addAlias () {
       this.tempAliasInfo.push({
@@ -265,17 +280,36 @@ export default {
       // 比較編輯前後是否有差異
       this.tempAliasInfo.forEach(element => {
         if (!element.isModified) {
-          element.isModified = this.valueAliasList[index].alias.findIndex(item => item.name === element.name) < 0
+          element.isModified = this.currentColumnInfo.aliasList[index].alias.findIndex(item => item.name === element.name) < 0
         }
       })
-      this.valueAliasList[index].alias = this.tempAliasInfo
-      this.valueAliasList[index].isSaved = true
+      // 過濾掉空字串
+      this.tempAliasInfo = this.tempAliasInfo.filter(element => element.name !== null && element.name !== '')
+
+      this.currentColumnInfo.aliasList[index].alias = this.tempAliasInfo
+      this.currentColumnInfo.aliasList[index].isSaved = true
+
       this.cancelEditAlias()
     },
     buildAlias () {
-      this.valueAliasList.reduce((acc, cur) => {
-        
+      let aliasInfo = this.dataColumnListInfo.reduce((acc, cur) => {
+        if (!cur.aliasList) return acc
+        let modifiedAlias = cur.aliasList.filter(element => element.isSaved)
+        if (modifiedAlias) {
+          modifiedAlias = modifiedAlias.map(element => {
+            return {
+              dataColumnId: element.dataColumnId,
+              dataValue: element.dataValue,
+              alias: element.alias.map(dataValue => dataValue.name)
+            }
+          })
+        } else {
+          modifiedAlias = []
+        }
+        return acc.concat(modifiedAlias)
       }, [])
+
+      saveValueAlias(aliasInfo)
     },
     closeDialog () {
       this.$emit('close')

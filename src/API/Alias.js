@@ -11,11 +11,12 @@ export function getValueAlias (columnId) {
 }
 
 /**
- * 
+ * add value alias
  */
-export function getDataFrameInfo (dataFrameId) {
+export function saveValueAlias (aliasInfo) {
   return request({
-    url: `/${dataFrameId}/framedata`,
-    method: 'GET'
+    url: `/alias/alter/ValueAlias`,
+    method: 'POST',
+    data: aliasInfo
   })
 }
