@@ -4,7 +4,7 @@
     :popper-class="tokenInfo.type"
   >
     <div slot="content">{{tooltipContent(tokenInfo)}}
-      <div v-if="tokenInfo.properties.length > 1">
+      <div v-if="tokenInfo.properties && tokenInfo.properties.length > 1">
         <span>{{ $t('resultDescription.hasColumn') }}</span>
         <span
           v-for="(property, propertyIndex) in tokenInfo.properties"
