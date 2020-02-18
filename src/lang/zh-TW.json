@@ -1158,7 +1158,8 @@
     "export": "下載資料 CSV 檔案",
     "rangeStart": "範圍起始",
     "rangeEnd": "範圍結束",
-    "count": "統計數量"
+    "count": "統計數量",
+    "download": "下載圖片"
   },
   "errorMessage": {
     "SYERR0001": "系統發生非預期錯誤",

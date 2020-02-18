@@ -26,7 +26,7 @@ export default {
         }
       }
     },
-    height: {type: String, default: '380px'}
+    height: {type: String, default: '420px'}
   },
   computed: {
     chartStyle () {

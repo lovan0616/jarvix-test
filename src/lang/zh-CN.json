@@ -1158,7 +1158,8 @@
     "export": "下载资料 CSV 档案",
     "rangeStart": "范围起始",
     "rangeEnd": "范围结束",
-    "count": "统计数量"
+    "count": "统计数量",
+    "download": "下载图片"
   },
   "errorMessage": {
     "SYERR0001": "系统发生非预期错误",
