@@ -2,7 +2,7 @@
   <el-tooltip placement="bottom"
     :tabindex="999"
     :popper-class="tokenInfo.type"
-    :content="tokenInfo.type === 'Datavalue' || tokenInfo.type === 'Datacolumn' ? $t(`segmentationToken.${tokenInfo.type}`, {name: tokenInfo.properties.datacolumnPrimaryAlias, dataFrame: tokenInfo.properties.dataframePrimaryAlias}) : $t(`segmentationToken.${tokenInfo.type}`)"
+    :content="tooltipContent(tokenInfo)"
   >
     <span class="question-token"
       :class="tokenInfo.type"
@@ -16,6 +16,20 @@ export default {
     tokenInfo: {
       type: Object
     }
+  },
+  methods: {
+    tooltipContent (tokenInfo) {
+      switch (tokenInfo.type) {
+        case 'Datavalue':
+        case 'Datacolumn':
+        case 'Datarow':
+          return this.$t('resultDescription.recognizeTo', {dataFrame: tokenInfo.properties.dataframePrimaryAlias, token: this.$t(`segmentationToken.${this.tokenInfo.type}`)}) + tokenInfo.matchedWord
+        default:
+          return this.$t(`segmentationToken.${this.tokenInfo.type}`)
+      }
+    }
+  },
+  computed: {
   }
 }
 </script>
