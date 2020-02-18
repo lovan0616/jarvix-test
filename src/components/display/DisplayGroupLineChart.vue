@@ -53,18 +53,18 @@ import {
   gridDefault,
   xAxisDefault,
   yAxisDefault,
-  seriesItemLineStack
+  seriesItemLine
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
   'xAxis:default': xAxisDefault(),
   'yAxis:default': yAxisDefault(),
-  'seriesItem:lineStack': seriesItemLineStack()
+  'seriesItem:line': seriesItemLine()
 })
 
 export default {
-  name: 'DisplayCompositionLineChart',
+  name: 'DisplayGroupLineChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     title: {
@@ -87,7 +87,7 @@ export default {
   },
   data () {
     echartAddon.mapping({
-      'seriesItem:lineStack': {
+      'seriesItem:line': {
         'large': true
       },
       'color:10': {},
@@ -126,7 +126,7 @@ export default {
         ...getDrillDownTool(this.title),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
         dataset: {
-          source: this.tobeDataset(this.dataset)
+          source: this.datasetTransform(this.dataset)
         },
         series: this.series,
         color: this.colorList
@@ -155,7 +155,7 @@ export default {
         for (let i = 0, length = datas.length; i < length; i++) {
           if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined) continue
           let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
-          res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '%' + '<br/>'
+          res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '<br/>'
         }
         return res
       }
@@ -164,12 +164,12 @@ export default {
       // 圖表是水平或是垂直
       if (this.isParallel) {
         config.xAxis = yAxisDefault()
-        config.xAxis.name = this.$t('resultDescription.percentage')
+        config.xAxis.name = this.title.yAxis[0].display_name
         config.yAxis = xAxisDefault()
         config.yAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
       } else {
         config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
-        config.yAxis.name = this.$t('resultDescription.percentage')
+        config.yAxis.name = this.title.yAxis[0].display_name
       }
 
       return config
@@ -195,18 +195,6 @@ export default {
     }
   },
   methods: {
-    tobeDataset (dataset) {
-      // get percentage
-      dataset.data = dataset.data.map(element => {
-        let total = element.reduce((acc, cur) => acc + cur, 0)
-        return element.map(item => this.roundNumber(item * 100 / total))
-      })
-
-      let result = dataset.data.map((element, index) => {
-        return [dataset.index[index], ...element]
-      })
-      return [['index', ...dataset.columns], ...result]
-    },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {
         this.selectedData = []

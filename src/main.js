@@ -69,6 +69,7 @@ import DisplayBubbleScatterChart from '@/components/display/DisplayBubbleScatter
 import DisplayGroupScatterChart from '@/components/display/DisplayGroupScatterChart'
 import DisplayLineChart from '@/components/display/DisplayLineChart'
 import DisplayStackLineChart from '@/components/display/DisplayStackLineChart'
+import DisplayGroupLineChart from '@/components/display/DisplayGroupLineChart'
 import DisplayCompositionLineChart from '@/components/display/DisplayCompositionLineChart'
 import DisplayPieChart from '@/components/display/DisplayPieChart'
 import DisplayBarChart from '@/components/display/DisplayBarChart'
@@ -151,6 +152,7 @@ Vue.component(DisplayBubbleScatterChart.name, DisplayBubbleScatterChart)
 Vue.component(DisplayTreeMapChart.name, DisplayTreeMapChart)
 Vue.component(DisplayLineChart.name, DisplayLineChart)
 Vue.component(DisplayStackLineChart.name, DisplayStackLineChart)
+Vue.component(DisplayGroupLineChart.name, DisplayGroupLineChart)
 Vue.component(DisplayCompositionLineChart.name, DisplayCompositionLineChart)
 Vue.component(DisplayStackBarChart.name, DisplayStackBarChart)
 Vue.component(DisplayPieChart.name, DisplayPieChart)

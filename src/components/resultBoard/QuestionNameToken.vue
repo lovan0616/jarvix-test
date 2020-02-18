@@ -2,8 +2,16 @@
   <el-tooltip placement="bottom"
     :tabindex="999"
     :popper-class="tokenInfo.type"
-    :content="tooltipContent(tokenInfo)"
   >
+    <div slot="content">{{tooltipContent(tokenInfo)}}
+      <div v-if="tokenInfo.properties.length > 1">
+        <span>{{ $t('resultDescription.hasColumn') }}</span>
+        <span
+          v-for="(property, propertyIndex) in tokenInfo.properties"
+          :key="propertyIndex"
+        >{{ property.datacolumnPrimaryAlias }}<span v-show="propertyIndex < tokenInfo.properties.length - 1">、</span></span>
+      </div>
+    </div>
     <span class="question-token"
       :class="tokenInfo.type"
     >{{tokenInfo.matchedWord}}</span>
@@ -20,12 +28,13 @@ export default {
   methods: {
     tooltipContent (tokenInfo) {
       switch (tokenInfo.type) {
+        case 'ColumnSet':
         case 'Datavalue':
         case 'Datacolumn':
         case 'Datarow':
-          return this.$t('resultDescription.recognizeTo', {dataFrame: tokenInfo.properties.dataframePrimaryAlias, token: this.$t(`segmentationToken.${this.tokenInfo.type}`)}) + tokenInfo.matchedWord
+          return this.$t('resultDescription.recognizeTo', {dataFrame: tokenInfo.properties[0].dataframePrimaryAlias, token: this.$t(`segmentationToken.${tokenInfo.type}`)}) + tokenInfo.matchedWord
         default:
-          return this.$t(`segmentationToken.${this.tokenInfo.type}`)
+          return this.$t(`segmentationToken.${tokenInfo.type}`)
       }
     }
   },
