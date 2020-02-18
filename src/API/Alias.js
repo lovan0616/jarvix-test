@@ -5,7 +5,7 @@ import request from '@/utils/publicRequest'
  */
 export function getValueAlias (columnId) {
   return request({
-    url: `/alias/get/ValueAlias/${columnId}`,
+    url: `/alias/value/${columnId}`,
     method: 'GET'
   })
 }
@@ -15,8 +15,8 @@ export function getValueAlias (columnId) {
  */
 export function saveValueAlias (aliasInfo) {
   return request({
-    url: `/alias/alter/ValueAlias`,
-    method: 'POST',
+    url: `/alias/value`,
+    method: 'PATCH',
     data: aliasInfo
   })
 }

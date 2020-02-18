@@ -105,6 +105,7 @@
 <script>
 import { getDataColumnDataValue } from '@/API/DataSource'
 import { getValueAlias, saveValueAlias } from '@/API/Alias'
+import { getSelfInfo } from '@/API/User'
 
 export default {
   name: 'ValueAliasDialog',
@@ -202,13 +203,20 @@ export default {
       aliasConfig: {
         name: null,
         isModified: true
-      }
+      },
+      userId: null
     }
   },
   mounted () {
     this.fetchColumnInfo()
+    this.getSelfUserInfo()
   },
   methods: {
+    getSelfUserInfo () {
+      getSelfInfo().then(response => {
+        this.userId = response.id
+      })
+    },
     fetchColumnInfo () {
       getDataColumnDataValue(this.dataFrameInfo.id).then(response => {
         console.log(response, 'data column & data value')
@@ -298,6 +306,7 @@ export default {
         if (modifiedAlias) {
           modifiedAlias = modifiedAlias.map(element => {
             return {
+              userId: this.userId,
               dataColumnId: element.dataColumnId,
               dataValue: element.dataValue,
               alias: element.alias.map(dataValue => dataValue.name)

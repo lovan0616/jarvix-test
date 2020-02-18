@@ -72,3 +72,13 @@ export function deleteUser (id) {
     method: 'DELETE'
   })
 }
+
+/**
+ * 取得自己資訊
+ */
+export function getSelfInfo (id) {
+  return request({
+    url: `/users/selfInfo`,
+    method: 'GET'
+  })
+}
