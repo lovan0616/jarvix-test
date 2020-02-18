@@ -29,9 +29,18 @@
               <span class="column-name"
                 :class="segmentation.type"
               >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from')}}
-              <span class="dataframe-name">{{segmentation.properties.dataframePrimaryAlias}}</span>
+              <span class="dataframe-name">{{segmentation.properties[0].dataframePrimaryAlias}}</span>
               {{ $t('resultDescription.tokenRecognize', {token: $t(`segmentationToken.${segmentation.type}`)}) }}
               <b>'{{ segmentation.matchedWord }}'</b>
+              <template
+                v-if="segmentation.properties.length > 1"
+              >
+                <span>，{{ $t('resultDescription.hasColumn') }}</span>
+                <span
+                  v-for="(property, propertyIndex) in segmentation.properties"
+                  :key="propertyIndex"
+                >{{ property.datacolumnPrimaryAlias }}<span v-show="propertyIndex < segmentation.properties.length - 1">、</span></span>
+              </template>
             </template>
             <template
               v-else-if="isIntend(segmentation.type)"
@@ -98,7 +107,7 @@ export default {
         case 'Datavalue':
         case 'Datacolumn':
         case 'Datarow':
-          return this.$t('resultDescription.recognizeTo', {dataFrame: tokenInfo.properties.dataframePrimaryAlias, token: this.$t(`segmentationToken.${this.tokenInfo.type}`)}) + tokenInfo.matchedWord
+          return this.$t('resultDescription.recognizeTo', {dataFrame: tokenInfo.properties[0].dataframePrimaryAlias, token: this.$t(`segmentationToken.${this.tokenInfo.type}`)}) + tokenInfo.matchedWord
         default:
           return this.$t(`segmentationToken.${this.tokenInfo.type}`)
       }

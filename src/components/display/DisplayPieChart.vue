@@ -95,22 +95,18 @@ export default {
     }
   },
   methods: {
-    tobeDataset (data) {
-      const result = [['index']]
-
+    tobeDataset (dataset) {
       // 如果有 index 經過 Number() 後為數字 ，echart 會畫不出來，所以補個 [] 給他
-      if (data.index) {
-        data.index = data.index.map(element => {
+      if (dataset.index) {
+        dataset.index = dataset.index.map(element => {
           return isNaN(Number(element)) ? element : '[' + element + ']'
         })
       }
 
-      result[0] = result[0].concat(data.columns)
-      data.data.forEach((row, rowIndex) => {
-        const rowData = [data.index[rowIndex]].concat(row)
-        result.push(rowData)
+      let result = dataset.data.map((element, index) => {
+        return [dataset.index[index], ...element]
       })
-      return result
+      return [['index', ...dataset.columns], ...result]
     }
   }
 }

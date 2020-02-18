@@ -105,6 +105,12 @@ Vue.mixin({
           return 'EmptyResult'
       }
     },
+    datasetTransform (dataset) {
+      let result = dataset.data.map((element, index) => {
+        return [dataset.index[index], ...element]
+      })
+      return [['index', ...dataset.columns], ...result]
+    },
     // 藉由後端的 template 名稱對應到前端的 component name
     getChartTemplate (value) {
       switch (value) {
