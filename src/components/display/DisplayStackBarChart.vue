@@ -68,7 +68,7 @@ export default {
     },
     height: {
       type: String,
-      default: '380px'
+      default: '420px'
     },
     isParallel: {
       type: Boolean,

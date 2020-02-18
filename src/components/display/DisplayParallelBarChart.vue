@@ -68,7 +68,7 @@ export default {
         }
       }
     },
-    height: {type: String, default: '380px'}
+    height: {type: String, default: '420px'}
   },
   data () {
     echartAddon.mapping({

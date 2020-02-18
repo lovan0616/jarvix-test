@@ -78,10 +78,6 @@ export default {
       default () {
         return []
       }
-    },
-    isPreview: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
@@ -107,7 +103,7 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: this.isPreview ? '200px' : '380px'
+        height: '420px'
       }
     },
     dataList () {
@@ -183,7 +179,6 @@ export default {
         return table
       }
 
-      if (this.isPreview) this.previewChartSetting(config)
       return config
     },
     colorList () {

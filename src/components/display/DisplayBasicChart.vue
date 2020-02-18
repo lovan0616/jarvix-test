@@ -89,7 +89,7 @@ export default {
       }
     },
     addons: { type: [Object, Array], default: () => ([]) },
-    height: {type: String, default: '380px'},
+    height: {type: String, default: '420px'},
     isParallel: {
       type: Boolean,
       default: false

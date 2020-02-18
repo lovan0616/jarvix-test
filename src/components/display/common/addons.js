@@ -97,6 +97,7 @@ export function yAxisParallel () {
     type: 'category',
     nameLocation: 'end',
     nameGap: config.nameGap,
+    inverse: true,
     nameTextStyle: {
       color: chartVariable['textColor']
     },

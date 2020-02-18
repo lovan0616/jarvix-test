@@ -31,16 +31,22 @@
               >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from')}}
               <span class="dataframe-name">{{segmentation.properties[0].dataframePrimaryAlias}}</span>
               {{ $t('resultDescription.tokenRecognize', {token: $t(`segmentationToken.${segmentation.type}`)}) }}
-              <b>'{{ segmentation.matchedWord }}'</b>
-              <template
-                v-if="segmentation.properties.length > 1"
+              <el-tooltip placement="bottom"
+                v-if="segmentation.properties && segmentation.properties.length > 1"
+                :tabindex="999"
               >
-                <span>，{{ $t('resultDescription.hasColumn') }}</span>
-                <span
-                  v-for="(property, propertyIndex) in segmentation.properties"
-                  :key="propertyIndex"
-                >{{ property.datacolumnPrimaryAlias }}<span v-show="propertyIndex < segmentation.properties.length - 1">、</span></span>
-              </template>
+                <div slot="content">
+                  <span>{{ $t('resultDescription.hasColumn') }}</span>
+                  <span
+                    v-for="(property, propertyIndex) in segmentation.properties"
+                    :key="propertyIndex"
+                  >{{ property.datacolumnPrimaryAlias }}<span v-show="propertyIndex < segmentation.properties.length - 1">、</span></span>
+                </div>
+                <b class="question-token">'{{ segmentation.matchedWord }}'</b>
+              </el-tooltip>
+              <b
+                v-else
+              >'{{ segmentation.matchedWord }}'</b>
             </template>
             <template
               v-else-if="isIntend(segmentation.type)"
@@ -179,6 +185,10 @@ export default {
       &.intend {
         color: #07E8B2;
       }
+    }
+
+    .question-token {
+      text-decoration: underline;
     }
 
     .dataframe-name {
