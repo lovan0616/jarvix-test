@@ -27,6 +27,7 @@
         ></empty-info-block>
         <pagination-table
           v-else
+          :is-processing="isProcessing"
           :dataset="dataSourceTableData"
           :pagination-info="pagination"
           @change-page="updatePage"
@@ -51,6 +52,7 @@ export default {
   data () {
     return {
       isLoading: false,
+      isProcessing: false,
       hasError: false,
       dataSourceTables: [],
       dataSourceTable: null,
@@ -114,7 +116,7 @@ export default {
       this.fetchDataFrameData(id)
     },
     fetchDataFrameData (id) {
-      this.isLoading = true
+      this.isProcessing = true
       this.$store.dispatch('dataSource/getDataFrameData', {id, page: this.pagination.currentPage})
         .then(response => {
           this.pagination = response.pagination
@@ -125,10 +127,12 @@ export default {
             index: [...Array(response.data.length)].map((x, i) => i)
           }
           this.isLoading = false
+          this.isProcessing = false
         })
         .catch(() => {
           this.hasError = true
           this.isLoading = false
+          this.isProcessing = false
         })
     },
     updatePage (page) {

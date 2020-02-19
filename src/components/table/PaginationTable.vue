@@ -1,5 +1,10 @@
 <template>
   <div class="sy-table-block">
+    <div class="spinner-block"
+      v-show="isProcessing"
+    >
+      <spinner class="spinner"></spinner>
+    </div>
     <el-table class="sy-table"
       v-bind="tableProps"
       style="width: 100%;"
@@ -68,6 +73,10 @@ export default {
           itemPerPage: 0
         }
       }
+    },
+    isProcessing: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -99,8 +108,19 @@ export default {
 </script>
 <style lang="scss" scoped>
 .sy-table-block {
+  position: relative;
   width: 100%;
   height: auto;
+
+  .spinner-block {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.25);
+    z-index: 100;
+  }
 
   .sy-table {
     margin-bottom: 16px;
