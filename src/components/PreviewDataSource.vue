@@ -25,10 +25,12 @@
           v-else-if="hasError"
           :msg="$t('message.systemIsError')"
         ></empty-info-block>
-        <sy-table
+        <pagination-table
           v-else
           :dataset="dataSourceTableData"
-        ></sy-table>
+          :pagination-info="pagination"
+          @change-page="updatePage"
+        ></pagination-table>
       </div>
     </div>
     <span v-show="!dataSourceId">{{ $t('message.emptyDataSource') }}</span>
@@ -37,12 +39,14 @@
 <script>
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
+import PaginationTable from '@/components/table/PaginationTable'
 
 export default {
   name: 'PreviewDataSource',
   components: {
     SySelect,
-    EmptyInfoBlock
+    EmptyInfoBlock,
+    PaginationTable
   },
   data () {
     return {
@@ -50,7 +54,11 @@ export default {
       hasError: false,
       dataSourceTables: [],
       dataSourceTable: null,
-      dataSourceTableData: null
+      dataSourceTableData: null,
+      pagination: {
+        currentPage: 0,
+        totalPage: 0
+      }
     }
   },
   mounted () {
@@ -101,14 +109,19 @@ export default {
     onDataSourceTableChange (id) {
       this.isLoading = true
       this.hasError = false
+      this.pagination.currentPage = 0
       this.setDataSourceTableById(id)
       this.fetchDataFrameData(id)
     },
     fetchDataFrameData (id) {
-      this.$store.dispatch('dataSource/getDataFrameData', id)
+      this.isLoading = true
+      this.$store.dispatch('dataSource/getDataFrameData', {id, page: this.pagination.currentPage})
         .then(response => {
+          this.pagination = response.pagination
+
           this.dataSourceTableData = {
-            ...response,
+            columns: response.columns,
+            data: response.data,
             index: [...Array(response.data.length)].map((x, i) => i)
           }
           this.isLoading = false
@@ -117,6 +130,10 @@ export default {
           this.hasError = true
           this.isLoading = false
         })
+    },
+    updatePage (page) {
+      this.pagination.currentPage = page - 1
+      this.fetchDataFrameData(this.dataSourceTable.id)
     }
   }
 }
