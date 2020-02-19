@@ -56,8 +56,8 @@ export default {
     if (state.dataSourceId === null) return Promise.reject(new Error('dataSource not set yet'))
     return getDataFrameById(state.dataSourceId)
   },
-  getDataFrameData ({state}, id) {
-    return getDataFrameData(id)
+  getDataFrameData ({state}, {id, page = 0}) {
+    return getDataFrameData(id, page)
   },
   getDataSourceColumnInfo ({ commit, state }) {
     return getDataSourceColumnInfoById(state.dataSourceId).then(response => {
