@@ -195,3 +195,23 @@ export function deleteDataFrameRelationById (relationId) {
     method: 'DELETE'
   })
 }
+
+/**
+ * get data value
+ */
+export function getDataValue (columnId) {
+  return request({
+    url: `/dataColumn/${columnId}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * get dataColumn ans dataValue
+ */
+export function getDataColumnDataValue (dataFrameId) {
+  return request({
+    url: `/dataFrame/FrameNameAndValue/${dataFrameId}`,
+    method: 'GET'
+  })
+}

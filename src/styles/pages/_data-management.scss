@@ -32,7 +32,7 @@
 
   .reach-limit {
     font-size: 14px;
-    color: #FFDF6F;
+    color: $theme-color-warning;
   }
 
   .table-board {
@@ -124,7 +124,7 @@
     align-items: center;
 
     &.table-head {
-      background: rgba(50, 75, 78, 0.6);
+      background: #2B4D51;
       color: $theme-text-color;
       border-width: 2px;
     }

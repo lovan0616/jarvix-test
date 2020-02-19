@@ -94,7 +94,7 @@ export default {
     }
 
     .question-lamp {
-      color: #FFDF6F;
+      color: $theme-color-warning;
     }
 
     .question-list {
