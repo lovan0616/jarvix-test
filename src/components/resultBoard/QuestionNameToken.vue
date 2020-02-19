@@ -14,7 +14,7 @@
     </div>
     <span class="question-token"
       :class="tokenInfo.type"
-    >{{tokenInfo.matchedWord}}</span>
+    >{{tokenInfo.word}}</span>
   </el-tooltip>
 </template>
 <script>

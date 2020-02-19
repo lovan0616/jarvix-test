@@ -1148,7 +1148,11 @@
     "IgnoreToken": "可忽略的词汇",
     "Datarow": "资料列",
     "Boolean": "布林值",
-    "Unique": "唯一值"
+    "Unique": "唯一值",
+    "EqualToken": "指定栏位或是资料的意图",
+    "NotEqualToken": "指定栏位或是资料的意图",
+    "ToToken": "时间连接词",
+    "ConstituteToken": "了解组成的意图"
   },
   "notification": {
     "uploadLimitNotification": "资料数量已达上限",
