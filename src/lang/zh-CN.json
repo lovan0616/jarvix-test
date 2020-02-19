@@ -169,7 +169,11 @@
     "rebuildRemark": "编辑后需再次建置资料",
     "dataValue": "数据值",
     "dataColumn": "资料表栏位",
-    "notSet": "未设定"
+    "notSet": "未设定",
+    "columnSetSetting": "栏位集设定",
+    "columnSetName": "栏位集名称",
+    "pleaseEnterName": "请输入名称",
+    "isSaving": "储存中"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
@@ -281,7 +285,9 @@
     "viewData": "查看图表数据",
     "remove": "移除",
     "add": "增加",
-    "editDataValue": "编辑数据"
+    "editDataValue": "编辑数据",
+    "saveAndBuild": "储存并建置",
+    "addColumnSet": "增加栏位集"
   },
   "aggregation": {
     "mean": "平均",

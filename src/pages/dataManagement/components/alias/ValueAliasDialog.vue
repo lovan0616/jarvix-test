@@ -1,6 +1,13 @@
 <template>
   <div class="value-alias-dialog full-page-dialog">
-    <div class="dialog-container">
+    <spinner class="layout-spinner"
+      v-if="isSaving"
+      :title="$t('editing.isSaving')"
+      size="50"
+    ></spinner>
+    <div class="dialog-container"
+      v-else
+    >
       <div class="dialog-title">
         {{ $t('editing.dataColumnValue') }}
         <a href="javascript:void(0)" class="close-btn"
@@ -106,6 +113,7 @@
 import { getDataColumnDataValue } from '@/API/DataSource'
 import { getValueAlias, saveValueAlias } from '@/API/Alias'
 import { getSelfInfo } from '@/API/User'
+import { Message } from 'element-ui'
 
 export default {
   name: 'ValueAliasDialog',
@@ -117,94 +125,16 @@ export default {
   },
   data () {
     return {
-      dataColumnListInfo: [
-        {
-          dataColumnId: 2,
-          primaryAlias: '產品',
-          dataValue: [
-            'test1',
-            'test2',
-            'test3'
-          ]
-        },
-        {
-          dataColumnId: 3,
-          primaryAlias: '國家',
-          dataValue: [
-            '中國',
-            '美國',
-            '日本'
-          ]
-        }
-      ],
-      columnList: [],
-      valueAliasList: [
-        {
-          dataColumnId: 1234,
-          dataValue: 'test',
-          alias: [
-            {
-              name: '測試1',
-              isModified: false
-            },
-            {
-              name: '測試2',
-              isModified: false
-            }
-          ],
-          isSaved: false
-        },
-        {
-          dataColumnId: 1234,
-          dataValue: '美國',
-          alias: [
-            {
-              name: '米國',
-              isModified: false
-            },
-            {
-              name: '米鍋',
-              isModified: false
-            }
-          ],
-          isSaved: false
-        },
-        {
-          dataColumnId: 1234,
-          dataValue: '美美',
-          alias: [
-            {
-              name: '米米',
-              isModified: false
-            },
-            {
-              name: '妹妹',
-              isModified: false
-            },
-            {
-              name: '秘密',
-              isModified: true
-            }
-          ],
-          isSaved: false
-        },
-        {
-          dataColumnId: 1234,
-          dataValue: '登登',
-          alias: []
-        }
-      ],
-      currentColumnInfo: {
-        id: 31042,
-        primaryAlias: '測試欄位'
-      },
+      dataColumnListInfo: [],
+      currentColumnInfo: null,
       currentEditValueIndex: null,
       tempAliasInfo: [],
       aliasConfig: {
         name: null,
         isModified: true
       },
-      userId: null
+      userId: null,
+      isSaving: false
     }
   },
   mounted () {
@@ -318,7 +248,15 @@ export default {
         return acc.concat(modifiedAlias)
       }, [])
 
-      saveValueAlias(aliasInfo)
+      saveValueAlias(aliasInfo).then(() => {
+        this.isSaving = false
+        Message({
+          message: this.$t('message.saveSuccess'),
+          type: 'success',
+          duration: 3 * 1000
+        })
+        this.closeDialog()
+      })
     },
     closeDialog () {
       this.$emit('close')

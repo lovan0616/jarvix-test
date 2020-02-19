@@ -90,6 +90,7 @@ import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
+import EditColumnSetDialog from './components/EditColumnSetDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import { getDataFrameById, checkDataSourceStatusById } from '@/API/DataSource'
 
@@ -101,6 +102,7 @@ export default {
     ConfirmDeleteFileDialog,
     EditTableJoinRelationDialog,
     EditColumnDialog,
+    EditColumnSetDialog,
     ValueAliasDialog
   },
   data () {
