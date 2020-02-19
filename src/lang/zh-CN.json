@@ -63,7 +63,7 @@
     "editTable": "编辑资料表",
     "editTableColumn": "编辑资料表栏位",
     "columnName": "栏位名称",
-    "columnAlias": "别名",
+    "alias": "别名",
     "columnTag": "标签",
     "columnDomain": "领域",
     "action": "操作",
@@ -163,7 +163,17 @@
     "indexErrorTitle": "首页资料暂时无法取得",
     "indexErrorDescription": "很抱歉，首页资料暂时无法取得，请稍后再试",
     "multiResultTitle": "问句分析",
-    "systemUnknownDescription": "系统无法辨识出以下文字："
+    "systemUnknownDescription": "系统无法辨识出以下文字：",
+    "dataColumnValue": "资料表数据值",
+    "dataFrame": "资料表",
+    "rebuildRemark": "编辑后需再次建置资料",
+    "dataValue": "数据值",
+    "dataColumn": "资料表栏位",
+    "notSet": "未设定",
+    "columnSetSetting": "栏位集设定",
+    "columnSetName": "栏位集名称",
+    "pleaseEnterName": "请输入名称",
+    "isSaving": "储存中"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
@@ -272,7 +282,12 @@
     "editName": "编辑名称",
     "addNewCategory": "新增分类",
     "exportData": "输出图表资料",
-    "viewData": "查看图表数据"
+    "viewData": "查看图表数据",
+    "remove": "移除",
+    "add": "增加",
+    "editDataValue": "编辑数据",
+    "saveAndBuild": "储存并建置",
+    "addColumnSet": "增加栏位集"
   },
   "aggregation": {
     "mean": "平均",
@@ -1089,7 +1104,9 @@
     "higherQuartile": "上四分位数",
     "max": "最大值",
     "from": "来自",
-    "dataColumnRecognize": "的资料栏位，辨识为",
+    "tokenRecognize": "的{token}，辨识为",
+    "recognizeTo": "来自 {dataFrame} 的{token}，辨识为",
+    "hasColumn": "包含以下栏位：",
     "columnValue": "栏位的资料",
     "loadedRate": "资料显示比率",
     "getMoreBtn": "看更多资料",
@@ -1097,8 +1114,9 @@
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",
-    "Datacolumn": "来自 {dataFrame} 的资料栏位 {dataColumn}，辨识为'{name}'",
-    "Datavalue": "'{name}'栏位的资料",
+    "Datacolumn": "资料栏位",
+    "Datavalue": "栏位资料",
+    "ColumnSet": "栏位组合",
     "DtToken": "时间范围",
     "FuzzyDtToken": "时间范围",
     "TimeScope": "时间范围",
@@ -1155,7 +1173,8 @@
     "export": "下载资料 CSV 档案",
     "rangeStart": "范围起始",
     "rangeEnd": "范围结束",
-    "count": "统计数量"
+    "count": "统计数量",
+    "download": "下载图片"
   },
   "errorMessage": {
     "SYERR0001": "系统发生非预期错误",

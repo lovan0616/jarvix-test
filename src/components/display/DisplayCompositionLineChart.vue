@@ -78,7 +78,7 @@ export default {
     },
     height: {
       type: String,
-      default: '380px'
+      default: '420px'
     },
     isParallel: {
       type: Boolean,
@@ -196,27 +196,16 @@ export default {
   },
   methods: {
     tobeDataset (dataset) {
-      const result = [['index']]
-      result[0] = result[0].concat(dataset.columns.map(column => {
-        if (Array.isArray(column)) return column.join(',')
-        else return column
-      }))
       // get percentage
       dataset.data = dataset.data.map(element => {
         let total = element.reduce((acc, cur) => acc + cur, 0)
         return element.map(item => this.roundNumber(item * 100 / total))
       })
 
-      dataset.index.forEach((i, iIndex) => {
-        let row = [dataset.index[iIndex]]
-        dataset.columns.forEach((c, cIndex) => {
-          const d = (dataset.data[iIndex][cIndex] || null)
-          row = row.concat([d])
-        })
-        result.push(row)
+      let result = dataset.data.map((element, index) => {
+        return [dataset.index[index], ...element]
       })
-
-      return result
+      return [['index', ...dataset.columns], ...result]
     },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {

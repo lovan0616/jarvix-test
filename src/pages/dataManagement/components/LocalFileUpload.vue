@@ -206,7 +206,7 @@ export default {
   }
 
   .upload-remark {
-    color: #FFDF6F;
+    color: $theme-color-warning;
     line-height: 20px;
     font-size: 14px;
     margin-top: 12px;

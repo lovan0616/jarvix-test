@@ -68,7 +68,7 @@ export default {
     },
     height: {
       type: String,
-      default: '380px'
+      default: '420px'
     },
     isParallel: {
       type: Boolean,
@@ -118,7 +118,7 @@ export default {
         ...getDrillDownTool(this.title),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
         dataset: {
-          source: this.tobeDataset(this.dataset)
+          source: this.datasetTransform(this.dataset)
         },
         series: this.series,
         color: this.colorList
@@ -187,22 +187,6 @@ export default {
     }
   },
   methods: {
-    tobeDataset (data) {
-      const result = [['index']]
-      result[0] = result[0].concat(data.columns.map(column => {
-        if (Array.isArray(column)) return column.join(',')
-        else return column
-      }))
-      data.index.forEach((i, iIndex) => {
-        let row = [data.index[iIndex]]
-        data.columns.forEach((c, cIndex) => {
-          const d = (data.data[iIndex][cIndex] || null)
-          row = row.concat([d])
-        })
-        result.push(row)
-      })
-      return result
-    },
     brushRegionSelected (params) {
       if (params.batch[0].selected[0].dataIndex.length === 0) {
         this.selectedData = []

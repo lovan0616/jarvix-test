@@ -54,10 +54,6 @@ let scatterChartConfig = {
     data: [],
     type: 'scatter',
     large: true
-  },
-  isPreview: {
-    type: Boolean,
-    default: false
   }
 }
 
@@ -87,10 +83,6 @@ export default {
           yAxis: null
         }
       }
-    },
-    isPreview: {
-      type: Boolean,
-      default: false
     },
     formula: {
       type: Object,
@@ -245,14 +237,12 @@ export default {
         }
       }
 
-      if (this.isPreview) this.previewChartSetting(chartAddon)
-
       return chartAddon
     },
     chartStyle () {
       return {
         width: '100%',
-        height: this.isPreview ? '200px' : '380px'
+        height: '420px'
       }
     },
     appQuestion () {

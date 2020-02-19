@@ -339,7 +339,7 @@ export default {
     flex: initial;
   }
   .alert-icon {
-    color: #FFDF6F;
+    color: $theme-color-warning;
   }
 }
 </style>

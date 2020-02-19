@@ -169,7 +169,7 @@ export default {
         color: $theme-color-primary;
 
         &.is-special {
-          color: #FFDF6F;
+          color: $theme-color-warning;
         }
       }
       .count {
@@ -181,8 +181,8 @@ export default {
         display: inline-block;
         font-size: 12px;
         line-height: 1;
-        color: #FFDF6F;
-        border: 1px solid #FFDF6F;
+        color: $theme-color-warning;
+        border: 1px solid $theme-color-warning;
         border-radius: 4px;
         padding: 6px 6px;
       }

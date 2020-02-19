@@ -136,7 +136,7 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: '380px'
+        height: '420px'
       }
     }
   }

@@ -188,7 +188,7 @@ export default {
     width: 100%;
     background-size: 200% auto;
     background-position: 0 100%;
-    animation: gradient 2s infinite;
+    animation: gradient 1s infinite;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
 

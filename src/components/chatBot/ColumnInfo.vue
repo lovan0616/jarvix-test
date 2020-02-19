@@ -84,7 +84,7 @@ export default {
   }
 
   .column-lamp {
-    color: #FFDF6F;
+    color: $theme-color-warning;
   }
 
   .column-name {
