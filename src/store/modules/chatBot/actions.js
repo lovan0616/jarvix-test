@@ -10,8 +10,7 @@ export default {
     return askQuestion({
       question: rootState.dataSource.appQuestion || data.question,
       dataSourceId: rootState.dataSource.dataSourceId || data.dataSourceId,
-      domain: 'GENERAL',
-      isIgnoreAlgorithm: false
+      domain: 'GENERAL'
     }, new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
       cancelFunction = c
