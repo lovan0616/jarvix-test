@@ -103,6 +103,7 @@ export default {
     },
     copyQuestion (value) {
       this.userQuestion = value
+      this.$refs.questionInput.focus()
     },
     showHistory () {
       if (this.showHistoryQuestion || this.showAskHelper) return

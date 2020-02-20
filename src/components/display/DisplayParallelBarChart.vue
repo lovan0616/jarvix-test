@@ -152,7 +152,7 @@ export default {
       config.xAxis = yAxisDefault()
       config.xAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
       config.yAxis = yAxisParallel()
-      config.yAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : null
+      config.yAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis.reduce((acc, cur, index) => acc + (index !== 0 ? ', ' : '') + cur.display_name.replace(/ /g, '\r\n'), '') : null
       // 如果是 bar chart
       config.yAxis.scale = true
 
@@ -191,17 +191,20 @@ export default {
         this.selectedData = []
         return false
       }
-      this.selectedData = [{
-        type: 'enum',
-        properties: {
-          dc_name: this.title.xAxis[0].dc_name,
-          data_type: this.title.xAxis[0].data_type,
-          display_name: this.title.xAxis[0].display_name,
-          datavalues: params.batch[0].selected[0].dataIndex.map(element => {
-            return this.dataset.index[element]
-          })
+
+      this.selectedData = this.title.xAxis.map((axis, index) => {
+        return {
+          type: 'enum',
+          properties: {
+            dc_name: axis.dc_name,
+            data_type: axis.data_type,
+            display_name: axis.display_name,
+            datavalues: params.batch[0].selected[0].dataIndex.map(element => {
+              return this.dataset.index[element][index]
+            }).filter((x, i, a) => a.indexOf(x) === i)
+          }
         }
-      }]
+      })
     },
     saveFilter () {
       this.$store.commit('dataSource/setFilterList', this.selectedData)
