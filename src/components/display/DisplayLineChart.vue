@@ -53,7 +53,8 @@ import {
   gridDefault,
   xAxisDefault,
   yAxisDefault,
-  seriesItemLine
+  seriesItemLine,
+  parallelZoomIn
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
@@ -129,7 +130,8 @@ export default {
           source: this.datasetTransform(this.dataset)
         },
         series: this.series,
-        color: this.colorList
+        color: this.colorList,
+        dataZoom: parallelZoomIn()
       }
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.dataset[0].source

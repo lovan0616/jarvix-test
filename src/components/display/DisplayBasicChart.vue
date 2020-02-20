@@ -59,7 +59,8 @@ import {
   seriesItemPie,
   seriesItemDoughnut,
   seriesItemMarkLine,
-  seriesItemPieLabelWithValue
+  seriesItemPieLabelWithValue,
+  xAxisScroll
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
@@ -109,7 +110,7 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: this.isPreview ? '200px' : this.height
+        height: this.height
       }
     },
     series () {
@@ -176,7 +177,13 @@ export default {
       // 如果是 bar chart
       config.yAxis.scale = !(this.series[0].type === 'bar')
 
-      if (this.isPreview) this.previewChartSetting(config)
+      // 數量大的時候出現 scroll bar
+      if (this.dataset.data.length > 30) {
+        config.xAxis.axisLabel.interval = 0
+        config.dataZoom = xAxisScroll(20 * 100 / this.dataset.data.length)
+        config.animation = false
+      }
+
       return config
     },
     colorList () {

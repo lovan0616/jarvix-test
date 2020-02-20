@@ -45,7 +45,8 @@ import {
   gridDefault,
   yAxisParallel,
   yAxisDefault,
-  seriesItemBar
+  seriesItemBar,
+  yAxisScroll
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
@@ -109,7 +110,7 @@ export default {
     options () {
       let config = {
         ...this.addonOptions,
-        ...getDrillDownTool(this.title),
+        ...getDrillDownTool(this.title, true),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
         dataset: {
           source: this.datasetTransform(this.dataset)
@@ -154,6 +155,13 @@ export default {
       config.yAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : null
       // 如果是 bar chart
       config.yAxis.scale = true
+
+      // 數量大的時候出現 scroll bar
+      if (this.dataset.data.length > 20) {
+        config.yAxis.axisLabel.interval = 0
+        config.dataZoom = yAxisScroll(20 * 100 / this.dataset.data.length)
+        config.animation = false
+      }
 
       return config
     },
