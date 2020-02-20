@@ -173,7 +173,10 @@
     "columnSetSetting": "栏位集设定",
     "columnSetName": "栏位集名称",
     "pleaseEnterName": "请输入名称",
-    "isSaving": "储存中"
+    "isSaving": "储存中",
+    "notSelect": "未选择",
+    "alreadySelect": "已选择",
+    "selectYet": "尚未选择任何项目"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
@@ -287,7 +290,9 @@
     "add": "增加",
     "editDataValue": "编辑数据",
     "saveAndBuild": "储存并建置",
-    "addColumnSet": "增加栏位集"
+    "addColumnSet": "增加栏位集",
+    "editColumnSet": "编辑栏位集",
+    "select": "选择"
   },
   "aggregation": {
     "mean": "平均",

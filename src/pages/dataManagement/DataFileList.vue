@@ -52,7 +52,8 @@
         @create="createDataSource"
         @delete="confirmDelete"
         @edit="editTableColumn"
-        @valueAlias="eidtTableValueAlias"
+        @valueAlias="editTableValueAlias"
+        @columnSet="editColumnSet"
       >
       </data-table>
     </div>
@@ -82,6 +83,11 @@
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeValueAliasDialog"
     ></value-alias-dialog>
+    <edit-column-set-dialog
+      v-if="showEditColumnSetDialog"
+      :data-frame-info="currentEditDataFrameInfo"
+      @close="closeEditClomnSetDialog"
+    ></edit-column-set-dialog>
   </div>
 </template>
 <script>
@@ -90,7 +96,7 @@ import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
-import EditColumnSetDialog from './components/EditColumnSetDialog'
+import EditColumnSetDialog from './components/columnSet/EditColumnSetDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import { getDataFrameById, checkDataSourceStatusById } from '@/API/DataSource'
 
@@ -122,10 +128,11 @@ export default {
       selectList: [],
       // 目前正在編輯的資料表
       currentEditDataFrameInfo: {
-        id: 689,
-        primaryAlias: 'test.csv'
+        id: null,
+        primaryAlias: null
       },
       showValueAliasDialog: false,
+      showEditColumnSetDialog: false,
       intervalFunction: null
     }
   },
@@ -238,15 +245,25 @@ export default {
       this.currentEditDataFrameInfo = null
       this.toggleEditColumnDialog()
     },
-    eidtTableValueAlias (dataInfo) {
+    editTableValueAlias (dataInfo) {
       this.currentEditDataFrameInfo = {
         id: dataInfo.id,
         primaryAlias: dataInfo.primaryAlias
       }
       this.showValueAliasDialog = true
     },
+    editColumnSet (dataInfo) {
+      this.currentEditDataFrameInfo = {
+        id: dataInfo.id,
+        primaryAlias: dataInfo.primaryAlias
+      }
+      this.showEditColumnSetDialog = true
+    },
     closeValueAliasDialog () {
       this.showValueAliasDialog = false
+    },
+    closeEditClomnSetDialog () {
+      this.showEditColumnSetDialog = false
     }
   },
   computed: {
@@ -282,7 +299,7 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '240px',
+          width: '270px',
           action: [
             {
               name: this.$t('button.editColumn'),
@@ -291,7 +308,12 @@ export default {
             {
               name: this.$t('button.editDataValue'),
               value: 'valueAlias'
+            },
+            {
+              name: this.$t('button.editColumnSet'),
+              value: 'columnSet'
             }
+            
             // {
             //   name: this.$t('button.rename'),
             //   value: 'rename'

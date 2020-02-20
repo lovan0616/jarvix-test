@@ -9,7 +9,7 @@
       </div>
       <div class="dialog-header-block">
         <div class="header-button-block">
-          <button class="btn btn-secondary add-btn"><svg-icon icon-class="plus"></svg-icon>{{ $t('button.addColumnSet') }}</button>
+          <button class="btn btn-secondary btn-has-icon add-btn"><svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.addColumnSet') }}</button>
           <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
         </div>
         <div class="button-block">
@@ -19,42 +19,66 @@
         </div>
       </div>
       <div class="dialog-content-block">
-        <div class="single-edit-region">
-          <div class="input-block">
-            <label for="">*{{ $t('editing.columnSetName') }}</label>
-            <input type="text" class="input"
-              :placeholder="$t('editing.pleaseEnterName')"
-            >
-          </div>
-        </div>
+        <single-column-set
+          v-for="singleColumnSet in columnSetList"
+          :key="singleColumnSet.id"
+          :column-list="columnList"
+        ></single-column-set>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { getColumnSetList } from '@/API/ColumnSet'
+import { getDataFrameColumnInfoById } from '@/API/DataSource'
+import SingleColumnSet from './SingleColumnSet'
 
 export default {
   name: 'EditColumnSetDialog',
+  components: {
+    SingleColumnSet
+  },
   props: {
     dataFrameInfo: {
       type: Object,
       default: () => {
         return {
-          primaryAlias: null
+          primaryAlias: null,
+          id: null
         }
       }
     }
   },
   data () {
     return {
+      columnList: [],
+      columnSetList: [],
+      singleColumnSetConfig: {
+        dataColumnList: [],
+        dataFrameId: null,
+        dataSourceId: null,
+        id: null,
+        primaryAlias: null
+      }
     }
   },
   mounted () {
-    this.fetchColumnSetInfo()
+    this.fetchColumnInfo()
   },
   methods: {
-    fetchColumnSetInfo () {
+    fetchColumnInfo () {
+      getDataFrameColumnInfoById(this.dataFrameInfo.id).then(response => {
+        console.log(response, 'column')
+        this.columnList = response
 
+        getColumnSetList(this.dataFrameInfo.id).then(columnSetInfo => {
+          if (columnSetInfo.length === 0) {
+            this.columnSetList.push(JSON.parse(JSON.stringify(this.singleColumnSetConfig)))
+          } else {
+
+          }
+        })
+      })
     },
     closeDialog () {
       this.$emit('close')
@@ -104,13 +128,6 @@ export default {
   .dialog-content-block {
     display: flex;
     max-height: 70vh;
-  }
-
-  .single-edit-region {
-    width: 100%;
-    padding: 24px;
-    background: rgba(50, 58, 58, 0.95);
-    border-radius: 5px;
   }
 }
 </style>
