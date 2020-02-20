@@ -187,7 +187,7 @@ Vue.mixin({
       }
     },
     roundNumber (value, count = 2) {
-      return (value).toFixed(count)
+      return parseFloat((value).toFixed(count))
     },
     // export data
     exportCSVFile (el, question, data) {

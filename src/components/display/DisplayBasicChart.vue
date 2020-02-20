@@ -233,17 +233,37 @@ export default {
             this.selectedData = []
             break
           }
-          this.selectedData = [{
-            type: 'enum',
-            properties: {
-              dc_name: this.title.xAxis[0].dc_name,
-              data_type: this.title.xAxis[0].data_type,
-              display_name: this.title.xAxis[0].display_name,
-              datavalues: params.batch[0].selected[0].dataIndex.map(element => {
-                return this.dataset.index[element]
-              })
-            }
-          }]
+
+          // 水平方向 drill down
+          if (this.title.yAxis[0].drillable) {
+            this.selectedData = params.batch[0].areas.map(areaElement => {
+              let coordRange = areaElement.coordRange
+              return {
+                type: 'range',
+                properties: {
+                  dc_name: this.title.yAxis[0].dc_name,
+                  data_type: this.title.yAxis[0].data_type,
+                  display_name: this.title.yAxis[0].display_name,
+                  start: this.roundNumber(coordRange[0]),
+                  end: this.roundNumber(coordRange[1])
+                }
+              }
+            })
+          } else {
+            // 垂直方向 drill down
+            this.selectedData = [{
+              type: 'enum',
+              properties: {
+                dc_name: this.title.xAxis[0].dc_name,
+                data_type: this.title.xAxis[0].data_type,
+                display_name: this.title.xAxis[0].display_name,
+                datavalues: params.batch[0].selected[0].dataIndex.map(element => {
+                  return this.dataset.index[element]
+                })
+              }
+            }]
+          }
+
           break
       }
     },
