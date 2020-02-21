@@ -1,22 +1,38 @@
 <template>
   <div class="single-edit-region">
+    <div class="button-block">
+      <button type="button" class="btn btn-default btn-save"
+        v-if="!columnSet.id"
+        @click="saveColumnSet"
+      >{{ $t('button.build') }}</button>
+      <button type="button" class="btn btn-secondary btn-delete"
+        @click="removeColumnSet"
+      >{{ $t('button.delete') }}</button>
+    </div>
     <div class="input-block">
-      <label for="">*{{ $t('editing.columnSetName') }}</label>
+      <label for="" class="label">*{{ $t('editing.columnSetName') }}</label>
       <input type="text" class="input"
+        v-if="!columnSet.id"
         :placeholder="$t('editing.pleaseEnterName')"
+        v-model="columnSet.primaryAlias"
       >
+      <div
+        v-else
+      >{{ columnSet.primaryAlias }}</div>
     </div>
     <div class="select-container">
       <div class="select-block">
         <div class="block-title">{{ $t('editing.notSelect') }}</div>
         <div class="option-list-block">
           <div class="single-option"
-            v-for="column in columnList"
+            v-for="(column, index) in columnOptionList"
             :key="column.id"
           >
             <div class="info name">{{ column.name }}</div>
             <div class="info alias">{{ column.primaryAlias }}</div>
-            <button class="btn-m btn-default btn-select">{{ $t('button.select') }}</button>
+            <button class="btn-m btn-default btn-select"
+              @click="selectColumn(index)"
+            >{{ $t('button.select') }}</button>
           </div>
         </div>
       </div>
@@ -26,32 +42,182 @@
       </div>
       <div class="select-block">
         <div class="block-title">{{ $t('editing.alreadySelect') }}</div>
-        <div class="option-list-block"></div>
+        <div class="option-list-block">
+          <div class="single-option"
+            v-for="(column, index) in columnSet.dataColumnList"
+            :key="column.id"
+          >
+            <div class="info name">{{ column.name }}</div>
+            <div class="info alias">{{ column.primaryAlias }}</div>
+            <button class="btn-m btn-secondary btn-select"
+              @click="cancelSelect(index)"
+            >{{ $t('button.cancel') }}</button>
+          </div>
+          <div class="empty-select"
+            v-if="columnSet.dataColumnList.length === 0"
+          >{{ $t('editing.selectYet') }}</div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { createColumnSet, addColumnSetColumn, removeColumnSetColumn, deleteColumnSet } from '@/API/ColumnSet'
+import { Message } from 'element-ui'
+
 export default {
   name: 'SingleColumnSet',
   props: {
     columnList: {
       type: Array,
       default: () => []
+    },
+    columnSet: {
+      type: Object,
+      default () {
+        return {
+          dataColumnList: [],
+          dataFrameId: null,
+          id: null,
+          primaryAlias: null
+        }
+      }
     }
   },
-  computed: {
-    
+  data () {
+    return {
+      columnOptionList: []
+    }
+  },
+  mounted () {
+    this.filterColumnList()
+  },
+  methods: {
+    filterColumnList () {
+      if (this.columnSet.dataColumnList.length > 0) {
+        // 調整資料格式
+        // this.columnSet.dataColumnList = this.columnSet.dataColumnList.map(column => {
+        //   return {
+        //     id: column.dataColumnId,
+        //     name: column.name,
+        //     primaryAlias: column.primaryAlias
+        //   }
+        // })
+        // 過濾已經被選擇的欄位
+        this.columnOptionList = this.columnList.filter(element => {
+          return this.columnSet.dataColumnList.findIndex(column => column.dataColumnId === element.id) === -1
+        })
+      } else {
+        this.columnOptionList = this.columnList
+      }
+    },
+    selectColumn (index) {
+      if (this.columnSet.id) {
+        addColumnSetColumn({
+          columnSetId: this.columnSet.id,
+          dataColumnId: this.columnOptionList[index].id
+        }).then(response => {
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+          this.columnSet.dataColumnList.push(response)
+          this.columnOptionList.splice(index, 1)
+        })
+      } else {
+        this.columnSet.dataColumnList.push(this.columnOptionList[index])
+        this.columnOptionList.splice(index, 1)
+      }
+    },
+    cancelSelect (index) {
+      let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)
+      this.columnOptionList.push(cancelColumnInfo[0])
+
+      if (this.columnSet.id) {
+        removeColumnSetColumn(cancelColumnInfo[0].id).then(() => {
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+        })
+      }
+    },
+    saveColumnSet () {
+      createColumnSet({
+        primaryAlias: this.columnSet.primaryAlias,
+        dataFrameId: this.columnSet.dataFrameId,
+        dataColumnIdList: this.columnSet.dataColumnList.map(column => column.id)
+      }).then(response => {
+        Message({
+          message: this.$t('message.saveSuccess'),
+          type: 'success',
+          duration: 3 * 1000
+        })
+        this.columnSet.id = response.id
+        this.columnSet.dataColumnList = response.dataColumnList
+      })
+    },
+    removeColumnSet () {
+      if (this.columnSet.id) {
+        deleteColumnSet(this.columnSet.id).then(() => {
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+          this.$emit('remove')
+        })
+      } else {
+        this.$emit('remove')
+      }
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
 .single-edit-region {
+  position: relative;
   width: 100%;
   height: 484px;
   padding: 24px;
   background: rgba(50, 58, 58, 0.95);
   border-radius: 5px;
+  margin-bottom: 32px;
+
+  .button-block {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+
+    .btn:not(:last-child) {
+      margin-right: 12px;
+    }
+  }
+
+  .empty-select {
+    color: #aaa;
+    text-align: center;
+    padding-top: 20px;
+  }
+
+  .input-block {
+    width: 301px;
+    margin-bottom: 20px;
+
+    .label {
+      display: block;
+      font-size: 14px;
+      line-height: 20px;
+      color: #ccc;
+      margin-bottom: 8px;
+    }
+
+    .input {
+      height: 40px;
+    }
+  }
 
   .select-container {
     display: flex;
@@ -86,7 +252,13 @@ export default {
       }
     }
 
+    .option-list-block {
+      height: 308px;
+      overflow: auto;
+    }
+
     .single-option {
+      position: relative;
       background: #475353;
       border-radius: 5px;
       padding: 12px;

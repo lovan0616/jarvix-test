@@ -30,3 +30,24 @@ export function deleteColumnSet (columnSetId) {
     method: 'DELETE'
   })
 }
+
+/**
+ * add columnSet column
+ */
+export function addColumnSetColumn (columnSetInfo) {
+  return request({
+    url: `/columnSet/column`,
+    method: 'POST',
+    data: columnSetInfo
+  })
+}
+
+/**
+ * remove columnSet column
+ */
+export function removeColumnSetColumn (columnSetColumnId) {
+  return request({
+    url: `/columnSet/column/${columnSetColumnId}`,
+    method: 'DELETE'
+  })
+}

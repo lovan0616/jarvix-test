@@ -313,7 +313,6 @@ export default {
               name: this.$t('button.editColumnSet'),
               value: 'columnSet'
             }
-            
             // {
             //   name: this.$t('button.rename'),
             //   value: 'rename'

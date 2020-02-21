@@ -9,20 +9,27 @@
       </div>
       <div class="dialog-header-block">
         <div class="header-button-block">
-          <button class="btn btn-secondary btn-has-icon add-btn"><svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.addColumnSet') }}</button>
+          <button class="btn btn-secondary btn-has-icon add-btn"
+            @click="addColumnSet"
+          ><svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.addColumnSet') }}</button>
           <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
         </div>
         <div class="button-block">
           <!-- <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span> -->
-          <button type="button" class="btn btn-default"
-          >{{ $t('button.saveAndBuild') }}</button>
+          <!-- <button type="button" class="btn btn-default"
+          >{{ $t('button.saveAndBuild') }}</button> -->
         </div>
       </div>
       <div class="dialog-content-block">
+        <spinner
+          v-if="isLoading"
+        ></spinner>
         <single-column-set
-          v-for="singleColumnSet in columnSetList"
-          :key="singleColumnSet.id"
+          v-for="(singleColumnSet, index) in columnSetList"
+          :key="index"
           :column-list="columnList"
+          :column-set="singleColumnSet"
+          @remove="removeColumnSet(index)"
         ></single-column-set>
       </div>
     </div>
@@ -55,11 +62,11 @@ export default {
       columnSetList: [],
       singleColumnSetConfig: {
         dataColumnList: [],
-        dataFrameId: null,
-        dataSourceId: null,
+        dataFrameId: this.dataFrameInfo.id,
         id: null,
         primaryAlias: null
-      }
+      },
+      isLoading: false
     }
   },
   mounted () {
@@ -67,18 +74,27 @@ export default {
   },
   methods: {
     fetchColumnInfo () {
+      this.isLoading = true
       getDataFrameColumnInfoById(this.dataFrameInfo.id).then(response => {
-        console.log(response, 'column')
         this.columnList = response
 
         getColumnSetList(this.dataFrameInfo.id).then(columnSetInfo => {
+          this.isLoading = false
           if (columnSetInfo.length === 0) {
             this.columnSetList.push(JSON.parse(JSON.stringify(this.singleColumnSetConfig)))
           } else {
-
+            this.columnSetList = columnSetInfo
           }
+        }).catch(() => {
+          this.isLoading = false
         })
       })
+    },
+    addColumnSet () {
+      this.columnSetList.unshift(JSON.parse(JSON.stringify(this.singleColumnSetConfig)))
+    },
+    removeColumnSet (index) {
+      this.columnSetList.splice(index, 1)
     },
     closeDialog () {
       this.$emit('close')
@@ -126,7 +142,6 @@ export default {
     }
   }
   .dialog-content-block {
-    display: flex;
     max-height: 70vh;
   }
 }
