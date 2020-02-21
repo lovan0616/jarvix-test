@@ -28,7 +28,8 @@
     "pleaseConfirmPassword": "請確認密碼是否相同",
     "addFilter": "保存成功",
     "emptyResult": "此搜尋條件並無對應資料",
-    "emptyDataSource": "尚未建立資料源"
+    "emptyDataSource": "尚未建立資料源",
+    "deleteSuccess": "刪除成功"
   },
   "guiding": {
     "preStep": "上一步",
@@ -173,7 +174,10 @@
     "columnSetSetting": "欄位集設定",
     "columnSetName": "欄位集名稱",
     "pleaseEnterName": "請輸入名稱",
-    "isSaving": "儲存中"
+    "isSaving": "儲存中",
+    "notSelect": "未選擇",
+    "alreadySelect": "已選擇",
+    "selectYet": "尚未選擇任何項目"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
@@ -287,7 +291,9 @@
     "add": "增加",
     "editDataValue": "編輯數據",
     "saveAndBuild": "儲存並建置",
-    "addColumnSet": "增加欄位集"
+    "addColumnSet": "增加欄位集",
+    "editColumnSet": "編輯欄位集",
+    "select": "選擇"
   },
   "aggregation": {
     "mean": "平均",
