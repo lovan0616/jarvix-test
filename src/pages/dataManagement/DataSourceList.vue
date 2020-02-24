@@ -218,6 +218,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.data-source-list-table {
+.data-management {
+  .data-source-list-table.data-table {
+    max-height: 100%;
+  }
 }
 </style>
