@@ -46,7 +46,7 @@ import {
   yAxisParallel,
   yAxisDefault,
   seriesItemBar,
-  yAxisScroll
+  verticalZoomIn
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
@@ -158,8 +158,9 @@ export default {
 
       // 數量大的時候出現 scroll bar
       if (this.dataset.data.length > 20) {
-        config.yAxis.axisLabel.interval = 0
-        config.dataZoom = yAxisScroll(20 * 100 / this.dataset.data.length)
+        // config.yAxis.axisLabel.interval = 0
+        // config.dataZoom = yAxisScroll(20 * 100 / this.dataset.data.length)
+        config.dataZoom = verticalZoomIn()
         config.animation = false
       }
 

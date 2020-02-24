@@ -1118,7 +1118,9 @@
     "columnValue": "欄位的資料",
     "loadedRate": "資料顯示比率",
     "getMoreBtn": "看更多資料",
-    "percentage": "百分比(%)"
+    "percentage": "百分比(%)",
+    "systemUnknownTokenList": "系統無法找到“{tokenList}”的相關數據",
+    "systemQuestionAnalysis": "系統進行“{question}”的語句分析"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",
