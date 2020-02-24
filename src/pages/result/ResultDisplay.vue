@@ -95,6 +95,7 @@ export default {
       this.layout = null
       this.resultInfo = null
       this.relatedQuestionList = []
+      this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {
       this.clearLayout()
