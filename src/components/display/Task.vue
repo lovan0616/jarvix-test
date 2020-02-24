@@ -33,14 +33,12 @@
         {{note}}
       </div>
       <div class="pagination-block"
-        v-if="pagination.totalPages > 1"
+        v-if="componentData.dataset && componentData.dataset.data.length === 200"
         :class="{'key-result-pagination': intend === 'key_result'}"
       >
         <button class="btn-m btn-default"
           @click="getNewPageInfo"
-          :disabled="pagination.currentPage + 1 === pagination.totalPages"
         >{{ $t('resultDescription.getMoreBtn') }}</button>
-        <span class="loading-percentage">{{ $t('resultDescription.loadedRate') }}：{{ roundNumber((pagination.currentPage + 1) / pagination.totalPages * 100) }}%</span>
       </div>
     </template>
   </div>

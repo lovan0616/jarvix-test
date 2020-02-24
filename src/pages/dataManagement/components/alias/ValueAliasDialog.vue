@@ -378,7 +378,7 @@ export default {
           margin-right: 4px;
         }
         &.is-modified {
-          color: #FFDF6F;
+          color: $theme-color-warning;
         }
       }
       .not-set {

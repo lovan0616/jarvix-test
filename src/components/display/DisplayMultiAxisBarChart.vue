@@ -53,7 +53,8 @@ import {
   gridDefault,
   xAxisDefault,
   yAxisMultiple,
-  seriesItemBar
+  seriesItemBar,
+  parallelZoomIn
 } from './common/addons'
 
 const echartAddon = new EchartAddon({
@@ -183,6 +184,12 @@ export default {
           }
         }
       })
+
+      // 數量大的時候出現 scroll bar
+      if (this.dataset.data.length > 20) {
+        config.dataZoom = parallelZoomIn()
+        config.animation = false
+      }
 
       return config
     },
