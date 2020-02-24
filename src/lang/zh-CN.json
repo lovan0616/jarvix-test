@@ -1110,6 +1110,8 @@
     "higherQuartile": "上四分位数",
     "max": "最大值",
     "from": "来自",
+    "has": "的",
+    "recognize": "，辨识为",
     "tokenRecognize": "的{token}，辨识为",
     "recognizeTo": "来自 {dataFrame} 的{token}，辨识为",
     "hasColumn": "包含以下栏位：",

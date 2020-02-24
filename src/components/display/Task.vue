@@ -103,17 +103,19 @@ export default {
             this.resultId = response.resultId
             this.componentName = this.getChartTemplate(this.diagram)
             // 分頁的資料 push 進去
-            if (this.pagination.totalPages > 1 && this.pagination.currentPage !== 0) {
-              this.componentData.dataset.data = this.componentData.dataset.data.concat(response.data.dataset.data)
-              this.componentData.dataset.index = this.componentData.dataset.index.concat(response.data.dataset.index)
+            // if (this.pagination.totalPages > 1 && this.pagination.currentPage !== 0) {
+            //   this.componentData.dataset.data = this.componentData.dataset.data.concat(response.data.dataset.data)
+            //   this.componentData.dataset.index = this.componentData.dataset.index.concat(response.data.dataset.index)
 
-              this.$nextTick(() => {
-                this.isGetPagination = false
-              })
-            } else {
-              this.componentData = response.data
-            }
-            this.pagination = response.pagination
+            //   this.$nextTick(() => {
+            //     this.isGetPagination = false
+            //   })
+            // } else {
+            //   this.componentData = response.data
+            // }
+            console.log(response)
+            this.componentData = response.data
+            // this.pagination = response.pagination
             this.loading = false
             // 如果有分頁資料還沒取
             // if (this.pagination.totalPages > 1 && this.pagination.totalPages > this.pagination.currentPage + 1) {

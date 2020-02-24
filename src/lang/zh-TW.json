@@ -1110,6 +1110,8 @@
     "higherQuartile": "上四分位數",
     "max": "最大值",
     "from": "來自",
+    "has": "的",
+    "recognize": "，辨識為",
     "tokenRecognize": "的{token}，辨識為",
     "recognizeTo": "來自 {dataFrame} 的{token}，辨識為",
     "hasColumn": "包含以下欄位：",
