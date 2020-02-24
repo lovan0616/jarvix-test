@@ -29,8 +29,24 @@
               <span class="column-name"
                 :class="segmentation.type"
               >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from')}}
-              <span class="dataframe-name">{{segmentation.properties[0].dataframePrimaryAlias}}</span>
-              {{ $t('resultDescription.tokenRecognize', {token: $t(`segmentationToken.${segmentation.type}`)}) }}
+              <span class="alias-name">{{segmentation.properties[0].dataframePrimaryAlias}}</span>{{ $t('resultDescription.has')}}
+              <span
+                v-if="segmentation.type === 'Datavalue'"
+              >
+                <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t('resultDescription.has')}}{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+              </span>
+              <span
+                v-else-if="segmentation.type === 'Datacolumn'"
+              >
+                <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+              </span>
+              <span
+                v-else-if="segmentation.type === 'Datarow'"
+              >
+                {{ $t(`segmentationToken.${segmentation.type}`) }}
+              </span>
+
+              <!-- {{ $t('resultDescription.tokenRecognize', {token: $t(`segmentationToken.${segmentation.type}`)}) }} -->
               <el-tooltip placement="bottom"
                 v-if="segmentation.properties && segmentation.properties.length > 1"
                 :tabindex="999"
@@ -44,9 +60,7 @@
                 </div>
                 <b class="question-token">'{{ segmentation.matchedWord }}'</b>
               </el-tooltip>
-              <b
-                v-else
-              >'{{ segmentation.matchedWord }}'</b>
+              <b>'{{ segmentation.matchedWord }}'</b>
             </template>
             <template
               v-else-if="isIntend(segmentation.type)"
@@ -58,7 +72,7 @@
               </div>
             </template>
             <template
-              v-else
+              v-else-if="isMeaningFul(segmentation.type)"
             >
               <span class="column-name"
                 :class="segmentation.type"
@@ -88,6 +102,16 @@ export default {
       this.$store.commit('dataSource/setAppQuestion', questionInfo.question)
       this.$store.commit('dataSource/setCurrentQuestionInfo', questionInfo)
       this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
+    },
+    isMeaningFul (value) {
+      switch (value) {
+        case 'IgnoreToken':
+        case 'PossessionToken':
+        case 'ConjunctionToken':
+          return false
+        default:
+          return true
+      }
     },
     isIntend (value) {
       switch (value) {
@@ -191,7 +215,7 @@ export default {
       text-decoration: underline;
     }
 
-    .dataframe-name {
+    .alias-name {
       display: inline-block;
       font-weight: bold;
       margin: 0 8px;
