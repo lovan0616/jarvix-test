@@ -1,5 +1,10 @@
 <template>
   <div class="result-layout">
+    <unknown-info-block
+      v-if="unknownTokenList.length > 0"
+      :token-list="unknownTokenList"
+      @close="closeUnknowInfoBlock"
+    ></unknown-info-block>
     <filter-info></filter-info>
     <spinner class="layout-spinner"
       v-if="isLoading"
@@ -30,11 +35,13 @@
 
 <script>
 import FilterInfo from '@/components/display/FilterInfo'
+import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
 
 export default {
   name: 'ResultDisplay',
   components: {
-    FilterInfo
+    FilterInfo,
+    UnknownInfoBlock
   },
   data () {
     return {
@@ -43,7 +50,8 @@ export default {
       resultInfo: null,
       timeStamp: this.$route.query.stamp,
       relatedQuestionList: [],
-      timeoutFunction: null
+      timeoutFunction: null,
+      unknownTokenList: []
     }
   },
   watch: {
@@ -175,6 +183,7 @@ export default {
             case 'Complete':
               this.resultInfo = componentResponse.componentIds
               this.layout = this.getLayout(res.layout)
+              this.unknownTokenList = this.getUnknownTokenList(componentResponse.segmentationPayload.segmentation)
               this.isLoading = false
               break
             case 'Disable':
@@ -206,6 +215,15 @@ export default {
         })
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
       })
+    },
+    getUnknownTokenList (segmentationInfo) {
+      if (segmentationInfo.length === 0) return []
+      return segmentationInfo.filter(element => {
+        return element.type === 'UnknownToken'
+      })
+    },
+    closeUnknowInfoBlock () {
+      this.unknownTokenList = []
     }
   }
 }

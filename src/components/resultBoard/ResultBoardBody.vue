@@ -5,6 +5,7 @@
     <div class="chart-container"
       :class="{'is-open': isShowChatRoom}"
     >
+      <!-- <QuestionAnalysisAlert/> -->
       <button type="button" class="btn-m btn-default control-btn"
         :class="{active: showBasicInfo}"
         v-if="$slots.InsightBasicInfo"
@@ -31,11 +32,13 @@
 </template>
 <script>
 import SlotDialog from '@/components/dialog/SlotDialog'
+import QuestionAnalysisAlert from './QuestionAnalysisAlert'
 
 export default {
   name: 'ResultBoardBody',
   components: {
-    SlotDialog
+    SlotDialog,
+    QuestionAnalysisAlert
   },
   data () {
     return {
