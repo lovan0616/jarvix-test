@@ -26,6 +26,10 @@ export default {
         }
       }
     },
+    total: {
+      type: Number,
+      default: 0
+    },
     height: {type: String, default: '420px'}
   },
   computed: {
@@ -102,10 +106,19 @@ export default {
           return isNaN(Number(element)) ? element : '[' + element + ']'
         })
       }
+      /**
+       * 檢查是否有 “其他” 的類別
+       * 透過 total 扣除資料的總和的餘額來判斷是不是有 “其他”
+       **/
+      let totalSum = this.dataset.data.reduce((acc, cur) => acc + cur[0], 0)
+      let otherCount = this.total - totalSum
 
       let result = dataset.data.map((element, index) => {
         return [dataset.index[index], ...element]
       })
+      if (otherCount > 0) {
+        result.push([this.$t('resultDescription.other'), otherCount])
+      }
       return [['index', ...dataset.columns], ...result]
     }
   }
