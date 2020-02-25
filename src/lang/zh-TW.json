@@ -1119,8 +1119,9 @@
     "loadedRate": "資料顯示比率",
     "getMoreBtn": "看更多資料",
     "percentage": "百分比(%)",
-    "systemUnknownTokenList": "系統無法找到“{tokenList}”的相關數據",
-    "systemQuestionAnalysis": "系統進行“{question}”的語句分析",
+    "systemUnknownTokenList": "為無法辨識的字詞",
+    "beRecognized": "被辨識為",
+    "systemQuestionAnalysis": "對 “{question}” 進行分析。其中",
     "other": "其他"
   },
   "segmentationToken": {

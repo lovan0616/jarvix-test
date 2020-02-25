@@ -1,8 +1,8 @@
 <template>
   <div class="result-layout">
     <unknown-info-block
-      v-if="unknownTokenList.length > 0"
-      :token-list="unknownTokenList"
+      v-if="segmentationInfo.unknownToken.length > 0 || segmentationInfo.nlpToken.length > 0"
+      :segmentation-info="segmentationInfo"
       @close="closeUnknowInfoBlock"
     ></unknown-info-block>
     <filter-info></filter-info>
@@ -51,7 +51,11 @@ export default {
       timeStamp: this.$route.query.stamp,
       relatedQuestionList: [],
       timeoutFunction: null,
-      unknownTokenList: []
+      segmentationInfo: {
+        question: null,
+        unknownToken: [],
+        nlpToken: []
+      }
     }
   },
   watch: {
@@ -113,6 +117,7 @@ export default {
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.getComponent(res)
+          this.getRelatedQuestion(data)
         }).catch(() => {
           this.isLoading = false
           this.$store.commit('chatBot/updateAnalyzeStatus', false)
@@ -131,12 +136,29 @@ export default {
 
           if (segmentationList.length === 1) {
             // 介紹資料集的處理
-            if (segmentationList[0].implication.intent === 'Introduction') {
-              this.layout = 'PreviewDataSource'
-              this.resultInfo = null
-              this.isLoading = false
-              return false
+            switch (segmentationList[0].implication.intent) {
+              case 'Introduction':
+                this.layout = 'PreviewDataSource'
+                this.resultInfo = null
+                this.isLoading = false
+                return false
+              case 'NoAnswer':
+                let implication = segmentationList[0].implication
+                console.log(implication, 'implication')
+                this.layout = 'EmptyResult'
+                this.resultInfo = {
+                  title: implication.title,
+                  description: implication.description
+                }
+                this.isLoading = false
+                return false
             }
+            // if (segmentationList[0].implication.intent === 'Introduction') {
+            //   this.layout = 'PreviewDataSource'
+            //   this.resultInfo = null
+            //   this.isLoading = false
+            //   return false
+            // }
             this.$store.dispatch('chatBot/askResult', {
               questionId,
               segmentationPayload: segmentationList[0],
@@ -184,7 +206,7 @@ export default {
             case 'Complete':
               this.resultInfo = componentResponse.componentIds
               this.layout = this.getLayout(res.layout)
-              this.unknownTokenList = this.getUnknownTokenList(componentResponse.segmentationPayload.segmentation)
+              this.segmentationAnalysis(componentResponse.segmentationPayload)
               this.isLoading = false
               break
             case 'Disable':
@@ -217,14 +239,21 @@ export default {
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
       })
     },
-    getUnknownTokenList (segmentationInfo) {
-      if (segmentationInfo.length === 0) return []
-      return segmentationInfo.filter(element => {
+    segmentationAnalysis (payloadInfo) {
+      this.segmentationInfo.nlpToken = payloadInfo.segmentation.filter(element => {
+        return element.isMatchedByNlp || element.isSynonym
+      })
+      this.segmentationInfo.unknownToken = payloadInfo.segmentation.filter(element => {
         return element.type === 'UnknownToken'
       })
+      this.segmentationInfo.question = payloadInfo.executedQuestion
     },
     closeUnknowInfoBlock () {
-      this.unknownTokenList = []
+      this.segmentationInfo = {
+        question: null,
+        unknownToken: [],
+        nlpToken: []
+      }
     }
   }
 }
