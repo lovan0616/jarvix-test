@@ -24,59 +24,63 @@
             :key="index + '-' + segmentationIndex"
           >
             <template
-              v-if="segmentation.properties"
+              v-if="displayStatusList[segmentationIndex]"
             >
-              <span class="column-name"
-                :class="segmentation.type"
-              >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from')}}
-              <span class="alias-name">{{segmentation.properties[0].dataframePrimaryAlias}}</span>{{ $t('resultDescription.has')}}
-              <span
-                v-if="segmentation.type === 'Datavalue'"
+              <template
+                v-if="segmentation.properties"
               >
-                <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t('resultDescription.has')}}{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
-              </span>
-              <span
-                v-else-if="segmentation.type === 'Datacolumn'"
-              >
-                <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
-              </span>
-              <span
-                v-else-if="segmentation.type === 'Datarow'"
-              >
-                {{ $t(`segmentationToken.${segmentation.type}`) }}
-              </span>
-
-              <!-- {{ $t('resultDescription.tokenRecognize', {token: $t(`segmentationToken.${segmentation.type}`)}) }} -->
-              <el-tooltip placement="bottom"
-                v-if="segmentation.properties && segmentation.properties.length > 1"
-                :tabindex="999"
-              >
-                <div slot="content">
-                  <span>{{ $t('resultDescription.hasColumn') }}</span>
-                  <span
-                    v-for="(property, propertyIndex) in segmentation.properties"
-                    :key="propertyIndex"
-                  >{{ property.datacolumnPrimaryAlias }}<span v-show="propertyIndex < segmentation.properties.length - 1">、</span></span>
-                </div>
-                <b class="question-token">'{{ segmentation.matchedWord }}'</b>
-              </el-tooltip>
-              <b>'{{ segmentation.matchedWord }}'</b>
-            </template>
-            <template
-              v-else-if="isIntend(segmentation.type)"
-            >
-              <div>
                 <span class="column-name"
-                  :class="{intend: isIntend(segmentation.type)}"
+                  :class="segmentation.type"
+                >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from')}}
+                <span class="alias-name">{{segmentation.properties[0].dataframePrimaryAlias}}</span>{{ $t('resultDescription.has')}}
+                <span
+                  v-if="segmentation.type === 'Datavalue'"
+                >
+                  <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t('resultDescription.has')}}{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                </span>
+                <span
+                  v-else-if="segmentation.type === 'Datacolumn'"
+                >
+                  <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                </span>
+                <span
+                  v-else-if="segmentation.type === 'Datarow'"
+                >
+                  {{ $t(`segmentationToken.${segmentation.type}`) }}
+                </span>
+
+                <!-- {{ $t('resultDescription.tokenRecognize', {token: $t(`segmentationToken.${segmentation.type}`)}) }} -->
+                <el-tooltip placement="bottom"
+                  v-if="segmentation.properties && segmentation.properties.length > 1"
+                  :tabindex="999"
+                >
+                  <div slot="content">
+                    <span>{{ $t('resultDescription.hasColumn') }}</span>
+                    <span
+                      v-for="(property, propertyIndex) in segmentation.properties"
+                      :key="propertyIndex"
+                    >{{ property.datacolumnPrimaryAlias }}<span v-show="propertyIndex < segmentation.properties.length - 1">、</span></span>
+                  </div>
+                  <b class="question-token">'{{ segmentation.matchedWord }}'</b>
+                </el-tooltip>
+                <b>'{{ segmentation.matchedWord }}'</b>
+              </template>
+              <template
+                v-else-if="isIntend(segmentation.type)"
+              >
+                <div>
+                  <span class="column-name"
+                    :class="{intend: isIntend(segmentation.type)}"
+                  >[{{ segmentation.word }}]</span>{{ $t(`segmentationToken.${segmentation.type}`)}}
+                </div>
+              </template>
+              <template
+                v-else-if="isMeaningFul(segmentation.type)"
+              >
+                <span class="column-name"
+                  :class="segmentation.type"
                 >[{{ segmentation.word }}]</span>{{ $t(`segmentationToken.${segmentation.type}`)}}
-              </div>
-            </template>
-            <template
-              v-else-if="isMeaningFul(segmentation.type)"
-            >
-              <span class="column-name"
-                :class="segmentation.type"
-              >[{{ segmentation.word }}]</span>{{ $t(`segmentationToken.${segmentation.type}`)}}
+              </template>
             </template>
           </div>
         </div>
@@ -95,6 +99,44 @@ export default {
   props: {
     resultInfo: {
       type: Object
+    }
+  },
+  computed: {
+    // 哪些 segmentation 需要顯示
+    displayStatusList () {
+      let standard = this.resultInfo.parseQuestionPayload.segmentations[0].segmentation
+      let statusList = []
+      for (let i = 0; i < standard.length; i++) {
+        statusList.push(false)
+      }
+      this.resultInfo.parseQuestionPayload.segmentations.forEach(element => {
+        element.segmentation.forEach((segmentationElement, index) => {
+          if (segmentationElement.type === standard[index].type) {
+            switch (segmentationElement.type) {
+              case 'Datavalue':
+              case 'Datacolumn':
+                if (segmentationElement.properties[0].dataframePrimaryAlias !== standard[index].properties[0].dataframePrimaryAlias ||
+                  segmentationElement.properties[0].datacolumnPrimaryAlias !== standard[index].properties[0].datacolumnPrimaryAlias) {
+                  statusList[index] = true
+                }
+                break
+              case 'Datarow':
+                console.log(segmentationElement.properties[0].dataframePrimaryAlias, standard[index].properties[0].dataframePrimaryAlias)
+                if (segmentationElement.properties[0].dataframePrimaryAlias !== standard[index].properties[0].dataframePrimaryAlias) {
+                  statusList[index] = true
+                }
+                break
+              default:
+                if (segmentationElement.matchedWord !== standard[index].matchedWord) {
+                  statusList[index] = true
+                }
+            }
+          } else {
+            statusList[index] = true
+          }
+        })
+      })
+      return statusList
     }
   },
   methods: {
