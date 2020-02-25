@@ -136,12 +136,29 @@ export default {
 
           if (segmentationList.length === 1) {
             // 介紹資料集的處理
-            if (segmentationList[0].implication.intent === 'Introduction') {
-              this.layout = 'PreviewDataSource'
-              this.resultInfo = null
-              this.isLoading = false
-              return false
+            switch (segmentationList[0].implication.intent) {
+              case 'Introduction':
+                this.layout = 'PreviewDataSource'
+                this.resultInfo = null
+                this.isLoading = false
+                return false
+              case 'NoAnswer':
+                let implication = segmentationList[0].implication
+                console.log(implication, 'implication')
+                this.layout = 'EmptyResult'
+                this.resultInfo = {
+                  title: implication.title,
+                  description: implication.description
+                }
+                this.isLoading = false
+                return false
             }
+            // if (segmentationList[0].implication.intent === 'Introduction') {
+            //   this.layout = 'PreviewDataSource'
+            //   this.resultInfo = null
+            //   this.isLoading = false
+            //   return false
+            // }
             this.$store.dispatch('chatBot/askResult', {
               questionId,
               segmentationPayload: segmentationList[0],
