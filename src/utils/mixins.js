@@ -38,6 +38,15 @@ Vue.mixin({
       let date = datetime.getDate()
       return year + '-' + this.paddingZero(month) + '-' + this.paddingZero(date)
     },
+    timeToFileName (time) {
+      let datetime = new Date(parseInt(time))
+      let year = datetime.getFullYear()
+      let month = datetime.getMonth() + 1
+      let date = datetime.getDate()
+      let hour = datetime.getHours()
+      let minute = datetime.getMinutes()
+      return `${year}-${this.paddingZero(month)}-${this.paddingZero(date)}-${this.paddingZero(hour)}${this.paddingZero(minute)}`
+    },
     // 轉成 YYYY-MM-DD HH:mm
     timeToDateTime (time) {
       let datetime = new Date(time)
@@ -193,7 +202,8 @@ Vue.mixin({
     exportCSVFile (el, question, data) {
       let exportFunction = (e) => {
         if (e.target && e.target.id === 'export-btn') {
-          this.exportToCSV(question, data)
+          let fileName = this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + question
+          this.exportToCSV(fileName, data)
         }
       }
       /**
