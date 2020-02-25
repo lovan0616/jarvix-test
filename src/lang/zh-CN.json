@@ -1119,8 +1119,9 @@
     "loadedRate": "资料显示比率",
     "getMoreBtn": "看更多资料",
     "percentage": "百分比(%)",
-    "systemUnknownTokenList": "系统无法找到“{tokenList}”的相关数据",
-    "systemQuestionAnalysis": "系统进行“{question}”的语句分析",
+    "systemUnknownTokenList": "为无法辨识的字词",
+    "beRecognized": "被辨识为",
+    "systemQuestionAnalysis": "对 “{question}” 进行分析。其中",
     "other": "其他"
   },
   "segmentationToken": {

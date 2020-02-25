@@ -7,7 +7,18 @@
       ></svg-icon>
     </div>
     <div class="content-block">
-      <div class="content">{{ $t('resultDescription.systemUnknownTokenList', {tokenList: unknowTokenList}) }}</div>
+      <div class="content">{{ $t('resultDescription.systemQuestionAnalysis', {question: segmentationInfo.question}) }}
+        <span v-if="segmentationInfo.unknownToken.length > 0">“{{ unknowTokenList }}” {{ $t('resultDescription.systemUnknownTokenList') }}</span>
+        <span v-if="segmentationInfo.unknownToken.length > 0 && segmentationInfo.nlpToken.length > 0">，</span>
+        <template
+          v-if="segmentationInfo.nlpToken.length > 0"
+        >
+          <span
+            v-for="(nlpToken, index) in segmentationInfo.nlpToken"
+            :key="index"
+          >“{{ nlpToken.word }}” {{ $t('resultDescription.beRecognized') }} “{{ nlpToken.matchedWord }}”<span v-if="index < segmentationInfo.nlpToken.length - 1">、</span></span>
+        </template>。
+      </div>
       <a href="javascript:void(0)" class="remove-link"
         @click="close"
       >
@@ -20,9 +31,15 @@
 export default {
   name: 'UnkonwnInfoBlock',
   props: {
-    tokenList: {
-      type: Array,
-      return: () => []
+    segmentationInfo: {
+      type: Object,
+      default () {
+        return {
+          question: null,
+          unknownToken: [],
+          nlpToken: []
+        }
+      }
     }
   },
   methods: {
@@ -32,7 +49,7 @@ export default {
   },
   computed: {
     unknowTokenList () {
-      return this.tokenList.map(element => element.matchedWord)
+      return this.segmentationInfo.unknownToken.map(element => element.matchedWord).join(', ')
     }
   }
 }

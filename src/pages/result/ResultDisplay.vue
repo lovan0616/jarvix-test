@@ -1,8 +1,8 @@
 <template>
   <div class="result-layout">
     <unknown-info-block
-      v-if="unknownTokenList.length > 0"
-      :token-list="unknownTokenList"
+      v-if="segmentationInfo.unknownToken.length > 0 || segmentationInfo.nlpToken.length > 0"
+      :segmentation-info="segmentationInfo"
       @close="closeUnknowInfoBlock"
     ></unknown-info-block>
     <filter-info></filter-info>
@@ -51,7 +51,11 @@ export default {
       timeStamp: this.$route.query.stamp,
       relatedQuestionList: [],
       timeoutFunction: null,
-      unknownTokenList: []
+      segmentationInfo: {
+        question: null,
+        unknownToken: [],
+        nlpToken: []
+      }
     }
   },
   watch: {
@@ -185,7 +189,7 @@ export default {
             case 'Complete':
               this.resultInfo = componentResponse.componentIds
               this.layout = this.getLayout(res.layout)
-              this.unknownTokenList = this.getUnknownTokenList(componentResponse.segmentationPayload.segmentation)
+              this.segmentationAnalysis(componentResponse.segmentationPayload)
               this.isLoading = false
               break
             case 'Disable':
@@ -218,14 +222,21 @@ export default {
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
       })
     },
-    getUnknownTokenList (segmentationInfo) {
-      if (segmentationInfo.length === 0) return []
-      return segmentationInfo.filter(element => {
+    segmentationAnalysis (payloadInfo) {
+      this.segmentationInfo.nlpToken = payloadInfo.segmentation.filter(element => {
+        return element.isMatchedByNlp || element.isSynonym
+      })
+      this.segmentationInfo.unknownToken = payloadInfo.segmentation.filter(element => {
         return element.type === 'UnknownToken'
       })
+      this.segmentationInfo.question = payloadInfo.executedQuestion
     },
     closeUnknowInfoBlock () {
-      this.unknownTokenList = []
+      this.segmentationInfo = {
+        question: null,
+        unknownToken: [],
+        nlpToken: []
+      }
     }
   }
 }
