@@ -1,6 +1,6 @@
 <template>
   <div class="task"
-    :class="{'task-mask': isGetPagination, 'has-pagination': pagination.totalPages > 1}"
+    :class="{'task-mask': isGetPagination, 'has-pagination': hasPagination}"
     :data-component-id="componentId"
     :data-result-id="resultId"
     :data-diagram-type="diagram"
@@ -26,6 +26,7 @@
         :notes="componentData.notes"
         :causes="componentData.causes"
         :description="componentData.description"
+        :total="componentData.total"
       ></component>
       <div class="task-note"
         v-for="(note, index) in notes" v-bind:key="index"
@@ -33,7 +34,7 @@
         {{note}}
       </div>
       <div class="pagination-block"
-        v-if="componentData.dataset && componentData.dataset.data.length === 200"
+        v-if="currentDataLength === 200"
         :class="{'key-result-pagination': intend === 'key_result'}"
       >
         <button class="btn-m btn-default"
@@ -69,7 +70,9 @@ export default {
         currentPage: 0,
         totalPages: 1
       },
-      isGetPagination: false
+      isGetPagination: false,
+      currentDataLength: 0,
+      hasPagination: false
     }
   },
   mounted () {
@@ -100,29 +103,20 @@ export default {
             this.diagram = response.diagram
             this.resultId = response.resultId
             this.componentName = this.getChartTemplate(this.diagram)
+            this.currentDataLength = response.data.dataset ? response.data.dataset.data.length : []
             // 分頁的資料 push 進去
-            // if (this.pagination.totalPages > 1 && this.pagination.currentPage !== 0) {
-            //   this.componentData.dataset.data = this.componentData.dataset.data.concat(response.data.dataset.data)
-            //   this.componentData.dataset.index = this.componentData.dataset.index.concat(response.data.dataset.index)
+            if (this.pagination.currentPage !== 0) {
+              this.componentData.dataset.data = this.componentData.dataset.data.concat(response.data.dataset.data)
+              this.componentData.dataset.index = this.componentData.dataset.index.concat(response.data.dataset.index)
 
-            //   this.$nextTick(() => {
-            //     this.isGetPagination = false
-            //   })
-            // } else {
-            //   this.componentData = response.data
-            // }
-            console.log(response)
-            this.componentData = response.data
-            // this.pagination = response.pagination
+              this.$nextTick(() => {
+                this.isGetPagination = false
+              })
+            } else {
+              this.hasPagination = response.data.dataset && response.data.dataset.data.length === 200
+              this.componentData = response.data
+            }
             this.loading = false
-            // 如果有分頁資料還沒取
-            // if (this.pagination.totalPages > 1 && this.pagination.totalPages > this.pagination.currentPage + 1) {
-            //   this.isGetPagination = true
-            //   this.pagination.currentPage += 1
-            //   this.fetchData()
-            // } else if (this.pagination.totalPages > 1 && this.pagination.totalPages === this.pagination.currentPage + 1) {
-            //   this.isGetPagination = false
-            // }
 
             // 空資料的處理
             if (this.componentData.dataset && this.componentData.dataset.data.length === 0) {

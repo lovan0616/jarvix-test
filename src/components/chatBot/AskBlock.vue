@@ -13,7 +13,7 @@
           :name="new Date().getTime()"
           :placeholder="$t('editing.askPlaceHolder')"
           autocomplete="off"
-          v-model="userQuestion"
+          v-model.trim="userQuestion"
           @keypress.enter.prevent="enterQuestion"
           @keyup.shift.ctrl.72="toggleHelper()"
         >
