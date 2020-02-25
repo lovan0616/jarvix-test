@@ -460,3 +460,17 @@ export function getDrillDownTool (titleObject, isParallel = false) {
     }
   }
 }
+
+export function paddingZero (n) {
+  return n < 10 ? '0' + n : n
+}
+
+export function timeToDateTime (time) {
+  let datetime = new Date(parseInt(time))
+  let year = datetime.getFullYear()
+  let month = datetime.getMonth() + 1
+  let date = datetime.getDate()
+  let hour = datetime.getHours()
+  let minute = datetime.getMinutes()
+  return `${year}-${paddingZero(month)}-${paddingZero(date)}-${paddingZero(hour)}${paddingZero(minute)}`
+}
