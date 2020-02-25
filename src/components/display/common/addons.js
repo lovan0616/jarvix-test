@@ -288,7 +288,8 @@ export function parallelZoomIn () {
 export function verticalZoomIn () {
   return [
     {
-      type: 'inside'
+      type: 'inside',
+      orient: 'vertical'
     },
     {
       type: 'slider',
