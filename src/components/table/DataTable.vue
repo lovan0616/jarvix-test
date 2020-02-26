@@ -113,6 +113,8 @@
               <svg-icon icon-class="alert" class="alert-icon"></svg-icon>
             </el-tooltip>
           </span>
+          <span v-else-if="headInfo.value === 'joinCount'"
+          >{{ data[headInfo.value] === 2 ? $t('editing.tableJoin') : $t('editing.userUpload') }}</span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
       </div>
