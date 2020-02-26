@@ -3,8 +3,8 @@ import chartVariable from '@/styles/chart/variables.scss'
 import { graphic } from 'echarts/lib/export'
 
 // 圖表的漸層色
-export function linearGradient (colorStart, colorEnd) {
-  return new graphic.LinearGradient(0, 0, 0, 1, [{
+export function linearGradient (colorStart, colorEnd, isParallel = false) {
+  return new graphic.LinearGradient(isParallel ? 1 : 0, 0, 0, isParallel ? 0 : 1, [{
     offset: 0, color: colorStart
   }, {
     offset: 1, color: colorEnd
@@ -12,7 +12,7 @@ export function linearGradient (colorStart, colorEnd) {
 }
 
 export const colorDefault = [linearGradient('#95FAF2', '#559BD5'), linearGradient('#4CE2F0', '#438AF8'), linearGradient('#76CCFF', '#3E52F9'), linearGradient('#79ACFF', '#5A3FFA'), linearGradient('#698DF3', '#7544FC')]
-export const colorOnly1 = [linearGradient('#95FAF2', '#559BD5')]
+export const colorOnly1 = [linearGradient('#4CE2F0', '#438AF8')]
 export const colorOnly2 = [linearGradient('#95FAF2', '#559BD5'), linearGradient('#4BCBF1', '#416DF9')]
 export const color3 = [linearGradient('#95FAF2', '#559BD5'), linearGradient('#76CCFF', '#3E52F9'), linearGradient('#698DF3', '#7544FC')]
 export const color10 = [
@@ -26,6 +26,22 @@ export const color10 = [
   linearGradient('#698DF3', '#7544FC'),
   linearGradient('#5568FA', '#9549FD'),
   linearGradient('#6245FF', '#C238FF')
+]
+export const parallelColorDefault = [linearGradient('#95FAF2', '#559BD5', true), linearGradient('#4CE2F0', '#438AF8', true), linearGradient('#76CCFF', '#3E52F9', true), linearGradient('#79ACFF', '#5A3FFA', true), linearGradient('#698DF3', '#7544FC', true)]
+export const parallelColorOnly1 = [linearGradient('#4CE2F0', '#438AF8', true)]
+export const parallelColorOnly2 = [linearGradient('#95FAF2', '#559BD5', true), linearGradient('#4BCBF1', '#416DF9', true)]
+export const parallelColor3 = [linearGradient('#95FAF2', '#559BD5', true), linearGradient('#76CCFF', '#3E52F9', true), linearGradient('#698DF3', '#7544FC', true)]
+export const parallelColor10 = [
+  linearGradient('#95FAF2', '#559BD5', true),
+  linearGradient('#78F5F7', '#5596E4', true),
+  linearGradient('#4CE2F0', '#438AF8', true),
+  linearGradient('#4BCBF1', '#416DF9', true),
+  linearGradient('#76CCFF', '#3E52F9', true),
+  linearGradient('#79BCFF', '#443FFA', true),
+  linearGradient('#79ACFF', '#5A3FFA', true),
+  linearGradient('#698DF3', '#7544FC', true),
+  linearGradient('#5568FA', '#9549FD', true),
+  linearGradient('#6245FF', '#C238FF', true)
 ]
 export const color12 = [
   chartVariable['chartColorList-1'],
