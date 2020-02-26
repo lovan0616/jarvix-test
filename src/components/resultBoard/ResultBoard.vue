@@ -272,7 +272,7 @@ export default {
       return `${window.location.origin}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&action=share`
     },
     hasFilter () {
-      return this.$store.state.dataSource.filterList.length > 0
+      return this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult'
     },
     currentResultId () {
       return this.$store.state.result.currentResultId

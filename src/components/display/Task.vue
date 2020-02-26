@@ -34,7 +34,7 @@
         {{note}}
       </div>
       <div class="pagination-block"
-        v-if="currentDataLength === 200"
+        v-if="hasNextPage"
         :class="{'key-result-pagination': intend === 'key_result'}"
       >
         <button class="btn-m btn-default"
@@ -71,8 +71,10 @@ export default {
         totalPages: 1
       },
       isGetPagination: false,
-      currentDataLength: 0,
-      hasPagination: false
+      hasPagination: false,
+      // 是否有下一頁資料
+      hasNextPage: false,
+      maxDataLengthPerPage: 200
     }
   },
   mounted () {
@@ -103,18 +105,61 @@ export default {
             this.diagram = response.diagram
             this.resultId = response.resultId
             this.componentName = this.getChartTemplate(this.diagram)
-            this.currentDataLength = response.data.dataset ? response.data.dataset.data.length : []
+
+            let responseData = response.data
+            if (responseData.dataset) {
+              if (response.diagram === 'line_chart') {
+                /**
+                 * 針對 line_chart 分頁處理
+                 * 如果 data 最後一個 array 裡的資料有空值代表後面還有資料
+                 **/
+                this.hasNextPage = responseData.dataset.data.length * responseData.dataset.columns.length >= 200
+              } else {
+                this.hasNextPage = responseData.dataset.data.length === this.maxDataLengthPerPage
+              }
+            } else {
+              this.hasNextPage = false
+            }
+
             // 分頁的資料 push 進去
             if (this.pagination.currentPage !== 0) {
-              this.componentData.dataset.data = this.componentData.dataset.data.concat(response.data.dataset.data)
-              this.componentData.dataset.index = this.componentData.dataset.index.concat(response.data.dataset.index)
+              if (response.diagram === 'line_chart') {
+                let indexLength = this.componentData.dataset.index.length
+
+                if (responseData.dataset.index.length === 1) {
+                  // 代表是最後一頁資料
+                  this.hasNextPage = false
+                  let restDataLength = responseData.dataset.data[0].length
+                  this.componentData.dataset.data[indexLength - 1].splice(this.componentData.dataset.columns.length - restDataLength, restDataLength)
+                  this.componentData.dataset.data[indexLength - 1] = this.componentData.dataset.data[indexLength - 1].concat(responseData.dataset.data[0])
+                } else {
+                  let firstNotNullIndex = responseData.dataset.data[0].findIndex(element => element !== null)
+                  // 檢查有沒有空值
+                  if (firstNotNullIndex > 0) {
+                    // 補最後一行的資料
+                    responseData.dataset.data[0].splice(0, firstNotNullIndex)
+                    this.componentData.dataset.data[indexLength - 1].splice(firstNotNullIndex, this.componentData.dataset.columns.length - firstNotNullIndex)
+                    this.componentData.dataset.data[indexLength - 1] = this.componentData.dataset.data[indexLength - 1].concat(responseData.dataset.data[0])
+                    responseData.dataset.data.shift()
+                    this.componentData.dataset.data = this.componentData.dataset.data.concat(responseData.dataset.data)
+                    responseData.dataset.index.shift()
+                    this.componentData.dataset.index = this.componentData.dataset.index.concat(responseData.dataset.index)
+                  } else {
+                    this.componentData.dataset.data = this.componentData.dataset.data.concat(responseData.dataset.data)
+                    this.componentData.dataset.index = this.componentData.dataset.index.concat(responseData.dataset.index)
+                  }
+                }
+              } else {
+                this.componentData.dataset.data = this.componentData.dataset.data.concat(responseData.dataset.data)
+                this.componentData.dataset.index = this.componentData.dataset.index.concat(responseData.dataset.index)
+              }
 
               this.$nextTick(() => {
                 this.isGetPagination = false
               })
             } else {
-              this.hasPagination = response.data.dataset && response.data.dataset.data.length === 200
-              this.componentData = response.data
+              this.hasPagination = responseData.dataset && responseData.dataset.data.length === this.maxindexLengthPerPage
+              this.componentData = responseData
             }
             this.loading = false
 
@@ -124,12 +169,12 @@ export default {
               this.errorMessage = this.$t('message.emptyResult')
             }
             // 取樣
-            if (response.data.sampling) {
-              this.appendNote(this.genSamplingNote(response.data.sampling))
+            if (responseData.sampling) {
+              this.appendNote(this.genSamplingNote(responseData.sampling))
             }
             // 取前 n 筆
-            if (response.data.group_limit) {
-              this.appendNote(this.genGroupLimitNote(response.data.group_limit))
+            if (responseData.group_limit) {
+              this.appendNote(this.genGroupLimitNote(responseData.group_limit))
             }
             break
           case 'Disable':

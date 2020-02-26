@@ -37,11 +37,11 @@
               :icon-class="spinner"
             ></svg-icon>{{ $t('button.delete') }}
           </button>
-          <div class="reach-limit"
+          <!-- <div class="reach-limit"
             v-if="reachLimit"
-          >{{ $t('notification.uploadLimitNotification') }}</div>
+          >{{ $t('notification.uploadLimitNotification') }}</div> -->
         </div>
-        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
+        <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div> -->
       </div>
       <data-table
         :headers="tableHeaders"
@@ -280,6 +280,11 @@ export default {
           text: this.$t('editing.tableName'),
           value: 'primaryAlias',
           sort: true
+        },
+        {
+          text: this.$t('editing.createWay'),
+          value: 'joinCount',
+          width: '100px'
         },
         {
           text: this.$t('editing.createDate'),

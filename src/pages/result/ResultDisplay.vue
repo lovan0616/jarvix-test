@@ -1,11 +1,11 @@
 <template>
   <div class="result-layout">
+    <filter-info></filter-info>
     <unknown-info-block
       v-if="segmentationInfo.unknownToken.length > 0 || segmentationInfo.nlpToken.length > 0"
       :segmentation-info="segmentationInfo"
       @close="closeUnknowInfoBlock"
     ></unknown-info-block>
-    <filter-info></filter-info>
     <spinner class="layout-spinner"
       v-if="isLoading"
       :title="$t('resultDescription.analysisProcessing')"
@@ -144,7 +144,6 @@ export default {
                 return false
               case 'NoAnswer':
                 let implication = segmentationList[0].implication
-                console.log(implication, 'implication')
                 this.layout = 'EmptyResult'
                 this.resultInfo = {
                   title: implication.title,
@@ -153,12 +152,7 @@ export default {
                 this.isLoading = false
                 return false
             }
-            // if (segmentationList[0].implication.intent === 'Introduction') {
-            //   this.layout = 'PreviewDataSource'
-            //   this.resultInfo = null
-            //   this.isLoading = false
-            //   return false
-            // }
+
             this.$store.dispatch('chatBot/askResult', {
               questionId,
               segmentationPayload: segmentationList[0],

@@ -177,7 +177,10 @@
     "isSaving": "储存中",
     "notSelect": "未选择",
     "alreadySelect": "已选择",
-    "selectYet": "尚未选择任何项目"
+    "selectYet": "尚未选择任何项目",
+    "createWay": "建立方式",
+    "tableJoin": "资料表关联",
+    "userUpload": "使用者上传"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",

@@ -2,6 +2,7 @@
   <el-tooltip placement="bottom"
     :tabindex="999"
     :popper-class="tokenInfo.type"
+    :hide-after="0"
   >
     <div slot="content">{{tooltipContent(tokenInfo)}}
       <div v-if="tokenInfo.properties && tokenInfo.properties.length > 1">
@@ -29,10 +30,13 @@ export default {
     tooltipContent (tokenInfo) {
       switch (tokenInfo.type) {
         case 'ColumnSet':
+          return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + tokenInfo.matchedWord
         case 'Datavalue':
+          return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + tokenInfo.properties[0].datacolumnPrimaryAlias + this.$t('resultDescription.has') + this.$t(`segmentationToken.${tokenInfo.type}`) + this.$t(`resultDescription.recognize`) + tokenInfo.matchedWord
         case 'Datacolumn':
+          return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + tokenInfo.properties[0].datacolumnPrimaryAlias + this.$t(`segmentationToken.${tokenInfo.type}`) + this.$t(`resultDescription.recognize`) + tokenInfo.matchedWord
         case 'Datarow':
-          return this.$t('resultDescription.recognizeTo', {dataFrame: tokenInfo.properties[0].dataframePrimaryAlias, token: this.$t(`segmentationToken.${tokenInfo.type}`)}) + tokenInfo.matchedWord
+          return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + this.$t(`segmentationToken.${tokenInfo.type}`) + tokenInfo.matchedWord
         default:
           return this.$t(`segmentationToken.${tokenInfo.type}`)
       }
@@ -86,6 +90,7 @@ export default {
   padding: 5px 8px;
   font-size: 14px;
   line-height: 32px;
+  max-width: 50vw;
 
   &.is-dark {
     @include tokenTooltip(#000);
