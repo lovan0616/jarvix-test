@@ -1,5 +1,5 @@
 <template>
-  <div class="display-basic-chart">
+  <div class="display-line-chart">
     <v-echart
       :style="chartStyle"
       :options="options"
@@ -7,6 +7,11 @@
       @brushselected="brushRegionSelected"
     >
     </v-echart>
+    <!-- <div class="next-page"
+      @click="$emit('next')"
+    >
+      <svg-icon icon-class="arrow-right"></svg-icon>
+    </div> -->
     <selected-region
       v-if="selectedData.length > 0"
       :title="$t('resultDescription.currentChosenData')"
@@ -226,3 +231,21 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.display-line-chart {
+  position: relative;
+
+  .next-page {
+    position: absolute;
+    top: 60px;
+    right: 88px;
+    width: 30px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(270deg, rgba(0, 198, 217, 0.6) 0.05%, rgba(173, 248, 255, 0) 99.95%);
+    cursor: pointer;
+  }
+}
+</style>
