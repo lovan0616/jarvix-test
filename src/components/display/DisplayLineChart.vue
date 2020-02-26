@@ -130,8 +130,7 @@ export default {
           source: this.datasetTransform(this.dataset)
         },
         series: this.series,
-        color: this.colorList,
-        dataZoom: parallelZoomIn()
+        color: this.colorList
       }
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.dataset[0].source
@@ -172,6 +171,11 @@ export default {
       } else {
         config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
         config.yAxis.name = this.title.yAxis[0].display_name
+      }
+
+      // 數量大的時候出現 scroll bar
+      if (this.dataset.index.length > 10) {
+        config.dataZoom = parallelZoomIn()
       }
 
       return config
