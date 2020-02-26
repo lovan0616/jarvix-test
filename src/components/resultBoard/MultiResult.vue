@@ -48,8 +48,6 @@
                 >
                   {{ $t(`segmentationToken.${segmentation.type}`) }}
                 </span>
-
-                <!-- {{ $t('resultDescription.tokenRecognize', {token: $t(`segmentationToken.${segmentation.type}`)}) }} -->
                 <el-tooltip placement="bottom"
                   v-if="segmentation.properties && segmentation.properties.length > 1"
                   :tabindex="999"

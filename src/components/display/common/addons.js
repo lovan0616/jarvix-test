@@ -279,7 +279,7 @@ export function parallelZoomIn () {
         }
       },
       height: 15,
-      bottom: 0,
+      bottom: 5,
       showDetail: false
     }
   ]
