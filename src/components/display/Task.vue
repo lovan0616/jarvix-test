@@ -197,6 +197,9 @@ export default {
     },
     genGroupLimitNote (randomLimit) {
       return this.$t('resultNote.groupLimitNote', {randomLimit})
+    },
+    updateHasPaginationStatus (value) {
+
     }
   }
 }

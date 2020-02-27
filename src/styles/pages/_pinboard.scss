@@ -82,7 +82,7 @@
 
 .single-pinboard {
   position: relative;
-  width: 330px;
+  width: 24%;
   height: 110px;
   display: flex;
   align-items: center;
@@ -93,19 +93,22 @@
   cursor: pointer;
   background-color: rgba(0, 0, 0, .35);
   transition: all 0.3s;
-  margin: 0px 12px 12px 0px;
+  margin-bottom: 12px;
+
+  &:not(:nth-child(4n)) {
+    margin-right: 1%;
+  }
 
   &::before {
     content: '';
     width: 5px;
-    height: 108px;
+    height: 100%;
     display: block;
     position: absolute;
     top: 0px;
     left: 0px;
     background: #4DE2F0;
     border-radius: 5px 0px 0px 5px;
-
   }
 
   .pinboad-pin-box {
@@ -116,6 +119,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: 12px;
   }
 
   .pin-icon {
@@ -125,7 +129,12 @@
   }
 
   .pinboard-name {
+    flex: 1;
     font-size: 18px;
+  }
+
+  .pinboard-action-block {
+    align-self: flex-end;
   }
 
   .pinboard-count {

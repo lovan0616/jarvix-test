@@ -159,7 +159,7 @@ export default {
       chartAddon.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.series[0].data
         let maxLength = dataset.length > 1000 ? 1000 : dataset.length
-        let table = '<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-secondary" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div>' +
+        let table = '<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div>' +
           `<div style="margin-top: 16px;padding: 0 16px;">${maxLength === 1000 ? this.$t('resultDescription.displayTopData', {count: maxLength}) : this.$t('resultDescription.displayTotalData', {count: maxLength})}</div>` +
           '<table style="width:100%;padding: 0 16px;"><tbody><tr>' +
           '<td style="padding: 4px 12px;">' + this.title.xAxis[0].display_name + '</td>' +

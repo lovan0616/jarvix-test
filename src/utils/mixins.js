@@ -218,6 +218,7 @@ Vue.mixin({
       }
     },
     exportToCSV (filename, rows) {
+      let fileName = filename + '.csv'
       let processRow = (row) => {
         let finalVal = ''
         for (let j = 0; j < row.length; j++) {
@@ -245,14 +246,14 @@ Vue.mixin({
       let blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' })
       if (navigator.msSaveBlob) {
         // IE 10+
-        navigator.msSaveBlob(blob, filename)
+        navigator.msSaveBlob(blob, fileName)
       } else {
         let link = document.createElement('a')
         if (link.download !== undefined) {
           // Browsers that support HTML5 download attribute
           let url = URL.createObjectURL(blob)
           link.setAttribute('href', url)
-          link.setAttribute('download', filename)
+          link.setAttribute('download', fileName)
           link.style.visibility = 'hidden'
           document.body.appendChild(link)
           link.click()
