@@ -7,11 +7,11 @@
       @brushselected="brushRegionSelected"
     >
     </v-echart>
-    <!-- <div class="next-page"
-      @click="$emit('next')"
-    >
-      <svg-icon icon-class="arrow-right"></svg-icon>
-    </div> -->
+    <arrow-button
+      v-show="showPagination"
+      v-if="hasPagination"
+      @click.native="$emit('next')"
+    ></arrow-button>
     <selected-region
       v-if="selectedData.length > 0"
       :title="$t('resultDescription.currentChosenData')"
@@ -89,6 +89,10 @@ export default {
     isParallel: {
       type: Boolean,
       default: false
+    },
+    hasPagination: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -105,7 +109,8 @@ export default {
       addonOptions: JSON.parse(JSON.stringify(echartAddon.options)),
       addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
-      selectedData: []
+      selectedData: [],
+      showPagination: true
     }
   },
   computed: {
@@ -138,8 +143,11 @@ export default {
         color: this.colorList
       }
       config.toolbox.feature.dataView.optionToContent = (opt) => {
+        if (this.hasPagination) {
+          this.$el.addEventListener('click', this.controlPagination, false)
+        }
         let dataset = opt.dataset[0].source
-        let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-secondary" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="margin-top: 16px;width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
+        let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="margin-top: 16px;width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur) => {
             return acc + `<td style="padding: 4px 12px;">${cur || ''}</td>`
@@ -206,6 +214,15 @@ export default {
     }
   },
   methods: {
+    controlPagination () {
+      let exportBtn = document.getElementById('export-btn')
+      if (exportBtn) {
+        this.showPagination = false
+      } else {
+        this.showPagination = true
+        this.$el.removeEventListener('click', this.controlPagination, false)
+      }
+    },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {
         this.selectedData = []
@@ -231,21 +248,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.display-line-chart {
-  position: relative;
-
-  .next-page {
-    position: absolute;
-    top: 60px;
-    right: 88px;
-    width: 30px;
-    height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(270deg, rgba(0, 198, 217, 0.6) 0.05%, rgba(173, 248, 255, 0) 99.95%);
-    cursor: pointer;
-  }
-}
-</style>

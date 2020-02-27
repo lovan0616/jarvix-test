@@ -196,6 +196,7 @@ export default {
     },
     setCurrentColumn (columnInfo) {
       this.setColumnInfo(columnInfo)
+      this.cancelEditAlias()
     },
     editValueAlias (index) {
       this.currentEditValueIndex = index

@@ -1,5 +1,6 @@
 <template>
   <div class="page-index">
+    <filter-info></filter-info>
     <spinner class="layout-spinner"
       v-if="isLoading"
       :title="$t('resultDescription.analysisProcessing')"
@@ -23,8 +24,13 @@
 </template>
 
 <script>
+import FilterInfo from '@/components/display/FilterInfo'
+
 export default {
   name: 'PageIndex',
+  components: {
+    FilterInfo
+  },
   data () {
     return {
       isLoading: false,

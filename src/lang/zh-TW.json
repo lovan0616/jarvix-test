@@ -1125,7 +1125,8 @@
     "systemUnknownTokenList": "為無法辨識的字詞",
     "beRecognized": "被辨識為",
     "systemQuestionAnalysis": "對 “{question}” 進行分析。其中",
-    "other": "其他"
+    "other": "其他",
+    "more": "看更多"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",
