@@ -14,6 +14,7 @@
       <!-- TODO: 調整寫法 -->
       <component
         :is="componentName"
+        :has-pagination="hasNextPage"
         :dataset="componentData.dataset"
         :title="componentData.title"
         :segmentation="componentData.segmentation"
@@ -27,19 +28,12 @@
         :causes="componentData.causes"
         :description="componentData.description"
         :total="componentData.total"
+        @next="getNewPageInfo"
       ></component>
       <div class="task-note"
         v-for="(note, index) in notes" v-bind:key="index"
       >
         {{note}}
-      </div>
-      <div class="pagination-block"
-        v-if="hasNextPage"
-        :class="{'key-result-pagination': intend === 'key_result'}"
-      >
-        <button class="btn-m btn-default"
-          @click="getNewPageInfo"
-        >{{ $t('resultDescription.getMoreBtn') }}</button>
       </div>
     </template>
   </div>
@@ -234,26 +228,6 @@ export default {
     @keyframes gradient {
       0%   { background-position: 0 0; }
       100% { background-position: -200% 0; }
-    }
-  }
-
-  .pagination-block {
-    display: flex;
-    align-items: center;
-
-    &.key-result-pagination {
-      position: absolute;
-      top: -30px;
-      left: 0;
-    }
-
-    .btn-m {
-      margin-right: 12px;
-    }
-
-    .loading-percentage {
-      color: #fff;
-      font-size: 12px;
     }
   }
 }

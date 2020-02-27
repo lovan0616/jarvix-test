@@ -103,6 +103,7 @@ import CorrelationInsight from '@/components/display/CorrelationInsight'
 import RootCauseDescription from '@/components/display/RootCauseDescription'
 import QuickStart from '@/components/display/QuickStart'
 import Spinner from '@/components/Spinner'
+import ArrowButton from '@/components/resultBoard/ArrowButton'
 
 var Rollbar = require('vue-rollbar')
 
@@ -179,6 +180,7 @@ Vue.component(CorrelationInsight.name, CorrelationInsight)
 Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(QuickStart.name, QuickStart)
 Vue.component(Spinner.name, Spinner)
+Vue.component(ArrowButton.name, ArrowButton)
 
 /** Custom Rule */
 Validator.extend('requireOneNumeric', function (value) {

@@ -6,6 +6,11 @@
       auto-resize
     >
     </v-echart>
+    <arrow-button
+      v-if="hasPagination"
+      isVertical
+      @click.native="$emit('next')"
+    ></arrow-button>
   </div>
 </template>
 
@@ -30,7 +35,11 @@ export default {
       type: Number,
       default: 0
     },
-    height: {type: String, default: '420px'}
+    height: {type: String, default: '420px'},
+    hasPagination: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     chartStyle () {

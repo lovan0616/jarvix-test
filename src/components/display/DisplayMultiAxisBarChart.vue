@@ -7,6 +7,10 @@
       @brushselected="brushRegionSelected"
     >
     </v-echart>
+    <arrow-button
+      v-if="hasPagination"
+      @click.native="$emit('next')"
+    ></arrow-button>
     <selected-region
       v-if="selectedData.length > 0"
       :title="$t('resultDescription.currentChosenData')"
@@ -80,6 +84,10 @@ export default {
     height: {
       type: String,
       default: '420px'
+    },
+    hasPagination: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

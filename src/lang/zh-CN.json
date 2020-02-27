@@ -1125,7 +1125,8 @@
     "systemUnknownTokenList": "为无法辨识的字词",
     "beRecognized": "被辨识为",
     "systemQuestionAnalysis": "对 “{question}” 进行分析。其中",
-    "other": "其他"
+    "other": "其他",
+    "more": "看更多"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",
