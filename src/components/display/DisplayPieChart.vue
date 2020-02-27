@@ -6,6 +6,12 @@
       auto-resize
     >
     </v-echart>
+    <arrow-button
+      v-show="showPagination"
+      v-if="hasPagination"
+      isVertical
+      @click.native="$emit('next')"
+    ></arrow-button>
   </div>
 </template>
 
@@ -30,7 +36,16 @@ export default {
       type: Number,
       default: 0
     },
-    height: {type: String, default: '420px'}
+    height: {type: String, default: '420px'},
+    hasPagination: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+      showPagination: true
+    }
   },
   computed: {
     chartStyle () {
@@ -65,12 +80,15 @@ export default {
 
       // 數據顯示
       config.toolbox.feature.dataView.optionToContent = (opt) => {
+        if (this.hasPagination) {
+          this.$el.addEventListener('click', this.controlPagination, false)
+        }
         let dataset = opt.dataset[0].source
         let valueSum = dataset.reduce((acc, cur, index) => {
           return index === 0 ? acc : acc + cur[1]
         }, 0)
 
-        let table = `<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-secondary" type="button" id="export-btn">${this.$t('chart.export')}</button></div>` +
+        let table = `<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">${this.$t('chart.export')}</button></div>` +
           '<table style="margin-top: 16px;width:100%;padding: 0 16px;"><tbody><tr style="background-color:#2B4D51">' +
           '<td>' + dataset[0][0] + '</td>' +
           '<td>' + dataset[0][1] + '</td>' +
@@ -99,6 +117,15 @@ export default {
     }
   },
   methods: {
+    controlPagination () {
+      let exportBtn = document.getElementById('export-btn')
+      if (exportBtn) {
+        this.showPagination = false
+      } else {
+        this.showPagination = true
+        this.$el.removeEventListener('click', this.controlPagination, false)
+      }
+    },
     tobeDataset (dataset) {
       // 如果有 index 經過 Number() 後為數字 ，echart 會畫不出來，所以補個 [] 給他
       if (dataset.index) {

@@ -3,11 +3,9 @@
         <div class="pinboad-pin-box">
             <svg-icon icon-class="pin" class="icon pin-icon"></svg-icon>
         </div>
-        <div>
-            <div class="pinboard-name">{{ boardInfo.name }}</div>
-            <!-- <div class="pinboard-count">{{ $t('editing.pinboardNum') }}：1</div> -->
-        </div>
-        <div class="pinboad-hover-box">
+        <div class="pinboard-name">{{ boardInfo.name }}</div>
+        <div class="pinboard-action-block">
+          <div class="pinboad-hover-box">
             <svg-icon icon-class="more" class="icon more-icon"></svg-icon>
 
             <div class="pinboard-popup">
@@ -26,6 +24,7 @@
                     <div class="popup-text">{{ $t('button.share') }}</div>
                 </div>
             </div>
+          </div>
         </div>
     </div>
 </template>
