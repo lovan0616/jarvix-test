@@ -24,7 +24,6 @@
     </el-table>
     <el-pagination class="table-pagination"
       v-if="paginationInfo.totalPages > 1"
-      background
       layout="prev, pager, next"
       :total="paginationInfo.totalPages"
       :page-size="paginationInfo.itemPerPage"
@@ -85,13 +84,14 @@ export default {
     },
     nextPage () {
       if (this.paginationInfo.currentPage + 1 <= this.paginationInfo.totalPages) {
-        this.$emit('change-page', this.paginationInfo.currentPage + 1)
+        this.paginationInfo.currentPage += 1
+        this.$emit('change-page', this.paginationInfo.currentPage)
       }
     },
     prevPage () {
       if (this.paginationInfo.currentPage - 1 > 0) {
         this.paginationInfo.currentPage -= 1
-        this.$emit('change-page', this.paginationInfo.currentPage - 1)
+        this.$emit('change-page', this.paginationInfo.currentPage)
       }
     }
   },
@@ -127,23 +127,4 @@ export default {
   }
 }
 </style>
-<style lang="scss">
-.table-pagination.el-pagination {
-  text-align: center;
-
-  button, .el-pager li {
-    height: 30px;
-    border-radius: 4px;
-  }
-
-  &.is-background {
-    .btn-next, .btn-prev, .el-pager li {
-      color: #fff;
-      background-color: rgba(255, 255, 255, 0.16);
-    }
-    .el-pager li:not(.disabled).active {
-      background-color: $theme-color-primary;
-    }
-  }
-}
-</style>
+<style src="@/styles/element-ui/el-pagination.scss" lang="scss"></style>

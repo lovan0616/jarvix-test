@@ -41,6 +41,7 @@
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import PaginationTable from '@/components/table/PaginationTable'
+import { init } from 'echarts/lib/echarts'
 
 export default {
   name: 'PreviewDataSource',
@@ -98,7 +99,7 @@ export default {
             }
           })
           this.dataSourceTable = response[0]
-          this.fetchDataFrameData(this.dataSourceTable.id)
+          this.fetchDataFrameData(this.dataSourceTable.id, 0, true)
         })
         .catch(() => {
           this.hasError = true
@@ -111,16 +112,16 @@ export default {
     onDataSourceTableChange (id) {
       this.isLoading = true
       this.hasError = false
-      this.pagination.currentPage = 0
       this.setDataSourceTableById(id)
-      this.fetchDataFrameData(id)
+      this.fetchDataFrameData(id, 0, true)
     },
-    fetchDataFrameData (id) {
+    fetchDataFrameData (id, page=0, resetPagination=false) {
       this.isProcessing = true
-      this.$store.dispatch('dataSource/getDataFrameData', {id, page: this.pagination.currentPage})
+      this.$store.dispatch('dataSource/getDataFrameData', {id, page})
         .then(response => {
-          this.pagination = response.pagination
-
+          if (resetPagination) {
+            this.pagination = response.pagination
+          }
           this.dataSourceTableData = {
             columns: response.columns,
             data: response.data,
@@ -136,8 +137,7 @@ export default {
         })
     },
     updatePage (page) {
-      this.pagination.currentPage = page - 1
-      this.fetchDataFrameData(this.dataSourceTable.id)
+      this.fetchDataFrameData(this.dataSourceTable.id, page - 1)
     }
   }
 }
