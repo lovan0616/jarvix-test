@@ -17,9 +17,14 @@
         min-width="120"
       />
     </el-table>
+    <arrow-button
+      v-if="hasPagination"
+      right="20"
+      @click.native="$emit('next')"
+    ></arrow-button>
     <el-pagination class="table-pagination"
       v-if="totalPage > 1"
-      background
+      hide-on-single-page
       layout="prev, pager, next"
       :total="dataset.data.length"
       :page-size="countPerPage"
@@ -52,6 +57,10 @@ export default {
     indexWidth: {
       type: Number,
       default: 80
+    },
+    hasPagination: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -157,23 +166,4 @@ export default {
   }
 }
 </style>
-<style lang="scss">
-.table-pagination.el-pagination {
-  text-align: center;
-
-  button, .el-pager li {
-    height: 30px;
-    border-radius: 4px;
-  }
-
-  &.is-background {
-    .btn-next, .btn-prev, .el-pager li {
-      color: #fff;
-      background-color: rgba(255, 255, 255, 0.16);
-    }
-    .el-pager li:not(.disabled).active {
-      background-color: $theme-color-primary;
-    }
-  }
-}
-</style>
+<style src="@/styles/element-ui/el-pagination.scss" lang="scss"></style>
