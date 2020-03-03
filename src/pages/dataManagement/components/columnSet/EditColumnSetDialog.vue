@@ -26,11 +26,16 @@
         ></spinner>
         <single-column-set
           v-for="(singleColumnSet, index) in columnSetList"
-          :key="index"
+          :key="columnSetList.length - index"
           :column-list="columnList"
           :column-set="singleColumnSet"
           @remove="removeColumnSet(index)"
         ></single-column-set>
+        <empty-info-block
+          class="empty-info-block"
+          v-if="columnSetList.length === 0"
+          :msg="$t('message.emptyDataSet')"
+        ></empty-info-block>
       </div>
     </div>
   </div>
@@ -39,11 +44,13 @@
 import { getColumnSetList } from '@/API/ColumnSet'
 import { getDataFrameColumnInfoById } from '@/API/DataSource'
 import SingleColumnSet from './SingleColumnSet'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 export default {
   name: 'EditColumnSetDialog',
   components: {
-    SingleColumnSet
+    SingleColumnSet,
+    EmptyInfoBlock
   },
   props: {
     dataFrameInfo: {
@@ -143,6 +150,11 @@ export default {
   }
   .dialog-content-block {
     max-height: 70vh;
+
+    .empty-info-block {
+      background: rgba(50, 58, 58, 0.95);
+      font-size: 18px;
+    }
   }
 }
 </style>

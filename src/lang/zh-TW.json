@@ -29,6 +29,7 @@
     "addFilter": "保存成功",
     "emptyResult": "此搜尋條件並無對應資料",
     "emptyDataSource": "尚未建立資料源",
+    "emptyDataSet": "尚未建立任何資料集",
     "deleteSuccess": "刪除成功"
   },
   "guiding": {
@@ -256,6 +257,7 @@
     "cancel": "取消",
     "delete": "刪除",
     "confirm": "確認",
+    "close": "關閉", 
     "share": "分享",
     "shareLink": "分享連結",
     "edit": "編輯",
