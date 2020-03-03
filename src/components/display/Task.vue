@@ -1,6 +1,6 @@
 <template>
   <div class="task"
-    :class="{'task-mask': isGetPagination, 'has-pagination': hasPagination}"
+    :class="{'task-mask': isGetPagination}"
     :data-component-id="componentId"
     :data-result-id="resultId"
     :data-diagram-type="diagram"
@@ -65,7 +65,6 @@ export default {
         totalPages: 1
       },
       isGetPagination: false,
-      hasPagination: false,
       // 是否有下一頁資料
       hasNextPage: false,
       maxDataLengthPerPage: 200
@@ -146,7 +145,6 @@ export default {
                 this.isGetPagination = false
               })
             } else {
-              this.hasPagination = responseData.dataset && responseData.dataset.data.length === this.maxindexLengthPerPage
               this.componentData = responseData
             }
             this.loading = false
@@ -191,9 +189,6 @@ export default {
     },
     genGroupLimitNote (randomLimit) {
       return this.$t('resultNote.groupLimitNote', {randomLimit})
-    },
-    updateHasPaginationStatus (value) {
-
     }
   }
 }
