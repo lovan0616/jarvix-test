@@ -34,7 +34,7 @@
         <empty-info-block
           class="empty-info-block"
           v-if="columnSetList.length === 0"
-          :msg="$t('message.emptyDataSet')"
+          :msg="$t('message.emptyColumnSet')"
         ></empty-info-block>
       </div>
     </div>
@@ -151,7 +151,7 @@ export default {
   .dialog-content-block {
     max-height: 70vh;
 
-    .empty-info-block {
+    & >>> .empty-info-block {
       background: rgba(50, 58, 58, 0.95);
       font-size: 18px;
     }

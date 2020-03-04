@@ -29,7 +29,7 @@
     "addFilter": "保存成功",
     "emptyResult": "此搜寻条件并无对应资料",
     "emptyDataSource": "尚未建立资料源",
-    "emptyDataSet": "尚未建立任何资料集",
+    "emptyColumnSet": "尚未建立任何栏位集",
     "deleteSuccess": "删除成功"
   },
   "guiding": {
