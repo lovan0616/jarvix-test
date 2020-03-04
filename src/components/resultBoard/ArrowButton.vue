@@ -1,6 +1,7 @@
 <template>
   <div class="arrow-block"
     :class="{down: isVertical}"
+    :style="{right: `${right}px`}"
   >
     <div class="arrow"></div>
     <div class="arrow"></div>
@@ -14,6 +15,10 @@ export default {
     isVertical: {
       type: Boolean,
       default: false
+    },
+    right: {
+      type: Number,
+      default: 80
     }
   }
 }
@@ -22,7 +27,6 @@ export default {
 .arrow-block {
   position: absolute;
   top: 190px;
-  right: 80px;
   width: 45px;
   height: 45px;
   display: flex;
