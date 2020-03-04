@@ -110,12 +110,6 @@ export default {
       // width: calc(71.5% - 32px);
       flex: 1;
       margin-right: 32px;
-
-      & >>> .has-pagination {
-        &:not(:last-child) {
-          margin-bottom: 64px;
-        }
-      }
     }
 
     .basic-info-container {
