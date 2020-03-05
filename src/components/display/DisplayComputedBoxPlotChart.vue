@@ -101,6 +101,8 @@ export default {
             return [index, element]
           })
           return acc.concat(outliers)
+        } else {
+          return acc
         }
       }, [])
       chartAddon.series[0] = boxPlotChartConfig.chartData
