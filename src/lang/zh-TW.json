@@ -29,6 +29,7 @@
     "addFilter": "保存成功",
     "emptyResult": "此搜尋條件並無對應資料",
     "emptyDataSource": "尚未建立資料源",
+    "emptyColumnSet": "尚未建立任何欄位集",
     "deleteSuccess": "刪除成功"
   },
   "guiding": {
@@ -256,6 +257,7 @@
     "cancel": "取消",
     "delete": "刪除",
     "confirm": "確認",
+    "close": "關閉", 
     "share": "分享",
     "shareLink": "分享連結",
     "edit": "編輯",
@@ -296,7 +298,8 @@
     "saveAndBuild": "儲存並建置",
     "addColumnSet": "增加欄位集",
     "editColumnSet": "編輯欄位集",
-    "select": "選擇"
+    "select": "選擇",
+    "download": "資料下載"
   },
   "aggregation": {
     "mean": "平均",

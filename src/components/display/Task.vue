@@ -1,6 +1,6 @@
 <template>
   <div class="task"
-    :class="{'task-mask': isGetPagination, 'has-pagination': hasPagination}"
+    :class="{'task-mask': isGetPagination}"
     :data-component-id="componentId"
     :data-result-id="resultId"
     :data-diagram-type="diagram"
@@ -65,7 +65,6 @@ export default {
         totalPages: 1
       },
       isGetPagination: false,
-      hasPagination: false,
       // 是否有下一頁資料
       hasNextPage: false,
       maxDataLengthPerPage: 200
@@ -102,14 +101,11 @@ export default {
 
             let responseData = response.data
             if (responseData.dataset) {
-              if (response.diagram === 'line_chart') {
-                /**
-                 * 針對 line_chart 分頁處理
-                 * 如果 data 最後一個 array 裡的資料有空值代表後面還有資料
-                 **/
-                this.hasNextPage = responseData.dataset.data.length * responseData.dataset.columns.length >= 200
+              // 如果拿到的資料為空 表示這一頁已經是最後一頁了
+              if (responseData.dataset.data.length === 0) {
+                this.hasNextPage = false
               } else {
-                this.hasNextPage = responseData.dataset.data.length === this.maxDataLengthPerPage
+                this.hasNextPage = true
               }
             } else {
               this.hasNextPage = false
@@ -119,14 +115,11 @@ export default {
             if (this.pagination.currentPage !== 0) {
               if (response.diagram === 'line_chart') {
                 let indexLength = this.componentData.dataset.index.length
-
                 if (responseData.dataset.index.length === 1) {
-                  // 代表是最後一頁資料
-                  this.hasNextPage = false
                   let restDataLength = responseData.dataset.data[0].length
                   this.componentData.dataset.data[indexLength - 1].splice(this.componentData.dataset.columns.length - restDataLength, restDataLength)
                   this.componentData.dataset.data[indexLength - 1] = this.componentData.dataset.data[indexLength - 1].concat(responseData.dataset.data[0])
-                } else {
+                } else if (responseData.dataset.index.length > 1) {
                   let firstNotNullIndex = responseData.dataset.data[0].findIndex(element => element !== null)
                   // 檢查有沒有空值
                   if (firstNotNullIndex > 0) {
@@ -152,7 +145,6 @@ export default {
                 this.isGetPagination = false
               })
             } else {
-              this.hasPagination = responseData.dataset && responseData.dataset.data.length === this.maxindexLengthPerPage
               this.componentData = responseData
             }
             this.loading = false
@@ -197,9 +189,6 @@ export default {
     },
     genGroupLimitNote (randomLimit) {
       return this.$t('resultNote.groupLimitNote', {randomLimit})
-    },
-    updateHasPaginationStatus (value) {
-
     }
   }
 }

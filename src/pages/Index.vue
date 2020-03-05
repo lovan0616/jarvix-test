@@ -67,7 +67,6 @@ export default {
         )
       }).catch(() => {
         this.isLoading = false
-        this.isNoResult = true
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
       })
     }

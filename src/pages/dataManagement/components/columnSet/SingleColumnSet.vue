@@ -2,63 +2,78 @@
   <div class="single-edit-region">
     <div class="button-block">
       <button type="button" class="btn btn-default btn-save"
-        v-if="!columnSet.id"
+        v-if="!columnSet.id && isEditing"
         @click="saveColumnSet"
       >{{ $t('button.build') }}</button>
-      <button type="button" class="btn btn-secondary btn-delete"
+      <button type="button" class="btn btn-delete"
         @click="removeColumnSet"
-      >{{ $t('button.delete') }}</button>
+        v-if="isEditing"
+        :class="columnSet.id ? 'btn-secondary' : 'btn-outline'"
+      >{{ columnSet.id ? $t('button.delete') : $t('button.cancel') }}</button>
+      <button type="button" class="btn btn-outline"
+        @click="toggleIsEditing()"
+        v-if="!isEditing"
+      >{{ $t('button.edit') }}</button>
+      <button type="button" class="btn btn-outline"
+        @click="toggleIsEditing()"
+        v-if="columnSet.id && isEditing"
+      >{{ $t('button.close') }}</button>
     </div>
-    <div class="input-block">
-      <label for="" class="label">*{{ $t('editing.columnSetName') }}</label>
-      <input type="text" class="input"
-        v-if="!columnSet.id"
-        :placeholder="$t('editing.pleaseEnterName')"
-        v-model="columnSet.primaryAlias"
-      >
-      <div
-        v-else
-      >{{ columnSet.primaryAlias }}</div>
+    <div class="region-title" v-if="!isEditing">
+      {{ columnSet.primaryAlias }}
     </div>
-    <div class="select-container">
-      <div class="select-block">
-        <div class="block-title">{{ $t('editing.notSelect') }}</div>
-        <div class="option-list-block">
-          <div class="single-option"
-            v-for="(column, index) in columnOptionList"
-            :key="column.id"
-          >
-            <div class="info name">{{ column.name }}</div>
-            <div class="info alias">{{ column.primaryAlias }}</div>
-            <button class="btn-m btn-default btn-select"
-              @click="selectColumn(index)"
-            >{{ $t('button.select') }}</button>
+    <template v-else>
+      <div class="input-block">
+        <label for="" class="label">*{{ $t('editing.columnSetName') }}</label>
+        <input type="text" class="input"
+          v-if="!columnSet.id"
+          :placeholder="$t('editing.pleaseEnterName')"
+          v-model="columnSet.primaryAlias"
+        >
+        <div
+          v-else
+        >{{ columnSet.primaryAlias }}</div>
+      </div>
+      <div class="select-container">
+        <div class="select-block">
+          <div class="block-title">{{ $t('editing.notSelect') }}</div>
+          <div class="option-list-block">
+            <div class="single-option"
+              v-for="(column, index) in columnOptionList"
+              :key="column.id"
+            >
+              <div class="info name">{{ column.name }}</div>
+              <div class="info alias">{{ column.primaryAlias }}</div>
+              <button class="btn-m btn-default btn-select"
+                @click="selectColumn(index)"
+              >{{ $t('button.select') }}</button>
+            </div>
+          </div>
+        </div>
+        <div class="icon-block">
+          <svg-icon icon-class="go-right" class="arrow-icon"></svg-icon>
+          <svg-icon icon-class="go-right" class="arrow-icon left"></svg-icon>
+        </div>
+        <div class="select-block">
+          <div class="block-title">{{ $t('editing.alreadySelect') }}</div>
+          <div class="option-list-block">
+            <div class="single-option"
+              v-for="(column, index) in columnSet.dataColumnList"
+              :key="column.id"
+            >
+              <div class="info name">{{ column.name }}</div>
+              <div class="info alias">{{ column.primaryAlias }}</div>
+              <button class="btn-m btn-secondary btn-select"
+                @click="cancelSelect(index)"
+              >{{ $t('button.cancel') }}</button>
+            </div>
+            <div class="empty-select"
+              v-if="columnSet.dataColumnList.length === 0"
+            >{{ $t('editing.selectYet') }}</div>
           </div>
         </div>
       </div>
-      <div class="icon-block">
-        <svg-icon icon-class="go-right" class="arrow-icon"></svg-icon>
-        <svg-icon icon-class="go-right" class="arrow-icon left"></svg-icon>
-      </div>
-      <div class="select-block">
-        <div class="block-title">{{ $t('editing.alreadySelect') }}</div>
-        <div class="option-list-block">
-          <div class="single-option"
-            v-for="(column, index) in columnSet.dataColumnList"
-            :key="column.id"
-          >
-            <div class="info name">{{ column.name }}</div>
-            <div class="info alias">{{ column.primaryAlias }}</div>
-            <button class="btn-m btn-secondary btn-select"
-              @click="cancelSelect(index)"
-            >{{ $t('button.cancel') }}</button>
-          </div>
-          <div class="empty-select"
-            v-if="columnSet.dataColumnList.length === 0"
-          >{{ $t('editing.selectYet') }}</div>
-        </div>
-      </div>
-    </div>
+    </template>
   </div>
 </template>
 <script>
@@ -86,7 +101,8 @@ export default {
   },
   data () {
     return {
-      columnOptionList: []
+      columnOptionList: [],
+      isEditing: !this.columnSet.id
     }
   },
   mounted () {
@@ -108,7 +124,7 @@ export default {
           return this.columnSet.dataColumnList.findIndex(column => column.dataColumnId === element.id) === -1
         })
       } else {
-        this.columnOptionList = this.columnList
+        this.columnOptionList = JSON.parse(JSON.stringify(this.columnList))
       }
     },
     selectColumn (index) {
@@ -132,10 +148,11 @@ export default {
     },
     cancelSelect (index) {
       let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)
-      this.columnOptionList.push(cancelColumnInfo[0])
+      const {id: dataColumnId, dataColumnId: id, ...otherData} = cancelColumnInfo[0]
+      this.columnOptionList.push({id, dataColumnId, ...otherData})
 
       if (this.columnSet.id) {
-        removeColumnSetColumn(cancelColumnInfo[0].id).then(() => {
+        removeColumnSetColumn(dataColumnId).then(() => {
           Message({
             message: this.$t('message.deleteSuccess'),
             type: 'success',
@@ -157,6 +174,7 @@ export default {
         })
         this.columnSet.id = response.id
         this.columnSet.dataColumnList = response.dataColumnList
+        this.toggleIsEditing()
       })
     },
     removeColumnSet () {
@@ -172,6 +190,9 @@ export default {
       } else {
         this.$emit('remove')
       }
+    },
+    toggleIsEditing () {
+      this.isEditing = !this.isEditing
     }
   }
 }
@@ -180,11 +201,10 @@ export default {
 .single-edit-region {
   position: relative;
   width: 100%;
-  height: 484px;
   padding: 24px;
   background: rgba(50, 58, 58, 0.95);
   border-radius: 5px;
-  margin-bottom: 32px;
+  margin-bottom: 12px;
 
   .button-block {
     position: absolute;
@@ -193,6 +213,24 @@ export default {
 
     .btn:not(:last-child) {
       margin-right: 12px;
+    }
+
+    .btn {
+      &-outline {
+        &:hover {
+          border-color: $theme-text-color;
+          color: $theme-text-color;
+          background-color: $theme-color-primary;
+        }
+      }
+
+      &-delete {
+        &:hover {
+          background-color: transparent;
+          color: $theme-color-primary;
+          border: 1px solid $theme-color-white;
+        }
+      }
     }
   }
 
@@ -217,6 +255,11 @@ export default {
     .input {
       height: 40px;
     }
+  }
+
+  .region-title {
+    width: 301px;
+    line-height: 36px;
   }
 
   .select-container {
