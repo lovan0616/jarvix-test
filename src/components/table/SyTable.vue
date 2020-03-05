@@ -1,5 +1,9 @@
 <template>
   <div class="sy-table-block">
+    <button type="button" class="btn-m btn-default btn-download"
+      v-if="appQuestion"
+      @click="downloadData"
+    >{{ $t('button.download') }}</button>
     <el-table class="sy-table"
       v-bind="tableProps"
       style="width: 100%;"
@@ -19,7 +23,7 @@
     </el-table>
     <arrow-button
       v-if="hasPagination"
-      right="20"
+      :right="20"
       @click.native="$emit('next')"
     ></arrow-button>
     <el-pagination class="table-pagination"
@@ -82,9 +86,18 @@ export default {
       if (this.currentPage - 1 > 0) {
         this.currentPage -= 1
       }
+    },
+    downloadData () {
+      let tableData = JSON.parse(JSON.stringify(this.dataset.data))
+      tableData.unshift(this.dataset.columns)
+      let fileName = this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + this.appQuestion
+      this.exportToCSV(fileName, tableData)
     }
   },
   computed: {
+    appQuestion () {
+      return this.$store.state.dataSource.appQuestion
+    },
     totalPage () {
       return Math.ceil(this.dataset.data.length / this.countPerPage)
     },
@@ -158,11 +171,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 .sy-table-block {
+  position: relative;
   width: 100%;
   height: auto;
 
   .sy-table {
     margin-bottom: 16px;
+  }
+
+  .btn-download {
+    position: absolute;
+    top: -30px;
+    left: 0;
   }
 }
 </style>
