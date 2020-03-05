@@ -41,7 +41,6 @@
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import PaginationTable from '@/components/table/PaginationTable'
-import { init } from 'echarts/lib/echarts'
 
 export default {
   name: 'PreviewDataSource',
@@ -115,7 +114,7 @@ export default {
       this.setDataSourceTableById(id)
       this.fetchDataFrameData(id, 0, true)
     },
-    fetchDataFrameData (id, page=0, resetPagination=false) {
+    fetchDataFrameData (id, page = 0, resetPagination = false) {
       this.isProcessing = true
       this.$store.dispatch('dataSource/getDataFrameData', {id, page})
         .then(response => {

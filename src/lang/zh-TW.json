@@ -298,7 +298,8 @@
     "saveAndBuild": "儲存並建置",
     "addColumnSet": "增加欄位集",
     "editColumnSet": "編輯欄位集",
-    "select": "選擇"
+    "select": "選擇",
+    "download": "資料下載"
   },
   "aggregation": {
     "mean": "平均",

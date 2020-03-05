@@ -115,10 +115,14 @@ Vue.mixin({
       }
     },
     datasetTransform (dataset) {
+      // 如果 columns 的名稱為數字，就補個空格給他，不然會被 echarts 辨識為數字
+      let dataColumn = dataset.columns.map(element => {
+        return isNaN(Number(element)) ? element : ' ' + element
+      })
       let result = dataset.data.map((element, index) => {
         return [dataset.index[index], ...element]
       })
-      return [['index', ...dataset.columns], ...result]
+      return [['index', ...dataColumn], ...result]
     },
     // 藉由後端的 template 名稱對應到前端的 component name
     getChartTemplate (value) {
