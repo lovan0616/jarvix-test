@@ -188,6 +188,7 @@ Validator.extend('requireOneNumeric', function (value) {
 })
 
 Validator.extend('letterSpace', function (value) {
+  // 含簡繁體、英文、空格
   return /^[\u4e00-\u9fa5_a-zA-Z\s]*$/i.test(value)
 })
 
