@@ -16,23 +16,27 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   inject: ['$validator'],
   name: 'DataInputVerify',
   props: {
     name: {
-      type: String
+      type: String,
+      required: true
     },
     placeholder: {
-      type: String
+      type: String,
+      default: ''
     },
     type: {
       type: String,
       default: 'text'
     },
     value: {
-      type: String
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -47,8 +51,8 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
 
+<style lang="scss" scoped>
 .input-verify {
   position: relative;
 
