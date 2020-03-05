@@ -55,13 +55,18 @@
                   <div class="edit-block"
                     v-if="currentEditValueIndex === index"
                   >
-                    <div class="input-block edit-alias-input-block"
+                    <div class="edit-alias-input-block"
                       v-for="(singleAlias, aliasIndex) in tempAliasInfo"
                       :key="index + '-' + aliasIndex"
                     >
-                      <input type="text" class="input"
+                      <data-input-verify
                         v-model="singleAlias.name"
-                      >
+                        type="text"
+                        class="input-verify"
+                        :name="index + '-' + aliasIndex"
+                        :placeholder="$t('editing.pleaseEnterName')"
+                        v-validate="'letterSpace|max:20'"
+                      />
                       <div class="link"
                         @click="removeAlias(aliasIndex)"
                       >{{ $t('button.remove') }}</div>
@@ -114,9 +119,14 @@ import { getDataColumnDataValue } from '@/API/DataSource'
 import { getValueAlias, saveValueAlias } from '@/API/Alias'
 import { getSelfInfo } from '@/API/User'
 import { Message } from 'element-ui'
+import DataInputVerify from '../DataInputVerify'
 
 export default {
   name: 'ValueAliasDialog',
+  inject: ['$validator'],
+  components: {
+    DataInputVerify
+  },
   props: {
     dataFrameInfo: {
       type: Object,
@@ -210,25 +220,33 @@ export default {
     },
     removeAlias (index) {
       this.tempAliasInfo.splice(index, 1)
+      // 確保已經從 DOM 中移除欄位才能驗證到正確名稱的欄位
+      this.$nextTick(() => {
+        // 重新驗證所有欄位
+        this.$validator.validateAll()
+      })
     },
     cancelEditAlias () {
       this.currentEditValueIndex = null
       this.tempAliasInfo = null
     },
     saveAlias (index) {
-      // 比較編輯前後是否有差異
-      this.tempAliasInfo.forEach(element => {
-        if (!element.isModified) {
-          element.isModified = this.currentColumnInfo.aliasList[index].alias.findIndex(item => item.name === element.name) < 0
-        }
+      this.$validator.validateAll().then(result => {
+        if (!result) return
+        // 比較編輯前後是否有差異
+        this.tempAliasInfo.forEach(element => {
+          if (!element.isModified) {
+            element.isModified = this.currentColumnInfo.aliasList[index].alias.findIndex(item => item.name === element.name) < 0
+          }
+        })
+        // 過濾掉空字串
+        this.tempAliasInfo = this.tempAliasInfo.filter(element => element.name !== null && element.name !== '')
+
+        this.currentColumnInfo.aliasList[index].alias = this.tempAliasInfo
+        this.currentColumnInfo.aliasList[index].isSaved = true
+
+        this.cancelEditAlias()
       })
-      // 過濾掉空字串
-      this.tempAliasInfo = this.tempAliasInfo.filter(element => element.name !== null && element.name !== '')
-
-      this.currentColumnInfo.aliasList[index].alias = this.tempAliasInfo
-      this.currentColumnInfo.aliasList[index].isSaved = true
-
-      this.cancelEditAlias()
     },
     buildAlias () {
       let aliasInfo = this.dataColumnListInfo.reduce((acc, cur) => {
@@ -389,16 +407,19 @@ export default {
 
     .edit-alias-input-block {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
 
       &:not(:last-child) {
         margin-bottom: 12px;
       }
 
-      .input {
+      & >>> .input-verify {
         width: 105px;
         margin-right: 12px;
-        padding-bottom: 0;
+      }
+
+      .link {
+        line-height: 32px;
       }
     }
 
