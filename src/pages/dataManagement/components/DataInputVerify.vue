@@ -72,14 +72,13 @@ export default {
 
     &.error {
       border-bottom-color: $theme-color-danger;
-      margin-bottom: 25px;
+      margin-bottom: 8px;
     }
   }
 
   .input-error {
     position: absolute;
-    bottom: 0;
-    line-height: 25px;
+    top: 36px;
     text-align: left;
   }
 }
