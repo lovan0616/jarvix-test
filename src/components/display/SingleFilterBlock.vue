@@ -30,7 +30,7 @@
           </div>
           <div class="tooltip-content-item-description">
             <template v-if="restraint.type === 'enum'">
-              {{restraint.properties['display_name']}} = {{restraint.properties['datavalues'].join(', ')}}
+              {{restraint.properties['display_name']}} = {{restraint.properties['display_datavalues'].join(', ')}}
             </template>
             <template v-if="restraint.type === 'range'">
               {{restraint.properties['display_name']}} = {{ $t('resultDescription.between', {
