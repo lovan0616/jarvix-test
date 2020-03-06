@@ -12,6 +12,7 @@
           @click="closeDialog"
          ><svg-icon icon-class="close"></svg-icon></a>
       </div>
+      <div class="dialog-header">{{ $t('editing.dataFrame') }}：{{ tableInfo.primaryAlias }}</div>
       <div class="edit-table-block">
         <div class="data-table">
           <div class="data-table-head is-scrolling">
@@ -194,8 +195,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .edit-column-dialog {
-  .dialog-title {
-    position: relative;
+  .dialog {
+    &-title {
+      position: relative;
+    }
+    &-header {
+      margin-bottom: 12px;
+    }
   }
   .edit-table-block {
     margin-bottom: 32px;
