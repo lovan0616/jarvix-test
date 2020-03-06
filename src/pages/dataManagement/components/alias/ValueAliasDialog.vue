@@ -20,7 +20,7 @@
           <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
           <button type="button" class="btn btn-default"
             @click="buildAlias"
-          >{{ $t('button.build') }}</button>
+          >{{ $t('button.save') }}</button>
         </div>
       </div>
       <div class="dialog-content-block">
@@ -100,7 +100,7 @@
                   >
                     <a href="javascript:void(0);" class="link action-link"
                       @click="saveAlias(index)"
-                    >{{ $t('button.save') }}</a>
+                    >{{ $t('button.finish') }}</a>
                     <a href="javascript:void(0);" class="link action-link"
                       @click="cancelEditAlias"
                     >{{ $t('button.cancel') }}</a>
