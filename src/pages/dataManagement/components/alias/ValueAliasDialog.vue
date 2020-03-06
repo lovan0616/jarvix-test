@@ -233,14 +233,16 @@ export default {
     saveAlias (index) {
       this.$validator.validateAll().then(result => {
         if (!result) return
-        // 比較編輯前後是否有差異
-        this.tempAliasInfo.forEach(element => {
-          if (!element.isModified) {
-            element.isModified = this.currentColumnInfo.aliasList[index].alias.findIndex(item => item.name === element.name) < 0
-          }
-        })
-        // 過濾掉空字串
-        this.tempAliasInfo = this.tempAliasInfo.filter(element => element.name !== null && element.name !== '')
+        this.tempAliasInfo = this.tempAliasInfo.reduce((result, element) => {
+          // 過濾掉空字串
+          if (element.name === null || element.name === '') return result
+          if (element.isModified) return result.concat(element)
+          // 比較編輯前後是否有差異
+          return result.concat({
+            ...element,
+            isModified: this.currentColumnInfo.aliasList[index].alias.findIndex(item => item.name === element.name) < 0
+          })
+        }, [])
 
         this.currentColumnInfo.aliasList[index].alias = this.tempAliasInfo
         this.currentColumnInfo.aliasList[index].isSaved = true
