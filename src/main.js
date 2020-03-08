@@ -187,6 +187,11 @@ Validator.extend('requireOneNumeric', function (value) {
   return /.*[0-9].*/i.test(value)
 })
 
+Validator.extend('letterSpace', function (value) {
+  // 含簡繁體、英文、空格
+  return /^[\u4e00-\u9fa5_a-zA-Z\s]*$/i.test(value)
+})
+
 Vue.use(VeeValidate, {
   // 避免自動 inject 到所有 component
   inject: false,
@@ -216,6 +221,9 @@ Vue.use(VeeValidate, {
         },
         confirmed () {
           return i18n.t('message.pleaseConfirmPassword')
+        },
+        letterSpace () {
+          return i18n.t('message.formLetterSpaceEmpty')
         }
       }
     },
@@ -241,6 +249,9 @@ Vue.use(VeeValidate, {
         },
         confirmed () {
           return i18n.t('message.pleaseConfirmPassword')
+        },
+        letterSpace () {
+          return i18n.t('message.formLetterSpaceEmpty')
         }
       }
     }
