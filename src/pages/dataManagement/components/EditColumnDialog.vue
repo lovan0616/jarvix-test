@@ -2,15 +2,17 @@
   <div class="edit-column-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="dialog-title">{{ $t('editing.dataColumn') }}
-         <button class="btn-m btn-default build-btn"
+        <a href="javascript:void(0)" class="close-btn"
+          @click="closeDialog"
+         ><svg-icon icon-class="close"></svg-icon></a>
+      </div>
+      <div class="dialog-header-block">
+        <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ tableInfo.primaryAlias }}</div>
+        <button class="btn-m btn-default"
           v-if="userEditInfo.userEditedColumnInputList.length > 0"
           :disabled="isProcessing"
           @click="updateDataSource"
-        >{{ $t('button.build') }}</button>
-        <a href="javascript:void(0)" class="close-btn"
-          v-else
-          @click="closeDialog"
-         ><svg-icon icon-class="close"></svg-icon></a>
+        >{{ $t('button.save') }}</button>
       </div>
       <div class="edit-table-block">
         <div class="data-table">
@@ -66,7 +68,7 @@
                   :disabled="isProcessing"
                   v-if="tempRowInfo.dataColumnId === column.id"
                   @click="save"
-                >{{ $t('button.save') }}</a>
+                >{{ $t('button.finish') }}</a>
                 <a class="link action-link" href="javascript:void(0)"
                   :disabled="isProcessing"
                   v-if="tempRowInfo.dataColumnId === column.id"
@@ -147,7 +149,7 @@ export default {
       this.isProcessing = true
 
       updateDataFrameAlias(this.userEditInfo).then(() => {
-        this.$router.push('/data-management')
+        this.closeDialog()
       }).catch(() => {
         this.cancel()
       })
@@ -165,7 +167,8 @@ export default {
       let hasId = false
       this.userEditInfo.userEditedColumnInputList.forEach(element => {
         if (element.dataColumnId === this.tempRowInfo.dataColumnId) {
-          element = this.tempRowInfo
+          element.alias = this.tempRowInfo.alias
+          element.columnStatsType = this.tempRowInfo.columnStatsType
           hasId = true
         }
       })
@@ -193,8 +196,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 .edit-column-dialog {
-  .dialog-title {
-    position: relative;
+  .dialog {
+    &-title {
+      position: relative;
+    }
+    &-header-block {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      line-height: 30px;
+    }
   }
   .edit-table-block {
     margin-bottom: 32px;
@@ -205,11 +216,6 @@ export default {
     right: 0;
     color: #fff;
     font-size: 14px;
-  }
-  .build-btn {
-    position: absolute;
-    top: 4px;
-    right: 0;
   }
   .name {
     width: 30%;
