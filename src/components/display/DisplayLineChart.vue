@@ -121,15 +121,11 @@ export default {
       }
     },
     series () {
-      return this.dataset.columns.map((element, colIndex) => {
-        return {
-          // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
-          name: isNaN(Number(element)) ? element : ' ' + element,
-          ...this.addonSeriesItem,
-          ...this.addonSeriesItems[colIndex],
-          connectNulls: true
-        }
-      })
+      if (this.dataset.display_columns) {
+        return this.dataset.display_columns.map((element, colIndex) => this.composeColumn(element, colIndex))
+      } else {
+        return this.dataset.columns.map((element, colIndex) => this.composeColumn(element, colIndex))
+      }
     },
     options () {
       let config = {
@@ -214,6 +210,15 @@ export default {
     }
   },
   methods: {
+    composeColumn (element, colIndex) {
+      return {
+        // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
+        name: isNaN(Number(element)) ? element : ' ' + element,
+        ...this.addonSeriesItem,
+        ...this.addonSeriesItems[colIndex],
+        connectNulls: true
+      }
+    },
     controlPagination () {
       let exportBtn = document.getElementById('export-btn')
       if (exportBtn) {

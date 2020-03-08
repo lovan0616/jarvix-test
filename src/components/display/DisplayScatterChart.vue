@@ -35,7 +35,7 @@
 <script>
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
-import { getDrillDownTool } from '@/components/display/common/addons.js'
+import { getDrillDownTool, twoAxisZoomIn } from '@/components/display/common/addons.js'
 let scatterChartConfig = {
   xAxisSplitLine: {
     show: false
@@ -151,6 +151,7 @@ export default {
       this.$set(chartAddon.xAxis, 'splitLine', scatterOptions.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterOptions.yAxisSplitLine)
       chartAddon.tooltip.formatter = tooltipFormatterWrapper(this.title)
+      chartAddon.dataZoom = twoAxisZoomIn()
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
       chartAddon.yAxis.name = this.title.yAxis[0].display_name
       scatterOptions.chartData.data = this.dataset.data
