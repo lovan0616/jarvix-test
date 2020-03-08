@@ -126,12 +126,15 @@ export default {
         this.$el.removeEventListener('click', this.controlPagination, false)
       }
     },
+    modifyPureNumber (element) {
+      return isNaN(Number(element)) ? element : '[' + element + ']'
+    },
     tobeDataset (dataset) {
       // 如果有 index 經過 Number() 後為數字 ，echart 會畫不出來，所以補個 [] 給他
-      if (dataset.index) {
-        dataset.index = dataset.index.map(element => {
-          return isNaN(Number(element)) ? element : '[' + element + ']'
-        })
+      if (dataset.display_index) {
+        dataset.display_index = dataset.display_index.map(element => this.modifyPureNumber(element))
+      } else if (dataset.index) {
+        dataset.index = dataset.index.map(element => this.modifyPureNumber(element))
       }
       /**
        * 檢查是否有 “其他” 的類別
@@ -141,12 +144,12 @@ export default {
       let otherCount = this.total - totalSum
 
       let result = dataset.data.map((element, index) => {
-        return [dataset.index[index], ...element]
+        return dataset.display_index ? [dataset.display_index[index], ...element] : [dataset.index[index], ...element]
       })
       if (otherCount > 0) {
         result.push([this.$t('resultDescription.other'), otherCount])
       }
-      return [['index', ...dataset.columns], ...result]
+      return [['index', ...dataset.display_columns ? dataset.display_columns : dataset.columns], ...result]
     }
   }
 }

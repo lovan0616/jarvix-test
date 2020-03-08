@@ -20,9 +20,9 @@
           <div class="filter-description">
             <div class="column-name">{{singleType.properties.display_name}} =</div>
             <div class="single-filter"
-              v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
+              v-for="(singleData, propertiesIndex) in singleType.properties.display_datavalues"
               :key="'enum-' + propertiesIndex"
-            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
+            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.display_datavalues.length - 1">、</span></div>
           </div>
         </div>
       </div>
@@ -100,17 +100,11 @@ export default {
       }
     },
     series () {
-      return this.dataset.columns.map((element, colIndex) => {
-        return {
-          // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
-          name: isNaN(Number(element)) ? element : ' ' + element,
-          ...this.addonSeriesItem,
-          ...this.addonSeriesItems[colIndex],
-          connectNulls: true,
-          stack: 'count',
-          areaStyle: {}
-        }
-      })
+      if (this.dataset.display_columns) {
+        return this.dataset.display_columns.map((element, colIndex) => this.composeColumn(element, colIndex))
+      } else {
+        return this.dataset.columns.map((element, colIndex) => this.composeColumn(element, colIndex))
+      }
     },
     options () {
       let config = {
@@ -187,6 +181,17 @@ export default {
     }
   },
   methods: {
+    composeColumn (element, colIndex) {
+      return {
+        // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
+        name: isNaN(Number(element)) ? element : ' ' + element,
+        ...this.addonSeriesItem,
+        ...this.addonSeriesItems[colIndex],
+        connectNulls: true,
+        stack: 'count',
+        areaStyle: {}
+      }
+    },
     brushRegionSelected (params) {
       if (params.batch[0].selected[0].dataIndex.length === 0) {
         this.selectedData = []
@@ -200,6 +205,9 @@ export default {
           display_name: this.title.xAxis[0].display_name,
           datavalues: params.batch[0].selected[0].dataIndex.map(element => {
             return this.dataset.index[element]
+          }),
+          display_datavalues: params.batch[0].selected[0].dataIndex.map(element => {
+            return this.dataset.display_index ? this.dataset.display_index[element] : this.dataset.index[element]
           })
         }
       }]

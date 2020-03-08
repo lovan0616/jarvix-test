@@ -14,6 +14,7 @@
     "formColumnEmpty": "欄位不得空白",
     "formMailWrong": "信箱格式錯誤",
     "formNumberEmpty": "請輸入數字",
+    "formLetterSpaceEmpty": "請填字串(含空格)",
     "formCharacterOverMax": "最多{max}個字元",
     "formCharacterOverMin": "最少{min}個字元",
     "formNumericeOverOne": "最少包含1個數字",

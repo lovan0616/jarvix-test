@@ -115,12 +115,22 @@ Vue.mixin({
       }
     },
     datasetTransform (dataset) {
-      // 如果 columns 的名稱為數字，就補個空格給他，不然會被 echarts 辨識為數字
-      let dataColumn = dataset.columns.map(element => {
+      function checkSpace (element) {
         return isNaN(Number(element)) ? element : ' ' + element
-      })
+      }
+      /**
+       * 如果 columns 的名稱為數字，就補個空格給他，不然會被 echarts 辨識為數字
+       * 先判斷 display_column 有沒有值，有就顯示 display_column 的資訊
+       **/
+      let dataColumn
+      if (dataset.display_columns) {
+        dataColumn = dataset.display_columns.map(element => checkSpace(element))
+      } else {
+        dataColumn = dataset.columns.map(element => checkSpace(element))
+      }
+
       let result = dataset.data.map((element, index) => {
-        return [dataset.index[index], ...element]
+        return [dataset.display_index ? dataset.display_index[index] : dataset.index[index], ...element]
       })
       return [['index', ...dataColumn], ...result]
     },
