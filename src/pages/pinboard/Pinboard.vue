@@ -20,6 +20,7 @@
         :data-pinboard-id="result.pinboardId"
         :data-data-source-id="result.dataSourceId"
         :resultInfo="result.info"
+        :restrictions="result.restrictions"
       ></component>
   </div>
 </template>
@@ -76,6 +77,7 @@ export default {
               break
             case 'Complete':
               currentResult.info = componentResponse.componentIds
+              currentResult.restrictions = componentResponse.restrictions
               currentResult.layout = this.getLayout(componentResponse.layout)
               this.$nextTick(() => {
                 this.isLoading = false

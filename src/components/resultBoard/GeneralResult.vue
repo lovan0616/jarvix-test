@@ -1,6 +1,7 @@
 <template>
   <result-board
     :result-info="resultInfo"
+    :restrictions="restrictions"
   >
     <template slot="PageResultBoardHeader">
       <task
@@ -50,6 +51,10 @@ export default {
   props: {
     resultInfo: {
       type: Object
+    },
+    restrictions: {
+      type: Array,
+      default: () => []
     }
   },
   mounted () {
