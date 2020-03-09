@@ -60,6 +60,12 @@ export default {
           })
             .then(res => {
               localStorage.setItem('token', res.accessToken)
+              // TODO: 保留使用者因 token 失效重新登入前的頁面資料與狀態
+              const dataSourceId = this.$store.state.dataSource.dataSourceId
+              // 用戶若因 token 失效需重新登入，使用先前已選擇的 id 取得相關資料
+              if (dataSourceId) {
+                this.$store.dispatch('dataSource/changeDataSourceById', dataSourceId)
+              }
               this.$router.push('/')
             })
         }
