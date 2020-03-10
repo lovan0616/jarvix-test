@@ -169,6 +169,12 @@ export default {
           case 'Fail':
             window.clearTimeout(this.timeoutFunction)
             this.loading = false
+            // 如果取分頁資料 fail，當作無資料來處理
+            if (this.pagination.currentPage > 0) {
+              this.hasNextPage = false
+              this.isGetPagination = false
+              break
+            }
             if (this.intend === 'key_result') this.isError = true
             break
         }

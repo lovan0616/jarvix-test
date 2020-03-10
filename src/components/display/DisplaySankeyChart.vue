@@ -69,16 +69,20 @@ export default {
     dataTransform () {
       this.dataset.columns.forEach(element => {
         for (let column in this.dataset.data[element]) {
+          /**
+           * 注意！！
+           * 如果 target / source 是數字的話會有問題，只好先轉 String 再送進去
+           */
           this.dataset.data[element][column].forEach(singleLink => {
             this.linkList.push({
-              source: singleLink[0],
-              target: singleLink[1],
+              source: singleLink[0].toString(),
+              target: singleLink[1].toString(),
               value: singleLink[2]
             })
             for (let i = 0; i < 2; i++) {
-              if (this.dataList.findIndex(node => node.name === singleLink[i]) < 0) {
+              if (this.dataList.findIndex(node => node.name.toString() === singleLink[i].toString()) < 0) {
                 this.dataList.push({
-                  name: singleLink[i]
+                  name: singleLink[i].toString()
                 })
               }
             }
@@ -93,7 +97,6 @@ export default {
 
       sankeyOptions.series[0].data = this.dataList
       sankeyOptions.series[0].links = this.linkList
-      sankeyOptions.toolbox.feature.dataZoom.show = false
       sankeyOptions.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.series[0].links.sort((a, b) => {
           return a.source > b.source ? 1 : -1

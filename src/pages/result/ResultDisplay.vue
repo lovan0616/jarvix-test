@@ -19,6 +19,7 @@
       :is="layout"
       :data-result-id="currentResultId"
       :resultInfo="resultInfo"
+      :restrictions="restrictInfo"
     ></component>
     <div class="related-question-block" v-if="relatedQuestionList.length > 0">
       <div class="block-title">{{ $t('editing.relatedQuesion') }}</div>
@@ -48,6 +49,7 @@ export default {
       isLoading: false,
       layout: null,
       resultInfo: null,
+      restrictInfo: [],
       timeStamp: this.$route.query.stamp,
       relatedQuestionList: [],
       timeoutFunction: null,
@@ -98,6 +100,7 @@ export default {
     clearLayout () {
       this.layout = null
       this.resultInfo = null
+      this.restrictInfo = []
       this.relatedQuestionList = []
       this.closeUnknowInfoBlock()
     },
@@ -199,6 +202,7 @@ export default {
               break
             case 'Complete':
               this.resultInfo = componentResponse.componentIds
+              this.restrictInfo = componentResponse.restrictions
               this.layout = this.getLayout(res.layout)
               this.segmentationAnalysis(componentResponse.segmentationPayload)
               this.isLoading = false

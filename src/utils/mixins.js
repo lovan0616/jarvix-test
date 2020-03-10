@@ -210,6 +210,7 @@ Vue.mixin({
       }
     },
     roundNumber (value, count = 2) {
+      if (typeof value === 'string') value = Number(value)
       return parseFloat((value).toFixed(count))
     },
     // export data

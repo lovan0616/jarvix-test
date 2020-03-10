@@ -300,7 +300,8 @@
     "addColumnSet": "增加欄位集",
     "editColumnSet": "編輯欄位集",
     "select": "選擇",
-    "download": "資料下載"
+    "download": "資料下載",
+    "restrict": "分析條件限制"
   },
   "aggregation": {
     "mean": "平均",

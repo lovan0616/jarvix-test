@@ -17,6 +17,7 @@
             :question="singleQuestion.question"
             :question-segmentation="singleQuestion.segmentation"
           ></question-name>
+          <svg-icon icon-class="go-right" class="arrow-icon"></svg-icon>
         </div>
         <div class="segmentation-info-block">
           <div class="single-segmentation"
@@ -40,6 +41,11 @@
                 </span>
                 <span
                   v-else-if="segmentation.type === 'Datacolumn'"
+                >
+                  <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                </span>
+                <span
+                  v-else-if="segmentation.type === 'NumRuleToken'"
                 >
                   <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
                 </span>
@@ -119,7 +125,6 @@ export default {
                 }
                 break
               case 'Datarow':
-                console.log(segmentationElement.properties[0].dataframePrimaryAlias, standard[index].properties[0].dataframePrimaryAlias)
                 if (segmentationElement.properties[0].dataframePrimaryAlias !== standard[index].properties[0].dataframePrimaryAlias) {
                   statusList[index] = true
                 }
@@ -209,6 +214,7 @@ export default {
   }
 
   .single-question {
+    position: relative;
     padding: 16px;
     background: rgba(35, 61, 64, 0.6);
     border: 1px solid #065D68;
@@ -220,6 +226,27 @@ export default {
     &:hover {
       transform: translate3d(0,-5px,0);
       box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .arrow-icon {
+      position: absolute;
+      right: 16px;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      animation: arrowRight 1s infinite;
+
+      @keyframes arrowRight {
+        0%{
+          transform: translateX(0);
+        }
+        50%{
+          transform: translateX(5px);
+        }
+        100%{
+          transform: translateX(0);
+        }
+      }
     }
   }
   .single-segmentation {
