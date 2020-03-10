@@ -33,8 +33,5 @@ export default {
     font-weight: 600;
     margin-bottom: 16px;
   }
-  .info-description {
-
-  }
 }
 </style>
