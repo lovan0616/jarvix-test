@@ -1114,7 +1114,7 @@
     "displayTopData": "顯示前 {count} 筆資料",
     "min": "最小值",
     "lowerQuartile": "下四分位數",
-    "average": "平均值",
+    "median": "中位數",
     "higherQuartile": "上四分位數",
     "max": "最大值",
     "from": "來自",
