@@ -21,7 +21,9 @@
             v-validate="'required'"
           ></input-block>
         </div>
-        <button type="submit" class="btn btn-default btn-submit">{{ $t('button.login') }}</button>
+        <button type="submit" class="btn btn-default btn-submit"
+          :disabled="isSubmit"
+        >{{ $t('button.login') }}</button>
       </form>
     </div>
   </page-layout>
@@ -43,7 +45,8 @@ export default {
       userInfo: {
         account: null,
         password: null
-      }
+      },
+      isSubmit: false
     }
   },
   mounted () {
@@ -54,6 +57,7 @@ export default {
     submitForm () {
       this.$validator.validateAll().then(result => {
         if (result) {
+          this.isSubmit = true
           login({
             email: this.userInfo.account,
             password: this.userInfo.password
@@ -67,6 +71,8 @@ export default {
                 this.$store.dispatch('dataSource/changeDataSourceById', dataSourceId)
               }
               this.$router.push('/')
+            }).catch(() => {
+              this.isSubmit = false
             })
         }
       })
