@@ -104,6 +104,7 @@ import RootCauseDescription from '@/components/display/RootCauseDescription'
 import QuickStart from '@/components/display/QuickStart'
 import Spinner from '@/components/Spinner'
 import ArrowButton from '@/components/resultBoard/ArrowButton'
+import DisplayNoAnswerInfo from '@/components/display/DisplayNoAnswerInfo'
 
 var Rollbar = require('vue-rollbar')
 
@@ -181,6 +182,7 @@ Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(QuickStart.name, QuickStart)
 Vue.component(Spinner.name, Spinner)
 Vue.component(ArrowButton.name, ArrowButton)
+Vue.component(DisplayNoAnswerInfo.name, DisplayNoAnswerInfo)
 
 /** Custom Rule */
 Validator.extend('requireOneNumeric', function (value) {

@@ -17,6 +17,7 @@
         :has-pagination="hasNextPage"
         :dataset="componentData.dataset"
         :title="componentData.title"
+        :message="componentData.message"
         :segmentation="componentData.segmentation"
         :info="componentData.info || componentData.data"
         :features="componentData.features"
