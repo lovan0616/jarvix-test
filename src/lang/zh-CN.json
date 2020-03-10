@@ -1131,7 +1131,10 @@
     "beRecognized": "被辨识为",
     "systemQuestionAnalysis": "对 “{question}” 进行分析。其中",
     "other": "其他",
-    "more": "看更多"
+    "more": "看更多",
+    "source": "来源",
+    "target": "目标",
+    "value": "数值"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",

@@ -1131,7 +1131,10 @@
     "beRecognized": "被辨識為",
     "systemQuestionAnalysis": "對 “{question}” 進行分析。其中",
     "other": "其他",
-    "more": "看更多"
+    "more": "看更多",
+    "source": "來源",
+    "target": "目標",
+    "value": "數值"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",
