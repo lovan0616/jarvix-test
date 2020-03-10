@@ -300,7 +300,8 @@
     "addColumnSet": "增加栏位集",
     "editColumnSet": "编辑栏位集",
     "select": "选择",
-    "download": "资料下载"
+    "download": "资料下载",
+    "restrict": "分析条件限制"
   },
   "aggregation": {
     "mean": "平均",

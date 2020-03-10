@@ -11,6 +11,17 @@
         <div class="pin-button-block"
           v-if="isPinboardPage"
         >
+          <button class="head-btn restrict"
+            v-if="hasFilter"
+            @click="toggleFilterInfo"
+            @blur="toggleFilterInfo"
+          >
+            {{ $t('button.restrict') }}
+            <filter-info-dialog
+              v-if="isShowFilterInfo"
+              :filter-info="restrictions"
+            ></filter-info-dialog>
+          </button>
           <a class="head-btn share"
             href="javascript:void(0)"
             @click="showShare"
@@ -86,6 +97,7 @@ import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import FilterInfoDialog from '@/pages/pinboard/components/filter/FilterInfoDialog'
 import { Message } from 'element-ui'
 
 export default {
@@ -94,12 +106,17 @@ export default {
     PinboardDialog,
     ShareDialog,
     DecideDialog,
-    WritingDialog
+    WritingDialog,
+    FilterInfoDialog
   },
   props: {
     resultInfo: {
       type: Object,
       default: () => {}
+    },
+    restrictions: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
@@ -112,7 +129,8 @@ export default {
       isShowShareDialog: false,
       isMouseoverPinButton: false,
       isShowDelete: false,
-      isShowShare: false
+      isShowShare: false,
+      isShowFilterInfo: false
     }
   },
   mounted () {
@@ -245,6 +263,9 @@ export default {
     },
     closeDelete () {
       this.isShowDelete = false
+    },
+    toggleFilterInfo () {
+      this.isShowFilterInfo = !this.isShowFilterInfo
     }
   },
   computed: {
@@ -272,7 +293,7 @@ export default {
       return `${window.location.origin}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&action=share`
     },
     hasFilter () {
-      return this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult'
+      return (this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult') || this.restrictions.length > 0
     },
     currentResultId () {
       return this.$store.state.result.currentResultId
@@ -303,17 +324,19 @@ export default {
     position: relative;
 
     .head-btn {
+      display: inline-block;
       position: relative;
       font-size: 14px;
       line-height: 26px;
       color: $theme-text-color;
-      padding: 4px 12px;
+      padding: 2px 12px;
       border-radius: 4px;
 
-      &.share {
+      &.share, &.restrict {
         background-color: #1EB8C7;
         margin-right: 12px;
       }
+
       &.delete {
         border: 1px solid #fff;
       }
@@ -432,4 +455,3 @@ export default {
     }
   }
 }
-</style>

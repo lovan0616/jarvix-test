@@ -45,6 +45,11 @@
                   <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
                 </span>
                 <span
+                  v-else-if="segmentation.type === 'NumRuleToken'"
+                >
+                  <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                </span>
+                <span
                   v-else-if="segmentation.type === 'Datarow'"
                 >
                   {{ $t(`segmentationToken.${segmentation.type}`) }}
@@ -120,7 +125,6 @@ export default {
                 }
                 break
               case 'Datarow':
-                console.log(segmentationElement.properties[0].dataframePrimaryAlias, standard[index].properties[0].dataframePrimaryAlias)
                 if (segmentationElement.properties[0].dataframePrimaryAlias !== standard[index].properties[0].dataframePrimaryAlias) {
                   statusList[index] = true
                 }
