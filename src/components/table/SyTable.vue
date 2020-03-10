@@ -184,6 +184,12 @@ export default {
     top: -30px;
     left: 0;
   }
+
+  &>>>.arrow-block {
+    top: 0;
+    bottom: 0;
+    margin: auto;
+  }
 }
 </style>
 <style src="@/styles/element-ui/el-pagination.scss" lang="scss"></style>

@@ -162,7 +162,7 @@ export default {
               table += `<td>${this.$t('resultDescription.lowerQuartile')}</td>`
               break
             case 2:
-              table += `<td>${this.$t('resultDescription.average')}</td>`
+              table += `<td>${this.$t('resultDescription.median')}</td>`
               break
             case 3:
               table += `<td>${this.$t('resultDescription.higherQuartile')}</td>`
@@ -198,7 +198,7 @@ export default {
                   rowData = [this.$t('resultDescription.lowerQuartile')]
                   break
                 case 2:
-                  rowData = [this.$t('resultDescription.average')]
+                  rowData = [this.$t('resultDescription.median')]
                   break
                 case 3:
                   rowData = [this.$t('resultDescription.higherQuartile')]
