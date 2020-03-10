@@ -162,8 +162,8 @@ export default {
               restrictions: this.filterRestrictionList
             }).then(res => {
               this.getComponent(res)
-            }).catch(() => {
-              this.isLoading = false
+            }).catch((error) => {
+              if (error.constructor.name !== 'Cancel') this.isLoading = false
             })
           } else {
             // 多個結果
