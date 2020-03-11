@@ -35,9 +35,12 @@ export default {
           return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + tokenInfo.properties[0].datacolumnPrimaryAlias + this.$t('resultDescription.has') + this.$t(`segmentationToken.${tokenInfo.type}`) + this.$t(`resultDescription.recognize`) + tokenInfo.matchedWord
         case 'Datacolumn':
           return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + tokenInfo.properties[0].datacolumnPrimaryAlias + this.$t(`segmentationToken.${tokenInfo.type}`) + this.$t(`resultDescription.recognize`) + tokenInfo.matchedWord
-        // 不確定跟 Datacolumn 是不是可以完全一樣，先獨立出來
         case 'NumRuleToken':
-          return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + tokenInfo.properties[0].datacolumnPrimaryAlias + this.$t(`segmentationToken.${tokenInfo.type}`) + this.$t(`resultDescription.recognize`) + tokenInfo.matchedWord
+          if (tokenInfo.properties) {
+            return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + tokenInfo.properties[0].datacolumnPrimaryAlias + this.$t(`segmentationToken.${tokenInfo.type}`) + this.$t(`resultDescription.recognize`) + tokenInfo.matchedWord
+          } else {
+            return this.$t(`segmentationToken.${tokenInfo.type}`)
+          }
         case 'Datarow':
           return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + this.$t(`segmentationToken.${tokenInfo.type}`) + tokenInfo.matchedWord
         default:

@@ -23,14 +23,14 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <div class="filter-description"
-            v-if="singleType.type === 'enum'"
-          >
-            <div class="column-name">{{singleType.properties.display_name}} =</div>
+          <div class="filter-description">
+            <div class="column-name">{{ $t('resultDescription.restrict') + (index + 1) }}:</div>
             <div class="single-filter"
-              v-for="(singleData, propertiesIndex) in singleType.properties.display_datavalues"
+              v-for="(singleData, propertiesIndex) in singleType.restraints"
               :key="'enum-' + propertiesIndex"
-            >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.display_datavalues.length - 1">、</span></div>
+            >
+              {{singleData.properties.display_name}} = {{singleData.properties.display_datavalues[0]}}<span v-show="propertiesIndex !== singleType.restraints.length - 1">、</span>
+            </div>
           </div>
         </div>
       </div>
@@ -117,7 +117,7 @@ export default {
     options () {
       let config = {
         ...this.addonOptions,
-        ...getDrillDownTool(this.title, true),
+        ...getDrillDownTool(this.title, true, true),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
         dataset: {
           source: this.datasetTransform(this.dataset)
@@ -221,21 +221,33 @@ export default {
         return false
       }
 
-      this.selectedData = this.title.xAxis.map((axis, index) => {
-        return {
-          type: 'enum',
-          properties: {
-            dc_name: axis.dc_name,
-            data_type: axis.data_type,
-            display_name: axis.display_name,
-            datavalues: params.batch[0].selected[0].dataIndex.map(element => {
-              return this.dataset.index[element][index]
-            }).filter((x, i, a) => a.indexOf(x) === i),
-            display_datavalues: params.batch[0].selected[0].dataIndex.map(element => {
-              return this.dataset.display_index ? this.dataset.display_index[element][index] : this.dataset.index[element][index]
-            }).filter((x, i, a) => a.indexOf(x) === i)
+      this.selectedData = params.batch[0].selected[0].dataIndex.map(indexValue => {
+        let restraints = this.title.xAxis.map((axis, index) => {
+          return {
+            type: 'enum',
+            properties: {
+              dc_name: axis.dc_name,
+              data_type: axis.data_type,
+              display_name: axis.display_name,
+              datavalues: [this.dataset.index[indexValue][index]],
+              display_datavalues: this.dataset.display_index ? [this.dataset.display_index[indexValue][index]] : [this.dataset.index[indexValue][index]]
+            }
           }
+        }).filter((element, index) => {
+          return this.title.xAxis[index].drillable
+        })
+
+        return {
+          type: 'compound',
+          restraints: restraints
         }
+      }).filter((element, index, self) => {
+        return self.findIndex((item, restrictionIndex) => {
+          let mapArray = item.restraints.filter((restrict, restrictIndex) => {
+            return restrict.properties.dc_name === element.restraints[restrictIndex].properties.dc_name && restrict.properties.datavalues[0] === element.restraints[restrictIndex].properties.datavalues[0]
+          })
+          return mapArray.length === item.restraints.length
+        }) === index
       })
     },
     saveFilter () {

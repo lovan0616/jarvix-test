@@ -47,7 +47,14 @@
                 <span
                   v-else-if="segmentation.type === 'NumRuleToken'"
                 >
-                  <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                  <template
+                    v-if="segmentation.properties"
+                  >
+                    <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                  </template>
+                  <template v-else>
+                    {{ $t(`segmentationToken.${segmentation.type}`) }}
+                  </template>
                 </span>
                 <span
                   v-else-if="segmentation.type === 'Datarow'"
