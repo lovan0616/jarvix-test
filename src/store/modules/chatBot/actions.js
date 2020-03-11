@@ -4,13 +4,13 @@ const CancelToken = axios.CancelToken
 let cancelFunction
 
 export default {
-  askQuestion ({dispatch, commit, state, rootState}, data) {
+  askQuestion ({dispatch, commit, state, rootState, rootGetters}, data) {
     dispatch('cancelRequest')
-
+    console.log(rootGetters)
     return askQuestion({
       question: rootState.dataSource.appQuestion || data.question,
       dataSourceId: rootState.dataSource.dataSourceId || data.dataSourceId,
-      previewQuestionId: rootState.dataSource.drillDownQuestionId,
+      previewQuestionId: rootGetters['dataSource/drillDownQuestionId'],
       domain: 'GENERAL'
     }, new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter

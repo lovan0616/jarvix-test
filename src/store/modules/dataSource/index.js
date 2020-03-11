@@ -13,7 +13,6 @@ export default {
     appQuestion: null,
     currentQuestionInfo: null,
     currentQuestionId: null,
-    drillDownQuestionId: null,
     historyQuestionList: [],
     filterList: []
   },
