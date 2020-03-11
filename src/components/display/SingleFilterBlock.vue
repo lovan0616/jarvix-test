@@ -15,10 +15,16 @@
             v-for="(sub_restraint, restraintsIndex) in restraint.restraints"
             :key="'restraints-' + index + '-' + restraintsIndex"
           >
-            {{ sub_restraint.properties.display_name }}{{ $t('resultDescription.between', {
-              start: isNaN(sub_restraint.properties.start) ? sub_restraint.properties.start : roundNumber(sub_restraint.properties.start),
-              end: isNaN(sub_restraint.properties.end) ? sub_restraint.properties.end : roundNumber(sub_restraint.properties.end)
-            }) }}
+            <template v-if="sub_restraint.type === 'enum'">
+              {{ sub_restraint.properties.display_name }} = {{ sub_restraint.properties['display_datavalues'].join(', ') }}
+            </template>
+            <template v-else>
+             {{ sub_restraint.properties.display_name }}{{ $t('resultDescription.between', {
+                start: isNaN(sub_restraint.properties.start) ? sub_restraint.properties.start : roundNumber(sub_restraint.properties.start),
+                end: isNaN(sub_restraint.properties.end) ? sub_restraint.properties.end : roundNumber(sub_restraint.properties.end)
+              }) }}
+            </template>
+            
             <span class="tooltip-content-item-condition"
               v-if="restraintsIndex < restraint.restraints.length - 1"
             >、</span>
@@ -85,7 +91,9 @@ export default {
           if (name !== undefined) result.push(name)
         }
         return result
-      }, [])
+      }, []).filter((element, index, self) => {
+        return self.findIndex(item => item === element) === index
+      })
     },
     popperClass () {
       let result = 'filter-block-tooltip'
