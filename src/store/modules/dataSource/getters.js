@@ -20,5 +20,13 @@ export default {
     return state.filterList.map(element => {
       return element.status
     })
+  },
+  drillDownQuestionId (state) {
+    let currentFilter = state.filterList.filter(element => element.status)
+    if (currentFilter.length === 0) {
+      return null
+    } else {
+      return currentFilter[currentFilter.length - 1].questionId
+    }
   }
 }

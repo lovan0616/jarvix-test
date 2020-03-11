@@ -34,7 +34,8 @@ export default {
     // 判斷要從哪邊開始取代新的
     let newRestriction = {
       status: true,
-      restriction: data
+      restriction: data,
+      questionId: state.currentQuestionId
     }
     let closeFilterIndex = -1
     for (let i = 0; i < state.filterList.length; i++) {
@@ -54,8 +55,6 @@ export default {
       type: 'success',
       duration: 3 * 1000
     })
-
-    state.drillDownQuestionId = state.currentQuestionId
   },
   clearFilterList (state) {
     state.filterList = []
@@ -67,11 +66,5 @@ export default {
   },
   clearCurrentQuestionId (state) {
     state.currentQuestionId = null
-  },
-  setDrillDownQuestionId (state, data) {
-    state.drillDownQuestionId = data
-  },
-  clearDrillDownQuestionId (state) {
-    state.drillDownQuestionId = null
   }
 }

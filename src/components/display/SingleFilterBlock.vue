@@ -24,7 +24,6 @@
                 end: isNaN(sub_restraint.properties.end) ? sub_restraint.properties.end : roundNumber(sub_restraint.properties.end)
               }) }}
             </template>
-            
             <span class="tooltip-content-item-condition"
               v-if="restraintsIndex < restraint.restraints.length - 1"
             >、</span>
