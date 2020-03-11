@@ -43,6 +43,8 @@ export default {
       dispatch('clearAllFilter')
       // 清除 question id
       commit('clearCurrentQuestionId')
+      // 清除 drill down 當時的 question id
+      commit('clearDrillDownQuestionId')
     }
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
@@ -93,10 +95,18 @@ export default {
       commit('setHistoryQuestionList', res)
     })
   },
-  updateFilterStatusList ({commit}, statusList) {
+  updateFilterStatusList ({commit, state}, statusList) {
     commit('setStatusList', statusList)
+    console.log(statusList)
+    // 如果狀態全都是 false，把 drillDownId 清空
+    if (!statusList.some(element => element)) {
+      commit('clearDrillDownQuestionId')
+    } else {
+      commit('setDrillDownQuestionId', state.currentQuestionId)
+    }
   },
   clearAllFilter ({ commit }) {
     commit('clearFilterList')
+    commit('clearDrillDownQuestionId')
   }
 }
