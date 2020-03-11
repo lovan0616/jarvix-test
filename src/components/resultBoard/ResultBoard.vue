@@ -331,6 +331,7 @@ export default {
       color: $theme-text-color;
       padding: 2px 12px;
       border-radius: 4px;
+      border: none;
 
       &.share, &.restrict {
         background-color: #1EB8C7;
