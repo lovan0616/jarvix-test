@@ -54,6 +54,8 @@ export default {
       type: 'success',
       duration: 3 * 1000
     })
+
+    state.drillDownQuestionId = state.currentQuestionId
   },
   clearFilterList (state) {
     state.filterList = []
@@ -65,5 +67,11 @@ export default {
   },
   clearCurrentQuestionId (state) {
     state.currentQuestionId = null
+  },
+  setDrillDownQuestionId (state, data) {
+    state.drillDownQuestionId = data
+  },
+  clearDrillDownQuestionId (state) {
+    state.drillDownQuestionId = null
   }
 }
