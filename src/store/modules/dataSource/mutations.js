@@ -62,5 +62,8 @@ export default {
     state.filterList.forEach((filter, index) => {
       state.filterList[index]['status'] = data[index]
     })
+  },
+  clearCurrentQuestionId (state) {
+    state.currentQuestionId = null
   }
 }

@@ -48,7 +48,7 @@ service.interceptors.response.use(
     return Promise.reject(res)
   },
   error => {
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       store.commit('dataSource/setIsInit', false)
       router.push('/login')
 

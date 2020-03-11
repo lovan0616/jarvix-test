@@ -200,6 +200,8 @@ Vue.mixin({
           return 'TrendRootCause'
         case 'heat_map_chart':
           return 'DisplayHeatMapChart'
+        case 'no_answer':
+          return 'DisplayNoAnswerInfo'
       }
     },
     // 整個結果頁的 layout

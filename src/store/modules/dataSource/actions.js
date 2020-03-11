@@ -41,6 +41,8 @@ export default {
       commit('chatBot/clearConversation', null, {root: true})
       // 清空篩選條件
       dispatch('clearAllFilter')
+      // 清除 question id
+      commit('clearCurrentQuestionId')
     }
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
