@@ -30,6 +30,7 @@
         :headers="tableHeaders"
         :data-list.sync="dataList"
         :empty-message="$t('editing.clickToCreateDataSource')"
+        :loading="isLoading"
         @create="createDataSource"
         @rename="confirmRename"
         @delete="confirmDelete"
@@ -80,7 +81,8 @@ export default {
       editDataSource: null,
       dataList: [],
       // 資料處理中
-      isProcessing: false
+      isProcessing: false,
+      isLoading: false
       // dataSourceLimitCount: 30
     }
   },
@@ -109,7 +111,13 @@ export default {
   },
   methods: {
     fetchData () {
+      this.isLoading = true
       return this.$store.dispatch('dataSource/getDataSourceList')
+        .then(() => {
+          this.isLoading = false
+        }).catch(() => {
+          this.isLoading = false
+        })
     },
     createDataSource () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
@@ -217,10 +225,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.data-management {
-  .data-source-list-table.data-table {
-    max-height: 100%;
-  }
-}
-</style>

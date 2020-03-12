@@ -1,8 +1,6 @@
 <template>
   <div class="data-table data-source-list-table">
-    <div class="data-table-head"
-      :class="{ 'is-scrolling': tableScrolling }"
-    >
+    <div class="data-table-head">
       <div class="data-table-row table-head">
         <div class="data-table-cell checkbox"
           v-if="hasCheckbox"
@@ -34,7 +32,14 @@
         </div>
       </div>
     </div>
-    <div class="data-table-body" ref="dataTableBody">
+    <spinner class="spinner-container"
+      v-if="loading"
+      :title="$t('editing.loading')"
+      size="50"
+    ></spinner>
+    <div class="data-table-body"
+      v-else
+    >
       <upload-block
         v-if="dataList.length === 0"
         class="empty-status"
@@ -183,20 +188,19 @@ export default {
     hasCheckbox: {
       type: Boolean,
       default: false
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
-      tableScrolling: false,
       sortStatus: null
     }
   },
   mounted () {
-    document.addEventListener('scroll', this.detectScroll, true)
     this.setSortStatus()
-  },
-  destroyed () {
-    document.removeEventListener('scroll', this.detectScroll, true)
   },
   methods: {
     setSortStatus () {
@@ -230,11 +234,6 @@ export default {
 
       let order = this.sortStatus[name] > 0 ? 'asc' : 'desc'
       this.$emit('update:dataList', orderBy(this.dataList, [name], [order]))
-    },
-    detectScroll () {
-      let dataTableBody = this.$refs.dataTableBody
-      let firstChild = dataTableBody.childNodes[0]
-      this.tableScrolling = firstChild.getBoundingClientRect().top - dataTableBody.getBoundingClientRect().top !== 0
     },
     linkTo (link, id) {
       this.$router.push({
@@ -342,6 +341,9 @@ export default {
   }
   .alert-icon {
     color: $theme-color-warning;
+  }
+  .spinner-container {
+    height: 310px;
   }
 }
 </style>
