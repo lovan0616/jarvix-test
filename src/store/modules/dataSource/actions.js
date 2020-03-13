@@ -2,6 +2,8 @@ import co from 'co'
 import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById, getDataFrameById, getDataFrameData } from '@/API/DataSource'
 import { getHistoryQuestionList } from '@/API/NewAsk'
 import router from '../../../router'
+import { Message } from 'element-ui'
+import i18n from '@/lang/index.js'
 
 export default {
   init ({ commit, dispatch, state }) {
@@ -16,16 +18,18 @@ export default {
       commit('setDataSourceList', res)
 
       if (data) {
-        let hasDataSource = false
-        res.forEach(element => {
-          if (element.id === data) hasDataSource = true
-        })
         // 判斷路由的 DataSource 是否存在
-        if (hasDataSource) {
+        if (res.some(element => element.id === data)) {
           dispatch('changeDataSourceById', data)
         } else {
           dispatch('changeDataSourceById', res[0].id)
           router.push('/')
+
+          Message({
+            message: i18n.t('message.dataSourceNotExist'),
+            type: 'success',
+            duration: 3 * 1000
+          })
         }
       } else {
         // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個

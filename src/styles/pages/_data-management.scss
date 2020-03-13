@@ -61,8 +61,6 @@
   background-color: $theme-bg-color;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
-  min-height: 310px;
-  max-height: calc(100vh - 190px);
 
   .data-table-head {
     transition: box-shadow 0.3s;

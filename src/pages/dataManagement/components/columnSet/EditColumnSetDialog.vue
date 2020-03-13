@@ -14,16 +14,15 @@
           ><svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.addColumnSet') }}</button>
           <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
         </div>
-        <div class="button-block">
-          <!-- <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span> -->
-          <!-- <button type="button" class="btn btn-default"
-          >{{ $t('button.saveAndBuild') }}</button> -->
-        </div>
       </div>
-      <div class="dialog-content-block">
-        <spinner
-          v-if="isLoading"
-        ></spinner>
+      <spinner class="spinner-container"
+        v-if="isLoading"
+        :title="$t('editing.loading')"
+        size="50"
+      ></spinner>
+      <div class="dialog-content-block"
+        v-else
+      >
         <single-column-set
           v-for="(singleColumnSet, index) in columnSetList"
           :key="columnSetList.length - index"
@@ -147,6 +146,9 @@ export default {
       font-size: 14px;
       margin-right: 12px;
     }
+  }
+  .spinner-container {
+    height: 50vh;
   }
   .dialog-content-block {
     max-height: 70vh;

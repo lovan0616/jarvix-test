@@ -159,7 +159,6 @@ export default {
     },
     fetchColumnInfo () {
       getDataColumnDataValue(this.dataFrameInfo.id).then(response => {
-        console.log(response, 'data column & data value')
         this.dataColumnListInfo = response
 
         // 取第一個 column 作為預測顯示

@@ -287,7 +287,7 @@ export default {
     },
     questionName () {
       let boardHeaderData = this.$children.filter(element => element.componentName === 'ResultBoardHeader')[0].componentData
-      return boardHeaderData ? boardHeaderData.title : ''
+      return boardHeaderData ? boardHeaderData.segmentation.question : ''
     },
     shareUrl () {
       return `${window.location.origin}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&action=share`
