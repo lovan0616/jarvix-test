@@ -94,14 +94,17 @@ export default {
           '<td>' + dataset[0][1] + '</td>' +
           '<td>' + 'percentage(%)' + '</td>' +
           '</tr>'
+
+        // 注意 valueSum 有可能為 0
         for (let i = 1; i < dataset.length; i++) {
           table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>
-            <td>${dataset[i][0]}</td><td>${dataset[i][1]}</td><td>${(dataset[i][1] * 100 / valueSum).toFixed(2)}</td>
+            <td>${dataset[i][0]}</td><td>${dataset[i][1]}</td><td>${valueSum === 0 ? dataset[i][1] : (dataset[i][1] * 100 / valueSum).toFixed(2)}</td>
           </tr>`
         }
         table += '</tbody></table>'
         return table
       }
+
       // export data
       this.$nextTick(() => {
         this.exportCSVFile(this.$el, this.appQuestion, config.dataset.source)

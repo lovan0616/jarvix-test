@@ -6,7 +6,6 @@ let cancelFunction
 export default {
   askQuestion ({dispatch, commit, state, rootState, rootGetters}, data) {
     dispatch('cancelRequest')
-    console.log(rootGetters)
     return askQuestion({
       question: rootState.dataSource.appQuestion || data.question,
       dataSourceId: rootState.dataSource.dataSourceId || data.dataSourceId,

@@ -31,7 +31,8 @@
     "emptyResult": "此搜尋條件並無對應資料",
     "emptyDataSource": "尚未建立資料源",
     "emptyColumnSet": "尚未建立任何欄位集",
-    "deleteSuccess": "刪除成功"
+    "deleteSuccess": "刪除成功",
+    "dataSourceNotExist": "資料源不存在"
   },
   "guiding": {
     "preStep": "上一步",

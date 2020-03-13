@@ -1,5 +1,7 @@
 <template>
-  <div class="insights-info basic-insights">
+  <div class="insights-info basic-insights"
+    v-if="!isEmpty"
+  >
     <el-tabs
       v-model="activeTab"
     >
@@ -86,10 +88,18 @@
       >{{ commentInfo }}</div>
     </div>
   </div>
+  <empty-info-block
+    v-else
+  ></empty-info-block>
 </template>
 <script>
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+
 export default {
   name: 'InsightTable',
+  components: {
+    EmptyInfoBlock
+  },
   props: {
     info: {
       type: Object,
@@ -107,6 +117,15 @@ export default {
   mounted () {
     this.basicInfo = this.info.nTable.concat(this.info.cTable)
     this.activeTab = this.basicInfo[0].name
+  },
+  computed: {
+    isEmpty () {
+      return this.info &&
+        this.info.cComment.length === 0 &&
+        this.info.nComment.length === 0 &&
+        this.info.cTable.length === 0 &&
+        this.info.nTable.length === 0
+    }
   }
 }
 </script>
