@@ -47,6 +47,8 @@ export default {
       dispatch('clearAllFilter')
       // 清除 question id
       commit('clearCurrentQuestionId')
+      // 關閉演算法
+      commit('chatBot/updateIsUseAlgorithm', false)
     }
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
