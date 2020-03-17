@@ -1,19 +1,19 @@
 <template>
   <div>
+    <div class="filter-title">
+      <svg-icon icon-class="filter" class="icon"></svg-icon>{{ dataColumnNames }}
+    </div>
     <div class="single-pinboard-filter-block"
+      :class="{'last': !notLast}"
       v-for="(restraint, index) in restriction"
       :key="index"
     >
       <template
         v-if="restraint.type === 'compound'"
       >
-        <div class="filter-title" v-if="index === 0">
-          <svg-icon icon-class="filter" class="icon"></svg-icon>{{ dcNames }}
-        </div>
         <div class="filter-description"
           v-for="(sub_restraint, restraintsIndex) in restraint.restraints"
           :key="'restraints-' + index + '-' + restraintsIndex"
-          :class="{'last': !notLast}"
         >
           <template v-if="sub_restraint.type === 'enum'">
             {{sub_restraint.properties.dc_name}} = {{sub_restraint.properties['datavalues'].join(', ')}}
@@ -28,22 +28,15 @@
         </div>
       </template>
       <template v-else>
-        <div class="filter-title" v-if="index === 0">
-          <svg-icon icon-class="filter" class="icon"></svg-icon>{{ restraint.properties['dc_name'] }}
-        </div>
-        <div class="filter-description"
-          :class="{'last': !notLast}"
-        >
-          <template v-if="restraint.type === 'enum'">
-            {{restraint.properties['datavalues'].join(', ')}}
-          </template>
-          <template v-if="restraint.type === 'range'">
-            {{ $t('resultDescription.between', {
-              start: isNaN(restraint.properties.start) ? restraint.properties.start : roundNumber(restraint.properties.start),
-              end: isNaN(restraint.properties.end) ? restraint.properties.end : roundNumber(restraint.properties.end)
-            }) }}
-          </template>
-        </div>
+        <template v-if="restraint.type === 'enum'">
+          {{restraint.properties['datavalues'].join(', ')}}
+        </template>
+        <template v-if="restraint.type === 'range'">
+          {{ $t('resultDescription.between', {
+            start: isNaN(restraint.properties.start) ? restraint.properties.start : roundNumber(restraint.properties.start),
+            end: isNaN(restraint.properties.end) ? restraint.properties.end : roundNumber(restraint.properties.end)
+          }) }}
+        </template>
       </template>
     </div>
   </div>
@@ -60,51 +53,59 @@ export default {
     }
   },
   computed: {
-    dcNames () {
-      if (!this.restriction.length || !this.restriction[0].restraints) return
-      return this.restriction[0].restraints.reduce((result, curr) => {
-        result.push(curr.properties.dc_name)
-        return result
-      }, []).join(' & ')
+    dataColumnNames () {
+      if (!this.restriction.length) return
+      if (this.restriction[0].type === 'compound') {
+        return this.restriction[0].restraints.reduce((result, curr) => {
+          result.push(curr.properties.dc_name)
+          return result
+        }, []).join(' & ')
+      } else {
+        return this.restriction[0].properties['dc_name']
+      }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.single-pinboard-filter-block {
-  .filter-title {
-    display: inline-flex;
-    align-items: center;
-    padding: 10px;
-    background: #4389F7;
-    border-radius: 5px;
-    color: #fff;
-    font-size: 12px;
-    line-height: 12px;
+.filter-title {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px;
+  background: #4389F7;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 12px;
+  line-height: 12px;
 
-    .icon {
-      margin-right: 6px;
+  .icon {
+    margin-right: 6px;
+  }
+}
+
+.single-pinboard-filter-block {
+  padding: 5px 12px;
+  margin: 9px 0 9px 28px;
+  background-color: rgba(69, 78, 78, .8);
+  border-radius: 5px;
+
+  &:not(.last) {
+    position: relative;
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: -9px;
+      left: -13px;
+      width: 2px;
+      height: calc(100% + 18px);
+      background-color: #4389F7;
     }
   }
 
   .filter-description {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    padding-left: 28px;
-
-    &:not(.last) {
-      position: relative;
-      &::before {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 16px;
-        width: 2px;
-        height: 100%;
-        background-color: #4389F7;
-      }
-    }
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
 }
 </style>
