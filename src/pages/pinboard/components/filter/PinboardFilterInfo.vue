@@ -7,36 +7,38 @@
       <template
         v-if="restraint.type === 'compound'"
       >
-        <div
+        <div class="filter-title" v-if="index === 0">
+          <svg-icon icon-class="filter" class="icon"></svg-icon>{{ dcNames }}
+        </div>
+        <div class="filter-description"
           v-for="(sub_restraint, restraintsIndex) in restraint.restraints"
           :key="'restraints-' + index + '-' + restraintsIndex"
+          :class="{'last': !notLast}"
         >
-          <div class="filter-title">
-            <svg-icon icon-class="filter" class="icon"></svg-icon>{{ sub_restraint.properties['dc_name'] }}
-          </div>
-          <div class="filter-description"
-            :class="{'last':  !notLast && index === (restriction.length - 1) && restraintsIndex === restraint.restraints.length -  1}"
-          >
+          <template v-if="sub_restraint.type === 'enum'">
+            {{sub_restraint.properties.dc_name}} = {{sub_restraint.properties['datavalues'].join(', ')}}
+          </template>
+          <template v-if="sub_restraint.type === 'range'">
             {{ sub_restraint.properties.dc_name }} =
-             {{ $t('resultDescription.between', {
+            {{ $t('resultDescription.between', {
               start: isNaN(sub_restraint.properties.start) ? sub_restraint.properties.start : roundNumber(sub_restraint.properties.start),
               end: isNaN(sub_restraint.properties.end) ? sub_restraint.properties.end : roundNumber(sub_restraint.properties.end)
             }) }}
-          </div>
+          </template>
         </div>
       </template>
       <template v-else>
-        <div class="filter-title">
+        <div class="filter-title" v-if="index === 0">
           <svg-icon icon-class="filter" class="icon"></svg-icon>{{ restraint.properties['dc_name'] }}
         </div>
         <div class="filter-description"
-          :class="{'last': !notLast && index === (restriction.length - 1)}"
+          :class="{'last': !notLast}"
         >
           <template v-if="restraint.type === 'enum'">
-            {{restraint.properties['dc_name']}} = {{restraint.properties['datavalues'].join(', ')}}
+            {{restraint.properties['datavalues'].join(', ')}}
           </template>
           <template v-if="restraint.type === 'range'">
-            {{restraint.properties['dc_name']}} = {{ $t('resultDescription.between', {
+            {{ $t('resultDescription.between', {
               start: isNaN(restraint.properties.start) ? restraint.properties.start : roundNumber(restraint.properties.start),
               end: isNaN(restraint.properties.end) ? restraint.properties.end : roundNumber(restraint.properties.end)
             }) }}
@@ -58,25 +60,12 @@ export default {
     }
   },
   computed: {
-    columnNames () {
-      return this.restriction.reduce((result, curr) => {
-        if (curr.restraints) {
-          curr.restraints.forEach(restraint => {
-            const name = this.getRestraintColumnName(restraint)
-            if (name !== undefined) result.push(name)
-          })
-        } else {
-          const name = this.getRestraintColumnName(curr)
-          if (name !== undefined) result.push(name)
-        }
+    dcNames () {
+      if (!this.restriction.length || !this.restriction[0].restraints) return
+      return this.restriction[0].restraints.reduce((result, curr) => {
+        result.push(curr.properties.dc_name)
         return result
-      }, [])
-    }
-  },
-  methods: {
-    getRestraintColumnName (restraint) {
-      if (!restraint.properties) return
-      return restraint.properties['display_name']
+      }, []).join(' & ')
     }
   }
 }
@@ -97,6 +86,7 @@ export default {
       margin-right: 6px;
     }
   }
+
   .filter-description {
     padding-top: 8px;
     padding-bottom: 8px;
