@@ -1,16 +1,14 @@
 <template>
-  <div>
+  <div class="single-filter-container">
     <div class="filter-title">
       <svg-icon icon-class="filter" class="icon"></svg-icon>{{ dataColumnNames }}
     </div>
-    <div class="single-pinboard-filter-block"
+    <div class="filter-description-block"
       :class="{'last': !notLast}"
       v-for="(restraint, index) in restriction"
       :key="index"
     >
-      <template
-        v-if="restraint.type === 'compound'"
-      >
+      <template v-if="restraint.type === 'compound'">
         <div class="filter-description"
           v-for="(sub_restraint, restraintsIndex) in restraint.restraints"
           :key="'restraints-' + index + '-' + restraintsIndex"
@@ -27,16 +25,14 @@
           </template>
         </div>
       </template>
-      <template v-else>
-        <template v-if="restraint.type === 'enum'">
-          {{restraint.properties['datavalues'].join(', ')}}
-        </template>
-        <template v-if="restraint.type === 'range'">
-          {{ $t('resultDescription.between', {
-            start: isNaN(restraint.properties.start) ? restraint.properties.start : roundNumber(restraint.properties.start),
-            end: isNaN(restraint.properties.end) ? restraint.properties.end : roundNumber(restraint.properties.end)
-          }) }}
-        </template>
+      <template v-else-if="restraint.type === 'enum'">
+        {{restraint.properties['datavalues'].join(', ')}}
+      </template>
+      <template v-else-if="restraint.type === 'range'">
+        {{ $t('resultDescription.between', {
+          start: isNaN(restraint.properties.start) ? restraint.properties.start : roundNumber(restraint.properties.start),
+          end: isNaN(restraint.properties.end) ? restraint.properties.end : roundNumber(restraint.properties.end)
+        }) }}
       </template>
     </div>
   </div>
@@ -83,7 +79,7 @@ export default {
   }
 }
 
-.single-pinboard-filter-block {
+.filter-description-block {
   padding: 5px 12px;
   margin: 9px 0 9px 28px;
   background-color: rgba(69, 78, 78, .8);
