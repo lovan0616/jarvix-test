@@ -5,7 +5,7 @@
         v-for="(restrict, index) in filterInfo"
         :key="index"
         :restriction="restrict"
-        :not-last="index !== filterInfo.length - 1"
+        :is-last="index === filterInfo.length - 1"
       />
     </div>
   </div>

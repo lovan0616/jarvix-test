@@ -4,7 +4,7 @@
       <svg-icon icon-class="filter" class="icon"></svg-icon>{{ dataColumnNames }}
     </div>
     <ul class="filter-description-block"
-      :class="{'last': !notLast}"
+      :class="{'last': isLast}"
       v-for="(restraint, index) in restriction"
       :key="index"
     >
@@ -47,9 +47,9 @@ export default {
   name: 'PinboardFilterInfo',
   props: {
     restriction: { type: Array, default: () => [] },
-    notLast: {
+    isLast: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   computed: {
