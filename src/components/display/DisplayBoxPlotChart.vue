@@ -127,7 +127,7 @@ export default {
       return dataTool.prepareBoxplotData(this.dataset.data)
     },
     chartOption () {
-      let chartAddon = JSON.parse(JSON.stringify(chartOptions))
+      let chartAddon = JSON.parse(JSON.stringify(chartOptions()))
       chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotChartConfig.xAxis}
       chartAddon.tooltip.trigger = boxPlotChartConfig.tooltip.trigger
       chartAddon.xAxis.data = this.dataset.index
