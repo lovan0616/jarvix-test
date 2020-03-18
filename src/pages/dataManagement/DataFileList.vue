@@ -48,6 +48,7 @@
         :data-list.sync="dataList"
         :selection.sync="selectList"
         :is-processing="isProcessing"
+        :loading="isLoading"
         :empty-message="$t('editing.clickToUploadTable')"
         @create="createDataSource"
         @delete="confirmDelete"
@@ -133,7 +134,8 @@ export default {
       },
       showValueAliasDialog: false,
       showEditColumnSetDialog: false,
-      intervalFunction: null
+      intervalFunction: null,
+      isLoading: false
     }
   },
   mounted () {
@@ -166,8 +168,12 @@ export default {
   },
   methods: {
     fetchData () {
+      this.isLoading = true
       return getDataFrameById(this.currentDataSourceId).then(response => {
         this.dataList = response
+        this.isLoading = false
+      }).catch(() => {
+        this.isLoading = false
       })
     },
     checkDataSourceStatus () {

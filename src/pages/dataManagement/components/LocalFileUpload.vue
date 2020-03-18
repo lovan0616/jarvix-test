@@ -91,7 +91,7 @@ export default {
     return {
       uploadStatus,
       currntUploadStatus: uploadStatus.wait,
-      uploadFileSizeLimit: 100,
+      uploadFileSizeLimit: 3000,
       unableFileList: []
     }
   },

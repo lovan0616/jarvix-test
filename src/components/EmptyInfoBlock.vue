@@ -4,13 +4,14 @@
   </div>
 </template>
 <script>
-import i18n from '@/lang/index.js'
 export default {
   name: 'EmptyInfoBlock',
   props: {
     msg: {
       type: String,
-      default: i18n.t('resultDescription.noData')
+      default () {
+        return this.$t('resultDescription.noData')
+      }
     }
   }
 }

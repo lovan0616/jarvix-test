@@ -6,7 +6,8 @@ export default {
   namespaced: true,
   state: {
     conversationList: [],
-    isAnalyzing: false
+    isAnalyzing: false,
+    isUseAlgorithm: false
   },
   actions,
   mutations,

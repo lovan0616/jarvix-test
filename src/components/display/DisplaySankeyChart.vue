@@ -101,7 +101,6 @@ export default {
         let dataset = opt.series[0].links.sort((a, b) => {
           return a.source > b.source ? 1 : -1
         })
-        console.log(dataset)
         let table = `<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">${this.$t('chart.export')}</button></div>
           <table style="margin-top: 16px;width:100%;padding: 0 16px;"><tbody><tr style="background-color:#2B4D51">` +
           '<td>' + this.$t('resultDescription.source') + '</td>' +
@@ -119,15 +118,18 @@ export default {
 
       // export data
       this.$nextTick(() => {
-        this.$el.addEventListener('click', (e) => {
-          if (e.target && e.target.id === 'export-btn') {
-            let exportData = this.linkList.map(element => {
-              return [element.source, element.target, element.value]
-            })
-            exportData.unshift([this.$t('resultDescription.source'), this.$t('resultDescription.target'), this.$t('resultDescription.value')])
-            this.exportToCSV(this.appQuestion, exportData)
-          }
-        })
+        if (this.$el.getAttribute('listener') !== 'true') {
+          this.$el.addEventListener('click', (e) => {
+            if (e.target && e.target.id === 'export-btn') {
+              let exportData = this.linkList.map(element => {
+                return [element.source, element.target, element.value]
+              })
+              exportData.unshift([this.$t('resultDescription.source'), this.$t('resultDescription.target'), this.$t('resultDescription.value')])
+              this.exportToCSV(this.appQuestion, exportData)
+            }
+          }, false)
+          this.$el.setAttribute('listener', true)
+        }
       })
 
       return sankeyOptions

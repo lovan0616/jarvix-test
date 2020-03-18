@@ -13,13 +13,13 @@
         >
           <button class="head-btn restrict"
             v-if="hasFilter"
-            @click="toggleFilterInfo"
-            @blur="toggleFilterInfo"
+            @click.stop.prevent="toggleFilterInfo"
           >
             {{ $t('button.restrict') }}
             <filter-info-dialog
               v-if="isShowFilterInfo"
               :filter-info="restrictions"
+              @close="closeFilterInfo"
             ></filter-info-dialog>
           </button>
           <a class="head-btn share"
@@ -266,6 +266,9 @@ export default {
     },
     toggleFilterInfo () {
       this.isShowFilterInfo = !this.isShowFilterInfo
+    },
+    closeFilterInfo () {
+      this.isShowFilterInfo = false
     }
   },
   computed: {
@@ -287,7 +290,7 @@ export default {
     },
     questionName () {
       let boardHeaderData = this.$children.filter(element => element.componentName === 'ResultBoardHeader')[0].componentData
-      return boardHeaderData ? boardHeaderData.title : ''
+      return boardHeaderData ? boardHeaderData.segmentation.question : ''
     },
     shareUrl () {
       return `${window.location.origin}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&action=share`

@@ -31,7 +31,8 @@
     "emptyResult": "此搜尋條件並無對應資料",
     "emptyDataSource": "尚未建立資料源",
     "emptyColumnSet": "尚未建立任何欄位集",
-    "deleteSuccess": "刪除成功"
+    "deleteSuccess": "刪除成功",
+    "dataSourceNotExist": "資料源不存在"
   },
   "guiding": {
     "preStep": "上一步",
@@ -182,7 +183,8 @@
     "selectYet": "尚未選擇任何項目",
     "createWay": "建立方式",
     "tableJoin": "資料表關聯",
-    "userUpload": "使用者上傳"
+    "userUpload": "使用者上傳",
+    "loading": "資料讀取中"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",

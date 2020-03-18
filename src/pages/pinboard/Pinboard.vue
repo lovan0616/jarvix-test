@@ -21,6 +21,7 @@
         :data-data-source-id="result.dataSourceId"
         :resultInfo="result.info"
         :restrictions="result.restrictions"
+        :question="result.question"
       ></component>
   </div>
 </template>
@@ -79,6 +80,7 @@ export default {
               currentResult.info = componentResponse.componentIds
               currentResult.restrictions = componentResponse.restrictions
               currentResult.layout = this.getLayout(componentResponse.layout)
+              currentResult.question = componentResponse.segmentationPayload.question
               this.$nextTick(() => {
                 this.isLoading = false
               })

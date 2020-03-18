@@ -29,6 +29,7 @@
         :causes="componentData.causes"
         :description="componentData.description"
         :total="componentData.total"
+        :key="componentId"
         @next="getNewPageInfo"
       ></component>
       <div class="task-note"
@@ -132,14 +133,24 @@ export default {
                     this.componentData.dataset.data = this.componentData.dataset.data.concat(responseData.dataset.data)
                     responseData.dataset.index.shift()
                     this.componentData.dataset.index = this.componentData.dataset.index.concat(responseData.dataset.index)
+                    if (responseData.dataset.display_index) {
+                      responseData.dataset.display_index.shift()
+                      this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(responseData.dataset.display_index)
+                    }
                   } else {
                     this.componentData.dataset.data = this.componentData.dataset.data.concat(responseData.dataset.data)
                     this.componentData.dataset.index = this.componentData.dataset.index.concat(responseData.dataset.index)
+                    if (this.componentData.dataset.display_index) {
+                      this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(responseData.dataset.display_index)
+                    }
                   }
                 }
               } else {
                 this.componentData.dataset.data = this.componentData.dataset.data.concat(responseData.dataset.data)
                 this.componentData.dataset.index = this.componentData.dataset.index.concat(responseData.dataset.index)
+                if (this.componentData.dataset.display_index) {
+                  this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(responseData.dataset.display_index)
+                }
               }
 
               this.$nextTick(() => {
