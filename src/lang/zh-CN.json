@@ -183,6 +183,7 @@
     "selectYet": "尚未选择任何项目",
     "createWay": "建立方式",
     "tableJoin": "资料表关联",
+    "selectJoinType": "关联方式",
     "userUpload": "使用者上传",
     "loading": "资料读取中"
   },

@@ -41,6 +41,13 @@
             v-if="reachLimit"
           >{{ $t('notification.uploadLimitNotification') }}</div> -->
         </div>
+        <div class="button-block">
+          <button class="btn-m btn-secondary btn-has-icon"
+            @click="toggleJoinTableDialog"
+          >
+            <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('description.addDataSheetConnect') }}
+          </button>
+        </div>
         <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div> -->
       </div>
       <data-table

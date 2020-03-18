@@ -9,7 +9,7 @@
       <div class="button-block">
         <button type="button" class="btn btn-secondary btn-has-icon"
           @click="addNewRelations"
-        ><svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('button.newForeign') }}</button>
+        ><svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.newForeign') }}</button>
       </div>
       <empty-info-block
         class="empty-info-block"

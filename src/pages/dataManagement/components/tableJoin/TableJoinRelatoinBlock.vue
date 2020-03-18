@@ -1,6 +1,6 @@
 <template>
   <div class="single-relation-block">
-    <div class="action-block">
+    <!-- <div class="action-block">
       <div class="title">{{ $t('editing.columnCorrelation') }}</div>
       <a href="javascript:void(0)" class="link"
         @click="checkDeleteRelations(relationInfo.id)"
@@ -10,6 +10,23 @@
         @cancel="cancelDelete"
         @confirm="deleteRelations"
       ></tooltip-dialog>
+    </div> -->
+    <div class="input-block">
+      <label for="" class="label">*{{ $t('editing.tableName') }}</label>
+      <input type="text" class="input"
+        v-if="!relationInfo.id"
+        :placeholder="$t('editing.pleaseEnterName')"
+        v-model="relationInfo.name"
+      >
+      <div
+        v-else
+      >{{ relationInfo.name }}</div>
+    </div>
+    <div class="input-block">
+      <label for="" class="label">*{{ $t('editing.selectJoinType') }}</label>
+      <default-select class="tag-select input"
+
+      ></default-select>
     </div>
     <div class="correlation-block">
       <div class="select-block">
@@ -58,6 +75,7 @@
 <script>
 import CustomSelect from '../CustomSelect'
 import TooltipDialog from '@/components/dialog/TooltipDialog'
+import DefaultSelect from '@/components/select/DefaultSelect'
 import { getDataFrameColumnInfoById, saveDataFrameRelation, updateDataFrameRelationById } from '@/API/DataSource'
 import { Message } from 'element-ui'
 
@@ -65,7 +83,8 @@ export default {
   name: 'TableJoinRelationBlock',
   components: {
     CustomSelect,
-    TooltipDialog
+    TooltipDialog,
+    DefaultSelect
   },
   props: {
     relationInfo: {
@@ -169,6 +188,24 @@ export default {
 
     .delete-icon {
       margin-right: 8px;
+    }
+  }
+
+  .input-block {
+    width: 290px;
+    margin-bottom: 20px;
+    display: inline-block;
+
+    .label {
+      display: block;
+      font-size: 14px;
+      line-height: 20px;
+      color: #ccc;
+      margin-bottom: 8px;
+    }
+
+    .input {
+      height: 40px;
     }
   }
 
