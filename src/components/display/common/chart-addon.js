@@ -133,52 +133,54 @@ export function commonChartOptions () {
     }
   }
 }
-export const chartOptions = {
-  ...commonChartOptions(),
-  // grid: {
-  //   containLabel: true
-  // },
-  xAxis: {
-    name: '',
-    nameLocation: 'end',
-    nameGap: 5,
-    nameTextStyle: {
-      fontSize: 12,
-      color: chartVariable['textColor']
-    },
-    axisLabel: {
-      rotate: 30,
-      color: chartVariable['xAxisLabelColor']
-    },
-    axisLine: {
-      lineStyle: {
-        color: chartVariable['xAxisColor']
+export function chartOptions () {
+  return {
+    ...commonChartOptions(),
+    // grid: {
+    //   containLabel: true
+    // },
+    xAxis: {
+      name: '',
+      nameLocation: 'end',
+      nameGap: 5,
+      nameTextStyle: {
+        fontSize: 12,
+        color: chartVariable['textColor']
+      },
+      axisLabel: {
+        rotate: 30,
+        color: chartVariable['xAxisLabelColor']
+      },
+      axisLine: {
+        lineStyle: {
+          color: chartVariable['xAxisColor']
+        }
+      },
+      // 刻度
+      axisTick: {
+        show: false
       }
     },
-    // 刻度
-    axisTick: {
-      show: false
-    }
-  },
-  yAxis: {
-    type: 'value',
-    name: '',
-    // nameGap: 58,
-    // nameLocation: 'middle',
-    nameTextStyle: {
-      fontSize: 12,
-      color: chartVariable['textColor']
+    yAxis: {
+      type: 'value',
+      name: '',
+      // nameGap: 58,
+      // nameLocation: 'middle',
+      nameTextStyle: {
+        fontSize: 12,
+        color: chartVariable['textColor']
+      },
+      axisLabel: {
+        color: chartVariable['yAxisLabelColor']
+      },
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      },
+      scale: true
     },
-    axisLabel: {
-      color: chartVariable['yAxisLabelColor']
-    },
-    axisLine: {
-      show: false
-    },
-    axisTick: {
-      show: false
-    },
-    scale: true
-  },
-  series: []
+    series: []
+  }
 }

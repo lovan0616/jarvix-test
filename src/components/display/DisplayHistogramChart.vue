@@ -33,7 +33,7 @@ import ecStat from 'echarts-stat'
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 import { getDrillDownTool } from '@/components/display/common/addons'
-let chartAddon = JSON.parse(JSON.stringify(chartOptions))
+let chartAddon = JSON.parse(JSON.stringify(chartOptions()))
 // 直方圖的參數設定
 let histogramChartConfig = {
   xAxis: {

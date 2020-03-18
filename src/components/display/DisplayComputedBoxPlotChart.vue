@@ -86,7 +86,7 @@ export default {
   },
   computed: {
     chartOption () {
-      let chartAddon = JSON.parse(JSON.stringify(chartOptions))
+      let chartAddon = JSON.parse(JSON.stringify(chartOptions()))
       let boxPlotConfig = JSON.parse(JSON.stringify(boxPlotChartConfig))
 
       chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotConfig.xAxis}
