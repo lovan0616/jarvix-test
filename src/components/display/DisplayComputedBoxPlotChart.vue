@@ -87,15 +87,17 @@ export default {
   computed: {
     chartOption () {
       let chartAddon = JSON.parse(JSON.stringify(chartOptions))
-      chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotChartConfig.xAxis}
-      chartAddon.tooltip.trigger = boxPlotChartConfig.tooltip.trigger
+      let boxPlotConfig = JSON.parse(JSON.stringify(boxPlotChartConfig))
+
+      chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotConfig.xAxis}
+      chartAddon.tooltip.trigger = boxPlotConfig.tooltip.trigger
       chartAddon.xAxis.data = this.dataset.index
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
       chartAddon.yAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
-      boxPlotChartConfig.chartData.data = this.dataset.data.map(element => {
+      boxPlotConfig.chartData.data = this.dataset.data.map(element => {
         return [element.low, element.q1, element.q2, element.q3, element.high]
       })
-      boxPlotChartConfig.outlier.data = this.dataset.data.reduce((acc, cur, index) => {
+      boxPlotConfig.outlier.data = this.dataset.data.reduce((acc, cur, index) => {
         if (cur.outliers.length > 0) {
           let outliers = cur.outliers.map(element => {
             return [index, element]
@@ -105,10 +107,10 @@ export default {
           return acc
         }
       }, [])
-      chartAddon.series[0] = boxPlotChartConfig.chartData
+      chartAddon.series[0] = boxPlotConfig.chartData
       chartAddon.series[0].itemStyle.borderColor = '#4DE2F0'
       chartAddon.series[0].itemStyle.color = '#000'
-      chartAddon.series[1] = boxPlotChartConfig.outlier
+      chartAddon.series[1] = boxPlotConfig.outlier
       chartAddon.series[1].itemStyle = {
         color: chartVariable['chartColorList-2']
       }
@@ -176,8 +178,8 @@ export default {
                   rowData = [this.$t('resultDescription.max')]
                   break
               }
-              for (let j = 0; j < boxPlotChartConfig.chartData.data.length; j++) {
-                rowData.push(boxPlotChartConfig.chartData.data[j][i])
+              for (let j = 0; j < boxPlotConfig.chartData.data.length; j++) {
+                rowData.push(boxPlotConfig.chartData.data[j][i])
               }
               exportData.push(rowData)
             }

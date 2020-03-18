@@ -5,7 +5,7 @@
         v-show="hasFilter"
       ><svg-icon icon-class="filter" class="icon"></svg-icon> {{ $t('resultDescription.filterRestrictions') }}</div>
       <div class="user-question-block"
-        :class="{'has-filter': hasFilter}"
+        :class="{'has-filter': hasFilter, 'is-use-algorithm': isUseAlgorithm}"
       >
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
         <input class="question-input input"
@@ -16,6 +16,7 @@
           v-model.trim="userQuestion"
           @keypress.enter.prevent="enterQuestion"
           @keyup.shift.ctrl.72="toggleHelper()"
+          @keyup.shift.ctrl.90="toggleAlgorithm()"
         >
         <a href="javascript:void(0);" class="clean-btn"
           @click="cleanQuestion"
@@ -125,6 +126,9 @@ export default {
       } else {
         this.showHelper()
       }
+    },
+    toggleAlgorithm () {
+      this.$store.commit('chatBot/updateIsUseAlgorithm', !this.isUseAlgorithm)
     }
   },
   computed: {
@@ -142,6 +146,9 @@ export default {
       return this.userQuestion
         ? this.$store.state.dataSource.historyQuestionList.filter(element => { return element.question.indexOf(this.userQuestion) > -1 })
         : []
+    },
+    isUseAlgorithm () {
+      return this.$store.state.chatBot.isUseAlgorithm
     }
   },
   watch: {
@@ -176,6 +183,12 @@ export default {
       }
       .ask-btn {
         color: $filter-color;
+      }
+    }
+
+    &.is-use-algorithm {
+      .ask-btn {
+        color: $theme-color-warning;
       }
     }
 
@@ -247,6 +260,15 @@ export default {
     &.has-filter {
       bottom: 137px;
     }
+  }
+
+  .algorithm-status {
+    position: absolute;
+    left: 0;
+    top: -18px;
+    font-size: 14px;
+    color: #333;
+    opacity: 0.6;
   }
 
   .history-question-block {

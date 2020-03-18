@@ -23,6 +23,19 @@ export default {
       type: Array,
       default: () => []
     }
+  },
+  mounted () {
+    document.addEventListener('click', this.autoHide, false)
+  },
+  destroyed () {
+    document.removeEventListener('click', this.autoHide, false)
+  },
+  methods: {
+    autoHide (evt) {
+      if (!this.$el.contains(evt.target)) {
+        this.$emit('close')
+      }
+    }
   }
 }
 </script>

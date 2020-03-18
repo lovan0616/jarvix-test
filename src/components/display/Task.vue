@@ -29,6 +29,7 @@
         :causes="componentData.causes"
         :description="componentData.description"
         :total="componentData.total"
+        :key="componentId"
         @next="getNewPageInfo"
       ></component>
       <div class="task-note"
