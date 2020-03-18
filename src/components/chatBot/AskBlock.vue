@@ -16,7 +16,7 @@
           v-model.trim="userQuestion"
           @keypress.enter.prevent="enterQuestion"
           @keyup.shift.ctrl.72="toggleHelper()"
-          @keyup.shift.ctrl.90.88.67.86="toggleAlgorithm()"
+          @keyup.shift.ctrl.90="toggleAlgorithm()"
         >
         <a href="javascript:void(0);" class="clean-btn"
           @click="cleanQuestion"
