@@ -22,7 +22,7 @@
         v-else
       >{{ relationInfo.name }}</div>
     </div>
-    <div class="input-block">
+    <div class="input-block select">
       <label for="" class="label">*{{ $t('editing.selectJoinType') }}</label>
       <default-select class="tag-select input"
 
@@ -196,6 +196,11 @@ export default {
     margin-bottom: 20px;
     display: inline-block;
 
+    &.select {
+      width: 170px;
+      margin-left: 15px;
+    }
+
     .label {
       display: block;
       font-size: 14px;
@@ -258,6 +263,17 @@ export default {
         margin-right: 16px;
       }
     }
+  }
+}
+
+>>> .tag-select.el-select {
+  .el-input__inner {
+    height: 32px;
+    line-height: 33px;
+    font-size: 16px;
+  }
+  .el-input__icon {
+    line-height: 32px;
   }
 }
 </style>
