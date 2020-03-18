@@ -3,13 +3,13 @@
     <div class="filter-title">
       <svg-icon icon-class="filter" class="icon"></svg-icon>{{ dataColumnNames }}
     </div>
-    <div class="filter-description-block"
+    <ul class="filter-description-block"
       :class="{'last': !notLast}"
       v-for="(restraint, index) in restriction"
       :key="index"
     >
       <template v-if="restraint.type === 'compound'">
-        <div class="filter-description"
+        <li class="filter-description"
           v-for="(sub_restraint, restraintsIndex) in restraint.restraints"
           :key="'restraints-' + index + '-' + restraintsIndex"
         >
@@ -23,18 +23,22 @@
               end: isNaN(sub_restraint.properties.end) ? sub_restraint.properties.end : roundNumber(sub_restraint.properties.end)
             }) }}
           </template>
-        </div>
+        </li>
       </template>
       <template v-else-if="restraint.type === 'enum'">
-        {{restraint.properties['datavalues'].join(', ')}}
+        <li class="filter-description">
+          {{restraint.properties['datavalues'].join(', ')}}
+        </li>
       </template>
       <template v-else-if="restraint.type === 'range'">
-        {{ $t('resultDescription.between', {
-          start: isNaN(restraint.properties.start) ? restraint.properties.start : roundNumber(restraint.properties.start),
-          end: isNaN(restraint.properties.end) ? restraint.properties.end : roundNumber(restraint.properties.end)
-        }) }}
+        <li class="filter-description">
+          {{ $t('resultDescription.between', {
+            start: isNaN(restraint.properties.start) ? restraint.properties.start : roundNumber(restraint.properties.start),
+            end: isNaN(restraint.properties.end) ? restraint.properties.end : roundNumber(restraint.properties.end)
+          }) }}
+        </li>
       </template>
-    </div>
+    </ul>
   </div>
 </template>
 <script>
@@ -80,7 +84,7 @@ export default {
 }
 
 .filter-description-block {
-  padding: 5px 12px;
+  padding: 5px 10px 5px 28px;
   margin: 9px 0 9px 28px;
   background-color: rgba(69, 78, 78, .8);
   border-radius: 5px;
@@ -100,8 +104,8 @@ export default {
   }
 
   .filter-description {
-    padding-top: 5px;
-    padding-bottom: 5px;
+    font-size: 12px;
+    line-height: 18px;
   }
 }
 </style>
