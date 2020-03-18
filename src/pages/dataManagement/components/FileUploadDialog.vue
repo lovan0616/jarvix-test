@@ -17,8 +17,8 @@
 </template>
 <script>
 import ChooseFileType from './ChooseFileType'
-import LocalFileUploadFlow from './LocalFileUploadFlow'
-import RemoteConnectionFlow from './RemoteConnectionFlow'
+import LocalFileUploadFlow from './localFileUpload/LocalFileUploadFlow'
+import RemoteConnectionFlow from './remoteConnection/RemoteConnectionFlow'
 
 export default {
   name: 'FileUploadDialog',

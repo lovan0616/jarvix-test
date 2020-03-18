@@ -52,7 +52,7 @@
 <script>
 import { dbConnect, buildStorage } from '@/API/Storage'
 import InputBlock from '@/components/InputBlock'
-import UploadProcessBlock from './UploadProcessBlock'
+import UploadProcessBlock from '../UploadProcessBlock'
 
 export default {
   inject: ['$validator'],
