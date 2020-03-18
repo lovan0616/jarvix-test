@@ -233,6 +233,8 @@ export default {
         this.selectedData = []
         return
       }
+      console.log(params.batch[0].areas, this.dataset.index.length)
+
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
         return {
@@ -241,8 +243,8 @@ export default {
             dc_name: this.title.xAxis[0].dc_name,
             data_type: this.title.xAxis[0].data_type,
             display_name: this.title.xAxis[0].display_name,
-            start: this.dataset.index[coordRange[0]],
-            end: this.dataset.index[coordRange[1]]
+            start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
+            end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]]
           }
         }
       })
