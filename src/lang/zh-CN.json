@@ -8,6 +8,8 @@
     "setting": "设定"
   },
   "message": {
+    "joinTableBuilt": "资料表关联建立完成",
+    "remindAdjustMainDate": "资料表具有多项日期栏位，您可进行主要日期栏位调整。",
     "builded": "资料源建立完成",
     "noData": "目前没有资料",
     "noResult": "目前暂无相关资讯",
@@ -49,7 +51,8 @@
     "step3": {
       "name": "看快速指引",
       "hint": "你也可以使用快速指引，一键开始进行搜寻分析"
-    }
+    },
+    "goAdjust": "前往调整"
   },
   "editing": {
     "confirmDeleteForeign": "确认删除此关联吗？",

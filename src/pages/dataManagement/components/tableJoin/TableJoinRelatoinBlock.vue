@@ -1,100 +1,150 @@
 <template>
-  <div class="single-relation-block">
-    <!-- <div class="action-block">
-      <div class="title">{{ $t('editing.columnCorrelation') }}</div>
-      <a href="javascript:void(0)" class="link"
-        @click="checkDeleteRelations(relationInfo.id)"
-      ><svg-icon icon-class="delete" class="delete-icon"></svg-icon>{{ $t('button.delete') }}</a>
-      <tooltip-dialog class="confirm-delete-dialog"
-        v-if="showConfirmDeleteDialog"
-        @cancel="cancelDelete"
-        @confirm="deleteRelations"
-      ></tooltip-dialog>
-    </div> -->
-    <div class="input-block">
+  <div class="single-join-table">
+    <div
+      v-if="!isEditing"
+      class="title-block"
+    >
+      <h3 class="table-name">{{ relationInfoData.name }}</h3>
+      <h6 class="join-type">
+        關聯方式:
+        <span
+          v-for="(relation, relationIndex) in relationInfoData.dataFrameRelationList"
+          :key="relationIndex"
+        >{{ getJoinTableName(relation.joinType) }}</span>
+      </h6>
+    </div>
+    <div
+      v-if="isEditing"
+      class="input-block"
+      :class="{'is-editing': isEditing}"
+    >
       <label for="" class="label">*{{ $t('editing.tableName') }}</label>
       <input type="text" class="input"
-        v-if="!relationInfo.id"
         :placeholder="$t('editing.pleaseEnterName')"
-        v-model="relationInfo.name"
+        v-model="relationInfoData.name"
       >
+    </div>
+    <div class="button-block">
+      <button type="button" class="btn btn-default btn-save"
+        v-if="isEditing && !relationInfoData.id"
+        :disabled="isLoading"
+        @click="relationInfoData.id ? updateJoinTable : buildJoinTable"
+      >{{ relationInfoData.id ? $t('button.update') : $t('button.build') }}</button>
+      <button type="button" class="btn btn-outline"
+        v-if="isEditing && !relationInfoData.id"
+        :disabled="isLoading"
+        @click="cancelAddingJoinTable"
+      >{{ $t('button.cancel') }}</button>
+      <button type="button" class="btn btn-outline"
+        v-if="!isEditing"
+        @click="toggleIsEditing"
+      >{{ $t('button.edit') }}</button>
+      <button type="button" class="btn btn-outline"
+        v-if="isEditing && relationInfoData.id"
+        :disabled="isLoading"
+        @click="toggleIsEditing"
+      >{{ $t('button.close') }}</button>
+    </div>
+    <section
+      v-if="isEditing"
+      class="join-relation-list"
+    >
       <div
-        v-else
-      >{{ relationInfo.name }}</div>
-    </div>
-    <div class="input-block select">
-      <label for="" class="label">*{{ $t('editing.selectJoinType') }}</label>
-      <default-select class="tag-select input"
-
-      ></default-select>
-    </div>
-    <div class="correlation-block">
-      <div class="select-block">
-        <custom-select
-          :key="new Date().getTime()+'-left-top'"
-          icon="table"
-          :default-msg="$t('editing.selectForeign')"
-          :option-list="tableList"
-          v-model="relationInfo.leftDataFrameId"
-        ></custom-select>
-        <custom-select
-          :key="new Date().getTime()+'-left-down'"
-          icon="column"
-          :default-msg="$t('editing.selectColumn')"
-          :option-list="leftTableColumnList"
-          v-model="relationInfo.leftDataColumnId"
-        ></custom-select>
+        class="join-relation"
+        v-for="(relation, relationIndex) in relationInfoData.dataFrameRelationList"
+        :key="relationIndex"
+      >
+        <div
+          class="input-block select"
+          :class="{'is-editing': isEditing}"
+        >
+          <label for="" class="label">{{ $t('editing.selectJoinType') }}</label>
+          <default-select
+            class="tag-select input"
+            v-model="relation.joinType"
+            :option-list="joinTypeOptions"
+          />
+        </div>
+        <div
+          class="correlation-block"
+        >
+          <relation-select-block
+            :table-list="tableList"
+            :initial-data-frame-id.sync="relation.leftDataFrameId"
+            :initial-data-Column-id.sync="relation.leftDataColumnId"
+            :index="relationIndex"
+          />
+          <svg-icon icon-class="table-correlation" class="correlation-icon"></svg-icon>
+          <relation-select-block
+            :table-list="tableList"
+            :initial-data-frame-id.sync="relation.rightDataFrameId"
+            :initial-data-Column-id.sync="relation.rightDataColumnId"
+            :index="relationIndex"
+          />
+        </div>
       </div>
-      <svg-icon icon-class="table-correlation" class="correlation-icon"></svg-icon>
-      <div class="select-block">
-        <custom-select
-          :key="new Date().getTime()+'-right-top'"
-          icon="table"
-          :default-msg="$t('editing.selectForeign')"
-          :option-list="tableList"
-          v-model="relationInfo.rightDataFrameId"
-        ></custom-select>
-        <custom-select
-          :key="new Date().getTime()+'-right-down'"
-          icon="column"
-          :default-msg="$t('editing.selectColumn')"
-          :option-list="rightTableColumnList"
-          v-model="relationInfo.rightDataColumnId"
-        ></custom-select>
-      </div>
+    </section>
+    <div
+      class="footer-button-block"
+      v-if="relationInfoData.id && isEditing"
+    >
+      <!-- <a href="javascript:void(0)" class="btn btn-secondary btn-delete"
+        @click="checkDeleteRelations(relationInfoData.id)"
+      >{{ $t('button.delete') }}</a> -->
+      <a
+        href="javascript:void(0)"
+        class="btn btn-secondary btn-delete"
+        @click="deleteJoinTable()"
+      >{{ $t('button.delete') }}</a>
     </div>
-    <div class="button-block footer-button-block">
-      <div class="control-button-block">
-        <button type="button" class="btn btn-default"
-          @click="saveRelations"
-        >{{ $t('button.save') }}</button>
-      </div>
+    <div
+      v-if="newTableCreated"
+      class="reminder-block"
+    >
+      <span class="reminder-title">
+        <svg-icon icon-class="lamp" />
+        {{$t('resultDescription.prompt')}}：
+      </span>
+      <span class="reminder-description">
+        {{$t('message.remindAdjustMainDate')}}
+      </span>
+      <!--TODO: 轉換到設定 main date 的 component-->
+      <a
+        href="javascript:void(0)"
+        class="btn-link"
+      >{{$t('guiding.goAdjust')}}</a>
     </div>
   </div>
 </template>
 <script>
-import CustomSelect from '../CustomSelect'
+import RelationSelectBlock from './RelationSelectBlock'
 import TooltipDialog from '@/components/dialog/TooltipDialog'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import { getDataFrameColumnInfoById, saveDataFrameRelation, updateDataFrameRelationById } from '@/API/DataSource'
+import { createJoinTable, updateJoinTable, deleteJoinTable } from '@/API/JoinTable'
 import { Message } from 'element-ui'
 
 export default {
   name: 'TableJoinRelationBlock',
   components: {
-    CustomSelect,
     TooltipDialog,
-    DefaultSelect
+    DefaultSelect,
+    RelationSelectBlock
   },
   props: {
     relationInfo: {
-      type: Object
+      type: Object,
+      required: true
     },
     tableList: {
       type: Array
     },
     index: {
-      type: Number
+      type: Number,
+      required: true
+    },
+    joinTypeOptions: {
+      type: Array,
+      required: true
     }
   },
   data () {
@@ -102,68 +152,76 @@ export default {
       deleteJoinId: null,
       showConfirmDeleteDialog: false,
       leftTableColumnList: [],
-      rightTableColumnList: []
-    }
-  },
-  mounted () {
-    if (this.relationInfo.leftDataFrameId) {
-      this.relationInfo.leftDataFrameId = parseInt(this.relationInfo.leftDataFrameId)
-      getDataFrameColumnInfoById(this.relationInfo.leftDataFrameId).then(response => {
-        this.leftTableColumnList = response
-      })
-    }
-    if (this.relationInfo.rightDataFrameId) {
-      this.relationInfo.rightDataFrameId = parseInt(this.relationInfo.rightDataFrameId)
-      getDataFrameColumnInfoById(this.relationInfo.rightDataFrameId).then(response => {
-        this.rightTableColumnList = response
-      })
+      rightTableColumnList: [],
+      isEditing: true,
+      currentDataSourceId: parseInt(this.$route.params.id),
+      isLoading: false,
+      relationInfoData: JSON.parse(JSON.stringify(this.relationInfo)),
+      newTableCreated: false
     }
   },
   methods: {
     checkDeleteRelations () {
       this.showConfirmDeleteDialog = true
     },
+    cancelAddingJoinTable () {
+      this.$emit('cancelAddingJoinTable', this.index)
+    },
     cancelDelete () {
       this.showConfirmDeleteDialog = false
     },
-    deleteRelations () {
-      this.$emit('deleteRelations', this.index)
-    },
-    saveRelations () {
-      let promise
-      if (this.relationInfo.id) {
-        promise = updateDataFrameRelationById(this.relationInfo.id, this.relationInfo)
-      } else {
-        promise = saveDataFrameRelation(this.relationInfo)
-      }
-
-      promise.then(() => {
-        Message({
-          message: this.$t('message.saveSuccess'),
-          type: 'success',
-          duration: 3 * 1000
+    deleteJoinTable () {
+      this.isLoading = true
+      deleteJoinTable(this.relationInfoData.id)
+        .then(() => {
+          this.$emit('deleteJoinTable', this.index)
         })
-      })
-    }
-  },
-  watch: {
-    'relationInfo.leftDataFrameId' (value) {
-      this.relationInfo.leftDataColumnId = null
-      getDataFrameColumnInfoById(value).then(response => {
-        this.leftTableColumnList = response
-      })
+        .catch(() => {
+          this.isLoading = false
+        })
     },
-    'relationInfo.rightDataFrameId' (value) {
-      this.relationInfo.rightDataColumnId = null
-      getDataFrameColumnInfoById(value).then(response => {
-        this.rightTableColumnList = response
-      })
+    buildJoinTable () {
+      this.isLoading = true
+      createJoinTable(this.relationInfoData)
+        .then(response => {
+          this.relationInfoData.id = response.id
+          this.isLoading = false
+          this.isEditing = false
+          this.newTableCreated = true
+          Message({
+            message: this.$t('message.joinTableBuilt'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+        })
+        .catch(() => { this.isLoading = false })
+    },
+    updateJoinTable () {
+      this.isLoading = true
+      updateJoinTable(this.relationInfoData)
+        .then(response => {
+          this.isEditing = false
+          this.isLoading = false
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+        })
+        .catch(() => { this.isLoading = false })
+    },
+    getJoinTableName (joinType) {
+      return this.joinTypeOptions.find(option => option.value === joinType).name
+    },
+    toggleIsEditing () {
+      this.isEditing = !this.isEditing
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.single-relation-block {
+.single-join-table {
+  position: relative;
   padding: 24px 32px;
   border-radius: 4px;
   background-color: rgba(50, 58, 58, 0.95);
@@ -176,29 +234,40 @@ export default {
     margin-bottom: 16px;
   }
 
-  .action-block {
-    position: relative;
-    margin-bottom: 16px;
+  .title-block {
     display: flex;
-    justify-content: space-between;
 
-    .link {
-      line-height: 19px;
+    .table-name,
+    .join-type {
+      margin: 0;
+      line-height: 36px;
+      font-weight: normal;
     }
 
-    .delete-icon {
-      margin-right: 8px;
+    .table-name {
+      font-size: 18px;
+      width: 290px;
+    }
+
+    .join-type {
+      font-size: 14px;
+      color: #DDDDDD;
     }
   }
 
   .input-block {
     width: 290px;
-    margin-bottom: 20px;
     display: inline-block;
 
+    &.is-editing {
+      margin-bottom: 20px;
+    }
+
     &.select {
-      width: 170px;
-      margin-left: 15px;
+      position: absolute;
+      top: 24px;
+      left: 340px;
+      width: 160px;
     }
 
     .label {
@@ -211,6 +280,16 @@ export default {
 
     .input {
       height: 40px;
+    }
+  }
+
+  .button-block {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+
+    .btn:not(:last-child) {
+      margin-right: 7px;
     }
   }
 
@@ -227,53 +306,42 @@ export default {
     .correlation-icon {
       width: 60px;
       font-size: 60px;
-      color: $theme-color-primary;
+      color: #485454;
     }
   }
 
-  .select-block {
-    flex: 1;
-    border: 2px solid $theme-color-primary;
-    padding: 16px;
-    border-radius: 8px;
-
-    & >>> .custom-select-block {
-      width: 100%;
-
-      &:not(:last-child) {
-        margin-bottom: 12px;
-      }
-    }
-
-    .join-icon {
-      font-size: 24px;
-    }
-  }
-
-  .button-block {
+  .footer-button-block {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 
-    &.footer-button-block {
-      justify-content: flex-end;
-    }
-
-    .control-button-block {
-      .btn:not(:last-child) {
-        margin-right: 16px;
-      }
+    .btn-delete {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
-}
 
->>> .tag-select.el-select {
-  .el-input__inner {
-    height: 32px;
-    line-height: 33px;
-    font-size: 16px;
+  .reminder-block {
+    background-color: rgba(0, 0, 0, 0.55);
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+
+    .reminder-title {
+      color: #FFDF6F;
+      font-weight: $theme-font-weight-semi-bold;
+    }
+
+    .btn-link {
+      color: #00C9DC;
+      text-decoration: underline;
+    }
   }
-  .el-input__icon {
-    line-height: 32px;
+
+  & >>> .tag-select.el-select {
+    .el-input__inner {
+      padding-left: 0;
+    }
   }
 }
 </style>

@@ -8,6 +8,8 @@
     "setting": "設定"
   },
   "message": {
+    "joinTableBuilt": "資料表關聯建立完成",
+    "remindAdjustMainDate": "資料表具有多項日期欄位，您可進行主要日期欄位調整。",
     "builded": "資料源建立完成",
     "noData": "目前沒有資料",
     "noResult": "目前暫無相關資訊",
@@ -49,7 +51,8 @@
     "step3": {
       "name": "看快速指引",
       "hint": "你也可以使用快速指引，一鍵開始進行搜尋分析"
-    }
+    },
+    "goAdjust": "前往調整"
   },
   "editing": {
     "confirmDeleteForeign": "確認刪除此關聯嗎？",

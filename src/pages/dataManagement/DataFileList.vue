@@ -45,7 +45,7 @@
           <button class="btn-m btn-secondary btn-has-icon"
             @click="toggleJoinTableDialog"
           >
-            <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('description.addDataSheetConnect') }}
+            <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
           </button>
         </div>
         <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div> -->
@@ -79,7 +79,7 @@
     ></confirm-delete-file-dialog>
     <edit-table-join-relation-dialog
       v-if="showJoinTableDialog"
-      @cancel="toggleJoinTableDialog"
+      @cancel="toggleJoinTableDialog(); fetchData()"
     ></edit-table-join-relation-dialog>
     <edit-column-dialog
       v-if="showEditColumnDialog"
