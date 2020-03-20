@@ -58,6 +58,10 @@
     "goAdjust": "前往调整"
   },
   "editing": {
+    "localUpload": "本机档案上传",
+    "localUploadDescription": "透过电脑上传.xlsx .xls .csv<br>档案资料并进行建置",
+    "remoteConnection": "连接资料库建置",
+    "remoteConnectionDescription": "直接读取您的资料库资料<br>并进行资料复制和建置",
     "confirmDeleteForeign": "确认删除此关联吗？",
     "choiceDataSource": "请选择资料源",
     "createBoard": "建立新版",
@@ -116,6 +120,9 @@
     "processStep1": "填写资料源名称",
     "processStep2": "上传资料/连结资料库",
     "processStep3": "开始新增",
+    "connectStep1": "连接资料库",
+    "connectStep2": "选择资料",
+    "connectStep3": "栏位设定",
     "dataProcessing": "资料处理中",
     "dataSource": "资料源",
     "newDataSource": "新增资料源",
@@ -134,7 +141,7 @@
     "uploadUser": "上传者",
     "status": "状态",
     "countOfTable": "资料表数",
-    "choice": "请选择",
+    "defaultOption": "请选择",
     "userLogin": "使用者登入",
     "userSignup": "使用者注册",
     "userManage": "使用者管理",
@@ -158,6 +165,7 @@
     "userTitle": "使用者名称",
     "userAccount": "使用者帐号",
     "setLoginPassword": "设定密码",
+    "loginAccount": "登入帐号",
     "loginPassword": "登入密码",
     "confirmPassword": "确认密码",
     "pleaseConfirmPassword": "请确认密码",
@@ -321,7 +329,8 @@
     "dateTimeColumnSetting": "日期栏位设定",
     "select": "选择",
     "download": "资料下载",
-    "restrict": "分析条件限制"
+    "restrict": "分析条件限制",
+    "start": "开始"
   },
   "aggregation": {
     "mean": "平均",

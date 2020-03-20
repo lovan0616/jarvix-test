@@ -3,14 +3,18 @@
     <div class="dialog-container">
       <transition name="fade" mode="out-in">
         <choose-file-type
-          v-if="!currentUploadInfo.name"
+          v-if="!currentUploadInfo.type"
         ></choose-file-type>
-        <local-file-upload-flow
+        <template
           v-else
-        ></local-file-upload-flow>
-        <!-- <remote-connection-flow
-          v-if="currentUploadInfo.type === 'mysql'"
-        ></remote-connection-flow> -->
+        >
+          <local-file-upload-flow
+            v-if="currentUploadInfo.type === 'local'"
+          ></local-file-upload-flow>
+          <remote-connection-flow
+            v-else
+          ></remote-connection-flow>
+        </template>
       </transition>
     </div>
   </div>
@@ -30,11 +34,15 @@ export default {
   destroyed () {
     // 還原狀態
     this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-    this.$store.commit('dataManagement/updateUploadFileList', [])
-    this.$store.commit('dataManagement/updateFileLoaded', false)
-    this.$store.commit('dataManagement/updateConnectionStatus', null)
+    if (this.currentUploadInfo.type === 'local') {
+      this.$store.commit('dataManagement/updateUploadFileList', [])
+      this.$store.commit('dataManagement/updateFileLoaded', false)
+    } else {
+      this.$store.commit('dataManagement/updateConnectionStatus', null)
+      this.$store.commit('dataManagement/clearConnectionInfo')
+    }
+
     this.$store.commit('dataManagement/clearCurrentUploadInfo')
-    this.$store.commit('dataManagement/clearConnectionInfo')
     this.$store.commit('dataManagement/updateShowSetTableJoin', false)
   },
   methods: {

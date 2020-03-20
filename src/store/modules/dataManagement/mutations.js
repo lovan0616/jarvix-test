@@ -14,6 +14,9 @@ export default {
   updateCurrentUploadInfo (state, data) {
     state.currentUploadInfo = data
   },
+  updateCurrentUploadDataType (state, data) {
+    state.currentUploadInfo.type = data
+  },
   updateCurrentUploadDataSourceName (state, data) {
     state.currentUploadInfo.name = data
   },

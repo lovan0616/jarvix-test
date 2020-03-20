@@ -78,7 +78,7 @@ import { Message } from 'element-ui'
 import { mapState } from 'vuex'
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
-import UploadProcessBlock from '../UploadProcessBlock'
+import UploadProcessBlock from './UploadProcessBlock'
 import { createDataSource } from '@/API/DataSource'
 
 export default {

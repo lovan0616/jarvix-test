@@ -2,7 +2,7 @@
   <div class="remote-connection">
     <div class="dialog-title">{{ $t('editing.connectMySQL') }}</div>
     <upload-process-block
-      :step="isLoading ? 3 : 2"
+      :step="isLoading ? 2 : 1"
     ></upload-process-block>
     <div class="dialog-body">
       <div class="loading-block"
@@ -15,24 +15,43 @@
         v-else
       >
         <input-block class="dialog-input"
-          :label="$t('editing.IPaddress')"
-          name="dataBase"
-          v-model="database"
+          :label="$t('editing.dataSourceName')"
+          name="dataSourceName"
+          v-model="dataSourceName"
           v-validate="'required'"
         ></input-block>
         <input-block class="dialog-input"
-          :label="$t('editing.username')"
-          name="userName"
-          v-model="username"
+          :label="$t('editing.loginAccount')"
+          name="loginAccount"
+          v-model="connectInfo.account"
           v-validate="'required'"
         ></input-block>
         <input-block class="dialog-input"
-          :label="$t('editing.password')"
-          name="password"
-          type="password"
-          v-model="password"
+          :label="$t('editing.loginPassword')"
+          name="loginPassword"
+          v-model="connectInfo.password"
           v-validate="'required'"
         ></input-block>
+        <default-select
+          v-model="connectInfo.databaseType"
+          :option-list="dbOptionList"
+          :placeholder="$t('editing.defaultOption')"
+          v-validate="'required'"
+        ></default-select>
+        <div class="inline-block">
+          <input-block class="dialog-input host"
+            label="Host"
+            name="host"
+            v-model="connectInfo.host"
+            v-validate="'required'"
+          ></input-block>
+          <input-block class="dialog-input port"
+            label="Port"
+            name="port"
+            v-model="connectInfo.port"
+            v-validate="'required'"
+          ></input-block>
+        </div>
       </div>
     </div>
     <div class="dialog-footer">
@@ -44,7 +63,7 @@
         <button class="btn btn-default"
           :disabled="isLoading"
           @click="nextStep"
-        >{{isLoading ? $t('button.connecting') : $t('button.connect')}}</button>
+        >{{isLoading ? $t('button.connecting') : $t('button.start')}}</button>
       </div>
     </div>
   </div>
@@ -52,18 +71,49 @@
 <script>
 import { dbConnect, buildStorage } from '@/API/Storage'
 import InputBlock from '@/components/InputBlock'
-import UploadProcessBlock from '../UploadProcessBlock'
+import UploadProcessBlock from './UploadProcessBlock'
+import DefaultSelect from '@/components/select/DefaultSelect'
 
 export default {
   inject: ['$validator'],
   name: 'RemoteConnection',
   components: {
     InputBlock,
-    UploadProcessBlock
+    UploadProcessBlock,
+    DefaultSelect
   },
   data () {
     return {
-      isLoading: false
+      isLoading: false,
+      dbOptionList: [
+        {
+          name: 'MSSQL',
+          value: 'MSSQL'
+        },
+        {
+          name: 'MYSQL',
+          value: 'MYSQL'
+        },
+        {
+          name: 'ORACLE',
+          value: 'ORACLE'
+        },
+        {
+          name: 'POSTGRESQL',
+          value: 'POSTGRESQL'
+        }
+      ],
+      dataSourceName: null,
+      connectInfo: {
+        account: null,
+        dataSourceId: null,
+        databaseType: null,
+        host: null,
+        name: null,
+        password: null,
+        port: null,
+        schema: null
+      }
     }
   },
   methods: {
@@ -126,7 +176,8 @@ export default {
 <style lang="scss" scoped>
 .remote-connection {
   .dialog-body {
-    background: #F8F8F8;
+    background-color: rgba(50, 58, 58, 0.95);
+    border-radius: 5px;
     margin-bottom: 16px;
   }
   .input-block-container {
@@ -136,7 +187,7 @@ export default {
   }
   .dialog-input {
     &:not(:last-child) {
-      margin-bottom: 68px;
+      margin-bottom: 36px;
     }
   }
   .loading-block {
@@ -152,6 +203,15 @@ export default {
     }
     .loading-text {
       color: $theme-text-color;
+    }
+  }
+  .inline-block {
+    width: 100%;
+    display: flex;
+
+    .host {
+      width: 74.66%;
+      margin-right: 16px;
     }
   }
 }

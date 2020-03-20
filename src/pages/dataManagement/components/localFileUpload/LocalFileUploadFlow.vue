@@ -14,6 +14,7 @@
   </div>
 </template>
 <script>
+import DataSourceName from './DataSourceName'
 import LocalFileUpload from './LocalFileUpload'
 import LocalFileUploadFinished from './LocalFileUploadFinished'
 import FirstTimeSetTableJoin from '../tableJoin/FirstTimeSetTableJoin'
@@ -21,6 +22,7 @@ import FirstTimeSetTableJoin from '../tableJoin/FirstTimeSetTableJoin'
 export default {
   name: 'LocalFileUploadFlow',
   components: {
+    DataSourceName,
     LocalFileUpload,
     LocalFileUploadFinished,
     FirstTimeSetTableJoin
