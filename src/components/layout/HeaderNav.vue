@@ -1,6 +1,7 @@
 <template>
   <nav class="nav-header">
     <router-link class="nav-item" to="/" exact>{{ $t('nav.index') }}</router-link>
+    <router-link class="nav-item" to="/algorithm">演算法</router-link>
     <router-link class="nav-item" to="/pinboard">{{ $t('nav.pinboard') }}</router-link>
     <div class="nav-item nav-item-dropdown nav-set">
       <div class="nav-set-flex">
