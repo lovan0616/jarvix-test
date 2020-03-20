@@ -79,6 +79,7 @@ export default {
   },
   computed: {
     selectedOption () {
+      if (!this.optionList.length) return
       return this.optionList.find(element => parseInt(element.id) === parseInt(this.value)).name
     },
     dropdownPosition () {

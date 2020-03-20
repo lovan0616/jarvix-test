@@ -66,10 +66,10 @@ export default {
         dataFrameRelationList: [
           {
             joinType: 'Inner',
-            leftDataFrameId: null,
-            leftDataColumnId: null,
-            rightDataFrameId: null,
-            rightDataColumnId: null
+            leftDataFrame: { id: null },
+            leftDataColumn: { id: null },
+            rightDataFrame: { id: null },
+            rightDataColumn: { id: null }
           }
         ],
         id: null,

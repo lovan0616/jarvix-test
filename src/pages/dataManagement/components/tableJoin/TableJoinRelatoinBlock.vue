@@ -19,30 +19,34 @@
       :class="{'is-editing': isEditing}"
     >
       <label for="" class="label">*{{ $t('editing.tableName') }}</label>
-      <input type="text" class="input"
+      <input
+        type="text"
+        class="input"
+        v-if="!relationInfoData.id"
         :placeholder="$t('editing.pleaseEnterName')"
         v-model="relationInfoData.name"
       >
+      <div class="name" v-else>{{ relationInfoData.name }}</div>
     </div>
     <div class="button-block">
       <button type="button" class="btn btn-default btn-save"
-        v-if="isEditing && !relationInfoData.id"
+        v-if="isEditing"
         :disabled="isLoading"
-        @click="relationInfoData.id ? updateJoinTable : buildJoinTable"
+        @click="relationInfoData.id ? updateJoinTable() : buildJoinTable()"
       >{{ relationInfoData.id ? $t('button.update') : $t('button.build') }}</button>
       <button type="button" class="btn btn-outline"
         v-if="isEditing && !relationInfoData.id"
         :disabled="isLoading"
-        @click="cancelAddingJoinTable"
+        @click="cancelAddingJoinTable()"
       >{{ $t('button.cancel') }}</button>
       <button type="button" class="btn btn-outline"
         v-if="!isEditing"
-        @click="toggleIsEditing"
+        @click="toggleIsEditing()"
       >{{ $t('button.edit') }}</button>
       <button type="button" class="btn btn-outline"
         v-if="isEditing && relationInfoData.id"
         :disabled="isLoading"
-        @click="toggleIsEditing"
+        @click="toggleIsEditing()"
       >{{ $t('button.close') }}</button>
     </div>
     <section
@@ -70,15 +74,15 @@
         >
           <relation-select-block
             :table-list="tableList"
-            :initial-data-frame-id.sync="relation.leftDataFrameId"
-            :initial-data-Column-id.sync="relation.leftDataColumnId"
+            :initial-data-frame-id.sync="relation.leftDataFrame.id"
+            :initial-data-column-id.sync="relation.leftDataColumn.id"
             :index="relationIndex"
           />
           <svg-icon icon-class="table-correlation" class="correlation-icon"></svg-icon>
           <relation-select-block
             :table-list="tableList"
-            :initial-data-frame-id.sync="relation.rightDataFrameId"
-            :initial-data-Column-id.sync="relation.rightDataColumnId"
+            :initial-data-frame-id.sync="relation.rightDataFrame.id"
+            :initial-data-column-id.sync="relation.rightDataColumn.id"
             :index="relationIndex"
           />
         </div>
@@ -175,6 +179,7 @@ export default {
       deleteJoinTable(this.relationInfoData.id)
         .then(() => {
           this.$emit('deleteJoinTable', this.index)
+          this.isLoading = false
         })
         .catch(() => {
           this.isLoading = false
@@ -182,9 +187,22 @@ export default {
     },
     buildJoinTable () {
       this.isLoading = true
-      createJoinTable(this.relationInfoData)
+      const joinTableData = {
+        dataFrameRelationList: [
+          {
+            joinType: this.relationInfoData.dataFrameRelationList[0].joinType,
+            leftDataColumnId: this.relationInfoData.dataFrameRelationList[0].leftDataColumn.id,
+            leftDataFrameId: this.relationInfoData.dataFrameRelationList[0].leftDataFrame.id,
+            rightDataColumnId: this.relationInfoData.dataFrameRelationList[0].rightDataColumn.id,
+            rightDataFrameId: this.relationInfoData.dataFrameRelationList[0].rightDataFrame.id
+          }
+        ],
+        dataSourceId: this.currentDataSourceId,
+        name: this.relationInfoData.name
+      }
+      createJoinTable(joinTableData)
         .then(response => {
-          this.relationInfoData.id = response.id
+          this.relationInfoData.id = response
           this.isLoading = false
           this.isEditing = false
           this.newTableCreated = true
@@ -194,11 +212,27 @@ export default {
             duration: 3 * 1000
           })
         })
-        .catch(() => { this.isLoading = false })
+        .catch((err) => {
+          console.log(err)
+          this.isLoading = false
+        })
     },
     updateJoinTable () {
       this.isLoading = true
-      updateJoinTable(this.relationInfoData)
+      const joinTableData = {
+        dataFrameRelationList: [
+          {
+            joinType: this.relationInfoData.dataFrameRelationList[0].joinType,
+            leftDataColumnId: this.relationInfoData.dataFrameRelationList[0].leftDataColumn.id,
+            leftDataFrameId: this.relationInfoData.dataFrameRelationList[0].leftDataFrame.id,
+            rightDataColumnId: this.relationInfoData.dataFrameRelationList[0].rightDataColumn.id,
+            rightDataFrameId: this.relationInfoData.dataFrameRelationList[0].rightDataFrame.id
+          }
+        ],
+        id: this.relationInfoData.id,
+        name: this.relationInfoData.name
+      }
+      updateJoinTable(joinTableData)
         .then(response => {
           this.isEditing = false
           this.isLoading = false
@@ -281,6 +315,10 @@ export default {
     .input {
       height: 40px;
     }
+
+    .name {
+      line-height: 40px;
+    }
   }
 
   .button-block {
@@ -326,6 +364,7 @@ export default {
     border-radius: 5px;
     padding: 8px;
     font-size: 14px;
+    margin-top: 17px;
 
     .reminder-title {
       color: #FFDF6F;
