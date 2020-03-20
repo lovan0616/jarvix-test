@@ -12,6 +12,34 @@ export function login (loginInfo) {
 }
 
 /**
+ * 註冊
+ * @param {Object} signupInfo - 使用者資訊
+ * @param {String} signupInfo.email - 使用者郵件
+ * @param {String} signupInfo.password - 使用者密碼
+ * @param {String} signupInfo.username - 使用者名稱
+ */
+export function signup (signupInfo) {
+  return request({
+    url: '/userNew',
+    method: 'POST',
+    data: signupInfo
+  })
+}
+
+/**
+ * 驗證邀請 Token
+ * @param {Object} validateInfo - 驗證邀請資訊
+ * @param {String} validateInfo.emailToken - 驗證 Token
+ */
+export function mailConfirm (validateInfo) {
+  return request({
+    url: '/mail/mailConfirm',
+    method: 'POST',
+    data: validateInfo
+  })
+}
+
+/**
  * 登出
  */
 export function logout () {

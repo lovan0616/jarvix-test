@@ -3,6 +3,7 @@ import { timeToDateTime } from './addons'
 import chartVariable from '@/styles/chart/variables.scss'
 // 與 DisplayBasicChart 共用的部分，這邊為了 i18n 改成 function
 export function commonChartOptions () {
+  console.log('jis')
   return {
     legend: {
       show: true,
