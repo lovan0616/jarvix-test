@@ -32,6 +32,21 @@ export default new Router({
           component: () => import('@/pages/pinboard/Pinboard')
         },
         {
+          path: 'algorithm',
+          name: 'PageAlgorithmList',
+          component: () => import('@/pages/algorithm/Index')
+        },
+        {
+          path: 'algorithm/1',
+          name: 'PageAlgorithmEdit1',
+          component: () => import('@/pages/algorithm/Edit1')
+        },
+        {
+          path: 'algorithm/2',
+          name: 'PageAlgorithmEdit2',
+          component: () => import('@/pages/algorithm/Edit2')
+        },
+        {
           path: 'data-management',
           component: () => import('@/pages/dataManagement/Index'),
           children: [
