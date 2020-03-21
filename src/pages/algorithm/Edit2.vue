@@ -33,7 +33,6 @@
             ></default-select>
           </div>
         </div>
-
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title must">目標參數欄位: </div>
@@ -198,34 +197,29 @@ import DefaultMultiSelect from '@/components/select/DefaultMultiSelect'
 export default {
   name: 'PageAlgorithmEdit',
   components: {
-      DataTable,
-      DefaultSelect,
-      DefaultMultiSelect
+    DataTable,
+    DefaultSelect,
+    DefaultMultiSelect
   },
   data () {
     return {
-        dataList: [
-            {
-                name: '第一個演算法',
-                creator: 'sygps',
-                createDate: '2020/3/20',
-                updateDate: '2020/3/20',
-                status: '可執行',
-
-            },
-            {
-                name: '第二個演算法',
-                creator: 'sygps',
-                createDate: '2020/3/20',
-                updateDate: '2020/3/20',
-                status: '可執行',
-
-            }
-        ],
+      dataList: [
+        {
+          name: '第一個演算法',
+          creator: 'sygps',
+          createDate: '2020/3/20',
+          updateDate: '2020/3/20',
+          status: '可執行'
+        },
+        {
+          name: '第二個演算法',
+          creator: 'sygps',
+          createDate: '2020/3/20',
+          updateDate: '2020/3/20',
+          status: '可執行'
+        }
+      ]
     }
-  },
-  mounted () {
-    
   },
   methods: {
     back () {
@@ -316,7 +310,6 @@ export default {
   
   .table-board {
     margin: 16px 0;
-
     .board-title-row {
       font-size: 20px;
       // color: #a7a7a7;
@@ -378,11 +371,9 @@ export default {
       }
     }
   }
-  
   .footer {
     float: right;
     margin: 0 -6px;
-
     .btn {
       margin: 0 6px;
     }

@@ -37,6 +37,11 @@ export default new Router({
           component: () => import('@/pages/algorithm/Index')
         },
         {
+          path: 'algorithm/create',
+          name: 'PageAlgorithmCreate',
+          component: () => import('@/pages/algorithm/Create')
+        },
+        {
           path: 'algorithm/1',
           name: 'PageAlgorithmEdit1',
           component: () => import('@/pages/algorithm/Edit1')

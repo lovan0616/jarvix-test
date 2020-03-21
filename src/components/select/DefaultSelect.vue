@@ -2,6 +2,7 @@
   <el-select class="sy-select theme-dark"
     v-model="selectedValue"
     :placeholder="placeholder"
+    @change="$emit('change', $event)"
   >
     <el-option
       v-for="option in optionList"
@@ -29,6 +30,12 @@ export default {
       set (value) {
         this.$emit('input', value)
       }
+    }
+  },
+  methods: {
+    onChange (e) {
+      console.log(e)
+      this.$emit('', e)
     }
   }
 }

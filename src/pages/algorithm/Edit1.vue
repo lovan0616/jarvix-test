@@ -52,7 +52,6 @@
               ]"
             ></default-select>
           </div>
-          
           <div class="content-item">
             <div class="item-title must">狀態欄位: </div>
             <default-select class="tag-select input"
@@ -215,29 +214,27 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 export default {
   name: 'PageAlgorithmEdit',
   components: {
-      DataTable,
-      DefaultSelect
+    DataTable,
+    DefaultSelect
   },
   data () {
     return {
-        dataList: [
-            {
-                name: '第一個演算法',
-                creator: 'sygps',
-                createDate: '2020/3/20',
-                updateDate: '2020/3/20',
-                status: '可執行',
-
-            },
-            {
-                name: '第二個演算法',
-                creator: 'sygps',
-                createDate: '2020/3/20',
-                updateDate: '2020/3/20',
-                status: '可執行',
-
-            }
-        ],
+      dataList: [
+        {
+          name: '第一個演算法',
+          creator: 'sygps',
+          createDate: '2020/3/20',
+          updateDate: '2020/3/20',
+          status: '可執行'
+        },
+        {
+          name: '第二個演算法',
+          creator: 'sygps',
+          createDate: '2020/3/20',
+          updateDate: '2020/3/20',
+          status: '可執行'
+        }
+      ]
     }
   },
   mounted () {

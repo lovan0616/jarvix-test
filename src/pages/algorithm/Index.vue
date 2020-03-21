@@ -4,14 +4,13 @@
       <h1 class="title">演算法管理</h1>
       <div class="bread-crumb">
         演算法
-        <!-- <router-link to="/data-management" class="title-link">{{ $t('editing.dataSource') }}</router-link>
-        <span class="divider">/</span>hello -->
       </div>
     </div>
     <div class="table-board">
       <div class="board-title-row">
         <div class="button-block">
           <button class="btn-m btn-default btn-has-icon"
+            @click="createAlgorithm"
           >
             <svg-icon icon-class="folder-plus" class="icon"></svg-icon>新增演算法
           </button>
@@ -19,16 +18,19 @@
       </div>
       <data-table
         :headers="tableHeaders"
-        :data-list="dataList"
+        :data-list="algorithms"
         :loading="false"
-        :empty-message="$t('editing.clickToCreateDataSource')"
+        empty-message="點擊建立您的演算法"
         @edit="editAlgorithm($event)"
+        @create="createAlgorithm"
+        @delete="deleteAlgorithm"
       >
       </data-table>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import DataTable from '@/components/table/DataTable'
 
 export default {
@@ -36,45 +38,36 @@ export default {
   components: {
     DataTable
   },
-  data () {
-    return {
-      dataList: [
-        {
-          id: 1,
-          name: '預測性維修',
-          creator: 'sygps',
-          createDate: '2020/3/20',
-          updateDate: '2020/3/20',
-          status: '可執行',
-        },
-        {
-          id: 2,
-          name: '第二個演算法',
-          creator: 'sygps',
-          createDate: '2020/3/20',
-          updateDate: '2020/3/20',
-          status: '可執行',
-
-        }
-      ],
-    }
-  },
-  mounted () {
-    
-  },
   methods: {
     editAlgorithm (e) {
       this.$router.push({
         path: `algorithm/${e.id}`
       })
+    },
+    createAlgorithm () {
+      this.$router.push({
+        path: `algorithm/create`
+      })
+    },
+    deleteAlgorithm (e) {
+      this.$store.dispatch('algorithm/deleteAlgorithm', e)
     }
   },
   computed: {
+    ...mapGetters('algorithm', ['algorithms']),
     tableHeaders () {
       return [
         {
           text: '演算法',
           value: 'name',
+          sort: true
+        //   link: {
+        //     name: 'PageDataFileList'
+        //   }
+        },
+        {
+          text: '目標資料表',
+          value: 'dataframe',
           sort: true
         //   link: {
         //     name: 'PageDataFileList'
@@ -149,7 +142,6 @@ export default {
     .spinner-icon {
       margin-right: 8px;
     }
-  }  
+  }
 }
-
 </style>

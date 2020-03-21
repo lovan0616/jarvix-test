@@ -7,6 +7,7 @@ import chatBot from './modules/chatBot'
 import result from './modules/result'
 import setting from './modules/setting'
 import userManagement from './modules/userManagement'
+import algorithm from './modules/algorithm'
 
 Vue.use(Vuex)
 
@@ -18,7 +19,8 @@ export default new Vuex.Store({
     chatBot,
     setting,
     userManagement,
-    result
+    result,
+    algorithm
   },
   state: {
     isShowChatRoom: false
