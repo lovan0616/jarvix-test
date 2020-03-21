@@ -28,5 +28,18 @@ export default {
     } else {
       return currentFilter[currentFilter.length - 1].questionId
     }
+  },
+  dataSourceList (state) {
+    let isDemoEnd = localStorage.getItem('isDemoEnd')
+    if (isDemoEnd) {
+      return state.dataSourceList
+    } else {
+      let demoDatasource = localStorage.getItem('demoDatasource') || 'molding_foxconn_predict'
+      return state.dataSourceList.reduce((res, curr) => {
+        if (curr.name === demoDatasource) return res
+        res.push(curr)
+        return res
+      }, [])
+    }
   }
 }

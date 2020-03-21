@@ -64,6 +64,7 @@ import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
 import { deleteDataSourceById, renameDataSourceById } from '@/API/DataSource'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'DataSourceList',
@@ -213,9 +214,7 @@ export default {
         }
       ]
     },
-    dataSourceList () {
-      return this.$store.state.dataSource.dataSourceList
-    },
+    ...mapGetters('dataSource', ['dataSourceList']),
     showCreateDataSourceDialog () {
       return this.$store.state.dataManagement.showCreateDataSourceDialog
     },

@@ -9,6 +9,7 @@
       <input type="file" class="hidden" name="fileUploadInput"
         ref="fileUploadInput"
         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+        multiple
         @change="fileImport"
       >
       <upload-block class="empty-upload-block"
