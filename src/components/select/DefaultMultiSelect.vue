@@ -1,6 +1,6 @@
 <template>
   <el-select class="sy-multi-select theme-dark"
-    v-model="values"
+    v-model="selectedValues"
     :placeholder="placeholder"
     multiple
   >
@@ -18,9 +18,22 @@
 export default {
   name: 'DefaultMultiSelect',
   props: {
-    values: { type: Array, default: [] },
+    value: { type: Array, default: () => [] },
     optionList: { type: Array, default: () => [] },
     placeholder: { type: String, default: '' }
+  },
+  watch: {
+    value: {
+      deep: true,
+      handler (e) {
+        this.selectedValues = e
+      }
+    }
+  },
+  data () {
+    return {
+      selectedValues: this.value
+    }
   }
   // computed: {
   //   selectedValue: {
