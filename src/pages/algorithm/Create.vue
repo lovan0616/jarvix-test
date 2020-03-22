@@ -185,12 +185,14 @@ export default {
     back () {
       this.$router.push('/algorithm')
     },
-    createData () {
+    createData (outputDatasourceName=null) {
       let now = new Date()
       return {
         id: this.selectedAlgorithm,
-        dataframe: this.dataframeOptions.reduce((res, curr) => curr.value === this.targetDataframe ? curr.name : null, null),
-        name: this.algorithmOptions.reduce((res, curr) => curr.value === this.selectedAlgorithm ? curr.name : null, null),
+        inputDatasource: this.datasourceOptions.reduce((res, curr) => curr.value === this.targetDatasource ? curr.name : res, null),
+        outputDatasource: outputDatasourceName,
+        dataframe: this.dataframeOptions.reduce((res, curr) => curr.value === this.targetDataframe ? curr.name : res, null),
+        name: this.algorithmOptions.reduce((res, curr) => curr.value === this.selectedAlgorithm ? curr.name : res, null),
         creator: 'sygps',
         createDate: now,
         updateDate: now,
@@ -202,10 +204,11 @@ export default {
       this.back()
     },
     execute () {
-      this.$store.dispatch('algorithm/addAlgorithm', this.createData())
+      let demoDatasource = localStorage.getItem('demoDatasource') || '富士康_輪廓型分析_molding_預測'
+      this.$store.dispatch('algorithm/addAlgorithm', this.createData(demoDatasource))
       this.executeAlgorithm().then(() => {
         Message({
-          message: '演算法處理完畢，請查看您的資料源列表。',
+          message: `演算法處理完畢。已自動新增一個資料源 ${demoDatasource}，並將結果儲存於內。`,
           type: 'success',
           duration: 3 * 1000
         })
