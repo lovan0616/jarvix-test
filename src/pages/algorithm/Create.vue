@@ -204,7 +204,7 @@ export default {
       this.back()
     },
     execute () {
-      let demoDatasource = localStorage.getItem('demoDatasource') || 'molding_foxconn_predict'
+      let demoDatasource = localStorage.getItem('demoDatasource') || '富士康_輪廓型分析_molding_預測'
       this.$store.dispatch('algorithm/addAlgorithm', this.createData(demoDatasource))
       this.executeAlgorithm().then(() => {
         Message({
