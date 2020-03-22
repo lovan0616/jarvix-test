@@ -32,13 +32,18 @@
           v-model="connectInfo.password"
           v-validate="'required'"
         ></input-block>
-        <default-select
-          v-model="connectInfo.databaseType"
-          :option-list="dbOptionList"
-          :placeholder="$t('editing.defaultOption')"
-          v-validate="'required'"
-        ></default-select>
-        <div class="inline-block">
+        <div class="database-type-select-block dialog-input">
+          <label for="connectInfo.databaseType"
+            class="select-label"
+          >{{ $t('editing.databaseType') }}</label>
+          <default-select
+            v-model="connectInfo.databaseType"
+            :option-list="dbOptionList"
+            :placeholder="$t('editing.defaultOption')"
+            v-validate="'required'"
+          ></default-select>
+        </div>
+        <div class="inline-input-block">
           <input-block class="dialog-input host"
             label="Host"
             name="host"
@@ -186,9 +191,7 @@ export default {
     padding: 48px 0 80px;
   }
   .dialog-input {
-    &:not(:last-child) {
-      margin-bottom: 36px;
-    }
+    margin-bottom: 36px;
   }
   .loading-block {
     display: flex;
@@ -205,14 +208,48 @@ export default {
       color: $theme-text-color;
     }
   }
-  .inline-block {
+  .database-type-select-block {
+    position: relative;
+
+    .select-label {
+      position: absolute;
+      font-size: 13px;
+      line-height: 24px;
+      top: -24px;
+      left: 0;
+    }
+
+    & >>> .sy-select {
+      width: 100%;
+      border-bottom: 1px solid #aaa;
+    }
+  }
+
+  .inline-input-block {
     width: 100%;
     display: flex;
+
+    .dialog-input {
+      margin-bottom: 0;
+    }
 
     .host {
       width: 74.66%;
       margin-right: 16px;
     }
+  }
+}
+</style>
+<style lang="scss">
+.database-type-select-block {
+  .sy-select {
+    .el-input__inner {
+      padding-left: 0;
+    }
+  }
+
+  .el-select-dropdown__item {
+    padding-left: 0;
   }
 }
 </style>

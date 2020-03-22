@@ -206,7 +206,11 @@
     "tableJoin": "资料表关联",
     "selectJoinType": "关联方式",
     "userUpload": "使用者上传",
-    "loading": "资料读取中"
+    "loading": "资料读取中",
+    "databaseType": "资料库类型",
+    "currentLoadedDataFrame": "目前读取的资料表",
+    "currentDisplayDataFrame": "目前显示资料表",
+    "dataType": "资料类型"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
@@ -330,7 +334,8 @@
     "select": "选择",
     "download": "资料下载",
     "restrict": "分析条件限制",
-    "start": "开始"
+    "start": "开始",
+    "copyAndBuild": "复制并建置"
   },
   "aggregation": {
     "mean": "平均",

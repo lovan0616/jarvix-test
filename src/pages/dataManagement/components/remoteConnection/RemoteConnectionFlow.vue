@@ -4,20 +4,27 @@
       <remote-connection
         v-if="connectionStatus === null"
       ></remote-connection>
-      <remote-connection-finished
+      <!-- <remote-connection-finished
         v-else
-      ></remote-connection-finished>
+      ></remote-connection-finished> -->
+      <!-- <choose-table></choose-table> -->
+      <!-- <column-setting></column-setting> -->
     </transition>
   </div>
 </template>
 <script>
 import RemoteConnection from './RemoteConnection'
 import RemoteConnectionFinished from './RemoteConnectionFinished'
+import ChooseTable from './ChooseTable'
+import ColumnSetting from './ColumnSetting'
+
 export default {
   name: 'RemoteConnectionFlow',
   components: {
     RemoteConnection,
-    RemoteConnectionFinished
+    RemoteConnectionFinished,
+    ChooseTable,
+    ColumnSetting
   },
   computed: {
     connectionStatus () {

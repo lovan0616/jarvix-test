@@ -206,7 +206,11 @@
     "tableJoin": "資料表關聯",
     "selectJoinType": "關聯方式",
     "userUpload": "使用者上傳",
-    "loading": "資料讀取中"
+    "loading": "資料讀取中",
+    "databaseType": "資料庫類型",
+    "currentLoadedDataFrame": "目前讀取的資料表",
+    "currentDisplayDataFrame": "目前顯示資料表",
+    "dataType": "資料類型"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
@@ -330,7 +334,8 @@
     "select": "選擇",
     "download": "資料下載",
     "restrict": "分析條件限制",
-    "start": "開始"
+    "start": "開始",
+    "copyAndBuild": "複製並建置"
   },
   "aggregation": {
     "mean": "平均",
