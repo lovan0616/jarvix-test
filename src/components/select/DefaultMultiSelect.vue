@@ -3,6 +3,7 @@
     v-model="selectedValues"
     :placeholder="placeholder"
     multiple
+    @change="$emit('change', $event)"
   >
     <el-option
       v-for="option in optionList"
@@ -35,21 +36,11 @@ export default {
       selectedValues: this.value
     }
   }
-  // computed: {
-  //   selectedValue: {
-  //     get () {
-  //       return this.value
-  //     },
-  //     set (value) {
-  //       this.$emit('input', value)
-  //     }
-  //   }
-  // }
 }
 </script>
 <style lang="scss">
 .sy-multi-select.theme-dark {
-  width: 240px !important;
+  width: 240px;
   .el-input__inner {
     border: 0;
     border-radius: 0;
@@ -79,7 +70,7 @@ export default {
     background: transparent;
     border-color: #979797;
     color: #979797;
-    margin: 0 6px 0 0;
+    margin: 2px 6px 2px 0;
     padding: 0 10px;
   }
   .el-tag__close.el-icon-close {

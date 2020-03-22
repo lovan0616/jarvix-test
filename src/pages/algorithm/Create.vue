@@ -46,7 +46,7 @@
             </div>
             <div class="content-item">
               <div class="item-title must">目標資料表: </div>
-              <default-select class="tag-select input"
+              <default-select class="tag-select input" :style="{width: '240px'}"
                 v-model="targetDataframe"
                 :option-list="dataframeOptions"
                 @change="onTargetDataframeChange"
@@ -59,22 +59,23 @@
               <div class="item-title must">目標參數欄位: </div>
               <default-select class="tag-select input"
                 v-model="targetDatacolumn"
-                :option-list="booleanDatacolumnOptions"
+                :option-list="datacolumnOptions"
               ></default-select>
             </div>
             <div class="content-item">
               <div class="item-title must">時間欄位: </div>
               <default-select class="tag-select input"
                 v-model="timeDatacolumn"
-                :option-list="datetimeDatacolumnOptions"
+                :option-list="datacolumnOptions"
               ></default-select>
             </div>
           </div>
           <div class="content-item">
             <div class="item-title must">測量值欄位: </div>
-            <default-multi-select class="tag-select input"
+            <default-multi-select class="tag-select input" :style="{width: '360px'}"
               v-model="valueDatacolumns"
-              :option-list="numericDatacolumnOptions"
+              :option-list="datacolumnOptions"
+              @change="onValueDatacolumnsChange"
             ></default-multi-select>
           </div>
         </div>
@@ -125,11 +126,39 @@ export default {
       timeDatacolumn: null,
       valueDatacolumns: [],
       dataframeList: [],
-      datacolumnList: []
+      datacolumnList: [],
+      selectedDatacolumns: []
     }
   },
   mounted () {
     this.fetchDatasources()
+  },
+  watch: {
+    targetDatacolumn (a, b) {
+      if (b !== null) this.selectedDatacolumns.splice(this.selectedDatacolumns.indexOf(b), 1)
+      if (this.selectedDatacolumns.indexOf(a) === -1) {
+        this.selectedDatacolumns.push(a)
+      }
+    },
+    timeDatacolumn (a, b) {
+      if (b !== null) this.selectedDatacolumns.splice(this.selectedDatacolumns.indexOf(b), 1)
+      if (this.selectedDatacolumns.indexOf(a) === -1) {
+        this.selectedDatacolumns.push(a)
+      }
+    },
+    valueDatacolumns: {
+      deep: true,
+      handler (a, b) {
+        b.forEach(item => {
+          if (item !== null) this.selectedDatacolumns.splice(this.selectedDatacolumns.indexOf(item), 1)
+        })
+        a.forEach(item => {
+          if (this.selectedDatacolumns.indexOf(item) === -1) {
+            this.selectedDatacolumns.push(item)
+          }
+        })
+      }
+    }
   },
   methods: {
     fetchDatasources () {
@@ -212,6 +241,9 @@ export default {
       this.timeDatacolumn = null
       this.valueDatacolumns = []
       this.fetchDatacolumns(e)
+    },
+    onValueDatacolumnsChange (e) {
+      this.valueDatacolumns = e
     }
   },
   computed: {
@@ -239,21 +271,24 @@ export default {
     dataframeOptions () {
       return this.dataframeList.map(item => {
         return {
-          name: item.name,
+          name: item.primaryAlias,
           value: item.id
         }
       })
     },
     datacolumnOptions () {
-      return this.datacolumnList.map(item => {
-        return {
+      return this.datacolumnList.reduce((result, item) => {
+        if (this.selectedDatacolumns.indexOf(item.id) > -1) return result
+        result.push({
           name: item.name,
           value: item.id
-        }
-      })
+        })
+        return result
+      }, [])
     },
     numericDatacolumnOptions () {
       return this.datacolumnList.reduce((result, item) => {
+        if (this.selectedDatacolumns.indexOf(item.id) > -1) return result
         if (item.statsType !== 'NUMERIC') return result
         result.push({
           name: item.name,
@@ -264,6 +299,7 @@ export default {
     },
     datetimeDatacolumnOptions () {
       return this.datacolumnList.reduce((result, item) => {
+        if (this.selectedDatacolumns.indexOf(item.id) > -1) return result
         if (item.statsType !== 'DATETIME') return result
         result.push({
           name: item.name,
@@ -274,6 +310,7 @@ export default {
     },
     booleanDatacolumnOptions () {
       return this.datacolumnList.reduce((result, item) => {
+        if (this.selectedDatacolumns.indexOf(item.id) > -1) return result
         if (item.statsType !== 'BOOLEAN' && item.statsType !== 'CATEGORY') return result
         result.push({
           name: item.name,
@@ -327,7 +364,7 @@ export default {
       .input {
         font-size: 14px;
         width: 160px;
-        height: 30px;
+        min-height: 30px;
         margin-right: 12px;
         color: #a7a7a7;
 
