@@ -61,17 +61,21 @@ export default {
           text: '演算法',
           value: 'name',
           sort: true
-        //   link: {
-        //     name: 'PageDataFileList'
-        //   }
         },
         {
-          text: '目標資料表',
+          text: '匯入資料源',
+          value: 'inputDatasource',
+          sort: true
+        },
+        {
+          text: '匯入資料表',
           value: 'dataframe',
           sort: true
-        //   link: {
-        //     name: 'PageDataFileList'
-        //   }
+        },
+        {
+          text: '匯出資料源',
+          value: 'outputDatasource',
+          sort: true
         },
         {
           text: '建立者',
