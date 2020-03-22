@@ -31,11 +31,6 @@ export default {
         this.$emit('input', value)
       }
     }
-  },
-  methods: {
-    onChange (e) {
-      this.$emit('', e)
-    }
   }
 }
 </script>
