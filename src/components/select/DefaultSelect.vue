@@ -34,7 +34,6 @@ export default {
   },
   methods: {
     onChange (e) {
-      console.log(e)
       this.$emit('', e)
     }
   }
