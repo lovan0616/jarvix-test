@@ -35,11 +35,6 @@ export default {
     return {
       selectedValues: this.value
     }
-  },
-  methods: {
-    onChange (e) {
-      this.$emit('', e)
-    }
   }
 }
 </script>
