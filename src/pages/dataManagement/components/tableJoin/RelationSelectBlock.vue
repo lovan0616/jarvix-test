@@ -5,7 +5,7 @@
       <custom-select
         :key="'top-select'"
         :default-msg="$t('editing.selectForeign')"
-        :option-list="tableList"
+        :option-list="dataFrameList"
         :value="dataFrameId"
         @input="onUpdateDataFrame"
       ></custom-select>
@@ -30,7 +30,7 @@ import { getDataFrameColumnInfoById } from '@/API/DataSource'
 export default {
   name: 'RelationSelectBlock',
   props: {
-    tableList: {
+    dataFrameList: {
       type: Array
     },
     initialDataFrameId: {

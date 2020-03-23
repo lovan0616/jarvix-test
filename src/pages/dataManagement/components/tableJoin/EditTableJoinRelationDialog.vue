@@ -29,7 +29,7 @@
           :index="index"
           :relation-info="relation"
           :join-type-options="joinTypeOptions"
-          :table-list="tableList"
+          :data-frame-list="dataFrameList"
           @deleteJoinTable="deleteJoinTable"
           @cancelAddingJoinTable="cancelAddingJoinTable"
         ></table-join-relatoin-block>
@@ -55,7 +55,7 @@ export default {
     return {
       currentDataSourceId: parseInt(this.$route.params.id),
       joinTableList: [],
-      tableList: [],
+      dataFrameList: [],
       joinTypeOptions: [
         {
           name: 'Inner Join',
@@ -96,7 +96,7 @@ export default {
             this.joinTableList = joinTableList
           }
           // handle dataframe list
-          this.tableList = dataFrameList
+          this.dataFrameList = dataFrameList
           // update loading status
           this.isLoading = false
         })

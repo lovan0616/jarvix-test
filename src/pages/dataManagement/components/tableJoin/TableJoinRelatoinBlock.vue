@@ -73,14 +73,14 @@
           class="correlation-block"
         >
           <relation-select-block
-            :table-list="tableList"
+            :data-frame-list="dataFrameList"
             :initial-data-frame-id.sync="relation.leftDataFrame.id"
             :initial-data-column-id.sync="relation.leftDataColumn.id"
             :index="relationIndex"
           />
           <svg-icon icon-class="table-correlation" class="correlation-icon"></svg-icon>
           <relation-select-block
-            :table-list="tableList"
+            :data-frame-list="dataFrameList"
             :initial-data-frame-id.sync="relation.rightDataFrame.id"
             :initial-data-column-id.sync="relation.rightDataColumn.id"
             :index="relationIndex"
@@ -139,7 +139,7 @@ export default {
       type: Object,
       required: true
     },
-    tableList: {
+    dataFrameList: {
       type: Array
     },
     index: {
