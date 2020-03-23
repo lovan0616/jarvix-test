@@ -271,7 +271,13 @@
     "dataFrameAliasInputPlaceholder": "請輸入別名",
     "featureManagement": "特徵欄位管理",
     "customFeature": "自訂特徵欄位",
-    "recommendFeature": "系統推薦特徵"
+    "recommendFeature": "系統推薦特徵",
+    "belongToDataFrame": "隸屬資料表",
+    "createFeature": "新增特徵",
+    "chooseDataFrame": "選擇資料表",
+    "featureColumnName": "特徵欄位名稱",
+    "isRequired": "必填",
+    "featureSetting": "運算式設定"
   },
   "etl": {
     "dataFrameList": "資料表列表",
@@ -420,7 +426,8 @@
     "buildData": "建置資料",
     "keepSave": "保存",
     "chooseFileUpload": "重新選擇檔案",
-    "moveForward": "前往"
+    "moveForward": "前往",
+    "addFeature": "新增特徵"
   },
   "aggregation": {
     "mean": "平均",

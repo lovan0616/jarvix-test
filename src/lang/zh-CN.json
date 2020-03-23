@@ -271,7 +271,12 @@
     "dataFrameAliasInputPlaceholder": "请输入别名",
     "featureManagement": "特征栏位管理",
     "customFeature": "自订特征栏位",
-    "recommendFeature": "系统推荐特征"
+    "recommendFeature": "系统推荐特征",
+    "belongToDataFrame": "隶属资料表",
+    "createFeature": "新增特征",
+    "chooseDataFrame": "选择资料表",
+    "featureColumnName": "特征栏位名称",
+    "isRequired": "必填"
   },
   "etl": {
     "dataFrameList": "资料表列表",
@@ -420,7 +425,8 @@
     "buildData": "建置资料",
     "keepSave": "保存",
     "chooseFileUpload": "重新选择档案",
-    "moveForward": "前往"
+    "moveForward": "前往",
+    "addFeature": "新增特征"
   },
   "aggregation": {
     "mean": "平均",
