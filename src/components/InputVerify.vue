@@ -3,7 +3,6 @@
       <input
           v-model.trim="inputValue"
           class="input-verify-text"
-          :class="{'error': errors.has(name)}"
           :type="type"
           :name="name"
           :placeholder="placeholder"

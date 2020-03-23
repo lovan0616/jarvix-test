@@ -503,16 +503,6 @@ export default {
 
   .fill-dialog {
     .input-verify {
-      &:last-of-type {
-        >>> .input-verify-text {
-          margin-bottom: 17px;
-
-          &.error {
-            margin-bottom: 36px;
-          }
-        }
-      }
-
       .remove {
         position: absolute;
         top: 0;
