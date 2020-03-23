@@ -85,11 +85,11 @@
         <button type="button" class="btn btn-outline"
           @click="back"
         >{{ $t('button.cancel') }}</button>
-        <button type="button" class="btn btn-default"
+        <!-- <button type="button" class="btn btn-default"
           @click="create"
         >
           <span>新建</span>
-        </button>
+        </button> -->
         <button type="button" class="btn btn-default"
           @click="execute"
         >
