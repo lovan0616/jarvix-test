@@ -131,16 +131,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .edit-table-join-relation-dialog {
-  .dialog-title {
-    position: relative;
-  }
-  .close-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    color: #fff;
-    font-size: 14px;
-  }
   .button-block {
     display: flex;
     justify-content: space-between;

@@ -109,6 +109,7 @@
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditDateTimeDialog"
     ></edit-date-time-dialog>
+    <feature-management-dialog></feature-management-dialog>
   </div>
 </template>
 <script>
@@ -122,6 +123,7 @@ import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
+import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 
 export default {
   name: 'DataFileList',
@@ -134,7 +136,8 @@ export default {
     EditColumnSetDialog,
     DataFrameAliasDialog,
     ValueAliasDialog,
-    EditDateTimeDialog
+    EditDateTimeDialog,
+    FeatureManagementDialog
   },
   data () {
     return {

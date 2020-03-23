@@ -110,18 +110,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .column-set-alias-dialog {
-  .dialog-title {
-    position: relative;
-
-    .close-btn {
-      position: absolute;
-      top: 0;
-      right: 0;
-      color: #fff;
-      font-size: 14px;
-    }
-  }
-
   .dialog-header-block {
     display: flex;
     justify-content: space-between;
