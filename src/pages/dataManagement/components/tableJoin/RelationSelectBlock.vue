@@ -61,6 +61,7 @@ export default {
     },
     onUpdateDataFrame (newDataFrameId) {
       this.dataFrameId = newDataFrameId
+      this.dataColumnId = null
       this.fetchDataColumnList(this.dataFrameId)
       this.$emit('update:initialDataFrameId', newDataFrameId)
     },

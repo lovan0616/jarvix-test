@@ -157,7 +157,7 @@ export default {
       showConfirmDeleteDialog: false,
       leftTableColumnList: [],
       rightTableColumnList: [],
-      isEditing: true,
+      isEditing: !this.relationInfo.id,
       currentDataSourceId: parseInt(this.$route.params.id),
       isLoading: false,
       relationInfoData: JSON.parse(JSON.stringify(this.relationInfo)),

@@ -25,7 +25,7 @@
         <table-join-relatoin-block
           v-else
           v-for="(relation, index) in joinTableList"
-          :key="index"
+          :key="joinTableList.length - index"
           :index="index"
           :relation-info="relation"
           :join-type-options="joinTypeOptions"
@@ -115,7 +115,7 @@ export default {
     },
     addJoinTable () {
       let newRelations = JSON.parse(JSON.stringify(this.singleJoinTable))
-      this.joinTableList.push(newRelations)
+      this.joinTableList.unshift(newRelations)
     },
     cancelAddingJoinTable (index) {
       this.joinTableList.splice(index, 1)
