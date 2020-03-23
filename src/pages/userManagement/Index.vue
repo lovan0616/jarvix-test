@@ -115,51 +115,48 @@
     <fill-dialog
       v-if="isShowCreateUser"
       @closeDialog="closeCreateUser"
-      @confirmBtn="createSingleUser"
+      @confirmBtn="createUsers"
+      class="fill-dialog"
     >
       <input-verify
-        v-model="userInfo.username"
-        type="text"
-        :placeholder="$t('editing.userName')"
-        name="createUserName"
-        v-validate="'required'"
+        v-for="(invitee, index) in inviteeList"
+        :key="invitee.id"
+        v-model="invitee.email"
+        type="email"
+        :placeholder="$t('editing.inviteeEmail')"
+        :name="'invitee' + '-' + invitee.id"
+        v-validate="'required|email'"
       >
+        <template #action>
+          <a
+            href="javascript:void(0)"
+            class="link remove"
+            @click="removeInvitee(index)"
+            v-if="inviteeList.length > 1"
+          >
+            {{ $t('button.remove') }}
+          </a>
+        </template>
       </input-verify>
-      <input-verify
-        v-model="userInfo.email"
-        type="text"
-        :placeholder="$t('editing.userAccount')"
-        name="createUserMail"
-        v-validate="'required'"
+      <!--TODO: 判定此 account 人數上限-->
+      <button
+        @click="addNewInvitee()"
+        class="btn btn-m btn-outline"
       >
-      </input-verify>
-      <input-verify
-        v-model="userInfo.password"
-        type="password"
-        :placeholder="$t('editing.loginPassword')"
-        name="createPassword"
-        v-validate="'required|min:8|requireOneNumeric'"
-        ref="loginPassword"
-      >
-      </input-verify>
-      <input-verify
-        v-model="verifyPassword"
-        type="password"
-        :placeholder="$t('editing.confirmPassword')"
-        name="createVerifyPassword"
-        v-validate="'required|min:8|requireOneNumeric|confirmed:loginPassword'"
-      >
-      </input-verify>
+        <svg-icon icon-class="plus" class="icon" />{{ $t('button.add') }}
+      </button>
     </fill-dialog>
   </div>
 </template>
 <script>
-import { createUser, getUsers, updateUser, deleteUser } from '@/API/User'
+import { getUsers, updateUser, deleteUser, inviteUser } from '@/API/User'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'
 import FillDialog from '@/components/dialog/FillDialog'
 import { Message } from 'element-ui'
+let inviteeId = 0
+
 export default {
   inject: ['$validator'],
   name: 'UserManagement',
@@ -172,6 +169,7 @@ export default {
   data () {
     return {
       isShowCreateUser: false,
+      inviteeList: [],
       userInfo: {
         username: '',
         email: '',
@@ -201,37 +199,32 @@ export default {
   },
   methods: {
     showCreateUser () {
+      this.addNewInvitee()
       this.isShowCreateUser = true
     },
     closeCreateUser () {
-      // 關閉 component 後，才清空資料，以免在 function 中觸發 validate 導致錯誤發生
       this.isShowCreateUser = false
-      this.$nextTick(() => {
-        for (let index in this.userInfo) {
-          this.userInfo[index] = ''
-        }
-        this.verifyPassword = ''
-      })
+      this.inviteeList = []
     },
-    createSingleUser () {
+    createUsers () {
       this.$validator.validateAll().then(result => {
-        if (result) {
-          createUser(
-            this.userInfo
-          )
-            .then(response => {
-              this.isShowCreateUser = false
-              this.getUserList()
-              Message({
-                message: this.$t('message.userCreateSuccess'),
-                type: 'success',
-                duration: 3 * 1000
-              })
+        if (!result) return
+        inviteUser({
+          email: this.inviteeList.map(invitee => invitee.email),
+          webURL: window.location.origin + this.$router.resolve({name: 'PageSignup'}).href
+        })
+          .then(() => {
+            this.isShowCreateUser = false
+            this.inviteeList = []
+            Message({
+              message: this.$t('message.userInviteSuccess'),
+              type: 'success',
+              duration: 3 * 1000
             })
-            .catch(error => {
-              console.log(error)
-            })
-        }
+          })
+          .catch(error => {
+            console.log(error)
+          })
       })
     },
     getUserList () {
@@ -393,6 +386,15 @@ export default {
         this.sortStatus = 'up'
         this.decendingData(this.userData)
       }
+    },
+    addNewInvitee () {
+      this.inviteeList.push({
+        id: inviteeId++,
+        email: ''
+      })
+    },
+    removeInvitee (index) {
+      this.inviteeList.splice(index, 1)
     }
   }
 }
@@ -496,6 +498,27 @@ export default {
       margin: 0px 10px 0px 8px;
       border-right: 1px solid #9DBDBD;
       font-size: 12px;
+    }
+  }
+
+  .fill-dialog {
+    .input-verify {
+      &:last-of-type {
+        >>> .input-verify-text {
+          margin-bottom: 17px;
+
+          &.error {
+            margin-bottom: 36px;
+          }
+        }
+      }
+
+      .remove {
+        position: absolute;
+        top: 0;
+        right: 0;
+        line-height: 40px;
+      }
     }
   }
 }
