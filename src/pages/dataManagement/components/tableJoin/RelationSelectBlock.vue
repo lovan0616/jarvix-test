@@ -38,10 +38,6 @@ export default {
     },
     initialDataColumnId: {
       type: Number
-    },
-    index: {
-      type: Number,
-      required: true
     }
   },
   components: {
