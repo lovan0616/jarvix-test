@@ -70,8 +70,15 @@ export default {
   created () {
     // retrieve email token for validation
     const emailToken = this.$route.query.emailToken
+    if (!emailToken) {
+      this.$router.push({name: 'PageLogin'})
+      return Message({
+        message: this.$t('errorMessage.lackOfSignUpToken'),
+        type: 'error',
+        duration: 3 * 1000
+      })
+    }
     this.confirmEmailToken(emailToken)
-    console.log(emailToken)
   },
   methods: {
     confirmEmailToken (emailToken) {

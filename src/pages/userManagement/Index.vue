@@ -7,7 +7,7 @@
     <div v-if="userData.length === 0" class="user-default">{{ $t('editing.notYetCreateUser') }}</div>
     <div v-else class="single-user">
       <div class="user-table-head">
-        <div class="user-item">{{ $t('editing.userName') }}</div>
+        <div class="user-item">{{ $t('editing.userTitle') }}</div>
         <div @click="sortUserData" class="user-item user-sort">
           {{ $t('editing.userAccount') }}
           <svg-icon icon-class="arrow-down" :class="['icon', {'user-rotate': sortStatus === 'up'}]"></svg-icon>
@@ -120,7 +120,7 @@
       <input-verify
         v-model="userInfo.username"
         type="text"
-        :placeholder="$t('editing.userName')"
+        :placeholder="$t('editing.userTitle')"
         name="createUserName"
         v-validate="'required'"
       >

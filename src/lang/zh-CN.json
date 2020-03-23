@@ -96,7 +96,7 @@
     "connectMySQL": "连结MySQL资料库",
     "DBconnecting": "连结资料库中",
     "IPaddress": "IP位址",
-    "account": "帐号",
+    "username": "帐号",
     "password": "密码",
     "changePassword": "密码变更",
     "connectSuccess": "连线成功",
@@ -1252,6 +1252,7 @@
     "TASKWARN0002": "此条件获取不到任何资料来进行处理",
     "TASKWARN0003": "计算结果为空",
     "authFail": "权限失效请重新登入",
+    "lackOfSignUpToken": "无注册权限，请联系管理员",
     "defaultMsg": "系统发生非预期错误"
   },
   "resultNote": {
