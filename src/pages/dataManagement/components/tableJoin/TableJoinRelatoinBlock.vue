@@ -185,20 +185,21 @@ export default {
           this.isLoading = false
         })
     },
+    getDataFrameRelationList () {
+      return this.relationInfoData.dataFrameRelationList.map(relation => ({
+        joinType: relation.joinType,
+        leftDataColumnId: relation.leftDataColumn.id,
+        leftDataFrameId: relation.leftDataFrame.id,
+        rightDataColumnId: relation.rightDataColumn.id,
+        rightDataFrameId: relation.rightDataFrame.id
+      }))
+    },
     buildJoinTable () {
       this.isLoading = true
       const joinTableData = {
-        dataFrameRelationList: [
-          {
-            joinType: this.relationInfoData.dataFrameRelationList[0].joinType,
-            leftDataColumnId: this.relationInfoData.dataFrameRelationList[0].leftDataColumn.id,
-            leftDataFrameId: this.relationInfoData.dataFrameRelationList[0].leftDataFrame.id,
-            rightDataColumnId: this.relationInfoData.dataFrameRelationList[0].rightDataColumn.id,
-            rightDataFrameId: this.relationInfoData.dataFrameRelationList[0].rightDataFrame.id
-          }
-        ],
         dataSourceId: this.currentDataSourceId,
-        name: this.relationInfoData.name
+        name: this.relationInfoData.name,
+        dataFrameRelationList: this.getDataFrameRelationList()
       }
       createJoinTable(joinTableData)
         .then(response => {
@@ -212,25 +213,14 @@ export default {
             duration: 3 * 1000
           })
         })
-        .catch((err) => {
-          console.log(err)
-          this.isLoading = false
-        })
+        .catch(() => { this.isLoading = false })
     },
     updateJoinTable () {
       this.isLoading = true
       const joinTableData = {
-        dataFrameRelationList: [
-          {
-            joinType: this.relationInfoData.dataFrameRelationList[0].joinType,
-            leftDataColumnId: this.relationInfoData.dataFrameRelationList[0].leftDataColumn.id,
-            leftDataFrameId: this.relationInfoData.dataFrameRelationList[0].leftDataFrame.id,
-            rightDataColumnId: this.relationInfoData.dataFrameRelationList[0].rightDataColumn.id,
-            rightDataFrameId: this.relationInfoData.dataFrameRelationList[0].rightDataFrame.id
-          }
-        ],
         id: this.relationInfoData.id,
-        name: this.relationInfoData.name
+        name: this.relationInfoData.name,
+        dataFrameRelationList: this.getDataFrameRelationList()
       }
       updateJoinTable(joinTableData)
         .then(response => {
