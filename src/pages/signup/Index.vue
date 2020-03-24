@@ -89,11 +89,6 @@ export default {
         })
         .catch(() => {
           this.$router.push({name: 'PageLogin'})
-          Message({
-            message: this.$t('errorMessage.authFail'),
-            type: 'error',
-            duration: 3 * 1000
-          })
         })
     },
     submitForm () {
@@ -105,7 +100,14 @@ export default {
           username: this.userInfo.userTitle,
           password: this.userInfo.password
         })
-          .then(() => { this.$router.push({name: 'PageLogin'}) })
+          .then(() => {
+            this.$router.push({name: 'PageLogin'})
+            Message({
+              message: this.$t('message.signUpSuccessPleaseLogin'),
+              type: 'success',
+              duration: 3 * 1000
+            })
+          })
           .catch(() => { this.isProcessing = false })
       })
     }
