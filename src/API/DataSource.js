@@ -215,3 +215,29 @@ export function getDataColumnDataValue (dataFrameId) {
     method: 'GET'
   })
 }
+
+/**
+ * get all columns whose stats_type is marked as Datetime
+ */
+export function getDateTimeColumns (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/columns/datetime`,
+    method: 'GET'
+  })
+}
+
+/**
+ * set specific column as main datetime
+ * @param {Number} dataFrameId
+ * @param {Object} columnData - 送給後端的資料物件
+ * @param {String} columnData.dataColumnName - 時間欄位名稱
+ * @param {String} columnData.dataColumnPrimaryAlias - 時間欄位別名
+ * @param {String} columnData.id - 資料表 ID
+ */
+export function setMainDateTimeColumn (dataFrameId, searchParams) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/columns/datetime/default`,
+    method: 'PUT',
+    params: searchParams
+  })
+}

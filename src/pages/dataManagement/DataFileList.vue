@@ -55,6 +55,7 @@
         @edit="editTableColumn"
         @valueAlias="editTableValueAlias"
         @columnSet="editColumnSet"
+        @dateTime="editDateTime"
       >
       </data-table>
     </div>
@@ -89,6 +90,11 @@
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditClomnSetDialog"
     ></edit-column-set-dialog>
+    <edit-date-time-dialog
+      v-if="showEditDateTimeDialog"
+      :data-frame-info="currentEditDataFrameInfo"
+      @close="closeEditDateTimeDialog"
+    ></edit-date-time-dialog>
   </div>
 </template>
 <script>
@@ -99,6 +105,7 @@ import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRel
 import EditColumnDialog from './components/EditColumnDialog'
 import EditColumnSetDialog from './components/columnSet/EditColumnSetDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
+import EditDateTimeDialog from './components/EditDateTimeDialog'
 import { getDataFrameById, checkDataSourceStatusById } from '@/API/DataSource'
 
 export default {
@@ -110,7 +117,8 @@ export default {
     EditTableJoinRelationDialog,
     EditColumnDialog,
     EditColumnSetDialog,
-    ValueAliasDialog
+    ValueAliasDialog,
+    EditDateTimeDialog
   },
   data () {
     return {
@@ -119,6 +127,7 @@ export default {
       showConfirmDeleteDialog: false,
       showJoinTableDialog: false,
       showEditColumnDialog: false,
+      showEditDateTimeDialog: false,
       deleteId: null,
       renameDataSource: null,
       // 資料處理中
@@ -265,11 +274,21 @@ export default {
       }
       this.showEditColumnSetDialog = true
     },
+    editDateTime (dataInfo) {
+      this.currentEditDataFrameInfo = {
+        id: dataInfo.id,
+        primaryAlias: dataInfo.primaryAlias
+      }
+      this.showEditDateTimeDialog = true
+    },
     closeValueAliasDialog () {
       this.showValueAliasDialog = false
     },
     closeEditClomnSetDialog () {
       this.showEditColumnSetDialog = false
+    },
+    closeEditDateTimeDialog () {
+      this.showEditDateTimeDialog = false
     }
   },
   computed: {
@@ -323,6 +342,10 @@ export default {
             {
               name: this.$t('button.editColumnSet'),
               value: 'columnSet'
+            },
+            {
+              name: this.$t('button.dateTimeColumnSetting'),
+              value: 'dateTime'
             }
             // {
             //   name: this.$t('button.rename'),
