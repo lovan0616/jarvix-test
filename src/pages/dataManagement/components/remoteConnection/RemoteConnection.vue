@@ -37,12 +37,19 @@
             class="select-label"
           >{{ $t('editing.databaseType') }}</label>
           <default-select
+            name="databaseType"
             v-model="connectInfo.databaseType"
             :option-list="dbOptionList"
             :placeholder="$t('editing.defaultOption')"
             v-validate="'required'"
           ></default-select>
         </div>
+        <input-block class="dialog-input"
+          label="Schema"
+          name="schema"
+          v-model="connectInfo.schema"
+          v-validate="'required'"
+        ></input-block>
         <div class="inline-input-block">
           <input-block class="dialog-input host"
             label="Host"
@@ -74,7 +81,8 @@
   </div>
 </template>
 <script>
-import { dbConnect, buildStorage } from '@/API/Storage'
+import { testConnection, createDatabaseConnection } from '@/API/RemoteConnection'
+import { createDataSource } from '@/API/DataSource'
 import InputBlock from '@/components/InputBlock'
 import UploadProcessBlock from './UploadProcessBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
@@ -109,9 +117,9 @@ export default {
         }
       ],
       dataSourceName: null,
+      dataSourceId: null,
       connectInfo: {
         account: null,
-        dataSourceId: null,
         databaseType: null,
         host: null,
         name: null,
@@ -130,17 +138,25 @@ export default {
         if (result) {
           this.isLoading = true
           this.$store.commit('dataManagement/updateConnectionType', this.currentUploadInfo.type)
-          dbConnect(this.currentUploadInfo.storageId, this.connectionInfo)
-            .then(() => {
-              buildStorage(this.currentUploadInfo.storageId, this.currentUploadInfo.dataSourceId)
-                .then(() => {
-                  this.$store.commit('dataManagement/updateConnectionStatus', true)
-                })
-            })
-            .catch(() => {
-              this.$store.commit('dataManagement/updateConnectionStatus', false)
-            })
+
+          testConnection(this.connectInfo).then(() => {
+            this.createConnection()
+          }).catch(() => {
+            this.$store.commit('dataManagement/updateConnectionStatus', false)
+          })
         }
+      })
+    },
+    createDataSource () {
+      return createDataSource(this.dataSourceName).then(response => {
+        this.dataSourceId = response.dataSourceId
+      })
+    },
+    createConnection () {
+      createDatabaseConnection(this.connectInfo).then(response => {
+        this.$store.commit('dataManagement/updateConnectionStatus', true)
+      }).catch(() => {
+        this.$store.commit('dataManagement/updateConnectionStatus', false)
       })
     }
   },

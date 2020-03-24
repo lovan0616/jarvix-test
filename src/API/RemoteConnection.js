@@ -34,3 +34,14 @@ export function getTableColumnList (connectionInfo) {
     data: connectionInfo
   })
 }
+
+/**
+ * 測試資料連線
+ */
+export function testConnection (connectionInfo) {
+  return request({
+    url: `/copyTable/databaseConnection/test`,
+    method: 'POST',
+    data: connectionInfo
+  })
+}
