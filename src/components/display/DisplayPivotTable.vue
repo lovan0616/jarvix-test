@@ -71,7 +71,7 @@ export default {
           columnIndex = newColumn.length - 1
         }
         if (indexIndex < 0) {
-          newIndex.push(indexValue)
+          newIndex.push(indexValue + '')
           indexIndex = newIndex.length - 1
           newData[indexIndex] = []
         }
