@@ -293,6 +293,19 @@
     "etlSetting": "資料清洗設定",
     "remarkToSave": "異動內容須保存"
   },
+  "feature": {
+    "value": "數值",
+    "columnValue": "欄位值",
+    "plus": "加法",
+    "minus": "減法",
+    "multiple": "乘法",
+    "divide": "除法",
+    "parentheses": "小括號",
+    "bracket": "中括號",
+    "braces": "大括號",
+    "hint": "提示",
+    "forbiddenRule": ["禁用全型文字"]
+  },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
     "welcomeMessageWithSuggestions": "@:bot.welcomeMessage 可以試試從這些問題開始：",
@@ -427,7 +440,8 @@
     "keepSave": "保存",
     "chooseFileUpload": "重新選擇檔案",
     "moveForward": "前往",
-    "addFeature": "新增特徵"
+    "addFeature": "新增特徵",
+    "create": "新增"
   },
   "aggregation": {
     "mean": "平均",

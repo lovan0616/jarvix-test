@@ -292,6 +292,19 @@
     "etlSetting": "资料清洗设定",
     "remarkToSave": "异动内容须保存"
   },
+  "feature": {
+    "value": "数值",
+    "columnValue": "栏位值",
+    "plus": "加法",
+    "minus": "减法",
+    "multiple": "乘法",
+    "divide": "除法",
+    "parentheses": "小括号",
+    "bracket": "中括号",
+    "braces": "大括号",
+    "hint": "提示",
+    "forbiddenRule": ["禁用全型文字"]
+  },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
     "welcomeMessageWithSuggestions": "@:bot.welcomeMessage 可以试试从这些问题开始：",
@@ -426,7 +439,8 @@
     "keepSave": "保存",
     "chooseFileUpload": "重新选择档案",
     "moveForward": "前往",
-    "addFeature": "新增特征"
+    "addFeature": "新增特征",
+    "create": "新增"
   },
   "aggregation": {
     "mean": "平均",
