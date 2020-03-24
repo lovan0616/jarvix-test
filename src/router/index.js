@@ -83,6 +83,11 @@ export default new Router({
       path: '/login',
       name: 'PageLogin',
       component: () => import('@/pages/login/Index')
+    },
+    {
+      path: '/signup',
+      name: 'PageSignup',
+      component: () => import('@/pages/signup/Index')
     }
   ],
   linkActiveClass: 'active',
