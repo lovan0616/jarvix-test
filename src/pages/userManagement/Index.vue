@@ -7,12 +7,13 @@
     <div v-if="userData.length === 0" class="user-default">{{ $t('editing.notYetCreateUser') }}</div>
     <div v-else class="single-user">
       <div class="user-table-head">
-        <div class="user-item">{{ $t('editing.userTitle') }}</div>
         <div @click="sortUserData" class="user-item user-sort">
           {{ $t('editing.userAccount') }}
           <svg-icon icon-class="arrow-down" :class="['icon', {'user-rotate': sortStatus === 'up'}]"></svg-icon>
         </div>
-        <div class="user-item user-status">{{ $t('editing.activeStatus') }}</div>
+        <div class="user-item">{{ $t('editing.userTitle') }}</div>
+        <div class="user-item">{{ $t('editing.group') }}</div>
+        <div class="user-item">{{ $t('editing.activeStatus') }}</div>
         <div class="user-item">{{ $t('editing.action') }}</div>
       </div>
       <div class="user-table-body">
@@ -21,9 +22,10 @@
           :key="index"
           class="user-row-child"
         >
-          <div class="user-item">{{user.name}}</div>
           <div class="user-item">{{user.email}}</div>
-          <div :class="['user-status', {'user-status-close': !user.active}]">
+          <div class="user-item">{{user.name}}</div>
+          <div class="user-item">{{groupName(user.groupList)}}</div>
+          <div :class="['user-item', {'user-status-close': !user.active}]">
             <template v-if="user.active">{{ $t('editing.active') }}</template>
             <template v-else>{{ $t('editing.close') }}</template>
           </div>
@@ -393,6 +395,9 @@ export default {
         this.sortStatus = 'up'
         this.decendingData(this.userData)
       }
+    },
+    groupName (list) {
+      return list[0].name
     }
   }
 }
@@ -456,8 +461,18 @@ export default {
       }
     }
 
-    .user-item {
-        flex: 1;
+    /* Set column widh */
+    $column-width:
+      "1" "userAccount" 280px,
+      "2" "userTitle" 190px,
+      "3" "group" 280px,
+      "4" "activeStatus" 190px,
+      "5" "action" 280px;
+
+    @each $index, $name, $width in $column-width {
+      .user-item:nth-of-type(#{$index}) {
+        flex: 1 1 $width;
+      }
     }
 
     .user-sort {
@@ -472,10 +487,10 @@ export default {
       transform: rotate(180deg);
     }
 
-    .user-status {
-      flex: 1;
-      flex-grow: 0.7;
-    }
+    // .user-status {
+    //   flex: 1;
+    //   flex-grow: 0.7;
+    // }
 
     .user-status-close {
       color: #FF5C46;
