@@ -333,25 +333,12 @@ export default {
           action: [
             {
               name: this.$t('button.edit'),
-              value: 'edit',
               subAction: [
                 {icon: '', title: 'button.editColumn', dialogName: 'edit'},
                 {icon: '', title: 'button.editDataValue', dialogName: 'valueAlias'},
                 {icon: '', title: 'button.editColumnSet', dialogName: 'columnSet'}
               ]
             },
-            // {
-            //   name: this.$t('button.editColumn'),
-            //   value: 'edit'
-            // },
-            // {
-            //   name: this.$t('button.editDataValue'),
-            //   value: 'valueAlias'
-            // },
-            // {
-            //   name: this.$t('button.editColumnSet'),
-            //   value: 'columnSet'
-            // },
             {
               name: this.$t('button.dateTimeColumnSetting'),
               value: 'dateTime'

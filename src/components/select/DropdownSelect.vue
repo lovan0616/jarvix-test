@@ -6,7 +6,7 @@
               @click="dialogEvent(bar)"
               :key="index"
              >
-                <svg-icon :icon-class="bar.icon" class="icon dropdown-icon"></svg-icon>
+                <svg-icon v-if="bar.icon" :icon-class="bar.icon" class="icon dropdown-icon"></svg-icon>
                 <div>{{ $t(bar.title) }}</div>
             </div>
         </div>

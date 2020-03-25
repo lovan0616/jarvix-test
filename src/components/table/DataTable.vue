@@ -88,10 +88,9 @@
             <dropdown-select
               v-if="action.subAction"
               class="dropdown"
-              @switchDialogName="switchDialogName"
+              @switchDialogName="doAction($event, data)"
               :barData="action.subAction"
-            >
-            </dropdown-select>
+            />
             {{ action.name }}
             <svg-icon v-if="action.subAction" icon-class="triangle" class="icon dropdown-icon" />
           </a>
@@ -282,7 +281,7 @@ export default {
       }
     },
     doAction (actionName, data) {
-      if (this.isProcessing || data['state'] === 'PROCESSING') return false
+      if (!actionName || this.isProcessing || data['state'] === 'PROCESSING') return false
       this.$emit(actionName, data)
     },
     buildStatus (value) {
@@ -342,6 +341,9 @@ export default {
     width: 100%;
     color: #42A5B3;
   }
+  .data-table-body {
+    overflow: visible;
+  }
   .data-table-row.is-processing {
     background-color: $theme-bg-color;
   }
@@ -358,6 +360,34 @@ export default {
   }
   .spinner-container {
     height: 310px;
+  }
+
+  .link-dropdown {
+    position: relative;
+    cursor: pointer;
+
+    &:hover {
+      .dropdown {
+        visibility: visible;
+      }
+
+      .dropdown-icon {
+        transform: rotate(0deg);
+        color: #fff;
+      }
+    }
+
+    .dropdown {
+      visibility: hidden;
+    }
+
+    .dropdown-icon {
+      margin-left: 6px;
+      width: 8px;
+      text-align: center;
+      transition: all 0.3s;
+      transform: rotate(180deg);
+    }
   }
 }
 </style>
@@ -385,35 +415,20 @@ export default {
   }
 }
 
-.link-dropdown {
-  position: relative;
-  cursor: pointer;
-
-  &:hover {
-    .dropdown {
-      visibility: visible;
+.data-source-list-table {
+  .link-dropdown {
+    .dropdown-select-box {
+      top: 29px;
+      left: 0;
+      z-index: 1;
+      box-shadow: 0px 4px 10px rgba(58, 178, 189, 0.5)
     }
-
-    .dropdown-icon {
-      transform: rotate(0deg);
-      color: #fff;
+    .dropdown-select-box::before {
+      right: 120px;
     }
-  }
-
-  .dropdown {
-    visibility: hidden;
-  }
-
-  .dropdown-icon {
-    margin-left: 6px;
-    width: 8px;
-    text-align: center;
-    transition: all 0.3s;
-    transform: rotate(180deg);
-  }
-
-  & >>> .dropdown-select-box {
-    top: 21px;
+    .dropdown-flex {
+      padding: 12px;
+    }
   }
 }
 </style>
