@@ -229,15 +229,14 @@ export function getDateTimeColumns (dataFrameId) {
 /**
  * set specific column as main datetime
  * @param {Number} dataFrameId
- * @param {Object} columnData - 送給後端的資料物件
- * @param {String} columnData.dataColumnName - 時間欄位名稱
- * @param {String} columnData.dataColumnPrimaryAlias - 時間欄位別名
- * @param {String} columnData.id - 資料表 ID
+ * @param {Object} dataColumnData - 送給後端的資料物件
+ * @param {String} dataColumnData.dataColumnName - 時間欄位名稱
+ * @param {String} dataColumnData.dataColumnPrimaryAlias - 時間欄位別名
  */
-export function setMainDateTimeColumn (dataFrameId, searchParams) {
+export function setMainDateTimeColumn (dataFrameId, dataColumnData) {
   return request({
     url: `/dataFrame/${dataFrameId}/columns/datetime/default`,
     method: 'PUT',
-    params: searchParams
+    data: dataColumnData
   })
 }
