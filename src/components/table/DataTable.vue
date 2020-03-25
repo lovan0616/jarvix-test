@@ -77,13 +77,25 @@
             v-if="headInfo.link && checkLinkEnable(headInfo, data)"
             @click="linkTo(headInfo.link, data.id)"
           >{{ data[headInfo.value] }}</a>
-          <a href="javascript:void(0)" class="link action-link"
+
+          <a href="javascript:void(0)" class="link action-link link-dropdown"
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
             :key="action.name"
             :disabled="isProcessing || data['state'] === 'PROCESSING'"
             @click="doAction(action.value, data)"
-          >{{ action.name }}</a>
+          >
+            <dropdown-select
+              v-if="action.subAction"
+              class="dropdown"
+              @switchDialogName="switchDialogName"
+              :barData="action.subAction"
+            >
+            </dropdown-select>
+            {{ action.name }}
+            <svg-icon v-if="action.subAction" icon-class="triangle" class="icon dropdown-icon" />
+          </a>
+
           <span v-else-if="headInfo.value === 'state'"
             :class="{'is-processing': data[headInfo.value] === 'PROCESSING'}"
           >
@@ -129,6 +141,7 @@
 <script>
 import UploadBlock from '@/components/UploadBlock'
 import orderBy from 'lodash.orderby'
+import DropdownSelect from '@/components/select/DropdownSelect'
 
 /**
  * Data table 可傳入屬性
@@ -161,7 +174,8 @@ import i18n from '@/lang/index.js'
 export default {
   name: 'DataTable',
   components: {
-    UploadBlock
+    UploadBlock,
+    DropdownSelect
   },
   props: {
     headers: {
@@ -368,6 +382,38 @@ export default {
 
   &.el-tooltip__popper[x-placement^=bottom] .popper__arrow {
     border-bottom-color: #007783;
+  }
+}
+
+.link-dropdown {
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    .dropdown {
+      visibility: visible;
+    }
+
+    .dropdown-icon {
+      transform: rotate(0deg);
+      color: #fff;
+    }
+  }
+
+  .dropdown {
+    visibility: hidden;
+  }
+
+  .dropdown-icon {
+    margin-left: 6px;
+    width: 8px;
+    text-align: center;
+    transition: all 0.3s;
+    transform: rotate(180deg);
+  }
+
+  & >>> .dropdown-select-box {
+    top: 21px;
   }
 }
 </style>

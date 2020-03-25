@@ -1,12 +1,12 @@
 <template>
-    <div class="dropdwon-select">
-         <div class="dropdwon-select-box">
-            <div :class="['dropdwon-flex', { 'dropdwon-border-line': index !== barData.length - 1 }]"
-            v-for="(bar, index) in barData"
-            @click="dialogEvent(bar)"
-            :key="index"
+    <div class="dropdown-select">
+         <div class="dropdown-select-box">
+            <div :class="['dropdown-flex', { 'dropdown-border-line': index !== barData.length - 1 }]"
+              v-for="(bar, index) in barData"
+              @click="dialogEvent(bar)"
+              :key="index"
              >
-                <svg-icon :icon-class="bar.icon" class="icon dropdwon-icon"></svg-icon>
+                <svg-icon :icon-class="bar.icon" class="icon dropdown-icon"></svg-icon>
                 <div>{{ $t(bar.title) }}</div>
             </div>
         </div>
@@ -21,7 +21,7 @@ export default {
     barData: {
       type: Array,
       default () {
-        return {}
+        return []
       }
     }
   },
@@ -38,7 +38,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 
-.dropdwon-select-box{
+.dropdown-select-box{
     position: absolute;
     top: 50px;
     left: -100px;
@@ -46,7 +46,7 @@ export default {
     border-radius: 8px;
     font-size: 14px;
 
-    .dropdwon-flex{
+    .dropdown-flex{
         height: 40px;
         width: 160px;
         align-items: center;
@@ -54,20 +54,20 @@ export default {
         color: #a7a7a7;
     }
 
-    .dropdwon-flex:hover{
+    .dropdown-flex:hover{
         color: #fff;
     }
 
-    .dropdwon-border-line{
+    .dropdown-border-line{
         border-bottom: 1px solid #384545;
     }
 
-    .dropdwon-icon{
+    .dropdown-icon{
         margin: 12px;
     }
 }
 
-.dropdwon-select-box::before{
+.dropdown-select-box::before{
     content: '';
     display: block;
     position: absolute;
