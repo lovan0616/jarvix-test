@@ -28,10 +28,10 @@
           :key="joinTableList.length - index"
           :index="index"
           :relation-info="relation"
-          :join-type-options="joinTypeOptions"
           :data-frame-list="dataFrameList"
           @deleteJoinTable="deleteJoinTable"
           @cancelAddingJoinTable="cancelAddingJoinTable"
+          @dataFrameUpdate="$emit('dataFrameUpdate')"
         ></table-join-relatoin-block>
       </template>
     </div>
@@ -56,12 +56,6 @@ export default {
       currentDataSourceId: parseInt(this.$route.params.id),
       joinTableList: [],
       dataFrameList: [],
-      joinTypeOptions: [
-        {
-          name: 'Inner Join',
-          value: 'Inner'
-        }
-      ],
       singleJoinTable: {
         dataFrameRelationList: [
           {
@@ -74,10 +68,6 @@ export default {
         ],
         id: null,
         name: null
-      },
-      singleForeignKey: {
-        left_column: null,
-        right_column: null
       },
       isLoading: true
     }
@@ -122,16 +112,12 @@ export default {
     },
     deleteJoinTable (index) {
       this.joinTableList.splice(index, 1)
+      this.$emit('dataFrameUpdate')
       Message({
         message: this.$t('message.correlationDeleteSuccess'),
         type: 'success',
         duration: 3 * 1000
       })
-    }
-  },
-  computed: {
-    currentBookmarkInfo () {
-      return this.$store.state.dataManagement.currentBookmarkInfo
     }
   }
 }

@@ -4,11 +4,11 @@
       v-if="!isEditing"
       class="title-block"
     >
-      <h3 class="table-name">{{ relationInfoData.name }}</h3>
+      <h3 class="table-name">{{ relationInfo.name }}</h3>
       <h6 class="join-type">
         關聯方式:
         <span
-          v-for="(relation, relationIndex) in relationInfoData.dataFrameRelationList"
+          v-for="(relation, relationIndex) in relationInfo.dataFrameRelationList"
           :key="relationIndex"
         >{{ getJoinTableName(relation.joinType) }}</span>
       </h6>
@@ -22,20 +22,20 @@
       <input
         type="text"
         class="input"
-        v-if="!relationInfoData.id"
+        v-if="!relationInfo.id"
         :placeholder="$t('editing.pleaseEnterName')"
-        v-model="relationInfoData.name"
+        v-model="relationInfo.name"
       >
-      <div class="name" v-else>{{ relationInfoData.name }}</div>
+      <div class="name" v-else>{{ relationInfo.name }}</div>
     </div>
     <div class="button-block">
       <button type="button" class="btn btn-default btn-save"
         v-if="isEditing"
         :disabled="isLoading"
-        @click="relationInfoData.id ? updateJoinTable() : buildJoinTable()"
-      >{{ relationInfoData.id ? $t('button.update') : $t('button.build') }}</button>
+        @click="relationInfo.id ? updateJoinTable() : buildJoinTable()"
+      >{{ relationInfo.id ? $t('button.update') : $t('button.build') }}</button>
       <button type="button" class="btn btn-outline"
-        v-if="isEditing && !relationInfoData.id"
+        v-if="isEditing && !relationInfo.id"
         :disabled="isLoading"
         @click="cancelAddingJoinTable()"
       >{{ $t('button.cancel') }}</button>
@@ -44,7 +44,7 @@
         @click="toggleIsEditing()"
       >{{ $t('button.edit') }}</button>
       <button type="button" class="btn btn-outline"
-        v-if="isEditing && relationInfoData.id"
+        v-if="isEditing && relationInfo.id"
         :disabled="isLoading"
         @click="toggleIsEditing()"
       >{{ $t('button.close') }}</button>
@@ -55,7 +55,7 @@
     >
       <div
         class="join-relation"
-        v-for="(relation, relationIndex) in relationInfoData.dataFrameRelationList"
+        v-for="(relation, relationIndex) in relationInfo.dataFrameRelationList"
         :key="relationIndex"
       >
         <div
@@ -90,7 +90,7 @@
     </section>
     <div
       class="footer-button-block"
-      v-if="relationInfoData.id && isEditing"
+      v-if="relationInfo.id && isEditing"
     >
       <!-- <a href="javascript:void(0)" class="btn btn-secondary btn-delete"
         @click="checkDeleteRelations(relationInfoData.id)"
@@ -145,10 +145,6 @@ export default {
     index: {
       type: Number,
       required: true
-    },
-    joinTypeOptions: {
-      type: Array,
-      required: true
     }
   },
   data () {
@@ -160,8 +156,13 @@ export default {
       isEditing: !this.relationInfo.id,
       currentDataSourceId: parseInt(this.$route.params.id),
       isLoading: false,
-      relationInfoData: JSON.parse(JSON.stringify(this.relationInfo)),
-      newTableCreated: false
+      newTableCreated: false,
+      joinTypeOptions: [
+        {
+          name: 'Inner Join',
+          value: 'Inner'
+        }
+      ]
     }
   },
   methods: {
@@ -176,7 +177,7 @@ export default {
     },
     deleteJoinTable () {
       this.isLoading = true
-      deleteJoinTable(this.relationInfoData.id)
+      deleteJoinTable(this.relationInfo.id)
         .then(() => {
           this.$emit('deleteJoinTable', this.index)
           this.isLoading = false
@@ -186,7 +187,7 @@ export default {
         })
     },
     getDataFrameRelationList () {
-      return this.relationInfoData.dataFrameRelationList.map(relation => ({
+      return this.relationInfo.dataFrameRelationList.map(relation => ({
         joinType: relation.joinType,
         leftDataColumnId: relation.leftDataColumn.id,
         leftDataFrameId: relation.leftDataFrame.id,
@@ -198,15 +199,16 @@ export default {
       this.isLoading = true
       const joinTableData = {
         dataSourceId: this.currentDataSourceId,
-        name: this.relationInfoData.name,
+        name: this.relationInfo.name,
         dataFrameRelationList: this.getDataFrameRelationList()
       }
       createJoinTable(joinTableData)
         .then(response => {
-          this.relationInfoData.id = response
+          this.relationInfo.id = response
           this.isLoading = false
           this.isEditing = false
           this.newTableCreated = true
+          this.$emit('dataFrameUpdate')
           Message({
             message: this.$t('message.joinTableBuilt'),
             type: 'success',
@@ -218,14 +220,15 @@ export default {
     updateJoinTable () {
       this.isLoading = true
       const joinTableData = {
-        id: this.relationInfoData.id,
-        name: this.relationInfoData.name,
+        id: this.relationInfo.id,
+        name: this.relationInfo.name,
         dataFrameRelationList: this.getDataFrameRelationList()
       }
       updateJoinTable(joinTableData)
         .then(response => {
           this.isEditing = false
           this.isLoading = false
+          this.$emit('dataFrameUpdate')
           Message({
             message: this.$t('message.saveSuccess'),
             type: 'success',
@@ -246,7 +249,7 @@ export default {
 <style lang="scss" scoped>
 .single-join-table {
   position: relative;
-  padding: 24px 32px;
+  padding: 24px;
   border-radius: 4px;
   background-color: rgba(50, 58, 58, 0.95);
 
@@ -314,7 +317,7 @@ export default {
   .button-block {
     position: absolute;
     top: 24px;
-    right: 32px;
+    right: 24px;
 
     .btn:not(:last-child) {
       margin-right: 7px;

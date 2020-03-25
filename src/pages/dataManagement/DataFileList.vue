@@ -79,7 +79,8 @@
     ></confirm-delete-file-dialog>
     <edit-table-join-relation-dialog
       v-if="showJoinTableDialog"
-      @cancel="toggleJoinTableDialog(); fetchData()"
+      @cancel="toggleJoinTableDialog()"
+      @dataFrameUpdate="fetchData()"
     ></edit-table-join-relation-dialog>
     <edit-column-dialog
       v-if="showEditColumnDialog"

@@ -63,9 +63,10 @@ export default {
 
       this.adjestPosition()
     },
-    chooseOption (value) {
-      this.$emit('input', value)
+    chooseOption (chosenValue) {
       this.toggleDropdown()
+      if (chosenValue === this.value) return
+      this.$emit('input', chosenValue)
     },
     adjestPosition () {
       if (!this.isDropdownOpen) return
