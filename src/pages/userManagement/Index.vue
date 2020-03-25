@@ -397,6 +397,7 @@ export default {
       }
     },
     groupName (list) {
+      // 暫時只呈現第一個名稱
       return list[0].name
     }
   }
@@ -466,7 +467,7 @@ export default {
       "1" "userAccount" 280px,
       "2" "userTitle" 190px,
       "3" "group" 280px,
-      "4" "activeStatus" 190px,
+      "4" "activeStatus" 140px,
       "5" "action" 280px;
 
     @each $index, $name, $width in $column-width {
