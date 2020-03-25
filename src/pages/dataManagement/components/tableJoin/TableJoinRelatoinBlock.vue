@@ -1,33 +1,5 @@
 <template>
   <div class="single-join-table">
-    <div
-      v-if="!isEditing"
-      class="title-block"
-    >
-      <h3 class="table-name">{{ relationInfo.name }}</h3>
-      <h6 class="join-type">
-        關聯方式:
-        <span
-          v-for="(relation, relationIndex) in relationInfo.dataFrameRelationList"
-          :key="relationIndex"
-        >{{ getJoinTableName(relation.joinType) }}</span>
-      </h6>
-    </div>
-    <div
-      v-if="isEditing"
-      class="input-block"
-      :class="{'is-editing': isEditing}"
-    >
-      <label for="" class="label">*{{ $t('editing.tableName') }}</label>
-      <input
-        type="text"
-        class="input"
-        v-if="!relationInfo.id"
-        :placeholder="$t('editing.pleaseEnterName')"
-        v-model="relationInfo.name"
-      >
-      <div class="name" v-else>{{ relationInfo.name }}</div>
-    </div>
     <div class="button-block">
       <button type="button" class="btn btn-default btn-save"
         v-if="isEditing"
@@ -49,60 +21,82 @@
         @click="toggleIsEditing()"
       >{{ $t('button.close') }}</button>
     </div>
-    <section
-      v-if="isEditing"
-      class="join-relation-list"
-    >
-      <div
-        class="join-relation"
-        v-for="(relation, relationIndex) in relationInfo.dataFrameRelationList"
-        :key="relationIndex"
-      >
-        <div
-          class="input-block select"
-          :class="{'is-editing': isEditing}"
-        >
-          <label for="" class="label">{{ $t('editing.selectJoinType') }}</label>
-          <default-select
-            class="tag-select input"
-            v-model="relation.joinType"
-            :option-list="joinTypeOptions"
-          />
-        </div>
-        <div
-          class="correlation-block"
-        >
-          <relation-select-block
-            :data-frame-list="dataFrameList"
-            :initial-data-frame-id.sync="relation.leftDataFrame.id"
-            :initial-data-column-id.sync="relation.leftDataColumn.id"
-            :index="relationIndex"
-          />
-          <svg-icon icon-class="table-correlation" class="correlation-icon"></svg-icon>
-          <relation-select-block
-            :data-frame-list="dataFrameList"
-            :initial-data-frame-id.sync="relation.rightDataFrame.id"
-            :initial-data-column-id.sync="relation.rightDataColumn.id"
-            :index="relationIndex"
-          />
-        </div>
-      </div>
-    </section>
     <div
-      class="footer-button-block"
-      v-if="relationInfo.id && isEditing"
+      v-if="!isEditing"
+      class="title-block"
     >
-      <!-- <a href="javascript:void(0)" class="btn btn-secondary btn-delete"
-        @click="checkDeleteRelations(relationInfoData.id)"
-      >{{ $t('button.delete') }}</a> -->
-      <a
-        href="javascript:void(0)"
-        class="btn btn-secondary btn-delete"
-        @click="deleteJoinTable()"
-      >{{ $t('button.delete') }}</a>
+      <h3 class="table-name">{{ relationInfo.name }}</h3>
+      <h6 class="join-type">
+        關聯方式:
+        <span
+          v-for="(relation, relationIndex) in relationInfo.dataFrameRelationList"
+          :key="relationIndex"
+        >{{ getJoinTableName(relation.joinType) }}</span>
+      </h6>
     </div>
+    <template v-else>
+      <div
+        class="input-block"
+        :class="{'is-editing': isEditing}"
+      >
+        <label for="" class="label">*{{ $t('editing.tableName') }}</label>
+        <input
+          type="text"
+          class="input"
+          v-if="!relationInfo.id"
+          :placeholder="$t('editing.pleaseEnterName')"
+          v-model="relationInfo.name"
+        >
+        <div class="name" v-else>{{ relationInfo.name }}</div>
+      </div>
+      <section class="join-relation-list">
+        <div
+          class="join-relation"
+          v-for="(relation, relationIndex) in relationInfo.dataFrameRelationList"
+          :key="relationIndex"
+        >
+          <div
+            class="input-block select"
+            :class="{'is-editing': isEditing}"
+          >
+            <label for="" class="label">{{ $t('editing.selectJoinType') }}</label>
+            <default-select
+              class="tag-select input"
+              v-model="relation.joinType"
+              :option-list="joinTypeOptions"
+            />
+          </div>
+          <div
+            class="correlation-block"
+          >
+            <relation-select-block
+              :data-frame-list="dataFrameList"
+              :initial-data-frame-id.sync="relation.leftDataFrame.id"
+              :data-column="relation.leftDataColumn"
+              :index="relationIndex"
+            />
+            <svg-icon icon-class="table-correlation" class="correlation-icon"></svg-icon>
+            <relation-select-block
+              :data-frame-list="dataFrameList"
+              :initial-data-frame-id.sync="relation.rightDataFrame.id"
+              :data-column="relation.rightDataColumn"
+              :index="relationIndex"
+            />
+          </div>
+        </div>
+      </section>
+      <div class="reminder-block">
+        <span class="reminder-title">
+          <svg-icon icon-class="lamp" />
+          {{$t('resultDescription.prompt')}}：
+        </span>
+        <span class="reminder-description">
+          {{$t('message.remindSameDataTypeColumns')}}
+        </span>
+      </div>
+    </template>
     <div
-      v-if="newTableCreated"
+      v-if="newTableCreated && !isEditing"
       class="reminder-block"
     >
       <span class="reminder-title">
@@ -117,6 +111,19 @@
         href="javascript:void(0)"
         class="btn-link"
       >{{$t('guiding.goAdjust')}}</a>
+    </div>
+    <div
+      class="footer-button-block"
+      v-if="relationInfo.id && isEditing"
+    >
+      <!-- <a href="javascript:void(0)" class="btn btn-secondary btn-delete"
+        @click="checkDeleteRelations(relationInfoData.id)"
+      >{{ $t('button.delete') }}</a> -->
+      <a
+        href="javascript:void(0)"
+        class="btn btn-secondary btn-delete"
+        @click="deleteJoinTable()"
+      >{{ $t('button.delete') }}</a>
     </div>
   </div>
 </template>
@@ -149,10 +156,7 @@ export default {
   },
   data () {
     return {
-      deleteJoinId: null,
       showConfirmDeleteDialog: false,
-      leftTableColumnList: [],
-      rightTableColumnList: [],
       isEditing: !this.relationInfo.id,
       currentDataSourceId: parseInt(this.$route.params.id),
       isLoading: false,
@@ -195,7 +199,37 @@ export default {
         rightDataFrameId: relation.rightDataFrame.id
       }))
     },
+    validateDataColumns () {
+      if (!this.relationInfo.name) {
+        Message({
+          message: this.$t('message.formColumnEmpty'),
+          type: 'warning',
+          duration: 3 * 1000
+        })
+        return false
+      }
+      for (let dataFrame of this.relationInfo.dataFrameRelationList) {
+        if (!dataFrame.leftDataColumn.id || !dataFrame.rightDataColumn.id) {
+          Message({
+            message: this.$t('message.formColumnEmpty'),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+          return false
+        }
+        if (dataFrame.leftDataColumn.dataType !== dataFrame.rightDataColumn.dataType) {
+          Message({
+            message: this.$t('message.remindSameDataTypeColumns'),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+          return false
+        }
+      }
+      return true
+    },
     buildJoinTable () {
+      if (!this.validateDataColumns()) return
       this.isLoading = true
       const joinTableData = {
         dataSourceId: this.currentDataSourceId,
@@ -218,6 +252,7 @@ export default {
         .catch(() => { this.isLoading = false })
     },
     updateJoinTable () {
+      if (!this.validateDataColumns()) return
       this.isLoading = true
       const joinTableData = {
         id: this.relationInfo.id,
@@ -328,11 +363,16 @@ export default {
     right: 0;
   }
 
+  .join-relation {
+    &:not(:last-of-type) {
+      margin-bottom: 17px;
+    }
+  }
+
   .correlation-block {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
 
     .correlation-icon {
       width: 60px;
@@ -344,6 +384,7 @@ export default {
   .footer-button-block {
     display: flex;
     justify-content: flex-end;
+    margin-top: 17px;
 
     .btn-delete {
       display: flex;

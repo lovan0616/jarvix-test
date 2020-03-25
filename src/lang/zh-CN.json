@@ -10,6 +10,7 @@
   "message": {
     "joinTableBuilt": "资料表关联建立完成",
     "remindAdjustMainDate": "资料表具有多项日期栏位，您可进行主要日期栏位调整。",
+    "remindSameDataTypeColumns": "两个栏位的资料型态必须相同。",
     "builded": "资料源建立完成",
     "noData": "目前没有资料",
     "noResult": "目前暂无相关资讯",

@@ -16,7 +16,7 @@
         :key="'bottom-select'"
         :default-msg="$t('editing.selectColumn')"
         :option-list="columnList"
-        :value="dataColumnId"
+        :value="dataColumn.id"
         @input="onUpdateDataColumn"
       ></custom-select>
     </div>
@@ -36,8 +36,8 @@ export default {
     initialDataFrameId: {
       type: Number
     },
-    initialDataColumnId: {
-      type: Number
+    dataColumn: {
+      type: Object
     }
   },
   components: {
@@ -46,8 +46,7 @@ export default {
   data () {
     return {
       columnList: [],
-      dataFrameId: this.initialDataFrameId,
-      dataColumnId: this.initialDataColumnId
+      dataFrameId: this.initialDataFrameId
     }
   },
   mounted () {
@@ -56,18 +55,22 @@ export default {
   methods: {
     fetchDataColumnList (dataFrameId) {
       getDataFrameColumnInfoById(dataFrameId).then(response => {
-        this.columnList = response
+        this.columnList = response.map(column => ({
+          ...column,
+          name: `${column.primaryAlias || column.name}（${column.dataType}）`
+        }))
       })
     },
     onUpdateDataFrame (newDataFrameId) {
       this.dataFrameId = newDataFrameId
-      this.dataColumnId = null
+      this.dataColumn.id = null
+      this.dataColumn.dataType = null
       this.fetchDataColumnList(this.dataFrameId)
       this.$emit('update:initialDataFrameId', newDataFrameId)
     },
     onUpdateDataColumn (newDataColumnId) {
-      this.dataColumnId = newDataColumnId
-      this.$emit('update:initialDataColumnId', newDataColumnId)
+      this.dataColumn.id = newDataColumnId
+      this.dataColumn.dataType = this.columnList.find(column => column.id === newDataColumnId).dataType
     }
   }
 }

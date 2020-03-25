@@ -25,7 +25,7 @@
         <table-join-relatoin-block
           v-else
           v-for="(relation, index) in joinTableList"
-          :key="joinTableList.length - index"
+          :key="relation.id || relation.key"
           :index="index"
           :relation-info="relation"
           :data-frame-list="dataFrameList"
@@ -61,9 +61,9 @@ export default {
           {
             joinType: 'Inner',
             leftDataFrame: { id: null },
-            leftDataColumn: { id: null },
+            leftDataColumn: { id: null, dataType: null },
             rightDataFrame: { id: null },
-            rightDataColumn: { id: null }
+            rightDataColumn: { id: null, dataType: null }
           }
         ],
         id: null,
@@ -81,12 +81,17 @@ export default {
         .then(([joinTableList, dataFrameList]) => {
           // handle join table list
           if (joinTableList.length === 0) {
-            this.joinTableList.push(JSON.parse(JSON.stringify(this.singleJoinTable)))
+            const emptyJoinTable = JSON.parse(JSON.stringify(this.singleJoinTable))
+            emptyJoinTable.key = new Date().toString()
+            this.joinTableList.push(emptyJoinTable)
           } else {
             this.joinTableList = joinTableList
           }
           // handle dataframe list
-          this.dataFrameList = dataFrameList
+          this.dataFrameList = dataFrameList.map(dataFrame => ({
+            ...dataFrame,
+            name: dataFrame.primaryAlias
+          }))
           // update loading status
           this.isLoading = false
         })
@@ -104,8 +109,9 @@ export default {
       this.$emit('cancel')
     },
     addJoinTable () {
-      let newRelations = JSON.parse(JSON.stringify(this.singleJoinTable))
-      this.joinTableList.unshift(newRelations)
+      const emptyJoinTable = JSON.parse(JSON.stringify(this.singleJoinTable))
+      emptyJoinTable.key = new Date().toString()
+      this.joinTableList.unshift(emptyJoinTable)
     },
     cancelAddingJoinTable (index) {
       this.joinTableList.splice(index, 1)
