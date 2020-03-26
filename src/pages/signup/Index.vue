@@ -7,14 +7,14 @@
       >
         <div class="signup-form">
           <div class="signup-input-block input-block">
-            <div class="input valid">{{userInfo.userName}}</div>
+            <div class="input valid">{{userInfo.email}}</div>
             <label class="placeholder">{{ $t('editing.username') }}</label>
           </div>
           <input-block class="signup-input-block"
             :label="$t('editing.userTitle')"
             name="userName"
             type="text"
-            v-model="userInfo.userTitle"
+            v-model="userInfo.username"
             v-validate="'required'"
           />
           <input-block class="signup-input-block"
@@ -58,8 +58,8 @@ export default {
   data () {
     return {
       userInfo: {
-        userName: null,
-        userTitle: null,
+        email: null,
+        username: null,
         password: null,
         verifyPassword: null,
         accountId: null,
@@ -86,7 +86,7 @@ export default {
     confirmEmailToken (emailToken) {
       mailConfirm({emailToken})
         .then(res => {
-          this.userInfo.userName = res.email
+          this.userInfo.email = res.email
           this.userInfo.accountId = res.accountId
           this.userInfo.invitedByUserId = res.invitedByUserId
           this.userInfo.groupId = res.mailData ? res.mailData.groupId : 1 // 暫定預設 1 為 default group
@@ -99,14 +99,8 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return
         this.isProcessing = true
-        signup({
-          email: this.userInfo.userName,
-          username: this.userInfo.userTitle,
-          password: this.userInfo.password,
-          accountId: this.userInfo.accountId,
-          groupId: this.userInfo.groupId,
-          invitedByUserId: this.userInfo.invitedByUserId
-        })
+        const {verifyPassword, ...userInfo} = this.userInfo
+        signup(userInfo)
           .then(() => {
             this.$router.push({name: 'PageLogin'})
             Message({
