@@ -20,7 +20,7 @@ export function login (loginInfo) {
  */
 export function signup (signupInfo) {
   return request({
-    url: '/userNew',
+    url: '/userR',
     method: 'POST',
     data: signupInfo
   })
