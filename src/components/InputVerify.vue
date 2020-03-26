@@ -1,18 +1,19 @@
 <template>
     <div class="input-verify">
-    <input
-        v-model.trim="inputValue"
-        class="input-verify-text"
-        :type="type"
-        :name="name"
-        :placeholder="placeholder"
-    >
-    <div
-        class="input-error error-text"
-        v-show="errors.has(name)"
-    >
-    {{ errors.first(name) }}
-    </div>
+      <input
+          v-model.trim="inputValue"
+          class="input-verify-text"
+          :type="type"
+          :name="name"
+          :placeholder="placeholder"
+      >
+      <div
+          class="input-error error-text"
+          v-show="errors.has(name)"
+      >
+      {{ errors.first(name) }}
+      </div>
+      <slot name="action"></slot>
     </div>
 </template>
 <script>

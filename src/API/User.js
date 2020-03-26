@@ -110,3 +110,17 @@ export function getSelfInfo (id) {
     method: 'GET'
   })
 }
+
+/**
+ * 邀請使用者
+ * @param {Object} inviteeInfo - 受邀者者資訊
+ * @param {Array}} inviteeInfo.email - 受邀者者郵件
+ * @param {String} inviteeInfo.webURL - 註冊頁面連結
+ */
+export function inviteUser (inviteeInfo) {
+  return request({
+    url: '/mail/inviteMail',
+    method: 'POST',
+    data: inviteeInfo
+  })
+}
