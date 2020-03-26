@@ -1,5 +1,7 @@
 <template>
-  <div class="column-setting">
+  <div class="column-setting"
+    v-if="!isProcessing"
+  >
     <div class="dialog-title">{{ $t('editing.connectMySQL') }}</div>
     <upload-process-block
       :step="3"
@@ -12,27 +14,47 @@
       <div class="data-frame-select-block">
         <label class="select-label">{{ $t('editing.currentDisplayDataFrame') }}</label>
         <default-select
+          v-model="currentTable"
+          :option-list="tableIdList"
         ></default-select>
       </div>
       <div class="data-table">
         <div class="data-table-row table-head">
           <div class="data-table-cell">{{ $t('editing.columnName') }}</div>
+          <div class="data-table-cell">{{ $t('editing.alias') }}</div>
           <div class="data-table-cell">{{ $t('editing.dataType') }}</div>
         </div>
         <div class="data-table-body">
-          <div class="data-table-row"
-            v-for="n in 20"
-            :key="n"
+          <spinner class="spinner-container"
+            v-if="isLoading"
+            :title="$t('editing.loading')"
+            size="50"
+          ></spinner>
+          <template
+            v-else
           >
-            <div class="data-table-cell">column1</div>
-            <div class="data-table-cell">
-              <default-select class="data-type-select"
-              ></default-select>
+            <div class="data-table-row"
+              v-for="(column, index) in copyTableList.filter(element => element.name === currentTable)[0].columns"
+              :key="index"
+            >
+              <div class="data-table-cell">{{ column.name }}</div>
+              <div class="data-table-cell">
+                <input-block class="column-alias-input"
+                  :name="column.name"
+                  v-model="column.primaryAlias"
+                  v-validate="'required'"
+                ></input-block>
+              </div>
+              <div class="data-table-cell">
+                <default-select class="data-type-select"
+                  v-model="column.dataType"
+                  :option-list="dataTypeList"
+                ></default-select>
+              </div>
             </div>
-          </div>
+          </template>
         </div>
       </div>
-
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
@@ -47,28 +69,105 @@
       </div>
     </div>
   </div>
+  <spinner class="processing-spinner-container"
+    v-else
+    :title="$t('editing.dataBuilding')"
+    size="50"
+  ></spinner>
 </template>
 <script>
+import { analyzeTable } from '@/API/RemoteConnection'
+import { dataSourcePreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
+import InputBlock from '@/components/InputBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
 
 export default {
   name: 'ColumnSetting',
+  inject: ['$validator'],
   components: {
     UploadProcessBlock,
-    DefaultSelect
+    DefaultSelect,
+    InputBlock
+  },
+  props: {
+    tableIdList: {
+      type: Array,
+      default: () => []
+    },
+    connectionId: {
+      type: Number,
+      default: null
+    }
   },
   data () {
     return {
-      isLoading: false
+      isLoading: false,
+      isProcessing: false,
+      dataTypeList: [
+        {
+          name: 'FLOAT',
+          value: 'FLOAT'
+        },
+        {
+          name: 'STRING',
+          value: 'STRING'
+        },
+        {
+          name: 'INT',
+          value: 'INT'
+        },
+        {
+          name: 'DATETIME',
+          value: 'DATETIME'
+        },
+        {
+          name: 'BOOLEAN',
+          value: 'BOOLEAN'
+        }
+      ],
+      currentTable: null,
+      copyTableList: []
     }
   },
+  mounted () {
+    this.fetchData()
+  },
   methods: {
-    cancelFileUpload () {
+    fetchData () {
+      this.isLoading = true
+      this.currentTable = this.tableIdList[0].name
 
+      this.tableIdList.forEach((element, index) => {
+        analyzeTable(this.connectionId, element.name).then(response => {
+          this.$set(this.copyTableList, index, response)
+
+          this.isLoading = false
+        }).catch(() => {
+          this.isLoading = false
+        })
+      })
+    },
+    cancelFileUpload () {
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     nextStep () {
-      
+      this.isProcessing = true
+      this.copyTableList.forEach((element, index) => {
+        dataSourcePreprocessor(element).then(response => {
+          this.tableIdList[index].connectionStatus = 'success'
+          this.checkUpdateFinish()
+        }).catch(() => {
+          this.tableIdList[index].connectionStatus = 'fail'
+          this.checkUpdateFinish()
+        })
+      })
+    },
+    checkUpdateFinish () {
+      if (!this.tableIdList.some(element => element.status === null)) {
+        this.$emit('next')
+        this.isProcessing = false
+      }
     }
   }
 }
@@ -106,6 +205,10 @@ export default {
     }
   }
 
+  .spinner-container {
+    height: 100%;
+  }
+
   .data-table {
     border-radius: 0;
 
@@ -118,16 +221,27 @@ export default {
     }
   }
 }
+.processing-spinner-container {
+  height: 80vh;
+}
 </style>
 <style lang="scss">
 .data-type-select {
-   .el-input__inner {
-     height: 20px;
-     line-height: 20px;
-     font-size: 14px;
-   }
-   .el-input__icon {
-     line-height: 20px;
-   }
- }
+  &.sy-select.theme-dark .el-input--suffix .el-input__inner {
+    height: 20px;
+    line-height: 20px;
+    font-size: 14px;
+    padding-left: 0;
+  }
+
+  .el-input__icon {
+    line-height: 20px;
+  }
+}
+.column-alias-input.input-block {
+  .input {
+    height: 20px;
+    padding-bottom: 2px;
+  }
+}
 </style>

@@ -210,7 +210,14 @@
     "databaseType": "資料庫類型",
     "currentLoadedDataFrame": "目前讀取的資料表",
     "currentDisplayDataFrame": "目前顯示資料表",
-    "dataType": "資料類型"
+    "dataType": "資料類型",
+    "chooseConnection": "選擇連線",
+    "emptyConnection": "尚未建立任何連線",
+    "createConnection": "建立新連線",
+    "buildFinish": "建置完成",
+    "buildStatus": "總共{total}項資料表，{success}項建置成功，{fail}項未建置",
+    "buildSuccess": "建置成功",
+    "buildFail": "建置失敗"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",

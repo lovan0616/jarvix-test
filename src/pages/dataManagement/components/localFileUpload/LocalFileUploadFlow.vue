@@ -1,14 +1,16 @@
 <template>
   <div class="local-file-upload-flow">
     <transition name="fade" mode="out-in">
+      <data-source-name
+        v-if="step === 0"
+        @next="nextStep"
+      ></data-source-name>
       <local-file-upload
-        v-if="!fileLoaded"
+        v-if="step === 1"
+        @next="nextStep"
       ></local-file-upload>
-      <first-time-set-table-join
-        v-else-if="showSetTableJoin"
-      ></first-time-set-table-join>
       <local-file-upload-finished
-        v-else
+        v-if="step === 2"
       ></local-file-upload-finished>
     </transition>
   </div>
@@ -17,22 +19,26 @@
 import DataSourceName from './DataSourceName'
 import LocalFileUpload from './LocalFileUpload'
 import LocalFileUploadFinished from './LocalFileUploadFinished'
-import FirstTimeSetTableJoin from '../tableJoin/FirstTimeSetTableJoin'
 
 export default {
   name: 'LocalFileUploadFlow',
   components: {
     DataSourceName,
     LocalFileUpload,
-    LocalFileUploadFinished,
-    FirstTimeSetTableJoin
+    LocalFileUploadFinished
   },
-  computed: {
-    fileLoaded () {
-      return this.$store.state.dataManagement.fileLoaded
-    },
-    showSetTableJoin () {
-      return this.$store.state.dataManagement.showSetTableJoin
+  data () {
+    return {
+      step: 0,
+      dataSourceId: this.$route.params ? parseInt(this.$route.params.id) : null
+    }
+  },
+  mounted () {
+    this.step = this.dataSourceId ? 1 : 0
+  },
+  methods: {
+    nextStep () {
+      this.step += 1
     }
   }
 }

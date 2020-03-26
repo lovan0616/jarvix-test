@@ -5,7 +5,6 @@
     <div class="dialog-body">
       <div class="input-block-container">
         <input-block class="file-info-input-block"
-          v-if="!currentDataSourceInfo"
           :label="$t('editing.dataSourceName')"
           name="dataSourceName"
           v-model="dataSourceInfo.name"
@@ -52,18 +51,10 @@ export default {
     nextStep () {
       this.$validator.validateAll().then(result => {
         if (result) {
-          if (this.currentDataSourceInfo) {
-            // 將 name 塞進去
-            this.dataSourceInfo.name = this.currentDataSourceInfo.name
-          }
           this.$store.commit('dataManagement/updateCurrentUploadDataSourceName', this.dataSourceInfo.name)
+          this.$emit('next')
         }
       })
-    }
-  },
-  computed: {
-    currentDataSourceInfo () {
-      return this.$store.state.dataManagement.currentDataSourceInfo
     }
   }
 }

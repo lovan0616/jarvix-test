@@ -6,7 +6,7 @@ import request from '@/utils/publicRequest'
  */
 export function createDatabaseConnection (connectInfo) {
   return request({
-    url: 'copyTable/databaseConnection',
+    url: '/database/connection',
     method: 'POST',
     data: connectInfo
   })
@@ -18,20 +18,21 @@ export function createDatabaseConnection (connectInfo) {
  */
 export function getTableList (databaseConnectionId) {
   return request({
-    url: `copyTable/${databaseConnectionId}`,
+    url: `/database/connection/${databaseConnectionId}/table`,
     method: 'GET'
   })
 }
 
 /**
- * 取得 column 列表
- * @param {Object} connectionInfo 連線資訊
+ * get record connection list
  */
-export function getTableColumnList (connectionInfo) {
+export function getConnectionInfoList (dataSourceId) {
   return request({
-    url: `copyTable/column`,
-    method: 'POST',
-    data: connectionInfo
+    url: `/database/connection`,
+    method: 'GET',
+    params: {
+      dataSourceId
+    }
   })
 }
 
@@ -40,8 +41,30 @@ export function getTableColumnList (connectionInfo) {
  */
 export function testConnection (connectionInfo) {
   return request({
-    url: `/copyTable/databaseConnection/test`,
+    url: `/database/connection/test`,
     method: 'POST',
     data: connectionInfo
+  })
+}
+
+/**
+ * 測試已新增的連線
+ */
+export function testOldConnection (connectionId) {
+  return request({
+    url: `/database/connection/${connectionId}/test`,
+    method: 'POST'
+  })
+}
+
+/**
+ * 解析 table
+ * @param {Number} connectionId - 連線 id
+ * @param {String} tableName - table 名稱
+ */
+export function analyzeTable (connectionId, tableName) {
+  return request({
+    url: `/database/connection/${connectionId}/table/${tableName}/analysis`,
+    method: 'POST'
   })
 }

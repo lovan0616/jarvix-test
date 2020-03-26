@@ -3,7 +3,7 @@
     <div class="dialog-container">
       <transition name="fade" mode="out-in">
         <choose-file-type
-          v-if="!currentUploadInfo.type"
+          v-if="currentUploadInfo.type === null"
         ></choose-file-type>
         <template
           v-else
@@ -36,14 +36,11 @@ export default {
     this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     if (this.currentUploadInfo.type === 'local') {
       this.$store.commit('dataManagement/updateUploadFileList', [])
-      this.$store.commit('dataManagement/updateFileLoaded', false)
     } else {
-      this.$store.commit('dataManagement/updateConnectionStatus', null)
       this.$store.commit('dataManagement/clearConnectionInfo')
     }
 
     this.$store.commit('dataManagement/clearCurrentUploadInfo')
-    this.$store.commit('dataManagement/updateShowSetTableJoin', false)
   },
   methods: {
   },

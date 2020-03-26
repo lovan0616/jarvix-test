@@ -15,9 +15,10 @@
         v-else
       >
         <input-block class="dialog-input"
+          v-if="!dataSourceId"
           :label="$t('editing.dataSourceName')"
           name="dataSourceName"
-          v-model="dataSourceName"
+          v-model="connectInfo.name"
           v-validate="'required'"
         ></input-block>
         <input-block class="dialog-input"
@@ -116,8 +117,7 @@ export default {
           value: 'POSTGRESQL'
         }
       ],
-      dataSourceName: null,
-      dataSourceId: null,
+      dataSourceId: this.$route.params ? parseInt(this.$route.params.id) : null,
       connectInfo: {
         account: null,
         databaseType: null,
@@ -137,26 +137,34 @@ export default {
       this.$validator.validateAll().then(result => {
         if (result) {
           this.isLoading = true
-          this.$store.commit('dataManagement/updateConnectionType', this.currentUploadInfo.type)
 
           testConnection(this.connectInfo).then(() => {
-            this.createConnection()
+            this.createDataSource()
           }).catch(() => {
-            this.$store.commit('dataManagement/updateConnectionStatus', false)
+            this.isLoading = false
           })
         }
       })
     },
     createDataSource () {
-      return createDataSource(this.dataSourceName).then(response => {
+      return createDataSource(this.connectInfo.name).then(response => {
         this.dataSourceId = response.dataSourceId
+
+        this.$emit('updateDataSource', this.dataSourceId)
+
+        this.createConnection({
+          dataSourceId: this.dataSourceId,
+          ...this.connectInfo
+        })
+      }).catch(() => {
+        this.isLoading = false
       })
     },
-    createConnection () {
-      createDatabaseConnection(this.connectInfo).then(response => {
-        this.$store.commit('dataManagement/updateConnectionStatus', true)
+    createConnection (connectInfo) {
+      createDatabaseConnection(connectInfo).then(response => {
+        this.$emit('next', response.id)
       }).catch(() => {
-        this.$store.commit('dataManagement/updateConnectionStatus', false)
+        this.isLoading = false
       })
     }
   },

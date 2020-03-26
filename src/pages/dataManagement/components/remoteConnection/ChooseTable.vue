@@ -10,17 +10,22 @@
     </div>
     <div class="dialog-body">
       <div class="data-frame-list">
-        <label class="single-data-frame">
+        <label class="single-data-frame"
+          v-for="(table, index) in tableList"
+          :key="index"
+        >
           <div class="checkbox">
             <div class="checkbox-label">
-              <input type="checkbox" name=""
+              <input type="checkbox" name="table"
+                :value="table"
+                v-model="tableIdList"
               >
               <div class="checkbox-square"></div>
             </div>
           </div>
           <div class="data-frame-info">
-            <div class="data-frame-name">Secen1</div>
-            <div class="data-frame-content">Scene1 content</div>
+            <div class="data-frame-name">{{ table }}</div>
+            <!-- <div class="data-frame-content">Scene1 content</div> -->
           </div>
         </label>
       </div>
@@ -40,6 +45,7 @@
   </div>
 </template>
 <script>
+import { getTableList } from '@/API/RemoteConnection'
 import UploadProcessBlock from './UploadProcessBlock'
 
 export default {
@@ -49,15 +55,36 @@ export default {
   },
   data () {
     return {
-      isLoading: false
+      isLoading: false,
+      tableList: [],
+      tableIdList: []
     }
   },
+  mounted () {
+    this.fetchData()
+  },
   methods: {
-    cancelFileUpload () {
+    fetchData () {
+      this.isLoading = true
+      getTableList(12).then(response => {
+        this.tableList = response
 
+        this.isLoading = false
+      }).catch(() => {
+        this.isLoading = false
+      })
+    },
+    cancelFileUpload () {
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     nextStep () {
-
+      this.$emit('next', this.tableIdList.map(element => {
+        return {
+          name: element,
+          value: element,
+          connectionStatus: null
+        }
+      }))
     }
   }
 }
@@ -103,7 +130,7 @@ export default {
     .data-frame-name {
       font-size: 14px;
       font-weight: 600;
-      margin-bottom: 8px;
+      // margin-bottom: 8px;
     }
     .data-frame-content {
       font-size: 13px;

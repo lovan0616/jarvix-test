@@ -101,7 +101,7 @@ export default {
       if (this.currntUploadStatus !== uploadStatus.uploading) return
       // 所有的檔案都已經上傳完畢
       if (value.findIndex(element => { return element === uploadStatus.wait || element === uploadStatus.uploading }) === -1) {
-        this.$store.commit('dataManagement/updateFileLoaded', true)
+        this.$emit('next')
       }
     }
   },

@@ -210,7 +210,14 @@
     "databaseType": "资料库类型",
     "currentLoadedDataFrame": "目前读取的资料表",
     "currentDisplayDataFrame": "目前显示资料表",
-    "dataType": "资料类型"
+    "dataType": "资料类型",
+    "chooseConnection": "选择连线",
+    "emptyConnection": "尚未建立任何连线",
+    "createConnection": "建立新连线",
+    "buildFinish": "建置完成",
+    "buildStatus": "总共{total}项资料表，{success}项建置成功，{fail}项未建置",
+    "buildSuccess": "建置成功",
+    "buildFail": "建置失败"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
