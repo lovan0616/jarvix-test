@@ -37,7 +37,8 @@
     "emptyDataSource": "尚未建立資料源",
     "emptyColumnSet": "尚未建立任何欄位集",
     "deleteSuccess": "刪除成功",
-    "dataSourceNotExist": "資料源不存在"
+    "dataSourceNotExist": "資料源不存在",
+    "connectionFail": "連線失敗"
   },
   "guiding": {
     "preStep": "上一步",

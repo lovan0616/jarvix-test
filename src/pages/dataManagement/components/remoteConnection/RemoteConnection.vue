@@ -18,6 +18,13 @@
         <input name="account" type="text" class="hidden-input">
         <input name="password" type="password" class="hidden-input">
         <input-block class="dialog-input"
+          v-if="!dataSourceId"
+          :label="$t('editing.dataSourceName')"
+          name="dataSourceName"
+          v-model="dataSourceName"
+          v-validate="'required'"
+        ></input-block>
+        <input-block class="dialog-input"
           :label="$t('editing.connectionName')"
           name="connectionName"
           v-model="connectInfo.name"
@@ -87,6 +94,7 @@
 <script>
 import { testConnection, createDatabaseConnection } from '@/API/RemoteConnection'
 import { createDataSource } from '@/API/DataSource'
+import { Message } from 'element-ui'
 import InputBlock from '@/components/InputBlock'
 import UploadProcessBlock from './UploadProcessBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
@@ -121,6 +129,7 @@ export default {
         }
       ],
       dataSourceId: this.$route.params ? parseInt(this.$route.params.id) : null,
+      dataSourceName: null,
       connectInfo: {
         account: null,
         databaseType: null,
@@ -142,15 +151,20 @@ export default {
           this.isLoading = true
 
           testConnection(this.connectInfo).then(() => {
-            this.createDataSource()
+            this.dataSourceId ? this.createConnection() : this.createDataSource()
           }).catch(() => {
+            Message({
+              message: this.$t('message.connectionFail'),
+              type: 'error',
+              duration: 3 * 1000
+            })
             this.isLoading = false
           })
         }
       })
     },
     createDataSource () {
-      return createDataSource(this.connectInfo.name).then(response => {
+      return createDataSource(this.dataSourceName).then(response => {
         this.dataSourceId = response.dataSourceId
 
         this.$emit('updateDataSource', this.dataSourceId)
@@ -165,7 +179,7 @@ export default {
     },
     createConnection (connectInfo) {
       createDatabaseConnection(connectInfo).then(response => {
-        this.$emit('next', response.id)
+        this.$emit('next', response)
       }).catch(() => {
         this.isLoading = false
       })
@@ -267,6 +281,7 @@ export default {
   }
 
   .hidden-input {
+    display: block;
     opacity: 0;
     height: 0;
     padding: 0;
