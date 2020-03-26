@@ -16,7 +16,6 @@
       <div class="board-title-row">
         <div class="button-block">
           <button class="btn-m btn-default btn-has-icon"
-            v-if="dataList.length === 0"
             :disabled="isProcessing || reachLimit"
             @click="createDataSource"
           >
@@ -37,9 +36,9 @@
               :icon-class="spinner"
             ></svg-icon>{{ $t('button.delete') }}
           </button>
-          <!-- <div class="reach-limit"
+          <div class="reach-limit"
             v-if="reachLimit"
-          >{{ $t('notification.uploadLimitNotification') }}</div> -->
+          >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
         <div class="button-block">
           <button class="btn-m btn-secondary btn-has-icon"

@@ -32,7 +32,7 @@
                <keep-alive>
                 <task
                   v-if="resultInfo.sub_key_result[displayFactorIndex]"
-                  v-bind:key="`sub-key-result-${displayFactorIndex}`"
+                  :key="`sub-key-result-${displayFactorIndex}`"
                   :component-id="resultInfo.sub_key_result[displayFactorIndex]"
                   intend="sub_key_result"
                 ></task>
@@ -40,7 +40,7 @@
               <keep-alive>
                 <task
                   v-if="resultInfo.sub_insight[displayFactorIndex]"
-                  v-bind:key="`sub-insight-${displayFactorIndex}`"
+                  :key="`sub-insight-${displayFactorIndex}`"
                   :component-id="resultInfo.sub_insight[displayFactorIndex]"
                   intend="sub_insight"
                 ></task>

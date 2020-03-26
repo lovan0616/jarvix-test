@@ -12,6 +12,8 @@
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'BookmarkSelect',
   components: {
@@ -21,9 +23,7 @@ export default {
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
-    dataSourceList () {
-      return this.$store.state.dataSource.dataSourceList
-    },
+    ...mapGetters('dataSource', ['dataSourceList']),
     // 過濾掉正在 build 的 bookmark
     buildDataSourceList () {
       return this.dataSourceList.filter(dataSource => {

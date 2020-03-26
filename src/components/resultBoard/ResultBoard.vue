@@ -13,13 +13,13 @@
         >
           <button class="head-btn restrict"
             v-if="hasFilter"
-            @click="toggleFilterInfo"
-            @blur="toggleFilterInfo"
+            @click.stop.prevent="toggleFilterInfo"
           >
             {{ $t('button.restrict') }}
             <filter-info-dialog
               v-if="isShowFilterInfo"
               :filter-info="restrictions"
+              @close="closeFilterInfo"
             ></filter-info-dialog>
           </button>
           <a class="head-btn share"
@@ -266,6 +266,9 @@ export default {
     },
     toggleFilterInfo () {
       this.isShowFilterInfo = !this.isShowFilterInfo
+    },
+    closeFilterInfo () {
+      this.isShowFilterInfo = false
     }
   },
   computed: {

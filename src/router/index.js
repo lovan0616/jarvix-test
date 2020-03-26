@@ -32,6 +32,26 @@ export default new Router({
           component: () => import('@/pages/pinboard/Pinboard')
         },
         {
+          path: 'algorithm',
+          name: 'PageAlgorithmList',
+          component: () => import('@/pages/algorithm/Index')
+        },
+        {
+          path: 'algorithm/create',
+          name: 'PageAlgorithmCreate',
+          component: () => import('@/pages/algorithm/Create')
+        },
+        {
+          path: 'algorithm/1',
+          name: 'PageAlgorithmEdit1',
+          component: () => import('@/pages/algorithm/Edit1')
+        },
+        {
+          path: 'algorithm/2',
+          name: 'PageAlgorithmEdit2',
+          component: () => import('@/pages/algorithm/Edit2')
+        },
+        {
           path: 'data-management',
           component: () => import('@/pages/dataManagement/Index'),
           children: [
@@ -63,6 +83,11 @@ export default new Router({
       path: '/login',
       name: 'PageLogin',
       component: () => import('@/pages/login/Index')
+    },
+    {
+      path: '/signup',
+      name: 'PageSignup',
+      component: () => import('@/pages/signup/Index')
     }
   ],
   linkActiveClass: 'active',

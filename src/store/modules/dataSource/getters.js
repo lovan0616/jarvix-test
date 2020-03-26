@@ -28,5 +28,18 @@ export default {
     } else {
       return currentFilter[currentFilter.length - 1].questionId
     }
+  },
+  dataSourceList (state) {
+    let isDemoEnd = localStorage.getItem('isDemoEnd')
+    if (isDemoEnd) {
+      return state.dataSourceList
+    } else {
+      let demoDatasource = localStorage.getItem('demoDatasource') || '富士康_輪廓型分析_molding_預測'
+      return state.dataSourceList.reduce((res, curr) => {
+        if (curr.name === demoDatasource) return res
+        res.push(curr)
+        return res
+      }, [])
+    }
   }
 }

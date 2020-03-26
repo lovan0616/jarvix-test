@@ -1,15 +1,12 @@
 <template>
   <div class="filter-info-dialog">
     <div class="filter-info-block">
-      <div
+      <pinboard-filter-info
         v-for="(restrict, index) in filterInfo"
         :key="index"
-      >
-        <pinboard-filter-info
-          :restriction="restrict"
-          :not-last="index !== filterInfo.length - 1"
-        ></pinboard-filter-info>
-      </div>
+        :restriction="restrict"
+        :is-last="index === filterInfo.length - 1"
+      />
     </div>
   </div>
 </template>
@@ -25,6 +22,19 @@ export default {
     filterInfo: {
       type: Array,
       default: () => []
+    }
+  },
+  mounted () {
+    document.addEventListener('click', this.autoHide, false)
+  },
+  destroyed () {
+    document.removeEventListener('click', this.autoHide, false)
+  },
+  methods: {
+    autoHide (evt) {
+      if (!this.$el.contains(evt.target)) {
+        this.$emit('close')
+      }
     }
   }
 }

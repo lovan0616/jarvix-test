@@ -20,5 +20,8 @@ export default {
   },
   updateAnalyzeStatus (state, data) {
     state.isAnalyzing = data
+  },
+  updateIsUseAlgorithm (state, data) {
+    state.isUseAlgorithm = data
   }
 }
