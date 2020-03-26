@@ -39,11 +39,13 @@ service.interceptors.response.use(
       Vue.rollbar.error(JSON.stringify(res))
     }
 
-    Message({
-      message: res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg'),
-      type: res.error.type,
-      duration: 3 * 1000
-    })
+    if (res.error) {
+      Message({
+        message: res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg'),
+        type: res.error.type,
+        duration: 3 * 1000
+      })
+    }
 
     return Promise.reject(res)
   },

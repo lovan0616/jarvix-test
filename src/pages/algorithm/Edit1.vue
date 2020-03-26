@@ -225,20 +225,19 @@ export default {
           creator: 'sygps',
           createDate: '2020/3/20',
           updateDate: '2020/3/20',
-          status: '可執行'
+          status: '可執行'
         },
         {
           name: '第二個演算法',
           creator: 'sygps',
           createDate: '2020/3/20',
           updateDate: '2020/3/20',
-          status: '可執行'
+          status: '可執行'
         }
       ]
     }
   },
   mounted () {
-    
   },
   methods: {
     back () {
@@ -326,7 +325,7 @@ export default {
       margin-right: 8px;
     }
   }
-  
+
   .table-board {
     margin: 16px 0;
 
@@ -353,7 +352,7 @@ export default {
         .content-item {
           margin: 0;
         }
-      }      
+      }
       .content-item {
         margin: 20px 0;
         padding-right: 36px;
@@ -379,7 +378,7 @@ export default {
       }
     }
   }
-  
+
   .footer {
     float: right;
     margin: 0 -6px;
@@ -407,5 +406,4 @@ export default {
     }
   }
 }
-
 </style>
