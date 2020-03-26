@@ -210,7 +210,7 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return
         inviteUser({
-          email: this.inviteeList.map(invitee => invitee.email),
+          emailList: this.inviteeList.map(invitee => invitee.email),
           webURL: window.location.origin + this.$router.resolve({name: 'PageSignup'}).href
         })
           .then(() => {
