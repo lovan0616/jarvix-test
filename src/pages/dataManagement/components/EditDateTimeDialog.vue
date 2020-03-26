@@ -151,53 +151,6 @@ export default {
       &:not(:last-of-type) {
         margin-bottom: 12px;
       }
-
-      .input-radio {
-        position: absolute;
-        left: -999999px;
-        top: -99999px;
-
-        &:checked + label:before,
-        &:not(:checked) + label:before {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 0;
-          transform: translateY(-50%);
-          width: 16px;
-          height: 16px;
-          border: 1px solid #fff;
-          border-radius: 100%;
-          background-color: transparent;
-        }
-
-        &:checked + label:after,
-        &:not(:checked) + label:after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 5px;
-          transform: translateY(-50%);
-          width: 8px;
-          height: 8px;
-          border-radius: 100%;
-          background-color: #1EB8C7;
-          transition: all 0.2s ease;
-        }
-
-        &:not(:checked) + label:after {
-          opacity: 0;
-        }
-
-        &:checked + label:after {
-          opacity: 1;
-        }
-      }
-
-      .input-radio-label {
-        position: relative;
-        padding-left: 28px;
-      }
     }
   }
 }
