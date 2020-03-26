@@ -8,23 +8,32 @@
       </div>
       <div class="button-block">
         <button type="button" class="btn btn-secondary btn-has-icon"
-          @click="addNewRelations"
-        ><svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('button.newForeign') }}</button>
+          @click="addJoinTable"
+        ><svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.newForeign') }}</button>
       </div>
-      <empty-info-block
-        class="empty-info-block"
-        v-if="joinRelations.length === 0"
-        :msg="$t('editing.emptyForeign')"
-      ></empty-info-block>
-      <table-join-relatoin-block
-        v-else
-        v-for="(relation, index) in joinRelations"
-        :key="relation.id"
-        :index="index"
-        :relation-info="relation"
-        :table-list="tableList"
-        @deleteRelations="deleteRelations"
-      ></table-join-relatoin-block>
+      <spinner class="spinner-container"
+        v-if="isLoading"
+        :title="$t('editing.loading')"
+        size="50"
+      ></spinner>
+      <template v-else>
+        <empty-info-block
+          class="empty-info-block"
+          v-if="joinTableList.length === 0"
+          :msg="$t('editing.emptyForeign')"
+        ></empty-info-block>
+        <table-join-relatoin-block
+          v-else
+          v-for="(relation, index) in joinTableList"
+          :key="relation.id || relation.key"
+          :index="index"
+          :relation-info="relation"
+          :data-frame-list="dataFrameList"
+          @deleteJoinTable="deleteJoinTable"
+          @cancelAddingJoinTable="cancelAddingJoinTable"
+          @dataFrameUpdate="$emit('dataFrameUpdate')"
+        ></table-join-relatoin-block>
+      </template>
     </div>
   </div>
 </template>
@@ -32,7 +41,8 @@
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import TableJoinRelatoinBlock from './TableJoinRelatoinBlock'
 // import { buildStorage, setCSVJoin } from '@/API/Storage'
-import { getDataFrameRelationById, getDataFrameById, deleteDataFrameRelationById } from '@/API/DataSource'
+import { getDataFrameById } from '@/API/DataSource'
+import { getJoinTableList } from '@/API/JoinTable'
 import { Message } from 'element-ui'
 
 export default {
@@ -44,65 +54,76 @@ export default {
   data () {
     return {
       currentDataSourceId: parseInt(this.$route.params.id),
-      joinRelations: [],
-      tableList: [],
-      singleJoinRelations: {
-        isNew: true,
+      joinTableList: [],
+      dataFrameList: [],
+      singleJoinTable: {
+        dataFrameRelationList: [
+          {
+            joinType: 'Inner',
+            leftDataFrame: { id: null },
+            leftDataColumn: { id: null, dataType: null },
+            rightDataFrame: { id: null },
+            rightDataColumn: { id: null, dataType: null }
+          }
+        ],
         id: null,
-        leftDataFrameId: null,
-        leftDataColumnId: null,
-        rightDataFrameId: null,
-        rightDataColumnId: null
+        name: null
       },
-      singleForeignKey: {
-        left_column: null,
-        right_column: null
-      }
+      isLoading: true
     }
   },
   mounted () {
-    this.getRelation()
-    this.getDataFrameList()
+    this.fetchData()
   },
   methods: {
-    getRelation () {
-      getDataFrameRelationById(this.currentDataSourceId).then(response => {
-        this.joinRelations = response
-      })
+    fetchData () {
+      Promise.all([this.getJoinTableList(), this.getDataFrameList()])
+        .then(([joinTableList, dataFrameList]) => {
+          // handle join table list
+          if (joinTableList.length === 0) {
+            const emptyJoinTable = JSON.parse(JSON.stringify(this.singleJoinTable))
+            emptyJoinTable.key = new Date().toString()
+            this.joinTableList.push(emptyJoinTable)
+          } else {
+            this.joinTableList = joinTableList
+          }
+          // handle dataframe list
+          this.dataFrameList = dataFrameList.map(dataFrame => ({
+            ...dataFrame,
+            name: dataFrame.primaryAlias
+          }))
+          // update loading status
+          this.isLoading = false
+        })
+        .catch(() => {
+          this.isLoading = false
+        })
+    },
+    getJoinTableList () {
+      return getJoinTableList(this.currentDataSourceId)
     },
     getDataFrameList () {
-      getDataFrameById(this.currentDataSourceId).then(response => {
-        this.tableList = response
-      })
+      return getDataFrameById(this.currentDataSourceId)
     },
     closeDialog () {
       this.$emit('cancel')
     },
-    // 新增關聯性
-    addNewRelations () {
-      let newRelations = JSON.parse(JSON.stringify(this.singleJoinRelations))
-      // newRelations.id = new Date().getTime()
-      this.joinRelations.push(newRelations)
+    addJoinTable () {
+      const emptyJoinTable = JSON.parse(JSON.stringify(this.singleJoinTable))
+      emptyJoinTable.key = new Date().toString()
+      this.joinTableList.unshift(emptyJoinTable)
     },
-    deleteRelations (index) {
-      if (this.joinRelations[index].isNew) {
-        this.joinRelations.splice(index, 1)
-      } else {
-        deleteDataFrameRelationById(this.joinRelations[index].id).then(() => {
-          this.getRelation()
-
-          Message({
-            message: this.$t('message.correlationDeleteSuccess'),
-            type: 'success',
-            duration: 3 * 1000
-          })
-        })
-      }
-    }
-  },
-  computed: {
-    currentBookmarkInfo () {
-      return this.$store.state.dataManagement.currentBookmarkInfo
+    cancelAddingJoinTable (index) {
+      this.joinTableList.splice(index, 1)
+    },
+    deleteJoinTable (index) {
+      this.joinTableList.splice(index, 1)
+      this.$emit('dataFrameUpdate')
+      Message({
+        message: this.$t('message.correlationDeleteSuccess'),
+        type: 'success',
+        duration: 3 * 1000
+      })
     }
   }
 }
