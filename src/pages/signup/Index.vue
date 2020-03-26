@@ -69,7 +69,7 @@ export default {
   },
   created () {
     // retrieve email token for validation
-    const emailToken = this.$route.query.emailToken
+    const emailToken = this.$route.query.token
     if (!emailToken) {
       this.$router.push({name: 'PageLogin'})
       return Message({
