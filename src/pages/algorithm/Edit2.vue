@@ -209,14 +209,14 @@ export default {
           creator: 'sygps',
           createDate: '2020/3/20',
           updateDate: '2020/3/20',
-          status: '可執行'
+          status: '可執行'
         },
         {
           name: '第二個演算法',
           creator: 'sygps',
           createDate: '2020/3/20',
           updateDate: '2020/3/20',
-          status: '可執行'
+          status: '可執行'
         }
       ]
     }
@@ -307,7 +307,7 @@ export default {
       margin-right: 8px;
     }
   }
-  
+
   .table-board {
     margin: 16px 0;
     .board-title-row {

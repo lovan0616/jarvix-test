@@ -185,7 +185,7 @@ export default {
     back () {
       this.$router.push('/algorithm')
     },
-    createData (outputDatasourceName=null) {
+    createData (outputDatasourceName = null) {
       let now = new Date()
       return {
         id: this.selectedAlgorithm,
@@ -196,7 +196,7 @@ export default {
         creator: 'sygps',
         createDate: now,
         updateDate: now,
-        status: '可執行'
+        status: '可執行'
       }
     },
     create () {
@@ -259,7 +259,7 @@ export default {
         // },
         {
           name: '輪廓型預測',
-          value: 2,
+          value: 2
         }
       ]
     },
@@ -353,7 +353,7 @@ export default {
       margin-right: 8px;
     }
   }
-  
+
   .table-board {
     margin: 16px 0;
 
@@ -418,7 +418,7 @@ export default {
       }
     }
   }
-  
+
   .footer {
     float: right;
     margin: 0 -6px;

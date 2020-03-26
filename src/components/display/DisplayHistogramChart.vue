@@ -130,7 +130,7 @@ export default {
     }
   },
   computed: {
-    chartData () {
+    chartOption () {
       let chartAddon = JSON.parse(JSON.stringify(chartOptions()))
       let interval
       let min = Infinity
@@ -190,7 +190,7 @@ export default {
       this.$nextTick(() => {
         this.$el.addEventListener('click', (e) => {
           if (e.target && e.target.id === 'export-btn') {
-            let exportData = JSON.parse(JSON.stringify(this.chartData))
+            let exportData = JSON.parse(JSON.stringify(chartData))
             exportData.unshift([this.$t('chart.rangeStart'), this.$t('chart.rangeEnd'), this.$t('chart.count')])
             this.exportToCSV(this.appQuestion, exportData)
           }
@@ -207,11 +207,8 @@ export default {
       chartAddon.yAxis.scale = false
       chartAddon.yAxis.name = this.title.yAxis[0].display_name
 
-      return chartData
-    },
-    chartOption () {
       histogramChartConfig.chartData.renderItem = this.renderItem
-      histogramChartConfig.chartData.data = this.chartData
+      histogramChartConfig.chartData.data = chartData
       chartAddon.series[0] = histogramChartConfig.chartData
 
       return {...chartAddon, ...getDrillDownTool(this.title)}
