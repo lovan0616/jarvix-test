@@ -240,3 +240,14 @@ export function setMainDateTimeColumn (dataFrameId, dataColumnData) {
     data: dataColumnData
   })
 }
+
+/*
+ * dataSource preprocessor
+ */
+export function dataSourcePreprocessor (dataSourceInfo) {
+  return request({
+    url: `/data/preprocessor`,
+    method: 'POST',
+    data: dataSourceInfo
+  })
+}

@@ -3,22 +3,26 @@
     <div class="dialog-container">
       <transition name="fade" mode="out-in">
         <choose-file-type
-          v-if="!currentUploadInfo.name"
+          v-if="currentUploadInfo.type === null"
         ></choose-file-type>
-        <local-file-upload-flow
+        <template
           v-else
-        ></local-file-upload-flow>
-        <!-- <remote-connection-flow
-          v-if="currentUploadInfo.type === 'mysql'"
-        ></remote-connection-flow> -->
+        >
+          <local-file-upload-flow
+            v-if="currentUploadInfo.type === 'local'"
+          ></local-file-upload-flow>
+          <remote-connection-flow
+            v-else
+          ></remote-connection-flow>
+        </template>
       </transition>
     </div>
   </div>
 </template>
 <script>
 import ChooseFileType from './ChooseFileType'
-import LocalFileUploadFlow from './LocalFileUploadFlow'
-import RemoteConnectionFlow from './RemoteConnectionFlow'
+import LocalFileUploadFlow from './localFileUpload/LocalFileUploadFlow'
+import RemoteConnectionFlow from './remoteConnection/RemoteConnectionFlow'
 
 export default {
   name: 'FileUploadDialog',
@@ -30,12 +34,13 @@ export default {
   destroyed () {
     // 還原狀態
     this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-    this.$store.commit('dataManagement/updateUploadFileList', [])
-    this.$store.commit('dataManagement/updateFileLoaded', false)
-    this.$store.commit('dataManagement/updateConnectionStatus', null)
+    if (this.currentUploadInfo.type === 'local') {
+      this.$store.commit('dataManagement/updateUploadFileList', [])
+    } else {
+      this.$store.commit('dataManagement/clearConnectionInfo')
+    }
+
     this.$store.commit('dataManagement/clearCurrentUploadInfo')
-    this.$store.commit('dataManagement/clearConnectionInfo')
-    this.$store.commit('dataManagement/updateShowSetTableJoin', false)
   },
   methods: {
   },

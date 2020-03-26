@@ -233,7 +233,6 @@ export default {
         this.selectedData = []
         return
       }
-      console.log(params.batch[0].areas, this.dataset.index.length)
 
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange

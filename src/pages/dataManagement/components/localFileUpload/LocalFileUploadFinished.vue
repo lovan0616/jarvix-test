@@ -6,8 +6,8 @@
       <span v-else>{{ $t('editing.uploadFinish') }}</span>
     </div>
     <div class="finished-img-block">
-      <img v-if="uploadFileList.length === successList.length" src="../../../assets/images/success.gif" :alt="$t('editing.uploadSuccess')" class="finished-img">
-      <img v-if="uploadFileList.length === failList.length" src="../../../assets/images/error.gif" :alt="$t('editing.uploadFailure')" class="finished-img">
+      <img v-if="uploadFileList.length === successList.length" src="../../../../assets/images/success.gif" :alt="$t('editing.uploadSuccess')" class="finished-img">
+      <img v-if="uploadFileList.length === failList.length" src="../../../../assets/images/error.gif" :alt="$t('editing.uploadFailure')" class="finished-img">
       <div class="finished-file-info">
         {{ $t('editing.uploadStatus', {total: uploadFileList.length, success: successList.length, pedding: failList.length}) }}
       </div>
@@ -66,9 +66,6 @@ export default {
       // close fileUploadDialog
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     }
-    // toSetJoinTable () {
-    //   this.$store.commit('dataManagement/updateShowSetTableJoin', true)
-    // }
   },
   computed: {
     ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),

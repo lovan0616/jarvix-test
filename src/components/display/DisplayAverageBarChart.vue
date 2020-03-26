@@ -12,7 +12,6 @@
 <script>
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
-let chartAddon = JSON.parse(JSON.stringify(chartOptions()))
 
 function averageBarChartConfig (t) {
   return {
@@ -61,20 +60,6 @@ export default {
           yAxis: null
         }
       }
-    },
-    isPreview: {
-      type: Boolean,
-      default: false
-    }
-  },
-  mounted () {
-    this.setOptions()
-  },
-  methods: {
-    setOptions () {
-      chartAddon.xAxis.data = this.dataset.index
-      chartAddon.xAxis.name = this.title.xAxis[0].display_name
-      chartAddon.yAxis.name = this.title.yAxis[0].display_name
     }
   },
   computed: {
@@ -85,6 +70,7 @@ export default {
       }
     },
     chartOption () {
+      let chartAddon = JSON.parse(JSON.stringify(chartOptions()))
       let seriesArray = this.dataset.data.map(element => {
         return element[0]
       })
@@ -111,7 +97,9 @@ export default {
       let config = averageBarChartConfig(this.$t)
       config.chartData.data = seriesArray
       chartAddon.series[0] = config.chartData
-      if (this.isPreview) this.previewChartSetting(chartAddon)
+      chartAddon.xAxis.data = this.dataset.index
+      chartAddon.xAxis.name = this.title.xAxis[0].display_name
+      chartAddon.yAxis.name = this.title.yAxis[0].display_name
 
       return chartAddon
     }

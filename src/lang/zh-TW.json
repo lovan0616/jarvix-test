@@ -58,6 +58,10 @@
     "goAdjust": "前往調整"
   },
   "editing": {
+    "localUpload": "本機檔案上傳",
+    "localUploadDescription": "透過電腦上傳.xlsx .xls .csv<br>檔案資料並進行建置",
+    "remoteConnection": "連接資料庫建置",
+    "remoteConnectionDescription": "直接讀取您的資料庫資料<br>並進行資料複製和建置",
     "confirmDeleteForeign": "確認刪除此關聯嗎？",
     "choiceDataSource": "請選擇資料源",
     "createBoard": "建立新版",
@@ -116,6 +120,9 @@
     "processStep1": "填寫資料源名稱",
     "processStep2": "上傳資料/連結資料庫",
     "processStep3": "開始新增",
+    "connectStep1": "連接資料庫",
+    "connectStep2": "選擇資料",
+    "connectStep3": "欄位設定",
     "dataProcessing": "資料處理中",
     "dataSource": "資料源",
     "newDataSource": "新增資料源",
@@ -134,7 +141,7 @@
     "uploadUser": "上傳者",
     "status": "狀態",
     "countOfTable": "資料表數",
-    "choice": "請選擇",
+    "defaultOption": "請選擇",
     "userLogin": "使用者登入",
     "userSignup": "使用者註冊",
     "userManage": "使用者管理",
@@ -158,6 +165,7 @@
     "userTitle": "使用者名稱",
     "userAccount": "使用者帳號",
     "setLoginPassword": "設定密碼",
+    "loginAccount": "登入帳號",
     "loginPassword": "登入密碼",
     "confirmPassword": "確認密碼",
     "pleaseConfirmPassword": "請確認密碼",
@@ -198,7 +206,19 @@
     "tableJoin": "資料表關聯",
     "selectJoinType": "關聯方式",
     "userUpload": "使用者上傳",
-    "loading": "資料讀取中"
+    "loading": "資料讀取中",
+    "databaseType": "資料庫類型",
+    "currentLoadedDataFrame": "目前讀取的資料表",
+    "currentDisplayDataFrame": "目前顯示資料表",
+    "dataType": "資料類型",
+    "chooseConnection": "選擇連線",
+    "emptyConnection": "尚未建立任何連線",
+    "createConnection": "建立新連線",
+    "buildFinish": "建置完成",
+    "buildStatus": "總共{total}項資料表，{success}項建置成功，{fail}項未建置",
+    "buildSuccess": "建置成功",
+    "buildFail": "建置失敗",
+    "connectionName": "連線名稱"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
@@ -321,7 +341,9 @@
     "dateTimeColumnSetting": "日期欄位設定",
     "select": "選擇",
     "download": "資料下載",
-    "restrict": "分析條件限制"
+    "restrict": "分析條件限制",
+    "start": "開始",
+    "copyAndBuild": "複製並建置"
   },
   "aggregation": {
     "mean": "平均",
