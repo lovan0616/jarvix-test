@@ -61,10 +61,12 @@ export default {
         userName: null,
         userTitle: null,
         password: null,
-        verifyPassword: null
+        verifyPassword: null,
+        accountId: null,
+        invitedByUserId: null,
+        groupId: null
       },
-      isProcessing: false,
-      accountId: null
+      isProcessing: false
     }
   },
   created () {
@@ -85,7 +87,9 @@ export default {
       mailConfirm({emailToken})
         .then(res => {
           this.userInfo.userName = res.email
-          this.accountId = res.accountId
+          this.userInfo.accountId = res.accountId
+          this.userInfo.invitedByUserId = res.invitedByUserId
+          this.userInfo.groupId = res.mailData ? res.mailData.groupId : 1 // 暫定預設 1 為 default group
         })
         .catch(() => {
           this.$router.push({name: 'PageLogin'})
@@ -98,7 +102,10 @@ export default {
         signup({
           email: this.userInfo.userName,
           username: this.userInfo.userTitle,
-          password: this.userInfo.password
+          password: this.userInfo.password,
+          accountId: this.userInfo.accountId,
+          groupId: this.userInfo.groupId,
+          invitedByUserId: this.userInfo.invitedByUserId
         })
           .then(() => {
             this.$router.push({name: 'PageLogin'})
