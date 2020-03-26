@@ -217,7 +217,8 @@
     "buildFinish": "建置完成",
     "buildStatus": "總共{total}項資料表，{success}項建置成功，{fail}項未建置",
     "buildSuccess": "建置成功",
-    "buildFail": "建置失敗"
+    "buildFail": "建置失敗",
+    "connectionName": "連線名稱"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",

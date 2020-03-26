@@ -56,7 +56,7 @@ export default {
       status: null
     }
   },
-  mounted () {
+  created () {
     this.step = this.dataSourceId ? 0 : 1
   },
   methods: {

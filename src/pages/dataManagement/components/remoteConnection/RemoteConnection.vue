@@ -11,25 +11,28 @@
         <svg-icon icon-class="spinner" class="loading-icon"></svg-icon>
         <div class="loading-text">{{ $t('editing.DBconnecting') }}</div>
       </div>
-      <div class="input-block-container"
+      <form class="input-block-container"
         v-else
       >
+        <!-- 為了避免瀏覽器自動帶入 -->
+        <input name="account" type="text" class="hidden-input">
+        <input name="password" type="password" class="hidden-input">
         <input-block class="dialog-input"
-          v-if="!dataSourceId"
-          :label="$t('editing.dataSourceName')"
-          name="dataSourceName"
+          :label="$t('editing.connectionName')"
+          name="connectionName"
           v-model="connectInfo.name"
           v-validate="'required'"
         ></input-block>
         <input-block class="dialog-input"
           :label="$t('editing.loginAccount')"
-          name="loginAccount"
+          name="account"
           v-model="connectInfo.account"
           v-validate="'required'"
         ></input-block>
         <input-block class="dialog-input"
           :label="$t('editing.loginPassword')"
-          name="loginPassword"
+          type="password"
+          name="loginPwd"
           v-model="connectInfo.password"
           v-validate="'required'"
         ></input-block>
@@ -65,7 +68,7 @@
             v-validate="'required'"
           ></input-block>
         </div>
-      </div>
+      </form>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
@@ -262,6 +265,13 @@ export default {
       margin-right: 16px;
     }
   }
+
+  .hidden-input {
+    opacity: 0;
+    height: 0;
+    padding: 0;
+    border: 0;
+  }
 }
 </style>
 <style lang="scss">
@@ -274,6 +284,11 @@ export default {
 
   .el-select-dropdown__item {
     padding-left: 0;
+  }
+}
+.remote-connection {
+  .input-block .error-text {
+    right: 0;
   }
 }
 </style>

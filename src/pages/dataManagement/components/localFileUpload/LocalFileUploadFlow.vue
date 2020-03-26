@@ -33,7 +33,7 @@ export default {
       dataSourceId: this.$route.params ? parseInt(this.$route.params.id) : null
     }
   },
-  mounted () {
+  created () {
     this.step = this.dataSourceId ? 1 : 0
   },
   methods: {
