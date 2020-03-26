@@ -178,6 +178,7 @@
     "multiResultTitle": "问句分析",
     "systemUnknownDescription": "系统无法辨识出以下文字：",
     "dataColumnValue": "资料表数据值",
+    "mainDateTimeColumnSetting": "主要日期栏位设定",
     "dataFrame": "资料表",
     "rebuildRemark": "编辑后需再次建置资料",
     "dataValue": "数据值",
@@ -313,6 +314,7 @@
     "saveAndBuild": "储存并建置",
     "addColumnSet": "增加栏位集",
     "editColumnSet": "编辑栏位集",
+    "dateTimeColumnSetting": "日期栏位设定",
     "select": "选择",
     "download": "资料下载",
     "restrict": "分析条件限制"
