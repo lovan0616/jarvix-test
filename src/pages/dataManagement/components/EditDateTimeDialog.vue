@@ -16,6 +16,7 @@
             type="button"
             class="btn btn-default"
             :disabled="isSaving"
+            v-if="hasColumn"
             @click="setMainDateTime"
           >{{ $t('button.save') }}</button>
         </div>
@@ -26,7 +27,7 @@
         size="50"
       ></spinner>
       <div class="dialog-content-block"
-        v-else
+        v-else-if="!isLoading && hasColumn"
       >
         <div
           class="input-radio-group"
@@ -50,11 +51,17 @@
           </label>
         </div>
       </div>
+      <empty-info-block
+        class="empty-info-block"
+        v-else
+        :msg="$t('editing.emptyDateTime')"
+      ></empty-info-block>
     </div>
   </div>
 </template>
 <script>
 import { getDateTimeColumns, setMainDateTimeColumn } from '@/API/DataSource'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 // import { getValueAlias, saveValueAlias } from '@/API/Alias'
 // import { getSelfInfo } from '@/API/User'
 import { Message } from 'element-ui'
@@ -64,7 +71,8 @@ export default {
   name: 'EditDateTimeDialog',
   inject: ['$validator'],
   components: {
-    DataInputVerify
+    DataInputVerify,
+    EmptyInfoBlock
   },
   props: {
     dataFrameInfo: {
@@ -82,6 +90,11 @@ export default {
   },
   mounted () {
     this.getDateTimeColumns()
+  },
+  computed: {
+    hasColumn () {
+      return this.columnList.length > 0
+    }
   },
   methods: {
     getDateTimeColumns () {
