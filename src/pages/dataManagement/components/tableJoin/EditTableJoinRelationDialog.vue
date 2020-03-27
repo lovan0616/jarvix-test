@@ -25,7 +25,7 @@
         <table-join-relatoin-block
           v-else
           v-for="(relation, index) in joinTableList"
-          :key="relation.id || relation.key"
+          :key="relation.key || relation.id"
           :index="index"
           :relation-info="relation"
           :data-frame-list="dataFrameList"
