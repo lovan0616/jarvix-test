@@ -116,6 +116,7 @@
     "foreignTable": "關聯資料表",
     "columnCorrelation": "欄位關聯",
     "emptyForeign": "尚未建立任何資料表關聯",
+    "emptyDateTime": "資料表無日期欄位",
     "selectForeign": "選擇關聯資料表",
     "selectColumn": "選擇欄位",
     "processStep1": "填寫資料源名稱",
