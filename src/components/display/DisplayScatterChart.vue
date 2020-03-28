@@ -194,10 +194,13 @@ export default {
         let maxX = this.dataset.data[0][0]
 
         this.dataset.data.forEach(element => {
+          if (element[0] === null) return
+          if (minX === null) minX = element[0]
+          if (minX === null) minX = element[0]
           maxX = element[0] > maxX ? element[0] : maxX
           minX = element[0] < minX ? element[0] : minX
         })
-
+        
         let minY = this.roundNumber(gradient * minX + offset, 4)
         let maxY = this.roundNumber(gradient * maxX + offset, 4)
 
