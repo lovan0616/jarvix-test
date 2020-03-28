@@ -30,8 +30,10 @@ export default {
     }
   },
   dataSourceList (state) {
+    // FIXME for poc/foxconn_molding
+    let demoMode = localStorage.getItem('demoMode')
     let isDemoEnd = localStorage.getItem('isDemoEnd')
-    if (isDemoEnd) {
+    if (!demoMode || isDemoEnd) {
       return state.dataSourceList
     } else {
       let demoDatasource = localStorage.getItem('demoDatasource') || '富士康_輪廓型分析_molding_預測'
