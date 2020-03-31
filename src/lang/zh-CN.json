@@ -182,6 +182,7 @@
     "pleaseConfirmNewPassword": "请确认新密码",
     "unableLogin": "将无法正常登入，确定关闭",
     "confirmDelete": "您确定要删除",
+    "confirmActive": "您确定要开启",
     "allCategory": "所有分类",
     "inputCategoryName": "请输入分类名称",
     "editingName": "编辑名称",

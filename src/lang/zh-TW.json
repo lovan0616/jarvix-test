@@ -182,6 +182,7 @@
     "pleaseConfirmNewPassword": "請確認新密碼",
     "unableLogin": "將無法正常登入，確定關閉",
     "confirmDelete": "您確定要刪除",
+    "confirmActive": "您確定要開啟",
     "allCategory": "所有分類",
     "inputCategoryName": "請輸入分類名稱",
     "editingName": "編輯名稱",
