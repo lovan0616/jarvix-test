@@ -1,6 +1,6 @@
 <template>
   <div class="remote-connection">
-    <div class="dialog-title">{{ $t('editing.connectMySQL') }}</div>
+    <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="isLoading ? 2 : 1"
     ></upload-process-block>
@@ -116,14 +116,6 @@ export default {
           value: 'MSSQL'
         },
         {
-          name: 'MYSQL',
-          value: 'MYSQL'
-        },
-        {
-          name: 'ORACLE',
-          value: 'ORACLE'
-        },
-        {
           name: 'POSTGRESQL',
           value: 'POSTGRESQL'
         }
@@ -169,16 +161,16 @@ export default {
 
         this.$emit('updateDataSource', this.dataSourceId)
 
-        this.createConnection({
-          dataSourceId: this.dataSourceId,
-          ...this.connectInfo
-        })
+        this.createConnection()
       }).catch(() => {
         this.isLoading = false
       })
     },
-    createConnection (connectInfo) {
-      createDatabaseConnection(connectInfo).then(response => {
+    createConnection () {
+      createDatabaseConnection({
+        dataSourceId: this.dataSourceId,
+        ...this.connectInfo
+      }).then(response => {
         this.$emit('next', response)
       }).catch(() => {
         this.isLoading = false

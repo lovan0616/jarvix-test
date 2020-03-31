@@ -1,6 +1,6 @@
 <template>
   <div class="choose-table">
-    <div class="dialog-title">{{ $t('editing.connectMySQL') }}</div>
+    <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="2"
     ></upload-process-block>

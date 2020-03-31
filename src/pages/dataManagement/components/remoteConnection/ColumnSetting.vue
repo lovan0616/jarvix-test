@@ -2,7 +2,7 @@
   <div class="column-setting"
     v-if="!isProcessing"
   >
-    <div class="dialog-title">{{ $t('editing.connectMySQL') }}</div>
+    <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="3"
     ></upload-process-block>

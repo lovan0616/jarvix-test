@@ -77,3 +77,8 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.remote-connection-flow {
+  margin-bottom: 64px;
+}
+</style>
