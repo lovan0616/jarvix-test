@@ -43,7 +43,7 @@
         <div class="button-block">
           <button class="btn-m btn-secondary btn-has-icon"
             @click="toggleJoinTableDialog"
-            :disabled="reachLimit"
+            :disabled="reachLimit || dataList.length === 0"
           >
             <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
           </button>
