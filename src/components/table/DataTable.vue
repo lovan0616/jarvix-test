@@ -43,6 +43,7 @@
       <upload-block
         v-if="dataList.length === 0"
         class="empty-status"
+        :class="{'is-processing': isProcessing}"
         :bottom-message="emptyMessage"
         @create="createDataSource"
       ></upload-block>
@@ -227,6 +228,7 @@ export default {
       this.sortStatus = sortObj
     },
     createDataSource () {
+      if (this.isProcessing) return
       this.$emit('create')
     },
     closeFileUploadDialog () {
@@ -334,6 +336,10 @@ export default {
     justify-content: center;
     align-items: center;
     height: 240px;
+
+    &.is-processing {
+      cursor: not-allowed;
+    }
   }
 
   .name-link {

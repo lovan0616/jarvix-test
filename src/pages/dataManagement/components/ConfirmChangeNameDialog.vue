@@ -4,9 +4,11 @@
     @close="cancel"
   >
     <div class="content" slot="dialogBody">
-      <input type="text" class="input" name="newDataSourceName"
+      <input-block class="login-input-block"
+        name="newDataSourceName"
         v-model="newName"
-      >
+        v-validate="'required'"
+      ></input-block>
     </div>
     <template class="dialog-btn-block" slot="dialogFooter">
       <button type="button" class="btn btn-outline"
@@ -24,10 +26,14 @@
 </template>
 <script>
 import ConfirmDialog from '@/components/dialog/ConfirmDialog'
+import InputBlock from '@/components/InputBlock'
+
 export default {
   name: 'ConfirmChangeNameDialog',
+  inject: ['$validator'],
   components: {
-    ConfirmDialog
+    ConfirmDialog,
+    InputBlock
   },
   props: {
     title: {
@@ -47,10 +53,13 @@ export default {
   },
   methods: {
     confirm () {
-      this.isProcessing = true
-      let result = new Promise(resolve => this.$emit('confirm', {resolve, name: this.newName}))
-      result.then(() => {
-        this.isProcessing = false
+      this.$validator.validateAll().then(result => {
+        if (!result) return
+        this.isProcessing = true
+        let confirmResult = new Promise(resolve => this.$emit('confirm', {resolve, name: this.newName}))
+        confirmResult.then(() => {
+          this.isProcessing = false
+        })
       })
     },
     cancel () {

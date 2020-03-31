@@ -18,7 +18,7 @@
 export default {
   name: 'DefaultSelect',
   props: {
-    value: { type: [String, Number], default: undefined },
+    value: { type: [String, Number, Boolean], default: undefined },
     optionList: { type: Array, default: () => [] },
     placeholder: { type: String, default: '' }
   },
