@@ -93,7 +93,6 @@ export default {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     prevStep () {
-      console.log('click')
       this.$emit('prev')
     },
     nextStep () {

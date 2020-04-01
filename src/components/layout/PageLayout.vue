@@ -23,7 +23,7 @@ export default {
 .page-layout {
   .page-logo-img {
     width: 200px;
-    margin: 60px 0 100px;
+    margin: 60px 0 55px;
   }
   .wrapper {
     text-align: center;
