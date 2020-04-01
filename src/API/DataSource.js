@@ -114,6 +114,17 @@ export function getDataFrameData (dataFrameId, page = 0) {
 }
 
 /**
+ * delete dataframe by dataFrameId
+ * @param {Number} dataFrameId - 欲檢查的資料表 ID
+ */
+export function deleteDataFrameById (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}`,
+    method: 'DELETE'
+  })
+}
+
+/**
  * get data column by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
