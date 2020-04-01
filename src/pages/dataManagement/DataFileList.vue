@@ -71,13 +71,13 @@
       @success="fetchData"
       @close="closeFileUploadDialog"
     ></file-upload-dialog>
-    <confirm-delete-file-dialog
+    <confirm-delete-data-frame-dialog
       v-if="showConfirmDeleteDialog"
       :title="$t('editing.deleteTable')"
       :file-list="selectList"
       @confirm="deleteFile"
       @cancel="cancelDelete"
-    ></confirm-delete-file-dialog>
+    ></confirm-delete-data-frame-dialog>
     <edit-table-join-relation-dialog
       v-if="showJoinTableDialog"
       @cancel="toggleJoinTableDialog()"
@@ -108,7 +108,7 @@
 <script>
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
-import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
+import ConfirmDeleteDataFrameDialog from './components/ConfirmDeleteDataFrameDialog'
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
 import EditColumnSetDialog from './components/columnSet/EditColumnSetDialog'
@@ -121,7 +121,7 @@ export default {
   components: {
     DataTable,
     FileUploadDialog,
-    ConfirmDeleteFileDialog,
+    ConfirmDeleteDataFrameDialog,
     EditTableJoinRelationDialog,
     EditColumnDialog,
     EditColumnSetDialog,
@@ -318,23 +318,27 @@ export default {
         {
           text: this.$t('editing.createWay'),
           value: 'createMethod',
-          width: '100px'
+          width: '80px'
         },
         {
           text: this.$t('editing.createDate'),
           value: 'createDate',
           sort: true,
-          width: '200px',
+          width: '140px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: this.$t('editing.updateDate'),
           value: 'updateDate',
           sort: true,
-          width: '200px',
+          width: '140px',
           time: 'YYYY-MM-DD HH:mm'
         },
-        {text: this.$t('editing.status'), value: 'type', width: '7.26%'},
+        {
+          text: this.$t('editing.status'),
+          value: 'type',
+          width: '80px'
+        },
         {
           text: this.$t('editing.action'),
           value: 'action',

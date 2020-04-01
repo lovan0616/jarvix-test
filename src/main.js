@@ -191,7 +191,7 @@ Validator.extend('requireOneNumeric', function (value) {
 
 Validator.extend('letterSpace', function (value) {
   // 含簡繁體、英文、空格
-  return /^[\u4e00-\u9fa5_a-zA-Z\s]*$/i.test(value)
+  return /^[\u4e00-\u9fa5_a-zA-Z0-9\s]*$/i.test(value) && !Number(value)
 })
 
 Vue.use(VeeValidate, {
@@ -302,6 +302,16 @@ Vue.config.productionTip = false
 Vue.config.errorHandler = err => {
   Vue.rollbar.error(err)
 }
+
+// 暫時的權限管理
+router.beforeEach((to, from, next) => {
+  let flag = to.matched.some(record => record.meta.requireAuth)
+  if (flag) {
+    store.state.setting.permission ? next() : router.push('/')
+  } else {
+    next()
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({

@@ -423,6 +423,11 @@ export default {
 
 .data-source-list-table {
   .link-dropdown {
+    .dropdown-select {
+      position: absolute;
+      width: 100%;
+      height: 30px;
+    }
     .dropdown-select-box {
       top: 29px;
       left: 0;
