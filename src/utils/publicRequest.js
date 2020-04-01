@@ -52,6 +52,7 @@ service.interceptors.response.use(
   error => {
     if (error.response && error.response.status === 401) {
       store.commit('dataSource/setIsInit', false)
+      store.commit('setting/setUserPermission', false)
       router.push('/login')
 
       Message({
