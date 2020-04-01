@@ -5,16 +5,12 @@
         <choose-file-type
           v-if="currentUploadInfo.type === null"
         ></choose-file-type>
-        <template
+        <local-file-upload-flow
+          v-else-if="currentUploadInfo.type === 'local'"
+        ></local-file-upload-flow>
+        <remote-connection-flow
           v-else
-        >
-          <local-file-upload-flow
-            v-if="currentUploadInfo.type === 'local'"
-          ></local-file-upload-flow>
-          <remote-connection-flow
-            v-else
-          ></remote-connection-flow>
-        </template>
+        ></remote-connection-flow>
       </transition>
     </div>
   </div>
@@ -36,8 +32,6 @@ export default {
     this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     if (this.currentUploadInfo.type === 'local') {
       this.$store.commit('dataManagement/updateUploadFileList', [])
-    } else {
-      this.$store.commit('dataManagement/clearConnectionInfo')
     }
 
     this.$store.commit('dataManagement/clearCurrentUploadInfo')

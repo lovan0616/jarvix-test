@@ -25,20 +25,6 @@ export default {
     state.currentUploadInfo.type = null
     state.currentUploadInfo.name = null
   },
-  updateConnectionDataBase (state, data) {
-    state.connectionInfo.database = data
-  },
-  updateConnectionUserName (state, data) {
-    state.connectionInfo.username = data
-  },
-  updateConnectionPassword (state, data) {
-    state.connectionInfo.password = data
-  },
-  clearConnectionInfo (state) {
-    state.connectionInfo.database = null
-    state.connectionInfo.username = null
-    state.connectionInfo.password = null
-  },
   updateFileUploadSuccess (state, data) {
     state.fileUploadSuccess = data
   }
