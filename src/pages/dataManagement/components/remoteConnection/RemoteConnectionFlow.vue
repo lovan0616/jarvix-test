@@ -14,6 +14,7 @@
       ></remote-connection>
       <choose-table
         v-if="step === 2"
+        :connection-id="connectionId"
         @next="tableChosen"
       ></choose-table>
       <column-setting

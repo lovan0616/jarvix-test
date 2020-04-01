@@ -176,38 +176,6 @@ export default {
         this.isLoading = false
       })
     }
-  },
-  computed: {
-    database: {
-      get () {
-        return this.connectionInfo.database
-      },
-      set (value) {
-        this.$store.commit('dataManagement/updateConnectionDataBase', value)
-      }
-    },
-    username: {
-      get () {
-        return this.connectionInfo.username
-      },
-      set (value) {
-        this.$store.commit('dataManagement/updateConnectionUserName', value)
-      }
-    },
-    password: {
-      get () {
-        return this.connectionInfo.password
-      },
-      set (value) {
-        this.$store.commit('dataManagement/updateConnectionPassword', value)
-      }
-    },
-    connectionInfo () {
-      return this.$store.state.dataManagement.connectionInfo
-    },
-    currentUploadInfo () {
-      return this.$store.state.dataManagement.currentUploadInfo
-    }
   }
 }
 </script>

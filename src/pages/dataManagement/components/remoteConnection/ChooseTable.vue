@@ -10,6 +10,11 @@
     </div>
     <div class="dialog-body">
       <div class="data-frame-list">
+        <spinner class="processing-spinner-container"
+          v-if="isLoading"
+          :title="$t('editing.loading')"
+          size="50"
+        ></spinner>
         <label class="single-data-frame"
           v-for="(table, index) in tableList"
           :key="index"
@@ -50,6 +55,12 @@ import UploadProcessBlock from './UploadProcessBlock'
 
 export default {
   name: 'ChooseTable',
+  props: {
+    connectionId: {
+      type: Number,
+      default: null
+    }
+  },
   components: {
     UploadProcessBlock
   },
@@ -66,7 +77,7 @@ export default {
   methods: {
     fetchData () {
       this.isLoading = true
-      getTableList(12).then(response => {
+      getTableList(this.connectionId).then(response => {
         this.tableList = response
 
         this.isLoading = false
@@ -103,7 +114,13 @@ export default {
     margin-bottom: 16px;
   }
 
+  .data-frame-list {
+    max-height: 48vh;
+    overflow: auto;
+  }
+
   .single-data-frame {
+    width: 100%;
     display: flex;
     align-items: center;
     padding: 14px 24px;
