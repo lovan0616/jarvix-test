@@ -162,6 +162,22 @@ export default {
       }
     },
     saveColumnSet () {
+      if (!this.columnSet.primaryAlias) {
+        Message({
+          message: this.$t('message.columnSetNameEmpty'),
+          type: 'warning',
+          duration: 3 * 1000
+        })
+        return false
+      }
+      if (this.columnSet.dataColumnList.length === 0) {
+        Message({
+          message: this.$t('message.columnSetChosenEmpty'),
+          type: 'warning',
+          duration: 3 * 1000
+        })
+        return false
+      }
       createColumnSet({
         primaryAlias: this.columnSet.primaryAlias,
         dataFrameId: this.columnSet.dataFrameId,

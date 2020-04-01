@@ -131,7 +131,11 @@ export default {
     padding: 28px;
     border-radius: 5px;
 
-    .signup-input-block {
+    .signup-input-block.input-block {
+      & >>> .error-text {
+        right: 0;
+      }
+
       &:not(:last-child) {
         margin-bottom: 37px;
       }
@@ -143,7 +147,8 @@ export default {
   }
 
   .btn-submit {
-    width: 88px;
+    width: 148px;
+    height: 44px;
     margin-top: 16px;
     border: none;
     border-radius: 4px;

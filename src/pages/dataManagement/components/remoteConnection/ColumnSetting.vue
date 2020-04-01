@@ -149,10 +149,8 @@ export default {
       })
 
       Promise.all(promiseList).then(() => {
-        console.log('success')
         this.isLoading = false
       }).catch(() => {
-        console.log('catch')
         this.isLoading = false
       })
     },
