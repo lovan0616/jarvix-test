@@ -9,8 +9,6 @@
 </template>
 
 <script>
-import { checkUserPermission } from '@/API/Permission'
-
 export default {
   name: 'App',
   data () {
@@ -22,7 +20,6 @@ export default {
   },
   created () {
     this.checkLocale()
-    this.checkPermission()
   },
   mounted () {
     this.init = true
@@ -34,11 +31,6 @@ export default {
       browserScale = browserScale === 'zh-tw' ? 'zh-TW' : 'zh-CN'
       let locale = prevLocale || browserScale
       this.$store.commit('setting/setLocale', locale)
-    },
-    checkPermission () {
-      checkUserPermission().then(response => {
-        this.$store.commit('setting/setUserPermission', response)
-      })
     }
   },
   watch: {
