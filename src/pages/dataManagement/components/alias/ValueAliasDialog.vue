@@ -189,38 +189,41 @@ export default {
       // 是否已經拿過 alias 資料
       if (this.currentColumnInfo.aliasList) return
       // 取得該 column 的 alias
-      getValueAlias(columnInfo.dataColumnId).then(response => {
-        if (response.length === 0) {
-          this.$set(this.currentColumnInfo, 'aliasList', columnInfo.dataValue.map(dataValue => {
-            return {
-              dataValue,
-              dataColumnId: this.currentColumnInfo.dataColumnId,
-              alias: [],
-              isSaved: false
-            }
-          }))
-        } else {
-          this.$set(this.currentColumnInfo, 'aliasList', columnInfo.dataValue.map(dataValue => {
-            let dataValueInfo = response.find(element => element.dataValue === dataValue)
-            if (dataValueInfo) {
-              dataValueInfo = dataValueInfo.alias.map(element => {
-                return {
-                  name: element,
-                  isModified: false
-                }
-              })
-            } else {
-              dataValueInfo = []
-            }
-            return {
-              dataValue,
-              dataColumnId: this.currentColumnInfo.dataColumnId,
-              alias: dataValueInfo,
-              isSaved: false
-            }
-          }))
-        }
-      })
+      getValueAlias(columnInfo.dataColumnId)
+        .then(response => {
+          if (response.length === 0) {
+            this.$set(this.currentColumnInfo, 'aliasList', columnInfo.dataValue.map(dataValue => {
+              return {
+                dataValue,
+                dataColumnId: this.currentColumnInfo.dataColumnId,
+                alias: [],
+                isSaved: false
+              }
+            }))
+          } else {
+            this.$set(this.currentColumnInfo, 'aliasList', columnInfo.dataValue.map(dataValue => {
+              let dataValueInfo = response.find(element => element.dataValue === dataValue)
+              if (dataValueInfo) {
+                dataValueInfo = dataValueInfo.alias.map(element => {
+                  return {
+                    name: element,
+                    isModified: false
+                  }
+                })
+              } else {
+                dataValueInfo = []
+              }
+              return {
+                dataValue,
+                dataColumnId: this.currentColumnInfo.dataColumnId,
+                alias: dataValueInfo,
+                isSaved: false
+              }
+            }))
+          }
+          this.isLoading = false
+        })
+        .catch(() => { this.isLoading = false })
     },
     setCurrentColumn (columnInfo) {
       this.setColumnInfo(columnInfo)
