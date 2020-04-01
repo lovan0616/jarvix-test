@@ -14,6 +14,7 @@
         <div class="user-item">{{ $t('editing.userTitle') }}</div>
         <div class="user-item">{{ $t('editing.group') }}</div>
         <div class="user-item">{{ $t('editing.activeStatus') }}</div>
+        <div class="user-item">{{ $t('editing.role') }}</div>
         <div class="user-item">{{ $t('editing.action') }}</div>
       </div>
       <div class="user-table-body">
@@ -25,9 +26,15 @@
           <div class="user-item">{{user.email}}</div>
           <div class="user-item">{{user.name}}</div>
           <div class="user-item">{{groupName(user.groupList)}}</div>
-          <div :class="['user-item', {'user-status-close': !user.active}]">
-            <template v-if="user.active">{{ $t('editing.active') }}</template>
-            <template v-else>{{ $t('editing.close') }}</template>
+          <div class="user-item" :class="{'user-status-close': !user.active}">
+            {{ user.active ? $t('editing.active') : $t('editing.close') }}
+          </div>
+          <div class="user-item">
+            <default-select class="role-select"
+              :value="user.permissionActive"
+              :option-list="roleList"
+              @input="setUserRole(user, user.id)"
+            ></default-select>
           </div>
           <div class="user-item">
             <span @click="showPassword(user.id)" class="user-manipulate-item">{{ $t('editing.changePassword') }}</span>
@@ -35,8 +42,7 @@
             <span @click="showEditName(user)" class="user-manipulate-item">{{ $t('editing.editingName') }}</span>
             <span class="user-line"></span>
             <span @click="showStatusChange(user)" class="user-manipulate-item">
-              <template v-if="user.active">{{ $t('editing.close') }}</template>
-              <template v-else>{{ $t('editing.active') }}</template>
+              {{ user.active ? $t('editing.close') : $t('editing.active') }}
             </span>
             <!-- <span class="user-line"></span>
             <span @click="showDeleteAccount(user.id)" class="user-manipulate-item">刪除</span> -->
@@ -152,10 +158,12 @@
 </template>
 <script>
 import { getUsers, updateUser, deleteUser, inviteUser } from '@/API/User'
+import { updateUserPermission } from '@/API/Permission'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'
 import FillDialog from '@/components/dialog/FillDialog'
+import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'
 let inviteeId = 0
 
@@ -166,7 +174,8 @@ export default {
     DecideDialog,
     WritingDialog,
     FillDialog,
-    InputVerify
+    InputVerify,
+    DefaultSelect
   },
   data () {
     return {
@@ -412,6 +421,25 @@ export default {
         // 原本為開通狀態使用者
         return `${this.closeText} ${this.currentUser.username} ${this.unableLoginText}？`
       }
+    },
+    setUserRole (user, id) {
+      updateUserPermission(id).then(response => {
+        user.permissionActive = !user.permissionActive
+      })
+    }
+  },
+  computed: {
+    roleList () {
+      return [
+        {
+          value: true,
+          name: this.$t('editing.admin')
+        },
+        {
+          value: false,
+          name: this.$t('editing.general')
+        }
+      ]
     }
   }
 }
@@ -481,7 +509,8 @@ export default {
       "2" "userTitle" 190px,
       "3" "group" 280px,
       "4" "activeStatus" 140px,
-      "5" "action" 280px;
+      "5" "role" 200px,
+      "6" "action" 280px;
 
     @each $index, $name, $width in $column-width {
       .user-item:nth-of-type(#{$index}) {
@@ -540,4 +569,17 @@ export default {
   }
 }
 
+</style>
+<style lang="scss">
+.role-select.el-select {
+  width: 120px;
+  .el-input__inner {
+    height: 20px;
+    line-height: 20px;
+    padding-left: 0;
+  }
+  .el-input__icon {
+    line-height: 20px;
+  }
+}
 </style>

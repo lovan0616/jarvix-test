@@ -2,7 +2,7 @@
   <div class="column-setting"
     v-if="!isProcessing"
   >
-    <div class="dialog-title">{{ $t('editing.connectMySQL') }}</div>
+    <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="3"
     ></upload-process-block>
@@ -34,7 +34,7 @@
             v-else
           >
             <div class="data-table-row"
-              v-for="(column, index) in copyTableList.filter(element => element.name === currentTable)[0].columns"
+              v-for="(column, index) in currentColumnList"
               :key="index"
             >
               <div class="data-table-cell">{{ column.name }}</div>
@@ -53,13 +53,17 @@
               </div>
             </div>
           </template>
+          <div class="empty-info"
+            v-if="currentColumnList.length === 0"
+          >
+            {{ $t('editing.emptyResult') }}
+          </div>
         </div>
       </div>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
-          :disabled="isLoading"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-default"
@@ -138,14 +142,16 @@ export default {
       this.isLoading = true
       this.currentTable = this.tableIdList[0].name
 
-      this.tableIdList.forEach((element, index) => {
-        analyzeTable(this.connectionId, element.name).then(response => {
+      let promiseList = this.tableIdList.map((element, index) => {
+        return analyzeTable(this.connectionId, element.name).then(response => {
           this.$set(this.copyTableList, index, response)
-
-          this.isLoading = false
-        }).catch(() => {
-          this.isLoading = false
         })
+      })
+
+      Promise.all(promiseList).then(() => {
+        this.isLoading = false
+      }).catch(() => {
+        this.isLoading = false
       })
     },
     cancelFileUpload () {
@@ -168,6 +174,12 @@ export default {
         this.$emit('next')
         this.isProcessing = false
       }
+    }
+  },
+  computed: {
+    currentColumnList () {
+      if (this.copyTableList.length === 0) return []
+      return this.copyTableList.filter(element => element.name === this.currentTable)[0].columns
     }
   }
 }
@@ -214,6 +226,12 @@ export default {
 
     .data-table-body {
       height: 260px;
+
+      .empty-info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     }
 
     .data-table-cell {

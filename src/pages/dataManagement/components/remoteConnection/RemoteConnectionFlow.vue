@@ -14,6 +14,8 @@
       ></remote-connection>
       <choose-table
         v-if="step === 2"
+        :connection-id="connectionId"
+        @prev="chooseAgain"
         @next="tableChosen"
       ></choose-table>
       <column-setting
@@ -73,7 +75,18 @@ export default {
     },
     nextStep () {
       this.step += 1
+    },
+    chooseAgain () {
+      this.step = 0
+    },
+    prevStep () {
+      this.step -= 1
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.remote-connection-flow {
+  margin-bottom: 64px;
+}
+</style>

@@ -78,11 +78,6 @@ export default {
         {icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'},
         // {icon: 'feedback', title: 'editing.questionFeedback'},
         {icon: 'description', title: 'editing.functionDescription', path: '/function-description'}
-      ],
-      accountData: [
-        // {icon: 'changePassword', title: 'editing.changePassword'},
-        // {icon: 'userManage', title: 'editing.userManage', path: '/user-management'},
-        {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
       ]
     }
   },
@@ -92,6 +87,9 @@ export default {
   computed: {
     locale () {
       return this.$store.state.setting.locale
+    },
+    permission () {
+      return this.$store.state.setting.permission
     },
     languages () {
       return this.$store.state.setting.languages
@@ -103,6 +101,14 @@ export default {
           name: this.languages[key]
         }
       })
+    },
+    accountData () {
+      return this.permission ? [
+        {icon: 'userManage', title: 'editing.userManage', path: '/user-management'},
+        {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
+      ] : [
+        {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
+      ]
     }
   },
   methods: {

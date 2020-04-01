@@ -50,7 +50,7 @@ export default {
   },
   data () {
     return {
-      selectedDataType: null,
+      selectedDataType: 'local',
       dataTypeList: [
         {
           type: 'local',

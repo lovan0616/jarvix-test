@@ -40,6 +40,16 @@
         </div>
       </div>
     </div>
+    <div class="dialog-footer">
+      <div class="dialog-button-block">
+        <button class="btn btn-outline"
+          @click="cancelFileUpload"
+        >{{ $t('button.cancel') }}</button>
+        <button class="btn btn-outline"
+          @click="prevStep"
+        >{{ $t('button.prevStep') }}</button>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -83,7 +93,16 @@ export default {
     },
     createConnection () {
       this.$emit('skip')
+    },
+    cancelFileUpload () {
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    },
+    prevStep () {
+      this.$store.commit('dataManagement/updateCurrentUploadDataType', null)
     }
+  },
+  computed: {
+    
   }
 }
 </script>

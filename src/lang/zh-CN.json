@@ -35,13 +35,15 @@
     "addFilter": "保存成功",
     "emptyResult": "此搜寻条件并无对应资料",
     "emptyDataSource": "尚未建立资料源",
-    "emptyColumnSet": "尚未建立任何栏位集",
+    "emptyColumnSet": "尚未建立任何栏位组合",
     "deleteSuccess": "删除成功",
     "dataSourceNotExist": "资料源不存在",
-    "connectionFail": "连线失败"
+    "connectionFail": "栏位资料有误，请重新检查",
+    "columnSetNameEmpty": "栏位组合名称未填写",
+    "columnSetChosenEmpty": "尚未选择任何栏位"
   },
   "guiding": {
-    "preStep": "上一步",
+    "prevStep": "上一步",
     "nextStep": "下一步",
     "endStep": "结束",
     "step1": {
@@ -174,6 +176,7 @@
     "confirmPasswordAgain": "再次确认密码",
     "group": "群组",
     "activeStatus": "启用状态",
+    "role": "角色",
     "active": "开启",
     "close": "关闭",
     "originalPassword": "原密码",
@@ -198,8 +201,8 @@
     "dataValue": "数据值",
     "dataColumn": "资料表栏位",
     "notSet": "未设定",
-    "columnSetSetting": "栏位集设定",
-    "columnSetName": "栏位集名称",
+    "columnSetSetting": "栏位组合设定",
+    "columnSetName": "栏位组合名称",
     "pleaseEnterName": "请输入名称",
     "isSaving": "储存中",
     "notSelect": "未选择",
@@ -221,7 +224,9 @@
     "buildStatus": "总共{total}项资料表，{success}项建置成功，{fail}项未建置",
     "buildSuccess": "建置成功",
     "buildFail": "建置失败",
-    "connectionName": "连线名称"
+    "connectionName": "连线名称",
+    "admin": "系统管理员",
+    "general": "一般使用者"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
@@ -310,7 +315,7 @@
     "toForeignTable": "关联资料表",
     "newForeign": "新增关联",
     "nextStep": "下一步",
-    "preStep": "上一步",
+    "prevStep": "上一步",
     "processing": "处理中...",
     "uploading": "上传中...",
     "connecting": "连线中...",
@@ -339,8 +344,8 @@
     "add": "增加",
     "editDataValue": "编辑数据",
     "saveAndBuild": "储存并建置",
-    "addColumnSet": "增加栏位集",
-    "editColumnSet": "编辑栏位集",
+    "addColumnSet": "增加栏位组合",
+    "editColumnSet": "编辑栏位组合",
     "dateTimeColumnSetting": "日期栏位设定",
     "select": "选择",
     "download": "资料下载",

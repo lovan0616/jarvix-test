@@ -1,15 +1,20 @@
 <template>
   <div class="choose-table">
-    <div class="dialog-title">{{ $t('editing.connectMySQL') }}</div>
+    <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="2"
     ></upload-process-block>
     <div class="info-block">
       <div>{{ $t('editing.currentLoadedDataFrame') }}</div>
-      <div>{{ $t('editing.dataSourceName') }}：{{ 'test' }}</div>
+      <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
       <div class="data-frame-list">
+        <spinner class="processing-spinner-container"
+          v-if="isLoading"
+          :title="$t('editing.loading')"
+          size="50"
+        ></spinner>
         <label class="single-data-frame"
           v-for="(table, index) in tableList"
           :key="index"
@@ -36,8 +41,12 @@
           :disabled="isLoading"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-default"
+        <button class="btn btn-outline"
           :disabled="isLoading"
+          @click="prevStep"
+        >{{ $t('button.prevStep') }}</button>
+        <button class="btn btn-default"
+          :disabled="isLoading || tableIdList.length === 0"
           @click="nextStep"
         >{{isLoading ? $t('button.processing') : $t('button.nextStep')}}</button>
       </div>
@@ -50,6 +59,12 @@ import UploadProcessBlock from './UploadProcessBlock'
 
 export default {
   name: 'ChooseTable',
+  props: {
+    connectionId: {
+      type: Number,
+      default: null
+    }
+  },
   components: {
     UploadProcessBlock
   },
@@ -66,7 +81,7 @@ export default {
   methods: {
     fetchData () {
       this.isLoading = true
-      getTableList(12).then(response => {
+      getTableList(this.connectionId).then(response => {
         this.tableList = response
 
         this.isLoading = false
@@ -77,6 +92,9 @@ export default {
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
+    prevStep () {
+      this.$emit('prev')
+    },
     nextStep () {
       this.$emit('next', this.tableIdList.map(element => {
         return {
@@ -85,6 +103,11 @@ export default {
           connectionStatus: null
         }
       }))
+    }
+  },
+  computed: {
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
     }
   }
 }
@@ -103,7 +126,13 @@ export default {
     margin-bottom: 16px;
   }
 
+  .data-frame-list {
+    max-height: 48vh;
+    overflow: auto;
+  }
+
   .single-data-frame {
+    width: 100%;
     display: flex;
     align-items: center;
     padding: 14px 24px;

@@ -1,16 +1,15 @@
 <template>
   <div class="remote-connection">
-    <div class="dialog-title">{{ $t('editing.connectMySQL') }}</div>
+    <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="isLoading ? 2 : 1"
     ></upload-process-block>
     <div class="dialog-body">
-      <div class="loading-block"
+      <spinner class="loading-block"
         v-if="isLoading"
-      >
-        <svg-icon icon-class="spinner" class="loading-icon"></svg-icon>
-        <div class="loading-text">{{ $t('editing.DBconnecting') }}</div>
-      </div>
+        :title="$t('editing.DBconnecting')"
+        size="50"
+      ></spinner>
       <form class="input-block-container"
         v-else
       >
@@ -116,14 +115,6 @@ export default {
           value: 'MSSQL'
         },
         {
-          name: 'MYSQL',
-          value: 'MYSQL'
-        },
-        {
-          name: 'ORACLE',
-          value: 'ORACLE'
-        },
-        {
           name: 'POSTGRESQL',
           value: 'POSTGRESQL'
         }
@@ -169,52 +160,20 @@ export default {
 
         this.$emit('updateDataSource', this.dataSourceId)
 
-        this.createConnection({
-          dataSourceId: this.dataSourceId,
-          ...this.connectInfo
-        })
+        this.createConnection()
       }).catch(() => {
         this.isLoading = false
       })
     },
-    createConnection (connectInfo) {
-      createDatabaseConnection(connectInfo).then(response => {
+    createConnection () {
+      createDatabaseConnection({
+        dataSourceId: this.dataSourceId,
+        ...this.connectInfo
+      }).then(response => {
         this.$emit('next', response)
       }).catch(() => {
         this.isLoading = false
       })
-    }
-  },
-  computed: {
-    database: {
-      get () {
-        return this.connectionInfo.database
-      },
-      set (value) {
-        this.$store.commit('dataManagement/updateConnectionDataBase', value)
-      }
-    },
-    username: {
-      get () {
-        return this.connectionInfo.username
-      },
-      set (value) {
-        this.$store.commit('dataManagement/updateConnectionUserName', value)
-      }
-    },
-    password: {
-      get () {
-        return this.connectionInfo.password
-      },
-      set (value) {
-        this.$store.commit('dataManagement/updateConnectionPassword', value)
-      }
-    },
-    connectionInfo () {
-      return this.$store.state.dataManagement.connectionInfo
-    },
-    currentUploadInfo () {
-      return this.$store.state.dataManagement.currentUploadInfo
     }
   }
 }
@@ -236,18 +195,9 @@ export default {
   }
   .loading-block {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 400px;
-
-    .loading-icon {
-      font-size: 65px;
-      margin-bottom: 48px;
-    }
-    .loading-text {
-      color: $theme-text-color;
-    }
+    height: 50vh;
   }
   .database-type-select-block {
     position: relative;
