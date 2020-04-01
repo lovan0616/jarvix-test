@@ -23,7 +23,7 @@ export default {
   computed: {
     processText () {
       return [
-        this.$t('editing.connectStep1'),
+        this.$t('editing.connectDB'),
         this.$t('editing.connectStep2'),
         this.$t('editing.connectStep3')
       ]
