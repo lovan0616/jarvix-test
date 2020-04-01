@@ -299,6 +299,8 @@ export default {
             type: 'success',
             duration: 3 * 1000
           })
+          // 更新問句說明資訊
+          this.$store.dispatch('dataSource/getDataSourceDataValue')
           this.closeDialog()
         })
         .catch(() => { this.isSaving = false })

@@ -71,7 +71,10 @@ export default new Router({
         {
           path: 'user-management',
           name: 'UserManagement',
-          component: () => import('@/pages/userManagement/Index')
+          component: () => import('@/pages/userManagement/Index'),
+          meta: {
+            requireAuth: true
+          }
         },
         {
           path: 'function-description',
