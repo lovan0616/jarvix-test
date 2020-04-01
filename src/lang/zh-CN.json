@@ -195,6 +195,8 @@
     "multiResultTitle": "问句分析",
     "systemUnknownDescription": "系统无法辨识出以下文字：",
     "dataColumnValue": "资料表数据值",
+    "emptyValueAlias": "目前资料表尚无数据值可编辑",
+    "emptyValueAliasDescription": "可编辑的资料类型包含：数值、类别、布林值",
     "mainDateTimeColumnSetting": "主要日期栏位设定",
     "dataFrame": "资料表",
     "rebuildRemark": "编辑后需再次建置资料",

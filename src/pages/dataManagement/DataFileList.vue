@@ -26,7 +26,7 @@
             :disabled="isProcessing"
             @click="editJoinTable"
           >{{ $t('editing.foreignTable') }}</button> -->
-          <button class="btn-m btn-outline btn-has-icon"
+          <!-- <button class="btn-m btn-outline btn-has-icon"
             v-if="selectList.length > 0"
             :disabled="isProcessing"
             @click="confirmDelete()"
@@ -35,19 +35,19 @@
               v-if="isProcessing"
               :icon-class="spinner"
             ></svg-icon>{{ $t('button.delete') }}
-          </button>
+          </button> -->
           <div class="reach-limit"
             v-if="reachLimit"
           >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
-        <div class="button-block">
+        <!-- <div class="button-block">
           <button class="btn-m btn-secondary btn-has-icon"
             @click="toggleJoinTableDialog"
-            :disabled="reachLimit"
+            :disabled="reachLimit || dataList.length === 0"
           >
             <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
           </button>
-        </div>
+        </div> -->
         <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div> -->
       </div>
       <data-table
@@ -114,7 +114,7 @@ import EditColumnDialog from './components/EditColumnDialog'
 import EditColumnSetDialog from './components/columnSet/EditColumnSetDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
-import { getDataFrameById, checkDataSourceStatusById } from '@/API/DataSource'
+import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
 
 export default {
   name: 'DataFileList',
@@ -219,29 +219,17 @@ export default {
       this.showConfirmDeleteDialog = true
     },
     deleteFile () {
-      // this.showConfirmDeleteDialog = false
-      // this.isProcessing = true
-      // // 先去取得 stoarge id
-      // createBookmarkStorage(this.currentDataSourceId, this.currentDataSourceInfo.type)
-      //   .then(res => {
-      //     let deleteList = []
-      //     for (let i = 0; i < this.selectList.length; i++) {
-      //       deleteList.push(deleteCSV(res.storage.id, this.selectList[i].id))
-      //     }
-
-      //     Promise.all(deleteList).then(() => {
-      //       buildStorage(res.storage.id, this.currentDataSourceId, false)
-      //         .then(() => {
-      //           this.deleteFinish()
-      //           this.$router.push('/data-management')
-      //         })
-      //         .catch(() => {
-      //           this.deleteFinish()
-      //         })
-      //     }, () => {
-      //       this.deleteFinish()
-      //     })
-      //   })
+      this.showConfirmDeleteDialog = false
+      this.isProcessing = true
+      const dataframeId = this.selectList[0].id
+      deleteDataFrameById(dataframeId)
+        .then(res => {
+          this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
+          this.deleteFinish()
+        })
+        .catch(() => {
+          this.deleteFinish()
+        })
     },
     deleteFinish () {
       this.selectList = []
@@ -351,14 +339,14 @@ export default {
             {
               name: this.$t('button.dateTimeColumnSetting'),
               value: 'dateTime'
+            },
+            {
+              name: this.$t('button.delete'),
+              value: 'delete'
             }
             // {
             //   name: this.$t('button.rename'),
             //   value: 'rename'
-            // },
-            // {
-            //   name: this.$t('button.delete'),
-            //   value: 'delete'
             // }
           ]
         }

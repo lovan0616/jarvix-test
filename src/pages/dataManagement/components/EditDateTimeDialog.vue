@@ -47,7 +47,7 @@
             class="input-radio-label"
             :for="column.dataColumnName"
           >
-            {{`${column.dataColumnPrimaryAlias}（${column.dataColumnName}）`}}
+            {{`${column.dataColumnPrimaryAlias}`}}
           </label>
         </div>
       </div>
