@@ -38,7 +38,9 @@
     "emptyColumnSet": "尚未建立任何欄位組合",
     "deleteSuccess": "刪除成功",
     "dataSourceNotExist": "資料源不存在",
-    "connectionFail": "欄位資料有誤，請重新檢查"
+    "connectionFail": "欄位資料有誤，請重新檢查",
+    "columnSetNameEmpty": "欄位組合名稱未填寫",
+    "columnSetChosenEmpty": "尚未選擇任何欄位"
   },
   "guiding": {
     "prevStep": "上一步",
