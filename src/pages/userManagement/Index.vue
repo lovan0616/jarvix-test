@@ -102,7 +102,7 @@
 
       <decide-dialog
         v-if="isShowStatusChange"
-        :title="`${closeText} ${currentUser.username} ${unableLoginText}？`"
+        :title="statusChangeConfirmTitle()"
         :type="'confirm'"
         :btnText="$t('button.confirm')"
         @closeDialog="closeStatusChange"
@@ -202,7 +202,9 @@ export default {
       sortStatus: 'down',
       confirmDeleteText: this.$t('editing.confirmDelete'),
       closeText: this.$t('editing.close'),
-      unableLoginText: this.$t('editing.unableLogin')
+      unableLoginText: this.$t('editing.unableLogin'),
+      confirmText: this.$t('editing.confirmActive'),
+      accountText: this.$t('editing.username')
     }
   },
   mounted () {
@@ -410,6 +412,15 @@ export default {
     groupName (list) {
       // 暫時只呈現第一個名稱
       return list[0].name
+    },
+    statusChangeConfirmTitle () {
+      if (this.currentUser.active) {
+        // 原本為規避狀態的使用者
+        return `${this.confirmText} ${this.currentUser.username} ${this.accountText}？`
+      } else {
+        // 原本為開通狀態使用者
+        return `${this.closeText} ${this.currentUser.username} ${this.unableLoginText}？`
+      }
     },
     setUserRole (user, id) {
       updateUserPermission(id).then(response => {
