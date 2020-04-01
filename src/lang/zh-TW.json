@@ -75,7 +75,7 @@
     "dataDisable": "無法使用",
     "newData":"新增資料",
     "choiceDataTypeFirst":"請先選擇資料類型",
-    "confirmDeleteNTables": "您確認要刪除以下{num}個資料表嗎？",
+    "confirmDeleteNTables": "您確認要刪除以下資料表嗎？",
     "describeDeleteNTables": "刪除過程會進行資料處理，在此期間您依然可以瀏覽所有資料源內容，但無法進行新增、刪除資料...等任何資料管理的操作。",
     "editTable": "編輯資料表",
     "editTableColumn": "編輯資料表欄位",

@@ -5,13 +5,12 @@
     @close="cancel"
   >
     <div class="content" slot="dialogBody">
-      <div class="main-content">{{ $t('editing.confirmDeleteNTables', { max: fileList.length }) }}</div>
-      <div class="sub-content">{{ $t('editing.describeDeleteNTables') }}</div>
+      <div class="main-content">{{ $t('editing.confirmDeleteNTables') }}</div>
       <div class="file-list">
         <div class="single-file"
           v-for="file in fileList"
           :key="file.id"
-        >{{ file.filename }}</div>
+        >{{ file.primaryAlias }}</div>
       </div>
     </div>
     <template class="dialog-btn-block" slot="dialogFooter">
@@ -27,7 +26,7 @@
 <script>
 import ConfirmDialog from '@/components/dialog/ConfirmDialog'
 export default {
-  name: 'ConfirmDeleteFileDialog',
+  name: 'ConfirmDeleteDataFrameDialog',
   components: {
     ConfirmDialog
   },
@@ -55,15 +54,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 .confirm-delete-file-dialog {
+
+  &.confirm-dialog.confirm-delet-file >>> .dialog-content-block {
+    padding: 0;
+    margin-bottom: 32px;
+  }
+
   .content {
     color: $theme-text-color;
     line-height: 28px;
   }
   .main-content {
-    margin-bottom: 32px;
-  }
-  .sub-content {
-    margin-bottom: 32px;
+    margin-bottom: 16px;
   }
   .single-file {
     line-height: 1;
