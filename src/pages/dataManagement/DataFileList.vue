@@ -187,11 +187,23 @@ export default {
     fetchData () {
       this.isLoading = true
       return getDataFrameById(this.currentDataSourceId).then(response => {
-        this.dataList = response
+        this.dataList = response.map(element => {
+          return {
+            ...element,
+            createMethod: element.joinCount === 2 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
+          }
+        })
         this.isLoading = false
       }).catch(() => {
         this.isLoading = false
       })
+    },
+    createMethod (value) {
+      if (value === 'file') {
+        return this.$t('editing.userUpload')
+      } else {
+        return this.$t('editing.connectDB')
+      }
     },
     checkDataSourceStatus () {
       return checkDataSourceStatusById(this.currentDataSourceId).then(response => {
@@ -305,7 +317,7 @@ export default {
         },
         {
           text: this.$t('editing.createWay'),
-          value: 'joinCount',
+          value: 'createMethod',
           width: '100px'
         },
         {

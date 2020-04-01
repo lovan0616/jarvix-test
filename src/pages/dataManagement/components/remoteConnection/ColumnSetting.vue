@@ -47,8 +47,10 @@
               </div>
               <div class="data-table-cell">
                 <default-select class="data-type-select"
+                  :key="column.name + '-' + index + '-select'"
                   v-model="column.dataType"
-                  :option-list="dataTypeList"
+                  :option-list="dataTypeOptionList(column.originalDataType)"
+                  @change="changeDataType(column, column.dataType)"
                 ></default-select>
               </div>
             </div>
@@ -144,6 +146,14 @@ export default {
 
       let promiseList = this.tableIdList.map((element, index) => {
         return analyzeTable(this.connectionId, element.name).then(response => {
+          let columnList = response.columns
+          if (columnList.length > 0) {
+            columnList.forEach(element => {
+              let newElement = JSON.parse(JSON.stringify(element))
+              this.$set(element, 'originalDataType', newElement.dataType)
+              this.$set(element, 'originalStatsType', newElement.statsType)
+            })
+          }
           this.$set(this.copyTableList, index, response)
         })
       })
@@ -174,6 +184,31 @@ export default {
         this.$emit('next')
         this.isProcessing = false
       }
+    },
+    dataTypeOptionList (type) {
+      if (type === 'STRING') {
+        return [
+          {
+            name: 'STRING',
+            value: 'STRING'
+          }
+        ]
+      } else {
+        return [
+          {
+            name: type,
+            value: type
+          },
+          {
+            name: 'STRING',
+            value: 'STRING'
+          }
+        ]
+      }
+    },
+    changeDataType (column, dataType) {
+      column.dataType = dataType
+      column.statsType = (dataType === 'STRING') ? 'CATEGORY' : column.originalStatsType
     }
   },
   computed: {

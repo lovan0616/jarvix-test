@@ -100,9 +100,6 @@ export default {
     prevStep () {
       this.$store.commit('dataManagement/updateCurrentUploadDataType', null)
     }
-  },
-  computed: {
-    
   }
 }
 </script>
