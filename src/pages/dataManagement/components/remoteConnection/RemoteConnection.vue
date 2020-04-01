@@ -5,12 +5,11 @@
       :step="isLoading ? 2 : 1"
     ></upload-process-block>
     <div class="dialog-body">
-      <div class="loading-block"
+      <spinner class="loading-block"
         v-if="isLoading"
-      >
-        <svg-icon icon-class="spinner" class="loading-icon"></svg-icon>
-        <div class="loading-text">{{ $t('editing.DBconnecting') }}</div>
-      </div>
+        :title="$t('editing.DBconnecting')"
+        size="50"
+      ></spinner>
       <form class="input-block-container"
         v-else
       >
@@ -196,18 +195,9 @@ export default {
   }
   .loading-block {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 400px;
-
-    .loading-icon {
-      font-size: 65px;
-      margin-bottom: 48px;
-    }
-    .loading-text {
-      color: $theme-text-color;
-    }
+    height: 50vh;
   }
   .database-type-select-block {
     position: relative;

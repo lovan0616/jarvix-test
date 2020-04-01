@@ -6,7 +6,7 @@
     ></upload-process-block>
     <div class="info-block">
       <div>{{ $t('editing.currentLoadedDataFrame') }}</div>
-      <div>{{ $t('editing.dataSourceName') }}：{{ 'test' }}</div>
+      <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
       <div class="data-frame-list">
@@ -41,8 +41,12 @@
           :disabled="isLoading"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-default"
+        <button class="btn btn-outline"
           :disabled="isLoading"
+          @click="prevStep"
+        >{{ $t('button.prevStep') }}</button>
+        <button class="btn btn-default"
+          :disabled="isLoading || tableIdList.length === 0"
           @click="nextStep"
         >{{isLoading ? $t('button.processing') : $t('button.nextStep')}}</button>
       </div>
@@ -88,6 +92,10 @@ export default {
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
+    prevStep () {
+      console.log('click')
+      this.$emit('prev')
+    },
     nextStep () {
       this.$emit('next', this.tableIdList.map(element => {
         return {
@@ -96,6 +104,11 @@ export default {
           connectionStatus: null
         }
       }))
+    }
+  },
+  computed: {
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
     }
   }
 }
