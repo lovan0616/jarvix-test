@@ -41,7 +41,7 @@
     "connectionFail": "栏位资料有误，请重新检查"
   },
   "guiding": {
-    "preStep": "上一步",
+    "prevStep": "上一步",
     "nextStep": "下一步",
     "endStep": "结束",
     "step1": {
@@ -312,7 +312,7 @@
     "toForeignTable": "关联资料表",
     "newForeign": "新增关联",
     "nextStep": "下一步",
-    "preStep": "上一步",
+    "prevStep": "上一步",
     "processing": "处理中...",
     "uploading": "上传中...",
     "connecting": "连线中...",

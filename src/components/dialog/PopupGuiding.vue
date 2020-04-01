@@ -27,7 +27,7 @@
             <a class="step-control" href="javasctipt:void(0)"
               v-if="currentStep > min"
               @click="chooseStep(currentStep - 1)"
-            >{{ $t('guiding.preStep') }}</a>
+            >{{ $t('guiding.prevStep') }}</a>
           </div>
           <div class="img-block popup-container">
             <img class="pic"

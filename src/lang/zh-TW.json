@@ -41,7 +41,7 @@
     "connectionFail": "欄位資料有誤，請重新檢查"
   },
   "guiding": {
-    "preStep": "上一步",
+    "prevStep": "上一步",
     "nextStep": "下一步",
     "endStep": "結束",
     "step1": {
@@ -312,7 +312,7 @@
     "toForeignTable": "關聯資料表",
     "newForeign": "新增關聯",
     "nextStep": "下一步",
-    "preStep": "上一步",
+    "prevStep": "上一步",
     "processing": "處理中...",
     "uploading": "上傳中...",
     "connecting": "連線中...",

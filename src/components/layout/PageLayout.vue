@@ -1,7 +1,7 @@
 <template>
   <div class="app-layout page-layout">
     <div class="wrapper">
-      <img src="@/assets/images/logo_white.svg" alt="logo" class="page-logo-img">
+      <img src="@/assets/images/logo-text.svg" alt="logo" class="page-logo-img">
       <main class="main">
         <div class="bg"></div>
         <slot></slot>
@@ -22,6 +22,7 @@ export default {
 <style lang="scss" scoped>
 .page-layout {
   .page-logo-img {
+    width: 200px;
     margin: 60px 0 100px;
   }
   .wrapper {
