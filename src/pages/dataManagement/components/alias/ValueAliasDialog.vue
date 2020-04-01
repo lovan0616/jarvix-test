@@ -1,7 +1,7 @@
 <template>
   <div class="value-alias-dialog full-page-dialog">
     <spinner class="layout-spinner"
-      v-if="isSaving"
+      v-if="isSaving || isLoading"
       :title="$t('editing.isSaving')"
       size="50"
     ></spinner>
@@ -14,103 +14,111 @@
           @click="closeDialog"
         ><svg-icon icon-class="close"></svg-icon></a>
       </div>
-      <div class="dialog-header-block">
-        <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
-        <div class="button-block">
-          <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
-          <button type="button" class="btn btn-default"
-            @click="buildAlias"
-          >{{ $t('button.save') }}</button>
-        </div>
-      </div>
-      <div class="dialog-content-block">
-        <div class="data-column-block">
-          <div class="data-column-row block-title">{{ $t('editing.columnName') }}</div>
-          <div class="data-column-block-body">
-            <div class="data-column-row"
-              v-for="column in dataColumnListInfo"
-              :key="column.dataColumnId"
-              :class="{active: currentColumnInfo.dataColumnId === column.dataColumnId}"
-              @click="setCurrentColumn(column)"
-            >{{ column.primaryAlias }}</div>
+      <template v-if="dataColumnListInfo.length > 0">
+        <div class="dialog-header-block">
+          <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
+          <div class="button-block">
+            <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
+            <button type="button" class="btn btn-default"
+              @click="buildAlias"
+            >{{ $t('button.save') }}</button>
           </div>
         </div>
-        <div class="data-value-block">
-          <div class="block-title">{{ $t('editing.columnName') }}：{{ currentColumnInfo.primaryAlias }}</div>
-          <div class="data-value-table data-table">
-            <div class="data-table-head is-scrolling">
-              <div class="data-table-row table-head">
-                <div class="data-table-cell data-value">{{ $t('editing.dataValue') }}</div>
-                <div class="data-table-cell alias">{{ $t('editing.alias') }}</div>
-                <div class="data-table-cell action">{{ $t('editing.action') }}</div>
-              </div>
+        <div class="dialog-content-block">
+          <div class="data-column-block">
+            <div class="data-column-row block-title">{{ $t('editing.columnName') }}</div>
+            <div class="data-column-block-body">
+              <div class="data-column-row"
+                v-for="column in dataColumnListInfo"
+                :key="column.dataColumnId"
+                :class="{active: currentColumnInfo.dataColumnId === column.dataColumnId}"
+                @click="setCurrentColumn(column)"
+              >{{ column.primaryAlias }}</div>
             </div>
-            <div class="data-table-body">
-              <div class="data-table-row"
-                v-for="(valueInfo, index) in currentColumnInfo.aliasList"
-                :key="index"
-              >
-                <div class="data-table-cell data-value">{{ valueInfo.dataValue }}</div>
-                <div class="data-table-cell alias">
-                  <div class="edit-block"
-                    v-if="currentEditValueIndex === index"
-                  >
-                    <div class="edit-alias-input-block"
-                      v-for="(singleAlias, aliasIndex) in tempAliasInfo"
-                      :key="index + '-' + aliasIndex"
+          </div>
+          <div class="data-value-block">
+            <div class="block-title">{{ $t('editing.columnName') }}：{{ currentColumnInfo.primaryAlias }}</div>
+            <div class="data-value-table data-table">
+              <div class="data-table-head is-scrolling">
+                <div class="data-table-row table-head">
+                  <div class="data-table-cell data-value">{{ $t('editing.dataValue') }}</div>
+                  <div class="data-table-cell alias">{{ $t('editing.alias') }}</div>
+                  <div class="data-table-cell action">{{ $t('editing.action') }}</div>
+                </div>
+              </div>
+              <div class="data-table-body">
+                <div class="data-table-row"
+                  v-for="(valueInfo, index) in currentColumnInfo.aliasList"
+                  :key="index"
+                >
+                  <div class="data-table-cell data-value">{{ valueInfo.dataValue }}</div>
+                  <div class="data-table-cell alias">
+                    <div class="edit-block"
+                      v-if="currentEditValueIndex === index"
                     >
-                      <data-input-verify
-                        v-model="singleAlias.name"
-                        type="text"
-                        class="input-verify"
-                        :name="index + '-' + aliasIndex"
-                        :placeholder="$t('editing.pleaseEnterName')"
-                        v-validate="'letterSpace|max:20'"
-                      />
-                      <div class="link"
-                        @click="removeAlias(aliasIndex)"
-                      >{{ $t('button.remove') }}</div>
+                      <div class="edit-alias-input-block"
+                        v-for="(singleAlias, aliasIndex) in tempAliasInfo"
+                        :key="index + '-' + aliasIndex"
+                      >
+                        <data-input-verify
+                          v-model="singleAlias.name"
+                          type="text"
+                          class="input-verify"
+                          :name="index + '-' + aliasIndex"
+                          :placeholder="$t('editing.pleaseEnterName')"
+                          v-validate="'letterSpace|max:20'"
+                        />
+                        <div class="link"
+                          @click="removeAlias(aliasIndex)"
+                        >{{ $t('button.remove') }}</div>
+                      </div>
+                      <button class="btn-m btn-secondary btn-add"
+                        @click="addAlias"
+                      >
+                        <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.add') }}
+                      </button>
                     </div>
-                    <button class="btn-m btn-secondary btn-add"
-                      @click="addAlias"
+                    <div class="display-block"
+                      v-else
                     >
-                      <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.add') }}
-                    </button>
+                      <div class="alias"
+                        :class="{'is-modified': singleAlias.isModified}"
+                        v-for="(singleAlias, aliasIndex) in valueInfo.alias"
+                        :key="index + '-' + aliasIndex"
+                      >{{ singleAlias.name }}<span v-show="aliasIndex !== valueInfo.alias.length - 1">,</span></div>
+                      <div class="not-set"
+                        v-show="valueInfo.alias.length === 0"
+                      >{{ $t('editing.notSet') }}</div>
+                    </div>
                   </div>
-                  <div class="display-block"
-                    v-else
-                  >
-                    <div class="alias"
-                      :class="{'is-modified': singleAlias.isModified}"
-                      v-for="(singleAlias, aliasIndex) in valueInfo.alias"
-                      :key="index + '-' + aliasIndex"
-                    >{{ singleAlias.name }}<span v-show="aliasIndex !== valueInfo.alias.length - 1">,</span></div>
-                    <div class="not-set"
-                      v-show="valueInfo.alias.length === 0"
-                    >{{ $t('editing.notSet') }}</div>
+                  <div class="data-table-cell action">
+                    <a href="javascript:void(0);" class="link action-link"
+                      v-if="currentEditValueIndex !== index"
+                      @click="editValueAlias(index)"
+                    >{{ $t('button.edit') }}</a>
+                    <template
+                      v-else
+                    >
+                      <a href="javascript:void(0);" class="link action-link"
+                        @click="saveAlias(index)"
+                      >{{ $t('button.finish') }}</a>
+                      <a href="javascript:void(0);" class="link action-link"
+                        @click="cancelEditAlias"
+                      >{{ $t('button.cancel') }}</a>
+                    </template>
                   </div>
-                </div>
-                <div class="data-table-cell action">
-                  <a href="javascript:void(0);" class="link action-link"
-                    v-if="currentEditValueIndex !== index"
-                    @click="editValueAlias(index)"
-                  >{{ $t('button.edit') }}</a>
-                  <template
-                    v-else
-                  >
-                    <a href="javascript:void(0);" class="link action-link"
-                      @click="saveAlias(index)"
-                    >{{ $t('button.finish') }}</a>
-                    <a href="javascript:void(0);" class="link action-link"
-                      @click="cancelEditAlias"
-                    >{{ $t('button.cancel') }}</a>
-                  </template>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </template>
+      <template v-else>
+        <div class="empty-info-block">
+          <div>{{ $t('editing.emptyValueAlias') }}</div>
+          <div>{{ '（' + $t('editing.emptyValueAliasDescription') + '）' }}</div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -144,7 +152,8 @@ export default {
         isModified: true
       },
       userId: null,
-      isSaving: false
+      isSaving: false,
+      isLoading: true
     }
   },
   mounted () {
@@ -153,17 +162,27 @@ export default {
   },
   methods: {
     getSelfUserInfo () {
-      getSelfInfo().then(response => {
-        this.userId = response.id
-      })
+      getSelfInfo()
+        .then(response => {
+          this.userId = response.id
+          this.isLoading = false
+        })
+        .catch(() => { this.isLoading = false })
     },
     fetchColumnInfo () {
-      getDataColumnDataValue(this.dataFrameInfo.id).then(response => {
-        this.dataColumnListInfo = response
+      getDataColumnDataValue(this.dataFrameInfo.id)
+        .then(response => {
+          this.dataColumnListInfo = response
+          // handle empty data
+          if (!this.dataColumnListInfo.length) {
+            this.isLoading = false
+            return
+          }
 
-        // 取第一個 column 作為預測顯示
-        this.setColumnInfo(response[0])
-      })
+          // 取第一個 column 作為預測顯示
+          this.setColumnInfo(response[0])
+        })
+        .catch(() => { this.isLoading = false })
     },
     setColumnInfo (columnInfo) {
       this.currentColumnInfo = columnInfo
@@ -250,6 +269,7 @@ export default {
       })
     },
     buildAlias () {
+      this.isSaving = true
       let aliasInfo = this.dataColumnListInfo.reduce((acc, cur) => {
         if (!cur.aliasList) return acc
         let modifiedAlias = cur.aliasList.filter(element => element.isSaved)
@@ -268,15 +288,17 @@ export default {
         return acc.concat(modifiedAlias)
       }, [])
 
-      saveValueAlias(aliasInfo).then(() => {
-        this.isSaving = false
-        Message({
-          message: this.$t('message.saveSuccess'),
-          type: 'success',
-          duration: 3 * 1000
+      saveValueAlias(aliasInfo)
+        .then(() => {
+          this.isSaving = false
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+          this.closeDialog()
         })
-        this.closeDialog()
-      })
+        .catch(() => { this.isSaving = false })
     },
     closeDialog () {
       this.$emit('close')
@@ -432,6 +454,13 @@ export default {
         }
       }
     }
+  }
+  .empty-info-block {
+    padding: 24px 0;
+    background-color: rgba(29, 30, 30, 0.95);
+    border-radius: 5px;
+    text-align: center;
+    color: #AAAAAA;
   }
 }
 </style>

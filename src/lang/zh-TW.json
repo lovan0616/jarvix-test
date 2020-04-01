@@ -191,6 +191,8 @@
     "multiResultTitle": "問句分析",
     "systemUnknownDescription": "系統無法辨識出以下文字：",
     "dataColumnValue": "資料表數據值",
+    "emptyValueAlias": "目前資料表尚無數據值可編輯",
+    "emptyValueAliasDescription": "可編輯的資料類型包含：數值、類別、布林值",
     "mainDateTimeColumnSetting": "主要日期欄位設定",
     "dataFrame": "資料表",
     "rebuildRemark": "編輯後需再次建置資料",
