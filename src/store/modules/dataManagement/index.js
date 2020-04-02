@@ -12,21 +12,8 @@ export default {
       type: null,
       name: null
     },
-    // 連線資訊
-    connectionInfo: {
-      connection_type: null,
-      database: null,
-      username: null,
-      password: null
-    },
     uploadFileList: [],
     showCreateDataSourceDialog: false,
-    // 檔案已上傳
-    fileLoaded: false,
-    // 資料庫連結狀態
-    connectionStatus: null,
-    // 設 tabe join
-    showSetTableJoin: false,
     // 為了讓資料清單頁面可以重新刷新資料
     fileUploadSuccess: false,
     fileCountLimit: 10

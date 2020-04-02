@@ -39,17 +39,20 @@ service.interceptors.response.use(
       Vue.rollbar.error(JSON.stringify(res))
     }
 
-    Message({
-      message: res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg'),
-      type: res.error.type,
-      duration: 3 * 1000
-    })
+    if (res.error) {
+      Message({
+        message: res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg'),
+        type: res.error.type,
+        duration: 3 * 1000
+      })
+    }
 
     return Promise.reject(res)
   },
   error => {
     if (error.response && error.response.status === 401) {
       store.commit('dataSource/setIsInit', false)
+      store.commit('setting/setUserPermission', false)
       router.push('/login')
 
       Message({

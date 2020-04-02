@@ -1,29 +1,27 @@
 <template>
   <div class="choose-file-type">
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
-    <upload-process-block></upload-process-block>
     <div class="dialog-body">
       <div class="input-block-container">
-        <!-- <div class="input-block file-type-select-block"
-          :class="{'has-error': errors.has('fileTypeSelect')}"
-        >
-          <sy-select class="file-type-select"
-            name="fileTypeSelect"
-            :selected="dataSourceInfo.type"
-            :items="fileTypeList"
-            :placeholder="$t('editing.selectDataType')"
-            @update:selected="bookmarkTypeChange"
-            v-validate="'required'"
-          ></sy-select>
-          <div class="error-text">{{ $t('editing.choiceDataTypeFirst') }}</div>
-        </div> -->
-        <input-block class="file-info-input-block"
-          v-if="!currentDataSourceInfo"
-          :label="$t('editing.dataSourceName')"
-          name="dataSourceName"
-          v-model="dataSourceInfo.name"
-          v-validate="'required'"
-        ></input-block>
+        <div class="choose-type-container">
+          <div class="single-type-block"
+            v-for="dataType in dataTypeList"
+            :key="dataType.type"
+            :class="{checked: selectedDataType === dataType.type}"
+            @click="selectDataType(dataType.type)"
+          >
+            <svg-icon class="check-icon"
+              icon-class="check-circle"
+            ></svg-icon>
+            <div class="single-type-content">
+              <svg-icon class="icon"
+                :icon-class="dataType.icon"
+              ></svg-icon>
+              <div class="type-title">{{ dataType.title }}</div>
+              <div class="type-content" v-html="dataType.description"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="dialog-footer">
@@ -32,8 +30,9 @@
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-default"
+          :disabled="!selectedDataType"
           @click="nextStep"
-        >{{ $t('button.nextStep') }}</button>
+        >{{ $t('button.start') }}</button>
       </div>
     </div>
   </div>
@@ -41,120 +40,120 @@
 <script>
 import SySelect from '@/components/select/SySelect'
 import InputBlock from '@/components/InputBlock'
-import UploadProcessBlock from './UploadProcessBlock'
 
 export default {
   inject: ['$validator'],
   name: 'ChooseFileType',
   components: {
     SySelect,
-    InputBlock,
-    UploadProcessBlock
+    InputBlock
   },
   data () {
     return {
-      dataSourceInfo: {
-        name: null
-        // type: null
-      },
-      typeList: [
+      selectedDataType: 'local',
+      dataTypeList: [
         {
-          name: 'CSV',
-          id: 'CSV'
+          type: 'local',
+          icon: 'upload',
+          title: this.$t('editing.localUpload'),
+          description: this.$t('editing.localUploadDescription')
+        },
+        {
+          type: 'remote',
+          icon: 'db-connection',
+          title: this.$t('editing.remoteConnection'),
+          description: this.$t('editing.remoteConnectionDescription')
         }
-        // {
-        //   name: 'MySQL',
-        //   id: 'mysql'
-        // }
       ]
     }
   },
-  // watch: {
-  //   'dataSourceInfo.type' (value) {
-  //     this.$validator.validate('fileTypeSelect', value)
-  //   }
-  // },
   methods: {
-    // bookmarkTypeChange (id) {
-    //   this.dataSourceInfo.type = id
-    // },
+    selectDataType (value) {
+      this.selectedDataType = value
+    },
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     nextStep () {
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          if (this.currentDataSourceInfo) {
-            // 將 name 塞進去
-            this.dataSourceInfo.name = this.currentDataSourceInfo.name
-          }
-          this.$store.commit('dataManagement/updateCurrentUploadDataSourceName', this.dataSourceInfo.name)
-        }
-      })
+      this.$store.commit('dataManagement/updateCurrentUploadDataType', this.selectedDataType)
     }
-  },
-  computed: {
-    currentDataSourceInfo () {
-      return this.$store.state.dataManagement.currentDataSourceInfo
-    }
-    // fileTypeList () {
-    //   if (this.currentDataSourceInfo) {
-    //     return this.typeList.filter(element => {
-    //       return element.id === this.currentDataSourceInfo.type
-    //     })
-    //   } else {
-    //     return this.typeList
-    //   }
-    // }
   }
 }
 </script>
 <style lang="scss" scoped>
 .choose-file-type {
   .dialog-body {
-    background-color: rgba(50, 58, 58, 0.95);
+    background: rgba(50, 58, 58, 0.95);
+    border-radius: 5px;
     margin-bottom: 16px;
   }
 
   .input-block-container {
-    width: 53.41%;
-    margin: 0 auto;
-    height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+    height: 308px;
+    padding: 24px;
 
-    .input-block {
-      &:not(:last-child) {
-        margin-bottom: 92px;
+    .choose-type-container {
+      display: flex;
+      justify-content: space-between;
+      height: 100%;
+
+      .single-type-block {
+        position: relative;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        align-items:center;
+        border: 2px solid rgba(72, 84, 84, 0.95);
+        border-radius: 12px;
+        cursor: pointer;
+
+        &.checked {
+          .check-icon {
+            display: block;
+          }
+        }
+
+        &:hover, &.checked {
+          border: 2px solid #2AD2E2;
+        }
+
+        .icon {
+          font-size: 70px;
+        }
+
+        .check-icon {
+          display: none;
+          position: absolute;
+          top: 15px;
+          right: 15px;
+          font-size: 30px;
+          color: #2AD2E2;
+        }
+
+        .type-title {
+          font-weight: 600;
+          font-size: 18px;
+          margin-bottom: 12px;
+        }
+
+        .type-content {
+          color: #ccc;
+        }
+
+        &:not(:last-child) {
+          margin-right: 20px;
+        }
+      }
+
+      .single-type-content {
+        text-align: center;
       }
     }
-  }
-
-  .file-type-select-block {
-    position: relative;
-  }
-
-  .file-type-select {
-    width: 100%;
-    border-bottom: 1px solid #979797;
-  }
-
-  .file-info-input-block {
-    position: relative;
-
-    .file-source-input {
-      height: 40px;
-    }
-  }
-
-  .upload-input-label {
-    position: absolute;
-    top: -21px;
-    font-size: 14px;
-    line-height: normal;
-    letter-spacing: 0.5px;
-    color: #979797;
   }
 }
 </style>

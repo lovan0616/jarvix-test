@@ -13,7 +13,6 @@ import { commonChartOptions } from '@/components/display/common/chart-addon'
 import chartVariable from '@/styles/chart/variables.scss'
 import { color12 } from './common/addons'
 const sankeyConfig = {
-  ...JSON.parse(JSON.stringify(commonChartOptions())),
   brush: {
     toolbox: [''],
     xAxisIndex: 0,
@@ -93,7 +92,10 @@ export default {
   },
   computed: {
     chartOption () {
-      let sankeyOptions = JSON.parse(JSON.stringify(sankeyConfig))
+      let sankeyOptions = {
+        ...JSON.parse(JSON.stringify(sankeyConfig)),
+        ...JSON.parse(JSON.stringify(commonChartOptions()))
+      }
 
       sankeyOptions.series[0].data = this.dataList
       sankeyOptions.series[0].links = this.linkList

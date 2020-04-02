@@ -149,6 +149,8 @@ export default {
       this.isProcessing = true
 
       updateDataFrameAlias(this.userEditInfo).then(() => {
+        // 更新問句說明資訊
+        this.$store.dispatch('dataSource/getDataSourceColumnInfo')
         this.closeDialog()
       }).catch(() => {
         this.cancel()

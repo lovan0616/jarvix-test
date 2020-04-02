@@ -26,7 +26,7 @@
             :disabled="isProcessing"
             @click="editJoinTable"
           >{{ $t('editing.foreignTable') }}</button> -->
-          <button class="btn-m btn-outline btn-has-icon"
+          <!-- <button class="btn-m btn-outline btn-has-icon"
             v-if="selectList.length > 0"
             :disabled="isProcessing"
             @click="confirmDelete()"
@@ -35,12 +35,20 @@
               v-if="isProcessing"
               :icon-class="spinner"
             ></svg-icon>{{ $t('button.delete') }}
-          </button>
+          </button> -->
           <div class="reach-limit"
             v-if="reachLimit"
           >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
-        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
+        <!-- <div class="button-block">
+          <button class="btn-m btn-secondary btn-has-icon"
+            @click="toggleJoinTableDialog"
+            :disabled="reachLimit || dataList.length === 0"
+          >
+            <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
+          </button>
+        </div> -->
+        <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div> -->
       </div>
       <data-table
         :headers="tableHeaders"
@@ -54,6 +62,7 @@
         @edit="editTableColumn"
         @valueAlias="editTableValueAlias"
         @columnSet="editColumnSet"
+        @dateTime="editDateTime"
       >
       </data-table>
     </div>
@@ -62,16 +71,17 @@
       @success="fetchData"
       @close="closeFileUploadDialog"
     ></file-upload-dialog>
-    <confirm-delete-file-dialog
+    <confirm-delete-data-frame-dialog
       v-if="showConfirmDeleteDialog"
       :title="$t('editing.deleteTable')"
       :file-list="selectList"
       @confirm="deleteFile"
       @cancel="cancelDelete"
-    ></confirm-delete-file-dialog>
+    ></confirm-delete-data-frame-dialog>
     <edit-table-join-relation-dialog
       v-if="showJoinTableDialog"
-      @cancel="toggleJoinTableDialog"
+      @cancel="toggleJoinTableDialog()"
+      @dataFrameUpdate="fetchData()"
     ></edit-table-join-relation-dialog>
     <edit-column-dialog
       v-if="showEditColumnDialog"
@@ -88,28 +98,35 @@
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditClomnSetDialog"
     ></edit-column-set-dialog>
+    <edit-date-time-dialog
+      v-if="showEditDateTimeDialog"
+      :data-frame-info="currentEditDataFrameInfo"
+      @close="closeEditDateTimeDialog"
+    ></edit-date-time-dialog>
   </div>
 </template>
 <script>
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
-import ConfirmDeleteFileDialog from './components/ConfirmDeleteFileDialog'
+import ConfirmDeleteDataFrameDialog from './components/ConfirmDeleteDataFrameDialog'
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
 import EditColumnSetDialog from './components/columnSet/EditColumnSetDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
-import { getDataFrameById, checkDataSourceStatusById } from '@/API/DataSource'
+import EditDateTimeDialog from './components/EditDateTimeDialog'
+import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
 
 export default {
   name: 'DataFileList',
   components: {
     DataTable,
     FileUploadDialog,
-    ConfirmDeleteFileDialog,
+    ConfirmDeleteDataFrameDialog,
     EditTableJoinRelationDialog,
     EditColumnDialog,
     EditColumnSetDialog,
-    ValueAliasDialog
+    ValueAliasDialog,
+    EditDateTimeDialog
   },
   data () {
     return {
@@ -118,6 +135,7 @@ export default {
       showConfirmDeleteDialog: false,
       showJoinTableDialog: false,
       showEditColumnDialog: false,
+      showEditDateTimeDialog: false,
       deleteId: null,
       renameDataSource: null,
       // 資料處理中
@@ -169,11 +187,23 @@ export default {
     fetchData () {
       this.isLoading = true
       return getDataFrameById(this.currentDataSourceId).then(response => {
-        this.dataList = response
+        this.dataList = response.map(element => {
+          return {
+            ...element,
+            createMethod: element.joinCount === 2 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
+          }
+        })
         this.isLoading = false
       }).catch(() => {
         this.isLoading = false
       })
+    },
+    createMethod (value) {
+      if (value === 'file') {
+        return this.$t('editing.userUpload')
+      } else {
+        return this.$t('editing.connectDB')
+      }
     },
     checkDataSourceStatus () {
       return checkDataSourceStatusById(this.currentDataSourceId).then(response => {
@@ -185,7 +215,8 @@ export default {
       // 為了資料表上傳
       this.$store.commit('dataManagement/updateCurrentUploadInfo', {
         dataSourceId: this.currentDataSourceId,
-        name: this.dataSourceName
+        name: this.dataSourceName,
+        type: null
       })
 
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
@@ -200,29 +231,17 @@ export default {
       this.showConfirmDeleteDialog = true
     },
     deleteFile () {
-      // this.showConfirmDeleteDialog = false
-      // this.isProcessing = true
-      // // 先去取得 stoarge id
-      // createBookmarkStorage(this.currentDataSourceId, this.currentDataSourceInfo.type)
-      //   .then(res => {
-      //     let deleteList = []
-      //     for (let i = 0; i < this.selectList.length; i++) {
-      //       deleteList.push(deleteCSV(res.storage.id, this.selectList[i].id))
-      //     }
-
-      //     Promise.all(deleteList).then(() => {
-      //       buildStorage(res.storage.id, this.currentDataSourceId, false)
-      //         .then(() => {
-      //           this.deleteFinish()
-      //           this.$router.push('/data-management')
-      //         })
-      //         .catch(() => {
-      //           this.deleteFinish()
-      //         })
-      //     }, () => {
-      //       this.deleteFinish()
-      //     })
-      //   })
+      this.showConfirmDeleteDialog = false
+      this.isProcessing = true
+      const dataframeId = this.selectList[0].id
+      deleteDataFrameById(dataframeId)
+        .then(res => {
+          this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
+          this.deleteFinish()
+        })
+        .catch(() => {
+          this.deleteFinish()
+        })
     },
     deleteFinish () {
       this.selectList = []
@@ -264,11 +283,21 @@ export default {
       }
       this.showEditColumnSetDialog = true
     },
+    editDateTime (dataInfo) {
+      this.currentEditDataFrameInfo = {
+        id: dataInfo.id,
+        primaryAlias: dataInfo.primaryAlias
+      }
+      this.showEditDateTimeDialog = true
+    },
     closeValueAliasDialog () {
       this.showValueAliasDialog = false
     },
     closeEditClomnSetDialog () {
       this.showEditColumnSetDialog = false
+    },
+    closeEditDateTimeDialog () {
+      this.showEditDateTimeDialog = false
     }
   },
   computed: {
@@ -288,48 +317,52 @@ export default {
         },
         {
           text: this.$t('editing.createWay'),
-          value: 'joinCount',
-          width: '100px'
+          value: 'createMethod',
+          width: '80px'
         },
         {
           text: this.$t('editing.createDate'),
           value: 'createDate',
           sort: true,
-          width: '200px',
+          width: '140px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: this.$t('editing.updateDate'),
           value: 'updateDate',
           sort: true,
-          width: '200px',
+          width: '140px',
           time: 'YYYY-MM-DD HH:mm'
         },
-        {text: this.$t('editing.status'), value: 'type', width: '7.26%'},
+        {
+          text: this.$t('editing.status'),
+          value: 'type',
+          width: '80px'
+        },
         {
           text: this.$t('editing.action'),
           value: 'action',
           width: '270px',
           action: [
             {
-              name: this.$t('button.editColumn'),
-              value: 'edit'
+              name: this.$t('button.edit'),
+              subAction: [
+                {icon: '', title: 'button.editColumn', dialogName: 'edit'},
+                {icon: '', title: 'button.editDataValue', dialogName: 'valueAlias'},
+                {icon: '', title: 'button.editColumnSet', dialogName: 'columnSet'}
+              ]
             },
             {
-              name: this.$t('button.editDataValue'),
-              value: 'valueAlias'
+              name: this.$t('button.dateTimeColumnSetting'),
+              value: 'dateTime'
             },
             {
-              name: this.$t('button.editColumnSet'),
-              value: 'columnSet'
+              name: this.$t('button.delete'),
+              value: 'delete'
             }
             // {
             //   name: this.$t('button.rename'),
             //   value: 'rename'
-            // },
-            // {
-            //   name: this.$t('button.delete'),
-            //   value: 'delete'
             // }
           ]
         }

@@ -71,7 +71,10 @@ export default new Router({
         {
           path: 'user-management',
           name: 'UserManagement',
-          component: () => import('@/pages/userManagement/Index')
+          component: () => import('@/pages/userManagement/Index'),
+          meta: {
+            requireAuth: true
+          }
         },
         {
           path: 'function-description',
@@ -84,6 +87,11 @@ export default new Router({
       path: '/login',
       name: 'PageLogin',
       component: () => import('@/pages/login/Index')
+    },
+    {
+      path: '/signup',
+      name: 'PageSignup',
+      component: () => import('@/pages/signup/Index')
     }
   ],
   linkActiveClass: 'active',

@@ -5,7 +5,7 @@
     <div class="container">
       <div class="header-root">
         <router-link class="header-logo" to="/">
-          <img src="@/assets/images/logo_white.svg">
+          <img src="@/assets/images/logo.svg">
         </router-link>
         <slot name="nav"></slot>
       </div>

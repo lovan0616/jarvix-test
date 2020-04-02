@@ -200,7 +200,7 @@ export default {
           maxX = element[0] > maxX ? element[0] : maxX
           minX = element[0] < minX ? element[0] : minX
         })
-        
+
         let minY = this.roundNumber(gradient * minX + offset, 4)
         let maxY = this.roundNumber(gradient * maxX + offset, 4)
 

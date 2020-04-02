@@ -114,6 +114,17 @@ export function getDataFrameData (dataFrameId, page = 0) {
 }
 
 /**
+ * delete dataframe by dataFrameId
+ * @param {Number} dataFrameId - 欲檢查的資料表 ID
+ */
+export function deleteDataFrameById (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}`,
+    method: 'DELETE'
+  })
+}
+
+/**
  * get data column by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
@@ -213,5 +224,41 @@ export function getDataColumnDataValue (dataFrameId) {
   return request({
     url: `/dataFrame/FrameNameAndValue/${dataFrameId}`,
     method: 'GET'
+  })
+}
+
+/**
+ * get all columns whose stats_type is marked as Datetime
+ */
+export function getDateTimeColumns (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/columns/datetime`,
+    method: 'GET'
+  })
+}
+
+/**
+ * set specific column as main datetime
+ * @param {Number} dataFrameId
+ * @param {Object} dataColumnData - 送給後端的資料物件
+ * @param {String} dataColumnData.dataColumnName - 時間欄位名稱
+ * @param {String} dataColumnData.dataColumnPrimaryAlias - 時間欄位別名
+ */
+export function setMainDateTimeColumn (dataFrameId, dataColumnData) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/columns/datetime/default`,
+    method: 'PUT',
+    data: dataColumnData
+  })
+}
+
+/*
+ * dataSource preprocessor
+ */
+export function dataSourcePreprocessor (dataSourceInfo) {
+  return request({
+    url: `/data/preprocessor`,
+    method: 'POST',
+    data: dataSourceInfo
   })
 }

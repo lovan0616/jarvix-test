@@ -13,7 +13,7 @@
             <sy-select class="kyc-select"
               :items="singleQuestion.option"
               :selected="response"
-              :placeholder="$t('editing.choice')"
+              :placeholder="$t('editing.defaultOption')"
               @update:selected="onOptionChange"
             >
             </sy-select>

@@ -3,7 +3,6 @@
     <div class="custom-select"
       @click="toggleDropdown"
     >
-      <svg-icon :icon-class="icon" class="type-icon"></svg-icon>
       <div class="selected-option">{{ value ? selectedOption : defaultMsg }}</div>
       <svg-icon icon-class="dropdown" class="arrow-icon"
         :class="{'is-open': isDropdownOpen}"
@@ -64,9 +63,10 @@ export default {
 
       this.adjestPosition()
     },
-    chooseOption (value) {
-      this.$emit('input', value)
+    chooseOption (chosenValue) {
       this.toggleDropdown()
+      if (chosenValue === this.value) return
+      this.$emit('input', chosenValue)
     },
     adjestPosition () {
       if (!this.isDropdownOpen) return
@@ -80,6 +80,7 @@ export default {
   },
   computed: {
     selectedOption () {
+      if (!this.optionList.length) return
       return this.optionList.find(element => parseInt(element.id) === parseInt(this.value)).name
     },
     dropdownPosition () {
@@ -107,16 +108,15 @@ export default {
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
-    border-radius: 2px;
-    padding: 8px 20px;
-    background-color: #2A3030;
+    padding: 8px 5px 8px 0;
     cursor: pointer;
     overflow: auto;
+    border-bottom: 1px solid $theme-color-white;
 
-    .type-icon {
-      margin-right: 12px;
-      color: $theme-color-primary;
-    }
+    // .type-icon {
+    //   margin-right: 12px;
+    //   color: $theme-color-primary;
+    // }
     .selected-option {
       flex: 1;
       line-height: 24px;

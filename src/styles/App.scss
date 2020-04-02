@@ -15,6 +15,7 @@
 @import './common/link';
 @import './common/input';
 @import './common/checkbox';
+@import './common/radio-button.scss';
 @import './common/dialog';
 @import './common/animation';
 @import './common/layout';
@@ -24,7 +25,7 @@
 // page
 @import './pages/data-management';
 @import './pages/pinboard';
-@import './pages/algorithm';
+// @import './pages/algorithm';
 
 /**
  * element-ui 的載入方式是參考下方連結，主要是希望按需載入同時不需要重新 build theme

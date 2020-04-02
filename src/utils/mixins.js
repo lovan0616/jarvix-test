@@ -92,16 +92,6 @@ Vue.mixin({
     paddingZero (n) {
       return n < 10 ? '0' + n : n
     },
-    // 後端設計 MySQL/SQLITE 的 storage type 都叫 SQLITE，不得以只好前端自己轉換
-    getStorageType (value) {
-      switch (value) {
-        case 'CSV':
-          return 'CSV'
-        case 'mysql':
-        case 'SQLITE':
-          return 'SQLITE'
-      }
-    },
     getLayout (value) {
       switch (value) {
         case 'general':

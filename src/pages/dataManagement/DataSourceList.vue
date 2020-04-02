@@ -96,6 +96,12 @@ export default {
         this.fetchData()
       }
     },
+    fileUploadSuccess (value) {
+      if (value) {
+        this.fetchData()
+        this.$store.commit('dataManagement/updateFileUploadSuccess', false)
+      }
+    },
     dataSourceList: {
       handler () {
         /**
@@ -220,6 +226,9 @@ export default {
     },
     isDataSourceBuilding () {
       return this.$store.getters['dataSource/isDataSourceBuilding']
+    },
+    fileUploadSuccess () {
+      return this.$store.state.dataManagement.fileUploadSuccess
     }
   }
 }

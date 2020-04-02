@@ -7,12 +7,14 @@
     <div v-if="userData.length === 0" class="user-default">{{ $t('editing.notYetCreateUser') }}</div>
     <div v-else class="single-user">
       <div class="user-table-head">
-        <div class="user-item">{{ $t('editing.userName') }}</div>
         <div @click="sortUserData" class="user-item user-sort">
           {{ $t('editing.userAccount') }}
           <svg-icon icon-class="arrow-down" :class="['icon', {'user-rotate': sortStatus === 'up'}]"></svg-icon>
         </div>
-        <div class="user-item user-status">{{ $t('editing.activeStatus') }}</div>
+        <div class="user-item">{{ $t('editing.userTitle') }}</div>
+        <div class="user-item">{{ $t('editing.group') }}</div>
+        <div class="user-item">{{ $t('editing.activeStatus') }}</div>
+        <div class="user-item">{{ $t('editing.role') }}</div>
         <div class="user-item">{{ $t('editing.action') }}</div>
       </div>
       <div class="user-table-body">
@@ -21,11 +23,18 @@
           :key="index"
           class="user-row-child"
         >
-          <div class="user-item">{{user.name}}</div>
           <div class="user-item">{{user.email}}</div>
-          <div :class="['user-status', {'user-status-close': !user.active}]">
-            <template v-if="user.active">{{ $t('editing.active') }}</template>
-            <template v-else>{{ $t('editing.close') }}</template>
+          <div class="user-item">{{user.name}}</div>
+          <div class="user-item">{{groupName(user.groupList)}}</div>
+          <div class="user-item" :class="{'user-status-close': !user.active}">
+            {{ user.active ? $t('editing.active') : $t('editing.close') }}
+          </div>
+          <div class="user-item">
+            <default-select class="role-select"
+              :value="user.permissionActive"
+              :option-list="roleList"
+              @input="setUserRole(user, user.id)"
+            ></default-select>
           </div>
           <div class="user-item">
             <span @click="showPassword(user.id)" class="user-manipulate-item">{{ $t('editing.changePassword') }}</span>
@@ -33,8 +42,7 @@
             <span @click="showEditName(user)" class="user-manipulate-item">{{ $t('editing.editingName') }}</span>
             <span class="user-line"></span>
             <span @click="showStatusChange(user)" class="user-manipulate-item">
-              <template v-if="user.active">{{ $t('editing.close') }}</template>
-              <template v-else>{{ $t('editing.active') }}</template>
+              {{ user.active ? $t('editing.close') : $t('editing.active') }}
             </span>
             <!-- <span class="user-line"></span>
             <span @click="showDeleteAccount(user.id)" class="user-manipulate-item">刪除</span> -->
@@ -94,7 +102,7 @@
 
       <decide-dialog
         v-if="isShowStatusChange"
-        :title="`${closeText} ${currentUser.username} ${unableLoginText}？`"
+        :title="statusChangeConfirmTitle()"
         :type="'confirm'"
         :btnText="$t('button.confirm')"
         @closeDialog="closeStatusChange"
@@ -115,51 +123,50 @@
     <fill-dialog
       v-if="isShowCreateUser"
       @closeDialog="closeCreateUser"
-      @confirmBtn="createSingleUser"
+      @confirmBtn="createUsers"
+      class="fill-dialog"
     >
       <input-verify
-        v-model="userInfo.username"
-        type="text"
-        :placeholder="$t('editing.userName')"
-        name="createUserName"
-        v-validate="'required'"
+        v-for="(invitee, index) in inviteeList"
+        :key="invitee.id"
+        v-model="invitee.email"
+        type="email"
+        :placeholder="$t('editing.inviteeEmail')"
+        :name="'invitee' + '-' + invitee.id"
+        v-validate="'required|email'"
       >
+        <template #action>
+          <a
+            href="javascript:void(0)"
+            class="link remove"
+            @click="removeInvitee(index)"
+            v-if="inviteeList.length > 1"
+          >
+            {{ $t('button.remove') }}
+          </a>
+        </template>
       </input-verify>
-      <input-verify
-        v-model="userInfo.email"
-        type="text"
-        :placeholder="$t('editing.userAccount')"
-        name="createUserMail"
-        v-validate="'required'"
+      <!--TODO: 判定此 account 人數上限-->
+      <button
+        @click="addNewInvitee()"
+        class="btn btn-m btn-outline"
       >
-      </input-verify>
-      <input-verify
-        v-model="userInfo.password"
-        type="password"
-        :placeholder="$t('editing.loginPassword')"
-        name="createPassword"
-        v-validate="'required|min:8|requireOneNumeric'"
-        ref="loginPassword"
-      >
-      </input-verify>
-      <input-verify
-        v-model="verifyPassword"
-        type="password"
-        :placeholder="$t('editing.confirmPassword')"
-        name="createVerifyPassword"
-        v-validate="'required|min:8|requireOneNumeric|confirmed:loginPassword'"
-      >
-      </input-verify>
+        <svg-icon icon-class="plus" class="icon" />{{ $t('button.add') }}
+      </button>
     </fill-dialog>
   </div>
 </template>
 <script>
-import { createUser, getUsers, updateUser, deleteUser } from '@/API/User'
+import { getUsers, updateUser, deleteUser, inviteUser } from '@/API/User'
+import { updateUserPermission } from '@/API/Permission'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'
 import FillDialog from '@/components/dialog/FillDialog'
+import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'
+let inviteeId = 0
+
 export default {
   inject: ['$validator'],
   name: 'UserManagement',
@@ -167,11 +174,13 @@ export default {
     DecideDialog,
     WritingDialog,
     FillDialog,
-    InputVerify
+    InputVerify,
+    DefaultSelect
   },
   data () {
     return {
       isShowCreateUser: false,
+      inviteeList: [],
       userInfo: {
         username: '',
         email: '',
@@ -193,7 +202,9 @@ export default {
       sortStatus: 'down',
       confirmDeleteText: this.$t('editing.confirmDelete'),
       closeText: this.$t('editing.close'),
-      unableLoginText: this.$t('editing.unableLogin')
+      unableLoginText: this.$t('editing.unableLogin'),
+      confirmText: this.$t('editing.confirmActive'),
+      accountText: this.$t('editing.username')
     }
   },
   mounted () {
@@ -201,37 +212,32 @@ export default {
   },
   methods: {
     showCreateUser () {
+      this.addNewInvitee()
       this.isShowCreateUser = true
     },
     closeCreateUser () {
-      // 關閉 component 後，才清空資料，以免在 function 中觸發 validate 導致錯誤發生
       this.isShowCreateUser = false
-      this.$nextTick(() => {
-        for (let index in this.userInfo) {
-          this.userInfo[index] = ''
-        }
-        this.verifyPassword = ''
-      })
+      this.inviteeList = []
     },
-    createSingleUser () {
+    createUsers () {
       this.$validator.validateAll().then(result => {
-        if (result) {
-          createUser(
-            this.userInfo
-          )
-            .then(response => {
-              this.isShowCreateUser = false
-              this.getUserList()
-              Message({
-                message: this.$t('message.userCreateSuccess'),
-                type: 'success',
-                duration: 3 * 1000
-              })
+        if (!result) return
+        inviteUser({
+          emailList: this.inviteeList.map(invitee => invitee.email),
+          webURL: window.location.origin + this.$router.resolve({name: 'PageSignup'}).href
+        })
+          .then(() => {
+            this.isShowCreateUser = false
+            this.inviteeList = []
+            Message({
+              message: this.$t('message.userInviteSuccess'),
+              type: 'success',
+              duration: 3 * 1000
             })
-            .catch(error => {
-              console.log(error)
-            })
-        }
+          })
+          .catch(error => {
+            console.log(error)
+          })
       })
     },
     getUserList () {
@@ -393,6 +399,47 @@ export default {
         this.sortStatus = 'up'
         this.decendingData(this.userData)
       }
+    },
+    addNewInvitee () {
+      this.inviteeList.push({
+        id: inviteeId++,
+        email: ''
+      })
+    },
+    removeInvitee (index) {
+      this.inviteeList.splice(index, 1)
+    },
+    groupName (list) {
+      // 暫時只呈現第一個名稱
+      return list[0].name
+    },
+    statusChangeConfirmTitle () {
+      if (this.currentUser.active) {
+        // 原本為規避狀態的使用者
+        return `${this.confirmText} ${this.currentUser.username} ${this.accountText}？`
+      } else {
+        // 原本為開通狀態使用者
+        return `${this.closeText} ${this.currentUser.username} ${this.unableLoginText}？`
+      }
+    },
+    setUserRole (user, id) {
+      updateUserPermission(id).then(response => {
+        user.permissionActive = !user.permissionActive
+      })
+    }
+  },
+  computed: {
+    roleList () {
+      return [
+        {
+          value: true,
+          name: this.$t('editing.admin')
+        },
+        {
+          value: false,
+          name: this.$t('editing.general')
+        }
+      ]
     }
   }
 }
@@ -456,8 +503,19 @@ export default {
       }
     }
 
-    .user-item {
-        flex: 1;
+    /* Set column widh */
+    $column-width:
+      "1" "userAccount" 280px,
+      "2" "userTitle" 190px,
+      "3" "group" 280px,
+      "4" "activeStatus" 140px,
+      "5" "role" 200px,
+      "6" "action" 280px;
+
+    @each $index, $name, $width in $column-width {
+      .user-item:nth-of-type(#{$index}) {
+        flex: 1 1 $width;
+      }
     }
 
     .user-sort {
@@ -472,10 +530,10 @@ export default {
       transform: rotate(180deg);
     }
 
-    .user-status {
-      flex: 1;
-      flex-grow: 0.7;
-    }
+    // .user-status {
+    //   flex: 1;
+    //   flex-grow: 0.7;
+    // }
 
     .user-status-close {
       color: #FF5C46;
@@ -498,6 +556,30 @@ export default {
       font-size: 12px;
     }
   }
+
+  .fill-dialog {
+    .input-verify {
+      .remove {
+        position: absolute;
+        top: 0;
+        right: 0;
+        line-height: 40px;
+      }
+    }
+  }
 }
 
+</style>
+<style lang="scss">
+.role-select.el-select {
+  width: 120px;
+  .el-input__inner {
+    height: 20px;
+    line-height: 20px;
+    padding-left: 0;
+  }
+  .el-input__icon {
+    line-height: 20px;
+  }
+}
 </style>

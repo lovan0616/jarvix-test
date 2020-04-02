@@ -76,8 +76,7 @@
 
   .full-create-dialog-box {
     width: 652px;
-    height: 346px;
-    padding: 36px 176px 0px;
+    padding: 36px 176px;
     background: rgba(50, 58, 58, 0.95);
     border-radius: 5px;
     margin-bottom: 16px;
@@ -117,7 +116,7 @@
 
   .dialog-create {
     margin-left: 16px;
-    background-color: #2AD2E2;
+    background-color: $button-color;
     border: 0px solid;
   }
 }

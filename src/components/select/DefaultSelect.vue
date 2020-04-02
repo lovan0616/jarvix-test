@@ -18,7 +18,7 @@
 export default {
   name: 'DefaultSelect',
   props: {
-    value: { type: [String, Number], default: undefined },
+    value: { type: [String, Number, Boolean], default: undefined },
     optionList: { type: Array, default: () => [] },
     placeholder: { type: String, default: '' }
   },
@@ -28,6 +28,8 @@ export default {
         return this.value
       },
       set (value) {
+        // 選取前後值一致則不更新
+        if (value === this.value) return
         this.$emit('input', value)
       }
     }
