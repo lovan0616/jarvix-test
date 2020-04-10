@@ -29,6 +29,8 @@ export default {
     dialogEvent (bar) {
       if (bar.path) {
         this.$router.push(bar.path)
+      } else if (bar.name) {
+        this.$router.push({name: bar.name})
       } else {
         this.$emit('switchDialogName', bar.dialogName)
       }

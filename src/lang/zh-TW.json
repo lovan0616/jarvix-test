@@ -7,6 +7,14 @@
     "languagePlaceholder": "語系",
     "setting": "設定"
   },
+  "sideNav": {
+    "accountManagement": "帳戶管理",
+    "accountInfo": "帳戶資訊",
+    "accountUserManagement": "帳戶使用者管理",
+    "accountGroupManagement": "帳戶專案管理",
+    "accountSetting": "帳號設定",
+    "functionDescription": "功能說明"
+  },
   "message": {
     "joinTableBuilt": "資料表關聯建立完成",
     "remindAdjustMainDate": "資料表具有多項日期欄位，您可進行主要日期欄位調整。",

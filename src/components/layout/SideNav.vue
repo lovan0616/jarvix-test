@@ -6,7 +6,7 @@
       :key="nav.title">
       <router-link
         class="nav-link main-nav-link"
-        :to="nav.path"
+        :to="nav.path ? nav.path : {name: nav.routeName}"
       >
         {{nav.title}}
       </router-link>
@@ -15,7 +15,7 @@
           class="nav-link sub-nav-link"
           v-for="subNav in nav.subNav"
           :key="subNav.title"
-          :to="subNav.path"
+          :to="subNav.path ? subNav.path : {name: subNav.routeName}"
         >
           {{subNav.title}}
         </router-link>
@@ -33,34 +33,6 @@ export default {
       default: () => []
     }
   }
-//   data () {
-//     return {
-//       navItems: [
-//         {
-//           title: this.$t('nav.index'),
-//           path: '/'
-//         },
-//         {
-//           title: '演算法',
-//           path: '/algorithm'
-//         },
-//         {
-//           title: this.$t('nav.pinboard'),
-//           path: '/pinboard',
-//           subNav: [
-//             {
-//               title: this.$t('nav.index'),
-//               path: '/'
-//             },
-//             {
-//               title: '演算法',
-//               path: '/algorithm'
-//             }
-//           ]
-//         }
-//       ]
-//     }
-//   },
 }
 </script>
 <style lang="scss" scoped>
@@ -69,6 +41,7 @@ export default {
   flex-direction: column;
   flex-wrap: wrap;
   background-color: rgba(0, 0, 0, .3);
+  height: 100%;
 
   .nav-link {
     line-height: 54px;

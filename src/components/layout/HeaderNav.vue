@@ -74,10 +74,10 @@ export default {
       isShowLogout: false,
       selectedLanguage: null,
       settingData: [
-        {icon: 'database', title: 'nav.dataManagement', path: '/data-management'},
+        {icon: 'database', title: 'nav.dataManagement', name: 'PageDataSourceList'},
         {icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'},
         // {icon: 'feedback', title: 'editing.questionFeedback'},
-        {icon: 'description', title: 'editing.functionDescription', path: '/function-description'}
+        {icon: 'description', title: 'editing.functionDescription', name: 'FunctionDescription'}
       ]
     }
   },
@@ -104,7 +104,7 @@ export default {
     },
     accountData () {
       return this.permission ? [
-        {icon: 'userManage', title: 'editing.userManage', path: '/user-management'},
+        {icon: 'userManage', title: 'editing.userManage', name: 'AccountUserManagement'},
         {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
       ] : [
         {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}

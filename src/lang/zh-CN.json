@@ -7,6 +7,14 @@
     "languagePlaceholder": "语系",
     "setting": "设定"
   },
+  "sideNav": {
+    "accountManagement": "帐户管理",
+    "accountInfo": "帐户资讯",
+    "accountUserManagement": "帐户使用者管理",
+    "accountGroupManagement": "帐户专案管理",
+    "accountSetting": "帐号设定",
+    "functionDescription": "功能说明"
+  },
   "message": {
     "joinTableBuilt": "资料表关联建立完成",
     "remindAdjustMainDate": "资料表具有多项日期栏位，您可进行主要日期栏位调整。",
