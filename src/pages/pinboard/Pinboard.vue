@@ -1,7 +1,9 @@
 <template>
   <div class="page-pinboard">
     <h1 class="page-title">{{ $t('editing.pinboard') }}</h1>
-    <div class="bread-crumb-block">
+    <div class="bread-crumb-block"
+      v-if="boardName"
+    >
       <router-link class="page root" to="/pinboard">{{ $t('editing.allCategory') }}</router-link>
       <span class="divider">/</span>
       <span class="page">{{ boardName }}</span>
@@ -112,7 +114,8 @@ export default {
         this.$store.dispatch('pinboard/getPinboardList')
         return ''
       } else {
-        return this.pinboardList.filter(element => element.id === parseInt(this.$route.params.id))[0].name
+        let currentBoard = this.pinboardList.filter(element => element.id === parseInt(this.$route.params.id))
+        return currentBoard.length > 0 ? currentBoard[0].name : null
       }
     }
   }

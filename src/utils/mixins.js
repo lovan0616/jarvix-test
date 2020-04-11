@@ -237,7 +237,7 @@ Vue.mixin({
       }
     },
     exportToCSV (filename, rows) {
-      let fileName = filename || this.timeToFileName(new Date().getTime()) + '.csv'
+      let fileName = filename + '.csv' || this.timeToFileName(new Date().getTime()) + '.csv'
       let processRow = (row) => {
         let finalVal = ''
         for (let j = 0; j < row.length; j++) {
@@ -262,7 +262,8 @@ Vue.mixin({
         csvFile += processRow(rows[i])
       }
 
-      let blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' })
+      // 前置的 '\uFEFF' 為零寬不換行空格，處理中文亂碼問題
+      let blob = new Blob(['\uFEFF' + csvFile], { type: 'text/csv;charset=utf-8;' })
       if (navigator.msSaveBlob) {
         // IE 10+
         navigator.msSaveBlob(blob, fileName)
