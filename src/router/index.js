@@ -80,7 +80,7 @@ export default new Router({
             // 當前頁面側邊導覽列第一層要顯示哪個模組，layer 就寫到那個模組為止
             {
               path: 'account',
-              component: () => import('@/pages/management/Account'),
+              component: () => import('@/pages/management/account/Index'),
               children: [
                 {
                   path: 'account-management',
@@ -101,6 +101,14 @@ export default new Router({
                       meta: {
                         layers: ['account', 'account-management']
                       }
+                    },
+                    {
+                      path: 'group-management',
+                      component: () => import('@/pages/management/account/GroupManagement'),
+                      name: 'AccountGroupManagement',
+                      meta: {
+                        layers: ['account', 'account-management']
+                      }
                     }
                   ]
                 },
@@ -117,7 +125,7 @@ export default new Router({
             },
             {
               path: 'group',
-              component: () => import('@/pages/management/Group'),
+              component: () => import('@/pages/management/account/Index'),
               children: [
                 // TODO: 開發帳戶管理時需更新此路由階層、補上 meta 和 layer
                 {
