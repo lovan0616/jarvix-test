@@ -15,7 +15,7 @@
           class="nav-link sub-nav-link"
           v-for="subNav in nav.subNav"
           :key="subNav.title"
-          :to="subNav.path ? subNav.path : {name: subNav.routeName}"
+          :to="subNav.path || {name: subNav.routeName}"
         >
           {{subNav.title}}
         </router-link>
@@ -37,9 +37,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .nav-header {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
   background-color: rgba(0, 0, 0, .3);
   height: 100%;
 

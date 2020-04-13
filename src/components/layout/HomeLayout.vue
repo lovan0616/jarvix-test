@@ -1,9 +1,11 @@
 <template>
   <div class="home-layout">
-    <ChatRoomBlock/>
+    <transition name="fade" mode="out-in">
+      <ChatRoomBlock/>
+    </transition>
     <chat-bot-btn class="chat-bot-btn"
       v-if="!isShowChatRoom"
-      @click.native="showChatRoom"
+      @click.native="toggleChatRoom"
     ></chat-bot-btn>
     <div class="wrapper"
       :class="{'is-open': isShowChatRoom}"
@@ -28,15 +30,21 @@ export default {
     ChatRoomBlock,
     ChatBotBtn
   },
+  mounted () {
+    this.toggleChatRoom(true)
+  },
   methods: {
-    showChatRoom () {
-      this.$store.commit('updateChatRoomStatus', true)
+    toggleChatRoom (isOpened = true) {
+      this.$store.commit('updateChatRoomStatus', isOpened)
     }
   },
   computed: {
     isShowChatRoom () {
       return this.$store.state.isShowChatRoom
     }
+  },
+  destroyed () {
+    this.toggleChatRoom(false)
   }
 }
 </script>

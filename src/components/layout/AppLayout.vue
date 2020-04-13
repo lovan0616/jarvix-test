@@ -56,13 +56,13 @@ export default {
           duration: 3 * 1000
         })
       }
-    },
-    // 判斷關閉時機
-    '$route.name' (value) {
-      if (value !== 'PageIndex' && value !== 'PageResult') {
-        this.$store.commit('updateChatRoomStatus', false)
-      }
     }
+    // 判斷關閉時機
+    // '$route.name' (value) {
+    //   if (value !== 'PageIndex' && value !== 'PageResult') {
+    //     this.$store.commit('updateChatRoomStatus', false)
+    //   }
+    // }
   },
   computed: {
     isDataSourceBuilding () {

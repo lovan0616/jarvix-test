@@ -36,7 +36,7 @@ export default {
       return string.charAt(0).toLowerCase() + string.slice(1)
     },
     getSideNav () {
-      let currentModule = this.$router.options.routes[0].children.find(item => item.path === 'management')
+      let currentModule = this.$router.options.routes[0]
       const layerList = this.$route.meta.layers
 
       for (let i = 0; i < layerList.length; i++) {
