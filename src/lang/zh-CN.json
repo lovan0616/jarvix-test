@@ -7,6 +7,14 @@
     "languagePlaceholder": "语系",
     "setting": "设定"
   },
+  "sideNav": {
+    "accountManagement": "帐户管理",
+    "accountInfo": "帐户资讯",
+    "accountUserManagement": "帐户使用者管理",
+    "accountGroupManagement": "帐户专案管理",
+    "accountSetting": "帐号设定",
+    "functionDescription": "功能说明"
+  },
   "message": {
     "joinTableBuilt": "资料表关联建立完成",
     "remindAdjustMainDate": "资料表具有多项日期栏位，您可进行主要日期栏位调整。",
@@ -174,9 +182,17 @@
     "confirmPassword": "确认密码",
     "pleaseConfirmPassword": "请确认密码",
     "confirmPasswordAgain": "再次确认密码",
-    "group": "群组",
+    "group": "专案",
+    "groupOwner": "专案拥有者",
+    "groupMemberAmount": "专案人数",
+    "groupName": "专案名称",
+    "notYetCreateGroup": "尚未建立专案",
+    "deleteGroup": "删除专案",
+    "confirmDeleteBelowGroupOrNot": "您确认要删除以下专案吗?",
+    "memberManagement": "成员管理",
     "activeStatus": "启用状态",
     "role": "角色",
+    "setRole": "设定角色",
     "active": "开启",
     "close": "关闭",
     "originalPassword": "原密码",
@@ -353,7 +369,10 @@
     "download": "资料下载",
     "restrict": "分析条件限制",
     "start": "开始",
-    "copyAndBuild": "复制并建置"
+    "copyAndBuild": "复制并建置",
+    "createGroup": "新建专案",
+    "deleteGroup": "删除专案",
+    "editGroupName": "编辑专案名称"
   },
   "aggregation": {
     "mean": "平均",

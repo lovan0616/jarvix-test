@@ -7,6 +7,14 @@
     "languagePlaceholder": "語系",
     "setting": "設定"
   },
+  "sideNav": {
+    "accountManagement": "帳戶管理",
+    "accountInfo": "帳戶資訊",
+    "accountUserManagement": "帳戶使用者管理",
+    "accountGroupManagement": "帳戶專案管理",
+    "accountSetting": "帳號設定",
+    "functionDescription": "功能說明"
+  },
   "message": {
     "joinTableBuilt": "資料表關聯建立完成",
     "remindAdjustMainDate": "資料表具有多項日期欄位，您可進行主要日期欄位調整。",
@@ -174,9 +182,17 @@
     "confirmPassword": "確認密碼",
     "pleaseConfirmPassword": "請確認密碼",
     "confirmPasswordAgain": "再次確認密碼",
-    "group": "群組",
+    "group": "專案",
+    "groupOwner": "專案擁有者",
+    "groupMemberAmount": "專案人數",
+    "groupName": "專案名稱",
+    "notYetCreateGroup": "尚未建立專案",
+    "deleteGroup": "刪除專案",
+    "confirmDeleteBelowGroupOrNot": "您確認要刪除以下專案嗎?",
+    "memberManagement": "成員管理",
     "activeStatus": "啟用狀態",
     "role": "角色",
+    "setRole": "設定角色",
     "active": "開啟",
     "close": "關閉",
     "originalPassword": "原密碼",
@@ -353,7 +369,10 @@
     "download": "資料下載",
     "restrict": "分析條件限制",
     "start": "開始",
-    "copyAndBuild": "複製並建置"
+    "copyAndBuild": "複製並建置",
+    "createGroup": "新建專案",
+    "deleteGroup": "刪除專案",
+    "editGroupName": "編輯專案名稱"
   },
   "aggregation": {
     "mean": "平均",

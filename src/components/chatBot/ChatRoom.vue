@@ -38,14 +38,6 @@ export default {
     isShowChatRoom () {
       return this.$store.state.isShowChatRoom
     }
-  },
-  watch: {
-    // 判斷關閉時機
-    '$route.name' (value) {
-      if (value !== 'PageIndex' && value !== 'PageResult') {
-        this.$store.commit('updateChatRoomStatus', false)
-      }
-    }
   }
 }
 </script>

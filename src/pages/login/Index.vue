@@ -50,7 +50,6 @@ export default {
     }
   },
   mounted () {
-    this.$store.commit('updateChatRoomStatus', false)
     this.$store.commit('chatBot/clearConversation')
   },
   methods: {
