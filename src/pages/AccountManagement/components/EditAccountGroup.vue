@@ -87,8 +87,8 @@ export default {
   },
   methods: {
     getGroupName () {
-      if (this.editData.type === 'create' || !this.editData.data || !this.editData.data.name) return ''
-      return JSON.parse(JSON.stringify(this.editData.data.name))
+      if (this.editData.type === 'create' || !this.editData.data || !this.editData.data.groupName) return ''
+      return JSON.parse(JSON.stringify(this.editData.data.groupName))
     },
     fetchUser () {
       getUsers()
@@ -110,7 +110,7 @@ export default {
             ...this.groupList,
             {
               id: -1, // dummy id
-              name: this.groupName,
+              groupName: this.groupName,
               owner: this.selectedOwner,
               memberAmount: 1
             }

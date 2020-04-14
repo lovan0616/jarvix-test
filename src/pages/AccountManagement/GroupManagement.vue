@@ -32,27 +32,6 @@ import AccountGroupList from './components/AccountGroupList'
 import EditAccountGroup from './components/EditAccountGroup'
 import { getAccountGroupList } from '@/API/User'
 
-const dummyList = [
-  {
-    'id': 1,
-    'name': '一銀',
-    'owner': 'Mike',
-    'memberAmount': 3
-  },
-  {
-    'id': 2,
-    'name': '台新',
-    'owner': 'Christan',
-    'memberAmount': 4
-  },
-  {
-    'id': 3,
-    'name': '中信',
-    'owner': 'proxy0001',
-    'memberAmount': 5
-  }
-]
-
 export default {
   name: 'GroupManagement',
   components: {
@@ -88,8 +67,12 @@ export default {
   methods: {
     fetchData () {
       this.isLoading = true
-      this.groupList = dummyList
-      this.isLoading = false
+      getAccountGroupList()
+        .then(groupList => {
+          this.groupList = groupList
+          this.isLoading = false
+        })
+        .catch(() => { this.isLoading = false })
     },
     editGroup (editData) {
       this.editData = editData

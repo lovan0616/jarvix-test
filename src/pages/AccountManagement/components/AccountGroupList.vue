@@ -42,6 +42,8 @@
 import CrudTable from '@/components/table/CrudTable'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import DecideDialog from '@/components/dialog/DecideDialog'
+import { deleteGroup } from '@/API/User'
+import { Message } from 'element-ui'
 
 export default {
   name: 'AccountGroupList',
@@ -71,7 +73,7 @@ export default {
       return [
         {
           text: this.$t('editing.groupName'),
-          value: 'name',
+          value: 'groupName',
           sort: true,
           width: '30%'
         },
@@ -83,7 +85,7 @@ export default {
         },
         {
           text: this.$t('editing.groupMemberAmount'),
-          value: 'memberAmount',
+          value: 'memberCount',
           sort: true,
           width: '10%'
         },
@@ -125,10 +127,17 @@ export default {
       this.showConfirmDeleteDialog = false
     },
     deleteGroup (data) {
-      // TODO: delete group
-      const updatedGroupList = this.groupList.filter(group => group.id !== this.selectedGroup.id)
-      this.$emit('update:groupList', updatedGroupList)
-      this.showConfirmDeleteDialog = false
+      deleteGroup(this.selectedGroup.groupId)
+        .then(() => {
+          const updatedGroupList = this.groupList.filter(group => group.groupId !== this.selectedGroup.groupId)
+          this.$emit('update:groupList', updatedGroupList)
+          this.showConfirmDeleteDialog = false
+          Message({
+            message: this.$t('message.groupDeleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+        })
     }
   }
 }
