@@ -53,7 +53,8 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputBlock from '@/components/InputBlock'
-import { getUsers } from '@/API/User'
+import { getUsers, updateGroupInfo } from '@/API/User'
+import { Message } from 'element-ui'
 
 export default {
   name: 'EditAccountGroup',
@@ -116,11 +117,21 @@ export default {
             }
           ]
           this.$emit('update:groupList', updatedGroupList)
-        } else {
-          // update selected group info
-          this.editData.data.name = this.groupName
+          return this.$emit('finishEdit')
         }
-        this.$emit('finishEdit')
+
+        // Update group info
+        const name = this.groupName
+        updateGroupInfo(this.editData.data.groupId, {name})
+          .then(() => {
+            this.editData.data.groupName = name
+            this.$emit('finishEdit')
+            Message({
+              message: this.$t('message.groupInfoUpdatedSuccess'),
+              type: 'success',
+              duration: 3 * 1000
+            })
+          })
       })
     }
   }

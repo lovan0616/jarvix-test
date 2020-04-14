@@ -35,6 +35,7 @@
     "correlationDeleteSuccess": "關聯已刪除",
     "groupCreateSuccess": "專案建立成功",
     "groupDeleteSuccess": "專案已成功刪除",
+    "groupInfoUpdatedSuccess": "專案資訊已成功更新",
     "signUpSuccessPleaseLogin": "註冊成功，請登入帳號",
     "userCreateSuccess": "建立使用者成功",
     "userInviteSuccess": "邀請使用者成功",

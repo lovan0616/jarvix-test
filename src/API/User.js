@@ -158,3 +158,17 @@ export function deleteGroup (id) {
     method: 'DELETE'
   })
 }
+
+/**
+ * 更新群組資訊
+ * @param {Number} id - 群組 ID
+ * @param {Object} groupInfo - 專案資訊
+ * @param {String} groupInfo.name - 專案名稱
+ */
+export function updateGroupInfo (id, groupInfo) {
+  return request({
+    url: `/users/update/${id}`,
+    method: 'PUT',
+    data: groupInfo
+  })
+}
