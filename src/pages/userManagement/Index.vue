@@ -213,6 +213,7 @@ export default {
   methods: {
     showCreateUser () {
       this.addNewInvitee()
+      console.log('alert')
       this.isShowCreateUser = true
     },
     closeCreateUser () {

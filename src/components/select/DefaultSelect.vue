@@ -29,6 +29,7 @@ export default {
       },
       set (value) {
         // 選取前後值一致則不更新
+        console.log(value, this.value)
         if (value === this.value) return
         this.$emit('input', value)
       }

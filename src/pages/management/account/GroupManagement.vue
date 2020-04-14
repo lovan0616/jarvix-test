@@ -2,50 +2,35 @@
   <div class="group-management">
     <div class="page-title-row">
       <div class="bread-crumb">
-        {{ $t('sideNav.accountManagement') }}
-      </div>
-      <h1 class="title">{{ $t('sideNav.accountGroupManagement') }}</h1>
-    </div>
-    <div class="table-board">
-      <div class="board-title-row">
-        <div class="button-block">
-          <!--TODO: 補路徑-->
-          <router-link
-            :to="{name: ''}"
-            class="btn-m btn-default btn-has-icon"
+        <span v-if="currentRouteName === currentStageName">{{currentRouteName}}</span>
+        <template v-else>
+          <a
+            href="javascript:void(0);"
+            class="title-link"
+            @click="cancelEditGroup"
           >
-            <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.createGroup') }}
-          </router-link>
-        </div>
+            {{currentRouteName}}
+          </a>
+          <span class="divider">></span>{{currentStageName}}
+        </template>
       </div>
-      <empty-info-block
-        v-if="!isLoading && groupList.length === 0"
-        :msg="$t('editing.notYetCreateGroup')"
-      ></empty-info-block>
-      <crud-table
-        v-else
-        :headers="tableHeaders"
-        :data-list.sync="groupList"
-        :loading="isLoading"
-        @delete="confirmDelete"
-      >
-      </crud-table>
+      <h1 class="title">{{currentStageName}}</h1>
     </div>
-    <decide-dialog
-      v-if="showConfirmDeleteDialog"
-      :title="this.$t('editing.confirmDeleteBelowGroupOrNot')"
-      :content="selectedGroup.name"
-      :type="'delete'"
-      @closeDialog="cancelDelete"
-      @confirmBtn="deleteGroup"
-    >
-    </decide-dialog>
+    <component
+      :is="currentManagementType"
+      :group-list.sync="groupList"
+      :is-loading="isLoading"
+      @editGroup="editGroup"
+      :edit-data="editData"
+      @cancelEdit="cancelEditGroup"
+      @finishEdit="finishEditGroup"
+    ></component>
   </div>
 </template>
 <script>
-import CrudTable from '@/components/table/CrudTable'
-import EmptyInfoBlock from '@/components/EmptyInfoBlock'
-import DecideDialog from '@/components/dialog/DecideDialog'
+import AccountGroupList from './components/AccountGroupList'
+import EditAccountGroup from './components/EditAccountGroup'
+import { getAccountGroupList } from '@/API/User'
 
 const dummyList = [
   {
@@ -71,20 +56,34 @@ const dummyList = [
 export default {
   name: 'GroupManagement',
   components: {
-    CrudTable,
-    EmptyInfoBlock,
-    DecideDialog
+    AccountGroupList,
+    EditAccountGroup
   },
   data () {
     return {
-      showConfirmDeleteDialog: false,
-      selectedGroup: {},
       isLoading: false,
-      groupList: []
+      groupList: [],
+      editData: {},
+      currentManagementType: 'AccountGroupList'
     }
   },
   mounted () {
     this.fetchData()
+  },
+  computed: {
+    currentRouteName () {
+      const routeName = this.$route.name
+      return this.$t('sideNav.' + routeName.charAt(0).toLowerCase() + routeName.slice(1))
+    },
+    currentStageName () {
+      if (this.currentManagementType === 'AccountGroupList') {
+        return this.$t('sideNav.accountGroupManagement')
+      } else if (this.editData.type === 'create') {
+        return this.$t('button.createGroup')
+      } else if (this.editData.type === 'edit') {
+        return this.$t('button.editGroupName')
+      }
+    }
   },
   methods: {
     fetchData () {
@@ -92,62 +91,17 @@ export default {
       this.groupList = dummyList
       this.isLoading = false
     },
-    confirmDelete (dataObj) {
-      this.selectedGroup = dataObj
-      this.showConfirmDeleteDialog = true
+    editGroup (editData) {
+      this.editData = editData
+      this.currentManagementType = 'EditAccountGroup'
     },
-    cancelDelete () {
-      this.selectedGroup = {}
-      this.showConfirmDeleteDialog = false
+    cancelEditGroup () {
+      this.editData = {}
+      this.currentManagementType = 'AccountGroupList'
     },
-    deleteGroup () {
-      // TODO: delete group
-    }
-  },
-  computed: {
-    tableHeaders () {
-      return [
-        {
-          text: this.$t('editing.groupName'),
-          value: 'name',
-          sort: true,
-          width: '30%'
-        },
-        {
-          text: this.$t('editing.groupOwner'),
-          value: 'owner',
-          sort: true,
-          width: '25%'
-        },
-        {
-          text: this.$t('editing.groupMemberAmount'),
-          value: 'memberAmount',
-          sort: true,
-          width: '10%'
-        },
-        {
-          text: this.$t('editing.action'),
-          value: 'action',
-          width: '35%',
-          action: [
-            {
-              type: 'popup',
-              name: this.$t('button.delete'),
-              value: 'delete'
-            },
-            {
-              type: 'link',
-              name: this.$t('editing.editingName'),
-              link: {name: ''} // 待補
-            },
-            {
-              type: 'link',
-              name: this.$t('editing.memberManagement'),
-              link: {name: ''} // 待補
-            }
-          ]
-        }
-      ]
+    finishEditGroup () {
+      this.editData = {}
+      this.currentManagementType = 'AccountGroupList'
     }
   }
 }
@@ -171,37 +125,16 @@ export default {
       line-height: 20px;
       letter-spacing: 1px;
     }
-  }
 
-  .button-block {
-    display: flex;
-    align-items: center;
-
-    .btn-m:not(:last-child) {
-      margin-right: 16px;
+    .title-link {
+      color: $theme-color-primary;
+      text-decoration: underline;
     }
 
-    .icon {
-      font-size: 18px;
+    .divider {
+      margin: 0 .5rem;
     }
   }
 
-  .table-board {
-    background: $theme-bg-color;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
-    border-radius: 8px;
-    padding: 24px;
-  }
-
-  .board-title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-
-  & >>> .empty-info-block {
-    background: rgba(35, 61, 64, 0.6);
-  }
 }
 </style>

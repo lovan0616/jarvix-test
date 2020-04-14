@@ -120,7 +120,7 @@ import DropdownSelect from '@/components/select/DropdownSelect'
       action: [
         {
           // action 用途
-          type: 'popup / link',
+          type: 'event / link',
           // 功能名稱
           name: '重新命名',
           // emit function name
@@ -235,7 +235,7 @@ export default {
     },
     doAction (action, data) {
       if (!action || (action && !action.value)) return
-      if (action.type === 'popup') return this.$emit(action.value, data)
+      if (action.type === 'event') return this.$emit(action.value, data)
       this.linkTo(action.link, data.id)
     },
     getBarData (actions, data) {
