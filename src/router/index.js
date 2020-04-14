@@ -46,7 +46,7 @@ export default new Router({
         // FIXME for poc/foxconn_molding
         {
           path: 'algorithm',
-          component: () => import('@/pages/algorithm/index'),
+          component: () => import('@/pages/algorithm/Index'),
           children: [
             {
               path: '/',
