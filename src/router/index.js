@@ -80,7 +80,7 @@ export default new Router({
           children: [
             {
               path: 'account-management',
-              component: () => import('@/pages/management/account/AccountManagement'),
+              component: () => import('@/pages/AccountManagement/Index'),
               children: [
                 {
                   path: '/',
@@ -100,7 +100,7 @@ export default new Router({
                 },
                 {
                   path: 'group-management',
-                  component: () => import('@/pages/management/account/GroupManagement'),
+                  component: () => import('@/pages/AccountManagement/GroupManagement'),
                   name: 'AccountGroupManagement',
                   meta: {
                     layers: ['account', 'account-management']
