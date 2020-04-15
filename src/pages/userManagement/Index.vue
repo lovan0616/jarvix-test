@@ -17,7 +17,7 @@
         <div class="user-item">{{ $t('editing.role') }}</div>
         <div class="user-item">{{ $t('editing.action') }}</div>
       </div>
-      <div class="user-table-body">
+      <!-- <div class="user-table-body">
         <div
           v-for="(user, index) in userData"
           :key="index"
@@ -44,11 +44,9 @@
             <span @click="showStatusChange(user)" class="user-manipulate-item">
               {{ user.active ? $t('editing.close') : $t('editing.active') }}
             </span>
-            <!-- <span class="user-line"></span>
-            <span @click="showDeleteAccount(user.id)" class="user-manipulate-item">刪除</span> -->
           </div>
         </div>
-      </div>
+      </div> -->
 
       <writing-dialog
         v-if="isShowPassword"
@@ -126,16 +124,48 @@
       @confirmBtn="createUsers"
       class="fill-dialog"
     >
-      <input-verify
-        v-for="(invitee, index) in inviteeList"
-        :key="invitee.id"
-        v-model="invitee.email"
-        type="email"
-        :placeholder="$t('editing.inviteeEmail')"
-        :name="'invitee' + '-' + invitee.id"
-        v-validate="'required|email'"
-      >
-        <template #action>
+      <div class="form new-invitee">
+        <div class="form-labels">
+          <span class="label-invitee-email">{{ $t('editing.inviteeEmail') }}</span>
+          <span class="label-user-role-authority">
+            {{ $t('userManagement.userRoleAuthority') }}
+            <button class="information-box">
+              <svg-icon icon-class="information-circle" class="information-circle-icon"></svg-icon>
+              <div class="information-popup">
+                <svg-icon icon-class="triangle" class="icon-triangle"></svg-icon>
+                <p class="popup-title">[{{ $t('userManagement.accountRoleDesc') }}]</p>
+                <div class="popup-content">
+                  <div class="content-item">
+                    <p class="item-label">{{ $t('userManagement.accountOwner') }}</p>
+                    <p class="item-description">{{ $t('userManagement.accountOwnerDesc') }}</p>
+                  </div>
+                  <div class="content-item">
+                    <p class="item-label">{{ $t('userManagement.accountMaintainer') }}</p>
+                    <p class="item-description">{{ $t('userManagement.accountMaintainerDesc') }}</p>
+                  </div>
+                  <div class="content-item">
+                    <p class="item-label">{{ $t('userManagement.accountViewer') }}</p>
+                    <p class="item-description">{{ $t('userManagement.accountViewerDesc') }}</p>
+                  </div>
+                </div>
+              </div>
+            </button>
+          </span>
+        </div>
+        <div class="form-item"
+          v-for="(invitee, index) in inviteeList"
+          :key="invitee.id">
+          <input-verify
+            v-model="invitee.email"
+            type="email"
+            :placeholder="$t('userManagement.inviteeEmailPlaceholder')"
+            :name="'invitee' + '-' + invitee.id"
+            v-validate="'required|email'"
+          />
+          <default-select class="input"
+            v-model="invitee.role"
+            :option-list="roleOptions"
+          ></default-select>
           <a
             href="javascript:void(0)"
             class="link remove"
@@ -144,15 +174,15 @@
           >
             {{ $t('button.remove') }}
           </a>
-        </template>
-      </input-verify>
-      <!--TODO: 判定此 account 人數上限-->
-      <button
-        @click="addNewInvitee()"
-        class="btn btn-m btn-outline"
-      >
-        <svg-icon icon-class="plus" class="icon" />{{ $t('button.add') }}
-      </button>
+        </div>
+        <!--TODO: 判定此 account 人數上限-->
+        <button
+          @click="addNewInvitee()"
+          class="btn btn-m btn-outline"
+        >
+          <svg-icon icon-class="plus" class="icon" />{{ $t('button.add') }}
+        </button>
+      </div>
     </fill-dialog>
   </div>
 </template>
@@ -179,6 +209,20 @@ export default {
   },
   data () {
     return {
+      roleOptions: [
+        {
+          value: 'owner',
+          name: this.$t('userManagement.accountOwner')
+        },
+        {
+          value: 'maintainer',
+          name: this.$t('userManagement.accountMaintainer')
+        },
+        {
+          value: 'viewer',
+          name: this.$t('editing.general')
+        }
+      ],
       isShowCreateUser: false,
       inviteeList: [],
       userInfo: {
@@ -192,6 +236,7 @@ export default {
       isShowEditName: false,
       isShowStatusChange: false,
       isShowDeleteAccount: false,
+      isShowRoleDescPop: false,
       currentId: '',
       currentUser: {
         active: true,
@@ -403,7 +448,8 @@ export default {
     addNewInvitee () {
       this.inviteeList.push({
         id: inviteeId++,
-        email: ''
+        email: '',
+        role: 'viewer'
       })
     },
     removeInvitee (index) {
@@ -558,12 +604,109 @@ export default {
   }
 
   .fill-dialog {
-    .input-verify {
-      .remove {
-        position: absolute;
-        top: 0;
-        right: 0;
-        line-height: 40px;
+    .form.new-invitee {
+      width: 652px;
+      padding: 36px 76px;
+      .form-labels {
+        display: flex;
+        margin-bottom: 20px;
+        font-size: 14px;
+        height: 21px;
+        overflow: visible;
+        .label-invitee-email {
+          flex: 0 0 269px;
+        }
+        .label-user-role-authority {
+          flex: 0 0 168px;
+          margin-left: 13px;
+          display: flex;
+          align-items: flex-start;
+        }
+        .information-box {
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          width: 20px;
+          padding-top: 4px;
+          margin-left: 2px;
+          background-color: transparent;
+          border: none;
+          text-align: left;
+          color: unset;
+          cursor: default;
+          &:focus {
+            .information-popup {
+              display: block;
+            }
+          }
+          .information-circle-icon {
+            fill: $theme-color-warning;
+            cursor: pointer;
+          }
+          .information-popup {
+            width: 212px;
+            background-color: #233131;
+            box-shadow: 0px 4px 12px rgba(73, 128, 132, 0.48), 0px -4px 12px rgba(73, 128, 132, 0.48);
+            border-radius: 8px;
+            padding: 10px 12px;
+            z-index: 1;
+            margin-top: 8px;
+            position: relative;
+            display: none;
+            .popup-title {
+              font-size: 12px;
+              margin: 0 0 10px 0;
+              color: $theme-color-primary;
+            }
+            .popup-content {
+              line-height: 14px;
+              .content-item {
+                &+.content-item {
+                  margin-top: 10px;
+                }
+                .item-label, .item-description {
+                  font-size: 12px;
+                  margin: 0;
+                  line-height: 16px;
+                }
+                .item-label {
+                  font-weight: 600;
+                }
+              }
+            }
+            .icon-triangle {
+              position: absolute;
+              top: -10px;
+              left: 50%;
+              transform: translateX(-50%);
+              fill: #233131;
+            }
+          }
+        }
+      }
+      .form-item {
+        position: relative;
+        font-size: 0;
+        .input-verify {
+          display: inline-block;
+          width: 269px;
+        }
+        .el-select {
+          display: inline-block;
+          width: 168px;
+          height: 40px;
+          border-bottom-color: #fff;
+          margin-left: 13px;
+          /deep/ .el-input__inner {
+            padding-left: 0;
+          }
+        }
+        .remove {
+          position: absolute;
+          top: 0;
+          right: 0;
+          line-height: 40px;
+        }
       }
     }
   }

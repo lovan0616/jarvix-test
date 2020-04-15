@@ -1328,5 +1328,16 @@
   "resultNote": {
     "groupLimitNote": "此结果为原资料取前 {randomLimit} 笔得来",
     "samplingNote": "此结果为原资料取样 {randomLimit} 笔计算得来"
+  },
+  "userManagement": {
+    "inviteeEmailPlaceholder": "請輸入受邀者email",
+    "userRoleAuthority": "帐户角色权限",
+    "accountOwner": "帐户拥有者",
+    "accountMaintainer": "帐户管理者",
+    "accountViewer": "一般使用者",
+    "accountRoleDesc": "角色权限说明",
+    "accountOwnerDesc": "无任何使用限制",
+    "accountMaintainerDesc": "拥有帐户管理权限",
+    "accountViewerDesc": "无法使用帐户管理相关功能"
   }
 }
