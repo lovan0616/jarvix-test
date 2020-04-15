@@ -99,6 +99,9 @@ export default {
       showPagination: true
     }
   },
+  mounted () {
+    this.exportCSVFile(this.$el, this.appQuestion, this)
+  },
   computed: {
     chartStyle () {
       return {
@@ -140,11 +143,6 @@ export default {
         table += '</tbody></table>'
         return table
       }
-
-      // export data
-      this.$nextTick(() => {
-        this.exportCSVFile(this.$el, this.appQuestion, config.dataset.source)
-      })
 
       // 移除 null 值
       config.tooltip.formatter = (datas) => {

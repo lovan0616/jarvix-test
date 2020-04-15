@@ -222,7 +222,7 @@ Vue.mixin({
            * 註冊事件當下由 function 傳進的 data，遇到 pagination 更新資料後
            * 便不再拿取新的 data，所以暫時改由 vue instance 內的 computed options 去拿
            */
-          this.exportToCSV(fileName, this.options.dataset.source)
+          this.exportToCSV(fileName, data.options.dataset.source)
         }
       }
       /**
