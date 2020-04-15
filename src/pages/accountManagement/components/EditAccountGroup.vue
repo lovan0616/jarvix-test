@@ -25,7 +25,7 @@
           <default-select
             class="input"
             v-model="selectedOwner"
-            :option-list="userList"
+            :option-list="userEmailList"
             name="owner"
             v-validate="'required'"
           ></default-select>
@@ -53,7 +53,7 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputBlock from '@/components/InputBlock'
-import { getUsers, updateGroupInfo } from '@/API/User'
+import { getUsers, updateGroupInfo, createGroup } from '@/API/User'
 import { Message } from 'element-ui'
 
 export default {
@@ -80,7 +80,8 @@ export default {
     return {
       selectedOwner: '',
       groupName: this.getGroupName(),
-      userList: []
+      userList: [],
+      userEmailList: []
     }
   },
   mounted () {
@@ -94,7 +95,8 @@ export default {
     fetchUser () {
       getUsers()
         .then(users => {
-          this.userList = users.map(user => ({value: user.name}))
+          this.userList = users
+          this.userEmailList = users.map(user => ({value: user.email}))
         })
         .catch(() => this.cancelEditGroup())
     },
@@ -104,27 +106,23 @@ export default {
     submitForm () {
       this.$validator.validateAll().then(result => {
         if (!result) return
-        // submit group data
+        // create a new group
         if (this.editData.type === 'create') {
-          // create a new group
-          const updatedGroupList = [
-            ...this.groupList,
-            {
-              id: -1, // dummy id
-              groupName: this.groupName,
-              owner: this.selectedOwner,
-              memberAmount: 1
-            }
-          ]
-          this.$emit('update:groupList', updatedGroupList)
-          return this.$emit('finishEdit')
+          createGroup({
+            name: this.groupName,
+            ownerId: this.userList.find(user => user.email === this.selectedOwner).id
+          })
+          this.$emit('finishEdit')
+          return Message({
+            message: this.$t('message.groupCreateSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
         }
 
         // Update group info
-        const name = this.groupName
-        updateGroupInfo(this.editData.data.groupId, {name})
+        updateGroupInfo(this.editData.data.groupId, {name: this.groupName})
           .then(() => {
-            this.editData.data.groupName = name
             this.$emit('finishEdit')
             Message({
               message: this.$t('message.groupInfoUpdatedSuccess'),
@@ -159,7 +157,7 @@ export default {
   }
 
   .input-block {
-    width: 200px;
+    width: 260px;
   }
 
   .button-block {

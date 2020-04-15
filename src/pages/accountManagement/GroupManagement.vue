@@ -89,6 +89,7 @@ export default {
       this.currentManagementType = 'AccountGroupList'
     },
     finishEditGroup () {
+      this.fetchData()
       this.editData = {}
       this.currentManagementType = 'AccountGroupList'
     }
