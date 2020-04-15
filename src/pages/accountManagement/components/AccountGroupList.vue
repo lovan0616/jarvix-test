@@ -11,12 +11,7 @@
         </a>
       </div>
     </div>
-    <empty-info-block
-      v-if="!isLoading && groupList.length === 0"
-      :msg="$t('editing.notYetCreateGroup')"
-    ></empty-info-block>
     <crud-table
-      v-else
       :headers="tableHeaders"
       :data-list="groupList"
       @update:dataList="$emit('update:groupList', $event)"
@@ -24,6 +19,7 @@
       @delete="confirmDelete"
       @cancel="cancelDelete"
       @edit="editGroup('edit', $event)"
+      :empty-message="$t('editing.notYetCreateGroup')"
     >
     </crud-table>
     <decide-dialog
@@ -40,7 +36,6 @@
 
 <script>
 import CrudTable from '@/components/table/CrudTable'
-import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { deleteGroup } from '@/API/User'
 import { Message } from 'element-ui'
@@ -49,7 +44,6 @@ export default {
   name: 'AccountGroupList',
   components: {
     CrudTable,
-    EmptyInfoBlock,
     DecideDialog
   },
   props: {

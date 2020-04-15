@@ -28,6 +28,16 @@
   </div>
 </template>
 <script>
+/**
+ * editData 物件架構
+ * {
+      // 編輯類型：創建或更新資料
+      type: 'create / edit',
+      // 帶入愈編輯的資料內容
+      data: {}
+    }
+ */
+
 import AccountGroupList from './components/AccountGroupList'
 import EditAccountGroup from './components/EditAccountGroup'
 import { getAccountGroupList } from '@/API/User'
@@ -50,10 +60,6 @@ export default {
     this.fetchData()
   },
   computed: {
-    currentRouteName () {
-      const routeName = this.$route.name
-      return this.$t('sideNav.' + routeName.charAt(0).toLowerCase() + routeName.slice(1))
-    },
     currentStageName () {
       if (this.currentManagementType === 'AccountGroupList') {
         return this.$t('sideNav.accountGroupManagement')

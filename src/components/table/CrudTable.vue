@@ -41,6 +41,10 @@
       :title="$t('editing.loading')"
       size="50"
     ></spinner>
+    <empty-info-block
+      v-else-if="dataList.length === 0"
+      :msg="emptyMessage"
+    ></empty-info-block>
     <div
       class="data-table-body"
       v-else
@@ -100,6 +104,7 @@
 <script>
 import orderBy from 'lodash.orderby'
 import DropdownSelect from '@/components/select/DropdownSelect'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 /**
  * Data table 可傳入屬性
@@ -137,7 +142,8 @@ import DropdownSelect from '@/components/select/DropdownSelect'
 export default {
   name: 'CrudTable',
   components: {
-    DropdownSelect
+    DropdownSelect,
+    EmptyInfoBlock
   },
   props: {
     headers: {
@@ -164,6 +170,10 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    emptyMessage: {
+      type: String,
+      default () { this.$t('editing.emptyResult') }
     }
   },
   data () {
