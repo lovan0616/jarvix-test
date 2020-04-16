@@ -59,6 +59,7 @@ import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'HeaderNav',
@@ -85,6 +86,7 @@ export default {
     this.selectedLanguage = this.locale
   },
   computed: {
+    ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission']),
     locale () {
       return this.$store.state.setting.locale
     },
@@ -103,12 +105,12 @@ export default {
       })
     },
     accountData () {
-      return this.permission ? [
-        {icon: 'userManage', title: 'editing.userManage', name: 'AccountUserManagement'},
-        {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
-      ] : [
-        {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
-      ]
+      const accountList = []
+      if (this.hasAccountPermission('A0004')) {
+        accountList.push({icon: 'userManage', title: 'sideNav.accountManagement', name: 'AccountUserManagement'})
+      }
+      accountList.push({icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'})
+      return accountList
     }
   },
   methods: {

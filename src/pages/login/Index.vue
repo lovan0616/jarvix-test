@@ -69,6 +69,13 @@ export default {
               if (dataSourceId) {
                 this.$store.dispatch('dataSource/changeDataSourceById', dataSourceId)
               }
+              this.$store.commit('userManagement/setUserInfo', {
+                userName: res.name,
+                accountList: res.accountList,
+                accountPermission: res.accountPermission,
+                groupList: res.groupList,
+                groupPermission: res.groupPermission
+              })
               this.$router.push('/')
             }).catch(() => {
               this.isSubmit = false

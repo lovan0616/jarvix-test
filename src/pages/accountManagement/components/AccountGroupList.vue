@@ -5,6 +5,7 @@
         <a
           href="javascript:void(0);"
           class="btn-m btn-default btn-has-icon"
+          v-if="showCreateButton()"
           @click="editGroup('create')"
         >
           <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.createGroup') }}
@@ -25,7 +26,7 @@
     <decide-dialog
       v-if="showConfirmDeleteDialog"
       :title="this.$t('editing.confirmDeleteBelowGroupOrNot')"
-      :content="selectedGroup.name"
+      :content="selectedGroup.groupName"
       :type="'delete'"
       @closeDialog="cancelDelete"
       @confirmBtn="deleteGroup"
@@ -39,6 +40,7 @@ import CrudTable from '@/components/table/CrudTable'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { deleteGroup } from '@/API/User'
 import { Message } from 'element-ui'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'AccountGroupList',
@@ -62,7 +64,11 @@ export default {
       showConfirmDeleteDialog: false
     }
   },
+  created () {
+    this.showActionButtons()
+  },
   computed: {
+    ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission']),
     tableHeaders () {
       return [
         {
@@ -87,23 +93,7 @@ export default {
           text: this.$t('editing.action'),
           value: 'action',
           width: '35%',
-          action: [
-            {
-              type: 'event',
-              name: this.$t('button.delete'),
-              value: 'delete'
-            },
-            {
-              type: 'event',
-              name: this.$t('editing.editingName'),
-              value: 'edit' // 待補
-            },
-            {
-              type: 'event',
-              name: this.$t('editing.memberManagement'),
-              link: {name: ''} // 待補
-            }
-          ]
+          action: []
         }
       ]
     }
@@ -132,6 +122,34 @@ export default {
             duration: 3 * 1000
           })
         })
+    },
+    showCreateButton () {
+      return this.hasAccountPermission('A0001')
+    },
+    showActionButtons () {
+      const actionHeader = this.tableHeaders.find(header => header.value === 'action')
+
+      if (this.hasAccountPermission('A0003')) {
+        actionHeader.action.push({
+          type: 'event',
+          name: this.$t('button.delete'),
+          value: 'delete'
+        })
+      }
+      if (this.hasAccountPermission('A0004')) {
+        actionHeader.action.push({
+          type: 'event',
+          name: this.$t('editing.editingName'),
+          value: 'edit'
+        })
+      }
+      if (this.hasGroupPermission('G0008')) {
+        actionHeader.action.push({
+          type: 'event',
+          name: this.$t('editing.memberManagement'),
+          link: {name: ''} // 待補
+        })
+      }
     }
   }
 }

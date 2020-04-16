@@ -9,7 +9,6 @@
   </div>
 </template>
 <script>
-import { checkUserPermission } from '@/API/Permission'
 import AppHeader from './AppHeader'
 import HeaderNav from './HeaderNav'
 import { Message } from 'element-ui'
@@ -22,7 +21,7 @@ export default {
   },
   created () {
     this.setDataSourceInfo()
-    this.checkPermission()
+    this.getUserInfo()
   },
   destroyed () {
     window.clearInterval(this.intervalFunction)
@@ -32,11 +31,6 @@ export default {
   methods: {
     setDataSourceInfo () {
       this.$store.dispatch('dataSource/init')
-    },
-    checkPermission () {
-      checkUserPermission().then(response => {
-        this.$store.commit('setting/setUserPermission', response)
-      })
     }
   },
   watch: {

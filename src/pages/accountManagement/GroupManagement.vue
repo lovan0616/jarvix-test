@@ -2,14 +2,14 @@
   <div class="group-management">
     <div class="page-title-row">
       <div class="bread-crumb">
-        <span v-if="currentRouteName === currentStageName">{{currentRouteName}}</span>
+        <span v-if="currentRouteName() === currentStageName">{{currentRouteName()}}</span>
         <template v-else>
           <a
             href="javascript:void(0);"
             class="title-link"
             @click="cancelEditGroup"
           >
-            {{currentRouteName}}
+            {{currentRouteName()}}
           </a>
           <span class="divider">></span>{{currentStageName}}
         </template>
