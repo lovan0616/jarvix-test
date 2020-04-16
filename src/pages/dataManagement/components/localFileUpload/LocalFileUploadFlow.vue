@@ -9,8 +9,16 @@
         v-if="step === 1"
         @next="nextStep"
       ></local-file-upload>
-      <local-file-upload-finished
+      <local-file-upload-status
         v-if="step === 2"
+        @next="nextStep"
+      ></local-file-upload-status>
+      <choose-column
+        v-if="step === 3"
+      ></choose-column>
+      <LocalColumnSetting></LocalColumnSetting>
+      <local-file-upload-finished
+        v-if="step === 4"
       ></local-file-upload-finished>
     </transition>
   </div>
@@ -18,6 +26,9 @@
 <script>
 import DataSourceName from './DataSourceName'
 import LocalFileUpload from './LocalFileUpload'
+import LocalFileUploadStatus from './LocalFileUploadStatus'
+import ChooseColumn from './ChooseColumn'
+import LocalColumnSetting from './LocalColumnSetting'
 import LocalFileUploadFinished from './LocalFileUploadFinished'
 
 export default {
@@ -25,6 +36,9 @@ export default {
   components: {
     DataSourceName,
     LocalFileUpload,
+    LocalFileUploadStatus,
+    ChooseColumn,
+    LocalColumnSetting,
     LocalFileUploadFinished
   },
   data () {

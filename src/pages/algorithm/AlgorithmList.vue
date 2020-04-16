@@ -46,7 +46,7 @@ export default {
     },
     createAlgorithm () {
       this.$router.push({
-        path: `algorithm/create`
+        name: 'PageAlgorithmCreate'
       })
     },
     deleteAlgorithm (e) {

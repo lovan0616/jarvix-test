@@ -16,7 +16,9 @@ export default {
     showCreateDataSourceDialog: false,
     // 為了讓資料清單頁面可以重新刷新資料
     fileUploadSuccess: false,
-    fileCountLimit: 10
+    fileCountLimit: 10,
+    // 當前預處理的 list
+    etlTableList: []
   },
   actions,
   mutations,

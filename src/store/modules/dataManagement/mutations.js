@@ -27,5 +27,8 @@ export default {
   },
   updateFileUploadSuccess (state, data) {
     state.fileUploadSuccess = data
+  },
+  updateEtlTableList (state, data) {
+    state.etlTableList.push(data)
   }
 }

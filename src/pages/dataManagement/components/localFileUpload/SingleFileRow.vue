@@ -43,7 +43,7 @@
 <script>
 import axios from 'axios'
 import { uploadStatus } from '@/utils/general'
-import { fileUpload } from '@/API/File'
+import { fileImport } from '@/API/File'
 
 export default {
   name: 'SingleFileRow',
@@ -76,10 +76,21 @@ export default {
   methods: {
     uploadFile () {
       let _this = this
-      fileUpload(this.singleFile.data, this.onProgress, new axios.CancelToken(function executor (c) {
+      fileImport(this.singleFile.data, this.onProgress, new axios.CancelToken(function executor (c) {
         _this.askCancelFunction = c
       }))
         .then(response => {
+          let columnList = response.columns
+          if (columnList.length > 0) {
+            columnList.forEach(element => {
+              let newElement = JSON.parse(JSON.stringify(element))
+              this.$set(element, 'originalDataType', newElement.dataType)
+              this.$set(element, 'targetDataType', newElement.dataType)
+              this.$set(element, 'originalStatsType', newElement.statsType)
+            })
+          }
+
+          this.$store.commit('dataManagement/updateEtlTableList', response)
           this.singleFile.status = uploadStatus.success
         }).catch(() => {
           this.singleFile.status = uploadStatus.fail

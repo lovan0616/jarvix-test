@@ -139,8 +139,9 @@
     "selectForeign": "選擇關聯資料表",
     "selectColumn": "選擇欄位",
     "processStep1": "填寫資料源名稱",
-    "processStep2": "上傳資料/連接資料庫",
-    "processStep3": "開始新增",
+    "processStep2": "上傳檔案",
+    "processStep3": "選擇欄位",
+    "processStep4": "資料清理設定",
     "connectDB": "連接資料庫",
     "connectStep2": "選擇資料",
     "connectStep3": "欄位設定",
@@ -245,6 +246,7 @@
     "loading": "資料讀取中",
     "databaseType": "資料庫類型",
     "currentLoadedDataFrame": "目前讀取的資料表",
+    "dataFrameContent": "資料表內容",
     "currentDisplayDataFrame": "目前顯示資料表",
     "dataType": "資料類型",
     "chooseConnection": "選擇連線",
@@ -259,6 +261,9 @@
     "general": "一般使用者",
     "dataFrameAliasSetting": "資料表別名設定",
     "dataFrameAliasInputPlaceholder": "請輸入別名"
+  },
+  "etl": {
+    "dataFrameList": "資料表列表"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
