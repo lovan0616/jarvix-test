@@ -13,10 +13,16 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'npm install'
-                sh 'npm run build'
-                sh 'touch dist/version'
-                sh "tar zcf ${ARTIFACT_NAME} dist"
+                sh '''
+                    npm install
+                    npm run build
+
+                    rm -f version
+                    echo "ref=${GIT_BRANCH}" >> dist/version
+                    echo "hash=${GIT_COMMIT}" >> dist/version
+
+                    tar zcf ${ARTIFACT_NAME} dist
+                '''
             }
         }
         stage('Artifact') {
