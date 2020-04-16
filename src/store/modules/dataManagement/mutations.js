@@ -30,5 +30,13 @@ export default {
   },
   updateEtlTableList (state, data) {
     state.etlTableList.push(data)
+  },
+  clearEtlTableList (state, data) {
+    state.etlTableList = []
+  },
+  chooseColumn (state, data) {
+    let {dataFrameIndex, columnIndex} = data
+    let column = state.etlTableList[dataFrameIndex].columns[columnIndex]
+    column.active = !column.active
   }
 }

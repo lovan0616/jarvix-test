@@ -87,6 +87,7 @@ export default {
               this.$set(element, 'originalDataType', newElement.dataType)
               this.$set(element, 'targetDataType', newElement.dataType)
               this.$set(element, 'originalStatsType', newElement.statsType)
+              this.$set(element, 'active', true)
             })
           }
 

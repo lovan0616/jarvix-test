@@ -208,7 +208,7 @@ export default {
       return this.copyTableList.filter(element => element.name === this.currentTable)[0].columns
     },
     etlTableList () {
-      return this.$store.state.datamanagement.etlTableList
+      return this.$store.state.dataManagement.etlTableList
     }
   }
 }
