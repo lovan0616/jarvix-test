@@ -124,3 +124,51 @@ export function inviteUser (inviteeInfo) {
     data: inviteeInfo
   })
 }
+
+/**
+ * 取得帳戶下所有群組
+ */
+export function getAccountGroupList () {
+  return request({
+    url: '/users/groupList',
+    method: 'GET'
+  })
+}
+
+/**
+ * 新增群組
+ * @param {Object} groupInfo - 專案資訊
+ * @param {String} groupInfo.name - 專案名稱
+ */
+export function createGroup (groupInfo) {
+  return request({
+    url: '/users/createGroup',
+    method: 'POST',
+    data: groupInfo
+  })
+}
+
+/**
+ * 刪除群錊
+ * @param {Number} id - 群組 ID
+ */
+export function deleteGroup (id) {
+  return request({
+    url: `/users/deleteGroup/${id}`,
+    method: 'DELETE'
+  })
+}
+
+/**
+ * 更新群組資訊
+ * @param {Number} id - 群組 ID
+ * @param {Object} groupInfo - 專案資訊
+ * @param {String} groupInfo.name - 專案名稱
+ */
+export function updateGroupInfo (id, groupInfo) {
+  return request({
+    url: `/users/update/${id}`,
+    method: 'PUT',
+    data: groupInfo
+  })
+}

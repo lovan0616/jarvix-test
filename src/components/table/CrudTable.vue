@@ -41,6 +41,10 @@
       :title="$t('editing.loading')"
       size="50"
     ></spinner>
+    <empty-info-block
+      v-else-if="dataList.length === 0"
+      :msg="emptyMessage"
+    ></empty-info-block>
     <div
       class="data-table-body"
       v-else
@@ -100,6 +104,7 @@
 <script>
 import orderBy from 'lodash.orderby'
 import DropdownSelect from '@/components/select/DropdownSelect'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 /**
  * Data table 可傳入屬性
@@ -120,7 +125,7 @@ import DropdownSelect from '@/components/select/DropdownSelect'
       action: [
         {
           // action 用途
-          type: 'popup / link',
+          type: 'event / link',
           // 功能名稱
           name: '重新命名',
           // emit function name
@@ -137,7 +142,8 @@ import DropdownSelect from '@/components/select/DropdownSelect'
 export default {
   name: 'CrudTable',
   components: {
-    DropdownSelect
+    DropdownSelect,
+    EmptyInfoBlock
   },
   props: {
     headers: {
@@ -164,6 +170,10 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    emptyMessage: {
+      type: String,
+      default () { this.$t('editing.emptyResult') }
     }
   },
   data () {
@@ -235,7 +245,7 @@ export default {
     },
     doAction (action, data) {
       if (!action || (action && !action.value)) return
-      if (action.type === 'popup') return this.$emit(action.value, data)
+      if (action.type === 'event') return this.$emit(action.value, data)
       this.linkTo(action.link, data.id)
     },
     getBarData (actions, data) {

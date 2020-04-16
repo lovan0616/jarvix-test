@@ -351,6 +351,15 @@ Vue.mixin({
       }
 
       window.requestAnimationFrame(step)
+    },
+    lowercaseFirstLetter (string) {
+      return string.charAt(0).toLowerCase() + string.slice(1)
+    }
+  },
+  computed: {
+    currentRouteName () {
+      const routeName = this.$route.name
+      return this.$t('sideNav.' + this.lowercaseFirstLetter(routeName))
     }
   }
 })
