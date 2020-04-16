@@ -198,3 +198,38 @@ export function getAccountGroupInfo (accountId) {
     method: 'GET'
   })
 }
+
+/**
+ * 取得所有比自己低等的帳戶角色
+ */
+export function getAccountRoles () {
+  return request({
+    url: '/users/getAccountRoleList',
+    method: 'GET'
+  })
+}
+
+/**
+ * 更新使用者角色
+ * @param {Number} id - 使用者 ID
+ * @param {Object} newRole - 使用者角色
+ */
+export function updateRole (id, newRole) {
+  return request({
+    url: `/users/updateRole/${id}`,
+    method: 'PUT',
+    data: newRole
+  })
+}
+
+/**
+ * 刪除帳戶與使用者關聯
+ * @param {Number} id - 使用者 ID
+ */
+export function deleteUserAccount (id) {
+  return request({
+    url: `/users/deleteUserAccount/${id}`,
+    method: 'DELETE',
+    data: { userId: id }
+  })
+}

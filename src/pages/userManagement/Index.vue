@@ -1,122 +1,128 @@
 <template>
   <div class="user-management">
-    <div @click="showCreateUser" class="user-add">
-      <svg-icon icon-class="user" class="icon"></svg-icon>
-      {{ $t('editing.createUser') }}
-    </div>
-    <div v-if="userData.length === 0" class="user-default">{{ $t('editing.notYetCreateUser') }}</div>
-    <div v-else class="single-user">
-      <div class="user-table-head">
-        <div @click="sortUserData" class="user-item user-sort">
-          {{ $t('editing.userAccount') }}
-          <svg-icon icon-class="arrow-down" :class="['icon', {'user-rotate': sortStatus === 'up'}]"></svg-icon>
-        </div>
-        <div class="user-item">{{ $t('editing.userTitle') }}</div>
-        <div class="user-item">{{ $t('editing.group') }}</div>
-        <div class="user-item">{{ $t('editing.activeStatus') }}</div>
-        <div class="user-item">{{ $t('editing.role') }}</div>
-        <div class="user-item">{{ $t('editing.action') }}</div>
+    <div class="page-title-row">
+      <div class="bread-crumb">
+        {{ $t('sideNav.accountManagement') }}
       </div>
-      <!-- <div class="user-table-body">
-        <div
-          v-for="(user, index) in userData"
-          :key="index"
-          class="user-row-child"
-        >
-          <div class="user-item">{{user.email}}</div>
-          <div class="user-item">{{user.name}}</div>
-          <div class="user-item">{{groupName(user.groupList)}}</div>
-          <div class="user-item" :class="{'user-status-close': !user.active}">
-            {{ user.active ? $t('editing.active') : $t('editing.close') }}
+      <h1 class="title">{{ $t('sideNav.accountUserManagement') }}</h1>
+    </div>
+    <div class="table-board">
+      <div @click="showCreateUser" class="user-add">
+        <svg-icon icon-class="user" class="icon"></svg-icon>
+        {{ $t('userManagement.createUser') }}
+      </div>
+      <div v-if="userData.length === 0" class="user-default">{{ $t('editing.notYetCreateUser') }}</div>
+      <div v-else class="single-user">
+        <div class="user-table-head">
+          <div @click="sortUserData" class="user-item user-sort">
+            {{ $t('editing.userAccount') }}
+            <svg-icon icon-class="arrow-down" :class="['icon', {'user-rotate': sortStatus === 'up'}]"></svg-icon>
           </div>
-          <div class="user-item">
-            <default-select class="role-select"
-              :value="user.permissionActive"
-              :option-list="roleList"
-              @input="setUserRole(user, user.id)"
+          <div class="user-item">{{ $t('userManagement.userRoleAuthority') }}</div>
+          <div class="user-item">{{ $t('editing.action') }}</div>
+        </div>
+        <div class="user-table-body">
+          <div
+            v-for="(user, index) in userData"
+            :key="index"
+            class="user-row-child"
+          >
+            <div class="user-item">{{user.email}}</div>
+            <div class="user-item">{{ $t(`userManagement.${toCamelCase(user.role)}`) }}</div>
+            <div class="user-item">
+              <button @click="showRoleChange(user)" :disabled="btnDisabled(user)" :class="['user-manipulate-item']">{{ $t('userManagement.updateRole') }}</button>
+              <span class="user-line"></span>
+              <button @click="showDeleteAccount(user)" :disabled="btnDisabled(user)" :class="['user-manipulate-item']">{{ $t('button.remove') }}</button>
+            </div>
+          </div>
+        </div>
+
+        <writing-dialog
+          v-if="isShowRoleChange"
+          :title="$t('userManagement.updateRole')"
+          :button="$t('button.confirm')"
+          @closeDialog="closeRoleChange"
+          @confirmBtn="changeRole"
+          :showBoth="true"
+        >
+          <div class="dialog-select-input-box">
+            <default-select class="input"
+              v-model="currentUser.role"
+              :option-list="roleOptions"
             ></default-select>
           </div>
-          <div class="user-item">
-            <span @click="showPassword(user.id)" class="user-manipulate-item">{{ $t('editing.changePassword') }}</span>
-            <span class="user-line"></span>
-            <span @click="showEditName(user)" class="user-manipulate-item">{{ $t('editing.editingName') }}</span>
-            <span class="user-line"></span>
-            <span @click="showStatusChange(user)" class="user-manipulate-item">
-              {{ user.active ? $t('editing.close') : $t('editing.active') }}
-            </span>
+        </writing-dialog>
+
+        <writing-dialog
+          v-if="isShowPassword"
+          :title="$t('editing.changePassword')"
+          :button="$t('button.built')"
+          @closeDialog="closePassword"
+          @confirmBtn="changePassword"
+          :showBoth="true"
+        >
+          <div class="dialog-select-input-box">
+            <!-- <input class="dialog-select-input" type="text" placeholder="原密碼"> -->
+            <input-verify
+              v-model="currentUser.password"
+              type="password"
+              :placeholder="$t('editing.newPassword')"
+              name="verifyNewPassword"
+              v-validate="'required|min:8|requireOneNumeric'"
+              ref="confirmPassword"
+            >
+            </input-verify>
+            <input-verify
+              v-model="currentUser.verifyPassword"
+              type="password"
+              :placeholder="$t('editing.confirmNewPassword')"
+              name="verifyPasswordCheck"
+              v-validate="'required|min:8|requireOneNumeric|confirmed:confirmPassword'"
+            >
+            </input-verify>
           </div>
-        </div>
-      </div> -->
+        </writing-dialog>
 
-      <writing-dialog
-        v-if="isShowPassword"
-        :title="$t('editing.changePassword')"
-        :button="$t('button.built')"
-        @closeDialog="closePassword"
-        @confirmBtn="changePassword"
-        :showBoth="true"
-      >
-        <div class="dialog-select-input-box">
-          <!-- <input class="dialog-select-input" type="text" placeholder="原密碼"> -->
-          <input-verify
-            v-model="currentUser.password"
-            type="password"
-            :placeholder="$t('editing.newPassword')"
-            name="verifyNewPassword"
-            v-validate="'required|min:8|requireOneNumeric'"
-            ref="confirmPassword"
-          >
-          </input-verify>
-          <input-verify
-            v-model="currentUser.verifyPassword"
-            type="password"
-            :placeholder="$t('editing.confirmNewPassword')"
-            name="verifyPasswordCheck"
-            v-validate="'required|min:8|requireOneNumeric|confirmed:confirmPassword'"
-          >
-          </input-verify>
-        </div>
-      </writing-dialog>
+        <writing-dialog
+          v-if="isShowEditName"
+          :title="$t('editing.editingName')"
+          :button="$t('button.save')"
+          @closeDialog="closeEditName"
+          @confirmBtn="editName"
+          :showBoth="true"
+        >
+          <div class="dialog-select-input-box">
+            <input-verify
+              v-model="currentUser.username"
+              type="text"
+              :placeholder="currentUser.username"
+              name="editUserName"
+              v-validate="'required'"
+            >
+            </input-verify>
+          </div>
+        </writing-dialog>
 
-      <writing-dialog
-        v-if="isShowEditName"
-        :title="$t('editing.editingName')"
-        :button="$t('button.save')"
-        @closeDialog="closeEditName"
-        @confirmBtn="editName"
-        :showBoth="true"
-      >
-        <div class="dialog-select-input-box">
-          <input-verify
-            v-model="currentUser.username"
-            type="text"
-            :placeholder="currentUser.username"
-            name="editUserName"
-            v-validate="'required'"
-          >
-          </input-verify>
-        </div>
-      </writing-dialog>
+        <decide-dialog
+          v-if="isShowStatusChange"
+          :title="statusChangeConfirmTitle()"
+          :type="'confirm'"
+          :btnText="$t('button.confirm')"
+          @closeDialog="closeStatusChange"
+          @confirmBtn="changeStatus"
+        >
+        </decide-dialog>
 
-      <decide-dialog
-        v-if="isShowStatusChange"
-        :title="statusChangeConfirmTitle()"
-        :type="'confirm'"
-        :btnText="$t('button.confirm')"
-        @closeDialog="closeStatusChange"
-        @confirmBtn="changeStatus"
-      >
-      </decide-dialog>
+        <decide-dialog
+          v-if="isShowDeleteAccount"
+          :title="$t('userManagement.confirmDeleteAccountText')"
+          :type="'delete'"
+          @closeDialog="closeDeleteAccount"
+          @confirmBtn="deleteAccount"
+        >
+        </decide-dialog>
 
-      <decide-dialog
-        v-if="isShowDeleteAccount"
-        :title="`${confirmDeleteText} ${currentUser.username} ？`"
-        :type="'delete'"
-        @closeDialog="closeDeleteAccount"
-        @confirmBtn="deleteAccount"
-      >
-      </decide-dialog>
-
+      </div>
     </div>
     <fill-dialog
       v-if="isShowCreateUser"
@@ -188,6 +194,7 @@
 </template>
 <script>
 import { getAccountUsers, updateUser, deleteUser, inviteUser } from '@/API/User'
+import { getUsers, updateUser, inviteUser, getAccountRoles, updateRole, deleteUserAccount, getSelfInfo } from '@/API/User'
 import { updateUserPermission } from '@/API/Permission'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
@@ -209,20 +216,7 @@ export default {
   },
   data () {
     return {
-      roleOptions: [
-        {
-          value: 'owner',
-          name: this.$t('userManagement.accountOwner')
-        },
-        {
-          value: 'maintainer',
-          name: this.$t('userManagement.accountMaintainer')
-        },
-        {
-          value: 'viewer',
-          name: this.$t('editing.general')
-        }
-      ],
+      roleOptions: [],
       isShowCreateUser: false,
       inviteeList: [],
       userInfo: {
@@ -235,14 +229,19 @@ export default {
       isShowPassword: false,
       isShowEditName: false,
       isShowStatusChange: false,
+      isShowRoleChange: false,
       isShowDeleteAccount: false,
-      isShowRoleDescPop: false,
       currentId: '',
       currentUser: {
         active: true,
         password: '',
         username: '',
-        verifyPassword: ''
+        verifyPassword: '',
+        role: '',
+        roleId: null
+      },
+      selfUser: {
+        roleId: null
       },
       sortStatus: 'down',
       confirmDeleteText: this.$t('editing.confirmDelete'),
@@ -254,8 +253,18 @@ export default {
   },
   mounted () {
     this.getUserList()
+    this.getAccountRoleList()
+    this.getSelfInfo()
   },
   methods: {
+    getSelfInfo () {
+      getSelfInfo().then(response => {
+        this.selfUser = this.userData.filter(user => user.id === response.id)[0]
+      })
+    },
+    btnDisabled (user) { // 待改善
+      return this.selfUser.role === 'account_maintainer' && user.role === 'account_owner'
+    },
     showCreateUser () {
       this.addNewInvitee()
       this.isShowCreateUser = true
@@ -268,7 +277,12 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return
         inviteUser({
-          emailList: this.inviteeList.map(invitee => invitee.email),
+          emailList: this.inviteeList.map(invitee => {
+            return {
+              accountRole: invitee.role,
+              mail: invitee.email
+            }
+          }),
           webURL: window.location.origin + this.$router.resolve({name: 'PageSignup'}).href
         })
           .then(() => {
@@ -290,6 +304,21 @@ export default {
         .then(response => {
           this.userData = []
           this.userData = response
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getAccountRoleList () {
+      getAccountRoles()
+        .then(response => {
+          this.roleOptions = []
+          this.roleOptions = response.map(item => {
+            return {
+              value: item.name,
+              name: this.$t(`userManagement.${this.toCamelCase(item.name)}`)
+            }
+          })
         })
         .catch(error => {
           console.log(error)
@@ -357,13 +386,31 @@ export default {
           console.log(error)
         })
     },
+    changeRole () {
+      updateRole(this.currentId, { newRole: this.currentUser.role })
+        .then(response => {
+          this.closeRoleChange()
+          this.getUserList()
+          Message({
+            message: this.$t('message.changeStatusSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
     deleteAccount () {
-      deleteUser(
-        this.currentId
-      )
+      deleteUserAccount(this.currentId)
         .then(response => {
           this.closeDeleteAccount()
           this.getUserList()
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
         })
         .catch(error => {
           console.log(error)
@@ -380,6 +427,14 @@ export default {
         this.currentUser.password = ''
         this.currentUser.verifyPassword = ''
       })
+    },
+    showRoleChange (user) {
+      this.currentUser.role = user.role
+      this.currentId = user.id
+      this.isShowRoleChange = true
+    },
+    closeRoleChange () {
+      this.isShowRoleChange = false
     },
     showEditName (user) {
       this.currentUser.username = user.name
@@ -399,8 +454,8 @@ export default {
     closeStatusChange () {
       this.isShowStatusChange = false
     },
-    showDeleteAccount (id) {
-      this.currentId = id
+    showDeleteAccount (user) {
+      this.currentId = user.id
       this.isShowDeleteAccount = true
     },
     closeDeleteAccount () {
@@ -449,7 +504,7 @@ export default {
       this.inviteeList.push({
         id: inviteeId++,
         email: '',
-        role: 'viewer'
+        role: 'account_viewer'
       })
     },
     removeInvitee (index) {
@@ -472,6 +527,9 @@ export default {
       updateUserPermission(id).then(response => {
         user.permissionActive = !user.permissionActive
       })
+    },
+    toCamelCase (str) {
+      return str.replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
     }
   },
   computed: {
@@ -492,10 +550,30 @@ export default {
 </script>
 <style lang="scss" scoped>
 .user-management {
-  padding: 24px;
-  background: $theme-bg-color;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
-  border-radius: 8px;
+
+  .page-title-row {
+    margin-bottom: 16px;
+
+    .title {
+      margin-top: .4rem;
+      font-size: 24px;
+      line-height: 32px;
+    }
+
+    .bread-crumb {
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      line-height: 20px;
+      letter-spacing: 1px;
+    }
+  }
+  .table-board {
+    padding: 24px;
+    background: $theme-bg-color;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+  }
 
   .user-add {
     width: 105px;
@@ -552,11 +630,8 @@ export default {
     /* Set column widh */
     $column-width:
       "1" "userAccount" 280px,
-      "2" "userTitle" 190px,
-      "3" "group" 280px,
-      "4" "activeStatus" 140px,
-      "5" "role" 200px,
-      "6" "action" 280px;
+      "2" "role" 200px,
+      "3" "action" 80px;
 
     @each $index, $name, $width in $column-width {
       .user-item:nth-of-type(#{$index}) {
@@ -587,8 +662,20 @@ export default {
 
     .user-manipulate-item {
       color: #4DE2F0;
-      border-bottom: 1px solid;
       cursor: pointer;
+      background-color: transparent;
+      border: none;
+      border-bottom: 1px solid;
+      padding-left: 0;
+      padding-right: 0;
+
+      &:disabled {
+        opacity: 0.15;
+        cursor: not-allowed;
+        &:hover {
+          opacity: 0.15;
+        }
+      }
 
       &:hover {
         opacity: 0.8;

@@ -173,7 +173,6 @@
     "sureLogout": "您確認要登出帳號？",
     "questionFeedback": "問題/建議回饋",
     "functionDescription": "功能說明",
-    "createUser": "建立使用者",
     "addUser": "新增使用者",
     "notYetCreateUser": "尚未建立使用者",
     "inviteeEmail": "受邀者email",
@@ -1330,6 +1329,7 @@
     "samplingNote": "此結果為原資料取樣 {randomLimit} 筆計算得來"
   },
   "userManagement": {
+    "createUser": "新增使用者",
     "inviteeEmailPlaceholder": "請輸入受邀者email",
     "userRoleAuthority": "帳戶角色權限",
     "accountOwner": "帳戶擁有者",
@@ -1338,6 +1338,8 @@
     "accountRoleDesc": "角色權限說明",
     "accountOwnerDesc": "無任何使用限制",
     "accountMaintainerDesc": "擁有帳戶管理權限",
-    "accountViewerDesc": "無法使用帳戶管理相關功能"
+    "accountViewerDesc": "無法使用帳戶管理相關功能",
+    "updateRole": "角色變更",
+    "confirmDeleteAccountText": "使用者移除後，此使用者將無法使用此帳戶任何功能，您確認要繼續移除此使用者？"
   }
 }
