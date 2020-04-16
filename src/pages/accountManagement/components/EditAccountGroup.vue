@@ -158,6 +158,10 @@ export default {
 
   .input-block {
     width: 350px;
+
+    & >>> .input {
+      padding-bottom: 0px;
+    }
   }
 
   .button-block {
