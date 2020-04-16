@@ -148,6 +148,8 @@ Vue.mixin({
           return 'DisplayGroupScatterChart'
         case 'histogram':
           return 'DisplayHistogramChart'
+        case 'computed_histogram':
+          return 'DisplayComputedHistogramChart'
         case 'line_chart':
           return 'DisplayLineChart'
         case 'stack_line_chart':
