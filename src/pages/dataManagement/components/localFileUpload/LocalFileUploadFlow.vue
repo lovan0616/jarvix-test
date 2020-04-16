@@ -16,9 +16,11 @@
       <choose-column
         v-if="step === 3"
       ></choose-column>
-      <LocalColumnSetting></LocalColumnSetting>
-      <local-file-upload-finished
+      <local-column-setting
         v-if="step === 4"
+      ></local-column-setting>
+      <local-file-upload-finished
+        v-if="step === 5"
       ></local-file-upload-finished>
     </transition>
   </div>

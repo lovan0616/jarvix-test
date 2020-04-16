@@ -16,7 +16,9 @@
     "functionDescription": "功能说明",
     "groupUserManagement": "专案成员管理",
     "groupUserList": "成员列表",
-    "groupCreateUser": "加入新成员"
+    "groupCreateUser": "加入新成员",
+    "pageDataSourceList": "资料源管理",
+    "pageDataFileList": "资料表列表"
   },
   "message": {
     "joinTableBuilt": "资料表关联建立完成",
@@ -261,6 +263,10 @@
     "general": "一般使用者",
     "dataFrameAliasSetting": "资料表别名设置",
     "dataFrameAliasInputPlaceholder": "请输入别名"
+  },
+  "etl": {
+    "dataFrameList": "资料表列表",
+    "columnList": "栏位列表"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",

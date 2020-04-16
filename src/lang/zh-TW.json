@@ -16,7 +16,9 @@
     "functionDescription": "功能說明",
     "groupUserManagement": "專案成員管理",
     "groupUserList": "成員列表",
-    "groupCreateUser": "加入新成員"
+    "groupCreateUser": "加入新成員",
+    "pageDataSourceList": "資料源管理",
+    "pageDataFileList": "資料表列表"
   },
   "message": {
     "joinTableBuilt": "資料表關聯建立完成",
@@ -263,7 +265,8 @@
     "dataFrameAliasInputPlaceholder": "請輸入別名"
   },
   "etl": {
-    "dataFrameList": "資料表列表"
+    "dataFrameList": "資料表列表",
+    "columnList": "欄位列表"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",

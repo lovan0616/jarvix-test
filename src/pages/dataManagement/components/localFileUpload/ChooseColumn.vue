@@ -9,7 +9,7 @@
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <EtlChooseColumn/>
+      <EtlChooseColumn />
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
@@ -18,22 +18,26 @@
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-default"
           @click="nextStep"
-        >{{isLoading ? $t('button.processing') : $t('button.nextStep')}}</button>
+        >{{ $t('button.nextStep') }}</button>
       </div>
     </div>
   </div>
 </template>
 <script>
 import EtlChooseColumn from '../etl/EtlChooseColumn'
+import UploadProcessBlock from './UploadProcessBlock'
 
 export default {
   name: 'ChooseColumn',
   components: {
+    UploadProcessBlock,
     EtlChooseColumn
   },
   methods: {
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    },
+    nextStep () {
     }
   },
   computed: {
