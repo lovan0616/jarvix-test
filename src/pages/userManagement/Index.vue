@@ -18,7 +18,10 @@
             {{ $t('editing.userAccount') }}
             <svg-icon icon-class="arrow-down" :class="['icon', {'user-rotate': sortStatus === 'up'}]"></svg-icon>
           </div>
-          <div class="user-item">{{ $t('userManagement.userRoleAuthority') }}</div>
+          <div class="user-item">
+            {{ $t('userManagement.userRoleAuthority') }}
+            <role-desc-pop />
+          </div>
           <div class="user-item">{{ $t('editing.action') }}</div>
         </div>
         <div class="user-table-body">
@@ -30,9 +33,9 @@
             <div class="user-item">{{user.email}}</div>
             <div class="user-item">{{ $t(`userManagement.${toCamelCase(user.role)}`) }}</div>
             <div class="user-item">
-              <button @click="showRoleChange(user)" :disabled="btnDisabled(user)" :class="['user-manipulate-item']">{{ $t('userManagement.updateRole') }}</button>
+              <button @click="showRoleChange(user)" :disabled="btnDisabled(user)" class="user-manipulate-item">{{ $t('userManagement.updateRole') }}</button>
               <span class="user-line"></span>
-              <button @click="showDeleteAccount(user)" :disabled="btnDisabled(user)" :class="['user-manipulate-item']">{{ $t('button.remove') }}</button>
+              <button @click="showDeleteAccount(user)" :disabled="btnDisabled(user)" class="user-manipulate-item">{{ $t('button.remove') }}</button>
             </div>
           </div>
         </div>
@@ -40,7 +43,7 @@
         <writing-dialog
           v-if="isShowRoleChange"
           :title="$t('userManagement.updateRole')"
-          :button="$t('button.confirm')"
+          :button="$t('button.change')"
           @closeDialog="closeRoleChange"
           @confirmBtn="changeRole"
           :showBoth="true"
@@ -135,27 +138,7 @@
           <span class="label-invitee-email">{{ $t('editing.inviteeEmail') }}</span>
           <span class="label-user-role-authority">
             {{ $t('userManagement.userRoleAuthority') }}
-            <button class="information-box">
-              <svg-icon icon-class="information-circle" class="information-circle-icon"></svg-icon>
-              <div class="information-popup">
-                <svg-icon icon-class="triangle" class="icon-triangle"></svg-icon>
-                <p class="popup-title">[{{ $t('userManagement.accountRoleDesc') }}]</p>
-                <div class="popup-content">
-                  <div class="content-item">
-                    <p class="item-label">{{ $t('userManagement.accountOwner') }}</p>
-                    <p class="item-description">{{ $t('userManagement.accountOwnerDesc') }}</p>
-                  </div>
-                  <div class="content-item">
-                    <p class="item-label">{{ $t('userManagement.accountMaintainer') }}</p>
-                    <p class="item-description">{{ $t('userManagement.accountMaintainerDesc') }}</p>
-                  </div>
-                  <div class="content-item">
-                    <p class="item-label">{{ $t('userManagement.accountViewer') }}</p>
-                    <p class="item-description">{{ $t('userManagement.accountViewerDesc') }}</p>
-                  </div>
-                </div>
-              </div>
-            </button>
+            <role-desc-pop />
           </span>
         </div>
         <div class="form-item"
@@ -201,6 +184,7 @@ import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'
 import FillDialog from '@/components/dialog/FillDialog'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import RoleDescPop from '@/pages/userManagement/components/RoleDescPop'
 import { Message } from 'element-ui'
 let inviteeId = 0
 
@@ -212,7 +196,8 @@ export default {
     WritingDialog,
     FillDialog,
     InputVerify,
-    DefaultSelect
+    DefaultSelect,
+    RoleDescPop
   },
   data () {
     return {
@@ -263,7 +248,12 @@ export default {
       })
     },
     btnDisabled (user) { // 待改善
-      return this.selfUser.role === 'account_maintainer' && user.role === 'account_owner'
+      if (this.selfUser.role === 'account_maintainer' && user.role === 'account_owner') {
+        return true
+      } else if (this.selfUser.id === user.id) {
+        return true
+      }
+      return false
     },
     showCreateUser () {
       this.addNewInvitee()
@@ -402,7 +392,10 @@ export default {
         })
     },
     deleteAccount () {
-      deleteUserAccount(this.currentId)
+      deleteUserAccount(
+        this.currentId,
+        this.selfUser.id
+      )
         .then(response => {
           this.closeDeleteAccount()
           this.getUserList()
@@ -707,67 +700,9 @@ export default {
           flex: 0 0 168px;
           margin-left: 13px;
           display: flex;
-          align-items: flex-start;
-        }
-        .information-box {
-          display: inline-flex;
-          flex-direction: column;
           align-items: center;
-          width: 20px;
-          padding-top: 4px;
-          margin-left: 2px;
-          background-color: transparent;
-          border: none;
-          text-align: left;
-          color: unset;
-          cursor: default;
-          &:focus {
-            .information-popup {
-              display: block;
-            }
-          }
-          .information-circle-icon {
-            fill: $theme-color-warning;
-            cursor: pointer;
-          }
-          .information-popup {
-            width: 212px;
-            background-color: #233131;
-            box-shadow: 0px 4px 12px rgba(73, 128, 132, 0.48), 0px -4px 12px rgba(73, 128, 132, 0.48);
-            border-radius: 8px;
-            padding: 10px 12px;
-            z-index: 1;
-            margin-top: 8px;
-            position: relative;
-            display: none;
-            .popup-title {
-              font-size: 12px;
-              margin: 0 0 10px 0;
-              color: $theme-color-primary;
-            }
-            .popup-content {
-              line-height: 14px;
-              .content-item {
-                &+.content-item {
-                  margin-top: 10px;
-                }
-                .item-label, .item-description {
-                  font-size: 12px;
-                  margin: 0;
-                  line-height: 16px;
-                }
-                .item-label {
-                  font-weight: 600;
-                }
-              }
-            }
-            .icon-triangle {
-              position: absolute;
-              top: -10px;
-              left: 50%;
-              transform: translateX(-50%);
-              fill: #233131;
-            }
+          .tooltip-thumbnail {
+            margin-left: 8px;
           }
         }
       }
@@ -797,8 +732,19 @@ export default {
       }
     }
   }
+
+  .dialog-box {
+    .dialog-inner-box {
+      .dialog-select-input-box {
+        margin-bottom: 16px;
+      }
+    }
+  }
 }
 
+.tooltip-thumbnail {
+  fill: $theme-color-warning;
+}
 </style>
 <style lang="scss">
 .role-select.el-select {

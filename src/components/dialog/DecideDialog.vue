@@ -35,7 +35,7 @@ export default {
     btnText: {
       type: String,
       default: function () {
-        return this.$t('button.delete')
+        return this.$t('button.remove')
       }
     }
   },
@@ -70,8 +70,8 @@ export default {
   justify-content: center;
 
   .dialog-decide-cancel {
+    background-color: #2AD2E2;
     margin-right: 15px;
-    border: 1px solid #FFFFFF;
     line-height: 36px;
     cursor: pointer;
   }
