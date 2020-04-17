@@ -106,7 +106,7 @@ export default {
     },
     accountData () {
       const accountList = []
-      if (this.hasAccountPermission('A0004')) {
+      if (this.hasAccountPermission('account_update_user')) {
         accountList.push({icon: 'userManage', title: 'sideNav.accountManagement', name: 'AccountUserManagement'})
       }
       accountList.push({icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'})
