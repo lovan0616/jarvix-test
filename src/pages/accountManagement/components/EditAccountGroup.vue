@@ -157,7 +157,11 @@ export default {
   }
 
   .input-block {
-    width: 260px;
+    width: 350px;
+
+    & >>> .input {
+      padding-bottom: 0px;
+    }
   }
 
   .button-block {
@@ -171,6 +175,11 @@ export default {
 
   .has-error .input {
     border-bottom: 1px solid #EB5959;
+  }
+
+  >>> .el-input__inner {
+    padding-left: 0;
+    padding-bottom: 8px;
   }
 }
 </style>

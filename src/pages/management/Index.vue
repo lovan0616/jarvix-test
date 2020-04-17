@@ -17,6 +17,7 @@
 
 <script>
 import SideNav from '@/components/layout/SideNav'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Management',
@@ -30,6 +31,9 @@ export default {
   },
   mounted () {
     this.getSideNav()
+  },
+  computed: {
+    ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission'])
   },
   methods: {
     getSideNav () {
@@ -65,6 +69,15 @@ export default {
 
             // 顯示模組子功能列表
           } else {
+            if (navItem.meta.accountPermission) {
+              const hasAccountPermission = navItem.meta.accountPermission.every(code => this.hasAccountPermission(code))
+              if (!hasAccountPermission) return
+            }
+
+            if (navItem.meta.groupPermission) {
+              const hasGroupPermission = navItem.meta.groupPermission.every(code => this.hasGroupPermission(code))
+              if (!hasGroupPermission) return
+            }
             this.nav[selectedMainNavIndex].subNav.push({
               title: this.$t('sideNav.' + this.lowercaseFirstLetter(navItem.name)),
               routeName: navItem.name

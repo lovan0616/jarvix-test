@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout'
+import store from '../store'
+import { Message } from 'element-ui'
+import i18n from '@/lang/index.js'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -74,6 +77,7 @@ export default new Router({
         // 如果第一層下有子功能列表 isMainNav 設定在子層 redirect 模組
         // meta 中 layer 用來設定從 management 模組往下到自己的路徑
         // 當前頁面側邊導覽列第一層要顯示哪個模組，layer 就寫到那個模組為止
+        // meta 使用 accountPermission & groupPermission 指定路由權限
         {
           path: 'account',
           component: () => import('@/pages/management/Index'),
@@ -95,7 +99,8 @@ export default new Router({
                   component: () => import('@/pages/userManagement/Index'),
                   name: 'AccountUserManagement',
                   meta: {
-                    layers: ['account', 'account-management']
+                    layers: ['account', 'account-management'],
+                    accountPermission: ['A0004']
                   }
                 },
                 {
@@ -103,7 +108,8 @@ export default new Router({
                   component: () => import('@/pages/accountManagement/GroupManagement'),
                   name: 'AccountGroupManagement',
                   meta: {
-                    layers: ['account', 'account-management']
+                    layers: ['account', 'account-management'],
+                    accountPermission: ['A0004']
                   }
                 }
               ]
@@ -164,3 +170,43 @@ export default new Router({
     }
   }
 })
+
+router.beforeEach(async (to, from, next) => {
+  // 處理頁面重整時 store 為空需重新取得使用者資料
+  const userName = store.state.userManagement.userName
+  if (!userName) await store.dispatch('userManagement/getUserInfo')
+
+  // 確認 account 和 group 權限都符合
+  const hasAccountPermission = store.getters['userManagement/hasAccountPermission']
+  const hasGroupPermission = store.getters['userManagement/hasGroupPermission']
+  for (let i = 0; i < to.matched.length; i++) {
+    if (!to.matched[i].meta) continue
+
+    let passAccountPermission
+    let passGroupPermission
+
+    if (to.matched[i].meta.accountPermission) {
+      passAccountPermission = to.matched[i].meta.accountPermission.every(code => hasAccountPermission(code))
+    } else {
+      passAccountPermission = true
+    }
+
+    if (to.matched[i].meta.groupPermission) {
+      passGroupPermission = to.matched[i].meta.groupPermission.every(code => hasGroupPermission(code))
+    } else {
+      passGroupPermission = true
+    }
+
+    if (passAccountPermission && passGroupPermission) continue
+
+    next(from.path)
+    return Message({
+      message: i18n.t('errorMessage.lackOfPermission'),
+      type: 'error',
+      duration: 3 * 1000
+    })
+  }
+  next()
+})
+
+export default router
