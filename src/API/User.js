@@ -1,4 +1,5 @@
 import request from '@/utils/publicRequest'
+import store from '../store'
 
 /**
  * 登入
@@ -50,11 +51,12 @@ export function logout () {
 }
 
 /**
- * 取得所有使用者
+ * 取得帳戶下所有使用者
  */
-export function getUsers () {
+export function getAccountUsers () {
+  const accountId = store.getters['userManagement/getCurrentAccountId']
   return request({
-    url: '/users',
+    url: `/account/${accountId}/user`,
     method: 'GET'
   })
 }
@@ -129,8 +131,9 @@ export function inviteUser (inviteeInfo) {
  * 取得帳戶下所有群組
  */
 export function getAccountGroupList () {
+  const accountId = store.getters['userManagement/getCurrentAccountId']
   return request({
-    url: '/users/groupList',
+    url: `/group/account/${accountId}`,
     method: 'GET'
   })
 }
@@ -142,9 +145,12 @@ export function getAccountGroupList () {
  */
 export function createGroup (groupInfo) {
   return request({
-    url: '/users/createGroup',
+    url: '/group',
     method: 'POST',
-    data: groupInfo
+    data: {
+      ...groupInfo,
+      accountId: store.getters['userManagement/getCurrentAccountId']
+    }
   })
 }
 
@@ -154,7 +160,7 @@ export function createGroup (groupInfo) {
  */
 export function deleteGroup (id) {
   return request({
-    url: `/users/deleteGroup/${id}`,
+    url: `/group/${id}`,
     method: 'DELETE'
   })
 }
@@ -165,10 +171,20 @@ export function deleteGroup (id) {
  * @param {Object} groupInfo - 專案資訊
  * @param {String} groupInfo.name - 專案名稱
  */
-export function updateGroupInfo (id, groupInfo) {
+export function updateGroupInfo (groupInfo) {
   return request({
-    url: `/users/update/${id}`,
+    url: '/group',
     method: 'PUT',
     data: groupInfo
+  })
+}
+
+/**
+ * 取得帳戶列表和權限
+ */
+export function getUserAccountInfo () {
+  return request({
+    url: '/account/permission',
+    method: 'GET'
   })
 }

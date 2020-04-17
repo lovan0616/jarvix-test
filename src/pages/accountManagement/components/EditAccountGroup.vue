@@ -53,7 +53,7 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputBlock from '@/components/InputBlock'
-import { getUsers, updateGroupInfo, createGroup } from '@/API/User'
+import { getAccountUsers, updateGroupInfo, createGroup } from '@/API/User'
 import { Message } from 'element-ui'
 
 export default {
@@ -93,7 +93,7 @@ export default {
       return JSON.parse(JSON.stringify(this.editData.data.groupName))
     },
     fetchUser () {
-      getUsers()
+      getAccountUsers()
         .then(users => {
           this.userList = users
           this.userEmailList = users.map(user => ({value: user.email}))
@@ -121,7 +121,10 @@ export default {
         }
 
         // Update group info
-        updateGroupInfo(this.editData.data.groupId, {name: this.groupName})
+        updateGroupInfo({
+          id: this.editData.data.groupId,
+          name: this.groupName
+        })
           .then(() => {
             this.$emit('finishEdit')
             Message({
