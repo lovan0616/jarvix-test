@@ -112,6 +112,7 @@ export default {
     },
     deleteGroup (data) {
       deleteGroup(this.selectedGroup.groupId)
+        .then(() => this.$store.dispatch('userManagement/getUserGroupList'))
         .then(() => {
           const updatedGroupList = this.groupList.filter(group => group.groupId !== this.selectedGroup.groupId)
           this.$emit('update:groupList', updatedGroupList)

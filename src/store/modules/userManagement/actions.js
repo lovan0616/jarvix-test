@@ -1,12 +1,4 @@
-import { logout } from '@/API/User'
-
-const dummyUserData = {
-  name: 'Mike',
-  accountList: [{id: 3, name: '瘋狂鯊魚', isDefault: false}, {id: 2, name: 'SyGPS', isDefault: true}],
-  accountPermission: ['account_delete_user', 'account_create_user', 'account_update_user', 'account_update_license', 'account_read_group'],
-  groupList: [],
-  groupPermission: []
-}
+import { logout, getAccountGroupList, getUserAccountInfo, getAccountGroupInfo, getSelfInfo } from '@/API/User'
 
 export default {
   logout ({ commit }) {
@@ -18,14 +10,30 @@ export default {
       localStorage.removeItem('token')
     })
   },
-  getUserInfo ({commit}) {
-    // fetch user data api
+  async getUserInfo ({commit}) {
+    const accountInfo = await getUserAccountInfo()
+    let groupInfo = {}
+
+    if (accountInfo.accountList.length) {
+      const defaultAccountId = accountInfo.accountList.find(account => account.isDefault).id
+      groupInfo = await getAccountGroupInfo(defaultAccountId)
+    }
+    const userInfo = await getSelfInfo()
     commit('setUserInfo', {
-      userName: dummyUserData.name,
-      accountList: dummyUserData.accountList,
-      accountPermission: dummyUserData.accountPermission,
-      groupList: dummyUserData.groupList,
-      groupPermission: dummyUserData.groupPermission
+      userName: userInfo.name,
+      accountList: accountInfo.accountList,
+      accountPermission: accountInfo.accountPermission,
+      groupList: groupInfo.groupList || [],
+      groupPermission: groupInfo.groupPermission || []
+    })
+  },
+  getUserGroupList ({commit}) {
+    return getAccountGroupList().then(list => {
+      const groupList = list.map(group => ({
+        groupId: group.groupId,
+        groupName: group.groupName
+      }))
+      commit('updateUserGroupList', groupList)
     })
   }
 }

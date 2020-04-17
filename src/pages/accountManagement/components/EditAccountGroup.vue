@@ -112,19 +112,20 @@ export default {
             name: this.groupName,
             ownerId: this.userList.find(user => user.email === this.selectedOwner).id
           })
-          this.$emit('finishEdit')
-          return Message({
-            message: this.$t('message.groupCreateSuccess'),
-            type: 'success',
-            duration: 3 * 1000
-          })
+            .then(() => this.$store.dispatch('userManagement/getUserGroupList'))
+            .then(() => {
+              this.$emit('finishEdit')
+              return Message({
+                message: this.$t('message.groupCreateSuccess'),
+                type: 'success',
+                duration: 3 * 1000
+              })
+            })
         }
 
         // Update group info
-        updateGroupInfo({
-          id: this.editData.data.groupId,
-          name: this.groupName
-        })
+        updateGroupInfo(this.editData.data.groupId, {name: this.groupName})
+          .then(() => this.$store.dispatch('userManagement/getUserGroupList'))
           .then(() => {
             this.$emit('finishEdit')
             Message({

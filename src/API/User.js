@@ -108,7 +108,7 @@ export function deleteUser (id) {
  */
 export function getSelfInfo (id) {
   return request({
-    url: `/users/selfInfo`,
+    url: `/users`,
     method: 'GET'
   })
 }
@@ -185,6 +185,16 @@ export function updateGroupInfo (groupInfo) {
 export function getUserAccountInfo () {
   return request({
     url: '/account/permission',
+    method: 'GET'
+  })
+}
+
+/**
+ * 取得帳戶列表和權限
+ */
+export function getAccountGroupInfo (accountId) {
+  return request({
+    url: `/group/account/${accountId}/userGroupAndPermission`,
     method: 'GET'
   })
 }

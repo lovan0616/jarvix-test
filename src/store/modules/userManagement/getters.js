@@ -6,9 +6,13 @@ export default {
     return state.groupPermission.includes(permissionCode)
   },
   getCurrentAccountId: state => {
-    return state.accountList.find(account => account.isDefault).id
+    const defaultAccount = state.accountList.find(account => account.isDefault)
+    if (!defaultAccount) return
+    return defaultAccount.id
   },
   getCurrentGroupId: state => {
-    return state.groupList.find(group => group.isDefault).groupId
+    const defaultGroup = state.groupList.find(group => group.isDefault)
+    if (!defaultGroup) return
+    return defaultGroup.groupId
   }
 }
