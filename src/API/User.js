@@ -224,12 +224,13 @@ export function updateRole (id, newRole) {
 
 /**
  * 刪除帳戶與使用者關聯
- * @param {Number} id - 使用者 ID
+ * @param {Number} accountId - 要刪除的使用者 ID
+ * @param {Number} userId - 操作者的 ID
  */
-export function deleteUserAccount (id) {
+export function deleteUserAccount (accountId, userId) {
   return request({
-    url: `/users/deleteUserAccount/${id}`,
+    url: `/users/deleteUserAccount/${accountId}`,
     method: 'DELETE',
-    data: { userId: id }
+    data: { userId }
   })
 }
