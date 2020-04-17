@@ -3,7 +3,7 @@ import { logout } from '@/API/User'
 const dummyUserData = {
   name: 'Mike',
   accountList: [{id: 3, name: '瘋狂鯊魚', isDefault: false}, {id: 2, name: 'SyGPS', isDefault: true}],
-  accountPermission: ['A0002', 'A0001', 'A0003', 'A0004', 'A0005'],
+  accountPermission: ['account_delete_user', 'account_create_user', 'account_update_user', 'account_update_license', 'account_read_group'],
   groupList: [],
   groupPermission: []
 }

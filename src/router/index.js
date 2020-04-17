@@ -100,7 +100,7 @@ const router = new Router({
                   name: 'AccountUserManagement',
                   meta: {
                     layers: ['account', 'account-management'],
-                    accountPermission: ['A0004']
+                    accountPermission: ['account_update_user']
                   }
                 },
                 {
@@ -109,7 +109,7 @@ const router = new Router({
                   name: 'AccountGroupManagement',
                   meta: {
                     layers: ['account', 'account-management'],
-                    accountPermission: ['A0004']
+                    accountPermission: ['account_update_user']
                   }
                 }
               ]

@@ -124,26 +124,26 @@ export default {
         })
     },
     showCreateButton () {
-      return this.hasAccountPermission('A0001')
+      return this.hasAccountPermission('account_create_user')
     },
     showActionButtons () {
       const actionHeader = this.tableHeaders.find(header => header.value === 'action')
 
-      if (this.hasAccountPermission('A0003')) {
+      if (this.hasAccountPermission('account_delete_user')) {
         actionHeader.action.push({
           type: 'event',
           name: this.$t('button.delete'),
           value: 'delete'
         })
       }
-      if (this.hasAccountPermission('A0004')) {
+      if (this.hasAccountPermission('account_update_user')) {
         actionHeader.action.push({
           type: 'event',
           name: this.$t('editing.editingName'),
           value: 'edit'
         })
       }
-      if (this.hasGroupPermission('G0008')) {
+      if (this.hasGroupPermission('group_read_user')) {
         actionHeader.action.push({
           type: 'event',
           name: this.$t('editing.memberManagement'),
