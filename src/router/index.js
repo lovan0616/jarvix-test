@@ -172,17 +172,20 @@ const router = new Router({
 })
 
 router.beforeEach(async (to, from, next) => {
+  // Declare routes without authentication
+  const pathWithoutAuth = ['PageLogin', 'PageSignup']
+  if (pathWithoutAuth.includes(to.name)) {
+    next()
+    return
+  }
+
   // 處理頁面重整時 store 為空需重新取得使用者資料
   const userName = store.state.userManagement.userName
   try {
     if (!userName) await store.dispatch('userManagement/getUserInfo')
   } catch (error) {
-    next()
-    return Message({
-      message: i18n.t('errorMessage.defaultMsg'),
-      type: 'error',
-      duration: 3 * 1000
-    })
+    // Debug 使用
+    console.log(error)
   }
 
   // 確認 account 和 group 權限都符合
