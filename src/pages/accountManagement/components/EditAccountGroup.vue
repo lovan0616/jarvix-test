@@ -112,8 +112,7 @@ export default {
             name: this.groupName,
             ownerId: this.userList.find(user => user.email === this.selectedOwner).id
           })
-            // TODO: 權限管理實作後需開啟此更新功能
-            // .then(() => this.$store.dispatch('userManagement/getUserGroupList'))
+            .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
             .then(() => {
               this.$emit('finishEdit')
               return Message({
@@ -125,8 +124,7 @@ export default {
         } else {
           // Update group info
           updateGroupInfo({id: this.editData.data.groupId, name: this.groupName})
-            // TODO: 權限管理實作後需開啟此更新功能
-            // .then(() => this.$store.dispatch('userManagement/getUserGroupList'))
+            .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
             .then(() => {
               this.$emit('finishEdit')
               Message({

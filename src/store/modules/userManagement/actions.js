@@ -1,4 +1,4 @@
-import { logout, getAccountGroupList, getUserAccountInfo, getAccountGroupInfo, getSelfInfo } from '@/API/User'
+import { logout, getUserAccountInfo, getAccountGroupInfo, getSelfInfo } from '@/API/User'
 
 export default {
   logout ({ commit }) {
@@ -27,13 +27,8 @@ export default {
       groupPermission: groupInfo.groupPermission || []
     })
   },
-  getUserGroupList ({commit}) {
-    return getAccountGroupList().then(list => {
-      const groupList = list.map(group => ({
-        groupId: group.groupId,
-        groupName: group.groupName
-      }))
-      commit('updateUserGroupList', groupList)
-    })
+  updateUserGroupList ({commit, getters}) {
+    const currentAccountId = getters.getCurrentAccountId
+    return getAccountGroupInfo(currentAccountId).then(res => commit('updateUserGroupInfo', res))
   }
 }
