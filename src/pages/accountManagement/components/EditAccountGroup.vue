@@ -112,7 +112,8 @@ export default {
             name: this.groupName,
             ownerId: this.userList.find(user => user.email === this.selectedOwner).id
           })
-            .then(() => this.$store.dispatch('userManagement/getUserGroupList'))
+            // TODO: 權限管理實作後需開啟此更新功能
+            // .then(() => this.$store.dispatch('userManagement/getUserGroupList'))
             .then(() => {
               this.$emit('finishEdit')
               return Message({
@@ -121,19 +122,20 @@ export default {
                 duration: 3 * 1000
               })
             })
-        }
-
-        // Update group info
-        updateGroupInfo(this.editData.data.groupId, {name: this.groupName})
-          .then(() => this.$store.dispatch('userManagement/getUserGroupList'))
-          .then(() => {
-            this.$emit('finishEdit')
-            Message({
-              message: this.$t('message.groupInfoUpdatedSuccess'),
-              type: 'success',
-              duration: 3 * 1000
+        } else {
+          // Update group info
+          updateGroupInfo({id: this.editData.data.groupId, name: this.groupName})
+            // TODO: 權限管理實作後需開啟此更新功能
+            // .then(() => this.$store.dispatch('userManagement/getUserGroupList'))
+            .then(() => {
+              this.$emit('finishEdit')
+              Message({
+                message: this.$t('message.groupInfoUpdatedSuccess'),
+                type: 'success',
+                duration: 3 * 1000
+              })
             })
-          })
+        }
       })
     }
   }
