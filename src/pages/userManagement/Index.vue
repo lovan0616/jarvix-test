@@ -157,7 +157,7 @@
   </div>
 </template>
 <script>
-import { getUsers, updateUser, deleteUser, inviteUser } from '@/API/User'
+import { getAccountUsers, updateUser, deleteUser, inviteUser } from '@/API/User'
 import { updateUserPermission } from '@/API/Permission'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
@@ -241,7 +241,7 @@ export default {
       })
     },
     getUserList () {
-      getUsers()
+      getAccountUsers()
         .then(response => {
           this.userData = []
           this.userData = response

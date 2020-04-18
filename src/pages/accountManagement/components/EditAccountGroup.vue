@@ -53,7 +53,7 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputBlock from '@/components/InputBlock'
-import { getUsers, updateGroupInfo, createGroup } from '@/API/User'
+import { getAccountUsers, updateGroupInfo, createGroup } from '@/API/User'
 import { Message } from 'element-ui'
 
 export default {
@@ -93,7 +93,7 @@ export default {
       return JSON.parse(JSON.stringify(this.editData.data.groupName))
     },
     fetchUser () {
-      getUsers()
+      getAccountUsers()
         .then(users => {
           this.userList = users
           this.userEmailList = users.map(user => ({value: user.email}))
@@ -112,24 +112,30 @@ export default {
             name: this.groupName,
             ownerId: this.userList.find(user => user.email === this.selectedOwner).id
           })
-          this.$emit('finishEdit')
-          return Message({
-            message: this.$t('message.groupCreateSuccess'),
-            type: 'success',
-            duration: 3 * 1000
-          })
-        }
-
-        // Update group info
-        updateGroupInfo(this.editData.data.groupId, {name: this.groupName})
-          .then(() => {
-            this.$emit('finishEdit')
-            Message({
-              message: this.$t('message.groupInfoUpdatedSuccess'),
-              type: 'success',
-              duration: 3 * 1000
+            // TODO: 權限管理實作後需開啟此更新功能
+            // .then(() => this.$store.dispatch('userManagement/getUserGroupList'))
+            .then(() => {
+              this.$emit('finishEdit')
+              return Message({
+                message: this.$t('message.groupCreateSuccess'),
+                type: 'success',
+                duration: 3 * 1000
+              })
             })
-          })
+        } else {
+          // Update group info
+          updateGroupInfo({id: this.editData.data.groupId, name: this.groupName})
+            // TODO: 權限管理實作後需開啟此更新功能
+            // .then(() => this.$store.dispatch('userManagement/getUserGroupList'))
+            .then(() => {
+              this.$emit('finishEdit')
+              Message({
+                message: this.$t('message.groupInfoUpdatedSuccess'),
+                type: 'success',
+                duration: 3 * 1000
+              })
+            })
+        }
       })
     }
   }

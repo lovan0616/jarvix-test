@@ -174,7 +174,16 @@ const router = new Router({
 router.beforeEach(async (to, from, next) => {
   // 處理頁面重整時 store 為空需重新取得使用者資料
   const userName = store.state.userManagement.userName
-  if (!userName) await store.dispatch('userManagement/getUserInfo')
+  try {
+    if (!userName) await store.dispatch('userManagement/getUserInfo')
+  } catch (error) {
+    next()
+    return Message({
+      message: i18n.t('errorMessage.defaultMsg'),
+      type: 'error',
+      duration: 3 * 1000
+    })
+  }
 
   // 確認 account 和 group 權限都符合
   const hasAccountPermission = store.getters['userManagement/hasAccountPermission']

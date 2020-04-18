@@ -112,6 +112,8 @@ export default {
     },
     deleteGroup (data) {
       deleteGroup(this.selectedGroup.groupId)
+        // TODO: 權限管理實作後需開啟此更新功能
+        // .then(() => this.$store.dispatch('userManagement/getUserGroupList'))
         .then(() => {
           const updatedGroupList = this.groupList.filter(group => group.groupId !== this.selectedGroup.groupId)
           this.$emit('update:groupList', updatedGroupList)
