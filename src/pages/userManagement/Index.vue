@@ -50,7 +50,7 @@
         >
           <div class="dialog-select-input-box">
             <default-select class="input"
-              v-model="currentUser.role"
+              v-model="currentUser.roleId"
               :option-list="roleOptions"
             ></default-select>
           </div>
@@ -152,7 +152,7 @@
             v-validate="'required|email'"
           />
           <default-select class="input"
-            v-model="invitee.role"
+            v-model="invitee.roleId"
             :option-list="roleOptions"
           ></default-select>
           <a
@@ -176,8 +176,7 @@
   </div>
 </template>
 <script>
-import { getAccountUsers, updateUser, deleteUser, inviteUser } from '@/API/User'
-import { getUsers, updateUser, inviteUser, getAccountRoles, updateRole, deleteUserAccount, getSelfInfo } from '@/API/User'
+import { getAccountUsers, deleteUserAccount, inviteUser, getAccountRoles, updateRole, getSelfInfo } from '@/API/User'
 import { updateUserPermission } from '@/API/Permission'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
@@ -269,7 +268,8 @@ export default {
         inviteUser({
           emailList: this.inviteeList.map(invitee => {
             return {
-              accountRole: invitee.role,
+              accountRole: invitee.roleId,
+              groupId: 1, // 暫定預設 1 為 default group
               mail: invitee.email
             }
           }),
@@ -303,81 +303,26 @@ export default {
       getAccountRoles()
         .then(response => {
           this.roleOptions = []
-          this.roleOptions = response.map(item => {
-            return {
-              value: item.name,
-              name: this.$t(`userManagement.${this.toCamelCase(item.name)}`)
-            }
-          })
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
-    changePassword () {
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          updateUser(
-            {password: this.currentUser.password},
-            this.currentId
-          )
-            .then(response => {
-              this.closePassword()
-              this.getUserList()
-              Message({
-                message: this.$t('message.changePasswordSuccess'),
-                type: 'success',
-                duration: 3 * 1000
-              })
+          this.roleOptions = response
+            // 後端一起回傳了非 account role，先擋掉
+            .filter(role => role.name.includes('account'))
+            .map(role => {
+              return {
+                value: role.id,
+                name: this.getZhRoleName(role.name)
+              }
             })
-            .catch(error => {
-              console.log(error)
-            })
-        }
-      })
-    },
-    editName () {
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          updateUser(
-            {username: this.currentUser.username},
-            this.currentId
-          )
-            .then(response => {
-              this.closeEditName()
-              this.getUserList()
-              Message({
-                message: this.$t('message.editNameSuccess'),
-                type: 'success',
-                duration: 3 * 1000
-              })
-            })
-            .catch(error => {
-              console.log(error)
-            })
-        }
-      })
-    },
-    changeStatus () {
-      updateUser(
-        {active: this.currentUser.active},
-        this.currentId
-      )
-        .then(response => {
-          this.closeStatusChange()
-          this.getUserList()
-          Message({
-            message: this.$t('message.changeStatusSuccess'),
-            type: 'success',
-            duration: 3 * 1000
-          })
         })
         .catch(error => {
           console.log(error)
         })
     },
     changeRole () {
-      updateRole(this.currentId, { newRole: this.currentUser.role })
+      updateRole({
+        accountId: this.$store.getters['userManagement/getCurrentAccountId'],
+        newRole: this.currentUser.roleId,
+        userId: this.currentId
+      })
         .then(response => {
           this.closeRoleChange()
           this.getUserList()
@@ -393,8 +338,8 @@ export default {
     },
     deleteAccount () {
       deleteUserAccount(
-        this.currentId,
-        this.selfUser.id
+        this.$store.getters['userManagement/getCurrentAccountId'],
+        this.currentId
       )
         .then(response => {
           this.closeDeleteAccount()
@@ -422,7 +367,8 @@ export default {
       })
     },
     showRoleChange (user) {
-      this.currentUser.role = user.role
+      const option = this.roleOptions.find(option => option.name === this.getZhRoleName(user.role)) || user.role
+      this.currentUser.roleId = option.value
       this.currentId = user.id
       this.isShowRoleChange = true
     },
@@ -497,7 +443,7 @@ export default {
       this.inviteeList.push({
         id: inviteeId++,
         email: '',
-        role: 'account_viewer'
+        roleId: 5 // 選項預設為 viewer 權限
       })
     },
     removeInvitee (index) {
@@ -523,6 +469,9 @@ export default {
     },
     toCamelCase (str) {
       return str.replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
+    },
+    getZhRoleName (accountRole) {
+      return this.$t(`userManagement.${this.toCamelCase(accountRole)}`)
     }
   },
   computed: {

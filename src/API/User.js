@@ -21,7 +21,7 @@ export function login (loginInfo) {
  */
 export function signup (signupInfo) {
   return request({
-    url: '/userR',
+    url: '/users',
     method: 'POST',
     data: signupInfo
   })
@@ -204,33 +204,34 @@ export function getAccountGroupInfo (accountId) {
  */
 export function getAccountRoles () {
   return request({
-    url: '/users/getAccountRoleList',
+    url: '/account/role',
     method: 'GET'
   })
 }
 
 /**
- * 更新使用者角色
- * @param {Number} id - 使用者 ID
- * @param {Object} newRole - 使用者角色
+ * 更新帳戶使用者角色
+ * @param {Object} info 更新資訊
+ * @param {Number} info.accountId - 帳戶 ID
+ * @param {Number} info.newRole - 使用者角色
+ * @param {Number} info.userId - 使用者 ID
  */
-export function updateRole (id, newRole) {
+export function updateRole (info) {
   return request({
-    url: `/users/updateRole/${id}`,
+    url: `/account/user`,
     method: 'PUT',
-    data: newRole
+    data: info
   })
 }
 
 /**
  * 刪除帳戶與使用者關聯
- * @param {Number} accountId - 要刪除的使用者 ID
- * @param {Number} userId - 操作者的 ID
+ * @param {Number} accountId - 帳戶 ID
+ * @param {Number} userId - 使用者 ID
  */
-export function deleteUserAccount (accountId, userId) {
+export function deleteUserAccount (id, accountId) {
   return request({
-    url: `/users/deleteUserAccount/${accountId}`,
-    method: 'DELETE',
-    data: { userId }
+    url: `/account/${id}/user/${accountId}`,
+    method: 'DELETE'
   })
 }
