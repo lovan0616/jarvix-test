@@ -56,66 +56,6 @@
           </div>
         </writing-dialog>
 
-        <writing-dialog
-          v-if="isShowPassword"
-          :title="$t('editing.changePassword')"
-          :button="$t('button.built')"
-          @closeDialog="closePassword"
-          @confirmBtn="changePassword"
-          :showBoth="true"
-        >
-          <div class="dialog-select-input-box">
-            <!-- <input class="dialog-select-input" type="text" placeholder="原密碼"> -->
-            <input-verify
-              v-model="currentUser.password"
-              type="password"
-              :placeholder="$t('editing.newPassword')"
-              name="verifyNewPassword"
-              v-validate="'required|min:8|requireOneNumeric'"
-              ref="confirmPassword"
-            >
-            </input-verify>
-            <input-verify
-              v-model="currentUser.verifyPassword"
-              type="password"
-              :placeholder="$t('editing.confirmNewPassword')"
-              name="verifyPasswordCheck"
-              v-validate="'required|min:8|requireOneNumeric|confirmed:confirmPassword'"
-            >
-            </input-verify>
-          </div>
-        </writing-dialog>
-
-        <writing-dialog
-          v-if="isShowEditName"
-          :title="$t('editing.editingName')"
-          :button="$t('button.save')"
-          @closeDialog="closeEditName"
-          @confirmBtn="editName"
-          :showBoth="true"
-        >
-          <div class="dialog-select-input-box">
-            <input-verify
-              v-model="currentUser.username"
-              type="text"
-              :placeholder="currentUser.username"
-              name="editUserName"
-              v-validate="'required'"
-            >
-            </input-verify>
-          </div>
-        </writing-dialog>
-
-        <decide-dialog
-          v-if="isShowStatusChange"
-          :title="statusChangeConfirmTitle()"
-          :type="'confirm'"
-          :btnText="$t('button.confirm')"
-          @closeDialog="closeStatusChange"
-          @confirmBtn="changeStatus"
-        >
-        </decide-dialog>
-
         <decide-dialog
           v-if="isShowDeleteAccount"
           :title="$t('userManagement.confirmDeleteAccountText')"
@@ -208,19 +148,12 @@ export default {
         email: '',
         password: ''
       },
-      verifyPassword: '',
       userData: [],
-      isShowPassword: false,
-      isShowEditName: false,
-      isShowStatusChange: false,
       isShowRoleChange: false,
       isShowDeleteAccount: false,
       currentId: '',
       currentUser: {
-        active: true,
-        password: '',
         username: '',
-        verifyPassword: '',
         role: '',
         roleId: null
       },
@@ -354,18 +287,6 @@ export default {
           console.log(error)
         })
     },
-    showPassword (id) {
-      this.currentId = id
-      this.isShowPassword = true
-    },
-    closePassword () {
-      // 關閉 component 後，才清空資料，以免在 function 中觸發 validate 導致錯誤發生
-      this.isShowPassword = false
-      this.$nextTick(() => {
-        this.currentUser.password = ''
-        this.currentUser.verifyPassword = ''
-      })
-    },
     showRoleChange (user) {
       const option = this.roleOptions.find(option => option.name === this.getZhRoleName(user.role)) || user.role
       this.currentUser.roleId = option.value
@@ -374,24 +295,6 @@ export default {
     },
     closeRoleChange () {
       this.isShowRoleChange = false
-    },
-    showEditName (user) {
-      this.currentUser.username = user.name
-      this.currentId = user.id
-      this.isShowEditName = true
-    },
-    closeEditName () {
-      this.isShowEditName = false
-    },
-    showStatusChange (user) {
-      this.currentUser.active = user.active
-      this.currentUser.username = user.name
-      this.currentUser.active = !this.currentUser.active
-      this.currentId = user.id
-      this.isShowStatusChange = true
-    },
-    closeStatusChange () {
-      this.isShowStatusChange = false
     },
     showDeleteAccount (user) {
       this.currentId = user.id
