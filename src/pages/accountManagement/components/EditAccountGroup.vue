@@ -96,7 +96,7 @@ export default {
       getAccountUsers()
         .then(users => {
           this.userList = users
-          this.userEmailList = users.map(user => ({value: user.email}))
+          this.userEmailList = users.filter(user => user.role === 'account_owner').map(user => ({value: user.email}))
         })
         .catch(() => this.cancelEditGroup())
     },
