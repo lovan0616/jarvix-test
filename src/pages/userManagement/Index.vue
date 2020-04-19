@@ -165,7 +165,7 @@ export default {
       selfUser: {
         roleId: null
       },
-      sortStatus: 'down',
+      sortStatus: 'up',
       confirmDeleteText: this.$t('editing.confirmDelete'),
       closeText: this.$t('editing.close'),
       unableLoginText: this.$t('editing.unableLogin'),
@@ -174,9 +174,10 @@ export default {
     }
   },
   mounted () {
-    this.getUserList()
+    this.getUserList().then(() => {
+      this.getSelfInfo()
+    })
     this.getAccountRoleList()
-    this.getSelfInfo()
   },
   methods: {
     getSelfInfo () {
@@ -228,7 +229,7 @@ export default {
       })
     },
     getUserList () {
-      getAccountUsers()
+      return getAccountUsers()
         .then(response => {
           this.userData = []
           this.userData = response
