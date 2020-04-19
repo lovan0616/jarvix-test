@@ -49,6 +49,10 @@
           :showBoth="true"
         >
           <div class="dialog-select-input-box">
+            <div class="label">
+              {{ $t('userManagement.userRoleAuthority') }}
+              <role-desc-pop />
+            </div>
             <default-select class="input"
               v-model="currentUser.roleId"
               :option-list="roleOptions"
@@ -60,6 +64,7 @@
           v-if="isShowDeleteAccount"
           :title="$t('userManagement.confirmDeleteAccountText')"
           :type="'delete'"
+          :btnText="$t('button.remove')"
           @closeDialog="closeDeleteAccount"
           @confirmBtn="deleteAccount"
         >
@@ -585,10 +590,24 @@ export default {
     }
   }
 
-  .dialog-box {
+  /deep/ .dialog-box {
     .dialog-inner-box {
+      .label {
+        font-size: 13px;
+        text-align: left;
+        margin-bottom: 8px;
+      }
       .dialog-select-input-box {
         margin-bottom: 16px;
+        .el-input__inner {
+          padding-left: 0;
+        }
+      }
+      .dialog-button-block {
+        .btn.dialog-decide-cancel {
+          background-color: #2AD2E2;
+          border: none;
+        }
       }
     }
   }

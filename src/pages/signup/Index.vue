@@ -64,7 +64,8 @@ export default {
         verifyPassword: null,
         accountId: null,
         invitedByUserId: null,
-        groupId: null
+        groupId: null,
+        accountRoleId: null
       },
       isProcessing: false
     }
@@ -90,6 +91,7 @@ export default {
           this.userInfo.accountId = res.accountId
           this.userInfo.invitedByUserId = res.invitedByUserId
           this.userInfo.groupId = res.mailData ? res.mailData.groupId : 1 // 暫定預設 1 為 default group
+          this.userInfo.accountRoleId = res.accountRole
         })
         .catch(() => {
           this.$router.push({name: 'PageLogin'})

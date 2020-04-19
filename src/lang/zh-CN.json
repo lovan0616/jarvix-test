@@ -1330,7 +1330,7 @@
   },
   "userManagement": {
     "createUser": "新增使用者",
-    "inviteeEmailPlaceholder": "請輸入受邀者email",
+    "inviteeEmailPlaceholder": "请输入受邀者email",
     "userRoleAuthority": "帐户角色权限",
     "accountOwner": "帐户拥有者",
     "accountMaintainer": "帐户管理者",
