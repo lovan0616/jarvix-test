@@ -86,7 +86,7 @@ import { dataSourcePreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
 import InputBlock from '@/components/InputBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import PublicColumnSetting from '../PublicColumnSetting'
+import EtlColumnSetting from '../etl/EtlColumnSetting'
 
 export default {
   name: 'LocalColumnSetting',
@@ -95,7 +95,7 @@ export default {
     UploadProcessBlock,
     DefaultSelect,
     InputBlock,
-    PublicColumnSetting
+    EtlColumnSetting
   },
   props: {
     tableIdList: {

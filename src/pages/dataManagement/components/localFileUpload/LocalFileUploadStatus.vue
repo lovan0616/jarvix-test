@@ -2,7 +2,7 @@
   <div class="file-upload-finished">
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
-      :step="currntUploadStatus === uploadStatus.uploading ? 3 : 2"
+      :step="2"
     ></upload-process-block>
     <div class="dialog-body">
       <file-list-block
