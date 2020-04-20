@@ -212,7 +212,8 @@ export default {
               mail: invitee.email
             }
           }),
-          webURL: window.location.origin + this.$router.resolve({name: 'PageSignup'}).href
+          webURL: window.location.origin + this.$router.resolve({name: 'PageSignup'}).href,
+          accountId: this.$store.getters['userManagement/getCurrentAccountId']
         })
           .then(() => {
             this.isShowCreateUser = false
