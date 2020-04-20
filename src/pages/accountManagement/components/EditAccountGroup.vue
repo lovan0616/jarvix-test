@@ -17,7 +17,7 @@
         v-if="editData.type === 'create'"
         class="input-group"
       >
-        <div class="input-label">{{ $t('editing.accountOwner') }}：</div>
+        <div class="input-label">{{ $t('editing.groupOwner') }}：</div>
         <div
           class="input-block"
           :class="{'has-error': errors.has('owner')}"
@@ -96,7 +96,7 @@ export default {
       getAccountUsers()
         .then(users => {
           this.userList = users
-          this.userEmailList = users.filter(user => user.role === 'account_owner').map(user => ({value: user.email}))
+          this.userEmailList = users.map(user => ({value: user.email}))
         })
         .catch(() => this.cancelEditGroup())
     },
