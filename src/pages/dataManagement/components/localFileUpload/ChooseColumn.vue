@@ -38,6 +38,7 @@ export default {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     nextStep () {
+      this.$emit('next')
     }
   },
   computed: {

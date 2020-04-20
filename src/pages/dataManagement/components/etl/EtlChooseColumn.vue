@@ -1,8 +1,8 @@
 <template>
-  <div class="etl-choose-column">
+  <div class="etl etl-choose-column">
     <div class="section data-frame">
       <div class="title">{{ $t('etl.dataFrameList') }}</div>
-      <div class="data-frame-list">
+      <div class="data-frame-list section-block">
         <div class="single-data-frame"
           v-for="(table, index) in tableOptionList"
           :key="table.originForeignId"
@@ -13,7 +13,7 @@
     </div>
     <div class="section data-column">
       <div class="title has-icon"><svg-icon icon-class="arrow-right" class="icon"></svg-icon><span class="data-frame-name">{{ tableOptionList[currentTableIndex].name }}</span>{{ $t('etl.columnList') }}</div>
-      <div class="data-column-list">
+      <div class="data-column-list section-block">
         <label class="single-column"
           v-for="(column, index) in columnOptionList"
           :key="currentTableIndex + '-' + index"
@@ -108,6 +108,10 @@ export default {
         left: -20px;
         color: #999;
       }
+    }
+
+    .data-frame-name {
+      max-width: 455px;
     }
   }
 

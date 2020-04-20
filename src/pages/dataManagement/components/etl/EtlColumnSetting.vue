@@ -1,8 +1,8 @@
 <template>
-  <div class="etl-column-setting">
+  <div class="etl etl-column-setting">
     <div class="section data-frame">
       <div class="title">{{ $t('etl.dataFrameList') }}</div>
-      <div class="data-frame-list">
+      <div class="data-frame-list section-block">
         <div class="single-data-frame"
           v-for="(table, index) in tableOptionList"
           :key="table.originForeignId"
@@ -13,46 +13,50 @@
     </div>
     <div class="section data-column">
       <div class="title has-icon"><svg-icon icon-class="arrow-right" class="icon"></svg-icon><span class="data-frame-name">{{ tableOptionList[currentTableIndex].name }}</span>{{ $t('etl.columnList') }}</div>
-      <div class="data-column-list">
-        <label class="single-column"
+      <div class="data-column-list section-block">
+        <div class="single-column"
           v-for="(column, index) in columnOptionList"
           :key="currentTableIndex + '-' + index"
+          :class="{active: currentColumnIndex === index}"
+          @click="chooseDataColumn(index)"
         >
-          <div class="checkbox">
-            <div class="checkbox-label">
-              <input type="checkbox" :name="'column' + index"
-                :value="true"
-                :checked="column.active"
-                @change="chooseColumn(index)"
-              >
-              <div class="checkbox-square"></div>
-            </div>
-          </div>
-          <div class="data-frame-info">
-            <div class="data-frame-name">{{ column.primaryAlias }}</div>
-          </div>
-        </label>
+          <div class="data-frame-name">{{ column.primaryAlias }}</div>
+          <div class="data-type">{{ column.originalDataType }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="section section-setting">
+      <div class="title has-icon"><svg-icon icon-class="arrow-right" class="icon"></svg-icon><span class="data-frame-name">{{  }}</span>{{ $t('etl.etlSetting') }}</div>
+      <div class="section-block">
+        <single-column-setting
+          :key="currentTableIndex + '-' + currentColumnIndex"
+          :column-info="currentColumnInfo"
+        ></single-column-setting>
       </div>
     </div>
   </div>
 </template>
 <script>
+import SingleColumnSetting from './SingleColumnSetting'
+
 export default {
   name: 'EtlColumnSetting',
+  components: {
+    SingleColumnSetting
+  },
   data () {
     return {
-      currentTableIndex: 0
+      currentTableIndex: 0,
+      currentColumnIndex: 0
     }
   },
   methods: {
     chooseDataFrame (index) {
       this.currentTableIndex = index
+      this.currentColumnIndex = 0
     },
-    chooseColumn (index) {
-      this.$store.commit('dataManagement/chooseColumn', {
-        dataFrameIndex: this.currentTableIndex,
-        columnIndex: index
-      })
+    chooseDataColumn (index) {
+      this.currentColumnIndex = index
     }
   },
   computed: {
@@ -71,17 +75,63 @@ export default {
     },
     etlTableList () {
       return this.$store.state.dataManagement.etlTableList
+    },
+    currentColumnInfo () {
+      if (this.columnOptionList.length === 0) return []
+      return this.columnOptionList[this.currentColumnIndex]
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.etl-column-setting {
-
-  .data-column-list {
-    .checkbox {
-      margin-right: 8px;
+.etl.etl-column-setting {
+  .section {
+    &.data-frame {
+      flex: initial;
+      width: 190px;
+    }
+    &.data-column {
+      flex: initial;
+      width: 230px;
     }
   }
+
+  .title {
+    .data-frame-name {
+      max-width: 150px;
+    }
+  }
+
+  .data-column-list {
+    // 這邊是與選擇欄位共用的，只是在這邊方向不同
+    .single-column {
+      position: relative;
+      flex-direction: column;
+      align-items: flex-start;
+      border: 2px solid rgba(67, 76, 76, .95);
+
+      &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 8px;
+        height: 8px;
+        background-color: #6C7273;
+        border-radius: 50%;
+      }
+
+      &.active {
+        border: 2px solid #2AD2E2;
+      }
+
+      .data-type {
+        font-size: 12px;
+        line-height: 17px;
+        color: #ccc;
+      }
+    }
+  }  
 }
 </style>

@@ -84,9 +84,28 @@ export default {
           if (columnList.length > 0) {
             columnList.forEach(element => {
               let newElement = JSON.parse(JSON.stringify(element))
-              this.$set(element, 'originalDataType', newElement.dataType)
-              this.$set(element, 'targetDataType', newElement.dataType)
+              this.$set(element, 'targetDataType', newElement.originalDataType)
               this.$set(element, 'originalStatsType', newElement.statsType)
+              this.$set(element, 'values', [
+                {
+                  value: null,
+                  newValue: '',
+                  type: 'MISSING_VALUE',
+                  active: true
+                },
+                {
+                  value: '',
+                  newValue: '',
+                  type: 'MISSING_VALUE',
+                  active: true
+                },
+                {
+                  value: null,
+                  newValue: '',
+                  type: 'ERROR_DEFAULT_VALUE',
+                  active: true
+                }
+              ])
               this.$set(element, 'active', true)
             })
           }

@@ -266,7 +266,16 @@
   },
   "etl": {
     "dataFrameList": "資料表列表",
-    "columnList": "欄位列表"
+    "columnList": "欄位列表",
+    "dataType": "資料型別",
+    "emptyStringReplaceValue": "空字串替代值",
+    "nullReplaceValue": "Null替代值",
+    "errorReplaceValue": "錯誤資料替代值",
+    "customDataManagement": "自訂資料處理",
+    "columnValue": "欄位值",
+    "replaceValue": "替代值",
+    "replaceValuePlaceholder": "請輸入替代值",
+    "etlSetting": "資料清洗設定"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
@@ -396,7 +405,9 @@
     "deleteGroup": "刪除專案",
     "editGroupName": "編輯專案名稱",
     "addNewMember": "加入新成員",
-    "editDataFrameAlias": "編輯資料表別名"
+    "editDataFrameAlias": "編輯資料表別名",
+    "addNew": "新增",
+    "buildData": "建置資料"
   },
   "aggregation": {
     "mean": "平均",

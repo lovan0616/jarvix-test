@@ -15,13 +15,13 @@
       ></local-file-upload-status>
       <choose-column
         v-if="step === 3"
+        @next="nextStep"
       ></choose-column>
       <local-column-setting
         v-if="step === 4"
+        @prev="prevStep"
+        @next="uploadFinish"
       ></local-column-setting>
-      <local-file-upload-finished
-        v-if="step === 5"
-      ></local-file-upload-finished>
     </transition>
   </div>
 </template>
@@ -31,7 +31,6 @@ import LocalFileUpload from './LocalFileUpload'
 import LocalFileUploadStatus from './LocalFileUploadStatus'
 import ChooseColumn from './ChooseColumn'
 import LocalColumnSetting from './LocalColumnSetting'
-import LocalFileUploadFinished from './LocalFileUploadFinished'
 
 export default {
   name: 'LocalFileUploadFlow',
@@ -40,8 +39,7 @@ export default {
     LocalFileUpload,
     LocalFileUploadStatus,
     ChooseColumn,
-    LocalColumnSetting,
-    LocalFileUploadFinished
+    LocalColumnSetting
   },
   data () {
     return {
@@ -55,6 +53,18 @@ export default {
   methods: {
     nextStep () {
       this.step += 1
+    },
+    prevStep () {
+      this.step -= 1
+    },
+    uploadFinish () {
+      if (this.$route.name === 'PageDataSourceList') {
+        this.$store.dispatch('dataSource/getDataSourceList')
+      } else {
+        this.$store.commit('dataManagement/updateFileUploadSuccess', true)
+      }
+      // close fileUploadDialog
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     }
   }
 }

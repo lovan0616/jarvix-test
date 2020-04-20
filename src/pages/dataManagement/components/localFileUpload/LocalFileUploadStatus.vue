@@ -25,7 +25,7 @@
       <div class="dialog-button-block">
         <button class="btn btn-outline"
           @click="cancel"
-        >{{ $t('button.finish') }}</button>
+        >{{ $t('button.cancel') }}</button>
         <button class="btn btn-default"
           @click="next"
         >{{ $t('button.nextStep') }}</button>

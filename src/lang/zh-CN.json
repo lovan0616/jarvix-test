@@ -266,7 +266,16 @@
   },
   "etl": {
     "dataFrameList": "资料表列表",
-    "columnList": "栏位列表"
+    "columnList": "栏位列表",
+    "dataType": "资料型别",
+    "emptyStringReplaceValue": "空字串替代值",
+    "nullReplaceValue": "Null替代值",
+    "errorReplaceValue": "错误资料替代值",
+    "customDataManagement": "自订资料处理",
+    "columnValue": "栏位值",
+    "replaceValue": "替代值",
+    "replaceValuePlaceholder": "请输入替代值",
+    "etlSetting": "资料清洗设定"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
@@ -396,7 +405,9 @@
     "deleteGroup": "删除专案",
     "editGroupName": "编辑专案名称",
     "addNewMember": "加入新成员",
-    "editDataFrameAlias": "编辑资料表别名"
+    "editDataFrameAlias": "编辑资料表别名",
+    "addNew": "新增",
+    "buildData": "建置资料"
   },
   "aggregation": {
     "mean": "平均",
