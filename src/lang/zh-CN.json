@@ -13,7 +13,10 @@
     "accountUserManagement": "帐户使用者管理",
     "accountGroupManagement": "帐户专案管理",
     "accountSetting": "帐号设定",
-    "functionDescription": "功能说明"
+    "functionDescription": "功能说明",
+    "groupUserManagement": "专案成员管理",
+    "groupUserList": "成员列表",
+    "groupCreateUser": "加入新成员"
   },
   "message": {
     "joinTableBuilt": "资料表关联建立完成",
@@ -34,6 +37,7 @@
     "saveSuccess": "储存成功",
     "correlationDeleteSuccess": "关联已删除",
     "groupCreateSuccess": "专案建立成功",
+    "memberCreateSuccess": "新成员建立成功",
     "groupDeleteSuccess": "专案已成功删除",
     "groupInfoUpdatedSuccess": "专案资讯已成功更新",
     "signUpSuccessPleaseLogin": "注册成功，请登入帐号",
@@ -51,7 +55,8 @@
     "dataSourceNotExist": "资料源不存在",
     "connectionFail": "栏位资料有误，请重新检查",
     "columnSetNameEmpty": "栏位组合名称未填写",
-    "columnSetChosenEmpty": "尚未选择任何栏位"
+    "columnSetChosenEmpty": "尚未选择任何栏位",
+    "memberDeleteSuccess": "成员删除成功"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -175,7 +180,7 @@
     "functionDescription": "功能说明",
     "addUser": "新增使用者",
     "notYetCreateUser": "尚未建立使用者",
-    "inviteeEmail": "受邀者email",
+    "inviteeEmail": "受邀者 email",
     "userTitle": "使用者名称",
     "userAccount": "使用者帐号",
     "setLoginPassword": "设定密码",
@@ -188,8 +193,10 @@
     "groupOwner": "专案拥有者",
     "groupMemberAmount": "专案人数",
     "groupName": "专案名称",
+    "groupRolePermission": "专案角色权限",
     "notYetCreateGroup": "尚未建立专案",
     "deleteGroup": "删除专案",
+    "confirmDeleteProjectUserText": "使用者移除后，此使用者将无法使用此专案任何功能，您确认要继续移除此使用者？",
     "confirmDeleteBelowGroupOrNot": "您确认要删除以下专案吗?",
     "accountOwner": "帐户拥有者",
     "memberManagement": "成员管理",
@@ -375,7 +382,8 @@
     "copyAndBuild": "复制并建置",
     "createGroup": "新建专案",
     "deleteGroup": "删除专案",
-    "editGroupName": "编辑专案名称"
+    "editGroupName": "编辑专案名称",
+    "addNewMember": "加入新成员"
   },
   "aggregation": {
     "mean": "平均",

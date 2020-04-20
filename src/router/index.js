@@ -152,10 +152,19 @@ const router = new Router({
               children: [
                 {
                   path: '/',
-                  redirect: { name: 'AccountUserManagement' },
+                  redirect: { name: 'GroupUserList' },
                   name: 'GroupUserManagement',
                   meta: {
                     isMainNav: true
+                  }
+                },
+                {
+                  path: '/',
+                  component: () => import('@/pages/groupUserManagement/GroupUserList'),
+                  name: 'GroupUserList',
+                  meta: {
+                    layers: ['group', 'user-management'],
+                    accountPermission: ['account_update_user']
                   }
                 },
                 {
@@ -164,7 +173,8 @@ const router = new Router({
                   name: 'GroupCreateUser',
                   meta: {
                     layers: ['group', 'user-management'],
-                    accountPermission: ['account_update_user']
+                    accountPermission: ['account_update_user'],
+                    isHiddenNav: true
                   }
                 }
               ]

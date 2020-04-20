@@ -76,10 +76,9 @@
           }"
         >
           <a href="javascript:void(0)" class="link name-link"
-            v-if="headInfo.link && checkLinkEnable(headInfo, data)"
+            v-if="headInfo.link && checkLinkEnable(headInfo, data) && showActionButton(headInfo)"
             @click="linkTo(headInfo.link, data.id)"
           >{{ data[headInfo.value] }}</a>
-
           <a href="javascript:void(0)" class="link action-link link-dropdown"
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
@@ -92,8 +91,10 @@
               class="dropdown"
               :barData="getBarData(action.subAction, data)"
             />
-            {{ action.name }}
-            <svg-icon v-if="action.subAction" icon-class="triangle" class="icon dropdown-icon" />
+            <template v-if="showActionButton(action)">
+              {{ action.name }}
+              <svg-icon v-if="action.subAction" icon-class="triangle" class="icon dropdown-icon" />
+            </template>
           </a>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
@@ -105,6 +106,7 @@
 import orderBy from 'lodash.orderby'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import { mapGetters } from 'vuex'
 
 /**
  * Data table 可傳入屬性
@@ -250,13 +252,22 @@ export default {
     },
     getBarData (actions, data) {
       if (data && !data.id) return actions
-      return actions.map(action => ({
-        ...action,
-        id: data.id
-      }))
+      return actions.reduce((acc, cur) => {
+        if (!this.showActionButton(cur)) return acc
+        acc.push({
+          ...cur,
+          id: data.id
+        })
+        return acc
+      }, [])
+    },
+    showActionButton (action) {
+      if (!action.hasOwnProperty('permission')) return true
+      return this.hasAccountPermission(action.permission)
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission']),
     // 目前所選擇的項目
     selectList: {
       get () {
