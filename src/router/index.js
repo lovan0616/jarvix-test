@@ -145,6 +145,29 @@ const router = new Router({
                   component: () => import('@/pages/dataManagement/DataFileList')
                 }
               ]
+            },
+            {
+              path: 'user-management',
+              component: () => import('@/pages/groupUserManagement/Index'),
+              children: [
+                {
+                  path: '/',
+                  redirect: { name: 'AccountUserManagement' },
+                  name: 'GroupUserManagement',
+                  meta: {
+                    isMainNav: true
+                  }
+                },
+                {
+                  path: 'create',
+                  component: () => import('@/pages/groupUserManagement/GroupCreateUser'),
+                  name: 'GroupCreateUser',
+                  meta: {
+                    layers: ['group', 'user-management'],
+                    accountPermission: ['account_update_user']
+                  }
+                }
+              ]
             }
           ]
         }
