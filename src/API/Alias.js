@@ -20,3 +20,25 @@ export function saveValueAlias (aliasInfo) {
     data: aliasInfo
   })
 }
+
+/**
+ * get data frame alias
+ */
+export function getDataframeAlias (id) {
+  return request({
+    url: `/alias/dataframe/${id}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * save data frame alias
+ * @param {Array} alias - 別名
+ */
+export function patchDataframeAlias (alias) {
+  return request({
+    url: '/alias/dataframe',
+    method: 'PATCH',
+    data: alias
+  })
+}
