@@ -407,7 +407,7 @@
     "editGroupName": "編輯專案名稱",
     "addNewMember": "加入新成員",
     "editDataFrameAlias": "編輯資料表別名",
-    "addNew": "新增",
+    "new": "新增",
     "buildData": "建置資料",
     "keepSave": "保存"
   },

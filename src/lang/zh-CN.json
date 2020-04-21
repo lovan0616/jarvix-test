@@ -407,7 +407,7 @@
     "editGroupName": "编辑专案名称",
     "addNewMember": "加入新成员",
     "editDataFrameAlias": "编辑资料表别名",
-    "addNew": "新增",
+    "new": "新增",
     "buildData": "建置资料",
     "keepSave": "保存"
   },

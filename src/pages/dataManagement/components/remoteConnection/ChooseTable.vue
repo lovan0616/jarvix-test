@@ -16,7 +16,6 @@
       ></spinner>
       <empty-info-block
         v-else-if="tableList.length === 0"
-        
       ></empty-info-block>
       <div class="data-frame-list"
         v-else

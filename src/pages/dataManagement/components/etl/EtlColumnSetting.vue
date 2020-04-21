@@ -138,6 +138,6 @@ export default {
         color: #ccc;
       }
     }
-  }  
+  }
 }
 </style>
