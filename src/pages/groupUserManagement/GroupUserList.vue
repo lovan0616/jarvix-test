@@ -21,14 +21,14 @@
         @update:dataList="$emit('update:userList', $event)"
         :loading="isLoading"
         @delete="confirmDelete"
-        @cancel="cancelDelete"
+        @cancel="closeDelete"
       >
       </crud-table>
       <decide-dialog
         v-if="showConfirmDeleteDialog"
         :title="this.$t('editing.confirmDeleteProjectUserText')"
         :type="'delete'"
-        @closeDialog="cancelDelete"
+        @closeDialog="closeDelete"
         @confirmBtn="deleteGroup"
       >
       </decide-dialog>
@@ -106,7 +106,7 @@ export default {
       this.selectedUser = dataObj
       this.showConfirmDeleteDialog = true
     },
-    cancelDelete () {
+    closeDelete () {
       this.selectedUser = {}
       this.showConfirmDeleteDialog = false
     },
@@ -114,10 +114,8 @@ export default {
       this.isLoading = true
       deleteGroupUser(this.selectedUser.id)
         .then(() => {
-          this.userList = this.userList.filter(user => user.id !== this.selectedUser.id)
-          this.isLoading = false
-          this.selectedUser = {}
-          this.showConfirmDeleteDialog = false
+          this.fetchData()
+          this.closeDelete()
           Message({
             message: this.$t('message.memberDeleteSuccess'),
             type: 'success',

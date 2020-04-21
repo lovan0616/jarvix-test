@@ -20,8 +20,9 @@
           >
             <default-select
               class="input"
-              v-model="selectedInvitee"
-              :option-list="userEmailList"
+              :value="selectedInvitee"
+              @input="updateSelectedInvitee"
+              :option-list="userList"
               name="invitee"
               v-validate="'required'"
             ></default-select>
@@ -75,7 +76,7 @@ import { createGroupUser } from '@/API/Group'
 import { Message } from 'element-ui'
 
 export default {
-  name: 'EditAccountGroup',
+  name: 'GroupCreateUser',
   inject: ['$validator'],
   components: {
     DefaultSelect,
@@ -87,7 +88,6 @@ export default {
       selectedRole: '',
       roleList: [],
       userList: [],
-      userEmailList: [],
       isLoading: false
     }
   },
@@ -99,17 +99,18 @@ export default {
       getAccountUsers()
         .then(users => {
           this.userList = users
-          this.userEmailList = users.filter(user => user.role === 'account_owner').map(user => ({value: user.email}))
+          this.userList = users.map(user => ({value: user.email, id: user.id}))
         })
         .catch(() => this.backToUserList())
     },
     submitForm () {
       this.$validator.validateAll().then(result => {
         if (!result) return
-        // add new user
+        // TODO: 帶 Group Role Id，這邊先設 4 為 group maintainer
+        const dummyGroupRole = 4
         createGroupUser({
-          groupRole: 4, // TODO: 帶 Group Role Id，這邊先設 4 為 group maintainer
-          userId: this.userList.find(user => user.email === this.selectedInvitee).id
+          groupRole: dummyGroupRole,
+          userId: this.userList.find(user => user.value === this.selectedInvitee).id
         })
           .then(() => {
             this.backToUserList()
@@ -124,6 +125,9 @@ export default {
     },
     backToUserList () {
       this.$router.push({name: 'GroupUserList'})
+    },
+    updateSelectedInvitee (invitee) {
+      this.selectedInvitee = this.userList.find(user => user.value === invitee).value
     }
   }
 }

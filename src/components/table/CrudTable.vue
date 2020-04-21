@@ -75,28 +75,25 @@
             'text-align': headInfo.align
           }"
         >
-          <a href="javascript:void(0)" class="link name-link"
-            v-if="headInfo.link && checkLinkEnable(headInfo, data) && showActionButton(headInfo)"
-            @click="linkTo(headInfo.link, data.id)"
-          >{{ data[headInfo.value] }}</a>
-          <a href="javascript:void(0)" class="link action-link link-dropdown"
-            v-else-if="headInfo.action"
-            v-for="action in headInfo.action"
-            :key="action.name"
-            :disabled="isProcessing"
-            @click="doAction(action, data)"
-          >
-            <dropdown-select
-              v-if="action.subAction"
-              class="dropdown"
-              :barData="getBarData(action.subAction, data)"
-            />
-            <template v-if="showActionButton(action)">
+          <template v-if="headInfo.action">
+            <a
+              href="javascript:void(0)"
+              class="link action-link link-dropdown"
+              v-for="action in headInfo.action"
+              :key="action.name"
+              :disabled="isProcessing || !showActionButton(action, data)"
+              @click="doAction(action, data)"
+            >
+              <dropdown-select
+                v-if="action.subAction"
+                class="dropdown"
+                :barData="getBarData(action.subAction, data)"
+              />
               {{ action.name }}
-              <svg-icon v-if="action.subAction" icon-class="triangle" class="icon dropdown-icon" />
-            </template>
-          </a>
-          <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
+              <svg-icon v-if="getBarData(action.subAction, data).length > 0" icon-class="triangle" class="icon dropdown-icon" />
+            </a>
+          </template>
+          <span v-else>{{ data[headInfo.value] }}</span>
         </div>
       </div>
     </div>
@@ -250,10 +247,14 @@ export default {
       if (action.type === 'event') return this.$emit(action.value, data)
       this.linkTo(action.link, data.id)
     },
-    getBarData (actions, data) {
+    hasActionPermission (action) {
+      if (!action.hasOwnProperty('permission')) return true
+      return this.hasAccountPermission(action.permission)
+    },
+    getBarData (actions = [], data) {
       if (data && !data.id) return actions
       return actions.reduce((acc, cur) => {
-        if (!this.showActionButton(cur)) return acc
+        if (!this.hasActionPermission(cur)) return acc
         acc.push({
           ...cur,
           id: data.id
@@ -261,9 +262,9 @@ export default {
         return acc
       }, [])
     },
-    showActionButton (action) {
-      if (!action.hasOwnProperty('permission')) return true
-      return this.hasAccountPermission(action.permission)
+    showActionButton (action, data) {
+      if (!action.subAction) return this.hasActionPermission(action)
+      return this.getBarData(action.subAction, data).length > 0
     }
   },
   computed: {
