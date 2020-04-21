@@ -1,11 +1,13 @@
 {
   "lang": "繁中",
   "nav": {
-    "index": "首頁",
+    "index": "智能分析",
     "pinboard": "個人釘板",
     "dataManagement": "資料管理",
+    "dataSourceManagement": "資料源管理",
     "languagePlaceholder": "語系",
-    "setting": "設定"
+    "setting": "設定",
+    "accountManagement": "專案管理"
   },
   "sideNav": {
     "accountManagement": "帳戶管理",
@@ -13,6 +15,7 @@
     "accountUserManagement": "帳戶使用者管理",
     "accountGroupManagement": "帳戶專案管理",
     "accountSetting": "帳號設定",
+    "groupUserManagement": "專案成員管理",
     "functionDescription": "功能說明"
   },
   "message": {
@@ -188,6 +191,7 @@
     "groupOwner": "專案擁有者",
     "groupMemberAmount": "專案人數",
     "groupName": "專案名稱",
+    "switchGroup": "切換專案",
     "notYetCreateGroup": "尚未建立專案",
     "deleteGroup": "刪除專案",
     "confirmDeleteBelowGroupOrNot": "您確認要刪除以下專案嗎?",

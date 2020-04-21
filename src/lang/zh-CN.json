@@ -1,11 +1,13 @@
 {
   "lang": "简中",
   "nav": {
-    "index": "首页",
+    "index": "智能分析",
     "pinboard": "个人钉板",
     "dataManagement": "资料管理",
+    "dataSourceManagement": "资料源管理",
     "languagePlaceholder": "语系",
-    "setting": "设定"
+    "setting": "设定",
+    "accountManagement": "专案管理"
   },
   "sideNav": {
     "accountManagement": "帐户管理",
@@ -13,6 +15,7 @@
     "accountUserManagement": "帐户使用者管理",
     "accountGroupManagement": "帐户专案管理",
     "accountSetting": "帐号设定",
+    "groupUserManagement": "专案成员管理",
     "functionDescription": "功能说明"
   },
   "message": {
@@ -188,6 +191,7 @@
     "groupOwner": "专案拥有者",
     "groupMemberAmount": "专案人数",
     "groupName": "专案名称",
+    "switchGroup": "切换专案",
     "notYetCreateGroup": "尚未建立专案",
     "deleteGroup": "删除专案",
     "confirmDeleteBelowGroupOrNot": "您确认要删除以下专案吗?",
