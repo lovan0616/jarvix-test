@@ -20,6 +20,7 @@
       @delete="confirmDelete"
       @cancel="cancelDelete"
       @edit="editGroup('edit', $event)"
+      @manage="manageMember"
       :empty-message="$t('editing.notYetCreateGroup')"
     >
     </crud-table>
@@ -64,9 +65,6 @@ export default {
       showConfirmDeleteDialog: false
     }
   },
-  created () {
-    this.showActionButtons()
-  },
   computed: {
     ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission']),
     tableHeaders () {
@@ -93,7 +91,26 @@ export default {
           text: this.$t('editing.action'),
           value: 'action',
           width: '35%',
-          action: []
+          action: [
+            {
+              type: 'event',
+              name: this.$t('button.delete'),
+              value: 'delete',
+              permission: 'account_delete_user'
+            },
+            {
+              type: 'event',
+              name: this.$t('editing.editingName'),
+              value: 'edit',
+              permission: 'account_update_user'
+            },
+            {
+              type: 'event',
+              name: this.$t('editing.memberManagement'),
+              value: 'manage',
+              permission: 'account_update_user' // 待更新
+            }
+          ]
         }
       ]
     }
@@ -127,30 +144,8 @@ export default {
     showCreateButton () {
       return this.hasAccountPermission('account_create_user')
     },
-    showActionButtons () {
-      const actionHeader = this.tableHeaders.find(header => header.value === 'action')
-
-      if (this.hasAccountPermission('account_delete_user')) {
-        actionHeader.action.push({
-          type: 'event',
-          name: this.$t('button.delete'),
-          value: 'delete'
-        })
-      }
-      if (this.hasAccountPermission('account_update_user')) {
-        actionHeader.action.push({
-          type: 'event',
-          name: this.$t('editing.editingName'),
-          value: 'edit'
-        })
-      }
-      if (this.hasGroupPermission('group_read_user')) {
-        actionHeader.action.push({
-          type: 'event',
-          name: this.$t('editing.memberManagement'),
-          link: {name: ''} // 待補
-        })
-      }
+    manageMember (data) {
+      this.$router.push({name: 'GroupUserList', params: {group_id: data.groupId}})
     }
   }
 }

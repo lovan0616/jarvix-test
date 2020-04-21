@@ -69,6 +69,8 @@ export default {
 
             // 顯示模組子功能列表
           } else {
+            if (navItem.meta.isHiddenNav) return
+
             if (navItem.meta.accountPermission) {
               const hasAccountPermission = navItem.meta.accountPermission.every(code => this.hasAccountPermission(code))
               if (!hasAccountPermission) return

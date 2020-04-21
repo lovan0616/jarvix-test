@@ -13,7 +13,10 @@
     "accountUserManagement": "帳戶使用者管理",
     "accountGroupManagement": "帳戶專案管理",
     "accountSetting": "帳號設定",
-    "functionDescription": "功能說明"
+    "functionDescription": "功能說明",
+    "groupUserManagement": "專案成員管理",
+    "groupUserList": "成員列表",
+    "groupCreateUser": "加入新成員"
   },
   "message": {
     "joinTableBuilt": "資料表關聯建立完成",
@@ -34,6 +37,7 @@
     "saveSuccess": "儲存成功",
     "correlationDeleteSuccess": "關聯已刪除",
     "groupCreateSuccess": "專案建立成功",
+    "memberCreateSuccess": "新成員建立成功",
     "groupDeleteSuccess": "專案已成功刪除",
     "groupInfoUpdatedSuccess": "專案資訊已成功更新",
     "signUpSuccessPleaseLogin": "註冊成功，請登入帳號",
@@ -51,7 +55,8 @@
     "dataSourceNotExist": "資料源不存在",
     "connectionFail": "欄位資料有誤，請重新檢查",
     "columnSetNameEmpty": "欄位組合名稱未填寫",
-    "columnSetChosenEmpty": "尚未選擇任何欄位"
+    "columnSetChosenEmpty": "尚未選擇任何欄位",
+    "memberDeleteSuccess": "成員刪除成功"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -175,7 +180,8 @@
     "functionDescription": "功能說明",
     "addUser": "新增使用者",
     "notYetCreateUser": "尚未建立使用者",
-    "inviteeEmail": "受邀者email",
+    "inviteeEmail": "受邀者 email",
+    "pleaseSelectInviteeEmail": "請選擇受邀者 email",
     "userTitle": "使用者名稱",
     "userAccount": "使用者帳號",
     "setLoginPassword": "設定密碼",
@@ -188,8 +194,10 @@
     "groupOwner": "專案擁有者",
     "groupMemberAmount": "專案人數",
     "groupName": "專案名稱",
+    "groupRolePermission": "專案角色權限",
     "notYetCreateGroup": "尚未建立專案",
     "deleteGroup": "刪除專案",
+    "confirmDeleteProjectUserText": "使用者移除後，此使用者將無法使用此專案任何功能，您確認要繼續移除此使用者？",
     "confirmDeleteBelowGroupOrNot": "您確認要刪除以下專案嗎?",
     "accountOwner": "帳戶擁有者",
     "memberManagement": "成員管理",
@@ -375,7 +383,8 @@
     "copyAndBuild": "複製並建置",
     "createGroup": "新建專案",
     "deleteGroup": "刪除專案",
-    "editGroupName": "編輯專案名稱"
+    "editGroupName": "編輯專案名稱",
+    "addNewMember": "加入新成員"
   },
   "aggregation": {
     "mean": "平均",

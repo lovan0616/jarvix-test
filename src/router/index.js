@@ -4,6 +4,7 @@ import AppLayout from '@/components/layout/AppLayout'
 import store from '../store'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
+const groupId = store.getters['userManagement/getCurrentGroupId'] || 82
 
 Vue.use(Router)
 
@@ -143,6 +144,39 @@ const router = new Router({
                   path: ':id',
                   name: 'PageDataFileList',
                   component: () => import('@/pages/dataManagement/DataFileList')
+                }
+              ]
+            },
+            {
+              path: 'user-management',
+              component: () => import('@/pages/groupUserManagement/Index'),
+              children: [
+                {
+                  path: '/',
+                  redirect: { name: 'GroupUserList', params: {group_id: groupId} },
+                  name: 'GroupUserManagement',
+                  meta: {
+                    isMainNav: true
+                  }
+                },
+                {
+                  path: ':group_id',
+                  component: () => import('@/pages/groupUserManagement/GroupUserList'),
+                  name: 'GroupUserList',
+                  meta: {
+                    layers: ['group', 'user-management'],
+                    accountPermission: ['account_update_user']
+                  }
+                },
+                {
+                  path: ':group_id/create',
+                  component: () => import('@/pages/groupUserManagement/GroupCreateUser'),
+                  name: 'GroupCreateUser',
+                  meta: {
+                    layers: ['group', 'user-management'],
+                    accountPermission: ['account_update_user'],
+                    isHiddenNav: true
+                  }
                 }
               ]
             }

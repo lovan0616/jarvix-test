@@ -155,7 +155,7 @@ export function createGroup (groupInfo) {
 }
 
 /**
- * 刪除群錊
+ * 刪除群組
  * @param {Number} id - 群組 ID
  */
 export function deleteGroup (id) {
