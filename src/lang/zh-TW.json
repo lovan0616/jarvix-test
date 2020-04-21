@@ -135,6 +135,7 @@
     "columnCorrelation": "欄位關聯",
     "emptyForeign": "尚未建立任何資料表關聯",
     "emptyDateTime": "資料表無日期欄位",
+    "emptyDataFrameAlias": "尚未建立任何資料表別名",
     "selectForeign": "選擇關聯資料表",
     "selectColumn": "選擇欄位",
     "processStep1": "填寫資料源名稱",
@@ -255,7 +256,9 @@
     "buildFail": "建置失敗",
     "connectionName": "連線名稱",
     "admin": "系統管理員",
-    "general": "一般使用者"
+    "general": "一般使用者",
+    "dataFrameAliasSetting": "資料表別名設定",
+    "dataFrameAliasInputPlaceholder": "請輸入別名"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
@@ -384,7 +387,8 @@
     "createGroup": "新建專案",
     "deleteGroup": "刪除專案",
     "editGroupName": "編輯專案名稱",
-    "addNewMember": "加入新成員"
+    "addNewMember": "加入新成員",
+    "editDataFrameAlias": "編輯資料表別名"
   },
   "aggregation": {
     "mean": "平均",

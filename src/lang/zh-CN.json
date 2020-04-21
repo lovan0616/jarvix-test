@@ -56,7 +56,12 @@
     "connectionFail": "栏位资料有误，请重新检查",
     "columnSetNameEmpty": "栏位组合名称未填写",
     "columnSetChosenEmpty": "尚未选择任何栏位",
+<<<<<<< HEAD
     "memberDeleteSuccess": "成员删除成功"
+=======
+    "dataFrameAliasSetting": "数据表别名设置",
+    "dataFrameAliasInputPlaceholder": "请输入别名"
+>>>>>>> add spinner + empty-block & fix bugs
   },
   "guiding": {
     "prevStep": "上一步",
@@ -135,6 +140,7 @@
     "columnCorrelation": "栏位关联",
     "emptyForeign": "尚未建立任何资料表关联",
     "emptyDateTime": "资料表无日期栏位",
+    "emptyDataFrameAlias": "尚未建立任何资料表别名",
     "selectForeign": "选择关联资料表",
     "selectColumn": "选择栏位",
     "processStep1": "填写资料源名称",
@@ -384,7 +390,8 @@
     "createGroup": "新建专案",
     "deleteGroup": "删除专案",
     "editGroupName": "编辑专案名称",
-    "addNewMember": "加入新成员"
+    "addNewMember": "加入新成员",
+    "editDataFrameAlias": "编辑资料表别名"
   },
   "aggregation": {
     "mean": "平均",

@@ -24,7 +24,7 @@ export function saveValueAlias (aliasInfo) {
 /**
  * get data frame alias
  */
-export function getDataframeAlias (id) {
+export function getDataFrameAlias (id) {
   return request({
     url: `/alias/dataframe/${id}`,
     method: 'GET'
@@ -35,7 +35,7 @@ export function getDataframeAlias (id) {
  * save data frame alias
  * @param {Array} alias - 別名
  */
-export function patchDataframeAlias (alias) {
+export function patchDataFrameAlias (alias) {
   return request({
     url: '/alias/dataframe',
     method: 'PATCH',

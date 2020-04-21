@@ -60,7 +60,7 @@
         @create="createDataSource"
         @delete="confirmDelete"
         @edit="editTableColumn"
-        @DataframeAlias="editDataframeAlias"
+        @dataFrameAlias="editDataFrameAlias"
         @valueAlias="editTableValueAlias"
         @columnSet="editColumnSet"
         @dateTime="editDateTime"
@@ -89,11 +89,11 @@
       :table-info="currentEditDataFrameInfo"
       @close="closeEditColumnDialog"
     ></edit-column-dialog>
-    <dataframe-alias-dialog
-      v-if="showDataframeAliasDialog"
+    <data-frame-alias-dialog
+      v-if="showDataFrameAliasDialog"
       :data-frame-info="currentEditDataFrameInfo"
-      @close="closeDataframeAliasDialog"
-    >123</dataframe-alias-dialog>
+      @close="closeDataFrameAliasDialog"
+    ></data-frame-alias-dialog>
     <value-alias-dialog
       v-if="showValueAliasDialog"
       :data-frame-info="currentEditDataFrameInfo"
@@ -118,7 +118,7 @@ import ConfirmDeleteDataFrameDialog from './components/ConfirmDeleteDataFrameDia
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
 import EditColumnSetDialog from './components/columnSet/EditColumnSetDialog'
-import DataframeAliasDialog from './components/alias/DataframeAliasDialog'
+import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
@@ -132,7 +132,7 @@ export default {
     EditTableJoinRelationDialog,
     EditColumnDialog,
     EditColumnSetDialog,
-    DataframeAliasDialog,
+    DataFrameAliasDialog,
     ValueAliasDialog,
     EditDateTimeDialog
   },
@@ -157,7 +157,7 @@ export default {
         id: null,
         primaryAlias: null
       },
-      showDataframeAliasDialog: false,
+      showDataFrameAliasDialog: false,
       showValueAliasDialog: false,
       showEditColumnSetDialog: false,
       intervalFunction: null,
@@ -278,12 +278,12 @@ export default {
       this.currentEditDataFrameInfo = null
       this.toggleEditColumnDialog()
     },
-    editDataframeAlias (dataInfo) {
+    editDataFrameAlias (dataInfo) {
       this.currentEditDataFrameInfo = {
         id: dataInfo.id,
         primaryAlias: dataInfo.primaryAlias
       }
-      this.showDataframeAliasDialog = true
+      this.showDataFrameAliasDialog = true
     },
     editTableValueAlias (dataInfo) {
       this.currentEditDataFrameInfo = {
@@ -306,8 +306,9 @@ export default {
       }
       this.showEditDateTimeDialog = true
     },
-    closeDataframeAliasDialog () {
-      this.showDataframeAliasDialog = false
+    closeDataFrameAliasDialog () {
+      this.showDataFrameAliasDialog = false
+      this.currentEditDataFrameInfo = null
     },
     closeValueAliasDialog () {
       this.showValueAliasDialog = false
@@ -366,7 +367,7 @@ export default {
             {
               name: this.$t('button.edit'),
               subAction: [
-                {icon: '', title: 'button.editDataframeAlias', dialogName: 'DataframeAlias'},
+                {icon: '', title: 'button.editDataFrameAlias', dialogName: 'dataFrameAlias'},
                 {icon: '', title: 'button.editColumn', dialogName: 'edit'},
                 {icon: '', title: 'button.editDataValue', dialogName: 'valueAlias'},
                 {icon: '', title: 'button.editColumnSet', dialogName: 'columnSet'}
