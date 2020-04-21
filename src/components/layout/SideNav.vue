@@ -46,7 +46,7 @@ export default {
     line-height: 54px;
     display: flex;
     align-items: center;
-    padding: 0 1rem;
+    padding: 0 1rem 0 40px;
     letter-spacing: 0.15em;
     color: #a7a7a7;
     position: relative;
@@ -86,7 +86,7 @@ export default {
       flex-basis: 24px;
       height: 12px;
       margin-right: 8px;
-      transform: rotate(-30deg);
+      transform: translate(-1px, -1px) rotate(-30deg);
       fill: #fff;
       visibility: hidden;
     }

@@ -107,7 +107,7 @@ export default {
   }
 
   .side-nav {
-    width: 270px;
+    width: $side-nav-width;
     margin: 0 auto 0 0;
     height: calc(100vh - #{$header-height});
   }
@@ -115,7 +115,7 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
-    width: calc(100% - 270px);
+    width: calc(100% - #{$side-nav-width});
     height: calc(100vh - #{$header-height});
   }
 
