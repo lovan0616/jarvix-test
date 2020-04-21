@@ -25,6 +25,7 @@
               :option-list="userList"
               name="invitee"
               v-validate="'required'"
+              :placeholder="$t('editing.pleaseSelectInviteeEmail')"
             ></default-select>
             <div
               class="error-text"
@@ -72,7 +73,7 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { getAccountUsers } from '@/API/User'
 import InputBlock from '@/components/InputBlock'
-import { createGroupUser } from '@/API/Group'
+import { createGroupUser, getGroupUserList } from '@/API/Group'
 import { Message } from 'element-ui'
 
 export default {
@@ -96,10 +97,15 @@ export default {
   },
   methods: {
     fetchUser () {
-      getAccountUsers()
-        .then(users => {
-          this.userList = users
-          this.userList = users.map(user => ({value: user.email, id: user.id}))
+      Promise.all([getAccountUsers(), getGroupUserList()])
+        .then(([accountUsers, groupUsers]) => {
+          // exclude existing members
+          this.userList = accountUsers.reduce((acc, cur) => {
+            const userExist = groupUsers.find(user => user.id === cur.id)
+            if (userExist) return acc
+            acc.push({value: cur.email, id: cur.id})
+            return acc
+          }, [])
         })
         .catch(() => this.backToUserList())
     },
@@ -206,6 +212,10 @@ export default {
   >>> .el-input__inner {
     padding-left: 0;
     padding-bottom: 8px;
+
+    &::placeholder {
+      color: #AAAAAA;
+    }
   }
 }
 </style>

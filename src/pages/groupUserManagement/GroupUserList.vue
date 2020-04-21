@@ -137,7 +137,7 @@ export default {
     margin-bottom: 16px;
 
     .title {
-      margin-top: .4rem;
+      margin-top: 0;
       font-size: 24px;
       line-height: 32px;
     }

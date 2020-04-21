@@ -243,7 +243,7 @@ export default {
       }
     },
     doAction (action, data) {
-      if (!action || (action && !action.value)) return
+      if (!action || (action && !action.value) || !this.showActionButton(action, data)) return
       if (action.type === 'event') return this.$emit(action.value, data)
       this.linkTo(action.link, data.id)
     },

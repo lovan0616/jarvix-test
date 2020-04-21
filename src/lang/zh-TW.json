@@ -181,6 +181,7 @@
     "addUser": "新增使用者",
     "notYetCreateUser": "尚未建立使用者",
     "inviteeEmail": "受邀者 email",
+    "pleaseSelectInviteeEmail": "請選擇受邀者 email",
     "userTitle": "使用者名稱",
     "userAccount": "使用者帳號",
     "setLoginPassword": "設定密碼",

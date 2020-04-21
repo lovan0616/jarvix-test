@@ -18,7 +18,6 @@ export default {
       const defaultAccountId = accountInfo.accountList.find(account => account.isDefault).id
       groupInfo = await getAccountGroupInfo(defaultAccountId)
     }
-    console.log(groupInfo)
     const userInfo = await getSelfInfo()
     commit('setUserInfo', {
       userName: userInfo.name,
