@@ -8,7 +8,7 @@
     <div class="page-title-row">
       <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
       <div class="bread-crumb">
-        <router-link to="/data-management" class="title-link">{{ $t('editing.dataSource') }}</router-link>
+        <router-link :to="{name: 'PageDataSourceList'}" class="title-link">{{ $t('editing.dataSource') }}</router-link>
         <span class="divider">/</span>{{ dataSourceName }}
       </div>
     </div>
