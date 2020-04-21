@@ -127,7 +127,7 @@ export default {
   },
   computed: {
     getSpinnerTitle () {
-      return this.isLoading ? this.$t('button.download') : this.$t('button.isSaving')
+      return this.isLoading ? this.$t('button.download') : this.$t('editing.isSaving')
     }
   }
 }
@@ -136,6 +136,11 @@ export default {
 .dialog-box {
   .dialog-inner-box {
     position: relative;
+    .dialog-container {
+      .alias-item:first-child {
+        margin-top: 24px;
+      }
+    }
   }
   .alias-item {
     width: 100%;
