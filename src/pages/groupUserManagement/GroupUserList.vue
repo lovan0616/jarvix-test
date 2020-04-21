@@ -9,7 +9,7 @@
           <router-link
             class="btn-m btn-default btn-has-icon"
             v-if="showCreateButton()"
-            :to="{name: 'GroupCreateUser'}"
+            :to="{name: 'GroupCreateUser', params: {group_id: currentGroupId}}"
           >
             <svg-icon icon-class="user" class="icon"></svg-icon>{{ $t('button.addNewMember') }}
           </router-link>
@@ -43,14 +43,15 @@ import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'GroupManagement',
+  name: 'GroupUserList',
   data () {
     return {
       isLoading: false,
       userList: [],
       editData: {},
       selectedUser: {},
-      showConfirmDeleteDialog: false
+      showConfirmDeleteDialog: false,
+      currentGroupId: ''
     }
   },
   components: {
@@ -58,7 +59,13 @@ export default {
     DecideDialog
   },
   mounted () {
-    this.fetchData()
+    this.currentGroupId = this.$route.params.group_id
+    this.fetchData(this.currentGroupId)
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.currentGroupId = to.params.group_id
+    this.fetchData(this.currentGroupId)
+    next()
   },
   computed: {
     ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission']),
@@ -93,9 +100,9 @@ export default {
     }
   },
   methods: {
-    fetchData () {
+    fetchData (currentGroupId) {
       this.isLoading = true
-      getGroupUserList()
+      getGroupUserList(currentGroupId)
         .then(userList => {
           this.userList = userList
           this.isLoading = false
@@ -112,9 +119,9 @@ export default {
     },
     deleteGroup (data) {
       this.isLoading = true
-      deleteGroupUser(this.selectedUser.id)
+      deleteGroupUser(this.selectedUser.id, this.currentGroupId)
         .then(() => {
-          this.fetchData()
+          this.fetchData(this.currentGroupId)
           this.closeDelete()
           Message({
             message: this.$t('message.memberDeleteSuccess'),

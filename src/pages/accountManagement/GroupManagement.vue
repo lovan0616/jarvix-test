@@ -16,15 +16,17 @@
       </div>
       <h1 class="title">{{currentStageName}}</h1>
     </div>
-    <component
-      :is="currentManagementType"
-      :group-list.sync="groupList"
-      :is-loading="isLoading"
-      @editGroup="editGroup"
-      :edit-data="editData"
-      @cancelEdit="cancelEditGroup"
-      @finishEdit="finishEditGroup"
-    ></component>
+    <transition name="fade" mode="out-in">
+      <component
+        :is="currentManagementType"
+        :group-list.sync="groupList"
+        :is-loading="isLoading"
+        @editGroup="editGroup"
+        :edit-data="editData"
+        @cancelEdit="cancelEditGroup"
+        @finishEdit="finishEditGroup"
+      ></component>
+    </transition>
   </div>
 </template>
 <script>

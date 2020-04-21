@@ -4,6 +4,7 @@ import AppLayout from '@/components/layout/AppLayout'
 import store from '../store'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
+const groupId = store.getters['userManagement/getCurrentGroupId'] || 82
 
 Vue.use(Router)
 
@@ -152,14 +153,14 @@ const router = new Router({
               children: [
                 {
                   path: '/',
-                  redirect: { name: 'GroupUserList' },
+                  redirect: { name: 'GroupUserList', params: {group_id: groupId} },
                   name: 'GroupUserManagement',
                   meta: {
                     isMainNav: true
                   }
                 },
                 {
-                  path: '/',
+                  path: ':group_id',
                   component: () => import('@/pages/groupUserManagement/GroupUserList'),
                   name: 'GroupUserList',
                   meta: {
@@ -168,7 +169,7 @@ const router = new Router({
                   }
                 },
                 {
-                  path: 'create',
+                  path: ':group_id/create',
                   component: () => import('@/pages/groupUserManagement/GroupCreateUser'),
                   name: 'GroupCreateUser',
                   meta: {

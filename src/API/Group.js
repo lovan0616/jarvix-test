@@ -1,12 +1,9 @@
 import request from '@/utils/publicRequest'
-import store from '../store'
 
 /**
  * 取得帳戶下所有使用者
  */
-export function getGroupUserList () {
-  const dummyGroupId = 82
-  const groupId = store.getters['userManagement/getCurrentGroupId'] || dummyGroupId
+export function getGroupUserList (groupId) {
   return request({
     url: `/group/${groupId}/user`,
     method: 'GET'
@@ -20,15 +17,13 @@ export function getGroupUserList () {
  * @param {Number} userInfo.groupRole - 群組角色
  * @param {Number} userInfo.userId - 使用者 ID
  */
-export function createGroupUser (userInfo) {
-  const dummyGroupId = 82
+export function createGroupUser (userInfo, groupId) {
   return request({
     url: '/group/user',
     method: 'POST',
     data: {
       ...userInfo,
-      //   groupId: store.getters['userManagement/getCurrentGroupId'],
-      groupId: dummyGroupId
+      groupId
     }
   })
 }
@@ -38,9 +33,7 @@ export function createGroupUser (userInfo) {
  * @param {Number} groupId - 群組 ID
  * @param {Number} userId - 使用者 ID
  */
-export function deleteGroupUser (userId) {
-  const dummyGroupId = 82
-  const groupId = store.getters['userManagement/getCurrentGroupId'] || dummyGroupId
+export function deleteGroupUser (userId, groupId) {
   return request({
     url: `/group/${groupId}/user/${userId}`,
     method: 'DELETE'

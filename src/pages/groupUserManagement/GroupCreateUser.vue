@@ -3,7 +3,10 @@
     <div class="page-title-row">
       <h1 class="title">{{ $t('sideNav.groupCreateUser') }}</h1>
       <div class="bread-crumb">
-        <router-link :to="{name: 'GroupUserList'}" class="title-link">{{ $t('sideNav.groupUserList') }}</router-link>
+        <router-link
+          :to="{name: 'GroupUserList', params: {group_id: $route.params.group_id}}"
+          class="title-link"
+        >{{ $t('sideNav.groupUserList') }}</router-link>
         <span class="divider">/</span>{{ $t('sideNav.groupCreateUser') }}
       </div>
     </div>
@@ -89,15 +92,22 @@ export default {
       selectedRole: '',
       roleList: [],
       userList: [],
-      isLoading: false
+      isLoading: false,
+      currentGroupId: ''
     }
   },
   mounted () {
-    this.fetchUser()
+    this.currentGroupId = this.$route.params.group_id
+    this.fetchUser(this.currentGroupId)
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.currentGroupId = to.params.group_id
+    this.fetchUser(this.currentGroupId)
+    next()
   },
   methods: {
-    fetchUser () {
-      Promise.all([getAccountUsers(), getGroupUserList()])
+    fetchUser (currentGroupId) {
+      Promise.all([getAccountUsers(), getGroupUserList(currentGroupId)])
         .then(([accountUsers, groupUsers]) => {
           // exclude existing members
           this.userList = accountUsers.reduce((acc, cur) => {
@@ -117,7 +127,7 @@ export default {
         createGroupUser({
           groupRole: dummyGroupRole,
           userId: this.userList.find(user => user.value === this.selectedInvitee).id
-        })
+        }, this.currentGroupId)
           .then(() => {
             this.backToUserList()
             return Message({
@@ -130,7 +140,7 @@ export default {
       })
     },
     backToUserList () {
-      this.$router.push({name: 'GroupUserList'})
+      this.$router.push({name: 'GroupUserList', params: {group_id: this.$route.params.group_id}})
     },
     updateSelectedInvitee (invitee) {
       this.selectedInvitee = this.userList.find(user => user.value === invitee).value
