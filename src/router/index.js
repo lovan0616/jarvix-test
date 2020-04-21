@@ -4,7 +4,6 @@ import AppLayout from '@/components/layout/AppLayout'
 import store from '../store'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
-const groupId = store.getters['userManagement/getCurrentGroupId'] || 82
 
 Vue.use(Router)
 
@@ -130,7 +129,6 @@ const router = new Router({
           path: 'group',
           component: () => import('@/pages/management/Index'),
           children: [
-            // TODO: 開發帳戶管理時需更新此路由階層、補上 meta 和 layer
             {
               path: 'data-management',
               component: () => import('@/pages/dataManagement/Index'),
@@ -138,12 +136,19 @@ const router = new Router({
                 {
                   path: '/',
                   name: 'PageDataSourceList',
-                  component: () => import('@/pages/dataManagement/DataSourceList')
+                  component: () => import('@/pages/dataManagement/DataSourceList'),
+                  meta: {
+                    isMainNav: true,
+                    layers: ['group', 'data-management']
+                  }
                 },
                 {
                   path: ':id',
                   name: 'PageDataFileList',
-                  component: () => import('@/pages/dataManagement/DataFileList')
+                  component: () => import('@/pages/dataManagement/DataFileList'),
+                  meta: {
+                    layers: ['group', 'data-management']
+                  }
                 }
               ]
             },
@@ -153,7 +158,7 @@ const router = new Router({
               children: [
                 {
                   path: '/',
-                  redirect: { name: 'GroupUserList', params: {group_id: groupId} },
+                  redirect: { name: 'GroupUserList' },
                   name: 'GroupUserManagement',
                   meta: {
                     isMainNav: true

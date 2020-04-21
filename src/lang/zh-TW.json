@@ -16,7 +16,9 @@
     "functionDescription": "功能說明",
     "groupUserManagement": "專案成員管理",
     "groupUserList": "成員列表",
-    "groupCreateUser": "加入新成員"
+    "groupCreateUser": "加入新成員",
+    "pageDataSourceList": "資料源管理",
+    "pageDataFileList": "資料表列表"
   },
   "message": {
     "joinTableBuilt": "資料表關聯建立完成",
@@ -139,8 +141,9 @@
     "selectForeign": "選擇關聯資料表",
     "selectColumn": "選擇欄位",
     "processStep1": "填寫資料源名稱",
-    "processStep2": "上傳資料/連接資料庫",
-    "processStep3": "開始新增",
+    "processStep2": "上傳檔案",
+    "processStep3": "選擇欄位",
+    "processStep4": "資料清理設定",
     "connectDB": "連接資料庫",
     "connectStep2": "選擇資料",
     "connectStep3": "欄位設定",
@@ -245,6 +248,7 @@
     "loading": "資料讀取中",
     "databaseType": "資料庫類型",
     "currentLoadedDataFrame": "目前讀取的資料表",
+    "dataFrameContent": "資料表內容",
     "currentDisplayDataFrame": "目前顯示資料表",
     "dataType": "資料類型",
     "chooseConnection": "選擇連線",
@@ -259,6 +263,20 @@
     "general": "一般使用者",
     "dataFrameAliasSetting": "資料表別名設定",
     "dataFrameAliasInputPlaceholder": "請輸入別名"
+  },
+  "etl": {
+    "dataFrameList": "資料表列表",
+    "columnList": "欄位列表",
+    "dataType": "資料型別",
+    "emptyStringReplaceValue": "空字串替代值",
+    "nullReplaceValue": "Null替代值",
+    "errorReplaceValue": "錯誤資料替代值",
+    "customDataManagement": "自訂資料處理",
+    "columnValue": "欄位值",
+    "replaceValue": "替代值",
+    "replaceValuePlaceholder": "請輸入替代值",
+    "etlSetting": "資料清洗設定",
+    "remarkToSave": "異動內容須保存"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
@@ -388,7 +406,10 @@
     "deleteGroup": "刪除專案",
     "editGroupName": "編輯專案名稱",
     "addNewMember": "加入新成員",
-    "editDataFrameAlias": "編輯資料表別名"
+    "editDataFrameAlias": "編輯資料表別名",
+    "new": "新增",
+    "buildData": "建置資料",
+    "keepSave": "保存"
   },
   "aggregation": {
     "mean": "平均",

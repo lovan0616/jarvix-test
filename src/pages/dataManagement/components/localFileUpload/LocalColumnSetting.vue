@@ -36,7 +36,7 @@ import UploadProcessBlock from './UploadProcessBlock'
 import EtlColumnSetting from '../etl/EtlColumnSetting'
 
 export default {
-  name: 'ColumnSetting',
+  name: 'LocalColumnSetting',
   inject: ['$validator'],
   components: {
     UploadProcessBlock,
@@ -50,13 +50,11 @@ export default {
   },
   data () {
     return {
-      isProcessing: false
+      isProcessing: false,
+      copyTableList: []
     }
   },
   methods: {
-    cancelFileUpload () {
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-    },
     prevStep () {
       this.$emit('prev')
     },
@@ -64,18 +62,12 @@ export default {
       this.isProcessing = true
       let promiseList = []
       this.etlTableList.forEach((element, index) => {
-        let promise = dataSourcePreprocessor(element).then(response => {
-          this.tableIdList[index].connectionStatus = 'success'
-        }).catch(() => {
-          this.tableIdList[index].connectionStatus = 'fail'
-        })
-        promiseList.push(promise)
+        promiseList.push(dataSourcePreprocessor(element))
       })
 
       Promise.all(promiseList)
         .then(() => {
           this.$emit('next')
-          this.isProcessing = false
         })
         .catch(err => {
           this.isProcessing = false

@@ -59,7 +59,7 @@ export default {
     DecideDialog
   },
   mounted () {
-    this.currentGroupId = this.$route.params.group_id
+    this.currentGroupId = this.groupId
     this.fetchData(this.currentGroupId)
   },
   beforeRouteUpdate (to, from, next) {
@@ -69,6 +69,10 @@ export default {
   },
   computed: {
     ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission']),
+    // TO FIX
+    groupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId'] || 82
+    },
     tableHeaders () {
       return [
         {

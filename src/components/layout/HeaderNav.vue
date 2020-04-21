@@ -2,8 +2,8 @@
   <nav class="nav-header">
     <router-link class="nav-item" to="/" exact>{{ $t('nav.index') }}</router-link>
     <!-- FIXME for poc/foxconn_molding -->
-    <router-link class="nav-item" to="/algorithm">演算法</router-link>
-    <router-link class="nav-item" to="/pinboard">{{ $t('nav.pinboard') }}</router-link>
+    <router-link class="nav-item" :to="{name: 'PageAlgorithmList'}">演算法</router-link>
+    <router-link class="nav-item" :to="{name: 'PagePinboardList'}">{{ $t('nav.pinboard') }}</router-link>
     <div class="nav-item nav-item-dropdown nav-set">
       <div class="nav-set-flex">
         <div>{{ $t('nav.setting') }}</div>
@@ -76,6 +76,7 @@ export default {
       selectedLanguage: null,
       settingData: [
         {icon: 'database', title: 'nav.dataManagement', name: 'PageDataSourceList'},
+        {icon: 'database', title: 'sideNav.groupUserManagement', name: 'GroupUserManagement'},
         {icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'},
         // {icon: 'feedback', title: 'editing.questionFeedback'},
         {icon: 'description', title: 'editing.functionDescription', name: 'FunctionDescription'}
