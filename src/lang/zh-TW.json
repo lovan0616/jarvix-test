@@ -275,7 +275,8 @@
     "columnValue": "欄位值",
     "replaceValue": "替代值",
     "replaceValuePlaceholder": "請輸入替代值",
-    "etlSetting": "資料清洗設定"
+    "etlSetting": "資料清洗設定",
+    "remarkToSave": "異動內容須保存"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
@@ -407,7 +408,8 @@
     "addNewMember": "加入新成員",
     "editDataFrameAlias": "編輯資料表別名",
     "addNew": "新增",
-    "buildData": "建置資料"
+    "buildData": "建置資料",
+    "keepSave": "保存"
   },
   "aggregation": {
     "mean": "平均",

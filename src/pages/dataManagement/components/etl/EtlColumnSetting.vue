@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="section data-column">
-      <div class="title has-icon"><svg-icon icon-class="arrow-right" class="icon"></svg-icon><span class="data-frame-name">{{ tableOptionList[currentTableIndex].name }}</span>{{ $t('etl.columnList') }}</div>
+      <div class="title has-icon"><svg-icon icon-class="arrow-right" class="icon"></svg-icon><span class="data-frame-name">{{ tableOptionList[currentTableIndex].name || '' }}</span>{{ $t('etl.columnList') }}</div>
       <div class="data-column-list section-block">
         <div class="single-column"
           v-for="(column, index) in columnOptionList"
@@ -26,13 +26,12 @@
       </div>
     </div>
     <div class="section section-setting">
-      <div class="title has-icon"><svg-icon icon-class="arrow-right" class="icon"></svg-icon><span class="data-frame-name">{{  }}</span>{{ $t('etl.etlSetting') }}</div>
-      <div class="section-block">
-        <single-column-setting
-          :key="currentTableIndex + '-' + currentColumnIndex"
-          :column-info="currentColumnInfo"
-        ></single-column-setting>
-      </div>
+      <div class="title has-icon"><svg-icon icon-class="arrow-right" class="icon"></svg-icon><span class="data-frame-name">{{ currentColumnInfo.primaryAlias || '' }}</span>{{ $t('etl.etlSetting') }}</div>
+      <single-column-setting
+        :key="currentTableIndex + '-' + currentColumnIndex"
+        :column-info="currentColumnInfo"
+        @updateInfo="updateSetting"
+      ></single-column-setting>
     </div>
   </div>
 </template>
@@ -57,6 +56,13 @@ export default {
     },
     chooseDataColumn (index) {
       this.currentColumnIndex = index
+    },
+    updateSetting (info) {
+      this.$store.commit('dataManagement/updateReplaceValue', {
+        tableIndex: this.currentTableIndex,
+        columnIndex: info.index,
+        info
+      })
     }
   },
   computed: {

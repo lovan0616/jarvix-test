@@ -8,7 +8,7 @@
     ></upload-process-block>
     <div class="info-block">
       <div>{{ $t('editing.dataColumn') }}</div>
-      <div>{{ $t('editing.dataSourceName') }}：{{ 'test' }}</div>
+      <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
       <etl-column-setting></etl-column-setting>
@@ -20,13 +20,13 @@
         >{{ $t('button.prevStep') }}</button>
         <button class="btn btn-default"
           @click="nextStep"
-        >{{ $t('button.copyAndBuild') }}</button>
+        >{{ $t('button.buildData') }}</button>
       </div>
     </div>
   </div>
   <spinner class="processing-spinner-container"
     v-else
-    :title="$t('editing.buildData')"
+    :title="$t('editing.dataBuilding')"
     size="50"
   ></spinner>
 </template>
@@ -78,6 +78,9 @@ export default {
   computed: {
     etlTableList () {
       return this.$store.state.dataManagement.etlTableList
+    },
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
     }
   }
 }

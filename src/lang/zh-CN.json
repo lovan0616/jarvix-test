@@ -275,7 +275,8 @@
     "columnValue": "栏位值",
     "replaceValue": "替代值",
     "replaceValuePlaceholder": "请输入替代值",
-    "etlSetting": "资料清洗设定"
+    "etlSetting": "资料清洗设定",
+    "remarkToSave": "异动内容须保存"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
@@ -407,7 +408,8 @@
     "addNewMember": "加入新成员",
     "editDataFrameAlias": "编辑资料表别名",
     "addNew": "新增",
-    "buildData": "建置资料"
+    "buildData": "建置资料",
+    "keepSave": "保存"
   },
   "aggregation": {
     "mean": "平均",
