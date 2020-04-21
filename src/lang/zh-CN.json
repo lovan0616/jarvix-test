@@ -135,6 +135,7 @@
     "columnCorrelation": "栏位关联",
     "emptyForeign": "尚未建立任何资料表关联",
     "emptyDateTime": "资料表无日期栏位",
+    "emptyDataFrameAlias": "尚未建立任何资料表别名",
     "selectForeign": "选择关联资料表",
     "selectColumn": "选择栏位",
     "processStep1": "填写资料源名称",
@@ -255,7 +256,9 @@
     "buildFail": "建置失败",
     "connectionName": "连线名称",
     "admin": "系统管理员",
-    "general": "一般使用者"
+    "general": "一般使用者",
+    "dataFrameAliasSetting": "资料表别名设置",
+    "dataFrameAliasInputPlaceholder": "请输入别名"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
@@ -384,7 +387,8 @@
     "createGroup": "新建专案",
     "deleteGroup": "删除专案",
     "editGroupName": "编辑专案名称",
-    "addNewMember": "加入新成员"
+    "addNewMember": "加入新成员",
+    "editDataFrameAlias": "编辑资料表别名"
   },
   "aggregation": {
     "mean": "平均",
