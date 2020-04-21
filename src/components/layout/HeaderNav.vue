@@ -76,6 +76,7 @@ export default {
       selectedLanguage: null,
       settingData: [
         {icon: 'database', title: 'nav.dataManagement', name: 'PageDataSourceList'},
+        {icon: 'database', title: 'sideNav.groupUserManagement', name: 'GroupUserManagement'},
         {icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'},
         // {icon: 'feedback', title: 'editing.questionFeedback'},
         {icon: 'description', title: 'editing.functionDescription', name: 'FunctionDescription'}
