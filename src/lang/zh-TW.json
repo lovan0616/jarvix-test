@@ -447,10 +447,10 @@
     "categoryTitle": "Category 類型",
     "numericTitle": "Numeric 類型",
     "datavalueTitle": "常見資料",
-    "category": "Category類型的欄位，不具有數量單位。",
-    "numeric": "numeric類型的欄位，具有數量單位。",
+    "category": "Category 類型的欄位，不具有數量單位。",
+    "numeric": "Numeric 類型的欄位，具有數量單位。",
     "filter": "時間篩選條件",
-    "value": "value是欄位的資料，不限定數量或其他型態。",
+    "value": "Value 是欄位的資料，不限定數量或其他型態。",
     "column": "欄位",
     "columnValue": "欄位資料",
     "type": "類型",
@@ -890,7 +890,7 @@
             ]
           },
           {
-            "questionText": "value 和 value 的 Numeric 比較",
+            "questionText": "Value 和 Value 的 Numeric 比較",
             "questionExample": [
               [
                 {"text": "上海", "type": "value"},
@@ -910,7 +910,7 @@
             ]
           },
           {
-            "questionText": "每年 value 和 value 的 Numeric 比較",
+            "questionText": "每年 Value 和 Value 的 Numeric 比較",
             "questionExample": [
               [
                 {"text": "每年", "type": "filter"},
@@ -1086,7 +1086,7 @@
             ]
           },
           {
-            "questionText": "value 和 value 各佔 Category 的比例",
+            "questionText": "Value 和 Value 各佔 Category 的比例",
             "questionExample": [
               [
                 {"text": "S1", "type": "value"},
@@ -1107,7 +1107,7 @@
             ]
           },
           {
-            "questionText": "value 和 value 各佔 Category 的 Numeric 的比例",
+            "questionText": "Value 和 Value 各佔 Category 的 Numeric 的比例",
             "questionExample": [
               [
                 {"text": "S1", "type": "value"},
