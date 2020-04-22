@@ -14,5 +14,10 @@ export default {
     const defaultGroup = state.groupList.find(group => group.isDefault)
     if (!defaultGroup) return
     return defaultGroup.groupId
+  },
+  getCurrentGroupName: state => {
+    const defaultGroup = state.groupList.find(group => group.isDefault)
+    if (!defaultGroup) return
+    return defaultGroup.groupName
   }
 }

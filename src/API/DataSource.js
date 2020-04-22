@@ -1,11 +1,13 @@
 import request from '@/utils/publicRequest'
+import store from '@/store'
 
 /**
  * get data source list
  */
 export function getDataSourceList () {
+  const groupId = store.getters['userManagement/getCurrentGroupId']
   return request({
-    url: '/datasources',
+    url: `/datasources/new/${groupId}`,
     method: 'GET'
   })
 }

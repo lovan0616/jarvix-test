@@ -1,11 +1,14 @@
 {
   "lang": "简中",
   "nav": {
-    "index": "首页",
+    "index": "智能分析",
     "pinboard": "个人钉板",
     "dataManagement": "资料管理",
+    "dataSourceManagement": "资料源管理",
+    "groupPlaceholder": "专案",
     "languagePlaceholder": "语系",
-    "setting": "设定"
+    "setting": "设定",
+    "projectManagement": "专案管理"
   },
   "sideNav": {
     "accountManagement": "帐户管理",
@@ -198,6 +201,7 @@
     "groupOwner": "专案拥有者",
     "groupMemberAmount": "专案人数",
     "groupName": "专案名称",
+    "switchGroup": "切换专案",
     "groupRolePermission": "专案角色权限",
     "notYetCreateGroup": "尚未建立专案",
     "deleteGroup": "删除专案",
@@ -1354,6 +1358,7 @@
     "TASKWARN0002": "此条件获取不到任何资料来进行处理",
     "TASKWARN0003": "计算结果为空",
     "authFail": "权限失效请重新登入",
+    "permissionChanged": "权限已被变更，请重新登入",
     "lackOfSignUpToken": "无注册权限，请联系管理员",
     "defaultMsg": "系统发生非预期错误",
     "lackOfPermission": "权限不足，请联系管理员"

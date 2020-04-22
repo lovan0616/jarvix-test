@@ -5,6 +5,7 @@
         <a
           href="javascript:void(0);"
           class="btn-m btn-default btn-has-icon"
+          :class="{disabled: isLoading}"
           v-if="showCreateButton()"
           @click="editGroup('create')"
         >
@@ -96,19 +97,19 @@ export default {
               type: 'event',
               name: this.$t('button.delete'),
               value: 'delete',
-              permission: 'account_delete_user'
+              permission: 'account_delete_group'
             },
             {
               type: 'event',
               name: this.$t('editing.editingName'),
               value: 'edit',
-              permission: 'account_update_user'
+              permission: 'account_update_group'
             },
             {
               type: 'event',
               name: this.$t('editing.memberManagement'),
               value: 'manage',
-              permission: 'account_update_user' // 待更新
+              permission: 'account_read_group'
             }
           ]
         }
@@ -142,7 +143,7 @@ export default {
         })
     },
     showCreateButton () {
-      return this.hasAccountPermission('account_create_user')
+      return this.hasAccountPermission('account_create_group')
     },
     manageMember (data) {
       this.$router.push({name: 'GroupUserList', params: {group_id: data.groupId}})

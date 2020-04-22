@@ -1,11 +1,14 @@
 {
   "lang": "繁中",
   "nav": {
-    "index": "首頁",
+    "index": "智能分析",
     "pinboard": "個人釘板",
     "dataManagement": "資料管理",
+    "dataSourceManagement": "資料源管理",
+    "groupPlaceholder": "專案",
     "languagePlaceholder": "語系",
-    "setting": "設定"
+    "setting": "設定",
+    "projectManagement": "專案管理"
   },
   "sideNav": {
     "accountManagement": "帳戶管理",
@@ -198,6 +201,7 @@
     "groupOwner": "專案擁有者",
     "groupMemberAmount": "專案人數",
     "groupName": "專案名稱",
+    "switchGroup": "切換專案",
     "groupRolePermission": "專案角色權限",
     "notYetCreateGroup": "尚未建立專案",
     "deleteGroup": "刪除專案",
@@ -1354,6 +1358,7 @@
     "TASKWARN0002": "此條件獲取不到任何資料來進行處理",
     "TASKWARN0003": "計算結果為空",
     "authFail": "權限失效請重新登入",
+    "permissionChanged": "權限已被變更，請重新登入",
     "lackOfSignUpToken": "無註冊權限，請聯繫管理員",
     "defaultMsg": "系統發生非預期錯誤",
     "lackOfPermission": "權限不足，請聯繫管理員"

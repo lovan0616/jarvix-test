@@ -76,6 +76,12 @@ export default {
                 groupList: res.groupList,
                 groupPermission: res.groupPermission
               })
+              const currentGroupId = this.$store.getters['userManagement/getCurrentGroupId']
+              if (currentGroupId) {
+                this.$store.dispatch('dataSource/getDataSourceList')
+              } else {
+                this.$store.commit('dataSource/setDataSourceList', [])
+              }
               this.$router.push('/')
             }).catch(() => {
               this.isSubmit = false

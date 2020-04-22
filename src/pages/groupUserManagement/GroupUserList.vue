@@ -29,7 +29,7 @@
         :title="this.$t('editing.confirmDeleteProjectUserText')"
         :type="'delete'"
         @closeDialog="closeDelete"
-        @confirmBtn="deleteGroup"
+        @confirmBtn="deleteGroupUser"
       >
       </decide-dialog>
     </div>
@@ -51,7 +51,8 @@ export default {
       editData: {},
       selectedUser: {},
       showConfirmDeleteDialog: false,
-      currentGroupId: ''
+      currentGroupId: '',
+      canEditList: false
     }
   },
   components: {
@@ -92,7 +93,7 @@ export default {
               type: 'event',
               name: this.$t('button.remove'),
               value: 'delete',
-              permission: 'account_delete_user'
+              permission: 'account_delete_group_user'
             }
           ]
         }
@@ -105,9 +106,13 @@ export default {
       getGroupUserList(currentGroupId)
         .then(userList => {
           this.userList = userList
+          this.canEditList = true
           this.isLoading = false
         })
-        .catch(() => { this.isLoading = false })
+        .catch(() => {
+          this.isLoading = false
+          this.canEditList = false
+        })
     },
     confirmDelete (dataObj) {
       this.selectedUser = dataObj
@@ -117,9 +122,10 @@ export default {
       this.selectedUser = {}
       this.showConfirmDeleteDialog = false
     },
-    deleteGroup (data) {
+    deleteGroupUser (data) {
       this.isLoading = true
       deleteGroupUser(this.selectedUser.id, this.currentGroupId)
+        .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
         .then(() => {
           this.fetchData(this.currentGroupId)
           this.closeDelete()
@@ -132,7 +138,7 @@ export default {
         .catch(() => { this.isLoading = false })
     },
     showCreateButton () {
-      return this.hasAccountPermission('account_create_user')
+      return this.canEditList ? this.hasAccountPermission('account_create_group_user') : false
     }
   }
 }

@@ -153,7 +153,6 @@
 </template>
 <script>
 import { getAccountUsers, deleteUserAccount, inviteUser, getAccountRoles, updateRole, getSelfInfo, updateUser } from '@/API/User'
-import { updateUserPermission } from '@/API/Permission'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'
@@ -447,11 +446,6 @@ export default {
         // 原本為開通狀態使用者
         return `${this.closeText} ${this.currentUser.username} ${this.unableLoginText}？`
       }
-    },
-    setUserRole (user, id) {
-      updateUserPermission(id).then(response => {
-        user.permissionActive = !user.permissionActive
-      })
     },
     toCamelCase (str) {
       return str.replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)

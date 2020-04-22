@@ -8,7 +8,13 @@
             <slot></slot>
             <div class="dialog-select-flex">
                 <div v-if="showBoth" @click="closeDialog" class="btn dialog-select-cancel">{{ $t('button.cancel') }}</div>
-                <div @click="confirmBtn" class="btn btn-default dialog-change">{{ button }}</div>
+                <button
+                  class="btn btn-default dialog-change"
+                  @click="confirmBtn"
+                  :disabled="isLoading"
+                >
+                  {{ button }}
+                </button>
             </div>
         </div>
     </div>
@@ -21,13 +27,15 @@ export default {
   props: {
     title: { type: String, default: '' },
     button: { type: String, default: '' },
-    showBoth: { type: Boolean, default: true }
+    showBoth: { type: Boolean, default: true },
+    isLoading: { type: Boolean, default: false }
   },
   methods: {
     closeDialog () {
       this.$emit('closeDialog')
     },
     confirmBtn () {
+      if (this.isLoading) return
       this.$emit('confirmBtn')
     }
   }

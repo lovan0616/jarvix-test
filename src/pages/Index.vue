@@ -72,7 +72,6 @@ export default {
   },
   watch: {
     dataSourceId (value) {
-      if (!value) return
       this.dataFrameInfo = null
       this.quickStartQuestionList = []
       this.isNoResult = false
