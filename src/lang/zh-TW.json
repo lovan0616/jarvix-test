@@ -1358,6 +1358,7 @@
     "TASKWARN0002": "此條件獲取不到任何資料來進行處理",
     "TASKWARN0003": "計算結果為空",
     "authFail": "權限失效請重新登入",
+    "permissionChanged": "權限已被變更，請重新登入",
     "lackOfSignUpToken": "無註冊權限，請聯繫管理員",
     "defaultMsg": "系統發生非預期錯誤",
     "lackOfPermission": "權限不足，請聯繫管理員"

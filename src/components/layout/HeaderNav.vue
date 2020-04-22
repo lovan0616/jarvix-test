@@ -103,7 +103,6 @@ import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
-import Tooltip from '@/components/Tooltip'
 import { mapGetters } from 'vuex'
 import { switchGroup } from '@/API/User'
 
@@ -113,8 +112,7 @@ export default {
     SySelect,
     DropdownSelect,
     DecideDialog,
-    WritingDialog,
-    Tooltip
+    WritingDialog
   },
   data () {
     return {

@@ -5,6 +5,7 @@
         <a
           href="javascript:void(0);"
           class="btn-m btn-default btn-has-icon"
+          :class="{disabled: isLoading}"
           v-if="showCreateButton()"
           @click="editGroup('create')"
         >
