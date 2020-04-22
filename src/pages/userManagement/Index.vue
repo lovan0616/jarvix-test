@@ -324,7 +324,7 @@ export default {
             username: this.currentUser.name
           })
             .then(response => {
-              this.closePassword()
+              this.closePasswordChange()
               this.getUserList()
               Message({
                 message: this.$t('message.changePasswordSuccess'),
