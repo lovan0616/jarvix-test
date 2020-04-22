@@ -202,6 +202,7 @@ export default {
           return this.$store.dispatch('dataSource/getDataSourceList')
         })
         .then(() => {
+          if (this.$route.name !== 'PageIndex') this.$router.push({name: 'PageIndex'})
           this.isShowGroup = false
           this.isLoading = false
         }).catch(() => {

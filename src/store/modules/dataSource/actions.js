@@ -62,7 +62,6 @@ export default {
     })
   },
   handleEmptyDataSource ({ dispatch, commit }) {
-    console.log('empty')
     commit('chatBot/clearConversation', null, {root: true})
     dispatch('clearAllFilter')
     commit('clearCurrentQuestionId')
