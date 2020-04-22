@@ -200,7 +200,7 @@ export default {
           this.updateDataTable()
         }, 5000)
       } else {
-        window.clearInterval(this.checkDataFrameIntervalFunction) 
+        window.clearInterval(this.checkDataFrameIntervalFunction)
       }
     }
   },

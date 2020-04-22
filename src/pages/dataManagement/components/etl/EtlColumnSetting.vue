@@ -5,7 +5,7 @@
       <div class="data-frame-list section-block">
         <div class="single-data-frame"
           v-for="(table, index) in tableOptionList"
-          :key="table.originForeignId"
+          :key="table.originForeignId + '-' + index"
           :class="{active: currentTableIndex === index}"
           @click="chooseDataFrame(index)"
         >{{ table.name }}</div>
@@ -28,7 +28,7 @@
     <div class="section section-setting">
       <div class="title has-icon"><svg-icon icon-class="arrow-right" class="icon"></svg-icon><span class="data-frame-name">{{ currentColumnInfo.primaryAlias || '' }}</span>{{ $t('etl.etlSetting') }}</div>
       <single-column-setting
-        :key="currentTableIndex + '-' + currentColumnIndex"
+        :key="currentTableIndex + '_' + currentColumnIndex"
         :column-info="currentColumnInfo"
         @updateInfo="updateSetting"
       ></single-column-setting>

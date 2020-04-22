@@ -22,8 +22,8 @@
           v-if="isLoading"
         ></spinner>
         <empty-info-block
-          v-else-if="hasError"
-          :msg="$t('message.systemIsError')"
+          v-else-if="hasError || dataSourceTables.length === 0"
+          :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
         ></empty-info-block>
         <pagination-table
           v-else
@@ -97,10 +97,15 @@ export default {
               name: element.primaryAlias
             }
           })
-          this.dataSourceTable = response[0]
-          this.fetchDataFrameData(this.dataSourceTable.id, 0, true)
+          if (response.length) {
+            this.dataSourceTable = response[0]
+            this.fetchDataFrameData(this.dataSourceTable.id, 0, true)
+          } else {
+            this.isLoading = false
+          }
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err)
           this.hasError = true
           this.isLoading = false
         })
