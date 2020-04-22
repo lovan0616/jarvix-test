@@ -27,8 +27,19 @@ export default {
       groupPermission: groupInfo.groupPermission || []
     })
   },
-  updateUserGroupList ({commit, getters}) {
+  updateUserGroupList ({dispatch, commit, getters}) {
     const currentAccountId = getters.getCurrentAccountId
-    return getAccountGroupInfo(currentAccountId).then(res => commit('updateUserGroupInfo', res))
+    getAccountGroupInfo(currentAccountId)
+      .then(res => commit('updateUserGroupInfo', res))
+      .then(() => {
+        const currentGroupId = getters.getCurrentGroupId
+        console.log(currentGroupId)
+        if (currentGroupId) {
+          dispatch('dataSource/getDataSourceList', null, {root: true})
+        } else {
+          commit('dataSource/setDataSourceList', [], {root: true})
+          dispatch('dataSource/handleEmptyDataSource', null, {root: true})
+        }
+      })
   }
 }

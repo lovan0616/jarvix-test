@@ -5,9 +5,12 @@
       <router-link class="nav-item" :to="{name: 'PagePinboardList'}">{{ $t('nav.pinboard') }}</router-link>
       <!-- FIXME for poc/foxconn_molding -->
       <router-link class="nav-item" :to="{name: 'PageAlgorithmList'}">演算法</router-link>
-      <div class="nav-item nav-item-dropdown nav-set">
+      <div
+        class="nav-item nav-item-dropdown nav-set"
+        v-if="groupId"
+      >
         <div class="nav-set-flex">
-          <div>{{ $t('nav.accountManagement') }}</div>
+          <div>{{ $t('nav.projectManagement') }}</div>
           <svg-icon icon-class="dropdown" class="icon nav-dropdown-icon is-rotate"></svg-icon>
         </div>
         <dropdown-select
@@ -74,7 +77,7 @@
       :showBoth="true"
     >
       <sy-select class="dialog-select"
-        :placeholder="$t('nav.languagePlaceholder')"
+        :placeholder="$t('nav.groupPlaceholder')"
         :selected="selectedGroupId"
         :items="groupListData()"
         v-on:update:selected="groupOnSelected"
@@ -149,11 +152,8 @@ export default {
     },
     settingData () {
       const settingList = []
-      const groupId = this.$store.getters['userManagement/getCurrentGroupId']
       settingList.push({icon: 'database', title: 'nav.dataSourceManagement', name: 'PageDataSourceList'})
-      if (groupId) {
-        settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/group/user-management/${groupId}`})
-      }
+      settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/group/user-management/${this.groupId}`})
       return settingList
     },
     accountData () {

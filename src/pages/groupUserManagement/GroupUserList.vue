@@ -29,7 +29,7 @@
         :title="this.$t('editing.confirmDeleteProjectUserText')"
         :type="'delete'"
         @closeDialog="closeDelete"
-        @confirmBtn="deleteGroup"
+        @confirmBtn="deleteGroupUser"
       >
       </decide-dialog>
     </div>
@@ -122,9 +122,10 @@ export default {
       this.selectedUser = {}
       this.showConfirmDeleteDialog = false
     },
-    deleteGroup (data) {
+    deleteGroupUser (data) {
       this.isLoading = true
       deleteGroupUser(this.selectedUser.id, this.currentGroupId)
+        .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
         .then(() => {
           this.fetchData(this.currentGroupId)
           this.closeDelete()

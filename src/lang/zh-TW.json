@@ -5,9 +5,10 @@
     "pinboard": "個人釘板",
     "dataManagement": "資料管理",
     "dataSourceManagement": "資料源管理",
+    "groupPlaceholder": "專案",
     "languagePlaceholder": "語系",
     "setting": "設定",
-    "accountManagement": "專案管理"
+    "projectManagement": "專案管理"
   },
   "sideNav": {
     "accountManagement": "帳戶管理",

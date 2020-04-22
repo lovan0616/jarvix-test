@@ -5,9 +5,10 @@
     "pinboard": "个人钉板",
     "dataManagement": "资料管理",
     "dataSourceManagement": "资料源管理",
+    "groupPlaceholder": "专案",
     "languagePlaceholder": "语系",
     "setting": "设定",
-    "accountManagement": "专案管理"
+    "projectManagement": "专案管理"
   },
   "sideNav": {
     "accountManagement": "帐户管理",
