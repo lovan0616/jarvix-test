@@ -26,6 +26,9 @@
         <button class="btn btn-outline"
           @click="cancel"
         >{{ $t('button.cancel') }}</button>
+        <button class="btn btn-outline" type="button"
+          @click="prev"
+        >{{ $t('button.chooseFileUpload') }}</button>
         <button class="btn btn-default"
           @click="next"
         >{{ $t('button.nextStep') }}</button>
@@ -56,6 +59,10 @@ export default {
     },
     next () {
       this.$emit('next')
+    },
+    prev () {
+      this.$store.commit('dataManagement/updateUploadFileList', [])
+      this.$emit('prev')
     }
   },
   computed: {

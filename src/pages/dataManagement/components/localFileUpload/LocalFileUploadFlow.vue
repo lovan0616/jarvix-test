@@ -12,6 +12,7 @@
       <local-file-upload-status
         v-if="step === 2"
         @next="nextStep"
+        @prev="prevStep"
       ></local-file-upload-status>
       <choose-column
         v-if="step === 3"
