@@ -127,7 +127,7 @@ export default {
   },
   computed: {
     getSpinnerTitle () {
-      return this.isLoading ? this.$t('button.download') : this.$t('editing.isSaving')
+      return this.isLoading ? this.$t('editing.loading') : this.$t('editing.isSaving')
     }
   }
 }
