@@ -75,27 +75,25 @@
             'text-align': headInfo.align
           }"
         >
-          <a href="javascript:void(0)" class="link name-link"
-            v-if="headInfo.link && checkLinkEnable(headInfo, data)"
-            @click="linkTo(headInfo.link, data.id)"
-          >{{ data[headInfo.value] }}</a>
-
-          <a href="javascript:void(0)" class="link action-link link-dropdown"
-            v-else-if="headInfo.action"
-            v-for="action in headInfo.action"
-            :key="action.name"
-            :disabled="isProcessing"
-            @click="doAction(action, data)"
-          >
-            <dropdown-select
-              v-if="action.subAction"
-              class="dropdown"
-              :barData="getBarData(action.subAction, data)"
-            />
-            {{ action.name }}
-            <svg-icon v-if="action.subAction" icon-class="triangle" class="icon dropdown-icon" />
-          </a>
-          <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
+          <template v-if="headInfo.action">
+            <a
+              href="javascript:void(0)"
+              class="link action-link link-dropdown"
+              v-for="action in headInfo.action"
+              :key="action.name"
+              :disabled="isProcessing || !showActionButton(action, data)"
+              @click="doAction(action, data)"
+            >
+              <dropdown-select
+                v-if="action.subAction"
+                class="dropdown"
+                :barData="getBarData(action.subAction, data)"
+              />
+              {{ action.name }}
+              <svg-icon v-if="getBarData(action.subAction, data).length > 0" icon-class="triangle" class="icon dropdown-icon" />
+            </a>
+          </template>
+          <span v-else>{{ data[headInfo.value] }}</span>
         </div>
       </div>
     </div>
@@ -105,6 +103,7 @@
 import orderBy from 'lodash.orderby'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import { mapGetters } from 'vuex'
 
 /**
  * Data table 可傳入屬性
@@ -244,19 +243,32 @@ export default {
       }
     },
     doAction (action, data) {
-      if (!action || (action && !action.value)) return
+      if (!action || (action && !action.value) || !this.showActionButton(action, data)) return
       if (action.type === 'event') return this.$emit(action.value, data)
       this.linkTo(action.link, data.id)
     },
-    getBarData (actions, data) {
+    hasActionPermission (action) {
+      if (!action.hasOwnProperty('permission')) return true
+      return this.hasAccountPermission(action.permission)
+    },
+    getBarData (actions = [], data) {
       if (data && !data.id) return actions
-      return actions.map(action => ({
-        ...action,
-        id: data.id
-      }))
+      return actions.reduce((acc, cur) => {
+        if (!this.hasActionPermission(cur)) return acc
+        acc.push({
+          ...cur,
+          id: data.id
+        })
+        return acc
+      }, [])
+    },
+    showActionButton (action, data) {
+      if (!action.subAction) return this.hasActionPermission(action)
+      return this.getBarData(action.subAction, data).length > 0
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission']),
     // 目前所選擇的項目
     selectList: {
       get () {

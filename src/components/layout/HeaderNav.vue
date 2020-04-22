@@ -2,9 +2,9 @@
   <nav class="nav-header">
     <section class="nav-left">
       <router-link class="nav-item" to="/" exact>{{ $t('nav.index') }}</router-link>
-      <router-link class="nav-item" to="/pinboard">{{ $t('nav.pinboard') }}</router-link>
+      <router-link class="nav-item" :to="{name: 'PagePinboardList'}">{{ $t('nav.pinboard') }}</router-link>
       <!-- FIXME for poc/foxconn_molding -->
-      <router-link class="nav-item" to="/algorithm">演算法</router-link>
+      <router-link class="nav-item" :to="{name: 'PageAlgorithmList'}">演算法</router-link>
       <div class="nav-item nav-item-dropdown nav-set">
         <div class="nav-set-flex">
           <div>{{ $t('nav.accountManagement') }}</div>

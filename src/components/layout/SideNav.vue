@@ -8,6 +8,7 @@
         class="nav-link main-nav-link"
         :to="nav.path ? nav.path : {name: nav.routeName}"
       >
+        <svg-icon icon-class="account-management" class="icon"></svg-icon>
         {{nav.title}}
       </router-link>
       <template v-if="nav.subNav">
@@ -17,6 +18,7 @@
           :key="subNav.title"
           :to="subNav.path || {name: subNav.routeName}"
         >
+          <svg-icon icon-class="triangle" class="icon"></svg-icon>
           {{subNav.title}}
         </router-link>
       </template>
@@ -42,9 +44,10 @@ export default {
 
   .nav-link {
     line-height: 54px;
-    display: block;
-    padding: 0 1rem;
-    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem 0 40px;
+    letter-spacing: 0.15em;
     color: #a7a7a7;
     position: relative;
 
@@ -61,20 +64,32 @@ export default {
 
   .main-nav-link {
     &.active {
-      &::before {
-        position: absolute;
-        content: '';
-        top: 0;
-        height: 100%;
-        left: 0;
-        width: 3px;
-        background-color: white;
-      }
+      color: #42A5B3;
+    }
+    .icon {
+      font-size: 24px;
+      margin-right: 8px;
+      margin-top: 2px;
+      fill: #42A5B3;
     }
   }
 
   .sub-nav-link {
     background-color: rgba(0, 0, 0, .3);
+    &.active {
+      background-color: #42A5B3;
+      .icon {
+        visibility: visible;
+      }
+    }
+    .icon {
+      flex-basis: 24px;
+      height: 12px;
+      margin-right: 8px;
+      transform: translate(-1px, -1px) rotate(-30deg);
+      fill: #fff;
+      visibility: hidden;
+    }
   }
 }
 </style>

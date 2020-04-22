@@ -15,8 +15,12 @@
     "accountUserManagement": "帐户使用者管理",
     "accountGroupManagement": "帐户专案管理",
     "accountSetting": "帐号设定",
+    "functionDescription": "功能说明",
     "groupUserManagement": "专案成员管理",
-    "functionDescription": "功能说明"
+    "groupUserList": "成员列表",
+    "groupCreateUser": "加入新成员",
+    "pageDataSourceList": "资料源管理",
+    "pageDataFileList": "资料表列表"
   },
   "message": {
     "joinTableBuilt": "资料表关联建立完成",
@@ -37,6 +41,7 @@
     "saveSuccess": "储存成功",
     "correlationDeleteSuccess": "关联已删除",
     "groupCreateSuccess": "专案建立成功",
+    "memberCreateSuccess": "新成员建立成功",
     "groupDeleteSuccess": "专案已成功删除",
     "groupInfoUpdatedSuccess": "专案资讯已成功更新",
     "signUpSuccessPleaseLogin": "注册成功，请登入帐号",
@@ -54,7 +59,8 @@
     "dataSourceNotExist": "资料源不存在",
     "connectionFail": "栏位资料有误，请重新检查",
     "columnSetNameEmpty": "栏位组合名称未填写",
-    "columnSetChosenEmpty": "尚未选择任何栏位"
+    "columnSetChosenEmpty": "尚未选择任何栏位",
+    "memberDeleteSuccess": "成员删除成功"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -133,11 +139,13 @@
     "columnCorrelation": "栏位关联",
     "emptyForeign": "尚未建立任何资料表关联",
     "emptyDateTime": "资料表无日期栏位",
+    "emptyDataFrameAlias": "尚未建立任何资料表别名",
     "selectForeign": "选择关联资料表",
     "selectColumn": "选择栏位",
     "processStep1": "填写资料源名称",
-    "processStep2": "上传资料/连接资料库",
-    "processStep3": "开始新增",
+    "processStep2": "上传档案",
+    "processStep3": "选择栏位",
+    "processStep4": "资料清理设定",
     "connectDB": "连接资料库",
     "connectStep2": "选择资料",
     "connectStep3": "栏位设定",
@@ -178,7 +186,8 @@
     "functionDescription": "功能说明",
     "addUser": "新增使用者",
     "notYetCreateUser": "尚未建立使用者",
-    "inviteeEmail": "受邀者email",
+    "inviteeEmail": "受邀者 email",
+    "pleaseSelectInviteeEmail": "请选择受邀者 email",
     "userTitle": "使用者名称",
     "userAccount": "使用者帐号",
     "setLoginPassword": "设定密码",
@@ -192,8 +201,10 @@
     "groupMemberAmount": "专案人数",
     "groupName": "专案名称",
     "switchGroup": "切换专案",
+    "groupRolePermission": "专案角色权限",
     "notYetCreateGroup": "尚未建立专案",
     "deleteGroup": "删除专案",
+    "confirmDeleteProjectUserText": "使用者移除后，此使用者将无法使用此专案任何功能，您确认要继续移除此使用者？",
     "confirmDeleteBelowGroupOrNot": "您确认要删除以下专案吗?",
     "accountOwner": "帐户拥有者",
     "memberManagement": "成员管理",
@@ -240,6 +251,7 @@
     "loading": "资料读取中",
     "databaseType": "资料库类型",
     "currentLoadedDataFrame": "目前读取的资料表",
+    "dataFrameContent": "资料表内容",
     "currentDisplayDataFrame": "目前显示资料表",
     "dataType": "资料类型",
     "chooseConnection": "选择连线",
@@ -251,7 +263,23 @@
     "buildFail": "建置失败",
     "connectionName": "连线名称",
     "admin": "系统管理员",
-    "general": "一般使用者"
+    "general": "一般使用者",
+    "dataFrameAliasSetting": "资料表别名设置",
+    "dataFrameAliasInputPlaceholder": "请输入别名"
+  },
+  "etl": {
+    "dataFrameList": "资料表列表",
+    "columnList": "栏位列表",
+    "dataType": "资料型别",
+    "emptyStringReplaceValue": "空字串替代值",
+    "nullReplaceValue": "Null替代值",
+    "errorReplaceValue": "错误资料替代值",
+    "customDataManagement": "自订资料处理",
+    "columnValue": "栏位值",
+    "replaceValue": "替代值",
+    "replaceValuePlaceholder": "请输入替代值",
+    "etlSetting": "资料清洗设定",
+    "remarkToSave": "异动内容须保存"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
@@ -379,7 +407,12 @@
     "copyAndBuild": "复制并建置",
     "createGroup": "新建专案",
     "deleteGroup": "删除专案",
-    "editGroupName": "编辑专案名称"
+    "editGroupName": "编辑专案名称",
+    "addNewMember": "加入新成员",
+    "editDataFrameAlias": "编辑资料表别名",
+    "new": "新增",
+    "buildData": "建置资料",
+    "keepSave": "保存"
   },
   "aggregation": {
     "mean": "平均",

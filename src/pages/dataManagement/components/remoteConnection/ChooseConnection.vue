@@ -27,7 +27,11 @@
               <div class="connection-label">Port:</div>{{ connection.port }}
             </div>
             <div class="conneciton-info">
-              <div class="connection-label">Schema:</div>{{ connection.schema }}</div>
+              <div class="connection-label">Schema:</div>{{ connection.schema }}
+            </div>
+            <div class="conneciton-info">
+              <div class="connection-label">Database:</div>{{ connection.database }}
+            </div>
             <div class="conneciton-info">
               <div class="connection-label">{{ $t('editing.username') }}:</div>{{ connection.account }}
             </div>

@@ -69,6 +69,8 @@ export default {
 
             // 顯示模組子功能列表
           } else {
+            if (navItem.meta.isHiddenNav) return
+
             if (navItem.meta.accountPermission) {
               const hasAccountPermission = navItem.meta.accountPermission.every(code => this.hasAccountPermission(code))
               if (!hasAccountPermission) return
@@ -107,7 +109,7 @@ export default {
   }
 
   .side-nav {
-    width: 270px;
+    width: $side-nav-width;
     margin: 0 auto 0 0;
     height: calc(100vh - #{$header-height});
   }
@@ -115,7 +117,7 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
-    width: calc(100% - 270px);
+    width: calc(100% - #{$side-nav-width});
     height: calc(100vh - #{$header-height});
   }
 

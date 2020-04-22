@@ -22,6 +22,7 @@
         v-if="step === 3"
         :connection-id="connectionId"
         :table-id-list="tableIdList"
+        @prev="prevStep"
         @next="nextStep"
       ></column-setting>
       <remote-connection-finished

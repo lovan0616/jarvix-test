@@ -33,12 +33,43 @@
             <div class="user-item">{{user.email}}</div>
             <div class="user-item">{{ $t(`userManagement.${toCamelCase(user.role)}`) }}</div>
             <div class="user-item">
+              <button @click="showPasswordChange(user)" :disabled="isNotAllowChangePsd(user)" class="user-manipulate-item">{{ $t('editing.changePassword') }}</button>
+              <span class="user-line"></span>
               <button @click="showRoleChange(user)" :disabled="btnDisabled(user)" class="user-manipulate-item">{{ $t('userManagement.updateRole') }}</button>
               <span class="user-line"></span>
               <button @click="showDeleteAccount(user)" :disabled="btnDisabled(user)" class="user-manipulate-item">{{ $t('button.remove') }}</button>
             </div>
           </div>
         </div>
+
+        <writing-dialog
+          v-if="isShowPasswordChange"
+          :title="$t('editing.changePassword')"
+          :button="$t('button.change')"
+          @closeDialog="closePasswordChange"
+          @confirmBtn="changePassword"
+          :showBoth="true"
+        >
+          <div class="dialog-select-input-box">
+            <input-verify
+              v-model="currentUser.password"
+              type="password"
+              :placeholder="$t('editing.newPassword')"
+              name="verifyNewPassword"
+              v-validate="'required|min:8|requireOneNumeric'"
+              ref="confirmPassword"
+            >
+            </input-verify>
+            <input-verify
+              v-model="currentUser.verifyPassword"
+              type="password"
+              :placeholder="$t('editing.confirmNewPassword')"
+              name="verifyPasswordCheck"
+              v-validate="'required|min:8|requireOneNumeric|confirmed:confirmPassword'"
+            >
+            </input-verify>
+          </div>
+        </writing-dialog>
 
         <writing-dialog
           v-if="isShowRoleChange"
@@ -121,7 +152,7 @@
   </div>
 </template>
 <script>
-import { getAccountUsers, deleteUserAccount, inviteUser, getAccountRoles, updateRole, getSelfInfo } from '@/API/User'
+import { getAccountUsers, deleteUserAccount, inviteUser, getAccountRoles, updateRole, getSelfInfo, updateUser } from '@/API/User'
 import { updateUserPermission } from '@/API/Permission'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
@@ -154,13 +185,17 @@ export default {
         password: ''
       },
       userData: [],
+      isShowPasswordChange: false,
       isShowRoleChange: false,
       isShowDeleteAccount: false,
       currentId: '',
       currentUser: {
+        active: null,
         username: '',
         role: '',
-        roleId: null
+        roleId: null,
+        password: '',
+        verifyPassword: ''
       },
       selfUser: {
         roleId: null
@@ -192,6 +227,9 @@ export default {
         return true
       }
       return false
+    },
+    isNotAllowChangePsd (user) {
+      return this.selfUser.role !== 'account_owner'
     },
     showCreateUser () {
       this.addNewInvitee()
@@ -276,6 +314,30 @@ export default {
           console.log(error)
         })
     },
+    changePassword () {
+      this.$validator.validateAll().then(result => {
+        if (result) {
+          updateUser({
+            active: this.currentUser.active,
+            password: this.currentUser.password,
+            userId: this.currentId,
+            username: this.currentUser.name
+          })
+            .then(response => {
+              this.closePassword()
+              this.getUserList()
+              Message({
+                message: this.$t('message.changePasswordSuccess'),
+                type: 'success',
+                duration: 3 * 1000
+              })
+            })
+            .catch(error => {
+              console.log(error)
+            })
+        }
+      })
+    },
     deleteAccount () {
       deleteUserAccount(
         this.$store.getters['userManagement/getCurrentAccountId'],
@@ -293,6 +355,20 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    showPasswordChange (user) {
+      this.currentId = user.id
+      this.currentUser.username = user.name
+      this.currentUser.active = user.active
+      this.isShowPasswordChange = true
+    },
+    closePasswordChange () {
+      // 關閉 component 後，才清空資料，以免在 function 中觸發 validate 導致錯誤發生
+      this.isShowPasswordChange = false
+      this.$nextTick(() => {
+        this.currentUser.password = ''
+        this.currentUser.verifyPassword = ''
+      })
     },
     showRoleChange (user) {
       const option = this.roleOptions.find(option => option.name === this.getZhRoleName(user.role)) || user.role
@@ -483,7 +559,7 @@ export default {
     $column-width:
       "1" "userAccount" 280px,
       "2" "role" 200px,
-      "3" "action" 80px;
+      "3" "action" 140px;
 
     @each $index, $name, $width in $column-width {
       .user-item:nth-of-type(#{$index}) {

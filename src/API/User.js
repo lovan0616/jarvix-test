@@ -82,11 +82,10 @@ export function createUser (userInfo) {
  * @param {String} userInfo.email - 使用者郵件
  * @param {String} userInfo.password - 使用者密碼
  * @param {String} userInfo.username - 使用者名稱
- * @param {Number} id - 使用者 ID
  */
-export function updateUser (userInfo, id) {
+export function updateUser (userInfo) {
   return request({
-    url: `/users/${id}`,
+    url: `/users`,
     method: 'PUT',
     data: userInfo
   })
@@ -155,7 +154,7 @@ export function createGroup (groupInfo) {
 }
 
 /**
- * 刪除群錊
+ * 刪除群組
  * @param {Number} id - 群組 ID
  */
 export function deleteGroup (id) {

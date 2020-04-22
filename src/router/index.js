@@ -129,7 +129,6 @@ const router = new Router({
           path: 'group',
           component: () => import('@/pages/management/Index'),
           children: [
-            // TODO: 開發帳戶管理時需更新此路由階層、補上 meta 和 layer
             {
               path: 'data-management',
               component: () => import('@/pages/dataManagement/Index'),
@@ -137,12 +136,52 @@ const router = new Router({
                 {
                   path: '/',
                   name: 'PageDataSourceList',
-                  component: () => import('@/pages/dataManagement/DataSourceList')
+                  component: () => import('@/pages/dataManagement/DataSourceList'),
+                  meta: {
+                    isMainNav: true,
+                    layers: ['group', 'data-management']
+                  }
                 },
                 {
                   path: ':id',
                   name: 'PageDataFileList',
-                  component: () => import('@/pages/dataManagement/DataFileList')
+                  component: () => import('@/pages/dataManagement/DataFileList'),
+                  meta: {
+                    layers: ['group', 'data-management']
+                  }
+                }
+              ]
+            },
+            {
+              path: 'user-management',
+              component: () => import('@/pages/groupUserManagement/Index'),
+              children: [
+                {
+                  path: '/',
+                  redirect: { name: 'GroupUserList' },
+                  name: 'GroupUserManagement',
+                  meta: {
+                    isMainNav: true
+                  }
+                },
+                {
+                  path: ':group_id',
+                  component: () => import('@/pages/groupUserManagement/GroupUserList'),
+                  name: 'GroupUserList',
+                  meta: {
+                    layers: ['group', 'user-management'],
+                    accountPermission: ['account_update_user']
+                  }
+                },
+                {
+                  path: ':group_id/create',
+                  component: () => import('@/pages/groupUserManagement/GroupCreateUser'),
+                  name: 'GroupCreateUser',
+                  meta: {
+                    layers: ['group', 'user-management'],
+                    accountPermission: ['account_update_user'],
+                    isHiddenNav: true
+                  }
                 }
               ]
             }
