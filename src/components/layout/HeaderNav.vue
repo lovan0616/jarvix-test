@@ -46,11 +46,15 @@
         >
         </dropdown-select>
       </div>
-      <div class="nav-item nav-item-dropdown nav-account">
-        <router-link :to="{name: 'FunctionDescription'}">
-          <svg-icon icon-class="description-white" class="icon"></svg-icon>
-        </router-link>
-      </div>
+      <router-link
+        :to="{name: 'FunctionDescription'}"
+        class="nav-item nav-function tooltip-container"
+      >
+        <svg-icon icon-class="description-white" class="icon"></svg-icon>
+        <div class="tooltip">
+          {{$t('sideNav.functionDescription')}}
+        </div>
+      </router-link>
     </section>
     <writing-dialog
       v-if="isShowLanguage"
@@ -99,6 +103,7 @@ import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import Tooltip from '@/components/Tooltip'
 import { mapGetters } from 'vuex'
 import { switchGroup } from '@/API/User'
 
@@ -108,7 +113,8 @@ export default {
     SySelect,
     DropdownSelect,
     DecideDialog,
-    WritingDialog
+    WritingDialog,
+    Tooltip
   },
   data () {
     return {
@@ -159,10 +165,10 @@ export default {
     accountData () {
       const accountList = []
       if (this.hasAccountPermission('account_update_user')) {
-        accountList.push({icon: 'tree-structure', title: 'sideNav.accountManagement', name: 'AccountUserManagement'})
+        accountList.push({icon: 'account-management', title: 'sideNav.accountManagement', name: 'AccountUserManagement'})
       }
       accountList.push({icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'})
-      accountList.push({icon: 'logout-white', title: 'button.logout', dialogName: 'isShowLogout'})
+      accountList.push({icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'})
       return accountList
     }
   },
@@ -287,7 +293,12 @@ export default {
       &:hover {
         color: #fff;
       }
+    }
 
+    & >>> .dropdown-select {
+      .icon {
+        fill: #2AD2E2;
+      }
     }
   }
   .nav-set {
@@ -319,6 +330,10 @@ export default {
     &-dropdown {
       visibility: hidden;
     }
+  }
+
+  .nav-function {
+    position: relative;
   }
 }
 </style>
