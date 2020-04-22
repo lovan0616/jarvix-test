@@ -451,10 +451,10 @@
     "categoryTitle": "Category 类型",
     "numericTitle": "Numeric 类型",
     "datavalueTitle": "常见资料",
-    "category": "Category类型的栏位，不具有数量单位。",
-    "numeric": "numeric类型的栏位，具有数量单位。",
+    "category": "Category 类型的栏位，不具有数量单位。",
+    "numeric": "Numeric 类型的栏位，具有数量单位。",
     "filter": "时间筛选条件",
-    "value": "value是栏位的资料，不限定数量或其他型态。",
+    "value": "Value 是栏位的资料，不限定数量或其他型态。",
     "column": "栏位",
     "columnValue": "栏位资料",
     "type": "类型",
@@ -626,7 +626,7 @@
                 {"text": "平均营收", "type": "numeric"},
                 {"text": "和", "type": ""},
                 {"text": "成本", "type": "numeric"},
-                {"text": "的关系", "type": ""}
+                {"text": "的平均", "type": ""}
               ]
             ]
           },
@@ -894,7 +894,7 @@
             ]
           },
           {
-            "questionText": "value 和 value 的 Numeric 比较",
+            "questionText": "Value 和 Value 的 Numeric 比较",
             "questionExample": [
               [
                 {"text": "上海", "type": "value"},
@@ -909,29 +909,6 @@
                 {"text": "M", "type": "value"},
                 {"text": "的", "type": ""},
                 {"text": "客户年龄", "type": "numeric"},
-                {"text": "比较", "type": ""}
-              ]
-            ]
-          },
-          {
-            "questionText": "每年 value 和 value 的 Numeric 比较",
-            "questionExample": [
-              [
-                {"text": "每年", "type": "filter"},
-                {"text": "上海", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "北京", "type": "value"},
-                {"text": "的", "type": ""},
-                {"text": "单位成本", "type": "numeric"},
-                {"text": "比较", "type": ""}
-              ],
-              [
-                {"text": "每年", "type": "filter"},
-                {"text": "S11", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "S12", "type": "value"},
-                {"text": "的", "type": ""},
-                {"text": "销售", "type": "numeric"},
                 {"text": "比较", "type": ""}
               ]
             ]
@@ -1028,6 +1005,21 @@
                 {"text": "的预测", "type": ""}
               ]
             ]
+          },
+          {
+            "questionText": "Value 的 Numeric 的预测",
+            "questionExample": [
+              [
+                {"text": "脚踏车", "type": "value"},
+                {"text": "销售", "type": "numeric"},
+                {"text": "的预测", "type": ""}
+              ],
+              [
+                {"text": "产品A", "type": "value"},
+                {"text": "良率", "type": "numeric"},
+                {"text": "的预测", "type": ""}
+              ]
+            ]
           }
         ]
       },
@@ -1090,7 +1082,7 @@
             ]
           },
           {
-            "questionText": "value 和 value 各占 Category 的比例",
+            "questionText": "Value 和 Value 各占 Category 的比例",
             "questionExample": [
               [
                 {"text": "S1", "type": "value"},
@@ -1106,29 +1098,6 @@
                 {"text": "M", "type": "value"},
                 {"text": "各占", "type": ""},
                 {"text": "顾客", "type": "category"},
-                {"text": "的比例", "type": ""}
-              ]
-            ]
-          },
-          {
-            "questionText": "value 和 value 各占 Category 的 Numeric 的比例",
-            "questionExample": [
-              [
-                {"text": "S1", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "S2", "type": "value"},
-                {"text": "各占", "type": ""},
-                {"text": "商店", "type": "category"},
-                {"text": "销售", "type": "numeric"},
-                {"text": "的比例", "type": ""}
-              ],
-              [
-                {"text": "F", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "M", "type": "value"},
-                {"text": "各占", "type": ""},
-                {"text": "顾客", "type": "category"},
-                {"text": "数量", "type": "numeric"},
                 {"text": "的比例", "type": ""}
               ]
             ]
@@ -1169,6 +1138,76 @@
                 {"text": "和", "type": ""},
                 {"text": "客户性别", "type": "category"},
                 {"text": "的关系", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "关联分析",
+        "questionList": [
+          {
+            "questionText": "什么和 Numeric 有关",
+            "questionExample": [
+              [
+                {"text": "什么和", "type": ""},
+                {"text": "良率", "type": "numeric"},
+                {"text": "有关", "type": ""}
+              ],
+              [
+                {"text": "什么和", "type": ""},
+                {"text": "收入", "type": "numeric"},
+                {"text": "有关", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "什么和 Category 有关",
+            "questionExample": [
+              [
+                {"text": "什么和", "type": ""},
+                {"text": "产品促销", "type": "category"},
+                {"text": "有关", "type": ""}
+              ],
+              [
+                {"text": "什么和", "type": ""},
+                {"text": "产品种类", "type": "category"},
+                {"text": "有关", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "差异分析",
+        "questionList": [
+          {
+            "questionText": "Value 和 Value 的差异",
+            "questionExample": [
+              [
+                {"text": "台北", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "新竹", "type": "value"},
+                {"text": "的差异", "type": ""}
+              ],
+              [
+                {"text": "产品A", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "产品B", "type": "value"},
+                {"text": "的差异", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Value 和其他的差异",
+            "questionExample": [
+              [
+                {"text": "产品A", "type": "value"},
+                {"text": "和其他的差异", "type": ""}
+              ],
+              [
+                {"text": "台北", "type": "value"},
+                {"text": "和其他的差异", "type": ""}
               ]
             ]
           }
