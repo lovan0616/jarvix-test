@@ -12,7 +12,7 @@
           v-if="userEditInfo.userEditedColumnInputList.length > 0"
           :disabled="isProcessing"
           @click="updateDataSource"
-        >{{ $t('button.save') }}</button>
+        >{{ $t('button.buildData') }}</button>
       </div>
       <div class="edit-table-block">
         <div class="data-table">
@@ -68,7 +68,7 @@
                   :disabled="isProcessing"
                   v-if="tempRowInfo.dataColumnId === column.id"
                   @click="save"
-                >{{ $t('button.finish') }}</a>
+                >{{ $t('button.save') }}</a>
                 <a class="link action-link" href="javascript:void(0)"
                   :disabled="isProcessing"
                   v-if="tempRowInfo.dataColumnId === column.id"

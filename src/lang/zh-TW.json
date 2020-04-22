@@ -413,7 +413,8 @@
     "editDataFrameAlias": "編輯資料表別名",
     "new": "新增",
     "buildData": "建置資料",
-    "keepSave": "保存"
+    "keepSave": "保存",
+    "chooseFileUpload": "重新選擇檔案"
   },
   "aggregation": {
     "mean": "平均",

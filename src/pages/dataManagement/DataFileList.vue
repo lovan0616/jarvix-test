@@ -161,6 +161,7 @@ export default {
       showValueAliasDialog: false,
       showEditColumnSetDialog: false,
       intervalFunction: null,
+      checkDataFrameIntervalFunction: null,
       isLoading: false
     }
   },
@@ -171,6 +172,8 @@ export default {
   beforeDestroy () {
     if (this.intervalFunction) {
       window.clearInterval(this.intervalFunction)
+    } else if (this.checkDataFrameIntervalFunction) {
+      window.clearInterval(this.checkDataFrameIntervalFunction)
     }
   },
   watch: {
@@ -190,11 +193,25 @@ export default {
       if (!value) {
         window.clearInterval(this.intervalFunction)
       }
+    },
+    hasDataFrameProcessing (value) {
+      if (value) {
+        this.checkDataFrameIntervalFunction = window.setInterval(() => {
+          this.updateDataTable()
+        }, 5000)
+      } else {
+        window.clearInterval(this.checkDataFrameIntervalFunction)
+      }
     }
   },
   methods: {
     fetchData () {
       this.isLoading = true
+      return this.updateDataTable().finally(() => {
+        this.isLoading = false
+      })
+    },
+    updateDataTable () {
       return getDataFrameById(this.currentDataSourceId).then(response => {
         this.dataList = response.map(element => {
           return {
@@ -202,9 +219,6 @@ export default {
             createMethod: element.joinCount === 2 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
           }
         })
-        this.isLoading = false
-      }).catch(() => {
-        this.isLoading = false
       })
     },
     createMethod (value) {
@@ -241,7 +255,7 @@ export default {
     },
     deleteFile () {
       this.showConfirmDeleteDialog = false
-      this.isProcessing = true
+      this.isLoading = true
       const dataframeId = this.selectList[0].id
       deleteDataFrameById(dataframeId)
         .then(res => {
@@ -254,7 +268,7 @@ export default {
     },
     deleteFinish () {
       this.selectList = []
-      this.isProcessing = false
+      this.isLoading = false
     },
     cancelDelete () {
       this.selectList = []
@@ -381,10 +395,6 @@ export default {
               name: this.$t('button.delete'),
               value: 'delete'
             }
-            // {
-            //   name: this.$t('button.rename'),
-            //   value: 'rename'
-            // }
           ]
         }
       ]
@@ -394,6 +404,10 @@ export default {
     },
     fileUploadSuccess () {
       return this.$store.state.dataManagement.fileUploadSuccess
+    },
+    hasDataFrameProcessing () {
+      if (!this.dataList.length) return false
+      return this.dataList.some(element => element.type === 'PROCESS')
     }
   }
 }

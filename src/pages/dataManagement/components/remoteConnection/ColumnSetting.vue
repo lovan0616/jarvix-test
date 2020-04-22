@@ -58,6 +58,7 @@ export default {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     prevStep () {
+      this.$store.commit('dataManagement/clearEtlTableList')
       this.$emit('prev')
     },
     nextStep () {

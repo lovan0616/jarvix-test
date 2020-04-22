@@ -115,6 +115,16 @@ export default {
           value: 'BOOLEAN'
         }
       ],
+      booleanOptionList: [
+        {
+          name: 'true',
+          value: true
+        },
+        {
+          name: 'false',
+          value: false
+        }
+      ],
       replaceValueObjest: {
         value: null,
         newValue: null,
@@ -165,24 +175,11 @@ export default {
       })
     },
     dataTypeOptionList (type) {
-      if (type === 'STRING') {
-        return [
-          {
-            name: 'STRING',
-            value: 'STRING'
-          }
-        ]
+      console.log(type, this.dataTypeList)
+      if (type === 'DATETIME') {
+        return this.dataTypeList
       } else {
-        return [
-          {
-            name: type,
-            value: type
-          },
-          {
-            name: 'STRING',
-            value: 'STRING'
-          }
-        ]
+        return this.dataTypeList.filter(element => element.value !== 'DATETIME')
       }
     },
     changeDataType (column, dataType) {

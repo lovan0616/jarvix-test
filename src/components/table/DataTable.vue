@@ -83,7 +83,7 @@
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
             :key="action.name"
-            :disabled="isProcessing || data['state'] === 'PROCESSING'"
+            :disabled="isProcessing || data['state'] === 'PROCESSING' || data['type'] === 'PROCESS'"
             @click="doAction(action.value, data)"
           >
             <dropdown-select
@@ -283,7 +283,7 @@ export default {
       }
     },
     doAction (actionName, data) {
-      if (!actionName || this.isProcessing || data['state'] === 'PROCESSING') return false
+      if (!actionName || this.isProcessing || data['state'] === 'PROCESSING' || data['type'] === 'PROCESS') return false
       this.$emit(actionName, data)
     },
     buildStatus (value) {
