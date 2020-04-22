@@ -51,7 +51,8 @@ export default {
       editData: {},
       selectedUser: {},
       showConfirmDeleteDialog: false,
-      currentGroupId: ''
+      currentGroupId: '',
+      canEditList: false
     }
   },
   components: {
@@ -59,7 +60,7 @@ export default {
     DecideDialog
   },
   mounted () {
-    this.currentGroupId = this.groupId
+    this.currentGroupId = this.$route.params.group_id
     this.fetchData(this.currentGroupId)
   },
   beforeRouteUpdate (to, from, next) {
@@ -69,10 +70,6 @@ export default {
   },
   computed: {
     ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission']),
-    // TO FIX
-    groupId () {
-      return this.$store.getters['userManagement/getCurrentGroupId'] || 82
-    },
     tableHeaders () {
       return [
         {
@@ -96,7 +93,7 @@ export default {
               type: 'event',
               name: this.$t('button.remove'),
               value: 'delete',
-              permission: 'account_delete_user'
+              permission: 'account_delete_group_user'
             }
           ]
         }
@@ -109,9 +106,13 @@ export default {
       getGroupUserList(currentGroupId)
         .then(userList => {
           this.userList = userList
+          this.canEditList = true
           this.isLoading = false
         })
-        .catch(() => { this.isLoading = false })
+        .catch(() => {
+          this.isLoading = false
+          this.canEditList = false
+        })
     },
     confirmDelete (dataObj) {
       this.selectedUser = dataObj
@@ -136,7 +137,7 @@ export default {
         .catch(() => { this.isLoading = false })
     },
     showCreateButton () {
-      return this.hasAccountPermission('account_create_user')
+      return this.canEditList ? this.hasAccountPermission('account_create_group_user') : false
     }
   }
 }

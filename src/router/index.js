@@ -109,7 +109,7 @@ const router = new Router({
                   name: 'AccountGroupManagement',
                   meta: {
                     layers: ['account', 'account-management'],
-                    accountPermission: ['account_update_user']
+                    accountPermission: ['account_read_group']
                   }
                 }
               ]
@@ -170,7 +170,7 @@ const router = new Router({
                   name: 'GroupUserList',
                   meta: {
                     layers: ['group', 'user-management'],
-                    accountPermission: ['account_update_user']
+                    accountPermission: ['account_read_group']
                   }
                 },
                 {
@@ -179,7 +179,7 @@ const router = new Router({
                   name: 'GroupCreateUser',
                   meta: {
                     layers: ['group', 'user-management'],
-                    accountPermission: ['account_update_user'],
+                    accountPermission: ['account_create_group_user'],
                     isHiddenNav: true
                   }
                 }
