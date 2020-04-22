@@ -75,7 +75,7 @@ export default {
       this.dataFrameInfo = null
       this.quickStartQuestionList = []
       this.isNoResult = false
-      this.getLandingInfo()
+      if (value) this.getLandingInfo()
     }
   }
 }
