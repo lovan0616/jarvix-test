@@ -32,7 +32,6 @@ export default {
       .then(res => commit('updateUserGroupInfo', res))
       .then(() => {
         const currentGroupId = getters.getCurrentGroupId
-        console.log(currentGroupId)
         if (currentGroupId) {
           dispatch('dataSource/getDataSourceList', null, {root: true})
         } else {
