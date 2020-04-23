@@ -29,6 +29,7 @@
     "remindSameDataTypeColumns": "兩個欄位的資料型態必須相同。",
     "builded": "資料源建立完成",
     "noData": "目前沒有資料",
+    "noMember": "目前沒有成員",
     "noResult": "目前暫無相關資訊",
     "formColumnEmpty": "欄位不得空白",
     "formMailWrong": "信箱格式錯誤",

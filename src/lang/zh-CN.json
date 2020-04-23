@@ -29,6 +29,7 @@
     "remindSameDataTypeColumns": "两个栏位的资料型态必须相同。",
     "builded": "资料源建立完成",
     "noData": "目前没有资料",
+    "noMember": "目前没有成员",
     "noResult": "目前暂无相关资讯",
     "formColumnEmpty": "栏位不得空白",
     "formMailWrong": "信箱格式错误",
