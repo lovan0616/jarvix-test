@@ -435,13 +435,13 @@
     "editGroupName": "編輯專案名稱",
     "addNewMember": "加入新成員",
     "editDataFrameAlias": "編輯資料表別名",
-    "new": "新增",
     "buildData": "建置資料",
     "keepSave": "保存",
     "chooseFileUpload": "重新選擇檔案",
     "moveForward": "前往",
     "addFeature": "新增特徵",
-    "create": "新增"
+    "create": "新增",
+    "featureManagement": "特徵管理"
   },
   "aggregation": {
     "mean": "平均",

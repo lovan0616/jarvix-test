@@ -26,29 +26,25 @@
             :disabled="isProcessing"
             @click="editJoinTable"
           >{{ $t('editing.foreignTable') }}</button> -->
-          <!-- <button class="btn-m btn-outline btn-has-icon"
-            v-if="selectList.length > 0"
-            :disabled="isProcessing"
-            @click="confirmDelete()"
-          >
-            <svg-icon class="icon"
-              v-if="isProcessing"
-              :icon-class="spinner"
-            ></svg-icon>{{ $t('button.delete') }}
-          </button> -->
           <div class="reach-limit"
             v-if="reachLimit"
           >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
         <div class="button-block">
           <button class="btn-m btn-secondary btn-has-icon"
+            @click="toggleEditFeatureDialog"
+            :disabled="reachLimit || dataList.length === 0"
+          >
+            <svg-icon icon-class="feature" class="icon"></svg-icon>{{ $t('button.featureManagement') }}
+          </button>
+          <!-- <button class="btn-m btn-secondary btn-has-icon"
             @click="toggleJoinTableDialog"
             :disabled="reachLimit || dataList.length === 0"
           >
             <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
-          </button>
-          <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
+          </button> -->
         </div>
+        <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div> -->
       </div>
       <data-table
         :headers="tableHeaders"
@@ -163,6 +159,7 @@ export default {
       showDataFrameAliasDialog: false,
       showValueAliasDialog: false,
       showEditColumnSetDialog: false,
+      showEditFeatureDialog: false,
       intervalFunction: null,
       checkDataFrameIntervalFunction: null,
       isLoading: false
@@ -336,6 +333,9 @@ export default {
     },
     closeEditDateTimeDialog () {
       this.showEditDateTimeDialog = false
+    },
+    toggleEditFeatureDialog () {
+      this.showEditFeatureDialog = !this.showEditFeatureDialog
     }
   },
   computed: {

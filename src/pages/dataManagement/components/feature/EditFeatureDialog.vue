@@ -59,7 +59,7 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputBlock from '@/components/InputBlock'
-import { getDataFrameById } from '@/API/DataSource'
+import { getDataFrameById, getDataFrameColumnInfoById } from '@/API/DataSource'
 
 export default {
   name: 'EditFeatureDialog',
@@ -99,6 +99,9 @@ export default {
           }
         })
       })
+    },
+    getDataFrameColumnInfo () {
+      getDataFrameColumnInfoById()
     }
   }
 }
