@@ -21,17 +21,27 @@
       @delete="confirmDelete"
       @cancel="cancelDelete"
       @edit="editGroup('edit', $event)"
-      @manage="manageMember"
+      @manage="confirmEnterGroup"
       :empty-message="$t('editing.notYetCreateGroup')"
     >
     </crud-table>
     <decide-dialog
       v-if="showConfirmDeleteDialog"
-      :title="this.$t('editing.confirmDeleteBelowGroupOrNot')"
+      :title="$t('editing.confirmDeleteBelowGroupOrNot')"
       :content="selectedGroup.groupName"
       :type="'delete'"
       @closeDialog="cancelDelete"
       @confirmBtn="deleteGroup"
+    >
+    </decide-dialog>
+    <decide-dialog
+      v-if="showConfirmEnterGroupDialog"
+      :title="$t('editing.confirmEnterGroupUserManagement')"
+      :content="selectedGroup.groupName"
+      :type="'confirm'"
+      :btnText="$t('button.moveForward')"
+      @closeDialog="cancelEnterGroup"
+      @confirmBtn="enterGroup"
     >
     </decide-dialog>
   </div>
@@ -63,7 +73,8 @@ export default {
   data () {
     return {
       selectedGroup: {},
-      showConfirmDeleteDialog: false
+      showConfirmDeleteDialog: false,
+      showConfirmEnterGroupDialog: false
     }
   },
   computed: {
@@ -145,8 +156,16 @@ export default {
     showCreateButton () {
       return this.hasAccountPermission('account_create_group')
     },
-    manageMember (data) {
-      this.$router.push({name: 'GroupUserList', params: {group_id: data.groupId}})
+    confirmEnterGroup (dataObj) {
+      this.selectedGroup = dataObj
+      this.showConfirmEnterGroupDialog = true
+    },
+    cancelEnterGroup () {
+      this.selectedGroup = {}
+      this.showConfirmEnterGroupDialog = false
+    },
+    enterGroup () {
+      this.$router.push({name: 'GroupUserList', params: {group_id: this.selectedGroup.groupId}})
     }
   }
 }
