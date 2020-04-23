@@ -106,19 +106,11 @@
       <span class="reminder-description">
         {{$t('message.remindAdjustMainDate')}}
       </span>
-      <!--TODO: 轉換到設定 main date 的 component-->
-      <a
-        href="javascript:void(0)"
-        class="btn-link"
-      >{{$t('guiding.goAdjust')}}</a>
     </div>
     <div
       class="footer-button-block"
       v-if="relationInfo.id && isEditing"
     >
-      <!-- <a href="javascript:void(0)" class="btn btn-secondary btn-delete"
-        @click="checkDeleteRelations(relationInfoData.id)"
-      >{{ $t('button.delete') }}</a> -->
       <a
         href="javascript:void(0)"
         class="btn btn-secondary btn-delete"
@@ -238,7 +230,7 @@ export default {
       }
       createJoinTable(joinTableData)
         .then(response => {
-          this.relationInfo.id = response
+          this.relationInfo.id = response.joinTableId
           this.isLoading = false
           this.isEditing = false
           this.newTableCreated = true

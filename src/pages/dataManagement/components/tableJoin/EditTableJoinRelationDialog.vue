@@ -87,11 +87,12 @@ export default {
           } else {
             this.joinTableList = joinTableList
           }
-          // handle dataframe list
-          this.dataFrameList = dataFrameList.map(dataFrame => ({
-            ...dataFrame,
-            name: dataFrame.primaryAlias
-          }))
+          // 排除正在處理中的資料表和關聯資料表 ＆ 允許 join 兩個相同的 table
+          this.dataFrameList = dataFrameList.reduce((acc, cur) => {
+            if (cur.state !== 'Enable' || cur.joinCount > 1) return acc
+            acc.push({...cur, name: cur.primaryAlias})
+            return acc
+          }, [])
           // update loading status
           this.isLoading = false
         })
