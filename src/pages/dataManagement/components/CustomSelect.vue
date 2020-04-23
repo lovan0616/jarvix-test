@@ -14,7 +14,7 @@
     >
       <div class="option"
         v-for="option in optionList"
-        :key="new Date().getTime() + option.id"
+        :key="option.id"
         @click="chooseOption(option.id)"
         :class="{active: option.id === value}"
       >{{ option.name }}</div>

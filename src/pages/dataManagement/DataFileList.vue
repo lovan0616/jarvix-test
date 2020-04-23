@@ -40,15 +40,15 @@
             v-if="reachLimit"
           >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
-        <!-- <div class="button-block">
+        <div class="button-block">
           <button class="btn-m btn-secondary btn-has-icon"
             @click="toggleJoinTableDialog"
             :disabled="reachLimit || dataList.length === 0"
           >
             <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
           </button>
-        </div> -->
-        <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div> -->
+          <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
+        </div>
       </div>
       <data-table
         :headers="tableHeaders"
@@ -216,7 +216,7 @@ export default {
         this.dataList = response.map(element => {
           return {
             ...element,
-            createMethod: element.joinCount === 2 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
+            createMethod: element.joinCount > 1 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
           }
         })
       })
@@ -275,6 +275,7 @@ export default {
       this.showConfirmDeleteDialog = false
     },
     toggleJoinTableDialog () {
+      if (this.reachLimit || this.dataList.length === 0) return
       this.showJoinTableDialog = !this.showJoinTableDialog
     },
     toggleEditColumnDialog () {
@@ -370,7 +371,7 @@ export default {
         },
         {
           text: this.$t('editing.status'),
-          value: 'type',
+          value: 'state',
           width: '80px'
         },
         {
@@ -407,7 +408,7 @@ export default {
     },
     hasDataFrameProcessing () {
       if (!this.dataList.length) return false
-      return this.dataList.some(element => element.type === 'PROCESS')
+      return this.dataList.some(element => element.type === 'PROCESS' || element.state === 'Process')
     }
   }
 }

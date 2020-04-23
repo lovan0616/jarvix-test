@@ -25,7 +25,7 @@
   },
   "message": {
     "joinTableBuilt": "資料表關聯建立完成",
-    "remindAdjustMainDate": "資料表具有多項日期欄位，您可進行主要日期欄位調整。",
+    "remindAdjustMainDate": "此表可能有多個日期欄位，您可用資料表的”日期欄位調整“功能進行設定。",
     "remindSameDataTypeColumns": "兩個欄位的資料型態必須相同。",
     "builded": "資料源建立完成",
     "noData": "目前沒有資料",
