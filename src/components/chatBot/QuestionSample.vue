@@ -6,19 +6,7 @@
         <svg-icon icon-class="lamp"></svg-icon>
         {{$t('askHelper.description')}}:
       </span>
-      {{$t('askHelper.category')}}</div>
-    <div class="question-description">
-      <span class="question-lamp">
-        <svg-icon icon-class="lamp"></svg-icon>
-        {{$t('askHelper.description')}}:
-      </span>
-      {{$t('askHelper.numeric')}}</div>
-    <div class="question-description">
-      <span class="question-lamp">
-        <svg-icon icon-class="lamp"></svg-icon>
-        {{$t('askHelper.description')}}:
-      </span>
-      {{$t('askHelper.value')}}</div>
+      {{$t('askHelper.exampleDesc')}}</div>
     <el-collapse class="question-sample-collapse"
       v-model="activeName"
       accordion
@@ -91,6 +79,7 @@ export default {
     .question-description {
       font-size: 12px;
       line-height: 32px;
+      word-break: keep-all;
     }
 
     .question-lamp {
@@ -154,23 +143,4 @@ export default {
   }
 }
 
-</style>
-<style lang="scss">
-.question-sample-collapse.el-collapse {
-  border-top: none;
-
-  .el-collapse-item__header {
-    background-color: transparent;
-    color: $theme-text-color;
-    padding-left: 16px;
-  }
-
-  .el-collapse-item__wrap {
-    background-color: transparent;
-  }
-
-  .el-collapse-item__content {
-    color: #fff;
-  }
-}
 </style>
