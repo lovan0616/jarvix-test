@@ -454,6 +454,9 @@
     "datavalueTitle": "常见资料",
     "category": "Category 类型的栏位，不具有数量单位。",
     "numeric": "Numeric 类型的栏位，具有数量单位。",
+    "datetime": "Datetime 类型的栏位，资料为日期/时间。",
+    "boolean": "Boolean 类型的栏位，不具有数量单位，资料为0/1。",
+    "unique": "Unique 类型的栏位，资料不会重复。",
     "filter": "时间筛选条件",
     "value": "Value 是栏位的资料，不限定数量或其他型态。",
     "column": "栏位",
@@ -463,6 +466,7 @@
     "columnName": "栏位名称",
     "ask": "问",
     "example": "范例",
+    "exampleDesc": "因 Boolean 和 Unique 类型问句方式与 Category 一致，以下均以 Category 类型举例。",
     "questionSampleList": [
       {
         "name": "一般问句",

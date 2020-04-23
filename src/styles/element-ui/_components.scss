@@ -107,3 +107,18 @@
     background-color: transparent;
   }
 }
+
+.el-collapse {
+  border-top: none;
+  .el-collapse-item__header {
+    background-color: transparent;
+    color: $theme-text-color;
+    padding-left: 16px;
+  }
+  .el-collapse-item__wrap {
+    background-color: transparent;
+  }
+  .el-collapse-item__content {
+    color: #fff;
+  }
+}

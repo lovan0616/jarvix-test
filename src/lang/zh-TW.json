@@ -454,6 +454,9 @@
     "datavalueTitle": "常見資料",
     "category": "Category 類型的欄位，不具有數量單位。",
     "numeric": "Numeric 類型的欄位，具有數量單位。",
+    "datetime": "Datetime 類型的欄位，資料為日期/時間。",
+    "boolean": "Boolean 類型的欄位，不具有數量單位，資料為0/1。",
+    "unique": "Unique 類型的欄位，資料不會重複。",
     "filter": "時間篩選條件",
     "value": "Value 是欄位的資料，不限定數量或其他型態。",
     "column": "欄位",
@@ -463,6 +466,7 @@
     "columnName": "欄位名稱",
     "ask": "問",
     "example": "範例",
+    "exampleDesc": "因 Boolean 和 Unique 類型問句方式與 Category 一致，以下均以 Category 類型舉例。",
     "questionSampleList": [
       {
         "name": "一般問句",
