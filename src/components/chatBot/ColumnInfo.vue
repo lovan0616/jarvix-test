@@ -104,7 +104,7 @@
       <div class="category-list">
         <div class="column-name">{{$t('askHelper.datavalueTitle')}}</div>
         <div class="single-column"
-          v-for="(columnInfo, index) in dataSourceDataValueList.value"
+          v-for="(columnInfo, index) in dataSourceDataValueList"
           :key="'datavalue' + index"
         >{{ columnInfo ? columnInfo : '-' }}
         </div>
