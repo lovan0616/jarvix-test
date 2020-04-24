@@ -199,9 +199,6 @@ export default {
 <style lang="scss" scoped>
 .edit-column-dialog {
   .dialog {
-    &-title {
-      position: relative;
-    }
     &-header-block {
       margin-bottom: 12px;
       display: flex;
@@ -211,13 +208,6 @@ export default {
   }
   .edit-table-block {
     margin-bottom: 32px;
-  }
-  .close-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    color: #fff;
-    font-size: 14px;
   }
   .name {
     width: 30%;

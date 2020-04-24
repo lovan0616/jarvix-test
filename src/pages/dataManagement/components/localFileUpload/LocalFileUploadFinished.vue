@@ -9,7 +9,7 @@
       <img v-if="uploadFileList.length === successList.length" src="../../../../assets/images/success.gif" :alt="$t('editing.uploadSuccess')" class="finished-img">
       <img v-if="uploadFileList.length === failList.length" src="../../../../assets/images/error.gif" :alt="$t('editing.uploadFailure')" class="finished-img">
       <div class="finished-file-info">
-        {{ $t('editing.uploadStatus', {total: uploadFileList.length, success: successList.length, pedding: failList.length}) }}
+        {{ $t('editing.uploadStatus', {total: uploadFileList.length, success: successList.length, pending: failList.length}) }}
       </div>
     </div>
     <div class="dialog-body">

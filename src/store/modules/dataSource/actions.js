@@ -69,7 +69,7 @@ export default {
     commit('setDataSourceId', null)
   },
   getDataSourceTables ({state}) {
-    if (state.dataSourceId === null) return Promise.reject(new Error('dataSource not set yet'))
+    if (state.dataSourceId === null) return
     return getDataFrameById(state.dataSourceId)
   },
   getDataFrameData ({state}, {id, page = 0}) {

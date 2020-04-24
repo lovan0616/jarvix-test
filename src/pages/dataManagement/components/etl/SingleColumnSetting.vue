@@ -62,7 +62,7 @@
         </div>
         <button class="btn btn-outline"
           @click="addReplaceValue"
-        >{{ $t('button.new') }}</button>
+        >{{ $t('button.create') }}</button>
       </div>
     </div>
     <div class="submit-block">

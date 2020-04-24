@@ -21,34 +21,25 @@
           >
             <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
           </button>
-          <!-- <button class="btn-m btn-default"
-            v-if="dataList.length > 1"
-            :disabled="isProcessing"
-            @click="editJoinTable"
-          >{{ $t('editing.foreignTable') }}</button> -->
-          <!-- <button class="btn-m btn-outline btn-has-icon"
-            v-if="selectList.length > 0"
-            :disabled="isProcessing"
-            @click="confirmDelete()"
-          >
-            <svg-icon class="icon"
-              v-if="isProcessing"
-              :icon-class="spinner"
-            ></svg-icon>{{ $t('button.delete') }}
-          </button> -->
           <div class="reach-limit"
             v-if="reachLimit"
           >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
-        <div class="button-block">
+        <div class="button-block dataframe-action">
+          <button class="btn-m btn-secondary btn-has-icon"
+            @click="toggleEditFeatureDialog"
+            :disabled="reachLimit || dataList.length === 0"
+          >
+            <svg-icon icon-class="feature" class="icon"></svg-icon>{{ $t('button.featureManagement') }}
+          </button>
           <button class="btn-m btn-secondary btn-has-icon"
             @click="toggleJoinTableDialog"
             :disabled="reachLimit || dataList.length === 0"
           >
             <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
           </button>
-          <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
         </div>
+        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
       </div>
       <data-table
         :headers="tableHeaders"
@@ -109,6 +100,10 @@
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditDateTimeDialog"
     ></edit-date-time-dialog>
+    <feature-management-dialog
+      v-if="showEditFeatureDialog"
+      @close="toggleEditFeatureDialog"
+    ></feature-management-dialog>
   </div>
 </template>
 <script>
@@ -122,6 +117,7 @@ import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
+import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 
 export default {
   name: 'DataFileList',
@@ -134,7 +130,8 @@ export default {
     EditColumnSetDialog,
     DataFrameAliasDialog,
     ValueAliasDialog,
-    EditDateTimeDialog
+    EditDateTimeDialog,
+    FeatureManagementDialog
   },
   data () {
     return {
@@ -160,6 +157,7 @@ export default {
       showDataFrameAliasDialog: false,
       showValueAliasDialog: false,
       showEditColumnSetDialog: false,
+      showEditFeatureDialog: false,
       intervalFunction: null,
       checkDataFrameIntervalFunction: null,
       isLoading: false
@@ -333,6 +331,9 @@ export default {
     },
     closeEditDateTimeDialog () {
       this.showEditDateTimeDialog = false
+    },
+    toggleEditFeatureDialog () {
+      this.showEditFeatureDialog = !this.showEditFeatureDialog
     }
   },
   computed: {
@@ -424,6 +425,12 @@ export default {
   .divider {
     margin: 0 8px;
     color: #979797;
+  }
+
+  .dataframe-action {
+    flex: 1;
+    justify-content: flex-end;
+    margin-right: 12px;
   }
 
   .status-block {

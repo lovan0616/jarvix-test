@@ -4,6 +4,7 @@
     <div class="single-root-cause"
       v-for="(singleInfo, index) in info"
       :key="index"
+      :class="{'has-link': singleInfo.next_question}"
       @click="linkTo(singleInfo.next_question)"
     >
       <span class="info-index">{{ index + 1 }}</span>
@@ -29,6 +30,7 @@ export default {
   },
   methods: {
     linkTo (value) {
+      if (!value) return
       this.$store.commit('dataSource/setAppQuestion', value)
       // 區分使用者是點擊推薦問句或是點擊過往的問句
       this.$store.dispatch('dataSource/updateResultRouter', 'trend_root_cause')
@@ -53,7 +55,14 @@ export default {
     display: flex;
     align-items: center;
     padding: 12px;
-    cursor: pointer;
+
+    &.has-link {
+      cursor: pointer;
+
+      .info-content {
+        text-decoration: underline;
+      }
+    }
 
     .info-index {
       width: 32px;
