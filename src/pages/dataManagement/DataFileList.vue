@@ -21,28 +21,23 @@
           >
             <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
           </button>
-          <!-- <button class="btn-m btn-default"
-            v-if="dataList.length > 1"
-            :disabled="isProcessing"
-            @click="editJoinTable"
-          >{{ $t('editing.foreignTable') }}</button> -->
           <div class="reach-limit"
             v-if="reachLimit"
           >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
-        <div class="button-block">
+        <div class="button-block dataframe-action">
           <button class="btn-m btn-secondary btn-has-icon"
             @click="toggleEditFeatureDialog"
             :disabled="reachLimit || dataList.length === 0"
           >
             <svg-icon icon-class="feature" class="icon"></svg-icon>{{ $t('button.featureManagement') }}
           </button>
-          <!-- <button class="btn-m btn-secondary btn-has-icon"
+          <button class="btn-m btn-secondary btn-has-icon"
             @click="toggleJoinTableDialog"
             :disabled="reachLimit || dataList.length === 0"
           >
             <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
-          </button> -->
+          </button>
         </div>
         <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
       </div>
@@ -430,6 +425,12 @@ export default {
   .divider {
     margin: 0 8px;
     color: #979797;
+  }
+
+  .dataframe-action {
+    flex: 1;
+    justify-content: flex-end;
+    margin-right: 12px;
   }
 
   .status-block {

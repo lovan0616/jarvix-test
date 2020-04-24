@@ -158,7 +158,7 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputBlock from '@/components/InputBlock'
 import { getDataFrameById, getDataFrameColumnInfoById } from '@/API/DataSource'
-import { createCustomFeature } from '@/API/Feature'
+import { createCustomFeature, updateCustomFeature } from '@/API/Feature'
 import { Message } from 'element-ui'
 import draggable from 'vuedraggable'
 
@@ -246,7 +246,8 @@ export default {
             }
           }, '')
 
-          createCustomFeature(this.featureInfo).then(() => {
+          let promise = this.featureInfo.id ? updateCustomFeature(this.featureInfo) : createCustomFeature(this.featureInfo)
+          promise.then(() => {
             Message({
               message: this.$t('message.saveSuccess'),
               type: 'success',
