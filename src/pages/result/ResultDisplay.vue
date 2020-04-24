@@ -171,8 +171,9 @@ export default {
             this.resultInfo = response
             this.isLoading = false
           }
-        }).catch(() => {
-          this.isLoading = false
+        }).catch((error) => {
+          // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
+          if (error.constructor.name !== 'Cancel') this.isLoading = false
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
 
