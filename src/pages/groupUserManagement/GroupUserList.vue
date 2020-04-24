@@ -75,7 +75,7 @@ export default {
       return [
         {
           text: this.$t('editing.userAccount'),
-          value: 'name',
+          value: 'email',
           sort: true,
           width: '70%'
         },
