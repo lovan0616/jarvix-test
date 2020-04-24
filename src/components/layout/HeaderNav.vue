@@ -219,6 +219,11 @@ export default {
         name: group.groupName
       }))
     }
+  },
+  watch: {
+    groupId (value) {
+      this.selectedGroupId = value
+    }
   }
 }
 </script>
