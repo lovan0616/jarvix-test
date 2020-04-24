@@ -22,7 +22,7 @@
       :restrictions="restrictInfo"
     ></component>
     <div class="related-question-block" v-if="relatedQuestionList.length > 0">
-      <div class="block-title">{{ $t('editing.relatedQuesion') }}</div>
+      <div class="block-title">{{ $t('editing.relatedQuestion') }}</div>
       <div class="related-question-list">
         <preview-result-board class="result-board"
           v-for="(relatedQuestion, index) in relatedQuestionList"

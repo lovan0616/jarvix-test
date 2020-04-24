@@ -44,7 +44,7 @@
             <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
           </button> -->
         </div>
-        <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div> -->
+        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
       </div>
       <data-table
         :headers="tableHeaders"
@@ -105,7 +105,10 @@
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditDateTimeDialog"
     ></edit-date-time-dialog>
-    <feature-management-dialog></feature-management-dialog>
+    <feature-management-dialog
+      v-if="showEditFeatureDialog"
+      @close="toggleEditFeatureDialog"
+    ></feature-management-dialog>
   </div>
 </template>
 <script>
