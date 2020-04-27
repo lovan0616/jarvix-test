@@ -189,7 +189,7 @@ export default {
     changeGroup () {
       this.isLoading = true
       switchGroup({
-        accrountId: this.getCurrentAccountId,
+        accountId: this.getCurrentAccountId,
         groupId: this.selectedGroupId
       })
         .then(res => {
