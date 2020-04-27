@@ -8,6 +8,7 @@
       </div>
       <div class="button-block">
         <button type="button" class="btn btn-secondary btn-has-icon"
+         :disabled="isLoading || reachLimit"
           @click="addJoinTable"
         ><svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.newForeign') }}</button>
       </div>
@@ -28,7 +29,7 @@
           :key="relation.key || relation.id"
           :index="index"
           :relation-info="relation"
-          :data-frame-list="dataFrameList"
+          :data-frame-list="dataFrameOptionList()"
           @deleteJoinTable="deleteJoinTable"
           @cancelAddingJoinTable="cancelAddingJoinTable"
           @dataFrameUpdate="$emit('dataFrameUpdate')"
@@ -41,7 +42,7 @@
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import TableJoinRelatoinBlock from './TableJoinRelatoinBlock'
 // import { buildStorage, setCSVJoin } from '@/API/Storage'
-import { getDataFrameById } from '@/API/DataSource'
+// import { getDataFrameById } from '@/API/DataSource'
 import { getJoinTableList } from '@/API/JoinTable'
 import { Message } from 'element-ui'
 
@@ -51,11 +52,20 @@ export default {
     TableJoinRelatoinBlock,
     EmptyInfoBlock
   },
+  props: {
+    reachLimit: {
+      type: Boolean,
+      required: true
+    },
+    dataFrameList: {
+      type: Array,
+      default: () => []
+    }
+  },
   data () {
     return {
       currentDataSourceId: parseInt(this.$route.params.id),
       joinTableList: [],
-      dataFrameList: [],
       singleJoinTable: {
         dataFrameRelationList: [
           {
@@ -77,34 +87,41 @@ export default {
   },
   methods: {
     fetchData () {
-      Promise.all([this.getJoinTableList(), this.getDataFrameList()])
-        .then(([joinTableList, dataFrameList]) => {
-          // handle join table list
-          if (joinTableList.length === 0) {
+      this.isLoading = true
+      getJoinTableList(this.currentDataSourceId)
+        .then((res) => {
+          if (res.length === 0) {
             const emptyJoinTable = JSON.parse(JSON.stringify(this.singleJoinTable))
             emptyJoinTable.key = new Date().toString()
             this.joinTableList.push(emptyJoinTable)
           } else {
-            this.joinTableList = joinTableList
+            this.joinTableList = res.reduce((acc, cur) => {
+              const selectedDataFrame = this.dataFrameList.find(dataFrame => dataFrame.id === cur.dataFrameId)
+              if (!selectedDataFrame) return acc
+              acc.push({...cur, state: selectedDataFrame.state})
+              return acc
+            }, [])
           }
-          // 排除正在處理中的資料表和關聯資料表 ＆ 允許 join 兩個相同的 table
-          this.dataFrameList = dataFrameList.reduce((acc, cur) => {
-            if (cur.state !== 'Enable' || cur.joinCount > 1) return acc
-            acc.push({...cur, name: cur.primaryAlias})
-            return acc
-          }, [])
-          // update loading status
           this.isLoading = false
         })
         .catch(() => {
           this.isLoading = false
         })
     },
-    getJoinTableList () {
-      return getJoinTableList(this.currentDataSourceId)
+    updateJoinTableList () {
+      this.joinTableList.forEach((table, index) => {
+        const selectedDataFrame = this.dataFrameList.find(dataFrame => dataFrame.id === table.dataFrameId)
+        if (table.state !== selectedDataFrame.state) {
+          this.$set(this.joinTableList, index, {...table, state: selectedDataFrame.state})
+        }
+      })
     },
-    getDataFrameList () {
-      return getDataFrameById(this.currentDataSourceId)
+    dataFrameOptionList () {
+      return this.dataFrameList.reduce((acc, cur) => {
+        if (cur.state !== 'Enable' || cur.joinCount > 1) return acc
+        acc.push({...cur, name: cur.primaryAlias})
+        return acc
+      }, [])
     },
     closeDialog () {
       this.$emit('cancel')
@@ -125,6 +142,14 @@ export default {
         type: 'success',
         duration: 3 * 1000
       })
+    }
+  },
+  watch: {
+    dataFrameList: {
+      deep: true,
+      handler (val) {
+        this.updateJoinTableList()
+      }
     }
   }
 }

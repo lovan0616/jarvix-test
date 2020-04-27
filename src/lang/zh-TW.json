@@ -24,7 +24,7 @@
     "pageDataFileList": "資料表列表"
   },
   "message": {
-    "joinTableBuilt": "資料表關聯建立完成",
+    "joinTableBuilding": "資料表建置中，建置完成即可使用",
     "remindAdjustMainDate": "此表可能有多個日期欄位，您可用資料表的”日期欄位調整“功能進行設定。",
     "remindSameDataTypeColumns": "兩個欄位的資料型態必須相同。",
     "builded": "資料源建立完成",

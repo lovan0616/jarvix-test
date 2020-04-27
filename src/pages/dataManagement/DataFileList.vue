@@ -33,8 +33,8 @@
             <svg-icon icon-class="feature" class="icon"></svg-icon>{{ $t('button.featureManagement') }}
           </button>
           <button class="btn-m btn-secondary btn-has-icon"
-            @click="toggleJoinTableDialog"
-            :disabled="reachLimit || dataList.length === 0"
+            @click="openEditJoinTableDialog"
+            :disabled="dataList.length === 0"
           >
             <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
           </button>
@@ -72,7 +72,9 @@
     ></confirm-delete-data-frame-dialog>
     <edit-table-join-relation-dialog
       v-if="showJoinTableDialog"
-      @cancel="toggleJoinTableDialog()"
+      :reach-limit="reachLimit"
+      :data-frame-list="dataList"
+      @cancel="closeEditJoinTableDialog"
       @dataFrameUpdate="fetchData()"
     ></edit-table-join-relation-dialog>
     <edit-column-dialog
@@ -272,15 +274,15 @@ export default {
       this.selectList = []
       this.showConfirmDeleteDialog = false
     },
-    toggleJoinTableDialog () {
-      if (this.reachLimit || this.dataList.length === 0) return
-      this.showJoinTableDialog = !this.showJoinTableDialog
+    openEditJoinTableDialog () {
+      if (this.dataList.length === 0) return
+      this.showJoinTableDialog = true
+    },
+    closeEditJoinTableDialog () {
+      this.showJoinTableDialog = false
     },
     toggleEditColumnDialog () {
       this.showEditColumnDialog = !this.showEditColumnDialog
-    },
-    editJoinTable () {
-      this.toggleJoinTableDialog()
     },
     editTableColumn (dataInfo) {
       // 利用 id 去 tableList 裡面找對應的 table 資訊
