@@ -277,7 +277,7 @@ export default {
         })
     },
     getAccountRoleList () {
-      getAccountRoles()
+      getAccountRoles(this.currentAccountId)
         .then(response => {
           this.roleOptions = []
           this.roleOptions = response
@@ -455,6 +455,9 @@ export default {
     }
   },
   computed: {
+    currentAccountId () {
+      return this.$store.getters['userManagement/getCurrentAccountId']
+    },
     roleList () {
       return [
         {
