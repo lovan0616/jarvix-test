@@ -6,9 +6,8 @@
       <svg-icon icon-class="plus" class="icon"></svg-icon>
       {{ $t('button.addNewCategory') }}
       </button>
-    <div class="pinboard-list">
+    <div class="pinboard-list" v-if="pinboardList.length > 0">
       <single-pinboard
-        v-if="pinboardList.length > 0"
         v-for="boardInfo in pinboardList"
         :key="boardInfo.id"
         :board-info="boardInfo"
@@ -18,11 +17,14 @@
       >
       </single-pinboard>
     </div>
-
+    <empty-info-block
+      v-else
+      :msg="$t('editing.emptyPinboard')"
+    ></empty-info-block>
     <writing-dialog
       v-if="isShowAdd"
       :title="$t('button.addNewCategory')"
-      :button="$t('button.change')"
+      :button="$t('button.create')"
       @closeDialog="closeAdd"
       @confirmBtn="addCategory"
       :showBoth="true"
@@ -64,6 +66,7 @@
 import SinglePinboard from './components/SinglePinboard'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import { Message } from 'element-ui'
 
 export default {
@@ -71,7 +74,8 @@ export default {
   components: {
     DecideDialog,
     WritingDialog,
-    SinglePinboard
+    SinglePinboard,
+    EmptyInfoBlock
   },
   data () {
     return {
