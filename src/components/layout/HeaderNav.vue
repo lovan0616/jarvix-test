@@ -156,7 +156,7 @@ export default {
     },
     settingData () {
       const settingList = []
-      settingList.push({icon: 'database', title: 'nav.dataSourceManagement', name: 'PageDataSourceList'})
+      settingList.push({icon: 'database', title: 'sideNav.dataSourceManagement', name: 'DataSourceList'})
       settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/group/user-management/${this.groupId}`})
       return settingList
     },

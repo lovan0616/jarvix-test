@@ -184,7 +184,7 @@ export default {
           value: 'name',
           sort: true,
           link: {
-            name: 'PageDataFileList'
+            name: 'DataFileList'
           }
         },
         {text: this.$t('editing.uploadUser'), value: 'creator', width: '9.96%'},

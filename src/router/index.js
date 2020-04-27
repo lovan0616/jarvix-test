@@ -130,24 +130,45 @@ const router = new Router({
           component: () => import('@/pages/management/Index'),
           children: [
             {
-              path: 'data-management',
+              path: 'datasource-management',
               component: () => import('@/pages/dataManagement/Index'),
               children: [
                 {
                   path: '/',
-                  name: 'PageDataSourceList',
-                  component: () => import('@/pages/dataManagement/DataSourceList'),
+                  redirect: { name: 'DataSourceList' },
+                  name: 'DataSourceManagement',
                   meta: {
-                    isMainNav: true,
-                    layers: ['group', 'data-management']
+                    isMainNav: true
                   }
                 },
                 {
+                  path: 'datasource-list',
+                  name: 'DataSourceList',
+                  component: () => import('@/pages/dataManagement/DataSourceList'),
+                  meta: {
+                    layers: ['group', 'datasource-management']
+                  }
+                }
+              ]
+            },
+            {
+              path: 'datasource-management/datasource-list',
+              component: () => import('@/pages/dataManagement/Index'),
+              children: [
+                {
                   path: ':id',
-                  name: 'PageDataFileList',
+                  redirect: to => ({name: 'DataFileList', params: {id: to.params.id}}),
+                  name: 'DataFileManagement',
+                  meta: {
+                    isMainNav: true
+                  }
+                },
+                {
+                  path: ':id/datafile-list',
+                  name: 'DataFileList',
                   component: () => import('@/pages/dataManagement/DataFileList'),
                   meta: {
-                    layers: ['group', 'data-management']
+                    layers: ['group', 'datasource-management/datasource-list']
                   }
                 }
               ]
@@ -157,8 +178,8 @@ const router = new Router({
               component: () => import('@/pages/groupUserManagement/Index'),
               children: [
                 {
-                  path: '/',
-                  redirect: { name: 'GroupUserList' },
+                  path: ':group_id',
+                  redirect: to => ({name: 'GroupUserList', params: {group_id: to.params.group_id}}),
                   name: 'GroupUserManagement',
                   meta: {
                     isMainNav: true
