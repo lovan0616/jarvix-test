@@ -201,9 +201,9 @@ export function getAccountGroupInfo (accountId) {
 /**
  * 取得所有比自己低等的帳戶角色
  */
-export function getAccountRoles () {
+export function getAccountRoles (accountId) {
   return request({
-    url: '/account/role',
+    url: `/account/${accountId}/role`,
     method: 'GET'
   })
 }
