@@ -1,13 +1,5 @@
 <template>
-  <div
-    class="frame"
-    :style="{
-      width,
-      height,
-      top,
-      left
-    }"
-  ></div>
+  <div class="frame" :style="{ width, height, top, left }"></div>
 </template>
 
 <script>
