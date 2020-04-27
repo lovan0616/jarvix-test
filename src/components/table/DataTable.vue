@@ -286,17 +286,28 @@ export default {
       if (!actionName || this.isProcessing || data['state'] === 'Process' || data['type'] === 'PROCESS') return false
       this.$emit(actionName, data)
     },
+    /**
+     * TODO
+     * 搞不清楚什麼時候要替換，這邊等後端更新之後再來統一
+     */
     buildStatus (value) {
       switch (value) {
         case 'Warn':
+        case 'WARN':
         case 'Ready':
+        case 'READY':
         case 'Enable':
+        case 'ENABLE':
           return i18n.t('editing.dataManageable')
         case 'Fail':
+        case 'FAIL':
         case 'Delete':
+        case 'DELETE':
         case 'Disable':
+        case 'DISABLE':
           return i18n.t('editing.dataDisable')
         case 'Process':
+        case 'PROCESS':
           return i18n.t('editing.dataBuilding')
       }
     },

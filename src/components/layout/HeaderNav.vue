@@ -130,7 +130,7 @@ export default {
     this.selectedGroupId = this.groupId
   },
   computed: {
-    ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission', 'getCurrentGroupName']),
+    ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
     locale () {
       return this.$store.state.setting.locale
     },
@@ -188,7 +188,10 @@ export default {
     },
     changeGroup () {
       this.isLoading = true
-      switchGroup(this.selectedGroupId)
+      switchGroup({
+        accrountId: this.getCurrentAccountId,
+        groupId: this.selectedGroupId
+      })
         .then(res => {
           // update user info
           this.$store.commit('userManagement/setUserInfo', {

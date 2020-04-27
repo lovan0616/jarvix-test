@@ -161,7 +161,10 @@ export default {
       })
     },
     createDataSource () {
-      return createDataSource(this.dataSourceName).then(response => {
+      return createDataSource({
+        name: this.dataSourceName,
+        groupId: this.currentGroupId
+      }).then(response => {
         this.dataSourceId = response.dataSourceId
 
         this.$emit('updateDataSource', this.dataSourceId)
@@ -180,6 +183,11 @@ export default {
       }).catch(() => {
         this.isLoading = false
       })
+    }
+  },
+  computed: {
+    currentGroupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
     }
   }
 }
