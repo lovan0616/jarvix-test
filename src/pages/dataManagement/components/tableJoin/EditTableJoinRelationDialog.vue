@@ -41,8 +41,6 @@
 <script>
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import TableJoinRelatoinBlock from './TableJoinRelatoinBlock'
-// import { buildStorage, setCSVJoin } from '@/API/Storage'
-// import { getDataFrameById } from '@/API/DataSource'
 import { getJoinTableList } from '@/API/JoinTable'
 import { Message } from 'element-ui'
 
