@@ -8,7 +8,7 @@
         class="nav-link main-nav-link"
         :to="nav.path ? nav.path : {name: nav.routeName}"
       >
-        <svg-icon icon-class="account-management" class="icon"></svg-icon>
+        <svg-icon :icon-class="nav.icon" class="icon"></svg-icon>
         {{nav.title}}
       </router-link>
       <template v-if="nav.subNav">
@@ -39,7 +39,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .nav-header {
-  background-color: rgba(0, 0, 0, .3);
+  background-color: rgba(0, 32, 36, 0.8);;
   height: 100%;
 
   .nav-link {
@@ -58,24 +58,23 @@ export default {
 
     &.active {
       color: #fff;
-      font-weight: 800;
     }
   }
 
   .main-nav-link {
     &.active {
-      color: #42A5B3;
+      color: #2AD2E2;
     }
     .icon {
-      font-size: 24px;
+      font-size: 16px;
       margin-right: 8px;
       margin-top: 2px;
-      fill: #42A5B3;
+      fill: #2AD2E2;
     }
   }
 
   .sub-nav-link {
-    background-color: rgba(0, 0, 0, .3);
+    background-color: #081C1E;;
     &.active {
       background-color: #42A5B3;
       .icon {

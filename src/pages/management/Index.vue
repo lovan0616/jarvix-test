@@ -49,7 +49,8 @@ export default {
         if (!currentModule.children) {
           return this.nav.push({
             title: this.$t('sideNav.' + this.lowercaseFirstLetter(currentModule.name)),
-            routeName: currentModule.name
+            routeName: currentModule.name,
+            icon: this.$route.meta.icon
           })
         }
 
@@ -62,7 +63,8 @@ export default {
           if (navItem.meta.isMainNav && index === 0) {
             this.nav.push({
               title: this.$t('sideNav.' + this.lowercaseFirstLetter(navItem.name)),
-              routeName: navItem.name
+              routeName: navItem.name,
+              icon: navItem.meta.icon
             })
             selectedMainNavIndex = index
             this.nav[selectedMainNavIndex].subNav = []

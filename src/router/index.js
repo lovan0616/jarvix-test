@@ -91,7 +91,8 @@ const router = new Router({
                   redirect: { name: 'AccountUserManagement' },
                   name: 'AccountManagement',
                   meta: {
-                    isMainNav: true
+                    isMainNav: true,
+                    icon: 'account-management'
                   }
                 },
                 {
@@ -120,7 +121,8 @@ const router = new Router({
               component: () => import('@/pages/functionDescription/Index'),
               meta: {
                 isMainNav: true,
-                layers: ['account', 'function-description']
+                layers: ['account', 'function-description'],
+                icon: 'description'
               }
             }
           ]
@@ -138,7 +140,8 @@ const router = new Router({
                   redirect: { name: 'DataSourceList' },
                   name: 'DataSourceManagement',
                   meta: {
-                    isMainNav: true
+                    isMainNav: true,
+                    icon: 'database'
                   }
                 },
                 {
@@ -160,7 +163,8 @@ const router = new Router({
                   redirect: to => ({name: 'DataFileList', params: {id: to.params.id}}),
                   name: 'DataFileManagement',
                   meta: {
-                    isMainNav: true
+                    isMainNav: true,
+                    icon: 'database'
                   }
                 },
                 {
@@ -182,7 +186,8 @@ const router = new Router({
                   redirect: to => ({name: 'GroupUserList', params: {group_id: to.params.group_id}}),
                   name: 'GroupUserManagement',
                   meta: {
-                    isMainNav: true
+                    isMainNav: true,
+                    icon: 'userManage'
                   }
                 },
                 {
