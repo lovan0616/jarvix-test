@@ -34,7 +34,7 @@
           </button>
           <button class="btn-m btn-secondary btn-has-icon"
             @click="openEditJoinTableDialog"
-            :disabled="dataList.length === 0"
+            :disabled="!canEditJoinTable()"
           >
             <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
           </button>
@@ -274,8 +274,12 @@ export default {
       this.selectList = []
       this.showConfirmDeleteDialog = false
     },
+    canEditJoinTable () {
+      const editableDataList = this.dataList.filter(dataFrame => dataFrame.state === 'Enable')
+      return editableDataList.length > 0
+    },
     openEditJoinTableDialog () {
-      if (this.dataList.length === 0) return
+      if (!this.canEditJoinTable) return
       this.showJoinTableDialog = true
     },
     closeEditJoinTableDialog () {
