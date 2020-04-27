@@ -14,15 +14,14 @@ export function getDataSourceList () {
 
 /**
  * createDataSource
- * @param {String} name - 資料源名稱
+ * @param {String} dataSourceInfo.name - 資料源名稱
+ * @param {Number} dataSourceInfo.groupId - 專案 id
  */
-export function createDataSource (name) {
+export function createDataSource (dataSourceInfo) {
   return request({
     url: '/datasources',
     method: 'POST',
-    data: {
-      name
-    }
+    data: dataSourceInfo
   })
 }
 

@@ -237,11 +237,13 @@ export function deleteUserAccount (id, accountId) {
 
 /**
  * 切換群組
- * @param {Number} groupId - 欲切換的群組 ID
+ * @param {Number} accountInfo.groupId - 欲切換的群組 ID
+ * @param {Number} accountInfo.accountId - 帳號 ID
  */
-export function switchGroup (groupId) {
+export function switchGroup (accountInfo) {
   return request({
-    url: `/auth/checkoutGroup/${groupId}`,
-    method: 'POST'
+    url: `/auth/checkoutGroup`,
+    method: 'POST',
+    data: accountInfo
   })
 }

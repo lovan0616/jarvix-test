@@ -157,6 +157,14 @@ export default {
         {
           name: 'Inner Join',
           value: 'Inner'
+        },
+        {
+          name: 'Left Join',
+          value: 'Left'
+        },
+        {
+          name: 'Right Join',
+          value: 'Right'
         }
       ]
     }
