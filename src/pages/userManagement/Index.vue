@@ -548,7 +548,6 @@ export default {
     }
 
     .user-table-body {
-      max-height: calc(100vh - 300px);
       overflow-y: auto;
     }
 
@@ -703,7 +702,7 @@ export default {
 }
 
 .tooltip-thumbnail {
-  fill: $theme-color-warning;
+  color: $theme-color-warning;
 }
 </style>
 <style lang="scss">
