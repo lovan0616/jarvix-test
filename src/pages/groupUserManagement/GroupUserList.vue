@@ -17,7 +17,7 @@
       </div>
       <crud-table
         :headers="tableHeaders"
-        :data-list="userList"
+        :data-list.sync="userList"
         :empty-message="this.$t('message.noMember')"
         @update:dataList="$emit('update:userList', $event)"
         :loading="isLoading"
