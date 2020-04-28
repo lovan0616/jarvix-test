@@ -42,7 +42,7 @@
                 <span
                   v-else-if="segmentation.type === 'Datacolumn'"
                 >
-                  <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                  <span class="alias-name">{{segmentation.properties[0].datacolumnPrimaryAlias}}<span v-if="segmentation.properties[0].isFeature">({{ $t('resultDescription.feature') }})</span></span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
                 </span>
                 <span
                   v-else-if="segmentation.type === 'NumRuleToken'"
@@ -125,9 +125,15 @@ export default {
           if (segmentationElement.type === standard[index].type) {
             switch (segmentationElement.type) {
               case 'Datavalue':
-              case 'Datacolumn':
                 if (segmentationElement.properties[0].dataframePrimaryAlias !== standard[index].properties[0].dataframePrimaryAlias ||
                   segmentationElement.properties[0].datacolumnPrimaryAlias !== standard[index].properties[0].datacolumnPrimaryAlias) {
+                  statusList[index] = true
+                }
+                break
+              case 'Datacolumn':
+                if (segmentationElement.properties[0].dataframePrimaryAlias !== standard[index].properties[0].dataframePrimaryAlias ||
+                  segmentationElement.properties[0].datacolumnPrimaryAlias !== standard[index].properties[0].datacolumnPrimaryAlias ||
+                  segmentationElement.properties[0].datacolumnId !== standard[index].properties[0].datacolumnId) {
                   statusList[index] = true
                 }
                 break

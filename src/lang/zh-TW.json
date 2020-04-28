@@ -1361,7 +1361,8 @@
     "more": "看更多",
     "source": "來源",
     "target": "目標",
-    "value": "數值"
+    "value": "數值",
+    "feature": "自定義欄位"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",

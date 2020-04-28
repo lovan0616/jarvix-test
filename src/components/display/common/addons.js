@@ -491,13 +491,15 @@ export function seriesItemMarkLine () {
 }
 
 // drillDown type
-export function getDrillDownTool (titleObject, isParallel = false, twoDirection = false) {
+export function getDrillDownTool (routeName, titleObject, isParallel = false, twoDirection = false) {
   let toolbox
 
   let xAxisDrillable = titleObject.xAxis.some(element => element.drillable)
   let yAxisDrillable = titleObject.yAxis.some(element => element.drillable)
 
-  if (titleObject.xAxis.length === 0 && titleObject.yAxis.length === 0) {
+  if (routeName === 'PagePinboard') {
+    toolbox = ['']
+  } else if (titleObject.xAxis.length === 0 && titleObject.yAxis.length === 0) {
     toolbox = ['']
   } else if (titleObject.xAxis.length === 0 && titleObject.yAxis.length > 0) {
     if (yAxisDrillable) {
@@ -531,7 +533,7 @@ export function getDrillDownTool (titleObject, isParallel = false, twoDirection 
     brush: {
       toolbox: toolbox,
       xAxisIndex: 0,
-      yAxisindex: 0
+      yAxisIndex: 0
     }
   }
 }

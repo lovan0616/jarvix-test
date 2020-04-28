@@ -84,16 +84,6 @@
           >(</span><span class="token bracket"
             @click="setOption('operator', ')')"
           >)</span></div>
-          <div class="rule">{{ $t('feature.bracket') }}: <span class="token bracket"
-            @click="setOption('operator', '[')"
-          >[</span><span class="token bracket"
-            @click="setOption('operator', ']')"
-          >]</span></div>
-          <div class="rule">{{ $t('feature.braces') }}: <span class="token bracket"
-            @click="setOption('operator', '{')"
-          >{</span><span class="token bracket"
-            @click="setOption('operator', '}')"
-          >}</span></div>
         </div>
         <div class="feature-input-block">
           <div class="placeholder"
