@@ -241,6 +241,14 @@ export default {
     createUsers () {
       this.$validator.validateAll().then(result => {
         if (!result) return
+        if (this.hasRepetitiveInvitee) {
+          Message({
+            message: this.$t('message.userInviteRepetitive'),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+          return
+        }
         inviteUser({
           emailList: this.inviteeList.map(invitee => {
             return {
@@ -455,6 +463,12 @@ export default {
     }
   },
   computed: {
+    hasRepetitiveInvitee () {
+      let hasRepetitive = this.inviteeList
+        .map(invitee => invitee.email)
+        .filter((email, index, array) => array.indexOf(email) !== index)
+      return hasRepetitive.length > 0
+    },
     currentAccountId () {
       return this.$store.getters['userManagement/getCurrentAccountId']
     },
