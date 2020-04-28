@@ -50,6 +50,7 @@
     "signUpSuccessPleaseLogin": "注册成功，请登入帐号",
     "userCreateSuccess": "建立使用者成功",
     "userInviteSuccess": "邀请使用者成功",
+    "userInviteRepetitive": "重复邀请相同email",
     "changePasswordSuccess": "密码变更成功",
     "editNameSuccess": "编辑名称成功",
     "changeStatusSuccess": "变更状态成功",

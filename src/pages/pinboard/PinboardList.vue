@@ -6,23 +6,30 @@
       <svg-icon icon-class="plus" class="icon"></svg-icon>
       {{ $t('button.addNewCategory') }}
       </button>
-    <div class="pinboard-list">
-      <single-pinboard
-        v-if="pinboardList.length > 0"
-        v-for="boardInfo in pinboardList"
-        :key="boardInfo.id"
-        :board-info="boardInfo"
-        @showEdit="showEditDialog(boardInfo)"
-        @showDelete="showDeleteDialog(boardInfo)"
-        @showShare="showShareDialog(boardInfo)"
-      >
-      </single-pinboard>
+    <spinner
+      :title="$t('editing.loading')" v-if="isLoading"
+    ></spinner>
+    <div v-else>
+      <div class="pinboard-list" v-if="pinboardList.length > 0">
+        <single-pinboard
+          v-for="boardInfo in pinboardList"
+          :key="boardInfo.id"
+          :board-info="boardInfo"
+          @showEdit="showEditDialog(boardInfo)"
+          @showDelete="showDeleteDialog(boardInfo)"
+          @showShare="showShareDialog(boardInfo)"
+        >
+        </single-pinboard>
+      </div>
+      <empty-info-block
+        v-else
+        :msg="$t('editing.emptyPinboard')"
+      ></empty-info-block>
     </div>
-
     <writing-dialog
       v-if="isShowAdd"
       :title="$t('button.addNewCategory')"
-      :button="$t('button.change')"
+      :button="$t('button.create')"
       @closeDialog="closeAdd"
       @confirmBtn="addCategory"
       :showBoth="true"
@@ -64,6 +71,7 @@
 import SinglePinboard from './components/SinglePinboard'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import { Message } from 'element-ui'
 
 export default {
@@ -71,10 +79,12 @@ export default {
   components: {
     DecideDialog,
     WritingDialog,
-    SinglePinboard
+    SinglePinboard,
+    EmptyInfoBlock
   },
   data () {
     return {
+      isLoading: true,
       isEdit: false,
       newBoardName: null,
       isShowAdd: false,
@@ -98,7 +108,9 @@ export default {
   },
   methods: {
     getPinboardInfo () {
-      this.$store.dispatch('pinboard/getPinboardList')
+      this.$store.dispatch('pinboard/getPinboardList').then(() => {
+        this.isLoading = false
+      })
     },
     addCategory () {
       this.$store.dispatch('pinboard/createPinboard', this.newBoardName).then(response => {
