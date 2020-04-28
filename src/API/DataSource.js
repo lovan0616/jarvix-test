@@ -92,12 +92,11 @@ export function getDataSourceDataValueById (dataSourceId, size = 50) {
  * @param {Number} dataSourceId - 欲檢查的資料源 ID
  */
 export function getDataFrameById (dataSourceId, getAllState = false) {
-  console.log(getAllState)
   return request({
     url: `/dataFrame/dataSource/${dataSourceId}`,
     method: 'GET',
     params: {
-      stateList: 'Enable'
+      stateList: getAllState ? [] : 'Enable'
     }
   })
 }
