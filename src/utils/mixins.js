@@ -258,19 +258,12 @@ Vue.mixin({
       let exportFunction = (e) => {
         if (e.target && e.target.id === 'export-btn') {
           /**
-           * 在結果頁下載資料可以從 url 上拿到時間資訊
-           * 但是 pinboard 頁無法
-           */
-          let fileName = window.location.search.split('&')[1]
-            ? this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + question
-            : question
-          /**
            * 注意！！
            * 這邊的資料不從 data 拿
            * 註冊事件當下由 function 傳進的 data，遇到 pagination 更新資料後
            * 便不再拿取新的 data，所以暫時改由 vue instance 內的 computed options 去拿
            */
-          this.exportToCSV(fileName, data.options.dataset.source)
+          this.exportToCSV(question, data.options.dataset.source)
         }
       }
       /**
@@ -284,8 +277,14 @@ Vue.mixin({
         el.setAttribute('listener', true)
       }
     },
-    exportToCSV (filename, rows) {
-      let fileName = filename + '.csv' || this.timeToFileName(new Date().getTime()) + '.csv'
+    exportToCSV (question, rows) {
+      /**
+       * 在結果頁下載資料可以從 url 上拿到時間資訊
+       * 但是 pinboard 頁無法
+       */
+      let fileName = window.location.search.split('&')[1]
+        ? this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + question + '.csv'
+        : this.timeToFileName(new Date().getTime()) + '.csv'
       let processRow = (row) => {
         let finalVal = ''
         for (let j = 0; j < row.length; j++) {

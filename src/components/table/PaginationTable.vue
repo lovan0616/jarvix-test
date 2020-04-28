@@ -25,7 +25,7 @@
     <el-pagination class="table-pagination"
       v-if="paginationInfo.totalPages > 1"
       layout="prev, pager, next"
-      :total="paginationInfo.totalPages"
+      :total="paginationInfo.totalItems"
       :page-size="paginationInfo.itemPerPage"
       :current-page="paginationInfo.currentPage + 1"
       @current-change="changePage"
