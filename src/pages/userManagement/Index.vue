@@ -263,6 +263,7 @@ export default {
           .then(() => {
             this.isShowCreateUser = false
             this.inviteeList = []
+            this.getUserList()
             Message({
               message: this.$t('message.userInviteSuccess'),
               type: 'success',
