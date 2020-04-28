@@ -69,7 +69,7 @@
 import { getAccountInfo } from '@/API/Account'
 
 export default {
-  name: 'GroupUserList',
+  name: 'AccountInfo',
   data () {
     return {
       isLoading: true,
