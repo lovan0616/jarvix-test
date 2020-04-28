@@ -6,6 +6,7 @@ export default {
       commit('dataSource/setIsInit', false, {root: true})
       commit('dataSource/setDataSourceId', null, {root: true})
       commit('clearUserInfo')
+      commit('setting/setCurrentPagePath', null, {root: true})
       localStorage.removeItem('token')
     })
   },

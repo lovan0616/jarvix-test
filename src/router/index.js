@@ -244,6 +244,9 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
+  // 將欲前往的頁面存取下來，避免使用者 token 失效被重新登入使用
+  store.commit('setting/setCurrentPagePath', to.fullPath)
+
   // 處理頁面重整時 store 為空需重新取得使用者資料
   const userName = store.state.userManagement.userName
   try {

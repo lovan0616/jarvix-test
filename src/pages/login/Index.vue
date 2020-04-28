@@ -63,7 +63,8 @@ export default {
           })
             .then(res => {
               localStorage.setItem('token', res.accessToken)
-              // TODO: 保留使用者因 token 失效重新登入前的頁面資料與狀態
+              // 取得前一次停留或拜訪的頁面
+              const currentPagePath = this.$store.state.setting.currentPagePath
               const dataSourceId = this.$store.state.dataSource.dataSourceId
               // 用戶若因 token 失效需重新登入，使用先前已選擇的 id 取得相關資料
               if (dataSourceId) {
@@ -81,6 +82,10 @@ export default {
                 this.$store.dispatch('dataSource/getDataSourceList')
               } else {
                 this.$store.commit('dataSource/setDataSourceList', [])
+              }
+              // 用戶若因 token 失效需重新登入，登入後導回原頁面
+              if (currentPagePath) {
+                return this.$router.push(currentPagePath)
               }
               this.$router.push('/')
             }).catch(() => {

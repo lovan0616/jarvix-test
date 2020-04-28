@@ -4,5 +4,8 @@ export default {
     state.locale = data
     // 更新 localStorage
     localStorage.setItem('locale', data)
+  },
+  setCurrentPagePath (state, data) {
+    state.currentPagePath = data
   }
 }

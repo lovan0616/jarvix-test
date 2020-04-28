@@ -10,7 +10,8 @@ export default {
     languages: {
       'zh-TW': i18n.t('lang', 'zh-TW'),
       'zh-CN': i18n.t('lang', 'zh-CN')
-    }
+    },
+    currentPagePath: null
   },
   actions,
   mutations,
