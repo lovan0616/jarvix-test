@@ -1,25 +1,32 @@
 <template>
   <div class="single-join-table">
     <div class="button-block">
-      <button type="button" class="btn btn-default btn-save"
-        v-if="isEditing"
-        :disabled="isLoading"
-        @click="relationInfo.id ? updateJoinTable() : buildJoinTable()"
-      >{{ relationInfo.id ? $t('button.update') : $t('button.build') }}</button>
-      <button type="button" class="btn btn-outline"
-        v-if="isEditing && !relationInfo.id"
-        :disabled="isLoading"
-        @click="cancelAddingJoinTable()"
-      >{{ $t('button.cancel') }}</button>
-      <button type="button" class="btn btn-outline"
-        v-if="!isEditing"
-        @click="toggleIsEditing()"
-      >{{ $t('button.edit') }}</button>
-      <button type="button" class="btn btn-outline"
-        v-if="isEditing && relationInfo.id"
-        :disabled="isLoading"
-        @click="toggleIsEditing()"
-      >{{ $t('button.close') }}</button>
+      <span
+        class="spinner"
+        v-if="relationInfo.state === 'Process'">
+        <svg-icon icon-class="spinner"></svg-icon>
+      </span>
+      <template v-else>
+        <button type="button" class="btn btn-default btn-save"
+          v-if="isEditing"
+          :disabled="isLoading"
+          @click="relationInfo.id ? updateJoinTable() : buildJoinTable()"
+        >{{ relationInfo.id ? $t('button.update') : $t('button.build') }}</button>
+        <button type="button" class="btn btn-outline"
+          v-if="isEditing && !relationInfo.id"
+          :disabled="isLoading"
+          @click="cancelAddingJoinTable()"
+        >{{ $t('button.cancel') }}</button>
+        <button type="button" class="btn btn-outline"
+          v-if="!isEditing"
+          @click="toggleIsEditing()"
+        >{{ $t('button.edit') }}</button>
+        <button type="button" class="btn btn-outline"
+          v-if="isEditing && relationInfo.id"
+          :disabled="isLoading"
+          @click="toggleIsEditing()"
+        >{{ $t('button.close') }}</button>
+      </template>
     </div>
     <div
       v-if="!isEditing"
@@ -239,12 +246,14 @@ export default {
       createJoinTable(joinTableData)
         .then(response => {
           this.relationInfo.id = response.joinTableId
+          this.relationInfo.dataFrameId = response.dataFrameId
+          this.relationInfo.state = 'Process'
           this.isLoading = false
           this.isEditing = false
           this.newTableCreated = true
           this.$emit('dataFrameUpdate')
           Message({
-            message: this.$t('message.joinTableBuilt'),
+            message: this.$t('message.joinTableBuilding'),
             type: 'success',
             duration: 3 * 1000
           })
@@ -261,6 +270,7 @@ export default {
       }
       updateJoinTable(joinTableData)
         .then(response => {
+          this.relationInfo.state = 'Process'
           this.isEditing = false
           this.isLoading = false
           this.$emit('dataFrameUpdate')
@@ -353,6 +363,13 @@ export default {
     position: absolute;
     top: 24px;
     right: 24px;
+
+    .spinner {
+      display: inline-block;
+      width: 76px;
+      text-align: center;
+      line-height: 36px;
+    }
 
     .btn:not(:last-child) {
       margin-right: 7px;

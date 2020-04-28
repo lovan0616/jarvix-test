@@ -25,7 +25,7 @@
     "dataFileList": "资料表列表"
   },
   "message": {
-    "joinTableBuilt": "资料表关联建立完成",
+    "joinTableBuilding": "资料表建置中，建置完成即可使用",
     "remindAdjustMainDate": "此表可能有多个日期栏位，您可用资料表的”日期栏位调整“功能进行设定。",
     "remindSameDataTypeColumns": "两个栏位的资料型态必须相同。",
     "builded": "资料源建立完成",
