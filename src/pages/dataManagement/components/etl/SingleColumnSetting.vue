@@ -175,7 +175,6 @@ export default {
       })
     },
     dataTypeOptionList (type) {
-      console.log(type, this.dataTypeList)
       if (type === 'DATETIME') {
         return this.dataTypeList
       } else {
