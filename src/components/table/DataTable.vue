@@ -51,7 +51,7 @@
         v-else
         v-for="(data, index) in dataList"
         :key="index"
-        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': data['state'] === 'Process'}"
+        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': data['state'] === 'Process' || data['state'] === 'PROCESSING'}"
       >
         <div class="data-table-cell checkbox"
           v-if="hasCheckbox"
@@ -83,7 +83,7 @@
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
             :key="action.name"
-            :disabled="isProcessing || data['state'] === 'Process' || data['type'] === 'PROCESS'"
+            :disabled="isProcessing || data['state'] === 'Process' || data['state'] === 'PROCESSING'"
             @click="doAction(action.value, data)"
           >
             <dropdown-select
@@ -97,10 +97,10 @@
           </a>
 
           <span v-else-if="headInfo.value === 'state'"
-            :class="{'is-processing': data[headInfo.value] === 'Process'}"
+            :class="{'is-processing': data[headInfo.value] === 'Process' || data[headInfo.value] === 'PROCESSING'}"
           >
             <svg-icon
-              v-if="data[headInfo.value] === 'Process'"
+              v-if="data[headInfo.value] === 'Process' || data[headInfo.value] === 'PROCESSING'"
               icon-class="spinner"
             ></svg-icon>
             {{ buildStatus(data[headInfo.value]) }}
@@ -283,7 +283,7 @@ export default {
       }
     },
     doAction (actionName, data) {
-      if (!actionName || this.isProcessing || data['state'] === 'Process' || data['type'] === 'PROCESS') return false
+      if (!actionName || this.isProcessing || data['state'] === 'Process' || data['type'] === 'PROCESS' || data['state'] === 'PROCESSING') return false
       this.$emit(actionName, data)
     },
     /**
@@ -303,16 +303,18 @@ export default {
         case 'FAIL':
         case 'Delete':
         case 'DELETE':
+        case 'DELETED':
         case 'Disable':
         case 'DISABLE':
           return i18n.t('editing.dataDisable')
         case 'Process':
         case 'PROCESS':
+        case 'PROCESSING':
           return i18n.t('editing.dataBuilding')
       }
     },
     showActionDropdown (subAction, data) {
-      return subAction && !this.isProcessing && data['state'] !== 'Process' && data['type'] !== 'PROCESS'
+      return subAction && !this.isProcessing && data['state'] !== 'Process' && data['type'] !== 'PROCESS' && data['state'] !== 'PROCESSING'
     }
   },
   computed: {
