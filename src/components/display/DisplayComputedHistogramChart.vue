@@ -29,7 +29,6 @@
   </div>
 </template>
 <script>
-import ecStat from 'echarts-stat'
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 import { getDrillDownTool } from '@/components/display/common/addons'
@@ -133,23 +132,14 @@ export default {
     chartOption () {
       let histogramConfig = JSON.parse(JSON.stringify(histogramChartConfig))
       let chartAddon = JSON.parse(JSON.stringify(chartOptions()))
-      let interval
-      let min = Infinity
-      let max = -Infinity
-      let newData = this.dataset.data.map(element => {
-        return element[1]
-      })
-
-      let bins = {}
-      bins = ecStat.histogram(newData, 'sturges')
-
-      let chartData = bins.data.map((item, index) => {
-        let x0 = bins.bins[index].x0
-        let x1 = bins.bins[index].x1
-        interval = x1 - x0
-        min = Math.min(min, x0)
-        max = Math.max(max, x1)
-        return [x0, x1, item[1]]
+      let min = this.dataset.range[0]
+      let max = this.dataset.range[1]
+      let dataLength = this.dataset.data.length
+      let interval = this.roundNumber(this.floatSub(max, min) / dataLength, 4)
+      let chartData = this.dataset.data.map((element, index) => {
+        return [
+          this.floatAdd(min, interval * index), this.floatAdd(min, interval * (index + 1)), element
+        ]
       })
 
       // 數據顯示
@@ -181,9 +171,9 @@ export default {
 
       // set histogram xAxis
       chartAddon.xAxis = {...chartAddon.xAxis, ...histogramConfig.xAxis}
-      chartAddon.xAxis.interval = allSameValue ? 'auto' : interval
-      chartAddon.xAxis.min = allSameValue ? newData[0] / 2 : min
-      chartAddon.xAxis.max = allSameValue ? newData[0] * 2 : max
+      chartAddon.xAxis.interval = interval
+      chartAddon.xAxis.min = min
+      chartAddon.xAxis.max = max
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramConfig.yAxis}
       chartAddon.yAxis.scale = false
