@@ -234,7 +234,7 @@ export default {
           value: 'name',
           sort: true
         //   link: {
-        //     name: 'PageDataFileList'
+        //     name: 'DataFileList'
         //   }
         },
         {

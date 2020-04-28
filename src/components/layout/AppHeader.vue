@@ -30,7 +30,7 @@ export default {
   height: $header-height;
   z-index: $header-z-index;
   box-shadow: $header-shadow;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #0e2b2f;
   border-bottom: 1px solid #04262B;
   // transition: all 0.1s;
 

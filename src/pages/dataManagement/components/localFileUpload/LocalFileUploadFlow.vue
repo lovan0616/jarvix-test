@@ -59,7 +59,7 @@ export default {
       this.step -= 1
     },
     uploadFinish () {
-      if (this.$route.name === 'PageDataSourceList') {
+      if (this.$route.name === 'DataSourceList') {
         this.$store.dispatch('dataSource/getDataSourceList')
       } else {
         this.$store.commit('dataManagement/updateFileUploadSuccess', true)

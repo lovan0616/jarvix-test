@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     buildBookmark () {
-      if (this.$route.name === 'PageDataSourceList') {
+      if (this.$route.name === 'DataSourceList') {
         this.$store.dispatch('dataSource/getDataSourceList')
       } else {
         this.$store.commit('dataManagement/updateFileUploadSuccess', true)
