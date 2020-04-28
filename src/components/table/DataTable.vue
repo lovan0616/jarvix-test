@@ -51,7 +51,7 @@
         v-else
         v-for="(data, index) in dataList"
         :key="index"
-        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': data['state'] === 'Process' || data['state'] === 'PROCESSING'}"
+        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': data['state'] === 'Process' || data['state'] === 'PROCESSING' || data['type'] === 'PROCESS'}"
       >
         <div class="data-table-cell checkbox"
           v-if="hasCheckbox"
@@ -83,7 +83,7 @@
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
             :key="action.name"
-            :disabled="isProcessing || data['state'] === 'Process' || data['state'] === 'PROCESSING'"
+            :disabled="isProcessing || data['type'] === 'PROCESS' || data['state'] === 'Process' || data['state'] === 'PROCESSING'"
             @click="doAction(action.value, data)"
           >
             <dropdown-select
