@@ -4,7 +4,7 @@
       <router-link class="nav-item" to="/" exact>{{ $t('nav.index') }}</router-link>
       <router-link class="nav-item" :to="{name: 'PagePinboardList'}">{{ $t('nav.pinboard') }}</router-link>
       <!-- FIXME for poc/foxconn_molding -->
-      <router-link class="nav-item" :to="{name: 'PageAlgorithmList'}">演算法</router-link>
+      <router-link class="nav-item" v-if="isShowAlgorithmBtn" :to="{name: 'PageAlgorithmList'}">演算法</router-link>
       <div
         class="nav-item nav-item-dropdown nav-set"
         v-if="groupId"
@@ -128,9 +128,14 @@ export default {
   mounted () {
     this.selectedLanguage = this.locale
     this.selectedGroupId = this.groupId
+    // 讓demo人員可以從localStorage打開nav演算法按法
+    this.setIsShowAlgorithmBtn()
   },
   computed: {
     ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
+    isShowAlgorithmBtn () {
+      return localStorage.getItem('isShowAlgorithmBtn') === 'true'
+    },
     locale () {
       return this.$store.state.setting.locale
     },
@@ -171,6 +176,12 @@ export default {
     }
   },
   methods: {
+    setIsShowAlgorithmBtn () {
+      let preSetting = localStorage.getItem('isShowAlgorithmBtn')
+      if (preSetting !== 'true') {
+        localStorage.setItem('isShowAlgorithmBtn', 'false')
+      }
+    },
     langOnSelected (item) {
       this.selectedLanguage = item
     },
