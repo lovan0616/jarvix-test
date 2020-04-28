@@ -328,7 +328,7 @@ Vue.mixin({
         }
       }
     },
-    // 圖表在preview 時，不顯示 legend、tootltip
+    // 圖表在preview 時，不顯示 legend、tooltip
     previewChartSetting (config) {
       config.legend.show = false
       config.tooltip.show = false

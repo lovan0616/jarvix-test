@@ -77,7 +77,7 @@ export default {
   },
   getDataSourceColumnInfo ({ commit, state }) {
     return getDataSourceColumnInfoById(state.dataSourceId).then(response => {
-      commit('setDataSourceCloumnInfoList', response)
+      commit('setDataSourceColumnInfoList', response)
     })
   },
   getDataSourceDataValue ({ commit, state }) {

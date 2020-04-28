@@ -60,7 +60,7 @@ export default {
     options () {
       let config = {
         ...JSON.parse(JSON.stringify(commonChartOptions())),
-        ...getDrillDownTool(this.title),
+        ...getDrillDownTool(this.$route.name, this.title),
         dataset: {
           source: this.tobeDataset(this.dataset)
         },

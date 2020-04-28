@@ -9,11 +9,6 @@
       >
       </v-echart>
     </div>
-    <arrow-button
-      v-show="showPagination"
-      v-if="hasPagination"
-      @click.native="$emit('next')"
-    ></arrow-button>
     <selected-region
       v-if="selectedData.length > 0"
       :title="$t('resultDescription.currentChosenData')"
@@ -83,16 +78,11 @@ export default {
       default () {
         return []
       }
-    },
-    hasPagination: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
     return {
-      selectedData: [],
-      showPagination: true
+      selectedData: []
     }
   },
   computed: {
@@ -147,7 +137,7 @@ export default {
         xAxis: xAxisDefault(),
         yAxis: yAxisDefault(),
         ...JSON.parse(JSON.stringify(commonChartOptions())),
-        ...getDrillDownTool(this.title),
+        ...getDrillDownTool(this.$route.name, this.title),
         dataset: {
           source: this.datasetTransform(this.dataset)
         },
@@ -158,9 +148,6 @@ export default {
       config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
       config.yAxis.name = this.title.yAxis[0].display_name
       config.toolbox.feature.dataView.optionToContent = (opt) => {
-        if (this.hasPagination) {
-          this.$el.addEventListener('click', this.controlPagination, false)
-        }
         let dataset = opt.dataset[0].source
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
@@ -231,15 +218,6 @@ export default {
     }
   },
   methods: {
-    controlPagination () {
-      let exportBtn = document.getElementById('export-btn')
-      if (exportBtn) {
-        this.showPagination = false
-      } else {
-        this.showPagination = true
-        this.$el.removeEventListener('click', this.controlPagination, false)
-      }
-    },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {
         this.selectedData = []

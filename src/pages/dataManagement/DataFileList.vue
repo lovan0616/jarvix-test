@@ -212,7 +212,7 @@ export default {
       })
     },
     updateDataTable () {
-      return getDataFrameById(this.currentDataSourceId).then(response => {
+      return getDataFrameById(this.currentDataSourceId, true).then(response => {
         this.dataList = response.map(element => {
           return {
             ...element,

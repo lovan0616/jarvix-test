@@ -1361,7 +1361,8 @@
     "more": "看更多",
     "source": "来源",
     "target": "目标",
-    "value": "数值"
+    "value": "数值",
+    "feature": "自定义栏位"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",

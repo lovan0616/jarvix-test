@@ -17,6 +17,7 @@
           <div class="root-cause-card"
             v-for="(tableInfo, contentIndex) in rootCauseInfo.content"
             :key="index +'-'+ contentIndex"
+            :class="{'in-pinboard': inPinboard}"
             @click="drillDown(tableInfo.link.question)"
           >
             <div class="abstract-info">
@@ -82,6 +83,7 @@ export default {
   },
   methods: {
     drillDown (question) {
+      if (this.inPinboard) return
       this.$store.commit('dataSource/setAppQuestion', question)
       this.$store.dispatch('dataSource/updateResultRouter', this.$route.name === 'PageResult' ? 'click_rootcause' : 'click_rootcause_pinboard')
     }
@@ -106,6 +108,9 @@ export default {
     },
     isShowChatRoom () {
       return this.$store.state.isShowChatRoom
+    },
+    inPinboard () {
+      return this.$route.name === 'PagePinboard'
     }
   }
 }
@@ -145,6 +150,13 @@ export default {
     width: 48%;
     cursor: pointer;
     @include card();
+
+    &.in-pinboard {
+      &:hover {
+        transform: none;
+        cursor: initial;
+      }
+    }
 
     &:not(:last-child) {
       margin-bottom: 24px;

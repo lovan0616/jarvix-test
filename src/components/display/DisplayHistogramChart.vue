@@ -211,7 +211,7 @@ export default {
       histogramChartConfig.chartData.data = chartData
       chartAddon.series[0] = histogramChartConfig.chartData
 
-      return {...chartAddon, ...getDrillDownTool(this.title)}
+      return {...chartAddon, ...getDrillDownTool(this.$route.name, this.title)}
     },
     chartStyle () {
       return {
