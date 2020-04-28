@@ -406,5 +406,17 @@ Vue.mixin({
       const routeName = this.$route.name
       return this.$t('sideNav.' + this.lowercaseFirstLetter(routeName))
     }
+  },
+  filters: {
+    convertTimeStamp (timeStamp) {
+      if (!timeStamp) return '-'
+      const date = new Date(timeStamp * 1000)
+      const year = date.getFullYear()
+      const month = date.getMonth() + 1
+      const day = date.getDate()
+      const hour = date.getHours().toString().padStart(2, '0')
+      const minute = date.getMinutes().toString().padStart(2, '0')
+      return `${year}/${month}/${day} ${hour}:${minute}`
+    }
   }
 })

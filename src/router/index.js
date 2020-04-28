@@ -96,6 +96,15 @@ const router = new Router({
                   }
                 },
                 {
+                  path: 'info',
+                  component: () => import('@/pages/accountInformation/Index'),
+                  name: 'AccountInformation',
+                  meta: {
+                    layers: ['account', 'account-management'],
+                    accountPermission: ['account_read_user']
+                  }
+                },
+                {
                   path: 'user-management',
                   component: () => import('@/pages/userManagement/Index'),
                   name: 'AccountUserManagement',

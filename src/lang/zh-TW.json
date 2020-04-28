@@ -11,7 +11,7 @@
   },
   "sideNav": {
     "accountManagement": "帳戶管理",
-    "accountInfo": "帳戶資訊",
+    "accountInformation": "帳戶資訊",
     "accountUserManagement": "帳戶使用者管理",
     "accountGroupManagement": "帳戶專案管理",
     "accountSetting": "帳號設定",
@@ -1496,5 +1496,15 @@
     "accountViewerDesc": "無法使用帳戶管理相關功能",
     "updateRole": "角色變更",
     "confirmDeleteAccountText": "使用者移除後，此使用者將無法使用此帳戶任何功能，您確認要繼續移除此使用者？"
+  },
+  "accountInfo": {
+    "userAmount": "使用者數量",
+    "currentUserAmount": "目前使用者數量",
+    "userAmountLimit": "使用者數量上限",
+    "dataAllowance": "數據容量",
+    "currentDataUsage": "目前數據使用容量",
+    "dataUsageProvided": "數據容量上限",
+    "expireDate": "到期時間",
+    "person": "人"
   }
 }
