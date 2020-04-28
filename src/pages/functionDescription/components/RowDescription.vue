@@ -1,9 +1,9 @@
 <template>
   <div class="row-description" :style="{ top, width }">
-    <div class="dot solid"></div>
-    <div class="line"></div>
-    <div class="dot outline"></div>
     <p class="text" v-html="text"></p>
+    <div class="dot outline"></div>
+    <div class="line"></div>
+    <div class="dot solid"></div>
   </div>
 </template>
 <script>
@@ -28,15 +28,13 @@ export default {
 <style lang="scss" scoped>
 .row-description {
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-start;
   align-items: center;
   position: absolute;
   left: -180px;
   &[right] {
     left: unset;
     right: -180px;
-    flex-direction: row;
+    flex-direction: row-reverse;
     .text {
       text-align: left;
     }
