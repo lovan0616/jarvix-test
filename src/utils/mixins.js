@@ -31,6 +31,52 @@ Vue.mixin({
     formatComma (str) {
       return str ? str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : str
     },
+    transformInt (num1, num2, padZeno, compute) {
+      num1 = '' + num1
+      num2 = '' + num2
+      let p1 = 0
+      let p2 = 0
+      try { p1 = num1.split('.')[1].length } catch (e) {}
+      try { p2 = num2.split('.')[1].length } catch (e) {}
+
+      if (padZeno) {
+        while (p1 < p2) {
+          p1++
+          num1 += '0'
+        }
+        while (p2 < p1) {
+          p2++
+          num2 += '0'
+        }
+      }
+      let int1 = parseInt(num1.replace('.', ''), 10)
+      let int2 = parseInt(num2.replace('.', ''), 10)
+      return compute(int1, int2, p1, p2)
+    },
+    /* 浮點數相加 */
+    floatAdd (num1, num2) {
+      return this.transformInt(num1, num2, true, (int1, int2, p1, p2) => {
+        return (int1 + int2) / Math.pow(10, p1)
+      })
+    },
+    /* 浮點數相減 */
+    floatSub (num1, num2) {
+      return this.transformInt(num1, num2, true, (int1, int2, p1, p2) => {
+        return (int1 - int2) / Math.pow(10, p1)
+      })
+    },
+    /* 浮點數相乘 */
+    floatMul (num1, num2) {
+      return this.transformInt(num1, num2, false, (int1, int2, p1, p2) => {
+        return (int1 * int2) / Math.pow(10, p1 + p2)
+      })
+    },
+    /* 浮點數相除 */
+    floatDiv (num1, num2) {
+      return this.transformInt(num1, num2, false, (int1, int2, p1, p2) => {
+        return (int1 / int2) / Math.pow(10, p1 - p2)
+      })
+    },
     timeToDate (time) {
       let datetime = new Date(time)
       let year = datetime.getFullYear()
@@ -148,6 +194,8 @@ Vue.mixin({
           return 'DisplayGroupScatterChart'
         case 'histogram':
           return 'DisplayHistogramChart'
+        case 'computed_histogram':
+          return 'DisplayComputedHistogramChart'
         case 'line_chart':
           return 'DisplayLineChart'
         case 'stack_line_chart':
