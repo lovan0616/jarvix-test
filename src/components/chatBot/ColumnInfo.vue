@@ -49,7 +49,7 @@
       </template>
       <div class="column-name">{{$t('askHelper.columnName')}}</div>
       <div class="single-column"
-        v-for="(columnInfo, index) in dataSourceCloumnInfoList.datetime"
+        v-for="(columnInfo, index) in dataSourceCloumnInfoList.dateTime"
         :key="'category' + index"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
@@ -67,7 +67,7 @@
       </template>
       <div class="column-name">{{$t('askHelper.columnName')}}</div>
       <div class="single-column"
-        v-for="(columnInfo, index) in dataSourceCloumnInfoList.boolean"
+        v-for="(columnInfo, index) in dataSourceCloumnInfoList.booleanList"
         :key="'category' + index"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
@@ -85,7 +85,7 @@
       </template>
       <div class="column-name">{{$t('askHelper.columnName')}}</div>
       <div class="single-column"
-        v-for="(columnInfo, index) in dataSourceCloumnInfoList.unique"
+        v-for="(columnInfo, index) in dataSourceCloumnInfoList.uniqueList"
         :key="'category' + index"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
