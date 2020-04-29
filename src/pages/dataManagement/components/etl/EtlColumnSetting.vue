@@ -86,6 +86,11 @@ export default {
       if (this.columnOptionList.length === 0) return []
       return this.columnOptionList[this.currentColumnIndex]
     }
+  },
+  watch: {
+    currentTableIndex () {
+      this.$el.querySelector('.data-column-list').scrollTop = 0
+    }
   }
 }
 </script>

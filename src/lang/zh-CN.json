@@ -66,7 +66,8 @@
     "columnSetNameEmpty": "栏位组合名称未填写",
     "columnSetChosenEmpty": "尚未选择任何栏位",
     "memberDeleteSuccess": "成员删除成功",
-    "etlSuccess": "资料预处理成功，开始建置资料表"
+    "etlSuccess": "资料预处理成功，开始建置资料表",
+    "etlSettingTempSave": "设定已经暂存"
   },
   "guiding": {
     "prevStep": "上一步",
