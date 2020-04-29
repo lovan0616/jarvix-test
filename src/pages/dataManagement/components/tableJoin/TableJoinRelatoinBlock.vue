@@ -98,7 +98,7 @@
           {{$t('resultDescription.prompt')}}：
         </span>
         <span class="reminder-description">
-          {{$t('message.remindSameDataTypeColumns')}}
+          {{'1.' + $t('message.remindNotAllowSelfJoin') + ' 2.' + $t('message.remindSameDataTypeColumns')}}
         </span>
       </div>
     </template>
@@ -219,6 +219,14 @@ export default {
         if (!dataFrame.leftDataColumn.id || !dataFrame.rightDataColumn.id) {
           Message({
             message: this.$t('message.formColumnEmpty'),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+          return false
+        }
+        if (dataFrame.leftDataFrame.id === dataFrame.rightDataFrame.id) {
+          Message({
+            message: this.$t('message.remindNotAllowSelfJoin'),
             type: 'warning',
             duration: 3 * 1000
           })
