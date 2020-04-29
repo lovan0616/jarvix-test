@@ -44,7 +44,7 @@
       <div class="dialog-button-block">
         <button class="btn btn-outline"
           :disabled="isLoading"
-          @click="cancelFileUpload"
+          @click="cancelConnection"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-outline"
           :disabled="isLoading"
@@ -96,7 +96,7 @@ export default {
         this.isLoading = false
       })
     },
-    cancelFileUpload () {
+    cancelConnection () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     prevStep () {
@@ -104,7 +104,8 @@ export default {
     },
     nextStep () {
       this.isLoading = true
-
+      // 先清除，避免有部分成功的情形發生
+      this.$store.commit('dataManagement/clearEtlTableList')
       let promiseList = this.tableIdList.map((element, index) => {
         return analyzeTable(this.connectionId, element).then(response => {
           this.$store.commit('dataManagement/updateEtlTableList', response)
