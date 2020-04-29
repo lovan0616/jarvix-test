@@ -6,6 +6,7 @@
 
 <script>
 import ResultDisplay from './ResultDisplay'
+import store from '@/store'
 
 export default {
   name: 'PageResult',
@@ -14,6 +15,13 @@ export default {
   },
   data () {
     return {}
+  },
+  // 暫時用來處理使用者切換群組後點擊上一頁或直接輸入連結
+  beforeRouteEnter: function (to, from, next) {
+    const groupId = to.query.groupId
+    const currentGroupId = store.getters['userManagement/getCurrentGroupId']
+    if (!groupId || groupId !== currentGroupId) return next('/')
+    next()
   },
   created () {
     this.getQueryInfo()
