@@ -85,7 +85,7 @@ export default {
       commit('setDataSourceDataValueList', response)
     })
   },
-  updateResultRouter ({commit, state}, actionTag) {
+  updateResultRouter ({commit, state, rootGetters}, actionTag) {
     /**
      * 這邊的 DataSource 需要轉成字串的原因是：
      * 今天如果直接在結果頁重新整理，我如果直接從 router 進來
@@ -98,7 +98,9 @@ export default {
         question: state.appQuestion,
         stamp: new Date().getTime(),
         dataSourceId: String(state.dataSourceId),
-        action: actionTag
+        action: actionTag,
+        // 暫時用來判定使用者是否在當前的群組問問題
+        groupId: rootGetters['userManagement/getCurrentGroupId']
       }
     })
   },
