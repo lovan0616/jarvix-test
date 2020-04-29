@@ -27,7 +27,8 @@
   "message": {
     "joinTableBuilding": "资料表建置中，建置完成即可使用",
     "remindAdjustMainDate": "此表可能有多个日期栏位，您可用资料表的”日期栏位调整“功能进行设定。",
-    "remindSameDataTypeColumns": "两个栏位的资料型态必须相同。",
+    "remindSameDataTypeColumns": "资料栏位的型态须相同",
+    "remindNotAllowSelfJoin": "不能选择相同资料表",
     "builded": "资料源建立完成",
     "noData": "目前没有资料",
     "noMember": "目前没有成员",

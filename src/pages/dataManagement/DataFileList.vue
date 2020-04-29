@@ -276,7 +276,9 @@ export default {
     },
     canEditJoinTable () {
       const editableDataList = this.dataList.filter(dataFrame => dataFrame.state === 'Enable')
-      return editableDataList.length > 0
+      // return editableDataList.length > 0
+      // 暫時無開啟 self join 功能，因此至少需兩張 dataframe 才可編輯
+      return editableDataList.length > 1
     },
     openEditJoinTableDialog () {
       if (!this.canEditJoinTable) return

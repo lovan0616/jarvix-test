@@ -27,7 +27,8 @@
   "message": {
     "joinTableBuilding": "資料表建置中，建置完成即可使用",
     "remindAdjustMainDate": "此表可能有多個日期欄位，您可用資料表的”日期欄位調整“功能進行設定。",
-    "remindSameDataTypeColumns": "兩個欄位的資料型態必須相同。",
+    "remindSameDataTypeColumns": "資料欄位的型態須相同",
+    "remindNotAllowSelfJoin": "不能選擇相同資料表",
     "builded": "資料源建立完成",
     "noData": "目前沒有資料",
     "noMember": "目前沒有成員",
