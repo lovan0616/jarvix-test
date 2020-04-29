@@ -76,6 +76,7 @@
 <script>
 import InputVerify from '@/components/InputVerify'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import { Message } from 'element-ui'
 
 export default {
   name: 'SingleColumnSetting',
@@ -134,7 +135,6 @@ export default {
       nullReplaceObject: null,
       stringReplaceObject: null,
       errorDefaultObject: null,
-      replaceValueList: [],
       replaceId: 0
     }
   },
@@ -145,32 +145,43 @@ export default {
         id: this.replaceId++
       }
     })
-    this.replaceValueList = this.editColumnInfo.values.filter(element => {
+    this.editColumnInfo.values.forEach(element => {
       if (element.type === 'MISSING_VALUE' && element.value === null) {
         this.nullReplaceObject = element
       } else if (element.type === 'MISSING_VALUE' && element.value === '') {
         this.stringReplaceObject = element
       } else if (element.type === 'ERROR_DEFAULT_VALUE' && element.value === null) {
         this.errorDefaultObject = element
-      } else {
-        return element
       }
     })
   },
+  computed: {
+    replaceValueList () {
+      return this.editColumnInfo.values.filter(element => {
+        return (element.type !== 'MISSING_VALUE' && element.type !== 'ERROR_DEFAULT_VALUE')
+      })
+    }
+  },
   methods: {
     addReplaceValue () {
-      this.replaceValueList.push({
+      this.editColumnInfo.values.push({
         ...this.replaceValueObjest,
         id: this.replaceId++
       })
     },
     removeReplaceValue (index) {
-      this.replaceValueList.splice(index, 1)
+      this.editColumnInfo.values.splice(index + 3, 1)
     },
     saveSetting () {
       this.$validator.validateAll().then(result => {
         if (result) {
           this.$emit('updateInfo', this.editColumnInfo)
+
+          Message({
+            message: this.$t('message.etlSettingTempSave'),
+            type: 'success',
+            duration: 3 * 1000
+          })
         }
       })
     },

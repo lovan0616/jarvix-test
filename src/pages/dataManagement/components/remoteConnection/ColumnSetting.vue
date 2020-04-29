@@ -16,6 +16,9 @@
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
+          @click="cancel"
+        >{{ $t('button.cancel') }}</button>
+        <button class="btn btn-outline"
           @click="prevStep"
         >{{ $t('button.prevStep') }}</button>
         <button class="btn btn-default"
@@ -82,6 +85,9 @@ export default {
           this.isProcessing = false
           console.log(err)
         })
+    },
+    cancel () {
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     }
   },
   computed: {
