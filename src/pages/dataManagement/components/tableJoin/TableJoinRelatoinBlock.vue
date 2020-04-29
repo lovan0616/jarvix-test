@@ -98,7 +98,7 @@
           {{$t('resultDescription.prompt')}}：
         </span>
         <span class="reminder-description">
-          {{'1.' + $t('message.remindSameDataTypeColumns') + '2.' + $t('message.remindSameDataTypeColumns')}}
+          {{'1.' + $t('message.remindNotAllowSelfJoin') + ' 2.' + $t('message.remindSameDataTypeColumns')}}
         </span>
       </div>
     </template>
