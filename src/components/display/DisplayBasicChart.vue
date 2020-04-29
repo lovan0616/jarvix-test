@@ -106,6 +106,9 @@ export default {
       selectedData: []
     }
   },
+  mounted () {
+    this.exportCSVFile(this.$el, this.appQuestion, this)
+  },
   computed: {
     chartStyle () {
       return {
@@ -127,7 +130,7 @@ export default {
     options () {
       let config = {
         ...this.addonOptions,
-        ...getDrillDownTool(this.title),
+        ...getDrillDownTool(this.$route.name, this.title),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
         dataset: {
           source: this.datasetTransform(this.dataset)
@@ -137,7 +140,7 @@ export default {
       }
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.dataset[0].source
-        let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="margin-top: 16px;width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
+        let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur) => {
             return acc + `<td style="padding: 4px 12px;">${cur || ''}</td>`
@@ -147,10 +150,6 @@ export default {
         table += '</tbody></table>'
         return table
       }
-      // export data
-      this.$nextTick(() => {
-        this.exportCSVFile(this.$el, this.appQuestion, config.dataset.source)
-      })
 
       // 移除 null 值
       config.tooltip.formatter = (datas) => {

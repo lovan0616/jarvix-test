@@ -13,7 +13,7 @@
           <sy-select class="preview-bookmark-select"
             :selected="dataSourcetableId"
             :items="dataSourceTables"
-            :placeholder="$t('editing.choiceDataSource')"
+            :placeholder="$t('editing.chooseDataFrame')"
             @update:selected="onDataSourceTableChange"
           ></sy-select>
           <div class="data-count">{{ metaTableRightText }}</div>
@@ -22,8 +22,8 @@
           v-if="isLoading"
         ></spinner>
         <empty-info-block
-          v-else-if="hasError"
-          :msg="$t('message.systemIsError')"
+          v-else-if="hasError || dataSourceTables.length === 0"
+          :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
         ></empty-info-block>
         <pagination-table
           v-else
@@ -91,14 +91,20 @@ export default {
     fetchDataSourceTable () {
       this.$store.dispatch('dataSource/getDataSourceTables')
         .then(response => {
-          this.dataSourceTables = response.map(element => {
+          this.dataSourceTables = response.filter(element => {
+            return element.state !== 'Process'
+          }).map(element => {
             return {
               id: element.id,
               name: element.primaryAlias
             }
           })
-          this.dataSourceTable = response[0]
-          this.fetchDataFrameData(this.dataSourceTable.id, 0, true)
+          if (this.dataSourceTables.length) {
+            this.dataSourceTable = response[0]
+            this.fetchDataFrameData(this.dataSourceTable.id, 0, true)
+          } else {
+            this.isLoading = false
+          }
         })
         .catch(() => {
           this.hasError = true

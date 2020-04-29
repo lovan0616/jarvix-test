@@ -40,7 +40,6 @@ export default {
     }
   },
   mounted () {
-    this.$store.commit('updateChatRoomStatus', true)
     // 變更 bookmark 從其他頁回到首頁的時候，如果是 null 代表如果是直接進首頁的話，會藉由 watch 觸發
     if (this.dataSourceId !== null) {
       this.getLandingInfo()
@@ -73,11 +72,10 @@ export default {
   },
   watch: {
     dataSourceId (value) {
-      if (!value) return
       this.dataFrameInfo = null
       this.quickStartQuestionList = []
       this.isNoResult = false
-      this.getLandingInfo()
+      if (value) this.getLandingInfo()
     }
   }
 }

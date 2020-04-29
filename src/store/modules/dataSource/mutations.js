@@ -11,8 +11,8 @@ export default {
   setDataSourceId (state, id) {
     state.dataSourceId = id
   },
-  setDataSourceCloumnInfoList (state, data) {
-    state.dataSourceCloumnInfoList = data
+  setDataSourceColumnInfoList (state, data) {
+    state.dataSourceColumnInfoList = data
   },
   setDataSourceDataValueList (state, data) {
     state.dataSourceDataValueList = data.values

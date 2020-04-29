@@ -25,7 +25,8 @@ export default {
       return [
         this.$t('editing.processStep1'),
         this.$t('editing.processStep2'),
-        this.$t('editing.processStep3')
+        this.$t('editing.processStep3'),
+        this.$t('editing.processStep4')
       ]
     }
   }

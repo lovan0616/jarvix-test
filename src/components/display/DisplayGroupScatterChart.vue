@@ -81,7 +81,7 @@ export default {
   },
   computed: {
     chartOption () {
-      let chartAddon = {...JSON.parse(JSON.stringify(chartOptions())), ...getDrillDownTool(this.title)}
+      let chartAddon = {...JSON.parse(JSON.stringify(chartOptions())), ...getDrillDownTool(this.$route.name, this.title)}
       this.$set(chartAddon.xAxis, 'splitLine', groupScatterChartConfig.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', groupScatterChartConfig.yAxisSplitLine)
       chartAddon.tooltip.trigger = groupScatterChartConfig.tooltip.trigger

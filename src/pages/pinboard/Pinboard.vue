@@ -4,7 +4,9 @@
     <div class="bread-crumb-block"
       v-if="boardName"
     >
-      <router-link class="page root" to="/pinboard">{{ $t('editing.allCategory') }}</router-link>
+      <router-link class="page root"
+        :to="{name: 'PagePinboardList'}"
+      >{{ $t('editing.allCategory') }}</router-link>
       <span class="divider">/</span>
       <span class="page">{{ boardName }}</span>
     </div>

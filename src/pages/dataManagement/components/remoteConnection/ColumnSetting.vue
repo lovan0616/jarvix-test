@@ -4,74 +4,23 @@
   >
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
-      :step="3"
+      :step="4"
     ></upload-process-block>
     <div class="info-block">
       <div>{{ $t('editing.dataColumn') }}</div>
-      <div>{{ $t('editing.dataSourceName') }}：{{ 'test' }}</div>
+      <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <div class="data-frame-select-block">
-        <label class="select-label">{{ $t('editing.currentDisplayDataFrame') }}</label>
-        <default-select
-          v-model="currentTable"
-          :option-list="tableIdList"
-        ></default-select>
-      </div>
-      <div class="data-table">
-        <div class="data-table-row table-head">
-          <div class="data-table-cell">{{ $t('editing.columnName') }}</div>
-          <div class="data-table-cell">{{ $t('editing.alias') }}</div>
-          <div class="data-table-cell">{{ $t('editing.dataType') }}</div>
-        </div>
-        <div class="data-table-body">
-          <spinner class="spinner-container"
-            v-if="isLoading"
-            :title="$t('editing.loading')"
-            size="50"
-          ></spinner>
-          <template
-            v-else
-          >
-            <div class="data-table-row"
-              v-for="(column, index) in currentColumnList"
-              :key="index"
-            >
-              <div class="data-table-cell">{{ column.name }}</div>
-              <div class="data-table-cell">
-                <input-block class="column-alias-input"
-                  :name="column.name"
-                  v-model="column.primaryAlias"
-                  v-validate="'required'"
-                ></input-block>
-              </div>
-              <div class="data-table-cell">
-                <default-select class="data-type-select"
-                  :key="column.name + '-' + index + '-select'"
-                  v-model="column.dataType"
-                  :option-list="dataTypeOptionList(column.originalDataType)"
-                  @change="changeDataType(column, column.dataType)"
-                ></default-select>
-              </div>
-            </div>
-          </template>
-          <div class="empty-info"
-            v-if="currentColumnList.length === 0"
-          >
-            {{ $t('editing.emptyResult') }}
-          </div>
-        </div>
-      </div>
+      <etl-column-setting></etl-column-setting>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
-          @click="cancelFileUpload"
-        >{{ $t('button.cancel') }}</button>
+          @click="prevStep"
+        >{{ $t('button.prevStep') }}</button>
         <button class="btn btn-default"
-          :disabled="isLoading"
           @click="nextStep"
-        >{{isLoading ? $t('button.processing') : $t('button.copyAndBuild')}}</button>
+        >{{ $t('button.buildData') }}</button>
       </div>
     </div>
   </div>
@@ -82,139 +31,65 @@
   ></spinner>
 </template>
 <script>
-import { analyzeTable } from '@/API/RemoteConnection'
 import { dataSourcePreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
-import InputBlock from '@/components/InputBlock'
-import DefaultSelect from '@/components/select/DefaultSelect'
+import EtlColumnSetting from '../etl/EtlColumnSetting'
 
 export default {
   name: 'ColumnSetting',
   inject: ['$validator'],
   components: {
     UploadProcessBlock,
-    DefaultSelect,
-    InputBlock
+    EtlColumnSetting
   },
   props: {
     tableIdList: {
       type: Array,
       default: () => []
-    },
-    connectionId: {
-      type: Number,
-      default: null
     }
   },
   data () {
     return {
-      isLoading: false,
-      isProcessing: false,
-      dataTypeList: [
-        {
-          name: 'FLOAT',
-          value: 'FLOAT'
-        },
-        {
-          name: 'STRING',
-          value: 'STRING'
-        },
-        {
-          name: 'INT',
-          value: 'INT'
-        },
-        {
-          name: 'DATETIME',
-          value: 'DATETIME'
-        },
-        {
-          name: 'BOOLEAN',
-          value: 'BOOLEAN'
-        }
-      ],
-      currentTable: null,
-      copyTableList: []
+      isProcessing: false
     }
   },
-  mounted () {
-    this.fetchData()
-  },
   methods: {
-    fetchData () {
-      this.isLoading = true
-      this.currentTable = this.tableIdList[0].name
-
-      let promiseList = this.tableIdList.map((element, index) => {
-        return analyzeTable(this.connectionId, element.name).then(response => {
-          let columnList = response.columns
-          if (columnList.length > 0) {
-            columnList.forEach(element => {
-              let newElement = JSON.parse(JSON.stringify(element))
-              this.$set(element, 'originalDataType', newElement.dataType)
-              this.$set(element, 'originalStatsType', newElement.statsType)
-            })
-          }
-          this.$set(this.copyTableList, index, response)
-        })
-      })
-
-      Promise.all(promiseList).then(() => {
-        this.isLoading = false
-      }).catch(() => {
-        this.isLoading = false
-      })
-    },
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
+    prevStep () {
+      this.$store.commit('dataManagement/clearEtlTableList')
+      this.$emit('prev')
+    },
     nextStep () {
       this.isProcessing = true
-      this.copyTableList.forEach((element, index) => {
-        dataSourcePreprocessor(element).then(response => {
+      let promiseList = []
+      this.etlTableList.forEach((element, index) => {
+        let promise = dataSourcePreprocessor(element).then(response => {
           this.tableIdList[index].connectionStatus = 'success'
-          this.checkUpdateFinish()
         }).catch(() => {
           this.tableIdList[index].connectionStatus = 'fail'
-          this.checkUpdateFinish()
         })
+        promiseList.push(promise)
       })
-    },
-    checkUpdateFinish () {
-      if (!this.tableIdList.some(element => element.status === null)) {
-        this.$emit('next')
-        this.isProcessing = false
-      }
-    },
-    dataTypeOptionList (type) {
-      if (type === 'STRING') {
-        return [
-          {
-            name: 'STRING',
-            value: 'STRING'
-          }
-        ]
-      } else {
-        return [
-          {
-            name: type,
-            value: type
-          },
-          {
-            name: 'STRING',
-            value: 'STRING'
-          }
-        ]
-      }
-    },
-    changeDataType (column, dataType) {
-      column.dataType = dataType
-      column.statsType = (dataType === 'STRING') ? 'CATEGORY' : column.originalStatsType
+
+      Promise.all(promiseList)
+        .then(() => {
+          this.$emit('next')
+          this.isProcessing = false
+        })
+        .catch(err => {
+          this.isProcessing = false
+          console.log(err)
+        })
     }
   },
   computed: {
-    currentColumnList () {
-      if (this.copyTableList.length === 0) return []
-      return this.copyTableList.filter(element => element.name === this.currentTable)[0].columns
+    etlTableList () {
+      return this.$store.state.dataManagement.etlTableList
+    },
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
     }
   }
 }
@@ -276,25 +151,5 @@ export default {
 }
 .processing-spinner-container {
   height: 80vh;
-}
-</style>
-<style lang="scss">
-.data-type-select {
-  &.sy-select.theme-dark .el-input--suffix .el-input__inner {
-    height: 20px;
-    line-height: 20px;
-    font-size: 14px;
-    padding-left: 0;
-  }
-
-  .el-input__icon {
-    line-height: 20px;
-  }
-}
-.column-alias-input.input-block {
-  .input {
-    height: 20px;
-    padding-bottom: 2px;
-  }
 }
 </style>

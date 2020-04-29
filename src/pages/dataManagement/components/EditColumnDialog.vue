@@ -12,7 +12,7 @@
           v-if="userEditInfo.userEditedColumnInputList.length > 0"
           :disabled="isProcessing"
           @click="updateDataSource"
-        >{{ $t('button.save') }}</button>
+        >{{ $t('button.buildData') }}</button>
       </div>
       <div class="edit-table-block">
         <div class="data-table">
@@ -68,7 +68,7 @@
                   :disabled="isProcessing"
                   v-if="tempRowInfo.dataColumnId === column.id"
                   @click="save"
-                >{{ $t('button.finish') }}</a>
+                >{{ $t('button.save') }}</a>
                 <a class="link action-link" href="javascript:void(0)"
                   :disabled="isProcessing"
                   v-if="tempRowInfo.dataColumnId === column.id"
@@ -199,9 +199,6 @@ export default {
 <style lang="scss" scoped>
 .edit-column-dialog {
   .dialog {
-    &-title {
-      position: relative;
-    }
     &-header-block {
       margin-bottom: 12px;
       display: flex;
@@ -211,13 +208,6 @@ export default {
   }
   .edit-table-block {
     margin-bottom: 32px;
-  }
-  .close-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    color: #fff;
-    font-size: 14px;
   }
   .name {
     width: 30%;

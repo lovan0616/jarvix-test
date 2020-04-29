@@ -13,7 +13,7 @@ export function linearGradient (colorStart, colorEnd, isParallel = false) {
 
 export const colorDefault = [linearGradient('#95FAF2', '#559BD5'), linearGradient('#4CE2F0', '#438AF8'), linearGradient('#76CCFF', '#3E52F9'), linearGradient('#79ACFF', '#5A3FFA'), linearGradient('#698DF3', '#7544FC')]
 export const colorOnly1 = [linearGradient('#4CE2F0', '#438AF8')]
-export const colorOnly2 = [linearGradient('#95FAF2', '#559BD5'), linearGradient('#4BCBF1', '#416DF9')]
+export const colorOnly2 = [linearGradient('#4CE2F0', '#438AF8'), linearGradient('#79ACFF', '#5A3FFA')]
 export const color3 = [linearGradient('#95FAF2', '#559BD5'), linearGradient('#76CCFF', '#3E52F9'), linearGradient('#698DF3', '#7544FC')]
 export const color10 = [
   linearGradient('#95FAF2', '#559BD5'),
@@ -491,13 +491,15 @@ export function seriesItemMarkLine () {
 }
 
 // drillDown type
-export function getDrillDownTool (titleObject, isParallel = false, twoDirection = false) {
+export function getDrillDownTool (routeName, titleObject, isParallel = false, twoDirection = false) {
   let toolbox
 
   let xAxisDrillable = titleObject.xAxis.some(element => element.drillable)
   let yAxisDrillable = titleObject.yAxis.some(element => element.drillable)
 
-  if (titleObject.xAxis.length === 0 && titleObject.yAxis.length === 0) {
+  if (routeName === 'PagePinboard') {
+    toolbox = ['']
+  } else if (titleObject.xAxis.length === 0 && titleObject.yAxis.length === 0) {
     toolbox = ['']
   } else if (titleObject.xAxis.length === 0 && titleObject.yAxis.length > 0) {
     if (yAxisDrillable) {
@@ -531,7 +533,7 @@ export function getDrillDownTool (titleObject, isParallel = false, twoDirection 
     brush: {
       toolbox: toolbox,
       xAxisIndex: 0,
-      yAxisindex: 0
+      yAxisIndex: 0
     }
   }
 }

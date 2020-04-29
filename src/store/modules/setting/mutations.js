@@ -5,7 +5,7 @@ export default {
     // 更新 localStorage
     localStorage.setItem('locale', data)
   },
-  setUserPermission (state, data) {
-    state.permission = data
+  setCurrentPagePath (state, data) {
+    state.currentPagePath = data
   }
 }

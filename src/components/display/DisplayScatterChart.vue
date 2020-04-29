@@ -146,7 +146,7 @@ export default {
   },
   computed: {
     chartOption () {
-      let chartAddon = {...JSON.parse(JSON.stringify(chartOptions())), ...getDrillDownTool(this.title)}
+      let chartAddon = {...JSON.parse(JSON.stringify(chartOptions())), ...getDrillDownTool(this.$route.name, this.title)}
       let scatterOptions = JSON.parse(JSON.stringify(scatterChartConfig))
       this.$set(chartAddon.xAxis, 'splitLine', scatterOptions.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterOptions.yAxisSplitLine)

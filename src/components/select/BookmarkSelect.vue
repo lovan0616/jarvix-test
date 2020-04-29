@@ -4,7 +4,7 @@
     <sy-select class="bookmark-select"
       :selected="dataSourceId"
       :items="buildDataSourceList"
-      :placeholder="$t('editing.choiceDataSource')"
+      :placeholder="$t('editing.chooseDataSource')"
       @update:selected="onDataSourceChange"
     >
     </sy-select>

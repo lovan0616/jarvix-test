@@ -11,7 +11,7 @@ export default {
       'zh-TW': i18n.t('lang', 'zh-TW'),
       'zh-CN': i18n.t('lang', 'zh-CN')
     },
-    permission: false
+    currentPagePath: null
   },
   actions,
   mutations,

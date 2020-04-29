@@ -47,6 +47,9 @@ export default {
       showPagination: true
     }
   },
+  mounted () {
+    this.exportCSVFile(this.$el, this.appQuestion, this)
+  },
   computed: {
     chartStyle () {
       return {
@@ -57,7 +60,7 @@ export default {
     options () {
       let config = {
         ...JSON.parse(JSON.stringify(commonChartOptions())),
-        ...getDrillDownTool(this.title),
+        ...getDrillDownTool(this.$route.name, this.title),
         dataset: {
           source: this.tobeDataset(this.dataset)
         },
@@ -88,8 +91,8 @@ export default {
           return index === 0 ? acc : acc + cur[1]
         }, 0)
 
-        let table = `<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">${this.$t('chart.export')}</button></div>` +
-          '<table style="margin-top: 16px;width:100%;padding: 0 16px;"><tbody><tr style="background-color:#2B4D51">' +
+        let table = `<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">${this.$t('chart.export')}</button></div>` +
+          '<table style="width:100%;padding: 0 16px;margin-top: 48px;"><tbody><tr style="background-color:#2B4D51">' +
           '<td>' + dataset[0][0] + '</td>' +
           '<td>' + dataset[0][1] + '</td>' +
           '<td>' + 'percentage(%)' + '</td>' +
@@ -104,11 +107,6 @@ export default {
         table += '</tbody></table>'
         return table
       }
-
-      // export data
-      this.$nextTick(() => {
-        this.exportCSVFile(this.$el, this.appQuestion, config.dataset.source)
-      })
 
       return config
     },

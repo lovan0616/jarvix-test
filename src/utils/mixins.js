@@ -31,6 +31,52 @@ Vue.mixin({
     formatComma (str) {
       return str ? str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : str
     },
+    transformInt (num1, num2, padZeno, compute) {
+      num1 = '' + num1
+      num2 = '' + num2
+      let p1 = 0
+      let p2 = 0
+      try { p1 = num1.split('.')[1].length } catch (e) {}
+      try { p2 = num2.split('.')[1].length } catch (e) {}
+
+      if (padZeno) {
+        while (p1 < p2) {
+          p1++
+          num1 += '0'
+        }
+        while (p2 < p1) {
+          p2++
+          num2 += '0'
+        }
+      }
+      let int1 = parseInt(num1.replace('.', ''), 10)
+      let int2 = parseInt(num2.replace('.', ''), 10)
+      return compute(int1, int2, p1, p2)
+    },
+    /* 浮點數相加 */
+    floatAdd (num1, num2) {
+      return this.transformInt(num1, num2, true, (int1, int2, p1, p2) => {
+        return (int1 + int2) / Math.pow(10, p1)
+      })
+    },
+    /* 浮點數相減 */
+    floatSub (num1, num2) {
+      return this.transformInt(num1, num2, true, (int1, int2, p1, p2) => {
+        return (int1 - int2) / Math.pow(10, p1)
+      })
+    },
+    /* 浮點數相乘 */
+    floatMul (num1, num2) {
+      return this.transformInt(num1, num2, false, (int1, int2, p1, p2) => {
+        return (int1 * int2) / Math.pow(10, p1 + p2)
+      })
+    },
+    /* 浮點數相除 */
+    floatDiv (num1, num2) {
+      return this.transformInt(num1, num2, false, (int1, int2, p1, p2) => {
+        return (int1 / int2) / Math.pow(10, p1 - p2)
+      })
+    },
     timeToDate (time) {
       let datetime = new Date(time)
       let year = datetime.getFullYear()
@@ -148,6 +194,8 @@ Vue.mixin({
           return 'DisplayGroupScatterChart'
         case 'histogram':
           return 'DisplayHistogramChart'
+        case 'computed_histogram':
+          return 'DisplayComputedHistogramChart'
         case 'line_chart':
           return 'DisplayLineChart'
         case 'stack_line_chart':
@@ -210,19 +258,12 @@ Vue.mixin({
       let exportFunction = (e) => {
         if (e.target && e.target.id === 'export-btn') {
           /**
-           * 在結果頁下載資料可以從 url 上拿到時間資訊
-           * 但是 pinboard 頁無法
-           */
-          let fileName = window.location.search.split('&')[1]
-            ? this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + question
-            : question
-          /**
            * 注意！！
            * 這邊的資料不從 data 拿
            * 註冊事件當下由 function 傳進的 data，遇到 pagination 更新資料後
            * 便不再拿取新的 data，所以暫時改由 vue instance 內的 computed options 去拿
            */
-          this.exportToCSV(fileName, this.options.dataset.source)
+          this.exportToCSV(question, data.options.dataset.source)
         }
       }
       /**
@@ -236,8 +277,14 @@ Vue.mixin({
         el.setAttribute('listener', true)
       }
     },
-    exportToCSV (filename, rows) {
-      let fileName = filename + '.csv' || this.timeToFileName(new Date().getTime()) + '.csv'
+    exportToCSV (question, rows) {
+      /**
+       * 在結果頁下載資料可以從 url 上拿到時間資訊
+       * 但是 pinboard 頁無法
+       */
+      let fileName = window.location.search.split('&')[1]
+        ? this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + question + '.csv'
+        : this.timeToFileName(new Date().getTime()) + '.csv'
       let processRow = (row) => {
         let finalVal = ''
         for (let j = 0; j < row.length; j++) {
@@ -281,7 +328,7 @@ Vue.mixin({
         }
       }
     },
-    // 圖表在preview 時，不顯示 legend、tootltip
+    // 圖表在preview 時，不顯示 legend、tooltip
     previewChartSetting (config) {
       config.legend.show = false
       config.tooltip.show = false
@@ -351,6 +398,25 @@ Vue.mixin({
       }
 
       window.requestAnimationFrame(step)
+    },
+    lowercaseFirstLetter (string) {
+      return string.charAt(0).toLowerCase() + string.slice(1)
+    },
+    currentRouteName () {
+      const routeName = this.$route.name
+      return this.$t('sideNav.' + this.lowercaseFirstLetter(routeName))
+    }
+  },
+  filters: {
+    convertTimeStamp (timeStamp) {
+      if (!timeStamp) return '-'
+      const date = new Date(timeStamp * 1000)
+      const year = date.getFullYear()
+      const month = date.getMonth() + 1
+      const day = date.getDate()
+      const hour = date.getHours().toString().padStart(2, '0')
+      const minute = date.getMinutes().toString().padStart(2, '0')
+      return `${year}/${month}/${day} ${hour}:${minute}`
     }
   }
 })

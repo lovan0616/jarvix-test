@@ -51,7 +51,7 @@
         v-else
         v-for="(data, index) in dataList"
         :key="index"
-        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': data['state'] === 'PROCESSING'}"
+        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': data['state'] === 'Process' || data['state'] === 'PROCESSING' || data['type'] === 'PROCESS'}"
       >
         <div class="data-table-cell checkbox"
           v-if="hasCheckbox"
@@ -83,11 +83,11 @@
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
             :key="action.name"
-            :disabled="isProcessing || data['state'] === 'PROCESSING'"
+            :disabled="isProcessing || data['type'] === 'PROCESS' || data['state'] === 'Process' || data['state'] === 'PROCESSING'"
             @click="doAction(action.value, data)"
           >
             <dropdown-select
-              v-if="action.subAction"
+              v-if="showActionDropdown(action.subAction, data)"
               class="dropdown"
               @switchDialogName="doAction($event, data)"
               :barData="action.subAction"
@@ -97,10 +97,10 @@
           </a>
 
           <span v-else-if="headInfo.value === 'state'"
-            :class="{'is-processing': data[headInfo.value] === 'PROCESSING'}"
+            :class="{'is-processing': data[headInfo.value] === 'Process' || data[headInfo.value] === 'PROCESSING'}"
           >
             <svg-icon
-              v-if="data[headInfo.value] === 'PROCESSING'"
+              v-if="data[headInfo.value] === 'Process' || data[headInfo.value] === 'PROCESSING'"
               icon-class="spinner"
             ></svg-icon>
             {{ buildStatus(data[headInfo.value]) }}
@@ -283,22 +283,38 @@ export default {
       }
     },
     doAction (actionName, data) {
-      if (!actionName || this.isProcessing || data['state'] === 'PROCESSING') return false
+      if (!actionName || this.isProcessing || data['state'] === 'Process' || data['type'] === 'PROCESS' || data['state'] === 'PROCESSING') return false
       this.$emit(actionName, data)
     },
+    /**
+     * TODO
+     * 搞不清楚什麼時候要替換，這邊等後端更新之後再來統一
+     */
     buildStatus (value) {
       switch (value) {
+        case 'Warn':
         case 'WARN':
+        case 'Ready':
         case 'READY':
+        case 'Enable':
         case 'ENABLE':
           return i18n.t('editing.dataManageable')
-        case 'ERROR':
+        case 'Fail':
+        case 'FAIL':
+        case 'Delete':
+        case 'DELETE':
+        case 'DELETED':
+        case 'Disable':
         case 'DISABLE':
           return i18n.t('editing.dataDisable')
+        case 'Process':
         case 'PROCESS':
         case 'PROCESSING':
           return i18n.t('editing.dataBuilding')
       }
+    },
+    showActionDropdown (subAction, data) {
+      return subAction && !this.isProcessing && data['state'] !== 'Process' && data['type'] !== 'PROCESS' && data['state'] !== 'PROCESSING'
     }
   },
   computed: {

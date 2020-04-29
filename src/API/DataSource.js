@@ -1,26 +1,27 @@
 import request from '@/utils/publicRequest'
+import store from '@/store'
 
 /**
  * get data source list
  */
 export function getDataSourceList () {
+  const groupId = store.getters['userManagement/getCurrentGroupId']
   return request({
-    url: '/datasources',
+    url: `/datasources/new/${groupId}`,
     method: 'GET'
   })
 }
 
 /**
  * createDataSource
- * @param {String} name - 資料源名稱
+ * @param {String} dataSourceInfo.name - 資料源名稱
+ * @param {Number} dataSourceInfo.groupId - 專案 id
  */
-export function createDataSource (name) {
+export function createDataSource (dataSourceInfo) {
   return request({
     url: '/datasources',
     method: 'POST',
-    data: {
-      name
-    }
+    data: dataSourceInfo
   })
 }
 
@@ -90,10 +91,13 @@ export function getDataSourceDataValueById (dataSourceId, size = 50) {
  * get data frame by dataSourceId
  * @param {Number} dataSourceId - 欲檢查的資料源 ID
  */
-export function getDataFrameById (dataSourceId) {
+export function getDataFrameById (dataSourceId, getAllState = false) {
   return request({
     url: `/dataFrame/dataSource/${dataSourceId}`,
-    method: 'GET'
+    method: 'GET',
+    params: {
+      stateList: getAllState ? [] : 'Enable'
+    }
   })
 }
 

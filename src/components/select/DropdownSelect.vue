@@ -14,6 +14,21 @@
 </template>
 
 <script>
+/**
+ * barData 可傳入屬性和格式
+ * [
+     {
+       icon: '',
+       title: 'content',
+       // emit dialog name
+       dialogName: 'name',
+       // 路徑名稱
+       name: 'route name',
+       path: 'route path',
+       // 路徑 params
+       id: number
+     }
+ */
 
 export default {
   name: 'DropdownSelect',
@@ -28,9 +43,11 @@ export default {
   methods: {
     dialogEvent (bar) {
       if (bar.path) {
-        this.$router.push(bar.path)
+        return this.$router.push(bar.path)
+      } else if (bar.name) {
+        return this.$router.push({name: bar.name, params: {id: bar.id}})
       } else {
-        this.$emit('switchDialogName', bar.dialogName)
+        return this.$emit('switchDialogName', bar.dialogName)
       }
     }
   }

@@ -1,7 +1,5 @@
 <template>
-  <header class="app-header"
-    :class="{'isShowChatRoom': isShowChatRoom}"
-  >
+  <header class="app-header">
     <div class="container">
       <div class="header-root">
         <router-link class="header-logo" to="/">
@@ -32,11 +30,17 @@ export default {
   height: $header-height;
   z-index: $header-z-index;
   box-shadow: $header-shadow;
+  background-color: #0e2b2f;
+  border-bottom: 1px solid #04262B;
   // transition: all 0.1s;
 
-  &.isShowChatRoom {
-    left: $chat-room-width;
-    width: calc(100% - #{$chat-room-width});
+  &::before {
+    position: absolute;
+    top: 0;
+    content: '';
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(1.58deg, #2AD2E2 0%, rgba(42, 210, 226, 0.3) 92.98%);
   }
 
   .header-root {

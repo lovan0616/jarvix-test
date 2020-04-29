@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+
+    environment {
+        ARTIFACT_NAME  = "dist.tar.gz"
+    }
+
+    stages {
+        stage('Starting') {
+            steps {
+                sh '~/.scripts/ci/slack-starting.sh'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh '''
+                    npm install
+                    npm run build
+
+                    rm -f version
+                    echo "ref=${GIT_BRANCH}" >> dist/version
+                    echo "hash=${GIT_COMMIT}" >> dist/version
+
+                    tar zcf ${ARTIFACT_NAME} dist
+                '''
+            }
+        }
+        stage('Artifact') {
+            steps {
+                sh '''
+                    set +x
+                    curl -v -f -u ${NEXUS_USER}:${NEXUS_PASS} \
+                        --upload-file ${ARTIFACT_NAME} \
+                        ${NEXUS_HTTP_HOST}/repository/synergies/jarvix/${JOB_NAME}/${ARTIFACT_NAME}
+                    set -x
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            sh 'sh ~/.scripts/ci/slack-success.sh'
+        }
+        failure {
+            sh 'sh ~/.scripts/ci/slack-failure.sh'
+            sh 'sh ~/.scripts/ci/slack-send-log.sh'
+        }
+    }
+}

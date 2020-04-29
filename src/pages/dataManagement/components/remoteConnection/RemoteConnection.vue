@@ -55,10 +55,15 @@
           ></default-select>
         </div>
         <input-block class="dialog-input"
+          label="Database"
+          name="database"
+          v-model="connectInfo.database"
+          v-validate="'required'"
+        ></input-block>
+        <input-block class="dialog-input"
           label="Schema"
           name="schema"
           v-model="connectInfo.schema"
-          v-validate="'required'"
         ></input-block>
         <div class="inline-input-block">
           <input-block class="dialog-input host"
@@ -128,6 +133,7 @@ export default {
         name: null,
         password: null,
         port: null,
+        database: null,
         schema: null
       }
     }
@@ -155,7 +161,10 @@ export default {
       })
     },
     createDataSource () {
-      return createDataSource(this.dataSourceName).then(response => {
+      return createDataSource({
+        name: this.dataSourceName,
+        groupId: this.currentGroupId
+      }).then(response => {
         this.dataSourceId = response.dataSourceId
 
         this.$emit('updateDataSource', this.dataSourceId)
@@ -174,6 +183,11 @@ export default {
       }).catch(() => {
         this.isLoading = false
       })
+    }
+  },
+  computed: {
+    currentGroupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
     }
   }
 }

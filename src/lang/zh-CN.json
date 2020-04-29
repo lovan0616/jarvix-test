@@ -1,18 +1,36 @@
 {
   "lang": "简中",
   "nav": {
-    "index": "首页",
+    "index": "智能分析",
     "pinboard": "个人钉板",
     "dataManagement": "资料管理",
+    "groupPlaceholder": "专案",
     "languagePlaceholder": "语系",
-    "setting": "设定"
+    "setting": "设定",
+    "projectManagement": "专案管理"
+  },
+  "sideNav": {
+    "accountManagement": "帐户管理",
+    "accountInformation": "帐户资讯",
+    "accountUserManagement": "帐户使用者管理",
+    "accountGroupManagement": "帐户专案管理",
+    "accountSetting": "帐号设定",
+    "functionDescription": "功能说明",
+    "groupUserManagement": "专案成员管理",
+    "groupUserList": "成员列表",
+    "groupCreateUser": "加入新成员",
+    "dataSourceManagement": "资料源管理",
+    "dataSourceList": "资料源列表",
+    "dataFileManagement": "资料表管理",
+    "dataFileList": "资料表列表"
   },
   "message": {
-    "joinTableBuilt": "资料表关联建立完成",
-    "remindAdjustMainDate": "资料表具有多项日期栏位，您可进行主要日期栏位调整。",
+    "joinTableBuilding": "资料表建置中，建置完成即可使用",
+    "remindAdjustMainDate": "此表可能有多个日期栏位，您可用资料表的”日期栏位调整“功能进行设定。",
     "remindSameDataTypeColumns": "两个栏位的资料型态必须相同。",
     "builded": "资料源建立完成",
     "noData": "目前没有资料",
+    "noMember": "目前没有成员",
     "noResult": "目前暂无相关资讯",
     "formColumnEmpty": "栏位不得空白",
     "formMailWrong": "信箱格式错误",
@@ -25,9 +43,14 @@
     "systemIsError": "系统发生异常",
     "saveSuccess": "储存成功",
     "correlationDeleteSuccess": "关联已删除",
+    "groupCreateSuccess": "专案建立成功",
+    "memberCreateSuccess": "新成员建立成功",
+    "groupDeleteSuccess": "专案已成功删除",
+    "groupInfoUpdatedSuccess": "专案资讯已成功更新",
     "signUpSuccessPleaseLogin": "注册成功，请登入帐号",
     "userCreateSuccess": "建立使用者成功",
     "userInviteSuccess": "邀请使用者成功",
+    "userInviteRepetitive": "重复邀请相同email",
     "changePasswordSuccess": "密码变更成功",
     "editNameSuccess": "编辑名称成功",
     "changeStatusSuccess": "变更状态成功",
@@ -40,7 +63,8 @@
     "dataSourceNotExist": "资料源不存在",
     "connectionFail": "栏位资料有误，请重新检查",
     "columnSetNameEmpty": "栏位组合名称未填写",
-    "columnSetChosenEmpty": "尚未选择任何栏位"
+    "columnSetChosenEmpty": "尚未选择任何栏位",
+    "memberDeleteSuccess": "成员删除成功"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -66,7 +90,7 @@
     "remoteConnection": "连接资料库建置",
     "remoteConnectionDescription": "直接读取您的资料库资料<br>并进行资料复制和建置",
     "confirmDeleteForeign": "确认删除此关联吗？",
-    "choiceDataSource": "请选择资料源",
+    "chooseDataSource": "请选择资料源",
     "createBoard": "建立新版",
     "questionPlaceHolder": "请输入问题，例如：价格和成本的相关性",
     "askPlaceHolder": "请输入问句后按Enter送出",
@@ -102,7 +126,7 @@
     "uploadSuccess": "上传成功",
     "uploadFailure": "上传失败",
     "uploadFinish": "上传完成",
-    "uploadStatus": "总共{total}项资料表，{success}项上传成功，{pedding}项未上传",
+    "uploadStatus": "总共{total}项资料表，{success}项上传成功，{pending}项未上传",
     "dataSourceInfo": "资料类型：{type} 资料源名称：{dataSourceName}",
     "uploaded": "已上传",
     "unuploaded": "未上传",
@@ -119,11 +143,13 @@
     "columnCorrelation": "栏位关联",
     "emptyForeign": "尚未建立任何资料表关联",
     "emptyDateTime": "资料表无日期栏位",
+    "emptyDataFrameAlias": "尚未建立任何资料表别名",
     "selectForeign": "选择关联资料表",
     "selectColumn": "选择栏位",
     "processStep1": "填写资料源名称",
-    "processStep2": "上传资料/连接资料库",
-    "processStep3": "开始新增",
+    "processStep2": "上传档案",
+    "processStep3": "选择栏位",
+    "processStep4": "资料清理设定",
     "connectDB": "连接资料库",
     "connectStep2": "选择资料",
     "connectStep3": "栏位设定",
@@ -156,16 +182,16 @@
     "emptyResultDescription": "您所输入的问题，无法找到相关联的数据进行分析，请重新输入语句搜寻，或使用系统建议语句",
     "preview": "预览",
     "result": "结果",
-    "relatedQuesion": "关联问题",
+    "relatedQuestion": "关联问题",
     "comparisonCategory": "比较类",
     "languageSetting": "语言设定: 简中",
     "sureLogout": "您确认要登出帐号？",
     "questionFeedback": "问题/建议回馈",
     "functionDescription": "功能说明",
-    "createUser": "建立使用者",
     "addUser": "新增使用者",
     "notYetCreateUser": "尚未建立使用者",
-    "inviteeEmail": "受邀者email",
+    "inviteeEmail": "受邀者 email",
+    "pleaseSelectInviteeEmail": "请选择受邀者 email",
     "userTitle": "使用者名称",
     "userAccount": "使用者帐号",
     "setLoginPassword": "设定密码",
@@ -174,9 +200,22 @@
     "confirmPassword": "确认密码",
     "pleaseConfirmPassword": "请确认密码",
     "confirmPasswordAgain": "再次确认密码",
-    "group": "群组",
+    "group": "专案",
+    "groupOwner": "专案拥有者",
+    "groupMemberAmount": "专案人数",
+    "groupName": "专案名称",
+    "switchGroup": "切换专案",
+    "groupRolePermission": "专案角色权限",
+    "notYetCreateGroup": "尚未建立专案",
+    "deleteGroup": "删除专案",
+    "confirmDeleteProjectUserText": "使用者移除后，此使用者将无法使用此专案任何功能，您确认要继续移除此使用者？",
+    "confirmDeleteBelowGroupOrNot": "您确认要删除以下专案吗?",
+    "confirmEnterGroupUserManagement": "系统将导页至以下专案的“专案成员管理”进行设定",
+    "accountOwner": "帐户拥有者",
+    "memberManagement": "成员管理",
     "activeStatus": "启用状态",
     "role": "角色",
+    "setRole": "设定角色",
     "active": "开启",
     "close": "关闭",
     "originalPassword": "原密码",
@@ -217,6 +256,7 @@
     "loading": "资料读取中",
     "databaseType": "资料库类型",
     "currentLoadedDataFrame": "目前读取的资料表",
+    "dataFrameContent": "资料表内容",
     "currentDisplayDataFrame": "目前显示资料表",
     "dataType": "资料类型",
     "chooseConnection": "选择连线",
@@ -228,7 +268,49 @@
     "buildFail": "建置失败",
     "connectionName": "连线名称",
     "admin": "系统管理员",
-    "general": "一般使用者"
+    "general": "一般使用者",
+    "dataFrameAliasSetting": "资料表别名设置",
+    "dataFrameAliasInputPlaceholder": "请输入别名",
+    "belongToDataFrame": "隶属资料表",
+    "chooseDataFrame": "选择资料表",
+    "chooseDataColumn": "选择资料栏位",
+    "numericOnly": "请输入数值",
+    "isRequired": "必填"
+  },
+  "etl": {
+    "dataFrameList": "资料表列表",
+    "columnList": "栏位列表",
+    "dataType": "资料型别",
+    "emptyStringReplaceValue": "空字串替代值",
+    "nullReplaceValue": "Null替代值",
+    "errorReplaceValue": "错误资料替代值",
+    "customDataManagement": "自订资料处理",
+    "columnValue": "栏位值",
+    "replaceValue": "替代值",
+    "replaceValuePlaceholder": "请输入替代值",
+    "etlSetting": "资料清洗设定",
+    "remarkToSave": "异动内容须保存"
+  },
+  "feature": {
+    "value": "数值",
+    "columnValue": "栏位值",
+    "plus": "加法",
+    "minus": "减法",
+    "multiple": "乘法",
+    "divide": "除法",
+    "parentheses": "小括号",
+    "bracket": "中括号",
+    "braces": "大括号",
+    "hint": "提示",
+    "forbiddenRule": ["禁用全型文字"],
+    "chooseOptionHint": "请从下方点选您所需要的元素组成特征栏位，元素可拖曳替换位置",
+    "inputPlaceholder": "范例：利润 = 收入 - 成本",
+    "featureManagement": "特征栏位管理",
+    "customFeature": "自订特征栏位",
+    "recommendFeature": "系统推荐特征",
+    "createFeature": "新增特征",
+    "featureColumnName": "特征栏位名称",
+    "featureSetting": "运算式设定"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的资料？",
@@ -239,65 +321,103 @@
     "similarQuestionDescription": "很抱歉，系统没有找到对应问题的栏位或资料，但有相关词意的栏位，请参考以下项目："
   },
   "description": {
-    "basicIntroduce": "基本介绍",
-    "questionAnalyzeUse": "问题分析操作",
-    "personalPinboard": "个人钉板使用",
-    "interfaceDescription": "介面说明",
-    "hide": "隐藏",
-    "guidingRow": "导引列",
-    "guidingRowIntroduce": "导览列介绍",
-    "mainLayout": "主画面",
-    "settingFunctionMenu": "设定功能选单",
-    "accountFunctionMenu": "帐号功能选单",
-    "indexPageFunctionIntroduce": "首页功能介绍",
-    "checkoutDataSheetDetail": "查看资料表的<br>详细内容",
-    "systemLogQuestion": "系统纪录的常<br>用问题",
-    "howAddData": "如何新增资料源",
-    "enterDataManage": "进入资料管理",
-    "howAddDataSheet": "如何新增资料表",
-    "pickupData": "点选资料源",
-    "howEditDataSheet": "如何资料表栏位别名编辑",
-    "clickEditColumn": "点击编辑栏位",
-    "editAlias": "编辑别名",
-    "confirmEdit": "确认修改",
-    "completeBuild": "完成建置",
-    "howConnectDataSheet": "如何将资料表栏位进行关联设定",
-    "clickDataSheetConnect": "点击资料表关联",
-    "addDataSheetConnect": "新增资料表关联",
-    "slectDataSheet": "选择资料表",
-    "andConnectColumn": "和关联栏位",
-    "storeSetting": "储存设定",
-    "howToAsk": "如何询问问题？",
-    "howToSearchAssist": "如何寻找问句协助？",
-    "analyzeResultDescription": "分析结果说明",
-    "howToDeepen": "如何深入挖掘问题？",
-    "questionClick": "点击系统推荐的问句",
-    "questionInput": "问题文字输入",
-    "inputKeyWord": "输入$和关键字就会开启<br>问句提示",
-    "questionHint": "问句提示选单",
-    "clickOpenQuestion": "点击开启问句说明",
-    "questionDescriptionContent": "问句说明内容",
-    "systemResponseResult": "系统回覆问题的<br>分析结果",
-    "questionAnalyzeDetail": "问题分析的详<br>细资讯",
-    "systemRecommendQuestion": "系统推荐的相关<br>问题",
-    "systemTargetFace": "系统归纳出针对<br>结果可以深入探究<br>究的面向（因不<br>同分析结果而有<br>差异）",
-    "activateHint": "1.启用问句提示",
-    "openQuestionDescription": "1.开启问句说明",
-    "howToAddPinboard": "如何将分析结果加入钉板？",
-    "howToClassManage": "如何进行钉板分类管理？",
-    "howToShare": "如何将钉板分享给他人？",
-    "clickPinboard": "点击钉板",
-    "selectPinboardClass": "选择钉板分类",
-    "pinboardCompleteCancel": "钉板完成，可随<br>时取消",
-    "enterPersonalPinboard": "进入个人钉板",
-    "enableAddClass": "可补充钉版分类",
-    "classFunctionMenu": "分类功能选单",
-    "clickMenuShare": "点击选单的分享",
-    "shareLink": "分享连结",
-    "clickSingleClass": "点击一种分类",
-    "clickShare": "点击分享",
-    "sharePinboardContent": "1.分享钉板分类中的内容",
-    "shareSinglePinboard": "2.分享单一钉板内容"
+    "basic": {
+      "intro": "基本介绍",
+      "ui": "介面说明",
+      "nav": "导引列",
+      "navIntro": "导览列介绍",
+      "index": "主画面",
+      "groupManage": "专案管理",
+      "groupSwitch": "专案切换",
+      "account": "帐号功能选单",
+      "funcDesc": "帐号功能说明",
+      "indexFuncIntro": "首页功能说明",
+      "checkDataFrameDetail": "查看资料表的详细内容",
+      "faq": "系统纪录的常见问题",
+      "hide": "隐藏"
+    },
+    "question": {
+      "analysis": "问题分析操作",
+      "how": "如何问问题？",
+      "recommended": "系统推荐的相关问题",
+      "input": "问题文字输入",
+      "assistant": "如何启用问句协助功能？",
+      "info1": "1.透过“问句说明”，了解可使用的词汇",
+      "info2": "2.透过问句说明，参考“问句范例”",
+      "click": "Step1:<br>点击开启<br>问句说明",
+      "vocabulary": "Step2:<br>词汇总览",
+      "sample": "Step2:<br>问句范例",
+      "result": "主要分析结果",
+      "resultInfo": "分析结果说明",
+      "basicInfo": "可查看基本资料",
+      "graphicTool": "图表操作功能",
+      "fetchMore": "点击可捞取更多资料",
+      "howToDeepen": "如何深入挖掘问题？",
+      "insights": "使用分析后的<br>资料洞察"
+    },
+    "pinboard": {
+      "personal": "个人钉板使用",
+      "how": "如何将分析结果加入钉板？",
+      "clickPinboard": "Step1:<br>点击钉板",
+      "classification": "Step2:<br>选择钉板分类",
+      "cancel": "Step3:<br>钉板完成，可随时取消",
+      "howToClassify": "如何进行钉板分类管理？",
+      "entry": "Step1:<br>进入个人钉板",
+      "addClass": "Step2:<br>可补充钉版分类",
+      "classificationAction": "Step3:<br>分类功能选单",
+      "share": "如何将钉板分享给他人？",
+      "title1": "1.分享钉板分类中的内容",
+      "title2": "2.分享单一钉板内容",
+      "clickShareBtn1": "Step1:<br>点击选单的分享",
+      "clickShareBtn2": "Step2:<br>点击分享",
+      "shareLink": "分享连结",
+      "clickClass": "Step1:<br>点击一种分类"
+    },
+    "data": {
+      "howToAddDataSource": "如何添加资料源？",
+      "howToAddDataFrame": "如何添加资料表？",
+      "howToAddColumnAlias": "如何编辑资料表栏位别名？",
+      "byFile": "1.使用“档案上传”方式",
+      "byDB": "2.使用“连接资料库”获得资料表方式",
+      "entry": "Step1:<br>进入资料管理",
+      "addDataSource": "Step2:<br>新增資料源",
+      "selectByFile": "Step3:<br>新增资料源",
+      "selectByDB": "Step1:<br>选用资料库连线",
+      "connectionSetting": "Step2:<br>资料库连线设定",
+      "selectLocalFile": "Step4:<br>选入本机档案",
+      "uploading": "Step5:<br>发布档案",
+      "selectDataFrame": "Step3:<br>选择需使用的<br>资料表",
+      "selectColumn": "挑选需用的资料栏位",
+      "dataCleansing": "资料整理设定",
+      "building": "建置作业将在<br>背景执行",
+      "clickDataSource": "Step1:<br>点选资料源",
+      "addDataFrame": "Step2:<br>新增资料表",
+      "clickEdit": "点击编辑栏位",
+      "editAlias": "Step3:<br>编辑别名",
+      "confirm": "Step4:<br>确认修改",
+      "finish": "Step5:<br>完成建置"
+    },
+    "account": {
+      "management": "帐户使用者管理",
+      "howToEnter": "如何进入帐户使用者管理？",
+      "howToInvite": "如何邀请新使用者加入？",
+      "howToUpdateRole": "如何编辑使用者帐户角色权限？",
+      "entry": "Step1:<br>进入帐户管理",
+      "entrySideNav": "Step2:<br>选择帐户使用者管理",
+      "clickInvite": "Step1:<br>点击新增按钮",
+      "confirmInvite": "Step2:<br>输入email并送出邀请，受邀者就可收到邀请信",
+      "clickUpdate": "Step1:<br>点击角色变更",
+      "confirmUpdate": "Step2:<br>开启角色变更画面后，即可变更"
+    },
+    "group": {
+      "management": "专案成员管理",
+      "howToEnter": "如何加入新成员？",
+      "howToInvite": "如何邀请新使用者加入？",
+      "entry": "Step1:<br>进入专案成员<br>管理",
+      "selectMember": "Step2:<br>选择成员列表",
+      "clickInvite": "Step1:<br>点选加入新成员",
+      "confirmInvite": "Step2:<br>填写使用者email后，点击确认按钮即加入"
+    }
   },
   "button": {
     "build": "建置",
@@ -353,7 +473,19 @@
     "download": "资料下载",
     "restrict": "分析条件限制",
     "start": "开始",
-    "copyAndBuild": "复制并建置"
+    "copyAndBuild": "复制并建置",
+    "createGroup": "新建专案",
+    "deleteGroup": "删除专案",
+    "editGroupName": "编辑专案名称",
+    "addNewMember": "加入新成员",
+    "editDataFrameAlias": "编辑资料表别名",
+    "buildData": "建置资料",
+    "keepSave": "保存",
+    "chooseFileUpload": "重新选择档案",
+    "moveForward": "前往",
+    "addFeature": "新增特征",
+    "create": "新增",
+    "featureManagement": "特征管理"
   },
   "aggregation": {
     "mean": "平均",
@@ -391,10 +523,13 @@
     "categoryTitle": "Category 类型",
     "numericTitle": "Numeric 类型",
     "datavalueTitle": "常见资料",
-    "category": "Category类型的栏位，不具有数量单位。",
-    "numeric": "numeric类型的栏位，具有数量单位。",
+    "category": "Category 类型的栏位，不具有数量单位。",
+    "numeric": "Numeric 类型的栏位，具有数量单位。",
+    "datetime": "Datetime 类型的栏位，资料为日期/时间。",
+    "boolean": "Boolean 类型的栏位，不具有数量单位，资料为0/1。",
+    "unique": "Unique 类型的栏位，资料不会重复。",
     "filter": "时间筛选条件",
-    "value": "value是栏位的资料，不限定数量或其他型态。",
+    "value": "Value 是栏位的资料，不限定数量或其他型态。",
     "column": "栏位",
     "columnValue": "栏位资料",
     "type": "类型",
@@ -402,6 +537,7 @@
     "columnName": "栏位名称",
     "ask": "问",
     "example": "范例",
+    "exampleDesc": "因 Boolean 和 Unique 类型问句方式与 Category 一致，以下均以 Category 类型举例。",
     "questionSampleList": [
       {
         "name": "一般问句",
@@ -566,7 +702,7 @@
                 {"text": "平均营收", "type": "numeric"},
                 {"text": "和", "type": ""},
                 {"text": "成本", "type": "numeric"},
-                {"text": "的关系", "type": ""}
+                {"text": "的平均", "type": ""}
               ]
             ]
           },
@@ -834,7 +970,7 @@
             ]
           },
           {
-            "questionText": "value 和 value 的 Numeric 比较",
+            "questionText": "Value 和 Value 的 Numeric 比较",
             "questionExample": [
               [
                 {"text": "上海", "type": "value"},
@@ -849,29 +985,6 @@
                 {"text": "M", "type": "value"},
                 {"text": "的", "type": ""},
                 {"text": "客户年龄", "type": "numeric"},
-                {"text": "比较", "type": ""}
-              ]
-            ]
-          },
-          {
-            "questionText": "每年 value 和 value 的 Numeric 比较",
-            "questionExample": [
-              [
-                {"text": "每年", "type": "filter"},
-                {"text": "上海", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "北京", "type": "value"},
-                {"text": "的", "type": ""},
-                {"text": "单位成本", "type": "numeric"},
-                {"text": "比较", "type": ""}
-              ],
-              [
-                {"text": "每年", "type": "filter"},
-                {"text": "S11", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "S12", "type": "value"},
-                {"text": "的", "type": ""},
-                {"text": "销售", "type": "numeric"},
                 {"text": "比较", "type": ""}
               ]
             ]
@@ -968,6 +1081,21 @@
                 {"text": "的预测", "type": ""}
               ]
             ]
+          },
+          {
+            "questionText": "Value 的 Numeric 的预测",
+            "questionExample": [
+              [
+                {"text": "脚踏车", "type": "value"},
+                {"text": "销售", "type": "numeric"},
+                {"text": "的预测", "type": ""}
+              ],
+              [
+                {"text": "产品A", "type": "value"},
+                {"text": "良率", "type": "numeric"},
+                {"text": "的预测", "type": ""}
+              ]
+            ]
           }
         ]
       },
@@ -1030,7 +1158,7 @@
             ]
           },
           {
-            "questionText": "value 和 value 各占 Category 的比例",
+            "questionText": "Value 和 Value 各占 Category 的比例",
             "questionExample": [
               [
                 {"text": "S1", "type": "value"},
@@ -1046,29 +1174,6 @@
                 {"text": "M", "type": "value"},
                 {"text": "各占", "type": ""},
                 {"text": "顾客", "type": "category"},
-                {"text": "的比例", "type": ""}
-              ]
-            ]
-          },
-          {
-            "questionText": "value 和 value 各占 Category 的 Numeric 的比例",
-            "questionExample": [
-              [
-                {"text": "S1", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "S2", "type": "value"},
-                {"text": "各占", "type": ""},
-                {"text": "商店", "type": "category"},
-                {"text": "销售", "type": "numeric"},
-                {"text": "的比例", "type": ""}
-              ],
-              [
-                {"text": "F", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "M", "type": "value"},
-                {"text": "各占", "type": ""},
-                {"text": "顾客", "type": "category"},
-                {"text": "数量", "type": "numeric"},
                 {"text": "的比例", "type": ""}
               ]
             ]
@@ -1109,6 +1214,76 @@
                 {"text": "和", "type": ""},
                 {"text": "客户性别", "type": "category"},
                 {"text": "的关系", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "关联分析",
+        "questionList": [
+          {
+            "questionText": "什么和 Numeric 有关",
+            "questionExample": [
+              [
+                {"text": "什么和", "type": ""},
+                {"text": "良率", "type": "numeric"},
+                {"text": "有关", "type": ""}
+              ],
+              [
+                {"text": "什么和", "type": ""},
+                {"text": "收入", "type": "numeric"},
+                {"text": "有关", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "什么和 Category 有关",
+            "questionExample": [
+              [
+                {"text": "什么和", "type": ""},
+                {"text": "产品促销", "type": "category"},
+                {"text": "有关", "type": ""}
+              ],
+              [
+                {"text": "什么和", "type": ""},
+                {"text": "产品种类", "type": "category"},
+                {"text": "有关", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "差异分析",
+        "questionList": [
+          {
+            "questionText": "Value 和 Value 的差异",
+            "questionExample": [
+              [
+                {"text": "台北", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "新竹", "type": "value"},
+                {"text": "的差异", "type": ""}
+              ],
+              [
+                {"text": "产品A", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "产品B", "type": "value"},
+                {"text": "的差异", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Value 和其他的差异",
+            "questionExample": [
+              [
+                {"text": "产品A", "type": "value"},
+                {"text": "和其他的差异", "type": ""}
+              ],
+              [
+                {"text": "台北", "type": "value"},
+                {"text": "和其他的差异", "type": ""}
               ]
             ]
           }
@@ -1186,7 +1361,8 @@
     "more": "看更多",
     "source": "来源",
     "target": "目标",
-    "value": "数值"
+    "value": "数值",
+    "feature": "自定义栏位"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",
@@ -1298,11 +1474,37 @@
     "TASKWARN0002": "此条件获取不到任何资料来进行处理",
     "TASKWARN0003": "计算结果为空",
     "authFail": "权限失效请重新登入",
+    "permissionChanged": "权限已被变更，请重新登入",
     "lackOfSignUpToken": "无注册权限，请联系管理员",
-    "defaultMsg": "系统发生非预期错误"
+    "defaultMsg": "系统发生非预期错误",
+    "lackOfPermission": "权限不足，请联系管理员"
   },
   "resultNote": {
     "groupLimitNote": "此结果为原资料取前 {randomLimit} 笔得来",
     "samplingNote": "此结果为原资料取样 {randomLimit} 笔计算得来"
+  },
+  "userManagement": {
+    "createUser": "新增使用者",
+    "inviteeEmailPlaceholder": "请输入受邀者email",
+    "userRoleAuthority": "帐户角色权限",
+    "accountOwner": "帐户拥有者",
+    "accountMaintainer": "帐户管理者",
+    "accountViewer": "一般使用者",
+    "accountRoleDesc": "角色权限说明",
+    "accountOwnerDesc": "无任何使用限制",
+    "accountMaintainerDesc": "拥有帐户管理权限",
+    "accountViewerDesc": "无法使用帐户管理相关功能",
+    "updateRole": "角色变更",
+    "confirmDeleteAccountText": "使用者移除后，此使用者将无法使用此帐户任何功能，您确认要继续移除此使用者？"
+  },
+  "accountInfo": {
+    "userAmount": "使用者数量",
+    "currentUserAmount": "目前使用者数量",
+    "userAmountLimit": "使用者数量上限",
+    "dataAllowance": "数据容量",
+    "currentDataUsage": "目前数据使用容量",
+    "dataUsageProvided": "数据容量上限",
+    "expireDate": "到期时间",
+    "person": "人"
   }
 }

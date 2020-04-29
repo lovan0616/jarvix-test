@@ -6,11 +6,11 @@ import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
 
 export default {
-  init ({ commit, dispatch, state }) {
+  init ({ commit, dispatch, state, getters, rootGetters }) {
     if (state.isInit) return Promise.resolve(state)
-
     let queryDataSource = parseInt(router.app.$route.query.dataSourceId)
-    dispatch('getDataSourceList', queryDataSource)
+    const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
+    if (currentGroupId) dispatch('getDataSourceList', queryDataSource)
     commit('setIsInit', true)
   },
   getDataSourceList ({ dispatch, commit, state }, data) {
@@ -32,9 +32,10 @@ export default {
           })
         }
       } else {
+        if (!res.length) return dispatch('handleEmptyDataSource')
         // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個
         if (!state.dataSourceId || res.findIndex(element => element.id === state.dataSourceId) < 0) {
-          dispatch('changeDataSourceById', res[0].id)
+          return dispatch('changeDataSourceById', res[0].id)
         }
       }
     })
@@ -60,8 +61,15 @@ export default {
       return Promise.resolve(state)
     })
   },
+  handleEmptyDataSource ({ dispatch, commit }) {
+    commit('chatBot/clearConversation', null, {root: true})
+    dispatch('clearAllFilter')
+    commit('clearCurrentQuestionId')
+    commit('chatBot/updateIsUseAlgorithm', false, {root: true})
+    commit('setDataSourceId', null)
+  },
   getDataSourceTables ({state}) {
-    if (state.dataSourceId === null) return Promise.reject(new Error('dataSource not set yet'))
+    if (state.dataSourceId === null) return
     return getDataFrameById(state.dataSourceId)
   },
   getDataFrameData ({state}, {id, page = 0}) {
@@ -69,7 +77,7 @@ export default {
   },
   getDataSourceColumnInfo ({ commit, state }) {
     return getDataSourceColumnInfoById(state.dataSourceId).then(response => {
-      commit('setDataSourceCloumnInfoList', response)
+      commit('setDataSourceColumnInfoList', response)
     })
   },
   getDataSourceDataValue ({ commit, state }) {

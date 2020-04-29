@@ -3,7 +3,7 @@
     <div class="page-title-row">
       <h1 class="title">演算法管理</h1>
       <div class="bread-crumb">
-        <router-link to="/algorithm" class="title-link">演算法</router-link>
+        <router-link :to="{name: 'PageAlgorithmList'}" class="title-link">演算法</router-link>
         <span class="divider">/</span>預測性維修
       </div>
     </div>
@@ -252,7 +252,7 @@ export default {
           value: 'name',
           sort: true
         //   link: {
-        //     name: 'PageDataFileList'
+        //     name: 'DataFileList'
         //   }
         },
         {

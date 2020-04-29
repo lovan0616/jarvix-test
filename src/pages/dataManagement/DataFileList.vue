@@ -8,7 +8,7 @@
     <div class="page-title-row">
       <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
       <div class="bread-crumb">
-        <router-link to="/data-management" class="title-link">{{ $t('editing.dataSource') }}</router-link>
+        <router-link :to="{name: 'DataSourceList'}" class="title-link">{{ $t('editing.dataSource') }}</router-link>
         <span class="divider">/</span>{{ dataSourceName }}
       </div>
     </div>
@@ -21,34 +21,25 @@
           >
             <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
           </button>
-          <!-- <button class="btn-m btn-default"
-            v-if="dataList.length > 1"
-            :disabled="isProcessing"
-            @click="editJoinTable"
-          >{{ $t('editing.foreignTable') }}</button> -->
-          <!-- <button class="btn-m btn-outline btn-has-icon"
-            v-if="selectList.length > 0"
-            :disabled="isProcessing"
-            @click="confirmDelete()"
-          >
-            <svg-icon class="icon"
-              v-if="isProcessing"
-              :icon-class="spinner"
-            ></svg-icon>{{ $t('button.delete') }}
-          </button> -->
           <div class="reach-limit"
             v-if="reachLimit"
           >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
-        <!-- <div class="button-block">
+        <div class="button-block dataframe-action">
           <button class="btn-m btn-secondary btn-has-icon"
-            @click="toggleJoinTableDialog"
+            @click="toggleEditFeatureDialog"
             :disabled="reachLimit || dataList.length === 0"
+          >
+            <svg-icon icon-class="feature" class="icon"></svg-icon>{{ $t('button.featureManagement') }}
+          </button>
+          <button class="btn-m btn-secondary btn-has-icon"
+            @click="openEditJoinTableDialog"
+            :disabled="!canEditJoinTable()"
           >
             <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
           </button>
-        </div> -->
-        <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div> -->
+        </div>
+        <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
       </div>
       <data-table
         :headers="tableHeaders"
@@ -60,6 +51,7 @@
         @create="createDataSource"
         @delete="confirmDelete"
         @edit="editTableColumn"
+        @dataFrameAlias="editDataFrameAlias"
         @valueAlias="editTableValueAlias"
         @columnSet="editColumnSet"
         @dateTime="editDateTime"
@@ -80,7 +72,9 @@
     ></confirm-delete-data-frame-dialog>
     <edit-table-join-relation-dialog
       v-if="showJoinTableDialog"
-      @cancel="toggleJoinTableDialog()"
+      :reach-limit="reachLimit"
+      :data-frame-list="dataList"
+      @cancel="closeEditJoinTableDialog"
       @dataFrameUpdate="fetchData()"
     ></edit-table-join-relation-dialog>
     <edit-column-dialog
@@ -88,6 +82,11 @@
       :table-info="currentEditDataFrameInfo"
       @close="closeEditColumnDialog"
     ></edit-column-dialog>
+    <data-frame-alias-dialog
+      v-if="showDataFrameAliasDialog"
+      :data-frame-info="currentEditDataFrameInfo"
+      @close="closeDataFrameAliasDialog"
+    ></data-frame-alias-dialog>
     <value-alias-dialog
       v-if="showValueAliasDialog"
       :data-frame-info="currentEditDataFrameInfo"
@@ -103,6 +102,10 @@
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditDateTimeDialog"
     ></edit-date-time-dialog>
+    <feature-management-dialog
+      v-if="showEditFeatureDialog"
+      @close="toggleEditFeatureDialog"
+    ></feature-management-dialog>
   </div>
 </template>
 <script>
@@ -112,9 +115,11 @@ import ConfirmDeleteDataFrameDialog from './components/ConfirmDeleteDataFrameDia
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
 import EditColumnSetDialog from './components/columnSet/EditColumnSetDialog'
+import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
+import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 
 export default {
   name: 'DataFileList',
@@ -125,8 +130,10 @@ export default {
     EditTableJoinRelationDialog,
     EditColumnDialog,
     EditColumnSetDialog,
+    DataFrameAliasDialog,
     ValueAliasDialog,
-    EditDateTimeDialog
+    EditDateTimeDialog,
+    FeatureManagementDialog
   },
   data () {
     return {
@@ -149,9 +156,12 @@ export default {
         id: null,
         primaryAlias: null
       },
+      showDataFrameAliasDialog: false,
       showValueAliasDialog: false,
       showEditColumnSetDialog: false,
+      showEditFeatureDialog: false,
       intervalFunction: null,
+      checkDataFrameIntervalFunction: null,
       isLoading: false
     }
   },
@@ -162,6 +172,8 @@ export default {
   beforeDestroy () {
     if (this.intervalFunction) {
       window.clearInterval(this.intervalFunction)
+    } else if (this.checkDataFrameIntervalFunction) {
+      window.clearInterval(this.checkDataFrameIntervalFunction)
     }
   },
   watch: {
@@ -181,21 +193,32 @@ export default {
       if (!value) {
         window.clearInterval(this.intervalFunction)
       }
+    },
+    hasDataFrameProcessing (value) {
+      if (value) {
+        this.checkDataFrameIntervalFunction = window.setInterval(() => {
+          this.updateDataTable()
+        }, 5000)
+      } else {
+        window.clearInterval(this.checkDataFrameIntervalFunction)
+      }
     }
   },
   methods: {
     fetchData () {
       this.isLoading = true
-      return getDataFrameById(this.currentDataSourceId).then(response => {
+      return this.updateDataTable().finally(() => {
+        this.isLoading = false
+      })
+    },
+    updateDataTable () {
+      return getDataFrameById(this.currentDataSourceId, true).then(response => {
         this.dataList = response.map(element => {
           return {
             ...element,
-            createMethod: element.joinCount === 2 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
+            createMethod: element.joinCount > 1 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
           }
         })
-        this.isLoading = false
-      }).catch(() => {
-        this.isLoading = false
       })
     },
     createMethod (value) {
@@ -232,7 +255,7 @@ export default {
     },
     deleteFile () {
       this.showConfirmDeleteDialog = false
-      this.isProcessing = true
+      this.isLoading = true
       const dataframeId = this.selectList[0].id
       deleteDataFrameById(dataframeId)
         .then(res => {
@@ -245,20 +268,25 @@ export default {
     },
     deleteFinish () {
       this.selectList = []
-      this.isProcessing = false
+      this.isLoading = false
     },
     cancelDelete () {
       this.selectList = []
       this.showConfirmDeleteDialog = false
     },
-    toggleJoinTableDialog () {
-      this.showJoinTableDialog = !this.showJoinTableDialog
+    canEditJoinTable () {
+      const editableDataList = this.dataList.filter(dataFrame => dataFrame.state === 'Enable')
+      return editableDataList.length > 0
+    },
+    openEditJoinTableDialog () {
+      if (!this.canEditJoinTable) return
+      this.showJoinTableDialog = true
+    },
+    closeEditJoinTableDialog () {
+      this.showJoinTableDialog = false
     },
     toggleEditColumnDialog () {
       this.showEditColumnDialog = !this.showEditColumnDialog
-    },
-    editJoinTable () {
-      this.toggleJoinTableDialog()
     },
     editTableColumn (dataInfo) {
       // 利用 id 去 tableList 裡面找對應的 table 資訊
@@ -268,6 +296,13 @@ export default {
     closeEditColumnDialog () {
       this.currentEditDataFrameInfo = null
       this.toggleEditColumnDialog()
+    },
+    editDataFrameAlias (dataInfo) {
+      this.currentEditDataFrameInfo = {
+        id: dataInfo.id,
+        primaryAlias: dataInfo.primaryAlias
+      }
+      this.showDataFrameAliasDialog = true
     },
     editTableValueAlias (dataInfo) {
       this.currentEditDataFrameInfo = {
@@ -290,6 +325,10 @@ export default {
       }
       this.showEditDateTimeDialog = true
     },
+    closeDataFrameAliasDialog () {
+      this.showDataFrameAliasDialog = false
+      this.currentEditDataFrameInfo = null
+    },
     closeValueAliasDialog () {
       this.showValueAliasDialog = false
     },
@@ -298,6 +337,9 @@ export default {
     },
     closeEditDateTimeDialog () {
       this.showEditDateTimeDialog = false
+    },
+    toggleEditFeatureDialog () {
+      this.showEditFeatureDialog = !this.showEditFeatureDialog
     }
   },
   computed: {
@@ -336,7 +378,7 @@ export default {
         },
         {
           text: this.$t('editing.status'),
-          value: 'type',
+          value: 'state',
           width: '80px'
         },
         {
@@ -347,6 +389,7 @@ export default {
             {
               name: this.$t('button.edit'),
               subAction: [
+                {icon: '', title: 'button.editDataFrameAlias', dialogName: 'dataFrameAlias'},
                 {icon: '', title: 'button.editColumn', dialogName: 'edit'},
                 {icon: '', title: 'button.editDataValue', dialogName: 'valueAlias'},
                 {icon: '', title: 'button.editColumnSet', dialogName: 'columnSet'}
@@ -360,10 +403,6 @@ export default {
               name: this.$t('button.delete'),
               value: 'delete'
             }
-            // {
-            //   name: this.$t('button.rename'),
-            //   value: 'rename'
-            // }
           ]
         }
       ]
@@ -373,6 +412,10 @@ export default {
     },
     fileUploadSuccess () {
       return this.$store.state.dataManagement.fileUploadSuccess
+    },
+    hasDataFrameProcessing () {
+      if (!this.dataList.length) return false
+      return this.dataList.some(element => element.type === 'PROCESS' || element.state === 'Process')
     }
   }
 }
@@ -388,6 +431,12 @@ export default {
   .divider {
     margin: 0 8px;
     color: #979797;
+  }
+
+  .dataframe-action {
+    flex: 1;
+    justify-content: flex-end;
+    margin-right: 12px;
   }
 
   .status-block {

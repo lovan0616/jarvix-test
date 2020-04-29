@@ -42,6 +42,7 @@
 export default {
   name: 'DisplayCorrelationFeatures',
   props: {
+    dataSourceId: null,
     features: { type: Array, default: () => [] },
     confidence: { type: Number }
   },

@@ -9,23 +9,38 @@
         v-if="step === 1"
         @next="nextStep"
       ></local-file-upload>
-      <local-file-upload-finished
+      <local-file-upload-status
         v-if="step === 2"
-      ></local-file-upload-finished>
+        @next="nextStep"
+        @prev="prevStep"
+      ></local-file-upload-status>
+      <choose-column
+        v-if="step === 3"
+        @next="nextStep"
+      ></choose-column>
+      <local-column-setting
+        v-if="step === 4"
+        @prev="prevStep"
+        @next="uploadFinish"
+      ></local-column-setting>
     </transition>
   </div>
 </template>
 <script>
 import DataSourceName from './DataSourceName'
 import LocalFileUpload from './LocalFileUpload'
-import LocalFileUploadFinished from './LocalFileUploadFinished'
+import LocalFileUploadStatus from './LocalFileUploadStatus'
+import ChooseColumn from './ChooseColumn'
+import LocalColumnSetting from './LocalColumnSetting'
 
 export default {
   name: 'LocalFileUploadFlow',
   components: {
     DataSourceName,
     LocalFileUpload,
-    LocalFileUploadFinished
+    LocalFileUploadStatus,
+    ChooseColumn,
+    LocalColumnSetting
   },
   data () {
     return {
@@ -39,6 +54,18 @@ export default {
   methods: {
     nextStep () {
       this.step += 1
+    },
+    prevStep () {
+      this.step -= 1
+    },
+    uploadFinish () {
+      if (this.$route.name === 'DataSourceList') {
+        this.$store.dispatch('dataSource/getDataSourceList')
+      } else {
+        this.$store.commit('dataManagement/updateFileUploadSuccess', true)
+      }
+      // close fileUploadDialog
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     }
   }
 }
