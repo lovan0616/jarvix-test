@@ -8,7 +8,7 @@ export default {
     isInit: false,
     dataSourceList: [],
     dataSourceId: null,
-    dataSourceCloumnInfoList: [],
+    dataSourceColumnInfoList: [],
     dataSourceDataValueList: [],
     appQuestion: null,
     currentQuestionInfo: null,

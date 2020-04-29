@@ -64,7 +64,8 @@
     "connectionFail": "欄位資料有誤，請重新檢查",
     "columnSetNameEmpty": "欄位組合名稱未填寫",
     "columnSetChosenEmpty": "尚未選擇任何欄位",
-    "memberDeleteSuccess": "成員刪除成功"
+    "memberDeleteSuccess": "成員刪除成功",
+    "etlSuccess": "資料預處理成功，開始建置資料表"
   },
   "guiding": {
     "prevStep": "上一步",

@@ -13,7 +13,7 @@
       </template>
       <div class="column-name">{{$t('askHelper.columnName')}}</div>
       <div class="single-column"
-        v-for="(columnInfo, index) in dataSourceCloumnInfoList.category"
+        v-for="(columnInfo, index) in dataSourceColumnInfoList.category"
         :key="'category' + index"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
@@ -31,7 +31,7 @@
       </template>
       <div class="column-name">{{$t('askHelper.columnName')}}</div>
       <div class="single-column"
-        v-for="(columnInfo, index) in dataSourceCloumnInfoList.numeric"
+        v-for="(columnInfo, index) in dataSourceColumnInfoList.numeric"
         :key="'numeric' + index"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
@@ -49,7 +49,7 @@
       </template>
       <div class="column-name">{{$t('askHelper.columnName')}}</div>
       <div class="single-column"
-        v-for="(columnInfo, index) in dataSourceCloumnInfoList.dateTime"
+        v-for="(columnInfo, index) in dataSourceColumnInfoList.dateTime"
         :key="'category' + index"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
@@ -67,7 +67,7 @@
       </template>
       <div class="column-name">{{$t('askHelper.columnName')}}</div>
       <div class="single-column"
-        v-for="(columnInfo, index) in dataSourceCloumnInfoList.booleanList"
+        v-for="(columnInfo, index) in dataSourceColumnInfoList.booleanList"
         :key="'category' + index"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
@@ -85,7 +85,7 @@
       </template>
       <div class="column-name">{{$t('askHelper.columnName')}}</div>
       <div class="single-column"
-        v-for="(columnInfo, index) in dataSourceCloumnInfoList.uniqueList"
+        v-for="(columnInfo, index) in dataSourceColumnInfoList.uniqueList"
         :key="'category' + index"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
@@ -121,8 +121,8 @@ export default {
     }
   },
   computed: {
-    dataSourceCloumnInfoList () {
-      return this.$store.state.dataSource.dataSourceCloumnInfoList
+    dataSourceColumnInfoList () {
+      return this.$store.state.dataSource.dataSourceColumnInfoList
     },
     dataSourceDataValueList () {
       return this.$store.state.dataSource.dataSourceDataValueList
