@@ -64,7 +64,8 @@
     "connectionFail": "栏位资料有误，请重新检查",
     "columnSetNameEmpty": "栏位组合名称未填写",
     "columnSetChosenEmpty": "尚未选择任何栏位",
-    "memberDeleteSuccess": "成员删除成功"
+    "memberDeleteSuccess": "成员删除成功",
+    "etlSuccess": "资料预处理成功，开始建置资料表"
   },
   "guiding": {
     "prevStep": "上一步",

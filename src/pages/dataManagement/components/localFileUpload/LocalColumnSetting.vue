@@ -34,6 +34,7 @@
 import { dataSourcePreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
 import EtlColumnSetting from '../etl/EtlColumnSetting'
+import { Message } from 'element-ui'
 
 export default {
   name: 'LocalColumnSetting',
@@ -67,6 +68,11 @@ export default {
 
       Promise.all(promiseList)
         .then(() => {
+          Message({
+            message: this.$t('message.etlSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
           this.$emit('next')
         })
         .catch(err => {
