@@ -52,6 +52,7 @@
     "userCreateSuccess": "建立使用者成功",
     "userInviteSuccess": "邀请使用者成功",
     "userInviteRepetitive": "重复邀请相同email",
+    "userAlreadyExisting": "不能邀请已存在此帐户的使用者，已从邀请清单移除",
     "changePasswordSuccess": "密码变更成功",
     "editNameSuccess": "编辑名称成功",
     "changeStatusSuccess": "变更状态成功",
