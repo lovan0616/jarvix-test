@@ -146,7 +146,7 @@ export default {
       let min = this.dataset.range[0]
       let max = this.dataset.range[1]
       let dataLength = this.dataset.data.length
-      let interval = this.roundNumber(this.floatSub(max, min) / dataLength, 4)
+      let interval = this.floatSub(max, min) / dataLength
       let chartData = this.dataset.data.map((element, index) => {
         return [
           this.floatAdd(min, interval * index), this.floatAdd(min, interval * (index + 1)), element
