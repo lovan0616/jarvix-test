@@ -50,10 +50,9 @@ import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { getDrillDownTool } from '@/components/display/common/addons'
 import {
-  colorDefault,
   colorOnly1,
   colorOnly2,
-  color3,
+  color5,
   color12,
   gridDefault,
   xAxisDefault,
@@ -194,11 +193,9 @@ export default {
         case 2:
           return colorOnly2
         case 3:
-          return color3
         case 4:
         case 5:
-        case 6:
-          return colorDefault
+          return color5
         default:
           return color12
       }
