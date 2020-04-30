@@ -55,8 +55,8 @@
           >{{ rule }}</span>
         </div> -->
         <div class="hint-info-block">
-          <span class="hint-title"><svg-icon icon-class="lamp"></svg-icon> {{ $t('feature.hint') }}:</span>
-          {{ $t('feature.chooseOptionHint') }}
+          <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"></svg-icon> {{ $t('feature.hint') }}:</span>{{ $t('feature.chooseOptionHint') }}</div>
+          <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"></svg-icon> {{ $t('feature.hint') }}:</span>{{ $t('feature.maxColumn', {number: 3}) }}</div>
         </div>
         <div class="setting">
           <div class="rule">{{ $t('feature.value') }}: <span class="token value"
@@ -350,6 +350,10 @@ export default {
     font-size: 14px;
     line-height: 1;
     margin-bottom: 12px;
+
+    .hint-info:not(:last-child) {
+      margin-bottom: 8px;
+    }
 
     .hint-title {
       color: #FFDF6F;

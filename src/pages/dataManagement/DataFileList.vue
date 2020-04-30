@@ -33,6 +33,7 @@
             <svg-icon icon-class="feature" class="icon"></svg-icon>{{ $t('button.featureManagement') }}
           </button>
           <button class="btn-m btn-secondary btn-has-icon"
+            v-if="showJoinTable === 'true'"
             @click="openEditJoinTableDialog"
             :disabled="!canEditJoinTable()"
           >
@@ -162,12 +163,14 @@ export default {
       showEditFeatureDialog: false,
       intervalFunction: null,
       checkDataFrameIntervalFunction: null,
-      isLoading: false
+      isLoading: false,
+      showJoinTable: localStorage.getItem('showJoinTable')
     }
   },
   mounted () {
     this.fetchData()
     this.checkDataSourceStatus()
+    this.checkJoinTable()
   },
   beforeDestroy () {
     if (this.intervalFunction) {
@@ -205,6 +208,11 @@ export default {
     }
   },
   methods: {
+    checkJoinTable () {
+      if (!this.showJoinTable) {
+        localStorage.setItem('showJoinTable', false)
+      }
+    },
     fetchData () {
       this.isLoading = true
       return this.updateDataTable().finally(() => {
