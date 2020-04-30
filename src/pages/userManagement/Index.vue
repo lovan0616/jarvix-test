@@ -1,9 +1,6 @@
 <template>
   <div class="user-management">
     <div class="page-title-row">
-      <div class="bread-crumb">
-        {{ $t('sideNav.accountManagement') }}
-      </div>
       <h1 class="title">{{ $t('sideNav.accountUserManagement') }}</h1>
     </div>
     <div class="table-board">
@@ -495,7 +492,7 @@ export default {
     margin-bottom: 16px;
 
     .title {
-      margin-top: .4rem;
+      margin: 0;
       font-size: 24px;
       line-height: 32px;
     }

@@ -1,6 +1,7 @@
 <template>
   <div class="group-management">
     <div class="page-title-row">
+      <h1 class="title">{{currentStageName}}</h1>
       <div class="bread-crumb">
         <span v-if="currentRouteName() === currentStageName">{{currentRouteName()}}</span>
         <template v-else>
@@ -14,7 +15,6 @@
           <span class="divider">></span>{{currentStageName}}
         </template>
       </div>
-      <h1 class="title">{{currentStageName}}</h1>
     </div>
     <transition name="fade" mode="out-in">
       <component
@@ -105,7 +105,7 @@ export default {
     margin-bottom: 16px;
 
     .title {
-      margin-top: .4rem;
+      margin-top: 0;
       font-size: 24px;
       line-height: 32px;
     }
