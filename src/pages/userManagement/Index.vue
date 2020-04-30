@@ -212,9 +212,7 @@ export default {
     this.getUserList().then(() => {
       this.getSelfInfo()
     })
-    this.getAccountRoleList().then(() => {
-      this.accountViewerRoleId = this.roleOptions.find(role => role.name === this.getZhRoleName('account_viewer')).value
-    })
+    this.getAccountRoleList()
   },
   methods: {
     getSelfInfo () {
@@ -301,6 +299,7 @@ export default {
     getAccountRoleList () {
       return getAccountRoles(this.currentAccountId)
         .then(response => {
+          this.accountViewerRoleId = response[response.length - 1].id
           this.roleOptions = []
           this.roleOptions = response
             .map(role => {
