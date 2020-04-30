@@ -410,7 +410,7 @@ Vue.mixin({
   filters: {
     convertTimeStamp (timeStamp) {
       if (!timeStamp) return '-'
-      const date = new Date(timeStamp * 1000)
+      const date = new Date(timeStamp)
       const year = date.getFullYear()
       const month = date.getMonth() + 1
       const day = date.getDate()
