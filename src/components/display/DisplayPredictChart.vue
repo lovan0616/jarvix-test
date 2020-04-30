@@ -51,11 +51,10 @@
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import {
   getDrillDownTool,
-  colorDefault,
   colorOnly1,
   colorOnly2,
-  color3,
-  color10,
+  color5,
+  color12,
   xAxisDefault,
   yAxisDefault
 } from './common/addons'
@@ -206,11 +205,11 @@ export default {
         case 3:
           return colorOnly2
         case 4:
-          return color3
+        case 5:
         case 6:
-          return colorDefault
+          return color5
         default:
-          return color10
+          return color12
       }
     },
     appQuestion () {

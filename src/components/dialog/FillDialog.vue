@@ -1,5 +1,5 @@
 <template>
-  <div @click="closeDialog" class="full-create-dialog">
+  <div class="full-create-dialog">
     <h2>{{ $t('editing.addUser') }}</h2>
     <div @click.stop class="full-create-dialog-box">
         <slot></slot>
