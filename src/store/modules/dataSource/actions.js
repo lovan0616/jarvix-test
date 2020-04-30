@@ -22,7 +22,9 @@ export default {
         if (res.some(element => element.id === data)) {
           dispatch('changeDataSourceById', data)
         } else {
-          dispatch('changeDataSourceById', res[0].id)
+          const dataSourceId = res.length ? res[0].id : null
+          dispatch('changeDataSourceById', dataSourceId)
+          if (!res.length) dispatch('handleEmptyDataSource')
           router.push('/')
 
           Message({
@@ -53,7 +55,7 @@ export default {
     }
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
-
+    if (!dataSourceId) return Promise.resolve(state)
     return co(function* () {
       yield dispatch('getHistoryQuestionList')
       yield dispatch('getDataSourceColumnInfo')
@@ -63,6 +65,7 @@ export default {
   },
   handleEmptyDataSource ({ dispatch, commit }) {
     commit('chatBot/clearConversation', null, {root: true})
+    commit('chatBot/updateAnalyzeStatus', false, {root: true})
     dispatch('clearAllFilter')
     commit('clearCurrentQuestionId')
     commit('chatBot/updateIsUseAlgorithm', false, {root: true})
@@ -76,11 +79,13 @@ export default {
     return getDataFrameData(id, page)
   },
   getDataSourceColumnInfo ({ commit, state }) {
+    if (!state.dataSourceId) return
     return getDataSourceColumnInfoById(state.dataSourceId).then(response => {
       commit('setDataSourceColumnInfoList', response)
     })
   },
   getDataSourceDataValue ({ commit, state }) {
+    if (!state.dataSourceId) return
     return getDataSourceDataValueById(state.dataSourceId).then(response => {
       commit('setDataSourceDataValueList', response)
     })
@@ -98,9 +103,9 @@ export default {
         question: state.appQuestion,
         stamp: new Date().getTime(),
         dataSourceId: String(state.dataSourceId),
-        action: actionTag,
+        action: actionTag
         // 暫時用來判定使用者是否在當前的群組問問題
-        groupId: rootGetters['userManagement/getCurrentGroupId']
+        // groupId: rootGetters['userManagement/getCurrentGroupId']
       }
     })
   },

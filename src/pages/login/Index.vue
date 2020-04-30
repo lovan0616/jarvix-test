@@ -64,7 +64,7 @@ export default {
             .then(res => {
               localStorage.setItem('token', res.accessToken)
               // 取得前一次停留或拜訪的頁面
-              const currentPagePath = this.$store.state.setting.currentPagePath
+              const currentRoute = this.$store.state.setting.currentRoute
               const dataSourceId = this.$store.state.dataSource.dataSourceId
               // 用戶若因 token 失效需重新登入，使用先前已選擇的 id 取得相關資料
               if (dataSourceId) {
@@ -77,17 +77,22 @@ export default {
                 groupList: res.groupList,
                 groupPermission: res.groupPermission
               })
+
               const currentGroupId = this.$store.getters['userManagement/getCurrentGroupId']
-              if (currentGroupId) {
-                this.$store.dispatch('dataSource/getDataSourceList')
-              } else {
+              if (!currentGroupId) {
                 this.$store.commit('dataSource/setDataSourceList', [])
+                return this.$router.push('/')
               }
+
+              this.$store.dispatch('dataSource/getDataSourceList')
+
               // 用戶若因 token 失效需重新登入，登入後導回原頁面
-              if (currentPagePath) {
-                return this.$router.push(currentPagePath)
+              if (currentRoute) {
+                const {name, query, params} = currentRoute
+                return this.$router.push({name, query, params})
+              } else {
+                return this.$router.push('/')
               }
-              this.$router.push('/')
             }).catch(() => {
               this.isSubmit = false
             })
