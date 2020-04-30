@@ -99,6 +99,7 @@ export default {
 
       sankeyOptions.series[0].data = this.dataList
       sankeyOptions.series[0].links = this.linkList
+      sankeyOptions.tooltip.trigger = 'item'
       sankeyOptions.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.series[0].links.sort((a, b) => {
           return a.source > b.source ? 1 : -1
