@@ -15,14 +15,14 @@
             name="userName"
             type="text"
             v-model="userInfo.username"
-            v-validate="'required'"
+            v-validate="`required|max:${max}|`"
           />
           <input-block class="signup-input-block"
             :label="$t('editing.setLoginPassword')"
             name="userPassword"
             type="password"
             v-model="userInfo.password"
-            v-validate="'required|min:8|requireOneNumeric'"
+            v-validate="`required|min:8|max:${max}|requireOneNumeric`"
             ref="confirmPassword"
           />
           <input-block class="signup-input-block"
@@ -30,7 +30,7 @@
             name="verifyPassword"
             type="password"
             v-model="userInfo.verifyPassword"
-            v-validate="'required|min:8|requireOneNumeric|confirmed:confirmPassword'"
+            v-validate="`required|min:8|max:${max}|requireOneNumeric|confirmed:confirmPassword`"
           />
         </div>
         <button
@@ -113,6 +113,11 @@ export default {
           })
           .catch(() => { this.isProcessing = false })
       })
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }
