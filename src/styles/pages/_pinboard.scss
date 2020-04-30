@@ -131,6 +131,8 @@
   .pinboard-name {
     flex: 1;
     font-size: 18px;
+    padding-right: 10px;
+    @include text-hidden(2)
   }
 
   .pinboard-action-block {

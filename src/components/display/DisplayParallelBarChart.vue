@@ -43,11 +43,10 @@ import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { getDrillDownTool } from '@/components/display/common/addons'
 import {
-  parallelColorDefault,
   parallelColorOnly1,
   parallelColorOnly2,
-  parallelColor3,
-  parallelColor10,
+  color5,
+  color12,
   gridDefault,
   yAxisParallel,
   yAxisDefault,
@@ -181,13 +180,11 @@ export default {
         case 2:
           return parallelColorOnly2
         case 3:
-          return parallelColor3
         case 4:
         case 5:
-        case 6:
-          return parallelColorDefault
+          return color5
         default:
-          return parallelColor10
+          return color12
       }
     },
     appQuestion () {

@@ -17,7 +17,7 @@
           <button class="btn btn-secondary btn-has-icon"
             @click="showEditDialog"
           >
-            <svg-icon icon-class="add-feature" class="icon"></svg-icon>{{ $t('button.addFeature') }}
+            <svg-icon icon-class="add-feature" class="icon"></svg-icon>{{ $t('button.addColumn') }}
           </button>
         </div>
         <div class="data-table feature-list">

@@ -51,7 +51,7 @@
         v-else
         v-for="(data, index) in dataList"
         :key="index"
-        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': data['state'] === 'Process' || data['state'] === 'PROCESSING' || data['type'] === 'PROCESS'}"
+        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': isInProcess(data)}"
       >
         <div class="data-table-cell checkbox"
           v-if="hasCheckbox"
@@ -83,7 +83,7 @@
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
             :key="action.name"
-            :disabled="isProcessing || data['type'] === 'PROCESS' || data['state'] === 'Process' || data['state'] === 'PROCESSING'"
+            :disabled="isProcessing || isInProcess(data) || (isFail(data) && action.value !== 'delete')"
             @click="doAction(action.value, data)"
           >
             <dropdown-select
@@ -283,7 +283,7 @@ export default {
       }
     },
     doAction (actionName, data) {
-      if (!actionName || this.isProcessing || data['state'] === 'Process' || data['type'] === 'PROCESS' || data['state'] === 'PROCESSING') return false
+      if (!actionName || this.isProcessing || this.isInProcess(data) || (this.isFail(data) && actionName !== 'delete')) return false
       this.$emit(actionName, data)
     },
     /**
@@ -314,7 +314,13 @@ export default {
       }
     },
     showActionDropdown (subAction, data) {
-      return subAction && !this.isProcessing && data['state'] !== 'Process' && data['type'] !== 'PROCESS' && data['state'] !== 'PROCESSING'
+      return subAction && !this.isProcessing && !this.isInProcess(data) && !this.isFail(data)
+    },
+    isInProcess (data) {
+      return data['state'] === 'Process' || data['state'] === 'PROCESSING'
+    },
+    isFail (data) {
+      return data['state'] === 'Disable' || data['type'] === 'DISABLE' || data['state'] === 'Fail' || data['type'] === 'FAIL'
     }
   },
   computed: {
@@ -387,6 +393,10 @@ export default {
   .link-dropdown {
     position: relative;
     cursor: pointer;
+
+    &[disabled] {
+      cursor: not-allowed;
+    }
 
     &:hover {
       .dropdown {

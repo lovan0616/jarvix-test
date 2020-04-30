@@ -17,7 +17,7 @@
 
 <script>
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { color12, getDrillDownTool } from './common/addons'
+import { colorOnly1, colorOnly2, color5, color12, getDrillDownTool } from './common/addons'
 
 export default {
   name: 'DisplayPieChart',
@@ -111,7 +111,18 @@ export default {
       return config
     },
     colorList () {
-      return color12
+      switch (this.dataset.data.length) {
+        case 1:
+          return colorOnly1
+        case 2:
+          return colorOnly2
+        case 3:
+        case 4:
+        case 5:
+          return color5
+        default:
+          return color12
+      }
     },
     appQuestion () {
       return this.$store.state.dataSource.appQuestion

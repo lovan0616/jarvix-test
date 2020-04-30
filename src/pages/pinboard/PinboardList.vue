@@ -34,7 +34,13 @@
       @confirmBtn="addCategory"
       :showBoth="true"
     >
-      <input v-model="newBoardName" type="text" class="input pinboard-name-input" :placeholder="$t('editing.inputCategoryName')">
+      <input-verify
+        v-model="newBoardName"
+        type="text"
+        :placeholder="$t('editing.inputCategoryName')"
+        name="newBoardName"
+        v-validate="`required|max:${max}`"
+      ></input-verify>
     </writing-dialog>
 
     <writing-dialog
@@ -45,7 +51,12 @@
       @confirmBtn="confirmEdit"
       :showBoth="true"
     >
-      <input type="text" class="input pinboard-name-input" v-model="tempEditInfo.name">
+      <input-verify
+        v-model="tempEditInfo.name"
+        type="text"
+        name="tempEditInfoName"
+        v-validate="`required|max:${max}`"
+      ></input-verify>
     </writing-dialog>
     <decide-dialog
       v-if="isShowDelete"
@@ -72,15 +83,18 @@ import SinglePinboard from './components/SinglePinboard'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import InputVerify from '@/components/InputVerify'
 import { Message } from 'element-ui'
 
 export default {
   name: 'PagePinboardList',
+  inject: ['$validator'],
   components: {
     DecideDialog,
     WritingDialog,
     SinglePinboard,
-    EmptyInfoBlock
+    EmptyInfoBlock,
+    InputVerify
   },
   data () {
     return {
@@ -113,9 +127,14 @@ export default {
       })
     },
     addCategory () {
-      this.$store.dispatch('pinboard/createPinboard', this.newBoardName).then(response => {
-        this.getPinboardInfo()
-        this.isShowAdd = false
+      this.$validator.validateAll().then(isValidate => {
+        if (!isValidate) return
+        this.$store.dispatch('pinboard/createPinboard', this.newBoardName)
+          .then(response => {
+            this.getPinboardInfo()
+            this.isShowAdd = false
+          })
+          .catch(() => {})
       })
     },
     insertBoardData (boardInfo) {
@@ -135,8 +154,13 @@ export default {
       this.shareLink = `${window.location.origin}/pinboard/${boardInfo.id}`
     },
     confirmEdit () {
-      this.$store.dispatch('pinboard/updatePinboardName', this.tempEditInfo).then(() => {
-        this.isShowEdit = false
+      this.$validator.validateAll().then(isValidate => {
+        if (!isValidate) return
+        this.$store.dispatch('pinboard/updatePinboardName', this.tempEditInfo)
+          .then(() => {
+            this.isShowEdit = false
+          })
+          .catch(() => {})
       })
     },
     confirmDelete () {
@@ -177,6 +201,9 @@ export default {
     }
   },
   computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
+    },
     pinboardList () {
       return this.$store.state.pinboard.pinboardList
     }

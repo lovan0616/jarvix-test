@@ -29,7 +29,6 @@
   </div>
 </template>
 <script>
-import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 import { getDrillDownTool } from '@/components/display/common/addons'
 
@@ -47,7 +46,19 @@ let histogramChartConfig = {
   chartData: {
     symbolSize: 8,
     itemStyle: {
-      color: chartVariable['lightestChartColor']
+      color: {
+        type: 'linear',
+        x: 0,
+        y: 0,
+        x2: 0,
+        y2: 1,
+        colorStops: [{
+          offset: 0, color: '#4CE2F0'
+        }, {
+          offset: 1, color: '#438AF8'
+        }],
+        global: false
+      }
     },
     data: [],
     type: 'custom',
