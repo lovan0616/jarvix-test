@@ -204,14 +204,17 @@ export default {
       closeText: this.$t('editing.close'),
       unableLoginText: this.$t('editing.unableLogin'),
       confirmText: this.$t('editing.confirmActive'),
-      accountText: this.$t('editing.username')
+      accountText: this.$t('editing.username'),
+      accountViewerRoleId: null
     }
   },
   mounted () {
     this.getUserList().then(() => {
       this.getSelfInfo()
     })
-    this.getAccountRoleList()
+    this.getAccountRoleList().then(() => {
+      this.accountViewerRoleId = this.roleOptions.find(role => role.name === this.getZhRoleName('account_viewer')).value
+    })
   },
   methods: {
     getSelfInfo () {
@@ -286,12 +289,10 @@ export default {
         })
     },
     getAccountRoleList () {
-      getAccountRoles(this.currentAccountId)
+      return getAccountRoles(this.currentAccountId)
         .then(response => {
           this.roleOptions = []
           this.roleOptions = response
-            // 後端一起回傳了非 account role，先擋掉
-            .filter(role => role.name.includes('account'))
             .map(role => {
               return {
                 value: role.id,
@@ -437,7 +438,7 @@ export default {
       this.inviteeList.push({
         id: inviteeId++,
         email: '',
-        roleId: 5 // 選項預設為 viewer 權限
+        roleId: this.accountViewerRoleId
       })
     },
     removeInvitee (index) {
