@@ -1,5 +1,5 @@
 <template>
-    <div @click="closeDialog" class="dialog-box">
+    <div class="dialog-box">
         <div @click.stop class="dialog-inner-box">
             <div @click="closeDialog">
                 <svg-icon icon-class="close" class="icon dialog-close"></svg-icon>

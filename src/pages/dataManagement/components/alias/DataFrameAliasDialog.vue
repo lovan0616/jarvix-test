@@ -112,7 +112,7 @@ export default {
           })
           .catch(() => {})
           .finally(() => {
-            this.isLoading = false
+            this.isSaving = false
           })
       })
     },

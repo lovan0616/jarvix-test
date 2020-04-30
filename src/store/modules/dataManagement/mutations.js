@@ -53,7 +53,7 @@ export default {
           },
           {
             value: null,
-            newValue: '',
+            newValue: null,
             type: 'ERROR_DEFAULT_VALUE',
             active: true
           }
