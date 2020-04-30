@@ -204,7 +204,8 @@ export default {
       closeText: this.$t('editing.close'),
       unableLoginText: this.$t('editing.unableLogin'),
       confirmText: this.$t('editing.confirmActive'),
-      accountText: this.$t('editing.username')
+      accountText: this.$t('editing.username'),
+      accountViewerRoleId: null
     }
   },
   mounted () {
@@ -241,6 +242,18 @@ export default {
     createUsers () {
       this.$validator.validateAll().then(result => {
         if (!result) return
+
+        let existingUsers = this.checkExistingUsers()
+        if (existingUsers.size > 0) {
+          const html = [...existingUsers].join(',<br>')
+          Message({
+            message: html + ',<br>' + this.$t('message.userAlreadyExisting'),
+            dangerouslyUseHTMLString: true,
+            type: 'warning',
+            duration: 5 * 1000
+          })
+          return
+        }
         if (this.hasRepetitiveInvitee) {
           Message({
             message: this.$t('message.userInviteRepetitive'),
@@ -270,9 +283,7 @@ export default {
               duration: 3 * 1000
             })
           })
-          .catch(error => {
-            console.log(error)
-          })
+          .catch(() => {})
       })
     },
     getUserList () {
@@ -286,12 +297,11 @@ export default {
         })
     },
     getAccountRoleList () {
-      getAccountRoles(this.currentAccountId)
+      return getAccountRoles(this.currentAccountId)
         .then(response => {
+          this.accountViewerRoleId = response[response.length - 1].id
           this.roleOptions = []
           this.roleOptions = response
-            // 後端一起回傳了非 account role，先擋掉
-            .filter(role => role.name.includes('account'))
             .map(role => {
               return {
                 value: role.id,
@@ -437,7 +447,7 @@ export default {
       this.inviteeList.push({
         id: inviteeId++,
         email: '',
-        roleId: 5 // 選項預設為 viewer 權限
+        roleId: this.accountViewerRoleId
       })
     },
     removeInvitee (index) {
@@ -461,6 +471,19 @@ export default {
     },
     getZhRoleName (accountRole) {
       return this.$t(`userManagement.${this.toCamelCase(accountRole)}`)
+    },
+    checkExistingUsers () {
+      let existingUsers = new Set()
+
+      for (let i = 0; i < this.inviteeList.length; i++) {
+        for (let j = 0; j < this.userData.length; j++) {
+          if (this.inviteeList[i].email === this.userData[j].email) {
+            existingUsers.add(this.inviteeList[i].email)
+            break
+          }
+        }
+      }
+      return existingUsers
     }
   },
   computed: {

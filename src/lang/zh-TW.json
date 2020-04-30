@@ -52,6 +52,7 @@
     "userCreateSuccess": "建立使用者成功",
     "userInviteSuccess": "邀請使用者成功",
     "userInviteRepetitive": "重複邀請相同email",
+    "userAlreadyExisting": "已存在此帳戶",
     "changePasswordSuccess": "密碼變更成功",
     "editNameSuccess": "編輯名稱成功",
     "changeStatusSuccess": "變更狀態成功",
