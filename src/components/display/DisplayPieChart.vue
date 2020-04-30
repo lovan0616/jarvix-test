@@ -17,7 +17,7 @@
 
 <script>
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { color12, getDrillDownTool } from './common/addons'
+import { colorOnly1, colorOnly2, color5, color12, getDrillDownTool } from './common/addons'
 
 export default {
   name: 'DisplayPieChart',
@@ -47,6 +47,9 @@ export default {
       showPagination: true
     }
   },
+  mounted () {
+    this.exportCSVFile(this.$el, this.appQuestion, this)
+  },
   computed: {
     chartStyle () {
       return {
@@ -57,7 +60,7 @@ export default {
     options () {
       let config = {
         ...JSON.parse(JSON.stringify(commonChartOptions())),
-        ...getDrillDownTool(this.title),
+        ...getDrillDownTool(this.$route.name, this.title),
         dataset: {
           source: this.tobeDataset(this.dataset)
         },
@@ -88,8 +91,8 @@ export default {
           return index === 0 ? acc : acc + cur[1]
         }, 0)
 
-        let table = `<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">${this.$t('chart.export')}</button></div>` +
-          '<table style="margin-top: 16px;width:100%;padding: 0 16px;"><tbody><tr style="background-color:#2B4D51">' +
+        let table = `<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">${this.$t('chart.export')}</button></div>` +
+          '<table style="width:100%;padding: 0 16px;margin-top: 48px;"><tbody><tr style="background-color:#2B4D51">' +
           '<td>' + dataset[0][0] + '</td>' +
           '<td>' + dataset[0][1] + '</td>' +
           '<td>' + 'percentage(%)' + '</td>' +
@@ -105,15 +108,21 @@ export default {
         return table
       }
 
-      // export data
-      this.$nextTick(() => {
-        this.exportCSVFile(this.$el, this.appQuestion, config.dataset.source)
-      })
-
       return config
     },
     colorList () {
-      return color12
+      switch (this.dataset.data.length) {
+        case 1:
+          return colorOnly1
+        case 2:
+          return colorOnly2
+        case 3:
+        case 4:
+        case 5:
+          return color5
+        default:
+          return color12
+      }
     },
     appQuestion () {
       return this.$store.state.dataSource.appQuestion

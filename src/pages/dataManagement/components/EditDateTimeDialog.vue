@@ -102,6 +102,7 @@ export default {
       getDateTimeColumns(dataFrameId).then(response => {
         this.columnList = response
         this.selectedColumn = response.find(column => column.isDefault)
+      }).finally(() => {
         this.isLoading = false
       })
     },

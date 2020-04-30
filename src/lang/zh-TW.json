@@ -1,18 +1,37 @@
 {
   "lang": "繁中",
   "nav": {
-    "index": "首頁",
+    "index": "智能分析",
     "pinboard": "個人釘板",
     "dataManagement": "資料管理",
+    "groupPlaceholder": "專案",
     "languagePlaceholder": "語系",
-    "setting": "設定"
+    "setting": "設定",
+    "projectManagement": "專案管理"
+  },
+  "sideNav": {
+    "accountManagement": "帳戶管理",
+    "accountInformation": "帳戶資訊",
+    "accountUserManagement": "使用者管理",
+    "accountGroupManagement": "專案管理",
+    "accountSetting": "帳號設定",
+    "functionDescription": "功能說明",
+    "groupUserManagement": "成員管理",
+    "groupUserList": "成員列表",
+    "groupCreateUser": "加入新成員",
+    "dataSourceManagement": "資料源管理",
+    "dataSourceList": "資料源列表",
+    "dataFileManagement": "資料表管理",
+    "dataFileList": "資料表列表"
   },
   "message": {
-    "joinTableBuilt": "資料表關聯建立完成",
-    "remindAdjustMainDate": "資料表具有多項日期欄位，您可進行主要日期欄位調整。",
-    "remindSameDataTypeColumns": "兩個欄位的資料型態必須相同。",
+    "joinTableBuilding": "資料表建置中，建置完成即可使用",
+    "remindAdjustMainDate": "此表可能有多個日期欄位，您可用資料表的”日期欄位調整“功能進行設定。",
+    "remindSameDataTypeColumns": "資料欄位的型態須相同",
+    "remindNotAllowSelfJoin": "不能選擇相同資料表",
     "builded": "資料源建立完成",
     "noData": "目前沒有資料",
+    "noMember": "目前沒有成員",
     "noResult": "目前暫無相關資訊",
     "formColumnEmpty": "欄位不得空白",
     "formMailWrong": "信箱格式錯誤",
@@ -25,9 +44,15 @@
     "systemIsError": "系統發生異常",
     "saveSuccess": "儲存成功",
     "correlationDeleteSuccess": "關聯已刪除",
+    "groupCreateSuccess": "專案建立成功",
+    "memberCreateSuccess": "新成員建立成功",
+    "groupDeleteSuccess": "專案已成功刪除",
+    "groupInfoUpdatedSuccess": "專案資訊已成功更新",
     "signUpSuccessPleaseLogin": "註冊成功，請登入帳號",
     "userCreateSuccess": "建立使用者成功",
     "userInviteSuccess": "邀請使用者成功",
+    "userInviteRepetitive": "重複邀請相同email",
+    "userAlreadyExisting": "已存在此帳戶",
     "changePasswordSuccess": "密碼變更成功",
     "editNameSuccess": "編輯名稱成功",
     "changeStatusSuccess": "變更狀態成功",
@@ -40,7 +65,10 @@
     "dataSourceNotExist": "資料源不存在",
     "connectionFail": "欄位資料有誤，請重新檢查",
     "columnSetNameEmpty": "欄位組合名稱未填寫",
-    "columnSetChosenEmpty": "尚未選擇任何欄位"
+    "columnSetChosenEmpty": "尚未選擇任何欄位",
+    "memberDeleteSuccess": "成員刪除成功",
+    "etlSuccess": "資料預處理成功，開始建置資料表",
+    "etlSettingTempSave": "設定已經暫存"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -66,7 +94,7 @@
     "remoteConnection": "連接資料庫建置",
     "remoteConnectionDescription": "直接讀取您的資料庫資料<br>並進行資料複製和建置",
     "confirmDeleteForeign": "確認刪除此關聯嗎？",
-    "choiceDataSource": "請選擇資料源",
+    "chooseDataSource": "請選擇資料源",
     "createBoard": "建立新版",
     "questionPlaceHolder": "請輸入問題，例如：價格和成本的相關性",
     "askPlaceHolder": "請輸入問句後按Enter送出",
@@ -102,7 +130,7 @@
     "uploadSuccess":"上傳成功",
     "uploadFailure":"上傳失敗",
     "uploadFinish":"上傳完成",
-    "uploadStatus":"總共{total}項資料表，{success}項上傳成功，{pedding}項未上傳",
+    "uploadStatus":"總共{total}項資料表，{success}項上傳成功，{pending}項未上傳",
     "dataSourceInfo":"資料類型：{type} 資料源名稱：{dataSourceName}",
     "uploaded":"已上傳",
     "unuploaded":"未上傳",
@@ -119,11 +147,13 @@
     "columnCorrelation": "欄位關聯",
     "emptyForeign": "尚未建立任何資料表關聯",
     "emptyDateTime": "資料表無日期欄位",
+    "emptyDataFrameAlias": "尚未建立任何資料表別名",
     "selectForeign": "選擇關聯資料表",
     "selectColumn": "選擇欄位",
     "processStep1": "填寫資料源名稱",
-    "processStep2": "上傳資料/連接資料庫",
-    "processStep3": "開始新增",
+    "processStep2": "上傳檔案",
+    "processStep3": "選擇欄位",
+    "processStep4": "資料清理設定",
     "connectDB": "連接資料庫",
     "connectStep2": "選擇資料",
     "connectStep3": "欄位設定",
@@ -156,16 +186,16 @@
     "emptyResultDescription": "您所輸入的問題，無法找到相關聯的數據進行分析，請重新輸入語句搜尋，或使用系統建議語句",
     "preview": "預覽",
     "result": "結果",
-    "relatedQuesion": "關聯問題",
+    "relatedQuestion": "關聯問題",
     "comparisonCategory": "比較類",
     "languageSetting": "語言設定: 繁中",
     "sureLogout": "您確認要登出帳號？",
     "questionFeedback": "問題/建議回饋",
     "functionDescription": "功能說明",
-    "createUser": "建立使用者",
     "addUser": "新增使用者",
     "notYetCreateUser": "尚未建立使用者",
-    "inviteeEmail": "受邀者email",
+    "inviteeEmail": "受邀者 email",
+    "pleaseSelectInviteeEmail": "請選擇受邀者 email",
     "userTitle": "使用者名稱",
     "userAccount": "使用者帳號",
     "setLoginPassword": "設定密碼",
@@ -174,9 +204,22 @@
     "confirmPassword": "確認密碼",
     "pleaseConfirmPassword": "請確認密碼",
     "confirmPasswordAgain": "再次確認密碼",
-    "group": "群組",
+    "group": "專案",
+    "groupOwner": "專案擁有者",
+    "groupMemberAmount": "專案人數",
+    "groupName": "專案名稱",
+    "switchGroup": "切換專案",
+    "groupRolePermission": "專案角色權限",
+    "notYetCreateGroup": "尚未建立專案",
+    "deleteGroup": "刪除專案",
+    "confirmDeleteProjectUserText": "使用者移除後，此使用者將無法使用此專案任何功能，您確認要繼續移除此使用者？",
+    "confirmDeleteBelowGroupOrNot": "您確認要刪除以下專案嗎?",
+    "confirmEnterGroupUserManagement": "系統將導頁至以下專案的“專案成員管理”進行設定",
+    "accountOwner": "帳戶擁有者",
+    "memberManagement": "成員管理",
     "activeStatus": "啟用狀態",
     "role": "角色",
+    "setRole": "設定角色",
     "active": "開啟",
     "close": "關閉",
     "originalPassword": "原密碼",
@@ -217,6 +260,7 @@
     "loading": "資料讀取中",
     "databaseType": "資料庫類型",
     "currentLoadedDataFrame": "目前讀取的資料表",
+    "dataFrameContent": "資料表內容",
     "currentDisplayDataFrame": "目前顯示資料表",
     "dataType": "資料類型",
     "chooseConnection": "選擇連線",
@@ -228,7 +272,51 @@
     "buildFail": "建置失敗",
     "connectionName": "連線名稱",
     "admin": "系統管理員",
-    "general": "一般使用者"
+    "general": "一般使用者",
+    "dataFrameAliasSetting": "資料表別名設定",
+    "dataFrameAliasInputPlaceholder": "請輸入別名",
+    "belongToDataFrame": "隸屬資料表",
+    "chooseDataFrame": "選擇資料表",
+    "chooseDataColumn": "選擇資料欄位",
+    "numericOnly": "請輸入數值",
+    "isRequired": "必填",
+    "resultOverSizeMessage": "資料量過大時，資料會經過取樣"
+  },
+  "etl": {
+    "dataFrameList": "資料表列表",
+    "columnList": "欄位列表",
+    "dataType": "資料型別",
+    "emptyStringReplaceValue": "空字串替代值",
+    "nullReplaceValue": "Null替代值",
+    "errorReplaceValue": "錯誤資料替代值",
+    "customDataManagement": "自訂資料處理",
+    "columnValue": "欄位值",
+    "replaceValue": "替代值",
+    "replaceValuePlaceholder": "請輸入替代值",
+    "etlSetting": "資料清洗設定",
+    "remarkToSave": "異動內容須保存"
+  },
+  "feature": {
+    "value": "數值",
+    "columnValue": "欄位值",
+    "plus": "加法",
+    "minus": "減法",
+    "multiple": "乘法",
+    "divide": "除法",
+    "parentheses": "小括號",
+    "bracket": "中括號",
+    "braces": "大括號",
+    "hint": "提示",
+    "forbiddenRule": ["禁用全型文字"],
+    "chooseOptionHint": "請從下方點選您所需要的元素組成欄位，元素可拖曳替換位置",
+    "maxColumn": "目前最多支援{number}個資料欄位組合",
+    "inputPlaceholder": "範例：利潤 = 收入 - 成本",
+    "featureManagement": "自定義欄位管理",
+    "customFeature": "自訂特徵欄位",
+    "recommendFeature": "系統推薦特徵",
+    "createFeature": "新增自定義欄位",
+    "featureColumnName": "自定義欄位名稱",
+    "featureSetting": "運算式設定"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什麼樣的資料？",
@@ -239,65 +327,103 @@
     "similarQuestionDescription": "很抱歉，系統沒有找到對應問題的欄位或資料，但有相關詞意的欄位，請參考以下項目："
   },
   "description": {
-    "basicIntroduce": "基本介紹",
-    "questionAnalyzeUse": "問題分析操作",
-    "personalPinboard": "個人釘板使用",
-    "interfaceDescription": "介面說明",
-    "hide": "隱藏",
-    "guidingRow": "導引列",
-    "guidingRowIntroduce": "導覽列介紹",
-    "mainLayout": "主畫面",
-    "settingFunctionMenu": "設定功能選單",
-    "accountFunctionMenu": "帳號功能選單",
-    "indexPageFunctionIntroduce": "首頁功能介紹",
-    "checkoutDataSheetDetail": "查看資料表的<br>詳細內容",
-    "systemLogQuestion": "系統紀錄的常<br>用問題",
-    "howAddData": "如何新增資料源",
-    "enterDataManage": "進入資料管理",
-    "howAddDataSheet": "如何新增資料表",
-    "pickupData": "點選資料源",
-    "howEditDataSheet": "如何資料表欄位別名編輯",
-    "clickEditColumn": "點擊編輯欄位",
-    "editAlias": "編輯別名",
-    "confirmEdit": "確認修改",
-    "completeBuild": "完成建置",
-    "howConnectDataSheet": "如何將資料表欄位進行關聯設定",
-    "clickDataSheetConnect": "點擊資料表關聯",
-    "addDataSheetConnect": "新增資料表關聯",
-    "slectDataSheet": "選擇資料表",
-    "andConnectColumn": "和關聯欄位",
-    "storeSetting": "儲存設定",
-    "howToAsk": "如何詢問問題？",
-    "howToSearchAssist": "如何尋找問句協助？",
-    "analyzeResultDescription": "分析結果說明",
-    "howToDeepen": "如何深入挖掘問題？",
-    "questionClick": "點擊系統推薦的問句",
-    "questionInput": "問題文字輸入",
-    "inputKeyWord": "輸入$和關鍵字就會開啟<br>問句提示",
-    "questionHint": "問句提示選單",
-    "clickOpenQuestion": "點擊開啟問句說明",
-    "questionDescriptionContent": "問句說明內容",
-    "systemResponseResult": "系統回覆問題的<br>分析結果",
-    "questionAnalyzeDetail": "問題分析的詳<br>細資訊",
-    "systemRecommendQuestion": "系統推薦的相關<br>問題",
-    "systemTargetFace": "系統歸納出針對<br>結果可以深入探<br>究的面向(因不<br>同分析結果而有<br>差異)",
-    "activateHint": "1.啟用問句提示",
-    "openQuestionDescription": "1.開啟問句說明",
-    "howToAddPinboard": "如何將分析結果加入釘板？",
-    "howToClassManage": "如何進行釘板分類管理？",
-    "howToShare": "如何將釘板分享給他人？",
-    "clickPinboard": "點擊釘板",
-    "selectPinboardClass": "選擇釘板分類",
-    "pinboardCompleteCancel": "釘板完成，可隨<br>時取消",
-    "enterPersonalPinboard": "進入個人釘板",
-    "enableAddClass": "可新增釘版分類",
-    "classFunctionMenu": "分類功能選單",
-    "clickMenuShare": "點擊選單的分享",
-    "shareLink": "分享連結",
-    "clickSingleClass": "點擊一種分類",
-    "clickShare": "點擊分享",
-    "sharePinboardContent": "1.分享釘板分類中的內容",
-    "shareSinglePinboard": "2.分享單一釘板內容"
+    "basic": {
+      "intro": "基本介紹",
+      "ui": "介面說明",
+      "nav": "導引列",
+      "navIntro": "導覽列介紹",
+      "index": "主畫面",
+      "groupManage": "專案管理",
+      "groupSwitch": "專案切換",
+      "account": "帳號功能選單",
+      "funcDesc": "帳號功能說明",
+      "indexFuncIntro": "首頁功能說明",
+      "checkDataFrameDetail": "查看資料表的詳細內容",
+      "faq": "系統紀錄的常用問題",
+      "hide": "隱藏"
+    },
+    "question": {
+      "analysis": "問題分析操作",
+      "how": "如何問問題？",
+      "recommended": "系統推薦的相關問題",
+      "input": "問題文字輸入",
+      "assistant": "如何啟用問句協助功能？",
+      "info1": "1.透過“問句說明”，了解可使用的詞彙",
+      "info2": "2.透過問句說明，參考“問句範例”",
+      "click": "Step1:<br>點擊開啟<br>問句說明",
+      "vocabulary": "Step2:<br>詞彙總覽",
+      "sample": "Step2:<br>問句範例",
+      "result": "主要分析結果",
+      "resultInfo": "分析結果說明",
+      "basicInfo": "可查看基本資料",
+      "graphicTool": "圖表操作功能",
+      "fetchMore": "點擊可撈取更多資料",
+      "howToDeepen": "如何深入挖掘問題？",
+      "insights": "使用分析後的<br>資料洞察"
+    },
+    "pinboard": {
+      "personal": "個人釘板使用",
+      "how": "如何將分析結果加入釘板？",
+      "clickPinboard": "Step1:<br>點擊釘板",
+      "classification": "Step2:<br>選擇釘板分類",
+      "cancel": "Step3:<br>釘板完成，可隨時取消",
+      "howToClassify": "如何進行釘板分類管理？",
+      "entry": "Step1:<br>進入個人釘板",
+      "addClass": "Step2:<br>可新增釘版分類",
+      "classificationAction": "Step3:<br>分類功能選單",
+      "share": "如何將釘板分享給他人？",
+      "title1": "1.分享釘板分類中的內容",
+      "title2": "2.分享單一釘板內容",
+      "clickShareBtn1": "Step1:<br>點擊選單的分享",
+      "clickShareBtn2": "Step2:<br>點擊分享",
+      "shareLink": "分享連結",
+      "clickClass": "Step1:<br>點擊一種分類"
+    },
+    "data": {
+      "howToAddDataSource": "如何新增資料源？",
+      "howToAddDataFrame": "如何新增資料表？",
+      "howToAddColumnAlias": "如何編輯資料表欄位別名？",
+      "byFile": "1.使用”檔案上傳“方式",
+      "byDB": "2.使用”連接資料庫“取得資料表方式",
+      "entry": "Step1:<br>進入資料管理",
+      "addDataSource": "Step2:<br>新增資料源",
+      "selectByFile": "Step3:<br>選用檔案上傳",
+      "selectByDB": "Step1:<br>選用資料庫連線",
+      "connectionSetting": "Step2:<br>資料庫連線設定",
+      "selectLocalFile": "Step4:<br>選入本機檔案",
+      "uploading": "Step5:<br>上傳檔案",
+      "selectDataFrame": "Step3:<br>選擇需使用的<br>資料表",
+      "selectColumn": "選取需用的資料欄位",
+      "dataCleansing": "資料清理設定",
+      "building": "建置作業將在<br>背景執行",
+      "clickDataSource": "Step1:<br>點選資料源",
+      "addDataFrame": "Step2:<br>新增資料表",
+      "clickEdit": "點擊編輯欄位",
+      "editAlias": "Step3:<br>編輯別名",
+      "confirm": "Step4:<br>確認修改",
+      "finish": "Step5:<br>完成建置"
+    },
+    "account": {
+      "management": "帳戶使用者管理",
+      "howToEnter": "如何進入帳戶使用者管理？",
+      "howToInvite": "如何邀請新使用者加入？",
+      "howToUpdateRole": "如何編輯使用者帳戶角色權限？",
+      "entry": "Step1:<br>進入帳戶管理",
+      "entrySideNav": "Step2:<br>選擇帳戶使用者管理",
+      "clickInvite": "Step1:<br>點擊新增按鈕",
+      "confirmInvite": "Step2:<br>輸入email並送出邀請，受邀者就可收到邀請信",
+      "clickUpdate": "Step1:<br>點擊角色變更",
+      "confirmUpdate": "Step2:<br>開啟角色變更畫面後，即可變更"
+    },
+    "group": {
+      "management": "專案成員管理",
+      "howToEnter": "如何加入新成員？",
+      "howToInvite": "如何邀請新使用者加入？",
+      "entry": "Step1:<br>進入專案成員<br>管理",
+      "selectMember": "Step2:<br>選擇成員列表",
+      "clickInvite": "Step1:<br>點選加入新成員",
+      "confirmInvite": "Step2:<br>填寫使用者email後，點擊確認按鈕即加入"
+    }
   },
   "button": {
     "build": "建置",
@@ -353,7 +479,19 @@
     "download": "資料下載",
     "restrict": "分析條件限制",
     "start": "開始",
-    "copyAndBuild": "複製並建置"
+    "copyAndBuild": "複製並建置",
+    "createGroup": "新建專案",
+    "deleteGroup": "刪除專案",
+    "editGroupName": "編輯專案名稱",
+    "addNewMember": "加入新成員",
+    "editDataFrameAlias": "編輯資料表別名",
+    "buildData": "建置資料",
+    "keepSave": "保存",
+    "chooseFileUpload": "重新選擇檔案",
+    "moveForward": "前往",
+    "addColumn": "新增欄位",
+    "create": "新增",
+    "featureManagement": "自定義欄位"
   },
   "aggregation": {
     "mean": "平均",
@@ -391,10 +529,13 @@
     "categoryTitle": "Category 類型",
     "numericTitle": "Numeric 類型",
     "datavalueTitle": "常見資料",
-    "category": "Category類型的欄位，不具有數量單位。",
-    "numeric": "numeric類型的欄位，具有數量單位。",
+    "category": "Category 類型的欄位，不具有數量單位。",
+    "numeric": "Numeric 類型的欄位，具有數量單位。",
+    "datetime": "Datetime 類型的欄位，資料為日期/時間。",
+    "boolean": "Boolean 類型的欄位，不具有數量單位，資料為0/1。",
+    "unique": "Unique 類型的欄位，資料不會重複。",
     "filter": "時間篩選條件",
-    "value": "value是欄位的資料，不限定數量或其他型態。",
+    "value": "Value 是欄位的資料，不限定數量或其他型態。",
     "column": "欄位",
     "columnValue": "欄位資料",
     "type": "類型",
@@ -402,6 +543,7 @@
     "columnName": "欄位名稱",
     "ask": "問",
     "example": "範例",
+    "exampleDesc": "因 Boolean 和 Unique 類型問句方式與 Category 一致，以下均以 Category 類型舉例。",
     "questionSampleList": [
       {
         "name": "一般問句",
@@ -566,7 +708,7 @@
                 {"text": "平均營收", "type": "numeric"},
                 {"text": "和", "type": ""},
                 {"text": "成本", "type": "numeric"},
-                {"text": "的關係", "type": ""}
+                {"text": "的平均", "type": ""}
               ]
             ]
           },
@@ -834,7 +976,7 @@
             ]
           },
           {
-            "questionText": "value 和 value 的 Numeric 比較",
+            "questionText": "Value 和 Value 的 Numeric 比較",
             "questionExample": [
               [
                 {"text": "上海", "type": "value"},
@@ -849,29 +991,6 @@
                 {"text": "M", "type": "value"},
                 {"text": "的", "type": ""},
                 {"text": "客戶年齡", "type": "numeric"},
-                {"text": "比較", "type": ""}
-              ]
-            ]
-          },
-          {
-            "questionText": "每年 value 和 value 的 Numeric 比較",
-            "questionExample": [
-              [
-                {"text": "每年", "type": "filter"},
-                {"text": "上海", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "北京", "type": "value"},
-                {"text": "的", "type": ""},
-                {"text": "單位成本", "type": "numeric"},
-                {"text": "比較", "type": ""}
-              ],
-              [
-                {"text": "每年", "type": "filter"},
-                {"text": "S11", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "S12", "type": "value"},
-                {"text": "的", "type": ""},
-                {"text": "銷售", "type": "numeric"},
                 {"text": "比較", "type": ""}
               ]
             ]
@@ -968,6 +1087,21 @@
                 {"text": "的預測", "type": ""}
               ]
             ]
+          },
+          {
+            "questionText": "Value 的 Numeric 的預測",
+            "questionExample": [
+              [
+                {"text": "腳踏車", "type": "value"},
+                {"text": "銷售", "type": "numeric"},
+                {"text": "的預測", "type": ""}
+              ],
+              [
+                {"text": "產品A", "type": "value"},
+                {"text": "良率", "type": "numeric"},
+                {"text": "的預測", "type": ""}
+              ]
+            ]
           }
         ]
       },
@@ -1030,7 +1164,7 @@
             ]
           },
           {
-            "questionText": "value 和 value 各佔 Category 的比例",
+            "questionText": "Value 和 Value 各佔 Category 的比例",
             "questionExample": [
               [
                 {"text": "S1", "type": "value"},
@@ -1046,29 +1180,6 @@
                 {"text": "M", "type": "value"},
                 {"text": "各佔", "type": ""},
                 {"text": "顧客", "type": "category"},
-                {"text": "的比例", "type": ""}
-              ]
-            ]
-          },
-          {
-            "questionText": "value 和 value 各佔 Category 的 Numeric 的比例",
-            "questionExample": [
-              [
-                {"text": "S1", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "S2", "type": "value"},
-                {"text": "各佔", "type": ""},
-                {"text": "商店", "type": "category"},
-                {"text": "銷售", "type": "numeric"},
-                {"text": "的比例", "type": ""}
-              ],
-              [
-                {"text": "F", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "M", "type": "value"},
-                {"text": "各佔", "type": ""},
-                {"text": "顧客", "type": "category"},
-                {"text": "數量", "type": "numeric"},
                 {"text": "的比例", "type": ""}
               ]
             ]
@@ -1109,6 +1220,76 @@
                 {"text": "和", "type": ""},
                 {"text": "客戶性別", "type": "category"},
                 {"text": "的關係", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "關聯分析",
+        "questionList": [
+          {
+            "questionText": "什麼和 Numeric 有關",
+            "questionExample": [
+              [
+                {"text": "什麼和", "type": ""},
+                {"text": "良率", "type": "numeric"},
+                {"text": "有關", "type": ""}
+              ],
+              [
+                {"text": "什麼和", "type": ""},
+                {"text": "收入", "type": "numeric"},
+                {"text": "有關", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "什麼和 Category 有關",
+            "questionExample": [
+              [
+                {"text": "什麼和", "type": ""},
+                {"text": "產品促銷", "type": "category"},
+                {"text": "有關", "type": ""}
+              ],
+              [
+                {"text": "什麼和", "type": ""},
+                {"text": "產品種類", "type": "category"},
+                {"text": "有關", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "差異分析",
+        "questionList": [
+          {
+            "questionText": "Value 和 Value 的差異",
+            "questionExample": [
+              [
+                {"text": "台北", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "新竹", "type": "value"},
+                {"text": "的差異", "type": ""}
+              ],
+              [
+                {"text": "產品A", "type": "value"},
+                {"text": "和", "type": ""},
+                {"text": "產品B", "type": "value"},
+                {"text": "的差異", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Value 和其他的差異",
+            "questionExample": [
+              [
+                {"text": "產品A", "type": "value"},
+                {"text": "和其他的差異", "type": ""}
+              ],
+              [
+                {"text": "台北", "type": "value"},
+                {"text": "和其他的差異", "type": ""}
               ]
             ]
           }
@@ -1186,7 +1367,8 @@
     "more": "看更多",
     "source": "來源",
     "target": "目標",
-    "value": "數值"
+    "value": "數值",
+    "feature": "自定義欄位"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",
@@ -1298,11 +1480,37 @@
     "TASKWARN0002": "此條件獲取不到任何資料來進行處理",
     "TASKWARN0003": "計算結果為空",
     "authFail": "權限失效請重新登入",
+    "permissionChanged": "權限已被變更，請重新登入",
     "lackOfSignUpToken": "無註冊權限，請聯繫管理員",
-    "defaultMsg": "系統發生非預期錯誤"
+    "defaultMsg": "系統發生非預期錯誤",
+    "lackOfPermission": "權限不足，請聯繫管理員"
   },
   "resultNote": {
     "groupLimitNote": "此結果為原資料取前 {randomLimit} 筆得來",
     "samplingNote": "此結果為原資料取樣 {randomLimit} 筆計算得來"
+  },
+  "userManagement": {
+    "createUser": "新增使用者",
+    "inviteeEmailPlaceholder": "請輸入受邀者email",
+    "userRoleAuthority": "帳戶角色權限",
+    "accountOwner": "帳戶擁有者",
+    "accountMaintainer": "帳戶管理者",
+    "accountViewer": "一般使用者",
+    "accountRoleDesc": "角色權限說明",
+    "accountOwnerDesc": "無任何使用限制",
+    "accountMaintainerDesc": "擁有帳戶管理權限",
+    "accountViewerDesc": "無法使用帳戶管理相關功能",
+    "updateRole": "角色變更",
+    "confirmDeleteAccountText": "使用者移除後，此使用者將無法使用此帳戶任何功能，您確認要繼續移除此使用者？"
+  },
+  "accountInfo": {
+    "userAmount": "使用者數量",
+    "currentUserAmount": "目前使用者數量",
+    "userAmountLimit": "使用者數量上限",
+    "dataAllowance": "數據容量",
+    "currentDataUsage": "目前數據使用容量",
+    "dataUsageProvided": "數據容量上限",
+    "expireDate": "到期時間",
+    "person": "人"
   }
 }

@@ -23,18 +23,27 @@
   }
 
   .dialog-container {
-    width: 768px;
+    width: 64%;
     margin: 0 auto;
     padding: 60px 32px 0;
   }
 
   .dialog-title {
+    position: relative;
     font-size: 24px;
     line-height: 40px;
     text-align: center;
     letter-spacing: 0.1em;
     color: $theme-text-color;
     margin-bottom: 32px;
+
+    .close-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: #fff;
+      font-size: 14px;
+    }
   }
 
   .dialog-body {
@@ -75,8 +84,6 @@
   z-index: 1000;
 
   .full-create-dialog-box {
-    width: 652px;
-    padding: 36px 176px;
     background: rgba(50, 58, 58, 0.95);
     border-radius: 5px;
     margin-bottom: 16px;

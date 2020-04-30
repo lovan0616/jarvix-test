@@ -50,7 +50,6 @@ export default {
     }
   },
   mounted () {
-    this.$store.commit('updateChatRoomStatus', false)
     this.$store.commit('chatBot/clearConversation')
   },
   methods: {
@@ -64,13 +63,36 @@ export default {
           })
             .then(res => {
               localStorage.setItem('token', res.accessToken)
-              // TODO: 保留使用者因 token 失效重新登入前的頁面資料與狀態
+              // 取得前一次停留或拜訪的頁面
+              const currentRoute = this.$store.state.setting.currentRoute
               const dataSourceId = this.$store.state.dataSource.dataSourceId
               // 用戶若因 token 失效需重新登入，使用先前已選擇的 id 取得相關資料
               if (dataSourceId) {
                 this.$store.dispatch('dataSource/changeDataSourceById', dataSourceId)
               }
-              this.$router.push('/')
+              this.$store.commit('userManagement/setUserInfo', {
+                userName: res.name,
+                accountList: res.accountList,
+                accountPermission: res.accountPermission,
+                groupList: res.groupList,
+                groupPermission: res.groupPermission
+              })
+
+              const currentGroupId = this.$store.getters['userManagement/getCurrentGroupId']
+              if (!currentGroupId) {
+                this.$store.commit('dataSource/setDataSourceList', [])
+                return this.$router.push('/')
+              }
+
+              this.$store.dispatch('dataSource/getDataSourceList')
+
+              // 用戶若因 token 失效需重新登入，登入後導回原頁面
+              if (currentRoute && currentRoute.path) {
+                const {name, query, params} = currentRoute
+                return this.$router.push({name, query, params})
+              } else {
+                return this.$router.push('/')
+              }
             }).catch(() => {
               this.isSubmit = false
             })

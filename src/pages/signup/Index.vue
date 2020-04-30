@@ -15,14 +15,14 @@
             name="userName"
             type="text"
             v-model="userInfo.username"
-            v-validate="'required'"
+            v-validate="`required|max:${max}|`"
           />
           <input-block class="signup-input-block"
             :label="$t('editing.setLoginPassword')"
             name="userPassword"
             type="password"
             v-model="userInfo.password"
-            v-validate="'required|min:8|requireOneNumeric'"
+            v-validate="`required|min:8|max:${max}|requireOneNumeric`"
             ref="confirmPassword"
           />
           <input-block class="signup-input-block"
@@ -30,7 +30,7 @@
             name="verifyPassword"
             type="password"
             v-model="userInfo.verifyPassword"
-            v-validate="'required|min:8|requireOneNumeric|confirmed:confirmPassword'"
+            v-validate="`required|min:8|max:${max}|requireOneNumeric|confirmed:confirmPassword`"
           />
         </div>
         <button
@@ -64,7 +64,8 @@ export default {
         verifyPassword: null,
         accountId: null,
         invitedByUserId: null,
-        groupId: null
+        groupId: null,
+        accountRoleId: null
       },
       isProcessing: false
     }
@@ -90,6 +91,7 @@ export default {
           this.userInfo.accountId = res.accountId
           this.userInfo.invitedByUserId = res.invitedByUserId
           this.userInfo.groupId = res.mailData ? res.mailData.groupId : 1 // 暫定預設 1 為 default group
+          this.userInfo.accountRoleId = res.accountRole
         })
         .catch(() => {
           this.$router.push({name: 'PageLogin'})
@@ -111,6 +113,11 @@ export default {
           })
           .catch(() => { this.isProcessing = false })
       })
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }

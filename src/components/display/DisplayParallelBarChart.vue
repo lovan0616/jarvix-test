@@ -43,11 +43,10 @@ import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { getDrillDownTool } from '@/components/display/common/addons'
 import {
-  parallelColorDefault,
   parallelColorOnly1,
   parallelColorOnly2,
-  parallelColor3,
-  parallelColor10,
+  color5,
+  color12,
   gridDefault,
   yAxisParallel,
   yAxisDefault,
@@ -99,6 +98,9 @@ export default {
       showPagination: true
     }
   },
+  mounted () {
+    this.exportCSVFile(this.$el, this.appQuestion, this)
+  },
   computed: {
     chartStyle () {
       return {
@@ -117,7 +119,7 @@ export default {
     options () {
       let config = {
         ...this.addonOptions,
-        ...getDrillDownTool(this.title, true, true),
+        ...getDrillDownTool(this.$route.name, this.title, true, true),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
         dataset: {
           source: this.datasetTransform(this.dataset)
@@ -130,7 +132,7 @@ export default {
           this.$el.addEventListener('click', this.controlPagination, false)
         }
         let dataset = opt.dataset[0].source
-        let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="margin-top: 16px;width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
+        let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur) => {
             return acc + `<td style="padding: 4px 12px;">${cur || ''}</td>`
@@ -140,11 +142,6 @@ export default {
         table += '</tbody></table>'
         return table
       }
-
-      // export data
-      this.$nextTick(() => {
-        this.exportCSVFile(this.$el, this.appQuestion, config.dataset.source)
-      })
 
       // 移除 null 值
       config.tooltip.formatter = (datas) => {
@@ -183,13 +180,11 @@ export default {
         case 2:
           return parallelColorOnly2
         case 3:
-          return parallelColor3
         case 4:
         case 5:
-        case 6:
-          return parallelColorDefault
+          return color5
         default:
-          return parallelColor10
+          return color12
       }
     },
     appQuestion () {

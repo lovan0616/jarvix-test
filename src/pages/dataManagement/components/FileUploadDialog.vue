@@ -28,6 +28,7 @@ export default {
     RemoteConnectionFlow
   },
   destroyed () {
+    this.$store.dispatch('dataSource/getDataSourceList')
     // 還原狀態
     this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     if (this.currentUploadInfo.type === 'local') {
@@ -35,6 +36,7 @@ export default {
     }
 
     this.$store.commit('dataManagement/clearCurrentUploadInfo')
+    this.$store.commit('dataManagement/clearEtlTableList')
   },
   methods: {
   },

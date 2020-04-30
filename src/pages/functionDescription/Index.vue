@@ -1,1467 +1,430 @@
 <template>
   <div class="function-description">
     <h1 class="title">{{ $t('editing.functionDescription') }}</h1>
-    <div class="function-table">
-      <div class="function-table-head">
-        <div
-          @click="showBasic"
-          :class="['function-table-head-cell', { 'head-active': tabBtn.basicBtn }]"
-        >
-          {{ $t('description.basicIntroduce') }}
-        </div>
-        <div
-          @click="showQuestion"
-          :class="['function-table-head-cell', { 'head-active': tabBtn.questionBtn }]"
-        >
-          {{ $t('description.questionAnalyzeUse') }}
-        </div>
-        <div
-          @click="showPinboard"
-          :class="['function-table-head-cell', { 'head-active': tabBtn.pinboardBtn }]"
-        >
-          {{ $t('description.personalPinboard') }}
-        </div>
-        <div
-          @click="showData"
-          :class="['function-table-head-cell', { 'head-active': tabBtn.dataBtn }]"
-        >
-          {{ $t('nav.dataManagement') }}
-        </div>
-        <div class="function-table-head-cell"></div>
-      </div>
-
-      <div v-if="tabBtn.basicBtn " class="function-table-body">
-        <div
-          @click="toggleInterface"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.interfaceDescription') }}</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': basicContent.isShowInterface }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="basicContent.isShowInterface">
+    <el-tabs v-model="activeTab" type="card">
+      <el-tab-pane :label="$t('description.basic.intro')" name="basic">
+        <el-collapse accordion v-model="activeCollapse">
+          <el-collapse-item :title="$t('description.basic.ui')" name="uiIntro">
             <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/basic-interface.png" :alt="$t('description.interfaceDescription')">
-              <div class="description-square first-interface-square"></div>
-              <row-description
-                class="first-interface-box"
-                :lineClassName="'first-interface-line'"
-                :text="'Chatroom'"
-              >
-              </row-description>
-              <row-description
-                class="second-interface-box"
-                :lineClassName="'second-interface-line'"
-                :text="`${langDescriptionHide}Chatroom`"
-              >
-              </row-description>
-
-              <div class="description-square third-interface-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="third-interface-box"
-                :lineClassName="'third-interface-line'"
-                :text="$t('description.guidingRow')"
-              >
-              </row-description>
-              <div class="description-square fouth-interface-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="fouth-interface-box"
-                :lineClassName="'fouth-interface-line'"
-                :text="$t('description.mainLayout')"
-              >
-              </row-description>
+              <img src="@/assets/images/function-description/basic/index.png">
+              <frame width="100%" height="30px" top="0">
+              <frame width="185px" height="330px" top="32px">
+              <frame width="445px" height="300px" top="40px" left="200px">
+              <row-description :text="$t('description.basic.nav')" top="5px" right />
+              <row-description text="Chatroom" top="100px" />
+              <row-description :text="`${$t('description.basic.hide')}<br>Chatroom`" width="350px" top="170px"/>
+              <row-description :text="$t('description.basic.index')" width="195px" top="80px" right/>
             </div>
-          </div>
-        </transition>
-        <div
-          @click="toggleGuiding"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.guidingRowIntroduce') }}</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': basicContent.isShowGuiding }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="basicContent.isShowGuiding">
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/basic-setting.png" :alt="$t('description.settingFunctionMenu')">
-              <div class="description-square first-menu-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="first-menu-box"
-                :lineClassName="'first-menu-line'"
-                :text="$t('description.settingFunctionMenu')"
-              >
-              </row-description>
+          </el-collapse-item>
+          <el-collapse-item :title="$t('description.basic.navIntro')" name="navIntro">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/basic/nav-group-management.png">
+              <frame width="180px" height="90px" top="56px" left="367px">
+              <row-description :text="$t('description.basic.groupManage')" width="292px" top="90px" right />
             </div>
             <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/basic-account.png" :alt="$t('description.accountFunctionMenu')">
-              <div class="description-square second-menu-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="second-menu-box"
-                :lineClassName="'second-menu-line'"
-                :text="$t('description.accountFunctionMenu')"
-              >
-              </row-description>
-            </div>
-          </div>
-        </transition>
-        <div
-          @click="toggleIndexPageFunction"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.indexPageFunctionIntroduce') }}</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': basicContent.isShowIndexPageFunction }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="basicContent.isShowIndexPageFunction">
-            <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/basic-interface.png" :alt="$t('description.checkoutDataSheetDetail')">
-              <div class="description-square first-index-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="first-index-box"
-                :lineClassName="'first-index-line'"
-                :text="$t('description.checkoutDataSheetDetail')"
-              >
-              </row-description>
-              <div class="description-square second-index-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="second-index-box"
-                :lineClassName="'second-index-line'"
-                :text="$t('description.systemLogQuestion')"
-              >
-              </row-description>
-            </div>
-          </div>
-        </transition>
-      </div>
-
-      <!-- 問題分析操作 -->
-
-      <div v-if="tabBtn.questionBtn" class="function-table-body">
-        <div
-          @click="toggleAskQuestion"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.howToAsk') }}</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': questionContent.isShowAskQuestion }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="questionContent.isShowAskQuestion">
-            <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/question-recommend.png" :alt="$t('description.questionClick')">
-              <div class="description-square first-ask-square"></div>
-              <row-description
-                class="first-ask-box"
-                :lineClassName="'first-ask-line'"
-                :text="$t('description.questionClick')"
-              >
-              </row-description>
-              <div class="description-square second-ask-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="second-ask-box"
-                :lineClassName="'second-ask-line'"
-                :text="$t('description.questionInput')"
-              >
-              </row-description>
-            </div>
-          </div>
-        </transition>
-        <div
-          @click="toggleSearchQuestion"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.howToSearchAssist') }}</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': questionContent.isShowSearchQuestion }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="questionContent.isShowSearchQuestion">
-            <!-- <div class="description-inner-text">{{ $t('description.activateHint') }}</div>
-            <div class="description-row-image-box description-space-image">
-              <img class="description-row-image" src="@/assets/images/functionDescription/question-hint.png" :alt="$t('description.howToSearchAssist')">
-              <div class="description-square first-assist-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="first-assist-box"
-                :lineClassName="'first-assist-line'"
-                :text="'Step1:<br>' + $t('description.inputKeyWord')"
-              >
-              </row-description>
-              <img src="@/assets/images/functionDescription/question-hint.png" :alt="$t('description.settingFunctionMenu')">
-              <div class="description-square second-assist-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="second-assist-box"
-                :lineClassName="'second-assist-line'"
-                :text="'Step2:<br>' + $t('description.questionHint')"
-              >
-              </row-description>
-            </div> -->
-            <div class="description-inner-text">{{ $t('description.openQuestionDescription') }}</div>
-            <div class="description-row-image-box description-space-image">
-              <img class="description-row-image" src="@/assets/images/functionDescription/question-recommend.png" :alt="$t('description.clickOpenQuestion')">
-              <div class="description-square third-assist-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="third-assist-box"
-                :lineClassName="'third-assist-line'"
-                :text="'Step1:<br>' + $t('description.clickOpenQuestion')"
-              >
-              </row-description>
-              <img src="@/assets/images/functionDescription/question-description.png" :alt="$t('description.questionDescriptionContent')">
-              <div class="description-square fourth-assist-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="fourth-assist-box"
-                :lineClassName="'fourth-assist-line'"
-                :text="'Step2:<br>' + $t('description.questionDescriptionContent')"
-              >
-              </row-description>
-            </div>
-
-          </div>
-        </transition>
-        <div
-          @click="toggleAnalyzeResult"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.analyzeResultDescription') }}</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': questionContent.isShowAnalyzeResult }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="questionContent.isShowAnalyzeResult">
-            <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/question-result.png" :alt="$t('description.analyzeResultDescription')">
-              <!-- <div class="description-square first-result-square"></div>
-              <row-description
-                class="first-result-box"
-                :lineClassName="'first-result-line'"
-                :text="$t('description.systemResponseResult')"
-              >
-              </row-description> -->
-              <div class="description-square second-result-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="second-result-box"
-                :lineClassName="'second-result-line'"
-                :text="$t('description.questionAnalyzeDetail')"
-              >
-              </row-description>
-            </div>
-          </div>
-        </transition>
-
-        <div
-          @click="toggleDeepQuestion"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.howToDeepen') }}</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': questionContent.isShowDeepQuestion }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="questionContent.isShowDeepQuestion">
-            <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/question-deepen.png" :alt="$t('description.systemRecommendQuestion')">
-              <div class="description-square first-deep-square"></div>
-              <row-description
-                class="first-deep-box"
-                :lineClassName="'first-deep-line'"
-                :text="$t('description.systemRecommendQuestion')"
-              >
-              </row-description>
-              <div class="description-square second-deep-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="second-deep-box"
-                :lineClassName="'second-deep-line'"
-                :text="$t('description.systemTargetFace')"
-              >
-              </row-description>
-              <div class="description-square third-deep-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="third-deep-box"
-                :lineClassName="'third-deep-line'"
-                :text="$t('description.systemRecommendQuestion')"
-              >
-              </row-description>
-            </div>
-          </div>
-        </transition>
-      </div>
-
-      <!-- 個人釘板使用 -->
-
-      <div v-if="tabBtn.pinboardBtn" class="function-table-body">
-        <div
-          @click="toggleAddPinboard"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.howToAddPinboard') }}</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': pinboardContent.isShowAddPinboard }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="pinboardContent.isShowAddPinboard">
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/pinboard-click-board.png" :alt="$t('description.clickPinboard')">
-              <div class="description-square first-pinboard-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="first-pinboard-box"
-                :lineClassName="'first-pinboard-line'"
-                :text="'Step1:<br>' + $t('description.clickPinboard')"
-              >
-              </row-description>
-            </div>
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/pinboard-select-class.png" :alt="$t('description.selectPinboardClass')">
-              <div class="description-square second-pinboard-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="second-pinboard-box"
-                :lineClassName="'second-pinboard-line'"
-                :text="'Step2:<br>' + $t('description.selectPinboardClass')"
-              >
-              </row-description>
+              <img src="@/assets/images/function-description/basic/nav-group.png" alt="">
+              <frame width="205px" height="136px" top="55px" left="392px">
+              <row-description :text="$t('description.basic.groupSwitch')" width="241px" top="113px" right />
             </div>
             <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/pinboard-complete-cancel.png" :alt="$t('description.pinboardCompleteCancel')">
-              <div class="description-square third-pinboard-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="third-pinboard-box"
-                :lineClassName="'third-pinboard-line'"
-                :text="'Step3:<br>' + $t('description.pinboardCompleteCancel')"
-              >
-              </row-description>
-            </div>
-          </div>
-        </transition>
-        <div
-          @click="toggleManageClass"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.howToClassManage') }}</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': pinboardContent.isShowManageClass }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="pinboardContent.isShowManageClass">
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/pinboard-enter-board.png" :alt="$t('description.enterPersonalPinboard')">
-              <div class="description-square first-class-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="first-class-box"
-                :lineClassName="'first-class-line'"
-                :text="'Step1:<br>' + $t('description.enterPersonalPinboard')"
-              >
-              </row-description>
-            </div>
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/pinboard-add-board.png" :alt="$t('description.enableAddClass')">
-              <div class="description-square second-class-square"></div>
-              <row-description
-                class="second-class-box"
-                :lineClassName="'second-class-line'"
-                :text="'Step2:<br>' + $t('description.enableAddClass')"
-              >
-              </row-description>
+              <img src="@/assets/images/function-description/basic/nav-account.png" alt="">
+              <frame width="205px" height="186px" top="57px" left="394px">
+              <row-description :text="$t('description.basic.account')" width="239px" top="146px" right />
             </div>
             <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/pinboard-select-menu.png" :alt="$t('description.classFunctionMenu')">
-              <div class="description-square third-class-square"></div>
-              <row-description
-                class="third-class-box"
-                :lineClassName="'third-class-line'"
-                :text="'Step3:<br>' + $t('description.classFunctionMenu')"
-              >
-              </row-description>
+              <img src="@/assets/images/function-description/basic/nav-func-desc.png" alt="">
+              <frame width="34px" height="34px" top="17px" left="592px">
+              <row-description :text="$t('description.basic.funcDesc')" top="26px" width="212px" right />
             </div>
-          </div>
-        </transition>
-
-        <div
-          @click="toggleSharePinboard"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.howToShare') }}</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': pinboardContent.isShowSharePinboard }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="pinboardContent.isShowSharePinboard">
-            <div class="description-inner-text">{{ $t('description.sharePinboardContent') }}</div>
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/pinboard-select-menu.png" :alt="$t('description.clickMenuShare')">
-              <div class="description-square first-share-square"></div>
-              <row-description
-                class="first-share-box"
-                :lineClassName="'first-share-line'"
-                :text="'Step1:<br>' + $t('description.clickMenuShare')"
-              >
-              </row-description>
+          </el-collapse-item>
+          <el-collapse-item :title="$t('description.basic.indexFuncIntro')" name="indexFuncIntro">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/basic/index.png" alt="">
+              <frame width="447px" height="200px" top="41px" left="200px">
+              <frame width="447px" height="93px" top="246px" left="200px">
+              <row-description :text="$t('description.basic.checkDataFrameDetail')" top="130px" width="190px" right />
+              <row-description :text="$t('description.basic.faq')" top="270px" width="190px" right />
             </div>
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/pinboard-share-dialog.png" :alt="$t('description.shareLink')">
-              <div class="description-square second-share-square"></div>
-              <row-description
-                class="second-share-box"
-                :lineClassName="'second-share-line'"
-                :text="'Step2:<br>' + $t('description.shareLink')"
-              >
-              </row-description>
+          </el-collapse-item>
+        </el-collapse>
+      </el-tab-pane>
+      <el-tab-pane :label="$t('description.question.analysis')" name="question">
+        <el-collapse accordion v-model="activeCollapse">
+          <el-collapse-item :title="$t('description.question.how')" name="how">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/question/entry.png" alt="">
+              <frame width="184px" height="138px" top="68px" left="220px">
+              <frame width="184px" height="35px" top="310px" left="220px">
+              <row-description :text="$t('description.question.recommended')" width="395px" top="80px"/>
+              <row-description :text="$t('description.question.input')" width="434px" top="317px" right/>
             </div>
-            <div class="description-inner-text">{{ $t('description.shareSinglePinboard') }}</div>
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/pinboard-select-single-class.png" :alt="$t('description.clickSingleClass')">
-              <div class="description-square third-share-square"></div>
-              <row-description
-                class="third-share-box"
-                :lineClassName="'third-share-line'"
-                :text="'Step1:<br>' + $t('description.clickSingleClass')"
-              >
-              </row-description>
+          </el-collapse-item>
+          <el-collapse-item :title="$t('description.question.assistant')" name="howToStartUpAssistant">
+            <p class="sub-title">{{ $t('description.question.info1') }}</p>
+            <div class="description-image-box space-between">
+              <img src="@/assets/images/function-description/question/entry.png" alt="">
+              <img src="@/assets/images/function-description/question/vocabulary.png" alt="">
+              <frame width="30px" height="20px" top="337px" left="114px">
+              <frame width="189px" height="288px" top="31px" left="440px">
+              <row-description :text="$t('description.question.click')" width="291px" top="88%"/>
+              <row-description :text="$t('description.question.vocabulary')" width="209px" top="117px" right/>
             </div>
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/pinboard-click-share.png" :alt="$t('description.clickShare')">
-              <div class="description-square fourth-share-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="fourth-share-box"
-                :lineClassName="'fourth-share-line'"
-                :text="'Step2:<br>' + $t('description.clickShare')"
-              >
-              </row-description>
+            <p class="sub-title">{{ $t('description.question.info2') }}</p>
+            <div class="description-image-box space-between">
+              <img src="@/assets/images/function-description/question/entry.png" alt="">
+              <img src="@/assets/images/function-description/question/vocabulary.png" alt="">
+              <frame width="30px" height="20px" top="337px" left="114px">
+              <frame width="189px" height="288px" top="31px" left="440px">
+              <row-description :text="$t('description.question.click')" width="291px" top="88%"/>
+              <row-description :text="$t('description.question.sample')" width="209px" top="117px" right/>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item :title="$t('description.question.resultInfo')" name="resultInfo">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/question/result.png" alt="">
+              <frame width="451px" height="232px" top="37px" left="197px">
+              <row-description :text="$t('description.question.result')" width="190px" top="80px" right/>
             </div>
             <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/pinboard-share-dialog.png" :alt="$t('description.shareLink')">
-              <div class="description-square fifth-share-square"></div>
-              <row-description
-                class="fifth-share-box"
-                :lineClassName="'fifth-share-line'"
-                :text="'Step3:<br>' + $t('description.shareLink')"
-              >
-              </row-description>
+              <img src="@/assets/images/function-description/question/result.png" alt="">
+              <frame width="55px" height="22px" top="77px" left="89%" />
+              <frame width="28px" height="153px" top="100px" left="93%" />
+              <frame width="30px" height="28px" top="154px" left="87%" />
+              <row-description :text="$t('description.question.basicInfo')" width="196px" top="69px" right />
+              <row-description :text="$t('description.question.graphicTool')" width="196px" top="120px" right />
+              <row-description :text="$t('description.question.fetchMore')" width="235px" top="150px" right />
             </div>
-          </div>
-        </transition>
-      </div>
-      <div v-if="tabBtn.dataBtn" class="function-table-body">
-        <div
-          @click="toggleAddData"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.howAddData') }}？</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': dataContent.isShowAddData }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="dataContent.isShowAddData">
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/basic-setting.png" :alt="$t('description.enterDataManage')">
-              <div class="description-square first-data-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="first-data-box"
-                :lineClassName="'first-data-line'"
-                :text="'Step1:<br>' + $t('description.enterDataManage')"
-
-              >
-              </row-description>
+          </el-collapse-item>
+          <el-collapse-item :title="$t('description.question.howToDeepen')" name="howToDeepen">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/question/result.png" alt="">
+              <frame width="185px" height="122px" top="185px" />
+              <frame width="437px" height="101px" top="269px" left="31%" />
+              <row-description :text="$t('description.question.recommended')" width="178px" top="200px"/>
+              <row-description :text="$t('description.question.insights')" width="197px" top="80%" right />
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+      </el-tab-pane>
+      <el-tab-pane :label="$t('description.pinboard.personal')" name="pinboard">
+        <el-collapse accordion v-model="activeCollapse">
+          <el-collapse-item :title="$t('description.pinboard.how')" name="how">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/pinboard/entry.png" alt="">
+              <frame width="67px" height="33px" top="71px" left="557px">
+              <row-description :text="$t('description.pinboard.clickPinboard')" width="212px" top="69px" right/>
             </div>
             <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/data-table-select.png" :alt="$t('editing.newDataSource')">
-              <div class="description-square second-data-square"></div>
-              <row-description
-                class="second-data-box"
-                :lineClassName="'second-data-line'"
-                :text="'Step2:<br>' + $t('editing.newDataSource')"
-              >
-              </row-description>
-            </div>
-          </div>
-        </transition>
-        <div
-          @click="toggleAddSheet"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.enterDataManage') }}？</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': dataContent.isShowAddSheet }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="dataContent.isShowAddSheet">
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-table-select.png" :alt="$t('description.pickupData')">
-              <div class="description-square first-sheet-square"></div>
-              <row-description
-                class="first-sheet-box"
-                :lineClassName="'first-sheet-line'"
-                :text="'Step1:<br>' + $t('description.pickupData')"
-              >
-              </row-description>
+              <img src="@/assets/images/function-description/pinboard/classification.png" alt="">
+              <frame width="102px" height="88px" top="47px" left="81%" />
+              <row-description :text="$t('description.pinboard.classification')" width="202px" top="62px" right />
             </div>
             <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/data-table.png" :alt="$t('editing.newTable')">
-              <div class="description-square second-sheet-square"></div>
-              <row-description
-                class="second-sheet-box"
-                :lineClassName="'second-sheet-line'"
-                :text="'Step2:<br>' + $t('editing.newTable')"
-              >
-              </row-description>
+              <img src="@/assets/images/function-description/pinboard/cancel.png" alt="">
+              <frame width="59px" height="23px" top="47px" left="578px" />
+              <row-description :text="$t('description.pinboard.cancel')" width="202px" top="30px" right />
             </div>
-          </div>
-        </transition>
-        <div
-          @click="toggleEditData"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.howEditDataSheet') }}？</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': dataContent.isShowEditData }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="dataContent.isShowEditData">
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-table.png" :alt="$t('description.clickEditColumn')">
-              <div class="description-square first-data-edit-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="first-data-edit-box"
-                :lineClassName="'first-data-edit-line'"
-                :text="'Step1:<br>' + $t('description.clickEditColumn')"
-              >
-              </row-description>
-            </div>
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-table.png" :alt="$t('description.clickEditColumn')">
-              <div class="description-square second-data-edit-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="second-data-edit-box"
-                :lineClassName="'second-data-edit-line'"
-                :text="'Step2:<br>' + $t('description.clickEditColumn')"
-              >
-              </row-description>
-            </div>
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-table-edit.png" :alt="$t('description.editAlias')">
-              <div class="description-square third-data-edit-square"></div>
-              <row-description
-                class="third-data-edit-box"
-                :lineClassName="'third-data-edit-line'"
-                :text="'Step3:<br>' + $t('description.editAlias')"
-              >
-              </row-description>
-              <div class="description-square fourth-data-edit-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="fourth-data-edit-box"
-                :lineClassName="'fourth-data-edit-line'"
-                :text="'Step3:<br>' + $t('description.confirmEdit')"
-              >
-              </row-description>
+          </el-collapse-item>
+          <el-collapse-item :title="$t('description.pinboard.howToClassify')" name="howToClassify">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/pinboard/entry-personal.png" alt="">
+              <frame width="111px" height="44px" top="11px" left="320px" />
+              <row-description :text="$t('description.pinboard.entry')" width="407px" top="15px" right />
             </div>
             <div class="description-image-box">
-              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-build.png" :alt="$t('description.completeBuild')">
-              <div class="description-square fifth-data-edit-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="fifth-data-edit-box"
-                :lineClassName="'fifth-data-edit-line'"
-                :text="'Step4:<br>' + $t('description.completeBuild')"
-              >
-              </row-description>
+              <img src="@/assets/images/function-description/pinboard/personal-panel.png" alt="">
+              <frame width="61px" height="29px" top="74px" left="12px" />
+              <row-description :text="$t('description.pinboard.addClass')" width="190px" top="70px" />
             </div>
-          </div>
-        </transition>
-        <!-- <div
-          @click="toggleConnectData"
-          class="function-content-title"
-        >
-          <div>{{ $t('description.howConnectDataSheet') }}？</div>
-          <svg-icon
-            :class="['content-icon', { 'rotate': dataContent.isShowConnectData }]"
-            icon-class="dropdown"
-          >
-          </svg-icon>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div class="single-description" v-if="dataContent.isShowConnectData">
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-table.png" :alt="$t('description.clickDataSheetConnect')">
-              <div class="description-square first-data-connect-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="first-data-connect-box"
-                :lineClassName="'first-data-connect-line'"
-                :text="'Step1:<br>' + $t('description.clickDataSheetConnect')"
-              >
-              </row-description>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/pinboard/personal-panel-action.png" alt="">
+              <frame width="88px" height="83px" top="63px" left="246px" />
+              <row-description :text="$t('description.pinboard.classificationAction')" width="425px" top="79px" />
             </div>
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect.png" :alt="$t('description.addDataSheetConnect')">
-              <div class="description-square second-data-connect-square"></div>
-              <row-description
-                class="second-data-connect-box"
-                :lineClassName="'second-data-connect-line'"
-                :text="'Step2:<br>' + $t('description.addDataSheetConnect')"
-              >
-              </row-description>
+          </el-collapse-item>
+          <el-collapse-item :title="$t('description.pinboard.share')" name="share">
+            <p class="sub-title">{{ $t('description.pinboard.title1') }}</p>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/pinboard/personal-panel-action.png" alt="">
+              <frame width="81px" height="25px" top="104px" left="249px" />
+              <row-description :text="$t('description.pinboard.clickShareBtn1')" width="427px" top="98px" />
             </div>
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect-column.png" :alt="$t('description.andConnectColumn')">
-              <div class="description-square third-data-connect-square"></div>
-              <row-description
-                class="third-data-connect-box"
-                :lineClassName="'third-data-connect-line'"
-                :text="'Step3:<br>' + $t('description.slectDataSheet') + '<br>' + $t('description.andConnectColumn')"
-              >
-              </row-description>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/pinboard/personal-share-pop.png" alt="">
+              <frame width="249px" height="104px" top="68px" left="206px" />
+              <row-description :text="`Step2:<br>${$t('description.pinboard.shareLink')}`" width="384px" top="101px" />
             </div>
-            <div class="description-image-box description-space-image">
-              <img class="description-image" src="@/assets/images/functionDescription/data-sheet-connect-store.png" :alt="$t('description.storeSetting')">
-              <div class="description-square fourth-data-connect-square"></div>
-              <row-description
-                :positionLeft="false"
-                class="fourth-data-connect-box"
-                :lineClassName="'fourth-data-connect-line'"
-                :text="'Step4:<br>' + $t('description.storeSetting')"
-              >
-              </row-description>
+            <p class="sub-title">{{ $t('description.pinboard.title2') }}</p>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/pinboard/personal-panel.png" alt="">
+              <frame width="164px" height="63px" top="96px" left="12px">
+              <row-description :text="$t('description.pinboard.clickClass')" width="190px" top="109px" />
             </div>
-          </div>
-        </transition> -->
-      </div>
-    </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/pinboard/panel.png" alt="">
+              <frame width="45px" height="26px" top="81px" left="554px" />
+              <row-description :text="$t('description.pinboard.clickShareBtn2')" width="240px" top="74px" right />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/pinboard/panel-share-pop.png" alt="">
+              <frame width="249px" height="104px" top="68px" left="206px" />
+              <row-description :text="`Step3:<br>${$t('description.pinboard.shareLink')}`" width="384px" top="101px" />
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+      </el-tab-pane>
+      <el-tab-pane :label="$t('nav.dataManagement')" name="dataManagement">
+        <el-collapse accordion v-model="activeCollapse">
+          <el-collapse-item :title="$t('description.data.howToAddDataSource')" name="howToAddDataSource">
+            <p class="sub-title">{{ $t('description.data.byFile') }}</p>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/entry-nav.png" alt="">
+              <frame width="184px" height="47px" top="54px" left="367px" />
+              <row-description :text="$t('description.data.entry')" width="288px" top="58px" right />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/list-data-source.png" alt="">
+              <frame width="66px" height="24px" top="84px" left="24px" />
+              <row-description :text="$t('description.data.addDataSource')" width="203px" top="76px" />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/upload-by-file.png" alt="">
+              <frame width="146px" height="131px" top="53px" left="186px" />
+              <row-description :text="$t('description.data.selectByFile')" width="364px" top="99px" />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/upload-by-file-select-file.png" alt="">
+              <frame width="405px" height="182px" top="75px" left="128px" />
+              <row-description :text="$t('description.data.selectLocalFile')" width="307px" top="145px" />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/upload-by-file-processing.png" alt="">
+              <frame width="405px" height="168px" top="75px" left="128px" />
+              <row-description :text="$t('description.data.uploading')" width="307px" top="130px" />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/upload-select-column.png" alt="">
+              <frame width="405px" height="231px" top="83px" left="128px" />
+              <row-description :text="`Step6:<br>${$t('description.data.selectColumn')}`" width="307px" top="130px" />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/upload-data-clean.png" alt="">
+              <frame width="405px" height="231px" top="83px" left="128px" />
+              <row-description :text="`Step7:<br>${$t('description.data.dataCleansing')}`" width="307px" top="130px" />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/data-building.png" alt="">
+              <frame width="92%" height="27px" top="161px" left="26px" />
+              <row-description :text="`Step8:<br>${$t('description.data.building')}`" width="203px" top="145px" />
+            </div>
+            <p class="sub-title">{{ $t('description.data.byDB') }}</p>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/upload-by-db.png" alt="">
+              <frame width="148px" height="131px" top="53px" left="328px" />
+              <row-description :text="$t('description.data.selectByDB')" width="362px" top="80px" right />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/upload-by-db-connection-setting.png" alt="">
+              <frame width="405px" height="250px" top="61px" left="128px" />
+              <row-description :text="$t('description.data.connectionSetting')" width="307px" top="145px" />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/upload-by-db-select-table.png" alt="">
+              <frame width="405px" height="182px" top="75px" left="128px" />
+              <row-description :text="$t('description.data.selectDataFrame')" width="307px" top="145px" />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/upload-select-column.png" alt="">
+              <frame width="405px" height="231px" top="83px" left="128px" />
+              <row-description :text="`Step4:<br>${$t('description.data.selectColumn')}`" width="307px" top="145px" />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/upload-data-clean.png" alt="">
+              <frame width="405px" height="231px" top="83px" left="128px" />
+              <row-description :text="`Step5:<br>${$t('description.data.dataCleansing')}`" width="307px" top="145px" />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/data-building.png" alt="">
+              <frame width="92%" height="27px" top="161px" left="26px" />
+              <row-description :text="`Step6:<br>${$t('description.data.building')}`" width="203px" top="145px" />
+            </div>
+          </el-collapse-item>
+          <el-collapse-item :title="$t('description.data.howToAddDataFrame')" name="howToAddDataFrame">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/list-data-source.png" alt="">
+              <frame width="66px" height="24px" top="126px" left="24px" />
+              <row-description :text="$t('description.data.clickDataSource')" width="203px" top="118px" />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/list-table.png" alt="">
+              <frame width="66px" height="24px" top="84px" left="24px" />
+              <row-description :text="$t('description.data.addDataFrame')" width="203px" top="76px" />
+            </div>
+          </el-collapse-item>
+          <el-collapse-item :title="$t('description.data.howToAddColumnAlias')" name="howToAddColumnAlias">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/table-action.png" alt="">
+              <frame width="84px" height="28px" top="139px" left="433px" />
+              <row-description :text="`Step1:<br>${$t('description.data.clickEdit')}`" width="321px" top="133px" right />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/table-column.png" alt="">
+              <frame width="34px" height="20px" top="62px" left="420px" />
+              <row-description :text="`Step2:<br>${$t('description.data.clickEdit')}`" width="384px" top="51px" right />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/table-column-edit.png" alt="">
+              <frame width="59px" height="21px" top="61px" left="266px" />
+              <frame width="34px" height="20px" top="62px" left="420px" />
+              <row-description :text="$t('description.data.editAlias')" width="444px" top="52px" />
+              <row-description :text="$t('description.data.confirm')" width="384px" top="52px" right />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/data/table-column-build.png" alt="">
+              <frame width="44px" height="25px" top="15px" left="442px" />
+              <row-description :text="$t('description.data.finish')" width="352px" top="8px" right />
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+      </el-tab-pane>
+      <el-tab-pane :label="$t('description.account.management')" name="account">
+        <el-collapse accordion v-model="activeCollapse">
+          <el-collapse-item :title="$t('description.account.howToEnter')" name="howToEnter">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/account/entry-nav.png" alt="">
+              <frame width="206px" height="48px" top="106px" left="394px" />
+              <row-description :text="$t('description.account.entry')" width="237px" top="110px" right />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/account/entry-sidenav.png" alt="">
+              <frame width="112px" height="27px" top="72px" />
+              <row-description :text="$t('description.account.entrySideNav')" top="57px"  />
+            </div>
+          </el-collapse-item>
+          <el-collapse-item :title="$t('description.account.howToInvite')" name="howToInvite">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/account/list.png" alt="">
+              <frame width="67px" height="27px" top="69px" left="132px" />
+              <row-description :text="$t('description.account.clickInvite')" width="310px" top="63px" />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/account/pop-add.png" alt="">
+              <frame width="306px" height="85px" top="46px" left="178px" />
+              <row-description :text="$t('description.account.confirmInvite')" width="356px" top="44px" />
+            </div>
+          </el-collapse-item>
+          <el-collapse-item :title="$t('description.account.howToUpdateRole')" name="howToUpdateRole">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/account/list.png" alt="">
+              <frame width="46px" height="27px" top="111px" left="509px" />
+              <row-description :text="$t('description.account.clickUpdate')" width="283px" top="105px" right />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/account/pop-update.png" alt="">
+              <frame width="253px" height="113px" top="68px" left="204px" />
+              <row-description :text="$t('description.account.confirmUpdate')" width="382px" top="85px" />
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+      </el-tab-pane>
+      <el-tab-pane :label="$t('description.group.management')" name="group">
+        <el-collapse accordion v-model="activeCollapse">
+          <el-collapse-item :title="$t('description.group.howToEnter')" name="howToEnter">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/group-member/entry-nav.png" alt="">
+              <frame width="184px" height="46px" top="100px" left="368px" />
+              <row-description :text="$t('description.group.entry')" width="285px" top="95px" right />
+            </div>
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/group-member/list.png" alt="">
+              <frame width="111px" height="27px" top="49px" />
+              <row-description :text="$t('description.group.selectMember')" top="43px" />
+            </div>
+          </el-collapse-item>
+          <el-collapse-item :title="$t('description.group.howToInvite')" name="howToInvite">
+            <div class="description-image-box">
+              <img src="@/assets/images/function-description/group-member/list.png" alt="">
+              <frame width="67px" height="26px" top="69px" left="132px" />
+              <row-description :text="$t('description.group.clickInvite')" width="310px" top="63px" />
+            </div><div class="description-image-box">
+              <img src="@/assets/images/function-description/group-member/add.png" alt="">
+              <frame width="173px" height="27px" top="81px" left="129px" />
+              <row-description :text="$t('description.group.confirmInvite')" width="307px" top="56px" />
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
+
 <script>
 import RowDescription from './components/RowDescription'
+import Frame from './components/Frame'
+
 export default {
   name: 'FunctionDescription',
   components: {
-    RowDescription
+    RowDescription,
+    Frame
   },
   data () {
     return {
-      tabBtn: {
-        basicBtn: true,
-        questionBtn: false,
-        pinboardBtn: false,
-        dataBtn: false
-      },
-      basicContent: {
-        isShowInterface: false,
-        isShowGuiding: false,
-        isShowIndexPageFunction: false
-      },
-      questionContent: {
-        isShowAskQuestion: false,
-        isShowSearchQuestion: false,
-        isShowAnalyzeResult: false,
-        isShowDeepQuestion: false
-      },
-      pinboardContent: {
-        isShowAddPinboard: false,
-        isShowManageClass: false,
-        isShowSharePinboard: false
-      },
-      dataContent: {
-        isShowAddData: false,
-        isShowAddSheet: false,
-        isShowEditData: false,
-        isShowConnectData: false
-      },
-      langDescriptionHide: this.$t('description.hide')
-    }
-  },
-  mounted () {
-
-  },
-  methods: {
-    closeTab () {
-      for (let index in this.tabBtn) {
-        this.tabBtn[index] = false
-      }
-    },
-    showBasic () {
-      this.closeTab()
-      this.tabBtn.basicBtn = true
-    },
-    showQuestion () {
-      this.closeTab()
-      this.tabBtn.questionBtn = true
-    },
-    showPinboard () {
-      this.closeTab()
-      this.tabBtn.pinboardBtn = true
-    },
-    showData () {
-      this.closeTab()
-      this.tabBtn.dataBtn = true
-    },
-    // 基本介紹
-    toggleInterface () {
-      this.basicContent.isShowInterface = !this.basicContent.isShowInterface
-    },
-    toggleGuiding () {
-      this.basicContent.isShowGuiding = !this.basicContent.isShowGuiding
-    },
-    toggleIndexPageFunction () {
-      this.basicContent.isShowIndexPageFunction = !this.basicContent.isShowIndexPageFunction
-    },
-    // 問題分析操作
-    toggleAskQuestion () {
-      this.questionContent.isShowAskQuestion = !this.questionContent.isShowAskQuestion
-    },
-    toggleSearchQuestion () {
-      this.questionContent.isShowSearchQuestion = !this.questionContent.isShowSearchQuestion
-    },
-    toggleAnalyzeResult () {
-      this.questionContent.isShowAnalyzeResult = !this.questionContent.isShowAnalyzeResult
-    },
-    toggleDeepQuestion () {
-      this.questionContent.isShowDeepQuestion = !this.questionContent.isShowDeepQuestion
-    },
-    // 個人釘板使用
-    toggleAddPinboard () {
-      this.pinboardContent.isShowAddPinboard = !this.pinboardContent.isShowAddPinboard
-    },
-    toggleManageClass () {
-      this.pinboardContent.isShowManageClass = !this.pinboardContent.isShowManageClass
-    },
-    toggleSharePinboard () {
-      this.pinboardContent.isShowSharePinboard = !this.pinboardContent.isShowSharePinboard
-    },
-    // 資料管理
-    toggleAddData () {
-      this.dataContent.isShowAddData = !this.dataContent.isShowAddData
-    },
-    toggleAddSheet () {
-      this.dataContent.isShowAddSheet = !this.dataContent.isShowAddSheet
-    },
-    toggleEditData () {
-      this.dataContent.isShowEditData = !this.dataContent.isShowEditData
-    },
-    toggleConnectData () {
-      this.dataContent.isShowConnectData = !this.dataContent.isShowConnectData
+      activeTab: 'basic',
+      activeCollapse: 'uiIntro'
     }
   }
 }
 </script>
+
 <style lang="scss" scoped>
-
-.function-description {
-
-  .function-table {
-    background: rgba(0, 0, 0, .55);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, .12);
-    border-radius: 8px;
-    padding: 24px;
-
-    &-head {
-      display: flex;
+/deep/ .el-tabs {
+  background: rgba(0, 0, 0, .55);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, .12);
+  border-radius: 8px;
+  padding: 24px;
+  &>.el-tabs__header {
+    border: none;
+    .el-tabs__nav {
+      width: 100%;
+      border: none;
     }
-
-    &-head-cell {
-      padding: 10px 0px;
+    .el-tabs__item {
+      border: none;
+      color:  #AAAAAA;
       border-bottom: 3px solid #324B4E;
       text-align: center;
-      cursor: pointer;
-      color: #AAA;
-      transition: all 0.3s;
-
-      &:not(:last-child) {
-        width: 120px;
-        margin-right: 2px;
-      }
-
-      &:last-child {
-        flex: 1;
-      }
-    }
-
-    .head-active {
-      background: linear-gradient(360deg, #324B4E 0%, rgba(50, 75, 78, 0) 100%);
-      border-bottom: 3px solid #4DE2F0;
-      color: #FFF;
-    }
-
-    &-body {
-      padding-top: 10px;
-    }
-
-    .function-content-title {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0px 10px 10px;
-      border-bottom: 1px solid #52696A;
-      cursor: pointer;
-
-      .content-icon {
-        margin-right: 10px;
-        transition: transform 0.3s;
-      }
-
-      .rotate {
-        transform: rotate(180deg);
+      &.is-active {
+        color: #fff;
+        background: linear-gradient(360deg, #324B4E 0%, rgba(50, 75, 78, 0) 100%);
+        border-bottom: 3px solid $theme-color-primary;
       }
     }
   }
-
-  .single-description {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 37px 0px;
-
-    .description-inner-text {
-      align-self: flex-start;
-      margin-bottom: 17px;
-    }
-
-    .description-image-box {
-      position: relative;
-      width: 660px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .description-row-image-box {
-      position: relative;
-      width: 760px;
-      display: flex;
-    }
-
-    .description-row-image {
-      margin-right: 280px;
-    }
-
-    .description-image {
-
-    }
-
-    .description-space-image {
-        margin-bottom: 53px;
-    }
-
-    .description-round-empty {
-      width: 8px;
-      height: 8px;
-      border: 1px solid $theme-color-warning;
-      border-radius: 99px;
-    }
-
-    .description-line {
-      height: 1px;
-      background: $theme-color-warning;
-    }
-
-    .description-round-full {
-      width: 8px;
-      height: 8px;
-      background: $theme-color-warning;
-      border-radius: 99px;
-    }
-
-    .description-square {
-      position: absolute;
-      border: 3px solid $theme-color-warning;
-    }
-
-    .description-text {
-        width: 100px;
-    }
-
-    .description-text-right {
-      text-align: right;
-    }
-
-    // interface
-    .first-interface-box {
-      left: -118px;
-      top: 74px;
-    }
-
-    .first-interface-square {
-      width: 184px;
-      height: 100%;
-      left: 0px;
-      top: 0px;
-    }
-
-    .second-interface-box {
-      left: -156px;
-      top: 148px;
-    }
-
-    .third-interface-box {
-      right: -85px;
-      top: 0px;
-    }
-
-    .third-interface-square {
-      width: 187px;
-      height: 28px;
-      right: 0px;
-      top: 0px;
-    }
-
-    .fouth-interface-box {
-      right: -84px;
-      top: 68px;
-    }
-
-    .fouth-interface-square {
-      width: 442px;
-      height: 294px;
-      right: 16px;
-      top: 30px;
-    }
-
-    // menu
-
-    .first-menu-box {
-      right: -144px;
-      top: 68px;
-    }
-
-    .first-menu-square {
-      width: 202px;
-      height: 220px;
-      right: 105px;
-      top: 7px;
-    }
-
-    .second-menu-box {
-      right: -138px;
-      top: 55px;
-    }
-
-    .second-menu-square {
-      width: 185px;
-      height: 179px;
-      right: 26px;
-      top: 6px;
-    }
-
-    // index page
-
-    .first-index-box {
-      right: -130px;
-      top: 53px;
-    }
-
-    .first-index-square {
-      width: 441px;
-      height: 113px;
-      right: 18px;
-      top: 32px;
-    }
-
-    .second-index-box {
-      right: -131px;
-      top: 183px;
-    }
-
-    .second-index-square {
-      width: 442px;
-      height: 172px;
-      right: 17px;
-      top: 153px;
-    }
-
-    // question
-
-    .first-ask-box {
-      left: 4px;
-      top: 67px;
-    }
-
-    .first-ask-square {
-      width: 186px;
-      height: 146px;
-      left: 220px;
-      top: 38px;
-    }
-
-    .second-ask-box {
-      right: 61px;
-      top: 318px;
-    }
-
-    .second-ask-square {
-      width: 186px;
-      height: 38px;
-      right: 254px;
-      top: 309px;
-    }
-
-    // assist
-    .first-assist-box {
-      top: 303px;
-      left: 73px;
-    }
-
-    .first-assist-square {
-      top: 335px;
-      left: 45px;
-      width: 24px;
-    }
-
-    .second-assist-box {
-      top: 185px;
-      right: -92px;
-    }
-
-    .second-assist-square {
-      width: 189px;
-      height: 121px;
-      top: 192px;
-      right: 79px;
-    }
-
-    .third-assist-box {
-      top: 331px;
-      left: 153px;
-    }
-
-    .third-assist-square {
-      top: 352px;
-      left: 114px;
-      width: 32px;
-    }
-
-    .fourth-assist-box {
-      top: 18px;
-      right: -95px;
-    }
-
-    .fourth-assist-square {
-      width: 189px;
-      height: 315px;
-      top: 0px;
-      right: 75px;
-    }
-
-    // result
-
-    .first-result-box {
-      left: -159px;
-      top: 192px;
-    }
-
-    .first-result-square {
-      width: 89px;
-      height: 48px;
-      left: 0px;
-      top: 189px;
-    }
-
-    .second-result-box {
-      right: -142px;
-      top: 71px;
-    }
-
-    .second-result-square {
-      width: 463px;
-      height: 336px;
-      right: 6px;
-      top: 23px;
-    }
-
-    // deep
-
-    .first-deep-box {
-      left: -155px;
-      top: 232px;
-    }
-
-    .first-deep-square {
-      width: 131px;
-      height: 78px;
-      left: 6px;
-      top: 231px;
-    }
-
-    .second-deep-box {
-      top: 74px;
-      right: -155px;
-    }
-
-    .second-deep-square {
-      width: 453px;
-      height: 182px;
-      top: 0px;
-      right: 10px;
-    }
-
-    .third-deep-box {
-      right: -156px;
-      top: 259px;
-    }
-
-    .third-deep-square {
-      width: 454px;
-      height: 178px;
-      right: 9px;
-      top: 185px;
-    }
-
-    // pinboard
-
-    .first-pinboard-box {
-      top: 40px;
-      right: -104px;
-    }
-
-    .first-pinboard-square {
-      height: 31px;
-      width: 58px;
-      top: 48px;
-      right: 32px;
-    }
-
-    .second-pinboard-box {
-      top: 61px;
-      right: -137px;
-    }
-
-    .second-pinboard-square {
-      width: 102px;
-      height: 90px;
-      top: 36px;
-      right: 24px;
-    }
-
-    .third-pinboard-box {
-      top: 14px;
-      right: -154px;
-    }
-
-    .third-pinboard-square {
-      width: 60px;
-      height: 25px;
-      top: 37px;
-      right: 24px;
-    }
-
-    // manage class
-
-    .first-class-box {
-      top: -6px;
-      right: -130px;
-    }
-
-    .first-class-square {
-      width: 59px;
-      height: 27px;
-      top: 3px;
-      right: 132px;
-    }
-
-    .second-class-box {
-      top: 56px;
-      left: -158px;
-    }
-
-    .second-class-square {
-      top: 67px;
-      left: 11px;
-      width: 62px;
-      height: 25px;
-    }
-
-    .third-class-box {
-      top: 55px;
-      left: -139px;
-    }
-
-    .third-class-square {
-      height: 92px;
-      width: 90px;
-      top: 55px;
-      left: 244px;
-    }
-
-    // share pinboard
-
-    .first-share-box {
-      top: 84px;
-      left: -155px;
-    }
-
-    .first-share-square {
-      width: 79px;
-      height: 26px;
-      left: 249px;
-      top: 94px;
-    }
-
-    .second-share-box {
-      left: -102px;
-      top: 98px;
-    }
-
-    .second-share-square {
-      width: 247px;
-      height: 100px;
-      top: 73px;
-      left: 207px;
-    }
-
-    .third-share-box {
-      left: -140px;
-      top: 95px;
-    }
-
-    .third-share-square {
-      width: 163px;
-      height: 58px;
-      left: 12px;
-      top: 90px;
-    }
-
-    .fourth-share-box {
-      top: 62px;
-      right: -104px;
-    }
-
-    .fourth-share-square {
-      width: 46px;
-      height: 26px;
-      top: 73px;
-      right: 61px;
-    }
-
-    .fifth-share-box {
-      top: 99px;
-      left: -104px;
-    }
-
-    .fifth-share-square {
-      width: 247px;
-      height: 100px;
-      top: 73px;
-      left: 205px;
-    }
-
-    // data
-
-    .first-data-box {
-      right: -136px;
-      top: 43px;
-    }
-
-    .first-data-square {
-      width: 166px;
-      height: 43px;
-      right: 119px;
-      top: 46px;
-    }
-
-    .second-data-box {
-      left: -122px;
-      top: 63px;
-    }
-
-    .second-data-square {
-      width: 66px;
-      height: 27px;
-      left: 24px;
-      top: 74px;
-    }
-
-    .first-sheet-box {
-      left: -125px;
-      top: 179px;
-    }
-
-    .first-sheet-square {
-      width: 74px;
-      height: 27px;
-      left: 28px;
-      top: 189px;
-    }
-
-    .second-sheet-box {
-      left: -123px;
-      top: 63px;
-    }
-
-    .second-sheet-square {
-      width: 70px;
-      height: 27px;
-      left: 22px;
-      top: 74px;
-    }
-
-    .first-data-edit-box {
-      right: -137px;
-      top: 105px;
-    }
-
-    .first-data-edit-square {
-      width: 41px;
-      height: 21px;
-      right: 116px;
-      top: 118px;
-    }
-
-    .second-data-edit-box {
-      right: -138px;
-      top: 49px;
-    }
-
-    .second-data-edit-square {
-      width: 47px;
-      height: 20px;
-      right: 201px;
-      top: 63px;
-    }
-
-    .third-data-edit-box {
-      left: -108px;
-      top: 49px;
-    }
-
-    .third-data-edit-square {
-      width: 66px;
-      height: 22px;
-      left: 263px;
-      top: 62px;
-    }
-
-    .fourth-data-edit-box {
-      right: -104px;
-      top: 49px;
-    }
-
-    .fourth-data-edit-square {
-      width: 33px;
-      height: 20px;
-      right: 206px;
-      top: 63px;
-    }
-
-    .fifth-data-edit-box {
-      right: -110px;
-      top: 4px;
-    }
-
-    .fifth-data-edit-square {
-      width: 46px;
-      height: 25px;
-      right: 173px;
-      top: 15px;
-    }
-
-    // connect
-
-    .first-data-connect-box {
-      right: -158px;
-      top: 64px;
-    }
-
-    .first-data-connect-square {
-      width: 62px;
-      height: 21px;
-      right: 96px;
-      top: 77px;
-    }
-
-    .second-data-connect-box {
-      left: -154px;
-      top: 30px;
-    }
-
-    .second-data-connect-square {
-      width: 59px;
-      height: 28px;
-      left: 176px;
-      top: 40px;
-    }
-
-    .third-data-connect-box {
-      left: -123px;
-      top: 90px;
-    }
-
-    .third-data-connect-square {
-      width: 120px;
-      height: 51px;
-      left: 194px;
-      top: 102px;
-    }
-
-    .fourth-data-connect-box {
-      right: -104px;
-      top: 159px;
-    }
-
-    .fourth-data-connect-square {
-      width: 45px;
-      height: 28px;
-      right: 174px;
-      top: 168px;
+  .el-tabs__content {
+    overflow-y: auto;
+    .el-collapse {
+      .el-collapse-item__header {
+        padding-left: 0;
+        font-size: 16px;
+      }
     }
   }
 }
 
+p.sub-title {
+  margin: 0;
+  font-size: 14px;
+}
+.description-image-box {
+  margin: 20px auto 30px auto;
+  width: 660px;
+  position: relative;
+  text-align: center;
+  &.space-between {
+    display: flex;
+    justify-content: space-between;
+  }
+}
 </style>

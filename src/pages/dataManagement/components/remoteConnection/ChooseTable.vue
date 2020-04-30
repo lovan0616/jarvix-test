@@ -9,12 +9,17 @@
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <div class="data-frame-list">
-        <spinner class="processing-spinner-container"
-          v-if="isLoading"
-          :title="$t('editing.loading')"
-          size="50"
-        ></spinner>
+      <spinner class="processing-spinner-container"
+        v-if="isLoading"
+        :title="$t('editing.loading')"
+        size="50"
+      ></spinner>
+      <empty-info-block
+        v-else-if="tableList.length === 0"
+      ></empty-info-block>
+      <div class="data-frame-list"
+        v-else
+      >
         <label class="single-data-frame"
           v-for="(table, index) in tableList"
           :key="index"
@@ -39,7 +44,7 @@
       <div class="dialog-button-block">
         <button class="btn btn-outline"
           :disabled="isLoading"
-          @click="cancelFileUpload"
+          @click="cancelConnection"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-outline"
           :disabled="isLoading"
@@ -54,7 +59,8 @@
   </div>
 </template>
 <script>
-import { getTableList } from '@/API/RemoteConnection'
+import { getTableList, analyzeTable } from '@/API/RemoteConnection'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import UploadProcessBlock from './UploadProcessBlock'
 
 export default {
@@ -66,7 +72,8 @@ export default {
     }
   },
   components: {
-    UploadProcessBlock
+    UploadProcessBlock,
+    EmptyInfoBlock
   },
   data () {
     return {
@@ -89,20 +96,34 @@ export default {
         this.isLoading = false
       })
     },
-    cancelFileUpload () {
+    cancelConnection () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     prevStep () {
       this.$emit('prev')
     },
     nextStep () {
-      this.$emit('next', this.tableIdList.map(element => {
-        return {
-          name: element,
-          value: element,
-          connectionStatus: null
-        }
-      }))
+      this.isLoading = true
+      // 先清除，避免有部分成功的情形發生
+      this.$store.commit('dataManagement/clearEtlTableList')
+      let promiseList = this.tableIdList.map((element, index) => {
+        return analyzeTable(this.connectionId, element).then(response => {
+          this.$store.commit('dataManagement/updateEtlTableList', response)
+        })
+      })
+
+      Promise.all(promiseList).then(() => {
+        this.isLoading = false
+        this.$emit('next', this.tableIdList.map(element => {
+          return {
+            name: element,
+            value: element,
+            connectionStatus: null
+          }
+        }))
+      }).catch(() => {
+        this.isLoading = false
+      })
     }
   },
   computed: {
@@ -126,7 +147,7 @@ export default {
     margin-bottom: 16px;
   }
 
-  .data-frame-list {
+  .data-frame-list, .processing-spinner-container {
     max-height: 48vh;
     overflow: auto;
   }

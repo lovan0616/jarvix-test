@@ -69,7 +69,7 @@ export default {
 
   &.show {
     overflow: auto;
-    height: calc(100vh - 110px);
+    height: calc(100vh - 110px - #{$header-height});
     padding: 24px 32px;
   }
 
@@ -117,7 +117,7 @@ export default {
 
   .el-tabs__content {
     overflow-y: auto;
-    height: calc(100vh - 280px);
+    height: calc(100vh - 280px - #{$header-height});
   }
 }
 </style>

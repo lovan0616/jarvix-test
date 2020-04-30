@@ -11,38 +11,14 @@ export function linearGradient (colorStart, colorEnd, isParallel = false) {
   }], false)
 }
 
-export const colorDefault = [linearGradient('#95FAF2', '#559BD5'), linearGradient('#4CE2F0', '#438AF8'), linearGradient('#76CCFF', '#3E52F9'), linearGradient('#79ACFF', '#5A3FFA'), linearGradient('#698DF3', '#7544FC')]
 export const colorOnly1 = [linearGradient('#4CE2F0', '#438AF8')]
-export const colorOnly2 = [linearGradient('#95FAF2', '#559BD5'), linearGradient('#4BCBF1', '#416DF9')]
-export const color3 = [linearGradient('#95FAF2', '#559BD5'), linearGradient('#76CCFF', '#3E52F9'), linearGradient('#698DF3', '#7544FC')]
-export const color10 = [
-  linearGradient('#95FAF2', '#559BD5'),
-  linearGradient('#78F5F7', '#5596E4'),
-  linearGradient('#4CE2F0', '#438AF8'),
-  linearGradient('#4BCBF1', '#416DF9'),
-  linearGradient('#76CCFF', '#3E52F9'),
-  linearGradient('#79BCFF', '#443FFA'),
-  linearGradient('#79ACFF', '#5A3FFA'),
-  linearGradient('#698DF3', '#7544FC'),
-  linearGradient('#5568FA', '#9549FD'),
-  linearGradient('#6245FF', '#C238FF')
-]
-export const parallelColorDefault = [linearGradient('#95FAF2', '#559BD5', true), linearGradient('#4CE2F0', '#438AF8', true), linearGradient('#76CCFF', '#3E52F9', true), linearGradient('#79ACFF', '#5A3FFA', true), linearGradient('#698DF3', '#7544FC', true)]
+export const colorOnly2 = [linearGradient('#4CE2F0', '#438AF8'), linearGradient('#79ACFF', '#5A3FFA')]
+export const color3 = ['#44D2FF', '#6C55FA', '#CA66DA']
+export const color5 = ['#44D2FF', '#6C55FA', '#CA66DA', '#FF9559', '#EDF86C']
+
 export const parallelColorOnly1 = [linearGradient('#4CE2F0', '#438AF8', true)]
 export const parallelColorOnly2 = [linearGradient('#95FAF2', '#559BD5', true), linearGradient('#4BCBF1', '#416DF9', true)]
-export const parallelColor3 = [linearGradient('#95FAF2', '#559BD5', true), linearGradient('#76CCFF', '#3E52F9', true), linearGradient('#698DF3', '#7544FC', true)]
-export const parallelColor10 = [
-  linearGradient('#95FAF2', '#559BD5', true),
-  linearGradient('#78F5F7', '#5596E4', true),
-  linearGradient('#4CE2F0', '#438AF8', true),
-  linearGradient('#4BCBF1', '#416DF9', true),
-  linearGradient('#76CCFF', '#3E52F9', true),
-  linearGradient('#79BCFF', '#443FFA', true),
-  linearGradient('#79ACFF', '#5A3FFA', true),
-  linearGradient('#698DF3', '#7544FC', true),
-  linearGradient('#5568FA', '#9549FD', true),
-  linearGradient('#6245FF', '#C238FF', true)
-]
+
 export const color12 = [
   chartVariable['chartColorList-1'],
   chartVariable['chartColorList-2'],
@@ -491,13 +467,15 @@ export function seriesItemMarkLine () {
 }
 
 // drillDown type
-export function getDrillDownTool (titleObject, isParallel = false, twoDirection = false) {
+export function getDrillDownTool (routeName, titleObject, isParallel = false, twoDirection = false) {
   let toolbox
 
   let xAxisDrillable = titleObject.xAxis.some(element => element.drillable)
   let yAxisDrillable = titleObject.yAxis.some(element => element.drillable)
 
-  if (titleObject.xAxis.length === 0 && titleObject.yAxis.length === 0) {
+  if (routeName === 'PagePinboard') {
+    toolbox = ['']
+  } else if (titleObject.xAxis.length === 0 && titleObject.yAxis.length === 0) {
     toolbox = ['']
   } else if (titleObject.xAxis.length === 0 && titleObject.yAxis.length > 0) {
     if (yAxisDrillable) {
@@ -531,7 +509,7 @@ export function getDrillDownTool (titleObject, isParallel = false, twoDirection 
     brush: {
       toolbox: toolbox,
       xAxisIndex: 0,
-      yAxisindex: 0
+      yAxisIndex: 0
     }
   }
 }

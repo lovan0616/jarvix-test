@@ -38,24 +38,17 @@ export default {
     isShowChatRoom () {
       return this.$store.state.isShowChatRoom
     }
-  },
-  watch: {
-    // 判斷關閉時機
-    '$route.name' (value) {
-      if (value !== 'PageIndex' && value !== 'PageResult') {
-        this.$store.commit('updateChatRoomStatus', false)
-      }
-    }
   }
 }
 </script>
 <style lang="scss" scoped>
 .chat-room-block {
-  position: relative;
+  position: fixed;
+  top: $header-height;
   display: flex;
   flex-direction: column;
   width: $chat-room-width;
-  height: 100vh;
+  height: calc(100vh - #{$header-height});
   background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
   transform: translateX(-$chat-room-width);

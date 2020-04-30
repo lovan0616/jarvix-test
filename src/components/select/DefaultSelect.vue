@@ -2,6 +2,7 @@
   <el-select class="sy-select theme-dark"
     v-model="selectedValue"
     :placeholder="placeholder"
+    :no-data-text="$t('message.noData')"
     @change="$emit('change', $event)"
   >
     <el-option

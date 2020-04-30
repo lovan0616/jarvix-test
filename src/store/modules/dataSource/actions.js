@@ -6,11 +6,11 @@ import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
 
 export default {
-  init ({ commit, dispatch, state }) {
+  init ({ commit, dispatch, state, getters, rootGetters }) {
     if (state.isInit) return Promise.resolve(state)
-
     let queryDataSource = parseInt(router.app.$route.query.dataSourceId)
-    dispatch('getDataSourceList', queryDataSource)
+    const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
+    if (currentGroupId) dispatch('getDataSourceList', queryDataSource)
     commit('setIsInit', true)
   },
   getDataSourceList ({ dispatch, commit, state }, data) {
@@ -22,7 +22,9 @@ export default {
         if (res.some(element => element.id === data)) {
           dispatch('changeDataSourceById', data)
         } else {
-          dispatch('changeDataSourceById', res[0].id)
+          const dataSourceId = res.length ? res[0].id : null
+          dispatch('changeDataSourceById', dataSourceId)
+          if (!res.length) dispatch('handleEmptyDataSource')
           router.push('/')
 
           Message({
@@ -32,8 +34,10 @@ export default {
           })
         }
       } else {
-        // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個
-        if (!state.dataSourceId || res.findIndex(element => element.id === state.dataSourceId) < 0) {
+        if (!res.length) {
+          dispatch('handleEmptyDataSource')
+        } else if (!state.dataSourceId || res.findIndex(element => element.id === state.dataSourceId) < 0) {
+          // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個
           dispatch('changeDataSourceById', res[0].id)
         }
       }
@@ -52,7 +56,7 @@ export default {
     }
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
-
+    if (!dataSourceId) return Promise.resolve(state)
     return co(function* () {
       yield dispatch('getHistoryQuestionList')
       yield dispatch('getDataSourceColumnInfo')
@@ -60,24 +64,34 @@ export default {
       return Promise.resolve(state)
     })
   },
+  handleEmptyDataSource ({ dispatch, commit }) {
+    commit('chatBot/clearConversation', null, {root: true})
+    commit('chatBot/updateAnalyzeStatus', false, {root: true})
+    dispatch('clearAllFilter')
+    commit('clearCurrentQuestionId')
+    commit('chatBot/updateIsUseAlgorithm', false, {root: true})
+    commit('setDataSourceId', null)
+  },
   getDataSourceTables ({state}) {
-    if (state.dataSourceId === null) return Promise.reject(new Error('dataSource not set yet'))
+    if (state.dataSourceId === null) return
     return getDataFrameById(state.dataSourceId)
   },
   getDataFrameData ({state}, {id, page = 0}) {
     return getDataFrameData(id, page)
   },
   getDataSourceColumnInfo ({ commit, state }) {
+    if (!state.dataSourceId) return
     return getDataSourceColumnInfoById(state.dataSourceId).then(response => {
-      commit('setDataSourceCloumnInfoList', response)
+      commit('setDataSourceColumnInfoList', response)
     })
   },
   getDataSourceDataValue ({ commit, state }) {
+    if (!state.dataSourceId) return
     return getDataSourceDataValueById(state.dataSourceId).then(response => {
       commit('setDataSourceDataValueList', response)
     })
   },
-  updateResultRouter ({commit, state}, actionTag) {
+  updateResultRouter ({commit, state, rootGetters}, actionTag) {
     /**
      * 這邊的 DataSource 需要轉成字串的原因是：
      * 今天如果直接在結果頁重新整理，我如果直接從 router 進來
@@ -91,6 +105,8 @@ export default {
         stamp: new Date().getTime(),
         dataSourceId: String(state.dataSourceId),
         action: actionTag
+        // 暫時用來判定使用者是否在當前的群組問問題
+        // groupId: rootGetters['userManagement/getCurrentGroupId']
       }
     })
   },

@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-import { color10 } from './common/addons'
+import { color12 } from './common/addons'
 
 export default {
   name: 'DisplayTreeMapChart',
@@ -24,7 +24,7 @@ export default {
   computed: {
     chartOption () {
       return {
-        color: color10,
+        color: color12,
         series: [{
           type: 'treemap',
           data: this.dataset.data

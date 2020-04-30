@@ -224,7 +224,7 @@ export default {
         brush: {
           toolbox: [''],
           xAxisIndex: 0,
-          yAxisindex: 0
+          yAxisIndex: 0
         }
       }
     },

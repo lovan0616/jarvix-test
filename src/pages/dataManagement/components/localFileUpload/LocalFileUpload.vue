@@ -131,7 +131,10 @@ export default {
         if (this.currentUploadInfo.dataSourceId) {
           this.updateFileList(uploadInput.files)
         } else {
-          createDataSource(this.currentUploadInfo.name).then(res => {
+          createDataSource({
+            name: this.currentUploadInfo.name,
+            groupId: this.currentGroupId
+          }).then(res => {
             this.$store.commit('dataManagement/updateCurrentUploadDataSourceId', res.dataSourceId)
             this.updateFileList(uploadInput.files)
           })
@@ -146,6 +149,7 @@ export default {
         let file = inputFileList[i]
         formData.append('file', file)
         formData.append('dataSourceId', this.currentUploadInfo.dataSourceId)
+        formData.append('groupId', this.currentGroupId)
         formData.append('fileFullName', file.name)
 
         // 判斷是否有檔案超過大小限制
@@ -180,6 +184,9 @@ export default {
   },
   computed: {
     ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
+    currentGroupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
+    },
     fileCountLimit () {
       return this.$store.state.dataManagement.fileCountLimit
     },

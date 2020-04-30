@@ -10,6 +10,11 @@
       ></task>
     </template>
     <result-board-body slot="PageResultBoardBody">
+      <template slot="PageResultBoardIndicator">
+        <div class="hint-info-block">
+          <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"></svg-icon> {{ $t('resultDescription.prompt') }}:</span> {{ $t('editing.resultOverSizeMessage') }}</div>
+        </div>
+      </template>
       <template slot="PageResultBoardChart">
         <div class="key-result-wrapper">
           <div class="key-result-selector">
@@ -102,6 +107,23 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.hint-info-block {
+  background-color: rgba(0, 0, 0, 0.55);
+  border-radius: 5px;
+  padding: 11px;
+  font-size: 14px;
+  line-height: 1;
+  margin-bottom: 12px;
+
+  .hint-title {
+    color: #FFDF6F;
+  }
+}
+
+>>>.result-board-body {
+  padding-top: 23px;
+}
+
 .key-result-wrapper {
   display: flex;
   .key-result-selector {

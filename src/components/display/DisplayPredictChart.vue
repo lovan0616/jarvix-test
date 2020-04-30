@@ -51,11 +51,10 @@
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import {
   getDrillDownTool,
-  colorDefault,
   colorOnly1,
   colorOnly2,
-  color3,
-  color10,
+  color5,
+  color12,
   xAxisDefault,
   yAxisDefault
 } from './common/addons'
@@ -86,32 +85,14 @@ export default {
     }
   },
   computed: {
-    _dataset () {
-      let result
-      if (typeof this.dataset === 'string') result = JSON.parse(this.dataset)
-      else result = this.dataset
-
-      // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
-      if (result.columns) {
-        result.columns = result.columns.map(element => {
-          return isNaN(Number(element)) ? element : ' ' + element
-        })
-      }
-
-      return result
-    },
     chartStyle () {
       return {
         width: '100%',
         height: '420px'
       }
     },
-    dataList () {
-      if ((this._dataset instanceof Array)) return this._dataset
-      else return this.tobeDataset(this._dataset)
-    },
     series () {
-      return this._dataset.columns.map((v, colIndex) => {
+      return this.dataset.columns.map((v, colIndex) => {
         let item = {
           name: v,
           type: 'line'
@@ -155,23 +136,27 @@ export default {
         xAxis: xAxisDefault(),
         yAxis: yAxisDefault(),
         ...JSON.parse(JSON.stringify(commonChartOptions())),
-        ...getDrillDownTool(this.title),
+        ...getDrillDownTool(this.$route.name, this.title),
         dataset: {
-          source: this.dataList
+          source: this.datasetTransform(this.dataset)
         },
         series: this.series,
         color: this.colorList
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
-      config.toolbox.feature.magicType.show = true
       config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
       config.yAxis.name = this.title.yAxis[0].display_name
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.dataset[0].source
-        let table = '<table style="width:100%;padding: 0 16px;white-space:nowrap;"><tbody>'
+        let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur) => {
-            return acc + '<td style="padding: 4px 12px;">' + cur + '</td>'
+            // 判斷是不是後端捕 0 的地方，這邊不用三元表示式純粹因為排版不好看
+            if (cur === 0 && dataset[i][2] === 0 && dataset[i][3] === 0 && dataset[i][4] === null) {
+              return acc + '<td style="padding: 4px 12px;">' + null + '</td>'
+            } else {
+              return acc + '<td style="padding: 4px 12px;">' + cur + '</td>'
+            }
           }, '')
           table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>${tableData}</tr>`
         }
@@ -179,33 +164,59 @@ export default {
         return table
       }
 
+      // 移除 null 值
+      config.tooltip.formatter = (datas) => {
+        let res = datas[0].name + '<br/>'
+        for (let i = 0, length = datas.length; i < length; i++) {
+          // 過濾掉 null、undefined、以及 為了 stck 的 0
+          if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined || (datas[i].value[i + 1] === 0 && datas[i].value[2] === 0 && datas[i].value[3] === 0 && datas[i].value[4] === null)) continue
+          let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
+          res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '<br/>'
+        }
+        return res
+      }
+
+      // export data
+      this.$nextTick(() => {
+        if (this.$el.getAttribute('listener') !== 'true') {
+          this.$el.addEventListener('click', (e) => {
+            if (e.target && e.target.id === 'export-btn') {
+              let exportData = this.options.dataset.source.map(element => {
+                if (element[2] === 0 && element[3] === 0 && element[4] === null) {
+                  return [element[0], element[1], null, null, null]
+                } else {
+                  return element
+                }
+              })
+
+              this.exportToCSV(this.appQuestion, exportData)
+            }
+          }, false)
+          this.$el.setAttribute('listener', true)
+        }
+      })
+
       return config
     },
     colorList () {
-      switch (this.dataList[0].length) {
+      switch (this.series.length) {
         case 2:
           return colorOnly1
         case 3:
           return colorOnly2
         case 4:
-          return color3
+        case 5:
         case 6:
-          return colorDefault
+          return color5
         default:
-          return color10
+          return color12
       }
+    },
+    appQuestion () {
+      return this.$store.state.dataSource.appQuestion
     }
   },
   methods: {
-    tobeDataset (data) {
-      const result = [['index']]
-      result[0] = result[0].concat(data.columns)
-      data.data.forEach((row, rowIndex) => {
-        const rowData = [data.index[rowIndex]].concat(row)
-        result.push(rowData)
-      })
-      return result
-    },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {
         this.selectedData = []

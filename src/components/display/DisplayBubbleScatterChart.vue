@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-import { colorOnly1, colorOnly2, color3, color10 } from './common/addons'
+import { colorOnly1, colorOnly2, color5, color12 } from './common/addons'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 import chartVariable from '@/styles/chart/variables.scss'
 let scatterBubleChartConfig = {
@@ -81,9 +81,11 @@ export default {
         case 2:
           return colorOnly2
         case 3:
-          return color3
+        case 4:
+        case 5:
+          return color5
         default:
-          return color10
+          return color12
       }
     },
     chartOption () {

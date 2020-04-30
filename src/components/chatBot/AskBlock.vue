@@ -10,8 +10,10 @@
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
         <input class="question-input input"
           ref="questionInput"
+          :class="{'disabled': !dataSourceList.length}"
           :name="new Date().getTime()"
           :placeholder="$t('editing.askPlaceHolder')"
+          :disabled="!dataSourceList.length"
           autocomplete="off"
           v-model.trim="userQuestion"
           @keypress.enter.prevent="enterQuestion"
@@ -94,9 +96,11 @@ export default {
       }
     },
     cleanQuestion () {
+      if (!this.dataSourceList.length) return
       this.userQuestion = null
     },
     enterQuestion () {
+      if (!this.dataSourceList.length) return
       this.$store.commit('dataSource/setAppQuestion', this.userQuestion)
       this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
       this.hideHistory()
@@ -149,6 +153,9 @@ export default {
     },
     isUseAlgorithm () {
       return this.$store.state.chatBot.isUseAlgorithm
+    },
+    dataSourceList () {
+      return this.$store.state.dataSource.dataSourceList
     }
   },
   watch: {
@@ -208,6 +215,17 @@ export default {
       overflow: auto;
       padding-right: 74px;
       border-bottom: none;
+
+      &:disabled {
+        &::placeholder {
+          opacity: .15;
+        }
+
+        & ~ .ask-btn,
+        & ~ .clean-btn {
+          opacity: .15;
+        }
+      }
     }
 
     .clean-btn {

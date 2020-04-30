@@ -14,9 +14,8 @@ import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
 import {
   getDrillDownTool,
-  colorDefault,
   colorOnly2,
-  color3,
+  color5,
   color12
 } from './common/addons'
 
@@ -81,7 +80,7 @@ export default {
   },
   computed: {
     chartOption () {
-      let chartAddon = {...JSON.parse(JSON.stringify(chartOptions())), ...getDrillDownTool(this.title)}
+      let chartAddon = {...JSON.parse(JSON.stringify(chartOptions())), ...getDrillDownTool(this.$route.name, this.title)}
       this.$set(chartAddon.xAxis, 'splitLine', groupScatterChartConfig.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', groupScatterChartConfig.yAxisSplitLine)
       chartAddon.tooltip.trigger = groupScatterChartConfig.tooltip.trigger
@@ -131,10 +130,9 @@ export default {
         case 2:
           return colorOnly2
         case 3:
-          return color3
+        case 4:
         case 5:
-        case 6:
-          return colorDefault
+          return color5
         default:
           return color12
       }

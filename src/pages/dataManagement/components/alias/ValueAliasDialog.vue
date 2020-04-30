@@ -21,7 +21,7 @@
             <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
             <button type="button" class="btn btn-default"
               @click="buildAlias"
-            >{{ $t('button.save') }}</button>
+            >{{ $t('button.buildData') }}</button>
           </div>
         </div>
         <div class="dialog-content-block">
@@ -101,7 +101,7 @@
                     >
                       <a href="javascript:void(0);" class="link action-link"
                         @click="saveAlias(index)"
-                      >{{ $t('button.finish') }}</a>
+                      >{{ $t('button.save') }}</a>
                       <a href="javascript:void(0);" class="link action-link"
                         @click="cancelEditAlias"
                       >{{ $t('button.cancel') }}</a>
@@ -313,18 +313,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .value-alias-dialog {
-  .dialog-title {
-    position: relative;
-
-    .close-btn {
-      position: absolute;
-      top: 0;
-      right: 0;
-      color: #fff;
-      font-size: 14px;
-    }
-  }
-
   .dialog-header-block {
     display: flex;
     justify-content: space-between;
