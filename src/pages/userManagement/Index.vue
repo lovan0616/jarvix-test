@@ -242,17 +242,20 @@ export default {
       this.inviteeList = []
     },
     createUsers () {
-      if (this.hasExistingUsers()) {
-        Message({
-          message: this.$t('message.userAlreadyExisting'),
-          type: 'warning',
-          duration: 3 * 1000
-        })
-        return
-      }
-
       this.$validator.validateAll().then(result => {
         if (!result) return
+
+        let existingUsers = this.checkExistingUsers()
+        if (existingUsers.size > 0) {
+          const html = [...existingUsers].join(',<br>')
+          Message({
+            message: html + ',<br>' + this.$t('message.userAlreadyExisting'),
+            dangerouslyUseHTMLString: true,
+            type: 'warning',
+            duration: 5 * 1000
+          })
+          return
+        }
         if (this.hasRepetitiveInvitee) {
           Message({
             message: this.$t('message.userInviteRepetitive'),
@@ -282,9 +285,7 @@ export default {
               duration: 3 * 1000
             })
           })
-          .catch(error => {
-            console.log(error)
-          })
+          .catch(() => {})
       })
     },
     getUserList () {
@@ -472,23 +473,18 @@ export default {
     getZhRoleName (accountRole) {
       return this.$t(`userManagement.${this.toCamelCase(accountRole)}`)
     },
-    hasExistingUsers () {
-      let hasExistingUser = false
+    checkExistingUsers () {
+      let existingUsers = new Set()
 
-      for (let i = this.inviteeList.length - 1; i >= 0; i--) {
+      for (let i = 0; i < this.inviteeList.length; i++) {
         for (let j = 0; j < this.userData.length; j++) {
           if (this.inviteeList[i].email === this.userData[j].email) {
-            this.spliceExistingUsers(i)
-            hasExistingUser = true
+            existingUsers.add(this.inviteeList[i].email)
             break
           }
         }
       }
-      return hasExistingUser
-    },
-    spliceExistingUsers (index) {
-      this.inviteeList.splice(index, 1)
-      if (this.inviteeList.length === 0) this.addNewInvitee()
+      return existingUsers
     }
   },
   computed: {
