@@ -6,7 +6,6 @@
 
 <script>
 import ResultDisplay from './ResultDisplay'
-import store from '@/store'
 
 export default {
   name: 'PageResult',
@@ -17,25 +16,31 @@ export default {
     return {}
   },
   // 暫時用來處理使用者切換群組後點擊上一頁或直接輸入連結
-  beforeRouteEnter: function (to, from, next) {
-    const groupId = to.query.groupId
-    const currentGroupId = store.getters['userManagement/getCurrentGroupId']
-    if (!groupId || groupId !== currentGroupId) return next('/')
-    next()
-  },
+  // beforeRouteEnter: function (to, from, next) {
+  //   const groupId = to.query.groupId
+  //   const currentGroupId = store.getters['userManagement/getCurrentGroupId']
+  //   if (!currentGroupId || (groupId && (groupId.toString() !== currentGroupId.toString()))) { return next('/') }
+  //   next()
+  // },
   created () {
     this.getQueryInfo()
   },
   // 主要針對瀏覽器上下頁、從 preview 回到 searchbar 的一些處理
   watch: {
-    '$route.query.dataSourceId' (value) {
-      if (this.$route.name === 'PageResult' && value) {
-        this.$store.dispatch('dataSource/changeDataSourceById', parseInt(value))
+    '$route.query.dataSourceId': {
+      immediate: true,
+      handler: function (value) {
+        if (this.$route.name === 'PageResult' && value) {
+          this.$store.dispatch('dataSource/changeDataSourceById', parseInt(value))
+        }
       }
     },
-    '$route.query.question' (value) {
-      if (this.$route.name === 'PageResult') {
-        this.$store.commit('dataSource/setAppQuestion', value)
+    '$route.query.question': {
+      immediate: true,
+      handler: function (value) {
+        if (this.$route.name === 'PageResult') {
+          this.$store.commit('dataSource/setAppQuestion', value)
+        }
       }
     }
   },
