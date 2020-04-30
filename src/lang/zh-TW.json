@@ -279,7 +279,8 @@
     "chooseDataFrame": "選擇資料表",
     "chooseDataColumn": "選擇資料欄位",
     "numericOnly": "請輸入數值",
-    "isRequired": "必填"
+    "isRequired": "必填",
+    "resultOverSizeMessage": "資料量過大時，資料會經過取樣"
   },
   "etl": {
     "dataFrameList": "資料表列表",
