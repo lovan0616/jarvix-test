@@ -87,7 +87,7 @@ export default {
               this.$store.dispatch('dataSource/getDataSourceList')
 
               // 用戶若因 token 失效需重新登入，登入後導回原頁面
-              if (currentRoute.path) {
+              if (currentRoute && currentRoute.path) {
                 const {name, query, params} = currentRoute
                 return this.$router.push({name, query, params})
               } else {

@@ -34,10 +34,11 @@ export default {
           })
         }
       } else {
-        if (!res.length) return dispatch('handleEmptyDataSource')
-        // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個
-        if (!state.dataSourceId || res.findIndex(element => element.id === state.dataSourceId) < 0) {
-          return dispatch('changeDataSourceById', res[0].id)
+        if (!res.length) {
+          dispatch('handleEmptyDataSource')
+        } else if (!state.dataSourceId || res.findIndex(element => element.id === state.dataSourceId) < 0) {
+          // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個
+          dispatch('changeDataSourceById', res[0].id)
         }
       }
     })
