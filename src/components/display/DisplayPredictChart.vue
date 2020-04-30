@@ -170,7 +170,7 @@ export default {
         for (let i = 0, length = datas.length; i < length; i++) {
           // 過濾掉 null、undefined、以及 為了 stck 的 0
           if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined || (datas[i].value[i + 1] === 0 && datas[i].value[2] === 0 && datas[i].value[3] === 0 && datas[i].value[4] === null)) continue
-          let marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
+          let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
           res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '<br/>'
         }
         return res

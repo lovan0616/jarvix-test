@@ -308,6 +308,7 @@
     "hint": "提示",
     "forbiddenRule": ["禁用全型文字"],
     "chooseOptionHint": "請從下方點選您所需要的元素組成欄位，元素可拖曳替換位置",
+    "maxColumn": "目前最多支援{number}個資料欄位組合",
     "inputPlaceholder": "範例：利潤 = 收入 - 成本",
     "featureManagement": "自定義欄位管理",
     "customFeature": "自訂特徵欄位",
