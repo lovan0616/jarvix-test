@@ -32,17 +32,17 @@
               <div class="data-table-cell name">{{ column.name }}</div>
               <div class="data-table-cell alias">
                 <span
-                  v-if="tempRowInfo.dataColumnId !== column.id"
+                  v-show="tempRowInfo.dataColumnId !== column.id"
                 >{{ column.primaryAlias }}</span>
                 <div class="edit-block"
-                  v-else
+                  v-show="tempRowInfo.dataColumnId === column.id"
                 >
-                  <div class="edit-alias-input-block">
-                    <input type="text" class="input alias-input"
-                      v-model="tempRowInfo.alias"
-                    >
-                    <!-- <a href="javascript:void(0);" class="link">{{ $t('button.remove') }}</a> -->
-                  </div>
+                  <input-block
+                    class="edit-alias-input-block"
+                    v-model="tempRowInfo.alias"
+                    :name="'alias' + '-' + column.id"
+                    v-validate="`required|max:${max}`"
+                  ></input-block>
                   <!-- <button class="btn-m btn-secondary btn-add">
                     <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.add') }}
                   </button> -->
@@ -85,11 +85,14 @@
 <script>
 import { getDataFrameColumnInfoById, updateDataFrameAlias } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import InputBlock from '@/components/InputBlock'
 
 export default {
   name: 'EditColumnDialog',
+  inject: ['$validator'],
   components: {
-    DefaultSelect
+    DefaultSelect,
+    InputBlock
   },
   props: {
     tableInfo: {
@@ -192,6 +195,9 @@ export default {
   computed: {
     currentBookmarkInfo () {
       return this.$store.state.dataManagement.currentBookmarkInfo
+    },
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }
@@ -230,6 +236,14 @@ export default {
   .edit-alias-input-block {
     display: flex;
     align-items: center;
+    height: 52px;
+    /deep/ .input {
+      height: 28px;
+      padding-bottom: 0;
+    }
+    /deep/ .error-text {
+      bottom: -2px;
+    }
 
     &:not(:last-child) {
       margin-bottom: 12px;

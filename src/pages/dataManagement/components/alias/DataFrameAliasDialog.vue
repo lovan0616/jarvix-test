@@ -23,12 +23,13 @@
         :key="index"
         class="alias-item"
       >
-        <input-verify
-          v-model.trim="alias.name"
-          :placeholder="$t('editing.dataFrameAliasInputPlaceholder')"
+        <input-block
+          class="dialog-input"
+          v-model="alias.name"
+          :label="$t('editing.dataFrameAliasInputPlaceholder')"
           :name="'alias' + '-' + index"
-          v-validate="'required'"
-        />
+          v-validate="`required|max:${max}`"
+        ></input-block>
         <a
           href="javascript:void(0)"
           class="link remove"
@@ -46,7 +47,7 @@
 
 <script>
 import { getDataFrameAlias, patchDataFrameAlias } from '@/API/Alias'
-import InputVerify from '@/components/InputVerify'
+import InputBlock from '@/components/InputBlock'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import { Message } from 'element-ui'
@@ -56,7 +57,7 @@ export default {
   inject: ['$validator'],
   components: {
     WritingDialog,
-    InputVerify,
+    InputBlock,
     EmptyInfoBlock
   },
   props: {
@@ -128,6 +129,9 @@ export default {
   computed: {
     getSpinnerTitle () {
       return this.isLoading ? this.$t('editing.loading') : this.$t('editing.isSaving')
+    },
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }
@@ -147,8 +151,9 @@ export default {
     display: flex;
     align-items: top;
     justify-content: space-between;
-    .input-verify {
+    .dialog-input {
       flex: 1;
+      margin-bottom: 36px;
     }
     .link.remove {
       margin-left: 12px;
