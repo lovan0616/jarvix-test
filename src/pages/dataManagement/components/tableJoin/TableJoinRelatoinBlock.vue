@@ -248,51 +248,57 @@ export default {
       return true
     },
     buildJoinTable () {
-      if (!this.validateDataColumns()) return
-      this.isLoading = true
-      const joinTableData = {
-        dataSourceId: this.currentDataSourceId,
-        name: this.relationInfo.name,
-        dataFrameRelationList: this.getDataFrameRelationList()
-      }
-      createJoinTable(joinTableData)
-        .then(response => {
-          this.relationInfo.id = response.joinTableId
-          this.relationInfo.dataFrameId = response.dataFrameId
-          this.relationInfo.state = 'Process'
-          this.isLoading = false
-          this.isEditing = false
-          this.newTableCreated = true
-          this.$emit('dataFrameUpdate')
-          Message({
-            message: this.$t('message.joinTableBuilding'),
-            type: 'success',
-            duration: 3 * 1000
+      this.$validator.validateAll().then((isValidate) => {
+        if (!isValidate) return
+        if (!this.validateDataColumns()) return
+        this.isLoading = true
+        const joinTableData = {
+          dataSourceId: this.currentDataSourceId,
+          name: this.relationInfo.name,
+          dataFrameRelationList: this.getDataFrameRelationList()
+        }
+        createJoinTable(joinTableData)
+          .then(response => {
+            this.relationInfo.id = response.joinTableId
+            this.relationInfo.dataFrameId = response.dataFrameId
+            this.relationInfo.state = 'Process'
+            this.isLoading = false
+            this.isEditing = false
+            this.newTableCreated = true
+            this.$emit('dataFrameUpdate')
+            Message({
+              message: this.$t('message.joinTableBuilding'),
+              type: 'success',
+              duration: 3 * 1000
+            })
           })
-        })
-        .catch(() => { this.isLoading = false })
+          .catch(() => { this.isLoading = false })
+      })
     },
     updateJoinTable () {
-      if (!this.validateDataColumns()) return
-      this.isLoading = true
-      const joinTableData = {
-        id: this.relationInfo.id,
-        name: this.relationInfo.name,
-        dataFrameRelationList: this.getDataFrameRelationList()
-      }
-      updateJoinTable(joinTableData)
-        .then(response => {
-          this.relationInfo.state = 'Process'
-          this.isEditing = false
-          this.isLoading = false
-          this.$emit('dataFrameUpdate')
-          Message({
-            message: this.$t('message.saveSuccess'),
-            type: 'success',
-            duration: 3 * 1000
+      this.$validator.validateAll().then((isValidate) => {
+        if (!isValidate) return
+        if (!this.validateDataColumns()) return
+        this.isLoading = true
+        const joinTableData = {
+          id: this.relationInfo.id,
+          name: this.relationInfo.name,
+          dataFrameRelationList: this.getDataFrameRelationList()
+        }
+        updateJoinTable(joinTableData)
+          .then(response => {
+            this.relationInfo.state = 'Process'
+            this.isEditing = false
+            this.isLoading = false
+            this.$emit('dataFrameUpdate')
+            Message({
+              message: this.$t('message.saveSuccess'),
+              type: 'success',
+              duration: 3 * 1000
+            })
           })
-        })
-        .catch(() => { this.isLoading = false })
+          .catch(() => { this.isLoading = false })
+      })
     },
     getJoinTableName (joinType) {
       return this.joinTypeOptions.find(option => option.value === joinType).name

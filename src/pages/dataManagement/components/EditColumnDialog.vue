@@ -31,12 +31,9 @@
             >
               <div class="data-table-cell name">{{ column.name }}</div>
               <div class="data-table-cell alias">
-                <span
-                  v-show="tempRowInfo.dataColumnId !== column.id"
-                >{{ column.primaryAlias }}</span>
-                <div class="edit-block"
-                  v-show="tempRowInfo.dataColumnId === column.id"
-                >
+                <span v-show="!isEditing(column.id)">{{ column.primaryAlias }}</span>
+                <!-- 不使用v-if因為從DOM中拔除時validator會報錯(validate unexisting field) -->
+                <div v-show="isEditing(column.id)" class="edit-block" >
                   <input-block
                     class="edit-alias-input-block"
                     v-model="tempRowInfo.alias"
@@ -160,28 +157,32 @@ export default {
       })
     },
     save () {
-      if (this.isProcessing) return
+      this.$validator.validateAll().then((isValidate) => {
+        if (!isValidate) return
 
-      let currentColumn = this.columnList.find(element => {
-        return element.id === this.tempRowInfo.dataColumnId
-      })
-      // 將 temp 資料塞回去
-      currentColumn.primaryAlias = this.tempRowInfo.alias
-      currentColumn.statsType = this.tempRowInfo.columnStatsType
-      // 目前的 id 是否已經存在
-      let hasId = false
-      this.userEditInfo.userEditedColumnInputList.forEach(element => {
-        if (element.dataColumnId === this.tempRowInfo.dataColumnId) {
-          element.alias = this.tempRowInfo.alias
-          element.columnStatsType = this.tempRowInfo.columnStatsType
-          hasId = true
+        if (this.isProcessing) return
+
+        let currentColumn = this.columnList.find(element => {
+          return element.id === this.tempRowInfo.dataColumnId
+        })
+        // 將 temp 資料塞回去
+        currentColumn.primaryAlias = this.tempRowInfo.alias
+        currentColumn.statsType = this.tempRowInfo.columnStatsType
+        // 目前的 id 是否已經存在
+        let hasId = false
+        this.userEditInfo.userEditedColumnInputList.forEach(element => {
+          if (element.dataColumnId === this.tempRowInfo.dataColumnId) {
+            element.alias = this.tempRowInfo.alias
+            element.columnStatsType = this.tempRowInfo.columnStatsType
+            hasId = true
+          }
+        })
+        if (!hasId) {
+          this.userEditInfo.userEditedColumnInputList.push(this.tempRowInfo)
         }
-      })
-      if (!hasId) {
-        this.userEditInfo.userEditedColumnInputList.push(this.tempRowInfo)
-      }
 
-      this.cancel()
+        this.cancel()
+      })
     },
     cancel () {
       this.tempRowInfo = {
@@ -190,6 +191,9 @@ export default {
         columnStatsType: null
       }
       this.isProcessing = false
+    },
+    isEditing (id) {
+      return this.tempRowInfo.dataColumnId === id
     }
   },
   computed: {
