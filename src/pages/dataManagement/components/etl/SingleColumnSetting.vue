@@ -197,16 +197,16 @@ export default {
       switch (dataType) {
         case 'FLOAT':
         case 'INT':
-          column.targetStatsType = 'NUMERIC'
+          column.statsType = 'NUMERIC'
           break
         case 'STRING':
-          column.targetStatsType = 'CATEGORY'
+          column.statsType = 'CATEGORY'
           break
         case 'DATETIME':
-          column.targetStatsType = 'DATETIME'
+          column.statsType = 'DATETIME'
           break
         case 'BOOLEAN':
-          column.targetStatsType = 'BOOLEAN'
+          column.statsType = 'BOOLEAN'
           break
       }
     }
