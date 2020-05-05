@@ -249,7 +249,7 @@ export default {
     },
     hasActionPermission (action) {
       if (!action.hasOwnProperty('permission')) return true
-      return this.hasAccountPermission(action.permission)
+      return this.hasPermission(action.permission)
     },
     getBarData (actions = [], data) {
       if (data && !data.id) return actions
@@ -268,7 +268,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission']),
+    ...mapGetters('userManagement', ['hasPermission']),
     // 目前所選擇的項目
     selectList: {
       get () {

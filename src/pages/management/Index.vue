@@ -33,7 +33,7 @@ export default {
     this.getSideNav()
   },
   computed: {
-    ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission'])
+    ...mapGetters('userManagement', ['hasPermission'])
   },
   methods: {
     getSideNav () {
@@ -71,17 +71,8 @@ export default {
 
             // 顯示模組子功能列表
           } else {
-            if (navItem.meta.isHiddenNav) return
+            if (navItem.meta.isHiddenNav || (navItem.meta.permission && !this.hasPermission(navItem.meta.permission))) return
 
-            if (navItem.meta.accountPermission) {
-              const hasAccountPermission = navItem.meta.accountPermission.every(code => this.hasAccountPermission(code))
-              if (!hasAccountPermission) return
-            }
-
-            if (navItem.meta.groupPermission) {
-              const hasGroupPermission = navItem.meta.groupPermission.every(code => this.hasGroupPermission(code))
-              if (!hasGroupPermission) return
-            }
             this.nav[selectedMainNavIndex].subNav.push({
               title: this.$t('sideNav.' + this.lowercaseFirstLetter(navItem.name)),
               routeName: navItem.name
