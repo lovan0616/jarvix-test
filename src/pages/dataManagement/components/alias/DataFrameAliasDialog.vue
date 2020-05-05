@@ -153,7 +153,7 @@ export default {
     justify-content: space-between;
     .dialog-input {
       flex: 1;
-      margin-bottom: 36px;
+      margin-bottom: 56px;
     }
     .link.remove {
       margin-left: 12px;

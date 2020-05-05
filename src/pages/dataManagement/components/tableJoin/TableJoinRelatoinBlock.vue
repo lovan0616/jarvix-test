@@ -47,13 +47,14 @@
         :class="{'is-editing': isEditing}"
       >
         <label for="" class="label">*{{ $t('editing.tableName') }}</label>
-        <input
+        <input-block
           type="text"
-          class="input"
           v-if="!relationInfo.id"
           :placeholder="$t('editing.pleaseEnterName')"
+          :name="relationInfo.key"
           v-model="relationInfo.name"
-        >
+          v-validate="`required|max:${max}`"
+        ></input-block>
         <div class="name" v-else>{{ relationInfo.name }}</div>
       </div>
       <section class="join-relation-list">
@@ -130,15 +131,18 @@
 import RelationSelectBlock from './RelationSelectBlock'
 import TooltipDialog from '@/components/dialog/TooltipDialog'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import inputBlock from '@/components/InputBlock'
 import { createJoinTable, updateJoinTable, deleteJoinTable } from '@/API/JoinTable'
 import { Message } from 'element-ui'
 
 export default {
   name: 'TableJoinRelationBlock',
+  inject: ['$validator'],
   components: {
     TooltipDialog,
     DefaultSelect,
-    RelationSelectBlock
+    RelationSelectBlock,
+    inputBlock
   },
   props: {
     relationInfo: {
@@ -296,6 +300,11 @@ export default {
     toggleIsEditing () {
       this.isEditing = !this.isEditing
     }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
+    }
   }
 }
 </script>
@@ -340,7 +349,7 @@ export default {
     display: inline-block;
 
     &.is-editing {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
 
     &.select {
@@ -348,6 +357,9 @@ export default {
       top: 24px;
       left: 340px;
       width: 160px;
+      .label {
+        margin-bottom: 0;
+      }
     }
 
     .label {

@@ -25,11 +25,13 @@
     <template v-else>
       <div class="input-block">
         <label for="" class="label">*{{ $t('editing.columnSetName') }}</label>
-        <input type="text" class="input"
+        <input-block
           v-if="!columnSet.id"
           :placeholder="$t('editing.pleaseEnterName')"
           v-model="columnSet.primaryAlias"
-        >
+          :name="validateFieldKey"
+          v-validate="`required|max:${max}`"
+        ></input-block>
         <div
           v-else
         >{{ columnSet.primaryAlias }}</div>
@@ -78,10 +80,15 @@
 </template>
 <script>
 import { createColumnSet, addColumnSetColumn, removeColumnSetColumn, deleteColumnSet } from '@/API/ColumnSet'
+import inputBlock from '@/components/InputBlock'
 import { Message } from 'element-ui'
 
 export default {
   name: 'SingleColumnSet',
+  inject: ['$validator'],
+  components: {
+    inputBlock
+  },
   props: {
     columnList: {
       type: Array,
@@ -102,7 +109,8 @@ export default {
   data () {
     return {
       columnOptionList: [],
-      isEditing: !this.columnSet.id
+      isEditing: !this.columnSet.id,
+      validateFieldKey: new Date().getTime().toString()
     }
   },
   mounted () {
@@ -210,6 +218,11 @@ export default {
     toggleIsEditing () {
       this.isEditing = !this.isEditing
     }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
+    }
   }
 }
 </script>
@@ -258,7 +271,7 @@ export default {
 
   .input-block {
     width: 301px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 
     .label {
       display: block;
