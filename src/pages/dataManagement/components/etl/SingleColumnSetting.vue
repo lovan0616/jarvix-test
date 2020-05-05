@@ -194,7 +194,21 @@ export default {
     },
     changeDataType (column, dataType) {
       column.targetDataType = dataType
-      column.targetStatsType = (dataType === 'STRING') ? 'CATEGORY' : column.originalStatsType
+      switch (dataType) {
+        case 'FLOAT':
+        case 'INT':
+          column.statsType = 'NUMERIC'
+          break
+        case 'STRING':
+          column.statsType = 'CATEGORY'
+          break
+        case 'DATETIME':
+          column.statsType = 'DATETIME'
+          break
+        case 'BOOLEAN':
+          column.statsType = 'BOOLEAN'
+          break
+      }
     }
   }
 }
