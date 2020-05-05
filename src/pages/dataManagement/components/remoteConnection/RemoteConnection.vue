@@ -64,6 +64,7 @@
           label="Schema"
           name="schema"
           v-model="connectInfo.schema"
+          v-validate="'max:128'"
         ></input-block>
         <div class="inline-input-block">
           <input-block class="dialog-input host"
