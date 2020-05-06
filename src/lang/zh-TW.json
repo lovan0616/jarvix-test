@@ -27,6 +27,7 @@
   "message": {
     "joinTableBuilding": "資料表建置中，建置完成即可使用",
     "remindAdjustMainDate": "此表可能有多個日期欄位，您可用資料表的”日期欄位調整“功能進行設定。",
+    "remindAdjustColumnAlias": "為了讓智能分析問句容易使用，建議進行資料表的“欄位別名”功能進行自定義調整",
     "remindSameDataTypeColumns": "資料欄位的型態須相同",
     "remindNotAllowSelfJoin": "不能選擇相同資料表",
     "builded": "資料源建立完成",
@@ -150,6 +151,11 @@
     "emptyDataFrameAlias": "尚未建立任何資料表別名",
     "selectForeign": "選擇關聯資料表",
     "selectColumn": "選擇欄位",
+    "dataColumnAmount": "資料欄位數",
+    "dataRowAmount": "資料列數",
+    "dataPreview": "資料預覽",
+    "emptyKey": "無資料",
+    "resultPreview": "結果預覽",
     "processStep1": "填寫資料源名稱",
     "processStep2": "上傳檔案",
     "processStep3": "選擇欄位",
@@ -255,7 +261,8 @@
     "selectYet": "尚未選擇任何項目",
     "createWay": "建立方式",
     "tableJoin": "資料表關聯",
-    "selectJoinType": "關聯方式",
+    "joinType": "關聯方式",
+    "selectJoinType": "選擇關聯方式",
     "userUpload": "使用者上傳",
     "loading": "資料讀取中",
     "databaseType": "資料庫類型",
@@ -491,7 +498,10 @@
     "moveForward": "前往",
     "addColumn": "新增欄位",
     "create": "新增",
-    "featureManagement": "自定義欄位"
+    "featureManagement": "自定義欄位",
+    "setting": "設定",
+    "reset": "重新設定",
+    "confirmBuild": "確認建置"
   },
   "aggregation": {
     "mean": "平均",

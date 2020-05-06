@@ -4,6 +4,7 @@
     :placeholder="placeholder"
     :no-data-text="$t('message.noData')"
     @change="$emit('change', $event)"
+    :disabled="isDisabled"
   >
     <el-option
       v-for="option in optionList"
@@ -21,7 +22,8 @@ export default {
   props: {
     value: { type: [String, Number, Boolean], default: undefined },
     optionList: { type: Array, default: () => [] },
-    placeholder: { type: String, default: '' }
+    placeholder: { type: String, default: '' },
+    isDisabled: {type: Boolean, default: false}
   },
   computed: {
     selectedValue: {
