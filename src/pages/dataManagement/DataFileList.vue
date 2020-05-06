@@ -33,7 +33,6 @@
             <svg-icon icon-class="feature" class="icon"></svg-icon>{{ $t('button.featureManagement') }}
           </button>
           <button class="btn-m btn-secondary btn-has-icon"
-            v-if="showJoinTable === 'true'"
             @click="openEditJoinTableDialog"
             :disabled="!canEditJoinTable()"
           >
