@@ -170,35 +170,39 @@ export default {
       }
     },
     saveColumnSet () {
-      if (!this.columnSet.primaryAlias) {
-        Message({
-          message: this.$t('message.columnSetNameEmpty'),
-          type: 'warning',
-          duration: 3 * 1000
+      this.$validator.validate(this.validateFieldKey).then((isValidate) => {
+        if (!isValidate) return
+
+        if (!this.columnSet.primaryAlias) {
+          Message({
+            message: this.$t('message.columnSetNameEmpty'),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+          return false
+        }
+        if (this.columnSet.dataColumnList.length === 0) {
+          Message({
+            message: this.$t('message.columnSetChosenEmpty'),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+          return false
+        }
+        createColumnSet({
+          primaryAlias: this.columnSet.primaryAlias,
+          dataFrameId: this.columnSet.dataFrameId,
+          dataColumnIdList: this.columnSet.dataColumnList.map(column => column.id)
+        }).then(response => {
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+          this.columnSet.id = response.id
+          this.columnSet.dataColumnList = response.dataColumnList
+          this.toggleIsEditing()
         })
-        return false
-      }
-      if (this.columnSet.dataColumnList.length === 0) {
-        Message({
-          message: this.$t('message.columnSetChosenEmpty'),
-          type: 'warning',
-          duration: 3 * 1000
-        })
-        return false
-      }
-      createColumnSet({
-        primaryAlias: this.columnSet.primaryAlias,
-        dataFrameId: this.columnSet.dataFrameId,
-        dataColumnIdList: this.columnSet.dataColumnList.map(column => column.id)
-      }).then(response => {
-        Message({
-          message: this.$t('message.saveSuccess'),
-          type: 'success',
-          duration: 3 * 1000
-        })
-        this.columnSet.id = response.id
-        this.columnSet.dataColumnList = response.dataColumnList
-        this.toggleIsEditing()
       })
     },
     removeColumnSet () {
