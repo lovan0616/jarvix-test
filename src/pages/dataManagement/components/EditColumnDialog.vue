@@ -19,6 +19,13 @@
           <div class="data-table-head is-scrolling">
             <div class="data-table-row table-head">
               <div class="data-table-cell name">{{ $t('editing.columnName') }}</div>
+              <div class="data-table-cell source">
+                {{ $t('editing.columnSource') }}
+                <span class="nav-item nav-function tooltip-container">
+                  <svg-icon icon-class="information-circle" class="icon" />
+                  <div class="tooltip">{{$t('editing.columnSourceRemind')}}</div>
+                </span>
+                </div>
               <div class="data-table-cell alias">{{ $t('editing.alias') }}</div>
               <div class="data-table-cell tag">{{ $t('editing.columnTag') }}</div>
               <div class="data-table-cell action">{{ $t('editing.action') }}</div>
@@ -30,6 +37,7 @@
               :key="column.id"
             >
               <div class="data-table-cell name">{{ column.name }}</div>
+              <div class="data-table-cell source">{{ column.parentDataFrameAlias || '-' }}</div>
               <div class="data-table-cell alias">
                 <span
                   v-if="tempRowInfo.dataColumnId !== column.id"
@@ -210,16 +218,19 @@ export default {
     margin-bottom: 32px;
   }
   .name {
-    width: 30%;
+    width: 22%;
+  }
+  .source {
+    width: 22%;
   }
   .alias {
-    width: 30%;
+    width: 21%;
   }
   .tag {
-    width: 15%;
+    width: 18%;
   }
   .action {
-    width: 20%;
+    width: 17%;
   }
 
   .alias-input {
@@ -239,6 +250,20 @@ export default {
     .icon {
       margin-right: 5px;
     }
+  }
+}
+
+.tooltip-container {
+  .tooltip {
+    width: 212px;
+    white-space: normal;
+    padding: 8px 12px;
+    line-height: 14px;
+    color: #DDDDDD;
+  }
+
+  .icon {
+    color: $theme-color-warning;
   }
 }
 </style>

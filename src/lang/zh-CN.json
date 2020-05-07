@@ -108,6 +108,8 @@
     "editTable": "编辑资料表",
     "editTableColumn": "编辑资料表栏位",
     "columnName": "栏位名称",
+    "columnSource": "栏位来源",
+    "columnSourceRemind": "透过关联方式建置的资料表才会显示栏位来源资料表资讯",
     "alias": "别名",
     "columnTag": "标签",
     "columnDomain": "领域",

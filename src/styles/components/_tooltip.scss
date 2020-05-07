@@ -1,7 +1,8 @@
 .tooltip-container {
+  position: relative;
   .tooltip {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%);
     background: #2B3839;
