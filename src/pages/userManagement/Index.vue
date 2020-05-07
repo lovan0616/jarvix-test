@@ -38,12 +38,13 @@
           </a>
         </template>
       </crud-table>
-      </div>
+    </div>
 
     <writing-dialog
       v-if="isShowPasswordChange"
       :title="$t('editing.changePassword')"
       :button="$t('button.change')"
+      :isLoading="isProcessing"
       @closeDialog="closePasswordChange"
       @confirmBtn="changePassword"
       :showBoth="true"
@@ -73,6 +74,7 @@
       v-if="isShowChangeRole"
       :title="$t('userManagement.updateRole')"
       :button="$t('button.change')"
+      :isLoading="isProcessing"
       @closeDialog="closeChangeRole"
       @confirmBtn="changeRole"
       :showBoth="true"
@@ -94,6 +96,7 @@
       :title="$t('userManagement.confirmDeleteAccountText')"
       :type="'delete'"
       :btnText="$t('button.remove')"
+      :isProcessing="isProcessing"
       @closeDialog="closeDeleteAccount"
       @confirmBtn="deleteAccount"
     >
@@ -103,6 +106,7 @@
       v-if="isShowCreateUser"
       @closeDialog="closeCreateUser"
       @confirmBtn="createUsers"
+      :isProcessing="isProcessing"
       class="fill-dialog"
     >
       <div class="form new-invitee">
@@ -204,6 +208,7 @@ export default {
       accountText: this.$t('editing.username'),
       accountViewerRoleId: null,
       isLoading: false,
+      isProcessing: false,
       tableHeaders: [
         {
           text: this.$t('editing.userAccount'),
@@ -278,6 +283,7 @@ export default {
           })
           return
         }
+        this.isProcessing = true
         inviteUser({
           emailList: this.inviteeList.map(invitee => {
             return {
@@ -300,6 +306,9 @@ export default {
             })
           })
           .catch(() => {})
+          .finally(() => {
+            this.isProcessing = false
+          })
       })
     },
     getUserList () {
@@ -336,6 +345,7 @@ export default {
         .catch(() => {})
     },
     changeRole () {
+      this.isProcessing = true
       updateRole({
         accountId: this.$store.getters['userManagement/getCurrentAccountId'],
         newRole: this.currentUser.roleId,
@@ -353,10 +363,14 @@ export default {
         .catch(error => {
           console.log(error)
         })
+        .finally(() => {
+          this.isProcessing = false
+        })
     },
     changePassword () {
       this.$validator.validateAll().then(result => {
         if (result) {
+          this.isProcessing = true
           updateUser({
             active: this.currentUser.active,
             password: this.currentUser.password,
@@ -375,10 +389,14 @@ export default {
             .catch(error => {
               console.log(error)
             })
+            .finally(() => {
+              this.isProcessing = false
+            })
         }
       })
     },
     deleteAccount () {
+      this.isProcessing = true
       deleteUserAccount(
         this.$store.getters['userManagement/getCurrentAccountId'],
         this.currentId
@@ -392,8 +410,9 @@ export default {
             duration: 3 * 1000
           })
         })
-        .catch(error => {
-          console.log(error)
+        .catch(() => {})
+        .finally(() => {
+          this.isProcessing = false
         })
     },
     showPasswordChange (user, hasPermission) {
@@ -537,35 +556,6 @@ export default {
     border-radius: 5px;
     margin-bottom: 16px;
     cursor: pointer;
-  }
-
-  .user-manipulate-item {
-    color: #4DE2F0;
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid;
-    padding-left: 0;
-    padding-right: 0;
-
-    &:disabled {
-      opacity: 0.15;
-      cursor: not-allowed;
-      &:hover {
-        opacity: 0.15;
-      }
-    }
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-
-  .user-line {
-    color: #9DBDBD;
-    margin: 0px 10px 0px 8px;
-    border-right: 1px solid #9DBDBD;
-    font-size: 12px;
   }
 
   .fill-dialog {

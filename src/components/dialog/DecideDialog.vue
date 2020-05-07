@@ -9,17 +9,30 @@
         <div v-if="content" class="content">{{ content }}</div>
       </div>
       <div class="dialog-button-block">
-        <div @click="closeDialog" class="btn dialog-decide-cancel">{{ $t('button.cancel') }}</div>
-        <div
+        <button
+          :disabled="isProcessing"
+          @click="closeDialog"
+          class="btn dialog-decide-cancel">
+          {{ $t('button.cancel') }}
+        </button>
+        <button
           v-if="type === 'confirm'"
+          :disabled="isProcessing"
           @click="confirmBtn"
           class="btn btn-default dialog-decide-change-logout"
-        >{{ btnText }}</div>
-        <div
+        >
+          <svg-icon v-if="isProcessing" icon-class="spinner"></svg-icon>
+          {{ btnText }}
+        </button>
+        <button
           v-else-if="type === 'delete'"
+          :disabled="isProcessing"
           @click="confirmBtn"
           class="btn btn-default dialog-decide-change-delete"
-        >{{ btnText }}</div>
+        >
+          <svg-icon v-if="isProcessing" icon-class="spinner"></svg-icon>
+          {{ btnText }}
+        </button>
       </div>
     </div>
   </div>
@@ -32,6 +45,7 @@ export default {
     title: { type: String, default: '' },
     content: { type: String, default: '' },
     type: { type: String, default: '' },
+    isProcessing: { type: Boolean, default: false },
     btnText: {
       type: String,
       default: function () {
