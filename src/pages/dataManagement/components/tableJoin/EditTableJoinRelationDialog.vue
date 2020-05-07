@@ -67,7 +67,7 @@ export default {
       singleJoinTable: {
         dataFrameRelationList: [
           {
-            joinType: 'Inner',
+            joinType: '',
             leftDataFrame: { id: null },
             leftDataColumn: { id: null, dataType: null },
             rightDataFrame: { id: null },

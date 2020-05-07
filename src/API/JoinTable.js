@@ -47,3 +47,18 @@ export function deleteJoinTable (joinTableId) {
     method: 'DELETE'
   })
 }
+
+/**
+ * retrieve join table preview result using current selection
+ * @param {Object} inputData - 欲建立資料關聯的資料
+ * @param {Array} inputData.dataFrameRelationList - 關聯表內容
+ * @param {Number} inputData.dataSourceId - 資料源 ID
+ * @param {String} inputData.name - 關聯表名稱
+ */
+export function createJoinTablePreviewResult (inputData) {
+  return request({
+    url: '/joinTable/info',
+    method: 'POST',
+    data: inputData
+  })
+}
