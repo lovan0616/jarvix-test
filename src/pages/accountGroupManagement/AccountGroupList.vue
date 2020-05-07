@@ -77,7 +77,7 @@ export default {
     this.fetchData()
   },
   computed: {
-    ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission']),
+    ...mapGetters('userManagement', ['hasPermission']),
     tableHeaders () {
       return [
         {
@@ -155,7 +155,7 @@ export default {
         })
     },
     showCreateButton () {
-      return this.hasAccountPermission('account_create_group')
+      return this.hasPermission('account_create_group')
     },
     confirmEnterGroup (dataObj) {
       this.selectedGroup = dataObj

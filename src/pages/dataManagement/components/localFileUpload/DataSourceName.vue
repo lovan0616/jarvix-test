@@ -8,7 +8,7 @@
           :label="$t('editing.dataSourceName')"
           name="dataSourceName"
           v-model="dataSourceInfo.name"
-          v-validate="'required'"
+          v-validate="`required|max:${max}`"
         ></input-block>
       </div>
     </div>
@@ -55,6 +55,11 @@ export default {
           this.$emit('next')
         }
       })
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }

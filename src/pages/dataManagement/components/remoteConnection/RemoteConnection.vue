@@ -21,13 +21,13 @@
           :label="$t('editing.dataSourceName')"
           name="dataSourceName"
           v-model="dataSourceName"
-          v-validate="'required'"
+          v-validate="`required|max:${max}`"
         ></input-block>
         <input-block class="dialog-input"
           :label="$t('editing.connectionName')"
           name="connectionName"
           v-model="connectInfo.name"
-          v-validate="'required'"
+          v-validate="`required|max:${max}`"
         ></input-block>
         <input-block class="dialog-input"
           :label="$t('editing.loginAccount')"
@@ -64,6 +64,7 @@
           label="Schema"
           name="schema"
           v-model="connectInfo.schema"
+          v-validate="'max:128'"
         ></input-block>
         <div class="inline-input-block">
           <input-block class="dialog-input host"
@@ -188,6 +189,9 @@ export default {
   computed: {
     currentGroupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
+    },
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }
