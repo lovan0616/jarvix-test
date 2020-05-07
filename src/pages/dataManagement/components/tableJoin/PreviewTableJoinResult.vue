@@ -1,7 +1,7 @@
 <template>
   <section class="preview-result">
     <h3 class="title">{{ $t('editing.resultPreview') }}</h3>
-    <div class="data-table feature-list">
+    <div class="data-table">
       <div class="data-table-row table-head">
         <div class="data-table-cell">{{ $t('editing.dataColumnAmount') }}</div>
         <div class="data-table-cell">{{ $t('editing.dataRowAmount') }}</div>

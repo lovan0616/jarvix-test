@@ -10,12 +10,11 @@
         <button
           v-if="relationInfo.id && isEditing"
           :disabled="isLoading"
-          class="btn btn-secondary btn-delete"
+          class="btn btn-secondary"
           @click="deleteJoinTable()"
         >{{ $t('button.delete') }}</button>
         <button type="button" class="btn btn-outline"
           v-if="isEditing && !relationInfo.id"
-          :disabled="isLoading"
           @click="cancelAddingJoinTable()"
         >{{ $t('button.cancel') }}</button>
         <button type="button" class="btn btn-outline"
@@ -24,7 +23,6 @@
         >{{ $t('button.edit') }}</button>
         <button type="button" class="btn btn-outline"
           v-if="isEditing && relationInfo.id"
-          :disabled="isLoading"
           @click="toggleIsEditing()"
         >{{ $t('button.close') }}</button>
       </template>
@@ -35,7 +33,7 @@
     >
       <h3 class="table-name">{{ relationInfo.name }}</h3>
       <h6 class="join-type">
-        關聯方式:
+        {{ $t('editing.joinType') }}
         <span
           v-for="(relation, relationIndex) in relationInfo.dataFrameRelationList"
           :key="relationIndex"
@@ -47,7 +45,7 @@
         class="input-block"
         :class="{'is-editing': isEditing, 'disabled': isPreviewingResult}"
       >
-        <label for="" class="label">*{{ $t('editing.tableName') }}</label>
+        <label class="label">*{{ $t('editing.tableName') }}</label>
         <input
           type="text"
           class="input"
@@ -71,7 +69,7 @@
             class="input-block select"
             :class="{'is-editing': isEditing}"
           >
-            <label for="" class="label">{{ $t('editing.joinType') }}</label>
+            <label class="label">{{ $t('editing.joinType') }}</label>
             <default-select
               class="tag-select input"
               v-model="relation.joinType"
@@ -80,9 +78,7 @@
               :placeholder="$t('editing.selectJoinType')"
             />
           </div>
-          <div
-            class="correlation-block"
-          >
+          <div class="correlation-block">
             <relation-select-block
               :data-frame-list="dataFrameList"
               :initial-data-frame-id.sync="relation.leftDataFrame.id"
@@ -119,7 +115,7 @@
       </transition>
       <div class="footer-button-block">
         <transition name="fade" mode="out-in">
-          <button type="button" class="btn btn-default btn-save"
+          <button type="button" class="btn btn-default"
             v-if="!isPreviewingResult"
             :disabled="isLoading"
             @click="getPreviewResult()"
@@ -129,7 +125,7 @@
               :disabled="isLoading"
               @click="isPreviewingResult = false"
             >{{ $t('button.reset') }}</button>
-            <button type="button" class="btn btn-default btn-save"
+            <button type="button" class="btn btn-default"
               :disabled="isLoading"
               @click="buildJoinTable()"
             >{{ $t('button.confirmBuild') }}</button>
@@ -222,13 +218,8 @@ export default {
     deleteJoinTable () {
       this.isLoading = true
       deleteJoinTable(this.relationInfo.id)
-        .then(() => {
-          this.$emit('deleteJoinTable', this.index)
-          this.isLoading = false
-        })
-        .catch(() => {
-          this.isLoading = false
-        })
+        .then(() => { this.$emit('deleteJoinTable', this.index) })
+        .finally(() => { this.isLoading = false })
     },
     getDataFrameRelationList () {
       return this.relationInfo.dataFrameRelationList.map(relation => ({
@@ -292,7 +283,6 @@ export default {
           this.relationInfo.id = response.joinTableId
           this.relationInfo.dataFrameId = response.dataFrameId
           this.relationInfo.state = 'Process'
-          this.isLoading = false
           this.toggleIsEditing()
           this.newTableCreated = true
           this.$emit('dataFrameUpdate')
@@ -302,7 +292,7 @@ export default {
             duration: 3 * 1000
           })
         })
-        .catch(() => { this.isLoading = false })
+        .finally(() => { this.isLoading = false })
     },
     updateJoinTable () {
       if (!this.validateDataColumns()) return
@@ -316,7 +306,6 @@ export default {
         .then(response => {
           this.relationInfo.state = 'Process'
           this.toggleIsEditing()
-          this.isLoading = false
           this.$emit('dataFrameUpdate')
           Message({
             message: this.$t('message.saveSuccess'),
@@ -324,7 +313,7 @@ export default {
             duration: 3 * 1000
           })
         })
-        .catch(() => { this.isLoading = false })
+        .finally(() => { this.isLoading = false })
     },
     getJoinTypeName (joinType) {
       return this.joinTypeOptions.find(option => option.value === joinType).name
