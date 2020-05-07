@@ -23,7 +23,7 @@
         >{{ $t('button.edit') }}</button>
         <button type="button" class="btn btn-outline"
           v-if="isEditing && relationInfo.id"
-          @click="toggleIsEditing()"
+          @click="cancelEdit()"
         >{{ $t('button.close') }}</button>
       </template>
     </div>
@@ -95,42 +95,38 @@
           </div>
         </div>
       </section>
-      <transition name="fade" mode="out-in">
-        <div
-          class="reminder-block"
-          v-if="!isPreviewingResult"
-        >
-          <span class="reminder-title">
-            <svg-icon icon-class="lamp" />
-            {{$t('resultDescription.prompt')}}：
-          </span>
-          <span class="reminder-description">
-            {{'1. ' + $t('message.remindNotAllowSelfJoin') + ' 2. ' + $t('message.remindSameDataTypeColumns')}}
-          </span>
-        </div>
-        <preview-table-join-result
-          v-else
-          :result="previewResultData"
-        />
-      </transition>
+      <div
+        class="reminder-block"
+        v-if="!isPreviewingResult"
+      >
+        <span class="reminder-title">
+          <svg-icon icon-class="lamp" />
+          {{$t('resultDescription.prompt')}}：
+        </span>
+        <span class="reminder-description">
+          {{'1. ' + $t('message.remindNotAllowSelfJoin') + ' 2. ' + $t('message.remindSameDataTypeColumns')}}
+        </span>
+      </div>
+      <preview-table-join-result
+        v-else
+        :result="previewResultData"
+      />
       <div class="footer-button-block">
-        <transition name="fade" mode="out-in">
-          <button type="button" class="btn btn-default"
-            v-if="!isPreviewingResult"
+        <button type="button" class="btn btn-default"
+          v-if="!isPreviewingResult"
+          :disabled="isLoading"
+          @click="getPreviewResult()"
+        >{{ $t('button.setting') }}</button>
+        <span v-else>
+          <button type="button" class="btn btn-outline"
             :disabled="isLoading"
-            @click="getPreviewResult()"
-          >{{ $t('button.setting') }}</button>
-          <span v-else>
-            <button type="button" class="btn btn-outline"
-              :disabled="isLoading"
-              @click="isPreviewingResult = false"
-            >{{ $t('button.reset') }}</button>
-            <button type="button" class="btn btn-default"
-              :disabled="isLoading"
-              @click="buildJoinTable()"
-            >{{ $t('button.confirmBuild') }}</button>
-          </span>
-        </transition>
+            @click="isPreviewingResult = false"
+          >{{ $t('button.reset') }}</button>
+          <button type="button" class="btn btn-default"
+            :disabled="isLoading"
+            @click="buildJoinTable()"
+          >{{ $t('button.confirmBuild') }}</button>
+        </span>
       </div>
     </template>
     <div
@@ -283,6 +279,7 @@ export default {
           this.relationInfo.id = response.joinTableId
           this.relationInfo.dataFrameId = response.dataFrameId
           this.relationInfo.state = 'Process'
+          this.isPreviewingResult = false
           this.toggleIsEditing()
           this.newTableCreated = true
           this.$emit('dataFrameUpdate')
@@ -305,6 +302,7 @@ export default {
       updateJoinTable(joinTableData)
         .then(response => {
           this.relationInfo.state = 'Process'
+          this.isPreviewingResult = false
           this.toggleIsEditing()
           this.$emit('dataFrameUpdate')
           Message({
@@ -331,6 +329,10 @@ export default {
           this.isPreviewingResult = true
         })
         .finally(() => { this.isLoading = false })
+    },
+    cancelEdit () {
+      this.toggleIsEditing()
+      this.isPreviewingResult = false
     }
   }
 }
