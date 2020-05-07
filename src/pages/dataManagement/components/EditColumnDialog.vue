@@ -44,18 +44,15 @@
               <div class="data-table-cell name">{{ column.name }}</div>
               <div class="data-table-cell source">{{ column.parentDataFrameAlias || '-' }}</div>
               <div class="data-table-cell alias">
-                <span
-                  v-if="tempRowInfo.dataColumnId !== column.id"
-                >{{ column.primaryAlias }}</span>
-                <div class="edit-block"
-                  v-else
-                >
-                  <div class="edit-alias-input-block">
-                    <input type="text" class="input alias-input"
-                      v-model="tempRowInfo.alias"
-                    >
-                    <!-- <a href="javascript:void(0);" class="link">{{ $t('button.remove') }}</a> -->
-                  </div>
+                <span v-show="!isEditing(column.id)">{{ column.primaryAlias }}</span>
+                <!-- 不使用v-if因為從DOM中拔除時validator會報錯(validate unexisting field) -->
+                <div v-show="isEditing(column.id)" class="edit-block" >
+                  <input-block
+                    class="edit-alias-input-block"
+                    v-model="tempRowInfo.alias"
+                    :name="'alias' + '-' + column.id"
+                    v-validate="`required|max:${max}`"
+                  ></input-block>
                   <!-- <button class="btn-m btn-secondary btn-add">
                     <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.add') }}
                   </button> -->
@@ -99,11 +96,14 @@
 import { getDataFrameColumnInfoById, updateDataFrameAlias } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'
+import InputBlock from '@/components/InputBlock'
 
 export default {
   name: 'EditColumnDialog',
+  inject: ['$validator'],
   components: {
-    DefaultSelect
+    DefaultSelect,
+    InputBlock
   },
   props: {
     tableInfo: {
@@ -177,28 +177,32 @@ export default {
         })
     },
     save () {
-      if (this.isProcessing) return
+      this.$validator.validateAll().then((isValidate) => {
+        if (!isValidate) return
 
-      let currentColumn = this.columnList.find(element => {
-        return element.id === this.tempRowInfo.dataColumnId
-      })
-      // 將 temp 資料塞回去
-      currentColumn.primaryAlias = this.tempRowInfo.alias
-      currentColumn.statsType = this.tempRowInfo.columnStatsType
-      // 目前的 id 是否已經存在
-      let hasId = false
-      this.userEditInfo.userEditedColumnInputList.forEach(element => {
-        if (element.dataColumnId === this.tempRowInfo.dataColumnId) {
-          element.alias = this.tempRowInfo.alias
-          element.columnStatsType = this.tempRowInfo.columnStatsType
-          hasId = true
+        if (this.isProcessing) return
+
+        let currentColumn = this.columnList.find(element => {
+          return element.id === this.tempRowInfo.dataColumnId
+        })
+        // 將 temp 資料塞回去
+        currentColumn.primaryAlias = this.tempRowInfo.alias
+        currentColumn.statsType = this.tempRowInfo.columnStatsType
+        // 目前的 id 是否已經存在
+        let hasId = false
+        this.userEditInfo.userEditedColumnInputList.forEach(element => {
+          if (element.dataColumnId === this.tempRowInfo.dataColumnId) {
+            element.alias = this.tempRowInfo.alias
+            element.columnStatsType = this.tempRowInfo.columnStatsType
+            hasId = true
+          }
+        })
+        if (!hasId) {
+          this.userEditInfo.userEditedColumnInputList.push(this.tempRowInfo)
         }
-      })
-      if (!hasId) {
-        this.userEditInfo.userEditedColumnInputList.push(this.tempRowInfo)
-      }
 
-      this.cancel()
+        this.cancel()
+      })
     },
     cancel () {
       this.tempRowInfo = {
@@ -207,11 +211,17 @@ export default {
         columnStatsType: null
       }
       this.isProcessing = false
+    },
+    isEditing (id) {
+      return this.tempRowInfo.dataColumnId === id
     }
   },
   computed: {
     currentBookmarkInfo () {
       return this.$store.state.dataManagement.currentBookmarkInfo
+    },
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }
@@ -261,6 +271,14 @@ export default {
   .edit-alias-input-block {
     display: flex;
     align-items: center;
+    height: 52px;
+    /deep/ .input {
+      height: 28px;
+      padding-bottom: 0;
+    }
+    /deep/ .error-text {
+      bottom: -2px;
+    }
 
     &:not(:last-child) {
       margin-bottom: 12px;

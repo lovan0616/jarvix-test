@@ -305,16 +305,6 @@ Vue.config.errorHandler = err => {
   Vue.rollbar.error(err)
 }
 
-// 暫時的權限管理
-router.beforeEach((to, from, next) => {
-  let flag = to.matched.some(record => record.meta.requireAuth)
-  if (flag) {
-    store.state.setting.permission ? next() : router.push('/')
-  } else {
-    next()
-  }
-})
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

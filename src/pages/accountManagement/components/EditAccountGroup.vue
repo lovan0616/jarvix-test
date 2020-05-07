@@ -10,7 +10,7 @@
           class="input-block"
           name="groupName"
           v-model="groupName"
-          v-validate="'required'"
+          v-validate="`required|max:${max}`"
         ></input-block>
       </div>
       <div
@@ -135,6 +135,11 @@ export default {
             })
         }
       })
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }

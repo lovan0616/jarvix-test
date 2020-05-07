@@ -66,7 +66,7 @@
                           class="input-verify"
                           :name="index + '-' + aliasIndex"
                           :placeholder="$t('editing.pleaseEnterName')"
-                          v-validate="'letterSpace|max:20'"
+                          v-validate="`letterSpace|max:${max}`"
                         />
                         <div class="link"
                           @click="removeAlias(aliasIndex)"
@@ -307,6 +307,11 @@ export default {
     },
     closeDialog () {
       this.$emit('close')
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }

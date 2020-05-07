@@ -132,9 +132,9 @@ export function deleteDataFrameById (dataFrameId) {
  * get data column by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
-export function getDataFrameColumnInfoById (dataFrameId) {
+export function getDataFrameColumnInfoById (dataFrameId, hasFeature = true) {
   return request({
-    url: `/dataColumn/dataFrame/${dataFrameId}`,
+    url: `/dataColumn/dataFrame/${dataFrameId}?hasFeature=${hasFeature}`,
     method: 'GET'
   })
 }
