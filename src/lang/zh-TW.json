@@ -109,6 +109,8 @@
     "editTable": "編輯資料表",
     "editTableColumn": "編輯資料表欄位",
     "columnName": "欄位名稱",
+    "columnSource": "欄位來源",
+    "columnSourceRemind": "透過關聯方式建置的資料表才會顯示欄位來源資料表資訊",
     "alias": "別名",
     "columnTag": "標籤",
     "columnDomain": "領域",

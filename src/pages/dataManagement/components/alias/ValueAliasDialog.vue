@@ -19,9 +19,9 @@
           <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
           <div class="button-block">
             <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
-            <button type="button" class="btn btn-default"
+            <button type="button" class="btn-m btn-default"
               @click="buildAlias"
-            >{{ $t('button.buildData') }}</button>
+            >{{ $t('button.build') }}</button>
           </div>
         </div>
         <div class="dialog-content-block">

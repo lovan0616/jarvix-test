@@ -8,17 +8,29 @@
       </div>
       <div class="dialog-header-block">
         <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ tableInfo.primaryAlias }}</div>
-        <button class="btn-m btn-default"
+        <div
           v-if="userEditInfo.userEditedColumnInputList.length > 0"
-          :disabled="isProcessing"
-          @click="updateDataSource"
-        >{{ $t('button.buildData') }}</button>
+          class="button-block"
+        >
+          <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
+          <button class="btn-m btn-default"
+            :disabled="isProcessing"
+            @click="updateDataSource"
+          >{{ $t('button.build') }}</button>
+        </div>
       </div>
       <div class="edit-table-block">
         <div class="data-table">
           <div class="data-table-head is-scrolling">
             <div class="data-table-row table-head">
               <div class="data-table-cell name">{{ $t('editing.columnName') }}</div>
+              <div class="data-table-cell source">
+                {{ $t('editing.columnSource') }}
+                <span class="nav-item nav-function tooltip-container">
+                  <svg-icon icon-class="information-circle" class="icon" />
+                  <div class="tooltip">{{$t('editing.columnSourceRemind')}}</div>
+                </span>
+                </div>
               <div class="data-table-cell alias">{{ $t('editing.alias') }}</div>
               <div class="data-table-cell tag">{{ $t('editing.columnTag') }}</div>
               <div class="data-table-cell action">{{ $t('editing.action') }}</div>
@@ -30,6 +42,7 @@
               :key="column.id"
             >
               <div class="data-table-cell name">{{ column.name }}</div>
+              <div class="data-table-cell source">{{ column.parentDataFrameAlias || '-' }}</div>
               <div class="data-table-cell alias">
                 <span v-show="!isEditing(column.id)">{{ column.primaryAlias }}</span>
                 <!-- 不使用v-if因為從DOM中拔除時validator會報錯(validate unexisting field) -->
@@ -82,6 +95,7 @@
 <script>
 import { getDataFrameColumnInfoById, updateDataFrameAlias } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import { Message } from 'element-ui'
 import InputBlock from '@/components/InputBlock'
 
 export default {
@@ -148,13 +162,19 @@ export default {
     updateDataSource () {
       this.isProcessing = true
 
-      updateDataFrameAlias(this.userEditInfo).then(() => {
+      updateDataFrameAlias(this.userEditInfo)
+        .then(() => {
         // 更新問句說明資訊
-        this.$store.dispatch('dataSource/getDataSourceColumnInfo')
-        this.closeDialog()
-      }).catch(() => {
-        this.cancel()
-      })
+          this.$store.dispatch('dataSource/getDataSourceColumnInfo')
+          this.closeDialog()
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+        }).catch(() => {
+          this.cancel()
+        })
     },
     save () {
       this.$validator.validateAll().then((isValidate) => {
@@ -208,28 +228,39 @@ export default {
 </script>
 <style lang="scss" scoped>
 .edit-column-dialog {
-  .dialog {
-    &-header-block {
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      line-height: 30px;
+  .dialog-header-block {
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    line-height: 30px;
+
+    .data-frame-name {
+      font-size: 14px;
+    }
+
+    .remark-text {
+      color: $theme-color-warning;
+      font-size: 14px;
+      margin-right: 12px;
     }
   }
   .edit-table-block {
     margin-bottom: 32px;
   }
   .name {
-    width: 30%;
+    width: 22%;
+  }
+  .source {
+    width: 22%;
   }
   .alias {
-    width: 30%;
+    width: 21%;
   }
   .tag {
-    width: 15%;
+    width: 18%;
   }
   .action {
-    width: 20%;
+    width: 17%;
   }
 
   .alias-input {
@@ -257,6 +288,20 @@ export default {
     .icon {
       margin-right: 5px;
     }
+  }
+}
+
+.tooltip-container {
+  .tooltip {
+    width: 212px;
+    white-space: normal;
+    padding: 8px 12px;
+    line-height: 14px;
+    color: #DDDDDD;
+  }
+
+  .icon {
+    color: $theme-color-warning;
   }
 }
 </style>
