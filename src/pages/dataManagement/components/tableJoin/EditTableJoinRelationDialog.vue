@@ -90,7 +90,7 @@ export default {
         .then((res) => {
           if (res.length === 0) {
             const emptyJoinTable = JSON.parse(JSON.stringify(this.singleJoinTable))
-            emptyJoinTable.key = new Date().toString()
+            emptyJoinTable.key = new Date().getTime().toString()
             this.joinTableList.push(emptyJoinTable)
           } else {
             this.joinTableList = res.reduce((acc, cur) => {
@@ -126,7 +126,7 @@ export default {
     },
     addJoinTable () {
       const emptyJoinTable = JSON.parse(JSON.stringify(this.singleJoinTable))
-      emptyJoinTable.key = new Date().toString()
+      emptyJoinTable.key = new Date().getTime().toString()
       this.joinTableList.unshift(emptyJoinTable)
     },
     cancelAddingJoinTable (index) {

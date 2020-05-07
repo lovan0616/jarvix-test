@@ -7,7 +7,7 @@
       <input-block class="login-input-block"
         name="newDataSourceName"
         v-model="newName"
-        v-validate="'required'"
+        v-validate="`required|max:${max}`"
       ></input-block>
     </div>
     <template class="dialog-btn-block" slot="dialogFooter">
@@ -64,6 +64,11 @@ export default {
     },
     cancel () {
       this.$emit('cancel')
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }

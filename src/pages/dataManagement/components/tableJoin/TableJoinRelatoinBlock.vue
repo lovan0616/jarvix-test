@@ -45,15 +45,16 @@
         class="input-block"
         :class="{'is-editing': isEditing, 'disabled': isPreviewingResult}"
       >
-        <label class="label">*{{ $t('editing.tableName') }}</label>
-        <input
+        <label for="" class="label">*{{ $t('editing.tableName') }}</label>
+        <input-block
           type="text"
-          class="input"
           v-if="!relationInfo.id"
           :placeholder="$t('editing.pleaseEnterName')"
           :disabled="isPreviewingResult"
+          :name="relationInfo.key"
           v-model="relationInfo.name"
-        >
+          v-validate="`required|max:${max}`"
+        ></input-block>
         <div class="name" v-else>{{ relationInfo.name }}</div>
       </div>
       <section
@@ -151,16 +152,19 @@ import RelationSelectBlock from './RelationSelectBlock'
 import TooltipDialog from '@/components/dialog/TooltipDialog'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import PreviewTableJoinResult from './PreviewTableJoinResult'
+import inputBlock from '@/components/InputBlock'
 import { createJoinTable, updateJoinTable, deleteJoinTable, createJoinTablePreviewResult } from '@/API/JoinTable'
 import { Message } from 'element-ui'
 
 export default {
   name: 'TableJoinRelationBlock',
+  inject: ['$validator'],
   components: {
     TooltipDialog,
     DefaultSelect,
     RelationSelectBlock,
-    PreviewTableJoinResult
+    PreviewTableJoinResult,
+    inputBlock
   },
   props: {
     relationInfo: {
@@ -271,47 +275,53 @@ export default {
       }
     },
     buildJoinTable () {
-      if (!this.validateDataColumns()) return
-      this.isLoading = true
-      const joinTableData = this.getJoinTableData()
-      createJoinTable(joinTableData)
-        .then(response => {
-          this.relationInfo.id = response.joinTableId
-          this.relationInfo.dataFrameId = response.dataFrameId
-          this.relationInfo.state = 'Process'
-          this.isPreviewingResult = false
-          this.toggleIsEditing()
-          this.newTableCreated = true
-          this.$emit('dataFrameUpdate')
-          Message({
-            message: this.$t('message.joinTableBuilding'),
-            type: 'success',
-            duration: 3 * 1000
+      this.$validator.validateAll().then((isValidate) => {
+        if (!isValidate) return
+        if (!this.validateDataColumns()) return
+        this.isLoading = true
+        const joinTableData = this.getJoinTableData()
+        createJoinTable(joinTableData)
+          .then(response => {
+            this.relationInfo.id = response.joinTableId
+            this.relationInfo.dataFrameId = response.dataFrameId
+            this.relationInfo.state = 'Process'
+            this.isPreviewingResult = false
+            this.toggleIsEditing()
+            this.newTableCreated = true
+            this.$emit('dataFrameUpdate')
+            Message({
+              message: this.$t('message.joinTableBuilding'),
+              type: 'success',
+              duration: 3 * 1000
+            })
           })
-        })
-        .finally(() => { this.isLoading = false })
+          .finally(() => { this.isLoading = false })
+      })
     },
     updateJoinTable () {
-      if (!this.validateDataColumns()) return
-      this.isLoading = true
-      const joinTableData = {
-        id: this.relationInfo.id,
-        name: this.relationInfo.name,
-        dataFrameRelationList: this.getDataFrameRelationList()
-      }
-      updateJoinTable(joinTableData)
-        .then(response => {
-          this.relationInfo.state = 'Process'
-          this.isPreviewingResult = false
-          this.toggleIsEditing()
-          this.$emit('dataFrameUpdate')
-          Message({
-            message: this.$t('message.saveSuccess'),
-            type: 'success',
-            duration: 3 * 1000
+      this.$validator.validateAll().then((isValidate) => {
+        if (!isValidate) return
+        if (!this.validateDataColumns()) return
+        this.isLoading = true
+        const joinTableData = {
+          id: this.relationInfo.id,
+          name: this.relationInfo.name,
+          dataFrameRelationList: this.getDataFrameRelationList()
+        }
+        updateJoinTable(joinTableData)
+          .then(response => {
+            this.relationInfo.state = 'Process'
+            this.isPreviewingResult = false
+            this.toggleIsEditing()
+            this.$emit('dataFrameUpdate')
+            Message({
+              message: this.$t('message.saveSuccess'),
+              type: 'success',
+              duration: 3 * 1000
+            })
           })
-        })
-        .finally(() => { this.isLoading = false })
+          .finally(() => { this.isLoading = false })
+      })
     },
     getJoinTypeName (joinType) {
       return this.joinTypeOptions.find(option => option.value === joinType).name
@@ -333,6 +343,11 @@ export default {
     cancelEdit () {
       this.toggleIsEditing()
       this.isPreviewingResult = false
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }
@@ -378,7 +393,7 @@ export default {
     display: inline-block;
 
     &.is-editing {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
 
     &.select {
@@ -386,6 +401,9 @@ export default {
       top: 24px;
       left: 340px;
       width: 160px;
+      .label {
+        margin-bottom: 0;
+      }
     }
 
     .label {

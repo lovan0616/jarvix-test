@@ -69,7 +69,7 @@ export default {
     next()
   },
   computed: {
-    ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission']),
+    ...mapGetters('userManagement', ['hasPermission']),
     tableHeaders () {
       return [
         {
@@ -93,7 +93,7 @@ export default {
               type: 'event',
               name: this.$t('button.remove'),
               value: 'delete',
-              permission: 'account_delete_group_user'
+              permission: ['account_delete_group_user', 'group_delete_user']
             }
           ]
         }
@@ -138,7 +138,8 @@ export default {
         .catch(() => { this.isLoading = false })
     },
     showCreateButton () {
-      return this.canEditList ? this.hasAccountPermission('account_create_group_user') : false
+      const permissionList = ['account_create_group_user', 'group_create_user']
+      return this.canEditList ? this.hasPermission(permissionList) : false
     }
   }
 }
