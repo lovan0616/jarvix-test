@@ -17,7 +17,7 @@
 
 <script>
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { colorOnly1, colorOnly2, color5, color12, getDrillDownTool } from './common/addons'
+import { color12, getDrillDownTool } from './common/addons'
 
 export default {
   name: 'DisplayPieChart',
