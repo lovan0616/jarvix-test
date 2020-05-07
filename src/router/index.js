@@ -77,7 +77,7 @@ const router = new Router({
         // 如果第一層下有子功能列表 isMainNav 設定在子層 redirect 模組
         // meta 中 layer 用來設定從 management 模組往下到自己的路徑
         // 當前頁面側邊導覽列第一層要顯示哪個模組，layer 就寫到那個模組為止
-        // meta 使用 accountPermission & groupPermission 指定路由權限
+        // meta 使用 permission 指定路由權限
         {
           path: 'account',
           component: () => import('@/pages/management/Index'),
@@ -101,7 +101,7 @@ const router = new Router({
                   name: 'AccountUserManagement',
                   meta: {
                     layers: ['account', 'account-management'],
-                    accountPermission: ['account_update_user']
+                    permission: ['account_update_user']
                   }
                 },
                 {
@@ -110,7 +110,7 @@ const router = new Router({
                   name: 'AccountGroupManagement',
                   meta: {
                     layers: ['account', 'account-management'],
-                    accountPermission: ['account_read_group']
+                    permission: ['account_read_group']
                   }
                 },
                 {
@@ -119,7 +119,7 @@ const router = new Router({
                   name: 'AccountInformation',
                   meta: {
                     layers: ['account', 'account-management'],
-                    accountPermission: ['account_read_user']
+                    permission: ['account_read_user']
                   }
                 }
               ]
@@ -205,7 +205,7 @@ const router = new Router({
                   name: 'GroupUserList',
                   meta: {
                     layers: ['group', 'user-management'],
-                    accountPermission: ['account_read_group']
+                    permission: ['account_read_group']
                   }
                 },
                 {
@@ -214,7 +214,7 @@ const router = new Router({
                   name: 'GroupCreateUser',
                   meta: {
                     layers: ['group', 'user-management'],
-                    accountPermission: ['account_create_group_user'],
+                    permission: ['account_create_group_user'],
                     isHiddenNav: true
                   }
                 }
@@ -266,27 +266,9 @@ router.beforeEach(async (to, from, next) => {
   }
 
   // 確認 account 和 group 權限都符合
-  const hasAccountPermission = store.getters['userManagement/hasAccountPermission']
-  const hasGroupPermission = store.getters['userManagement/hasGroupPermission']
+  const hasPermission = store.getters['userManagement/hasPermission']
   for (let i = 0; i < to.matched.length; i++) {
-    if (!to.matched[i].meta) continue
-
-    let passAccountPermission
-    let passGroupPermission
-
-    if (to.matched[i].meta.accountPermission) {
-      passAccountPermission = to.matched[i].meta.accountPermission.every(code => hasAccountPermission(code))
-    } else {
-      passAccountPermission = true
-    }
-
-    if (to.matched[i].meta.groupPermission) {
-      passGroupPermission = to.matched[i].meta.groupPermission.every(code => hasGroupPermission(code))
-    } else {
-      passGroupPermission = true
-    }
-
-    if (passAccountPermission && passGroupPermission) continue
+    if (!to.matched[i].meta || !to.matched[i].meta.permission || hasPermission(to.matched[i].meta.permission)) continue
 
     next(from.path)
     return Message({

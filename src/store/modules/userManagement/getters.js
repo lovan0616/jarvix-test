@@ -1,9 +1,10 @@
 export default {
-  hasAccountPermission: state => permissionCode => {
-    return state.accountPermission.includes(permissionCode)
-  },
-  hasGroupPermission: state => permissionCode => {
-    return state.groupPermission.includes(permissionCode)
+  hasPermission: state => permissionCode => {
+    const userPermission = new Set(state.permission)
+    // validate single permission
+    if (typeof permissionCode === 'string') return userPermission.has(permissionCode)
+    // validate a list of permission
+    return permissionCode.some(permission => userPermission.has(permission))
   },
   getCurrentAccountId: state => {
     const defaultAccount = state.accountList.find(account => account.isDefault)
