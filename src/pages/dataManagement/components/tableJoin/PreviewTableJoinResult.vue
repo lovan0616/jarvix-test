@@ -9,8 +9,8 @@
       </div>
       <div class="data-table-body">
         <div class="data-table-row">
-          <div class="data-table-cell">{{ result.rowCount }}</div>
-          <div class="data-table-cell">{{ result.columnCount }}</div>
+          <div class="data-table-cell">{{ result.columnCount | formatZeroData }}</div>
+          <div class="data-table-cell">{{ result.rowCount | formatZeroData }}</div>
           <div class="data-table-cell value-list">
             <span v-if="!result.valueList.length">{{ $t('editing.emptyKey') }}</span>
             <span
@@ -32,6 +32,12 @@ export default {
     result: {
       type: Object,
       required: true
+    }
+  },
+  filters: {
+    formatZeroData: function (value) {
+      if (value <= 0) return 0
+      return value
     }
   }
 }
