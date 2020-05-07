@@ -106,11 +106,31 @@ const router = new Router({
                 },
                 {
                   path: 'group-management',
-                  component: () => import('@/pages/accountManagement/GroupManagement'),
+                  component: () => import('@/pages/accountGroupManagement/AccountGroupList'),
                   name: 'AccountGroupManagement',
                   meta: {
                     layers: ['account', 'account-management'],
                     permission: ['account_read_group']
+                  }
+                },
+                {
+                  path: 'group-management/create',
+                  component: () => import('@/pages/accountGroupManagement/EditAccountGroup'),
+                  name: 'CreateAccountGroup',
+                  meta: {
+                    layers: ['account', 'account-management'],
+                    accountPermission: ['account_create_group'],
+                    isHiddenNav: true
+                  }
+                },
+                {
+                  path: 'group-management/:id',
+                  component: () => import('@/pages/accountGroupManagement/EditAccountGroup'),
+                  name: 'EditAccountGroup',
+                  meta: {
+                    layers: ['account', 'account-management'],
+                    accountPermission: ['account_update_group'],
+                    isHiddenNav: true
                   }
                 },
                 {
