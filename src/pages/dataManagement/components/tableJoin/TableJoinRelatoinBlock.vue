@@ -99,38 +99,42 @@
           </div>
         </div>
       </section>
-      <div
-        class="reminder-block"
-        v-if="!isPreviewingResult"
-      >
-        <span class="reminder-title">
-          <svg-icon icon-class="lamp" />
-          {{$t('resultDescription.prompt')}}：
-        </span>
-        <span class="reminder-description">
-          {{'1. ' + $t('message.remindNotAllowSelfJoin') + ' 2. ' + $t('message.remindSameDataTypeColumns')}}
-        </span>
-      </div>
-      <preview-table-join-result
-        v-if="isPreviewingResult"
-        :result="previewResultData"
-      />
-      <div class="footer-button-block">
-         <button type="button" class="btn btn-default btn-save"
+      <transition name="fade" mode="out-in">
+        <div
+          class="reminder-block"
           v-if="!isPreviewingResult"
-          :disabled="isLoading"
-          @click="getPreviewResult()"
-        >{{ $t('button.setting') }}</button>
-        <template v-else>
-          <button type="button" class="btn btn-outline"
-            :disabled="isLoading"
-            @click="isPreviewingResult = false"
-          >{{ $t('button.reset') }}</button>
+        >
+          <span class="reminder-title">
+            <svg-icon icon-class="lamp" />
+            {{$t('resultDescription.prompt')}}：
+          </span>
+          <span class="reminder-description">
+            {{'1. ' + $t('message.remindNotAllowSelfJoin') + ' 2. ' + $t('message.remindSameDataTypeColumns')}}
+          </span>
+        </div>
+        <preview-table-join-result
+          v-else
+          :result="previewResultData"
+        />
+      </transition>
+      <div class="footer-button-block">
+        <transition name="fade" mode="out-in">
           <button type="button" class="btn btn-default btn-save"
+            v-if="!isPreviewingResult"
             :disabled="isLoading"
-            @click="buildJoinTable()"
-          >{{ $t('button.confirmBuild') }}</button>
-        </template>
+            @click="getPreviewResult()"
+          >{{ $t('button.setting') }}</button>
+          <span v-else>
+            <button type="button" class="btn btn-outline"
+              :disabled="isLoading"
+              @click="isPreviewingResult = false"
+            >{{ $t('button.reset') }}</button>
+            <button type="button" class="btn btn-default btn-save"
+              :disabled="isLoading"
+              @click="buildJoinTable()"
+            >{{ $t('button.confirmBuild') }}</button>
+          </span>
+        </transition>
       </div>
     </template>
     <div
@@ -486,6 +490,7 @@ export default {
 
   .disabled {
     opacity: .5;
+    transition: opacity .2s linear;
     pointer-events: none;
     cursor: not-allowed;
   }
