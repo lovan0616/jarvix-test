@@ -200,7 +200,7 @@ Vue.use(VeeValidate, {
   // 避免自動 inject 到所有 component
   inject: false,
   // 語系
-  locale: 'zh_CN',
+  locale: 'zh_TW',
   // 驗證字串
   dictionary: {
     zh_TW: {
