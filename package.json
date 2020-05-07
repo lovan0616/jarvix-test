@@ -17,7 +17,7 @@
     "@marketconnect/vue-pivot-table": "0.0.1",
     "axios": "^0.18.1",
     "co": "^4.6.0",
-    "echarts": "^4.4.0",
+    "echarts": "^4.7.0",
     "echarts-stat": "1.1.0",
     "element-ui": "^2.4.1",
     "fuzzball": "^1.1.2",

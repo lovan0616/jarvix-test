@@ -66,8 +66,10 @@ export default {
         },
         series: {
           type: 'pie',
+          minShowLabelAngle: 10,
           label: {
-            fontSize: 12
+            fontSize: 12,
+            alignTo: 'labelLine'
           },
           labelLine: {
             normal: {
@@ -111,18 +113,7 @@ export default {
       return config
     },
     colorList () {
-      switch (this.dataset.data.length) {
-        case 1:
-          return colorOnly1
-        case 2:
-          return colorOnly2
-        case 3:
-        case 4:
-        case 5:
-          return color5
-        default:
-          return color12
-      }
+      return color12
     },
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
