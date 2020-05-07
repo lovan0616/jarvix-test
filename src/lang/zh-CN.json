@@ -503,7 +503,8 @@
     "featureManagement": "自订义栏位",
     "setting": "设定",
     "reset": "重新设定",
-    "confirmBuild": "确认建置"
+    "confirmBuild": "确认建置",
+    "selectAll": "全选"
   },
   "aggregation": {
     "mean": "平均",

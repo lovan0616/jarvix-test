@@ -20,6 +20,17 @@ export function commonChartOptions () {
       pageIconColor: chartVariable['textColor'],
       pageTextStyle: {
         color: chartVariable['textColor']
+      },
+      selector: [
+        {
+          type: 'all or inverse',
+          title: i18n.t('button.selectAll')
+        }
+      ],
+      selectorLabel: {
+        color: '#fff',
+        backgroundColor: '#2AD2E2',
+        borderColor: 'transparent'
       }
     },
     toolbox: {
