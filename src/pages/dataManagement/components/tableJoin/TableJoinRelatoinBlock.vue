@@ -366,6 +366,13 @@ export default {
             this.previewResultData = previewResultData
             this.isPreviewingResult = true
           })
+          .catch(() => {
+            Message({
+              message: this.$t('message.previewFailed'),
+              type: 'error',
+              duration: 3 * 1000
+            })
+          })
           .finally(() => { this.isLoading = false })
       })
     },
@@ -423,7 +430,7 @@ export default {
     display: inline-block;
 
     &.is-editing {
-      margin-bottom: 30px;
+      margin-bottom: 17px;
     }
 
     &.select {

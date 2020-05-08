@@ -33,6 +33,7 @@
     "joinTypeEmpty": "请选择关联方式",
     "builded": "资料源建立完成",
     "noMatchedKey": "没有成功对上的值，请尝试设定其他关联表或栏位",
+    "previewFailed": "设定失败，请稍候再试",
     "noData": "目前没有资料",
     "noMember": "目前没有成员",
     "noResult": "目前暂无相关资讯",
