@@ -113,12 +113,20 @@
         :result="previewResultData"
       />
       <div class="footer-button-block">
-        <button type="button" class="btn btn-default"
-          v-if="!isPreviewingResult"
-          :disabled="isLoading"
-          @click="getPreviewResult()"
-        >{{ $t('button.setting') }}</button>
-        <span v-else>
+        <template v-if="!isPreviewingResult">
+          <button type="button" class="btn btn-default"
+            v-if="!isLoading"
+            :disabled="isLoading"
+            @click="getPreviewResult()"
+          >{{ $t('button.setting') }}</button>
+          <span
+            v-else
+            class="remark-text"
+          >
+            <svg-icon icon-class="spinner" /> {{ $t('editing.systemSetting') }}
+          </span>
+        </template>
+        <template v-else>
           <button type="button" class="btn btn-outline"
             :disabled="isLoading"
             @click="isPreviewingResult = false"
@@ -127,7 +135,7 @@
             :disabled="isLoading"
             @click="relationInfo.id ? updateJoinTable() : buildJoinTable()"
           >{{ $t('button.confirmBuild') }}</button>
-        </span>
+        </template>
       </div>
     </template>
     <div
@@ -484,6 +492,12 @@ export default {
 
     .btn:not(:last-child) {
       margin-right: 7px;
+    }
+
+    .remark-text {
+      color: $theme-color-warning;
+      font-size: 14px;
+      margin-right: 12px;
     }
   }
 

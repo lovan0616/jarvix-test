@@ -154,6 +154,7 @@
     "emptyDataFrameAlias": "尚未建立任何资料表别名",
     "selectForeign": "选择关联资料表",
     "selectColumn": "选择栏位",
+    "systemSetting": "系统尝试设定中",
     "dataColumnAmount": "资料栏位数",
     "dataRowAmount": "资料列数",
     "matchedKey": "有成功对上的值",
