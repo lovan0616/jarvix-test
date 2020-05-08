@@ -267,6 +267,7 @@ export default {
       deleteDataFrameById(dataframeId)
         .then(res => {
           this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
+          this.fetchData()
           this.deleteFinish()
         })
         .catch(() => {
