@@ -52,7 +52,7 @@
           :placeholder="$t('editing.pleaseEnterName')"
           :disabled="isPreviewingResult"
           :name="relationInfo.key"
-          v-model="relationInfo.name"
+          v-model="editedRelationInfo.name"
           v-validate="`required|max:${max}`"
         ></input-block>
         <div class="name" v-else>{{ relationInfo.name }}</div>
@@ -63,7 +63,7 @@
       >
         <div
           class="join-relation"
-          v-for="(relation, relationIndex) in relationInfo.dataFrameRelationList"
+          v-for="(relation, relationIndex) in editedRelationInfo.dataFrameRelationList"
           :key="relationIndex"
         >
           <div
@@ -125,7 +125,7 @@
           >{{ $t('button.reset') }}</button>
           <button type="button" class="btn btn-default"
             :disabled="isLoading"
-            @click="buildJoinTable()"
+            @click="relationInfo.id ? updateJoinTable() : buildJoinTable()"
           >{{ $t('button.confirmBuild') }}</button>
         </span>
       </div>
@@ -202,7 +202,8 @@ export default {
           value: 'Right'
         }
       ],
-      previewResultData: null
+      previewResultData: null,
+      editedRelationInfo: JSON.parse(JSON.stringify(this.relationInfo))
     }
   },
   methods: {
@@ -222,7 +223,7 @@ export default {
         .finally(() => { this.isLoading = false })
     },
     getDataFrameRelationList () {
-      return this.relationInfo.dataFrameRelationList.map(relation => ({
+      return this.editedRelationInfo.dataFrameRelationList.map(relation => ({
         joinType: relation.joinType,
         leftDataColumnId: relation.leftDataColumn.id,
         leftDataFrameId: relation.leftDataFrame.id,
@@ -231,7 +232,7 @@ export default {
       }))
     },
     validateDataColumns () {
-      if (!this.relationInfo.name) {
+      if (!this.editedRelationInfo.name) {
         Message({
           message: this.$t('message.formColumnEmpty'),
           type: 'warning',
@@ -239,7 +240,7 @@ export default {
         })
         return false
       }
-      for (let dataFrame of this.relationInfo.dataFrameRelationList) {
+      for (let dataFrame of this.editedRelationInfo.dataFrameRelationList) {
         if (!dataFrame.leftDataColumn.id || !dataFrame.rightDataColumn.id || !dataFrame.joinType) {
           Message({
             message: this.$t('message.formColumnEmpty'),
@@ -270,21 +271,25 @@ export default {
     getJoinTableData () {
       return {
         dataSourceId: this.currentDataSourceId,
-        name: this.relationInfo.name,
+        name: this.editedRelationInfo.name,
         dataFrameRelationList: this.getDataFrameRelationList()
       }
     },
+    updateRelationInfo (responseData) {
+      this.relationInfo.id = this.relationInfo.id || responseData.joinTableId
+      this.relationInfo.dataFrameId = this.relationInfo.dataFrameId || responseData.dataFrameId
+      this.relationInfo.state = 'Process'
+      this.relationInfo.name = this.editedRelationInfo.name
+      this.relationInfo.dataFrameRelationList = this.editedRelationInfo.dataFrameRelationList
+    },
     buildJoinTable () {
       this.$validator.validateAll().then((isValidate) => {
-        if (!isValidate) return
-        if (!this.validateDataColumns()) return
+        if (!isValidate || !this.validateDataColumns()) return
         this.isLoading = true
         const joinTableData = this.getJoinTableData()
         createJoinTable(joinTableData)
           .then(response => {
-            this.relationInfo.id = response.joinTableId
-            this.relationInfo.dataFrameId = response.dataFrameId
-            this.relationInfo.state = 'Process'
+            this.updateRelationInfo(response)
             this.isPreviewingResult = false
             this.toggleIsEditing()
             this.newTableCreated = true
@@ -300,8 +305,7 @@ export default {
     },
     updateJoinTable () {
       this.$validator.validateAll().then((isValidate) => {
-        if (!isValidate) return
-        if (!this.validateDataColumns()) return
+        if (!isValidate || !this.validateDataColumns()) return
         this.isLoading = true
         const joinTableData = {
           id: this.relationInfo.id,
@@ -310,12 +314,12 @@ export default {
         }
         updateJoinTable(joinTableData)
           .then(response => {
-            this.relationInfo.state = 'Process'
+            this.updateRelationInfo()
             this.isPreviewingResult = false
             this.toggleIsEditing()
             this.$emit('dataFrameUpdate')
             Message({
-              message: this.$t('message.saveSuccess'),
+              message: this.$t('message.joinTableBuilding'),
               type: 'success',
               duration: 3 * 1000
             })
@@ -330,19 +334,22 @@ export default {
       this.isEditing = !this.isEditing
     },
     getPreviewResult () {
-      if (!this.validateDataColumns()) return
-      this.isLoading = true
-      const joinTableData = this.getJoinTableData()
-      createJoinTablePreviewResult(joinTableData)
-        .then(previewResultData => {
-          this.previewResultData = previewResultData
-          this.isPreviewingResult = true
-        })
-        .finally(() => { this.isLoading = false })
+      this.$validator.validateAll().then((isValidate) => {
+        if (!isValidate || !this.validateDataColumns()) return
+        this.isLoading = true
+        const joinTableData = this.getJoinTableData()
+        createJoinTablePreviewResult(joinTableData)
+          .then(previewResultData => {
+            this.previewResultData = previewResultData
+            this.isPreviewingResult = true
+          })
+          .finally(() => { this.isLoading = false })
+      })
     },
     cancelEdit () {
       this.toggleIsEditing()
       this.isPreviewingResult = false
+      this.editedRelationInfo = JSON.parse(JSON.stringify(this.relationInfo))
     }
   },
   computed: {
