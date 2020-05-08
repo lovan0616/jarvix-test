@@ -43,7 +43,7 @@
     <template v-else>
       <div
         class="input-block"
-        :class="{'is-editing': isEditing, 'disabled': isPreviewingResult}"
+        :class="{'is-editing': isEditing, 'disabled': isPreviewingResult, 'invalid': errors.has(relationInfo.key)}"
       >
         <label for="" class="label">*{{ $t('editing.tableName') }}</label>
         <input-block
@@ -431,6 +431,10 @@ export default {
 
     &.is-editing {
       margin-bottom: 17px;
+    }
+
+    &.invalid {
+      margin-bottom: 30px;
     }
 
     &.select {
