@@ -156,7 +156,7 @@
     "selectColumn": "選擇欄位",
     "dataColumnAmount": "資料欄位數",
     "dataRowAmount": "資料列數",
-    "dataPreview": "資料預覽",
+    "matchedKey": "有成功對上的值",
     "emptyKey": "無資料",
     "resultPreview": "結果預覽",
     "processStep1": "填寫資料源名稱",

@@ -156,7 +156,7 @@
     "selectColumn": "选择栏位",
     "dataColumnAmount": "资料栏位数",
     "dataRowAmount": "资料列数",
-    "dataPreview": "资料预览",
+    "matchedKey": "有成功对上的值",
     "emptyKey": "无资料",
     "resultPreview": "结果预览",
     "processStep1": "填写资料源名称",

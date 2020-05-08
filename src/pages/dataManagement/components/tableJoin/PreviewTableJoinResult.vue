@@ -5,7 +5,7 @@
       <div class="data-table-row table-head">
         <div class="data-table-cell">{{ $t('editing.dataColumnAmount') }}</div>
         <div class="data-table-cell">{{ $t('editing.dataRowAmount') }}</div>
-        <div class="data-table-cell">{{ $t('editing.dataPreview') }}</div>
+        <div class="data-table-cell">{{ $t('editing.matchedKey') }}</div>
       </div>
       <div class="data-table-body">
         <div class="data-table-row">
