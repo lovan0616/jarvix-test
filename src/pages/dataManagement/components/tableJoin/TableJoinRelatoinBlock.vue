@@ -43,7 +43,7 @@
     <template v-else>
       <div
         class="input-block"
-        :class="{'is-editing': isEditing, 'disabled': isPreviewingResult}"
+        :class="{'is-editing': isEditing, 'disabled': isPreviewingResult, 'invalid': errors.has(relationInfo.key)}"
       >
         <label for="" class="label">*{{ $t('editing.tableName') }}</label>
         <input-block
@@ -113,12 +113,20 @@
         :result="previewResultData"
       />
       <div class="footer-button-block">
-        <button type="button" class="btn btn-default"
-          v-if="!isPreviewingResult"
-          :disabled="isLoading"
-          @click="getPreviewResult()"
-        >{{ $t('button.setting') }}</button>
-        <span v-else>
+        <template v-if="!isPreviewingResult">
+          <button type="button" class="btn btn-default"
+            v-if="!isLoading"
+            :disabled="isLoading"
+            @click="getPreviewResult()"
+          >{{ $t('button.setting') }}</button>
+          <span
+            v-else
+            class="remark-text"
+          >
+            <svg-icon icon-class="spinner" /> {{ $t('editing.systemSetting') }}
+          </span>
+        </template>
+        <template v-else>
           <button type="button" class="btn btn-outline"
             :disabled="isLoading"
             @click="isPreviewingResult = false"
@@ -127,7 +135,7 @@
             :disabled="isLoading"
             @click="relationInfo.id ? updateJoinTable() : buildJoinTable()"
           >{{ $t('button.confirmBuild') }}</button>
-        </span>
+        </template>
       </div>
     </template>
     <div
@@ -241,9 +249,17 @@ export default {
         return false
       }
       for (let dataFrame of this.editedRelationInfo.dataFrameRelationList) {
-        if (!dataFrame.leftDataColumn.id || !dataFrame.rightDataColumn.id || !dataFrame.joinType) {
+        if (!dataFrame.leftDataColumn.id || !dataFrame.rightDataColumn.id) {
           Message({
             message: this.$t('message.formColumnEmpty'),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+          return false
+        }
+        if (!dataFrame.joinType) {
+          Message({
+            message: this.$t('message.joinTypeEmpty'),
             type: 'warning',
             duration: 3 * 1000
           })
@@ -340,8 +356,22 @@ export default {
         const joinTableData = this.getJoinTableData()
         createJoinTablePreviewResult(joinTableData)
           .then(previewResultData => {
+            if (!previewResultData.valueList.length) {
+              return Message({
+                message: this.$t('message.noMatchedKey'),
+                type: 'warning',
+                duration: 3 * 1000
+              })
+            }
             this.previewResultData = previewResultData
             this.isPreviewingResult = true
+          })
+          .catch(() => {
+            Message({
+              message: this.$t('message.previewFailed'),
+              type: 'error',
+              duration: 3 * 1000
+            })
           })
           .finally(() => { this.isLoading = false })
       })
@@ -400,6 +430,10 @@ export default {
     display: inline-block;
 
     &.is-editing {
+      margin-bottom: 17px;
+    }
+
+    &.invalid {
       margin-bottom: 30px;
     }
 
@@ -426,7 +460,7 @@ export default {
     }
 
     .name {
-      line-height: 40px;
+      line-height: 32px;
     }
   }
 
@@ -476,6 +510,12 @@ export default {
 
     .btn:not(:last-child) {
       margin-right: 7px;
+    }
+
+    .remark-text {
+      color: $theme-color-warning;
+      font-size: 14px;
+      margin-right: 12px;
     }
   }
 
