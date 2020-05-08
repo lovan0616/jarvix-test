@@ -75,23 +75,25 @@
             'text-align': headInfo.align
           }"
         >
-          <template v-if="headInfo.action">
-            <a
-              href="javascript:void(0)"
-              class="link action-link link-dropdown"
-              v-for="action in headInfo.action"
-              :key="action.name"
-              :disabled="isProcessing || !showActionButton(action, data)"
-              @click="doAction(action, data)"
-            >
-              <dropdown-select
-                v-if="action.subAction"
-                class="dropdown"
-                :barData="getBarData(action.subAction, data)"
-              />
-              {{ action.name }}
-              <svg-icon v-if="getBarData(action.subAction, data).length > 0" icon-class="triangle" class="icon dropdown-icon" />
-            </a>
+          <template v-if="headInfo.value === 'action'">
+            <slot name="action" :data="data">
+              <a
+                href="javascript:void(0)"
+                class="link action-link link-dropdown"
+                v-for="action in headInfo.action"
+                :key="action.name"
+                :disabled="isProcessing || !showActionButton(action, data)"
+                @click="doAction(action, data)"
+              >
+                <dropdown-select
+                  v-if="action.subAction"
+                  class="dropdown"
+                  :barData="getBarData(action.subAction, data)"
+                />
+                {{ action.name }}
+                <svg-icon v-if="getBarData(action.subAction, data).length > 0" icon-class="triangle" class="icon dropdown-icon" />
+              </a>
+            </slot>
           </template>
           <span v-else>{{ data[headInfo.value] }}</span>
         </div>

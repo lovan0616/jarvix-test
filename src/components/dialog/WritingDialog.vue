@@ -7,13 +7,20 @@
             <div class="dialog-select-text">{{ title }}</div>
             <slot></slot>
             <div class="dialog-select-flex">
-                <div v-if="showBoth" @click="closeDialog" class="btn dialog-select-cancel">{{ $t('button.cancel') }}</div>
+                <button
+                  v-if="showBoth"
+                  :disabled="isLoading"
+                  @click="closeDialog"
+                  class="btn btn-outline dialog-select-cancel">
+                  {{ $t('button.cancel') }}
+                </button>
                 <button
                   class="btn btn-default dialog-change"
                   @click="confirmBtn"
                   :disabled="isLoading"
                 >
-                  {{ button }}
+                  <span v-if="isLoading"><svg-icon icon-class="spinner"></svg-icon>{{ $t('button.processing') }}</span>
+                  <span v-else>{{ button }}</span>
                 </button>
             </div>
         </div>
