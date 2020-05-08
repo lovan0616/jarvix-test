@@ -356,6 +356,13 @@ export default {
         const joinTableData = this.getJoinTableData()
         createJoinTablePreviewResult(joinTableData)
           .then(previewResultData => {
+            if (!previewResultData.valueList.length) {
+              return Message({
+                message: this.$t('message.noMatchedKey'),
+                type: 'warning',
+                duration: 3 * 1000
+              })
+            }
             this.previewResultData = previewResultData
             this.isPreviewingResult = true
           })
@@ -442,7 +449,7 @@ export default {
     }
 
     .name {
-      line-height: 40px;
+      line-height: 32px;
     }
   }
 
