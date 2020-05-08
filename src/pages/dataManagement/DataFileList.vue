@@ -33,7 +33,6 @@
             <svg-icon icon-class="feature" class="icon"></svg-icon>{{ $t('button.featureManagement') }}
           </button>
           <button class="btn-m btn-secondary btn-has-icon"
-            v-if="showJoinTable === 'true'"
             @click="openEditJoinTableDialog"
             :disabled="!canEditJoinTable()"
           >
@@ -268,6 +267,7 @@ export default {
       deleteDataFrameById(dataframeId)
         .then(res => {
           this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
+          this.fetchData()
           this.deleteFinish()
         })
         .catch(() => {

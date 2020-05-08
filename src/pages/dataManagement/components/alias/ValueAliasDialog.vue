@@ -19,9 +19,9 @@
           <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
           <div class="button-block">
             <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
-            <button type="button" class="btn btn-default"
+            <button type="button" class="btn-m btn-default"
               @click="buildAlias"
-            >{{ $t('button.buildData') }}</button>
+            >{{ $t('button.build') }}</button>
           </div>
         </div>
         <div class="dialog-content-block">
@@ -66,7 +66,7 @@
                           class="input-verify"
                           :name="index + '-' + aliasIndex"
                           :placeholder="$t('editing.pleaseEnterName')"
-                          v-validate="'letterSpace|max:20'"
+                          v-validate="`letterSpace|max:${max}`"
                         />
                         <div class="link"
                           @click="removeAlias(aliasIndex)"
@@ -307,6 +307,11 @@ export default {
     },
     closeDialog () {
       this.$emit('close')
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }

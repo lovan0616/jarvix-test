@@ -4,7 +4,7 @@ import zhCN from './zh-CN.json'
 import zhTW from './zh-TW.json'
 
 Vue.use(VueI18n)
-const locale = 'zh-CN'
+const locale = 'zh-TW'
 const messages = {
   'zh-CN': zhCN,
   'zh-TW': zhTW

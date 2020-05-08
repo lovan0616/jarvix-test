@@ -122,8 +122,8 @@ export default {
     submitForm () {
       this.$validator.validateAll().then(result => {
         if (!result) return
-        // TODO: 帶 Group Role Id，這邊先設 4 為 group maintainer
-        const dummyGroupRole = 4
+        // TODO: 下拉式選單選擇角色，這邊先預設 null，後端收到會先給使用者 group_viewer 的角色權限
+        const dummyGroupRole = null
         createGroupUser({
           groupRole: dummyGroupRole,
           userId: this.userList.find(user => user.value === this.selectedInvitee).id

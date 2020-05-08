@@ -54,7 +54,8 @@ export default {
   },
   methods: {
     fetchDataColumnList (dataFrameId) {
-      getDataFrameColumnInfoById(dataFrameId).then(response => {
+      const hasFeatureColumn = false
+      getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn).then(response => {
         this.columnList = response.map(column => ({
           ...column,
           name: `${column.primaryAlias || column.name}（${column.dataType}）`

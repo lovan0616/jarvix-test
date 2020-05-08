@@ -28,7 +28,7 @@
           <input-block
             name="featureName"
             v-model="featureInfo.name"
-            v-validate="'required'"
+            v-validate="`required|max:${max}`"
           ></input-block>
         </div>
       </div>
@@ -250,6 +250,11 @@ export default {
     },
     cancelEdit () {
       this.$emit('cancel')
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }
