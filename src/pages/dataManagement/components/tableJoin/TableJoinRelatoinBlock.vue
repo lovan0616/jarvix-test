@@ -241,9 +241,17 @@ export default {
         return false
       }
       for (let dataFrame of this.editedRelationInfo.dataFrameRelationList) {
-        if (!dataFrame.leftDataColumn.id || !dataFrame.rightDataColumn.id || !dataFrame.joinType) {
+        if (!dataFrame.leftDataColumn.id || !dataFrame.rightDataColumn.id) {
           Message({
             message: this.$t('message.formColumnEmpty'),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+          return false
+        }
+        if (!dataFrame.joinType) {
+          Message({
+            message: this.$t('message.joinTypeEmpty'),
             type: 'warning',
             duration: 3 * 1000
           })

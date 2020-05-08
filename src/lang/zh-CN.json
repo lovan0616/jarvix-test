@@ -30,6 +30,7 @@
     "remindAdjustColumnAlias": "为了让智能分析问句容易使用，建议进行资料表的“栏位别名”功能进行自定义调整",
     "remindSameDataTypeColumns": "资料栏位的型态须相同",
     "remindNotAllowSelfJoin": "不能选择相同资料表",
+    "joinTypeEmpty": "请选择关联方式",
     "builded": "资料源建立完成",
     "noData": "目前没有资料",
     "noMember": "目前没有成员",

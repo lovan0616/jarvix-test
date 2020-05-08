@@ -30,6 +30,7 @@
     "remindAdjustColumnAlias": "為了讓智能分析問句容易使用，建議進行資料表的“欄位別名”功能進行自定義調整",
     "remindSameDataTypeColumns": "資料欄位的型態須相同",
     "remindNotAllowSelfJoin": "不能選擇相同資料表",
+    "joinTypeEmpty": "請選擇關聯方式",
     "builded": "資料源建立完成",
     "noData": "目前沒有資料",
     "noMember": "目前沒有成員",
