@@ -160,6 +160,7 @@
     "matchedKey": "有成功對上的值",
     "emptyKey": "無資料",
     "resultPreview": "結果預覽",
+    "previewKeyRemind": "最多顯示 100 個值",
     "processStep1": "填寫資料源名稱",
     "processStep2": "上傳檔案",
     "processStep3": "選擇欄位",

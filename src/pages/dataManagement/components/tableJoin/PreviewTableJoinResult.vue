@@ -5,7 +5,13 @@
       <div class="data-table-row table-head">
         <div class="data-table-cell">{{ $t('editing.dataColumnAmount') }}</div>
         <div class="data-table-cell">{{ $t('editing.dataRowAmount') }}</div>
-        <div class="data-table-cell">{{ $t('editing.matchedKey') }}</div>
+        <div class="data-table-cell">
+          {{ $t('editing.matchedKey') }}
+          <span class="nav-item nav-function tooltip-container">
+          <svg-icon icon-class="information-circle" class="icon" />
+          <div class="tooltip">{{$t('editing.previewKeyRemind')}}</div>
+        </span>
+        </div>
       </div>
       <div class="data-table-body">
         <div class="data-table-row">
@@ -69,6 +75,12 @@ export default {
     .value-list {
       display: flex;
       flex-direction: column;
+    }
+  }
+
+  .tooltip-container {
+    .icon {
+      color: $theme-color-warning;
     }
   }
 }
