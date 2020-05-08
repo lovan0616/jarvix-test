@@ -1,0 +1,20 @@
+.user-management {
+  .button-block {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .btn-m:not(:last-child) {
+      margin-right: 16px;
+    }
+
+    .icon {
+      font-size: 18px;
+    }
+  }
+
+  .reach-limit {
+    font-size: 14px;
+    color: $theme-color-warning;
+  }
+}

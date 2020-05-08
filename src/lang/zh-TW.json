@@ -1427,7 +1427,8 @@
   },
   "notification": {
     "uploadLimitNotification": "資料數量已達上限",
-    "uploadLimit": "資料表限制：最多{count}筆"
+    "uploadLimit": "資料表限制：最多{count}筆",
+    "userLimitNotification": "使用者數量已達上限"
   },
   "chart": {
     "zoom": "區域縮放",
