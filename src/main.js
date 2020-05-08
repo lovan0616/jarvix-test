@@ -264,7 +264,6 @@ Vue.use(VeeValidate, {
 
 Vue.use(VueGtag, {
   disableScriptLoad: true,
-  pageTrackerScreenviewEnabled: true,
   config: {
     id: 'UA-152823461-1',
     params: {
