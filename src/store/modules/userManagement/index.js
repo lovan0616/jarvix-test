@@ -7,9 +7,8 @@ export default {
   state: {
     userName: '',
     accountList: [],
-    accountPermission: [],
     groupList: [],
-    groupPermission: []
+    permission: []
   },
   actions,
   mutations,

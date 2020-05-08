@@ -73,9 +73,8 @@ export default {
               this.$store.commit('userManagement/setUserInfo', {
                 userName: res.name,
                 accountList: res.accountList,
-                accountPermission: res.accountPermission,
                 groupList: res.groupList,
-                groupPermission: res.groupPermission
+                permission: [...res.accountPermission, ...res.groupPermission]
               })
 
               const currentGroupId = this.$store.getters['userManagement/getCurrentGroupId']

@@ -132,7 +132,7 @@ export default {
     this.setIsShowAlgorithmBtn()
   },
   computed: {
-    ...mapGetters('userManagement', ['hasAccountPermission', 'hasGroupPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
@@ -144,9 +144,6 @@ export default {
     },
     groupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
-    },
-    permission () {
-      return this.$store.state.setting.permission
     },
     languages () {
       return this.$store.state.setting.languages
@@ -167,7 +164,7 @@ export default {
     },
     accountData () {
       const accountList = []
-      if (this.hasAccountPermission('account_update_user')) {
+      if (this.hasPermission('account_update_user')) {
         accountList.push({icon: 'account-management', title: 'sideNav.accountManagement', name: 'AccountUserManagement'})
       }
       accountList.push({icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'})
@@ -208,9 +205,8 @@ export default {
           this.$store.commit('userManagement/setUserInfo', {
             userName: res.name,
             accountList: res.accountList,
-            accountPermission: res.accountPermission,
             groupList: res.groupList,
-            groupPermission: res.groupPermission
+            permission: [...res.accountPermission, ...res.groupPermission]
           })
           // update data source list
           return this.$store.dispatch('dataSource/getDataSourceList')

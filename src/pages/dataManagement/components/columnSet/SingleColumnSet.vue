@@ -25,11 +25,13 @@
     <template v-else>
       <div class="input-block">
         <label for="" class="label">*{{ $t('editing.columnSetName') }}</label>
-        <input type="text" class="input"
+        <input-block
           v-if="!columnSet.id"
           :placeholder="$t('editing.pleaseEnterName')"
           v-model="columnSet.primaryAlias"
-        >
+          :name="validateFieldKey"
+          v-validate="`required|max:${max}`"
+        ></input-block>
         <div
           v-else
         >{{ columnSet.primaryAlias }}</div>
@@ -65,6 +67,7 @@
               <div class="info alias">{{ column.primaryAlias }}</div>
               <button class="btn-m btn-secondary btn-select"
                 @click="cancelSelect(index)"
+                v-if="columnSet.dataColumnList.length > 1"
               >{{ $t('button.cancel') }}</button>
             </div>
             <div class="empty-select"
@@ -78,10 +81,15 @@
 </template>
 <script>
 import { createColumnSet, addColumnSetColumn, removeColumnSetColumn, deleteColumnSet } from '@/API/ColumnSet'
+import inputBlock from '@/components/InputBlock'
 import { Message } from 'element-ui'
 
 export default {
   name: 'SingleColumnSet',
+  inject: ['$validator'],
+  components: {
+    inputBlock
+  },
   props: {
     columnList: {
       type: Array,
@@ -102,7 +110,8 @@ export default {
   data () {
     return {
       columnOptionList: [],
-      isEditing: !this.columnSet.id
+      isEditing: !this.columnSet.id,
+      validateFieldKey: new Date().getTime().toString()
     }
   },
   mounted () {
@@ -147,6 +156,14 @@ export default {
       }
     },
     cancelSelect (index) {
+      // if (this.columnSet.dataColumnList.length <= 1) {
+      //   Message({
+      //     message: this.$t('message.columnSetAtLeastOne'),
+      //     type: 'warning',
+      //     duration: 3 * 1000
+      //   })
+      //   return
+      // }
       let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)
       const {id: dataColumnId, dataColumnId: id, ...otherData} = cancelColumnInfo[0]
       this.columnOptionList.push({id, dataColumnId, ...otherData})
@@ -162,35 +179,39 @@ export default {
       }
     },
     saveColumnSet () {
-      if (!this.columnSet.primaryAlias) {
-        Message({
-          message: this.$t('message.columnSetNameEmpty'),
-          type: 'warning',
-          duration: 3 * 1000
+      this.$validator.validate(this.validateFieldKey).then((isValidate) => {
+        if (!isValidate) return
+
+        if (!this.columnSet.primaryAlias) {
+          Message({
+            message: this.$t('message.columnSetNameEmpty'),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+          return false
+        }
+        if (this.columnSet.dataColumnList.length === 0) {
+          Message({
+            message: this.$t('message.columnSetChosenEmpty'),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+          return false
+        }
+        createColumnSet({
+          primaryAlias: this.columnSet.primaryAlias,
+          dataFrameId: this.columnSet.dataFrameId,
+          dataColumnIdList: this.columnSet.dataColumnList.map(column => column.id)
+        }).then(response => {
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+          this.columnSet.id = response.id
+          this.columnSet.dataColumnList = response.dataColumnList
+          this.toggleIsEditing()
         })
-        return false
-      }
-      if (this.columnSet.dataColumnList.length === 0) {
-        Message({
-          message: this.$t('message.columnSetChosenEmpty'),
-          type: 'warning',
-          duration: 3 * 1000
-        })
-        return false
-      }
-      createColumnSet({
-        primaryAlias: this.columnSet.primaryAlias,
-        dataFrameId: this.columnSet.dataFrameId,
-        dataColumnIdList: this.columnSet.dataColumnList.map(column => column.id)
-      }).then(response => {
-        Message({
-          message: this.$t('message.saveSuccess'),
-          type: 'success',
-          duration: 3 * 1000
-        })
-        this.columnSet.id = response.id
-        this.columnSet.dataColumnList = response.dataColumnList
-        this.toggleIsEditing()
       })
     },
     removeColumnSet () {
@@ -209,6 +230,11 @@ export default {
     },
     toggleIsEditing () {
       this.isEditing = !this.isEditing
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }
@@ -258,7 +284,7 @@ export default {
 
   .input-block {
     width: 301px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 
     .label {
       display: block;

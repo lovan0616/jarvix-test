@@ -27,9 +27,13 @@
   "message": {
     "joinTableBuilding": "资料表建置中，建置完成即可使用",
     "remindAdjustMainDate": "此表可能有多个日期栏位，您可用资料表的”日期栏位调整“功能进行设定。",
+    "remindAdjustColumnAlias": "为了让智能分析问句容易使用，建议进行资料表的“栏位别名”功能进行自定义调整",
     "remindSameDataTypeColumns": "资料栏位的型态须相同",
     "remindNotAllowSelfJoin": "不能选择相同资料表",
+    "joinTypeEmpty": "请选择关联方式",
     "builded": "资料源建立完成",
+    "noMatchedKey": "没有成功对上的值，请尝试设定其他关联表或栏位",
+    "previewFailed": "设定失败，请稍候再试",
     "noData": "目前没有资料",
     "noMember": "目前没有成员",
     "noResult": "目前暂无相关资讯",
@@ -108,6 +112,8 @@
     "editTable": "编辑资料表",
     "editTableColumn": "编辑资料表栏位",
     "columnName": "栏位名称",
+    "columnSource": "栏位来源",
+    "columnSourceRemind": "透过关联方式建置的资料表才会显示栏位来源资料表资讯",
     "alias": "别名",
     "columnTag": "标签",
     "columnDomain": "领域",
@@ -150,6 +156,13 @@
     "emptyDataFrameAlias": "尚未建立任何资料表别名",
     "selectForeign": "选择关联资料表",
     "selectColumn": "选择栏位",
+    "systemSetting": "系统尝试设定中",
+    "dataColumnAmount": "资料栏位数",
+    "dataRowAmount": "资料列数",
+    "matchedKey": "有成功对上的值",
+    "emptyKey": "无资料",
+    "resultPreview": "结果预览",
+    "previewKeyRemind": "最多显示 100 个值",
     "processStep1": "填写资料源名称",
     "processStep2": "上传档案",
     "processStep3": "选择栏位",
@@ -255,7 +268,8 @@
     "selectYet": "尚未选择任何项目",
     "createWay": "建立方式",
     "tableJoin": "资料表关联",
-    "selectJoinType": "关联方式",
+    "joinType": "关联方式",
+    "selectJoinType": "选择关联方式",
     "userUpload": "使用者上传",
     "loading": "资料读取中",
     "databaseType": "资料库类型",
@@ -491,7 +505,11 @@
     "moveForward": "前往",
     "addColumn": "新增栏位",
     "create": "新增",
-    "featureManagement": "自订义栏位"
+    "featureManagement": "自订义栏位",
+    "setting": "设定",
+    "reset": "重新设定",
+    "confirmBuild": "确认建置",
+    "selectAll": "全选"
   },
   "aggregation": {
     "mean": "平均",
@@ -1414,7 +1432,8 @@
   },
   "notification": {
     "uploadLimitNotification": "资料数量已达上限",
-    "uploadLimit": "资料表限制：最多{count}笔"
+    "uploadLimit": "资料表限制：最多{count}笔",
+    "userLimitNotification": "使用者数量已达上限"
   },
   "chart": {
     "zoom": "区域缩放",

@@ -7,14 +7,14 @@
         <svg-icon icon-class="spinner"></svg-icon>
       </span>
       <template v-else>
-        <button type="button" class="btn btn-default btn-save"
-          v-if="isEditing"
+        <button
+          v-if="relationInfo.id && isEditing"
           :disabled="isLoading"
-          @click="relationInfo.id ? updateJoinTable() : buildJoinTable()"
-        >{{ relationInfo.id ? $t('button.update') : $t('button.build') }}</button>
+          class="btn btn-secondary"
+          @click="deleteJoinTable()"
+        >{{ $t('button.delete') }}</button>
         <button type="button" class="btn btn-outline"
           v-if="isEditing && !relationInfo.id"
-          :disabled="isLoading"
           @click="cancelAddingJoinTable()"
         >{{ $t('button.cancel') }}</button>
         <button type="button" class="btn btn-outline"
@@ -23,8 +23,7 @@
         >{{ $t('button.edit') }}</button>
         <button type="button" class="btn btn-outline"
           v-if="isEditing && relationInfo.id"
-          :disabled="isLoading"
-          @click="toggleIsEditing()"
+          @click="cancelEdit()"
         >{{ $t('button.close') }}</button>
       </template>
     </div>
@@ -34,48 +33,53 @@
     >
       <h3 class="table-name">{{ relationInfo.name }}</h3>
       <h6 class="join-type">
-        關聯方式:
+        {{ $t('editing.joinType') }}
         <span
           v-for="(relation, relationIndex) in relationInfo.dataFrameRelationList"
           :key="relationIndex"
-        >{{ getJoinTableName(relation.joinType) }}</span>
+        >{{ getJoinTypeName(relation.joinType) }}</span>
       </h6>
     </div>
     <template v-else>
       <div
         class="input-block"
-        :class="{'is-editing': isEditing}"
+        :class="{'is-editing': isEditing, 'disabled': isPreviewingResult, 'invalid': errors.has(relationInfo.key)}"
       >
         <label for="" class="label">*{{ $t('editing.tableName') }}</label>
-        <input
+        <input-block
           type="text"
-          class="input"
           v-if="!relationInfo.id"
           :placeholder="$t('editing.pleaseEnterName')"
-          v-model="relationInfo.name"
-        >
+          :disabled="isPreviewingResult"
+          :name="relationInfo.key"
+          v-model="editedRelationInfo.name"
+          v-validate="`required|max:${max}`"
+        ></input-block>
         <div class="name" v-else>{{ relationInfo.name }}</div>
       </div>
-      <section class="join-relation-list">
+      <section
+        class="join-relation-list"
+        :class="{'disabled': isPreviewingResult}"
+      >
         <div
           class="join-relation"
-          v-for="(relation, relationIndex) in relationInfo.dataFrameRelationList"
+          v-for="(relation, relationIndex) in editedRelationInfo.dataFrameRelationList"
           :key="relationIndex"
         >
           <div
             class="input-block select"
             :class="{'is-editing': isEditing}"
           >
-            <label for="" class="label">{{ $t('editing.selectJoinType') }}</label>
+            <label class="label">{{ $t('editing.joinType') }}</label>
             <default-select
               class="tag-select input"
               v-model="relation.joinType"
               :option-list="joinTypeOptions"
+              :is-disabled="isPreviewingResult"
+              :placeholder="$t('editing.selectJoinType')"
             />
           </div>
-          <div
-            class="correlation-block"
-          >
+          <div class="correlation-block">
             <relation-select-block
               :data-frame-list="dataFrameList"
               :initial-data-frame-id.sync="relation.leftDataFrame.id"
@@ -92,14 +96,46 @@
           </div>
         </div>
       </section>
-      <div class="reminder-block">
+      <div
+        class="reminder-block"
+        v-if="!isPreviewingResult"
+      >
         <span class="reminder-title">
           <svg-icon icon-class="lamp" />
           {{$t('resultDescription.prompt')}}：
         </span>
         <span class="reminder-description">
-          {{'1.' + $t('message.remindNotAllowSelfJoin') + ' 2.' + $t('message.remindSameDataTypeColumns')}}
+          {{'1. ' + $t('message.remindNotAllowSelfJoin') + ' 2. ' + $t('message.remindSameDataTypeColumns')}}
         </span>
+      </div>
+      <preview-table-join-result
+        v-else
+        :result="previewResultData"
+      />
+      <div class="footer-button-block">
+        <template v-if="!isPreviewingResult">
+          <button type="button" class="btn btn-default"
+            v-if="!isLoading"
+            :disabled="isLoading"
+            @click="getPreviewResult()"
+          >{{ $t('button.setting') }}</button>
+          <span
+            v-else
+            class="remark-text"
+          >
+            <svg-icon icon-class="spinner" /> {{ $t('editing.systemSetting') }}
+          </span>
+        </template>
+        <template v-else>
+          <button type="button" class="btn btn-outline"
+            :disabled="isLoading"
+            @click="isPreviewingResult = false"
+          >{{ $t('button.reset') }}</button>
+          <button type="button" class="btn btn-default"
+            :disabled="isLoading"
+            @click="relationInfo.id ? updateJoinTable() : buildJoinTable()"
+          >{{ $t('button.confirmBuild') }}</button>
+        </template>
       </div>
     </template>
     <div
@@ -111,18 +147,11 @@
         {{$t('resultDescription.prompt')}}：
       </span>
       <span class="reminder-description">
-        {{$t('message.remindAdjustMainDate')}}
+        {{'1. ' + $t('message.remindAdjustMainDate')}}
       </span>
-    </div>
-    <div
-      class="footer-button-block"
-      v-if="relationInfo.id && isEditing"
-    >
-      <a
-        href="javascript:void(0)"
-        class="btn btn-secondary btn-delete"
-        @click="deleteJoinTable()"
-      >{{ $t('button.delete') }}</a>
+      <span class="reminder-description">
+        {{'2. ' + $t('message.remindAdjustColumnAlias')}}
+      </span>
     </div>
   </div>
 </template>
@@ -130,15 +159,20 @@
 import RelationSelectBlock from './RelationSelectBlock'
 import TooltipDialog from '@/components/dialog/TooltipDialog'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import { createJoinTable, updateJoinTable, deleteJoinTable } from '@/API/JoinTable'
+import PreviewTableJoinResult from './PreviewTableJoinResult'
+import inputBlock from '@/components/InputBlock'
+import { createJoinTable, updateJoinTable, deleteJoinTable, createJoinTablePreviewResult } from '@/API/JoinTable'
 import { Message } from 'element-ui'
 
 export default {
   name: 'TableJoinRelationBlock',
+  inject: ['$validator'],
   components: {
     TooltipDialog,
     DefaultSelect,
-    RelationSelectBlock
+    RelationSelectBlock,
+    PreviewTableJoinResult,
+    inputBlock
   },
   props: {
     relationInfo: {
@@ -157,8 +191,10 @@ export default {
     return {
       showConfirmDeleteDialog: false,
       isEditing: !this.relationInfo.id,
+      isPreviewingResult: false,
       currentDataSourceId: parseInt(this.$route.params.id),
       isLoading: false,
+      isPreviewing: false,
       newTableCreated: false,
       joinTypeOptions: [
         {
@@ -173,7 +209,9 @@ export default {
           name: 'Right Join',
           value: 'Right'
         }
-      ]
+      ],
+      previewResultData: null,
+      editedRelationInfo: JSON.parse(JSON.stringify(this.relationInfo))
     }
   },
   methods: {
@@ -189,16 +227,11 @@ export default {
     deleteJoinTable () {
       this.isLoading = true
       deleteJoinTable(this.relationInfo.id)
-        .then(() => {
-          this.$emit('deleteJoinTable', this.index)
-          this.isLoading = false
-        })
-        .catch(() => {
-          this.isLoading = false
-        })
+        .then(() => { this.$emit('deleteJoinTable', this.index) })
+        .finally(() => { this.isLoading = false })
     },
     getDataFrameRelationList () {
-      return this.relationInfo.dataFrameRelationList.map(relation => ({
+      return this.editedRelationInfo.dataFrameRelationList.map(relation => ({
         joinType: relation.joinType,
         leftDataColumnId: relation.leftDataColumn.id,
         leftDataFrameId: relation.leftDataFrame.id,
@@ -207,7 +240,7 @@ export default {
       }))
     },
     validateDataColumns () {
-      if (!this.relationInfo.name) {
+      if (!this.editedRelationInfo.name) {
         Message({
           message: this.$t('message.formColumnEmpty'),
           type: 'warning',
@@ -215,10 +248,18 @@ export default {
         })
         return false
       }
-      for (let dataFrame of this.relationInfo.dataFrameRelationList) {
+      for (let dataFrame of this.editedRelationInfo.dataFrameRelationList) {
         if (!dataFrame.leftDataColumn.id || !dataFrame.rightDataColumn.id) {
           Message({
             message: this.$t('message.formColumnEmpty'),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+          return false
+        }
+        if (!dataFrame.joinType) {
+          Message({
+            message: this.$t('message.joinTypeEmpty'),
             type: 'warning',
             duration: 3 * 1000
           })
@@ -243,58 +284,100 @@ export default {
       }
       return true
     },
-    buildJoinTable () {
-      if (!this.validateDataColumns()) return
-      this.isLoading = true
-      const joinTableData = {
+    getJoinTableData () {
+      return {
         dataSourceId: this.currentDataSourceId,
-        name: this.relationInfo.name,
+        name: this.editedRelationInfo.name,
         dataFrameRelationList: this.getDataFrameRelationList()
       }
-      createJoinTable(joinTableData)
-        .then(response => {
-          this.relationInfo.id = response.joinTableId
-          this.relationInfo.dataFrameId = response.dataFrameId
-          this.relationInfo.state = 'Process'
-          this.isLoading = false
-          this.isEditing = false
-          this.newTableCreated = true
-          this.$emit('dataFrameUpdate')
-          Message({
-            message: this.$t('message.joinTableBuilding'),
-            type: 'success',
-            duration: 3 * 1000
+    },
+    updateRelationInfo (responseData) {
+      this.relationInfo.id = this.relationInfo.id || responseData.joinTableId
+      this.relationInfo.dataFrameId = this.relationInfo.dataFrameId || responseData.dataFrameId
+      this.relationInfo.state = 'Process'
+      this.relationInfo.name = this.editedRelationInfo.name
+      this.relationInfo.dataFrameRelationList = this.editedRelationInfo.dataFrameRelationList
+    },
+    buildJoinTable () {
+      this.$validator.validateAll().then((isValidate) => {
+        if (!isValidate || !this.validateDataColumns()) return
+        this.isLoading = true
+        const joinTableData = this.getJoinTableData()
+        createJoinTable(joinTableData)
+          .then(response => {
+            this.updateRelationInfo(response)
+            this.isPreviewingResult = false
+            this.toggleIsEditing()
+            this.newTableCreated = true
+            this.$emit('dataFrameUpdate')
+            Message({
+              message: this.$t('message.joinTableBuilding'),
+              type: 'success',
+              duration: 3 * 1000
+            })
           })
-        })
-        .catch(() => { this.isLoading = false })
+          .finally(() => { this.isLoading = false })
+      })
     },
     updateJoinTable () {
-      if (!this.validateDataColumns()) return
-      this.isLoading = true
-      const joinTableData = {
-        id: this.relationInfo.id,
-        name: this.relationInfo.name,
-        dataFrameRelationList: this.getDataFrameRelationList()
-      }
-      updateJoinTable(joinTableData)
-        .then(response => {
-          this.relationInfo.state = 'Process'
-          this.isEditing = false
-          this.isLoading = false
-          this.$emit('dataFrameUpdate')
-          Message({
-            message: this.$t('message.saveSuccess'),
-            type: 'success',
-            duration: 3 * 1000
+      this.$validator.validateAll().then((isValidate) => {
+        if (!isValidate || !this.validateDataColumns()) return
+        this.isLoading = true
+        const joinTableData = {
+          id: this.relationInfo.id,
+          name: this.relationInfo.name,
+          dataFrameRelationList: this.getDataFrameRelationList()
+        }
+        updateJoinTable(joinTableData)
+          .then(response => {
+            this.updateRelationInfo()
+            this.isPreviewingResult = false
+            this.toggleIsEditing()
+            this.$emit('dataFrameUpdate')
+            Message({
+              message: this.$t('message.joinTableBuilding'),
+              type: 'success',
+              duration: 3 * 1000
+            })
           })
-        })
-        .catch(() => { this.isLoading = false })
+          .finally(() => { this.isLoading = false })
+      })
     },
-    getJoinTableName (joinType) {
+    getJoinTypeName (joinType) {
       return this.joinTypeOptions.find(option => option.value === joinType).name
     },
     toggleIsEditing () {
       this.isEditing = !this.isEditing
+    },
+    getPreviewResult () {
+      this.$validator.validateAll().then((isValidate) => {
+        if (!isValidate || !this.validateDataColumns()) return
+        this.isLoading = true
+        const joinTableData = this.getJoinTableData()
+        createJoinTablePreviewResult(joinTableData)
+          .then(previewResultData => {
+            if (!previewResultData.valueList.length) {
+              return Message({
+                message: this.$t('message.noMatchedKey'),
+                type: 'warning',
+                duration: 3 * 1000
+              })
+            }
+            this.previewResultData = previewResultData
+            this.isPreviewingResult = true
+          })
+          .finally(() => { this.isLoading = false })
+      })
+    },
+    cancelEdit () {
+      this.toggleIsEditing()
+      this.isPreviewingResult = false
+      this.editedRelationInfo = JSON.parse(JSON.stringify(this.relationInfo))
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }
@@ -340,7 +423,11 @@ export default {
     display: inline-block;
 
     &.is-editing {
-      margin-bottom: 20px;
+      margin-bottom: 17px;
+    }
+
+    &.invalid {
+      margin-bottom: 30px;
     }
 
     &.select {
@@ -348,6 +435,9 @@ export default {
       top: 24px;
       left: 340px;
       width: 160px;
+      .label {
+        margin-bottom: 0;
+      }
     }
 
     .label {
@@ -363,7 +453,7 @@ export default {
     }
 
     .name {
-      line-height: 40px;
+      line-height: 32px;
     }
   }
 
@@ -411,10 +501,14 @@ export default {
     justify-content: flex-end;
     margin-top: 17px;
 
-    .btn-delete {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .btn:not(:last-child) {
+      margin-right: 7px;
+    }
+
+    .remark-text {
+      color: $theme-color-warning;
+      font-size: 14px;
+      margin-right: 12px;
     }
   }
 
@@ -424,16 +518,30 @@ export default {
     padding: 8px;
     font-size: 14px;
     margin-top: 17px;
+    display: flex;
+    flex-direction: column;
 
     .reminder-title {
       color: #FFDF6F;
       font-weight: $theme-font-weight-semi-bold;
+      line-height: 32px;
+    }
+
+    .reminder-description {
+      line-height: 32px;
     }
 
     .btn-link {
       color: #00C9DC;
       text-decoration: underline;
     }
+  }
+
+  .disabled {
+    opacity: .5;
+    transition: opacity .2s linear;
+    pointer-events: none;
+    cursor: not-allowed;
   }
 
   & >>> .tag-select.el-select {
