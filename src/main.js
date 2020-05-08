@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 import VueEvents from 'vue-events'
 import VeeValidate, { Validator } from 'vee-validate'
-import VueGtag from "vue-gtag"
+import VueGtag from 'vue-gtag'
 import store from './store'
 import '@/utils/filters'
 import '@/utils/mixins'
