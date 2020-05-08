@@ -234,7 +234,7 @@ const router = new Router({
                   name: 'GroupCreateUser',
                   meta: {
                     layers: ['group', 'user-management'],
-                    permission: ['account_create_group_user'],
+                    permission: ['account_create_group_user', 'group_create_user'],
                     isHiddenNav: true
                   }
                 }
