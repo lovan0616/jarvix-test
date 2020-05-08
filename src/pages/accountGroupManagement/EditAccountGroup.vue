@@ -24,7 +24,7 @@
             class="input-block"
             name="groupName"
             v-model="groupName"
-            v-validate="'required'"
+            v-validate="`required|max:${max}`"
           ></input-block>
         </div>
         <div
@@ -98,6 +98,9 @@ export default {
     },
     editTypeName () {
       return this.editType === 'create' ? this.$t('button.createGroup') : this.$t('button.editGroupName')
+    },
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   },
   methods: {
