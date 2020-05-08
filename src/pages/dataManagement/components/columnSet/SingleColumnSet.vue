@@ -67,6 +67,7 @@
               <div class="info alias">{{ column.primaryAlias }}</div>
               <button class="btn-m btn-secondary btn-select"
                 @click="cancelSelect(index)"
+                v-if="columnSet.dataColumnList.length > 1"
               >{{ $t('button.cancel') }}</button>
             </div>
             <div class="empty-select"
@@ -155,6 +156,14 @@ export default {
       }
     },
     cancelSelect (index) {
+      // if (this.columnSet.dataColumnList.length <= 1) {
+      //   Message({
+      //     message: this.$t('message.columnSetAtLeastOne'),
+      //     type: 'warning',
+      //     duration: 3 * 1000
+      //   })
+      //   return
+      // }
       let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)
       const {id: dataColumnId, dataColumnId: id, ...otherData} = cancelColumnInfo[0]
       this.columnOptionList.push({id, dataColumnId, ...otherData})

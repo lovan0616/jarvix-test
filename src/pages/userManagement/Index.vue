@@ -4,9 +4,17 @@
       <h1 class="title">{{ $t('sideNav.accountUserManagement') }}</h1>
     </div>
     <div class="table-board">
-      <div @click="showCreateUser" class="user-add">
-        <svg-icon icon-class="user" class="icon"></svg-icon>
-        {{ $t('userManagement.createUser') }}
+      <div class="button-block">
+        <button
+          class="btn-m btn-default btn-has-icon"
+          :disabled="isLoading || isProcessing || reachUserLimit"
+          @click="showCreateUser">
+          <svg-icon icon-class="user" class="icon"></svg-icon>
+          {{ $t('userManagement.createUser') }}
+        </button>
+        <div class="reach-limit"
+          v-if="reachUserLimit"
+        >{{ $t('notification.userLimitNotification') }}</div>
       </div>
       <crud-table
         :headers="tableHeaders"
@@ -140,7 +148,6 @@
             {{ $t('button.remove') }}
           </a>
         </div>
-        <!--TODO: 判定此 account 人數上限-->
         <button
           @click="addNewInvitee()"
           class="btn btn-m btn-outline"
@@ -153,6 +160,7 @@
 </template>
 <script>
 import { getAccountUsers, deleteUserAccount, inviteUser, getAccountRoles, updateRole, getSelfInfo, updateUser } from '@/API/User'
+import { getAccountInfo } from '@/API/Account'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'
@@ -209,6 +217,7 @@ export default {
       accountViewerRoleId: null,
       isLoading: false,
       isProcessing: false,
+      reachUserLimit: false,
       tableHeaders: [
         {
           text: this.$t('editing.userAccount'),
@@ -234,8 +243,14 @@ export default {
       this.getSelfInfo()
     })
     this.getAccountRoleList()
+    this.checkIfReachUserLimit()
   },
   methods: {
+    checkIfReachUserLimit () {
+      getAccountInfo().then(({ license }) => {
+        this.reachUserLimit = license.currentUser >= license.maxUser
+      })
+    },
     getSelfInfo () {
       getSelfInfo().then(response => {
         this.selfUser = this.userData.filter(user => user.id === response.id)[0]
@@ -515,6 +530,15 @@ export default {
         }
       ]
     }
+  },
+  watch: {
+    userData: {
+      handler (newUsers, oldUsers) {
+        if (newUsers.length === oldUsers.length) return
+        this.checkIfReachUserLimit()
+      },
+      immediate: false
+    }
   }
 }
 </script>
@@ -543,19 +567,6 @@ export default {
     background: $theme-bg-color;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
-  }
-
-  .user-add {
-    width: 105px;
-    height: 30px;
-    font-size: 14px;
-    line-height: 30px;
-    text-align: center;
-    color: #fff;
-    background: #1EB8C7;
-    border-radius: 5px;
-    margin-bottom: 16px;
-    cursor: pointer;
   }
 
   .fill-dialog {

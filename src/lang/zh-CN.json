@@ -1432,7 +1432,8 @@
   },
   "notification": {
     "uploadLimitNotification": "资料数量已达上限",
-    "uploadLimit": "资料表限制：最多{count}笔"
+    "uploadLimit": "资料表限制：最多{count}笔",
+    "userLimitNotification": "使用者数量已达上限"
   },
   "chart": {
     "zoom": "区域缩放",
