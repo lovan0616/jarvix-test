@@ -5,6 +5,8 @@
     :no-data-text="$t('message.noData')"
     @change="$emit('change', $event)"
     :disabled="isDisabled"
+    :popper-append-to-body="false"
+    style="text-align:left;"
   >
     <el-option
       v-for="option in optionList"
