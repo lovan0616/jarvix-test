@@ -277,7 +277,7 @@ Vue.use(Rollbar, {
   accessToken: process.env.ROLL_BAR,
   captureUncaught: true,
   captureUnhandledRejections: true,
-  enabled: window.location.hostname === 'sygps.sis.ai' || 'jarvix.sis.ai',
+  enabled: window.location.hostname === 'sygps.sis.ai' || window.location.hostname === 'jarvix.sis.ai',
   environment: window.location.hostname,
   payload: {
     client: {
