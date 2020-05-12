@@ -74,7 +74,7 @@ export default {
                 userName: res.name,
                 accountList: res.accountList,
                 groupList: res.groupList,
-                permission: [...res.accountPermission, ...res.groupPermission]
+                permission: res.groupPermission ? [...res.accountPermission, ...res.groupPermission] : res.accountPermission
               })
 
               const currentGroupId = this.$store.getters['userManagement/getCurrentGroupId']
