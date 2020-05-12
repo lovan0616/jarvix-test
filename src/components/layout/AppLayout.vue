@@ -21,7 +21,6 @@ export default {
   },
   created () {
     this.setDataSourceInfo()
-    this.getUserInfo()
   },
   destroyed () {
     window.clearInterval(this.intervalFunction)
