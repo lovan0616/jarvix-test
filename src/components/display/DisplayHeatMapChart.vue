@@ -2,7 +2,7 @@
   <div class="display-heat-map-chart">
     <v-echart
       :style="chartStyle"
-      :options="chartOption"
+      :options="options"
       auto-resize
     >
     </v-echart>
@@ -23,7 +23,7 @@ export default {
     }
   },
   computed: {
-    chartOption () {
+    options () {
       return {
         tooltip: {
           position: 'top'
