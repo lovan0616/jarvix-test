@@ -2,7 +2,7 @@
   <div class="display-heat-map-chart">
     <v-echart
       :style="chartStyle"
-      :options="chartOption"
+      :options="options"
       auto-resize
     >
     </v-echart>
@@ -48,6 +48,7 @@ export default {
     // dataset.data = [ [0,0,0.5],[1,0,0.1],[2,2,0],[1,1,0.3] ...... ] > [x, y, value]
     // dataset.index = [ [1, 2, 3, 4, 5 ,6 ......], [1, 2, 3, 4, 5, 6 ......] ] [ [x 軸各欄位名稱], [y 軸各欄位名稱] ]
     // dataset.index[0] 數量 乘上 index[1] 數量 = value 格數
+    // dataset.range = [最小值, 最大值]
     dataset: {
       type: Object,
       default: null
@@ -56,7 +57,7 @@ export default {
     width: {type: String, default: '100%'}
   },
   computed: {
-    chartOption () {
+    options () {
       const {tooltip} = JSON.parse(JSON.stringify(commonChartOptions()))
       const config = {
         ...this.addonOptions,
@@ -75,8 +76,8 @@ export default {
           color: '#fff'
         },
         visualMap: {
-          min: 0,
-          max: 1, // this.maxValue
+          min: this.minValue,
+          max: this.maxValue,
           // calculable: true,
           orient: 'vertical',
           right: '3%',
@@ -89,7 +90,7 @@ export default {
           itemHeight: '200px',
           precision: 1,
           itemWidth: '8px',
-          text: [1, 0]
+          text: [this.maxValue, this.minValue]
         },
         dataset: {
           source: this.dataset.data
@@ -105,6 +106,7 @@ export default {
       return config
     },
     maxValue () {
+      if (this.dataset.range) return this.dataset.range[1]
       let max = 0
       this.dataset.data.forEach(element => {
         if (element[2] > max) {
@@ -113,6 +115,17 @@ export default {
       })
 
       return max
+    },
+    minValue () {
+      if (this.dataset.range) return this.dataset.range[0]
+      let min = 0
+      this.dataset.data.forEach(element => {
+        if (element[2] < min) {
+          min = element[2]
+        }
+      })
+
+      return min
     },
     chartStyle () {
       return {

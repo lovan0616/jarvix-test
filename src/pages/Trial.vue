@@ -1,26 +1,7 @@
 <template>
-  <!-- <component
-        :is="componentName"
-        :has-pagination="hasNextPage"
-        :dataset="componentData.dataset"
-        :title="componentData.title"
-        :message="componentData.message"
-        :segmentation="componentData.segmentation"
-        :info="componentData.info || componentData.data"
-        :features="componentData.features"
-        :confidence="componentData.confidence"
-        :formula="componentData.ax_b"
-        :text="componentData.text"
-        :chart-data="componentData.chart_data"
-        :notes="componentData.notes"
-        :causes="componentData.causes"
-        :description="componentData.description"
-        :total="componentData.total"
-        @next="getNewPageInfo"
-      ></component> -->
-      <section class="display">
-        <DisplayHeatMapChartDataSet :dataset="componentData.dataset" />
-      </section>
+  <section class="display">
+    <DisplayHeatMapChartDataSet :dataset="componentData.dataset" />
+  </section>
 </template>
 <script>
 import DisplayHeatMapChartDataSet from '@/components/display/DisplayHeatMapChartDataSet'
@@ -31,23 +12,8 @@ export default {
   name: 'Trial',
   data () {
     return {
-      resultId: null,
-      diagram: null,
       loading: true,
-      componentName: null,
-      componentData: null,
-      isError: false,
-      errorMessage: '',
-      notes: [],
-      timeoutFunction: null,
-      pagination: {
-        currentPage: 0,
-        totalPages: 1
-      },
-      isGetPagination: false,
-      // 是否有下一頁資料
-      hasNextPage: false,
-      maxDataLengthPerPage: 200
+      componentData: null
     }
   },
   components: {
@@ -56,63 +22,20 @@ export default {
   mounted () {
     this.fetchData()
   },
-  destroyed () {
-    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
-  },
   methods: {
     fetchData () {
       this.componentData = {
         dataset: {
           data: dummyData,
           index: [['a', 'b', 'c', 'd'], ['a', 'b', 'c', 'd', 'e']],
-          columns: ['x 軸名稱', 'y 軸名稱']
+          columns: ['x 軸名稱', 'y 軸名稱'],
+          range: [0, 1]
         }
       }
-    },
-    getNewPageInfo () {
-      this.pagination.currentPage += 1
-      this.fetchData()
-    },
-    appendNote (note) {
-      this.notes.push(note)
-    },
-    genSamplingNote (randomLimit) {
-      return this.$t('resultNote.samplingNote', {randomLimit})
-    },
-    genGroupLimitNote (randomLimit) {
-      return this.$t('resultNote.groupLimitNote', {randomLimit})
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.task {
-  position: relative;
-  width: 100%;
 
-  .task-note {
-    &::before {
-      content: '#';
-    }
-    color: #A7A7A7;
-    font-size: 12px;
-  }
-
-  // pagination 遮罩
-  &.task-mask {
-    position: relative;
-    background: repeating-linear-gradient(to right, rgba(34, 64, 68, 0) 0%, rgba(34, 64, 68, 1) 50%, rgba(34, 64, 68, 0) 100%);
-    width: 100%;
-    background-size: 200% auto;
-    background-position: 0 100%;
-    animation: gradient 1s infinite;
-    animation-fill-mode: forwards;
-    animation-timing-function: linear;
-
-    @keyframes gradient {
-      0%   { background-position: 0 0; }
-      100% { background-position: -200% 0; }
-    }
-  }
-}
 </style>
