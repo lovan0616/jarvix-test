@@ -21,7 +21,7 @@ const router = new Router({
             {
               path: '/',
               name: 'PageIndex',
-              component: () => import('@/pages/Index')
+              component: () => import('@/pages/datasetDashboard/Index')
             },
             {
               path: 'result',
@@ -253,11 +253,6 @@ const router = new Router({
       path: '/signup',
       name: 'PageSignup',
       component: () => import('@/pages/signup/Index')
-    },
-    {
-      path: '/trial',
-      name: 'Trial',
-      component: () => import('@/pages/Trial')
     }
   ],
   linkActiveClass: 'active',

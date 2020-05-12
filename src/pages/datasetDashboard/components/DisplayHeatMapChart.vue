@@ -9,14 +9,14 @@
   </div>
 </template>
 <script>
-import EchartAddon from './common/addon.js'
+import EchartAddon from '@/components/display/common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import {
   gridDefault,
   xAxisDefault,
   yAxisDefault,
   seriesItemHeatMap
-} from './common/addons'
+} from '@/components/display/common/addons'
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
@@ -48,7 +48,6 @@ export default {
     // dataset.data = [ [0,0,0.5],[1,0,0.1],[2,2,0],[1,1,0.3] ...... ] > [x, y, value]
     // dataset.index = [ [1, 2, 3, 4, 5 ,6 ......], [1, 2, 3, 4, 5, 6 ......] ] [ [x 軸各欄位名稱], [y 軸各欄位名稱] ]
     // dataset.index[0] 數量 乘上 index[1] 數量 = value 格數
-    // dataset.range = [最小值, 最大值]
     dataset: {
       type: Object,
       default: null
@@ -70,19 +69,20 @@ export default {
           }
         },
         grid: {
-          containLabel: true
+          // containLabel: true,
+          right: 60
         },
         textStyle: {
           color: '#fff'
         },
         visualMap: {
-          min: this.minValue,
-          max: this.maxValue,
+          min: 0,
+          max: 1,
           // calculable: true,
           orient: 'vertical',
-          right: '3%',
+          left: 'right',
           top: 'middle',
-          align: 'top',
+          align: 'bottom',
           color: ['#F8696B', '#E2E282', '#63BD7B'],
           textStyle: {
             color: '#fff'
@@ -90,7 +90,7 @@ export default {
           itemHeight: '200px',
           precision: 1,
           itemWidth: '8px',
-          text: [this.maxValue, this.minValue]
+          text: [1, 0]
         },
         dataset: {
           source: this.dataset.data
@@ -104,28 +104,6 @@ export default {
       config.yAxis.data = this.dataset.index[1]
 
       return config
-    },
-    maxValue () {
-      if (this.dataset.range) return this.dataset.range[1]
-      let max = 0
-      this.dataset.data.forEach(element => {
-        if (element[2] > max) {
-          max = element[2]
-        }
-      })
-
-      return max
-    },
-    minValue () {
-      if (this.dataset.range) return this.dataset.range[0]
-      let min = 0
-      this.dataset.data.forEach(element => {
-        if (element[2] < min) {
-          min = element[2]
-        }
-      })
-
-      return min
     },
     chartStyle () {
       return {
