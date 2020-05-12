@@ -25,7 +25,7 @@
         @deleteUserFromAccount="showDeleteAccount"
         :empty-message="$t('editing.notYetCreateGroup')"
       >
-        <template v-slot:roleZhNameTooltip>
+        <template v-slot:roleZhName>
           <role-desc-pop />
         </template>
         <template v-slot:action="{ data }">
@@ -238,7 +238,6 @@ export default {
           value: 'roleZhName',
           width: '35%',
           tooltip: {
-            display: true,
             width: '212px'
           }
         },

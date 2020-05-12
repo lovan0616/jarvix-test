@@ -31,15 +31,15 @@
         >{{ headInfo.text }}
           <span
             class="tooltip-container"
-            v-if="headInfo.tooltip && headInfo.tooltip.display"
+            v-if="headInfo.tooltip"
           >
             <svg-icon icon-class="information-circle" class="icon" />
             <div
               class="tooltip"
               :style="{width: headInfo.tooltip.width}"
             >
-              <slot :name="headInfo.value + 'Tooltip'" />
-              {{headInfo.tooltip.text}}
+              <slot :name="headInfo.value" />
+              <span v-if="headInfo.tooltip.text" v-html="headInfo.tooltip.text" />
             </div>
           </span>
           <svg-icon icon-class="arrow-down" class="arrow-icon"
@@ -133,12 +133,10 @@ import { mapGetters } from 'vuex'
       width: '16.3%',
       // tooltip
       tooltip: {
-        // 是否顯示 tooltip
-        display: true,
         // tooltip 寬度（需給定）
         width: '200px',
-        // tooltip 內容可直接透過 text 屬性帶入值
-        // 亦可用 slot 帶入客製化內容，slot 名稱格式："header value 值 + 'Tooltip'"
+        // tooltip 內容可直接透過 text 屬性帶入值(允許 innerHTML)
+        // 亦可用 slot 帶入客製化內容，slot 名稱格式："header value"
         text: 'tooltip 文字內容'
       }
       // 是否有連接
