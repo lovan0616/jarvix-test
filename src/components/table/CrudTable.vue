@@ -29,6 +29,19 @@
           }"
           @click="(headInfo.sort) ? rankingData(headInfo.value) : ''"
         >{{ headInfo.text }}
+          <span
+            class="tooltip-container"
+            v-if="headInfo.tooltip"
+          >
+            <svg-icon icon-class="information-circle" class="icon" />
+            <div
+              class="tooltip"
+              :style="{width: headInfo.tooltip.width}"
+            >
+              <slot :name="headInfo.value" />
+              <span v-if="headInfo.tooltip.text" v-html="headInfo.tooltip.text" />
+            </div>
+          </span>
           <svg-icon icon-class="arrow-down" class="arrow-icon"
             v-if="headInfo.sort && sortStatus"
             :class="{ 'arrow-up': sortStatus[headInfo.value] > 0, 'active': sortStatus[headInfo.value]  }"
@@ -118,6 +131,14 @@ import { mapGetters } from 'vuex'
       sort: true,
       // 欄位寬度
       width: '16.3%',
+      // tooltip
+      tooltip: {
+        // tooltip 寬度（需給定）
+        width: '200px',
+        // tooltip 內容可直接透過 text 屬性帶入值(允許 innerHTML)
+        // 亦可用 slot 帶入客製化內容，slot 名稱格式："header value"
+        text: 'tooltip 文字內容'
+      }
       // 是否有連接
       link: true,
       // 時間格式
@@ -345,6 +366,20 @@ export default {
       text-align: center;
       transition: all 0.3s;
       transform: rotate(180deg);
+    }
+  }
+
+  .tooltip-container {
+    margin: 0 3px;
+
+    .tooltip {
+      padding: 12px;
+      line-height: 14px;
+      white-space: normal;
+    }
+
+    .icon {
+      color: $theme-color-warning;
     }
   }
 }
