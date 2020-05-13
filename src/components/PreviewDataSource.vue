@@ -25,13 +25,20 @@
           v-else-if="hasError || dataSourceTables.length === 0"
           :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
         ></empty-info-block>
-        <pagination-table
-          v-else
-          :is-processing="isProcessing"
-          :dataset="dataSourceTableData"
-          :pagination-info="pagination"
-          @change-page="updatePage"
-        ></pagination-table>
+        <template v-else>
+          <section class="board-section">
+            <pagination-table
+              :is-processing="isProcessing"
+              :dataset="dataSourceTableData"
+              :pagination-info="pagination"
+              @change-page="updatePage"
+            ></pagination-table>
+          </section>
+          <section class="board-section">
+            <div class="title">{{ $t('resultDescription.columnCorrelationOverview') }}</div>
+            <column-correlation-overview :data-source-table-id="dataSourceTable.id" />
+          </section>
+        </template>
       </div>
     </div>
     <span v-show="!dataSourceId">{{ $t('message.emptyDataSource') }}</span>
@@ -41,13 +48,15 @@
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import PaginationTable from '@/components/table/PaginationTable'
+import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/ColumnCorrelationOverview'
 
 export default {
   name: 'PreviewDataSource',
   components: {
     SySelect,
     EmptyInfoBlock,
-    PaginationTable
+    PaginationTable,
+    ColumnCorrelationOverview
   },
   data () {
     return {
@@ -60,7 +69,8 @@ export default {
       pagination: {
         currentPage: 0,
         totalPage: 0
-      }
+      },
+      currentDataFrameId: null
     }
   },
   mounted () {
@@ -154,6 +164,19 @@ export default {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
+  }
+
+  .board-section {
+    &:not(:last-of-type) {
+      margin-bottom: 1.3rem;
+    }
+
+    .title {
+      font-weight: 600;
+      font-size: 24px;
+      line-height: 32px;
+      margin-bottom: 0;
+    }
   }
 }
 </style>

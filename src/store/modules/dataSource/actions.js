@@ -79,6 +79,9 @@ export default {
   getDataFrameData ({state}, {id, page = 0}) {
     return getDataFrameData(id, page)
   },
+  getDataFrameColumnCorrelation ({ state }, { id }) {
+    // TODO: 串接 API
+  },
   getDataSourceColumnInfo ({ commit, state }) {
     if (!state.dataSourceId) return
     return getDataSourceColumnInfoById(state.dataSourceId).then(response => {
