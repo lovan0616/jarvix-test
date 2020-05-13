@@ -1342,6 +1342,7 @@
     "of": "的",
     "dataSourceIntro": "资料集介绍",
     "degreeOfCorrelation": "关联度",
+    "columnCorrelationName": "关联栏位名称",
     "columnCorrelationOverview": "栏位关联概况",
     "strongCorrelationColumns": "高关联度栏位",
     "correlationRange": "数值范围 {min} - {max} 之内为高关联度栏位",

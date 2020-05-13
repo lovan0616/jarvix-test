@@ -26,18 +26,15 @@
           :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
         ></empty-info-block>
         <template v-else>
-          <section class="board-section">
-            <pagination-table
-              :is-processing="isProcessing"
-              :dataset="dataSourceTableData"
-              :pagination-info="pagination"
-              @change-page="updatePage"
-            ></pagination-table>
-          </section>
-          <section class="board-section">
-            <div class="title">{{ $t('resultDescription.columnCorrelationOverview') }}</div>
-            <column-correlation-overview :data-source-table-id="dataSourceTable.id" />
-          </section>
+          <pagination-table
+            :is-processing="isProcessing"
+            :dataset="dataSourceTableData"
+            :pagination-info="pagination"
+            @change-page="updatePage"
+          ></pagination-table>
+          <column-correlation-overview
+            :data-source-table-id="dataSourceTable.id"
+          />
         </template>
       </div>
     </div>
@@ -164,19 +161,6 @@ export default {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
-  }
-
-  .board-section {
-    &:not(:last-of-type) {
-      margin-bottom: 1.3rem;
-    }
-
-    .title {
-      font-weight: 600;
-      font-size: 24px;
-      line-height: 32px;
-      margin-bottom: 0;
-    }
   }
 }
 </style>
