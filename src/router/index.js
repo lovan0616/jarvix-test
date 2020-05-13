@@ -21,7 +21,7 @@ const router = new Router({
             {
               path: '/',
               name: 'PageIndex',
-              component: () => import('@/pages/datasetDashboard/Index')
+              component: () => import('@/pages/datasourceDashboard/Index')
             },
             {
               path: 'result',
