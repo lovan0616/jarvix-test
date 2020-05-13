@@ -110,6 +110,9 @@ export default {
         this.dataList = this.dataSourceList.map(dataInfo => {
           // 注意！這邊只會做資料表數計算，時間的顯示在 DataTable 處理，主要是為了時間排序的準確
           dataInfo.dataFrameCount = dataInfo.dataFrameCount || 0
+          dataInfo.processDataFrameCount = dataInfo.processDataFrameCount || 0
+          dataInfo.enableDataFrameCount = dataInfo.enableDataFrameCount || 0
+          dataInfo.failDataFrameCount = dataInfo.failDataFrameCount || 0
           return dataInfo
         })
       },
