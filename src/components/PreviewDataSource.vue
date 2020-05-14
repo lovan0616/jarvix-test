@@ -30,8 +30,24 @@
           :is-processing="isProcessing"
           :dataset="dataSourceTableData"
           :pagination-info="pagination"
+          :columnWidth="'250px'"
           @change-page="updatePage"
-        ></pagination-table>
+        >
+          <template v-slot="{ column, index }">
+            <div class="header-block">
+              <div class="header">
+                <!--TODO: 根據資料類型顯示相對應 icon-->
+                <svg-icon class="icon"
+                  icon-class="check-circle"
+                ></svg-icon>
+                {{column.titles[index]}}
+              </div>
+              <div class="summary">
+                <data-column-summary :summary-data="column.summary[index]" />
+              </div>
+            </div>
+          </template>
+        </pagination-table>
       </div>
     </div>
     <span v-show="!dataSourceId">{{ $t('message.emptyDataSource') }}</span>
@@ -41,13 +57,50 @@
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import PaginationTable from '@/components/table/PaginationTable'
+import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
+
+const dummySummaryData = [
+  {
+    diagram: 'list',
+    data: {
+      dataType: 'Boolean',
+      data: [
+        {
+          name: 'true',
+          value: '39%'
+        },
+        {
+          name: 'false',
+          value: '39%'
+        },
+        {
+          name: 'null',
+          value: '22%'
+        }
+      ]
+    }
+  },
+  {
+    diagram: 'list',
+    data: {
+      dataType: 'Boolean',
+      data: [
+        {
+          name: 'true',
+          value: '40%'
+        }
+      ]
+    }
+  }
+]
 
 export default {
   name: 'PreviewDataSource',
   components: {
     SySelect,
     EmptyInfoBlock,
-    PaginationTable
+    PaginationTable,
+    DataColumnSummary
   },
   data () {
     return {
@@ -128,7 +181,10 @@ export default {
             this.pagination = response.pagination
           }
           this.dataSourceTableData = {
-            columns: response.columns,
+            columns: {
+              titles: response.columns,
+              summary: dummySummaryData
+            },
             data: response.data,
             index: [...Array(response.data.length)].map((x, i) => i)
           }
@@ -154,6 +210,27 @@ export default {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
+  }
+
+  .header-block {
+    height: 190px;
+
+    .header {
+      padding: 10px;
+      border-bottom: 1px solid #515959;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      .icon {
+        margin-right: 6px;
+      }
+    }
+    .summary {
+      padding: 10px;
+      overflow: auto;
+      height: calc(100% - 44px);
+    }
   }
 }
 </style>

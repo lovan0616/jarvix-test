@@ -15,12 +15,23 @@
       >
       </el-table-column>
       <el-table-column
-        v-for="(col, i) in dataset.columns"
+        v-for="(col, i) in dataset.columns.titles || dataset.columns"
         :key="i"
         :prop="i.toString()"
         :label="(typeof col === 'number') ? col.toString() : col"
+        :width="columnWidth"
         min-width="120"
-      />
+      >
+        <!--Header slot-->
+        <template slot="header" slot-scope="scope">
+          <slot
+            :column="dataset.columns"
+            :index="i"
+          >
+           {{scope.column.label}}
+          </slot>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination class="table-pagination"
       v-if="paginationInfo.totalPages > 1"
@@ -62,6 +73,10 @@ export default {
       type: Number,
       default: 80
     },
+    columnWidth: {
+      type: String,
+      default: null
+    },
     paginationInfo: {
       type: Object,
       default () {
@@ -99,7 +114,7 @@ export default {
     tableProps () {
       let tableProps = { ...this.$props, data: this.dataset.data }
       if (!this.$props.maxHeight) {
-        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 400)
+        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 500)
       }
       return tableProps
     }
@@ -124,6 +139,22 @@ export default {
 
   .sy-table {
     margin-bottom: 16px;
+  }
+
+  /deep/ .sy-table.el-table {
+    border: 1px solid #515959;
+    th, td {
+      border-bottom: 1px solid #515959;
+      border-right: 1px solid #515959;
+    }
+  }
+
+  /deep/ .el-table th>.cell {
+    padding: 0;
+  }
+
+  /deep/ .el-table th {
+    padding: 0;
   }
 }
 </style>
