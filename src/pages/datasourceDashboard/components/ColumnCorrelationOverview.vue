@@ -15,12 +15,23 @@
       ></empty-info-block>
     </div>
     <div class="overview-section">
-      <div class="title">{{ $t('resultDescription.strongCorrelationColumns') }}</div>
+      <div class="title">
+        {{ $t('resultDescription.strongCorrelationColumns') }}
+         <span class="nav-item nav-function tooltip-container">
+          <svg-icon icon-class="information-circle" class="icon" />
+          <div class="tooltip">{{$t('resultDescription.correlationRange', {min: degreeMin, max: degreeMax})}}</div>
+        </span>
+      </div>
+      <spinner
+        v-if="isLoading"
+      ></spinner>
       <crud-table
+        class="high-correlation-table"
+        v-else
         :headers="tableHeaders"
         :data-list.sync="correlationData"
         :loading="isLoading"
-        :empty-message="$t('resultDescription.noStrongCorrelationColumns')"
+        :empty-message="hasError ? $t('message.systemIsError') : $t('resultDescription.noStrongCorrelationColumns')"
       />
     </div>
   </section>
@@ -90,7 +101,10 @@ export default {
           width: '32%'
         }
       ],
-      correlationData: []
+      correlationData: [],
+      // TODO: 待 DS 關聯度區間
+      degreeMin: 0.3,
+      degreeMax: 1
     }
   },
   mounted () {
@@ -110,6 +124,7 @@ export default {
             }
           }
           this.correlationData = dummyData.top
+          //  TODO: 增加關聯欄位間的正確 icon
           this.correlationData = this.correlationData.map(data => ({
             ...data,
             icon: 'arrow-right'
@@ -135,6 +150,22 @@ export default {
     font-size: 24px;
     line-height: 32px;
     margin-bottom: 14px;
+  }
+
+  .tooltip-container {
+    z-index: 1;
+    .tooltip {
+      width: 190px;
+      text-align: center;
+      white-space: normal;
+      padding: 8px;
+      line-height: 14px;
+      color: #DDDDDD;
+    }
+
+    .icon {
+      color: $theme-color-warning;
+    }
   }
 }
 </style>

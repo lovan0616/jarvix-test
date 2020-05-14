@@ -1345,7 +1345,7 @@
     "columnCorrelationName": "关联栏位名称",
     "columnCorrelationOverview": "栏位关联概况",
     "strongCorrelationColumns": "高关联度栏位",
-    "correlationRange": "数值范围 {min} - {max} 之内为高关联度栏位",
+    "correlationRange": "数值范围 {min} - {max} 之内为高关联度栏位(至多显示五笔)",
     "noStrongCorrelationColumns": "目前没有找到任何高关联度栏位",
     "relatedQuestion": "关联问题",
     "basicInfo": "基本资料",

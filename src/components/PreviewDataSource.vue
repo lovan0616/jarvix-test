@@ -27,14 +27,17 @@
         ></empty-info-block>
         <template v-else>
           <pagination-table
+            class="board-body-section"
             :is-processing="isProcessing"
             :dataset="dataSourceTableData"
             :pagination-info="pagination"
             @change-page="updatePage"
           ></pagination-table>
-          <column-correlation-overview
+          <!--欄位關聯概況-->
+          <!-- <column-correlation-overview
+            class="board-body-section"
             :data-source-table-id="dataSourceTable.id"
-          />
+          /> -->
         </template>
       </div>
     </div>
@@ -161,6 +164,12 @@ export default {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
+  }
+
+  .board-body-section {
+    &:not(:last-child) {
+      margin-bottom: 1.3rem;
+    }
   }
 }
 </style>

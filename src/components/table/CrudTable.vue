@@ -96,7 +96,11 @@
             </slot>
           </template>
           <template v-if="headInfo.value === 'icon'">
-            <svg-icon :icon-class="data[headInfo.value]"></svg-icon>
+            <svg-icon
+              :icon-class="data[headInfo.value]"
+              class="icon"
+              :class="data.class"
+            />
           </template>
           <span v-else>{{ data[headInfo.value] }}</span>
         </div>
