@@ -466,6 +466,16 @@ export function seriesItemMarkLine () {
   }
 }
 
+export function seriesItemHeatMap () {
+  return {
+    type: 'heatmap',
+    label: {
+      show: true,
+      color: '#000'
+    }
+  }
+}
+
 // drillDown type
 export function getDrillDownTool (routeName, titleObject, isParallel = false, twoDirection = false) {
   let toolbox
