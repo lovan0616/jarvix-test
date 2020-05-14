@@ -69,8 +69,7 @@ export default {
       pagination: {
         currentPage: 0,
         totalPage: 0
-      },
-      currentDataFrameId: null
+      }
     }
   },
   mounted () {

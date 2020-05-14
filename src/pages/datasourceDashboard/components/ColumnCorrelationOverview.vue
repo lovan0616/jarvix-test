@@ -17,7 +17,7 @@
     <div class="overview-section">
       <div class="title">
         {{ $t('resultDescription.strongCorrelationColumns') }}
-         <span class="nav-item nav-function tooltip-container">
+        <span class="nav-item nav-function tooltip-container">
           <svg-icon icon-class="information-circle" class="icon" />
           <div class="tooltip">{{$t('resultDescription.correlationRange', {min: degreeMin, max: degreeMax})}}</div>
         </span>
@@ -145,6 +145,7 @@ export default {
   &:not(:last-of-type) {
     margin-bottom: 1.3rem;
   }
+
   .title {
     font-weight: 600;
     font-size: 24px;

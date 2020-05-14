@@ -105,12 +105,13 @@ export default {
         series: this.addonSeriesItem
       }
 
+      // 限制 label 字數避免圖片被壓縮
       const formateLabel = function (value, index) {
         if (value.length <= 5) return value
         return value.slice(0, 5) + '...'
       }
 
-      // 數量大的時候出現 scroll bar 並隱藏 label
+      // 欄位超過 10x10 的時候出現 scroll bar 並隱藏 label
       if (this.dataset.data.length > 100) {
         const verticalZoomConfig = verticalZoomIn()
         verticalZoomConfig[1].top = 50
@@ -122,8 +123,6 @@ export default {
 
       config.xAxis.position = 'top'
       config.xAxis.data = this.dataset.index[0]
-      config.xAxis.min = 'dataMin'
-      config.xAxis.max = 'dataMax'
       config.xAxis.axisLabel.formatter = formateLabel
       config.yAxis.inverse = true
       config.yAxis.data = this.dataset.index[1]
