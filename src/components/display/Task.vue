@@ -82,6 +82,7 @@ export default {
   },
   methods: {
     fetchData (page = 0) {
+      console.log(page, this.intend, 'before fetch')
       window.clearTimeout(this.timeoutFunction)
       return this.$store.dispatch('chatBot/getComponentData', {
         id: this.componentId,
@@ -91,6 +92,7 @@ export default {
           case 'Process':
           case 'Ready':
             this.timeoutFunction = window.setTimeout(() => {
+              console.log('ready', this.intend, page)
               this.fetchData(page)
             }, 1000)
             break
@@ -109,9 +111,7 @@ export default {
             if (responseData.group_limit) {
               this.appendNote(this.genGroupLimitNote(responseData.group_limit))
             }
-
-            console.log(responseData, 'responseData')
-
+            // 判斷是否為 圖表
             if (responseData.dataset) {
               // 如果拿到的資料為空 表示這一頁已經是最後一頁了
               if (responseData.dataset.data.length === 0) {
@@ -123,6 +123,7 @@ export default {
                   this.errorMessage = this.$t('message.emptyResult')
                 }
               } else {
+                console.log(responseData, page, 'responseData')
                 return responseData
               }
             } else {
@@ -143,9 +144,9 @@ export default {
               this.hasNextPage = false
               this.isGetPagination = false
               this.nextPageData = null
-              break
+            } else {
+              if (this.intend === 'key_result') this.isError = true
             }
-            if (this.intend === 'key_result') this.isError = true
             break
         }
       }).catch(() => {
@@ -156,15 +157,17 @@ export default {
     },
     handleTaskInitData () {
       this.fetchData(this.pagination.currentPage).then(taskData => {
-        if (taskData) {
-          this.componentData = taskData
-          this.fetchData(this.pagination.currentPage + 1).then(nextPagedata => {
-            if (nextPagedata) {
-              this.nextPageData = nextPagedata
-              this.hasNextPage = true
-            }
-          })
-        }
+        if (!taskData) return
+        this.componentData = taskData
+        this.getNextPage(this.pagination.currentPage + 1)
+      })
+    },
+    getNextPage (page) {
+      return this.fetchData(page).then(taskData => {
+        console.log(taskData, 'nextPageData')
+        if (!taskData) return
+        this.nextPageData = taskData
+        this.hasNextPage = true
       })
     },
     getNewPageInfo () {
@@ -173,23 +176,59 @@ export default {
       // 將下一頁的資料塞進去
       this.updateChartData(this.nextPageData)
       // 確認下一頁有沒有資料
-      this.fetchData(this.pagination.currentPage).then(taskData => {
-        if (taskData) {
-          this.nextPageData = taskData
-          this.hasNextPage = true
-        }
-      })
+      this.getNextPage(this.pagination.currentPage)
     },
     updateChartData (taskData) {
       // 分頁的資料 push 進去
       if (this.diagram === 'line_chart') {
         let indexLength = this.componentData.dataset.index.length
         if (taskData.dataset.index.length === 1) {
+          /**
+           * 如果只有一個類別，欄位超過 200 個，才會跑這來
+           **/
           let restDataLength = taskData.dataset.data[0].length
           this.componentData.dataset.data[indexLength - 1].splice(this.componentData.dataset.columns.length - restDataLength, restDataLength)
           this.componentData.dataset.data[indexLength - 1] = this.componentData.dataset.data[indexLength - 1].concat(taskData.dataset.data[0])
         } else if (taskData.dataset.index.length > 1) {
+          /**
+           * 如果有多個類別
+           **/
           let firstNotNullIndex = taskData.dataset.data[0].findIndex(element => element !== null)
+          // 檢查新舊資料的 index 長度是否一致
+          if (taskData.dataset.index.length === indexLength) {
+            // 檢查有沒有空值
+            if (firstNotNullIndex > 0) {
+              /**
+               * 前面有空值，代表可能前一頁的最後一列資料沒有拿完，因此要補最後一行的資料
+               **/
+              // 新資料第一列移除空值的部分
+              taskData.dataset.data[0].splice(0, firstNotNullIndex)
+              // 舊資料最後一列移除空值部分
+              this.componentData.dataset.data[indexLength - 1].splice(firstNotNullIndex, this.componentData.dataset.columns.length - firstNotNullIndex)
+              // 舊資料最後一列補上新資料的第一列
+              this.componentData.dataset.data[indexLength - 1] = this.componentData.dataset.data[indexLength - 1].concat(taskData.dataset.data[0])
+              // 新資料移除第一列
+              taskData.dataset.data.shift()
+              // 接上新資料
+              this.componentData.dataset.data = this.componentData.dataset.data.concat(taskData.dataset.data)
+              taskData.dataset.index.shift()
+              this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
+              if (taskData.dataset.display_index) {
+                taskData.dataset.display_index.shift()
+                this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
+              }
+            } else {
+              
+              this.componentData.dataset.data = this.componentData.dataset.data.concat(taskData.dataset.data)
+              this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
+              if (this.componentData.dataset.display_index) {
+                this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
+              }
+            }
+          } else {
+            // 新舊類別數量不一致，代表說有新的類別資料到這個時候才拿到
+          }
+
           // 檢查有沒有空值
           if (firstNotNullIndex > 0) {
             // 補最後一行的資料
