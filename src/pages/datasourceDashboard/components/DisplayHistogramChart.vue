@@ -138,10 +138,13 @@ export default {
         bottom: 20
       }
 
-      // const axisName = this.title
-      // chartAddon.tooltip.formatter = function (params, ticket, callback) {
-      //   return `${axisName.xAxis.name}: ${params[0].data[0]} <br> ${axisName.yAxis.name}: ${params[0].data[2]}`
-      // }
+      const axisName = this.title
+      chartAddon.tooltip.formatter = function (params, ticket, callback) {
+        const rangeStart = Math.abs(params[0].data[0] < 0.01) ? params[0].data[0] : parseFloat(params[0].data[0].toFixed(2))
+        const rangeEnd = Math.abs(params[0].data[1] < 0.01) ? params[0].data[1] : parseFloat(params[0].data[1].toFixed(2))
+        return `${axisName.xAxis.name}: ${rangeStart} - ${rangeEnd} <br> ${axisName.yAxis.name}: ${params[0].data[2]}`
+      }
+      chartAddon.tooltip.extraCssText += 'max-width: 200px;white-space: normal;'
 
       histogramConfig.chartData.renderItem = this.renderItem
       histogramConfig.chartData.data = chartData

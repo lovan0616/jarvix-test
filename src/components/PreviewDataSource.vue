@@ -97,15 +97,15 @@ const dummySummaryData = [
     data: {
       chartType: 'histogram',
       dataset: {
-        data: [20178, 5827, 3394, 2080, 1382, 589, 317, 299, 342, 335],
-        range: [12.22222, 342343333333]
+        data: [333, 5827, 3394, 2080, 1382, 589, 317, 299, 342, 335],
+        range: [12, 343]
       },
       title: {
         xAxis: {
           name: 'age'
         },
         yAxis: {
-          name: 'revunueeee'
+          name: 'revenue'
         }
       }
     }
