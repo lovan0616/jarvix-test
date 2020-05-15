@@ -17,17 +17,38 @@
         </div>
       </li>
     </ul>
-
+    <template v-else>
+      <component
+        :is="componentName"
+        v-if="summaryData.data.chartType === 'histogram'"
+        :dataset="summaryData.data.dataset"
+        :title="summaryData.data.title"
+      ></component>
+    </template>
   </div>
 </template>
 
 <script>
+import DisplayHistogramChart from './DisplayHistogramChart'
+
 export default {
   name: 'DataColumnSummary',
   props: {
     summaryData: {
       type: Object,
       default: () => {}
+    }
+  },
+  components: {
+    DisplayHistogramChart
+  },
+  computed: {
+    componentName () {
+      if (this.summaryData.diagram !== 'chart') return
+      switch (this.summaryData.data.chartType) {
+        case 'histogram':
+          return 'DisplayHistogramChart'
+      }
     }
   }
 }
