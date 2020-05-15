@@ -43,7 +43,9 @@
                 {{column.titles[index]}}
               </div>
               <div class="summary">
-                <data-column-summary :summary-data="column.summary[index]" />
+                <data-column-summary
+                  :summary-data="dataSourceTableData.columns.summary[index]"
+                />
               </div>
             </div>
           </template>
