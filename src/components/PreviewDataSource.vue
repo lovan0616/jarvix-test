@@ -37,10 +37,13 @@
             <div class="header-block">
               <div class="header">
                 <!--TODO: 根據資料類型顯示相對應 icon-->
-                <svg-icon class="icon"
-                  icon-class="check-circle"
-                ></svg-icon>
-                {{column.titles[index]}}
+                <span class="tooltip-container icon">
+                  <svg-icon :icon-class="getHeaderIcon(index)" />
+                  <div class="tooltip">{{ getDataTypeName(index)}}</div>
+                </span>
+                <span class="text">
+                  {{column.titles[index]}}
+                </span>
               </div>
               <div class="summary">
                 <data-column-summary
@@ -65,7 +68,7 @@ const dummySummaryData = [
   {
     diagram: 'list',
     data: {
-      dataType: 'Boolean',
+      dataType: 'boolean',
       data: [
         {
           name: 'true',
@@ -85,7 +88,7 @@ const dummySummaryData = [
   {
     diagram: 'list',
     data: {
-      dataType: 'Boolean',
+      dataType: 'boolean',
       data: [
         {
           name: 'true',
@@ -97,6 +100,7 @@ const dummySummaryData = [
   {
     diagram: 'chart',
     data: {
+      dataType: 'numeric',
       chartType: 'histogram',
       dataset: {
         data: [333, 5827, 3394, 2080, 1382, 589, 317, 299, 342, 335],
@@ -219,6 +223,28 @@ export default {
     },
     updatePage (page) {
       this.fetchDataFrameData(this.dataSourceTable.id, page - 1)
+    },
+    getHeaderIcon (index) {
+      if (!this.dataSourceTableData.columns.summary[index]) return 'check-circle'
+      const dataType = this.dataSourceTableData.columns.summary[index].data.dataType
+      // TODO: 根據資料型態回覆正確的 icon
+      return 'check-circle'
+    },
+    getDataTypeName (index) {
+      if (!this.dataSourceTableData.columns.summary[index]) return ''
+      const dataType = this.dataSourceTableData.columns.summary[index].data.dataType
+      switch (dataType) {
+        case 'category':
+          return `${this.$t('dataType.category')}${this.$t('askHelper.column')}`
+        case 'numeric':
+          return `${this.$t('dataType.numeric')}${this.$t('askHelper.column')}`
+        case 'boolean':
+          return `${this.$t('dataType.boolean')}${this.$t('askHelper.column')}`
+        case 'datetime':
+          return `${this.$t('dataType.datetime')}${this.$t('askHelper.column')}`
+        default:
+          return `${this.$t('dataType.others')}${this.$t('askHelper.column')}`
+      }
     }
   }
 }
@@ -238,12 +264,19 @@ export default {
     .header {
       padding: 10px;
       border-bottom: 1px solid #515959;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      display: flex;
 
       .icon {
-        margin-right: 6px;
+        width: 20px;
+        margin-right: 5px;
+        text-align: center;
+      }
+
+      .text {
+        width: calc(100% - 25px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
     .summary {

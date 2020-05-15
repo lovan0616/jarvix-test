@@ -156,6 +156,14 @@ export default {
   /deep/ .el-table th {
     padding: 0;
   }
+
+  /deep/ .el-table thead th>.cell {
+    overflow: visible;
+  }
+
+  /deep/ .el-table thead th {
+    overflow: visible;
+  }
 }
 </style>
 <style src="@/styles/element-ui/el-pagination.scss" lang="scss"></style>
