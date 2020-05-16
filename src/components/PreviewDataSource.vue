@@ -25,18 +25,18 @@
           v-else-if="hasError || dataSourceTables.length === 0"
           :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
         ></empty-info-block>
+        <!--TODO: 上版前需設定 :min-column-width="'270px'"-->
         <pagination-table
           v-else
           :is-processing="isProcessing"
           :dataset="dataSourceTableData"
           :pagination-info="pagination"
-          :min-column-width="'270px'"
           @change-page="updatePage"
         >
-          <template v-slot="{ column, index }">
+          <!--TODO: 上版前需把註解移除-->
+          <!-- <template v-slot="{ column, index }">
             <div class="header-block">
               <div class="header">
-                <!--TODO: 根據資料類型顯示相對應 icon-->
                 <span class="tooltip-container icon">
                   <svg-icon :icon-class="getHeaderIcon(index)" />
                   <div class="tooltip">{{ getDataTypeName(index)}}</div>
@@ -51,7 +51,7 @@
                 />
               </div>
             </div>
-          </template>
+          </template> -->
         </pagination-table>
       </div>
     </div>
