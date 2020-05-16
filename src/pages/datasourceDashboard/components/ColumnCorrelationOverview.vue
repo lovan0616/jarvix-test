@@ -68,7 +68,7 @@ export default {
     CrudTable
   },
   props: {
-    dataSourceTableId: {
+    dataFrameId: {
       type: Number,
       required: true
     }
@@ -113,7 +113,7 @@ export default {
   methods: {
     fetchData () {
       this.isLoading = true
-      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', {id: this.dataSourceTableId})
+      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', {id: this.dataFrameId})
         .then(response => {
           // TODO: 處理從 API 取得的資料
           this.componentData = {

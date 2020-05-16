@@ -36,7 +36,7 @@
           <!--欄位關聯概況-->
           <!-- <column-correlation-overview
             class="board-body-section"
-            :data-source-table-id="dataSourceTable.id"
+            :data-frame-id="dataSourceTable.id"
           /> -->
         </template>
       </div>
