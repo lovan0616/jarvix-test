@@ -1,30 +1,34 @@
 <template>
   <div class="column-summary">
-    <ul
-      v-if="summaryData.diagram === 'list'"
-      class="list"
+    <div
+      v-for="dataBlock in summaryData.data"
+      :key="dataBlock.diagram"
+      class="data-block"
     >
-      <li
-        class="list-item"
-        v-for="item in summaryData.data.data"
-        :key="item.name + item.value"
-      >
-        <div class="list-item-name">
-          {{item.name}}
-        </div>
-        <div class="list-item-value">
-          {{item.value}}
-        </div>
-      </li>
-    </ul>
-    <template v-else>
       <component
-        :is="componentName"
-        v-if="summaryData.data.chartType === 'histogram'"
-        :dataset="summaryData.data.dataset"
-        :title="summaryData.data.title"
+        v-if="dataBlock.diagram === 'chart'"
+        :is="componentName(dataBlock.chartType)"
+        :dataset="dataBlock.dataset"
+        :title="dataBlock.title"
       ></component>
-    </template>
+      <ul
+        v-if="dataBlock.diagram === 'list'"
+        class="list"
+      >
+        <li
+          class="list-item"
+          v-for="item in dataBlock.data"
+          :key="item.name + item.value"
+        >
+          <div class="list-item-name">
+            {{item.name}}
+          </div>
+          <div class="list-item-value">
+            {{item.value}}
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -42,10 +46,10 @@ export default {
   components: {
     DisplayHistogramChart
   },
-  computed: {
-    componentName () {
-      if (this.summaryData.diagram !== 'chart') return
-      switch (this.summaryData.data.chartType) {
+  methods: {
+    componentName (chartType) {
+      if (!chartType) return
+      switch (chartType) {
         case 'histogram':
           return 'DisplayHistogramChart'
       }
@@ -56,6 +60,10 @@ export default {
 
 <style lang="scss" scoped>
 .column-summary {
+  .data-block:not(:last-of-type) {
+    margin-bottom: 12px;
+  }
+
   .list {
     margin: 0;
     padding: 0;

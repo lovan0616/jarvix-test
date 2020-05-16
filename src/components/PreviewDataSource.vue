@@ -30,7 +30,7 @@
           :is-processing="isProcessing"
           :dataset="dataSourceTableData"
           :pagination-info="pagination"
-          :min-column-width="'250px'"
+          :min-column-width="'270px'"
           @change-page="updatePage"
         >
           <template v-slot="{ column, index }">
@@ -66,55 +66,74 @@ import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumn
 
 const dummySummaryData = [
   {
-    diagram: 'list',
-    data: {
-      dataType: 'boolean',
-      data: [
-        {
-          name: 'true',
-          value: '39%'
-        },
-        {
-          name: 'false',
-          value: '39%'
-        },
-        {
-          name: 'null',
-          value: '22%'
-        }
-      ]
-    }
-  },
-  {
-    diagram: 'list',
-    data: {
-      dataType: 'boolean',
-      data: [
-        {
-          name: 'true',
-          value: '40%'
-        }
-      ]
-    }
-  },
-  {
-    diagram: 'chart',
-    data: {
-      dataType: 'numeric',
-      chartType: 'histogram',
-      dataset: {
-        data: [333, 5827, 3394, 2080, 1382, 589, 317, 299, 342, 335],
-        range: [12, 343]
-      },
-      title: {
-        xAxis: {
-          name: 'age'
-        },
-        yAxis: {
-          name: 'revenue'
-        }
+    dataType: 'boolean',
+    data: [
+      {
+        diagram: 'list',
+        data: [
+          {
+            name: 'true',
+            value: '39%'
+          },
+          {
+            name: 'false',
+            value: '39%'
+          },
+          {
+            name: 'null',
+            value: '22%'
+          }
+        ]
       }
-    }
+    ]
+  },
+  {
+    dataType: 'boolean',
+    data: [
+      {
+        diagram: 'list',
+        data: [
+          {
+            name: 'true',
+            value: '40%'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    dataType: 'numeric',
+    data: [
+      {
+        diagram: 'chart',
+        chartType: 'histogram',
+        dataset: {
+          data: [333, 5827, 3394, 2080, 1382, 589, 317, 299, 342, 335],
+          range: [12, 343]
+        },
+        title: {
+          xAxis: {
+            name: 'age'
+          },
+          yAxis: {
+            name: 'revenue'
+          }
+        }
+      },
+      {
+        diagram: 'list',
+        data: [
+          {
+            name: 'true',
+            value: '40%'
+          },
+          {
+            name: 'false',
+            value: '60%'
+          }
+        ]
+      }
+    ]
   }
 ]
 
@@ -226,13 +245,13 @@ export default {
     },
     getHeaderIcon (index) {
       if (!this.dataSourceTableData.columns.summary[index]) return 'check-circle'
-      const dataType = this.dataSourceTableData.columns.summary[index].data.dataType
+      const dataType = this.dataSourceTableData.columns.summary[index].dataType
       // TODO: 根據資料型態回覆正確的 icon
       return 'check-circle'
     },
     getDataTypeName (index) {
       if (!this.dataSourceTableData.columns.summary[index]) return ''
-      const dataType = this.dataSourceTableData.columns.summary[index].data.dataType
+      const dataType = this.dataSourceTableData.columns.summary[index].dataType
       switch (dataType) {
         case 'category':
           return `${this.$t('dataType.category')}${this.$t('askHelper.column')}`
@@ -259,7 +278,7 @@ export default {
   }
 
   .header-block {
-    height: 190px;
+    height: 210px;
 
     .header {
       padding: 10px;
