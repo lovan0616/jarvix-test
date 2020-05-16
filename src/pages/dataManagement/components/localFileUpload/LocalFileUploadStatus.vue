@@ -30,8 +30,11 @@
           @click="prev"
         >{{ $t('button.chooseFileUpload') }}</button>
         <button class="btn btn-default"
+          @click="$emit('buildData')"
+        >{{ $t('editing.buildImmediately') }}</button>
+        <button class="btn btn-default"
           @click="next"
-        >{{ $t('button.nextStep') }}</button>
+        >{{ $t('button.nextStep') }}：{{ $t('editing.processStep3') }}</button>
       </div>
     </div>
   </div>

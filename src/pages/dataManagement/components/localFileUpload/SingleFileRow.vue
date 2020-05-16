@@ -158,6 +158,7 @@ export default {
     position: relative;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
     flex: 1;
     line-height: 19px;
@@ -165,16 +166,14 @@ export default {
     margin-right: 15px;
   }
   .single-file-progress {
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 100%;
+    flex-basis: 100%;
     height: 3px;
-    background-color: #fff;
+    margin: 8px 0 6px 0;
 
     .progress-bar {
       height: 100%;
-      background-color: #49E6DE;
+      background: linear-gradient(90deg, #4CE2F0 0%, #438AF8 100%);
+      border-radius: 5px;
     }
   }
   .file-status {

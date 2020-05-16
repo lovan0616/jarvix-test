@@ -29,10 +29,6 @@
         <button class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-default"
-          :disabled="!selectedDataType"
-          @click="nextStep"
-        >{{ $t('button.start') }}</button>
       </div>
     </div>
   </div>
@@ -70,6 +66,7 @@ export default {
   methods: {
     selectDataType (value) {
       this.selectedDataType = value
+      this.nextStep()
     },
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
