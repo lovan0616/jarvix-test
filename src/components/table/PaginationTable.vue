@@ -20,7 +20,7 @@
         :prop="i.toString()"
         :label="(typeof col === 'number') ? col.toString() : col"
         :width="columnWidth"
-        min-width="120"
+        :min-width="minColumnWidth"
       >
         <!--Header slot-->
         <template slot="header" slot-scope="scope">
@@ -74,6 +74,10 @@ export default {
       default: 80
     },
     columnWidth: {
+      type: String,
+      default: null
+    },
+    minColumnWidth: {
       type: String,
       default: null
     },

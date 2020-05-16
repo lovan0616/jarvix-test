@@ -30,7 +30,7 @@
           :is-processing="isProcessing"
           :dataset="dataSourceTableData"
           :pagination-info="pagination"
-          :columnWidth="'250px'"
+          :min-column-width="'250px'"
           @change-page="updatePage"
         >
           <template v-slot="{ column, index }">
