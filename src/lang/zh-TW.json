@@ -313,7 +313,9 @@
     "replaceValue": "替代值",
     "replaceValuePlaceholder": "請輸入替代值",
     "etlSetting": "資料清洗設定",
-    "remarkToSave": "異動內容須保存"
+    "remarkToSave": "異動內容須保存",
+    "selectColumn": "使用",
+    "advance": "進階"
   },
   "feature": {
     "value": "數值",

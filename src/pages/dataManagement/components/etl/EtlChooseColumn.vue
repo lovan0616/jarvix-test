@@ -1,44 +1,61 @@
 <template>
-  <div class="etl etl-choose-column">
+  <div class="etl-choose-column">
     <div class="section data-frame">
-      <div class="title">{{ $t('etl.dataFrameList') }}</div>
-      <div class="data-frame-list section-block">
-        <div class="single-data-frame"
-          v-for="(table, index) in tableOptionList"
-          :key="table.originForeignId"
-          :class="{active: currentTableIndex === index}"
-          @click="chooseDataFrame(index)"
-        >{{ table.name }}</div>
+      <div class="data-frame-info">
+        <div class="title">目前顯示資料表</div>
+        <default-select
+          v-model="currentTableIndex"
+          :option-list="tableOptionList"
+          @change="chooseDataFrame"
+        ></default-select>
       </div>
+      <!-- TODO 已選欄位數、資料欄位總數、資料總筆數 -->
     </div>
     <div class="section data-column">
-      <div class="title has-icon"><svg-icon icon-class="arrow-right" class="icon"></svg-icon><span class="data-frame-name">{{ tableOptionList[currentTableIndex].name }}</span>{{ $t('etl.columnList') }}</div>
-      <div class="data-column-list section-block">
-        <label class="single-column"
-          v-for="(column, index) in columnOptionList"
-          :key="currentTableIndex + '-' + index"
-        >
-          <div class="checkbox">
-            <div class="checkbox-label">
-              <input type="checkbox" :name="'column' + index"
-                :value="true"
-                :checked="column.active"
-                @change="chooseColumn(index)"
-              >
-              <div class="checkbox-square"></div>
+      <!-- TODO 更換為 PaginationTable -->
+      <fake-pagination-table :currentTableIndex="currentTableIndex" >
+        <template v-slot="{ column, index }">
+          <div class="header-block">
+            <div class="header">
+              <span class="text">
+                {{ column.originalName }}
+              </span>
+              <div class="checkbox">
+                <div><!-- TODO 使用原本的 checkbox-label -->
+                  <input
+                    type="checkbox" :name="'column' + index"
+                    :value="true"
+                    v-model="column.active"
+                    @change="chooseColumn(index)"
+                  >{{ $t('etl.selectColumn') }}
+                  <!-- <div class="checkbox-square"></div> -->
+                </div>
+              </div>
+            </div>
+            <div class="header">
+              <span>
+                {{ column.originalStatsType }}
+              </span>
+              <a href="javascript:void(0)" class="link"
+                @click="$emit('advance')"
+              >{{ $t('etl.advance') }}</a>
             </div>
           </div>
-          <div class="data-frame-info">
-            <div class="data-frame-name">{{ column.primaryAlias }}</div>
-          </div>
-        </label>
-      </div>
+        </template>
+      </fake-pagination-table>
     </div>
   </div>
 </template>
 <script>
+import FakePaginationTable from './FakePaginationTable'
+import DefaultSelect from '@/components/select/DefaultSelect'
+
 export default {
   name: 'EtlChooseColumn',
+  components: {
+    FakePaginationTable,
+    DefaultSelect
+  },
   data () {
     return {
       currentTableIndex: 0
@@ -58,16 +75,21 @@ export default {
   computed: {
     tableOptionList () {
       if (this.etlTableList.length === 0) return []
-      return this.etlTableList.map(element => {
+      return this.etlTableList.map((element, index) => {
         return {
           name: element.name,
-          originForeignId: element.originForeignId
+          value: index
         }
       })
     },
     columnOptionList () {
       if (this.etlTableList.length === 0) return []
-      return this.etlTableList.filter((element, index) => index === this.currentTableIndex)[0].columns
+      return this.etlTableList[this.currentTableIndex].columns.map(element => {
+        return {
+          name: element.originalName,
+          value: element.index
+        }
+      })
     },
     etlTableList () {
       return this.$store.state.dataManagement.etlTableList
@@ -77,18 +99,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .etl-choose-column {
-  display: flex;
-
   .section {
-    flex: 1;
-
-    &:not(:last-child) {
-      margin-right: 20px;
-    }
-
     &.data-frame {
-      flex: initial;
-      width: 250px;
+      display: flex;
+      align-items: center;
+      .data-frame-info {
+        display: flex;
+        align-items: center;
+      }
     }
   }
 
@@ -97,7 +115,6 @@ export default {
   }
 
   .title {
-    margin-bottom: 12px;
 
     &.has-icon {
       position: relative;
@@ -142,6 +159,22 @@ export default {
       .checkbox {
         margin-right: 8px;
       }
+    }
+  }
+}
+
+.header-block {
+  height: 210px;
+
+  .header {
+    padding: 10px;
+    border-bottom: 1px solid #515959;
+    display: flex;
+    justify-content: space-between;
+
+    .checkbox {
+      display: flex;
+      align-items: center;
     }
   }
 }

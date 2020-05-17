@@ -10,15 +10,21 @@
     </div>
     <div class="dialog-body">
       <!-- Column Choosing Component -->
+      <etl-choose-column
+        v-if="step === 'choose-column'"
+        @advance="step = 'column-setting'"
+      >
+      </etl-choose-column>
       <!-- Column Setting Component -->
+      <etl-column-setting v-else></etl-column-setting>
     </div>
-    <div class="dialog-footer">
+    <div class="dialog-footer" v-if="step === 'choose-column'">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
           @click="prev"
         >{{ $t('button.prevStep') }}</button>
         <button class="btn btn-default"
-          @click="nextStep"
+          @click="next"
         >{{ $t('button.buildData') }}</button>
       </div>
     </div>
@@ -27,11 +33,28 @@
 
 <script>
 import UploadProcessBlock from './UploadProcessBlock'
+import EtlChooseColumn from '../etl/EtlChooseColumn'
+import EtlColumnSetting from '../etl/EtlColumnSetting'
 
 export default {
   name: 'EtlSetting',
   components: {
-    UploadProcessBlock
+    UploadProcessBlock,
+    EtlChooseColumn,
+    EtlColumnSetting
+  },
+  data () {
+    return {
+      step: 'choose-column'
+    }
+  },
+  methods: {
+    prev () {
+      this.$emit('prev')
+    },
+    next () {
+      this.$emit('next')
+    }
   },
   computed: {
     currentUploadInfo () {

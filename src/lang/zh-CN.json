@@ -312,7 +312,9 @@
     "replaceValue": "替代值",
     "replaceValuePlaceholder": "请输入替代值",
     "etlSetting": "资料清洗设定",
-    "remarkToSave": "异动内容须保存"
+    "remarkToSave": "异动内容须保存",
+    "selectColumn": "使用",
+    "advance": "进阶"
   },
   "feature": {
     "value": "数值",
