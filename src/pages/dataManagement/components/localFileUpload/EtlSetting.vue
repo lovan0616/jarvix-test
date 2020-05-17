@@ -9,13 +9,11 @@
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <!-- Column Choosing Component -->
       <etl-choose-column
         v-if="step === 'choose-column'"
         @advance="step = 'column-setting'"
       >
       </etl-choose-column>
-      <!-- Column Setting Component -->
       <etl-column-setting
         v-else
         @back="step = 'choose-column'"
@@ -54,6 +52,10 @@ export default {
   },
   methods: {
     prev () {
+      // 將所選表格恢復成預設值
+      if (this.currentTableIndex !== 0) {
+        this.$store.commit('dataManagement/changeCurrentTableIndex', 0)
+      }
       this.$emit('prev')
     },
     next () {
@@ -63,6 +65,9 @@ export default {
   computed: {
     currentUploadInfo () {
       return this.$store.state.dataManagement.currentUploadInfo
+    },
+    currentTableIndex () {
+      return this.$store.state.dataManagement.currentTableIndex
     }
   }
 }

@@ -100,19 +100,12 @@ import { Message } from 'element-ui'
 export default {
   name: 'SingleColumnSetting',
   inject: ['$validator'],
-  props: {
-    columnInfo: {
-      type: Object,
-      default: () => {}
-    }
-  },
   components: {
     InputVerify,
     DefaultSelect
   },
   data () {
     return {
-      editColumnInfo: JSON.parse(JSON.stringify(this.columnInfo)),
       dataTypeList: [
         {
           name: 'FLOAT',
@@ -185,6 +178,18 @@ export default {
       return this.editColumnInfo.values.filter(element => {
         return (element.type !== 'MISSING_VALUE' && element.type !== 'ERROR_DEFAULT_VALUE')
       })
+    },
+    etlTableList () {
+      return this.$store.state.dataManagement.etlTableList
+    },
+    currentTableIndex () {
+      return this.$store.state.dataManagement.currentTableIndex
+    },
+    currentColumnIndex () {
+      return this.$store.state.dataManagement.currentColumnIndex
+    },
+    editColumnInfo () {
+      return this.etlTableList[this.currentTableIndex].columns[this.currentColumnIndex]
     }
   },
   methods: {

@@ -2,18 +2,18 @@
   <div class="etl-choose-column">
     <div class="section data-frame">
       <div class="data-frame-info">
-        <div class="title">目前顯示資料表</div>
+        <div class="title">{{ $t('etl.currentDataFrame') }}</div>
         <default-select
           v-model="currentTableIndex"
           :option-list="tableOptionList"
-          @change="chooseDataFrame"
+          @change="chooseTable"
         ></default-select>
       </div>
       <!-- TODO 已選欄位數、資料欄位總數、資料總筆數 -->
     </div>
     <div class="section data-column">
       <!-- TODO 更換為 PaginationTable -->
-      <fake-pagination-table :currentTableIndex="currentTableIndex" >
+      <fake-pagination-table :current-table-index="currentTableIndex" >
         <template v-slot="{ column, index }">
           <div class="header-block">
             <div class="header">
@@ -26,7 +26,7 @@
                     type="checkbox" :name="'column' + index"
                     :value="true"
                     v-model="column.active"
-                    @change="chooseColumn(index)"
+                    @change="toggleColumn(index)"
                   >{{ $t('etl.selectColumn') }}
                   <!-- <div class="checkbox-square"></div> -->
                 </div>
@@ -37,7 +37,7 @@
                 {{ column.originalStatsType }}
               </span>
               <a href="javascript:void(0)" class="link"
-                @click="$emit('advance')"
+                @click="chooseColumn(index)"
               >{{ $t('etl.advance') }}</a>
             </div>
           </div>
@@ -58,17 +58,20 @@ export default {
   },
   data () {
     return {
-      currentTableIndex: 0
     }
   },
   methods: {
-    chooseDataFrame (index) {
-      this.currentTableIndex = index
+    chooseTable () {
+      this.$store.commit('dataManagement/changeCurrentTableIndex', this.currentTableIndex)
     },
-    chooseColumn (index) {
+    chooseColumn (columnIndex) {
+      this.$emit('advance')
+      this.$store.commit('dataManagement/changeCurrentColumnIndex', columnIndex)
+    },
+    toggleColumn (columnIndex) {
       this.$store.commit('dataManagement/chooseColumn', {
         dataFrameIndex: this.currentTableIndex,
-        columnIndex: index
+        columnIndex
       })
     }
   },
@@ -82,17 +85,19 @@ export default {
         }
       })
     },
-    columnOptionList () {
-      if (this.etlTableList.length === 0) return []
-      return this.etlTableList[this.currentTableIndex].columns.map(element => {
-        return {
-          name: element.originalName,
-          value: element.index
-        }
-      })
-    },
     etlTableList () {
       return this.$store.state.dataManagement.etlTableList
+    },
+    currentTableIndex: {
+      get () {
+        return this.$store.state.dataManagement.currentTableIndex
+      },
+      set (currentTableIndex) {
+        this.$store.commit('dataManagement/changeCurrentTableIndex', currentTableIndex)
+      }
+    },
+    currentColumnIndex () {
+      return this.$store.state.dataManagement.currentColumnIndex
     }
   }
 }

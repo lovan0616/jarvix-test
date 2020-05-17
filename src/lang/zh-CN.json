@@ -321,7 +321,8 @@
     "column": "栏位",
     "nullAction": "无动作",
     "custom": "自订",
-    "dropRow": "删除整列"
+    "dropRow": "删除整列",
+    "currentDataFrame": "目前显示资料表"
   },
   "feature": {
     "value": "数值",

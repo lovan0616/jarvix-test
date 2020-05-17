@@ -15,7 +15,6 @@
     <div class="section column-setting">
       <single-column-setting
         :key="currentTableIndex + '_' + currentColumnIndex"
-        :column-info="currentColumnInfo"
         @updateInfo="updateSetting"
       ></single-column-setting>
     </div>
@@ -39,18 +38,9 @@ export default {
   },
   data () {
     return {
-      currentTableIndex: 0,
-      currentColumnIndex: 0
     }
   },
   methods: {
-    chooseDataFrame (index) {
-      this.currentTableIndex = index
-      this.currentColumnIndex = 0
-    },
-    chooseDataColumn (index) {
-      this.currentColumnIndex = index
-    },
     updateSetting (info) {
       this.$store.commit('dataManagement/updateReplaceValue', {
         tableIndex: this.currentTableIndex,
@@ -60,25 +50,17 @@ export default {
     }
   },
   computed: {
-    tableOptionList () {
-      if (this.etlTableList.length === 0) return []
-      return this.etlTableList.map(element => {
-        return {
-          name: element.name,
-          originForeignId: element.originForeignId
-        }
-      })
-    },
-    columnOptionList () {
-      if (this.etlTableList.length === 0) return []
-      return this.etlTableList.filter((element, index) => index === this.currentTableIndex)[0].columns.filter(element => element.active)
-    },
     etlTableList () {
       return this.$store.state.dataManagement.etlTableList
     },
+    currentTableIndex () {
+      return this.$store.state.dataManagement.currentTableIndex
+    },
+    currentColumnIndex () {
+      return this.$store.state.dataManagement.currentColumnIndex
+    },
     currentColumnInfo () {
-      if (this.columnOptionList.length === 0) return []
-      return this.columnOptionList[this.currentColumnIndex]
+      return this.etlTableList[this.currentTableIndex].columns[this.currentColumnIndex]
     }
   }
 }

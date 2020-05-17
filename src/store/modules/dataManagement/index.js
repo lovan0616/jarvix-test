@@ -18,7 +18,9 @@ export default {
     fileUploadSuccess: false,
     fileCountLimit: 10,
     // 當前預處理的 list
-    etlTableList: []
+    etlTableList: [],
+    currentTableIndex: 0,
+    currentColumnIndex: 0
   },
   actions,
   mutations,

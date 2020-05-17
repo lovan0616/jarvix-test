@@ -280,7 +280,6 @@
     "databaseType": "資料庫類型",
     "currentLoadedDataFrame": "目前讀取的資料表",
     "dataFrameContent": "資料表內容",
-    "currentDisplayDataFrame": "目前顯示資料表",
     "dataType": "資料類型",
     "chooseConnection": "選擇連線",
     "emptyConnection": "尚未建立任何連線",
@@ -321,7 +320,8 @@
     "column": "欄位",
     "nullAction": "無動作",
     "custom": "自訂",
-    "dropRow": "刪除整列"
+    "dropRow": "刪除整列",
+    "currentDataFrame": "目前顯示資料表"
   },
   "feature": {
     "value": "數值",

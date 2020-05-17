@@ -74,5 +74,11 @@ export default {
     let {dataFrameIndex, columnIndex} = data
     let column = state.etlTableList[dataFrameIndex].columns[columnIndex]
     column.active = !column.active
+  },
+  changeCurrentTableIndex (state, index) {
+    state.currentTableIndex = index
+  },
+  changeCurrentColumnIndex (state, index) {
+    state.currentColumnIndex = index
   }
 }
