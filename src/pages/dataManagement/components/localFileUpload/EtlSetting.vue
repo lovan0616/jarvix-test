@@ -16,7 +16,11 @@
       >
       </etl-choose-column>
       <!-- Column Setting Component -->
-      <etl-column-setting v-else></etl-column-setting>
+      <etl-column-setting
+        v-else
+        @back="step = 'choose-column'"
+      >
+      </etl-column-setting>
     </div>
     <div class="dialog-footer" v-if="step === 'choose-column'">
       <div class="dialog-button-block">

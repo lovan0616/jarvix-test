@@ -167,6 +167,7 @@
     "processStep1": "选择档案",
     "processStep2": "上传档案",
     "processStep3": "资料处理",
+    "buildImmediately": "立即建置",
     "connectDB": "连接资料库",
     "connectStep2": "选择资料",
     "connectStep3": "栏位设定",
@@ -310,11 +311,17 @@
     "customDataManagement": "自订资料处理",
     "columnValue": "栏位值",
     "replaceValue": "替代值",
-    "replaceValuePlaceholder": "请输入替代值",
+    "replaceValuePlaceholder": "自订值",
     "etlSetting": "资料清洗设定",
     "remarkToSave": "异动内容须保存",
     "selectColumn": "使用",
-    "advance": "进阶"
+    "advance": "进阶",
+    "advanceSetting": "进阶设定",
+    "backToDataFrame": "返回资料表",
+    "column": "栏位",
+    "nullAction": "无动作",
+    "custom": "自订",
+    "dropRow": "删除整列"
   },
   "feature": {
     "value": "数值",
@@ -515,7 +522,8 @@
     "setting": "设定",
     "reset": "重新设定",
     "confirmBuild": "确认建置",
-    "selectAll": "全选"
+    "selectAll": "全选",
+    "resumeDefault": "恢复预设值"
   },
   "aggregation": {
     "mean": "平均",

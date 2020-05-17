@@ -13,25 +13,40 @@
       </div>
       <div class="setting-input-block">
         <label class="input-label" for="">{{ $t('etl.emptyStringReplaceValue') }}</label>
+        <default-select class="replace-type-select"
+          v-model="stringReplaceObject.newValue"
+          :option-list="replaceTypeOptionList"
+        ></default-select>
         <input-verify
           name="stringReplaceObject"
-          v-model="stringReplaceObject.newValue"
+          v-if="stringReplaceObject.newValue === 'CUSTOM'"
+          v-model="stringReplaceObject.newCustomValue"
           :placeholder="$t('etl.replaceValuePlaceholder')"
         ></input-verify>
       </div>
       <div class="setting-input-block">
         <label class="input-label" for="">{{ $t('etl.nullReplaceValue') }}</label>
+        <default-select class="replace-type-select"
+          v-model="nullReplaceObject.newValue"
+          :option-list="replaceTypeOptionList"
+        ></default-select>
         <input-verify
           name="nullReplaceObject"
-          v-model="nullReplaceObject.newValue"
+          v-if="nullReplaceObject.newValue === 'CUSTOM'"
+          v-model="nullReplaceObject.newCustomValue"
           :placeholder="$t('etl.replaceValuePlaceholder')"
         ></input-verify>
       </div>
       <div class="setting-input-block">
         <label class="input-label" for="">{{ $t('etl.errorReplaceValue') }}</label>
+        <default-select class="replace-type-select"
+          v-model="errorDefaultObject.newValue"
+          :option-list="replaceTypeOptionList"
+        ></default-select>
         <input-verify
           name="errorDefaultObject"
-          v-model="errorDefaultObject.newValue"
+          v-if="errorDefaultObject.newValue === 'CUSTOM'"
+          v-model="errorDefaultObject.newCustomValue"
           :placeholder="$t('etl.replaceValuePlaceholder')"
         ></input-verify>
       </div>
@@ -66,10 +81,14 @@
       </div>
     </div>
     <div class="submit-block">
-      <button class="btn-m btn-default"
-        @click="saveSetting"
-      >{{ $t('button.keepSave') }}</button>
-      <span class="remark-info">{{ $t('etl.remarkToSave') }}</span>
+      <div class="button-block">
+        <button class="btn btn-default"
+          @click="saveSetting"
+        >{{ $t('button.keepSave') }}</button>
+        <button class="btn btn-outline"
+          @click="reset"
+        >{{ $t('button.resumeDefault') }}</button>
+      </div>
     </div>
   </div>
 </template>
@@ -125,6 +144,12 @@ export default {
           name: 'false',
           value: false
         }
+      ],
+      replaceTypeOptionList: [
+        // TODO 待API出來要再加上其他補值方式，例如常見值
+        { value: null, name: '無動作' },
+        { value: 'CUSTOM', name: '自訂' },
+        { value: 'DROP', name: '刪除整列' }
       ],
       replaceValueObjest: {
         value: null,
@@ -209,17 +234,23 @@ export default {
           column.statsType = 'BOOLEAN'
           break
       }
-    }
+    },
+    reset () {}
   }
 }
 </script>
 <style lang="scss" scoped>
 .setting-block {
   position: relative;
-  background: rgba(67, 76, 76, 0.95);
-  border-radius: 5px;
-  padding: 12px 16px;
-
+  height: 100%;
+  .section-block {
+    background: rgba(67, 76, 76, 0.95);
+    border-radius: 5px;
+    padding: 12px 16px;
+    height: 297px;
+    overflow: auto;
+    margin-bottom: 12px;
+  }
   .has-change {
     padding-bottom: 62px;
   }
@@ -229,13 +260,22 @@ export default {
       display: block;
     }
 
+    .replace-type-select {
+      width: 40%;
+      & + .input-verify {
+        display: inline-block;
+        height: 41px; // 與select高度對齊
+        margin-left: 20px;
+      }
+    }
     & >>> .input-verify .input-verify-text {
       margin-bottom: 20px;
     }
   }
 
-  .data-type-select {
-    width: 100%;
+  .data-type-select, .replace-type-select {
+    width: 40%;
+    border-bottom: 1px solid;
     margin-bottom: 20px;
 
     &>>> .el-input--suffix .el-input__inner {
@@ -267,19 +307,15 @@ export default {
   }
 
   .submit-block {
-    position: absolute;
-    bottom: 0;
-    left: 0;
     display: flex;
     align-items: center;
     width: 100%;
-    background-color: rgba(67, 76, 76, 0.85);
-    padding: 16px;
+    background-color: transparent;
 
-    .remark-info {
-      font-size: 14px;
-      color: #FFDF6F;
-      margin-left: 8px;
+    .button-block {
+      .btn:not(:last-child) {
+        margin-right: 12px;
+      }
     }
   }
 }
