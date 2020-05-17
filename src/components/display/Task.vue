@@ -82,92 +82,94 @@ export default {
   },
   methods: {
     fetchData (page = 0) {
-      console.log(page, this.intend, 'before fetch')
-      window.clearTimeout(this.timeoutFunction)
-      return this.$store.dispatch('chatBot/getComponentData', {
-        id: this.componentId,
-        page
-      }).then(response => {
-        switch (response.status) {
-          case 'Process':
-          case 'Ready':
-            this.timeoutFunction = window.setTimeout(() => {
-              console.log('ready', this.intend, page)
-              this.fetchData(page)
-            }, 1000)
-            break
-          case 'Complete':
-            window.clearTimeout(this.timeoutFunction)
-            this.diagram = response.diagram
-            this.resultId = response.resultId
-            this.componentName = this.getChartTemplate(this.diagram)
-            let responseData = response.data
+      return new Promise((resolve, reject) => {
+        window.clearTimeout(this.timeoutFunction)
+        this.$store.dispatch('chatBot/getComponentData', {
+          id: this.componentId,
+          page
+        }).then(response => {
+          switch (response.status) {
+            case 'Process':
+            case 'Ready':
+              this.timeoutFunction = window.setTimeout(() => {
+                this.fetchData(page)
+              }, 1000)
+              break
+            case 'Complete':
+              window.clearTimeout(this.timeoutFunction)
+              this.diagram = response.diagram
+              this.resultId = response.resultId
+              this.componentName = this.getChartTemplate(this.diagram)
+              let responseData = response.data
 
-            // 取樣
-            if (responseData.sampling) {
-              this.appendNote(this.genSamplingNote(responseData.sampling))
-            }
-            // 取前 n 筆
-            if (responseData.group_limit) {
-              this.appendNote(this.genGroupLimitNote(responseData.group_limit))
-            }
-            // 判斷是否為 圖表
-            if (responseData.dataset) {
-              // 如果拿到的資料為空 表示這一頁已經是最後一頁了
-              if (responseData.dataset.data.length === 0) {
-                this.hasNextPage = false
-                this.nextPageData = null
-                // 空資料的處理
-                if (page === 0) {
-                  this.isError = true
-                  this.errorMessage = this.$t('message.emptyResult')
+              // 取樣
+              if (responseData.sampling) {
+                this.appendNote(this.genSamplingNote(responseData.sampling))
+              }
+              // 取前 n 筆
+              if (responseData.group_limit) {
+                this.appendNote(this.genGroupLimitNote(responseData.group_limit))
+              }
+              // 判斷是否為 圖表
+              if (responseData.dataset) {
+                // 如果拿到的資料為空 表示這一頁已經是最後一頁了
+                if (responseData.dataset.data.length === 0) {
+                  this.hasNextPage = false
+                  this.nextPageData = null
+                  // 空資料的處理
+                  if (page === 0) {
+                    this.isError = true
+                    this.errorMessage = this.$t('message.emptyResult')
+                  }
+                } else {
+                  console.log(responseData, page, 'responseData')
+                  return resolve(responseData)
                 }
               } else {
-                console.log(responseData, page, 'responseData')
-                return responseData
+                // 圖表以外的 task
+                this.componentData = responseData
+                this.hasNextPage = false
+                this.nextPageData = null
               }
-            } else {
-              // 圖表以外的 task
-              this.componentData = responseData
-              this.hasNextPage = false
-              this.nextPageData = null
-            }
-            break
-          case 'Disable':
-          case 'Delete':
-          case 'Warn':
-          case 'Fail':
-            window.clearTimeout(this.timeoutFunction)
-            this.loading = false
-            // 如果取分頁資料 fail，當作無資料來處理
-            if (page > 0) {
-              this.hasNextPage = false
-              this.isGetPagination = false
-              this.nextPageData = null
-            } else {
-              if (this.intend === 'key_result') this.isError = true
-            }
-            break
-        }
-      }).catch(() => {
-        if (this.intend === 'key_result') this.isError = true
-      }).finally(() => {
-        this.loading = false
+              break
+            case 'Disable':
+            case 'Delete':
+            case 'Warn':
+            case 'Fail':
+              window.clearTimeout(this.timeoutFunction)
+              this.loading = false
+              // 如果取分頁資料 fail，當作無資料來處理
+              if (page > 0) {
+                this.hasNextPage = false
+                this.isGetPagination = false
+                this.nextPageData = null
+              } else {
+                if (this.intend === 'key_result') this.isError = true
+              }
+              break
+          }
+        }).catch(() => {
+          if (this.intend === 'key_result') this.isError = true
+        }).finally(() => {
+          this.loading = false
+        })
       })
     },
     handleTaskInitData () {
       this.fetchData(this.pagination.currentPage).then(taskData => {
-        if (!taskData) return
+        console.log(taskData, 'taskData')
         this.componentData = taskData
         this.getNextPage(this.pagination.currentPage + 1)
       })
     },
     getNextPage (page) {
-      return this.fetchData(page).then(taskData => {
+      console.log('getNextPage')
+      this.fetchData(page).then(taskData => {
         console.log(taskData, 'nextPageData')
-        if (!taskData) return
-        this.nextPageData = taskData
-        this.hasNextPage = true
+        if (taskData) {
+          this.nextPageData = taskData
+          this.hasNextPage = true
+        }
       })
     },
     getNewPageInfo () {

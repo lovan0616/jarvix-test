@@ -53,6 +53,7 @@ export default {
       timeStamp: this.$route.query.stamp,
       relatedQuestionList: [],
       timeoutFunction: null,
+      addConversationTimeout: null,
       segmentationInfo: {
         question: null,
         unknownToken: [],
@@ -71,6 +72,7 @@ export default {
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+    if (this.addConversationTimeout) window.clearTimeout(this.addConversationTimeout)
   },
   computed: {
     dataSourceId () {
@@ -224,7 +226,7 @@ export default {
         dataSourceId: data.dataSourceId
       }).then(response => {
         this.$nextTick(() => {
-          window.setTimeout(() => {
+          this.addConversationTimeout = window.setTimeout(() => {
             this.$store.commit('chatBot/addSystemConversation', {
               text: response ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: response
             })
