@@ -26,13 +26,34 @@
           :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
         ></empty-info-block>
         <template v-else>
+          <!--TODO: 上版前需設定 :min-column-width="'270px'"-->
           <pagination-table
             class="board-body-section"
             :is-processing="isProcessing"
             :dataset="dataSourceTableData"
             :pagination-info="pagination"
             @change-page="updatePage"
-          ></pagination-table>
+          >
+            <!--TODO: 上版前需把註解移除-->
+            <!-- <template v-slot="{ column, index }">
+              <div class="header-block">
+                <div class="header">
+                  <span class="tooltip-container icon">
+                    <svg-icon :icon-class="getHeaderIcon(index)" />
+                    <div class="tooltip">{{ getDataTypeName(index)}}</div>
+                  </span>
+                  <span class="text">
+                    {{column.titles[index]}}
+                  </span>
+                </div>
+                <div class="summary">
+                  <data-column-summary
+                    :summary-data="dataSourceTableData.columns.summary[index]"
+                  />
+                </div>
+              </div>
+            </template> -->
+          </pagination-table>
           <!--欄位關聯概況-->
           <!-- <column-correlation-overview
             class="board-body-section"
@@ -48,7 +69,81 @@
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import PaginationTable from '@/components/table/PaginationTable'
+import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/ColumnCorrelationOverview'
+
+const dummySummaryData = [
+  {
+    dataType: 'boolean',
+    data: [
+      {
+        diagram: 'list',
+        data: [
+          {
+            name: 'true',
+            value: '39%'
+          },
+          {
+            name: 'false',
+            value: '39%'
+          },
+          {
+            name: 'null',
+            value: '22%'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    dataType: 'boolean',
+    data: [
+      {
+        diagram: 'list',
+        data: [
+          {
+            name: 'true',
+            value: '40%'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    dataType: 'numeric',
+    data: [
+      {
+        diagram: 'chart',
+        chartType: 'histogram',
+        dataset: {
+          data: [333, 5827, 3394, 2080, 1382, 589, 317, 299, 342, 335],
+          range: [12, 343]
+        },
+        title: {
+          xAxis: {
+            name: 'age'
+          },
+          yAxis: {
+            name: 'revenue'
+          }
+        }
+      },
+      {
+        diagram: 'list',
+        data: [
+          {
+            name: 'true',
+            value: '40%'
+          },
+          {
+            name: 'false',
+            value: '60%'
+          }
+        ]
+      }
+    ]
+  }
+]
 
 export default {
   name: 'PreviewDataSource',
@@ -56,6 +151,7 @@ export default {
     SySelect,
     EmptyInfoBlock,
     PaginationTable,
+    DataColumnSummary,
     ColumnCorrelationOverview
   },
   data () {
@@ -137,7 +233,10 @@ export default {
             this.pagination = response.pagination
           }
           this.dataSourceTableData = {
-            columns: response.columns,
+            columns: {
+              titles: response.columns,
+              summary: dummySummaryData
+            },
             data: response.data,
             index: [...Array(response.data.length)].map((x, i) => i)
           }
@@ -152,6 +251,28 @@ export default {
     },
     updatePage (page) {
       this.fetchDataFrameData(this.dataSourceTable.id, page - 1)
+    },
+    getHeaderIcon (index) {
+      if (!this.dataSourceTableData.columns.summary[index]) return 'check-circle'
+      const dataType = this.dataSourceTableData.columns.summary[index].dataType
+      // TODO: 根據資料型態回覆正確的 icon
+      return 'check-circle'
+    },
+    getDataTypeName (index) {
+      if (!this.dataSourceTableData.columns.summary[index]) return ''
+      const dataType = this.dataSourceTableData.columns.summary[index].dataType
+      switch (dataType) {
+        case 'category':
+          return `${this.$t('dataType.category')}${this.$t('askHelper.column')}`
+        case 'numeric':
+          return `${this.$t('dataType.numeric')}${this.$t('askHelper.column')}`
+        case 'boolean':
+          return `${this.$t('dataType.boolean')}${this.$t('askHelper.column')}`
+        case 'datetime':
+          return `${this.$t('dataType.datetime')}${this.$t('askHelper.column')}`
+        default:
+          return `${this.$t('dataType.others')}${this.$t('askHelper.column')}`
+      }
     }
   }
 }
@@ -168,6 +289,34 @@ export default {
   .board-body-section {
     &:not(:last-child) {
       margin-bottom: 1.3rem;
+    }
+  }
+
+  .header-block {
+    height: 210px;
+
+    .header {
+      padding: 10px;
+      border-bottom: 1px solid #515959;
+      display: flex;
+
+      .icon {
+        width: 20px;
+        margin-right: 5px;
+        text-align: center;
+      }
+
+      .text {
+        width: calc(100% - 25px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .summary {
+      padding: 10px;
+      overflow: auto;
+      height: calc(100% - 44px);
     }
   }
 }

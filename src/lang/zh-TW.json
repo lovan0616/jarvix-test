@@ -1541,5 +1541,12 @@
     "dataUsageProvided": "數據容量上限",
     "expireDate": "到期時間",
     "person": "人"
+  },
+  "dataType": {
+    "numeric": "數值",
+    "category": "類別",
+    "boolean": "布林",
+    "datetime": "時間",
+    "others": "其他"
   }
 }
