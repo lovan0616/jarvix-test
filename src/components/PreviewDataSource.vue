@@ -1,30 +1,33 @@
 <template>
   <div class="page-preview-bookmark">
+    <div class="title">{{$t('resultDescription.dataSourceIntro')}}</div>
     <div class="result-board"
       v-show="dataSourceId"
     >
-      <div class="board-header">
-        <!-- <result-board-header
-          :title="$t('resultDescription.dataSourceIntro')"
-        ></result-board-header> -->
-        <tabs
-          v-if="dataSourceTables.length > 0"
-          :selected="dataSourcetableId"
-          :items="dataSourceTables"
-          :placeholder="$t('editing.chooseDataFrame')"
-          @update:selected="onDataSourceTableChange"
-        />
+      <div
+        v-if="dataSourceTables.length > 0"
+        class="board-header"
+      >
+        <el-tabs
+          :value="`${dataSourcetableId}`"
+          type="card"
+          @tab-click="onDataSourceTableChange"
+        >
+          <el-tab-pane
+            v-for="(tab, index) in dataSourceTables"
+            :key="index + tab.name"
+            :label="tab.name"
+            :name="`${tab.id}`"
+          >
+            <el-tooltip
+              slot="label"
+              :content="tab.name">
+              <span>{{tab.name}}</span>
+            </el-tooltip>
+          </el-tab-pane>
+        </el-tabs>
       </div>
       <div class="board-body">
-        <!-- <div class="dataset-info">
-          <sy-select class="preview-bookmark-select"
-            :selected="dataSourcetableId"
-            :items="dataSourceTables"
-            :placeholder="$t('editing.chooseDataFrame')"
-            @update:selected="onDataSourceTableChange"
-          ></sy-select>
-          <div class="data-count">{{ metaTableRightText }}</div>
-        </div> -->
         <spinner
           v-if="isLoading"
         ></spinner>
@@ -48,15 +51,13 @@
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import PaginationTable from '@/components/table/PaginationTable'
-import Tabs from '@/components/Tabs'
 
 export default {
   name: 'PreviewDataSource',
   components: {
     SySelect,
     EmptyInfoBlock,
-    PaginationTable,
-    Tabs
+    PaginationTable
   },
   data () {
     return {
@@ -123,7 +124,9 @@ export default {
     setDataSourceTableById (id) {
       this.dataSourceTable = this.dataSourceTables.find(item => item.id === id)
     },
-    onDataSourceTableChange (id) {
+    onDataSourceTableChange (tab) {
+      const id = parseInt(tab.name)
+      if (this.dataSourceTable.id === id) { return }
       this.isLoading = true
       this.hasError = false
       this.setDataSourceTableById(id)
@@ -158,6 +161,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-preview-bookmark {
+  .title {
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 32px;
+    margin-bottom: 24px;
+  }
+
   .dataset-info {
     display: flex;
     align-items: center;
@@ -170,6 +180,42 @@ export default {
   .board-header {
     border-top: unset;
     padding-bottom: 0;
+  }
+}
+
+/deep/ .el-tabs {
+  width: 100%;
+  &>.el-tabs__header {
+    border: none;
+    margin: 0;
+    width: 100%;
+
+    .el-tabs__nav {
+      width: 100%;
+      border: none;
+      overflow-x: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    .el-tabs__item {
+      border: none;
+      color:  #AAAAAA;
+      border-bottom: 3px solid #324B4E;
+      text-align: center;
+      width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: top;
+      &.is-active {
+        color: #fff;
+        background: linear-gradient(360deg, #324B4E 0%, rgba(50, 75, 78, 0) 100%);
+        border-bottom: 3px solid $theme-color-primary;
+      }
+    }
   }
 }
 </style>
