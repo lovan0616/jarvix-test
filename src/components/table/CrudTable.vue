@@ -108,6 +108,13 @@
               </a>
             </slot>
           </template>
+          <template v-if="headInfo.value === 'icon'">
+            <svg-icon
+              :icon-class="data[headInfo.value]"
+              class="icon"
+              :class="data.class"
+            />
+          </template>
           <span v-else>{{ data[headInfo.value] }}</span>
         </div>
       </div>
@@ -330,6 +337,9 @@ export default {
     background-color: $theme-bg-color;
   }
   .data-table-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     .is-processing {
       color: #ccc;
     }

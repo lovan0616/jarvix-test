@@ -25,13 +25,20 @@
           v-else-if="hasError || dataSourceTables.length === 0"
           :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
         ></empty-info-block>
-        <pagination-table
-          v-else
-          :is-processing="isProcessing"
-          :dataset="dataSourceTableData"
-          :pagination-info="pagination"
-          @change-page="updatePage"
-        ></pagination-table>
+        <template v-else>
+          <pagination-table
+            class="board-body-section"
+            :is-processing="isProcessing"
+            :dataset="dataSourceTableData"
+            :pagination-info="pagination"
+            @change-page="updatePage"
+          ></pagination-table>
+          <!--欄位關聯概況-->
+          <!-- <column-correlation-overview
+            class="board-body-section"
+            :data-frame-id="dataSourceTable.id"
+          /> -->
+        </template>
       </div>
     </div>
     <span v-show="!dataSourceId">{{ $t('message.emptyDataSource') }}</span>
@@ -41,13 +48,15 @@
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import PaginationTable from '@/components/table/PaginationTable'
+import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/ColumnCorrelationOverview'
 
 export default {
   name: 'PreviewDataSource',
   components: {
     SySelect,
     EmptyInfoBlock,
-    PaginationTable
+    PaginationTable,
+    ColumnCorrelationOverview
   },
   data () {
     return {
@@ -154,6 +163,12 @@ export default {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
+  }
+
+  .board-body-section {
+    &:not(:last-child) {
+      margin-bottom: 1.3rem;
+    }
   }
 }
 </style>

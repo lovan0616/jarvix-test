@@ -11,11 +11,14 @@
 <script>
 import EchartAddon from '@/components/display/common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
+import i18n from '@/lang/index.js'
 import {
   gridDefault,
   xAxisDefault,
   yAxisDefault,
-  seriesItemHeatMap
+  seriesItemHeatMap,
+  parallelZoomIn,
+  verticalZoomIn
 } from '@/components/display/common/addons'
 
 const echartAddon = new EchartAddon({
@@ -64,13 +67,17 @@ export default {
           ...tooltip,
           trigger: 'item',
           position: 'top',
-          formatter (p) {
-            return `[${p.value[0]}, ${p.value[1]}]`
+          formatter (params) {
+            if (!params || !params['value']) return
+            return `${i18n.t('resultDescription.degreeOfCorrelation')}: ${params['value'][2]}<br>${params['value'][0]}, ${params['value'][1]}`
           }
         },
         grid: {
-          // containLabel: true,
-          right: 60
+          containLabel: true,
+          left: 18,
+          right: 80,
+          top: 18,
+          bottom: 40
         },
         textStyle: {
           color: '#fff'
@@ -81,13 +88,13 @@ export default {
           // calculable: true,
           orient: 'vertical',
           left: 'right',
-          top: 'middle',
+          top: '23',
           align: 'bottom',
           color: ['#F8696B', '#E2E282', '#63BD7B'],
           textStyle: {
             color: '#fff'
           },
-          itemHeight: '200px',
+          itemHeight: '330px',
           precision: 1,
           itemWidth: '8px',
           text: [1, 0]
@@ -98,10 +105,28 @@ export default {
         series: this.addonSeriesItem
       }
 
+      // 限制 label 字數避免圖片被壓縮
+      const formateLabel = function (value, index) {
+        if (value.length <= 5) return value
+        return value.slice(0, 5) + '...'
+      }
+
+      // 欄位超過 10x10 的時候出現 scroll bar 並隱藏 label
+      if (this.dataset.data.length > 100) {
+        const verticalZoomConfig = verticalZoomIn()
+        verticalZoomConfig[1].top = 50
+        verticalZoomConfig[1].bottom = 40
+        config.dataZoom = [...parallelZoomIn(), ...verticalZoomConfig]
+        config.animation = false
+        config.series.label.show = false
+      }
+
       config.xAxis.position = 'top'
       config.xAxis.data = this.dataset.index[0]
+      config.xAxis.axisLabel.formatter = formateLabel
       config.yAxis.inverse = true
       config.yAxis.data = this.dataset.index[1]
+      config.yAxis.axisLabel.formatter = formateLabel
 
       return config
     },
