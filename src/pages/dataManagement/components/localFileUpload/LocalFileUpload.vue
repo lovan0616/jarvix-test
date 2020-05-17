@@ -92,7 +92,7 @@ export default {
     return {
       uploadStatus,
       currntUploadStatus: uploadStatus.wait,
-      uploadFileSizeLimit: 3000,
+      uploadFileSizeLimit: localStorage.getItem('uploadLimit') ? parseInt(localStorage.getItem('uploadLimit'), 10) : 3000,
       unableFileList: []
     }
   },

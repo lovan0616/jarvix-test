@@ -30,7 +30,7 @@
                   <svg-icon icon-class="information-circle" class="icon" />
                   <div class="tooltip">{{$t('editing.columnSourceRemind')}}</div>
                 </span>
-                </div>
+              </div>
               <div class="data-table-cell alias">{{ $t('editing.alias') }}</div>
               <div class="data-table-cell tag">{{ $t('editing.columnTag') }}</div>
               <div class="data-table-cell action">{{ $t('editing.action') }}</div>

@@ -25,34 +25,41 @@
           v-else-if="hasError || dataSourceTables.length === 0"
           :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
         ></empty-info-block>
-        <!--TODO: 上版前需設定 :min-column-width="'270px'"-->
-        <pagination-table
-          v-else
-          :is-processing="isProcessing"
-          :dataset="dataSourceTableData"
-          :pagination-info="pagination"
-          @change-page="updatePage"
-        >
-          <!--TODO: 上版前需把註解移除-->
-          <!-- <template v-slot="{ column, index }">
-            <div class="header-block">
-              <div class="header">
-                <span class="tooltip-container icon">
-                  <svg-icon :icon-class="getHeaderIcon(index)" />
-                  <div class="tooltip">{{ getDataTypeName(index)}}</div>
-                </span>
-                <span class="text">
-                  {{column.titles[index]}}
-                </span>
+        <template v-else>
+          <!--TODO: 上版前需設定 :min-column-width="'270px'"-->
+          <pagination-table
+            class="board-body-section"
+            :is-processing="isProcessing"
+            :dataset="dataSourceTableData"
+            :pagination-info="pagination"
+            @change-page="updatePage"
+          >
+            <!--TODO: 上版前需把註解移除-->
+            <!-- <template v-slot="{ column, index }">
+              <div class="header-block">
+                <div class="header">
+                  <span class="tooltip-container icon">
+                    <svg-icon :icon-class="getHeaderIcon(index)" />
+                    <div class="tooltip">{{ getDataTypeName(index)}}</div>
+                  </span>
+                  <span class="text">
+                    {{column.titles[index]}}
+                  </span>
+                </div>
+                <div class="summary">
+                  <data-column-summary
+                    :summary-data="dataSourceTableData.columns.summary[index]"
+                  />
+                </div>
               </div>
-              <div class="summary">
-                <data-column-summary
-                  :summary-data="dataSourceTableData.columns.summary[index]"
-                />
-              </div>
-            </div>
-          </template> -->
-        </pagination-table>
+            </template> -->
+          </pagination-table>
+          <!--欄位關聯概況-->
+          <!-- <column-correlation-overview
+            class="board-body-section"
+            :data-frame-id="dataSourceTable.id"
+          /> -->
+        </template>
       </div>
     </div>
     <span v-show="!dataSourceId">{{ $t('message.emptyDataSource') }}</span>
@@ -63,6 +70,7 @@ import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
+import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/ColumnCorrelationOverview'
 
 const dummySummaryData = [
   {
@@ -143,7 +151,8 @@ export default {
     SySelect,
     EmptyInfoBlock,
     PaginationTable,
-    DataColumnSummary
+    DataColumnSummary,
+    ColumnCorrelationOverview
   },
   data () {
     return {
@@ -275,6 +284,12 @@ export default {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
+  }
+
+  .board-body-section {
+    &:not(:last-child) {
+      margin-bottom: 1.3rem;
+    }
   }
 
   .header-block {

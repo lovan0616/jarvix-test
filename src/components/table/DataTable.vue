@@ -132,6 +132,17 @@
           </span>
           <span v-else-if="headInfo.value === 'joinCount'"
           >{{ data[headInfo.value] === 2 ? $t('editing.tableJoin') : $t('editing.userUpload') }}</span>
+          <span v-else-if="headInfo.value === 'dataFrameStatus'">
+            <span class="dataframe-status finished">
+              {{ $t('editing.buildFinished') }}：{{ data.enableDataFrameCount }}
+            </span>
+            <span class="dataframe-status processing">
+              {{ $t('editing.buildProcessing') }}：{{ data.processDataFrameCount }}
+            </span>
+            <span class="dataframe-status failed">
+              {{ $t('editing.buildFailed') }}：{{ data.failDataFrameCount }}
+            </span>
+          </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
       </div>
@@ -378,6 +389,19 @@ export default {
   .data-table-cell {
     .is-processing {
       color: #ccc;
+    }
+    .dataframe-status {
+      display: block;
+      height: 23px;
+      &.finished {
+        color: $theme-color-success;
+      }
+      &.processing {
+        color: $theme-color-warning;
+      }
+      &.failed {
+        color: $theme-color-danger;
+      }
     }
   }
   .hasWidth {
