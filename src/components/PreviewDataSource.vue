@@ -4,12 +4,19 @@
       v-show="dataSourceId"
     >
       <div class="board-header">
-        <result-board-header
+        <!-- <result-board-header
           :title="$t('resultDescription.dataSourceIntro')"
-        ></result-board-header>
+        ></result-board-header> -->
+        <tabs
+          v-if="dataSourceTables.length > 0"
+          :selected="dataSourcetableId"
+          :items="dataSourceTables"
+          :placeholder="$t('editing.chooseDataFrame')"
+          @update:selected="onDataSourceTableChange"
+        />
       </div>
       <div class="board-body">
-        <div class="dataset-info">
+        <!-- <div class="dataset-info">
           <sy-select class="preview-bookmark-select"
             :selected="dataSourcetableId"
             :items="dataSourceTables"
@@ -17,7 +24,7 @@
             @update:selected="onDataSourceTableChange"
           ></sy-select>
           <div class="data-count">{{ metaTableRightText }}</div>
-        </div>
+        </div> -->
         <spinner
           v-if="isLoading"
         ></spinner>
@@ -41,13 +48,15 @@
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import PaginationTable from '@/components/table/PaginationTable'
+import Tabs from '@/components/Tabs'
 
 export default {
   name: 'PreviewDataSource',
   components: {
     SySelect,
     EmptyInfoBlock,
-    PaginationTable
+    PaginationTable,
+    Tabs
   },
   data () {
     return {
@@ -154,6 +163,13 @@ export default {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
+  }
+}
+
+.result-board {
+  .board-header {
+    border-top: unset;
+    padding-bottom: 0;
   }
 }
 </style>
