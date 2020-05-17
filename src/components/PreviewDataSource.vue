@@ -181,6 +181,9 @@ export default {
     border-top: unset;
     padding-bottom: 0;
   }
+  .board-body {
+    padding: 16px 24px;
+  }
 }
 
 /deep/ .el-tabs {
