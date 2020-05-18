@@ -266,7 +266,7 @@ export default {
     },
     getHeaderIcon (index) {
       if (!this.dataSourceTableData.columns.summary[index]) return 'check-circle'
-      const dataType = this.dataSourceTableData.columns.summary[index].dataType
+      // const dataType = this.dataSourceTableData.columns.summary[index].dataType
       // TODO: 根據資料型態回覆正確的 icon
       return 'check-circle'
     },
@@ -358,6 +358,7 @@ export default {
     width: 100%;
 
     .el-tabs__nav {
+      position: relative;
       width: 100%;
       border: none;
       overflow-x: auto;
@@ -365,6 +366,15 @@ export default {
       scrollbar-width: none;
       &::-webkit-scrollbar {
         display: none;
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 3px;
+        background: #324B4E;
       }
     }
     .el-tabs__item {
