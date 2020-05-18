@@ -27,10 +27,20 @@
           :key="item.name + item.value"
         >
           <div class="list-item-name">
-            {{item.name}}
+             <el-tooltip
+              slot="label"
+              :enterable="false"
+              :content="item.name">
+              <span>{{item.name}}</span>
+            </el-tooltip>
           </div>
           <div class="list-item-value">
-            {{item.value}}
+            <el-tooltip
+              slot="label"
+              :enterable="false"
+              :content="item.value">
+              <span>{{item.value}}</span>
+            </el-tooltip>
           </div>
         </li>
       </ul>
@@ -87,13 +97,18 @@ export default {
     display: flex;
     padding: 5px 0;
     font-weight: normal;
+    justify-content: space-between;
   }
 
-  .list-item-name {
-    width: 70%;
+  .list-item-name,
+  .list-item-value {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .list-item-name {
+    width: 65%;
   }
 
   .list-item-value {
