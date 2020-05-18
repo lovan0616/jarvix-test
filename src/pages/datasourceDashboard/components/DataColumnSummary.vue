@@ -5,14 +5,20 @@
       :key="dataBlock.diagram"
       class="data-block"
     >
+      <div
+        v-if="dataBlock.diagram === 'message'"
+        class="message"
+      >
+        {{dataBlock.message}}
+      </div>
       <component
-        v-if="dataBlock.diagram === 'chart'"
+        v-else-if="dataBlock.diagram === 'chart'"
         :is="componentName(dataBlock.chartType)"
         :dataset="dataBlock.dataset"
         :title="dataBlock.title"
       ></component>
       <ul
-        v-if="dataBlock.diagram === 'list'"
+         v-else-if="dataBlock.diagram === 'list'"
         class="list"
       >
         <li
@@ -62,6 +68,13 @@ export default {
 .column-summary {
   .data-block:not(:last-of-type) {
     margin-bottom: 12px;
+  }
+
+  .message {
+    height: 146px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .list {

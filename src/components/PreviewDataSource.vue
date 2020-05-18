@@ -152,6 +152,15 @@ const dummySummaryData = [
         ]
       }
     ]
+  },
+  {
+    dataType: 'numeric',
+    data: [
+      {
+        diagram: 'message',
+        message: '資料量太大無法統計'
+      }
+    ]
   }
 ]
 
