@@ -7,7 +7,6 @@
           <div class="single-type-block"
             v-for="dataType in dataTypeList"
             :key="dataType.type"
-            :class="{checked: selectedDataType === dataType.type}"
             @click="selectDataType(dataType.type)"
           >
             <svg-icon class="check-icon"
@@ -109,13 +108,7 @@ export default {
         border-radius: 12px;
         cursor: pointer;
 
-        &.checked {
-          .check-icon {
-            display: block;
-          }
-        }
-
-        &:hover, &.checked {
+        &:hover {
           border: 2px solid #2AD2E2;
         }
 
