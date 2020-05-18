@@ -26,7 +26,7 @@
           @click="prev"
         >{{ $t('button.prevStep') }}</button>
         <button class="btn btn-default"
-          @click="next"
+          @click="buildData"
         >{{ $t('button.buildData') }}</button>
       </div>
     </div>
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { dataSourcePreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
 import EtlChooseColumn from '../etl/EtlChooseColumn'
 import EtlColumnSetting from '../etl/EtlColumnSetting'
@@ -60,6 +61,21 @@ export default {
     },
     next () {
       this.$emit('next')
+    },
+    buildData () {
+      let promiseList = []
+      this.etlTableList.forEach((element, index) => {
+        promiseList.push(dataSourcePreprocessor(element))
+      })
+
+      Promise.all(promiseList)
+        .then(() => {
+          // 全部資料表都設置成功才進入 ConfirmPage 結束導入流程
+          this.$emit('next')
+        })
+        .catch(() => {
+          // 若有資料表補值失敗 publicRequest 將跳出錯誤訊息 
+        })
     }
   },
   computed: {
@@ -68,6 +84,9 @@ export default {
     },
     currentTableIndex () {
       return this.$store.state.dataManagement.currentTableIndex
+    },
+    etlTableList () {
+      return this.$store.state.dataManagement.etlTableList
     }
   }
 }

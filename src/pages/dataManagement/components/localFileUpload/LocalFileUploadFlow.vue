@@ -9,17 +9,17 @@
         v-if="step === 1"
         @next="nextStep"
         @prev="prevStep"
-        @buildData="step = 3"
+        @dataBuilded="step = 3"
       ></local-file-upload-status>
       <etl-setting
         v-if="step === 2"
         @next="nextStep"
         @prev="prevStep"
       ></etl-setting>
-      <build-data
+      <confirm-page
         v-if="step === 3"
         @next="uploadFinish"
-      ></build-data>
+      ></confirm-page>
     </transition>
   </div>
 </template>
@@ -27,7 +27,7 @@
 import LocalFileUpload from './LocalFileUpload'
 import LocalFileUploadStatus from './LocalFileUploadStatus'
 import EtlSetting from './EtlSetting'
-import BuildData from './BuildData'
+import ConfirmPage from './ConfirmPage'
 
 export default {
   name: 'LocalFileUploadFlow',
@@ -35,7 +35,7 @@ export default {
     LocalFileUpload,
     LocalFileUploadStatus,
     EtlSetting,
-    BuildData
+    ConfirmPage
   },
   data () {
     return {

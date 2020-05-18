@@ -30,9 +30,11 @@
           @click="prev"
         >{{ $t('button.chooseFileUpload') }}</button>
         <button class="btn btn-default"
-          @click="$emit('buildData')"
+          :disabled="successList.length === 0"
+          @click="buildData"
         >{{ $t('editing.buildImmediately') }}</button>
         <button class="btn btn-default"
+          :disabled="successList.length === 0"
           @click="next"
         >{{ $t('button.nextStep') }}：{{ $t('editing.processStep3') }}</button>
       </div>
@@ -40,6 +42,7 @@
   </div>
 </template>
 <script>
+import { dataSourcePreprocessor } from '@/API/DataSource'
 import { uploadStatus } from '@/utils/general'
 import { mapState } from 'vuex'
 import FileListBlock from './FileListBlock'
@@ -69,6 +72,21 @@ export default {
       // 清空 etl table list
       this.$store.commit('dataManagement/clearEtlTableList')
       this.$emit('prev')
+    },
+    buildData () {
+      let promiseList = []
+      this.etlTableList.forEach((element, index) => {
+        promiseList.push(dataSourcePreprocessor(element))
+      })
+
+      Promise.all(promiseList)
+        .then(() => {
+          // 全部資料表都設置成功才進入 ConfirmPage 結束導入流程
+          this.$emit('dataBuilded')
+        })
+        .catch(() => {
+          // 若有資料表補值失敗 publicRequest 將跳出錯誤訊息 
+        })
     }
   },
   computed: {
@@ -82,6 +100,9 @@ export default {
       return this.uploadFileList.filter(element => {
         return element.status === uploadStatus.fail
       })
+    },
+    etlTableList () {
+      return this.$store.state.dataManagement.etlTableList
     }
   }
 }

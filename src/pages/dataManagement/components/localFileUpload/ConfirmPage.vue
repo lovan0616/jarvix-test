@@ -14,28 +14,12 @@
 </template>
 
 <script>
-import { dataSourcePreprocessor } from '@/API/DataSource'
-
 export default {
+  name: 'ConfirmPage',
   data () {
     return {
     }
   },
-  created () {
-    let promiseList = []
-    this.etlTableList.forEach((element, index) => {
-      promiseList.push(dataSourcePreprocessor(element))
-    })
-
-    Promise.all(promiseList)
-      .then(() => { this.$emit('next') })
-      .catch(() => {})
-  },
-  computed: {
-    etlTableList () {
-      return this.$store.state.dataManagement.etlTableList
-    }
-  }
 }
 </script>
 
