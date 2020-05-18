@@ -10,6 +10,13 @@
           :option-list="statsTypeOptionList"
           @change="changeStatsType(editColumnInfo, editColumnInfo.statsType)"
         ></default-select>
+        <default-select class="datetime-format-select"
+          v-if="editColumnInfo.statsType === 'DATETIME'"
+          v-model="editColumnInfo.datetimeFormat"
+          :placeholder="$t('etl.datetimeFormat')"
+          :option-list="datetimeFormatOptionList"
+          @change="changeStatsType(editColumnInfo, editColumnInfo.statsType)"
+        ></default-select>
       </div>
       <div class="setting-input-block">
         <label class="input-label" for="">{{ $t('etl.emptyStringReplaceValue') }}</label>
@@ -21,6 +28,7 @@
           name="stringReplaceObject"
           v-if="stringReplaceObject.newValue === 'CUSTOM'"
           v-model="stringReplaceObject.customValue"
+          :type="replaceValueInputType"
           :placeholder="$t('etl.replaceValuePlaceholder')"
           v-validate="'required'"
         ></input-verify>
@@ -35,6 +43,7 @@
           name="nullReplaceObject"
           v-if="nullReplaceObject.newValue === 'CUSTOM'"
           v-model="nullReplaceObject.customValue"
+          :type="replaceValueInputType"
           :placeholder="$t('etl.replaceValuePlaceholder')"
           v-validate="'required'"
         ></input-verify>
@@ -49,6 +58,7 @@
           name="errorDefaultObject"
           v-if="errorDefaultObject.newValue === 'CUSTOM'"
           v-model="errorDefaultObject.customValue"
+          :type="replaceValueInputType"
           :placeholder="$t('etl.replaceValuePlaceholder')"
           v-validate="'required'"
         ></input-verify>
@@ -92,11 +102,12 @@
           @click="reset"
         >{{ $t('button.resumeDefault') }}</button>
       </div>
+      <span class="remark-info">{{ $t('etl.remarkToSave') }}</span>
     </div>
   </div>
 </template>
 <script>
-import { statsTypeOptionList, booleanOptionList } from '@/utils/general'
+import { statsTypeOptionList, booleanOptionList, datetimeFormatOptionList } from '@/utils/general'
 import InputVerify from '@/components/InputVerify'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'
@@ -119,12 +130,36 @@ export default {
       editColumnInfo: JSON.parse(JSON.stringify(this.columnInfo)),
       statsTypeOptionList,
       booleanOptionList,
-      replaceTypeOptionList: [
-        // TODO 待API出來要再加上其他補值方式，例如常見值
-        { value: null, name: '無動作' },
-        { value: 'CUSTOM', name: '自訂' },
-        { value: 'DROP', name: '刪除整列' }
+      dataSummaryOption: [],
+      // TODO 確認時間格式
+      datetimeFormatOptionList: [
+        { name: 'YYYY/MM/DD', value: 'YYYY/MM/DD' },
+        { name: 'yyyy-mm-dd', value: 'yyyy-mm-dd' }
       ],
+      categoryOptionList: [
+        { value: '1', name: this.$t('etl.commonValue1') },
+        { value: '2', name: this.$t('etl.commonValue2') },
+        { value: '3', name: this.$t('etl.commonValue3') },
+        { value: '4', name: this.$t('etl.commonValue4') },
+        { value: '5', name: this.$t('etl.commonValue5') },
+        { value: 'CUSTOM', name: this.$t('etl.custom') }
+      ],
+      numericOptionList: [
+        { value: 'max', name: this.$t('etl.maxValue') },
+        { value: 'min', name: this.$t('etl.minValue') },
+        { value: 'avg', name: this.$t('etl.avgValue') },
+        { value: 'sd', name: this.$t('etl.sdValue') },
+        { value: 'CUSTOM', name: this.$t('etl.custom') }
+      ],
+      datetimeOptionList: [
+        { value: '1', name: this.$t('etl.commonValue1') },
+        { value: '2', name: this.$t('etl.commonValue2') },
+        { value: '3', name: this.$t('etl.commonValue3') },
+        { value: '4', name: this.$t('etl.commonValue4') },
+        { value: '5', name: this.$t('etl.commonValue5') },
+        { value: 'CUSTOM', name: this.$t('etl.custom') }
+      ],
+      replaceValueInputType: '',
       replaceValueObjest: {
         value: null,
         newValue: null,
@@ -155,6 +190,13 @@ export default {
     })
   },
   computed: {
+    replaceTypeOptionList () {
+      return [
+        { value: null, name: this.$t('etl.nullAction') },
+        ...this.dataSummaryOption,
+        { value: 'DROP', name: this.$t('etl.dropRow') }
+      ]
+    },
     replaceValueList () {
       return this.editColumnInfo.values.filter(element => {
         return (element.type !== 'MISSING_VALUE' && element.type !== 'ERROR_DEFAULT_VALUE')
@@ -218,6 +260,25 @@ export default {
       }
     },
     reset () {}
+  },
+  watch: {
+    'editColumnInfo.statsType': {
+      handler (newVal) {
+        if (newVal === 'BOOLEAN') {
+          this.dataSummaryOption = this.booleanOptionList
+        } else if (newVal === 'CATEGORY') {
+          this.dataSummaryOption = this.categoryOptionList
+          this.replaceValueInputType = 'text'
+        } else if (newVal === 'NUMERIC') {
+          this.dataSummaryOption = this.numericOptionList
+          this.replaceValueInputType = 'numeric'
+        } else if (newVal === 'DATETIME') {
+          this.dataSummaryOption = this.datetimeOptionList
+          this.replaceValueInputType = 'text'
+        }
+      },
+      immediate: true
+    }
   }
 }
 </script>
@@ -243,7 +304,6 @@ export default {
       width: 40%;
       & + .input-verify {
         display: inline-block;
-        margin-left: 20px;
         >>> .input-verify-text {
           height: 41px; // 與select高度對齊
         }
@@ -257,11 +317,10 @@ export default {
     }
   }
 
-  .data-type-select, .replace-type-select {
+  .sy-select {
     width: 40%;
     border-bottom: 1px solid;
-    margin-bottom: 20px;
-
+    margin: 0 20px 20px 0;
     &>>> .el-input--suffix .el-input__inner {
       padding-left: 0;
     }
@@ -301,6 +360,25 @@ export default {
         margin-right: 12px;
       }
     }
+
+    .remark-info {
+      font-size: 14px;
+      color: #FFDF6F;
+      margin-left: 8px;
+    }
   }
+}
+
+// 移除 type="number"時的上下箭頭
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 </style>

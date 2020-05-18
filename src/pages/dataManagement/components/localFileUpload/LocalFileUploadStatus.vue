@@ -85,7 +85,7 @@ export default {
           this.$emit('dataBuilded')
         })
         .catch(() => {
-          // 若有資料表補值失敗 publicRequest 將跳出錯誤訊息 
+          // 若有資料表補值失敗 publicRequest 將跳出錯誤訊息
         })
     }
   },

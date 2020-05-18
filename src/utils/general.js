@@ -83,6 +83,6 @@ export const statsTypeOptionList = [
 ]
 
 export const booleanOptionList = [
-  { name: 'true', value: true },
-  { name: 'false', value: false }
+  { name: 'True', value: true },
+  { name: 'False', value: false }
 ]
