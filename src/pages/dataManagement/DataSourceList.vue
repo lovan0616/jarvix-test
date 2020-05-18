@@ -37,11 +37,16 @@
       >
       </data-table>
     </div>
-    <file-upload-dialog
+    <!-- <file-upload-dialog
       v-if="showCreateDataSourceDialog"
       @success="fetchData"
       @close="closeFileUploadDialog"
-    ></file-upload-dialog>
+    ></file-upload-dialog> -->
+    <create-data-source-name
+      v-if="showCreateDataSourceDialog"
+      @confirm="createDataSourceName"
+      @close="closeFileUploadDialog"
+    ></create-data-source-name>
     <confirm-delete-dialog
       v-if="showConfirmDeleteDialog"
       :title="$t('editing.deleteDataSource')"
@@ -61,9 +66,10 @@
 <script>
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
+import CreateDataSourceName from './components/CreateDataSourceName'
 import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
-import { deleteDataSourceById, renameDataSourceById } from '@/API/DataSource'
+import { createDataSource, deleteDataSourceById, renameDataSourceById } from '@/API/DataSource'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -71,6 +77,7 @@ export default {
   components: {
     DataTable,
     FileUploadDialog,
+    CreateDataSourceName,
     ConfirmDeleteDialog,
     ConfirmChangeNameDialog
   },
@@ -139,6 +146,16 @@ export default {
     confirmDelete (dataObj) {
       this.deleteId = dataObj.id
       this.showConfirmDeleteDialog = true
+    },
+    createDataSourceName (name) {
+      createDataSource(name)
+        .then(response => {
+          this.closeFileUploadDialog()
+          this.fetchData()
+            .then(() => {
+            })
+        }).catch(() => {
+        })
     },
     deleteDataSource (resolve) {
       deleteDataSourceById(this.deleteId)

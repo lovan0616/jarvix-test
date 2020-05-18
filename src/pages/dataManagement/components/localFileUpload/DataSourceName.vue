@@ -17,9 +17,9 @@
         <button class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-default"
+        <button class="btn btn-default he"
           @click="nextStep"
-        >{{ $t('button.nextStep') }}</button>
+        >{{ $t('button.buildData') }}</button>
       </div>
     </div>
   </div>
