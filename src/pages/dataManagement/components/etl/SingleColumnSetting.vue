@@ -6,9 +6,9 @@
       <div class="setting-input-block">
         <label class="input-label" for="">{{ $t('etl.dataType') }}</label>
         <default-select class="data-type-select"
-          v-model="editColumnInfo.targetDataType"
-          :option-list="dataTypeOptionList(editColumnInfo.originalDataType)"
-          @change="changeDataType(editColumnInfo, editColumnInfo.targetDataType)"
+          v-model="editColumnInfo.statsType"
+          :option-list="statsTypeOptionList"
+          @change="changeStatsType(editColumnInfo, editColumnInfo.statsType)"
         ></default-select>
       </div>
       <div class="setting-input-block">
@@ -20,8 +20,9 @@
         <input-verify
           name="stringReplaceObject"
           v-if="stringReplaceObject.newValue === 'CUSTOM'"
-          v-model="stringReplaceObject.newCustomValue"
+          v-model="stringReplaceObject.customValue"
           :placeholder="$t('etl.replaceValuePlaceholder')"
+          v-validate="'required'"
         ></input-verify>
       </div>
       <div class="setting-input-block">
@@ -33,8 +34,9 @@
         <input-verify
           name="nullReplaceObject"
           v-if="nullReplaceObject.newValue === 'CUSTOM'"
-          v-model="nullReplaceObject.newCustomValue"
+          v-model="nullReplaceObject.customValue"
           :placeholder="$t('etl.replaceValuePlaceholder')"
+          v-validate="'required'"
         ></input-verify>
       </div>
       <div class="setting-input-block">
@@ -46,8 +48,9 @@
         <input-verify
           name="errorDefaultObject"
           v-if="errorDefaultObject.newValue === 'CUSTOM'"
-          v-model="errorDefaultObject.newCustomValue"
+          v-model="errorDefaultObject.customValue"
           :placeholder="$t('etl.replaceValuePlaceholder')"
+          v-validate="'required'"
         ></input-verify>
       </div>
       <div class="setting-input-block">
@@ -93,6 +96,7 @@
   </div>
 </template>
 <script>
+import { statsTypeOptionList, booleanOptionList } from '@/utils/general'
 import InputVerify from '@/components/InputVerify'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'
@@ -104,40 +108,17 @@ export default {
     InputVerify,
     DefaultSelect
   },
+  props: {
+    columnInfo: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data () {
     return {
-      dataTypeList: [
-        {
-          name: 'FLOAT',
-          value: 'FLOAT'
-        },
-        {
-          name: 'STRING',
-          value: 'STRING'
-        },
-        {
-          name: 'INT',
-          value: 'INT'
-        },
-        {
-          name: 'DATETIME',
-          value: 'DATETIME'
-        },
-        {
-          name: 'BOOLEAN',
-          value: 'BOOLEAN'
-        }
-      ],
-      booleanOptionList: [
-        {
-          name: 'true',
-          value: true
-        },
-        {
-          name: 'false',
-          value: false
-        }
-      ],
+      editColumnInfo: JSON.parse(JSON.stringify(this.columnInfo)),
+      statsTypeOptionList,
+      booleanOptionList,
       replaceTypeOptionList: [
         // TODO 待API出來要再加上其他補值方式，例如常見值
         { value: null, name: '無動作' },
@@ -187,9 +168,6 @@ export default {
     },
     currentColumnIndex () {
       return this.$store.state.dataManagement.currentColumnIndex
-    },
-    editColumnInfo () {
-      return this.etlTableList[this.currentTableIndex].columns[this.currentColumnIndex]
     }
   },
   methods: {
@@ -205,6 +183,13 @@ export default {
     saveSetting () {
       this.$validator.validateAll().then(result => {
         if (result) {
+          this.editColumnInfo.values.forEach(el => {
+            // 將自訂值指定為 newValue
+            if (el.customValue) {
+              el.newValue = el.customValue
+              delete el.customValue
+            }
+          })
           this.$emit('updateInfo', this.editColumnInfo)
 
           Message({
@@ -215,28 +200,20 @@ export default {
         }
       })
     },
-    dataTypeOptionList (type) {
-      if (type === 'DATETIME') {
-        return this.dataTypeList
-      } else {
-        return this.dataTypeList.filter(element => element.value !== 'DATETIME')
-      }
-    },
-    changeDataType (column, dataType) {
-      column.targetDataType = dataType
-      switch (dataType) {
-        case 'FLOAT':
-        case 'INT':
-          column.statsType = 'NUMERIC'
+    changeStatsType (column, targetStatsType) {
+      column.statsType = targetStatsType
+      switch (targetStatsType) {
+        case 'NUMERIC':
+          column.targetDataType = 'FLOAT'
           break
-        case 'STRING':
-          column.statsType = 'CATEGORY'
+        case 'CATEGORY':
+          column.targetDataType = 'STRING'
           break
         case 'DATETIME':
-          column.statsType = 'DATETIME'
+          column.targetDataType = 'DATETIME'
           break
         case 'BOOLEAN':
-          column.statsType = 'BOOLEAN'
+          column.targetDataType = 'BOOLEAN'
           break
       }
     },
@@ -256,9 +233,6 @@ export default {
     overflow: auto;
     margin-bottom: 12px;
   }
-  .has-change {
-    padding-bottom: 62px;
-  }
 
   .setting-input-block {
     .input-label {
@@ -269,8 +243,13 @@ export default {
       width: 40%;
       & + .input-verify {
         display: inline-block;
-        height: 41px; // 與select高度對齊
         margin-left: 20px;
+        >>> .input-verify-text {
+          height: 41px; // 與select高度對齊
+        }
+        >>> .input-error.error-text {
+          bottom: 2px;
+        }
       }
     }
     & >>> .input-verify .input-verify-text {

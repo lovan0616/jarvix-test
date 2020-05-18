@@ -34,7 +34,7 @@
             </div>
             <div class="header">
               <span>
-                {{ column.originalStatsType }}
+                {{ column.statsType }}
               </span>
               <a href="javascript:void(0)" class="link"
                 @click="chooseColumn(index)"

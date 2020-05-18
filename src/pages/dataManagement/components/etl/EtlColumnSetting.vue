@@ -14,6 +14,7 @@
     </div>
     <div class="section column-setting">
       <single-column-setting
+        :column-info="currentColumnInfo"
         :key="currentTableIndex + '_' + currentColumnIndex"
         @updateInfo="updateSetting"
       ></single-column-setting>
