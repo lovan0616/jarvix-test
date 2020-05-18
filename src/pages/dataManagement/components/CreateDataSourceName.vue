@@ -17,11 +17,12 @@
             <div class="dialog-footer">
             <div class="dialog-button-block">
                 <button class="btn btn-outline"
-                @click="cancelFileUpload"
-                >{{ $t('button.cancel') }}</button>
+                  @click="cancelFileUpload"
+                  >{{ $t('button.cancel') }}</button>
                 <button class="btn btn-default"
-                @click="nextStep"
-                >{{ $t('button.built') }}</button>
+                  :disabled="isProcessing"
+                  @click="built"
+                  >{{ $t('button.built') }}</button>
             </div>
             </div>
         </div>
@@ -42,7 +43,9 @@ export default {
   },
   data () {
     return {
+      isProcessing: false,
       dataSourceInfo: {
+        groupId: null,
         name: null
       }
     }
@@ -51,16 +54,23 @@ export default {
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
-    nextStep () {
+    built () {
       this.$validator.validateAll().then(result => {
-        if (result) {
-          // this.$store.commit('dataManagement/updateCurrentUploadDataSourceName', this.dataSourceInfo.name)
-          this.$emit('confirm', { groupId: 2, name: this.dataSourceInfo.name })
-        }
+        if (!result) return
+        this.isProcessing = true
+        this.dataSourceInfo.groupId = this.currentGroupId
+        let confirmResult = new Promise(resolve => this.$emit('confirm', {resolve, dataSourceInfo: this.dataSourceInfo}))
+        confirmResult.then(() => {
+          this.isProcessing = false
+        })
+        // this.$emit('confirm', { groupId: this.currentGroupId, name: this.dataSourceInfo.name })
       })
     }
   },
   computed: {
+    currentGroupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
+    },
     max () {
       return this.$store.state.validation.fieldCommonMaxLength
     }

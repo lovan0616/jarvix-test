@@ -147,14 +147,16 @@ export default {
       this.deleteId = dataObj.id
       this.showConfirmDeleteDialog = true
     },
-    createDataSourceName (name) {
-      createDataSource(name)
+    createDataSourceName ({resolve, dataSourceInfo}) {
+      createDataSource(dataSourceInfo)
         .then(response => {
-          this.closeFileUploadDialog()
           this.fetchData()
             .then(() => {
+              this.closeFileUploadDialog()
+              resolve()
             })
         }).catch(() => {
+          resolve()
         })
     },
     deleteDataSource (resolve) {
