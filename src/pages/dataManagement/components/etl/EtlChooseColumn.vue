@@ -9,7 +9,17 @@
           @change="chooseTable"
         ></default-select>
       </div>
-      <!-- TODO 已選欄位數、資料欄位總數、資料總筆數 -->
+      <!-- TODO 已選欄位數 -->
+      <div class="data-content-info">
+        <dl>
+          <dt>{{ $t('etl.columnCount')}}：</dt>
+          <dd>{{ currentTableInfo.columns.length }}</dd>
+        </dl>
+        <dl>
+          <dt>{{ $t('etl.rowCount')}}：</dt>
+          <dd>{{ currentTableInfo.rowCount }}</dd>
+        </dl>
+      </div>
     </div>
     <div class="section data-column">
       <!-- TODO 更換為 PaginationTable -->
@@ -98,6 +108,9 @@ export default {
     },
     currentColumnIndex () {
       return this.$store.state.dataManagement.currentColumnIndex
+    },
+    currentTableInfo () {
+      return this.etlTableList[this.currentTableIndex]
     }
   }
 }
@@ -108,9 +121,19 @@ export default {
     &.data-frame {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       .data-frame-info {
         display: flex;
         align-items: center;
+      }
+      .data-content-info {
+        dl:not(:last-child) {
+          margin-right: 20px;
+        }
+        dl, dt, dd {
+          display: inline-block;
+          margin: 0;
+        }
       }
     }
   }
