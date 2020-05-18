@@ -72,9 +72,7 @@
     "columnSetChosenEmpty": "尚未選擇任何欄位",
     "memberDeleteSuccess": "成員刪除成功",
     "etlSuccess": "資料預處理成功，開始建置資料表",
-    "etlSettingTempSave": "設定已經暫存",
-    "columnCount": "資料欄位總數",
-    "rowCount": "資料總筆數"
+    "etlSettingTempSave": "設定已經暫存"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -323,7 +321,9 @@
     "nullAction": "無動作",
     "custom": "自訂",
     "dropRow": "刪除整列",
-    "currentDataFrame": "目前顯示資料表"
+    "currentDataFrame": "目前顯示資料表",
+    "columnCount": "資料欄位總數",
+    "rowCount": "資料總筆數"
   },
   "feature": {
     "value": "數值",

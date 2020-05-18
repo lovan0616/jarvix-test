@@ -72,9 +72,7 @@
     "columnSetChosenEmpty": "尚未选择任何栏位",
     "memberDeleteSuccess": "成员删除成功",
     "etlSuccess": "资料预处理成功，开始建置资料表",
-    "etlSettingTempSave": "设定已经暂存",
-    "columnCount": "资料栏位总数",
-    "rowCount": "资料总笔数"
+    "etlSettingTempSave": "设定已经暂存"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -282,7 +280,6 @@
     "databaseType": "资料库类型",
     "currentLoadedDataFrame": "目前读取的资料表",
     "dataFrameContent": "资料表内容",
-    "currentDisplayDataFrame": "目前显示资料表",
     "dataType": "资料类型",
     "chooseConnection": "选择连线",
     "emptyConnection": "尚未建立任何连线",
@@ -324,7 +321,9 @@
     "nullAction": "无动作",
     "custom": "自订",
     "dropRow": "删除整列",
-    "currentDataFrame": "目前显示资料表"
+    "currentDataFrame": "目前显示资料表",
+    "columnCount": "资料栏位总数",
+    "rowCount": "资料总笔数"
   },
   "feature": {
     "value": "数值",
