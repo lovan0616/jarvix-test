@@ -202,7 +202,9 @@ export default {
       })
     },
     getDataFrameColumnInfo (value) {
-      getDataFrameColumnInfoById(value).then(response => {
+      // 過濾掉特徵欄位
+      let hasFeature = false
+      getDataFrameColumnInfoById(value, hasFeature).then(response => {
         // 只能選擇數值類型的欄位
         this.numericColumnList = response.filter(element => {
           return element.dataType === 'INT' || element.dataType === 'FLOAT'
