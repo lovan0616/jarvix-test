@@ -76,8 +76,18 @@ export default {
     if (state.dataSourceId === null) return
     return getDataFrameById(state.dataSourceId)
   },
+  getDataColumnSummary ({ state }, { id, page }) {
+    // if (page) return
+    // TODO: 串接 API
+  },
   getDataFrameData ({state}, {id, page = 0}) {
     return getDataFrameData(id, page)
+  },
+  getDataFrameIntro ({ dispatch, state }, { id, page }) {
+    return Promise.all([
+      dispatch('getDataFrameData', { id, page }),
+      dispatch('getDataColumnSummary', { id, page })
+    ])
   },
   getDataFrameColumnCorrelation ({ state }, { id }) {
     // TODO: 串接 API
