@@ -75,9 +75,9 @@ export default {
         grid: {
           containLabel: true,
           left: 18,
-          right: 80,
+          right: 10,
           top: 18,
-          bottom: 40
+          bottom: 45
         },
         textStyle: {
           color: '#fff'
@@ -85,11 +85,10 @@ export default {
         visualMap: {
           min: 0,
           max: 1,
-          // calculable: true,
-          orient: 'vertical',
-          left: 'right',
-          top: '23',
-          align: 'bottom',
+          calculable: true,
+          orient: 'horizontal',
+          left: 'center',
+          align: 'top',
           color: ['#F8696B', '#E2E282', '#63BD7B'],
           textStyle: {
             color: '#fff'
@@ -97,7 +96,13 @@ export default {
           itemHeight: '330px',
           precision: 1,
           itemWidth: '8px',
-          text: [1, 0]
+          text: [1, 0],
+          padding: [
+            10,
+            0,
+            0,
+            0
+          ]
         },
         dataset: {
           source: this.dataset.data

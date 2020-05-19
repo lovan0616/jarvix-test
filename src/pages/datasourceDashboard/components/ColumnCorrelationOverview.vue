@@ -5,10 +5,18 @@
       <spinner
         v-if="isLoading"
       ></spinner>
-      <display-heat-map-chart
-        :dataset="componentData.dataset"
-        v-else-if="!isLoading && componentData && !hasError"
-      />
+      <div v-else-if="!isLoading && componentData && !hasError">
+        <display-heat-map-chart
+          :dataset="componentData.dataset"
+        />
+        <div class="descrtipion">
+          <div class="description-__container">
+            <div class="description-__container--min">高度負相關</div>
+            <div class="description-__container--zero">無相關</div>
+            <div class="description-__container--min">高度正相關</div>
+          </div>
+        </div>
+      </div>
       <empty-info-block
         v-else
         :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
