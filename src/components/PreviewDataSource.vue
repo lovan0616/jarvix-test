@@ -1,78 +1,93 @@
 <template>
   <div class="page-preview-bookmark">
-    <div class="title">{{$t('resultDescription.dataSourceIntro')}}</div>
-    <div class="result-board"
-      v-show="dataSourceId"
-    >
-      <div
-        v-if="dataSourceTables.length > 0"
-        class="board-header"
-      >
-        <el-tabs
-          :value="`${dataSourcetableId}`"
-          type="card"
-          @tab-click="onDataSourceTableChange"
+    <template v-if="dataSourceId">
+      <div class="header">{{$t('resultDescription.dataSourceIntro')}}</div>
+      <div class="result-board">
+        <div
+          v-if="dataSourceTables.length > 0"
+          class="board-header"
         >
-          <el-tab-pane
-            v-for="(tab, index) in dataSourceTables"
-            :key="index + tab.name"
-            :label="tab.name"
-            :name="`${tab.id}`"
+          <el-tabs
+            :value="`${dataSourcetableId}`"
+            type="card"
+            @tab-click="onDataSourceTableChange"
           >
-            <el-tooltip
-              slot="label"
-              :content="tab.name">
-              <span>{{tab.name}}</span>
-            </el-tooltip>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
-      <div class="board-body">
-        <spinner
-          v-if="isLoading"
-        ></spinner>
-        <empty-info-block
-          v-else-if="hasError || dataSourceTables.length === 0"
-          :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
-        ></empty-info-block>
-        <template v-else>
-          <!--TODO: 上版前需設定 :min-column-width="'270px'"-->
-          <pagination-table
-            class="board-body-section"
-            :is-processing="isProcessing"
-            :dataset="dataSourceTableData"
-            :pagination-info="pagination"
-            @change-page="updatePage"
-          >
-            <!--TODO: 上版前需把註解移除-->
-            <!-- <template v-slot="{ column, index }">
-              <div class="header-block">
-                <div class="header">
-                  <span class="tooltip-container icon">
-                    <svg-icon :icon-class="getHeaderIcon(index)" />
-                    <div class="tooltip">{{ getDataTypeName(index)}}</div>
-                  </span>
-                  <span class="text">
-                    {{column.titles[index]}}
-                  </span>
+            <el-tab-pane
+              v-for="(tab, index) in dataSourceTables"
+              :key="index + tab.name"
+              :label="tab.name"
+              :name="`${tab.id}`"
+            >
+              <el-tooltip
+                slot="label"
+                :content="tab.name">
+                <span>{{tab.name}}</span>
+              </el-tooltip>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+        <div class="board-body">
+          <spinner
+            v-if="isLoading"
+          ></spinner>
+          <empty-info-block
+            v-else-if="hasError || dataSourceTables.length === 0"
+            :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
+          ></empty-info-block>
+          <template v-else>
+            <div class="board-body-section">
+              <div class="title">{{ $t('editing.dataFrameContent') }}</div>
+              <div class="overview">
+                <div class="overview--data">
+                  <div class="overview--item">
+                    {{ $t('resultDescription.totalDataRows') + ': ' + dataFrameOverviewData.totalRows }}
+                  </div>
+                  <div class="overview--item">
+                    {{ $t('resultDescription.totalDataColumns') + ': ' + dataFrameOverviewData.totalColumns }}
+                  </div>
                 </div>
-                <div class="summary">
-                  <data-column-summary
-                    :summary-data="dataSourceTableData.columns.summary[index]"
-                  />
+                <div class="overview--reminder">
+                  {{ '*' + $t('notification.columnSummarySampleNotification') }}
                 </div>
               </div>
-            </template> -->
-          </pagination-table>
-          <!--欄位關聯概況-->
-          <!-- <column-correlation-overview
-            class="board-body-section"
-            :data-frame-id="dataSourceTable.id"
-          /> -->
-        </template>
+              <!--TODO: 上版前需設定 :min-column-width="'270px'"-->
+              <pagination-table
+                :is-processing="isProcessing"
+                :dataset="dataSourceTableData"
+                :pagination-info="pagination"
+                @change-page="updatePage"
+              >
+                <!--TODO: 上版前需把註解移除-->
+                <!-- <template v-slot="{ column, index }">
+                  <div class="header-block">
+                    <div class="header">
+                      <span class="tooltip-container icon">
+                        <svg-icon :icon-class="getHeaderIcon(index)" />
+                        <div class="tooltip">{{ getDataTypeName(index)}}</div>
+                      </span>
+                      <span class="text">
+                        {{column.titles[index]}}
+                      </span>
+                    </div>
+                    <div class="summary">
+                      <data-column-summary
+                        :summary-data="dataSourceTableData.columns.summary[index]"
+                      />
+                    </div>
+                  </div>
+                </template> -->
+              </pagination-table>
+            </div>
+            <!--欄位關聯概況-->
+            <!-- <column-correlation-overview
+              class="board-body-section"
+              :data-frame-id="dataSourceTable.id"
+            /> -->
+          </template>
+        </div>
       </div>
-    </div>
-    <span v-show="!dataSourceId">{{ $t('message.emptyDataSource') }}</span>
+    </template>
+    <span v-else>{{ $t('message.emptyDataSource') }}</span>
   </div>
 </template>
 <script>
@@ -184,6 +199,10 @@ export default {
       pagination: {
         currentPage: 0,
         totalPage: 0
+      },
+      dataFrameOverviewData: {
+        totalRows: '-',
+        totalColumns: '-'
       }
     }
   },
@@ -252,6 +271,10 @@ export default {
         .then(response => {
           if (resetPagination) {
             this.pagination = response.pagination
+            this.dataFrameOverviewData = {
+              totalRows: response.pagination.totalItems,
+              totalColumns: response.columns.length
+            }
           }
           this.dataSourceTableData = {
             columns: {
@@ -300,7 +323,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-preview-bookmark {
-  .title {
+  .header {
     font-weight: 600;
     font-size: 24px;
     line-height: 32px;
@@ -315,6 +338,12 @@ export default {
   }
 
   .board-body-section {
+    .title {
+      margin-bottom: 13px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
     &:not(:last-child) {
       margin-bottom: 1.3rem;
     }
@@ -356,6 +385,25 @@ export default {
   }
   .board-body {
     padding: 16px 24px;
+  }
+
+  .overview {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+
+    &--data {
+      display: flex;
+    }
+
+    &--item {
+      margin-right: 45px;
+    }
+
+    &--reminder {
+      color: #FFDF6F;
+    }
   }
 }
 

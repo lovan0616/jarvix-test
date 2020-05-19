@@ -1345,6 +1345,8 @@
     "noData": "暫無資料",
     "of": "的",
     "dataSourceIntro": "資料集介紹",
+    "totalDataRows": "資料總筆數",
+    "totalDataColumns": "資料欄位總數",
     "degreeOfCorrelation": "關聯度",
     "columnCorrelationName": "關聯欄位名稱",
     "columnCorrelationOverview": "欄位關聯概況",
@@ -1443,7 +1445,8 @@
   "notification": {
     "uploadLimitNotification": "資料數量已達上限",
     "uploadLimit": "資料表限制：最多{count}筆",
-    "userLimitNotification": "使用者數量已達上限"
+    "userLimitNotification": "使用者數量已達上限",
+    "columnSummarySampleNotification": "欄位摘要為取樣統計，僅供參考"
   },
   "chart": {
     "zoom": "區域縮放",
