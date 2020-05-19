@@ -55,7 +55,7 @@ export default {
       type: Object,
       default: null
     },
-    height: {type: String, default: '420px'},
+    height: {type: String, default: '550px'},
     width: {type: String, default: '100%'}
   },
   computed: {
@@ -75,29 +75,34 @@ export default {
         grid: {
           containLabel: true,
           left: 18,
-          right: 80,
+          right: 35,
           top: 18,
-          bottom: 40
+          bottom: 65
         },
         textStyle: {
           color: '#fff'
         },
         visualMap: {
-          min: 0,
+          min: -1,
           max: 1,
-          // calculable: true,
-          orient: 'vertical',
-          left: 'right',
-          top: '23',
+          calculable: true,
+          orient: 'horizontal',
+          left: 'center',
           align: 'bottom',
-          color: ['#F8696B', '#E2E282', '#63BD7B'],
+          color: ['#FF9559', '#FFFFFF', '#2B86A3'],
           textStyle: {
-            color: '#fff'
+            color: '#fff',
+            fontSize: 14
           },
           itemHeight: '330px',
           precision: 1,
           itemWidth: '8px',
-          text: [1, 0]
+          padding: [
+            1,
+            0,
+            0,
+            0
+          ]
         },
         dataset: {
           source: this.dataset.data
@@ -112,11 +117,14 @@ export default {
       }
 
       // 欄位超過 10x10 的時候出現 scroll bar 並隱藏 label
-      if (this.dataset.data.length > 100) {
+      if (this.dataset.data.length > 144) {
         const verticalZoomConfig = verticalZoomIn()
-        verticalZoomConfig[1].top = 50
-        verticalZoomConfig[1].bottom = 40
-        config.dataZoom = [...parallelZoomIn(), ...verticalZoomConfig]
+        const parallelZoomConfig = parallelZoomIn()
+        verticalZoomConfig[1].top = 40
+        verticalZoomConfig[1].bottom = 65
+        verticalZoomConfig[1].right = 10
+        parallelZoomConfig[1].bottom = 40
+        config.dataZoom = [...parallelZoomConfig, ...verticalZoomConfig]
         config.animation = false
         config.series.label.show = false
       }
@@ -124,6 +132,7 @@ export default {
       config.xAxis.position = 'top'
       config.xAxis.data = this.dataset.index[0]
       config.xAxis.axisLabel.formatter = formateLabel
+      config.xAxis.axisLabel.rotate = -30
       config.yAxis.inverse = true
       config.yAxis.data = this.dataset.index[1]
       config.yAxis.axisLabel.formatter = formateLabel
