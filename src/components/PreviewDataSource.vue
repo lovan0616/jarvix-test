@@ -38,15 +38,15 @@
             <div class="board-body-section">
               <div class="title">{{ $t('editing.dataFrameContent') }}</div>
               <div class="overview">
-                <div class="overview--data">
-                  <div class="overview--item">
+                <div class="overview__data">
+                  <div class="overview__item">
                     {{ $t('resultDescription.totalDataRows') + ': ' + dataFrameOverviewData.totalRows }}
                   </div>
-                  <div class="overview--item">
+                  <div class="overview__item">
                     {{ $t('resultDescription.totalDataColumns') + ': ' + dataFrameOverviewData.totalColumns }}
                   </div>
                 </div>
-                <div class="overview--reminder">
+                <div class="overview__reminder">
                   {{ '*' + $t('notification.columnSummarySampleNotification') }}
                 </div>
               </div>
@@ -393,15 +393,15 @@ export default {
     margin-bottom: 10px;
     font-size: 14px;
 
-    &--data {
+    &__data {
       display: flex;
     }
 
-    &--item {
+    &__item {
       margin-right: 45px;
     }
 
-    &--reminder {
+    &__reminder {
       color: #FFDF6F;
     }
   }
