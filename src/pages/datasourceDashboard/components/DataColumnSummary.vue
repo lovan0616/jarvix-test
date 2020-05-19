@@ -5,14 +5,20 @@
       :key="dataBlock.diagram"
       class="data-block"
     >
+      <div
+        v-if="dataBlock.diagram === 'message'"
+        class="message"
+      >
+        {{dataBlock.message}}
+      </div>
       <component
-        v-if="dataBlock.diagram === 'chart'"
+        v-else-if="dataBlock.diagram === 'chart'"
         :is="componentName(dataBlock.chartType)"
         :dataset="dataBlock.dataset"
         :title="dataBlock.title"
       ></component>
       <ul
-        v-if="dataBlock.diagram === 'list'"
+         v-else-if="dataBlock.diagram === 'list'"
         class="list"
       >
         <li
@@ -21,10 +27,20 @@
           :key="item.name + item.value"
         >
           <div class="list-item-name">
-            {{item.name}}
+             <el-tooltip
+              slot="label"
+              :enterable="false"
+              :content="item.name">
+              <span>{{item.name}}</span>
+            </el-tooltip>
           </div>
           <div class="list-item-value">
-            {{item.value}}
+            <el-tooltip
+              slot="label"
+              :enterable="false"
+              :content="item.value">
+              <span>{{item.value}}</span>
+            </el-tooltip>
           </div>
         </li>
       </ul>
@@ -64,6 +80,13 @@ export default {
     margin-bottom: 12px;
   }
 
+  .message {
+    height: 146px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .list {
     margin: 0;
     padding: 0;
@@ -74,13 +97,18 @@ export default {
     display: flex;
     padding: 5px 0;
     font-weight: normal;
+    justify-content: space-between;
   }
 
-  .list-item-name {
-    width: 70%;
+  .list-item-name,
+  .list-item-value {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .list-item-name {
+    width: 65%;
   }
 
   .list-item-value {
