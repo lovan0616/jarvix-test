@@ -80,7 +80,7 @@ export default {
         _this.askCancelFunction = c
       }))
         .then(response => {
-          this.$store.commit('dataManagement/updateEtlTableList', response)
+          this.$store.commit('dataManagement/updateImportedFileList', response)
           this.singleFile.status = uploadStatus.success
         }).catch(() => {
           this.singleFile.status = uploadStatus.fail

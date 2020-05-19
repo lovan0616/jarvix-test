@@ -43,10 +43,12 @@
 </template>
 <script>
 import { dataSourcePreprocessor } from '@/API/DataSource'
+import { analysisFile } from '@/API/File'
 import { uploadStatus } from '@/utils/general'
 import { mapState } from 'vuex'
 import FileListBlock from './FileListBlock'
 import UploadProcessBlock from './UploadProcessBlock'
+import { Message } from 'element-ui'
 
 export default {
   name: 'LocalFileUploadStatus',
@@ -56,15 +58,40 @@ export default {
   },
   data () {
     return {
-      uploadStatus
+      uploadStatus,
+      dataSourceId: parseInt(this.$route.params.id),
     }
+  },
+  mounted () {
+    // console.log(this.$route.params.id)
   },
   methods: {
     cancel () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     next () {
-      this.$emit('next')
+      let promiseList = []
+      this.importedFileList.forEach((element, index) => {
+        promiseList.push(analysisFile(element.id, this.dataSourceId))
+      })
+
+      Promise.all(promiseList)
+        .then((response) => {
+          console.log(response)
+          response.forEach(file => {
+            this.$store.commit('dataManagement/updateEtlTableList', file)
+          })
+          this.$emit('next')
+        })
+        .catch((error) => {
+          console.log(error)
+          Message({
+            message: '檔案格式不符合，請檢查一下',
+            type: 'error',
+            duration: 3 * 1000
+          })
+        })
+      
     },
     prev () {
       // 清空上傳檔案
@@ -103,6 +130,9 @@ export default {
     },
     etlTableList () {
       return this.$store.state.dataManagement.etlTableList
+    },
+    importedFileList () {
+      return this.$store.state.dataManagement.importedFileList
     }
   }
 }

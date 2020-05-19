@@ -90,7 +90,7 @@ export default {
       if (this.etlTableList.length === 0) return []
       return this.etlTableList.map((element, index) => {
         return {
-          name: element.name,
+          name: element.primaryAlias,
           value: index
         }
       })

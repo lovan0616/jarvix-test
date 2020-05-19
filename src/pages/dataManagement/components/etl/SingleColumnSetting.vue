@@ -107,7 +107,7 @@
   </div>
 </template>
 <script>
-import { statsTypeOptionList, booleanOptionList, datetimeFormatOptionList } from '@/utils/general'
+import { statsTypeOptionList, booleanOptionList } from '@/utils/general'
 import InputVerify from '@/components/InputVerify'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'

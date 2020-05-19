@@ -1,6 +1,9 @@
 import Vue from 'vue'
 
 export default {
+  updateImportedFileList (state, file) {
+    state.importedFileList.push(file)
+  },
   updateUploadFileList (state, data) {
     state.uploadFileList = data
   },
