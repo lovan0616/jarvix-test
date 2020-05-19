@@ -71,6 +71,7 @@ import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
 import { createDataSource, deleteDataSourceById, renameDataSourceById } from '@/API/DataSource'
 import { mapGetters } from 'vuex'
+import { Message } from 'element-ui'
 
 export default {
   name: 'DataSourceList',
@@ -151,10 +152,12 @@ export default {
       createDataSource(dataSourceInfo)
         .then(response => {
           this.fetchData()
-            .then(() => {
-              this.closeFileUploadDialog()
-              resolve()
-            })
+          this.closeFileUploadDialog()
+          Message({
+            message: this.$t('message.builded'),
+            type: 'success',
+            duration: 3 * 1000
+          })
         }).catch(() => {
           resolve()
         })
@@ -167,8 +170,6 @@ export default {
               this.cancelDelete()
               resolve()
             })
-        }).catch(() => {
-          resolve()
         })
     },
     cancelDelete () {

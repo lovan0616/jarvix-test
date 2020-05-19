@@ -3,7 +3,7 @@
     <div class="dialog-container">
       <transition name="fade" mode="out-in">
         <div class="create-data-source">
-            <div class="dialog-title">{{ $t('editing.newData') }}</div>
+            <div class="dialog-title">{{ $t('editing.newDataSource') }}</div>
             <div class="dialog-body">
             <div class="input-block-container">
                 <input-block class="file-info-input-block"
@@ -17,12 +17,15 @@
             <div class="dialog-footer">
             <div class="dialog-button-block">
                 <button class="btn btn-outline"
-                  @click="cancelFileUpload"
+                  @click="cancelBuilt"
                   >{{ $t('button.cancel') }}</button>
                 <button class="btn btn-default"
                   :disabled="isProcessing"
                   @click="built"
-                  >{{ $t('button.built') }}</button>
+                >
+                  <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>{{ $t('button.processing') }}</span>
+                  <span v-else>{{ $t('button.built') }}</span>
+                </button>
             </div>
             </div>
         </div>
@@ -51,7 +54,7 @@ export default {
     }
   },
   methods: {
-    cancelFileUpload () {
+    cancelBuilt () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     built () {
@@ -63,7 +66,6 @@ export default {
         confirmResult.then(() => {
           this.isProcessing = false
         })
-        // this.$emit('confirm', { groupId: this.currentGroupId, name: this.dataSourceInfo.name })
       })
     }
   },
