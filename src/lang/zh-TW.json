@@ -72,7 +72,8 @@
     "columnSetChosenEmpty": "尚未選擇任何欄位",
     "memberDeleteSuccess": "成員刪除成功",
     "etlSuccess": "資料預處理成功，開始建置資料表",
-    "etlSettingTempSave": "設定已經暫存"
+    "etlSettingTempSave": "設定已經暫存",
+    "calculatingPleaseTryLater": "資料計算中，請稍後再試"
   },
   "guiding": {
     "prevStep": "上一步",

@@ -19,10 +19,11 @@
       </div>
       <empty-info-block
         v-else
-        :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
+        :msg="emptyMsg"
       ></empty-info-block>
     </div>
-    <div class="overview-section">
+    <!--暫時不顯示高度關聯區塊-->
+    <!-- <div class="overview-section">
       <div class="title">
         {{ $t('resultDescription.strongCorrelationColumns') }}
         <span class="nav-item nav-function tooltip-container">
@@ -41,7 +42,7 @@
         :loading="isLoading"
         :empty-message="hasError ? $t('message.systemIsError') : $t('resultDescription.noStrongCorrelationColumns')"
       />
-    </div>
+    </div> -->
   </section>
 </template>
 
@@ -50,24 +51,24 @@ import DisplayHeatMapChart from '@/pages/datasourceDashboard/components/DisplayH
 import CrudTable from '@/components/table/CrudTable'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
-const dummyData = {
-  overview: {
-    data: [-1, 0.1, 0.4, -0.4, 0.7, 0.3, -0.2, 0.0, 0.3, 0.1, 0.3, 0.6, -0.9, 0.5, 0.3, -0.6, 0.3, 0.1, 0.3, 0.6],
-    columnNameList: ['apple22222222', 'dddddddddd', 'c', 'd']
-  },
-  top: [
-    {
-      degree: '0.88',
-      fistColumnName: 'column a erewrererererererwrewrewrewr',
-      secondColumnName: 'column bewrewrererererererewrewrewrrewr'
-    },
-    {
-      degree: '0.98',
-      fistColumnName: 'column a',
-      secondColumnName: 'column b'
-    }
-  ]
-}
+// const dummyData = {
+//   overview: {
+//     data: [-1, 0.1, 0.4, -0.4, 0.7, 0.3, -0.2, 0.0, 0.3, 0.1, 0.3, 0.6, -0.9, 0.5, 0.3, -0.6, 0.3, 0.1, 0.3, 0.6],
+//     columnNameList: ['apple22222222', 'dddddddddd', 'c', 'd']
+//   },
+//   top: [
+//     {
+//       degree: '0.88',
+//       fistColumnName: 'column a erewrererererererwrewrewrewr',
+//       secondColumnName: 'column bewrewrererererererewrewrewrrewr'
+//     },
+//     {
+//       degree: '0.98',
+//       fistColumnName: 'column a',
+//       secondColumnName: 'column b'
+//     }
+//   ]
+// }
 
 export default {
   components: {
@@ -85,6 +86,7 @@ export default {
     return {
       componentData: null,
       isLoading: true,
+      isCalculating: false,
       hasError: false,
       tableHeaders: [
         {
@@ -118,14 +120,27 @@ export default {
   mounted () {
     this.fetchData()
   },
+  computed: {
+    emptyMsg () {
+      if (this.isCalculating) return this.$t('message.calculatingPleaseTryLater')
+      this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
+    }
+  },
   methods: {
     fetchData () {
       this.isLoading = true
-      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', {id: this.dataFrameId})
+      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { id: this.dataFrameId })
         .then(response => {
-          const columnNameList = dummyData.overview.columnNameList
-          const columnDataList = dummyData.overview.data
-          // TODO: 處理從 API 取得的資料
+          const columnNameList = response.columnNameList
+          const columnDataList = response.data
+          // 處理舊資料需被計算的狀態
+          if (response.statusType === 'Ready' || response.statusType === 'Process') {
+            this.isCalculating = true
+            return
+          }
+
+          if (!columnNameList || !columnDataList) return
+
           this.componentData = {
             dataset: {
               data: this.formatData(columnDataList, columnNameList),
@@ -133,16 +148,18 @@ export default {
               range: [0, 1]
             }
           }
-          this.correlationData = dummyData.top
-          //  TODO: 增加關聯欄位間的正確 icon
-          this.correlationData = this.correlationData.map(data => ({
-            ...data,
-            icon: 'arrow-right'
-          }))
-          this.isLoading = false
+
+          // this.correlationData = dummyData.top
+          // //  TODO: 增加關聯欄位間的正確 icon
+          // this.correlationData = this.correlationData.map(data => ({
+          //   ...data,
+          //   icon: 'arrow-right'
+          // }))
         })
         .catch(() => {
           this.hasError = true
+        })
+        .finally(() => {
           this.isLoading = false
         })
     },
