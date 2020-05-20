@@ -7,14 +7,7 @@
         <label class="input-label" for="">{{ $t('etl.dataType') }}</label>
         <default-select class="data-type-select"
           v-model="editColumnInfo.statsType"
-          :option-list="statsTypeOptionList"
-          @change="changeStatsType(editColumnInfo, editColumnInfo.statsType)"
-        ></default-select>
-        <default-select class="datetime-format-select"
-          v-if="editColumnInfo.statsType === 'DATETIME'"
-          v-model="editColumnInfo.datetimeFormat"
-          :placeholder="$t('etl.datetimeFormat')"
-          :option-list="datetimeFormatOptionList"
+          :option-list="statsTypeOptions"
           @change="changeStatsType(editColumnInfo, editColumnInfo.statsType)"
         ></default-select>
       </div>
@@ -129,35 +122,19 @@ export default {
   data () {
     return {
       editColumnInfo: JSON.parse(JSON.stringify(this.columnInfo)),
-      statsTypeOptionList,
       booleanOptionList,
       dataSummaryOption: [],
-      // TODO 確認時間格式
-      datetimeFormatOptionList: [
-        { name: 'YYYY/MM/DD', value: 'YYYY/MM/DD' },
-        { name: 'yyyy-mm-dd', value: 'yyyy-mm-dd' }
-      ],
       categoryOptionList: [
-        { value: '1', name: this.$t('etl.commonValue1') },
-        { value: '2', name: this.$t('etl.commonValue2') },
-        { value: '3', name: this.$t('etl.commonValue3') },
-        { value: '4', name: this.$t('etl.commonValue4') },
-        { value: '5', name: this.$t('etl.commonValue5') },
         { value: 'CUSTOM', name: this.$t('etl.custom') }
       ],
       numericOptionList: [
-        { value: 'max', name: this.$t('etl.maxValue') },
-        { value: 'min', name: this.$t('etl.minValue') },
-        { value: 'avg', name: this.$t('etl.avgValue') },
-        { value: 'sd', name: this.$t('etl.sdValue') },
+        { value: 'MAX', name: this.$t('etl.maxValue') },
+        { value: 'MIN', name: this.$t('etl.minValue') },
+        { value: 'AVG', name: this.$t('etl.avgValue') },
+        { value: 'STD', name: this.$t('etl.sdValue') },
         { value: 'CUSTOM', name: this.$t('etl.custom') }
       ],
       datetimeOptionList: [
-        { value: '1', name: this.$t('etl.commonValue1') },
-        { value: '2', name: this.$t('etl.commonValue2') },
-        { value: '3', name: this.$t('etl.commonValue3') },
-        { value: '4', name: this.$t('etl.commonValue4') },
-        { value: '5', name: this.$t('etl.commonValue5') },
         { value: 'CUSTOM', name: this.$t('etl.custom') }
       ],
       replaceValueInputType: '',
@@ -191,6 +168,13 @@ export default {
     })
   },
   computed: {
+    statsTypeOptions () {
+      return statsTypeOptionList.filter((option) => {
+        return this.editColumnInfo.originalStatsType === 'DATETIME'
+          ? option
+          : option.value !== 'DATETIME'
+      })
+    },
     replaceTypeOptionList () {
       return [
         { value: null, name: this.$t('etl.nullAction') },
