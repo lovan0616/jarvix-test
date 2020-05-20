@@ -1,7 +1,7 @@
 <template>
   <div class="page-preview-bookmark">
     <template v-if="dataSourceId">
-      <div class="header">{{$t('resultDescription.dataSourceIntro')}}</div>
+      <div class="bookmark-header">{{$t('resultDescription.dataSourceIntro')}}</div>
       <div class="result-board">
         <div
           v-if="dataSourceTables.length > 0"
@@ -267,22 +267,22 @@ export default {
     },
     fetchDataFrameData (id, page = 0, resetPagination = false) {
       this.isProcessing = true
-      this.$store.dispatch('dataSource/getDataFrameData', {id, page})
-        .then(response => {
+      this.$store.dispatch('dataSource/getDataFrameIntro', {id, page})
+        .then(([dataFrameData, dataColumnSummary]) => {
           if (resetPagination) {
-            this.pagination = response.pagination
+            this.pagination = dataFrameData.pagination
             this.dataFrameOverviewData = {
-              totalRows: response.pagination.totalItems,
-              totalColumns: response.columns.length
+              totalRows: dataFrameData.pagination.totalItems,
+              totalColumns: dataFrameData.columns.length
             }
           }
           this.dataSourceTableData = {
             columns: {
-              titles: response.columns,
-              summary: dummySummaryData
+              titles: dataFrameData.columns,
+              summary: dataColumnSummary || dummySummaryData
             },
-            data: response.data,
-            index: [...Array(response.data.length)].map((x, i) => i)
+            data: dataFrameData.data,
+            index: [...Array(dataFrameData.data.length)].map((x, i) => i)
           }
           this.isLoading = false
           this.isProcessing = false
@@ -323,7 +323,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-preview-bookmark {
-  .header {
+  .bookmark-header {
     font-weight: 600;
     font-size: 24px;
     line-height: 32px;
