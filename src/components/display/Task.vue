@@ -238,10 +238,7 @@ export default {
             // 新資料移除第一列
             taskData.dataset.data.shift()
             // 接上新資料
-            let newDatasetData = []
-            for (let i = 0; i < this.componentData.dataset.columns.length; i++) {
-              newDatasetData.push(null)
-            }
+            let newDatasetData = [...Array(this.componentData.dataset.columns.length)].map(element => null)
             taskData.dataset.data = taskData.dataset.data.map(element => {
               let arrayData = JSON.parse(JSON.stringify(newDatasetData))
               for (let i = 0; i < element.length; i++) {
@@ -273,10 +270,7 @@ export default {
             columnIndexArray.push(columnIndex)
           }
           // 新資料的空值矩陣，處理新 column 可能長度不一致的問題
-          let newDatasetData = []
-          for (let i = 0; i < this.componentData.dataset.columns.length; i++) {
-            newDatasetData.push(null)
-          }
+          let newDatasetData = [...Array(this.componentData.dataset.columns.length)].map(element => null)
           // 接上新資料
           taskData.dataset.data = taskData.dataset.data.map(element => {
             let arrayData = JSON.parse(JSON.stringify(newDatasetData))
