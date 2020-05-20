@@ -20,11 +20,11 @@
       ></single-column-setting>
     </div>
     <div class="section column-summary">
-      <!-- TODO 待串接資料 -->
-      <div class="title">資料概要</div>
-      <dl v-for="i in 3" :key="i">
-        <dt>第{{i}}常見value</dt>
-        <dd>30%</dd>
+      <!-- TODO 替換為 data-summary componente -->
+      <div class="title">{{ $t('etl.dataSummary') }}</div>
+      <dl v-for="(value, key) in dataSummary" :key="key">
+        <dt>{{ key }}</dt>
+        <dd>{{ value }}</dd>
       </dl>
     </div>
   </div>
@@ -62,6 +62,9 @@ export default {
     },
     currentColumnInfo () {
       return this.etlTableList[this.currentTableIndex].columns[this.currentColumnIndex]
+    },
+    dataSummary () {
+      return this.currentColumnInfo.dataSummary.data[0].data
     }
   }
 }
@@ -95,6 +98,8 @@ export default {
       padding: 12px 16px;
       height: fit-content;
       margin-left: 20px;
+      max-height: 297px; // 最高與 etl block 同高
+      overflow: auto;
 
       dl {
         display: flex;
