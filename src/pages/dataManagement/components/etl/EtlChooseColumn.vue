@@ -45,7 +45,7 @@
                   <input
                     type="checkbox"
                     :name="'column' + index"
-                    :checked="column.active"
+                    :checked="column[index].active"
                     @change="toggleColumn(index)"
                   >
                   <div class="checkbox-square"></div>
@@ -56,7 +56,7 @@
             </div>
             <div class="header">
               <span>
-                {{ column.statsType }}
+                {{ column[index].statsType }}
               </span>
               <a href="javascript:void(0)" class="link"
                 @click="chooseColumn(index)"
@@ -74,7 +74,6 @@
   </div>
 </template>
 <script>
-import FakePaginationTable from './FakePaginationTable'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
@@ -82,7 +81,6 @@ import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumn
 export default {
   name: 'EtlChooseColumn',
   components: {
-    FakePaginationTable,
     DefaultSelect,
     PaginationTable,
     DataColumnSummary
@@ -132,8 +130,10 @@ export default {
     },
     currentTableInfo () {
       const tableInfo = this.etlTableList[this.currentTableIndex]
-      tableInfo.data = tableInfo.rowData
-      delete tableInfo.rowData
+      if (tableInfo.rowData) {
+        tableInfo.data = tableInfo.rowData
+        delete tableInfo.rowData
+      }
       tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
       return tableInfo
     },
