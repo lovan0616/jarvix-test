@@ -177,7 +177,7 @@ export default {
     },
     createConnection () {
       createDatabaseConnection({
-        dataSourceId: this.dataSourceId,
+        groupId: this.currentGroupId,
         ...this.connectInfo
       }).then(response => {
         this.$emit('next', response)

@@ -79,7 +79,7 @@ export default {
   methods: {
     fetchData () {
       this.isLoading = true
-      getConnectionInfoList(this.dataSourceId).then(response => {
+      getConnectionInfoList(this.groupId).then(response => {
         if (response.length > 0) {
           this.connectionList = response
         } else {
@@ -103,6 +103,11 @@ export default {
     },
     prevStep () {
       this.$store.commit('dataManagement/updateCurrentUploadDataType', null)
+    }
+  },
+  computed: {
+    groupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
     }
   }
 }
