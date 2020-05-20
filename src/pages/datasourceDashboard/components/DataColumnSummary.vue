@@ -23,24 +23,14 @@
       >
         <li
           class="list-item"
-          v-for="item in dataBlock.data"
-          :key="item.name + item.value"
+          v-for="(value, name) in dataBlock.data"
+          :key="name + value"
         >
           <div class="list-item-name">
-             <el-tooltip
-              slot="label"
-              :enterable="false"
-              :content="item.name">
-              <span>{{item.name}}</span>
-            </el-tooltip>
+            {{name}}
           </div>
           <div class="list-item-value">
-            <el-tooltip
-              slot="label"
-              :enterable="false"
-              :content="item.value">
-              <span>{{item.value}}</span>
-            </el-tooltip>
+            {{value}}
           </div>
         </li>
       </ul>

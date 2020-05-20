@@ -21,26 +21,38 @@
         </dl>
       </div>
     </div>
-    <div class="section data-column">
-      <!-- TODO 更換為 PaginationTable -->
-      <fake-pagination-table :current-table-index="currentTableIndex" >
+    <div
+      class="section data-column"
+      v-if="currentTableInfo"
+    >
+      <!--TODO: 上版前需設定 :min-column-width="'270px'"-->
+      <pagination-table
+        class="board-body-section"
+        :dataset="currentTableInfo"
+        :min-column-width="'270px'"
+        :current-table-index="currentTableIndex"
+      >
+        <!--TODO: 上版前需把註解移除-->
         <template v-slot="{ column, index }">
           <div class="header-block">
             <div class="header">
               <span class="text">
-                {{ column.originalName }}
+                {{ column[index].primaryAlias }}
               </span>
+
               <div class="checkbox">
                 <label class="checkbox-label">
                   <input
-                    type="checkbox" :name="'column' + index"
-                    v-model="column.active"
+                    type="checkbox"
+                    :name="'column' + index"
+                    :checked="column.active"
                     @change="toggleColumn(index)"
                   >
                   <div class="checkbox-square"></div>
                 </label>
-                <span class="checkbox-text">{{ $t('etl.selectColumn') }}</span>
+                {{ $t('etl.selectColumn') }}
               </div>
+
             </div>
             <div class="header">
               <span>
@@ -50,21 +62,30 @@
                 @click="chooseColumn(index)"
               >{{ $t('etl.advance') }}</a>
             </div>
+            <div class="summary">
+              <!-- <data-column-summary
+                :summary-data="currentTableSummary[index]"
+              /> -->
+            </div>
           </div>
         </template>
-      </fake-pagination-table>
+      </pagination-table>
     </div>
   </div>
 </template>
 <script>
 import FakePaginationTable from './FakePaginationTable'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import PaginationTable from '@/components/table/PaginationTable'
+import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 
 export default {
   name: 'EtlChooseColumn',
   components: {
     FakePaginationTable,
-    DefaultSelect
+    DefaultSelect,
+    PaginationTable,
+    DataColumnSummary
   },
   data () {
     return {
@@ -110,7 +131,14 @@ export default {
       return this.$store.state.dataManagement.currentColumnIndex
     },
     currentTableInfo () {
-      return this.etlTableList[this.currentTableIndex]
+      const tableInfo = this.etlTableList[this.currentTableIndex]
+      tableInfo.data = tableInfo.rowData
+      delete tableInfo.rowData
+      tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
+      return tableInfo
+    },
+    currentTableSummary () {
+      return this.currentTableInfo.columns.map(column => column.dataSummary)
     }
   }
 }
@@ -210,6 +238,23 @@ export default {
         padding-left: 10px;
       }
     }
+
+    .checkbox-label {
+      margin-right: 8px;
+    }
+
+    .text {
+      width: calc(100% - 52px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .summary {
+    padding: 10px;
+    overflow: auto;
+    height: calc(100% - 44px);
   }
 }
 </style>

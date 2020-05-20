@@ -18,7 +18,7 @@
         v-for="(col, i) in dataset.columns.titles || dataset.columns"
         :key="i"
         :prop="i.toString()"
-        :label="(typeof col === 'number') ? col.toString() : col"
+        :label="(typeof col === 'number') ? col.toString() : col.primaryAlias"
         :width="columnWidth"
         :min-width="minColumnWidth"
       >
@@ -146,29 +146,29 @@ export default {
   }
 
   /* TODO: 上版前需把註解移除 */
-  // /deep/ .sy-table.el-table {
-  //   border: 1px solid #515959;
-  //   th, td {
-  //     border-bottom: 1px solid #515959;
-  //     border-right: 1px solid #515959;
-  //   }
-  // }
+  /deep/ .sy-table.el-table {
+    border: 1px solid #515959;
+    th, td {
+      border-bottom: 1px solid #515959;
+      border-right: 1px solid #515959;
+    }
+  }
 
-  // /deep/ .el-table th>.cell {
-  //   padding: 0;
-  // }
+  /deep/ .el-table th>.cell {
+    padding: 0;
+  }
 
-  // /deep/ .el-table th {
-  //   padding: 0;
-  // }
+  /deep/ .el-table th {
+    padding: 0;
+  }
 
-  // /deep/ .el-table thead th>.cell {
-  //   overflow: visible;
-  // }
+  /deep/ .el-table thead th>.cell {
+    overflow: visible;
+  }
 
-  // /deep/ .el-table thead th {
-  //   overflow: visible;
-  // }
+  /deep/ .el-table thead th {
+    overflow: visible;
+  }
 }
 </style>
 <style src="@/styles/element-ui/el-pagination.scss" lang="scss"></style>
