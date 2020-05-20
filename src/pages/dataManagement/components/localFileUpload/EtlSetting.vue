@@ -38,6 +38,7 @@ import { dataSourcePreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
 import EtlChooseColumn from '../etl/EtlChooseColumn'
 import EtlColumnSetting from '../etl/EtlColumnSetting'
+import { Message } from 'element-ui'
 
 export default {
   name: 'EtlSetting',
@@ -75,6 +76,11 @@ export default {
         })
         .catch(() => {
           // 若有資料表補值失敗 publicRequest 將跳出錯誤訊息
+          Message({
+            message: this.$t('message.analysisFailed'),
+            type: 'error',
+            duration: 3 * 1000
+          })
         })
     }
   },

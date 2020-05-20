@@ -72,7 +72,8 @@
     "columnSetChosenEmpty": "尚未選擇任何欄位",
     "memberDeleteSuccess": "成員刪除成功",
     "etlSuccess": "資料預處理成功，開始建置資料表",
-    "etlSettingTempSave": "設定已經暫存"
+    "etlSettingTempSave": "設定已經暫存",
+    "analysisFailed": "檔案解析發生錯誤"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -333,7 +334,8 @@
     "maxValue": "最大值",
     "minValue": "最小值",
     "avgValue": "平均值",
-    "sdValue": "標準差"
+    "sdValue": "標準差",
+    "dataSummary": "資料概要"
   },
   "feature": {
     "value": "數值",

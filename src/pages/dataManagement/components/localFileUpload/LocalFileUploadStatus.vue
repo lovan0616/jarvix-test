@@ -29,10 +29,10 @@
         <button class="btn btn-outline" type="button"
           @click="prev"
         >{{ $t('button.chooseFileUpload') }}</button>
-        <button class="btn btn-default"
+        <!-- <button class="btn btn-default"
           :disabled="successList.length === 0"
           @click="buildData"
-        >{{ $t('editing.buildImmediately') }}</button>
+        >{{ $t('editing.buildImmediately') }}</button> -->
         <button class="btn btn-default"
           :disabled="successList.length === 0"
           @click="next"
@@ -59,7 +59,7 @@ export default {
   data () {
     return {
       uploadStatus,
-      dataSourceId: parseInt(this.$route.params.id),
+      dataSourceId: parseInt(this.$route.params.id)
     }
   },
   mounted () {
@@ -77,25 +77,24 @@ export default {
 
       Promise.all(promiseList)
         .then((response) => {
-          console.log(response)
           response.forEach(file => {
             this.$store.commit('dataManagement/updateEtlTableList', file)
           })
           this.$emit('next')
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
           Message({
-            message: '檔案格式不符合，請檢查一下',
+            message: this.$t('message.analysisFailed'),
             type: 'error',
             duration: 3 * 1000
           })
         })
-      
     },
     prev () {
       // 清空上傳檔案
       this.$store.commit('dataManagement/updateUploadFileList', [])
+      // 清空 imported table list
+      this.$store.commit('dataManagement/clearImportedTableList')
       // 清空 etl table list
       this.$store.commit('dataManagement/clearEtlTableList')
       this.$emit('prev')
@@ -109,10 +108,14 @@ export default {
       Promise.all(promiseList)
         .then(() => {
           // 全部資料表都設置成功才進入 ConfirmPage 結束導入流程
-          this.$emit('dataBuilded')
+          this.$emit('dataBuilt')
         })
         .catch(() => {
-          // 若有資料表補值失敗 publicRequest 將跳出錯誤訊息
+          Message({
+            message: this.$t('message.analysisFailed'),
+            type: 'error',
+            duration: 3 * 1000
+          })
         })
     }
   },
