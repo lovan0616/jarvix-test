@@ -73,7 +73,8 @@
     "memberDeleteSuccess": "成员删除成功",
     "etlSuccess": "资料预处理成功，开始建置资料表",
     "etlSettingTempSave": "设定已经暂存",
-    "analysisFailed": "档案解析发生错误"
+    "analysisFailed": "档案解析发生错误",
+    "confirmColumnStateTypeChange": "此变更将会清除进阶设定内容，您确认要进行变更？"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -334,7 +335,8 @@
     "maxValue": "最大值",
     "minValue": "最小值",
     "avgValue": "平均值",
-    "sdValue": "标准差"
+    "sdValue": "标准差",
+    "dataSummary": "材料概述"
   },
   "feature": {
     "value": "数值",
@@ -1424,7 +1426,13 @@
     "source": "来源",
     "target": "目标",
     "value": "数值",
-    "feature": "自定义栏位"
+    "feature": "自定义栏位",
+    "average": "平均值",
+    "standardDeviation": "标准差",
+    "const": "定值",
+    "distinctCount": "不重复值",
+    "range": "范围",
+    "sum": "总合值"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",

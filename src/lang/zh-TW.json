@@ -73,7 +73,8 @@
     "memberDeleteSuccess": "成員刪除成功",
     "etlSuccess": "資料預處理成功，開始建置資料表",
     "etlSettingTempSave": "設定已經暫存",
-    "analysisFailed": "檔案解析發生錯誤"
+    "analysisFailed": "檔案解析發生錯誤",
+    "confirmColumnStateTypeChange": "此變更將會清除進階設定內容，您確認要進行變更？"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -1425,7 +1426,13 @@
     "source": "來源",
     "target": "目標",
     "value": "數值",
-    "feature": "自定義欄位"
+    "feature": "自定義欄位",
+    "average": "平均值",
+    "standardDeviation": "標準差",
+    "const": "定值",
+    "distinctCount": "不重複值",
+    "range": "範圍",
+    "sum": "總合值"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",

@@ -26,7 +26,6 @@
       class="section data-column"
       v-if="currentTableInfo"
     >
-      <!--TODO: 上版前需設定 :min-column-width="'270px'"-->
       <pagination-table
         class="board-body-section"
         :dataset="currentTableInfo"
@@ -56,17 +55,18 @@
 
             </div>
             <div class="header">
-              <span>
-                {{ column[index].statsType }}
-              </span>
+              <category-select
+                :column-info="getColumnInfo(index)"
+                @updateInfo="updateSetting"
+              />
               <a href="javascript:void(0)" class="link"
                 @click="chooseColumn(index)"
               >{{ $t('etl.advance') }}</a>
             </div>
             <div class="summary">
-              <!-- <data-column-summary
+              <data-column-summary
                 :summary-data="currentTableSummary[index]"
-              /> -->
+              />
             </div>
           </div>
         </template>
@@ -78,13 +78,15 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
+import CategorySelect from './CategorySelect'
 
 export default {
   name: 'EtlChooseColumn',
   components: {
     DefaultSelect,
     PaginationTable,
-    DataColumnSummary
+    DataColumnSummary,
+    CategorySelect
   },
   data () {
     return {
@@ -102,6 +104,16 @@ export default {
       this.$store.commit('dataManagement/chooseColumn', {
         dataFrameIndex: this.currentTableIndex,
         columnIndex
+      })
+    },
+    getColumnInfo (columnIndex) {
+      return this.currentTableInfo.columns[columnIndex]
+    },
+    updateSetting (info) {
+      this.$store.commit('dataManagement/updateReplaceValue', {
+        tableIndex: this.currentTableIndex,
+        columnIndex: info.index,
+        info
       })
     }
   },
@@ -236,7 +248,7 @@ export default {
 }
 
 .header-block {
-  height: 210px;
+  height: 255px;
 
   .header {
     padding: 10px;
@@ -265,12 +277,16 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
+    .link {
+      line-height: 40px;
+    }
   }
 
   .summary {
     padding: 10px;
     overflow: auto;
-    height: calc(100% - 44px);
+    height: calc(100% - 105px);
   }
 }
 </style>

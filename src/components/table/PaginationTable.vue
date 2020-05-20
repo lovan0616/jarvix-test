@@ -12,6 +12,7 @@
       <el-table-column
         type="index"
         :width="indexWidth"
+        align="center"
       >
       </el-table-column>
       <el-table-column
@@ -71,7 +72,7 @@ export default {
     },
     indexWidth: {
       type: Number,
-      default: 80
+      default: 40
     },
     columnWidth: {
       type: String,
