@@ -9,13 +9,14 @@
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
+      <!-- TODO 使用 currentColumnInfo 控制元件 show/hide -->
       <etl-choose-column
-        v-if="step === 'choose-column'"
+        v-show="step === 'choose-column'"
         @advance="step = 'column-setting'"
       >
       </etl-choose-column>
       <etl-column-setting
-        v-else
+        v-show="step === 'column-setting'"
         @back="step = 'choose-column'"
       >
       </etl-column-setting>

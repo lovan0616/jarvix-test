@@ -2,8 +2,9 @@
   <div class="etl-choose-column">
     <div class="section data-frame">
       <div class="data-frame-info">
-        <div class="title">{{ $t('etl.currentDataFrame') }}</div>
+        <div class="title">{{ $t('etl.currentDataFrame') }}：</div>
         <default-select
+          size="mini"
           v-model="currentTableIndex"
           :option-list="tableOptionList"
           @change="chooseTable"
@@ -145,16 +146,31 @@ export default {
 </script>
 <style lang="scss" scoped>
 .etl-choose-column {
+  background: rgba(50, 58, 58, 0.95);
+  padding: 20px;
+  border-radius: 5px;
   .section {
     &.data-frame {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding-bottom: 10px;
       .data-frame-info {
         display: flex;
         align-items: center;
+        font-size: 14px;
+        >>> .sy-select {
+          border: 1px solid #2AD2E2;
+          border-radius: 5px;
+          .el-input {
+            .el-input__inner {
+              font-size: 14px;
+            }
+          }
+        }
       }
       .data-content-info {
+        font-size: 14px;
         dl:not(:last-child) {
           margin-right: 20px;
         }
