@@ -34,8 +34,6 @@ export default {
     state.fileUploadSuccess = data
   },
   updateEtlTableList (state, data) {
-    state.etlTableList = []
-
     let columnList = data.columns
     if (columnList.length > 0) {
       columnList.forEach((element, index) => {
