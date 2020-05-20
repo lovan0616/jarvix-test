@@ -1,47 +1,43 @@
 <template>
   <div class="file-upload-dialog full-page-dialog">
     <div class="dialog-container">
-      <transition name="fade" mode="out-in">
-        <div class="create-data-source">
-            <div class="dialog-title">{{ $t('editing.newDataSource') }}</div>
-            <div class="dialog-body">
+      <div class="create-data-source">
+          <div class="dialog-title">{{ $t('editing.newDataSource') }}</div>
+          <div class="dialog-body">
             <div class="input-block-container">
                 <input-block class="file-info-input-block"
-                :label="$t('editing.dataSourceName')"
-                name="dataSourceName"
-                v-model="dataSourceInfo.name"
-                v-validate="`required|max:${max}`"
+                  :label="$t('editing.dataSourceName')"
+                  name="dataSourceName"
+                  v-model="dataSourceInfo.name"
+                  v-validate="`required|max:${max}`"
                 ></input-block>
             </div>
-            </div>
-            <div class="dialog-footer">
+          </div>
+          <div class="dialog-footer">
             <div class="dialog-button-block">
-                <button class="btn btn-outline"
-                  @click="cancelBuilt"
-                  >{{ $t('button.cancel') }}</button>
-                <button class="btn btn-default"
-                  :disabled="isProcessing"
-                  @click="built"
-                >
-                  <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>{{ $t('button.processing') }}</span>
-                  <span v-else>{{ $t('button.built') }}</span>
-                </button>
+              <button class="btn btn-outline"
+                @click="cancelBuilt"
+                >{{ $t('button.cancel') }}</button>
+              <button class="btn btn-default"
+                :disabled="isProcessing"
+                @click="built"
+              >
+                <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>{{ $t('button.processing') }}</span>
+                <span v-else>{{ $t('button.built') }}</span>
+              </button>
             </div>
-            </div>
-        </div>
-      </transition>
+          </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import SySelect from '@/components/select/SySelect'
 import InputBlock from '@/components/InputBlock'
 
 export default {
   inject: ['$validator'],
-  name: 'CreateDataSourceName',
+  name: 'CreateDataSource',
   components: {
-    SySelect,
     InputBlock
   },
   data () {
@@ -55,17 +51,14 @@ export default {
   },
   methods: {
     cancelBuilt () {
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+      this.$emit('close')
     },
     built () {
       this.$validator.validateAll().then(result => {
         if (!result) return
         this.isProcessing = true
         this.dataSourceInfo.groupId = this.currentGroupId
-        let confirmResult = new Promise(resolve => this.$emit('confirm', {resolve, dataSourceInfo: this.dataSourceInfo}))
-        confirmResult.then(() => {
-          this.isProcessing = false
-        })
+        this.$emit('confirm', this.dataSourceInfo)
       })
     }
   },

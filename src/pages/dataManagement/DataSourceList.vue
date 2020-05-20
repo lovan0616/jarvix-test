@@ -37,16 +37,11 @@
       >
       </data-table>
     </div>
-    <!-- <file-upload-dialog
+    <create-data-source
       v-if="showCreateDataSourceDialog"
-      @success="fetchData"
-      @close="closeFileUploadDialog"
-    ></file-upload-dialog> -->
-    <create-data-source-name
-      v-if="showCreateDataSourceDialog"
-      @confirm="createDataSourceName"
-      @close="closeFileUploadDialog"
-    ></create-data-source-name>
+      @confirm="newDataSource"
+      @close="closeCreateDataSourceDialog"
+    ></create-data-source>
     <confirm-delete-dialog
       v-if="showConfirmDeleteDialog"
       :title="$t('editing.deleteDataSource')"
@@ -66,7 +61,7 @@
 <script>
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
-import CreateDataSourceName from './components/CreateDataSourceName'
+import CreateDataSource from './components/CreateDataSource'
 import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
 import { createDataSource, deleteDataSourceById, renameDataSourceById } from '@/API/DataSource'
@@ -78,12 +73,13 @@ export default {
   components: {
     DataTable,
     FileUploadDialog,
-    CreateDataSourceName,
+    CreateDataSource,
     ConfirmDeleteDialog,
     ConfirmChangeNameDialog
   },
   data () {
     return {
+      showCreateDataSourceDialog: false,
       showConfirmDeleteDialog: false,
       showConfirmRenameDialog: false,
       deleteId: null,
@@ -135,10 +131,10 @@ export default {
         })
     },
     createDataSource () {
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
+      this.showCreateDataSourceDialog = true
     },
-    closeFileUploadDialog () {
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    closeCreateDataSourceDialog () {
+      this.showCreateDataSourceDialog = false
     },
     confirmRename (dataInfo) {
       this.editDataSource = dataInfo
@@ -148,18 +144,18 @@ export default {
       this.deleteId = dataObj.id
       this.showConfirmDeleteDialog = true
     },
-    createDataSourceName ({resolve, dataSourceInfo}) {
+    newDataSource (dataSourceInfo) {
       createDataSource(dataSourceInfo)
         .then(response => {
           this.fetchData()
-          this.closeFileUploadDialog()
-          Message({
-            message: this.$t('message.builded'),
-            type: 'success',
-            duration: 3 * 1000
-          })
-        }).catch(() => {
-          resolve()
+            .then(() => {
+              this.closeCreateDataSourceDialog()
+              Message({
+                message: this.$t('message.builded'),
+                type: 'success',
+                duration: 3 * 1000
+              })
+            })
         })
     },
     deleteDataSource (resolve) {
@@ -170,6 +166,8 @@ export default {
               this.cancelDelete()
               resolve()
             })
+        }).catch(() => {
+          resolve()
         })
     },
     cancelDelete () {
@@ -241,9 +239,6 @@ export default {
       ]
     },
     ...mapGetters('dataSource', ['dataSourceList']),
-    showCreateDataSourceDialog () {
-      return this.$store.state.dataManagement.showCreateDataSourceDialog
-    },
     isDataSourceBuilding () {
       return this.$store.getters['dataSource/isDataSourceBuilding']
     },
