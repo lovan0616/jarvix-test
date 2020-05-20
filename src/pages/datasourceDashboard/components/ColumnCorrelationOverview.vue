@@ -52,8 +52,8 @@ import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 const dummyData = {
   overview: {
-    data: [['apple22222222', 'apple22222222', -1], ['dddddddddd', 'apple22222222', 0.1], ['c', 'apple22222222', 0.4], ['d', 'apple22222222', -0.4], ['apple22222222', 'dddddddddd', 0.7], ['dddddddddd', 'dddddddddd', 0.3], ['c', 'dddddddddd', -0.2], ['d', 'dddddddddd', 0.0], ['apple22222222', 'c', 0.3], ['dddddddddd', 'c', 0.1], ['c', 'c', 0.3], ['d', 'c', 0.6], ['apple22222222', 'd', -0.9], ['dddddddddd', 'd', 0.5], ['c', 'd', 0.3], ['d', 'd', -0.6], ['apple22222222', 'e', 0.3], ['dddddddddd', 'e', 0.1], ['c', 'e', 0.3], ['d', 'e', 0.6]],
-    index: [['apple22222222', 'dddddddddd', 'c', 'd'], ['apple22222222', 'dddddddddd', 'c', 'd', 'e']]
+    data: [-1, 0.1, 0.4, -0.4, 0.7, 0.3, -0.2, 0.0, 0.3, 0.1, 0.3, 0.6, -0.9, 0.5, 0.3, -0.6, 0.3, 0.1, 0.3, 0.6],
+    columnNameList: ['apple22222222', 'dddddddddd', 'c', 'd']
   },
   top: [
     {
@@ -123,11 +123,13 @@ export default {
       this.isLoading = true
       this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', {id: this.dataFrameId})
         .then(response => {
+          const columnNameList = dummyData.overview.columnNameList
+          const columnDataList = dummyData.overview.data
           // TODO: 處理從 API 取得的資料
           this.componentData = {
             dataset: {
-              data: dummyData.overview.data,
-              index: dummyData.overview.index,
+              data: this.formatData(columnDataList, columnNameList),
+              index: [columnNameList, columnNameList],
               range: [0, 1]
             }
           }
@@ -143,6 +145,17 @@ export default {
           this.hasError = true
           this.isLoading = false
         })
+    },
+    formatData (dataList, nameList) {
+      const result = []
+      let dataIndex = 0
+      for (let y of nameList) {
+        for (let x of nameList) {
+          result.push([x, y, dataList[dataIndex]])
+          dataIndex += 1
+        }
+      }
+      return result
     }
   }
 }
