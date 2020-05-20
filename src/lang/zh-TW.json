@@ -336,7 +336,10 @@
     "minValue": "最小值",
     "avgValue": "平均值",
     "sdValue": "標準差",
-    "dataSummary": "資料概要"
+    "dataSummary": "資料概要",
+    "connectionHistory": "連線紀錄",
+    "newConnectionSetting": "新連線設定",
+    "emptyConnectionHistory": "沒有任何連線紀錄"
   },
   "feature": {
     "value": "數值",

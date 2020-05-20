@@ -26,12 +26,12 @@ export function getTableList (databaseConnectionId) {
 /**
  * get record connection list
  */
-export function getConnectionInfoList (dataSourceId) {
+export function getConnectionInfoList (groupId) {
   return request({
     url: `/database/connection`,
     method: 'GET',
     params: {
-      dataSourceId
+      groupId
     }
   })
 }
@@ -62,9 +62,9 @@ export function testOldConnection (connectionId) {
  * @param {Number} connectionId - 連線 id
  * @param {String} tableName - table 名稱
  */
-export function analyzeTable (connectionId, tableName) {
+export function analyzeTable (connectionId, dataSourceId, tableName) {
   return request({
-    url: `/database/connection/${connectionId}/table/${tableName}/analysis`,
+    url: `/database/connection/${connectionId}/dataSource/${dataSourceId}/table/${tableName}/analysis`,
     method: 'POST'
   })
 }

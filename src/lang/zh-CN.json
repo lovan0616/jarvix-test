@@ -336,7 +336,10 @@
     "minValue": "最小值",
     "avgValue": "平均值",
     "sdValue": "标准差",
-    "dataSummary": "材料概述"
+    "dataSummary": "材料概述",
+    "connectionHistory": "连线纪录",
+    "newConnectionSetting": "新连线设定",
+    "emptyConnectionHistory": "没有任何连线纪录"
   },
   "feature": {
     "value": "数值",
