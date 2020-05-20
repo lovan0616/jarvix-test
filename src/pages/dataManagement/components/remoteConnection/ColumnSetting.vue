@@ -11,17 +11,29 @@
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <etl-column-setting></etl-column-setting>
+      <etl-choose-column
+        v-show="step === 'choose-column'"
+        @advance="step = 'column-setting'"
+      >
+      </etl-choose-column>
+      <etl-column-setting
+        v-show="step === 'column-setting'"
+        @back="step = 'choose-column'"
+      >
+      </etl-column-setting>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
+          :disabled="isProcessing"
           @click="cancel"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-outline"
+          :disabled="isProcessing"
           @click="prevStep"
         >{{ $t('button.prevStep') }}</button>
         <button class="btn btn-default"
+          :disabled="isProcessing"
           @click="nextStep"
         >{{ $t('button.buildData') }}</button>
       </div>
@@ -37,13 +49,16 @@
 import { dataSourcePreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
 import EtlColumnSetting from '../etl/EtlColumnSetting'
+import EtlChooseColumn from '../etl/EtlChooseColumn'
+import { Message } from 'element-ui'
 
 export default {
   name: 'ColumnSetting',
   inject: ['$validator'],
   components: {
     UploadProcessBlock,
-    EtlColumnSetting
+    EtlColumnSetting,
+    EtlChooseColumn
   },
   props: {
     tableIdList: {
@@ -53,6 +68,7 @@ export default {
   },
   data () {
     return {
+      step: 'choose-column',
       isProcessing: false
     }
   },
@@ -61,6 +77,8 @@ export default {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     prevStep () {
+      // 將所選表格恢復成預設值
+      this.$store.commit('dataManagement/changeCurrentTableIndex', 0)
       this.$store.commit('dataManagement/clearEtlTableList')
       this.$emit('prev')
     },
@@ -79,11 +97,16 @@ export default {
       Promise.all(promiseList)
         .then(() => {
           this.$emit('next')
-          this.isProcessing = false
         })
-        .catch(err => {
+        .catch(() => {
+          Message({
+            message: this.$t('message.analysisFailed'),
+            type: 'error',
+            duration: 3 * 1000
+          })
+        })
+        .finally(() => {
           this.isProcessing = false
-          console.log(err)
         })
     },
     cancel () {
@@ -91,11 +114,14 @@ export default {
     }
   },
   computed: {
-    etlTableList () {
-      return this.$store.state.dataManagement.etlTableList
-    },
     currentUploadInfo () {
       return this.$store.state.dataManagement.currentUploadInfo
+    },
+    currentTableIndex () {
+      return this.$store.state.dataManagement.currentTableIndex
+    },
+    etlTableList () {
+      return this.$store.state.dataManagement.etlTableList
     }
   }
 }

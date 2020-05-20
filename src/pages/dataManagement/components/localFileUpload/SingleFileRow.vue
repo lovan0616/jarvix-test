@@ -7,7 +7,7 @@
         <div class="file-info name">{{ formDataInfo.name }}</div>
         <div class="file-info size">{{ byteToMB(formDataInfo.size) }}</div>
         <div class="single-file-progress"
-          v-if="singleFile.status === uploadStatus.uploading && progress < 100"
+          v-if="singleFile.status === uploadStatus.uploading"
         >
           <div class="progress-bar"
             :style="{ width: progress + '%' }"

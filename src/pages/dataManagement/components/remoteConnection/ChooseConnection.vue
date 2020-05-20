@@ -121,6 +121,11 @@ export default {
     margin-bottom: 16px;
   }
 
+  .connection-list {
+    max-height: 60vh;
+    overflow: auto;
+  }
+
   .single-connection {
     border: 2px solid #485454;
     padding: 24px;
