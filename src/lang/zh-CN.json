@@ -334,7 +334,10 @@
     "maxValue": "最大值",
     "minValue": "最小值",
     "avgValue": "平均值",
-    "sdValue": "标准差"
+    "sdValue": "标准差",
+    "connectionHistory": "连线纪录",
+    "newConnectionSetting": "新连线设定",
+    "emptyConnectionHistory": "没有任何连线纪录"
   },
   "feature": {
     "value": "数值",

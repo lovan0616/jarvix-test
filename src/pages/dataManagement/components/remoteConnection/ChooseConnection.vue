@@ -1,46 +1,60 @@
 <template>
-  <spinner class="spinner-container"
-    v-if="isLoading"
-    :title="$t('editing.loading')"
-    size="50"
-  ></spinner>
-  <div class="choose-connection"
-    v-else
-  >
-    <div class="dialog-title">{{ $t('editing.chooseConnection') }}</div>
+  <div class="choose-connection">
+    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <upload-process-block
+      :step="1"
+    ></upload-process-block>
+    <div class="info-block">
+      <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
+    </div>
     <div class="dialog-body">
-      <div class="connection-list">
-        <div class="single-connection"
-          v-for="connection in connectionList"
-          :key="connection.id"
-          @click="chooseConnection(connection.id)"
-        >
-          <div class="connection-title">{{ connection.name }}</div>
-          <div class="conneciton-info-block">
-            <div class="conneciton-info">
-              <div class="connection-label">{{ $t('editing.databaseType') }}:</div>{{ connection.databaseType }}
-            </div>
-            <div class="conneciton-info">
-              <div class="connection-label">Host:</div>{{ connection.host }}
-            </div>
-            <div class="conneciton-info">
-              <div class="connection-label">Port:</div>{{ connection.port }}
-            </div>
-            <div class="conneciton-info">
-              <div class="connection-label">Schema:</div>{{ connection.schema }}
-            </div>
-            <div class="conneciton-info">
-              <div class="connection-label">Database:</div>{{ connection.database }}
-            </div>
-            <div class="conneciton-info">
-              <div class="connection-label">{{ $t('editing.username') }}:</div>{{ connection.account }}
+      <spinner class="spinner-container"
+        v-if="isLoading"
+        :title="$t('editing.loading')"
+        size="50"
+      ></spinner>
+      <div class="connection-list-block"
+        v-else
+      >
+        <div class="title-block-container">
+          <div class="block-title">{{ $t('etl.connectionHistory') }}</div>
+          <button class="btn-m btn-outline"
+            @click="createConnection"
+          >{{ $t('etl.newConnectionSetting') }}</button>
+        </div>
+        <div class="connection-list">
+          <empty-info-block
+            v-if="connectionList.length === 0"
+            :msg="$t('etl.emptyConnectionHistory')"
+          ></empty-info-block>
+          <div class="single-connection"
+            v-else
+            v-for="connection in connectionList"
+            :key="connection.id"
+            @click="chooseConnection(connection.id)"
+          >
+            <div class="connection-title">{{ connection.name }}</div>
+            <div class="conneciton-info-block">
+              <div class="conneciton-info">
+                <div class="connection-label">{{ $t('editing.username') }}:</div>{{ connection.account }}
+              </div>
+              <div class="conneciton-info">
+                <div class="connection-label">Host:</div>{{ connection.host }}
+              </div>
+              <div class="conneciton-info">
+                <div class="connection-label">{{ $t('editing.databaseType') }}:</div>{{ connection.databaseType }}
+              </div>
+              <div class="conneciton-info">
+                <div class="connection-label">Port:</div>{{ connection.port }}
+              </div>
+              <div class="conneciton-info">
+                <div class="connection-label">Database:</div>{{ connection.database }}
+              </div>
+              <div class="conneciton-info">
+                <div class="connection-label">Schema:</div>{{ connection.schema }}
+              </div>
             </div>
           </div>
-        </div>
-        <div class="single-connection create-connection"
-          @click="createConnection"
-        >
-          <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('editing.createConnection') }}
         </div>
       </div>
     </div>
@@ -58,14 +72,14 @@
 </template>
 <script>
 import { getConnectionInfoList, testOldConnection } from '@/API/RemoteConnection'
+import UploadProcessBlock from './UploadProcessBlock'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 export default {
   name: 'ChooseConnection',
-  props: {
-    dataSourceId: {
-      type: Number,
-      default: null
-    }
+  components: {
+    UploadProcessBlock,
+    EmptyInfoBlock
   },
   data () {
     return {
@@ -108,6 +122,9 @@ export default {
   computed: {
     groupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
+    },
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
     }
   }
 }
@@ -115,14 +132,38 @@ export default {
 <style lang="scss" scoped>
 .choose-connection {
   .dialog-body {
+    height: 60vh;
     background-color: rgba(50, 58, 58, 0.95);
     border-radius: 5px;
     padding: 24px;
     margin-bottom: 16px;
   }
 
+  .info-block {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+  }
+
+  .connection-list-block {
+    width: 62%;
+    margin: 0 auto;
+  }
+
+  .title-block-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .block-title {
+      font-weight: 600;
+      font-size: 18px;
+      margin-right: 16px;
+    }
+  }
+
   .connection-list {
-    max-height: 60vh;
+    max-height: calc(60vh - 102px);
     overflow: auto;
   }
 
@@ -154,10 +195,13 @@ export default {
       .conneciton-info {
         display: flex;
         width: 50%;
+        font-size: 14px;
       }
 
       .connection-label {
         width: 40%;
+        margin-right: 8px;
+        text-align: right;
       }
     }
   }
