@@ -44,7 +44,7 @@
                   <input
                     type="checkbox"
                     :name="'column' + index"
-                    :checked="column.active"
+                    :checked="column[index].active"
                     @change="toggleColumn(index)"
                   >
                   <div class="checkbox-square"></div>
@@ -54,9 +54,10 @@
 
             </div>
             <div class="header">
-              <span>
-                {{ column.statsType }}
-              </span>
+              <category-select
+                :column-info="getColumnInfo(index)"
+                @updateInfo="updateSetting"
+              />
               <a href="javascript:void(0)" class="link"
                 @click="chooseColumn(index)"
               >{{ $t('etl.advance') }}</a>
@@ -77,6 +78,7 @@ import FakePaginationTable from './FakePaginationTable'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
+import CategorySelect from './CategorySelect'
 
 export default {
   name: 'EtlChooseColumn',
@@ -84,7 +86,8 @@ export default {
     FakePaginationTable,
     DefaultSelect,
     PaginationTable,
-    DataColumnSummary
+    DataColumnSummary,
+    CategorySelect
   },
   data () {
     return {
@@ -102,6 +105,16 @@ export default {
       this.$store.commit('dataManagement/chooseColumn', {
         dataFrameIndex: this.currentTableIndex,
         columnIndex
+      })
+    },
+    getColumnInfo (columnIndex) {
+      return this.currentTableInfo.columns[columnIndex]
+    },
+    updateSetting (info) {
+      this.$store.commit('dataManagement/updateReplaceValue', {
+        tableIndex: this.currentTableIndex,
+        columnIndex: info.index,
+        info
       })
     }
   },
@@ -247,12 +260,16 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
+    .link {
+      line-height: 40px;
+    }
   }
 
   .summary {
     padding: 10px;
     overflow: auto;
-    height: calc(100% - 88px);
+    height: calc(100% - 105px);
   }
 }
 </style>

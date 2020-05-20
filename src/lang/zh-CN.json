@@ -73,7 +73,8 @@
     "memberDeleteSuccess": "成员删除成功",
     "etlSuccess": "资料预处理成功，开始建置资料表",
     "etlSettingTempSave": "设定已经暂存",
-    "analysisFailed": "档案解析发生错误"
+    "analysisFailed": "档案解析发生错误",
+    "confirmColumnStateTypeChange": "此变更将会清除进阶设定内容，您确认要进行变更？"
   },
   "guiding": {
     "prevStep": "上一步",
