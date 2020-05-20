@@ -25,7 +25,6 @@
       class="section data-column"
       v-if="currentTableInfo"
     >
-      <!--TODO: 上版前需設定 :min-column-width="'270px'"-->
       <pagination-table
         class="board-body-section"
         :dataset="currentTableInfo"
@@ -63,9 +62,9 @@
               >{{ $t('etl.advance') }}</a>
             </div>
             <div class="summary">
-              <!-- <data-column-summary
+              <data-column-summary
                 :summary-data="currentTableSummary[index]"
-              /> -->
+              />
             </div>
           </div>
         </template>
@@ -133,7 +132,6 @@ export default {
     currentTableInfo () {
       const tableInfo = this.etlTableList[this.currentTableIndex]
       tableInfo.data = tableInfo.rowData
-      delete tableInfo.rowData
       tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
       return tableInfo
     },
@@ -220,7 +218,7 @@ export default {
 }
 
 .header-block {
-  height: 210px;
+  height: 255px;
 
   .header {
     padding: 10px;
@@ -254,7 +252,7 @@ export default {
   .summary {
     padding: 10px;
     overflow: auto;
-    height: calc(100% - 44px);
+    height: calc(100% - 88px);
   }
 }
 </style>
