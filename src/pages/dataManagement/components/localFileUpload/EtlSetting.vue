@@ -23,9 +23,11 @@
     <div class="dialog-footer" v-if="step === 'choose-column'">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
+          :disabled="isProcessing"
           @click="prev"
         >{{ $t('button.prevStep') }}</button>
         <button class="btn btn-default"
+          :disabled="isProcessing"
           @click="buildData"
         >{{ $t('button.buildData') }}</button>
       </div>
@@ -49,7 +51,8 @@ export default {
   },
   data () {
     return {
-      step: 'choose-column'
+      step: 'choose-column',
+      isProcessing: false
     }
   },
   methods: {
@@ -64,6 +67,8 @@ export default {
       this.$emit('next')
     },
     buildData () {
+      this.isProcessing = true
+
       let promiseList = []
       this.etlTableList.forEach((element, index) => {
         promiseList.push(dataSourcePreprocessor(element))
@@ -81,6 +86,9 @@ export default {
             type: 'error',
             duration: 3 * 1000
           })
+        })
+        .finally(() => {
+          this.isProcessing = false
         })
     }
   },

@@ -24,17 +24,19 @@
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
+          :disabled="isProcessing"
           @click="cancel"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-outline" type="button"
+          :disabled="isProcessing"
           @click="prev"
         >{{ $t('button.chooseFileUpload') }}</button>
         <!-- <button class="btn btn-default"
-          :disabled="successList.length === 0"
+          :disabled="successList.length === 0 || isProcessing"
           @click="buildData"
         >{{ $t('editing.buildImmediately') }}</button> -->
         <button class="btn btn-default"
-          :disabled="successList.length === 0"
+          :disabled="successList.length === 0 || isProcessing"
           @click="next"
         >{{ $t('button.nextStep') }}：{{ $t('editing.processStep3') }}</button>
       </div>
@@ -59,17 +61,18 @@ export default {
   data () {
     return {
       uploadStatus,
-      dataSourceId: parseInt(this.$route.params.id)
+      dataSourceId: parseInt(this.$route.params.id),
+      isProcessing: false
     }
   },
   mounted () {
-    // console.log(this.$route.params.id)
   },
   methods: {
     cancel () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     next () {
+      this.isProcessing = true
       let promiseList = []
       this.importedFileList.forEach((element, index) => {
         promiseList.push(analysisFile(element.id, this.dataSourceId))
@@ -88,6 +91,9 @@ export default {
             type: 'error',
             duration: 3 * 1000
           })
+        })
+        .finally(() => {
+          this.isProcessing = false
         })
     },
     prev () {
@@ -116,6 +122,9 @@ export default {
             type: 'error',
             duration: 3 * 1000
           })
+        })
+        .finally(() => {
+          this.isProcessing = false
         })
     }
   },
