@@ -31,15 +31,15 @@
                 {{ column.originalName }}
               </span>
               <div class="checkbox">
-                <div><!-- TODO 使用原本的 checkbox-label -->
+                <label class="checkbox-label">
                   <input
                     type="checkbox" :name="'column' + index"
-                    :value="true"
                     v-model="column.active"
                     @change="toggleColumn(index)"
-                  >{{ $t('etl.selectColumn') }}
-                  <!-- <div class="checkbox-square"></div> -->
-                </div>
+                  >
+                  <div class="checkbox-square"></div>
+                </label>
+                <span class="checkbox-text">{{ $t('etl.selectColumn') }}</span>
               </div>
             </div>
             <div class="header">
@@ -203,6 +203,12 @@ export default {
     .checkbox {
       display: flex;
       align-items: center;
+      .checkbox-text {
+        display: block;
+        word-break: no-break;
+        line-height: 1;
+        padding-left: 10px;
+      }
     }
   }
 }

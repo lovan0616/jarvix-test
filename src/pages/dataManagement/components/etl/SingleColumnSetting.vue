@@ -98,9 +98,10 @@
         <button class="btn btn-default"
           @click="saveSetting"
         >{{ $t('button.keepSave') }}</button>
-        <button class="btn btn-outline"
+        <!-- TODO 恢復預設值 -->
+        <!-- <button class="btn btn-outline"
           @click="reset"
-        >{{ $t('button.resumeDefault') }}</button>
+        >{{ $t('button.resumeDefault') }}</button> -->
       </div>
       <span class="remark-info">{{ $t('etl.remarkToSave') }}</span>
     </div>
@@ -271,7 +272,7 @@ export default {
           this.replaceValueInputType = 'text'
         } else if (newVal === 'NUMERIC') {
           this.dataSummaryOption = this.numericOptionList
-          this.replaceValueInputType = 'numeric'
+          this.replaceValueInputType = 'number'
         } else if (newVal === 'DATETIME') {
           this.dataSummaryOption = this.datetimeOptionList
           this.replaceValueInputType = 'text'

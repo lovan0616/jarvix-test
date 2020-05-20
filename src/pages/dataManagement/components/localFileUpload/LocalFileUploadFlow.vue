@@ -9,7 +9,7 @@
         v-if="step === 1"
         @next="nextStep"
         @prev="prevStep"
-        @dataBuilded="step = 3"
+        @dataBuilt="step = 3"
       ></local-file-upload-status>
       <etl-setting
         v-if="step === 2"
