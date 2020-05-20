@@ -119,6 +119,7 @@ export default {
                   this.loading = false
                   this.hasNextPage = false
                   this.nextPageData = null
+                  this.isGetPagination = false
                   // 空資料的處理
                   if (page === 0) {
                     this.isError = true
@@ -141,6 +142,7 @@ export default {
             case 'Fail':
               window.clearTimeout(this.timeoutFunction)
               this.loading = false
+              this.isGetPagination = false
               // 如果取分頁資料 fail，當作無資料來處理
               if (page > 0) {
                 this.hasNextPage = false
@@ -167,6 +169,7 @@ export default {
       this.fetchData(page).then(taskData => {
         this.nextPageData = taskData
         this.hasNextPage = true
+        this.isGetPagination = false
       }).finally(() => {
         this.loading = false
       })
@@ -183,46 +186,111 @@ export default {
       // 分頁的資料 push 進去
       if (this.diagram === 'line_chart') {
         let indexLength = this.componentData.dataset.index.length
-        if (taskData.dataset.index.length === 1) {
+
+        // 合併 columns
+        let concatColumns = [...new Set([...this.componentData.dataset.columns, ...taskData.dataset.columns])]
+
+        // 檢查舊有資料需不需要補值
+        if (concatColumns.length > this.componentData.dataset.columns.length) {
+          let lengthDiff = concatColumns.length - this.componentData.dataset.columns.length
+          this.componentData.dataset.data.forEach(element => {
+            for (let i = 0; i < lengthDiff; i++) {
+              element.push(null)
+            }
+          })
+        }
+        // 更新 columns
+        this.componentData.dataset.columns = concatColumns
+
+        // 處理 display_columns
+        if (taskData.dataset.display_columns) {
+          // 合併 columns
+          let concatDisplayColumns = [...new Set([...this.componentData.dataset.display_columns, ...taskData.dataset.display_columns])]
+          // 更新 columns
+          this.componentData.dataset.display_columns = concatDisplayColumns
+        }
+
+        /**
+         * 判斷需不需要銜接資料，舊的最後一筆跟新的第一筆依樣時間的話
+         **/
+        if (this.componentData.dataset.index[this.componentData.dataset.index.length - 1] === taskData.dataset.index[0]) {
           /**
-           * 如果只有一個類別，欄位超過 200 個，才會跑這來
+           * 需要銜接資料
+           * 可能前一頁的最後一列資料沒有拿完，因此要補最後一行的資料
            **/
-          let restDataLength = taskData.dataset.data[0].length
-          this.componentData.dataset.data[indexLength - 1].splice(this.componentData.dataset.columns.length - restDataLength, restDataLength)
-          this.componentData.dataset.data[indexLength - 1] = this.componentData.dataset.data[indexLength - 1].concat(taskData.dataset.data[0])
-        } else if (taskData.dataset.index.length > 1) {
+          // 針對前一頁最後一個陣列的資料補上新資料第一個陣列的值
+          let firstColumnData = taskData.dataset.data[0]
+          // 舊資料最後一列
+          let lastColumnData = this.componentData.dataset.data[indexLength - 1]
+          // 新資料的 column 對應 index
+          let columnIndexArray = []
+          for (let i = 0; i < firstColumnData.length; i++) {
+            let columnIndex = this.componentData.dataset.columns.findIndex(element => element === taskData.dataset.columns[i])
+            columnIndexArray.push(columnIndex)
+            if (firstColumnData[i] !== null) {
+              this.$set(lastColumnData, columnIndex, firstColumnData[i])
+            }
+          }
           /**
-           * 如果有多個類別
-           **/
-          let firstNotNullIndex = taskData.dataset.data[0].findIndex(element => element !== null)
-          // 檢查有沒有空值
-          if (firstNotNullIndex > 0) {
-            /**
-             * 前面有空值，代表可能前一頁的最後一列資料沒有拿完，因此要補最後一行的資料
-             **/
-            // 新資料第一列移除空值的部分
-            taskData.dataset.data[0].splice(0, firstNotNullIndex)
-            // 舊資料最後一列移除空值部分
-            this.componentData.dataset.data[indexLength - 1].splice(firstNotNullIndex, this.componentData.dataset.columns.length - firstNotNullIndex)
-            // 舊資料最後一列補上新資料的第一列
-            this.componentData.dataset.data[indexLength - 1] = this.componentData.dataset.data[indexLength - 1].concat(taskData.dataset.data[0])
+           * TODO: 這邊待整理，這邊怕整理了之後失去了原本的邏輯
+           */
+          if (taskData.dataset.data.length > 1) {
             // 新資料移除第一列
             taskData.dataset.data.shift()
             // 接上新資料
+            let newDatasetData = []
+            for (let i = 0; i < this.componentData.dataset.columns.length; i++) {
+              newDatasetData.push(null)
+            }
+            taskData.dataset.data = taskData.dataset.data.map(element => {
+              let arrayData = JSON.parse(JSON.stringify(newDatasetData))
+              for (let i = 0; i < element.length; i++) {
+                this.$set(arrayData, columnIndexArray[i], element[i])
+              }
+              return arrayData
+            })
+
             this.componentData.dataset.data = this.componentData.dataset.data.concat(taskData.dataset.data)
-            // 有新的類別
+          }
+
+          if (taskData.dataset.index.length !== 1) {
+            // index 更新
             taskData.dataset.index.shift()
             this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
             if (taskData.dataset.display_index) {
               taskData.dataset.display_index.shift()
               this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
             }
-          } else {
-            this.componentData.dataset.data = this.componentData.dataset.data.concat(taskData.dataset.data)
-            this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
-            if (this.componentData.dataset.display_index) {
-              this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
+          }
+        } else {
+          /**
+           * 不用銜接
+           **/
+          // 找出新 column 對應到舊 column 的 index
+          let columnIndexArray = []
+          for (let i = 0; i < taskData.dataset.columns.length; i++) {
+            let columnIndex = this.componentData.dataset.columns.findIndex(element => element === taskData.dataset.columns[i])
+            columnIndexArray.push(columnIndex)
+          }
+          // 新資料的空值矩陣，處理新 column 可能長度不一致的問題
+          let newDatasetData = []
+          for (let i = 0; i < this.componentData.dataset.columns.length; i++) {
+            newDatasetData.push(null)
+          }
+          // 接上新資料
+          taskData.dataset.data = taskData.dataset.data.map(element => {
+            let arrayData = JSON.parse(JSON.stringify(newDatasetData))
+            for (let i = 0; i < element.length; i++) {
+              this.$set(arrayData, columnIndexArray[i], element[i])
             }
+            return arrayData
+          })
+          this.componentData.dataset.data = this.componentData.dataset.data.concat(taskData.dataset.data)
+
+          // index 更新
+          this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
+          if (taskData.dataset.display_index) {
+            this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
           }
         }
       } else {
@@ -232,10 +300,6 @@ export default {
           this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
         }
       }
-
-      this.$nextTick(() => {
-        this.isGetPagination = false
-      })
     },
     appendNote (note) {
       this.notes.push(note)
@@ -276,6 +340,18 @@ export default {
     @keyframes gradient {
       0%   { background-position: 0 0; }
       100% { background-position: -200% 0; }
+    }
+
+    // 遮罩避免使用者點擊到看更多
+    &:before {
+      display: block;
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
     }
   }
 }
