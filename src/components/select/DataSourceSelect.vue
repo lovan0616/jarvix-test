@@ -1,7 +1,7 @@
 <template>
-  <div class="bookmark-select-block">
-    <svg-icon icon-class="folder" class="bookmark-select-icon"></svg-icon>
-    <sy-select class="bookmark-select"
+  <div class="data-source-select-block">
+    <svg-icon icon-class="folder" class="data-source-select-icon"></svg-icon>
+    <sy-select class="data-source-select"
       :selected="dataSourceId"
       :items="buildDataSourceList"
       :placeholder="$t('editing.chooseDataSource')"
@@ -15,7 +15,7 @@ import SySelect from '@/components/select/SySelect'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'BookmarkSelect',
+  name: 'DataSourceSelect',
   components: {
     SySelect
   },
@@ -27,7 +27,7 @@ export default {
     // 過濾掉正在 build 的 bookmark
     buildDataSourceList () {
       return this.dataSourceList.filter(dataSource => {
-        return dataSource.state === 'ENABLE'
+        return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
       })
     }
   },
@@ -42,14 +42,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.bookmark-select-block {
+.data-source-select-block {
   display: inline-block;
   position: relative;
   background-color: $theme-bg-lighter-color;
   color: #fff;
   border-radius: 4px;
 
-  .bookmark-select-icon {
+  .data-source-select-icon {
     position: absolute;
     top: 10px;
     left: 8px;
@@ -57,7 +57,7 @@ export default {
 }
 </style>
 <style lang="scss">
-.bookmark-select.sy-select.theme-default {
+.data-source-select.sy-select.theme-default {
   .el-input__inner {
     padding-left: 36px;
   }

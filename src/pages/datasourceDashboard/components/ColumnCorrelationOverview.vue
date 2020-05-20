@@ -5,10 +5,18 @@
       <spinner
         v-if="isLoading"
       ></spinner>
-      <display-heat-map-chart
-        :dataset="componentData.dataset"
-        v-else-if="!isLoading && componentData && !hasError"
-      />
+      <div v-else-if="!isLoading && componentData && !hasError">
+        <display-heat-map-chart
+          :dataset="componentData.dataset"
+        />
+        <div class="descrtipion">
+          <div class="description__container">
+            <div class="description__item description__item--min">{{ $t('resultDescription.highlyPositiveCorrelated') }}</div>
+            <div class="description__item description__item--zero">{{ $t('resultDescription.notCorrelated') }}</div>
+            <div class="description__item description__item--max">{{ $t('resultDescription.highlyNegativeCorrelated') }}</div>
+          </div>
+        </div>
+      </div>
       <empty-info-block
         v-else
         :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
@@ -44,7 +52,7 @@ import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 const dummyData = {
   overview: {
-    data: [['apple22222222', 'apple22222222', 0.5], ['dddddddddd', 'apple22222222', 0.1], ['c', 'apple22222222', 0.4], ['d', 'apple22222222', 0.4], ['apple22222222', 'dddddddddd', 0.7], ['dddddddddd', 'dddddddddd', 0.3], ['c', 'dddddddddd', 0.2], ['d', 'dddddddddd', 0.0], ['apple22222222', 'c', 0.3], ['dddddddddd', 'c', 0.1], ['c', 'c', 0.3], ['d', 'c', 0.6], ['apple22222222', 'd', 0.9], ['dddddddddd', 'd', 0.5], ['c', 'd', 0.3], ['d', 'd', 0.6], ['apple22222222', 'e', 0.3], ['dddddddddd', 'e', 0.1], ['c', 'e', 0.3], ['d', 'e', 0.6]],
+    data: [['apple22222222', 'apple22222222', -1], ['dddddddddd', 'apple22222222', 0.1], ['c', 'apple22222222', 0.4], ['d', 'apple22222222', -0.4], ['apple22222222', 'dddddddddd', 0.7], ['dddddddddd', 'dddddddddd', 0.3], ['c', 'dddddddddd', -0.2], ['d', 'dddddddddd', 0.0], ['apple22222222', 'c', 0.3], ['dddddddddd', 'c', 0.1], ['c', 'c', 0.3], ['d', 'c', 0.6], ['apple22222222', 'd', -0.9], ['dddddddddd', 'd', 0.5], ['c', 'd', 0.3], ['d', 'd', -0.6], ['apple22222222', 'e', 0.3], ['dddddddddd', 'e', 0.1], ['c', 'e', 0.3], ['d', 'e', 0.6]],
     index: [['apple22222222', 'dddddddddd', 'c', 'd'], ['apple22222222', 'dddddddddd', 'c', 'd', 'e']]
   },
   top: [
@@ -148,8 +156,7 @@ export default {
 
   .title {
     font-weight: 600;
-    font-size: 24px;
-    line-height: 32px;
+    font-size: 20px;
     margin-bottom: 14px;
   }
 
@@ -168,5 +175,42 @@ export default {
       color: $theme-color-warning;
     }
   }
+
+  .description {
+    &__container {
+      margin: 0 auto;
+      width: 330px;
+      font-size: 12px;
+      color: #CCCCCC;
+      display: flex;
+      justify-content: space-between;
+      padding-top: 15px;
+    }
+
+    &__item {
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 110%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-top: 6px solid transparent;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-bottom: 6px solid #CCCCCC;
+      }
+
+      &--min {
+        transform: translateX(-50%);
+      }
+
+      &--max {
+        transform: translateX(50%);
+      }
+    }
+  }
+
 }
+
 </style>

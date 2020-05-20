@@ -1345,10 +1345,15 @@
     "noData": "暂无资料",
     "of": "的",
     "dataSourceIntro": "资料集介绍",
+    "totalDataRows": "资料总笔数",
+    "totalDataColumns": "资料栏位总数",
     "degreeOfCorrelation": "关联度",
     "columnCorrelationName": "关联栏位名称",
     "columnCorrelationOverview": "栏位关联概况",
     "strongCorrelationColumns": "高关联度栏位",
+    "highlyPositiveCorrelated": "高度正相关",
+    "highlyNegativeCorrelated": "高度负相关",
+    "notCorrelated": "零相关",
     "correlationRange": "数值范围 {min} - {max} 之内为高关联度栏位(至多显示五笔)",
     "noStrongCorrelationColumns": "目前没有找到任何高关联度栏位",
     "relatedQuestion": "关联问题",
@@ -1443,7 +1448,8 @@
   "notification": {
     "uploadLimitNotification": "资料数量已达上限",
     "uploadLimit": "资料表限制：最多{count}笔",
-    "userLimitNotification": "使用者数量已达上限"
+    "userLimitNotification": "使用者数量已达上限",
+    "columnSummarySampleNotification": "栏位摘要为取样统计，仅供参考"
   },
   "chart": {
     "zoom": "区域缩放",
