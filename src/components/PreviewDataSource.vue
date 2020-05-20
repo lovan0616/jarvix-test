@@ -1,7 +1,7 @@
 <template>
   <div class="page-preview-bookmark">
     <template v-if="dataSourceId">
-      <div class="header">{{$t('resultDescription.dataSourceIntro')}}</div>
+      <div class="bookmark-header">{{$t('resultDescription.dataSourceIntro')}}</div>
       <div class="result-board">
         <div
           v-if="dataSourceTables.length > 0"
@@ -323,7 +323,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-preview-bookmark {
-  .header {
+  .bookmark-header {
     font-weight: 600;
     font-size: 24px;
     line-height: 32px;
