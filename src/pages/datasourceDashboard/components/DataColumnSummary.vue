@@ -1,36 +1,33 @@
 <template>
   <div class="column-summary">
     <div
-      v-for="dataBlock in summaryData.data"
-      :key="dataBlock.diagram"
       class="data-block"
+      v-if="summaryData.statsType === 'NUMERIC'"
     >
-      <div
-        v-if="dataBlock.diagram === 'message'"
-        class="message"
-      >
-        {{dataBlock.message}}
-      </div>
-      <component
-        v-else-if="dataBlock.diagram === 'chart'"
-        :is="componentName(dataBlock.chartType)"
-        :dataset="dataBlock.dataset"
-        :title="dataBlock.title"
-      ></component>
-      <ul
-         v-else-if="dataBlock.diagram === 'list'"
-        class="list"
-      >
+      <display-histogram-chart :dataset="histogramData" />
+    </div>
+    <div class="data-block">
+      <ul class="list">
         <li
-          class="list-item"
-          v-for="(value, name) in getDataList(dataBlock.data)"
+          class="list__item"
+          v-for="(value, name) in descriptionList"
           :key="name + value"
         >
-          <div class="list-item-name">
-            {{name}}
+          <div class="list__item--name">
+            <el-tooltip
+              :enterable="false"
+              slot="label"
+              :content="`${name}`">
+              <span>{{name}}</span>
+            </el-tooltip>
           </div>
-          <div class="list-item-value">
-            {{value}}
+          <div class="list__item--value">
+            <el-tooltip
+              :enterable="false"
+              slot="label"
+              :content="`${value}`">
+              <span>{{value}}</span>
+            </el-tooltip>
           </div>
         </li>
       </ul>
@@ -52,26 +49,83 @@ export default {
   components: {
     DisplayHistogramChart
   },
-  methods: {
-    componentName (chartType) {
-      if (!chartType) return
-      switch (chartType) {
-        case 'histogram':
-          return 'DisplayHistogramChart'
+  computed: {
+    histogramData () {
+      if (this.summaryData.statsType !== 'NUMERIC') return
+      const stateMeta = this.summaryData.numeric_stats_meta
+      return {
+        data: stateMeta.bins.map(rangeData => rangeData.count),
+        range: [parseInt(stateMeta.min), parseInt(stateMeta.max)]
       }
     },
-    getDataList (dataObj) {
-      let dataList = {}
-      for (let prop in dataObj) {
-        if (typeof dataObj[prop] === 'object') {
-          dataList = {...dataList, ...dataObj[prop]}
-        } else {
-          const typesInEnglish = ['null', 'true', 'false']
-          const propName = typesInEnglish.includes(prop) ? prop : this.$t(`resultDescription.${prop}`)
-          dataList[propName] = dataObj[prop]
-        }
+    descriptionList () {
+      return {
+        ...this.additionalDescription,
+        ...this.dataTypeDescriptionList
       }
-      return dataList
+    },
+    dataTypeDescriptionList () {
+      const totlaRowsWithData = this.summaryData.totalRows + this.summaryData.null_count
+      switch (this.summaryData.statsType) {
+        case 'CATEGORY':
+          const {
+            largest_value: largestValue,
+            largest_value_count: largestValueCount,
+            second_largest_value: secondaryValue,
+            second_largest_value_count: secondaryValueCount
+          } = this.summaryData.category_stats_meta
+          return {
+            [largestValue]: this.formatPercentage(largestValueCount / totlaRowsWithData),
+            [secondaryValue]: this.formatPercentage(secondaryValueCount / totlaRowsWithData),
+            [this.$t('columnSummary.distinctCount')]: `${this.formatComma(this.summaryData.distinct_count)} ${this.$t('columnSummary.record')}`
+          }
+        case 'DATETIME':
+          const {
+            min_timestamp: startDate,
+            max_timestamp: endDate
+          } = this.summaryData.datetime_stats_meta
+          return {
+            [this.$t('columnSummary.range')]: `${startDate} - ${endDate}`
+          }
+        case 'BOOLEAN':
+          const {
+            true_count: trueCount,
+            false_count: falseCount
+          } = this.summaryData.boolean_stats_meta
+          return {
+            'True': this.formatPercentage(trueCount / totlaRowsWithData),
+            'False': this.formatPercentage(falseCount.false_count / totlaRowsWithData)
+          }
+        case 'NUMERIC':
+          const {avg, sum, stdev} = this.summaryData.numeric_stats_meta
+          return {
+            [this.$t(`columnSummary.avg`)]: this.formatNumeric(avg),
+            [this.$t(`columnSummary.sum`)]: this.formatNumeric(sum),
+            [this.$t(`columnSummary.stdev`)]: this.formatNumeric(stdev)
+          }
+      }
+    },
+    additionalDescription () {
+      const nullPercentage = this.summaryData.null_count / this.summaryData.totalRows
+      const constCount = this.summaryData.constant
+
+      return {
+        ...(nullPercentage && {'Null': this.formatPercentage(this.summaryData.null_count / this.summaryData.totalRows)}),
+        ...(constCount && {[this.$t(`columnSummary.const`)]: this.summaryData.constant})
+      }
+    }
+  },
+  methods: {
+    formatNumeric (value) {
+      if (Math.abs(value) < 0.01) return value
+      return this.formatComma(this.roundNumber(value, 2))
+    },
+    formatPercentage (value) {
+      if (!value) return
+      let valueInPercentage = value * 100
+      if (Number.isInteger(valueInPercentage)) return this.formatComma(valueInPercentage) + '%'
+      if (Math.abs(valueInPercentage) < 0.01) return '<' + Math.sign(valueInPercentage) * 0.01 + '%'
+      return this.formatComma(this.roundNumber(valueInPercentage, 2)) + '%'
     }
   }
 }
@@ -79,44 +133,39 @@ export default {
 
 <style lang="scss" scoped>
 .column-summary {
+  font-size: 12px;
+
   .data-block:not(:last-of-type) {
     margin-bottom: 12px;
-  }
-
-  .message {
-    height: 146px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   .list {
     margin: 0;
     padding: 0;
-  }
 
-  .list-item {
-    list-style-type: none;
-    display: flex;
-    padding: 5px 0;
-    font-weight: normal;
-    justify-content: space-between;
-  }
+    &__item {
+      list-style-type: none;
+      display: flex;
+      padding: 0px 0;
+      font-weight: normal;
+      justify-content: space-between;
 
-  .list-item-name,
-  .list-item-value {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+      &--name,
+      &--value {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
 
-  .list-item-name {
-    width: 65%;
-  }
+      &--name {
+        width: 60%;
+      }
 
-  .list-item-value {
-    width: 30%;
-    text-align: right;
+      &--value {
+        width: 35%;
+        text-align: right;
+      }
+    }
   }
 }
 </style>

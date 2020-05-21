@@ -32,14 +32,17 @@
         :min-column-width="'270px'"
         :current-table-index="currentTableIndex"
       >
-        <!--TODO: 上版前需把註解移除-->
         <template v-slot="{ column, index }">
           <div class="header-block">
             <div class="header">
               <span class="text" :class="{'has-changed': column[index].hasChanged}">
-                {{ column[index].primaryAlias }}
+                <el-tooltip
+                  :enterable="false"
+                  slot="label"
+                  :content="`${column[index].primaryAlias}`">
+                  <span>{{ column[index].primaryAlias }}</span>
+                </el-tooltip>
               </span>
-
               <div class="checkbox">
                 <label class="checkbox-label">
                   <input
@@ -153,7 +156,11 @@ export default {
       return tableInfo
     },
     currentTableSummary () {
-      return this.currentTableInfo.columns.map(column => column.dataSummary)
+      return this.currentTableInfo.columns.map(column => ({
+        ...column.dataSummary,
+        statsType: column.statsType,
+        totalRows: this.currentTableInfo.rowCount
+      }))
     }
   }
 }
@@ -258,7 +265,7 @@ export default {
 }
 
 .header-block {
-  height: 255px;
+  height: 305px;
 
   .header {
     padding: 10px;
@@ -317,7 +324,6 @@ export default {
 
   .summary {
     padding: 10px;
-    overflow: auto;
     height: calc(100% - 105px);
   }
 }

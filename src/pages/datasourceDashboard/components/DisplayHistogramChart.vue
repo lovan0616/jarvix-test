@@ -10,6 +10,7 @@
 </template>
 <script>
 import { chartOptions } from '@/components/display/common/chart-addon.js'
+import i18n from '@/lang/index.js'
 
 // 直方圖的參數設定
 let histogramChartConfig = {
@@ -138,11 +139,10 @@ export default {
         bottom: 20
       }
 
-      const axisName = this.title
       chartAddon.tooltip.formatter = function (params, ticket, callback) {
         const rangeStart = Math.abs(params[0].data[0] < 0.01) ? params[0].data[0] : parseFloat(params[0].data[0].toFixed(2))
         const rangeEnd = Math.abs(params[0].data[1] < 0.01) ? params[0].data[1] : parseFloat(params[0].data[1].toFixed(2))
-        return `${axisName.xAxis.name}: ${rangeStart} - ${rangeEnd} <br> ${axisName.yAxis.name}: ${params[0].data[2]}`
+        return `${i18n.t('columnSummary.interval')}: ${rangeStart} - ${rangeEnd} <br> ${i18n.t('columnSummary.total')}: ${params[0].data[2]}`
       }
       chartAddon.tooltip.extraCssText += 'max-width: 200px;white-space: normal;'
 
@@ -154,7 +154,7 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: '126px'
+        height: '100px'
       }
     }
   }
