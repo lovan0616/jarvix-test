@@ -1,82 +1,90 @@
 <template>
-  <div class="etl-choose-column">
-    <div class="section data-frame">
-      <div class="data-frame-info">
-        <div class="title">{{ $t('etl.currentDataFrame') }}：</div>
-        <default-select
-          size="mini"
-          v-model="currentTableIndex"
-          :option-list="tableOptionList"
-          @change="chooseTable"
-        ></default-select>
-      </div>
-      <!-- TODO 已選欄位數 -->
-      <div class="data-content-info">
-        <dl>
-          <dt>{{ $t('etl.columnCount')}}：</dt>
-          <dd>{{ currentTableInfo.columns.length }}</dd>
-        </dl>
-        <dl>
-          <dt>{{ $t('etl.rowCount')}}：</dt>
-          <dd>{{ currentTableInfo.rowCount }}</dd>
-        </dl>
-      </div>
-    </div>
-    <div
-      class="section data-column"
-      v-if="currentTableInfo"
+  <div>
+    <div class="etl-choose-column"
+      v-show="!showEtlSetting"
     >
-      <pagination-table
-        class="board-body-section"
-        :dataset="currentTableInfo"
-        :min-column-width="'270px'"
-        :current-table-index="currentTableIndex"
+      <div class="section data-frame">
+        <div class="data-frame-info">
+          <div class="title">{{ $t('etl.currentDataFrame') }}：</div>
+          <default-select
+            size="mini"
+            v-model="currentTableIndex"
+            :option-list="tableOptionList"
+            @change="chooseTable"
+          ></default-select>
+        </div>
+        <!-- TODO 已選欄位數 -->
+        <div class="data-content-info">
+          <dl>
+            <dt>{{ $t('etl.columnCount')}}：</dt>
+            <dd>{{ currentTableInfo.columns.length }}</dd>
+          </dl>
+          <dl>
+            <dt>{{ $t('etl.rowCount')}}：</dt>
+            <dd>{{ currentTableInfo.rowCount }}</dd>
+          </dl>
+        </div>
+      </div>
+      <div
+        class="section data-column"
+        v-if="currentTableInfo"
       >
-        <template v-slot="{ column, index }">
-          <div class="header-block">
-            <div class="header">
-              <span class="text" :class="{'has-changed': column[index].hasChanged}">
-                <el-tooltip
-                  :enterable="false"
-                  slot="label"
-                  :content="`${column[index].primaryAlias}`">
-                  <span>{{ column[index].primaryAlias }}</span>
-                </el-tooltip>
-              </span>
-              <div class="checkbox">
-                <label class="checkbox-label">
-                  <input
-                    type="checkbox"
-                    :name="'column' + index"
-                    :checked="column[index].active"
-                    @change="toggleColumn(index)"
-                  >
-                  <div class="checkbox-square"></div>
+        <pagination-table
+          class="board-body-section"
+          :dataset="currentTableInfo"
+          :min-column-width="'270px'"
+          :current-table-index="currentTableIndex"
+        >
+          <template v-slot="{ column, index }">
+            <div class="header-block">
+              <div class="header">
+                <span class="text" :class="{'has-changed': column[index].hasChanged}">
+                  <el-tooltip
+                    :enterable="false"
+                    slot="label"
+                    :content="`${column[index].primaryAlias}`">
+                    <span>{{ column[index].primaryAlias }}</span>
+                  </el-tooltip>
+                </span>
+                <label class="checkbox">
+                  <div class="checkbox-label">
+                    <input
+                      type="checkbox"
+                      :name="'column' + index"
+                      :checked="column[index].active"
+                      @change="toggleColumn(index)"
+                    >
+                    <div class="checkbox-square"></div>
+                  </div>
+                  {{ $t('etl.selectColumn') }}
                 </label>
-                {{ $t('etl.selectColumn') }}
+              </div>
+              <div class="header">
+                <category-select
+                  :column-info="getColumnInfo(index)"
+                  @updateInfo="updateSetting"
+                />
+                <a href="javascript:void(0)" class="link"
+                  @click="chooseColumn(index)"
+                >{{ $t('etl.advance') }}</a>
+              </div>
+              <div class="summary">
+                <data-column-summary
+                  :summary-data="currentTableSummary[index]"
+                />
               </div>
             </div>
-            <div class="header">
-              <category-select
-                :column-info="getColumnInfo(index)"
-                @updateInfo="updateSetting"
-              />
-              <a href="javascript:void(0)" class="link"
-                @click="chooseColumn(index)"
-              >{{ $t('etl.advance') }}</a>
-            </div>
-            <div class="summary">
-              <data-column-summary
-                :summary-data="currentTableSummary[index]"
-              />
-            </div>
-          </div>
-        </template>
-      </pagination-table>
-      <p class="data-column__reminder">
-        *{{ $t('notification.columnSummarySampleNotification') }}
-      </p>
+          </template>
+        </pagination-table>
+        <p class="data-column__reminder">
+          *{{ $t('notification.columnSummarySampleNotification') }}
+        </p>
+      </div>
     </div>
+    <etl-column-setting
+      v-if="showEtlSetting"
+      @close="closeEtlColumnSetting"
+    ></etl-column-setting>
   </div>
 </template>
 <script>
@@ -84,6 +92,7 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import CategorySelect from './CategorySelect'
+import EtlColumnSetting from './EtlColumnSetting'
 
 export default {
   name: 'EtlChooseColumn',
@@ -91,10 +100,12 @@ export default {
     DefaultSelect,
     PaginationTable,
     DataColumnSummary,
-    CategorySelect
+    CategorySelect,
+    EtlColumnSetting
   },
   data () {
     return {
+      showEtlSetting: false
     }
   },
   methods: {
@@ -102,8 +113,8 @@ export default {
       this.$store.commit('dataManagement/changeCurrentTableIndex', this.currentTableIndex)
     },
     chooseColumn (columnIndex) {
-      this.$emit('advance')
       this.$store.commit('dataManagement/changeCurrentColumnIndex', columnIndex)
+      this.showEtlSetting = true
     },
     toggleColumn (columnIndex) {
       this.$store.commit('dataManagement/chooseColumn', {
@@ -120,6 +131,9 @@ export default {
         columnIndex: info.index,
         info
       })
+    },
+    closeEtlColumnSetting () {
+      this.showEtlSetting = false
     }
   },
   computed: {
@@ -142,9 +156,6 @@ export default {
       set (currentTableIndex) {
         this.$store.commit('dataManagement/changeCurrentTableIndex', currentTableIndex)
       }
-    },
-    currentColumnIndex () {
-      return this.$store.state.dataManagement.currentColumnIndex
     },
     currentTableInfo () {
       const tableInfo = this.etlTableList[this.currentTableIndex]
@@ -292,6 +303,8 @@ export default {
     .checkbox {
       display: flex;
       align-items: center;
+      cursor: pointer;
+
       .checkbox-text {
         display: block;
         word-break: no-break;

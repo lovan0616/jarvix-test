@@ -92,7 +92,7 @@ export default {
     ])
   },
   getDataFrameColumnCorrelation ({ state }, { id }) {
-    return getColumnCorrelationMatrix(id)
+    // return getColumnCorrelationMatrix(id)
   },
   getDataSourceColumnInfo ({ commit, state }) {
     if (!state.dataSourceId) return

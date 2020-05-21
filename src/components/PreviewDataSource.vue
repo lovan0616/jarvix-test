@@ -99,7 +99,7 @@ import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
-import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/ColumnCorrelationOverview'
+// import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/ColumnCorrelationOverview'
 
 export default {
   name: 'PreviewDataSource',
@@ -107,8 +107,7 @@ export default {
     SySelect,
     EmptyInfoBlock,
     PaginationTable,
-    DataColumnSummary,
-    ColumnCorrelationOverview
+    DataColumnSummary
   },
   data () {
     return {
