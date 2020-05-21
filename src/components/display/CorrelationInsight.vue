@@ -1,6 +1,7 @@
 <template>
-  <div class="correlation-insight">
-    {{ info }}
+  <div class="correlation-insight"
+    v-html="textTransform(info)"
+  >
   </div>
 </template>
 <script>
@@ -9,6 +10,11 @@ export default {
   props: {
     info: {
       type: String
+    }
+  },
+  methods: {
+    textTransform (text) {
+      return text.replace('^2', '<sup>2</sup>')
     }
   }
 }

@@ -22,7 +22,7 @@
         :info="componentData.info || componentData.data"
         :features="componentData.features"
         :confidence="componentData.confidence"
-        :formula="componentData.ax_b"
+        :formula="componentData.coeffs"
         :text="componentData.text"
         :chart-data="componentData.chart_data"
         :notes="componentData.notes"
@@ -69,135 +69,239 @@ export default {
       isGetPagination: false,
       // 是否有下一頁資料
       hasNextPage: false,
-      maxDataLengthPerPage: 200
+      maxDataLengthPerPage: 200,
+      // 下個分頁資料
+      nextPageData: null,
+      singlePage: true
     }
   },
   mounted () {
-    this.fetchData()
+    this.handleTaskInitData()
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
-    fetchData () {
-      if (this.pagination.currentPage > 0) {
-        this.isGetPagination = true
-      }
-      window.clearTimeout(this.timeoutFunction)
-      this.$store.dispatch('chatBot/getComponentData', {
-        id: this.componentId,
-        page: this.pagination.currentPage
-      }).then(response => {
-        switch (response.status) {
-          case 'Process':
-          case 'Ready':
-            this.timeoutFunction = window.setTimeout(() => {
-              this.fetchData()
-            }, 1000)
-            break
-          case 'Complete':
-            window.clearTimeout(this.timeoutFunction)
-            this.diagram = response.diagram
-            this.resultId = response.resultId
-            this.componentName = this.getChartTemplate(this.diagram)
-
-            let responseData = response.data
-            if (responseData.dataset) {
-              // 如果拿到的資料為空 表示這一頁已經是最後一頁了
-              if (responseData.dataset.data.length === 0) {
-                this.hasNextPage = false
-              } else {
-                this.hasNextPage = true
-              }
-            } else {
-              this.hasNextPage = false
-            }
-
-            // 分頁的資料 push 進去
-            if (this.pagination.currentPage !== 0) {
-              if (response.diagram === 'line_chart') {
-                let indexLength = this.componentData.dataset.index.length
-                if (responseData.dataset.index.length === 1) {
-                  let restDataLength = responseData.dataset.data[0].length
-                  this.componentData.dataset.data[indexLength - 1].splice(this.componentData.dataset.columns.length - restDataLength, restDataLength)
-                  this.componentData.dataset.data[indexLength - 1] = this.componentData.dataset.data[indexLength - 1].concat(responseData.dataset.data[0])
-                } else if (responseData.dataset.index.length > 1) {
-                  let firstNotNullIndex = responseData.dataset.data[0].findIndex(element => element !== null)
-                  // 檢查有沒有空值
-                  if (firstNotNullIndex > 0) {
-                    // 補最後一行的資料
-                    responseData.dataset.data[0].splice(0, firstNotNullIndex)
-                    this.componentData.dataset.data[indexLength - 1].splice(firstNotNullIndex, this.componentData.dataset.columns.length - firstNotNullIndex)
-                    this.componentData.dataset.data[indexLength - 1] = this.componentData.dataset.data[indexLength - 1].concat(responseData.dataset.data[0])
-                    responseData.dataset.data.shift()
-                    this.componentData.dataset.data = this.componentData.dataset.data.concat(responseData.dataset.data)
-                    responseData.dataset.index.shift()
-                    this.componentData.dataset.index = this.componentData.dataset.index.concat(responseData.dataset.index)
-                    if (responseData.dataset.display_index) {
-                      responseData.dataset.display_index.shift()
-                      this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(responseData.dataset.display_index)
-                    }
-                  } else {
-                    this.componentData.dataset.data = this.componentData.dataset.data.concat(responseData.dataset.data)
-                    this.componentData.dataset.index = this.componentData.dataset.index.concat(responseData.dataset.index)
-                    if (this.componentData.dataset.display_index) {
-                      this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(responseData.dataset.display_index)
-                    }
-                  }
-                }
-              } else {
-                this.componentData.dataset.data = this.componentData.dataset.data.concat(responseData.dataset.data)
-                this.componentData.dataset.index = this.componentData.dataset.index.concat(responseData.dataset.index)
-                if (this.componentData.dataset.display_index) {
-                  this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(responseData.dataset.display_index)
-                }
-              }
-
-              this.$nextTick(() => {
-                this.isGetPagination = false
-              })
-            } else {
-              this.componentData = responseData
-            }
-            this.loading = false
-
-            // 空資料的處理
-            if (this.componentData.dataset && this.componentData.dataset.data.length === 0) {
-              this.isError = true
-              this.errorMessage = this.$t('message.emptyResult')
-            }
-            // 取樣
-            if (responseData.sampling) {
-              this.appendNote(this.genSamplingNote(responseData.sampling))
-            }
-            // 取前 n 筆
-            if (responseData.group_limit) {
-              this.appendNote(this.genGroupLimitNote(responseData.group_limit))
-            }
-            break
-          case 'Disable':
-          case 'Delete':
-          case 'Warn':
-          case 'Fail':
-            window.clearTimeout(this.timeoutFunction)
-            this.loading = false
-            // 如果取分頁資料 fail，當作無資料來處理
-            if (this.pagination.currentPage > 0) {
-              this.hasNextPage = false
-              this.isGetPagination = false
+    fetchData (page = 0) {
+      return new Promise((resolve, reject) => {
+        window.clearTimeout(this.timeoutFunction)
+        this.$store.dispatch('chatBot/getComponentData', {
+          id: this.componentId,
+          page
+        }).then(response => {
+          // 是否只有一個頁面
+          this.singlePage = response.singlePage
+          switch (response.status) {
+            case 'Process':
+            case 'Ready':
+              this.timeoutFunction = window.setTimeout(() => {
+                this.fetchData(page).then(task => {
+                  resolve(task)
+                })
+              }, 1000)
               break
-            }
-            if (this.intend === 'key_result') this.isError = true
-            break
+            case 'Complete':
+              window.clearTimeout(this.timeoutFunction)
+              this.diagram = response.diagram
+              this.resultId = response.resultId
+              this.componentName = this.getChartTemplate(this.diagram)
+              let responseData = response.data
+
+              // 取樣
+              if (responseData.sampling) {
+                this.appendNote(this.genSamplingNote(responseData.sampling))
+              }
+              // 取前 n 筆
+              if (responseData.group_limit) {
+                this.appendNote(this.genGroupLimitNote(responseData.group_limit))
+              }
+              // 判斷是否為 圖表
+              if (responseData.dataset) {
+                // 如果拿到的資料為空 表示這一頁已經是最後一頁了
+                if (responseData.dataset.data.length === 0) {
+                  this.loading = false
+                  this.hasNextPage = false
+                  this.nextPageData = null
+                  this.isGetPagination = false
+                  // 空資料的處理
+                  if (page === 0) {
+                    this.isError = true
+                    this.errorMessage = this.$t('message.emptyResult')
+                  }
+                } else {
+                  resolve(responseData)
+                }
+              } else {
+                // 圖表以外的 task
+                this.componentData = responseData
+                this.hasNextPage = false
+                this.nextPageData = null
+                this.loading = false
+              }
+              break
+            case 'Disable':
+            case 'Delete':
+            case 'Warn':
+            case 'Fail':
+              window.clearTimeout(this.timeoutFunction)
+              this.loading = false
+              this.isGetPagination = false
+              // 如果取分頁資料 fail，當作無資料來處理
+              if (page > 0) {
+                this.hasNextPage = false
+                this.isGetPagination = false
+                this.nextPageData = null
+              } else {
+                if (this.intend === 'key_result') this.isError = true
+              }
+              break
+          }
+        }).catch(() => {
+          this.loading = false
+          if (this.intend === 'key_result') this.isError = true
+        })
+      })
+    },
+    handleTaskInitData () {
+      this.fetchData(this.pagination.currentPage).then(taskData => {
+        this.componentData = taskData
+        if (!this.singlePage) {
+          this.getNextPage(this.pagination.currentPage + 1)
+        } else {
+          this.loading = false
+          this.hasNextPage = false
         }
-      }).catch(() => {
+      })
+    },
+    getNextPage (page) {
+      this.fetchData(page).then(taskData => {
+        this.nextPageData = taskData
+        this.hasNextPage = true
+        this.isGetPagination = false
+      }).finally(() => {
         this.loading = false
-        if (this.intend === 'key_result') this.isError = true
       })
     },
     getNewPageInfo () {
+      this.isGetPagination = true
       this.pagination.currentPage += 1
-      this.fetchData()
+      // 將下一頁的資料塞進去
+      this.updateChartData(this.nextPageData)
+      // 確認下一頁有沒有資料
+      this.getNextPage(this.pagination.currentPage + 1)
+    },
+    updateChartData (taskData) {
+      // 分頁的資料 push 進去
+      if (this.diagram === 'line_chart') {
+        let indexLength = this.componentData.dataset.index.length
+
+        // 合併 columns
+        let concatColumns = [...new Set([...this.componentData.dataset.columns, ...taskData.dataset.columns])]
+
+        // 檢查舊有資料需不需要補值
+        if (concatColumns.length > this.componentData.dataset.columns.length) {
+          let lengthDiff = concatColumns.length - this.componentData.dataset.columns.length
+          this.componentData.dataset.data.forEach(element => {
+            for (let i = 0; i < lengthDiff; i++) {
+              element.push(null)
+            }
+          })
+        }
+        // 更新 columns
+        this.componentData.dataset.columns = concatColumns
+
+        // 處理 display_columns
+        if (taskData.dataset.display_columns) {
+          // 合併 columns
+          let concatDisplayColumns = [...new Set([...this.componentData.dataset.display_columns, ...taskData.dataset.display_columns])]
+          // 更新 columns
+          this.componentData.dataset.display_columns = concatDisplayColumns
+        }
+
+        /**
+         * 判斷需不需要銜接資料，舊的最後一筆跟新的第一筆依樣時間的話
+         **/
+        if (this.componentData.dataset.index[this.componentData.dataset.index.length - 1] === taskData.dataset.index[0]) {
+          /**
+           * 需要銜接資料
+           * 可能前一頁的最後一列資料沒有拿完，因此要補最後一行的資料
+           **/
+          // 針對前一頁最後一個陣列的資料補上新資料第一個陣列的值
+          let firstColumnData = taskData.dataset.data[0]
+          // 舊資料最後一列
+          let lastColumnData = this.componentData.dataset.data[indexLength - 1]
+          // 新資料的 column 對應 index
+          let columnIndexArray = []
+          for (let i = 0; i < firstColumnData.length; i++) {
+            let columnIndex = this.componentData.dataset.columns.findIndex(element => element === taskData.dataset.columns[i])
+            columnIndexArray.push(columnIndex)
+            if (firstColumnData[i] !== null) {
+              this.$set(lastColumnData, columnIndex, firstColumnData[i])
+            }
+          }
+          /**
+           * TODO: 這邊待整理，這邊怕整理了之後失去了原本的邏輯
+           */
+          if (taskData.dataset.data.length > 1) {
+            // 新資料移除第一列
+            taskData.dataset.data.shift()
+            // 接上新資料
+            let newDatasetData = [...Array(this.componentData.dataset.columns.length)].map(element => null)
+            taskData.dataset.data = taskData.dataset.data.map(element => {
+              let arrayData = JSON.parse(JSON.stringify(newDatasetData))
+              for (let i = 0; i < element.length; i++) {
+                this.$set(arrayData, columnIndexArray[i], element[i])
+              }
+              return arrayData
+            })
+
+            this.componentData.dataset.data = this.componentData.dataset.data.concat(taskData.dataset.data)
+          }
+
+          if (taskData.dataset.index.length !== 1) {
+            // index 更新
+            taskData.dataset.index.shift()
+            this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
+            if (taskData.dataset.display_index) {
+              taskData.dataset.display_index.shift()
+              this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
+            }
+          }
+        } else {
+          /**
+           * 不用銜接
+           **/
+          // 找出新 column 對應到舊 column 的 index
+          let columnIndexArray = []
+          for (let i = 0; i < taskData.dataset.columns.length; i++) {
+            let columnIndex = this.componentData.dataset.columns.findIndex(element => element === taskData.dataset.columns[i])
+            columnIndexArray.push(columnIndex)
+          }
+          // 新資料的空值矩陣，處理新 column 可能長度不一致的問題
+          let newDatasetData = [...Array(this.componentData.dataset.columns.length)].map(element => null)
+          // 接上新資料
+          taskData.dataset.data = taskData.dataset.data.map(element => {
+            let arrayData = JSON.parse(JSON.stringify(newDatasetData))
+            for (let i = 0; i < element.length; i++) {
+              this.$set(arrayData, columnIndexArray[i], element[i])
+            }
+            return arrayData
+          })
+          this.componentData.dataset.data = this.componentData.dataset.data.concat(taskData.dataset.data)
+
+          // index 更新
+          this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
+          if (taskData.dataset.display_index) {
+            this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
+          }
+        }
+      } else {
+        this.componentData.dataset.data = this.componentData.dataset.data.concat(taskData.dataset.data)
+        this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
+        if (this.componentData.dataset.display_index) {
+          this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
+        }
+      }
     },
     appendNote (note) {
       this.notes.push(note)
@@ -238,6 +342,18 @@ export default {
     @keyframes gradient {
       0%   { background-position: 0 0; }
       100% { background-position: -200% 0; }
+    }
+
+    // 遮罩避免使用者點擊到看更多
+    &:before {
+      display: block;
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
     }
   }
 }

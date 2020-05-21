@@ -65,9 +65,6 @@ export default {
     confirmChange () {
       this.changeStatsType()
       this.editedColumnInfo.hasChanged = this.editedColumnInfo.statsType !== this.editedColumnInfo.originalStatsType
-      this.editedColumnInfo.hasChanged = false
-      this.editedColumnInfo.statsType = this.editedColumnInfo.originalStatsType
-      this.editedColumnInfo.targetDataType = this.editedColumnInfo.originalDataType
       this.editedColumnInfo.values = this.editedColumnInfo.values.filter(el => el.type !== 'VALUE_REPLACEMENT')
       this.editedColumnInfo.values.forEach(function (el) { el.newValue = null })
 

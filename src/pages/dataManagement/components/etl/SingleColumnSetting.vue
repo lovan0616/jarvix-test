@@ -100,7 +100,7 @@
   </div>
 </template>
 <script>
-import { statsTypeOptionList, booleanOptionList } from '@/utils/general'
+import { statsTypeOptionList } from '@/utils/general'
 import InputVerify from '@/components/InputVerify'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'
@@ -125,17 +125,16 @@ export default {
   data () {
     return {
       editColumnInfo: JSON.parse(JSON.stringify(this.columnInfo)),
-      booleanOptionList,
       dataSummaryOption: [],
       categoryOptionList: [
         { value: 'CUSTOM', name: this.$t('etl.custom') }
       ],
       numericOptionList: [
-        { value: 'max', name: this.$t('etl.maxValue') },
-        { value: 'min', name: this.$t('etl.minValue') },
-        { value: 'average', name: this.$t('etl.avgValue') },
-        { value: 'standardDeviation', name: this.$t('etl.sdValue') },
-        { value: 'sum', name: this.$t('etl.sumValue') },
+        // { value: 'max', name: this.$t('etl.maxValue') },
+        // { value: 'min', name: this.$t('etl.minValue') },
+        // { value: 'average', name: this.$t('etl.avgValue') },
+        // { value: 'standardDeviation', name: this.$t('etl.sdValue') },
+        // { value: 'sum', name: this.$t('etl.sumValue') },
         { value: 'CUSTOM', name: this.$t('etl.custom') }
       ],
       datetimeOptionList: [
@@ -182,8 +181,7 @@ export default {
     replaceTypeOptionList () {
       return [
         { value: null, name: this.$t('etl.nullAction') },
-        ...this.dataSummaryOption,
-        { value: 'DROP', name: this.$t('etl.dropRow') }
+        ...this.dataSummaryOption
       ]
     },
     replaceValueList () {
@@ -215,7 +213,7 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return
 
-        let numTypes = ['average', 'min', 'max', 'sum', 'standardDeviation']
+        // let numTypes = ['average', 'min', 'max', 'sum', 'standardDeviation']
 
         this.editColumnInfo.hasChanged = true
         this.editColumnInfo.values.forEach(el => {
@@ -225,9 +223,9 @@ export default {
             delete el.customValue
           }
           // Numeric型別時，將實際值指定給 newValue
-          if (numTypes.includes(el.newValue)) {
-            el.newValue = this.summaryData.data[1].data[numTypes]
-          }
+          // if (numTypes.includes(el.newValue)) {
+          //   el.newValue = this.summaryData.data[1].data[numTypes]
+          // }
         })
         this.$emit('updateInfo', this.editColumnInfo)
 
@@ -236,6 +234,8 @@ export default {
           type: 'success',
           duration: 3 * 1000
         })
+
+        this.$emit('back')
       })
     },
     changeStatsType (column, targetStatsType) {
@@ -280,7 +280,7 @@ export default {
     'editColumnInfo.statsType': {
       handler (newVal) {
         if (newVal === 'BOOLEAN') {
-          this.dataSummaryOption = this.booleanOptionList
+          // this.dataSummaryOption = this.booleanOptionList
         } else if (newVal === 'CATEGORY') {
           this.dataSummaryOption = this.categoryOptionList
           this.replaceValueInputType = 'text'

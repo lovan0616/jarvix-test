@@ -77,7 +77,10 @@ export default {
           left: 18,
           right: 35,
           top: 18,
-          bottom: 65
+          bottom: 65,
+          backgroundColor: '#303737',
+          borderColor: 'rgba(225,225,225,.3)',
+          show: true
         },
         textStyle: {
           color: '#fff'
@@ -133,9 +136,17 @@ export default {
       config.xAxis.data = this.dataset.index[0]
       config.xAxis.axisLabel.formatter = formateLabel
       config.xAxis.axisLabel.rotate = -30
+      config.xAxis.axisLine.show = false
+      config.xAxis.splitLine.show = true
+      config.xAxis.splitLine.lineStyle = {
+        color: 'rgba(225,225,225,.3)'
+      }
       config.yAxis.inverse = true
       config.yAxis.data = this.dataset.index[1]
       config.yAxis.axisLabel.formatter = formateLabel
+      config.yAxis.splitLine.lineStyle = {
+        color: 'rgba(225,225,225,.3)'
+      }
 
       return config
     },

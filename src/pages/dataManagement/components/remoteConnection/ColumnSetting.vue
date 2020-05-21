@@ -12,12 +12,12 @@
     </div>
     <div class="dialog-body">
       <etl-choose-column
-        v-show="step === 'choose-column'"
+        v-if="step === 'choose-column'"
         @advance="step = 'column-setting'"
       >
       </etl-choose-column>
       <etl-column-setting
-        v-show="step === 'column-setting'"
+        v-else
         @back="step = 'choose-column'"
       >
       </etl-column-setting>

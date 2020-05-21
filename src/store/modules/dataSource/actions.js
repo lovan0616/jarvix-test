@@ -92,7 +92,7 @@ export default {
     ])
   },
   getDataFrameColumnCorrelation ({ state }, { id }) {
-    // TODO: 串接 API
+    return getColumnCorrelationMatrix(id)
   },
   getDataSourceColumnInfo ({ commit, state }) {
     if (!state.dataSourceId) return

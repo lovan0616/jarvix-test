@@ -2,24 +2,33 @@
   <div class="file-upload-finished">
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
-      :step="2"
+      :step="3"
     ></upload-process-block>
     <div class="dialog-body">
-      <file-list-block
-        v-if="successList.length > 0"
-        :title="$t('editing.uploaded')"
-        :file-list="successList"
+      <spinner class="spinner-container"
+        v-if="isProcessing"
+        :title="$t('editing.dataBuilding')"
+        size="50"
+      ></spinner>
+      <div
+        v-else
       >
-        <div class="uploaded-data-info" slot="fileListTitle">
-          {{ $t('editing.dataSourceInfo', {type: currentUploadInfo.type, dataSourceName: currentUploadInfo.name}) }}
-        </div>
-      </file-list-block>
-      <file-list-block
-        v-if="failList.length > 0"
-        :title="$t('editing.unuploaded')"
-        type="fail"
-        :file-list="failList"
-      ></file-list-block>
+        <file-list-block
+          v-if="successList.length > 0"
+          :title="$t('editing.uploaded')"
+          :file-list="successList"
+        >
+          <div class="uploaded-data-info" slot="fileListTitle">
+            {{ $t('editing.dataSourceInfo', {type: currentUploadInfo.type, dataSourceName: currentUploadInfo.name}) }}
+          </div>
+        </file-list-block>
+        <file-list-block
+          v-if="failList.length > 0"
+          :title="$t('editing.unuploaded')"
+          type="fail"
+          :file-list="failList"
+        ></file-list-block>
+      </div>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
@@ -81,6 +90,7 @@ export default {
       Promise.all(promiseList)
         .then((response) => {
           response.forEach(file => {
+            file.dataSourceId = this.dataSourceId
             this.$store.commit('dataManagement/updateEtlTableList', file)
           })
           this.$emit('next')
@@ -101,8 +111,6 @@ export default {
       this.$store.commit('dataManagement/updateUploadFileList', [])
       // 清空 imported table list
       this.$store.commit('dataManagement/clearImportedTableList')
-      // 清空 etl table list
-      this.$store.commit('dataManagement/clearEtlTableList')
       this.$emit('prev')
     },
     buildData () {
@@ -154,17 +162,13 @@ export default {
   .dialog-title {
     margin-bottom: 16px;
   }
-  .finished-img-block {
-    text-align: center;
-    margin-bottom: 44px;
+
+  .spinner-container {
+    height: 60vh;
+    background: rgba(50, 58, 58, 0.95);
+    border-radius: 5px;
   }
-  .finished-img {
-    width: 70px;
-    margin-bottom: 32px;
-  }
-  .finished-file-info {
-    line-height: 20px;
-  }
+
   .uploaded-data-info {
     font-size: 14px;
     line-height: 20px;
