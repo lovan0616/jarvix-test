@@ -36,7 +36,7 @@
         <template v-slot="{ column, index }">
           <div class="header-block">
             <div class="header">
-              <span class="text">
+              <span class="text" :class="{'has-changed': column[index].hasChanged}">
                 {{ column[index].primaryAlias }}
               </span>
 
@@ -52,7 +52,6 @@
                 </label>
                 {{ $t('etl.selectColumn') }}
               </div>
-
             </div>
             <div class="header">
               <category-select
@@ -71,6 +70,9 @@
           </div>
         </template>
       </pagination-table>
+      <p class="data-column__reminder">
+        *{{ $t('notification.columnSummarySampleNotification') }}
+      </p>
     </div>
   </div>
 </template>
@@ -192,6 +194,14 @@ export default {
         }
       }
     }
+    &.data-column {
+      .data-column__reminder {
+        font-size: 14px;
+        text-align: right;
+        color: $theme-color-warning;
+        margin: 0;
+      }
+    }
   }
 
   .data-frame-name {
@@ -255,6 +265,22 @@ export default {
     border-bottom: 1px solid #515959;
     display: flex;
     justify-content: space-between;
+    position: relative;
+    .text {
+      &.has-changed {
+        padding-left: 4px;
+        &::before {
+          content: '';
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          top: 8px;
+          left: 8px;
+          background-color: $theme-color-warning;
+        }
+      }
+    }
 
     .checkbox {
       display: flex;
@@ -280,6 +306,12 @@ export default {
 
     .link {
       line-height: 40px;
+    }
+
+    /deep/ .el-select {
+      background: #252C2C;
+      border-radius: 5px;
+      width: 190px;
     }
   }
 

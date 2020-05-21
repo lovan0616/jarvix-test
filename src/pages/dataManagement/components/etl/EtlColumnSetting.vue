@@ -14,28 +14,29 @@
     </div>
     <div class="section column-setting">
       <single-column-setting
+        :summary-data="currentTableSummary[currentColumnIndex]"
         :column-info="currentColumnInfo"
         :key="currentTableIndex + '_' + currentColumnIndex"
         @updateInfo="updateSetting"
       ></single-column-setting>
     </div>
     <div class="section column-summary">
-      <!-- TODO 替換為 data-summary componente -->
       <div class="title">{{ $t('etl.dataSummary') }}</div>
-      <dl v-for="(value, key) in dataSummary" :key="key">
-        <dt>{{ key }}</dt>
-        <dd>{{ value }}</dd>
-      </dl>
+      <data-column-summary
+        :summary-data="currentTableSummary[currentColumnIndex]"
+      />
     </div>
   </div>
 </template>
 <script>
 import SingleColumnSetting from './SingleColumnSetting'
+import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 
 export default {
   name: 'EtlColumnSetting',
   components: {
-    SingleColumnSetting
+    SingleColumnSetting,
+    DataColumnSummary
   },
   data () {
     return {
@@ -63,8 +64,17 @@ export default {
     currentColumnInfo () {
       return this.etlTableList[this.currentTableIndex].columns[this.currentColumnIndex]
     },
-    dataSummary () {
-      return this.currentColumnInfo.dataSummary.data[0].data
+    currentTableInfo () {
+      const tableInfo = this.etlTableList[this.currentTableIndex]
+      if (tableInfo.rowData) {
+        tableInfo.data = tableInfo.rowData
+        delete tableInfo.rowData
+      }
+      tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
+      return tableInfo
+    },
+    currentTableSummary () {
+      return this.currentTableInfo.columns.map(column => column.dataSummary)
     }
   }
 }
@@ -98,7 +108,7 @@ export default {
       padding: 12px 16px;
       height: fit-content;
       margin-left: 20px;
-      max-height: 297px; // 最高與 etl block 同高
+      max-height: 544px; // 最高與 etl block 同高
       overflow: auto;
 
       dl {

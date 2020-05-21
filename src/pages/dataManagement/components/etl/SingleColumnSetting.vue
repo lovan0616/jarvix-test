@@ -91,10 +91,9 @@
         <button class="btn btn-default"
           @click="saveSetting"
         >{{ $t('button.keepSave') }}</button>
-        <!-- TODO 恢復預設值 -->
-        <!-- <button class="btn btn-outline"
+        <button class="btn btn-outline"
           @click="reset"
-        >{{ $t('button.resumeDefault') }}</button> -->
+        >{{ $t('button.resumeDefault') }}</button>
       </div>
       <span class="remark-info">{{ $t('etl.remarkToSave') }}</span>
     </div>
@@ -117,6 +116,10 @@ export default {
     columnInfo: {
       type: Object,
       default: () => {}
+    },
+    summaryData: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
@@ -128,10 +131,11 @@ export default {
         { value: 'CUSTOM', name: this.$t('etl.custom') }
       ],
       numericOptionList: [
-        { value: 'MAX', name: this.$t('etl.maxValue') },
-        { value: 'MIN', name: this.$t('etl.minValue') },
-        { value: 'AVG', name: this.$t('etl.avgValue') },
-        { value: 'STD', name: this.$t('etl.sdValue') },
+        { value: 'max', name: this.$t('etl.maxValue') },
+        { value: 'min', name: this.$t('etl.minValue') },
+        { value: 'average', name: this.$t('etl.avgValue') },
+        { value: 'standardDeviation', name: this.$t('etl.sdValue') },
+        { value: 'sum', name: this.$t('etl.sumValue') },
         { value: 'CUSTOM', name: this.$t('etl.custom') }
       ],
       datetimeOptionList: [
@@ -209,22 +213,29 @@ export default {
     },
     saveSetting () {
       this.$validator.validateAll().then(result => {
-        if (result) {
-          this.editColumnInfo.values.forEach(el => {
-            // 將自訂值指定為 newValue
-            if (el.customValue) {
-              el.newValue = el.customValue
-              delete el.customValue
-            }
-          })
-          this.$emit('updateInfo', this.editColumnInfo)
+        if (!result) return 
 
-          Message({
-            message: this.$t('message.etlSettingTempSave'),
-            type: 'success',
-            duration: 3 * 1000
-          })
-        }
+        let numTypes = ['average', 'min', 'max', 'sum', 'standardDeviation']
+
+        this.editColumnInfo.hasChanged = true
+        this.editColumnInfo.values.forEach(el => {
+          // 將自訂值指定為 newValue
+          if (el.customValue) {
+            el.newValue = el.customValue
+            delete el.customValue
+          }
+          // Numeric型別時，將實際值指定給 newValue
+          if (numTypes.includes(el.newValue)) {
+            el.newValue = this.summaryData.data[1].data[numType]
+          }
+        })
+        this.$emit('updateInfo', this.editColumnInfo)
+
+        Message({
+          message: this.$t('message.etlSettingTempSave'),
+          type: 'success',
+          duration: 3 * 1000
+        })
       })
     },
     changeStatsType (column, targetStatsType) {
@@ -243,8 +254,27 @@ export default {
           column.targetDataType = 'BOOLEAN'
           break
       }
+      this.cleanReplacements()
     },
-    reset () {}
+    reset () {
+      this.editColumnInfo.hasChanged = false
+      this.editColumnInfo.statsType = this.editColumnInfo.originalStatsType
+      this.editColumnInfo.targetDataType = this.editColumnInfo.originalDataType
+      this.cleanReplacements()
+
+      this.updateSetting(this.editColumnInfo)
+    },
+    cleanReplacements () {
+      this.editColumnInfo.values = this.editColumnInfo.values.filter(el => el.type !== 'VALUE_REPLACEMENT')
+      this.editColumnInfo.values.forEach(function (el) { el.newValue = null })
+    },
+    updateSetting (info) {
+      this.$store.commit('dataManagement/updateReplaceValue', {
+        tableIndex: this.currentTableIndex,
+        columnIndex: info.index,
+        info
+      })
+    }
   },
   watch: {
     'editColumnInfo.statsType': {
@@ -275,7 +305,7 @@ export default {
     background: rgba(67, 76, 76, 0.95);
     border-radius: 5px;
     padding: 12px 16px;
-    height: 297px;
+    max-height: 544px;
     overflow: auto;
     margin-bottom: 12px;
   }

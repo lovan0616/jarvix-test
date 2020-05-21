@@ -38,6 +38,7 @@ export default {
     if (columnList.length > 0) {
       columnList.forEach((element, index) => {
         let newElement = JSON.parse(JSON.stringify(element))
+        Vue.set(element, 'hasChanged', false)
         Vue.set(element, 'index', index)
         Vue.set(element, 'targetDataType', newElement.originalDataType)
         Vue.set(element, 'originalStatsType', newElement.statsType)
