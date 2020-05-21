@@ -5,15 +5,23 @@
       <spinner
         v-if="isLoading"
       ></spinner>
-      <div v-else-if="!isLoading && componentData && !hasError">
+      <div
+        v-else-if="!isLoading && componentData && !hasError && !isCalculating"
+      >
         <display-heat-map-chart
           :dataset="componentData.dataset"
         />
         <div class="descrtipion">
           <div class="description__container">
-            <div class="description__item description__item--min">{{ $t('resultDescription.highlyPositiveCorrelated') }}</div>
-            <div class="description__item description__item--zero">{{ $t('resultDescription.notCorrelated') }}</div>
-            <div class="description__item description__item--max">{{ $t('resultDescription.highlyNegativeCorrelated') }}</div>
+            <div class="description__item description__item--min">
+              {{ $t('resultDescription.highlyPositiveCorrelated') }}
+            </div>
+            <div class="description__item description__item--zero">
+              {{ $t('resultDescription.notCorrelated') }}
+            </div>
+            <div class="description__item description__item--max">
+              {{ $t('resultDescription.highlyNegativeCorrelated') }}
+            </div>
           </div>
         </div>
       </div>
@@ -53,7 +61,7 @@ import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 // const dummyData = {
 //   overview: {
-//     data: [-1, 0.1, 0.4, -0.4, 0.7, 0.3, -0.2, 0.0, 0.3, 0.1, 0.3, 0.6, -0.9, 0.5, 0.3, -0.6, 0.3, 0.1, 0.3, 0.6],
+//     data: [[-1, 0.1, 0.4, -0.4], [0.7, 0.3, -0.2, 0.0], [0.3, 0.1, 0.3, 0.6], [-0.9, 0.5, 0.3, -0.6], [0.3, 0.1, 0.3, 0.6]],
 //     columnNameList: ['apple22222222', 'dddddddddd', 'c', 'd']
 //   },
 //   top: [
@@ -134,7 +142,7 @@ export default {
           const columnNameList = response.columnNameList
           const columnDataList = response.data
           // 處理舊資料需被計算的狀態
-          if (response.statusType === 'Ready' || response.statusType === 'Process') {
+          if (response.statusType === 'Process') {
             this.isCalculating = true
             return
           }
@@ -156,22 +164,16 @@ export default {
           //   icon: 'arrow-right'
           // }))
         })
-        .catch(() => {
-          this.hasError = true
-        })
-        .finally(() => {
-          this.isLoading = false
-        })
+        .catch(() => { this.hasError = true })
+        .finally(() => { this.isLoading = false })
     },
     formatData (dataList, nameList) {
       const result = []
-      let dataIndex = 0
-      for (let y of nameList) {
-        for (let x of nameList) {
-          result.push([x, y, dataList[dataIndex]])
-          dataIndex += 1
-        }
-      }
+      dataList.forEach((row, yAxisIndex) => {
+        row.forEach((column, xAxisIndex) => {
+          result.push([nameList[xAxisIndex], nameList[yAxisIndex], column])
+        })
+      })
       return result
     }
   }
