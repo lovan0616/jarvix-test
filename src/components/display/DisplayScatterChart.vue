@@ -85,13 +85,14 @@ export default {
       }
     },
     formula: {
-      type: Object,
+      type: Array,
       default: null
     }
   },
   data () {
     return {
-      selectedData: []
+      selectedData: [],
+      correlationLinePoint: 100
     }
   },
   methods: {
@@ -189,12 +190,11 @@ export default {
       })
 
       if (this.formula) {
-        let gradient = Number((this.formula.a).toFixed(4))
-        let offset = Number((this.formula.b).toFixed(4))
-        let expression = `y = ${gradient}x ${offset > 0 ? '+' : '-'} ${Math.abs(offset)}`
+        let lineData = []
+        let expression = ''
+        // 找出 X 的最大值和最小值
         let minX = this.dataset.data[0][0]
         let maxX = this.dataset.data[0][0]
-
         this.dataset.data.forEach(element => {
           if (element[0] === null) return
           if (minX === null) minX = element[0]
@@ -203,8 +203,27 @@ export default {
           minX = element[0] < minX ? element[0] : minX
         })
 
-        let minY = this.roundNumber(gradient * minX + offset, 4)
-        let maxY = this.roundNumber(gradient * maxX + offset, 4)
+        if (this.formula.length === 2) {
+          // ax + b
+          let offset = Number((this.formula[0]).toFixed(4))
+          let gradient = Number((this.formula[1]).toFixed(4))
+          let minY = this.roundNumber(gradient * minX + offset, 4)
+          let maxY = this.roundNumber(gradient * maxX + offset, 4)
+          expression = `y = ${gradient}x ${offset > 0 ? '+' : '-'} ${Math.abs(offset)}`
+          lineData = [[minX, minY], [maxX, maxY]]
+        } else {
+          // ax^2 + bx + c
+          let offset = this.formula[0]
+          let firstDegree = this.formula[1]
+          let secondDegree = this.formula[2]
+          let interval = this.floatSub(maxX, minX) / this.correlationLinePoint
+          // 迴歸線點
+          for (let i = 0; i < this.correlationLinePoint; i++) {
+            let xPoint = minX + interval * i
+            lineData.push([xPoint, secondDegree * xPoint * xPoint + firstDegree * xPoint + offset])
+          }
+          expression = `y = ${Number((secondDegree).toFixed(4))}x^2 ${firstDegree > 0 ? '+' : '-'} ${Math.abs(Number((firstDegree).toFixed(4)))}x ${offset > 0 ? '+' : '-'} ${Math.abs(Number((offset).toFixed(4)))}`
+        }
 
         // markLine
         chartAddon.series[1] = {
@@ -214,7 +233,7 @@ export default {
           smooth: true,
           color: '#FF9559',
           symbol: 'none',
-          data: [[minX, minY], [maxX, maxY]],
+          data: lineData,
           markPoint: {
             itemStyle: {
               normal: {
@@ -227,17 +246,16 @@ export default {
               formatter: expression,
               width: '100%',
               lineHeight: 14,
-              padding: [1, 2, 1, 22],
+              padding: this.formula.length === 2 ? [1, 2, 1, 22] : [1, 2, 1, 50],
               textStyle: {
                 color: '#FF9559',
                 fontSize: 14
               },
-              // backgroundColor: '#093B3E'
               backgroundColor: '#000'
             },
             data: [
               {
-                coord: [maxX, maxY]
+                coord: lineData[lineData.length - 1]
               }
             ]
           }
