@@ -65,7 +65,12 @@
                         <div class="tooltip">{{ getStatesTypeName(index)}}</div>
                       </span>
                       <span class="text">
-                        {{column.titles[index]}}
+                        <el-tooltip
+                          :enterable="false"
+                          slot="label"
+                          :content="`${column.titles[index]}`">
+                          <span>{{column.titles[index]}}</span>
+                        </el-tooltip>
                       </span>
                     </div>
                     <div class="summary">

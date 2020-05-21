@@ -36,7 +36,12 @@
           <div class="header-block">
             <div class="header">
               <span class="text" :class="{'has-changed': column[index].hasChanged}">
-                {{ column[index].primaryAlias }}
+                <el-tooltip
+                  :enterable="false"
+                  slot="label"
+                  :content="`${column[index].primaryAlias}`">
+                  <span>{{ column[index].primaryAlias }}</span>
+                </el-tooltip>
               </span>
               <div class="checkbox">
                 <label class="checkbox-label">
