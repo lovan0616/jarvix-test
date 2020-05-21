@@ -213,7 +213,7 @@ export default {
     },
     saveSetting () {
       this.$validator.validateAll().then(result => {
-        if (!result) return 
+        if (!result) return
 
         let numTypes = ['average', 'min', 'max', 'sum', 'standardDeviation']
 
@@ -226,7 +226,7 @@ export default {
           }
           // Numeric型別時，將實際值指定給 newValue
           if (numTypes.includes(el.newValue)) {
-            el.newValue = this.summaryData.data[1].data[numType]
+            el.newValue = this.summaryData.data[1].data[numTypes]
           }
         })
         this.$emit('updateInfo', this.editColumnInfo)
