@@ -1431,12 +1431,18 @@
     "target": "目標",
     "value": "數值",
     "feature": "自定義欄位",
-    "average": "平均值",
-    "standardDeviation": "標準差",
+    "average": "平均值"
+  },
+  "columnSummary": {
+    "avg": "平均值",
+    "stdev": "標準差",
     "const": "定值",
     "distinctCount": "不重複值",
     "range": "範圍",
-    "sum": "總合值"
+    "sum": "總合值",
+    "record": "筆",
+    "total": "總量",
+    "interval": "區間"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",

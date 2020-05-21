@@ -372,7 +372,6 @@ export default {
     }
     .summary {
       padding: 10px;
-      overflow: auto;
       height: calc(100% - 44px);
     }
   }

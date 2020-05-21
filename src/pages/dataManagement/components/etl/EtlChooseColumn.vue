@@ -155,7 +155,8 @@ export default {
     currentTableSummary () {
       return this.currentTableInfo.columns.map(column => ({
         ...column.dataSummary,
-        statsType: column.statsType
+        statsType: column.statsType,
+        totalRows: this.currentTableInfo.rowCount
       }))
     }
   }
@@ -261,7 +262,7 @@ export default {
 }
 
 .header-block {
-  height: 255px;
+  height: 305px;
 
   .header {
     padding: 10px;
@@ -320,7 +321,6 @@ export default {
 
   .summary {
     padding: 10px;
-    overflow: auto;
     height: calc(100% - 105px);
   }
 }
