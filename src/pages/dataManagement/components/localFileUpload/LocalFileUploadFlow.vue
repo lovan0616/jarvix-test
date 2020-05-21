@@ -1,55 +1,47 @@
 <template>
   <div class="local-file-upload-flow">
     <transition name="fade" mode="out-in">
-      <data-source-name
-        v-if="step === 0"
-        @next="nextStep"
-      ></data-source-name>
       <local-file-upload
-        v-if="step === 1"
+        v-if="step === 0"
         @next="nextStep"
       ></local-file-upload>
       <local-file-upload-status
+        v-if="step === 1"
+        @next="nextStep"
+        @prev="prevStep"
+        @dataBuilt="step = 3"
+      ></local-file-upload-status>
+      <etl-setting
         v-if="step === 2"
         @next="nextStep"
         @prev="prevStep"
-      ></local-file-upload-status>
-      <choose-column
+      ></etl-setting>
+      <confirm-page
         v-if="step === 3"
-        @next="nextStep"
-      ></choose-column>
-      <local-column-setting
-        v-if="step === 4"
-        @prev="prevStep"
         @next="uploadFinish"
-      ></local-column-setting>
+      ></confirm-page>
     </transition>
   </div>
 </template>
 <script>
-import DataSourceName from './DataSourceName'
 import LocalFileUpload from './LocalFileUpload'
 import LocalFileUploadStatus from './LocalFileUploadStatus'
-import ChooseColumn from './ChooseColumn'
-import LocalColumnSetting from './LocalColumnSetting'
+import EtlSetting from './EtlSetting'
+import ConfirmPage from './ConfirmPage'
 
 export default {
   name: 'LocalFileUploadFlow',
   components: {
-    DataSourceName,
     LocalFileUpload,
     LocalFileUploadStatus,
-    ChooseColumn,
-    LocalColumnSetting
+    EtlSetting,
+    ConfirmPage
   },
   data () {
     return {
       step: 0,
-      dataSourceId: this.$route.params ? parseInt(this.$route.params.id) : null
+      dataSourceId: parseInt(this.$route.params.id)
     }
-  },
-  created () {
-    this.step = this.dataSourceId ? 1 : 0
   },
   methods: {
     nextStep () {
@@ -59,11 +51,7 @@ export default {
       this.step -= 1
     },
     uploadFinish () {
-      if (this.$route.name === 'DataSourceList') {
-        this.$store.dispatch('dataSource/getDataSourceList')
-      } else {
-        this.$store.commit('dataManagement/updateFileUploadSuccess', true)
-      }
+      this.$store.commit('dataManagement/updateFileUploadSuccess', true)
       // close fileUploadDialog
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     }

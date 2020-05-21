@@ -23,24 +23,14 @@
       >
         <li
           class="list-item"
-          v-for="item in dataBlock.data"
-          :key="item.name + item.value"
+          v-for="(value, name) in getDataList(dataBlock.data)"
+          :key="name + value"
         >
           <div class="list-item-name">
-             <el-tooltip
-              slot="label"
-              :enterable="false"
-              :content="item.name">
-              <span>{{item.name}}</span>
-            </el-tooltip>
+            {{name}}
           </div>
           <div class="list-item-value">
-            <el-tooltip
-              slot="label"
-              :enterable="false"
-              :content="item.value">
-              <span>{{item.value}}</span>
-            </el-tooltip>
+            {{value}}
           </div>
         </li>
       </ul>
@@ -69,6 +59,19 @@ export default {
         case 'histogram':
           return 'DisplayHistogramChart'
       }
+    },
+    getDataList (dataObj) {
+      let dataList = {}
+      for (let prop in dataObj) {
+        if (typeof dataObj[prop] === 'object') {
+          dataList = {...dataList, ...dataObj[prop]}
+        } else {
+          const typesInEnglish = ['null', 'true', 'false']
+          const propName = typesInEnglish.includes(prop) ? prop : this.$t(`resultDescription.${prop}`)
+          dataList[propName] = dataObj[prop]
+        }
+      }
+      return dataList
     }
   }
 }

@@ -74,3 +74,15 @@ export const uploadStatus = {
   // 上傳結束
   finished: 'finished'
 }
+
+export const statsTypeOptionList = [
+  { value: 'CATEGORY', name: 'Category' },
+  { value: 'NUMERIC', name: 'Numeric' },
+  { value: 'BOOLEAN', name: 'Boolean' },
+  { value: 'DATETIME', name: 'Datetime' }
+]
+
+export const booleanOptionList = [
+  { name: 'True', value: true },
+  { name: 'False', value: false }
+]

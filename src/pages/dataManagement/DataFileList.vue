@@ -28,7 +28,7 @@
         <div class="button-block dataframe-action">
           <button class="btn-m btn-secondary btn-has-icon"
             @click="toggleEditFeatureDialog"
-            :disabled="reachLimit || dataList.length === 0"
+            :disabled="reachLimit || enableDataFrameCount === 0"
           >
             <svg-icon icon-class="feature" class="icon"></svg-icon>{{ $t('button.featureManagement') }}
           </button>
@@ -220,7 +220,8 @@ export default {
     },
     updateDataTable () {
       return getDataFrameById(this.currentDataSourceId, true).then(response => {
-        this.dataList = response.map(element => {
+        // 因為 ETL 會預建立 data frame，如果未執行預處理 data frame 會處於 pending 狀態，在這邊需要過濾掉
+        this.dataList = response.filter(element => element.state !== 'Pending').map(element => {
           return {
             ...element,
             createMethod: element.joinCount > 1 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
@@ -426,6 +427,11 @@ export default {
     hasDataFrameProcessing () {
       if (!this.dataList.length) return false
       return this.dataList.some(element => element.type === 'PROCESS' || element.state === 'Process')
+    },
+    enableDataFrameCount () {
+      return this.dataList.reduce((acc, cur) => {
+        return (cur.state === 'Enable') ? acc + 1 : acc
+      }, 0)
     }
   }
 }
