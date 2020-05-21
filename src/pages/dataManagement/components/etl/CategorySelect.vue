@@ -4,7 +4,7 @@
       class="dropdown__container"
       v-model="editedColumnInfo.statsType"
       @change="openConfirmMsg"
-      :option-list="statsTypeOptionList"
+      :option-list="statsTypeOptions"
     ></default-select>
     <div
       class="confirm"
@@ -64,6 +64,13 @@ export default {
     },
     confirmChange () {
       this.changeStatsType()
+      this.editedColumnInfo.hasChanged = this.editedColumnInfo.statsType !== this.editedColumnInfo.originalStatsType
+      this.editedColumnInfo.hasChanged = false
+      this.editedColumnInfo.statsType = this.editedColumnInfo.originalStatsType
+      this.editedColumnInfo.targetDataType = this.editedColumnInfo.originalDataType
+      this.editedColumnInfo.values = this.editedColumnInfo.values.filter(el => el.type !== 'VALUE_REPLACEMENT')
+      this.editedColumnInfo.values.forEach(function (el) { el.newValue = null })
+
       this.$emit('updateInfo', this.editedColumnInfo)
       this.closeConfirmMsg()
     },
@@ -82,6 +89,15 @@ export default {
           this.editedColumnInfo.targetDataType = 'BOOLEAN'
           break
       }
+    }
+  },
+  computed: {
+    statsTypeOptions () {
+      return statsTypeOptionList.filter((option) => {
+        return this.editedColumnInfo.originalStatsType === 'DATETIME'
+          ? option
+          : option.value !== 'DATETIME'
+      })
     }
   }
 }
@@ -132,9 +148,4 @@ export default {
   }
 }
 
-/deep/ .el-select {
-  background: #252C2C;
-  border-radius: 5px;
-  width: 190px;
-}
 </style>

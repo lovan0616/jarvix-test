@@ -336,6 +336,7 @@
     "minValue": "最小值",
     "avgValue": "平均值",
     "sdValue": "标准差",
+    "sumValue": "总和值",
     "dataSummary": "材料概述",
     "connectionHistory": "连线纪录",
     "newConnectionSetting": "新连线设定",

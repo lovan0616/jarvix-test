@@ -336,6 +336,7 @@
     "minValue": "最小值",
     "avgValue": "平均值",
     "sdValue": "標準差",
+    "sumValue": "總和值",
     "dataSummary": "資料概要",
     "connectionHistory": "連線紀錄",
     "newConnectionSetting": "新連線設定",
