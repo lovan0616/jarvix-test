@@ -21,7 +21,7 @@ export default {
     // 當前預處理的 list
     etlTableList: [],
     currentTableIndex: 0,
-    currentColumnIndex: 0
+    currentColumnIndex: null
   },
   actions,
   mutations,

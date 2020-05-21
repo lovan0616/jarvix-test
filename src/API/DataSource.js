@@ -267,13 +267,12 @@ export function dataSourcePreprocessor (dataSourceInfo) {
   })
 }
 
-/**
- * get column correlation matrix
- * @param {Number} dataFrameId - 欲查閱的資料表 ID
+/*
+ * Dataframe column summary
  */
-export function getColumnCorrelationMatrix (dataFrameId) {
+export function dataFrameColumnSummary (dataFrameId) {
   return request({
-    url: `/dataFrame/${dataFrameId}/relationMatrix`,
+    url: `/dataFrame/${dataFrameId}/summary`,
     method: 'GET'
   })
 }

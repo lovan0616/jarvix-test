@@ -1432,12 +1432,18 @@
     "target": "目标",
     "value": "数值",
     "feature": "自定义栏位",
-    "average": "平均值",
-    "standardDeviation": "标准差",
+    "average": "平均值"
+  },
+  "columnSummary": {
+    "avg": "平均值",
+    "stdev": "标准差",
     "const": "定值",
     "distinctCount": "不重复值",
     "range": "范围",
-    "sum": "总合值"
+    "sum": "总合值",
+    "record": "笔",
+    "total": "总量",
+    "interval": "区间"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",

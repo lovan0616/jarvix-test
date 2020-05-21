@@ -24,7 +24,9 @@
           <div class="data-table-head is-scrolling">
             <div class="data-table-row table-head">
               <div class="data-table-cell name">{{ $t('editing.columnName') }}</div>
-              <div class="data-table-cell source">
+              <div class="data-table-cell source"
+                v-if="isJoinTable"
+              >
                 {{ $t('editing.columnSource') }}
                 <span class="nav-item nav-function tooltip-container">
                   <svg-icon icon-class="information-circle" class="icon" />
@@ -42,7 +44,9 @@
               :key="column.id"
             >
               <div class="data-table-cell name">{{ column.name }}</div>
-              <div class="data-table-cell source">{{ column.parentDataFrameAlias || '-' }}</div>
+              <div class="data-table-cell source"
+                v-if="isJoinTable"
+              >{{ column.parentDataFrameAlias || '-' }}</div>
               <div class="data-table-cell alias">
                 <span v-show="!isEditing(column.id)">{{ column.primaryAlias }}</span>
                 <!-- 不使用v-if因為從DOM中拔除時validator會報錯(validate unexisting field) -->
@@ -222,6 +226,9 @@ export default {
     },
     max () {
       return this.$store.state.validation.fieldCommonMaxLength
+    },
+    isJoinTable () {
+      return this.columnList.some(element => element.parentDataFrameAlias)
     }
   }
 }

@@ -90,6 +90,7 @@ export default {
       Promise.all(promiseList)
         .then((response) => {
           response.forEach(file => {
+            file.dataSourceId = this.dataSourceId
             this.$store.commit('dataManagement/updateEtlTableList', file)
           })
           this.$emit('next')

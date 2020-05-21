@@ -4,7 +4,7 @@
       <div class="title">
         <svg-icon icon-class="arrow-right" class="icon"></svg-icon>
         <a href="javascript:void(0)" class="link"
-          @click="$emit('back')"
+          @click="$emit('close')"
         >{{ $t('etl.backToDataFrame') }}</a>
         <p class="data-frame-name">
           {{ $t('etl.advanceSetting') }}
@@ -18,7 +18,7 @@
         :column-info="currentColumnInfo"
         :key="currentTableIndex + '_' + currentColumnIndex"
         @updateInfo="updateSetting"
-        @back="$emit('back')"
+        @back="$emit('close')"
       ></single-column-setting>
     </div>
     <div class="section column-summary">
@@ -42,6 +42,9 @@ export default {
   data () {
     return {
     }
+  },
+  destroyed () {
+    this.$store.commit('dataManagement/changeCurrentColumnIndex', null)
   },
   methods: {
     updateSetting (info) {
@@ -75,7 +78,10 @@ export default {
       return tableInfo
     },
     currentTableSummary () {
-      return this.currentTableInfo.columns.map(column => column.dataSummary)
+      return this.currentTableInfo.columns.map(column => ({
+        ...column.dataSummary,
+        statsType: column.statsType
+      }))
     }
   }
 }
