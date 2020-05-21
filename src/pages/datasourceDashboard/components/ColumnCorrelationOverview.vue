@@ -131,7 +131,7 @@ export default {
   computed: {
     emptyMsg () {
       if (this.isCalculating) return this.$t('message.calculatingPleaseTryLater')
-      this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
+      return this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
     }
   },
   methods: {
