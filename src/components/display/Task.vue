@@ -71,7 +71,8 @@ export default {
       hasNextPage: false,
       maxDataLengthPerPage: 200,
       // 下個分頁資料
-      nextPageData: null
+      nextPageData: null,
+      singlePage: true
     }
   },
   mounted () {
@@ -88,6 +89,8 @@ export default {
           id: this.componentId,
           page
         }).then(response => {
+          this.singlePage = response.singlePage
+
           switch (response.status) {
             case 'Process':
             case 'Ready':
@@ -162,7 +165,12 @@ export default {
     handleTaskInitData () {
       this.fetchData(this.pagination.currentPage).then(taskData => {
         this.componentData = taskData
-        this.getNextPage(this.pagination.currentPage + 1)
+        if (!this.singlePage) {
+          this.getNextPage(this.pagination.currentPage + 1)
+        } else {
+          this.loading = false
+          this.hasNextPage = false
+        }
       })
     },
     getNextPage (page) {
