@@ -22,7 +22,7 @@
         :info="componentData.info || componentData.data"
         :features="componentData.features"
         :confidence="componentData.confidence"
-        :formula="componentData.ax_b"
+        :formula="componentData.coeffs"
         :text="componentData.text"
         :chart-data="componentData.chart_data"
         :notes="componentData.notes"
