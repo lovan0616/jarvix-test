@@ -65,7 +65,7 @@ export default {
       }
     },
     dataTypeDescriptionList () {
-      const totlaRowsWithData = this.summaryData.totalRows + this.summaryData.null_count
+      const totlaRowsWithData = this.summaryData.total_count + this.summaryData.null_count
       switch (this.summaryData.statsType) {
         case 'CATEGORY':
           const {
@@ -106,17 +106,18 @@ export default {
       }
     },
     additionalDescription () {
-      const nullPercentage = this.summaryData.null_count / this.summaryData.totalRows
+      const nullPercentage = this.summaryData.null_count / this.summaryData.total_count
       const constCount = this.summaryData.constant
 
       return {
-        ...(nullPercentage && {'Null': this.formatPercentage(this.summaryData.null_count / this.summaryData.totalRows)}),
+        ...(nullPercentage && {'Null': this.formatPercentage(this.summaryData.null_count / this.summaryData.total_count)}),
         ...(constCount && {[this.$t(`columnSummary.const`)]: this.summaryData.constant})
       }
     }
   },
   methods: {
     formatNumeric (value) {
+      if (typeof value === 'string') value = Number(value)
       if (Math.abs(value) < 0.01) return value
       return this.formatComma(this.roundNumber(value, 2))
     },
@@ -158,11 +159,11 @@ export default {
       }
 
       &--name {
-        width: 60%;
+        width: 50%;
       }
 
       &--value {
-        width: 35%;
+        width: 50%;
         text-align: right;
       }
     }
