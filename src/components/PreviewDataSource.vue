@@ -79,10 +79,10 @@
               </pagination-table>
             </div>
             <!--欄位關聯概況-->
-            <column-correlation-overview
+            <!-- <column-correlation-overview
               class="board-body-section"
               :data-frame-id="dataSourceTable.id"
-            />
+            /> -->
           </template>
         </div>
       </div>
