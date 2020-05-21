@@ -151,6 +151,8 @@ export default {
       this.$set(chartAddon.xAxis, 'splitLine', scatterOptions.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterOptions.yAxisSplitLine)
       chartAddon.tooltip.formatter = tooltipFormatterWrapper(this.title)
+      // 不顯示“全選”按鈕
+      chartAddon.legend.selector = false
       // 開啟工具列的 dataZoom 工具
       chartAddon.toolbox.feature.dataZoom.show = true
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
