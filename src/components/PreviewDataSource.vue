@@ -1,7 +1,7 @@
 <template>
   <div class="page-preview-bookmark">
     <template v-if="dataSourceId">
-      <div class="header">{{$t('resultDescription.dataSourceIntro')}}</div>
+      <div class="bookmark-header">{{$t('resultDescription.dataSourceIntro')}}</div>
       <div class="result-board">
         <div
           v-if="dataSourceTables.length > 0"
@@ -31,7 +31,7 @@
             v-if="isLoading"
           ></spinner>
           <empty-info-block
-            v-else-if="hasError || dataSourceTables.length === 0"
+            v-else-if="!isLoading && (hasError || dataSourceTables.length === 0)"
             :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
           ></empty-info-block>
           <template v-else>
@@ -50,20 +50,19 @@
                   {{ '*' + $t('notification.columnSummarySampleNotification') }}
                 </div>
               </div>
-              <!--TODO: 上版前需設定 :min-column-width="'270px'"-->
               <pagination-table
                 :is-processing="isProcessing"
                 :dataset="dataSourceTableData"
                 :pagination-info="pagination"
+                :min-column-width="'270px'"
                 @change-page="updatePage"
               >
-                <!--TODO: 上版前需把註解移除-->
-                <!-- <template v-slot="{ column, index }">
+                <template v-slot="{ column, index }">
                   <div class="header-block">
                     <div class="header">
                       <span class="tooltip-container icon">
                         <svg-icon :icon-class="getHeaderIcon(index)" />
-                        <div class="tooltip">{{ getDataTypeName(index)}}</div>
+                        <div class="tooltip">{{ getStatesTypeName(index)}}</div>
                       </span>
                       <span class="text">
                         {{column.titles[index]}}
@@ -71,11 +70,11 @@
                     </div>
                     <div class="summary">
                       <data-column-summary
-                        :summary-data="dataSourceTableData.columns.summary[index]"
+                        :summary-data="tableSummaryList[index]"
                       />
                     </div>
                   </div>
-                </template> -->
+                </template>
               </pagination-table>
             </div>
             <!--欄位關聯概況-->
@@ -97,88 +96,6 @@ import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/ColumnCorrelationOverview'
 
-const dummySummaryData = [
-  {
-    dataType: 'boolean',
-    data: [
-      {
-        diagram: 'list',
-        data: [
-          {
-            name: 'true',
-            value: '39%'
-          },
-          {
-            name: 'false',
-            value: '39%'
-          },
-          {
-            name: 'null',
-            value: '22%'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    dataType: 'boolean',
-    data: [
-      {
-        diagram: 'list',
-        data: [
-          {
-            name: 'true',
-            value: '40%'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    dataType: 'numeric',
-    data: [
-      {
-        diagram: 'chart',
-        chartType: 'histogram',
-        dataset: {
-          data: [333, 5827, 3394, 2080, 1382, 589, 317, 299, 342, 335],
-          range: [12, 343]
-        },
-        title: {
-          xAxis: {
-            name: 'age'
-          },
-          yAxis: {
-            name: 'revenue'
-          }
-        }
-      },
-      {
-        diagram: 'list',
-        data: [
-          {
-            name: 'true',
-            value: '40%'
-          },
-          {
-            name: 'false',
-            value: '60%'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    dataType: 'numeric',
-    data: [
-      {
-        diagram: 'message',
-        message: '資料量太大無法統計'
-      }
-    ]
-  }
-]
-
 export default {
   name: 'PreviewDataSource',
   components: {
@@ -195,7 +112,7 @@ export default {
       hasError: false,
       dataSourceTables: [],
       dataSourceTable: null,
-      dataSourceTableData: null,
+      dataSourceTableData: {},
       pagination: {
         currentPage: 0,
         totalPage: 0
@@ -203,7 +120,8 @@ export default {
       dataFrameOverviewData: {
         totalRows: '-',
         totalColumns: '-'
-      }
+      },
+      tableSummaryList: []
     }
   },
   mounted () {
@@ -267,22 +185,26 @@ export default {
     },
     fetchDataFrameData (id, page = 0, resetPagination = false) {
       this.isProcessing = true
-      this.$store.dispatch('dataSource/getDataFrameData', {id, page})
-        .then(response => {
+      this.$store.dispatch('dataSource/getDataFrameIntro', {id, page})
+        .then(([dataFrameData, dataColumnSummary]) => {
           if (resetPagination) {
-            this.pagination = response.pagination
+            this.pagination = dataFrameData.pagination
             this.dataFrameOverviewData = {
-              totalRows: response.pagination.totalItems,
-              totalColumns: response.columns.length
+              totalRows: dataFrameData.pagination.totalItems,
+              totalColumns: dataFrameData.columns.length
             }
+            this.tableSummaryList = dataColumnSummary.map(column => ({
+              ...column.dataSummary,
+              statsType: column.statsType,
+              totalRows: dataFrameData.pagination.totalItems
+            }))
           }
           this.dataSourceTableData = {
             columns: {
-              titles: response.columns,
-              summary: dummySummaryData
+              titles: dataFrameData.columns
             },
-            data: response.data,
-            index: [...Array(response.data.length)].map((x, i) => i)
+            data: dataFrameData.data,
+            index: [...Array(dataFrameData.data.length)].map((x, i) => i)
           }
           this.isLoading = false
           this.isProcessing = false
@@ -297,22 +219,32 @@ export default {
       this.fetchDataFrameData(this.dataSourceTable.id, page - 1)
     },
     getHeaderIcon (index) {
-      if (!this.dataSourceTableData.columns.summary[index]) return 'check-circle'
-      // const dataType = this.dataSourceTableData.columns.summary[index].dataType
-      // TODO: 根據資料型態回覆正確的 icon
-      return 'check-circle'
+      if (!this.tableSummaryList[index]) return 'check-circle'
+      const statesType = this.tableSummaryList[index].statsType
+      switch (statesType) {
+        case 'CATEGORY':
+          return 'character-a'
+        case 'NUMERIC':
+          return 'numeric'
+        case 'BOOLEAN':
+          return 'checked'
+        case 'DATETIME':
+          return 'calendar'
+        default:
+          return 'check-circle'
+      }
     },
-    getDataTypeName (index) {
-      if (!this.dataSourceTableData.columns.summary[index]) return ''
-      const dataType = this.dataSourceTableData.columns.summary[index].dataType
-      switch (dataType) {
-        case 'category':
+    getStatesTypeName (index) {
+      if (!this.tableSummaryList[index]) return ''
+      const statesType = this.tableSummaryList[index].statsType
+      switch (statesType) {
+        case 'CATEGORY':
           return `${this.$t('dataType.category')}${this.$t('askHelper.column')}`
-        case 'numeric':
+        case 'NUMERIC':
           return `${this.$t('dataType.numeric')}${this.$t('askHelper.column')}`
-        case 'boolean':
+        case 'BOOLEAN':
           return `${this.$t('dataType.boolean')}${this.$t('askHelper.column')}`
-        case 'datetime':
+        case 'DATETIME':
           return `${this.$t('dataType.datetime')}${this.$t('askHelper.column')}`
         default:
           return `${this.$t('dataType.others')}${this.$t('askHelper.column')}`
@@ -323,7 +255,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-preview-bookmark {
-  .header {
+  .bookmark-header {
     font-weight: 600;
     font-size: 24px;
     line-height: 32px;
@@ -350,7 +282,7 @@ export default {
   }
 
   .header-block {
-    height: 210px;
+    height: 244px;
 
     .header {
       padding: 10px;

@@ -1,5 +1,5 @@
 import co from 'co'
-import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById, getDataFrameById, getDataFrameData } from '@/API/DataSource'
+import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById, getDataFrameById, getDataFrameData, dataFrameColumnSummary } from '@/API/DataSource'
 import { getHistoryQuestionList } from '@/API/NewAsk'
 import router from '../../../router'
 import { Message } from 'element-ui'
@@ -78,8 +78,18 @@ export default {
     if (state.dataSourceId === null) return
     return getDataFrameById(state.dataSourceId)
   },
-  getDataFrameData ({state}, {id, page = 0}) {
+  getDataFrameColumnSummary ({ state }, { id, page }) {
+    if (page > 0) return
+    return dataFrameColumnSummary(id)
+  },
+  getDataFrameData ({ state }, { id, page = 0 }) {
     return getDataFrameData(id, page)
+  },
+  getDataFrameIntro ({ dispatch, state }, { id, page }) {
+    return Promise.all([
+      dispatch('getDataFrameData', { id, page }),
+      dispatch('getDataFrameColumnSummary', { id, page })
+    ])
   },
   getDataFrameColumnCorrelation ({ state }, { id }) {
     // TODO: 串接 API

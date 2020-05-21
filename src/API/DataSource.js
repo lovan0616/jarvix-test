@@ -266,3 +266,13 @@ export function dataSourcePreprocessor (dataSourceInfo) {
     data: dataSourceInfo
   })
 }
+
+/*
+ * Dataframe column summary
+ */
+export function dataFrameColumnSummary (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/summary`,
+    method: 'GET'
+  })
+}

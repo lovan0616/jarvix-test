@@ -32,14 +32,12 @@
         :min-column-width="'270px'"
         :current-table-index="currentTableIndex"
       >
-        <!--TODO: 上版前需把註解移除-->
         <template v-slot="{ column, index }">
           <div class="header-block">
             <div class="header">
               <span class="text" :class="{'has-changed': column[index].hasChanged}">
                 {{ column[index].primaryAlias }}
               </span>
-
               <div class="checkbox">
                 <label class="checkbox-label">
                   <input
