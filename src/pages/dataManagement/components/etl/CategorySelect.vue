@@ -96,6 +96,11 @@ export default {
           : option.value !== 'DATETIME'
       })
     }
+  },
+  watch: {
+    'columnInfo.statsType' () {
+      this.editedColumnInfo = JSON.parse(JSON.stringify(this.columnInfo))
+    }
   }
 }
 </script>

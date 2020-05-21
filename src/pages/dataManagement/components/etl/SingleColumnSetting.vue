@@ -189,14 +189,8 @@ export default {
         return (element.type !== 'MISSING_VALUE' && element.type !== 'ERROR_DEFAULT_VALUE')
       })
     },
-    etlTableList () {
-      return this.$store.state.dataManagement.etlTableList
-    },
     currentTableIndex () {
       return this.$store.state.dataManagement.currentTableIndex
-    },
-    currentColumnIndex () {
-      return this.$store.state.dataManagement.currentColumnIndex
     }
   },
   methods: {

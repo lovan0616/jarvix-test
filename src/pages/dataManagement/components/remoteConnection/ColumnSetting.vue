@@ -11,18 +11,9 @@
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <etl-choose-column
-        v-if="step === 'choose-column'"
-        @advance="step = 'column-setting'"
-      >
-      </etl-choose-column>
-      <etl-column-setting
-        v-else
-        @back="step = 'choose-column'"
-      >
-      </etl-column-setting>
+      <etl-choose-column></etl-choose-column>
     </div>
-    <div class="dialog-footer">
+    <div class="dialog-footer" v-if="currentColumnIndex === null">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
           :disabled="isProcessing"
@@ -68,7 +59,6 @@ export default {
   },
   data () {
     return {
-      step: 'choose-column',
       isProcessing: false
     }
   },
@@ -122,6 +112,9 @@ export default {
     },
     etlTableList () {
       return this.$store.state.dataManagement.etlTableList
+    },
+    currentColumnIndex () {
+      return this.$store.state.dataManagement.currentColumnIndex
     }
   }
 }

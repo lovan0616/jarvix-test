@@ -10,18 +10,9 @@
     </div>
     <div class="dialog-body">
       <!-- TODO 使用 currentColumnInfo 控制元件 show/hide -->
-      <etl-choose-column
-        v-if="step === 'choose-column'"
-        @advance="step = 'column-setting'"
-      >
-      </etl-choose-column>
-      <etl-column-setting
-        v-else
-        @back="step = 'choose-column'"
-      >
-      </etl-column-setting>
+      <etl-choose-column></etl-choose-column>
     </div>
-    <div class="dialog-footer" v-if="step === 'choose-column'">
+    <div class="dialog-footer" v-if="currentColumnIndex === null">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
           :disabled="isProcessing"
@@ -40,19 +31,16 @@
 import { dataSourcePreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
 import EtlChooseColumn from '../etl/EtlChooseColumn'
-import EtlColumnSetting from '../etl/EtlColumnSetting'
 import { Message } from 'element-ui'
 
 export default {
   name: 'EtlSetting',
   components: {
     UploadProcessBlock,
-    EtlChooseColumn,
-    EtlColumnSetting
+    EtlChooseColumn
   },
   data () {
     return {
-      step: 'choose-column',
       isProcessing: false
     }
   },
@@ -102,6 +90,9 @@ export default {
     },
     etlTableList () {
       return this.$store.state.dataManagement.etlTableList
+    },
+    currentColumnIndex () {
+      return this.$store.state.dataManagement.currentColumnIndex
     }
   }
 }
