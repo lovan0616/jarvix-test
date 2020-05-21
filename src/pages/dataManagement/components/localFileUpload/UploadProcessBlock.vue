@@ -25,8 +25,7 @@ export default {
       return [
         this.$t('editing.processStep1'),
         this.$t('editing.processStep2'),
-        this.$t('editing.processStep3'),
-        this.$t('editing.processStep4')
+        this.$t('editing.processStep3')
       ]
     }
   }
@@ -36,8 +35,8 @@ export default {
   .upload-process-block {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    margin-bottom: 12px;
+    width: calc(100% - 180px);
+    margin: 0 auto 12px auto;
 
     .step-process {
       display: flex;
@@ -74,9 +73,9 @@ export default {
         }
 
         .step {
-          color: #fff;
+          color: #00C9DC;
           background-color: transparent;
-          border-color: #fff;
+          border-color: #00C9DC;
         }
         .step-level {
           color: #fff;
