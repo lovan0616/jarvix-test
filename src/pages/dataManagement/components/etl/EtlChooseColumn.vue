@@ -43,8 +43,8 @@
                   <span>{{ column[index].primaryAlias }}</span>
                 </el-tooltip>
               </span>
-              <div class="checkbox">
-                <label class="checkbox-label">
+              <label class="checkbox">
+                <div class="checkbox-label">
                   <input
                     type="checkbox"
                     :name="'column' + index"
@@ -52,9 +52,9 @@
                     @change="toggleColumn(index)"
                   >
                   <div class="checkbox-square"></div>
-                </label>
+                </div>
                 {{ $t('etl.selectColumn') }}
-              </div>
+              </label>
             </div>
             <div class="header">
               <category-select
@@ -292,6 +292,8 @@ export default {
     .checkbox {
       display: flex;
       align-items: center;
+      cursor: pointer;
+
       .checkbox-text {
         display: block;
         word-break: no-break;
