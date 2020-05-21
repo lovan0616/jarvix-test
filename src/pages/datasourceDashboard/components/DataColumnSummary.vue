@@ -1,6 +1,29 @@
 <template>
   <div class="column-summary">
-    <div
+    <div v-if="summaryData.statsType === 'NUMERIC'">
+      <component
+        :is="componentName(summaryData.statsType)"
+        :dataset="getHistogramData(summaryData)"
+      ></component>
+      <ul
+        class="list"
+      >
+        <li
+          class="list-item"
+          v-for="(value, name) in getDataList(dataBlock.data)"
+          :key="name + value"
+        >
+          <div class="list-item-name">
+            {{name}}
+          </div>
+          <div class="list-item-value">
+            {{value}}
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- <div
       v-for="dataBlock in summaryData.data"
       :key="dataBlock.diagram"
       class="data-block"
@@ -11,12 +34,7 @@
       >
         {{dataBlock.message}}
       </div>
-      <component
-        v-else-if="dataBlock.diagram === 'chart'"
-        :is="componentName(dataBlock.chartType)"
-        :dataset="dataBlock.dataset"
-        :title="dataBlock.title"
-      ></component>
+
       <ul
          v-else-if="dataBlock.diagram === 'list'"
         class="list"
@@ -34,7 +52,7 @@
           </div>
         </li>
       </ul>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -52,11 +70,21 @@ export default {
   components: {
     DisplayHistogramChart
   },
+  computed: {
+    getHistogramData () {
+      if (this.summaryData.statsType !== 'NUMERIC') return
+      const stateMeta = this.summaryData.numeric_stats_meta
+      return {
+        data: stateMeta.bins.map(rangeData => rangeData.count),
+        range: [stateMeta.min, stateMeta.max]
+      }
+    }
+  },
   methods: {
-    componentName (chartType) {
-      if (!chartType) return
-      switch (chartType) {
-        case 'histogram':
+    componentName (statsType) {
+      if (!statsType) return
+      switch (statsType) {
+        case 'NUMERIC':
           return 'DisplayHistogramChart'
       }
     },
