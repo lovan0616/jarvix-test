@@ -3,13 +3,13 @@
     <transition name="fade" mode="out-in">
       <choose-connection
         v-if="step === 0"
-        :data-source-id="dataSourceId"
         @skip="nextStep"
         @next="connectEstablish"
       ></choose-connection>
       <remote-connection
         v-if="step === 1"
         @updateDataSource="setDataSource"
+        @prev="prevStep"
         @next="connectEstablish"
       ></remote-connection>
       <choose-table

@@ -1,5 +1,5 @@
 import co from 'co'
-import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById, getDataFrameById, getDataFrameData } from '@/API/DataSource'
+import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById, getDataFrameById, getDataFrameData, getColumnCorrelationMatrix } from '@/API/DataSource'
 import { getHistoryQuestionList } from '@/API/NewAsk'
 import router from '../../../router'
 import { Message } from 'element-ui'
@@ -16,15 +16,17 @@ export default {
   getDataSourceList ({ dispatch, commit, state }, data) {
     return getDataSourceList().then(res => {
       commit('setDataSourceList', res)
+      // 找出第一個可以使用的 dataSourceId
+      let firstEnableDataSourceIndex = res.findIndex(element => element.enableDataFrameCount)
 
       if (data) {
         // 判斷路由的 DataSource 是否存在
         if (res.some(element => element.id === data)) {
           dispatch('changeDataSourceById', data)
         } else {
-          const dataSourceId = res.length ? res[0].id : null
+          const dataSourceId = firstEnableDataSourceIndex > -1 ? res[firstEnableDataSourceIndex].id : null
           dispatch('changeDataSourceById', dataSourceId)
-          if (!res.length) dispatch('handleEmptyDataSource')
+          if (firstEnableDataSourceIndex < 0) dispatch('handleEmptyDataSource')
           router.push('/')
 
           Message({
@@ -34,11 +36,11 @@ export default {
           })
         }
       } else {
-        if (!res.length) {
+        if (firstEnableDataSourceIndex < 0) {
           dispatch('handleEmptyDataSource')
         } else if (!state.dataSourceId || res.findIndex(element => element.id === state.dataSourceId) < 0) {
-          // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個
-          dispatch('changeDataSourceById', res[0].id)
+          // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個可使用的 dataSource
+          dispatch('changeDataSourceById', res[firstEnableDataSourceIndex].id)
         }
       }
     })
@@ -76,8 +78,21 @@ export default {
     if (state.dataSourceId === null) return
     return getDataFrameById(state.dataSourceId)
   },
+  getDataColumnSummary ({ state }, { id, page }) {
+    // if (page) return
+    // TODO: 串接 API
+  },
   getDataFrameData ({state}, {id, page = 0}) {
     return getDataFrameData(id, page)
+  },
+  getDataFrameIntro ({ dispatch, state }, { id, page }) {
+    return Promise.all([
+      dispatch('getDataFrameData', { id, page }),
+      dispatch('getDataColumnSummary', { id, page })
+    ])
+  },
+  getDataFrameColumnCorrelation ({ state }, { id }) {
+    return getColumnCorrelationMatrix(id)
   },
   getDataSourceColumnInfo ({ commit, state }) {
     if (!state.dataSourceId) return

@@ -107,7 +107,7 @@ export default {
       // 先清除，避免有部分成功的情形發生
       this.$store.commit('dataManagement/clearEtlTableList')
       let promiseList = this.tableIdList.map((element, index) => {
-        return analyzeTable(this.connectionId, element).then(response => {
+        return analyzeTable(this.connectionId, this.currentUploadInfo.dataSourceId, element).then(response => {
           this.$store.commit('dataManagement/updateEtlTableList', response)
         })
       })

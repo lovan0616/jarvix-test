@@ -2,7 +2,7 @@
   <div class="local-file-upload">
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
-      :step="currntUploadStatus === uploadStatus.uploading ? 3 : 2"
+      :step="currntUploadStatus === uploadStatus.uploading ? 2 : 1"
     ></upload-process-block>
     <div class="dialog-body">
       <div class="data-source-name">{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
@@ -53,16 +53,15 @@
         <span v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait">
           {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadFileList.length, size: byteToMB(totalTransmitDataAmount)}) }}
         </span>
-        <span v-if="currntUploadStatus !== uploadStatus.wait">{{ $t('editing.uploading') }}</span>
       </div>
       <div class="dialog-button-block">
+        <span v-if="currntUploadStatus !== uploadStatus.wait" class="uploading-reminding">{{ $t('editing.uploading') }}</span>
         <button class="btn btn-outline"
           v-if="currntUploadStatus === uploadStatus.wait"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-default"
-          v-if="currntUploadStatus !== uploadStatus.finish"
-          :disabled="uploadFileList.length === 0 || currntUploadStatus !== uploadStatus.wait"
+          v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait"
           @click="fileUpload"
         >
           <span v-show="currntUploadStatus === uploadStatus.wait">{{ $t('button.confirmUpload') }}</span>
@@ -79,7 +78,6 @@ import { mapState } from 'vuex'
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
 import UploadProcessBlock from './UploadProcessBlock'
-import { createDataSource } from '@/API/DataSource'
 
 export default {
   name: 'LocalFileUpload',
@@ -92,7 +90,7 @@ export default {
     return {
       uploadStatus,
       currntUploadStatus: uploadStatus.wait,
-      uploadFileSizeLimit: 3000,
+      uploadFileSizeLimit: localStorage.getItem('uploadLimit') ? parseInt(localStorage.getItem('uploadLimit'), 10) : 3000,
       unableFileList: []
     }
   },
@@ -126,19 +124,7 @@ export default {
 
           return false
         }
-
-        // 如果沒有 dataSourceId 就先去建一個
-        if (this.currentUploadInfo.dataSourceId) {
-          this.updateFileList(uploadInput.files)
-        } else {
-          createDataSource({
-            name: this.currentUploadInfo.name,
-            groupId: this.currentGroupId
-          }).then(res => {
-            this.$store.commit('dataManagement/updateCurrentUploadDataSourceId', res.dataSourceId)
-            this.updateFileList(uploadInput.files)
-          })
-        }
+        this.updateFileList(uploadInput.files)
       }
     },
     // 將 input 內的檔案塞進 formData，並存到 store 中
@@ -253,6 +239,13 @@ export default {
     font-size: 12px;
     line-height: 17px;
     letter-spacing: 0.5px;
+  }
+
+  .uploading-reminding {
+    font-size: 12px;
+    line-height: 17px;
+    letter-spacing: 0.5px;
+    color: $theme-color-warning;
   }
 }
 </style>

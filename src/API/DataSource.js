@@ -93,7 +93,7 @@ export function getDataSourceDataValueById (dataSourceId, size = 50) {
  */
 export function getDataFrameById (dataSourceId, getAllState = false) {
   return request({
-    url: `/dataFrame/dataSource/${dataSourceId}`,
+    url: `datasources/${dataSourceId}/dataFrame`,
     method: 'GET',
     params: {
       stateList: getAllState ? [] : 'Enable'
@@ -226,7 +226,7 @@ export function getDataValue (columnId) {
  */
 export function getDataColumnDataValue (dataFrameId) {
   return request({
-    url: `/dataFrame/FrameNameAndValue/${dataFrameId}`,
+    url: `/dataFrame/${dataFrameId}/dataColumn/aliasAndValue`,
     method: 'GET'
   })
 }
@@ -264,5 +264,16 @@ export function dataSourcePreprocessor (dataSourceInfo) {
     url: `/data/preprocessor`,
     method: 'POST',
     data: dataSourceInfo
+  })
+}
+
+/**
+ * get column correlation matrix
+ * @param {Number} dataFrameId - 欲查閱的資料表 ID
+ */
+export function getColumnCorrelationMatrix (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/relationMatrix`,
+    method: 'GET'
   })
 }

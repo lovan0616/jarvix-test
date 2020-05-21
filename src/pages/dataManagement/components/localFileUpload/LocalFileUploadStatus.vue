@@ -2,45 +2,64 @@
   <div class="file-upload-finished">
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
-      :step="2"
+      :step="3"
     ></upload-process-block>
     <div class="dialog-body">
-      <file-list-block
-        v-if="successList.length > 0"
-        :title="$t('editing.uploaded')"
-        :file-list="successList"
+      <spinner class="spinner-container"
+        v-if="isProcessing"
+        :title="$t('editing.dataBuilding')"
+        size="50"
+      ></spinner>
+      <div
+        v-else
       >
-        <div class="uploaded-data-info" slot="fileListTitle">
-          {{ $t('editing.dataSourceInfo', {type: currentUploadInfo.type, dataSourceName: currentUploadInfo.name}) }}
-        </div>
-      </file-list-block>
-      <file-list-block
-        v-if="failList.length > 0"
-        :title="$t('editing.unuploaded')"
-        type="fail"
-        :file-list="failList"
-      ></file-list-block>
+        <file-list-block
+          v-if="successList.length > 0"
+          :title="$t('editing.uploaded')"
+          :file-list="successList"
+        >
+          <div class="uploaded-data-info" slot="fileListTitle">
+            {{ $t('editing.dataSourceInfo', {type: currentUploadInfo.type, dataSourceName: currentUploadInfo.name}) }}
+          </div>
+        </file-list-block>
+        <file-list-block
+          v-if="failList.length > 0"
+          :title="$t('editing.unuploaded')"
+          type="fail"
+          :file-list="failList"
+        ></file-list-block>
+      </div>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
+          :disabled="isProcessing"
           @click="cancel"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-outline" type="button"
+          :disabled="isProcessing"
           @click="prev"
         >{{ $t('button.chooseFileUpload') }}</button>
+        <!-- <button class="btn btn-default"
+          :disabled="successList.length === 0 || isProcessing"
+          @click="buildData"
+        >{{ $t('editing.buildImmediately') }}</button> -->
         <button class="btn btn-default"
+          :disabled="successList.length === 0 || isProcessing"
           @click="next"
-        >{{ $t('button.nextStep') }}</button>
+        >{{ $t('button.nextStep') }}：{{ $t('editing.processStep3') }}</button>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { dataSourcePreprocessor } from '@/API/DataSource'
+import { analysisFile } from '@/API/File'
 import { uploadStatus } from '@/utils/general'
 import { mapState } from 'vuex'
 import FileListBlock from './FileListBlock'
 import UploadProcessBlock from './UploadProcessBlock'
+import { Message } from 'element-ui'
 
 export default {
   name: 'LocalFileUploadStatus',
@@ -50,22 +69,70 @@ export default {
   },
   data () {
     return {
-      uploadStatus
+      uploadStatus,
+      dataSourceId: parseInt(this.$route.params.id),
+      isProcessing: false
     }
+  },
+  mounted () {
   },
   methods: {
     cancel () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
     next () {
-      this.$emit('next')
+      this.isProcessing = true
+      let promiseList = []
+      this.importedFileList.forEach((element, index) => {
+        promiseList.push(analysisFile(element.id, this.dataSourceId))
+      })
+
+      Promise.all(promiseList)
+        .then((response) => {
+          response.forEach(file => {
+            this.$store.commit('dataManagement/updateEtlTableList', file)
+          })
+          this.$emit('next')
+        })
+        .catch(() => {
+          Message({
+            message: this.$t('message.analysisFailed'),
+            type: 'error',
+            duration: 3 * 1000
+          })
+        })
+        .finally(() => {
+          this.isProcessing = false
+        })
     },
     prev () {
       // 清空上傳檔案
       this.$store.commit('dataManagement/updateUploadFileList', [])
-      // 清空 etl table list
-      this.$store.commit('dataManagement/clearEtlTableList')
+      // 清空 imported table list
+      this.$store.commit('dataManagement/clearImportedTableList')
       this.$emit('prev')
+    },
+    buildData () {
+      let promiseList = []
+      this.etlTableList.forEach((element, index) => {
+        promiseList.push(dataSourcePreprocessor(element))
+      })
+
+      Promise.all(promiseList)
+        .then(() => {
+          // 全部資料表都設置成功才進入 ConfirmPage 結束導入流程
+          this.$emit('dataBuilt')
+        })
+        .catch(() => {
+          Message({
+            message: this.$t('message.analysisFailed'),
+            type: 'error',
+            duration: 3 * 1000
+          })
+        })
+        .finally(() => {
+          this.isProcessing = false
+        })
     }
   },
   computed: {
@@ -79,6 +146,12 @@ export default {
       return this.uploadFileList.filter(element => {
         return element.status === uploadStatus.fail
       })
+    },
+    etlTableList () {
+      return this.$store.state.dataManagement.etlTableList
+    },
+    importedFileList () {
+      return this.$store.state.dataManagement.importedFileList
     }
   }
 }
@@ -88,17 +161,13 @@ export default {
   .dialog-title {
     margin-bottom: 16px;
   }
-  .finished-img-block {
-    text-align: center;
-    margin-bottom: 44px;
+
+  .spinner-container {
+    height: 60vh;
+    background: rgba(50, 58, 58, 0.95);
+    border-radius: 5px;
   }
-  .finished-img {
-    width: 70px;
-    margin-bottom: 32px;
-  }
-  .finished-file-info {
-    line-height: 20px;
-  }
+
   .uploaded-data-info {
     font-size: 14px;
     line-height: 20px;

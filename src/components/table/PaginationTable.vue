@@ -12,15 +12,27 @@
       <el-table-column
         type="index"
         :width="indexWidth"
+        align="center"
       >
       </el-table-column>
       <el-table-column
-        v-for="(col, i) in dataset.columns"
+        v-for="(col, i) in dataset.columns.titles || dataset.columns"
         :key="i"
         :prop="i.toString()"
-        :label="(typeof col === 'number') ? col.toString() : col"
-        min-width="120"
-      />
+        :label="(typeof col === 'number') ? col.toString() : col.primaryAlias"
+        :width="columnWidth"
+        :min-width="minColumnWidth"
+      >
+        <!--Header slot-->
+        <template slot="header" slot-scope="scope">
+          <slot
+            :column="dataset.columns"
+            :index="i"
+          >
+           {{scope.column.label}}
+          </slot>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination class="table-pagination"
       v-if="paginationInfo.totalPages > 1"
@@ -60,7 +72,15 @@ export default {
     },
     indexWidth: {
       type: Number,
-      default: 80
+      default: 40
+    },
+    columnWidth: {
+      type: String,
+      default: null
+    },
+    minColumnWidth: {
+      type: String,
+      default: '120'
     },
     paginationInfo: {
       type: Object,
@@ -99,7 +119,7 @@ export default {
     tableProps () {
       let tableProps = { ...this.$props, data: this.dataset.data }
       if (!this.$props.maxHeight) {
-        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 400)
+        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 500)
       }
       return tableProps
     }
@@ -124,6 +144,31 @@ export default {
 
   .sy-table {
     margin-bottom: 16px;
+  }
+
+  /* TODO: 上版前需把註解移除 */
+  /deep/ .sy-table.el-table {
+    border: 1px solid #515959;
+    th, td {
+      border-bottom: 1px solid #515959;
+      border-right: 1px solid #515959;
+    }
+  }
+
+  /deep/ .el-table th>.cell {
+    padding: 0;
+  }
+
+  /deep/ .el-table th {
+    padding: 0;
+  }
+
+  /deep/ .el-table thead th>.cell {
+    overflow: visible;
+  }
+
+  /deep/ .el-table thead th {
+    overflow: visible;
   }
 }
 </style>

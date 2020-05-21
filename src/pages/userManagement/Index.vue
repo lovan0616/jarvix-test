@@ -25,6 +25,9 @@
         @deleteUserFromAccount="showDeleteAccount"
         :empty-message="$t('editing.notYetCreateGroup')"
       >
+        <template v-slot:roleZhName>
+          <role-desc-pop />
+        </template>
         <template v-slot:action="{ data }">
           <a
             @click="showPasswordChange(data, !isNotAllowChangePsd(data))"
@@ -90,7 +93,12 @@
       <div class="dialog-select-input-box">
         <div class="label">
           {{ $t('userManagement.userRoleAuthority') }}
-          <role-desc-pop />
+          <span class="tooltip-container">
+            <svg-icon icon-class="information-circle" class="icon" />
+            <div class="tooltip">
+              <role-desc-pop />
+            </div>
+          </span>
         </div>
         <default-select class="input"
           v-model="currentUser.roleId"
@@ -228,7 +236,10 @@ export default {
         {
           text: this.$t('userManagement.userRoleAuthority'),
           value: 'roleZhName',
-          width: '35%'
+          width: '35%',
+          tooltip: {
+            width: '212px'
+          }
         },
         {
           text: this.$t('editing.action'),
@@ -587,9 +598,6 @@ export default {
           margin-left: 13px;
           display: flex;
           align-items: center;
-          .tooltip-thumbnail {
-            margin-left: 8px;
-          }
         }
       }
       .form-item {
@@ -619,6 +627,20 @@ export default {
     }
   }
 
+  .tooltip-container {
+    .tooltip {
+      width: 212px;
+      white-space: normal;
+      padding: 12px;
+      line-height: 14px;
+      z-index: 2010;
+    }
+
+    .icon {
+      color: $theme-color-warning;
+    }
+  }
+
   /deep/ .dialog-box {
     .dialog-inner-box {
       .label {
@@ -642,9 +664,6 @@ export default {
   }
 }
 
-.tooltip-thumbnail {
-  color: $theme-color-warning;
-}
 </style>
 <style lang="scss">
 .role-select.el-select {

@@ -37,11 +37,11 @@
       >
       </data-table>
     </div>
-    <file-upload-dialog
+    <create-data-source
       v-if="showCreateDataSourceDialog"
-      @success="fetchData"
-      @close="closeFileUploadDialog"
-    ></file-upload-dialog>
+      @confirm="newDataSource"
+      @close="closeCreateDataSourceDialog"
+    ></create-data-source>
     <confirm-delete-dialog
       v-if="showConfirmDeleteDialog"
       :title="$t('editing.deleteDataSource')"
@@ -61,21 +61,25 @@
 <script>
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
+import CreateDataSource from './components/CreateDataSource'
 import ConfirmDeleteDialog from './components/ConfirmDeleteDialog'
 import ConfirmChangeNameDialog from './components/ConfirmChangeNameDialog'
-import { deleteDataSourceById, renameDataSourceById } from '@/API/DataSource'
+import { createDataSource, deleteDataSourceById, renameDataSourceById } from '@/API/DataSource'
 import { mapGetters } from 'vuex'
+import { Message } from 'element-ui'
 
 export default {
   name: 'DataSourceList',
   components: {
     DataTable,
     FileUploadDialog,
+    CreateDataSource,
     ConfirmDeleteDialog,
     ConfirmChangeNameDialog
   },
   data () {
     return {
+      showCreateDataSourceDialog: false,
       showConfirmDeleteDialog: false,
       showConfirmRenameDialog: false,
       deleteId: null,
@@ -110,6 +114,9 @@ export default {
         this.dataList = this.dataSourceList.map(dataInfo => {
           // 注意！這邊只會做資料表數計算，時間的顯示在 DataTable 處理，主要是為了時間排序的準確
           dataInfo.dataFrameCount = dataInfo.dataFrameCount || 0
+          dataInfo.processDataFrameCount = dataInfo.processDataFrameCount || 0
+          dataInfo.enableDataFrameCount = dataInfo.enableDataFrameCount || 0
+          dataInfo.failDataFrameCount = dataInfo.failDataFrameCount || 0
           return dataInfo
         })
       },
@@ -127,10 +134,10 @@ export default {
         })
     },
     createDataSource () {
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
+      this.showCreateDataSourceDialog = true
     },
-    closeFileUploadDialog () {
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    closeCreateDataSourceDialog () {
+      this.showCreateDataSourceDialog = false
     },
     confirmRename (dataInfo) {
       this.editDataSource = dataInfo
@@ -139,6 +146,20 @@ export default {
     confirmDelete (dataObj) {
       this.deleteId = dataObj.id
       this.showConfirmDeleteDialog = true
+    },
+    newDataSource (dataSourceInfo) {
+      createDataSource(dataSourceInfo)
+        .then(response => {
+          this.fetchData()
+            .then(() => {
+              this.closeCreateDataSourceDialog()
+              Message({
+                message: this.$t('message.builded'),
+                type: 'success',
+                duration: 3 * 1000
+              })
+            })
+        })
     },
     deleteDataSource (resolve) {
       deleteDataSourceById(this.deleteId)
@@ -204,6 +225,7 @@ export default {
         },
         {text: this.$t('editing.status'), value: 'state', width: '7.26%'},
         {text: this.$t('editing.countOfTable'), value: 'dataFrameCount', width: '65px'},
+        {text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '65px'},
         {
           text: this.$t('editing.action'),
           value: 'action',
@@ -221,9 +243,6 @@ export default {
       ]
     },
     ...mapGetters('dataSource', ['dataSourceList']),
-    showCreateDataSourceDialog () {
-      return this.$store.state.dataManagement.showCreateDataSourceDialog
-    },
     isDataSourceBuilding () {
       return this.$store.getters['dataSource/isDataSourceBuilding']
     },

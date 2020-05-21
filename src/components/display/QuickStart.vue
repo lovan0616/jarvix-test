@@ -25,7 +25,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .quick-start-list {
-  padding: 24px;
+  // padding: 24px;
 
   .title {
     text-align: left;

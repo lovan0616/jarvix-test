@@ -466,6 +466,21 @@ export function seriesItemMarkLine () {
   }
 }
 
+export function seriesItemHeatMap () {
+  return {
+    type: 'heatmap',
+    label: {
+      show: true,
+      color: '#000'
+    },
+    markLine: {
+      lineStyle: {
+        color: 'rgba(225,225,225,.3)'
+      }
+    }
+  }
+}
+
 // drillDown type
 export function getDrillDownTool (routeName, titleObject, isParallel = false, twoDirection = false) {
   let toolbox

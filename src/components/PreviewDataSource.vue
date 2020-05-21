@@ -1,53 +1,192 @@
 <template>
   <div class="page-preview-bookmark">
-    <div class="result-board"
-      v-show="dataSourceId"
-    >
-      <div class="board-header">
-        <result-board-header
-          :title="$t('resultDescription.dataSourceIntro')"
-        ></result-board-header>
-      </div>
-      <div class="board-body">
-        <div class="dataset-info">
-          <sy-select class="preview-bookmark-select"
-            :selected="dataSourcetableId"
-            :items="dataSourceTables"
-            :placeholder="$t('editing.chooseDataFrame')"
-            @update:selected="onDataSourceTableChange"
-          ></sy-select>
-          <div class="data-count">{{ metaTableRightText }}</div>
+    <template v-if="dataSourceId">
+      <div class="bookmark-header">{{$t('resultDescription.dataSourceIntro')}}</div>
+      <div class="result-board">
+        <div
+          v-if="dataSourceTables.length > 0"
+          class="board-header"
+        >
+          <el-tabs
+            :value="`${dataSourcetableId}`"
+            type="card"
+            @tab-click="onDataSourceTableChange"
+          >
+            <el-tab-pane
+              v-for="(tab, index) in dataSourceTables"
+              :key="index + tab.name"
+              :label="tab.name"
+              :name="`${tab.id}`"
+            >
+              <el-tooltip
+                slot="label"
+                :content="tab.name">
+                <span>{{tab.name}}</span>
+              </el-tooltip>
+            </el-tab-pane>
+          </el-tabs>
         </div>
-        <spinner
-          v-if="isLoading"
-        ></spinner>
-        <empty-info-block
-          v-else-if="hasError || dataSourceTables.length === 0"
-          :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
-        ></empty-info-block>
-        <pagination-table
-          v-else
-          :is-processing="isProcessing"
-          :dataset="dataSourceTableData"
-          :pagination-info="pagination"
-          @change-page="updatePage"
-        ></pagination-table>
+        <div class="board-body">
+          <spinner
+            v-if="isLoading"
+          ></spinner>
+          <empty-info-block
+            v-else-if="hasError || dataSourceTables.length === 0"
+            :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
+          ></empty-info-block>
+          <template v-else>
+            <div class="board-body-section">
+              <div class="title">{{ $t('editing.dataFrameContent') }}</div>
+              <div class="overview">
+                <div class="overview__data">
+                  <div class="overview__item">
+                    {{ $t('resultDescription.totalDataRows') + ': ' + dataFrameOverviewData.totalRows }}
+                  </div>
+                  <div class="overview__item">
+                    {{ $t('resultDescription.totalDataColumns') + ': ' + dataFrameOverviewData.totalColumns }}
+                  </div>
+                </div>
+                <div class="overview__reminder">
+                  {{ '*' + $t('notification.columnSummarySampleNotification') }}
+                </div>
+              </div>
+              <!--TODO: 上版前需設定 :min-column-width="'270px'"-->
+              <pagination-table
+                :is-processing="isProcessing"
+                :dataset="dataSourceTableData"
+                :pagination-info="pagination"
+                @change-page="updatePage"
+              >
+                <!--TODO: 上版前需把註解移除-->
+                <!-- <template v-slot="{ column, index }">
+                  <div class="header-block">
+                    <div class="header">
+                      <span class="tooltip-container icon">
+                        <svg-icon :icon-class="getHeaderIcon(index)" />
+                        <div class="tooltip">{{ getDataTypeName(index)}}</div>
+                      </span>
+                      <span class="text">
+                        {{column.titles[index]}}
+                      </span>
+                    </div>
+                    <div class="summary">
+                      <data-column-summary
+                        :summary-data="dataSourceTableData.columns.summary[index]"
+                      />
+                    </div>
+                  </div>
+                </template> -->
+              </pagination-table>
+            </div>
+            <!--欄位關聯概況-->
+            <!-- <column-correlation-overview
+              class="board-body-section"
+              :data-frame-id="dataSourceTable.id"
+            /> -->
+          </template>
+        </div>
       </div>
-    </div>
-    <span v-show="!dataSourceId">{{ $t('message.emptyDataSource') }}</span>
+    </template>
+    <span v-else>{{ $t('message.emptyDataSource') }}</span>
   </div>
 </template>
 <script>
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import PaginationTable from '@/components/table/PaginationTable'
+import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
+import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/ColumnCorrelationOverview'
+
+const dummySummaryData = [
+  {
+    dataType: 'boolean',
+    data: [
+      {
+        diagram: 'list',
+        data: [
+          {
+            name: 'true',
+            value: '39%'
+          },
+          {
+            name: 'false',
+            value: '39%'
+          },
+          {
+            name: 'null',
+            value: '22%'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    dataType: 'boolean',
+    data: [
+      {
+        diagram: 'list',
+        data: [
+          {
+            name: 'true',
+            value: '40%'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    dataType: 'numeric',
+    data: [
+      {
+        diagram: 'chart',
+        chartType: 'histogram',
+        dataset: {
+          data: [333, 5827, 3394, 2080, 1382, 589, 317, 299, 342, 335],
+          range: [12, 343]
+        },
+        title: {
+          xAxis: {
+            name: 'age'
+          },
+          yAxis: {
+            name: 'revenue'
+          }
+        }
+      },
+      {
+        diagram: 'list',
+        data: [
+          {
+            name: 'true',
+            value: '40%'
+          },
+          {
+            name: 'false',
+            value: '60%'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    dataType: 'numeric',
+    data: [
+      {
+        diagram: 'message',
+        message: '資料量太大無法統計'
+      }
+    ]
+  }
+]
 
 export default {
   name: 'PreviewDataSource',
   components: {
     SySelect,
     EmptyInfoBlock,
-    PaginationTable
+    PaginationTable,
+    DataColumnSummary,
+    ColumnCorrelationOverview
   },
   data () {
     return {
@@ -60,6 +199,10 @@ export default {
       pagination: {
         currentPage: 0,
         totalPage: 0
+      },
+      dataFrameOverviewData: {
+        totalRows: '-',
+        totalColumns: '-'
       }
     }
   },
@@ -114,7 +257,9 @@ export default {
     setDataSourceTableById (id) {
       this.dataSourceTable = this.dataSourceTables.find(item => item.id === id)
     },
-    onDataSourceTableChange (id) {
+    onDataSourceTableChange (tab) {
+      const id = parseInt(tab.name)
+      if (this.dataSourceTable.id === id) { return }
       this.isLoading = true
       this.hasError = false
       this.setDataSourceTableById(id)
@@ -122,15 +267,22 @@ export default {
     },
     fetchDataFrameData (id, page = 0, resetPagination = false) {
       this.isProcessing = true
-      this.$store.dispatch('dataSource/getDataFrameData', {id, page})
-        .then(response => {
+      this.$store.dispatch('dataSource/getDataFrameIntro', {id, page})
+        .then(([dataFrameData, dataColumnSummary]) => {
           if (resetPagination) {
-            this.pagination = response.pagination
+            this.pagination = dataFrameData.pagination
+            this.dataFrameOverviewData = {
+              totalRows: dataFrameData.pagination.totalItems,
+              totalColumns: dataFrameData.columns.length
+            }
           }
           this.dataSourceTableData = {
-            columns: response.columns,
-            data: response.data,
-            index: [...Array(response.data.length)].map((x, i) => i)
+            columns: {
+              titles: dataFrameData.columns,
+              summary: dataColumnSummary || dummySummaryData
+            },
+            data: dataFrameData.data,
+            index: [...Array(dataFrameData.data.length)].map((x, i) => i)
           }
           this.isLoading = false
           this.isProcessing = false
@@ -143,17 +295,161 @@ export default {
     },
     updatePage (page) {
       this.fetchDataFrameData(this.dataSourceTable.id, page - 1)
+    },
+    getHeaderIcon (index) {
+      if (!this.dataSourceTableData.columns.summary[index]) return 'check-circle'
+      // const dataType = this.dataSourceTableData.columns.summary[index].dataType
+      // TODO: 根據資料型態回覆正確的 icon
+      return 'check-circle'
+    },
+    getDataTypeName (index) {
+      if (!this.dataSourceTableData.columns.summary[index]) return ''
+      const dataType = this.dataSourceTableData.columns.summary[index].dataType
+      switch (dataType) {
+        case 'category':
+          return `${this.$t('dataType.category')}${this.$t('askHelper.column')}`
+        case 'numeric':
+          return `${this.$t('dataType.numeric')}${this.$t('askHelper.column')}`
+        case 'boolean':
+          return `${this.$t('dataType.boolean')}${this.$t('askHelper.column')}`
+        case 'datetime':
+          return `${this.$t('dataType.datetime')}${this.$t('askHelper.column')}`
+        default:
+          return `${this.$t('dataType.others')}${this.$t('askHelper.column')}`
+      }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .page-preview-bookmark {
+  .bookmark-header {
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 32px;
+    margin-bottom: 24px;
+  }
+
   .dataset-info {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
+  }
+
+  .board-body-section {
+    .title {
+      margin-bottom: 13px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 1.3rem;
+    }
+  }
+
+  .header-block {
+    height: 210px;
+
+    .header {
+      padding: 10px;
+      border-bottom: 1px solid #515959;
+      display: flex;
+
+      .icon {
+        width: 20px;
+        margin-right: 5px;
+        text-align: center;
+      }
+
+      .text {
+        width: calc(100% - 25px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .summary {
+      padding: 10px;
+      overflow: auto;
+      height: calc(100% - 44px);
+    }
+  }
+}
+
+.result-board {
+  .board-header {
+    border-top: unset;
+    padding-bottom: 0;
+  }
+  .board-body {
+    padding: 16px 24px;
+  }
+
+  .overview {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+
+    &__data {
+      display: flex;
+    }
+
+    &__item {
+      margin-right: 45px;
+    }
+
+    &__reminder {
+      color: #FFDF6F;
+    }
+  }
+}
+
+/deep/ .el-tabs {
+  width: 100%;
+  &>.el-tabs__header {
+    border: none;
+    margin: 0;
+    width: 100%;
+
+    .el-tabs__nav {
+      position: relative;
+      width: 100%;
+      border: none;
+      overflow-x: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 3px;
+        background: #324B4E;
+      }
+    }
+    .el-tabs__item {
+      border: none;
+      color:  #AAAAAA;
+      border-bottom: 3px solid #324B4E;
+      text-align: center;
+      width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: top;
+      &.is-active {
+        color: #fff;
+        background: linear-gradient(360deg, #324B4E 0%, rgba(50, 75, 78, 0) 100%);
+        border-bottom: 3px solid $theme-color-primary;
+      }
+    }
   }
 }
 </style>

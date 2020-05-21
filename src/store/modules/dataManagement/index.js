@@ -13,12 +13,15 @@ export default {
       name: null
     },
     uploadFileList: [],
+    importedFileList: [],
     showCreateDataSourceDialog: false,
     // 為了讓資料清單頁面可以重新刷新資料
     fileUploadSuccess: false,
     fileCountLimit: 10,
     // 當前預處理的 list
-    etlTableList: []
+    etlTableList: [],
+    currentTableIndex: 0,
+    currentColumnIndex: 0
   },
   actions,
   mutations,

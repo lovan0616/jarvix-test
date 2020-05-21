@@ -9,7 +9,7 @@
     </a>
     <div class="chat-room-header">
       <chat-bot-btn class="chat-bot-link"></chat-bot-btn>
-      <bookmark-select class="bookmark-select"></bookmark-select>
+      <data-source-select class="data-source-select"></data-source-select>
     </div>
     <conversation-block></conversation-block>
     <ask-block></ask-block>
@@ -19,12 +19,12 @@
 import ConversationBlock from './ConversationBlock'
 import AskBlock from './AskBlock'
 import ChatBotBtn from './ChatBotBtn'
-import BookmarkSelect from '@/components/select/BookmarkSelect'
+import DataSourceSelect from '@/components/select/DataSourceSelect'
 
 export default {
   name: 'ChatRoomBlock',
   components: {
-    BookmarkSelect,
+    DataSourceSelect,
     ConversationBlock,
     AskBlock,
     ChatBotBtn
@@ -87,7 +87,7 @@ export default {
       margin: initial;
     }
 
-    .bookmark-select {
+    .data-source-select {
       width: 150px;
       height: 36px;
     }
