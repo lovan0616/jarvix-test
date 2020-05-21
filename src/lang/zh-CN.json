@@ -1435,11 +1435,11 @@
   },
   "columnSummary": {
     "avg": "平均值",
-    "stdev": "標準差",
+    "stdev": "标准差",
     "const": "定值",
-    "distinctCount": "不重複值",
-    "range": "範圍",
-    "sum": "總合值",
+    "distinctCount": "不重复值",
+    "range": "范围",
+    "sum": "总合值",
     "record": "笔",
     "total": "总量",
     "interval": "区间"
