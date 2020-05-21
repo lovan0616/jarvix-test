@@ -235,6 +235,8 @@ export default {
           type: 'success',
           duration: 3 * 1000
         })
+
+        this.$emit('back')
       })
     },
     changeStatsType (column, targetStatsType) {

@@ -18,6 +18,7 @@
         :column-info="currentColumnInfo"
         :key="currentTableIndex + '_' + currentColumnIndex"
         @updateInfo="updateSetting"
+        @back="$emit('back')"
       ></single-column-setting>
     </div>
     <div class="section column-summary">
