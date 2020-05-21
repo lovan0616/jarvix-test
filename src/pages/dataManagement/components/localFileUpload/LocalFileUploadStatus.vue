@@ -110,8 +110,6 @@ export default {
       this.$store.commit('dataManagement/updateUploadFileList', [])
       // 清空 imported table list
       this.$store.commit('dataManagement/clearImportedTableList')
-      // 清空 etl table list
-      this.$store.commit('dataManagement/clearEtlTableList')
       this.$emit('prev')
     },
     buildData () {
