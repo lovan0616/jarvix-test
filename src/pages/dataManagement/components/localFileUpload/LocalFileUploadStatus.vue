@@ -79,6 +79,7 @@ export default {
   methods: {
     cancel () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+      this.$store.commit('dataManagement/clearImportedTableList')
     },
     next () {
       this.isProcessing = true
