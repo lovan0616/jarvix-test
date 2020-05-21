@@ -183,7 +183,6 @@ export default {
       return [
         { value: null, name: this.$t('etl.nullAction') },
         ...this.dataSummaryOption,
-        { value: 'DROP', name: this.$t('etl.dropRow') }
       ]
     },
     replaceValueList () {
