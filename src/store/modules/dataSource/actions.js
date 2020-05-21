@@ -1,5 +1,5 @@
 import co from 'co'
-import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById, getDataFrameById, getDataFrameData } from '@/API/DataSource'
+import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById, getDataFrameById, getDataFrameData, getColumnCorrelationMatrix } from '@/API/DataSource'
 import { getHistoryQuestionList } from '@/API/NewAsk'
 import router from '../../../router'
 import { Message } from 'element-ui'
@@ -92,7 +92,7 @@ export default {
     ])
   },
   getDataFrameColumnCorrelation ({ state }, { id }) {
-    // TODO: 串接 API
+    return getColumnCorrelationMatrix(id)
   },
   getDataSourceColumnInfo ({ commit, state }) {
     if (!state.dataSourceId) return

@@ -472,6 +472,11 @@ export function seriesItemHeatMap () {
     label: {
       show: true,
       color: '#000'
+    },
+    markLine: {
+      lineStyle: {
+        color: 'rgba(225,225,225,.3)'
+      }
     }
   }
 }

@@ -5,24 +5,33 @@
       <spinner
         v-if="isLoading"
       ></spinner>
-      <div v-else-if="!isLoading && componentData && !hasError">
+      <div
+        v-else-if="!isLoading && componentData && !hasError && !isCalculating"
+      >
         <display-heat-map-chart
           :dataset="componentData.dataset"
         />
         <div class="descrtipion">
           <div class="description__container">
-            <div class="description__item description__item--min">{{ $t('resultDescription.highlyPositiveCorrelated') }}</div>
-            <div class="description__item description__item--zero">{{ $t('resultDescription.notCorrelated') }}</div>
-            <div class="description__item description__item--max">{{ $t('resultDescription.highlyNegativeCorrelated') }}</div>
+            <div class="description__item description__item--min">
+              {{ $t('resultDescription.highlyPositiveCorrelated') }}
+            </div>
+            <div class="description__item description__item--zero">
+              {{ $t('resultDescription.notCorrelated') }}
+            </div>
+            <div class="description__item description__item--max">
+              {{ $t('resultDescription.highlyNegativeCorrelated') }}
+            </div>
           </div>
         </div>
       </div>
       <empty-info-block
         v-else
-        :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
+        :msg="emptyMsg"
       ></empty-info-block>
     </div>
-    <div class="overview-section">
+    <!--暫時不顯示高度關聯區塊-->
+    <!-- <div class="overview-section">
       <div class="title">
         {{ $t('resultDescription.strongCorrelationColumns') }}
         <span class="nav-item nav-function tooltip-container">
@@ -41,7 +50,7 @@
         :loading="isLoading"
         :empty-message="hasError ? $t('message.systemIsError') : $t('resultDescription.noStrongCorrelationColumns')"
       />
-    </div>
+    </div> -->
   </section>
 </template>
 
@@ -50,24 +59,24 @@ import DisplayHeatMapChart from '@/pages/datasourceDashboard/components/DisplayH
 import CrudTable from '@/components/table/CrudTable'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
-const dummyData = {
-  overview: {
-    data: [['apple22222222', 'apple22222222', -1], ['dddddddddd', 'apple22222222', 0.1], ['c', 'apple22222222', 0.4], ['d', 'apple22222222', -0.4], ['apple22222222', 'dddddddddd', 0.7], ['dddddddddd', 'dddddddddd', 0.3], ['c', 'dddddddddd', -0.2], ['d', 'dddddddddd', 0.0], ['apple22222222', 'c', 0.3], ['dddddddddd', 'c', 0.1], ['c', 'c', 0.3], ['d', 'c', 0.6], ['apple22222222', 'd', -0.9], ['dddddddddd', 'd', 0.5], ['c', 'd', 0.3], ['d', 'd', -0.6], ['apple22222222', 'e', 0.3], ['dddddddddd', 'e', 0.1], ['c', 'e', 0.3], ['d', 'e', 0.6]],
-    index: [['apple22222222', 'dddddddddd', 'c', 'd'], ['apple22222222', 'dddddddddd', 'c', 'd', 'e']]
-  },
-  top: [
-    {
-      degree: '0.88',
-      fistColumnName: 'column a erewrererererererwrewrewrewr',
-      secondColumnName: 'column bewrewrererererererewrewrewrrewr'
-    },
-    {
-      degree: '0.98',
-      fistColumnName: 'column a',
-      secondColumnName: 'column b'
-    }
-  ]
-}
+// const dummyData = {
+//   overview: {
+//     data: [[-1, 0.1, 0.4, -0.4], [0.7, 0.3, -0.2, 0.0], [0.3, 0.1, 0.3, 0.6], [-0.9, 0.5, 0.3, -0.6], [0.3, 0.1, 0.3, 0.6]],
+//     columnNameList: ['apple22222222', 'dddddddddd', 'c', 'd']
+//   },
+//   top: [
+//     {
+//       degree: '0.88',
+//       fistColumnName: 'column a erewrererererererwrewrewrewr',
+//       secondColumnName: 'column bewrewrererererererewrewrewrrewr'
+//     },
+//     {
+//       degree: '0.98',
+//       fistColumnName: 'column a',
+//       secondColumnName: 'column b'
+//     }
+//   ]
+// }
 
 export default {
   components: {
@@ -85,6 +94,7 @@ export default {
     return {
       componentData: null,
       isLoading: true,
+      isCalculating: false,
       hasError: false,
       tableHeaders: [
         {
@@ -118,31 +128,53 @@ export default {
   mounted () {
     this.fetchData()
   },
+  computed: {
+    emptyMsg () {
+      if (this.isCalculating) return this.$t('message.calculatingPleaseTryLater')
+      return this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
+    }
+  },
   methods: {
     fetchData () {
       this.isLoading = true
-      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', {id: this.dataFrameId})
+      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { id: this.dataFrameId })
         .then(response => {
-          // TODO: 處理從 API 取得的資料
+          const columnNameList = response.columnNameList
+          const columnDataList = response.data
+          // 處理舊資料需被計算的狀態
+          if (response.statusType === 'Process') {
+            this.isCalculating = true
+            return
+          }
+
+          if (!columnNameList || !columnDataList) return
+
           this.componentData = {
             dataset: {
-              data: dummyData.overview.data,
-              index: dummyData.overview.index,
+              data: this.formatData(columnDataList, columnNameList),
+              index: [columnNameList, columnNameList],
               range: [0, 1]
             }
           }
-          this.correlationData = dummyData.top
-          //  TODO: 增加關聯欄位間的正確 icon
-          this.correlationData = this.correlationData.map(data => ({
-            ...data,
-            icon: 'arrow-right'
-          }))
-          this.isLoading = false
+
+          // this.correlationData = dummyData.top
+          // //  TODO: 增加關聯欄位間的正確 icon
+          // this.correlationData = this.correlationData.map(data => ({
+          //   ...data,
+          //   icon: 'arrow-right'
+          // }))
         })
-        .catch(() => {
-          this.hasError = true
-          this.isLoading = false
+        .catch(() => { this.hasError = true })
+        .finally(() => { this.isLoading = false })
+    },
+    formatData (dataList, nameList) {
+      const result = []
+      dataList.forEach((row, yAxisIndex) => {
+        row.forEach((column, xAxisIndex) => {
+          result.push([nameList[xAxisIndex], nameList[yAxisIndex], column])
         })
+      })
+      return result
     }
   }
 }
