@@ -89,8 +89,8 @@ export default {
           id: this.componentId,
           page
         }).then(response => {
+          // 是否只有一個頁面
           this.singlePage = response.singlePage
-
           switch (response.status) {
             case 'Process':
             case 'Ready':
