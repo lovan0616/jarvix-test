@@ -134,7 +134,7 @@
     "reachUploadCountLimit": "資料表不得多於{countLimit}個",
     "canUpload": "可以上傳",
     "unableUpload": "無法上傳",
-    "addFile": "+ 選取檔案",
+    "addFile": "選取檔案",
     "selectedTablesWaitingToUpload": "選取{num}項資料表，總和{size}，可進行上傳",
     "uploading": "上傳過程中請勿關閉瀏覽器視窗，以免上傳作業失敗",
     "uploadSuccess":"上傳成功",

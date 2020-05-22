@@ -134,7 +134,7 @@
     "reachUploadCountLimit": "资料表不得多于{countLimit}个",
     "canUpload": "可以上传",
     "unableUpload": "无法上传",
-    "addFile": "+ 选取档案",
+    "addFile": "选取档案",
     "selectedTablesWaitingToUpload": "选取{num}项资料表，总和{size}，可进行上传",
     "uploading": "上传过程中请勿关闭浏览器视窗，以免上传作业失败",
     "uploadSuccess": "上传成功",
