@@ -51,7 +51,7 @@
         v-else
         v-for="(data, index) in dataList"
         :key="index"
-        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': isInProcess(data)}"
+        :class="{selected: selectList.indexOf(data) > -1, 'is-processing': isInProcess(data) || isPending(data)}"
       >
         <div class="data-table-cell checkbox"
           v-if="hasCheckbox"
@@ -83,7 +83,7 @@
             v-else-if="headInfo.action"
             v-for="action in headInfo.action"
             :key="action.name"
-            :disabled="isProcessing || isInProcess(data) || (isFail(data) && action.value !== 'delete')"
+            :disabled="isProcessing || isInProcess(data) || ((isFail(data) || isPending(data)) && action.value !== 'delete')"
             @click="doAction(action.value, data)"
           >
             <dropdown-select
@@ -294,7 +294,7 @@ export default {
       }
     },
     doAction (actionName, data) {
-      if (!actionName || this.isProcessing || this.isInProcess(data) || (this.isFail(data) && actionName !== 'delete')) return false
+      if (!actionName || this.isProcessing || this.isInProcess(data) || ((this.isFail(data) || this.isPending(data)) && actionName !== 'delete')) return false
       this.$emit(actionName, data)
     },
     /**
@@ -322,13 +322,18 @@ export default {
         case 'PROCESS':
         case 'PROCESSING':
           return i18n.t('editing.dataBuilding')
+        case 'Pending':
+          return i18n.t('editing.dataInQueue')
       }
     },
     showActionDropdown (subAction, data) {
-      return subAction && !this.isProcessing && !this.isInProcess(data) && !this.isFail(data)
+      return subAction && !this.isProcessing && !this.isInProcess(data) && !this.isFail(data) && !this.isPending(data)
     },
     isInProcess (data) {
       return data['state'] === 'Process' || data['state'] === 'PROCESSING'
+    },
+    isPending (data) {
+      return data['state'] === 'Pending'
     },
     isFail (data) {
       return data['state'] === 'Disable' || data['type'] === 'DISABLE' || data['state'] === 'Fail' || data['type'] === 'FAIL'
