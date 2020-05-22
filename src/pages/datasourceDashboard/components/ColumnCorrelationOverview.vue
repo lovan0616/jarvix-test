@@ -14,13 +14,13 @@
         <div class="descrtipion">
           <div class="description__container">
             <div class="description__item description__item--min">
-              {{ $t('resultDescription.highlyPositiveCorrelated') }}
+              {{ $t('resultDescription.highlyNegativeCorrelated') }}
             </div>
             <div class="description__item description__item--zero">
               {{ $t('resultDescription.notCorrelated') }}
             </div>
             <div class="description__item description__item--max">
-              {{ $t('resultDescription.highlyNegativeCorrelated') }}
+              {{ $t('resultDescription.highlyPositiveCorrelated') }}
             </div>
           </div>
         </div>
@@ -139,10 +139,11 @@ export default {
       this.isLoading = true
       this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { id: this.dataFrameId })
         .then(response => {
+          console.log(response)
           const columnNameList = response.columnNameList
           const columnDataList = response.data
           // 處理舊資料需被計算的狀態
-          if (response.statusType === 'Process') {
+          if (response.statusType === 'Process' || response.statusType === 'Ready') {
             this.isCalculating = true
             return
           }
@@ -171,7 +172,7 @@ export default {
       const result = []
       dataList.forEach((row, yAxisIndex) => {
         row.forEach((column, xAxisIndex) => {
-          result.push([nameList[xAxisIndex], nameList[yAxisIndex], column])
+          result.push([nameList[xAxisIndex], nameList[yAxisIndex], this.roundNumber(column, 2)])
         })
       })
       return result

@@ -276,3 +276,14 @@ export function dataFrameColumnSummary (dataFrameId) {
     method: 'GET'
   })
 }
+
+/**
+ * get column correlation matrix
+ * @param {Number} dataFrameId - 欲查閱的資料表 ID
+ */
+export function getColumnCorrelationMatrix (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/relationMatrix`,
+    method: 'GET'
+  })
+}
