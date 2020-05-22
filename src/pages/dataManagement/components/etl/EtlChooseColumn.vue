@@ -63,6 +63,7 @@
                 <category-select
                   :column-info="getColumnInfo(index)"
                   @updateInfo="updateSetting"
+                  :key="currentTableIndex + column[index].primaryAlias + index"
                 />
                 <a href="javascript:void(0)" class="link"
                   @click="chooseColumn(index)"
