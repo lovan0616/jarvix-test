@@ -79,7 +79,8 @@ export default {
     return {
       isLoading: false,
       tableList: [],
-      tableIdList: []
+      tableIdList: [],
+      dataSourceId: parseInt(this.$route.params.id)
     }
   },
   mounted () {
@@ -108,6 +109,7 @@ export default {
       this.$store.commit('dataManagement/clearEtlTableList')
       let promiseList = this.tableIdList.map((element, index) => {
         return analyzeTable(this.connectionId, this.currentUploadInfo.dataSourceId, element).then(response => {
+          response.dataSourceId = this.dataSourceId
           this.$store.commit('dataManagement/updateEtlTableList', response)
         })
       })
