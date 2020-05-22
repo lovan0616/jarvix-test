@@ -43,7 +43,6 @@
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
-          :disabled="isLoading"
           @click="cancelConnection"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-outline"

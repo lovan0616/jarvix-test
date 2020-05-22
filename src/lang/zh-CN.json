@@ -134,7 +134,7 @@
     "reachUploadCountLimit": "资料表不得多于{countLimit}个",
     "canUpload": "可以上传",
     "unableUpload": "无法上传",
-    "addFile": "+ 选取档案",
+    "addFile": "选取档案",
     "selectedTablesWaitingToUpload": "选取{num}项资料表，总和{size}，可进行上传",
     "uploading": "上传过程中请勿关闭浏览器视窗，以免上传作业失败",
     "uploadSuccess": "上传成功",
@@ -342,7 +342,8 @@
     "dataSummary": "材料概述",
     "connectionHistory": "连线纪录",
     "newConnectionSetting": "新连线设定",
-    "emptyConnectionHistory": "没有任何连线纪录"
+    "emptyConnectionHistory": "没有任何连线纪录",
+    "dataCalculate": "资料计算中"
   },
   "feature": {
     "value": "数值",
@@ -1381,6 +1382,7 @@
     "degreeOfCorrelation": "关联度",
     "columnCorrelationName": "关联栏位名称",
     "columnCorrelationOverview": "栏位关联概况",
+    "filterColumnCorrelation": "部分栏位无法进行关联分析，故已过滤排除",
     "strongCorrelationColumns": "高关联度栏位",
     "highlyPositiveCorrelated": "高度正相关",
     "highlyNegativeCorrelated": "高度负相关",

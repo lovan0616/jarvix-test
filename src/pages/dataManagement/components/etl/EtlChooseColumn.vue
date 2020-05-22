@@ -71,8 +71,15 @@
               </div>
               <div class="summary">
                 <data-column-summary
-                  :summary-data="currentTableSummary[index]"
+                  v-if="currentTableInfo.columns[index].dataSummary"
+                  :key="currentTableIndex + '-' + index + 'column-summary'"
+                  :summary-data="currentTableInfo.columns[index].dataSummary"
                 />
+                <spinner class="spinner-conatiner"
+                  v-else
+                  :title="$t('etl.dataCalculate')"
+                  size="30"
+                ></spinner>
               </div>
             </div>
           </template>
@@ -94,6 +101,7 @@ import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import CategorySelect from './CategorySelect'
 import EtlColumnSetting from './EtlColumnSetting'
+import { getDataFrameSummary } from '@/API/File'
 
 export default {
   name: 'EtlChooseColumn',
@@ -106,8 +114,15 @@ export default {
   },
   data () {
     return {
-      showEtlSetting: false
+      showEtlSetting: false,
+      intervalFunction: null
     }
+  },
+  mounted () {
+    this.getDataFrameSummary(this.etlTableList[this.currentTableIndex].tableId)
+  },
+  destroyed () {
+    window.clearInterval(this.intervalFunction)
   },
   methods: {
     chooseTable () {
@@ -135,6 +150,27 @@ export default {
     },
     closeEtlColumnSetting () {
       this.showEtlSetting = false
+    },
+    getDataFrameSummary (id) {
+      getDataFrameSummary(id).then(response => {
+        response.columns.forEach(element => {
+          let columnIndex = this.currentTableInfo.columns.findIndex(column => column.importColumnId === element.importColumnId)
+          if (element.dataSummary && !this.currentTableInfo.columns[columnIndex].dataSummary) {
+            this.$store.commit('dataManagement/updateSummaryInfo', {
+              tableIndex: this.currentTableIndex,
+              columnIndex,
+              dataSummary: {...element.dataSummary, statsType: element.statsType}
+            })
+          }
+        })
+
+        window.clearInterval(this.intervalFunction)
+        if (response.columns.some(element => !element.dataSummary)) {
+          this.intervalFunction = window.setInterval(() => {
+            this.getDataFrameSummary(id)
+          }, 3000)
+        }
+      })
     }
   },
   computed: {
@@ -156,6 +192,8 @@ export default {
       },
       set (currentTableIndex) {
         this.$store.commit('dataManagement/changeCurrentTableIndex', currentTableIndex)
+        window.clearInterval(this.intervalFunction)
+        this.getDataFrameSummary(this.etlTableList[currentTableIndex].tableId)
       }
     },
     currentTableInfo () {
@@ -166,13 +204,6 @@ export default {
       }
       tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
       return tableInfo
-    },
-    currentTableSummary () {
-      return this.currentTableInfo.columns.map(column => ({
-        ...column.dataSummary,
-        statsType: column.statsType,
-        totalRows: this.currentTableInfo.rowCount
-      }))
     }
   }
 }
@@ -277,7 +308,7 @@ export default {
 }
 
 .header-block {
-  height: 305px;
+  height: 345px;
 
   .header {
     padding: 10px;
@@ -334,6 +365,10 @@ export default {
       border-radius: 5px;
       width: 190px;
     }
+  }
+
+  .spinner-conatiner {
+    height: 100%;
   }
 
   .summary {

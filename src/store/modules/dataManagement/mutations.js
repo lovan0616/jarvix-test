@@ -87,5 +87,9 @@ export default {
   },
   changeCurrentColumnIndex (state, index) {
     state.currentColumnIndex = index
+  },
+  updateSummaryInfo (state, data) {
+    let {tableIndex, columnIndex, dataSummary} = data
+    Vue.set(state.etlTableList[tableIndex].columns[columnIndex], 'dataSummary', dataSummary)
   }
 }

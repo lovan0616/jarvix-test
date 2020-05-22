@@ -134,7 +134,7 @@
     "reachUploadCountLimit": "資料表不得多於{countLimit}個",
     "canUpload": "可以上傳",
     "unableUpload": "無法上傳",
-    "addFile": "+ 選取檔案",
+    "addFile": "選取檔案",
     "selectedTablesWaitingToUpload": "選取{num}項資料表，總和{size}，可進行上傳",
     "uploading": "上傳過程中請勿關閉瀏覽器視窗，以免上傳作業失敗",
     "uploadSuccess":"上傳成功",
@@ -342,7 +342,8 @@
     "dataSummary": "資料概要",
     "connectionHistory": "連線紀錄",
     "newConnectionSetting": "新連線設定",
-    "emptyConnectionHistory": "沒有任何連線紀錄"
+    "emptyConnectionHistory": "沒有任何連線紀錄",
+    "dataCalculate": "資料計算中"
   },
   "feature": {
     "value": "數值",
@@ -1381,6 +1382,7 @@
     "degreeOfCorrelation": "關聯度",
     "columnCorrelationName": "關聯欄位名稱",
     "columnCorrelationOverview": "欄位關聯概況",
+    "filterColumnCorrelation": "部分欄位無法進行關聯分析，故已過濾排除",
     "strongCorrelationColumns": "高關聯度欄位",
     "highlyPositiveCorrelated": "高度正相關",
     "highlyNegativeCorrelated": "高度負相關",

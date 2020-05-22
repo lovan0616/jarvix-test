@@ -15,6 +15,7 @@
         >
           <div class="list__item--name">
             <el-tooltip
+              placement="bottom-start"
               :enterable="false"
               slot="label"
               :content="`${name}`">
@@ -23,6 +24,7 @@
           </div>
           <div class="list__item--value">
             <el-tooltip
+              placement="bottom-start"
               :enterable="false"
               slot="label"
               :content="`${value}`">
@@ -55,7 +57,7 @@ export default {
       const stateMeta = this.summaryData.numeric_stats_meta
       return {
         data: stateMeta.bins.map(rangeData => rangeData.count),
-        range: [parseInt(stateMeta.min), parseInt(stateMeta.max)]
+        range: [stateMeta.min, stateMeta.max]
       }
     },
     descriptionList () {
@@ -94,7 +96,7 @@ export default {
           } = this.summaryData.boolean_stats_meta
           return {
             'True': this.formatPercentage(trueCount / totlaRowsWithData),
-            'False': this.formatPercentage(falseCount.false_count / totlaRowsWithData)
+            'False': this.formatPercentage(falseCount / totlaRowsWithData)
           }
         case 'NUMERIC':
           const {avg, sum, stdev} = this.summaryData.numeric_stats_meta
@@ -122,6 +124,7 @@ export default {
       return this.formatComma(this.roundNumber(value, 2))
     },
     formatPercentage (value) {
+      if (value === 0) return value
       if (!value) return
       let valueInPercentage = value * 100
       if (Number.isInteger(valueInPercentage)) return this.formatComma(valueInPercentage) + '%'
@@ -168,5 +171,12 @@ export default {
       }
     }
   }
+}
+</style>
+<style lang="scss">
+.el-tooltip__popper {
+  max-width: 200px;
+  box-shadow: 0px 4px 10px rgba(58, 178, 189, 0.5);
+  line-height: 15px;
 }
 </style>

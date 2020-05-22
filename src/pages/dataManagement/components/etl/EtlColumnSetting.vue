@@ -24,8 +24,14 @@
     <div class="section column-summary">
       <div class="title">{{ $t('etl.dataSummary') }}</div>
       <data-column-summary
+        v-if="currentTableSummary[currentColumnIndex].dataSummary"
         :summary-data="currentTableSummary[currentColumnIndex]"
       />
+      <spinner class="spinner-conatiner"
+        v-else
+        :title="$t('etl.dataCalculate')"
+        size="30"
+      ></spinner>
     </div>
   </div>
 </template>
@@ -80,7 +86,7 @@ export default {
     currentTableSummary () {
       return this.currentTableInfo.columns.map(column => ({
         ...column.dataSummary,
-        statsType: column.statsType
+        statsType: this.currentColumnInfo.originalStatsType
       }))
     }
   }

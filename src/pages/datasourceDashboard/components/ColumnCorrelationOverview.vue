@@ -1,7 +1,16 @@
 <template>
-  <section class="column-correlation">
+  <section
+    v-if="!isEmpty"
+    class="column-correlation"
+  >
     <div class="overview-section">
-      <div class="title">{{ $t('resultDescription.columnCorrelationOverview') }}</div>
+      <div class="title">
+        {{ $t('resultDescription.columnCorrelationOverview') }}
+        <span class="nav-item nav-function tooltip-container">
+          <svg-icon icon-class="information-circle" class="icon" />
+          <div class="tooltip">{{$t('resultDescription.filterColumnCorrelation')}}</div>
+        </span>
+      </div>
       <spinner
         v-if="isLoading"
       ></spinner>
@@ -27,7 +36,7 @@
       </div>
       <empty-info-block
         v-else
-        :msg="emptyMsg"
+        :msg="reminderMsg"
       ></empty-info-block>
     </div>
     <!--暫時不顯示高度關聯區塊-->
@@ -122,14 +131,15 @@ export default {
       correlationData: [],
       // TODO: 待 DS 關聯度區間
       degreeMin: 0.3,
-      degreeMax: 1
+      degreeMax: 1,
+      isEmpty: false
     }
   },
   mounted () {
     this.fetchData()
   },
   computed: {
-    emptyMsg () {
+    reminderMsg () {
       if (this.isCalculating) return this.$t('message.calculatingPleaseTryLater')
       return this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
     }
@@ -139,12 +149,16 @@ export default {
       this.isLoading = true
       this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { id: this.dataFrameId })
         .then(response => {
-          console.log(response)
           const columnNameList = response.columnNameList
           const columnDataList = response.data
           // 處理舊資料需被計算的狀態
           if (response.statusType === 'Process' || response.statusType === 'Ready') {
             this.isCalculating = true
+            return
+          }
+          // 無資料或計算錯誤時，不顯示結果
+          if (response.statusType === 'Fail' || !columnNameList.length || !columnDataList.length) {
+            this.isEmpty = true
             return
           }
 
