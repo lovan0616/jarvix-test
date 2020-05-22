@@ -158,7 +158,13 @@ export default {
           }
         }).catch(() => {
           this.loading = false
-          if (this.intend === 'key_result') this.isError = true
+          if (this.intend === 'key_result') {
+            if (page === 0) {
+              this.isError = true
+            }
+            this.isGetPagination = false
+            this.hasNextPage = false
+          }
         })
       })
     },
