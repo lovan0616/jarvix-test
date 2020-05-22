@@ -77,7 +77,7 @@
                 />
                 <spinner class="spinner-conatiner"
                   v-else
-                  :title="$t('editing.loading')"
+                  :title="$t('etl.dataCalculate')"
                   size="30"
                 ></spinner>
               </div>
