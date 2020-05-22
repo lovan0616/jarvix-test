@@ -70,7 +70,13 @@
               :placeholder="$t('etl.columnValue')"
             ></input-verify>
             <svg-icon icon-class="go-right" class="arrow-icon"></svg-icon>
+            <default-select
+              v-if="editColumnInfo.statsType === 'BOOLEAN'"
+              :option-list="booleanOptionList"
+              v-model="replaceValue.newValue"
+            ></default-select>
             <input-verify
+              v-else
               :name="replaceValue.id + '-1'"
               v-model="replaceValue.newValue"
               v-validate="'required'"
@@ -100,7 +106,7 @@
   </div>
 </template>
 <script>
-import { statsTypeOptionList } from '@/utils/general'
+import { statsTypeOptionList, booleanOptionList } from '@/utils/general'
 import InputVerify from '@/components/InputVerify'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'
@@ -137,6 +143,7 @@ export default {
         // { value: 'sum', name: this.$t('etl.sumValue') },
         { value: 'CUSTOM', name: this.$t('etl.custom') }
       ],
+      booleanOptionList,
       datetimeOptionList: [
         { value: 'CUSTOM', name: this.$t('etl.custom') }
       ],
@@ -274,7 +281,7 @@ export default {
     'editColumnInfo.statsType': {
       handler (newVal) {
         if (newVal === 'BOOLEAN') {
-          this.dataSummaryOption = []
+          this.dataSummaryOption = this.booleanOptionList
         } else if (newVal === 'CATEGORY') {
           this.dataSummaryOption = this.categoryOptionList
           this.replaceValueInputType = 'text'
