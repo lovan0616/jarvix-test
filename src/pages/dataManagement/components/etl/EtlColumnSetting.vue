@@ -80,7 +80,7 @@ export default {
     currentTableSummary () {
       return this.currentTableInfo.columns.map(column => ({
         ...column.dataSummary,
-        statsType: column.statsType
+        statsType: this.currentColumnInfo.originalStatsType
       }))
     }
   }
