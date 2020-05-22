@@ -109,7 +109,7 @@ export default {
     },
     additionalDescription () {
       const nullPercentage = this.summaryData.null_count / this.summaryData.total_count
-      const constCount = this.summaryData.distinct_count
+      const constCount = this.summaryData.constant
 
       return {
         ...(nullPercentage && {'Null': this.formatPercentage(this.summaryData.null_count / this.summaryData.total_count)}),
