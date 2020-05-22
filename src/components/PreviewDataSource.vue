@@ -46,9 +46,6 @@
                     {{ $t('resultDescription.totalDataColumns') + ': ' + dataFrameOverviewData.totalColumns }}
                   </div>
                 </div>
-                <div class="overview__reminder">
-                  {{ '*' + $t('notification.columnSummarySampleNotification') }}
-                </div>
               </div>
               <pagination-table
                 :is-processing="isProcessing"
@@ -324,8 +321,6 @@ export default {
   }
 
   .overview {
-    display: flex;
-    justify-content: space-between;
     margin-bottom: 10px;
     font-size: 14px;
 
@@ -335,10 +330,6 @@ export default {
 
     &__item {
       margin-right: 45px;
-    }
-
-    &__reminder {
-      color: #FFDF6F;
     }
   }
 }
