@@ -71,9 +71,9 @@
               </div>
               <div class="summary">
                 <data-column-summary
-                  v-if="currentTableSummary[index].summaryData"
+                  v-if="currentTableInfo.columns[index].dataSummary"
                   :key="currentTableIndex + '-' + index + 'column-summary'"
-                  :summary-data="currentTableSummary[index]"
+                  :summary-data="currentTableInfo.columns[index].dataSummary"
                 />
                 <spinner class="spinner-conatiner"
                   v-else
@@ -159,7 +159,7 @@ export default {
             this.$store.commit('dataManagement/updateSummaryInfo', {
               tableIndex: this.currentTableIndex,
               columnIndex,
-              dataSummary: element.dataSummary
+              dataSummary: {...element.dataSummary, statsType: element.statsType}
             })
           }
         })
@@ -204,13 +204,6 @@ export default {
       }
       tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
       return tableInfo
-    },
-    currentTableSummary () {
-      return this.currentTableInfo.columns.map(column => ({
-        ...column.dataSummary,
-        statsType: column.statsType,
-        totalRows: this.currentTableInfo.rowCount
-      }))
     }
   }
 }
