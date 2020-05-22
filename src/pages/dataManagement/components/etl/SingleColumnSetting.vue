@@ -274,7 +274,7 @@ export default {
     'editColumnInfo.statsType': {
       handler (newVal) {
         if (newVal === 'BOOLEAN') {
-          // this.dataSummaryOption = this.booleanOptionList
+          this.dataSummaryOption = []
         } else if (newVal === 'CATEGORY') {
           this.dataSummaryOption = this.categoryOptionList
           this.replaceValueInputType = 'text'
