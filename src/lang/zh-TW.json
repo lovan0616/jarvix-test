@@ -1381,6 +1381,7 @@
     "degreeOfCorrelation": "關聯度",
     "columnCorrelationName": "關聯欄位名稱",
     "columnCorrelationOverview": "欄位關聯概況",
+    "filterColumnCorrelation": "部分欄位無法進行關聯分析，故已過濾排除",
     "strongCorrelationColumns": "高關聯度欄位",
     "highlyPositiveCorrelated": "高度正相關",
     "highlyNegativeCorrelated": "高度負相關",

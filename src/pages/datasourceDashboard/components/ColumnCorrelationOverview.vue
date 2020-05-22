@@ -4,7 +4,13 @@
     class="column-correlation"
   >
     <div class="overview-section">
-      <div class="title">{{ $t('resultDescription.columnCorrelationOverview') }}</div>
+      <div class="title">
+        {{ $t('resultDescription.columnCorrelationOverview') }}
+        <span class="nav-item nav-function tooltip-container">
+          <svg-icon icon-class="information-circle" class="icon" />
+          <div class="tooltip">{{$t('resultDescription.filterColumnCorrelation')}}</div>
+        </span>
+      </div>
       <spinner
         v-if="isLoading"
       ></spinner>

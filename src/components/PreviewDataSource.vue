@@ -279,7 +279,7 @@ export default {
     }
 
     &:not(:last-child) {
-      margin-bottom: 1.3rem;
+      margin-bottom: 2rem;
     }
   }
 
