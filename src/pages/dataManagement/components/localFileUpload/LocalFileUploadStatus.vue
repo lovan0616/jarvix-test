@@ -95,13 +95,7 @@ export default {
           })
           this.$emit('next')
         })
-        .catch(() => {
-          Message({
-            message: this.$t('message.analysisFailed'),
-            type: 'error',
-            duration: 3 * 1000
-          })
-        })
+        .catch(() => {})
         .finally(() => {
           this.isProcessing = false
         })
