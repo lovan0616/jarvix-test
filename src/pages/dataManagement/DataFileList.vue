@@ -221,7 +221,7 @@ export default {
     updateDataTable () {
       return getDataFrameById(this.currentDataSourceId, true).then(response => {
         // 因為 ETL 會預建立 data frame，如果未執行預處理 data frame 會處於 pending 狀態，在這邊需要過濾掉
-        this.dataList = response.filter(element => element.state !== 'Pending').map(element => {
+        this.dataList = response.filter(element => element.state !== 'Temp').map(element => {
           return {
             ...element,
             createMethod: element.joinCount > 1 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
@@ -426,7 +426,7 @@ export default {
     },
     hasDataFrameProcessing () {
       if (!this.dataList.length) return false
-      return this.dataList.some(element => element.type === 'PROCESS' || element.state === 'Process')
+      return this.dataList.some(element => element.type === 'PROCESS' || element.state === 'Process' || element.state === 'Pending')
     },
     enableDataFrameCount () {
       return this.dataList.reduce((acc, cur) => {

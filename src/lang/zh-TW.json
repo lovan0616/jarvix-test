@@ -107,6 +107,7 @@
     "askPlaceHolder": "請輸入問句後按Enter送出",
     "dataBuilding": "資料處理中",
     "dataManageable": "可管理",
+    "dataInQueue": "等待處理中",
     "dataDisable": "無法使用",
     "newData":"新增資料",
     "choiceDataTypeFirst":"請先選擇資料類型",
