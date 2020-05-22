@@ -204,7 +204,8 @@ export default {
     addReplaceValue () {
       this.editColumnInfo.values.push({
         ...this.replaceValueObjest,
-        id: this.replaceId++
+        id: this.replaceId++,
+        newValue: this.editColumnInfo.statsType === 'BOOLEAN' ? true : null
       })
     },
     removeReplaceValue (index) {
