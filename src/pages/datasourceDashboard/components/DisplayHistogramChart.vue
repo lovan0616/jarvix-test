@@ -123,7 +123,7 @@ export default {
       chartAddon.xAxis.axisLabel.showMinLabel = true
       chartAddon.xAxis.axisLabel.showMaxLabel = true
       chartAddon.xAxis.axisLine.show = true
-      chartAddon.xAxis.axisLine.lineStyle.color = '＃52696A'
+      chartAddon.xAxis.axisLine.lineStyle.color = '#52696A'
       const shortenNumberMethod = this.shortenNumber
       chartAddon.xAxis.axisLabel.formatter = function (value, index) {
         if (!index || index === dataLength) return shortenNumberMethod(value, 2)
