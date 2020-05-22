@@ -83,10 +83,10 @@
               </pagination-table>
             </div>
             <!--欄位關聯概況-->
-            <!-- <column-correlation-overview
+            <column-correlation-overview
               class="board-body-section"
               :data-frame-id="dataSourceTable.id"
-            /> -->
+            />
           </template>
         </div>
       </div>
@@ -99,7 +99,7 @@ import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
-// import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/ColumnCorrelationOverview'
+import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/ColumnCorrelationOverview'
 
 export default {
   name: 'PreviewDataSource',
@@ -107,7 +107,8 @@ export default {
     SySelect,
     EmptyInfoBlock,
     PaginationTable,
-    DataColumnSummary
+    DataColumnSummary,
+    ColumnCorrelationOverview
   },
   data () {
     return {

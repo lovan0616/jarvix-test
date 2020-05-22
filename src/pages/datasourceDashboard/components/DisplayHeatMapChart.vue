@@ -92,7 +92,7 @@ export default {
           orient: 'horizontal',
           left: 'center',
           align: 'bottom',
-          color: ['#FF9559', '#FFFFFF', '#2B86A3'],
+          color: ['#309CFF', '#424B4B', '#DE636E'],
           textStyle: {
             color: '#fff',
             fontSize: 14
@@ -119,8 +119,8 @@ export default {
         return value.slice(0, 5) + '...'
       }
 
-      // 欄位超過 10x10 的時候出現 scroll bar 並隱藏 label
-      if (this.dataset.data.length > 144) {
+      // 欄位超過 15x15 的時候出現 scroll bar 並隱藏 label
+      if (this.dataset.data.length > 225) {
         const verticalZoomConfig = verticalZoomIn()
         const parallelZoomConfig = parallelZoomIn()
         verticalZoomConfig[1].top = 40
@@ -131,6 +131,8 @@ export default {
         config.animation = false
         config.series.label.show = false
       }
+
+      config.series.label.color = '#FFFFFF'
 
       config.xAxis.position = 'top'
       config.xAxis.data = this.dataset.index[0]
