@@ -19,10 +19,12 @@
       >
         <div class="upload-remark" slot="uploadLimit">
           <div class="title">【{{ $t('editing.uploadLimitTitle') }}】</div>
-          <div class="content">{{ $t('editing.uploadLimitFileType') }}</div>
-          <div class="content">{{ $t('editing.uploadLimitCount', {countLimit: fileCountLimit}) }}</div>
-          <div class="content">{{ $t('editing.uploadLimitSize', {limitSize: uploadFileSizeLimit}) }}</div>
-          <div class="content">{{ $t('editing.uploadLimitContent') }}</div>
+          <div class="conten-container">
+            <div class="content">1. {{ $t('editing.uploadLimitFileType') }}</div>
+            <div class="content">2. {{ $t('editing.uploadLimitCount', {countLimit: fileCountLimit}) }}</div>
+            <div class="content">3. {{ $t('editing.uploadLimitSize', {limitSize: uploadFileSizeLimit}) }}</div>
+          </div>
+          <div class="content">4. {{ $t('editing.uploadLimitContent') }}</div>
         </div>
       </upload-block>
       <div class="file-list-container"
@@ -40,20 +42,19 @@
           :file-list="unableFileList"
         >
         </file-list-block>
-        <div class="choose-file-block">
-          <a href="javascript:void(0)" class="choose-file"
-            v-show="currntUploadStatus === uploadStatus.wait && uploadFileList.length === 0"
+        <div class="file-chosen-info"
+          v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait"
+        >
+          <span class="file-chosen-remark">
+            {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadFileList.length, size: byteToMB(totalTransmitDataAmount)}) }}
+          </span>
+          <button class="btn-m btn-secondary btn-has-icon"
             @click="chooseFile"
-          >{{ $t('editing.addFile') }}</a>
+          ><svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.addFile') }}</button>
         </div>
       </div>
     </div>
     <div class="dialog-footer">
-      <div class="file-chosen-info">
-        <span v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait">
-          {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadFileList.length, size: byteToMB(totalTransmitDataAmount)}) }}
-        </span>
-      </div>
       <div class="dialog-button-block">
         <span v-if="currntUploadStatus !== uploadStatus.wait" class="uploading-reminding">{{ $t('editing.uploading') }}</span>
         <button class="btn btn-outline"
@@ -115,7 +116,7 @@ export default {
       // 有選到檔案才執行
       if (uploadInput.files) {
         // 判斷數量是否超過限制
-        if (uploadInput.files.length + this.currentUploadInfo.fileCount + this.uploadFileList.length > this.fileCountLimit) {
+        if (uploadInput.files.length + this.uploadFileList.length > this.fileCountLimit) {
           Message({
             message: this.$t('editing.reachUploadCountLimit', {countLimit: this.fileCountLimit}),
             type: 'warning',
@@ -208,6 +209,18 @@ export default {
     .title {
       margin-bottom: 4px;
     }
+
+    .conten-container {
+      display: flex;
+
+      .content:not(:last-child) {
+        &:after {
+          content: '/';
+          padding: 0 8px;
+          color: #6c8281;
+        }
+      }
+    }
   }
 
   .data-source-name {
@@ -236,9 +249,16 @@ export default {
   }
 
   .file-chosen-info {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     font-size: 12px;
     line-height: 17px;
     letter-spacing: 0.5px;
+
+    .file-chosen-remark {
+      margin-right: 16px;
+    }
   }
 
   .uploading-reminding {
