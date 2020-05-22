@@ -74,3 +74,13 @@ export function deleteFile (fileId) {
     method: 'POST'
   })
 }
+
+/**
+ * get data summary
+ */
+export function getDataFrameSummary (dataFrameId) {
+  return request({
+    url: `/import/table/${dataFrameId}/summary`,
+    method: 'GET'
+  })
+}
