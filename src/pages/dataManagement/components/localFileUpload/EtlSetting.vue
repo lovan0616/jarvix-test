@@ -50,6 +50,7 @@ export default {
       if (this.currentTableIndex !== 0) {
         this.$store.commit('dataManagement/changeCurrentTableIndex', 0)
       }
+      this.$store.commit('dataManagement/clearEtlTableList')
       this.$emit('prev')
     },
     next () {
