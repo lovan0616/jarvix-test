@@ -5,30 +5,21 @@
       :step="3"
     ></upload-process-block>
     <div class="dialog-body">
-      <spinner class="spinner-container"
-        v-if="isProcessing"
-        :title="$t('editing.dataBuilding')"
-        size="50"
-      ></spinner>
-      <div
-        v-else
+      <file-list-block
+        v-if="successList.length > 0"
+        :title="$t('editing.uploaded')"
+        :file-list="successList"
       >
-        <file-list-block
-          v-if="successList.length > 0"
-          :title="$t('editing.uploaded')"
-          :file-list="successList"
-        >
-          <div class="uploaded-data-info" slot="fileListTitle">
-            {{ $t('editing.dataSourceInfo', {type: currentUploadInfo.type, dataSourceName: currentUploadInfo.name}) }}
-          </div>
-        </file-list-block>
-        <file-list-block
-          v-if="failList.length > 0"
-          :title="$t('editing.unuploaded')"
-          type="fail"
-          :file-list="failList"
-        ></file-list-block>
-      </div>
+        <div class="uploaded-data-info" slot="fileListTitle">
+          {{ $t('editing.dataSourceInfo', {type: currentUploadInfo.type, dataSourceName: currentUploadInfo.name}) }}
+        </div>
+      </file-list-block>
+      <file-list-block
+        v-if="failList.length > 0"
+        :title="$t('editing.unuploaded')"
+        type="fail"
+        :file-list="failList"
+      ></file-list-block>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
@@ -47,7 +38,13 @@
         <button class="btn btn-default"
           :disabled="successList.length === 0 || isProcessing"
           @click="next"
-        >{{ $t('button.nextStep') }}：{{ $t('editing.processStep3') }}</button>
+        >
+          <span v-if="isProcessing">
+            <svg-icon v-if="isProcessing" icon-class="spinner"></svg-icon>
+            {{ $t('button.processing')}}
+          </span>
+          <span v-else>{{ $t('button.nextStep') }}：{{ $t('editing.processStep3') }}</span>
+        </button>
       </div>
     </div>
   </div>
