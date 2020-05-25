@@ -308,7 +308,7 @@ export default {
 }
 
 .header-block {
-  height: 345px;
+  height: 325px;
 
   .header {
     padding: 10px;
