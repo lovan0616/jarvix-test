@@ -169,6 +169,7 @@ export default {
 
   /deep/ .el-table thead th {
     overflow: visible;
+    vertical-align: top;
   }
 }
 </style>

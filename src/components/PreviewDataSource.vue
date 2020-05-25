@@ -57,9 +57,14 @@
                 <template v-slot="{ column, index }">
                   <div class="header-block">
                     <div class="header">
-                      <span class="tooltip-container icon">
-                        <svg-icon :icon-class="getHeaderIcon(index)" />
-                        <div class="tooltip">{{ getStatesTypeName(index)}}</div>
+                      <span class="icon">
+                        <el-tooltip
+                          :enterable="false"
+                          class="icon"
+                          slot="label"
+                          :content="`${getStatesTypeName(index)}`">
+                          <svg-icon :icon-class="getHeaderIcon(index)" />
+                        </el-tooltip>
                       </span>
                       <span class="text">
                         <el-tooltip
@@ -70,7 +75,10 @@
                         </el-tooltip>
                       </span>
                     </div>
-                    <div class="summary">
+                    <div
+                      class="summary"
+                      v-if="showColumnSummaryRow"
+                    >
                       <data-column-summary
                         :summary-data="tableSummaryList[index]"
                       />
@@ -123,7 +131,8 @@ export default {
         totalRows: '-',
         totalColumns: '-'
       },
-      tableSummaryList: []
+      tableSummaryList: [],
+      showColumnSummaryRow: true
     }
   },
   mounted () {
@@ -195,6 +204,7 @@ export default {
               totalRows: dataFrameData.pagination.totalItems,
               totalColumns: dataFrameData.columns.length
             }
+            this.showColumnSummaryRow = !dataColumnSummary.every(column => !column.dataSummary)
             this.tableSummaryList = dataColumnSummary.map(column => ({
               ...column.dataSummary,
               statsType: column.statsType,
@@ -284,8 +294,6 @@ export default {
   }
 
   .header-block {
-    height: 265px;
-
     .header {
       padding: 10px;
       border-bottom: 1px solid #515959;
@@ -306,7 +314,6 @@ export default {
     }
     .summary {
       padding: 10px;
-      height: calc(100% - 44px);
     }
   }
 }
