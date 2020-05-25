@@ -54,8 +54,8 @@ export default {
   computed: {
     showHistogram () {
       const statesType = this.summaryData.statsType
-      const constValue = this.summaryData.constant
-      return statesType === 'NUMERIC' && !constValue
+      const distinctCount = this.summaryData.distinct_count
+      return statesType === 'NUMERIC' && distinctCount > 1
     },
     histogramData () {
       if (this.summaryData.statsType !== 'NUMERIC') return
@@ -106,8 +106,8 @@ export default {
             'False': this.formatPercentage(falseCount / totlaRowsWithData)
           }
         case 'NUMERIC':
-          const constValue = this.summaryData.constant
-          if (constValue) break
+          const distinctCount = this.summaryData.distinct_count
+          if (distinctCount <= 1) break
           const {avg, sum, stdev} = this.summaryData.numeric_stats_meta
           return {
             [this.$t(`columnSummary.avg`)]: this.formatNumeric(avg),
