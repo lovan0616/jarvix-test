@@ -343,7 +343,8 @@
     "connectionHistory": "连线纪录",
     "newConnectionSetting": "新连线设定",
     "emptyConnectionHistory": "没有任何连线纪录",
-    "dataCalculate": "资料计算中"
+    "dataCalculate": "资料计算中",
+    "tableChosenLimit": "最多选择 {number} 张资料表"
   },
   "feature": {
     "value": "数值",
