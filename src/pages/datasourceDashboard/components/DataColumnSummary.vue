@@ -72,6 +72,9 @@ export default {
       }
     },
     dataTypeDescriptionList () {
+      const constValue = this.summaryData.constant
+      // 如果為定值，不顯示以下資訊
+      if (constValue || constValue === '') return
       const totlaRowsWithData = this.summaryData.total_count + this.summaryData.null_count
       switch (this.summaryData.statsType) {
         case 'CATEGORY':
