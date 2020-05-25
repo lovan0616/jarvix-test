@@ -102,8 +102,8 @@ export default {
             false_count: falseCount
           } = this.summaryData.boolean_stats_meta
           return {
-            'True': this.formatPercentage(trueCount / totlaRowsWithData),
-            'False': this.formatPercentage(falseCount / totlaRowsWithData)
+            'True': this.formatPercentage(trueCount / this.summaryData.total_count),
+            'False': this.formatPercentage(falseCount / this.summaryData.total_count)
           }
         case 'NUMERIC':
           const distinctCount = this.summaryData.distinct_count
