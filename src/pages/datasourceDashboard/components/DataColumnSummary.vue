@@ -19,6 +19,7 @@
               placement="bottom-start"
               :enterable="false"
               slot="label"
+              :popper-class="'column-summary__tooltip'"
               :content="`${name}`">
               <span>{{name}}</span>
             </el-tooltip>
@@ -28,6 +29,7 @@
               placement="bottom-start"
               :enterable="false"
               slot="label"
+              :popper-class="'column-summary__tooltip'"
               :content="`${value}`">
               <span>{{value}}</span>
             </el-tooltip>
@@ -196,9 +198,9 @@ export default {
 }
 </style>
 <style lang="scss">
-.el-tooltip__popper {
+.column-summary__tooltip {
   max-width: 200px;
   box-shadow: 0px 4px 10px rgba(58, 178, 189, 0.5);
-  line-height: 15px;
+  line-height: 17px;
 }
 </style>
