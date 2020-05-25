@@ -62,7 +62,7 @@ export default {
       const stateMeta = this.summaryData.numeric_stats_meta
       return {
         data: stateMeta.bins.map(rangeData => rangeData.count),
-        range: [stateMeta.min, stateMeta.max]
+        range: [parseFloat(stateMeta.min), parseFloat(stateMeta.max)]
       }
     },
     descriptionList () {
