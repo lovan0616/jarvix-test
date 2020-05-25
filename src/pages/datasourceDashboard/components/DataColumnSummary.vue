@@ -10,6 +10,7 @@
       <ul class="list">
         <li
           class="list__item"
+          :class="{'list__item--date': summaryData.statsType === 'DATETIME'}"
           v-for="(value, name) in descriptionList"
           :key="name + value"
         >
@@ -180,6 +181,15 @@ export default {
       &--value {
         width: 50%;
         text-align: right;
+      }
+
+      &--date {
+        .list__item--name {
+          width: 18%;
+        }
+        .list__item--value {
+          width: 82%;
+        }
       }
     }
   }
