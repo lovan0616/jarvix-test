@@ -81,9 +81,11 @@ export default {
             second_largest_value: secondaryValue,
             second_largest_value_count: secondaryValueCount
           } = this.summaryData.category_stats_meta || {}
+          const showLargestValue = largestValue || largestValue === ''
+          const showSecondaryValue = secondaryValue || secondaryValue === ''
           return {
-            ...(largestValue && {[largestValue]: this.formatPercentage(largestValueCount / totlaRowsWithData)}),
-            ...(secondaryValue && {[secondaryValue]: this.formatPercentage(secondaryValueCount / totlaRowsWithData)}),
+            ...(showLargestValue && {[largestValue || `(${this.$t('columnSummary.emptyString')})`]: this.formatPercentage(largestValueCount / totlaRowsWithData)}),
+            ...(showSecondaryValue && {[secondaryValue || `(${this.$t('columnSummary.emptyString')})`]: this.formatPercentage(secondaryValueCount / totlaRowsWithData)}),
             [this.$t('columnSummary.distinctCount')]: `${this.formatComma(this.summaryData.distinct_count)} ${this.$t('columnSummary.record')}`
           }
         case 'DATETIME':
@@ -117,10 +119,10 @@ export default {
     additionalDescription () {
       const nullPercentage = this.summaryData.null_count / this.summaryData.total_count
       const constValue = this.summaryData.constant
-
+      const showConst = constValue || constValue === ''
       return {
         ...(nullPercentage && {'Null': this.formatPercentage(this.summaryData.null_count / this.summaryData.total_count)}),
-        ...(constValue && {[this.$t(`columnSummary.const`)]: this.summaryData.constant})
+        ...(showConst && {[this.$t(`columnSummary.const`)]: this.summaryData.constant || `(${this.$t('columnSummary.emptyString')})`})
       }
     }
   },
