@@ -80,10 +80,10 @@ export default {
             largest_value_count: largestValueCount,
             second_largest_value: secondaryValue,
             second_largest_value_count: secondaryValueCount
-          } = this.summaryData.category_stats_meta
+          } = this.summaryData.category_stats_meta || {}
           return {
-            [largestValue]: this.formatPercentage(largestValueCount / totlaRowsWithData),
-            [secondaryValue]: this.formatPercentage(secondaryValueCount / totlaRowsWithData),
+            ...(largestValue && {[largestValue]: this.formatPercentage(largestValueCount / totlaRowsWithData)}),
+            ...(secondaryValue && {[secondaryValue]: this.formatPercentage(secondaryValueCount / totlaRowsWithData)}),
             [this.$t('columnSummary.distinctCount')]: `${this.formatComma(this.summaryData.distinct_count)} ${this.$t('columnSummary.record')}`
           }
         case 'DATETIME':
