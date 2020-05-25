@@ -1446,7 +1446,8 @@
     "sum": "總合值",
     "record": "筆",
     "total": "總量",
-    "interval": "區間"
+    "interval": "區間",
+    "emptyString": "空字串"
   },
   "segmentationToken": {
     "UnknownToken": "無法辨識的詞彙",

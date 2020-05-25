@@ -308,8 +308,6 @@ export default {
 }
 
 .header-block {
-  height: 345px;
-
   .header {
     padding: 10px;
     border-bottom: 1px solid #515959;
@@ -373,7 +371,6 @@ export default {
 
   .summary {
     padding: 10px;
-    height: calc(100% - 105px);
   }
 }
 </style>

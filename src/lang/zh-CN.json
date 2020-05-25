@@ -1446,7 +1446,8 @@
     "sum": "总合值",
     "record": "笔",
     "total": "总量",
-    "interval": "区间"
+    "interval": "区间",
+    "emptyString": "空字串"
   },
   "segmentationToken": {
     "UnknownToken": "无法辨识的词汇",
