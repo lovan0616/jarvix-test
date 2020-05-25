@@ -17,11 +17,11 @@
         <div class="data-content-info">
           <dl>
             <dt>{{ $t('etl.columnCount')}}：</dt>
-            <dd>{{ currentTableInfo.columns.length }}</dd>
+            <dd>{{ formatComma(currentTableInfo.columns.length) }}</dd>
           </dl>
           <dl>
             <dt>{{ $t('etl.rowCount')}}：</dt>
-            <dd>{{ currentTableInfo.rowCount }}</dd>
+            <dd>{{ formatComma(currentTableInfo.rowCount) }}</dd>
           </dl>
         </div>
       </div>
