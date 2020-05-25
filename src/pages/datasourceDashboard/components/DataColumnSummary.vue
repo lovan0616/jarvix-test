@@ -13,7 +13,10 @@
           v-for="(value, name) in descriptionList"
           :key="name + value"
         >
-          <div class="list__item--name">
+          <div
+            class="list__item--name"
+            :class="{'small': summaryData.statsType === 'DATETIME'}"
+          >
             <el-tooltip
               placement="bottom-start"
               :enterable="false"
@@ -22,7 +25,10 @@
               <span>{{name}}</span>
             </el-tooltip>
           </div>
-          <div class="list__item--value">
+          <div
+            class="list__item--value"
+            :class="{'large': summaryData.statsType === 'DATETIME'}"
+          >
             <el-tooltip
               placement="bottom-start"
               :enterable="false"
@@ -175,11 +181,17 @@ export default {
 
       &--name {
         width: 50%;
+        &.small {
+          width: 18%;
+        }
       }
 
       &--value {
         width: 50%;
         text-align: right;
+        &.large {
+          width: 82%;
+        }
       }
     }
   }
