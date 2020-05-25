@@ -2,7 +2,7 @@
   <div class="column-summary">
     <div
       class="data-block"
-      v-if="summaryData.statsType === 'NUMERIC'"
+      v-if="showHistogram"
     >
       <display-histogram-chart :dataset="histogramData" />
     </div>
@@ -10,6 +10,7 @@
       <ul class="list">
         <li
           class="list__item"
+          :class="{'list__item--date': summaryData.statsType === 'DATETIME'}"
           v-for="(value, name) in descriptionList"
           :key="name + value"
         >
@@ -52,12 +53,17 @@ export default {
     DisplayHistogramChart
   },
   computed: {
+    showHistogram () {
+      const statesType = this.summaryData.statsType
+      const distinctCount = this.summaryData.distinct_count
+      return statesType === 'NUMERIC' && distinctCount > 1
+    },
     histogramData () {
       if (this.summaryData.statsType !== 'NUMERIC') return
       const stateMeta = this.summaryData.numeric_stats_meta
       return {
         data: stateMeta.bins.map(rangeData => rangeData.count),
-        range: [stateMeta.min, stateMeta.max]
+        range: [Number(stateMeta.min), Number(stateMeta.max)]
       }
     },
     descriptionList () {
@@ -67,6 +73,9 @@ export default {
       }
     },
     dataTypeDescriptionList () {
+      const constValue = this.summaryData.constant
+      // 如果為定值，不顯示以下資訊
+      if (constValue || constValue === '') return
       const totlaRowsWithData = this.summaryData.total_count + this.summaryData.null_count
       switch (this.summaryData.statsType) {
         case 'CATEGORY':
@@ -75,10 +84,12 @@ export default {
             largest_value_count: largestValueCount,
             second_largest_value: secondaryValue,
             second_largest_value_count: secondaryValueCount
-          } = this.summaryData.category_stats_meta
+          } = this.summaryData.category_stats_meta || {}
+          const showLargestValue = largestValue || largestValue === ''
+          const showSecondaryValue = secondaryValue || secondaryValue === ''
           return {
-            [largestValue]: this.formatPercentage(largestValueCount / totlaRowsWithData),
-            [secondaryValue]: this.formatPercentage(secondaryValueCount / totlaRowsWithData),
+            ...(showLargestValue && {[largestValue || `(${this.$t('columnSummary.emptyString')})`]: this.formatPercentage(largestValueCount / totlaRowsWithData)}),
+            ...(showSecondaryValue && {[secondaryValue || `(${this.$t('columnSummary.emptyString')})`]: this.formatPercentage(secondaryValueCount / totlaRowsWithData)}),
             [this.$t('columnSummary.distinctCount')]: `${this.formatComma(this.summaryData.distinct_count)} ${this.$t('columnSummary.record')}`
           }
         case 'DATETIME':
@@ -95,10 +106,12 @@ export default {
             false_count: falseCount
           } = this.summaryData.boolean_stats_meta
           return {
-            'True': this.formatPercentage(trueCount / totlaRowsWithData),
-            'False': this.formatPercentage(falseCount / totlaRowsWithData)
+            'True': this.formatPercentage(trueCount / this.summaryData.total_count),
+            'False': this.formatPercentage(falseCount / this.summaryData.total_count)
           }
         case 'NUMERIC':
+          const distinctCount = this.summaryData.distinct_count
+          if (distinctCount <= 1) break
           const {avg, sum, stdev} = this.summaryData.numeric_stats_meta
           return {
             [this.$t(`columnSummary.avg`)]: this.formatNumeric(avg),
@@ -109,11 +122,11 @@ export default {
     },
     additionalDescription () {
       const nullPercentage = this.summaryData.null_count / this.summaryData.total_count
-      const constCount = this.summaryData.constant
-
+      const constValue = this.summaryData.constant
+      const showConst = constValue || constValue === ''
       return {
         ...(nullPercentage && {'Null': this.formatPercentage(this.summaryData.null_count / this.summaryData.total_count)}),
-        ...(constCount && {[this.$t(`columnSummary.const`)]: this.summaryData.constant})
+        ...(showConst && {[this.$t(`columnSummary.const`)]: this.summaryData.constant || `(${this.$t('columnSummary.emptyString')})`})
       }
     }
   },
@@ -168,6 +181,15 @@ export default {
       &--value {
         width: 50%;
         text-align: right;
+      }
+
+      &--date {
+        .list__item--name {
+          width: 18%;
+        }
+        .list__item--value {
+          width: 82%;
+        }
       }
     }
   }

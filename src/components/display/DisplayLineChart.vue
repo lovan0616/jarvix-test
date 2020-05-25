@@ -168,6 +168,10 @@ export default {
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
+      // 只有一個分類
+      if (this.dataset.columns.length === 1) {
+        config.toolbox.feature.magicType.type = ['line', 'bar']
+      }
       // 圖表是水平或是垂直
       if (this.isParallel) {
         config.xAxis = yAxisDefault()

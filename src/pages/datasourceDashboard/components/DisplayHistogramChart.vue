@@ -90,7 +90,7 @@ export default {
           x: start[0] + 1,
           y: start[1],
           width: size[0] - 2,
-          height: size[1]
+          height: size[1] < 2 && size[1] > 0 ? 1 : size[1]
         },
         style: style
       }

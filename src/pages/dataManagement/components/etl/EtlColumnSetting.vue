@@ -24,7 +24,7 @@
     <div class="section column-summary">
       <div class="title">{{ $t('etl.dataSummary') }}</div>
       <data-column-summary
-        v-if="currentTableSummary[currentColumnIndex].dataSummary"
+        v-if="Object.keys(currentTableSummary[currentColumnIndex]).length > 1"
         :summary-data="currentTableSummary[currentColumnIndex]"
       />
       <spinner class="spinner-conatiner"

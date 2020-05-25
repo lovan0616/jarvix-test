@@ -119,7 +119,7 @@ export default {
     tableProps () {
       let tableProps = { ...this.$props, data: this.dataset.data }
       if (!this.$props.maxHeight) {
-        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 550)
+        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 600)
       }
       return tableProps
     }
@@ -169,6 +169,7 @@ export default {
 
   /deep/ .el-table thead th {
     overflow: visible;
+    vertical-align: top;
   }
 }
 </style>

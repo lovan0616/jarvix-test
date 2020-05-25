@@ -144,12 +144,6 @@ export default {
   background-color: rgba(67, 76, 76, 0.95);
   border-radius: 5px;
 
-  &:hover {
-    .file-status .action-link.cancel {
-      display: block;
-    }
-  }
-
   &.fail {
     color: #BDBDBD;
   }
@@ -188,10 +182,6 @@ export default {
       line-height: 19px;
       letter-spacing: 0.5px;
       color: $theme-color-primary;
-
-      &.cancel {
-        display: none;
-      }
     }
     .success {
       color: $theme-color-primary;

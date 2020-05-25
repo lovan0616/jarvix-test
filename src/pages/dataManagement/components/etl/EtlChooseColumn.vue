@@ -17,11 +17,11 @@
         <div class="data-content-info">
           <dl>
             <dt>{{ $t('etl.columnCount')}}：</dt>
-            <dd>{{ currentTableInfo.columns.length }}</dd>
+            <dd>{{ formatComma(currentTableInfo.columns.length) }}</dd>
           </dl>
           <dl>
             <dt>{{ $t('etl.rowCount')}}：</dt>
-            <dd>{{ currentTableInfo.rowCount }}</dd>
+            <dd>{{ formatComma(currentTableInfo.rowCount) }}</dd>
           </dl>
         </div>
       </div>
@@ -308,8 +308,6 @@ export default {
 }
 
 .header-block {
-  height: 345px;
-
   .header {
     padding: 10px;
     border-bottom: 1px solid #515959;
@@ -373,7 +371,6 @@ export default {
 
   .summary {
     padding: 10px;
-    height: calc(100% - 105px);
   }
 }
 </style>
