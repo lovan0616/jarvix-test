@@ -98,7 +98,7 @@ export default {
     }
   },
   watch: {
-    'columnInfo.statsType' () {
+    columnInfo () {
       this.editedColumnInfo = JSON.parse(JSON.stringify(this.columnInfo))
     }
   }

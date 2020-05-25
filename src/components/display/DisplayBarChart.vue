@@ -175,6 +175,10 @@ export default {
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.toolbox.feature.magicType.show = true
+      // 只有一個分類
+      if (this.dataset.columns.length === 1) {
+        config.toolbox.feature.magicType.type = ['line', 'bar']
+      }
       config.xAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : null
       config.yAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
       // 如果是 bar chart
