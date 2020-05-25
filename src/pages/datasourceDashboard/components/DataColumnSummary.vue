@@ -2,7 +2,7 @@
   <div class="column-summary">
     <div
       class="data-block"
-      v-if="summaryData.statsType === 'NUMERIC'"
+      v-if="showHistogram"
     >
       <display-histogram-chart :dataset="histogramData" />
     </div>
@@ -52,6 +52,11 @@ export default {
     DisplayHistogramChart
   },
   computed: {
+    showHistogram () {
+      const statesType = this.summaryData.statsType
+      const constValue = this.summaryData.constant
+      return statesType === 'NUMERIC' && !constValue
+    },
     histogramData () {
       if (this.summaryData.statsType !== 'NUMERIC') return
       const stateMeta = this.summaryData.numeric_stats_meta
@@ -99,6 +104,8 @@ export default {
             'False': this.formatPercentage(falseCount / totlaRowsWithData)
           }
         case 'NUMERIC':
+          const constValue = this.summaryData.constant
+          if (constValue) break
           const {avg, sum, stdev} = this.summaryData.numeric_stats_meta
           return {
             [this.$t(`columnSummary.avg`)]: this.formatNumeric(avg),
@@ -109,11 +116,11 @@ export default {
     },
     additionalDescription () {
       const nullPercentage = this.summaryData.null_count / this.summaryData.total_count
-      const constCount = this.summaryData.constant
+      const constValue = this.summaryData.constant
 
       return {
         ...(nullPercentage && {'Null': this.formatPercentage(this.summaryData.null_count / this.summaryData.total_count)}),
-        ...(constCount && {[this.$t(`columnSummary.const`)]: this.summaryData.constant})
+        ...(constValue && {[this.$t(`columnSummary.const`)]: this.summaryData.constant})
       }
     }
   },
