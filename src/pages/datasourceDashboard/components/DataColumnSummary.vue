@@ -189,6 +189,9 @@ export default {
         }
         .list__item--value {
           width: 82%;
+          overflow: visible;
+          text-overflow: clip;
+          white-space: normal;
         }
       }
     }
