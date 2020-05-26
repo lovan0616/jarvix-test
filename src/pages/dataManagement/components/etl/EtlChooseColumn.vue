@@ -27,7 +27,7 @@
       </div>
       <div
         class="section data-column"
-        v-if="currentTableInfo"
+        v-if="currentTableInfo && !isProcessing"
       >
         <pagination-table
           class="board-body-section"
@@ -88,6 +88,11 @@
           *{{ $t('notification.columnSummarySampleNotification') }}
         </p>
       </div>
+      <spinner class="processing-spinner-container"
+        v-else
+        :title="$t('editing.loading')"
+        size="50"
+      ></spinner>
     </div>
     <etl-column-setting
       v-if="showEtlSetting"
@@ -115,11 +120,15 @@ export default {
   data () {
     return {
       showEtlSetting: false,
-      intervalFunction: null
+      intervalFunction: null,
+      isProcessing: true
     }
   },
   mounted () {
     this.getDataFrameSummary(this.etlTableList[this.currentTableIndex].tableId)
+    window.setTimeout(() => {
+      this.isProcessing = false
+    }, 1000)
   },
   destroyed () {
     window.clearInterval(this.intervalFunction)
