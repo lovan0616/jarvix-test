@@ -203,6 +203,7 @@ export default {
           this.updateDataTable()
         }, 5000)
       } else {
+        this.$store.dispatch('dataSource/getDataSourceList')
         window.clearInterval(this.checkDataFrameIntervalFunction)
       }
     }
