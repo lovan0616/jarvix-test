@@ -20,6 +20,8 @@
             >
               <el-tooltip
                 slot="label"
+                placement="bottom-start"
+                :visible-arrow="false"
                 :content="tab.name">
                 <span>{{tab.name}}</span>
               </el-tooltip>
