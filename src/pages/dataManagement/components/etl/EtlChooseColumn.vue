@@ -41,6 +41,8 @@
                 <span class="text" :class="{'has-changed': column[index].hasChanged}">
                   <el-tooltip
                     :enterable="false"
+                    :visible-arrow="false"
+                    placement="bottom-start"
                     slot="label"
                     :content="`${column[index].primaryAlias}`">
                     <span>{{ column[index].primaryAlias }}</span>

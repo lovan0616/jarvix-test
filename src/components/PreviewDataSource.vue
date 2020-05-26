@@ -60,6 +60,7 @@
                       <span class="icon">
                         <el-tooltip
                           :enterable="false"
+                          :visible-arrow="false"
                           class="icon"
                           slot="label"
                           :content="`${getStatesTypeName(index)}`">
@@ -68,6 +69,8 @@
                       </span>
                       <span class="text">
                         <el-tooltip
+                          placement="bottom-start"
+                          :visible-arrow="false"
                           :enterable="false"
                           slot="label"
                           :content="`${column.titles[index]}`">
