@@ -27,7 +27,7 @@
       </div>
       <div
         class="section data-column"
-        v-if="currentTableInfo"
+        v-if="currentTableInfo && !isProcessing"
       >
         <pagination-table
           class="board-body-section"
@@ -88,6 +88,11 @@
           *{{ $t('notification.columnSummarySampleNotification') }}
         </p>
       </div>
+      <spinner class="processing-spinner-container"
+        v-else
+        :title="$t('editing.loading')"
+        size="50"
+      ></spinner>
     </div>
     <etl-column-setting
       v-if="showEtlSetting"
@@ -115,11 +120,15 @@ export default {
   data () {
     return {
       showEtlSetting: false,
-      intervalFunction: null
+      intervalFunction: null,
+      isProcessing: true
     }
   },
   mounted () {
     this.getDataFrameSummary(this.etlTableList[this.currentTableIndex].tableId)
+    window.setTimeout(() => {
+      this.isProcessing = false
+    }, 1000)
   },
   destroyed () {
     window.clearInterval(this.intervalFunction)
@@ -371,6 +380,14 @@ export default {
 
   .summary {
     padding: 10px;
+  }
+}
+</style>
+<style lang="scss">
+// TODO 等 confirmPopup 改寫法，就可以把這邊拿掉
+.etl-choose-column {
+  .header-block {
+    min-height: 224px;
   }
 }
 </style>
