@@ -353,11 +353,6 @@ export default {
       width: 100%;
       border: none;
       overflow-x: auto;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      &::-webkit-scrollbar {
-        display: none;
-      }
 
       &::before {
         content: '';

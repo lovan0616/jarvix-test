@@ -66,11 +66,12 @@ textarea {
 // scrollbar 樣式
 ::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
   cursor: pointer;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #000;
+  background-color: #333333;
   border-radius: 10px;
 }
 
