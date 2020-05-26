@@ -201,7 +201,7 @@ export default {
 }
 </style>
 <style lang="scss">
-.column-summary__tooltip {
+.el-tooltip__popper.column-summary__tooltip {
   max-width: 200px;
   box-shadow: 0px 4px 10px rgba(58, 178, 189, 0.5);
   line-height: 17px;
