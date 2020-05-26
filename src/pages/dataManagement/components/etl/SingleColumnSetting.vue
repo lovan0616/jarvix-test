@@ -79,6 +79,7 @@
               v-else
               :name="replaceValue.id + '-1'"
               v-model="replaceValue.newValue"
+              :type="replaceValueInputType"
               v-validate="'required'"
               :placeholder="$t('etl.replaceValue')"
             ></input-verify>
