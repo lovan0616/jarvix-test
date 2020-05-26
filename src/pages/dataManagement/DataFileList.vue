@@ -194,6 +194,7 @@ export default {
       // 建置完成
       if (!value) {
         window.clearInterval(this.intervalFunction)
+        this.$store.dispatch('dataSource/getDataSourceList')
       }
     },
     hasDataFrameProcessing (value) {
