@@ -140,10 +140,11 @@ export default {
         bottom: 20
       }
 
+      const formatComma = this.formatComma
       chartAddon.tooltip.formatter = function (params, ticket, callback) {
         const rangeStart = Math.abs(params[0].data[0] < 0.01) ? params[0].data[0] : parseFloat(params[0].data[0].toFixed(2))
         const rangeEnd = Math.abs(params[0].data[1] < 0.01) ? params[0].data[1] : parseFloat(params[0].data[1].toFixed(2))
-        return `${i18n.t('columnSummary.interval')}: ${rangeStart} - ${rangeEnd} <br> ${i18n.t('columnSummary.total')}: ${params[0].data[2]}`
+        return `${i18n.t('columnSummary.interval')}: ${formatComma(rangeStart)} - ${formatComma(rangeEnd)} <br> ${i18n.t('columnSummary.total')}: ${formatComma(params[0].data[2])}`
       }
       chartAddon.tooltip.extraCssText += 'max-width: 200px;white-space: normal;'
 
