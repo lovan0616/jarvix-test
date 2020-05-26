@@ -33,6 +33,13 @@
           </slot>
         </template>
       </el-table-column>
+      <el-table-column
+        ref="tableEnd"
+        type="index"
+        :width="indexWidth"
+        align="center"
+      >
+      </el-table-column>
     </el-table>
     <el-pagination class="table-pagination"
       v-if="paginationInfo.totalPages > 1"
@@ -49,6 +56,11 @@
 
 <script>
 import { Table } from 'element-ui'
+
+const options = {
+  root: null,
+  threshold: 0
+}
 
 export default {
   name: 'PaginationTable',
@@ -98,6 +110,18 @@ export default {
       default: false
     }
   },
+  data () {
+    return {
+      columnList: [],
+      observer: null,
+      offset: 0,
+      itemPerFetch: 5
+    }
+  },
+  mounted () {
+    this.observer = new IntersectionObserver(this.callback, options)
+    this.observer.observe(this.$refs.tableEnd)
+  },
   methods: {
     changePage (value) {
       this.$emit('change-page', value)
@@ -113,6 +137,16 @@ export default {
         this.paginationInfo.currentPage -= 1
         this.$emit('change-page', this.paginationInfo.currentPage)
       }
+    },
+    callback (entries, observer) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this.addNewColumnData()
+        }
+      })
+    },
+    addNewColumnData () {
+      this.columnList.push(this.dataset)
     }
   },
   computed: {
