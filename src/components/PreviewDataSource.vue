@@ -56,7 +56,7 @@
                 :min-column-width="'270px'"
                 @change-page="updatePage"
               >
-                <template v-slot="{ column, index }">
+                <template #columns-header="{ column, index }">
                   <div class="header-block">
                     <div class="header">
                       <span class="icon">

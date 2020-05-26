@@ -35,7 +35,23 @@
           :min-column-width="'270px'"
           :current-table-index="currentTableIndex"
         >
-          <template v-slot="{ column, index }">
+          <template #index-header>
+            <div class="toggle-block">
+              <label class="checkbox">
+                <div class="checkbox-label"
+                  :class="{'indeterminate': someColumnSelected && !allColumnSelected}"
+                >
+                  <input
+                    type="checkbox"
+                    :checked="allColumnSelected"
+                    @change="toggleSelectAll"
+                  >
+                  <div class="checkbox-square"></div>
+                </div>
+              </label>
+            </div>
+          </template>
+          <template #columns-header="{ column, index }">
             <div class="header-block">
               <div class="header">
                 <span class="text" :class="{'has-changed': column[index].hasChanged}">
@@ -136,6 +152,17 @@ export default {
     window.clearInterval(this.intervalFunction)
   },
   methods: {
+    toggleSelectAll () {
+      if (this.allColumnSelected) {
+        this.etlTableList[this.currentTableIndex].columns.forEach(column => {
+          column.active = false
+        })
+      } else {
+        this.etlTableList[this.currentTableIndex].columns.forEach(column => {
+          column.active = true
+        })
+      }
+    },
     chooseTable () {
       this.$store.commit('dataManagement/changeCurrentTableIndex', this.currentTableIndex)
     },
@@ -215,6 +242,14 @@ export default {
       }
       tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
       return tableInfo
+    },
+    allColumnSelected () {
+      let selected = (column) => column.active
+      return this.etlTableList[this.currentTableIndex].columns.every(selected)
+    },
+    someColumnSelected () {
+      let selected = (column) => column.active
+      return this.etlTableList[this.currentTableIndex].columns.some(selected)
     }
   }
 }
@@ -317,7 +352,13 @@ export default {
     }
   }
 }
-
+.toggle-block {
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #515959;
+}
 .header-block {
   .header {
     padding: 10px;

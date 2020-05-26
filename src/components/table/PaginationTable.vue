@@ -14,6 +14,9 @@
         :width="indexWidth"
         align="center"
       >
+        <template slot="header">
+          <slot name="index-header" />
+        </template>
       </el-table-column>
       <el-table-column
         v-for="(col, i) in dataset.columns.titles || dataset.columns"
@@ -25,7 +28,7 @@
       >
         <!--Header slot-->
         <template slot="header" slot-scope="scope">
-          <slot
+          <slot name="columns-header"
             :column="dataset.columns"
             :index="i"
           >
