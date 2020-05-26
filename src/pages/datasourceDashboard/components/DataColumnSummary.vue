@@ -20,6 +20,7 @@
               :enterable="false"
               slot="label"
               :popper-class="'column-summary__tooltip'"
+              :visible-arrow="false"
               :content="`${name}`">
               <span>{{name}}</span>
             </el-tooltip>
@@ -28,10 +29,15 @@
             <el-tooltip
               placement="bottom-start"
               :enterable="false"
+              :visible-arrow="false"
               slot="label"
-              :popper-class="'column-summary__tooltip'"
-              :content="`${value}`">
-              <span>{{value}}</span>
+              :popper-class="'column-summary__tooltip'">
+              <template slot="content">
+                <span v-if="typeof value === 'string'">{{value}}</span>
+                <span v-else>{{value.start + '-'}}<br>{{value.end}}</span>
+              </template>
+              <span v-if="typeof value === 'string'">{{value}}</span>
+              <span v-else>{{value.start + '-'}}<br>{{value.end}}</span>
             </el-tooltip>
           </div>
         </li>
@@ -75,9 +81,8 @@ export default {
       }
     },
     dataTypeDescriptionList () {
-      const constValue = this.summaryData.constant
-      // 如果為定值，不顯示以下資訊
-      if (constValue || constValue === '') return
+      const distinctCount = this.summaryData.distinct_count
+      if (distinctCount <= 1) return
       const totlaRowsWithData = this.summaryData.total_count + this.summaryData.null_count
       switch (this.summaryData.statsType) {
         case 'CATEGORY':
@@ -100,7 +105,10 @@ export default {
             max_timestamp: endDate
           } = this.summaryData.datetime_stats_meta
           return {
-            [this.$t('columnSummary.range')]: `${startDate} - ${endDate}`
+            [this.$t('columnSummary.range')]: {
+              start: startDate,
+              end: endDate
+            }
           }
         case 'BOOLEAN':
           const {
@@ -112,8 +120,6 @@ export default {
             'False': this.formatPercentage(falseCount / this.summaryData.total_count)
           }
         case 'NUMERIC':
-          const distinctCount = this.summaryData.distinct_count
-          if (distinctCount <= 1) break
           const {avg, sum, stdev} = this.summaryData.numeric_stats_meta
           return {
             [this.$t(`columnSummary.avg`)]: this.formatNumeric(avg),
@@ -205,5 +211,12 @@ export default {
   max-width: 200px;
   box-shadow: 0px 4px 10px rgba(58, 178, 189, 0.5);
   line-height: 17px;
+}
+
+// .column-summary__tooltip.popper__arrow {
+//   left: 0px;
+// }
+.el-tooltip__popper .popper__arrow {
+  left: 0;
 }
 </style>
