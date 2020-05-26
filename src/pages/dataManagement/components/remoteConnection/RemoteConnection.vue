@@ -91,7 +91,6 @@
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
-          :disabled="isLoading"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-default"
