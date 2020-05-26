@@ -40,10 +40,10 @@
               <div class="overview">
                 <div class="overview__data">
                   <div class="overview__item">
-                    {{ $t('resultDescription.totalDataRows') + ': ' + dataFrameOverviewData.totalRows }}
+                    {{ $t('resultDescription.totalDataRows') + ': ' + formatComma(dataFrameOverviewData.totalRows) }}
                   </div>
                   <div class="overview__item">
-                    {{ $t('resultDescription.totalDataColumns') + ': ' + dataFrameOverviewData.totalColumns }}
+                    {{ $t('resultDescription.totalDataColumns') + ': ' + formatComma(dataFrameOverviewData.totalColumns) }}
                   </div>
                 </div>
               </div>
