@@ -408,6 +408,7 @@ Vue.mixin({
     },
     shortenNumber (num, digit) {
       const absValue = Math.abs(num)
+      if (absValue === 0) return num
       if (absValue >= 1000000000000) return parseFloat((num / 1000000000000).toFixed(digit)) + 'T'
       if (absValue >= 1000000000) return parseFloat((num / 1000000000).toFixed(digit)) + 'B'
       if (absValue >= 1000000) return parseFloat((num / 1000000).toFixed(digit)) + 'M'
