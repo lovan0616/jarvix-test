@@ -19,7 +19,7 @@
           @click="prev"
         >{{ $t('button.prevStep') }}</button>
         <button class="btn btn-default"
-          :disabled="isProcessing"
+          :disabled="isProcessing || !anyColumnSelected"
           @click="buildData"
         >{{ $t('button.buildData') }}</button>
       </div>
@@ -86,6 +86,10 @@ export default {
     },
     currentColumnIndex () {
       return this.$store.state.dataManagement.currentColumnIndex
+    },
+    anyColumnSelected () {
+      let selected = (column) => column.active
+      return this.etlTableList[this.currentTableIndex].columns.some(selected)
     }
   }
 }
