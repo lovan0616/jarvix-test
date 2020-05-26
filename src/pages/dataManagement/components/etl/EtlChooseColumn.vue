@@ -383,3 +383,11 @@ export default {
   }
 }
 </style>
+<style lang="scss">
+// TODO 等 confirmPopup 改寫法，就可以把這邊拿掉
+.etl-choose-column {
+  .header-block {
+    min-height: 224px;
+  }
+}
+</style>
