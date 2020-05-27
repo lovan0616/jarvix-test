@@ -126,9 +126,10 @@ export default {
       chartAddon.xAxis.axisLine.lineStyle.color = '#52696A'
       const shortenNumberMethod = this.shortenNumber
       chartAddon.xAxis.axisLabel.formatter = function (value, index) {
-        if (!index || index === dataLength) return shortenNumberMethod(value, 2)
+        if (index === 0 || index === dataLength || index === dataLength + 1) {
+          return shortenNumberMethod(value, 2)
+        }
       }
-
       // set histogram yAxis
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramConfig.yAxis}
       chartAddon.yAxis.scale = false
@@ -137,13 +138,17 @@ export default {
 
       chartAddon.grid = {
         top: 0,
-        bottom: 20
+        bottom: 20,
+        left: 30,
+        right: 30,
+        containLabel: true
       }
 
+      const formatComma = this.formatComma
       chartAddon.tooltip.formatter = function (params, ticket, callback) {
         const rangeStart = Math.abs(params[0].data[0] < 0.01) ? params[0].data[0] : parseFloat(params[0].data[0].toFixed(2))
         const rangeEnd = Math.abs(params[0].data[1] < 0.01) ? params[0].data[1] : parseFloat(params[0].data[1].toFixed(2))
-        return `${i18n.t('columnSummary.interval')}: ${rangeStart} - ${rangeEnd} <br> ${i18n.t('columnSummary.total')}: ${params[0].data[2]}`
+        return `${i18n.t('columnSummary.interval')}: ${formatComma(rangeStart)} - ${formatComma(rangeEnd)} <br> ${i18n.t('columnSummary.total')}: ${formatComma(params[0].data[2])}`
       }
       chartAddon.tooltip.extraCssText += 'max-width: 200px;white-space: normal;'
 
