@@ -101,6 +101,16 @@
     &::before {
       background-color: transparent;
     }
+    .el-table__fixed-header-wrapper {
+      tr {
+        background: rgba(35, 61, 64, 1);
+      }
+    }
+    .el-table__fixed-body-wrapper {
+      tr {
+        background: rgba(35, 61, 64, 1);
+      }
+    }
   }
 
   .el-table__body tr.current-row > td {
