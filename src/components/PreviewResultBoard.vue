@@ -11,14 +11,6 @@
           :question-segmentation="questionInfo.segmentation"
         ></question-name>
       </div>
-      <div class="board-chart-block" v-if="questionInfo.template">
-        <component
-          v-if="questionInfo.template"
-          :is="getChartTemplate(questionInfo.template)"
-          v-bind="questionInfo.data"
-          :is-preview="true"
-        ></component>
-      </div>
     </div>
   </div>
 </template>
@@ -47,9 +39,7 @@ export default {
   methods: {
     linkToResult () {
       this.$store.commit('dataSource/setAppQuestion', this.questionInfo.question)
-      // this.$store.commit('dataSource/setCurrentQuestionInfo', this.questionInfo)
       this.$store.dispatch('dataSource/updateResultRouter', this.$route.name === 'PageResult' ? 'click_recommend_result' : 'click_recommend_index')
-      this.$events.emit('cleanPreview')
     }
   }
 }
@@ -92,26 +82,6 @@ export default {
     .question-name {
       flex: 1;
     }
-  }
-  .board-chart-block {
-    position: relative;
-    width: 100%;
-    min-height: 105px;
-
-    /**
-     * 因為 echarts 的圖表有 inline cursor: default，為了看出可以點擊
-     * 所以用偽元素覆蓋一層上去
-     */
-    // &:after {
-    //   position: absolute;
-    //   top: 0;
-    //   left: 0;
-    //   display: block;
-    //   content: "";
-    //   width: 100%;
-    //   height: 100%;
-    //   cursor: pointer;
-    // }
   }
 }
 </style>

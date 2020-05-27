@@ -188,7 +188,7 @@ export default {
     },
     replaceTypeOptionList () {
       return [
-        { value: null, name: this.$t('etl.nullAction') },
+        { value: null, name: this.$t('etl.null') },
         ...this.dataSummaryOption
       ]
     },
