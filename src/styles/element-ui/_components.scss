@@ -103,12 +103,17 @@
     }
     .el-table__fixed-header-wrapper {
       tr {
-        background: rgba(35, 61, 64, 1);
+        background: rgb(41, 64, 66);
       }
     }
     .el-table__fixed-body-wrapper {
       tr {
-        background: rgba(35, 61, 64, 1);
+        :nth-child(odd) {
+          background-color: rgb(41, 64, 66);
+        }
+        :nth-child(even) {
+          background-color: rgb(49, 67, 69);
+        }
       }
     }
   }
