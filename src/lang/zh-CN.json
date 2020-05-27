@@ -344,7 +344,8 @@
     "newConnectionSetting": "新连线设定",
     "emptyConnectionHistory": "没有任何连线纪录",
     "dataCalculate": "资料计算中",
-    "tableChosenLimit": "最多选择 {number} 张资料表"
+    "tableChosenLimit": "最多选择 {number} 张资料表",
+    "null": "Null"
   },
   "feature": {
     "value": "数值",
