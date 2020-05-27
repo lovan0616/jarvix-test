@@ -146,6 +146,7 @@ export default {
                 this.layout = 'PreviewDataSource'
                 this.resultInfo = null
                 this.isLoading = false
+                this.setRelatedQuestions()
                 return false
               case 'NoAnswer':
                 let implication = segmentationList[0].implication
@@ -155,6 +156,7 @@ export default {
                   description: implication.description
                 }
                 this.isLoading = false
+                this.setRelatedQuestions()
                 return false
             }
 
@@ -173,12 +175,19 @@ export default {
             this.layout = 'MultiResult'
             this.resultInfo = response
             this.isLoading = false
+            this.setRelatedQuestions()
           }
         }).catch((error) => {
           // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
           if (error.constructor.name !== 'Cancel') this.isLoading = false
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
+    },
+    setRelatedQuestions (options = []) {
+      this.$store.commit('chatBot/addSystemConversation', {
+        text: this.$t('bot.finish'), options
+      })
+      this.$store.commit('chatBot/updateAnalyzeStatus', false)
     },
     getComponent (res) {
       window.clearTimeout(this.timeoutFunction)
