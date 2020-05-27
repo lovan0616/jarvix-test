@@ -13,6 +13,7 @@
         type="index"
         :width="indexWidth"
         align="center"
+        :fixed="fixedIndex"
       >
         <template slot="header">
           <slot name="index-header" />
@@ -57,6 +58,7 @@ export default {
   name: 'PaginationTable',
   props: {
     ...Table.props,
+    fixedIndex: { type: Boolean, default: false },
     dataset: {
       type: [ Object, Array ],
       validator: value => {

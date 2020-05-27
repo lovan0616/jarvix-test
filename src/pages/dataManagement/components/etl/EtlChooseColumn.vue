@@ -34,6 +34,7 @@
           :dataset="currentTableInfo"
           :min-column-width="'270px'"
           :current-table-index="currentTableIndex"
+          fixedIndex
         >
           <template #index-header>
             <div class="toggle-block">
