@@ -344,7 +344,8 @@
     "newConnectionSetting": "新連線設定",
     "emptyConnectionHistory": "沒有任何連線紀錄",
     "dataCalculate": "資料計算中",
-    "tableChosenLimit": "最多選擇 {number} 張資料表"
+    "tableChosenLimit": "最多選擇 {number} 張資料表",
+    "null": "Null"
   },
   "feature": {
     "value": "數值",
