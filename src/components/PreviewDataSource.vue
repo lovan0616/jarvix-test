@@ -55,6 +55,7 @@
                 :pagination-info="pagination"
                 :min-column-width="'270px'"
                 @change-page="updatePage"
+                fixedIndex
               >
                 <template #columns-header="{ column, index }">
                   <div class="header-block">
