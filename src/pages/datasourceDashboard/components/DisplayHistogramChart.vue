@@ -126,9 +126,10 @@ export default {
       chartAddon.xAxis.axisLine.lineStyle.color = '#52696A'
       const shortenNumberMethod = this.shortenNumber
       chartAddon.xAxis.axisLabel.formatter = function (value, index) {
-        if (!index || index === dataLength) return shortenNumberMethod(value, 2)
+        if (index === 0 || index === dataLength || index === dataLength + 1) {
+          return shortenNumberMethod(value, 2)
+        }
       }
-
       // set histogram yAxis
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramConfig.yAxis}
       chartAddon.yAxis.scale = false
@@ -137,7 +138,10 @@ export default {
 
       chartAddon.grid = {
         top: 0,
-        bottom: 20
+        bottom: 20,
+        left: 30,
+        right: 30,
+        containLabel: true
       }
 
       const formatComma = this.formatComma
