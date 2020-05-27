@@ -30,7 +30,6 @@
         v-if="currentTableInfo && !isProcessing"
       >
         <pagination-table
-          class="board-body-section"
           :dataset="currentTableInfo"
           :min-column-width="'270px'"
           :current-table-index="currentTableIndex"
