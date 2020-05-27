@@ -45,7 +45,7 @@
                   <input
                     type="checkbox"
                     :checked="allColumnSelected"
-                    @change="toggleSelectAll"
+                    @change="allColumnSelected"
                   >
                   <div class="checkbox-square"></div>
                 </div>
@@ -153,17 +153,6 @@ export default {
     window.clearInterval(this.intervalFunction)
   },
   methods: {
-    toggleSelectAll () {
-      if (this.allColumnSelected) {
-        this.etlTableList[this.currentTableIndex].columns.forEach(column => {
-          column.active = false
-        })
-      } else {
-        this.etlTableList[this.currentTableIndex].columns.forEach(column => {
-          column.active = true
-        })
-      }
-    },
     chooseTable () {
       this.$store.commit('dataManagement/changeCurrentTableIndex', this.currentTableIndex)
     },
@@ -244,9 +233,16 @@ export default {
       tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
       return tableInfo
     },
-    allColumnSelected () {
-      let selected = (column) => column.active
-      return this.etlTableList[this.currentTableIndex].columns.every(selected)
+    allColumnSelected: {
+      get () {
+        let selected = (column) => column.active
+        return this.etlTableList[this.currentTableIndex].columns.every(selected)
+      },
+      set (selected) {
+        this.etlTableList[this.currentTableIndex].columns.forEach(column => {
+          column.active = selected
+        })
+      }
     },
     someColumnSelected () {
       let selected = (column) => column.active
