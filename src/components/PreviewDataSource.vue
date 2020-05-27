@@ -55,8 +55,9 @@
                 :pagination-info="pagination"
                 :min-column-width="'270px'"
                 @change-page="updatePage"
+                fixedIndex
               >
-                <template v-slot="{ column, index }">
+                <template #columns-header="{ column, index }">
                   <div class="header-block">
                     <div class="header">
                       <span class="icon">
