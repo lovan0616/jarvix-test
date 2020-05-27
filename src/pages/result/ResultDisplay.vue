@@ -122,7 +122,7 @@ export default {
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.getComponent(res)
-          this.getRelatedQuestion(data)
+          this.getRelatedQuestion(res.resultId)
         }).catch(() => {
           this.isLoading = false
           this.$store.commit('chatBot/updateAnalyzeStatus', false)
@@ -164,6 +164,7 @@ export default {
               restrictions: this.filterRestrictionList
             }).then(res => {
               this.getComponent(res)
+              this.getRelatedQuestion(res.resultId)
             }).catch((error) => {
               if (error.constructor.name !== 'Cancel') this.isLoading = false
             })
@@ -178,8 +179,6 @@ export default {
           if (error.constructor.name !== 'Cancel') this.isLoading = false
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
-
-      this.getRelatedQuestion(data)
     },
     getComponent (res) {
       window.clearTimeout(this.timeoutFunction)
@@ -220,11 +219,8 @@ export default {
           }
         })
     },
-    getRelatedQuestion (data) {
-      this.$store.dispatch('chatBot/getRelatedQuestionList', {
-        question: data.question,
-        dataSourceId: data.dataSourceId
-      }).then(response => {
+    getRelatedQuestion (id) {
+      this.$store.dispatch('chatBot/getRelatedQuestionList', id).then(response => {
         this.$nextTick(() => {
           this.addConversationTimeout = window.setTimeout(() => {
             this.$store.commit('chatBot/addSystemConversation', {
