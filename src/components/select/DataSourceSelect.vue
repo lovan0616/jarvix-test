@@ -1,13 +1,15 @@
 <template>
   <div class="data-source-select-block">
-    <svg-icon icon-class="folder" class="data-source-select-icon"></svg-icon>
-    <sy-select class="data-source-select"
+    <svg-icon 
+      icon-class="folder" 
+      class="data-source-select-icon"/>
+    <sy-select 
       :selected="dataSourceId"
       :items="buildDataSourceList"
       :placeholder="$t('editing.chooseDataSource')"
+      class="data-source-select"
       @update:selected="onDataSourceChange"
-    >
-    </sy-select>
+    />
   </div>
 </template>
 <script>
