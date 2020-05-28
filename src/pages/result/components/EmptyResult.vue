@@ -2,8 +2,9 @@
   <div class="empty-result">
     <div class="empty-result-title">{{ resultInfo ? resultInfo.title : this.$t('editing.emptyResult') }}</div>
     <div class="empty-result-sub-title">{{ resultInfo ? resultInfo.description : this.$t('editing.emptyResultDescription') }}</div>
-    <div class="empty-result-unknown-detail"
+    <div 
       v-if="resultInfo && resultInfo.unknown && resultInfo.unknown.length > 0"
+      class="empty-result-unknown-detail"
     >{{ $t('editing.systemUnknownDescription') }}
       <span
         v-for="(unknownText, index) in resultInfo.unknown"
