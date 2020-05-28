@@ -43,8 +43,7 @@
                 >
                   <input
                     type="checkbox"
-                    :checked="allColumnSelected"
-                    @change="allColumnSelected"
+                    v-model="allColumnSelected"
                   >
                   <div class="checkbox-square"></div>
                 </div>
