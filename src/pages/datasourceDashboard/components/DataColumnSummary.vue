@@ -141,7 +141,7 @@ export default {
   methods: {
     formatNumeric (value) {
       if (typeof value === 'string') value = Number(value)
-      if (Math.abs(value) < 0.01) return value
+      if (Math.abs(value) < 0.01) return `${value}`
       return this.formatComma(this.roundNumber(value, 2))
     },
     formatPercentage (value) {

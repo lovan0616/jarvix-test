@@ -233,7 +233,7 @@ export default {
         this.$nextTick(() => {
           this.addConversationTimeout = window.setTimeout(() => {
             this.$store.commit('chatBot/addSystemConversation', {
-              text: response ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: response
+              text: response.length > 0 ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: response
             })
             this.$store.commit('chatBot/updateAnalyzeStatus', false)
           }, 2000)
