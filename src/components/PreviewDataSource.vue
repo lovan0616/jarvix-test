@@ -228,10 +228,11 @@ export default {
           this.isProcessing = false
         })
         .catch((error) => {
-          if (error.constructor.name === 'Cancel') return
-          this.hasError = true
-          this.isLoading = false
-          this.isProcessing = false
+          if (error.constructor.name !== 'Cancel') {
+            this.hasError = true
+            this.isLoading = false
+            this.isProcessing = false
+          }
         })
     },
     updatePage (page) {
