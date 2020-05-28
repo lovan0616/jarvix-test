@@ -1,6 +1,6 @@
 <template>
   <div class="page-algorithm">
-    <spinner 
+    <spinner
       v-if="isExecuting"
       class="layout-spinner"
       title="演算法處理中，請耐心等待..."
@@ -10,8 +10,8 @@
       <div class="page-title-row">
         <h1 class="title">演算法管理</h1>
         <div class="bread-crumb">
-          <router-link 
-            :to="{name: 'PageAlgorithmList'}" 
+          <router-link
+            :to="{name: 'PageAlgorithmList'}"
             class="title-link">演算法</router-link>
           <span class="divider">/</span>新建
         </div>
@@ -24,7 +24,7 @@
           <div class="item-wrap">
             <div class="content-item">
               <div class="item-title must">演算法類型: </div>
-              <default-select 
+              <default-select
                 v-model="selectedAlgorithm"
                 :option-list="algorithmOptions"
                 class="tag-select input"
@@ -42,7 +42,7 @@
           <div class="item-wrap">
             <div class="content-item">
               <div class="item-title must">目標資料源: </div>
-              <default-select 
+              <default-select
                 v-model="targetDatasource"
                 :option-list="datasourceOptions"
                 class="tag-select input"
@@ -64,7 +64,7 @@
           <div class="item-wrap">
             <div class="content-item">
               <div class="item-title must">目標參數欄位: </div>
-              <default-select 
+              <default-select
                 v-model="targetDatacolumn"
                 :option-list="datacolumnOptions"
                 class="tag-select input"
@@ -72,7 +72,7 @@
             </div>
             <div class="content-item">
               <div class="item-title must">時間欄位: </div>
-              <default-select 
+              <default-select
                 v-model="timeDatacolumn"
                 :option-list="datacolumnOptions"
                 class="tag-select input"
@@ -93,8 +93,8 @@
       </div>
 
       <div class="footer">
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="btn btn-outline"
           @click="back"
         >{{ $t('button.cancel') }}</button>

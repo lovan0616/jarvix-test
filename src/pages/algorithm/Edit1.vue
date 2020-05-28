@@ -3,9 +3,10 @@
     <div class="page-title-row">
       <h1 class="title">演算法管理</h1>
       <div class="bread-crumb">
-        <router-link 
-          :to="{name: 'PageAlgorithmList'}" 
-          class="title-link">演算法</router-link>
+        <router-link
+          :to="{name: 'PageAlgorithmList'}"
+          class="title-link"
+        >演算法</router-link>
         <span class="divider">/</span>預測性維修
       </div>
     </div>
@@ -17,7 +18,7 @@
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title must">目標資料源: </div>
-            <default-select 
+            <default-select
               :value="1"
               :option-list="[
                 {value: 1, name: '富士康demo'},
@@ -27,7 +28,7 @@
           </div>
           <div class="content-item">
             <div class="item-title must">目標資料表: </div>
-            <default-select 
+            <default-select
               :value="1"
               :option-list="[
                 {value: 1, name: 'TemperatureData'},
@@ -40,7 +41,7 @@
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title must">目標參數欄位: </div>
-            <default-select 
+            <default-select
               :value="1"
               :option-list="[
                 {value: 1, name: '溫度'},

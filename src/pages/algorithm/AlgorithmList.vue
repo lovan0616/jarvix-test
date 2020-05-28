@@ -9,13 +9,15 @@
     <div class="table-board">
       <div class="board-title-row">
         <div class="button-block">
-          <button 
+          <button
             class="btn-m btn-default btn-has-icon"
             @click="createAlgorithm"
           >
-            <svg-icon 
-              icon-class="folder-plus" 
-              class="icon"/>新增演算法
+            <svg-icon
+              icon-class="folder-plus"
+              class="icon"
+            />
+            新增演算法
           </button>
         </div>
       </div>
