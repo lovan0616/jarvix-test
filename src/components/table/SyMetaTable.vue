@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="meta-table-top-area">
-      <div class="meta-table-top-area-right">{{rightText}}</div>
+      <div class="meta-table-top-area-right">{{ rightText }}</div>
     </div>
     <sy-table
       v-bind="$props"
-    ></sy-table>
+    />
   </div>
 </template>
 
