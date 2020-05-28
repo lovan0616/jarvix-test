@@ -35,7 +35,7 @@ export default {
   },
   data () {
     return {
-      isLoading: false,
+      isLoading: true,
       isNoResult: false,
       dataFrameInfo: null,
       quickStartQuestionList: []
