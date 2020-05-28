@@ -1,24 +1,24 @@
 <template>
-  <el-autocomplete :class="['sy-speech-autocomplete-input', 'el-input--round', {'is-recognizing': recognizing}]"
+  <el-autocomplete
     ref="autocomplete"
+    :class="['sy-speech-autocomplete-input', 'el-input--round', {'is-recognizing': recognizing}]"
     :placeholder="placeholder"
     :value="inputValue"
+    :fetch-suggestions="querySearch"
+    :trigger-on-focus="false"
+    :disabled="disabled"
+    custom-item="aucocomplete-item"
+    popper-class="autocomplete-item"
     @keypress.enter.native="onEnter"
     @input="onInput"
     @focus="onFocus"
     @blur="onBlur"
-    :fetch-suggestions="querySearch"
-    :trigger-on-focus="false"
     @select="handleSelect"
-    :disabled="disabled"
-    custom-item="aucocomplete-item"
-    popper-class="autocomplete-item"
   >
     <i
-      class="el-input__icon ion ion-ios-mic-outline"
       slot="suffix"
-      @click="onVoiceClick">
-    </i>
+      class="el-input__icon ion ion-ios-mic-outline"
+      @click="onVoiceClick"/>
   </el-autocomplete>
 </template>
 
@@ -28,6 +28,9 @@ import fuzzball from 'fuzzball'
 import Vue from 'vue'
 Vue.component('aucocomplete-item', {
   functional: true,
+  props: {
+    item: { type: Object, required: true }
+  },
   render: function (h, ctx) {
     var item = ctx.props.item
     return h('li', ctx.data, [
@@ -35,9 +38,6 @@ Vue.component('aucocomplete-item', {
       h('span', { attrs: { class: 'info' } }, [item.info])
     ])
   },
-  props: {
-    item: { type: Object, required: true }
-  }
 })
 export default {
   name: 'SySpeechAutocompleteInput',
@@ -56,6 +56,12 @@ export default {
       disabled: false
     }
   },
+  computed: {
+    recognizing () {
+      if (!this.speechCognition) return false
+      else return this.speechCognition.recognizing
+    }
+  },
   watch: {
     value (e) {
       this.inputValue = e
@@ -63,16 +69,9 @@ export default {
   },
   created () {
     this.initSpeech()
-    console.log(this.speechCognition)
   },
   destroyed () {
     this.endSpeech()
-  },
-  computed: {
-    recognizing () {
-      if (!this.speechCognition) return false
-      else return this.speechCognition.recognizing
-    }
   },
   mounted () {
     this.suggestions = this.loadAll()
@@ -133,7 +132,6 @@ export default {
       // console.log('onBlur')
     },
     onVoiceClick (e) {
-      console.log('hello')
       return (!this.recognizing) ? this.startSpeech() : this.endSpeech()
     },
     initSpeech () {
@@ -141,18 +139,14 @@ export default {
       this.speechCognition = new SpeechCognition({
         lang: 'cmn-Hant-TW',
         onStart () {
-          console.log('onStart')
         },
         onResult (e) {
-          console.log('onResult', e)
           self.$emit('input', self.inputValue)
           self.inputValue = e
         },
         onError (e) {
-          console.log('onError', e)
         },
         onEnd () {
-          console.log('onEnd')
         }
       })
     },
