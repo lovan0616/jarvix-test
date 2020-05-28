@@ -3,8 +3,10 @@
     <app-header>
       <HeaderNav slot="nav" />
     </app-header>
-    <transition name="fade" mode="out-in">
-      <router-view ></router-view>
+    <transition 
+      name="fade" 
+      mode="out-in">
+      <router-view />
     </transition>
   </div>
 </template>
@@ -19,17 +21,9 @@ export default {
     AppHeader,
     HeaderNav
   },
-  created () {
-    this.setDataSourceInfo()
-  },
-  destroyed () {
-    window.clearInterval(this.intervalFunction)
-    this.$store.commit('dataSource/setDataSourceList', [])
-    this.$store.commit('dataSource/setIsInit', false)
-  },
-  methods: {
-    setDataSourceInfo () {
-      this.$store.dispatch('dataSource/init')
+  computed: {
+    isDataSourceBuilding () {
+      return this.$store.getters['dataSource/isDataSourceBuilding']
     }
   },
   watch: {
@@ -57,11 +51,19 @@ export default {
     //   }
     // }
   },
-  computed: {
-    isDataSourceBuilding () {
-      return this.$store.getters['dataSource/isDataSourceBuilding']
+  created () {
+    this.setDataSourceInfo()
+  },
+  destroyed () {
+    window.clearInterval(this.intervalFunction)
+    this.$store.commit('dataSource/setDataSourceList', [])
+    this.$store.commit('dataSource/setIsInit', false)
+  },
+  methods: {
+    setDataSourceInfo () {
+      this.$store.dispatch('dataSource/init')
     }
-  }
+  },
 }
 </script>
 <style lang="scss" scoped>
