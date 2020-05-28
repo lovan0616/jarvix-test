@@ -29,76 +29,11 @@
           </el-tabs>
         </div>
         <div class="board-body">
-          <spinner
-            v-if="isLoading"
-          ></spinner>
-          <empty-info-block
-            v-else-if="!isLoading && (hasError || dataSourceTables.length === 0)"
-            :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
-          ></empty-info-block>
-          <template v-else>
-            <div class="board-body-section">
-              <div class="title">{{ $t('editing.dataFrameContent') }}</div>
-              <div class="overview">
-                <div class="overview__data">
-                  <div class="overview__item">
-                    {{ $t('resultDescription.totalDataRows') + ': ' + formatComma(dataFrameOverviewData.totalRows) }}
-                  </div>
-                  <div class="overview__item">
-                    {{ $t('resultDescription.totalDataColumns') + ': ' + formatComma(dataFrameOverviewData.totalColumns) }}
-                  </div>
-                </div>
-              </div>
-              <pagination-table
-                :is-processing="isProcessing"
-                :dataset="dataSourceTableData"
-                :pagination-info="pagination"
-                :min-column-width="'270px'"
-                @change-page="updatePage"
-                fixedIndex
-              >
-                <template #columns-header="{ column, index }">
-                  <div class="header-block">
-                    <div class="header">
-                      <span class="icon">
-                        <el-tooltip
-                          :enterable="false"
-                          :visible-arrow="false"
-                          class="icon"
-                          slot="label"
-                          :content="`${getStatesTypeName(index)}`">
-                          <svg-icon :icon-class="getHeaderIcon(index)" />
-                        </el-tooltip>
-                      </span>
-                      <span class="text">
-                        <el-tooltip
-                          placement="bottom-start"
-                          :visible-arrow="false"
-                          :enterable="false"
-                          slot="label"
-                          :content="`${column.titles[index]}`">
-                          <span>{{column.titles[index]}}</span>
-                        </el-tooltip>
-                      </span>
-                    </div>
-                    <div
-                      class="summary"
-                      v-if="showColumnSummaryRow"
-                    >
-                      <data-column-summary
-                        :summary-data="tableSummaryList[index]"
-                      />
-                    </div>
-                  </div>
-                </template>
-              </pagination-table>
-            </div>
-            <!--欄位關聯概況-->
-            <column-correlation-overview
-              class="board-body-section"
-              :data-frame-id="dataSourceTable.id"
-            />
-          </template>
+          <data-frame-data
+            v-if="currentDataFrameId"
+            :key="currentDataFrameId"
+            :data-frame-id="currentDataFrameId"
+          ></data-frame-data>
         </div>
       </div>
     </template>
@@ -108,18 +43,14 @@
 <script>
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
-import PaginationTable from '@/components/table/PaginationTable'
-import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
-import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/ColumnCorrelationOverview'
+import DataFrameData from './DataFrameData'
 
 export default {
   name: 'PreviewDataSource',
   components: {
     SySelect,
     EmptyInfoBlock,
-    PaginationTable,
-    DataColumnSummary,
-    ColumnCorrelationOverview
+    DataFrameData
   },
   data () {
     return {
@@ -138,7 +69,8 @@ export default {
         totalColumns: '-'
       },
       tableSummaryList: [],
-      showColumnSummaryRow: true
+      showColumnSummaryRow: true,
+      currentDataFrameId: null
     }
   },
   mounted () {
@@ -179,10 +111,9 @@ export default {
           })
           if (this.dataSourceTables.length) {
             this.dataSourceTable = response[0]
-            this.fetchDataFrameData(this.dataSourceTable.id, 0, true)
-          } else {
-            this.isLoading = false
+            this.currentDataFrameId = this.dataSourceTable.id
           }
+          this.isLoading = false
         })
         .catch(() => {
           this.hasError = true
@@ -197,8 +128,8 @@ export default {
       if (this.dataSourceTable.id === id) { return }
       this.isLoading = true
       this.hasError = false
-      this.setDataSourceTableById(id)
-      this.fetchDataFrameData(id, 0, true)
+      this.dataSourceTable.id = id
+      this.currentDataFrameId = id
     },
     fetchDataFrameData (id, page = 0, resetPagination = false) {
       this.isProcessing = true
@@ -228,14 +159,12 @@ export default {
           this.isProcessing = false
         })
         .catch((error) => {
-          if (error.constructor.name === 'Cancel') return
-          this.hasError = true
-          this.isLoading = false
-          this.isProcessing = false
+          if (error.constructor.name !== 'Cancel') {
+            this.hasError = true
+            this.isLoading = false
+            this.isProcessing = false
+          }
         })
-    },
-    updatePage (page) {
-      this.fetchDataFrameData(this.dataSourceTable.id, page - 1)
     },
     getHeaderIcon (index) {
       if (!this.tableSummaryList[index]) return 'check-circle'
