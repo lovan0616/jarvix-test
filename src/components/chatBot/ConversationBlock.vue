@@ -4,11 +4,12 @@
       v-for="(conversation, index) in conversationList"
       :key="index"
       :content="conversation"
-    ></single-chat-block>
-    <div class="spinner-container"
+    />
+    <div 
       v-if="isAnalyzing"
+      class="spinner-container"
     >
-      <dot-spinner></dot-spinner>
+      <dot-spinner/>
     </div>
   </div>
 </template>
