@@ -1,9 +1,11 @@
 <template>
   <div :class="['container-card', { 'is-full-height': fullHeight, 'is-bg': bg }]">
-    <div :class="['card-title', `align-${titleAlign}`]" v-if="title !== undefined">
+    <div 
+      v-if="title !== undefined" 
+      :class="['card-title', `align-${titleAlign}`]">
       {{ title }}
     </div>
-    <slot></slot>
+    <slot/>
   </div>
 </template>
 

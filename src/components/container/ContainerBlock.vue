@@ -3,33 +3,41 @@
     :class="[
       'container-block',
       `flex-direct-${flexDirection}`,
-        {
-          'is-flexible': flexible,
-          'is-full-height': fullHeight,
-          'is-no-padding': noPadding,
-          'is-bg': bg,
-          'is-inner-bg': innerBg,
-          'is-inner-padding': innerPadding,
-          'has-header': title,
-          'is-no-header-padding': noHeaderPadding,
-          'is-bg-dark': bgDark,
-          'is-body-flexible': bodyFlexible,
-          'is-flow-reverse': flowReverse,
-          'is-outspread': outspread,
-          'is-same-height': sameHeight
-        }
+      {
+        'is-flexible': flexible,
+        'is-full-height': fullHeight,
+        'is-no-padding': noPadding,
+        'is-bg': bg,
+        'is-inner-bg': innerBg,
+        'is-inner-padding': innerPadding,
+        'has-header': title,
+        'is-no-header-padding': noHeaderPadding,
+        'is-bg-dark': bgDark,
+        'is-body-flexible': bodyFlexible,
+        'is-flow-reverse': flowReverse,
+        'is-outspread': outspread,
+        'is-same-height': sameHeight
+      }
     ]"
     :style="rootStyle"
   >
-    <div v-if="title || subTitle" :class="['block-header', `align-${titleAlign}`]">
-      <div v-if="title" class="block-title">{{title}}</div>
-      <div v-if="subTitle" class="block-sub-title">{{subTitle}}</div>
+    <div 
+      v-if="title || subTitle" 
+      :class="['block-header', `align-${titleAlign}`]">
+      <div 
+        v-if="title" 
+        class="block-title">{{ title }}</div>
+      <div 
+        v-if="subTitle" 
+        class="block-sub-title">{{ subTitle }}</div>
     </div>
     <div :class="['block-body', `flex-direct-${bodyFlexDirection}`]">
-      <div v-if="flexible" class="block-row">
-        <slot></slot>
+      <div 
+        v-if="flexible" 
+        class="block-row">
+        <slot/>
       </div>
-      <slot v-else></slot>
+      <slot v-else/>
     </div>
   </div>
 </template>
