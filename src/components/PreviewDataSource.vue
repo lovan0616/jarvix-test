@@ -134,45 +134,9 @@ export default {
     onDataSourceTableChange (tab) {
       const id = parseInt(tab.name)
       if (this.dataSourceTable.id === id) { return }
-      this.isLoading = true
       this.hasError = false
       this.dataSourceTable.id = id
       this.currentDataFrameId = id
-    },
-    fetchDataFrameData (id, page = 0, resetPagination = false) {
-      this.isProcessing = true
-      this.$store.dispatch('dataSource/getDataFrameIntro', {id, page})
-        .then(([dataFrameData, dataColumnSummary]) => {
-          if (resetPagination) {
-            this.pagination = dataFrameData.pagination
-            this.dataFrameOverviewData = {
-              totalRows: dataFrameData.pagination.totalItems,
-              totalColumns: dataFrameData.columns.length
-            }
-            this.showColumnSummaryRow = !dataColumnSummary.every(column => !column.dataSummary)
-            this.tableSummaryList = dataColumnSummary.map(column => ({
-              ...column.dataSummary,
-              statsType: column.statsType,
-              totalRows: dataFrameData.pagination.totalItems
-            }))
-          }
-          this.dataSourceTableData = {
-            columns: {
-              titles: dataFrameData.columns
-            },
-            data: dataFrameData.data,
-            index: [...Array(dataFrameData.data.length)].map((x, i) => i)
-          }
-          this.isLoading = false
-          this.isProcessing = false
-        })
-        .catch((error) => {
-          if (error.constructor.name !== 'Cancel') {
-            this.hasError = true
-            this.isLoading = false
-            this.isProcessing = false
-          }
-        })
     },
     getHeaderIcon (index) {
       if (!this.tableSummaryList[index]) return 'check-circle'
