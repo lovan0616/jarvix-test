@@ -3,6 +3,11 @@
     <template v-if="dataSourceId">
       <div class="bookmark-header">{{$t('resultDescription.dataSourceIntro')}}</div>
       <div class="result-board">
+        <spinner
+          v-if="isLoading"
+          :title="$t('editing.loading')"
+          size="50"
+        ></spinner>
         <div
           v-if="dataSourceTables.length > 0"
           class="board-header"
@@ -28,7 +33,10 @@
             </el-tab-pane>
           </el-tabs>
         </div>
-        <div class="board-body">
+        <div
+          class="board-body"
+          :class="{'is-loading': isLoading}"
+        >
           <data-frame-data
             v-if="currentDataFrameId"
             :key="currentDataFrameId"
@@ -261,6 +269,10 @@ export default {
   }
   .board-body {
     padding: 16px 24px;
+
+    &.is-loading {
+      padding: 0 24px;
+    }
   }
 
   .overview {
