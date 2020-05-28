@@ -1,15 +1,18 @@
 <template>
   <div class="page-algorithm">
-    <spinner class="layout-spinner"
+    <spinner 
       v-if="isExecuting"
+      class="layout-spinner"
       title="演算法處理中，請耐心等待..."
       size="50"
-    ></spinner>
+    />
     <template v-else>
       <div class="page-title-row">
         <h1 class="title">演算法管理</h1>
         <div class="bread-crumb">
-          <router-link :to="{name: 'PageAlgorithmList'}" class="title-link">演算法</router-link>
+          <router-link 
+            :to="{name: 'PageAlgorithmList'}" 
+            class="title-link">演算法</router-link>
           <span class="divider">/</span>新建
         </div>
       </div>
@@ -21,11 +24,12 @@
           <div class="item-wrap">
             <div class="content-item">
               <div class="item-title must">演算法類型: </div>
-              <default-select class="tag-select input"
+              <default-select 
                 v-model="selectedAlgorithm"
                 :option-list="algorithmOptions"
+                class="tag-select input"
                 @change="onAlgorithmChange"
-              ></default-select>
+              />
             </div>
           </div>
         </div>
@@ -38,51 +42,60 @@
           <div class="item-wrap">
             <div class="content-item">
               <div class="item-title must">目標資料源: </div>
-              <default-select class="tag-select input"
+              <default-select 
                 v-model="targetDatasource"
                 :option-list="datasourceOptions"
+                class="tag-select input"
                 @change="onTargetDatasourceChange"
-              ></default-select>
+              />
             </div>
             <div class="content-item">
               <div class="item-title must">目標資料表: </div>
-              <default-select class="tag-select input" :style="{width: '240px'}"
+              <default-select 
+                :style="{width: '240px'}" 
                 v-model="targetDataframe"
                 :option-list="dataframeOptions"
+                class="tag-select input"
                 @change="onTargetDataframeChange"
-              ></default-select>
+              />
             </div>
           </div>
 
           <div class="item-wrap">
             <div class="content-item">
               <div class="item-title must">目標參數欄位: </div>
-              <default-select class="tag-select input"
+              <default-select 
                 v-model="targetDatacolumn"
                 :option-list="datacolumnOptions"
-              ></default-select>
+                class="tag-select input"
+              />
             </div>
             <div class="content-item">
               <div class="item-title must">時間欄位: </div>
-              <default-select class="tag-select input"
+              <default-select 
                 v-model="timeDatacolumn"
                 :option-list="datacolumnOptions"
-              ></default-select>
+                class="tag-select input"
+              />
             </div>
           </div>
           <div class="content-item">
             <div class="item-title must">測量值欄位: </div>
-            <default-multi-select class="tag-select input" :style="{width: '360px'}"
+            <default-multi-select 
+              :style="{width: '360px'}" 
               v-model="valueDatacolumns"
               :option-list="datacolumnOptions"
+              class="tag-select input"
               @change="onValueDatacolumnsChange"
-            ></default-multi-select>
+            />
           </div>
         </div>
       </div>
 
       <div class="footer">
-        <button type="button" class="btn btn-outline"
+        <button 
+          type="button" 
+          class="btn btn-outline"
           @click="back"
         >{{ $t('button.cancel') }}</button>
         <!-- <button type="button" class="btn btn-default"
@@ -90,7 +103,9 @@
         >
           <span>新建</span>
         </button> -->
-        <button type="button" class="btn btn-default"
+        <button 
+          type="button" 
+          class="btn btn-default"
           @click="execute"
         >
           <span>執行</span>
@@ -130,8 +145,79 @@ export default {
       selectedDatacolumns: []
     }
   },
-  mounted () {
-    this.fetchDatasources()
+  computed: {
+    ...mapGetters('dataSource', ['dataSourceList']),
+    algorithmOptions () {
+      return [
+        // {
+        //   name: '預測性維修',
+        //   value: 1,
+        // },
+        {
+          name: '輪廓型預測',
+          value: 2
+        }
+      ]
+    },
+    datasourceOptions () {
+      return this.dataSourceList.map(item => {
+        return {
+          name: item.name,
+          value: item.id
+        }
+      })
+    },
+    dataframeOptions () {
+      return this.dataframeList.map(item => {
+        return {
+          name: item.primaryAlias,
+          value: item.id
+        }
+      })
+    },
+    datacolumnOptions () {
+      return this.datacolumnList.reduce((result, item) => {
+        if (this.selectedDatacolumns.indexOf(item.id) > -1) return result
+        result.push({
+          name: item.name,
+          value: item.id
+        })
+        return result
+      }, [])
+    },
+    numericDatacolumnOptions () {
+      return this.datacolumnList.reduce((result, item) => {
+        if (this.selectedDatacolumns.indexOf(item.id) > -1) return result
+        if (item.statsType !== 'NUMERIC') return result
+        result.push({
+          name: item.name,
+          value: item.id
+        })
+        return result
+      }, [])
+    },
+    datetimeDatacolumnOptions () {
+      return this.datacolumnList.reduce((result, item) => {
+        if (this.selectedDatacolumns.indexOf(item.id) > -1) return result
+        if (item.statsType !== 'DATETIME') return result
+        result.push({
+          name: item.name,
+          value: item.id
+        })
+        return result
+      }, [])
+    },
+    booleanDatacolumnOptions () {
+      return this.datacolumnList.reduce((result, item) => {
+        if (this.selectedDatacolumns.indexOf(item.id) > -1) return result
+        if (item.statsType !== 'BOOLEAN' && item.statsType !== 'CATEGORY') return result
+        result.push({
+          name: item.name,
+          value: item.id
+        })
+        return result
+      }, [])
+    }
   },
   watch: {
     targetDatacolumn (a, b) {
@@ -159,6 +245,9 @@ export default {
         })
       }
     }
+  },
+  mounted () {
+    this.fetchDatasources()
   },
   methods: {
     fetchDatasources () {
@@ -247,80 +336,6 @@ export default {
     },
     onValueDatacolumnsChange (e) {
       this.valueDatacolumns = e
-    }
-  },
-  computed: {
-    ...mapGetters('dataSource', ['dataSourceList']),
-    algorithmOptions () {
-      return [
-        // {
-        //   name: '預測性維修',
-        //   value: 1,
-        // },
-        {
-          name: '輪廓型預測',
-          value: 2
-        }
-      ]
-    },
-    datasourceOptions () {
-      return this.dataSourceList.map(item => {
-        return {
-          name: item.name,
-          value: item.id
-        }
-      })
-    },
-    dataframeOptions () {
-      return this.dataframeList.map(item => {
-        return {
-          name: item.primaryAlias,
-          value: item.id
-        }
-      })
-    },
-    datacolumnOptions () {
-      return this.datacolumnList.reduce((result, item) => {
-        if (this.selectedDatacolumns.indexOf(item.id) > -1) return result
-        result.push({
-          name: item.name,
-          value: item.id
-        })
-        return result
-      }, [])
-    },
-    numericDatacolumnOptions () {
-      return this.datacolumnList.reduce((result, item) => {
-        if (this.selectedDatacolumns.indexOf(item.id) > -1) return result
-        if (item.statsType !== 'NUMERIC') return result
-        result.push({
-          name: item.name,
-          value: item.id
-        })
-        return result
-      }, [])
-    },
-    datetimeDatacolumnOptions () {
-      return this.datacolumnList.reduce((result, item) => {
-        if (this.selectedDatacolumns.indexOf(item.id) > -1) return result
-        if (item.statsType !== 'DATETIME') return result
-        result.push({
-          name: item.name,
-          value: item.id
-        })
-        return result
-      }, [])
-    },
-    booleanDatacolumnOptions () {
-      return this.datacolumnList.reduce((result, item) => {
-        if (this.selectedDatacolumns.indexOf(item.id) > -1) return result
-        if (item.statsType !== 'BOOLEAN' && item.statsType !== 'CATEGORY') return result
-        result.push({
-          name: item.name,
-          value: item.id
-        })
-        return result
-      }, [])
     }
   }
 }

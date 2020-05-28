@@ -3,7 +3,9 @@
     <div class="page-title-row">
       <h1 class="title">演算法管理</h1>
       <div class="bread-crumb">
-        <router-link :to="{name: 'PageAlgorithmList'}" class="title-link">演算法</router-link>
+        <router-link 
+          :to="{name: 'PageAlgorithmList'}" 
+          class="title-link">演算法</router-link>
         <span class="divider">/</span>預測性維修
       </div>
     </div>
@@ -15,51 +17,56 @@
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title must">目標資料源: </div>
-            <default-select class="tag-select input"
+            <default-select 
               :value="1"
               :option-list="[
                 {value: 1, name: '富士康demo'},
               ]"
-            ></default-select>
+              class="tag-select input"
+            />
           </div>
           <div class="content-item">
             <div class="item-title must">目標資料表: </div>
-            <default-select class="tag-select input"
+            <default-select 
               :value="1"
               :option-list="[
                 {value: 1, name: 'TemperatureData'},
                 {value: 2, name: 'molding'},
               ]"
-            ></default-select>
+              class="tag-select input"
+            />
           </div>
         </div>
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title must">目標參數欄位: </div>
-            <default-select class="tag-select input"
+            <default-select 
               :value="1"
               :option-list="[
                 {value: 1, name: '溫度'},
               ]"
-            ></default-select>
+              class="tag-select input"
+            />
           </div>
           <div class="content-item">
             <div class="item-title must">時間欄位: </div>
-            <default-select class="tag-select input"
+            <default-select 
               :value="1"
               :option-list="[
                 {value: 1, name: '開始時間'},
               ]"
-            ></default-select>
+              class="tag-select input"
+            />
           </div>
           <div class="content-item">
             <div class="item-title must">狀態欄位: </div>
-            <default-select class="tag-select input"
+            <default-select 
               :value="1"
               :option-list="[
                 {value: 1, name: '狀態'},
               ]"
-            ></default-select>
+              class="tag-select input"
+            />
           </div>
         </div>
       </div>
@@ -78,67 +85,98 @@
       <div class="content">
         <div class="content-item">
           <div class="item-title">模型類型: </div>
-          <default-select class="tag-select input"
+          <default-select 
             :value="1"
             :option-list="[
               {value: 1, name: '非監督'},
               {value: 2, name: '監督'},
             ]"
-          ></default-select>
+            class="tag-select input"
+          />
         </div>
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title">規格上限: </div>
-            <input type="text" class="input" placeholder="">
+            <input 
+              type="text" 
+              class="input" 
+              placeholder="">
           </div>
           <div class="content-item">
             <div class="item-title">規格下限: </div>
-            <input type="text" class="input" placeholder="">
+            <input 
+              type="text" 
+              class="input" 
+              placeholder="">
           </div>
         </div>
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title">管制上限比例: </div>
-            <input type="text" class="input" :value="0.95" placeholder="0.5~1">
+            <input 
+              :value="0.95" 
+              type="text" 
+              class="input" 
+              placeholder="0.5~1">
           </div>
           <div class="content-item">
             <div class="item-title">管制下限比例: </div>
-            <input type="text" class="input" :value="0.05" placeholder="0~0.5">
+            <input 
+              :value="0.05" 
+              type="text" 
+              class="input" 
+              placeholder="0~0.5">
           </div>
         </div>
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title">時間單位: </div>
-            <default-select class="tag-select input"
+            <default-select 
               :value="1"
               :option-list="[
                 {value: 1, name: '秒'},
                 {value: 2, name: '分'},
                 {value: 3, name: '時'},
               ]"
-            ></default-select>
+              class="tag-select input"
+            />
           </div>
           <div class="content-item">
             <div class="item-title">提早時間: </div>
-            <input type="text" class="input" :value="60" placeholder="時間單位依照上面">
+            <input 
+              :value="60" 
+              type="text" 
+              class="input" 
+              placeholder="時間單位依照上面">
           </div>
         </div>
         <div class="content-item">
           <div class="item-title">視窗大小: </div>
-          <input type="text" class="input" :value="60">
+          <input 
+            :value="60" 
+            type="text" 
+            class="input">
         </div>
         <div class="content-item">
           <div class="item-title">訓練集佔比: </div>
-          <input type="text" class="input" :value="0.8" placeholder="0~1">
+          <input 
+            :value="0.8" 
+            type="text" 
+            class="input" 
+            placeholder="0~1">
         </div>
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title">警告閥值: </div>
-            <input type="text" class="input">
+            <input 
+              type="text" 
+              class="input">
           </div>
           <div class="content-item">
             <div class="item-title">異常閥值: </div>
-            <input type="text" class="input">
+            <input 
+              type="text" 
+              class="input">
           </div>
         </div>
       </div>
@@ -158,25 +196,27 @@
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title">目標資料源: </div>
-            <default-select class="tag-select input"
+            <default-select 
               :option-list="[
                 {value: 1, name: '富士康demo'},
               ]"
-            ></default-select>
+              class="tag-select input"
+            />
           </div>
           <div class="content-item">
             <div class="item-title">目標資料表: </div>
-            <default-select class="tag-select input"
+            <default-select 
               :option-list="[
                 {value: 1, name: 'TemperatureData'},
                 {value: 2, name: 'molding'},
               ]"
-            ></default-select>
+              class="tag-select input"
+            />
           </div>
         </div>
         <div class="content-item">
           <div class="item-title">執行週期: </div>
-          <default-select class="tag-select input"
+          <default-select 
             :value="5"
             :option-list="[
               {value: 1, name: '一秒'},
@@ -190,16 +230,21 @@
               {value: 9, name: '四五分鐘'},
               {value: 10, name: '一小時'},
             ]"
-          ></default-select>
+            class="tag-select input"
+          />
         </div>
       </div>
     </div>
 
     <div class="footer">
-      <button type="button" class="btn btn-outline"
+      <button 
+        type="button" 
+        class="btn btn-outline"
         @click="back"
       >{{ $t('button.cancel') }}</button>
-      <button type="button" class="btn btn-default"
+      <button 
+        type="button" 
+        class="btn btn-default"
         @click="back"
       >
         <span>{{ $t('button.confirm') }}</span>
@@ -235,13 +280,6 @@ export default {
           status: '可執行'
         }
       ]
-    }
-  },
-  mounted () {
-  },
-  methods: {
-    back () {
-      this.$router.push('/algorithm')
     }
   },
   computed: {
@@ -294,7 +332,14 @@ export default {
         }
       ]
     }
-  }
+  },
+  mounted () {
+  },
+  methods: {
+    back () {
+      this.$router.push('/algorithm')
+    }
+  },
 }
 </script>
 <style lang="scss" scoped>
