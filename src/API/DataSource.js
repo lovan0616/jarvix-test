@@ -93,7 +93,7 @@ export function getDataSourceDataValueById (dataSourceId, size = 50) {
  */
 export function getDataFrameById (dataSourceId, getAllState = false) {
   return request({
-    url: `/dataFrame/dataSource/${dataSourceId}`,
+    url: `datasources/${dataSourceId}/dataFrame`,
     method: 'GET',
     params: {
       stateList: getAllState ? [] : 'Enable'
@@ -105,7 +105,7 @@ export function getDataFrameById (dataSourceId, getAllState = false) {
  * get data of dataframe by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
-export function getDataFrameData (dataFrameId, page = 0) {
+export function getDataFrameData (dataFrameId, page = 0, cancelToken) {
   // FIXME just default a big size, doesn't implement with pagination
   return request({
     url: `/dataFrame/${dataFrameId}/data`,
@@ -113,7 +113,8 @@ export function getDataFrameData (dataFrameId, page = 0) {
     params: {
       page,
       size: 20
-    }
+    },
+    cancelToken
   })
 }
 
@@ -226,7 +227,7 @@ export function getDataValue (columnId) {
  */
 export function getDataColumnDataValue (dataFrameId) {
   return request({
-    url: `/dataFrame/FrameNameAndValue/${dataFrameId}`,
+    url: `/dataFrame/${dataFrameId}/dataColumn/aliasAndValue`,
     method: 'GET'
   })
 }
@@ -264,5 +265,27 @@ export function dataSourcePreprocessor (dataSourceInfo) {
     url: `/data/preprocessor`,
     method: 'POST',
     data: dataSourceInfo
+  })
+}
+
+/*
+ * Dataframe column summary
+ */
+export function dataFrameColumnSummary (dataFrameId, cancelToken) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/summary`,
+    method: 'GET',
+    cancelToken
+  })
+}
+
+/**
+ * get column correlation matrix
+ * @param {Number} dataFrameId - 欲查閱的資料表 ID
+ */
+export function getColumnCorrelationMatrix (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/relationMatrix`,
+    method: 'GET'
   })
 }

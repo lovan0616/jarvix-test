@@ -1,6 +1,9 @@
 import Vue from 'vue'
 
 export default {
+  updateImportedFileList (state, file) {
+    state.importedFileList.push(file)
+  },
   updateUploadFileList (state, data) {
     state.uploadFileList = data
   },
@@ -35,6 +38,7 @@ export default {
     if (columnList.length > 0) {
       columnList.forEach((element, index) => {
         let newElement = JSON.parse(JSON.stringify(element))
+        Vue.set(element, 'hasChanged', false)
         Vue.set(element, 'index', index)
         Vue.set(element, 'targetDataType', newElement.originalDataType)
         Vue.set(element, 'originalStatsType', newElement.statsType)
@@ -67,6 +71,9 @@ export default {
     let {tableIndex, columnIndex, info} = data
     Vue.set(state.etlTableList[tableIndex].columns, columnIndex, info)
   },
+  clearImportedTableList (state) {
+    state.importedFileList = []
+  },
   clearEtlTableList (state, data) {
     state.etlTableList = []
   },
@@ -74,5 +81,15 @@ export default {
     let {dataFrameIndex, columnIndex} = data
     let column = state.etlTableList[dataFrameIndex].columns[columnIndex]
     column.active = !column.active
+  },
+  changeCurrentTableIndex (state, index) {
+    state.currentTableIndex = index
+  },
+  changeCurrentColumnIndex (state, index) {
+    state.currentColumnIndex = index
+  },
+  updateSummaryInfo (state, data) {
+    let {tableIndex, columnIndex, dataSummary} = data
+    Vue.set(state.etlTableList[tableIndex].columns[columnIndex], 'dataSummary', dataSummary)
   }
 }

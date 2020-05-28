@@ -7,7 +7,7 @@
         <div class="file-info name">{{ formDataInfo.name }}</div>
         <div class="file-info size">{{ byteToMB(formDataInfo.size) }}</div>
         <div class="single-file-progress"
-          v-if="singleFile.status === uploadStatus.uploading && progress < 100"
+          v-if="singleFile.status === uploadStatus.uploading"
         >
           <div class="progress-bar"
             :style="{ width: progress + '%' }"
@@ -80,7 +80,7 @@ export default {
         _this.askCancelFunction = c
       }))
         .then(response => {
-          this.$store.commit('dataManagement/updateEtlTableList', response)
+          this.$store.commit('dataManagement/updateImportedFileList', response)
           this.singleFile.status = uploadStatus.success
         }).catch(() => {
           this.singleFile.status = uploadStatus.fail
@@ -144,12 +144,6 @@ export default {
   background-color: rgba(67, 76, 76, 0.95);
   border-radius: 5px;
 
-  &:hover {
-    .file-status .action-link.cancel {
-      display: block;
-    }
-  }
-
   &.fail {
     color: #BDBDBD;
   }
@@ -158,6 +152,7 @@ export default {
     position: relative;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
     flex: 1;
     line-height: 19px;
@@ -165,16 +160,14 @@ export default {
     margin-right: 15px;
   }
   .single-file-progress {
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 100%;
+    flex-basis: 100%;
     height: 3px;
-    background-color: #fff;
+    margin: 8px 0 6px 0;
 
     .progress-bar {
       height: 100%;
-      background-color: #49E6DE;
+      background: linear-gradient(90deg, #4CE2F0 0%, #438AF8 100%);
+      border-radius: 5px;
     }
   }
   .file-status {
@@ -189,10 +182,6 @@ export default {
       line-height: 19px;
       letter-spacing: 0.5px;
       color: $theme-color-primary;
-
-      &.cancel {
-        display: none;
-      }
     }
     .success {
       color: $theme-color-primary;

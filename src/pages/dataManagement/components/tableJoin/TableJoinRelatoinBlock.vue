@@ -284,11 +284,15 @@ export default {
       }
       return true
     },
+    checkDataCount () {
+      return localStorage.getItem('joinLimit') ? localStorage.getItem('joinLimit') === 'true' : true
+    },
     getJoinTableData () {
       return {
         dataSourceId: this.currentDataSourceId,
         name: this.editedRelationInfo.name,
-        dataFrameRelationList: this.getDataFrameRelationList()
+        dataFrameRelationList: this.getDataFrameRelationList(),
+        isCheckDataCount: this.checkDataCount()
       }
     },
     updateRelationInfo (responseData) {
@@ -326,7 +330,8 @@ export default {
         const joinTableData = {
           id: this.relationInfo.id,
           name: this.relationInfo.name,
-          dataFrameRelationList: this.getDataFrameRelationList()
+          dataFrameRelationList: this.getDataFrameRelationList(),
+          isCheckDataCount: this.checkDataCount()
         }
         updateJoinTable(joinTableData)
           .then(response => {

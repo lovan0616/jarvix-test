@@ -1,53 +1,64 @@
 <template>
   <div class="page-preview-bookmark">
-    <div class="result-board"
-      v-show="dataSourceId"
-    >
-      <div class="board-header">
-        <result-board-header
-          :title="$t('resultDescription.dataSourceIntro')"
-        ></result-board-header>
-      </div>
-      <div class="board-body">
-        <div class="dataset-info">
-          <sy-select class="preview-bookmark-select"
-            :selected="dataSourcetableId"
-            :items="dataSourceTables"
-            :placeholder="$t('editing.chooseDataFrame')"
-            @update:selected="onDataSourceTableChange"
-          ></sy-select>
-          <div class="data-count">{{ metaTableRightText }}</div>
-        </div>
+    <template v-if="dataSourceId">
+      <div class="bookmark-header">{{$t('resultDescription.dataSourceIntro')}}</div>
+      <div class="result-board">
         <spinner
           v-if="isLoading"
+          :title="$t('editing.loading')"
+          size="50"
         ></spinner>
-        <empty-info-block
-          v-else-if="hasError || dataSourceTables.length === 0"
-          :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
-        ></empty-info-block>
-        <pagination-table
-          v-else
-          :is-processing="isProcessing"
-          :dataset="dataSourceTableData"
-          :pagination-info="pagination"
-          @change-page="updatePage"
-        ></pagination-table>
+        <div
+          v-if="dataSourceTables.length > 0"
+          class="board-header"
+        >
+          <el-tabs
+            :value="`${dataSourcetableId}`"
+            type="card"
+            @tab-click="onDataSourceTableChange"
+          >
+            <el-tab-pane
+              v-for="(tab, index) in dataSourceTables"
+              :key="index + tab.name"
+              :label="tab.name"
+              :name="`${tab.id}`"
+            >
+              <el-tooltip
+                slot="label"
+                placement="bottom-start"
+                :visible-arrow="false"
+                :content="tab.name">
+                <span>{{tab.name}}</span>
+              </el-tooltip>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+        <div
+          class="board-body"
+          :class="{'is-loading': isLoading}"
+        >
+          <data-frame-data
+            v-if="currentDataFrameId"
+            :key="currentDataFrameId"
+            :data-frame-id="currentDataFrameId"
+          ></data-frame-data>
+        </div>
       </div>
-    </div>
-    <span v-show="!dataSourceId">{{ $t('message.emptyDataSource') }}</span>
+    </template>
+    <span v-else>{{ $t('message.emptyDataSource') }}</span>
   </div>
 </template>
 <script>
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
-import PaginationTable from '@/components/table/PaginationTable'
+import DataFrameData from './DataFrameData'
 
 export default {
   name: 'PreviewDataSource',
   components: {
     SySelect,
     EmptyInfoBlock,
-    PaginationTable
+    DataFrameData
   },
   data () {
     return {
@@ -56,11 +67,18 @@ export default {
       hasError: false,
       dataSourceTables: [],
       dataSourceTable: null,
-      dataSourceTableData: null,
+      dataSourceTableData: {},
       pagination: {
         currentPage: 0,
         totalPage: 0
-      }
+      },
+      dataFrameOverviewData: {
+        totalRows: '-',
+        totalColumns: '-'
+      },
+      tableSummaryList: [],
+      showColumnSummaryRow: true,
+      currentDataFrameId: null
     }
   },
   mounted () {
@@ -101,10 +119,9 @@ export default {
           })
           if (this.dataSourceTables.length) {
             this.dataSourceTable = response[0]
-            this.fetchDataFrameData(this.dataSourceTable.id, 0, true)
-          } else {
-            this.isLoading = false
+            this.currentDataFrameId = this.dataSourceTable.id
           }
+          this.isLoading = false
         })
         .catch(() => {
           this.hasError = true
@@ -114,46 +131,202 @@ export default {
     setDataSourceTableById (id) {
       this.dataSourceTable = this.dataSourceTables.find(item => item.id === id)
     },
-    onDataSourceTableChange (id) {
+    onDataSourceTableChange (tab) {
+      const id = parseInt(tab.name)
+      if (this.dataSourceTable.id === id) { return }
       this.isLoading = true
       this.hasError = false
-      this.setDataSourceTableById(id)
-      this.fetchDataFrameData(id, 0, true)
+      this.dataSourceTable.id = id
+      this.currentDataFrameId = id
     },
     fetchDataFrameData (id, page = 0, resetPagination = false) {
       this.isProcessing = true
-      this.$store.dispatch('dataSource/getDataFrameData', {id, page})
-        .then(response => {
+      this.$store.dispatch('dataSource/getDataFrameIntro', {id, page})
+        .then(([dataFrameData, dataColumnSummary]) => {
           if (resetPagination) {
-            this.pagination = response.pagination
+            this.pagination = dataFrameData.pagination
+            this.dataFrameOverviewData = {
+              totalRows: dataFrameData.pagination.totalItems,
+              totalColumns: dataFrameData.columns.length
+            }
+            this.showColumnSummaryRow = !dataColumnSummary.every(column => !column.dataSummary)
+            this.tableSummaryList = dataColumnSummary.map(column => ({
+              ...column.dataSummary,
+              statsType: column.statsType,
+              totalRows: dataFrameData.pagination.totalItems
+            }))
           }
           this.dataSourceTableData = {
-            columns: response.columns,
-            data: response.data,
-            index: [...Array(response.data.length)].map((x, i) => i)
+            columns: {
+              titles: dataFrameData.columns
+            },
+            data: dataFrameData.data,
+            index: [...Array(dataFrameData.data.length)].map((x, i) => i)
           }
           this.isLoading = false
           this.isProcessing = false
         })
-        .catch(() => {
-          this.hasError = true
-          this.isLoading = false
-          this.isProcessing = false
+        .catch((error) => {
+          if (error.constructor.name !== 'Cancel') {
+            this.hasError = true
+            this.isLoading = false
+            this.isProcessing = false
+          }
         })
     },
-    updatePage (page) {
-      this.fetchDataFrameData(this.dataSourceTable.id, page - 1)
+    getHeaderIcon (index) {
+      if (!this.tableSummaryList[index]) return 'check-circle'
+      const statesType = this.tableSummaryList[index].statsType
+      switch (statesType) {
+        case 'CATEGORY':
+          return 'character-a'
+        case 'NUMERIC':
+          return 'numeric'
+        case 'BOOLEAN':
+          return 'checked'
+        case 'DATETIME':
+          return 'calendar'
+        default:
+          return 'check-circle'
+      }
+    },
+    getStatesTypeName (index) {
+      if (!this.tableSummaryList[index]) return ''
+      const statesType = this.tableSummaryList[index].statsType
+      switch (statesType) {
+        case 'CATEGORY':
+          return `${this.$t('dataType.category')}${this.$t('askHelper.column')}`
+        case 'NUMERIC':
+          return `${this.$t('dataType.numeric')}${this.$t('askHelper.column')}`
+        case 'BOOLEAN':
+          return `${this.$t('dataType.boolean')}${this.$t('askHelper.column')}`
+        case 'DATETIME':
+          return `${this.$t('dataType.datetime')}${this.$t('askHelper.column')}`
+        default:
+          return `${this.$t('dataType.others')}${this.$t('askHelper.column')}`
+      }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .page-preview-bookmark {
+  .bookmark-header {
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 32px;
+    margin-bottom: 24px;
+  }
+
   .dataset-info {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
+  }
+
+  .board-body-section {
+    .title {
+      margin-bottom: 13px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 2rem;
+    }
+  }
+
+  .header-block {
+    .header {
+      padding: 10px;
+      border-bottom: 1px solid #515959;
+      display: flex;
+
+      .icon {
+        width: 20px;
+        margin-right: 5px;
+        text-align: center;
+      }
+
+      .text {
+        width: calc(100% - 25px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .summary {
+      padding: 10px;
+    }
+  }
+}
+
+.result-board {
+  .board-header {
+    border-top: unset;
+    padding-bottom: 0;
+  }
+  .board-body {
+    padding: 16px 24px;
+
+    &.is-loading {
+      padding: 0 24px;
+    }
+  }
+
+  .overview {
+    margin-bottom: 10px;
+    font-size: 14px;
+
+    &__data {
+      display: flex;
+    }
+
+    &__item {
+      margin-right: 45px;
+    }
+  }
+}
+
+/deep/ .el-tabs {
+  width: 100%;
+  &>.el-tabs__header {
+    border: none;
+    margin: 0;
+    width: 100%;
+
+    .el-tabs__nav {
+      position: relative;
+      width: 100%;
+      border: none;
+      overflow-x: auto;
+
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 3px;
+        background: #324B4E;
+      }
+    }
+    .el-tabs__item {
+      border: none;
+      color:  #AAAAAA;
+      border-bottom: 3px solid #324B4E;
+      text-align: center;
+      width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: top;
+      &.is-active {
+        color: #fff;
+        background: linear-gradient(360deg, #324B4E 0%, rgba(50, 75, 78, 0) 100%);
+        border-bottom: 3px solid $theme-color-primary;
+      }
+    }
   }
 }
 </style>

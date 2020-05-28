@@ -193,6 +193,8 @@ export default {
       histogramConfig.chartData.renderItem = this.renderItem
       histogramConfig.chartData.data = chartData
       chartAddon.series[0] = histogramConfig.chartData
+      // 不顯示“全選”按鈕
+      chartAddon.legend.selector = false
 
       return {...chartAddon, ...getDrillDownTool(this.$route.name, this.title)}
     },

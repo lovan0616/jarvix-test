@@ -96,7 +96,8 @@ export default {
         ...JSON.parse(JSON.stringify(sankeyConfig)),
         ...JSON.parse(JSON.stringify(commonChartOptions()))
       }
-
+      // 不顯示“全選”按鈕
+      sankeyOptions.legend.selector = false
       sankeyOptions.series[0].data = this.dataList
       sankeyOptions.series[0].links = this.linkList
       sankeyOptions.tooltip.trigger = 'item'

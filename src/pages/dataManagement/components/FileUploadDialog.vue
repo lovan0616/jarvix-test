@@ -36,6 +36,7 @@ export default {
     }
 
     this.$store.commit('dataManagement/clearCurrentUploadInfo')
+    this.$store.commit('dataManagement/clearImportedTableList')
     this.$store.commit('dataManagement/clearEtlTableList')
   },
   methods: {

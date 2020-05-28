@@ -17,33 +17,36 @@
       <empty-info-block
         v-else-if="tableList.length === 0"
       ></empty-info-block>
-      <div class="data-frame-list"
+      <div
         v-else
       >
-        <label class="single-data-frame"
-          v-for="(table, index) in tableList"
-          :key="index"
-        >
-          <div class="checkbox">
-            <div class="checkbox-label">
-              <input type="checkbox" name="table"
-                :value="table"
-                v-model="tableIdList"
-              >
-              <div class="checkbox-square"></div>
+        <div class="remark-info">{{ $t('etl.tableChosenLimit', {number: this.tableConnectionLimt}) }}</div>
+        <div class="data-frame-list">
+          <label class="single-data-frame"
+            v-for="(table, index) in tableList"
+            :key="index"
+          >
+            <div class="checkbox">
+              <div class="checkbox-label">
+                <input type="checkbox"
+                  :id="'table' + index"
+                  :value="table"
+                  v-model="tableIdList"
+                >
+                <div class="checkbox-square"></div>
+              </div>
             </div>
-          </div>
-          <div class="data-frame-info">
-            <div class="data-frame-name">{{ table }}</div>
-            <!-- <div class="data-frame-content">Scene1 content</div> -->
-          </div>
-        </label>
+            <div class="data-frame-info">
+              <div class="data-frame-name">{{ table }}</div>
+            </div>
+          </label>
+        </div>
       </div>
+
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
-          :disabled="isLoading"
           @click="cancelConnection"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-outline"
@@ -62,6 +65,7 @@
 import { getTableList, analyzeTable } from '@/API/RemoteConnection'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import UploadProcessBlock from './UploadProcessBlock'
+import { Message } from 'element-ui'
 
 export default {
   name: 'ChooseTable',
@@ -79,7 +83,9 @@ export default {
     return {
       isLoading: false,
       tableList: [],
-      tableIdList: []
+      tableIdList: [],
+      dataSourceId: parseInt(this.$route.params.id),
+      tableConnectionLimt: 10
     }
   },
   mounted () {
@@ -103,11 +109,20 @@ export default {
       this.$emit('prev')
     },
     nextStep () {
+      if (this.tableIdList.length > this.tableConnectionLimt) {
+        Message({
+          message: this.$t('etl.tableChosenLimit', {number: this.tableConnectionLimt}),
+          type: 'warning',
+          duration: 3 * 1000
+        })
+        return false
+      }
       this.isLoading = true
       // 先清除，避免有部分成功的情形發生
       this.$store.commit('dataManagement/clearEtlTableList')
       let promiseList = this.tableIdList.map((element, index) => {
-        return analyzeTable(this.connectionId, element).then(response => {
+        return analyzeTable(this.connectionId, this.currentUploadInfo.dataSourceId, element).then(response => {
+          response.dataSourceId = this.dataSourceId
           this.$store.commit('dataManagement/updateEtlTableList', response)
         })
       })
@@ -150,6 +165,12 @@ export default {
   .data-frame-list, .processing-spinner-container {
     max-height: 48vh;
     overflow: auto;
+  }
+
+  .remark-info {
+    font-size: 14px;
+    color: #FFDF6F;
+    margin-bottom: 8px;
   }
 
   .single-data-frame {

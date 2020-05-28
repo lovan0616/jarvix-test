@@ -54,11 +54,33 @@ export function fileImport (fileData, onProgress, cancelFunction) {
 }
 
 /**
+ * analysis file
+ * @param {Number} fileId - 欲取得的資料源 ID
+ * @param {Number} dataSourceId - 欲取得的資料源 ID
+ */
+export function analysisFile (fileId, dataSourceId) {
+  return request({
+    url: `/files/${fileId}/dataSource/${dataSourceId}/analysis`,
+    method: 'POST'
+  })
+}
+
+/**
  * delete file
  */
 export function deleteFile (fileId) {
   return request({
     url: `/files/upload/${fileId}`,
     method: 'POST'
+  })
+}
+
+/**
+ * get data summary
+ */
+export function getDataFrameSummary (dataFrameId) {
+  return request({
+    url: `/import/table/${dataFrameId}/summary`,
+    method: 'GET'
   })
 }

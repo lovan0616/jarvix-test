@@ -405,6 +405,18 @@ Vue.mixin({
     currentRouteName () {
       const routeName = this.$route.name
       return this.$t('sideNav.' + this.lowercaseFirstLetter(routeName))
+    },
+    shortenNumber (num, digit) {
+      const absValue = Math.abs(num)
+      if (absValue === 0) return num
+      if (absValue >= 1000000000000000000) return parseFloat((num / 1000000000000000000).toFixed(digit)) + 'Q'
+      if (absValue >= 1000000000000000) return parseFloat((num / 1000000000000000).toFixed(digit)) + 'q'
+      if (absValue >= 1000000000000) return parseFloat((num / 1000000000000).toFixed(digit)) + 't'
+      if (absValue >= 1000000000) return parseFloat((num / 1000000000).toFixed(digit)) + 'B'
+      if (absValue >= 1000000) return parseFloat((num / 1000000).toFixed(digit)) + 'M'
+      if (absValue >= 1000) return parseFloat((num / 1000).toFixed(digit)) + 'K'
+      if (absValue >= 0.01) return parseFloat(num.toFixed(digit))
+      return '<' + Math.sign(num) * 0.01
     }
   },
   filters: {

@@ -13,6 +13,12 @@
       <form class="input-block-container"
         v-else
       >
+        <div class="title-block-container">
+          <div class="block-title">{{ $t('etl.newConnectionSetting') }}</div>
+          <button class="btn-m btn-outline"
+            @click.prevent="prevStep"
+          >{{ $t('etl.connectionHistory') }}</button>
+        </div>
         <!-- 為了避免瀏覽器自動帶入 -->
         <input name="account" type="text" class="hidden-input">
         <input name="password" type="password" class="hidden-input">
@@ -85,13 +91,12 @@
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <button class="btn btn-outline"
-          :disabled="isLoading"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
         <button class="btn btn-default"
           :disabled="isLoading"
           @click="nextStep"
-        >{{isLoading ? $t('button.connecting') : $t('button.start')}}</button>
+        >{{isLoading ? $t('button.connecting') : $t('button.nextStep')}}</button>
       </div>
     </div>
   </div>
@@ -143,6 +148,9 @@ export default {
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     },
+    prevStep () {
+      this.$emit('prev')
+    },
     nextStep () {
       this.$validator.validateAll().then(result => {
         if (result) {
@@ -177,7 +185,7 @@ export default {
     },
     createConnection () {
       createDatabaseConnection({
-        dataSourceId: this.dataSourceId,
+        groupId: this.currentGroupId,
         ...this.connectInfo
       }).then(response => {
         this.$emit('next', response)
@@ -202,6 +210,17 @@ export default {
     background-color: rgba(50, 58, 58, 0.95);
     border-radius: 5px;
     margin-bottom: 16px;
+  }
+  .title-block-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .block-title {
+      font-weight: 600;
+      font-size: 18px;
+      margin-right: 16px;
+    }
   }
   .input-block-container {
     width: 53.41%;

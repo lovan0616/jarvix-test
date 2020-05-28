@@ -5,6 +5,9 @@
     :no-data-text="$t('message.noData')"
     @change="$emit('change', $event)"
     :disabled="isDisabled"
+    :popper-append-to-body="false"
+    style="text-align:left;"
+    :size="size"
   >
     <el-option
       v-for="option in optionList"
@@ -23,7 +26,8 @@ export default {
     value: { type: [String, Number, Boolean], default: undefined },
     optionList: { type: Array, default: () => [] },
     placeholder: { type: String, default: '' },
-    isDisabled: {type: Boolean, default: false}
+    isDisabled: {type: Boolean, default: false},
+    size: { type: String, default: '' }
   },
   computed: {
     selectedValue: {
