@@ -105,7 +105,7 @@ export function getDataFrameById (dataSourceId, getAllState = false) {
  * get data of dataframe by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
-export function getDataFrameData (dataFrameId, page = 0) {
+export function getDataFrameData (dataFrameId, page = 0, cancelToken) {
   // FIXME just default a big size, doesn't implement with pagination
   return request({
     url: `/dataFrame/${dataFrameId}/data`,
@@ -113,7 +113,8 @@ export function getDataFrameData (dataFrameId, page = 0) {
     params: {
       page,
       size: 20
-    }
+    },
+    cancelToken
   })
 }
 
@@ -270,10 +271,11 @@ export function dataSourcePreprocessor (dataSourceInfo) {
 /*
  * Dataframe column summary
  */
-export function dataFrameColumnSummary (dataFrameId) {
+export function dataFrameColumnSummary (dataFrameId, cancelToken) {
   return request({
     url: `/dataFrame/${dataFrameId}/summary`,
-    method: 'GET'
+    method: 'GET',
+    cancelToken
   })
 }
 
