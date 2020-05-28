@@ -128,7 +128,6 @@ export default {
       if (this.dataSourceTable.id === id) { return }
       this.isLoading = true
       this.hasError = false
-      console.log(id, 'id')
       this.dataSourceTable.id = id
       this.currentDataFrameId = id
     },
