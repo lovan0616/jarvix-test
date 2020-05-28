@@ -1,31 +1,31 @@
 <template>
   <div class="group-management">
     <div class="page-title-row">
-      <h1 class="title">{{editTypeName}}</h1>
+      <h1 class="title">{{ editTypeName }}</h1>
       <div class="bread-crumb">
         <router-link
           :to="{name: 'AccountGroupManagement'}"
           class="title-link"
           @click="quitEditGroup"
         >
-          {{$t('sideNav.accountGroupManagement')}}
+          {{ $t('sideNav.accountGroupManagement') }}
         </router-link>
-        <span class="divider">></span>{{editTypeName}}
+        <span class="divider">></span>{{ editTypeName }}
       </div>
     </div>
     <form
-      @submit.stop.prevent="submitForm"
       class="group-info-form"
+      @submit.stop.prevent="submitForm"
     >
       <div class="input-wrapper">
         <div class="input-group">
           <div class="input-label">{{ $t('editing.groupName') }}</div>
           <input-block
+            v-validate="`required|max:${max}`"
+            v-model="groupName"
             class="input-block"
             name="groupName"
-            v-model="groupName"
-            v-validate="`required|max:${max}`"
-          ></input-block>
+          />
         </div>
         <div
           v-if="editType === 'create'"
@@ -33,20 +33,20 @@
         >
           <div class="input-label">{{ $t('editing.groupOwner') }}</div>
           <div
-            class="input-block"
             :class="{'has-error': errors.has('owner')}"
+            class="input-block"
           >
             <default-select
-              class="input"
+              v-validate="'required'"
               v-model="selectedOwner"
               :option-list="userEmailList"
+              class="input"
               name="owner"
-              v-validate="'required'"
-            ></default-select>
+            />
             <div
-              class="error-text"
               v-if="errors.has('owner')"
-            >{{errors.first('owner')}}</div>
+              class="error-text"
+            >{{ errors.first('owner') }}</div>
           </div>
         </div>
       </div>
@@ -57,10 +57,10 @@
           @click.stop="quitEditGroup"
         >{{ $t('button.cancel') }}</button>
         <button
+          :disabled="isLoading"
           class="btn btn-default"
           type="submit"
-          :disabled="isLoading"
-        >{{editType === 'create' ? $t('button.built') : $t('button.save')}}</button>
+        >{{ editType === 'create' ? $t('button.built') : $t('button.save') }}</button>
       </div>
     </form>
   </div>
@@ -88,9 +88,6 @@ export default {
       userEmailList: []
     }
   },
-  mounted () {
-    this.editType === 'create' ? this.fetchUser() : this.fetchGroupName()
-  },
   computed: {
     editType () {
       const groupId = this.$route.params.id
@@ -102,6 +99,9 @@ export default {
     max () {
       return this.$store.state.validation.fieldCommonMaxLength
     }
+  },
+  mounted () {
+    this.editType === 'create' ? this.fetchUser() : this.fetchGroupName()
   },
   methods: {
     quitEditGroup () {
