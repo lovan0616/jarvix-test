@@ -96,7 +96,9 @@
             @click="setOption('operator', ')')"
           >)</span></div>
         </div>
-        <div class="feature-input-block">
+        <div 
+          :class="{'has-error': !validFeatureFormula}"
+          class="feature-input-block">
           <div 
             v-if="featureFormula.length === 0"
             class="placeholder"
@@ -151,6 +153,10 @@
               </a>
             </div>
           </draggable>
+          <div 
+            v-show="!validFeatureFormula"
+            class="error-text"
+          >{{ $t('message.emptyFeatureFormula') }}</div>
         </div>
       </div>
       <div class="button-block">
@@ -159,6 +165,7 @@
           @click="cancelEdit"
         >{{ $t('button.cancel') }}</button>
         <button 
+          :disabled="errors.any() || !validFeatureFormula"
           class="btn btn-default"
           @click="saveFeature"
         >{{ $t('button.create') }}</button>
@@ -207,6 +214,10 @@ export default {
   computed: {
     max () {
       return this.$store.state.validation.fieldCommonMaxLength
+    },
+    validFeatureFormula () {
+      let column = this.featureFormula.filter(element => element.type === 'column')
+      return (column.length !== 0 && column.every(element => element.value !== null))
     }
   },
   mounted () {
@@ -216,6 +227,7 @@ export default {
       this.getDataFrameColumnInfo(this.featureInfo.dataFrameId)
     }
     this.getDataFrameList()
+    this.setOption('column', null)
   },
   methods: {
     getDataFrameList () {
@@ -280,7 +292,7 @@ export default {
     cancelEdit () {
       this.$emit('cancel')
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -302,7 +314,7 @@ export default {
       margin-bottom: 10px;
     }
 
-    .input-block {
+    & >>> .input-block {
 
       &.name {
         width: 300px;
@@ -394,9 +406,19 @@ export default {
     line-height: 40px;
     border-bottom: 1px solid #fff;
     padding: 8px 0;
+    position: relative;
 
     .placeholder {
       color: #aaa;
+    }
+
+    &.has-error {
+      border-color: $theme-color-danger;
+
+      .error-text {
+        position: absolute;
+        bottom: -18px;
+      }
     }
   }
 
