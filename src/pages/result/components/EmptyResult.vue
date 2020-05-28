@@ -18,7 +18,14 @@ export default {
   name: 'EmptyResult',
   props: {
     resultInfo: {
-      type: Object
+      type: Object,
+      default: () => {
+        return { 
+          title: null,
+          description: null,
+          unknown: null
+        }
+      }
     }
   }
 }
