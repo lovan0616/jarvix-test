@@ -4,6 +4,9 @@ import { getHistoryQuestionList } from '@/API/NewAsk'
 import router from '../../../router'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
+import axios from 'axios'
+const CancelToken = axios.CancelToken
+let cancelFunction
 
 export default {
   init ({ commit, dispatch, state, getters, rootGetters }) {
@@ -78,17 +81,22 @@ export default {
     if (state.dataSourceId === null) return
     return getDataFrameById(state.dataSourceId)
   },
-  getDataFrameColumnSummary ({ state }, { id, page }) {
+  getDataFrameColumnSummary ({ state }, { id, page, cancelToken }) {
     if (page > 0) return
-    return dataFrameColumnSummary(id)
+    return dataFrameColumnSummary(id, cancelToken)
   },
-  getDataFrameData ({ state }, { id, page = 0 }) {
-    return getDataFrameData(id, page)
+  getDataFrameData ({ state }, { id, page = 0, cancelToken }) {
+    return getDataFrameData(id, page, cancelToken)
   },
   getDataFrameIntro ({ dispatch, state }, { id, page }) {
+    dispatch('cancelRequest')
+    const cancelToken = new CancelToken(function executor (c) {
+      // An executor function receives a cancel function as a parameter
+      cancelFunction = c
+    })
     return Promise.all([
-      dispatch('getDataFrameData', { id, page }),
-      dispatch('getDataFrameColumnSummary', { id, page })
+      dispatch('getDataFrameData', { id, page, cancelToken }),
+      dispatch('getDataFrameColumnSummary', { id, page, cancelToken })
     ])
   },
   getDataFrameColumnCorrelation ({ state }, { id }) {
@@ -135,5 +143,10 @@ export default {
   },
   clearAllFilter ({ commit }) {
     commit('clearFilterList')
+  },
+  cancelRequest () {
+    if (typeof cancelFunction === 'function') {
+      cancelFunction('cancel request')
+    }
   }
 }

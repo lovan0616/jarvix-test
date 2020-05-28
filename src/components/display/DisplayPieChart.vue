@@ -36,6 +36,10 @@ export default {
       type: Number,
       default: 0
     },
+    itemCount: {
+      type: Number,
+      default: 0
+    },
     height: {type: String, default: '420px'},
     hasPagination: {
       type: Boolean,
@@ -149,7 +153,7 @@ export default {
       let result = dataset.data.map((element, index) => {
         return dataset.display_index ? [dataset.display_index[index], ...element] : [dataset.index[index], ...element]
       })
-      if (otherCount > 0) {
+      if (this.itemCount - dataset.data.length > 0) {
         result.push([this.$t('resultDescription.other'), otherCount])
       }
       return [['index', ...dataset.display_columns ? dataset.display_columns : dataset.columns], ...result]

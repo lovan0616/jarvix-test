@@ -29,6 +29,7 @@
         :causes="componentData.causes"
         :description="componentData.description"
         :total="componentData.total"
+        :item-count="componentData.item_count"
         :key="componentId"
         @next="getNewPageInfo"
       ></component>
