@@ -5,8 +5,7 @@
       :options="chartOption"
       auto-resize
       @brushselected="brushRegionSelected"
-    >
-    </v-echart>
+    />
     <selected-region
       v-if="selectedData.length > 0"
       :title="$t('resultDescription.currentChosenData')"
@@ -17,17 +16,20 @@
           v-for="(singleType, index) in selectedData"
           :key="index"
         >
-          <div class="filter-description"
+          <div 
             v-if="singleType.type === 'enum'"
+            class="filter-description"
           >
-            <div class="column-name">{{singleType.properties.display_name}} =</div>
-            <div class="single-filter"
+            <div class="column-name">{{ singleType.properties.display_name }} =</div>
+            <div 
               v-for="(singleData, propertiesIndex) in singleType.properties.datavalues"
               :key="'enum-' + propertiesIndex"
+              class="single-filter"
             >{{ singleData }}<span v-show="propertiesIndex !== singleType.properties.datavalues.length - 1">、</span></div>
           </div>
-          <div class="region-description"
+          <div 
             v-if="singleType.type === 'range'"
+            class="region-description"
           >
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
@@ -98,28 +100,6 @@ export default {
   data () {
     return {
       selectedData: []
-    }
-  },
-  methods: {
-    brushRegionSelected (params) {
-      if (params.batch[0].selected[0].dataIndex.length === 0) {
-        this.selectedData = []
-        return
-      }
-      this.selectedData = [{
-        type: 'enum',
-        properties: {
-          dc_name: this.title.xAxis[0].dc_name,
-          data_type: this.title.xAxis[0].data_type,
-          display_name: this.title.xAxis[0].display_name,
-          datavalues: params.batch[0].selected[0].dataIndex.map(element => {
-            return this.dataset.index[element]
-          })
-        }
-      }]
-    },
-    saveFilter () {
-      this.$store.commit('dataSource/setFilterList', this.selectedData)
     }
   },
   computed: {
@@ -237,6 +217,28 @@ export default {
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
     }
-  }
+  },
+  methods: {
+    brushRegionSelected (params) {
+      if (params.batch[0].selected[0].dataIndex.length === 0) {
+        this.selectedData = []
+        return
+      }
+      this.selectedData = [{
+        type: 'enum',
+        properties: {
+          dc_name: this.title.xAxis[0].dc_name,
+          data_type: this.title.xAxis[0].data_type,
+          display_name: this.title.xAxis[0].display_name,
+          datavalues: params.batch[0].selected[0].dataIndex.map(element => {
+            return this.dataset.index[element]
+          })
+        }
+      }]
+    },
+    saveFilter () {
+      this.$store.commit('dataSource/setFilterList', this.selectedData)
+    }
+  },
 }
 </script>

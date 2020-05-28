@@ -1,26 +1,31 @@
 <template>
-  <div v-show="filterStatusList.length > 0" class="filter-info-block">
+  <div 
+    v-show="filterStatusList.length > 0" 
+    class="filter-info-block">
     <div class="info-title-block">
       <div class="block-title">
-        <span class="filter-icon"><svg-icon icon-class="filter"></svg-icon></span>
+        <span class="filter-icon"><svg-icon icon-class="filter"/></span>
         <span class="title-text">{{ $t('resultDescription.filterRestrictions') }}</span>
-        <button class="btn btn-m btn-outline"
+        <button 
+          class="btn btn-m btn-outline"
           @click="onClearAll"
         >
           {{ $t('resultDescription.clearAllFilter') }}
         </button>
       </div>
       <div class="remark-info">
-        <span class="remark-title"><svg-icon icon-class="lamp" class="lamp-icon"></svg-icon>{{ $t('resultDescription.prompt') }}：</span>{{ $t('resultDescription.filterRule') }}</div>
+        <span class="remark-title"><svg-icon 
+          icon-class="lamp" 
+          class="lamp-icon"/>{{ $t('resultDescription.prompt') }}：</span>{{ $t('resultDescription.filterRule') }}</div>
     </div>
     <div class="info-body-block">
       <single-filter-block
         v-for="(f, index) in filterList"
-        v-bind:key="index"
+        :key="index"
         :restriction="f.restriction"
         :status="filterStatusList[index]"
         @status-change="onFilterStatusChange(index, $event)"
-      ></single-filter-block>
+      />
     </div>
   </div>
 </template>
