@@ -1,8 +1,10 @@
 <template>
   <div class="pinboard-wrapper">
     <main class="main">
-      <transition name="fade" mode="out-in">
-        <router-view ></router-view>
+      <transition 
+        name="fade" 
+        mode="out-in">
+        <router-view />
       </transition>
     </main>
   </div>
