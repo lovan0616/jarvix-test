@@ -1,6 +1,8 @@
 <template>
-  <svg :class="svgClass" aria-hidden="true">
-    <use :xlink:href="iconName"></use>
+  <svg 
+    :class="svgClass" 
+    aria-hidden="true">
+    <use :xlink:href="iconName"/>
   </svg>
 </template>
 <script>
@@ -12,7 +14,8 @@ export default {
       required: true
     },
     className: {
-      type: String
+      type: String,
+      default: ''
     }
   },
   computed: {

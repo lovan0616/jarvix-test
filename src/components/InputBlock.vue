@@ -1,16 +1,21 @@
 <template>
-  <div class="input-block"
+  <div 
     :class="{'has-error': errors.has(name)}"
+    class="input-block"
   >
-    <input class="input"
+    <input 
       :class="{valid: inputValue !== null && inputValue !== '' }"
       :type="type"
       :name="name"
       v-model.trim="inputValue"
+      class="input"
     >
-    <label class="placeholder" :for="name">{{ label }}</label>
-    <div class="error-text"
+    <label 
+      :for="name" 
+      class="placeholder">{{ label }}</label>
+    <div 
       v-show="errors.has(name)"
+      class="error-text"
     >{{ errors.first(name) }}</div>
   </div>
 </template>
@@ -20,10 +25,12 @@ export default {
   name: 'InputBlock',
   props: {
     name: {
-      type: String
+      type: String,
+      default: ''
     },
     label: {
-      type: String
+      type: String,
+      default: ''
     },
     type: {
       type: String,
@@ -31,7 +38,7 @@ export default {
     },
     value: {
       type: String,
-      default: null
+      default: ''
     }
   },
   computed: {

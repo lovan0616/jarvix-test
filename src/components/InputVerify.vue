@@ -1,20 +1,20 @@
 <template>
-    <div class="input-verify">
-      <input
-          v-model.trim="inputValue"
-          class="input-verify-text"
-          :type="type"
-          :name="name"
-          :placeholder="placeholder"
-      >
-      <div
-          class="input-error error-text"
-          v-show="errors.has(name)"
-      >
+  <div class="input-verify">
+    <input
+      v-model.trim="inputValue"
+      :type="type"
+      :name="name"
+      :placeholder="placeholder"
+      class="input-verify-text"
+    >
+    <div
+      v-show="errors.has(name)"
+      class="input-error error-text"
+    >
       {{ errors.first(name) }}
-      </div>
-      <slot name="action"></slot>
     </div>
+    <slot name="action"/>
+  </div>
 </template>
 <script>
 export default {
@@ -22,17 +22,20 @@ export default {
   name: 'InputVerify',
   props: {
     name: {
-      type: String
+      type: String,
+      default: ''
     },
     placeholder: {
-      type: String
+      type: String,
+      default: ''
     },
     type: {
       type: String,
       default: 'text'
     },
     value: {
-      type: String
+      type: String,
+      default: ''
     }
   },
   computed: {

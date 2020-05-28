@@ -1,13 +1,17 @@
 <template>
-  <div class="upload-block"
+  <div 
+    class="upload-block"
     @click="clickBlock"
   >
     <div class="upload-text-container">
-      <svg-icon icon-class="file-plus" class="upload-icon"></svg-icon>
-      <div class="upload-message bottom"
+      <svg-icon 
+        icon-class="file-plus" 
+        class="upload-icon"/>
+      <div 
         v-if="bottomMessage"
+        class="upload-message bottom"
       >{{ bottomMessage }}</div>
-      <slot name="uploadLimit"></slot>
+      <slot name="uploadLimit"/>
     </div>
   </div>
 </template>

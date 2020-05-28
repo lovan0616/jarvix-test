@@ -1,23 +1,30 @@
 <template>
-  <div class="task-root"
+  <div 
     :data-diagram-type="params.diagram_type"
     :data-task="dataUrl.split('/')[2]"
+    class="task-root"
   >
-    <spinner class="task-spinner"
+    <spinner 
       v-if="loading"
-    ></spinner>
+      class="task-spinner"
+    />
     <template v-else-if="!isError">
-      <component ref="taskComponent"
+      <component 
+        ref="taskComponent"
         :is="childContent"
         @task-event="onTaskEmitEvent"
-      ></component>
-      <div class="task-note"
-        v-for="(note, index) in notes" v-bind:key="index"
+      />
+      <div 
+        v-for="(note, index) in notes"
+        :key="index" 
+        class="task-note"
       >
-        {{note}}
+        {{ note }}
       </div>
     </template>
-    <no-result v-else-if="isError" :message="errorMessage"></no-result>
+    <no-result 
+      v-else-if="isError" 
+      :message="errorMessage"/>
   </div>
 </template>
 
@@ -42,9 +49,6 @@ export default {
       notes: []
     }
   },
-  mounted () {
-    this.genTaskByTemplateAndData()
-  },
   computed: {
     templatePath () {
       return this.urlRoot + this.templateUrl
@@ -52,6 +56,9 @@ export default {
     dataPath () {
       return this.urlRoot + this.dataUrl
     }
+  },
+  mounted () {
+    this.genTaskByTemplateAndData()
   },
   methods: {
     onTaskEmitEvent (eventName, ...args) {
