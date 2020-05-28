@@ -3,22 +3,25 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="1"
-    ></upload-process-block>
+    />
     <div class="info-block">
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <spinner class="spinner-container"
+      <spinner 
         v-if="isLoading"
         :title="$t('editing.loading')"
+        class="spinner-container"
         size="50"
-      ></spinner>
-      <div class="connection-list-block"
+      />
+      <div 
         v-else
+        class="connection-list-block"
       >
         <div class="title-block-container">
           <div class="block-title">{{ $t('etl.connectionHistory') }}</div>
-          <button class="btn-m btn-outline"
+          <button 
+            class="btn-m btn-outline"
             @click="createConnection"
           >{{ $t('etl.newConnectionSetting') }}</button>
         </div>
@@ -26,11 +29,12 @@
           <empty-info-block
             v-if="connectionList.length === 0"
             :msg="$t('etl.emptyConnectionHistory')"
-          ></empty-info-block>
-          <div class="single-connection"
-            v-else
+          />
+          <div 
             v-for="connection in connectionList"
+            v-else
             :key="connection.id"
+            class="single-connection"
             @click="chooseConnection(connection.id)"
           >
             <div class="connection-title">{{ connection.name }}</div>
@@ -60,10 +64,12 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="prevStep"
         >{{ $t('button.prevStep') }}</button>
       </div>
@@ -85,6 +91,14 @@ export default {
     return {
       isLoading: false,
       connectionList: []
+    }
+  },
+  computed: {
+    groupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
+    },
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
     }
   },
   mounted () {
@@ -119,14 +133,6 @@ export default {
       this.$store.commit('dataManagement/updateCurrentUploadDataType', null)
     }
   },
-  computed: {
-    groupId () {
-      return this.$store.getters['userManagement/getCurrentGroupId']
-    },
-    currentUploadInfo () {
-      return this.$store.state.dataManagement.currentUploadInfo
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

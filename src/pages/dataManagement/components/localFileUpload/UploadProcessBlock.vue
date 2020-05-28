@@ -1,12 +1,17 @@
 <template>
   <div class="upload-process-block">
-    <div class="step-process"
-      :class="{'current': step === index + 1, 'active': step > index + 1 }"
+    <div 
       v-for="(singleProcess, index) in processText"
+      :class="{'current': step === index + 1, 'active': step > index + 1 }"
       :key="index"
+      class="step-process"
     >
-      <div class="step" v-if="step <= index + 1">{{ index + 1 }}</div>
-      <div class="step" v-else><svg-icon icon-class="checked"></svg-icon></div>
+      <div 
+        v-if="step <= index + 1" 
+        class="step">{{ index + 1 }}</div>
+      <div 
+        v-else 
+        class="step"><svg-icon icon-class="checked"/></div>
       <div class="step-level">{{ singleProcess }}</div>
     </div>
   </div>

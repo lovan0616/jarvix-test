@@ -2,8 +2,12 @@
   <div class="etl-column-setting">
     <div class="section column-header">
       <div class="title">
-        <svg-icon icon-class="arrow-right" class="icon"></svg-icon>
-        <a href="javascript:void(0)" class="link"
+        <svg-icon 
+          icon-class="arrow-right" 
+          class="icon"/>
+        <a 
+          href="javascript:void(0)" 
+          class="link"
           @click="$emit('close')"
         >{{ $t('etl.backToDataFrame') }}</a>
         <p class="data-frame-name">
@@ -19,7 +23,7 @@
         :key="currentTableIndex + '_' + currentColumnIndex"
         @updateInfo="updateSetting"
         @back="$emit('close')"
-      ></single-column-setting>
+      />
     </div>
     <div class="section column-summary">
       <div class="title">{{ $t('etl.dataSummary') }}</div>
@@ -27,11 +31,12 @@
         v-if="Object.keys(currentTableSummary[currentColumnIndex]).length > 1"
         :summary-data="currentTableSummary[currentColumnIndex]"
       />
-      <spinner class="spinner-conatiner"
+      <spinner 
         v-else
         :title="$t('etl.dataCalculate')"
+        class="spinner-conatiner"
         size="30"
-      ></spinner>
+      />
     </div>
   </div>
 </template>
@@ -47,18 +52,6 @@ export default {
   },
   data () {
     return {
-    }
-  },
-  destroyed () {
-    this.$store.commit('dataManagement/changeCurrentColumnIndex', null)
-  },
-  methods: {
-    updateSetting (info) {
-      this.$store.commit('dataManagement/updateReplaceValue', {
-        tableIndex: this.currentTableIndex,
-        columnIndex: info.index,
-        info
-      })
     }
   },
   computed: {
@@ -89,7 +82,19 @@ export default {
         statsType: this.currentColumnInfo.originalStatsType
       }))
     }
-  }
+  },
+  destroyed () {
+    this.$store.commit('dataManagement/changeCurrentColumnIndex', null)
+  },
+  methods: {
+    updateSetting (info) {
+      this.$store.commit('dataManagement/updateReplaceValue', {
+        tableIndex: this.currentTableIndex,
+        columnIndex: info.index,
+        info
+      })
+    }
+  },
 }
 </script>
 <style lang="scss" scoped>

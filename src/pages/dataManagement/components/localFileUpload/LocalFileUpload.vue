@@ -3,21 +3,27 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="currntUploadStatus === uploadStatus.uploading ? 2 : 1"
-    ></upload-process-block>
+    />
     <div class="dialog-body">
       <div class="data-source-name">{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
-      <input type="file" class="hidden" name="fileUploadInput"
-        ref="fileUploadInput"
+      <input 
+        ref="fileUploadInput" 
+        type="file" 
+        class="hidden"
+        name="fileUploadInput"
         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
         multiple
         @change="fileImport"
       >
-      <upload-block class="empty-upload-block"
-        :bottom-message="$t('editing.clickToSelectFiles')"
+      <upload-block 
         v-if="uploadFileList.length === 0 && unableFileList.length === 0"
+        :bottom-message="$t('editing.clickToSelectFiles')"
+        class="empty-upload-block"
         @create="chooseFile"
       >
-        <div class="upload-remark" slot="uploadLimit">
+        <div 
+          slot="uploadLimit" 
+          class="upload-remark">
           <div class="title">【{{ $t('editing.uploadLimitTitle') }}】</div>
           <div class="conten-container">
             <div class="content">1. {{ $t('editing.uploadLimitFileType') }}</div>
@@ -27,46 +33,53 @@
           <div class="content">4. {{ $t('editing.uploadLimitContent') }}</div>
         </div>
       </upload-block>
-      <div class="file-list-container"
+      <div 
         v-else
+        class="file-list-container"
       >
         <file-list-block
           v-if="uploadFileList.length > 0"
           :title="$t('editing.canUpload')"
           :file-list="uploadFileList"
-        >
-        </file-list-block>
+        />
         <file-list-block
           v-if="unableFileList.length > 0"
           :title="$t('editing.unableUpload')"
           :file-list="unableFileList"
-        >
-        </file-list-block>
-        <div class="file-chosen-info"
+        />
+        <div 
           v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait"
+          class="file-chosen-info"
         >
           <span class="file-chosen-remark">
             {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadFileList.length, size: byteToMB(totalTransmitDataAmount)}) }}
           </span>
-          <button class="btn-m btn-secondary btn-has-icon"
+          <button 
+            class="btn-m btn-secondary btn-has-icon"
             @click="chooseFile"
-          ><svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.addFile') }}</button>
+          ><svg-icon 
+            icon-class="file-plus" 
+            class="icon"/>{{ $t('editing.addFile') }}</button>
         </div>
       </div>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <span v-if="currntUploadStatus !== uploadStatus.wait" class="uploading-reminding">{{ $t('editing.uploading') }}</span>
-        <button class="btn btn-outline"
+        <span 
+          v-if="currntUploadStatus !== uploadStatus.wait" 
+          class="uploading-reminding">{{ $t('editing.uploading') }}</span>
+        <button 
           v-if="currntUploadStatus === uploadStatus.wait"
+          class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-default"
+        <button 
           v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait"
+          class="btn btn-default"
           @click="fileUpload"
         >
           <span v-show="currntUploadStatus === uploadStatus.wait">{{ $t('button.confirmUpload') }}</span>
-          <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner"></svg-icon>{{ $t('button.uploading') }}</span>
+          <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner"/>{{ $t('button.uploading') }}</span>
         </button>
       </div>
     </div>
@@ -93,6 +106,26 @@ export default {
       currntUploadStatus: uploadStatus.wait,
       uploadFileSizeLimit: localStorage.getItem('uploadLimit') ? parseInt(localStorage.getItem('uploadLimit'), 10) : 3000,
       unableFileList: []
+    }
+  },
+  computed: {
+    ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
+    currentGroupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
+    },
+    fileCountLimit () {
+      return this.$store.state.dataManagement.fileCountLimit
+    },
+    uploadFileStatusList () {
+      return this.uploadFileList.map(element => {
+        return element.status
+      })
+    },
+    // 總資料傳輸量
+    totalTransmitDataAmount () {
+      return this.uploadFileList.reduce((acc, cur) => {
+        return acc + cur.data.get('file').size
+      }, 0)
     }
   },
   watch: {
@@ -167,26 +200,6 @@ export default {
     },
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-    }
-  },
-  computed: {
-    ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
-    currentGroupId () {
-      return this.$store.getters['userManagement/getCurrentGroupId']
-    },
-    fileCountLimit () {
-      return this.$store.state.dataManagement.fileCountLimit
-    },
-    uploadFileStatusList () {
-      return this.uploadFileList.map(element => {
-        return element.status
-      })
-    },
-    // 總資料傳輸量
-    totalTransmitDataAmount () {
-      return this.uploadFileList.reduce((acc, cur) => {
-        return acc + cur.data.get('file').size
-      }, 0)
     }
   }
 }

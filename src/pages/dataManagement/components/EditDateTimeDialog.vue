@@ -3,9 +3,11 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('editing.mainDateTimeColumnSetting') }}
-        <a href="javascript:void(0)" class="close-btn"
+        <a 
+          href="javascript:void(0)" 
+          class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"></svg-icon></a>
+        ><svg-icon icon-class="close"/></a>
       </div>
       <div class="dialog-header-block">
         <div class="data-frame-name">
@@ -13,49 +15,51 @@
         </div>
         <div class="button-block">
           <button
+            v-if="hasColumn"
+            :disabled="isSaving"
             type="button"
             class="btn btn-default"
-            :disabled="isSaving"
-            v-if="hasColumn"
             @click="setMainDateTime"
           >{{ $t('button.save') }}</button>
         </div>
       </div>
-      <spinner class="spinner-container"
+      <spinner 
         v-if="isLoading"
         :title="$t('editing.loading')"
+        class="spinner-container"
         size="50"
-      ></spinner>
-      <div class="dialog-content-block"
+      />
+      <div 
         v-else-if="!isLoading && hasColumn"
+        class="dialog-content-block"
       >
         <div
-          class="input-radio-group"
           v-for="(column, index) in columnList"
           :key="column.dataColumnId"
+          class="input-radio-group"
         >
           <input
-            class="input-radio"
-            type="radio"
-            name="mainDate"
             :id="column.dataColumnName"
             :value="column.dataColumnName"
             :checked="column.dataColumnId === selectedColumn.dataColumnId"
+            class="input-radio"
+            type="radio"
+            name="mainDate"
             @change="updateSelect(index)"
           >
           <label
-            class="input-radio-label"
             :for="column.dataColumnName"
+            class="input-radio-label"
           >
-            {{`${column.dataColumnPrimaryAlias}`}}
+            {{ `${column.dataColumnPrimaryAlias}` }}
           </label>
         </div>
       </div>
       <empty-info-block
-        class="empty-info-block"
         v-else
         :msg="$t('editing.emptyDateTime')"
-      ></empty-info-block>
+        class="empty-info-block"
+      />
     </div>
   </div>
 </template>
@@ -88,13 +92,13 @@ export default {
       selectedColumn: null
     }
   },
-  mounted () {
-    this.getDateTimeColumns()
-  },
   computed: {
     hasColumn () {
       return this.columnList.length > 0
     }
+  },
+  mounted () {
+    this.getDateTimeColumns()
   },
   methods: {
     getDateTimeColumns () {

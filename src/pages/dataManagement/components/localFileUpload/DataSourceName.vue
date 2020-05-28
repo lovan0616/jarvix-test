@@ -1,23 +1,26 @@
 <template>
   <div class="choose-file-type">
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
-    <upload-process-block></upload-process-block>
+    <upload-process-block/>
     <div class="dialog-body">
       <div class="input-block-container">
-        <input-block class="file-info-input-block"
-          :label="$t('editing.dataSourceName')"
-          name="dataSourceName"
-          v-model="dataSourceInfo.name"
+        <input-block 
           v-validate="`required|max:${max}`"
-        ></input-block>
+          :label="$t('editing.dataSourceName')"
+          v-model="dataSourceInfo.name"
+          class="file-info-input-block"
+          name="dataSourceName"
+        />
       </div>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-default he"
+        <button 
+          class="btn btn-default he"
           @click="nextStep"
         >{{ $t('button.buildData') }}</button>
       </div>
@@ -44,6 +47,11 @@ export default {
       }
     }
   },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
+    }
+  },
   methods: {
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
@@ -57,11 +65,6 @@ export default {
       })
     }
   },
-  computed: {
-    max () {
-      return this.$store.state.validation.fieldCommonMaxLength
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

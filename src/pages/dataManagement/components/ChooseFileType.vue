@@ -4,20 +4,25 @@
     <div class="dialog-body">
       <div class="input-block-container">
         <div class="choose-type-container">
-          <div class="single-type-block"
+          <div 
             v-for="dataType in dataTypeList"
             :key="dataType.type"
+            class="single-type-block"
             @click="selectDataType(dataType.type)"
           >
-            <svg-icon class="check-icon"
+            <svg-icon 
+              class="check-icon"
               icon-class="check-circle"
-            ></svg-icon>
+            />
             <div class="single-type-content">
-              <svg-icon class="icon"
+              <svg-icon 
                 :icon-class="dataType.icon"
-              ></svg-icon>
+                class="icon"
+              />
               <div class="type-title">{{ dataType.title }}</div>
-              <div class="type-content" v-html="dataType.description"></div>
+              <div 
+                class="type-content" 
+                v-html="dataType.description"/>
             </div>
           </div>
         </div>
@@ -25,7 +30,8 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
       </div>

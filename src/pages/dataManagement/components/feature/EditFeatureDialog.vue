@@ -6,19 +6,22 @@
       </div>
       <div class="feature-block">
         <div class="block-title">Step1: {{ $t('editing.chooseDataFrame') }}</div>
-        <div class="input-block name"
+        <div 
           :class="{'has-error': errors.has('dataFrameName')}"
+          class="input-block name"
         >
-          <default-select class="data-frame-select"
-            name="dataFrameName"
+          <default-select 
+            v-validate="'required'"
             v-model="featureInfo.dataFrameId"
             :option-list="dataFrameList"
             :placeholder="$t('editing.chooseDataFrame')"
-            v-validate="'required'"
+            class="data-frame-select"
+            name="dataFrameName"
             @change="getDataFrameColumnInfo"
-          ></default-select>
-          <div class="error-text"
+          />
+          <div 
             v-show="errors.has('dataFrameName')"
+            class="error-text"
           >{{ errors.first('dataFrameName') }}</div>
         </div>
       </div>
@@ -26,10 +29,10 @@
         <div class="block-title">Step2: {{ $t('feature.featureColumnName') }}（{{ $t('editing.isRequired') }}）</div>
         <div class="input-block name">
           <input-block
-            name="featureName"
-            v-model="featureInfo.name"
             v-validate="`required|max:${max}`"
-          ></input-block>
+            v-model="featureInfo.name"
+            name="featureName"
+          />
         </div>
       </div>
       <div class="feature-block">
@@ -55,89 +58,108 @@
           >{{ rule }}</span>
         </div> -->
         <div class="hint-info-block">
-          <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"></svg-icon> {{ $t('feature.hint') }}:</span>{{ $t('feature.chooseOptionHint') }}</div>
-          <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"></svg-icon> {{ $t('feature.hint') }}:</span>{{ $t('feature.maxColumn', {number: 3}) }}</div>
+          <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"/> {{ $t('feature.hint') }}:</span>{{ $t('feature.chooseOptionHint') }}</div>
+          <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"/> {{ $t('feature.hint') }}:</span>{{ $t('feature.maxColumn', {number: 3}) }}</div>
         </div>
         <div class="setting">
-          <div class="rule">{{ $t('feature.value') }}: <span class="token value"
+          <div class="rule">{{ $t('feature.value') }}: <span 
+            class="token value"
             @click="setOption('numeric', null)"
           >100</span></div>
-          <div class="rule">{{ $t('feature.columnValue') }}: <span class="token column"
+          <div class="rule">{{ $t('feature.columnValue') }}: <span 
+            class="token column"
             @click="setOption('column', null)"
           >“{{ $t('editing.columnName') }}”</span></div>
-          <div class="rule">{{ $t('feature.plus') }}: <span class="token operator"
+          <div class="rule">{{ $t('feature.plus') }}: <span 
+            class="token operator"
             @click="setOption('operator', '+')"
           >+</span></div>
-          <div class="rule">{{ $t('feature.minus') }}: <span class="token operator"
+          <div class="rule">{{ $t('feature.minus') }}: <span 
+            class="token operator"
             @click="setOption('operator', '-')"
           >-</span></div>
-          <div class="rule">{{ $t('feature.multiple') }}: <span class="token operator"
+          <div class="rule">{{ $t('feature.multiple') }}: <span 
+            class="token operator"
             @click="setOption('operator', '*')"
           >*</span></div>
-          <div class="rule">{{ $t('feature.divide') }}: <span class="token operator"
+          <div class="rule">{{ $t('feature.divide') }}: <span 
+            class="token operator"
             @click="setOption('operator', '/')"
           >/</span></div>
         </div>
         <div class="setting last">
-          <div class="rule">{{ $t('feature.parentheses') }}: <span class="token bracket"
+          <div class="rule">{{ $t('feature.parentheses') }}: <span 
+            class="token bracket"
             @click="setOption('operator', '(')"
-          >(</span><span class="token bracket"
+          >(</span><span 
+            class="token bracket"
             @click="setOption('operator', ')')"
           >)</span></div>
         </div>
         <div class="feature-input-block">
-          <div class="placeholder"
+          <div 
             v-if="featureFormula.length === 0"
+            class="placeholder"
           >{{ $t('feature.inputPlaceholder') }}</div>
-          <draggable  class="feature-container"
+          <draggable 
             v-model="featureFormula"
+            class="feature-container"
             @start="drag=true"
             @end="drag=false"
           >
-            <div class="operator"
+            <div 
               v-for="(element, index) in featureFormula"
               :key="index"
+              class="operator"
             >
               <template
                 v-if="element.type === 'column'"
               >
-                <default-select class="data-column-select"
+                <default-select 
+                  v-validate="'required'"
                   v-model="element.value"
                   :option-list="numericColumnList"
                   :placeholder="$t('editing.chooseDataColumn')"
-                  v-validate="'required'"
-                ></default-select>
+                  class="data-column-select"
+                />
               </template>
               <template
                 v-else-if="element.type === 'numeric'"
               >
-                <input-block class="numeric-input"
+                <input-block 
+                  v-validate="'required'"
                   :name="element.value + '-' + index"
-                  type="number"
                   :placeholder="$t('editing.numericOnly')"
                   v-model="element.value"
-                  v-validate="'required'"
-                ></input-block>
+                  class="numeric-input"
+                  type="number"
+                />
               </template>
               <template
                 v-else
               >
-                {{element.value}}
+                {{ element.value }}
               </template>
-              <a href="javascript:void(0)" class="delete-btn"
+              <a 
+                href="javascript:void(0)" 
+                class="delete-btn"
                 @click="removeOption(index)"
               >
-                <svg-icon icon-class="close" class="delete-icon"></svg-icon>
+                <svg-icon 
+                  icon-class="close" 
+                  class="delete-icon"/>
               </a>
             </div>
           </draggable>
         </div>
       </div>
       <div class="button-block">
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="cancelEdit"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-default"
+        <button 
+          class="btn btn-default"
           @click="saveFeature"
         >{{ $t('button.create') }}</button>
       </div>
@@ -155,16 +177,16 @@ import draggable from 'vuedraggable'
 export default {
   name: 'EditFeatureDialog',
   inject: ['$validator'],
+  components: {
+    DefaultSelect,
+    InputBlock,
+    draggable
+  },
   props: {
     editFeatureInfo: {
       type: Object,
       default: () => {}
     }
-  },
-  components: {
-    DefaultSelect,
-    InputBlock,
-    draggable
   },
   data () {
     return {
@@ -180,6 +202,11 @@ export default {
       },
       numericColumnList: [],
       featureFormula: []
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   },
   mounted () {
@@ -254,11 +281,6 @@ export default {
       this.$emit('cancel')
     }
   },
-  computed: {
-    max () {
-      return this.$store.state.validation.fieldCommonMaxLength
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

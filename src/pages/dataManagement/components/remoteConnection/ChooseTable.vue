@@ -3,37 +3,40 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="2"
-    ></upload-process-block>
+    />
     <div class="info-block">
       <div>{{ $t('editing.currentLoadedDataFrame') }}</div>
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <spinner class="processing-spinner-container"
+      <spinner 
         v-if="isLoading"
         :title="$t('editing.loading')"
+        class="processing-spinner-container"
         size="50"
-      ></spinner>
+      />
       <empty-info-block
         v-else-if="tableList.length === 0"
-      ></empty-info-block>
+      />
       <div
         v-else
       >
-        <div class="remark-info">{{ $t('etl.tableChosenLimit', {number: this.tableConnectionLimt}) }}</div>
+        <div class="remark-info">{{ $t('etl.tableChosenLimit', {number: tableConnectionLimt}) }}</div>
         <div class="data-frame-list">
-          <label class="single-data-frame"
+          <label 
             v-for="(table, index) in tableList"
             :key="index"
+            class="single-data-frame"
           >
             <div class="checkbox">
               <div class="checkbox-label">
-                <input type="checkbox"
+                <input 
                   :id="'table' + index"
                   :value="table"
                   v-model="tableIdList"
+                  type="checkbox"
                 >
-                <div class="checkbox-square"></div>
+                <div class="checkbox-square"/>
               </div>
             </div>
             <div class="data-frame-info">
@@ -46,17 +49,20 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="cancelConnection"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-outline"
+        <button 
           :disabled="isLoading"
+          class="btn btn-outline"
           @click="prevStep"
         >{{ $t('button.prevStep') }}</button>
-        <button class="btn btn-default"
+        <button 
           :disabled="isLoading || tableIdList.length === 0"
+          class="btn btn-default"
           @click="nextStep"
-        >{{isLoading ? $t('button.processing') : $t('button.nextStep')}}</button>
+        >{{ isLoading ? $t('button.processing') : $t('button.nextStep') }}</button>
       </div>
     </div>
   </div>
@@ -69,15 +75,15 @@ import { Message } from 'element-ui'
 
 export default {
   name: 'ChooseTable',
+  components: {
+    UploadProcessBlock,
+    EmptyInfoBlock
+  },
   props: {
     connectionId: {
       type: Number,
       default: null
     }
-  },
-  components: {
-    UploadProcessBlock,
-    EmptyInfoBlock
   },
   data () {
     return {
@@ -86,6 +92,11 @@ export default {
       tableIdList: [],
       dataSourceId: parseInt(this.$route.params.id),
       tableConnectionLimt: 10
+    }
+  },
+  computed: {
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
     }
   },
   mounted () {
@@ -141,11 +152,6 @@ export default {
       })
     }
   },
-  computed: {
-    currentUploadInfo () {
-      return this.$store.state.dataManagement.currentUploadInfo
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

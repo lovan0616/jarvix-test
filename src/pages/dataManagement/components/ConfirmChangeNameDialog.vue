@@ -1,24 +1,34 @@
 <template>
-  <confirm-dialog class="confirm-change-name-dialog"
+  <confirm-dialog 
     :title="title"
+    class="confirm-change-name-dialog"
     @close="cancel"
   >
-    <div class="content" slot="dialogBody">
-      <input-block class="login-input-block"
-        name="newDataSourceName"
-        v-model="newName"
+    <div 
+      slot="dialogBody" 
+      class="content">
+      <input-block 
         v-validate="`required|max:${max}`"
-      ></input-block>
+        v-model="newName"
+        class="login-input-block"
+        name="newDataSourceName"
+      />
     </div>
-    <template class="dialog-btn-block" slot="dialogFooter">
-      <button type="button" class="btn btn-outline"
+    <template 
+      slot="dialogFooter" 
+      class="dialog-btn-block">
+      <button 
+        type="button" 
+        class="btn btn-outline"
         @click="cancel"
       >{{ $t('button.cancel') }}</button>
-      <button type="button" class="btn btn-default"
-        :disabled="isProcessing"
+      <button 
+        :disabled="isProcessing" 
+        type="button"
+        class="btn btn-default"
         @click="confirm"
       >
-        <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>{{ $t('button.processing') }}</span>
+        <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
         <span v-else>{{ $t('button.confirm') }}</span>
       </button>
     </template>
@@ -51,6 +61,11 @@ export default {
       isProcessing: false
     }
   },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
+    }
+  },
   methods: {
     confirm () {
       this.$validator.validateAll().then(result => {
@@ -66,11 +81,6 @@ export default {
       this.$emit('cancel')
     }
   },
-  computed: {
-    max () {
-      return this.$store.state.validation.fieldCommonMaxLength
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

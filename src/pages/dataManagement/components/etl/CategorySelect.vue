@@ -1,14 +1,14 @@
 <template>
   <div class="dropdown">
     <default-select
-      class="dropdown__container"
       v-model="editedColumnInfo.statsType"
-      @change="openConfirmMsg"
       :option-list="statsTypeOptions"
-    ></default-select>
+      class="dropdown__container"
+      @change="openConfirmMsg"
+    />
     <div
-      class="confirm"
       v-if="showConfirmMsg"
+      class="confirm"
     >
       <div class="confirm__message">
         {{ $t('message.confirmColumnStateTypeChange') }}
@@ -51,6 +51,20 @@ export default {
       showConfirmMsg: false
     }
   },
+  computed: {
+    statsTypeOptions () {
+      return statsTypeOptionList.filter((option) => {
+        return this.editedColumnInfo.originalStatsType === 'DATETIME'
+          ? option
+          : option.value !== 'DATETIME'
+      })
+    }
+  },
+  watch: {
+    columnInfo () {
+      this.editedColumnInfo = JSON.parse(JSON.stringify(this.columnInfo))
+    }
+  },
   methods: {
     openConfirmMsg () {
       this.showConfirmMsg = true
@@ -88,20 +102,6 @@ export default {
       }
     }
   },
-  computed: {
-    statsTypeOptions () {
-      return statsTypeOptionList.filter((option) => {
-        return this.editedColumnInfo.originalStatsType === 'DATETIME'
-          ? option
-          : option.value !== 'DATETIME'
-      })
-    }
-  },
-  watch: {
-    columnInfo () {
-      this.editedColumnInfo = JSON.parse(JSON.stringify(this.columnInfo))
-    }
-  }
 }
 </script>
 

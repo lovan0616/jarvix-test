@@ -2,31 +2,34 @@
   <div class="file-upload-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="create-data-source">
-          <div class="dialog-title">{{ $t('editing.newDataSource') }}</div>
-          <div class="dialog-body">
-            <div class="input-block-container">
-                <input-block class="file-info-input-block"
-                  :label="$t('editing.dataSourceName')"
-                  name="dataSourceName"
-                  v-model="dataSourceInfo.name"
-                  v-validate="`required|max:${max}`"
-                ></input-block>
-            </div>
+        <div class="dialog-title">{{ $t('editing.newDataSource') }}</div>
+        <div class="dialog-body">
+          <div class="input-block-container">
+            <input-block 
+              v-validate="`required|max:${max}`"
+              :label="$t('editing.dataSourceName')"
+              v-model="dataSourceInfo.name"
+              class="file-info-input-block"
+              name="dataSourceName"
+            />
           </div>
-          <div class="dialog-footer">
-            <div class="dialog-button-block">
-              <button class="btn btn-outline"
-                @click="cancelBuilt"
-                >{{ $t('button.cancel') }}</button>
-              <button class="btn btn-default"
-                :disabled="isProcessing"
-                @click="built"
-              >
-                <span v-if="isProcessing"><svg-icon icon-class="spinner"></svg-icon>{{ $t('button.processing') }}</span>
-                <span v-else>{{ $t('button.built') }}</span>
-              </button>
-            </div>
+        </div>
+        <div class="dialog-footer">
+          <div class="dialog-button-block">
+            <button 
+              class="btn btn-outline"
+              @click="cancelBuilt"
+            >{{ $t('button.cancel') }}</button>
+            <button 
+              :disabled="isProcessing"
+              class="btn btn-default"
+              @click="built"
+            >
+              <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
+              <span v-else>{{ $t('button.built') }}</span>
+            </button>
           </div>
+        </div>
       </div>
     </div>
   </div>
@@ -49,6 +52,14 @@ export default {
       }
     }
   },
+  computed: {
+    currentGroupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
+    },
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
+    }
+  },
   methods: {
     cancelBuilt () {
       this.$emit('close')
@@ -62,14 +73,6 @@ export default {
       })
     }
   },
-  computed: {
-    currentGroupId () {
-      return this.$store.getters['userManagement/getCurrentGroupId']
-    },
-    max () {
-      return this.$store.state.validation.fieldCommonMaxLength
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>
