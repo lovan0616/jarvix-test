@@ -48,8 +48,13 @@ Vue.mixin({
       num2 = '' + num2
       let p1 = 0
       let p2 = 0
-      p1 = num1.split('.')[1].length
-      p2 = num2.split('.')[1].length
+
+      if (num1.split('.')[1]) {
+        p1 = num1.split('.')[1].length
+      }
+      if (num2.split('.')[1]) {
+        p2 = num2.split('.')[1].length
+      }
 
       if (padZeno) {
         while (p1 < p2) {
