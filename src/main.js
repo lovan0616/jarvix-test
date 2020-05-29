@@ -46,8 +46,6 @@ import 'echarts-stat'
 
 import Layout from './components/Layout.vue'
 import Task from './components/display/Task.vue'
-import ContainerBlock from './components/container/ContainerBlock.vue'
-import ContainerCard from './components/container/ContainerCard.vue'
 import DisplayBasicChart from './components/display/DisplayBasicChart.vue'
 import SyTable from './components/table/SyTable.vue'
 import PreviewDataSource from './components/PreviewDataSource.vue'
@@ -134,8 +132,6 @@ Vue.component(CorrelationExplorationResult.name, CorrelationExplorationResult)
 Vue.component(RootCauseResult.name, RootCauseResult)
 Vue.component(MultiResult.name, MultiResult)
 Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
-Vue.component(ContainerBlock.name, ContainerBlock)
-Vue.component(ContainerCard.name, ContainerCard)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
 Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
 Vue.component(DisplayScatterChart.name, DisplayScatterChart)
