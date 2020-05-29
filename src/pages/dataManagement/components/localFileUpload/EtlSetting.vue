@@ -19,6 +19,11 @@
         <button 
           :disabled="isProcessing"
           class="btn btn-outline"
+          @click="cancel"
+        >{{ $t('button.cancel') }}</button>
+        <button 
+          :disabled="isProcessing"
+          class="btn btn-outline"
           @click="prev"
         >{{ $t('button.prevStep') }}</button>
         <button 
@@ -66,6 +71,9 @@ export default {
     }
   },
   methods: {
+    cancel () {
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    },
     prev () {
       // 將所選表格恢復成預設值
       if (this.currentTableIndex !== 0) {
