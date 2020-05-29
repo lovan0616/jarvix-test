@@ -6,23 +6,27 @@
         @submit.prevent="submitForm"
       >
         <div class="login-form">
-          <input-block class="login-input-block"
+          <input-block 
+            v-validate="'required'"
             :label="$t('editing.username')"
+            v-model="userInfo.account"
+            class="login-input-block"
             name="userName"
             type="email"
-            v-model="userInfo.account"
+          />
+          <input-block 
             v-validate="'required'"
-          ></input-block>
-          <input-block class="login-input-block"
             :label="$t('editing.password')"
+            v-model="userInfo.password"
+            class="login-input-block"
             name="userPassword"
             type="password"
-            v-model="userInfo.password"
-            v-validate="'required'"
-          ></input-block>
+          />
         </div>
-        <button type="submit" class="btn btn-default btn-submit"
-          :disabled="isSubmit"
+        <button 
+          :disabled="isSubmit" 
+          type="submit"
+          class="btn btn-default btn-submit"
         >{{ $t('button.login') }}</button>
       </form>
     </div>

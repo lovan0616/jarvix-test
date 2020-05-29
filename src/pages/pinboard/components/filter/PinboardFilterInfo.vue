@@ -1,20 +1,24 @@
 <template>
   <div class="single-filter-container">
     <div class="filter-title">
-      <svg-icon icon-class="filter" class="icon"></svg-icon>{{ dataColumnNames }}
+      <svg-icon 
+        icon-class="filter" 
+        class="icon"/>{{ dataColumnNames }}
     </div>
-    <ul class="filter-description-block"
-      :class="{'last': isLast}"
+    <ul 
       v-for="(restraint, index) in restriction"
+      :class="{'last': isLast}"
       :key="index"
+      class="filter-description-block"
     >
       <template v-if="restraint.type === 'compound'">
-        <li class="filter-description"
+        <li 
           v-for="(sub_restraint, restraintsIndex) in restraint.restraints"
           :key="'restraints-' + index + '-' + restraintsIndex"
+          class="filter-description"
         >
           <template v-if="sub_restraint.type === 'enum'">
-            {{sub_restraint.properties.dc_name}} = {{sub_restraint.properties['datavalues'].join(', ')}}
+            {{ sub_restraint.properties.dc_name }} = {{ sub_restraint.properties['datavalues'].join(', ') }}
           </template>
           <template v-if="sub_restraint.type === 'range'">
             {{ sub_restraint.properties.dc_name }} =
@@ -27,7 +31,7 @@
       </template>
       <template v-else-if="restraint.type === 'enum'">
         <li class="filter-description">
-          {{restraint.properties['datavalues'].join(', ')}}
+          {{ restraint.properties['datavalues'].join(', ') }}
         </li>
       </template>
       <template v-else-if="restraint.type === 'range'">

@@ -1,51 +1,53 @@
 <template>
   <div>
-    <div class="etl-choose-column"
+    <div 
       v-show="!showEtlSetting"
+      class="etl-choose-column"
     >
       <div class="section data-frame">
         <div class="data-frame-info">
           <div class="title">{{ $t('etl.currentDataFrame') }}：</div>
           <default-select
-            size="mini"
             v-model="currentTableIndex"
             :option-list="tableOptionList"
+            size="mini"
             @change="chooseTable"
-          ></default-select>
+          />
         </div>
         <!-- TODO 已選欄位數 -->
         <div class="data-content-info">
           <dl>
-            <dt>{{ $t('etl.columnCount')}}：</dt>
+            <dt>{{ $t('etl.columnCount') }}：</dt>
             <dd>{{ formatComma(currentTableInfo.columns.length) }}</dd>
           </dl>
           <dl>
-            <dt>{{ $t('etl.rowCount')}}：</dt>
+            <dt>{{ $t('etl.rowCount') }}：</dt>
             <dd>{{ formatComma(currentTableInfo.rowCount) }}</dd>
           </dl>
         </div>
       </div>
       <div
-        class="section data-column"
         v-if="currentTableInfo && !isProcessing"
+        class="section data-column"
       >
         <pagination-table
           :dataset="currentTableInfo"
           :min-column-width="'270px'"
           :current-table-index="currentTableIndex"
-          fixedIndex
+          fixed-index
         >
           <template #index-header>
             <div class="toggle-block">
               <label class="checkbox">
-                <div class="checkbox-label"
+                <div 
                   :class="{'indeterminate': someColumnSelected && !allColumnSelected}"
+                  class="checkbox-label"
                 >
                   <input
-                    type="checkbox"
                     v-model="allColumnSelected"
+                    type="checkbox"
                   >
-                  <div class="checkbox-square"></div>
+                  <div class="checkbox-square"/>
                 </div>
               </label>
             </div>
@@ -53,25 +55,27 @@
           <template #columns-header="{ column, index }">
             <div class="header-block">
               <div class="header">
-                <span class="text" :class="{'has-changed': column[index].hasChanged}">
+                <span 
+                  :class="{'has-changed': column[index].hasChanged}" 
+                  class="text">
                   <el-tooltip
+                    slot="label"
                     :enterable="false"
                     :visible-arrow="false"
-                    placement="bottom-start"
-                    slot="label"
-                    :content="`${column[index].primaryAlias}`">
+                    :content="`${column[index].primaryAlias}`"
+                    placement="bottom-start">
                     <span>{{ column[index].primaryAlias }}</span>
                   </el-tooltip>
                 </span>
                 <label class="checkbox">
                   <div class="checkbox-label">
                     <input
-                      type="checkbox"
                       :name="'column' + index"
                       :checked="column[index].active"
+                      type="checkbox"
                       @change="toggleColumn(index)"
                     >
-                    <div class="checkbox-square"></div>
+                    <div class="checkbox-square"/>
                   </div>
                   {{ $t('etl.selectColumn') }}
                 </label>
@@ -79,10 +83,12 @@
               <div class="header">
                 <category-select
                   :column-info="getColumnInfo(index)"
-                  @updateInfo="updateSetting"
                   :key="currentTableIndex + column[index].primaryAlias + index"
+                  @updateInfo="updateSetting"
                 />
-                <a href="javascript:void(0)" class="link"
+                <a 
+                  href="javascript:void(0)" 
+                  class="link"
                   @click="chooseColumn(index)"
                 >{{ $t('etl.advance') }}</a>
               </div>
@@ -92,11 +98,12 @@
                   :key="currentTableIndex + '-' + index + 'column-summary'"
                   :summary-data="currentTableInfo.columns[index].dataSummary"
                 />
-                <spinner class="spinner-conatiner"
+                <spinner 
                   v-else
                   :title="$t('etl.dataCalculate')"
+                  class="spinner-conatiner"
                   size="30"
-                ></spinner>
+                />
               </div>
             </div>
           </template>
@@ -105,16 +112,17 @@
           *{{ $t('notification.columnSummarySampleNotification') }}
         </p>
       </div>
-      <spinner class="processing-spinner-container"
+      <spinner 
         v-else
         :title="$t('editing.loading')"
+        class="processing-spinner-container"
         size="50"
-      ></spinner>
+      />
     </div>
     <etl-column-setting
       v-if="showEtlSetting"
       @close="closeEtlColumnSetting"
-    ></etl-column-setting>
+    />
   </div>
 </template>
 <script>
@@ -139,6 +147,54 @@ export default {
       showEtlSetting: false,
       intervalFunction: null,
       isProcessing: true
+    }
+  },
+  computed: {
+    tableOptionList () {
+      if (this.etlTableList.length === 0) return []
+      return this.etlTableList.map((element, index) => {
+        return {
+          name: element.primaryAlias,
+          value: index
+        }
+      })
+    },
+    etlTableList () {
+      return this.$store.state.dataManagement.etlTableList
+    },
+    currentTableIndex: {
+      get () {
+        return this.$store.state.dataManagement.currentTableIndex
+      },
+      set (currentTableIndex) {
+        this.$store.commit('dataManagement/changeCurrentTableIndex', currentTableIndex)
+        window.clearInterval(this.intervalFunction)
+        this.getDataFrameSummary(this.etlTableList[currentTableIndex].tableId)
+      }
+    },
+    currentTableInfo () {
+      const tableInfo = this.etlTableList[this.currentTableIndex]
+      if (tableInfo.rowData) {
+        tableInfo.data = tableInfo.rowData
+        delete tableInfo.rowData
+      }
+      tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
+      return tableInfo
+    },
+    allColumnSelected: {
+      get () {
+        let selected = (column) => column.active
+        return this.etlTableList[this.currentTableIndex].columns.every(selected)
+      },
+      set (selected) {
+        this.etlTableList[this.currentTableIndex].columns.forEach(column => {
+          column.active = selected
+        })
+      }
+    },
+    someColumnSelected () {
+      let selected = (column) => column.active
+      return this.etlTableList[this.currentTableIndex].columns.some(selected)
     }
   },
   mounted () {
@@ -199,54 +255,6 @@ export default {
       })
     }
   },
-  computed: {
-    tableOptionList () {
-      if (this.etlTableList.length === 0) return []
-      return this.etlTableList.map((element, index) => {
-        return {
-          name: element.primaryAlias,
-          value: index
-        }
-      })
-    },
-    etlTableList () {
-      return this.$store.state.dataManagement.etlTableList
-    },
-    currentTableIndex: {
-      get () {
-        return this.$store.state.dataManagement.currentTableIndex
-      },
-      set (currentTableIndex) {
-        this.$store.commit('dataManagement/changeCurrentTableIndex', currentTableIndex)
-        window.clearInterval(this.intervalFunction)
-        this.getDataFrameSummary(this.etlTableList[currentTableIndex].tableId)
-      }
-    },
-    currentTableInfo () {
-      const tableInfo = this.etlTableList[this.currentTableIndex]
-      if (tableInfo.rowData) {
-        tableInfo.data = tableInfo.rowData
-        delete tableInfo.rowData
-      }
-      tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
-      return tableInfo
-    },
-    allColumnSelected: {
-      get () {
-        let selected = (column) => column.active
-        return this.etlTableList[this.currentTableIndex].columns.every(selected)
-      },
-      set (selected) {
-        this.etlTableList[this.currentTableIndex].columns.forEach(column => {
-          column.active = selected
-        })
-      }
-    },
-    someColumnSelected () {
-      let selected = (column) => column.active
-      return this.etlTableList[this.currentTableIndex].columns.some(selected)
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

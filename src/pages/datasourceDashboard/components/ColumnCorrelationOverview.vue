@@ -7,13 +7,16 @@
       <div class="title">
         {{ $t('resultDescription.columnCorrelationOverview') }}
         <span class="nav-item nav-function tooltip-container">
-          <svg-icon icon-class="information-circle" class="icon" />
-          <div class="tooltip">{{$t('resultDescription.filterColumnCorrelation')}}</div>
+          <svg-icon
+            class="icon"
+            icon-class="information-circle"
+          />
+          <div class="tooltip">{{ $t('resultDescription.filterColumnCorrelation') }}</div>
         </span>
       </div>
       <spinner
         v-if="isLoading"
-      ></spinner>
+      />
       <div
         v-else-if="!isLoading && componentData && !hasError && !isCalculating"
       >
@@ -37,7 +40,7 @@
       <empty-info-block
         v-else
         :msg="reminderMsg"
-      ></empty-info-block>
+      />
     </div>
     <!--暫時不顯示高度關聯區塊-->
     <!-- <div class="overview-section">
@@ -135,14 +138,14 @@ export default {
       isEmpty: false
     }
   },
-  mounted () {
-    this.fetchData()
-  },
   computed: {
     reminderMsg () {
       if (this.isCalculating) return this.$t('message.calculatingPleaseTryLater')
       return this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
     }
+  },
+  mounted () {
+    this.fetchData()
   },
   methods: {
     fetchData () {
@@ -257,7 +260,6 @@ export default {
       }
     }
   }
-
 }
 
 </style>

@@ -3,7 +3,7 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="3"
-    ></upload-process-block>
+    />
     <div class="info-block">
       <div>{{ $t('editing.dataFrameContent') }}</div>
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
@@ -13,10 +13,12 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-default"
+        <button 
+          class="btn btn-default"
           @click="nextStep"
         >{{ $t('button.nextStep') }}</button>
       </div>
@@ -33,6 +35,11 @@ export default {
     UploadProcessBlock,
     EtlChooseColumn
   },
+  computed: {
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
+    }
+  },
   methods: {
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
@@ -41,11 +48,6 @@ export default {
       this.$emit('next')
     }
   },
-  computed: {
-    currentUploadInfo () {
-      return this.$store.state.dataManagement.currentUploadInfo
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

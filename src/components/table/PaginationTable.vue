@@ -1,19 +1,21 @@
 <template>
   <div class="sy-table-block">
-    <div class="spinner-block"
+    <div 
       v-show="isProcessing"
+      class="spinner-block"
     >
-      <spinner class="spinner"></spinner>
+      <spinner class="spinner"/>
     </div>
-    <el-table class="sy-table"
+    <el-table 
       v-bind="tableProps"
+      class="sy-table"
       style="width: 100%;"
     >
       <el-table-column
-        type="index"
         :width="indexWidth"
-        align="center"
         :fixed="fixedIndex"
+        type="index"
+        align="center"
       >
         <template slot="header">
           <slot name="index-header" />
@@ -28,26 +30,30 @@
         :min-width="minColumnWidth"
       >
         <!--Header slot-->
-        <template slot="header" slot-scope="scope">
-          <slot name="columns-header"
+        <template 
+          slot="header" 
+          slot-scope="scope">
+          <slot 
             :column="dataset.columns"
             :index="i"
+            name="columns-header"
           >
-           {{scope.column.label}}
+            {{ scope.column.label }}
           </slot>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination class="table-pagination"
+    <el-pagination 
       v-if="paginationInfo.totalPages > 1"
-      layout="prev, pager, next"
       :total="paginationInfo.totalItems"
       :page-size="paginationInfo.itemPerPage"
       :current-page="paginationInfo.currentPage + 1"
+      class="table-pagination"
+      layout="prev, pager, next"
       @current-change="changePage"
       @prev-click="prevPage"
       @next-click="nextPage"
-    ></el-pagination>
+    />
   </div>
 </template>
 
@@ -103,6 +109,15 @@ export default {
       default: false
     }
   },
+  computed: {
+    tableProps () {
+      let tableProps = { ...this.$props, data: this.dataset.data }
+      if (!this.$props.maxHeight) {
+        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 600)
+      }
+      return tableProps
+    }
+  },
   methods: {
     changePage (value) {
       this.$emit('change-page', value)
@@ -120,15 +135,6 @@ export default {
       }
     }
   },
-  computed: {
-    tableProps () {
-      let tableProps = { ...this.$props, data: this.dataset.data }
-      if (!this.$props.maxHeight) {
-        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 600)
-      }
-      return tableProps
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

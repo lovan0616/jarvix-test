@@ -1,34 +1,38 @@
 <template>
   <div class="result-layout">
-    <filter-info></filter-info>
+    <filter-info/>
     <unknown-info-block
       v-if="segmentationInfo.unknownToken.length > 0 || segmentationInfo.nlpToken.length > 0"
       :segmentation-info="segmentationInfo"
       @close="closeUnknowInfoBlock"
-    ></unknown-info-block>
-    <spinner class="layout-spinner"
+    />
+    <spinner 
       v-if="isLoading"
       :title="$t('resultDescription.analysisProcessing')"
+      class="layout-spinner"
       size="50"
-    ></spinner>
+    />
     <empty-result
       v-else-if="!layout"
-    ></empty-result>
+    />
     <component
       v-else
       :is="layout"
       :data-result-id="currentResultId"
-      :resultInfo="resultInfo"
+      :result-info="resultInfo"
       :restrictions="restrictInfo"
-    ></component>
-    <div class="related-question-block" v-if="relatedQuestionList.length > 0">
+    />
+    <div 
+      v-if="relatedQuestionList.length > 0" 
+      class="related-question-block">
       <div class="block-title">{{ $t('editing.relatedQuestion') }}</div>
       <div class="related-question-list">
-        <preview-result-board class="result-board"
+        <preview-result-board 
           v-for="(relatedQuestion, index) in relatedQuestionList"
           :key="index"
           :question-info="relatedQuestion"
-        ></preview-result-board>
+          class="result-board"
+        />
       </div>
     </div>
   </div>
@@ -61,19 +65,6 @@ export default {
       }
     }
   },
-  watch: {
-    '$route.query' ({ question, action, stamp }) {
-      if (!question) return false
-      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId})
-    }
-  },
-  mounted () {
-    this.fetchData()
-  },
-  destroyed () {
-    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
-    if (this.addConversationTimeout) window.clearTimeout(this.addConversationTimeout)
-  },
   computed: {
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
@@ -90,6 +81,19 @@ export default {
     filterRestrictionList () {
       return this.$store.getters['dataSource/filterRestrictionList']
     }
+  },
+  watch: {
+    '$route.query' ({ question, action, stamp }) {
+      if (!question) return false
+      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId})
+    }
+  },
+  mounted () {
+    this.fetchData()
+  },
+  destroyed () {
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+    if (this.addConversationTimeout) window.clearTimeout(this.addConversationTimeout)
   },
   methods: {
     fetchData () {
@@ -142,13 +146,14 @@ export default {
           if (segmentationList.length === 1) {
             // 介紹資料集的處理
             switch (segmentationList[0].implication.intent) {
-              case 'Introduction':
+              case 'Introduction': {
                 this.layout = 'PreviewDataSource'
                 this.resultInfo = null
                 this.isLoading = false
                 this.setRelatedQuestions()
                 return false
-              case 'NoAnswer':
+              }
+              case 'NoAnswer': {
                 let implication = segmentationList[0].implication
                 this.layout = 'EmptyResult'
                 this.resultInfo = {
@@ -158,6 +163,7 @@ export default {
                 this.isLoading = false
                 this.setRelatedQuestions()
                 return false
+              }
             }
 
             this.$store.dispatch('chatBot/askResult', {

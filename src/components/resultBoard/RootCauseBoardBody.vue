@@ -1,20 +1,20 @@
 <template>
   <div class="result-board-body root-cause-board-body">
     <div class="hint-info-block">
-      <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"></svg-icon> {{ $t('resultDescription.prompt') }}:</span> {{ $t('editing.resultOverSizeMessage') }}</div>
+      <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"/> {{ $t('resultDescription.prompt') }}:</span> {{ $t('editing.resultOverSizeMessage') }}</div>
     </div>
     <div class="title-block">{{ $t('resultDescription.summaryReport') }}</div>
     <div class="main-chart-container">
       <div class="chart-description-block">
-        <slot name="RootCauseDescription"></slot>
+        <slot name="RootCauseDescription"/>
       </div>
       <div class="chart-block">
-        <slot name="PageResultBoardChart"></slot>
+        <slot name="PageResultBoardChart"/>
       </div>
     </div>
     <div class="title-block">{{ $t('resultDescription.importantFeatureChanging') }}</div>
     <div class="root-cause-item-block">
-      <slot name="RootCauseItem"></slot>
+      <slot name="RootCauseItem"/>
     </div>
   </div>
 </template>
@@ -25,8 +25,6 @@ export default {
     return {
       showBasicInfo: false
     }
-  },
-  methods: {
   }
 }
 </script>

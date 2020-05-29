@@ -2,9 +2,11 @@
   <div class="edit-column-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="dialog-title">{{ $t('editing.dataColumn') }}
-        <a href="javascript:void(0)" class="close-btn"
+        <a 
+          href="javascript:void(0)" 
+          class="close-btn"
           @click="closeDialog"
-         ><svg-icon icon-class="close"></svg-icon></a>
+        ><svg-icon icon-class="close"/></a>
       </div>
       <div class="dialog-header-block">
         <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ tableInfo.primaryAlias }}</div>
@@ -13,8 +15,9 @@
           class="button-block"
         >
           <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
-          <button class="btn-m btn-default"
+          <button 
             :disabled="isProcessing"
+            class="btn-m btn-default"
             @click="updateDataSource"
           >{{ $t('button.build') }}</button>
         </div>
@@ -24,13 +27,16 @@
           <div class="data-table-head is-scrolling">
             <div class="data-table-row table-head">
               <div class="data-table-cell name">{{ $t('editing.columnName') }}</div>
-              <div class="data-table-cell source"
+              <div 
                 v-if="isJoinTable"
+                class="data-table-cell source"
               >
                 {{ $t('editing.columnSource') }}
                 <span class="nav-item nav-function tooltip-container">
-                  <svg-icon icon-class="information-circle" class="icon" />
-                  <div class="tooltip">{{$t('editing.columnSourceRemind')}}</div>
+                  <svg-icon 
+                    icon-class="information-circle" 
+                    class="icon" />
+                  <div class="tooltip">{{ $t('editing.columnSourceRemind') }}</div>
                 </span>
               </div>
               <div class="data-table-cell alias">{{ $t('editing.alias') }}</div>
@@ -38,25 +44,31 @@
               <div class="data-table-cell action">{{ $t('editing.action') }}</div>
             </div>
           </div>
-          <div class="data-table-body" ref="dataTableBody">
-            <div class="data-table-row"
+          <div 
+            ref="dataTableBody" 
+            class="data-table-body">
+            <div 
               v-for="column in columnList"
               :key="column.id"
+              class="data-table-row"
             >
               <div class="data-table-cell name">{{ column.name }}</div>
-              <div class="data-table-cell source"
+              <div 
                 v-if="isJoinTable"
+                class="data-table-cell source"
               >{{ column.parentDataFrameAlias || '-' }}</div>
               <div class="data-table-cell alias">
                 <span v-show="!isEditing(column.id)">{{ column.primaryAlias }}</span>
                 <!-- 不使用v-if因為從DOM中拔除時validator會報錯(validate unexisting field) -->
-                <div v-show="isEditing(column.id)" class="edit-block" >
+                <div 
+                  v-show="isEditing(column.id)" 
+                  class="edit-block" >
                   <input-block
-                    class="edit-alias-input-block"
+                    v-validate="`required|max:${max}`"
                     v-model="tempRowInfo.alias"
                     :name="'alias' + '-' + column.id"
-                    v-validate="`required|max:${max}`"
-                  ></input-block>
+                    class="edit-alias-input-block"
+                  />
                   <!-- <button class="btn-m btn-secondary btn-add">
                     <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.add') }}
                   </button> -->
@@ -67,25 +79,32 @@
                 <span
                   v-if="tempRowInfo.dataColumnId !== column.id"
                 >{{ column.statsType }}</span>
-                <default-select class="tag-select input"
+                <default-select 
                   v-else
                   v-model="tempRowInfo.columnStatsType"
                   :option-list="typeOptionList(column.statsTypeOptionList)"
-                ></default-select>
+                  class="tag-select input"
+                />
               </div>
               <div class="data-table-cell action">
-                <a class="link action-link" href="javascript:void(0)"
-                  v-if="tempRowInfo.dataColumnId !== column.id"
+                <a 
+                  v-if="tempRowInfo.dataColumnId !== column.id" 
+                  class="link action-link"
+                  href="javascript:void(0)"
                   @click="edit(column)"
                 >{{ $t('button.edit') }}</a>
-                <a class="link action-link" href="javascript:void(0)"
+                <a 
+                  v-if="tempRowInfo.dataColumnId === column.id" 
                   :disabled="isProcessing"
-                  v-if="tempRowInfo.dataColumnId === column.id"
+                  class="link action-link"
+                  href="javascript:void(0)"
                   @click="save"
                 >{{ $t('button.save') }}</a>
-                <a class="link action-link" href="javascript:void(0)"
+                <a 
+                  v-if="tempRowInfo.dataColumnId === column.id" 
                   :disabled="isProcessing"
-                  v-if="tempRowInfo.dataColumnId === column.id"
+                  class="link action-link"
+                  href="javascript:void(0)"
                   @click="cancel"
                 >{{ $t('button.cancel') }}</a>
               </div>
@@ -135,6 +154,17 @@ export default {
         userEditedColumnInputList: []
       },
       isProcessing: false
+    }
+  },
+  computed: {
+    currentBookmarkInfo () {
+      return this.$store.state.dataManagement.currentBookmarkInfo
+    },
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
+    },
+    isJoinTable () {
+      return this.columnList.some(element => element.parentDataFrameAlias)
     }
   },
   mounted () {
@@ -220,17 +250,6 @@ export default {
       return this.tempRowInfo.dataColumnId === id
     }
   },
-  computed: {
-    currentBookmarkInfo () {
-      return this.$store.state.dataManagement.currentBookmarkInfo
-    },
-    max () {
-      return this.$store.state.validation.fieldCommonMaxLength
-    },
-    isJoinTable () {
-      return this.columnList.some(element => element.parentDataFrameAlias)
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

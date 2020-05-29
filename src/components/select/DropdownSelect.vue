@@ -1,16 +1,20 @@
 <template>
-    <div class="dropdown-select">
-         <div class="dropdown-select-box">
-            <div :class="['dropdown-flex', { 'dropdown-border-line': index !== barData.length - 1 }]"
-              v-for="(bar, index) in barData"
-              @click="dialogEvent(bar)"
-              :key="index"
-             >
-                <svg-icon v-if="bar.icon" :icon-class="bar.icon" class="icon dropdown-icon"></svg-icon>
-                <div>{{ $t(bar.title) }}</div>
-            </div>
-        </div>
+  <div class="dropdown-select">
+    <div class="dropdown-select-box">
+      <div 
+        v-for="(bar, index) in barData"
+        :class="['dropdown-flex', { 'dropdown-border-line': index !== barData.length - 1 }]"
+        :key="index"
+        @click="dialogEvent(bar)"
+      >
+        <svg-icon 
+          v-if="bar.icon" 
+          :icon-class="bar.icon" 
+          class="icon dropdown-icon"/>
+        <div>{{ $t(bar.title) }}</div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>

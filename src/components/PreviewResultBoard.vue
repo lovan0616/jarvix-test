@@ -1,5 +1,6 @@
 <template>
-  <div class="single-result-board"
+  <div 
+    class="single-result-board"
     @click="linkToResult"
   >
     <div class="board-top-section">
@@ -9,7 +10,7 @@
         <question-name
           :question="questionInfo.question"
           :question-segmentation="questionInfo.segmentation"
-        ></question-name>
+        />
       </div>
     </div>
   </div>

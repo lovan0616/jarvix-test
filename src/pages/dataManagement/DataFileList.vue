@@ -1,42 +1,57 @@
 <template>
   <div class="data-management">
-    <div class="status-block"
+    <div 
       v-show="isProcessing"
+      class="status-block"
     >
-      <svg-icon icon-class="spinner" class="spinner-icon"></svg-icon>{{ $t('editing.dataProcessing') }}
+      <svg-icon 
+        icon-class="spinner" 
+        class="spinner-icon"/>{{ $t('editing.dataProcessing') }}
     </div>
     <div class="page-title-row">
       <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
       <div class="bread-crumb">
-        <router-link :to="{name: 'DataSourceList'}" class="title-link">{{ $t('editing.dataSource') }}</router-link>
+        <router-link 
+          :to="{name: 'DataSourceList'}" 
+          class="title-link">{{ $t('editing.dataSource') }}</router-link>
         <span class="divider">/</span>{{ dataSourceName }}
       </div>
     </div>
     <div class="table-board">
       <div class="board-title-row">
         <div class="button-block">
-          <button class="btn-m btn-default btn-has-icon"
+          <button 
             :disabled="isProcessing || reachLimit"
+            class="btn-m btn-default btn-has-icon"
             @click="createDataSource"
           >
-            <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
+            <svg-icon 
+              icon-class="file-plus" 
+              class="icon"/>{{ $t('editing.newTable') }}
           </button>
-          <div class="reach-limit"
+          <div 
             v-if="reachLimit"
+            class="reach-limit"
           >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
         <div class="button-block dataframe-action">
-          <button class="btn-m btn-secondary btn-has-icon"
-            @click="toggleEditFeatureDialog"
+          <button 
             :disabled="reachLimit || enableDataFrameCount === 0"
+            class="btn-m btn-secondary btn-has-icon"
+            @click="toggleEditFeatureDialog"
           >
-            <svg-icon icon-class="feature" class="icon"></svg-icon>{{ $t('button.featureManagement') }}
+            <svg-icon 
+              icon-class="feature" 
+              class="icon"/>{{ $t('button.featureManagement') }}
           </button>
-          <button class="btn-m btn-secondary btn-has-icon"
-            @click="openEditJoinTableDialog"
+          <button 
             :disabled="!canEditJoinTable()"
+            class="btn-m btn-secondary btn-has-icon"
+            @click="openEditJoinTableDialog"
           >
-            <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
+            <svg-icon 
+              icon-class="correlation" 
+              class="icon"/>{{ $t('editing.tableJoin') }}
           </button>
         </div>
         <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
@@ -55,57 +70,56 @@
         @valueAlias="editTableValueAlias"
         @columnSet="editColumnSet"
         @dateTime="editDateTime"
-      >
-      </data-table>
+      />
     </div>
     <file-upload-dialog
       v-if="showCreateDataSourceDialog"
       @success="fetchData"
       @close="closeFileUploadDialog"
-    ></file-upload-dialog>
+    />
     <confirm-delete-data-frame-dialog
       v-if="showConfirmDeleteDialog"
       :title="$t('editing.deleteTable')"
       :file-list="selectList"
       @confirm="deleteFile"
       @cancel="cancelDelete"
-    ></confirm-delete-data-frame-dialog>
+    />
     <edit-table-join-relation-dialog
       v-if="showJoinTableDialog"
       :reach-limit="reachLimit"
       :data-frame-list="dataList"
       @cancel="closeEditJoinTableDialog"
       @dataFrameUpdate="fetchData()"
-    ></edit-table-join-relation-dialog>
+    />
     <edit-column-dialog
       v-if="showEditColumnDialog"
       :table-info="currentEditDataFrameInfo"
       @close="closeEditColumnDialog"
-    ></edit-column-dialog>
+    />
     <data-frame-alias-dialog
       v-if="showDataFrameAliasDialog"
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeDataFrameAliasDialog"
-    ></data-frame-alias-dialog>
+    />
     <value-alias-dialog
       v-if="showValueAliasDialog"
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeValueAliasDialog"
-    ></value-alias-dialog>
+    />
     <edit-column-set-dialog
       v-if="showEditColumnSetDialog"
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditClomnSetDialog"
-    ></edit-column-set-dialog>
+    />
     <edit-date-time-dialog
       v-if="showEditDateTimeDialog"
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditDateTimeDialog"
-    ></edit-date-time-dialog>
+    />
     <feature-management-dialog
       v-if="showEditFeatureDialog"
       @close="toggleEditFeatureDialog"
-    ></feature-management-dialog>
+    />
   </div>
 </template>
 <script>
@@ -166,16 +180,85 @@ export default {
       showJoinTable: localStorage.getItem('showJoinTable')
     }
   },
-  mounted () {
-    this.fetchData()
-    this.checkDataSourceStatus()
-    this.checkJoinTable()
-  },
-  beforeDestroy () {
-    if (this.intervalFunction) {
-      window.clearInterval(this.intervalFunction)
-    } else if (this.checkDataFrameIntervalFunction) {
-      window.clearInterval(this.checkDataFrameIntervalFunction)
+  computed: {
+    fileCountLimit () {
+      return this.$store.state.dataManagement.fileCountLimit
+    },
+    reachLimit () {
+      return this.dataList.length >= this.fileCountLimit
+    },
+    // 用來生成 data table
+    tableHeaders () {
+      return [
+        {
+          text: this.$t('editing.tableName'),
+          value: 'primaryAlias',
+          sort: true
+        },
+        {
+          text: this.$t('editing.createWay'),
+          value: 'createMethod',
+          width: '80px'
+        },
+        {
+          text: this.$t('editing.createDate'),
+          value: 'createDate',
+          sort: true,
+          width: '140px',
+          time: 'YYYY-MM-DD HH:mm'
+        },
+        {
+          text: this.$t('editing.updateDate'),
+          value: 'updateDate',
+          sort: true,
+          width: '140px',
+          time: 'YYYY-MM-DD HH:mm'
+        },
+        {
+          text: this.$t('editing.status'),
+          value: 'state',
+          width: '80px'
+        },
+        {
+          text: this.$t('editing.action'),
+          value: 'action',
+          width: '270px',
+          action: [
+            {
+              name: this.$t('button.edit'),
+              subAction: [
+                {icon: '', title: 'button.editDataFrameAlias', dialogName: 'dataFrameAlias'},
+                {icon: '', title: 'button.editColumn', dialogName: 'edit'},
+                {icon: '', title: 'button.editDataValue', dialogName: 'valueAlias'},
+                {icon: '', title: 'button.editColumnSet', dialogName: 'columnSet'}
+              ]
+            },
+            {
+              name: this.$t('button.dateTimeColumnSetting'),
+              value: 'dateTime'
+            },
+            {
+              name: this.$t('button.delete'),
+              value: 'delete'
+            }
+          ]
+        }
+      ]
+    },
+    showCreateDataSourceDialog () {
+      return this.$store.state.dataManagement.showCreateDataSourceDialog
+    },
+    fileUploadSuccess () {
+      return this.$store.state.dataManagement.fileUploadSuccess
+    },
+    hasDataFrameProcessing () {
+      if (!this.dataList.length) return false
+      return this.dataList.some(element => element.type === 'PROCESS' || element.state === 'Process' || element.state === 'Pending')
+    },
+    enableDataFrameCount () {
+      return this.dataList.reduce((acc, cur) => {
+        return (cur.state === 'Enable') ? acc + 1 : acc
+      }, 0)
     }
   },
   watch: {
@@ -206,6 +289,18 @@ export default {
         this.$store.dispatch('dataSource/getDataSourceList')
         window.clearInterval(this.checkDataFrameIntervalFunction)
       }
+    }
+  },
+  mounted () {
+    this.fetchData()
+    this.checkDataSourceStatus()
+    this.checkJoinTable()
+  },
+  beforeDestroy () {
+    if (this.intervalFunction) {
+      window.clearInterval(this.intervalFunction)
+    } else if (this.checkDataFrameIntervalFunction) {
+      window.clearInterval(this.checkDataFrameIntervalFunction)
     }
   },
   methods: {
@@ -355,87 +450,6 @@ export default {
       this.showEditFeatureDialog = !this.showEditFeatureDialog
     }
   },
-  computed: {
-    fileCountLimit () {
-      return this.$store.state.dataManagement.fileCountLimit
-    },
-    reachLimit () {
-      return this.dataList.length >= this.fileCountLimit
-    },
-    // 用來生成 data table
-    tableHeaders () {
-      return [
-        {
-          text: this.$t('editing.tableName'),
-          value: 'primaryAlias',
-          sort: true
-        },
-        {
-          text: this.$t('editing.createWay'),
-          value: 'createMethod',
-          width: '80px'
-        },
-        {
-          text: this.$t('editing.createDate'),
-          value: 'createDate',
-          sort: true,
-          width: '140px',
-          time: 'YYYY-MM-DD HH:mm'
-        },
-        {
-          text: this.$t('editing.updateDate'),
-          value: 'updateDate',
-          sort: true,
-          width: '140px',
-          time: 'YYYY-MM-DD HH:mm'
-        },
-        {
-          text: this.$t('editing.status'),
-          value: 'state',
-          width: '80px'
-        },
-        {
-          text: this.$t('editing.action'),
-          value: 'action',
-          width: '270px',
-          action: [
-            {
-              name: this.$t('button.edit'),
-              subAction: [
-                {icon: '', title: 'button.editDataFrameAlias', dialogName: 'dataFrameAlias'},
-                {icon: '', title: 'button.editColumn', dialogName: 'edit'},
-                {icon: '', title: 'button.editDataValue', dialogName: 'valueAlias'},
-                {icon: '', title: 'button.editColumnSet', dialogName: 'columnSet'}
-              ]
-            },
-            {
-              name: this.$t('button.dateTimeColumnSetting'),
-              value: 'dateTime'
-            },
-            {
-              name: this.$t('button.delete'),
-              value: 'delete'
-            }
-          ]
-        }
-      ]
-    },
-    showCreateDataSourceDialog () {
-      return this.$store.state.dataManagement.showCreateDataSourceDialog
-    },
-    fileUploadSuccess () {
-      return this.$store.state.dataManagement.fileUploadSuccess
-    },
-    hasDataFrameProcessing () {
-      if (!this.dataList.length) return false
-      return this.dataList.some(element => element.type === 'PROCESS' || element.state === 'Process' || element.state === 'Pending')
-    },
-    enableDataFrameCount () {
-      return this.dataList.reduce((acc, cur) => {
-        return (cur.state === 'Enable') ? acc + 1 : acc
-      }, 0)
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

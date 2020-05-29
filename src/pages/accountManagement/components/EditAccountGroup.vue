@@ -1,17 +1,17 @@
 <template>
   <form
-    @submit.stop.prevent="submitForm"
     class="edit-account-group"
+    @submit.stop.prevent="submitForm"
   >
     <div class="input-wrapper">
       <div class="input-group">
         <div class="input-label">{{ $t('editing.groupName') }}：</div>
         <input-block
+          v-validate="`required|max:${max}`"
+          v-model="groupName"
           class="input-block"
           name="groupName"
-          v-model="groupName"
-          v-validate="`required|max:${max}`"
-        ></input-block>
+        />
       </div>
       <div
         v-if="editData.type === 'create'"
@@ -19,33 +19,33 @@
       >
         <div class="input-label">{{ $t('editing.groupOwner') }}：</div>
         <div
-          class="input-block"
           :class="{'has-error': errors.has('owner')}"
+          class="input-block"
         >
           <default-select
-            class="input"
+            v-validate="'required'"
             v-model="selectedOwner"
             :option-list="userEmailList"
+            class="input"
             name="owner"
-            v-validate="'required'"
-          ></default-select>
+          />
           <div
-            class="error-text"
             v-if="errors.has('owner')"
-          >{{errors.first('owner')}}</div>
+            class="error-text"
+          >{{ errors.first('owner') }}</div>
         </div>
       </div>
     </div>
     <div class="button-block">
       <button
-       type="button"
+        type="button"
         class="btn btn-outline"
         @click.stop="cancelEditGroup"
       >{{ $t('button.cancel') }}</button>
       <button
         class="btn btn-default"
         type="submit"
-      >{{editData.type === 'create' ? $t('button.built') : $t('button.save')}}</button>
+      >{{ editData.type === 'create' ? $t('button.built') : $t('button.save') }}</button>
     </div>
   </form>
 </template>
@@ -82,6 +82,11 @@ export default {
       groupName: this.getGroupName(),
       userList: [],
       userEmailList: []
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   },
   mounted () {
@@ -135,11 +140,6 @@ export default {
             })
         }
       })
-    }
-  },
-  computed: {
-    max () {
-      return this.$store.state.validation.fieldCommonMaxLength
     }
   }
 }

@@ -1,13 +1,19 @@
 <template>
   <div class="root-cause-item">
     <div class="chart-block">
-      <display-line-chart height="280px" v-bind="chartData" v-if="chartType === 'line'">
-      </display-line-chart>
-      <display-bar-chart height="280px" v-bind="chartData" v-else>
-      </display-bar-chart>
+      <display-line-chart
+        v-if="chartType === 'line'"
+        v-bind="chartData"
+        height="280px" 
+      />
+      <display-bar-chart
+        v-else
+        v-bind="chartData"
+        height="280px"
+      />
     </div>
     <div class="chart-description">
-      {{text}}
+      {{ text }}
     </div>
   </div>
 </template>

@@ -2,17 +2,18 @@
   <div class="file-list-block">
     <div class="block-title-row">
       <div class="block-title">{{ title }}</div>
-      <slot name="fileListTitle"></slot>
+      <slot name="fileListTitle"/>
     </div>
-    <div class="file-list"
+    <div 
       :class="{fail: type === 'fail'}"
+      class="file-list"
     >
       <single-file-row
         v-for="(singleFile, index) in fileList"
         :key="index"
         :single-file="singleFile"
         :index="index"
-      ></single-file-row>
+      />
     </div>
   </div>
 </template>
@@ -37,7 +38,8 @@ export default {
     },
     type: {
       type: String,
-      required: false
+      required: false,
+      default: ''
     }
   }
 }

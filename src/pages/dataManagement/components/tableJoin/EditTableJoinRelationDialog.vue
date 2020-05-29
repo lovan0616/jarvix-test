@@ -2,30 +2,37 @@
   <div class="edit-table-join-relation-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="dialog-title">{{ $t('editing.foreignTable') }}
-        <a href="javascript:void(0)" class="close-btn"
+        <a 
+          href="javascript:void(0)" 
+          class="close-btn"
           @click="closeDialog"
-         ><svg-icon icon-class="close"></svg-icon></a>
+        ><svg-icon icon-class="close"/></a>
       </div>
       <div class="button-block">
-        <button type="button" class="btn btn-secondary btn-has-icon"
-         :disabled="isLoading || reachLimit"
+        <button 
+          :disabled="isLoading || reachLimit" 
+          type="button"
+          class="btn btn-secondary btn-has-icon"
           @click="addJoinTable"
-        ><svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.newForeign') }}</button>
+        ><svg-icon 
+          icon-class="plus" 
+          class="icon"/>{{ $t('button.newForeign') }}</button>
       </div>
-      <spinner class="spinner-container"
+      <spinner 
         v-if="isLoading"
         :title="$t('editing.loading')"
+        class="spinner-container"
         size="50"
-      ></spinner>
+      />
       <template v-else>
         <empty-info-block
-          class="empty-info-block"
           v-if="joinTableList.length === 0"
           :msg="$t('editing.emptyForeign')"
-        ></empty-info-block>
+          class="empty-info-block"
+        />
         <table-join-relatoin-block
-          v-else
           v-for="(relation, index) in joinTableList"
+          v-else
           :key="relation.key || relation.id"
           :index="index"
           :relation-info="relation"
@@ -33,7 +40,7 @@
           @deleteJoinTable="deleteJoinTable"
           @cancelAddingJoinTable="cancelAddingJoinTable"
           @dataFrameUpdate="$emit('dataFrameUpdate')"
-        ></table-join-relatoin-block>
+        />
       </template>
     </div>
   </div>
@@ -78,6 +85,14 @@ export default {
         name: null
       },
       isLoading: true
+    }
+  },
+  watch: {
+    dataFrameList: {
+      deep: true,
+      handler (val) {
+        this.updateJoinTableList()
+      }
     }
   },
   mounted () {
@@ -142,14 +157,6 @@ export default {
       })
     }
   },
-  watch: {
-    dataFrameList: {
-      deep: true,
-      handler (val) {
-        this.updateJoinTableList()
-      }
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

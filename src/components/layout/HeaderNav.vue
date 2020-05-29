@@ -1,58 +1,72 @@
 <template>
   <nav class="nav-header">
     <section class="nav-left">
-      <router-link class="nav-item" to="/" exact>{{ $t('nav.index') }}</router-link>
-      <router-link class="nav-item" :to="{name: 'PagePinboardList'}">{{ $t('nav.pinboard') }}</router-link>
+      <router-link 
+        class="nav-item" 
+        to="/" 
+        exact>{{ $t('nav.index') }}</router-link>
+      <router-link 
+        :to="{name: 'PagePinboardList'}" 
+        class="nav-item">{{ $t('nav.pinboard') }}</router-link>
       <!-- FIXME for poc/foxconn_molding -->
-      <router-link class="nav-item" v-if="isShowAlgorithmBtn" :to="{name: 'PageAlgorithmList'}">演算法</router-link>
+      <router-link 
+        v-if="isShowAlgorithmBtn" 
+        :to="{name: 'PageAlgorithmList'}" 
+        class="nav-item">演算法</router-link>
       <div
-        class="nav-item nav-item-dropdown nav-set"
         v-if="groupId"
+        class="nav-item nav-item-dropdown nav-set"
       >
         <div class="nav-set-flex">
           <div>{{ $t('nav.projectManagement') }}</div>
-          <svg-icon icon-class="dropdown" class="icon nav-dropdown-icon is-rotate"></svg-icon>
+          <svg-icon 
+            icon-class="dropdown" 
+            class="icon nav-dropdown-icon is-rotate"/>
         </div>
         <dropdown-select
+          :bar-data="settingData"
           class="nav-set-dropdown"
           @switchDialogName="switchDialogName"
-          :barData="settingData"
-        >
-        </dropdown-select>
+        />
       </div>
     </section>
     <section class="nav-right">
       <div
-        class="nav-item nav-item-dropdown nav-set group-list"
         v-if="groupName"
+        class="nav-item nav-item-dropdown nav-set group-list"
       >
         <div
           class="nav-set-flex"
           @click="isShowGroup = true"
         >
           <div>{{ groupName }}</div>
-          <svg-icon icon-class="switch" class="icon nav-dropdown-icon is-rotate"></svg-icon>
+          <svg-icon 
+            icon-class="switch" 
+            class="icon nav-dropdown-icon is-rotate"/>
         </div>
       </div>
       <div class="nav-item nav-item-dropdown nav-account">
         <div class="nav-set-flex">
           <div>{{ userName }}</div>
-          <svg-icon icon-class="dropdown" class="icon nav-dropdown-icon is-rotate"></svg-icon>
+          <svg-icon 
+            icon-class="dropdown" 
+            class="icon nav-dropdown-icon is-rotate"/>
         </div>
         <dropdown-select
+          :bar-data="accountData"
           class="nav-account-dropdown"
           @switchDialogName="switchDialogName"
-          :barData="accountData"
-        >
-        </dropdown-select>
+        />
       </div>
       <router-link
         :to="{name: 'FunctionDescription'}"
         class="nav-item nav-function tooltip-container"
       >
-        <svg-icon icon-class="description-white" class="icon"></svg-icon>
+        <svg-icon 
+          icon-class="description-white" 
+          class="icon"/>
         <div class="tooltip">
-          {{$t('sideNav.functionDescription')}}
+          {{ $t('sideNav.functionDescription') }}
         </div>
       </router-link>
     </section>
@@ -60,42 +74,43 @@
       v-if="isShowLanguage"
       :title="$t('editing.languageSetting')"
       :button="$t('button.change')"
+      :show-both="true"
       @closeDialog="isShowLanguage = false"
       @confirmBtn="changeLang"
-      :showBoth="true"
     >
-      <sy-select class="dialog-select"
+      <sy-select 
         :placeholder="$t('nav.languagePlaceholder')"
         :selected="locale"
         :items="selectItems"
-        v-on:update:selected="langOnSelected"
-      ></sy-select>
+        class="dialog-select"
+        @update:selected="langOnSelected"
+      />
     </writing-dialog>
     <writing-dialog
       v-if="isShowGroup"
       :title="$t('editing.switchGroup')"
       :button="$t('button.change')"
       :is-loading="isLoading"
+      :show-both="true"
       @closeDialog="isShowGroup = false"
       @confirmBtn="changeGroup"
-      :showBoth="true"
     >
-      <sy-select class="dialog-select"
+      <sy-select 
         :placeholder="$t('nav.groupPlaceholder')"
         :selected="selectedGroupId"
         :items="groupListData()"
-        v-on:update:selected="groupOnSelected"
-      ></sy-select>
+        class="dialog-select"
+        @update:selected="groupOnSelected"
+      />
     </writing-dialog>
     <decide-dialog
       v-if="isShowLogout"
       :title="$t('editing.sureLogout')"
       :type="'confirm'"
-      :btnText="$t('button.logout')"
+      :btn-text="$t('button.logout')"
       @closeDialog="isShowLogout = false"
       @confirmBtn="onBtnExitClick"
-    >
-    </decide-dialog>
+    />
   </nav>
 </template>
 <script>
@@ -124,12 +139,6 @@ export default {
       userName: this.$store.state.userManagement.userName,
       isLoading: false
     }
-  },
-  mounted () {
-    this.selectedLanguage = this.locale
-    this.selectedGroupId = this.groupId
-    // 讓demo人員可以從localStorage打開nav演算法按法
-    this.setIsShowAlgorithmBtn()
   },
   computed: {
     ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
@@ -171,6 +180,17 @@ export default {
       accountList.push({icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'})
       return accountList
     }
+  },
+  watch: {
+    groupId (value) {
+      this.selectedGroupId = value
+    }
+  },
+  mounted () {
+    this.selectedLanguage = this.locale
+    this.selectedGroupId = this.groupId
+    // 讓demo人員可以從localStorage打開nav演算法按法
+    this.setIsShowAlgorithmBtn()
   },
   methods: {
     setIsShowAlgorithmBtn () {
@@ -230,11 +250,6 @@ export default {
       }))
     }
   },
-  watch: {
-    groupId (value) {
-      this.selectedGroupId = value
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

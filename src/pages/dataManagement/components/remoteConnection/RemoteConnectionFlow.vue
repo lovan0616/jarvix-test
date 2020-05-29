@@ -1,34 +1,36 @@
 <template>
   <div class="remote-connection-flow">
-    <transition name="fade" mode="out-in">
+    <transition 
+      name="fade" 
+      mode="out-in">
       <choose-connection
         v-if="step === 0"
         @skip="nextStep"
         @next="connectEstablish"
-      ></choose-connection>
+      />
       <remote-connection
         v-if="step === 1"
         @updateDataSource="setDataSource"
         @prev="prevStep"
         @next="connectEstablish"
-      ></remote-connection>
+      />
       <choose-table
         v-if="step === 2"
         :connection-id="connectionId"
         @prev="chooseAgain"
         @next="tableChosen"
-      ></choose-table>
+      />
       <column-setting
         v-if="step === 3"
         :connection-id="connectionId"
         :table-id-list="tableIdList"
         @prev="prevStep"
         @next="nextStep"
-      ></column-setting>
+      />
       <remote-connection-finished
         v-if="step === 4"
         :table-id-list="tableIdList"
-      ></remote-connection-finished>
+      />
     </transition>
   </div>
 </template>

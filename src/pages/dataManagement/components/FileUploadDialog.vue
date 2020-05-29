@@ -1,16 +1,19 @@
 <template>
   <div class="file-upload-dialog full-page-dialog">
     <div class="dialog-container">
-      <transition name="fade" mode="out-in">
+      <transition 
+        name="fade" 
+        mode="out-in">
         <choose-file-type
           v-if="currentUploadInfo.type === null"
-        ></choose-file-type>
+        />
         <local-file-upload-flow
-          v-else-if="currentUploadInfo.type === importType.LOCAL"
-        ></local-file-upload-flow>
+          v-else-if="currentUploadInfo.type === importType.LOCAL" 
+          head
+        />
         <remote-connection-flow
           v-else
-        ></remote-connection-flow>
+        />
       </transition>
     </div>
   </div>
@@ -28,9 +31,9 @@ export default {
     LocalFileUploadFlow,
     RemoteConnectionFlow
   },
-  data: () => {
-    return {
-      importType
+  computed: {
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
     }
   },
   destroyed () {
@@ -47,14 +50,8 @@ export default {
   },
   methods: {
   },
-  computed: {
-    currentUploadInfo () {
-      return this.$store.state.dataManagement.currentUploadInfo
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>
-.file-upload-dialog {
-}
+
 </style>

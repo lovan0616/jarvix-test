@@ -1,15 +1,16 @@
 <template>
-  <div class="correlation-insight"
+  <div 
+    class="correlation-insight"
     v-html="textTransform(info)"
-  >
-  </div>
+  />
 </template>
 <script>
 export default {
   name: 'CorrelationInsight',
   props: {
     info: {
-      type: String
+      type: String,
+      default: null
     }
   },
   methods: {

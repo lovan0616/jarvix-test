@@ -1,18 +1,24 @@
 <template>
   <transition name="popup">
-    <div class="popup-guiding" v-if="showDialog">
+    <div 
+      v-if="showDialog" 
+      class="popup-guiding">
       <div class="popup-guiding-main">
-        <a href="javascript:void(0)" class="btn-close"
+        <a 
+          href="javascript:void(0)" 
+          class="btn-close"
           @click="closePopup"
         >
-          <svg-icon icon-class="close" class="close-icon"></svg-icon>
+          <svg-icon 
+            icon-class="close" 
+            class="close-icon"/>
         </a>
         <div class="popup-guiding-top popup-container">
           <div
-            class="step"
-            :class="{ 'is-actived': index + 1 === currentStep }"
             v-for="(step, index) in stepList"
+            :class="{ 'is-actived': index + 1 === currentStep }"
             :key="index"
+            class="step"
             @click="chooseStep(index + 1)"
           >
             <div class="step-label">{{ index + 1 }}</div>
@@ -24,26 +30,32 @@
         </div>
         <div class="popup-guiding-center">
           <div class="step-control-block">
-            <a class="step-control" href="javasctipt:void(0)"
-              v-if="currentStep > min"
+            <a 
+              v-if="currentStep > min" 
+              class="step-control"
+              href="javasctipt:void(0)"
               @click="chooseStep(currentStep - 1)"
             >{{ $t('guiding.prevStep') }}</a>
           </div>
           <div class="img-block popup-container">
-            <img class="pic"
+            <img 
+              v-for="(step, index) in stepList"
               :class="{ 'is-actived': index + 1 === currentStep }"
               :src="require(`@/assets/images/${step.imgSrc}`)"
-              v-for="(step, index) in stepList"
               :key="index"
+              class="pic"
             >
           </div>
           <div class="step-control-block">
-            <a class="step-control" href="javasctipt:void(0)"
-              v-if="currentStep < stepList.length"
+            <a 
+              v-if="currentStep < stepList.length" 
+              class="step-control"
+              href="javasctipt:void(0)"
               @click="chooseStep(currentStep + 1)"
             >{{ $t('guiding.nextStep') }}</a>
-            <button class="btn-finish"
+            <button 
               v-else
+              class="btn-finish"
               @click="closePopup"
             >{{ $t('guiding.endStep') }}</button>
           </div>
@@ -65,16 +77,6 @@ export default {
       showDialog: false
     }
   },
-  mounted () {
-    this.showDialog = true
-    document.getElementsByTagName('body')[0].style.overflow = 'hidden'
-    document.addEventListener('click', this.autoHide, false)
-  },
-  destroyed () {
-    this.showDialog = false
-    document.getElementsByTagName('body')[0].removeAttribute('style')
-    document.removeEventListener('click', this.autoHide, false)
-  },
   computed: {
     stepList () {
       return [
@@ -95,6 +97,16 @@ export default {
         }
       ]
     }
+  },
+  mounted () {
+    this.showDialog = true
+    document.getElementsByTagName('body')[0].style.overflow = 'hidden'
+    document.addEventListener('click', this.autoHide, false)
+  },
+  destroyed () {
+    this.showDialog = false
+    document.getElementsByTagName('body')[0].removeAttribute('style')
+    document.removeEventListener('click', this.autoHide, false)
   },
   methods: {
     autoHide (evt) {

@@ -7,12 +7,12 @@
       <task
         :component-id="resultInfo.title[0]"
         intend="title"
-      ></task>
+      />
     </template>
     <result-board-body slot="PageResultBoardBody">
       <template slot="PageResultBoardIndicator">
         <div class="hint-info-block">
-          <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"></svg-icon> {{ $t('resultDescription.prompt') }}:</span> {{ $t('editing.resultOverSizeMessage') }}</div>
+          <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"/> {{ $t('resultDescription.prompt') }}:</span> {{ $t('editing.resultOverSizeMessage') }}</div>
         </div>
       </template>
       <template slot="PageResultBoardChart">
@@ -21,26 +21,28 @@
             <task
               :component-id="resultInfo.key_result_selector[0]"
               intend="key_result_selector"
-            ></task>
+            />
           </div>
           <div class="key-result-viewer">
-            <div class="key-result-spinner"
+            <div 
               v-show="isLoading"
+              class="key-result-spinner"
             >
               <spinner
                 :title="$t('resultDescription.analysisProcessing')"
-              ></spinner>
+              />
             </div>
-            <div class="chart-block"
+            <div 
               v-show="!isLoading"
+              class="chart-block"
             >
-               <keep-alive>
+              <keep-alive>
                 <task
                   v-if="resultInfo.sub_key_result[displayFactorIndex]"
                   :key="`sub-key-result-${displayFactorIndex}`"
                   :component-id="resultInfo.sub_key_result[displayFactorIndex]"
                   intend="sub_key_result"
-                ></task>
+                />
               </keep-alive>
               <keep-alive>
                 <task
@@ -48,7 +50,7 @@
                   :key="`sub-insight-${displayFactorIndex}`"
                   :component-id="resultInfo.sub_insight[displayFactorIndex]"
                   intend="sub_insight"
-                ></task>
+                />
               </keep-alive>
             </div>
           </div>
@@ -57,10 +59,10 @@
       <template slot="InsightBasicInfo">
         <task
           v-if="resultInfo.sub_basic_info[displayFactorIndex]"
-          v-bind:key="`sub-basic-info-${displayFactorIndex}`"
+          :key="`sub-basic-info-${displayFactorIndex}`"
           :component-id="resultInfo.sub_basic_info[displayFactorIndex]"
           intend="sub_basic_info"
-        ></task>
+        />
       </template>
     </result-board-body>
   </result-board>
@@ -70,7 +72,8 @@ export default {
   name: 'CorrelationExplorationResult',
   props: {
     resultInfo: {
-      type: Object
+      type: Object,
+      required: true
     },
     restrictions: {
       type: Array,
@@ -81,14 +84,6 @@ export default {
     return {
       isLoading: true
     }
-  },
-  destroyed () {
-    this.$store.commit('result/updateDisplayFactorIndex', 0)
-  },
-  mounted () {
-    this.$nextTick(() => {
-      this.isLoading = false
-    })
   },
   computed: {
     displayFactorIndex () {
@@ -103,7 +98,15 @@ export default {
         this.isLoading = false
       })
     }
-  }
+  },
+  destroyed () {
+    this.$store.commit('result/updateDisplayFactorIndex', 0)
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.isLoading = false
+    })
+  },
 }
 </script>
 <style lang="scss" scoped>

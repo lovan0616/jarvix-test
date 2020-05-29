@@ -1,28 +1,38 @@
 <template>
-   <page-layout>
+  <page-layout>
     <div class="page-kyc">
       <ChatBotBtn class="chat-bot-btn" />
-      <transition name="fade" mode="out-in">
-        <div class="question-block"
+      <transition 
+        name="fade" 
+        mode="out-in">
+        <div
           v-if="currentQuestion === index + 1"
-          v-for="(singleQuestion, index) in questionList"
-          :key="index"
         >
-          <div class="question-title">{{ singleQuestion.question }}</div>
-          <div class="kyc-select-block">
-            <sy-select class="kyc-select"
-              :items="singleQuestion.option"
-              :selected="response"
-              :placeholder="$t('editing.defaultOption')"
-              @update:selected="onOptionChange"
-            >
-            </sy-select>
-            <img src="@/assets/images/input.svg" class="kyc-input-img" alt="">
+          <div
+            v-for="(singleQuestion, index) in questionList"
+            :key="index"
+            class="question-block"
+          >
+            <div class="question-title">{{ singleQuestion.question }}</div>
+            <div class="kyc-select-block">
+              <sy-select
+                :items="singleQuestion.option"
+                :selected="response"
+                :placeholder="$t('editing.defaultOption')"
+                class="kyc-select"
+                @update:selected="onOptionChange"
+              />
+              <img 
+                src="@/assets/images/input.svg" 
+                class="kyc-input-img" 
+                alt=""
+              >
+            </div>
           </div>
         </div>
       </transition>
     </div>
-   </page-layout>
+  </page-layout>
 </template>
 <script>
 import PageLayout from '@/components/layout/PageLayout'

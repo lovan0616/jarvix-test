@@ -1,6 +1,9 @@
 <template>
   <div class="bot-btn">
-    <img class="bot-img" :src="filePath" alt="">
+    <img 
+      :src="filePath" 
+      class="bot-img" 
+      alt="">
   </div>
 </template>
 <script>

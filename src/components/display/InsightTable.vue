@@ -1,6 +1,7 @@
 <template>
-  <div class="insights-info basic-insights"
+  <div
     v-if="!isEmpty"
+    class="insights-info basic-insights"
   >
     <el-tabs
       v-model="activeTab"
@@ -11,8 +12,9 @@
         :label="singleBasicInfo.name"
         :name="singleBasicInfo.name"
       >
-        <div class="insight-vertical-table"
+        <div
           v-if="singleBasicInfo['sum']"
+          class="insight-vertical-table"
         >
           <div class="insight-table-row">
             <div class="insight-table-head">{{ $t('aggregatedValue.sum') }}</div>
@@ -43,8 +45,9 @@
             <div class="insight-table-content">{{ singleBasicInfo.comment }}</div>
           </div>
         </div>
-        <div class="insight-vertical-table"
+        <div
           v-else
+          class="insight-vertical-table"
         >
           <div class="insight-table-row">
             <div class="insight-table-head">{{ $t('aggregatedValue.count') }}</div>
@@ -78,19 +81,21 @@
       </el-tab-pane>
     </el-tabs>
     <div class="insights-info-block">
-      <div class="insights-info-text"
+      <div
         v-for="(commentInfo, index) in info.nComment"
         :key="index"
+        class="insights-info-text"
       >{{ commentInfo }}</div>
-      <div class="insights-info-text"
+      <div
         v-for="(commentInfo, index) in info.cComment"
         :key="index"
+        class="insights-info-text"
       >{{ commentInfo }}</div>
     </div>
   </div>
   <empty-info-block
     v-else
-  ></empty-info-block>
+  />
 </template>
 <script>
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
@@ -114,10 +119,6 @@ export default {
       activeTab: null
     }
   },
-  mounted () {
-    this.basicInfo = this.info.nTable.concat(this.info.cTable)
-    this.activeTab = this.basicInfo[0].name
-  },
   computed: {
     isEmpty () {
       return this.info &&
@@ -126,7 +127,11 @@ export default {
         this.info.cTable.length === 0 &&
         this.info.nTable.length === 0
     }
-  }
+  },
+  mounted () {
+    this.basicInfo = this.info.nTable.concat(this.info.cTable)
+    this.activeTab = this.basicInfo[0].name
+  },
 }
 </script>
 <style lang="scss" scoped>
