@@ -15,7 +15,7 @@
     >
       <template slot="PageResultBoardIndicator">
         <hint-info-block
-          :msg="$t('editing.resultOverSizeMessage')"
+          :msg-list="[$t('editing.resultOverSizeMessage')]"
           inline
         />
       </template>

@@ -1,17 +1,24 @@
 <template>
   <div
-    :class="{'hint-info--inline': inline}"
-    class="hint-info"
+    :class="{'hint-info-block--inline': inline}"
+    class="hint-info-block"
   >
-    <span class="hint-info__title"><svg-icon icon-class="lamp"/> {{ $t('resultDescription.prompt') }}:</span> {{ msg }}
+    <div
+      v-for="(msg, index) in msgList"
+      :key="index"
+      class="hint-info"
+    >
+      <span class="hint-info__title"><svg-icon icon-class="lamp"/> {{ $t('resultDescription.prompt') }}:</span> {{ msg }}
+    </div>
   </div>
+  
 </template>
 <script>
 export default {
   props: {
-    msg: {
-      type: String,
-      default: null
+    msgList: {
+      type: Array,
+      default: () => []
     },
     inline: {
       type: Boolean,
@@ -21,7 +28,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.hint-info {
+.hint-info-block {
   background-color: rgba(0, 0, 0, 0.55);
   border-radius: 5px;
   padding: 11px;
@@ -29,12 +36,17 @@ export default {
   line-height: 1;
   margin-bottom: 12px;
 
-  &--inline {
-    display: inline-block;
+  .hint-info {
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+    &__title {
+      color: #FFDF6F;
+    }
   }
 
-  &__title {
-    color: #FFDF6F;
+  &--inline {
+    display: inline-block;
   }
 }
 </style>

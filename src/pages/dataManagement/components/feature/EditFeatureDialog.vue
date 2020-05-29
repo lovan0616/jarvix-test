@@ -57,10 +57,13 @@
             :key="index"
           >{{ rule }}</span>
         </div> -->
-        <div class="hint-info-block">
+        <hint-info-block
+          :msg-list="[$t('feature.chooseOptionHint'), $t('feature.maxColumn', {number: 3})]"
+        />
+        <!-- <div class="hint-info-block">
           <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"/> {{ $t('feature.hint') }}:</span>{{ $t('feature.chooseOptionHint') }}</div>
           <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"/> {{ $t('feature.hint') }}:</span>{{ $t('feature.maxColumn', {number: 3}) }}</div>
-        </div>
+        </div> -->
         <div class="setting">
           <div class="rule">{{ $t('feature.value') }}: <span 
             class="token value"
@@ -169,6 +172,7 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputBlock from '@/components/InputBlock'
+import HintInfoBlock from '@/components/display/HintInfoBlock'
 import { getDataFrameById, getDataFrameColumnInfoById } from '@/API/DataSource'
 import { createCustomFeature, updateCustomFeature } from '@/API/Feature'
 import { Message } from 'element-ui'
@@ -180,7 +184,8 @@ export default {
   components: {
     DefaultSelect,
     InputBlock,
-    draggable
+    draggable,
+    HintInfoBlock
   },
   props: {
     editFeatureInfo: {
@@ -369,23 +374,6 @@ export default {
     }
     &.bracket {
       color: #CA66DA;
-    }
-  }
-
-  .hint-info-block {
-    background-color: rgba(0, 0, 0, 0.55);
-    border-radius: 5px;
-    padding: 11px;
-    font-size: 14px;
-    line-height: 1;
-    margin-bottom: 12px;
-
-    .hint-info:not(:last-child) {
-      margin-bottom: 8px;
-    }
-
-    .hint-title {
-      color: #FFDF6F;
     }
   }
 
