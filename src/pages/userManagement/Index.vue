@@ -134,7 +134,9 @@
           <span class="label-user-role-authority">
             {{ $t('userManagement.userRoleAuthority') }}
             <span class="tooltip-container">
-              <svg-icon icon-class="information-circle" class="icon" />
+              <svg-icon 
+                icon-class="information-circle" 
+                class="icon" />
               <div class="tooltip">
                 <role-desc-pop />
               </div>

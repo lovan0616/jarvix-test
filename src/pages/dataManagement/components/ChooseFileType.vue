@@ -7,9 +7,9 @@
           <div 
             v-for="dataType in dataTypeList"
             :key="dataType.type"
+            :class="{'is-disabled': !hasPermission(dataType.type)}"
             class="single-type-block"
             @click="selectDataType(dataType.type)"
-            :class="{'is-disabled': !hasPermission(dataType.type)}"
           >
             <svg-icon 
               class="check-icon"
