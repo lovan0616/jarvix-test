@@ -3,6 +3,11 @@
     <template v-if="dataSourceId">
       <div class="bookmark-header">{{$t('resultDescription.dataSourceIntro')}}</div>
       <div class="result-board">
+        <spinner
+          v-if="isLoading"
+          :title="$t('editing.loading')"
+          size="50"
+        ></spinner>
         <div
           v-if="dataSourceTables.length > 0"
           class="board-header"
@@ -20,79 +25,23 @@
             >
               <el-tooltip
                 slot="label"
+                placement="bottom-start"
+                :visible-arrow="false"
                 :content="tab.name">
                 <span>{{tab.name}}</span>
               </el-tooltip>
             </el-tab-pane>
           </el-tabs>
         </div>
-        <div class="board-body">
-          <spinner
-            v-if="isLoading"
-          ></spinner>
-          <empty-info-block
-            v-else-if="!isLoading && (hasError || dataSourceTables.length === 0)"
-            :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
-          ></empty-info-block>
-          <template v-else>
-            <div class="board-body-section">
-              <div class="title">{{ $t('editing.dataFrameContent') }}</div>
-              <div class="overview">
-                <div class="overview__data">
-                  <div class="overview__item">
-                    {{ $t('resultDescription.totalDataRows') + ': ' + dataFrameOverviewData.totalRows }}
-                  </div>
-                  <div class="overview__item">
-                    {{ $t('resultDescription.totalDataColumns') + ': ' + dataFrameOverviewData.totalColumns }}
-                  </div>
-                </div>
-              </div>
-              <pagination-table
-                :is-processing="isProcessing"
-                :dataset="dataSourceTableData"
-                :pagination-info="pagination"
-                :min-column-width="'270px'"
-                @change-page="updatePage"
-              >
-                <template v-slot="{ column, index }">
-                  <div class="header-block">
-                    <div class="header">
-                      <span class="icon">
-                        <el-tooltip
-                          :enterable="false"
-                          class="icon"
-                          slot="label"
-                          :content="`${getStatesTypeName(index)}`">
-                          <svg-icon :icon-class="getHeaderIcon(index)" />
-                        </el-tooltip>
-                      </span>
-                      <span class="text">
-                        <el-tooltip
-                          :enterable="false"
-                          slot="label"
-                          :content="`${column.titles[index]}`">
-                          <span>{{column.titles[index]}}</span>
-                        </el-tooltip>
-                      </span>
-                    </div>
-                    <div
-                      class="summary"
-                      v-if="showColumnSummaryRow"
-                    >
-                      <data-column-summary
-                        :summary-data="tableSummaryList[index]"
-                      />
-                    </div>
-                  </div>
-                </template>
-              </pagination-table>
-            </div>
-            <!--欄位關聯概況-->
-            <column-correlation-overview
-              class="board-body-section"
-              :data-frame-id="dataSourceTable.id"
-            />
-          </template>
+        <div
+          class="board-body"
+          :class="{'is-loading': isLoading}"
+        >
+          <data-frame-data
+            v-if="currentDataFrameId"
+            :key="currentDataFrameId"
+            :data-frame-id="currentDataFrameId"
+          ></data-frame-data>
         </div>
       </div>
     </template>
@@ -102,18 +51,14 @@
 <script>
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
-import PaginationTable from '@/components/table/PaginationTable'
-import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
-import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/ColumnCorrelationOverview'
+import DataFrameData from './DataFrameData'
 
 export default {
   name: 'PreviewDataSource',
   components: {
     SySelect,
     EmptyInfoBlock,
-    PaginationTable,
-    DataColumnSummary,
-    ColumnCorrelationOverview
+    DataFrameData
   },
   data () {
     return {
@@ -132,7 +77,8 @@ export default {
         totalColumns: '-'
       },
       tableSummaryList: [],
-      showColumnSummaryRow: true
+      showColumnSummaryRow: true,
+      currentDataFrameId: null
     }
   },
   mounted () {
@@ -173,10 +119,9 @@ export default {
           })
           if (this.dataSourceTables.length) {
             this.dataSourceTable = response[0]
-            this.fetchDataFrameData(this.dataSourceTable.id, 0, true)
-          } else {
-            this.isLoading = false
+            this.currentDataFrameId = this.dataSourceTable.id
           }
+          this.isLoading = false
         })
         .catch(() => {
           this.hasError = true
@@ -189,46 +134,9 @@ export default {
     onDataSourceTableChange (tab) {
       const id = parseInt(tab.name)
       if (this.dataSourceTable.id === id) { return }
-      this.isLoading = true
       this.hasError = false
-      this.setDataSourceTableById(id)
-      this.fetchDataFrameData(id, 0, true)
-    },
-    fetchDataFrameData (id, page = 0, resetPagination = false) {
-      this.isProcessing = true
-      this.$store.dispatch('dataSource/getDataFrameIntro', {id, page})
-        .then(([dataFrameData, dataColumnSummary]) => {
-          if (resetPagination) {
-            this.pagination = dataFrameData.pagination
-            this.dataFrameOverviewData = {
-              totalRows: dataFrameData.pagination.totalItems,
-              totalColumns: dataFrameData.columns.length
-            }
-            this.showColumnSummaryRow = !dataColumnSummary.every(column => !column.dataSummary)
-            this.tableSummaryList = dataColumnSummary.map(column => ({
-              ...column.dataSummary,
-              statsType: column.statsType,
-              totalRows: dataFrameData.pagination.totalItems
-            }))
-          }
-          this.dataSourceTableData = {
-            columns: {
-              titles: dataFrameData.columns
-            },
-            data: dataFrameData.data,
-            index: [...Array(dataFrameData.data.length)].map((x, i) => i)
-          }
-          this.isLoading = false
-          this.isProcessing = false
-        })
-        .catch(() => {
-          this.hasError = true
-          this.isLoading = false
-          this.isProcessing = false
-        })
-    },
-    updatePage (page) {
-      this.fetchDataFrameData(this.dataSourceTable.id, page - 1)
+      this.dataSourceTable.id = id
+      this.currentDataFrameId = id
     },
     getHeaderIcon (index) {
       if (!this.tableSummaryList[index]) return 'check-circle'
@@ -325,6 +233,10 @@ export default {
   }
   .board-body {
     padding: 16px 24px;
+
+    &.is-loading {
+      padding: 0 24px;
+    }
   }
 
   .overview {
@@ -353,11 +265,6 @@ export default {
       width: 100%;
       border: none;
       overflow-x: auto;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      &::-webkit-scrollbar {
-        display: none;
-      }
 
       &::before {
         content: '';

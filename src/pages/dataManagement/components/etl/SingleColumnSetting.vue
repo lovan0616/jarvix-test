@@ -79,6 +79,7 @@
               v-else
               :name="replaceValue.id + '-1'"
               v-model="replaceValue.newValue"
+              :type="replaceValueInputType"
               v-validate="'required'"
               :placeholder="$t('etl.replaceValue')"
             ></input-verify>
@@ -187,7 +188,7 @@ export default {
     },
     replaceTypeOptionList () {
       return [
-        { value: null, name: this.$t('etl.nullAction') },
+        { value: null, name: this.$t('etl.null') },
         ...this.dataSummaryOption
       ]
     },

@@ -13,7 +13,11 @@
         type="index"
         :width="indexWidth"
         align="center"
+        :fixed="fixedIndex"
       >
+        <template slot="header">
+          <slot name="index-header" />
+        </template>
       </el-table-column>
       <el-table-column
         v-for="(col, i) in dataset.columns.titles || dataset.columns"
@@ -25,7 +29,7 @@
       >
         <!--Header slot-->
         <template slot="header" slot-scope="scope">
-          <slot
+          <slot name="columns-header"
             :column="dataset.columns"
             :index="i"
           >
@@ -66,6 +70,7 @@ export default {
   name: 'PaginationTable',
   props: {
     ...Table.props,
+    fixedIndex: { type: Boolean, default: false },
     dataset: {
       type: [ Object, Array ],
       validator: value => {

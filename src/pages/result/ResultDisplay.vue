@@ -122,7 +122,7 @@ export default {
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.getComponent(res)
-          this.getRelatedQuestion(data)
+          this.getRelatedQuestion(res.resultId)
         }).catch(() => {
           this.isLoading = false
           this.$store.commit('chatBot/updateAnalyzeStatus', false)
@@ -146,6 +146,7 @@ export default {
                 this.layout = 'PreviewDataSource'
                 this.resultInfo = null
                 this.isLoading = false
+                this.setRelatedQuestions()
                 return false
               case 'NoAnswer':
                 let implication = segmentationList[0].implication
@@ -155,6 +156,7 @@ export default {
                   description: implication.description
                 }
                 this.isLoading = false
+                this.setRelatedQuestions()
                 return false
             }
 
@@ -164,6 +166,7 @@ export default {
               restrictions: this.filterRestrictionList
             }).then(res => {
               this.getComponent(res)
+              this.getRelatedQuestion(res.resultId)
             }).catch((error) => {
               if (error.constructor.name !== 'Cancel') this.isLoading = false
             })
@@ -172,14 +175,19 @@ export default {
             this.layout = 'MultiResult'
             this.resultInfo = response
             this.isLoading = false
+            this.setRelatedQuestions()
           }
         }).catch((error) => {
           // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
           if (error.constructor.name !== 'Cancel') this.isLoading = false
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
-
-      this.getRelatedQuestion(data)
+    },
+    setRelatedQuestions (options = []) {
+      this.$store.commit('chatBot/addSystemConversation', {
+        text: this.$t('bot.finish'), options
+      })
+      this.$store.commit('chatBot/updateAnalyzeStatus', false)
     },
     getComponent (res) {
       window.clearTimeout(this.timeoutFunction)
@@ -220,15 +228,12 @@ export default {
           }
         })
     },
-    getRelatedQuestion (data) {
-      this.$store.dispatch('chatBot/getRelatedQuestionList', {
-        question: data.question,
-        dataSourceId: data.dataSourceId
-      }).then(response => {
+    getRelatedQuestion (id) {
+      this.$store.dispatch('chatBot/getRelatedQuestionList', id).then(response => {
         this.$nextTick(() => {
           this.addConversationTimeout = window.setTimeout(() => {
             this.$store.commit('chatBot/addSystemConversation', {
-              text: response ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: response
+              text: response.length > 0 ? this.$t('bot.defaultResponse') : this.$t('bot.finish'), options: response
             })
             this.$store.commit('chatBot/updateAnalyzeStatus', false)
           }, 2000)

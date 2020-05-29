@@ -25,11 +25,13 @@
 
 <script>
 import FilterInfo from '@/components/display/FilterInfo'
+import QuickStart from './components/QuickStart'
 
 export default {
   name: 'PageIndex',
   components: {
-    FilterInfo
+    FilterInfo,
+    QuickStart
   },
   data () {
     return {

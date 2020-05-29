@@ -27,20 +27,37 @@
       </div>
       <div
         class="section data-column"
-        v-if="currentTableInfo"
+        v-if="currentTableInfo && !isProcessing"
       >
         <pagination-table
-          class="board-body-section"
           :dataset="currentTableInfo"
           :min-column-width="'270px'"
           :current-table-index="currentTableIndex"
+          fixedIndex
         >
-          <template v-slot="{ column, index }">
+          <template #index-header>
+            <div class="toggle-block">
+              <label class="checkbox">
+                <div class="checkbox-label"
+                  :class="{'indeterminate': someColumnSelected && !allColumnSelected}"
+                >
+                  <input
+                    type="checkbox"
+                    v-model="allColumnSelected"
+                  >
+                  <div class="checkbox-square"></div>
+                </div>
+              </label>
+            </div>
+          </template>
+          <template #columns-header="{ column, index }">
             <div class="header-block">
               <div class="header">
                 <span class="text" :class="{'has-changed': column[index].hasChanged}">
                   <el-tooltip
                     :enterable="false"
+                    :visible-arrow="false"
+                    placement="bottom-start"
                     slot="label"
                     :content="`${column[index].primaryAlias}`">
                     <span>{{ column[index].primaryAlias }}</span>
@@ -88,6 +105,11 @@
           *{{ $t('notification.columnSummarySampleNotification') }}
         </p>
       </div>
+      <spinner class="processing-spinner-container"
+        v-else
+        :title="$t('editing.loading')"
+        size="50"
+      ></spinner>
     </div>
     <etl-column-setting
       v-if="showEtlSetting"
@@ -115,11 +137,15 @@ export default {
   data () {
     return {
       showEtlSetting: false,
-      intervalFunction: null
+      intervalFunction: null,
+      isProcessing: true
     }
   },
   mounted () {
     this.getDataFrameSummary(this.etlTableList[this.currentTableIndex].tableId)
+    window.setTimeout(() => {
+      this.isProcessing = false
+    }, 1000)
   },
   destroyed () {
     window.clearInterval(this.intervalFunction)
@@ -204,6 +230,21 @@ export default {
       }
       tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
       return tableInfo
+    },
+    allColumnSelected: {
+      get () {
+        let selected = (column) => column.active
+        return this.etlTableList[this.currentTableIndex].columns.every(selected)
+      },
+      set (selected) {
+        this.etlTableList[this.currentTableIndex].columns.forEach(column => {
+          column.active = selected
+        })
+      }
+    },
+    someColumnSelected () {
+      let selected = (column) => column.active
+      return this.etlTableList[this.currentTableIndex].columns.some(selected)
     }
   }
 }
@@ -306,7 +347,13 @@ export default {
     }
   }
 }
-
+.toggle-block {
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #515959;
+}
 .header-block {
   .header {
     padding: 10px;
@@ -371,6 +418,14 @@ export default {
 
   .summary {
     padding: 10px;
+  }
+}
+</style>
+<style lang="scss">
+// TODO 等 confirmPopup 改寫法，就可以把這邊拿掉
+.etl-choose-column {
+  .header-block {
+    min-height: 224px;
   }
 }
 </style>
