@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <div ref="test">
     <ul>
       <li class="list-item" v-for="item in items" :key="item.id">{{item.name}}</li>
     </ul>
-    <!-- <Observer @intersect="intersected"/> -->
+    <Observer :options="options" @intersect="intersected"/>
   </div>
 </template>
 
 <script>
-// import Observer from "./Observer";
+import Observer from './Observer'
 
 const dummyData = [
   {
@@ -38,15 +38,27 @@ const dummyData = [
 ]
 
 export default {
-  data: () => ({
-    items: []
-  }),
+  data () {
+    return {
+      items: [],
+      options: {
+        root: this.$refs.test,
+        rootMargin: '0px',
+        threshold: 1.0
+      }
+    }
+  },
+  components: {
+    Observer
+  },
   mounted () {
     this.items = dummyData.slice(0, 4)
+  },
+  methods: {
+    intersected () {
+      console.log('outside')
+      this.items = [...this.items, ...dummyData.slice(4, 6)]
+    }
   }
-  // ...
-  // components: {
-  //   Observer
-  // }
 }
 </script>

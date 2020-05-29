@@ -21,7 +21,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-for="(col, i) in dataset.columns.titles || dataset.columns"
+        v-for="(col, i) in columnList"
         :key="i"
         :prop="i.toString()"
         :label="(typeof col === 'number') ? col.toString() : col.primaryAlias"
@@ -39,11 +39,15 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="loadMore"
         ref="tableEnd"
         type="index"
         :width="indexWidth"
         align="center"
       >
+        <template slot="header" slot-scope="scope">
+          <Observer :options="options" @intersect="intersected"/>
+        </template>
       </el-table-column>
     </el-table>
     <el-pagination class="table-pagination"
@@ -61,6 +65,7 @@
 
 <script>
 import { Table } from 'element-ui'
+import Observer from '../Observer'
 
 export default {
   name: 'PaginationTable',
@@ -111,35 +116,30 @@ export default {
       default: false
     }
   },
+  components: {
+    Observer
+  },
   data () {
     return {
       columnList: [],
-      observer: null,
       offset: 0,
-      itemPerFetch: 5,
+      columnPerScroll: 6,
       options: {
         root: this.$refs.table,
         threshold: 0
       }
     }
   },
-  created () {
-    console.log('mount')
-    console.log('ref', this.$refs)
-    // this.observer = new IntersectionObserver(this.callback, options)
-    console.log('opt', this.options)
-    this.observer = new IntersectionObserver(([entry]) => {
-      if (entry && entry.isIntersecting) {
-        console.log('intersect')
-      }
-    }, {
-      root: this.$refs.table,
-      threshold: 0
-    })
-    console.log('ob', this.observer)
-    this.observer.observe(this.$refs.tableEnd)
+  mounted () {
+    this.getData()
   },
   methods: {
+    getData () {
+      const headerList = this.dataset.columns.titles || this.dataset.columns
+      if (headerList.length === this.offset) return
+      this.columnList = [...this.columnList, ...headerList.slice(this.offset, this.offset + this.columnPerScroll)]
+      this.offset += this.columnPerScroll
+    },
     changePage (value) {
       this.$emit('change-page', value)
     },
@@ -155,15 +155,8 @@ export default {
         this.$emit('change-page', this.paginationInfo.currentPage)
       }
     },
-    callback (entries, observer) {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          this.addNewColumnData()
-        }
-      })
-    },
-    addNewColumnData () {
-      this.columnList.push(this.dataset)
+    intersected () {
+      this.getData()
     }
   },
   computed: {
@@ -173,6 +166,12 @@ export default {
         this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 600)
       }
       return tableProps
+    },
+    loadMore () {
+      const headerList = this.dataset.columns.titles || this.dataset.columns
+      const isBigData = headerList.length > this.columnPerScroll
+      const hasReachedEnd = this.offset >= headerList.length
+      return isBigData && !hasReachedEnd
     }
   }
 }
