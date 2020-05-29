@@ -337,9 +337,6 @@ export default {
     background-color: $theme-bg-color;
   }
   .data-table-cell {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     .is-processing {
       color: #ccc;
     }
