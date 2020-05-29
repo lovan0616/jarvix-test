@@ -8,6 +8,7 @@
     <el-table class="sy-table"
       v-bind="tableProps"
       style="width: 100%;"
+      ref="table"
     >
       <el-table-column
         type="index"
@@ -60,11 +61,6 @@
 
 <script>
 import { Table } from 'element-ui'
-
-const options = {
-  root: null,
-  threshold: 0
-}
 
 export default {
   name: 'PaginationTable',
@@ -120,11 +116,27 @@ export default {
       columnList: [],
       observer: null,
       offset: 0,
-      itemPerFetch: 5
+      itemPerFetch: 5,
+      options: {
+        root: this.$refs.table,
+        threshold: 0
+      }
     }
   },
-  mounted () {
-    this.observer = new IntersectionObserver(this.callback, options)
+  created () {
+    console.log('mount')
+    console.log('ref', this.$refs)
+    // this.observer = new IntersectionObserver(this.callback, options)
+    console.log('opt', this.options)
+    this.observer = new IntersectionObserver(([entry]) => {
+      if (entry && entry.isIntersecting) {
+        console.log('intersect')
+      }
+    }, {
+      root: this.$refs.table,
+      threshold: 0
+    })
+    console.log('ob', this.observer)
     this.observer.observe(this.$refs.tableEnd)
   },
   methods: {
