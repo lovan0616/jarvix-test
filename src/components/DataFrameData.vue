@@ -7,7 +7,8 @@
       v-else-if="!isLoading && hasError"
       :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
     ></empty-info-block>
-    <div class="board-body-section"
+    <div
+      class="board-body-section"
       v-else
     >
       <div class="title">{{ $t('editing.dataFrameContent') }}</div>
@@ -113,15 +114,16 @@ export default {
   },
   watch: {
     dataFrameId (value) {
+      this.isLoading = true
       this.fetchDataFrameData(value, 0, true)
     }
   },
   mounted () {
+    this.isLoading = true
     this.fetchDataFrameData(this.dataFrameId, 0, true)
   },
   methods: {
     fetchDataFrameData (id, page = 0, resetPagination = false) {
-      this.isLoading = true
       this.isProcessing = true
       this.$store.dispatch('dataSource/getDataFrameIntro', {id, page})
         .then(([dataFrameData, dataColumnSummary]) => {
@@ -187,7 +189,7 @@ export default {
       }
     },
     updatePage (page) {
-      this.fetchDataFrameData(this.dataSourceTable.id, page - 1)
+      this.fetchDataFrameData(this.dataFrameId, page - 1)
     }
   }
 }
