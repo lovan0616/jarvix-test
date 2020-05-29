@@ -345,7 +345,8 @@
     "emptyConnectionHistory": "沒有任何連線紀錄",
     "dataCalculate": "資料計算中",
     "tableChosenLimit": "最多選擇 {number} 張資料表",
-    "null": "Null"
+    "null": "Null",
+    "columnSelected": "已選擇欄位數"
   },
   "feature": {
     "value": "數值",
