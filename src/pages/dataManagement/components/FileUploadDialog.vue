@@ -31,6 +31,11 @@ export default {
     LocalFileUploadFlow,
     RemoteConnectionFlow
   },
+  data () {
+    return {
+      importType
+    } 
+  },
   computed: {
     currentUploadInfo () {
       return this.$store.state.dataManagement.currentUploadInfo
