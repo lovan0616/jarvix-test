@@ -8,7 +8,8 @@
           v-if="currentUploadInfo.type === null"
         />
         <local-file-upload-flow
-          v-else-if="currentUploadInfo.type === 'local'"
+          v-else-if="currentUploadInfo.type === importType.LOCAL" 
+          head
         />
         <remote-connection-flow
           v-else
@@ -18,6 +19,7 @@
   </div>
 </template>
 <script>
+import { importType } from '@/utils/general'
 import ChooseFileType from './ChooseFileType'
 import LocalFileUploadFlow from './localFileUpload/LocalFileUploadFlow'
 import RemoteConnectionFlow from './remoteConnection/RemoteConnectionFlow'
@@ -29,6 +31,11 @@ export default {
     LocalFileUploadFlow,
     RemoteConnectionFlow
   },
+  data () {
+    return {
+      importType
+    } 
+  },
   computed: {
     currentUploadInfo () {
       return this.$store.state.dataManagement.currentUploadInfo
@@ -38,7 +45,7 @@ export default {
     this.$store.dispatch('dataSource/getDataSourceList')
     // 還原狀態
     this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-    if (this.currentUploadInfo.type === 'local') {
+    if (this.currentUploadInfo.type === importType.LOCAL) {
       this.$store.commit('dataManagement/updateUploadFileList', [])
     }
 

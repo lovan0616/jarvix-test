@@ -133,7 +133,14 @@
           <span class="label-invitee-email">{{ $t('editing.inviteeEmail') }}</span>
           <span class="label-user-role-authority">
             {{ $t('userManagement.userRoleAuthority') }}
-            <role-desc-pop />
+            <span class="tooltip-container">
+              <svg-icon 
+                icon-class="information-circle" 
+                class="icon" />
+              <div class="tooltip">
+                <role-desc-pop />
+              </div>
+            </span>
           </span>
         </div>
         <div 
@@ -633,6 +640,7 @@ export default {
   }
 
   .tooltip-container {
+    margin: 0 3px;
     .tooltip {
       width: 212px;
       white-space: normal;
