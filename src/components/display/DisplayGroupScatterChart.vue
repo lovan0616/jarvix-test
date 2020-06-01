@@ -3,10 +3,9 @@
     <v-echart
       :style="chartStyle"
       :options="chartOption"
-      @brushselected="brushRegionSelected"
       auto-resize
-    >
-    </v-echart>
+      @brushselected="brushRegionSelected"
+    />
   </div>
 </template>
 <script>
@@ -47,7 +46,13 @@ export default {
   name: 'DisplayGroupScatterChart',
   props: {
     dataset: {
-      type: Object
+      type: Object,
+      default: () => {
+        return {
+          data: null,
+          index: null
+        }
+      }
     },
     title: {
       type: Object,
@@ -61,21 +66,6 @@ export default {
     isPreview: {
       type: Boolean,
       default: false
-    }
-  },
-  methods: {
-    dotSize (dataLength) {
-      if (dataLength > 500 && dataLength < 1999) {
-        return 4
-      } else if (dataLength > 1999 && dataLength < 4999) {
-        return 2
-      } else if (dataLength > 4999) {
-        return 1
-      } else {
-        return 8
-      }
-    },
-    brushRegionSelected (params) {
     }
   },
   computed: {
@@ -159,6 +149,21 @@ export default {
       })
       return dataList
     }
-  }
+  },
+  methods: {
+    dotSize (dataLength) {
+      if (dataLength > 500 && dataLength < 1999) {
+        return 4
+      } else if (dataLength > 1999 && dataLength < 4999) {
+        return 2
+      } else if (dataLength > 4999) {
+        return 1
+      } else {
+        return 8
+      }
+    },
+    brushRegionSelected (params) {
+    }
+  },
 }
 </script>

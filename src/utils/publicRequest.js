@@ -79,7 +79,6 @@ service.interceptors.response.use(
 
     // cancel request
     if (axios.isCancel(error)) {
-      console.log('Request canceled', error.message)
       return Promise.reject(error)
     }
     // rollbar 留存

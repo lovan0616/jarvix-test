@@ -1,44 +1,44 @@
 <template>
-<div class="question-sample">
-  <div class="question-sample-block">
-    <div class="question-description">
-      <span class="question-lamp">
-        <svg-icon icon-class="lamp"></svg-icon>
-        {{$t('askHelper.description')}}:
-      </span>
-      {{$t('askHelper.exampleDesc')}}</div>
-    <el-collapse class="question-sample-collapse"
-      v-model="activeName"
-      accordion
-    >
-      <el-collapse-item
-        v-for="(questionCategory, index) in $t('askHelper.questionSampleList')"
-        :key="index"
-        class="question-title"
-        :title="questionCategory.name"
+  <div class="question-sample">
+    <div class="question-sample-block">
+      <div class="question-description">
+        <span class="question-lamp">
+          <svg-icon icon-class="lamp"/>
+          {{ $t('askHelper.description') }}:
+        </span>
+        {{ $t('askHelper.exampleDesc') }}</div>
+      <el-collapse 
+        v-model="activeName"
+        class="question-sample-collapse"
+        accordion
       >
-        <div
-          class="question-box"
-          v-for="(question, questionIndex) in questionCategory.questionList"
-          :key="index + '-' + questionIndex"
+        <el-collapse-item
+          v-for="(questionCategory, index) in $t('askHelper.questionSampleList')"
+          :key="index"
+          :title="questionCategory.name"
+          class="question-title"
         >
-          <div class="question-ask">
-            <p class="question-ask-text">{{$t('askHelper.ask')}}: </p>
-            <p>{{ question.questionText }}</p>
-          </div>
-          <div class="question-example">{{$t('askHelper.example')}}:</div>
-          <single-question
-            :exampleQuestion="exampleQuestion"
-            v-for="(exampleQuestion, exampleQuestionIndex) in question.questionExample"
-            :key="index + '-' + exampleQuestionIndex"
-            class="question-sentence"
+          <div
+            v-for="(question, questionIndex) in questionCategory.questionList"
+            :key="index + '-' + questionIndex"
+            class="question-box"
           >
-          </single-question>
-        </div>
-      </el-collapse-item>
-    </el-collapse>
+            <div class="question-ask">
+              <p class="question-ask-text">{{ $t('askHelper.ask') }}: </p>
+              <p>{{ question.questionText }}</p>
+            </div>
+            <div class="question-example">{{ $t('askHelper.example') }}:</div>
+            <single-question
+              v-for="(exampleQuestion, exampleQuestionIndex) in question.questionExample"
+              :example-question="exampleQuestion"
+              :key="index + '-' + exampleQuestionIndex"
+              class="question-sentence"
+            />
+          </div>
+        </el-collapse-item>
+      </el-collapse>
+    </div>
   </div>
-</div>
 </template>
 <script>
 import SingleQuestion from '@/components/chatBot/SingleQuestion'

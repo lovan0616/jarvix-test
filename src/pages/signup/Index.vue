@@ -7,35 +7,38 @@
       >
         <div class="signup-form">
           <div class="signup-input-block input-block">
-            <div class="input valid">{{userInfo.email}}</div>
+            <div class="input valid">{{ userInfo.email }}</div>
             <label class="placeholder">{{ $t('editing.username') }}</label>
           </div>
-          <input-block class="signup-input-block"
+          <input-block 
+            v-validate="`required|max:${max}|`"
             :label="$t('editing.userTitle')"
+            v-model="userInfo.username"
+            class="signup-input-block"
             name="userName"
             type="text"
-            v-model="userInfo.username"
-            v-validate="`required|max:${max}|`"
           />
-          <input-block class="signup-input-block"
-            :label="$t('editing.setLoginPassword')"
-            name="userPassword"
-            type="password"
-            v-model="userInfo.password"
+          <input-block 
             v-validate="`required|min:8|max:${max}|requireOneNumeric`"
             ref="confirmPassword"
+            :label="$t('editing.setLoginPassword')"
+            v-model="userInfo.password"
+            class="signup-input-block"
+            name="userPassword"
+            type="password"
           />
-          <input-block class="signup-input-block"
+          <input-block 
+            v-validate="`required|min:8|max:${max}|requireOneNumeric|confirmed:confirmPassword`"
             :label="$t('editing.confirmPasswordAgain')"
+            v-model="userInfo.verifyPassword"
+            class="signup-input-block"
             name="verifyPassword"
             type="password"
-            v-model="userInfo.verifyPassword"
-            v-validate="`required|min:8|max:${max}|requireOneNumeric|confirmed:confirmPassword`"
           />
         </div>
         <button
-          class="btn btn-default btn-submit"
           :disabled="isProcessing"
+          class="btn btn-default btn-submit"
         >
           {{ $t('button.confirmSignup') }}
         </button>
@@ -68,6 +71,11 @@ export default {
         accountRoleId: null
       },
       isProcessing: false
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   },
   created () {
@@ -115,11 +123,6 @@ export default {
       })
     }
   },
-  computed: {
-    max () {
-      return this.$store.state.validation.fieldCommonMaxLength
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

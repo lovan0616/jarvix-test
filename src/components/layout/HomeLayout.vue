@@ -1,19 +1,25 @@
 <template>
   <div class="home-layout">
-    <transition name="fade" mode="out-in">
+    <transition 
+      name="fade" 
+      mode="out-in">
       <ChatRoomBlock/>
     </transition>
-    <chat-bot-btn class="chat-bot-btn"
+    <chat-bot-btn 
       v-if="!isShowChatRoom"
+      class="chat-bot-btn"
       @click.native="toggleChatRoom"
-    ></chat-bot-btn>
-    <div class="wrapper"
+    />
+    <div 
       :class="{'is-open': isShowChatRoom}"
+      class="wrapper"
     >
       <main class="main">
         <div class="center">
-          <transition name="fade" mode="out-in">
-            <router-view ></router-view>
+          <transition 
+            name="fade" 
+            mode="out-in">
+            <router-view />
           </transition>
         </div>
       </main>
@@ -30,22 +36,22 @@ export default {
     ChatRoomBlock,
     ChatBotBtn
   },
+  computed: {
+    isShowChatRoom () {
+      return this.$store.state.isShowChatRoom
+    }
+  },
   mounted () {
     this.toggleChatRoom(true)
+  },
+  destroyed () {
+    this.toggleChatRoom(false)
   },
   methods: {
     toggleChatRoom (isOpened = true) {
       this.$store.commit('updateChatRoomStatus', isOpened)
     }
   },
-  computed: {
-    isShowChatRoom () {
-      return this.$store.state.isShowChatRoom
-    }
-  },
-  destroyed () {
-    this.toggleChatRoom(false)
-  }
 }
 </script>
 <style lang="scss" scoped>

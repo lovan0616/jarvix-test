@@ -3,23 +3,23 @@
     <div class="data-table-head">
       <div class="data-table-row table-head">
         <div
-          class="data-table-cell checkbox"
           v-if="hasCheckbox"
+          class="data-table-cell checkbox"
         >
-          <label class="checkbox-label"
+          <label 
             :class="{indeterminate: selectList.length > 0 && selectList.length < dataList.length}"
+            class="checkbox-label"
           >
             <input
-              type="checkbox"
-              name="selectAll"
               v-model="selectAll"
               :disabled="isProcessing"
+              type="checkbox"
+              name="selectAll"
             >
-            <div class="checkbox-square"></div>
+            <div class="checkbox-square"/>
           </label>
         </div>
         <div
-          class="data-table-cell"
           v-for="headInfo in headers"
           :key="headInfo.value"
           :class="{sort: headInfo.sort, hasWidth: headInfo.width}"
@@ -27,59 +27,71 @@
             width: headInfo.width,
             'text-align': headInfo.align
           }"
+          class="data-table-cell"
           @click="(headInfo.sort) ? rankingData(headInfo.value) : ''"
         >{{ headInfo.text }}
           <span
-            class="tooltip-container"
             v-if="headInfo.tooltip"
+            class="tooltip-container"
           >
-            <svg-icon icon-class="information-circle" class="icon" />
+            <svg-icon 
+              icon-class="information-circle" 
+              class="icon" />
             <div
-              class="tooltip"
               :style="{width: headInfo.tooltip.width}"
+              class="tooltip"
             >
               <slot :name="headInfo.value" />
-              <span v-if="headInfo.tooltip.text" v-html="headInfo.tooltip.text" />
+              <span 
+                v-if="headInfo.tooltip.text" 
+                v-html="headInfo.tooltip.text" />
             </div>
           </span>
-          <svg-icon icon-class="arrow-down" class="arrow-icon"
-            v-if="headInfo.sort && sortStatus"
-            :class="{ 'arrow-up': sortStatus[headInfo.value] > 0, 'active': sortStatus[headInfo.value]  }"
-          ></svg-icon>
+          <svg-icon 
+            v-if="headInfo.sort && sortStatus" 
+            :class="{ 'arrow-up': sortStatus[headInfo.value] > 0, 'active': sortStatus[headInfo.value] }"
+            icon-class="arrow-down"
+            class="arrow-icon"
+          />
         </div>
       </div>
     </div>
-    <spinner class="spinner-container"
+    <spinner 
       v-if="loading"
       :title="$t('editing.loading')"
+      class="spinner-container"
       size="50"
-    ></spinner>
+    />
     <empty-info-block
       v-else-if="dataList.length === 0"
       :msg="emptyMessage"
-    ></empty-info-block>
+    />
     <div
-      class="data-table-body"
       v-else
+      class="data-table-body"
     >
-      <div class="data-table-row"
+      <div 
         v-for="(data, index) in dataList"
         :key="index"
         :class="{selected: selectList.indexOf(data) > -1}"
+        class="data-table-row"
       >
-        <div class="data-table-cell checkbox"
+        <div 
           v-if="hasCheckbox"
+          class="data-table-cell checkbox"
         >
           <label class="checkbox-label">
-            <input type="checkbox" name="fileChosen"
-              v-model="selectList"
+            <input 
+              v-model="selectList" 
               :value="data"
               :disabled="isProcessing"
+              type="checkbox"
+              name="fileChosen"
             >
-            <div class="checkbox-square"></div>
+            <div class="checkbox-square"/>
           </label>
         </div>
-        <div class="data-table-cell"
+        <div 
           v-for="headInfo in headers"
           :class="{action: headInfo.action, hasWidth: headInfo.width}"
           :key="headInfo.value"
@@ -87,32 +99,38 @@
             width: headInfo.width,
             'text-align': headInfo.align
           }"
+          class="data-table-cell"
         >
           <template v-if="headInfo.value === 'action'">
-            <slot name="action" :data="data">
+            <slot 
+              :data="data" 
+              name="action">
               <a
-                href="javascript:void(0)"
-                class="link action-link link-dropdown"
                 v-for="action in headInfo.action"
                 :key="action.name"
                 :disabled="isProcessing || !showActionButton(action, data)"
+                href="javascript:void(0)"
+                class="link action-link link-dropdown"
                 @click="doAction(action, data)"
               >
                 <dropdown-select
                   v-if="action.subAction"
+                  :bar-data="getBarData(action.subAction, data)"
                   class="dropdown"
-                  :barData="getBarData(action.subAction, data)"
                 />
                 {{ action.name }}
-                <svg-icon v-if="getBarData(action.subAction, data).length > 0" icon-class="triangle" class="icon dropdown-icon" />
+                <svg-icon 
+                  v-if="getBarData(action.subAction, data).length > 0" 
+                  icon-class="triangle" 
+                  class="icon dropdown-icon" />
               </a>
             </slot>
           </template>
           <template v-if="headInfo.value === 'icon'">
             <svg-icon
               :icon-class="data[headInfo.value]"
-              class="icon"
               :class="data.class"
+              class="icon"
             />
           </template>
           <span v-else>{{ data[headInfo.value] }}</span>
@@ -210,6 +228,30 @@ export default {
       sortStatus: null
     }
   },
+  computed: {
+    ...mapGetters('userManagement', ['hasPermission']),
+    // 目前所選擇的項目
+    selectList: {
+      get () {
+        return this.selection
+      },
+      set (value) {
+        this.$emit('update:selection', value)
+      }
+    },
+    selectAll: {
+      get () {
+        return this.selectList.length === this.dataList.length && this.dataList.length > 0
+      },
+      set (value) {
+        if (value) {
+          this.selectList = this.dataList
+        } else {
+          this.selectList = []
+        }
+      }
+    }
+  },
   mounted () {
     this.setSortStatus()
   },
@@ -295,30 +337,6 @@ export default {
     showActionButton (action, data) {
       if (!action.subAction) return this.hasActionPermission(action)
       return this.getBarData(action.subAction, data).length > 0
-    }
-  },
-  computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
-    // 目前所選擇的項目
-    selectList: {
-      get () {
-        return this.selection
-      },
-      set (value) {
-        this.$emit('update:selection', value)
-      }
-    },
-    selectAll: {
-      get () {
-        return this.selectList.length === this.dataList.length && this.dataList.length > 0
-      },
-      set (value) {
-        if (value) {
-          this.selectList = this.dataList
-        } else {
-          this.selectList = []
-        }
-      }
     }
   }
 }

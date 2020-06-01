@@ -6,8 +6,7 @@
         :options="options"
         auto-resize
         @brushselected="brushRegionSelected"
-      >
-      </v-echart>
+      />
     </div>
     <selected-region
       v-if="selectedData.length > 0"
@@ -28,14 +27,16 @@
         </div>
       </div>
     </selected-region>
-    <div class="predict-detail-region"
+    <div 
       v-if="info.length > 0"
+      class="predict-detail-region"
     >
       <div class="block-title">{{ $t('resultDescription.predictionInfo') }}</div>
       <div class="predict-detail-block">
-        <div class="single-info-block"
+        <div 
           v-for="(singleInfo, index) in info"
           :key="index"
+          class="single-info-block"
         >
           <div class="info-target">{{ $t("resultDescription.timeOfPredictionInterval", {time: singleInfo.time}) }}</div>
           <div class="info-detail"><div class="info-title">{{ $t('resultDescription.predictionMax') }}</div><div class="info-content">{{ singleInfo.max }}</div></div>

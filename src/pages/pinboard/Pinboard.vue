@@ -1,32 +1,34 @@
 <template>
   <div class="page-pinboard">
     <h1 class="page-title">{{ $t('editing.pinboard') }}</h1>
-    <div class="bread-crumb-block"
+    <div 
       v-if="boardName"
+      class="bread-crumb-block"
     >
-      <router-link class="page root"
+      <router-link 
         :to="{name: 'PagePinboardList'}"
+        class="page root"
       >{{ $t('editing.allCategory') }}</router-link>
       <span class="divider">/</span>
       <span class="page">{{ boardName }}</span>
     </div>
     <spinner
       v-if="isLoading"
-    ></spinner>
+    />
     <empty-info-block
       v-else-if="boardList.length === 0"
       :msg="$t('editing.emptyPinboard')"
-    ></empty-info-block>
-      <component
-        v-for="result in boardList"
-        :key="result.pinboardId"
-        :is="result.layout"
-        :data-pinboard-id="result.pinboardId"
-        :data-data-source-id="result.dataSourceId"
-        :resultInfo="result.info"
-        :restrictions="result.restrictions"
-        :question="result.question"
-      ></component>
+    />
+    <component
+      v-for="result in boardList"
+      :key="result.pinboardId"
+      :is="result.layout"
+      :data-pinboard-id="result.pinboardId"
+      :data-data-source-id="result.dataSourceId"
+      :result-info="result.info"
+      :restrictions="result.restrictions"
+      :question="result.question"
+    />
   </div>
 </template>
 <script>
@@ -42,6 +44,23 @@ export default {
       isLoading: true,
       timeoutFunction: null,
       boardList: []
+    }
+  },
+  computed: {
+    pinboardList () {
+      return this.$store.state.pinboard.pinboardList
+    },
+    pinboardInfo () {
+      return this.$store.state.pinboard.pinboardInfo
+    },
+    boardName () {
+      if (this.pinboardList.length === 0) {
+        this.$store.dispatch('pinboard/getPinboardList')
+        return ''
+      } else {
+        let currentBoard = this.pinboardList.filter(element => element.id === parseInt(this.$route.params.id))
+        return currentBoard.length > 0 ? currentBoard[0].name : null
+      }
     }
   },
   mounted () {
@@ -104,23 +123,6 @@ export default {
       return this.boardList.filter(element => element.resultId === resultId)[0]
     }
   },
-  computed: {
-    pinboardList () {
-      return this.$store.state.pinboard.pinboardList
-    },
-    pinboardInfo () {
-      return this.$store.state.pinboard.pinboardInfo
-    },
-    boardName () {
-      if (this.pinboardList.length === 0) {
-        this.$store.dispatch('pinboard/getPinboardList')
-        return ''
-      } else {
-        let currentBoard = this.pinboardList.filter(element => element.id === parseInt(this.$route.params.id))
-        return currentBoard.length > 0 ? currentBoard[0].name : null
-      }
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

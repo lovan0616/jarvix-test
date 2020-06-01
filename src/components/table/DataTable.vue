@@ -2,20 +2,24 @@
   <div class="data-table data-source-list-table">
     <div class="data-table-head">
       <div class="data-table-row table-head">
-        <div class="data-table-cell checkbox"
+        <div 
           v-if="hasCheckbox"
+          class="data-table-cell checkbox"
         >
-          <label class="checkbox-label"
+          <label 
             :class="{indeterminate: selectList.length > 0 && selectList.length < dataList.length}"
+            class="checkbox-label"
           >
-            <input type="checkbox" name="selectAll"
-              v-model="selectAll"
+            <input 
+              v-model="selectAll" 
               :disabled="isProcessing"
+              type="checkbox"
+              name="selectAll"
             >
-            <div class="checkbox-square"></div>
+            <div class="checkbox-square"/>
           </label>
         </div>
-        <div class="data-table-cell"
+        <div 
           v-for="headInfo in headers"
           :key="headInfo.value"
           :class="{sort: headInfo.sort, hasWidth: headInfo.width}"
@@ -23,49 +27,58 @@
             width: headInfo.width,
             'text-align': headInfo.align
           }"
+          class="data-table-cell"
           @click="(headInfo.sort) ? rankingData(headInfo.value) : ''"
         >{{ headInfo.text }}
-          <svg-icon icon-class="arrow-down" class="arrow-icon"
-            v-if="headInfo.sort && sortStatus"
-            :class="{ 'arrow-up': sortStatus[headInfo.value] > 0, 'active': sortStatus[headInfo.value]  }"
-          ></svg-icon>
+          <svg-icon 
+            v-if="headInfo.sort && sortStatus" 
+            :class="{ 'arrow-up': sortStatus[headInfo.value] > 0, 'active': sortStatus[headInfo.value] }"
+            icon-class="arrow-down"
+            class="arrow-icon"
+          />
         </div>
       </div>
     </div>
-    <spinner class="spinner-container"
+    <spinner 
       v-if="loading"
       :title="$t('editing.loading')"
+      class="spinner-container"
       size="50"
-    ></spinner>
-    <div class="data-table-body"
+    />
+    <div 
       v-else
+      class="data-table-body"
     >
       <upload-block
         v-if="dataList.length === 0"
-        class="empty-status"
         :class="{'is-processing': isProcessing}"
         :bottom-message="emptyMessage"
+        class="empty-status"
         @create="createDataSource"
-      ></upload-block>
-      <div class="data-table-row"
-        v-else
+      />
+      <div 
         v-for="(data, index) in dataList"
+        v-else
         :key="index"
         :class="{selected: selectList.indexOf(data) > -1, 'is-processing': isInProcess(data) || isPending(data)}"
+        class="data-table-row"
       >
-        <div class="data-table-cell checkbox"
+        <div 
           v-if="hasCheckbox"
+          class="data-table-cell checkbox"
         >
           <label class="checkbox-label">
-            <input type="checkbox" name="fileChosen"
-              v-model="selectList"
+            <input 
+              v-model="selectList" 
               :value="data"
               :disabled="isProcessing"
+              type="checkbox"
+              name="fileChosen"
             >
-            <div class="checkbox-square"></div>
+            <div class="checkbox-square"/>
           </label>
         </div>
-        <div class="data-table-cell"
+        <div 
           v-for="headInfo in headers"
           :class="{action: headInfo.action, hasWidth: headInfo.width}"
           :key="headInfo.value"
@@ -73,64 +86,81 @@
             width: headInfo.width,
             'text-align': headInfo.align
           }"
+          class="data-table-cell"
         >
-          <a href="javascript:void(0)" class="link name-link"
-            v-if="headInfo.link && checkLinkEnable(headInfo, data)"
+          <a 
+            v-if="headInfo.link && checkLinkEnable(headInfo, data)" 
+            href="javascript:void(0)"
+            class="link name-link"
             @click="linkTo(headInfo.link, data.id)"
           >{{ data[headInfo.value] }}</a>
 
-          <a href="javascript:void(0)" class="link action-link link-dropdown"
+          <a 
+            v-for="action in headInfo.action" 
             v-else-if="headInfo.action"
-            v-for="action in headInfo.action"
             :key="action.name"
             :disabled="isProcessing || isInProcess(data) || ((isFail(data) || isPending(data)) && action.value !== 'delete')"
+            href="javascript:void(0)"
+            class="link action-link link-dropdown"
             @click="doAction(action.value, data)"
           >
             <dropdown-select
               v-if="showActionDropdown(action.subAction, data)"
+              :bar-data="action.subAction"
               class="dropdown"
               @switchDialogName="doAction($event, data)"
-              :barData="action.subAction"
             />
             {{ action.name }}
-            <svg-icon v-if="action.subAction" icon-class="triangle" class="icon dropdown-icon" />
+            <svg-icon 
+              v-if="action.subAction" 
+              icon-class="triangle" 
+              class="icon dropdown-icon" />
           </a>
 
-          <span v-else-if="headInfo.value === 'state'"
+          <span 
+            v-else-if="headInfo.value === 'state'"
             :class="{'is-processing': data[headInfo.value] === 'Process' || data[headInfo.value] === 'PROCESSING'}"
           >
             <svg-icon
               v-if="data[headInfo.value] === 'Process' || data[headInfo.value] === 'PROCESSING'"
               icon-class="spinner"
-            ></svg-icon>
+            />
             {{ buildStatus(data[headInfo.value]) }}
-            <el-tooltip class="item"
+            <el-tooltip 
               v-if="data.processComment"
-              popper-class="error-tooltip"
               :content="data.processComment"
+              class="item"
+              popper-class="error-tooltip"
               placement="bottom"
             >
-              <svg-icon icon-class="alert" class="alert-icon"></svg-icon>
+              <svg-icon 
+                icon-class="alert" 
+                class="alert-icon"/>
             </el-tooltip>
           </span>
-          <span v-else-if="headInfo.value === 'type'"
+          <span 
+            v-else-if="headInfo.value === 'type'"
             :class="{'is-processing': data[headInfo.value] === 'PROCESS'}"
           >
             <svg-icon
               v-if="data[headInfo.value] === 'PROCESS'"
               icon-class="spinner"
-            ></svg-icon>
+            />
             {{ buildStatus(data[headInfo.value]) }}
-            <el-tooltip class="item"
+            <el-tooltip 
               v-if="data.processComment"
-              popper-class="error-tooltip"
               :content="data.processComment"
+              class="item"
+              popper-class="error-tooltip"
               placement="bottom"
             >
-              <svg-icon icon-class="alert" class="alert-icon"></svg-icon>
+              <svg-icon 
+                icon-class="alert" 
+                class="alert-icon"/>
             </el-tooltip>
           </span>
-          <span v-else-if="headInfo.value === 'joinCount'"
+          <span 
+            v-else-if="headInfo.value === 'joinCount'"
           >{{ data[headInfo.value] === 2 ? $t('editing.tableJoin') : $t('editing.userUpload') }}</span>
           <span v-else-if="headInfo.value === 'dataFrameStatus'">
             <span class="dataframe-status finished">
@@ -222,6 +252,32 @@ export default {
   data () {
     return {
       sortStatus: null
+    }
+  },
+  computed: {
+    showCreateDataSourceDialog () {
+      return this.$store.state.dataManagement.showCreateDataSourceDialog
+    },
+    // 目前所選擇的項目
+    selectList: {
+      get () {
+        return this.selection
+      },
+      set (value) {
+        this.$emit('update:selection', value)
+      }
+    },
+    selectAll: {
+      get () {
+        return this.selectList.length === this.dataList.length && this.dataList.length > 0
+      },
+      set (value) {
+        if (value) {
+          this.selectList = this.dataList
+        } else {
+          this.selectList = []
+        }
+      }
     }
   },
   mounted () {
@@ -339,32 +395,6 @@ export default {
       return data['state'] === 'Disable' || data['type'] === 'DISABLE' || data['state'] === 'Fail' || data['type'] === 'FAIL'
     }
   },
-  computed: {
-    showCreateDataSourceDialog () {
-      return this.$store.state.dataManagement.showCreateDataSourceDialog
-    },
-    // 目前所選擇的項目
-    selectList: {
-      get () {
-        return this.selection
-      },
-      set (value) {
-        this.$emit('update:selection', value)
-      }
-    },
-    selectAll: {
-      get () {
-        return this.selectList.length === this.dataList.length && this.dataList.length > 0
-      },
-      set (value) {
-        if (value) {
-          this.selectList = this.dataList
-        } else {
-          this.selectList = []
-        }
-      }
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

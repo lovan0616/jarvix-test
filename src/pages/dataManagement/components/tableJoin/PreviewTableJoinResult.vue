@@ -8,9 +8,11 @@
         <div class="data-table-cell">
           {{ $t('editing.matchedKey') }}
           <span class="nav-item nav-function tooltip-container">
-          <svg-icon icon-class="information-circle" class="icon" />
-          <div class="tooltip">{{$t('editing.previewKeyRemind')}}</div>
-        </span>
+            <svg-icon 
+              icon-class="information-circle" 
+              class="icon" />
+            <div class="tooltip">{{ $t('editing.previewKeyRemind') }}</div>
+          </span>
         </div>
       </div>
       <div class="data-table-body">
@@ -20,8 +22,8 @@
           <div class="data-table-cell value-list">
             <span v-if="!result.valueList.length">{{ $t('editing.emptyKey') }}</span>
             <span
-              v-else
               v-for="value in result.valueList"
+              v-else
               :key="value"
             >{{ value }}</span>
           </div>
@@ -34,18 +36,18 @@
 <script>
 export default {
   name: 'PreviewTableJoinResult',
+  filters: {
+    formatZeroData: function (value) {
+      if (value <= 0) return 0
+      return value
+    }
+  },
   props: {
     result: {
       type: Object,
       required: true
     }
   },
-  filters: {
-    formatZeroData: function (value) {
-      if (value <= 0) return 0
-      return value
-    }
-  }
 }
 </script>
 

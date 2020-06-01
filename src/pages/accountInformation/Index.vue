@@ -5,59 +5,59 @@
     </div>
     <section class="info-wrapper">
       <spinner
-        class="spinner"
         v-if="isLoading"
-      ></spinner>
+        class="spinner"
+      />
       <template v-else>
         <div class="info-block">
           <h3 class="info-title">
-            {{$t('accountInfo.userAmount')}}
+            {{ $t('accountInfo.userAmount') }}
           </h3>
           <div class="sub-info-block">
             <h6 class="sub-info-title">
-              {{$t('accountInfo.currentUserAmount')}}
+              {{ $t('accountInfo.currentUserAmount') }}
             </h6>
             <p class="sub-info-desciption">
-              {{license.currentUser || '-'}}{{$t('accountInfo.person')}}
+              {{ license.currentUser || '-' }}{{ $t('accountInfo.person') }}
             </p>
           </div>
           <div class="sub-info-block">
             <h6 class="sub-info-title">
-              {{$t('accountInfo.userAmountLimit')}}
+              {{ $t('accountInfo.userAmountLimit') }}
             </h6>
             <p class="sub-info-desciption">
-              {{license.maxUser || '-'}}{{$t('accountInfo.person')}}
+              {{ license.maxUser || '-' }}{{ $t('accountInfo.person') }}
             </p>
           </div>
         </div>
         <div class="info-block">
           <h3 class="info-title">
-            {{$t('accountInfo.dataAllowance')}}
+            {{ $t('accountInfo.dataAllowance') }}
           </h3>
           <div class="sub-info-block">
             <h6 class="sub-info-title">
-              {{$t('accountInfo.currentDataUsage')}}
+              {{ $t('accountInfo.currentDataUsage') }}
             </h6>
             <p class="sub-info-desciption">
-              {{license.currentDataStorageSize || '-'}}GB
+              {{ license.currentDataStorageSize || '-' }}GB
             </p>
           </div>
           <div class="sub-info-block">
             <h6 class="sub-info-title">
-              {{$t('accountInfo.dataUsageProvided')}}
+              {{ $t('accountInfo.dataUsageProvided') }}
             </h6>
             <p class="sub-info-desciption">
-              {{license.maxDataStorageSize || '-'}}GB
+              {{ license.maxDataStorageSize || '-' }}GB
             </p>
           </div>
         </div>
         <div class="info-block">
           <h3 class="info-title">
-            {{$t('accountInfo.expireDate')}}
+            {{ $t('accountInfo.expireDate') }}
           </h3>
           <div class="sub-info-block">
             <p class="sub-info-desciption">
-              {{license.expiredTime | convertTimeStamp}}
+              {{ license.expiredTime | convertTimeStamp }}
             </p>
           </div>
         </div>

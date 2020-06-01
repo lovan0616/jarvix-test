@@ -1,22 +1,27 @@
 <template>
   <div class="custom-select-block">
-    <div class="custom-select"
+    <div 
+      class="custom-select"
       @click="toggleDropdown"
     >
       <div class="selected-option">{{ value ? selectedOption : defaultMsg }}</div>
-      <svg-icon icon-class="dropdown" class="arrow-icon"
-        :class="{'is-open': isDropdownOpen}"
-      ></svg-icon>
+      <svg-icon 
+        :class="{'is-open': isDropdownOpen}" 
+        icon-class="dropdown"
+        class="arrow-icon"
+      />
     </div>
-    <div class="option-list-block"
+    <div 
       v-show="isDropdownOpen"
       :style="[dropdownPosition, {'max-height': optionListMaxHeight + 'px'}]"
+      class="option-list-block"
     >
-      <div class="option"
+      <div 
         v-for="option in optionList"
         :key="option.id"
-        @click="chooseOption(option.id)"
         :class="{active: option.id === value}"
+        class="option"
+        @click="chooseOption(option.id)"
       >{{ option.name }}</div>
     </div>
   </div>
@@ -26,16 +31,20 @@ export default {
   name: 'CustomSelect',
   props: {
     value: {
-      type: [String, Number]
+      type: [String, Number],
+      default: null
     },
     icon: {
-      type: String
+      type: String,
+      default: ''
     },
     optionList: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     defaultMsg: {
-      type: String
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -43,6 +52,26 @@ export default {
       isDropdownOpen: false,
       onTop: false,
       optionListMaxHeight: 160
+    }
+  },
+  computed: {
+    selectedOption () {
+      if (!this.optionList.length) return
+      return this.optionList.find(element => parseInt(element.id) === parseInt(this.value)).name
+    },
+    dropdownPosition () {
+      if (this.onTop) {
+        // 減 1 是為了蓋在 border 上
+        return {
+          bottom: '100%',
+          boxShadow: '0px -4px 12px rgba(0, 0, 0, 0.12)'
+        }
+      } else {
+        return {
+          top: '39px',
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.12)'
+        }
+      }
     }
   },
   mounted () {
@@ -78,26 +107,6 @@ export default {
       this.onTop = (viewHeight - rect.bottom) < this.optionListMaxHeight
     }
   },
-  computed: {
-    selectedOption () {
-      if (!this.optionList.length) return
-      return this.optionList.find(element => parseInt(element.id) === parseInt(this.value)).name
-    },
-    dropdownPosition () {
-      if (this.onTop) {
-        // 減 1 是為了蓋在 border 上
-        return {
-          bottom: '100%',
-          boxShadow: '0px -4px 12px rgba(0, 0, 0, 0.12)'
-        }
-      } else {
-        return {
-          top: '39px',
-          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.12)'
-        }
-      }
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

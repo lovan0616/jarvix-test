@@ -9,10 +9,15 @@
     <div class="table-board">
       <div class="board-title-row">
         <div class="button-block">
-          <button class="btn-m btn-default btn-has-icon"
+          <button
+            class="btn-m btn-default btn-has-icon"
             @click="createAlgorithm"
           >
-            <svg-icon icon-class="folder-plus" class="icon"></svg-icon>新增演算法
+            <svg-icon
+              icon-class="folder-plus"
+              class="icon"
+            />
+            新增演算法
           </button>
         </div>
       </div>
@@ -24,8 +29,7 @@
         @edit="editAlgorithm($event)"
         @create="createAlgorithm"
         @delete="deleteAlgorithm"
-      >
-      </data-table>
+      />
     </div>
   </div>
 </template>
@@ -37,21 +41,6 @@ export default {
   name: 'PageAlgorithmList',
   components: {
     DataTable
-  },
-  methods: {
-    editAlgorithm (e) {
-      this.$router.push({
-        path: `algorithm/${e.id}`
-      })
-    },
-    createAlgorithm () {
-      this.$router.push({
-        name: 'PageAlgorithmCreate'
-      })
-    },
-    deleteAlgorithm (e) {
-      this.$store.dispatch('algorithm/deleteAlgorithm', e)
-    }
   },
   computed: {
     ...mapGetters('algorithm', ['algorithms']),
@@ -115,6 +104,21 @@ export default {
           ]
         }
       ]
+    }
+  },
+  methods: {
+    editAlgorithm (e) {
+      this.$router.push({
+        path: `algorithm/${e.id}`
+      })
+    },
+    createAlgorithm () {
+      this.$router.push({
+        name: 'PageAlgorithmCreate'
+      })
+    },
+    deleteAlgorithm (e) {
+      this.$store.dispatch('algorithm/deleteAlgorithm', e)
     }
   }
 }

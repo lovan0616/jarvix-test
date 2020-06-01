@@ -1,25 +1,27 @@
 <template>
   <div class="local-file-upload-flow">
-    <transition name="fade" mode="out-in">
+    <transition 
+      name="fade" 
+      mode="out-in">
       <local-file-upload
         v-if="step === 0"
         @next="nextStep"
-      ></local-file-upload>
+      />
       <local-file-upload-status
         v-if="step === 1"
         @next="nextStep"
         @prev="prevStep"
         @dataBuilt="step = 3"
-      ></local-file-upload-status>
+      />
       <etl-setting
         v-if="step === 2"
         @next="nextStep"
         @prev="prevStep"
-      ></etl-setting>
+      />
       <confirm-page
         v-if="step === 3"
         @next="uploadFinish"
-      ></confirm-page>
+      />
     </transition>
   </div>
 </template>

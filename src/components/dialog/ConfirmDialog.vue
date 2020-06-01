@@ -1,23 +1,35 @@
 <template>
-  <div class="confirm-dialog" tabindex="-1" role="dialog"
-    :class="name"
+  <div 
+    :class="name" 
+    class="confirm-dialog" 
+    tabindex="-1"
+    role="dialog"
   >
     <transition name="slide-down">
-      <div v-if="showDialog" class="dialog-container" role="document">
-        <a href="javascript:void(0)" class="dialog-close-btn"
+      <div 
+        v-if="showDialog" 
+        class="dialog-container" 
+        role="document">
+        <a 
+          href="javascript:void(0)" 
+          class="dialog-close-btn"
           @click="close"
         >
-          <svg-icon icon-class="close" class="close-icon"></svg-icon>
+          <svg-icon 
+            icon-class="close" 
+            class="close-icon"/>
         </a>
         <div class="dialog-title-block">
           <div class="dialog-title">{{ title }}</div>
         </div>
         <div class="dialog-body-block">
           <div class="dialog-content-block">
-            <slot name="dialogBody"></slot>
+            <slot name="dialogBody"/>
           </div>
-          <div class="dialog-btn-block" slot="dialogFooter">
-            <slot name="dialogFooter"></slot>
+          <div 
+            slot="dialogFooter" 
+            class="dialog-btn-block">
+            <slot name="dialogFooter"/>
           </div>
         </div>
       </div>

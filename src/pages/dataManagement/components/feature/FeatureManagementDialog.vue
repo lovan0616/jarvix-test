@@ -3,21 +3,27 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('feature.featureManagement') }}
-        <a href="javascript:void(0)" class="close-btn"
+        <a 
+          href="javascript:void(0)" 
+          class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"></svg-icon></a>
+        ><svg-icon icon-class="close"/></a>
       </div>
       <div class="custom-feature-list">
         <div class="title-block">
-          <default-select class="data-frame-select"
+          <default-select 
             v-model="currentDataFrame"
             :option-list="dataFrameList"
+            class="data-frame-select"
             @change="getDataFrameFeature"
-          ></default-select>
-          <button class="btn btn-secondary btn-has-icon"
+          />
+          <button 
+            class="btn btn-secondary btn-has-icon"
             @click="showEditDialog"
           >
-            <svg-icon icon-class="add-feature" class="icon"></svg-icon>{{ $t('button.addColumn') }}
+            <svg-icon 
+              icon-class="add-feature" 
+              class="icon"/>{{ $t('button.addColumn') }}
           </button>
         </div>
         <div class="data-table feature-list">
@@ -29,10 +35,11 @@
           <div class="data-table-body">
             <empty-info-block
               v-if="featureList.length === 0"
-            ></empty-info-block>
-            <div class="data-table-row"
+            />
+            <div 
               v-for="feature in featureList"
               :key="feature.id"
+              class="data-table-row"
             >
               <div class="data-table-cell">{{ feature.name }}</div>
               <!-- <div class="data-table-cell">{{ feature.description }}
@@ -43,7 +50,9 @@
                 </el-tooltip>
               </div> -->
               <div class="data-table-cell">
-                <a href="javascript:void(0)" class="action-link link"
+                <a 
+                  href="javascript:void(0)" 
+                  class="action-link link"
                   @click="editFeature(feature)"
                 >{{ $t('button.edit') }}</a>
               </div>
@@ -55,7 +64,7 @@
           :edit-feature-info="editFeatureInfo"
           @update="updateFeature"
           @cancel="closeEditDialog"
-        ></edit-feature-dialog>
+        />
       </div>
     </div>
   </div>

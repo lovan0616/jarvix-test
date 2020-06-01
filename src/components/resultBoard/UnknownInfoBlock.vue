@@ -4,7 +4,7 @@
       <svg-icon
         icon-class="alert-circle-outline"
         class="icon"
-      ></svg-icon>
+      />
     </div>
     <div class="content-block">
       <div class="content">{{ $t('resultDescription.systemQuestionAnalysis', {question: segmentationInfo.question}) }}
@@ -18,10 +18,12 @@
           >“{{ nlpToken.word }}” {{ $t('resultDescription.beRecognized') }} “{{ nlpToken.matchedWord }}”<span v-if="index < segmentationInfo.nlpToken.length - 1">、</span></span>
         </template>。
       </div>
-      <a href="javascript:void(0)" class="remove-link"
+      <a 
+        href="javascript:void(0)" 
+        class="remove-link"
         @click="close"
       >
-        <svg-icon icon-class="remove-circle"></svg-icon>
+        <svg-icon icon-class="remove-circle"/>
       </a>
     </div>
   </div>
@@ -41,16 +43,16 @@ export default {
       }
     }
   },
+  computed: {
+    unknowTokenList () {
+      return this.segmentationInfo.unknownToken.map(element => element.matchedWord).join(', ')
+    }
+  },
   methods: {
     close () {
       this.$emit('close')
     }
   },
-  computed: {
-    unknowTokenList () {
-      return this.segmentationInfo.unknownToken.map(element => element.matchedWord).join(', ')
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

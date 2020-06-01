@@ -5,7 +5,8 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-default"
+        <button 
+          class="btn btn-default"
           @click="$emit('next')"
         >{{ $t('button.confirm') }}</button>
       </div>

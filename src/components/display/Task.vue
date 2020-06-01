@@ -1,15 +1,20 @@
 <template>
-  <div class="task"
+  <div
     :class="{'task-mask': isGetPagination}"
     :data-component-id="componentId"
     :data-result-id="resultId"
     :data-diagram-type="diagram"
     :data-intend="intend"
+    class="task"
   >
-    <spinner class="task-spinner"
+    <spinner
       v-if="loading"
-    ></spinner>
-    <no-result v-else-if="isError" :message="errorMessage"></no-result>
+      class="task-spinner"
+    />
+    <no-result
+      v-else-if="isError"
+      :message="errorMessage"
+    />
     <template v-else-if="diagram">
       <!-- TODO: 調整寫法 -->
       <component
@@ -32,11 +37,13 @@
         :item-count="componentData.item_count"
         :key="componentId"
         @next="getNewPageInfo"
-      ></component>
-      <div class="task-note"
-        v-for="(note, index) in notes" v-bind:key="index"
+      />
+      <div
+        v-for="(note, index) in notes"
+        :key="index"
+        class="task-note"
       >
-        {{note}}
+        {{ note }}
       </div>
     </template>
   </div>
@@ -46,10 +53,12 @@ export default {
   name: 'Task',
   props: {
     componentId: {
-      type: Number
+      type: Number,
+      default: null
     },
     intend: {
-      type: String
+      type: String,
+      default: null
     }
   },
   data () {
@@ -101,7 +110,7 @@ export default {
                 })
               }, 1000)
               break
-            case 'Complete':
+            case 'Complete': {
               window.clearTimeout(this.timeoutFunction)
               this.diagram = response.diagram
               this.resultId = response.resultId
@@ -140,6 +149,7 @@ export default {
                 this.loading = false
               }
               break
+            }
             case 'Disable':
             case 'Delete':
             case 'Warn':
