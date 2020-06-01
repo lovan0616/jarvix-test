@@ -116,10 +116,14 @@ export default {
       return sankeyOptions
     },
     chartStyle () {
-      let columns = this.dataset.columns
+      // let columns = this.dataset.columns
+      // return {
+      //   width: '100%',
+      //   height: `${this.dataset.data[columns[0]][columns[1]].length * 32}px` || '420px'
+      // }
       return {
         width: '100%',
-        height: `${this.dataset.data[columns[0]][columns[1]].length * 32}px` || '420px'
+        height: '420px'
       }
     },
     appQuestion () {
