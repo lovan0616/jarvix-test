@@ -1,24 +1,28 @@
 <template>
   <div class="select-block">
     <div class="select-block-item">
-      <svg-icon icon-class="table" class="type-icon" />
+      <svg-icon 
+        icon-class="table" 
+        class="type-icon" />
       <custom-select
         :key="'top-select'"
         :default-msg="$t('editing.selectForeign')"
         :option-list="dataFrameList"
         :value="dataFrameId"
         @input="onUpdateDataFrame"
-      ></custom-select>
+      />
     </div>
     <div class="select-block-item">
-      <svg-icon icon-class="column" class="type-icon" />
+      <svg-icon 
+        icon-class="column" 
+        class="type-icon" />
       <custom-select
         :key="'bottom-select'"
         :default-msg="$t('editing.selectColumn')"
         :option-list="columnList"
         :value="dataColumn.id"
         @input="onUpdateDataColumn"
-      ></custom-select>
+      />
     </div>
   </div>
 </template>
@@ -29,19 +33,22 @@ import { getDataFrameColumnInfoById } from '@/API/DataSource'
 
 export default {
   name: 'RelationSelectBlock',
-  props: {
-    dataFrameList: {
-      type: Array
-    },
-    initialDataFrameId: {
-      type: Number
-    },
-    dataColumn: {
-      type: Object
-    }
-  },
   components: {
     CustomSelect
+  },
+  props: {
+    dataFrameList: {
+      type: Array,
+      default: () => []
+    },
+    initialDataFrameId: {
+      type: Number,
+      default: null
+    },
+    dataColumn: {
+      type: Object,
+      default: () => {}
+    }
   },
   data () {
     return {

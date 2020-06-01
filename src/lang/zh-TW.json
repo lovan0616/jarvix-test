@@ -65,6 +65,7 @@
     "emptyResult": "此搜尋條件並無對應資料",
     "emptyDataSource": "尚未建立資料源",
     "emptyColumnSet": "尚未建立任何欄位組合",
+    "emptyFeatureFormula": "資料欄位未填寫",
     "deleteSuccess": "刪除成功",
     "dataSourceNotExist": "資料源不存在",
     "connectionFail": "欄位資料有誤，請重新檢查",
@@ -345,7 +346,8 @@
     "emptyConnectionHistory": "沒有任何連線紀錄",
     "dataCalculate": "資料計算中",
     "tableChosenLimit": "最多選擇 {number} 張資料表",
-    "null": "Null"
+    "null": "Null",
+    "columnSelected": "已選擇欄位數"
   },
   "feature": {
     "value": "數值",

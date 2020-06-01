@@ -1,12 +1,18 @@
 <template>
   <div class="selected-region">
     <div class="region-title-block">
-      <div class="region-title"><svg-icon icon-class="filter" class="filter-icon"></svg-icon>{{ title }}：</div>
-      <button class="btn-m btn-outline"
+      <div class="region-title">
+        <svg-icon
+          icon-class="filter"
+          class="filter-icon"
+        />{{ title }}：
+      </div>
+      <button
+        class="btn-m btn-outline"
         @click="save"
       >{{ $t('resultDescription.saveFilterCondition') }}</button>
     </div>
-    <slot name="selectedFilterRegion"></slot>
+    <slot name="selectedFilterRegion"/>
   </div>
 </template>
 <script>
@@ -14,7 +20,8 @@ export default {
   name: 'SelectedRegion',
   props: {
     title: {
-      type: String
+      type: String,
+      default: null
     }
   },
   methods: {

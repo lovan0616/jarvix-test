@@ -1,18 +1,23 @@
 <template>
-  <div class="chat-room-block"
+  <div 
     :class="{'is-show': isShowChatRoom}"
+    class="chat-room-block"
   >
-    <a href="javascript:void(0)" class="close-btn"
+    <a 
+      href="javascript:void(0)" 
+      class="close-btn"
       @click="closeChatRoom"
     >
-      <svg-icon icon-class="double-arrow-left" class="arrow-icon"></svg-icon>
+      <svg-icon 
+        icon-class="double-arrow-left" 
+        class="arrow-icon"/>
     </a>
     <div class="chat-room-header">
-      <chat-bot-btn class="chat-bot-link"></chat-bot-btn>
-      <data-source-select class="data-source-select"></data-source-select>
+      <chat-bot-btn class="chat-bot-link"/>
+      <data-source-select class="data-source-select"/>
     </div>
-    <conversation-block></conversation-block>
-    <ask-block></ask-block>
+    <conversation-block/>
+    <ask-block/>
   </div>
 </template>
 <script>
@@ -29,16 +34,16 @@ export default {
     AskBlock,
     ChatBotBtn
   },
+  computed: {
+    isShowChatRoom () {
+      return this.$store.state.isShowChatRoom
+    }
+  },
   methods: {
     closeChatRoom () {
       this.$store.commit('updateChatRoomStatus', false)
     }
   },
-  computed: {
-    isShowChatRoom () {
-      return this.$store.state.isShowChatRoom
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

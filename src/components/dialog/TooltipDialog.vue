@@ -2,10 +2,14 @@
   <div class="tooltip-dialog">
     <div class="text-block">{{ $t('editing.confirmDeleteForeign') }}</div>
     <div class="button-block">
-      <a href="javascript:void(0)" class="link"
+      <a 
+        href="javascript:void(0)" 
+        class="link"
         @click="cancel"
       >{{ $t('button.cancel') }}</a>
-      <a href="javascript:void(0)" class="link"
+      <a 
+        href="javascript:void(0)" 
+        class="link"
         @click="confirm"
       >{{ $t('button.delete') }}</a>
     </div>

@@ -1,5 +1,7 @@
 <template>
-  <div slot="content" class="tooltip-content">
+  <div 
+    slot="content" 
+    class="tooltip-content">
     <p class="content-title">[{{ $t('userManagement.accountRoleDesc') }}]</p>
     <div class="content-item">
       <p class="item-label">{{ $t('userManagement.accountOwner') + ':' }}</p>

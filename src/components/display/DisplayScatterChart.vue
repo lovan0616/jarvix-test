@@ -5,17 +5,19 @@
       :options="chartOption"
       auto-resize
       @brushselected="brushRegionSelected"
-    >
-    </v-echart>
+    />
     <selected-region
       v-if="selectedData.length > 0"
       :title="$t('resultDescription.currentChosenArea')"
       @save="saveFilter"
     >
-      <div class="region-description" slot="selectedFilterRegion">
-        <div class="single-area"
+      <div 
+        slot="selectedFilterRegion" 
+        class="region-description">
+        <div 
           v-for="(singleArea, index) in selectedData"
           :key="index"
+          class="single-area"
         >
           {{ $t('resultDescription.area') + (index + 1) }}:
           <span
@@ -93,56 +95,6 @@ export default {
     return {
       selectedData: [],
       correlationLinePoint: 100
-    }
-  },
-  methods: {
-    dotSize (dataLength) {
-      if (dataLength > 500 && dataLength < 1999) {
-        return 4
-      } else if (dataLength > 1999 && dataLength < 4999) {
-        return 2
-      } else if (dataLength > 4999) {
-        return 1
-      } else {
-        return 8
-      }
-    },
-    brushRegionSelected (params) {
-      if (params.batch[0].areas.length === 0) {
-        this.selectedData = []
-        return
-      }
-      this.selectedData = params.batch[0].areas.map(areaElement => {
-        let coordRange = areaElement.coordRange
-        return {
-          type: 'compound',
-          restraints: [
-            {
-              type: 'range',
-              properties: {
-                dc_name: this.title.xAxis[0].dc_name,
-                data_type: this.title.xAxis[0].data_type,
-                display_name: this.title.xAxis[0].display_name,
-                start: this.title.xAxis[0].stats_type === 'numeric' ? coordRange[0][0] : this.dataset.index[coordRange[0][0]],
-                end: this.title.xAxis[0].stats_type === 'numeric' ? coordRange[0][1] : this.dataset.index[coordRange[0][1]]
-              }
-            },
-            {
-              type: 'range',
-              properties: {
-                dc_name: this.title.yAxis[0].dc_name,
-                data_type: this.title.yAxis[0].data_type,
-                display_name: this.title.yAxis[0].display_name,
-                start: coordRange[1][0],
-                end: coordRange[1][1]
-              }
-            }
-          ]
-        }
-      })
-    },
-    saveFilter () {
-      this.$store.commit('dataSource/setFilterList', this.selectedData)
     }
   },
   computed: {
@@ -273,13 +225,56 @@ export default {
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
     }
-  }
+  },
+  methods: {
+    dotSize (dataLength) {
+      if (dataLength > 500 && dataLength < 1999) {
+        return 4
+      } else if (dataLength > 1999 && dataLength < 4999) {
+        return 2
+      } else if (dataLength > 4999) {
+        return 1
+      } else {
+        return 8
+      }
+    },
+    brushRegionSelected (params) {
+      if (params.batch[0].areas.length === 0) {
+        this.selectedData = []
+        return
+      }
+      this.selectedData = params.batch[0].areas.map(areaElement => {
+        let coordRange = areaElement.coordRange
+        return {
+          type: 'compound',
+          restraints: [
+            {
+              type: 'range',
+              properties: {
+                dc_name: this.title.xAxis[0].dc_name,
+                data_type: this.title.xAxis[0].data_type,
+                display_name: this.title.xAxis[0].display_name,
+                start: this.title.xAxis[0].stats_type === 'numeric' ? coordRange[0][0] : this.dataset.index[coordRange[0][0]],
+                end: this.title.xAxis[0].stats_type === 'numeric' ? coordRange[0][1] : this.dataset.index[coordRange[0][1]]
+              }
+            },
+            {
+              type: 'range',
+              properties: {
+                dc_name: this.title.yAxis[0].dc_name,
+                data_type: this.title.yAxis[0].data_type,
+                display_name: this.title.yAxis[0].display_name,
+                start: coordRange[1][0],
+                end: coordRange[1][1]
+              }
+            }
+          ]
+        }
+      })
+    },
+    saveFilter () {
+      this.$store.commit('dataSource/setFilterList', this.selectedData)
+    }
+  },
 }
 </script>
-<style lang="scss" scoped>
-.selected-region {
-  .single-area {
-
-  }
-}
-</style>

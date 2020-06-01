@@ -3,100 +3,120 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="isLoading ? 2 : 1"
-    ></upload-process-block>
+    />
     <div class="dialog-body">
-      <spinner class="loading-block"
+      <spinner 
         v-if="isLoading"
         :title="$t('editing.DBconnecting')"
+        class="loading-block"
         size="50"
-      ></spinner>
-      <form class="input-block-container"
+      />
+      <form 
         v-else
+        class="input-block-container"
       >
         <div class="title-block-container">
           <div class="block-title">{{ $t('etl.newConnectionSetting') }}</div>
-          <button class="btn-m btn-outline"
+          <button 
+            class="btn-m btn-outline"
             @click.prevent="prevStep"
           >{{ $t('etl.connectionHistory') }}</button>
         </div>
         <!-- 為了避免瀏覽器自動帶入 -->
-        <input name="account" type="text" class="hidden-input">
-        <input name="password" type="password" class="hidden-input">
-        <input-block class="dialog-input"
+        <input 
+          name="account" 
+          type="text" 
+          class="hidden-input">
+        <input 
+          name="password" 
+          type="password" 
+          class="hidden-input">
+        <input-block 
+          v-validate="`required|max:${max}`"
           v-if="!dataSourceId"
           :label="$t('editing.dataSourceName')"
-          name="dataSourceName"
           v-model="dataSourceName"
+          class="dialog-input"
+          name="dataSourceName"
+        />
+        <input-block 
           v-validate="`required|max:${max}`"
-        ></input-block>
-        <input-block class="dialog-input"
           :label="$t('editing.connectionName')"
-          name="connectionName"
           v-model="connectInfo.name"
-          v-validate="`required|max:${max}`"
-        ></input-block>
-        <input-block class="dialog-input"
-          :label="$t('editing.loginAccount')"
-          name="account"
-          v-model="connectInfo.account"
+          class="dialog-input"
+          name="connectionName"
+        />
+        <input-block 
           v-validate="'required'"
-        ></input-block>
-        <input-block class="dialog-input"
+          :label="$t('editing.loginAccount')"
+          v-model="connectInfo.account"
+          class="dialog-input"
+          name="account"
+        />
+        <input-block 
+          v-validate="'required'"
           :label="$t('editing.loginPassword')"
+          v-model="connectInfo.password"
+          class="dialog-input"
           type="password"
           name="loginPwd"
-          v-model="connectInfo.password"
-          v-validate="'required'"
-        ></input-block>
+        />
         <div class="database-type-select-block dialog-input">
-          <label for="connectInfo.databaseType"
+          <label 
+            for="connectInfo.databaseType"
             class="select-label"
           >{{ $t('editing.databaseType') }}</label>
           <default-select
-            name="databaseType"
+            v-validate="'required'"
             v-model="connectInfo.databaseType"
             :option-list="dbOptionList"
             :placeholder="$t('editing.defaultOption')"
-            v-validate="'required'"
-          ></default-select>
+            name="databaseType"
+          />
         </div>
-        <input-block class="dialog-input"
+        <input-block 
+          v-validate="'required'"
+          v-model="connectInfo.database"
+          class="dialog-input"
           label="Database"
           name="database"
-          v-model="connectInfo.database"
-          v-validate="'required'"
-        ></input-block>
-        <input-block class="dialog-input"
+        />
+        <input-block 
+          v-validate="'max:128'"
+          v-model="connectInfo.schema"
+          class="dialog-input"
           label="Schema"
           name="schema"
-          v-model="connectInfo.schema"
-          v-validate="'max:128'"
-        ></input-block>
+        />
         <div class="inline-input-block">
-          <input-block class="dialog-input host"
+          <input-block 
+            v-validate="'required'"
+            v-model="connectInfo.host"
+            class="dialog-input host"
             label="Host"
             name="host"
-            v-model="connectInfo.host"
+          />
+          <input-block 
             v-validate="'required'"
-          ></input-block>
-          <input-block class="dialog-input port"
+            v-model="connectInfo.port"
+            class="dialog-input port"
             label="Port"
             name="port"
-            v-model="connectInfo.port"
-            v-validate="'required'"
-          ></input-block>
+          />
         </div>
       </form>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-default"
+        <button 
           :disabled="isLoading"
+          class="btn btn-default"
           @click="nextStep"
-        >{{isLoading ? $t('button.connecting') : $t('button.nextStep')}}</button>
+        >{{ isLoading ? $t('button.connecting') : $t('button.nextStep') }}</button>
       </div>
     </div>
   </div>
@@ -142,6 +162,14 @@ export default {
         database: null,
         schema: null
       }
+    }
+  },
+  computed: {
+    currentGroupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
+    },
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   },
   methods: {
@@ -194,14 +222,6 @@ export default {
       })
     }
   },
-  computed: {
-    currentGroupId () {
-      return this.$store.getters['userManagement/getCurrentGroupId']
-    },
-    max () {
-      return this.$store.state.validation.fieldCommonMaxLength
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

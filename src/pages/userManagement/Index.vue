@@ -6,45 +6,48 @@
     <div class="table-board">
       <div class="button-block">
         <button
-          class="btn-m btn-default btn-has-icon"
           :disabled="isLoading || isProcessing || reachUserLimit"
+          class="btn-m btn-default btn-has-icon"
           @click="showCreateUser">
-          <svg-icon icon-class="user" class="icon"></svg-icon>
+          <svg-icon 
+            icon-class="user" 
+            class="icon"/>
           {{ $t('userManagement.createUser') }}
         </button>
-        <div class="reach-limit"
+        <div 
           v-if="reachUserLimit"
+          class="reach-limit"
         >{{ $t('notification.userLimitNotification') }}</div>
       </div>
       <crud-table
         :headers="tableHeaders"
         :data-list.sync="userData"
         :loading="isLoading"
+        :empty-message="$t('editing.notYetCreateGroup')"
         @changePassword="showPasswordChange"
         @changeRole="showChangeRole"
         @deleteUserFromAccount="showDeleteAccount"
-        :empty-message="$t('editing.notYetCreateGroup')"
       >
         <template v-slot:roleZhName>
           <role-desc-pop />
         </template>
         <template v-slot:action="{ data }">
           <a
-            @click="showPasswordChange(data, !isNotAllowChangePsd(data))"
+            :disabled="isNotAllowChangePsd(data)"
             class="link action-link"
-            :disabled="isNotAllowChangePsd(data)">
+            @click="showPasswordChange(data, !isNotAllowChangePsd(data))">
             {{ $t('editing.changePassword') }}
           </a>
           <a
-            @click="showChangeRole(data, !btnDisabled(data))"
+            :disabled="btnDisabled(data)"
             class="link action-link"
-            :disabled="btnDisabled(data)">
+            @click="showChangeRole(data, !btnDisabled(data))">
             {{ $t('userManagement.updateRole') }}
           </a>
           <a
-            @click="showDeleteAccount(data, !btnDisabled(data))"
+            :disabled="btnDisabled(data)"
             class="link action-link"
-            :disabled="btnDisabled(data)">
+            @click="showDeleteAccount(data, !btnDisabled(data))">
             {{ $t('button.remove') }}
           </a>
         </template>
@@ -55,29 +58,27 @@
       v-if="isShowPasswordChange"
       :title="$t('editing.changePassword')"
       :button="$t('button.change')"
-      :isLoading="isProcessing"
+      :is-loading="isProcessing"
+      :show-both="true"
       @closeDialog="closePasswordChange"
       @confirmBtn="changePassword"
-      :showBoth="true"
     >
       <div class="dialog-select-input-box">
         <input-verify
-          v-model="currentUser.password"
-          type="password"
-          :placeholder="$t('editing.newPassword')"
-          name="verifyNewPassword"
           v-validate="'required|min:8|requireOneNumeric'"
           ref="confirmPassword"
-        >
-        </input-verify>
-        <input-verify
-          v-model="currentUser.verifyPassword"
+          v-model="currentUser.password"
+          :placeholder="$t('editing.newPassword')"
           type="password"
-          :placeholder="$t('editing.confirmNewPassword')"
-          name="verifyPasswordCheck"
+          name="verifyNewPassword"
+        />
+        <input-verify
           v-validate="'required|min:8|requireOneNumeric|confirmed:confirmPassword'"
-        >
-        </input-verify>
+          v-model="currentUser.verifyPassword"
+          :placeholder="$t('editing.confirmNewPassword')"
+          type="password"
+          name="verifyPasswordCheck"
+        />
       </div>
     </writing-dialog>
 
@@ -85,25 +86,28 @@
       v-if="isShowChangeRole"
       :title="$t('userManagement.updateRole')"
       :button="$t('button.change')"
-      :isLoading="isProcessing"
+      :is-loading="isProcessing"
+      :show-both="true"
       @closeDialog="closeChangeRole"
       @confirmBtn="changeRole"
-      :showBoth="true"
     >
       <div class="dialog-select-input-box">
         <div class="label">
           {{ $t('userManagement.userRoleAuthority') }}
           <span class="tooltip-container">
-            <svg-icon icon-class="information-circle" class="icon" />
+            <svg-icon 
+              icon-class="information-circle" 
+              class="icon" />
             <div class="tooltip">
               <role-desc-pop />
             </div>
           </span>
         </div>
-        <default-select class="input"
+        <default-select 
           v-model="currentUser.roleId"
           :option-list="roleOptions"
-        ></default-select>
+          class="input"
+        />
       </div>
     </writing-dialog>
 
@@ -111,19 +115,18 @@
       v-if="isShowDeleteAccount"
       :title="$t('userManagement.confirmDeleteAccountText')"
       :type="'delete'"
-      :btnText="$t('button.remove')"
-      :isProcessing="isProcessing"
+      :btn-text="$t('button.remove')"
+      :is-processing="isProcessing"
       @closeDialog="closeDeleteAccount"
       @confirmBtn="deleteAccount"
-    >
-    </decide-dialog>
+    />
 
     <fill-dialog
       v-if="isShowCreateUser"
+      :is-processing="isProcessing"
+      class="fill-dialog"
       @closeDialog="closeCreateUser"
       @confirmBtn="createUsers"
-      :isProcessing="isProcessing"
-      class="fill-dialog"
     >
       <div class="form new-invitee">
         <div class="form-labels">
@@ -131,41 +134,47 @@
           <span class="label-user-role-authority">
             {{ $t('userManagement.userRoleAuthority') }}
             <span class="tooltip-container">
-              <svg-icon icon-class="information-circle" class="icon" />
+              <svg-icon 
+                icon-class="information-circle" 
+                class="icon" />
               <div class="tooltip">
                 <role-desc-pop />
               </div>
             </span>
           </span>
         </div>
-        <div class="form-item"
+        <div 
           v-for="(invitee, index) in inviteeList"
-          :key="invitee.id">
+          :key="invitee.id"
+          class="form-item">
           <input-verify
+            v-validate="'required|email'"
             v-model="invitee.email"
-            type="email"
             :placeholder="$t('userManagement.inviteeEmailPlaceholder')"
             :name="'invitee' + '-' + invitee.id"
-            v-validate="'required|email'"
+            type="email"
           />
-          <default-select class="input"
+          <default-select 
             v-model="invitee.roleId"
             :option-list="roleOptions"
-          ></default-select>
+            class="input"
+          />
           <a
+            v-if="inviteeList.length > 1"
             href="javascript:void(0)"
             class="link remove"
             @click="removeInvitee(index)"
-            v-if="inviteeList.length > 1"
           >
             {{ $t('button.remove') }}
           </a>
         </div>
         <button
-          @click="addNewInvitee()"
           class="btn btn-m btn-outline"
+          @click="addNewInvitee()"
         >
-          <svg-icon icon-class="plus" class="icon" />{{ $t('button.add') }}
+          <svg-icon 
+            icon-class="plus" 
+            class="icon" />{{ $t('button.add') }}
         </button>
       </div>
     </fill-dialog>
@@ -252,6 +261,38 @@ export default {
           width: '30%'
         }
       ]
+    }
+  },
+  computed: {
+    hasRepetitiveInvitee () {
+      let hasRepetitive = this.inviteeList
+        .map(invitee => invitee.email)
+        .filter((email, index, array) => array.indexOf(email) !== index)
+      return hasRepetitive.length > 0
+    },
+    currentAccountId () {
+      return this.$store.getters['userManagement/getCurrentAccountId']
+    },
+    roleList () {
+      return [
+        {
+          value: true,
+          name: this.$t('editing.admin')
+        },
+        {
+          value: false,
+          name: this.$t('editing.general')
+        }
+      ]
+    }
+  },
+  watch: {
+    userData: {
+      handler (newUsers, oldUsers) {
+        if (newUsers.length === oldUsers.length) return
+        this.checkIfReachUserLimit()
+      },
+      immediate: false
     }
   },
   mounted () {
@@ -392,7 +433,6 @@ export default {
           })
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => {
           this.isProcessing = false
@@ -418,7 +458,6 @@ export default {
               })
             })
             .catch(error => {
-              console.log(error)
             })
             .finally(() => {
               this.isProcessing = false
@@ -524,38 +563,6 @@ export default {
       return existingUsers
     }
   },
-  computed: {
-    hasRepetitiveInvitee () {
-      let hasRepetitive = this.inviteeList
-        .map(invitee => invitee.email)
-        .filter((email, index, array) => array.indexOf(email) !== index)
-      return hasRepetitive.length > 0
-    },
-    currentAccountId () {
-      return this.$store.getters['userManagement/getCurrentAccountId']
-    },
-    roleList () {
-      return [
-        {
-          value: true,
-          name: this.$t('editing.admin')
-        },
-        {
-          value: false,
-          name: this.$t('editing.general')
-        }
-      ]
-    }
-  },
-  watch: {
-    userData: {
-      handler (newUsers, oldUsers) {
-        if (newUsers.length === oldUsers.length) return
-        this.checkIfReachUserLimit()
-      },
-      immediate: false
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

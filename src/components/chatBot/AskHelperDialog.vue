@@ -1,30 +1,34 @@
 <template>
-  <div class="ask-helper-dialog"
+  <div 
     :class="{show}"
+    class="ask-helper-dialog"
   >
     <div class="title-block">
       <div class="dialog-title">{{ $t('askHelper.title') }}</div>
-      <a href="javascript:void(0)" class="close-btn"
+      <a 
+        href="javascript:void(0)" 
+        class="close-btn"
         @click="closeDialog"
       >
-        <svg-icon icon-class="close"></svg-icon>
+        <svg-icon icon-class="close"/>
       </a>
     </div>
-    <el-tabs class="ask-helper-tab"
-      type="card"
+    <el-tabs 
       v-model="activeTab"
+      class="ask-helper-tab"
+      type="card"
     >
       <el-tab-pane
         :label="$t('askHelper.tabToken')"
         :name="$t('askHelper.tabToken')"
       >
-        <column-info></column-info>
+        <column-info/>
       </el-tab-pane>
       <el-tab-pane
         :label="$t('askHelper.tabSample')"
         :name="$t('askHelper.tabSample')"
       >
-        <question-sample></question-sample>
+        <question-sample/>
       </el-tab-pane>
     </el-tabs>
   </div>

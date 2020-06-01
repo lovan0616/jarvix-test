@@ -75,6 +75,11 @@ export const uploadStatus = {
   finished: 'finished'
 }
 
+export const importType = {
+  LOCAL: 'import_file',
+  REMOTE: 'import_database'
+}
+
 export const statsTypeOptionList = [
   { value: 'CATEGORY', name: 'Category' },
   { value: 'NUMERIC', name: 'Numeric' },

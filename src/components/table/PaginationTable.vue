@@ -1,20 +1,21 @@
 <template>
   <div class="sy-table-block">
-    <div class="spinner-block"
+    <div 
       v-show="isProcessing"
+      class="spinner-block"
     >
-      <spinner class="spinner"></spinner>
+      <spinner class="spinner"/>
     </div>
-    <el-table
-      class="sy-table"
+    <el-table 
       v-bind="tableProps"
+      class="sy-table"
       style="width: 100%;"
     >
       <el-table-column
-        type="index"
         :width="indexWidth"
-        align="center"
         :fixed="fixedIndex"
+        type="index"
+        align="center"
       >
         <template slot="header">
           <slot name="index-header" />
@@ -29,12 +30,15 @@
         :min-width="minColumnWidth"
       >
         <!--Header slot-->
-        <template slot="header" slot-scope="scope">
-          <slot name="columns-header"
+        <template 
+          slot="header" 
+          slot-scope="scope">
+          <slot 
             :column="dataset.columns"
             :index="i"
+            name="columns-header"
           >
-            {{scope.column.label}}
+            {{ scope.column.label }}
           </slot>
         </template>
       </el-table-column>
@@ -43,21 +47,26 @@
         width="0px"
         align="center"
       >
-        <template slot="header" slot-scope="scope">
-          <Observer :options="formOptions()" @intersect="getData"/>
+        <template 
+          slot="header" 
+          slot-scope="scope">
+          <Observer 
+            :options="formOptions()" 
+            @intersect="getData"/>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination class="table-pagination"
+    <el-pagination 
       v-if="paginationInfo.totalPages > 1"
-      layout="prev, pager, next"
       :total="paginationInfo.totalItems"
       :page-size="paginationInfo.itemPerPage"
       :current-page="paginationInfo.currentPage + 1"
+      class="table-pagination"
+      layout="prev, pager, next"
       @current-change="changePage"
       @prev-click="prevPage"
       @next-click="nextPage"
-    ></el-pagination>
+    />
   </div>
 </template>
 
@@ -67,6 +76,9 @@ import Observer from '../Observer'
 
 export default {
   name: 'PaginationTable',
+  components: {
+    Observer
+  },
   props: {
     ...Table.props,
     fixedIndex: { type: Boolean, default: false },
@@ -114,14 +126,31 @@ export default {
       default: false
     }
   },
-  components: {
-    Observer
-  },
   data () {
     return {
       columnList: [],
       offset: 0,
       columnPerScroll: 6
+    }
+  },
+  computed: {
+    tableProps () {
+      let tableProps = { ...this.$props, data: this.dataset.data }
+      if (!this.$props.maxHeight) {
+        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 600)
+      }
+      return tableProps
+    },
+    loadMore () {
+      const headerList = this.dataset.columns.titles || this.dataset.columns
+      const isBigData = headerList.length > this.columnPerScroll
+      const hasReachedEnd = this.offset >= headerList.length
+      return isBigData && !hasReachedEnd
+    }
+  },
+  watch: {
+    dataset: function (val) {
+      this.clearSetting()
     }
   },
   mounted () {
@@ -162,26 +191,6 @@ export default {
       this.getData()
     }
   },
-  computed: {
-    tableProps () {
-      let tableProps = { ...this.$props, data: this.dataset.data }
-      if (!this.$props.maxHeight) {
-        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 600)
-      }
-      return tableProps
-    },
-    loadMore () {
-      const headerList = this.dataset.columns.titles || this.dataset.columns
-      const isBigData = headerList.length > this.columnPerScroll
-      const hasReachedEnd = this.offset >= headerList.length
-      return isBigData && !hasReachedEnd
-    }
-  },
-  watch: {
-    dataset: function (val) {
-      this.clearSetting()
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

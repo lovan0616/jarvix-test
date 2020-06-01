@@ -1,20 +1,26 @@
 <template>
-  <div class="conversation-block"
+  <div 
     :class="[content.type === 'System' ? 'system' : 'user']"
+    class="conversation-block"
   >
-    <div class="response"
+    <div 
+      class="response"
       @click="askAgain(content.text)"
     >
-      <svg-icon icon-class="triangle" class="icon"
-        v-if="content.type === 'System'"
-      ></svg-icon>
+      <svg-icon 
+        v-if="content.type === 'System'" 
+        icon-class="triangle"
+        class="icon"
+      />
       {{ content.text }}</div>
-    <div class="option-list"
+    <div 
       v-show="content.options"
+      class="option-list"
     >
-      <div class="option"
+      <div 
         v-for="(option, index) in content.options"
         :key="index + '-option-' + new Date().getTime()"
+        class="option"
         @click="askChatBot(option)"
       >{{ option.question }}</div>
     </div>
@@ -87,10 +93,6 @@ export default {
     .response {
       cursor: pointer;
     }
-  }
-
-  &.system {
-
   }
 
   .option-list {

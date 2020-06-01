@@ -1,35 +1,38 @@
 <template>
   <writing-dialog
-    @closeDialog="$emit('close')"
-    @confirmBtn="createAlias"
     :button="$t('button.save')"
     :title="$t('editing.dataFrameAliasSetting')"
-    :showBoth="true"
+    :show-both="true"
+    @closeDialog="$emit('close')"
+    @confirmBtn="createAlias"
   >
-    <spinner class="layout-spinner"
+    <spinner 
       v-if="isSaving || isLoading"
       :title="getSpinnerTitle"
+      class="layout-spinner"
       size="50"
-    ></spinner>
-    <div v-else class="dialog-container">
+    />
+    <div 
+      v-else 
+      class="dialog-container">
       <empty-info-block
-        class="empty-info-block"
         v-if="dataFrameAlias.length === 0"
         :msg="$t('editing.emptyDataFrameAlias')"
-      ></empty-info-block>
+        class="empty-info-block"
+      />
       <div
-        v-else
         v-for="(alias, index) in dataFrameAlias"
+        v-else
         :key="index"
         class="alias-item"
       >
         <input-block
-          class="dialog-input"
+          v-validate="`required|max:${max}`"
           v-model="alias.name"
           :label="$t('editing.dataFrameAliasInputPlaceholder')"
           :name="'alias' + '-' + index"
-          v-validate="`required|max:${max}`"
-        ></input-block>
+          class="dialog-input"
+        />
         <a
           href="javascript:void(0)"
           class="link remove"
@@ -37,8 +40,10 @@
           {{ $t('button.remove') }}
         </a>
       </div>
-      <button class="btn btn-secondary add" @click="addNewAlias">
-        <svg-icon icon-class="plus"></svg-icon>
+      <button 
+        class="btn btn-secondary add" 
+        @click="addNewAlias">
+        <svg-icon icon-class="plus"/>
         {{ $t('button.add') }}
       </button>
     </div>
@@ -71,6 +76,14 @@ export default {
       isSaving: false,
       isLoading: false,
       dataFrameAlias: []
+    }
+  },
+  computed: {
+    getSpinnerTitle () {
+      return this.isLoading ? this.$t('editing.loading') : this.$t('editing.isSaving')
+    },
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   },
   mounted () {
@@ -126,14 +139,6 @@ export default {
       })
     }
   },
-  computed: {
-    getSpinnerTitle () {
-      return this.isLoading ? this.$t('editing.loading') : this.$t('editing.isSaving')
-    },
-    max () {
-      return this.$store.state.validation.fieldCommonMaxLength
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

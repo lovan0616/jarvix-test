@@ -1,30 +1,34 @@
 <template>
-    <div class="dialog-box">
-        <div @click.stop class="dialog-inner-box">
-            <div @click="closeDialog">
-                <svg-icon icon-class="close" class="icon dialog-close"></svg-icon>
-            </div>
-            <div class="dialog-select-text">{{ title }}</div>
-            <slot></slot>
-            <div class="dialog-select-flex">
-                <button
-                  v-if="showBoth"
-                  :disabled="isLoading"
-                  @click="closeDialog"
-                  class="btn btn-outline dialog-select-cancel">
-                  {{ $t('button.cancel') }}
-                </button>
-                <button
-                  class="btn btn-default dialog-change"
-                  @click="confirmBtn"
-                  :disabled="isLoading"
-                >
-                  <span v-if="isLoading"><svg-icon icon-class="spinner"></svg-icon>{{ $t('button.processing') }}</span>
-                  <span v-else>{{ button }}</span>
-                </button>
-            </div>
-        </div>
+  <div class="dialog-box">
+    <div 
+      class="dialog-inner-box" 
+      @click.stop>
+      <div @click="closeDialog">
+        <svg-icon 
+          icon-class="close" 
+          class="icon dialog-close"/>
+      </div>
+      <div class="dialog-select-text">{{ title }}</div>
+      <slot/>
+      <div class="dialog-select-flex">
+        <button
+          v-if="showBoth"
+          :disabled="isLoading"
+          class="btn btn-outline dialog-select-cancel"
+          @click="closeDialog">
+          {{ $t('button.cancel') }}
+        </button>
+        <button
+          :disabled="isLoading"
+          class="btn btn-default dialog-change"
+          @click="confirmBtn"
+        >
+          <span v-if="isLoading"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
+          <span v-else>{{ button }}</span>
+        </button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>

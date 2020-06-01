@@ -4,20 +4,26 @@
     <div class="dialog-body">
       <div class="input-block-container">
         <div class="choose-type-container">
-          <div class="single-type-block"
+          <div 
             v-for="dataType in dataTypeList"
             :key="dataType.type"
+            :class="{'is-disabled': !hasPermission(dataType.type)}"
+            class="single-type-block"
             @click="selectDataType(dataType.type)"
           >
-            <svg-icon class="check-icon"
+            <svg-icon 
+              class="check-icon"
               icon-class="check-circle"
-            ></svg-icon>
+            />
             <div class="single-type-content">
-              <svg-icon class="icon"
+              <svg-icon 
                 :icon-class="dataType.icon"
-              ></svg-icon>
+                class="icon"
+              />
               <div class="type-title">{{ dataType.title }}</div>
-              <div class="type-content" v-html="dataType.description"></div>
+              <div 
+                class="type-content" 
+                v-html="dataType.description"/>
             </div>
           </div>
         </div>
@@ -25,7 +31,8 @@
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
       </div>
@@ -33,6 +40,7 @@
   </div>
 </template>
 <script>
+import { importType } from '@/utils/general'
 import SySelect from '@/components/select/SySelect'
 import InputBlock from '@/components/InputBlock'
 
@@ -45,16 +53,16 @@ export default {
   },
   data () {
     return {
-      selectedDataType: 'local',
+      selectedDataType: importType.LOCAL,
       dataTypeList: [
         {
-          type: 'local',
+          type: importType.LOCAL,
           icon: 'upload',
           title: this.$t('editing.localUpload'),
           description: this.$t('editing.localUploadDescription')
         },
         {
-          type: 'remote',
+          type: importType.REMOTE,
           icon: 'db-connection',
           title: this.$t('editing.remoteConnection'),
           description: this.$t('editing.remoteConnectionDescription')
@@ -63,7 +71,11 @@ export default {
     }
   },
   methods: {
+    hasPermission (type) {
+      return this.$store.state.userManagement.permission.includes(type)
+    },
     selectDataType (value) {
+      if (!this.hasPermission(value)) return
       this.selectedDataType = value
       this.nextStep()
     },
@@ -107,6 +119,14 @@ export default {
         border: 2px solid rgba(72, 84, 84, 0.95);
         border-radius: 12px;
         cursor: pointer;
+
+        &.is-disabled {
+          cursor: not-allowed;
+          opacity: 0.3;
+          &:hover {
+            border: 2px solid rgba(72, 84, 84, 0.95);
+          }
+        }
 
         &:hover {
           border: 2px solid #2AD2E2;

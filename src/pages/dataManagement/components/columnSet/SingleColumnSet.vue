@@ -1,37 +1,49 @@
 <template>
   <div class="single-edit-region">
     <div class="button-block">
-      <button type="button" class="btn btn-default btn-save"
-        v-if="!columnSet.id && isEditing"
+      <button 
+        v-if="!columnSet.id && isEditing" 
+        type="button"
+        class="btn btn-default btn-save"
         @click="saveColumnSet"
       >{{ $t('button.build') }}</button>
-      <button type="button" class="btn btn-delete"
-        @click="removeColumnSet"
-        v-if="isEditing"
+      <button 
+        v-if="isEditing" 
         :class="columnSet.id ? 'btn-secondary' : 'btn-outline'"
+        type="button"
+        class="btn btn-delete"
+        @click="removeColumnSet"
       >{{ columnSet.id ? $t('button.delete') : $t('button.cancel') }}</button>
-      <button type="button" class="btn btn-outline"
+      <button 
+        v-if="!isEditing" 
+        type="button"
+        class="btn btn-outline"
         @click="toggleIsEditing()"
-        v-if="!isEditing"
       >{{ $t('button.edit') }}</button>
-      <button type="button" class="btn btn-outline"
+      <button 
+        v-if="columnSet.id && isEditing" 
+        type="button"
+        class="btn btn-outline"
         @click="toggleIsEditing()"
-        v-if="columnSet.id && isEditing"
       >{{ $t('button.close') }}</button>
     </div>
-    <div class="region-title" v-if="!isEditing">
+    <div 
+      v-if="!isEditing" 
+      class="region-title">
       {{ columnSet.primaryAlias }}
     </div>
     <template v-else>
       <div class="input-block">
-        <label for="" class="label">*{{ $t('editing.columnSetName') }}</label>
+        <label 
+          for="" 
+          class="label">*{{ $t('editing.columnSetName') }}</label>
         <input-block
+          v-validate="`required|max:${max}`"
           v-if="!columnSet.id"
           :placeholder="$t('editing.pleaseEnterName')"
           v-model="columnSet.primaryAlias"
           :name="validateFieldKey"
-          v-validate="`required|max:${max}`"
-        ></input-block>
+        />
         <div
           v-else
         >{{ columnSet.primaryAlias }}</div>
@@ -40,38 +52,47 @@
         <div class="select-block">
           <div class="block-title">{{ $t('editing.notSelect') }}</div>
           <div class="option-list-block">
-            <div class="single-option"
+            <div 
               v-for="(column, index) in columnOptionList"
               :key="column.id"
+              class="single-option"
             >
               <div class="info name">{{ column.name }}</div>
               <div class="info alias">{{ column.primaryAlias }}</div>
-              <button class="btn-m btn-default btn-select"
+              <button 
+                class="btn-m btn-default btn-select"
                 @click="selectColumn(index)"
               >{{ $t('button.select') }}</button>
             </div>
           </div>
         </div>
         <div class="icon-block">
-          <svg-icon icon-class="go-right" class="arrow-icon"></svg-icon>
-          <svg-icon icon-class="go-right" class="arrow-icon left"></svg-icon>
+          <svg-icon 
+            icon-class="go-right" 
+            class="arrow-icon"/>
+          <svg-icon 
+            icon-class="go-right" 
+            class="arrow-icon left"/>
         </div>
         <div class="select-block">
           <div class="block-title">{{ $t('editing.alreadySelect') }}</div>
           <div class="option-list-block">
-            <div class="single-option"
+            <div 
               v-for="(column, index) in columnSet.dataColumnList"
               :key="column.id"
+              class="single-option"
             >
               <div class="info name">{{ column.name }}</div>
               <div class="info alias">{{ column.primaryAlias }}</div>
-              <button class="btn-m btn-secondary btn-select"
-                @click="cancelSelect(index)"
+              <button 
                 v-if="columnSet.dataColumnList.length > 1"
+                class="btn-m btn-secondary btn-select"
+                @click="cancelSelect(index)"
               >{{ $t('button.cancel') }}</button>
             </div>
-            <div class="empty-select"
+            <div 
               v-if="columnSet.dataColumnList.length === 0"
+              class="empty-select"
             >{{ $t('editing.selectYet') }}</div>
           </div>
         </div>
@@ -112,6 +133,11 @@ export default {
       columnOptionList: [],
       isEditing: !this.columnSet.id,
       validateFieldKey: new Date().getTime().toString()
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   },
   mounted () {
@@ -232,11 +258,6 @@ export default {
       this.isEditing = !this.isEditing
     }
   },
-  computed: {
-    max () {
-      return this.$store.state.validation.fieldCommonMaxLength
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

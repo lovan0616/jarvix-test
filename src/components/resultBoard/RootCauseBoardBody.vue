@@ -1,51 +1,42 @@
 <template>
   <div class="result-board-body root-cause-board-body">
-    <div class="hint-info-block">
-      <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"></svg-icon> {{ $t('resultDescription.prompt') }}:</span> {{ $t('editing.resultOverSizeMessage') }}</div>
-    </div>
+    <hint-info-block
+      :msg-list="[$t('editing.resultOverSizeMessage')]"
+      inline
+    />
     <div class="title-block">{{ $t('resultDescription.summaryReport') }}</div>
     <div class="main-chart-container">
       <div class="chart-description-block">
-        <slot name="RootCauseDescription"></slot>
+        <slot name="RootCauseDescription"/>
       </div>
       <div class="chart-block">
-        <slot name="PageResultBoardChart"></slot>
+        <slot name="PageResultBoardChart"/>
       </div>
     </div>
     <div class="title-block">{{ $t('resultDescription.importantFeatureChanging') }}</div>
     <div class="root-cause-item-block">
-      <slot name="RootCauseItem"></slot>
+      <slot name="RootCauseItem"/>
     </div>
   </div>
 </template>
 <script>
+import HintInfoBlock from '@/components/display/HintInfoBlock'
+
 export default {
   name: 'RootCauseBoardBody',
+  components: {
+    HintInfoBlock
+  },
   data () {
     return {
       showBasicInfo: false
     }
-  },
-  methods: {
   }
 }
 </script>
 <style lang="scss" scoped>
 .result-board-body {
   padding: 19px 30px 30px;
-
-  .hint-info-block {
-    background-color: rgba(0, 0, 0, 0.55);
-    border-radius: 5px;
-    padding: 11px;
-    font-size: 14px;
-    line-height: 1;
-    margin-bottom: 12px;
-
-    .hint-title {
-      color: #FFDF6F;
-    }
-  }
 
   .title-block {
     font-size: 20px;

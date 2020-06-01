@@ -4,8 +4,7 @@
       :style="chartStyle"
       :options="options"
       auto-resize
-    >
-    </v-echart>
+    />
   </div>
 </template>
 <script>
@@ -30,6 +29,18 @@ const echartAddon = new EchartAddon({
 
 export default {
   name: 'DisplayHeatMapChart',
+  props: {
+    // dataset.columns = ['x 軸名稱', 'y 軸名稱']
+    // dataset.data = [ [0,0,0.5],[1,0,0.1],[2,2,0],[1,1,0.3] ...... ] > [x, y, value]
+    // dataset.index = [ [1, 2, 3, 4, 5 ,6 ......], [1, 2, 3, 4, 5, 6 ......] ] [ [x 軸各欄位名稱], [y 軸各欄位名稱] ]
+    // dataset.index[0] 數量 乘上 index[1] 數量 = value 格數
+    dataset: {
+      type: Object,
+      default: null
+    },
+    height: {type: String, default: '550px'},
+    width: {type: String, default: '100%'}
+  },
   data () {
     echartAddon.mapping({
       'seriesItem:heatmap': {
@@ -45,18 +56,6 @@ export default {
       addonSeriesData: JSON.parse(JSON.stringify(echartAddon.seriesData)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems))
     }
-  },
-  props: {
-    // dataset.columns = ['x 軸名稱', 'y 軸名稱']
-    // dataset.data = [ [0,0,0.5],[1,0,0.1],[2,2,0],[1,1,0.3] ...... ] > [x, y, value]
-    // dataset.index = [ [1, 2, 3, 4, 5 ,6 ......], [1, 2, 3, 4, 5, 6 ......] ] [ [x 軸各欄位名稱], [y 軸各欄位名稱] ]
-    // dataset.index[0] 數量 乘上 index[1] 數量 = value 格數
-    dataset: {
-      type: Object,
-      default: null
-    },
-    height: {type: String, default: '550px'},
-    width: {type: String, default: '100%'}
   },
   computed: {
     options () {

@@ -1,13 +1,13 @@
 <template>
   <div class="page-preview-bookmark">
     <template v-if="dataSourceId">
-      <div class="bookmark-header">{{$t('resultDescription.dataSourceIntro')}}</div>
+      <div class="bookmark-header">{{ $t('resultDescription.dataSourceIntro') }}</div>
       <div class="result-board">
         <spinner
           v-if="isLoading"
           :title="$t('editing.loading')"
           size="50"
-        ></spinner>
+        />
         <div
           v-if="dataSourceTables.length > 0"
           class="board-header"
@@ -25,23 +25,23 @@
             >
               <el-tooltip
                 slot="label"
-                placement="bottom-start"
                 :visible-arrow="false"
-                :content="tab.name">
-                <span>{{tab.name}}</span>
+                :content="tab.name"
+                placement="bottom-start">
+                <span>{{ tab.name }}</span>
               </el-tooltip>
             </el-tab-pane>
           </el-tabs>
         </div>
         <div
-          class="board-body"
           :class="{'is-loading': isLoading}"
+          class="board-body"
         >
           <data-frame-data
             v-if="currentDataFrameId"
             :key="currentDataFrameId"
             :data-frame-id="currentDataFrameId"
-          ></data-frame-data>
+          />
         </div>
       </div>
     </template>
@@ -81,10 +81,6 @@ export default {
       currentDataFrameId: null
     }
   },
-  mounted () {
-    this.isLoading = true
-    this.fetchDataSourceTable()
-  },
   computed: {
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
@@ -104,6 +100,10 @@ export default {
       }
       return result
     }
+  },
+  mounted () {
+    this.isLoading = true
+    this.fetchDataSourceTable()
   },
   methods: {
     fetchDataSourceTable () {

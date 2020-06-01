@@ -2,11 +2,12 @@
   <div class="quick-start-list">
     <div class="title">{{ $t('resultDescription.quickStart') }}</div>
     <div class="question-list">
-      <preview-result-board class="result-board"
+      <preview-result-board 
         v-for="(singleQuestion, index) in questionList"
         :key="index"
         :question-info="singleQuestion"
-      ></preview-result-board>
+        class="result-board"
+      />
     </div>
   </div>
 </template>

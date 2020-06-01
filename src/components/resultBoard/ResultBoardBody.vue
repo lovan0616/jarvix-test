@@ -1,33 +1,37 @@
 <template>
   <div class="result-board-body">
     <!-- indicator -->
-    <slot name="PageResultBoardIndicator"></slot>
-    <div class="chart-container"
+    <slot name="PageResultBoardIndicator"/>
+    <div 
       :class="{'is-open': isShowChatRoom}"
+      class="chart-container"
     >
       <!-- <QuestionAnalysisAlert/> -->
-      <button type="button" class="btn-m btn-default control-btn"
-        :class="{active: showBasicInfo}"
-        v-if="$slots.InsightBasicInfo"
+      <button 
+        v-if="$slots.InsightBasicInfo" 
         v-show="isShowChatRoom"
+        :class="{active: showBasicInfo}"
+        type="button"
+        class="btn-m btn-default control-btn"
         @click.stop="toggleBasicInfoDialog"
       >{{ $t('resultDescription.basicInfo') }}</button>
       <div class="chart-block">
-        <slot name="PageResultBoardChart"></slot>
+        <slot name="PageResultBoardChart"/>
       </div>
-      <slot-dialog class="basic-info-container"
+      <slot-dialog 
         v-if="$slots.InsightBasicInfo"
         v-show="showBasicInfo || !isShowChatRoom"
         :show="showBasicInfo"
+        class="basic-info-container"
         @close="closeBasicInfoDialog"
       >
         <template slot="SlotDialog">
-          <slot name="InsightBasicInfo"></slot>
+          <slot name="InsightBasicInfo"/>
         </template>
       </slot-dialog>
     </div>
-    <slot name="InsightRootCause"></slot>
-    <slot name="CorrelationAnalysis"></slot>
+    <slot name="InsightRootCause"/>
+    <slot name="CorrelationAnalysis"/>
   </div>
 </template>
 <script>
@@ -45,14 +49,6 @@ export default {
       showBasicInfo: false
     }
   },
-  methods: {
-    toggleBasicInfoDialog () {
-      this.showBasicInfo = !this.showBasicInfo
-    },
-    closeBasicInfoDialog () {
-      this.showBasicInfo = false
-    }
-  },
   computed: {
     isShowChatRoom () {
       return this.$store.state.isShowChatRoom
@@ -62,7 +58,15 @@ export default {
     isShowChatRoom (value, oldValue) {
       this.closeBasicInfoDialog()
     }
-  }
+  },
+  methods: {
+    toggleBasicInfoDialog () {
+      this.showBasicInfo = !this.showBasicInfo
+    },
+    closeBasicInfoDialog () {
+      this.showBasicInfo = false
+    }
+  },
 }
 </script>
 <style lang="scss" scoped>

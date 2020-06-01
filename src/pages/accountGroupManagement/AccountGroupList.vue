@@ -7,27 +7,28 @@
       <div class="board-title-row">
         <div class="button-block">
           <router-link
-            :to="{name: 'CreateAccountGroup'}"
-            class="btn-m btn-default btn-has-icon"
-            :class="{disabled: isLoading}"
             v-if="showCreateButton()"
+            :to="{name: 'CreateAccountGroup'}"
+            :class="{disabled: isLoading}"
+            class="btn-m btn-default btn-has-icon"
           >
-            <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.createGroup') }}
+            <svg-icon
+              icon-class="plus"
+              class="icon"/>{{ $t('button.createGroup') }}
           </router-link>
         </div>
       </div>
       <crud-table
         :headers="tableHeaders"
         :data-list="groupList"
-        @update:dataList="$emit('update:groupList', $event)"
         :loading="isLoading"
+        :empty-message="$t('editing.notYetCreateGroup')"
+        @update:dataList="$emit('update:groupList', $event)"
         @delete="confirmDelete"
         @cancel="cancelDelete"
         @edit="editGroup($event)"
         @manage="confirmEnterGroup"
-        :empty-message="$t('editing.notYetCreateGroup')"
-      >
-      </crud-table>
+      />
       <decide-dialog
         v-if="showConfirmDeleteDialog"
         :title="$t('editing.confirmDeleteBelowGroupOrNot')"
@@ -35,18 +36,16 @@
         :type="'delete'"
         @closeDialog="cancelDelete"
         @confirmBtn="deleteGroup"
-      >
-      </decide-dialog>
+      />
       <decide-dialog
         v-if="showConfirmEnterGroupDialog"
         :title="$t('editing.confirmEnterGroupUserManagement')"
         :content="selectedGroup.groupName"
         :type="'confirm'"
-        :btnText="$t('button.moveForward')"
+        :btn-text="$t('button.moveForward')"
         @closeDialog="cancelEnterGroup"
         @confirmBtn="enterGroup"
-      >
-      </decide-dialog>
+      />
     </div>
   </div>
 </template>
@@ -72,9 +71,6 @@ export default {
       showConfirmDeleteDialog: false,
       showConfirmEnterGroupDialog: false
     }
-  },
-  mounted () {
-    this.fetchData()
   },
   computed: {
     ...mapGetters('userManagement', ['hasPermission']),
@@ -125,6 +121,9 @@ export default {
         }
       ]
     }
+  },
+  mounted () {
+    this.fetchData()
   },
   methods: {
     fetchData () {
