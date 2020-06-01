@@ -26,6 +26,7 @@
               :value="selectedInvitee"
               :option-list="userList"
               :placeholder="$t('editing.pleaseSelectInviteeEmail')"
+              filterable
               class="input"
               name="invitee"
               @input="updateSelectedInvitee"

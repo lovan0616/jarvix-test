@@ -1,13 +1,15 @@
 <template>
-  <el-select 
+  <el-select
     v-model="selectedValue"
     :placeholder="placeholder"
     :no-data-text="$t('message.noData')"
+    :no-match-text="$t('message.noMatchData')"
     :disabled="isDisabled"
     :popper-append-to-body="false"
     :size="size"
     :multiple="multiple"
     :collapse-tags="collapseTags"
+    :filterable="filterable"
     class="sy-select theme-dark"
     style="text-align:left;"
     @change="$emit('change', $event)"
@@ -38,7 +40,8 @@ export default {
     isDisabled: {type: Boolean, default: false},
     size: { type: String, default: '' },
     multiple: {type: Boolean, default: false},
-    collapseTags: {type: Boolean, default: false}
+    collapseTags: {type: Boolean, default: false},
+    filterable: {type: Boolean, default: false}
   },
   computed: {
     selectedValue: {
