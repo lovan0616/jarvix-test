@@ -44,7 +44,7 @@
         align="center"
       >
         <template slot="header" slot-scope="scope">
-          <Observer ref="observer" :options="formOptions()" @intersect="getData"/>
+          <Observer :options="formOptions()" @intersect="getData"/>
         </template>
       </el-table-column>
     </el-table>
