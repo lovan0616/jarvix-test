@@ -43,9 +43,6 @@
             :data-frame-id="currentDataFrameId"
           ></data-frame-data>
         </div>
-        <div class="scroll-test">
-          <InfiniteScroll />
-        </div>
       </div>
     </template>
     <span v-else>{{ $t('message.emptyDataSource') }}</span>
@@ -55,15 +52,13 @@
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import DataFrameData from './DataFrameData'
-import InfiniteScroll from './InfiniteScroll'
 
 export default {
   name: 'PreviewDataSource',
   components: {
     SySelect,
     EmptyInfoBlock,
-    DataFrameData,
-    InfiniteScroll
+    DataFrameData
   },
   data () {
     return {

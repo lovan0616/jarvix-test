@@ -5,18 +5,29 @@
 
 <script>
 export default {
-  props: ['options'],
+  props: {
+    options: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data: () => ({
     observer: null
   }),
   mounted () {
     const options = this.options || {}
+    console.log(this)
+    console.log(this.$el.closest('.el-table__header-wrapper'))
     this.observer = new IntersectionObserver(([entry]) => {
       if (entry && entry.isIntersecting) {
         console.log('intersect')
         this.$emit('intersect')
       }
-    }, options)
+    }, {
+      root: this.$el.closest('.el-table__header-wrapper'),
+      rootMargin: '300px',
+      threshold: 0
+    })
 
     this.observer.observe(this.$el)
   },

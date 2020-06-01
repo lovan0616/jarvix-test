@@ -40,13 +40,18 @@
       </el-table-column>
       <el-table-column
         v-if="loadMore"
-        ref="tableEnd"
-        type="index"
-        :width="indexWidth"
+        width="10px"
         align="center"
+        ref="observer"
       >
         <template slot="header" slot-scope="scope">
-          <Observer :options="options" @intersect="intersected"/>
+          <Observer @intersect="intersected"/>
+        </template>
+        <template slot-scope="scope">
+          <!-- <spinner
+            class="cell-spinner"
+            size="5"
+          ></spinner> -->
         </template>
       </el-table-column>
     </el-table>
@@ -123,11 +128,7 @@ export default {
     return {
       columnList: [],
       offset: 0,
-      columnPerScroll: 6,
-      options: {
-        root: this.$refs.table,
-        threshold: 0
-      }
+      columnPerScroll: 6
     }
   },
   mounted () {
@@ -137,7 +138,7 @@ export default {
     getData () {
       const headerList = this.dataset.columns.titles || this.dataset.columns
       if (headerList.length === this.offset) return
-      this.columnList = [...this.columnList, ...headerList.slice(this.offset, this.offset + this.columnPerScroll)]
+      this.columnList.push(...headerList.slice(this.offset, this.offset + this.columnPerScroll))
       this.offset += this.columnPerScroll
     },
     changePage (value) {
@@ -194,6 +195,10 @@ export default {
 
   .sy-table {
     margin-bottom: 16px;
+  }
+
+  /deep/ .spinner-block {
+    padding: 0;
   }
 
   /* TODO: 上版前需把註解移除 */
