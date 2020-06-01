@@ -107,7 +107,7 @@ export default {
     }
 
     .chart-block {
-      width: calc(71.5% - 32px);
+      width: 100%;
       flex: 1;
       margin-right: 32px;
     }
