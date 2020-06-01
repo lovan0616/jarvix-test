@@ -293,12 +293,6 @@ export default {
     }
   }
 }
-
-.scroll-test {
-  height: 100px;
-  border: 1px solid green;
-  overflow: auto;
-}
 </style>
 <style lang="scss">
 .preview-bookmark-select.sy-select.theme-default {
