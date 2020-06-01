@@ -99,7 +99,7 @@
         <div 
           :class="{'has-error': !validFeatureFormula}"
           class="feature-input-block">
-          <div 
+          <div
             v-if="featureFormula.length === 0"
             class="placeholder"
           >{{ $t('feature.inputPlaceholder') }}</div>
@@ -153,6 +153,7 @@
               </a>
             </div>
           </draggable>
+
           <div 
             v-show="!validFeatureFormula"
             class="error-text"
