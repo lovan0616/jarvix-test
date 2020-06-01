@@ -70,4 +70,14 @@ export default {
     margin-right: 16px;
   }
 }
+
+// 將原本的 option 藏起來不被點選到
+/deep/ .el-select-dropdown {
+  .el-select-dropdown__item {
+    padding: 0;
+    .checkbox {
+      padding: 0 20px;
+    }
+  }
+}
 </style>
