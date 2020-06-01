@@ -345,7 +345,8 @@
     "emptyConnectionHistory": "没有任何连线纪录",
     "dataCalculate": "资料计算中",
     "tableChosenLimit": "最多选择 {number} 张资料表",
-    "null": "Null"
+    "null": "Null",
+    "columnSelected": "已选择栏位数"
   },
   "feature": {
     "value": "数值",

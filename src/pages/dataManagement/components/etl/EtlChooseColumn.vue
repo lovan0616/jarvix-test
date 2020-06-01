@@ -5,7 +5,7 @@
       class="etl-choose-column"
     >
       <div class="section data-frame">
-        <div class="data-frame-info">
+        <div class="data-frame__name">
           <div class="title">{{ $t('etl.currentDataFrame') }}：</div>
           <default-select
             v-model="currentTableIndex"
@@ -14,8 +14,7 @@
             @change="chooseTable"
           />
         </div>
-        <!-- TODO 已選欄位數 -->
-        <div class="data-content-info">
+        <div class="data-frame__info">
           <dl>
             <dt>{{ $t('etl.columnCount') }}：</dt>
             <dd>{{ formatComma(currentTableInfo.columns.length) }}</dd>
@@ -24,6 +23,13 @@
             <dt>{{ $t('etl.rowCount') }}：</dt>
             <dd>{{ formatComma(currentTableInfo.rowCount) }}</dd>
           </dl>
+        </div>
+        <div class="data-frame__select">
+          <div class="title">{{ $t('etl.columnSelected') }}：</div>
+          <column-select
+            :current-table-info="currentTableInfo"
+            @toggleColumn="toggleColumn"
+          />
         </div>
       </div>
       <div
@@ -130,6 +136,7 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import CategorySelect from './CategorySelect'
+import ColumnSelect from './ColumnSelect'
 import EtlColumnSetting from './EtlColumnSetting'
 import { getDataFrameSummary } from '@/API/File'
 
@@ -140,7 +147,8 @@ export default {
     PaginationTable,
     DataColumnSummary,
     CategorySelect,
-    EtlColumnSetting
+    EtlColumnSetting,
+    ColumnSelect
   },
   data () {
     return {
@@ -266,15 +274,24 @@ export default {
     &.data-frame {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      flex-wrap: wrap;
+      justify-content: flex-start;
       padding-bottom: 10px;
-      .data-frame-info {
+      .data-frame__name {
+        flex-basis: 100%;
+        margin-bottom: 8px;
+        >>> .sy-select {
+          border: 1px solid #2AD2E2;
+        }
+      }
+      .data-frame__name,
+      .data-frame__select {
         display: flex;
         align-items: center;
         font-size: 14px;
         >>> .sy-select {
-          border: 1px solid #2AD2E2;
           border-radius: 5px;
+          background-color: #252C2C;
           .el-input {
             .el-input__inner {
               font-size: 14px;
@@ -282,8 +299,9 @@ export default {
           }
         }
       }
-      .data-content-info {
+      .data-frame__info {
         font-size: 14px;
+        margin-right:16px;
         dl:not(:last-child) {
           margin-right: 20px;
         }
