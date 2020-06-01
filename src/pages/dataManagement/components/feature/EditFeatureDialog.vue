@@ -194,7 +194,6 @@ export default {
       this.getDataFrameColumnInfo(this.featureInfo.dataFrameId)
     }
     this.getDataFrameList()
-    this.setOption('column', null)
   },
   methods: {
     getDataFrameList () {
