@@ -223,9 +223,7 @@ export default {
   }
 
   .header-block {
-    width: 270px;
     .header {
-      width: 270px;
       padding: 10px;
       border-bottom: 1px solid #515959;
       display: flex;
@@ -244,7 +242,6 @@ export default {
       }
     }
     .summary {
-      width: 270px;
       padding: 10px;
     }
   }

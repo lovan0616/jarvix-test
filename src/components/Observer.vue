@@ -1,6 +1,5 @@
-<!-- Observer.vue -->
 <template>
-  <div class="observer"/>
+  <div class="observer" />
 </template>
 
 <script>
@@ -14,20 +13,21 @@ export default {
   data: () => ({
     observer: null
   }),
+  computed: {
+    formedOptions () {
+      return {
+        root: this.options.root || this.$el.closest(this.options.rootClassName) || null,
+        rootMargin: this.options.rootMargin || '0px',
+        threshold: this.options.threshold || 0
+      }
+    }
+  },
   mounted () {
-    const options = this.options || {}
-    console.log(this)
-    console.log(this.$el.closest('.el-table__header-wrapper'))
     this.observer = new IntersectionObserver(([entry]) => {
       if (entry && entry.isIntersecting) {
-        console.log('intersect')
         this.$emit('intersect')
       }
-    }, {
-      root: this.$el.closest('.el-table__header-wrapper'),
-      rootMargin: '300px',
-      threshold: 0
-    })
+    }, this.formedOptions)
 
     this.observer.observe(this.$el)
   },

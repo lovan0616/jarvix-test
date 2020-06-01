@@ -5,10 +5,10 @@
     >
       <spinner class="spinner"></spinner>
     </div>
-    <el-table class="sy-table"
+    <el-table
+      class="sy-table"
       v-bind="tableProps"
       style="width: 100%;"
-      ref="table"
     >
       <el-table-column
         type="index"
@@ -34,24 +34,17 @@
             :column="dataset.columns"
             :index="i"
           >
-           {{scope.column.label}}
+            {{scope.column.label}}
           </slot>
         </template>
       </el-table-column>
       <el-table-column
         v-if="loadMore"
-        width="10px"
+        width="0px"
         align="center"
-        ref="observer"
       >
         <template slot="header" slot-scope="scope">
-          <Observer @intersect="intersected"/>
-        </template>
-        <template slot-scope="scope">
-          <!-- <spinner
-            class="cell-spinner"
-            size="5"
-          ></spinner> -->
+          <Observer ref="observer" :options="formOptions()" @intersect="getData"/>
         </template>
       </el-table-column>
     </el-table>
@@ -156,7 +149,16 @@ export default {
         this.$emit('change-page', this.paginationInfo.currentPage)
       }
     },
-    intersected () {
+    formOptions () {
+      return {
+        rootClassName: '.el-table__header-wrapper',
+        rootMargin: '300px',
+        threshold: 0
+      }
+    },
+    clearSetting () {
+      this.columnList = []
+      this.offset = 0
       this.getData()
     }
   },
@@ -173,6 +175,11 @@ export default {
       const isBigData = headerList.length > this.columnPerScroll
       const hasReachedEnd = this.offset >= headerList.length
       return isBigData && !hasReachedEnd
+    }
+  },
+  watch: {
+    dataset: function (val) {
+      this.clearSetting()
     }
   }
 }
@@ -201,7 +208,6 @@ export default {
     padding: 0;
   }
 
-  /* TODO: 上版前需把註解移除 */
   /deep/ .sy-table.el-table {
     border: 1px solid #515959;
     th, td {
@@ -225,6 +231,15 @@ export default {
   /deep/ .el-table thead th {
     overflow: visible;
     vertical-align: top;
+  }
+
+  /* 解決 lazy loading 新增欄位時，寬度增長速度大於資料顯示，造成短暫 word wrap */
+  /deep/ .el-table td {
+    width: 270px
+  }
+
+  /deep/ .el-table th {
+    width: 270px
   }
 }
 </style>
