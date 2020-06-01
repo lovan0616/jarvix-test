@@ -184,7 +184,6 @@ export default {
         operator: null
       },
       numericColumnList: [],
-      // validFeatureFormula: false,
       featureFormula: []
     }
   },
