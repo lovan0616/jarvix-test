@@ -9,11 +9,15 @@
         intend="title"
       />
     </template>
-    <result-board-body slot="PageResultBoardBody">
+    <result-board-body
+      slot="PageResultBoardBody"
+      class="correlation-result-body"
+    >
       <template slot="PageResultBoardIndicator">
-        <div class="hint-info-block">
-          <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"/> {{ $t('resultDescription.prompt') }}:</span> {{ $t('editing.resultOverSizeMessage') }}</div>
-        </div>
+        <hint-info-block
+          :msg-list="[$t('editing.resultOverSizeMessage')]"
+          inline
+        />
       </template>
       <template slot="PageResultBoardChart">
         <div class="key-result-wrapper">
@@ -68,8 +72,13 @@
   </result-board>
 </template>
 <script>
+import HintInfoBlock from '@/components/display/HintInfoBlock'
+
 export default {
   name: 'CorrelationExplorationResult',
+  components: {
+    HintInfoBlock
+  },
   props: {
     resultInfo: {
       type: Object,
@@ -110,21 +119,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.hint-info-block {
-  background-color: rgba(0, 0, 0, 0.55);
-  border-radius: 5px;
-  padding: 11px;
-  font-size: 14px;
-  line-height: 1;
-  margin-bottom: 12px;
-
-  .hint-title {
-    color: #FFDF6F;
-  }
-}
-
->>>.result-board-body {
-  padding-top: 23px;
+.correlation-result-body.result-board-body {
+  padding-top: 16px;
 }
 
 .key-result-wrapper {
