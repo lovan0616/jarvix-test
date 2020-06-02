@@ -22,9 +22,17 @@
         v-else
       >
         <div class="remark-info">{{ $t('etl.tableChosenLimit', {number: tableConnectionLimt}) }}</div>
-        <div class="data-frame-list">
+        <input
+          v-model="queryWord"
+          :placeholder="$t('etl.tableSearch')"
+          class="choose-table__search"
+          type="text"
+        >
+        <div
+          v-if="filterTableList.length > 0"
+          class="data-frame-list">
           <label 
-            v-for="(table, index) in tableList"
+            v-for="(table, index) in filterTableList"
             :key="index"
             class="single-data-frame"
           >
@@ -44,6 +52,10 @@
             </div>
           </label>
         </div>
+        <empty-info-block
+          v-else-if="filterTableList.length === 0"
+          :msg="$t('message.emptyResult')"
+        />
       </div>
 
     </div>
@@ -90,13 +102,26 @@ export default {
       isLoading: false,
       tableList: [],
       tableIdList: [],
+      filterTableList: [],
       dataSourceId: parseInt(this.$route.params.id),
-      tableConnectionLimt: 10
+      tableConnectionLimt: 10,
+      queryWord: ''
     }
   },
   computed: {
     currentUploadInfo () {
       return this.$store.state.dataManagement.currentUploadInfo
+    }
+  },
+  watch: {
+    queryWord () {
+      if (this.queryWord === '') {
+        this.filterTableList = [...this.tableList]
+      }
+      else {
+        this.filterTableList = []
+        this.filterTableList = [...this.tableList.filter((element) => element.toLowerCase().split(this.queryWord.toLowerCase()).length > 1)]
+      }
     }
   },
   mounted () {
@@ -107,7 +132,7 @@ export default {
       this.isLoading = true
       getTableList(this.connectionId).then(response => {
         this.tableList = response
-
+        this.filterTableList = [...this.tableList]
         this.isLoading = false
       }).catch(() => {
         this.isLoading = false
@@ -155,6 +180,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+
 .choose-table {
   .info-block {
     display: flex;
@@ -169,7 +195,7 @@ export default {
   }
 
   .data-frame-list, .processing-spinner-container {
-    max-height: 48vh;
+    height: 48vh;
     overflow: auto;
   }
 
@@ -177,6 +203,12 @@ export default {
     font-size: 14px;
     color: #FFDF6F;
     margin-bottom: 8px;
+    display: inline-block;
+  }
+
+  &__search {
+    float: right;
+    background: rgba(67, 76, 76, 0.95);
   }
 
   .single-data-frame {
