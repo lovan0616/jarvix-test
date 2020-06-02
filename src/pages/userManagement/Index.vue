@@ -406,7 +406,8 @@ export default {
             active: this.currentUser.active,
             password: this.currentUser.password,
             userId: this.currentId,
-            username: this.currentUser.name
+            username: this.currentUser.name,
+            accountId: this.$store.getters['userManagement/getCurrentAccountId']
           })
             .then(response => {
               this.closePasswordChange()
