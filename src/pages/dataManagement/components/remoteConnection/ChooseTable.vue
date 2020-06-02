@@ -22,12 +22,11 @@
         v-else
       >
         <div class="remark-info">{{ $t('etl.tableChosenLimit', {number: tableConnectionLimt}) }}</div>
-        <input
+        <input-block
           v-model="queryWord"
-          :placeholder="$t('etl.tableSearch')"
+          :label="$t('etl.tableSearch')"
           class="choose-table__search"
-          type="text"
-        >
+        />
         <div
           v-if="filterTableList.length > 0"
           class="data-frame-list">
@@ -83,13 +82,15 @@
 import { getTableList, analyzeTable } from '@/API/RemoteConnection'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import UploadProcessBlock from './UploadProcessBlock'
+import InputBlock from '@/components/InputBlock'
 import { Message } from 'element-ui'
 
 export default {
   name: 'ChooseTable',
   components: {
     UploadProcessBlock,
-    EmptyInfoBlock
+    EmptyInfoBlock,
+    InputBlock
   },
   props: {
     connectionId: {
@@ -190,7 +191,7 @@ export default {
   .dialog-body {
     background-color: rgba(50, 58, 58, 0.95);
     border-radius: 5px;
-    padding: 24px;
+    padding: 30px 24px;
     margin-bottom: 16px;
   }
 
@@ -202,13 +203,13 @@ export default {
   .remark-info {
     font-size: 14px;
     color: #FFDF6F;
-    margin-bottom: 8px;
+    margin-bottom: 20px;
     display: inline-block;
   }
 
   &__search {
     float: right;
-    background: rgba(67, 76, 76, 0.95);
+    width: unset;
   }
 
   .single-data-frame {
