@@ -180,7 +180,11 @@ export default {
           axisLine: {
             lineStyle: {
               color: this.colorList[index]
-            }
+            },
+            ...(index === 1) ? {
+              onZero: false,
+              onZeroAxisIndex: 0
+            } : null
           },
           axisTick: {
             lineStyle: {
