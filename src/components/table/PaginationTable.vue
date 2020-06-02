@@ -124,13 +124,19 @@ export default {
     isProcessing: {
       type: Boolean,
       default: false
+    },
+    lazyLoadInfo: {
+      type: Object,
+      default: () => ({
+        rootMargin: '300px',
+        columnPerScroll: 6
+      })
     }
   },
   data () {
     return {
       columnList: [],
-      offset: 0,
-      columnPerScroll: 6
+      offset: 0
     }
   },
   computed: {
@@ -143,14 +149,9 @@ export default {
     },
     loadMore () {
       const headerList = this.dataset.columns.titles || this.dataset.columns
-      const isBigData = headerList.length > this.columnPerScroll
+      const isBigData = headerList.length > this.lazyLoadInfo.columnPerScroll
       const hasReachedEnd = this.offset >= headerList.length
       return isBigData && !hasReachedEnd
-    }
-  },
-  watch: {
-    dataset: function (val) {
-      this.clearSetting()
     }
   },
   mounted () {
@@ -160,8 +161,8 @@ export default {
     getData () {
       const headerList = this.dataset.columns.titles || this.dataset.columns
       if (headerList.length === this.offset) return
-      this.columnList.push(...headerList.slice(this.offset, this.offset + this.columnPerScroll))
-      this.offset += this.columnPerScroll
+      this.columnList.push(...headerList.slice(this.offset, this.offset + this.lazyLoadInfo.columnPerScroll))
+      this.offset += this.lazyLoadInfo.columnPerScroll
     },
     changePage (value) {
       this.$emit('change-page', value)
@@ -181,14 +182,9 @@ export default {
     formOptions () {
       return {
         rootClassName: '.el-table__header-wrapper',
-        rootMargin: '300px',
-        threshold: 0
+        rootMargin: this.lazyLoadInfo.rootMargin,
+        threshold: 0,
       }
-    },
-    clearSetting () {
-      this.columnList = []
-      this.offset = 0
-      this.getData()
     }
   },
 }
