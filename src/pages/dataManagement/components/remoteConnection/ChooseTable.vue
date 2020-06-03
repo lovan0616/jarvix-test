@@ -103,7 +103,6 @@ export default {
       isLoading: false,
       tableList: [],
       tableIdList: [],
-      filterTableList: [],
       dataSourceId: parseInt(this.$route.params.id),
       tableConnectionLimt: 10,
       queryWord: ''
@@ -112,17 +111,9 @@ export default {
   computed: {
     currentUploadInfo () {
       return this.$store.state.dataManagement.currentUploadInfo
-    }
-  },
-  watch: {
-    queryWord () {
-      if (this.queryWord === '') {
-        this.filterTableList = [...this.tableList]
-      }
-      else {
-        this.filterTableList = []
-        this.filterTableList = [...this.tableList.filter((element) => element.toLowerCase().split(this.queryWord.toLowerCase()).length > 1)]
-      }
+    },
+    filterTableList () {
+      return this.queryWord === '' ? [...this.tableList] : [...this.tableList.filter((element) => element.toLowerCase().split(this.queryWord.toLowerCase()).length > 1)]
     }
   },
   mounted () {
