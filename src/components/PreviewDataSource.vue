@@ -10,6 +10,7 @@
         />
         <div
           v-if="dataSourceTables.length > 0"
+          :class="{'is-previewing': isPreviewing}"
           class="board-header"
         >
           <el-tabs
@@ -34,7 +35,7 @@
           </el-tabs>
         </div>
         <div
-          :class="{'is-loading': isLoading}"
+          :class="{'is-loading': isLoading, 'is-previewing': isPreviewing}"
           class="board-body"
         >
           <data-frame-data
@@ -59,6 +60,12 @@ export default {
     SySelect,
     EmptyInfoBlock,
     DataFrameData
+  },
+  props: {
+    isPreviewing: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
@@ -230,12 +237,21 @@ export default {
   .board-header {
     border-top: unset;
     padding-bottom: 0;
+
+    &.is-previewing {
+      padding-left: 0;
+      padding-right: 0;
+    }
   }
   .board-body {
     padding: 16px 24px;
 
     &.is-loading {
       padding: 0 24px;
+    }
+
+    &.is-previewing {
+      padding: 16px 0;
     }
   }
 

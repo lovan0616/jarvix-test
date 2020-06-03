@@ -10,6 +10,16 @@
       class="data-source-select"
       @update:selected="onDataSourceChange"
     />
+    <a 
+      href="javascript:void(0)" 
+      class="preview-datasource-btn"
+      @click="togglePreviewDataSource"
+    >
+      <svg-icon 
+        :class="{'preview-datasource-btn__icon--show': isShowPreviewDataSource}"
+        icon-class="view-data"
+        class="preview-datasource-btn__icon"/>
+    </a>
   </div>
 </template>
 <script>
@@ -31,6 +41,9 @@ export default {
       return this.dataSourceList.filter(dataSource => {
         return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
       })
+    },
+    isShowPreviewDataSource () {
+      return this.$store.state.previewDataSource.isShowPreviewDataSource
     }
   },
   methods: {
@@ -39,6 +52,9 @@ export default {
         .then(() => {
           if (this.$route.name !== 'PageIndex') this.$router.push('/')
         })
+    },
+    togglePreviewDataSource () {
+      this.$store.commit('previewDataSource/togglePreviewDataSource', !this.isShowPreviewDataSource)
     }
   }
 }
@@ -47,7 +63,7 @@ export default {
 .data-source-select-block {
   display: inline-block;
   position: relative;
-  background-color: $theme-bg-lighter-color;
+  background-color: #233131;
   color: #fff;
   border-radius: 4px;
 
@@ -55,6 +71,27 @@ export default {
     position: absolute;
     top: 10px;
     left: 8px;
+  }
+
+  .preview-datasource-btn {
+    width: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: 1px solid #3E4B4B;
+
+    &__icon {
+      font-size: 18px;
+      fill: #FFFFFF;
+
+      &--show {
+        fill: #2AD2E2;
+      }
+    }
+  }
+
+  /deep/ .el-select {
+    flex: 1;
   }
 }
 </style>

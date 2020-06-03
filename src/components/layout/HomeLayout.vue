@@ -24,22 +24,48 @@
         </div>
       </main>
     </div>
+    <section 
+      v-if="isShowPreviewDataSource"
+      :class="{'preview-datasource--show': isShowPreviewDataSource}" 
+      class="preview-datasource">
+      <preview-data-source 
+        :key="dataSourceId" 
+        :is-previewing="true"
+      />
+      <a 
+        href="javascript:void(0)" 
+        class="preview-datasource__close-btn"
+        @click="closePreviewDataSource"
+      ><svg-icon icon-class="close"/></a>
+    </section>
   </div>
 </template>
 <script>
 import ChatRoomBlock from '@/components/chatBot/ChatRoom'
 import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
+import PreviewDataSource from '@/components/PreviewDataSource'
 
 export default {
   name: 'HomeLayout',
   components: {
     ChatRoomBlock,
-    ChatBotBtn
+    ChatBotBtn,
+    PreviewDataSource
   },
   computed: {
+    dataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
+    },
     isShowChatRoom () {
       return this.$store.state.isShowChatRoom
+    },
+    isShowPreviewDataSource () {
+      return this.$store.state.previewDataSource.isShowPreviewDataSource
     }
+  },
+  beforeRouteUpdate(to, from, next) {
+    if (this.isShowPreviewDataSource) this.closePreviewDataSource()
+    next()
   },
   mounted () {
     this.toggleChatRoom(true)
@@ -50,6 +76,10 @@ export default {
   methods: {
     toggleChatRoom (isOpened = true) {
       this.$store.commit('updateChatRoomStatus', isOpened)
+      if (!isOpened) this.closePreviewDataSource()
+    },
+    closePreviewDataSource () {
+      this.$store.commit('previewDataSource/togglePreviewDataSource', false)
     }
   },
 }
@@ -79,6 +109,30 @@ export default {
     min-height: calc(100vh - #{$header-height});
   }
 
+  .preview-datasource {
+    width: calc(100% - #{$chat-room-width});
+    height: calc(100vh - #{$header-height});
+    position: absolute;
+    top: $header-height;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    overflow: auto;
+    padding: 32px 40px 0 40px;
+
+
+    &--show {
+      z-index: 3;
+    }
+
+    &__close-btn {
+      position: absolute;
+      top: 32px;
+      right: 40px;
+      color: #fff;
+      font-size: 14px;
+    }
+  }
+
   .chat-bot-btn {
     position: fixed;
     bottom: 16px;
@@ -104,6 +158,18 @@ export default {
       border-radius: 50%;
       z-index: -1;
     }
+  }
+
+  .fast-fade-in-enter-active {
+    transition: opacity .2s;
+  }
+
+  .fast-fade-in-enter {
+    opacity: 0
+  }
+
+  .fast-fade-in-leave-active {
+    transition: none;
   }
 }
 </style>

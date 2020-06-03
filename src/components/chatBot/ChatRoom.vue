@@ -13,7 +13,6 @@
         class="arrow-icon"/>
     </a>
     <div class="chat-room-header">
-      <chat-bot-btn class="chat-bot-link"/>
       <data-source-select class="data-source-select"/>
     </div>
     <conversation-block/>
@@ -23,7 +22,6 @@
 <script>
 import ConversationBlock from './ConversationBlock'
 import AskBlock from './AskBlock'
-import ChatBotBtn from './ChatBotBtn'
 import DataSourceSelect from '@/components/select/DataSourceSelect'
 
 export default {
@@ -31,8 +29,7 @@ export default {
   components: {
     DataSourceSelect,
     ConversationBlock,
-    AskBlock,
-    ChatBotBtn
+    AskBlock
   },
   computed: {
     isShowChatRoom () {
@@ -42,6 +39,10 @@ export default {
   methods: {
     closeChatRoom () {
       this.$store.commit('updateChatRoomStatus', false)
+      this.closePreviewDataSource()
+    },
+    closePreviewDataSource () {
+      this.$store.commit('previewDataSource/togglePreviewDataSource', false)
     }
   },
 }
@@ -83,8 +84,8 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 32px 0;
-    margin-bottom: 16px;
+    padding: 32px 32px 0;
+    margin-bottom: 24px;
 
     .chat-bot-link {
       width: 70px;
@@ -93,8 +94,9 @@ export default {
     }
 
     .data-source-select {
-      width: 150px;
+      width: 100%;
       height: 36px;
+      display: flex;
     }
   }
 }
