@@ -35,6 +35,7 @@
     "noMatchedKey": "沒有成功對上的值，請嘗試設定其他關聯表或欄位",
     "previewFailed": "設定失敗，請稍候再試",
     "noData": "目前沒有資料",
+    "noMatchData": "目前沒有匹配資料",
     "noMember": "目前沒有成員",
     "noResult": "目前暫無相關資訊",
     "formColumnEmpty": "欄位不得空白",
@@ -346,6 +347,7 @@
     "emptyConnectionHistory": "沒有任何連線紀錄",
     "dataCalculate": "資料計算中",
     "tableChosenLimit": "最多選擇 {number} 張資料表",
+    "tableSearch": "搜尋資料表",
     "null": "Null",
     "columnSelected": "已選擇欄位數"
   },
