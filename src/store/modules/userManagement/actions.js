@@ -1,4 +1,5 @@
-import { logout, getUserAccountInfo, getAccountGroupInfo, getSelfInfo } from '@/API/User'
+import { logout, getAccountGroupInfo } from '@/API/User'
+import { getPermission } from '@/API/Permission'
 
 export default {
   logout ({ commit }) {
@@ -10,20 +11,31 @@ export default {
       localStorage.removeItem('token')
     })
   },
-  async getUserInfo ({ commit }) {
-    const accountInfo = await getUserAccountInfo()
-    let groupInfo = {}
+  getUserInfo ({ commit }) {
+    getPermission().then((userInfo) => {
 
-    if (accountInfo.accountList.length) {
-      const defaultAccountId = accountInfo.accountList.find(account => account.isDefault).id
-      groupInfo = await getAccountGroupInfo(defaultAccountId)
-    }
-    const userInfo = await getSelfInfo()
-    commit('setUserInfo', {
-      userName: userInfo.name,
-      accountList: accountInfo.accountList,
-      groupList: groupInfo.groupList || [],
-      permission: [...accountInfo.accountPermission, ...groupInfo.groupPermission]
+      let accountPermissionList = []
+      let licensePermissionList = []
+      let groupPermissionList = []
+
+      if (userInfo.accountList.length) {
+        accountPermissionList = userInfo.accountList[0].accountPermissionList
+        licensePermissionList = userInfo.accountList[0].licensePermissionList
+        if (userInfo.accountList[0].groupList.length) {
+          groupPermissionList = userInfo.accountList[0].groupList[0].groupPermissionList
+        }
+      }
+
+      commit('setUserInfo', {
+        userName: userInfo.username,
+        accountList: userInfo.accountList,
+        groupList: userInfo.accountList.length ? userInfo.accountList[0].groupList : [],
+        permission: [
+          ...accountPermissionList,
+          ...groupPermissionList,
+          ...licensePermissionList
+        ]
+      })
     })
   },
   updateUserGroupList ({ dispatch, commit, getters }) {
