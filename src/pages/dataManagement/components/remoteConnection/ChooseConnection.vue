@@ -40,24 +40,38 @@
             <div class="connection-title">{{ connection.name }}</div>
             <div class="conneciton-info-block">
               <div class="conneciton-info">
-                <div class="connection-label">{{ $t('editing.username') }}:</div>{{ connection.account }}
+                <div class="connection-label">{{ $t('editing.loginAccount') }}:</div>{{ connection.account }}
               </div>
               <div class="conneciton-info">
-                <div class="connection-label">Host:</div>{{ connection.host }}
+                <div class="connection-label">Schema:</div>{{ connection.schema }}
               </div>
               <div class="conneciton-info">
                 <div class="connection-label">{{ $t('editing.databaseType') }}:</div>{{ connection.databaseType }}
               </div>
               <div class="conneciton-info">
-                <div class="connection-label">Port:</div>{{ connection.port }}
+                <div class="connection-label">Host:</div>{{ connection.host }}
               </div>
               <div class="conneciton-info">
                 <div class="connection-label">Database:</div>{{ connection.database }}
               </div>
               <div class="conneciton-info">
-                <div class="connection-label">Schema:</div>{{ connection.schema }}
+                <div class="connection-label">Port:</div>{{ connection.port }}
               </div>
             </div>
+            <a
+              href="javascript:void(0);" 
+              class="conneciton__edit"
+              @click="editConnection(connection.id)"
+            >
+              {{ $t('button.edit') }}
+            </a>
+            <a
+              href="javascript:void(0);"
+              class="conneciton__delete"
+              @click="deleteConnection(connection.id)"
+            >
+              <svg-icon icon-class="delete"/>
+            </a>
           </div>
         </div>
       </div>
@@ -131,6 +145,9 @@ export default {
     },
     prevStep () {
       this.$store.commit('dataManagement/updateCurrentUploadDataType', null)
+    },
+    deleteConnectionList (id) {
+
     }
   },
 }
@@ -178,6 +195,7 @@ export default {
     padding: 24px;
     border-radius: 8px;
     cursor: pointer;
+    position: relative;
 
     &:not(:last-child) {
       margin-bottom: 16px;
@@ -197,6 +215,7 @@ export default {
     .conneciton-info-block {
       display: flex;
       flex-wrap: wrap;
+      color: $theme-text-color-light;
 
       .conneciton-info {
         display: flex;
@@ -205,10 +224,29 @@ export default {
       }
 
       .connection-label {
-        width: 40%;
         margin-right: 8px;
-        text-align: right;
+        text-align: left;
+        font-weight: 600;
       }
+    }
+
+    .conneciton__edit {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      font-size: 14px;
+      color: $button-color;
+
+      &:hover {
+        border-bottom: 1px solid;
+      }
+    }
+
+    .conneciton__delete {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      color: $theme-color-white;
     }
   }
 
