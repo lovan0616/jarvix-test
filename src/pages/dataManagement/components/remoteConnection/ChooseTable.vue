@@ -113,7 +113,9 @@ export default {
       return this.$store.state.dataManagement.currentUploadInfo
     },
     filterTableList () {
-      return this.queryWord === '' ? [...this.tableList] : [...this.tableList.filter((element) => element.toLowerCase().split(this.queryWord.toLowerCase()).length > 1)]
+      return this.queryWord === '' 
+        ? this.tableList 
+        : this.tableList.filter((element) => element.toLowerCase().split(this.queryWord.toLowerCase()).length > 1)
     }
   },
   mounted () {
@@ -124,7 +126,6 @@ export default {
       this.isLoading = true
       getTableList(this.connectionId).then(response => {
         this.tableList = response
-        this.filterTableList = [...this.tableList]
         this.isLoading = false
       }).catch(() => {
         this.isLoading = false
