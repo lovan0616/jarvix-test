@@ -22,7 +22,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-for="(col, i) in dataset.columns.titles || dataset.columns"
+        v-for="(col, i) in columnList"
         :key="i"
         :prop="i.toString()"
         :label="(typeof col === 'number') ? col.toString() : col.primaryAlias"
@@ -42,6 +42,19 @@
           </slot>
         </template>
       </el-table-column>
+      <el-table-column
+        v-if="loadMore"
+        width="0px"
+        align="center"
+      >
+        <template 
+          slot="header" 
+          slot-scope="scope">
+          <Observer 
+            :options="formOptions()" 
+            @intersect="getData"/>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination 
       v-if="paginationInfo.totalPages > 1"
@@ -59,9 +72,13 @@
 
 <script>
 import { Table } from 'element-ui'
+import Observer from '../Observer'
 
 export default {
   name: 'PaginationTable',
+  components: {
+    Observer
+  },
   props: {
     ...Table.props,
     fixedIndex: { type: Boolean, default: false },
@@ -107,6 +124,19 @@ export default {
     isProcessing: {
       type: Boolean,
       default: false
+    },
+    lazyLoadInfo: {
+      type: Object,
+      default: () => ({
+        rootMargin: '300px',
+        columnPerScroll: 6
+      })
+    }
+  },
+  data () {
+    return {
+      columnList: [],
+      offset: 0
     }
   },
   computed: {
@@ -116,9 +146,24 @@ export default {
         this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 600)
       }
       return tableProps
+    },
+    loadMore () {
+      const headerList = this.dataset.columns.titles || this.dataset.columns
+      const isBigData = headerList.length > this.lazyLoadInfo.columnPerScroll
+      const hasReachedEnd = this.offset >= headerList.length
+      return isBigData && !hasReachedEnd
     }
   },
+  mounted () {
+    this.getData()
+  },
   methods: {
+    getData () {
+      const headerList = this.dataset.columns.titles || this.dataset.columns
+      if (headerList.length === this.offset) return
+      this.columnList.push(...headerList.slice(this.offset, this.offset + this.lazyLoadInfo.columnPerScroll))
+      this.offset += this.lazyLoadInfo.columnPerScroll
+    },
     changePage (value) {
       this.$emit('change-page', value)
     },
@@ -132,6 +177,13 @@ export default {
       if (this.paginationInfo.currentPage - 1 > 0) {
         this.paginationInfo.currentPage -= 1
         this.$emit('change-page', this.paginationInfo.currentPage)
+      }
+    },
+    formOptions () {
+      return {
+        rootClassName: '.el-table__header-wrapper',
+        rootMargin: this.lazyLoadInfo.rootMargin,
+        threshold: 0,
       }
     }
   },
@@ -157,7 +209,10 @@ export default {
     margin-bottom: 16px;
   }
 
-  /* TODO: 上版前需把註解移除 */
+  /deep/ .spinner-block {
+    padding: 0;
+  }
+
   /deep/ .sy-table.el-table {
     border: 1px solid #515959;
     th, td {
@@ -181,6 +236,15 @@ export default {
   /deep/ .el-table thead th {
     overflow: visible;
     vertical-align: top;
+  }
+
+  /* 解決 lazy loading 新增欄位時，寬度增長速度大於資料顯示，造成短暫 word wrap */
+  /deep/ .el-table td {
+    width: 270px
+  }
+
+  /deep/ .el-table th {
+    width: 270px
   }
 }
 </style>

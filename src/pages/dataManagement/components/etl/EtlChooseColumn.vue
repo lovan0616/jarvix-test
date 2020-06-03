@@ -40,6 +40,7 @@
           :dataset="currentTableInfo"
           :min-column-width="'270px'"
           :current-table-index="currentTableIndex"
+          :is-processing="isProcessing"
           fixed-index
         >
           <template #index-header>
@@ -207,16 +208,18 @@ export default {
   },
   mounted () {
     this.getDataFrameSummary(this.etlTableList[this.currentTableIndex].tableId)
-    window.setTimeout(() => {
-      this.isProcessing = false
-    }, 1000)
+    this.isProcessing = false
   },
   destroyed () {
     window.clearInterval(this.intervalFunction)
   },
   methods: {
     chooseTable () {
+      this.isProcessing = true
       this.$store.commit('dataManagement/changeCurrentTableIndex', this.currentTableIndex)
+      this.$nextTick(() => {
+        this.isProcessing = false
+      })
     },
     chooseColumn (columnIndex) {
       this.$store.commit('dataManagement/changeCurrentColumnIndex', columnIndex)
