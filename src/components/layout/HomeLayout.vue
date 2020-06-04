@@ -156,17 +156,5 @@ export default {
       z-index: -1;
     }
   }
-
-  .fast-fade-in-enter-active {
-    transition: opacity .2s;
-  }
-
-  .fast-fade-in-enter {
-    opacity: 0
-  }
-
-  .fast-fade-in-leave-active {
-    transition: none;
-  }
 }
 </style>
