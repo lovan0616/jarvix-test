@@ -1,4 +1,5 @@
-import { logout, getUserAccountInfo, getAccountGroupInfo, getSelfInfo } from '@/API/User'
+import { logout, getAccountGroupInfo } from '@/API/User'
+import { getPermission } from '@/API/Permission'
 
 export default {
   logout ({ commit }) {
@@ -10,20 +11,33 @@ export default {
       localStorage.removeItem('token')
     })
   },
-  async getUserInfo ({ commit }) {
-    const accountInfo = await getUserAccountInfo()
-    let groupInfo = {}
+  getUserInfo ({ commit }) {
+    getPermission().then((userInfo) => {
+      let accountPermissionList = []
+      let licensePermissionList = []
+      let groupPermissionList = []
+      let defaultAccount = {}
 
-    if (accountInfo.accountList.length) {
-      const defaultAccountId = accountInfo.accountList.find(account => account.isDefault).id
-      groupInfo = await getAccountGroupInfo(defaultAccountId)
-    }
-    const userInfo = await getSelfInfo()
-    commit('setUserInfo', {
-      userName: userInfo.name,
-      accountList: accountInfo.accountList,
-      groupList: groupInfo.groupList || [],
-      permission: [...accountInfo.accountPermission, ...groupInfo.groupPermission]
+      if (userInfo.accountList.length) {
+        defaultAccount = userInfo.accountList.find(account => account.isDefault)
+        licensePermissionList = defaultAccount.licensePermissionList
+        accountPermissionList = defaultAccount.accountPermissionList
+        if (defaultAccount.groupList.length) {
+          let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
+          groupPermissionList = defaultGroup.groupPermissionList
+        }
+      }
+
+      commit('setUserInfo', {
+        userName: userInfo.username,
+        accountList: userInfo.accountList,
+        groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
+        permission: [
+          ...accountPermissionList,
+          ...groupPermissionList,
+          ...licensePermissionList
+        ]
+      })
     })
   },
   updateUserGroupList ({ dispatch, commit, getters }) {

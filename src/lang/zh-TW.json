@@ -1494,7 +1494,7 @@
     "ConstituteToken": "了解組成的意圖"
   },
   "notification": {
-    "uploadLimitNotification": "資料數量已達上限",
+    "uploadLimitNotification": "資料數量或數據容量已達上限",
     "uploadLimit": "資料表限制：最多{count}筆",
     "userLimitNotification": "使用者數量已達上限",
     "columnSummarySampleNotification": "欄位摘要經數值估算，會有些微誤差，僅供參考"

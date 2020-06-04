@@ -79,6 +79,7 @@ import { mapState } from 'vuex'
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
 import UploadProcessBlock from './UploadProcessBlock'
+import { getAccountInfo } from '@/API/Account'
 
 export default {
   name: 'LocalFileUpload',
@@ -91,7 +92,7 @@ export default {
     return {
       uploadStatus,
       currntUploadStatus: uploadStatus.wait,
-      uploadFileSizeLimit: localStorage.getItem('uploadLimit') ? parseInt(localStorage.getItem('uploadLimit'), 10) : 3000,
+      uploadFileSizeLimit: null,
       unableFileList: []
     }
   },
@@ -102,6 +103,20 @@ export default {
       if (value.findIndex(element => { return element === uploadStatus.wait || element === uploadStatus.uploading }) === -1) {
         this.$emit('next')
       }
+    }
+  },
+  mounted () {
+    if (localStorage.getItem('uploadLimit')) {
+      this.uploadFileSizeLimit = parseInt(localStorage.getItem('uploadLimit'), 10)
+    } else {
+      getAccountInfo()
+        .then(accountInfo => {
+          const licenseMaxSize = accountInfo.license.maxDataStorageSize * 1024
+          this.uploadFileSizeLimit = licenseMaxSize || 3000
+        })
+        .catch(() => {
+          this.uploadFileSizeLimit = 3000
+        })
     }
   },
   methods: {
