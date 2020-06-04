@@ -19,10 +19,12 @@ export default {
       let groupPermissionList = []
 
       if (userInfo.accountList.length) {
-        accountPermissionList = userInfo.accountList[0].accountPermissionList
-        licensePermissionList = userInfo.accountList[0].licensePermissionList
-        if (userInfo.accountList[0].groupList.length) {
-          groupPermissionList = userInfo.accountList[0].groupList[0].groupPermissionList
+        let defaultAccount = userInfo.accountList.find(account => account.isDefault)
+        licensePermissionList = defaultAccount.licensePermissionList
+        accountPermissionList = defaultAccount.accountPermissionList
+        if (defaultAccount.groupList.length) {
+          let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
+          groupPermissionList = defaultGroup.groupPermissionList
         }
       }
 
