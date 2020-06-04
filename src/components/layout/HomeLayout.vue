@@ -24,20 +24,21 @@
         </div>
       </main>
     </div>
-    <section 
-      v-if="isShowPreviewDataSource"
-      :class="{'preview-datasource--show': isShowPreviewDataSource}" 
-      class="preview-datasource">
-      <preview-data-source 
-        :key="dataSourceId" 
-        :is-previewing="true"
-      />
-      <a 
-        href="javascript:void(0)" 
-        class="preview-datasource__close-btn"
-        @click="closePreviewDataSource"
-      ><svg-icon icon-class="close"/></a>
-    </section>
+    <transition name="fast-fade-in">
+      <section 
+        v-if="isShowPreviewDataSource"
+        class="preview-datasource">
+        <preview-data-source 
+          :key="dataSourceId" 
+          :is-previewing="true"
+        />
+        <a 
+          href="javascript:void(0)" 
+          class="preview-datasource__close-btn"
+          @click="closePreviewDataSource"
+        ><svg-icon icon-class="close"/></a>
+      </section>
+    </transition>
   </div>
 </template>
 <script>
@@ -118,11 +119,7 @@ export default {
     background: rgba(0, 0, 0, 0.95);
     overflow: auto;
     padding: 32px 40px 0 40px;
-
-
-    &--show {
-      z-index: 3;
-    }
+    z-index: 3;
 
     &__close-btn {
       position: absolute;
