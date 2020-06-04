@@ -19,3 +19,10 @@ export function updateUserPermission (userId) {
     method: 'POST'
   })
 }
+
+export function getPermission () {
+  return request({
+    url: `/permission`,
+    method: 'GET'
+  })
+}
