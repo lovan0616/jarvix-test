@@ -152,6 +152,9 @@ export default {
       }).catch(() => {
         this.isLoading = false
       })
+    },
+    saveConnectionInfo () {
+      
     }
   },
 }

@@ -68,10 +68,17 @@
             <a
               href="javascript:void(0);"
               class="conneciton__delete"
-              @click.stop="deleteConnection(index)"
+              @click.stop="currentDeleteIndex=index"
             >
               <svg-icon icon-class="delete"/>
             </a>
+            <tooltip-dialog
+              v-if="index === currentDeleteIndex"
+              :msg="$t('editing.toolTipMessage.comfrmToDeleteConnectionHistory')"
+              class="tooltip-dialog"
+              @cancel="currentDeleteIndex=-1"
+              @confirm="deleteConnection(index, connection.id)"
+            />
           </div>
         </div>
       </div>
@@ -91,21 +98,25 @@
   </div>
 </template>
 <script>
-import { getConnectionInfoList, testOldConnection } from '@/API/RemoteConnection'
+import { getConnectionInfoList, testOldConnection, deleteDatabaseConnection } from '@/API/RemoteConnection'
+import { Message } from 'element-ui'
 import UploadProcessBlock from './UploadProcessBlock'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import TooltipDialog from '@/components/dialog/TooltipDialog'
 
 export default {
   name: 'ChooseConnection',
   components: {
     UploadProcessBlock,
-    EmptyInfoBlock
+    EmptyInfoBlock,
+    TooltipDialog
   },
   data () {
     return {
       isLoading: false,
-      connectionList: [],
-      isEditing: false
+      isEditing: false,
+      currentDeleteIndex: -1,
+      connectionList: []
     }
   },
   computed: {
@@ -151,9 +162,19 @@ export default {
       this.$emit('edit', connection)
 
     },
-    deleteConnection (index) {
+    deleteConnection (index, connectId) {
       // TODO: api delete
-      this.connectionList.splice(index, 1)
+      deleteDatabaseConnection(connectId).then(() => {
+        this.connectionList.splice(index, 1)
+        this.currentDeleteIndex = -1
+        Message({
+          message: this.$t('message.deleteSuccess'),
+          type: 'success',
+          duration: 3 * 1000
+        })
+      }).catch (() => {
+
+      })
     }
   },
 }
@@ -252,7 +273,24 @@ export default {
       position: absolute;
       right: 20px;
       bottom: 20px;
+      margin-right: 5px;
       color: $theme-color-white;
+    }
+
+    .tooltip-dialog {
+      right: 12px;
+      bottom: 53px;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        right: 6%;
+        border-bottom: 9px solid transparent;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-top: 9px solid #2AD2E2;
+      }
     }
   }
 
