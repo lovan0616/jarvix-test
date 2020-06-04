@@ -170,6 +170,21 @@ export default {
           ...config.xAxis
         }
       })
+
+      // 為了雙軸左右兩邊一致，先找到最小值 \ 最大值
+      let min = null
+      let max = null
+      this.dataset.data.forEach(element => {
+        if (min === null) min = element[0]
+        if (max === null) max = element[0]
+        element.forEach(item => {
+          if (item < min) min = item
+          if (item > max) max = item
+        })
+      })
+      min = (min < 0) ? min : 0
+      max = (max < 0) ? 0 : max
+
       config.yAxis = this.title.yAxis.map((axis, index) => {
         return {
           ...config.yAxis,
@@ -177,14 +192,12 @@ export default {
           name: axis.display_name,
           offset: Math.floor(index / 2) * 35,
           scale: false,
+          min: min,
+          max: max,
           axisLine: {
             lineStyle: {
               color: this.colorList[index]
-            },
-            ...(index === 1) ? {
-              onZero: false,
-              onZeroAxisIndex: 0
-            } : null
+            }
           },
           axisTick: {
             lineStyle: {
