@@ -163,18 +163,15 @@ export default {
 
     },
     deleteConnection (index, connectId) {
-      // TODO: api delete
       deleteDatabaseConnection(connectId).then(() => {
         this.connectionList.splice(index, 1)
-        this.currentDeleteIndex = -1
         Message({
           message: this.$t('message.deleteSuccess'),
           type: 'success',
           duration: 3 * 1000
         })
-      }).catch (() => {
-
       })
+      this.currentDeleteIndex = -1
     }
   },
 }
