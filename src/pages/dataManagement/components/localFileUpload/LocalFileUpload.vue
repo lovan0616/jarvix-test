@@ -144,7 +144,7 @@ export default {
     } else {
       getAccountInfo()
         .then(accountInfo => {
-          const licenseMaxSize = accountInfo.license.maxDataStorageSize
+          const licenseMaxSize = accountInfo.license.maxDataStorageSize * 1024
           this.uploadFileSizeLimit = licenseMaxSize ? licenseMaxSize : 3000
         })
         .catch(() => {
