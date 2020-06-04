@@ -6,10 +6,18 @@
       <choose-connection
         v-if="step === 0"
         @skip="nextStep"
+        @edit="editConnection"
         @next="connectEstablish"
       />
-      <remote-connection
-        v-if="step === 1"
+      <new-remote-connection
+        v-if="step === 1 && !isEditing"
+        @updateDataSource="setDataSource"
+        @prev="prevStep"
+        @next="connectEstablish"
+      />
+      <edit-remote-connection
+        v-if="step === 1 && isEditing"
+        :connect-info="connectInfo"
         @updateDataSource="setDataSource"
         @prev="prevStep"
         @next="connectEstablish"
@@ -37,6 +45,8 @@
 <script>
 import ChooseConnection from './ChooseConnection'
 import RemoteConnection from './RemoteConnection'
+import NewRemoteConnection from './NewRemoteConnection'
+import EditRemoteConnection from './EditRemoteConnection'
 import RemoteConnectionFinished from './RemoteConnectionFinished'
 import ChooseTable from './ChooseTable'
 import ColumnSetting from './ColumnSetting'
@@ -45,6 +55,8 @@ export default {
   name: 'RemoteConnectionFlow',
   components: {
     RemoteConnection,
+    NewRemoteConnection,
+    EditRemoteConnection,
     RemoteConnectionFinished,
     ChooseTable,
     ColumnSetting,
@@ -58,7 +70,9 @@ export default {
       connectionId: null,
       // 要複製的 table id 列表
       tableIdList: [],
-      status: null
+      status: null,
+      isEditing: false,
+      connectInfo: {}
     }
   },
   created () {
@@ -84,6 +98,12 @@ export default {
     },
     prevStep () {
       this.step -= 1
+      this.isEditing = false
+    },
+    editConnection (connection) {
+      this.connectInfo = connection
+      this.isEditing = !this.isEditing
+      this.nextStep()
     }
   }
 }

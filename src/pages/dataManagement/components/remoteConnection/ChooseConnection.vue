@@ -31,7 +31,7 @@
             :msg="$t('etl.emptyConnectionHistory')"
           />
           <div 
-            v-for="connection in connectionList"
+            v-for="(connection, index) in connectionList"
             v-else
             :key="connection.id"
             class="single-connection"
@@ -61,14 +61,14 @@
             <a
               href="javascript:void(0);" 
               class="conneciton__edit"
-              @click="editConnection(connection.id)"
+              @click.stop="editConnection(connection)"
             >
               {{ $t('button.edit') }}
             </a>
             <a
               href="javascript:void(0);"
               class="conneciton__delete"
-              @click="deleteConnection(connection.id)"
+              @click.stop="deleteConnection(index)"
             >
               <svg-icon icon-class="delete"/>
             </a>
@@ -104,7 +104,8 @@ export default {
   data () {
     return {
       isLoading: false,
-      connectionList: []
+      connectionList: [],
+      isEditing: false
     }
   },
   computed: {
@@ -146,8 +147,13 @@ export default {
     prevStep () {
       this.$store.commit('dataManagement/updateCurrentUploadDataType', null)
     },
-    deleteConnectionList (id) {
+    editConnection (connection) {
+      this.$emit('edit', connection)
 
+    },
+    deleteConnection (index) {
+      // TODO: api delete
+      this.connectionList.splice(index, 1)
     }
   },
 }
