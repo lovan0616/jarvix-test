@@ -17,9 +17,10 @@ export default {
       let accountPermissionList = []
       let licensePermissionList = []
       let groupPermissionList = []
+      let defaultAccount = {}
 
       if (userInfo.accountList.length) {
-        let defaultAccount = userInfo.accountList.find(account => account.isDefault)
+        defaultAccount = userInfo.accountList.find(account => account.isDefault)
         licensePermissionList = defaultAccount.licensePermissionList
         accountPermissionList = defaultAccount.accountPermissionList
         if (defaultAccount.groupList.length) {
@@ -31,7 +32,7 @@ export default {
       commit('setUserInfo', {
         userName: userInfo.username,
         accountList: userInfo.accountList,
-        groupList: userInfo.accountList.length ? userInfo.accountList[0].groupList : [],
+        groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
         permission: [
           ...accountPermissionList,
           ...groupPermissionList,
