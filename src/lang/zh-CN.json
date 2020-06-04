@@ -1499,7 +1499,7 @@
     "ConstituteToken": "了解组成的意图"
   },
   "notification": {
-    "uploadLimitNotification": "资料数量已达上限",
+    "uploadLimitNotification": "资料数量或数据容量已达上限",
     "uploadLimit": "资料表限制：最多{count}笔",
     "userLimitNotification": "使用者数量已达上限",
     "columnSummarySampleNotification": "栏位摘要经数值估算，会有些微误差，仅供参考"
