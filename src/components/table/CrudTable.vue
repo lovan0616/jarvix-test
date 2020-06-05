@@ -108,7 +108,7 @@
               </a>
             </slot>
           </template>
-          <template v-if="headInfo.value === 'icon'">
+          <template v-else-if="headInfo.value === 'icon'">
             <svg-icon
               :icon-class="data[headInfo.value]"
               class="icon"
