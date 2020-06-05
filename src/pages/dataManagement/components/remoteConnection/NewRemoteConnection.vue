@@ -22,8 +22,7 @@
             @click.prevent="prevStep"
           >{{ $t('etl.connectionHistory') }}</button>
         </div>
-        <remote-connection-form 
-          :db-option-list="dbOptionList"
+        <remote-connection-form
           :data-source-id="dataSourceId"
           :data-source-name="dataSourceName"
           :connect-info="connectInfo"
@@ -62,16 +61,6 @@ export default {
   data () {
     return {
       isLoading: false,
-      dbOptionList: [
-        {
-          name: 'MSSQL',
-          value: 'MSSQL'
-        },
-        {
-          name: 'POSTGRESQL',
-          value: 'POSTGRESQL'
-        }
-      ],
       dataSourceId: this.$route.params ? parseInt(this.$route.params.id) : null,
       dataSourceName: null,
       connectInfo: {

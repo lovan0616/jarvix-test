@@ -76,7 +76,7 @@
               v-if="index === currentDeleteIndex"
               :msg="$t('editing.toolTipMessage.comfrmToDeleteConnectionHistory')"
               class="tooltip-dialog"
-              @cancel="currentDeleteIndex=-1"
+              @cancel="currentDeleteIndex=null"
               @confirm="deleteConnection(index, connection.id)"
             />
           </div>
@@ -115,7 +115,7 @@ export default {
     return {
       isLoading: false,
       isEditing: false,
-      currentDeleteIndex: -1,
+      currentDeleteIndex: null,
       connectionList: []
     }
   },
@@ -170,7 +170,7 @@ export default {
           duration: 3 * 1000
         })
       })
-      this.currentDeleteIndex = -1
+      this.currentDeleteIndex = null
     }
   },
 }

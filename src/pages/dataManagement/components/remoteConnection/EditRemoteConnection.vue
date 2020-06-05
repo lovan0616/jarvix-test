@@ -25,8 +25,7 @@
             {{ $t('etl.returnConnectionHistory') }}
           </a>
         </div>
-        <remote-connection-form 
-          :db-option-list="dbOptionList"
+        <remote-connection-form
           :data-source-id="dataSourceId"
           :data-source-name="dataSourceName"
           :connect-info="connectInfo"
@@ -84,16 +83,6 @@ export default {
     return {
       isLoading: false,
       isProcessing: false,
-      dbOptionList: [
-        {
-          name: 'MSSQL',
-          value: 'MSSQL'
-        },
-        {
-          name: 'POSTGRESQL',
-          value: 'POSTGRESQL'
-        }
-      ],
       dataSourceId: this.$route.params ? parseInt(this.$route.params.id) : null,
       dataSourceName: null
     }
@@ -126,8 +115,8 @@ export default {
       this.$validator.validateAll().then(result => {
         if (result) {
           this.isProcessing = true
-          const {id, ...noConnectionId} = this.connectInfo
-          return updateDatabaseConnection (id, noConnectionId)
+          const {id, ...connectionInfo} = this.connectInfo
+          return updateDatabaseConnection (id, connectionInfo)
             .then (() => {
               Message({
                 message: this.$t('message.saveSuccess'),
@@ -138,11 +127,6 @@ export default {
             })
             .catch(() => { 
               this.isProcessing = false
-              Message({
-                message: this.$t('message.connectionFail'),
-                type: 'success',
-                duration: 3 * 1000
-              })
             })
         }
       })

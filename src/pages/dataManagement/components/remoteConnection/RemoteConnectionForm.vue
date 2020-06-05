@@ -96,10 +96,6 @@ export default {
     DefaultSelect
   },
   props: {
-    dbOptionList: {
-      type: Array,
-      default: () => []
-    },
     dataSourceId: {
       type: Number,
       default: null
@@ -121,6 +117,14 @@ export default {
           database: null,
           schema: null
         }
+      }
+    }
+  },
+  data () {
+    return {
+      dbOptionList: {
+        type: Array,
+        default: () => []
       }
     }
   },
