@@ -265,6 +265,7 @@ export default {
     checkIfReachUserLimit () {
       getAccountInfo().then(({ license }) => {
         this.reachUserLimit = license.currentUser >= license.maxUser
+        this.$store.commit('userManagement/setLicenseCurrentUser', license.currentUser)
       })
     },
     getSelfInfo () {

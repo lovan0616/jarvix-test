@@ -120,6 +120,8 @@ import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
+import { getAccountInfo } from '@/API/Account'
+import { mapState } from 'vuex'
 
 export default {
   name: 'DataFileList',
@@ -170,6 +172,7 @@ export default {
     this.fetchData()
     this.checkDataSourceStatus()
     this.checkJoinTable()
+    this.checkIfReachFileSizeLimit()
   },
   beforeDestroy () {
     if (this.intervalFunction) {
@@ -205,10 +208,18 @@ export default {
       } else {
         this.$store.dispatch('dataSource/getDataSourceList')
         window.clearInterval(this.checkDataFrameIntervalFunction)
+        this.checkIfReachFileSizeLimit()
       }
     }
   },
   methods: {
+    checkIfReachFileSizeLimit () {
+      getAccountInfo()
+        .then((accountInfo) => {
+          this.$store.commit('userManagement/setLicenseCurrentDataStorageSize', accountInfo.license.currentDataStorageSize)
+        })
+        .catch(() => {})
+    },
     checkJoinTable () {
       if (!this.showJoinTable) {
         localStorage.setItem('showJoinTable', false)
@@ -272,6 +283,7 @@ export default {
           this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
           this.fetchData()
           this.deleteFinish()
+          this.checkIfReachFileSizeLimit()
         })
         .catch(() => {
           this.deleteFinish()
@@ -356,10 +368,18 @@ export default {
     }
   },
   computed: {
+    ...mapState('userManagement', ['license']),
+
+    reachLicenseFileSizeLimit () {
+      return this.license.currentDataStorageSize >= this.license.maxDataStorageSize
+    },
     fileCountLimit () {
       return this.$store.state.dataManagement.fileCountLimit
     },
     reachLimit () {
+      return this.reachFileLengthLimit || this.reachLicenseFileSizeLimit
+    },
+    reachFileLengthLimit () {
       return this.dataList.length >= this.fileCountLimit
     },
     // 用來生成 data table
