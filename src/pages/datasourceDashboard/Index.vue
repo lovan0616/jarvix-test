@@ -38,21 +38,27 @@ export default {
     return {
       isLoading: false,
       isNoResult: false,
-      dataFrameInfo: null,
       quickStartQuestionList: []
     }
   },
   computed: {
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
+    },
+    dataFrameId () {
+      return this.$store.state.dataSource.dataFrameId
     }
   },
   watch: {
     dataSourceId (value) {
-      this.dataFrameInfo = null
+      this.isLoading = true
       this.quickStartQuestionList = []
       this.isNoResult = false
       if (value) this.getLandingInfo()
+    },
+    dataFrameId (value) {
+      this.quickStartQuestionList = []
+      if (value || value === '') this.getLandingInfo()
     }
   },
   mounted () {
@@ -63,7 +69,6 @@ export default {
   },
   methods: {
     getLandingInfo () {
-      this.isLoading = true
       this.$store.commit('chatBot/updateAnalyzeStatus', true)
 
       this.$store.dispatch('chatBot/getQuickStartQuestion', this.dataSourceId).then(response => {

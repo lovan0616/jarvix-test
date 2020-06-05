@@ -69,6 +69,9 @@ export default {
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
+    dataFrameId () {
+      return this.$store.state.dataSource.dataFrameId
+    },
     currentQuestionInfo () {
       return this.$store.state.dataSource.currentQuestionInfo
     },
@@ -85,7 +88,7 @@ export default {
   watch: {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
-      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId})
+      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'dataFrameId': this.dataFrameId})
     }
   },
   mounted () {
@@ -97,11 +100,13 @@ export default {
   },
   methods: {
     fetchData () {
-      let question = this.$route.query.question
-      let dataSourceId = parseInt(this.$route.query.dataSourceId)
-      if (question) {
-        this.fetchApiAsk({dataSourceId, question})
-      }
+      const {dataSourceId, dataFrameId, question} = this.$route.query
+      if (!question) return
+      this.fetchApiAsk({
+        dataSourceId: parseInt(dataSourceId), 
+        dataFrameId: parseInt(dataFrameId),
+        question
+      })
     },
     clearLayout () {
       this.layout = null

@@ -11,7 +11,8 @@ export default {
       dataSourceId: rootState.dataSource.dataSourceId || data.dataSourceId,
       previewQuestionId: rootGetters['dataSource/drillDownQuestionId'],
       domain: 'GENERAL',
-      isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null
+      isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null,
+      dataFrameId: rootState.dataSource.dataFrameId || data.dataFrameId
     }, new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
       cancelFunction = c
