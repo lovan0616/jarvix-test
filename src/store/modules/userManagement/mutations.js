@@ -4,6 +4,7 @@ export default {
     state.accountList = data.accountList
     state.groupList = data.groupList
     state.permission = data.permission
+    state.license = data.license
   },
   clearUserInfo (state) {
     state.userName = ''
