@@ -17,22 +17,16 @@ export default {
     let licensePermissionList = []
     let groupPermissionList = []
     let defaultAccount = {}
+    let accountInfo = {}
 
     const userInfo = await getPermission()
 
     if (userInfo.accountList.length) {
       defaultAccount = userInfo.accountList.find(account => account.isDefault)
+      accountInfo = await getAccountInfo(defaultAccount.id)
+
+      accountPermissionList = defaultAccount.accountPermissionList
       licensePermissionList = defaultAccount.licensePermissionList
-
-      const accountInfo = await getAccountInfo(defaultAccount.id)
-
-      // 判斷是否為個人版
-      let individual = accountInfo.license.maxUser === 1
-
-      // 個人版無 account_create_user 權限
-      accountPermissionList = individual
-        ? defaultAccount.accountPermissionList.filter(p => p !== 'account_create_user')
-        : defaultAccount.accountPermissionList
       if (defaultAccount.groupList.length) {
         let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
         groupPermissionList = defaultGroup.groupPermissionList
@@ -47,7 +41,8 @@ export default {
         ...accountPermissionList,
         ...groupPermissionList,
         ...licensePermissionList
-      ]
+      ],
+      license: accountInfo.license
     })
   },
   updateUserGroupList ({ dispatch, commit, getters }) {
