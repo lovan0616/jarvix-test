@@ -138,7 +138,11 @@ export default {
             })
             .catch(() => { 
               this.isProcessing = false
-              if (onlySave) this.prevStep()
+              Message({
+                message: this.$t('message.connectionFail'),
+                type: 'success',
+                duration: 3 * 1000
+              })
             })
         }
       })
