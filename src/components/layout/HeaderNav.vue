@@ -118,7 +118,7 @@ import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import { switchGroup } from '@/API/User'
 
 export default {
@@ -141,7 +141,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId', 'getCurrentAccountLicense']),
+    ...mapState('userManagement', ['license']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
@@ -168,7 +169,8 @@ export default {
     settingData () {
       const settingList = []
       settingList.push({icon: 'database', title: 'sideNav.dataSourceManagement', name: 'DataSourceList'})
-      if (this.hasPermission('account_create_user')) {
+      // 個人版 隱藏成員管理選項
+      if (this.license.maxUser !== 1) {
         settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/group/user-management/${this.groupId}`})
       }
       return settingList
