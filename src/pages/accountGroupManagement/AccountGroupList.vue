@@ -55,7 +55,7 @@ import { getAccountGroupList, deleteGroup } from '@/API/User'
 import CrudTable from '@/components/table/CrudTable'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'AccountGroupList',
@@ -74,6 +74,7 @@ export default {
   },
   computed: {
     ...mapGetters('userManagement', ['hasPermission']),
+    ...mapState('userManagement', ['license']),
     tableHeaders () {
       return [
         {
@@ -111,12 +112,12 @@ export default {
               value: 'edit',
               permission: 'account_update_group'
             },
-            {
+            ...(this.license.maxUser > 1) ? {
               type: 'event',
               name: this.$t('editing.memberManagement'),
               value: 'manage',
               permission: 'account_read_group'
-            }
+            } : {}
           ]
         }
       ]
