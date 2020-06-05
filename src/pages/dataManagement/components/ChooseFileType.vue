@@ -75,7 +75,7 @@ export default {
       return this.$store.state.userManagement.permission.includes(type)
     },
     selectDataType (value) {
-      // if (!this.hasPermission(value)) return
+      if (!this.hasPermission(value)) return
       this.selectedDataType = value
       this.nextStep()
     },
