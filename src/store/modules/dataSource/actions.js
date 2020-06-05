@@ -13,7 +13,11 @@ export default {
     if (state.isInit) return Promise.resolve(state)
     let queryDataSource = parseInt(router.app.$route.query.dataSourceId)
     const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
-    if (currentGroupId) dispatch('getDataSourceList', queryDataSource)
+    if (currentGroupId) {
+      dispatch('getDataSourceList', queryDataSource)
+        .then(() => { if (state.dataSourceId) return dispatch('getDataSourceTables') })
+        .then(res => { commit('setDataFrameList', res)})
+    }
     commit('setIsInit', true)
   },
   getDataSourceList ({ dispatch, commit, state }, data) {
@@ -68,6 +72,27 @@ export default {
       yield dispatch('getDataSourceDataValue')
       return Promise.resolve(state)
     })
+  },
+  changeDataFrameById ({ dispatch, commit, state }, dataFrameId) {
+    // 清空對話紀錄
+    // if (state.dataFrameId || state.dataFrameId === '') {
+    //   commit('chatBot/clearConversation', null, { root: true })
+    //   // 清空篩選條件 
+    //   dispatch('clearAllFilter')
+    //   // 清除 question id
+    //   commit('clearCurrentQuestionId')
+    //   // 關閉演算法
+    //   commit('chatBot/updateIsUseAlgorithm', false, { root: true })
+    // }
+    // 更新 DataSource 資料
+    commit('setDataFrameId', dataFrameId)
+    // if (!dataFrameId && state.dataFrameId !== '') return Promise.resolve(state)
+    // return co(function* () {
+    //   yield dispatch('getHistoryQuestionList')
+    //   yield dispatch('getDataSourceColumnInfo')
+    //   yield dispatch('getDataSourceDataValue')
+    //   return Promise.resolve(state)
+    // })
   },
   handleEmptyDataSource ({ dispatch, commit }) {
     commit('chatBot/clearConversation', null, {root: true})

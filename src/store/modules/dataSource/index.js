@@ -14,7 +14,9 @@ export default {
     currentQuestionInfo: null,
     currentQuestionId: null,
     historyQuestionList: [],
-    filterList: []
+    filterList: [],
+    dataFrameId: '',
+    dataFrameList: []
   },
   actions,
   mutations,
