@@ -134,6 +134,7 @@ import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
+import { getAccountInfo } from '@/API/Account'
 import { mapState } from 'vuex'
 
 export default {
@@ -178,13 +179,12 @@ export default {
       intervalFunction: null,
       checkDataFrameIntervalFunction: null,
       isLoading: false,
-      showJoinTable: localStorage.getItem('showJoinTable'),
-      reachLicenseFileSizeLimit: false
+      showJoinTable: localStorage.getItem('showJoinTable')
     }
   },
   computed: {
     ...mapState('userManagement', ['license']),
-    checkIfReachFileSizeLimit () {
+    reachLicenseFileSizeLimit () {
       return this.license.currentDataStorageSize >= this.license.maxDataStorageSize
     },
     fileCountLimit () {
@@ -314,6 +314,13 @@ export default {
     }
   },
   methods: {
+    checkIfReachFileSizeLimit () {
+      getAccountInfo()
+        .then((accountInfo) => {
+          this.$store.commit('userManagement/setLicenseCurrentDataStorageSize', accountInfo.license.currentDataStorageSize)
+        })
+        .catch(() => {})
+    },
     checkJoinTable () {
       if (!this.showJoinTable) {
         localStorage.setItem('showJoinTable', false)

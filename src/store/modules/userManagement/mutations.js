@@ -6,6 +6,12 @@ export default {
     state.permission = data.permission
     state.license = data.license
   },
+  setLicenseCurrentUser (state, data) {
+    state.license.currentUser = data
+  },
+  setLicenseCurrentDataStorageSize (state, data) {
+    state.license.currentDataStolicenserageSize = data
+  },
   clearUserInfo (state) {
     state.userName = ''
     state.accountList = []
