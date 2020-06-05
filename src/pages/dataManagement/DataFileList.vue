@@ -172,6 +172,7 @@ export default {
     this.fetchData()
     this.checkDataSourceStatus()
     this.checkJoinTable()
+    this.checkIfReachFileSizeLimit()
   },
   beforeDestroy () {
     if (this.intervalFunction) {
@@ -207,6 +208,7 @@ export default {
       } else {
         this.$store.dispatch('dataSource/getDataSourceList')
         window.clearInterval(this.checkDataFrameIntervalFunction)
+        this.checkIfReachFileSizeLimit()
       }
     }
   },
@@ -281,6 +283,7 @@ export default {
           this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
           this.fetchData()
           this.deleteFinish()
+          this.checkIfReachFileSizeLimit()
         })
         .catch(() => {
           this.deleteFinish()
