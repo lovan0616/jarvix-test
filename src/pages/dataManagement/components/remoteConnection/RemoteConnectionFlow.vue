@@ -19,7 +19,7 @@
         v-if="step === 1 && isEditing"
         :connect-info="connectInfo"
         @prev="prevStep"
-        @next="tableChosen"
+        @next="connectDatabase"
       />
       <choose-table
         v-if="step === 2"
@@ -89,6 +89,10 @@ export default {
       this.tableIdList = value
       this.nextStep()
     },
+    connectDatabase (value) {
+      this.connectionId = value
+      this.tableChosen(value)
+    },
     nextStep () {
       this.step += 1
     },
@@ -101,7 +105,7 @@ export default {
     },
     editConnection (connection) {
       this.connectInfo = connection
-      this.isEditing = !this.isEditing
+      this.isEditing = true
       this.nextStep()
     }
   }

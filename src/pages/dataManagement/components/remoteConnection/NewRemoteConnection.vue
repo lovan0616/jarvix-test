@@ -52,7 +52,6 @@ import { Message } from 'element-ui'
 import UploadProcessBlock from './UploadProcessBlock'
 import RemoteConnectionForm from './RemoteConnectionForm'
 
-
 export default {
   inject: ['$validator'],
   name: 'NewRemoteConnection',

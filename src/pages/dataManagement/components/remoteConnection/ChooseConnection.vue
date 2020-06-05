@@ -60,7 +60,7 @@
             </div>
             <a
               href="javascript:void(0);" 
-              class="conneciton__edit"
+              class="link action-link"
               @click.stop="editConnection(connection)"
             >
               {{ $t('button.edit') }}
@@ -160,7 +160,6 @@ export default {
     },
     editConnection (connection) {
       this.$emit('edit', connection)
-
     },
     deleteConnection (index, connectId) {
       deleteDatabaseConnection(connectId).then(() => {
@@ -216,7 +215,7 @@ export default {
 
   .single-connection {
     border: 2px solid #485454;
-    padding: 24px;
+    padding: 18px 24px;
     border-radius: 8px;
     cursor: pointer;
     position: relative;
@@ -231,9 +230,10 @@ export default {
     }
 
     .connection-title {
-      font-size: 24px;
+      font-size: 18px;
       font-weight: 600;
-      margin-bottom: 16px;
+      line-height: 25px;
+      margin-bottom: 8px;
     }
 
     .conneciton-info-block {
@@ -254,16 +254,11 @@ export default {
       }
     }
 
-    .conneciton__edit {
+    .action-link {
       position: absolute;
       top: 18px;
       right: 20px;
       font-size: 14px;
-      color: $button-color;
-
-      &:hover {
-        border-bottom: 1px solid;
-      }
     }
 
     .conneciton__delete {

@@ -1,5 +1,8 @@
 <template>
-  <div class="tooltip-dialog">
+  <div
+    class="tooltip-dialog"
+    @click.stop
+  >
     <div class="tooltip__message">{{ msg }}</div>
     <div class="tooltip__buttons">
       <a 

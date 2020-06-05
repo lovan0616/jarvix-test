@@ -56,7 +56,6 @@ import { Message } from 'element-ui'
 import UploadProcessBlock from './UploadProcessBlock'
 import RemoteConnectionForm from './RemoteConnectionForm'
 
-
 export default {
   inject: ['$validator'],
   name: 'EditRemoteConnection',
@@ -115,6 +114,12 @@ export default {
       testOldConnection(id).then(() => {
         this.$emit('next', id)
       }).catch(() => {
+        Message({
+          message: this.$t('message.connectionFail'),
+          type: 'error',
+          duration: 3 * 1000
+        })
+        this.prevStep() 
       })
     },
     saveConnectionInfo (onlySave=true) {
