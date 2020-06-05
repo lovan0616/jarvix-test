@@ -1571,7 +1571,8 @@
     "permissionChanged": "权限已被变更，请重新登入",
     "lackOfSignUpToken": "无注册权限，请联系管理员",
     "defaultMsg": "系统发生非预期错误",
-    "lackOfPermission": "权限不足，请联系管理员"
+    "lackOfPermission": "权限不足，请联系管理员",
+    "versionUpdate": "有新版本上线，立即帮您更新"
   },
   "resultNote": {
     "groupLimitNote": "此结果为原资料取前 {randomLimit} 笔得来",

@@ -295,4 +295,21 @@ router.beforeEach(async (to, from, next) => {
   next()
 })
 
+// 處理如果有版本更新結果前端拿不到對應 js 的處理
+router.onError((error) => {
+  const pattern = /Loading chunk (\d)+ failed/g
+  const isChunkLoadFailed = error.message.match(pattern)
+
+  if (isChunkLoadFailed) {
+    Message({
+      message: i18n.t('errorMessage.versionUpdate'),
+      type: 'error',
+      duration: 3 * 1000
+    })
+    window.setTimeout(() => {
+      window.location.reload()
+    }, 2000)
+  }
+})
+
 export default router
