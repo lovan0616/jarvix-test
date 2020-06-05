@@ -74,12 +74,7 @@ export default {
               if (dataSourceId) {
                 this.$store.dispatch('dataSource/changeDataSourceById', dataSourceId)
               }
-              this.$store.commit('userManagement/setUserInfo', {
-                userName: res.name,
-                accountList: res.accountList,
-                groupList: res.groupList,
-                permission: res.groupPermission ? [...res.accountPermission, ...res.groupPermission, ...res.licensePermission] : res.accountPermission
-              })
+              this.$store.dispatch('userManagement/getUserInfo')
 
               const currentGroupId = this.$store.getters['userManagement/getCurrentGroupId']
               if (!currentGroupId) {
