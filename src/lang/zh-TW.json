@@ -176,7 +176,7 @@
     "buildImmediately": "立即建置",
     "connectDB": "連接資料庫",
     "connectStep2": "選擇資料",
-    "connectStep3": "欄位設定",
+    "connectStep3": "資料處理",
     "dataProcessing": "資料處理中",
     "dataSource": "資料源",
     "newDataSource": "新增資料源",
