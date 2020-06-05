@@ -51,6 +51,7 @@ export default {
   },
   watch: {
     dataSourceId (value) {
+      // loading 狀態會影響介紹資料集的顯示，因此只在 datasource id 變更時才改變
       this.isLoading = true
       this.quickStartQuestionList = []
       this.isNoResult = false

@@ -13,11 +13,7 @@ export default {
     if (state.isInit) return Promise.resolve(state)
     let queryDataSource = parseInt(router.app.$route.query.dataSourceId)
     const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
-    if (currentGroupId) {
-      dispatch('getDataSourceList', queryDataSource)
-        .then(() => { if (state.dataSourceId) return dispatch('getDataSourceTables') })
-        .then(res => { commit('setDataFrameList', res)})
-    }
+    if (currentGroupId) dispatch('getDataSourceList', queryDataSource)
     commit('setIsInit', true)
   },
   getDataSourceList ({ dispatch, commit, state }, data) {
@@ -54,15 +50,7 @@ export default {
   },
   async changeDataSourceById ({ dispatch, commit, state }, dataSourceId) {
     // 清空對話紀錄
-    if (state.dataSourceId) {
-      commit('chatBot/clearConversation', null, {root: true})
-      // 清空篩選條件
-      dispatch('clearAllFilter')
-      // 清除 question id
-      commit('clearCurrentQuestionId')
-      // 關閉演算法
-      commit('chatBot/updateIsUseAlgorithm', false, {root: true})
-    }
+    if (state.dataSourceId) dispatch('clearChatbot')
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
     if (!dataSourceId) return Promise.resolve(state)
@@ -71,7 +59,7 @@ export default {
     const dataFrameList = await dispatch('getDataSourceTables')
     commit('setDataFrameList', dataFrameList)
     commit('setDataFrameId', '')
-    
+  
     return co(function* () {
       yield dispatch('getHistoryQuestionList')
       yield dispatch('getDataSourceColumnInfo')
@@ -80,14 +68,7 @@ export default {
     })
   },
   changeDataFrameById ({ dispatch, commit, state }, dataFrameId) {
-    // 清空對話紀錄
-    commit('chatBot/clearConversation', null, { root: true })
-    // 清空篩選條件 
-    dispatch('clearAllFilter')
-    // 清除 question id
-    commit('clearCurrentQuestionId')
-    // 關閉演算法
-    commit('chatBot/updateIsUseAlgorithm', false, { root: true })
+    dispatch('clearChatbot')
     // 更新 DataFrame 資料
     commit('setDataFrameId', dataFrameId)
     // if (!dataFrameId && state.dataFrameId !== '') return Promise.resolve(state)
@@ -97,6 +78,16 @@ export default {
       yield dispatch('getDataSourceDataValue')
       return Promise.resolve(state)
     })
+  },
+  clearChatbot({ dispatch, commit, state }) {
+    // 清空對話紀錄
+    commit('chatBot/clearConversation', null, { root: true })
+    // 清空篩選條件 
+    dispatch('clearAllFilter')
+    // 清除 question id
+    commit('clearCurrentQuestionId')
+    // 關閉演算法
+    commit('chatBot/updateIsUseAlgorithm', false, { root: true })
   },
   handleEmptyDataSource ({ dispatch, commit }) {
     commit('chatBot/clearConversation', null, {root: true})
