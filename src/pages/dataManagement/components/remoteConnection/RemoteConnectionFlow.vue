@@ -18,9 +18,8 @@
       <edit-remote-connection
         v-if="step === 1 && isEditing"
         :connect-info="connectInfo"
-        @updateDataSource="setDataSource"
         @prev="prevStep"
-        @next="connectEstablish"
+        @next="tableChosen"
       />
       <choose-table
         v-if="step === 2"

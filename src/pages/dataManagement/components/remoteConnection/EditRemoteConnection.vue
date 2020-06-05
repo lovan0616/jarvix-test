@@ -35,14 +35,14 @@
         <div class="dialog-footer">
           <div class="dialog-button-block">
             <button
-              :disabled="isLoading"
+              :disabled="isProcessing"
               class="btn btn-default"
-              @click="nextStep"
+              @click.prevent="saveConnectionInfo(false)"
             >{{ $t('button.saveAndConnect') }}</button>
             <button 
-              :disabled="isLoading"
+              :disabled="isProcessing"
               class="btn btn-default"
-              @click="saveConnectionInfo"
+              @click.prevent="saveConnectionInfo"
             >{{ $t('button.save') }}</button>
           </div>
         </div>
@@ -51,8 +51,7 @@
   </div>
 </template>
 <script>
-import { testConnection, createDatabaseConnection } from '@/API/RemoteConnection'
-import { createDataSource } from '@/API/DataSource'
+import { testOldConnection, updateDatabaseConnection } from '@/API/RemoteConnection'
 import { Message } from 'element-ui'
 import UploadProcessBlock from './UploadProcessBlock'
 import RemoteConnectionForm from './RemoteConnectionForm'
@@ -85,6 +84,7 @@ export default {
   data () {
     return {
       isLoading: false,
+      isProcessing: false,
       dbOptionList: [
         {
           name: 'MSSQL',
@@ -111,50 +111,32 @@ export default {
     prevStep () {
       this.$emit('prev')
     },
-    nextStep () {
+    chooseConnection (id) {
+      testOldConnection(id).then(() => {
+        this.$emit('next', id)
+      }).catch(() => {
+      })
+    },
+    saveConnectionInfo (onlySave=true) {
       this.$validator.validateAll().then(result => {
         if (result) {
-          this.isLoading = true
-
-          testConnection(this.connectInfo).then(() => {
-            this.dataSourceId ? this.createConnection() : this.createDataSource()
-          }).catch(() => {
-            Message({
-              message: this.$t('message.connectionFail'),
-              type: 'error',
-              duration: 3 * 1000
+          this.isProcessing = true
+          const {id, ...noConnectionId} = this.connectInfo
+          return updateDatabaseConnection (id, noConnectionId)
+            .then (() => {
+              Message({
+                message: this.$t('message.saveSuccess'),
+                type: 'success',
+                duration: 3 * 1000
+              })
+              onlySave ? this.prevStep() : this.chooseConnection(id)
             })
-            this.isLoading = false
-          })
+            .catch(() => { 
+              this.isProcessing = false
+              if (onlySave) this.prevStep()
+            })
         }
       })
-    },
-    createDataSource () {
-      return createDataSource({
-        name: this.dataSourceName,
-        groupId: this.currentGroupId
-      }).then(response => {
-        this.dataSourceId = response.dataSourceId
-
-        this.$emit('updateDataSource', this.dataSourceId)
-
-        this.createConnection()
-      }).catch(() => {
-        this.isLoading = false
-      })
-    },
-    createConnection () {
-      createDatabaseConnection({
-        groupId: this.currentGroupId,
-        ...this.connectInfo
-      }).then(response => {
-        this.$emit('next', response)
-      }).catch(() => {
-        this.isLoading = false
-      })
-    },
-    saveConnectionInfo () {
-      
     }
   },
 }

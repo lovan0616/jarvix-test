@@ -302,7 +302,10 @@
     "chooseDataColumn": "选择资料栏位",
     "numericOnly": "请输入数值",
     "isRequired": "必填",
-    "resultOverSizeMessage": "资料量过大时，资料会经过取样"
+    "resultOverSizeMessage": "资料量过大时，资料会经过取样",
+    "toolTipMessage": {
+      "comfrmToDeleteConnectionHistory":"你确定要删除连线纪录?"
+    }
   },
   "etl": {
     "dataFrameList": "资料表列表",
