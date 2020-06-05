@@ -66,15 +66,39 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { getAccountInfo } from '@/API/Account'
 
 export default {
   name: 'AccountInfo',
   data () {
-    return {}
+    return {
+      isLoading: true,
+      license: {
+        maxUser: null,
+        currentUser: null,
+        maxDataStorageSize: null,
+        currentDataStorageSize: null,
+        expiredTime: null
+      }
+    }
   },
-  computed: {
-    ...mapState('userManagement', ['license'])
+  mounted () {
+    this.fetchData()
+  },
+  methods: {
+    fetchData () {
+      this.isLoading = true
+      getAccountInfo()
+        .then(accountInfo => {
+          this.license = {
+            ...this.license,
+            ...accountInfo.license
+          }
+          this.$store.commit('userManagement/setLicenseCurrentUser', this.license.currentUser)
+          this.$store.commit('userManagement/setLicenseCurrentDataStorageSize', this.license.currentDataStorageSize)
+        })
+        .finally(() => { this.isLoading = false })
+    }
   }
 }
 </script>
