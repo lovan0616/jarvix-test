@@ -2,6 +2,8 @@
   <div 
     class="upload-block"
     @click="clickBlock"
+    @drop.prevent="dropHandler($event)"
+    @dragover.prevent
   >
     <div class="upload-text-container">
       <svg-icon 
@@ -26,11 +28,24 @@ export default {
     remarkMessage: {
       default: null,
       type: String
+    },
+    acceptFileTypes: {
+      default: null,
+      type: Array
     }
   },
   methods: {
     clickBlock () {
       this.$emit('create')
+    },
+    dropHandler (event) {
+      let files = []
+      if (event.dataTransfer.items) {
+        files = Array.from(event.dataTransfer.items).map(item => {
+          if (this.acceptFileTypes.includes(item.type)) item.getAsFile()
+        })
+      } 
+      this.$emit('filesDropped', files)
     }
   }
 }

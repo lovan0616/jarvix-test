@@ -8,18 +8,20 @@
       <div class="data-source-name">{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
       <input 
         ref="fileUploadInput" 
-        type="file" 
+        :accept="acceptFileTypes.join(',').toString()" 
+        type="file"
         class="hidden"
         name="fileUploadInput"
-        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
         multiple
-        @change="fileImport"
+        @change="fileImport($event.target.files)"
       >
-      <upload-block 
+      <upload-block
         v-if="uploadFileList.length === 0 && unableFileList.length === 0"
         :bottom-message="$t('editing.clickToSelectFiles')"
+        :accept-file-types="acceptFileTypes"
         class="empty-upload-block"
         @create="chooseFile"
+        @filesDropped="fileImport"
       >
         <div 
           slot="uploadLimit" 
@@ -106,7 +108,12 @@ export default {
       uploadStatus,
       currntUploadStatus: uploadStatus.wait,
       uploadFileSizeLimit: null,
-      unableFileList: []
+      unableFileList: [],
+      acceptFileTypes: [
+        '.csv',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel'
+      ],
     }
   },
   computed: {
@@ -158,13 +165,11 @@ export default {
       uploadInput.value = ''
       uploadInput.click()
     },
-    fileImport (event) {
-      let uploadInput = event.target
-
+    fileImport (files) {
       // 有選到檔案才執行
-      if (uploadInput.files) {
+      if (files) {
         // 判斷數量是否超過限制
-        if (uploadInput.files.length + this.uploadFileList.length > this.fileCountLimit) {
+        if (files.length + this.uploadFileList.length > this.fileCountLimit) {
           Message({
             message: this.$t('editing.reachUploadCountLimit', {countLimit: this.fileCountLimit}),
             type: 'warning',
@@ -173,7 +178,7 @@ export default {
 
           return false
         }
-        this.updateFileList(uploadInput.files)
+        this.updateFileList(files)
       }
     },
     // 將 input 內的檔案塞進 formData，並存到 store 中
