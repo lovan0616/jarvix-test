@@ -304,7 +304,10 @@
     "chooseDataColumn": "選擇資料欄位",
     "numericOnly": "請輸入數值",
     "isRequired": "必填",
-    "resultOverSizeMessage": "資料量過大時，資料會經過取樣"
+    "resultOverSizeMessage": "資料量過大時，資料會經過取樣",
+    "toolTipMessage": {
+      "comfrmToDeleteConnectionHistory":"你確定要刪除連線紀錄?"
+    }
   },
   "etl": {
     "dataFrameList": "資料表列表",
@@ -344,6 +347,7 @@
     "dataSummary": "資料概要",
     "connectionHistory": "連線紀錄",
     "newConnectionSetting": "新連線設定",
+    "returnConnectionHistory": "返回連線紀錄",
     "emptyConnectionHistory": "沒有任何連線紀錄",
     "dataCalculate": "資料計算中",
     "tableChosenLimit": "最多選擇 {number} 張資料表",
@@ -497,6 +501,7 @@
     "update": "更新",
     "finish": "完成",
     "connect": "連線",
+    "saveAndConnect": "儲存並連線",
     "toForeignTable": "關聯資料表",
     "newForeign": "新增關聯",
     "nextStep": "下一步",

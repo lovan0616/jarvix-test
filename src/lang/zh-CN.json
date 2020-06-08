@@ -303,7 +303,10 @@
     "chooseDataColumn": "选择资料栏位",
     "numericOnly": "请输入数值",
     "isRequired": "必填",
-    "resultOverSizeMessage": "资料量过大时，资料会经过取样"
+    "resultOverSizeMessage": "资料量过大时，资料会经过取样",
+    "toolTipMessage": {
+      "comfrmToDeleteConnectionHistory":"你确定要删除连线纪录?"
+    }
   },
   "etl": {
     "dataFrameList": "资料表列表",
@@ -344,6 +347,7 @@
     "connectionHistory": "连线纪录",
     "newConnectionSetting": "新连线设定",
     "emptyConnectionHistory": "没有任何连线纪录",
+    "returnConnectionHistory": "返回连线纪录",
     "dataCalculate": "资料计算中",
     "tableChosenLimit": "最多选择 {number} 张资料表",
     "tableSearch": "搜寻资料表",
@@ -496,6 +500,7 @@
     "update": "更新",
     "finish": "完成",
     "connect": "连线",
+    "saveAndConnect": "储存并连线",
     "toForeignTable": "关联资料表",
     "newForeign": "新增关联",
     "nextStep": "下一步",
