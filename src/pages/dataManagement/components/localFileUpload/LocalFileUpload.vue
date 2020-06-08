@@ -160,6 +160,45 @@ export default {
     }
   },
   methods: {
+    dropFiles (event) {
+      if (!event.dataTransfer.items) return
+
+      const files = Array.from(event.dataTransfer.items)
+        .filter(item => {
+          if (this.acceptFileTypes.includes(item.type)) return true
+          // 格式不支援者，最後一併跳提示訊息
+          this.notSupportedFileType.add(this.getFileShortExtension(item.type))
+        })
+        .map(item => item.getAsFile())
+
+      if (this.notSupportedFileType.size > 0) {
+        Message({
+          message: this.$t('message.fileTypeNotSupported', {fileType: [...this.notSupportedFileType].join(', ')}),
+          type: 'warning',
+          duration: 3 * 1000
+        })
+      }
+      this.fileImport(files)
+
+      // 還原狀態
+      this.dragEnter = false
+      this.notSupportedFileType = new Set()
+    },
+    getFileShortExtension (type) {
+      switch (type) {
+        case 'application/pdf':
+          return 'PDF'
+        case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+          return 'PPT'
+        case 'image/png':
+        case 'image/jpeg':
+          return 'IMAGE'
+        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+          return 'WORD'
+        default:
+          return '此'
+      }
+    },
     chooseFile () {
       let uploadInput = this.$refs.fileUploadInput
       uploadInput.value = ''

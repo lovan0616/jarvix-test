@@ -76,7 +76,8 @@
     "etlSettingTempSave": "设定已经暂存",
     "calculatingPleaseTryLater": "资料计算中，请稍后再试",
     "analysisFailed": "档案解析发生错误",
-    "confirmColumnStateTypeChange": "此变更将会清除进阶设定内容，您确认要进行变更？"
+    "confirmColumnStateTypeChange": "此变更将会清除进阶设定内容，您确认要进行变更？",
+    "fileTypeNotSupported": "不支援{fileType}档案格式"
   },
   "guiding": {
     "prevStep": "上一步",
