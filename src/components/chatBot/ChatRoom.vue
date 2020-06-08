@@ -12,9 +12,9 @@
         icon-class="double-arrow-left" 
         class="arrow-icon"/>
     </a>
-    <div class="chat-room__header header">
-      <data-source-select class="header__select"/>
-      <data-frame-select class="header__select"/>
+    <div class="chat-room__header select-group">
+      <data-source-select class="select-group__select"/>
+      <data-frame-select class="select-group__select"/>
     </div>
     <conversation-block/>
     <ask-block/>
@@ -88,7 +88,7 @@ export default {
     }
   }
 
-  .header {
+  .select-group {
     &__select {
       width: 100%;
       height: 36px;
