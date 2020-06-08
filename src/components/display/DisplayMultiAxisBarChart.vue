@@ -171,19 +171,22 @@ export default {
         }
       })
 
-      // 為了雙軸左右兩邊一致，先找到最小值 \ 最大值
-      let min = null
-      let max = null
-      this.dataset.data.forEach(element => {
-        if (min === null) min = element[0]
-        if (max === null) max = element[0]
-        element.forEach(item => {
-          if (item < min) min = item
-          if (item > max) max = item
-        })
-      })
-      min = (min < 0) ? min : 0
-      max = (max < 0) ? 0 : max
+      /**
+       * 為了雙軸左右兩邊一致，先找到最小值 \ 最大值
+       * 暫時先註解起來，用了覺得反而喪失了一些特性
+       **/
+      // let min = null
+      // let max = null
+      // this.dataset.data.forEach(element => {
+      //   if (min === null) min = element[0]
+      //   if (max === null) max = element[0]
+      //   element.forEach(item => {
+      //     if (item < min) min = item
+      //     if (item > max) max = item
+      //   })
+      // })
+      // min = (min < 0) ? min : 0
+      // max = (max < 0) ? 0 : max
 
       config.yAxis = this.title.yAxis.map((axis, index) => {
         return {
@@ -192,8 +195,12 @@ export default {
           name: axis.display_name,
           offset: Math.floor(index / 2) * 35,
           scale: false,
-          min: min,
-          max: max,
+          min: (value) => {
+            return value.min
+          },
+          max: (value) => {
+            return value.max
+          },
           axisLine: {
             lineStyle: {
               color: this.colorList[index]
