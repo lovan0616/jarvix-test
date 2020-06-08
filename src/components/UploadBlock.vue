@@ -3,10 +3,6 @@
     :class="{'droppable': dragEnter}"
     class="upload-block"
     @click="clickBlock"
-    @drop.prevent="dropHandler($event)"
-    @dragover.prevent
-    @dragenter="dragEnter = true"
-    @dragleave="dragEnter = false"
   >
     <div class="upload-text-container">
       <svg-icon 
@@ -32,28 +28,18 @@ export default {
       default: null,
       type: String
     },
-    acceptFileTypes: {
-      default: null,
-      type: Array
+    dragEnter: {
+      default: false,
+      type: Boolean
     }
   },
   data () {
     return {
-      dragEnter: false,
     }
   },
   methods: {
     clickBlock () {
       this.$emit('create')
-    },
-    dropHandler (event) {
-      let files = []
-      if (event.dataTransfer.items) {
-        files = Array.from(event.dataTransfer.items).map(item => {
-          return this.acceptFileTypes.includes(item.type) ? item.getAsFile() : null
-        })
-      } 
-      this.$emit('filesDropped', files)
     }
   }
 }

@@ -19,9 +19,13 @@
         v-if="uploadFileList.length === 0 && unableFileList.length === 0"
         :bottom-message="$t('editing.clickToSelectFiles')"
         :accept-file-types="acceptFileTypes"
+        :drag-enter="dragEnter"
         class="empty-upload-block"
         @create="chooseFile"
-        @filesDropped="fileImport"
+        @drop.native.prevent="dropFiles($event)"
+        @dragover.native.prevent
+        @dragenter.native="dragEnter = true"
+        @dragleave.native="dragEnter = false"
       >
         <div 
           slot="uploadLimit" 
@@ -38,9 +42,14 @@
       <div 
         v-else
         class="file-list-container"
+        @drop.prevent="dropFiles($event)"
+        @dragover.prevent
+        @dragenter="dragEnter = true"
+        @dragleave="dragEnter = false"
       >
         <file-list-block
           v-if="uploadFileList.length > 0"
+          :drag-enter="dragEnter"
           :title="$t('editing.canUpload')"
           :file-list="uploadFileList"
         />
@@ -111,9 +120,12 @@ export default {
       unableFileList: [],
       acceptFileTypes: [
         '.csv',
+        'text/csv',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'application/vnd.ms-excel'
       ],
+      dragEnter: false,
+      notSupportedFileType: new Set()
     }
   },
   computed: {
@@ -327,6 +339,7 @@ export default {
     font-size: 12px;
     line-height: 17px;
     letter-spacing: 0.5px;
+    pointer-events: none;
 
     .file-chosen-remark {
       margin-right: 16px;
