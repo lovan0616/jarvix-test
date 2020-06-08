@@ -1,18 +1,9 @@
 <template>
   <div class="remote-connection">
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
-    <upload-process-block
-      :step="isLoading ? 2 : 1"
-    />
+    <upload-process-block />
     <div class="dialog-body">
-      <spinner 
-        v-if="isLoading"
-        :title="$t('editing.DBconnecting')"
-        class="loading-block"
-        size="50"
-      />
       <form 
-        v-else
         class="input-block-container"
       >
         <div class="return-block-container">
@@ -27,7 +18,6 @@
         </div>
         <remote-connection-form
           :data-source-id="dataSourceId"
-          :data-source-name="dataSourceName"
           :connect-info="connectInfo"
           class="remote-connection-form"
         />  
@@ -81,10 +71,8 @@ export default {
   },
   data () {
     return {
-      isLoading: false,
       isProcessing: false,
-      dataSourceId: this.$route.params ? parseInt(this.$route.params.id) : null,
-      dataSourceName: null
+      dataSourceId: this.$route.params ? parseInt(this.$route.params.id) : null
     }
   },
   computed: {

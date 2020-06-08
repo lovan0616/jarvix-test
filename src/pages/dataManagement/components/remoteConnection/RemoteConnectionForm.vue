@@ -122,10 +122,16 @@ export default {
   },
   data () {
     return {
-      dbOptionList: {
-        type: Array,
-        default: () => []
-      }
+      dbOptionList: [
+        {
+          name: 'MSSQL',
+          value: 'MSSQL'
+        },
+        {
+          name: 'POSTGRESQL',
+          value: 'POSTGRESQL'
+        }
+      ]
     }
   },
   computed: {

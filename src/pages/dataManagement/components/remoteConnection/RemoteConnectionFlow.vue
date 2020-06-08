@@ -10,15 +10,15 @@
         @next="connectEstablish"
       />
       <new-remote-connection
-        v-if="step === 1 && !isEditing"
+        v-if="step === 1 && !isOldConnection"
         @updateDataSource="setDataSource"
         @prev="prevStep"
         @next="connectEstablish"
       />
       <edit-remote-connection
-        v-if="step === 1 && isEditing"
+        v-if="step === 1 && isOldConnection"
         :connect-info="connectInfo"
-        @prev="prevStep"
+        @prev="editPrevStep"
         @next="connectDatabase"
       />
       <choose-table
@@ -70,7 +70,7 @@ export default {
       // 要複製的 table id 列表
       tableIdList: [],
       status: null,
-      isEditing: false,
+      isOldConnection: false,
       connectInfo: {}
     }
   },
@@ -101,11 +101,14 @@ export default {
     },
     prevStep () {
       this.step -= 1
-      this.isEditing = false
+    },
+    editPrevStep () {
+      this.prevStep()
+      this.isOldConnection = false
     },
     editConnection (connection) {
       this.connectInfo = connection
-      this.isEditing = true
+      this.isOldConnection = true
       this.nextStep()
     }
   }

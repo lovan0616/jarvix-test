@@ -147,6 +147,12 @@ export default {
     chooseConnection (id) {
       testOldConnection(id).then(() => {
         this.$emit('next', id)
+      }).catch(() => {
+        Message({
+          message: this.$t('message.connectionFail'),
+          type: 'error',
+          duration: 3 * 1000
+        })
       })
     },
     createConnection () {
