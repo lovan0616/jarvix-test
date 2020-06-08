@@ -80,6 +80,7 @@ export default {
     ...mapGetters('userManagement', ['hasPermission']),
     ...mapState('userManagement', ['license']),
     tableHeaders () {
+      console.log(this.license.maxUser, 'test')
       return [
         {
           text: this.$t('editing.groupName'),
@@ -116,12 +117,12 @@ export default {
               value: 'edit',
               permission: 'account_update_group'
             },
-            ...(this.license.maxUser > 1) ? {
+            ...(this.license.maxUser > 1) ? [{
               type: 'event',
               name: this.$t('editing.memberManagement'),
               value: 'manage',
               permission: 'account_read_group'
-            } : {}
+            }] : {}
           ]
         }
       ]
