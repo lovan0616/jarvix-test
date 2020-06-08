@@ -62,16 +62,33 @@
                 <!-- 不使用v-if因為從DOM中拔除時validator會報錯(validate unexisting field) -->
                 <div 
                   v-show="isEditing(column.id)" 
-                  class="edit-block" >
-                  <input-block
-                    v-validate="`required|max:${max}`"
-                    v-model="tempRowInfo.alias"
-                    :name="'alias' + '-' + column.id"
-                    class="edit-alias-input-block"
-                  />
-                  <!-- <button class="btn-m btn-secondary btn-add">
-                    <svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.add') }}
-                  </button> -->
+                  class="edit-block"
+                >
+                  <div 
+                    v-for="(singleAlias, aliasIndex) in tempRowInfo.alias"
+                    :key="column.id + '-' + aliasIndex"
+                    class="edit-alias-input-list"
+                  >
+                    <input-block
+                      v-validate="`required|max:${max}`"
+                      v-model="tempRowInfo.alias[aliasIndex]"
+                      :name="'alias' + '-' + column.id"
+                      :placeholder="$t('editing.dataFrameInputPlaceholder')"
+                      class="edit-alias-input-block"
+                    />
+                    <div 
+                      class="link"
+                      @click="removeAlias(aliasIndex)"
+                    >{{ $t('button.remove') }}</div>
+                  </div>
+                  <button 
+                    class="btn-m btn-secondary btn-add"
+                    @click="addAlias"
+                  >
+                    <svg-icon 
+                      icon-class="plus" 
+                      class="icon"/>{{ $t('button.add') }}
+                  </button>
                 </div>
               </div>
               <!-- <div class="data-table-cell tag">{{ column.statsType }}</div> -->
@@ -145,7 +162,7 @@ export default {
       // 目前編輯的欄位資訊
       tempRowInfo: {
         dataColumnId: null,
-        alias: null,
+        alias: [],
         columnStatsType: null
       },
       userEditInfo: {
@@ -190,7 +207,7 @@ export default {
     },
     edit (columnInfo) {
       this.tempRowInfo.dataColumnId = columnInfo.id
-      this.tempRowInfo.alias = JSON.parse(JSON.stringify(columnInfo.primaryAlias))
+      this.tempRowInfo.alias = [columnInfo.primaryAlias]
       this.tempRowInfo.columnStatsType = JSON.parse(JSON.stringify(columnInfo.statsType))
     },
     updateDataSource () {
@@ -248,6 +265,22 @@ export default {
     },
     isEditing (id) {
       return this.tempRowInfo.dataColumnId === id
+    },
+    addAlias () {
+      this.tempRowInfo.alias.push('')
+      this.$nextTick(() => {
+        // 重新驗證所有欄位
+        this.$validator.validateAll()
+      })
+    },
+    removeAlias (index) {
+      this.tempRowInfo.alias.splice(index, 1)
+      // 確保已經從 DOM 中移除欄位才能驗證到正確名稱的欄位
+      this.$nextTick(() => {
+        // 重新驗證所有欄位
+        this.$validator.validateAll()
+      })
+      // console.log(this.tempRowInfo)
     }
   },
 }
@@ -294,20 +327,37 @@ export default {
     line-height: 24px;
     margin-right: 12px;
   }
-  .edit-alias-input-block {
+
+  .edit-block {
     display: flex;
-    align-items: center;
-    height: 52px;
+    flex-direction: column;
+
+    .link {
+      align-self: center;
+    }
+
+    .btn-add {
+      width: 80px;
+    }
+  }
+
+  .edit-alias-input-list {
+    display: flex;
+  }
+
+  .edit-alias-input-block {
+    width: 105px;
+    margin-right: 12px;
     /deep/ .input {
       height: 28px;
       padding-bottom: 0;
     }
     /deep/ .error-text {
-      bottom: -2px;
+      bottom: -10px;
     }
 
     &:not(:last-child) {
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
   }
   .btn-add {
