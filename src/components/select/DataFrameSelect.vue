@@ -5,7 +5,7 @@
       class="data-frame-select__icon"/>
     <sy-select 
       :selected="dataFrameId"
-      :items="buildDataFrameList"
+      :items="availabelDataFrames"
       :placeholder="$t('editing.chooseDataFrame')"
       class="data-frame-select__dropdown"
       @update:selected="onDataFrameChange"
@@ -24,7 +24,7 @@ export default {
     dataFrameId () {
       return this.$store.state.dataSource.dataFrameId
     },
-    buildDataFrameList () {
+    availabelDataFrames () {
       const dataFrameList = this.$store.state.dataSource.dataFrameList
       const defaultOption = {
         name: this.$t('editing.allDataFrames'),
