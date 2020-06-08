@@ -318,7 +318,6 @@ export default {
       .data-column__reminder {
         font-size: 14px;
         text-align: right;
-        color: $theme-color-warning;
         margin: 0;
       }
     }

@@ -5,7 +5,17 @@
       :option-list="statsTypeOptions"
       class="dropdown__container"
       @change="openConfirmMsg"
-    />
+    >
+      <template #option-content="{ option }">
+        <svg-icon 
+          :icon-class="getStatsTypeIcon(option.value)"
+          class="statsType__icon" />
+        <span class="statsType__label">{{ option.name }}</span>
+      </template>
+    </default-select>
+    <svg-icon 
+      :icon-class="getStatsTypeIcon(editedColumnInfo.statsType)"
+      class="statsType__icon" />
     <div
       v-if="showConfirmMsg"
       class="confirm"
@@ -100,14 +110,44 @@ export default {
           this.editedColumnInfo.targetDataType = 'BOOLEAN'
           break
       }
-    }
-  },
+    },
+    getStatsTypeIcon (statesType) {
+      switch (statesType) {
+        case 'CATEGORY':
+          return 'character-a'
+        case 'NUMERIC':
+          return 'numeric'
+        case 'BOOLEAN':
+          return 'checked'
+        case 'DATETIME':
+          return 'calendar'
+        default:
+          return 'check-circle'
+      }
+    },
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .dropdown {
   position: relative;
+}
+
+>>> .sy-select {
+  .el-input__inner {
+    padding-left: 40px;
+  }
+  .statsType__label {
+    padding-left: 20px;
+  }
+}
+.statsType__icon {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  font-size: 16px;
 }
 
 .confirm {
