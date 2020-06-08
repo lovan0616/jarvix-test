@@ -12,17 +12,23 @@ export default {
   components: {
     ResultDisplay
   },
-  data () {
-    return {}
-  },
   // 主要針對瀏覽器上下頁、從 preview 回到 searchbar 的一些處理
   watch: {
     '$route.query.dataSourceId': {
       immediate: true,
       handler: function (value) {
         if (this.$route.name === 'PageResult' && value) {
-          this.$store.dispatch('dataSource/changeDataSourceById', parseInt(value))
+          this.$store.dispatch('dataSource/changeDataSourceById', {
+            dataSourceId: parseInt(value),
+            dataFrameId: this.$route.query.dataFrameId === 'all' ? 'all' : parseInt(this.$route.query.dataFrameId)
+          })
         }
+      }
+    },
+    '$route.query.dataFrameId'(value) {
+      if (this.$route.name === 'PageResult' && value) {
+        const dataFrameId = value === 'all' ? 'all' : parseInt(value)
+        this.$store.dispatch('dataSource/changeDataFrameById', dataFrameId)
       }
     },
     '$route.query.question': {

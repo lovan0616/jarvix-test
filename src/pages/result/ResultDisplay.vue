@@ -103,8 +103,8 @@ export default {
       const {dataSourceId, dataFrameId, question} = this.$route.query
       if (!question) return
       this.fetchApiAsk({
-        dataSourceId: parseInt(dataSourceId), 
-        dataFrameId: parseInt(dataFrameId),
+        dataSourceId, 
+        dataFrameId,
         question
       })
     },

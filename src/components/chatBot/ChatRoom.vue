@@ -37,6 +37,17 @@ export default {
   computed: {
     isShowChatRoom () {
       return this.$store.state.isShowChatRoom
+    },
+    dataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
+    },
+    dataFrameId () {
+      return this.$store.state.dataSource.dataFrameId
+    }
+  },
+  watch: {
+    dataFrameId (value) {
+      if (value) this.updateChatRoom()
     }
   },
   methods: {
@@ -46,6 +57,20 @@ export default {
     },
     closePreviewDataSource () {
       this.$store.commit('previewDataSource/togglePreviewDataSource', false)
+    },
+    updateChatRoom () {
+      this.$store.commit('chatBot/updateAnalyzeStatus', true)
+      this.$store.dispatch('chatBot/getQuickStartQuestion', this.dataSourceId)
+      .then(response => {
+        this.$store.commit('chatBot/updateAnalyzeStatus', false)
+        this.$store.commit('chatBot/addSystemConversation',
+          response.length > 0
+            ? {text: this.$t('bot.welcomeMessageWithSuggestions'), options: response}
+            : {text: this.$t('bot.welcomeMessage')}
+        )
+      }).catch(() => {
+        this.$store.commit('chatBot/updateAnalyzeStatus', false)
+      })
     }
   },
 }

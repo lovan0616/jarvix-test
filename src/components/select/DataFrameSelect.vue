@@ -26,9 +26,10 @@ export default {
     },
     availabelDataFrames () {
       const dataFrameList = this.$store.state.dataSource.dataFrameList
+      if (dataFrameList.length === 0) return []
       const defaultOption = {
         name: this.$t('editing.allDataFrames'),
-        id: ''
+        id: 'all'
       }
       return dataFrameList.reduce((acc, cur) => {
         if (cur.state !== 'Enable') return acc

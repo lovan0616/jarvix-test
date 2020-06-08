@@ -540,5 +540,6 @@ export function timeToDateTime (time) {
   let date = datetime.getDate()
   let hour = datetime.getHours()
   let minute = datetime.getMinutes()
+  console.log(`${year}-${paddingZero(month)}-${paddingZero(date)}-${paddingZero(hour)}${paddingZero(minute)}`)
   return `${year}-${paddingZero(month)}-${paddingZero(date)}-${paddingZero(hour)}${paddingZero(minute)}`
 }

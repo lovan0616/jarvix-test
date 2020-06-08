@@ -6,13 +6,14 @@ let cancelFunction
 export default {
   askQuestion ({dispatch, commit, state, rootState, rootGetters}, data) {
     dispatch('cancelRequest')
+    const dataFrameId = rootState.dataSource.dataFrameId || data.dataFrameId
     return askQuestion({
       question: rootState.dataSource.appQuestion || data.question,
       dataSourceId: rootState.dataSource.dataSourceId || data.dataSourceId,
       previewQuestionId: rootGetters['dataSource/drillDownQuestionId'],
       domain: 'GENERAL',
       isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null,
-      dataFrameId: rootState.dataSource.dataFrameId || data.dataFrameId
+      dataFrameId: dataFrameId === 'all' ? '' : dataFrameId
     }, new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
       cancelFunction = c
