@@ -1,9 +1,12 @@
 <template>
   <div 
+    :class="{'droppable': dragEnter}"
     class="upload-block"
     @click="clickBlock"
     @drop.prevent="dropHandler($event)"
     @dragover.prevent
+    @dragenter="dragEnter = true"
+    @dragleave="dragEnter = false"
   >
     <div class="upload-text-container">
       <svg-icon 
@@ -34,6 +37,11 @@ export default {
       type: Array
     }
   },
+  data () {
+    return {
+      dragEnter: false,
+    }
+  },
   methods: {
     clickBlock () {
       this.$emit('create')
@@ -56,7 +64,12 @@ export default {
   background-color: rgba(50, 58, 58, 0.95);
   text-align: center;
   cursor: pointer;
-
+  &:hover, &.droppable {
+    background: #485454;
+  }
+  .upload-text-container {
+    pointer-events: none;
+  }
   .upload-icon {
     font-size: 52px;
     margin-bottom: 16px;

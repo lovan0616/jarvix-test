@@ -111,8 +111,8 @@
     "dataManageable": "可管理",
     "dataInQueue": "等待處理中",
     "dataDisable": "無法使用",
-    "newData":"新增資料",
-    "choiceDataTypeFirst":"請先選擇資料類型",
+    "newData": "新增資料",
+    "choiceDataTypeFirst": "請先選擇資料類型",
     "confirmDeleteNTables": "您確認要刪除以下資料表嗎？",
     "describeDeleteNTables": "刪除過程會進行資料處理，在此期間您依然可以瀏覽所有資料源內容，但無法進行新增、刪除資料...等任何資料管理的操作。",
     "editTable": "編輯資料表",
@@ -126,7 +126,7 @@
     "action": "操作",
     "dataSourceName": "資料源名稱",
     "selectDataType": "選擇資料類型",
-    "clickToSelectFiles": "點擊此區塊，選擇資料表檔案",
+    "clickToSelectFiles": "點擊選擇檔案，或拖曳檔案至此",
     "uploadLimitTitle": "檔案上傳限制說明",
     "uploadLimitFileType": "支援格式：.xlsx .xls .csv",
     "uploadLimitSize": "檔案大小：{limitSize}MB",
@@ -139,13 +139,13 @@
     "addFile": "選取檔案",
     "selectedTablesWaitingToUpload": "選取{num}項資料表，總和{size}，可進行上傳",
     "uploading": "上傳過程中請勿關閉瀏覽器視窗，以免上傳作業失敗",
-    "uploadSuccess":"上傳成功",
-    "uploadFailure":"上傳失敗",
-    "uploadFinish":"上傳完成",
-    "uploadStatus":"總共{total}項資料表，{success}項上傳成功，{pending}項未上傳",
-    "dataSourceInfo":"資料類型：{type} 資料源名稱：{dataSourceName}",
-    "uploaded":"已上傳",
-    "unuploaded":"未上傳",
+    "uploadSuccess": "上傳成功",
+    "uploadFailure": "上傳失敗",
+    "uploadFinish": "上傳完成",
+    "uploadStatus": "總共{total}項資料表，{success}項上傳成功，{pending}項未上傳",
+    "dataSourceInfo": "資料類型：{type} 資料源名稱：{dataSourceName}",
+    "uploaded": "已上傳",
+    "unuploaded": "未上傳",
     "dataBuildingReminding": "資料表建置將以背景執行方式進行，建置進度將顯示在資料表狀態。",
     "connectMySQL": "連結MySQL資料庫",
     "DBconnecting": "連結資料庫中",
@@ -366,7 +366,9 @@
     "bracket": "中括號",
     "braces": "大括號",
     "hint": "提示",
-    "forbiddenRule": ["禁用全型文字"],
+    "forbiddenRule": [
+      "禁用全型文字"
+    ],
     "chooseOptionHint": "請從下方點選您所需要的元素組成欄位，元素可拖曳替換位置",
     "maxColumn": "目前最多支援{number}個資料欄位組合",
     "inputPlaceholder": "範例：利潤 = 收入 - 成本",
@@ -491,7 +493,7 @@
     "cancel": "取消",
     "delete": "刪除",
     "confirm": "確認",
-    "close": "關閉", 
+    "close": "關閉",
     "share": "分享",
     "shareLink": "分享連結",
     "edit": "編輯",
@@ -619,14 +621,32 @@
             "questionText": "Numeric 的概況",
             "questionExample": [
               [
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "概況", "type": ""}
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "概況",
+                  "type": ""
+                }
               ],
               [
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "概況", "type": ""}
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "概況",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -634,14 +654,32 @@
             "questionText": "Numeric 的平均",
             "questionExample": [
               [
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "平均", "type": ""}
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "平均",
+                  "type": ""
+                }
               ],
               [
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "平均", "type": ""}
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "平均",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -649,14 +687,32 @@
             "questionText": "Numeric 的總和",
             "questionExample": [
               [
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "總和", "type": ""}
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "總和",
+                  "type": ""
+                }
               ],
               [
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "總和", "type": ""}
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "總和",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -664,14 +720,32 @@
             "questionText": "Numeric 的總數",
             "questionExample": [
               [
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "總數", "type": ""}
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "總數",
+                  "type": ""
+                }
               ],
               [
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "總數", "type": ""}
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "總數",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -679,14 +753,32 @@
             "questionText": "Numeric 的最大值",
             "questionExample": [
               [
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "最大值", "type": ""}
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "最大值",
+                  "type": ""
+                }
               ],
               [
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "最大值", "type": ""}
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "最大值",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -694,14 +786,32 @@
             "questionText": "Numeric 的標準差",
             "questionExample": [
               [
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "標準差", "type": ""}
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "標準差",
+                  "type": ""
+                }
               ],
               [
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "標準差", "type": ""}
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "標準差",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -709,14 +819,32 @@
             "questionText": "Numeric 的中位數",
             "questionExample": [
               [
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "中位數", "type": ""}
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "中位數",
+                  "type": ""
+                }
               ],
               [
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "的", "type": ""},
-                {"text": "中位數", "type": ""}
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "中位數",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -724,14 +852,32 @@
             "questionText": "Category",
             "questionExample": [
               [
-                {"text": "事件", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "概況", "type": ""}
+                {
+                  "text": "事件",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "概況",
+                  "type": ""
+                }
               ],
               [
-                {"text": "國家", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "概況", "type": ""}
+                {
+                  "text": "國家",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "概況",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -739,14 +885,32 @@
             "questionText": "Category 的總數",
             "questionExample": [
               [
-                {"text": "事件", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "總數", "type": ""}
+                {
+                  "text": "事件",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "總數",
+                  "type": ""
+                }
               ],
               [
-                {"text": "國家", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "總數", "type": ""}
+                {
+                  "text": "國家",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "總數",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -754,11 +918,26 @@
             "questionText": "各 Category 的 Numeric 的總合",
             "questionExample": [
               [
-                {"text": "各", "type": ""},
-                {"text": "產品", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "利潤", "type": "numeric"},
-                {"text": "總合", "type": ""}
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "總合",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -766,16 +945,40 @@
             "questionText": "Numeric 和 Numeric 的平均",
             "questionExample": [
               [
-                {"text": "成本", "type": "numeric"},
-                {"text": "和", "type": ""},
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的平均", "type": ""}
+                {
+                  "text": "成本",
+                  "type": "numeric"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的平均",
+                  "type": ""
+                }
               ],
               [
-                {"text": "平均營收", "type": "numeric"},
-                {"text": "和", "type": ""},
-                {"text": "成本", "type": "numeric"},
-                {"text": "的平均", "type": ""}
+                {
+                  "text": "平均營收",
+                  "type": "numeric"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "成本",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的平均",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -783,13 +986,34 @@
             "questionText": "各 Category 的 Numeric 和 Numeric 的平均",
             "questionExample": [
               [
-                {"text": "各", "type": ""},
-                {"text": "產品", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "和", "type": ""},
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的平均", "type": ""}
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的平均",
+                  "type": ""
+                }
               ]
             ]
           }
@@ -802,14 +1026,32 @@
             "questionText": "Category 和 Category",
             "questionExample": [
               [
-                {"text": "事件", "type": "category"},
-                {"text": "和", "type": ""},
-                {"text": "產品", "type": "category"}
+                {
+                  "text": "事件",
+                  "type": "category"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                }
               ],
               [
-                {"text": "部", "type": "category"},
-                {"text": "和", "type": ""},
-                {"text": "商店", "type": "category"}
+                {
+                  "text": "部",
+                  "type": "category"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "商店",
+                  "type": "category"
+                }
               ]
             ]
           },
@@ -817,12 +1059,30 @@
             "questionText": "Category 和 Category 的 Numeric 的總合",
             "questionExample": [
               [
-                {"text": "客戶性別", "type": "category"},
-                {"text": "和", "type": ""},
-                {"text": "產品", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "的總和", "type": ""}
+                {
+                  "text": "客戶性別",
+                  "type": "category"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的總和",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -830,24 +1090,72 @@
             "questionText": "Category 和 Category 的 Numeric 和 Numeric 的總和",
             "questionExample": [
               [
-                {"text": "客戶性別", "type": "category"},
-                {"text": "和", "type": ""},
-                {"text": "產品", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "和", "type": ""},
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的總和", "type": ""}
+                {
+                  "text": "客戶性別",
+                  "type": "category"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的總和",
+                  "type": ""
+                }
               ],
               [
-                {"text": "倉庫", "type": "category"},
-                {"text": "和", "type": ""},
-                {"text": "採購來源", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "良品", "type": "numeric"},
-                {"text": "和", "type": ""},
-                {"text": "不良品", "type": "numeric"},
-                {"text": "的總和", "type": ""}
+                {
+                  "text": "倉庫",
+                  "type": "category"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "採購來源",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "良品",
+                  "type": "numeric"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "不良品",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的總和",
+                  "type": ""
+                }
               ]
             ]
           }
@@ -860,12 +1168,24 @@
             "questionText": "Numeric 的趨勢",
             "questionExample": [
               [
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "的趨勢", "type": ""}
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的趨勢",
+                  "type": ""
+                }
               ],
               [
-                {"text": "採購數量", "type": "numeric"},
-                {"text": "的趨勢", "type": ""}
+                {
+                  "text": "採購數量",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的趨勢",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -873,14 +1193,32 @@
             "questionText": "每月的 Numeric",
             "questionExample": [
               [
-                {"text": "每月", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "單位價格", "type": "numeric"}
+                {
+                  "text": "每月",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                }
               ],
               [
-                {"text": "每月", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "失業率", "type": "numeric"}
+                {
+                  "text": "每月",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "失業率",
+                  "type": "numeric"
+                }
               ]
             ]
           },
@@ -888,12 +1226,30 @@
             "questionText": "每月的 Numeric 和 Numeric 總和",
             "questionExample": [
               [
-                {"text": "每月", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "和", "type": ""},
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的總和", "type": ""}
+                {
+                  "text": "每月",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的總和",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -901,20 +1257,56 @@
             "questionText": "每月各 Category 的 Numeric 總和",
             "questionExample": [
               [
-                {"text": "每月", "type": "filter"},
-                {"text": "的各", "type": ""},
-                {"text": "產品", "type": "category"},
-                {"text": "和", "type": ""},
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的總和", "type": ""}
+                {
+                  "text": "每月",
+                  "type": "filter"
+                },
+                {
+                  "text": "的各",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的總和",
+                  "type": ""
+                }
               ],
               [
-                {"text": "每月", "type": "filter"},
-                {"text": "各", "type": ""},
-                {"text": "商店", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "銷售", "type": "numeric"},
-                {"text": "總和", "type": ""}
+                {
+                  "text": "每月",
+                  "type": "filter"
+                },
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "商店",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "銷售",
+                  "type": "numeric"
+                },
+                {
+                  "text": "總和",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -922,22 +1314,64 @@
             "questionText": "每月各 Category 的 Numeric 和 Numeric ",
             "questionExample": [
               [
-                {"text": "每月", "type": "filter"},
-                {"text": "各", "type": ""},
-                {"text": "商店", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "銷售", "type": "numeric"},
-                {"text": "和", "type": ""},
-                {"text": "利潤", "type": "numeric"}
+                {
+                  "text": "每月",
+                  "type": "filter"
+                },
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "商店",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "銷售",
+                  "type": "numeric"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                }
               ],
               [
-                {"text": "每月", "type": "filter"},
-                {"text": "各", "type": ""},
-                {"text": "產品", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "利潤", "type": "numeric"},
-                {"text": "和", "type": ""},
-                {"text": "單位成本", "type": "numeric"}
+                {
+                  "text": "每月",
+                  "type": "filter"
+                },
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "單位成本",
+                  "type": "numeric"
+                }
               ]
             ]
           },
@@ -945,24 +1379,72 @@
             "questionText": "每月各 Category 的 Numeric 和 Numeric 總和",
             "questionExample": [
               [
-                {"text": "每月", "type": "filter"},
-                {"text": "各", "type": ""},
-                {"text": "商店", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "銷售", "type": "numeric"},
-                {"text": "和", "type": ""},
-                {"text": "利潤", "type": "numeric"},
-                {"text": "總和", "type": ""}
+                {
+                  "text": "每月",
+                  "type": "filter"
+                },
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "商店",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "銷售",
+                  "type": "numeric"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "總和",
+                  "type": ""
+                }
               ],
               [
-                {"text": "每月", "type": "filter"},
-                {"text": "各", "type": ""},
-                {"text": "產品", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "利潤", "type": "numeric"},
-                {"text": "和", "type": ""},
-                {"text": "單位成本", "type": "numeric"},
-                {"text": "總和", "type": ""}
+                {
+                  "text": "每月",
+                  "type": "filter"
+                },
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "單位成本",
+                  "type": "numeric"
+                },
+                {
+                  "text": "總和",
+                  "type": ""
+                }
               ]
             ]
           }
@@ -975,20 +1457,56 @@
             "questionText": "Y 年和 Y 年的 Numeric 比較",
             "questionExample": [
               [
-                {"text": "2017年", "type": "filter"},
-                {"text": "和", "type": ""},
-                {"text": "2018年", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "單位成本", "type": "numeric"},
-                {"text": "比較", "type": ""}
+                {
+                  "text": "2017年",
+                  "type": "filter"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "2018年",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "單位成本",
+                  "type": "numeric"
+                },
+                {
+                  "text": "比較",
+                  "type": ""
+                }
               ],
               [
-                {"text": "2010年", "type": "filter"},
-                {"text": "和", "type": ""},
-                {"text": "2011年", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "銷售", "type": "numeric"},
-                {"text": "比較", "type": ""}
+                {
+                  "text": "2010年",
+                  "type": "filter"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "2011年",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "銷售",
+                  "type": "numeric"
+                },
+                {
+                  "text": "比較",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -996,24 +1514,72 @@
             "questionText": "Y 年的第 X 季和第 X 季的 Numeric 比較",
             "questionExample": [
               [
-                {"text": "2010年", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "第一季", "type": "filter"},
-                {"text": "和", "type": ""},
-                {"text": "第三季", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "銷售", "type": "numeric"},
-                {"text": "比較", "type": ""}
+                {
+                  "text": "2010年",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "第一季",
+                  "type": "filter"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "第三季",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "銷售",
+                  "type": "numeric"
+                },
+                {
+                  "text": "比較",
+                  "type": ""
+                }
               ],
               [
-                {"text": "2019年", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "第一季", "type": "filter"},
-                {"text": "和", "type": ""},
-                {"text": "第三季", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "單位成本", "type": "numeric"},
-                {"text": "比較", "type": ""}
+                {
+                  "text": "2019年",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "第一季",
+                  "type": "filter"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "第三季",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "單位成本",
+                  "type": "numeric"
+                },
+                {
+                  "text": "比較",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -1021,24 +1587,72 @@
             "questionText": "Y 年的 M 月和 M 月的 Numeric 的比較",
             "questionExample": [
               [
-                {"text": "2010年", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "3月", "type": "filter"},
-                {"text": "和", "type": ""},
-                {"text": "5月", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "銷售", "type": "numeric"},
-                {"text": "比較", "type": ""}
+                {
+                  "text": "2010年",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "3月",
+                  "type": "filter"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "5月",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "銷售",
+                  "type": "numeric"
+                },
+                {
+                  "text": "比較",
+                  "type": ""
+                }
               ],
               [
-                {"text": "2019年", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "8月", "type": "filter"},
-                {"text": "和", "type": ""},
-                {"text": "9月", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "單位成本", "type": "numeric"},
-                {"text": "比較", "type": ""}
+                {
+                  "text": "2019年",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "8月",
+                  "type": "filter"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "9月",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "單位成本",
+                  "type": "numeric"
+                },
+                {
+                  "text": "比較",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -1046,19 +1660,52 @@
             "questionText": "Value 和 Value 的 Numeric 比較",
             "questionExample": [
               [
-                {"text": "上海", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "北京", "type": "value"},
-                {"text": "單位成本", "type": "numeric"},
-                {"text": "的比較", "type": ""}
+                {
+                  "text": "上海",
+                  "type": "value"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "北京",
+                  "type": "value"
+                },
+                {
+                  "text": "單位成本",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的比較",
+                  "type": ""
+                }
               ],
               [
-                {"text": "F", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "M", "type": "value"},
-                {"text": "的", "type": ""},
-                {"text": "客戶年齡", "type": "numeric"},
-                {"text": "比較", "type": ""}
+                {
+                  "text": "F",
+                  "type": "value"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "M",
+                  "type": "value"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "客戶年齡",
+                  "type": "numeric"
+                },
+                {
+                  "text": "比較",
+                  "type": ""
+                }
               ]
             ]
           }
@@ -1071,18 +1718,48 @@
             "questionText": "為什麼 Y 年的 Numeric 上升",
             "questionExample": [
               [
-                {"text": "為什麼", "type": ""},
-                {"text": "2017年11月", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "收入", "type": "numeric"},
-                {"text": "上升", "type": ""}
+                {
+                  "text": "為什麼",
+                  "type": ""
+                },
+                {
+                  "text": "2017年11月",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "收入",
+                  "type": "numeric"
+                },
+                {
+                  "text": "上升",
+                  "type": ""
+                }
               ],
               [
-                {"text": "為什麼", "type": ""},
-                {"text": "2011年1月", "type": "filter"},
-                {"text": "的", "type": ""},
-                {"text": "採購量", "type": "numeric"},
-                {"text": "下降", "type": ""}
+                {
+                  "text": "為什麼",
+                  "type": ""
+                },
+                {
+                  "text": "2011年1月",
+                  "type": "filter"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "採購量",
+                  "type": "numeric"
+                },
+                {
+                  "text": "下降",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -1090,14 +1767,32 @@
             "questionText": "Y 年 M 月 Numeric 的根因分析",
             "questionExample": [
               [
-                {"text": "2017年11月", "type": "filter"},
-                {"text": "收入", "type": "numeric"},
-                {"text": "的根因分析", "type": ""}
+                {
+                  "text": "2017年11月",
+                  "type": "filter"
+                },
+                {
+                  "text": "收入",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的根因分析",
+                  "type": ""
+                }
               ],
               [
-                {"text": "2011年1月", "type": "filter"},
-                {"text": "採購量", "type": "numeric"},
-                {"text": "的根因分析", "type": ""}
+                {
+                  "text": "2011年1月",
+                  "type": "filter"
+                },
+                {
+                  "text": "採購量",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的根因分析",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -1105,18 +1800,48 @@
             "questionText": "Y 年 M 月到 M 月的 Numeric 的根因分析",
             "questionExample": [
               [
-                {"text": "2017年1月", "type": "filter"},
-                {"text": "至", "type": ""},
-                {"text": "2018年1月", "type": "filter"},
-                {"text": "收入", "type": "numeric"},
-                {"text": "的根因分析", "type": ""}
+                {
+                  "text": "2017年1月",
+                  "type": "filter"
+                },
+                {
+                  "text": "至",
+                  "type": ""
+                },
+                {
+                  "text": "2018年1月",
+                  "type": "filter"
+                },
+                {
+                  "text": "收入",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的根因分析",
+                  "type": ""
+                }
               ],
               [
-                {"text": "2011年1月", "type": "filter"},
-                {"text": "至", "type": ""},
-                {"text": "2012年1月", "type": "filter"},
-                {"text": "銷售", "type": "numeric"},
-                {"text": "的根因分析", "type": ""}
+                {
+                  "text": "2011年1月",
+                  "type": "filter"
+                },
+                {
+                  "text": "至",
+                  "type": ""
+                },
+                {
+                  "text": "2012年1月",
+                  "type": "filter"
+                },
+                {
+                  "text": "銷售",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的根因分析",
+                  "type": ""
+                }
               ]
             ]
           }
@@ -1129,14 +1854,32 @@
             "questionText": "每月 Numeric 的預測",
             "questionExample": [
               [
-                {"text": "每月", "type": "filter"},
-                {"text": "收入", "type": "numeric"},
-                {"text": "的預測", "type": ""}
+                {
+                  "text": "每月",
+                  "type": "filter"
+                },
+                {
+                  "text": "收入",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的預測",
+                  "type": ""
+                }
               ],
               [
-                {"text": "每月", "type": "filter"},
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "的預測", "type": ""}
+                {
+                  "text": "每月",
+                  "type": "filter"
+                },
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的預測",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -1144,14 +1887,32 @@
             "questionText": "每周 Numeric 的預測",
             "questionExample": [
               [
-                {"text": "每周", "type": "filter"},
-                {"text": "收入", "type": "numeric"},
-                {"text": "的預測", "type": ""}
+                {
+                  "text": "每周",
+                  "type": "filter"
+                },
+                {
+                  "text": "收入",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的預測",
+                  "type": ""
+                }
               ],
               [
-                {"text": "每周", "type": "filter"},
-                {"text": "單位價格", "type": "numeric"},
-                {"text": "的預測", "type": ""}
+                {
+                  "text": "每周",
+                  "type": "filter"
+                },
+                {
+                  "text": "單位價格",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的預測",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -1159,14 +1920,32 @@
             "questionText": "Value 的 Numeric 的預測",
             "questionExample": [
               [
-                {"text": "腳踏車", "type": "value"},
-                {"text": "銷售", "type": "numeric"},
-                {"text": "的預測", "type": ""}
+                {
+                  "text": "腳踏車",
+                  "type": "value"
+                },
+                {
+                  "text": "銷售",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的預測",
+                  "type": ""
+                }
               ],
               [
-                {"text": "產品A", "type": "value"},
-                {"text": "良率", "type": "numeric"},
-                {"text": "的預測", "type": ""}
+                {
+                  "text": "產品A",
+                  "type": "value"
+                },
+                {
+                  "text": "良率",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的預測",
+                  "type": ""
+                }
               ]
             ]
           }
@@ -1179,14 +1958,32 @@
             "questionText": "各 Category 的比例",
             "questionExample": [
               [
-                {"text": "各", "type": ""},
-                {"text": "產品", "type": "category"},
-                {"text": "的比例", "type": ""}
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "的比例",
+                  "type": ""
+                }
               ],
               [
-                {"text": "各", "type": ""},
-                {"text": "商店類型", "type": "category"},
-                {"text": "的比例", "type": ""}
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "商店類型",
+                  "type": "category"
+                },
+                {
+                  "text": "的比例",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -1194,18 +1991,48 @@
             "questionText": "各 Category 的 Numeric 的比例",
             "questionExample": [
               [
-                {"text": "各", "type": ""},
-                {"text": "產品", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的比例", "type": ""}
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的比例",
+                  "type": ""
+                }
               ],
               [
-                {"text": "各", "type": ""},
-                {"text": "商品", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "銷售量", "type": "numeric"},
-                {"text": "的比例", "type": ""}
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "商品",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "銷售量",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的比例",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -1213,20 +2040,56 @@
             "questionText": "Y 年各 Category 的 Numeric 的比例",
             "questionExample": [
               [
-                {"text": "2018年", "type": "filter"},
-                {"text": "各", "type": ""},
-                {"text": "商品", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "銷售量", "type": "numeric"},
-                {"text": "的比例", "type": ""}
+                {
+                  "text": "2018年",
+                  "type": "filter"
+                },
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "商品",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "銷售量",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的比例",
+                  "type": ""
+                }
               ],
               [
-                {"text": "2011年", "type": "filter"},
-                {"text": "各", "type": ""},
-                {"text": "產品", "type": "category"},
-                {"text": "的", "type": ""},
-                {"text": "利潤", "type": "numeric"},
-                {"text": "的比例", "type": ""}
+                {
+                  "text": "2011年",
+                  "type": "filter"
+                },
+                {
+                  "text": "各",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "的",
+                  "type": ""
+                },
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的比例",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -1234,20 +2097,56 @@
             "questionText": "Value 和 Value 各佔 Category 的比例",
             "questionExample": [
               [
-                {"text": "S1", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "S2", "type": "value"},
-                {"text": "各佔", "type": ""},
-                {"text": "產品", "type": "category"},
-                {"text": "的比例", "type": ""}
+                {
+                  "text": "S1",
+                  "type": "value"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "S2",
+                  "type": "value"
+                },
+                {
+                  "text": "各佔",
+                  "type": ""
+                },
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "的比例",
+                  "type": ""
+                }
               ],
               [
-                {"text": "F", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "M", "type": "value"},
-                {"text": "各佔", "type": ""},
-                {"text": "顧客", "type": "category"},
-                {"text": "的比例", "type": ""}
+                {
+                  "text": "F",
+                  "type": "value"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "M",
+                  "type": "value"
+                },
+                {
+                  "text": "各佔",
+                  "type": ""
+                },
+                {
+                  "text": "顧客",
+                  "type": "category"
+                },
+                {
+                  "text": "的比例",
+                  "type": ""
+                }
               ]
             ]
           }
@@ -1260,16 +2159,40 @@
             "questionText": "Numeric 和 Numeric 的關係",
             "questionExample": [
               [
-                {"text": "成本", "type": "numeric"},
-                {"text": "和", "type": ""},
-                {"text": "收入", "type": "numeric"},
-                {"text": "的關係", "type": ""}
+                {
+                  "text": "成本",
+                  "type": "numeric"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "收入",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的關係",
+                  "type": ""
+                }
               ],
               [
-                {"text": "利潤", "type": "numeric"},
-                {"text": "和", "type": ""},
-                {"text": "成本", "type": "numeric"},
-                {"text": "的關係", "type": ""}
+                {
+                  "text": "利潤",
+                  "type": "numeric"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "成本",
+                  "type": "numeric"
+                },
+                {
+                  "text": "的關係",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -1277,16 +2200,40 @@
             "questionText": "Category 和 Category 的關係",
             "questionExample": [
               [
-                {"text": "產品", "type": "category"},
-                {"text": "和", "type": ""},
-                {"text": "國家", "type": "category"},
-                {"text": "的關係", "type": ""}
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "國家",
+                  "type": "category"
+                },
+                {
+                  "text": "的關係",
+                  "type": ""
+                }
               ],
               [
-                {"text": "產品", "type": "category"},
-                {"text": "和", "type": ""},
-                {"text": "客戶性別", "type": "category"},
-                {"text": "的關係", "type": ""}
+                {
+                  "text": "產品",
+                  "type": "category"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "客戶性別",
+                  "type": "category"
+                },
+                {
+                  "text": "的關係",
+                  "type": ""
+                }
               ]
             ]
           }
@@ -1299,14 +2246,32 @@
             "questionText": "什麼和 Numeric 有關",
             "questionExample": [
               [
-                {"text": "什麼和", "type": ""},
-                {"text": "良率", "type": "numeric"},
-                {"text": "有關", "type": ""}
+                {
+                  "text": "什麼和",
+                  "type": ""
+                },
+                {
+                  "text": "良率",
+                  "type": "numeric"
+                },
+                {
+                  "text": "有關",
+                  "type": ""
+                }
               ],
               [
-                {"text": "什麼和", "type": ""},
-                {"text": "收入", "type": "numeric"},
-                {"text": "有關", "type": ""}
+                {
+                  "text": "什麼和",
+                  "type": ""
+                },
+                {
+                  "text": "收入",
+                  "type": "numeric"
+                },
+                {
+                  "text": "有關",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -1314,14 +2279,32 @@
             "questionText": "什麼和 Category 有關",
             "questionExample": [
               [
-                {"text": "什麼和", "type": ""},
-                {"text": "產品促銷", "type": "category"},
-                {"text": "有關", "type": ""}
+                {
+                  "text": "什麼和",
+                  "type": ""
+                },
+                {
+                  "text": "產品促銷",
+                  "type": "category"
+                },
+                {
+                  "text": "有關",
+                  "type": ""
+                }
               ],
               [
-                {"text": "什麼和", "type": ""},
-                {"text": "產品種類", "type": "category"},
-                {"text": "有關", "type": ""}
+                {
+                  "text": "什麼和",
+                  "type": ""
+                },
+                {
+                  "text": "產品種類",
+                  "type": "category"
+                },
+                {
+                  "text": "有關",
+                  "type": ""
+                }
               ]
             ]
           }
@@ -1334,16 +2317,40 @@
             "questionText": "Value 和 Value 的差異",
             "questionExample": [
               [
-                {"text": "台北", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "新竹", "type": "value"},
-                {"text": "的差異", "type": ""}
+                {
+                  "text": "台北",
+                  "type": "value"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "新竹",
+                  "type": "value"
+                },
+                {
+                  "text": "的差異",
+                  "type": ""
+                }
               ],
               [
-                {"text": "產品A", "type": "value"},
-                {"text": "和", "type": ""},
-                {"text": "產品B", "type": "value"},
-                {"text": "的差異", "type": ""}
+                {
+                  "text": "產品A",
+                  "type": "value"
+                },
+                {
+                  "text": "和",
+                  "type": ""
+                },
+                {
+                  "text": "產品B",
+                  "type": "value"
+                },
+                {
+                  "text": "的差異",
+                  "type": ""
+                }
               ]
             ]
           },
@@ -1351,12 +2358,24 @@
             "questionText": "Value 和其他的差異",
             "questionExample": [
               [
-                {"text": "產品A", "type": "value"},
-                {"text": "和其他的差異", "type": ""}
+                {
+                  "text": "產品A",
+                  "type": "value"
+                },
+                {
+                  "text": "和其他的差異",
+                  "type": ""
+                }
               ],
               [
-                {"text": "台北", "type": "value"},
-                {"text": "和其他的差異", "type": ""}
+                {
+                  "text": "台北",
+                  "type": "value"
+                },
+                {
+                  "text": "和其他的差異",
+                  "type": ""
+                }
               ]
             ]
           }
@@ -1519,7 +2538,11 @@
     "bar": "切換為柱狀圖",
     "restore": "還原",
     "dataView": "觀看原始資料",
-    "dataViewDetail": ["原始資料", "關閉", "刷新"],
+    "dataViewDetail": [
+      "原始資料",
+      "關閉",
+      "刷新"
+    ],
     "rect": "矩形選擇",
     "polygon": "圈選",
     "lineX": "橫向選擇",
