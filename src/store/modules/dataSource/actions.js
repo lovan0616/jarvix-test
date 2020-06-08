@@ -55,8 +55,10 @@ export default {
     if (state.dataSourceId) dispatch('clearChatbot')
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
-    // 清空 dataFrame id 
+    // 清空 dataFrame list 和 id
     commit('setDataFrameId', null)
+    commit('setDataFrameList', [])
+    
     if (!dataSourceId) return Promise.resolve(state)
 
     // 更新 DataFrame 資料
