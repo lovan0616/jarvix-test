@@ -42,7 +42,7 @@ export default {
       let files = []
       if (event.dataTransfer.items) {
         files = Array.from(event.dataTransfer.items).map(item => {
-          if (this.acceptFileTypes.includes(item.type)) item.getAsFile()
+          return this.acceptFileTypes.includes(item.type) ? item.getAsFile() : null
         })
       } 
       this.$emit('filesDropped', files)
