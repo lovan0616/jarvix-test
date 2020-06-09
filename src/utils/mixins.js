@@ -96,7 +96,7 @@ Vue.mixin({
     },
     timeToDate (time) {
       // time will be represented as '2020-05-18T08:48:33.505+0000'
-      return time.split('.')[0].split('T')[0]
+      return time.split('T')[0]
     },
     timeToFileName (time) {
       let datetime = new Date(parseInt(time))
