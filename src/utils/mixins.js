@@ -95,11 +95,8 @@ Vue.mixin({
       })
     },
     timeToDate (time) {
-      let datetime = new Date(time)
-      let year = datetime.getFullYear()
-      let month = datetime.getMonth() + 1
-      let date = datetime.getDate()
-      return year + '-' + this.paddingZero(month) + '-' + this.paddingZero(date)
+      // time will be represented as '2020-05-18T08:48:33.505+0000'
+      return time.split('.')[0].split('T')[0]
     },
     timeToFileName (time) {
       let datetime = new Date(parseInt(time))
@@ -112,13 +109,8 @@ Vue.mixin({
     },
     // 轉成 YYYY-MM-DD HH:mm
     timeToDateTime (time) {
-      let datetime = new Date(time)
-      let year = datetime.getFullYear()
-      let month = datetime.getMonth() + 1
-      let date = datetime.getDate()
-      let hour = datetime.getHours()
-      let minute = datetime.getMinutes()
-      return `${year}-${this.paddingZero(month)}-${this.paddingZero(date)} ${this.paddingZero(hour)}:${this.paddingZero(minute)}`
+      // time will be represented as '2020-05-18T08:48:33.505+0000'
+      return time.split('.')[0].replace(/T/g, ' ').slice(0, -3)
     },
     // timeStamp 轉成 YYYY-MM-DD
     timeStampToDate (time) {
