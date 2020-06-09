@@ -36,13 +36,18 @@ export default {
     }
   },
   watch: {
-    dataSourceId (value) {
+    dataFrameId (newValue, oldValue) {
       this.quickStartQuestionList = []
-      if (value) this.getQuickQuestionList()
-    },
-    dataFrameId (value) {
-      this.quickStartQuestionList = []
-      if (value) this.getQuickQuestionList()
+      if (newValue && (newValue !== oldValue)) {
+        this.getQuickQuestionList()
+        this.updateUrl()
+      }
+    }
+  },
+  created() {
+    if (this.dataSourceId !== null) {
+      let {dataSourceId, dataFrameId} = this.$route.query
+      if (!dataSourceId || !dataFrameId) this.updateUrl()
     }
   },
   mounted () {
@@ -52,6 +57,21 @@ export default {
     }
   },
   methods: {
+    updateUrl () {
+      let {dataSourceId: queryDataSourceId, dataFrameId: queryDataFrameId} = this.$route.query
+      // 無值補值 ＆ 避免前往相同路徑
+      if (
+        queryDataSourceId && queryDataFrameId 
+        && (String(queryDataSourceId) ===  String(this.dataSourceId)) 
+        && (String(queryDataFrameId) === String(this.dataFrameId))
+      ) return
+      this.$router.replace({
+        query: {
+          dataSourceId: this.dataSourceId,
+          dataFrameId: this.dataFrameId
+        }
+      })
+    },
     getQuickQuestionList () {
       this.isLoading = true
       this.$store.dispatch('chatBot/getQuickStartQuestion', this.dataSourceId)

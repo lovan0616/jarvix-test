@@ -12,23 +12,28 @@ export default {
   init ({ commit, dispatch, state, getters, rootGetters }) {
     if (state.isInit) return Promise.resolve(state)
     let queryDataSource = parseInt(router.app.$route.query.dataSourceId)
+    let queryDataFrame = router.app.$route.query.dataFrameId
     const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
-    if (currentGroupId) dispatch('getDataSourceList', queryDataSource)
+    if (currentGroupId) {
+      dispatch('getDataSourceList', {
+        dataSourceId: queryDataSource, 
+        dataFrameId: queryDataFrame === 'all' ? 'all' : parseInt(queryDataFrame)
+      })
+    }
     commit('setIsInit', true)
   },
-  getDataSourceList({ dispatch, commit, state }, dataSourceId) {
+  getDataSourceList({ dispatch, commit, state }, {dataSourceId, dataFrameId}) {
     return getDataSourceList().then(res => {
       commit('setDataSourceList', res)
       // 找出第一個可以使用的 dataSourceId
       let firstEnableDataSourceIndex = res.findIndex(element => element.enableDataFrameCount)
-
       if (dataSourceId) {
         // 判斷路由的 DataSource 是否存在
         if (res.some(element => element.id === dataSourceId)) {
-          dispatch('changeDataSourceById', {dataSourceId})
+          dispatch('changeDataSourceById', {dataSourceId, dataFrameId})
         } else {
           const dataSourceId = firstEnableDataSourceIndex > -1 ? res[firstEnableDataSourceIndex].id : null
-          dispatch('changeDataSourceById', {dataSourceId})
+          dispatch('changeDataSourceById', {dataSourceId, dataFrameId: 'all'})
           if (firstEnableDataSourceIndex < 0) dispatch('handleEmptyDataSource')
           router.push('/')
 
@@ -43,7 +48,7 @@ export default {
           dispatch('handleEmptyDataSource')
         } else if (!state.dataSourceId || res.findIndex(element => element.id === state.dataSourceId) < 0) {
           // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個可使用的 dataSource
-          dispatch('changeDataSourceById', {dataSourceId: res[firstEnableDataSourceIndex].id})
+          dispatch('changeDataSourceById', {dataSourceId: res[firstEnableDataSourceIndex].id, dataFrameId: 'all'})
         }
       }
     })
@@ -64,13 +69,16 @@ export default {
     // 更新 DataFrame 資料
     const dataFrameList = await dispatch('getDataSourceTables')
     commit('setDataFrameList', dataFrameList)
+    // 當指定 DataFrame 時，確認是否存在
+    if (dataFrameId !== 'all' && !dataFrameList.some(element => element.id === dataFrameId)) {
+      return dispatch('changeDataFrameById', 'all')
+    }
     return dispatch('changeDataFrameById', dataFrameId)
   },
   changeDataFrameById ({ dispatch, commit, state }, dataFrameId) {
     dispatch('clearChatbot')
     // 更新 DataFrame 資料
     commit('setDataFrameId', dataFrameId)
-    // if (!dataFrameId && state.dataFrameId !== '') return Promise.resolve(state)
     return co(function* () {
       yield dispatch('getHistoryQuestionList')
       yield dispatch('getDataSourceColumnInfo')

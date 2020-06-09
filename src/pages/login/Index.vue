@@ -88,7 +88,7 @@ export default {
                 return this.$router.push('/')
               }
 
-              this.$store.dispatch('dataSource/getDataSourceList')
+              this.$store.dispatch('dataSource/getDataSourceList', {})
 
               // 用戶若因 token 失效需重新登入，登入後導回原頁面
               if (currentRoute && currentRoute.path) {

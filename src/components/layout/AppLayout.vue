@@ -31,7 +31,7 @@ export default {
     isDataSourceBuilding (value, oldValue) {
       if (value) {
         this.intervalFunction = window.setInterval(() => {
-          this.$store.dispatch('dataSource/getDataSourceList')
+          this.$store.dispatch('dataSource/getDataSourceList', {})
         }, 5000)
       }
       // 建置完成
