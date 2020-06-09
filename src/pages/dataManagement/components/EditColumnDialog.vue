@@ -134,6 +134,7 @@
 </template>
 <script>
 import { getDataFrameColumnInfoById, updateDataFrameAlias } from '@/API/DataSource'
+import { getColumnAliasInfoById, patchColumnAlias } from '@/API/Alias'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'
 import InputBlock from '@/components/InputBlock'
@@ -213,7 +214,7 @@ export default {
     updateDataSource () {
       this.isProcessing = true
 
-      updateDataFrameAlias(this.userEditInfo)
+      patchColumnAlias(this.userEditInfo)
         .then(() => {
         // 更新問句說明資訊
           this.$store.dispatch('dataSource/getDataSourceColumnInfo')

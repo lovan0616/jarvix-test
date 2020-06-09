@@ -42,3 +42,26 @@ export function patchDataFrameAlias (alias) {
     data: alias
   })
 }
+
+/**
+ * get column alias
+ * @param {Number} alias - 別名
+ */
+export function getColumnAliasInfoById (id) {
+  return request({
+    url: `/alias/column/${id}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * alter column alias
+ * @param {Object} alias - 別名
+ */
+export function patchColumnAlias (aliasInfo) {
+  return request({
+    url: '/alias/column',
+    method: 'PATCH',
+    data: aliasInfo
+  })
+}
