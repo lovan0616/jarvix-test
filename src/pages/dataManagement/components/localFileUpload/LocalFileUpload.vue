@@ -18,14 +18,13 @@
       <upload-block
         v-if="uploadFileList.length === 0 && unableFileList.length === 0"
         :bottom-message="$t('editing.clickToSelectFiles')"
-        :accept-file-types="acceptFileTypes"
         :drag-enter="dragEnter"
         class="empty-upload-block"
         @create="chooseFile"
         @drop.native.prevent="dropFiles($event)"
         @dragover.native.prevent
-        @dragenter.native="dragEnter = true"
-        @dragleave.native="dragEnter = false"
+        @dragenter.native="toggleDragEnter(true)"
+        @dragleave.native="toggleDragEnter(false)"
       >
         <div 
           slot="uploadLimit" 
@@ -43,9 +42,9 @@
         v-else
         class="file-list-container"
         @drop.prevent="dropFiles($event)"
-        @dragover.prevent="dragEnter = true"
-        @dragenter="dragEnter = true"
-        @dragleave="dragEnter = false"
+        @dragover.prevent="toggleDragEnter(true)"
+        @dragenter="toggleDragEnter(true)"
+        @dragleave="toggleDragEnter(false)"
       >
         <file-list-block
           v-if="uploadFileList.length > 0"
@@ -210,6 +209,9 @@ export default {
         default:
           return type
       }
+    },
+    toggleDragEnter (isDraggingOver) {
+      this.dragEnter = isDraggingOver
     },
     chooseFile () {
       let uploadInput = this.$refs.fileUploadInput
