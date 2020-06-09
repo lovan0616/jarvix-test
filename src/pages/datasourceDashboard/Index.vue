@@ -36,9 +36,9 @@ export default {
     }
   },
   watch: {
-    dataFrameId (newValue, oldValue) {
+    dataFrameId (newValue) {
       this.quickStartQuestionList = []
-      if (newValue && (newValue !== oldValue)) {
+      if (newValue) {
         this.getQuickQuestionList()
         this.updateUrl()
       }
