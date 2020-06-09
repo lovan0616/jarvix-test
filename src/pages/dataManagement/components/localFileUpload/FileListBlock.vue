@@ -5,7 +5,7 @@
       <slot name="fileListTitle"/>
     </div>
     <div 
-      :class="{fail: type === 'fail'}"
+      :class="[{fail: type === 'fail'}, {'droppable': dragEnter}]"
       class="file-list"
     >
       <single-file-row
@@ -40,6 +40,10 @@ export default {
       type: String,
       required: false,
       default: ''
+    },
+    dragEnter: {
+      type: Boolean,
+      default: false
     }
   }
 }
@@ -75,6 +79,10 @@ export default {
     max-height: 280px;
     overflow: auto;
     padding: 24px;
+    &.droppable {
+      cursor: pointer;
+      background: #485454;
+    }
 
     &.fail {
       height: 100px;

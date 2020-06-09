@@ -67,6 +67,7 @@
     "emptyDataSource": "尚未建立资料源",
     "emptyColumnSet": "尚未建立任何栏位组合",
     "deleteSuccess": "删除成功",
+    "emptyFeatureFormula": "资料栏位未填写",
     "dataSourceNotExist": "资料源不存在",
     "connectionFail": "栏位资料有误，请重新检查",
     "columnSetNameEmpty": "栏位组合名称未填写",
@@ -76,7 +77,8 @@
     "etlSettingTempSave": "设定已经暂存",
     "calculatingPleaseTryLater": "资料计算中，请稍后再试",
     "analysisFailed": "档案解析发生错误",
-    "confirmColumnStateTypeChange": "此变更将会清除进阶设定内容，您确认要进行变更？"
+    "confirmColumnStateTypeChange": "此变更将会清除进阶设定内容，您确认要进行变更？",
+    "fileTypeNotSupported": "不支援{fileType}档案格式"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -125,7 +127,7 @@
     "action": "操作",
     "dataSourceName": "资料源名称",
     "selectDataType": "选择资料类型",
-    "clickToSelectFiles": "点击此区块，选择资料表档案",
+    "clickToSelectFiles": "点击选择档案，或拖曳档案至此",
     "uploadLimitTitle": "档案上传限制说明",
     "uploadLimitFileType": "支援格式：.xlsx .xls .csv",
     "uploadLimitSize": "档案大小：{limitSize}MB",
