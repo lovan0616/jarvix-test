@@ -417,6 +417,10 @@ Vue.mixin({
       if (absValue >= 1000) return parseFloat((num / 1000).toFixed(digit)) + 'K'
       if (absValue >= 0.01) return parseFloat(num.toFixed(digit))
       return '<' + Math.sign(num) * 0.01
+    },
+    shortenDataCapacityNumber (gb, digit = 2) {
+      if (gb <= 0.5) return this.formatComma((gb * 1024).toFixed(digit)) + ' MB'
+      return this.formatComma((gb).toFixed(digit)) + ' GB'
     }
   },
   filters: {

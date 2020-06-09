@@ -39,7 +39,7 @@
               {{$t('accountInfo.currentDataUsage')}}
             </h6>
             <p class="sub-info-desciption">
-              {{(license.currentDataStorageSize * 1024).toFixed(2) || '-'}} MB
+              {{shortenDataCapacityNumber(license.currentDataStorageSize) || '-'}}
             </p>
           </div>
           <div class="sub-info-block">
@@ -47,7 +47,7 @@
               {{$t('accountInfo.dataUsageProvided')}}
             </h6>
             <p class="sub-info-desciption">
-              {{(license.maxDataStorageSize * 1024).toFixed(2) || '-'}} MB
+              {{shortenDataCapacityNumber(license.showMaxDataStorageSize) || '-'}}
             </p>
           </div>
         </div>
