@@ -419,7 +419,6 @@ Vue.mixin({
       return '<' + Math.sign(num) * 0.01
     },
     shortenDataCapacityNumber (gb, digit = 2) {
-      if (gb <= 0.25) return this.formatComma((gb * 1024 * 1024).toFixed(digit)) + ' KB'
       if (gb <= 0.5) return this.formatComma((gb * 1024).toFixed(digit)) + ' MB'
       return this.formatComma((gb).toFixed(digit)) + ' GB'
     }
