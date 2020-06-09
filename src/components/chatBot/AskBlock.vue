@@ -143,7 +143,7 @@ export default {
   },
   methods: {
     toggleWebSocketConnection () {
-      if (this.websocketHandler) this.closeWebSocketConnection()
+      if (this.websocketHandler) return this.closeWebSocketConnection()
       this.createWebSocketConnection()
     },
     createWebSocketConnection () {
