@@ -50,7 +50,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .file-list-block {
-  pointer-events: none;
   &.forbidden {
     .file-list {
       min-height: 90px;

@@ -43,7 +43,7 @@
         v-else
         class="file-list-container"
         @drop.prevent="dropFiles($event)"
-        @dragover.prevent
+        @dragover.prevent="dragEnter = true"
         @dragenter="dragEnter = true"
         @dragleave="dragEnter = false"
       >
@@ -208,7 +208,7 @@ export default {
         case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
           return 'WORD'
         default:
-          return '此'
+          return type
       }
     },
     chooseFile () {
@@ -339,7 +339,6 @@ export default {
     font-size: 12px;
     line-height: 17px;
     letter-spacing: 0.5px;
-    pointer-events: none;
 
     .file-chosen-remark {
       margin-right: 16px;
