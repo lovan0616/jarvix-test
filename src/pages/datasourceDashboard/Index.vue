@@ -59,7 +59,9 @@ export default {
   methods: {
     updateUrl () {
       let {dataSourceId: queryDataSourceId, dataFrameId: queryDataFrameId} = this.$route.query
-      // 無值補值 ＆ 避免前往相同路徑
+      // Watch 在切換 datasource / dataframe 時會觸發＆從連結進來 init 階段改變 datasource / dataframe 也會觸發
+      // 需要判定 1：Store 有值但 url query 上沒有時，補上 query string
+      // 需要判定 2：init 改變觸發時，需要確認是否跟當前 url 上 query 相同，避免前往相同路徑（一般切換則不影響）
       if (
         queryDataSourceId && queryDataFrameId 
         && (String(queryDataSourceId) ===  String(this.dataSourceId)) 
