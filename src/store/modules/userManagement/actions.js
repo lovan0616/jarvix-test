@@ -17,14 +17,10 @@ export default {
     let licensePermissionList = []
     let groupPermissionList = []
     let defaultAccount = {}
-    let accountInfo = {}
-
     const userInfo = await getPermission()
 
     if (userInfo.accountList.length) {
       defaultAccount = userInfo.accountList.find(account => account.isDefault)
-      accountInfo = await getAccountInfo(defaultAccount.id)
-
       accountPermissionList = defaultAccount.accountPermissionList
       licensePermissionList = defaultAccount.licensePermissionList
       if (defaultAccount.groupList.length) {
@@ -41,9 +37,10 @@ export default {
         ...accountPermissionList,
         ...groupPermissionList,
         ...licensePermissionList
-      ],
-      license: accountInfo.license
+      ]
     })
+    let accountInfo = await getAccountInfo(defaultAccount.id)
+    commit('setLicenseInfo', accountInfo.license)
   },
   updateUserGroupList ({ dispatch, commit, getters }) {
     const currentAccountId = getters.getCurrentAccountId
