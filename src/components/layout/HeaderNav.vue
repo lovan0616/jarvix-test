@@ -2,7 +2,8 @@
   <nav class="nav-header">
     <section class="nav-left">
       <router-link 
-        class="nav-item" 
+        :class="{'active': $route.name === 'PageIndex'}"
+        class="nav-item"
         to="/" 
         exact>{{ $t('nav.index') }}</router-link>
       <router-link 
@@ -229,7 +230,7 @@ export default {
             permission: [...res.accountPermission, ...res.groupPermission]
           })
           // update data source list
-          return this.$store.dispatch('dataSource/getDataSourceList')
+          return this.$store.dispatch('dataSource/getDataSourceList', {})
         })
         .then(() => {
           if (this.$route.name !== 'PageIndex') this.$router.push({name: 'PageIndex'})
