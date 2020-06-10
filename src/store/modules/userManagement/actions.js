@@ -23,7 +23,7 @@ export default {
       userName: userInfo.name,
       accountList: accountInfo.accountList,
       groupList: groupInfo.groupList || [],
-      permission: [...accountInfo.accountPermission, ...groupInfo.groupPermission]
+      permission: [...accountInfo.accountPermission, ...groupInfo.groupPermission || []]
     })
   },
   updateUserGroupList ({ dispatch, commit, getters }) {

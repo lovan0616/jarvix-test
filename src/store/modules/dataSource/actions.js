@@ -165,8 +165,10 @@ export default {
       }
     })
   },
-  getHistoryQuestionList ({commit, state}, data) {
-    return getHistoryQuestionList(state.dataSourceId || data).then(res => {
+  getHistoryQuestionList ({commit, state, getters}, dataSourceIdData) {
+    const dataSourceId = state.dataSourceId || dataSourceIdData
+    const dataFrameId = getters.currentDataFrameId
+    return getHistoryQuestionList(dataSourceId, dataFrameId).then(res => {
       commit('setHistoryQuestionList', res)
     })
   },

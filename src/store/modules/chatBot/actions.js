@@ -34,11 +34,13 @@ export default {
   getComponentData ({dispatch}, data) {
     return getComponentData(data)
   },
-  getRelatedQuestionList ({commit}, data) {
-    return getRelatedQuestionList(data)
+  getRelatedQuestionList({rootState}, resultId) {
+    return getRelatedQuestionList(resultId, rootState.dataSource.dataSourceId)
   },
-  getQuickStartQuestion ({rootState}, data) {
-    return getQuickStartQuestion(rootState.dataSource.dataSourceId || data)
+  getQuickStartQuestion({ rootState, rootGetters }, dataSourceIdData) {
+    const dataSourceId = rootState.dataSource.dataSourceId || dataSourceIdData
+    const dataFrameId = rootGetters['dataSource/currentDataFrameId']
+    return getQuickStartQuestion(dataSourceId, dataFrameId)
   },
   cancelRequest () {
     if (typeof cancelFunction === 'function') {
