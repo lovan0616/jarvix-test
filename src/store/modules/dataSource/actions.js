@@ -131,15 +131,17 @@ export default {
   getDataFrameColumnCorrelation ({ state }, { id }) {
     return getColumnCorrelationMatrix(id)
   },
-  getDataSourceColumnInfo ({ commit, state }) {
+  getDataSourceColumnInfo({ commit, state, getters }) {
     if (!state.dataSourceId) return
-    return getDataSourceColumnInfoById(state.dataSourceId).then(response => {
+    const dataFrameId = getters.currentDataFrameId
+    return getDataSourceColumnInfoById(state.dataSourceId, dataFrameId).then(response => {
       commit('setDataSourceColumnInfoList', response)
     })
   },
-  getDataSourceDataValue ({ commit, state }) {
+  getDataSourceDataValue ({ commit, state, getters }) {
     if (!state.dataSourceId) return
-    return getDataSourceDataValueById(state.dataSourceId).then(response => {
+    const dataFrameId = getters.currentDataFrameId
+    return getDataSourceDataValueById(state.dataSourceId, dataFrameId).then(response => {
       commit('setDataSourceDataValueList', response)
     })
   },

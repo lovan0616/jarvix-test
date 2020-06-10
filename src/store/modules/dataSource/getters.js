@@ -41,5 +41,8 @@ export default {
         return res
       }, [])
     }
+  },
+  currentDataFrameId (state) {
+    return state.dataFrameId === 'all' ? '' : state.dataFrameId
   }
 }

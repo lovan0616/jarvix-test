@@ -142,6 +142,7 @@ export default {
       isLoading: false,
       pinBoardId: null,
       dataSourceId: null,
+      dataFrameId: null,
       showPinboardList: false,
       isShowShareDialog: false,
       isMouseoverPinButton: false,
@@ -172,7 +173,7 @@ export default {
       return boardHeaderData ? boardHeaderData.segmentation.question : ''
     },
     shareUrl () {
-      return `${window.location.origin}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&action=share`
+      return `${window.location.origin}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&dataFrameId=${this.dataFrameId}&action=share`
     },
     hasFilter () {
       return (this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult') || this.restrictions.length > 0
@@ -186,6 +187,7 @@ export default {
     if (this.isPinboardPage) {
       this.pinBoardId = this.$parent.$attrs['data-pinboard-id']
       this.dataSourceId = this.$parent.$attrs['data-data-source-id']
+      this.dataFrameId = this.$parent.$attrs['data-data-frame-id']
     }
   },
   methods: {
