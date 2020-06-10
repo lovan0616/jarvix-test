@@ -8,18 +8,23 @@
       <div class="data-source-name">{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
       <input 
         ref="fileUploadInput" 
-        type="file" 
+        :accept="acceptFileTypes.join(',').toString()" 
+        type="file"
         class="hidden"
         name="fileUploadInput"
-        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
         multiple
-        @change="fileImport"
+        @change="fileImport($event.target.files)"
       >
-      <upload-block 
+      <upload-block
         v-if="uploadFileList.length === 0 && unableFileList.length === 0"
         :bottom-message="$t('editing.clickToSelectFiles')"
+        :drag-enter="dragEnter"
         class="empty-upload-block"
         @create="chooseFile"
+        @drop.native.prevent="dropFiles($event)"
+        @dragover.native.prevent
+        @dragenter.native="toggleDragEnter(true)"
+        @dragleave.native="toggleDragEnter(false)"
       >
         <div 
           slot="uploadLimit" 
@@ -36,9 +41,14 @@
       <div 
         v-else
         class="file-list-container"
+        @drop.prevent="dropFiles($event)"
+        @dragover.prevent="toggleDragEnter(true)"
+        @dragenter="toggleDragEnter(true)"
+        @dragleave="toggleDragEnter(false)"
       >
         <file-list-block
           v-if="uploadFileList.length > 0"
+          :drag-enter="dragEnter"
           :title="$t('editing.canUpload')"
           :file-list="uploadFileList"
         />
@@ -92,6 +102,7 @@ import { mapState } from 'vuex'
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
 import UploadProcessBlock from './UploadProcessBlock'
+import { getAccountInfo } from '@/API/Account'
 
 export default {
   name: 'LocalFileUpload',
@@ -104,8 +115,16 @@ export default {
     return {
       uploadStatus,
       currntUploadStatus: uploadStatus.wait,
-      uploadFileSizeLimit: localStorage.getItem('uploadLimit') ? parseInt(localStorage.getItem('uploadLimit'), 10) : 3000,
-      unableFileList: []
+      uploadFileSizeLimit: null,
+      unableFileList: [],
+      acceptFileTypes: [
+        '.csv',
+        'text/csv',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel'
+      ],
+      dragEnter: false,
+      notSupportedFileType: new Set()
     }
   },
   computed: {
@@ -137,19 +156,73 @@ export default {
       }
     }
   },
+  mounted () {
+    if (localStorage.getItem('uploadLimit')) {
+      this.uploadFileSizeLimit = parseInt(localStorage.getItem('uploadLimit'), 10)
+    } else {
+      getAccountInfo()
+        .then(accountInfo => {
+          const licenseMaxSize = accountInfo.license.maxDataStorageSize * 1024
+          this.uploadFileSizeLimit = licenseMaxSize ? licenseMaxSize : 3000
+        })
+        .catch(() => {
+          this.uploadFileSizeLimit = 3000
+        })
+    }
+  },
   methods: {
+    dropFiles (event) {
+      if (!event.dataTransfer.items) return
+
+      const files = Array.from(event.dataTransfer.items)
+        .filter(item => {
+          if (this.acceptFileTypes.includes(item.type)) return true
+          // 格式不支援者，最後一併跳提示訊息
+          this.notSupportedFileType.add(this.getFileShortExtension(item.type))
+        })
+        .map(item => item.getAsFile())
+
+      if (this.notSupportedFileType.size > 0) {
+        Message({
+          message: this.$t('message.fileTypeNotSupported', {fileType: [...this.notSupportedFileType].join(', ')}),
+          type: 'warning',
+          duration: 3 * 1000
+        })
+      }
+      this.fileImport(files)
+
+      // 還原狀態
+      this.dragEnter = false
+      this.notSupportedFileType = new Set()
+    },
+    getFileShortExtension (type) {
+      switch (type) {
+        case 'application/pdf':
+          return 'PDF'
+        case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+          return 'PPT'
+        case 'image/png':
+        case 'image/jpeg':
+          return 'IMAGE'
+        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+          return 'WORD'
+        default:
+          return type
+      }
+    },
+    toggleDragEnter (isDraggingOver) {
+      this.dragEnter = isDraggingOver
+    },
     chooseFile () {
       let uploadInput = this.$refs.fileUploadInput
       uploadInput.value = ''
       uploadInput.click()
     },
-    fileImport (event) {
-      let uploadInput = event.target
-
+    fileImport (files) {
       // 有選到檔案才執行
-      if (uploadInput.files) {
+      if (files) {
         // 判斷數量是否超過限制
-        if (uploadInput.files.length + this.uploadFileList.length > this.fileCountLimit) {
+        if (files.length + this.uploadFileList.length > this.fileCountLimit) {
           Message({
             message: this.$t('editing.reachUploadCountLimit', {countLimit: this.fileCountLimit}),
             type: 'warning',
@@ -158,7 +231,7 @@ export default {
 
           return false
         }
-        this.updateFileList(uploadInput.files)
+        this.updateFileList(files)
       }
     },
     // 將 input 內的檔案塞進 formData，並存到 store 中

@@ -15,10 +15,15 @@
       class="preview-datasource-btn"
       @click="togglePreviewDataSource"
     >
-      <svg-icon 
-        :class="{'preview-datasource-btn__icon--show': isShowPreviewDataSource}"
-        icon-class="view-data"
-        class="preview-datasource-btn__icon"/>
+      <el-tooltip
+        slot="label"
+        :content="previewDataSourceTooltipContent"
+      >
+        <svg-icon 
+          :class="{'preview-datasource-btn__icon--show': isShowPreviewDataSource}"
+          icon-class="view-data"
+          class="preview-datasource-btn__icon"/>
+      </el-tooltip>
     </a>
   </div>
 </template>
@@ -44,6 +49,9 @@ export default {
     },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
+    },
+    previewDataSourceTooltipContent () {
+      return this.isShowPreviewDataSource ? this.$t('bot.closeDataSource') : this.$t('bot.previewDataSource')
     }
   },
   methods: {
@@ -82,10 +90,18 @@ export default {
 
     &__icon {
       font-size: 18px;
-      fill: #FFFFFF;
+      fill: rgba(255, 255, 255, .8);
+
+      &:hover {
+        fill: rgba(255, 255, 255, 1);
+      }
 
       &--show {
-        fill: #2AD2E2;
+        fill: rgba(42, 210, 226, .8);
+
+        &:hover {
+          fill: #2AD2E2;
+        }
       }
     }
   }

@@ -134,6 +134,7 @@ import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
+import { getAccountInfo } from '@/API/Account'
 
 export default {
   name: 'DataFileList',
@@ -177,7 +178,8 @@ export default {
       intervalFunction: null,
       checkDataFrameIntervalFunction: null,
       isLoading: false,
-      showJoinTable: localStorage.getItem('showJoinTable')
+      showJoinTable: localStorage.getItem('showJoinTable'),
+      reachLicenseFileSizeLimit: false
     }
   },
   computed: {
@@ -185,6 +187,9 @@ export default {
       return this.$store.state.dataManagement.fileCountLimit
     },
     reachLimit () {
+      return this.reachFileLengthLimit || this.reachLicenseFileSizeLimit
+    },
+    reachFileLengthLimit () {
       return this.dataList.length >= this.fileCountLimit
     },
     // 用來生成 data table
@@ -295,6 +300,7 @@ export default {
     this.fetchData()
     this.checkDataSourceStatus()
     this.checkJoinTable()
+    this.checkIfReachFileSizeLimit()
   },
   beforeDestroy () {
     if (this.intervalFunction) {
@@ -304,6 +310,13 @@ export default {
     }
   },
   methods: {
+    checkIfReachFileSizeLimit () {
+      getAccountInfo()
+        .then((accountInfo) => {
+          this.reachLicenseFileSizeLimit = accountInfo.license.currentDataStorageSize >= accountInfo.license.maxDataStorageSize
+        })
+        .catch(() => {})
+    },
     checkJoinTable () {
       if (!this.showJoinTable) {
         localStorage.setItem('showJoinTable', false)

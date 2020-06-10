@@ -6,13 +6,20 @@
       <choose-connection
         v-if="step === 0"
         @skip="nextStep"
+        @edit="editConnection"
         @next="connectEstablish"
       />
-      <remote-connection
-        v-if="step === 1"
+      <new-remote-connection
+        v-if="step === 1 && !isOldConnection"
         @updateDataSource="setDataSource"
         @prev="prevStep"
         @next="connectEstablish"
+      />
+      <edit-remote-connection
+        v-if="step === 1 && isOldConnection"
+        :connect-info="connectInfo"
+        @prev="editPrevStep"
+        @next="connectDatabase"
       />
       <choose-table
         v-if="step === 2"
@@ -37,6 +44,8 @@
 <script>
 import ChooseConnection from './ChooseConnection'
 import RemoteConnection from './RemoteConnection'
+import NewRemoteConnection from './NewRemoteConnection'
+import EditRemoteConnection from './EditRemoteConnection'
 import RemoteConnectionFinished from './RemoteConnectionFinished'
 import ChooseTable from './ChooseTable'
 import ColumnSetting from './ColumnSetting'
@@ -45,6 +54,8 @@ export default {
   name: 'RemoteConnectionFlow',
   components: {
     RemoteConnection,
+    NewRemoteConnection,
+    EditRemoteConnection,
     RemoteConnectionFinished,
     ChooseTable,
     ColumnSetting,
@@ -58,7 +69,9 @@ export default {
       connectionId: null,
       // 要複製的 table id 列表
       tableIdList: [],
-      status: null
+      status: null,
+      isOldConnection: false,
+      connectInfo: {}
     }
   },
   created () {
@@ -76,6 +89,10 @@ export default {
       this.tableIdList = value
       this.nextStep()
     },
+    connectDatabase (value) {
+      this.connectionId = value
+      this.tableChosen(value)
+    },
     nextStep () {
       this.step += 1
     },
@@ -84,6 +101,15 @@ export default {
     },
     prevStep () {
       this.step -= 1
+    },
+    editPrevStep () {
+      this.prevStep()
+      this.isOldConnection = false
+    },
+    editConnection (connection) {
+      this.connectInfo = connection
+      this.isOldConnection = true
+      this.nextStep()
     }
   }
 }

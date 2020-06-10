@@ -77,7 +77,8 @@
     "etlSettingTempSave": "設定已經暫存",
     "calculatingPleaseTryLater": "資料計算中，請稍後再試",
     "analysisFailed": "檔案解析發生錯誤",
-    "confirmColumnStateTypeChange": "此變更將會清除進階設定內容，您確認要進行變更？"
+    "confirmColumnStateTypeChange": "此變更將會清除進階設定內容，您確認要進行變更？",
+    "fileTypeNotSupported": "不支援{fileType}檔案格式"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -112,8 +113,8 @@
     "dataManageable": "可管理",
     "dataInQueue": "等待處理中",
     "dataDisable": "無法使用",
-    "newData":"新增資料",
-    "choiceDataTypeFirst":"請先選擇資料類型",
+    "newData": "新增資料",
+    "choiceDataTypeFirst": "請先選擇資料類型",
     "confirmDeleteNTables": "您確認要刪除以下資料表嗎？",
     "describeDeleteNTables": "刪除過程會進行資料處理，在此期間您依然可以瀏覽所有資料源內容，但無法進行新增、刪除資料...等任何資料管理的操作。",
     "editTable": "編輯資料表",
@@ -127,7 +128,7 @@
     "action": "操作",
     "dataSourceName": "資料源名稱",
     "selectDataType": "選擇資料類型",
-    "clickToSelectFiles": "點擊此區塊，選擇資料表檔案",
+    "clickToSelectFiles": "點擊選擇檔案，或拖曳檔案至此",
     "uploadLimitTitle": "檔案上傳限制說明",
     "uploadLimitFileType": "支援格式：.xlsx .xls .csv",
     "uploadLimitSize": "檔案大小：{limitSize}MB",
@@ -140,13 +141,13 @@
     "addFile": "選取檔案",
     "selectedTablesWaitingToUpload": "選取{num}項資料表，總和{size}，可進行上傳",
     "uploading": "上傳過程中請勿關閉瀏覽器視窗，以免上傳作業失敗",
-    "uploadSuccess":"上傳成功",
-    "uploadFailure":"上傳失敗",
-    "uploadFinish":"上傳完成",
-    "uploadStatus":"總共{total}項資料表，{success}項上傳成功，{pending}項未上傳",
-    "dataSourceInfo":"資料類型：{type} 資料源名稱：{dataSourceName}",
-    "uploaded":"已上傳",
-    "unuploaded":"未上傳",
+    "uploadSuccess": "上傳成功",
+    "uploadFailure": "上傳失敗",
+    "uploadFinish": "上傳完成",
+    "uploadStatus": "總共{total}項資料表，{success}項上傳成功，{pending}項未上傳",
+    "dataSourceInfo": "資料類型：{type} 資料源名稱：{dataSourceName}",
+    "uploaded": "已上傳",
+    "unuploaded": "未上傳",
     "dataBuildingReminding": "資料表建置將以背景執行方式進行，建置進度將顯示在資料表狀態。",
     "connectMySQL": "連結MySQL資料庫",
     "DBconnecting": "連結資料庫中",
@@ -177,7 +178,7 @@
     "buildImmediately": "立即建置",
     "connectDB": "連接資料庫",
     "connectStep2": "選擇資料",
-    "connectStep3": "欄位設定",
+    "connectStep3": "資料處理",
     "dataProcessing": "資料處理中",
     "dataSource": "資料源",
     "newDataSource": "新增資料源",
@@ -305,7 +306,10 @@
     "chooseDataColumn": "選擇資料欄位",
     "numericOnly": "請輸入數值",
     "isRequired": "必填",
-    "resultOverSizeMessage": "資料量過大時，資料會經過取樣"
+    "resultOverSizeMessage": "資料量過大時，資料會經過取樣",
+    "toolTipMessage": {
+      "comfrmToDeleteConnectionHistory":"你確定要刪除連線紀錄?"
+    }
   },
   "etl": {
     "dataFrameList": "資料表列表",
@@ -345,6 +349,7 @@
     "dataSummary": "資料概要",
     "connectionHistory": "連線紀錄",
     "newConnectionSetting": "新連線設定",
+    "returnConnectionHistory": "返回連線紀錄",
     "emptyConnectionHistory": "沒有任何連線紀錄",
     "dataCalculate": "資料計算中",
     "tableChosenLimit": "最多選擇 {number} 張資料表",
@@ -380,7 +385,9 @@
     "defaultResponse": "已分析完成，您可能有興趣的關聯問題：",
     "finish": "已分析完成",
     "multiplePossibilities": "很抱歉，經系統分析後，發現詞彙具有多重意義，請參考以下項目：",
-    "similarQuestionDescription": "很抱歉，系統沒有找到對應問題的欄位或資料，但有相關詞意的欄位，請參考以下項目："
+    "similarQuestionDescription": "很抱歉，系統沒有找到對應問題的欄位或資料，但有相關詞意的欄位，請參考以下項目：",
+    "previewDataSource": "查看資料源",
+    "closeDataSource": "關閉資料源"
   },
   "description": {
     "basic": {
@@ -496,6 +503,7 @@
     "update": "更新",
     "finish": "完成",
     "connect": "連線",
+    "saveAndConnect": "儲存並連線",
     "toForeignTable": "關聯資料表",
     "newForeign": "新增關聯",
     "nextStep": "下一步",
@@ -1499,7 +1507,7 @@
     "ConstituteToken": "了解組成的意圖"
   },
   "notification": {
-    "uploadLimitNotification": "資料數量已達上限",
+    "uploadLimitNotification": "資料數量或數據容量已達上限",
     "uploadLimit": "資料表限制：最多{count}筆",
     "userLimitNotification": "使用者數量已達上限",
     "columnSummarySampleNotification": "欄位摘要經數值估算，會有些微誤差，僅供參考"
@@ -1571,7 +1579,8 @@
     "permissionChanged": "權限已被變更，請重新登入",
     "lackOfSignUpToken": "無註冊權限，請聯繫管理員",
     "defaultMsg": "系統發生非預期錯誤",
-    "lackOfPermission": "權限不足，請聯繫管理員"
+    "lackOfPermission": "權限不足，請聯繫管理員",
+    "versionUpdate": "有新版本上線，立即幫您更新"
   },
   "resultNote": {
     "groupLimitNote": "此結果為原資料取前 {randomLimit} 筆得來",

@@ -12,9 +12,23 @@
   /**
    * 注意這邊是 .valid, 不是 :valid
    * 不用 :valid 是我覺得每次都要在 input 加 required 沒有道理
-   * auto-fill 是為了處理瀏覽器自動帶入帳號密碼的問題
    */
-  &:focus, &.valid, &:-webkit-autofill {
+  &:focus, &.valid {
+    outline: none;
+
+    & ~ .placeholder {
+      transform: translate3d(0, -28px, 0);
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      color: $theme-text-color;
+    }
+  }
+
+  /**
+   * auto-fill 是為了處理瀏覽器自動帶入帳號密碼的問題
+   * autofill 獨立寫是因為在 firefox 中如果後面還有接其他的 selector，所有 rules 都會被忽略
+   */
+  &:-webkit-autofill {
     outline: none;
 
     & ~ .placeholder {
