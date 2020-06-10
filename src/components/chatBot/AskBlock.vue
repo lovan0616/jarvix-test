@@ -147,7 +147,7 @@ export default {
       this.createWebSocketConnection()
     },
     createWebSocketConnection () {
-      let connectionRequestUrl = `ws:${window.env.PUBLIC_API_ROOT_URL.split(':')[1]}websocket/ROBOT`
+      let connectionRequestUrl = `${window.location.protocol === 'https:' ? 'wss' : 'ws'}:${window.env.PUBLIC_API_ROOT_URL.split(':')[1]}websocket/ROBOT`
       this.websocketHandler = new WebSocket(connectionRequestUrl)
       this.websocketHandler.onopen = this.onWebSocketOpen
       this.websocketHandler.onmessage = this.onWebSocketReceiveMessage
