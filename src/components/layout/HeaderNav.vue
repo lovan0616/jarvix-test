@@ -2,7 +2,8 @@
   <nav class="nav-header">
     <section class="nav-left">
       <router-link 
-        class="nav-item" 
+        :class="{'active': $route.name === 'PageIndex'}"
+        class="nav-item"
         to="/" 
         exact>{{ $t('nav.index') }}</router-link>
       <router-link 
@@ -44,6 +45,16 @@
             icon-class="switch" 
             class="icon nav-dropdown-icon is-rotate"/>
         </div>
+      </div>
+      <div v-else>
+        <button
+          v-if="hasPermission('account_create_group')"
+          class="btn-m btn-default btn-create-group"
+          @click="$router.push({name: 'AccountGroupManagement'})"
+        >
+          <svg-icon icon-class="plus" />
+          {{ $t('editing.createGroup') }}
+        </button>
       </div>
       <div class="nav-item nav-item-dropdown nav-account">
         <div class="nav-set-flex">
@@ -136,13 +147,12 @@ export default {
       isShowGroup: false,
       selectedLanguage: null,
       selectedGroupId: null,
-      userName: this.$store.state.userManagement.userName,
       isLoading: false
     }
   },
   computed: {
     ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId', 'getCurrentAccountLicense']),
-    ...mapState('userManagement', ['license']),
+    ...mapState('userManagement', ['userName', 'license']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
@@ -233,7 +243,7 @@ export default {
             permission: [...res.accountPermission, ...res.groupPermission]
           })
           // update data source list
-          return this.$store.dispatch('dataSource/getDataSourceList')
+          return this.$store.dispatch('dataSource/getDataSourceList', {})
         })
         .then(() => {
           if (this.$route.name !== 'PageIndex') this.$router.push({name: 'PageIndex'})
@@ -266,6 +276,7 @@ export default {
   .nav-left,
   .nav-right {
     display: flex;
+    align-items: center;
   }
 
   .nav-item {
@@ -307,6 +318,13 @@ export default {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+  }
+
+  .btn-create-group {
+    margin-right: 16px;
+    border-radius: 16px;
+    background: rgba(50, 75, 78, 0.6);
+    color: $theme-color-primary;
   }
 
   .nav-item-dropdown {

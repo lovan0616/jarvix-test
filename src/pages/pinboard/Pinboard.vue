@@ -25,6 +25,7 @@
       :is="result.layout"
       :data-pinboard-id="result.pinboardId"
       :data-data-source-id="result.dataSourceId"
+      :data-data-frame-id="result.dataFrameId"
       :result-info="result.info"
       :restrictions="result.restrictions"
       :question="result.question"
@@ -78,6 +79,7 @@ export default {
             pinboardId: element.id,
             resultId: element.resultId,
             dataSourceId: element.dataSourceId,
+            dataFrameId: element.dataFrameId,
             layout: null,
             info: null
           })

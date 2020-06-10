@@ -286,7 +286,7 @@ export default {
       // 建置完成
       if (!value) {
         window.clearInterval(this.intervalFunction)
-        this.$store.dispatch('dataSource/getDataSourceList')
+        this.$store.dispatch('dataSource/getDataSourceList', {})
       }
     },
     hasDataFrameProcessing (value) {
@@ -295,7 +295,7 @@ export default {
           this.updateDataTable()
         }, 5000)
       } else {
-        this.$store.dispatch('dataSource/getDataSourceList')
+        this.$store.dispatch('dataSource/getDataSourceList', {})
         window.clearInterval(this.checkDataFrameIntervalFunction)
         this.checkIfReachFileSizeLimit()
       }

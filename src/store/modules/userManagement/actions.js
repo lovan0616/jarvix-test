@@ -52,7 +52,7 @@ export default {
       .then(() => {
         const currentGroupId = getters.getCurrentGroupId
         if (currentGroupId) {
-          dispatch('dataSource/getDataSourceList', null, { root: true })
+          dispatch('dataSource/getDataSourceList', {}, { root: true })
         } else {
           commit('dataSource/setDataSourceList', [], { root: true })
           dispatch('dataSource/handleEmptyDataSource', null, { root: true })

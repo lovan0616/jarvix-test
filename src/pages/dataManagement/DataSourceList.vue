@@ -184,7 +184,7 @@ export default {
   methods: {
     fetchData () {
       this.isLoading = true
-      return this.$store.dispatch('dataSource/getDataSourceList')
+      return this.$store.dispatch('dataSource/getDataSourceList', {})
         .then(() => {
           this.isLoading = false
         }).catch(() => {

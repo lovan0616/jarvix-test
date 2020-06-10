@@ -42,7 +42,7 @@ export default {
     }
   },
   destroyed () {
-    this.$store.dispatch('dataSource/getDataSourceList')
+    this.$store.dispatch('dataSource/getDataSourceList', {})
     // 還原狀態
     this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     if (this.currentUploadInfo.type === importType.LOCAL) {

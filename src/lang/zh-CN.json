@@ -66,6 +66,7 @@
     "emptyResult": "此搜寻条件并无对应资料",
     "emptyDataSource": "尚未建立资料源",
     "emptyColumnSet": "尚未建立任何栏位组合",
+    "emptyFeatureFormula": "资料栏位未填写",
     "deleteSuccess": "删除成功",
     "emptyFeatureFormula": "资料栏位未填写",
     "dataSourceNotExist": "资料源不存在",
@@ -78,7 +79,8 @@
     "calculatingPleaseTryLater": "资料计算中，请稍后再试",
     "analysisFailed": "档案解析发生错误",
     "confirmColumnStateTypeChange": "此变更将会清除进阶设定内容，您确认要进行变更？",
-    "fileTypeNotSupported": "不支援{fileType}档案格式"
+    "fileTypeNotSupported": "不支援{fileType}档案格式",
+    "goToGroupManagement": "前往帐户专案管理"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -96,7 +98,10 @@
       "name": "看快速指引",
       "hint": "你也可以使用快速指引，一键开始进行搜寻分析"
     },
-    "goAdjust": "前往调整"
+    "goAdjust": "前往调整",
+    "notBelongToGroups": "因您未隶属专案而无法使用该功能",
+    "pleaseCreateOrJoinGroup": "请先加入专案或建立新专案",
+    "pleaseInformManager": "请待专案管理员将您加入专案"
   },
   "editing": {
     "localUpload": "本机档案上传",
@@ -105,6 +110,7 @@
     "remoteConnectionDescription": "直接读取您的资料库资料<br>并进行资料复制和建置",
     "confirmDeleteForeign": "确认删除此关联吗？",
     "chooseDataSource": "请选择资料源",
+    "allDataFrames": "全部资料表",
     "createBoard": "建立新版",
     "questionPlaceHolder": "请输入问题，例如：价格和成本的相关性",
     "askPlaceHolder": "请输入问句后按Enter送出",
@@ -308,7 +314,8 @@
     "resultOverSizeMessage": "资料量过大时，资料会经过取样",
     "toolTipMessage": {
       "comfrmToDeleteConnectionHistory":"你确定要删除连线纪录?"
-    }
+    },
+    "createGroup": "建立专案"
   },
   "etl": {
     "dataFrameList": "资料表列表",
