@@ -4,13 +4,15 @@ export default {
     state.accountList = data.accountList
     state.groupList = data.groupList
     state.permission = data.permission
-    state.license = data.license
+  },
+  setLicenseInfo (state, data) {
+    state.license = data
   },
   setLicenseCurrentUser (state, data) {
     state.license.currentUser = data
   },
   setLicenseCurrentDataStorageSize (state, data) {
-    state.license.currentDataStolicenserageSize = data
+    state.license.currentDataStorageSize = data
   },
   clearUserInfo (state) {
     state.userName = ''

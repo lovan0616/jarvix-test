@@ -90,12 +90,8 @@ export default {
       this.isLoading = true
       getAccountInfo()
         .then(accountInfo => {
-          this.license = {
-            ...this.license,
-            ...accountInfo.license
-          }
-          this.$store.commit('userManagement/setLicenseCurrentUser', this.license.currentUser)
-          this.$store.commit('userManagement/setLicenseCurrentDataStorageSize', this.license.currentDataStorageSize)
+          this.license = accountInfo.license
+          this.$store.commit('userManagement/setLicenseInfo', accountInfo.license)
         })
         .finally(() => { this.isLoading = false })
     }
