@@ -206,9 +206,10 @@ export default {
       })
         .then(res => {
           // update user info
-          this.$store.dispatch('userManagement/getUserInfo')
-          // update data source list
-          return this.$store.dispatch('dataSource/getDataSourceList')
+          this.$store.dispatch('userManagement/getUserInfo').then(() => {
+            // update data source list
+            return this.$store.dispatch('dataSource/getDataSourceList')
+          })
         })
         .then(() => {
           if (this.$route.name !== 'PageIndex') this.$router.push({name: 'PageIndex'})
