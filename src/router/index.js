@@ -31,6 +31,11 @@ const router = new Router({
           ]
         },
         {
+          path: 'groupless-guidance',
+          name: 'PageGrouplessGuidance',
+          component: () => import('@/components/layout/GrouplessLayout'),
+        },
+        {
           path: 'pinboard',
           component: () => import('@/pages/pinboard/Index'),
           children: [
@@ -178,7 +183,8 @@ const router = new Router({
                   name: 'DataSourceList',
                   component: () => import('@/pages/dataManagement/DataSourceList'),
                   meta: {
-                    layers: ['group', 'datasource-management']
+                    layers: ['group', 'datasource-management'],
+                    permission: ['group_read_user', 'group_read_data']
                   }
                 }
               ]
@@ -201,7 +207,8 @@ const router = new Router({
                   name: 'DataFileList',
                   component: () => import('@/pages/dataManagement/DataFileList'),
                   meta: {
-                    layers: ['group', 'datasource-management/datasource-list']
+                    layers: ['group', 'datasource-management/datasource-list'],
+                    permission: ['group_read_user', 'group_read_data']
                   }
                 }
               ]

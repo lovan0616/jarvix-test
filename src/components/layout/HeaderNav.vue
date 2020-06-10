@@ -46,6 +46,16 @@
             class="icon nav-dropdown-icon is-rotate"/>
         </div>
       </div>
+      <div v-else>
+        <button
+          v-if="hasPermission('account_create_group')"
+          class="btn-m btn-default btn-create-group"
+          @click="$router.push({name: 'AccountGroupManagement'})"
+        >
+          <svg-icon icon-class="plus" />
+          {{ $t('editing.createGroup') }}
+        </button>
+      </div>
       <div class="nav-item nav-item-dropdown nav-account">
         <div class="nav-set-flex">
           <div>{{ userName }}</div>
@@ -119,7 +129,7 @@ import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import { switchGroup } from '@/API/User'
 
 export default {
@@ -137,12 +147,12 @@ export default {
       isShowGroup: false,
       selectedLanguage: null,
       selectedGroupId: null,
-      userName: this.$store.state.userManagement.userName,
       isLoading: false
     }
   },
   computed: {
     ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
+    ...mapState('userManagement', ['userName']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
@@ -263,6 +273,7 @@ export default {
   .nav-left,
   .nav-right {
     display: flex;
+    align-items: center;
   }
 
   .nav-item {
@@ -304,6 +315,13 @@ export default {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+  }
+
+  .btn-create-group {
+    margin-right: 16px;
+    border-radius: 16px;
+    background: rgba(50, 75, 78, 0.6);
+    color: $theme-color-primary;
   }
 
   .nav-item-dropdown {

@@ -78,7 +78,8 @@
     "calculatingPleaseTryLater": "資料計算中，請稍後再試",
     "analysisFailed": "檔案解析發生錯誤",
     "confirmColumnStateTypeChange": "此變更將會清除進階設定內容，您確認要進行變更？",
-    "fileTypeNotSupported": "不支援{fileType}檔案格式"
+    "fileTypeNotSupported": "不支援{fileType}檔案格式",
+    "goToGroupManagement": "前往帳戶專案管理"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -96,7 +97,10 @@
       "name": "看快速指引",
       "hint": "你也可以使用快速指引，一鍵開始進行搜尋分析"
     },
-    "goAdjust": "前往調整"
+    "goAdjust": "前往調整",
+    "notBelongToGroups": "因您未隸屬專案而無法使用該功能",
+    "pleaseCreateOrJoinGroup": "請先加入專案或建立新專案",
+    "pleaseInformManager": "請待專案管理員將您加入專案"
   },
   "editing": {
     "localUpload": "本機檔案上傳",
@@ -309,7 +313,8 @@
     "resultOverSizeMessage": "資料量過大時，資料會經過取樣",
     "toolTipMessage": {
       "comfrmToDeleteConnectionHistory":"你確定要刪除連線紀錄?"
-    }
+    },
+    "createGroup": "建立專案"
   },
   "etl": {
     "dataFrameList": "資料表列表",
