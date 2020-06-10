@@ -236,12 +236,7 @@ export default {
       })
         .then(res => {
           // update user info
-          this.$store.commit('userManagement/setUserInfo', {
-            userName: res.name,
-            accountList: res.accountList,
-            groupList: res.groupList,
-            permission: [...res.accountPermission, ...res.groupPermission]
-          })
+          this.$store.dispatch('userManagement/getUserInfo')
           // update data source list
           return this.$store.dispatch('dataSource/getDataSourceList', {})
         })
