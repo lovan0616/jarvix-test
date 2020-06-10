@@ -45,6 +45,7 @@
 import ChatRoomBlock from '@/components/chatBot/ChatRoom'
 import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
 import PreviewDataSource from '@/components/PreviewDataSource'
+import store from '@/store'
 
 export default {
   name: 'HomeLayout',
@@ -63,6 +64,10 @@ export default {
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    const hasGroup = store.state.userManagement.groupList.length > 0
+    hasGroup ? next() : next({ name: 'PageGrouplessGuidance' })
   },
   beforeRouteUpdate(to, from, next) {
     if (this.isShowPreviewDataSource) this.closePreviewDataSource()
