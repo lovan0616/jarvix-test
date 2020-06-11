@@ -39,7 +39,7 @@
               {{ $t('accountInfo.currentDataUsage') }}
             </h6>
             <p class="sub-info-desciption">
-              {{ license.currentDataStorageSize || '-' }}GB
+              {{ shortenDataCapacityNumber(license.currentDataStorageSize) || '-' }}
             </p>
           </div>
           <div class="sub-info-block">
@@ -47,7 +47,7 @@
               {{ $t('accountInfo.dataUsageProvided') }}
             </h6>
             <p class="sub-info-desciption">
-              {{ license.maxDataStorageSize || '-' }}GB
+              {{ shortenDataCapacityNumber(license.showMaxDataStorageSize) || '-' }}
             </p>
           </div>
         </div>
@@ -94,6 +94,8 @@ export default {
             ...this.license,
             ...accountInfo.license
           }
+          this.$store.commit('userManagement/setLicenseCurrentUser', this.license.currentUser)
+          this.$store.commit('userManagement/setLicenseCurrentDataStorageSize', this.license.currentDataStorageSize)
         })
         .finally(() => { this.isLoading = false })
     }

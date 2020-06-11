@@ -151,8 +151,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
-    ...mapState('userManagement', ['userName']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId', 'getCurrentAccountLicense']),
+    ...mapState('userManagement', ['userName', 'license']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
@@ -179,7 +179,10 @@ export default {
     settingData () {
       const settingList = []
       settingList.push({icon: 'database', title: 'sideNav.dataSourceManagement', name: 'DataSourceList'})
-      settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/group/user-management/${this.groupId}`})
+      // 個人版 隱藏成員管理選項
+      if (this.license.maxUser !== 1) {
+        settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/group/user-management/${this.groupId}`})
+      }
       return settingList
     },
     accountData () {

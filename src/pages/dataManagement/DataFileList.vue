@@ -135,6 +135,7 @@ import EditDateTimeDialog from './components/EditDateTimeDialog'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 import { getAccountInfo } from '@/API/Account'
+import { mapState } from 'vuex'
 
 export default {
   name: 'DataFileList',
@@ -178,11 +179,14 @@ export default {
       intervalFunction: null,
       checkDataFrameIntervalFunction: null,
       isLoading: false,
-      showJoinTable: localStorage.getItem('showJoinTable'),
-      reachLicenseFileSizeLimit: false
+      showJoinTable: localStorage.getItem('showJoinTable')
     }
   },
   computed: {
+    ...mapState('userManagement', ['license']),
+    reachLicenseFileSizeLimit () {
+      return this.license.currentDataStorageSize >= this.license.maxDataStorageSize
+    },
     fileCountLimit () {
       return this.$store.state.dataManagement.fileCountLimit
     },
@@ -293,6 +297,7 @@ export default {
       } else {
         this.$store.dispatch('dataSource/getDataSourceList', {})
         window.clearInterval(this.checkDataFrameIntervalFunction)
+        this.checkIfReachFileSizeLimit()
       }
     }
   },
@@ -313,7 +318,7 @@ export default {
     checkIfReachFileSizeLimit () {
       getAccountInfo()
         .then((accountInfo) => {
-          this.reachLicenseFileSizeLimit = accountInfo.license.currentDataStorageSize >= accountInfo.license.maxDataStorageSize
+          this.$store.commit('userManagement/setLicenseCurrentDataStorageSize', accountInfo.license.currentDataStorageSize)
         })
         .catch(() => {})
     },
@@ -380,6 +385,7 @@ export default {
           this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
           this.fetchData()
           this.deleteFinish()
+          this.checkIfReachFileSizeLimit()
         })
         .catch(() => {
           this.deleteFinish()
@@ -462,7 +468,7 @@ export default {
     toggleEditFeatureDialog () {
       this.showEditFeatureDialog = !this.showEditFeatureDialog
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

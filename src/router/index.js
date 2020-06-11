@@ -216,6 +216,14 @@ const router = new Router({
             {
               path: 'user-management',
               component: () => import('@/pages/groupUserManagement/Index'),
+              beforeEnter: (to, from, next) => {
+                // 個人版 不能進入成員管理頁面
+                if (store.state.userManagement.license.maxUser !== 1) {
+                  next()
+                } else {
+                  router.push(from)
+                }
+              },
               children: [
                 {
                   path: ':group_id',
