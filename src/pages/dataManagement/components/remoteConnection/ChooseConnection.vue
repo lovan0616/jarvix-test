@@ -34,7 +34,6 @@
             v-for="(connection, index) in connectionList"
             v-else
             :key="connection.id"
-            :class="{'connection--testing': true}"
             class="single-connection"
             @click="chooseConnection(connection.id)"
           >
