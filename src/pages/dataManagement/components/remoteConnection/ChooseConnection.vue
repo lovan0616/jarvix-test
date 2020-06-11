@@ -303,6 +303,7 @@ export default {
 
           .spinner-title {
             font-size: 14px;
+            margin-top: 0;
           }
         }
       }

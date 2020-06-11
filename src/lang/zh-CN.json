@@ -70,7 +70,7 @@
     "deleteSuccess": "删除成功",
     "dataSourceNotExist": "资料源不存在",
     "connectionFail": "栏位资料有误，请重新检查",
-    "connectionInterrupted": "连贯中断",
+    "connectionInterrupted": "连线已中断",
     "columnSetNameEmpty": "栏位组合名称未填写",
     "columnSetChosenEmpty": "尚未选择任何栏位",
     "memberDeleteSuccess": "成员删除成功",

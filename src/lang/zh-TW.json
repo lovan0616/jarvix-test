@@ -70,7 +70,7 @@
     "deleteSuccess": "刪除成功",
     "dataSourceNotExist": "資料源不存在",
     "connectionFail": "欄位資料有誤，請重新檢查",
-    "connectionInterrupted": "連現已中斷",
+    "connectionInterrupted": "連線已中斷",
     "columnSetNameEmpty": "欄位組合名稱未填寫",
     "columnSetChosenEmpty": "尚未選擇任何欄位",
     "memberDeleteSuccess": "成員刪除成功",
