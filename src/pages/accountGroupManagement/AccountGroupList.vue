@@ -76,7 +76,6 @@ export default {
     ...mapGetters('userManagement', ['hasPermission']),
     ...mapState('userManagement', ['license']),
     tableHeaders () {
-      console.log(this.license.maxUser, 'test')
       return [
         {
           text: this.$t('editing.groupName'),
