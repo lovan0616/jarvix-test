@@ -33,7 +33,7 @@
           <div class="conten-container">
             <div class="content">1. {{ $t('editing.uploadLimitFileType') }}</div>
             <div class="content">2. {{ $t('editing.uploadLimitCount', {countLimit: fileCountLimit}) }}</div>
-            <div class="content">3. {{ $t('editing.uploadLimitSize', {limitSize: uploadFileSizeLimit}) }}</div>
+            <div class="content">3. {{ $t('editing.uploadLimitSize', {limitSize: shortenDataCapacityNumber(license.showMaxDataStorageSize)}) }}</div>
           </div>
           <div class="content">4. {{ $t('editing.uploadLimitContent') }}</div>
         </div>
@@ -129,6 +129,7 @@ export default {
   },
   computed: {
     ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
+    ...mapState('userManagement', ['license']),
     currentGroupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },

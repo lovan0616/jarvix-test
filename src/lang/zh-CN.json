@@ -136,7 +136,7 @@
     "clickToSelectFiles": "点击选择档案，或拖曳档案至此",
     "uploadLimitTitle": "档案上传限制说明",
     "uploadLimitFileType": "支援格式：.xlsx .xls .csv",
-    "uploadLimitSize": "档案大小：{limitSize}MB",
+    "uploadLimitSize": "档案大小：{limitSize}",
     "uploadLimitCount": "档案数量：{countLimit}笔",
     "uploadLimitContent": "内容限制：不可有分页、不可合并储存格、标题仅限1行",
     "reachUploadSizeLimit": "资料表大小超过{limitSize}MB",
