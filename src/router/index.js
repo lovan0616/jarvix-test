@@ -290,7 +290,7 @@ router.beforeEach(async (to, from, next) => {
   // 處理頁面重整時 store 為空需重新取得使用者資料
   const userName = store.state.userManagement.userName
   if (!userName) await store.dispatch('userManagement/getUserInfo')
-  console.log('route 123')
+
   // 確認 account 和 group 權限都符合
   const hasPermission = store.getters['userManagement/hasPermission']
   for (let i = 0; i < to.matched.length; i++) {
