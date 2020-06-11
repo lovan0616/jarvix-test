@@ -17,30 +17,40 @@ export default {
     let licensePermissionList = []
     let groupPermissionList = []
     let defaultAccount = {}
-    const userInfo = await getPermission()
 
-    if (userInfo.accountList.length) {
-      defaultAccount = userInfo.accountList.find(account => account.isDefault)
-      accountPermissionList = defaultAccount.accountPermissionList
-      licensePermissionList = defaultAccount.licensePermissionList
-      if (defaultAccount.groupList.length) {
-        let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
-        groupPermissionList = defaultGroup.groupPermissionList
+    try {
+      const userInfo = await getPermission()
+
+      if (userInfo.accountList.length) {
+        defaultAccount = userInfo.accountList.find(account => account.isDefault)
+        accountPermissionList = defaultAccount.accountPermissionList
+        licensePermissionList = defaultAccount.licensePermissionList
+        if (defaultAccount.groupList.length) {
+          let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
+          groupPermissionList = defaultGroup.groupPermissionList
+        }
       }
-    }
 
-    commit('setUserInfo', {
-      userName: userInfo.username,
-      accountList: userInfo.accountList,
-      groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
-      permission: [
-        ...accountPermissionList,
-        ...groupPermissionList,
-        ...licensePermissionList
-      ]
-    })
-    let accountInfo = await getAccountInfo(defaultAccount.id)
-    commit('setLicenseInfo', accountInfo.license)
+      commit('setUserInfo', {
+        userName: userInfo.username,
+        accountList: userInfo.accountList,
+        groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
+        permission: [
+          ...accountPermissionList,
+          ...groupPermissionList,
+          ...licensePermissionList
+        ]
+      })
+    } catch (error) {
+      // 
+    }
+    
+    try {
+      let accountInfo = await getAccountInfo(defaultAccount.id)
+      commit('setLicenseInfo', accountInfo.license)
+    } catch (error) {
+      // 
+    }
   },
   updateUserGroupList ({ dispatch, commit, getters }) {
     const currentAccountId = getters.getCurrentAccountId
