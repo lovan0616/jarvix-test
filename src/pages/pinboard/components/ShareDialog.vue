@@ -1,13 +1,17 @@
 <template>
   <div class="tooltip-dialog">
     <div class="input-block">
-      <input type="text" class="input" ref="shareInput"
-        :value="shareUrl"
-        @click="selectText"
+      <input 
+        ref="shareInput" 
+        :value="shareUrl" 
+        type="text"
+        class="input"
         readonly
+        @click="selectText"
       >
     </div>
-    <button class="btn btn-copy"
+    <button 
+      class="btn btn-copy"
       @click="copyInput"
     >{{ $t('button.copy') }}</button>
   </div>
@@ -19,7 +23,8 @@ export default {
   name: 'ShareDialog',
   props: {
     shareUrl: {
-      type: String
+      type: String,
+      default: ''
     }
   },
   mounted () {

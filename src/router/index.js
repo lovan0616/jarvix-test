@@ -31,6 +31,11 @@ const router = new Router({
           ]
         },
         {
+          path: 'groupless-guidance',
+          name: 'PageGrouplessGuidance',
+          component: () => import('@/components/layout/GrouplessLayout'),
+        },
+        {
           path: 'pinboard',
           component: () => import('@/pages/pinboard/Index'),
           children: [
@@ -178,7 +183,8 @@ const router = new Router({
                   name: 'DataSourceList',
                   component: () => import('@/pages/dataManagement/DataSourceList'),
                   meta: {
-                    layers: ['group', 'datasource-management']
+                    layers: ['group', 'datasource-management'],
+                    permission: ['group_read_user', 'group_read_data']
                   }
                 }
               ]
@@ -201,7 +207,8 @@ const router = new Router({
                   name: 'DataFileList',
                   component: () => import('@/pages/dataManagement/DataFileList'),
                   meta: {
-                    layers: ['group', 'datasource-management/datasource-list']
+                    layers: ['group', 'datasource-management/datasource-list'],
+                    permission: ['group_read_user', 'group_read_data']
                   }
                 }
               ]
@@ -211,11 +218,7 @@ const router = new Router({
               component: () => import('@/pages/groupUserManagement/Index'),
               beforeEnter: (to, from, next) => {
                 // 個人版 不能進入成員管理頁面
-                if (store.state.userManagement.license.maxUser !== 1) {
-                  next()
-                } else {
-                  router.push(from)
-                }
+                store.state.userManagement.license.maxUser > 1 ? next() : next(from)
               },
               children: [
                 {
@@ -286,12 +289,7 @@ router.beforeEach(async (to, from, next) => {
 
   // 處理頁面重整時 store 為空需重新取得使用者資料
   const userName = store.state.userManagement.userName
-  try {
-    if (!userName) await store.dispatch('userManagement/getUserInfo')
-  } catch (error) {
-    // Debug 使用
-    console.log(error)
-  }
+  if (!userName) await store.dispatch('userManagement/getUserInfo')
 
   // 確認 account 和 group 權限都符合
   const hasPermission = store.getters['userManagement/hasPermission']
@@ -306,6 +304,23 @@ router.beforeEach(async (to, from, next) => {
     })
   }
   next()
+})
+
+// 處理如果有版本更新結果前端拿不到對應 js 的處理
+router.onError((error) => {
+  const pattern = /Loading chunk (\d)+ failed/g
+  const isChunkLoadFailed = error.message.match(pattern)
+
+  if (isChunkLoadFailed) {
+    Message({
+      message: i18n.t('errorMessage.versionUpdate'),
+      type: 'error',
+      duration: 3 * 1000
+    })
+    window.setTimeout(() => {
+      window.location.reload()
+    }, 2000)
+  }
 })
 
 export default router

@@ -1,9 +1,15 @@
 <template>
   <div id="app">
-    <div class="app-bg"></div>
-    <transition name="fade" mode="out-in">
-      <router-view v-if="init" :key="locale"/>
-      <spinner v-else style="height: 100vh;"></spinner>
+    <div class="app-bg"/>
+    <transition 
+      name="fade" 
+      mode="out-in">
+      <router-view 
+        v-if="init" 
+        :key="locale"/>
+      <spinner 
+        v-else 
+        style="height: 100vh;"/>
     </transition>
   </div>
 </template>
@@ -16,6 +22,17 @@ export default {
       intervalFunction: null,
       renderKey: 0,
       init: false
+    }
+  },
+  computed: {
+    locale () {
+      return this.$store.state.setting.locale
+    }
+  },
+  watch: {
+    locale (value) {
+      // 更新 i18n
+      this.$i18n.locale = value
     }
   },
   created () {
@@ -33,16 +50,5 @@ export default {
       this.$store.commit('setting/setLocale', locale)
     }
   },
-  watch: {
-    locale (value) {
-      // 更新 i18n
-      this.$i18n.locale = value
-    }
-  },
-  computed: {
-    locale () {
-      return this.$store.state.setting.locale
-    }
-  }
 }
 </script>

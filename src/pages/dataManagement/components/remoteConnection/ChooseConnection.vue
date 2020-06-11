@@ -3,22 +3,25 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="1"
-    ></upload-process-block>
+    />
     <div class="info-block">
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <spinner class="spinner-container"
+      <spinner 
         v-if="isLoading"
         :title="$t('editing.loading')"
+        class="spinner-container"
         size="50"
-      ></spinner>
-      <div class="connection-list-block"
+      />
+      <div 
         v-else
+        class="connection-list-block"
       >
         <div class="title-block-container">
           <div class="block-title">{{ $t('etl.connectionHistory') }}</div>
-          <button class="btn-m btn-outline"
+          <button 
+            class="btn-m btn-outline"
             @click="createConnection"
           >{{ $t('etl.newConnectionSetting') }}</button>
         </div>
@@ -26,44 +29,68 @@
           <empty-info-block
             v-if="connectionList.length === 0"
             :msg="$t('etl.emptyConnectionHistory')"
-          ></empty-info-block>
-          <div class="single-connection"
+          />
+          <div 
+            v-for="(connection, index) in connectionList"
             v-else
-            v-for="connection in connectionList"
             :key="connection.id"
+            class="single-connection"
             @click="chooseConnection(connection.id)"
           >
             <div class="connection-title">{{ connection.name }}</div>
             <div class="conneciton-info-block">
               <div class="conneciton-info">
-                <div class="connection-label">{{ $t('editing.username') }}:</div>{{ connection.account }}
+                <div class="connection-label">{{ $t('editing.loginAccount') }}:</div>{{ connection.account }}
               </div>
               <div class="conneciton-info">
-                <div class="connection-label">Host:</div>{{ connection.host }}
+                <div class="connection-label">Schema:</div>{{ connection.schema }}
               </div>
               <div class="conneciton-info">
                 <div class="connection-label">{{ $t('editing.databaseType') }}:</div>{{ connection.databaseType }}
               </div>
               <div class="conneciton-info">
-                <div class="connection-label">Port:</div>{{ connection.port }}
+                <div class="connection-label">Host:</div>{{ connection.host }}
               </div>
               <div class="conneciton-info">
                 <div class="connection-label">Database:</div>{{ connection.database }}
               </div>
               <div class="conneciton-info">
-                <div class="connection-label">Schema:</div>{{ connection.schema }}
+                <div class="connection-label">Port:</div>{{ connection.port }}
               </div>
             </div>
+            <a
+              href="javascript:void(0);" 
+              class="link action-link"
+              @click.stop="editConnection(connection)"
+            >
+              {{ $t('button.edit') }}
+            </a>
+            <a
+              href="javascript:void(0);"
+              class="conneciton__delete"
+              @click.stop="currentDeleteIndex=index"
+            >
+              <svg-icon icon-class="delete"/>
+            </a>
+            <tooltip-dialog
+              v-if="index === currentDeleteIndex"
+              :msg="$t('editing.toolTipMessage.comfrmToDeleteConnectionHistory')"
+              class="tooltip-dialog"
+              @cancel="currentDeleteIndex=null"
+              @confirm="deleteConnection(index, connection.id)"
+            />
           </div>
         </div>
       </div>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="prevStep"
         >{{ $t('button.prevStep') }}</button>
       </div>
@@ -71,20 +98,33 @@
   </div>
 </template>
 <script>
-import { getConnectionInfoList, testOldConnection } from '@/API/RemoteConnection'
+import { getConnectionInfoList, testOldConnection, deleteDatabaseConnection } from '@/API/RemoteConnection'
+import { Message } from 'element-ui'
 import UploadProcessBlock from './UploadProcessBlock'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import TooltipDialog from '@/components/dialog/TooltipDialog'
 
 export default {
   name: 'ChooseConnection',
   components: {
     UploadProcessBlock,
-    EmptyInfoBlock
+    EmptyInfoBlock,
+    TooltipDialog
   },
   data () {
     return {
       isLoading: false,
+      isEditing: false,
+      currentDeleteIndex: null,
       connectionList: []
+    }
+  },
+  computed: {
+    groupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
+    },
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
     }
   },
   mounted () {
@@ -107,6 +147,12 @@ export default {
     chooseConnection (id) {
       testOldConnection(id).then(() => {
         this.$emit('next', id)
+      }).catch(() => {
+        Message({
+          message: this.$t('message.connectionFail'),
+          type: 'error',
+          duration: 3 * 1000
+        })
       })
     },
     createConnection () {
@@ -117,16 +163,22 @@ export default {
     },
     prevStep () {
       this.$store.commit('dataManagement/updateCurrentUploadDataType', null)
+    },
+    editConnection (connection) {
+      this.$emit('edit', connection)
+    },
+    deleteConnection (index, connectId) {
+      deleteDatabaseConnection(connectId).then(() => {
+        this.connectionList.splice(index, 1)
+        Message({
+          message: this.$t('message.deleteSuccess'),
+          type: 'success',
+          duration: 3 * 1000
+        })
+      })
+      this.currentDeleteIndex = null
     }
   },
-  computed: {
-    groupId () {
-      return this.$store.getters['userManagement/getCurrentGroupId']
-    },
-    currentUploadInfo () {
-      return this.$store.state.dataManagement.currentUploadInfo
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>
@@ -169,9 +221,10 @@ export default {
 
   .single-connection {
     border: 2px solid #485454;
-    padding: 24px;
+    padding: 18px 24px;
     border-radius: 8px;
     cursor: pointer;
+    position: relative;
 
     &:not(:last-child) {
       margin-bottom: 16px;
@@ -183,14 +236,16 @@ export default {
     }
 
     .connection-title {
-      font-size: 24px;
+      font-size: 18px;
       font-weight: 600;
-      margin-bottom: 16px;
+      line-height: 25px;
+      margin-bottom: 8px;
     }
 
     .conneciton-info-block {
       display: flex;
       flex-wrap: wrap;
+      color: $theme-text-color-light;
 
       .conneciton-info {
         display: flex;
@@ -199,9 +254,40 @@ export default {
       }
 
       .connection-label {
-        width: 40%;
         margin-right: 8px;
-        text-align: right;
+        text-align: left;
+        font-weight: 600;
+      }
+    }
+
+    .action-link {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      font-size: 14px;
+    }
+
+    .conneciton__delete {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      margin-right: 5px;
+      color: $theme-color-white;
+    }
+
+    .tooltip-dialog {
+      right: 12px;
+      bottom: 53px;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        right: 6%;
+        border-bottom: 9px solid transparent;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-top: 9px solid #2AD2E2;
       }
     }
   }

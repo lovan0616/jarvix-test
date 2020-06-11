@@ -2,14 +2,14 @@
   <div class="data-frame-data">
     <spinner
       v-if="isLoading"
-    ></spinner>
+    />
     <empty-info-block
       v-else-if="!isLoading && hasError"
       :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
-    ></empty-info-block>
-    <div
-      class="board-body-section"
+    />
+    <div 
       v-else
+      class="board-body-section"
     >
       <div class="title">{{ $t('editing.dataFrameContent') }}</div>
       <div class="overview">
@@ -28,36 +28,36 @@
         :dataset="dataSourceTableData"
         :pagination-info="pagination"
         :min-column-width="'270px'"
+        fixed-index
         @change-page="updatePage"
-        fixedIndex
       >
         <template #columns-header="{ column, index }">
           <div class="header-block">
             <div class="header">
               <span class="icon">
                 <el-tooltip
+                  slot="label"
                   :enterable="false"
                   :visible-arrow="false"
-                  class="icon"
-                  slot="label"
-                  :content="`${getStatesTypeName(index)}`">
+                  :content="`${getStatesTypeName(index)}`"
+                  class="icon">
                   <svg-icon :icon-class="getHeaderIcon(index)" />
                 </el-tooltip>
               </span>
               <span class="text">
                 <el-tooltip
-                  placement="bottom-start"
+                  slot="label"
                   :visible-arrow="false"
                   :enterable="false"
-                  slot="label"
-                  :content="`${column.titles[index]}`">
-                  <span>{{column.titles[index]}}</span>
+                  :content="`${column.titles[index]}`"
+                  placement="bottom-start">
+                  <span>{{ column.titles[index] }}</span>
                 </el-tooltip>
               </span>
             </div>
             <div
-              class="summary"
               v-if="showColumnSummaryRow"
+              class="summary"
             >
               <data-column-summary
                 :summary-data="tableSummaryList[index]"

@@ -1,8 +1,9 @@
 <template>
-  <el-select class="sy-multi-select theme-dark"
+  <el-select 
     v-model="selectedValues"
     :placeholder="placeholder"
     :no-data-text="$t('message.noData')"
+    class="sy-multi-select theme-dark"
     multiple
     @change="$emit('change', $event)"
   >
@@ -11,7 +12,7 @@
       :key="option.value"
       :label="option.name"
       :value="option.value"
-    ></el-option>
+    />
   </el-select>
 </template>
 
@@ -24,6 +25,11 @@ export default {
     optionList: { type: Array, default: () => [] },
     placeholder: { type: String, default: '' }
   },
+  data () {
+    return {
+      selectedValues: this.value
+    }
+  },
   watch: {
     value: {
       deep: true,
@@ -32,11 +38,6 @@ export default {
       }
     }
   },
-  data () {
-    return {
-      selectedValues: this.value
-    }
-  }
 }
 </script>
 <style lang="scss">

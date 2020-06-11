@@ -1,14 +1,24 @@
 <template>
   <div class="dropdown">
     <default-select
-      class="dropdown__container"
       v-model="editedColumnInfo.statsType"
-      @change="openConfirmMsg"
       :option-list="statsTypeOptions"
-    ></default-select>
+      class="dropdown__container"
+      @change="openConfirmMsg"
+    >
+      <template #option-content="{ option }">
+        <svg-icon 
+          :icon-class="getStatsTypeIcon(option.value)"
+          class="statsType__icon" />
+        <span class="statsType__label">{{ option.name }}</span>
+      </template>
+    </default-select>
+    <svg-icon 
+      :icon-class="getStatsTypeIcon(editedColumnInfo.statsType)"
+      class="statsType__icon" />
     <div
-      class="confirm"
       v-if="showConfirmMsg"
+      class="confirm"
     >
       <div class="confirm__message">
         {{ $t('message.confirmColumnStateTypeChange') }}
@@ -51,6 +61,20 @@ export default {
       showConfirmMsg: false
     }
   },
+  computed: {
+    statsTypeOptions () {
+      return statsTypeOptionList.filter((option) => {
+        return this.editedColumnInfo.originalStatsType === 'DATETIME'
+          ? option
+          : option.value !== 'DATETIME'
+      })
+    }
+  },
+  watch: {
+    columnInfo () {
+      this.editedColumnInfo = JSON.parse(JSON.stringify(this.columnInfo))
+    }
+  },
   methods: {
     openConfirmMsg () {
       this.showConfirmMsg = true
@@ -86,21 +110,21 @@ export default {
           this.editedColumnInfo.targetDataType = 'BOOLEAN'
           break
       }
-    }
-  },
-  computed: {
-    statsTypeOptions () {
-      return statsTypeOptionList.filter((option) => {
-        return this.editedColumnInfo.originalStatsType === 'DATETIME'
-          ? option
-          : option.value !== 'DATETIME'
-      })
-    }
-  },
-  watch: {
-    columnInfo () {
-      this.editedColumnInfo = JSON.parse(JSON.stringify(this.columnInfo))
-    }
+    },
+    getStatsTypeIcon (statesType) {
+      switch (statesType) {
+        case 'CATEGORY':
+          return 'character-a'
+        case 'NUMERIC':
+          return 'numeric'
+        case 'BOOLEAN':
+          return 'checked'
+        case 'DATETIME':
+          return 'calendar'
+        default:
+          return 'check-circle'
+      }
+    },
   }
 }
 </script>
@@ -108,6 +132,22 @@ export default {
 <style lang="scss" scoped>
 .dropdown {
   position: relative;
+}
+
+>>> .sy-select {
+  .el-input__inner {
+    padding-left: 40px;
+  }
+  .statsType__label {
+    padding-left: 20px;
+  }
+}
+.statsType__icon {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  font-size: 16px;
 }
 
 .confirm {

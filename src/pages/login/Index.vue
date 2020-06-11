@@ -6,23 +6,27 @@
         @submit.prevent="submitForm"
       >
         <div class="login-form">
-          <input-block class="login-input-block"
+          <input-block 
+            v-validate="'required'"
             :label="$t('editing.username')"
+            v-model="userInfo.account"
+            class="login-input-block"
             name="userName"
             type="email"
-            v-model="userInfo.account"
+          />
+          <input-block 
             v-validate="'required'"
-          ></input-block>
-          <input-block class="login-input-block"
             :label="$t('editing.password')"
+            v-model="userInfo.password"
+            class="login-input-block"
             name="userPassword"
             type="password"
-            v-model="userInfo.password"
-            v-validate="'required'"
-          ></input-block>
+          />
         </div>
-        <button type="submit" class="btn btn-default btn-submit"
-          :disabled="isSubmit"
+        <button 
+          :disabled="isSubmit" 
+          type="submit"
+          class="btn btn-default btn-submit"
         >{{ $t('button.login') }}</button>
       </form>
     </div>
@@ -66,9 +70,10 @@ export default {
               // 取得前一次停留或拜訪的頁面
               const currentRoute = this.$store.state.setting.currentRoute
               const dataSourceId = this.$store.state.dataSource.dataSourceId
+              const dataFrameId = this.$store.state.dataSource.dataFrameId
               // 用戶若因 token 失效需重新登入，使用先前已選擇的 id 取得相關資料
               if (dataSourceId) {
-                this.$store.dispatch('dataSource/changeDataSourceById', dataSourceId)
+                this.$store.dispatch('dataSource/changeDataSourceById', {dataSourceId, dataFrameId})
               }
               this.$store.dispatch('userManagement/getUserInfo')
 
@@ -78,7 +83,7 @@ export default {
                 return this.$router.push('/')
               }
 
-              this.$store.dispatch('dataSource/getDataSourceList')
+              this.$store.dispatch('dataSource/getDataSourceList', {})
 
               // 用戶若因 token 失效需重新登入，登入後導回原頁面
               if (currentRoute && currentRoute.path) {

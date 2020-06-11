@@ -3,7 +3,9 @@
     <div class="page-title-row">
       <h1 class="title">演算法管理</h1>
       <div class="bread-crumb">
-        <router-link :to="{name: 'PageAlgorithmList'}" class="title-link">演算法</router-link>
+        <router-link 
+          :to="{name: 'PageAlgorithmList'}" 
+          class="title-link">演算法</router-link>
         <span class="divider">/</span>輪廓型預測
       </div>
     </div>
@@ -15,53 +17,58 @@
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title must">目標資料源: </div>
-            <default-select class="tag-select input"
+            <default-select 
               :value="1"
               :option-list="[
                 {value: 1, name: '富士康demo'},
               ]"
-            ></default-select>
+              class="tag-select input"
+            />
           </div>
           <div class="content-item">
             <div class="item-title must">目標資料表: </div>
-            <default-select class="tag-select input"
+            <default-select 
               :value="1"
               :option-list="[
                 {value: 1, name: 'TemperatureData'},
                 {value: 2, name: 'molding'},
               ]"
-            ></default-select>
+              class="tag-select input"
+            />
           </div>
         </div>
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title must">目標參數欄位: </div>
-            <default-select class="tag-select input"
+            <default-select 
               :value="1"
               :option-list="[
                 {value: 1, name: '實際標籤'},
               ]"
-            ></default-select>
+              class="tag-select input"
+            />
           </div>
           <div class="content-item">
             <div class="item-title must">時間欄位: </div>
-            <default-select class="tag-select input"
+            <default-select 
               :value="1"
               :option-list="[
                 {value: 1, name: '時間戳'},
               ]"
-            ></default-select>
+              class="tag-select input"
+            />
           </div>
         </div>
         <div class="content-item">
           <div class="item-title must">測量值欄位: </div>
-          <default-multi-select class="tag-select input"
+          <default-multi-select 
             :values="[1, 2]"
             :option-list="[
               {value: 1, name: '溫度'},
               {value: 2, name: '壓力'},
             ]"
-          ></default-multi-select>
+            class="tag-select input"
+          />
         </div>
       </div>
     </div>
@@ -80,50 +87,69 @@
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title">CNN模型額外層數: </div>
-            <input type="text" class="input" :value="0">
+            <input 
+              :value="0" 
+              type="text" 
+              class="input">
           </div>
           <div class="content-item">
             <div class="item-title">FNN模型額外層數: </div>
-            <input type="text" class="input" :value="0">
+            <input 
+              :value="0" 
+              type="text" 
+              class="input">
           </div>
         </div>
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title">學習速度: </div>
-            <input type="text" class="input">
+            <input 
+              type="text" 
+              class="input">
           </div>
           <div class="content-item">
             <div class="item-title">訓練次數: </div>
-            <input type="text" class="input" :value="20">
+            <input 
+              :value="20" 
+              type="text" 
+              class="input">
           </div>
         </div>
         <div class="item-wrap">
           <div class="content-item">
             <div class="item-title">訓練批大小: </div>
-            <input type="text" class="input" :value="64">
+            <input 
+              :value="64" 
+              type="text" 
+              class="input">
           </div>
           <div class="content-item">
             <div class="item-title">訓練與驗證資料比例: </div>
-            <input type="text" class="input" :value="0.8">
+            <input 
+              :value="0.8" 
+              type="text" 
+              class="input">
           </div>
         </div>
         <div class="content-item">
           <div class="item-title">標準化方式: </div>
-          <default-select class="tag-select input"
+          <default-select 
             :value="1"
             :option-list="[
               {value: 1, name: 'Range'},
             ]"
-          ></default-select>
+            class="tag-select input"
+          />
         </div>
         <div class="content-item">
           <div class="item-title">初始化參數: </div>
-          <default-select class="tag-select input"
+          <default-select 
             :value="1"
             :option-list="[
               {value: 1, name: 'Gaussian'},
             ]"
-          ></default-select>
+            class="tag-select input"
+          />
         </div>
       </div>
     </div>
@@ -141,24 +167,26 @@
       <div class="content">
         <div class="content-item">
           <div class="item-title">目標資料源: </div>
-          <default-select class="tag-select input"
+          <default-select 
             :option-list="[
               {value: 1, name: '富士康demo'},
             ]"
-          ></default-select>
+            class="tag-select input"
+          />
         </div>
         <div class="content-item">
           <div class="item-title">目標資料表: </div>
-          <default-select class="tag-select input"
+          <default-select 
             :option-list="[
               {value: 1, name: 'TemperatureData'},
               {value: 2, name: 'molding'},
             ]"
-          ></default-select>
+            class="tag-select input"
+          />
         </div>
         <div class="content-item">
           <div class="item-title">執行週期: </div>
-          <default-select class="tag-select input"
+          <default-select 
             :value="5"
             :option-list="[
               {value: 1, name: '一秒'},
@@ -172,16 +200,21 @@
               {value: 9, name: '四五分鐘'},
               {value: 10, name: '一小時'},
             ]"
-          ></default-select>
+            class="tag-select input"
+          />
         </div>
       </div>
     </div>
 
     <div class="footer">
-      <button type="button" class="btn btn-outline"
+      <button 
+        type="button" 
+        class="btn btn-outline"
         @click="back"
       >{{ $t('button.cancel') }}</button>
-      <button type="button" class="btn btn-default"
+      <button 
+        type="button" 
+        class="btn btn-default"
         @click="back"
       >
         <span>{{ $t('button.confirm') }}</span>
@@ -219,11 +252,6 @@ export default {
           status: '可執行'
         }
       ]
-    }
-  },
-  methods: {
-    back () {
-      this.$router.push('/algorithm')
     }
   },
   computed: {
@@ -276,7 +304,12 @@ export default {
         }
       ]
     }
-  }
+  },
+  methods: {
+    back () {
+      this.$router.push('/algorithm')
+    }
+  },
 }
 </script>
 <style lang="scss" scoped>

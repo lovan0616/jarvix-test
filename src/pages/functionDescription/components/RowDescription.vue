@@ -1,9 +1,13 @@
 <template>
-  <div class="row-description" :style="{ top, width }">
-    <p class="text" v-html="text"></p>
-    <div class="dot outline"></div>
-    <div class="line"></div>
-    <div class="dot solid"></div>
+  <div 
+    :style="{ top, width }" 
+    class="row-description">
+    <p 
+      class="text" 
+      v-html="text"/>
+    <div class="dot outline"/>
+    <div class="line"/>
+    <div class="dot solid"/>
   </div>
 </template>
 <script>
@@ -11,7 +15,8 @@ export default {
   name: 'RowDescription',
   props: {
     text: {
-      type: String
+      type: String,
+      default: ''
     },
     width: {
       type: String,

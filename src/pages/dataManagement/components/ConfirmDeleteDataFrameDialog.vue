@@ -1,23 +1,33 @@
 <template>
-  <confirm-dialog class="confirm-delete-file-dialog"
+  <confirm-dialog 
     :title="title"
+    class="confirm-delete-file-dialog"
     name="confirm-delet-file"
     @close="cancel"
   >
-    <div class="content" slot="dialogBody">
+    <div 
+      slot="dialogBody" 
+      class="content">
       <div class="main-content">{{ $t('editing.confirmDeleteNTables') }}</div>
       <div class="file-list">
-        <div class="single-file"
+        <div 
           v-for="file in fileList"
           :key="file.id"
+          class="single-file"
         >{{ file.primaryAlias }}</div>
       </div>
     </div>
-    <template class="dialog-btn-block" slot="dialogFooter">
-      <button type="button" class="btn btn-secondary"
+    <template 
+      slot="dialogFooter" 
+      class="dialog-btn-block">
+      <button 
+        type="button" 
+        class="btn btn-secondary"
         @click="cancel"
       >{{ $t('button.cancel') }}</button>
-      <button type="button" class="btn btn-default"
+      <button 
+        type="button" 
+        class="btn btn-default"
         @click="confirm"
       >{{ $t('button.confirmDelete') }}</button>
     </template>

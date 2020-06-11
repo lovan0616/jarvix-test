@@ -12,23 +12,28 @@ export default {
   init ({ commit, dispatch, state, getters, rootGetters }) {
     if (state.isInit) return Promise.resolve(state)
     let queryDataSource = parseInt(router.app.$route.query.dataSourceId)
+    let queryDataFrame = router.app.$route.query.dataFrameId
     const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
-    if (currentGroupId) dispatch('getDataSourceList', queryDataSource)
+    if (currentGroupId) {
+      dispatch('getDataSourceList', {
+        dataSourceId: queryDataSource, 
+        dataFrameId: queryDataFrame === 'all' ? 'all' : parseInt(queryDataFrame)
+      })
+    }
     commit('setIsInit', true)
   },
-  getDataSourceList ({ dispatch, commit, state }, data) {
+  getDataSourceList({ dispatch, commit, state }, {dataSourceId, dataFrameId}) {
     return getDataSourceList().then(res => {
       commit('setDataSourceList', res)
       // 找出第一個可以使用的 dataSourceId
       let firstEnableDataSourceIndex = res.findIndex(element => element.enableDataFrameCount)
-
-      if (data) {
+      if (dataSourceId) {
         // 判斷路由的 DataSource 是否存在
-        if (res.some(element => element.id === data)) {
-          dispatch('changeDataSourceById', data)
+        if (res.some(element => element.id === dataSourceId)) {
+          dispatch('changeDataSourceById', {dataSourceId, dataFrameId})
         } else {
           const dataSourceId = firstEnableDataSourceIndex > -1 ? res[firstEnableDataSourceIndex].id : null
-          dispatch('changeDataSourceById', dataSourceId)
+          dispatch('changeDataSourceById', {dataSourceId, dataFrameId: 'all'})
           if (firstEnableDataSourceIndex < 0) dispatch('handleEmptyDataSource')
           router.push('/')
 
@@ -43,31 +48,53 @@ export default {
           dispatch('handleEmptyDataSource')
         } else if (!state.dataSourceId || res.findIndex(element => element.id === state.dataSourceId) < 0) {
           // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個可使用的 dataSource
-          dispatch('changeDataSourceById', res[firstEnableDataSourceIndex].id)
+          dispatch('changeDataSourceById', {dataSourceId: res[firstEnableDataSourceIndex].id, dataFrameId: 'all'})
         }
       }
     })
   },
-  changeDataSourceById ({ dispatch, commit, state }, dataSourceId) {
+  async changeDataSourceById({ dispatch, commit, state }, {dataSourceId, dataFrameId = 'all'}) {
+    if (state.dataSourceId === dataSourceId) return Promise.resolve(state)
+
     // 清空對話紀錄
-    if (state.dataSourceId) {
-      commit('chatBot/clearConversation', null, {root: true})
-      // 清空篩選條件
-      dispatch('clearAllFilter')
-      // 清除 question id
-      commit('clearCurrentQuestionId')
-      // 關閉演算法
-      commit('chatBot/updateIsUseAlgorithm', false, {root: true})
-    }
+    if (state.dataSourceId) dispatch('clearChatbot')
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
+    // 清空 dataFrame list 和 id
+    commit('setDataFrameId', null)
+    commit('setDataFrameList', [])
+    
     if (!dataSourceId) return Promise.resolve(state)
+
+    // 更新 DataFrame 資料
+    const dataFrameList = await dispatch('getDataSourceTables')
+    commit('setDataFrameList', dataFrameList)
+    // 當指定 DataFrame 時，確認是否存在
+    if (dataFrameId !== 'all' && !dataFrameList.some(element => element.id === dataFrameId)) {
+      return dispatch('changeDataFrameById', 'all')
+    }
+    return dispatch('changeDataFrameById', dataFrameId)
+  },
+  changeDataFrameById ({ dispatch, commit, state }, dataFrameId) {
+    dispatch('clearChatbot')
+    // 更新 DataFrame 資料
+    commit('setDataFrameId', dataFrameId)
     return co(function* () {
       yield dispatch('getHistoryQuestionList')
       yield dispatch('getDataSourceColumnInfo')
       yield dispatch('getDataSourceDataValue')
       return Promise.resolve(state)
     })
+  },
+  clearChatbot({ dispatch, commit, state }) {
+    // 清空對話紀錄
+    commit('chatBot/clearConversation', null, { root: true })
+    // 清空篩選條件 
+    dispatch('clearAllFilter')
+    // 清除 question id
+    commit('clearCurrentQuestionId')
+    // 關閉演算法
+    commit('chatBot/updateIsUseAlgorithm', false, { root: true })
   },
   handleEmptyDataSource ({ dispatch, commit }) {
     commit('chatBot/clearConversation', null, {root: true})
@@ -76,6 +103,8 @@ export default {
     commit('clearCurrentQuestionId')
     commit('chatBot/updateIsUseAlgorithm', false, {root: true})
     commit('setDataSourceId', null)
+    commit('setDataFrameList', [])
+    commit('setDataFrameId', null)
   },
   getDataSourceTables ({state}) {
     if (state.dataSourceId === null) return
@@ -102,15 +131,17 @@ export default {
   getDataFrameColumnCorrelation ({ state }, { id }) {
     return getColumnCorrelationMatrix(id)
   },
-  getDataSourceColumnInfo ({ commit, state }) {
+  getDataSourceColumnInfo({ commit, state, getters }) {
     if (!state.dataSourceId) return
-    return getDataSourceColumnInfoById(state.dataSourceId).then(response => {
+    const dataFrameId = getters.currentDataFrameId
+    return getDataSourceColumnInfoById(state.dataSourceId, dataFrameId).then(response => {
       commit('setDataSourceColumnInfoList', response)
     })
   },
-  getDataSourceDataValue ({ commit, state }) {
+  getDataSourceDataValue ({ commit, state, getters }) {
     if (!state.dataSourceId) return
-    return getDataSourceDataValueById(state.dataSourceId).then(response => {
+    const dataFrameId = getters.currentDataFrameId
+    return getDataSourceDataValueById(state.dataSourceId, dataFrameId).then(response => {
       commit('setDataSourceDataValueList', response)
     })
   },
@@ -127,14 +158,17 @@ export default {
         question: state.appQuestion,
         stamp: new Date().getTime(),
         dataSourceId: String(state.dataSourceId),
+        dataFrameId: String(state.dataFrameId),
         action: actionTag
         // 暫時用來判定使用者是否在當前的群組問問題
         // groupId: rootGetters['userManagement/getCurrentGroupId']
       }
     })
   },
-  getHistoryQuestionList ({commit, state}, data) {
-    return getHistoryQuestionList(state.dataSourceId || data).then(res => {
+  getHistoryQuestionList ({commit, state, getters}, dataSourceIdData) {
+    const dataSourceId = state.dataSourceId || dataSourceIdData
+    const dataFrameId = getters.currentDataFrameId
+    return getHistoryQuestionList(dataSourceId, dataFrameId).then(res => {
       commit('setHistoryQuestionList', res)
     })
   },

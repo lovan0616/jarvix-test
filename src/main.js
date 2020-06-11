@@ -46,8 +46,6 @@ import 'echarts-stat'
 
 import Layout from './components/Layout.vue'
 import Task from './components/display/Task.vue'
-import ContainerBlock from './components/container/ContainerBlock.vue'
-import ContainerCard from './components/container/ContainerCard.vue'
 import DisplayBasicChart from './components/display/DisplayBasicChart.vue'
 import SyTable from './components/table/SyTable.vue'
 import PreviewDataSource from './components/PreviewDataSource.vue'
@@ -87,13 +85,9 @@ import DisplayHeatMapChart from '@/components/display/DisplayHeatMapChart'
 import DisplaySankeyChart from '@/components/display/DisplaySankeyChart'
 import DisplayCorrelationFeatures from '@/components/display/DisplayCorrelationFeatures'
 import DisplayPivotTable from '@/components/display/DisplayPivotTable'
-// import PreviewPivot from '@/components/display/PreviewPivot'
 // import DisplayPivot from '@/components/display/DisplayPivot'
-import InsightsInfo from '@/components/display/InsightsInfo'
 import RootCauseInfo from '@/components/display/RootCauseInfo'
 import InsightTable from '@/components/display/InsightTable'
-import IndicatorInfo from '@/components/display/IndicatorInfo'
-import IndicatorsList from '@/components/display/IndicatorsList'
 import SelectedRegion from '@/components/display/SelectedRegion'
 import NoResult from '@/components/display/NoResult'
 import EmptyResult from '@/pages/result/components/EmptyResult'
@@ -128,11 +122,8 @@ Vue.component(Layout.name, Layout)
 Vue.component(Task.name, Task)
 Vue.component(PreviewDataSource.name, PreviewDataSource)
 Vue.component(SyTable.name, SyTable)
-Vue.component(InsightsInfo.name, InsightsInfo)
 Vue.component(RootCauseInfo.name, RootCauseInfo)
 Vue.component(InsightTable.name, InsightTable)
-Vue.component(IndicatorInfo.name, IndicatorInfo)
-Vue.component(IndicatorsList.name, IndicatorsList)
 Vue.component(ResultBoard.name, ResultBoard)
 Vue.component(ResultBoardHeader.name, ResultBoardHeader)
 Vue.component(ResultBoardBody.name, ResultBoardBody)
@@ -141,8 +132,6 @@ Vue.component(CorrelationExplorationResult.name, CorrelationExplorationResult)
 Vue.component(RootCauseResult.name, RootCauseResult)
 Vue.component(MultiResult.name, MultiResult)
 Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
-Vue.component(ContainerBlock.name, ContainerBlock)
-Vue.component(ContainerCard.name, ContainerCard)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
 Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
 Vue.component(DisplayScatterChart.name, DisplayScatterChart)
@@ -167,7 +156,6 @@ Vue.component(DisplayChinaMap.name, DisplayChinaMap)
 Vue.component(DisplayWorldMap.name, DisplayWorldMap)
 Vue.component(DisplayPredictChart.name, DisplayPredictChart)
 // Vue.component(DisplayPivot.name, DisplayPivot)
-// Vue.component(PreviewPivot.name, PreviewPivot)
 Vue.component(DisplayPivotTable.name, DisplayPivotTable)
 Vue.component(DisplayHeatMapChart.name, DisplayHeatMapChart)
 Vue.component(DisplaySankeyChart.name, DisplaySankeyChart)

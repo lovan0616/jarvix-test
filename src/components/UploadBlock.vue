@@ -1,13 +1,18 @@
 <template>
-  <div class="upload-block"
+  <div 
+    :class="{'droppable': dragEnter}"
+    class="upload-block"
     @click="clickBlock"
   >
     <div class="upload-text-container">
-      <svg-icon icon-class="file-plus" class="upload-icon"></svg-icon>
-      <div class="upload-message bottom"
+      <svg-icon 
+        icon-class="file-plus" 
+        class="upload-icon"/>
+      <div 
         v-if="bottomMessage"
+        class="upload-message bottom"
       >{{ bottomMessage }}</div>
-      <slot name="uploadLimit"></slot>
+      <slot name="uploadLimit"/>
     </div>
   </div>
 </template>
@@ -22,6 +27,14 @@ export default {
     remarkMessage: {
       default: null,
       type: String
+    },
+    dragEnter: {
+      default: false,
+      type: Boolean
+    }
+  },
+  data () {
+    return {
     }
   },
   methods: {
@@ -37,7 +50,12 @@ export default {
   background-color: rgba(50, 58, 58, 0.95);
   text-align: center;
   cursor: pointer;
-
+  &:hover, &.droppable {
+    background: #485454;
+  }
+  .upload-text-container {
+    pointer-events: none;
+  }
   .upload-icon {
     font-size: 52px;
     margin-bottom: 16px;

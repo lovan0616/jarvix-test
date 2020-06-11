@@ -2,15 +2,15 @@
   <div class="input-verify">
     <input
       v-model.trim="inputValue"
-      class="input-verify-text"
       :class="{'error': errors.has(name)}"
       :type="type"
       :name="name"
       :placeholder="placeholder"
+      class="input-verify-text"
     >
     <div
-      class="input-error error-text"
       v-show="errors.has(name)"
+      class="input-error error-text"
     >
       {{ errors.first(name) }}
     </div>

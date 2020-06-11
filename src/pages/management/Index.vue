@@ -2,15 +2,17 @@
   <div class="management-layout">
     <div class="management-wrapper">
       <div class="side-nav">
-        <side-nav :navItems="nav" />
+        <side-nav :nav-items="nav" />
       </div>
       <div class="wrapper">
-          <main class="main">
-            <transition name="fade" mode="out-in">
-              <router-view></router-view>
-            </transition>
-          </main>
-        </div>
+        <main class="main">
+          <transition 
+            name="fade" 
+            mode="out-in">
+            <router-view/>
+          </transition>
+        </main>
+      </div>
     </div>
   </div>
 </template>
@@ -29,11 +31,17 @@ export default {
       nav: []
     }
   },
-  mounted () {
-    this.getSideNav()
-  },
   computed: {
     ...mapGetters('userManagement', ['hasPermission'])
+  },
+  watch: {
+    $route () {
+      this.nav = []
+      this.getSideNav()
+    }
+  },
+  mounted () {
+    this.getSideNav()
   },
   methods: {
     getSideNav () {
@@ -82,12 +90,6 @@ export default {
       }
     }
   },
-  watch: {
-    $route () {
-      this.nav = []
-      this.getSideNav()
-    }
-  }
 }
 </script>
 

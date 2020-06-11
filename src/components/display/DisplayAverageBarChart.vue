@@ -4,8 +4,7 @@
       :style="chartStyle"
       :options="chartOption"
       auto-resize
-    >
-    </v-echart>
+    />
   </div>
 </template>
 

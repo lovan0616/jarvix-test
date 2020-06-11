@@ -1,6 +1,8 @@
 <template>
   <div class="question-analysis-alert">
-    <svg-icon icon-class="alert-circle" class="icon"></svg-icon>{{ $t('resultDescription.systemQuestionAnalysis', {question: question}) }}
+    <svg-icon 
+      icon-class="alert-circle" 
+      class="icon"/>{{ $t('resultDescription.systemQuestionAnalysis', {question: question}) }}
   </div>
 </template>
 <script>

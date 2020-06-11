@@ -2,9 +2,9 @@
   <div class="single-join-table">
     <div class="button-block">
       <span
-        class="spinner"
-        v-if="relationInfo.state === 'Process'">
-        <svg-icon icon-class="spinner"></svg-icon>
+        v-if="relationInfo.state === 'Process'"
+        class="spinner">
+        <svg-icon icon-class="spinner"/>
       </span>
       <template v-else>
         <button
@@ -13,16 +13,22 @@
           class="btn btn-secondary"
           @click="deleteJoinTable()"
         >{{ $t('button.delete') }}</button>
-        <button type="button" class="btn btn-outline"
-          v-if="isEditing && !relationInfo.id"
+        <button 
+          v-if="isEditing && !relationInfo.id" 
+          type="button"
+          class="btn btn-outline"
           @click="cancelAddingJoinTable()"
         >{{ $t('button.cancel') }}</button>
-        <button type="button" class="btn btn-outline"
-          v-if="!isEditing"
+        <button 
+          v-if="!isEditing" 
+          type="button"
+          class="btn btn-outline"
           @click="toggleIsEditing()"
         >{{ $t('button.edit') }}</button>
-        <button type="button" class="btn btn-outline"
-          v-if="isEditing && relationInfo.id"
+        <button 
+          v-if="isEditing && relationInfo.id" 
+          type="button"
+          class="btn btn-outline"
           @click="cancelEdit()"
         >{{ $t('button.close') }}</button>
       </template>
@@ -42,41 +48,46 @@
     </div>
     <template v-else>
       <div
-        class="input-block"
         :class="{'is-editing': isEditing, 'disabled': isPreviewingResult, 'invalid': errors.has(relationInfo.key)}"
+        class="input-block"
       >
-        <label for="" class="label">*{{ $t('editing.tableName') }}</label>
+        <label 
+          for="" 
+          class="label">*{{ $t('editing.tableName') }}</label>
         <input-block
-          type="text"
+          v-validate="`required|max:${max}`"
           v-if="!relationInfo.id"
           :placeholder="$t('editing.pleaseEnterName')"
           :disabled="isPreviewingResult"
           :name="relationInfo.key"
           v-model="editedRelationInfo.name"
-          v-validate="`required|max:${max}`"
-        ></input-block>
-        <div class="name" v-else>{{ relationInfo.name }}</div>
+          type="text"
+        />
+        <div 
+          v-else 
+          class="name">{{ relationInfo.name }}</div>
       </div>
       <section
-        class="join-relation-list"
         :class="{'disabled': isPreviewingResult}"
+        class="join-relation-list"
       >
         <div
-          class="join-relation"
           v-for="(relation, relationIndex) in editedRelationInfo.dataFrameRelationList"
           :key="relationIndex"
+          class="join-relation"
         >
           <div
-            class="input-block select"
             :class="{'is-editing': isEditing}"
+            class="input-block select"
           >
             <label class="label">{{ $t('editing.joinType') }}</label>
             <default-select
-              class="tag-select input"
               v-model="relation.joinType"
               :option-list="joinTypeOptions"
               :is-disabled="isPreviewingResult"
               :placeholder="$t('editing.selectJoinType')"
+              filterable
+              class="tag-select input"
             />
           </div>
           <div class="correlation-block">
@@ -86,7 +97,9 @@
               :data-column="relation.leftDataColumn"
               :index="relationIndex"
             />
-            <svg-icon icon-class="table-correlation" class="correlation-icon"></svg-icon>
+            <svg-icon 
+              icon-class="table-correlation" 
+              class="correlation-icon"/>
             <relation-select-block
               :data-frame-list="dataFrameList"
               :initial-data-frame-id.sync="relation.rightDataFrame.id"
@@ -97,15 +110,15 @@
         </div>
       </section>
       <div
-        class="reminder-block"
         v-if="!isPreviewingResult"
+        class="reminder-block"
       >
         <span class="reminder-title">
           <svg-icon icon-class="lamp" />
-          {{$t('resultDescription.prompt')}}：
+          {{ $t('resultDescription.prompt') }}：
         </span>
         <span class="reminder-description">
-          {{'1. ' + $t('message.remindNotAllowSelfJoin') + ' 2. ' + $t('message.remindSameDataTypeColumns')}}
+          {{ '1. ' + $t('message.remindNotAllowSelfJoin') + ' 2. ' + $t('message.remindSameDataTypeColumns') }}
         </span>
       </div>
       <preview-table-join-result
@@ -114,9 +127,11 @@
       />
       <div class="footer-button-block">
         <template v-if="!isPreviewingResult">
-          <button type="button" class="btn btn-default"
-            v-if="!isLoading"
+          <button 
+            v-if="!isLoading" 
             :disabled="isLoading"
+            type="button"
+            class="btn btn-default"
             @click="getPreviewResult()"
           >{{ $t('button.setting') }}</button>
           <span
@@ -127,12 +142,16 @@
           </span>
         </template>
         <template v-else>
-          <button type="button" class="btn btn-outline"
-            :disabled="isLoading"
+          <button 
+            :disabled="isLoading" 
+            type="button"
+            class="btn btn-outline"
             @click="isPreviewingResult = false"
           >{{ $t('button.reset') }}</button>
-          <button type="button" class="btn btn-default"
-            :disabled="isLoading"
+          <button 
+            :disabled="isLoading" 
+            type="button"
+            class="btn btn-default"
             @click="relationInfo.id ? updateJoinTable() : buildJoinTable()"
           >{{ $t('button.confirmBuild') }}</button>
         </template>
@@ -144,13 +163,13 @@
     >
       <span class="reminder-title">
         <svg-icon icon-class="lamp" />
-        {{$t('resultDescription.prompt')}}：
+        {{ $t('resultDescription.prompt') }}：
       </span>
       <span class="reminder-description">
-        {{'1. ' + $t('message.remindAdjustMainDate')}}
+        {{ '1. ' + $t('message.remindAdjustMainDate') }}
       </span>
       <span class="reminder-description">
-        {{'2. ' + $t('message.remindAdjustColumnAlias')}}
+        {{ '2. ' + $t('message.remindAdjustColumnAlias') }}
       </span>
     </div>
   </div>
@@ -180,7 +199,8 @@ export default {
       required: true
     },
     dataFrameList: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     index: {
       type: Number,
@@ -212,6 +232,11 @@ export default {
       ],
       previewResultData: null,
       editedRelationInfo: JSON.parse(JSON.stringify(this.relationInfo))
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
     }
   },
   methods: {
@@ -380,11 +405,6 @@ export default {
       this.editedRelationInfo = JSON.parse(JSON.stringify(this.relationInfo))
     }
   },
-  computed: {
-    max () {
-      return this.$store.state.validation.fieldCommonMaxLength
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

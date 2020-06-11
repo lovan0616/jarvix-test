@@ -50,10 +50,13 @@ export function getComponentData (componentInfo, cancelFunction) {
 /**
  * get question history
  */
-export function getHistoryQuestionList (dataSourceId) {
+export function getHistoryQuestionList(dataSourceId, dataFrameId) {
   return request({
     url: `/ask/questionHistoryList/${dataSourceId}`,
-    method: 'GET'
+    method: 'GET',
+    params: {
+      dataFrameId
+    }
   })
 }
 
@@ -61,12 +64,13 @@ export function getHistoryQuestionList (dataSourceId) {
  * get related question
  * @param resultId
  */
-export function getRelatedQuestionList (resultId) {
+export function getRelatedQuestionList(resultId, dataSourceId) {
   return request({
     url: `/ask/relatedQuestionList`,
     method: 'POST',
     data: {
-      resultId
+      resultId,
+      dataSourceId
     }
   })
 }
@@ -74,9 +78,12 @@ export function getRelatedQuestionList (resultId) {
 /**
  * get quick start question
  */
-export function getQuickStartQuestion (dataSourceId) {
+export function getQuickStartQuestion(dataSourceId, dataFrameId) {
   return request({
     url: `/ask/quickQuestionList/${dataSourceId}`,
-    method: 'GET'
+    method: 'GET',
+    params: {
+      dataFrameId
+    }
   })
 }

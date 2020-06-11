@@ -4,14 +4,13 @@
       :style="chartStyle"
       :options="options"
       auto-resize
-    >
-    </v-echart>
+    />
     <arrow-button
       v-show="showPagination"
       v-if="hasPagination"
-      isVertical
+      is-vertical
       @click.native="$emit('next')"
-    ></arrow-button>
+    />
   </div>
 </template>
 
@@ -50,9 +49,6 @@ export default {
     return {
       showPagination: true
     }
-  },
-  mounted () {
-    this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   computed: {
     chartStyle () {
@@ -122,6 +118,9 @@ export default {
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
     }
+  },
+  mounted () {
+    this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
     controlPagination () {

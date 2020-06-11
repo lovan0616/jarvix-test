@@ -4,8 +4,7 @@
       :style="chartStyle"
       :options="chartOption"
       auto-resize
-    >
-    </v-echart>
+    />
   </div>
 </template>
 <script>
@@ -77,25 +76,6 @@ export default {
       }
     }
   },
-  methods: {
-    renderItem (params, api) {
-      let yValue = api.value(2)
-      let start = api.coord([api.value(0), yValue])
-      let size = api.size([api.value(1) - api.value(0), yValue])
-      let style = api.style()
-
-      return {
-        type: 'rect',
-        shape: {
-          x: start[0] + 1,
-          y: start[1],
-          width: size[0] - 2,
-          height: size[1] < 2 && size[1] > 0 ? 1 : size[1]
-        },
-        style: style
-      }
-    }
-  },
   computed: {
     chartOption () {
       let histogramConfig = JSON.parse(JSON.stringify(histogramChartConfig))
@@ -163,7 +143,26 @@ export default {
         height: '100px'
       }
     }
-  }
+  },
+  methods: {
+    renderItem (params, api) {
+      let yValue = api.value(2)
+      let start = api.coord([api.value(0), yValue])
+      let size = api.size([api.value(1) - api.value(0), yValue])
+      let style = api.style()
+
+      return {
+        type: 'rect',
+        shape: {
+          x: start[0] + 1,
+          y: start[1],
+          width: size[0] - 2,
+          height: size[1] < 2 && size[1] > 0 ? 1 : size[1]
+        },
+        style: style
+      }
+    }
+  },
 }
 </script>
 
