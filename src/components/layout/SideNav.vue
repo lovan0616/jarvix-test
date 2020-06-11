@@ -1,25 +1,29 @@
 <template>
   <nav class="nav-header">
     <div
-      class="nav-item"
       v-for="nav in navItems"
-      :key="nav.title">
+      :key="nav.title"
+      class="nav-item">
       <router-link
-        class="nav-link main-nav-link"
         :to="nav.path ? nav.path : {name: nav.routeName}"
+        class="nav-link main-nav-link"
       >
-        <svg-icon :icon-class="nav.icon" class="icon"></svg-icon>
-        {{nav.title}}
+        <svg-icon 
+          :icon-class="nav.icon" 
+          class="icon"/>
+        {{ nav.title }}
       </router-link>
       <template v-if="nav.subNav">
         <router-link
-          class="nav-link sub-nav-link"
           v-for="subNav in nav.subNav"
           :key="subNav.title"
           :to="subNav.path || {name: subNav.routeName}"
+          class="nav-link sub-nav-link"
         >
-          <svg-icon icon-class="triangle" class="icon"></svg-icon>
-          {{subNav.title}}
+          <svg-icon 
+            icon-class="triangle" 
+            class="icon"/>
+          {{ subNav.title }}
         </router-link>
       </template>
     </div>

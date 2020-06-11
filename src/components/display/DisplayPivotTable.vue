@@ -4,7 +4,7 @@
       :dataset="transformDataset"
       :height="height"
       :title="title"
-      :addIndexToData="false"
+      :add-index-to-data="false"
       :addons="{
         'seriesItem:bar': {
           'large': true
@@ -14,7 +14,7 @@
         'xAxis:default': {},
         'yAxis:default': {},
       }"
-    ></display-basic-chart>
+    />
   </div>
 </template>
 
@@ -24,7 +24,13 @@ export default {
   name: 'DisplayPivotTable',
   props: {
     dataset: {
-      type: Object
+      type: Object,
+      default: () => {
+        return {
+          index: null,
+          data: null
+        }
+      }
     },
     title: {
       type: Object,
@@ -44,9 +50,6 @@ export default {
     return {
 
     }
-  },
-  created () {
-
   },
   computed: {
     transformDataset () {
@@ -84,6 +87,9 @@ export default {
       }
       return dataset
     }
+  },
+  created () {
+
   },
   methods: {
     indexOfArrayElement (array, item) {

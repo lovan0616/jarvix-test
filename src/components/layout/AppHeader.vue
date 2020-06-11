@@ -2,10 +2,12 @@
   <header class="app-header">
     <div class="container">
       <div class="header-root">
-        <router-link class="header-logo" to="/">
+        <router-link 
+          class="header-logo" 
+          to="/">
           <img src="@/assets/images/logo.svg">
         </router-link>
-        <slot name="nav"></slot>
+        <slot name="nav"/>
       </div>
     </div>
   </header>

@@ -1,20 +1,27 @@
 <template>
   <div class="root-cause-description">
     <div class="description">
-      {{description}}
+      {{ description }}
     </div>
     <div class="causes">
-      <div class="cause-item" v-for="(cause, index) in causes" v-bind:key="index">
+      <div
+        v-for="(cause, index) in causes"
+        :key="index"
+        class="cause-item"
+      >
         <div class="cause-item-header">
-          <div class="cause-item-column">{{cause.column}}</div>
-          <div class="cause-item-weight">{{ $t('resultDescription.weight') }}: {{cause.weight}}</div>
+          <div class="cause-item-column">{{ cause.column }}</div>
+          <div class="cause-item-weight">{{ $t('resultDescription.weight') }}: {{ cause.weight }}</div>
         </div>
-        <div class="cause-item-description">{{cause.description}}</div>
+        <div class="cause-item-description">{{ cause.description }}</div>
       </div>
     </div>
     <ul class="notes">
-      <li v-for="(note, index) in notes" v-bind:key="index">
-        # {{note}}
+      <li
+        v-for="(note, index) in notes"
+        :key="index"
+      >
+        # {{ note }}
       </li>
     </ul>
   </div>

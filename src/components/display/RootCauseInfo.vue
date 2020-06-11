@@ -2,7 +2,7 @@
   <div class="insights-info root-cause">
     <div class="insights-info-title">{{ $t('resultDescription.dataInsight') }}</div>
     <el-tabs
-      v-if="this.info.rootCause.length > 0"
+      v-if="info.rootCause.length > 0"
       v-model="activeTab"
     >
       <el-tab-pane
@@ -11,24 +11,28 @@
         :label="rootCauseInfo.name"
         :name="rootCauseInfo.name"
       >
-        <div class="root-cause-container"
+        <div
           :class="{'is-open': isShowChatRoom}"
+          class="root-cause-container"
         >
-          <div class="root-cause-card"
+          <div
             v-for="(tableInfo, contentIndex) in rootCauseInfo.content"
             :key="index +'-'+ contentIndex"
             :class="{'in-pinboard': inPinboard}"
+            class="root-cause-card"
             @click="drillDown(tableInfo.link.question)"
           >
             <div class="abstract-info">
               <div class="column-title">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</div>
-              <div class="sub-title">{{ rootCauseInfo.name }}{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}{{ $t('aggregatedValue.mean')}}</div>
-              <div class="amount-block"
+              <div class="sub-title">{{ rootCauseInfo.name }}{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}{{ $t('aggregatedValue.mean') }}</div>
+              <div
                 :class="{'is-special': tableInfo.unusual}"
+                class="amount-block"
               >
                 <div class="count">{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
-                <div class="hight-light-label"
+                <div
                   v-show="tableInfo.unusual"
+                  class="hight-light-label"
                 >{{ $t('resultDescription.keyInsight') }}</div>
               </div>
             </div>
@@ -55,7 +59,7 @@
     </el-tabs>
     <no-result
       v-else
-    ></no-result>
+    />
   </div>
 </template>
 <script>
@@ -74,18 +78,6 @@ export default {
   data () {
     return {
       activeTab: null
-    }
-  },
-  mounted () {
-    if (this.info.rootCause.length > 0) {
-      this.activeTab = this.info.rootCause[0].name
-    }
-  },
-  methods: {
-    drillDown (question) {
-      if (this.inPinboard) return
-      this.$store.commit('dataSource/setAppQuestion', question)
-      this.$store.dispatch('dataSource/updateResultRouter', this.$route.name === 'PageResult' ? 'click_rootcause' : 'click_rootcause_pinboard')
     }
   },
   computed: {
@@ -112,7 +104,19 @@ export default {
     inPinboard () {
       return this.$route.name === 'PagePinboard'
     }
-  }
+  },
+  mounted () {
+    if (this.info.rootCause.length > 0) {
+      this.activeTab = this.info.rootCause[0].name
+    }
+  },
+  methods: {
+    drillDown (question) {
+      if (this.inPinboard) return
+      this.$store.commit('dataSource/setAppQuestion', question)
+      this.$store.dispatch('dataSource/updateResultRouter', this.$route.name === 'PageResult' ? 'click_rootcause' : 'click_rootcause_pinboard')
+    }
+  },
 }
 </script>
 <style lang="scss" scoped>

@@ -1,15 +1,16 @@
 <template>
   <div class="page-preview-bookmark">
     <template v-if="dataSourceId">
-      <div class="bookmark-header">{{$t('resultDescription.dataSourceIntro')}}</div>
+      <div class="bookmark-header">{{ $t('resultDescription.dataSourceIntro') }}</div>
       <div class="result-board">
         <spinner
           v-if="isLoading"
           :title="$t('editing.loading')"
           size="50"
-        ></spinner>
+        />
         <div
           v-if="dataSourceTables.length > 0"
+          :class="{'is-previewing': isPreviewing}"
           class="board-header"
         >
           <el-tabs
@@ -25,23 +26,23 @@
             >
               <el-tooltip
                 slot="label"
-                placement="bottom-start"
                 :visible-arrow="false"
-                :content="tab.name">
-                <span>{{tab.name}}</span>
+                :content="tab.name"
+                placement="bottom-start">
+                <span>{{ tab.name }}</span>
               </el-tooltip>
             </el-tab-pane>
           </el-tabs>
         </div>
         <div
+          :class="{'is-loading': isLoading, 'is-previewing': isPreviewing}"
           class="board-body"
-          :class="{'is-loading': isLoading}"
         >
           <data-frame-data
             v-if="currentDataFrameId"
             :key="currentDataFrameId"
             :data-frame-id="currentDataFrameId"
-          ></data-frame-data>
+          />
         </div>
       </div>
     </template>
@@ -59,6 +60,12 @@ export default {
     SySelect,
     EmptyInfoBlock,
     DataFrameData
+  },
+  props: {
+    isPreviewing: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
@@ -81,10 +88,6 @@ export default {
       currentDataFrameId: null
     }
   },
-  mounted () {
-    this.isLoading = true
-    this.fetchDataSourceTable()
-  },
   computed: {
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
@@ -104,6 +107,10 @@ export default {
       }
       return result
     }
+  },
+  mounted () {
+    this.isLoading = true
+    this.fetchDataSourceTable()
   },
   methods: {
     fetchDataSourceTable () {
@@ -230,12 +237,21 @@ export default {
   .board-header {
     border-top: unset;
     padding-bottom: 0;
+
+    &.is-previewing {
+      padding-left: 0;
+      padding-right: 0;
+    }
   }
   .board-body {
     padding: 16px 24px;
 
     &.is-loading {
       padding: 0 24px;
+    }
+
+    &.is-previewing {
+      padding: 16px 0;
     }
   }
 

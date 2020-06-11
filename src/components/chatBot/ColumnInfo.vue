@@ -1,111 +1,120 @@
 <template>
-  <el-collapse v-model="activeName" accordion class="column-info-block">
+  <el-collapse 
+    v-model="activeName" 
+    accordion 
+    class="column-info-block">
     <el-collapse-item name="category">
       <template slot="title">
-        <div class="column-title">{{$t('askHelper.column')}}（{{$t('askHelper.type')}}: Category）</div>
+        <div class="column-title">{{ $t('askHelper.column') }}（{{ $t('askHelper.type') }}: Category）</div>
         <div class="column-subtitle">
           <span class="column-lamp">
-            <svg-icon icon-class="lamp"></svg-icon>
-            {{$t('askHelper.description')}}:
+            <svg-icon icon-class="lamp"/>
+            {{ $t('askHelper.description') }}:
           </span>
-          {{$t('askHelper.category')}}
+          {{ $t('askHelper.category') }}
         </div>
       </template>
-      <div class="column-name">{{$t('askHelper.columnName')}}</div>
-      <div class="single-column"
+      <div class="column-name">{{ $t('askHelper.columnName') }}</div>
+      <div 
         v-for="(columnInfo, index) in dataSourceColumnInfoList.category"
         :key="'category' + index"
+        class="single-column"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
     </el-collapse-item>
     <el-collapse-item name="numeric">
       <template slot="title">
-        <div class="column-title">{{$t('askHelper.column')}}（{{$t('askHelper.type')}}: Numeric）</div>
+        <div class="column-title">{{ $t('askHelper.column') }}（{{ $t('askHelper.type') }}: Numeric）</div>
         <div class="column-subtitle">
           <span class="column-lamp">
-            <svg-icon icon-class="lamp"></svg-icon>
-            {{$t('askHelper.description')}}:
+            <svg-icon icon-class="lamp"/>
+            {{ $t('askHelper.description') }}:
           </span>
-          {{$t('askHelper.numeric')}}
+          {{ $t('askHelper.numeric') }}
         </div>
       </template>
-      <div class="column-name">{{$t('askHelper.columnName')}}</div>
-      <div class="single-column"
+      <div class="column-name">{{ $t('askHelper.columnName') }}</div>
+      <div 
         v-for="(columnInfo, index) in dataSourceColumnInfoList.numeric"
         :key="'numeric' + index"
+        class="single-column"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
     </el-collapse-item>
     <el-collapse-item name="datetime">
       <template slot="title">
-        <div class="column-title">{{$t('askHelper.column')}}（{{$t('askHelper.type')}}: Datetime）</div>
+        <div class="column-title">{{ $t('askHelper.column') }}（{{ $t('askHelper.type') }}: Datetime）</div>
         <div class="column-subtitle">
           <span class="column-lamp">
-            <svg-icon icon-class="lamp"></svg-icon>
-            {{$t('askHelper.description')}}:
+            <svg-icon icon-class="lamp"/>
+            {{ $t('askHelper.description') }}:
           </span>
-          {{$t('askHelper.datetime')}}
+          {{ $t('askHelper.datetime') }}
         </div>
       </template>
-      <div class="column-name">{{$t('askHelper.columnName')}}</div>
-      <div class="single-column"
+      <div class="column-name">{{ $t('askHelper.columnName') }}</div>
+      <div 
         v-for="(columnInfo, index) in dataSourceColumnInfoList.dateTime"
         :key="'category' + index"
+        class="single-column"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
     </el-collapse-item>
     <el-collapse-item name="boolean">
       <template slot="title">
-        <div class="column-title">{{$t('askHelper.column')}}（{{$t('askHelper.type')}}: Boolean）</div>
+        <div class="column-title">{{ $t('askHelper.column') }}（{{ $t('askHelper.type') }}: Boolean）</div>
         <div class="column-subtitle">
           <span class="column-lamp">
-            <svg-icon icon-class="lamp"></svg-icon>
-            {{$t('askHelper.description')}}:
+            <svg-icon icon-class="lamp"/>
+            {{ $t('askHelper.description') }}:
           </span>
-          {{$t('askHelper.boolean')}}
+          {{ $t('askHelper.boolean') }}
         </div>
       </template>
-      <div class="column-name">{{$t('askHelper.columnName')}}</div>
-      <div class="single-column"
+      <div class="column-name">{{ $t('askHelper.columnName') }}</div>
+      <div 
         v-for="(columnInfo, index) in dataSourceColumnInfoList.booleanList"
         :key="'category' + index"
+        class="single-column"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
     </el-collapse-item>
     <el-collapse-item name="unique">
       <template slot="title">
-        <div class="column-title">{{$t('askHelper.column')}}（{{$t('askHelper.type')}}: Unique）</div>
+        <div class="column-title">{{ $t('askHelper.column') }}（{{ $t('askHelper.type') }}: Unique）</div>
         <div class="column-subtitle">
           <span class="column-lamp">
-            <svg-icon icon-class="lamp"></svg-icon>
-            {{$t('askHelper.description')}}:
+            <svg-icon icon-class="lamp"/>
+            {{ $t('askHelper.description') }}:
           </span>
-          {{$t('askHelper.unique')}}
+          {{ $t('askHelper.unique') }}
         </div>
       </template>
-      <div class="column-name">{{$t('askHelper.columnName')}}</div>
-      <div class="single-column"
+      <div class="column-name">{{ $t('askHelper.columnName') }}</div>
+      <div 
         v-for="(columnInfo, index) in dataSourceColumnInfoList.uniqueList"
         :key="'category' + index"
+        class="single-column"
       >{{ columnInfo ? columnInfo : '-' }}
       </div>
     </el-collapse-item>
     <el-collapse-item name="value">
       <template slot="title">
-        <div class="column-title">{{$t('askHelper.columnValue')}}（{{$t('askHelper.type')}}: Value）</div>
+        <div class="column-title">{{ $t('askHelper.columnValue') }}（{{ $t('askHelper.type') }}: Value）</div>
         <div class="column-subtitle">
           <span class="column-lamp">
-            <svg-icon icon-class="lamp"></svg-icon>
-            {{$t('askHelper.description')}}:
+            <svg-icon icon-class="lamp"/>
+            {{ $t('askHelper.description') }}:
           </span>
-          {{$t('askHelper.value')}}
+          {{ $t('askHelper.value') }}
         </div>
       </template>
       <div class="category-list">
-        <div class="column-name">{{$t('askHelper.datavalueTitle')}}</div>
-        <div class="single-column"
+        <div class="column-name">{{ $t('askHelper.datavalueTitle') }}</div>
+        <div 
           v-for="(columnInfo, index) in dataSourceDataValueList"
           :key="'datavalue' + index"
+          class="single-column"
         >{{ columnInfo ? columnInfo : '-' }}
         </div>
       </div>

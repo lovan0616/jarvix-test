@@ -2,17 +2,19 @@
   <div class="result-board-title">
     <div class="board-name">
       <div class="question-mark">Q</div>
-      <div class="question-name"
-        v-if="segmentation && segmentation.segmentation.length > 0"
+      <div 
+        v-if="segmentation.segmentation && segmentation.segmentation.length"
+        class="question-name"
       >
         <question-name-token
           v-for="(tokenInfo, index) in segmentation.segmentation"
           :key="index"
           :token-info="tokenInfo"
-        ></question-name-token>
+        />
       </div>
-      <div class="question-name"
+      <div 
         v-else
+        class="question-name"
       >{{ title }}</div>
     </div>
   </div>
@@ -31,7 +33,8 @@ export default {
       default: ''
     },
     segmentation: {
-      type: Object
+      type: Object,
+      default: () => ({})
     }
   }
 }

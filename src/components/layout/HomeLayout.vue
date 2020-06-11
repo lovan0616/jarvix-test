@@ -1,51 +1,94 @@
 <template>
   <div class="home-layout">
-    <transition name="fade" mode="out-in">
+    <transition 
+      name="fade" 
+      mode="out-in">
       <ChatRoomBlock/>
     </transition>
-    <chat-bot-btn class="chat-bot-btn"
+    <chat-bot-btn 
       v-if="!isShowChatRoom"
+      class="chat-bot-btn"
       @click.native="toggleChatRoom"
-    ></chat-bot-btn>
-    <div class="wrapper"
+    />
+    <div 
       :class="{'is-open': isShowChatRoom}"
+      class="wrapper"
     >
       <main class="main">
         <div class="center">
-          <transition name="fade" mode="out-in">
-            <router-view ></router-view>
+          <transition 
+            name="fade" 
+            mode="out-in">
+            <router-view />
           </transition>
         </div>
       </main>
     </div>
+    <transition name="fast-fade-in">
+      <section 
+        v-if="isShowPreviewDataSource"
+        class="preview-datasource">
+        <preview-data-source 
+          :key="dataSourceId" 
+          :is-previewing="true"
+        />
+        <a 
+          href="javascript:void(0)" 
+          class="preview-datasource__close-btn"
+          @click="closePreviewDataSource"
+        ><svg-icon icon-class="close"/></a>
+      </section>
+    </transition>
   </div>
 </template>
 <script>
 import ChatRoomBlock from '@/components/chatBot/ChatRoom'
 import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
+import PreviewDataSource from '@/components/PreviewDataSource'
+import store from '@/store'
 
 export default {
   name: 'HomeLayout',
   components: {
     ChatRoomBlock,
-    ChatBotBtn
+    ChatBotBtn,
+    PreviewDataSource
+  },
+  computed: {
+    dataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
+    },
+    isShowChatRoom () {
+      return this.$store.state.isShowChatRoom
+    },
+    isShowPreviewDataSource () {
+      return this.$store.state.previewDataSource.isShowPreviewDataSource
+    }
+  },
+  beforeRouteEnter (to, from, next) {
+    const currentAccount = store.getters['userManagement/getCurrentAccountId']
+    const currentGroup = store.getters['userManagement/getCurrentGroupId']
+    currentAccount && !currentGroup ? next({ name: 'PageGrouplessGuidance' }) : next()
+  },
+  beforeRouteUpdate(to, from, next) {
+    if (this.isShowPreviewDataSource) this.closePreviewDataSource()
+    next()
   },
   mounted () {
     this.toggleChatRoom(true)
   },
+  destroyed () {
+    this.toggleChatRoom(false)
+  },
   methods: {
     toggleChatRoom (isOpened = true) {
       this.$store.commit('updateChatRoomStatus', isOpened)
+      if (!isOpened) this.closePreviewDataSource()
+    },
+    closePreviewDataSource () {
+      this.$store.commit('previewDataSource/togglePreviewDataSource', false)
     }
   },
-  computed: {
-    isShowChatRoom () {
-      return this.$store.state.isShowChatRoom
-    }
-  },
-  destroyed () {
-    this.toggleChatRoom(false)
-  }
 }
 </script>
 <style lang="scss" scoped>
@@ -71,6 +114,26 @@ export default {
     padding-bottom: 64px;
     min-height: calc(100vh - 136px);
     min-height: calc(100vh - #{$header-height});
+  }
+
+  .preview-datasource {
+    width: calc(100% - #{$chat-room-width});
+    height: calc(100vh - #{$header-height});
+    position: absolute;
+    top: $header-height;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    overflow: auto;
+    padding: 32px 40px 0 40px;
+    z-index: 3;
+
+    &__close-btn {
+      position: absolute;
+      top: 32px;
+      right: 40px;
+      color: #fff;
+      font-size: 14px;
+    }
   }
 
   .chat-bot-btn {

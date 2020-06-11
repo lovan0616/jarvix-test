@@ -1,24 +1,26 @@
 <template>
   <div class="spinner-block">
     <div class="spinner-container">
-      <div class="spinner-circle"
+      <div 
         :style="spinnerSize"
+        class="spinner-circle"
       >
-        <div class="sp-circle1 sp-circle"></div>
-        <div class="sp-circle2 sp-circle"></div>
-        <div class="sp-circle3 sp-circle"></div>
-        <div class="sp-circle4 sp-circle"></div>
-        <div class="sp-circle5 sp-circle"></div>
-        <div class="sp-circle6 sp-circle"></div>
-        <div class="sp-circle7 sp-circle"></div>
-        <div class="sp-circle8 sp-circle"></div>
-        <div class="sp-circle9 sp-circle"></div>
-        <div class="sp-circle10 sp-circle"></div>
-        <div class="sp-circle11 sp-circle"></div>
-        <div class="sp-circle12 sp-circle"></div>
+        <div class="sp-circle1 sp-circle"/>
+        <div class="sp-circle2 sp-circle"/>
+        <div class="sp-circle3 sp-circle"/>
+        <div class="sp-circle4 sp-circle"/>
+        <div class="sp-circle5 sp-circle"/>
+        <div class="sp-circle6 sp-circle"/>
+        <div class="sp-circle7 sp-circle"/>
+        <div class="sp-circle8 sp-circle"/>
+        <div class="sp-circle9 sp-circle"/>
+        <div class="sp-circle10 sp-circle"/>
+        <div class="sp-circle11 sp-circle"/>
+        <div class="sp-circle12 sp-circle"/>
       </div>
-      <div class="spinner-title"
+      <div 
         v-if="title"
+        class="spinner-title"
       >{{ title }}</div>
     </div>
   </div>

@@ -1,62 +1,85 @@
 <template>
   <div class="ask-container">
     <div class="ask-block">
-      <div class="filter-block"
+      <div 
         v-show="hasFilter"
-      ><svg-icon icon-class="filter" class="icon"></svg-icon> {{ $t('resultDescription.filterRestrictions') }}</div>
-      <div class="user-question-block"
-        :class="{'has-filter': hasFilter, 'is-use-algorithm': isUseAlgorithm}"
+        class="filter-block"
+      ><svg-icon 
+        icon-class="filter" 
+        class="icon"/> {{ $t('resultDescription.filterRestrictions') }}</div>
+      <div 
+        :class="{
+          'has-filter': hasFilter,
+          'is-use-algorithm': isUseAlgorithm,
+          'is-connect-channel': websocketHandler
+        }"
+        class="user-question-block"
       >
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
-        <input class="question-input input"
+        <input 
           ref="questionInput"
           :class="{'disabled': !dataSourceList.length}"
           :name="new Date().getTime()"
           :placeholder="$t('editing.askPlaceHolder')"
           :disabled="!dataSourceList.length"
-          autocomplete="off"
           v-model.trim="userQuestion"
+          class="question-input input"
+          autocomplete="off"
           @keypress.enter.prevent="enterQuestion"
           @keyup.shift.ctrl.72="toggleHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
+          @keyup.shift.ctrl.88="toggleWebSocketConnection()"
         >
-        <a href="javascript:void(0);" class="clean-btn"
+        <a 
+          href="javascript:void(0);" 
+          class="clean-btn"
           @click="cleanQuestion"
         >
-          <svg-icon icon-class="remove-circle"></svg-icon>
+          <svg-icon icon-class="remove-circle"/>
         </a>
-        <a href="javascript:void(0);" class="ask-btn"
+        <a 
+          href="javascript:void(0);" 
+          class="ask-btn"
           @click="enterQuestion"
         >
-          <svg-icon icon-class="go-right"></svg-icon>
+          <svg-icon icon-class="go-right"/>
         </a>
       </div>
-      <div class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}<a href="javascript:void(0)" class="link help-link"
+      <div class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}<a 
+        href="javascript:void(0)" 
+        class="link help-link"
         @click="showHelper"
       >{{ $t('askHelper.helpLink') }}</a> </div>
     </div>
-    <div class="history-question-block"
+    <div 
       :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
+      class="history-question-block"
     >
-      <a href="javascript:void(0)" class="close-btn"
+      <a 
+        href="javascript:void(0)" 
+        class="close-btn"
         @click="hideHistory"
       >
-        <svg-icon icon-class="close"></svg-icon>
+        <svg-icon icon-class="close"/>
       </a>
       <div class="title">{{ $t('askHelper.historyTitle') }}</div>
-      <div class="history-question"
+      <div 
         v-for="singleHistory in historyQuestionList"
         :key="singleHistory.id"
+        class="history-question"
         @click="copyQuestion(singleHistory.question)"
-      ><svg-icon icon-class="clock" class="icon"></svg-icon> {{ singleHistory.question }}</div>
+      ><svg-icon 
+        icon-class="clock" 
+        class="icon"/> {{ singleHistory.question }}</div>
     </div>
-    <ask-helper-dialog class="ask-helper-dialog"
+    <ask-helper-dialog 
       ref="helperDialog"
       :class="{'has-filter': hasFilter}"
       :key="dataSourceId"
       :show="showAskHelper"
+      class="ask-helper-dialog"
       @close="closeHelper"
-    ></ask-helper-dialog>
+    />
   </div>
 </template>
 <script>
@@ -71,17 +94,77 @@ export default {
     return {
       userQuestion: null,
       showHistoryQuestion: false,
-      showAskHelper: false
+      showAskHelper: false,
+      websocketHandler: null
+    }
+  },
+  computed: {
+    dataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
+    },
+    appQuestion () {
+      return this.$store.state.dataSource.appQuestion
+    },
+    hasFilter () {
+      return this.$store.state.dataSource.filterList.length > 0
+    },
+    historyQuestionList () {
+      // 過濾 boomark 以及 問題字串
+      return this.userQuestion
+        ? this.$store.state.dataSource.historyQuestionList.filter(element => { return element.question.indexOf(this.userQuestion) > -1 })
+        : []
+    },
+    isUseAlgorithm () {
+      return this.$store.state.chatBot.isUseAlgorithm
+    },
+    dataSourceList () {
+      return this.$store.state.dataSource.dataSourceList
+    }
+  },
+  watch: {
+    userQuestion () {
+      if (document.activeElement === this.$refs.questionInput) {
+        this.showHistory()
+      }
+    },
+    appQuestion (value) {
+      this.copyQuestion(value)
+    },
+    dataSourceId (value, oldValue) {
+      if (!oldValue) return
+      this.userQuestion = null
     }
   },
   mounted () {
-    // this.$refs.questionInput.focus()
     document.addEventListener('click', this.autoHide, false)
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
   },
   methods: {
+    toggleWebSocketConnection () {
+      if (this.websocketHandler) return this.closeWebSocketConnection()
+      this.createWebSocketConnection()
+    },
+    createWebSocketConnection () {
+      let connectionRequestUrl = `${window.env.PUBLIC_API_ROOT_URL.replace('https', window.location.protocol === 'https:' ? 'wss' : 'ws')}websocket/ROBOT`
+      this.websocketHandler = new WebSocket(connectionRequestUrl)
+      this.websocketHandler.onopen = this.onWebSocketOpen
+      this.websocketHandler.onmessage = this.onWebSocketReceiveMessage
+      this.websocketHandler.onclose = this.onWebSocketClose
+    },
+    closeWebSocketConnection () {
+      this.websocketHandler.close()
+      this.websocketHandler = null
+    },
+    onWebSocketOpen () {
+    },
+    onWebSocketReceiveMessage (evt) {
+      this.userQuestion = evt.data
+      this.enterQuestion()
+    },
+    onWebSocketClose (evt) {
+    },
     autoHide (evt) {
       let clickInside = this.$el.contains(evt.target)
       if (this.showHistoryQuestion && !clickInside) {
@@ -135,43 +218,6 @@ export default {
       this.$store.commit('chatBot/updateIsUseAlgorithm', !this.isUseAlgorithm)
     }
   },
-  computed: {
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
-    appQuestion () {
-      return this.$store.state.dataSource.appQuestion
-    },
-    hasFilter () {
-      return this.$store.state.dataSource.filterList.length > 0
-    },
-    historyQuestionList () {
-      // 過濾 boomark 以及 問題字串
-      return this.userQuestion
-        ? this.$store.state.dataSource.historyQuestionList.filter(element => { return element.question.indexOf(this.userQuestion) > -1 })
-        : []
-    },
-    isUseAlgorithm () {
-      return this.$store.state.chatBot.isUseAlgorithm
-    },
-    dataSourceList () {
-      return this.$store.state.dataSource.dataSourceList
-    }
-  },
-  watch: {
-    userQuestion () {
-      if (document.activeElement === this.$refs.questionInput) {
-        this.showHistory()
-      }
-    },
-    appQuestion (value) {
-      this.copyQuestion(value)
-    },
-    dataSourceId (value, oldValue) {
-      if (!oldValue) return
-      this.userQuestion = null
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>
@@ -196,6 +242,12 @@ export default {
     &.is-use-algorithm {
       .ask-btn {
         color: $theme-color-warning;
+      }
+    }
+
+    &.is-connect-channel {
+      .clean-btn {
+        color: $theme-color-danger;
       }
     }
 

@@ -1,15 +1,16 @@
 <template>
   <div class="layout-root">
-    <spinner class="layout-spinner"
+    <spinner 
       v-if="loading"
       :title="$t('resultDescription.analysisProcessing')"
+      class="layout-spinner"
       size="50"
-    ></spinner>
+    />
     <component
       v-else
       :id="id"
       :is="content"
-    ></component>
+    />
   </div>
 </template>
 

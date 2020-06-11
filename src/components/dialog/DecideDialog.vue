@@ -1,36 +1,50 @@
 <template>
-  <div @click="closeDialog" class="dialog-box">
-    <div @click.stop class="dialog-inner-box">
+  <div 
+    class="dialog-box" 
+    @click="closeDialog">
+    <div 
+      class="dialog-inner-box" 
+      @click.stop>
       <div @click="closeDialog">
-        <svg-icon icon-class="close" class="icon dialog-close"></svg-icon>
+        <svg-icon 
+          icon-class="close" 
+          class="icon dialog-close"/>
       </div>
       <div class="dialog-content-wrapper">
-        <div class="title" :class="{'hasContent': content}">{{ title }}</div>
-        <div v-if="content" class="content">{{ content }}</div>
+        <div 
+          :class="{'hasContent': content}" 
+          class="title">{{ title }}</div>
+        <div 
+          v-if="content" 
+          class="content">{{ content }}</div>
       </div>
       <div class="dialog-button-block">
         <button
           :disabled="isProcessing"
-          @click="closeDialog"
-          class="btn dialog-decide-cancel">
+          class="btn dialog-decide-cancel"
+          @click="closeDialog">
           {{ $t('button.cancel') }}
         </button>
         <button
           v-if="type === 'confirm'"
           :disabled="isProcessing"
-          @click="confirmBtn"
           class="btn btn-default dialog-decide-change-logout"
+          @click="confirmBtn"
         >
-          <svg-icon v-if="isProcessing" icon-class="spinner"></svg-icon>
+          <svg-icon 
+            v-if="isProcessing" 
+            icon-class="spinner"/>
           {{ btnText }}
         </button>
         <button
           v-else-if="type === 'delete'"
           :disabled="isProcessing"
-          @click="confirmBtn"
           class="btn btn-default dialog-decide-change-delete"
+          @click="confirmBtn"
         >
-          <svg-icon v-if="isProcessing" icon-class="spinner"></svg-icon>
+          <svg-icon 
+            v-if="isProcessing" 
+            icon-class="spinner"/>
           {{ btnText }}
         </button>
       </div>

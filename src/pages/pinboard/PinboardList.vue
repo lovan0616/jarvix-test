@@ -2,15 +2,22 @@
   <div class="page-pinboard">
     <h1 class="page-title">{{ $t('editing.pinboard') }}</h1>
     <div class="page-category">{{ $t('editing.allCategory') }}</div>
-    <button @click="showAdd" class="btn-m btn-default btn-has-icon add-btn">
-      <svg-icon icon-class="plus" class="icon"></svg-icon>
+    <button 
+      class="btn-m btn-default btn-has-icon add-btn" 
+      @click="showAdd">
+      <svg-icon 
+        icon-class="plus" 
+        class="icon"/>
       {{ $t('button.addNewCategory') }}
-      </button>
+    </button>
     <spinner
-      :title="$t('editing.loading')" v-if="isLoading"
-    ></spinner>
+      v-if="isLoading" 
+      :title="$t('editing.loading')"
+    />
     <div v-else>
-      <div class="pinboard-list" v-if="pinboardList.length > 0">
+      <div 
+        v-if="pinboardList.length > 0" 
+        class="pinboard-list">
         <single-pinboard
           v-for="boardInfo in pinboardList"
           :key="boardInfo.id"
@@ -18,45 +25,44 @@
           @showEdit="showEditDialog(boardInfo)"
           @showDelete="showDeleteDialog(boardInfo)"
           @showShare="showShareDialog(boardInfo)"
-        >
-        </single-pinboard>
+        />
       </div>
       <empty-info-block
         v-else
         :msg="$t('editing.emptyPinboard')"
-      ></empty-info-block>
+      />
     </div>
     <writing-dialog
       v-if="isShowAdd"
       :title="$t('button.addNewCategory')"
       :button="$t('button.create')"
+      :show-both="true"
       @closeDialog="closeAdd"
       @confirmBtn="addCategory"
-      :showBoth="true"
     >
       <input-verify
-        v-model="newBoardName"
-        type="text"
-        :placeholder="$t('editing.inputCategoryName')"
-        name="newBoardName"
         v-validate="`required|max:${max}`"
-      ></input-verify>
+        v-model="newBoardName"
+        :placeholder="$t('editing.inputCategoryName')"
+        type="text"
+        name="newBoardName"
+      />
     </writing-dialog>
 
     <writing-dialog
       v-if="isShowEdit"
       :title="$t('editing.editingName')"
       :button="$t('button.change')"
+      :show-both="true"
       @closeDialog="closeEdit"
       @confirmBtn="confirmEdit"
-      :showBoth="true"
     >
       <input-verify
+        v-validate="`required|max:${max}`"
         v-model="tempEditInfo.name"
         type="text"
         name="tempEditInfoName"
-        v-validate="`required|max:${max}`"
-      ></input-verify>
+      />
     </writing-dialog>
     <decide-dialog
       v-if="isShowDelete"
@@ -64,17 +70,20 @@
       :type="'delete'"
       @closeDialog="closeDelete"
       @confirmBtn="confirmDelete"
-    >
-    </decide-dialog>
+    />
     <writing-dialog
       v-if="isShowShare"
       :title="$t('button.shareLink')"
       :button="$t('button.copy')"
+      :show-both="false"
       @closeDialog="closeShare"
       @confirmBtn="confirmShare"
-      :showBoth="false"
     >
-      <input type="text" class="input pinboard-name-input" v-model="shareLink" ref="shareInput">
+      <input 
+        ref="shareInput" 
+        v-model="shareLink" 
+        type="text" 
+        class="input pinboard-name-input">
     </writing-dialog>
   </div>
 </template>
@@ -114,6 +123,14 @@ export default {
       confirmDeleteText: this.$t('editing.confirmDelete')
     }
   },
+  computed: {
+    max () {
+      return this.$store.state.validation.fieldCommonMaxLength
+    },
+    pinboardList () {
+      return this.$store.state.pinboard.pinboardList
+    }
+  },
   mounted () {
     this.getPinboardInfo()
   },
@@ -133,6 +150,9 @@ export default {
           .then(response => {
             this.getPinboardInfo()
             this.isShowAdd = false
+            this.$nextTick(() => {
+              this.newBoardName = null
+            })
           })
           .catch(() => {})
       })
@@ -200,14 +220,6 @@ export default {
       this.isShowShare = false
     }
   },
-  computed: {
-    max () {
-      return this.$store.state.validation.fieldCommonMaxLength
-    },
-    pinboardList () {
-      return this.$store.state.pinboard.pinboardList
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

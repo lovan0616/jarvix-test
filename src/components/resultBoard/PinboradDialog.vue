@@ -1,28 +1,36 @@
 <template>
   <div class="pinboard-dialog">
-    <div class="pinboard-option-list"
+    <div 
       v-if="!isEdit"
+      class="pinboard-option-list"
     >
-      <div class="single-board default"
+      <div 
+        class="single-board default"
         @click="editBoard"
       ><span class="add-icon">+</span>{{ $t('editing.createBoard') }}</div>
-      <div class="single-board"
+      <div 
         v-for="pinboardInfo in pinboardList"
         :key="pinboardInfo.id"
+        class="single-board"
         @click="pin(pinboardInfo.id)"
       >{{ pinboardInfo.name }}</div>
     </div>
-    <div class="edit-block"
+    <div 
       v-else
+      class="edit-block"
     >
-      <input type="text" class="input board-name-input"
-        v-model="newBoardName"
+      <input 
+        v-model="newBoardName" 
+        type="text"
+        class="input board-name-input"
       >
       <div class="button-block">
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="cancelCreate"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-default"
+        <button 
+          class="btn btn-default"
           @click="createPinboard"
         >{{ $t('button.confirm') }}</button>
       </div>
@@ -36,6 +44,11 @@ export default {
     return {
       isEdit: false,
       newBoardName: null
+    }
+  },
+  computed: {
+    pinboardList () {
+      return this.$store.state.pinboard.pinboardList
     }
   },
   mounted () {
@@ -67,11 +80,6 @@ export default {
       this.isEdit = true
     }
   },
-  computed: {
-    pinboardList () {
-      return this.$store.state.pinboard.pinboardList
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

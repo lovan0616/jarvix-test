@@ -1,43 +1,43 @@
 <template>
   <div class="column-summary">
     <div
-      class="data-block"
       v-if="showHistogram"
+      class="data-block"
     >
       <display-histogram-chart :dataset="histogramData" />
     </div>
     <div class="data-block">
       <ul class="list">
         <li
-          class="list__item"
-          :class="{'list__item--date': summaryData.statsType === 'DATETIME'}"
           v-for="(value, name) in descriptionList"
+          :class="{'list__item--date':summaryData.statsType === 'DATETIME'}"
           :key="name + value"
+          class="list__item"
         >
           <div class="list__item--name">
             <el-tooltip
-              placement="bottom-start"
-              :enterable="false"
               slot="label"
+              :enterable="false"
               :popper-class="'column-summary__tooltip'"
               :visible-arrow="false"
-              :content="`${name}`">
-              <span>{{name}}</span>
+              :content="`${name}`"
+              placement="bottom-start">
+              <span>{{ name }}</span>
             </el-tooltip>
           </div>
           <div class="list__item--value">
             <el-tooltip
-              placement="bottom-start"
+              slot="label"
               :enterable="false"
               :visible-arrow="false"
-              slot="label"
-              :popper-class="'column-summary__tooltip'">
+              :popper-class="'column-summary__tooltip'"
+              placement="bottom-start">
               <template slot="content">
-                <span v-if="typeof value === 'string'">{{value}}</span>
-                <span v-else>{{value.start + '-'}}<br>{{value.end}}</span>
+                <span v-if="typeof value === 'string'">{{ value }}</span>
+                <span v-else>{{ value.start + '-' }}<br>{{ value.end }}</span>
               </template>
-              <span v-if="typeof value === 'string'">{{value}}</span>
-              <span v-else>{{value.start + '-'}}<br>{{value.end}}</span>
+              <span v-if="typeof value === 'string'">{{ value }}</span>
+              <span v-else>{{ value.start + '-' }}<br>{{ value.end }}</span>
             </el-tooltip>
           </div>
         </li>
@@ -51,14 +51,14 @@ import DisplayHistogramChart from './DisplayHistogramChart'
 
 export default {
   name: 'DataColumnSummary',
+  components: {
+    DisplayHistogramChart
+  },
   props: {
     summaryData: {
       type: Object,
       default: () => {}
     }
-  },
-  components: {
-    DisplayHistogramChart
   },
   computed: {
     showHistogram () {
@@ -85,7 +85,7 @@ export default {
       if (distinctCount <= 1) return
       const totlaRowsWithData = this.summaryData.total_count + this.summaryData.null_count
       switch (this.summaryData.statsType) {
-        case 'CATEGORY':
+        case 'CATEGORY': {
           const {
             largest_value: largestValue,
             largest_value_count: largestValueCount,
@@ -99,7 +99,8 @@ export default {
             ...(showSecondaryValue && {[secondaryValue || `(${this.$t('columnSummary.emptyString')})`]: this.formatPercentage(secondaryValueCount / totlaRowsWithData)}),
             [this.$t('columnSummary.distinctCount')]: `${this.formatComma(this.summaryData.distinct_count)} ${this.$t('columnSummary.record')}`
           }
-        case 'DATETIME':
+        }
+        case 'DATETIME': {
           const {
             min_timestamp: startDate,
             max_timestamp: endDate
@@ -110,7 +111,8 @@ export default {
               end: endDate
             }
           }
-        case 'BOOLEAN':
+        }
+        case 'BOOLEAN': {
           const {
             true_count: trueCount,
             false_count: falseCount
@@ -119,13 +121,15 @@ export default {
             'True': this.formatPercentage(trueCount / this.summaryData.total_count),
             'False': this.formatPercentage(falseCount / this.summaryData.total_count)
           }
-        case 'NUMERIC':
+        }
+        case 'NUMERIC': {
           const {avg, sum, stdev} = this.summaryData.numeric_stats_meta
           return {
             [this.$t(`columnSummary.avg`)]: this.formatNumeric(avg),
             [this.$t(`columnSummary.sum`)]: this.formatNumeric(sum),
             [this.$t(`columnSummary.stdev`)]: this.formatNumeric(stdev)
           }
+        }
       }
     },
     additionalDescription () {

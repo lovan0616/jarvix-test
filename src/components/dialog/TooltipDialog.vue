@@ -1,31 +1,32 @@
 <template>
-  <div class="tooltip-dialog">
-    <div class="text-block">{{ $t('editing.confirmDeleteForeign') }}</div>
-    <div class="button-block">
-      <a href="javascript:void(0)" class="link"
-        @click="cancel"
+  <div
+    class="tooltip-dialog"
+    @click.stop
+  >
+    <div class="tooltip__message">{{ msg }}</div>
+    <div class="tooltip__buttons">
+      <a 
+        href="javascript:void(0)" 
+        class="link tooltip__link"
+        @click.stop="cancel"
       >{{ $t('button.cancel') }}</a>
-      <a href="javascript:void(0)" class="link"
-        @click="confirm"
-      >{{ $t('button.delete') }}</a>
+      <a 
+        href="javascript:void(0)" 
+        class="link tooltip__link"
+        @click.stop="confirm"
+      >{{ $t('button.confirm') }}</a>
     </div>
   </div>
 </template>
 <script>
 export default {
   name: 'TooltipDialog',
-  mounted () {
-    document.addEventListener('click', this.autoHide, false)
-  },
-  destroyed () {
-    document.removeEventListener('click', this.autoHide, false)
+  props: {
+    msg: { 
+      type: String,
+      default: ''}
   },
   methods: {
-    autoHide (evt) {
-      if (!this.$el.contains(evt.target)) {
-        this.$emit('cancel')
-      }
-    },
     cancel () {
       this.$emit('cancel')
     },
@@ -38,30 +39,32 @@ export default {
 <style lang="scss" scoped>
 .tooltip-dialog {
   position: absolute;
-  top: 30px;
-  z-index: 990;
-  background-color: #000;
-  padding: 24px 32px;
-  box-shadow: 0px 4px 24px rgba(26, 56, 62, 0.5);
-  border-radius: 5px;
+  z-index: 1;
+  padding: 10px 12px;
+  background: #323A3A;
+  border: 1px solid #2AD2E2;
+  border-radius: 8px;
+  box-shadow: 0px 2px 10px rgba(34, 117, 125, 0.5);
 
-  &:before {
-    display: block;
-    content: '';
-    position: absolute;
-    top: -5px;
-    right: 15px;
-    width: 20px;
-    height: 20px;
-    background: #000;
-    transform: rotate(45deg);
-    border-radius: 3px;
+  .tooltip {
+    &__message {
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    &__buttons {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    &__link {
+      &:not(:last-child) {
+        color: #FFFFFF;
+        margin-right: 12px;
+      }
+    }
   }
-
-  .text-block {
-    margin-bottom: 16px;
-  }
-
+  
   .button-block {
     text-align: center;
 

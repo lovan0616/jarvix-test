@@ -1,104 +1,127 @@
 <template>
   <div class="setting-block">
-    <div class="section-block"
+    <div 
       :class="{'has-change': true}"
+      class="section-block"
     >
       <div class="setting-input-block">
-        <label class="input-label" for="">{{ $t('etl.dataType') }}</label>
-        <default-select class="data-type-select"
+        <label 
+          class="input-label" 
+          for="">{{ $t('etl.dataType') }}</label>
+        <default-select 
           v-model="editColumnInfo.statsType"
           :option-list="statsTypeOptions"
+          class="data-type-select"
           @change="changeStatsType(editColumnInfo, editColumnInfo.statsType)"
-        ></default-select>
+        />
       </div>
       <div class="setting-input-block">
-        <label class="input-label" for="">{{ $t('etl.emptyStringReplaceValue') }}</label>
-        <default-select class="replace-type-select"
+        <label 
+          class="input-label" 
+          for="">{{ $t('etl.emptyStringReplaceValue') }}</label>
+        <default-select 
           v-model="stringReplaceObject.newValue"
           :option-list="replaceTypeOptionList"
-        ></default-select>
+          class="replace-type-select"
+        />
         <input-verify
-          name="stringReplaceObject"
+          v-validate="'required'"
           v-if="stringReplaceObject.newValue === 'CUSTOM'"
           v-model="stringReplaceObject.customValue"
           :type="replaceValueInputType"
           :placeholder="$t('etl.replaceValuePlaceholder')"
-          v-validate="'required'"
-        ></input-verify>
+          name="stringReplaceObject"
+        />
       </div>
       <div class="setting-input-block">
-        <label class="input-label" for="">{{ $t('etl.nullReplaceValue') }}</label>
-        <default-select class="replace-type-select"
+        <label 
+          class="input-label" 
+          for="">{{ $t('etl.nullReplaceValue') }}</label>
+        <default-select 
           v-model="nullReplaceObject.newValue"
           :option-list="replaceTypeOptionList"
-        ></default-select>
+          class="replace-type-select"
+        />
         <input-verify
-          name="nullReplaceObject"
+          v-validate="'required'"
           v-if="nullReplaceObject.newValue === 'CUSTOM'"
           v-model="nullReplaceObject.customValue"
           :type="replaceValueInputType"
           :placeholder="$t('etl.replaceValuePlaceholder')"
-          v-validate="'required'"
-        ></input-verify>
+          name="nullReplaceObject"
+        />
       </div>
       <div class="setting-input-block">
-        <label class="input-label" for="">{{ $t('etl.errorReplaceValue') }}</label>
-        <default-select class="replace-type-select"
+        <label 
+          class="input-label" 
+          for="">{{ $t('etl.errorReplaceValue') }}</label>
+        <default-select 
           v-model="errorDefaultObject.newValue"
           :option-list="replaceTypeOptionList"
-        ></default-select>
+          class="replace-type-select"
+        />
         <input-verify
-          name="errorDefaultObject"
+          v-validate="'required'"
           v-if="errorDefaultObject.newValue === 'CUSTOM'"
           v-model="errorDefaultObject.customValue"
           :type="replaceValueInputType"
           :placeholder="$t('etl.replaceValuePlaceholder')"
-          v-validate="'required'"
-        ></input-verify>
+          name="errorDefaultObject"
+        />
       </div>
       <div class="setting-input-block">
-        <label class="input-label" for="">{{ $t('etl.customDataManagement') }}</label>
+        <label 
+          class="input-label" 
+          for="">{{ $t('etl.customDataManagement') }}</label>
         <div class="input-list">
-          <div class="inline-input-block"
+          <div 
             v-for="(replaceValue, index) in replaceValueList"
             :key="replaceValue.id"
+            class="inline-input-block"
           >
             <input-verify
+              v-validate="'required'"
               :name="replaceValue.id + '-0'"
               v-model="replaceValue.value"
-              v-validate="'required'"
               :placeholder="$t('etl.columnValue')"
-            ></input-verify>
-            <svg-icon icon-class="go-right" class="arrow-icon"></svg-icon>
+            />
+            <svg-icon 
+              icon-class="go-right" 
+              class="arrow-icon"/>
             <default-select
               v-if="editColumnInfo.statsType === 'BOOLEAN'"
               :option-list="booleanOptionList"
               v-model="replaceValue.newValue"
-            ></default-select>
+            />
             <input-verify
+              v-validate="'required'"
               v-else
               :name="replaceValue.id + '-1'"
               v-model="replaceValue.newValue"
               :type="replaceValueInputType"
-              v-validate="'required'"
               :placeholder="$t('etl.replaceValue')"
-            ></input-verify>
-            <a href="javascript:void(0)" class="link remove-link"
+            />
+            <a 
+              href="javascript:void(0)" 
+              class="link remove-link"
               @click="removeReplaceValue(index)"
             >{{ $t('button.remove') }}</a>
           </div>
         </div>
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="addReplaceValue"
         >{{ $t('button.create') }}</button>
       </div>
     </div>
     <div class="submit-block">
       <div class="button-block">
-        <button class="btn btn-default"
+        <button 
+          class="btn btn-default"
           @click="saveSetting"
         >{{ $t('button.keepSave') }}</button>
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="reset"
         >{{ $t('button.resumeDefault') }}</button>
       </div>
@@ -161,23 +184,6 @@ export default {
       replaceId: 0
     }
   },
-  mounted () {
-    this.editColumnInfo.values = this.editColumnInfo.values.map(element => {
-      return {
-        ...element,
-        id: this.replaceId++
-      }
-    })
-    this.editColumnInfo.values.forEach(element => {
-      if (element.type === 'MISSING_VALUE' && element.value === null) {
-        this.nullReplaceObject = element
-      } else if (element.type === 'MISSING_VALUE' && element.value === '') {
-        this.stringReplaceObject = element
-      } else if (element.type === 'ERROR_DEFAULT_VALUE' && element.value === null) {
-        this.errorDefaultObject = element
-      }
-    })
-  },
   computed: {
     statsTypeOptions () {
       return statsTypeOptionList.filter((option) => {
@@ -200,6 +206,42 @@ export default {
     currentTableIndex () {
       return this.$store.state.dataManagement.currentTableIndex
     }
+  },
+  watch: {
+    'editColumnInfo.statsType': {
+      handler (newVal) {
+        if (newVal === 'BOOLEAN') {
+          this.dataSummaryOption = this.booleanOptionList
+        } else if (newVal === 'CATEGORY') {
+          this.dataSummaryOption = this.categoryOptionList
+          this.replaceValueInputType = 'text'
+        } else if (newVal === 'NUMERIC') {
+          this.dataSummaryOption = this.numericOptionList
+          this.replaceValueInputType = 'number'
+        } else if (newVal === 'DATETIME') {
+          this.dataSummaryOption = this.datetimeOptionList
+          this.replaceValueInputType = 'text'
+        }
+      },
+      immediate: true
+    }
+  },
+  mounted () {
+    this.editColumnInfo.values = this.editColumnInfo.values.map(element => {
+      return {
+        ...element,
+        id: this.replaceId++
+      }
+    })
+    this.editColumnInfo.values.forEach(element => {
+      if (element.type === 'MISSING_VALUE' && element.value === null) {
+        this.nullReplaceObject = element
+      } else if (element.type === 'MISSING_VALUE' && element.value === '') {
+        this.stringReplaceObject = element
+      } else if (element.type === 'ERROR_DEFAULT_VALUE' && element.value === null) {
+        this.errorDefaultObject = element
+      }
+    })
   },
   methods: {
     addReplaceValue () {
@@ -279,25 +321,6 @@ export default {
       })
     }
   },
-  watch: {
-    'editColumnInfo.statsType': {
-      handler (newVal) {
-        if (newVal === 'BOOLEAN') {
-          this.dataSummaryOption = this.booleanOptionList
-        } else if (newVal === 'CATEGORY') {
-          this.dataSummaryOption = this.categoryOptionList
-          this.replaceValueInputType = 'text'
-        } else if (newVal === 'NUMERIC') {
-          this.dataSummaryOption = this.numericOptionList
-          this.replaceValueInputType = 'number'
-        } else if (newVal === 'DATETIME') {
-          this.dataSummaryOption = this.datetimeOptionList
-          this.replaceValueInputType = 'text'
-        }
-      },
-      immediate: true
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

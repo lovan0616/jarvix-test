@@ -2,12 +2,13 @@
   <div class="display-correlation-features">
     <div class="feature-header">
       <div class="feature-header-left">
-        <div class="feature-header-title"><div class="dot"></div>{{$t('resultDescription.featureList')}}</div>
-        <div class="feature-header-description">{{$t('resultDescription.hereIsFeatures')}}</div>
+        <div class="feature-header-title"><div class="dot"/>{{ $t('resultDescription.featureList') }}</div>
+        <div class="feature-header-description">{{ $t('resultDescription.hereIsFeatures') }}</div>
       </div>
       <template v-if="!isNaN(confidence)">
-        <el-tooltip placement="bottom"
+        <el-tooltip 
           :content="$t('resultDescription.modelConfidence')"
+          placement="bottom"
         >
           <div class="feature-header-confidence">
             {{ Math.round( confidence > 0 ? confidence * 100 : 0) }}
@@ -17,21 +18,24 @@
       </template>
     </div>
     <div class="feature-body">
-      <div :class="['feature-item', {'selected': index === displayFactorIndex}]"
+      <div 
         v-for="(item, index) in features"
-        v-bind:key="index"
+        :class="['feature-item', {'selected': index === displayFactorIndex}]"
+        :key="index"
         @click="onClickItem(index)"
       >
         <div class="item-header">
           <div class="item-title">
-            {{item['alias']}}
+            {{ item['alias'] }}
           </div>
           <div class="item-importance">
-            {{round(item['importance'], 4)}}
+            {{ round(item['importance'], 4) }}
           </div>
         </div>
         <div class="item-bar">
-          <div class="item-inner-bar" :style="{width: item['importance'] * 100 + '%'}"></div>
+          <div 
+            :style="{width: item['importance'] * 100 + '%'}" 
+            class="item-inner-bar"/>
         </div>
       </div>
     </div>
@@ -42,9 +46,16 @@
 export default {
   name: 'DisplayCorrelationFeatures',
   props: {
-    dataSourceId: null,
     features: { type: Array, default: () => [] },
-    confidence: { type: Number }
+    confidence: {
+      type: Number,
+      default: 0
+    }
+  },
+  computed: {
+    displayFactorIndex () {
+      return this.$store.state.result.displayFactorIndex
+    }
   },
   methods: {
     onClickItem (index) {
@@ -54,11 +65,6 @@ export default {
       return Math.round(x * Math.pow(10, n)) / Math.pow(10, n)
     }
   },
-  computed: {
-    displayFactorIndex () {
-      return this.$store.state.result.displayFactorIndex
-    }
-  }
 }
 </script>
 <style lang="scss">

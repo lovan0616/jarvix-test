@@ -2,6 +2,18 @@ import Vue from 'vue'
 
 // 全站共用的 function，會注入每個 component 當中
 Vue.mixin({
+  filters: {
+    convertTimeStamp (timeStamp) {
+      if (!timeStamp) return '-'
+      const date = new Date(timeStamp)
+      const year = date.getFullYear()
+      const month = date.getMonth() + 1
+      const day = date.getDate()
+      const hour = date.getHours().toString().padStart(2, '0')
+      const minute = date.getMinutes().toString().padStart(2, '0')
+      return `${year}/${month}/${day} ${hour}:${minute}`
+    }
+  },
   methods: {
     /**
      *  字串加密 https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/atob
@@ -36,8 +48,13 @@ Vue.mixin({
       num2 = '' + num2
       let p1 = 0
       let p2 = 0
-      try { p1 = num1.split('.')[1].length } catch (e) {}
-      try { p2 = num2.split('.')[1].length } catch (e) {}
+
+      if (num1.split('.')[1]) {
+        p1 = num1.split('.')[1].length
+      }
+      if (num2.split('.')[1]) {
+        p2 = num2.split('.')[1].length
+      }
 
       if (padZeno) {
         while (p1 < p2) {
@@ -78,11 +95,8 @@ Vue.mixin({
       })
     },
     timeToDate (time) {
-      let datetime = new Date(time)
-      let year = datetime.getFullYear()
-      let month = datetime.getMonth() + 1
-      let date = datetime.getDate()
-      return year + '-' + this.paddingZero(month) + '-' + this.paddingZero(date)
+      // time will be represented as '2020-05-18T08:48:33.505+0000'
+      return time.split('T')[0]
     },
     timeToFileName (time) {
       let datetime = new Date(parseInt(time))
@@ -95,13 +109,8 @@ Vue.mixin({
     },
     // 轉成 YYYY-MM-DD HH:mm
     timeToDateTime (time) {
-      let datetime = new Date(time)
-      let year = datetime.getFullYear()
-      let month = datetime.getMonth() + 1
-      let date = datetime.getDate()
-      let hour = datetime.getHours()
-      let minute = datetime.getMinutes()
-      return `${year}-${this.paddingZero(month)}-${this.paddingZero(date)} ${this.paddingZero(hour)}:${this.paddingZero(minute)}`
+      // time will be represented as '2020-05-18T08:48:33.505+0000'
+      return time.split('.')[0].replace(/T/g, ' ').slice(0, -3)
     },
     // timeStamp 轉成 YYYY-MM-DD
     timeStampToDate (time) {
@@ -291,7 +300,7 @@ Vue.mixin({
           let innerValue = row[j] === null ? '' : row[j].toString()
           if (row[j] instanceof Date) {
             innerValue = row[j].toLocaleString()
-          };
+          }
           let result = innerValue.replace(/"/g, '""')
           if (result.search(/("|,|\n)/g) >= 0) {
             result = '"' + result + '"'
@@ -421,18 +430,6 @@ Vue.mixin({
     shortenDataCapacityNumber (gb, digit = 2) {
       if (gb <= 0.5) return this.formatComma((gb * 1024).toFixed(digit)) + ' MB'
       return this.formatComma((gb).toFixed(digit)) + ' GB'
-    }
-  },
-  filters: {
-    convertTimeStamp (timeStamp) {
-      if (!timeStamp) return '-'
-      const date = new Date(timeStamp)
-      const year = date.getFullYear()
-      const month = date.getMonth() + 1
-      const day = date.getDate()
-      const hour = date.getHours().toString().padStart(2, '0')
-      const minute = date.getMinutes().toString().padStart(2, '0')
-      return `${year}/${month}/${day} ${hour}:${minute}`
     }
   }
 })

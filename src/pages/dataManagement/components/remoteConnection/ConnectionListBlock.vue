@@ -2,12 +2,13 @@
   <div class="connection-list-block">
     <div class="block-title-row">
       <div class="block-title">{{ title }}</div>
-      <slot name="fileListTitle"></slot>
+      <slot name="fileListTitle"/>
     </div>
     <div class="connection-list">
-      <div class="single-connection-row"
+      <div 
         v-for="(connection, index) in connectionList"
         :key="index"
+        class="single-connection-row"
       >
         <div class="single-connection-info">
           <div class="file-info name">{{ connection.name }}</div>
@@ -16,7 +17,7 @@
           <svg-icon
             :class="connection.connectionStatus"
             :icon-class="connection.connectionStatus === 'success' ? 'checked' : 'alert'"
-          ></svg-icon>
+          />
         </div>
       </div>
     </div>

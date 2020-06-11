@@ -6,8 +6,16 @@
       <span v-else>{{ $t('editing.uploadFinish') }}</span>
     </div>
     <div class="finished-img-block">
-      <img v-if="uploadFileList.length === successList.length" src="../../../../assets/images/success.gif" :alt="$t('editing.uploadSuccess')" class="finished-img">
-      <img v-if="uploadFileList.length === failList.length" src="../../../../assets/images/error.gif" :alt="$t('editing.uploadFailure')" class="finished-img">
+      <img 
+        v-if="uploadFileList.length === successList.length" 
+        :alt="$t('editing.uploadSuccess')" 
+        src="../../../../assets/images/success.gif" 
+        class="finished-img">
+      <img 
+        v-if="uploadFileList.length === failList.length" 
+        :alt="$t('editing.uploadFailure')" 
+        src="../../../../assets/images/error.gif" 
+        class="finished-img">
       <div class="finished-file-info">
         {{ $t('editing.uploadStatus', {total: uploadFileList.length, success: successList.length, pending: failList.length}) }}
       </div>
@@ -18,20 +26,23 @@
         :title="$t('editing.uploaded')"
         :file-list="successList"
       >
-        <div class="uploaded-data-info" slot="fileListTitle">
+        <div 
+          slot="fileListTitle" 
+          class="uploaded-data-info">
           {{ $t('editing.dataSourceInfo', {type: currentUploadInfo.type, dataSourceName: currentUploadInfo.name}) }}
         </div>
       </file-list-block>
       <file-list-block
         v-if="failList.length > 0"
         :title="$t('editing.unuploaded')"
-        type="fail"
         :file-list="failList"
-      ></file-list-block>
+        type="fail"
+      />
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="buildBookmark"
         >{{ $t('button.finish') }}</button>
         <!-- <button class="btn btn-default"
@@ -56,17 +67,6 @@ export default {
       uploadStatus
     }
   },
-  methods: {
-    buildBookmark () {
-      if (this.$route.name === 'DataSourceList') {
-        this.$store.dispatch('dataSource/getDataSourceList')
-      } else {
-        this.$store.commit('dataManagement/updateFileUploadSuccess', true)
-      }
-      // close fileUploadDialog
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-    }
-  },
   computed: {
     ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
     successList () {
@@ -78,6 +78,17 @@ export default {
       return this.uploadFileList.filter(element => {
         return element.status === uploadStatus.fail
       })
+    }
+  },
+  methods: {
+    buildBookmark () {
+      if (this.$route.name === 'DataSourceList') {
+        this.$store.dispatch('dataSource/getDataSourceList', {})
+      } else {
+        this.$store.commit('dataManagement/updateFileUploadSuccess', true)
+      }
+      // close fileUploadDialog
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
     }
   }
 }

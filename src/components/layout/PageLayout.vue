@@ -1,10 +1,13 @@
 <template>
   <div class="app-layout page-layout">
     <div class="wrapper">
-      <img src="@/assets/images/logo-text.svg" alt="logo" class="page-logo-img">
+      <img 
+        src="@/assets/images/logo-text.svg" 
+        alt="logo" 
+        class="page-logo-img">
       <main class="main">
-        <div class="bg"></div>
-        <slot></slot>
+        <div class="bg"/>
+        <slot/>
       </main>
     </div>
   </div>

@@ -1,17 +1,19 @@
 <template>
   <div class="trend-root-cause">
     <div class="block-title">{{ $t('resultDescription.trendInsight') }}</div>
-    <div class="single-root-cause"
+    <div
       v-for="(singleInfo, index) in info"
       :key="index"
       :class="{'has-link': singleInfo.next_question}"
+      class="single-root-cause"
       @click="linkTo(singleInfo.next_question)"
     >
       <span class="info-index">{{ index + 1 }}</span>
-      <div class="info-content">{{singleInfo.information}}</div>
+      <div class="info-content">{{ singleInfo.information }}</div>
     </div>
-    <div class="empty-info"
+    <div
       v-if="info.length === 0"
+      class="empty-info"
     >
       {{ $t('resultDescription.trendInsightNoData') }}
     </div>

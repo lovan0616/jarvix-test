@@ -1,12 +1,14 @@
 <template>
   <div class="display-pivot-table">
     <div class="button-block">
-      <button class="btn btn-default"
+      <button 
         v-show="!isShowChart"
+        class="btn btn-default"
         @click="showChart"
       >{{ $t('resultDescription.displayChart') }}</button>
-      <button class="btn btn-default"
+      <button 
         v-show="isShowChart"
+        class="btn btn-default"
         @click="showData"
       >{{ $t('resultDescription.displayData') }}</button>
     </div>
@@ -29,9 +31,15 @@
       :is-show-chart="isShowChart"
     >
       <!-- Optional slots can be used for formatting table headers and values, see documentation below -->
-      <template slot="value" slot-scope="{ value }">
-        <div class="empty-content" v-if="value == 0">--</div>
-        <div class="td-content" v-else>{{ roundDecimal(value, 3) }}</div>
+      <template 
+        slot="value" 
+        slot-scope="{ value }">
+        <div 
+          v-if="value == 0" 
+          class="empty-content">--</div>
+        <div 
+          v-else 
+          class="td-content">{{ roundDecimal(value, 3) }}</div>
       </template>
     </pivot-table>
   </div>
@@ -44,15 +52,32 @@ export default {
   components: {
     PivotTable
   },
-  props: [
-    'dataset',
-    'availableFields',
-    'rowFields',
-    'colFields',
-    'valFields',
-    'aggregate',
-    'defaultShowSettings'
-  ],
+  props: {
+    dataset: {
+      type: Array,
+      default: () => []
+    },
+    availableFields: {
+      type: Array,
+      default: () => []
+    },
+    rowFields: {
+      type: Array,
+      default: () => []
+    },
+    colFields: {
+      type: Array,
+      default: () => []
+    },
+    valFields: {
+      type: Array,
+      default: () => []
+    },
+    aggregate: {
+      type: String,
+      default: null
+    }
+  },
   data () {
     return {
       isShowChart: true,
@@ -108,9 +133,6 @@ export default {
 
       .empty-content {
         min-width: auto;
-      }
-
-      .td-content {
       }
     }
   }

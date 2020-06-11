@@ -3,25 +3,32 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('editing.columnSetSetting') }}
-        <a href="javascript:void(0)" class="close-btn"
+        <a 
+          href="javascript:void(0)" 
+          class="close-btn"
           @click="closeDialog"
-        ><svg-icon icon-class="close"></svg-icon></a>
+        ><svg-icon icon-class="close"/></a>
       </div>
       <div class="dialog-header-block">
         <div class="header-button-block">
-          <button class="btn btn-secondary btn-has-icon add-btn"
+          <button 
+            class="btn btn-secondary btn-has-icon add-btn"
             @click="addColumnSet"
-          ><svg-icon icon-class="plus" class="icon"></svg-icon>{{ $t('button.addColumnSet') }}</button>
+          ><svg-icon 
+            icon-class="plus" 
+            class="icon"/>{{ $t('button.addColumnSet') }}</button>
           <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
         </div>
       </div>
-      <spinner class="spinner-container"
+      <spinner 
         v-if="isLoading"
         :title="$t('editing.loading')"
+        class="spinner-container"
         size="50"
-      ></spinner>
-      <div class="dialog-content-block"
+      />
+      <div 
         v-else
+        class="dialog-content-block"
       >
         <single-column-set
           v-for="(singleColumnSet, index) in columnSetList"
@@ -29,12 +36,12 @@
           :column-list="columnList"
           :column-set="singleColumnSet"
           @remove="removeColumnSet(index)"
-        ></single-column-set>
+        />
         <empty-info-block
-          class="empty-info-block"
           v-if="columnSetList.length === 0"
           :msg="$t('message.emptyColumnSet')"
-        ></empty-info-block>
+          class="empty-info-block"
+        />
       </div>
     </div>
   </div>

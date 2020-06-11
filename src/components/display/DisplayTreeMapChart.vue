@@ -4,8 +4,7 @@
       :style="chartStyle"
       :options="chartOption"
       auto-resize
-    >
-    </v-echart>
+    />
   </div>
 </template>
 <script>
@@ -18,8 +17,6 @@ export default {
       type: Object,
       default: null
     }
-  },
-  methods: {
   },
   computed: {
     chartOption () {
@@ -37,6 +34,8 @@ export default {
         height: '420px'
       }
     }
-  }
+  },
+  methods: {
+  },
 }
 </script>
