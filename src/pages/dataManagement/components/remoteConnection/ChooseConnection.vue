@@ -37,6 +37,24 @@
             class="single-connection"
             @click="chooseConnection(connection.id)"
           >
+            <div
+              v-if="currentTestId === connection.id"
+              class="connection__mask connection__mask--active"
+            >
+              <spinner 
+                :title="$t('button.connecting')"
+                class="connection__mask__spinner"
+                size="20"
+              />
+              <button 
+                class="btn btn-outline connection__mask__btn"
+                @click.stop="cancelConnection"
+              >{{ $t('button.cancelConnect') }}</button>
+            </div>
+            <div
+              v-else-if="currentTestId"
+              class="connection__mask"
+            />
             <div class="connection-title">{{ connection.name }}</div>
             <div class="conneciton-info-block">
               <div class="conneciton-info">
@@ -98,6 +116,7 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
 import { getConnectionInfoList, testOldConnection, deleteDatabaseConnection } from '@/API/RemoteConnection'
 import { Message } from 'element-ui'
 import UploadProcessBlock from './UploadProcessBlock'
@@ -114,7 +133,7 @@ export default {
   data () {
     return {
       isLoading: false,
-      isEditing: false,
+      currentTestId: null,
       currentDeleteIndex: null,
       connectionList: []
     }
@@ -145,14 +164,29 @@ export default {
       })
     },
     chooseConnection (id) {
-      testOldConnection(id).then(() => {
+      if (this.currentTestId) return
+      this.currentTestId = id
+      let _this = this
+      testOldConnection(id, new axios.CancelToken(function executor (c) {
+        _this.askCancelFunction = c
+      })).then(() => {
         this.$emit('next', id)
-      }).catch(() => {
-        Message({
-          message: this.$t('message.connectionFail'),
-          type: 'error',
-          duration: 3 * 1000
-        })
+      }).catch((response) => {
+        if(response.message === 'cancel request') {
+            Message({
+            message: this.$t('message.connectionInterrupted'),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+        } else {
+          Message({
+            message: this.$t('message.connectionFail'),
+            type: 'error',
+            duration: 3 * 1000
+          })
+        }
+      }).finally(() => {
+        this.currentTestId = null
       })
     },
     createConnection () {
@@ -177,7 +211,12 @@ export default {
         })
       })
       this.currentDeleteIndex = null
-    }
+    },
+    cancelConnection (){
+      if (typeof this.askCancelFunction === 'function') {
+        this.askCancelFunction( 'cancel request' )
+      }
+    },
   },
 }
 </script>
@@ -233,6 +272,41 @@ export default {
     &:hover {
       background-color: #485454;
       border-color: #2AD2E2;
+    }
+
+    .connection__mask {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      padding: 0 24px;
+      cursor: no-drop;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(55, 65, 65, 0.8);
+
+      &--active {
+        background: rgba(72, 84, 84, 0.9);
+      }
+
+      &__spinner {
+        /deep/ .spinner-container {
+          display: flex;
+          flex-direction: row;
+
+          .spinner-circle {
+            margin-right: 8px;
+          }
+
+          .spinner-title {
+            font-size: 14px;
+            margin-top: 0;
+          }
+        }
+      }
     }
 
     .connection-title {
