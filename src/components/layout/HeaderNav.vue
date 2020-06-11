@@ -238,7 +238,7 @@ export default {
           // update user info
           this.$store.dispatch('userManagement/getUserInfo').then(() => {
             // update data source list
-            return this.$store.dispatch('dataSource/getDataSourceList')
+            return this.$store.dispatch('dataSource/getDataSourceList', {})
           })
         })
         .then(() => {
