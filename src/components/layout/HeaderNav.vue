@@ -236,14 +236,10 @@ export default {
       })
         .then(res => {
           // update user info
-          this.$store.commit('userManagement/setUserInfo', {
-            userName: res.name,
-            accountList: res.accountList,
-            groupList: res.groupList,
-            permission: [...res.accountPermission, ...res.groupPermission]
+          this.$store.dispatch('userManagement/getUserInfo').then(() => {
+            // update data source list
+            return this.$store.dispatch('dataSource/getDataSourceList')
           })
-          // update data source list
-          return this.$store.dispatch('dataSource/getDataSourceList', {})
         })
         .then(() => {
           if (this.$route.name !== 'PageIndex') this.$router.push({name: 'PageIndex'})
