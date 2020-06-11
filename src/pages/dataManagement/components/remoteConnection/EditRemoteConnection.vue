@@ -96,7 +96,7 @@ export default {
           type: 'error',
           duration: 3 * 1000
         })
-        this.prevStep() 
+        this.isProcessing = false
       })
     },
     saveConnectionInfo (onlySave=true) {

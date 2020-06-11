@@ -70,6 +70,7 @@
     "deleteSuccess": "刪除成功",
     "dataSourceNotExist": "資料源不存在",
     "connectionFail": "欄位資料有誤，請重新檢查",
+    "connectionInterrupted": "連線已中斷",
     "columnSetNameEmpty": "欄位組合名稱未填寫",
     "columnSetChosenEmpty": "尚未選擇任何欄位",
     "memberDeleteSuccess": "成員刪除成功",
@@ -78,7 +79,7 @@
     "calculatingPleaseTryLater": "資料計算中，請稍後再試",
     "analysisFailed": "檔案解析發生錯誤",
     "confirmColumnStateTypeChange": "此變更將會清除進階設定內容，您確認要進行變更？",
-    "fileTypeNotSupported": "不支援{fileType}檔案格式",
+    "fileTypeNotSupported": "不支援 {fileType} 檔案格式",
     "goToGroupManagement": "前往帳戶專案管理"
   },
   "guiding": {
@@ -508,6 +509,7 @@
     "update": "更新",
     "finish": "完成",
     "connect": "連線",
+    "cancelConnect": "取消連線",
     "saveAndConnect": "儲存並連線",
     "toForeignTable": "關聯資料表",
     "newForeign": "新增關聯",

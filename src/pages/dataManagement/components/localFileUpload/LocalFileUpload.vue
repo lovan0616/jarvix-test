@@ -184,11 +184,15 @@ export default {
         .map(item => item.getAsFile())
 
       if (this.notSupportedFileType.size > 0) {
-        Message({
-          message: this.$t('message.fileTypeNotSupported', {fileType: [...this.notSupportedFileType].join(', ')}),
-          type: 'warning',
-          duration: 3 * 1000
-        })
+        const notSupportedFileTypeString = [...this.notSupportedFileType].join(', ')
+        // 避免若同時拖曳超過十個檔案時 $message 重疊
+        setTimeout(() => {
+          Message({
+            message: this.$t('message.fileTypeNotSupported', {fileType: notSupportedFileTypeString}),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+        }, 0)
       }
       this.fileImport(files)
 

@@ -75,10 +75,11 @@ export function testConnection (connectionInfo) {
 /**
  * 測試已新增的連線
  */
-export function testOldConnection (connectionId) {
+export function testOldConnection (connectionId, cancelFunction=null) {
   return request({
     url: `/database/connection/${connectionId}/test`,
-    method: 'POST'
+    method: 'POST',
+    cancelToken: cancelFunction
   })
 }
 
