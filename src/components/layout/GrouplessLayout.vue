@@ -26,8 +26,9 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    const hasGroup = store.state.userManagement.groupList.length > 0
-    hasGroup ? next({ name: 'PageIndex' }) : next()
+    const currentAccount = store.getters['userManagement/getCurrentAccountId']
+    const currentGroup = store.getters['userManagement/getCurrentGroupId']
+    currentAccount && !currentGroup ? next() : next({ name: 'PageIndex' })
   },
   computed: {
     ...mapGetters('userManagement', ['hasPermission']),

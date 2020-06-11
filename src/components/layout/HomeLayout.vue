@@ -66,8 +66,9 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    const hasGroup = store.state.userManagement.groupList.length > 0
-    hasGroup ? next() : next({ name: 'PageGrouplessGuidance' })
+    const currentAccount = store.getters['userManagement/getCurrentAccountId']
+    const currentGroup = store.getters['userManagement/getCurrentGroupId']
+    currentAccount && !currentGroup ? next({ name: 'PageGrouplessGuidance' }) : next()
   },
   beforeRouteUpdate(to, from, next) {
     if (this.isShowPreviewDataSource) this.closePreviewDataSource()
