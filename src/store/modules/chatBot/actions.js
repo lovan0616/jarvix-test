@@ -1,5 +1,6 @@
 import { askQuestion, askResult, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion } from '@/API/NewAsk'
 import axios from 'axios'
+import i18n from '@/lang/index.js'
 const CancelToken = axios.CancelToken
 let cancelFunction
 
@@ -45,6 +46,20 @@ export default {
   cancelRequest () {
     if (typeof cancelFunction === 'function') {
       cancelFunction('cancel request')
+    }
+  },
+  async updateChatConversation({ dispatch, commit, state, rootState }) {
+    commit('updateAnalyzeStatus', true)
+    try {
+      const response = await dispatch('getQuickStartQuestion', rootState.dataSource.dataSourceId)
+      commit('updateAnalyzeStatus', false)
+      commit('addSystemConversation',
+        response.length > 0
+          ? { text: i18n.t('bot.welcomeMessageWithSuggestions'), options: response }
+          : { text: i18n.t('bot.welcomeMessage') }
+      )
+    } catch (error) {
+      commit('updateAnalyzeStatus', false)
     }
   }
 }
