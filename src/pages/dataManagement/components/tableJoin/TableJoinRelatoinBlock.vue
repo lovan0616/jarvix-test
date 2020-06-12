@@ -86,7 +86,6 @@
               :option-list="joinTypeOptions"
               :is-disabled="isPreviewingResult"
               :placeholder="$t('editing.selectJoinType')"
-              filterable
               class="tag-select input"
             />
           </div>
