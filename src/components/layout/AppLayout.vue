@@ -36,12 +36,16 @@ export default {
       }
       // 建置完成
       if (!value && oldValue) {
-        window.clearInterval(this.intervalFunction)
-        Message({
-          message: this.$t('message.builded'),
-          type: 'success',
-          duration: 3 * 1000
-        })
+        // 避免建置完的 datasource 為當前的，需要重新取得其新的 dataframe list
+        this.$store.dispatch('dataSource/updateDataFrameList')
+          .then(() => {
+            window.clearInterval(this.intervalFunction)
+            Message({
+              message: this.$t('message.builded'),
+              type: 'success',
+              duration: 3 * 1000
+            })
+          })
       }
     }
     // 判斷關閉時機
@@ -62,7 +66,11 @@ export default {
   methods: {
     setDataSourceInfo () {
       this.$store.dispatch('dataSource/init')
-    }
+    },
+    // getDataFrameList () {
+    //   const dataFrameList = await dispatch('getDataSourceTables')
+    //   commit('setDataFrameList', dataFrameList)
+    // }
   },
 }
 </script>

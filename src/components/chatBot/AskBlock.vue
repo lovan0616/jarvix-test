@@ -140,6 +140,7 @@ export default {
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
+    this.closeWebSocketConnection()
   },
   methods: {
     toggleWebSocketConnection () {

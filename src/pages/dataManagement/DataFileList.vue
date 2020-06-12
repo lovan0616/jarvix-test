@@ -268,6 +268,9 @@ export default {
       return this.dataList.reduce((acc, cur) => {
         return (cur.state === 'Enable') ? acc + 1 : acc
       }, 0)
+    },
+    storedDataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
     }
   },
   watch: {
@@ -379,13 +382,16 @@ export default {
     deleteFile () {
       this.showConfirmDeleteDialog = false
       this.isLoading = true
-      const dataframeId = this.selectList[0].id
+      const {id: dataframeId, dataSourceId: selectedDataSourceId} = this.selectList[0]
       deleteDataFrameById(dataframeId)
         .then(res => {
           this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
           this.fetchData()
           this.deleteFinish()
           this.checkIfReachFileSizeLimit()
+          // 如果為全域當前的 datasource，需要更新 store 中 dataframe 資料
+          if (selectedDataSourceId !== this.storedDataSourceId) return
+          this.$store.dispatch('dataSource/updateDataFrameList')
         })
         .catch(() => {
           this.deleteFinish()
