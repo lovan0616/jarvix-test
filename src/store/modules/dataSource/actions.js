@@ -28,8 +28,9 @@ export default {
       // 找出第一個可以使用的 dataSourceId
       let firstEnableDataSourceIndex = res.findIndex(element => element.enableDataFrameCount)
       if (dataSourceId) {
-        // 判斷路由的 DataSource 是否存在
-        if (res.some(element => element.id === dataSourceId)) {
+        // 判斷路由的 DataSource 是否存在，且該 DataSource 是有可使用的 DataFrame
+        const matchedDataSource = res.find(element => element.id === dataSourceId)
+        if (matchedDataSource && matchedDataSource.enableDataFrameCount) {
           dispatch('changeDataSourceById', {dataSourceId, dataFrameId})
         } else {
           const dataSourceId = firstEnableDataSourceIndex > -1 ? res[firstEnableDataSourceIndex].id : null
@@ -80,6 +81,7 @@ export default {
     // 更新 DataFrame 資料
     commit('setDataFrameId', dataFrameId)
     return co(function* () {
+      yield dispatch('chatBot/updateChatConversation', false, { root: true })
       yield dispatch('getHistoryQuestionList')
       yield dispatch('getDataSourceColumnInfo')
       yield dispatch('getDataSourceDataValue')
@@ -182,5 +184,25 @@ export default {
     if (typeof cancelFunction === 'function') {
       cancelFunction('cancel request')
     }
+  },
+  async updateDataFrameList({ commit, state, dispatch }) {
+    // 取得 dataFrame 資料
+    const dataFrameList = await dispatch('getDataSourceTables')
+
+    // 如果沒有 dataFrame 則重新 assign store 中當前的 dataSource
+    if (dataFrameList.length === 0) {
+      commit('setDataSourceId', null)
+      return dispatch('getDataSourceList', {})
+    }
+
+    // 更新 dataFrame list
+    commit('setDataFrameList', dataFrameList)
+
+    // 確認當前 dataFrame 是否存在
+    const hasCurrentDataFrame = dataFrameList.some(element => element.id === state.dataFrameId)
+    if (state.dataFrameId === "all" || hasCurrentDataFrame) return
+
+    // 如果 dataFrame 被刪掉則恢復預設 all
+    return dispatch('changeDataFrameById', 'all')
   }
 }
