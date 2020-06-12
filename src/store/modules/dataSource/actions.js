@@ -29,8 +29,7 @@ export default {
       let firstEnableDataSourceIndex = res.findIndex(element => element.enableDataFrameCount)
       if (dataSourceId) {
         // 判斷路由的 DataSource 是否存在，且該 DataSource 是有可使用的 DataFrame
-        const matchedDataSource = res.find(element => element.id === dataSourceId)
-        if (matchedDataSource && matchedDataSource.enableDataFrameCount) {
+        if (res.some(element => element.id === dataSourceId && element.enableDataFrameCount)) {
           dispatch('changeDataSourceById', {dataSourceId, dataFrameId})
         } else {
           const dataSourceId = firstEnableDataSourceIndex > -1 ? res[firstEnableDataSourceIndex].id : null
