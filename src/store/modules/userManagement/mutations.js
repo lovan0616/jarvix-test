@@ -24,9 +24,10 @@ export default {
     state.groupList = data.groupList
     const groupPermission = new Set(data.groupPermission)
     const ACCOUNT_REGEX = /^account/
+    const IMPORT_REGEX = /^import/
     // compare with the latest permission list and remove expired ones
     state.permission = state.permission.filter(permission => {
-      if (permission.match(ACCOUNT_REGEX)) return true
+      if (permission.match(ACCOUNT_REGEX) || permission.match(IMPORT_REGEX)) return true
       return groupPermission.has(permission)
     })
     // merge the latest permission list into existing one and exclude duplicate items
