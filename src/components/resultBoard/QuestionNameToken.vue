@@ -11,7 +11,7 @@
         <span
           v-for="(property, propertyIndex) in tokenInfo.properties"
           :key="propertyIndex"
-        >{{ property.datacolumnPrimaryAlias }}<span v-show="propertyIndex < tokenInfo.properties.length - 1">〝</span></span>
+        >{{ property.datacolumnPrimaryAlias }}<span v-show="propertyIndex < tokenInfo.properties.length - 1">、</span></span>
       </div>
     </div>
     <span 
