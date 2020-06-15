@@ -29,7 +29,7 @@
           @click="prevStep"
         >{{ $t('button.prevStep') }}</button>
         <button 
-          :disabled="isProcessing"
+          :disabled="isProcessing || !anyColumnSelected"
           class="btn btn-default"
           @click="nextStep"
         >{{ $t('button.buildData') }}</button>
@@ -81,6 +81,10 @@ export default {
     },
     currentColumnIndex () {
       return this.$store.state.dataManagement.currentColumnIndex
+    },
+    anyColumnSelected () {
+      let selected = (column) => column.active
+      return this.etlTableList[this.currentTableIndex].columns.some(selected)
     }
   },
   methods: {
@@ -136,7 +140,6 @@ export default {
   .dialog-body {
     background-color: rgba(50, 58, 58, 0.95);
     border-radius: 5px;
-    padding: 24px;
     margin-bottom: 16px;
   }
 
