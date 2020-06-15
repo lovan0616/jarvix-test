@@ -21,39 +21,43 @@ export default {
     AppHeader,
     HeaderNav
   },
+  data () {
+    return {
+      intervalFunction: null
+    }
+  },
   computed: {
     isDataSourceBuilding () {
       return this.$store.getters['dataSource/isDataSourceBuilding']
+    },
+    dataSourceBuildingStatusList () {
+      return this.$store.getters['dataSource/dataSourceBuildingStatusList']
     }
   },
   watch: {
-    // 監聽 dataSource 清單是否有 dataSource 正在建置中
-    isDataSourceBuilding (value, oldValue) {
-      if (value) {
+    // 監聽有 dataframe 建置中的 dataSource 清單是否有變化
+    dataSourceBuildingStatusList (newValue, oldValue) {
+      if (newValue.length === 0 && oldValue.length === 0) return
+      window.clearInterval(this.intervalFunction)
+      if (newValue.length > 0) {
         this.intervalFunction = window.setInterval(() => {
           this.$store.dispatch('dataSource/getDataSourceList', {})
         }, 5000)
       }
-      // 建置完成
-      if (!value && oldValue) {
-        // 避免建置完的 datasource 為當前的，需要重新取得其新的 dataframe list
-        this.$store.dispatch('dataSource/updateDataFrameList')
-          .then(() => {
-            window.clearInterval(this.intervalFunction)
-            Message({
-              message: this.$t('message.builded'),
-              type: 'success',
-              duration: 3 * 1000
-            })
+
+      // 確認有無資料表建立完成
+      if (!this.hasDataFrameBuilt(newValue, oldValue)) return
+
+      // 避免建置完的 datasource 為當前的，需要重新取得其新的 dataframe list
+      this.$store.dispatch('dataSource/updateDataFrameList')
+        .then(() => {
+          Message({
+            message: this.$t('message.dataFrameBuilt'),
+            type: 'success',
+            duration: 3 * 1000
           })
-      }
+        })
     }
-    // 判斷關閉時機
-    // '$route.name' (value) {
-    //   if (value !== 'PageIndex' && value !== 'PageResult') {
-    //     this.$store.commit('updateChatRoomStatus', false)
-    //   }
-    // }
   },
   created () {
     this.setDataSourceInfo()
@@ -67,10 +71,17 @@ export default {
     setDataSourceInfo () {
       this.$store.dispatch('dataSource/init')
     },
-    // getDataFrameList () {
-    //   const dataFrameList = await dispatch('getDataSourceTables')
-    //   commit('setDataFrameList', dataFrameList)
-    // }
+    hasDataFrameBuilt (newList, oldList) {
+      const newDataSourceList = new Set(newList.map(item => item.id))
+      for (let i = 0; i < oldList.length; i++) {
+        if (
+          !newDataSourceList.has(oldList[i].id)
+          || !newList[i].processDataFrameCount
+          || oldList[i].processDataFrameCount > newList[i].processDataFrameCount
+        ) return true
+      }
+      return false
+    }
   },
 }
 </script>

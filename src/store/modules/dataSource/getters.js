@@ -5,6 +5,19 @@ export default {
       return (element.processDataFrameCount)
     })
   },
+  // 取得所有有資料表處理中的資料源
+  dataSourceBuildingStatusList (state) {
+    return state.dataSourceList.reduce((acc, cur) => {
+      if (!cur.processDataFrameCount) return acc
+      acc.push({
+        id: cur.id,
+        enableDataFrameCount: cur.enableDataFrameCount,
+        name: cur.name,
+        processDataFrameCount: cur.processDataFrameCount
+      })
+      return acc
+    }, [])
+  },
   // 過濾掉狀態實際送往後端的資料
   filterRestrictionList (state) {
     if (state.filterList.length === 0) return []
