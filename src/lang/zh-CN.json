@@ -67,7 +67,7 @@
     "emptyDataSource": "尚未建立资料源",
     "emptyColumnSet": "尚未建立任何栏位组合",
     "emptyFeatureFormula": "资料栏位未填写",
-    "emptyColumn": "尚未选取栏位值",
+    "emptyColumn": "未选取栏位值",
     "emptyDataColumn": "未选择资料栏位",
     "deleteSuccess": "删除成功",
     "dataSourceNotExist": "资料源不存在",
