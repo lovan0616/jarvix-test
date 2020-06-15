@@ -29,7 +29,7 @@
           @click="prevStep"
         >{{ $t('button.prevStep') }}</button>
         <button 
-          :disabled="isProcessing || !anyColumnSelected"
+          :disabled="isProcessing"
           class="btn btn-default"
           @click="nextStep"
         >{{ $t('button.buildData') }}</button>
@@ -98,6 +98,15 @@ export default {
       this.$emit('prev')
     },
     nextStep () {
+      if (!this.selectAtLeastOneColumnPerTable()) {
+        Message({
+          message: this.$t('etl.pleaseSelectAtLeastOneColumnPerTable'),
+          type: 'warning',
+          duration: 3 * 1000
+        })
+        return
+      }
+      
       this.isProcessing = true
       let promiseList = []
       this.etlTableList.forEach((element, index) => {
@@ -126,6 +135,16 @@ export default {
     },
     cancel () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    },
+    selectAtLeastOneColumnPerTable () {
+      let result = true
+      for (let i = 0; i < this.etlTableList.length; i++) {
+        if (!this.etlTableList[i].columns.some(column => column.active)) {
+          result = false
+          break
+        }
+      }
+      return result
     }
   },
 }

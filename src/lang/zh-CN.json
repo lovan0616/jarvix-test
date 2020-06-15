@@ -361,7 +361,8 @@
     "tableChosenLimit": "最多选择 {number} 张资料表",
     "tableSearch": "搜寻资料表",
     "null": "Null",
-    "columnSelected": "已选择栏位数"
+    "columnSelected": "已选择栏位数",
+    "pleaseSelectAtLeastOneColumnPerTable": "每张表格请至少选择一个栏位"
   },
   "feature": {
     "value": "数值",

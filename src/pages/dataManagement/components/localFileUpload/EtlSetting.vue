@@ -9,7 +9,6 @@
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <!-- TODO 使用 currentColumnInfo 控制元件 show/hide -->
       <etl-choose-column/>
     </div>
     <div 
@@ -27,7 +26,7 @@
           @click="prev"
         >{{ $t('button.prevStep') }}</button>
         <button 
-          :disabled="isProcessing || !anyColumnSelected"
+          :disabled="isProcessing"
           class="btn btn-default"
           @click="buildData"
         >{{ $t('button.buildData') }}</button>
@@ -40,6 +39,7 @@
 import { dataSourcePreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
 import EtlChooseColumn from '../etl/EtlChooseColumn'
+import { Message } from 'element-ui'
 
 export default {
   name: 'EtlSetting',
@@ -86,6 +86,14 @@ export default {
       this.$emit('next')
     },
     buildData () {
+      if (!this.selectAtLeastOneColumnPerTable()) {
+        Message({
+          message: this.$t('etl.pleaseSelectAtLeastOneColumnPerTable'),
+          type: 'warning',
+          duration: 3 * 1000
+        })
+        return
+      }
       this.isProcessing = true
 
       let promiseList = []
@@ -102,6 +110,16 @@ export default {
         .finally(() => {
           this.isProcessing = false
         })
+    },
+    selectAtLeastOneColumnPerTable () {
+      let result = true
+      for (let i = 0; i < this.etlTableList.length; i++) {
+        if (!this.etlTableList[i].columns.some(column => column.active)) {
+          result = false
+          break
+        }
+      }
+      return result
     }
   },
 }
