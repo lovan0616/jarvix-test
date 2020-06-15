@@ -237,6 +237,8 @@ export default {
         .then(res => {
           // update user info
           this.$store.dispatch('userManagement/getUserInfo').then(() => {
+            // 先清空，因為新群組有可能沒有 dataSource
+            this.$store.commit('dataSource/setDataSourceId', null)
             // update data source list
             return this.$store.dispatch('dataSource/getDataSourceList', {})
           })

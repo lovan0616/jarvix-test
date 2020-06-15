@@ -44,7 +44,8 @@ export default {
     return {
       isLoading: true,
       timeoutFunction: null,
-      boardList: []
+      boardList: [],
+      boardName: null
     }
   },
   computed: {
@@ -53,21 +54,26 @@ export default {
     },
     pinboardInfo () {
       return this.$store.state.pinboard.pinboardInfo
-    },
-    boardName () {
-      if (this.pinboardList.length === 0) {
-        this.$store.dispatch('pinboard/getPinboardList')
-        return ''
-      } else {
-        let currentBoard = this.pinboardList.filter(element => element.id === parseInt(this.$route.params.id))
-        return currentBoard.length > 0 ? currentBoard[0].name : null
-      }
     }
   },
   mounted () {
     this.getPinboardInfo()
+    this.getPinboardName()
   },
   methods: {
+    getPinboardName () {
+      if (this.pinboardList.length > 0) {
+        this.setPinboardName()
+      } else {
+        this.$store.dispatch('pinboard/getPinboardList').then(() => {
+          this.setPinboardName()
+        })
+      }
+    },
+    setPinboardName () {
+      let currentBoard = this.pinboardList.filter(element => element.id === parseInt(this.$route.params.id))
+      this.boardName = currentBoard.length > 0 ? currentBoard[0].name : null
+    },
     getPinboardInfo () {
       this.$store.dispatch('pinboard/getPinboardById', this.$route.params.id).then(response => {
         if (response.length === 0) {
