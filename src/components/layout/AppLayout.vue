@@ -38,8 +38,8 @@ export default {
     // 監聽有 dataframe 建置中的 dataSource 清單是否有變化
     dataSourceBuildingStatusList (newValue, oldValue) {
       if (newValue.length === 0 && oldValue.length === 0) return
+      window.clearInterval(this.intervalFunction)
       if (newValue.length > 0) {
-        window.clearInterval(this.intervalFunction)
         this.intervalFunction = window.setInterval(() => {
           this.$store.dispatch('dataSource/getDataSourceList', {})
         }, 5000)
@@ -56,8 +56,6 @@ export default {
             type: 'success',
             duration: 3 * 1000
           })
-
-          if (newValue.length === 0) window.clearInterval(this.intervalFunction)
         })
     }
   },
