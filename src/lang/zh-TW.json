@@ -68,7 +68,7 @@
     "emptyColumnSet": "尚未建立任何欄位組合",
     "emptyFeatureFormula": "資料欄位未填寫",
     "emptyColumn": "尚未選取欄位值",
-    "emptyDataColumn": "請選擇資料欄位",
+    "emptyDataColumn": "未選擇資料欄位",
     "deleteSuccess": "刪除成功",
     "dataSourceNotExist": "資料源不存在",
     "connectionFail": "欄位資料有誤，請重新檢查",

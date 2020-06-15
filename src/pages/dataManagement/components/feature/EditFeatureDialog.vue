@@ -224,7 +224,7 @@ export default {
     },
     validFeatureFormula () {
       let column = this.featureFormula.filter(element => element.type === 'column')
-      this.validateExpresstion()
+      this.validateState()
       return (column.length !== 0 && column.every(element => element.value !== null))
     }
   },
@@ -271,7 +271,7 @@ export default {
     removeOption (index) {
       this.featureFormula.splice(index, 1)
     },
-    validateExpresstion () {
+    validateState () {
       let column = this.featureFormula.filter(element => element.type === 'column')
       if(column.some(element => element.value === null))
         this.validateMsg = 'emptyDataColumn'
