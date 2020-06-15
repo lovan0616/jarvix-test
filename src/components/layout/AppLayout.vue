@@ -52,7 +52,7 @@ export default {
       this.$store.dispatch('dataSource/updateDataFrameList')
         .then(() => {
           Message({
-            message: this.$t('message.builded'),
+            message: this.$t('message.dataFrameBuilt'),
             type: 'success',
             duration: 3 * 1000
           })
