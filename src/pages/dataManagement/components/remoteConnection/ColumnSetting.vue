@@ -162,10 +162,6 @@ export default {
     margin-bottom: 16px;
   }
 
-  & >>> .sy-select {
-    border-bottom: 1px solid #aaa;
-  }
-
   .data-frame-select-block {
     width: 256px;
     margin-bottom: 16px;
