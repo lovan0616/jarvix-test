@@ -160,7 +160,7 @@
           <div 
             v-show="!validFeatureFormula"
             class="error-text"
-          >{{ $t('message.emptyFeatureFormula') }}</div>
+          >{{ $t(`message.${validateMsg}`) }}</div>
         </div>
       </div>
       <div class="button-block">
@@ -214,7 +214,8 @@ export default {
         operator: null
       },
       numericColumnList: [],
-      featureFormula: []
+      featureFormula: [],
+      validateMsg: ''
     }
   },
   computed: {
@@ -223,6 +224,7 @@ export default {
     },
     validFeatureFormula () {
       let column = this.featureFormula.filter(element => element.type === 'column')
+      this.validateExpresstion()
       return (column.length !== 0 && column.every(element => element.value !== null))
     }
   },
@@ -268,6 +270,15 @@ export default {
     },
     removeOption (index) {
       this.featureFormula.splice(index, 1)
+    },
+    validateExpresstion () {
+      let column = this.featureFormula.filter(element => element.type === 'column')
+      if(column.some(element => element.value === null))
+        this.validateMsg = 'emptyDataColumn'
+      if(column.length == 0)
+        this.validateMsg = 'emptyColumn'
+      if(this.featureFormula.length == 0)
+        this.validateMsg = 'emptyFeatureFormula'
     },
     saveFeature () {
       this.$validator.validateAll().then(result => {
@@ -407,6 +418,10 @@ export default {
         position: absolute;
         bottom: -18px;
       }
+    }
+  
+    & >>> .input-block.has-error .error-text {
+      bottom: -20px;
     }
   }
 
