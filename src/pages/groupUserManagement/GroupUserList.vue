@@ -140,17 +140,16 @@ export default {
 
           // 若因刪除群組而造成使用者 default 群組變動，給予提示訊息
           const currentGroupName = this.$store.getters['userManagement/getCurrentGroupName']
-          if (currentGroupName === undefined) {
+          if (!currentGroupName) {
             Message({
               message: this.$t('message.youAreGroupless'),
-              type: 'success',
+              type: 'warning',
               duration: 3 * 1000
             })
-          }
-          if (prevGroupName !== currentGroupName) {
+          } else if (prevGroupName !== currentGroupName) {
             Message({
               message: this.$t('message.switchToGroupBySys', { groupName: currentGroupName }),
-              type: 'success',
+              type: 'info',
               duration: 3 * 1000
             })
           }
