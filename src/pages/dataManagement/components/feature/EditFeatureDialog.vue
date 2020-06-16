@@ -264,21 +264,14 @@ export default {
       let validateMsg = ''
       const columnList = this.featureFormula.filter(element => element.type === 'column')
       const numericList = this.featureFormula.filter(element => element.type === 'numeric')
-      if (numericList.some(element => element.value === null)) {
-        setTimeout(() => {
-            Message({
-            message: this.$t('message.emptyNumeric'),
-            type: 'error',
-            duration: 3 * 1000
-          })
-        }, 0) 
-      }
       if(columnList.some(element => element.value === null))
         validateMsg = this.$t('message.emptyDataColumn')
       if(columnList.length == 0)
         validateMsg = this.$t('message.emptyColumn')
       if(this.featureFormula.length == 0)
         validateMsg = this.$t('message.emptyFeatureFormula')
+      if (numericList.some(element => element.value === null))
+        validateMsg = this.$t('message.emptyNumeric')
       if(validateMsg) {
         Message({
           message: validateMsg,
@@ -289,9 +282,6 @@ export default {
     },
     saveFeature () {
       this.$validator.validateAll().then(result => {
-        this.validateState()
-        if (!this.validFeatureFormula) return
-        
         if (result) {
           this.featureInfo.description = JSON.stringify(this.featureFormula)
           this.featureInfo.dataColumnIdList = this.featureFormula.filter(element => element.type === 'column').map(element => element.value)
@@ -302,6 +292,9 @@ export default {
               return acc + cur.value
             }
           }, '')
+
+          this.validateState()
+          if (!this.validFeatureFormula) return
 
           let promise = this.featureInfo.id ? updateCustomFeature(this.featureInfo) : createCustomFeature(this.featureInfo)
           promise.then(() => {
