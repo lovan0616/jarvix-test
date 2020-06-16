@@ -362,7 +362,8 @@
     "tableChosenLimit": "最多選擇 {number} 張資料表",
     "tableSearch": "搜尋資料表",
     "null": "Null",
-    "columnSelected": "已選擇欄位數"
+    "columnSelected": "已選擇欄位數",
+    "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位"
   },
   "feature": {
     "value": "數值",
