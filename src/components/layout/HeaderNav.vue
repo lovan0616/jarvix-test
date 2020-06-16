@@ -237,14 +237,12 @@ export default {
         accountId: this.getCurrentAccountId,
         groupId: this.selectedGroupId
       })
-        .then(res => {
-          // update user info
-          this.$store.dispatch('userManagement/getUserInfo').then(() => {
+        .then(() => this.$store.dispatch('userManagement/getUserInfo'))
+        .then(() => {
             // 先清空，因為新群組有可能沒有 dataSource
             this.$store.commit('dataSource/setDataSourceId', null)
             // update data source list
             return this.$store.dispatch('dataSource/getDataSourceList', {})
-          })
         })
         .then(() => {
           if (this.$route.name !== 'PageIndex') this.$router.push({name: 'PageIndex'})
