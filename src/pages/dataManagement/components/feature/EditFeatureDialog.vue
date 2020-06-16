@@ -119,8 +119,7 @@
               <template
                 v-if="element.type === 'column'"
               >
-                <default-select 
-                  v-validate="'required'"
+                <default-select
                   v-model="element.value"
                   :option-list="numericColumnList"
                   :placeholder="$t('editing.chooseDataColumn')"
@@ -263,10 +262,20 @@ export default {
     },
     validateState () {
       let validateMsg = ''
-      const column = this.featureFormula.filter(element => element.type === 'column')
-      if(column.some(element => element.value === null))
+      const columnList = this.featureFormula.filter(element => element.type === 'column')
+      const numericList = this.featureFormula.filter(element => element.type === 'numeric')
+      if (numericList.some(element => element.value === null)) {
+        setTimeout(() => {
+            Message({
+            message: this.$t('message.emptyNumeric'),
+            type: 'error',
+            duration: 3 * 1000
+          })
+        }, 0) 
+      }
+      if(columnList.some(element => element.value === null))
         validateMsg = this.$t('message.emptyDataColumn')
-      if(column.length == 0)
+      if(columnList.length == 0)
         validateMsg = this.$t('message.emptyColumn')
       if(this.featureFormula.length == 0)
         validateMsg = this.$t('message.emptyFeatureFormula')
@@ -279,9 +288,10 @@ export default {
       }
     },
     saveFeature () {
-      this.validateState()
-      if (!this.validFeatureFormula) return
       this.$validator.validateAll().then(result => {
+        this.validateState()
+        if (!this.validFeatureFormula) return
+        
         if (result) {
           this.featureInfo.description = JSON.stringify(this.featureFormula)
           this.featureInfo.dataColumnIdList = this.featureFormula.filter(element => element.type === 'column').map(element => element.value)

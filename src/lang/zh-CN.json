@@ -69,6 +69,7 @@
     "emptyFeatureFormula": "资料栏位未填写",
     "emptyColumn": "未选取栏位值",
     "emptyDataColumn": "未选择资料栏位",
+    "emptyNumeric": "未填写数值",
     "deleteSuccess": "删除成功",
     "dataSourceNotExist": "资料源不存在",
     "connectionFail": "栏位资料有误，请重新检查",
