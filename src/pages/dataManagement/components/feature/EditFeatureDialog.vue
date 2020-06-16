@@ -301,7 +301,7 @@ export default {
               duration: 3 * 1000
             })
             this.$emit('update')
-          })
+          }).catch(() => {})
         }
       })
     },
