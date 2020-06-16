@@ -108,7 +108,7 @@ export default {
     commit('setDataFrameId', null)
   },
   getDataSourceTables ({state}) {
-    if (state.dataSourceId === null) return
+    if (state.dataSourceId === null) return []
     return getDataFrameById(state.dataSourceId)
   },
   getDataFrameColumnSummary ({ state }, { id, page, cancelToken }) {
