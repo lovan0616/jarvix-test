@@ -100,7 +100,6 @@
           >)</span></div>
         </div>
         <div 
-          :class="{'has-error': !validFeatureFormula}"
           class="feature-input-block">
           <div
             v-if="featureFormula.length === 0"
@@ -131,8 +130,7 @@
               <template
                 v-else-if="element.type === 'numeric'"
               >
-                <input-block 
-                  v-validate="'required'"
+                <input-block
                   :name="element.value + '-' + index"
                   :placeholder="$t('editing.numericOnly')"
                   v-model="element.value"
@@ -156,11 +154,6 @@
               </a>
             </div>
           </draggable>
-
-          <div 
-            v-show="!validFeatureFormula"
-            class="error-text"
-          >{{ $t(`message.${validateMsg}`) }}</div>
         </div>
       </div>
       <div class="button-block">
@@ -169,7 +162,6 @@
           @click="cancelEdit"
         >{{ $t('button.cancel') }}</button>
         <button 
-          :disabled="errors.any() || !validFeatureFormula"
           class="btn btn-default"
           @click="saveFeature"
         >{{ $t('button.create') }}</button>
@@ -214,8 +206,7 @@ export default {
         operator: null
       },
       numericColumnList: [],
-      featureFormula: [],
-      validateMsg: ''
+      featureFormula: []
     }
   },
   computed: {
@@ -224,7 +215,6 @@ export default {
     },
     validFeatureFormula () {
       let column = this.featureFormula.filter(element => element.type === 'column')
-      this.validateState()
       return (column.length !== 0 && column.every(element => element.value !== null))
     }
   },
@@ -272,15 +262,25 @@ export default {
       this.featureFormula.splice(index, 1)
     },
     validateState () {
-      let column = this.featureFormula.filter(element => element.type === 'column')
+      let validateMsg = ''
+      const column = this.featureFormula.filter(element => element.type === 'column')
       if(column.some(element => element.value === null))
-        this.validateMsg = 'emptyDataColumn'
+        validateMsg = this.$t('message.emptyDataColumn')
       if(column.length == 0)
-        this.validateMsg = 'emptyColumn'
+        validateMsg = this.$t('message.emptyColumn')
       if(this.featureFormula.length == 0)
-        this.validateMsg = 'emptyFeatureFormula'
+        validateMsg = this.$t('message.emptyFeatureFormula')
+      if(validateMsg) {
+        Message({
+          message: validateMsg,
+          type: 'error',
+          duration: 3 * 1000
+        })
+      }
     },
     saveFeature () {
+      this.validateState()
+      if (!this.validFeatureFormula) return
       this.$validator.validateAll().then(result => {
         if (result) {
           this.featureInfo.description = JSON.stringify(this.featureFormula)
@@ -409,19 +409,6 @@ export default {
 
     .placeholder {
       color: #aaa;
-    }
-
-    &.has-error {
-      border-color: $theme-color-danger;
-
-      .error-text {
-        position: absolute;
-        bottom: -18px;
-      }
-    }
-  
-    & >>> .input-block.has-error .error-text {
-      bottom: -20px;
     }
   }
 
