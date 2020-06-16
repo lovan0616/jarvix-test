@@ -178,7 +178,10 @@ export default {
     },
     settingData () {
       const settingList = []
-      settingList.push({icon: 'database', title: 'sideNav.dataSourceManagement', name: 'DataSourceList'})
+      if (this.hasPermission(['group_read_user', 'group_read_data'])) {
+        settingList.push({icon: 'database', title: 'sideNav.dataSourceManagement', name: 'DataSourceList'})
+      }
+  
       // 個人版 隱藏成員管理選項
       if (this.license.maxUser !== 1) {
         settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/group/user-management/${this.groupId}`})
@@ -234,12 +237,12 @@ export default {
         accountId: this.getCurrentAccountId,
         groupId: this.selectedGroupId
       })
-        .then(res => {
-          // update user info
-          this.$store.dispatch('userManagement/getUserInfo').then(() => {
+        .then(() => this.$store.dispatch('userManagement/getUserInfo'))
+        .then(() => {
+            // 先清空，因為新群組有可能沒有 dataSource
+            this.$store.commit('dataSource/setDataSourceId', null)
             // update data source list
             return this.$store.dispatch('dataSource/getDataSourceList', {})
-          })
         })
         .then(() => {
           if (this.$route.name !== 'PageIndex') this.$router.push({name: 'PageIndex'})

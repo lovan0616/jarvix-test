@@ -86,7 +86,7 @@
               :option-list="joinTypeOptions"
               :is-disabled="isPreviewingResult"
               :placeholder="$t('editing.selectJoinType')"
-              class="tag-select input"
+              class="join-type-select input"
             />
           </div>
           <div class="correlation-block">
@@ -568,7 +568,7 @@ export default {
     cursor: not-allowed;
   }
 
-  & >>> .tag-select.el-select {
+  & >>> .join-type-select.el-select {
     .el-input__inner {
       padding-left: 0;
     }

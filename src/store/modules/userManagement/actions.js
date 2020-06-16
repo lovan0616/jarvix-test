@@ -1,4 +1,4 @@
-import { logout, getAccountGroupInfo } from '@/API/User'
+import { logout } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
 
@@ -50,9 +50,7 @@ export default {
       .catch(() => {})
   },
   updateUserGroupList ({ dispatch, commit, getters }) {
-    const currentAccountId = getters.getCurrentAccountId
-    getAccountGroupInfo(currentAccountId)
-      .then(res => commit('updateUserGroupInfo', res))
+    return dispatch('getUserInfo')
       .then(() => {
         const currentGroupId = getters.getCurrentGroupId
         if (currentGroupId) {

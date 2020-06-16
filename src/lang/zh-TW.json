@@ -32,6 +32,7 @@
     "remindNotAllowSelfJoin": "不能選擇相同資料表",
     "joinTypeEmpty": "請選擇關聯方式",
     "builded": "資料源建立完成",
+    "dataFrameBuilt": "資料表建立完成",
     "noMatchedKey": "沒有成功對上的值，請嘗試設定其他關聯表或欄位",
     "previewFailed": "設定失敗，請稍候再試",
     "noData": "目前沒有資料",
@@ -67,6 +68,9 @@
     "emptyDataSource": "尚未建立資料源",
     "emptyColumnSet": "尚未建立任何欄位組合",
     "emptyFeatureFormula": "資料欄位未填寫",
+    "emptyColumn": "未選取欄位值",
+    "emptyDataColumn": "未選擇資料欄位",
+    "emptyNumeric": "未填寫數值",
     "deleteSuccess": "刪除成功",
     "dataSourceNotExist": "資料源不存在",
     "connectionFail": "欄位資料有誤，請重新檢查",
@@ -80,7 +84,9 @@
     "analysisFailed": "檔案解析發生錯誤",
     "confirmColumnStateTypeChange": "此變更將會清除進階設定內容，您確認要進行變更？",
     "fileTypeNotSupported": "不支援 {fileType} 檔案格式",
-    "goToGroupManagement": "前往帳戶專案管理"
+    "goToGroupManagement": "前往帳戶專案管理",
+    "switchToGroupBySys": "系统已將您切換至群組：{groupName}",
+    "youAreGroupless": "您目前無隸屬群組"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -361,7 +367,8 @@
     "tableChosenLimit": "最多選擇 {number} 張資料表",
     "tableSearch": "搜尋資料表",
     "null": "Null",
-    "columnSelected": "已選擇欄位數"
+    "columnSelected": "已選擇欄位數",
+    "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位"
   },
   "feature": {
     "value": "數值",

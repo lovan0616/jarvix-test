@@ -32,6 +32,7 @@
     "remindNotAllowSelfJoin": "不能选择相同资料表",
     "joinTypeEmpty": "请选择关联方式",
     "builded": "资料源建立完成",
+    "dataFrameBuilt": "资料表建立完成",
     "noMatchedKey": "没有成功对上的值，请尝试设定其他关联表或栏位",
     "previewFailed": "设定失败，请稍候再试",
     "noData": "目前没有资料",
@@ -67,6 +68,9 @@
     "emptyDataSource": "尚未建立资料源",
     "emptyColumnSet": "尚未建立任何栏位组合",
     "emptyFeatureFormula": "资料栏位未填写",
+    "emptyColumn": "未选取栏位值",
+    "emptyDataColumn": "未选择资料栏位",
+    "emptyNumeric": "未填写数值",
     "deleteSuccess": "删除成功",
     "dataSourceNotExist": "资料源不存在",
     "connectionFail": "栏位资料有误，请重新检查",
@@ -80,7 +84,9 @@
     "analysisFailed": "档案解析发生错误",
     "confirmColumnStateTypeChange": "此变更将会清除进阶设定内容，您确认要进行变更？",
     "fileTypeNotSupported": "不支援 {fileType} 档案格式",
-    "goToGroupManagement": "前往帐户专案管理"
+    "goToGroupManagement": "前往帐户专案管理",
+    "switchToGroupBySys": "系统已将您切换至群組：{groupName}",
+    "youAreGroupless": "您目前无隶属群组"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -361,7 +367,8 @@
     "tableChosenLimit": "最多选择 {number} 张资料表",
     "tableSearch": "搜寻资料表",
     "null": "Null",
-    "columnSelected": "已选择栏位数"
+    "columnSelected": "已选择栏位数",
+    "pleaseSelectAtLeastOneColumnPerTable": "每张表格请至少选择一个栏位"
   },
   "feature": {
     "value": "数值",

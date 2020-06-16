@@ -100,7 +100,6 @@
           >)</span></div>
         </div>
         <div 
-          :class="{'has-error': !validFeatureFormula}"
           class="feature-input-block">
           <div
             v-if="featureFormula.length === 0"
@@ -120,8 +119,7 @@
               <template
                 v-if="element.type === 'column'"
               >
-                <default-select 
-                  v-validate="'required'"
+                <default-select
                   v-model="element.value"
                   :option-list="numericColumnList"
                   :placeholder="$t('editing.chooseDataColumn')"
@@ -131,8 +129,7 @@
               <template
                 v-else-if="element.type === 'numeric'"
               >
-                <input-block 
-                  v-validate="'required'"
+                <input-block
                   :name="element.value + '-' + index"
                   :placeholder="$t('editing.numericOnly')"
                   v-model="element.value"
@@ -156,11 +153,6 @@
               </a>
             </div>
           </draggable>
-
-          <div 
-            v-show="!validFeatureFormula"
-            class="error-text"
-          >{{ $t('message.emptyFeatureFormula') }}</div>
         </div>
       </div>
       <div class="button-block">
@@ -169,7 +161,6 @@
           @click="cancelEdit"
         >{{ $t('button.cancel') }}</button>
         <button 
-          :disabled="errors.any() || !validFeatureFormula"
           class="btn btn-default"
           @click="saveFeature"
         >{{ $t('button.create') }}</button>
@@ -220,10 +211,6 @@ export default {
   computed: {
     max () {
       return this.$store.state.validation.fieldCommonMaxLength
-    },
-    validFeatureFormula () {
-      let column = this.featureFormula.filter(element => element.type === 'column')
-      return (column.length !== 0 && column.every(element => element.value !== null))
     }
   },
   mounted () {
@@ -269,6 +256,28 @@ export default {
     removeOption (index) {
       this.featureFormula.splice(index, 1)
     },
+    validFeatureFormula () {
+      let validateMsg = ''
+      const columnList = this.featureFormula.filter(element => element.type === 'column')
+      const numericList = this.featureFormula.filter(element => element.type === 'numeric')
+      if(columnList.some(element => element.value === null))
+        validateMsg = this.$t('message.emptyDataColumn')
+      if(columnList.length == 0)
+        validateMsg = this.$t('message.emptyColumn')
+      if(this.featureFormula.length == 0)
+        validateMsg = this.$t('message.emptyFeatureFormula')
+      if (numericList.some(element => element.value === null || element.value === ''))
+        validateMsg = this.$t('message.emptyNumeric')
+      if(validateMsg) {
+        Message({
+          message: validateMsg,
+          type: 'error',
+          duration: 3 * 1000
+        })
+        return false
+      }
+      return true
+    },
     saveFeature () {
       this.$validator.validateAll().then(result => {
         if (result) {
@@ -282,6 +291,8 @@ export default {
             }
           }, '')
 
+          if (!this.validFeatureFormula()) return
+
           let promise = this.featureInfo.id ? updateCustomFeature(this.featureInfo) : createCustomFeature(this.featureInfo)
           promise.then(() => {
             Message({
@@ -290,7 +301,7 @@ export default {
               duration: 3 * 1000
             })
             this.$emit('update')
-          })
+          }).catch(() => {})
         }
       })
     },
@@ -398,15 +409,6 @@ export default {
 
     .placeholder {
       color: #aaa;
-    }
-
-    &.has-error {
-      border-color: $theme-color-danger;
-
-      .error-text {
-        position: absolute;
-        bottom: -18px;
-      }
     }
   }
 
