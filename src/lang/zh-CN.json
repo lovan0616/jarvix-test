@@ -84,7 +84,9 @@
     "analysisFailed": "档案解析发生错误",
     "confirmColumnStateTypeChange": "此变更将会清除进阶设定内容，您确认要进行变更？",
     "fileTypeNotSupported": "不支援 {fileType} 档案格式",
-    "goToGroupManagement": "前往帐户专案管理"
+    "goToGroupManagement": "前往帐户专案管理",
+    "switchToGroupBySys": "系统已将您切换至群組：{groupName}",
+    "youAreGroupless": "您目前无隶属群组"
   },
   "guiding": {
     "prevStep": "上一步",

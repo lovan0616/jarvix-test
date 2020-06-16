@@ -50,7 +50,7 @@ export default {
       .catch(() => {})
   },
   updateUserGroupList ({ dispatch, commit, getters }) {
-    dispatch('getUserInfo')
+    return dispatch('getUserInfo')
       .then(() => {
         const currentGroupId = getters.getCurrentGroupId
         if (currentGroupId) {
