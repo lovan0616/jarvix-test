@@ -142,19 +142,11 @@ export default {
       ]
     },
     ...mapGetters('dataSource', ['dataSourceList']),
-    isDataSourceBuilding () {
-      return this.$store.getters['dataSource/isDataSourceBuilding']
-    },
     fileUploadSuccess () {
       return this.$store.state.dataManagement.fileUploadSuccess
     }
   },
   watch: {
-    isDataSourceBuilding (value, oldValue) {
-      if (!value && oldValue) {
-        this.fetchData()
-      }
-    },
     fileUploadSuccess (value) {
       if (value) {
         this.fetchData()

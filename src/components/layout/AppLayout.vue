@@ -27,9 +27,6 @@ export default {
     }
   },
   computed: {
-    isDataSourceBuilding () {
-      return this.$store.getters['dataSource/isDataSourceBuilding']
-    },
     dataSourceBuildingStatusList () {
       return this.$store.getters['dataSource/dataSourceBuildingStatusList']
     },
