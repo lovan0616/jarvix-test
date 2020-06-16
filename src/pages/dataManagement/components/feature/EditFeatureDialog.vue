@@ -266,7 +266,7 @@ export default {
         validateMsg = this.$t('message.emptyColumn')
       if(this.featureFormula.length == 0)
         validateMsg = this.$t('message.emptyFeatureFormula')
-      if (numericList.some(element => element.value === null))
+      if (numericList.some(element => element.value === null || element.value === ''))
         validateMsg = this.$t('message.emptyNumeric')
       if(validateMsg) {
         Message({
