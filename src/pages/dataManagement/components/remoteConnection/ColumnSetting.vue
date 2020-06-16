@@ -81,10 +81,6 @@ export default {
     },
     currentColumnIndex () {
       return this.$store.state.dataManagement.currentColumnIndex
-    },
-    anyColumnSelected () {
-      let selected = (column) => column.active
-      return this.etlTableList[this.currentTableIndex].columns.some(selected)
     }
   },
   methods: {
