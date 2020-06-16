@@ -175,7 +175,7 @@ Vue.mixin({
       }
 
       let result = dataset.data.map((element, index) => {
-        return [dataset.display_index ? dataset.display_index[index] : dataset.index[index], ...element]
+        return [dataset.display_index ? String(dataset.display_index[index]) : String(dataset.index[index]), ...element]
       })
       return [['index', ...dataColumn], ...result]
     },
