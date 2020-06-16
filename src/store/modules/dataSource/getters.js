@@ -1,14 +1,8 @@
 export default {
-  // 是否有資料源正在處理中
-  isDataSourceBuilding (state) {
-    return state.dataSourceList.some(element => {
-      return (element.processDataFrameCount)
-    })
-  },
-  // 取得所有有資料表處理中的資料源
+  // 取得所有有資料表處理中或排隊中的資料源
   dataSourceBuildingStatusList (state) {
     return state.dataSourceList.reduce((acc, cur) => {
-      if (!cur.processDataFrameCount) return acc
+      if (!cur.processDataFrameCount && !cur.pendingDataFrameCount) return acc
       acc.push({
         id: cur.id,
         enableDataFrameCount: cur.enableDataFrameCount,
