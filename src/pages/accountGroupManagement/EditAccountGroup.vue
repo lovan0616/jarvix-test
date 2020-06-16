@@ -40,6 +40,7 @@
               v-validate="'required'"
               v-model="selectedOwner"
               :option-list="userEmailList"
+              filterable
               class="input"
               name="owner"
             />
