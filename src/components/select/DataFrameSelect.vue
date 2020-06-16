@@ -56,7 +56,7 @@ export default {
   &__icon {
     position: absolute;
     top: 10px;
-    left: 8px;
+    left: 10px;
   }
 
   &__dropdown {
@@ -69,6 +69,10 @@ export default {
   
   /deep/ .el-select {
     flex: 1;
+  }
+
+  /deep/ .el-input__icon {
+    width: 40px;
   }
 }
 </style>
