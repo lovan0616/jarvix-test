@@ -38,15 +38,13 @@ export default {
   watch: {
     dataFrameId (newValue) {
       this.quickStartQuestionList = []
-      if (newValue) {
-        this.getQuickQuestionList()
-        this.updateUrl()
-      }
+      this.updateUrl()
+      if (newValue) this.getQuickQuestionList()
     }
   },
   created() {
     if (this.dataSourceId !== null) {
-      let {dataSourceId, dataFrameId} = this.$route.query
+      let { dataSourceId, dataFrameId } = this.$route.query
       if (!dataSourceId || !dataFrameId) this.updateUrl()
     }
   },
@@ -67,7 +65,9 @@ export default {
         && (String(queryDataSourceId) ===  String(this.dataSourceId)) 
         && (String(queryDataFrameId) === String(this.dataFrameId))
       ) return
-      this.$router.replace({
+
+      // 當前無 datasource 時，去除 query string
+      this.$router.replace(!this.dataSourceId ? '/' : {
         query: {
           dataSourceId: this.dataSourceId,
           dataFrameId: this.dataFrameId
