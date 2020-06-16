@@ -45,10 +45,12 @@
           <svg-icon icon-class="go-right"/>
         </a>
       </div>
-      <div class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}<a 
-        href="javascript:void(0)" 
-        class="link help-link"
-        @click="showHelper"
+      <div 
+        :class="{ 'disabled': dataSourceList.length === 0 }" 
+        class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}<a 
+          href="javascript:void(0)" 
+          class="link help-link"
+          @click="showHelper"
       >{{ $t('askHelper.helpLink') }}</a> </div>
     </div>
     <div 
@@ -202,6 +204,7 @@ export default {
       this.showHistoryQuestion = false
     },
     showHelper () {
+      if (this.dataSourceList.length === 0) return
       this.showAskHelper = true
       this.hideHistory()
     },
@@ -318,6 +321,10 @@ export default {
     line-height: 30px;
     text-align: left;
     letter-spacing: 0.05em;
+
+    &.disabled {
+      opacity: .3;
+    }
 
     .help-link {
       font-size: 13px;
