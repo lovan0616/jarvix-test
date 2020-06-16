@@ -84,7 +84,9 @@
     "analysisFailed": "檔案解析發生錯誤",
     "confirmColumnStateTypeChange": "此變更將會清除進階設定內容，您確認要進行變更？",
     "fileTypeNotSupported": "不支援 {fileType} 檔案格式",
-    "goToGroupManagement": "前往帳戶專案管理"
+    "goToGroupManagement": "前往帳戶專案管理",
+    "switchToGroupBySys": "系统已将您切换至群組：{groupName}",
+    "youAreGroupless": "您目前無隸屬群組"
   },
   "guiding": {
     "prevStep": "上一步",
