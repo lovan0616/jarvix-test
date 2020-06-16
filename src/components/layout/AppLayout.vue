@@ -32,6 +32,9 @@ export default {
     },
     dataSourceBuildingStatusList () {
       return this.$store.getters['dataSource/dataSourceBuildingStatusList']
+    },
+    currentGroupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
     }
   },
   watch: {
@@ -57,6 +60,11 @@ export default {
             duration: 3 * 1000
           })
         })
+    },
+    currentGroupId (value, oldValue) {
+      if (value && oldValue) {
+        window.clearInterval(this.intervalFunction)
+      }
     }
   },
   created () {
