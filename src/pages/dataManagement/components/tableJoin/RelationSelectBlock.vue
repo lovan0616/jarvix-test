@@ -4,37 +4,40 @@
       <svg-icon 
         icon-class="table" 
         class="type-icon" />
-      <custom-select
+      <default-select
+        v-validate="'required'"
+        v-model="dataFrameId"
         :key="'top-select'"
-        :default-msg="$t('editing.selectForeign')"
-        :option-list="dataFrameList"
-        :value="dataFrameId"
-        @input="onUpdateDataFrame"
+        :placeholder="$t('editing.selectForeign')"
+        :option-list="dataFrameSelectList"
+        class="default-select"
       />
     </div>
     <div class="select-block-item">
       <svg-icon 
         icon-class="column" 
         class="type-icon" />
-      <custom-select
+      <default-select
+        v-validate="'required'"
+        v-model="dataColumn.id"
         :key="'bottom-select'"
-        :default-msg="$t('editing.selectColumn')"
+        :placeholder="$t('editing.selectColumn')"
         :option-list="columnList"
-        :value="dataColumn.id"
-        @input="onUpdateDataColumn"
+        class="default-select"
+        filterable
       />
     </div>
   </div>
 </template>
 
 <script>
-import CustomSelect from '../CustomSelect'
+import DefaultSelect from '@/components/select/DefaultSelect'
 import { getDataFrameColumnInfoById } from '@/API/DataSource'
 
 export default {
   name: 'RelationSelectBlock',
   components: {
-    CustomSelect
+    DefaultSelect
   },
   props: {
     dataFrameList: {
@@ -56,8 +59,25 @@ export default {
       dataFrameId: this.initialDataFrameId
     }
   },
+  computed: {
+    dataFrameSelectList() {
+      return this.dataFrameList.map(element=> ({
+        ...element,
+        value : element.id
+      }))
+    }   
+  },
+  watch: {
+    'dataColumn.id' (value) {
+      this.onUpdateDataColumn(value)
+    },
+    dataFrameId (value) {
+      this.onUpdateDataFrame(value)
+    }
+  },
   mounted () {
     if (this.dataFrameId) this.fetchDataColumnList(this.dataFrameId)
+    
   },
   methods: {
     fetchDataColumnList (dataFrameId) {
@@ -65,19 +85,18 @@ export default {
       getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn).then(response => {
         this.columnList = response.map(column => ({
           ...column,
-          name: `${column.primaryAlias || column.name}（${column.dataType}）`
+          name: `${column.primaryAlias || column.name}（${column.dataType}）`,
+          value: column.id
         }))
       })
     },
     onUpdateDataFrame (newDataFrameId) {
-      this.dataFrameId = newDataFrameId
       this.dataColumn.id = null
       this.dataColumn.dataType = null
       this.fetchDataColumnList(this.dataFrameId)
       this.$emit('update:initialDataFrameId', newDataFrameId)
     },
     onUpdateDataColumn (newDataColumnId) {
-      this.dataColumn.id = newDataColumnId
       this.dataColumn.dataType = this.columnList.find(column => column.id === newDataColumnId).dataType
     }
   }
@@ -111,6 +130,23 @@ export default {
 
   .join-icon {
     font-size: 24px;
+  }
+
+  & >>> .default-select {
+    width: 100%;
+    border-bottom: 1px solid #fff;
+
+    .el-input__inner {
+      line-height: 24px;
+      font-size: 14px;
+      padding-left: 0;
+    }
+
+    .el-select-dropdown {
+      background-color: #303435;
+      border-radius: 4px;
+      overflow: auto;
+    }
   }
 }
 </style>
