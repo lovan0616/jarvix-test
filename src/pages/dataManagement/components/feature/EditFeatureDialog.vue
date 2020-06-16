@@ -211,10 +211,6 @@ export default {
   computed: {
     max () {
       return this.$store.state.validation.fieldCommonMaxLength
-    },
-    validFeatureFormula () {
-      let column = this.featureFormula.filter(element => element.type === 'column')
-      return (column.length !== 0 && column.every(element => element.value !== null))
     }
   },
   mounted () {
@@ -260,7 +256,7 @@ export default {
     removeOption (index) {
       this.featureFormula.splice(index, 1)
     },
-    validateState () {
+    validFeatureFormula () {
       let validateMsg = ''
       const columnList = this.featureFormula.filter(element => element.type === 'column')
       const numericList = this.featureFormula.filter(element => element.type === 'numeric')
@@ -278,7 +274,9 @@ export default {
           type: 'error',
           duration: 3 * 1000
         })
+        return false
       }
+      return true
     },
     saveFeature () {
       this.$validator.validateAll().then(result => {
@@ -293,8 +291,7 @@ export default {
             }
           }, '')
 
-          this.validateState()
-          if (!this.validFeatureFormula) return
+          if (!this.validFeatureFormula()) return
 
           let promise = this.featureInfo.id ? updateCustomFeature(this.featureInfo) : createCustomFeature(this.featureInfo)
           promise.then(() => {
