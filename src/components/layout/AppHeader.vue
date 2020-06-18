@@ -1,9 +1,19 @@
 <template>
-  <header class="app-header">
-    <div class="container">
-      <div class="header-root">
+  <header class="header">
+    <a 
+      href="javascript:void(0);" 
+      class="header__sidenav-toggle"
+      @click="toggleSideNav"
+    >
+      <svg-icon 
+        icon-class="side-nav" 
+        class="side-nav-icon"
+      />
+    </a>
+    <div class="header__container">
+      <div class="header__root">
         <router-link 
-          class="header-logo" 
+          class="header__logo" 
           to="/">
           <img src="@/assets/images/logo.svg">
         </router-link>
@@ -19,14 +29,20 @@ export default {
     isShowChatRoom () {
       return this.$store.state.isShowChatRoom
     }
+  },
+  methods: {
+    toggleSideNav() {
+      console.log('hi')
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
-.app-header {
+.header {
   position: fixed;
   top: 0;
   left: 0;
+  display: flex;
   width: 100%;
   height: auto;
   height: $header-height;
@@ -36,27 +52,38 @@ export default {
   border-bottom: 1px solid #04262B;
   // transition: all 0.1s;
 
-  &::before {
-    position: absolute;
-    top: 0;
-    content: '';
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(1.58deg, #2AD2E2 0%, rgba(42, 210, 226, 0.3) 92.98%);
+  &__container {
+    width: calc(100% - 64px - 80px);
+    margin: 0 auto;
   }
 
-  .header-root {
+  &__sidenav-toggle {
+    width: 64px;
+    height: 64px;
+    display: inline-block;
+    background: #1F3B3F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .side-nav-icon {
+      color: #2AD2E2;
+      font-size: 20px;
+    }
+  }
+
+  &__root {
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
 
-    .header-logo {
-      height: 32px;
-      cursor: pointer;
-      img {
-        height: 100%;
-      }
+  &__logo {
+    height: 32px;
+    cursor: pointer;
+    img {
+      height: 100%;
     }
   }
 }

@@ -267,7 +267,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .nav-header {
-  margin-left: 80px;
+  margin-left: 24px;
   display: flex;
   flex: 1;
   justify-content: space-between;
