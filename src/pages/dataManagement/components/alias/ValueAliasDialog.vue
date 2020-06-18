@@ -57,6 +57,7 @@
                 <div 
                   v-for="(valueInfo, index) in currentColumnInfo.aliasList"
                   :key="index"
+                  :class="{'is-editing': currentEditValueIndex === index}"
                   class="data-table-row"
                 >
                   <div class="data-table-cell data-value">{{ valueInfo.dataValue }}</div>
@@ -78,10 +79,16 @@
                           type="text"
                           class="input-verify"
                         />
-                        <div 
-                          class="link"
-                          @click="removeAlias(aliasIndex)"
-                        >{{ $t('button.remove') }}</div>
+                        <el-tooltip
+                          :enterable="false"
+                          :visible-arrow="false"
+                          :content="$t('button.save')"
+                          placement="bottom"
+                        >
+                          <svg-icon 
+                            icon-class="ban"
+                            @click.native="removeAlias(aliasIndex)" />
+                        </el-tooltip>
                       </div>
                       <button 
                         class="btn-m btn-secondary btn-add"
@@ -118,16 +125,27 @@
                     <template
                       v-else
                     >
-                      <a 
-                        href="javascript:void(0);" 
-                        class="link action-link"
-                        @click="saveAlias(index)"
-                      >{{ $t('button.save') }}</a>
-                      <a 
-                        href="javascript:void(0);" 
-                        class="link action-link"
-                        @click="cancelEditAlias"
-                      >{{ $t('button.cancel') }}</a>
+                      <el-tooltip
+                        :enterable="false"
+                        :visible-arrow="false"
+                        :content="$t('button.save')"
+                        placement="bottom"
+                      >
+                        <svg-icon
+                          icon-class="save"
+                          @click.native="saveAlias(index)" />
+                      </el-tooltip>
+                      <el-tooltip
+                        :enterable="false"
+                        :visible-arrow="false"
+                        :content="$t('button.cancel')"
+                        placement="bottom"
+                      >
+                        <svg-icon
+                          icon-class="close"
+                          class="icon-close"
+                          @click.native="cancelEditAlias"/>
+                      </el-tooltip>
                     </template>
                   </div>
                 </div>
@@ -415,6 +433,16 @@ export default {
     .data-value-table.data-table {
       .data-table-body {
         max-height: calc(70vh - 120px);
+        .data-table-row {
+          align-items: flex-start;
+          &.is-editing {
+            .data-table-cell {
+              &.data-value, &.action {
+                padding-top: 17px; // 對齊用
+              }
+            }
+          }
+        }
       }
       .data-table-cell {
         padding: 10px 16px;
@@ -451,7 +479,7 @@ export default {
 
     .edit-alias-input-block {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
 
       &:not(:last-child) {
         margin-bottom: 12px;
@@ -460,10 +488,6 @@ export default {
       & >>> .input-verify {
         width: 105px;
         margin-right: 12px;
-      }
-
-      .link {
-        line-height: 32px;
       }
     }
 
@@ -482,6 +506,21 @@ export default {
     border-radius: 5px;
     text-align: center;
     color: #AAAAAA;
+  }
+}
+
+.svg-icon {
+  fill: $theme-color-primary;
+  cursor: pointer;
+  font-size: 18px;
+  position: relative;
+  &.icon-close {
+    font-size: 16px;
+    margin-top: 1px;
+    position: relative;
+  }
+  & + .svg-icon {
+    margin-left: 20px;
   }
 }
 </style>
