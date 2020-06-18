@@ -1,5 +1,7 @@
 <template>
-  <div id="app">
+  <div 
+    id="app" 
+    data-theme="default">
     <div class="app-bg"/>
     <transition 
       name="fade" 
