@@ -67,6 +67,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
   transform: translateX(-$chat-room-width);
+  z-index: 1;
   // transition: transform 0.1s;
 
   &.is-show {

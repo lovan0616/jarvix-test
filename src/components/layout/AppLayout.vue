@@ -3,6 +3,7 @@
     <app-header>
       <HeaderNav slot="nav" />
     </app-header>
+    <AppSideNav />
     <transition 
       name="fade" 
       mode="out-in">
@@ -13,13 +14,15 @@
 <script>
 import AppHeader from './AppHeader'
 import HeaderNav from './HeaderNav'
+import AppSideNav from './AppSideNav'
 import { Message } from 'element-ui'
 
 export default {
   name: 'AppLayout',
   components: {
     AppHeader,
-    HeaderNav
+    HeaderNav,
+    AppSideNav
   },
   data () {
     return {

@@ -22,17 +22,22 @@
     </div>
   </header>
 </template>
+
 <script>
+import { mapState, mapMutations } from 'vuex'
+
 export default {
   name: 'AppHeader',
   computed: {
+    ...mapState(['isShowFullSideNav']),
     isShowChatRoom () {
       return this.$store.state.isShowChatRoom
     }
   },
   methods: {
+    ...mapMutations(['updateSideNavStatus']),
     toggleSideNav() {
-      console.log('hi')
+      this.updateSideNavStatus(!this.isShowFullSideNav)
     }
   }
 }
