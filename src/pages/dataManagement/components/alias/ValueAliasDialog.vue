@@ -81,8 +81,7 @@
                         />
                         <el-tooltip
                           :enterable="false"
-                          :visible-arrow="false"
-                          :content="$t('button.save')"
+                          :content="$t('button.remove')"
                           placement="bottom"
                         >
                           <svg-icon 
@@ -127,7 +126,6 @@
                     >
                       <el-tooltip
                         :enterable="false"
-                        :visible-arrow="false"
                         :content="$t('button.save')"
                         placement="bottom"
                       >
@@ -137,7 +135,6 @@
                       </el-tooltip>
                       <el-tooltip
                         :enterable="false"
-                        :visible-arrow="false"
                         :content="$t('button.cancel')"
                         placement="bottom"
                       >
