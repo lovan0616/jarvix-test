@@ -93,20 +93,29 @@
                   href="javascript:void(0)"
                   @click="edit(column)"
                 >{{ $t('button.edit') }}</a>
-                <a 
-                  v-if="tempRowInfo.dataColumnId === column.id" 
-                  :disabled="isProcessing"
-                  class="link action-link"
-                  href="javascript:void(0)"
-                  @click="save"
-                >{{ $t('button.save') }}</a>
-                <a 
-                  v-if="tempRowInfo.dataColumnId === column.id" 
-                  :disabled="isProcessing"
-                  class="link action-link"
-                  href="javascript:void(0)"
-                  @click="cancel"
-                >{{ $t('button.cancel') }}</a>
+                <el-tooltip
+                  v-if="tempRowInfo.dataColumnId === column.id"
+                  :enterable="false"
+                  :visible-arrow="false"
+                  :content="$t('button.save')"
+                  placement="bottom"
+                >
+                  <svg-icon
+                    icon-class="save"
+                    @click.native="save" />
+                </el-tooltip>
+                <el-tooltip
+                  v-if="tempRowInfo.dataColumnId === column.id"
+                  :enterable="false"
+                  :visible-arrow="false"
+                  :content="$t('button.cancel')"
+                  placement="bottom"
+                >
+                  <svg-icon
+                    icon-class="close"
+                    class="icon-close"
+                    @click.native="cancel"/>
+                </el-tooltip>
               </div>
             </div>
           </div>
@@ -342,6 +351,21 @@ export default {
   }
   .el-input__icon {
     line-height: 24px;
+  }
+}
+
+.svg-icon {
+  fill: $theme-color-primary !important;
+  cursor: pointer;
+  font-size: 18px;
+  position: relative;
+  &.icon-close {
+    font-size: 16px;
+    margin-top: 1px;
+    position: relative;
+  }
+  & + .svg-icon {
+    margin-left: 20px;
   }
 }
 </style>
