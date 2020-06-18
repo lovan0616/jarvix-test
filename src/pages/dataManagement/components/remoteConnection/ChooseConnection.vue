@@ -156,7 +156,8 @@ export default {
         if (response.length > 0) {
           this.connectionList = response
         } else {
-          this.$emit('skip')
+          let hasConnectionHistory = false
+          this.$emit('skip', hasConnectionHistory)
         }
         this.isLoading = false
       }).catch(() => {
