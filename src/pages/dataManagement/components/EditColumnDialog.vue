@@ -9,7 +9,11 @@
         ><svg-icon icon-class="close"/></a>
       </div>
       <div class="dialog-header-block">
-        <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ tableInfo.primaryAlias }}</div>
+        <el-tooltip 
+          :content="tableInfo.primaryAlias"
+          placement="bottom">
+          <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ tableInfo.primaryAlias }}</div>
+        </el-tooltip>
         <div
           v-if="userEditInfo.userEditedColumnInputList.length > 0"
           class="button-block"
@@ -271,6 +275,7 @@ export default {
 
     .data-frame-name {
       font-size: 14px;
+      @include text-hidden
     }
 
     .remark-text {
@@ -339,6 +344,21 @@ export default {
     color: $theme-color-warning;
   }
 }
+
+.svg-icon {
+  color: $theme-color-primary;
+  cursor: pointer;
+  font-size: 18px;
+  position: relative;
+  &.icon-close {
+    font-size: 16px;
+    margin-top: 1px;
+    position: relative;
+  }
+  & + .svg-icon {
+    margin-left: 20px;
+  }
+}
 </style>
 <style lang="scss">
 .tag-select.el-select {
@@ -351,21 +371,6 @@ export default {
   }
   .el-input__icon {
     line-height: 24px;
-  }
-}
-
-.svg-icon {
-  fill: $theme-color-primary !important;
-  cursor: pointer;
-  font-size: 18px;
-  position: relative;
-  &.icon-close {
-    font-size: 16px;
-    margin-top: 1px;
-    position: relative;
-  }
-  & + .svg-icon {
-    margin-left: 20px;
   }
 }
 </style>

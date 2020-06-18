@@ -20,7 +20,12 @@
       </div>
       <template v-if="dataColumnListInfo.length > 0">
         <div class="dialog-header-block">
-          <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
+          <el-tooltip
+            :content="dataFrameInfo.primaryAlias"
+            placement="bottom"
+          >
+            <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
+          </el-tooltip>
           <div class="button-block">
             <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
             <button 
@@ -364,12 +369,14 @@ export default {
 
     .data-frame-name {
       font-size: 14px;
+      @include text-hidden
     }
 
     .remark-text {
       color: $theme-color-warning;
       font-size: 14px;
       margin-right: 12px;
+      white-space: nowrap;
     }
   }
   .dialog-content-block {
