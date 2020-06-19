@@ -5,13 +5,12 @@
       mode="out-in">
       <choose-connection
         v-if="step === 0"
-        @skip="skipChooseConnection"
+        @skip="nextStep"
         @edit="editConnection"
         @next="connectEstablish"
       />
       <new-remote-connection
         v-if="step === 1 && !isOldConnection"
-        :has-connection-history="hasConnectionHistory"
         @updateDataSource="setDataSource"
         @prev="prevStep"
         @next="connectEstablish"
@@ -72,8 +71,7 @@ export default {
       tableIdList: [],
       status: null,
       isOldConnection: false,
-      connectInfo: {},
-      hasConnectionHistory: true
+      connectInfo: {}
     }
   },
   created () {
@@ -94,10 +92,6 @@ export default {
     connectDatabase (value) {
       this.connectionId = value
       this.tableChosen(value)
-    },
-    skipChooseConnection (value) {
-      this.hasConnectionHistory = value
-      this.nextStep()
     },
     nextStep () {
       this.step += 1

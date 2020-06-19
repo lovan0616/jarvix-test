@@ -18,7 +18,6 @@
         <div class="title-block-container">
           <div class="block-title">{{ $t('etl.newConnectionSetting') }}</div>
           <button 
-            v-if="hasConnectionHistory"
             class="btn-m btn-outline"
             @click.prevent="prevStep"
           >{{ $t('etl.connectionHistory') }}</button>
@@ -58,12 +57,6 @@ export default {
   components: {
     UploadProcessBlock,
     RemoteConnectionForm
-  },
-  props: {
-    hasConnectionHistory: {
-      type: Boolean,
-      default: true
-    }
   },
   data () {
     return {
