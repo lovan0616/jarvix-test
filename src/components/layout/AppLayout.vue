@@ -4,11 +4,13 @@
       <HeaderNav slot="nav" />
     </app-header>
     <AppSideNav />
-    <transition 
-      name="fade" 
-      mode="out-in">
-      <router-view />
-    </transition>
+    <main class="main">
+      <transition
+        name="fade" 
+        mode="out-in">
+        <router-view />
+      </transition>
+    </main>
   </div>
 </template>
 <script>
@@ -97,5 +99,11 @@ export default {
 .app-layout {
   width: 100%;
   position: relative;
+
+  .main {
+    width: calc(100% - #{$app-side-nav-closed-width});
+    position: absolute;
+    right: 0;
+  }
 }
 </style>

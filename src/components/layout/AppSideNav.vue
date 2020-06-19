@@ -214,7 +214,7 @@ export default {
   top: $header-height;
   display: flex;
   flex-direction: column;
-  width: 64px;
+  width: $app-side-nav-closed-width;
   height: calc(100vh - #{$header-height});
   background: #182D30;
   z-index: 2;
@@ -222,7 +222,7 @@ export default {
   border-right: 1px solid #2B3638;
 
   &--opened {
-    width: 240px;
+    width: $app-side-nav-opened-width;
   }
 
   .list {

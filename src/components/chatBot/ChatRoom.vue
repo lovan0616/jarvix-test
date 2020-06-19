@@ -60,6 +60,7 @@ export default {
 .chat-room {
   position: fixed;
   top: $header-height;
+  left: $app-side-nav-closed-width;
   display: flex;
   flex-direction: column;
   width: $chat-room-width;
