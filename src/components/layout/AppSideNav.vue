@@ -3,34 +3,23 @@
     :class="{ 'sidenav--opened': isShowFullSideNav }"
     class="sidenav"
   >
-    <ul class="nav-list list">
-      <li class="list__item dropdown">
-        <div 
-          :class="{ 'dropdown__badge--full': isShowFullSideNav }"
-          class="dropdown__badge"
-          @click="isShowChangeAccount = !isShowChangeAccount"
-        >
-          {{ currentAccountName }}
-        </div>
-        <ul 
-          v-if="isShowChangeAccount"
-          class="dropdown__list"
-        >
-          <li
-            v-for="account in accountList"
-            :key="account.id"
-            class="dropdown__item"
+    <div class="sidenav__account">
+      <custom-dropdown-select
+        :data-list="accountList"
+        :selected="getCurrentAccountId"
+        trigger="click"
+      >
+        <template v-slot:display>
+          <div 
+            class="dropdown__badge"
+            @click="isShowChangeAccount = !isShowChangeAccount"
           >
-            <a 
-              :class="{ 'dropdown__link--selected': isCurrentAccount(account.id) }" 
-              href="javascript:void(0);"
-              class="dropdown__link"
-            >
-              {{ account.name }}
-            </a>
-          </li>
-        </ul>
-      </li>
+            {{ currentAccountName }}
+          </div>
+        </template>
+      </custom-dropdown-select>
+    </div>
+    <ul class="sidenav__list--top list">
       <li class="list__item">
         <router-link
           :to="{ name: 'PageIndex' }"
@@ -38,13 +27,12 @@
           class="list__link"
           exact
         >
-          <svg-icon 
-            icon-class="home" 
-            class="list__icon" />
-          <span 
-            :class="{ 'list__text--show': isShowFullSideNav }"
-            class="list__text"
-          >
+          <div class="list__icon-box">
+            <svg-icon 
+              icon-class="home" 
+              class="list__icon" />
+          </div>
+          <span class="list__text">
             {{ $t('sideNav.home') }}
           </span>
         </router-link>
@@ -54,13 +42,12 @@
           :to="{ name: 'PagePinboardList' }"
           class="list__link"
         >
-          <svg-icon 
-            icon-class="pin" 
-            class="list__icon" />
-          <span 
-            :class="{ 'list__text--show': isShowFullSideNav }"
-            class="list__text"
-          >
+          <div class="list__icon-box">
+            <svg-icon 
+              icon-class="pin" 
+              class="list__icon" />
+          </div>
+          <span class="list__text">
             {{ $t('sideNav.pinboard') }}
           </span>
         </router-link>
@@ -73,19 +60,18 @@
           :to="{ name: 'AccountManagement' }"
           class="list__link"
         >
-          <svg-icon 
-            icon-class="account-management" 
-            class="list__icon" />
-          <span 
-            :class="{ 'list__text--show': isShowFullSideNav }"
-            class="list__text"
-          >
+          <div class="list__icon-box">
+            <svg-icon 
+              icon-class="account-management" 
+              class="list__icon" />
+          </div>
+          <span class="list__text">
             {{ $t('sideNav.accountManagement') }}
           </span>
         </router-link>
       </li>
     </ul>
-    <ul class="setting-list list">
+    <ul class="sidenav__list--bottom list">
       <li
         v-for="item in settingList"
         :key="item.title"
@@ -96,13 +82,12 @@
           class="list__link"
           @click="switchDialogName(item.dialogName)"
         >
-          <svg-icon 
-            :icon-class="item.icon" 
-            class="list__icon" />
-          <span 
-            :class="{ 'list__text--show': isShowFullSideNav }"
-            class="list__text"
-          >
+          <div class="list__icon-box">
+            <svg-icon 
+              :icon-class="item.icon" 
+              class="list__icon" />
+          </div>
+          <span class="list__text">
             {{ $t(item.title) }}
           </span>
         </a>
@@ -139,6 +124,7 @@
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import SySelect from '@/components/select/SySelect'
+import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import { mapState, mapGetters } from 'vuex'
 
 export default {
@@ -146,7 +132,8 @@ export default {
   components: {
     DecideDialog,
     WritingDialog,
-    SySelect
+    SySelect,
+    CustomDropdownSelect
   },
   data () {
     return {
@@ -217,33 +204,34 @@ export default {
   width: $app-side-nav-closed-width;
   height: calc(100vh - #{$header-height});
   background: #182D30;
-  z-index: 2;
+  z-index: 1000;
   transition: width .1s linear;
   border-right: 1px solid #2B3638;
 
-  &--opened {
-    width: $app-side-nav-opened-width;
+  &__account {
+    padding: 12px 16px;
+  }
+
+  &__list {
+    &--bottom {
+      border-top: 1px solid #2B3638;
+      margin: auto 0 0 0;
+    }
   }
 
   .list {
-    padding: 12px 16px;
+    padding: 0;
     margin: 0;
 
     &__item {
       list-style-type: none;
-      height: 32px;
-      
-      &:not(:last-of-type) {
-        margin-bottom: 22px;
-      }
+      white-space: nowrap;
     }
 
     &__link {
-      padding: 0;
+      padding: 22px 21px;
       display: flex;
-      width: 100%;
       align-items: center;
-      height: 32px;
       color: #CCCCCC;
 
       &.active {
@@ -258,87 +246,29 @@ export default {
     &__icon {
       color: #7496A0;
       font-size: 22px;
-      transform: translateX(5px);
+    }
+
+    &__icon-box {
+      margin-right: 0;
+      display: inline-block;
     }
 
     &__text {
-      opacity: 0;
-      width: 0;
       font-weight: bold;
-      padding-left: 0;
-
-      &--show {
-        width: initial;
-        transition: all .1s linear .1s;
-        opacity: 1;
-        padding-left: 15px;
-      }
-    }
-  }
-
-  .nav-list {
-
-  }
-
-  .setting-list {
-    border-top: 1px solid #2B3638;
-    margin: auto 0 0 0;
-  }
-
-  .dropdown {
-    position: relative;
-
-    &__list {
-      position: absolute;
-      top: 0;
-      left: calc(100% + 16px);
-      width: 207px;
-      z-index: 2;
-      background: #232D2D;
-      padding: 0;
-      border-radius: 5px;
-      box-shadow: 0px 4px 10px rgba(58, 178, 189, 0.5);
-    }
-
-    &__item {
-      list-style-type: none;
-      &:not(:last-of-type) {
-        border-bottom: 1px solid #394045;
-      }
-    }
-
-    &__link {
-      display: block;
-      line-height: 44px;
-      cursor: pointer;
-      padding: 0 14px;
-      color: #CCCCCC;
-      width: 100%;
+      flex: 1;
       overflow: hidden;
-      text-overflow: ellipsis;
+      width: 0;
       white-space: nowrap;
+      opacity: 0;
+    }
+  }
 
-      &::before {
-        content: "\2022";
-        color: #687072;
-        font-weight: bold;
-        display: inline-block;
-        padding: 0 6px;
-      }
-
-      &:hover,
-      &--selected {
-        color: #FFFFFF;
-
-        &::before {
-          color: #2AD2E2;
-        }
-      }
+  /deep/ .dropdown {
+    &__list {
+      left: calc(100% + 16px);
     }
 
     &__badge {
-      width: 100%;
-      height: 100%;
       text-align: center;
       background: #1F3B3F;
       border-radius: 5px;
@@ -353,8 +283,25 @@ export default {
       -moz-user-select: none;
       -webkit-user-select: none;
       -ms-user-select: none;
+    }
+  }
 
-      &--full {
+  &--opened {
+    width: $app-side-nav-opened-width;
+
+    .list {
+      &__icon-box {
+        margin-right: 13px;
+      }
+
+      &__text {
+        transition: opacity .1s linear .1s;
+        opacity: 1;
+      }
+    }
+
+    /deep/ .dropdown {
+      &__badge {
         text-align: left;
         padding: 0 12px;
       }
