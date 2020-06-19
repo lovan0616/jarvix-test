@@ -6,7 +6,6 @@
         class="type-icon" />
       <default-select
         v-validate="'required'"
-        v-model="dataFrameId"
         :key="'top-select'"
         :placeholder="$t('editing.selectForeign')"
         :option-list="dataFrameSelectList"
