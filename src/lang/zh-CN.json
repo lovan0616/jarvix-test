@@ -7,7 +7,8 @@
     "groupPlaceholder": "专案",
     "languagePlaceholder": "语系",
     "setting": "设定",
-    "projectManagement": "专案管理"
+    "projectManagement": "专案管理",
+    "projectPinboard": "专案钉板"
   },
   "sideNav": {
     "accountManagement": "帐户管理",
@@ -118,6 +119,11 @@
     "chooseDataSource": "请选择资料源",
     "allDataFrames": "全部资料表",
     "createBoard": "建立新版",
+    "prevStep": "返回上层",
+    "newPinboard": "新增钉版",
+    "onlyPersonal": "仅个人使用",
+    "shareToProject": "共享至专案",
+    "pinboardName": "钉板名称",
     "questionPlaceHolder": "请输入问题，例如：价格和成本的相关性",
     "askPlaceHolder": "请输入问句后按Enter送出",
     "dataBuilding": "资料处理中",
@@ -537,7 +543,7 @@
     "logout": "登出",
     "change": "变更",
     "copy": "复制",
-    "pinToBoard": "加入钉板",
+    "pinToBoard": "钉板",
     "pinned": "已钉板",
     "cancelPinned": "取消钉板",
     "built": "建立",
