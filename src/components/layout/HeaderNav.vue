@@ -6,9 +6,6 @@
         class="nav-item"
         to="/" 
         exact>{{ $t('nav.index') }}</router-link>
-      <router-link 
-        :to="{name: 'PagePinboardList'}" 
-        class="nav-item">{{ $t('nav.pinboard') }}</router-link>
       <!-- FIXME for poc/foxconn_molding -->
       <router-link 
         v-if="isShowAlgorithmBtn" 
@@ -56,19 +53,6 @@
           {{ $t('editing.createGroup') }}
         </button>
       </div>
-      <div class="nav-item nav-item-dropdown nav-account">
-        <div class="nav-set-flex">
-          <div>{{ userName }}</div>
-          <svg-icon 
-            icon-class="dropdown" 
-            class="icon nav-dropdown-icon is-rotate"/>
-        </div>
-        <dropdown-select
-          :bar-data="accountData"
-          class="nav-account-dropdown"
-          @switchDialogName="switchDialogName"
-        />
-      </div>
       <router-link
         :to="{name: 'FunctionDescription'}"
         class="nav-item nav-function tooltip-container"
@@ -81,22 +65,6 @@
         </div>
       </router-link>
     </section>
-    <writing-dialog
-      v-if="isShowLanguage"
-      :title="$t('editing.languageSetting')"
-      :button="$t('button.change')"
-      :show-both="true"
-      @closeDialog="isShowLanguage = false"
-      @confirmBtn="changeLang"
-    >
-      <sy-select 
-        :placeholder="$t('nav.languagePlaceholder')"
-        :selected="locale"
-        :items="selectItems"
-        class="dialog-select"
-        @update:selected="langOnSelected"
-      />
-    </writing-dialog>
     <writing-dialog
       v-if="isShowGroup"
       :title="$t('editing.switchGroup')"
@@ -114,20 +82,11 @@
         @update:selected="groupOnSelected"
       />
     </writing-dialog>
-    <decide-dialog
-      v-if="isShowLogout"
-      :title="$t('editing.sureLogout')"
-      :type="'confirm'"
-      :btn-text="$t('button.logout')"
-      @closeDialog="isShowLogout = false"
-      @confirmBtn="onBtnExitClick"
-    />
   </nav>
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
-import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import { mapGetters, mapState } from 'vuex'
 import { switchGroup } from '@/API/User'
@@ -137,44 +96,25 @@ export default {
   components: {
     SySelect,
     DropdownSelect,
-    DecideDialog,
     WritingDialog
   },
   data () {
     return {
-      isShowLanguage: false,
-      isShowLogout: false,
       isShowGroup: false,
-      selectedLanguage: null,
-      selectedGroupId: null,
       isLoading: false
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId', 'getCurrentAccountLicense']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
     ...mapState('userManagement', ['userName', 'license']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
-    },
-    locale () {
-      return this.$store.state.setting.locale
     },
     groupName () {
       return this.$store.getters['userManagement/getCurrentGroupName']
     },
     groupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
-    },
-    languages () {
-      return this.$store.state.setting.languages
-    },
-    selectItems () {
-      return Object.keys(this.languages).map(key => {
-        return {
-          id: key,
-          name: this.languages[key]
-        }
-      })
     },
     settingData () {
       const settingList = []
@@ -187,15 +127,6 @@ export default {
         settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/group/user-management/${this.groupId}`})
       }
       return settingList
-    },
-    accountData () {
-      const accountList = []
-      if (this.hasPermission('account_update_user')) {
-        accountList.push({icon: 'account-management', title: 'sideNav.accountManagement', name: 'AccountUserManagement'})
-      }
-      accountList.push({icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'})
-      accountList.push({icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'})
-      return accountList
     }
   },
   watch: {
@@ -204,7 +135,6 @@ export default {
     }
   },
   mounted () {
-    this.selectedLanguage = this.locale
     this.selectedGroupId = this.groupId
     // 讓demo人員可以從localStorage打開nav演算法按法
     this.setIsShowAlgorithmBtn()
@@ -216,20 +146,8 @@ export default {
         localStorage.setItem('isShowAlgorithmBtn', 'false')
       }
     },
-    langOnSelected (item) {
-      this.selectedLanguage = item
-    },
     groupOnSelected (item) {
       this.selectedGroupId = item
-    },
-    onBtnExitClick () {
-      this.$store.dispatch('userManagement/logout').then(() => {
-        this.$router.push('/login')
-      })
-    },
-    changeLang () {
-      this.$store.commit('setting/setLocale', this.selectedLanguage)
-      this.isShowLanguage = false
     },
     changeGroup () {
       this.isLoading = true
@@ -279,7 +197,8 @@ export default {
   }
 
   .nav-item {
-    line-height: 54px;
+    position: relative;
+    line-height: $header-height;
     text-align: center;
     letter-spacing: 0.5px;
     color: #a7a7a7;
@@ -294,7 +213,16 @@ export default {
 
     &.active {
       color: #fff;
-      border-bottom: 2px solid #fff;
+
+      &::before {
+        position: absolute;
+        content: '';
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: #2AD2E2;
+      }
     }
   }
 
@@ -303,20 +231,6 @@ export default {
     &:hover {
       color: #2AD2E2
     }
-  }
-
-  .nav-select {
-    display: flex;
-    width: 70px;
-    align-items: center;
-  }
-
-  .btn-exit {
-    display: flex;
-    width: 50px;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
   }
 
   .btn-create-group {
@@ -354,21 +268,6 @@ export default {
   .nav-set {
     &:hover {
       .nav-set-dropdown {
-        visibility: visible;
-      }
-
-      .is-rotate {
-        transform: rotate(180deg);
-      }
-    }
-
-    &-dropdown {
-      visibility: hidden;
-    }
-  }
-  .nav-account {
-    &:hover {
-      .nav-account-dropdown {
         visibility: visible;
       }
 
