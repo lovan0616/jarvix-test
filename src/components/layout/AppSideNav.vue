@@ -213,6 +213,10 @@ export default {
   }
 
   &__list {
+    &--top {
+      margin: 0;
+    }
+
     &--bottom {
       border-top: 1px solid #2B3638;
       margin: auto 0 0 0;
@@ -221,7 +225,6 @@ export default {
 
   .list {
     padding: 0;
-    margin: 0;
 
     &__item {
       list-style-type: none;
