@@ -70,6 +70,7 @@
         />
       </div>
       <router-link
+        v-if="isShowFunctionDescription"
         :to="{name: 'FunctionDescription'}"
         class="nav-item nav-function tooltip-container"
       >
@@ -155,6 +156,9 @@ export default {
     ...mapState('userManagement', ['userName', 'license']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
+    },
+    isShowFunctionDescription () {
+      return this.$store.state.setting.locale.includes('zh')
     },
     locale () {
       return this.$store.state.setting.locale
