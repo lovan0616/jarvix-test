@@ -54,15 +54,13 @@
         </button>
       </div>
       <router-link
-        :to="{name: 'FunctionDescription'}"
-        class="nav-item nav-function tooltip-container"
+        :to="{ name: 'FunctionDescription' }"
+        class="nav-item nav-function"
       >
         <svg-icon 
-          icon-class="description-white" 
-          class="icon"/>
-        <div class="tooltip">
-          {{ $t('sideNav.functionDescription') }}
-        </div>
+          icon-class="description" 
+          class="icon icon-description"/>
+        {{ $t('sideNav.functionDescription') }}
       </router-link>
     </section>
     <writing-dialog
@@ -223,6 +221,11 @@ export default {
         height: 2px;
         background: #2AD2E2;
       }
+    }
+
+    .icon-description {
+      font-size: 22px;
+      vertical-align: middle;
     }
   }
 
