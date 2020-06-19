@@ -10,7 +10,9 @@
         :key="'top-select'"
         :placeholder="$t('editing.selectForeign')"
         :option-list="dataFrameSelectList"
+        :value="dataFrameId"
         class="default-select"
+        @input="onUpdateDataFrame"
       />
     </div>
     <div class="select-block-item">
@@ -19,12 +21,13 @@
         class="type-icon" />
       <default-select
         v-validate="'required'"
-        v-model="dataColumn.id"
         :key="'bottom-select'"
         :placeholder="$t('editing.selectColumn')"
         :option-list="columnList"
+        :value="dataColumn.id"
         class="default-select"
         filterable
+        @input="onUpdateDataColumn"
       />
     </div>
   </div>
@@ -67,14 +70,6 @@ export default {
       }))
     }   
   },
-  watch: {
-    'dataColumn.id' (value) {
-      this.onUpdateDataColumn(value)
-    },
-    dataFrameId (value) {
-      this.onUpdateDataFrame(value)
-    }
-  },
   mounted () {
     if (this.dataFrameId) this.fetchDataColumnList(this.dataFrameId)
     
@@ -91,12 +86,14 @@ export default {
       })
     },
     onUpdateDataFrame (newDataFrameId) {
+      this.dataFrameId = newDataFrameId
       this.dataColumn.id = null
       this.dataColumn.dataType = null
       this.fetchDataColumnList(this.dataFrameId)
       this.$emit('update:initialDataFrameId', newDataFrameId)
     },
     onUpdateDataColumn (newDataColumnId) {
+      this.dataColumn.id = newDataColumnId
       this.dataColumn.dataType = this.columnList.find(column => column.id === newDataColumnId).dataType
     }
   }
