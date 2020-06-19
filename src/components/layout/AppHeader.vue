@@ -66,8 +66,9 @@ export default {
   // transition: all 0.1s;
 
   &__container {
-    width: calc(100% - 64px - 80px);
-    margin: 0 auto;
+    width: calc(100% - #{$app-side-nav-closed-width});
+    margin: 0 0 0 auto;
+    padding: 0 40px;
   }
 
   &__sidenav-toggle-container {
