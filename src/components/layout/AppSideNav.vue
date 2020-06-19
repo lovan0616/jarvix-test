@@ -2,121 +2,130 @@
   <section
     :class="{ 'sidenav--opened': isShowFullSideNav }"
     class="sidenav"
+    @click="closeSideNav"
   >
-    <div class="sidenav__account">
-      <custom-dropdown-select
-        :data-list="accountList"
-        :selected="getCurrentAccountId"
-        trigger="click"
-      >
-        <template v-slot:display>
-          <div 
-            class="dropdown__badge"
-            @click="isShowChangeAccount = !isShowChangeAccount"
-          >
-            {{ currentAccountName }}
-          </div>
-        </template>
-      </custom-dropdown-select>
-    </div>
-    <ul class="sidenav__list--top list">
-      <li class="list__item">
-        <router-link
-          :to="{ name: 'PageIndex' }"
-          :class="{'active': $route.name === 'PageIndex'}"
-          class="list__link"
-          exact
-        >
-          <div class="list__icon-box">
-            <svg-icon 
-              icon-class="home" 
-              class="list__icon" />
-          </div>
-          <span class="list__text">
-            {{ $t('sideNav.home') }}
-          </span>
-        </router-link>
-      </li>
-      <li class="list__item">
-        <router-link
-          :to="{ name: 'PagePinboardList' }"
-          class="list__link"
-        >
-          <div class="list__icon-box">
-            <svg-icon 
-              icon-class="pin" 
-              class="list__icon" />
-          </div>
-          <span class="list__text">
-            {{ $t('sideNav.pinboard') }}
-          </span>
-        </router-link>
-      </li>
-      <li
-        v-if="hasPermission('account_update_user')"
-        class="list__item"
-      >
-        <router-link
-          :to="{ name: 'AccountManagement' }"
-          class="list__link"
-        >
-          <div class="list__icon-box">
-            <svg-icon 
-              icon-class="account-management" 
-              class="list__icon" />
-          </div>
-          <span class="list__text">
-            {{ $t('sideNav.accountManagement') }}
-          </span>
-        </router-link>
-      </li>
-    </ul>
-    <ul class="sidenav__list--bottom list">
-      <li
-        v-for="item in settingList"
-        :key="item.title"
-        class="list__item"
-      >
-        <a 
-          href="javascript:void(0);" 
-          class="list__link"
-          @click="switchDialogName(item.dialogName)"
-        >
-          <div class="list__icon-box">
-            <svg-icon 
-              :icon-class="item.icon" 
-              class="list__icon" />
-          </div>
-          <span class="list__text">
-            {{ $t(item.title) }}
-          </span>
-        </a>
-      </li>
-    </ul>
-    <writing-dialog
-      v-if="isShowLanguage"
-      :title="$t('editing.languageSetting')"
-      :button="$t('button.change')"
-      :show-both="true"
-      @closeDialog="isShowLanguage = false"
-      @confirmBtn="changeLang"
+    <div 
+      class="sidenav__container"
+      @click.stop
     >
-      <sy-select 
-        :placeholder="$t('nav.languagePlaceholder')"
-        :selected="locale"
-        :items="selectItems"
-        class="dialog-select"
-        @update:selected="langOnSelected"
+      <div class="sidenav__account">
+        <custom-dropdown-select
+          :data-list="accountList"
+          :selected="getCurrentAccountId"
+          trigger="click"
+        >
+          <template v-slot:display>
+            <div 
+              class="dropdown__badge"
+              @click="isShowChangeAccount = !isShowChangeAccount"
+            >
+              {{ currentAccountName }}
+            </div>
+          </template>
+        </custom-dropdown-select>
+      </div>
+      <ul 
+        class="sidenav__list--top list"
+        @click="closeSideNav"
+      >
+        <li class="list__item">
+          <router-link
+            :to="{ name: 'PageIndex' }"
+            :class="{'active': $route.name === 'PageIndex'}"
+            class="list__link"
+            exact
+          >
+            <div class="list__icon-box">
+              <svg-icon 
+                icon-class="home" 
+                class="list__icon" />
+            </div>
+            <span class="list__text">
+              {{ $t('sideNav.home') }}
+            </span>
+          </router-link>
+        </li>
+        <li class="list__item">
+          <router-link
+            :to="{ name: 'PagePinboardList' }"
+            class="list__link"
+          >
+            <div class="list__icon-box">
+              <svg-icon 
+                icon-class="pin" 
+                class="list__icon" />
+            </div>
+            <span class="list__text">
+              {{ $t('sideNav.pinboard') }}
+            </span>
+          </router-link>
+        </li>
+        <li
+          v-if="hasPermission('account_update_user')"
+          class="list__item"
+        >
+          <router-link
+            :to="{ name: 'AccountManagement' }"
+            class="list__link"
+          >
+            <div class="list__icon-box">
+              <svg-icon 
+                icon-class="account-management" 
+                class="list__icon" />
+            </div>
+            <span class="list__text">
+              {{ $t('sideNav.accountManagement') }}
+            </span>
+          </router-link>
+        </li>
+      </ul>
+      <ul class="sidenav__list--bottom list">
+        <li
+          v-for="item in settingList"
+          :key="item.title"
+          class="list__item"
+        >
+          <a 
+            href="javascript:void(0);" 
+            class="list__link"
+            @click="switchDialogName(item.dialogName)"
+          >
+            <div class="list__icon-box">
+              <svg-icon 
+                :icon-class="item.icon" 
+                class="list__icon" />
+            </div>
+            <span class="list__text">
+              {{ $t(item.title) }}
+            </span>
+          </a>
+        </li>
+      </ul>
+      <writing-dialog
+        v-if="isShowLanguage"
+        :title="$t('editing.languageSetting')"
+        :button="$t('button.change')"
+        :show-both="true"
+        @closeDialog="isShowLanguage = false"
+        @confirmBtn="changeLang"
+      >
+        <sy-select 
+          :placeholder="$t('nav.languagePlaceholder')"
+          :selected="locale"
+          :items="selectItems"
+          class="dialog-select"
+          @update:selected="langOnSelected"
+        />
+      </writing-dialog>
+      <decide-dialog
+        v-if="isShowLogout"
+        :title="$t('editing.sureLogout')"
+        :type="'confirm'"
+        :btn-text="$t('button.logout')"
+        @closeDialog="isShowLogout = false"
+        @confirmBtn="onBtnExitClick"
       />
-    </writing-dialog>
-    <decide-dialog
-      v-if="isShowLogout"
-      :title="$t('editing.sureLogout')"
-      :type="'confirm'"
-      :btn-text="$t('button.logout')"
-      @closeDialog="isShowLogout = false"
-      @confirmBtn="onBtnExitClick"
-    />
+    </div>
   </section>
 </template>
 
@@ -125,7 +134,7 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import SySelect from '@/components/select/SySelect'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'AppSideNav',
@@ -173,6 +182,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(['updateSideNavStatus']),
     isCurrentAccount(id) {
       return id === this.getCurrentAccountId
     },
@@ -182,6 +192,7 @@ export default {
     changeLang () {
       this.$store.commit('setting/setLocale', this.selectedLanguage)
       this.isShowLanguage = false
+      this.closeSideNav()
     },
     langOnSelected (item) {
       this.selectedLanguage = item
@@ -191,6 +202,9 @@ export default {
         this.$router.push('/login')
       })
     },
+    closeSideNav() {
+      if(this.isShowFullSideNav) this.updateSideNavStatus(false)
+    }
   }
 }
 </script>
@@ -198,16 +212,25 @@ export default {
 <style lang="scss" scoped>
 .sidenav {
   position: fixed;
-  top: $header-height;
-  display: flex;
-  flex-direction: column;
-  width: $app-side-nav-closed-width;
-  height: calc(100vh - #{$header-height});
-  background: #182D30;
+  top: 0;
+  left: $app-side-nav-closed-width;
+  bottom: 0;
   z-index: 1000;
-  transition: width .1s linear;
-  border-right: 1px solid #2B3638;
+  transition: all .1s linear;
 
+  &__container {
+    position: fixed;
+    top: $header-height;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    width: $app-side-nav-closed-width;
+    height: calc(100vh - #{$header-height});
+    background: #182D30;
+    z-index: 1001;
+    border-right: 1px solid #2B3638;
+  }
+  
   &__account {
     padding: 12px 16px;
   }
@@ -290,7 +313,16 @@ export default {
   }
 
   &--opened {
-    width: $app-side-nav-opened-width;
+    left: $app-side-nav-opened-width;;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+
+    .sidenav {
+      &__container {
+        width: $app-side-nav-opened-width;
+        transition: width .1s linear;
+      }
+    }
 
     .list {
       &__icon-box {

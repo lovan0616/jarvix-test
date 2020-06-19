@@ -1,15 +1,23 @@
 <template>
   <header class="header">
-    <a 
-      href="javascript:void(0);" 
-      class="header__sidenav-toggle"
-      @click="toggleSideNav"
+    <div 
+      :class="{ 'header__sidenav-toggle-container--expand': isShowFullSideNav }"
+      class="header__sidenav-toggle-container"
     >
-      <svg-icon 
-        icon-class="side-nav" 
-        class="side-nav-icon"
-      />
-    </a>
+      <a 
+        href="javascript:void(0);" 
+        class="toggle"
+        @click="toggleSideNav"
+      >
+        <svg-icon 
+          icon-class="side-nav" 
+          class="toggle__icon"
+        />
+        <span class="toggle__text">
+          功能選單
+        </span>
+      </a>
+    </div>
     <div class="header__container">
       <div class="header__root">
         <router-link 
@@ -62,18 +70,47 @@ export default {
     margin: 0 auto;
   }
 
-  &__sidenav-toggle {
-    width: 64px;
-    height: 64px;
-    display: inline-block;
+  &__sidenav-toggle-container {
+    position: fixed;
+    padding: 21px;
+    white-space: nowrap;
+    border-right: 1px solid #2B3638;
+    width: $app-side-nav-closed-width;
     background: #1F3B3F;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    z-index: 999999999;
 
-    .side-nav-icon {
-      color: #2AD2E2;
-      font-size: 20px;
+    .toggle {
+      display: flex;
+      align-items: center;
+      &__icon {
+        color: #2AD2E2;
+        font-size: 20px;
+        margin-right: 0;
+      }
+
+      &__text {
+        flex: 1;
+        font-weight: bold;
+        color: #2AD2E2;
+        overflow: hidden;
+        width: 0;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity .1s linear .1s;
+      }
+    }
+
+    &--expand {
+      width: $app-side-nav-opened-width;
+      .toggle {
+        &__icon {
+          margin-right: 13px;
+        }
+
+        &__text {
+          opacity: 1;
+        }
+      }
     }
   }
 
