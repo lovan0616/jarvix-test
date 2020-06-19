@@ -14,7 +14,7 @@
           class="toggle__icon"
         />
         <span class="toggle__text">
-          功能選單
+          {{ $t('sideNav.functionList') }}
         </span>
       </a>
     </div>
