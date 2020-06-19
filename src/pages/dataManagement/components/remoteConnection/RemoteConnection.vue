@@ -303,10 +303,6 @@ export default {
       padding-left: 0;
     }
   }
-
-  .el-select-dropdown__item {
-    padding-left: 0;
-  }
 }
 .remote-connection {
   .input-block .error-text {

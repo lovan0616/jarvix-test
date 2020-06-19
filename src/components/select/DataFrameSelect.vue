@@ -56,13 +56,13 @@ export default {
   &__icon {
     position: absolute;
     top: 10px;
-    left: 10px;
+    left: 14px;
   }
 
   &__dropdown {
     /deep/ &.sy-select.theme-default {
       .el-input__inner {
-        padding-left: 36px;
+        padding-left: 42px;
       }
     }
   }
