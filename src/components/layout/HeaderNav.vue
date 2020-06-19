@@ -158,7 +158,7 @@ export default {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
     isShowFunctionDescription () {
-      return localStorage.getItem('locale').includes('zh')
+      return this.$store.state.setting.locale.includes('zh')
     },
     locale () {
       return this.$store.state.setting.locale

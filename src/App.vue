@@ -44,7 +44,7 @@ export default {
   methods: {
     checkLocale () {
       let prevLocale = localStorage.getItem('locale')
-      let browserScale = (navigator.language || navigator.browserLanguage)
+      let browserScale = (navigator.language || navigator.browserLanguage).toLowerCase()
       if (browserScale.includes('en')) {
         browserScale = 'en-US'
       } else if (browserScale === 'zh-tw') {
