@@ -1,6 +1,39 @@
 <template>
   <nav class="nav-header">
     <section class="nav-left">
+      <div
+        v-if="groupName"
+        class="nav-item nav-item-dropdown nav-set group-list"
+      >
+        <div class="nav-set-flex">
+          <custom-dropdown-select
+            :data-list="groupListData()"
+            :selected="groupId"
+            :is-loading="isLoading"
+            trigger="hover"
+            @select="changeGroup($event)"
+          >
+            <template v-slot:display>
+              <div class="switch">
+                <div class="switch__text">{{ groupName }}</div>
+                <svg-icon 
+                  icon-class="dropdown" 
+                  class="icon switch__icon"/>
+              </div>
+            </template>
+          </custom-dropdown-select>
+        </div>
+      </div>
+      <div v-else>
+        <button
+          v-if="hasPermission('account_create_group')"
+          class="btn-m btn-default btn-create-group"
+          @click="$router.push({name: 'AccountGroupManagement'})"
+        >
+          <svg-icon icon-class="plus" />
+          {{ $t('editing.createGroup') }}
+        </button>
+      </div>
       <router-link 
         :class="{'active': $route.name === 'PageIndex'}"
         class="nav-item"
@@ -29,30 +62,6 @@
       </div>
     </section>
     <section class="nav-right">
-      <div
-        v-if="groupName"
-        class="nav-item nav-item-dropdown nav-set group-list"
-      >
-        <div
-          class="nav-set-flex"
-          @click="isShowGroup = true"
-        >
-          <div>{{ groupName }}</div>
-          <svg-icon 
-            icon-class="switch" 
-            class="icon nav-dropdown-icon is-rotate"/>
-        </div>
-      </div>
-      <div v-else>
-        <button
-          v-if="hasPermission('account_create_group')"
-          class="btn-m btn-default btn-create-group"
-          @click="$router.push({name: 'AccountGroupManagement'})"
-        >
-          <svg-icon icon-class="plus" />
-          {{ $t('editing.createGroup') }}
-        </button>
-      </div>
       <router-link
         :to="{ name: 'FunctionDescription' }"
         class="nav-item nav-function"
@@ -63,29 +72,13 @@
         {{ $t('sideNav.functionDescription') }}
       </router-link>
     </section>
-    <writing-dialog
-      v-if="isShowGroup"
-      :title="$t('editing.switchGroup')"
-      :button="$t('button.change')"
-      :is-loading="isLoading"
-      :show-both="true"
-      @closeDialog="isShowGroup = false"
-      @confirmBtn="changeGroup"
-    >
-      <sy-select 
-        :placeholder="$t('nav.groupPlaceholder')"
-        :selected="selectedGroupId"
-        :items="groupListData()"
-        class="dialog-select"
-        @update:selected="groupOnSelected"
-      />
-    </writing-dialog>
   </nav>
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import { mapGetters, mapState } from 'vuex'
 import { switchGroup } from '@/API/User'
 
@@ -94,12 +87,13 @@ export default {
   components: {
     SySelect,
     DropdownSelect,
-    WritingDialog
+    WritingDialog,
+    CustomDropdownSelect
   },
   data () {
     return {
       isShowGroup: false,
-      isLoading: false
+      isLoading: false,
     }
   },
   computed: {
@@ -127,13 +121,7 @@ export default {
       return settingList
     }
   },
-  watch: {
-    groupId (value) {
-      this.selectedGroupId = value
-    }
-  },
   mounted () {
-    this.selectedGroupId = this.groupId
     // 讓demo人員可以從localStorage打開nav演算法按法
     this.setIsShowAlgorithmBtn()
   },
@@ -144,14 +132,11 @@ export default {
         localStorage.setItem('isShowAlgorithmBtn', 'false')
       }
     },
-    groupOnSelected (item) {
-      this.selectedGroupId = item
-    },
-    changeGroup () {
+    changeGroup (groupId) {
       this.isLoading = true
       switchGroup({
         accountId: this.getCurrentAccountId,
-        groupId: this.selectedGroupId
+        groupId: groupId
       })
         .then(() => this.$store.dispatch('userManagement/getUserInfo'))
         .then(() => {
@@ -173,10 +158,12 @@ export default {
     },
     groupListData () {
       const groupList = this.$store.state.userManagement.groupList
-      return groupList.map(group => ({
-        id: group.groupId,
-        name: group.groupName
-      }))
+      return groupList
+        .map(group => ({
+          id: group.groupId,
+          name: group.groupName
+        }))
+        .sort((groupOne, groupTwo) => (groupOne.name.toLowerCase() > groupTwo.name.toLowerCase()) ? 1 : -1) 
     }
   },
 }
@@ -230,9 +217,26 @@ export default {
   }
 
   .group-list {
-    color: #2AD2E2;
-    &:hover {
-      color: #2AD2E2
+    .switch {
+      display: flex;
+      align-items: center;
+      background: rgba(50, 75, 78, 0.6);
+      line-height: initial;
+      border-radius: 16px;
+      padding: 5px 15px;
+      color: #2AD2E2;
+
+      &__icon {
+        margin-left: 6px;
+        width: 8px;
+      }
+
+      &__text {
+        max-width: 105px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      }
     }
   }
 
@@ -286,6 +290,35 @@ export default {
 
   .nav-function {
     position: relative;
+  }
+
+  /deep/ .dropdown {
+    &__list {
+      left: 0;
+      top: calc(100% + 10px);
+      text-align: left;
+      z-index: 1;
+
+      &::before {
+        position: absolute;
+        content: "";
+        bottom: 100%;
+        left: 0;
+        width: 100%;
+        background-color: transparent;
+        height: 12px;
+      }
+
+      &::after {
+        position: absolute;
+        content: "";
+        bottom: 100%;
+        left: 10%;
+        border-bottom: 12px solid #2B3839;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+      }
+    }
   }
 }
 </style>

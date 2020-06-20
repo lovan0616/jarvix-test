@@ -17,12 +17,14 @@
       <li
         v-for="item in dataList"
         :key="item.id"
+        :class="{ 'dropdown__item--disabled': isLoading }"
         class="dropdown__item"
       >
-        <a 
+        <a
           :class="{ 'dropdown__link--selected': isSelectedItem(item.id) }" 
           href="javascript:void(0);"
           class="dropdown__link"
+          @click="selectItem(item.id)"
         >
           {{ item.name }}
         </a>
@@ -47,6 +49,10 @@ export default {
     selected: {
       type: Number,
       default: null
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -62,6 +68,10 @@ export default {
     isSelectedItem(id) {
       return id === this.selected
     },
+    selectItem(id) {
+      if (this.isLoading || this.selected === id) return
+      this.$emit('select', id)
+    }
   }
 }
 </script>
@@ -77,7 +87,7 @@ export default {
     width: 207px;
     margin: 0;
     visibility: hidden;
-    background: #232D2D;
+    background: #2B3839;
     padding: 0;
     border-radius: 5px;
     box-shadow: 0px 4px 10px rgba(58, 178, 189, 0.5);
@@ -91,6 +101,11 @@ export default {
     list-style-type: none;
     &:not(:last-of-type) {
       border-bottom: 1px solid #394045;
+    }
+
+    &--disabled {
+      opacity: .3;
+      cursor: wait;
     }
   }
 
