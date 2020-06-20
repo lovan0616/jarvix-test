@@ -87,7 +87,8 @@
     "fileTypeNotSupported": "不支援 {fileType} 档案格式",
     "goToGroupManagement": "前往帐户专案管理",
     "switchToGroupBySys": "系统已将您切换至群組：{groupName}",
-    "youAreGroupless": "您目前无隶属群组"
+    "youAreGroupless": "您目前无隶属群组",
+    "pinboardSuccess": "钉板成功"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -120,7 +121,7 @@
     "allDataFrames": "全部资料表",
     "createBoard": "建立新版",
     "prevStep": "返回上层",
-    "newPinboard": "新增钉版",
+    "newPinboard": "新增钉板",
     "onlyPersonal": "仅个人使用",
     "shareToProject": "共享至专案",
     "pinboardName": "钉板名称",
@@ -544,8 +545,6 @@
     "change": "变更",
     "copy": "复制",
     "pinToBoard": "钉板",
-    "pinned": "已钉板",
-    "cancelPinned": "取消钉板",
     "built": "建立",
     "submit": "送出",
     "editName": "编辑名称",

@@ -54,17 +54,14 @@
           class="pin-button-block"
         >
           <a 
-            :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
-            :data-text="pinButtonText"
             class="pin-button"
             href="javascript:void(0)"
             @click="pinToBoard"
-            @mouseover="isMouseoverPinButton = true"
-            @mouseleave="isMouseoverPinButton = false"
           >
             <span class="pin-slash"><svg-icon 
               :icon-class="isLoading ? 'spinner' : 'pin'" 
               class="pin-icon"/></span>
+            {{ $t('button.pinToBoard') }}
           </a>
           <pinboard-dialog
             v-if="showPinboardList"
@@ -145,25 +142,14 @@ export default {
       dataFrameId: null,
       showPinboardList: false,
       isShowShareDialog: false,
-      isMouseoverPinButton: false,
       isShowDelete: false,
       isShowShare: false,
       isShowFilterInfo: false
     }
   },
   computed: {
-    pinButtonText () {
-      if (this.isLoading) return this.$t('button.processing')
-      if (this.isPinned && !this.isMouseoverPinButton) return this.$t('button.pinned')
-      if (this.isPinned && this.isMouseoverPinButton) return this.$t('button.cancelPinned')
-      return this.$t('button.pinToBoard')
-    },
     isPinboardPage () {
       return this.$route.name === 'PagePinboard'
-    },
-    pinStatus () {
-      // 目前 pinboard 頁，只會有 pinned 的狀態
-      return this.isPinned || this.$route.name === 'PagePinboard'
     },
     pinboardList () {
       return this.$store.state.pinboard.pinboardList
@@ -193,60 +179,31 @@ export default {
   methods: {
     pinToBoard () {
       if (this.isLoading) return false
-      if (this.isPinned) {
-        this.isLoading = true
-
-        this.$store.dispatch('pinboard/unPinById', this.pinBoardId)
-          .then(res => {
-            if (this.isPinboardPage) {
-              // 這邊是為了 transition 所以先抓高度
-              let elem = document.getElementById(this.pinBoardId)
-              elem.style.height = elem.offsetHeight + 'px'
-              window.setTimeout(() => {
-                elem.style.height = 0
-                elem.style.overflow = 'hidden'
-                elem.style.padding = 0
-                elem.style.margin = 0
-              }, 300)
-              window.setTimeout(() => {
-                this.isLoading = false
-                this.$store.commit('pinboard/unPinById', this.pinBoardId)
-              }, 900)
-            } else {
-              this.isLoading = false
-              this.pinBoardId = null
-            }
-            // 更新 pinned 狀態
-            this.updatePinnedStatus()
-          }).catch(() => {
-            this.isLoading = false
-          })
-      } else {
-        if (this.showPinboardList) {
-          this.showPinboardList = false
-          return false
-        }
-        // 取得最新的 pinboardList
-        this.$store.dispatch('pinboard/getPinboardList').then(() => {
-          this.showPinboardList = true
-        })
+      if (this.showPinboardList) {
+        this.showPinboardList = false
+        return false
       }
+      // 取得最新的 pinboardList
+      this.$store.dispatch('pinboard/getPinboardList').then(() => {
+        this.showPinboardList = true
+      })
     },
     selectPinboard (id) {
       this.isLoading = true
       this.$store.dispatch('pinboard/pinToBoard', {folderId: id, resultId: this.currentResultId})
         .then(res => {
           this.pinBoardId = res.id
-          this.updatePinnedStatus()
           this.isLoading = false
           this.showPinboardList = false
+          Message({
+            message: this.$t('message.pinboardSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
         }).catch(() => {
           this.isLoading = false
           this.showPinboardList = false
         })
-    },
-    updatePinnedStatus () {
-      this.isPinned = !this.isPinned
     },
     closePinboardList () {
       this.showPinboardList = false

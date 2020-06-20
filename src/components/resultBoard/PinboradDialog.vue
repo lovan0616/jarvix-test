@@ -67,7 +67,6 @@ export default {
   name: 'PinboardDialog',
   data () {
     return {
-      isEdit: false,
       newBoardName: null,
       pinStep: 0
     }
@@ -94,17 +93,14 @@ export default {
       this.$emit('pin', id)
     },
     cancelCreate () {
-      this.isEdit = false
       this.newBoardName = null
+      this.$emit('close')
     },
     createPinboard () {
       this.$store.dispatch('pinboard/createPinboard', this.newBoardName).then(response => {
         this.$emit('pin', response.id)
         this.cancelCreate()
       })
-    },
-    editBoard () {
-      this.isEdit = true
     },
     prevStep () {
       this.pinStep -= 1
