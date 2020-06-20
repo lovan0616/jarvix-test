@@ -135,7 +135,6 @@ export default {
   },
   data () {
     return {
-      isPinned: false,
       isLoading: false,
       pinBoardId: null,
       dataSourceId: null,
