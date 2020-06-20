@@ -189,7 +189,8 @@ export default {
       const result = []
       dataList.forEach((row, yAxisIndex) => {
         row.forEach((column, xAxisIndex) => {
-          result.push([nameList[xAxisIndex], nameList[yAxisIndex], this.roundNumber(column, 2)])
+          const columnValue = column === null ? '-' : this.roundNumber(column, 2)
+          result.push([nameList[xAxisIndex], nameList[yAxisIndex], columnValue])
         })
       })
       return result
