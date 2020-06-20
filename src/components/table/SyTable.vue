@@ -1,18 +1,20 @@
 <template>
   <div class="sy-table-block">
-    <button type="button" class="btn-m btn-default btn-download"
-      v-if="appQuestion"
+    <button 
+      v-if="appQuestion" 
+      type="button"
+      class="btn-m btn-default btn-download"
       @click="downloadData"
     >{{ $t('button.download') }}</button>
-    <el-table class="sy-table"
+    <el-table 
       v-bind="tableProps"
+      class="sy-table"
       style="width: 100%;"
     >
       <el-table-column
-        type="index"
         :width="indexWidth"
-      >
-      </el-table-column>
+        type="index"
+      />
       <el-table-column
         v-for="(col, i) in dataset.columns"
         :key="i"
@@ -25,18 +27,19 @@
       v-if="hasPagination"
       :right="20"
       @click.native="$emit('next')"
-    ></arrow-button>
-    <el-pagination class="table-pagination"
+    />
+    <el-pagination 
       v-if="totalPage > 1"
-      hide-on-single-page
-      layout="prev, pager, next"
       :total="dataset.data.length"
       :page-size="countPerPage"
       :current-page="currentPage"
+      class="table-pagination"
+      hide-on-single-page
+      layout="prev, pager, next"
       @current-change="changePage"
       @prev-click="prevPage"
       @next-click="nextPage"
-    ></el-pagination>
+    />
   </div>
 </template>
 
@@ -71,27 +74,6 @@ export default {
     return {
       currentPage: 1,
       countPerPage: 20
-    }
-  },
-  methods: {
-    changePage (value) {
-      this.currentPage = value
-    },
-    nextPage () {
-      if (this.currentPage + 1 <= this.totalPage) {
-        this.currentPage += 1
-      }
-    },
-    prevPage () {
-      if (this.currentPage - 1 > 0) {
-        this.currentPage -= 1
-      }
-    },
-    downloadData () {
-      let tableData = JSON.parse(JSON.stringify(this.dataset.data))
-      tableData.unshift(this.dataset.columns)
-      let fileName = this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + this.appQuestion
-      this.exportToCSV(fileName, tableData)
     }
   },
   computed: {
@@ -166,7 +148,28 @@ export default {
       })
       return ({ row, column, rowIndex, columnIndex }) => result[rowIndex][columnIndex]
     }
-  }
+  },
+  methods: {
+    changePage (value) {
+      this.currentPage = value
+    },
+    nextPage () {
+      if (this.currentPage + 1 <= this.totalPage) {
+        this.currentPage += 1
+      }
+    },
+    prevPage () {
+      if (this.currentPage - 1 > 0) {
+        this.currentPage -= 1
+      }
+    },
+    downloadData () {
+      let tableData = JSON.parse(JSON.stringify(this.dataset.data))
+      tableData.unshift(this.dataset.columns)
+      let fileName = this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + this.appQuestion
+      this.exportToCSV(fileName, tableData)
+    }
+  },
 }
 </script>
 <style lang="scss" scoped>

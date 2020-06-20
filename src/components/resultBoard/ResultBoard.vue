@@ -1,18 +1,21 @@
 <template>
   <div class="result-board-container">
-    <div class="result-board"
+    <div 
       :id="pinBoardId"
       :class="{'has-filter': hasFilter}"
+      class="result-board"
     >
       <div class="board-header">
         <div class="header-block">
-          <slot name="PageResultBoardHeader"></slot>
+          <slot name="PageResultBoardHeader"/>
         </div>
-        <div class="pin-button-block"
+        <div 
           v-if="isPinboardPage"
+          class="pin-button-block"
         >
-          <button class="head-btn restrict"
+          <button 
             v-if="hasFilter"
+            class="head-btn restrict"
             @click.stop.prevent="toggleFilterInfo"
           >
             {{ $t('button.restrict') }}
@@ -20,55 +23,66 @@
               v-if="isShowFilterInfo"
               :filter-info="restrictions"
               @close="closeFilterInfo"
-            ></filter-info-dialog>
+            />
           </button>
-          <a class="head-btn share"
+          <a 
+            class="head-btn share"
             href="javascript:void(0)"
             @click="showShare"
           >
-            <svg-icon icon-class="share" class="icon"></svg-icon>{{ $t('button.share') }}
+            <svg-icon 
+              icon-class="share" 
+              class="icon"/>{{ $t('button.share') }}
             <share-dialog
               v-if="isShowShareDialog"
               :share-url="shareUrl"
               @cancel="closeShareDialog"
-            ></share-dialog>
+            />
           </a>
-          <a class="head-btn delete"
+          <a 
+            class="head-btn delete"
             href="javascript:void(0)"
             @click="showDelete"
           >
-            <svg-icon icon-class="delete" class="icon"></svg-icon>{{ $t('button.delete') }}
+            <svg-icon 
+              icon-class="delete" 
+              class="icon"/>{{ $t('button.delete') }}
           </a>
         </div>
-        <div class="pin-button-block"
+        <div 
           v-else
+          class="pin-button-block"
         >
-          <a class="pin-button"
+          <a 
             :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
+            :data-text="pinButtonText"
+            class="pin-button"
             href="javascript:void(0)"
             @click="pinToBoard"
             @mouseover="isMouseoverPinButton = true"
             @mouseleave="isMouseoverPinButton = false"
-            :data-text="pinButtonText"
           >
-            <span class="pin-slash"><svg-icon :icon-class="isLoading  ? 'spinner' : 'pin'" class="pin-icon"></svg-icon></span>
+            <span class="pin-slash"><svg-icon 
+              :icon-class="isLoading ? 'spinner' : 'pin'" 
+              class="pin-icon"/></span>
           </a>
           <pinboard-dialog
             v-if="showPinboardList"
             @pin="selectPinboard"
             @close="closePinboardList"
-          ></pinboard-dialog>
+          />
         </div>
       </div>
-      <slot name="PageResultBoardBody"></slot>
-      <slot name="RootCauseResultBoardBody"></slot>
+      <slot name="PageResultBoardBody"/>
+      <slot name="RootCauseResultBoardBody"/>
     </div>
-    <div class="related-question-block"
+    <div 
       v-if="$slots.RelatedQuestions"
+      class="related-question-block"
     >
       <div class="block-title">{{ $t('resultDescription.relatedQuestion') }}</div>
       <div class="related-question-list">
-        <slot name="RelatedQuestions"></slot>
+        <slot name="RelatedQuestions"/>
       </div>
     </div>
 
@@ -76,11 +90,15 @@
       v-if="isShowShare"
       :title="$t('button.shareLink')"
       :button="$t('button.copy')"
+      :show-both="false"
       @closeDialog="closeShare"
       @confirmBtn="confirmShare"
-      :showBoth="false"
     >
-      <input type="text" class="input pinboard-name-input" :value="shareUrl" ref="shareInput">
+      <input 
+        ref="shareInput" 
+        :value="shareUrl" 
+        type="text" 
+        class="input pinboard-name-input">
     </writing-dialog>
     <decide-dialog
       v-if="isShowDelete"
@@ -88,8 +106,7 @@
       :type="'delete'"
       @closeDialog="closeDelete"
       @confirmBtn="confirmDelete"
-    >
-    </decide-dialog>
+    />
   </div>
 </template>
 <script>
@@ -125,6 +142,7 @@ export default {
       isLoading: false,
       pinBoardId: null,
       dataSourceId: null,
+      dataFrameId: null,
       showPinboardList: false,
       isShowShareDialog: false,
       isMouseoverPinButton: false,
@@ -133,11 +151,43 @@ export default {
       isShowFilterInfo: false
     }
   },
+  computed: {
+    pinButtonText () {
+      if (this.isLoading) return this.$t('button.processing')
+      if (this.isPinned && !this.isMouseoverPinButton) return this.$t('button.pinned')
+      if (this.isPinned && this.isMouseoverPinButton) return this.$t('button.cancelPinned')
+      return this.$t('button.pinToBoard')
+    },
+    isPinboardPage () {
+      return this.$route.name === 'PagePinboard'
+    },
+    pinStatus () {
+      // 目前 pinboard 頁，只會有 pinned 的狀態
+      return this.isPinned || this.$route.name === 'PagePinboard'
+    },
+    pinboardList () {
+      return this.$store.state.pinboard.pinboardList
+    },
+    questionName () {
+      let boardHeaderData = this.$children.filter(element => element.componentName === 'ResultBoardHeader')[0].componentData
+      return boardHeaderData ? boardHeaderData.segmentation.question : ''
+    },
+    shareUrl () {
+      return `${window.location.origin}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&dataFrameId=${this.dataFrameId}&action=share`
+    },
+    hasFilter () {
+      return (this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult') || this.restrictions.length > 0
+    },
+    currentResultId () {
+      return this.$store.state.result.currentResultId
+    }
+  },
   mounted () {
     // Pinboard 頁預設全都是 pin 完的狀態
     if (this.isPinboardPage) {
       this.pinBoardId = this.$parent.$attrs['data-pinboard-id']
       this.dataSourceId = this.$parent.$attrs['data-data-source-id']
+      this.dataFrameId = this.$parent.$attrs['data-data-frame-id']
     }
   },
   methods: {
@@ -271,37 +321,6 @@ export default {
       this.isShowFilterInfo = false
     }
   },
-  computed: {
-    pinButtonText () {
-      if (this.isLoading) return this.$t('button.processing')
-      if (this.isPinned && !this.isMouseoverPinButton) return this.$t('button.pinned')
-      if (this.isPinned && this.isMouseoverPinButton) return this.$t('button.cancelPinned')
-      return this.$t('button.pinToBoard')
-    },
-    isPinboardPage () {
-      return this.$route.name === 'PagePinboard'
-    },
-    pinStatus () {
-      // 目前 pinboard 頁，只會有 pinned 的狀態
-      return this.isPinned || this.$route.name === 'PagePinboard'
-    },
-    pinboardList () {
-      return this.$store.state.pinboard.pinboardList
-    },
-    questionName () {
-      let boardHeaderData = this.$children.filter(element => element.componentName === 'ResultBoardHeader')[0].componentData
-      return boardHeaderData ? boardHeaderData.segmentation.question : ''
-    },
-    shareUrl () {
-      return `${window.location.origin}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&action=share`
-    },
-    hasFilter () {
-      return (this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult') || this.restrictions.length > 0
-    },
-    currentResultId () {
-      return this.$store.state.result.currentResultId
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

@@ -1,4 +1,4 @@
-import { logout, getAccountGroupInfo } from '@/API/User'
+import { logout } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
 
@@ -17,39 +17,44 @@ export default {
     let licensePermissionList = []
     let groupPermissionList = []
     let defaultAccount = {}
-    const userInfo = await getPermission()
 
-    if (userInfo.accountList.length) {
-      defaultAccount = userInfo.accountList.find(account => account.isDefault)
-      accountPermissionList = defaultAccount.accountPermissionList
-      licensePermissionList = defaultAccount.licensePermissionList
-      if (defaultAccount.groupList.length) {
-        let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
-        groupPermissionList = defaultGroup.groupPermissionList
-      }
-    }
-
-    commit('setUserInfo', {
-      userName: userInfo.username,
-      accountList: userInfo.accountList,
-      groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
-      permission: [
-        ...accountPermissionList,
-        ...groupPermissionList,
-        ...licensePermissionList
-      ]
-    })
-    let accountInfo = await getAccountInfo(defaultAccount.id)
-    commit('setLicenseInfo', accountInfo.license)
+    await getPermission()
+      .then((userInfo) => {
+        if (userInfo.accountList.length) {
+          defaultAccount = userInfo.accountList.find(account => account.isDefault)
+          accountPermissionList = defaultAccount.accountPermissionList
+          licensePermissionList = defaultAccount.licensePermissionList
+          if (defaultAccount.groupList.length) {
+            let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
+            groupPermissionList = defaultGroup.groupPermissionList
+          }
+        }
+    
+        commit('setUserInfo', {
+          userName: userInfo.username,
+          accountList: userInfo.accountList,
+          groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
+          permission: [
+            ...accountPermissionList,
+            ...groupPermissionList,
+            ...licensePermissionList
+          ]
+        })
+      })
+      .catch(() => {})
+    
+    await getAccountInfo(defaultAccount.id)
+      .then((accountInfo) => {
+        commit('setLicenseInfo', accountInfo.license)
+      })
+      .catch(() => {})
   },
   updateUserGroupList ({ dispatch, commit, getters }) {
-    const currentAccountId = getters.getCurrentAccountId
-    getAccountGroupInfo(currentAccountId)
-      .then(res => commit('updateUserGroupInfo', res))
+    return dispatch('getUserInfo')
       .then(() => {
         const currentGroupId = getters.getCurrentGroupId
         if (currentGroupId) {
-          dispatch('dataSource/getDataSourceList', null, { root: true })
+          dispatch('dataSource/getDataSourceList', {}, { root: true })
         } else {
           commit('dataSource/setDataSourceList', [], { root: true })
           dispatch('dataSource/handleEmptyDataSource', null, { root: true })

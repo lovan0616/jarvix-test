@@ -4,8 +4,7 @@
       :style="chartStyle"
       :options="chartOption"
       auto-resize
-    >
-    </v-echart>
+    />
   </div>
 </template>
 <script>
@@ -57,7 +56,14 @@ export default {
   name: 'DisplayBubbleScatterChart',
   props: {
     dataset: {
-      type: Object
+      type: Object,
+      default: () => {
+        return {
+          data: [],
+          index: [],
+          columns: []
+        }
+      }
     },
     title: {
       type: Object,

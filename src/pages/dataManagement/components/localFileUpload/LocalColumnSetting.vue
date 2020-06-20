@@ -1,37 +1,42 @@
 <template>
-  <div class="column-setting"
+  <div 
     v-if="!isProcessing"
+    class="column-setting"
   >
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="4"
-    ></upload-process-block>
+    />
     <div class="info-block">
       <div>{{ $t('editing.dataColumn') }}</div>
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <etl-column-setting></etl-column-setting>
+      <etl-column-setting/>
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="cancel"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-outline"
+        <button 
+          class="btn btn-outline"
           @click="prevStep"
         >{{ $t('button.prevStep') }}</button>
-        <button class="btn btn-default"
+        <button 
+          class="btn btn-default"
           @click="nextStep"
         >{{ $t('button.buildData') }}</button>
       </div>
     </div>
   </div>
-  <spinner class="processing-spinner-container"
+  <spinner 
     v-else
     :title="$t('editing.dataBuilding')"
+    class="processing-spinner-container"
     size="50"
-  ></spinner>
+  />
 </template>
 <script>
 import { dataSourcePreprocessor } from '@/API/DataSource'
@@ -56,6 +61,14 @@ export default {
     return {
       isProcessing: false,
       copyTableList: []
+    }
+  },
+  computed: {
+    etlTableList () {
+      return this.$store.state.dataManagement.etlTableList
+    },
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
     }
   },
   methods: {
@@ -83,18 +96,9 @@ export default {
         })
         .catch(err => {
           this.isProcessing = false
-          console.log(err)
         })
     }
   },
-  computed: {
-    etlTableList () {
-      return this.$store.state.dataManagement.etlTableList
-    },
-    currentUploadInfo () {
-      return this.$store.state.dataManagement.currentUploadInfo
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>

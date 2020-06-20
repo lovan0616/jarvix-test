@@ -3,23 +3,31 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="3"
-    ></upload-process-block>
+    />
     <div class="info-block">
       <div>{{ $t('editing.dataFrameContent') }}</div>
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <!-- TODO 使用 currentColumnInfo 控制元件 show/hide -->
-      <etl-choose-column></etl-choose-column>
+      <etl-choose-column/>
     </div>
-    <div class="dialog-footer" v-if="currentColumnIndex === null">
+    <div 
+      v-if="currentColumnIndex === null" 
+      class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
           :disabled="isProcessing"
+          class="btn btn-outline"
+          @click="cancel"
+        >{{ $t('button.cancel') }}</button>
+        <button 
+          :disabled="isProcessing"
+          class="btn btn-outline"
           @click="prev"
         >{{ $t('button.prevStep') }}</button>
-        <button class="btn btn-default"
-          :disabled="isProcessing || !anyColumnSelected"
+        <button 
+          :disabled="isProcessing"
+          class="btn btn-default"
           @click="buildData"
         >{{ $t('button.buildData') }}</button>
       </div>
@@ -31,6 +39,7 @@
 import { dataSourcePreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
 import EtlChooseColumn from '../etl/EtlChooseColumn'
+import { Message } from 'element-ui'
 
 export default {
   name: 'EtlSetting',
@@ -43,7 +52,24 @@ export default {
       isProcessing: false
     }
   },
+  computed: {
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
+    },
+    currentTableIndex () {
+      return this.$store.state.dataManagement.currentTableIndex
+    },
+    etlTableList () {
+      return this.$store.state.dataManagement.etlTableList
+    },
+    currentColumnIndex () {
+      return this.$store.state.dataManagement.currentColumnIndex
+    }
+  },
   methods: {
+    cancel () {
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    },
     prev () {
       // 將所選表格恢復成預設值
       if (this.currentTableIndex !== 0) {
@@ -56,6 +82,14 @@ export default {
       this.$emit('next')
     },
     buildData () {
+      if (!this.selectAtLeastOneColumnPerTable()) {
+        Message({
+          message: this.$t('etl.pleaseSelectAtLeastOneColumnPerTable'),
+          type: 'warning',
+          duration: 3 * 1000
+        })
+        return
+      }
       this.isProcessing = true
 
       let promiseList = []
@@ -72,26 +106,18 @@ export default {
         .finally(() => {
           this.isProcessing = false
         })
+    },
+    selectAtLeastOneColumnPerTable () {
+      let result = true
+      for (let i = 0; i < this.etlTableList.length; i++) {
+        if (!this.etlTableList[i].columns.some(column => column.active)) {
+          result = false
+          break
+        }
+      }
+      return result
     }
   },
-  computed: {
-    currentUploadInfo () {
-      return this.$store.state.dataManagement.currentUploadInfo
-    },
-    currentTableIndex () {
-      return this.$store.state.dataManagement.currentTableIndex
-    },
-    etlTableList () {
-      return this.$store.state.dataManagement.etlTableList
-    },
-    currentColumnIndex () {
-      return this.$store.state.dataManagement.currentColumnIndex
-    },
-    anyColumnSelected () {
-      let selected = (column) => column.active
-      return this.etlTableList[this.currentTableIndex].columns.some(selected)
-    }
-  }
 }
 </script>
 

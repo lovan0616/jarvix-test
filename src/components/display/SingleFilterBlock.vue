@@ -1,11 +1,13 @@
 <template>
-  <el-tooltip placement="bottom-start"
+  <el-tooltip
     :popper-class="popperClass"
+    placement="bottom-start"
   >
     <div slot="content">
-      <div class="tooltip-content-item"
+      <div
         v-for="(restraint, index) in restriction"
         :key="index"
+        class="tooltip-content-item"
       >
         <template
           v-if="restraint.type === 'compound'"
@@ -19,13 +21,14 @@
               {{ sub_restraint.properties.display_name }} = {{ sub_restraint.properties['display_datavalues'].join(', ') }}
             </template>
             <template v-else>
-             {{ sub_restraint.properties.display_name }}{{ $t('resultDescription.between', {
+              {{ sub_restraint.properties.display_name }}{{ $t('resultDescription.between', {
                 start: isNaN(sub_restraint.properties.start) ? sub_restraint.properties.start : roundNumber(sub_restraint.properties.start),
                 end: isNaN(sub_restraint.properties.end) ? sub_restraint.properties.end : roundNumber(sub_restraint.properties.end)
               }) }}
             </template>
-            <span class="tooltip-content-item-condition"
+            <span
               v-if="restraintsIndex < restraint.restraints.length - 1"
+              class="tooltip-content-item-condition"
             >、</span>
           </div>
         </template>
@@ -35,10 +38,10 @@
           </div>
           <div class="tooltip-content-item-description">
             <template v-if="restraint.type === 'enum'">
-              {{restraint.properties['display_name']}} = {{restraint.properties['display_datavalues'].join(', ')}}
+              {{ restraint.properties['display_name'] }} = {{ restraint.properties['display_datavalues'].join(', ') }}
             </template>
             <template v-if="restraint.type === 'range'">
-              {{restraint.properties['display_name']}} = {{ $t('resultDescription.between', {
+              {{ restraint.properties['display_name'] }} = {{ $t('resultDescription.between', {
                 start: isNaN(restraint.properties.start) ? restraint.properties.start : roundNumber(restraint.properties.start),
                 end: isNaN(restraint.properties.end) ? restraint.properties.end : roundNumber(restraint.properties.end)
               }) }}
@@ -48,13 +51,14 @@
       </div>
     </div>
     <div :class="['single-filter-block', {checked: checked}]">
-      <div class="column-name">{{columnNames.join(', ')}}</div>
+      <div class="column-name">{{ columnNames.join(', ') }}</div>
       <label class="checkbox-label filer-checkbox">
-        <input type="checkbox"
+        <input
           v-model="checked"
+          type="checkbox"
           @change="onCheckedChange(checked)"
         >
-        <div class="checkbox-square"></div>
+        <div class="checkbox-square"/>
       </label>
     </div>
   </el-tooltip>
@@ -64,17 +68,15 @@
 export default {
   name: 'SingleFilterBlock',
   props: {
-    status: { type: Boolean },
+    status: {
+      type: Boolean,
+      default: false
+    },
     restriction: { type: Array, default: () => [] }
   },
   data () {
     return {
       checked: this.status
-    }
-  },
-  watch: {
-    status (status) {
-      this.checked = status
     }
   },
   computed: {
@@ -98,6 +100,11 @@ export default {
       let result = 'filter-block-tooltip'
       if (!this.checked) result += ' checked'
       return result
+    }
+  },
+  watch: {
+    status (status) {
+      this.checked = status
     }
   },
   methods: {

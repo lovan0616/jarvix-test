@@ -56,6 +56,12 @@ export default {
       duration: 3 * 1000
     })
   },
+  setDataFrameList(state, data) {
+    state.dataFrameList = data
+  },
+  setDataFrameId(state, id) {
+    state.dataFrameId = id
+  },
   clearFilterList (state) {
     state.filterList = []
   },

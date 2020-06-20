@@ -1,40 +1,47 @@
 <template>
-  <div class="column-setting"
+  <div 
     v-if="!isProcessing"
+    class="column-setting"
   >
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="4"
-    ></upload-process-block>
+    />
     <div class="info-block">
       <div>{{ $t('editing.dataColumn') }}</div>
       <div>{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
     </div>
     <div class="dialog-body">
-      <etl-choose-column></etl-choose-column>
+      <etl-choose-column/>
     </div>
-    <div class="dialog-footer" v-if="currentColumnIndex === null">
+    <div 
+      v-if="currentColumnIndex === null" 
+      class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
           :disabled="isProcessing"
+          class="btn btn-outline"
           @click="cancel"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-outline"
+        <button 
           :disabled="isProcessing"
+          class="btn btn-outline"
           @click="prevStep"
         >{{ $t('button.prevStep') }}</button>
-        <button class="btn btn-default"
+        <button 
           :disabled="isProcessing"
+          class="btn btn-default"
           @click="nextStep"
         >{{ $t('button.buildData') }}</button>
       </div>
     </div>
   </div>
-  <spinner class="processing-spinner-container"
+  <spinner 
     v-else
     :title="$t('editing.dataBuilding')"
+    class="processing-spinner-container"
     size="50"
-  ></spinner>
+  />
 </template>
 <script>
 import { dataSourcePreprocessor } from '@/API/DataSource'
@@ -62,6 +69,20 @@ export default {
       isProcessing: false
     }
   },
+  computed: {
+    currentUploadInfo () {
+      return this.$store.state.dataManagement.currentUploadInfo
+    },
+    currentTableIndex () {
+      return this.$store.state.dataManagement.currentTableIndex
+    },
+    etlTableList () {
+      return this.$store.state.dataManagement.etlTableList
+    },
+    currentColumnIndex () {
+      return this.$store.state.dataManagement.currentColumnIndex
+    }
+  },
   methods: {
     cancelFileUpload () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
@@ -73,6 +94,15 @@ export default {
       this.$emit('prev')
     },
     nextStep () {
+      if (!this.selectAtLeastOneColumnPerTable()) {
+        Message({
+          message: this.$t('etl.pleaseSelectAtLeastOneColumnPerTable'),
+          type: 'warning',
+          duration: 3 * 1000
+        })
+        return
+      }
+      
       this.isProcessing = true
       let promiseList = []
       this.etlTableList.forEach((element, index) => {
@@ -101,22 +131,18 @@ export default {
     },
     cancel () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    },
+    selectAtLeastOneColumnPerTable () {
+      let result = true
+      for (let i = 0; i < this.etlTableList.length; i++) {
+        if (!this.etlTableList[i].columns.some(column => column.active)) {
+          result = false
+          break
+        }
+      }
+      return result
     }
   },
-  computed: {
-    currentUploadInfo () {
-      return this.$store.state.dataManagement.currentUploadInfo
-    },
-    currentTableIndex () {
-      return this.$store.state.dataManagement.currentTableIndex
-    },
-    etlTableList () {
-      return this.$store.state.dataManagement.etlTableList
-    },
-    currentColumnIndex () {
-      return this.$store.state.dataManagement.currentColumnIndex
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>
@@ -129,12 +155,7 @@ export default {
   .dialog-body {
     background-color: rgba(50, 58, 58, 0.95);
     border-radius: 5px;
-    padding: 24px;
     margin-bottom: 16px;
-  }
-
-  & >>> .sy-select {
-    border-bottom: 1px solid #aaa;
   }
 
   .data-frame-select-block {

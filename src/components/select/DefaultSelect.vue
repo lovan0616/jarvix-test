@@ -1,20 +1,31 @@
 <template>
-  <el-select class="sy-select theme-dark"
+  <el-select
     v-model="selectedValue"
     :placeholder="placeholder"
     :no-data-text="$t('message.noData')"
-    @change="$emit('change', $event)"
+    :no-match-text="$t('message.noMatchData')"
     :disabled="isDisabled"
     :popper-append-to-body="false"
-    style="text-align:left;"
     :size="size"
+    :multiple="multiple"
+    :collapse-tags="collapseTags"
+    :filterable="filterable"
+    class="sy-select theme-dark"
+    style="text-align:left;"
+    @change="$emit('change', $event)"
   >
     <el-option
-      v-for="option in optionList"
+      v-for="(option, index) in optionList"
       :key="option.value"
       :label="option.name"
       :value="option.value"
-    ></el-option>
+    >
+      <slot 
+        :option="option"
+        :index="index"
+        name="option-content"
+      />
+    </el-option>
   </el-select>
 </template>
 
@@ -23,11 +34,14 @@
 export default {
   name: 'DefaultSelect',
   props: {
-    value: { type: [String, Number, Boolean], default: undefined },
+    value: { type: [String, Number, Boolean, Array], default: undefined },
     optionList: { type: Array, default: () => [] },
     placeholder: { type: String, default: '' },
     isDisabled: {type: Boolean, default: false},
-    size: { type: String, default: '' }
+    size: { type: String, default: '' },
+    multiple: {type: Boolean, default: false},
+    collapseTags: {type: Boolean, default: false},
+    filterable: {type: Boolean, default: false}
   },
   computed: {
     selectedValue: {

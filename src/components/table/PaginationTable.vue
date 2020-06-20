@@ -1,26 +1,28 @@
 <template>
   <div class="sy-table-block">
-    <div class="spinner-block"
+    <div 
       v-show="isProcessing"
+      class="spinner-block"
     >
-      <spinner class="spinner"></spinner>
+      <spinner class="spinner"/>
     </div>
-    <el-table class="sy-table"
+    <el-table 
       v-bind="tableProps"
+      class="sy-table"
       style="width: 100%;"
     >
       <el-table-column
-        type="index"
         :width="indexWidth"
-        align="center"
         :fixed="fixedIndex"
+        type="index"
+        align="center"
       >
         <template slot="header">
           <slot name="index-header" />
         </template>
       </el-table-column>
       <el-table-column
-        v-for="(col, i) in dataset.columns.titles || dataset.columns"
+        v-for="(col, i) in columnList"
         :key="i"
         :prop="i.toString()"
         :label="(typeof col === 'number') ? col.toString() : col.primaryAlias"
@@ -28,34 +30,55 @@
         :min-width="minColumnWidth"
       >
         <!--Header slot-->
-        <template slot="header" slot-scope="scope">
-          <slot name="columns-header"
+        <template 
+          slot="header" 
+          slot-scope="scope">
+          <slot 
             :column="dataset.columns"
             :index="i"
+            name="columns-header"
           >
-           {{scope.column.label}}
+            {{ scope.column.label }}
           </slot>
         </template>
       </el-table-column>
+      <el-table-column
+        v-if="loadMore"
+        width="0px"
+        align="center"
+      >
+        <template 
+          slot="header" 
+          slot-scope="scope">
+          <Observer 
+            :options="formOptions()" 
+            @intersect="getData"/>
+        </template>
+      </el-table-column>
     </el-table>
-    <el-pagination class="table-pagination"
+    <el-pagination 
       v-if="paginationInfo.totalPages > 1"
-      layout="prev, pager, next"
       :total="paginationInfo.totalItems"
       :page-size="paginationInfo.itemPerPage"
       :current-page="paginationInfo.currentPage + 1"
+      class="table-pagination"
+      layout="prev, pager, next"
       @current-change="changePage"
       @prev-click="prevPage"
       @next-click="nextPage"
-    ></el-pagination>
+    />
   </div>
 </template>
 
 <script>
 import { Table } from 'element-ui'
+import Observer from '../Observer'
 
 export default {
   name: 'PaginationTable',
+  components: {
+    Observer
+  },
   props: {
     ...Table.props,
     fixedIndex: { type: Boolean, default: false },
@@ -101,9 +124,46 @@ export default {
     isProcessing: {
       type: Boolean,
       default: false
+    },
+    lazyLoadInfo: {
+      type: Object,
+      default: () => ({
+        rootMargin: '300px',
+        columnPerScroll: 6
+      })
     }
   },
+  data () {
+    return {
+      columnList: [],
+      offset: 0
+    }
+  },
+  computed: {
+    tableProps () {
+      let tableProps = { ...this.$props, data: this.dataset.data }
+      if (!this.$props.maxHeight) {
+        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 600)
+      }
+      return tableProps
+    },
+    loadMore () {
+      const headerList = this.dataset.columns.titles || this.dataset.columns
+      const isBigData = headerList.length > this.lazyLoadInfo.columnPerScroll
+      const hasReachedEnd = this.offset >= headerList.length
+      return isBigData && !hasReachedEnd
+    }
+  },
+  mounted () {
+    this.getData()
+  },
   methods: {
+    getData () {
+      const headerList = this.dataset.columns.titles || this.dataset.columns
+      if (headerList.length === this.offset) return
+      this.columnList.push(...headerList.slice(this.offset, this.offset + this.lazyLoadInfo.columnPerScroll))
+      this.offset += this.lazyLoadInfo.columnPerScroll
+    },
     changePage (value) {
       this.$emit('change-page', value)
     },
@@ -118,17 +178,15 @@ export default {
         this.paginationInfo.currentPage -= 1
         this.$emit('change-page', this.paginationInfo.currentPage)
       }
+    },
+    formOptions () {
+      return {
+        rootClassName: '.el-table__header-wrapper',
+        rootMargin: this.lazyLoadInfo.rootMargin,
+        threshold: 0,
+      }
     }
   },
-  computed: {
-    tableProps () {
-      let tableProps = { ...this.$props, data: this.dataset.data }
-      if (!this.$props.maxHeight) {
-        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 600)
-      }
-      return tableProps
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>
@@ -151,7 +209,10 @@ export default {
     margin-bottom: 16px;
   }
 
-  /* TODO: 上版前需把註解移除 */
+  /deep/ .spinner-block {
+    padding: 0;
+  }
+
   /deep/ .sy-table.el-table {
     border: 1px solid #515959;
     th, td {
@@ -175,6 +236,15 @@ export default {
   /deep/ .el-table thead th {
     overflow: visible;
     vertical-align: top;
+  }
+
+  /* 解決 lazy loading 新增欄位時，寬度增長速度大於資料顯示，造成短暫 word wrap */
+  /deep/ .el-table td {
+    width: 270px
+  }
+
+  /deep/ .el-table th {
+    width: 270px
   }
 }
 </style>

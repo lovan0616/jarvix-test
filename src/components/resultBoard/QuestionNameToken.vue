@@ -1,10 +1,11 @@
 <template>
-  <el-tooltip placement="bottom"
+  <el-tooltip 
     :tabindex="999"
     :popper-class="tokenInfo.type"
     :hide-after="0"
+    placement="bottom"
   >
-    <div slot="content">{{tooltipContent(tokenInfo)}}
+    <div slot="content">{{ tooltipContent(tokenInfo) }}
       <div v-if="tokenInfo.properties && tokenInfo.properties.length > 1">
         <span>{{ $t('resultDescription.hasColumn') }}</span>
         <span
@@ -13,9 +14,10 @@
         >{{ property.datacolumnPrimaryAlias }}<span v-show="propertyIndex < tokenInfo.properties.length - 1">、</span></span>
       </div>
     </div>
-    <span class="question-token"
+    <span 
       :class="tokenInfo.type"
-    >{{tokenInfo.word}}</span>
+      class="question-token"
+    >{{ tokenInfo.word }}</span>
   </el-tooltip>
 </template>
 <script>
@@ -23,8 +25,11 @@ export default {
   name: 'QuestionNameToken',
   props: {
     tokenInfo: {
-      type: Object
+      type: Object,
+      required: true
     }
+  },
+  computed: {
   },
   methods: {
     tooltipContent (tokenInfo) {
@@ -48,8 +53,6 @@ export default {
       }
     }
   },
-  computed: {
-  }
 }
 </script>
 <style lang="scss" scoped>

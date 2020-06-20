@@ -4,8 +4,7 @@
       :style="chartStyle"
       :options="chartOption"
       auto-resize
-    >
-    </v-echart>
+    />
   </div>
 </template>
 <script>
@@ -52,42 +51,19 @@ export default {
   name: 'DisplaySankeyChart',
   props: {
     dataset: {
-      type: Object
+      type: Object,
+      default: () => {
+        return {
+          columns: null,
+          data: null
+        }
+      }
     }
   },
   data () {
     return {
       linkList: [],
       dataList: []
-    }
-  },
-  mounted () {
-    this.dataTransform()
-  },
-  methods: {
-    dataTransform () {
-      this.dataset.columns.forEach(element => {
-        for (let column in this.dataset.data[element]) {
-          /**
-           * 注意！！
-           * 如果 target / source 是數字的話會有問題，只好先轉 String 再送進去
-           */
-          this.dataset.data[element][column].forEach(singleLink => {
-            this.linkList.push({
-              source: singleLink[0].toString() + '-' + this.dataset.columns[0],
-              target: singleLink[1].toString() + '-' + this.dataset.columns[1],
-              value: singleLink[2]
-            })
-            for (let i = 0; i < 2; i++) {
-              if (this.dataList.findIndex(node => node.name.toString() === (singleLink[i].toString() + '-' + (i === 0 ? element : column))) < 0) {
-                this.dataList.push({
-                  name: singleLink[i].toString() + '-' + (i === 0 ? element : column)
-                })
-              }
-            }
-          })
-        }
-      })
     }
   },
   computed: {
@@ -98,6 +74,7 @@ export default {
       }
       // 不顯示“全選”按鈕
       sankeyOptions.legend.selector = false
+      sankeyOptions.nodeGap = 20
       sankeyOptions.series[0].data = this.dataList
       sankeyOptions.series[0].links = this.linkList
       sankeyOptions.tooltip.trigger = 'item'
@@ -139,6 +116,11 @@ export default {
       return sankeyOptions
     },
     chartStyle () {
+      // let columns = this.dataset.columns
+      // return {
+      //   width: '100%',
+      //   height: `${this.dataset.data[columns[0]][columns[1]].length * 32}px` || '420px'
+      // }
       return {
         width: '100%',
         height: '420px'
@@ -147,6 +129,41 @@ export default {
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
     }
-  }
+  },
+  mounted () {
+    this.dataTransform()
+  },
+  methods: {
+    dataTransform () {
+      this.dataset.columns.forEach(element => {
+        for (let column in this.dataset.data[element]) {
+          /**
+           * 注意！！
+           * 如果 target / source 是數字的話會有問題，只好先轉 String 再送進去
+           */
+          this.dataset.data[element][column].forEach(singleLink => {
+            this.linkList.push({
+              source: singleLink[0].toString() + '-' + this.dataset.columns[0],
+              target: singleLink[1].toString() + '-' + this.dataset.columns[1],
+              value: singleLink[2]
+            })
+            for (let i = 0; i < 2; i++) {
+              if (this.dataList.findIndex(node => node.name.toString() === (singleLink[i].toString() + '-' + (i === 0 ? element : column))) < 0) {
+                this.dataList.push({
+                  name: singleLink[i].toString() + '-' + (i === 0 ? element : column)
+                })
+              }
+            }
+          })
+        }
+      })
+    }
+  },
 }
 </script>
+<style lang="scss" scoped>
+.display-sankey-chart {
+  max-height: 420px;
+  overflow: auto;
+}
+</style>

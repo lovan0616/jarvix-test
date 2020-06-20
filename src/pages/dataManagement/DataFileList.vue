@@ -1,42 +1,57 @@
 <template>
   <div class="data-management">
-    <div class="status-block"
+    <div 
       v-show="isProcessing"
+      class="status-block"
     >
-      <svg-icon icon-class="spinner" class="spinner-icon"></svg-icon>{{ $t('editing.dataProcessing') }}
+      <svg-icon 
+        icon-class="spinner" 
+        class="spinner-icon"/>{{ $t('editing.dataProcessing') }}
     </div>
     <div class="page-title-row">
       <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
       <div class="bread-crumb">
-        <router-link :to="{name: 'DataSourceList'}" class="title-link">{{ $t('editing.dataSource') }}</router-link>
+        <router-link 
+          :to="{name: 'DataSourceList'}" 
+          class="title-link">{{ $t('editing.dataSource') }}</router-link>
         <span class="divider">/</span>{{ dataSourceName }}
       </div>
     </div>
     <div class="table-board">
       <div class="board-title-row">
         <div class="button-block">
-          <button class="btn-m btn-default btn-has-icon"
+          <button 
             :disabled="isProcessing || reachLimit"
+            class="btn-m btn-default btn-has-icon"
             @click="createDataSource"
           >
-            <svg-icon icon-class="file-plus" class="icon"></svg-icon>{{ $t('editing.newTable') }}
+            <svg-icon 
+              icon-class="file-plus" 
+              class="icon"/>{{ $t('editing.newTable') }}
           </button>
-          <div class="reach-limit"
+          <div 
             v-if="reachLimit"
+            class="reach-limit"
           >{{ $t('notification.uploadLimitNotification') }}</div>
         </div>
         <div class="button-block dataframe-action">
-          <button class="btn-m btn-secondary btn-has-icon"
-            @click="toggleEditFeatureDialog"
+          <button 
             :disabled="reachLimit || enableDataFrameCount === 0"
+            class="btn-m btn-secondary btn-has-icon"
+            @click="toggleEditFeatureDialog"
           >
-            <svg-icon icon-class="feature" class="icon"></svg-icon>{{ $t('button.featureManagement') }}
+            <svg-icon 
+              icon-class="feature" 
+              class="icon"/>{{ $t('button.featureManagement') }}
           </button>
-          <button class="btn-m btn-secondary btn-has-icon"
-            @click="openEditJoinTableDialog"
+          <button 
             :disabled="!canEditJoinTable()"
+            class="btn-m btn-secondary btn-has-icon"
+            @click="openEditJoinTableDialog"
           >
-            <svg-icon icon-class="correlation" class="icon"></svg-icon>{{ $t('editing.tableJoin') }}
+            <svg-icon 
+              icon-class="correlation" 
+              class="icon"/>{{ $t('editing.tableJoin') }}
           </button>
         </div>
         <div class="limit-notification">{{ $t('notification.uploadLimit', {count: fileCountLimit}) }}</div>
@@ -55,57 +70,56 @@
         @valueAlias="editTableValueAlias"
         @columnSet="editColumnSet"
         @dateTime="editDateTime"
-      >
-      </data-table>
+      />
     </div>
     <file-upload-dialog
       v-if="showCreateDataSourceDialog"
       @success="fetchData"
       @close="closeFileUploadDialog"
-    ></file-upload-dialog>
+    />
     <confirm-delete-data-frame-dialog
       v-if="showConfirmDeleteDialog"
       :title="$t('editing.deleteTable')"
       :file-list="selectList"
       @confirm="deleteFile"
       @cancel="cancelDelete"
-    ></confirm-delete-data-frame-dialog>
+    />
     <edit-table-join-relation-dialog
       v-if="showJoinTableDialog"
       :reach-limit="reachLimit"
       :data-frame-list="dataList"
       @cancel="closeEditJoinTableDialog"
       @dataFrameUpdate="fetchData()"
-    ></edit-table-join-relation-dialog>
+    />
     <edit-column-dialog
       v-if="showEditColumnDialog"
       :table-info="currentEditDataFrameInfo"
       @close="closeEditColumnDialog"
-    ></edit-column-dialog>
+    />
     <data-frame-alias-dialog
       v-if="showDataFrameAliasDialog"
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeDataFrameAliasDialog"
-    ></data-frame-alias-dialog>
+    />
     <value-alias-dialog
       v-if="showValueAliasDialog"
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeValueAliasDialog"
-    ></value-alias-dialog>
+    />
     <edit-column-set-dialog
       v-if="showEditColumnSetDialog"
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditClomnSetDialog"
-    ></edit-column-set-dialog>
+    />
     <edit-date-time-dialog
       v-if="showEditDateTimeDialog"
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditDateTimeDialog"
-    ></edit-date-time-dialog>
+    />
     <feature-management-dialog
       v-if="showEditFeatureDialog"
       @close="toggleEditFeatureDialog"
-    ></feature-management-dialog>
+    />
   </div>
 </template>
 <script>
@@ -168,208 +182,8 @@ export default {
       showJoinTable: localStorage.getItem('showJoinTable')
     }
   },
-  mounted () {
-    this.fetchData()
-    this.checkDataSourceStatus()
-    this.checkJoinTable()
-    this.checkIfReachFileSizeLimit()
-  },
-  beforeDestroy () {
-    if (this.intervalFunction) {
-      window.clearInterval(this.intervalFunction)
-    } else if (this.checkDataFrameIntervalFunction) {
-      window.clearInterval(this.checkDataFrameIntervalFunction)
-    }
-  },
-  watch: {
-    fileUploadSuccess (value) {
-      if (value) {
-        this.fetchData()
-        this.$store.commit('dataManagement/updateFileUploadSuccess', false)
-      }
-    },
-    isProcessing (value) {
-      if (value) {
-        this.intervalFunction = window.setInterval(() => {
-          this.checkDataSourceStatus()
-        }, 5000)
-      }
-      // 建置完成
-      if (!value) {
-        window.clearInterval(this.intervalFunction)
-        this.$store.dispatch('dataSource/getDataSourceList')
-      }
-    },
-    hasDataFrameProcessing (value) {
-      if (value) {
-        this.checkDataFrameIntervalFunction = window.setInterval(() => {
-          this.updateDataTable()
-        }, 5000)
-      } else {
-        this.$store.dispatch('dataSource/getDataSourceList')
-        window.clearInterval(this.checkDataFrameIntervalFunction)
-        this.checkIfReachFileSizeLimit()
-      }
-    }
-  },
-  methods: {
-    checkIfReachFileSizeLimit () {
-      getAccountInfo()
-        .then((accountInfo) => {
-          this.$store.commit('userManagement/setLicenseCurrentDataStorageSize', accountInfo.license.currentDataStorageSize)
-        })
-        .catch(() => {})
-    },
-    checkJoinTable () {
-      if (!this.showJoinTable) {
-        localStorage.setItem('showJoinTable', false)
-      }
-    },
-    fetchData () {
-      this.isLoading = true
-      return this.updateDataTable().finally(() => {
-        this.isLoading = false
-      })
-    },
-    updateDataTable () {
-      return getDataFrameById(this.currentDataSourceId, true).then(response => {
-        // 因為 ETL 會預建立 data frame，如果未執行預處理 data frame 會處於 pending 狀態，在這邊需要過濾掉
-        this.dataList = response.filter(element => element.state !== 'Temp').map(element => {
-          return {
-            ...element,
-            createMethod: element.joinCount > 1 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
-          }
-        })
-      })
-    },
-    createMethod (value) {
-      if (value === 'file') {
-        return this.$t('editing.userUpload')
-      } else {
-        return this.$t('editing.connectDB')
-      }
-    },
-    checkDataSourceStatus () {
-      return checkDataSourceStatusById(this.currentDataSourceId).then(response => {
-        this.isProcessing = response.state === 'PROCESSING'
-        this.dataSourceName = response.name
-      })
-    },
-    createDataSource () {
-      // 為了資料表上傳
-      this.$store.commit('dataManagement/updateCurrentUploadInfo', {
-        dataSourceId: this.currentDataSourceId,
-        name: this.dataSourceName,
-        type: null
-      })
-
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
-    },
-    closeFileUploadDialog () {
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-    },
-    confirmDelete (dataObj) {
-      if (dataObj) {
-        this.selectList = [dataObj]
-      }
-      this.showConfirmDeleteDialog = true
-    },
-    deleteFile () {
-      this.showConfirmDeleteDialog = false
-      this.isLoading = true
-      const dataframeId = this.selectList[0].id
-      deleteDataFrameById(dataframeId)
-        .then(res => {
-          this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
-          this.fetchData()
-          this.deleteFinish()
-          this.checkIfReachFileSizeLimit()
-        })
-        .catch(() => {
-          this.deleteFinish()
-        })
-    },
-    deleteFinish () {
-      this.selectList = []
-      this.isLoading = false
-    },
-    cancelDelete () {
-      this.selectList = []
-      this.showConfirmDeleteDialog = false
-    },
-    canEditJoinTable () {
-      const editableDataList = this.dataList.filter(dataFrame => dataFrame.state === 'Enable')
-      // return editableDataList.length > 0
-      // 暫時無開啟 self join 功能，因此至少需兩張 dataframe 才可編輯
-      return editableDataList.length > 1
-    },
-    openEditJoinTableDialog () {
-      if (!this.canEditJoinTable) return
-      this.showJoinTableDialog = true
-    },
-    closeEditJoinTableDialog () {
-      this.showJoinTableDialog = false
-    },
-    toggleEditColumnDialog () {
-      this.showEditColumnDialog = !this.showEditColumnDialog
-    },
-    editTableColumn (dataInfo) {
-      // 利用 id 去 tableList 裡面找對應的 table 資訊
-      this.currentEditDataFrameInfo = dataInfo
-      this.toggleEditColumnDialog()
-    },
-    closeEditColumnDialog () {
-      this.currentEditDataFrameInfo = null
-      this.toggleEditColumnDialog()
-    },
-    editDataFrameAlias (dataInfo) {
-      this.currentEditDataFrameInfo = {
-        id: dataInfo.id,
-        primaryAlias: dataInfo.primaryAlias
-      }
-      this.showDataFrameAliasDialog = true
-    },
-    editTableValueAlias (dataInfo) {
-      this.currentEditDataFrameInfo = {
-        id: dataInfo.id,
-        primaryAlias: dataInfo.primaryAlias
-      }
-      this.showValueAliasDialog = true
-    },
-    editColumnSet (dataInfo) {
-      this.currentEditDataFrameInfo = {
-        id: dataInfo.id,
-        primaryAlias: dataInfo.primaryAlias
-      }
-      this.showEditColumnSetDialog = true
-    },
-    editDateTime (dataInfo) {
-      this.currentEditDataFrameInfo = {
-        id: dataInfo.id,
-        primaryAlias: dataInfo.primaryAlias
-      }
-      this.showEditDateTimeDialog = true
-    },
-    closeDataFrameAliasDialog () {
-      this.showDataFrameAliasDialog = false
-      this.currentEditDataFrameInfo = null
-    },
-    closeValueAliasDialog () {
-      this.showValueAliasDialog = false
-    },
-    closeEditClomnSetDialog () {
-      this.showEditColumnSetDialog = false
-    },
-    closeEditDateTimeDialog () {
-      this.showEditDateTimeDialog = false
-    },
-    toggleEditFeatureDialog () {
-      this.showEditFeatureDialog = !this.showEditFeatureDialog
-    }
-  },
   computed: {
     ...mapState('userManagement', ['license']),
-
     reachLicenseFileSizeLimit () {
       return this.license.currentDataStorageSize >= this.license.maxDataStorageSize
     },
@@ -454,6 +268,211 @@ export default {
       return this.dataList.reduce((acc, cur) => {
         return (cur.state === 'Enable') ? acc + 1 : acc
       }, 0)
+    },
+    storedDataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
+    }
+  },
+  watch: {
+    fileUploadSuccess (value) {
+      if (value) {
+        this.fetchData()
+        this.$store.commit('dataManagement/updateFileUploadSuccess', false)
+      }
+    },
+    isProcessing (value) {
+      if (value) {
+        this.intervalFunction = window.setInterval(() => {
+          this.checkDataSourceStatus()
+        }, 5000)
+      }
+      // 建置完成
+      if (!value) {
+        window.clearInterval(this.intervalFunction)
+        this.$store.dispatch('dataSource/getDataSourceList', {})
+      }
+    },
+    hasDataFrameProcessing (value) {
+      if (value) {
+        this.checkDataFrameIntervalFunction = window.setInterval(() => {
+          this.updateDataTable()
+        }, 5000)
+      } else {
+        this.$store.dispatch('dataSource/getDataSourceList', {})
+        window.clearInterval(this.checkDataFrameIntervalFunction)
+        this.checkIfReachFileSizeLimit()
+      }
+    }
+  },
+  mounted () {
+    this.fetchData()
+    this.checkDataSourceStatus()
+    this.checkJoinTable()
+    this.checkIfReachFileSizeLimit()
+  },
+  beforeDestroy () {
+    if (this.intervalFunction) {
+      window.clearInterval(this.intervalFunction)
+    } else if (this.checkDataFrameIntervalFunction) {
+      window.clearInterval(this.checkDataFrameIntervalFunction)
+    }
+  },
+  methods: {
+    checkIfReachFileSizeLimit () {
+      getAccountInfo()
+        .then((accountInfo) => {
+          this.$store.commit('userManagement/setLicenseCurrentDataStorageSize', accountInfo.license.currentDataStorageSize)
+        })
+        .catch(() => {})
+    },
+    checkJoinTable () {
+      if (!this.showJoinTable) {
+        localStorage.setItem('showJoinTable', false)
+      }
+    },
+    fetchData () {
+      this.isLoading = true
+      return this.updateDataTable().finally(() => {
+        this.isLoading = false
+      })
+    },
+    updateDataTable () {
+      return getDataFrameById(this.currentDataSourceId, true).then(response => {
+        // 因為 ETL 會預建立 data frame，如果未執行預處理 data frame 會處於 pending 狀態，在這邊需要過濾掉
+        this.dataList = response.filter(element => element.state !== 'Temp').map(element => {
+          return {
+            ...element,
+            createMethod: element.joinCount > 1 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
+          }
+        })
+      })
+    },
+    createMethod (value) {
+      if (value === 'file') {
+        return this.$t('editing.userUpload')
+      } else {
+        return this.$t('editing.connectDB')
+      }
+    },
+    checkDataSourceStatus () {
+      return checkDataSourceStatusById(this.currentDataSourceId).then(response => {
+        this.isProcessing = response.state === 'PROCESSING'
+        this.dataSourceName = response.name
+      })
+    },
+    createDataSource () {
+      // 為了資料表上傳
+      this.$store.commit('dataManagement/updateCurrentUploadInfo', {
+        dataSourceId: this.currentDataSourceId,
+        name: this.dataSourceName,
+        type: null
+      })
+
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', true)
+    },
+    closeFileUploadDialog () {
+      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    },
+    confirmDelete (dataObj) {
+      if (dataObj) {
+        this.selectList = [dataObj]
+      }
+      this.showConfirmDeleteDialog = true
+    },
+    deleteFile () {
+      this.showConfirmDeleteDialog = false
+      this.isLoading = true
+      const {id: dataframeId, dataSourceId: selectedDataSourceId} = this.selectList[0]
+      deleteDataFrameById(dataframeId)
+        .then(res => {
+          this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
+          this.fetchData()
+          this.deleteFinish()
+          this.checkIfReachFileSizeLimit()
+          // 如果為全域當前的 datasource，需要更新 store 中 dataframe 資料
+          if (selectedDataSourceId !== this.storedDataSourceId) return
+          this.$store.dispatch('dataSource/updateDataFrameList')
+        })
+        .catch(() => {
+          this.deleteFinish()
+        })
+    },
+    deleteFinish () {
+      this.selectList = []
+      this.isLoading = false
+    },
+    cancelDelete () {
+      this.selectList = []
+      this.showConfirmDeleteDialog = false
+    },
+    canEditJoinTable () {
+      const editableDataList = this.dataList.filter(dataFrame => dataFrame.state === 'Enable')
+      // return editableDataList.length > 0
+      // 暫時無開啟 self join 功能，因此至少需兩張 dataframe 才可編輯
+      return editableDataList.length > 1
+    },
+    openEditJoinTableDialog () {
+      if (!this.canEditJoinTable) return
+      this.showJoinTableDialog = true
+    },
+    closeEditJoinTableDialog () {
+      this.showJoinTableDialog = false
+    },
+    toggleEditColumnDialog () {
+      this.showEditColumnDialog = !this.showEditColumnDialog
+    },
+    editTableColumn (dataInfo) {
+      // 利用 id 去 tableList 裡面找對應的 table 資訊
+      this.currentEditDataFrameInfo = dataInfo
+      this.toggleEditColumnDialog()
+    },
+    closeEditColumnDialog () {
+      this.currentEditDataFrameInfo = null
+      this.toggleEditColumnDialog()
+    },
+    editDataFrameAlias (dataInfo) {
+      this.currentEditDataFrameInfo = {
+        id: dataInfo.id,
+        primaryAlias: dataInfo.primaryAlias
+      }
+      this.showDataFrameAliasDialog = true
+    },
+    editTableValueAlias (dataInfo) {
+      this.currentEditDataFrameInfo = {
+        id: dataInfo.id,
+        primaryAlias: dataInfo.primaryAlias
+      }
+      this.showValueAliasDialog = true
+    },
+    editColumnSet (dataInfo) {
+      this.currentEditDataFrameInfo = {
+        id: dataInfo.id,
+        primaryAlias: dataInfo.primaryAlias
+      }
+      this.showEditColumnSetDialog = true
+    },
+    editDateTime (dataInfo) {
+      this.currentEditDataFrameInfo = {
+        id: dataInfo.id,
+        primaryAlias: dataInfo.primaryAlias
+      }
+      this.showEditDateTimeDialog = true
+    },
+    closeDataFrameAliasDialog () {
+      this.showDataFrameAliasDialog = false
+      this.currentEditDataFrameInfo = null
+    },
+    closeValueAliasDialog () {
+      this.showValueAliasDialog = false
+    },
+    closeEditClomnSetDialog () {
+      this.showEditColumnSetDialog = false
+    },
+    closeEditDateTimeDialog () {
+      this.showEditDateTimeDialog = false
+    },
+    toggleEditFeatureDialog () {
+      this.showEditFeatureDialog = !this.showEditFeatureDialog
     }
   }
 }

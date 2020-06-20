@@ -9,10 +9,13 @@
     <div class="table-board">
       <div class="board-title-row">
         <div class="button-block">
-          <button class="btn-m btn-default btn-has-icon"
+          <button 
+            class="btn-m btn-default btn-has-icon"
             @click="createDataSource"
           >
-            <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('editing.newDataSource') }}
+            <svg-icon 
+              icon-class="folder-plus" 
+              class="icon"/>{{ $t('editing.newDataSource') }}
           </button>
           <!-- <button class="btn-m btn-default btn-has-icon"
             :disabled="reachUploadLimit"
@@ -34,28 +37,27 @@
         @create="createDataSource"
         @rename="confirmRename"
         @delete="confirmDelete"
-      >
-      </data-table>
+      />
     </div>
     <create-data-source
       v-if="showCreateDataSourceDialog"
       @confirm="newDataSource"
       @close="closeCreateDataSourceDialog"
-    ></create-data-source>
+    />
     <confirm-delete-dialog
       v-if="showConfirmDeleteDialog"
       :title="$t('editing.deleteDataSource')"
       :content="$t('editing.confirmDeleteDataSourceOrNot')"
       @confirm="deleteDataSource"
       @cancel="cancelDelete"
-    ></confirm-delete-dialog>
+    />
     <confirm-change-name-dialog
       v-if="showConfirmRenameDialog"
       :title="$t('editing.renameDataSource')"
       :source="editDataSource.name"
       @confirm="renameDataSource"
       @cancel="cancelRename"
-    ></confirm-change-name-dialog>
+    />
   </div>
 </template>
 <script>
@@ -91,15 +93,60 @@ export default {
       // dataSourceLimitCount: 30
     }
   },
-  mounted () {
-    this.fetchData()
+  computed: {
+    // reachUploadLimit () {
+    //   return this.dataList.length >= this.dataSourceLimitCount
+    // },
+    tableHeaders () {
+      return [
+        {
+          text: this.$t('editing.dataSourceName'),
+          value: 'name',
+          sort: true,
+          link: {
+            name: 'DataFileList'
+          }
+        },
+        {text: this.$t('editing.uploadUser'), value: 'creator', width: '9.96%'},
+        {
+          text: this.$t('editing.createDate'),
+          value: 'createDate',
+          sort: true,
+          width: '90px',
+          time: 'YYYY-MM-DD'
+        },
+        {
+          text: this.$t('editing.updateDate'),
+          value: 'updateDate',
+          sort: true,
+          width: '90px',
+          time: 'YYYY-MM-DD'
+        },
+        {text: this.$t('editing.status'), value: 'state', width: '7.26%'},
+        {text: this.$t('editing.countOfTable'), value: 'dataFrameCount', width: '65px'},
+        {text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '65px'},
+        {
+          text: this.$t('editing.action'),
+          value: 'action',
+          width: '140px',
+          action: [
+            {
+              name: this.$t('button.rename'),
+              value: 'rename'
+            }, {
+              name: this.$t('button.delete'),
+              value: 'delete'
+            }
+          ]
+        }
+      ]
+    },
+    ...mapGetters('dataSource', ['dataSourceList']),
+    fileUploadSuccess () {
+      return this.$store.state.dataManagement.fileUploadSuccess
+    }
   },
   watch: {
-    isDataSourceBuilding (value, oldValue) {
-      if (!value && oldValue) {
-        this.fetchData()
-      }
-    },
     fileUploadSuccess (value) {
       if (value) {
         this.fetchData()
@@ -123,10 +170,13 @@ export default {
       immediate: true
     }
   },
+  mounted () {
+    this.fetchData()
+  },
   methods: {
     fetchData () {
       this.isLoading = true
-      return this.$store.dispatch('dataSource/getDataSourceList')
+      return this.$store.dispatch('dataSource/getDataSourceList', {})
         .then(() => {
           this.isLoading = false
         }).catch(() => {
@@ -192,62 +242,6 @@ export default {
     cancelRename () {
       this.editDataSource = null
       this.showConfirmRenameDialog = false
-    }
-  },
-  computed: {
-    // reachUploadLimit () {
-    //   return this.dataList.length >= this.dataSourceLimitCount
-    // },
-    tableHeaders () {
-      return [
-        {
-          text: this.$t('editing.dataSourceName'),
-          value: 'name',
-          sort: true,
-          link: {
-            name: 'DataFileList'
-          }
-        },
-        {text: this.$t('editing.uploadUser'), value: 'creator', width: '9.96%'},
-        {
-          text: this.$t('editing.createDate'),
-          value: 'createDate',
-          sort: true,
-          width: '90px',
-          time: 'YYYY-MM-DD'
-        },
-        {
-          text: this.$t('editing.updateDate'),
-          value: 'updateDate',
-          sort: true,
-          width: '90px',
-          time: 'YYYY-MM-DD'
-        },
-        {text: this.$t('editing.status'), value: 'state', width: '7.26%'},
-        {text: this.$t('editing.countOfTable'), value: 'dataFrameCount', width: '65px'},
-        {text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '65px'},
-        {
-          text: this.$t('editing.action'),
-          value: 'action',
-          width: '140px',
-          action: [
-            {
-              name: this.$t('button.rename'),
-              value: 'rename'
-            }, {
-              name: this.$t('button.delete'),
-              value: 'delete'
-            }
-          ]
-        }
-      ]
-    },
-    ...mapGetters('dataSource', ['dataSourceList']),
-    isDataSourceBuilding () {
-      return this.$store.getters['dataSource/isDataSourceBuilding']
-    },
-    fileUploadSuccess () {
-      return this.$store.state.dataManagement.fileUploadSuccess
     }
   }
 }

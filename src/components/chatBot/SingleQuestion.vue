@@ -10,10 +10,10 @@
       >
         {{ example.text }}
         <div
-            v-if="example.type"
-            :class="['question-type', `question-${example.type}-type`, `${position.class}`]"
+          v-if="example.type"
+          :class="['question-type', `question-${example.type}-type`, `${position.class}`]"
         >
-            {{ $t(`askHelper.${example.type}`) }}
+          {{ $t(`askHelper.${example.type}`) }}
         </div>
       </span>
     </div>
@@ -24,7 +24,8 @@ export default {
   name: 'SingleQuestion',
   props: {
     exampleQuestion: {
-      type: Array
+      type: Array,
+      default: () => []
     }
   },
   data () {

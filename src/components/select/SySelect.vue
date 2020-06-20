@@ -1,8 +1,10 @@
 <template>
-  <el-select :class="['sy-select', `theme-${theme}`]"
+  <el-select 
+    :class="['sy-select', `theme-${theme}`]"
     v-model="value"
     :placeholder="placeholder"
     :no-data-text="$t('message.noData')"
+    :disabled="disableSelect"
     @change="$emit('update:selected', $event)"
   >
     <el-option
@@ -10,7 +12,7 @@
       :key="item.id"
       :label="item.name"
       :value="item.id"
-    ></el-option>
+    />
   </el-select>
 </template>
 
@@ -27,6 +29,11 @@ export default {
   data () {
     return {
       value: this.selected
+    }
+  },
+  computed: {
+    disableSelect () {
+      return this.items.length === 0
     }
   },
   watch: {

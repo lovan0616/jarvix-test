@@ -3,45 +3,53 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="3"
-    ></upload-process-block>
+    />
     <div class="dialog-body">
       <file-list-block
         v-if="successList.length > 0"
         :title="$t('editing.uploaded')"
         :file-list="successList"
       >
-        <div class="uploaded-data-info" slot="fileListTitle">
+        <div 
+          slot="fileListTitle" 
+          class="uploaded-data-info">
           {{ $t('editing.dataSourceInfo', {type: currentUploadInfo.type, dataSourceName: currentUploadInfo.name}) }}
         </div>
       </file-list-block>
       <file-list-block
         v-if="failList.length > 0"
         :title="$t('editing.unuploaded')"
-        type="fail"
         :file-list="failList"
-      ></file-list-block>
+        type="fail"
+      />
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
-        <button class="btn btn-outline"
+        <button 
           :disabled="isProcessing"
+          class="btn btn-outline"
           @click="cancel"
         >{{ $t('button.cancel') }}</button>
-        <button class="btn btn-outline" type="button"
-          :disabled="isProcessing"
+        <button 
+          :disabled="isProcessing" 
+          class="btn btn-outline"
+          type="button"
           @click="prev"
         >{{ $t('button.chooseFileUpload') }}</button>
         <!-- <button class="btn btn-default"
           :disabled="successList.length === 0 || isProcessing"
           @click="buildData"
         >{{ $t('editing.buildImmediately') }}</button> -->
-        <button class="btn btn-default"
+        <button 
           :disabled="successList.length === 0 || isProcessing"
+          class="btn btn-default"
           @click="next"
         >
           <span v-if="isProcessing">
-            <svg-icon v-if="isProcessing" icon-class="spinner"></svg-icon>
-            {{ $t('button.processing')}}
+            <svg-icon 
+              v-if="isProcessing" 
+              icon-class="spinner"/>
+            {{ $t('button.processing') }}
           </span>
           <span v-else>{{ $t('button.nextStep') }}：{{ $t('editing.processStep3') }}</span>
         </button>
@@ -69,6 +77,25 @@ export default {
       uploadStatus,
       dataSourceId: parseInt(this.$route.params.id),
       isProcessing: false
+    }
+  },
+  computed: {
+    ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
+    successList () {
+      return this.uploadFileList.filter(element => {
+        return element.status === uploadStatus.success
+      })
+    },
+    failList () {
+      return this.uploadFileList.filter(element => {
+        return element.status === uploadStatus.fail
+      })
+    },
+    etlTableList () {
+      return this.$store.state.dataManagement.etlTableList
+    },
+    importedFileList () {
+      return this.$store.state.dataManagement.importedFileList
     }
   },
   mounted () {
@@ -125,25 +152,6 @@ export default {
         .finally(() => {
           this.isProcessing = false
         })
-    }
-  },
-  computed: {
-    ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
-    successList () {
-      return this.uploadFileList.filter(element => {
-        return element.status === uploadStatus.success
-      })
-    },
-    failList () {
-      return this.uploadFileList.filter(element => {
-        return element.status === uploadStatus.fail
-      })
-    },
-    etlTableList () {
-      return this.$store.state.dataManagement.etlTableList
-    },
-    importedFileList () {
-      return this.$store.state.dataManagement.importedFileList
     }
   }
 }

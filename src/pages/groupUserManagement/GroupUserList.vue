@@ -7,11 +7,13 @@
       <div class="board-title-row">
         <div class="button-block">
           <router-link
-            class="btn-m btn-default btn-has-icon"
             v-if="showCreateButton()"
             :to="{name: 'GroupCreateUser', params: {group_id: currentGroupId}}"
+            class="btn-m btn-default btn-has-icon"
           >
-            <svg-icon icon-class="user" class="icon"></svg-icon>{{ $t('button.addNewMember') }}
+            <svg-icon
+              icon-class="user"
+              class="icon"/>{{ $t('button.addNewMember') }}
           </router-link>
         </div>
       </div>
@@ -22,16 +24,14 @@
         :loading="isLoading"
         @delete="confirmDelete"
         @cancel="closeDelete"
-      >
-      </crud-table>
+      />
       <decide-dialog
         v-if="showConfirmDeleteDialog"
         :title="this.$t('editing.confirmDeleteProjectUserText')"
         :type="'delete'"
         @closeDialog="closeDelete"
         @confirmBtn="deleteGroupUser"
-      >
-      </decide-dialog>
+      />
     </div>
   </div>
 </template>
@@ -44,6 +44,10 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'GroupUserList',
+  components: {
+    CrudTable,
+    DecideDialog
+  },
   data () {
     return {
       isLoading: false,
@@ -54,19 +58,6 @@ export default {
       currentGroupId: '',
       canEditList: false
     }
-  },
-  components: {
-    CrudTable,
-    DecideDialog
-  },
-  mounted () {
-    this.currentGroupId = this.$route.params.group_id
-    this.fetchData(this.currentGroupId)
-  },
-  beforeRouteUpdate (to, from, next) {
-    this.currentGroupId = to.params.group_id
-    this.fetchData(this.currentGroupId)
-    next()
   },
   computed: {
     ...mapGetters('userManagement', ['hasPermission']),
@@ -100,6 +91,15 @@ export default {
       ]
     }
   },
+  mounted () {
+    this.currentGroupId = this.$route.params.group_id
+    this.fetchData(this.currentGroupId)
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.currentGroupId = to.params.group_id
+    this.fetchData(this.currentGroupId)
+    next()
+  },
   methods: {
     fetchData (currentGroupId) {
       this.isLoading = true
@@ -124,16 +124,35 @@ export default {
     },
     deleteGroupUser (data) {
       this.isLoading = true
+      const prevGroupName = this.$store.getters['userManagement/getCurrentGroupName']
       deleteGroupUser(this.selectedUser.id, this.currentGroupId)
         .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
         .then(() => {
           this.fetchData(this.currentGroupId)
           this.closeDelete()
-          Message({
-            message: this.$t('message.memberDeleteSuccess'),
-            type: 'success',
-            duration: 3 * 1000
-          })
+          setTimeout(() => {
+            Message({
+              message: this.$t('message.memberDeleteSuccess'),
+              type: 'success',
+              duration: 3 * 1000
+            })
+          }, 0)
+
+          // 若因刪除群組而造成使用者 default 群組變動，給予提示訊息
+          const currentGroupName = this.$store.getters['userManagement/getCurrentGroupName']
+          if (!currentGroupName) {
+            Message({
+              message: this.$t('message.youAreGroupless'),
+              type: 'warning',
+              duration: 3 * 1000
+            })
+          } else if (prevGroupName !== currentGroupName) {
+            Message({
+              message: this.$t('message.switchToGroupBySys', { groupName: currentGroupName }),
+              type: 'info',
+              duration: 3 * 1000
+            })
+          }
         })
         .catch(() => { this.isLoading = false })
     },

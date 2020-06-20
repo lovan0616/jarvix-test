@@ -5,8 +5,7 @@
       :options="chartOption"
       auto-resize
       @brushselected="brushRegionSelected"
-    >
-    </v-echart>
+    />
     <selected-region
       v-if="selectedData.length > 0"
       :title="$t('resultDescription.currentChosenData')"
@@ -20,7 +19,7 @@
           <div class="region-description">
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-               {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: roundNumber(singleType.properties.start), end: roundNumber(singleType.properties.end) }) }}
+              {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: roundNumber(singleType.properties.start), end: roundNumber(singleType.properties.end) }) }}
             </div>
           </div>
         </div>
@@ -98,47 +97,6 @@ export default {
       selectedData: []
     }
   },
-  methods: {
-    renderItem (params, api) {
-      let yValue = api.value(2)
-      let start = api.coord([api.value(0), yValue])
-      let size = api.size([api.value(1) - api.value(0), yValue])
-      let style = api.style()
-
-      return {
-        type: 'rect',
-        shape: {
-          x: start[0] + 1,
-          y: start[1],
-          width: size[0] - 2,
-          height: size[1]
-        },
-        style: style
-      }
-    },
-    brushRegionSelected (params) {
-      if (params.batch[0].areas.length === 0) {
-        this.selectedData = []
-        return
-      }
-      this.selectedData = params.batch[0].areas.map(areaElement => {
-        let coordRange = areaElement.coordRange
-        return {
-          type: 'range',
-          properties: {
-            dc_name: this.title.xAxis[0].dc_name,
-            data_type: this.title.xAxis[0].data_type,
-            display_name: this.title.xAxis[0].display_name,
-            start: coordRange[0],
-            end: coordRange[1]
-          }
-        }
-      })
-    },
-    saveFilter () {
-      this.$store.commit('dataSource/setFilterList', this.selectedData)
-    }
-  },
   computed: {
     chartOption () {
       let histogramConfig = JSON.parse(JSON.stringify(histogramChartConfig))
@@ -207,6 +165,47 @@ export default {
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
     }
-  }
+  },
+  methods: {
+    renderItem (params, api) {
+      let yValue = api.value(2)
+      let start = api.coord([api.value(0), yValue])
+      let size = api.size([api.value(1) - api.value(0), yValue])
+      let style = api.style()
+
+      return {
+        type: 'rect',
+        shape: {
+          x: start[0] + 1,
+          y: start[1],
+          width: size[0] - 2,
+          height: size[1]
+        },
+        style: style
+      }
+    },
+    brushRegionSelected (params) {
+      if (params.batch[0].areas.length === 0) {
+        this.selectedData = []
+        return
+      }
+      this.selectedData = params.batch[0].areas.map(areaElement => {
+        let coordRange = areaElement.coordRange
+        return {
+          type: 'range',
+          properties: {
+            dc_name: this.title.xAxis[0].dc_name,
+            data_type: this.title.xAxis[0].data_type,
+            display_name: this.title.xAxis[0].display_name,
+            start: coordRange[0],
+            end: coordRange[1]
+          }
+        }
+      })
+    },
+    saveFilter () {
+      this.$store.commit('dataSource/setFilterList', this.selectedData)
+    }
+  },
 }
 </script>

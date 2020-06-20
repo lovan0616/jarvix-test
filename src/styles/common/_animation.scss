@@ -22,3 +22,16 @@
   height: 0;
   transform: translateY(-100%);
 }
+
+// fast-fade-in
+.fast-fade-in-enter-active {
+  transition: opacity .2s;
+}
+
+.fast-fade-in-enter {
+  opacity: 0
+}
+
+.fast-fade-in-leave-active {
+  transition: none;
+}

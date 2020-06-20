@@ -7,13 +7,17 @@
       <task
         :component-id="resultInfo.title[0]"
         intend="title"
-      ></task>
+      />
     </template>
-    <result-board-body slot="PageResultBoardBody">
+    <result-board-body
+      slot="PageResultBoardBody"
+      class="correlation-result-body"
+    >
       <template slot="PageResultBoardIndicator">
-        <div class="hint-info-block">
-          <div class="hint-info"><span class="hint-title"><svg-icon icon-class="lamp"></svg-icon> {{ $t('resultDescription.prompt') }}:</span> {{ $t('editing.resultOverSizeMessage') }}</div>
-        </div>
+        <hint-info-block
+          :msg-list="[$t('editing.resultOverSizeMessage')]"
+          inline
+        />
       </template>
       <template slot="PageResultBoardChart">
         <div class="key-result-wrapper">
@@ -21,26 +25,28 @@
             <task
               :component-id="resultInfo.key_result_selector[0]"
               intend="key_result_selector"
-            ></task>
+            />
           </div>
           <div class="key-result-viewer">
-            <div class="key-result-spinner"
+            <div 
               v-show="isLoading"
+              class="key-result-spinner"
             >
               <spinner
                 :title="$t('resultDescription.analysisProcessing')"
-              ></spinner>
+              />
             </div>
-            <div class="chart-block"
+            <div 
               v-show="!isLoading"
+              class="chart-block"
             >
-               <keep-alive>
+              <keep-alive>
                 <task
                   v-if="resultInfo.sub_key_result[displayFactorIndex]"
                   :key="`sub-key-result-${displayFactorIndex}`"
                   :component-id="resultInfo.sub_key_result[displayFactorIndex]"
                   intend="sub_key_result"
-                ></task>
+                />
               </keep-alive>
               <keep-alive>
                 <task
@@ -48,7 +54,7 @@
                   :key="`sub-insight-${displayFactorIndex}`"
                   :component-id="resultInfo.sub_insight[displayFactorIndex]"
                   intend="sub_insight"
-                ></task>
+                />
               </keep-alive>
             </div>
           </div>
@@ -57,20 +63,26 @@
       <template slot="InsightBasicInfo">
         <task
           v-if="resultInfo.sub_basic_info[displayFactorIndex]"
-          v-bind:key="`sub-basic-info-${displayFactorIndex}`"
+          :key="`sub-basic-info-${displayFactorIndex}`"
           :component-id="resultInfo.sub_basic_info[displayFactorIndex]"
           intend="sub_basic_info"
-        ></task>
+        />
       </template>
     </result-board-body>
   </result-board>
 </template>
 <script>
+import HintInfoBlock from '@/components/display/HintInfoBlock'
+
 export default {
   name: 'CorrelationExplorationResult',
+  components: {
+    HintInfoBlock
+  },
   props: {
     resultInfo: {
-      type: Object
+      type: Object,
+      required: true
     },
     restrictions: {
       type: Array,
@@ -81,14 +93,6 @@ export default {
     return {
       isLoading: true
     }
-  },
-  destroyed () {
-    this.$store.commit('result/updateDisplayFactorIndex', 0)
-  },
-  mounted () {
-    this.$nextTick(() => {
-      this.isLoading = false
-    })
   },
   computed: {
     displayFactorIndex () {
@@ -103,25 +107,20 @@ export default {
         this.isLoading = false
       })
     }
-  }
+  },
+  destroyed () {
+    this.$store.commit('result/updateDisplayFactorIndex', 0)
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.isLoading = false
+    })
+  },
 }
 </script>
 <style lang="scss" scoped>
-.hint-info-block {
-  background-color: rgba(0, 0, 0, 0.55);
-  border-radius: 5px;
-  padding: 11px;
-  font-size: 14px;
-  line-height: 1;
-  margin-bottom: 12px;
-
-  .hint-title {
-    color: #FFDF6F;
-  }
-}
-
->>>.result-board-body {
-  padding-top: 23px;
+.correlation-result-body.result-board-body {
+  padding-top: 16px;
 }
 
 .key-result-wrapper {

@@ -11,29 +11,30 @@
       </div>
     </div>
     <form
-      @submit.stop.prevent="submitForm"
       class="group-creation-form"
+      @submit.stop.prevent="submitForm"
     >
       <div class="input-wrapper">
         <div class="input-group">
           <div class="input-label">{{ $t('editing.inviteeEmail') }}：</div>
           <div
-            class="input-block"
             :class="{'has-error': errors.has('invitee')}"
+            class="input-block"
           >
             <default-select
-              class="input"
-              :value="selectedInvitee"
-              @input="updateSelectedInvitee"
-              :option-list="userList"
-              name="invitee"
               v-validate="'required'"
+              :value="selectedInvitee"
+              :option-list="userList"
               :placeholder="$t('editing.pleaseSelectInviteeEmail')"
-            ></default-select>
+              filterable
+              class="input"
+              name="invitee"
+              @input="updateSelectedInvitee"
+            />
             <div
-              class="error-text"
               v-if="errors.has('invitee')"
-            >{{errors.first('invitee')}}</div>
+              class="error-text"
+            >{{ errors.first('invitee') }}</div>
           </div>
         </div>
         <!-- <div class="input-group">
@@ -63,10 +64,10 @@
           @click.stop="backToUserList"
         >{{ $t('button.cancel') }}</button>
         <button
+          :disabled="isLoading"
           class="btn btn-default"
           type="submit"
-          :disabled="isLoading"
-        >{{$t('button.confirm')}}</button>
+        >{{ $t('button.confirm') }}</button>
       </div>
     </form>
   </div>

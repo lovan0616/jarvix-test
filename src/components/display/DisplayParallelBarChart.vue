@@ -5,14 +5,13 @@
       :options="options"
       auto-resize
       @brushselected="brushRegionSelected"
-    >
-    </v-echart>
+    />
     <arrow-button
       v-show="showPagination"
       v-if="hasPagination"
-      isVertical
+      is-vertical
       @click.native="$emit('next')"
-    ></arrow-button>
+    />
     <selected-region
       v-if="selectedData.length > 0"
       :title="$t('resultDescription.currentChosenData')"
@@ -25,11 +24,12 @@
         >
           <div class="filter-description">
             <div class="column-name">{{ $t('resultDescription.restrict') + (index + 1) }}:</div>
-            <div class="single-filter"
+            <div 
               v-for="(singleData, propertiesIndex) in singleType.restraints"
               :key="'enum-' + propertiesIndex"
+              class="single-filter"
             >
-              {{singleData.properties.display_name}} = {{singleData.properties.display_datavalues[0]}}<span v-show="propertiesIndex !== singleType.restraints.length - 1">、</span>
+              {{ singleData.properties.display_name }} = {{ singleData.properties.display_datavalues[0] }}<span v-show="propertiesIndex !== singleType.restraints.length - 1">、</span>
             </div>
           </div>
         </div>
@@ -97,9 +97,6 @@ export default {
       selectedData: [],
       showPagination: true
     }
-  },
-  mounted () {
-    this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   computed: {
     chartStyle () {
@@ -190,6 +187,9 @@ export default {
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
     }
+  },
+  mounted () {
+    this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
     composeColumn (element, colIndex) {
