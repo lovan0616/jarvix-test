@@ -3,12 +3,12 @@
   "nav": {
     "index": "智能分析",
     "pinboard": "个人钉板",
+    "projectPinboard": "专案钉板",
     "dataManagement": "资料管理",
     "groupPlaceholder": "专案",
     "languagePlaceholder": "语系",
     "setting": "设定",
-    "projectManagement": "专案管理",
-    "projectPinboard": "专案钉板"
+    "projectManagement": "专案管理"
   },
   "sideNav": {
     "accountManagement": "帐户管理",

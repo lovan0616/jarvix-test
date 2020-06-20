@@ -3,12 +3,12 @@
   "nav": {
     "index": "智能分析",
     "pinboard": "個人釘板",
+    "projectPinboard": "專案釘板",
     "dataManagement": "資料管理",
     "groupPlaceholder": "專案",
     "languagePlaceholder": "語系",
     "setting": "設定",
-    "projectManagement": "專案管理",
-    "projectPinboard": "專案釘板"
+    "projectManagement": "專案管理"
   },
   "sideNav": {
     "accountManagement": "帳戶管理",

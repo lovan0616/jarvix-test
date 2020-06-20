@@ -30,6 +30,9 @@
           @switchDialogName="switchDialogName"
         />
       </div>
+      <router-link 
+        :to="{name: 'PagePinboardList'}" 
+        class="nav-item">{{ $t('nav.projectPinboard') }}</router-link>
     </section>
     <section class="nav-right">
       <div
