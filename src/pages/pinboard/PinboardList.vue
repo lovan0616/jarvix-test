@@ -1,6 +1,6 @@
 <template>
   <div class="page-pinboard">
-    <h1 class="page-title">{{ $t('editing.pinboard') }}</h1>
+    <h1 class="page-title">{{ isProjectPinboard ? $t('editing.projectPinboard') : $t('editing.pinboard') }}</h1>
     <div class="page-category">{{ $t('editing.allCategory') }}</div>
     <button 
       class="btn-m btn-default btn-has-icon add-btn" 
@@ -115,9 +115,6 @@ export default {
       isShowEdit: false,
       isShowDelete: false,
       isShowShare: false,
-      accountId: null,
-      groupId: null,
-      isProjectPinboard: false,
       editName: '',
       shareLink: '',
       tempEditInfo: {
@@ -133,13 +130,19 @@ export default {
     },
     pinboardList () {
       return this.$store.state.pinboard.pinboardList
+    },
+    accountId () {
+      return this.$route.params.accountId
+    },
+    groupId () {
+      return this.$route.params.groupId
+    },
+    isProjectPinboard () {
+      return this.groupId !== undefined
     }
   },
   mounted () {
     this.getPinboardInfo()
-    this.accountId = this.$route.params.accountId
-    this.groupId = this.$route.params.groupId
-    this.isProjectPinboard = this.groupId !== undefined
   },
   beforeDestroy () {
     this.$store.commit('pinboard/setPinboardList', [])

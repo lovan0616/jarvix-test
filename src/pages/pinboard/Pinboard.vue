@@ -1,6 +1,6 @@
 <template>
   <div class="page-pinboard">
-    <h1 class="page-title">{{ $t('editing.pinboard') }}</h1>
+    <h1 class="page-title">{{ isProjectPinboard ? $t('editing.projectPinboard') : $t('editing.pinboard') }}</h1>
     <div 
       v-if="boardName"
       class="bread-crumb-block"
@@ -46,9 +46,6 @@ export default {
       timeoutFunction: null,
       boardList: [],
       boardName: null,
-      accountId: null,
-      groupId: null,
-      isProjectPinboard: false
     }
   },
   computed: {
@@ -60,14 +57,20 @@ export default {
     },
     prevPage () {
       return this.isProjectPinboard ? 'projectPagePinboardList' : 'personalPagePinboardList'
+    },
+    accountId () {
+      return this.$route.params.accountId
+    },
+    groupId () {
+      return this.$route.params.groupId
+    },
+    isProjectPinboard () {
+      return this.groupId !== undefined
     }
   },
   mounted () {
     this.getPinboardInfo()
     this.getPinboardName()
-    this.accoutId = this.$route.params.accoutId
-    this.groupId = this.$route.params.groupId
-    this.isProjectPinboard = this.groupId !== undefined
   },
   methods: {
     getPinboardName () {

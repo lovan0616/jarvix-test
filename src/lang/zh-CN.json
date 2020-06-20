@@ -225,6 +225,7 @@
     "userManage": "使用者管理",
     "confirmDeleteBoardOrNot": "确认删除此钉板？",
     "pinboard": "个人钉板",
+    "projectPinboard": "专案钉板",
     "emptyPinboard": "目前无任何内容",
     "emptyResult": "没有相关资料",
     "emptyResultDescription": "您所输入的问题，无法找到相关联的数据进行分析，请重新输入语句搜寻，或使用系统建议语句",
