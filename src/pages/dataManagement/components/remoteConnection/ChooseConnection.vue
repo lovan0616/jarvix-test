@@ -153,11 +153,7 @@ export default {
     fetchData () {
       this.isLoading = true
       getConnectionInfoList(this.groupId).then(response => {
-        if (response.length > 0) {
-          this.connectionList = response
-        } else {
-          this.$emit('skip')
-        }
+        this.connectionList = response
         this.isLoading = false
       }).catch(() => {
         this.isLoading = false

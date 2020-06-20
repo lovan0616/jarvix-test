@@ -65,6 +65,7 @@
       <router-link
         :to="{ name: 'FunctionDescription' }"
         class="nav-item nav-function"
+        v-if="isShowFunctionDescription"
       >
         <svg-icon 
           icon-class="description" 
@@ -101,6 +102,12 @@ export default {
     ...mapState('userManagement', ['userName', 'license']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
+    },
+    isShowFunctionDescription () {
+      return this.$store.state.setting.locale.includes('zh')
+    },
+    locale () {
+      return this.$store.state.setting.locale
     },
     groupName () {
       return this.$store.getters['userManagement/getCurrentGroupName']

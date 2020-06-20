@@ -1,0 +1,1635 @@
+{
+  "lang": "English",
+  "nav": {
+    "index": "Intellignet Analysis",
+    "pinboard": "Pinboard",
+    "dataManagement": "Data Management",
+    "groupPlaceholder": "Group",
+    "languagePlaceholder": "Language",
+    "setting": "Setting",
+    "projectManagement": "Group Management"
+  },
+  "sideNav": {
+    "accountManagement": "Account Management",
+    "accountInformation": "Account INformation",
+    "accountUserManagement": "User Managrment",
+    "accountGroupManagement": "Group Management",
+    "accountSetting": "Account Setting",
+    "functionDescription": "Function Description",
+    "groupUserManagement": "User Management",
+    "groupUserList": "User List",
+    "groupCreateUser": "Create User",
+    "dataSourceManagement": "DataSource Management",
+    "dataSourceList": "DataSource List",
+    "dataFileManagement": "DataFile Management",
+    "dataFileList": "DataFile List"
+  },
+  "message": {
+    "joinTableBuilding": "The table is being built, you can use it after it is built",
+    "remindAdjustMainDate": "This table may have multiple date fields, you can use the 'date field adjustment' function of the table to set it.",
+    "remindAdjustColumnAlias": "In order to make intelligent analysis questions easy to use, it is recommended to perform custom adjustments to the 'column alias' function of the data table",
+    "remindSameDataTypeColumns": "The types of data fields must be the same",
+    "remindNotAllowSelfJoin": "Cannot select the same table",
+    "joinTypeEmpty": "Please select an association method",
+    "builded": "Data source creation completed",
+    "dataFrameBuilt": "Data table creation completed",
+    "noMatchedKey": "No successful match, please try to set other related tables or fields",
+    "previewFailed": "Setting failed, please try again later",
+    "noData": "No data currently",
+    "noMatchData": "There is currently no matching data",
+    "noMember": "There are currently no members",
+    "noResult": "No relevant information currently",
+    "formColumnEmpty": "Columns must not be blank",
+    "formMailWrong": "Mailbox format error",
+    "formNumberEmpty": "Please enter a number",
+    "formLetterSpaceEmpty": "Please fill in a string (including spaces)",
+    "formCharacterOverMax": "Maximum {max} characters",
+    "formCharacterOverMin": "At least {min} characters",
+    "formNumericeOverOne": "Contain at least 1 number",
+    "copiedToBoard": "copied to clipboard",
+    "systemIsError": "An exception occurred in the system",
+    "saveSuccess": "Save Success",
+    "correlationDeleteSuccess": "CorrelationDeleteSuccess: 'CorrelationDeleteSuccess'",
+    "groupCreateSuccess": "Project created successfully",
+    "memberCreateSuccess": "New member successfully created",
+    "groupDeleteSuccess": "Project has been successfully deleted",
+    "groupInfoUpdatedSuccess": "Project information has been successfully updated",
+    "signUpSuccessPleaseLogin": "Registration succeeded, please log in to your account",
+    "userCreateSuccess": "Create User Success",
+    "userInviteSuccess": "Invite user to succeed",
+    "userInviteRepetitive": "Repeatedly invite the same email",
+    "userAlreadyExisting": "This account already exists",
+    "changePasswordSuccess": "Password changed successfully",
+    "editNameSuccess": "Edit Name Success",
+    "changeStatusSuccess": "Change StatusSuccess",
+    "pleaseConfirmPassword": "Please confirm the password is the same",
+    "addFilter": "Save successfully",
+    "emptyResult": "There is no corresponding data for this search condition",
+    "emptyDataSource": "Data source has not been created",
+    "emptyColumnSet": "No column combination has been created",
+    "emptyFeatureFormula": "Data field is not filled in",
+    "emptyColumn": "No column value selected",
+    "emptyDataColumn": "Data field not selected",
+    "emptyNumeric": "Value not filled",
+    "deleteSuccess": "Delete Successful",
+    "dataSourceNotExist": "Data source does not exist",
+    "connectionFail": "The field information is incorrect, please check again",
+    "connectionInterrupted": "Connection Interrupted",
+    "columnSetNameEmpty": "Column combination name is not filled in",
+    "columnSetChosenEmpty": "No fields have been selected",
+    "memberDeleteSuccess": "Member deleted successfully",
+    "etlSuccess": "Data pre-processing succeeded, start building data table",
+    "etlSettingTempSave": "The settings have been temporarily saved",
+    "calculatingPleaseTryLater": "Data calculation, please try again later",
+    "analysisFailed": "An error occurred in file analysis",
+    "confirmColumnStateTypeChange": "This change will clear the advanced settings. Are you sure you want to make changes?",
+    "fileTypeNotSupported": "{fileType} file format is not supported",
+    "goToGroupManagement": "Go to account project management",
+    "switchToGroupBySys": "The system has switched you to a group: {groupName}",
+    "youAreGroupless": "You are currently not affiliated with a group"
+  },
+  "guiding": {
+    "prevStep": "Prev Step",
+    "nextStep": "Next Step",
+    "endStep": "End",
+    "step1": {
+      "name": "Select DataSource",
+      "hint": "select data source you want to analysis"
+    },
+    "step2": {
+      "name": "checkout recommenend question",
+      "hint": "Use the introductory data set to understand the data and inquire by following the suggested questions"
+    },
+    "step3": {
+      "name": "chekout quick start",
+      "hint": "You can also use the quick guide to start a search analysis with one click"
+    },
+    "goAdjust": "Go to Adjust",
+    "notBelongToGroups": "This feature cannot be used because you are not affiliated with a project",
+    "pleaseCreateOrJoinGroup": "please",
+    "pleaseInformManager": "for adding you to groups, please inform your manager"
+  },
+  "editing": {
+    "localUpload": "Local File Upload",
+    "localUploadDescription": "Upload .xlsx .xls .csv<br>file data and build through computer",
+    "remoteConnection": "Build Connection Database",
+    "remoteConnectionDescription": "Read your database data directly<br>and copy and build data",
+    "confirmDeleteForeign": "Are you sure you want to delete this association?",
+    "chooseDataSource": "Please select a data source",
+    "allDataFrames": "All Data Frames",
+    "createBoard": "Create New Version",
+    "questionPlaceHolder": "Please enter a question, for example: the correlation between price and cost",
+    "askPlaceHolder": "Please enter questions and press Enter to send out",
+    "dataBuilding": "Data Processing",
+    "dataManageable": "Manageable",
+    "dataInQueue": "Waiting for Processing",
+    "dataDisable": "Unable to use",
+    "newData": "New Data",
+    "choiceDataTypeFirst": "Please select the data type first",
+    "confirmDeleteNTables": "Are you sure you want to delete the following tables?",
+    "describeDeleteNTables": "Delete process will process data. During this period, you can still browse all data sources, but you cannot add, delete, etc. any data management operations.",
+    "editTable": "Edit Table",
+    "editTableColumn": "Edit Table Column",
+    "columnName": "Column Name",
+    "columnSource": "Column Source",
+    "columnSourceRemind": "Database information about field sources will only be displayed for tables built through association",
+    "alias": "Alias",
+    "columnTag": "Tag",
+    "columnDomain": "Domain",
+    "action": "Action",
+    "dataSourceName": "DataSourceName",
+    "selectDataType": "Select DataType",
+    "clickToSelectFiles": "Click to select files, or drag files here",
+    "uploadLimitTitle": "File upload limit description",
+    "uploadLimitFileType": "Supported formats: .xlsx .xls .csv",
+    "uploadLimitSize": "File size: {limitSize}",
+    "uploadLimitCount": "Number of files: {countLimit} pen",
+    "uploadLimitContent": "Content limitation: no pagination, no merged cells, and only one row of titles",
+    "reachUploadSizeLimit": "Table size exceeds {limitSize}MB",
+    "reachUploadCountLimit": "Not more than {countLimit} tables",
+    "canUpload": "Can Upload",
+    "unableUpload": "Unable to upload",
+    "addFile": "Select File",
+    "selectedTablesWaitingToUpload": "Select {num} item tables, the sum of {size} can be uploaded",
+    "uploading": "Please do not close the browser window during the upload process to avoid upload failure",
+    "uploadSuccess": "Upload Successful",
+    "uploadFailure": "UploadFailure",
+    "uploadFinish": "Upload Finished",
+    "uploadStatus": "Total {total} items, {success} items uploaded successfully, {pending} items not uploaded",
+    "dataSourceInfo": "Data type: {type} Data source name: {dataSourceName}",
+    "uploaded": "Uploaded",
+    "unuploaded": "Unuploaded",
+    "dataBuildingReminding": "The construction of the data table will be performed in the background, and the progress of the construction will be displayed in the state of the data table.",
+    "connectMySQL": "Connect MySQL Database",
+    "DBconnecting": "Connecting to the database",
+    "IPaddress": "IPaddress",
+    "username": "Account",
+    "password": "Password",
+    "changePassword": "Password Change",
+    "connectSuccess": "Connect Successful",
+    "connectFailure": "Failed to connect, please check if the settings are correct",
+    "fileOverSize": "File is too large",
+    "foreignTable": "Related Table",
+    "columnCorrelation": "Column Correlation",
+    "emptyForeign": "No table association has been established",
+    "emptyDateTime": "Data table has no date field",
+    "emptyDataFrameAlias": "No table alias has been created",
+    "selectForeign": "Select Related Table",
+    "selectColumn": "Select Column",
+    "systemSetting": "System trying to set up",
+    "dataColumnAmount": "Number of Data Columns",
+    "dataRowAmount": "Number of Data Rows",
+    "matchedKey": "The value of the successful match",
+    "emptyKey": "No data",
+    "resultPreview": "Result Preview",
+    "previewKeyRemind": "Display up to 100 values",
+    "processStep1": "Select File",
+    "processStep2": "Upload File",
+    "processStep3": "Data Processing",
+    "buildImmediately": "Build Now",
+    "connectDB": "Connect Database",
+    "connectStep2": "Select Information",
+    "connectStep3": "Data Processing",
+    "dataProcessing": "Data Processing",
+    "dataSource": "DataSource",
+    "newDataSource": "New Data Source",
+    "newTable": "New Table",
+    "clickToCreateDataSource": "Click to create your data source",
+    "clickToUploadTable": "Click to upload your data table",
+    "deleteTable": "Delete Table",
+    "deleteDataSource": "Delete Data Table",
+    "renameTable": "Rename Table",
+    "renameDataSource": "Rename DataSource",
+    "tableName": "table name",
+    "createDate": "Create Date",
+    "updateDate": "Modified Date",
+    "confirmDeleteDataSourceOrNot": "Are you sure you want to delete this data source?",
+    "sourceOfData": "Data Source",
+    "uploadUser": "Uploader",
+    "status": "Status",
+    "countOfTable": "Number of Data Tables",
+    "dataFrameStatus": "Data Table Status",
+    "buildFinished": "BuildFinished",
+    "buildProcessing": "Building",
+    "buildFailed": "BuildFailed",
+    "defaultOption": "Please select",
+    "userLogin": "User Login",
+    "userSignup": "User Registration",
+    "userManage": "User Management",
+    "confirmDeleteBoardOrNot": "Are you sure you want to delete this pinboard?",
+    "pinboard": "Personal Pinboard",
+    "emptyPinboard": "There is currently no content",
+    "emptyResult": "No relevant information",
+    "emptyResultDescription": "The question you entered could not be found with the associated data for analysis. Please re-enter the sentence search or use the system suggested sentence",
+    "preview": "Preview",
+    "result": "Result",
+    "relatedQuestion": "Related Question",
+    "comparisonCategory": "Comparative Category",
+    "languageSetting": "LanguageSetting: English",
+    "sureLogout": "Are you sure you want to log out of your account?",
+    "questionFeedback": "QuestionFeedback",
+    "functionDescription": "Function Description",
+    "addUser": "Add User",
+    "notYetCreateUser": "User has not been created",
+    "inviteeEmail": "Invited Email",
+    "pleaseSelectInviteeEmail": "Please select invitee email",
+    "userTitle": "User Name",
+    "userAccount": "User Account",
+    "setLoginPassword": "Set Password",
+    "loginAccount": "Login Account",
+    "loginPassword": "Login Password",
+    "confirmPassword": "Confirm Password",
+    "pleaseConfirmPassword": "Please confirm the password",
+    "confirmPasswordAgain": "Confirm Password Again",
+    "group": "Project",
+    "groupOwner": "Project Owner",
+    "groupMemberAmount": "Project Number",
+    "groupName": "Project Name",
+    "switchGroup": "Switch Project",
+    "groupRolePermission": "Project Role Permission",
+    "notYetCreateGroup": "Project has not been created",
+    "deleteGroup": "Delete Project",
+    "confirmDeleteProjectUserText": "After the user is removed, this user will not be able to use any features of this project. Are you sure you want to continue removing this user?",
+    "confirmDeleteBelowGroupOrNot": "Are you sure you want to delete the following project?",
+    "confirmEnterGroupUserManagement": "The system will guide to the 'Project Member Management' of the following project to set",
+    "accountOwner": "Account Owner",
+    "memberManagement": "Member Management",
+    "activeStatus": "Enable Status",
+    "role": "role",
+    "setRole": "Set Role",
+    "active": "On",
+    "close": "Close",
+    "originalPassword": "Original Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "pleaseConfirmNewPassword": "Please confirm the new password",
+    "unableLogin": "You will not be able to log in normally, be sure to close",
+    "confirmDelete": "Are you sure you want to delete",
+    "confirmActive": "Are you sure you want to open",
+    "allCategory": "All Categories",
+    "inputCategoryName": "Please enter a category name",
+    "editingName": "Editing Name",
+    "pinboardNum": "Number of Pinboards",
+    "indexErrorTitle": "Homepage information is temporarily unavailable",
+    "indexErrorDescription": "Sorry, the home page information is temporarily unavailable, please try again later",
+    "multiResultTitle": "Question Analysis",
+    "systemUnknownDescription": "The system cannot recognize the following text:",
+    "dataColumnValue": "Data Table Data Value",
+    "emptyValueAlias": "There are currently no data values ​​to edit in the data table",
+    "emptyValueAliasDescription": "Editable data types include: category (unrepeated number less than 200), Bollinger value",
+    "mainDateTimeColumnSetting": "Main Date Field Setting",
+    "dataFrame": "Data Table",
+    "rebuildRemark": "Data needs to be built again after editing",
+    "dataValue": "DataValue",
+    "dataColumn": "Data Table Field",
+    "notSet": "Not Set",
+    "columnSetSetting": "Column Combination Setting",
+    "columnSetName": "Column Set Name",
+    "pleaseEnterName": "Please enter a name",
+    "isSaving": "Storing",
+    "notSelect": "Not Selected",
+    "alreadySelect": "Selected",
+    "selectYet": "No items have been selected",
+    "createWay": "Create Way",
+    "tableJoin": "Table Association",
+    "joinType": "Join Type",
+    "selectJoinType": "Select Association Type",
+    "userUpload": "UserUpload",
+    "loading": "Data is being read",
+    "databaseType": "DatabaseType",
+    "currentLoadedDataFrame": "Currently read data table",
+    "dataFrameContent": "Data Table Content",
+    "dataType": "DataType",
+    "chooseConnection": "choose connection",
+    "emptyConnection": "No connection has been established",
+    "createConnection": "Create a new connection",
+    "buildFinish": "Build Complete",
+    "buildStatus": "Total {total} items, {success} items built successfully, {fail} items not built",
+    "buildSuccess": "Build Success",
+    "buildFail": "BuildFail",
+    "connectionName": "connection name",
+    "admin": "System Administrator",
+    "general": "General User",
+    "dataFrameAliasSetting": "Data Table Alias ​​Setting",
+    "dataFrameAliasInputPlaceholder": "Please enter an alias",
+    "belongToDataFrame": "Affiliated Data Table",
+    "chooseDataFrame": "Select Table",
+    "chooseDataColumn": "Select Data Field",
+    "numericOnly": "Please enter a numeric value",
+    "isRequired": "Required",
+    "resultOverSizeMessage": "When the amount of data is too large, the data will be sampled",
+    "toolTipMessage": {
+      "comfrmToDeleteConnectionHistory": "Are you sure you want to delete the connection history?"
+    },
+    "createGroup": "Create Project"
+  },
+  "etl": {
+    "dataFrameList": "Data Table List",
+    "columnList": "Column List",
+    "dataType": "Data Type",
+    "emptyStringReplaceValue": "EmptyStringReplaceValue",
+    "nullReplaceValue": "Null Replacement Value",
+    "errorReplaceValue": "Error data replacement value",
+    "customDataManagement": "Custom Data Management",
+    "columnValue": "Column Value",
+    "replaceValue": "Replace Value",
+    "replaceValuePlaceholder": "Custom Value",
+    "etlSetting": "Data Cleaning Settings",
+    "remarkToSave": "Transaction content must be saved",
+    "selectColumn": "Use",
+    "advance": "Advanced",
+    "advanceSetting": "Advanced Settings",
+    "backToDataFrame": "Back to Data Table",
+    "column": "Column",
+    "nullAction": "Do Not Process",
+    "custom": "Custom",
+    "dropRow": "Drop entire column",
+    "currentDataFrame": "Currently displaying data table",
+    "columnCount": "Total Data Columns",
+    "rowCount": "Total Number of Data",
+    "datetimeFormat": "Date Format",
+    "commonValue1": "The 1st common value",
+    "commonValue2": "The 2nd common value",
+    "commonValue3": "The 3rd common value",
+    "commonValue4": "The 4th common value",
+    "commonValue5": "The fifth common value",
+    "maxValue": "Max Value",
+    "minValue": "Min Value",
+    "avgValue": "Average",
+    "sdValue": "Standard Deviation",
+    "sumValue": "Summary Value",
+    "dataSummary": "Data Summary",
+    "connectionHistory": "Connection History",
+    "newConnectionSetting": "New Connection Setting",
+    "returnConnectionHistory": "Return Connection History",
+    "emptyConnectionHistory": "No connection history",
+    "dataCalculate": "Data Calculation",
+    "tableChosenLimit": "Select up to {number} tables",
+    "tableSearch": "Search Table",
+    "null": "Null",
+    "columnSelected": "Number of columns selected",
+    "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field for each table"
+  },
+  "feature": {
+    "value": "Value",
+    "columnValue": "Column Value",
+    "plus": "Addition",
+    "minus": "Subtraction",
+    "multiple": "Multiple",
+    "divide": "Division",
+    "parentheses": "Little Brackets",
+    "bracket": "Bracket",
+    "braces": "Braces",
+    "hint": "Hint",
+    "forbiddenRule": ["Disable full text"],
+    "chooseOptionHint": "Please select the elements you need to form a field from below, and the elements can be dragged to replace the position",
+    "maxColumn": "Currently supports up to {number} data field combinations",
+    "inputPlaceholder": "Example: Profit = Revenue-Cost",
+    "featureManagement": "Custom Field Management",
+    "customFeature": "Custom Feature",
+    "recommendFeature": "Recommendation Feature",
+    "createFeature": "Add custom field",
+    "featureColumnName": "Custom Column Name",
+    "featureSetting": "Expression Setting"
+  },
+  "bot": {
+    "welcomeMessage": "Hello, what kind of information do you want to analyze today?",
+    "welcomeMessageWithSuggestions": "@:bot.welcomeMessage can try starting with these questions:",
+    "defaultResponse": "Analysis is complete, you may be interested in related issues:",
+    "finish": "Analysis completed",
+    "multiplePossibilities": "Sorry, after systematic analysis, the words have multiple meanings, please refer to the following items:",
+    "similarQuestionDescription": "Sorry, the system did not find the field or data corresponding to the question, but there are fields with related meanings, please refer to the following items:",
+    "previewDataSource": "View Data Source",
+    "closeDataSource": "Close DataSource"
+  },
+  "description": {
+    "basic": {
+      "intro": "Basic Introduction",
+      "ui": "Interface Description",
+      "nav": "Guide column",
+      "navIntro": "Introduction to Tour List",
+      "index": "Home Screen",
+      "groupManage": "Project Management",
+      "groupSwitch": "Project Switch",
+      "account": "Account Function Menu",
+      "funcDesc": "Account Function Description",
+      "indexFuncIntro": "Home Function Description",
+      "checkDataFrameDetail": "Check the details of the data table",
+      "faq": "Common Questions about System Records",
+      "hide": "Hide"
+    },
+    "question": {
+      "analysis": "Problem Analysis Operation",
+      "how": "How to ask questions?",
+      "recommended": "Recommendations related to system recommendations",
+      "input": "Question text input",
+      "assistant": "How to enable question assist function?",
+      "info1": "1. Understand the available vocabulary through 'question description'",
+      "info2": "2. Through the question description, refer to 'Sample Questions'",
+      "click": "Step1:<br>click to open<br>question description",
+      "vocabulary": "Step2:<br>Overview of Vocabulary",
+      "sample": "Step2:<br>Sample question",
+      "result": "Main analysis results",
+      "resultInfo": "Description of Analysis Results",
+      "basicInfo": "Can view basic information",
+      "graphicTool": "Graphic operation function",
+      "fetchMore": "Click to get more information",
+      "howToDeepen": "How to dig deeper into the problem?",
+      "insights": "<br>Data Insights after Using Analysis"
+    },
+    "pinboard": {
+      "personal": "Personal Nailboard Use",
+      "how": "How to add the analysis results to the nail plate?",
+      "clickPinboard": "Step1:<br>Click Pinboard",
+      "classification": "Step2:<br>select nail board classification",
+      "cancel": "Step3:<br>The nail board is completed and can be canceled at any time",
+      "howToClassify": "How to manage nail plate classification?",
+      "entry": "Step1:<br>Enter personal nailboard",
+      "addClass": "Step2:<br>Can add nail version classification",
+      "classificationAction": "Step3:<br>Classification Function Menu",
+      "share": "How to share the nailboard to others?",
+      "title1": "1. Share the content in the nailboard category",
+      "title2": "2. Share single nailboard content",
+      "clickShareBtn1": "Step1:<br>Click to share the menu",
+      "clickShareBtn2": "Step2:<br>Click to share",
+      "shareLink": "ShareLink",
+      "clickClass": "Step1:<br>click a category"
+    },
+    "data": {
+      "howToAddDataSource": "How to add a data source?",
+      "howToAddDataFrame": "How to add a data table?",
+      "howToAddColumnAlias": "How to edit table column aliases?",
+      "byFile": "1. Use 'file upload' method",
+      "byDB": "2. Connect to the database using 'Get Table'",
+      "entry": "Step1:<br>Enter data management",
+      "addDataSource": "Step2:<br>Add Data Source",
+      "selectByFile": "Step3:<br>optional file upload",
+      "selectByDB": "Step1:<br>Select Database Connection",
+      "connectionSetting": "Step2:<br>Database connection settings",
+      "selectLocalFile": "Step4:<br>Select local file",
+      "uploading": "Step5:<br>Upload File",
+      "selectDataFrame": "Step3:<br>Select the data table to use<br>",
+      "selectColumn": "Select the required data field",
+      "dataCleansing": "DataCleansing",
+      "building": "Building operations will be performed in the <br>background",
+      "clickDataSource": "Step1:<br>Click Data Source",
+      "addDataFrame": "Step2:<br>Add Table",
+      "clickEdit": "Click Edit Field",
+      "editAlias": "Step3:<br>Edit Alias",
+      "confirm": "Step4:<br>Confirm changes",
+      "finish": "Step5:<br>Completion"
+    },
+    "account": {
+      "management": "Account User Management",
+      "howToEnter": "How to enter account user management?",
+      "howToInvite": "How to invite new users to join?",
+      "howToUpdateRole": "How to edit user account role permissions?",
+      "entry": "Step1:<br>Enter Account Management",
+      "entrySideNav": "Step2:<br>Select Account User Management",
+      "clickInvite": "Step1:<br>click the add button",
+      "confirmInvite": "Step2:<br>Enter the email and send the invitation, and the invitee will receive the invitation letter",
+      "clickUpdate": "Step1:<br>click role change",
+      "confirmUpdate": "Step2:<br>After opening the character change screen, you can change it"
+    },
+    "group": {
+      "management": "Project Member Management",
+      "howToEnter": "How to join a new member?",
+      "howToInvite": "How to invite new users to join?",
+      "entry": "Step1:<br>Enter project members<br>Management",
+      "selectMember": "Step2:<br>Select Member List",
+      "clickInvite": "Step1:<br>Click to join new member",
+      "confirmInvite": "Step2:<br>After filling in the user email, click the confirm button to join"
+    }
+  },
+  "button": {
+    "build": "Build",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "close": "Close",
+    "share": "Share",
+    "shareLink": "ShareLink",
+    "edit": "Edit",
+    "save": "Save",
+    "skip": "Skip",
+    "upload": "Upload",
+    "update": "Update",
+    "finish": "Finish",
+    "connect": "Connect",
+    "cancelConnect": "Cancel Connect",
+    "saveAndConnect": "Save and Connect",
+    "toForeignTable": "Related Table",
+    "newForeign": "New Association",
+    "nextStep": "Next",
+    "prevStep": "Previous Step",
+    "processing": "Processing...",
+    "uploading": "Uploading...",
+    "connecting": "Connecting...",
+    "confirmDelete": "@:(button.confirm)@:(button.delete)",
+    "confirmDeleteOrNot": "@:(button.confirm)@:(button.delete)?",
+    "confirmUpload": "@:(button.confirm)@:(button.upload)",
+    "backToEdit": "Back to Edit",
+    "gotIt": "I know",
+    "editColumn": "Edit Column",
+    "rename": "Rename",
+    "login": "Login",
+    "confirmSignup": "Confirm Signup",
+    "logout": "Logout",
+    "copy": "Copy",
+    "change": "Change",
+    "pinToBoard": "Add Pinboard",
+    "pinned": "Pinned",
+    "cancelPinned": "Cancel Pinboard",
+    "built": "built",
+    "submit": "Submit",
+    "editName": "Edit Name",
+    "addNewCategory": "Add Category",
+    "exportData": "Output chart data",
+    "viewData": "View chart data",
+    "remove": "Remove",
+    "add": "Add",
+    "editDataValue": "Edit Data",
+    "saveAndBuild": "Save and Build",
+    "addColumnSet": "Add Column Combination",
+    "editColumnSet": "Edit Column Set",
+    "dateTimeColumnSetting": "DateTimeColumnSetting",
+    "select": "Select",
+    "download": "Data Download",
+    "restrict": "Analysis Condition Restriction",
+    "start": "Start",
+    "copyAndBuild": "Copy and Build",
+    "createGroup": "New Project",
+    "deleteGroup": "Delete Project",
+    "editGroupName": "Edit Project Name",
+    "addNewMember": "Add New Member",
+    "editDataFrameAlias": "Edit Table Aliases",
+    "buildData": "Build Data",
+    "keepSave": "Save",
+    "chooseFileUpload": "Reselect File",
+    "moveForward": "Go",
+    "addColumn": "Add Column",
+    "create": "Add",
+    "featureManagement": "Custom Field",
+    "setting": "Settings",
+    "reset": "Reset",
+    "confirmBuild": "ConfirmBuild",
+    "selectAll": "Select All",
+    "resumeDefault": "Restore Default"
+  },
+  "aggregation": {
+    "mean": "Average",
+    "count": "Total",
+    "sum": "Total Sum",
+    "max": "Max",
+    "min": "Min",
+    "std": "Standard Deviation",
+    "median": "Median"
+  },
+  "aggregatedValue": {
+    "mean": "Average",
+    "count": "Total Quantity",
+    "sum": "Total Sum",
+    "max": "Max",
+    "min": "Min",
+    "std": "Standard Deviation",
+    "median": "Median",
+    "note": "Note",
+    "maxCategory": "MaxCategory",
+    "minCategory": "Minimal Category",
+    "maxCategoryCount": "Max CategoryCount",
+    "minCategoryCount": "Minimum Number of Categories",
+    "countMean": "Quantity Average",
+    "countStd": "Quantity Standard Deviation"
+  },
+  "askHelper": {
+    "title": "Question Explanation",
+    "historyTitle": "History Question",
+    "askHelpRemark": "Please check the question prompt",
+    "helpLink": "Question Explanation",
+    "tabToken": "Glossary Overview",
+    "tabSample": "Sample Questions",
+    "columnTitle": "Data Field Name",
+    "categoryTitle": "Category Type",
+    "numericTitle": "Numeric Type",
+    "datavalueTitle": "Common Information",
+    "category": "Category type field, no quantity unit.",
+    "numeric": "Numeric-type field with a unit of quantity.",
+    "datetime": "Datetime type field, the data is date/time.",
+    "boolean": "Boolean field, no quantity unit, the data is 0/1.",
+    "unique": "Unique fields, the data will not be repeated.",
+    "filter": "Time Filter Condition",
+    "value": "Value is the data of the field, not limited to quantity or other types.",
+    "column": "Column",
+    "columnValue": "Column Information",
+    "type": "Type",
+    "description": "Description",
+    "columnName": "Column Name",
+    "ask": "Ask",
+    "example": "Example",
+    "exampleDesc": "Because Boolean and Unique questions are in the same category as Category, the following are all examples of Category.",
+    "questionSampleList": [
+      {
+        "name": "General question",
+        "questionList": [
+          {
+            "questionText": "Numeric Overview",
+            "questionExample": [
+              [
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "Overview", "type": ""}
+              ],
+              [
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "Overview", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric Average",
+            "questionExample": [
+              [
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "Average", "type": ""}
+              ],
+              [
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "Average", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric Sum",
+            "questionExample": [
+              [
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "Sum", "type": ""}
+              ],
+              [
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "Sum", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 'sTotal",
+            "questionExample": [
+              [
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "Total", "type": ""}
+              ],
+              [
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "Total", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 'sMax Value",
+            "questionExample": [
+              [
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "Max Value", "type": ""}
+              ],
+              [
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "Max Value", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 'sSTD",
+            "questionExample": [
+              [
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "STD", "type": ""}
+              ],
+              [
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "STD", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 'sMedian",
+            "questionExample": [
+              [
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "Median", "type": ""}
+              ],
+              [
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "'s", "type": ""},
+                {"text": "Median", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Category",
+            "questionExample": [
+              [
+                {"text": "Event", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Overview", "type": ""}
+              ],
+              [
+                {"text": "Country", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Overview", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Category 'sTotal",
+            "questionExample": [
+              [
+                {"text": "Event", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Total", "type": ""}
+              ],
+              [
+                {"text": "Country", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Total", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Every Category's Numeric's Summary",
+            "questionExample": [
+              [
+                {"text": "Every", "type": ""},
+                {"text": "Product", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Profit", "type": "numeric"},
+                {"text": "Summary", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric And Numeric's Average",
+            "questionExample": [
+              [
+                {"text": "Cost", "type": "numeric"},
+                {"text": "And", "type": ""},
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'s Average", "type": ""}
+              ],
+              [
+                {"text": "Average Revenue", "type": "numeric"},
+                {"text": "And", "type": ""},
+                {"text": "Cost", "type": "numeric"},
+                {"text": "'s Average", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Every Category's Numeric And Numeric 'sAverage",
+            "questionExample": [
+              [
+                {"text": "Every", "type": ""},
+                {"text": "Product", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "And", "type": ""},
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'sAverage", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Pivot analysis question",
+        "questionList": [
+          {
+            "questionText": "Category And Category",
+            "questionExample": [
+              [
+                {"text": "Event", "type": "category"},
+                {"text": "And", "type": ""},
+                {"text": "Product", "type": "category"}
+              ],
+              [
+                {"text": "Department", "type": "category"},
+                {"text": "And", "type": ""},
+                {"text": "Shop", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Category And Category 's Numeric 'sSummary",
+            "questionExample": [
+              [
+                {"text": "Customer Gender", "type": "category"},
+                {"text": "And", "type": ""},
+                {"text": "Product", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "'s Sum", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Category And Category 's Numeric And Numeric 'sSum",
+            "questionExample": [
+              [
+                {"text": "Customer Gender", "type": "category"},
+                {"text": "And", "type": ""},
+                {"text": "Product", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "And", "type": ""},
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'sSum", "type": ""}
+              ],
+              [
+                {"text": "Storage", "type": "category"},
+                {"text": "And", "type": ""},
+                {"text": "Source of purchase", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Good product", "type": "numeric"},
+                {"text": "And", "type": ""},
+                {"text": "Defective product", "type": "numeric"},
+                {"text": "'s Sum", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Trend question",
+        "questionList": [
+          {
+            "questionText": "Numeric 's Trend",
+            "questionExample": [
+              [
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "'s Trend", "type": ""}
+              ],
+              [
+                {"text": "Purchase quantity", "type": "numeric"},
+                {"text": "'s Trend", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Every Month's Numeric",
+            "questionExample": [
+              [
+                {"text": "Every Month", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "Unit Price", "type": "numeric"}
+              ],
+              [
+                {"text": "Every Month", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "unemployment rate", "type": "numeric"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Every Month's Numeric And Numeric Sum",
+            "questionExample": [
+              [
+                {"text": "Every Month", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "And", "type": ""},
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'sSum", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Every MonthEvery Category 's Numeric Sum",
+            "questionExample": [
+              [
+                {"text": "Every Month", "type": "filter"},
+                {"text": "'sEvery", "type": ""},
+                {"text": "Product", "type": "category"},
+                {"text": "And", "type": ""},
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'sSum", "type": ""}
+              ],
+              [
+                {"text": "Every Month", "type": "filter"},
+                {"text": "Every", "type": ""},
+                {"text": "Shop", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Sales", "type": "numeric"},
+                {"text": "Sum", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Every MonthEvery Category 's Numeric And Numeric ",
+            "questionExample": [
+              [
+                {"text": "Every Month", "type": "filter"},
+                {"text": "Every", "type": ""},
+                {"text": "Shop", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Sales", "type": "numeric"},
+                {"text": "And", "type": ""},
+                {"text": "Profit", "type": "numeric"}
+              ],
+              [
+                {"text": "Every Month", "type": "filter"},
+                {"text": "Every", "type": ""},
+                {"text": "Product", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Profit", "type": "numeric"},
+                {"text": "And", "type": ""},
+                {"text": "Unit Cost", "type": "numeric"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Every MonthEvery Category 's Numeric And Numeric Sum",
+            "questionExample": [
+              [
+                {"text": "Every Month", "type": "filter"},
+                {"text": "Every", "type": ""},
+                {"text": "Shop", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Sales", "type": "numeric"},
+                {"text": "And", "type": ""},
+                {"text": "Profit", "type": "numeric"},
+                {"text": "Sum", "type": ""}
+              ],
+              [
+                {"text": "Every Month", "type": "filter"},
+                {"text": "Every", "type": ""},
+                {"text": "Product", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Profit", "type": "numeric"},
+                {"text": "And", "type": ""},
+                {"text": "Unit Cost", "type": "numeric"},
+                {"text": "Sum", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Comparative question",
+        "questionList": [
+          {
+            "questionText": "Y Year And Y Year's Numeric Compare",
+            "questionExample": [
+              [
+                {"text": "2017 Year", "type": "filter"},
+                {"text": "And", "type": ""},
+                {"text": "2018 Year", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "Unit Cost", "type": "numeric"},
+                {"text": "Compare", "type": ""}
+              ],
+              [
+                {"text": "Year 2010", "type": "filter"},
+                {"text": "And", "type": ""},
+                {"text": "Year 2011", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "Sales", "type": "numeric"},
+                {"text": "Compare", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y Year's Season X And Season X's Numeric Compare",
+            "questionExample": [
+              [
+                {"text": "Year 2010", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "Season one", "type": "filter"},
+                {"text": "And", "type": ""},
+                {"text": "Season Third", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "Sales", "type": "numeric"},
+                {"text": "Compare", "type": ""}
+              ],
+              [
+                {"text": "Year 2019", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "Season one", "type": "filter"},
+                {"text": "And", "type": ""},
+                {"text": "Season Third", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "Unit Cost", "type": "numeric"},
+                {"text": "Compare", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y Year's M Month And M Month's Numeric 'sCompare",
+            "questionExample": [
+              [
+                {"text": "Year 2010", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "March", "type": "filter"},
+                {"text": "And", "type": ""},
+                {"text": "May", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "Sales", "type": "numeric"},
+                {"text": "Compare", "type": ""}
+              ],
+              [
+                {"text": "Year 2019", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "August", "type": "filter"},
+                {"text": "And", "type": ""},
+                {"text": "September", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "Unit Cost", "type": "numeric"},
+                {"text": "Compare", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Value And Value 's Numeric Compare",
+            "questionExample": [
+              [
+                {"text": "Shanghai", "type": "value"},
+                {"text": "And", "type": ""},
+                {"text": "Beijing", "type": "value"},
+                {"text": "Unit Cost", "type": "numeric"},
+                {"text": "'s Compare", "type": ""}
+              ],
+              [
+                {"text": "F", "type": "value"},
+                {"text": "And", "type": ""},
+                {"text": "M", "type": "value"},
+                {"text": "'s", "type": ""},
+                {"text": "Costumer Age", "type": "numeric"},
+                {"text": "Compare", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Root cause analysis",
+        "questionList": [
+          {
+            "questionText": "Why Y Year's Numeric rise",
+            "questionExample": [
+              [
+                {"text": "Why", "type": ""},
+                {"text": "2017 Nov.", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "income", "type": "numeric"},
+                {"text": "rise", "type": ""}
+              ],
+              [
+                {"text": "Why", "type": ""},
+                {"text": "2011 Jan.", "type": "filter"},
+                {"text": "'s", "type": ""},
+                {"text": "Purchase quantity", "type": "numeric"},
+                {"text": "decline", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y Year M Month Numeric 's Root cause analysis",
+            "questionExample": [
+              [
+                {"text": "2017 Nov.", "type": "filter"},
+                {"text": "income", "type": "numeric"},
+                {"text": "'s Root cause analysis", "type": ""}
+              ],
+              [
+                {"text": "2011 Jan.", "type": "filter"},
+                {"text": "Purchase quantity", "type": "numeric"},
+                {"text": "'s Root cause analysis", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y Year M Month M Month's Numeric 's Root cause analysis",
+            "questionExample": [
+              [
+                {"text": "2017 Jan.", "type": "filter"},
+                {"text": "To", "type": ""},
+                {"text": "2018 Jan.", "type": "filter"},
+                {"text": "income", "type": "numeric"},
+                {"text": "'s Root cause analysis", "type": ""}
+              ],
+              [
+                {"text": "2011 Jan.", "type": "filter"},
+                {"text": "To", "type": ""},
+                {"text": "2012 Jan.", "type": "filter"},
+                {"text": "Sales", "type": "numeric"},
+                {"text": "'s Root cause analysis", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Predictive analysis questions",
+        "questionList": [
+          {
+            "questionText": "Every Month Numeric 's Prediction",
+            "questionExample": [
+              [
+                {"text": "Every Month", "type": "filter"},
+                {"text": "income", "type": "numeric"},
+                {"text": "'s Prediction", "type": ""}
+              ],
+              [
+                {"text": "Every Month", "type": "filter"},
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "'s Prediction", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Every Week Numeric 's Prediction",
+            "questionExample": [
+              [
+                {"text": "Every Week", "type": "filter"},
+                {"text": "income", "type": "numeric"},
+                {"text": "'s Prediction", "type": ""}
+              ],
+              [
+                {"text": "Every Week", "type": "filter"},
+                {"text": "Unit Price", "type": "numeric"},
+                {"text": "'s Prediction", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Value 's Numeric 's Prediction",
+            "questionExample": [
+              [
+                {"text": "Bike", "type": "value"},
+                {"text": "Sales", "type": "numeric"},
+                {"text": "'s Prediction", "type": ""}
+              ],
+              [
+                {"text": "ProductA", "type": "value"},
+                {"text": "Yield", "type": "numeric"},
+                {"text": "'s Prediction", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Scale Type question",
+        "questionList": [
+          {
+            "questionText": "Every Category 's Proportion",
+            "questionExample": [
+              [
+                {"text": "Every", "type": ""},
+                {"text": "Product", "type": "category"},
+                {"text": "'s Proportion", "type": ""}
+              ],
+              [
+                {"text": "Every", "type": ""},
+                {"text": "Shop Type", "type": "category"},
+                {"text": "'s Proportion", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Every Category 's Numeric 's Proportion",
+            "questionExample": [
+              [
+                {"text": "Every", "type": ""},
+                {"text": "Product", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'s Proportion", "type": ""}
+              ],
+              [
+                {"text": "Every", "type": ""},
+                {"text": "Product", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Sales Quantity", "type": "numeric"},
+                {"text": "'s Proportion", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y Year Every Category 's Numeric 's Proportion",
+            "questionExample": [
+              [
+                {"text": "Year 2018", "type": "filter"},
+                {"text": "Every", "type": ""},
+                {"text": "commodity", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Sales Quantity", "type": "numeric"},
+                {"text": "'s Proportion", "type": ""}
+              ],
+              [
+                {"text": "Year 2011", "type": "filter"},
+                {"text": "Every", "type": ""},
+                {"text": "Product", "type": "category"},
+                {"text": "'s", "type": ""},
+                {"text": "Profit", "type": "numeric"},
+                {"text": "'s Proportion", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Value And Value Every Take up Category 's Proportion",
+            "questionExample": [
+              [
+                {"text": "S1", "type": "value"},
+                {"text": "And", "type": ""},
+                {"text": "S2", "type": "value"},
+                {"text": "Every Take up", "type": ""},
+                {"text": "Product", "type": "category"},
+                {"text": "'s Proportion", "type": ""}
+              ],
+              [
+                {"text": "F", "type": "value"},
+                {"text": "And", "type": ""},
+                {"text": "M", "type": "value"},
+                {"text": "Every Take up", "type": ""},
+                {"text": "Customer", "type": "category"},
+                {"text": "'s Proportion", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Relation type question",
+        "questionList": [
+          {
+            "questionText": "Numeric And Numeric's Relation",
+            "questionExample": [
+              [
+                {"text": "Cost", "type": "numeric"},
+                {"text": "And", "type": ""},
+                {"text": "income", "type": "numeric"},
+                {"text": "'s Relation", "type": ""}
+              ],
+              [
+                {"text": "Profit", "type": "numeric"},
+                {"text": "And", "type": ""},
+                {"text": "Cost", "type": "numeric"},
+                {"text": "'s Relation", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Category And Category 's Relation",
+            "questionExample": [
+              [
+                {"text": "Product", "type": "category"},
+                {"text": "And", "type": ""},
+                {"text": "Country", "type": "category"},
+                {"text": "'s Relation", "type": ""}
+              ],
+              [
+                {"text": "Product", "type": "category"},
+                {"text": "And", "type": ""},
+                {"text": "Customer Gender", "type": "category"},
+                {"text": "'s Relation", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Correlation Analysis",
+        "questionList": [
+          {
+            "questionText": "What is related with Numeric?",
+            "questionExample": [
+              [
+                {"text": "What And", "type": ""},
+                {"text": "Yield", "type": "numeric"},
+                {"text": "Related", "type": ""}
+              ],
+              [
+                {"text": "What And", "type": ""},
+                {"text": "income", "type": "numeric"},
+                {"text": "Related", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "What And Category Related",
+            "questionExample": [
+              [
+                {"text": "What And", "type": ""},
+                {"text": "Product Promotion", "type": "category"},
+                {"text": "Related", "type": ""}
+              ],
+              [
+                {"text": "What And", "type": ""},
+                {"text": "Product Category", "type": "category"},
+                {"text": "Related", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Difference analysis",
+        "questionList": [
+          {
+            "questionText": "Value And Value 's difference",
+            "questionExample": [
+              [
+                {"text": "Taipei", "type": "value"},
+                {"text": "And", "type": ""},
+                {"text": "Hsinchu", "type": "value"},
+                {"text": "'s difference", "type": ""}
+              ],
+              [
+                {"text": "ProductA", "type": "value"},
+                {"text": "And", "type": ""},
+                {"text": "ProductB", "type": "value"},
+                {"text": "'s difference", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Value And other's difference",
+            "questionExample": [
+              [
+                {"text": "ProductA", "type": "value"},
+                {"text": "And other's difference", "type": ""}
+              ],
+              [
+                {"text": "Taipei", "type": "value"},
+                {"text": "And other's difference", "type": ""}
+              ]
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "resultDescription": {
+    "high": "High",
+    "low": "Low",
+    "higher": "Higher",
+    "lower": "Below",
+    "displayChart": "Display Chart",
+    "displayData": "Display Data",
+    "predictionInfo": "PredictionInfo",
+    "timeOfPredictionInterval": "Prediction Interval for {time}",
+    "predictionMax": "PredictionMax",
+    "predictionMin": "Prediction Min",
+    "confidenceInterval": "Error interval",
+    "confidenceIndex": "ConfidenceIndex",
+    "pivotTable": "Pivot Analysis",
+    "weight": "weight",
+    "dataInsight": "Data Insight",
+    "keyInsight": "Key Insight",
+    "total": "Total",
+    "is": "We",
+    "dataRowCount": "DataRowCount",
+    "totalPercentage": "TotalPercentage",
+    "trendInsight": "Trend Insight",
+    "trendInsightNoData": "No trend anomalies have been detected",
+    "noData": "No data",
+    "of": "'s",
+    "dataSourceIntro": "Introduction to Data Set",
+    "totalDataRows": "Total DataRows",
+    "totalDataColumns": "Total DataColumns",
+    "degreeOfCorrelation": "Relationship",
+    "columnCorrelationName": "Correlation Field Name",
+    "columnCorrelationOverview": "Column CorrelationOverview",
+    "filterColumnCorrelation": "Some fields cannot be correlated, so they have been filtered out",
+    "strongCorrelationColumns": "High CorrelationColumns",
+    "highlyPositiveCorrelated": "HighlyPositiveCorrelated",
+    "highlyNegativeCorrelated": "HighlyNegativeCorrelated",
+    "notCorrelated": "Zero Related",
+    "correlationRange": "The value range {min}-{max} is the high correlation field (up to five strokes are displayed)",
+    "noStrongCorrelationColumns": "No high correlation fields are currently found",
+    "relatedQuestion": "Related Question",
+    "basicInfo": "Basic Information",
+    "summaryReport": "Summary Report",
+    "importantFeatureChanging": "Comparison of changes in important factors",
+    "analysisProcessing": "Analysis Processing",
+    "quickStart": "Common Questions",
+    "clearAllFilter": "Clear All Conditions",
+    "closeFilter": "Close Condition",
+    "currentChosenData": "Currently selected data",
+    "currentChosenArea": "Currently selected block",
+    "saveFilterCondition": "Save Filter Condition",
+    "area": "Block",
+    "between": "Fall between {start} and {end}",
+    "filterRestrictions": "Filter Restrictions",
+    "prompt": "Prompt",
+    "filterRule": "Filter conditions will affect the results of subsequent question analysis",
+    "restrict": "Restrict",
+    "featureList": "Relation List",
+    "hereIsFeatures": "The following are related factors",
+    "modelConfidence": "Model Confidence",
+    "displayTotalData": "Total {count} records",
+    "displayTopData": "{count} items before display",
+    "min": "Min",
+    "lowerQuartile": "Lower Quartile",
+    "median": "Median",
+    "higherQuartile": "Upper Quartile",
+    "max": "Max",
+    "from": "From",
+    "has": "'s",
+    "recognize": "recognized as",
+    "tokenRecognize": "{token}, identified as ",
+    "recognizeTo": "{token} from {dataFrame}, recognized as",
+    "hasColumn": "Contains the following fields:",
+    "columnValue": "Column Information",
+    "loadedRate": "Data Display Rate",
+    "getMoreBtn": "See more information",
+    "percentage": "Percentage (%)",
+    "systemUnknownTokenList": "Unrecognized words",
+    "beRecognized": "Identified as",
+    "systemQuestionAnalysis": "Analyze '{question}'. Among them",
+    "other": "Other",
+    "more": "See more",
+    "source": "Source",
+    "target": "Target",
+    "value": "Value",
+    "feature": "Custom Field",
+    "average": "Average"
+  },
+  "columnSummary": {
+    "avg": "Average",
+    "stdev": "Standard Deviation",
+    "const": "Fixed Value",
+    "distinctCount": "Don't Repeat Values",
+    "range": "range",
+    "sum": "Total Value",
+    "record": "Pen",
+    "total": "Total",
+    "interval": "Interval",
+    "emptyString": "EmptyString"
+  },
+  "segmentationToken": {
+    "UnknownToken": "Unrecognized Word",
+    "Datacolumn": "Datacolumn",
+    "Datavalue": "Column Data",
+    "ColumnSet": "Column Set",
+    "DtToken": "Time Range",
+    "FuzzyDtToken": "Time Range",
+    "TimeScope": "TimeScope",
+    "CountToken": "Data Calculation Method",
+    "SumToken": "Data Calculation Method",
+    "MeanToken": "Data Calculation Method",
+    "StdevToken": "Data Calculation Method",
+    "MedianToken": "Data Calculation Method",
+    "MaximalToken": "Data Calculation Method",
+    "MinimalToken": "Data Calculation Method",
+    "NumRuleToken": "Filter Criteria",
+    "TopBotToken": "Filter Criteria",
+    "IntroductionToken": "Question intent",
+    "GenericToken": "Question intent",
+    "ComparisonToken": "Question intent, comparative analysis between data to be processed",
+    "TrendToken": "Question intent",
+    "PredictionToken": "Question intent",
+    "RootCauseToken": "Question intent",
+    "PivotTableToken": "Question intent",
+    "ProportionToken": "Question intent",
+    "CorrelationToken": "Question intent",
+    "CorrExplorationToken": "Question intent",
+    "CorrVerificationToken": "Question intent",
+    "DiffExplorationToken": "Question intent, analysis of differences between data to be processed",
+    "ConjunctionToken": "Conjunction",
+    "PossessionToken": "Connective Word",
+    "ChangeToken": "Other Vocabulary",
+    "ElseToken": "Other Vocabulary",
+    "IgnoreToken": "Neglectable Word",
+    "Datarow": "Datarow",
+    "Boolean": "Bringing Value",
+    "Unique": "Unique Value",
+    "EqualToken": "Intent to specify fields or data",
+    "NotEqualToken": "Intent to specify field or data",
+    "ToToken": "Time Connective",
+    "ConstituteToken": "Understand the intention of composition"
+  },
+  "notification": {
+    "uploadLimitNotification": "The number of data or data capacity has reached the upper limit",
+    "uploadLimit": "Table limit: up to {count} pens",
+    "userLimitNotification": "The number of users has reached the upper limit",
+    "columnSummarySampleNotification": "The column summary has been estimated numerically, there will be slight errors, for reference only"
+  },
+  "chart": {
+    "zoom": "Zoom Zoom",
+    "back": "Zone Zoom Restoration",
+    "stack": "Switch to stack",
+    "tiled": "Switch to tile",
+    "line": "Switch to line chart",
+    "bar": "Switch to histogram",
+    "restore": "Restore",
+    "dataView": "View raw data",
+    "dataViewDetail": ["raw data", "close", "refresh"],
+    "rect": "Rectangle Selection",
+    "polygon": "Circle Selection",
+    "lineX": "Horizontal Selection",
+    "lineY": "Vertical Selection",
+    "keep": "Keep multiple choices",
+    "clear": "Clear Selection",
+    "export": "Download data CSV file",
+    "rangeStart": "rangeStart",
+    "rangeEnd": "rangeEnd",
+    "count": "Statistics",
+    "download": "Download image"
+  },
+  "errorMessage": {
+    "SYERR0001": "Unexpected error occurred in the system",
+    "SYERR0002": "plural storage type handler",
+    "SYERR0003": "Storage type handler not found",
+    "SYERR0004": "Storage space has been damaged",
+    "SYERR0005": "The storage space cannot be edited",
+    "SYERR0006": "File does not exist",
+    "SYERR0007": "Repeat Upload",
+    "SYERR0008": "Cannot operate the cancelled upload",
+    "SYERR0009": "Build failed",
+    "SYERR0010": "Database not set",
+    "SYERR0011": "Data table association already exists",
+    "SYERR0012": "Data table association does not exist",
+    "SYERR0013": "Data table association already exists",
+    "SYERR0014": "The table is currently unavailable",
+    "SYERR0015": "Table field is unavailable",
+    "SYERR0016": "Cannot associate the same data table",
+    "SYERR0017": "Data table does not exist",
+    "SYERR0018": "There is no associated key in the data table",
+    "SYERR0019": "There is no field in the data table",
+    "SYERR0101": "File cannot be decoded",
+    "SYERR0102": "The file could not be parsed",
+    "SYWARN0001": "Warning!!",
+    "SYWARN0002": "Data source already exists",
+    "SYWARN0003": "The data source cannot be edited at present",
+    "SYWARN0004": "Storage Space Under Construction",
+    "SYWARN0005": "Storage space does not exist",
+    "SYWARN0006": "Data source does not exist",
+    "SYWARN0007": "Query time format error",
+    "SYWARN0008": "table name already exists",
+    "SYWARN0009": "File name already exists",
+    "SYWARN0010": "Data source field does not exist",
+    "SYWARN0011": "Field alias already exists",
+    "SYWARN0012": "Illegal field label",
+    "APPERR0001": "Unexpected error occurred in the system",
+    "APPWARN0001": "Wrong account password",
+    "APPWARN0002": "User already exists",
+    "APPWARN0003": "Please log in again if the authority is invalid",
+    "APPWARN0004": "Check no recommended questions",
+    "TASKWARN0002": "No data can be obtained for processing under this condition",
+    "TASKWARN0003": "The calculation result is empty",
+    "authFail": "Please log in again if the authority is invalid",
+    "permissionChanged": "Permission has been changed, please log in again",
+    "lackOfSignUpToken": "No registration permission, please contact the administrator",
+    "defaultMsg": "Unexpected error occurred in the system",
+    "lackOfPermission": "lack of permissions, please contact the administrator",
+    "versionUpdate": "A new version is online, help you update it immediately",
+    "networkError": "An error occurred in the network connection, please check the connection and try again later"
+  },
+  "resultNote": {
+    "groupLimitNote": "The result is before the original data {randomLimit} 笔得来",
+    "samplingNote": "This result is calculated from the original sample {randomLimit} pens"
+  },
+  "userManagement": {
+    "createUser": "Add User",
+    "inviteeEmailPlaceholder": "Please enter the email of the invitee",
+    "userRoleAuthority": "Account Role Permission",
+    "accountOwner": "Account Owner",
+    "accountMaintainer": "Account Manager",
+    "accountViewer": "General User",
+    "accountRoleDesc": "Role Permission Description",
+    "accountOwnerDesc": "No restrictions on use",
+    "accountMaintainerDesc": "With account management permissions",
+    "accountViewerDesc": "Unable to use account management related functions",
+    "updateRole": "Character Change",
+    "confirmDeleteAccountText": "After the user is removed, this user will not be able to use any features of this account. Are you sure you want to continue removing this user?"
+  },
+  "accountInfo": {
+    "userAmount": "Number of Users",
+    "currentUserAmount": "Current number of users",
+    "userAmountLimit": "Maximum Number of Users",
+    "dataAllowance": "Data Capacity",
+    "currentDataUsage": "Current Data Usage Capacity",
+    "dataUsageProvided": "Data Capacity Maximum",
+    "expireDate": "Expire Date",
+    "person": "person"
+  },
+  "dataType": {
+    "numeric": "Numeric",
+    "category": "Category",
+    "boolean": "Brin",
+    "datetime": "Time",
+    "others": "Others"
+  }
+}

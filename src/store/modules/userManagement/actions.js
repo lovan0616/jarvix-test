@@ -1,4 +1,4 @@
-import { logout } from '@/API/User'
+import { logout, refreshToken } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
 
@@ -48,6 +48,10 @@ export default {
         commit('setLicenseInfo', accountInfo.license)
       })
       .catch(() => {})
+
+    await refreshToken().then(res => {
+      localStorage.setItem('token', res.accessToken)
+    })
   },
   updateUserGroupList ({ dispatch, commit, getters }) {
     return dispatch('getUserInfo')

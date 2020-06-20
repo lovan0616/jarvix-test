@@ -50,31 +50,45 @@ service.interceptors.response.use(
     return Promise.reject(res)
   },
   error => {
-    if (error.response && error.response.status === 401) {
-      // 避免單一頁面多個請求，token 失效被登出時跳出多個訊息
-      if (router.currentRoute.path === '/login') return Promise.reject(error)
-      store.commit('dataSource/setIsInit', false)
-      store.commit('userManagement/clearUserInfo')
-      router.push('/login')
-
+    if (!error.response) {
+      // network error
       Message({
-        message: i18n.t('errorMessage.authFail'),
+        message: i18n.t('errorMessage.networkError'),
         type: 'error',
         duration: 3 * 1000
       })
-    }
+    } else {
+      let statusCode = error.response.status
 
-    if (error.response && error.response.status === 403) {
-      store.commit('dataSource/setIsInit', false)
-      store.commit('dataSource/setDataSourceId', null)
-      store.commit('userManagement/clearUserInfo')
-      router.push('/login')
+      switch (statusCode) {
+        case 401:
+          // 避免單一頁面多個請求，token 失效被登出時跳出多個訊息
+          if (router.currentRoute.path === '/login') return Promise.reject(error)
+          store.commit('dataSource/setIsInit', false)
+          store.commit('userManagement/clearUserInfo')
+          router.push('/login')
 
-      Message({
-        message: i18n.t('errorMessage.permissionChanged'),
-        type: 'error',
-        duration: 3 * 1000
-      })
+          Message({
+            message: i18n.t('errorMessage.authFail'),
+            type: 'error',
+            duration: 3 * 1000
+          })
+
+          break
+        case 403:
+          store.commit('dataSource/setIsInit', false)
+          store.commit('dataSource/setDataSourceId', null)
+          store.commit('userManagement/clearUserInfo')
+          router.push('/login')
+
+          Message({
+            message: i18n.t('errorMessage.permissionChanged'),
+            type: 'error',
+            duration: 3 * 1000
+          })
+
+          break
+      }
     }
 
     // cancel request
