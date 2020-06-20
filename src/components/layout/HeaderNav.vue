@@ -106,9 +106,6 @@ export default {
     isShowFunctionDescription () {
       return this.$store.state.setting.locale.includes('zh')
     },
-    locale () {
-      return this.$store.state.setting.locale
-    },
     groupName () {
       return this.$store.getters['userManagement/getCurrentGroupName']
     },
