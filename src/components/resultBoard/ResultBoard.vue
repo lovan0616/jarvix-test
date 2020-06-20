@@ -148,7 +148,7 @@ export default {
   },
   computed: {
     isPinboardPage () {
-      return this.$route.name === 'PagePinboard'
+      return this.$route.name === 'personalPagePinboard' | this.$route.name === 'projectPagePinboard'
     },
     pinboardList () {
       return this.$store.state.pinboard.pinboardList
