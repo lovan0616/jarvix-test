@@ -22,6 +22,7 @@
           v-for="boardInfo in pinboardList"
           :key="boardInfo.id"
           :board-info="boardInfo"
+          :is-project-pinboard="isProjectPinboard"
           @showEdit="showEditDialog(boardInfo)"
           @showDelete="showDeleteDialog(boardInfo)"
           @showShare="showShareDialog(boardInfo)"
@@ -114,6 +115,9 @@ export default {
       isShowEdit: false,
       isShowDelete: false,
       isShowShare: false,
+      accountId: null,
+      groupId: null,
+      isProjectPinboard: false,
       editName: '',
       shareLink: '',
       tempEditInfo: {
@@ -133,6 +137,9 @@ export default {
   },
   mounted () {
     this.getPinboardInfo()
+    this.accountId = this.$route.params.accountId
+    this.groupId = this.$route.params.groupId
+    this.isProjectPinboard = this.groupId !== undefined
   },
   beforeDestroy () {
     this.$store.commit('pinboard/setPinboardList', [])

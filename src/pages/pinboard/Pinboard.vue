@@ -6,7 +6,7 @@
       class="bread-crumb-block"
     >
       <router-link 
-        :to="{name: 'PagePinboardList'}"
+        :to="{name: prevPage}"
         class="page root"
       >{{ $t('editing.allCategory') }}</router-link>
       <span class="divider">/</span>
@@ -45,7 +45,10 @@ export default {
       isLoading: true,
       timeoutFunction: null,
       boardList: [],
-      boardName: null
+      boardName: null,
+      accountId: null,
+      groupId: null,
+      isProjectPinboard: false
     }
   },
   computed: {
@@ -54,11 +57,17 @@ export default {
     },
     pinboardInfo () {
       return this.$store.state.pinboard.pinboardInfo
+    },
+    prevPage () {
+      return this.isProjectPinboard ? 'projectPagePinboardList' : 'personalPagePinboardList'
     }
   },
   mounted () {
     this.getPinboardInfo()
     this.getPinboardName()
+    this.accoutId = this.$route.params.accoutId
+    this.groupId = this.$route.params.groupId
+    this.isProjectPinboard = this.groupId !== undefined
   },
   methods: {
     getPinboardName () {

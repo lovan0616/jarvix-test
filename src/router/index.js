@@ -51,6 +51,38 @@ const router = new Router({
             }
           ]
         },
+        {
+          path: ':accountId/pinboard',
+          component: () => import('@/pages/pinboard/Index'),
+          children: [
+            {
+              path: '/',
+              name: 'personalPagePinboardList',
+              component: () => import('@/pages/pinboard/PinboardList')
+            },
+            {
+              path: ':id',
+              name: 'personalPagePinboard',
+              component: () => import('@/pages/pinboard/Pinboard')
+            }
+          ]
+        },
+        {
+          path: ':accountId/:groupId/pinboard',
+          component: () => import('@/pages/pinboard/Index'),
+          children: [
+            {
+              path: '/',
+              name: 'projectPagePinboardList',
+              component: () => import('@/pages/pinboard/PinboardList')
+            },
+            {
+              path: ':id',
+              name: 'projectPagePinboard',
+              component: () => import('@/pages/pinboard/Pinboard')
+            }
+          ]
+        },
         // FIXME for poc/foxconn_molding
         {
           path: 'algorithm',

@@ -54,6 +54,7 @@
 export default {
   name: 'SinglePinboard',
   props: {
+    isProjectPinboard: { type:Boolean, default: false },
     boardInfo: {
       type: Object,
       default: ()=> {
@@ -63,8 +64,9 @@ export default {
   },
   methods: {
     goToBoard () {
+      let routerName = this.isProjectPinboard ? 'projectPagePinboard' : 'personalPagePinboard'
       this.$router.push({
-        name: 'PagePinboard',
+        name: routerName,
         params: {
           id: this.boardInfo.id
         }

@@ -7,7 +7,7 @@
         to="/" 
         exact>{{ $t('nav.index') }}</router-link>
       <router-link 
-        :to="{name: 'PagePinboardList'}" 
+        :to="{name: 'personalPagePinboardList', params: { accountId: accountId }}" 
         class="nav-item">{{ $t('nav.pinboard') }}</router-link>
       <!-- FIXME for poc/foxconn_molding -->
       <router-link 
@@ -31,7 +31,7 @@
         />
       </div>
       <router-link 
-        :to="{name: 'PagePinboardList'}" 
+        :to="{name: 'projectPagePinboardList', params: { accountId: accountId, groupId: groupId }}" 
         class="nav-item">{{ $t('nav.projectPinboard') }}</router-link>
     </section>
     <section class="nav-right">
@@ -171,6 +171,9 @@ export default {
     },
     groupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
+    },
+    accountId () {
+      return this.getCurrentAccountId
     },
     languages () {
       return this.$store.state.setting.languages
