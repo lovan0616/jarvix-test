@@ -11,10 +11,10 @@
       <div class="sidenav__account">
         <custom-dropdown-select
           :data-list="accountList"
-          :selected="getCurrentAccountId"
+          :selected-id="getCurrentAccountId"
           trigger="click"
         >
-          <template v-slot:display>
+          <template #display>
             <div 
               class="dropdown__badge"
               @click="isShowChangeAccount = !isShowChangeAccount"
@@ -31,7 +31,7 @@
         <li class="list__item">
           <router-link
             :to="{ name: 'PageIndex' }"
-            :class="{'active': $route.name === 'PageIndex'}"
+            :class="{ 'active': $route.name === 'PageIndex' }"
             class="list__link"
             exact
           >
@@ -183,9 +183,6 @@ export default {
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
-    isCurrentAccount(id) {
-      return id === this.getCurrentAccountId
-    },
     switchDialogName (dialog) {
       this[dialog] = true
     },
@@ -198,9 +195,12 @@ export default {
       this.selectedLanguage = item
     },
     onBtnExitClick () {
-      this.$store.dispatch('userManagement/logout').then(() => {
-        this.$router.push('/login')
-      })
+      this.$store.dispatch('userManagement/logout')
+        .then(() => {
+          this.$router.push('/login')
+          // 避免重新登入時仍開著
+          this.closeSideNav()
+        })
     },
     closeSideNav() {
       if(this.isShowFullSideNav) this.updateSideNavStatus(false)
@@ -215,7 +215,7 @@ export default {
   top: 0;
   left: $app-side-nav-closed-width;
   bottom: 0;
-  z-index: 1000;
+  z-index: 999;
   transition: all .1s linear;
 
   &__container {
@@ -227,7 +227,6 @@ export default {
     width: $app-side-nav-closed-width;
     height: calc(100vh - #{$header-height});
     background: #182D30;
-    z-index: 1001;
     border-right: 1px solid #2B3638;
   }
   
@@ -305,6 +304,7 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      /* 避免點擊時選取到文字 */
       user-select: none;
       -moz-user-select: none;
       -webkit-user-select: none;

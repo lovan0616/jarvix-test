@@ -38,9 +38,6 @@ export default {
   name: 'AppHeader',
   computed: {
     ...mapState(['isShowFullSideNav']),
-    isShowChatRoom () {
-      return this.$store.state.isShowChatRoom
-    }
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
@@ -65,12 +62,6 @@ export default {
   border-bottom: 1px solid #04262B;
   // transition: all 0.1s;
 
-  &__container {
-    width: calc(100% - #{$app-side-nav-closed-width});
-    margin: 0 0 0 auto;
-    padding: 0 40px;
-  }
-
   &__sidenav-toggle-container {
     position: fixed;
     padding: 21px;
@@ -78,7 +69,6 @@ export default {
     border-right: 1px solid #2B3638;
     width: $app-side-nav-closed-width;
     background: #1F3B3F;
-    z-index: 999999999;
 
     .toggle {
       display: flex;
@@ -90,11 +80,10 @@ export default {
       }
 
       &__text {
-        flex: 1;
+        flex: 1 1 0;
         font-weight: bold;
         color: #2AD2E2;
         overflow: hidden;
-        width: 0;
         white-space: nowrap;
         opacity: 0;
         transition: opacity .1s linear .1s;
@@ -113,6 +102,12 @@ export default {
         }
       }
     }
+  }
+
+  &__container {
+    width: calc(100% - #{$app-side-nav-closed-width});
+    margin: 0 0 0 auto;
+    padding: 0 40px;
   }
 
   &__root {

@@ -46,7 +46,7 @@ export default {
       type: Array,
       required: true
     },
-    selected: {
+    selectedId: {
       type: Number,
       default: null
     },
@@ -66,10 +66,10 @@ export default {
       this.isShowDropdownList = !this.isShowDropdownList
     },
     isSelectedItem(id) {
-      return id === this.selected
+      return id === this.selectedId
     },
     selectItem(id) {
-      if (this.isLoading || this.selected === id) return
+      if (this.isLoading || this.selectedId === id) return
       this.$emit('select', id)
     }
   }

@@ -8,7 +8,7 @@
         <div class="nav-set-flex">
           <custom-dropdown-select
             :data-list="groupListData()"
-            :selected="groupId"
+            :selected-id="groupId"
             :is-loading="isLoading"
             trigger="hover"
             @select="changeGroup($event)"
@@ -28,14 +28,14 @@
         <button
           v-if="hasPermission('account_create_group')"
           class="btn-m btn-default btn-create-group"
-          @click="$router.push({name: 'AccountGroupManagement'})"
+          @click="$router.push({ name: 'AccountGroupManagement' })"
         >
           <svg-icon icon-class="plus" />
           {{ $t('editing.createGroup') }}
         </button>
       </div>
       <router-link 
-        :class="{'active': $route.name === 'PageIndex'}"
+        :class="{ 'active': $route.name === 'PageIndex' }"
         class="nav-item"
         to="/" 
         exact>{{ $t('nav.index') }}</router-link>
@@ -111,12 +111,12 @@ export default {
     settingData () {
       const settingList = []
       if (this.hasPermission(['group_read_user', 'group_read_data'])) {
-        settingList.push({icon: 'database', title: 'sideNav.dataSourceManagement', name: 'DataSourceList'})
+        settingList.push({ icon: 'database', title: 'sideNav.dataSourceManagement', name: 'DataSourceList' })
       }
   
       // 個人版 隱藏成員管理選項
       if (this.license.maxUser !== 1) {
-        settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/group/user-management/${this.groupId}`})
+        settingList.push({ icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/group/user-management/${this.groupId}` })
       }
       return settingList
     }
@@ -313,7 +313,7 @@ export default {
         position: absolute;
         content: "";
         bottom: 100%;
-        left: 10%;
+        left: 15%;
         border-bottom: 12px solid #2B3839;
         border-left: 12px solid transparent;
         border-right: 12px solid transparent;
