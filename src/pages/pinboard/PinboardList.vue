@@ -181,7 +181,10 @@ export default {
     showShareDialog (boardInfo) {
       this.insertBoardData(boardInfo)
       this.isShowShare = true
-      this.shareLink = `${window.location.origin}/pinboard/${boardInfo.id}`
+      if (this.isProjectPinboard)
+        this.shareLink = `${window.location.origin}/${this.accountId}/${this.groupId}/pinboard/${boardInfo.id}`
+      else
+        this.shareLink = `${window.location.origin}/${this.accountId}/pinboard/${boardInfo.id}`
     },
     confirmEdit () {
       this.$validator.validateAll().then(isValidate => {
