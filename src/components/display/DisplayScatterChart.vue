@@ -37,7 +37,7 @@
 <script>
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
-import { getDrillDownTool } from '@/components/display/common/addons.js'
+import { getDrillDownTool, parallelZoomIn, verticalZoomIn } from '@/components/display/common/addons.js'
 let scatterChartConfig = {
   xAxisSplitLine: {
     show: false
@@ -110,6 +110,84 @@ export default {
       chartAddon.toolbox.feature.dataZoom.show = true
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
       chartAddon.yAxis.name = this.title.yAxis[0].display_name
+      
+      /**
+       * 處理 dataZoom
+       **/
+      // 找出 X 的最大值和最小值
+      let minX = this.dataset.data[0][0]
+      let maxX = this.dataset.data[0][0]
+      let minY = this.dataset.data[0][1]
+      let maxY = this.dataset.data[0][1]
+      this.dataset.data.forEach(element => {
+        if (element[0] !== null) {
+          if (minX === null) minX = element[0]
+          if (maxX === null) maxX = element[0]
+          maxX = element[0] > maxX ? element[0] : maxX
+          minX = element[0] < minX ? element[0] : minX
+        }
+        if (element[1] !== null) {
+          if (minY === null) minY = element[1]
+          if (maxY === null) maxY = element[1]
+          maxY = element[1] > maxY ? element[1] : maxY
+          minY = element[1] < minY ? element[1] : minY
+        }
+      })
+
+      /**
+       * 處理 X 軸
+       */
+      let displayXaxisMin
+      let displayYaxisMin
+      let displayXaxisMax
+      let displayYaxisMax
+      const parallelZoomConfig = parallelZoomIn()
+      if (minX > 0 && maxX > 0) {
+        let buffer = (maxX - minX) / 2
+        let padding = (maxX - minX) / 10
+        displayXaxisMax = maxX + buffer
+        displayXaxisMin = minX - buffer > 0 ? 0 : minX - buffer
+        parallelZoomConfig[0].start = (minX - padding) * 100 / displayXaxisMax
+        parallelZoomConfig[0].end = (maxX + padding) * 100 / displayXaxisMax
+      } else if (minX < 0 && maxX < 0) {
+        let buffer = (maxX - minX) / 2
+        let padding = (maxX - minX) / 10
+        displayXaxisMax = maxX + buffer < 0 ? 0 : maxX + buffer
+        displayXaxisMin = minX - buffer
+        parallelZoomConfig[0].start = (maxX + padding) * 100 / displayXaxisMin
+        parallelZoomConfig[0].end = (minX - padding) * 100 / displayXaxisMin
+      } else {
+        chartAddon.xAxis.scale = true
+      }
+
+      /**
+       * 處理 Y 軸
+       */
+      const verticalZoomConfig = verticalZoomIn()
+      if (minY > 0 && maxY > 0) {
+        let buffer = (maxY - minY) / 2
+        let padding = (maxY - minY) / 10
+        displayYaxisMax = maxY + buffer
+        displayYaxisMin = minY - buffer > 0 ? 0 : minY - buffer
+        verticalZoomConfig[0].start = (minY - padding) * 100 / displayYaxisMax
+        verticalZoomConfig[0].end = (maxY + padding) * 100 / displayYaxisMax
+      } else if (minY < 0 && maxY < 0) {
+        let buffer = (maxY - minY) / 2
+        let padding = (maxY - minY) / 10
+        displayYaxisMax = maxY + buffer < 0 ? 0 : maxY + buffer
+        displayYaxisMin = minY - buffer
+        verticalZoomConfig[0].start = (maxY + padding) * 100 / displayYaxisMin
+        verticalZoomConfig[0].end = (minY - padding) * 100 / displayYaxisMin
+      } else {
+        chartAddon.yAxis.scale = true
+      }
+
+      chartAddon.xAxis.max = this.roundNumber(displayXaxisMax, 4)
+      chartAddon.xAxis.min = this.roundNumber(displayXaxisMin, 4)
+      chartAddon.yAxis.max = this.roundNumber(displayYaxisMax, 4)
+      chartAddon.yAxis.min = this.roundNumber(displayYaxisMin, 4)
+      chartAddon.dataZoom = [...parallelZoomConfig, ...verticalZoomConfig]
+
       scatterOptions.chartData.data = this.dataset.data
       scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.series[0] = scatterOptions.chartData
@@ -144,16 +222,6 @@ export default {
       if (this.formula) {
         let lineData = []
         let expression = ''
-        // 找出 X 的最大值和最小值
-        let minX = this.dataset.data[0][0]
-        let maxX = this.dataset.data[0][0]
-        this.dataset.data.forEach(element => {
-          if (element[0] === null) return
-          if (minX === null) minX = element[0]
-          if (minX === null) minX = element[0]
-          maxX = element[0] > maxX ? element[0] : maxX
-          minX = element[0] < minX ? element[0] : minX
-        })
 
         if (this.formula.length === 2) {
           // ax + b
