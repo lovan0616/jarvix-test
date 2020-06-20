@@ -1,5 +1,5 @@
 <template>
-  <section
+  <nav
     :class="{ 'sidenav--opened': isShowFullSideNav }"
     class="sidenav"
     @click="closeSideNav"
@@ -126,7 +126,7 @@
         @confirmBtn="onBtnExitClick"
       />
     </div>
-  </section>
+  </nav>
 </template>
 
 <script>
