@@ -86,6 +86,7 @@
       v-if="isShowLanguage"
       :title="$t('editing.languageSetting')"
       :button="$t('button.change')"
+      :is-loading="isLoading"
       :show-both="true"
       @closeDialog="isShowLanguage = false"
       @confirmBtn="changeLang"
@@ -131,7 +132,7 @@ import DropdownSelect from '@/components/select/DropdownSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import { mapGetters, mapState } from 'vuex'
-import { switchGroup } from '@/API/User'
+import { switchGroup, updateLocale } from '@/API/User'
 
 export default {
   name: 'HeaderNav',
@@ -232,8 +233,14 @@ export default {
       })
     },
     changeLang () {
-      this.$store.commit('setting/setLocale', this.selectedLanguage)
-      this.isShowLanguage = false
+      this.isLoading = true
+      updateLocale(this.selectedLanguage.replace('-', '_'))
+        .then(() => this.$store.dispatch('userManagement/getUserInfo'))
+        .catch(() => {})
+        .finally(() => {
+          this.isShowLanguage = false
+          this.isLoading = false
+        })
     },
     changeGroup () {
       this.isLoading = true
