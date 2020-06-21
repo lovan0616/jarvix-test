@@ -40,6 +40,11 @@ export default {
             ...licensePermissionList
           ]
         })
+        
+        let locale = userInfo.userData.language
+        if (locale) {
+          commit('setting/setLocale', locale.replace('_', '-'), { root: true })
+        }
       })
       .catch(() => {})
     
