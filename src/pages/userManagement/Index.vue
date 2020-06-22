@@ -10,7 +10,7 @@
           class="btn-m btn-default btn-has-icon"
           @click="showCreateUser">
           <svg-icon 
-            icon-class="user" 
+            icon-class="user-plus" 
             class="icon"/>
           {{ $t('userManagement.createUser') }}
         </button>
