@@ -63,9 +63,9 @@
     </section>
     <section class="nav-right">
       <router-link
+        v-if="isShowFunctionDescription"
         :to="{ name: 'FunctionDescription' }"
         class="nav-item nav-function"
-        v-if="isShowFunctionDescription"
       >
         <svg-icon 
           icon-class="description" 
