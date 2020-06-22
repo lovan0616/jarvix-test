@@ -1627,7 +1627,7 @@
     "currentDataUsage": "Current Data Usage Capacity",
     "dataUsageProvided": "Data Capacity Maximum",
     "expireDate": "Expire Date",
-    "person": "person"
+    "person": "person | people"
   },
   "dataType": {
     "numeric": "Numeric",
