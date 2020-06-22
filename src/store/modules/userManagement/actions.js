@@ -43,7 +43,7 @@ export default {
         
         let locale = userInfo.userData.language
         if (locale) {
-          commit('setting/setLocale', locale.replace('_', '-'), { root: true })
+          commit('setting/setLocale', locale, { root: true })
         }
       })
       .catch(() => {})

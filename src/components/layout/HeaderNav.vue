@@ -234,8 +234,8 @@ export default {
     },
     changeLang () {
       this.isLoading = true
-      updateLocale(this.selectedLanguage.replace('-', '_'))
-        .then(() => this.$store.dispatch('userManagement/getUserInfo'))
+      updateLocale(this.selectedLanguage)
+        .then(() => this.$store.commit('setting/setLocale', this.selectedLanguage))
         .catch(() => {})
         .finally(() => {
           this.isShowLanguage = false
