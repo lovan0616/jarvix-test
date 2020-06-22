@@ -31,7 +31,7 @@ export default {
         }
     
         commit('setUserInfo', {
-          userName: userInfo.username,
+          userName: userInfo.userData.name,
           accountList: userInfo.accountList,
           groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
           permission: [

@@ -3,8 +3,8 @@
     <section class="nav-left">
       <router-link 
         :class="{'active': $route.name === 'PageIndex'}"
-        class="nav-item"
-        to="/" 
+        :to="{ name: 'PageIndex', params: { 'group_id': groupId } }"
+        class="nav-item" 
         exact>{{ $t('nav.index') }}</router-link>
       <router-link 
         :to="{name: 'PagePinboardList'}" 
@@ -169,6 +169,9 @@ export default {
     groupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
+    accountId () {
+      return this.$store.getters['userManagement/getCurrentAccountId']
+    },
     languages () {
       return this.$store.state.setting.languages
     },
@@ -183,12 +186,12 @@ export default {
     settingData () {
       const settingList = []
       if (this.hasPermission(['group_read_user', 'group_read_data'])) {
-        settingList.push({icon: 'database', title: 'sideNav.dataSourceManagement', name: 'DataSourceList'})
+        settingList.push({icon: 'database', title: 'sideNav.dataSourceManagement', path: `/account/${this.accountId}/group/${this.groupId}/datasource`})
       }
   
       // 個人版 隱藏成員管理選項
       if (this.license.maxUser !== 1) {
-        settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/group/user-management/${this.groupId}`})
+        settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/account/${this.accountId}/group/${this.groupId}/users`})
       }
       return settingList
     },
@@ -201,6 +204,9 @@ export default {
       accountList.push({icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'})
       return accountList
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    next()
   },
   watch: {
     groupId (value) {
