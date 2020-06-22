@@ -52,8 +52,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  display: flex;
-  width: 100%;
+  width: 100%; 
   height: auto;
   height: $header-height;
   z-index: $header-z-index;
@@ -64,13 +63,13 @@ export default {
 
   &__sidenav-toggle-container {
     position: fixed;
-    padding: 21px;
     white-space: nowrap;
     border-right: 1px solid #2B3638;
     width: $app-side-nav-closed-width;
     background: #1F3B3F;
 
     .toggle {
+      padding: 21px;
       display: flex;
       align-items: center;
       &__icon {

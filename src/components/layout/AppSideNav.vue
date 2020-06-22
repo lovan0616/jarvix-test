@@ -2,23 +2,21 @@
   <nav
     :class="{ 'sidenav--opened': isShowFullSideNav }"
     class="sidenav"
-    @click="closeSideNav"
+    @click.self="closeSideNav"
   >
-    <div 
-      class="sidenav__container"
-      @click.stop
-    >
-      <div class="sidenav__account">
+    <div class="sidenav__container">
+      <div 
+        v-if="accountList && accountList.length > 0" 
+        class="sidenav__account">
+        <!-- TODO: 串接 change account API 時須改：:data-list="accountList"  -->
         <custom-dropdown-select
-          :data-list="accountList"
+          :data-list="[]"
           :selected-id="getCurrentAccountId"
           trigger="click"
+          @select="changeAccount"
         >
           <template #display>
-            <div 
-              class="dropdown__badge"
-              @click="isShowChangeAccount = !isShowChangeAccount"
-            >
+            <div class="dropdown__badge">
               {{ currentAccountName }}
             </div>
           </template>
@@ -35,11 +33,9 @@
             class="list__link"
             exact
           >
-            <div class="list__icon-box">
-              <svg-icon 
-                icon-class="home" 
-                class="list__icon" />
-            </div>
+            <svg-icon 
+              icon-class="home" 
+              class="list__icon" />
             <span class="list__text">
               {{ $t('sideNav.home') }}
             </span>
@@ -50,11 +46,9 @@
             :to="{ name: 'PagePinboardList' }"
             class="list__link"
           >
-            <div class="list__icon-box">
-              <svg-icon 
-                icon-class="pin" 
-                class="list__icon" />
-            </div>
+            <svg-icon 
+              icon-class="pin" 
+              class="list__icon" />
             <span class="list__text">
               {{ $t('sideNav.pinboard') }}
             </span>
@@ -68,11 +62,9 @@
             :to="{ name: 'AccountManagement' }"
             class="list__link"
           >
-            <div class="list__icon-box">
-              <svg-icon 
-                icon-class="account-management" 
-                class="list__icon" />
-            </div>
+            <svg-icon 
+              icon-class="account-management" 
+              class="list__icon" />
             <span class="list__text">
               {{ $t('sideNav.accountManagement') }}
             </span>
@@ -90,11 +82,9 @@
             class="list__link"
             @click="switchDialogName(item.dialogName)"
           >
-            <div class="list__icon-box">
-              <svg-icon 
-                :icon-class="item.icon" 
-                class="list__icon" />
-            </div>
+            <svg-icon 
+              :icon-class="item.icon" 
+              class="list__icon" />
             <span class="list__text">
               {{ $t(item.title) }}
             </span>
@@ -146,7 +136,6 @@ export default {
   },
   data () {
     return {
-      isShowChangeAccount: false,
       isShowLanguage: false,
       isShowLogout: false,
       selectedLanguage: null,
@@ -158,6 +147,7 @@ export default {
     ...mapGetters('userManagement', ['getCurrentAccountName', 'getCurrentAccountId', 'hasPermission']),
     currentAccountName() {
       const fullName = this.getCurrentAccountName
+      if (!fullName) return '-'
       return this.isShowFullSideNav ? fullName : fullName[0]
     },
     settingList () {
@@ -204,6 +194,9 @@ export default {
     },
     closeSideNav() {
       if(this.isShowFullSideNav) this.updateSideNavStatus(false)
+    },
+    changeAccount(accountId) {
+      // TODO: change account feature
     }
   }
 }
@@ -215,7 +208,7 @@ export default {
   top: 0;
   left: $app-side-nav-closed-width;
   bottom: 0;
-  z-index: 999;
+  z-index: 1000;
   transition: all .1s linear;
 
   &__container {
@@ -269,13 +262,11 @@ export default {
     }
 
     &__icon {
+      display: inline-block;
+      margin-right: 0;
       color: #7496A0;
       font-size: 22px;
-    }
-
-    &__icon-box {
-      margin-right: 0;
-      display: inline-block;
+      flex: 0 0 22px;
     }
 
     &__text {
@@ -325,7 +316,7 @@ export default {
     }
 
     .list {
-      &__icon-box {
+      &__icon {
         margin-right: 13px;
       }
 

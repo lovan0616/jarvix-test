@@ -1,8 +1,8 @@
 <template>
   <div
     class="dropdown"
-    @mouseenter="toggleDropdownList('hover')"
-    @mouseleave="toggleDropdownList('hover')"
+    @mouseenter.self="toggleDropdownList('hover')"
+    @mouseleave.self="toggleDropdownList('hover')"
   >
     <div 
       class="dropdown__select"
@@ -60,6 +60,16 @@ export default {
       isShowDropdownList: false
     }
   },
+  mounted () {
+    if (this.trigger === 'click') {
+      document.addEventListener('click', this.autoCloseDropdownList)
+    }
+  },
+  destroyed () {
+    if (this.trigger === 'click') {
+      document.removeEventListener('click', this.autoCloseDropdownList)
+    }
+  },
   methods: {
     toggleDropdownList(trigger) {
       if (trigger !== this.trigger) return
@@ -71,6 +81,10 @@ export default {
     selectItem(id) {
       if (this.isLoading || this.selectedId === id) return
       this.$emit('select', id)
+    },
+    autoCloseDropdownList (event) {
+      if (this.$el.contains(event.target) || !this.isShowDropdownList) return
+      this.toggleDropdownList('click')
     }
   }
 }
