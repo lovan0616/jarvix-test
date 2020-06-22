@@ -10,6 +10,9 @@
     "projectManagement": "专案管理"
   },
   "sideNav": {
+    "functionList": "功能选单",
+    "home": "首頁",
+    "pinboard": "個人釘板",
     "accountManagement": "帐户管理",
     "accountInformation": "帐户资讯",
     "accountUserManagement": "使用者管理",

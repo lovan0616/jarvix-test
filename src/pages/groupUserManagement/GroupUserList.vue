@@ -12,7 +12,7 @@
             class="btn-m btn-default btn-has-icon"
           >
             <svg-icon
-              icon-class="user"
+              icon-class="user-plus"
               class="icon"/>{{ $t('button.addNewMember') }}
           </router-link>
         </div>
