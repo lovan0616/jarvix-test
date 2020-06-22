@@ -13,6 +13,16 @@ export function login (loginInfo) {
 }
 
 /**
+ * refresh token
+ */
+export function refreshToken () {
+  return request({
+    url: 'auth/refresh',
+    method: 'PUT',
+  })
+}
+
+/**
  * 註冊
  * @param {Object} signupInfo - 使用者資訊
  * @param {String} signupInfo.email - 使用者郵件

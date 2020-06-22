@@ -1597,7 +1597,8 @@
     "lackOfSignUpToken": "無註冊權限，請聯繫管理員",
     "defaultMsg": "系統發生非預期錯誤",
     "lackOfPermission": "權限不足，請聯繫管理員",
-    "versionUpdate": "有新版本上線，立即幫您更新"
+    "versionUpdate": "有新版本上線，立即幫您更新",
+    "networkError": "網路連線發生錯誤，請檢查連線，稍後再試"
   },
   "resultNote": {
     "groupLimitNote": "此結果為原資料取前 {randomLimit} 筆得來",

@@ -1004,9 +1004,13 @@ export default {
   },
   data () {
     return {
-      lang: localStorage.getItem('locale'),
       activeTab: 'basic',
       activeCollapse: 'uiIntro'
+    }
+  },
+  computed: {
+    lang () {
+      return this.$store.state.setting.locale
     }
   },
   methods: {
