@@ -80,6 +80,7 @@ export default {
     },
     selectItem(id) {
       if (this.isLoading || this.selectedId === id) return
+      if (this.trigger === 'click') this.toggleDropdownList('click')
       this.$emit('select', id)
     },
     autoCloseDropdownList (event) {

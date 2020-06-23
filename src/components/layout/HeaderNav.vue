@@ -80,7 +80,7 @@ import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState, mapMutations } from 'vuex'
 import { switchGroup } from '@/API/User'
 
 export default {
@@ -93,7 +93,6 @@ export default {
   },
   data () {
     return {
-      isShowGroup: false,
       isLoading: false,
     }
   },
@@ -130,6 +129,7 @@ export default {
     this.setIsShowAlgorithmBtn()
   },
   methods: {
+    ...mapMutations(['updateAppLoadingStatus']),
     setIsShowAlgorithmBtn () {
       let preSetting = localStorage.getItem('isShowAlgorithmBtn')
       if (preSetting !== 'true') {
@@ -137,6 +137,8 @@ export default {
       }
     },
     changeGroup (groupId) {
+      // 更新全域狀態
+      this.updateAppLoadingStatus(true)
       this.isLoading = true
       switchGroup({
         accountId: this.getCurrentAccountId,
@@ -151,9 +153,9 @@ export default {
         })
         .then(() => {
           if (this.$route.name !== 'PageIndex') this.$router.push({name: 'PageIndex'})
-          this.isShowGroup = false
-          this.isLoading = false
-        }).catch(() => {
+        })
+        .finally(() => {
+          this.updateAppLoadingStatus(false)
           this.isLoading = false
         })
     },

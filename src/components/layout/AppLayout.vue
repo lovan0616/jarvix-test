@@ -1,5 +1,8 @@
 <template>
-  <div class="app-layout">
+  <div
+    :class="{ 'app-layout--loading': isAppLoading }"
+    class="app-layout"
+  >
     <app-header>
       <HeaderNav slot="nav" />
     </app-header>
@@ -11,6 +14,12 @@
         <router-view />
       </transition>
     </main>
+    <spinner 
+      v-if="isAppLoading"
+      :title="$t('message.switching')"
+      class="spinner"
+      size="50"
+    />
   </div>
 </template>
 <script>
@@ -18,6 +27,7 @@ import AppHeader from './AppHeader'
 import HeaderNav from './HeaderNav'
 import AppSideNav from './AppSideNav'
 import { Message } from 'element-ui'
+import { mapState } from 'vuex'
 
 export default {
   name: 'AppLayout',
@@ -32,6 +42,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['isAppLoading']),
     dataSourceBuildingStatusList () {
       return this.$store.getters['dataSource/dataSourceBuildingStatusList']
     },
@@ -100,10 +111,34 @@ export default {
   width: 100%;
   position: relative;
 
+  &--loading {
+    &::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1001;
+    }
+  }
+
   .main {
     width: calc(100% - #{$app-side-nav-closed-width});
     position: absolute;
     right: 0;
+  }
+
+  .spinner {
+    position:relative;
+    height: 100vh;
+    z-index: 1002;
+    /* 避免點擊文字 */
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
   }
 }
 </style>

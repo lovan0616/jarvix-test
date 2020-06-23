@@ -48,7 +48,7 @@ export default {
           dispatch('handleEmptyDataSource')
         } else if (!state.dataSourceId || res.findIndex(element => element.id === state.dataSourceId) < 0) {
           // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個可使用的 dataSource
-          dispatch('changeDataSourceById', {dataSourceId: res[firstEnableDataSourceIndex].id, dataFrameId: 'all'})
+          return dispatch('changeDataSourceById', { dataSourceId: res[firstEnableDataSourceIndex].id, dataFrameId: 'all' })
         }
       }
     })
