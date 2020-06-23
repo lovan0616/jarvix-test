@@ -132,7 +132,7 @@ export default {
 
   .info-block {
     display: grid;
-    grid-template-columns: 144px 195px auto;
+    grid-template-columns: 180px 260px auto;
     background: rgba(35, 61, 64, 0.6);
     padding: 12px 16px;
   }

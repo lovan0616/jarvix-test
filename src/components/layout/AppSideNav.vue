@@ -155,7 +155,7 @@ export default {
     },
     settingList () {
       return [
-        {icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'},
+        {icon: 'language', title: 'lang', dialogName: 'isShowLanguage'},
         {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
       ]
     },
