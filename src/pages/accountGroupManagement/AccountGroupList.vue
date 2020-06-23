@@ -218,7 +218,7 @@ export default {
   }
 
   & >>> .dialog-box {
-    z-index: 999;
+    z-index: 1000;
   }
 }
 </style>

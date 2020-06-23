@@ -28,7 +28,8 @@ export default new Vuex.Store({
   },
   state: {
     isShowChatRoom: false,
-    isShowFullSideNav: false
+    isShowFullSideNav: false,
+    isAppLoading: false
   },
   mutations: {
     updateChatRoomStatus (state, data) {
@@ -36,6 +37,9 @@ export default new Vuex.Store({
     },
     updateSideNavStatus(state, data) {
       state.isShowFullSideNav = data
+    },
+    updateAppLoadingStatus(state, data) {
+      state.isAppLoading = data
     }
   }
 })

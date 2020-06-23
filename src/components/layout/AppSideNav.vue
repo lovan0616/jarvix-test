@@ -174,7 +174,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['updateSideNavStatus']),
+    ...mapMutations(['updateSideNavStatus', 'updateAppLoadingStatus']),
     ...mapMutations('dataSource', ['setDataSourceList', 'setDataSourceId']),
     ...mapActions('dataSource', ['handleEmptyDataSource', 'getDataSourceList']),
     ...mapActions('userManagement', ['getUserInfo']),
@@ -210,6 +210,8 @@ export default {
         .sort((accountOne, accountTwo) => (accountOne.name.toLowerCase() > accountTwo.name.toLowerCase()) ? 1 : -1) 
     },
     switchAccount(accountId) {
+      // 更新全域狀態
+      this.updateAppLoadingStatus(true)
       this.isLoading = true
       switchAccount({ accountId })
         .then(() => this.getUserInfo())
@@ -223,14 +225,15 @@ export default {
             // 先清空，因為新群組有可能沒有 dataSource
             this.setDataSourceId(null)
             
-            // update data source list
+            // 取得新的列表
             return this.getDataSourceList({})
         })
         .then(() => {
-          this.isLoading = false
           if (this.groupList.length === 0) return this.$router.push({ name: 'PageGrouplessGuidance' })
           if (this.$route.name !== 'PageIndex') this.$router.push({ name: 'PageIndex' })
-        }).catch(() => {
+        })
+        .finally(() => {
+          this.updateAppLoadingStatus(false)
           this.isLoading = false
         })
     }
