@@ -264,7 +264,7 @@ export function switchGroup (accountInfo) {
  * @param {Number} data.userId - 使用者 ID
  */
 export async function updateLocale (language) {
-  const { id: userId } = await getSelfInfo()
+  const userId = store.state.userManagement.userId
   return request({
     url: `/users/language`,
     method: 'PUT',

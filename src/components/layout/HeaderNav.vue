@@ -81,7 +81,7 @@ import DropdownSelect from '@/components/select/DropdownSelect'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import { mapGetters, mapState } from 'vuex'
-import { switchGroup, updateLocale } from '@/API/User'
+import { switchGroup } from '@/API/User'
 
 export default {
   name: 'HeaderNav',
