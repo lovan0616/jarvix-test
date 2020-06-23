@@ -64,9 +64,9 @@ export default {
 }
 
 
-.dialog-select-text{
-    font-size: 24px;
-    letter-spacing: 3px;
+.dialog-select-text {
+  font-size: 24px;
+  letter-spacing: var(--theme-letter-spacing-x-wide);
 }
 
 .dialog-select-input-box {
