@@ -34,32 +34,34 @@
           {{ $t('editing.createGroup') }}
         </button>
       </div>
-      <router-link 
-        :class="{'active': $route.name === 'PageIndex'}"
-        :to="{ name: 'PageIndex', params: { 'group_id': groupId } }"
-        class="nav-item" 
-        exact>{{ $t('nav.index') }}</router-link>
-      <!-- FIXME for poc/foxconn_molding -->
-      <router-link 
-        v-if="isShowAlgorithmBtn" 
-        :to="{name: 'PageAlgorithmList'}" 
-        class="nav-item">演算法</router-link>
-      <div
-        v-if="groupId"
-        class="nav-item nav-item-dropdown nav-set"
-      >
-        <div class="nav-set-flex">
-          <div>{{ $t('nav.projectManagement') }}</div>
-          <svg-icon 
-            icon-class="dropdown" 
-            class="icon nav-dropdown-icon is-rotate"/>
+      <template v-if="groupList.length > 0">
+        <router-link 
+          :class="{'active': $route.name === 'PageIndex'}"
+          :to="{ name: 'PageIndex', params: { 'group_id': groupId } }"
+          class="nav-item" 
+          exact>{{ $t('nav.index') }}</router-link>
+        <!-- FIXME for poc/foxconn_molding -->
+        <router-link 
+          v-if="isShowAlgorithmBtn" 
+          :to="{ name: 'PageAlgorithmList', params: { 'group_id': groupId } }" 
+          class="nav-item">演算法</router-link>
+        <div
+          v-if="groupId"
+          class="nav-item nav-item-dropdown nav-set"
+        >
+          <div class="nav-set-flex">
+            <div>{{ $t('nav.projectManagement') }}</div>
+            <svg-icon 
+              icon-class="dropdown" 
+              class="icon nav-dropdown-icon is-rotate"/>
+          </div>
+          <dropdown-select
+            :bar-data="settingData"
+            class="nav-set-dropdown"
+            @switchDialogName="switchDialogName"
+          />
         </div>
-        <dropdown-select
-          :bar-data="settingData"
-          class="nav-set-dropdown"
-          @switchDialogName="switchDialogName"
-        />
-      </div>
+      </template>
     </section>
     <section class="nav-right">
       <router-link
@@ -99,7 +101,7 @@ export default {
   },
   computed: {
     ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
-    ...mapState('userManagement', ['userName', 'license']),
+    ...mapState('userManagement', ['userName', 'license', 'groupList']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
@@ -153,7 +155,7 @@ export default {
             return this.$store.dispatch('dataSource/getDataSourceList', {})
         })
         .then(() => {
-          if (this.$route.name !== 'PageIndex') this.$router.push({name: 'PageIndex'})
+          if (this.$route.name !== 'PageIndex') this.$router.push({ name: 'PageIndex', params: { 'group_id': groupId } })
           this.isShowGroup = false
           this.isLoading = false
         }).catch(() => {
@@ -164,8 +166,7 @@ export default {
       this[dialog] = true
     },
     groupListData () {
-      const groupList = this.$store.state.userManagement.groupList
-      return groupList
+      return this.groupList
         .map(group => ({
           id: group.groupId,
           name: group.groupName

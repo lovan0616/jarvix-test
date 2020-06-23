@@ -27,11 +27,12 @@
         @click="closeSideNav"
       >
         <li class="list__item">
-          <router-link
-            :to="{ name: 'PageIndex' }"
+          <a
             :class="{ 'active': $route.name === 'PageIndex' }"
+            href="javascript:void(0)" 
             class="list__link"
             exact
+            @click="directToHomePage"
           >
             <svg-icon 
               icon-class="home" 
@@ -39,7 +40,7 @@
             <span class="list__text">
               {{ $t('sideNav.home') }}
             </span>
-          </router-link>
+          </a>
         </li>
         <li class="list__item">
           <router-link
@@ -146,8 +147,8 @@ export default {
   },
   computed: {
     ...mapState(['isShowFullSideNav']),
-    ...mapState('userManagement', ['accountList']),
-    ...mapGetters('userManagement', ['getCurrentAccountName', 'getCurrentAccountId', 'hasPermission']),
+    ...mapState('userManagement', ['accountList', 'groupList']),
+    ...mapGetters('userManagement', ['getCurrentAccountName', 'getCurrentAccountId', 'hasPermission', 'getCurrentGroupId']),
     currentAccountName() {
       const fullName = this.getCurrentAccountName
       if (!fullName) return '-'
@@ -205,6 +206,10 @@ export default {
     },
     changeAccount(accountId) {
       // TODO: change account feature
+    },
+    directToHomePage() {
+      if (this.groupList.length === 0) return this.$$router.push({ name: 'PageGrouplessGuidance' })
+      this.$router.push({ name: 'PageIndex', params: { 'group_id': this.getCurrentGroupId } })
     }
   }
 }
