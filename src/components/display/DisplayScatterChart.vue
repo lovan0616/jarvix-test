@@ -138,49 +138,56 @@ export default {
        * 處理 X 軸
        */
       let displayXaxisMin
-      let displayYaxisMin
       let displayXaxisMax
-      let displayYaxisMax
       const parallelZoomConfig = parallelZoomIn()
-      if (minX > 0 && maxX > 0) {
-        let buffer = (maxX - minX) / 2
-        let padding = (maxX - minX) / 10
-        displayXaxisMax = maxX + buffer
-        displayXaxisMin = minX - buffer > 0 ? 0 : minX - buffer
-        parallelZoomConfig[0].start = (minX - padding) * 100 / displayXaxisMax
-        parallelZoomConfig[0].end = (maxX + padding) * 100 / displayXaxisMax
-      } else if (minX < 0 && maxX < 0) {
-        let buffer = (maxX - minX) / 2
-        let padding = (maxX - minX) / 10
-        displayXaxisMax = maxX + buffer < 0 ? 0 : maxX + buffer
-        displayXaxisMin = minX - buffer
-        parallelZoomConfig[0].start = (maxX + padding) * 100 / displayXaxisMin
-        parallelZoomConfig[0].end = (minX - padding) * 100 / displayXaxisMin
-      } else {
-        chartAddon.xAxis.scale = true
-      }
+      let xAxisBuffer = (maxX - minX) / 2
+      let xAxisPadding = (maxX - minX) / 10
+      let xAxisDisplayRange = displayXaxisMax - displayXaxisMin
+      displayXaxisMax = maxX + xAxisBuffer < 0 ? 0 : maxX + xAxisBuffer
+      displayXaxisMin = minX - xAxisBuffer
+      parallelZoomConfig[0].start = (minX - xAxisPadding - displayXaxisMin) * 100 / xAxisDisplayRange
+      parallelZoomConfig[0].end = (maxX + xAxisPadding - displayXaxisMin) * 100 / xAxisDisplayRange
+
+      // if (minX > 0 && maxX > 0) {
+      //   displayXaxisMax = maxX + xAxisBuffer
+      //   displayXaxisMin = minX - xAxisBuffer > 0 ? 0 : minX - xAxisBuffer
+      //   parallelZoomConfig[0].start = (minX - xAxisPadding) * 100 / xAxisDisplayRange
+      //   parallelZoomConfig[0].end = (maxX + xAxisPadding) * 100 / xAxisDisplayRange
+      // } else if (minX < 0 && maxX < 0) {
+      //   displayXaxisMax = maxX + xAxisBuffer < 0 ? 0 : maxX + xAxisBuffer
+      //   displayXaxisMin = minX - xAxisBuffer
+      //   parallelZoomConfig[0].start = (minX - xAxisPadding - displayXaxisMin) * 100 / xAxisDisplayRange
+      //   parallelZoomConfig[0].end = (maxX + xAxisPadding - displayXaxisMin) * 100 / xAxisDisplayRange
+      // } else {
+      //   chartAddon.xAxis.scale = true
+      // }
 
       /**
        * 處理 Y 軸
        */
+      let displayYaxisMin
+      let displayYaxisMax
       const verticalZoomConfig = verticalZoomIn()
-      if (minY > 0 && maxY > 0) {
-        let buffer = (maxY - minY) / 2
-        let padding = (maxY - minY) / 10
-        displayYaxisMax = maxY + buffer
-        displayYaxisMin = minY - buffer > 0 ? 0 : minY - buffer
-        verticalZoomConfig[0].start = (minY - padding) * 100 / displayYaxisMax
-        verticalZoomConfig[0].end = (maxY + padding) * 100 / displayYaxisMax
-      } else if (minY < 0 && maxY < 0) {
-        let buffer = (maxY - minY) / 2
-        let padding = (maxY - minY) / 10
-        displayYaxisMax = maxY + buffer < 0 ? 0 : maxY + buffer
-        displayYaxisMin = minY - buffer
-        verticalZoomConfig[0].start = (maxY + padding) * 100 / displayYaxisMin
-        verticalZoomConfig[0].end = (minY - padding) * 100 / displayYaxisMin
-      } else {
-        chartAddon.yAxis.scale = true
-      }
+      let yAxisBuffer = (maxY - minY) / 2
+      let yAxisPadding = (maxY - minY) / 10
+      let yAxisDisplayRange = displayYaxisMax - displayYaxisMin
+      displayYaxisMax = maxY + yAxisBuffer < 0 ? 0 : maxY + yAxisBuffer
+      displayYaxisMin = minY - yAxisBuffer
+      verticalZoomConfig[0].start = (minY - yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
+      verticalZoomConfig[0].end = (maxY + yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
+      // if (minY > 0 && maxY > 0) {
+      //   displayYaxisMax = maxY + yAxisBuffer
+      //   displayYaxisMin = minY - yAxisBuffer > 0 ? 0 : minY - yAxisBuffer
+      //   verticalZoomConfig[0].start = (minY - yAxisPadding) * 100 / displayYaxisMax
+      //   verticalZoomConfig[0].end = (maxY + yAxisPadding) * 100 / displayYaxisMax
+      // } else if (minY < 0 && maxY < 0) {
+      //   displayYaxisMax = maxY + yAxisBuffer < 0 ? 0 : maxY + yAxisBuffer
+      //   displayYaxisMin = minY - yAxisBuffer
+      //   verticalZoomConfig[0].start = (minY - yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
+      //   verticalZoomConfig[0].end = (maxY + yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
+      // } else {
+      //   chartAddon.yAxis.scale = true
+      // }
 
       chartAddon.xAxis.max = this.roundNumber(displayXaxisMax, 4)
       chartAddon.xAxis.min = this.roundNumber(displayXaxisMin, 4)
