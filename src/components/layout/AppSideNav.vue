@@ -95,6 +95,7 @@
         v-if="isShowLanguage"
         :title="$t('editing.languageSetting')"
         :button="$t('button.change')"
+        :is-loading="isLoading"
         :show-both="true"
         @closeDialog="isShowLanguage = false"
         @confirmBtn="changeLang"
@@ -125,7 +126,7 @@ import WritingDialog from '@/components/dialog/WritingDialog'
 import SySelect from '@/components/select/SySelect'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import { switchAccount } from '@/API/User'
+import { switchAccount, updateLocale } from '@/API/User'
 
 export default {
   name: 'AppSideNav',
@@ -140,7 +141,7 @@ export default {
       isShowLanguage: false,
       isShowLogout: false,
       selectedLanguage: null,
-      isLoading: false,
+      isLoading: false
     }
   },
   computed: {
@@ -182,9 +183,14 @@ export default {
       this[dialog] = true
     },
     changeLang () {
-      this.$store.commit('setting/setLocale', this.selectedLanguage)
-      this.isShowLanguage = false
-      this.closeSideNav()
+      this.isLoading = true
+      updateLocale(this.selectedLanguage)
+        .then(() => this.$store.commit('setting/setLocale', this.selectedLanguage))
+        .catch(() => {})
+        .finally(() => {
+          this.isShowLanguage = false
+          this.isLoading = false
+        })
     },
     langOnSelected (item) {
       this.selectedLanguage = item

@@ -10,8 +10,11 @@
     "projectManagement": "Group Management"
   },
   "sideNav": {
+    "functionList": "Function List",
+    "home": "Home",
+    "pinboard": "Personal Pinboard",
     "accountManagement": "Account Management",
-    "accountInformation": "Account INformation",
+    "accountInformation": "Account Info",
     "accountUserManagement": "User Managrment",
     "accountGroupManagement": "Group Management",
     "accountSetting": "Account Setting",
@@ -337,6 +340,7 @@
     "etlSetting": "Data Cleaning Settings",
     "remarkToSave": "Transaction content must be saved",
     "selectColumn": "Use",
+    "skipColumn": "Not Use",
     "advance": "Advanced",
     "advanceSetting": "Advanced Settings",
     "backToDataFrame": "Back to Data Table",

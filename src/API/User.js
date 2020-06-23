@@ -269,3 +269,17 @@ export function switchAccount(accountInfo) {
     data: accountInfo
   })
 }
+
+/**
+ * 更換語系
+ * @param {String} data.locale - 欲更換的語言
+ * @param {Number} data.userId - 使用者 ID
+ */
+export async function updateLocale (language) {
+  const userId = store.state.userManagement.userId
+  return request({
+    url: `/users/language`,
+    method: 'PUT',
+    data: { language, userId }
+  })
+}
