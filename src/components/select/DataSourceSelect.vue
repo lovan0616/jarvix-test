@@ -41,6 +41,7 @@ export default {
       return this.$store.state.dataSource.dataSourceId
     },
     ...mapGetters('dataSource', ['dataSourceList']),
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
     // 過濾掉正在 build 的 bookmark
     buildDataSourceList () {
       return this.dataSourceList.filter(dataSource => {
@@ -56,9 +57,11 @@ export default {
   },
   methods: {
     onDataSourceChange (dataSourceId) {
-      this.$store.dispatch('dataSource/changeDataSourceById', {dataSourceId})
+      this.$store.dispatch('dataSource/changeDataSourceById', { dataSourceId })
         .then(() => {
-          if (this.$route.name !== 'PageIndex') this.$router.push('/')
+          if (this.$route.name !== 'PageIndex') {
+            this.$router.push({ name: 'PageIndex', params: { 'group_id': this.getCurrentGroupId } })
+          }
         })
     },
     togglePreviewDataSource () {

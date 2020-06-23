@@ -5,7 +5,7 @@
       :key="nav.title"
       class="nav-item">
       <router-link
-        :to="nav.path ? nav.path : {name: nav.routeName}"
+        :to="nav.path ? nav.path : { name: nav.routeName }"
         class="nav-link main-nav-link"
       >
         <svg-icon 
@@ -17,7 +17,7 @@
         <router-link
           v-for="subNav in nav.subNav"
           :key="subNav.title"
-          :to="subNav.path || {name: subNav.routeName}"
+          :to="subNav.path || { name: subNav.routeName }"
           class="nav-link sub-nav-link"
         >
           <svg-icon 

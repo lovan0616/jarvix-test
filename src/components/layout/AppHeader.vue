@@ -20,11 +20,12 @@
     </div>
     <div class="header__container">
       <div class="header__root">
-        <router-link 
+        <a
           class="header__logo" 
-          to="/">
+          @click="directToHomePage"
+        >
           <img src="@/assets/images/logo.svg">
-        </router-link>
+        </a>
         <slot name="nav"/>
       </div>
     </div>
@@ -32,17 +33,23 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 
 export default {
   name: 'AppHeader',
   computed: {
     ...mapState(['isShowFullSideNav']),
+    ...mapState('userManagement', ['groupList']),
+    ...mapGetters('userManagement', ['getCurrentGroupId'])
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
     toggleSideNav() {
       this.updateSideNavStatus(!this.isShowFullSideNav)
+    },
+    directToHomePage() {
+      if (this.groupList.length === 0) return this.$router.push({ name: 'PageGrouplessGuidance' })
+      this.$router.push({ name: 'PageIndex', params: { 'group_id': this.getCurrentGroupId } })
     }
   }
 }

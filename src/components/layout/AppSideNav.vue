@@ -208,7 +208,7 @@ export default {
       // TODO: change account feature
     },
     directToHomePage() {
-      if (this.groupList.length === 0) return this.$$router.push({ name: 'PageGrouplessGuidance' })
+      if (this.groupList.length === 0) return this.$router.push({ name: 'PageGrouplessGuidance' })
       this.$router.push({ name: 'PageIndex', params: { 'group_id': this.getCurrentGroupId } })
     }
   }
