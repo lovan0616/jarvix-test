@@ -224,9 +224,5 @@ export default {
   & >>> .empty-info-block {
     background: rgba(35, 61, 64, 0.6);
   }
-
-  & >>> .dialog-box {
-    z-index: 1000;
-  }
 }
 </style>
