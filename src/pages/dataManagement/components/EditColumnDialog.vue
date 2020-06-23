@@ -59,6 +59,11 @@
               >{{ column.parentDataFrameAlias || '-' }}</div>
               <div class="data-table-cell alias">
                 <span v-show="!isEditing(column.id)">{{ column.primaryAlias }}</span>
+                <!-- <div 
+                  v-for="(singleAlias, aliasIndex) in column.primaryAlias"
+                  :key="index + '-' + aliasIndex"
+                  class="alias"
+                >{{ singleAlias }}</div> -->
                 <!-- 不使用v-if因為從DOM中拔除時validator會報錯(validate unexisting field) -->
                 <div 
                   v-show="isEditing(column.id)" 
@@ -133,8 +138,8 @@
   </div>
 </template>
 <script>
-import { getDataFrameColumnInfoById, updateDataFrameAlias } from '@/API/DataSource'
-import { getColumnAliasInfoById, patchColumnAlias } from '@/API/Alias'
+import { getDataFrameColumnInfoById } from '@/API/DataSource'
+import { patchColumnAlias } from '@/API/Alias'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'
 import InputBlock from '@/components/InputBlock'
@@ -193,6 +198,7 @@ export default {
       getDataFrameColumnInfoById(this.tableId).then(response => {
         this.columnList = response
       })
+      
     },
     // 依據 type 決定選單選項
     typeOptionList (optionList) {
@@ -208,12 +214,11 @@ export default {
     },
     edit (columnInfo) {
       this.tempRowInfo.dataColumnId = columnInfo.id
-      this.tempRowInfo.alias = [columnInfo.primaryAlias]
+      this.tempRowInfo.alias = columnInfo.primaryAlias
       this.tempRowInfo.columnStatsType = JSON.parse(JSON.stringify(columnInfo.statsType))
     },
     updateDataSource () {
       this.isProcessing = true
-
       patchColumnAlias(this.userEditInfo)
         .then(() => {
         // 更新問句說明資訊
@@ -271,7 +276,7 @@ export default {
       this.tempRowInfo.alias.push('')
       this.$nextTick(() => {
         // 重新驗證所有欄位
-        this.$validator.validateAll()
+        // this.$validator.validateAll()
       })
     },
     removeAlias (index) {
@@ -279,7 +284,7 @@ export default {
       // 確保已經從 DOM 中移除欄位才能驗證到正確名稱的欄位
       this.$nextTick(() => {
         // 重新驗證所有欄位
-        this.$validator.validateAll()
+        // this.$validator.validateAll()
       })
       // console.log(this.tempRowInfo)
     }
@@ -306,6 +311,10 @@ export default {
   }
   .edit-table-block {
     margin-bottom: 32px;
+
+    .data-table-row {
+      align-items: flex-start;
+    }
   }
   .name {
     width: 22%;
@@ -325,7 +334,6 @@ export default {
 
   .alias-input {
     width: 105px;
-    line-height: 24px;
     margin-right: 12px;
   }
 
@@ -344,13 +352,17 @@ export default {
 
   .edit-alias-input-list {
     display: flex;
+    
+    .link {
+      height: 32px;
+    }
   }
 
   .edit-alias-input-block {
     width: 105px;
     margin-right: 12px;
     /deep/ .input {
-      height: 28px;
+      height: 32px;
       padding-bottom: 0;
     }
     /deep/ .error-text {
@@ -385,7 +397,7 @@ export default {
 <style lang="scss">
 .tag-select.el-select {
   .el-input__inner {
-    height: 24px;
+    height: 32px;
     line-height: 24px;
     font-size: 14px;
     padding-left: 0;
