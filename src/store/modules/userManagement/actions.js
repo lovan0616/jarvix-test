@@ -12,7 +12,7 @@ export default {
       localStorage.removeItem('token')
     })
   },
-  async getUserInfo ({ commit }) {
+  async getUserInfo ({ commit, rootState }) {
     let accountPermissionList = []
     let licensePermissionList = []
     let groupPermissionList = []
@@ -31,6 +31,7 @@ export default {
         }
     
         commit('setUserInfo', {
+          userId: userInfo.userData.id,
           userName: userInfo.userData.name,
           accountList: userInfo.accountList,
           groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
@@ -40,6 +41,11 @@ export default {
             ...licensePermissionList
           ]
         })
+        
+        let locale = userInfo.userData.language
+        if (locale && locale !== rootState.setting.locale) {
+          commit('setting/setLocale', locale, { root: true })
+        }
       })
       .catch(() => {})
     

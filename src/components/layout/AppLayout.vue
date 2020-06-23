@@ -3,23 +3,28 @@
     <app-header>
       <HeaderNav slot="nav" />
     </app-header>
-    <transition 
-      name="fade" 
-      mode="out-in">
-      <router-view />
-    </transition>
+    <AppSideNav />
+    <main class="main">
+      <transition
+        name="fade" 
+        mode="out-in">
+        <router-view />
+      </transition>
+    </main>
   </div>
 </template>
 <script>
 import AppHeader from './AppHeader'
 import HeaderNav from './HeaderNav'
+import AppSideNav from './AppSideNav'
 import { Message } from 'element-ui'
 
 export default {
   name: 'AppLayout',
   components: {
     AppHeader,
-    HeaderNav
+    HeaderNav,
+    AppSideNav
   },
   data () {
     return {
@@ -94,5 +99,11 @@ export default {
 .app-layout {
   width: 100%;
   position: relative;
+
+  .main {
+    width: calc(100% - #{$app-side-nav-closed-width});
+    position: absolute;
+    right: 0;
+  }
 }
 </style>

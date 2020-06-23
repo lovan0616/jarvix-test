@@ -1,14 +1,44 @@
 <template>
   <nav class="nav-header">
     <section class="nav-left">
+      <div
+        v-if="groupName"
+        class="nav-item nav-item-dropdown nav-set group-list"
+      >
+        <div class="nav-set-flex">
+          <custom-dropdown-select
+            :data-list="groupListData()"
+            :selected-id="groupId"
+            :is-loading="isLoading"
+            trigger="hover"
+            @select="changeGroup($event)"
+          >
+            <template v-slot:display>
+              <div class="switch">
+                <div class="switch__text">{{ groupName }}</div>
+                <svg-icon 
+                  icon-class="dropdown" 
+                  class="icon switch__icon"/>
+              </div>
+            </template>
+          </custom-dropdown-select>
+        </div>
+      </div>
+      <div v-else>
+        <button
+          v-if="hasPermission('account_create_group')"
+          class="btn-m btn-default btn-create-group"
+          @click="$router.push({ name: 'AccountGroupManagement' })"
+        >
+          <svg-icon icon-class="plus" />
+          {{ $t('editing.createGroup') }}
+        </button>
+      </div>
       <router-link 
         :class="{'active': $route.name === 'PageIndex'}"
         :to="{ name: 'PageIndex', params: { 'group_id': groupId } }"
         class="nav-item" 
         exact>{{ $t('nav.index') }}</router-link>
-      <router-link 
-        :to="{name: 'PagePinboardList'}" 
-        class="nav-item">{{ $t('nav.pinboard') }}</router-link>
       <!-- FIXME for poc/foxconn_molding -->
       <router-link 
         v-if="isShowAlgorithmBtn" 
@@ -32,104 +62,24 @@
       </div>
     </section>
     <section class="nav-right">
-      <div
-        v-if="groupName"
-        class="nav-item nav-item-dropdown nav-set group-list"
-      >
-        <div
-          class="nav-set-flex"
-          @click="isShowGroup = true"
-        >
-          <div>{{ groupName }}</div>
-          <svg-icon 
-            icon-class="switch" 
-            class="icon nav-dropdown-icon is-rotate"/>
-        </div>
-      </div>
-      <div v-else>
-        <button
-          v-if="hasPermission('account_create_group')"
-          class="btn-m btn-default btn-create-group"
-          @click="$router.push({name: 'AccountGroupManagement'})"
-        >
-          <svg-icon icon-class="plus" />
-          {{ $t('editing.createGroup') }}
-        </button>
-      </div>
-      <div class="nav-item nav-item-dropdown nav-account">
-        <div class="nav-set-flex">
-          <div>{{ userName }}</div>
-          <svg-icon 
-            icon-class="dropdown" 
-            class="icon nav-dropdown-icon is-rotate"/>
-        </div>
-        <dropdown-select
-          :bar-data="accountData"
-          class="nav-account-dropdown"
-          @switchDialogName="switchDialogName"
-        />
-      </div>
       <router-link
         v-if="isShowFunctionDescription"
-        :to="{name: 'FunctionDescription'}"
-        class="nav-item nav-function tooltip-container"
+        :to="{ name: 'FunctionDescription' }"
+        class="nav-item nav-function"
       >
         <svg-icon 
-          icon-class="description-white" 
-          class="icon"/>
-        <div class="tooltip">
-          {{ $t('sideNav.functionDescription') }}
-        </div>
+          icon-class="description" 
+          class="icon icon-description"/>
+        {{ $t('sideNav.functionDescription') }}
       </router-link>
     </section>
-    <writing-dialog
-      v-if="isShowLanguage"
-      :title="$t('editing.languageSetting')"
-      :button="$t('button.change')"
-      :show-both="true"
-      @closeDialog="isShowLanguage = false"
-      @confirmBtn="changeLang"
-    >
-      <sy-select 
-        :placeholder="$t('nav.languagePlaceholder')"
-        :selected="locale"
-        :items="selectItems"
-        class="dialog-select"
-        @update:selected="langOnSelected"
-      />
-    </writing-dialog>
-    <writing-dialog
-      v-if="isShowGroup"
-      :title="$t('editing.switchGroup')"
-      :button="$t('button.change')"
-      :is-loading="isLoading"
-      :show-both="true"
-      @closeDialog="isShowGroup = false"
-      @confirmBtn="changeGroup"
-    >
-      <sy-select 
-        :placeholder="$t('nav.groupPlaceholder')"
-        :selected="selectedGroupId"
-        :items="groupListData()"
-        class="dialog-select"
-        @update:selected="groupOnSelected"
-      />
-    </writing-dialog>
-    <decide-dialog
-      v-if="isShowLogout"
-      :title="$t('editing.sureLogout')"
-      :type="'confirm'"
-      :btn-text="$t('button.logout')"
-      @closeDialog="isShowLogout = false"
-      @confirmBtn="onBtnExitClick"
-    />
   </nav>
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
-import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import { mapGetters, mapState } from 'vuex'
 import { switchGroup } from '@/API/User'
 
@@ -138,30 +88,23 @@ export default {
   components: {
     SySelect,
     DropdownSelect,
-    DecideDialog,
-    WritingDialog
+    WritingDialog,
+    CustomDropdownSelect
   },
   data () {
     return {
-      isShowLanguage: false,
-      isShowLogout: false,
       isShowGroup: false,
-      selectedLanguage: null,
-      selectedGroupId: null,
-      isLoading: false
+      isLoading: false,
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId', 'getCurrentAccountLicense']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
     ...mapState('userManagement', ['userName', 'license']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
     isShowFunctionDescription () {
       return this.$store.state.setting.locale.includes('zh')
-    },
-    locale () {
-      return this.$store.state.setting.locale
     },
     groupName () {
       return this.$store.getters['userManagement/getCurrentGroupName']
@@ -171,17 +114,6 @@ export default {
     },
     accountId () {
       return this.$store.getters['userManagement/getCurrentAccountId']
-    },
-    languages () {
-      return this.$store.state.setting.languages
-    },
-    selectItems () {
-      return Object.keys(this.languages).map(key => {
-        return {
-          id: key,
-          name: this.languages[key]
-        }
-      })
     },
     settingData () {
       const settingList = []
@@ -194,28 +126,9 @@ export default {
         settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/account/${this.accountId}/group/${this.groupId}/users`})
       }
       return settingList
-    },
-    accountData () {
-      const accountList = []
-      if (this.hasPermission('account_update_user')) {
-        accountList.push({icon: 'account-management', title: 'sideNav.accountManagement', name: 'AccountUserManagement'})
-      }
-      accountList.push({icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'})
-      accountList.push({icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'})
-      return accountList
-    }
-  },
-  beforeRouteLeave (to, from, next) {
-    next()
-  },
-  watch: {
-    groupId (value) {
-      this.selectedGroupId = value
     }
   },
   mounted () {
-    this.selectedLanguage = this.locale
-    this.selectedGroupId = this.groupId
     // 讓demo人員可以從localStorage打開nav演算法按法
     this.setIsShowAlgorithmBtn()
   },
@@ -226,26 +139,11 @@ export default {
         localStorage.setItem('isShowAlgorithmBtn', 'false')
       }
     },
-    langOnSelected (item) {
-      this.selectedLanguage = item
-    },
-    groupOnSelected (item) {
-      this.selectedGroupId = item
-    },
-    onBtnExitClick () {
-      this.$store.dispatch('userManagement/logout').then(() => {
-        this.$router.push('/login')
-      })
-    },
-    changeLang () {
-      this.$store.commit('setting/setLocale', this.selectedLanguage)
-      this.isShowLanguage = false
-    },
-    changeGroup () {
+    changeGroup (groupId) {
       this.isLoading = true
       switchGroup({
         accountId: this.getCurrentAccountId,
-        groupId: this.selectedGroupId
+        groupId: groupId
       })
         .then(() => this.$store.dispatch('userManagement/getUserInfo'))
         .then(() => {
@@ -267,17 +165,19 @@ export default {
     },
     groupListData () {
       const groupList = this.$store.state.userManagement.groupList
-      return groupList.map(group => ({
-        id: group.groupId,
-        name: group.groupName
-      }))
+      return groupList
+        .map(group => ({
+          id: group.groupId,
+          name: group.groupName
+        }))
+        .sort((groupOne, groupTwo) => (groupOne.name.toLowerCase() > groupTwo.name.toLowerCase()) ? 1 : -1) 
     }
   },
 }
 </script>
 <style lang="scss" scoped>
 .nav-header {
-  margin-left: 80px;
+  margin-left: 24px;
   display: flex;
   flex: 1;
   justify-content: space-between;
@@ -289,7 +189,8 @@ export default {
   }
 
   .nav-item {
-    line-height: 54px;
+    position: relative;
+    line-height: $header-height;
     text-align: center;
     letter-spacing: 0.5px;
     color: #a7a7a7;
@@ -304,29 +205,46 @@ export default {
 
     &.active {
       color: #fff;
-      border-bottom: 2px solid #fff;
+
+      &::before {
+        position: absolute;
+        content: '';
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: #2AD2E2;
+      }
+    }
+
+    .icon-description {
+      font-size: 22px;
+      vertical-align: middle;
     }
   }
 
   .group-list {
-    color: #2AD2E2;
-    &:hover {
-      color: #2AD2E2
+    .switch {
+      display: flex;
+      align-items: center;
+      background: rgba(50, 75, 78, 0.6);
+      line-height: initial;
+      border-radius: 16px;
+      padding: 5px 15px;
+      color: #2AD2E2;
+
+      &__icon {
+        margin-left: 6px;
+        width: 8px;
+      }
+
+      &__text {
+        max-width: 105px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      }
     }
-  }
-
-  .nav-select {
-    display: flex;
-    width: 70px;
-    align-items: center;
-  }
-
-  .btn-exit {
-    display: flex;
-    width: 50px;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
   }
 
   .btn-create-group {
@@ -376,24 +294,38 @@ export default {
       visibility: hidden;
     }
   }
-  .nav-account {
-    &:hover {
-      .nav-account-dropdown {
-        visibility: visible;
-      }
-
-      .is-rotate {
-        transform: rotate(180deg);
-      }
-    }
-
-    &-dropdown {
-      visibility: hidden;
-    }
-  }
 
   .nav-function {
     position: relative;
+  }
+
+  /deep/ .dropdown {
+    &__list {
+      left: 0;
+      top: calc(100% + 10px);
+      text-align: left;
+      z-index: 1;
+
+      &::before {
+        position: absolute;
+        content: "";
+        bottom: 100%;
+        left: 0;
+        width: 100%;
+        background-color: transparent;
+        height: 12px;
+      }
+
+      &::after {
+        position: absolute;
+        content: "";
+        bottom: 100%;
+        left: 15%;
+        border-bottom: 12px solid #2B3839;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+      }
+    }
   }
 }
 </style>

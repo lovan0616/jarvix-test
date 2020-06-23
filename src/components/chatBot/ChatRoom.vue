@@ -60,6 +60,7 @@ export default {
 .chat-room {
   position: fixed;
   top: $header-height;
+  left: $app-side-nav-closed-width;
   display: flex;
   flex-direction: column;
   width: $chat-room-width;
@@ -67,6 +68,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
   transform: translateX(-$chat-room-width);
+  z-index: 1;
   // transition: transform 0.1s;
 
   &.is-show {

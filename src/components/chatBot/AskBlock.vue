@@ -353,7 +353,7 @@ export default {
     position: absolute;
     text-align: left;
     left: 0;
-    bottom: 111px;
+    bottom: 100%;
     width: 100%;
     height: 0;
     overflow: hidden;

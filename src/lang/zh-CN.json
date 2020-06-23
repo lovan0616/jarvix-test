@@ -10,6 +10,9 @@
     "projectManagement": "专案管理"
   },
   "sideNav": {
+    "functionList": "功能选单",
+    "home": "首頁",
+    "pinboard": "個人釘板",
     "accountManagement": "帐户管理",
     "accountInformation": "帐户资讯",
     "accountUserManagement": "使用者管理",
@@ -337,6 +340,7 @@
     "etlSetting": "资料清洗设定",
     "remarkToSave": "异动内容须保存",
     "selectColumn": "使用",
+    "skipColumn": "不使用",
     "advance": "进阶",
     "advanceSetting": "进阶设定",
     "backToDataFrame": "返回资料表",

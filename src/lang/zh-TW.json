@@ -10,6 +10,9 @@
     "projectManagement": "專案管理"
   },
   "sideNav": {
+    "functionList": "功能選單",
+    "home": "首頁",
+    "pinboard": "個人釘板",
     "accountManagement": "帳戶管理",
     "accountInformation": "帳戶資訊",
     "accountUserManagement": "使用者管理",
@@ -337,6 +340,7 @@
     "etlSetting": "資料清洗設定",
     "remarkToSave": "異動內容須保存",
     "selectColumn": "使用",
+    "skipColumn": "不使用",
     "advance": "進階",
     "advanceSetting": "進階設定",
     "backToDataFrame": "返回資料表",
