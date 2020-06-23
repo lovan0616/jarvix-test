@@ -15,248 +15,259 @@ const router = new Router({
       component: AppLayout,
       children: [
         {
-          path: 'account/:account_id',
-          component: () => import('@/pages/accountManagement/Index'),
+          path: 'account',
+          component: () => import('@/pages/account/Index'),
           children: [
-            // 該頁面名稱如果為側邊導覽列第一層 meta 需設定 isMainNav 為 true
-            // 如果第一層下有子功能列表 isMainNav 設定在子層 redirect 模組
-            // meta 中 layer 用來設定從 management 模組往下到自己的路徑
-            // 當前頁面側邊導覽列第一層要顯示哪個模組，layer 就寫到那個模組為止
-            // meta 使用 permission 指定路由權限
             {
-              path: 'management',
-              component: () => import('@/pages/management/Index'),
+              path: ':account_id',
+              component: () => import('@/pages/account/Index'),
               children: [
+                // 該頁面名稱如果為側邊導覽列第一層 meta 需設定 isMainNav 為 true
+                // 如果第一層下有子功能列表 isMainNav 設定在子層 redirect 模組
+                // meta 中 layer 用來設定從 management 模組往下到自己的路徑
+                // 當前頁面側邊導覽列第一層要顯示哪個模組，layer 就寫到那個模組為止
+                // meta 使用 permission 指定路由權限
                 {
                   path: '/',
-                  redirect: { name: 'AccountUserManagement' },
-                  name: 'AccountManagement',
-                  meta: {
-                    isMainNav: true,
-                    icon: 'account-management'
-                  }
-                },
-                {
-                  path: 'users',
-                  component: () => import('@/pages/userManagement/Index'),
-                  name: 'AccountUserManagement',
-                  meta: {
-                    layers: ['account/:account_id', 'management'],
-                    permission: ['account_update_user']
-                  }
-                },
-                {
-                  path: 'group',
-                  component: () => import('@/pages/accountGroupManagement/AccountGroupList'),
-                  name: 'AccountGroupManagement',
-                  meta: {
-                    layers: ['account/:account_id', 'management'],
-                    permission: ['account_read_group']
-                  }
-                },
-                {
-                  path: 'group/create',
-                  component: () => import('@/pages/accountGroupManagement/EditAccountGroup'),
-                  name: 'CreateAccountGroup',
-                  meta: {
-                    layers: ['account/:account_id', 'management'],
-                    accountPermission: ['account_create_group'],
-                    isHiddenNav: true
-                  }
-                },
-                {
-                  path: 'group/:id',
-                  component: () => import('@/pages/accountGroupManagement/EditAccountGroup'),
-                  name: 'EditAccountGroup',
-                  meta: {
-                    layers: ['account/:account_id', 'management'],
-                    accountPermission: ['account_update_group'],
-                    isHiddenNav: true
-                  }
-                },
-                {
-                  path: 'info',
-                  component: () => import('@/pages/accountInformation/Index'),
-                  name: 'AccountInformation',
-                  meta: {
-                    layers: ['account/:account_id', 'management'],
-                    permission: ['account_read_user']
-                  }
-                },
-                {
-                  path: 'function-description',
-                  name: 'FunctionDescription',
-                  component: () => import('@/pages/functionDescription/Index'),
-                  meta: {
-                    isMainNav: true,
-                    layers: ['account/:account_id', 'management', 'function-description'],
-                    icon: 'description'
-                  }
-                },
-              ],
-            },
-            {
-              path: 'pinboard',
-              component: () => import('@/pages/pinboard/Index'),
-              children: [
-                {
-                  path: '/',
-                  name: 'PagePinboardList',
-                  component: () => import('@/pages/pinboard/PinboardList')
-                },
-                {
-                  path: ':id',
-                  name: 'PagePinboard',
-                  component: () => import('@/pages/pinboard/Pinboard')
-                }
-              ]
-            },
-            {
-              path: 'group/:group_id',
-              // todo 
-              component: () => import('@/pages/accountManagement/Index'),
-              children: [
-                {
-                  path: '/',
-                  component: () => import('@/components/layout/HomeLayout'),
-                  children: [
-                    {
-                      path: '/',
-                      name: 'PageIndex',
-                      component: () => import('@/pages/datasourceDashboard/Index')
-                    },
-                    {
-                      path: 'result',
-                      name: 'PageResult',
-                      component: () => import('@/pages/result/Index')
-                    }
-                  ]
-                },
-                // FIXME for poc/foxconn_molding
-                {
-                  path: 'algorithm',
-                  component: () => import('@/pages/algorithm/Index'),
-                  children: [
-                    {
-                      path: '/',
-                      name: 'PageAlgorithmList',
-                      component: () => import('@/pages/algorithm/AlgorithmList')
-                    },
-                    {
-                      path: 'create',
-                      name: 'PageAlgorithmCreate',
-                      component: () => import('@/pages/algorithm/Create')
-                    },
-                    {
-                      path: '1',
-                      name: 'PageAlgorithmEdit1',
-                      component: () => import('@/pages/algorithm/Edit1')
-                    },
-                    {
-                      path: '2',
-                      name: 'PageAlgorithmEdit2',
-                      component: () => import('@/pages/algorithm/Edit2')
-                    }
-                  ]
-                },
-                {
-                  path: 'datasource',
                   component: () => import('@/pages/management/Index'),
                   children: [
                     {
                       path: '/',
-                      component: () => import('@/pages/dataManagement/Index'),
-                      children: [
-                        {
-                          path: '/',
-                          redirect: { name: 'DataSourceList' },
-                          name: 'DataSourceManagement',
-                          meta: {
-                            isMainNav: true,
-                            icon: 'database'
-                          }
-                        },
-                        {
-                          path: '/',
-                          name: 'DataSourceList',
-                          component: () => import('@/pages/dataManagement/DataSourceList'),
-                          meta: {
-                            layers: ['account/:account_id', 'group/:group_id', 'datasource', '/'],
-                            permission: ['group_read_user', 'group_read_data']
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      path: ':id',
-                      component: () => import('@/pages/dataManagement/Index'),
-                      children: [
-                        {
-                          path: '/',
-                          redirect: to => ({ name: 'DataFileList' }),
-                          name: 'DataFileManagement',
-                          meta: {
-                            isMainNav: true,
-                            icon: 'database'
-                          }
-                        },
-                        {
-                          path: '/',
-                          name: 'DataFileList',
-                          component: () => import('@/pages/dataManagement/DataFileList'),
-                          meta: {
-                            layers: ['account/:account_id', 'group/:group_id', 'datasource', ':id'],
-                            permission: ['group_read_user', 'group_read_data']
-                          }
-                        }
-                      ]
-                    },
-                  ]
-                },
-                {
-                  path: 'users',
-                  component: () => import('@/pages/management/Index'),
-                  beforeEnter: (to, from, next) => {
-                    // 個人版 不能進入成員管理頁面
-                    store.state.userManagement.license.maxUser > 1 ? next() : next(from)
-                  },
-                  children: [
-                    {
-                      path: '/',
-                      redirect: to => ({ name: 'GroupUserList' }),
-                      name: 'GroupUserManagement',
+                      redirect: { name: 'AccountUserManagement' },
+                      name: 'AccountManagement',
                       meta: {
                         isMainNav: true,
-                        icon: 'userManage'
+                        icon: 'account-management'
                       }
                     },
                     {
-                      path: '/',
-                      component: () => import('@/pages/groupUserManagement/GroupUserList'),
-                      name: 'GroupUserList',
+                      path: 'users',
+                      component: () => import('@/pages/userManagement/Index'),
+                      name: 'AccountUserManagement',
                       meta: {
-                        layers: ['account/:account_id', 'group/:group_id', 'users'],
+                        layers: ['account', ':account_id', '/'],
+                        permission: ['account_update_user']
+                      }
+                    },
+                    {
+                      path: 'groups',
+                      component: () => import('@/pages/accountGroupManagement/AccountGroupList'),
+                      name: 'AccountGroupManagement',
+                      meta: {
+                        layers: ['account', ':account_id', '/'],
                         permission: ['account_read_group']
                       }
                     },
                     {
-                      path: 'create',
-                      component: () => import('@/pages/groupUserManagement/GroupCreateUser'),
-                      name: 'GroupCreateUser',
+                      path: 'groups/create',
+                      component: () => import('@/pages/accountGroupManagement/EditAccountGroup'),
+                      name: 'CreateAccountGroup',
                       meta: {
-                        layers: ['account/:account_id', 'group/:group_id', 'users'],
-                        permission: ['account_create_group_user', 'group_create_user'],
+                        layers: ['account', ':account_id', '/'],
+                        accountPermission: ['account_create_group'],
                         isHiddenNav: true
                       }
+                    },
+                    {
+                      path: 'groups/edit/:id',
+                      component: () => import('@/pages/accountGroupManagement/EditAccountGroup'),
+                      name: 'EditAccountGroup',
+                      meta: {
+                        layers: ['account', ':account_id', '/'],
+                        accountPermission: ['account_update_group'],
+                        isHiddenNav: true
+                      }
+                    },
+                    {
+                      path: 'info',
+                      component: () => import('@/pages/accountInformation/Index'),
+                      name: 'AccountInformation',
+                      meta: {
+                        layers: ['account', ':account_id', '/'],
+                        permission: ['account_read_user']
+                      }
+                    },
+                    {
+                      path: 'function-description',
+                      name: 'FunctionDescription',
+                      component: () => import('@/pages/functionDescription/Index'),
+                      meta: {
+                        isMainNav: true,
+                        layers: ['account', ':account_id', '/', 'function-description'],
+                        icon: 'description'
+                      }
+                    },
+                  ],
+                },
+                {
+                  path: 'pinboard',
+                  component: () => import('@/pages/pinboard/Index'),
+                  children: [
+                    {
+                      path: '/',
+                      name: 'PagePinboardList',
+                      component: () => import('@/pages/pinboard/PinboardList')
+                    },
+                    {
+                      path: ':id',
+                      name: 'PagePinboard',
+                      component: () => import('@/pages/pinboard/Pinboard')
                     }
                   ]
+                },
+                {
+                  path: 'group',
+                  component: () => import('@/pages/group/Index'),
+                  children: [
+                    {
+                      path: ':group_id',
+                      component: () => import('@/pages/group/Index'),
+                      children: [
+                        {
+                          path: '/',
+                          component: () => import('@/components/layout/HomeLayout'),
+                          children: [
+                            {
+                              path: '/',
+                              name: 'PageIndex',
+                              component: () => import('@/pages/datasourceDashboard/Index')
+                            },
+                            {
+                              path: 'result',
+                              name: 'PageResult',
+                              component: () => import('@/pages/result/Index')
+                            }
+                          ]
+                        },
+                        // FIXME for poc/foxconn_molding
+                        {
+                          path: 'algorithm',
+                          component: () => import('@/pages/algorithm/Index'),
+                          children: [
+                            {
+                              path: '/',
+                              name: 'PageAlgorithmList',
+                              component: () => import('@/pages/algorithm/AlgorithmList')
+                            },
+                            {
+                              path: 'create',
+                              name: 'PageAlgorithmCreate',
+                              component: () => import('@/pages/algorithm/Create')
+                            },
+                            {
+                              path: '1',
+                              name: 'PageAlgorithmEdit1',
+                              component: () => import('@/pages/algorithm/Edit1')
+                            },
+                            {
+                              path: '2',
+                              name: 'PageAlgorithmEdit2',
+                              component: () => import('@/pages/algorithm/Edit2')
+                            }
+                          ]
+                        },
+                        {
+                          path: 'datasource',
+                          component: () => import('@/pages/management/Index'),
+                          children: [
+                            {
+                              path: '/',
+                              component: () => import('@/pages/dataManagement/Index'),
+                              children: [
+                                {
+                                  path: '/',
+                                  redirect: { name: 'DataSourceList' },
+                                  name: 'DataSourceManagement',
+                                  meta: {
+                                    isMainNav: true,
+                                    icon: 'database'
+                                  }
+                                },
+                                {
+                                  path: '/',
+                                  name: 'DataSourceList',
+                                  component: () => import('@/pages/dataManagement/DataSourceList'),
+                                  meta: {
+                                    layers: ['account', ':account_id', 'group', ':group_id', 'datasource', '/'],
+                                    permission: ['group_read_user', 'group_read_data']
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              path: ':id',
+                              component: () => import('@/pages/dataManagement/Index'),
+                              children: [
+                                {
+                                  path: '/',
+                                  redirect: to => ({ name: 'DataFileList' }),
+                                  name: 'DataFileManagement',
+                                  meta: {
+                                    isMainNav: true,
+                                    icon: 'database'
+                                  }
+                                },
+                                {
+                                  path: '/',
+                                  name: 'DataFileList',
+                                  component: () => import('@/pages/dataManagement/DataFileList'),
+                                  meta: {
+                                    layers: ['account', ':account_id', 'group', ':group_id', 'datasource', ':id'],
+                                    permission: ['group_read_user', 'group_read_data']
+                                  }
+                                }
+                              ]
+                            },
+                          ]
+                        },
+                        {
+                          path: 'users',
+                          component: () => import('@/pages/management/Index'),
+                          beforeEnter: (to, from, next) => {
+                            // 個人版 不能進入成員管理頁面
+                            store.state.userManagement.license.maxUser > 1 ? next() : next(from)
+                          },
+                          children: [
+                            {
+                              path: '/',
+                              redirect: to => ({ name: 'GroupUserList' }),
+                              name: 'GroupUserManagement',
+                              meta: {
+                                isMainNav: true,
+                                icon: 'userManage'
+                              }
+                            },
+                            {
+                              path: '/',
+                              component: () => import('@/pages/groupUserManagement/GroupUserList'),
+                              name: 'GroupUserList',
+                              meta: {
+                                layers: ['account', ':account_id', 'group', ':group_id', 'users'],
+                                permission: ['account_read_group']
+                              }
+                            },
+                            {
+                              path: 'create',
+                              component: () => import('@/pages/groupUserManagement/GroupCreateUser'),
+                              name: 'GroupCreateUser',
+                              meta: {
+                                layers: ['account', ':account_id', 'group', ':group_id', 'users'],
+                                permission: ['account_create_group_user', 'group_create_user'],
+                                isHiddenNav: true
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                  ]
+                },
+                {
+                  path: 'groupless-guidance',
+                  name: 'PageGrouplessGuidance',
+                  component: () => import('@/components/layout/GrouplessLayout'),
                 }
               ]
-            },
-            {
-              path: 'groupless-guidance',
-              name: 'PageGrouplessGuidance',
-              component: () => import('@/components/layout/GrouplessLayout'),
             }
           ]
         }
