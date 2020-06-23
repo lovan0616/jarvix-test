@@ -340,6 +340,7 @@
     "etlSetting": "資料清洗設定",
     "remarkToSave": "異動內容須保存",
     "selectColumn": "使用",
+    "skipColumn": "不使用",
     "advance": "進階",
     "advanceSetting": "進階設定",
     "backToDataFrame": "返回資料表",
