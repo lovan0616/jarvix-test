@@ -36,22 +36,6 @@ const router = new Router({
           component: () => import('@/components/layout/GrouplessLayout'),
         },
         {
-          path: 'pinboard',
-          component: () => import('@/pages/pinboard/Index'),
-          children: [
-            {
-              path: '/',
-              name: 'PagePinboardList',
-              component: () => import('@/pages/pinboard/PinboardList')
-            },
-            {
-              path: ':id',
-              name: 'PagePinboard',
-              component: () => import('@/pages/pinboard/Pinboard')
-            }
-          ]
-        },
-        {
           path: ':accountId/pinboard',
           component: () => import('@/pages/pinboard/Index'),
           children: [
