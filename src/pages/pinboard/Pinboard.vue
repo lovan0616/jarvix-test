@@ -11,7 +11,20 @@
       >{{ $t('editing.allCategory') }}</router-link>
       <span class="divider">/</span>
       <span class="page">{{ boardName }}</span>
+      <a
+        :class="{'unSortable': !isSortable}"
+        class="sort-btn"
+        href="javascript:void(0)"
+        @click="isShowSortingDialog=true">
+        <svg-icon
+          icon-class="vector"
+          class="icon"/> {{ $t('button.sortSetting') }}
+      </a>
     </div>
+    <sorting-dialog
+      v-if="isShowSortingDialog"
+      @close="closeSortingDialog"
+    />
     <spinner
       v-if="isLoading"
     />
@@ -34,15 +47,18 @@
 </template>
 <script>
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import SortingDialog from './components/SortingDialog'
 
 export default {
   name: 'PagePinboard',
   components: {
-    EmptyInfoBlock
+    EmptyInfoBlock,
+    SortingDialog
   },
   data () {
     return {
       isLoading: true,
+      isShowSortingDialog: false,
       timeoutFunction: null,
       boardList: [],
       boardName: null,
@@ -66,6 +82,9 @@ export default {
     },
     isProjectPinboard () {
       return this.groupId !== undefined
+    },
+    isSortable () {
+      return this.boardList.length > 1
     }
   },
   mounted () {
@@ -141,6 +160,9 @@ export default {
     },
     getResult (resultId) {
       return this.boardList.filter(element => element.resultId === resultId)[0]
+    },
+    closeSortingDialog () {
+      this.isShowSortingDialog = false
     }
   },
 }
@@ -161,6 +183,25 @@ export default {
     .divider {
       color: #979797;
       margin: 0 4px;
+    }
+    .sort-btn {
+      float: right;
+      position: relative;
+      font-size: 14px;
+      line-height: 26px;
+      color: $theme-text-color;
+      padding: 2px 12px;
+      border-radius: 4px;
+      border: 1px solid #fff;
+      
+      &:hover {
+        background-color: #63cbd5;
+        color: #fff;
+      }
+    }
+
+    .unSortable {
+      display: none;
     }
   }
   .page-title {

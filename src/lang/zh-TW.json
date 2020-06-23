@@ -332,7 +332,9 @@
     "toolTipMessage": {
       "comfrmToDeleteConnectionHistory":"你確定要刪除連線紀錄?"
     },
-    "createGroup": "建立專案"
+    "createGroup": "建立專案",
+    "sortSetting": "排序設定",
+    "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。"
   },
   "etl": {
     "dataFrameList": "資料表列表",
@@ -583,7 +585,8 @@
     "reset": "重新設定",
     "confirmBuild": "確認建置",
     "selectAll": "全選",
-    "resumeDefault": "恢復預設值"
+    "resumeDefault": "恢復預設值",
+    "sortSetting": "排序設定"
   },
   "aggregation": {
     "mean": "平均",

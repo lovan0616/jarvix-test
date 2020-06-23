@@ -11,6 +11,16 @@ export function getPinboardList () {
 }
 
 /**
+ * get group pinboard list
+ */
+export function getGroupPinboardList (groupId) {
+  return request({
+    url: `/pinBoard/group/${groupId}/folder`,
+    method: 'GET'
+  })
+}
+
+/**
  * get pinboard by id
  */
 export function getPinboardById (id) {
@@ -34,6 +44,20 @@ export function createPinboard (name) {
 }
 
 /**
+ * create new group board
+ */
+export function createGroupPinboard (name, groupId) {
+  return request({
+    url: `/pinBoard/group/folder`,
+    method: 'POST',
+    data: {
+      name,
+      groupId
+    }
+  })
+}
+
+/**
  * update pinboard name
  */
 export function updatePinboardName (id, name) {
@@ -48,11 +72,36 @@ export function updatePinboardName (id, name) {
 }
 
 /**
+ * update group pinboard name
+ */
+export function updateGroupPinboardName (id, groupId, name) {
+  return request({
+    url: `/pinBoard/folder`,
+    method: 'PUT',
+    data: {
+      id,
+      groupId,
+      name
+    }
+  })
+}
+
+/**
  * delete board
  */
 export function deletePinboard (id) {
   return request({
     url: `/pinBoard/folder/${id}`,
+    method: 'DELETE'
+  })
+}
+
+/**
+ * delete group board
+ */
+export function deleteGroupPinboard (groupId, id) {
+  return request({
+    url: `/pinBoard/group/${groupId}/folder/${id}`,
     method: 'DELETE'
   })
 }

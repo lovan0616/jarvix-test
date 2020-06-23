@@ -332,7 +332,9 @@
     "toolTipMessage": {
       "comfrmToDeleteConnectionHistory":"你确定要删除连线纪录?"
     },
-    "createGroup": "建立专案"
+    "createGroup": "建立专案",
+    "sortSetting": "排序设定",
+    "dragAndSort": "请按住项目上下拖曳移动排序位置，项目排序变更后即生效。"
   },
   "etl": {
     "dataFrameList": "资料表列表",
@@ -583,7 +585,8 @@
     "reset": "重新设定",
     "confirmBuild": "确认建置",
     "selectAll": "全选",
-    "resumeDefault": "恢复预设值"
+    "resumeDefault": "恢复预设值",
+    "sortSetting": "排序设定"
   },
   "aggregation": {
     "mean": "平均",
