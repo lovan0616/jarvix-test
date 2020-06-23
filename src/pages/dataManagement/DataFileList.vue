@@ -231,7 +231,7 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '370px',
+          width: this.$store.state.setting.locale.includes('zh') ? '270px' : '320px',
           action: [
             {
               name: this.$t('button.edit'),
