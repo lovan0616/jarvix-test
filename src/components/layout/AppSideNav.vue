@@ -8,12 +8,12 @@
       <div 
         v-if="accountList && accountList.length > 0" 
         class="sidenav__account">
-        <!-- TODO: 串接 change account API 時須改：:data-list="accountList"  -->
         <custom-dropdown-select
-          :data-list="[]"
+          :data-list="accountListData()"
           :selected-id="getCurrentAccountId"
+          :is-loading="isLoading"
           trigger="click"
-          @select="changeAccount"
+          @select="switchAccount"
         >
           <template #display>
             <div class="dropdown__badge">
@@ -124,7 +124,8 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import SySelect from '@/components/select/SySelect'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { switchAccount } from '@/API/User'
 
 export default {
   name: 'AppSideNav',
@@ -139,11 +140,12 @@ export default {
       isShowLanguage: false,
       isShowLogout: false,
       selectedLanguage: null,
+      isLoading: false,
     }
   },
   computed: {
     ...mapState(['isShowFullSideNav']),
-    ...mapState('userManagement', ['accountList']),
+    ...mapState('userManagement', ['accountList', 'groupList']),
     ...mapGetters('userManagement', ['getCurrentAccountName', 'getCurrentAccountId', 'hasPermission']),
     currentAccountName() {
       const fullName = this.getCurrentAccountName
@@ -173,6 +175,9 @@ export default {
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
+    ...mapMutations('dataSource', ['setDataSourceList', 'setDataSourceId']),
+    ...mapActions('dataSource', ['handleEmptyDataSource', 'getDataSourceList']),
+    ...mapActions('userManagement', ['getUserInfo']),
     switchDialogName (dialog) {
       this[dialog] = true
     },
@@ -195,8 +200,39 @@ export default {
     closeSideNav() {
       if(this.isShowFullSideNav) this.updateSideNavStatus(false)
     },
-    changeAccount(accountId) {
-      // TODO: change account feature
+    accountListData () {
+      if (!this.accountList) return []
+      return this.accountList
+        .map(account => ({
+          id: account.id,
+          name: account.name
+        }))
+        .sort((accountOne, accountTwo) => (accountOne.name.toLowerCase() > accountTwo.name.toLowerCase()) ? 1 : -1) 
+    },
+    switchAccount(accountId) {
+      this.isLoading = true
+      switchAccount({ accountId })
+        .then(() => this.getUserInfo())
+        .then(() => {
+            // 處理帳戶下沒有群組的狀況
+            if (this.groupList.length === 0) {
+              this.setDataSourceList([])
+              return this.handleEmptyDataSource()
+            } 
+
+            // 先清空，因為新群組有可能沒有 dataSource
+            this.setDataSourceId(null)
+            
+            // update data source list
+            return this.getDataSourceList({})
+        })
+        .then(() => {
+          this.isLoading = false
+          if (this.groupList.length === 0) return this.$router.push({ name: 'PageGrouplessGuidance' })
+          if (this.$route.name !== 'PageIndex') this.$router.push({ name: 'PageIndex' })
+        }).catch(() => {
+          this.isLoading = false
+        })
     }
   }
 }
