@@ -1,5 +1,6 @@
 export default {
   setUserInfo (state, data) {
+    state.userId = data.userId
     state.userName = data.userName
     state.accountList = data.accountList
     state.groupList = data.groupList
