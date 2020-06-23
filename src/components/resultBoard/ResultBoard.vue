@@ -165,6 +165,12 @@ export default {
     },
     currentResultId () {
       return this.$store.state.result.currentResultId
+    },
+    groupId () {
+      return this.$route.params.groupId
+    },
+    isPersonalPinboard () {
+      return this.groupId === undefined
     }
   },
   mounted () {
@@ -183,9 +189,15 @@ export default {
         return false
       }
       // 取得最新的 pinboardList
-      this.$store.dispatch('pinboard/getPinboardList').then(() => {
-        this.showPinboardList = true
-      })
+      if (this.isPersonalPinboard) {
+        this.$store.dispatch('pinboard/getPinboardList').then(() => {
+          this.showPinboardList = true
+        })
+      } else {
+        this.$store.dispatch('pinboard/getGroupPinboardList').then(() => {
+          this.showPinboardList = true
+        })
+      }
     },
     selectPinboard (id) {
       this.isLoading = true

@@ -5,12 +5,12 @@
       class="pinboard-option-list">
       <div
         class="single-board"
-        @click="nextStep">
+        @click="onlyPersonal">
         {{ $t('editing.onlyPersonal') }}
       </div>
       <div
         class="single-board"
-        @click="nextStep">
+        @click="shareToProject">
         {{ $t('editing.shareToProject') }}
       </div>
     </div>
@@ -68,12 +68,22 @@ export default {
   data () {
     return {
       newBoardName: null,
-      pinStep: 0
+      pinStep: 0,
+      isPersonal: true
     }
   },
   computed: {
     pinboardList () {
+      return this.isPersonal ? this.personalPinboardList : this.groupPinboardList
+    },
+    personalPinboardList () {
       return this.$store.state.pinboard.pinboardList
+    },
+    groupPinboardList () {
+      return this.$store.state.pinboard.groupPinboardList
+    },
+    groupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
     }
   },
   mounted () {
@@ -97,16 +107,31 @@ export default {
       this.$emit('close')
     },
     createPinboard () {
-      this.$store.dispatch('pinboard/createPinboard', this.newBoardName).then(response => {
-        this.$emit('pin', response.id)
-        this.cancelCreate()
-      })
+      if(this.isPersonal) {
+        this.$store.dispatch('pinboard/createPinboard', this.newBoardName).then(response => {
+          this.$emit('pin', response.id)
+          this.cancelCreate()
+        })
+      } else {
+        this.$store.dispatch('pinboard/createGroupPinboard', {name: this.newBoardName, groupId: this.groupId}).then(response => {
+          this.$emit('pin', response.id)
+          this.cancelCreate()
+        })
+      }
     },
     prevStep () {
       this.pinStep -= 1
     },
     nextStep () {
       this.pinStep += 1
+    },
+    onlyPersonal () {
+      this.isPersonal = true
+      this.nextStep()
+    },
+    shareToProject () {
+      this.isPersonal = false
+      this.nextStep()
     }
   },
 }

@@ -71,6 +71,12 @@ export default {
     pinboardInfo () {
       return this.$store.state.pinboard.pinboardInfo
     },
+    groupPinboardList () {
+      return this.$store.state.pinboard.groupPinboardList
+    },
+    groupPinboardInfo () {
+      return this.$store.state.pinboard.groupPinboardInfo
+    },
     prevPage () {
       return this.isProjectPinboard ? 'projectPagePinboardList' : 'personalPagePinboardList'
     },
