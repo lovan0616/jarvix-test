@@ -142,25 +142,12 @@ export default {
       const parallelZoomConfig = parallelZoomIn()
       let xAxisBuffer = (maxX - minX) / 2
       let xAxisPadding = (maxX - minX) / 10
-      let xAxisDisplayRange = displayXaxisMax - displayXaxisMin
+
       displayXaxisMax = maxX + xAxisBuffer < 0 ? 0 : maxX + xAxisBuffer
-      displayXaxisMin = minX - xAxisBuffer
+      displayXaxisMin = minX - xAxisBuffer > 0 ? 0 : minX - xAxisBuffer
+      let xAxisDisplayRange = displayXaxisMax - displayXaxisMin
       parallelZoomConfig[0].start = (minX - xAxisPadding - displayXaxisMin) * 100 / xAxisDisplayRange
       parallelZoomConfig[0].end = (maxX + xAxisPadding - displayXaxisMin) * 100 / xAxisDisplayRange
-
-      // if (minX > 0 && maxX > 0) {
-      //   displayXaxisMax = maxX + xAxisBuffer
-      //   displayXaxisMin = minX - xAxisBuffer > 0 ? 0 : minX - xAxisBuffer
-      //   parallelZoomConfig[0].start = (minX - xAxisPadding) * 100 / xAxisDisplayRange
-      //   parallelZoomConfig[0].end = (maxX + xAxisPadding) * 100 / xAxisDisplayRange
-      // } else if (minX < 0 && maxX < 0) {
-      //   displayXaxisMax = maxX + xAxisBuffer < 0 ? 0 : maxX + xAxisBuffer
-      //   displayXaxisMin = minX - xAxisBuffer
-      //   parallelZoomConfig[0].start = (minX - xAxisPadding - displayXaxisMin) * 100 / xAxisDisplayRange
-      //   parallelZoomConfig[0].end = (maxX + xAxisPadding - displayXaxisMin) * 100 / xAxisDisplayRange
-      // } else {
-      //   chartAddon.xAxis.scale = true
-      // }
 
       /**
        * 處理 Y 軸
@@ -170,24 +157,12 @@ export default {
       const verticalZoomConfig = verticalZoomIn()
       let yAxisBuffer = (maxY - minY) / 2
       let yAxisPadding = (maxY - minY) / 10
-      let yAxisDisplayRange = displayYaxisMax - displayYaxisMin
+
       displayYaxisMax = maxY + yAxisBuffer < 0 ? 0 : maxY + yAxisBuffer
-      displayYaxisMin = minY - yAxisBuffer
+      displayYaxisMin = minY - yAxisBuffer > 0 ? 0 : minY - yAxisBuffer
+      let yAxisDisplayRange = displayYaxisMax - displayYaxisMin
       verticalZoomConfig[0].start = (minY - yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
       verticalZoomConfig[0].end = (maxY + yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
-      // if (minY > 0 && maxY > 0) {
-      //   displayYaxisMax = maxY + yAxisBuffer
-      //   displayYaxisMin = minY - yAxisBuffer > 0 ? 0 : minY - yAxisBuffer
-      //   verticalZoomConfig[0].start = (minY - yAxisPadding) * 100 / displayYaxisMax
-      //   verticalZoomConfig[0].end = (maxY + yAxisPadding) * 100 / displayYaxisMax
-      // } else if (minY < 0 && maxY < 0) {
-      //   displayYaxisMax = maxY + yAxisBuffer < 0 ? 0 : maxY + yAxisBuffer
-      //   displayYaxisMin = minY - yAxisBuffer
-      //   verticalZoomConfig[0].start = (minY - yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
-      //   verticalZoomConfig[0].end = (maxY + yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
-      // } else {
-      //   chartAddon.yAxis.scale = true
-      // }
 
       chartAddon.xAxis.max = this.roundNumber(displayXaxisMax, 4)
       chartAddon.xAxis.min = this.roundNumber(displayXaxisMin, 4)
@@ -229,21 +204,22 @@ export default {
       if (this.formula) {
         let lineData = []
         let expression = ''
-
+        let interval = this.floatSub(maxX, minX) / this.correlationLinePoint
         if (this.formula.length === 2) {
           // ax + b
           let offset = Number((this.formula[0]).toFixed(4))
           let gradient = Number((this.formula[1]).toFixed(4))
-          let minY = this.roundNumber(gradient * minX + offset, 4)
-          let maxY = this.roundNumber(gradient * maxX + offset, 4)
+          // 迴歸線點
+          for (let i = 0; i < this.correlationLinePoint; i++) {
+            let xPoint = minX + interval * i
+            lineData.push([xPoint, this.roundNumber(gradient * xPoint + offset, 4)])
+          }
           expression = `y = ${gradient}x ${offset > 0 ? '+' : '-'} ${Math.abs(offset)}`
-          lineData = [[minX, minY], [maxX, maxY]]
         } else {
           // ax^2 + bx + c
           let offset = this.formula[0]
           let firstDegree = this.formula[1]
           let secondDegree = this.formula[2]
-          let interval = this.floatSub(maxX, minX) / this.correlationLinePoint
           // 迴歸線點
           for (let i = 0; i < this.correlationLinePoint; i++) {
             let xPoint = minX + interval * i
