@@ -11,7 +11,7 @@ export default {
       commit('setGroupPinboardList', res)
     })
   },
-  createPinboard ({dispatch}, data) {
+  createPinboard (data) {
     return createPinboard(data)
   },
   createGroupPinboard (data) {
@@ -31,12 +31,12 @@ export default {
     return getPinboardById(data)
   },
   updatePinboardName ({dispatch}, data) {
-    return updatePinboardName(data.id, data.groupId, data.name).then(() => {
+    return updatePinboardName(data.id, data.name).then(() => {
       dispatch('getPinboardList')
     })
   },  
   updateGroupPinboardName ({dispatch}, data) {
-    return updateGroupPinboardName(data.id, data.name).then(() => {
+    return updateGroupPinboardName(data.id, data.groupId, data.name).then(() => {
       dispatch('getGroupPinboardList')
     })
   },

@@ -1,6 +1,6 @@
 <template>
   <div class="page-pinboard">
-    <h1 class="page-title">{{ isProjectPinboard ? $t('editing.projectPinboard') : $t('editing.pinboard') }}</h1>
+    <h1 class="page-title">{{ isPersonalPinboard ? $t('editing.pinboard') : $t('editing.projectPinboard') }}</h1>
     <div 
       v-if="boardName"
       class="bread-crumb-block"
@@ -78,7 +78,7 @@ export default {
       return this.$store.state.pinboard.groupPinboardInfo
     },
     prevPage () {
-      return this.isProjectPinboard ? 'projectPagePinboardList' : 'personalPagePinboardList'
+      return this.isPersonalPinboard ? 'personalPagePinboardList' : 'projectPagePinboardList'
     },
     accountId () {
       return this.$route.params.accountId
@@ -86,8 +86,8 @@ export default {
     groupId () {
       return this.$route.params.groupId
     },
-    isProjectPinboard () {
-      return this.groupId !== undefined
+    isPersonalPinboard () {
+      return this.groupId === undefined
     },
     isSortable () {
       return this.boardList.length > 1

@@ -149,22 +149,33 @@ export default {
   },
   methods: {
     getPinboardInfo () {
-      this.$store.dispatch('pinboard/getPinboardList').then(() => {
-        this.isLoading = false
-      })
+      if(this.isPersonalPinboard) {
+        this.$store.dispatch('pinboard/getPinboardList').then(() => {
+          this.isLoading = false
+        })
+      } else {
+        this.$store.dispatch('pinboard/getGroupPinboardList').then(() => {
+          this.isLoading = false
+        })
+      }
     },
     addCategory () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
-        this.$store.dispatch('pinboard/createPinboard', this.newBoardName)
-          .then(response => {
-            this.getPinboardInfo()
-            this.isShowAdd = false
-            this.$nextTick(() => {
-              this.newBoardName = null
-            })
+        let promise
+        if (this.isPersonalPinboard) {
+          promise = this.$store.dispatch('pinboard/createPinboard', this.newBoardName)
+        } else {
+          promise = this.$store.dispatch('pinboard/createGroupPinboard', { name: this.newBoardName, groupId: this.groupId })
+        }
+        promise.then(response => {
+          this.getPinboardInfo()
+          this.isShowAdd = false
+          this.$nextTick(() => {
+            this.newBoardName = null
           })
-          .catch(() => {})
+        })
+        .catch(() => {})
       })
     },
     insertBoardData (boardInfo) {
@@ -189,11 +200,17 @@ export default {
     confirmEdit () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
-        this.$store.dispatch('pinboard/updatePinboardName', this.tempEditInfo)
-          .then(() => {
-            this.isShowEdit = false
-          })
-          .catch(() => {})
+        let promise
+        if(this.isPersonalPinboard) {
+          promise = this.$store.dispatch('pinboard/updatePinboardName', this.tempEditInfo)
+        } else {
+          this.tempEditInfo.groupId = this.groupId
+          this.$store.dispatch('pinboard/updateGroupPinboardName', this.tempEditInfo)
+        }
+        promise.then(() => {
+          this.isShowEdit = false
+        })
+        .catch(() => {})
       })
     },
     confirmDelete () {
