@@ -18,7 +18,7 @@
           <div
             v-for="(tableInfo, contentIndex) in rootCauseInfo.content"
             :key="index +'-'+ contentIndex"
-            :class="{'in-pinboard': inPinboard}"
+            :class="{ 'in-pinboard': inPinboard, 'is-special': tableInfo.unusual }"
             class="root-cause-card"
             @click="drillDown(tableInfo.link.question)"
           >
@@ -33,10 +33,7 @@
                 <span class="sub-title__text">{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}</span>
                 <span class="sub-title__text">{{ $t('aggregatedValue.mean') }}</span>
               </div>
-              <div
-                :class="{'is-special': tableInfo.unusual}"
-                class="amount-block"
-              >
+              <div class="amount-block">
                 <div class="count">{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
                 <div
                   v-show="tableInfo.unusual"
@@ -67,7 +64,7 @@
                 </div>
                 <div class="single-info">
                   <div class="info-label">{{ $t('resultDescription.totalPercentage') }}</div>
-                  <div class="info-content">{{ tableInfo.percent }}</div>
+                  <div class="info-content">{{ tableInfo.percent || '-' }} </div>
                 </div>
                 <div class="single-info">
                   <div class="info-label">{{ $t('aggregatedValue.mean') }}</div>
@@ -183,6 +180,16 @@ export default {
         cursor: initial;
       }
     }
+    &.is-special {
+      .amount-block {
+        color: $theme-color-warning;
+      }
+      .detail-info .detail-info__list .detail-info__list__item {
+        >>> .name {
+          color: $theme-color-warning;
+        }
+      }
+    }
 
     &:not(:last-child) {
       margin-bottom: 24px;
@@ -214,13 +221,6 @@ export default {
           }
         }
       }
-      .amount-block {
-        color: $theme-color-primary;
-
-        &.is-special {
-          color: $theme-color-warning;
-        }
-      }
       .count {
         font-size: 30px;
         line-height: 1;
@@ -240,7 +240,6 @@ export default {
     .column-name {
       text-decoration: underline;
     }
-
     .detail-info {
       display: flex;
       flex-direction: column;
@@ -256,13 +255,10 @@ export default {
           &::before {
             content: '-';
             margin-right: 8px;
-            & + .name {
-              padding-left: 0;
-            }
           }
-          >>> .name {
+          >>> .name:first-child {
             padding: 0 8px;
-            color: $theme-color-warning;
+            color: $theme-color-primary;
           }
         }
       }
