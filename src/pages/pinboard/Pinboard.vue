@@ -178,7 +178,6 @@ export default {
       this.isShowSortingDialog = false
     },
     unPin (pinBoardId) {
-      console.log('unPin')
       this.boardList.forEach(element => {
         if(element.pinBoardId === pinBoardId)
           element.isShow = true
