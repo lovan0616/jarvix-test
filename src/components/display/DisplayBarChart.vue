@@ -180,8 +180,6 @@ export default {
       }
       config.xAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : null
       config.yAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
-      // 如果是 bar chart
-      config.yAxis.scale = false
 
       // 數量大的時候出現 scroll bar
       if (this.dataset.data.length > 30) {
