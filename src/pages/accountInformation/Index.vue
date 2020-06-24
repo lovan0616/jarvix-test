@@ -19,8 +19,7 @@
             </h6>
             <p class="sub-info-desciption">
               {{ license.currentUser || '-' }}
-              <span v-if="license.currentUser > 1">{{ $tc('accountInfo.person', 0) }}</span>
-              <span v-else>{{ $tc('accountInfo.person', 1) }}</span>
+              {{ $tc('accountInfo.person', license.currentUser) }}
             </p>
           </div>
           <div class="sub-info-block">
@@ -29,8 +28,7 @@
             </h6>
             <p class="sub-info-desciption">
               {{ license.maxUser || '-' }}
-              <span v-if="license.currentUser > 1">{{ $tc('accountInfo.person', 0) }}</span>
-              <span v-else>{{ $tc('accountInfo.person', 1) }}</span>
+              {{ $tc('accountInfo.person', license.maxUser) }}
             </p>
           </div>
         </div>
