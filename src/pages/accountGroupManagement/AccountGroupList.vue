@@ -8,8 +8,8 @@
         <div class="button-block">
           <router-link
             v-if="showCreateButton()"
-            :to="{name: 'CreateAccountGroup'}"
-            :class="{disabled: isLoading}"
+            :to="{ name: 'CreateAccountGroup' }"
+            :class="{ disabled: isLoading }"
             class="btn-m btn-default btn-has-icon"
           >
             <svg-icon
@@ -166,10 +166,10 @@ export default {
       this.showConfirmEnterGroupDialog = false
     },
     enterGroup () {
-      this.$router.push({name: 'GroupUserList', params: {group_id: this.selectedGroup.groupId}})
+      this.$router.push({ name: 'GroupUserList', params: { group_id: this.selectedGroup.groupId } })
     },
     editGroup (data) {
-      this.$router.push({name: 'EditAccountGroup', params: {id: data.groupId}})
+      this.$router.push({ name: 'EditAccountGroup', params: { id: data.groupId } })
     }
   }
 }

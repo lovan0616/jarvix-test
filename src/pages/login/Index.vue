@@ -67,34 +67,40 @@ export default {
           })
             .then(res => {
               localStorage.setItem('token', res.accessToken)
+              return this.$store.dispatch('userManagement/getUserInfo')
+            })
+            .then(() => {
+              const currentGroupId = this.$store.getters['userManagement/getCurrentGroupId']
+              if (!currentGroupId) {
+                this.$store.commit('dataSource/setDataSourceList', [])
+                this.$store.dispatch('dataSource/handleEmptyDataSource')
+                return this.$router.push({ name: 'PageGrouplessGuidance' })
+              }
+
               // 取得前一次停留或拜訪的頁面
               const currentRoute = this.$store.state.setting.currentRoute
               const dataSourceId = this.$store.state.dataSource.dataSourceId
               const dataFrameId = this.$store.state.dataSource.dataFrameId
+
               // 用戶若因 token 失效需重新登入，使用先前已選擇的 id 取得相關資料
-              if (dataSourceId) {
-                this.$store.dispatch('dataSource/changeDataSourceById', {dataSourceId, dataFrameId})
-              }
-              this.$store.dispatch('userManagement/getUserInfo')
-
-              const currentGroupId = this.$store.getters['userManagement/getCurrentGroupId']
-              if (!currentGroupId) {
-                this.$store.commit('dataSource/setDataSourceList', [])
-                return this.$router.push('/')
-              }
-
-              this.$store.dispatch('dataSource/getDataSourceList', {})
+              this.$store.dispatch('dataSource/getDataSourceList', { dataSourceId, dataFrameId })
 
               // 用戶若因 token 失效需重新登入，登入後導回原頁面
               if (currentRoute && currentRoute.path) {
-                const {name, query, params} = currentRoute
-                return this.$router.push({name, query, params})
+                const { name, query, params } = currentRoute
+                return this.$router.push({ name, query, params })
               } else {
-                return this.$router.push('/')
+                const currentAccountId = this.$store.getters['userManagement/getCurrentAccountId']
+                return this.$router.push({
+                  name: 'PageIndex', 
+                  params: {
+                    'account_id': currentAccountId,
+                    'group_id': currentGroupId
+                  } 
+                })
               }
-            }).catch(() => {
-              this.isSubmit = false
             })
+            .catch(() => this.isSubmit = false)
         }
       })
     }

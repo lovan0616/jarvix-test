@@ -69,7 +69,7 @@ const router = new Router({
                       }
                     },
                     {
-                      path: 'groups/edit/:id',
+                      path: 'groups/:id/edit',
                       component: () => import('@/pages/accountGroupManagement/EditAccountGroup'),
                       name: 'EditAccountGroup',
                       meta: {
