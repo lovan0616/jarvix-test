@@ -146,6 +146,7 @@ export default {
   },
   beforeDestroy () {
     this.$store.commit('pinboard/setPinboardList', [])
+    this.$store.commit('pinboard/setGroupPinboardList', [])
   },
   methods: {
     getPinboardInfo () {

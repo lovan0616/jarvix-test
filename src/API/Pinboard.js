@@ -12,6 +12,7 @@ export function getPinboardList () {
 
 /**
  * get group pinboard list
+ * @param {Number} groupId
  */
 export function getGroupPinboardList (groupId) {
   return request({
@@ -22,6 +23,7 @@ export function getGroupPinboardList (groupId) {
 
 /**
  * get pinboard by id
+ * @param {Number} id
  */
 export function getPinboardById (id) {
   return request({
@@ -32,6 +34,7 @@ export function getPinboardById (id) {
 
 /**
  * create new board
+ * @param {String} name - 新分類名
  */
 export function createPinboard (name) {
   return request({
@@ -45,6 +48,8 @@ export function createPinboard (name) {
 
 /**
  * create new group board
+ * @param {String} name - 新分類名稱
+ * @param {Number} groupId
  */
 export function createGroupPinboard (name, groupId) {
   return request({
@@ -59,6 +64,8 @@ export function createGroupPinboard (name, groupId) {
 
 /**
  * update pinboard name
+ * @param {String} name - 釘板分類名稱
+ * @param {Number} id - 釘板分類 ID
  */
 export function updatePinboardName (id, name) {
   return request({
@@ -73,6 +80,9 @@ export function updatePinboardName (id, name) {
 
 /**
  * update group pinboard name
+ * @param {String} name - 釘板分類名稱
+ * @param {Number} id - 釘板分類 ID
+ * @param {Number} groupId
  */
 export function updateGroupPinboardName (id, groupId, name) {
   return request({
@@ -88,6 +98,7 @@ export function updateGroupPinboardName (id, groupId, name) {
 
 /**
  * delete board
+ * @param {Number} id -  pinBoard ID
  */
 export function deletePinboard (id) {
   return request({
@@ -98,6 +109,8 @@ export function deletePinboard (id) {
 
 /**
  * delete group board
+ * @param {Number} id -  pinBoard ID
+ * @param {Number} groupId -  groupId ID
  */
 export function deleteGroupPinboard (groupId, id) {
   return request({
@@ -124,5 +137,21 @@ export function unPinById (id) {
   return request({
     url: `/pinBoard/${id}`,
     method: 'DELETE'
+  })
+}
+
+/**
+ * sort pinboard
+ * @param {Number} folderId - 釘板分類 ID
+ * @param {Array} pinbordList
+ */
+export function sortPinboard (folderId, pinbordList) {
+  return request({
+    url: '/pinBoard/order',
+    method: 'PUT',
+    data: {
+      folderId,
+      pinbordList
+    }
   })
 }

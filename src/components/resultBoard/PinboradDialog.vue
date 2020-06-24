@@ -74,13 +74,9 @@ export default {
   },
   computed: {
     pinboardList () {
-      return this.isPersonal ? this.personalPinboardList : this.groupPinboardList
-    },
-    personalPinboardList () {
-      return this.$store.state.pinboard.pinboardList
-    },
-    groupPinboardList () {
-      return this.$store.state.pinboard.groupPinboardList
+      return this.isPersonal 
+        ? this.$store.state.pinboard.pinboardList
+        : this.$store.state.pinboard.groupPinboardList
     },
     groupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']

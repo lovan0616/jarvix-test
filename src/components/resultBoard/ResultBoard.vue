@@ -151,7 +151,9 @@ export default {
       return this.$route.name === 'personalPagePinboard' | this.$route.name === 'projectPagePinboard'
     },
     pinboardList () {
-      return this.$store.state.pinboard.pinboardList
+      return this.isPersonalPinboard 
+        ? this.$store.state.pinboard.pinboardList
+        : this.$store.state.pinboard.groupPinboardList
     },
     questionName () {
       let boardHeaderData = this.$children.filter(element => element.componentName === 'ResultBoardHeader')[0].componentData
@@ -189,7 +191,6 @@ export default {
         return false
       }
       // 取得最新的 pinboardList
-      console.log(this.isPersonalPinboard)
       if (this.isPersonalPinboard) {
         this.$store.dispatch('pinboard/getPinboardList').then(() => {
           this.showPinboardList = true
@@ -223,6 +224,7 @@ export default {
     unPin () {
       this.$store.dispatch('pinboard/unPinById', this.pinBoardId)
         .then(res => {
+          this.$emit('unPin', this.pinBoardId)
           if (this.isPinboardPage) {
             // 這邊是為了 transition 所以先抓高度
             let elem = document.getElementById(this.pinBoardId)

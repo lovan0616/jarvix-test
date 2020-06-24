@@ -23,6 +23,7 @@
     </div>
     <sorting-dialog
       v-if="isShowSortingDialog"
+      :board-list="boardList"
       @close="closeSortingDialog"
     />
     <spinner
@@ -42,6 +43,7 @@
       :result-info="result.info"
       :restrictions="result.restrictions"
       :question="result.question"
+      @unPin="unPin"
     />
   </div>
 </template>
@@ -66,16 +68,14 @@ export default {
   },
   computed: {
     pinboardList () {
-      return this.$store.state.pinboard.pinboardList
+      return this.isPersonalPinboard 
+        ? this.$store.state.pinboard.pinboardList
+        : this.$store.state.pinboard.groupPinboardList
     },
     pinboardInfo () {
-      return this.$store.state.pinboard.pinboardInfo
-    },
-    groupPinboardList () {
-      return this.$store.state.pinboard.groupPinboardList
-    },
-    groupPinboardInfo () {
-      return this.$store.state.pinboard.groupPinboardInfo
+      return this.isPersonalPinboard 
+       ? this.$store.state.pinboard.pinboardInfo
+       : this.$store.state.pinboard.groupPinboardInfo
     },
     prevPage () {
       return this.isPersonalPinboard ? 'personalPagePinboardList' : 'projectPagePinboardList'
@@ -102,9 +102,15 @@ export default {
       if (this.pinboardList.length > 0) {
         this.setPinboardName()
       } else {
-        this.$store.dispatch('pinboard/getPinboardList').then(() => {
-          this.setPinboardName()
-        })
+        if (this.isPersonalPinboard) {
+          this.$store.dispatch('pinboard/getPinboardList').then(() => {
+            this.setPinboardName()
+          })
+        } else {
+          this.$store.dispatch('pinboard/getGroupPinboardList').then(() => {
+            this.setPinboardName()
+          })
+        }
       }
     },
     setPinboardName () {
@@ -124,7 +130,8 @@ export default {
             dataSourceId: element.dataSourceId,
             dataFrameId: element.dataFrameId,
             layout: null,
-            info: null
+            info: null,
+            isDeleted: false
           })
           this.getComponent(element)
         })
@@ -169,6 +176,13 @@ export default {
     },
     closeSortingDialog () {
       this.isShowSortingDialog = false
+    },
+    unPin (pinBoardId) {
+      console.log('unPin')
+      this.boardList.forEach(element => {
+        if(element.pinBoardId === pinBoardId)
+          element.isShow = true
+      })
     }
   },
 }
