@@ -94,6 +94,15 @@ export default {
       this.$emit('prev')
     },
     nextStep () {
+      if (!this.selectAtLeastOneColumnPerTable()) {
+        Message({
+          message: this.$t('etl.pleaseSelectAtLeastOneColumnPerTable'),
+          type: 'warning',
+          duration: 3 * 1000
+        })
+        return
+      }
+      
       this.isProcessing = true
       let promiseList = []
       this.etlTableList.forEach((element, index) => {
@@ -122,6 +131,16 @@ export default {
     },
     cancel () {
       this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+    },
+    selectAtLeastOneColumnPerTable () {
+      let result = true
+      for (let i = 0; i < this.etlTableList.length; i++) {
+        if (!this.etlTableList[i].columns.some(column => column.active)) {
+          result = false
+          break
+        }
+      }
+      return result
     }
   },
 }
@@ -136,12 +155,7 @@ export default {
   .dialog-body {
     background-color: rgba(50, 58, 58, 0.95);
     border-radius: 5px;
-    padding: 24px;
     margin-bottom: 16px;
-  }
-
-  & >>> .sy-select {
-    border-bottom: 1px solid #aaa;
   }
 
   .data-frame-select-block {

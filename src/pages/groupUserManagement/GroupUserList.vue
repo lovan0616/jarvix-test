@@ -12,7 +12,7 @@
             class="btn-m btn-default btn-has-icon"
           >
             <svg-icon
-              icon-class="user"
+              icon-class="user-plus"
               class="icon"/>{{ $t('button.addNewMember') }}
           </router-link>
         </div>
@@ -124,16 +124,35 @@ export default {
     },
     deleteGroupUser (data) {
       this.isLoading = true
+      const prevGroupName = this.$store.getters['userManagement/getCurrentGroupName']
       deleteGroupUser(this.selectedUser.id, this.currentGroupId)
         .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
         .then(() => {
           this.fetchData(this.currentGroupId)
           this.closeDelete()
-          Message({
-            message: this.$t('message.memberDeleteSuccess'),
-            type: 'success',
-            duration: 3 * 1000
-          })
+          setTimeout(() => {
+            Message({
+              message: this.$t('message.memberDeleteSuccess'),
+              type: 'success',
+              duration: 3 * 1000
+            })
+          }, 0)
+
+          // 若因刪除群組而造成使用者 default 群組變動，給予提示訊息
+          const currentGroupName = this.$store.getters['userManagement/getCurrentGroupName']
+          if (!currentGroupName) {
+            Message({
+              message: this.$t('message.youAreGroupless'),
+              type: 'warning',
+              duration: 3 * 1000
+            })
+          } else if (prevGroupName !== currentGroupName) {
+            Message({
+              message: this.$t('message.switchToGroupBySys', { groupName: currentGroupName }),
+              type: 'info',
+              duration: 3 * 1000
+            })
+          }
         })
         .catch(() => { this.isLoading = false })
     },
@@ -204,10 +223,6 @@ export default {
 
   & >>> .empty-info-block {
     background: rgba(35, 61, 64, 0.6);
-  }
-
-  & >>> .dialog-box {
-    z-index: 999;
   }
 }
 </style>

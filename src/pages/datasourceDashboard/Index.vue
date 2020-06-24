@@ -1,26 +1,13 @@
 <template>
   <div class="page-index">
     <filter-info/>
-    <spinner
-      v-if="isLoading"
-      :title="$t('resultDescription.analysisProcessing')"
-      class="layout-spinner"
-      size="50"
-    />
-    <empty-result
-      v-else-if="isNoResult"
-      :title="$t('editing.indexErrorTitle')"
-      :description="$t('editing.indexErrorDescription')"
-    />
     <preview-data-source
-      v-else
       :key="dataSourceId"
     />
-    <div v-if="quickStartQuestionList.length > 0">
-      <quick-start
-        :question-list="quickStartQuestionList"
-      />
-    </div>
+    <quick-start
+      v-if="quickStartQuestionList.length > 0"
+      :question-list="quickStartQuestionList"
+    />
   </div>
 </template>
 
@@ -37,47 +24,64 @@ export default {
   data () {
     return {
       isLoading: false,
-      isNoResult: false,
-      dataFrameInfo: null,
       quickStartQuestionList: []
     }
   },
   computed: {
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
+    },
+    dataFrameId () {
+      return this.$store.state.dataSource.dataFrameId
     }
   },
   watch: {
-    dataSourceId (value) {
-      this.dataFrameInfo = null
+    dataFrameId (newValue) {
       this.quickStartQuestionList = []
-      this.isNoResult = false
-      if (value) this.getLandingInfo()
+      this.updateUrl()
+      if (newValue) this.getQuickQuestionList()
+    }
+  },
+  created() {
+    if (this.dataSourceId !== null) {
+      let { dataSourceId, dataFrameId } = this.$route.query
+      if (!dataSourceId || !dataFrameId) this.updateUrl()
     }
   },
   mounted () {
     // 變更 bookmark 從其他頁回到首頁的時候，如果是 null 代表如果是直接進首頁的話，會藉由 watch 觸發
     if (this.dataSourceId !== null) {
-      this.getLandingInfo()
+      this.getQuickQuestionList()
     }
   },
   methods: {
-    getLandingInfo () {
-      this.isLoading = true
-      this.$store.commit('chatBot/updateAnalyzeStatus', true)
+    updateUrl () {
+      let {dataSourceId: queryDataSourceId, dataFrameId: queryDataFrameId} = this.$route.query
+      // Watch 在切換 datasource / dataframe 時會觸發＆從連結進來 init 階段改變 datasource / dataframe 也會觸發
+      // 需要判定 1：Store 有值但 url query 上沒有時，補上 query string
+      // 需要判定 2：init 改變觸發時，需要確認是否跟當前 url 上 query 相同，避免前往相同路徑（一般切換則不影響）
+      if (
+        queryDataSourceId && queryDataFrameId 
+        && (String(queryDataSourceId) ===  String(this.dataSourceId)) 
+        && (String(queryDataFrameId) === String(this.dataFrameId))
+      ) return
 
-      this.$store.dispatch('chatBot/getQuickStartQuestion', this.dataSourceId).then(response => {
-        this.isLoading = false
+      // 當前無 datasource 時，去除 query string
+      this.$router.replace(!this.dataSourceId ? '/' : {
+        query: {
+          dataSourceId: this.dataSourceId,
+          dataFrameId: this.dataFrameId
+        }
+      })
+    },
+    getQuickQuestionList () {
+      this.isLoading = true
+      this.$store.dispatch('chatBot/getQuickStartQuestion', this.dataSourceId)
+      .then(response => {
         this.quickStartQuestionList = response
-        this.$store.commit('chatBot/updateAnalyzeStatus', false)
-        this.$store.commit('chatBot/addSystemConversation',
-          this.quickStartQuestionList.length > 0
-            ? {text: this.$t('bot.welcomeMessageWithSuggestions'), options: response}
-            : {text: this.$t('bot.welcomeMessage')}
-        )
+        this.isLoading = false
       }).catch(() => {
         this.isLoading = false
-        this.$store.commit('chatBot/updateAnalyzeStatus', false)
       })
     }
   },

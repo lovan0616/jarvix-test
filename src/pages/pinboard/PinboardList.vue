@@ -150,6 +150,9 @@ export default {
           .then(response => {
             this.getPinboardInfo()
             this.isShowAdd = false
+            this.$nextTick(() => {
+              this.newBoardName = null
+            })
           })
           .catch(() => {})
       })

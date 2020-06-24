@@ -66,26 +66,30 @@
                   :class="{'has-changed': column[index].hasChanged}" 
                   class="text">
                   <el-tooltip
-                    slot="label"
                     :enterable="false"
                     :visible-arrow="false"
-                    :content="`${column[index].primaryAlias}`"
+                    :content="column[index].primaryAlias"
                     placement="bottom-start">
                     <span>{{ column[index].primaryAlias }}</span>
                   </el-tooltip>
                 </span>
-                <label class="checkbox">
-                  <div class="checkbox-label">
-                    <input
-                      :name="'column' + index"
-                      :checked="column[index].active"
-                      type="checkbox"
-                      @change="toggleColumn(index)"
-                    >
-                    <div class="checkbox-square"/>
-                  </div>
-                  {{ $t('etl.selectColumn') }}
-                </label>
+                <el-tooltip
+                  :enterable="false"
+                  :visible-arrow="false"
+                  :content="getColumnSelectedContent(column[index].active)"
+                  placement="bottom">
+                  <label class="checkbox">
+                    <div class="checkbox-label">
+                      <input
+                        :name="'column' + index"
+                        :checked="column[index].active"
+                        type="checkbox"
+                        @change="toggleColumn(index)"
+                      >
+                      <div class="checkbox-square"/>
+                    </div>
+                  </label>
+                </el-tooltip>
               </div>
               <div class="header">
                 <category-select
@@ -93,11 +97,16 @@
                   :key="currentTableIndex + column[index].primaryAlias + index"
                   @updateInfo="updateSetting"
                 />
-                <a 
-                  href="javascript:void(0)" 
-                  class="link"
-                  @click="chooseColumn(index)"
-                >{{ $t('etl.advance') }}</a>
+                <el-tooltip
+                  :enterable="false"
+                  :visible-arrow="false"
+                  :content="$t('etl.advance')"
+                  placement="bottom">
+                  <svg-icon
+                    icon-class="setting"
+                    class="icon-setting"
+                    @click="chooseColumn(index)"/>
+                </el-tooltip>
               </div>
               <div class="summary">
                 <data-column-summary
@@ -264,6 +273,9 @@ export default {
           }, 3000)
         }
       })
+    },
+    getColumnSelectedContent (checked) {
+      return checked ? this.$t('etl.selectColumn') : this.$t('etl.skipColumn')
     }
   },
 }
@@ -318,7 +330,6 @@ export default {
       .data-column__reminder {
         font-size: 14px;
         text-align: right;
-        color: $theme-color-warning;
         margin: 0;
       }
     }
@@ -389,6 +400,7 @@ export default {
     border-bottom: 1px solid #515959;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     position: relative;
     .text {
       &.has-changed {
@@ -420,7 +432,7 @@ export default {
     }
 
     .checkbox-label {
-      margin-right: 8px;
+      margin-right: 2px;
     }
 
     .text {
@@ -437,7 +449,15 @@ export default {
     /deep/ .el-select {
       background: #252C2C;
       border-radius: 5px;
-      width: 190px;
+      flex: 1;
+    }
+
+    .icon-setting {
+      width: 20px;
+      height: 20px;
+      margin-left: 12px;
+      cursor: pointer;
+      stroke: $theme-color-primary
     }
   }
 

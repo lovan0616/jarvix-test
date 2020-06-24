@@ -8,7 +8,10 @@
         class="icon pin-icon"/>
     </div>
     <div class="pinboard-name">{{ boardInfo.name }}</div>
-    <div class="pinboard-action-block">
+    <div 
+      class="pinboard-action-block"
+      @click.stop
+    >
       <div class="pinboad-hover-box">
         <svg-icon 
           icon-class="more" 

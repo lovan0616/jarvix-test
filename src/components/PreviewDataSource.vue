@@ -106,6 +106,16 @@ export default {
         if (colNum) result = `${colNum} columns`
       }
       return result
+    },
+    availableDataFrames () {
+      const dataFrameList = this.$store.state.dataSource.dataFrameList
+      return dataFrameList.filter(dataFrame => dataFrame.state === 'Enable')
+    }
+  },
+  watch: {
+    availableDataFrames (newList, oldList) {
+      if (oldList.length === 0) return
+      this.fetchDataSourceTable()
     }
   },
   mounted () {

@@ -1,5 +1,8 @@
 <template>
-  <div id="app">
+  <div 
+    id="app"
+    :lang="getLang"
+  >
     <div class="app-bg"/>
     <transition 
       name="fade" 
@@ -27,6 +30,9 @@ export default {
   computed: {
     locale () {
       return this.$store.state.setting.locale
+    },
+    getLang () {
+      return this.locale.split('-')[0]
     }
   },
   watch: {
@@ -45,7 +51,13 @@ export default {
     checkLocale () {
       let prevLocale = localStorage.getItem('locale')
       let browserScale = (navigator.language || navigator.browserLanguage).toLowerCase()
-      browserScale = browserScale === 'zh-tw' ? 'zh-TW' : 'zh-CN'
+      if (browserScale.includes('en')) {
+        browserScale = 'en-US'
+      } else if (browserScale === 'zh-tw') {
+        browserScale = 'zh-TW'
+      } else {
+        browserScale = 'zh-CN'
+      }
       let locale = prevLocale || browserScale
       this.$store.commit('setting/setLocale', locale)
     }

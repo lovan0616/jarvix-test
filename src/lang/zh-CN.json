@@ -10,6 +10,9 @@
     "projectManagement": "专案管理"
   },
   "sideNav": {
+    "functionList": "功能选单",
+    "home": "首頁",
+    "pinboard": "個人釘板",
     "accountManagement": "帐户管理",
     "accountInformation": "帐户资讯",
     "accountUserManagement": "使用者管理",
@@ -32,6 +35,7 @@
     "remindNotAllowSelfJoin": "不能选择相同资料表",
     "joinTypeEmpty": "请选择关联方式",
     "builded": "资料源建立完成",
+    "dataFrameBuilt": "资料表建立完成",
     "noMatchedKey": "没有成功对上的值，请尝试设定其他关联表或栏位",
     "previewFailed": "设定失败，请稍候再试",
     "noData": "目前没有资料",
@@ -66,9 +70,14 @@
     "emptyResult": "此搜寻条件并无对应资料",
     "emptyDataSource": "尚未建立资料源",
     "emptyColumnSet": "尚未建立任何栏位组合",
+    "emptyFeatureFormula": "资料栏位未填写",
+    "emptyColumn": "未选取栏位值",
+    "emptyDataColumn": "未选择资料栏位",
+    "emptyNumeric": "未填写数值",
     "deleteSuccess": "删除成功",
     "dataSourceNotExist": "资料源不存在",
     "connectionFail": "栏位资料有误，请重新检查",
+    "connectionInterrupted": "连线已中断",
     "columnSetNameEmpty": "栏位组合名称未填写",
     "columnSetChosenEmpty": "尚未选择任何栏位",
     "memberDeleteSuccess": "成员删除成功",
@@ -76,7 +85,12 @@
     "etlSettingTempSave": "设定已经暂存",
     "calculatingPleaseTryLater": "资料计算中，请稍后再试",
     "analysisFailed": "档案解析发生错误",
-    "confirmColumnStateTypeChange": "此变更将会清除进阶设定内容，您确认要进行变更？"
+    "confirmColumnStateTypeChange": "此变更将会清除进阶设定内容，您确认要进行变更？",
+    "fileTypeNotSupported": "不支援 {fileType} 档案格式",
+    "goToGroupManagement": "前往帐户专案管理",
+    "switchToGroupBySys": "系统已将您切换至群組：{groupName}",
+    "youAreGroupless": "您目前无隶属群组",
+    "switching": "切换中"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -94,7 +108,10 @@
       "name": "看快速指引",
       "hint": "你也可以使用快速指引，一键开始进行搜寻分析"
     },
-    "goAdjust": "前往调整"
+    "goAdjust": "前往调整",
+    "notBelongToGroups": "因您未隶属专案而无法使用该功能",
+    "pleaseCreateOrJoinGroup": "请先加入专案或建立新专案",
+    "pleaseInformManager": "请待专案管理员将您加入专案"
   },
   "editing": {
     "localUpload": "本机档案上传",
@@ -103,6 +120,7 @@
     "remoteConnectionDescription": "直接读取您的资料库资料<br>并进行资料复制和建置",
     "confirmDeleteForeign": "确认删除此关联吗？",
     "chooseDataSource": "请选择资料源",
+    "allDataFrames": "全部资料表",
     "createBoard": "建立新版",
     "questionPlaceHolder": "请输入问题，例如：价格和成本的相关性",
     "askPlaceHolder": "请输入问句后按Enter送出",
@@ -125,10 +143,10 @@
     "action": "操作",
     "dataSourceName": "资料源名称",
     "selectDataType": "选择资料类型",
-    "clickToSelectFiles": "点击此区块，选择资料表档案",
+    "clickToSelectFiles": "点击选择档案，或拖曳档案至此",
     "uploadLimitTitle": "档案上传限制说明",
     "uploadLimitFileType": "支援格式：.xlsx .xls .csv",
-    "uploadLimitSize": "档案大小：{limitSize}MB",
+    "uploadLimitSize": "档案大小：{limitSize}",
     "uploadLimitCount": "档案数量：{countLimit}笔",
     "uploadLimitContent": "内容限制：不可有分页、不可合并储存格、标题仅限1行",
     "reachUploadSizeLimit": "资料表大小超过{limitSize}MB",
@@ -304,7 +322,11 @@
     "chooseDataColumn": "选择资料栏位",
     "numericOnly": "请输入数值",
     "isRequired": "必填",
-    "resultOverSizeMessage": "资料量过大时，资料会经过取样"
+    "resultOverSizeMessage": "资料量过大时，资料会经过取样",
+    "toolTipMessage": {
+      "comfrmToDeleteConnectionHistory":"你确定要删除连线纪录?"
+    },
+    "createGroup": "建立专案"
   },
   "etl": {
     "dataFrameList": "资料表列表",
@@ -320,6 +342,7 @@
     "etlSetting": "资料清洗设定",
     "remarkToSave": "异动内容须保存",
     "selectColumn": "使用",
+    "skipColumn": "不使用",
     "advance": "进阶",
     "advanceSetting": "进阶设定",
     "backToDataFrame": "返回资料表",
@@ -345,11 +368,13 @@
     "connectionHistory": "连线纪录",
     "newConnectionSetting": "新连线设定",
     "emptyConnectionHistory": "没有任何连线纪录",
+    "returnConnectionHistory": "返回连线纪录",
     "dataCalculate": "资料计算中",
     "tableChosenLimit": "最多选择 {number} 张资料表",
     "tableSearch": "搜寻资料表",
     "null": "Null",
-    "columnSelected": "已选择栏位数"
+    "columnSelected": "已选择栏位数",
+    "pleaseSelectAtLeastOneColumnPerTable": "每张表格请至少选择一个栏位"
   },
   "feature": {
     "value": "数值",
@@ -497,6 +522,8 @@
     "update": "更新",
     "finish": "完成",
     "connect": "连线",
+    "cancelConnect": "取消连线",
+    "saveAndConnect": "储存并连线",
     "toForeignTable": "关联资料表",
     "newForeign": "新增关联",
     "nextStep": "下一步",
@@ -1573,7 +1600,8 @@
     "lackOfSignUpToken": "无注册权限，请联系管理员",
     "defaultMsg": "系统发生非预期错误",
     "lackOfPermission": "权限不足，请联系管理员",
-    "versionUpdate": "有新版本上线，立即帮您更新"
+    "versionUpdate": "有新版本上线，立即帮您更新",
+    "networkError": "网路连线发生错误，请检查连线，稍后再试"
   },
   "resultNote": {
     "groupLimitNote": "此结果为原资料取前 {randomLimit} 笔得来",

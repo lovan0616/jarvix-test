@@ -185,4 +185,11 @@ export default {
   }
 }
 
+[lang="en"] {
+  .question-type-text {
+    & + .question-type-text {
+      margin-left: 8px;
+    }
+  }
+}
 </style>

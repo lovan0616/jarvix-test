@@ -8,7 +8,11 @@
         icon-class="filter" 
         class="icon"/> {{ $t('resultDescription.filterRestrictions') }}</div>
       <div 
-        :class="{'has-filter': hasFilter, 'is-use-algorithm': isUseAlgorithm}"
+        :class="{
+          'has-filter': hasFilter,
+          'is-use-algorithm': isUseAlgorithm,
+          'is-connect-channel': websocketHandler
+        }"
         class="user-question-block"
       >
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
@@ -24,6 +28,7 @@
           @keypress.enter.prevent="enterQuestion"
           @keyup.shift.ctrl.72="toggleHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
+          @keyup.shift.ctrl.88="toggleWebSocketConnection()"
         >
         <a 
           href="javascript:void(0);" 
@@ -40,10 +45,12 @@
           <svg-icon icon-class="go-right"/>
         </a>
       </div>
-      <div class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}<a 
-        href="javascript:void(0)" 
-        class="link help-link"
-        @click="showHelper"
+      <div 
+        :class="{ 'disabled': dataSourceList.length === 0 }" 
+        class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}<a 
+          href="javascript:void(0)" 
+          class="link help-link"
+          @click="showHelper"
       >{{ $t('askHelper.helpLink') }}</a> </div>
     </div>
     <div 
@@ -89,7 +96,8 @@ export default {
     return {
       userQuestion: null,
       showHistoryQuestion: false,
-      showAskHelper: false
+      showAskHelper: false,
+      websocketHandler: null
     }
   },
   computed: {
@@ -130,13 +138,36 @@ export default {
     }
   },
   mounted () {
-    // this.$refs.questionInput.focus()
     document.addEventListener('click', this.autoHide, false)
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
+    if (this.websocketHandler) this.closeWebSocketConnection()
   },
   methods: {
+    toggleWebSocketConnection () {
+      if (this.websocketHandler) return this.closeWebSocketConnection()
+      this.createWebSocketConnection()
+    },
+    createWebSocketConnection () {
+      let connectionRequestUrl = `${window.env.PUBLIC_API_ROOT_URL.replace('https', window.location.protocol === 'https:' ? 'wss' : 'ws')}websocket/ROBOT`
+      this.websocketHandler = new WebSocket(connectionRequestUrl)
+      this.websocketHandler.onopen = this.onWebSocketOpen
+      this.websocketHandler.onmessage = this.onWebSocketReceiveMessage
+      this.websocketHandler.onclose = this.onWebSocketClose
+    },
+    closeWebSocketConnection () {
+      this.websocketHandler.close()
+      this.websocketHandler = null
+    },
+    onWebSocketOpen () {
+    },
+    onWebSocketReceiveMessage (evt) {
+      this.userQuestion = evt.data
+      this.enterQuestion()
+    },
+    onWebSocketClose (evt) {
+    },
     autoHide (evt) {
       let clickInside = this.$el.contains(evt.target)
       if (this.showHistoryQuestion && !clickInside) {
@@ -173,6 +204,7 @@ export default {
       this.showHistoryQuestion = false
     },
     showHelper () {
+      if (this.dataSourceList.length === 0) return
       this.showAskHelper = true
       this.hideHistory()
     },
@@ -214,6 +246,12 @@ export default {
     &.is-use-algorithm {
       .ask-btn {
         color: $theme-color-warning;
+      }
+    }
+
+    &.is-connect-channel {
+      .clean-btn {
+        color: $theme-color-danger;
       }
     }
 
@@ -284,6 +322,10 @@ export default {
     text-align: left;
     letter-spacing: 0.05em;
 
+    &.disabled {
+      opacity: .3;
+    }
+
     .help-link {
       font-size: 13px;
       margin-left: 4px;
@@ -311,7 +353,7 @@ export default {
     position: absolute;
     text-align: left;
     left: 0;
-    bottom: 111px;
+    bottom: 100%;
     width: 100%;
     height: 0;
     overflow: hidden;

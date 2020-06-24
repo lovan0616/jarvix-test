@@ -1,4 +1,5 @@
-import { logout, getAccountGroupInfo } from '@/API/User'
+import { logout, refreshToken } from '@/API/User'
+import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
 
 export default {
@@ -11,44 +12,59 @@ export default {
       localStorage.removeItem('token')
     })
   },
-  getUserInfo ({ commit }) {
-    getPermission().then((userInfo) => {
+  async getUserInfo ({ commit, rootState }) {
+    let accountPermissionList = []
+    let licensePermissionList = []
+    let groupPermissionList = []
+    let defaultAccount = {}
 
-      let accountPermissionList = []
-      let licensePermissionList = []
-      let groupPermissionList = []
-      let defaultAccount = {}
-
-      if (userInfo.accountList.length) {
-        defaultAccount = userInfo.accountList.find(account => account.isDefault)
-        licensePermissionList = defaultAccount.licensePermissionList
-        accountPermissionList = defaultAccount.accountPermissionList
-        if (defaultAccount.groupList.length) {
-          let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
-          groupPermissionList = defaultGroup.groupPermissionList
+    await getPermission()
+      .then((userInfo) => {
+        if (userInfo.accountList.length) {
+          defaultAccount = userInfo.accountList.find(account => account.isDefault)
+          accountPermissionList = defaultAccount.accountPermissionList
+          licensePermissionList = defaultAccount.licensePermissionList
+          if (defaultAccount.groupList.length) {
+            let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
+            groupPermissionList = defaultGroup.groupPermissionList
+          }
         }
-      }
-
-      commit('setUserInfo', {
-        userName: userInfo.username,
-        accountList: userInfo.accountList,
-        groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
-        permission: [
-          ...accountPermissionList,
-          ...groupPermissionList,
-          ...licensePermissionList
-        ]
+    
+        commit('setUserInfo', {
+          userId: userInfo.userData.id,
+          userName: userInfo.userData.name,
+          accountList: userInfo.accountList,
+          groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
+          permission: [
+            ...accountPermissionList,
+            ...groupPermissionList,
+            ...licensePermissionList
+          ]
+        })
+        
+        let locale = userInfo.userData.language
+        if (locale && locale !== rootState.setting.locale) {
+          commit('setting/setLocale', locale, { root: true })
+        }
       })
+      .catch(() => {})
+    
+    await getAccountInfo(defaultAccount.id)
+      .then((accountInfo) => {
+        commit('setLicenseInfo', accountInfo.license)
+      })
+      .catch(() => {})
+
+    await refreshToken().then(res => {
+      localStorage.setItem('token', res.accessToken)
     })
   },
   updateUserGroupList ({ dispatch, commit, getters }) {
-    const currentAccountId = getters.getCurrentAccountId
-    getAccountGroupInfo(currentAccountId)
-      .then(res => commit('updateUserGroupInfo', res))
+    return dispatch('getUserInfo')
       .then(() => {
         const currentGroupId = getters.getCurrentGroupId
         if (currentGroupId) {
-          dispatch('dataSource/getDataSourceList', null, { root: true })
+          dispatch('dataSource/getDataSourceList', {}, { root: true })
         } else {
           commit('dataSource/setDataSourceList', [], { root: true })
           dispatch('dataSource/handleEmptyDataSource', null, { root: true })

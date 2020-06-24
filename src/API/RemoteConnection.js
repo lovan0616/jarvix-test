@@ -13,6 +13,31 @@ export function createDatabaseConnection (connectInfo) {
 }
 
 /**
+ * 依照連線資訊 ID 刪除連線資訊
+ * @param {Number} databaseConnectionId 連線 id
+ */
+export function deleteDatabaseConnection (databaseConnectionId) {
+  return request({
+    url: `/database/connection/${databaseConnectionId}`,
+    method: 'DELETE'
+  })
+}
+
+/**
+ * 依照連線資訊 ID 更新連線資訊
+ * @param {Number} databaseConnectionId 連線 id
+ * @param {Object} connectInfo 更改資訊
+ */
+export function updateDatabaseConnection (databaseConnectionId, connectInfo) {
+  return request({
+    url: `/database/connection/${databaseConnectionId}`,
+    method: 'PUT',
+    data: connectInfo
+  })
+}
+
+
+/**
  * 取得 table 列表
  * @param {Number} databaseConnectionId 連線 id
  */
@@ -50,10 +75,11 @@ export function testConnection (connectionInfo) {
 /**
  * 測試已新增的連線
  */
-export function testOldConnection (connectionId) {
+export function testOldConnection (connectionId, cancelFunction=null) {
   return request({
     url: `/database/connection/${connectionId}/test`,
-    method: 'POST'
+    method: 'POST',
+    cancelToken: cancelFunction
   })
 }
 

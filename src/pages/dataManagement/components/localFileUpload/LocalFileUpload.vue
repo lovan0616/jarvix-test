@@ -8,18 +8,23 @@
       <div class="data-source-name">{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
       <input 
         ref="fileUploadInput" 
-        type="file" 
+        :accept="acceptFileTypes.join(',').toString()" 
+        type="file"
         class="hidden"
         name="fileUploadInput"
-        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
         multiple
-        @change="fileImport"
+        @change="fileImport($event.target.files)"
       >
-      <upload-block 
+      <upload-block
         v-if="uploadFileList.length === 0 && unableFileList.length === 0"
         :bottom-message="$t('editing.clickToSelectFiles')"
+        :drag-enter="dragEnter"
         class="empty-upload-block"
         @create="chooseFile"
+        @drop.native.prevent="dropFiles($event)"
+        @dragover.native.prevent
+        @dragenter.native="toggleDragEnter(true)"
+        @dragleave.native="toggleDragEnter(false)"
       >
         <div 
           slot="uploadLimit" 
@@ -28,7 +33,7 @@
           <div class="conten-container">
             <div class="content">1. {{ $t('editing.uploadLimitFileType') }}</div>
             <div class="content">2. {{ $t('editing.uploadLimitCount', {countLimit: fileCountLimit}) }}</div>
-            <div class="content">3. {{ $t('editing.uploadLimitSize', {limitSize: uploadFileSizeLimit}) }}</div>
+            <div class="content">3. {{ $t('editing.uploadLimitSize', {limitSize: shortenDataCapacityNumber(license.showMaxDataStorageSize)}) }}</div>
           </div>
           <div class="content">4. {{ $t('editing.uploadLimitContent') }}</div>
         </div>
@@ -36,9 +41,14 @@
       <div 
         v-else
         class="file-list-container"
+        @drop.prevent="dropFiles($event)"
+        @dragover.prevent="toggleDragEnter(true)"
+        @dragenter="toggleDragEnter(true)"
+        @dragleave="toggleDragEnter(false)"
       >
         <file-list-block
           v-if="uploadFileList.length > 0"
+          :drag-enter="dragEnter"
           :title="$t('editing.canUpload')"
           :file-list="uploadFileList"
         />
@@ -106,11 +116,20 @@ export default {
       uploadStatus,
       currntUploadStatus: uploadStatus.wait,
       uploadFileSizeLimit: null,
-      unableFileList: []
+      unableFileList: [],
+      acceptFileTypes: [
+        '.csv',
+        'text/csv',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel'
+      ],
+      dragEnter: false,
+      notSupportedFileType: new Set()
     }
   },
   computed: {
     ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
+    ...mapState('userManagement', ['license']),
     currentGroupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
@@ -153,18 +172,62 @@ export default {
     }
   },
   methods: {
+    dropFiles (event) {
+      if (!event.dataTransfer.items) return
+
+      const files = Array.from(event.dataTransfer.items)
+        .filter(item => {
+          if (this.acceptFileTypes.includes(item.type)) return true
+          // 格式不支援者，最後一併跳提示訊息
+          this.notSupportedFileType.add(this.getFileShortExtension(item.type))
+        })
+        .map(item => item.getAsFile())
+
+      if (this.notSupportedFileType.size > 0) {
+        const notSupportedFileTypeString = [...this.notSupportedFileType].join(', ')
+        // 避免若同時拖曳超過十個檔案時 $message 重疊
+        setTimeout(() => {
+          Message({
+            message: this.$t('message.fileTypeNotSupported', {fileType: notSupportedFileTypeString}),
+            type: 'warning',
+            duration: 3 * 1000
+          })
+        }, 0)
+      }
+      this.fileImport(files)
+
+      // 還原狀態
+      this.dragEnter = false
+      this.notSupportedFileType = new Set()
+    },
+    getFileShortExtension (type) {
+      switch (type) {
+        case 'application/pdf':
+          return 'PDF'
+        case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+          return 'PPT'
+        case 'image/png':
+        case 'image/jpeg':
+          return 'IMAGE'
+        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+          return 'WORD'
+        default:
+          return type
+      }
+    },
+    toggleDragEnter (isDraggingOver) {
+      this.dragEnter = isDraggingOver
+    },
     chooseFile () {
       let uploadInput = this.$refs.fileUploadInput
       uploadInput.value = ''
       uploadInput.click()
     },
-    fileImport (event) {
-      let uploadInput = event.target
-
+    fileImport (files) {
       // 有選到檔案才執行
-      if (uploadInput.files) {
+      if (files) {
         // 判斷數量是否超過限制
-        if (uploadInput.files.length + this.uploadFileList.length > this.fileCountLimit) {
+        if (files.length + this.uploadFileList.length > this.fileCountLimit) {
           Message({
             message: this.$t('editing.reachUploadCountLimit', {countLimit: this.fileCountLimit}),
             type: 'warning',
@@ -173,7 +236,7 @@ export default {
 
           return false
         }
-        this.updateFileList(uploadInput.files)
+        this.updateFileList(files)
       }
     },
     // 將 input 內的檔案塞進 formData，並存到 store 中

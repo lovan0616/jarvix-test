@@ -5,8 +5,10 @@
       @click.stop>
       <div @click="closeDialog">
         <svg-icon 
-          icon-class="close" 
-          class="icon dialog-close"/>
+          :class="{ 'disabled': isLoading }" 
+          icon-class="close"
+          class="icon dialog-close"
+        />
       </div>
       <div class="dialog-select-text">{{ title }}</div>
       <slot/>
@@ -43,6 +45,7 @@ export default {
   },
   methods: {
     closeDialog () {
+      if (this.isLoading) return
       this.$emit('closeDialog')
     },
     confirmBtn () {
@@ -53,13 +56,17 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.dialog-close:hover{
+.dialog-close {
+  &:hover,
+  &.disabled {
     opacity: 0.8;
+  }
 }
 
-.dialog-select-text{
-    font-size: 24px;
-    letter-spacing: 3px;
+
+.dialog-select-text {
+  font-size: 24px;
+  letter-spacing: var(--theme-letter-spacing-x-wide);
 }
 
 .dialog-select-input-box {

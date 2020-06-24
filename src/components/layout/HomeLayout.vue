@@ -45,6 +45,7 @@
 import ChatRoomBlock from '@/components/chatBot/ChatRoom'
 import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
 import PreviewDataSource from '@/components/PreviewDataSource'
+import store from '@/store'
 
 export default {
   name: 'HomeLayout',
@@ -63,6 +64,11 @@ export default {
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    const currentAccount = store.getters['userManagement/getCurrentAccountId']
+    const currentGroup = store.getters['userManagement/getCurrentGroupId']
+    currentAccount && !currentGroup ? next({ name: 'PageGrouplessGuidance' }) : next()
   },
   beforeRouteUpdate(to, from, next) {
     if (this.isShowPreviewDataSource) this.closePreviewDataSource()
@@ -133,7 +139,7 @@ export default {
   .chat-bot-btn {
     position: fixed;
     bottom: 16px;
-    left: 20px;
+    left: 70px;
     z-index: 999;
     cursor: pointer;
     width: 80px;

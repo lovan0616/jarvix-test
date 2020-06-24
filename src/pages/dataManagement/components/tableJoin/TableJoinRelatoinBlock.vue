@@ -37,7 +37,12 @@
       v-if="!isEditing"
       class="title-block"
     >
-      <h3 class="table-name">{{ relationInfo.name }}</h3>
+      <el-tooltip
+        :content="relationInfo.name"
+        placement="bottom"
+      >
+        <h3 class="table-name">{{ relationInfo.name }}</h3>
+      </el-tooltip>
       <h6 class="join-type">
         {{ $t('editing.joinType') }}
         <span
@@ -86,8 +91,7 @@
               :option-list="joinTypeOptions"
               :is-disabled="isPreviewingResult"
               :placeholder="$t('editing.selectJoinType')"
-              filterable
-              class="tag-select input"
+              class="join-type-select input"
             />
           </div>
           <div class="correlation-block">
@@ -424,6 +428,8 @@ export default {
 
   .title-block {
     display: flex;
+    justify-content: space-between;
+    padding-right: 80px;
 
     .table-name,
     .join-type {
@@ -434,7 +440,9 @@ export default {
 
     .table-name {
       font-size: 18px;
-      width: 290px;
+      flex: 1;
+      @include text-hidden;
+      margin-right: 16px;
     }
 
     .join-type {
@@ -569,7 +577,7 @@ export default {
     cursor: not-allowed;
   }
 
-  & >>> .tag-select.el-select {
+  & >>> .join-type-select.el-select {
     .el-input__inner {
       padding-left: 0;
     }

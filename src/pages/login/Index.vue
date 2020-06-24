@@ -70,16 +70,12 @@ export default {
               // 取得前一次停留或拜訪的頁面
               const currentRoute = this.$store.state.setting.currentRoute
               const dataSourceId = this.$store.state.dataSource.dataSourceId
+              const dataFrameId = this.$store.state.dataSource.dataFrameId
               // 用戶若因 token 失效需重新登入，使用先前已選擇的 id 取得相關資料
               if (dataSourceId) {
-                this.$store.dispatch('dataSource/changeDataSourceById', dataSourceId)
+                this.$store.dispatch('dataSource/changeDataSourceById', {dataSourceId, dataFrameId})
               }
-              this.$store.commit('userManagement/setUserInfo', {
-                userName: res.name,
-                accountList: res.accountList,
-                groupList: res.groupList,
-                permission: res.groupPermission ? [...res.accountPermission, ...res.groupPermission, ...res.licensePermission] : res.accountPermission
-              })
+              this.$store.dispatch('userManagement/getUserInfo')
 
               const currentGroupId = this.$store.getters['userManagement/getCurrentGroupId']
               if (!currentGroupId) {
@@ -87,7 +83,7 @@ export default {
                 return this.$router.push('/')
               }
 
-              this.$store.dispatch('dataSource/getDataSourceList')
+              this.$store.dispatch('dataSource/getDataSourceList', {})
 
               // 用戶若因 token 失效需重新登入，登入後導回原頁面
               if (currentRoute && currentRoute.path) {

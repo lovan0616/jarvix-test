@@ -124,11 +124,11 @@ export default {
         },
         {text: this.$t('editing.status'), value: 'state', width: '7.26%'},
         {text: this.$t('editing.countOfTable'), value: 'dataFrameCount', width: '65px'},
-        {text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '65px'},
+        {text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '160px'},
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '140px',
+          width: '200px',
           action: [
             {
               name: this.$t('button.rename'),
@@ -142,19 +142,11 @@ export default {
       ]
     },
     ...mapGetters('dataSource', ['dataSourceList']),
-    isDataSourceBuilding () {
-      return this.$store.getters['dataSource/isDataSourceBuilding']
-    },
     fileUploadSuccess () {
       return this.$store.state.dataManagement.fileUploadSuccess
     }
   },
   watch: {
-    isDataSourceBuilding (value, oldValue) {
-      if (!value && oldValue) {
-        this.fetchData()
-      }
-    },
     fileUploadSuccess (value) {
       if (value) {
         this.fetchData()
@@ -184,7 +176,7 @@ export default {
   methods: {
     fetchData () {
       this.isLoading = true
-      return this.$store.dispatch('dataSource/getDataSourceList')
+      return this.$store.dispatch('dataSource/getDataSourceList', {})
         .then(() => {
           this.isLoading = false
         }).catch(() => {

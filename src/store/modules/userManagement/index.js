@@ -5,10 +5,12 @@ import getters from './getters'
 export default {
   namespaced: true,
   state: {
+    userId: null,
     userName: '',
     accountList: [],
     groupList: [],
-    permission: []
+    permission: [],
+    license: null
   },
   actions,
   mutations,
