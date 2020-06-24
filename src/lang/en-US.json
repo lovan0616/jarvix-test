@@ -1387,7 +1387,7 @@
   },
   "resultDescription": {
     "totalColumnAverage": "The average of <span class='name'>{name}</span> is {value}",
-    "compareToAverage": "<span class='name'>{name}</span> is {compare} than average {percentage}%",
+    "compareToAverage": "<span class='name'>{name}</span> is {percentage}% {compare} average",
     "high": "higher",
     "low": "lower",
     "higher": "above",
