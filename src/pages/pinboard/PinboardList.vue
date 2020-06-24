@@ -1,6 +1,6 @@
 <template>
   <div class="page-pinboard">
-    <h1 class="page-title">{{ isProjectPinboard ? $t('editing.projectPinboard') : $t('editing.pinboard') }}</h1>
+    <h1 class="page-title">{{ isPersonalPinboard ? $t('editing.pinboard') : $t('editing.projectPinboard') }}</h1>
     <div class="page-category">{{ $t('editing.allCategory') }}</div>
     <button 
       class="btn-m btn-default btn-has-icon add-btn" 
@@ -22,7 +22,7 @@
           v-for="boardInfo in pinboardList"
           :key="boardInfo.id"
           :board-info="boardInfo"
-          :is-project-pinboard="isProjectPinboard"
+          :is-personal-pinboard="isPersonalPinboard"
           @showEdit="showEditDialog(boardInfo)"
           @showDelete="showDeleteDialog(boardInfo)"
           @showShare="showShareDialog(boardInfo)"
@@ -137,8 +137,8 @@ export default {
     groupId () {
       return this.$route.params.groupId
     },
-    isProjectPinboard () {
-      return this.groupId !== undefined
+    isPersonalPinboard () {
+      return this.groupId === undefined
     }
   },
   mounted () {
@@ -181,10 +181,10 @@ export default {
     showShareDialog (boardInfo) {
       this.insertBoardData(boardInfo)
       this.isShowShare = true
-      if (this.isProjectPinboard)
-        this.shareLink = `${window.location.origin}/${this.accountId}/${this.groupId}/pinboard/${boardInfo.id}`
-      else
+      if (this.isPersonalPinboard)
         this.shareLink = `${window.location.origin}/${this.accountId}/pinboard/${boardInfo.id}`
+      else
+        this.shareLink = `${window.location.origin}/${this.accountId}/${this.groupId}/pinboard/${boardInfo.id}`
     },
     confirmEdit () {
       this.$validator.validateAll().then(isValidate => {
