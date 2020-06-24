@@ -28,7 +28,7 @@ const router = new Router({
                 // 當前頁面側邊導覽列第一層要顯示哪個模組，layer 就寫到那個模組為止
                 // meta 使用 permission 指定路由權限
                 {
-                  path: '/',
+                  path: 'management',
                   component: () => import('@/pages/management/Index'),
                   children: [
                     {
@@ -45,7 +45,7 @@ const router = new Router({
                       component: () => import('@/pages/userManagement/Index'),
                       name: 'AccountUserManagement',
                       meta: {
-                        layers: ['account', ':account_id', '/'],
+                        layers: ['account', ':account_id', 'management'],
                         permission: ['account_update_user']
                       }
                     },
@@ -54,7 +54,7 @@ const router = new Router({
                       component: () => import('@/pages/accountGroupManagement/AccountGroupList'),
                       name: 'AccountGroupManagement',
                       meta: {
-                        layers: ['account', ':account_id', '/'],
+                        layers: ['account', ':account_id', 'management'],
                         permission: ['account_read_group']
                       }
                     },
@@ -63,7 +63,7 @@ const router = new Router({
                       component: () => import('@/pages/accountGroupManagement/EditAccountGroup'),
                       name: 'CreateAccountGroup',
                       meta: {
-                        layers: ['account', ':account_id', '/'],
+                        layers: ['account', ':account_id', 'management'],
                         accountPermission: ['account_create_group'],
                         isHiddenNav: true
                       }
@@ -73,7 +73,7 @@ const router = new Router({
                       component: () => import('@/pages/accountGroupManagement/EditAccountGroup'),
                       name: 'EditAccountGroup',
                       meta: {
-                        layers: ['account', ':account_id', '/'],
+                        layers: ['account', ':account_id', 'management'],
                         accountPermission: ['account_update_group'],
                         isHiddenNav: true
                       }
@@ -83,7 +83,7 @@ const router = new Router({
                       component: () => import('@/pages/accountInformation/Index'),
                       name: 'AccountInformation',
                       meta: {
-                        layers: ['account', ':account_id', '/'],
+                        layers: ['account', ':account_id', 'management'],
                         permission: ['account_read_user']
                       }
                     },
@@ -93,7 +93,7 @@ const router = new Router({
                       component: () => import('@/pages/functionDescription/Index'),
                       meta: {
                         isMainNav: true,
-                        layers: ['account', ':account_id', '/', 'function-description'],
+                        layers: ['account', ':account_id', 'management', 'function-description'],
                         icon: 'description'
                       }
                     },
@@ -117,8 +117,14 @@ const router = new Router({
                 },
                 {
                   path: 'group',
+                  name: 'group',
                   component: () => import('@/pages/group/Index'),
                   children: [
+                    {
+                      path: 'groupless-guidance',
+                      name: 'PageGrouplessGuidance',
+                      component: () => import('@/components/layout/GrouplessLayout'),
+                    },
                     {
                       path: ':group_id',
                       component: () => import('@/pages/group/Index'),
@@ -261,11 +267,6 @@ const router = new Router({
                       ]
                     },
                   ]
-                },
-                {
-                  path: 'groupless-guidance',
-                  name: 'PageGrouplessGuidance',
-                  component: () => import('@/components/layout/GrouplessLayout'),
                 }
               ]
             }

@@ -8,7 +8,7 @@
         <div class="button-block">
           <router-link
             v-if="showCreateButton()"
-            :to="{ name: 'GroupCreateUser', params: { group_id: $route.params.group_id } }"
+            :to="{ name: 'GroupCreateUser' }"
             class="btn-m btn-default btn-has-icon"
           >
             <svg-icon

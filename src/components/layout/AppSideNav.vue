@@ -27,12 +27,10 @@
         @click="closeSideNav"
       >
         <li class="list__item">
-          <a
-            :class="{ 'active': $route.name === 'PageIndex' }"
+          <router-link
+            :to="accountHomePageRoute()"
             href="javascript:void(0)" 
             class="list__link"
-            exact
-            @click="directToHomePage"
           >
             <svg-icon 
               icon-class="home" 
@@ -40,7 +38,7 @@
             <span class="list__text">
               {{ $t('sideNav.home') }}
             </span>
-          </a>
+          </router-link>
         </li>
         <li class="list__item">
           <router-link
@@ -207,9 +205,8 @@ export default {
     changeAccount(accountId) {
       // TODO: change account feature
     },
-    directToHomePage() {
-      if (this.groupList.length === 0) return this.$router.push({ name: 'PageGrouplessGuidance' })
-      this.$router.push({ name: 'PageIndex', params: { 'group_id': this.getCurrentGroupId } })
+    accountHomePageRoute() {
+      return this.groupList.length === 0 ? { name: 'PageGrouplessGuidance' } : { name: 'PageIndex', params: { 'group_id': this.getCurrentGroupId } }
     }
   }
 }

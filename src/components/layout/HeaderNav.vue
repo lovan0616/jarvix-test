@@ -1,6 +1,9 @@
 <template>
   <nav class="nav-header">
-    <section class="nav-left">
+    <section 
+      v-if="$route.params.group_id"
+      class="nav-left"
+    >
       <div
         v-if="groupName"
         class="nav-item nav-item-dropdown nav-set group-list"
@@ -36,14 +39,14 @@
       </div>
       <template v-if="groupList.length > 0">
         <router-link 
-          :class="{'active': $route.name === 'PageIndex'}"
-          :to="{ name: 'PageIndex', params: { 'group_id': groupId } }"
+          :class="{ 'active': $route.name === 'PageIndex' }"
+          :to="{ name: 'PageIndex' }"
           class="nav-item" 
           exact>{{ $t('nav.index') }}</router-link>
         <!-- FIXME for poc/foxconn_molding -->
         <router-link 
           v-if="isShowAlgorithmBtn" 
-          :to="{ name: 'PageAlgorithmList', params: { 'group_id': groupId } }" 
+          :to="{ name: 'PageAlgorithmList' }" 
           class="nav-item">演算法</router-link>
         <div
           v-if="groupId"
@@ -181,12 +184,15 @@ export default {
   margin-left: 24px;
   display: flex;
   flex: 1;
-  justify-content: space-between;
 
   .nav-left,
   .nav-right {
     display: flex;
     align-items: center;
+  }
+
+  .nav-right {
+    margin: 0 0 0 auto;
   }
 
   .nav-item {

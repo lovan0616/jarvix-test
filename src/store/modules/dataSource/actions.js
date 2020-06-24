@@ -22,7 +22,7 @@ export default {
     }
     commit('setIsInit', true)
   },
-  getDataSourceList({ dispatch, commit, state }, { dataSourceId, dataFrameId }) {
+  getDataSourceList({ dispatch, commit, state, rootGetters }, { dataSourceId, dataFrameId }) {
     return getDataSourceList().then(res => {
       commit('setDataSourceList', res)
       // 找出第一個可以使用的 dataSourceId
@@ -35,7 +35,8 @@ export default {
           const dataSourceId = firstEnableDataSourceIndex > -1 ? res[firstEnableDataSourceIndex].id : null
           dispatch('changeDataSourceById', { dataSourceId, dataFrameId: 'all' })
           if (firstEnableDataSourceIndex < 0) dispatch('handleEmptyDataSource')
-          router.push('/')
+          const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
+          router.push({ name: 'PageIndex', params: { 'group_id': currentGroupId } })
 
           Message({
             message: i18n.t('message.dataSourceNotExist'),

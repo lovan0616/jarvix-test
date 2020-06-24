@@ -4,7 +4,7 @@
       <h1 class="title">演算法管理</h1>
       <div class="bread-crumb">
         <router-link
-          :to="{name: 'PageAlgorithmList'}"
+          :to="{ name: 'PageAlgorithmList' }"
           class="title-link"
         >演算法</router-link>
         <span class="divider">/</span>預測性維修
@@ -338,7 +338,7 @@ export default {
   },
   methods: {
     back () {
-      this.$router.push('/algorithm')
+      this.$router.push({ name: 'PageAlgorithmList' })
     }
   },
 }
