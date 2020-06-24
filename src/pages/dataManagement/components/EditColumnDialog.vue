@@ -84,7 +84,10 @@
                     <div 
                       class="link"
                       @click="removeAlias(aliasIndex)"
-                    >{{ $t('button.remove') }}</div>
+                    >
+                      <svg-icon 
+                        icon-class="ban" />
+                    </div>
                   </div>
                   <button 
                     class="btn-m btn-secondary btn-add"
@@ -195,7 +198,7 @@ export default {
   },
   methods: {
     fetchData () {
-      getDataFrameColumnInfoById(this.tableId).then(response => {
+      getDataFrameColumnInfoById(this.tableId, true, false).then(response => {
         this.columnList = response
       })
       
@@ -214,7 +217,7 @@ export default {
     },
     edit (columnInfo) {
       this.tempRowInfo.dataColumnId = columnInfo.id
-      this.tempRowInfo.alias = columnInfo.primaryAlias
+      this.tempRowInfo.alias = columnInfo.aliasList
       this.tempRowInfo.columnStatsType = JSON.parse(JSON.stringify(columnInfo.statsType))
     },
     updateDataSource () {
