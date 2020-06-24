@@ -88,6 +88,7 @@
 </template>
 <script>
 import AskHelperDialog from './AskHelperDialog'
+import { mapState } from 'vuex'
 
 export default {
   name: 'AskBlock',
@@ -103,11 +104,13 @@ export default {
     }
   },
   computed: {
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
-    appQuestion () {
-      return this.$store.state.dataSource.appQuestion
+    ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
+    tokenList () {
+      let tokens = []
+      for (let i = 0; i < this.userQuestion.length; i++) {
+        console.log(this.userQuestion.charAt[i])
+      }
+      return tokens
     },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
@@ -126,8 +129,16 @@ export default {
     }
   },
   watch: {
-    userQuestion () {
+    userQuestion (val) {
       if (document.activeElement === this.$refs.questionInput) {
+        // 處理問句字串
+        for (let i = 0; i < val.length; i++) {
+          for (let j = i + 1; j <= val.length; j++) {
+            let currentText = val.slice(i, j)
+            console.log(currentText, 'currentText')
+          }
+          
+        }
         this.showHistory()
       }
     },
