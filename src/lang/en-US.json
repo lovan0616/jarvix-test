@@ -89,7 +89,8 @@
     "fileTypeNotSupported": "{fileType} file format is not supported",
     "goToGroupManagement": "Go to account project management",
     "switchToGroupBySys": "The system has switched you to a group: {groupName}",
-    "youAreGroupless": "You are currently not affiliated with a group"
+    "youAreGroupless": "You are currently not affiliated with a group",
+    "switching": "Switching"
   },
   "guiding": {
     "prevStep": "Prev Step",
@@ -590,7 +591,7 @@
     "median": "Median"
   },
   "aggregatedValue": {
-    "mean": "Average",
+    "mean": "average",
     "count": "Total Quantity",
     "sum": "Total Sum",
     "max": "Max",
@@ -1385,10 +1386,12 @@
     ]
   },
   "resultDescription": {
-    "high": "High",
-    "low": "Low",
-    "higher": "Higher",
-    "lower": "Below",
+    "totalColumnAverage": "The average of <span class='name'>{name}</span> is {value}",
+    "compareToAverage": "<span class='name'>{name}</span> is {compare} than average {percentage}%",
+    "high": "higher",
+    "low": "lower",
+    "higher": "above",
+    "lower": "below",
     "displayChart": "Display Chart",
     "displayData": "Display Data",
     "predictionInfo": "PredictionInfo",
@@ -1402,7 +1405,7 @@
     "dataInsight": "Data Insight",
     "keyInsight": "Key Insight",
     "total": "Total",
-    "is": "We",
+    "is": "is",
     "dataRowCount": "DataRowCount",
     "totalPercentage": "TotalPercentage",
     "trendInsight": "Trend Insight",
@@ -1468,7 +1471,7 @@
     "target": "Target",
     "value": "Value",
     "feature": "Custom Field",
-    "average": "Average"
+    "average": "average"
   },
   "columnSummary": {
     "avg": "Average",

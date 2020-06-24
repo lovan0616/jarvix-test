@@ -23,8 +23,16 @@
             @click="drillDown(tableInfo.link.question)"
           >
             <div class="abstract-info">
-              <div class="column-title">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</div>
-              <div class="sub-title">{{ rootCauseInfo.name }}{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}{{ $t('aggregatedValue.mean') }}</div>
+              <el-tooltip
+                :content="tableInfo.columnName + tableInfo.columnValue"
+              >
+                <div class="column-title">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</div>
+              </el-tooltip>
+              <div class="sub-title">
+                <span class="sub-title__text">{{ rootCauseInfo.name }}</span>
+                <span class="sub-title__text">{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}</span>
+                <span class="sub-title__text">{{ $t('aggregatedValue.mean') }}</span>
+              </div>
               <div
                 :class="{'is-special': tableInfo.unusual}"
                 class="amount-block"
@@ -37,7 +45,21 @@
               </div>
             </div>
             <div class="detail-info">
-              <div class="title">{{ $t('resultDescription.total') + rootCauseInfo.name + $t('aggregatedValue.mean') + $t('resultDescription.is') + tableInfo.totalAverage }}，<span class="column-name">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</span>{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}{{ $t('aggregatedValue.mean') + Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
+              <div class="detail-info__list">
+                <p 
+                  class="detail-info__list__item" 
+                  v-html="$t('resultDescription.totalColumnAverage', {
+                    name: rootCauseInfo.name,
+                    value: tableInfo.totalAverage
+                })"/>
+                <p 
+                  class="detail-info__list__item" 
+                  v-html="$t('resultDescription.compareToAverage', {
+                    name: tableInfo.columnName + tableInfo.columnValue,
+                    compare: tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower'),
+                    percentage: Math.abs(tableInfo.diffAverageRate)
+                })"/>
+              </div>
               <div class="info-block">
                 <div class="single-info">
                   <div class="info-label">{{ $t('resultDescription.dataRowCount') }}</div>
@@ -176,10 +198,21 @@ export default {
       padding: 0 24px;
       width: 32%;
 
+      .column-title {
+        @include text-hidden
+      }
+
       .sub-title {
         font-size: 14px;
         line-height: 26px;
         margin-bottom: 6px;
+        display: flex;
+        justify-content: center;
+        [lang="en"] & {
+          &__text:not(:last-child) {
+            margin-right: 4px;
+          }
+        }
       }
       .amount-block {
         color: $theme-color-primary;
@@ -215,8 +248,23 @@ export default {
       padding: 0 24px;
       flex: 1;
 
-      .title {
+      .detail-info__list {
         margin-bottom: 14px;
+        &__item {
+          margin: 0;
+          display: flex;
+          &::before {
+            content: '-';
+            margin-right: 8px;
+            & + .name {
+              padding-left: 0;
+            }
+          }
+          >>> .name {
+            padding: 0 8px;
+            color: $theme-color-warning;
+          }
+        }
       }
     }
     .info-block {

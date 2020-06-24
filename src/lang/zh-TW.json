@@ -1386,6 +1386,8 @@
     ]
   },
   "resultDescription": {
+    "totalColumnAverage": "整體<span class='name'>{name}</span><span>平均值為{value}",
+    "compareToAverage": "<span class='name'>{name}</span>{compare}於平均值{percentage}%",
     "high": "高",
     "low": "低",
     "higher": "高於",
