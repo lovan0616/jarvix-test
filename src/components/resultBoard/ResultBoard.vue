@@ -189,6 +189,7 @@ export default {
         return false
       }
       // 取得最新的 pinboardList
+      console.log(this.isPersonalPinboard)
       if (this.isPersonalPinboard) {
         this.$store.dispatch('pinboard/getPinboardList').then(() => {
           this.showPinboardList = true
