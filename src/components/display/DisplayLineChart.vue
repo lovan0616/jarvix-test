@@ -181,6 +181,7 @@ export default {
         config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
         config.yAxis.name = this.title.yAxis[0].display_name
       }
+      config.yAxis.scale = true
 
       // 數量大的時候出現 scroll bar
       if (this.dataset.index.length > 10) {

@@ -85,7 +85,7 @@ import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState, mapMutations } from 'vuex'
 import { switchGroup } from '@/API/User'
 
 export default {
@@ -98,7 +98,6 @@ export default {
   },
   data () {
     return {
-      isShowGroup: false,
       isLoading: false,
     }
   },
@@ -138,6 +137,7 @@ export default {
     this.setIsShowAlgorithmBtn()
   },
   methods: {
+    ...mapMutations(['updateAppLoadingStatus']),
     setIsShowAlgorithmBtn () {
       let preSetting = localStorage.getItem('isShowAlgorithmBtn')
       if (preSetting !== 'true') {
@@ -145,23 +145,26 @@ export default {
       }
     },
     changeGroup (groupId) {
+      const currentAccountId = this.$route.params.account_id
+      // 更新全域狀態
+      this.updateAppLoadingStatus(true)
       this.isLoading = true
       switchGroup({
-        accountId: this.getCurrentAccountId,
+        accountId: currentAccountId,
         groupId: groupId
       })
         .then(() => this.$store.dispatch('userManagement/getUserInfo'))
         .then(() => {
-            // 先清空，因為新群組有可能沒有 dataSource
-            this.$store.commit('dataSource/setDataSourceId', null)
-            // update data source list
-            return this.$store.dispatch('dataSource/getDataSourceList', {})
+          // 先清空，因為新群組有可能沒有 dataSource
+          this.$store.commit('dataSource/setDataSourceId', null)
+          // update data source list
+          return this.$store.dispatch('dataSource/getDataSourceList', {})
         })
         .then(() => {
-          if (this.$route.name !== 'PageIndex') this.$router.push({ name: 'PageIndex', params: { 'group_id': groupId } })
-          this.isShowGroup = false
-          this.isLoading = false
-        }).catch(() => {
+          if (this.$route.name !== 'PageIndex') this.$router.push({ name: 'PageIndex' })
+        })
+        .finally(() => {
+          this.updateAppLoadingStatus(false)
           this.isLoading = false
         })
     },

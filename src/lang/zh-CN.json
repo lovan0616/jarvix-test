@@ -89,7 +89,8 @@
     "fileTypeNotSupported": "不支援 {fileType} 档案格式",
     "goToGroupManagement": "前往帐户专案管理",
     "switchToGroupBySys": "系统已将您切换至群組：{groupName}",
-    "youAreGroupless": "您目前无隶属群组"
+    "youAreGroupless": "您目前无隶属群组",
+    "switching": "切换中"
   },
   "guiding": {
     "prevStep": "上一步",

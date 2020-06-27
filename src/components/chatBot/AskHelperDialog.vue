@@ -25,6 +25,7 @@
         <column-info/>
       </el-tab-pane>
       <el-tab-pane
+        v-if="$store.state.setting.locale.includes('zh')"
         :label="$t('askHelper.tabSample')"
         :name="$t('askHelper.tabSample')"
       >

@@ -252,7 +252,19 @@ export function deleteUserAccount (id, accountId) {
  */
 export function switchGroup (accountInfo) {
   return request({
-    url: `/auth/checkoutGroup`,
+    url: `/group/switch`,
+    method: 'POST',
+    data: accountInfo
+  })
+}
+
+/**
+ * 切換帳戶
+ * @param {Number} accountInfo.accountId - 欲切換的帳戶 ID
+ */
+export function switchAccount(accountInfo) {
+  return request({
+    url: `/account/switch`,
     method: 'POST',
     data: accountInfo
   })

@@ -14,6 +14,7 @@
 <script>
 import FilterInfo from '@/components/display/FilterInfo'
 import QuickStart from './components/QuickStart'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PageIndex',
@@ -28,6 +29,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
@@ -66,11 +68,19 @@ export default {
         && (String(queryDataFrameId) === String(this.dataFrameId))
       ) return
 
+
       // 當前無 datasource 時，去除 query string
-      this.$router.replace(!this.dataSourceId ? '/' : {
+      this.$router.replace({
+        name: 'PageIndex',
+        params: {
+          'account_id': this.getCurrentAccountId,
+          'group_id': this.getCurrentGroupId
+        },
         query: {
-          dataSourceId: this.dataSourceId,
-          dataFrameId: this.dataFrameId
+          ...(this.dataSourceId && { 
+            dataSourceId: this.dataSourceId,
+            dataFrameId: this.dataFrameId
+          }),
         }
       })
     },

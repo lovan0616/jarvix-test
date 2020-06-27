@@ -15,6 +15,7 @@ html, body {
 
 h1 {
   @extend %h1;
+  letter-spacing: var(--theme-letter-spacing-wide);
 }
 
 p {
