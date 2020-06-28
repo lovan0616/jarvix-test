@@ -201,7 +201,7 @@ export default {
   },
   computed: {
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   mounted () {

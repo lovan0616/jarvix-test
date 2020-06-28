@@ -8,7 +8,9 @@ module.exports = {
     "postcss-cssnext": {
       features: {
         customProperties: {
-          warnings: true
+          // 先把不需要的 warnings 關掉
+          // https://github.com/angular/angular-cli/issues/7991
+          warnings: false
         }
       }
     },
