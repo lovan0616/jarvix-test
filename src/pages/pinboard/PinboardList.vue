@@ -203,8 +203,7 @@ export default {
         if (!isValidate) return
         let promise
         if(this.isPersonalPinboard) {
-          this.tempEditInfo.userId = this.accountId
-          console.log(this.tempEditInfo)
+          this.tempEditInfo.accountId = this.accountId
           promise = this.$store.dispatch('pinboard/updatePinboardName', this.tempEditInfo)
         } else {
           this.tempEditInfo.groupId = this.groupId
@@ -217,7 +216,7 @@ export default {
       })
     },
     confirmDelete () {
-      this.$store.dispatch('pinboard/deletePinboard', this.tempEditInfo.id).then(() => {
+      this.$store.dispatch('pinboard/deletePinboard', { accountId: this.accountId, id: this.tempEditInfo.id }).then(() => {
         this.isShowDelete = false
       })
     },

@@ -55,15 +55,19 @@ export default {
     this.boardList.forEach((element, index) => {
       if (!element.isDeleted) {
         this.tmpList.push({
-          id: element.id,
+          question: element.question,
+          id: element.pinboardId,
           order: index
         })
       }
     })
   },
   updated () {
-    this.$store.dispatch('pinboard/sortPinboard', this.$route.params.id, this.tmpList).then(() => {
+    this.tmpList.forEach((element, index) => {
+      element.order = index
     })
+    // this.$store.dispatch('pinboard/sortPinboard', this.$route.params.id, this.tmpList).then(() => {
+    // })
   },
 	methods: {
 		closeDialog () {

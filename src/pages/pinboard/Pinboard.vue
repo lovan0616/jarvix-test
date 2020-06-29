@@ -179,8 +179,8 @@ export default {
     },
     unPin (pinBoardId) {
       this.boardList.forEach(element => {
-        if(element.pinBoardId === pinBoardId)
-          element.isShow = true
+        if(element.pinboardId === pinBoardId)
+          element.isDeleted = true
       })
     }
   },

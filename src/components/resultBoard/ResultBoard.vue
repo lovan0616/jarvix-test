@@ -163,6 +163,9 @@ export default {
     currentResultId () {
       return this.$store.state.result.currentResultId
     },
+    accountId () {
+      return this.$route.params.accountId
+    },
     groupId () {
       return this.$route.params.groupId
     },
@@ -198,7 +201,7 @@ export default {
     },
     selectPinboard (id) {
       this.isLoading = true
-      this.$store.dispatch('pinboard/pinToBoard', {folderId: id, resultId: this.currentResultId})
+      this.$store.dispatch('pinboard/pinToBoard', {folderId: id, resultId: this.currentResultId, name: "", userId: 0})
         .then(res => {
           this.pinBoardId = res.id
           this.isLoading = false
@@ -217,30 +220,31 @@ export default {
       this.showPinboardList = false
     },
     unPin () {
-      this.$store.dispatch('pinboard/unPinById', this.pinBoardId)
-        .then(res => {
-          this.$emit('unPin', this.pinBoardId)
-          if (this.isPinboardPage) {
-            // 這邊是為了 transition 所以先抓高度
-            let elem = document.getElementById(this.pinBoardId)
-            elem.style.height = elem.offsetHeight + 'px'
-            window.setTimeout(() => {
-              elem.style.height = 0
-              elem.style.overflow = 'hidden'
-              elem.style.padding = 0
-              elem.style.margin = 0
-            }, 300)
-            window.setTimeout(() => {
-              this.isLoading = false
-              this.$store.commit('pinboard/deletePinboardById', this.pinBoardId)
-            }, 900)
-          } else {
-            this.isLoading = false
-            this.pinBoardId = null
-          }
-        }).catch(() => {
-          this.isLoading = false
-        })
+      this.$emit('unPin', this.pinBoardId)
+      // this.$store.dispatch('pinboard/unPinById', this.pinBoardId)
+      //   .then(res => {
+      //     if (this.isPinboardPage) {
+      //       // 這邊是為了 transition 所以先抓高度
+      //       let elem = document.getElementById(this.pinBoardId)
+      //       elem.style.height = elem.offsetHeight + 'px'
+      //       window.setTimeout(() => {
+      //         elem.style.height = 0
+      //         elem.style.overflow = 'hidden'
+      //         elem.style.padding = 0
+      //         elem.style.margin = 0
+      //       }, 300)
+      //       window.setTimeout(() => {
+      //         this.isLoading = false
+      //         this.$store.commit('pinboard/deletePinboardById', { accountId: this.accountId, id: this.pinBoardId })
+      //       }, 900)
+      //       this.$emit('unPin', this.pinBoardId)
+      //     } else {
+      //       this.isLoading = false
+      //       this.pinBoardId = null
+      //     }
+      //   }).catch(() => {
+      //     this.isLoading = false
+      //   })
     },
     showShareDialog () {
       this.isShowShareDialog = true
