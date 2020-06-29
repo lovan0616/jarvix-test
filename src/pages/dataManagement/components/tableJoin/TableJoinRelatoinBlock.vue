@@ -37,7 +37,12 @@
       v-if="!isEditing"
       class="title-block"
     >
-      <h3 class="table-name">{{ relationInfo.name }}</h3>
+      <el-tooltip
+        :content="relationInfo.name"
+        placement="bottom"
+      >
+        <h3 class="table-name">{{ relationInfo.name }}</h3>
+      </el-tooltip>
       <h6 class="join-type">
         {{ $t('editing.joinType') }}
         <span
@@ -235,7 +240,7 @@ export default {
   },
   computed: {
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   methods: {
@@ -423,6 +428,8 @@ export default {
 
   .title-block {
     display: flex;
+    justify-content: space-between;
+    padding-right: 80px;
 
     .table-name,
     .join-type {
@@ -433,7 +440,9 @@ export default {
 
     .table-name {
       font-size: 18px;
-      width: 290px;
+      flex: 1;
+      @include text-hidden;
+      margin-right: 16px;
     }
 
     .join-type {

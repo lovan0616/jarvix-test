@@ -112,7 +112,6 @@ export default {
       }
       // set histogram yAxis
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramConfig.yAxis}
-      chartAddon.yAxis.scale = false
       chartAddon.yAxis.splitLine = { show: false }
       chartAddon.yAxis.axisLabel.show = false
 

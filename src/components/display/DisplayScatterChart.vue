@@ -37,7 +37,7 @@
 <script>
 import chartVariable from '@/styles/chart/variables.scss'
 import { chartOptions } from '@/components/display/common/chart-addon.js'
-import { getDrillDownTool } from '@/components/display/common/addons.js'
+import { getDrillDownTool, parallelZoomIn, verticalZoomIn } from '@/components/display/common/addons.js'
 let scatterChartConfig = {
   xAxisSplitLine: {
     show: false
@@ -110,6 +110,66 @@ export default {
       chartAddon.toolbox.feature.dataZoom.show = true
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
       chartAddon.yAxis.name = this.title.yAxis[0].display_name
+      
+      /**
+       * 處理 dataZoom
+       **/
+      // 找出 X 的最大值和最小值
+      let minX = this.dataset.data[0][0]
+      let maxX = this.dataset.data[0][0]
+      let minY = this.dataset.data[0][1]
+      let maxY = this.dataset.data[0][1]
+      this.dataset.data.forEach(element => {
+        if (element[0] !== null) {
+          if (minX === null) minX = element[0]
+          if (maxX === null) maxX = element[0]
+          maxX = element[0] > maxX ? element[0] : maxX
+          minX = element[0] < minX ? element[0] : minX
+        }
+        if (element[1] !== null) {
+          if (minY === null) minY = element[1]
+          if (maxY === null) maxY = element[1]
+          maxY = element[1] > maxY ? element[1] : maxY
+          minY = element[1] < minY ? element[1] : minY
+        }
+      })
+
+      /**
+       * 處理 X 軸
+       */
+      let displayXaxisMin
+      let displayXaxisMax
+      const parallelZoomConfig = parallelZoomIn()
+      let xAxisBuffer = (maxX - minX) / 2
+      let xAxisPadding = (maxX - minX) / 10
+
+      displayXaxisMax = maxX + xAxisBuffer < 0 ? 0 : maxX + xAxisBuffer
+      displayXaxisMin = minX - xAxisBuffer > 0 ? 0 : minX - xAxisBuffer
+      let xAxisDisplayRange = displayXaxisMax - displayXaxisMin
+      parallelZoomConfig[0].start = (minX - xAxisPadding - displayXaxisMin) * 100 / xAxisDisplayRange
+      parallelZoomConfig[0].end = (maxX + xAxisPadding - displayXaxisMin) * 100 / xAxisDisplayRange
+
+      /**
+       * 處理 Y 軸
+       */
+      let displayYaxisMin
+      let displayYaxisMax
+      const verticalZoomConfig = verticalZoomIn()
+      let yAxisBuffer = (maxY - minY) / 2
+      let yAxisPadding = (maxY - minY) / 10
+
+      displayYaxisMax = maxY + yAxisBuffer < 0 ? 0 : maxY + yAxisBuffer
+      displayYaxisMin = minY - yAxisBuffer > 0 ? 0 : minY - yAxisBuffer
+      let yAxisDisplayRange = displayYaxisMax - displayYaxisMin
+      verticalZoomConfig[0].start = (minY - yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
+      verticalZoomConfig[0].end = (maxY + yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
+
+      chartAddon.xAxis.max = this.roundNumber(displayXaxisMax, 4)
+      chartAddon.xAxis.min = this.roundNumber(displayXaxisMin, 4)
+      chartAddon.yAxis.max = this.roundNumber(displayYaxisMax, 4)
+      chartAddon.yAxis.min = this.roundNumber(displayYaxisMin, 4)
+      chartAddon.dataZoom = [...parallelZoomConfig, ...verticalZoomConfig]
+
       scatterOptions.chartData.data = this.dataset.data
       scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)
       chartAddon.series[0] = scatterOptions.chartData
@@ -144,31 +204,22 @@ export default {
       if (this.formula) {
         let lineData = []
         let expression = ''
-        // 找出 X 的最大值和最小值
-        let minX = this.dataset.data[0][0]
-        let maxX = this.dataset.data[0][0]
-        this.dataset.data.forEach(element => {
-          if (element[0] === null) return
-          if (minX === null) minX = element[0]
-          if (minX === null) minX = element[0]
-          maxX = element[0] > maxX ? element[0] : maxX
-          minX = element[0] < minX ? element[0] : minX
-        })
-
+        let interval = this.floatSub(maxX, minX) / this.correlationLinePoint
         if (this.formula.length === 2) {
           // ax + b
           let offset = Number((this.formula[0]).toFixed(4))
           let gradient = Number((this.formula[1]).toFixed(4))
-          let minY = this.roundNumber(gradient * minX + offset, 4)
-          let maxY = this.roundNumber(gradient * maxX + offset, 4)
+          // 迴歸線點
+          for (let i = 0; i < this.correlationLinePoint; i++) {
+            let xPoint = minX + interval * i
+            lineData.push([xPoint, this.roundNumber(gradient * xPoint + offset, 4)])
+          }
           expression = `y = ${gradient}x ${offset > 0 ? '+' : '-'} ${Math.abs(offset)}`
-          lineData = [[minX, minY], [maxX, maxY]]
         } else {
           // ax^2 + bx + c
           let offset = this.formula[0]
           let firstDegree = this.formula[1]
           let secondDegree = this.formula[2]
-          let interval = this.floatSub(maxX, minX) / this.correlationLinePoint
           // 迴歸線點
           for (let i = 0; i < this.correlationLinePoint; i++) {
             let xPoint = minX + interval * i

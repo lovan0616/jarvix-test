@@ -1,5 +1,8 @@
 <template>
-  <div id="app">
+  <div 
+    id="app"
+    :lang="getLang"
+  >
     <div class="app-bg"/>
     <transition 
       name="fade" 
@@ -27,6 +30,9 @@ export default {
   computed: {
     locale () {
       return this.$store.state.setting.locale
+    },
+    getLang () {
+      return this.locale.split('-')[0]
     }
   },
   watch: {

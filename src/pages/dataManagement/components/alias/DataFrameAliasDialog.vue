@@ -83,7 +83,7 @@ export default {
       return this.isLoading ? this.$t('editing.loading') : this.$t('editing.isSaving')
     },
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   mounted () {

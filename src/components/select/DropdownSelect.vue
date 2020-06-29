@@ -69,10 +69,12 @@ export default {
 
     .dropdown-flex{
         height: 40px;
-        width: 160px;
+        min-width: 160px;
+        padding-right: 12px;
         align-items: center;
         display: flex;
         color: #a7a7a7;
+        white-space: nowrap;
     }
 
     .dropdown-flex:hover{
@@ -85,6 +87,7 @@ export default {
 
     .dropdown-icon{
         margin: 12px;
+        flex-shrink: 0;
     }
 }
 

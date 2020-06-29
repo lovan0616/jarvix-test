@@ -139,7 +139,7 @@ export default {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   }
 }
@@ -199,10 +199,6 @@ export default {
     .el-input__inner {
       padding-left: 0;
     }
-  }
-
-  .el-select-dropdown__item {
-    padding-left: 0;
   }
 }
 .remote-connection-form {

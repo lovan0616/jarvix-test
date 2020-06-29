@@ -17,7 +17,12 @@
           ><svg-icon 
             icon-class="plus" 
             class="icon"/>{{ $t('button.addColumnSet') }}</button>
-          <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
+          <el-tooltip
+            :content="dataFrameInfo.primaryAlias"
+            placement="bottom"
+          >
+            <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
+          </el-tooltip>
         </div>
       </div>
       <spinner 
@@ -129,11 +134,13 @@ export default {
     }
 
     .add-btn {
+      flex-shrink: 0;
       margin-right: 16px;
     }
 
     .data-frame-name {
       font-size: 14px;
+      @include text-hidden
     }
 
     .remark-text {

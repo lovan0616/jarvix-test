@@ -411,7 +411,7 @@ export default {
               return {
                 value: role.id,
                 key: role.name,
-                name: this.getZhRoleName(role.name)
+                name: this.getLocaleName(role.name)
               }
             })
         })
@@ -505,7 +505,7 @@ export default {
     showChangeRole (user, hasPermission) {
       if (!hasPermission) return
 
-      const option = this.roleOptions.find(option => option.name === this.getZhRoleName(user.role)) || user.role
+      const option = this.roleOptions.find(option => option.name === this.getLocaleName(user.role)) || user.role
       this.currentUser.roleId = option.value
       this.currentId = user.id
       this.isShowChangeRole = true
@@ -548,7 +548,7 @@ export default {
     toCamelCase (str) {
       return str.replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
     },
-    getZhRoleName (accountRole) {
+    getLocaleName (accountRole) {
       return this.$t(`userManagement.${this.toCamelCase(accountRole)}`)
     },
     checkExistingUsers () {

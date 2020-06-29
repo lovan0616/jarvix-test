@@ -91,7 +91,8 @@
     "goToGroupManagement": "前往帐户专案管理",
     "switchToGroupBySys": "系统已将您切换至群組：{groupName}",
     "youAreGroupless": "您目前无隶属群组",
-    "pinboardSuccess": "钉板成功"
+    "pinboardSuccess": "钉板成功",
+    "switching": "切换中"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -350,6 +351,7 @@
     "etlSetting": "资料清洗设定",
     "remarkToSave": "异动内容须保存",
     "selectColumn": "使用",
+    "skipColumn": "不使用",
     "advance": "进阶",
     "advanceSetting": "进阶设定",
     "backToDataFrame": "返回资料表",

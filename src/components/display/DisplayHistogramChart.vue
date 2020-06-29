@@ -162,7 +162,6 @@ export default {
       chartAddon.xAxis.max = allSameValue ? newData[0] * 2 : max
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramChartConfig.yAxis}
-      chartAddon.yAxis.scale = false
       chartAddon.yAxis.name = this.title.yAxis[0].display_name
 
       histogramChartConfig.chartData.renderItem = this.renderItem

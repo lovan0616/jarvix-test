@@ -8,12 +8,12 @@
       <div 
         v-if="accountList && accountList.length > 0" 
         class="sidenav__account">
-        <!-- TODO: 串接 change account API 時須改：:data-list="accountList"  -->
         <custom-dropdown-select
-          :data-list="[]"
+          :data-list="accountListData()"
           :selected-id="getCurrentAccountId"
+          :is-loading="isLoading"
           trigger="click"
-          @select="changeAccount"
+          @select="switchAccount"
         >
           <template #display>
             <div class="dropdown__badge">
@@ -95,6 +95,7 @@
         v-if="isShowLanguage"
         :title="$t('editing.languageSetting')"
         :button="$t('button.change')"
+        :is-loading="isLoading"
         :show-both="true"
         @closeDialog="isShowLanguage = false"
         @confirmBtn="changeLang"
@@ -124,7 +125,8 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import SySelect from '@/components/select/SySelect'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { switchAccount, updateLocale } from '@/API/User'
 
 export default {
   name: 'AppSideNav',
@@ -139,11 +141,12 @@ export default {
       isShowLanguage: false,
       isShowLogout: false,
       selectedLanguage: null,
+      isLoading: false
     }
   },
   computed: {
     ...mapState(['isShowFullSideNav']),
-    ...mapState('userManagement', ['accountList']),
+    ...mapState('userManagement', ['accountList', 'groupList']),
     ...mapGetters('userManagement', ['getCurrentAccountName', 'getCurrentAccountId', 'hasPermission']),
     currentAccountName() {
       const fullName = this.getCurrentAccountName
@@ -152,7 +155,7 @@ export default {
     },
     settingList () {
       return [
-        {icon: 'language', title: 'editing.languageSetting', dialogName: 'isShowLanguage'},
+        {icon: 'language', title: 'lang', dialogName: 'isShowLanguage'},
         {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
       ]
     },
@@ -172,14 +175,22 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['updateSideNavStatus']),
+    ...mapMutations(['updateSideNavStatus', 'updateAppLoadingStatus']),
+    ...mapMutations('dataSource', ['setDataSourceList', 'setDataSourceId']),
+    ...mapActions('dataSource', ['handleEmptyDataSource', 'getDataSourceList']),
+    ...mapActions('userManagement', ['getUserInfo']),
     switchDialogName (dialog) {
       this[dialog] = true
     },
     changeLang () {
-      this.$store.commit('setting/setLocale', this.selectedLanguage)
-      this.isShowLanguage = false
-      this.closeSideNav()
+      this.isLoading = true
+      updateLocale(this.selectedLanguage)
+        .then(() => this.$store.commit('setting/setLocale', this.selectedLanguage))
+        .catch(() => {})
+        .finally(() => {
+          this.isShowLanguage = false
+          this.isLoading = false
+        })
     },
     langOnSelected (item) {
       this.selectedLanguage = item
@@ -195,8 +206,42 @@ export default {
     closeSideNav() {
       if(this.isShowFullSideNav) this.updateSideNavStatus(false)
     },
-    changeAccount(accountId) {
-      // TODO: change account feature
+    accountListData () {
+      if (!this.accountList) return []
+      return this.accountList
+        .map(account => ({
+          id: account.id,
+          name: account.name
+        }))
+        .sort((accountOne, accountTwo) => (accountOne.name.toLowerCase() > accountTwo.name.toLowerCase()) ? 1 : -1) 
+    },
+    switchAccount(accountId) {
+      // 更新全域狀態
+      this.updateAppLoadingStatus(true)
+      this.isLoading = true
+      switchAccount({ accountId })
+        .then(() => this.getUserInfo())
+        .then(() => {
+            // 處理帳戶下沒有群組的狀況
+            if (this.groupList.length === 0) {
+              this.setDataSourceList([])
+              return this.handleEmptyDataSource()
+            } 
+
+            // 先清空，因為新群組有可能沒有 dataSource
+            this.setDataSourceId(null)
+            
+            // 取得新的列表
+            return this.getDataSourceList({})
+        })
+        .then(() => {
+          if (this.groupList.length === 0) return this.$router.push({ name: 'PageGrouplessGuidance' })
+          if (this.$route.name !== 'PageIndex') this.$router.push({ name: 'PageIndex' })
+        })
+        .finally(() => {
+          this.updateAppLoadingStatus(false)
+          this.isLoading = false
+        })
     }
   }
 }
