@@ -1,5 +1,6 @@
 {
   "lang": "English",
+  "interpolation": "{interpolation}",
   "nav": {
     "index": "Intellignet Analysis",
     "pinboard": "Pinboard",
@@ -130,7 +131,7 @@
     "dataDisable": "Unable to use",
     "newData": "New Data",
     "choiceDataTypeFirst": "Please select the data type first",
-    "confirmDeleteNTables": "Are you sure you want to delete the following tables?",
+    "confirmDeleteNTables": "Are you sure you want to delete the following table?",
     "describeDeleteNTables": "Delete process will process data. During this period, you can still browse all data sources, but you cannot add, delete, etc. any data management operations.",
     "editTable": "Edit Table",
     "editTableColumn": "Edit Table Column",
@@ -1386,8 +1387,8 @@
     ]
   },
   "resultDescription": {
-    "totalColumnAverage": "The average of <span class='name'>{name}</span> is {value}",
-    "compareToAverage": "<span class='name'>{name}</span> is {percentage}% {compare} average",
+    "totalColumnAverage": "The average of {0} is {1}",
+    "compareToAverage": "{0} is {1} {2} average",
     "high": "higher",
     "low": "lower",
     "higher": "above",

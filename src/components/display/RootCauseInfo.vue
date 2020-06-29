@@ -43,19 +43,25 @@
             </div>
             <div class="detail-info">
               <div class="detail-info__list">
-                <p 
+                <i18n
+                  :for="['interpolation', 'interpolation']"
+                  path="resultDescription.totalColumnAverage"
+                  tag="pre"
                   class="detail-info__list__item" 
-                  v-html="$t('resultDescription.totalColumnAverage', {
-                    name: rootCauseInfo.name,
-                    value: tableInfo.totalAverage
-                })"/>
-                <p 
+                >
+                  <span class="text name">{{ $t('interpolation', { interpolation: rootCauseInfo.name }) }}</span>
+                  <span class="text">{{ $t('interpolation', { interpolation: tableInfo.totalAverage }) }}</span>
+                </i18n>
+                <i18n
+                  :for="['interpolation', 'interpolation', 'interpolation']"
+                  path="resultDescription.compareToAverage"
+                  tag="pre"
                   class="detail-info__list__item" 
-                  v-html="$t('resultDescription.compareToAverage', {
-                    name: tableInfo.columnName + tableInfo.columnValue,
-                    compare: tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower'),
-                    percentage: Math.abs(tableInfo.diffAverageRate)
-                })"/>
+                >
+                  <span class="text name">{{ $t('interpolation', { interpolation: tableInfo.columnName + tableInfo.columnValue }) }}</span>
+                  <span class="text percentage">{{ $t('interpolation', { interpolation: Math.abs(tableInfo.diffAverageRate) + '%' }) }}</span>
+                  <span class="text">{{ $t('interpolation', { interpolation: tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }) }}</span>
+                </i18n>
               </div>
               <div class="info-block">
                 <div class="single-info">
@@ -185,7 +191,7 @@ export default {
         color: $theme-color-warning;
       }
       .detail-info .detail-info__list .detail-info__list__item {
-        >>> .name {
+        .name {
           color: $theme-color-warning;
         }
       }
@@ -221,6 +227,9 @@ export default {
           }
         }
       }
+      .amount-block {
+        color: $theme-color-primary;
+      }
       .count {
         font-size: 30px;
         line-height: 1;
@@ -252,13 +261,19 @@ export default {
         &__item {
           margin: 0;
           display: flex;
+          flex-wrap: wrap;
+          // 為了保留空白而使用 <pre> 這邊必須把字型再蓋回來 
+          font-family: $theme-font-family-default;
+          word-break: break-word;
           &::before {
             content: '-';
             margin-right: 8px;
           }
-          >>> .name:first-child {
-            padding: 0 8px;
+          .name {
             color: $theme-color-primary;
+          }
+          .percentage {
+            padding-right: 8px;
           }
         }
       }

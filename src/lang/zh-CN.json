@@ -1,5 +1,6 @@
 {
   "lang": "简中",
+  "interpolation": "{interpolation}",
   "nav": {
     "index": "智能分析",
     "pinboard": "个人钉板",
@@ -1386,8 +1387,8 @@
     ]
   },
   "resultDescription": {
-    "totalColumnAverage": "整体<span class='name'>{name}</span><span>平均值为{value}",
-    "compareToAverage": "<span class='name'>{name}</span>{compare}于平均值{percentage}%",
+    "totalColumnAverage": "整体{0}平均值为{1}",
+    "compareToAverage": "{0}{2}于平均值{1}",
     "high": "高",
     "low": "低",
     "higher": "高于",
