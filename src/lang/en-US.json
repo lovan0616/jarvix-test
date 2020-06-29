@@ -170,7 +170,7 @@
     "IPaddress": "IPaddress",
     "username": "Account",
     "password": "Password",
-    "changePassword": "Reset PWD",
+    "changePassword": "Change Password",
     "connectSuccess": "Connect Successful",
     "connectFailure": "Failed to connect, please check if the settings are correct",
     "fileOverSize": "File is too large",
@@ -184,7 +184,7 @@
     "systemSetting": "System trying to set up",
     "dataColumnAmount": "Number of Data Columns",
     "dataRowAmount": "Number of Data Rows",
-    "matchedKey": "The value of the successful match",
+    "matchedKey": "Values successfully matched",
     "emptyKey": "No data",
     "resultPreview": "Result Preview",
     "previewKeyRemind": "Display up to 100 values",
@@ -592,7 +592,7 @@
     "median": "Median"
   },
   "aggregatedValue": {
-    "mean": "average",
+    "mean": "Average",
     "count": "Total Quantity",
     "sum": "Total Sum",
     "max": "Max",

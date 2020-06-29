@@ -333,7 +333,7 @@ export default {
   }
 
   .ask-helper-dialog {
-    bottom: 111px;
+    bottom: 100%;
 
     &.has-filter {
       bottom: 137px;

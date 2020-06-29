@@ -144,7 +144,7 @@ export default {
 
   .insight-vertical-table {
     font-size: 14px;
-    line-height: 26px;
+    line-height: 20px;
   }
 
   .insight-table-row {
@@ -152,7 +152,7 @@ export default {
     flex-wrap: wrap;
 
     &:not(:last-child) {
-      margin-bottom: 8px;
+      margin-bottom: 16px;
     }
   }
 
@@ -163,6 +163,7 @@ export default {
 
   .insight-table-content {
     flex: 1;
+    padding-left: 8px;
   }
 }
 </style>

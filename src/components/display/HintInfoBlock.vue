@@ -37,6 +37,7 @@ export default {
   margin-bottom: 12px;
 
   .hint-info {
+    line-height: 1.5;
     &:not(:last-child) {
       margin-bottom: 8px;
     }

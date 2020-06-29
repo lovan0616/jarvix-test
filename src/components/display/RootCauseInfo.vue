@@ -221,6 +221,7 @@ export default {
         margin-bottom: 6px;
         display: flex;
         justify-content: center;
+        flex-wrap: wrap;
         [lang="en"] & {
           &__text:not(:last-child) {
             margin-right: 4px;
