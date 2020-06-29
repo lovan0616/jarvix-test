@@ -62,25 +62,27 @@
                 class="data-table-cell source"
               >{{ column.parentDataFrameAlias || '-' }}</div>
               <div class="data-table-cell alias">
-                <span v-show="!isEditing(column.id)">{{ column.primaryAlias }}</span>
-                <!-- <div 
-                  v-for="(singleAlias, aliasIndex) in column.primaryAlias"
-                  :key="index + '-' + aliasIndex"
-                  class="alias"
-                >{{ singleAlias }}</div> -->
+                <!-- <span v-show="!isEditing(column.id)">{{ column.aliasList }}</span> -->
+                <div 
+                  v-for="(singleAlias, aliasIndex) in column.aliasList"
+                  v-show="!isEditing(column.id)"
+                  :class="{'is-modified': singleAlias.isModified}"
+                  :key="column.id + '-' + aliasIndex"
+                  class="alias__item"
+                >{{ singleAlias.name }}<span v-show="aliasIndex !== column.aliasList.length - 1">, </span></div>
                 <!-- 不使用v-if因為從DOM中拔除時validator會報錯(validate unexisting field) -->
                 <div 
                   v-show="isEditing(column.id)" 
                   class="edit-block"
                 >
                   <div 
-                    v-for="(singleAlias, aliasIndex) in tempRowInfo.alias"
+                    v-for="(singleAlias, aliasIndex) in tempRowInfo.aliasList"
                     :key="column.id + '-' + aliasIndex"
                     class="edit-alias-input-list"
                   >
                     <input-block
                       v-validate="`required|max:${max}`"
-                      v-model="tempRowInfo.alias[aliasIndex]"
+                      v-model="tempRowInfo.aliasList[aliasIndex].name"
                       :name="'alias' + '-' + column.id"
                       :placeholder="$t('editing.dataFrameInputPlaceholder')"
                       class="edit-alias-input-block"
@@ -99,7 +101,7 @@
                   >
                     <svg-icon 
                       icon-class="plus" 
-                      class="icon"/>{{ $t('button.add') }}
+                      class="icon icon-plus"/>{{ $t('button.add') }}
                   </button>
                 </div>
               </div>
@@ -184,7 +186,7 @@ export default {
       // 目前編輯的欄位資訊
       tempRowInfo: {
         dataColumnId: null,
-        alias: [],
+        aliasList: [],
         columnStatsType: null
       },
       userEditInfo: {
@@ -212,9 +214,17 @@ export default {
   methods: {
     fetchData () {
       getDataFrameColumnInfoById(this.tableId, true, false).then(response => {
+        response.forEach((element, index) => {
+          element.aliasList = element.aliasList.map(alias => {
+            return {
+              name: element,
+              isModified: false
+            }
+          })
+        })
+        console.log(response)
         this.columnList = response
       })
-      
     },
     // 依據 type 決定選單選項
     typeOptionList (optionList) {
@@ -229,12 +239,14 @@ export default {
       this.$emit('close')
     },
     edit (columnInfo) {
+      this.tempRowInfo.name = columnInfo.name
       this.tempRowInfo.dataColumnId = columnInfo.id
-      this.tempRowInfo.alias = columnInfo.aliasList
+      this.tempRowInfo.aliasList = columnInfo.aliasList
       this.tempRowInfo.columnStatsType = JSON.parse(JSON.stringify(columnInfo.statsType))
     },
     updateDataSource () {
       this.isProcessing = true
+
       patchColumnAlias(this.userEditInfo)
         .then(() => {
         // 更新問句說明資訊
@@ -259,13 +271,13 @@ export default {
           return element.id === this.tempRowInfo.dataColumnId
         })
         // 將 temp 資料塞回去
-        currentColumn.primaryAlias = this.tempRowInfo.alias
+        currentColumn.aliasList = this.tempRowInfo.aliasList
         currentColumn.statsType = this.tempRowInfo.columnStatsType
         // 目前的 id 是否已經存在
         let hasId = false
         this.userEditInfo.userEditedColumnInputList.forEach(element => {
           if (element.dataColumnId === this.tempRowInfo.dataColumnId) {
-            element.alias = this.tempRowInfo.alias
+            element.alias = this.tempRowInfo.name
             element.columnStatsType = this.tempRowInfo.columnStatsType
             hasId = true
           }
@@ -280,7 +292,7 @@ export default {
     cancel () {
       this.tempRowInfo = {
         dataColumnId: null,
-        alias: null,
+        aliasList: null,
         columnStatsType: null
       }
       this.isProcessing = false
@@ -289,14 +301,17 @@ export default {
       return this.tempRowInfo.dataColumnId === id
     },
     addAlias () {
-      this.tempRowInfo.alias.push('')
+      this.tempRowInfo.aliasList.push({
+        name: null,
+        isModified: true
+      })
       this.$nextTick(() => {
         // 重新驗證所有欄位
         // this.$validator.validateAll()
       })
     },
     removeAlias (index) {
-      this.tempRowInfo.alias.splice(index, 1)
+      this.tempRowInfo.aliasList.splice(index, 1)
       // 確保已經從 DOM 中移除欄位才能驗證到正確名稱的欄位
       this.$nextTick(() => {
         // 重新驗證所有欄位
@@ -341,6 +356,14 @@ export default {
   }
   .alias {
     width: 21%;
+
+    .alias__item {
+      display: inline;
+
+      &.is-modified {
+        color: $theme-color-warning;
+      }
+    }
   }
   .tag {
     width: 18%;
@@ -364,6 +387,10 @@ export default {
 
     .btn-add {
       width: 80px;
+
+      .icon-plus {
+        font-size: 13px;
+      }
     }
   }
 
