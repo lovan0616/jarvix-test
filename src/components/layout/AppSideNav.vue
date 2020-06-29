@@ -43,7 +43,7 @@
         </li>
         <li class="list__item">
           <router-link
-            :to="{ name: 'personalPagePinboardList', params: { accountId: getCurrentAccountId }}"
+            :to="{ name: 'PersonalPagePinboardList', params: { accountId: getCurrentAccountId }}"
             class="list__link"
           >
             <svg-icon 

@@ -1,4 +1,4 @@
-import { getPinboardList, getGroupPinboardList, getPinboardById, deletePinboard, deleteGroupPinboard, createPinboard, createGroupPinboard, updatePinboardName, updateGroupPinboardName, pinToBoard, unPinById } from '@/API/Pinboard'
+import { getPinboardList, getGroupPinboardList, getPinboardById, deletePinboard, deleteGroupPinboard, createPinboard, createGroupPinboard, updatePinboardName, updateGroupPinboardName, pinToBoard, unPinById, sortPinboard } from '@/API/Pinboard'
 
 export default {
   getPinboardList ({ commit }) {
@@ -11,11 +11,11 @@ export default {
       commit('setGroupPinboardList', res)
     })
   },
-  createPinboard (data) {
+  createPinboard ({ state }, data) {
     return createPinboard(data)
   },
-  createGroupPinboard (data) {
-    return createGroupPinboard(data.name, data.groupId)
+  createGroupPinboard ({ state }, data) {
+    return createGroupPinboard(data)
   },
   deletePinboard ({ dispatch }, data) {
     return deletePinboard(data).then(() => {
@@ -31,7 +31,8 @@ export default {
     return getPinboardById(data)
   },
   updatePinboardName ({dispatch}, data) {
-    return updatePinboardName(data.id, data.name).then(() => {
+    console.log(data)
+    return updatePinboardName(data.name, data.userId, data.id).then(() => {
       dispatch('getPinboardList')
     })
   },  
@@ -45,5 +46,8 @@ export default {
   },
   unPinById ({commit}, data) {
     return unPinById(data)
+  },
+  sortPinboard (folderId, pinbordList) {
+    return sortPinboard(folderId, pinbordList)
   }
 }

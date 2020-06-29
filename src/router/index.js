@@ -41,12 +41,12 @@ const router = new Router({
           children: [
             {
               path: '/',
-              name: 'personalPagePinboardList',
+              name: 'PersonalPagePinboardList',
               component: () => import('@/pages/pinboard/PinboardList')
             },
             {
               path: ':id',
-              name: 'personalPagePinboard',
+              name: 'PersonalPagePinboard',
               component: () => import('@/pages/pinboard/Pinboard')
             }
           ]
@@ -57,12 +57,12 @@ const router = new Router({
           children: [
             {
               path: '/',
-              name: 'projectPagePinboardList',
+              name: 'ProjectPagePinboardList',
               component: () => import('@/pages/pinboard/PinboardList')
             },
             {
               path: ':id',
-              name: 'projectPagePinboard',
+              name: 'ProjectPagePinboard',
               component: () => import('@/pages/pinboard/Pinboard')
             }
           ]

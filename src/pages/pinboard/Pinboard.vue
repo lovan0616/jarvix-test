@@ -78,7 +78,7 @@ export default {
        : this.$store.state.pinboard.groupPinboardInfo
     },
     prevPage () {
-      return this.isPersonalPinboard ? 'personalPagePinboardList' : 'projectPagePinboardList'
+      return this.isPersonalPinboard ? 'PersonalPagePinboardList' : 'ProjectPagePinboardList'
     },
     accountId () {
       return this.$route.params.accountId

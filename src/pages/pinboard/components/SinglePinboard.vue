@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     goToBoard () {
-      let routerName = this.isPersonalPinboard ? 'personalPagePinboard' : 'projectPagePinboard'
+      let routerName = this.isPersonalPinboard ? 'PersonalPagePinboard' : 'ProjectPagePinboard'
       this.$router.push({
         name: routerName,
         params: {

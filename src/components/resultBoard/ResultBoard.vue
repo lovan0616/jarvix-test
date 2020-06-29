@@ -148,12 +148,7 @@ export default {
   },
   computed: {
     isPinboardPage () {
-      return this.$route.name === 'personalPagePinboard' | this.$route.name === 'projectPagePinboard'
-    },
-    pinboardList () {
-      return this.isPersonalPinboard 
-        ? this.$store.state.pinboard.pinboardList
-        : this.$store.state.pinboard.groupPinboardList
+      return this.$route.name === 'PersonalPagePinboard' || this.$route.name === 'ProjectPagePinboard'
     },
     questionName () {
       let boardHeaderData = this.$children.filter(element => element.componentName === 'ResultBoardHeader')[0].componentData

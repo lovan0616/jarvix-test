@@ -165,7 +165,7 @@ export default {
         if (!isValidate) return
         let promise
         if (this.isPersonalPinboard) {
-          promise = this.$store.dispatch('pinboard/createPinboard', this.newBoardName)
+          promise = this.$store.dispatch('pinboard/createPinboard',  { name: this.newBoardName, userId: this.accountId })
         } else {
           promise = this.$store.dispatch('pinboard/createGroupPinboard', { name: this.newBoardName, groupId: this.groupId })
         }
@@ -203,6 +203,8 @@ export default {
         if (!isValidate) return
         let promise
         if(this.isPersonalPinboard) {
+          this.tempEditInfo.userId = this.accountId
+          console.log(this.tempEditInfo)
           promise = this.$store.dispatch('pinboard/updatePinboardName', this.tempEditInfo)
         } else {
           this.tempEditInfo.groupId = this.groupId

@@ -1,11 +1,11 @@
 import request from '@/utils/publicRequest'
 
 /**
- * get pinboard list
+ * get personal pinboard list
  */
 export function getPinboardList () {
   return request({
-    url: '/pinBoard/folder',
+    url: '/pinBoard/user/folder',
     method: 'GET'
   })
 }
@@ -33,15 +33,17 @@ export function getPinboardById (id) {
 }
 
 /**
- * create new board
+ * create new personal board
  * @param {String} name - 新分類名
+ * @param {Number} accountId
  */
-export function createPinboard (name) {
+export function createPinboard ({name, userId}) {
   return request({
-    url: `/pinBoard/folder`,
+    url: `/pinBoard/user/folder`,
     method: 'POST',
     data: {
-      name
+      name,
+      userId
     }
   })
 }
@@ -51,7 +53,7 @@ export function createPinboard (name) {
  * @param {String} name - 新分類名稱
  * @param {Number} groupId
  */
-export function createGroupPinboard (name, groupId) {
+export function createGroupPinboard ({name, groupId}) {
   return request({
     url: `/pinBoard/group/folder`,
     method: 'POST',
@@ -63,17 +65,19 @@ export function createGroupPinboard (name, groupId) {
 }
 
 /**
- * update pinboard name
+ * update personal pinboard name
  * @param {String} name - 釘板分類名稱
+ * @param {Number} userId
  * @param {Number} id - 釘板分類 ID
  */
-export function updatePinboardName (id, name) {
+export function updatePinboardName (name, userId, id) {
   return request({
-    url: `/pinBoard/folder`,
-    method: 'PUT',
+    url: `/pinBoard/user/folder`,
+    method: 'PATCH',
     data: {
-      id,
-      name
+      name,
+      userId,
+      id
     }
   })
 }
@@ -87,7 +91,7 @@ export function updatePinboardName (id, name) {
 export function updateGroupPinboardName (id, groupId, name) {
   return request({
     url: `/pinBoard/folder`,
-    method: 'PUT',
+    method: 'PATCH',
     data: {
       id,
       groupId,

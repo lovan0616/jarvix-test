@@ -1,47 +1,46 @@
 <template>
   <div class="pinboard-dialog">
     <div
-      v-show="pinStep==1"
+      v-show="pinStep === 1"
       class="pinboard-option-list">
       <div
         class="single-board"
-        @click="onlyPersonal">
+        @click="choosePinboard(true)">
         {{ $t('editing.onlyPersonal') }}
       </div>
       <div
         class="single-board"
-        @click="shareToProject">
+        @click="choosePinboard(false)">
         {{ $t('editing.shareToProject') }}
       </div>
     </div>
-    <div v-show="pinStep==2">
-      <div 
-        class="pinboard-option-list"
-      >
-        <div class="return-block-container">
-          <div class="block__arrow" />
-          <a
-            href="javascript:void(0);" 
-            class="link action-link"
-            @click.prevent="prevStep"
-          >
-            {{ $t('editing.prevStep') }}
-          </a>
-        </div>
-        <div 
-          class="single-board default"
-          @click="nextStep"
-        ><span class="add-icon">+</span>{{ $t('editing.newPinboard') }}</div>
-        <div 
-          v-for="pinboardInfo in pinboardList"
-          :key="pinboardInfo.id"
-          class="single-board"
-          @click="pin(pinboardInfo.id)"
-        >{{ pinboardInfo.name }}</div>
+    <div 
+      v-show="pinStep === 2"
+      class="pinboard-option-list"
+    >
+      <div class="return-block-container">
+        <div class="block__arrow" />
+        <a
+          href="javascript:void(0);" 
+          class="link action-link"
+          @click.prevent="prevStep"
+        >
+          {{ $t('editing.prevStep') }}
+        </a>
       </div>
+      <div 
+        class="single-board default"
+        @click="nextStep"
+      ><span class="add-icon">+</span>{{ $t('editing.newPinboard') }}</div>
+      <div 
+        v-for="pinboardInfo in pinboardList"
+        :key="pinboardInfo.id"
+        class="single-board"
+        @click="pin(pinboardInfo.id)"
+      >{{ pinboardInfo.name }}</div>
     </div>
     <div 
-      v-show="pinStep==3"
+      v-show="pinStep === 3"
       class="edit-block"
     >
       <input 
@@ -68,7 +67,7 @@ export default {
   data () {
     return {
       newBoardName: null,
-      pinStep: 0,
+      pinStep: 1,
       isPersonal: true
     }
   },
@@ -78,13 +77,15 @@ export default {
         ? this.$store.state.pinboard.pinboardList
         : this.$store.state.pinboard.groupPinboardList
     },
+    accountId () {
+      return this.$store.getters['userManagement/getCurrentAccountId']
+    },
     groupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
     }
   },
   mounted () {
     document.addEventListener('click', this.autoHide, false)
-    this.nextStep()
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
@@ -104,12 +105,12 @@ export default {
     },
     createPinboard () {
       if(this.isPersonal) {
-        this.$store.dispatch('pinboard/createPinboard', this.newBoardName).then(response => {
+        this.$store.dispatch('pinboard/createPinboard', { name: this.newBoardName, userId: this.accountId } ).then(response => {
           this.$emit('pin', response.id)
           this.cancelCreate()
         })
       } else {
-        this.$store.dispatch('pinboard/createGroupPinboard', {name: this.newBoardName, groupId: this.groupId}).then(response => {
+        this.$store.dispatch('pinboard/createGroupPinboard', { name: this.newBoardName, groupId: this.groupId }).then(response => {
           this.$emit('pin', response.id)
           this.cancelCreate()
         })
@@ -121,12 +122,8 @@ export default {
     nextStep () {
       this.pinStep += 1
     },
-    onlyPersonal () {
-      this.isPersonal = true
-      this.nextStep()
-    },
-    shareToProject () {
-      this.isPersonal = false
+    choosePinboard (isPersonal) {
+      this.isPersonal = isPersonal
       this.nextStep()
     }
   },

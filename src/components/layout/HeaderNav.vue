@@ -61,7 +61,7 @@
         />
       </div>
       <router-link 
-        :to="{name: 'projectPagePinboardList', params: { accountId: getCurrentAccountId, groupId: getCurrentGroupId }}" 
+        :to="{name: 'ProjectPagePinboardList', params: { accountId: getCurrentAccountId, groupId: getCurrentGroupId }}" 
         class="nav-item">{{ $t('nav.projectPinboard') }}</router-link>
     </section>
     <section class="nav-right">
