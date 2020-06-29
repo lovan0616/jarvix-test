@@ -330,7 +330,7 @@ router.beforeEach(async (to, from, next) => {
     if ((paramsGroupId) && (paramsGroupId !== currentGroupId)) {
       await store.dispatch('userManagement/switchGroupById', paramsGroupId)
     }
-    console.log(to)
+    
     return next({ 
       name: to.name,
       params: {

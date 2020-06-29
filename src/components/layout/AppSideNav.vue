@@ -146,6 +146,7 @@ export default {
   computed: {
     ...mapState(['isShowFullSideNav']),
     ...mapState('userManagement', ['accountList', 'groupList']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     ...mapGetters('userManagement', ['getCurrentAccountName', 'getCurrentAccountId', 'hasPermission', 'getCurrentGroupId']),
     currentAccountName() {
       const fullName = this.getCurrentAccountName
@@ -226,15 +227,19 @@ export default {
             })
           } 
 
-          if (this.$route.name !== 'PageIndex') {
-            this.$router.push({
-              name: 'PageIndex', 
-              params: { 
-                account_id: accountId, 
-                group_id: this.getCurrentGroupId 
-              } 
-            })
-          }
+          this.$router.push({
+            name: 'PageIndex', 
+            params: { 
+              account_id: accountId, 
+              group_id: this.getCurrentGroupId 
+            },
+            query: {
+              ...(this.dataSourceId && { 
+                dataSourceId: this.dataSourceId,
+                dataFrameId: this.dataFrameId
+              })
+            }
+          })
         })
         .finally(() => this.isLoading = false)
     }

@@ -59,9 +59,16 @@ export default {
     onDataSourceChange (dataSourceId) {
       this.$store.dispatch('dataSource/changeDataSourceById', { dataSourceId })
         .then(() => {
-          if (this.$route.name !== 'PageIndex') {
-            this.$router.push({ name: 'PageIndex', params: { 'group_id': this.getCurrentGroupId } })
-          }
+          this.$router.push({ 
+            name: 'PageIndex', 
+            params: { 
+              'group_id': this.getCurrentGroupId
+            },
+            query: {
+              dataSourceId: this.dataSourceId,
+              dataFrameId: 'all'
+            }
+          })
         })
     },
     togglePreviewDataSource () {

@@ -14,7 +14,7 @@
 <script>
 import FilterInfo from '@/components/display/FilterInfo'
 import QuickStart from './components/QuickStart'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'PageIndex',
@@ -40,7 +40,6 @@ export default {
   watch: {
     dataFrameId (newValue) {
       this.quickStartQuestionList = []
-      this.updateUrl()
       if (newValue) this.getQuickQuestionList()
     }
   },
@@ -57,8 +56,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions('userManagement', ['switchGroupById']),
     updateUrl () {
-      let {dataSourceId: queryDataSourceId, dataFrameId: queryDataFrameId} = this.$route.query
+      let { dataSourceId: queryDataSourceId, dataFrameId: queryDataFrameId } = this.$route.query
+      let { account_id, group_id } = this.$route.params
       // Watch 在切換 datasource / dataframe 時會觸發＆從連結進來 init 階段改變 datasource / dataframe 也會觸發
       // 需要判定 1：Store 有值但 url query 上沒有時，補上 query string
       // 需要判定 2：init 改變觸發時，需要確認是否跟當前 url 上 query 相同，避免前往相同路徑（一般切換則不影響）
@@ -73,8 +74,8 @@ export default {
       this.$router.replace({
         name: 'PageIndex',
         params: {
-          'account_id': this.getCurrentAccountId,
-          'group_id': this.getCurrentGroupId
+          account_id,
+          group_id
         },
         query: {
           ...(this.dataSourceId && { 

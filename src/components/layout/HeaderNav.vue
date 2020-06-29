@@ -103,6 +103,7 @@ export default {
   computed: {
     ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName']),
     ...mapState('userManagement', ['userName', 'license', 'groupList']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
@@ -148,7 +149,19 @@ export default {
       this.isLoading = true
       this.switchGroupById(groupId)
         .then(() => {
-          if (this.$route.name !== 'PageIndex') this.$router.push({ name: 'PageIndex' })
+          this.$router.push({ 
+            name: 'PageIndex',
+            params: {
+              'account_id': this.$route.params.account_id,
+              'group_id': groupId
+            },
+            query: {
+              ...(this.dataSourceId && { 
+                dataSourceId: this.dataSourceId,
+                dataFrameId: this.dataFrameId
+              })
+            }
+          })
         })
         .finally(() => this.isLoading = false)
     },

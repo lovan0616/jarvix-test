@@ -14,6 +14,7 @@
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'DataFrameSelect',
@@ -21,6 +22,7 @@ export default {
     SySelect
   },
   computed: {
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
     dataFrameId () {
       return this.$store.state.dataSource.dataFrameId
     },
@@ -41,6 +43,18 @@ export default {
   methods: {
     onDataFrameChange (dataFrameId) {
       this.$store.dispatch('dataSource/changeDataFrameById', dataFrameId)
+      .then(() => {
+        this.$router.replace({
+          name: this.$route.name, 
+          params: { 
+            'group_id': this.getCurrentGroupId
+          },
+          query: {
+            dataSourceId: this.$route.query.dataSourceId,
+            dataFrameId
+          }
+        })
+      })
     }
   }
 }
