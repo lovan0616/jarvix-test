@@ -57,14 +57,14 @@ export default {
         this.tmpList.push({
           question: element.question,
           id: element.pinboardId,
-          order: index
+          sequence: index
         })
       }
     })
   },
   updated () {
     this.tmpList.forEach((element, index) => {
-      element.order =  ++index
+      element.sequence =  ++index
     })
     // this.$store.dispatch('pinboard/sortPinboard', this.$route.params.id, this.tmpList).then(() => {
     // })
