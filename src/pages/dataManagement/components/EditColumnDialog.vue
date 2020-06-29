@@ -200,7 +200,7 @@ export default {
       return this.$store.state.dataManagement.currentBookmarkInfo
     },
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     },
     isJoinTable () {
       return this.columnList.some(element => element.parentDataFrameAlias)
