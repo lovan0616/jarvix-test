@@ -8,7 +8,8 @@
     "groupPlaceholder": "專案",
     "languagePlaceholder": "語系",
     "setting": "設定",
-    "projectManagement": "專案管理"
+    "projectManagement": "專案管理",
+    "algorithm": "演算法"
   },
   "sideNav": {
     "functionList": "功能選單",
@@ -329,7 +330,7 @@
     "createGroup": "建立專案"
   },
   "algorithm": {
-    "algorithm": "演算法",
+    "name": "演算法",
     "type": "演算法類型",
     "create": "新增演算法",
     "clickToCreate": "點擊建立您的演算法",
@@ -353,6 +354,7 @@
     "creator": "建立者",
     "foxconnDemo": "富士康demo",
     "temperature": "溫度",
+    "pressure": "壓力",
     "startTime": "開始時間",
     "statusColumn": "狀態欄位",
     "status": "狀態",
@@ -366,15 +368,27 @@
     "lowerControlRatio": "管制下限比例",
     "timeUnit": "時間單位",
     "second": "秒",
-    "minute": "分鐘",
+    "minute": "分",
+    "minuteLong": "分鐘",
     "hour": "小時",
+    "hourLong": "小時",
     "earlyTime": "提早時間",
     "windowSize": "視窗大小",
     "proportionOfTrainingSet": "訓練集佔比",
     "warningThreshold": "警告閥值",
     "abnormalThreshold": "異常閥值",
     "realTimeDataSetting": "即時資料設定",
-    "executionCycle": "執行週期"
+    "executionCycle": "執行週期",
+    "nthAlgorithm": "第{n}個演算法",
+    "modelExtraLayers": "模型額外層數",
+    "learningSpeed": "學習速度",
+    "trainningTimes": "訓練次數",
+    "trainingBatchSize": "訓練批大小",
+    "trainingAndVerificationDataRatio": "訓練與驗證資料比例",
+    "standardizedMethod": "標準化方式",
+    "initParams": "初始化參數",
+    "actualLabel": "實際標籤",
+    "timestamp": "時間戳"
   },
   "etl": {
     "dataFrameList": "資料表列表",
