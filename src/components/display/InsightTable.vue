@@ -122,8 +122,6 @@ export default {
   computed: {
     isEmpty () {
       return this.info &&
-        this.info.cComment.length === 0 &&
-        this.info.nComment.length === 0 &&
         this.info.cTable.length === 0 &&
         this.info.nTable.length === 0
     }

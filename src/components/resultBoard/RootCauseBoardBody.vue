@@ -41,7 +41,7 @@ export default {
   .title-block {
     font-size: 20px;
     line-height: 34px;
-    letter-spacing: 0.1em;
+    letter-spacing: var(--theme-letter-spacing-semi-wide);
     color: #fff;
     margin-bottom: 16px;
   }

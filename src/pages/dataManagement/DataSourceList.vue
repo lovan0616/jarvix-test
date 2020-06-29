@@ -124,11 +124,11 @@ export default {
         },
         {text: this.$t('editing.status'), value: 'state', width: '7.26%'},
         {text: this.$t('editing.countOfTable'), value: 'dataFrameCount', width: '65px'},
-        {text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '65px'},
+        {text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '160px'},
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '140px',
+          width: '200px',
           action: [
             {
               name: this.$t('button.rename'),

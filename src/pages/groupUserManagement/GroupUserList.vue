@@ -12,7 +12,7 @@
             class="btn-m btn-default btn-has-icon"
           >
             <svg-icon
-              icon-class="user"
+              icon-class="user-plus"
               class="icon"/>{{ $t('button.addNewMember') }}
           </router-link>
         </div>
@@ -223,10 +223,6 @@ export default {
 
   & >>> .empty-info-block {
     background: rgba(35, 61, 64, 0.6);
-  }
-
-  & >>> .dialog-box {
-    z-index: 999;
   }
 }
 </style>

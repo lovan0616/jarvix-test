@@ -370,6 +370,10 @@ export default {
     position: relative;
     cursor: pointer;
 
+    &[disabled] {
+      cursor: not-allowed;
+    }
+
     &:hover {
       .dropdown {
         visibility: visible;

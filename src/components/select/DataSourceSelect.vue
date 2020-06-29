@@ -78,11 +78,11 @@ export default {
   .data-source-select-icon {
     position: absolute;
     top: 10px;
-    left: 10px;
+    left: 14px;
   }
 
   .preview-datasource-btn {
-    width: 36px;
+    width: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -114,7 +114,7 @@ export default {
 <style lang="scss">
 .data-source-select.sy-select.theme-default {
   .el-input__inner {
-    padding-left: 36px;
+    padding-left: 42px;
   }
   .el-input__icon {
     width: 40px;

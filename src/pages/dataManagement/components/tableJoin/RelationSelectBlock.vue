@@ -4,11 +4,13 @@
       <svg-icon 
         icon-class="table" 
         class="type-icon" />
-      <custom-select
+      <default-select
+        v-validate="'required'"
         :key="'top-select'"
-        :default-msg="$t('editing.selectForeign')"
-        :option-list="dataFrameList"
+        :placeholder="$t('editing.selectForeign')"
+        :option-list="dataFrameSelectList"
         :value="dataFrameId"
+        class="default-select"
         @input="onUpdateDataFrame"
       />
     </div>
@@ -16,11 +18,14 @@
       <svg-icon 
         icon-class="column" 
         class="type-icon" />
-      <custom-select
+      <default-select
+        v-validate="'required'"
         :key="'bottom-select'"
-        :default-msg="$t('editing.selectColumn')"
+        :placeholder="$t('editing.selectColumn')"
         :option-list="columnList"
         :value="dataColumn.id"
+        class="default-select"
+        filterable
         @input="onUpdateDataColumn"
       />
     </div>
@@ -28,13 +33,13 @@
 </template>
 
 <script>
-import CustomSelect from '../CustomSelect'
+import DefaultSelect from '@/components/select/DefaultSelect'
 import { getDataFrameColumnInfoById } from '@/API/DataSource'
 
 export default {
   name: 'RelationSelectBlock',
   components: {
-    CustomSelect
+    DefaultSelect
   },
   props: {
     dataFrameList: {
@@ -56,8 +61,17 @@ export default {
       dataFrameId: this.initialDataFrameId
     }
   },
+  computed: {
+    dataFrameSelectList() {
+      return this.dataFrameList.map(element=> ({
+        ...element,
+        value : element.id
+      }))
+    }   
+  },
   mounted () {
     if (this.dataFrameId) this.fetchDataColumnList(this.dataFrameId)
+    
   },
   methods: {
     fetchDataColumnList (dataFrameId) {
@@ -65,7 +79,8 @@ export default {
       getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn).then(response => {
         this.columnList = response.map(column => ({
           ...column,
-          name: `${column.primaryAlias || column.name}（${column.dataType}）`
+          name: `${column.primaryAlias || column.name}（${column.dataType}）`,
+          value: column.id
         }))
       })
     },
@@ -111,6 +126,23 @@ export default {
 
   .join-icon {
     font-size: 24px;
+  }
+
+  & >>> .default-select {
+    width: 100%;
+    border-bottom: 1px solid #fff;
+
+    .el-input__inner {
+      line-height: 24px;
+      font-size: 14px;
+      padding-left: 0;
+    }
+
+    .el-select-dropdown {
+      background-color: #303435;
+      border-radius: 4px;
+      overflow: auto;
+    }
   }
 }
 </style>

@@ -190,7 +190,7 @@ export function chartOptions () {
       axisTick: {
         show: false
       },
-      scale: true
+      scale: false
     },
     series: []
   }

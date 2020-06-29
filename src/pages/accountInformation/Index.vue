@@ -18,7 +18,9 @@
               {{ $t('accountInfo.currentUserAmount') }}
             </h6>
             <p class="sub-info-desciption">
-              {{ license.currentUser || '-' }}{{ $t('accountInfo.person') }}
+              {{ license.currentUser || '-' }}
+              <span v-if="license.currentUser > 1">{{ $tc('accountInfo.person', 0) }}</span>
+              <span v-else>{{ $tc('accountInfo.person', 1) }}</span>
             </p>
           </div>
           <div class="sub-info-block">
@@ -26,7 +28,9 @@
               {{ $t('accountInfo.userAmountLimit') }}
             </h6>
             <p class="sub-info-desciption">
-              {{ license.maxUser || '-' }}{{ $t('accountInfo.person') }}
+              {{ license.maxUser || '-' }}
+              <span v-if="license.currentUser > 1">{{ $tc('accountInfo.person', 0) }}</span>
+              <span v-else>{{ $tc('accountInfo.person', 1) }}</span>
             </p>
           </div>
         </div>
@@ -128,7 +132,7 @@ export default {
 
   .info-block {
     display: grid;
-    grid-template-columns: 144px 195px auto;
+    grid-template-columns: 180px 260px auto;
     background: rgba(35, 61, 64, 0.6);
     padding: 12px 16px;
   }

@@ -10,6 +10,9 @@
     "projectManagement": "专案管理"
   },
   "sideNav": {
+    "functionList": "功能选单",
+    "home": "首頁",
+    "pinboard": "個人釘板",
     "accountManagement": "帐户管理",
     "accountInformation": "帐户资讯",
     "accountUserManagement": "使用者管理",
@@ -86,7 +89,8 @@
     "fileTypeNotSupported": "不支援 {fileType} 档案格式",
     "goToGroupManagement": "前往帐户专案管理",
     "switchToGroupBySys": "系统已将您切换至群組：{groupName}",
-    "youAreGroupless": "您目前无隶属群组"
+    "youAreGroupless": "您目前无隶属群组",
+    "switching": "切换中"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -337,6 +341,7 @@
     "etlSetting": "资料清洗设定",
     "remarkToSave": "异动内容须保存",
     "selectColumn": "使用",
+    "skipColumn": "不使用",
     "advance": "进阶",
     "advanceSetting": "进阶设定",
     "backToDataFrame": "返回资料表",
@@ -1594,7 +1599,8 @@
     "lackOfSignUpToken": "无注册权限，请联系管理员",
     "defaultMsg": "系统发生非预期错误",
     "lackOfPermission": "权限不足，请联系管理员",
-    "versionUpdate": "有新版本上线，立即帮您更新"
+    "versionUpdate": "有新版本上线，立即帮您更新",
+    "networkError": "网路连线发生错误，请检查连线，稍后再试"
   },
   "resultNote": {
     "groupLimitNote": "此结果为原资料取前 {randomLimit} 笔得来",

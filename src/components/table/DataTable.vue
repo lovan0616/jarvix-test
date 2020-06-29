@@ -88,13 +88,17 @@
           }"
           class="data-table-cell"
         >
-          <a 
+          <el-tooltip
             v-if="headInfo.link && checkLinkEnable(headInfo, data)" 
-            href="javascript:void(0)"
-            class="link name-link"
-            @click="linkTo(headInfo.link, data.id)"
-          >{{ data[headInfo.value] }}</a>
-
+            :content="data[headInfo.value]"
+            placement="bottom-start"
+          >
+            <a 
+              href="javascript:void(0)"
+              class="link name-link"
+              @click="linkTo(headInfo.link, data.id)"
+            >{{ data[headInfo.value] }}</a>
+          </el-tooltip>
           <a 
             v-for="action in headInfo.action" 
             v-else-if="headInfo.action"
@@ -172,6 +176,14 @@
             <span class="dataframe-status failed">
               {{ $t('editing.buildFailed') }}：{{ data.failDataFrameCount }}
             </span>
+          </span>
+          <span v-else-if="headInfo.value === 'primaryAlias'">
+            <el-tooltip
+              :content="data[headInfo.value]"
+              placement="bottom-start"
+            >
+              <span class="dataframe-name">{{ data[headInfo.value] }}</span>
+            </el-tooltip>
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
@@ -414,6 +426,7 @@ export default {
     display: inline-block;
     width: 100%;
     color: #42A5B3;
+    @include text-hidden;
   }
   .data-table-body {
     overflow: visible;
@@ -437,6 +450,9 @@ export default {
       &.failed {
         color: $theme-color-danger;
       }
+    }
+    .dataframe-name {
+      @include text-hidden;
     }
   }
   .hasWidth {

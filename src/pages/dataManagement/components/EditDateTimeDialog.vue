@@ -155,6 +155,7 @@ export default {
 
     .data-frame-name {
       font-size: 14px;
+      @include text-hidden
     }
   }
   .dialog-content-block {

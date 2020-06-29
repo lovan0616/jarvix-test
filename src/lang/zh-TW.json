@@ -10,6 +10,9 @@
     "projectManagement": "專案管理"
   },
   "sideNav": {
+    "functionList": "功能選單",
+    "home": "首頁",
+    "pinboard": "個人釘板",
     "accountManagement": "帳戶管理",
     "accountInformation": "帳戶資訊",
     "accountUserManagement": "使用者管理",
@@ -86,7 +89,8 @@
     "fileTypeNotSupported": "不支援 {fileType} 檔案格式",
     "goToGroupManagement": "前往帳戶專案管理",
     "switchToGroupBySys": "系统已將您切換至群組：{groupName}",
-    "youAreGroupless": "您目前無隸屬群組"
+    "youAreGroupless": "您目前無隸屬群組",
+    "switching": "切換中"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -337,6 +341,7 @@
     "etlSetting": "資料清洗設定",
     "remarkToSave": "異動內容須保存",
     "selectColumn": "使用",
+    "skipColumn": "不使用",
     "advance": "進階",
     "advanceSetting": "進階設定",
     "backToDataFrame": "返回資料表",
@@ -1594,7 +1599,8 @@
     "lackOfSignUpToken": "無註冊權限，請聯繫管理員",
     "defaultMsg": "系統發生非預期錯誤",
     "lackOfPermission": "權限不足，請聯繫管理員",
-    "versionUpdate": "有新版本上線，立即幫您更新"
+    "versionUpdate": "有新版本上線，立即幫您更新",
+    "networkError": "網路連線發生錯誤，請檢查連線，稍後再試"
   },
   "resultNote": {
     "groupLimitNote": "此結果為原資料取前 {randomLimit} 筆得來",
