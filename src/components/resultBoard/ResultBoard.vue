@@ -220,31 +220,30 @@ export default {
       this.showPinboardList = false
     },
     unPin () {
-      this.$emit('unPin', this.pinBoardId)
-      // this.$store.dispatch('pinboard/unPinById', this.pinBoardId)
-      //   .then(res => {
-      //     if (this.isPinboardPage) {
-      //       // 這邊是為了 transition 所以先抓高度
-      //       let elem = document.getElementById(this.pinBoardId)
-      //       elem.style.height = elem.offsetHeight + 'px'
-      //       window.setTimeout(() => {
-      //         elem.style.height = 0
-      //         elem.style.overflow = 'hidden'
-      //         elem.style.padding = 0
-      //         elem.style.margin = 0
-      //       }, 300)
-      //       window.setTimeout(() => {
-      //         this.isLoading = false
-      //         this.$store.commit('pinboard/deletePinboardById', { accountId: this.accountId, id: this.pinBoardId })
-      //       }, 900)
-      //       this.$emit('unPin', this.pinBoardId)
-      //     } else {
-      //       this.isLoading = false
-      //       this.pinBoardId = null
-      //     }
-      //   }).catch(() => {
-      //     this.isLoading = false
-      //   })
+      this.$store.dispatch('pinboard/unPinById', this.pinBoardId)
+        .then(res => {
+          if (this.isPinboardPage) {
+            // 這邊是為了 transition 所以先抓高度
+            let elem = document.getElementById(this.pinBoardId)
+            elem.style.height = elem.offsetHeight + 'px'
+            window.setTimeout(() => {
+              elem.style.height = 0
+              elem.style.overflow = 'hidden'
+              elem.style.padding = 0
+              elem.style.margin = 0
+            }, 300)
+            window.setTimeout(() => {
+              this.isLoading = false
+              this.$store.commit('pinboard/deletePinboardById', { accountId: this.accountId, id: this.pinBoardId })
+            }, 900)
+            this.$emit('unPin', this.pinBoardId)
+          } else {
+            this.isLoading = false
+            this.pinBoardId = null
+          }
+        }).catch(() => {
+          this.isLoading = false
+        })
     },
     showShareDialog () {
       this.isShowShareDialog = true

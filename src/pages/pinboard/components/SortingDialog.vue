@@ -64,7 +64,7 @@ export default {
   },
   updated () {
     this.tmpList.forEach((element, index) => {
-      element.order = index
+      element.order =  ++index
     })
     // this.$store.dispatch('pinboard/sortPinboard', this.$route.params.id, this.tmpList).then(() => {
     // })
@@ -86,6 +86,8 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: move;
+
 
     &__question {
       display: block;
