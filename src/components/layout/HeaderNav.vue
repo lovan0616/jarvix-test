@@ -14,7 +14,7 @@
             :selected-id="groupId"
             :is-loading="isLoading"
             trigger="hover"
-            @select="changeGroup($event)"
+            @select="switchGroup($event)"
           >
             <template v-slot:display>
               <div class="switch">
@@ -85,8 +85,7 @@ import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
-import { mapGetters, mapState, mapMutations } from 'vuex'
-import { switchGroup } from '@/API/User'
+import { mapGetters, mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   name: 'HeaderNav',
@@ -102,7 +101,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName']),
     ...mapState('userManagement', ['userName', 'license', 'groupList']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
@@ -138,35 +137,20 @@ export default {
   },
   methods: {
     ...mapMutations(['updateAppLoadingStatus']),
+    ...mapActions('userManagement', ['switchGroupById']),
     setIsShowAlgorithmBtn () {
       let preSetting = localStorage.getItem('isShowAlgorithmBtn')
       if (preSetting !== 'true') {
         localStorage.setItem('isShowAlgorithmBtn', 'false')
       }
     },
-    changeGroup (groupId) {
-      const currentAccountId = this.$route.params.account_id
-      // 更新全域狀態
-      this.updateAppLoadingStatus(true)
+    switchGroup (groupId) {
       this.isLoading = true
-      switchGroup({
-        accountId: currentAccountId,
-        groupId: groupId
-      })
-        .then(() => this.$store.dispatch('userManagement/getUserInfo'))
-        .then(() => {
-          // 先清空，因為新群組有可能沒有 dataSource
-          this.$store.commit('dataSource/setDataSourceId', null)
-          // update data source list
-          return this.$store.dispatch('dataSource/getDataSourceList', {})
-        })
+      this.switchGroupById(groupId)
         .then(() => {
           if (this.$route.name !== 'PageIndex') this.$router.push({ name: 'PageIndex' })
         })
-        .finally(() => {
-          this.updateAppLoadingStatus(false)
-          this.isLoading = false
-        })
+        .finally(() => this.isLoading = false)
     },
     switchDialogName (dialog) {
       this[dialog] = true

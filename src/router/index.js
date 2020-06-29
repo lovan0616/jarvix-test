@@ -267,6 +267,14 @@ const router = new Router({
                       ]
                     },
                   ]
+                }, 
+                {
+                  path: '/',
+                  redirect: to => {
+                    const currentGroupId = Number(store.getters['userManagement/getCurrentGroupId'])
+                    if (!currentGroupId) return { name: 'PageGrouplessGuidance' }
+                    return { name: 'PageIndex', params: { group_id: currentGroupId } }
+                  }
                 }
               ]
             }
@@ -303,13 +311,40 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  // 將欲前往的頁面存取下來，避免使用者 token 失效被重新登入使用
-  store.commit('setting/setCurrentRoute', to)
-
   // 處理頁面重整時 store 為空需重新取得使用者資料
   const userName = store.state.userManagement.userName
-  if (!userName) await store.dispatch('userManagement/getUserInfo')
+  if (!userName) {
+    await store.dispatch('userManagement/getUserInfo')
 
+    // 處理路由的 group 和 account id 與 store 中 default 不相同時：切換成路由的 id
+    const { account_id: paramsAccountId, group_id: paramsGroupId } = to.params
+    const currentAccountId = Number(store.getters['userManagement/getCurrentAccountId'])
+    const currentGroupId = Number(store.getters['userManagement/getCurrentGroupId'])
+    if ((paramsAccountId) && (paramsAccountId !== currentAccountId)) {
+      await store.dispatch('userManagement/switchAccountById', {
+        accountId: paramsAccountId,
+        defaultGroupId: paramsGroupId
+      })
+    }
+    
+    if ((paramsGroupId) && (paramsGroupId !== currentGroupId)) {
+      await store.dispatch('userManagement/switchGroupById', paramsGroupId)
+    }
+    console.log(to)
+    return next({ 
+      name: to.name,
+      params: {
+        ...to.params,
+        account_id: paramsAccountId,
+        group_id: paramsGroupId || currentGroupId
+      },
+      query: to.query
+    })
+  }
+
+  // 將欲前往的頁面存取下來，避免使用者 token 失效被重新登入使用
+  store.commit('setting/setCurrentRoute', to)
+  
   // 確認 account 和 group 權限都符合
   const hasPermission = store.getters['userManagement/hasPermission']
   for (let i = 0; i < to.matched.length; i++) {

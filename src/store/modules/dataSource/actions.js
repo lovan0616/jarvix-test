@@ -36,7 +36,18 @@ export default {
           dispatch('changeDataSourceById', { dataSourceId, dataFrameId: 'all' })
           if (firstEnableDataSourceIndex < 0) dispatch('handleEmptyDataSource')
           const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
-          router.push({ name: 'PageIndex', params: { 'group_id': currentGroupId } })
+          router.push({
+            name: 'PageIndex', 
+            params: { 
+              'group_id': currentGroupId
+            },
+            query: {
+              ...(dataSourceId && {
+                dataSourceId: dataSourceId,
+                dataFrameId: 'all'
+              })
+            }
+          })
 
           Message({
             message: i18n.t('message.dataSourceNotExist'),
