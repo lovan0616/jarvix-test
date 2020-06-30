@@ -40,7 +40,7 @@ export default {
   computed: {
     ...mapState(['isShowFullSideNav']),
     ...mapState('userManagement', ['groupList']),
-    ...mapGetters('userManagement', ['getCurrentGroupId'])
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId'])
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
@@ -48,8 +48,9 @@ export default {
       this.updateSideNavStatus(!this.isShowFullSideNav)
     },
     directToHomePage() {
-      if (this.groupList.length === 0) return this.$router.push({ name: 'PageGrouplessGuidance' })
-      this.$router.push({ name: 'PageIndex', params: { 'group_id': this.getCurrentGroupId } })
+      const groupLessPage = { name: 'PageGrouplessGuidance', params: { 'account_id': this.getCurrentAccountId } }
+      const accountHomePage = { name: 'PageIndex', params: { 'account_id': this.getCurrentAccountId, 'group_id': this.getCurrentGroupId } }
+      this.$router.push(this.groupList.length === 0 ? groupLessPage : accountHomePage)
     }
   }
 }

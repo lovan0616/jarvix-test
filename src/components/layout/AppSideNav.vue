@@ -42,7 +42,7 @@
         </li>
         <li class="list__item">
           <router-link
-            :to="{ name: 'PagePinboardList' }"
+            :to="{ name: 'PagePinboardList', params: { 'account_id': getCurrentAccountId } }"
             class="list__link"
           >
             <svg-icon 
@@ -58,7 +58,7 @@
           class="list__item"
         >
           <router-link
-            :to="{ name: 'AccountManagement' }"
+            :to="{ name: 'AccountManagement', params: { 'account_id': getCurrentAccountId } }"
             class="list__link"
           >
             <svg-icon 
@@ -205,7 +205,9 @@ export default {
       if(this.isShowFullSideNav) this.updateSideNavStatus(false)
     },
     accountHomePageRoute() {
-      return this.groupList.length === 0 ? { name: 'PageGrouplessGuidance' } : { name: 'PageIndex', params: { 'group_id': this.getCurrentGroupId } }
+      const groupLessPage = { name: 'PageGrouplessGuidance', params: { 'account_id': this.getCurrentAccountId } }
+      const accountHomePage = { name: 'PageIndex', params: { 'account_id': this.getCurrentAccountId, 'group_id': this.getCurrentGroupId } }
+      return this.groupList.length === 0 ? groupLessPage : accountHomePage
     },
     accountListData() {
       if (!this.accountList) return []

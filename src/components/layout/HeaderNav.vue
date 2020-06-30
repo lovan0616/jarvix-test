@@ -69,7 +69,7 @@
     <section class="nav-right">
       <router-link
         v-if="isShowFunctionDescription"
-        :to="{ name: 'FunctionDescription' }"
+        :to="{ name: 'FunctionDescription', params: { 'account_id': accountId } }"
         class="nav-item nav-function"
       >
         <svg-icon 
