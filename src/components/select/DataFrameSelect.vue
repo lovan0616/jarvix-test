@@ -44,8 +44,8 @@ export default {
     onDataFrameChange (dataFrameId) {
       this.$store.dispatch('dataSource/changeDataFrameById', dataFrameId)
       .then(() => {
-        this.$router.replace({
-          name: this.$route.name, 
+        this.$router.push({ 
+          name: 'PageIndex', 
           params: { 
             'group_id': this.getCurrentGroupId
           },

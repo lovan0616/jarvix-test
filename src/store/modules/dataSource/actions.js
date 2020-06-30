@@ -66,8 +66,7 @@ export default {
     })
   },
   async changeDataSourceById({ dispatch, commit, state }, {dataSourceId, dataFrameId = 'all'}) {
-    if (state.dataSourceId === dataSourceId) return Promise.resolve(state)
-
+    if (state.dataSourceId === dataSourceId  && state.dataFrameId === dataFrameId) return Promise.resolve(state)
     // 清空對話紀錄
     if (state.dataSourceId) dispatch('clearChatbot')
     // 更新 DataSource 資料
