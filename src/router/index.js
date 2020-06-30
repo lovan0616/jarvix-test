@@ -267,14 +267,6 @@ const router = new Router({
                       ]
                     },
                   ]
-                }, 
-                {
-                  path: '/',
-                  redirect: to => {
-                    const currentGroupId = Number(store.getters['userManagement/getCurrentGroupId'])
-                    if (!currentGroupId) return { name: 'PageGrouplessGuidance' }
-                    return { name: 'PageIndex', params: { group_id: currentGroupId } }
-                  }
                 }
               ]
             }
