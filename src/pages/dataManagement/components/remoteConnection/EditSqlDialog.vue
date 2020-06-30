@@ -142,12 +142,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 .edit-sql-dialog {
+
+  &.confirm-dialog >>> .dialog-container {
+    top: 90px;
+  }
+
   .dialog-input-block {
     text-align: left;
   }
 
   .sql-content-input {
     width: 100%;
+    height: 40vh;
     background-color: rgba(0, 0, 0, 0.55);
     border-radius: 8px;
     padding: 8px;

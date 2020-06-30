@@ -221,13 +221,22 @@ export default {
 
       Promise.all(promiseList).then(() => {
         this.isLoading = false
-        this.$emit('next', this.tableIdList.map(element => {
+        let connectionTableList = this.tableIdList.map(element => {
           return {
             name: element,
             value: element,
             connectionStatus: null
           }
-        }))
+        })
+        let sqlTableList = this.sqlTableChosenList.map(element => {
+          return {
+            name: element.creatingSqlName,
+            value: element.creatingSqlName,
+            connectionStatus: null
+          }
+        })
+
+        this.$emit('next', [...connectionTableList, ...sqlTableList])
       }).catch(() => {
         this.isLoading = false
       })
