@@ -55,11 +55,10 @@ export function createPinboard ({name, userId}) {
  */
 export function createGroupPinboard ({name, groupId}) {
   return request({
-    url: `/pinBoard/group/folder`,
+    url: `/pinBoard/group/${groupId}/folder`,
     method: 'POST',
     data: {
-      name,
-      groupId
+      name
     }
   })
 }
@@ -147,15 +146,13 @@ export function unPinById (id) {
 
 /**
  * sort pinboard
- * @param {Number} folderId - 釘板分類 ID
  * @param {Array} pinbordList
  */
-export function sortPinboard (folderId, pinbordList) {
+export function sortPinboard (pinbordList) {
   return request({
-    url: '/pinBoard/order',
-    method: 'PUT',
+    url: '/pinBoard/sequence',
+    method: 'PATCH',
     data: {
-      folderId,
       pinbordList
     }
   })

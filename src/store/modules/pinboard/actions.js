@@ -7,7 +7,7 @@ export default {
     })
   },
   getGroupPinboardList ({ commit }, groupId) {
-    return getGroupPinboardList().then(res => {
+    return getGroupPinboardList(groupId).then(res => {
       commit('setGroupPinboardList', res)
     })
   },
@@ -24,7 +24,7 @@ export default {
   },
   deleteGroupPinboard ({ dispatch }, data) {
     return deleteGroupPinboard(data.groupId, data.id).then(() => {
-      dispatch('getGroupPinboardList')
+      dispatch('getGroupPinboardList', data.groupId)
     })
   },
   getPinboardById ({commit}, data) {
@@ -37,7 +37,7 @@ export default {
   },  
   updateGroupPinboardName ({dispatch}, data) {
     return updateGroupPinboardName(data.id, data.name, data.groupId).then(() => {
-      dispatch('getGroupPinboardList')
+      dispatch('getGroupPinboardList', data.groupId)
     })
   },
   pinToBoard ({commit}, data) {
@@ -46,7 +46,7 @@ export default {
   unPinById ({commit}, data) {
     return unPinById(data)
   },
-  sortPinboard (folderId, pinbordList) {
-    return sortPinboard(folderId, pinbordList)
+  sortPinboard ({ state }, pinbordList) {
+    return sortPinboard(pinbordList)
   }
 }

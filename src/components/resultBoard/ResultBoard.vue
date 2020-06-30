@@ -194,7 +194,7 @@ export default {
           this.showPinboardList = true
         })
       } else {
-        this.$store.dispatch('pinboard/getGroupPinboardList').then(() => {
+        this.$store.dispatch('pinboard/getGroupPinboardList', this.groupId).then(() => {
           this.showPinboardList = true
         })
       }

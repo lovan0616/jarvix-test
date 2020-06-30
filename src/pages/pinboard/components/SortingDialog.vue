@@ -13,9 +13,9 @@
         inline
       />
       <draggable
-        v-model="tmpList">
+        v-model="sortedList">
         <div
-          v-for="(singleBoard, index) in tmpList"
+          v-for="(singleBoard, index) in sortedList"
           :key="index"
           class="sorting-dialog__board-list">
           <span 
@@ -48,7 +48,8 @@ export default {
   },
   data () {
     return { 
-      tmpList: []
+      tmpList: [],
+      sortedList: []
     }
   },
   mounted () {
@@ -61,18 +62,22 @@ export default {
         })
       }
     })
+    this.sortedList = [...this.tmpList]
   },
   updated () {
-    this.tmpList.forEach((element, index) => {
+    this.sortedList.forEach((element, index) => {
       element.sequence =  ++index
     })
-    // this.$store.dispatch('pinboard/sortPinboard', this.$route.params.id, this.tmpList).then(() => {
-    // })
+    this.$store.dispatch('pinboard/sortPinboard', this.sortedList).then(() => {
+    })
   },
 	methods: {
 		closeDialog () {
-      this.$emit('close')
-    },
+      let isSorted = this.tmpList.some((element, index) => {
+        return element.id !== this.sortedList[index].id
+      })
+      this.$emit('close', isSorted)
+    }
 	}
 }
 </script>

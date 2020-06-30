@@ -62,6 +62,7 @@
   </div>
 </template>
 <script>
+
 export default {
   name: 'PinboardDialog',
   data () {
@@ -105,7 +106,7 @@ export default {
     },
     createPinboard () {
       if(this.isPersonal) {
-        this.$store.dispatch('pinboard/createPinboard', { name: this.newBoardName, userId: this.accountId } ).then(response => {
+        this.$store.dispatch('pinboard/createPinboard', { name: this.newBoardName, userId: this.accountId }).then(response => {
           this.$emit('pin', response.id)
           this.cancelCreate()
         })

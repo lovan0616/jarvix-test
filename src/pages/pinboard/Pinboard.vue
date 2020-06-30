@@ -107,7 +107,7 @@ export default {
             this.setPinboardName()
           })
         } else {
-          this.$store.dispatch('pinboard/getGroupPinboardList').then(() => {
+          this.$store.dispatch('pinboard/getGroupPinboardList', this.groupId).then(() => {
             this.setPinboardName()
           })
         }
@@ -174,8 +174,12 @@ export default {
     getResult (resultId) {
       return this.boardList.filter(element => element.resultId === resultId)[0]
     },
-    closeSortingDialog () {
+    closeSortingDialog (isSorted) {
       this.isShowSortingDialog = false
+      if(isSorted) {
+        this.boardList = []
+        this.getPinboardInfo()
+      }
     },
     unPin (pinBoardId) {
       this.boardList.forEach(element => {
