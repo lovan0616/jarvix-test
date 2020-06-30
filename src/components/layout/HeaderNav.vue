@@ -199,11 +199,11 @@ export default {
     }
 
     &:hover {
-      color: #fff;
+      color: var(--color-text-hover);
     }
 
     &.active {
-      color: #fff;
+      color: var(--color-text-hover);
 
       &::before {
         position: absolute;

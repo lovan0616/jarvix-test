@@ -203,7 +203,7 @@ export default {
 
 .group-info-form {
   .input-wrapper {
-    background: $theme-bg-color;
+    background: var(--color-bg-5);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     padding: 24px;

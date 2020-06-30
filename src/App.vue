@@ -2,7 +2,7 @@
   <div 
     id="app" 
     :lang="getLang"
-    data-theme="default"
+    :theme="getColor"
   >
     <div class="app-bg"/>
     <transition 
@@ -34,19 +34,25 @@ export default {
     },
     getLang () {
       return this.locale.split('-')[0]
+    },
+    getColor () {
+      console.log(localStorage.getItem('themeColor'))
+      return localStorage.getItem('themeColor')
     }
   },
   watch: {
     locale (value) {
       // 更新 i18n
       this.$i18n.locale = value
-    }
+    },
+    
   },
   created () {
     this.checkLocale()
   },
   mounted () {
     this.init = true
+    localStorage.setItem('themeColor', 'default')
   },
   methods: {
     checkLocale () {

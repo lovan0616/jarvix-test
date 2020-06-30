@@ -52,7 +52,7 @@ export default {
 .spinner-block {
   display: flex;
   align-items: center;
-  // background-color: $theme-bg-color;
+  // background-color: var(--color-bg-5);
   border-radius: 8px;
   padding: 48px 0;
 

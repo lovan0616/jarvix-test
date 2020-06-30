@@ -65,7 +65,7 @@ export default {
   flex-direction: column;
   width: $chat-room-width;
   height: calc(100vh - #{$header-height});
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--color-bg-1);
   overflow: auto;
   transform: translateX(-$chat-room-width);
   z-index: 1;

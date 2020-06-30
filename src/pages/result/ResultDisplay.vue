@@ -303,7 +303,7 @@ export default {
   }
 
   .related-question-block {
-    background-color: $theme-bg-color;
+    background-color: var(--color-bg-5);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     padding: 28px 28px 4px;

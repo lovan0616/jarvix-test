@@ -44,7 +44,7 @@ export default {
 .trend-root-cause {
   border-radius: 8px;
   padding: 20px;
-  background-color: $theme-bg-color;
+  background-color: var(--color-bg-5);
 
   .block-title {
     font-size: 24px;
@@ -87,7 +87,7 @@ export default {
   }
 
   .empty-info {
-    background: $theme-bg-color;
+    background: var(--color-bg-5);
     border-radius: 8px;
     padding: 20px;
     text-align: center;
