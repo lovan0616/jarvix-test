@@ -116,6 +116,7 @@ export default {
       if (oldList.length === 0) return
       this.fetchDataSourceTable()
     },
+    // 根據當前選定的 id 進行切換
     dataFrameId (value) {
       if (!value) return 
       this.onDataSourceTableChange (value)
@@ -139,7 +140,8 @@ export default {
           })
           if (this.dataSourceTables.length) {
             const queryDataFrame = response.find(dataFrame => dataFrame.id === this.dataFrameId)
-            this.dataSourceTable = (this.dataFrameId && this.dataFrameId !== 'all') ? queryDataFrame : response[0]
+            // 根據當前選定的 id 進行切換
+            this.dataSourceTable = this.dataFrameId && this.dataFrameId !== 'all' ? queryDataFrame : response[0]
             this.currentDataFrameId = this.dataSourceTable.id
           }
           this.isLoading = false
