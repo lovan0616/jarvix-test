@@ -1,22 +1,22 @@
 <template>
   <div class="page-algorithm">
     <div class="page-title-row">
-      <h1 class="title">演算法管理</h1>
+      <h1 class="title">{{ $t('algorithm.management') }}</h1>
       <div class="bread-crumb">
         <router-link 
           :to="{name: 'PageAlgorithmList'}" 
-          class="title-link">演算法</router-link>
-        <span class="divider">/</span>輪廓型預測
+          class="title-link">{{ $t('algorithm.name') }}</router-link>
+        <span class="divider">/</span>{{ $t('algorithm.contourPrediction') }}
       </div>
     </div>
     <div class="table-board">
       <div class="board-title-row">
-        訓練資料設定
+        {{ $t('algorithm.trainDataSetting') }}
       </div>
       <div class="content">
         <div class="item-wrap">
           <div class="content-item">
-            <div class="item-title must">目標資料源: </div>
+            <div class="item-title must">{{ $t('algorithm.targetDataSource') }}: </div>
             <default-select 
               :value="1"
               :option-list="[
@@ -26,12 +26,12 @@
             />
           </div>
           <div class="content-item">
-            <div class="item-title must">目標資料表: </div>
+            <div class="item-title must">{{ $t('algorithm.targetDataFrame') }}: </div>
             <default-select 
               :value="1"
               :option-list="[
-                {value: 1, name: 'TemperatureData'},
-                {value: 2, name: 'molding'},
+                { value: 1, name: 'TemperatureData' },
+                { value: 2, name: 'molding' },
               ]"
               class="tag-select input"
             />
@@ -39,33 +39,33 @@
         </div>
         <div class="item-wrap">
           <div class="content-item">
-            <div class="item-title must">目標參數欄位: </div>
+            <div class="item-title must">{{ $t('algorithm.targetParamColumn') }}: </div>
             <default-select 
               :value="1"
               :option-list="[
-                {value: 1, name: '實際標籤'},
+                { value: 1, name: $t('algorithm.actualLabel') },
               ]"
               class="tag-select input"
             />
           </div>
           <div class="content-item">
-            <div class="item-title must">時間欄位: </div>
+            <div class="item-title must">{{ $t('algorithm.timeColumn') }}: </div>
             <default-select 
               :value="1"
               :option-list="[
-                {value: 1, name: '時間戳'},
+                { value: 1, name: $t('algorithm.timestamp') },
               ]"
               class="tag-select input"
             />
           </div>
         </div>
         <div class="content-item">
-          <div class="item-title must">測量值欄位: </div>
+          <div class="item-title must">{{ $t('algorithm.measurementColumn') }}: </div>
           <default-multi-select 
             :values="[1, 2]"
             :option-list="[
-              {value: 1, name: '溫度'},
-              {value: 2, name: '壓力'},
+              { value: 1, name: $t('algorithm.temperature') },
+              { value: 2, name: $t('algorithm.pressure') },
             ]"
             class="tag-select input"
           />
@@ -75,25 +75,25 @@
 
     <div class="table-board">
       <div class="board-title-row">
-        模型參數設定
+        {{ $t('algorithm.modelParamSetting') }}
         <!-- <div class="button-block">
           <button class="btn-m btn-default btn-has-icon"
           >
-            <svg-icon icon-class="folder-plus" class="icon"></svg-icon>新增演算法
+            <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('algorithm.create') }}
           </button>
         </div> -->
       </div>
       <div class="content">
         <div class="item-wrap">
           <div class="content-item">
-            <div class="item-title">CNN模型額外層數: </div>
+            <div class="item-title">CNN{{ $t('algorithm.modelExtraLayers') }}: </div>
             <input 
               :value="0" 
               type="text" 
               class="input">
           </div>
           <div class="content-item">
-            <div class="item-title">FNN模型額外層數: </div>
+            <div class="item-title">FNN{{ $t('algorithm.modelExtraLayers') }}: </div>
             <input 
               :value="0" 
               type="text" 
@@ -102,13 +102,13 @@
         </div>
         <div class="item-wrap">
           <div class="content-item">
-            <div class="item-title">學習速度: </div>
+            <div class="item-title">{{ $t('algorithm.learningSpeed') }}: </div>
             <input 
               type="text" 
               class="input">
           </div>
           <div class="content-item">
-            <div class="item-title">訓練次數: </div>
+            <div class="item-title">{{ $t('algorithm.trainningTimes') }}: </div>
             <input 
               :value="20" 
               type="text" 
@@ -117,14 +117,14 @@
         </div>
         <div class="item-wrap">
           <div class="content-item">
-            <div class="item-title">訓練批大小: </div>
+            <div class="item-title">{{ $t('algorithm.trainingBatchSize') }}: </div>
             <input 
               :value="64" 
               type="text" 
               class="input">
           </div>
           <div class="content-item">
-            <div class="item-title">訓練與驗證資料比例: </div>
+            <div class="item-title">{{ $t('algorithm.trainingAndVerificationDataRatio') }}: </div>
             <input 
               :value="0.8" 
               type="text" 
@@ -132,7 +132,7 @@
           </div>
         </div>
         <div class="content-item">
-          <div class="item-title">標準化方式: </div>
+          <div class="item-title">{{ $t('algorithm.standardizedMethod') }}: </div>
           <default-select 
             :value="1"
             :option-list="[
@@ -142,7 +142,7 @@
           />
         </div>
         <div class="content-item">
-          <div class="item-title">初始化參數: </div>
+          <div class="item-title">{{ $t('algorithm.initParams') }}: </div>
           <default-select 
             :value="1"
             :option-list="[
@@ -156,26 +156,26 @@
 
     <div class="table-board">
       <div class="board-title-row">
-        即時資料設定
+        {{ $t('algorithm.realTimeDataSetting') }}
         <!-- <div class="button-block">
           <button class="btn-m btn-default btn-has-icon"
           >
-            <svg-icon icon-class="folder-plus" class="icon"></svg-icon>新增演算法
+            <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('algorithm.create') }}
           </button>
         </div> -->
       </div>
       <div class="content">
         <div class="content-item">
-          <div class="item-title">目標資料源: </div>
+          <div class="item-title">{{ $t('algorithm.targetDataSource') }}: </div>
           <default-select 
             :option-list="[
-              {value: 1, name: '富士康demo'},
+              {value: 1, name: $t('algorithm.foxconnDemo')},
             ]"
             class="tag-select input"
           />
         </div>
         <div class="content-item">
-          <div class="item-title">目標資料表: </div>
+          <div class="item-title">{{ $t('algorithm.targetDataFrame') }}: </div>
           <default-select 
             :option-list="[
               {value: 1, name: 'TemperatureData'},
@@ -185,20 +185,20 @@
           />
         </div>
         <div class="content-item">
-          <div class="item-title">執行週期: </div>
+          <div class="item-title">{{ $t('algorithm.executionCycle') }}: </div>
           <default-select 
             :value="5"
             :option-list="[
-              {value: 1, name: '一秒'},
-              {value: 2, name: '十五秒'},
-              {value: 3, name: '三十秒'},
-              {value: 4, name: '一分鐘'},
-              {value: 5, name: '十分鐘'},
-              {value: 6, name: '十五分鐘'},
-              {value: 7, name: '三十分鐘'},
-              {value: 8, name: '四十分鐘'},
-              {value: 9, name: '四五分鐘'},
-              {value: 10, name: '一小時'},
+              { value: 1, name: '1' + $t('algorithm.second') },
+              { value: 2, name: '15' + $t('algorithm.second') },
+              { value: 3, name: '30' + $t('algorithm.second') },
+              { value: 4, name: '1' + $t('algorithm.minuteLong') },
+              { value: 5, name: '10' + $t('algorithm.minuteLong') },
+              { value: 6, name: '15' + $t('algorithm.minuteLong') },
+              { value: 7, name: '30' + $t('algorithm.minuteLong') },
+              { value: 8, name: '40' + $t('algorithm.minuteLong') },
+              { value: 9, name: '45' + $t('algorithm.minuteLong') },
+              { value: 10, name: '1' + $t('algorithm.hourLong') },
             ]"
             class="tag-select input"
           />
@@ -238,18 +238,18 @@ export default {
     return {
       dataList: [
         {
-          name: '第一個演算法',
+          name: this.$t('algorithm.nthAlgorithm', { n: 1 }),
           creator: 'sygps',
           createDate: '2020/3/20',
           updateDate: '2020/3/20',
-          status: '可執行'
+          status: this.$t('algorithm.executable')
         },
         {
-          name: '第二個演算法',
+          name: this.$t('algorithm.nthAlgorithm', { n: 2 }),
           creator: 'sygps',
           createDate: '2020/3/20',
           updateDate: '2020/3/20',
-          status: '可執行'
+          status: this.$t('algorithm.executable')
         }
       ]
     }
@@ -258,7 +258,7 @@ export default {
     tableHeaders () {
       return [
         {
-          text: '演算法',
+          text: this.$t('algorithm.name'),
           value: 'name',
           sort: true
         //   link: {
@@ -266,7 +266,7 @@ export default {
         //   }
         },
         {
-          text: '建立者',
+          text: this.$t('algorithm.creator'),
           value: 'creator',
           sort: true
         },
@@ -284,14 +284,14 @@ export default {
           width: '90px',
           time: 'YYYY-MM-DD'
         },
-        {text: this.$t('editing.status'), value: 'status', width: '7.26%'},
+        { text: this.$t('editing.status'), value: 'status', width: '7.26%' },
         {
           text: this.$t('editing.action'),
           value: 'action',
           width: '180px',
           action: [
             {
-              name: '執行',
+              name: this.$t('algorithm.execute'),
               value: 'excute'
             }, {
               name: this.$t('button.edit'),
@@ -313,6 +313,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import '@/styles/pages/_algorithm.scss';
+
 .page-algorithm {
   .title-link {
     color: $theme-color-primary;

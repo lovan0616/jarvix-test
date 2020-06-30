@@ -1,9 +1,9 @@
 <template>
   <div class="page-algorithm">
     <div class="page-title-row">
-      <h1 class="title">演算法管理</h1>
+      <h1 class="title">{{ $t('algorithm.management') }}</h1>
       <div class="bread-crumb">
-        演算法
+        {{ $t('algorithm.name') }}
       </div>
     </div>
     <div class="table-board">
@@ -17,7 +17,7 @@
               icon-class="folder-plus"
               class="icon"
             />
-            新增演算法
+            {{ $t('algorithm.create') }}
           </button>
         </div>
       </div>
@@ -25,7 +25,7 @@
         :headers="tableHeaders"
         :data-list="algorithms"
         :loading="false"
-        empty-message="點擊建立您的演算法"
+        :empty-message="$t('algorithm.clickToCreate')"
         @edit="editAlgorithm($event)"
         @create="createAlgorithm"
         @delete="deleteAlgorithm"
@@ -47,27 +47,27 @@ export default {
     tableHeaders () {
       return [
         {
-          text: '演算法',
+          text: this.$t('algorithm.name'),
           value: 'name',
           sort: true
         },
         {
-          text: '匯入資料源',
+          text: this.$t('algorithm.importDataSource'),
           value: 'inputDatasource',
           sort: true
         },
         {
-          text: '匯入資料表',
+          text: this.$t('algorithm.importDataFrame'),
           value: 'dataframe',
           sort: true
         },
         {
-          text: '匯出資料源',
+          text: this.$t('algorithm.exportDataSource'),
           value: 'outputDatasource',
           sort: true
         },
         {
-          text: '建立者',
+          text: this.$t('algorithm.creator'),
           value: 'creator',
           sort: true
         },
@@ -92,7 +92,7 @@ export default {
           width: '180px',
           action: [
             {
-              name: '執行',
+              name: this.$t('algorithm.execute'),
               value: 'excute'
             }, {
               name: this.$t('button.edit'),
@@ -124,6 +124,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import '@/styles/pages/_algorithm.scss';
+
 .page-algorithm {
   .title-link {
     color: $theme-color-primary;
