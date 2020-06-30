@@ -80,7 +80,7 @@ export default {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   methods: {

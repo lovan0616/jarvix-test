@@ -98,7 +98,7 @@ export default {
       return this.editType === 'create' ? this.$t('button.createGroup') : this.$t('button.editGroupName')
     },
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   mounted () {
