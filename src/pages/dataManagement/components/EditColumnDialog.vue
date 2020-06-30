@@ -22,7 +22,7 @@
           <button 
             :disabled="isProcessing"
             class="btn-m btn-default"
-            @click="updateDataSource"
+            @click="buildAlias"
           >{{ $t('button.build') }}</button>
         </div>
       </div>
@@ -62,7 +62,7 @@
                 class="data-table-cell source"
               >{{ column.parentDataFrameAlias || '-' }}</div>
               <div class="data-table-cell alias">
-                <!-- <span v-show="!isEditing(column.id)">{{ column.aliasList }}</span> -->
+                <span v-show="!isEditing(column.id) && column.aliasList.length === 0"> - </span>
                 <div 
                   v-for="(singleAlias, aliasIndex) in column.aliasList"
                   v-show="!isEditing(column.id)"
@@ -158,6 +158,7 @@
 <script>
 import { getDataFrameColumnInfoById } from '@/API/DataSource'
 import { patchColumnAlias } from '@/API/Alias'
+import { updateDataFrameAlias } from '@/API/DataSource.js'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'
 import InputBlock from '@/components/InputBlock'
@@ -217,12 +218,11 @@ export default {
         response.forEach((element, index) => {
           element.aliasList = element.aliasList.map(alias => {
             return {
-              name: element,
+              name: alias,
               isModified: false
             }
           })
         })
-        console.log(response)
         this.columnList = response
       })
     },
@@ -241,13 +241,23 @@ export default {
     edit (columnInfo) {
       this.tempRowInfo.name = columnInfo.name
       this.tempRowInfo.dataColumnId = columnInfo.id
-      this.tempRowInfo.aliasList = columnInfo.aliasList
+      this.tempRowInfo.aliasList = [...columnInfo.aliasList]
       this.tempRowInfo.columnStatsType = JSON.parse(JSON.stringify(columnInfo.statsType))
     },
-    updateDataSource () {
+    buildAlias () {
       this.isProcessing = true
+      let filterList = this.columnList.map(element => {
+        return {
+          dataColumnId: element.id,
+          dataValue: element.name,
+          alias: element.aliasList.map(dataValue => dataValue.name)
+        }
+      })
+      console.log(filterList)
 
-      patchColumnAlias(this.userEditInfo)
+      const aliasPromise = patchColumnAlias(filterList)
+      const statsTypePromise = updateDataFrameAlias(this.userEditInfo)
+      Promise.all([aliasPromise, statsTypePromise])
         .then(() => {
         // 更新問句說明資訊
           this.$store.dispatch('dataSource/getDataSourceColumnInfo')
@@ -277,7 +287,6 @@ export default {
         let hasId = false
         this.userEditInfo.userEditedColumnInputList.forEach(element => {
           if (element.dataColumnId === this.tempRowInfo.dataColumnId) {
-            element.alias = this.tempRowInfo.name
             element.columnStatsType = this.tempRowInfo.columnStatsType
             hasId = true
           }
