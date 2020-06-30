@@ -24,7 +24,7 @@
           class="dialog-input-label"
         >{{ $t('remoteConnection.sql') }}</label>
         <textarea 
-          v-validate="`required|max:${max}`" 
+          v-validate="`required`" 
           id="sqlContnet"
           v-model.trim="editSqlInfo.creatingSql" 
           rows="5"
@@ -32,6 +32,10 @@
           class="sql-content-input"
           name="sqlContnet"
         />
+        <div
+          v-show="errors.has('sqlContnet')"
+          class="error-text"
+        >{{ errors.first('sqlContnet') }}</div>
       </div>
     </div>
     <template 
