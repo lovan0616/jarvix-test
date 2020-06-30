@@ -105,7 +105,7 @@
                   <svg-icon
                     icon-class="setting"
                     class="icon-setting"
-                    @click="chooseColumn(index)"/>
+                    @click.native="chooseColumn(index)"/>
                 </el-tooltip>
               </div>
               <div class="summary">
