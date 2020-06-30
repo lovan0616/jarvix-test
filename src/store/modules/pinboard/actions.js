@@ -31,12 +31,12 @@ export default {
     return getPinboardById(data)
   },
   updatePinboardName ({dispatch}, data) {
-    return updatePinboardName(data.id, data.name, data.accountId).then(() => {
+    return updatePinboardName(data.id, data.accountId, data.name).then(() => {
       dispatch('getPinboardList')
     })
   },  
   updateGroupPinboardName ({dispatch}, data) {
-    return updateGroupPinboardName(data.id, data.name, data.groupId).then(() => {
+    return updateGroupPinboardName(data.id, data.groupId, data.name).then(() => {
       dispatch('getGroupPinboardList', data.groupId)
     })
   },

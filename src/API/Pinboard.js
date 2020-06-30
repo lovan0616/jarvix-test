@@ -66,17 +66,15 @@ export function createGroupPinboard ({name, groupId}) {
 /**
  * update personal pinboard name
  * @param {Number} folderId - 釘板分類 ID
- * @param {String} name - 釘板分類名稱
  * @param {Number} userId
+ * @param {String} name - 釘板分類名稱
  */
-export function updatePinboardName (folderId, name, userId) {
+export function updatePinboardName (folderId, userId, name) {
   return request({
-    url: `/pinBoard/user/folder`,
+    url: `/pinBoard/user/${userId}/folder/${folderId}`,
     method: 'PATCH',
     data: {
-      folderId,
       name,
-      userId
     }
   })
 }
@@ -84,17 +82,15 @@ export function updatePinboardName (folderId, name, userId) {
 /**
  * update group pinboard name
  * @param {Number} folderId - 釘板分類 ID
- * @param {String} name - 釘板分類名稱
  * @param {Number} groupId
+ * @param {String} name - 釘板分類名稱
  */
-export function updateGroupPinboardName (folderId, name, groupId) {
+export function updateGroupPinboardName (folderId, groupId, name) {
   return request({
-    url: `/pinBoard/folder`,
+    url: `/pinBoard/group/${groupId}/folder/${folderId}`,
     method: 'PATCH',
     data: {
-      folderId,  
-      name,
-      groupId
+      name
     }
   })
 }
