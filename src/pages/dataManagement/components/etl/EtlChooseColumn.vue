@@ -316,7 +316,7 @@ export default {
       }
       .data-frame__info {
         font-size: 14px;
-        margin-right:16px;
+        margin: 0 16px 10px 0;
         dl:not(:last-child) {
           margin-right: 20px;
         }
