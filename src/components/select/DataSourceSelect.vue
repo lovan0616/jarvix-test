@@ -29,7 +29,7 @@
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'DataSourceSelect',
@@ -37,11 +37,12 @@ export default {
     SySelect
   },
   computed: {
+    ...mapGetters('dataSource', ['dataSourceList']),
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
+    ...mapState('previewDataSource', ['isShowPreviewDataSource']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
-    ...mapGetters('dataSource', ['dataSourceList']),
-    ...mapGetters('userManagement', ['getCurrentGroupId']),
     // 過濾掉正在 build 的 bookmark
     buildDataSourceList () {
       return this.dataSourceList.filter(dataSource => {
@@ -56,7 +57,10 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
     onDataSourceChange (dataSourceId) {
+      // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
+      if (this.isShowPreviewDataSource) this.togglePreviewDataSource(false)
       this.$store.dispatch('dataSource/changeDataSourceById', { dataSourceId })
         .then(() => {
           this.$router.push({ 

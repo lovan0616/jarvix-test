@@ -14,7 +14,7 @@
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'DataFrameSelect',
@@ -23,6 +23,7 @@ export default {
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentGroupId']),
+    ...mapState('previewDataSource', ['isShowPreviewDataSource']),
     dataFrameId () {
       return this.$store.state.dataSource.dataFrameId
     },
@@ -41,7 +42,10 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
     onDataFrameChange (dataFrameId) {
+      // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
+      if (this.isShowPreviewDataSource) this.togglePreviewDataSource(false)
       this.$store.dispatch('dataSource/changeDataFrameById', dataFrameId)
       .then(() => {
         this.$router.push({ 
