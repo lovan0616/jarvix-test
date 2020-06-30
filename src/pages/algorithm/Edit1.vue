@@ -221,16 +221,16 @@
           <default-select 
             :value="5"
             :option-list="[
-              { value: 1, name: '1' + $t('algorithm.second') },
-              { value: 2, name: '15' + $t('algorithm.second') },
-              { value: 3, name: '30' + $t('algorithm.second') },
-              { value: 4, name: '1' + $t('algorithm.minuteLong') },
-              { value: 5, name: '10' + $t('algorithm.minuteLong') },
-              { value: 6, name: '15' + $t('algorithm.minuteLong') },
-              { value: 7, name: '30' + $t('algorithm.minuteLong') },
-              { value: 8, name: '40' + $t('algorithm.minuteLong') },
-              { value: 9, name: '45' + $t('algorithm.minuteLong') },
-              { value: 10, name: '1' + $t('algorithm.hourLong') },
+              { value: 1, name: $tc('algorithm.second', 1) },
+              { value: 2, name: $tc('algorithm.second', 15 ) },
+              { value: 3, name: $tc('algorithm.second', 30) },
+              { value: 4, name: $tc('algorithm.minuteLong', 1) },
+              { value: 5, name: $tc('algorithm.minuteLong', 10) },
+              { value: 6, name: $tc('algorithm.minuteLong', 15) },
+              { value: 7, name: $tc('algorithm.minuteLong', 30) },
+              { value: 8, name: $tc('algorithm.minuteLong', 40) },
+              { value: 9, name: $tc('algorithm.minuteLong', 45) },
+              { value: 10, name: $tc('algorithm.hourLong', 1) },
             ]"
             class="tag-select input"
           />
@@ -410,7 +410,6 @@ export default {
       .item-title {
         font-size: 14px;
         min-width: 80px;
-        max-width: 120px;
         margin-right: 16px;
         align-items: center;
         display: flex;

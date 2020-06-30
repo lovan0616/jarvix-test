@@ -112,7 +112,7 @@ export default {
           text: this.$t('editing.createDate'),
           value: 'createDate',
           sort: true,
-          width: '90px',
+          width: '120px',
           time: 'YYYY-MM-DD'
         },
         {

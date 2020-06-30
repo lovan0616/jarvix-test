@@ -75,21 +75,21 @@ export default {
           text: this.$t('editing.createDate'),
           value: 'createDate',
           sort: true,
-          width: '90px',
+          width: '120px',
           time: 'YYYY-MM-DD'
         },
         {
           text: this.$t('editing.updateDate'),
           value: 'updateDate',
           sort: true,
-          width: '90px',
+          width: '120px',
           time: 'YYYY-MM-DD'
         },
         {text: this.$t('editing.status'), value: 'status', width: '7.26%'},
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '180px',
+          width: '220px',
           action: [
             {
               name: this.$t('algorithm.execute'),

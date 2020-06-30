@@ -346,7 +346,7 @@
     "executable": "可执行",
     "predictiveMaintenance": "预测性维修",
     "contourPrediction": "轮廓型预测",
-    "algoProcessFinishMessage": "演算法处理完毕。已自动新增一个资料源{demoDatasource}并将结果储存于内。",
+    "algoProcessFinished": "演算法处理完毕。已自动新增一个资料源{demoDatasource}并将结果储存于内。",
     "foxconnContourPredictionMolding": "富士康_轮廓型分析_molding_预测",
     "importDataSource": "汇入资料源",
     "importDataFrame": "汇入资料表",

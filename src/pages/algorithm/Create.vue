@@ -418,7 +418,6 @@ export default {
       .item-title {
         font-size: 14px;
         min-width: 80px;
-        max-width: 180px;
         margin-right: 16px;
         align-items: center;
         display: flex;
