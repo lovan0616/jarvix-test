@@ -121,13 +121,14 @@ export default {
     },
     settingData () {
       const settingList = []
+      const { account_id: queryAccountId, group_id: queryGroupId } = this.$route.params
       if (this.hasPermission(['group_read_user', 'group_read_data'])) {
-        settingList.push({icon: 'database', title: 'sideNav.dataSourceManagement', path: `/account/${this.accountId}/group/${this.groupId}/datasource`})
+        settingList.push({icon: 'database', title: 'sideNav.dataSourceManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/datasource`})
       }
   
       // 個人版 隱藏成員管理選項
       if (this.license.maxUser !== 1) {
-        settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/account/${this.accountId}/group/${this.groupId}/users`})
+        settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/users`})
       }
       return settingList
     }
