@@ -108,8 +108,8 @@
           class="btn btn-outline"
           @click="prevStep"
         >{{ $t('button.prevStep') }}</button>
-        <button 
-          :disabled="isLoading || tableIdList.length === 0"
+        <button
+          :disabled="isLoading || (tableIdList.length === 0 && sqlTableChosenList.length === 0)"
           class="btn btn-default"
           @click="nextStep"
         >{{ isLoading ? $t('button.processing') : $t('button.nextStep') }}</button>
