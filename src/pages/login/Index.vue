@@ -36,6 +36,7 @@
 import { login } from '@/API/User'
 import InputBlock from '@/components/InputBlock'
 import PageLayout from '@/components/layout/PageLayout'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   inject: ['$validator'],
@@ -53,10 +54,14 @@ export default {
       isSubmit: false
     }
   },
+  computed: {
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+  },
   mounted () {
     this.$store.commit('chatBot/clearConversation')
   },
   methods: {
+    ...mapActions('userManagement', ['getUserInfo']),
     submitForm () {
       this.$validator.validateAll().then(result => {
         if (result) {
@@ -67,38 +72,45 @@ export default {
           })
             .then(res => {
               localStorage.setItem('token', res.accessToken)
-              return this.$store.dispatch('userManagement/getUserInfo')
+              return this.getUserInfo()
             })
             .then(() => {
-              const currentGroupId = this.$store.getters['userManagement/getCurrentGroupId']
-              if (!currentGroupId) {
-                this.$store.commit('dataSource/setDataSourceList', [])
-                this.$store.dispatch('dataSource/handleEmptyDataSource')
-                return this.$router.push({ name: 'PageGrouplessGuidance' })
-              }
-
-              // 取得前一次停留或拜訪的頁面
+              // 取得前一次停留或拜訪的資訊
               const currentRoute = this.$store.state.setting.currentRoute
               const dataSourceId = this.$store.state.dataSource.dataSourceId
-              const dataFrameId = this.$store.state.dataSource.dataFrameId
 
+              if (!this.getCurrentGroupId) {
+                this.$store.commit('dataSource/setDataSourceList', [])
+                this.$store.dispatch('dataSource/handleEmptyDataSource')
+              }
+              
               // 用戶若因 token 失效需重新登入，使用先前已選擇的 id 取得相關資料
-              this.$store.dispatch('dataSource/getDataSourceList', { dataSourceId, dataFrameId })
+              if (this.getCurrentGroupId && dataSourceId) {
+                const dataFrameId = this.$store.state.dataSource.dataFrameId
+                this.$store.dispatch('dataSource/getDataSourceList', { dataSourceId, dataFrameId })
+              }
 
               // 用戶若因 token 失效需重新登入，登入後導回原頁面
               if (currentRoute && currentRoute.path) {
                 const { name, query, params } = currentRoute
                 return this.$router.push({ name, query, params })
-              } else {
-                const currentAccountId = this.$store.getters['userManagement/getCurrentAccountId']
-                return this.$router.push({
-                  name: 'PageIndex', 
-                  params: {
-                    'account_id': currentAccountId,
-                    'group_id': currentGroupId
-                  } 
+              } 
+              
+              // 沒有群組時導向引導頁面
+              if (!this.getCurrentGroupId) {
+                return this.$router.push({ 
+                  name: 'PageGrouplessGuidance',
+                  params: { 'account_id': this.getCurrentAccountId }
                 })
-              }
+              } 
+
+              this.$router.push({
+                name: 'PageIndex', 
+                params: {
+                  'account_id': this.getCurrentAccountId,
+                  'group_id': this.getCurrentGroupId
+                }
+              })
             })
             .catch(() => this.isSubmit = false)
         }
