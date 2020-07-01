@@ -90,7 +90,7 @@
 <script>
 import AskHelperDialog from './AskHelperDialog'
 import { mapState } from 'vuex'
-import { addTableToMemory } from '@/API/NewAsk'
+
 
 export default {
   name: 'AskBlock',
@@ -117,13 +117,13 @@ export default {
         ...this.dataSourceDataValueList
       ]
     },
-    tokenList () {
-      let tokens = []
-      for (let i = 0; i < this.userQuestion.length; i++) {
-        console.log(this.userQuestion.charAt[i])
-      }
-      return tokens
-    },
+    // tokenList () {
+    //   let tokens = []
+    //   for (let i = 0; i < this.userQuestion.length; i++) {
+    //     console.log(this.userQuestion.charAt[i])
+    //   }
+    //   return tokens
+    // },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
     },
@@ -144,13 +144,12 @@ export default {
     userQuestion (val) {
       if (document.activeElement === this.$refs.questionInput) {
         // 處理問句字串
-        for (let i = 0; i < val.length; i++) {
-          for (let j = i + 1; j <= val.length; j++) {
-            let currentText = val.slice(i, j)
-            console.log(currentText, 'currentText')
-          }
-          
-        }
+        // for (let i = 0; i < val.length; i++) {
+        //   for (let j = i + 1; j <= val.length; j++) {
+        //     let currentText = val.slice(i, j)
+        //     console.log(currentText, 'currentText')
+        //   }
+        // }
         this.showHistory()
       }
     },
@@ -247,9 +246,7 @@ export default {
       this.$store.commit('chatBot/updateIsUseAlgorithm', !this.isUseAlgorithm)
     },
     focusInput () {
-      let {dataFrameId, dataSourceId} = this.$route.query
-      let {account_id} = this.$route.params
-      addTableToMemory(account_id, dataFrameId === 'all' ? null : dataFrameId, dataSourceId)
+      this.$store.dispatch('chatBot/openAskInMemory')
     }
   },
 }
