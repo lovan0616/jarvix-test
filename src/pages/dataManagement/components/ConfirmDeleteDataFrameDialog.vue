@@ -81,6 +81,7 @@ export default {
     line-height: 1;
     letter-spacing: 2px;
     color: $theme-color-primary;
+    word-break: break-all;
 
     &:not(:last-child) {
       margin-bottom: 16px;

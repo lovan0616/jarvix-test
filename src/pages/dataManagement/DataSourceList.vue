@@ -112,14 +112,14 @@ export default {
           text: this.$t('editing.createDate'),
           value: 'createDate',
           sort: true,
-          width: '90px',
+          width: '120px',
           time: 'YYYY-MM-DD'
         },
         {
           text: this.$t('editing.updateDate'),
           value: 'updateDate',
           sort: true,
-          width: '90px',
+          width: '120px',
           time: 'YYYY-MM-DD'
         },
         {text: this.$t('editing.status'), value: 'state', width: '7.26%'},

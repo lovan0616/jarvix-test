@@ -358,7 +358,6 @@ export default {
     line-height: 1;
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 8px;
 
     &.last {
       margin-bottom: 16px;
@@ -368,6 +367,7 @@ export default {
       display: flex;
       align-items: center;
       margin-right: 20px;
+      margin-bottom: 8px;
     }
   }
 

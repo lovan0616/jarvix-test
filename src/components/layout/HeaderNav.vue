@@ -43,7 +43,7 @@
       <router-link 
         v-if="isShowAlgorithmBtn" 
         :to="{name: 'PageAlgorithmList'}" 
-        class="nav-item">演算法</router-link>
+        class="nav-item">{{ $t('nav.algorithm') }}</router-link>
       <div
         v-if="groupId"
         class="nav-item nav-item-dropdown nav-set"
