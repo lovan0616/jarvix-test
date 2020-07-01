@@ -36,7 +36,6 @@ export default {
       return this.locale.split('-')[0]
     },
     getColor () {
-      console.log(localStorage.getItem('themeColor'))
       return localStorage.getItem('themeColor')
     }
   },
@@ -44,8 +43,7 @@ export default {
     locale (value) {
       // 更新 i18n
       this.$i18n.locale = value
-    },
-    
+    }
   },
   created () {
     this.checkLocale()
