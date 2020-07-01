@@ -23,11 +23,11 @@ export function getGroupPinboardList (groupId) {
 
 /**
  * get pinboard by id
- * @param {Number} id
+ * @param {Number} folderId
  */
-export function getPinboardById (forderId) {
+export function getPinboardById (folderId) {
   return request({
-    url: `/pinBoard/${forderId}`,
+    url: `/pinBoard/${folderId}`,
     method: 'GET'
   })
 }
@@ -95,8 +95,8 @@ export function updateGroupPinboardName (folderId, groupId, name) {
 
 /**
  * delete personal board
- * @param {Number} userId -  account ID
- * @param {Number} folderId -  pinBoard ID
+ * @param {Number} userId -  user ID
+ * @param {Number} folderId -  釘板分類 ID
  */
 export function deletePinboard (userId, folderId) {
   return request({
@@ -107,7 +107,7 @@ export function deletePinboard (userId, folderId) {
 
 /**
  * delete group board
- * @param {Number} folderId -  pinBoard ID
+ * @param {Number} folderId -  釘板分類 ID
  * @param {Number} groupId -  groupId ID
  */
 export function deleteGroupPinboard (groupId, folderId) {

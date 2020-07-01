@@ -63,7 +63,7 @@ export default {
       isShowSortingDialog: false,
       timeoutFunction: null,
       boardList: [],
-      boardName: null,
+      boardName: null
     }
   },
   computed: {
@@ -79,9 +79,6 @@ export default {
     },
     prevPage () {
       return this.isPersonalPinboard ? 'PersonalPagePinboardList' : 'ProjectPagePinboardList'
-    },
-    accountId () {
-      return this.$store.state['userManagement/getCurrentGroupId']
     },
     groupId () {
       return this.$route.params.group_id
