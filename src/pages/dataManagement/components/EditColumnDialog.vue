@@ -52,7 +52,7 @@
             ref="dataTableBody" 
             class="data-table-body">
             <div 
-              v-for="column in columnList"
+              v-for="(column, index) in columnList"
               :key="column.id"
               class="data-table-row"
             >
@@ -80,10 +80,10 @@
                     :key="column.id + '-' + aliasIndex"
                     class="edit-alias-input-list"
                   >
-                    <input-block
-                      v-validate="`required|max:${max}`"
+                    <input-verify
+                      v-validate="`max:${max}`"
                       v-model="tempRowInfo.aliasList[aliasIndex].name"
-                      :name="'alias' + '-' + column.id"
+                      :name="'alias' + '-' + column.id + '-' + aliasIndex"
                       :placeholder="$t('editing.dataFrameInputPlaceholder')"
                       class="edit-alias-input-block"
                     />
@@ -105,7 +105,6 @@
                   </button>
                 </div>
               </div>
-              <!-- <div class="data-table-cell tag">{{ column.statsType }}</div> -->
               <div class="data-table-cell tag">
                 <span
                   v-if="tempRowInfo.dataColumnId !== column.id"
@@ -133,7 +132,7 @@
                 >
                   <svg-icon
                     icon-class="save"
-                    @click.native="save" />
+                    @click.native="saveAlias(index)" />
                 </el-tooltip>
                 <el-tooltip
                   v-if="tempRowInfo.dataColumnId === column.id"
@@ -161,14 +160,14 @@ import { patchColumnAlias } from '@/API/Alias'
 import { updateDataFrameAlias } from '@/API/DataSource.js'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'
-import InputBlock from '@/components/InputBlock'
+import InputVerify from '@/components/InputVerify'
 
 export default {
   name: 'EditColumnDialog',
   inject: ['$validator'],
   components: {
     DefaultSelect,
-    InputBlock
+    InputVerify
   },
   props: {
     tableInfo: {
@@ -239,9 +238,8 @@ export default {
       this.$emit('close')
     },
     edit (columnInfo) {
-      this.tempRowInfo.name = columnInfo.name
       this.tempRowInfo.dataColumnId = columnInfo.id
-      this.tempRowInfo.aliasList = [...columnInfo.aliasList]
+      this.tempRowInfo.aliasList = JSON.parse(JSON.stringify(columnInfo.aliasList))
       this.tempRowInfo.columnStatsType = JSON.parse(JSON.stringify(columnInfo.statsType))
     },
     buildAlias () {
@@ -253,7 +251,6 @@ export default {
           alias: element.aliasList.map(dataValue => dataValue.name)
         }
       })
-      console.log(filterList)
 
       const aliasPromise = patchColumnAlias(filterList)
       const statsTypePromise = updateDataFrameAlias(this.userEditInfo)
@@ -271,18 +268,27 @@ export default {
           this.cancel()
         })
     },
-    save () {
+    saveAlias (index) {
       this.$validator.validateAll().then((isValidate) => {
         if (!isValidate) return
 
         if (this.isProcessing) return
 
-        let currentColumn = this.columnList.find(element => {
-          return element.id === this.tempRowInfo.dataColumnId
-        })
+        this.tempRowInfo.aliasList = this.tempRowInfo.aliasList.reduce((result, element) => {
+          // 過濾掉空字串
+          if (element.name === null || element.name === '') return result
+          if (element.isModified) return result.concat(element)
+          // 比較編輯前後是否有差異
+          return result.concat({
+            ...element,
+            isModified: this.columnList[index].aliasList.findIndex(item => item.name === element.name) < 0
+          })
+        }, [])
+
         // 將 temp 資料塞回去
-        currentColumn.aliasList = this.tempRowInfo.aliasList
-        currentColumn.statsType = this.tempRowInfo.columnStatsType
+        this.columnList[index].aliasList = this.tempRowInfo.aliasList
+        this.columnList[index].statsType = this.tempRowInfo.columnStatsType
+
         // 目前的 id 是否已經存在
         let hasId = false
         this.userEditInfo.userEditedColumnInputList.forEach(element => {
@@ -314,19 +320,9 @@ export default {
         name: null,
         isModified: true
       })
-      this.$nextTick(() => {
-        // 重新驗證所有欄位
-        // this.$validator.validateAll()
-      })
     },
     removeAlias (index) {
       this.tempRowInfo.aliasList.splice(index, 1)
-      // 確保已經從 DOM 中移除欄位才能驗證到正確名稱的欄位
-      this.$nextTick(() => {
-        // 重新驗證所有欄位
-        // this.$validator.validateAll()
-      })
-      // console.log(this.tempRowInfo)
     }
   },
 }
@@ -359,12 +355,14 @@ export default {
   }
   .name {
     width: 22%;
+    color: #DDDDDD;
   }
   .source {
     width: 22%;
   }
   .alias {
     width: 21%;
+    color: #DDDDDD;
 
     .alias__item {
       display: inline;
@@ -376,6 +374,7 @@ export default {
   }
   .tag {
     width: 18%;
+    color: #DDDDDD;
   }
   .action {
     width: 17%;
@@ -413,13 +412,16 @@ export default {
 
   .edit-alias-input-block {
     width: 105px;
+    height: 32px;
     margin-right: 12px;
-    /deep/ .input {
+
+    /deep/ .input-verify-text {
       height: 32px;
-      padding-bottom: 0;
+      color: $theme-text-color;
     }
-    /deep/ .error-text {
-      bottom: -10px;
+
+    /deep/ .input-error  {
+      bottom: -18px;
     }
 
     &:not(:last-child) {

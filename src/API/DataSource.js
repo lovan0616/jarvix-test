@@ -136,6 +136,8 @@ export function deleteDataFrameById (dataFrameId) {
 /**
  * get data column by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
+ * @param {Boolean} hasFeature
+ * @param {Boolean} hasAliasLimit - ture: get one primary alias, false: get all alias
  */
 export function getDataFrameColumnInfoById (dataFrameId, hasFeature = true, hasAliasLimit = true) {
   return request({
