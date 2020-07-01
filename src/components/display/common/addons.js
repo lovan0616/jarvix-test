@@ -142,7 +142,7 @@ export function yAxisDefault () {
         color: chartVariable['xAxisColor']
       }
     },
-    scale: true,
+    scale: false,
     axisLabel: {
       show: true,
       textStyle: {

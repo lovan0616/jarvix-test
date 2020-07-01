@@ -27,10 +27,22 @@ export function commonChartOptions () {
           title: i18n.t('button.selectAll')
         }
       ],
+      emphasis: {
+        selectorLabel: {
+          backgroundColor: '#0a3c42',
+          borderColor: '#0a3c42',
+          borderWidth: 2
+        }
+      },
       selectorLabel: {
         color: '#fff',
         backgroundColor: '#2AD2E2',
-        borderColor: 'transparent'
+        borderColor: '#2AD2E2',
+        borderWidth: 2,
+        align: 'center',
+        verticalAlign: 'middle',
+        lineHeight: 12,
+        padding: [2, 4, 2, 4]
       }
     },
     toolbox: {
@@ -126,8 +138,17 @@ export function commonChartOptions () {
           textBackgroundColor: '#0a3c42'
         }
       },
-      showTitle: true,
-      top: 54
+      showTitle: false,
+      top: 54,
+      tooltip: {
+        show: true,
+        padding: 4,
+        position: 'left',
+        textStyle: {
+          width: '100%',
+          fontSize: 12
+        }
+      }
     },
     tooltip: {
       show: true,

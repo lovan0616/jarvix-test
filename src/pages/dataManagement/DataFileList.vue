@@ -313,7 +313,8 @@ export default {
   beforeDestroy () {
     if (this.intervalFunction) {
       window.clearInterval(this.intervalFunction)
-    } else if (this.checkDataFrameIntervalFunction) {
+    }
+    if (this.checkDataFrameIntervalFunction) {
       window.clearInterval(this.checkDataFrameIntervalFunction)
     }
   },
