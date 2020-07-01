@@ -151,7 +151,10 @@ export default {
     },
     switchGroup (groupId) {
       this.isLoading = true
-      this.switchGroupById(groupId)
+      this.switchGroupById({
+        accountId: this.$route.params.account_id,
+        groupId
+      })
         .then(() => {
           this.$router.push({ 
             name: 'PageIndex',

@@ -1,7 +1,6 @@
 import { logout, refreshToken, switchAccount, switchGroup } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
-import router from '../../../router'
 
 export default {
   logout ({ commit }) {
@@ -85,7 +84,7 @@ export default {
         }
 
         // 處理路徑中帶有指定的 group id
-        if (defaultGroupId) return dispatch('switchGroupById', defaultGroupId)
+        if (defaultGroupId) return dispatch('switchGroupById', { accountId, groupId: defaultGroupId })
 
         // 先清空，因為新群組有可能沒有 dataSource
         commit('dataSource/setDataSourceId', null, { root: true })
@@ -95,15 +94,10 @@ export default {
       })
       .finally(() => commit('updateAppLoadingStatus', false, { root: true }))
   },
-  switchGroupById({ state, dispatch, commit, getters }, groupId) {
-    const currentAccountId = router.app.$route.params.account_id
-    
+  switchGroupById({ dispatch, commit }, { accountId, groupId }) {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
-    return switchGroup({
-      accountId: currentAccountId,
-      groupId: groupId
-    })
+    return switchGroup({ accountId, groupId })
       .then(() => dispatch('getUserInfo'))
       .then(() => {
         // 先清空，因為新群組有可能沒有 dataSource
