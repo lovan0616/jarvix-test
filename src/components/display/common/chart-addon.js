@@ -138,10 +138,16 @@ export function commonChartOptions () {
           textBackgroundColor: '#0a3c42'
         }
       },
-      showTitle: true,
+      showTitle: false,
       top: 54,
       tooltip: {
-        
+        show: true,
+        padding: 4,
+        position: 'left',
+        textStyle: {
+          width: '100%',
+          fontSize: 12
+        }
       }
     },
     tooltip: {
