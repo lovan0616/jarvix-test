@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import moment from 'moment'
 
 // 全站共用的 function，會注入每個 component 當中
 Vue.mixin({
@@ -95,53 +96,14 @@ Vue.mixin({
       })
     },
     timeToDate (time) {
-      // time will be represented as '2020-05-18T08:48:33.505+0000'
-      return time.split('T')[0]
+      return moment(time).format('YYYY-MM-DD')
     },
     timeToFileName (time) {
-      let datetime = new Date(parseInt(time))
-      let year = datetime.getFullYear()
-      let month = datetime.getMonth() + 1
-      let date = datetime.getDate()
-      let hour = datetime.getHours()
-      let minute = datetime.getMinutes()
-      return `${year}-${this.paddingZero(month)}-${this.paddingZero(date)}-${this.paddingZero(hour)}${this.paddingZero(minute)}`
+      return moment(Number(time)).format('YYYY-MM-DD-HHmm')
     },
     // 轉成 YYYY-MM-DD HH:mm
     timeToDateTime (time) {
-      // time will be represented as '2020-05-18T08:48:33.505+0000'
-      return time.split('.')[0].replace(/T/g, ' ').slice(0, -3)
-    },
-    // timeStamp 轉成 YYYY-MM-DD
-    timeStampToDate (time) {
-      let datetime = new Date()
-      datetime.setTime(time * 1000)
-      let year = datetime.getFullYear()
-      let month = datetime.getMonth() + 1
-      let date = datetime.getDate()
-      return year + '-' + this.paddingZero(month) + '-' + this.paddingZero(date)
-    },
-    // timeStamp 轉成 YYYY-MM-DD HH:mm
-    timeStampToDateTime (time) {
-      let datetime = new Date()
-      datetime.setTime(time * 1000)
-      let year = datetime.getFullYear()
-      let month = datetime.getMonth() + 1
-      let date = datetime.getDate()
-      let hour = datetime.getHours()
-      let minute = datetime.getMinutes()
-      return `${year}-${this.paddingZero(month)}-${this.paddingZero(date)} ${this.paddingZero(hour)}:${this.paddingZero(minute)}`
-    },
-    // timeStamp 轉成 YYYY/MM/DD HH:mm
-    timeStampToDateTime2 (time) {
-      let datetime = new Date()
-      datetime.setTime(time * 1000)
-      let year = datetime.getFullYear()
-      let month = datetime.getMonth() + 1
-      let date = datetime.getDate()
-      let hour = datetime.getHours()
-      let minute = datetime.getMinutes()
-      return `${year}/${this.paddingZero(month)}/${this.paddingZero(date)} ${this.paddingZero(hour)}:${this.paddingZero(minute)}`
+      return moment(time).format('YYYY-MM-DD HH:mm')
     },
     // 時間補十分位，為了滿足 YYYY-MM-DD 格式
     paddingZero (n) {
