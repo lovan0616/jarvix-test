@@ -107,10 +107,12 @@
                   :visible-arrow="false"
                   :content="$t('etl.advance')"
                   placement="bottom">
-                  <svg-icon
-                    icon-class="setting"
-                    class="icon-setting"
-                    @click.native="chooseColumn(index)"/>
+                  <div @click="chooseColumn(index)">
+                    <svg-icon
+                      icon-class="setting"
+                      class="icon-setting"
+                    />
+                  </div>
                 </el-tooltip>
               </div>
               <div class="summary">
