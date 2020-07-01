@@ -29,6 +29,7 @@
           @keyup.shift.ctrl.72="toggleHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
+          @focus="focusInput"
         >
         <a 
           href="javascript:void(0);" 
@@ -89,6 +90,7 @@
 <script>
 import AskHelperDialog from './AskHelperDialog'
 import { mapState } from 'vuex'
+import { addTableToMemory } from '@/API/NewAsk'
 
 export default {
   name: 'AskBlock',
@@ -105,6 +107,16 @@ export default {
   },
   computed: {
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
+    dictionaries () {
+      return [
+        ...this.dataSourceColumnInfoList.booleanList,
+        ...this.dataSourceColumnInfoList.category,
+        ...this.dataSourceColumnInfoList.dateTime,
+        ...this.dataSourceColumnInfoList.numeric,
+        ...this.dataSourceColumnInfoList.uniqueList,
+        ...this.dataSourceDataValueList
+      ]
+    },
     tokenList () {
       let tokens = []
       for (let i = 0; i < this.userQuestion.length; i++) {
@@ -233,6 +245,11 @@ export default {
     },
     toggleAlgorithm () {
       this.$store.commit('chatBot/updateIsUseAlgorithm', !this.isUseAlgorithm)
+    },
+    focusInput () {
+      let {dataFrameId, dataSourceId} = this.$route.query
+      let {account_id} = this.$route.params
+      addTableToMemory(account_id, dataFrameId === 'all' ? null : dataFrameId, dataSourceId)
     }
   },
 }
