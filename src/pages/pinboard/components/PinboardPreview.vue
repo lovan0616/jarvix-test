@@ -118,7 +118,7 @@ export default {
       return `${window.location.origin}/pinboard/${this.boardInfo.id}`
     },
     accountId () {
-      return this.$route.params.accountId
+      return this.$route.params.account_id
     },
   },
   methods: {

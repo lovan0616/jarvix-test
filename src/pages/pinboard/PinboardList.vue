@@ -139,10 +139,10 @@ export default {
       return this.$store.state.userManagement.userId
     },
     accountId () {
-      return this.$route.params.accountId
+      return this.$route.params.account_id
     },
     groupId () {
-      return this.$route.params.groupId
+      return this.$route.params.group_id
     },
     isPersonalPinboard () {
       return this.groupId === undefined

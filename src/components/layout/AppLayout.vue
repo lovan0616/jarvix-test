@@ -97,8 +97,7 @@ export default {
       for (let i = 0; i < oldList.length; i++) {
         if (
           !newDataSourceList.has(oldList[i].id)
-          || !newList[i].processDataFrameCount
-          || oldList[i].processDataFrameCount > newList[i].processDataFrameCount
+          || oldList[i].processDataFrameCount > newList.find(dataFrame => dataFrame.id === oldList[i].id).processDataFrameCount
         ) return true
       }
       return false

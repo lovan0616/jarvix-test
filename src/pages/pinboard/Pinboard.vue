@@ -84,7 +84,7 @@ export default {
       return this.$store.state['userManagement/getCurrentGroupId']
     },
     groupId () {
-      return this.$route.params.groupId
+      return this.$route.params.group_id
     },
     isPersonalPinboard () {
       return this.groupId === undefined
