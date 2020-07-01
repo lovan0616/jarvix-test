@@ -47,11 +47,13 @@
       </div>
       <div 
         :class="{ 'disabled': dataSourceList.length === 0 }" 
-        class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}<a 
+        class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}
+        <a 
           href="javascript:void(0)" 
           class="link help-link"
           @click="showHelper"
-      >{{ $t('askHelper.helpLink') }}</a> </div>
+        >{{ $t('askHelper.helpLink') }}</a>
+      </div>
     </div>
     <div 
       :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
@@ -328,12 +330,11 @@ export default {
 
     .help-link {
       font-size: 13px;
-      margin-left: 4px;
     }
   }
 
   .ask-helper-dialog {
-    bottom: 111px;
+    bottom: 100%;
 
     &.has-filter {
       bottom: 137px;
