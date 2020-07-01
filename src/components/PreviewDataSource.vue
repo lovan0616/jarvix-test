@@ -160,7 +160,7 @@ export default {
       this.dataSourceTable = this.dataSourceTables.find(item => item.id === id)
     },
     onDataSourceTableChange (id) {
-      const dataFrameId = Number(id)
+      const dataFrameId = id === 'all' ? this.currentDataFrameId :  Number(id)
       if (this.dataSourceTable.id === dataFrameId) return
       this.hasError = false
       this.dataSourceTable.id = dataFrameId
