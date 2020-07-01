@@ -29,7 +29,6 @@
         <li class="list__item">
           <router-link
             :to="accountHomePageRoute()"
-            href="javascript:void(0)" 
             class="list__link"
           >
             <svg-icon 
