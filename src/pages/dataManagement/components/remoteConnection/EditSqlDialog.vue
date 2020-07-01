@@ -116,8 +116,8 @@ export default {
     confirm () {
       this.$validator.validateAll().then(result => {
         if (!result) return
-        if (this.tableList.some(element => element === this.editSqlInfo.creatingSqlName)
-        || this.sqlTableList.some(element => element.creatingSqlName === this.editSqlInfo.creatingSqlName)) {
+        if (this.editIndex === null && (this.tableList.some(element => element === this.editSqlInfo.creatingSqlName)
+        || this.sqlTableList.some(element => element.creatingSqlName === this.editSqlInfo.creatingSqlName))) {
           Message({
             message: this.$t('remoteConnection.tableNameDuplicate'),
             type: 'warning',
@@ -145,6 +145,7 @@ export default {
 
   &.confirm-dialog >>> .dialog-container {
     top: 90px;
+    width: 80%;
   }
 
   .dialog-input-block {
@@ -162,6 +163,12 @@ export default {
   .dialog-input-label {
     display: block;
     margin-bottom: 4px;
+
+    .remark-info {
+      font-size: 14px;
+      color: #FFDF6F;
+      margin-left: 4px;
+    }
   }
 
   .dialog-btn-block {
