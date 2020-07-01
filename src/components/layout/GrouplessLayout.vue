@@ -26,7 +26,7 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    const currentAccount = to.params.account_id
+    const currentAccount = store.getters['userManagement/getCurrentAccountId']
     const currentGroup = store.getters['userManagement/getCurrentGroupId']
     currentAccount && !currentGroup ? next() : next({
       name: 'PageIndex', 

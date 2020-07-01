@@ -15,6 +15,15 @@ const router = new Router({
       component: AppLayout,
       children: [
         {
+          path: '/',
+          beforeEnter: (to, from, next) => {
+            const accountId = store.getters['userManagement/getCurrentAccountId']
+            const groupId = store.getters['userManagement/getCurrentGroupId']
+            if (!groupId) return next({ name: 'PageGrouplessGuidance', params: { 'account_id': accountId } })
+            next({ name: 'PageIndex', params: { 'account_id': accountId, 'group_id': groupId } })
+          }
+        },
+        {
           path: 'account',
           component: () => import('@/pages/account/Index'),
           children: [
