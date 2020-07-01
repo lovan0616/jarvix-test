@@ -70,6 +70,7 @@
         @valueAlias="editTableValueAlias"
         @columnSet="editColumnSet"
         @dateTime="editDateTime"
+        @etlSetting="editEtlSetting"
       />
     </div>
     <file-upload-dialog
@@ -120,6 +121,11 @@
       v-if="showEditFeatureDialog"
       @close="toggleEditFeatureDialog"
     />
+    <edit-etl-dialog
+      v-if="showEditEtlDialog"
+      :is-review-mode="isReviewMode"
+      @close="closeEditEtlDialog"
+    />
   </div>
 </template>
 <script>
@@ -129,10 +135,11 @@ import ConfirmDeleteDataFrameDialog from './components/ConfirmDeleteDataFrameDia
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
 import EditColumnSetDialog from './components/columnSet/EditColumnSetDialog'
+import EditEtlDialog from './components/EditEtlDialog'
 import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
-import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
+import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById, getDataFrameEtlSetting } from '@/API/DataSource'
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 import { getAccountInfo } from '@/API/Account'
 import { mapState } from 'vuex'
@@ -149,7 +156,8 @@ export default {
     DataFrameAliasDialog,
     ValueAliasDialog,
     EditDateTimeDialog,
-    FeatureManagementDialog
+    FeatureManagementDialog,
+    EditEtlDialog
   },
   data () {
     return {
@@ -159,6 +167,7 @@ export default {
       showJoinTableDialog: false,
       showEditColumnDialog: false,
       showEditDateTimeDialog: false,
+      showEditEtlDialog: false,
       deleteId: null,
       renameDataSource: null,
       // 資料處理中
@@ -179,7 +188,8 @@ export default {
       intervalFunction: null,
       checkDataFrameIntervalFunction: null,
       isLoading: false,
-      showJoinTable: localStorage.getItem('showJoinTable')
+      showJoinTable: localStorage.getItem('showJoinTable'),
+      isReviewMode: false
     }
   },
   computed: {
@@ -236,10 +246,11 @@ export default {
             {
               name: this.$t('button.edit'),
               subAction: [
-                {icon: '', title: 'button.editDataFrameAlias', dialogName: 'dataFrameAlias'},
-                {icon: '', title: 'button.editColumn', dialogName: 'edit'},
-                {icon: '', title: 'button.editDataValue', dialogName: 'valueAlias'},
-                {icon: '', title: 'button.editColumnSet', dialogName: 'columnSet'}
+                { icon: '', title: 'button.editDataFrameAlias', dialogName: 'dataFrameAlias' },
+                { icon: '', title: 'button.editColumn', dialogName: 'edit' },
+                { icon: '', title: 'button.editDataValue', dialogName: 'valueAlias' },
+                { icon: '', title: 'button.editColumnSet', dialogName: 'columnSet' },
+                { icon: '', title: 'button.editEtlSetting', dialogName: 'etlSetting' }
               ]
             },
             {
@@ -271,6 +282,9 @@ export default {
     },
     storedDataSourceId () {
       return this.$store.state.dataSource.dataSourceId
+    },
+    currentEtlTableInfo () {
+      return this.$store.state.dataManagement.etlTableList[0]
     }
   },
   watch: {
@@ -458,6 +472,22 @@ export default {
       }
       this.showEditDateTimeDialog = true
     },
+    editEtlSetting ({ id }) {
+      this.showEditEtlDialog = true
+
+      getDataFrameEtlSetting(id)
+        .then((res) => {
+          let etlSetting = res
+          this.isReviewMode = !res.enableEdit
+          etlSetting.columns.forEach(column => {
+            if (column.dataSummary) column.dataSummary.statsType = column.statsType
+          })
+          this.$store.state.dataManagement.etlTableList.push(etlSetting)
+        })
+        .catch((res) => {
+          this.showEditEtlDialog = false
+        })
+    },
     closeDataFrameAliasDialog () {
       this.showDataFrameAliasDialog = false
       this.currentEditDataFrameInfo = null
@@ -473,6 +503,9 @@ export default {
     },
     toggleEditFeatureDialog () {
       this.showEditFeatureDialog = !this.showEditFeatureDialog
+    },
+    closeEditEtlDialog () {
+      this.showEditEtlDialog = false
     }
   }
 }

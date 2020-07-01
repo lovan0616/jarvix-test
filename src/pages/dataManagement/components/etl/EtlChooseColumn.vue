@@ -5,7 +5,9 @@
       class="etl-choose-column"
     >
       <div class="section data-frame">
-        <div class="data-frame__name">
+        <div 
+          v-if="showDataFrameName" 
+          class="data-frame__name">
           <div class="title">{{ $t('etl.currentDataFrame') }}：</div>
           <default-select
             v-model="currentTableIndex"
@@ -17,11 +19,11 @@
         <div class="data-frame__info">
           <dl>
             <dt>{{ $t('etl.columnCount') }}：</dt>
-            <dd>{{ formatComma(currentTableInfo.columns.length) }}</dd>
+            <dd>{{ formatComma(currentTableInfo.columns.length) || '-' }}</dd>
           </dl>
           <dl>
             <dt>{{ $t('etl.rowCount') }}：</dt>
-            <dd>{{ formatComma(currentTableInfo.rowCount) }}</dd>
+            <dd>{{ formatComma(currentTableInfo.rowCount || '-') }}</dd>
           </dl>
         </div>
         <div class="data-frame__select">
@@ -41,6 +43,7 @@
           :min-column-width="'270px'"
           :current-table-index="currentTableIndex"
           :is-processing="isProcessing"
+          height="calc(100vh - 400px)"
           fixed-index
         >
           <template #index-header>
@@ -83,6 +86,7 @@
                       <input
                         :name="'column' + index"
                         :checked="column[index].active"
+                        :disabled="isReviewMode"
                         type="checkbox"
                         @change="toggleColumn(index)"
                       >
@@ -95,6 +99,7 @@
                 <category-select
                   :column-info="getColumnInfo(index)"
                   :key="currentTableIndex + column[index].primaryAlias + index"
+                  :is-review-mode="isReviewMode"
                   @updateInfo="updateSetting"
                 />
                 <el-tooltip
@@ -137,6 +142,7 @@
     </div>
     <etl-column-setting
       v-if="showEtlSetting"
+      :is-review-mode="isReviewMode"
       @close="closeEtlColumnSetting"
     />
   </div>
@@ -160,11 +166,21 @@ export default {
     EtlColumnSetting,
     ColumnSelect
   },
+  props: {
+    isReviewMode: {
+      type: Boolean,
+      default: false
+    },
+    showDataFrameName: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
       showEtlSetting: false,
       intervalFunction: null,
-      isProcessing: true
+      isProcessing: false
     }
   },
   computed: {
@@ -194,9 +210,9 @@ export default {
       const tableInfo = this.etlTableList[this.currentTableIndex]
       if (tableInfo.rowData) {
         tableInfo.data = tableInfo.rowData
+        tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
         delete tableInfo.rowData
       }
-      tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
       return tableInfo
     },
     allColumnSelected: {
@@ -217,7 +233,6 @@ export default {
   },
   mounted () {
     this.getDataFrameSummary(this.etlTableList[this.currentTableIndex].tableId)
-    this.isProcessing = false
   },
   destroyed () {
     window.clearInterval(this.intervalFunction)
@@ -337,6 +352,7 @@ export default {
 
   .data-frame-name {
     margin-right: 4px;
+    word-break: break-all;
   }
 
   .title {

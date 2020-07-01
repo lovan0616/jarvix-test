@@ -21,6 +21,7 @@
         :summary-data="currentTableSummary[currentColumnIndex]"
         :column-info="currentColumnInfo"
         :key="currentTableIndex + '_' + currentColumnIndex"
+        :is-review-mode="isReviewMode"
         @updateInfo="updateSetting"
         @back="$emit('close')"
       />
@@ -50,6 +51,12 @@ export default {
     SingleColumnSetting,
     DataColumnSummary
   },
+  props: {
+    isReviewMode: {
+      type: Boolean,
+      default: false
+    },
+  },
   data () {
     return {
     }
@@ -71,15 +78,15 @@ export default {
       const tableInfo = this.etlTableList[this.currentTableIndex]
       if (tableInfo.rowData) {
         tableInfo.data = tableInfo.rowData
+        tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
         delete tableInfo.rowData
       }
-      tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
       return tableInfo
     },
     currentTableSummary () {
       return this.currentTableInfo.columns.map(column => ({
         ...column.dataSummary,
-        statsType: this.currentColumnInfo.originalStatsType
+        statsType: column.statsType
       }))
     }
   },

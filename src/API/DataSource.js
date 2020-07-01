@@ -293,3 +293,14 @@ export function getColumnCorrelationMatrix (dataFrameId) {
     method: 'GET'
   })
 }
+
+/**
+ * get dataframe etl setting
+ * @param {Number} dataFrameId - 欲查閱的資料表 ID
+ */
+export function getDataFrameEtlSetting (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/importSetting`,
+    method: 'GET'
+  })
+}

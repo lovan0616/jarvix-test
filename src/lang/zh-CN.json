@@ -620,6 +620,8 @@
     "saveAndBuild": "保存并创建",
     "addColumnSet": "新增栏位组合",
     "editColumnSet": "编辑栏位组合",
+    "editEtlSetting": "数据处理设定",
+    "reviewEtlSetting": "检视数据处理设定",
     "dateTimeColumnSetting": "日期栏位设定",
     "select": "选择",
     "download": "数据下载",

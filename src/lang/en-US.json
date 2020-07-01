@@ -620,6 +620,8 @@
     "saveAndBuild": "Save and Build",
     "addColumnSet": "New Column Combination",
     "editColumnSet": "Edit Column Set",
+    "editEtlSetting": "Edit Etl Setting",
+    "reviewEtlSetting": "Review Etl Setting",
     "dateTimeColumnSetting": "Default Time",
     "select": "Select",
     "download": "Data Download",
