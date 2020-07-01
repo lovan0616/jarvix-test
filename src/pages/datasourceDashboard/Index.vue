@@ -3,6 +3,7 @@
     <filter-info/>
     <preview-data-source
       :key="dataSourceId"
+      mode="display"
     />
     <quick-start
       v-if="quickStartQuestionList.length > 0"

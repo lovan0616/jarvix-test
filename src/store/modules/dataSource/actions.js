@@ -6,7 +6,8 @@ import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
 import axios from 'axios'
 const CancelToken = axios.CancelToken
-let cancelFunction
+let popupCancelFunction
+let displayCancelFunction
 
 export default {
   init ({ commit, dispatch, state, getters, rootGetters }) {
@@ -129,11 +130,12 @@ export default {
   getDataFrameData ({ state }, { id, page = 0, cancelToken }) {
     return getDataFrameData(id, page, cancelToken)
   },
-  getDataFrameIntro ({ dispatch, state }, { id, page }) {
-    dispatch('cancelRequest')
+  getDataFrameIntro ({ dispatch, state }, { id, page, mode }) {
+    dispatch('cancelRequest', mode)
     const cancelToken = new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
-      cancelFunction = c
+      if (mode === 'popup') popupCancelFunction = c
+      if (mode === 'display') displayCancelFunction = c
     })
     return Promise.all([
       dispatch('getDataFrameData', { id, page, cancelToken }),
@@ -190,9 +192,12 @@ export default {
   clearAllFilter ({ commit }) {
     commit('clearFilterList')
   },
-  cancelRequest () {
-    if (typeof cancelFunction === 'function') {
-      cancelFunction('cancel request')
+  cancelRequest ({ state }, mode) {
+    if (mode === 'popup' && typeof popupCancelFunction === 'function') {
+      popupCancelFunction('cancel request')
+    } 
+    if (mode === 'display' && typeof displayCancelFunction === 'function') {
+      displayCancelFunction('cancel request')
     }
   },
   async updateDataFrameList({ commit, state, dispatch }) {
