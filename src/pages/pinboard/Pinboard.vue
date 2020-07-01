@@ -6,7 +6,7 @@
       class="bread-crumb-block"
     >
       <router-link 
-        :to="{name: 'PagePinboardList'}"
+        :to="{ name: 'PagePinboardList' }"
         class="page root"
       >{{ $t('editing.allCategory') }}</router-link>
       <span class="divider">/</span>

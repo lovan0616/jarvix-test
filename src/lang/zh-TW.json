@@ -257,7 +257,7 @@
     "deleteGroup": "刪除專案",
     "confirmDeleteProjectUserText": "使用者移除後，此使用者將無法使用此專案任何功能，您確認要繼續移除此使用者？",
     "confirmDeleteBelowGroupOrNot": "您確認要刪除以下專案嗎?",
-    "confirmEnterGroupUserManagement": "系統將導頁至以下專案的“專案成員管理”進行設定",
+    "confirmEnterGroupUserManagement": "系統將切換至以下專案的“專案成員管理”進行設定",
     "accountOwner": "帳戶擁有者",
     "memberManagement": "成員管理",
     "activeStatus": "啟用狀態",

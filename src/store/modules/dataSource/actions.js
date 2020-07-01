@@ -22,7 +22,7 @@ export default {
     }
     commit('setIsInit', true)
   },
-  getDataSourceList({ dispatch, commit, state }, {dataSourceId, dataFrameId}) {
+  getDataSourceList({ dispatch, commit, state, rootGetters }, { dataSourceId, dataFrameId }) {
     return getDataSourceList().then(res => {
       commit('setDataSourceList', res)
       // 找出第一個可以使用的 dataSourceId
@@ -30,12 +30,24 @@ export default {
       if (dataSourceId) {
         // 判斷路由的 DataSource 是否存在，且該 DataSource 是有可使用的 DataFrame
         if (res.some(element => element.id === dataSourceId && element.enableDataFrameCount)) {
-          dispatch('changeDataSourceById', {dataSourceId, dataFrameId})
+          dispatch('changeDataSourceById', { dataSourceId, dataFrameId })
         } else {
           const dataSourceId = firstEnableDataSourceIndex > -1 ? res[firstEnableDataSourceIndex].id : null
-          dispatch('changeDataSourceById', {dataSourceId, dataFrameId: 'all'})
+          dispatch('changeDataSourceById', { dataSourceId, dataFrameId: 'all' })
           if (firstEnableDataSourceIndex < 0) dispatch('handleEmptyDataSource')
-          router.push('/')
+          const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
+          router.push({
+            name: 'PageIndex', 
+            params: { 
+              'group_id': currentGroupId
+            },
+            query: {
+              ...(dataSourceId && {
+                dataSourceId: dataSourceId,
+                dataFrameId: 'all'
+              })
+            }
+          })
 
           Message({
             message: i18n.t('message.dataSourceNotExist'),
@@ -54,8 +66,7 @@ export default {
     })
   },
   async changeDataSourceById({ dispatch, commit, state }, {dataSourceId, dataFrameId = 'all'}) {
-    if (state.dataSourceId === dataSourceId) return Promise.resolve(state)
-
+    if (state.dataSourceId === dataSourceId  && state.dataFrameId === dataFrameId) return Promise.resolve(state)
     // 清空對話紀錄
     if (state.dataSourceId) dispatch('clearChatbot')
     // 更新 DataSource 資料

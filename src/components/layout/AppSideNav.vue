@@ -28,10 +28,8 @@
       >
         <li class="list__item">
           <router-link
-            :to="{ name: 'PageIndex' }"
-            :class="{ 'active': $route.name === 'PageIndex' }"
+            :to="accountHomePageRoute()"
             class="list__link"
-            exact
           >
             <svg-icon 
               icon-class="home" 
@@ -43,7 +41,7 @@
         </li>
         <li class="list__item">
           <router-link
-            :to="{ name: 'PagePinboardList' }"
+            :to="{ name: 'PagePinboardList', params: { 'account_id': getCurrentAccountId } }"
             class="list__link"
           >
             <svg-icon 
@@ -59,7 +57,7 @@
           class="list__item"
         >
           <router-link
-            :to="{ name: 'AccountManagement' }"
+            :to="{ name: 'AccountManagement', params: { 'account_id': getCurrentAccountId } }"
             class="list__link"
           >
             <svg-icon 
@@ -126,7 +124,7 @@ import WritingDialog from '@/components/dialog/WritingDialog'
 import SySelect from '@/components/select/SySelect'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import { switchAccount, updateLocale } from '@/API/User'
+import { updateLocale } from '@/API/User'
 
 export default {
   name: 'AppSideNav',
@@ -147,7 +145,8 @@ export default {
   computed: {
     ...mapState(['isShowFullSideNav']),
     ...mapState('userManagement', ['accountList', 'groupList']),
-    ...mapGetters('userManagement', ['getCurrentAccountName', 'getCurrentAccountId', 'hasPermission']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
+    ...mapGetters('userManagement', ['getCurrentAccountName', 'getCurrentAccountId', 'hasPermission', 'getCurrentGroupId']),
     currentAccountName() {
       const fullName = this.getCurrentAccountName
       if (!fullName) return '-'
@@ -175,10 +174,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['updateSideNavStatus', 'updateAppLoadingStatus']),
-    ...mapMutations('dataSource', ['setDataSourceList', 'setDataSourceId']),
-    ...mapActions('dataSource', ['handleEmptyDataSource', 'getDataSourceList']),
-    ...mapActions('userManagement', ['getUserInfo']),
+    ...mapMutations(['updateSideNavStatus']),
+    ...mapActions('userManagement', ['switchAccountById']),
     switchDialogName (dialog) {
       this[dialog] = true
     },
@@ -206,7 +203,12 @@ export default {
     closeSideNav() {
       if(this.isShowFullSideNav) this.updateSideNavStatus(false)
     },
-    accountListData () {
+    accountHomePageRoute() {
+      const groupLessPage = { name: 'PageGrouplessGuidance', params: { 'account_id': this.getCurrentAccountId } }
+      const accountHomePage = { name: 'PageIndex', params: { 'account_id': this.getCurrentAccountId, 'group_id': this.getCurrentGroupId } }
+      return this.groupList.length === 0 ? groupLessPage : accountHomePage
+    },
+    accountListData() {
       if (!this.accountList) return []
       return this.accountList
         .map(account => ({
@@ -216,32 +218,31 @@ export default {
         .sort((accountOne, accountTwo) => (accountOne.name.toLowerCase() > accountTwo.name.toLowerCase()) ? 1 : -1) 
     },
     switchAccount(accountId) {
-      // 更新全域狀態
-      this.updateAppLoadingStatus(true)
       this.isLoading = true
-      switchAccount({ accountId })
-        .then(() => this.getUserInfo())
+      this.switchAccountById({ accountId })
         .then(() => {
-            // 處理帳戶下沒有群組的狀況
-            if (this.groupList.length === 0) {
-              this.setDataSourceList([])
-              return this.handleEmptyDataSource()
-            } 
+          if (this.groupList.length === 0) {
+            return this.$router.push({ 
+              name: 'PageGrouplessGuidance',
+              params: { 'account_id': accountId }
+            })
+          } 
 
-            // 先清空，因為新群組有可能沒有 dataSource
-            this.setDataSourceId(null)
-            
-            // 取得新的列表
-            return this.getDataSourceList({})
+          this.$router.push({
+            name: 'PageIndex', 
+            params: { 
+              account_id: accountId, 
+              group_id: this.getCurrentGroupId 
+            },
+            query: {
+              ...(this.dataSourceId && { 
+                dataSourceId: this.dataSourceId,
+                dataFrameId: this.dataFrameId
+              })
+            }
+          })
         })
-        .then(() => {
-          if (this.groupList.length === 0) return this.$router.push({ name: 'PageGrouplessGuidance' })
-          if (this.$route.name !== 'PageIndex') this.$router.push({ name: 'PageIndex' })
-        })
-        .finally(() => {
-          this.updateAppLoadingStatus(false)
-          this.isLoading = false
-        })
+        .finally(() => this.isLoading = false)
     }
   }
 }

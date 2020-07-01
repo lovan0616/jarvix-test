@@ -257,7 +257,7 @@
     "deleteGroup": "删除专案",
     "confirmDeleteProjectUserText": "使用者移除后，此使用者将无法使用此专案任何功能，您确认要继续移除此使用者？",
     "confirmDeleteBelowGroupOrNot": "您确认要删除以下专案吗?",
-    "confirmEnterGroupUserManagement": "系统将跳转至以下专案的“专案成员管理”进行设定",
+    "confirmEnterGroupUserManagement": "系统将切换至以下专案的“专案成员管理”进行设定",
     "accountOwner": "帐户拥有者",
     "memberManagement": "成员管理",
     "activeStatus": "启用状态",

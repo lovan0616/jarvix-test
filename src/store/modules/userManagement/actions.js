@@ -1,6 +1,7 @@
-import { logout, refreshToken } from '@/API/User'
+import { logout, refreshToken, switchAccount, switchGroup } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
+import router from '../../../router'
 
 export default {
   logout ({ commit }) {
@@ -70,5 +71,47 @@ export default {
           dispatch('dataSource/handleEmptyDataSource', null, { root: true })
         }
       })
+  },
+  switchAccountById({ state, dispatch, commit, getters }, { accountId, defaultGroupId }) {
+    // 更新全域狀態
+    commit('updateAppLoadingStatus', true, { root: true })
+    return switchAccount({ accountId })
+      .then(() => dispatch('getUserInfo'))
+      .then(() => {
+        // 處理帳戶下沒有群組的狀況
+        if (state.groupList.length === 0) {
+          commit('dataSource/setDataSourceList', [], { root: true })
+          return dispatch('dataSource/handleEmptyDataSource', null, { root: true })
+        }
+
+        // 處理路徑中帶有指定的 group id
+        if (defaultGroupId) return dispatch('switchGroupById', defaultGroupId)
+
+        // 先清空，因為新群組有可能沒有 dataSource
+        commit('dataSource/setDataSourceId', null, { root: true })
+
+        // 取得新的列表
+        return dispatch('dataSource/getDataSourceList', {}, { root: true })
+      })
+      .finally(() => commit('updateAppLoadingStatus', false, { root: true }))
+  },
+  switchGroupById({ state, dispatch, commit, getters }, groupId) {
+    const currentAccountId = router.app.$route.params.account_id
+    
+    // 更新全域狀態
+    commit('updateAppLoadingStatus', true, { root: true })
+    return switchGroup({
+      accountId: currentAccountId,
+      groupId: groupId
+    })
+      .then(() => dispatch('getUserInfo'))
+      .then(() => {
+        // 先清空，因為新群組有可能沒有 dataSource
+        commit('dataSource/setDataSourceId', null, { root: true })
+
+        // 取得新的列表
+        return dispatch('dataSource/getDataSourceList', {}, { root: true })
+      })
+      .finally(() => commit('updateAppLoadingStatus', false, { root: true }))
   }
 }

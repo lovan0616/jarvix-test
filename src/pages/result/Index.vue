@@ -6,11 +6,15 @@
 
 <script>
 import ResultDisplay from './ResultDisplay'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PageResult',
   components: {
     ResultDisplay
+  },
+  computed: {
+    ...mapGetters('userManagement', ['getCurrentGroupId'])
   },
   // 主要針對瀏覽器上下頁、從 preview 回到 searchbar 的一些處理
   watch: {
@@ -53,11 +57,11 @@ export default {
   methods: {
     getQueryInfo () {
       let question = this.$route.query.question
-
       if (question) {
         this.$store.commit('dataSource/setAppQuestion', question)
       } else {
-        this.$router.push('/')
+        const groupId = this.$route.params.group_id
+        this.$router.push({ name: 'PageIndex', params: { 'group_id': groupId } })
       }
     }
   }

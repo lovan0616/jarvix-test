@@ -12,7 +12,7 @@
       <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
       <div class="bread-crumb">
         <router-link 
-          :to="{name: 'DataSourceList'}" 
+          :to="{ name: 'DataSourceList' }" 
           class="title-link">{{ $t('editing.dataSource') }}</router-link>
         <span class="divider">/</span>{{ dataSourceName }}
       </div>
