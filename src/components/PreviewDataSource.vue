@@ -42,6 +42,7 @@
             v-if="currentDataFrameId"
             :key="currentDataFrameId"
             :data-frame-id="currentDataFrameId"
+            :mode="mode"
           />
         </div>
       </div>
@@ -66,6 +67,10 @@ export default {
     isPreviewing: {
       type: Boolean,
       default: false
+    },
+    mode: {
+      type: String,
+      required: true
     }
   },
   data () {

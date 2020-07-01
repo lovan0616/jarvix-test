@@ -59,8 +59,8 @@ export default {
   methods: {
     ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
     onDataSourceChange (dataSourceId) {
-      // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
-      if (this.isShowPreviewDataSource) this.togglePreviewDataSource(false)
+      // // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
+      // if (this.isShowPreviewDataSource) this.togglePreviewDataSource(false)
       this.$store.dispatch('dataSource/changeDataSourceById', { dataSourceId })
         .then(() => {
           this.$router.push({ 

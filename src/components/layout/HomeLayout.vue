@@ -31,6 +31,7 @@
         <preview-data-source 
           :key="dataSourceId" 
           :is-previewing="true"
+          mode="popup"
         />
         <a 
           href="javascript:void(0)" 
