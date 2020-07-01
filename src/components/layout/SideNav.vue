@@ -51,7 +51,7 @@ export default {
     display: flex;
     align-items: center;
     padding: 0 1rem 0 40px;
-    letter-spacing: 0.15em;
+    letter-spacing: var(--theme-letter-spacing-wide);
     color: #a7a7a7;
     position: relative;
 

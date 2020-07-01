@@ -5,7 +5,7 @@
       <div class="data-table-row table-head">
         <div class="data-table-cell">{{ $t('editing.dataColumnAmount') }}</div>
         <div class="data-table-cell">{{ $t('editing.dataRowAmount') }}</div>
-        <div class="data-table-cell">
+        <div class="data-table-cell value-list">
           {{ $t('editing.matchedKey') }}
           <span class="nav-item nav-function tooltip-container">
             <svg-icon 
@@ -25,6 +25,7 @@
               v-for="value in result.valueList"
               v-else
               :key="value"
+              class="value"
             >{{ value }}</span>
           </div>
         </div>
@@ -63,7 +64,13 @@ export default {
     margin-bottom: 12px;
     font-size: 1rem;
   }
-
+  .table-head {
+    .data-table-cell {
+      &.value-list {
+        flex: 0 0 260px;
+      }
+    }
+  }
   .data-table-body {
     .data-table-row {
       height: 100px;
@@ -77,6 +84,10 @@ export default {
     .value-list {
       display: flex;
       flex-direction: column;
+      flex: 0 0 260px;
+      .value:not(:last-child) {
+        margin-bottom: 4px;
+      }
     }
   }
 

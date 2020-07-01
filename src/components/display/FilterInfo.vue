@@ -83,7 +83,7 @@ export default {
   .info-title-block {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 16px;
   }
 
@@ -93,6 +93,7 @@ export default {
     font-weight: 400;
     font-size: 18px;
     line-height: 24px;
+    margin-right: 20px;
 
     .title-text {
       margin-right: 16px;
@@ -100,10 +101,12 @@ export default {
   }
 
   .remark-info {
+    flex: 1;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     font-size: 12px;
     align-self: flex-start;
+    justify-content: flex-end;
 
     .remark-title {
       display: inline-flex;

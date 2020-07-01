@@ -81,7 +81,6 @@ export default {
           text: this.$t('editing.groupName'),
           value: 'groupName',
           sort: true,
-          width: '30%'
         },
         {
           text: this.$t('editing.groupOwner'),
@@ -93,12 +92,12 @@ export default {
           text: this.$t('editing.groupMemberAmount'),
           value: 'memberCount',
           sort: true,
-          width: '10%'
+          width: '150px'
         },
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '35%',
+          width: '220px',
           action: [
             {
               type: 'event',
