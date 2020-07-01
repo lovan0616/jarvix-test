@@ -400,6 +400,12 @@
     "actualLabel": "实际标籤",
     "timestamp": "时间戳"
   },
+  "remoteConnection": {
+    "tableNameDuplicate": "资料表名称重复",
+    "sqlCreateTable": "SQL 建立资料表",
+    "dataFrameName": "资料表名称",
+    "sql": "SQL 语法"
+  },
   "etl": {
     "dataFrameList": "资料表列表",
     "columnList": "栏位列表",
@@ -651,7 +657,9 @@
     "confirmBuild": "确认建置",
     "selectAll": "全选",
     "resumeDefault": "恢复预设值",
-    "sortSetting": "排序设定"
+    "sortSetting": "排序设定",
+    "addSqlScript": "使用自定义 SQL",
+    "testConnecting": "测试连线中..."
   },
   "aggregation": {
     "mean": "平均",

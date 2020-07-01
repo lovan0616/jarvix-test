@@ -10,7 +10,8 @@ export default {
     currentUploadInfo: {
       dataSourceId: null,
       type: null,
-      name: null
+      name: null,
+      db: null
     },
     uploadFileList: [],
     importedFileList: [],

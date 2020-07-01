@@ -25,10 +25,14 @@ export default {
   updateCurrentUploadDataSourceId (state, data) {
     state.currentUploadInfo.dataSourceId = data
   },
+  updateCurrentConnectionDB (state, data) {
+    state.currentUploadInfo.db = data
+  },
   clearCurrentUploadInfo (state) {
     state.currentUploadInfo.dataSourceId = null
     state.currentUploadInfo.type = null
     state.currentUploadInfo.name = null
+    state.currentUploadInfo.db = null
   },
   updateFileUploadSuccess (state, data) {
     state.fileUploadSuccess = data

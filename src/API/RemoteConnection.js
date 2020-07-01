@@ -94,3 +94,32 @@ export function analyzeTable (connectionId, dataSourceId, tableName) {
     method: 'POST'
   })
 }
+
+/**
+ * 測試用 SQL 建立的 table
+ * @param {Number} connectionId - 連線 id
+ * @param {String} sqlInfo - SQL 語法
+ */
+export function testCreateTableSql (connectionId, sqlInfo) {
+  return request({
+    url: `/database/connection/${connectionId}/testCreateTableSql`,
+    method: 'POST',
+    data: {
+      createSql: sqlInfo
+    }
+  })
+}
+
+
+/**
+ * 依照連線資訊 ID 對資料導入 SQL 進行初步解析
+ * @param {Number} connectionId - 連線 id
+ * @param {String} sqlInfo - SQL 語法
+ */
+export function analysisCreateTableSql (connectionId, sqlInfo) {
+  return request({
+    url: `/database/connection/${connectionId}/sql/analysis`,
+    method: 'POST',
+    data: sqlInfo
+  })
+}

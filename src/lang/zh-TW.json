@@ -400,6 +400,12 @@
     "actualLabel": "實際標籤",
     "timestamp": "時間戳"
   },
+  "remoteConnection": {
+    "tableNameDuplicate": "資料表名稱重複",
+    "sqlCreateTable": "SQL 建立資料表",
+    "dataFrameName": "資料表名稱",
+    "sql": "SQL 語法"
+  },
   "etl": {
     "dataFrameList": "資料表列表",
     "columnList": "欄位列表",
@@ -651,7 +657,9 @@
     "confirmBuild": "確認建置",
     "selectAll": "全選",
     "resumeDefault": "恢復預設值",
-    "sortSetting": "排序設定"
+    "sortSetting": "排序設定",
+    "addSqlScript": "使用自定義 SQL",
+    "testConnecting": "測試連線中..."
   },
   "aggregation": {
     "mean": "平均",

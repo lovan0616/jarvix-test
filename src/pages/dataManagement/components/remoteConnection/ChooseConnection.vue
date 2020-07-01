@@ -166,6 +166,7 @@ export default {
       testOldConnection(id, new axios.CancelToken(function executor (c) {
         _this.askCancelFunction = c
       })).then(() => {
+        this.$store.commit('dataManagement/updateCurrentConnectionDB', this.connectionList.find(element => element.id === id).databaseType)
         this.$emit('next', id)
       }).catch((response) => {
         if(response.message === 'cancel request') {
