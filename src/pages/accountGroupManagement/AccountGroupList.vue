@@ -167,7 +167,10 @@ export default {
     },
     enterGroup () {
       const selectedGroupId = this.selectedGroup.groupId
-      this.switchGroupById(selectedGroupId)
+      this.switchGroupById({
+        accountId: this.$route.params.account_id,
+        groupId: selectedGroupId
+      })
         .then(() => this.$router.push({ name: 'GroupUserList', params: { group_id: selectedGroupId } }))
     },
     editGroup (data) {

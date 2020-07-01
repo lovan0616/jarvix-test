@@ -321,15 +321,18 @@ router.beforeEach(async (to, from, next) => {
     const { account_id: paramsAccountId, group_id: paramsGroupId } = to.params
     const currentAccountId = Number(store.getters['userManagement/getCurrentAccountId'])
     const currentGroupId = Number(store.getters['userManagement/getCurrentGroupId'])
-    if ((paramsAccountId) && (paramsAccountId !== currentAccountId)) {
+    if ((paramsAccountId) && (Number(paramsAccountId) !== currentAccountId)) {
       await store.dispatch('userManagement/switchAccountById', {
         accountId: paramsAccountId,
         defaultGroupId: paramsGroupId
       })
     }
     
-    if ((paramsGroupId) && (paramsGroupId !== currentGroupId)) {
-      await store.dispatch('userManagement/switchGroupById', paramsGroupId)
+    if ((paramsGroupId) && (Number(paramsGroupId) !== currentGroupId)) {
+      await store.dispatch('userManagement/switchGroupById', {
+        accountId: paramsAccountId,
+        groupId: paramsGroupId
+      })
     }
     
     return next({ 

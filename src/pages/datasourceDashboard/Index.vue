@@ -14,7 +14,7 @@
 <script>
 import FilterInfo from '@/components/display/FilterInfo'
 import QuickStart from './components/QuickStart'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PageIndex',
@@ -56,7 +56,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions('userManagement', ['switchGroupById']),
     updateUrl () {
       let { dataSourceId: queryDataSourceId, dataFrameId: queryDataFrameId } = this.$route.query
       let { account_id, group_id } = this.$route.params
