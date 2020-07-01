@@ -64,6 +64,9 @@
             @switchDialogName="switchDialogName"
           />
         </div>
+        <router-link 
+          :to="{name: 'ProjectPagePinboardList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}" 
+          class="nav-item">{{ $t('nav.projectPinboard') }}</router-link>
       </template>
     </section>
     <section class="nav-right">
@@ -101,7 +104,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId', 'getCurrentGroupId']),
     ...mapState('userManagement', ['userName', 'license', 'groupList']),
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     isShowAlgorithmBtn () {

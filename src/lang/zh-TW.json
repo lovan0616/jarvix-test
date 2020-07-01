@@ -4,6 +4,7 @@
   "nav": {
     "index": "智能分析",
     "pinboard": "個人釘板",
+    "projectPinboard": "專案釘板",
     "dataManagement": "資料管理",
     "groupPlaceholder": "專案",
     "languagePlaceholder": "語系",
@@ -92,6 +93,7 @@
     "goToGroupManagement": "前往帳戶專案管理",
     "switchToGroupBySys": "系统已將您切換至群組：{groupName}",
     "youAreGroupless": "您目前無隸屬群組",
+    "pinboardSuccess": "釘板成功",
     "switching": "切換中"
   },
   "guiding": {
@@ -124,6 +126,11 @@
     "chooseDataSource": "請選擇資料源",
     "allDataFrames": "全部資料表",
     "createBoard": "建立新版",
+    "prevStep": "返回上層",
+    "newPinboard": "新增釘板",
+    "onlyPersonal": "僅個人使用",
+    "shareToProject": "共享至專案",
+    "pinboardName": "釘板名稱",
     "questionPlaceHolder": "請輸入問題，例如：價格和成本的相關性",
     "askPlaceHolder": "請輸入問句後按Enter送出",
     "dataBuilding": "資料處理中",
@@ -224,6 +231,7 @@
     "userManage": "使用者管理",
     "confirmDeleteBoardOrNot": "確認刪除此釘板？",
     "pinboard": "個人釘板",
+    "projectPinboard": "專案釘板",
     "emptyPinboard": "目前無任何內容",
     "emptyResult": "沒有相關資料",
     "emptyResultDescription": "您所輸入的問題，無法找到相關聯的數據進行分析，請重新輸入語句搜尋，或使用系統建議語句",
@@ -327,7 +335,9 @@
     "toolTipMessage": {
       "comfrmToDeleteConnectionHistory":"你確定要刪除連線紀錄?"
     },
-    "createGroup": "建立專案"
+    "createGroup": "建立專案",
+    "sortSetting": "排序設定",
+    "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。"
   },
   "algorithm": {
     "name": "演算法",
@@ -605,9 +615,7 @@
     "logout": "登出",
     "copy": "複製",
     "change": "變更",
-    "pinToBoard": "加入釘板",
-    "pinned": "已釘板",
-    "cancelPinned": "取消釘板",
+    "pinToBoard": "釘板",
     "built": "建立",
     "submit": "送出",
     "editName": "編輯名稱",
@@ -642,7 +650,8 @@
     "reset": "重新設定",
     "confirmBuild": "確認建置",
     "selectAll": "全選",
-    "resumeDefault": "恢復預設值"
+    "resumeDefault": "恢復預設值",
+    "sortSetting": "排序設定"
   },
   "aggregation": {
     "mean": "平均",

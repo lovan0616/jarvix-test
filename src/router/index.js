@@ -114,12 +114,12 @@ const router = new Router({
                   children: [
                     {
                       path: '/',
-                      name: 'PagePinboardList',
+                      name: 'PersonalPagePinboardList',
                       component: () => import('@/pages/pinboard/PinboardList')
                     },
                     {
                       path: ':id',
-                      name: 'PagePinboard',
+                      name: 'PersonalPagePinboard',
                       component: () => import('@/pages/pinboard/Pinboard')
                     }
                   ]
@@ -151,6 +151,22 @@ const router = new Router({
                               path: 'result',
                               name: 'PageResult',
                               component: () => import('@/pages/result/Index')
+                            }
+                          ]
+                        },
+                        {
+                          path: 'pinboard',
+                          component: () => import('@/pages/pinboard/Index'),
+                          children: [
+                            {
+                              path: '/',
+                              name: 'ProjectPagePinboardList',
+                              component: () => import('@/pages/pinboard/PinboardList')
+                            },
+                            {
+                              path: ':id',
+                              name: 'ProjectPagePinboard',
+                              component: () => import('@/pages/pinboard/Pinboard')
                             }
                           ]
                         },
