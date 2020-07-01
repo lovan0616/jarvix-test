@@ -94,6 +94,7 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import InputVerify from '@/components/InputVerify'
+import { mapState } from 'vuex'
 import { Message } from 'element-ui'
 
 export default {
@@ -125,11 +126,17 @@ export default {
     }
   },
   computed: {
+    ...mapState('userManagement', ['userId']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     },
     pinboardList () {
-      return this.$store.state.pinboard.pinboardList
+      return this.isPersonalPinboard 
+        ? this.$store.state.pinboard.pinboardList
+        : this.$store.state.pinboard.groupPinboardList
+    },
+    userId () {
+      return this.$store.state.userManagement.userId
     },
     accountId () {
       return this.$route.params.accountId
@@ -165,7 +172,8 @@ export default {
         if (!isValidate) return
         let promise
         if (this.isPersonalPinboard) {
-          promise = this.$store.dispatch('pinboard/createPinboard',  { name: this.newBoardName, userId: this.accountId })
+          promise = this.$store.dispatch('pinboard/createPinboard', this.newBoardName)
+          
         } else {
           promise = this.$store.dispatch('pinboard/createGroupPinboard', { name: this.newBoardName, groupId: this.groupId })
         }
@@ -203,11 +211,11 @@ export default {
         if (!isValidate) return
         let promise
         if(this.isPersonalPinboard) {
-          this.tempEditInfo.accountId = this.accountId
+          this.tempEditInfo.userId = this.userId
           promise = this.$store.dispatch('pinboard/updatePinboardName', this.tempEditInfo)
         } else {
           this.tempEditInfo.groupId = this.groupId
-          this.$store.dispatch('pinboard/updateGroupPinboardName', this.tempEditInfo)
+          promise = this.$store.dispatch('pinboard/updateGroupPinboardName', this.tempEditInfo)
         }
         promise.then(() => {
           this.isShowEdit = false
@@ -216,9 +224,15 @@ export default {
       })
     },
     confirmDelete () {
-      this.$store.dispatch('pinboard/deletePinboard', { accountId: this.accountId, id: this.tempEditInfo.id }).then(() => {
-        this.isShowDelete = false
-      })
+      if(this.isPersonalPinboard) {
+        this.$store.dispatch('pinboard/deletePinboard', { userId: this.userId, id: this.tempEditInfo.id }).then(() => {
+          this.isShowDelete = false
+        })
+      } else {
+        this.$store.dispatch('pinboard/deleteGroupPinboard', { groupId: this.groupId, id: this.tempEditInfo.id }).then(() => {
+          this.isShowDelete = false
+        })
+      }
     },
     confirmShare () {
       let input = this.$refs.shareInput

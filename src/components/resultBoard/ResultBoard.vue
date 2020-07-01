@@ -188,16 +188,9 @@ export default {
         this.showPinboardList = false
         return false
       }
-      // 取得最新的 pinboardList
-      if (this.isPersonalPinboard) {
-        this.$store.dispatch('pinboard/getPinboardList').then(() => {
-          this.showPinboardList = true
-        })
-      } else {
-        this.$store.dispatch('pinboard/getGroupPinboardList', this.groupId).then(() => {
-          this.showPinboardList = true
-        })
-      }
+      setTimeout(() => {
+        this.showPinboardList = true
+      })
     },
     selectPinboard (id) {
       this.isLoading = true

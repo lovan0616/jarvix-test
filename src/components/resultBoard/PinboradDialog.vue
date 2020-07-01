@@ -5,12 +5,12 @@
       class="pinboard-option-list">
       <div
         class="single-board"
-        @click="choosePinboard(true)">
+        @click="choosePersonalPinboard(true)">
         {{ $t('editing.onlyPersonal') }}
       </div>
       <div
         class="single-board"
-        @click="choosePinboard(false)">
+        @click="choosePersonalPinboard(false)">
         {{ $t('editing.shareToProject') }}
       </div>
     </div>
@@ -62,6 +62,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 
 export default {
   name: 'PinboardDialog',
@@ -73,13 +74,14 @@ export default {
     }
   },
   computed: {
+    ...mapState('userManagement', ['userId']),
     pinboardList () {
       return this.isPersonal 
         ? this.$store.state.pinboard.pinboardList
         : this.$store.state.pinboard.groupPinboardList
     },
-    accountId () {
-      return this.$store.getters['userManagement/getCurrentAccountId']
+    userId () {
+      return this.$store.state.userManagement.userId
     },
     groupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
@@ -87,6 +89,7 @@ export default {
   },
   mounted () {
     document.addEventListener('click', this.autoHide, false)
+    this.getPinboardInfo()
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
@@ -97,6 +100,10 @@ export default {
         this.$emit('close')
       }
     },
+    getPinboardInfo () {
+      this.$store.dispatch('pinboard/getPinboardList')
+      this.$store.dispatch('pinboard/getGroupPinboardList', this.groupId)
+    },
     pin (id) {
       this.$emit('pin', id)
     },
@@ -106,7 +113,7 @@ export default {
     },
     createPinboard () {
       if(this.isPersonal) {
-        this.$store.dispatch('pinboard/createPinboard', { name: this.newBoardName, userId: this.accountId }).then(response => {
+        this.$store.dispatch('pinboard/createPinboard', this.newBoardName).then(response => {
           this.$emit('pin', response.id)
           this.cancelCreate()
         })
@@ -123,7 +130,7 @@ export default {
     nextStep () {
       this.pinStep += 1
     },
-    choosePinboard (isPersonal) {
+    choosePersonalPinboard (isPersonal) {
       this.isPersonal = isPersonal
       this.nextStep()
     }

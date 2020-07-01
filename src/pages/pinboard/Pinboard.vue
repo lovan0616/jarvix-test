@@ -81,7 +81,7 @@ export default {
       return this.isPersonalPinboard ? 'PersonalPagePinboardList' : 'ProjectPagePinboardList'
     },
     accountId () {
-      return this.$route.params.accountId
+      return this.$store.state['userManagement/getCurrentGroupId']
     },
     groupId () {
       return this.$route.params.groupId

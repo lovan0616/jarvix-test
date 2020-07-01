@@ -18,7 +18,7 @@ export default {
     return createGroupPinboard(data)
   },
   deletePinboard ({ dispatch }, data) {
-    return deletePinboard(data.accountId, data.id).then(() => {
+    return deletePinboard(data.userId, data.id).then(() => {
       dispatch('getPinboardList')
     })
   },
@@ -31,7 +31,7 @@ export default {
     return getPinboardById(data)
   },
   updatePinboardName ({dispatch}, data) {
-    return updatePinboardName(data.id, data.accountId, data.name).then(() => {
+    return updatePinboardName(data.id, data.userId, data.name).then(() => {
       dispatch('getPinboardList')
     })
   },  

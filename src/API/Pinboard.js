@@ -35,15 +35,13 @@ export function getPinboardById (forderId) {
 /**
  * create new personal board
  * @param {String} name - 新分類名
- * @param {Number} accountId
  */
-export function createPinboard ({name, userId}) {
+export function createPinboard (name) {
   return request({
     url: `/pinBoard/user/folder`,
     method: 'POST',
     data: {
-      name,
-      userId
+      name
     }
   })
 }
@@ -98,23 +96,23 @@ export function updateGroupPinboardName (folderId, groupId, name) {
 /**
  * delete personal board
  * @param {Number} userId -  account ID
- * @param {Number} id -  pinBoard ID
+ * @param {Number} folderId -  pinBoard ID
  */
-export function deletePinboard (userId, id) {
+export function deletePinboard (userId, folderId) {
   return request({
-    url: `/pinBoard/user/${userId}/folder/${id}`,
+    url: `/pinBoard/user/${userId}/folder/${folderId}`,
     method: 'DELETE'
   })
 }
 
 /**
  * delete group board
- * @param {Number} id -  pinBoard ID
+ * @param {Number} folderId -  pinBoard ID
  * @param {Number} groupId -  groupId ID
  */
-export function deleteGroupPinboard (groupId, id) {
+export function deleteGroupPinboard (groupId, folderId) {
   return request({
-    url: `/pinBoard/group/${groupId}/folder/${id}`,
+    url: `/pinBoard/group/${groupId}/folder/${folderId}`,
     method: 'DELETE'
   })
 }
