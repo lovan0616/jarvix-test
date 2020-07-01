@@ -145,7 +145,7 @@ export default {
       return this.$route.params.group_id
     },
     isPersonalPinboard () {
-      return this.groupId === undefined
+      return this.$route.name === 'PersonalPagePinboardList'
     }
   },
   mounted () {
@@ -202,9 +202,9 @@ export default {
       this.insertBoardData(boardInfo)
       this.isShowShare = true
       if (this.isPersonalPinboard)
-        this.shareLink = `${window.location.origin}/${this.accountId}/pinboard/${boardInfo.id}`
+        this.shareLink = `${window.location.origin}/account/${this.accountId}/pinboard/${boardInfo.id}`
       else
-        this.shareLink = `${window.location.origin}/${this.accountId}/${this.groupId}/pinboard/${boardInfo.id}`
+        this.shareLink = `${window.location.origin}/account/${this.accountId}/group/${this.groupId}/pinboard/${boardInfo.id}`
     },
     confirmEdit () {
       this.$validator.validateAll().then(isValidate => {
@@ -255,6 +255,9 @@ export default {
     },
     closeAdd () {
       this.isShowAdd = false
+      this.$nextTick(() => {
+        this.newBoardName = null
+      })
     },
     closeEdit () {
       this.isShowEdit = false

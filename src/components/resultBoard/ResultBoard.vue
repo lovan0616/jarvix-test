@@ -155,7 +155,7 @@ export default {
       return boardHeaderData ? boardHeaderData.segmentation.question : ''
     },
     shareUrl () {
-      return `${window.location.origin}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&dataFrameId=${this.dataFrameId}&action=share`
+      return `${window.location.origin}/account/${this.accountId}/group/${this.accountId}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&dataFrameId=${this.dataFrameId}&action=share`
     },
     hasFilter () {
       return (this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult') || this.restrictions.length > 0
@@ -170,7 +170,7 @@ export default {
       return this.$route.params.group_id
     },
     isPersonalPinboard () {
-      return this.groupId === undefined
+      return this.$route.name === 'PersonalPagePinboardList'
     }
   },
   mounted () {
