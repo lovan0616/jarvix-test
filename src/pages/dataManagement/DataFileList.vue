@@ -217,7 +217,7 @@ export default {
         {
           text: this.$t('editing.createWay'),
           value: 'createMethod',
-          width: '80px'
+          width: '90px'
         },
         {
           text: this.$t('editing.createDate'),
