@@ -46,7 +46,7 @@ input.input {
   &:-webkit-autofill:focus, 
   &:-webkit-autofill:active {
     -webkit-text-fill-color: $theme-text-color !important;
-    box-shadow: 0 0 0px 1000px $theme-bg-color inset;
+    box-shadow: 0 0 0px 1000px var(--color-bg-5) inset;
     transition: background-color 5000s ease-in-out 0s;
     font-size: 16px;
     caret-color: $theme-text-color;

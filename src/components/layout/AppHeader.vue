@@ -65,16 +65,16 @@ export default {
   height: $header-height;
   z-index: $header-z-index;
   box-shadow: $header-shadow;
-  background-color: #0e2b2f;
+  background-color: var(--color-bg-2);
   border-bottom: 1px solid #04262B;
   // transition: all 0.1s;
 
   &__sidenav-toggle-container {
     position: fixed;
     white-space: nowrap;
-    border-right: 1px solid #2B3638;
+    border-right: 1px solid var(--color-border);
     width: $app-side-nav-closed-width;
-    background: #1F3B3F;
+    background: var(--color-bg-3);
 
     .toggle {
       padding: 21px;
@@ -113,6 +113,7 @@ export default {
 
   &__container {
     width: calc(100% - #{$app-side-nav-closed-width});
+    height: 100%;
     margin: 0 0 0 auto;
     padding: 0 40px;
   }

@@ -73,7 +73,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupId']),
     ...mapState('userManagement', ['license']),
     tableHeaders () {
       return [
@@ -159,6 +159,8 @@ export default {
     },
     confirmEnterGroup (dataObj) {
       this.selectedGroup = dataObj
+      if (this.getCurrentGroupId === this.selectedGroup.groupId) return this.enterGroup()
+      // 如果欲前往的群組與當前的不同，會切換群組，因此需要先提醒使用者
       this.showConfirmEnterGroupDialog = true
     },
     cancelEnterGroup () {
@@ -167,6 +169,11 @@ export default {
     },
     enterGroup () {
       const selectedGroupId = this.selectedGroup.groupId
+      if (this.getCurrentGroupId === selectedGroupId) {
+        return this.$router.push({ name: 'GroupUserList', params: { group_id: selectedGroupId } })
+      }
+
+      // 如果欲前往的群組與當前的不同，須先切換群組再導頁
       this.switchGroupById({
         accountId: this.$route.params.account_id,
         groupId: selectedGroupId
@@ -193,7 +200,7 @@ export default {
 }
 
 .table-board {
-  background: $theme-bg-color;
+  background: var(--color-bg-5);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   padding: 24px;

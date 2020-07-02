@@ -6,7 +6,11 @@ html, body {
   line-height: 1.5;
   word-wrap: break-word;
   word-break: break-all;
-  color: $theme-text-color;
+  color: var(--color-text);
+}
+
+#app {
+  color: var(--color-text);
 }
 
 * {

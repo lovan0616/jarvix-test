@@ -20,6 +20,12 @@
   .button-block {
     display: flex;
     align-items: center;
+    &:first-child {
+      flex: 1;
+    }
+    &+.button-block {
+      margin-left: 16px;
+    }
 
     .btn-m:not(:last-child) {
       margin-right: 16px;
@@ -36,7 +42,7 @@
   }
 
   .table-board {
-    background: $theme-bg-color;
+    background: var(--color-bg-5);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     padding: 24px;
@@ -58,7 +64,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: $theme-bg-color;
+  background-color: var(--color-bg-5);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
 
@@ -121,8 +127,8 @@
     align-items: center;
 
     &.table-head {
-      background: #2B4D51;
-      color: $theme-text-color;
+      background: var(--color-bg-4);
+      color: var(--color-text-table);
       border-width: 2px;
     }
   }

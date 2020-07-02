@@ -1,7 +1,8 @@
 <template>
   <div 
-    id="app"
+    id="app" 
     :lang="getLang"
+    :theme="getColor"
   >
     <div class="app-bg"/>
     <transition 
@@ -33,6 +34,9 @@ export default {
     },
     getLang () {
       return this.locale.split('-')[0]
+    },
+    getColor () {
+      return sessionStorage.getItem('themeColor')
     }
   },
   watch: {
@@ -46,6 +50,7 @@ export default {
   },
   mounted () {
     this.init = true
+    sessionStorage.setItem('themeColor', 'default')
   },
   methods: {
     checkLocale () {

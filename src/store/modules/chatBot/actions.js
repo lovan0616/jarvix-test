@@ -63,6 +63,7 @@ export default {
     }
   },
   openAskInMemory ({rootGetters, rootState}) {
+    if (!rootGetters['userManagement/hasPermission']('in_memory')) return
     addTableToMemory(rootGetters['userManagement/getCurrentAccountId'], rootGetters['dataSource/currentDataFrameId'], rootState.dataSource.dataSourceId)
   }
 }
