@@ -102,7 +102,8 @@ export default {
       userQuestion: null,
       showHistoryQuestion: false,
       showAskHelper: false,
-      websocketHandler: null
+      websocketHandler: null,
+      recommendList: []
     }
   },
   computed: {
@@ -118,13 +119,6 @@ export default {
         ...this.$t('questionToken')
       ]
     },
-    // tokenList () {
-    //   let tokens = []
-    //   for (let i = 0; i < this.userQuestion.length; i++) {
-    //     console.log(this.userQuestion.charAt[i])
-    //   }
-    //   return tokens
-    // },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
     },
@@ -140,25 +134,43 @@ export default {
     dataSourceList () {
       return this.$store.state.dataSource.dataSourceList
     },
-    questionToken () {
-      let tokenCount = 0
+    questionTokenList () {
+      let tokenList = []
       // 處理問句字串
       if (!this.userQuestion) return 0
       for (let i = 0; i < this.userQuestion.length; i++) {
         for (let j = this.userQuestion.length; j >= i + 1; j--) {
           let currentText = this.userQuestion.slice(i, j)
-          if (this.dictionaries.some(element => element.text === currentText)) {
-            tokenCount += 1
+          // 找出是否有符合的 token
+          let tokenIndex = this.dictionaries.findIndex(element => element.text.toLowerCase() === currentText.toLowerCase())
+          if (tokenIndex > -1) {
+            tokenList.push(this.dictionaries[tokenIndex])
+            i = j - 1
+            break
+          }
+
+          if (j === i + 1) {
+            tokenList.push({type: 'unknown', text: this.userQuestion[i]})
           }
         }
       }
-      return tokenCount
+
+      return tokenList
     }
   },
   watch: {
-    questionToken (value, oldValue) {
-      if (value === 0 || value < oldValue) return
-      this.enterQuestion()
+    questionTokenList (value, oldValue) {
+      if (value.length === 0) return
+      // 如果最後一個是認得出來的 token 就問問題
+      let lastToken = value[value.length - 1]
+      if (lastToken.type !== 'unknown') {
+        this.enterQuestion()
+      } else {
+        // 未來作推薦問句的處理
+        // this.recommendList = this.dictionaries.filter(element => {
+        //   return element.text.indexOf(lastToken.text) !== -1
+        // }).map(element => element.text)
+      }
     },
     userQuestion (val) {
       if (document.activeElement === this.$refs.questionInput) {
