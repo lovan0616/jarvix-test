@@ -1724,5 +1724,29 @@
     "boolean": "Brin",
     "datetime": "Time",
     "others": "Others"
-  }
+  },
+  "questionToken": [
+    {"type": "intend", "text": "overview"},
+    {"type": "aggregate", "text": "average"},
+    {"type": "aggregate", "text": "avg"},
+    {"type": "aggregate", "text": "sum"},
+    {"type": "aggregate", "text": "summary"},
+    {"type": "aggregate", "text": "count"},
+    {"type": "aggregate", "text": "max"},
+    {"type": "aggregate", "text": "min"},
+    {"type": "aggregate", "text": "standard deviation"},
+    {"type": "aggregate", "text": "median"},
+    {"type": "intend", "text": "trend"},
+    {"type": "intend", "text": "compare"},
+    {"type": "intend", "text": "comparison"},
+    {"type": "rootCause", "text": "rise"},
+    {"type": "rootCause", "text": "go up"},
+    {"type": "rootCause", "text": "decline"},
+    {"type": "rootCause", "text": "go down"},
+    {"type": "intend", "text": "root cause"},
+    {"type": "intend", "text": "predict"},
+    {"type": "intend", "text": "proportion"},
+    {"type": "intend", "text": "relationship"},
+    {"type": "intend", "text": "difference"}
+  ]
 }
