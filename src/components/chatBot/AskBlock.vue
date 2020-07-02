@@ -145,7 +145,7 @@ export default {
       if (document.activeElement === this.$refs.questionInput) {
         // 處理問句字串
         // for (let i = 0; i < val.length; i++) {
-        //   for (let j = i + 1; j <= val.length; j++) {
+        //   for (let j = val.length; j >= i + 1; j--) {
         //     let currentText = val.slice(i, j)
         //     console.log(currentText, 'currentText')
         //   }
