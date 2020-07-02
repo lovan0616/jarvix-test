@@ -231,4 +231,10 @@ export default {
     }
   }
 }
+
+[lang="en"] {
+  .pinboard-dialog {
+    width: 240px;
+  }
+}
 </style>

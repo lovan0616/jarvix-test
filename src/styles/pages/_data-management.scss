@@ -20,6 +20,12 @@
   .button-block {
     display: flex;
     align-items: center;
+    &:first-child {
+      flex: 1;
+    }
+    &+.button-block {
+      margin-left: 16px;
+    }
 
     .btn-m:not(:last-child) {
       margin-right: 16px;
