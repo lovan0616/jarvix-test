@@ -66,7 +66,7 @@ export default {
       }
     })
   },
-  async changeDataSourceById({ dispatch, commit, state }, {dataSourceId, dataFrameId = 'all'}) {
+  async changeDataSourceById({ dispatch, commit, state, rootGetters }, {dataSourceId, dataFrameId = 'all'}) {
     if (state.dataSourceId === dataSourceId  && state.dataFrameId === dataFrameId) return Promise.resolve(state)
     // 清空對話紀錄
     if (state.dataSourceId) dispatch('clearChatbot')
@@ -81,9 +81,27 @@ export default {
     // 更新 DataFrame 資料
     const dataFrameList = await dispatch('getDataSourceTables')
     commit('setDataFrameList', dataFrameList)
+
     // 當指定 DataFrame 時，確認是否存在
     if (dataFrameId !== 'all' && !dataFrameList.some(element => element.id === dataFrameId)) {
-      return dispatch('changeDataFrameById', 'all')
+      dispatch('changeDataFrameById', 'all')
+      const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
+      router.push({
+        name: 'PageIndex',
+        params: {
+          'group_id': currentGroupId
+        },
+        query: {
+          dataSourceId: dataSourceId,
+          dataFrameId: 'all'
+        }
+      })
+
+      return Message({
+        message: i18n.t('message.dataFrameNotExist'),
+        type: 'success',
+        duration: 3 * 1000
+      })
     }
     return dispatch('changeDataFrameById', dataFrameId)
   },
