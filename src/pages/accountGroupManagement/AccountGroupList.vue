@@ -73,7 +73,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupId']),
     ...mapState('userManagement', ['license']),
     tableHeaders () {
       return [
@@ -167,6 +167,11 @@ export default {
     },
     enterGroup () {
       const selectedGroupId = this.selectedGroup.groupId
+      if (this.getCurrentGroupId === selectedGroupId) {
+        return this.$router.push({ name: 'GroupUserList', params: { group_id: selectedGroupId } })
+      }
+
+      // 如果欲前往的群組與當前的不同，須先切換群組再導頁
       this.switchGroupById({
         accountId: this.$route.params.account_id,
         groupId: selectedGroupId
