@@ -281,9 +281,6 @@ export default {
     },
     storedDataSourceId () {
       return this.$store.state.dataSource.dataSourceId
-    },
-    currentEtlTableInfo () {
-      return this.$store.state.dataManagement.etlTableList[0]
     }
   },
   watch: {
@@ -441,7 +438,7 @@ export default {
       this.toggleEditColumnDialog()
     },
     closeEditColumnDialog () {
-      this.currentEditDataFrameInfo = null
+      this.currentEditDataFrameInfo = {}
       this.toggleEditColumnDialog()
     },
     editDataFrameAlias (dataInfo) {
@@ -478,7 +475,7 @@ export default {
     },
     closeDataFrameAliasDialog () {
       this.showDataFrameAliasDialog = false
-      this.currentEditDataFrameInfo = null
+      this.currentEditDataFrameInfo = {}
     },
     closeValueAliasDialog () {
       this.showValueAliasDialog = false
@@ -494,6 +491,7 @@ export default {
     },
     closeEditEtlDialog () {
       this.showEditEtlDialog = false
+      this.currentEditDataFrameInfo = {}
     }
   }
 }
