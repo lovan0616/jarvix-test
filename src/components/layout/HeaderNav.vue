@@ -307,6 +307,11 @@ export default {
     &-dropdown {
       visibility: hidden;
     }
+
+    /deep/ .dropdown-select-box {
+      right: 0;
+      left: unset;
+    }
   }
 
   .nav-function {
