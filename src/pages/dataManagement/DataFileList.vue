@@ -207,7 +207,7 @@ export default {
         {
           text: this.$t('editing.createWay'),
           value: 'createMethod',
-          width: '80px'
+          width: '90px'
         },
         {
           text: this.$t('editing.createDate'),
@@ -226,12 +226,12 @@ export default {
         {
           text: this.$t('editing.status'),
           value: 'state',
-          width: '80px'
+          width: '140px'
         },
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: this.$store.state.setting.locale.includes('zh') ? '270px' : '320px',
+          width: '270px',
           action: [
             {
               name: this.$t('button.edit'),
@@ -492,7 +492,6 @@ export default {
   }
 
   .dataframe-action {
-    flex: 1;
     justify-content: flex-end;
     margin-right: 12px;
   }
