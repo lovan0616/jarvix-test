@@ -36,7 +36,7 @@ export default {
       return this.locale.split('-')[0]
     },
     getColor () {
-      return localStorage.getItem('themeColor')
+      return sessionStorage.getItem('themeColor')
     }
   },
   watch: {
@@ -50,7 +50,7 @@ export default {
   },
   mounted () {
     this.init = true
-    localStorage.setItem('themeColor', 'default')
+    sessionStorage.setItem('themeColor', 'default')
   },
   methods: {
     checkLocale () {
