@@ -409,6 +409,7 @@ export default {
 
     .button-block {
       white-space: nowrap;
+      flex: unset;
       .btn:not(:last-child) {
         margin-right: 12px;
       }

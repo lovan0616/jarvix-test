@@ -482,6 +482,7 @@ export default {
           this.isReviewMode = !res.enableEdit
           etlSetting.columns.forEach(column => {
             if (column.dataSummary) column.dataSummary.statsType = column.statsType
+            this.$set(column, 'originalStatsType', column.statsType)
           })
           this.$store.commit('dataManagement/updateEtlTableList', etlSetting)
         })
