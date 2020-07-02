@@ -182,7 +182,11 @@ export default {
     changeLang () {
       this.isLoading = true
       updateLocale(this.selectedLanguage)
-        .then(() => this.$store.commit('setting/setLocale', this.selectedLanguage))
+        .then(() => {
+          this.$store.commit('setting/setLocale', this.selectedLanguage)
+          this.$store.commit('chatBot/clearConversation')
+          this.$store.dispatch('chatBot/updateChatConversation')
+        })
         .catch(() => {})
         .finally(() => {
           this.isShowLanguage = false
