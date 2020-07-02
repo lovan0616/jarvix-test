@@ -109,12 +109,13 @@ export default {
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
     dictionaries () {
       return [
-        ...this.dataSourceColumnInfoList.booleanList,
-        ...this.dataSourceColumnInfoList.category,
-        ...this.dataSourceColumnInfoList.dateTime,
-        ...this.dataSourceColumnInfoList.numeric,
-        ...this.dataSourceColumnInfoList.uniqueList,
-        ...this.dataSourceDataValueList
+        ...this.dataSourceColumnInfoList.booleanList.map(element => ({type: 'boolean', text: element})),
+        ...this.dataSourceColumnInfoList.category.map(element => ({type: 'category', text: element})),
+        ...this.dataSourceColumnInfoList.dateTime.map(element => ({type: 'dateTime', text: element})),
+        ...this.dataSourceColumnInfoList.numeric.map(element => ({type: 'numeric', text: element})),
+        ...this.dataSourceColumnInfoList.uniqueList.map(element => ({type: 'unique', text: element})),
+        ...this.dataSourceDataValueList.map(element => ({type: 'dataValue', text: element})),
+        ...this.$t('questionToken')
       ]
     },
     // tokenList () {
@@ -138,18 +139,29 @@ export default {
     },
     dataSourceList () {
       return this.$store.state.dataSource.dataSourceList
+    },
+    questionToken () {
+      let tokenCount = 0
+      // 處理問句字串
+      if (!this.userQuestion) return 0
+      for (let i = 0; i < this.userQuestion.length; i++) {
+        for (let j = this.userQuestion.length; j >= i + 1; j--) {
+          let currentText = this.userQuestion.slice(i, j)
+          if (this.dictionaries.some(element => element.text === currentText)) {
+            tokenCount += 1
+          }
+        }
+      }
+      return tokenCount
     }
   },
   watch: {
+    questionToken (value, oldValue) {
+      if (value === 0 || value < oldValue) return
+      this.enterQuestion()
+    },
     userQuestion (val) {
       if (document.activeElement === this.$refs.questionInput) {
-        // 處理問句字串
-        // for (let i = 0; i < val.length; i++) {
-        //   for (let j = val.length; j >= i + 1; j--) {
-        //     let currentText = val.slice(i, j)
-        //     console.log(currentText, 'currentText')
-        //   }
-        // }
         this.showHistory()
       }
     },
