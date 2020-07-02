@@ -138,7 +138,7 @@ export default {
     },
     getComponent (res) {
       window.clearTimeout(this.timeoutFunction)
-      let currentResult = this.getResult(res.resultId)
+      let currentResult = this.getResult(res.id)
       this.$store.dispatch('chatBot/getComponentList', res.resultId)
         .then(componentResponse => {
           switch (componentResponse.status) {
@@ -168,8 +168,8 @@ export default {
           }
         })
     },
-    getResult (resultId) {
-      return this.boardList.filter(element => element.resultId === resultId)[0]
+    getResult (pinboardId) {
+      return this.boardList.filter(element => element.pinboardId === pinboardId)[0]
     },
     closeSortingDialog (isSorted) {
       this.isShowSortingDialog = false
