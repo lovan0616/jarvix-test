@@ -119,7 +119,7 @@ export default {
   grid-template-columns: 1fr;
   grid-template-rows: repeat(2, 76px) 50px;
   grid-gap: 12px;
-  background: $theme-bg-color;
+  background: var(--color-bg-5);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   padding: 24px 20px;

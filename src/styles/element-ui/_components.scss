@@ -43,7 +43,7 @@
     color: #A7A7A7;
 
     &.hover, &:hover, &.selected {
-      background-color: $theme-bg-color;
+      background-color: var(--color-bg-5);
       color: $theme-text-color;
     }
   }

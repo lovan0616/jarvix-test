@@ -12,7 +12,7 @@
       <h1 class="title">{{ $t('nav.dataManagement') }}</h1>
       <div class="bread-crumb">
         <router-link 
-          :to="{name: 'DataSourceList'}" 
+          :to="{ name: 'DataSourceList' }" 
           class="title-link">{{ $t('editing.dataSource') }}</router-link>
         <span class="divider">/</span>{{ dataSourceName }}
       </div>
@@ -236,12 +236,12 @@ export default {
         {
           text: this.$t('editing.status'),
           value: 'state',
-          width: '80px'
+          width: '140px'
         },
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: this.$store.state.setting.locale.includes('zh') ? '270px' : '320px',
+          width: '270px',
           action: [
             {
               name: this.$t('button.edit'),
@@ -327,7 +327,8 @@ export default {
   beforeDestroy () {
     if (this.intervalFunction) {
       window.clearInterval(this.intervalFunction)
-    } else if (this.checkDataFrameIntervalFunction) {
+    }
+    if (this.checkDataFrameIntervalFunction) {
       window.clearInterval(this.checkDataFrameIntervalFunction)
     }
   },
@@ -525,7 +526,6 @@ export default {
   }
 
   .dataframe-action {
-    flex: 1;
     justify-content: flex-end;
     margin-right: 12px;
   }

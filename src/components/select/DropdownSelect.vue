@@ -49,7 +49,10 @@ export default {
       if (bar.path) {
         return this.$router.push(bar.path)
       } else if (bar.name) {
-        return this.$router.push({name: bar.name, params: {id: bar.id}})
+        return this.$router.push({
+          name: bar.name, 
+          ...bar.id && { params: { id: bar.id } }
+        })
       } else {
         return this.$emit('switchDialogName', bar.dialogName)
       }

@@ -8,7 +8,7 @@
         <div class="button-block">
           <router-link
             v-if="showCreateButton()"
-            :to="{name: 'GroupCreateUser', params: {group_id: currentGroupId}}"
+            :to="{ name: 'GroupCreateUser' }"
             class="btn-m btn-default btn-has-icon"
           >
             <svg-icon
@@ -196,7 +196,7 @@ export default {
 }
 
 .table-board {
-  background: $theme-bg-color;
+  background: var(--color-bg-5);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   padding: 24px;

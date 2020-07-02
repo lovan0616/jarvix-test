@@ -21,7 +21,7 @@
     }
 
     &.el-table th {
-      background: $theme-bg-color;
+      background: var(--color-bg-5);
       border-bottom: 2px solid #d4d4d4;
     }
 

@@ -8,8 +8,8 @@
         <div class="button-block">
           <router-link
             v-if="showCreateButton()"
-            :to="{name: 'CreateAccountGroup'}"
-            :class="{disabled: isLoading}"
+            :to="{ name: 'CreateAccountGroup' }"
+            :class="{ disabled: isLoading }"
             class="btn-m btn-default btn-has-icon"
           >
             <svg-icon
@@ -55,7 +55,7 @@ import { getAccountGroupList, deleteGroup } from '@/API/User'
 import CrudTable from '@/components/table/CrudTable'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState, mapActions } from 'vuex'
 
 export default {
   name: 'AccountGroupList',
@@ -73,7 +73,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupId']),
     ...mapState('userManagement', ['license']),
     tableHeaders () {
       return [
@@ -126,6 +126,7 @@ export default {
     this.fetchData()
   },
   methods: {
+    ...mapActions('userManagement', ['switchGroupById']),
     fetchData () {
       this.isLoading = true
       getAccountGroupList()
@@ -158,6 +159,8 @@ export default {
     },
     confirmEnterGroup (dataObj) {
       this.selectedGroup = dataObj
+      if (this.getCurrentGroupId === this.selectedGroup.groupId) return this.enterGroup()
+      // 如果欲前往的群組與當前的不同，會切換群組，因此需要先提醒使用者
       this.showConfirmEnterGroupDialog = true
     },
     cancelEnterGroup () {
@@ -165,10 +168,20 @@ export default {
       this.showConfirmEnterGroupDialog = false
     },
     enterGroup () {
-      this.$router.push({name: 'GroupUserList', params: {group_id: this.selectedGroup.groupId}})
+      const selectedGroupId = this.selectedGroup.groupId
+      if (this.getCurrentGroupId === selectedGroupId) {
+        return this.$router.push({ name: 'GroupUserList', params: { group_id: selectedGroupId } })
+      }
+
+      // 如果欲前往的群組與當前的不同，須先切換群組再導頁
+      this.switchGroupById({
+        accountId: this.$route.params.account_id,
+        groupId: selectedGroupId
+      })
+        .then(() => this.$router.push({ name: 'GroupUserList', params: { group_id: selectedGroupId } }))
     },
     editGroup (data) {
-      this.$router.push({name: 'EditAccountGroup', params: {id: data.groupId}})
+      this.$router.push({ name: 'EditAccountGroup', params: { id: data.groupId } })
     }
   }
 }
@@ -187,7 +200,7 @@ export default {
 }
 
 .table-board {
-  background: $theme-bg-color;
+  background: var(--color-bg-5);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   padding: 24px;

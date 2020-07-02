@@ -92,6 +92,10 @@ export default {
     dataFrameId: {
       type: Number,
       default: null
+    },
+    mode: {
+      type: String,
+      required: true
     }
   },
   data () {
@@ -125,7 +129,7 @@ export default {
   methods: {
     fetchDataFrameData (id, page = 0, resetPagination = false) {
       this.isProcessing = true
-      this.$store.dispatch('dataSource/getDataFrameIntro', {id, page})
+      this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode })
         .then(([dataFrameData, dataColumnSummary]) => {
           if (resetPagination) {
             this.pagination = dataFrameData.pagination

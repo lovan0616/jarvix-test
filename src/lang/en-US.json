@@ -4,6 +4,7 @@
   "nav": {
     "index": "Intellignet Analysis",
     "pinboard": "Pinboard",
+    "projectPinboard": "Group Pinboard",
     "dataManagement": "Data Management",
     "groupPlaceholder": "Group",
     "languagePlaceholder": "Language",
@@ -78,6 +79,7 @@
     "emptyNumeric": "Value not filled",
     "deleteSuccess": "Delete Successful",
     "dataSourceNotExist": "Data source does not exist",
+    "dataFrameNotExist": "Data frame does not exist",
     "connectionFail": "The field information is incorrect, please check again",
     "connectionInterrupted": "Connection Interrupted",
     "columnSetNameEmpty": "Column combination name is not filled in",
@@ -92,6 +94,7 @@
     "goToGroupManagement": "Go to account project management",
     "switchToGroupBySys": "The system has switched you to a group: {groupName}",
     "youAreGroupless": "You are currently not affiliated with a group",
+    "pinboardSuccess": "Successfully Pinned",
     "switching": "Switching"
   },
   "guiding": {
@@ -124,6 +127,11 @@
     "chooseDataSource": "Please select a data source",
     "allDataFrames": "All Data Frames",
     "createBoard": "Create New Version",
+    "prevStep": "Back",
+    "newPinboard": "New Pinboard",
+    "onlyPersonal": "Personal Pinboard",
+    "shareToProject": "Group Pinboard",
+    "pinboardName": "Pinboard Name",
     "questionPlaceHolder": "Please enter a question, for example: the correlation between price and cost",
     "askPlaceHolder": "Ask JarviX",
     "dataBuilding": "Data Processing",
@@ -193,13 +201,13 @@
     "processStep2": "Upload File",
     "processStep3": "Data Processing",
     "buildImmediately": "Build Now",
-    "connectDB": "Connect Database",
+    "connectDB": "Database",
     "connectStep2": "Select Information",
     "connectStep3": "Data Processing",
     "dataProcessing": "Data Processing",
     "dataSource": "Data Source",
     "newDataSource": "New Data Source",
-    "newTable": "New Data Set",
+    "newTable": "New Dataset",
     "clickToCreateDataSource": "Click to create your data source",
     "clickToUploadTable": "Click to upload your data table",
     "deleteTable": "Delete Table",
@@ -224,6 +232,7 @@
     "userManage": "User Management",
     "confirmDeleteBoardOrNot": "Are you sure you want to delete this pinboard?",
     "pinboard": "Personal Pinboard",
+    "projectPinboard": "Group Pinboard",
     "emptyPinboard": "There is currently no content",
     "emptyResult": "No relevant information",
     "emptyResultDescription": "The question you entered could not be found with the associated data for analysis. Please re-enter the sentence search or use the system suggested sentence",
@@ -327,7 +336,9 @@
     "toolTipMessage": {
       "comfrmToDeleteConnectionHistory": "Are you sure you want to delete the connection history?"
     },
-    "createGroup": "Create Project"
+    "createGroup": "Create Project",
+    "sortSetting": "Sorting settings",
+    "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change."
   },
   "algorithm": {
     "name": "Algorithm",
@@ -389,6 +400,12 @@
     "initParams": "Initialization Parameters",
     "actualLabel": "Actual Label",
     "timestamp": "Timestamp"
+  },
+  "remoteConnection": {
+    "tableNameDuplicate": "Table name duplicate",
+    "sqlCreateTable": "Created by SQL",
+    "dataFrameName": "Data Table Name",
+    "sql": "SQL Syntax"
   },
   "etl": {
     "dataFrameList": "Data Table List",
@@ -606,8 +623,6 @@
     "copy": "Copy",
     "change": "Change",
     "pinToBoard": "New Pinboard",
-    "pinned": "Pinned",
-    "cancelPinned": "Cancel Pinboard",
     "built": "built",
     "submit": "Submit",
     "editName": "Edit Name",
@@ -644,7 +659,10 @@
     "reset": "Reset",
     "confirmBuild": "ConfirmBuild",
     "selectAll": "Select All",
-    "resumeDefault": "Restore Default"
+    "resumeDefault": "Restore Default",
+    "sortSetting": "Sort",
+    "addSqlScript": "Add Customized SQL",
+    "testConnecting": "Testing Connection..."
   },
   "aggregation": {
     "mean": "Average",
@@ -1693,13 +1711,13 @@
     "confirmDeleteAccountText": "After the user is removed, this user will not be able to use any features of this account. Are you sure you want to continue removing this user?"
   },
   "accountInfo": {
-    "userAmount": "Number of Users",
-    "currentUserAmount": "Current number of users",
-    "userAmountLimit": "Maximum Number of Users",
+    "userAmount": "User Limit",
+    "currentUserAmount": "Current Number of Users",
+    "userAmountLimit": "Max Number of Users",
     "dataAllowance": "Data Capacity",
-    "currentDataUsage": "Current Data Usage Capacity",
-    "dataUsageProvided": "Data Capacity Maximum",
-    "expireDate": "Expire Date",
+    "currentDataUsage": "Current Data Storage",
+    "dataUsageProvided": "Max Data Capacity",
+    "expireDate": "Expiration Date",
     "person": "person | people"
   },
   "dataType": {
@@ -1708,5 +1726,29 @@
     "boolean": "Brin",
     "datetime": "Time",
     "others": "Others"
-  }
+  },
+  "questionToken": [
+    {"type": "intend", "text": "overview"},
+    {"type": "aggregate", "text": "average"},
+    {"type": "aggregate", "text": "avg"},
+    {"type": "aggregate", "text": "sum"},
+    {"type": "aggregate", "text": "summary"},
+    {"type": "aggregate", "text": "count"},
+    {"type": "aggregate", "text": "max"},
+    {"type": "aggregate", "text": "min"},
+    {"type": "aggregate", "text": "standard deviation"},
+    {"type": "aggregate", "text": "median"},
+    {"type": "intend", "text": "trend"},
+    {"type": "intend", "text": "compare"},
+    {"type": "intend", "text": "comparison"},
+    {"type": "rootCause", "text": "rise"},
+    {"type": "rootCause", "text": "go up"},
+    {"type": "rootCause", "text": "decline"},
+    {"type": "rootCause", "text": "go down"},
+    {"type": "intend", "text": "root cause"},
+    {"type": "intend", "text": "predict"},
+    {"type": "intend", "text": "proportion"},
+    {"type": "intend", "text": "relationship"},
+    {"type": "intend", "text": "difference"}
+  ]
 }

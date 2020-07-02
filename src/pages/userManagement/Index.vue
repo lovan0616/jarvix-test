@@ -357,7 +357,7 @@ export default {
               mail: invitee.email
             }
           }),
-          webURL: window.location.origin + this.$router.resolve({name: 'PageSignup'}).href,
+          webURL: window.location.origin + this.$router.resolve({ name: 'PageSignup' }).href,
           accountId: this.$store.getters['userManagement/getCurrentAccountId']
         })
           .then(() => {
@@ -581,7 +581,7 @@ export default {
   }
   .table-board {
     padding: 24px;
-    background: $theme-bg-color;
+    background: var(--color-bg-5);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
   }

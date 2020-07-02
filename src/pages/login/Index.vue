@@ -36,6 +36,7 @@
 import { login } from '@/API/User'
 import InputBlock from '@/components/InputBlock'
 import PageLayout from '@/components/layout/PageLayout'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   inject: ['$validator'],
@@ -53,10 +54,14 @@ export default {
       isSubmit: false
     }
   },
+  computed: {
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+  },
   mounted () {
     this.$store.commit('chatBot/clearConversation')
   },
   methods: {
+    ...mapActions('userManagement', ['getUserInfo']),
     submitForm () {
       this.$validator.validateAll().then(result => {
         if (result) {
@@ -67,34 +72,47 @@ export default {
           })
             .then(res => {
               localStorage.setItem('token', res.accessToken)
-              // 取得前一次停留或拜訪的頁面
+              return this.getUserInfo()
+            })
+            .then(() => {
+              // 取得前一次停留或拜訪的資訊
               const currentRoute = this.$store.state.setting.currentRoute
               const dataSourceId = this.$store.state.dataSource.dataSourceId
-              const dataFrameId = this.$store.state.dataSource.dataFrameId
-              // 用戶若因 token 失效需重新登入，使用先前已選擇的 id 取得相關資料
-              if (dataSourceId) {
-                this.$store.dispatch('dataSource/changeDataSourceById', {dataSourceId, dataFrameId})
-              }
-              this.$store.dispatch('userManagement/getUserInfo')
 
-              const currentGroupId = this.$store.getters['userManagement/getCurrentGroupId']
-              if (!currentGroupId) {
+              if (!this.getCurrentGroupId) {
                 this.$store.commit('dataSource/setDataSourceList', [])
-                return this.$router.push('/')
+                this.$store.dispatch('dataSource/handleEmptyDataSource')
               }
-
-              this.$store.dispatch('dataSource/getDataSourceList', {})
+              
+              // 用戶若因 token 失效需重新登入，使用先前已選擇的 id 取得相關資料
+              if (this.getCurrentGroupId && dataSourceId) {
+                const dataFrameId = this.$store.state.dataSource.dataFrameId
+                this.$store.dispatch('dataSource/getDataSourceList', { dataSourceId, dataFrameId })
+              }
 
               // 用戶若因 token 失效需重新登入，登入後導回原頁面
               if (currentRoute && currentRoute.path) {
-                const {name, query, params} = currentRoute
-                return this.$router.push({name, query, params})
-              } else {
-                return this.$router.push('/')
-              }
-            }).catch(() => {
-              this.isSubmit = false
+                const { name, query, params } = currentRoute
+                return this.$router.push({ name, query, params })
+              } 
+              
+              // 沒有群組時導向引導頁面
+              if (!this.getCurrentGroupId) {
+                return this.$router.push({ 
+                  name: 'PageGrouplessGuidance',
+                  params: { 'account_id': this.getCurrentAccountId }
+                })
+              } 
+
+              this.$router.push({
+                name: 'PageIndex', 
+                params: {
+                  'account_id': this.getCurrentAccountId,
+                  'group_id': this.getCurrentGroupId
+                }
+              })
             })
+            .catch(() => this.isSubmit = false)
         }
       })
     }
@@ -113,7 +131,7 @@ export default {
 
   .login-form {
     text-align: left;
-    background-color: $theme-bg-color;
+    background-color: var(--color-bg-5);
     padding: 40px;
     border-radius: 8px;
 

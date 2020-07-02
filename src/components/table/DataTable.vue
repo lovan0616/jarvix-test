@@ -432,7 +432,7 @@ export default {
     overflow: visible;
   }
   .data-table-row.is-processing {
-    background-color: $theme-bg-color;
+    background-color: var(--color-bg-5);
   }
   .data-table-cell {
     .is-processing {

@@ -96,6 +96,7 @@ export default {
           this.isLoading = true
 
           testConnection(this.connectInfo).then(() => {
+            this.$store.commit('dataManagement/updateCurrentConnectionDB', this.connectInfo.databaseType)
             this.dataSourceId ? this.createConnection() : this.createDataSource()
           }).catch(() => {
             Message({

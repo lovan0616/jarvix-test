@@ -62,7 +62,9 @@ export default {
         question: null,
         unknownToken: [],
         nlpToken: []
-      }
+      },
+      totalSec: 50,
+      periodSec: 200
     }
   },
   computed: {
@@ -220,9 +222,14 @@ export default {
             case 'Ready':
               this.timeoutFunction = window.setTimeout(() => {
                 this.getComponent(res)
-              }, 1000)
+              }, this.totalSec)
+
+              this.totalSec += this.periodSec
+              this.periodSec = this.totalSec
               break
             case 'Complete':
+              this.totalSec = 50
+              this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
               this.restrictInfo = componentResponse.restrictions
               this.layout = this.getLayout(res.layout)
@@ -303,7 +310,7 @@ export default {
   }
 
   .related-question-block {
-    background-color: $theme-bg-color;
+    background-color: var(--color-bg-5);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     padding: 28px 28px 4px;

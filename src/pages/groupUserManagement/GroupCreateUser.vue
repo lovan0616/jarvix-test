@@ -4,7 +4,7 @@
       <h1 class="title">{{ $t('sideNav.groupCreateUser') }}</h1>
       <div class="bread-crumb">
         <router-link
-          :to="{name: 'GroupUserList', params: {group_id: $route.params.group_id}}"
+          :to="{ name: 'GroupUserList' }"
           class="title-link"
         >{{ $t('sideNav.groupUserList') }}</router-link>
         <span class="divider">/</span>{{ $t('sideNav.groupCreateUser') }}
@@ -142,7 +142,7 @@ export default {
       })
     },
     backToUserList () {
-      this.$router.push({name: 'GroupUserList', params: {group_id: this.$route.params.group_id}})
+      this.$router.push({ name: 'GroupUserList' })
     },
     updateSelectedInvitee (invitee) {
       this.selectedInvitee = this.userList.find(user => user.value === invitee).value
@@ -183,7 +183,7 @@ export default {
 
 .group-creation-form {
   .input-wrapper {
-    background: $theme-bg-color;
+    background: var(--color-bg-5);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     padding: 24px;

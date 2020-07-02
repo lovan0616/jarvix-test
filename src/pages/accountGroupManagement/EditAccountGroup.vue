@@ -4,7 +4,7 @@
       <h1 class="title">{{ editTypeName }}</h1>
       <div class="bread-crumb">
         <router-link
-          :to="{name: 'AccountGroupManagement'}"
+          :to="{ name: 'AccountGroupManagement' }"
           class="title-link"
           @click="quitEditGroup"
         >
@@ -106,7 +106,7 @@ export default {
   },
   methods: {
     quitEditGroup () {
-      this.$router.push({name: 'AccountGroupManagement'})
+      this.$router.push({ name: 'AccountGroupManagement' })
     },
     fetchGroupName () {
       this.isLoading = true
@@ -203,7 +203,7 @@ export default {
 
 .group-info-form {
   .input-wrapper {
-    background: $theme-bg-color;
+    background: var(--color-bg-5);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     padding: 24px;

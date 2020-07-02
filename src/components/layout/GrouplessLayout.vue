@@ -9,7 +9,7 @@
       class="guiding">{{ $t('guiding.pleaseInformManager') }}</p>
     <router-link
       v-if="hasPermission('account_create_group')"
-      :to="{ name: 'AccountGroupManagement' }" 
+      :to="{ name: 'AccountGroupManagement', params: { 'account_id': $route.params.account_id } }" 
       class="link">{{ this.$t('message.goToGroupManagement') }}</router-link>
   </div>
 </template>
@@ -28,7 +28,13 @@ export default {
   beforeRouteEnter (to, from, next) {
     const currentAccount = store.getters['userManagement/getCurrentAccountId']
     const currentGroup = store.getters['userManagement/getCurrentGroupId']
-    currentAccount && !currentGroup ? next() : next({ name: 'PageIndex' })
+    currentAccount && !currentGroup ? next() : next({
+      name: 'PageIndex', 
+      params: {
+        'account_id': currentAccount,
+        'group_id': currentGroup 
+      } 
+    })
   },
   computed: {
     ...mapGetters('userManagement', ['hasPermission']),

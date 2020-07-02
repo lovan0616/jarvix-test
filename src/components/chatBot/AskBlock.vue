@@ -29,6 +29,7 @@
           @keyup.shift.ctrl.72="toggleHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
+          @focus="focusInput"
         >
         <a 
           href="javascript:void(0);" 
@@ -88,6 +89,8 @@
 </template>
 <script>
 import AskHelperDialog from './AskHelperDialog'
+import { mapState } from 'vuex'
+
 
 export default {
   name: 'AskBlock',
@@ -103,12 +106,25 @@ export default {
     }
   },
   computed: {
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
+    ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
+    dictionaries () {
+      return [
+        ...this.dataSourceColumnInfoList.booleanList.map(element => ({type: 'boolean', text: element})),
+        ...this.dataSourceColumnInfoList.category.map(element => ({type: 'category', text: element})),
+        ...this.dataSourceColumnInfoList.dateTime.map(element => ({type: 'dateTime', text: element})),
+        ...this.dataSourceColumnInfoList.numeric.map(element => ({type: 'numeric', text: element})),
+        ...this.dataSourceColumnInfoList.uniqueList.map(element => ({type: 'unique', text: element})),
+        ...this.dataSourceDataValueList.map(element => ({type: 'dataValue', text: element})),
+        ...this.$t('questionToken')
+      ]
     },
-    appQuestion () {
-      return this.$store.state.dataSource.appQuestion
-    },
+    // tokenList () {
+    //   let tokens = []
+    //   for (let i = 0; i < this.userQuestion.length; i++) {
+    //     console.log(this.userQuestion.charAt[i])
+    //   }
+    //   return tokens
+    // },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
     },
@@ -123,10 +139,28 @@ export default {
     },
     dataSourceList () {
       return this.$store.state.dataSource.dataSourceList
+    },
+    questionToken () {
+      let tokenCount = 0
+      // 處理問句字串
+      if (!this.userQuestion) return 0
+      for (let i = 0; i < this.userQuestion.length; i++) {
+        for (let j = this.userQuestion.length; j >= i + 1; j--) {
+          let currentText = this.userQuestion.slice(i, j)
+          if (this.dictionaries.some(element => element.text === currentText)) {
+            tokenCount += 1
+          }
+        }
+      }
+      return tokenCount
     }
   },
   watch: {
-    userQuestion () {
+    questionToken (value, oldValue) {
+      if (value === 0 || value < oldValue) return
+      this.enterQuestion()
+    },
+    userQuestion (val) {
       if (document.activeElement === this.$refs.questionInput) {
         this.showHistory()
       }
@@ -222,6 +256,9 @@ export default {
     },
     toggleAlgorithm () {
       this.$store.commit('chatBot/updateIsUseAlgorithm', !this.isUseAlgorithm)
+    },
+    focusInput () {
+      this.$store.dispatch('chatBot/openAskInMemory')
     }
   },
 }
@@ -230,7 +267,7 @@ export default {
 .ask-container {
   position: relative;
   padding: 16px 32px;
-  background-color: rgba(35, 61, 64, 0.6);
+  background-color: var(--color-bg-1);
 
   .user-question-block {
     position: relative;

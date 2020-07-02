@@ -5,7 +5,7 @@
       :key="nav.title"
       class="nav-item">
       <router-link
-        :to="nav.path ? nav.path : {name: nav.routeName}"
+        :to="nav.path ? nav.path : { name: nav.routeName }"
         class="nav-link main-nav-link"
       >
         <svg-icon 
@@ -17,7 +17,7 @@
         <router-link
           v-for="subNav in nav.subNav"
           :key="subNav.title"
-          :to="subNav.path || {name: subNav.routeName}"
+          :to="subNav.path || { name: subNav.routeName }"
           class="nav-link sub-nav-link"
         >
           <svg-icon 
@@ -43,7 +43,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .nav-header {
-  background-color: rgba(0, 32, 36, 0.8);;
+  background-color: var(--color-bg-1);
   height: 100%;
 
   .nav-link {
@@ -78,7 +78,7 @@ export default {
   }
 
   .sub-nav-link {
-    background-color: #081C1E;;
+    background-color: var(--color-bg-2);
     &.active {
       background-color: #42A5B3;
       .icon {

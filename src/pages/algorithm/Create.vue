@@ -11,7 +11,7 @@
         <h1 class="title">{{ $t('algorithm.management') }}</h1>
         <div class="bread-crumb">
           <router-link
-            :to="{name: 'PageAlgorithmList'}"
+            :to="{ name: 'PageAlgorithmList' }"
             class="title-link">{{ $t('algorithm.name') }}</router-link>
           <span class="divider">/</span>{{ $t('button.create') }}
         </div>
@@ -272,7 +272,7 @@ export default {
         })
     },
     back () {
-      this.$router.push('/algorithm')
+      this.$router.push({ name: 'PageAlgorithmList' })
     },
     createData (outputDatasourceName = null) {
       let now = new Date()
