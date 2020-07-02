@@ -45,6 +45,7 @@
     >
       <input 
         v-model="newBoardName" 
+        :placeholder="$t('editing.pinboardName')"
         type="text"
         class="input board-name-input"
       >
@@ -194,7 +195,6 @@ export default {
   }
 
   .single-board {
-    background-color: var(--color-bg-5);
     padding: 4px 12px;
     border-radius: 4px;
     font-size: 14px;
@@ -219,8 +219,10 @@ export default {
 
   .edit-block {
     .board-name-input {
-      margin-bottom: 12px;
+      height: 39px;
+      font-size: 16px;
       line-height: 22px;
+      margin-bottom: 12px;
     }
     .button-block {
       display: flex;
