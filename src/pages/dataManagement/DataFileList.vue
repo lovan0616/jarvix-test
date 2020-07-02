@@ -123,7 +123,7 @@
     />
     <edit-etl-dialog
       v-if="showEditEtlDialog"
-      :is-review-mode="isReviewMode"
+      :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditEtlDialog"
     />
   </div>
@@ -139,7 +139,7 @@ import EditEtlDialog from './components/EditEtlDialog'
 import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
-import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById, getDataFrameEtlSetting } from '@/API/DataSource'
+import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 import { getAccountInfo } from '@/API/Account'
 import { mapState } from 'vuex'
@@ -188,8 +188,7 @@ export default {
       intervalFunction: null,
       checkDataFrameIntervalFunction: null,
       isLoading: false,
-      showJoinTable: localStorage.getItem('showJoinTable'),
-      isReviewMode: false
+      showJoinTable: localStorage.getItem('showJoinTable')
     }
   },
   computed: {
@@ -474,21 +473,8 @@ export default {
       this.showEditDateTimeDialog = true
     },
     editEtlSetting ({ id }) {
+      this.currentEditDataFrameInfo.id = id
       this.showEditEtlDialog = true
-
-      getDataFrameEtlSetting(id)
-        .then((res) => {
-          let etlSetting = res
-          this.isReviewMode = !res.enableEdit
-          etlSetting.columns.forEach(column => {
-            if (column.dataSummary) column.dataSummary.statsType = column.statsType
-            this.$set(column, 'originalStatsType', column.statsType)
-          })
-          this.$store.commit('dataManagement/updateEtlTableList', etlSetting)
-        })
-        .catch((res) => {
-          this.showEditEtlDialog = false
-        })
     },
     closeDataFrameAliasDialog () {
       this.showDataFrameAliasDialog = false

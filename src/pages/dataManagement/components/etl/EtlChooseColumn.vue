@@ -54,6 +54,7 @@
                   class="checkbox-label"
                 >
                   <input
+                    :disabled="isReviewMode"
                     v-model="allColumnSelected"
                     type="checkbox"
                   >

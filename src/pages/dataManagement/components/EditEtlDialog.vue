@@ -1,10 +1,10 @@
 <template>
   <div class="full-page-dialog">
     <div
-      :style="getDialogWidth"
+      :style="getDialogStyle"
       class="dialog-container"
     >
-      <div v-if="step === 1" >
+      <div v-if="editing" >
         <div class="dialog-title">
           {{ isReviewMode ? $t('button.reviewEtlSetting') : $t('button.editEtlSetting') }}
           <a 
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { dataRepreprocessor } from '@/API/DataSource'
+import { getDataFrameEtlSetting, dataRepreprocessor } from '@/API/DataSource'
 import EtlSetting from '@/pages/dataManagement/components/etl/EtlChooseColumn';
 import ConfirmPage from '@/pages/dataManagement/components/localFileUpload/ConfirmPage'
 import { Message } from 'element-ui'
@@ -80,15 +80,16 @@ export default {
     ConfirmPage
   },
   props: {
-    isReviewMode: {
-      type: Boolean,
-      default: false
-    },
+    dataFrameInfo: {
+      type: Object,
+      required: true
+    }
   },
   data () {
     return {
       isProcessing: false,
-      step: 1
+      editing: true,
+      isReviewMode: false
     }
   },
   computed: {
@@ -100,11 +101,25 @@ export default {
       const target = this.$store.state.dataManagement.etlTableList[0]
       return target ? target.primaryAlias : ''
     },
-    getDialogWidth () {
-      return `width: ${ this.step === 1 ? '90%' : '64%'}`
+    getDialogStyle () {
+      return {
+        width: this.editing ? '90%' : '64%'
+      }
     }
   },
   mounted () {
+    getDataFrameEtlSetting(this.dataFrameInfo.id)
+      .then((etlSetting) => {
+        this.isReviewMode = !etlSetting.enableEdit
+        etlSetting.columns.forEach(column => {
+          if (column.dataSummary) column.dataSummary.statsType = column.statsType
+          this.$set(column, 'originalStatsType', column.statsType)
+        })
+        this.$store.commit('dataManagement/updateEtlTableList', etlSetting)
+      })
+      .catch(() => {
+        this.closeDialog()
+      })
   },
   destroyed () {
     this.$store.commit('dataManagement/clearEtlTableList')
@@ -129,15 +144,12 @@ export default {
       Promise.all(promiseList)
         .then(() => {
           // 全部資料表都設置成功才進入 ConfirmPage 結束導入流程
-          this.next()
+          this.editing = false
         })
         .catch(() => {})
         .finally(() => {
           this.isProcessing = false
         })
-    },
-    next () {
-      this.step += 1
     },
     selectAtLeastOneColumnPerTable () {
       let result = true
