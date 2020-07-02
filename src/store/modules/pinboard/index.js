@@ -6,7 +6,9 @@ export default {
   namespaced: true,
   state: {
     pinboardList: [],
-    pinboardInfo: []
+    pinboardInfo: [],
+    groupPinboardList: [],
+    groupPinboardInfo: []
   },
   actions,
   mutations,

@@ -1,6 +1,9 @@
 <template>
   <nav class="nav-header">
-    <section class="nav-left">
+    <section 
+      v-if="$route.params.group_id"
+      class="nav-left"
+    >
       <div
         v-if="groupName"
         class="nav-item nav-item-dropdown nav-set group-list"
@@ -11,7 +14,7 @@
             :selected-id="groupId"
             :is-loading="isLoading"
             trigger="hover"
-            @select="changeGroup($event)"
+            @select="switchGroup($event)"
           >
             <template v-slot:display>
               <div class="switch">
@@ -34,37 +37,42 @@
           {{ $t('editing.createGroup') }}
         </button>
       </div>
-      <router-link 
-        :class="{ 'active': $route.name === 'PageIndex' }"
-        class="nav-item"
-        to="/" 
-        exact>{{ $t('nav.index') }}</router-link>
-      <!-- FIXME for poc/foxconn_molding -->
-      <router-link 
-        v-if="isShowAlgorithmBtn" 
-        :to="{name: 'PageAlgorithmList'}" 
-        class="nav-item">{{ $t('nav.algorithm') }}</router-link>
-      <div
-        v-if="groupId"
-        class="nav-item nav-item-dropdown nav-set"
-      >
-        <div class="nav-set-flex">
-          <div>{{ $t('nav.projectManagement') }}</div>
-          <svg-icon 
-            icon-class="dropdown" 
-            class="icon nav-dropdown-icon is-rotate"/>
+      <template v-if="groupList.length > 0">
+        <router-link 
+          :class="{ 'active': $route.name === 'PageIndex' }"
+          :to="{ name: 'PageIndex' }"
+          class="nav-item" 
+          exact>{{ $t('nav.index') }}</router-link>
+        <!-- FIXME for poc/foxconn_molding -->
+        <router-link 
+          v-if="isShowAlgorithmBtn" 
+          :to="{ name: 'PageAlgorithmList' }" 
+          class="nav-item">{{ $t('nav.algorithm') }}</router-link>
+        <div
+          v-if="groupId"
+          class="nav-item nav-item-dropdown nav-set"
+        >
+          <div class="nav-set-flex">
+            <div>{{ $t('nav.projectManagement') }}</div>
+            <svg-icon 
+              icon-class="dropdown" 
+              class="icon nav-dropdown-icon is-rotate"/>
+          </div>
+          <dropdown-select
+            :bar-data="settingData"
+            class="nav-set-dropdown"
+            @switchDialogName="switchDialogName"
+          />
         </div>
-        <dropdown-select
-          :bar-data="settingData"
-          class="nav-set-dropdown"
-          @switchDialogName="switchDialogName"
-        />
-      </div>
+        <router-link 
+          :to="{name: 'ProjectPagePinboardList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}" 
+          class="nav-item">{{ $t('nav.projectPinboard') }}</router-link>
+      </template>
     </section>
     <section class="nav-right">
       <router-link
         v-if="isShowFunctionDescription"
-        :to="{ name: 'FunctionDescription' }"
+        :to="{ name: 'FunctionDescription', params: { 'account_id': accountId } }"
         class="nav-item nav-function"
       >
         <svg-icon 
@@ -80,8 +88,7 @@ import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
-import { mapGetters, mapState, mapMutations } from 'vuex'
-import { switchGroup } from '@/API/User'
+import { mapGetters, mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   name: 'HeaderNav',
@@ -97,8 +104,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId']),
-    ...mapState('userManagement', ['userName', 'license']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupName', 'getCurrentAccountId', 'getCurrentGroupId']),
+    ...mapState('userManagement', ['userName', 'license', 'groupList']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
@@ -111,15 +119,19 @@ export default {
     groupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
+    accountId () {
+      return this.$store.getters['userManagement/getCurrentAccountId']
+    },
     settingData () {
       const settingList = []
+      const { account_id: queryAccountId, group_id: queryGroupId } = this.$route.params
       if (this.hasPermission(['group_read_user', 'group_read_data'])) {
-        settingList.push({ icon: 'database', title: 'sideNav.dataSourceManagement', name: 'DataSourceList' })
+        settingList.push({icon: 'database', title: 'sideNav.dataSourceManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/datasource`})
       }
   
       // 個人版 隱藏成員管理選項
       if (this.license.maxUser !== 1) {
-        settingList.push({ icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/group/user-management/${this.groupId}` })
+        settingList.push({icon: 'userManage', title: 'sideNav.groupUserManagement', path: `/account/${queryAccountId}/group/${queryGroupId}/users`})
       }
       return settingList
     }
@@ -130,41 +142,41 @@ export default {
   },
   methods: {
     ...mapMutations(['updateAppLoadingStatus']),
+    ...mapActions('userManagement', ['switchGroupById']),
     setIsShowAlgorithmBtn () {
       let preSetting = localStorage.getItem('isShowAlgorithmBtn')
       if (preSetting !== 'true') {
         localStorage.setItem('isShowAlgorithmBtn', 'false')
       }
     },
-    changeGroup (groupId) {
-      // 更新全域狀態
-      this.updateAppLoadingStatus(true)
+    switchGroup (groupId) {
       this.isLoading = true
-      switchGroup({
-        accountId: this.getCurrentAccountId,
-        groupId: groupId
+      this.switchGroupById({
+        accountId: this.$route.params.account_id,
+        groupId
       })
-        .then(() => this.$store.dispatch('userManagement/getUserInfo'))
         .then(() => {
-            // 先清空，因為新群組有可能沒有 dataSource
-            this.$store.commit('dataSource/setDataSourceId', null)
-            // update data source list
-            return this.$store.dispatch('dataSource/getDataSourceList', {})
+          this.$router.push({ 
+            name: 'PageIndex',
+            params: {
+              'account_id': this.$route.params.account_id,
+              'group_id': groupId
+            },
+            query: {
+              ...(this.dataSourceId && { 
+                dataSourceId: this.dataSourceId,
+                dataFrameId: this.dataFrameId
+              })
+            }
+          })
         })
-        .then(() => {
-          if (this.$route.name !== 'PageIndex') this.$router.push({name: 'PageIndex'})
-        })
-        .finally(() => {
-          this.updateAppLoadingStatus(false)
-          this.isLoading = false
-        })
+        .finally(() => this.isLoading = false)
     },
     switchDialogName (dialog) {
       this[dialog] = true
     },
     groupListData () {
-      const groupList = this.$store.state.userManagement.groupList
-      return groupList
+      return this.groupList
         .map(group => ({
           id: group.groupId,
           name: group.groupName
@@ -179,12 +191,15 @@ export default {
   margin-left: 24px;
   display: flex;
   flex: 1;
-  justify-content: space-between;
 
   .nav-left,
   .nav-right {
     display: flex;
     align-items: center;
+  }
+
+  .nav-right {
+    margin: 0 0 0 auto;
   }
 
   .nav-item {

@@ -87,3 +87,22 @@ export function getQuickStartQuestion(dataSourceId, dataFrameId) {
     }
   })
 }
+
+/**
+ * add table to memory
+ * @param {Number} accountId
+ * @param {Number} dataFrameId,
+ * @param {Number} dataSourceId
+ */
+export function addTableToMemory(accountId, dataFrameId, dataSourceId) {
+  return request({
+    url: `/inMemory`,
+    method: 'POST',
+    data: {
+      accountId,
+      dataFrameId,
+      dataSourceId
+    }
+  })
+}
+

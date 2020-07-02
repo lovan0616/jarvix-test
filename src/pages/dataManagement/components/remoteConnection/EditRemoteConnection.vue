@@ -106,6 +106,7 @@ export default {
           const {id, ...connectionInfo} = this.connectInfo
           return updateDatabaseConnection (id, connectionInfo)
             .then (() => {
+              this.$store.commit('dataManagement/updateCurrentConnectionDB', connectionInfo.databaseType)
               Message({
                 message: this.$t('message.saveSuccess'),
                 type: 'success',

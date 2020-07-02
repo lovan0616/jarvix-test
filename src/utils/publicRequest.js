@@ -50,6 +50,11 @@ service.interceptors.response.use(
     return Promise.reject(res)
   },
   error => {
+    // cancel request
+    if (axios.isCancel(error)) {
+      return Promise.reject(error)
+    }
+    
     if (!error.response) {
       // network error
       Message({
@@ -91,10 +96,6 @@ service.interceptors.response.use(
       }
     }
 
-    // cancel request
-    if (axios.isCancel(error)) {
-      return Promise.reject(error)
-    }
     // rollbar 留存
     if (window.location.hostname !== 'localhost') {
       Vue.rollbar.error(JSON.stringify(error))

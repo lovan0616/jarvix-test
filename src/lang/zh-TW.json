@@ -4,6 +4,7 @@
   "nav": {
     "index": "智能分析",
     "pinboard": "個人釘板",
+    "projectPinboard": "專案釘板",
     "dataManagement": "資料管理",
     "groupPlaceholder": "專案",
     "languagePlaceholder": "語系",
@@ -92,6 +93,7 @@
     "goToGroupManagement": "前往帳戶專案管理",
     "switchToGroupBySys": "系统已將您切換至群組：{groupName}",
     "youAreGroupless": "您目前無隸屬群組",
+    "pinboardSuccess": "釘板成功",
     "switching": "切換中"
   },
   "guiding": {
@@ -124,6 +126,11 @@
     "chooseDataSource": "請選擇資料源",
     "allDataFrames": "全部資料表",
     "createBoard": "建立新版",
+    "prevStep": "返回上層",
+    "newPinboard": "新增釘板",
+    "onlyPersonal": "僅個人使用",
+    "shareToProject": "共享至專案",
+    "pinboardName": "釘板名稱",
     "questionPlaceHolder": "請輸入問題，例如：價格和成本的相關性",
     "askPlaceHolder": "請輸入問句後按Enter送出",
     "dataBuilding": "資料處理中",
@@ -224,6 +231,7 @@
     "userManage": "使用者管理",
     "confirmDeleteBoardOrNot": "確認刪除此釘板？",
     "pinboard": "個人釘板",
+    "projectPinboard": "專案釘板",
     "emptyPinboard": "目前無任何內容",
     "emptyResult": "沒有相關資料",
     "emptyResultDescription": "您所輸入的問題，無法找到相關聯的數據進行分析，請重新輸入語句搜尋，或使用系統建議語句",
@@ -257,7 +265,7 @@
     "deleteGroup": "刪除專案",
     "confirmDeleteProjectUserText": "使用者移除後，此使用者將無法使用此專案任何功能，您確認要繼續移除此使用者？",
     "confirmDeleteBelowGroupOrNot": "您確認要刪除以下專案嗎?",
-    "confirmEnterGroupUserManagement": "系統將導頁至以下專案的“專案成員管理”進行設定",
+    "confirmEnterGroupUserManagement": "系統將切換至以下專案的“專案成員管理”進行設定",
     "accountOwner": "帳戶擁有者",
     "memberManagement": "成員管理",
     "activeStatus": "啟用狀態",
@@ -328,7 +336,9 @@
     "toolTipMessage": {
       "comfrmToDeleteConnectionHistory":"你確定要刪除連線紀錄?"
     },
-    "createGroup": "建立專案"
+    "createGroup": "建立專案",
+    "sortSetting": "排序設定",
+    "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。"
   },
   "algorithm": {
     "name": "演算法",
@@ -390,6 +400,12 @@
     "initParams": "初始化參數",
     "actualLabel": "實際標籤",
     "timestamp": "時間戳"
+  },
+  "remoteConnection": {
+    "tableNameDuplicate": "資料表名稱重複",
+    "sqlCreateTable": "SQL 建立資料表",
+    "dataFrameName": "資料表名稱",
+    "sql": "SQL 語法"
   },
   "etl": {
     "dataFrameList": "資料表列表",
@@ -606,9 +622,7 @@
     "logout": "登出",
     "copy": "複製",
     "change": "變更",
-    "pinToBoard": "加入釘板",
-    "pinned": "已釘板",
-    "cancelPinned": "取消釘板",
+    "pinToBoard": "釘板",
     "built": "建立",
     "submit": "送出",
     "editName": "編輯名稱",
@@ -643,7 +657,10 @@
     "reset": "重新設定",
     "confirmBuild": "確認建置",
     "selectAll": "全選",
-    "resumeDefault": "恢復預設值"
+    "resumeDefault": "恢復預設值",
+    "sortSetting": "排序設定",
+    "addSqlScript": "使用自定義 SQL",
+    "testConnecting": "測試連線中..."
   },
   "aggregation": {
     "mean": "平均",

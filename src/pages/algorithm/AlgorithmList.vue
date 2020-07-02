@@ -109,7 +109,7 @@ export default {
   methods: {
     editAlgorithm (e) {
       this.$router.push({
-        path: `algorithm/${e.id}`
+        path: `${e.id}`
       })
     },
     createAlgorithm () {
