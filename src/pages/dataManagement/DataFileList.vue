@@ -438,7 +438,7 @@ export default {
       this.toggleEditColumnDialog()
     },
     closeEditColumnDialog () {
-      this.currentEditDataFrameInfo = {}
+      this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
       this.toggleEditColumnDialog()
     },
     editDataFrameAlias (dataInfo) {
@@ -475,7 +475,7 @@ export default {
     },
     closeDataFrameAliasDialog () {
       this.showDataFrameAliasDialog = false
-      this.currentEditDataFrameInfo = {}
+      this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
     },
     closeValueAliasDialog () {
       this.showValueAliasDialog = false
@@ -491,7 +491,7 @@ export default {
     },
     closeEditEtlDialog () {
       this.showEditEtlDialog = false
-      this.currentEditDataFrameInfo = {}
+      this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
     }
   }
 }
