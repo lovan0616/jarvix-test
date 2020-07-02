@@ -79,6 +79,7 @@
     "emptyNumeric": "未填寫數值",
     "deleteSuccess": "刪除成功",
     "dataSourceNotExist": "資料源不存在",
+    "dataFrameNotExist": "資料表不存在",
     "connectionFail": "欄位資料有誤，請重新檢查",
     "connectionInterrupted": "連線已中斷",
     "columnSetNameEmpty": "欄位組合名稱未填寫",

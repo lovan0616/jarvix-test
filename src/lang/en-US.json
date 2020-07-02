@@ -78,6 +78,7 @@
     "emptyNumeric": "Value not filled",
     "deleteSuccess": "Delete Successful",
     "dataSourceNotExist": "Data source does not exist",
+    "dataFrameNotExist": "Data frame does not exist",
     "connectionFail": "The field information is incorrect, please check again",
     "connectionInterrupted": "Connection Interrupted",
     "columnSetNameEmpty": "Column combination name is not filled in",
