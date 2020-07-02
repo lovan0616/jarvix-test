@@ -159,6 +159,8 @@ export default {
     },
     confirmEnterGroup (dataObj) {
       this.selectedGroup = dataObj
+      if (this.getCurrentGroupId === this.selectedGroup.groupId) return this.enterGroup()
+      // 如果欲前往的群組與當前的不同，會切換群組，因此需要先提醒使用者
       this.showConfirmEnterGroupDialog = true
     },
     cancelEnterGroup () {
