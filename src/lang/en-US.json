@@ -4,6 +4,7 @@
   "nav": {
     "index": "Intellignet Analysis",
     "pinboard": "Pinboard",
+    "projectPinboard": "Group Pinboard",
     "dataManagement": "Data Management",
     "groupPlaceholder": "Group",
     "languagePlaceholder": "Language",
@@ -92,6 +93,7 @@
     "goToGroupManagement": "Go to account project management",
     "switchToGroupBySys": "The system has switched you to a group: {groupName}",
     "youAreGroupless": "You are currently not affiliated with a group",
+    "pinboardSuccess": "Successfully Pinned",
     "switching": "Switching"
   },
   "guiding": {
@@ -124,6 +126,11 @@
     "chooseDataSource": "Please select a data source",
     "allDataFrames": "All Data Frames",
     "createBoard": "Create New Version",
+    "prevStep": "Back to prevstep",
+    "newPinboard": "New Pinboard",
+    "onlyPersonal": "For personal use only",
+    "shareToProject": "Share to project",
+    "pinboardName": "Pinboard Name",
     "questionPlaceHolder": "Please enter a question, for example: the correlation between price and cost",
     "askPlaceHolder": "Ask JarviX",
     "dataBuilding": "Data Processing",
@@ -224,6 +231,7 @@
     "userManage": "User Management",
     "confirmDeleteBoardOrNot": "Are you sure you want to delete this pinboard?",
     "pinboard": "Personal Pinboard",
+    "projectPinboard": "Group Pinboard",
     "emptyPinboard": "There is currently no content",
     "emptyResult": "No relevant information",
     "emptyResultDescription": "The question you entered could not be found with the associated data for analysis. Please re-enter the sentence search or use the system suggested sentence",
@@ -327,7 +335,9 @@
     "toolTipMessage": {
       "comfrmToDeleteConnectionHistory": "Are you sure you want to delete the connection history?"
     },
-    "createGroup": "Create Project"
+    "createGroup": "Create Project",
+    "sortSetting": "Sorting settings",
+    "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change."
   },
   "algorithm": {
     "name": "Algorithm",
@@ -389,6 +399,12 @@
     "initParams": "Initialization Parameters",
     "actualLabel": "Actual Label",
     "timestamp": "Timestamp"
+  },
+  "remoteConnection": {
+    "tableNameDuplicate": "Table name duplicate",
+    "sqlCreateTable": "SQL Create Table",
+    "dataFrameName": "Data Table Name",
+    "sql": "SQL Syntax"
   },
   "etl": {
     "dataFrameList": "Data Table List",
@@ -642,7 +658,8 @@
     "reset": "Reset",
     "confirmBuild": "ConfirmBuild",
     "selectAll": "Select All",
-    "resumeDefault": "Restore Default"
+    "resumeDefault": "Restore Default",
+    "testConnecting": "Testing Connection..."
   },
   "aggregation": {
     "mean": "Average",
