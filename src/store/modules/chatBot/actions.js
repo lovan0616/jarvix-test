@@ -1,4 +1,4 @@
-import { askQuestion, askResult, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion } from '@/API/NewAsk'
+import { askQuestion, askResult, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
 const CancelToken = axios.CancelToken
@@ -61,5 +61,8 @@ export default {
     } catch (error) {
       commit('updateAnalyzeStatus', false)
     }
+  },
+  openAskInMemory ({rootGetters, rootState}) {
+    addTableToMemory(rootGetters['userManagement/getCurrentAccountId'], rootGetters['dataSource/currentDataFrameId'], rootState.dataSource.dataSourceId)
   }
 }

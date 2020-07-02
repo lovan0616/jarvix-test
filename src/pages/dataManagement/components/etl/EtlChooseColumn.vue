@@ -105,7 +105,7 @@
                   <svg-icon
                     icon-class="setting"
                     class="icon-setting"
-                    @click="chooseColumn(index)"/>
+                    @click.native="chooseColumn(index)"/>
                 </el-tooltip>
               </div>
               <div class="summary">
@@ -291,7 +291,6 @@ export default {
       align-items: center;
       flex-wrap: wrap;
       justify-content: flex-start;
-      padding-bottom: 10px;
       .data-frame__name {
         flex-basis: 100%;
         margin-bottom: 8px;
@@ -304,6 +303,7 @@ export default {
         display: flex;
         align-items: center;
         font-size: 14px;
+        margin-bottom: 10px;
         >>> .sy-select {
           border-radius: 5px;
           background-color: #252C2C;
@@ -316,7 +316,7 @@ export default {
       }
       .data-frame__info {
         font-size: 14px;
-        margin-right:16px;
+        margin: 0 16px 10px 0;
         dl:not(:last-child) {
           margin-right: 20px;
         }

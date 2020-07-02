@@ -29,6 +29,7 @@
           @keyup.shift.ctrl.72="toggleHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
+          @focus="focusInput"
         >
         <a 
           href="javascript:void(0);" 
@@ -47,11 +48,13 @@
       </div>
       <div 
         :class="{ 'disabled': dataSourceList.length === 0 }" 
-        class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}<a 
+        class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}
+        <a 
           href="javascript:void(0)" 
           class="link help-link"
           @click="showHelper"
-      >{{ $t('askHelper.helpLink') }}</a> </div>
+        >{{ $t('askHelper.helpLink') }}</a>
+      </div>
     </div>
     <div 
       :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
@@ -86,6 +89,8 @@
 </template>
 <script>
 import AskHelperDialog from './AskHelperDialog'
+import { mapState } from 'vuex'
+
 
 export default {
   name: 'AskBlock',
@@ -101,12 +106,24 @@ export default {
     }
   },
   computed: {
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
+    ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
+    dictionaries () {
+      return [
+        ...this.dataSourceColumnInfoList.booleanList,
+        ...this.dataSourceColumnInfoList.category,
+        ...this.dataSourceColumnInfoList.dateTime,
+        ...this.dataSourceColumnInfoList.numeric,
+        ...this.dataSourceColumnInfoList.uniqueList,
+        ...this.dataSourceDataValueList
+      ]
     },
-    appQuestion () {
-      return this.$store.state.dataSource.appQuestion
-    },
+    // tokenList () {
+    //   let tokens = []
+    //   for (let i = 0; i < this.userQuestion.length; i++) {
+    //     console.log(this.userQuestion.charAt[i])
+    //   }
+    //   return tokens
+    // },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
     },
@@ -124,8 +141,15 @@ export default {
     }
   },
   watch: {
-    userQuestion () {
+    userQuestion (val) {
       if (document.activeElement === this.$refs.questionInput) {
+        // 處理問句字串
+        // for (let i = 0; i < val.length; i++) {
+        //   for (let j = i + 1; j <= val.length; j++) {
+        //     let currentText = val.slice(i, j)
+        //     console.log(currentText, 'currentText')
+        //   }
+        // }
         this.showHistory()
       }
     },
@@ -220,6 +244,9 @@ export default {
     },
     toggleAlgorithm () {
       this.$store.commit('chatBot/updateIsUseAlgorithm', !this.isUseAlgorithm)
+    },
+    focusInput () {
+      this.$store.dispatch('chatBot/openAskInMemory')
     }
   },
 }
@@ -328,12 +355,11 @@ export default {
 
     .help-link {
       font-size: 13px;
-      margin-left: 4px;
     }
   }
 
   .ask-helper-dialog {
-    bottom: 111px;
+    bottom: 100%;
 
     &.has-filter {
       bottom: 137px;

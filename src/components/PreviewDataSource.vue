@@ -16,7 +16,7 @@
           <el-tabs
             :value="`${dataSourcetableId}`"
             type="card"
-            @tab-click="onDataSourceTableChange"
+            @tab-click="onDataSourceTableChange($event.name)"
           >
             <el-tab-pane
               v-for="(tab, index) in dataSourceTables"
@@ -42,6 +42,7 @@
             v-if="currentDataFrameId"
             :key="currentDataFrameId"
             :data-frame-id="currentDataFrameId"
+            :mode="mode"
           />
         </div>
       </div>
@@ -53,6 +54,7 @@
 import SySelect from '../components/select/SySelect'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import DataFrameData from './DataFrameData'
+import { mapState } from 'vuex'
 
 export default {
   name: 'PreviewDataSource',
@@ -65,6 +67,10 @@ export default {
     isPreviewing: {
       type: Boolean,
       default: false
+    },
+    mode: {
+      type: String,
+      required: true
     }
   },
   data () {
@@ -89,9 +95,7 @@ export default {
     }
   },
   computed: {
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     dataSourcetableId () {
       return this.dataSourceTable ? this.dataSourceTable.id : null
     },
@@ -116,6 +120,11 @@ export default {
     availableDataFrames (newList, oldList) {
       if (oldList.length === 0) return
       this.fetchDataSourceTable()
+    },
+    // 根據當前選定的 id 進行切換
+    dataFrameId (value) {
+      if (!value) return 
+      this.onDataSourceTableChange (value)
     }
   },
   mounted () {
@@ -135,7 +144,9 @@ export default {
             }
           })
           if (this.dataSourceTables.length) {
-            this.dataSourceTable = response[0]
+            const queryDataFrame = response.find(dataFrame => dataFrame.id === this.dataFrameId)
+            // 根據當前選定的 id 進行切換
+            this.dataSourceTable = this.dataFrameId && this.dataFrameId !== 'all' ? queryDataFrame : response[0]
             this.currentDataFrameId = this.dataSourceTable.id
           }
           this.isLoading = false
@@ -148,12 +159,12 @@ export default {
     setDataSourceTableById (id) {
       this.dataSourceTable = this.dataSourceTables.find(item => item.id === id)
     },
-    onDataSourceTableChange (tab) {
-      const id = parseInt(tab.name)
-      if (this.dataSourceTable.id === id) { return }
+    onDataSourceTableChange (id) {
+      const dataFrameId = id === 'all' ? this.currentDataFrameId :  Number(id)
+      if (this.dataSourceTable.id === dataFrameId) return
       this.hasError = false
-      this.dataSourceTable.id = id
-      this.currentDataFrameId = id
+      this.dataSourceTable.id = dataFrameId
+      this.currentDataFrameId = dataFrameId
     },
     getHeaderIcon (index) {
       if (!this.tableSummaryList[index]) return 'check-circle'

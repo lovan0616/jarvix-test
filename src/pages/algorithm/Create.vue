@@ -2,28 +2,28 @@
   <div class="page-algorithm">
     <spinner
       v-if="isExecuting"
+      :title="$t('algorithm.processing')"
       class="layout-spinner"
-      title="演算法處理中，請耐心等待..."
       size="50"
     />
     <template v-else>
       <div class="page-title-row">
-        <h1 class="title">演算法管理</h1>
+        <h1 class="title">{{ $t('algorithm.management') }}</h1>
         <div class="bread-crumb">
           <router-link
-            :to="{name: 'PageAlgorithmList'}"
-            class="title-link">演算法</router-link>
-          <span class="divider">/</span>新建
+            :to="{ name: 'PageAlgorithmList' }"
+            class="title-link">{{ $t('algorithm.name') }}</router-link>
+          <span class="divider">/</span>{{ $t('button.create') }}
         </div>
       </div>
       <div class="table-board">
         <div class="board-title-row">
-          演算法
+          {{ $t('algorithm.name') }}
         </div>
         <div class="content">
           <div class="item-wrap">
             <div class="content-item">
-              <div class="item-title must">演算法類型: </div>
+              <div class="item-title must">{{ $t('algorithm.type') }}: </div>
               <default-select
                 v-model="selectedAlgorithm"
                 :option-list="algorithmOptions"
@@ -36,12 +36,12 @@
       </div>
       <div class="table-board">
         <div class="board-title-row">
-          訓練資料設定
+          {{ $t('algorithm.trainDataSetting') }}
         </div>
         <div class="content">
           <div class="item-wrap">
             <div class="content-item">
-              <div class="item-title must">目標資料源: </div>
+              <div class="item-title must">{{ $t('algorithm.targetDataSource') }}: </div>
               <default-select
                 v-model="targetDatasource"
                 :option-list="datasourceOptions"
@@ -50,7 +50,7 @@
               />
             </div>
             <div class="content-item">
-              <div class="item-title must">目標資料表: </div>
+              <div class="item-title must">{{ $t('algorithm.targetDataSource') }}: </div>
               <default-select 
                 :style="{width: '240px'}" 
                 v-model="targetDataframe"
@@ -63,7 +63,7 @@
 
           <div class="item-wrap">
             <div class="content-item">
-              <div class="item-title must">目標參數欄位: </div>
+              <div class="item-title must">{{ $t('algorithm.targetParamColumn') }}: </div>
               <default-select
                 v-model="targetDatacolumn"
                 :option-list="datacolumnOptions"
@@ -71,7 +71,7 @@
               />
             </div>
             <div class="content-item">
-              <div class="item-title must">時間欄位: </div>
+              <div class="item-title must">{{ $t('algorithm.timeColumn') }}: </div>
               <default-select
                 v-model="timeDatacolumn"
                 :option-list="datacolumnOptions"
@@ -80,7 +80,7 @@
             </div>
           </div>
           <div class="content-item">
-            <div class="item-title must">測量值欄位: </div>
+            <div class="item-title must">{{ $t('algorithm.measurementColumn') }}: </div>
             <default-multi-select 
               :style="{width: '360px'}" 
               v-model="valueDatacolumns"
@@ -101,14 +101,14 @@
         <!-- <button type="button" class="btn btn-default"
           @click="create"
         >
-          <span>新建</span>
+          <span>{{ $t('button.create') }}</span>
         </button> -->
         <button 
           type="button" 
           class="btn btn-default"
           @click="execute"
         >
-          <span>執行</span>
+          <span>{{ $t('algorithm.execute') }}</span>
         </button>
       </div>
     </template>
@@ -150,11 +150,11 @@ export default {
     algorithmOptions () {
       return [
         // {
-        //   name: '預測性維修',
+        //   name: this.$t('algorithm.predictiveMaintenance'),
         //   value: 1,
         // },
         {
-          name: '輪廓型預測',
+          name: this.$t('algorithm.contourPrediction'),
           value: 2
         }
       ]
@@ -272,7 +272,7 @@ export default {
         })
     },
     back () {
-      this.$router.push('/algorithm')
+      this.$router.push({ name: 'PageAlgorithmList' })
     },
     createData (outputDatasourceName = null) {
       let now = new Date()
@@ -285,7 +285,7 @@ export default {
         creator: 'sygps',
         createDate: now,
         updateDate: now,
-        status: '可執行'
+        status: this.$t('algorithm.executable')
       }
     },
     create () {
@@ -293,11 +293,11 @@ export default {
       this.back()
     },
     execute () {
-      let demoDatasource = localStorage.getItem('demoDatasource') || '富士康_輪廓型分析_molding_預測'
+      let demoDatasource = localStorage.getItem('demoDatasource') || this.$t('algorithm.foxconnContourPredictionMolding')
       this.$store.dispatch('algorithm/addAlgorithm', this.createData(demoDatasource))
       this.executeAlgorithm().then(() => {
         Message({
-          message: `演算法處理完畢。已自動新增一個資料源 ${demoDatasource}，並將結果儲存於內。`,
+          message: this.$t('algorithm.algoProcessFinished', { demoDatasource }),
           type: 'success',
           duration: 3 * 1000
         })
@@ -341,6 +341,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import '@/styles/pages/_algorithm.scss';
+
 .page-algorithm {
   .title-link {
     color: $theme-color-primary;
@@ -416,7 +418,6 @@ export default {
       .item-title {
         font-size: 14px;
         min-width: 80px;
-        max-width: 180px;
         margin-right: 16px;
         align-items: center;
         display: flex;

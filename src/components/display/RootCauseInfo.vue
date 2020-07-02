@@ -18,17 +18,22 @@
           <div
             v-for="(tableInfo, contentIndex) in rootCauseInfo.content"
             :key="index +'-'+ contentIndex"
-            :class="{'in-pinboard': inPinboard}"
+            :class="{ 'in-pinboard': inPinboard, 'is-special': tableInfo.unusual }"
             class="root-cause-card"
             @click="drillDown(tableInfo.link.question)"
           >
             <div class="abstract-info">
-              <div class="column-title">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</div>
-              <div class="sub-title">{{ rootCauseInfo.name }}{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}{{ $t('aggregatedValue.mean') }}</div>
-              <div
-                :class="{'is-special': tableInfo.unusual}"
-                class="amount-block"
+              <el-tooltip
+                :content="tableInfo.columnName + tableInfo.columnValue"
               >
+                <div class="column-title">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</div>
+              </el-tooltip>
+              <div class="sub-title">
+                <span class="sub-title__text">{{ rootCauseInfo.name }}</span>
+                <span class="sub-title__text">{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}</span>
+                <span class="sub-title__text">{{ $t('aggregatedValue.mean') }}</span>
+              </div>
+              <div class="amount-block">
                 <div class="count">{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
                 <div
                   v-show="tableInfo.unusual"
@@ -37,7 +42,27 @@
               </div>
             </div>
             <div class="detail-info">
-              <div class="title">{{ $t('resultDescription.total') + rootCauseInfo.name + $t('aggregatedValue.mean') + $t('resultDescription.is') + tableInfo.totalAverage }}，<span class="column-name">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</span>{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}{{ $t('aggregatedValue.mean') + Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
+              <div class="detail-info__list">
+                <i18n
+                  :for="['interpolation', 'interpolation']"
+                  path="resultDescription.totalColumnAverage"
+                  tag="pre"
+                  class="detail-info__list__item" 
+                >
+                  <span class="text name">{{ $t('interpolation', { interpolation: rootCauseInfo.name }) }}</span>
+                  <span class="text">{{ $t('interpolation', { interpolation: tableInfo.totalAverage }) }}</span>
+                </i18n>
+                <i18n
+                  :for="['interpolation', 'interpolation', 'interpolation']"
+                  path="resultDescription.compareToAverage"
+                  tag="pre"
+                  class="detail-info__list__item" 
+                >
+                  <span class="text name">{{ $t('interpolation', { interpolation: tableInfo.columnName + tableInfo.columnValue }) }}</span>
+                  <span class="text percentage">{{ $t('interpolation', { interpolation: Math.abs(tableInfo.diffAverageRate) + '%' }) }}</span>
+                  <span class="text">{{ $t('interpolation', { interpolation: tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }) }}</span>
+                </i18n>
+              </div>
               <div class="info-block">
                 <div class="single-info">
                   <div class="info-label">{{ $t('resultDescription.dataRowCount') }}</div>
@@ -45,7 +70,7 @@
                 </div>
                 <div class="single-info">
                   <div class="info-label">{{ $t('resultDescription.totalPercentage') }}</div>
-                  <div class="info-content">{{ tableInfo.percent }}</div>
+                  <div class="info-content">{{ tableInfo.percent || '-' }} </div>
                 </div>
                 <div class="single-info">
                   <div class="info-label">{{ $t('aggregatedValue.mean') }}</div>
@@ -161,6 +186,16 @@ export default {
         cursor: initial;
       }
     }
+    &.is-special {
+      .amount-block {
+        color: $theme-color-warning;
+      }
+      .detail-info .detail-info__list .detail-info__list__item {
+        .name {
+          color: $theme-color-warning;
+        }
+      }
+    }
 
     &:not(:last-child) {
       margin-bottom: 24px;
@@ -176,17 +211,25 @@ export default {
       padding: 0 24px;
       width: 32%;
 
+      .column-title {
+        @include text-hidden
+      }
+
       .sub-title {
         font-size: 14px;
         line-height: 26px;
         margin-bottom: 6px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        [lang="en"] & {
+          &__text:not(:last-child) {
+            margin-right: 4px;
+          }
+        }
       }
       .amount-block {
         color: $theme-color-primary;
-
-        &.is-special {
-          color: $theme-color-warning;
-        }
       }
       .count {
         font-size: 30px;
@@ -207,7 +250,6 @@ export default {
     .column-name {
       text-decoration: underline;
     }
-
     .detail-info {
       display: flex;
       flex-direction: column;
@@ -215,8 +257,26 @@ export default {
       padding: 0 24px;
       flex: 1;
 
-      .title {
+      .detail-info__list {
         margin-bottom: 14px;
+        &__item {
+          margin: 0;
+          display: flex;
+          flex-wrap: wrap;
+          // 為了保留空白而使用 <pre> 這邊必須把字型再蓋回來 
+          font-family: $theme-font-family-default;
+          word-break: break-word;
+          &::before {
+            content: '-';
+            margin-right: 8px;
+          }
+          .name {
+            color: $theme-color-primary;
+          }
+          .percentage {
+            padding-right: 8px;
+          }
+        }
       }
     }
     .info-block {

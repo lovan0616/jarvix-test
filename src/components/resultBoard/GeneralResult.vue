@@ -2,6 +2,7 @@
   <result-board
     :result-info="resultInfo"
     :restrictions="restrictions"
+    @unPin="unPin"
   >
     <template slot="PageResultBoardHeader">
       <task
@@ -60,6 +61,11 @@ export default {
     restrictions: {
       type: Array,
       default: () => []
+    }
+  },
+  methods: {
+    unPin (pinBoardId) {
+      this.$emit('unPin', pinBoardId)
     }
   }
 }

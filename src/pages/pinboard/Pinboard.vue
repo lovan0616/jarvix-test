@@ -1,17 +1,31 @@
 <template>
   <div class="page-pinboard">
-    <h1 class="page-title">{{ $t('editing.pinboard') }}</h1>
+    <h1 class="page-title">{{ isPersonalPinboard ? $t('editing.pinboard') : $t('editing.projectPinboard') }}</h1>
     <div 
       v-if="boardName"
       class="bread-crumb-block"
     >
       <router-link 
-        :to="{name: 'PagePinboardList'}"
+        :to="{name: prevPage}"
         class="page root"
       >{{ $t('editing.allCategory') }}</router-link>
       <span class="divider">/</span>
       <span class="page">{{ boardName }}</span>
+      <a
+        :class="{'unSortable': !isSortable}"
+        class="sort-btn"
+        href="javascript:void(0)"
+        @click="isShowSortingDialog=true">
+        <svg-icon
+          icon-class="vector"
+          class="icon"/> {{ $t('button.sortSetting') }}
+      </a>
     </div>
+    <sorting-dialog
+      v-if="isShowSortingDialog"
+      :board-list="boardList"
+      @close="closeSortingDialog"
+    />
     <spinner
       v-if="isLoading"
     />
@@ -29,20 +43,24 @@
       :result-info="result.info"
       :restrictions="result.restrictions"
       :question="result.question"
+      @unPin="unPin"
     />
   </div>
 </template>
 <script>
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import SortingDialog from './components/SortingDialog'
 
 export default {
   name: 'PagePinboard',
   components: {
-    EmptyInfoBlock
+    EmptyInfoBlock,
+    SortingDialog
   },
   data () {
     return {
       isLoading: true,
+      isShowSortingDialog: false,
       timeoutFunction: null,
       boardList: [],
       boardName: null
@@ -50,10 +68,26 @@ export default {
   },
   computed: {
     pinboardList () {
-      return this.$store.state.pinboard.pinboardList
+      return this.isPersonalPinboard 
+        ? this.$store.state.pinboard.pinboardList
+        : this.$store.state.pinboard.groupPinboardList
     },
     pinboardInfo () {
-      return this.$store.state.pinboard.pinboardInfo
+      return this.isPersonalPinboard 
+       ? this.$store.state.pinboard.pinboardInfo
+       : this.$store.state.pinboard.groupPinboardInfo
+    },
+    prevPage () {
+      return this.isPersonalPinboard ? 'PersonalPagePinboardList' : 'ProjectPagePinboardList'
+    },
+    groupId () {
+      return this.$route.params.group_id
+    },
+    isPersonalPinboard () {
+      return this.groupId === undefined
+    },
+    isSortable () {
+      return this.boardList.length > 1
     }
   },
   mounted () {
@@ -65,9 +99,15 @@ export default {
       if (this.pinboardList.length > 0) {
         this.setPinboardName()
       } else {
-        this.$store.dispatch('pinboard/getPinboardList').then(() => {
-          this.setPinboardName()
-        })
+        if (this.isPersonalPinboard) {
+          this.$store.dispatch('pinboard/getPinboardList').then(() => {
+            this.setPinboardName()
+          })
+        } else {
+          this.$store.dispatch('pinboard/getGroupPinboardList', this.groupId).then(() => {
+            this.setPinboardName()
+          })
+        }
       }
     },
     setPinboardName () {
@@ -87,7 +127,8 @@ export default {
             dataSourceId: element.dataSourceId,
             dataFrameId: element.dataFrameId,
             layout: null,
-            info: null
+            info: null,
+            isDeleted: false
           })
           this.getComponent(element)
         })
@@ -129,6 +170,19 @@ export default {
     },
     getResult (resultId) {
       return this.boardList.filter(element => element.resultId === resultId)[0]
+    },
+    closeSortingDialog (isSorted) {
+      this.isShowSortingDialog = false
+      if(isSorted) {
+        this.boardList = []
+        this.getPinboardInfo()
+      }
+    },
+    unPin (pinBoardId) {
+      this.boardList.forEach(element => {
+        if(element.pinboardId === pinBoardId)
+          element.isDeleted = true
+      })
     }
   },
 }
@@ -149,6 +203,25 @@ export default {
     .divider {
       color: #979797;
       margin: 0 4px;
+    }
+    .sort-btn {
+      float: right;
+      position: relative;
+      font-size: 14px;
+      line-height: 26px;
+      color: $theme-text-color;
+      padding: 2px 12px;
+      border-radius: 4px;
+      border: 1px solid #fff;
+      
+      &:hover {
+        background-color: #63cbd5;
+        color: #fff;
+      }
+    }
+
+    .unSortable {
+      display: none;
     }
   }
   .page-title {

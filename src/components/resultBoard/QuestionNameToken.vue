@@ -11,7 +11,7 @@
         <span
           v-for="(property, propertyIndex) in tokenInfo.properties"
           :key="propertyIndex"
-        >{{ property.datacolumnPrimaryAlias }}<span v-show="propertyIndex < tokenInfo.properties.length - 1">、</span></span>
+        >{{ property.datacolumnPrimaryAlias }}<span v-show="propertyIndex < tokenInfo.properties.length - 1">, </span></span>
       </div>
     </div>
     <span 
@@ -35,19 +35,37 @@ export default {
     tooltipContent (tokenInfo) {
       switch (tokenInfo.type) {
         case 'ColumnSet':
-          return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + tokenInfo.matchedWord
+          return this.$t('segmentationToken.ColumnSetToken', {
+            dataFrame: tokenInfo.properties[0].dataframePrimaryAlias,
+            matchedWord: tokenInfo.matchedWord
+          })
         case 'Datavalue':
-          return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + tokenInfo.properties[0].datacolumnPrimaryAlias + this.$t('resultDescription.has') + this.$t(`segmentationToken.${tokenInfo.type}`) + this.$t(`resultDescription.recognize`) + tokenInfo.matchedWord
+          return this.$t('segmentationToken.DataValueToken', {
+            dataFrame: tokenInfo.properties[0].dataframePrimaryAlias,
+            dataColumn: tokenInfo.properties[0].datacolumnPrimaryAlias,
+            matchedWord: tokenInfo.matchedWord
+          })
         case 'Datacolumn':
-          return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + tokenInfo.properties[0].datacolumnPrimaryAlias + this.$t(`segmentationToken.${tokenInfo.type}`) + this.$t(`resultDescription.recognize`) + tokenInfo.matchedWord
+          return this.$t('segmentationToken.DataColumnToken', {
+            dataFrame: tokenInfo.properties[0].dataframePrimaryAlias,
+            dataColumn: tokenInfo.properties[0].datacolumnPrimaryAlias,
+            matchedWord: tokenInfo.matchedWord
+          })
         case 'NumRuleToken':
           if (tokenInfo.properties) {
-            return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + tokenInfo.properties[0].datacolumnPrimaryAlias + this.$t(`segmentationToken.${tokenInfo.type}`) + this.$t(`resultDescription.recognize`) + tokenInfo.matchedWord
+            return this.$t('segmentationToken.NumRuleTokenHasProperty', {
+              dataFrame: tokenInfo.properties[0].dataframePrimaryAlias,
+              dataColumn: tokenInfo.properties[0].datacolumnPrimaryAlias,
+              matchedWord: tokenInfo.matchedWord
+            })
           } else {
             return this.$t(`segmentationToken.${tokenInfo.type}`)
           }
         case 'Datarow':
-          return this.$t('resultDescription.from') + tokenInfo.properties[0].dataframePrimaryAlias + this.$t('resultDescription.has') + this.$t(`segmentationToken.${tokenInfo.type}`) + tokenInfo.matchedWord
+          return this.$t('segmentationToken.DatarowToken', {
+            dataFrame: tokenInfo.properties[0].dataframePrimaryAlias,
+            matchedWord: tokenInfo.matchedWord
+          })
         default:
           return this.$t(`segmentationToken.${tokenInfo.type}`)
       }

@@ -35,21 +35,15 @@
           <a
             :disabled="isNotAllowChangePsd(data)"
             class="link action-link"
-            @click="showPasswordChange(data, !isNotAllowChangePsd(data))">
-            {{ $t('editing.changePassword') }}
-          </a>
+            @click="showPasswordChange(data, !isNotAllowChangePsd(data))">{{ $t('editing.changePassword') }}</a>
           <a
             :disabled="btnDisabled(data)"
             class="link action-link"
-            @click="showChangeRole(data, !btnDisabled(data))">
-            {{ $t('userManagement.updateRole') }}
-          </a>
+            @click="showChangeRole(data, !btnDisabled(data))">{{ $t('userManagement.updateRole') }}</a>
           <a
             :disabled="btnDisabled(data)"
             class="link action-link"
-            @click="showDeleteAccount(data, !btnDisabled(data))">
-            {{ $t('button.remove') }}
-          </a>
+            @click="showDeleteAccount(data, !btnDisabled(data))">{{ $t('button.remove') }}</a>
         </template>
       </crud-table>
     </div>
@@ -245,12 +239,10 @@ export default {
           text: this.$t('editing.userAccount'),
           value: 'email',
           sort: true,
-          width: '35%'
         },
         {
           text: this.$t('userManagement.userRoleAuthority'),
           value: 'roleZhName',
-          width: '35%',
           tooltip: {
             width: '212px'
           }
@@ -258,7 +250,7 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '30%'
+          width: '300px'
         }
       ]
     }
@@ -365,7 +357,7 @@ export default {
               mail: invitee.email
             }
           }),
-          webURL: window.location.origin + this.$router.resolve({name: 'PageSignup'}).href,
+          webURL: window.location.origin + this.$router.resolve({ name: 'PageSignup' }).href,
           accountId: this.$store.getters['userManagement/getCurrentAccountId']
         })
           .then(() => {
@@ -619,7 +611,10 @@ export default {
         font-size: 0;
         .input-verify {
           display: inline-block;
-          width: 269px;
+          width: 260px;
+          [lang="en"] & {
+            width: 244px;
+          }
         }
         .el-select {
           display: inline-block;

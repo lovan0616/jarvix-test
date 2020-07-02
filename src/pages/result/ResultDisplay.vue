@@ -62,7 +62,9 @@ export default {
         question: null,
         unknownToken: [],
         nlpToken: []
-      }
+      },
+      totalSec: 50,
+      periodSec: 200
     }
   },
   computed: {
@@ -220,9 +222,14 @@ export default {
             case 'Ready':
               this.timeoutFunction = window.setTimeout(() => {
                 this.getComponent(res)
-              }, 1000)
+              }, this.totalSec)
+
+              this.totalSec += this.periodSec
+              this.periodSec = this.totalSec
               break
             case 'Complete':
+              this.totalSec = 50
+              this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
               this.restrictInfo = componentResponse.restrictions
               this.layout = this.getLayout(res.layout)
