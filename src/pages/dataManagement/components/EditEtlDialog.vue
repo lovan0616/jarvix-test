@@ -1,72 +1,83 @@
 <template>
   <div class="full-page-dialog">
-    <div class="dialog-container">
-      <div class="dialog-title">
-        {{ isReviewMode ? $t('button.reviewEtlSetting') : $t('button.editEtlSetting') }}
-        <a 
-          href="javascript:void(0)" 
-          class="close-btn"
-          @click="closeDialog"
-        ><svg-icon icon-class="close"/></a>
-      </div>
-      <spinner
-        v-if="isLoading"
-        :title="$t('editing.loading')"
-        class="spinner-container"
-        size="50"
-      />
-      <div v-else>
-        <div class="dialog-header-block">
-          <div class="data-frame-name">{{ $t('editing.tableName') }}：{{ dataFrameName }}</div>
-        </div>
-        <div class="dialog-content-block">
-          <etl-setting
-            :is-review-mode="isReviewMode"
-            :show-data-frame-name="false"
-          />
-        </div>
-        <div 
-          v-if="isReviewMode" 
-          class="dialog-button-block">
-          <button
-            type="button"
-            class="btn btn-outline"
+    <div
+      :style="getDialogWidth"
+      class="dialog-container"
+    >
+      <div v-if="step === 1" >
+        <div class="dialog-title">
+          {{ isReviewMode ? $t('button.reviewEtlSetting') : $t('button.editEtlSetting') }}
+          <a 
+            href="javascript:void(0)" 
+            class="close-btn"
             @click="closeDialog"
-          >{{ $t('button.close') }}
-          </button>
+          ><svg-icon icon-class="close"/></a>
         </div>
-        <div 
-          v-else 
-          class="dialog-button-block">
-          <button
-            :disabled="isProcessing"
-            type="button"
-            class="btn btn-outline"
-            @click="closeDialog"
-          >{{ $t('button.cancel') }}
-          </button>
-          <button
-            :disabled="isProcessing"
-            type="button"
-            class="btn btn-default"
-            @click="buildData"
-          >{{ $t('button.buildData') }}
-          </button>
+        <spinner
+          v-if="isLoading"
+          :title="$t('editing.loading')"
+          class="spinner-container"
+          size="50"
+        />
+        <div v-else>
+          <div class="dialog-header-block">
+            <div class="data-frame-name">{{ $t('editing.tableName') }}：{{ dataFrameName }}</div>
+          </div>
+          <div class="dialog-content-block">
+            <etl-setting
+              :is-review-mode="isReviewMode"
+              :show-data-frame-name="false"
+            />
+          </div>
+          <div 
+            v-if="isReviewMode" 
+            class="dialog-button-block">
+            <button
+              type="button"
+              class="btn btn-outline"
+              @click="closeDialog"
+            >{{ $t('button.close') }}
+            </button>
+          </div>
+          <div 
+            v-else 
+            class="dialog-button-block">
+            <button
+              :disabled="isProcessing"
+              type="button"
+              class="btn btn-outline"
+              @click="closeDialog"
+            >{{ $t('button.cancel') }}
+            </button>
+            <button
+              :disabled="isProcessing"
+              type="button"
+              class="btn btn-default"
+              @click="buildData"
+            >{{ $t('button.buildData') }}
+            </button>
+          </div>
         </div>
       </div>
+      <confirm-page 
+        v-else 
+        @next="closeDialog"/>
     </div>
   </div>
 </template>
 
 <script>
-import { dataPreprocessor } from '@/API/DataSource'
+import { dataRepreprocessor } from '@/API/DataSource'
 import EtlSetting from '@/pages/dataManagement/components/etl/EtlChooseColumn';
+import ConfirmPage from '@/pages/dataManagement/components/localFileUpload/ConfirmPage'
 import { Message } from 'element-ui'
+import { mapState } from 'vuex'
 
 export default {
   name: 'EditEtlDialog',
   components: {
-    EtlSetting
+    EtlSetting,
+    ConfirmPage
   },
   props: {
     isReviewMode: {
@@ -76,16 +87,21 @@ export default {
   },
   data () {
     return {
-      isProcessing: false
+      isProcessing: false,
+      step: 1
     }
   },
   computed: {
+    ...mapState('dataManagement', ['etlTableList']),
     isLoading () {
       return this.$store.state.dataManagement.etlTableList.length === 0
     },
     dataFrameName () {
       const target = this.$store.state.dataManagement.etlTableList[0]
       return target ? target.primaryAlias : ''
+    },
+    getDialogWidth () {
+      return `width: ${ this.step === 1 ? '90%' : '64%'}`
     }
   },
   mounted () {
@@ -95,7 +111,43 @@ export default {
   },
   methods: {
     buildData () {
-      // 使用新的再編輯的 preprocessor API
+      if (!this.selectAtLeastOneColumnPerTable()) {
+        Message({
+          message: this.$t('etl.pleaseSelectAtLeastOneColumnPerTable'),
+          type: 'warning',
+          duration: 3 * 1000
+        })
+        return
+      }
+      this.isProcessing = true
+
+      let promiseList = []
+      this.etlTableList.forEach((element, index) => {
+        promiseList.push(dataRepreprocessor(element))
+      })
+
+      Promise.all(promiseList)
+        .then(() => {
+          // 全部資料表都設置成功才進入 ConfirmPage 結束導入流程
+          this.next()
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.isProcessing = false
+        })
+    },
+    next () {
+      this.step += 1
+    },
+    selectAtLeastOneColumnPerTable () {
+      let result = true
+      for (let i = 0; i < this.etlTableList.length; i++) {
+        if (!this.etlTableList[i].columns.some(column => column.active)) {
+          result = false
+          break
+        }
+      }
+      return result
     },
     closeDialog () {
       this.$emit('close')
