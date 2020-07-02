@@ -3,6 +3,7 @@
     <default-select
       v-model="editedColumnInfo.statsType"
       :option-list="statsTypeOptions"
+      :is-disabled="isReviewMode"
       class="dropdown__container"
       @change="openConfirmMsg"
     >
@@ -52,6 +53,10 @@ export default {
     columnInfo: {
       type: Object,
       default: () => {}
+    },
+    isReviewMode: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

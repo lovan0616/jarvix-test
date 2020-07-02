@@ -38,36 +38,40 @@ export default {
     state.fileUploadSuccess = data
   },
   updateEtlTableList (state, data) {
-    let columnList = data.columns
-    if (columnList.length > 0) {
-      columnList.forEach((element, index) => {
-        let newElement = JSON.parse(JSON.stringify(element))
-        Vue.set(element, 'hasChanged', false)
-        Vue.set(element, 'index', index)
-        Vue.set(element, 'targetDataType', newElement.originalDataType)
-        Vue.set(element, 'originalStatsType', newElement.statsType)
-        Vue.set(element, 'values', [
-          {
-            value: null,
-            newValue: null,
-            type: 'MISSING_VALUE',
-            active: true
-          },
-          {
-            value: '',
-            newValue: null,
-            type: 'MISSING_VALUE',
-            active: true
-          },
-          {
-            value: null,
-            newValue: null,
-            type: 'ERROR_DEFAULT_VALUE',
-            active: true
-          }
-        ])
-        Vue.set(element, 'active', true)
-      })
+
+    // 如果為再編輯的 dataFrame 就不需要再處理，直接 set
+    if (!Object.prototype.hasOwnProperty.call(data, 'enableEdit')) {
+      let columnList = data.columns
+      if (columnList.length > 0) {
+        columnList.forEach((element, index) => {
+          let newElement = JSON.parse(JSON.stringify(element))
+          Vue.set(element, 'hasChanged', false)
+          Vue.set(element, 'index', index)
+          Vue.set(element, 'targetDataType', newElement.originalDataType)
+          Vue.set(element, 'originalStatsType', newElement.statsType)
+          Vue.set(element, 'values', [
+            {
+              value: null,
+              newValue: null,
+              type: 'MISSING_VALUE',
+              active: true
+            },
+            {
+              value: '',
+              newValue: null,
+              type: 'MISSING_VALUE',
+              active: true
+            },
+            {
+              value: null,
+              newValue: null,
+              type: 'ERROR_DEFAULT_VALUE',
+              active: true
+            }
+          ])
+          Vue.set(element, 'active', true)
+        })
+      }
     }
     state.etlTableList.push(data)
   },

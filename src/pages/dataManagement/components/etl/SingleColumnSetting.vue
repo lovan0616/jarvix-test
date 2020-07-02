@@ -10,6 +10,7 @@
           for="">{{ $t('etl.dataType') }}</label>
         <default-select 
           v-model="editColumnInfo.statsType"
+          :is-disabled="isReviewMode"
           :option-list="statsTypeOptions"
           class="data-type-select"
           @change="changeStatsType(editColumnInfo, editColumnInfo.statsType)"
@@ -21,6 +22,7 @@
           for="">{{ $t('etl.emptyStringReplaceValue') }}</label>
         <default-select 
           v-model="stringReplaceObject.newValue"
+          :is-disabled="isReviewMode"
           :option-list="replaceTypeOptionList"
           class="replace-type-select"
         />
@@ -39,6 +41,7 @@
           for="">{{ $t('etl.nullReplaceValue') }}</label>
         <default-select 
           v-model="nullReplaceObject.newValue"
+          :is-disabled="isReviewMode"
           :option-list="replaceTypeOptionList"
           class="replace-type-select"
         />
@@ -57,6 +60,7 @@
           for="">{{ $t('etl.errorReplaceValue') }}</label>
         <default-select 
           v-model="errorDefaultObject.newValue"
+          :is-disabled="isReviewMode"
           :option-list="replaceTypeOptionList"
           class="replace-type-select"
         />
@@ -69,7 +73,9 @@
           name="errorDefaultObject"
         />
       </div>
-      <div class="setting-input-block">
+      <div 
+        v-if="!isReviewMode" 
+        class="setting-input-block">
         <label 
           class="input-label" 
           for="">{{ $t('etl.customDataManagement') }}</label>
@@ -114,7 +120,9 @@
         >{{ $t('button.create') }}</button>
       </div>
     </div>
-    <div class="submit-block">
+    <div 
+      v-if="!isReviewMode" 
+      class="submit-block" >
       <div class="button-block">
         <button 
           class="btn btn-default"
@@ -150,6 +158,10 @@ export default {
     summaryData: {
       type: Object,
       default: () => {}
+    },
+    isReviewMode: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -326,7 +338,6 @@ export default {
 <style lang="scss" scoped>
 .setting-block {
   position: relative;
-  height: 100%;
   .section-block {
     background: rgba(67, 76, 76, 0.95);
     border-radius: 5px;
@@ -397,6 +408,8 @@ export default {
     background-color: transparent;
 
     .button-block {
+      white-space: nowrap;
+      flex: unset;
       .btn:not(:last-child) {
         margin-right: 12px;
       }

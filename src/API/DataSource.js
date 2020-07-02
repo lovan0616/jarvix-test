@@ -264,13 +264,24 @@ export function setMainDateTimeColumn (dataFrameId, dataColumnData) {
 }
 
 /*
- * dataSource preprocessor
+ * data preprocessor
  */
-export function dataSourcePreprocessor (dataSourceInfo) {
+export function dataPreprocessor (data) {
   return request({
     url: `/data/preprocessor`,
     method: 'POST',
-    data: dataSourceInfo
+    data
+  })
+}
+
+/*
+ * data re-preprocessor
+ */
+export function dataRepreprocessor (data) {
+  return request({
+    url: `/data/repreprocessor`,
+    method: 'POST',
+    data
   })
 }
 
@@ -292,6 +303,17 @@ export function dataFrameColumnSummary (dataFrameId, cancelToken) {
 export function getColumnCorrelationMatrix (dataFrameId) {
   return request({
     url: `/dataFrame/${dataFrameId}/relationMatrix`,
+    method: 'GET'
+  })
+}
+
+/**
+ * get dataframe etl setting
+ * @param {Number} dataFrameId - 欲查閱的資料表 ID
+ */
+export function getDataFrameEtlSetting (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/importSetting`,
     method: 'GET'
   })
 }

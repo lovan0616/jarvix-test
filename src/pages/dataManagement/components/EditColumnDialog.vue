@@ -141,10 +141,14 @@
                   :content="$t('button.cancel')"
                   placement="bottom"
                 >
-                  <svg-icon
-                    icon-class="close"
-                    class="icon-close"
-                    @click.native="cancel"/>
+                  <div 
+                    class="svg-wrapper" 
+                    @click="cancel">
+                    <svg-icon
+                      icon-class="close"
+                      class="icon-close"
+                    />
+                  </div>
                 </el-tooltip>
               </div>
             </div>
@@ -449,6 +453,9 @@ export default {
   }
 }
 
+.svg-wrapper + .svg-wrapper {
+  margin-left: 20px;
+}
 .svg-icon {
   color: $theme-color-primary;
   cursor: pointer;
@@ -458,9 +465,6 @@ export default {
     font-size: 16px;
     margin-top: 1px;
     position: relative;
-  }
-  & + .svg-icon {
-    margin-left: 20px;
   }
 }
 </style>

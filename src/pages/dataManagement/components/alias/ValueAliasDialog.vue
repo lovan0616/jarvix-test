@@ -89,9 +89,11 @@
                           :content="$t('button.remove')"
                           placement="bottom"
                         >
-                          <svg-icon 
-                            icon-class="ban"
-                            @click.native="removeAlias(aliasIndex)" />
+                          <div 
+                            class="svg-wrapper" 
+                            @click="removeAlias(aliasIndex)">
+                            <svg-icon icon-class="ban"/>
+                          </div>
                         </el-tooltip>
                       </div>
                       <button 
@@ -134,19 +136,25 @@
                         :content="$t('button.save')"
                         placement="bottom"
                       >
-                        <svg-icon
-                          icon-class="save"
-                          @click.native="saveAlias(index)" />
+                        <div 
+                          class="svg-wrapper" 
+                          @click="saveAlias(index)">
+                          <svg-icon icon-class="save"/>
+                        </div>
                       </el-tooltip>
                       <el-tooltip
                         :enterable="false"
                         :content="$t('button.cancel')"
                         placement="bottom"
                       >
-                        <svg-icon
-                          icon-class="close"
-                          class="icon-close"
-                          @click.native="cancelEditAlias"/>
+                        <div 
+                          class="svg-wrapper" 
+                          @click="cancelEditAlias">
+                          <svg-icon
+                            icon-class="close"
+                            class="icon-close"
+                          />
+                        </div>
                       </el-tooltip>
                     </template>
                   </div>
@@ -490,7 +498,7 @@ export default {
       }
 
       & >>> .input-verify {
-        width: 105px;
+        width: 158px;
         margin-right: 12px;
       }
     }
@@ -512,7 +520,9 @@ export default {
     color: #AAAAAA;
   }
 }
-
+.svg-wrapper + .svg-wrapper {
+  margin-left: 20px;
+}
 .svg-icon {
   fill: $theme-color-primary;
   cursor: pointer;
@@ -522,9 +532,6 @@ export default {
     font-size: 16px;
     margin-top: 1px;
     position: relative;
-  }
-  & + .svg-icon {
-    margin-left: 20px;
   }
 }
 </style>

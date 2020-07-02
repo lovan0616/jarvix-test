@@ -58,7 +58,7 @@
   </div>
 </template>
 <script>
-import { dataSourcePreprocessor } from '@/API/DataSource'
+import { dataPreprocessor } from '@/API/DataSource'
 import { analysisFile } from '@/API/File'
 import { uploadStatus } from '@/utils/general'
 import { mapState } from 'vuex'
@@ -134,7 +134,7 @@ export default {
     buildData () {
       let promiseList = []
       this.etlTableList.forEach((element, index) => {
-        promiseList.push(dataSourcePreprocessor(element))
+        promiseList.push(dataPreprocessor(element))
       })
 
       Promise.all(promiseList)

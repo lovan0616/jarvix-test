@@ -70,6 +70,7 @@
         @valueAlias="editTableValueAlias"
         @columnSet="editColumnSet"
         @dateTime="editDateTime"
+        @etlSetting="editEtlSetting"
       />
     </div>
     <file-upload-dialog
@@ -120,6 +121,11 @@
       v-if="showEditFeatureDialog"
       @close="toggleEditFeatureDialog"
     />
+    <edit-etl-dialog
+      v-if="showEditEtlDialog"
+      :data-frame-info="currentEditDataFrameInfo"
+      @close="closeEditEtlDialog"
+    />
   </div>
 </template>
 <script>
@@ -129,6 +135,7 @@ import ConfirmDeleteDataFrameDialog from './components/ConfirmDeleteDataFrameDia
 import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRelationDialog'
 import EditColumnDialog from './components/EditColumnDialog'
 import EditColumnSetDialog from './components/columnSet/EditColumnSetDialog'
+import EditEtlDialog from './components/EditEtlDialog'
 import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
@@ -149,7 +156,8 @@ export default {
     DataFrameAliasDialog,
     ValueAliasDialog,
     EditDateTimeDialog,
-    FeatureManagementDialog
+    FeatureManagementDialog,
+    EditEtlDialog
   },
   data () {
     return {
@@ -159,6 +167,7 @@ export default {
       showJoinTableDialog: false,
       showEditColumnDialog: false,
       showEditDateTimeDialog: false,
+      showEditEtlDialog: false,
       deleteId: null,
       renameDataSource: null,
       // 資料處理中
@@ -236,10 +245,11 @@ export default {
             {
               name: this.$t('button.edit'),
               subAction: [
-                {icon: '', title: 'button.editDataFrameAlias', dialogName: 'dataFrameAlias'},
-                {icon: '', title: 'button.editColumn', dialogName: 'edit'},
-                {icon: '', title: 'button.editDataValue', dialogName: 'valueAlias'},
-                {icon: '', title: 'button.editColumnSet', dialogName: 'columnSet'}
+                { icon: '', title: 'button.editDataFrameAlias', dialogName: 'dataFrameAlias' },
+                { icon: '', title: 'button.editColumn', dialogName: 'edit' },
+                { icon: '', title: 'button.editDataValue', dialogName: 'valueAlias' },
+                { icon: '', title: 'button.editColumnSet', dialogName: 'columnSet' },
+                { icon: '', title: 'button.editEtlSetting', dialogName: 'etlSetting' }
               ]
             },
             {
@@ -428,7 +438,7 @@ export default {
       this.toggleEditColumnDialog()
     },
     closeEditColumnDialog () {
-      this.currentEditDataFrameInfo = null
+      this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
       this.toggleEditColumnDialog()
     },
     editDataFrameAlias (dataInfo) {
@@ -459,9 +469,13 @@ export default {
       }
       this.showEditDateTimeDialog = true
     },
+    editEtlSetting ({ id }) {
+      this.currentEditDataFrameInfo.id = id
+      this.showEditEtlDialog = true
+    },
     closeDataFrameAliasDialog () {
       this.showDataFrameAliasDialog = false
-      this.currentEditDataFrameInfo = null
+      this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
     },
     closeValueAliasDialog () {
       this.showValueAliasDialog = false
@@ -474,6 +488,10 @@ export default {
     },
     toggleEditFeatureDialog () {
       this.showEditFeatureDialog = !this.showEditFeatureDialog
+    },
+    closeEditEtlDialog () {
+      this.showEditEtlDialog = false
+      this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
     }
   }
 }
