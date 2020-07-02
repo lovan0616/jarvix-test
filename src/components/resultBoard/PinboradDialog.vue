@@ -194,6 +194,7 @@ export default {
   }
 
   .single-board {
+    background-color: var(--color-bg-5);
     padding: 4px 12px;
     border-radius: 4px;
     font-size: 14px;

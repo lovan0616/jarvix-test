@@ -121,7 +121,7 @@ export default {
       width: 28.5%;
       padding: 20px;
       border-radius: 8px;
-      background-color: $theme-bg-color;
+      background-color: var(--color-bg-5);
     }
 
     .control-btn {

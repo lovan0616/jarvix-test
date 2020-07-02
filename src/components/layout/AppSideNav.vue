@@ -265,8 +265,8 @@ export default {
     flex-direction: column;
     width: $app-side-nav-closed-width;
     height: calc(100vh - #{$header-height});
-    background: #182D30;
-    border-right: 1px solid #2B3638;
+    background: var(--color-bg-3);
+    border-right: 1px solid var(--color-border);
   }
   
   &__account {
@@ -279,7 +279,7 @@ export default {
     }
 
     &--bottom {
-      border-top: 1px solid #2B3638;
+      border-top: 1px solid var(--color-border);
       margin: auto 0 0 0;
     }
   }
@@ -332,7 +332,7 @@ export default {
 
     &__badge {
       text-align: center;
-      background: #1F3B3F;
+      background: var(--color-bg-6);
       border-radius: 5px;
       line-height: 32px;
       font-weight: bold;

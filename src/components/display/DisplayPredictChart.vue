@@ -262,7 +262,7 @@ export default {
 
     .single-info-block {
       width: 24.25%;
-      background-color: $theme-bg-color;
+      background-color: var(--color-bg-5);
       border-radius: 8px;
       padding: 20px;
       margin-right: 1%;

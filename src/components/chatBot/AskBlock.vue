@@ -255,7 +255,7 @@ export default {
 .ask-container {
   position: relative;
   padding: 16px 32px;
-  background-color: rgba(35, 61, 64, 0.6);
+  background-color: var(--color-bg-1);
 
   .user-question-block {
     position: relative;

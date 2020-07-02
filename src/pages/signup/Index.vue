@@ -137,7 +137,7 @@ export default {
 
   .signup-form {
     text-align: left;
-    background-color: $theme-bg-color;
+    background-color: var(--color-bg-5);
     padding: 28px;
     border-radius: 5px;
 

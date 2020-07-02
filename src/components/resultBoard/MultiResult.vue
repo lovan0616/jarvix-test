@@ -216,7 +216,7 @@ export default {
 <style lang="scss" scoped>
 .multi-result {
   padding: 16px 24px 24px;
-  background-color: $theme-bg-color;
+  background-color: var(--color-bg-5);
   border-radius: 8px;
 
   .board-title {
