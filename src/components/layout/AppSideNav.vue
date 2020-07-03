@@ -145,6 +145,7 @@ export default {
   computed: {
     ...mapState(['isShowFullSideNav']),
     ...mapState('userManagement', ['accountList', 'groupList']),
+    ...mapState('setting', ['locale']),
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     ...mapGetters('userManagement', ['getCurrentAccountName', 'getCurrentAccountId', 'hasPermission', 'getCurrentGroupId']),
     currentAccountName() {
@@ -173,6 +174,9 @@ export default {
       })
     },
   },
+  mounted () {
+    this.selectedLanguage = this.locale
+  },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
     ...mapActions('userManagement', ['switchAccountById']),
@@ -180,6 +184,10 @@ export default {
       this[dialog] = true
     },
     changeLang () {
+      if (this.selectedLanguage === this.locale) {
+        this.isShowLanguage = false
+        return
+      }
       this.isLoading = true
       updateLocale(this.selectedLanguage)
         .then(() => {
