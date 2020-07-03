@@ -110,7 +110,7 @@
           >
             <dropdown-select
               v-if="showActionDropdown(action.subAction, data)"
-              :bar-data="action.subAction"
+              :bar-data="showSubAction(action.subAction, data)"
               class="dropdown"
               @switchDialogName="doAction($event, data)"
             />
@@ -396,6 +396,12 @@ export default {
     },
     showActionDropdown (subAction, data) {
       return subAction && !this.isProcessing && !this.isInProcess(data) && !this.isFail(data) && !this.isPending(data)
+    },
+    showSubAction (subAction, data) {
+      return subAction.filter(action => {
+        if (action.dialogName === 'etlSetting') return data.createMethod !== 'tableJoin'
+        return true
+      })
     },
     isInProcess (data) {
       return data['state'] === 'Process' || data['state'] === 'PROCESSING'

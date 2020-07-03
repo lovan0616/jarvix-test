@@ -215,7 +215,7 @@ export default {
         },
         {
           text: this.$t('editing.createWay'),
-          value: 'createMethod',
+          value: 'createMethodLabel',
           width: '90px'
         },
         {
@@ -353,7 +353,8 @@ export default {
         this.dataList = response.filter(element => element.state !== 'Temp').map(element => {
           return {
             ...element,
-            createMethod: element.joinCount > 1 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
+            createMethod: element.joinCount > 1 ? 'tableJoin' : this.createMethod(element.originType),
+            createMethodLabel: element.joinCount > 1 ? this.$t('editing.tableJoin') : this.createMethod(element.originType)
           }
         })
       })
@@ -469,8 +470,8 @@ export default {
       }
       this.showEditDateTimeDialog = true
     },
-    editEtlSetting ({ id }) {
-      this.currentEditDataFrameInfo.id = id
+    editEtlSetting ({ id, primaryAlias }) {
+      this.currentEditDataFrameInfo = { id, primaryAlias }
       this.showEditEtlDialog = true
     },
     closeDataFrameAliasDialog () {
@@ -492,6 +493,7 @@ export default {
     closeEditEtlDialog () {
       this.showEditEtlDialog = false
       this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
+      this.fetchData()
     }
   }
 }
