@@ -20,10 +20,9 @@
       </div>
       <crud-table
         :headers="tableHeaders"
-        :data-list="groupList"
+        :data-list.sync="groupList"
         :loading="isLoading"
         :empty-message="$t('editing.notYetCreateGroup')"
-        @update:dataList="$emit('update:groupList', $event)"
         @delete="confirmDelete"
         @cancel="cancelDelete"
         @edit="editGroup($event)"
