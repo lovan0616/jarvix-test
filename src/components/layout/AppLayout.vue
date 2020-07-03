@@ -57,6 +57,7 @@ export default {
       window.clearInterval(this.intervalFunction)
       if (newValue.length > 0) {
         this.intervalFunction = window.setInterval(() => {
+          console.log('app')
           this.$store.dispatch('dataSource/getDataSourceList', {})
         }, 5000)
       }
