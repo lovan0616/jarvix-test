@@ -130,9 +130,13 @@
                   :content="$t('button.save')"
                   placement="bottom"
                 >
-                  <svg-icon
-                    icon-class="save"
-                    @click.native="saveAlias(index)" />
+                  <div 
+                    class="svg-wrapper"
+                    @click="saveAlias(index)">
+                    <svg-icon
+                      icon-class="save"
+                    />
+                  </div>
                 </el-tooltip>
                 <el-tooltip
                   v-if="tempRowInfo.dataColumnId === column.id"
