@@ -488,7 +488,7 @@ export function getDrillDownTool (routeName, titleObject, isParallel = false, tw
   let xAxisDrillable = titleObject.xAxis.some(element => element.drillable)
   let yAxisDrillable = titleObject.yAxis.some(element => element.drillable)
 
-  if (routeName === 'PagePinboard') {
+  if (routeName === 'PersonalPagePinboard') {
     toolbox = ['']
   } else if (titleObject.xAxis.length === 0 && titleObject.yAxis.length === 0) {
     toolbox = ['']
