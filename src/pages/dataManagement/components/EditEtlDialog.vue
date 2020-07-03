@@ -21,7 +21,7 @@
         />
         <div v-else>
           <div class="dialog-header-block">
-            <div class="data-frame-name">{{ $t('editing.tableName') }}：{{ dataFrameName }}</div>
+            <div class="data-frame-name">{{ $t('editing.tableName') }}：{{ dataFrameInfo.primaryAlias }}</div>
           </div>
           <div class="dialog-content-block">
             <etl-setting
@@ -96,10 +96,6 @@ export default {
     ...mapState('dataManagement', ['etlTableList']),
     isLoading () {
       return this.$store.state.dataManagement.etlTableList.length === 0
-    },
-    dataFrameName () {
-      const target = this.$store.state.dataManagement.etlTableList[0]
-      return target ? target.primaryAlias : ''
     },
     getDialogStyle () {
       return {

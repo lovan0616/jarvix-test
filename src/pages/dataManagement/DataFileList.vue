@@ -470,8 +470,8 @@ export default {
       }
       this.showEditDateTimeDialog = true
     },
-    editEtlSetting ({ id }) {
-      this.currentEditDataFrameInfo.id = id
+    editEtlSetting ({ id, primaryAlias }) {
+      this.currentEditDataFrameInfo = { id, primaryAlias }
       this.showEditEtlDialog = true
     },
     closeDataFrameAliasDialog () {
