@@ -125,7 +125,8 @@ export function yAxisDefault () {
   return {
     nameGap: config.nameGap,
     nameTextStyle: {
-      color: chartVariable['textColor']
+      color: chartVariable['textColor'],
+      align: 'left'
     },
     splitLine: {
       show: true,

@@ -197,10 +197,10 @@ export function chartOptions () {
       type: 'value',
       name: '',
       // nameGap: 58,
-      // nameLocation: 'middle',
       nameTextStyle: {
         fontSize: 12,
-        color: chartVariable['textColor']
+        color: chartVariable['textColor'],
+        align: 'left'
       },
       axisLabel: {
         color: chartVariable['yAxisLabelColor']
