@@ -60,7 +60,7 @@ export default {
         return
       }
       // 在登入、註冊頁面修改語言
-      if (this.userId === null) {
+      if (!this.userId) {
         this.$store.commit('setting/setLocale', this.selectedLanguage)
         return
       }
