@@ -89,23 +89,10 @@
           </a>
         </li>
       </ul>
-      <writing-dialog
-        v-if="isShowLanguage"
-        :title="$t('editing.languageSetting')"
-        :button="$t('button.change')"
-        :is-loading="isLoading"
-        :show-both="true"
+      <change-language-dialog
+        v-show="isShowLanguage"
         @closeDialog="isShowLanguage = false"
-        @confirmBtn="changeLang"
-      >
-        <sy-select 
-          :placeholder="$t('nav.languagePlaceholder')"
-          :selected="locale"
-          :items="selectItems"
-          class="dialog-select"
-          @update:selected="langOnSelected"
-        />
-      </writing-dialog>
+      />
       <decide-dialog
         v-if="isShowLogout"
         :title="$t('editing.sureLogout')"
@@ -120,19 +107,18 @@
 
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
-import WritingDialog from '@/components/dialog/WritingDialog'
+import ChangeLanguageDialog from '@/components/dialog/ChangeLanguageDialog';
 import SySelect from '@/components/select/SySelect'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import { updateLocale } from '@/API/User'
 
 export default {
   name: 'AppSideNav',
   components: {
     DecideDialog,
-    WritingDialog,
     SySelect,
-    CustomDropdownSelect
+    CustomDropdownSelect,
+    ChangeLanguageDialog
   },
   data () {
     return {
@@ -159,50 +145,12 @@ export default {
         {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
       ]
     },
-    locale () {
-      return this.$store.state.setting.locale
-    },
-    languages () {
-      return this.$store.state.setting.languages
-    },
-    selectItems () {
-      return Object.keys(this.languages).map(key => {
-        return {
-          id: key,
-          name: this.languages[key]
-        }
-      })
-    },
-  },
-  mounted () {
-    this.selectedLanguage = this.locale
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
     ...mapActions('userManagement', ['switchAccountById']),
     switchDialogName (dialog) {
       this[dialog] = true
-    },
-    changeLang () {
-      if (this.selectedLanguage === this.locale) {
-        this.isShowLanguage = false
-        return
-      }
-      this.isLoading = true
-      updateLocale(this.selectedLanguage)
-        .then(() => {
-          this.$store.commit('setting/setLocale', this.selectedLanguage)
-          this.$store.commit('chatBot/clearConversation')
-          this.$store.dispatch('chatBot/updateChatConversation')
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.isShowLanguage = false
-          this.isLoading = false
-        })
-    },
-    langOnSelected (item) {
-      this.selectedLanguage = item
     },
     onBtnExitClick () {
       this.$store.dispatch('userManagement/logout')
