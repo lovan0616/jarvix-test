@@ -148,6 +148,10 @@ export default {
 
       &:not(:last-child) {
         margin-bottom: 37px;
+
+        &.has-error {
+          margin-bottom: 55px;
+        }
       }
 
       &:first-of-type {
