@@ -492,6 +492,7 @@ export default {
     closeEditEtlDialog () {
       this.showEditEtlDialog = false
       this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
+      this.fetchData()
     }
   }
 }
