@@ -127,7 +127,7 @@ export default {
       return this.$store.state.isShowChatRoom
     },
     inPinboard () {
-      return this.$route.name === 'PagePinboard'
+      return this.$route.name === 'PersonalPagePinboard' || this.$route.name === 'ProjectPagePinboard'
     }
   },
   mounted () {
