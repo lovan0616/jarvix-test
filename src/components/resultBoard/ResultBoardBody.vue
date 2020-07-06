@@ -31,6 +31,7 @@
       </slot-dialog>
     </div>
     <slot name="InsightRootCause"/>
+    <slot name="InsightRecommended"/>
     <slot name="CorrelationAnalysis"/>
   </div>
 </template>

@@ -68,6 +68,15 @@
           intend="sub_basic_info"
         />
       </template>
+      <!-- TODO 推薦洞察 -->
+      <!-- <template slot="InsightRecommended">
+        <task
+          v-if="resultInfo.recommended_insight"
+          :key="`recommended-insight-${displayFactorIndex}`"
+          :component-id="resultInfo.recommended_insight[displayFactorIndex]"
+          intend="recommended_insight"
+        />
+      </template> -->
     </result-board-body>
   </result-board>
 </template>
