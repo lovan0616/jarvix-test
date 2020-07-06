@@ -249,12 +249,9 @@ export default {
                 { icon: '', title: 'button.editColumn', dialogName: 'edit' },
                 { icon: '', title: 'button.editDataValue', dialogName: 'valueAlias' },
                 { icon: '', title: 'button.editColumnSet', dialogName: 'columnSet' },
-                { icon: '', title: 'button.editEtlSetting', dialogName: 'etlSetting' }
+                { icon: '', title: 'button.editEtlSetting', dialogName: 'etlSetting' },
+                { icon: '', title: 'button.dateTimeColumnSetting', dialogName: 'dateTime' }
               ]
-            },
-            {
-              name: this.$t('button.dateTimeColumnSetting'),
-              value: 'dateTime'
             },
             {
               name: this.$t('button.delete'),
