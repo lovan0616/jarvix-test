@@ -103,7 +103,7 @@
             v-for="action in headInfo.action" 
             v-else-if="headInfo.action"
             :key="action.name"
-            :disabled="isProcessing || isInProcess(data) || ((isFail(data) || isPending(data)) && action.value !== 'delete')"
+            :disabled="isDisabledActionButton(action.value, data)"
             href="javascript:void(0)"
             class="link action-link link-dropdown"
             @click="doAction(action.value, data)"
@@ -362,8 +362,20 @@ export default {
       }
     },
     doAction (actionName, data) {
-      if (!actionName || this.isProcessing || this.isInProcess(data) || ((this.isFail(data) || this.isPending(data)) && actionName !== 'delete')) return false
+      if (
+        !actionName 
+        || this.isDisabledActionButton(actionName, data)
+      ) return false
       this.$emit(actionName, data)
+    },
+    isDisabledActionButton(actionName, data) {
+      if (
+        this.isProcessing 
+        || this.isInProcess(data) 
+        || ((this.isFail(data) || this.isPending(data)) && actionName !== 'delete')
+        || (actionName === 'batchLoad' && data.originType !== 'database')
+      ) return true
+      return false
     },
     /**
      * TODO

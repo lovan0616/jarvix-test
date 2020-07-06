@@ -455,6 +455,25 @@
     "columnSelected": "Number of columns selected",
     "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field for each table"
   },
+  "batchLoad": {
+    "primaryKeyColumns": "Primary Keys",
+    "updatedTimeColumn": "Updated Time",
+    "builtTimeColumn": "Built Time",
+    "chooseColumn": "Select Column",
+    "columnSetting": "Column Setting",
+    "scheduleSetting": "Schedule Setting",
+    "setBatchLoad": "Set Batch Load",
+    "batchLoadSetting": "Batch Load Setting",
+    "basicSetting": "Basic Setting",
+    "chooseCycle": "Select Cycle",
+    "on": "On",
+    "off": "Off",
+    "everyMinute": "Every {number} minutes",
+    "everyHour": "Hourly",
+    "everyDay": "Daily",
+    "everyWeek": "Weekly",
+    "everyMonth": "Monthly"
+  },
   "feature": {
     "value": "Value",
     "columnValue": "Column Value",
@@ -638,6 +657,7 @@
     "editEtlSetting": "Edit Etl Setting",
     "reviewEtlSetting": "Review Etl Setting",
     "dateTimeColumnSetting": "Default Time",
+    "batchLoadSetting": "Batch Loading Data",
     "select": "Select",
     "download": "Data Download",
     "restrict": "Analysis Condition Restriction",

@@ -3,6 +3,7 @@
     v-model="selectedValues"
     :placeholder="placeholder"
     :no-data-text="$t('message.noData')"
+    :filterable="filterable"
     class="sy-multi-select theme-dark"
     multiple
     @change="$emit('change', $event)"
@@ -23,7 +24,8 @@ export default {
   props: {
     value: { type: Array, default: () => [] },
     optionList: { type: Array, default: () => [] },
-    placeholder: { type: String, default: '' }
+    placeholder: { type: String, default: '' },
+    filterable: { type: Boolean, default: false }
   },
   data () {
     return {

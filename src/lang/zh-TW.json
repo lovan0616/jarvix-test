@@ -456,6 +456,25 @@
     "columnSelected": "已選擇欄位數",
     "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位"
   },
+  "batchLoad": {
+    "primaryKeyColumns": "主鍵欄位",
+    "updatedTimeColumn": "更新時間欄位",
+    "builtTimeColumn": "建置時間欄位",
+    "chooseColumn": "選擇欄位",
+    "columnSetting": "欄位設定",
+    "scheduleSetting": "排成設定",
+    "setBatchLoad": "設定批次更新資料",
+    "batchLoadSetting": "批次更新資料設定",
+    "basicSetting": "基本設定",
+    "chooseCycle": "選擇週期",
+    "on": "開啟",
+    "off": "關閉",
+    "everyMinute": "每 {number} 分鐘",
+    "everyHour": "每小時",
+    "everyDay": "每天",
+    "everyWeek": "每週",
+    "everyMonth": "每月"
+  },
   "feature": {
     "value": "數值",
     "columnValue": "欄位值",
@@ -639,6 +658,7 @@
     "editEtlSetting": "資料處理設定",
     "reviewEtlSetting": "檢視資料處理設定",
     "dateTimeColumnSetting": "日期欄位設定",
+    "batchLoadSetting": "資料更新設定",
     "select": "選擇",
     "download": "資料下載",
     "restrict": "分析條件限制",
