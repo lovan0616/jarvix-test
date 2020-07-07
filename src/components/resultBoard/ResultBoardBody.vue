@@ -156,6 +156,14 @@ export default {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
+      .task[data-diagram-type="recommended_insight"] {
+        width: 0; // 讓卡片能響應式縮小
+        height: 342px;
+        flex-basis: calc(50% - 10px);
+        &:first-child {
+          margin-bottom: 20px;
+        }
+      }
     }
   }
 }

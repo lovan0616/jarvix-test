@@ -197,7 +197,7 @@ Vue.mixin({
         case 'correlation_insight':
           return 'CorrelationInsight'
         case 'recommended_insight':
-          return 'RecommendedInsightItem'
+          return 'RecommendedInsight'
         case 'root_cause_item':
           return 'RootCauseItem'
         case 'root_cause_description':

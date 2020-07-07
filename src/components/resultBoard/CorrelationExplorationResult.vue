@@ -68,29 +68,32 @@
           intend="sub_basic_info"
         />
       </template>
-      <!-- TODO 推薦洞察 -->
-      <template slot="InsightRecommended">
-        <recommended-insight-item 
-          v-for="(insight, i) in fakeResultInfo.recommended_insight"
-          :key="i">
-          <task
-            :component-id="insight"
-            :show-toolbox="false"
-            :custom-chart-style="{ width: '100%', height: '280px' }"
-            intend="recommended_insight"
-          />
-        </recommended-insight-item>
+      <template 
+        v-if="fakeResultInfo.recommended_insight.length > 0" 
+        slot="InsightRecommended">
+        <!-- 這個換動態轉換成 RecommendedInsight-->
+        <task-fake
+          v-for="id in fakeResultInfo.recommended_insight"
+          :key="id"
+          :component-id="id"
+          :show-toolbox="false"
+          :custom-chart-style="{ width: '100%', height: '240px' }"
+          :arrow-btn-right="20"
+          intend="recommended_insight"
+        />
       </template>
     </result-board-body>
   </result-board>
 </template>
 <script>
 import HintInfoBlock from '@/components/display/HintInfoBlock'
+import TaskFake from '@/components/display/TaskFake'
 
 export default {
   name: 'CorrelationExplorationResult',
   components: {
-    HintInfoBlock
+    HintInfoBlock,
+    TaskFake
   },
   props: {
     resultInfo: {

@@ -7,19 +7,19 @@
         @click="learnMore">{{ $t('editing.moreInfo') }}</button>
     </div>
     <div class="card__body">
-      <slot/>
+      <!-- 轉換成各圖表 -->
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'RecommendedInsightItem',
+  name: 'RecommendedInsight',
   props: {
     title: {
       type: String,
       default: '我沒有標題!!'
-    }
+    },
   },
   methods: {
     learnMore () {
@@ -36,12 +36,7 @@ export default {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   overflow: hidden;
-  width: 0; // 讓卡片能響應式縮小
-  height: 342px;
-  flex-basis: calc(50% - 10px);
-  &:first-child {
-    margin-bottom: 20px;
-  }
+  height: 100%;
 
   .card {
     &__header {
