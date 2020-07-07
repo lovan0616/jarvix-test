@@ -15,13 +15,11 @@
       <spinner 
         v-if="isLoading"
         :title="$t('editing.loading')"
-        class="spinner-container"
         size="50"
       />
       <empty-info-block
         v-else-if="dateTimeColumnList.length === 0"
         :msg="$t('editing.emptyDateTime')"
-        class="empty-info-block"
       />
       <template v-else>
         <div class="setting-block">
@@ -42,10 +40,7 @@
               inactive-color="#324B4E"/>
           </div>
           <template v-if="switchInfo.selected" >
-            <div 
-              :class="{'has-error': errors.has('builtTimeColumn')}"
-              class="setting-block__input-field input-field"
-            >
+            <div class="setting-block__input-field input-field">
               <label class="input-field__label">{{ $t('batchLoad.builtTimeColumn') }}</label>
               <div class="input-field__input">
                 <default-select 
@@ -64,10 +59,7 @@
                 >{{ errors.first('builtTimeColumn') }}</div>
               </div>
             </div>
-            <div
-              :class="{'has-error': errors.has('builtTimeColumn')}"
-              class="setting-block__input-field input-field"
-            >
+            <div class="setting-block__input-field input-field">
               <label class="input-field__label">{{ $t('batchLoad.updatedTimeColumn') }}</label>
               <div class="input-field__input">
                 <default-select 
@@ -86,10 +78,7 @@
                 >{{ errors.first('updatedTimeColumn') }}</div>
               </div>
             </div>
-            <div
-              :class="{'has-error': errors.has('primaryKeyColumn')}"
-              class="setting-block__input-field  input-field"
-            >
+            <div class="setting-block__input-field  input-field">
               <label class="input-field__label">{{ $t('batchLoad.primaryKeyColumns') }}</label>
               <div class="input-field__input">
                 <default-multi-select
@@ -117,10 +106,7 @@
           class="setting-block"
         >
           <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
-          <div 
-            :class="{'has-error': errors.has('basicScheduleColumn')}"
-            class="setting-block__input-field input-field"
-          >
+          <div class="setting-block__input-field input-field">
             <label class="input-field__label">{{ $t('batchLoad.basicSetting') }}</label>
             <div class="input-field__input">
               <default-select 
@@ -420,6 +406,7 @@ export default {
 
     &__input-field {
       display: flex;
+      flex-direction: column;
 
       &:not(:last-of-type) {
         margin-bottom: 16px;
@@ -436,17 +423,11 @@ export default {
     }
 
     .input-field {
-      flex-direction: column;
       &__multi-select {
         width: 70%;
       }
 
-      &__input {
-        position: relative;
-      }
-
       &__label {
-        // line-height: 40px;
         font-size: 14px;
       }
 
@@ -455,24 +436,11 @@ export default {
         border-bottom: 1px solid #fff;
       }
     }
-
-    & >>> .input-field {
-      &.has-error {
-        .data-frame-select {
-          border-color: $theme-color-danger;
-        }
-
-        .error-text {
-          bottom: -10px;
-        }
-      }
-    }
   }
 
   .button-block {
     display: flex;
     justify-content: flex-end;
-    padding-bottom: 64px;
 
     .btn:not(:last-child) {
       margin-right: 20px;
