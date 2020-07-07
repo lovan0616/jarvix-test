@@ -29,19 +29,16 @@ export default {
     filterable: { type: Boolean, default: false },
     isDisabled: {type: Boolean, default: false}
   },
-  data () {
-    return {
-      selectedValues: this.value
-    }
-  },
-  watch: {
-    value: {
-      deep: true,
-      handler (e) {
-        this.selectedValues = e
+  computed: {
+    selectedValues: {
+      get () {
+        return this.value
+      },
+      set (value) {
+        this.$emit('input', value)
       }
     }
-  },
+  }
 }
 </script>
 <style lang="scss">

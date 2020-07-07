@@ -91,7 +91,7 @@
                   multiple
                   class="input-field__multi-select"
                   name="primaryKeyColumn"
-                  @change="columnInfo.primaryKeys = $event"
+                  @input="columnInfo.primaryKeys = $event"
                 />
                 <div 
                   v-show="errors.has('primaryKeyColumn')"
