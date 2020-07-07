@@ -457,12 +457,12 @@
     "pleaseSelectAtLeastOneColumnPerTable": "每张表格请至少选择一个栏位"
   },
   "batchLoad": {
-    "primaryKeyColumns": "主键栏位",
-    "updatedTimeColumn": "更新时间栏位",
-    "builtTimeColumn": "建置时间栏位",
+    "primaryKeyColumns": "主键（可复选）",
+    "updatedTimeColumn": "更新时间",
+    "builtTimeColumn": "建置时间",
     "chooseColumn": "选择栏位",
-    "columnSetting": "栏位设定",
-    "scheduleSetting": "排成设定",
+    "columnSetting": "对应栏位设定",
+    "scheduleSetting": "更新周期设定",
     "setBatchLoad": "设定批次更新资料",
     "batchLoadSetting": "批次更新资料设定",
     "basicSetting": "基本设置",

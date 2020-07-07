@@ -457,12 +457,12 @@
     "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位"
   },
   "batchLoad": {
-    "primaryKeyColumns": "主鍵欄位",
-    "updatedTimeColumn": "更新時間欄位",
-    "builtTimeColumn": "建置時間欄位",
+    "primaryKeyColumns": "主鍵（可複選）",
+    "updatedTimeColumn": "更新時間",
+    "builtTimeColumn": "建置時間",
     "chooseColumn": "選擇欄位",
-    "columnSetting": "欄位設定",
-    "scheduleSetting": "排成設定",
+    "columnSetting": "對應欄位設定",
+    "scheduleSetting": "更新週期設定",
     "setBatchLoad": "設定批次更新資料",
     "batchLoadSetting": "批次更新資料設定",
     "basicSetting": "基本設定",

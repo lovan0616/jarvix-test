@@ -17,8 +17,8 @@
             :active-text="switchInfo.on"
             :inactive-text="switchInfo.off"
             :disabled="isLoading"
+            :width="Number('32')"
             active-color="#2AD2E2"
-            width="32"
             inactive-color="#324B4E"/>
         </div>
 
@@ -27,7 +27,7 @@
             :class="{'has-error': errors.has('builtTimeColumn')}"
             class="setting-block__input-field input-field"
           >
-            <label class="input-field__label">{{ $t('batchLoad.builtTimeColumn') + '：' }}</label>
+            <label class="input-field__label">{{ $t('batchLoad.builtTimeColumn') }}</label>
             <div class="input-field__input">
               <default-select 
                 v-validate="'required'"
@@ -48,7 +48,7 @@
             :class="{'has-error': errors.has('builtTimeColumn')}"
             class="setting-block__input-field input-field"
           >
-            <label class="input-field__label">{{ $t('batchLoad.updatedTimeColumn') + '：' }}</label>
+            <label class="input-field__label">{{ $t('batchLoad.updatedTimeColumn') }}</label>
             <div class="input-field__input">
               <default-select 
                 v-validate="'required'"
@@ -67,9 +67,9 @@
           </div>
           <div
             :class="{'has-error': errors.has('primaryKeyColumn')}"
-            class="setting-block__input-field  input-field--column"
+            class="setting-block__input-field  input-field"
           >
-            <label class="input-field__label">{{ $t('batchLoad.primaryKeyColumns') + '：' }}</label>
+            <label class="input-field__label">{{ $t('batchLoad.primaryKeyColumns') }}</label>
             <div class="input-field__input">
               <default-multi-select
                 v-validate="'required'"
@@ -99,7 +99,7 @@
           :class="{'has-error': errors.has('basicScheduleColumn')}"
           class="setting-block__input-field input-field"
         >
-          <label class="input-field__label">{{ $t('batchLoad.basicSetting') + '：' }}</label>
+          <label class="input-field__label">{{ $t('batchLoad.basicSetting') }}</label>
           <div class="input-field__input">
             <default-select 
               v-validate="'required'"
@@ -277,14 +277,14 @@ export default {
       font-weight: 600;
       font-size: 18px;
       line-height: 1;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     &__input-field {
       display: flex;
 
       &:not(:last-of-type) {
-        margin-bottom: 10px;
+        margin-bottom: 16px;
       }
 
       /deep/ .el-input__inner {
@@ -298,12 +298,9 @@ export default {
     }
 
     .input-field {
-      &--column {
-        flex-direction: column;
-
-        .input-field__multi-select {
-          width: 50%;
-        }
+      flex-direction: column;
+      &__multi-select {
+        width: 70%;
       }
 
       &__input {
@@ -311,7 +308,7 @@ export default {
       }
 
       &__label {
-        line-height: 40px;
+        // line-height: 40px;
         font-size: 14px;
       }
 
