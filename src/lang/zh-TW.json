@@ -339,7 +339,8 @@
     },
     "createGroup": "建立專案",
     "sortSetting": "排序設定",
-    "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。"
+    "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。",
+    "lastUpdateResult": "近一次更新結果"
   },
   "algorithm": {
     "name": "演算法",
@@ -473,7 +474,11 @@
     "everyHour": "每小時",
     "everyDay": "每天",
     "everyWeek": "每週",
-    "everyMonth": "每月"
+    "everyMonth": "每月",
+    "noRecord": "無紀錄",
+    "updateSuccessfully": "更新成功",
+    "updateFailed": "更新失敗",
+    "updating": "更新中"
   },
   "feature": {
     "value": "數值",

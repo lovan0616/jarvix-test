@@ -247,6 +247,11 @@ export default {
           width: '140px'
         },
         {
+          text: this.$t('editing.lastUpdateResult'),
+          value: 'crontabState',
+          width: '140px'
+        },
+        {
           text: this.$t('editing.action'),
           value: 'action',
           width: '270px',

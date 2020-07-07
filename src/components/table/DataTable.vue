@@ -185,6 +185,9 @@
               <span class="dataframe-name">{{ data[headInfo.value] }}</span>
             </el-tooltip>
           </span>
+          <span v-else-if="headInfo.value === 'crontabState'">
+            {{ batchLoadStatus(data) }}
+          </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
       </div>
@@ -404,6 +407,19 @@ export default {
           return i18n.t('editing.dataBuilding')
         case 'Pending':
           return i18n.t('editing.dataInQueue')
+      }
+    },
+    batchLoadStatus (data) {
+      if (data.originType !== 'database') return '-'
+      switch (data['crontabState']) {
+        case null:
+          return this.$t('batchLoad.noRecord')
+        case 'Complete':
+          return this.$t('batchLoad.updateSuccessfully')
+        case 'Fail':
+          return this.$t('batchLoad.updateFailed')
+        case 'Process':
+          return this.$t('batchLoad.updating')
       }
     },
     showActionDropdown (subAction, data) {

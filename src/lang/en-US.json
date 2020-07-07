@@ -338,7 +338,8 @@
     },
     "createGroup": "Create Project",
     "sortSetting": "Sorting settings",
-    "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change."
+    "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change.",
+    "lastUpdateResult": "Latest Update Result"
   },
   "algorithm": {
     "name": "Algorithm",
@@ -472,7 +473,11 @@
     "everyHour": "Hourly",
     "everyDay": "Daily",
     "everyWeek": "Weekly",
-    "everyMonth": "Monthly"
+    "everyMonth": "Monthly",
+    "noRecord": "No Record",
+    "updateSuccessfully": "Update Successfully",
+    "updateFailed": "Update Failed",
+    "updating": "Updating"
   },
   "feature": {
     "value": "Value",

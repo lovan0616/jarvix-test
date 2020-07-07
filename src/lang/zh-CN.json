@@ -339,7 +339,8 @@
     },
     "createGroup": "建立专案",
     "sortSetting": "排序设定",
-    "dragAndSort": "请按住项目上下拖曳移动排序位置，项目排序变更后即生效。"
+    "dragAndSort": "请按住项目上下拖曳移动排序位置，项目排序变更后即生效。",
+    "lastUpdateResult": "近一次更新结果"
   },
   "algorithm": {
     "name": "演算法",
@@ -473,7 +474,11 @@
     "everyHour": "每小时",
     "everyDay": "每天",
     "everyWeek": "每周",
-    "everyMonth": "每月"
+    "everyMonth": "每月",
+    "noRecord": "无纪录",
+    "updateSuccessfully": "更新成功",
+    "updateFailed": "更新失败",
+    "updating": "更新中"
   },
   "feature": {
     "value": "数值",
