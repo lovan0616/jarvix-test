@@ -38,6 +38,7 @@
         :key="componentId"
         :show-toolbox="showToolbox"
         :custom-chart-style="customChartStyle"
+        :arrow-btn-right="arrowBtnRight"
         @next="getNewPageInfo"
       />
       <div
@@ -69,6 +70,10 @@ export default {
     customChartStyle: {
       type: Object,
       default: () => {}
+    },
+    arrowBtnRight: {
+      type: Number,
+      default: 80
     }
   },
   data () {

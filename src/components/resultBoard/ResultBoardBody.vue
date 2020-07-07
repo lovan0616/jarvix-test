@@ -30,8 +30,17 @@
         </template>
       </slot-dialog>
     </div>
-    <slot name="InsightRootCause"/>
-    <slot name="InsightRecommended"/>
+    <div 
+      v-if="isShowInsightRecommended" 
+      name="InsightRootCause">
+      <!-- {{ $slots }} -->
+      <div class="insights-info recommended">
+        <div class="insights-info-title">{{ $t('resultDescription.recommendedInsight') }}</div>
+        <div class="insights-info__wrapper">
+          <slot name="InsightRecommended"/>
+        </div>
+      </div>
+    </div>
     <slot name="CorrelationAnalysis"/>
   </div>
 </template>
@@ -53,6 +62,9 @@ export default {
   computed: {
     isShowChatRoom () {
       return this.$store.state.isShowChatRoom
+    },
+    isShowInsightRecommended () {
+      return Object.prototype.hasOwnProperty.call(this.$slots, 'InsightRecommended')
     }
   },
   watch: {
@@ -139,5 +151,14 @@ export default {
       }
     }
   }
+  .insights-info.recommended {
+    .insights-info__wrapper {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+  }
 }
+
+
 </style>

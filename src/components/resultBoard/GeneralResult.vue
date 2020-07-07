@@ -48,26 +48,31 @@
         </template>
       </template>
       <!-- TODO 推薦洞察 -->
-      <recommended-insight slot="InsightRecommended">
-        <task-fake
-          v-for="i in 4"
-          :key="i"
-          :component-id="196549"
-          intend="recommended_insight"
-        />
-      </recommended-insight>
+      <template 
+        v-if="fakeResultInfo.recommended_insight" 
+        slot="InsightRecommended">
+        <recommended-insight-item 
+          v-for="id in fakeResultInfo.recommended_insight"
+          :key="id">
+          <task
+            :component-id="id"
+            :show-toolbox="false"
+            :custom-chart-style="{ width: '100%', height: '240px' }"
+            :arrow-btn-right="20"
+            intend="recommended_insight"
+          />
+        </recommended-insight-item>
+      </template>
     </result-board-body>
   </result-board>
 </template>
 <script>
-import RecommendedInsight from '@/components/display/RecommendedInsight'
-import TaskFake from '@/components/display/TaskFake'
+import RecommendedInsightItem from '@/components/display/RecommendedInsightItem'
 
 export default {
   name: 'GeneralResult',
   components: {
-    TaskFake,
-    RecommendedInsight
+    RecommendedInsightItem
   },
   props: {
     resultInfo: {
@@ -77,6 +82,13 @@ export default {
     restrictions: {
       type: Array,
       default: () => []
+    }
+  },
+  data () {
+    return {
+      fakeResultInfo: {
+        recommended_insight: [197209, 198006, 199050, 198660]
+      }
     }
   },
   methods: {

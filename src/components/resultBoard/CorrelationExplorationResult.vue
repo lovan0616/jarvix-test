@@ -69,14 +69,18 @@
         />
       </template>
       <!-- TODO 推薦洞察 -->
-      <!-- <template slot="InsightRecommended">
-        <task
-          v-if="resultInfo.recommended_insight"
-          :key="`recommended-insight-${displayFactorIndex}`"
-          :component-id="resultInfo.recommended_insight[displayFactorIndex]"
-          intend="recommended_insight"
-        />
-      </template> -->
+      <template slot="InsightRecommended">
+        <recommended-insight-item 
+          v-for="(insight, i) in fakeResultInfo.recommended_insight"
+          :key="i">
+          <task
+            :component-id="insight"
+            :show-toolbox="false"
+            :custom-chart-style="{ width: '100%', height: '280px' }"
+            intend="recommended_insight"
+          />
+        </recommended-insight-item>
+      </template>
     </result-board-body>
   </result-board>
 </template>
@@ -100,7 +104,10 @@ export default {
   },
   data () {
     return {
-      isLoading: true
+      isLoading: true,
+      fakeResultInfo: {
+        recommended_insight: [198005, 198006, 198007, 197995]
+      }
     }
   },
   computed: {
