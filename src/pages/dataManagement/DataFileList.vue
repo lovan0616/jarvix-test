@@ -244,7 +244,7 @@ export default {
         {
           text: this.$t('editing.status'),
           value: 'state',
-          width: '140px'
+          width: '115px'
         },
         {
           text: this.$t('editing.lastUpdateResult'),
