@@ -49,19 +49,24 @@
       </template>
       <!-- TODO 推薦洞察 -->
       <recommended-insight slot="InsightRecommended">
-        <recommended-insight-item
+        <task-fake
           v-for="i in 4"
-          :key="i"/>
+          :key="i"
+          :component-id="196549"
+          intend="recommended_insight"
+        />
       </recommended-insight>
     </result-board-body>
   </result-board>
 </template>
 <script>
 import RecommendedInsight from '@/components/display/RecommendedInsight'
+import TaskFake from '@/components/display/TaskFake'
 
 export default {
   name: 'GeneralResult',
   components: {
+    TaskFake,
     RecommendedInsight
   },
   props: {

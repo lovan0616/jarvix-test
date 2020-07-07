@@ -36,7 +36,7 @@
         :total="componentData.total"
         :item-count="componentData.item_count"
         :key="componentId"
-        :show-toolbox="showToolbox"
+        :custom-chart-options="customChartOptions"
         :custom-chart-style="customChartStyle"
         @next="getNewPageInfo"
       />
@@ -52,7 +52,7 @@
 </template>
 <script>
 export default {
-  name: 'Task',
+  name: 'TaskFake',
   props: {
     componentId: {
       type: Number,
@@ -62,9 +62,9 @@ export default {
       type: String,
       default: null
     },
-    showToolbox: {
-      type: Boolean,
-      default: true
+    customChartOptions: {
+      type: Object,
+      default: () => {}
     },
     customChartStyle: {
       type: Object,
@@ -122,7 +122,7 @@ export default {
               break
             case 'Complete': {
               window.clearTimeout(this.timeoutFunction)
-              this.diagram = response.diagram
+              this.diagram = 'recommended_insight'
               this.resultId = response.resultId
               this.componentName = this.getChartTemplate(this.diagram)
               let responseData = response.data

@@ -25,6 +25,7 @@ export default {
   .task {
     flex-basis: calc(50% - 10px);
     width: unset;
+    height: 342px;
     &:first-child {
       margin-bottom: 20px;
     }

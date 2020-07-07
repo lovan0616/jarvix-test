@@ -1,12 +1,18 @@
 <template>
   <div class="recommended-insights__card">
     <div class="card__header">
-      <div class="header__title">客戶年齡與訂單金額的概況</div>
-      <button class="header__link btn btn-outline">瞭解更多</button>
+      <div class="header__title">{{ title }}</div>
+      <button 
+        class="header__link btn btn-outline" 
+        @click="learnMore">{{ $t('editing.moreInfo') }}</button>
     </div>
     <div class="card__body">
-      <!-- TODO: Remove mock data -->
-      <task :component-id="196548"/>
+      <!-- 有API之後這邊會改成動態組件 -->
+      <task
+        :component-id="197209"
+        :show-toolbox="false"
+        :custom-chart-style="customChartStyle"
+      />
     </div>
   </div>
 </template>
@@ -16,8 +22,19 @@ export default {
   name: 'RecommendedInsightItem',
   data () {
     return {
+      title: 'wood', // TODO 串API
+      customChartStyle: {
+        width: '100%',
+        height: '240px'
+      }
     }
   },
+  methods: {
+    learnMore () {
+      this.$store.commit('dataSource/setAppQuestion', this.title)
+      this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
+    },
+  }
 }
 </script>
 

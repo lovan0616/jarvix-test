@@ -144,16 +144,19 @@ export default {
   },
 }
 </script>
+
 <style lang="scss" scoped>
 .insights-info.root-cause {
   .root-cause-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    align-items: flex-start;
 
     &.is-open {
       .root-cause-card {
         width: 100%;
+        flex-basis: unset;
 
         &:not(:last-child) {
           margin-bottom: 24px;
