@@ -409,7 +409,15 @@
     "sql": "SQL 語法"
   },
   "monitorSetting": {
-    "settingDialogTitle": "系統監測設定"
+    "settingDialogTitle": "系統監測設定",
+    "enableMonitoring": "啟用系統監測",
+    "autoRefresh": "自動更新",
+    "monitorColumn": "監測欄位",
+    "dateColumn": "時間欄位",
+    "timeScopeUnit": "時間範圍單位",
+    "aggregationType": "集合功能",
+    "monitorThreshold": "監測閾值",
+    "mail": "通知信箱"
   },
   "etl": {
     "dataFrameList": "資料表列表",

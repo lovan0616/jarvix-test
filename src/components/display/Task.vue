@@ -52,9 +52,12 @@
         {{ note }}
       </div>
     </template>
-    <!-- <monitor-setting-dialog
+    <monitor-setting-dialog
+      v-if="isShowMonitorSettingDialog"
       :component-id="componentId"
-    /> -->
+      :data-frame-id="dataFrameId"
+      @close="closeMonitorSettingDialog"
+    />
   </div>
 </template>
 <script>
@@ -65,6 +68,10 @@ export default {
     MonitorSettingDialog
   },
   props: {
+    dataFrameId: {
+      type: Number,
+      default: null
+    },
     componentId: {
       type: Number,
       default: null
@@ -95,7 +102,8 @@ export default {
       maxDataLengthPerPage: 200,
       // 下個分頁資料
       nextPageData: null,
-      singlePage: true
+      singlePage: true,
+      isShowMonitorSettingDialog: false
     }
   },
   computed: {
@@ -348,7 +356,10 @@ export default {
       return this.$t('resultNote.groupLimitNote', {randomLimit})
     },
     openMonitorSettingDialog () {
-
+      this.isShowMonitorSettingDialog = true
+    },
+    closeMonitorSettingDialog () {
+      this.isShowMonitorSettingDialog = false
     }
   }
 }

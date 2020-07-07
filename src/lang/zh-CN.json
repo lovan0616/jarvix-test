@@ -409,7 +409,15 @@
     "sql": "SQL 语法"
   },
   "monitorSetting": {
-    "settingDialogTitle": "系统监测设定"
+    "settingDialogTitle": "系统监测设定",
+    "enableMonitoring": "启用系统监测",
+    "autoRefresh": "自动更新",
+    "monitorColumn": "监测栏位",
+    "dateColumn": "时间栏位",
+    "timeScopeUnit": "时间范围单位",
+    "aggregationType": "集合功能",
+    "monitorThreshold": "监测阈值",
+    "mail": "通知信箱"
   },
   "etl": {
     "dataFrameList": "资料表列表",

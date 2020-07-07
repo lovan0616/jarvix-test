@@ -85,7 +85,7 @@ export default {
       return this.$route.params.group_id
     },
     isPersonalPinboard () {
-      return this.groupId === undefined
+      return this.$route.name === 'PersonalPagePinboard'
     },
     isSortable () {
       return this.boardList.length > 1

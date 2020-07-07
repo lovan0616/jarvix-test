@@ -409,7 +409,15 @@
     "sql": "SQL Syntax"
   },
   "monitorSetting": {
-    "settingDialogTitle": "System Monitor Setting"
+    "settingDialogTitle": "System Monitor Setting",
+    "enableMonitoring": "Monitor",
+    "autoRefresh": "Auto Refresh",
+    "monitorColumn": "Monitor Column",
+    "dateColumn": "Date Column",
+    "timeScopeUnit": "Time Scope Unit",
+    "aggregationType": "Aggregation Type",
+    "monitorThreshold": "Threshold",
+    "mail": "E-mail"
   },
   "etl": {
     "dataFrameList": "Data Table List",
