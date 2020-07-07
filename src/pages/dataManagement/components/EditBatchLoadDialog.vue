@@ -74,7 +74,7 @@
               <default-multi-select
                 v-validate="'required'"
                 :value="columnInfo.primaryKeys"
-                :option-list="columnList"
+                :option-list="columnInfo.columnList"
                 :placeholder="$t('batchLoad.chooseColumn')"
                 filterable
                 multiple
@@ -103,8 +103,8 @@
           <div class="input-field__input">
             <default-select 
               v-validate="'required'"
-              v-model="columnInfo.updatedTime"
-              :option-list="scheduleInfo"
+              v-model="scheduleInfo.selectedBasicSchedule"
+              :option-list="scheduleInfo.basicScheduleList"
               :placeholder="$t('batchLoad.chooseCycle')"
               class="input-field__select"
               name="basicScheduleColumn"
@@ -167,49 +167,52 @@ export default {
       columnInfo: {
         builtTime: '',
         updatedTime: '',
-        primaryKeys: []
+        primaryKeys: [],
+        columnList: []
       },
-      scheduleInfo: [
+      scheduleInfo: {
+        selectedBasicSchedule: null,
+        basicScheduleList: [
         {
-          value: '5min',
+          value: '*/5 * * * *',
           name: this.$t('batchLoad.everyMinute', { number: 5 })
         },
         {
-          value: '15min',
+          value: '*/15 * * * *',
           name: this.$t('batchLoad.everyMinute', { number: 15 })
         },
         {
-          value: '30min',
+          value: '*/30 * * * *',
           name: this.$t('batchLoad.everyMinute', { number: 30 })
         },
         {
-          value: '45min',
+          value: '*/45 * * * *',
           name: this.$t('batchLoad.everyMinute', { number: 45 })
         },
         {
-          value: '1hour',
+          value: '0 * * * *',
           name: this.$t('batchLoad.everyHour')
         },
         {
-          value: '1day',
+          value: '0 0 * * *',
           name: this.$t('batchLoad.everyDay')
         },
         {
-          value: '1week',
+          value: '0 0 * * 0',
           name: this.$t('batchLoad.everyWeek')
         },
         {
-          value: '1month',
+          value: '0 0 1 * *',
           name: this.$t('batchLoad.everyMonth')
         }
       ],
-      columnList: [],
+      },
       isLoading: false
     }
   },
   computed: {
     dateTimeColumnList () {
-      return this.columnList.filter(column => column.dataType === "DATETIME")
+      return this.columnInfo.columnList.filter(column => column.dataType === "DATETIME")
     }
   },
   mounted () {
@@ -221,7 +224,7 @@ export default {
       const hasFeatureColumn = false
       getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn)
         .then(response => {
-          this.columnList = response.map(column => ({
+          this.columnInfo.columnList = response.map(column => ({
             ...column,
             name: column.primaryAlias || column.name,
             value: column.id
