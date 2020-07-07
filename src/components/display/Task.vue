@@ -16,6 +16,12 @@
       :message="errorMessage"
     />
     <template v-else-if="diagram">
+      <button
+        v-if="intend === 'key_result' && isPinboardPage"
+        type="button"
+        class="btn-m btn-default btn-monitor"
+        @click="openMonitorSettingDialog"
+      >{{ $t('button.monitorSetting') }}</button>
       <!-- TODO: 調整寫法 -->
       <component
         :is="componentName"
@@ -46,11 +52,18 @@
         {{ note }}
       </div>
     </template>
+    <!-- <monitor-setting-dialog
+      :component-id="componentId"
+    /> -->
   </div>
 </template>
 <script>
+import MonitorSettingDialog from '@/pages/pinboard/components/MonitorSettingDialog'
 export default {
   name: 'Task',
+  components: {
+    MonitorSettingDialog
+  },
   props: {
     componentId: {
       type: Number,
@@ -83,6 +96,11 @@ export default {
       // 下個分頁資料
       nextPageData: null,
       singlePage: true
+    }
+  },
+  computed: {
+    isPinboardPage () {
+      return this.$route.name === 'PersonalPagePinboard' || this.$route.name === 'ProjectPagePinboard'
     }
   },
   mounted () {
@@ -328,6 +346,9 @@ export default {
     },
     genGroupLimitNote (randomLimit) {
       return this.$t('resultNote.groupLimitNote', {randomLimit})
+    },
+    openMonitorSettingDialog () {
+
     }
   }
 }
@@ -343,6 +364,13 @@ export default {
     }
     color: #A7A7A7;
     font-size: 12px;
+  }
+
+  .btn-monitor {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
   }
 
   // pagination 遮罩

@@ -51,7 +51,7 @@ export default {
     }
   },
   mounted () {
-    // 變更 bookmark 從其他頁回到首頁的時候，如果是 null 代表如果是直接進首頁的話，會藉由 watch 觸發
+    // 變更 dataSource 從其他頁回到首頁的時候，如果是 null 代表如果是直接進首頁的話，會藉由 watch 觸發
     if (this.dataSourceId !== null) {
       this.getQuickQuestionList()
     }

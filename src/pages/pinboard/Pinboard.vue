@@ -40,6 +40,7 @@
       :data-pinboard-id="result.pinboardId"
       :data-data-source-id="result.dataSourceId"
       :data-data-frame-id="result.dataFrameId"
+      :data-frame-id="result.dataFrameId"
       :result-info="result.info"
       :restrictions="result.restrictions"
       :question="result.question"

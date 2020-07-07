@@ -327,6 +327,7 @@
     "general": "General User",
     "dataFrameAliasSetting": "Data Table Alias ​​Setting",
     "dataFrameAliasInputPlaceholder": "Please enter an alias",
+    "dataFrameInputPlaceholder": "Please enter",
     "belongToDataFrame": "Affiliated Data Table",
     "chooseDataFrame": "Select Table",
     "chooseDataColumn": "Select Data Field",
@@ -406,6 +407,9 @@
     "sqlCreateTable": "Created by SQL",
     "dataFrameName": "Data Table Name",
     "sql": "SQL Syntax"
+  },
+  "monitorSetting": {
+    "settingDialogTitle": "System Monitor Setting"
   },
   "etl": {
     "dataFrameList": "Data Table List",
@@ -662,7 +666,18 @@
     "resumeDefault": "Restore Default",
     "sortSetting": "Sort",
     "addSqlScript": "Add Customized SQL",
-    "testConnecting": "Testing Connection..."
+    "testConnecting": "Testing Connection...",
+    "monitorSetting": "Monitor Setting"
+  },
+  "timeScopeUnit": {
+    "second": "seconds",
+    "minute": "minutes",
+    "hour": "hours",
+    "day": "days",
+    "week": "weeks",
+    "month": "months",
+    "season": "seasons",
+    "year": "years"
   },
   "aggregation": {
     "mean": "Average",

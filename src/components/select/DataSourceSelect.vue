@@ -43,7 +43,7 @@ export default {
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
-    // 過濾掉正在 build 的 bookmark
+    // 過濾掉正在 build 的 dataSource
     buildDataSourceList () {
       return this.dataSourceList.filter(dataSource => {
         return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
