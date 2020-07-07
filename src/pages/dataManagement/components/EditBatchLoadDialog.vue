@@ -125,7 +125,7 @@
             </div>
           </div>
         </div>
-        <div class="button-block">
+        <div class="button__block">
           <button 
             class="btn btn-outline"
             @click="closeDialog"
@@ -438,12 +438,14 @@ export default {
     }
   }
 
-  .button-block {
-    display: flex;
-    justify-content: flex-end;
+  .button {
+    &__block {
+      display: flex;
+      justify-content: flex-end;
 
-    .btn:not(:last-child) {
-      margin-right: 20px;
+      .btn:not(:last-child) {
+        margin-right: 20px;
+      }
     }
   }
 
