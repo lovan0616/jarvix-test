@@ -80,6 +80,9 @@ export default {
     display: flex;
     flex-wrap: nowrap;
     margin-bottom: 32px;
+    & ~ div:not(:last-child) {
+      margin-bottom: 32px;
+    }
 
     &.is-open {
       .chart-block {

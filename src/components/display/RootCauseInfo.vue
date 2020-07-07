@@ -176,7 +176,7 @@ export default {
   .root-cause-card {
     display: flex;
     padding: 24px 0;
-    width: 48%;
+    flex-basis: calc(50% - 10px);
     cursor: pointer;
     @include card();
 

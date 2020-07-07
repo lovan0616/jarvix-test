@@ -48,21 +48,22 @@
         </template>
       </template>
       <!-- TODO 推薦洞察 -->
-      <!-- <recommended-insight slot="InsightRecommended">
-        <div class="task__wrapper">
-          <task
-            v-for="(otherTask, index) in resultInfo.recommended_insight"
-            :component-id="resultInfo.recommended_insight[index]"
-            intend="recommended_insight"
-          />
-        </div>
-      </recommended-insight> -->
+      <recommended-insight slot="InsightRecommended">
+        <recommended-insight-item
+          v-for="i in 4"
+          :key="i"/>
+      </recommended-insight>
     </result-board-body>
   </result-board>
 </template>
 <script>
+import RecommendedInsight from '@/components/display/RecommendedInsight'
+
 export default {
   name: 'GeneralResult',
+  components: {
+    RecommendedInsight
+  },
   props: {
     resultInfo: {
       type: Object,

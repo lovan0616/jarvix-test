@@ -1,7 +1,9 @@
 <template>
   <div class="insights-info recommended">
     <div class="insights-info-title">{{ $t('resultDescription.recommendedInsight') }}</div>
-    <slot />
+    <div class="task__wrapper">
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -18,9 +20,14 @@ export default {
 <style lang="scss" scoped>
 .task__wrapper {
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
   .task {
-    flex: 1 0 50%;
+    flex-basis: calc(50% - 10px);
+    width: unset;
+    &:first-child {
+      margin-bottom: 20px;
+    }
   }
 }
 </style>
