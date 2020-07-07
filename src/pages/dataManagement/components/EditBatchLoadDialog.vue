@@ -3,135 +3,161 @@
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('batchLoad.setBatchLoad') }}
+        <a 
+          href="javascript:void(0)" 
+          class="close-btn"
+          @click="closeDialog"
+        ><svg-icon icon-class="close"/></a>
       </div>
-      <div class="setting-block">
-        <div 
-          v-if="!switchInfo.selected" 
-          class="setting-block__title">{{ $t('batchLoad.batchLoadSetting') }}</div>
-        <div 
-          v-else 
-          class="setting-block__title">{{ $t('batchLoad.columnSetting') }}</div>
-        <div class="setting-block__switch">
-          <el-switch
-            v-model="switchInfo.selected"
-            :active-text="switchInfo.on"
-            :inactive-text="switchInfo.off"
-            :disabled="isLoading"
-            :width="Number('32')"
-            active-color="#2AD2E2"
-            inactive-color="#324B4E"/>
-        </div>
-
-        <template v-if="switchInfo.selected" >
+      <div class="dialog__sub-title">
+        {{ $t('editing.dataFrame') }}: {{ dataFrameInfo.primaryAlias }}
+      </div>
+      <spinner 
+        v-if="isLoading"
+        :title="$t('editing.loading')"
+        class="spinner-container"
+        size="50"
+      />
+      <empty-info-block
+        v-else-if="dateTimeColumnList.length === 0"
+        :msg="$t('editing.emptyDateTime')"
+        class="empty-info-block"
+      />
+      <template v-else>
+        <div class="setting-block">
           <div 
-            :class="{'has-error': errors.has('builtTimeColumn')}"
-            class="setting-block__input-field input-field"
-          >
-            <label class="input-field__label">{{ $t('batchLoad.builtTimeColumn') }}</label>
-            <div class="input-field__input">
-              <default-select 
-                v-validate="'required'"
-                v-model="columnInfo.updatedTime"
-                :option-list="dateTimeColumnList"
-                :placeholder="$t('batchLoad.chooseColumn')"
-                filterable
-                class="input-field__select"
-                name="builtTimeColumn"
-              />
-              <div 
-                v-show="errors.has('builtTimeColumn')"
-                class="error-text"
-              >{{ errors.first('builtTimeColumn') }}</div>
-            </div>
+            v-if="!switchInfo.selected" 
+            class="setting-block__title">{{ $t('batchLoad.batchLoadSetting') }}</div>
+          <div 
+            v-else 
+            class="setting-block__title">{{ $t('batchLoad.columnSetting') }}</div>
+          <div class="setting-block__switch">
+            <el-switch
+              v-model="switchInfo.selected"
+              :active-text="switchInfo.on"
+              :inactive-text="switchInfo.off"
+              :disabled="isProcessing"
+              :width="Number('32')"
+              active-color="#2AD2E2"
+              inactive-color="#324B4E"/>
           </div>
-          <div
-            :class="{'has-error': errors.has('builtTimeColumn')}"
-            class="setting-block__input-field input-field"
-          >
-            <label class="input-field__label">{{ $t('batchLoad.updatedTimeColumn') }}</label>
-            <div class="input-field__input">
-              <default-select 
-                v-validate="'required'"
-                v-model="columnInfo.builtTime"
-                :option-list="dateTimeColumnList"
-                :placeholder="$t('batchLoad.chooseColumn')"
-                filterable
-                class="input-field__select"
-                name="updatedTimeColumn"
-              />
-              <div 
-                v-show="errors.has('updatedTimeColumn')"
-                class="error-text"
-              >{{ errors.first('updatedTimeColumn') }}</div>
-            </div>
-          </div>
-          <div
-            :class="{'has-error': errors.has('primaryKeyColumn')}"
-            class="setting-block__input-field  input-field"
-          >
-            <label class="input-field__label">{{ $t('batchLoad.primaryKeyColumns') }}</label>
-            <div class="input-field__input">
-              <default-multi-select
-                v-validate="'required'"
-                :value="columnInfo.primaryKeys"
-                :option-list="columnInfo.columnList"
-                :placeholder="$t('batchLoad.chooseColumn')"
-                filterable
-                multiple
-                class="input-field__multi-select"
-                name="primaryKeyColumn"
-                @change="columnInfo.primaryKeys = $event"
-              />
-              <div 
-                v-show="errors.has('primaryKeyColumn')"
-                class="error-text"
-              >{{ errors.first('primaryKeyColumn') }}</div>
-            </div>
-          </div>
-        </template>
-      </div>
-      <div 
-        v-if="switchInfo.selected" 
-        class="setting-block"
-      >
-        <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
-        <div 
-          :class="{'has-error': errors.has('basicScheduleColumn')}"
-          class="setting-block__input-field input-field"
-        >
-          <label class="input-field__label">{{ $t('batchLoad.basicSetting') }}</label>
-          <div class="input-field__input">
-            <default-select 
-              v-validate="'required'"
-              v-model="scheduleInfo.selectedBasicSchedule"
-              :option-list="scheduleInfo.basicScheduleList"
-              :placeholder="$t('batchLoad.chooseCycle')"
-              class="input-field__select"
-              name="basicScheduleColumn"
-            />
+          <template v-if="switchInfo.selected" >
             <div 
-              v-show="errors.has('basicScheduleColumn')"
-              class="error-text"
-            >{{ errors.first('basicScheduleColumn') }}</div>
+              :class="{'has-error': errors.has('builtTimeColumn')}"
+              class="setting-block__input-field input-field"
+            >
+              <label class="input-field__label">{{ $t('batchLoad.builtTimeColumn') }}</label>
+              <div class="input-field__input">
+                <default-select 
+                  v-validate="'required'"
+                  v-model="columnInfo.updatedTime"
+                  :option-list="dateTimeColumnList"
+                  :placeholder="$t('batchLoad.chooseColumn')"
+                  :is-disabled="isProcessing"
+                  filterable
+                  class="input-field__select"
+                  name="builtTimeColumn"
+                />
+                <div 
+                  v-show="errors.has('builtTimeColumn')"
+                  class="error-text"
+                >{{ errors.first('builtTimeColumn') }}</div>
+              </div>
+            </div>
+            <div
+              :class="{'has-error': errors.has('builtTimeColumn')}"
+              class="setting-block__input-field input-field"
+            >
+              <label class="input-field__label">{{ $t('batchLoad.updatedTimeColumn') }}</label>
+              <div class="input-field__input">
+                <default-select 
+                  v-validate="'required'"
+                  v-model="columnInfo.builtTime"
+                  :option-list="dateTimeColumnList"
+                  :placeholder="$t('batchLoad.chooseColumn')"
+                  :is-disabled="isProcessing"
+                  filterable
+                  class="input-field__select"
+                  name="updatedTimeColumn"
+                />
+                <div 
+                  v-show="errors.has('updatedTimeColumn')"
+                  class="error-text"
+                >{{ errors.first('updatedTimeColumn') }}</div>
+              </div>
+            </div>
+            <div
+              :class="{'has-error': errors.has('primaryKeyColumn')}"
+              class="setting-block__input-field  input-field"
+            >
+              <label class="input-field__label">{{ $t('batchLoad.primaryKeyColumns') }}</label>
+              <div class="input-field__input">
+                <default-multi-select
+                  v-validate="'required'"
+                  :value="columnInfo.primaryKeys"
+                  :option-list="columnInfo.columnList"
+                  :placeholder="$t('batchLoad.chooseColumn')"
+                  :is-disabled="isProcessing"
+                  filterable
+                  multiple
+                  class="input-field__multi-select"
+                  name="primaryKeyColumn"
+                  @change="columnInfo.primaryKeys = $event"
+                />
+                <div 
+                  v-show="errors.has('primaryKeyColumn')"
+                  class="error-text"
+                >{{ errors.first('primaryKeyColumn') }}</div>
+              </div>
+            </div>
+          </template>
+        </div>
+        <div 
+          v-if="switchInfo.selected" 
+          class="setting-block"
+        >
+          <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
+          <div 
+            :class="{'has-error': errors.has('basicScheduleColumn')}"
+            class="setting-block__input-field input-field"
+          >
+            <label class="input-field__label">{{ $t('batchLoad.basicSetting') }}</label>
+            <div class="input-field__input">
+              <default-select 
+                v-validate="'required'"
+                v-model="scheduleInfo.selectedBasicSchedule"
+                :option-list="scheduleInfo.basicScheduleList"
+                :placeholder="$t('batchLoad.chooseCycle')"
+                :is-disabled="isProcessing"
+                class="input-field__select"
+                name="basicScheduleColumn"
+              />
+              <div 
+                v-show="errors.has('basicScheduleColumn')"
+                class="error-text"
+              >{{ errors.first('basicScheduleColumn') }}</div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="button-block">
-        <button 
-          class="btn btn-outline"
-          @click="$emit('close')"
-        >{{ $t('button.cancel') }}</button>
-        <button 
-          v-if="!settingId"
-          class="btn btn-default"
-          @click="setBatchLoad"
-        >{{ $t('button.confirm') }}</button>
-        <button 
-          v-else
-          class="btn btn-default"
-          @click="updateBatchLoad"
-        >{{ $t('button.update') }}</button>
-      </div>
+        <div class="button-block">
+          <button 
+            class="btn btn-outline"
+            @click="closeDialog"
+          >{{ $t('button.cancel') }}</button>
+          <button 
+            v-if="!settingId"
+            :disabled="isProcessing || !switchInfo.selected"
+            class="btn btn-default"
+            @click="setBatchLoad"
+          >{{ $t('button.confirm') }}</button>
+          <button 
+            v-else
+            :disabled="isProcessing"
+            class="btn btn-default"
+            @click="updateBatchLoad"
+          >{{ $t('button.update') }}</button>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -140,7 +166,35 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DefaultMultiSelect from '@/components/select/DefaultMultiSelect'
 import InputBlock from '@/components/InputBlock'
-import { getDataFrameColumnInfoById } from '@/API/DataSource'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import { 
+  getDataFrameColumnInfoById, 
+  getBatchLoadSetting, 
+  setBatchLoad, 
+  updateBatchLoadSetting,
+  changeBatchLoadSettingStatus
+} from '@/API/DataSource'
+import { Message } from 'element-ui'
+
+// const dummySetting = {
+//   createDateColumn: 75399,
+//   cron: "*/30 * * * *",
+//   dataframeId: 4690,
+//   id: 1,
+//   status: "Enable",
+//   updateDateColumn: 75401,
+//   primaryKey: [75397, 75398]
+// }
+
+const dummySetting = {
+  createDateColumn: null,
+  cron: null,
+  dataframeId: null,
+  id: null,
+  status: "Disable",
+  updateDateColumn: null,
+  primaryKey: []
+}
 
 export default {
   name: 'EditBatchLoadDialog',
@@ -148,7 +202,8 @@ export default {
   components: {
     DefaultSelect,
     InputBlock,
-    DefaultMultiSelect
+    DefaultMultiSelect,
+    EmptyInfoBlock
   },
   props: {
     dataFrameInfo: {
@@ -165,49 +220,50 @@ export default {
         selected: false
       },
       columnInfo: {
-        builtTime: '',
-        updatedTime: '',
+        builtTime: null,
+        updatedTime: null,
         primaryKeys: [],
         columnList: []
       },
       scheduleInfo: {
         selectedBasicSchedule: null,
         basicScheduleList: [
-        {
-          value: '*/5 * * * *',
-          name: this.$t('batchLoad.everyMinute', { number: 5 })
-        },
-        {
-          value: '*/15 * * * *',
-          name: this.$t('batchLoad.everyMinute', { number: 15 })
-        },
-        {
-          value: '*/30 * * * *',
-          name: this.$t('batchLoad.everyMinute', { number: 30 })
-        },
-        {
-          value: '*/45 * * * *',
-          name: this.$t('batchLoad.everyMinute', { number: 45 })
-        },
-        {
-          value: '0 * * * *',
-          name: this.$t('batchLoad.everyHour')
-        },
-        {
-          value: '0 0 * * *',
-          name: this.$t('batchLoad.everyDay')
-        },
-        {
-          value: '0 0 * * 0',
-          name: this.$t('batchLoad.everyWeek')
-        },
-        {
-          value: '0 0 1 * *',
-          name: this.$t('batchLoad.everyMonth')
-        }
-      ],
+          {
+            value: '*/5 * * * *',
+            name: this.$t('batchLoad.everyMinute', { number: 5 })
+          },
+          {
+            value: '*/15 * * * *',
+            name: this.$t('batchLoad.everyMinute', { number: 15 })
+          },
+          {
+            value: '*/30 * * * *',
+            name: this.$t('batchLoad.everyMinute', { number: 30 })
+          },
+          {
+            value: '*/45 * * * *',
+            name: this.$t('batchLoad.everyMinute', { number: 45 })
+          },
+          {
+            value: '0 * * * *',
+            name: this.$t('batchLoad.everyHour')
+          },
+          {
+            value: '0 0 * * *',
+            name: this.$t('batchLoad.everyDay')
+          },
+          {
+            value: '0 0 * * 0',
+            name: this.$t('batchLoad.everyWeek')
+          },
+          {
+            value: '0 0 1 * *',
+            name: this.$t('batchLoad.everyMonth')
+          }
+        ],
       },
-      isLoading: false
+      isLoading: false,
+      isProcessing: false
     }
   },
   computed: {
@@ -216,13 +272,28 @@ export default {
     }
   },
   mounted () {
-    this.fetchDataColumnList(this.dataFrameInfo.id)
+    this.getBatchSetting()
   },
   methods: {
-    fetchDataColumnList (dataFrameId) {
+    getBatchSetting () {
       this.isLoading = true
+      getBatchLoadSetting(this.dataFrameInfo.id)
+        .then(settingData => {
+          this.switchInfo.selected = dummySetting.id && dummySetting.status === 'Enable'
+          this.settingId = dummySetting.id
+          this.columnInfo = {
+            builtTime: dummySetting.createDateColumn || null,
+            updatedTime: dummySetting.updateDateColumn || null,
+            primaryKeys: dummySetting.primaryKey || []
+          }
+          this.scheduleInfo.selectedBasicSchedule = dummySetting .cron || null
+          this.fetchDataColumnList()
+        })
+        .catch(() => this.isLoading = false)
+    },
+    fetchDataColumnList () {
       const hasFeatureColumn = false
-      getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn)
+      getDataFrameColumnInfoById(this.dataFrameInfo.id, hasFeatureColumn)
         .then(response => {
           this.columnInfo.columnList = response.map(column => ({
             ...column,
@@ -232,13 +303,73 @@ export default {
         })
         .finally(() => this.isLoading = false)
     },
+    formatSettingData () {
+      return {
+        createDateColumn: this.columnInfo.builtTime,
+        cron: this.scheduleInfo.selectedBasicSchedule,
+        primaryKey: this.columnInfo.primaryKeys,
+        status: "Enable",
+        update_date_column: this.columnInfo.updatedTime
+      }
+    },
     setBatchLoad () {
-      this.$validator.validateAll().then(result => {
-        // set
-      })
+      if (!this.switchInfo.selected) return 
+      this.$validator.validateAll()
+        .then(result => {
+          if (!result) return
+          this.isProcessing = true
+          const dataFrameId = this.dataFrameInfo.id
+          const settingData = this.formatSettingData()
+          setBatchLoad(dataFrameId, settingData)
+            .then(() => {
+              Message({
+                message: this.$t('message.saveSuccess'),
+                type: 'success',
+                duration: 3 * 1000
+              })
+              this.closeDialog()
+            })
+            .finally(() => this.isProcessing = false)
+        })
+    },
+    updateBatchLoadStatus () {
+      this.isProcessing = true
+      changeBatchLoadSettingStatus(this.dataFrameInfo.id, 'Disable')
+        .then(() => {
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+          this.closeDialog()
+        })
+        .finally(() => this.isProcessing = false)
+    },
+    updateBatchLoadSetting () {
+      this.$validator.validateAll()
+        .then(result => {
+          if (!result) return
+          this.isProcessing = true
+          const dataFrameId = this.dataFrameInfo.id
+          const settingData = this.formatSettingData()
+          updateBatchLoadSetting(dataFrameId, settingData)
+            .then(() => {
+              Message({
+                message: this.$t('message.saveSuccess'),
+                type: 'success',
+                duration: 3 * 1000
+              })
+              this.closeDialog()
+            })
+            .finally(() => this.isProcessing = false)
+        })
     },
     updateBatchLoad () {
-
+      if (!this.switchInfo.selected) return this.updateBatchLoadStatus
+      this.updateBatchLoadSetting()
+    },
+    closeDialog () {
+      this.$emit('close')
     }
   }
 }
@@ -246,6 +377,13 @@ export default {
 
 <style lang="scss" scoped>
 .edit-batch-load-dialog {
+  .dialog {
+    &__sub-title {
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+  }
+  
   .setting-block {
     position: relative;
     padding: 24px;

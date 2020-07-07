@@ -4,6 +4,7 @@
     :placeholder="placeholder"
     :no-data-text="$t('message.noData')"
     :filterable="filterable"
+    :disabled="isDisabled"
     class="sy-multi-select theme-dark"
     multiple
     @change="$emit('change', $event)"
@@ -25,7 +26,8 @@ export default {
     value: { type: Array, default: () => [] },
     optionList: { type: Array, default: () => [] },
     placeholder: { type: String, default: '' },
-    filterable: { type: Boolean, default: false }
+    filterable: { type: Boolean, default: false },
+    isDisabled: {type: Boolean, default: false}
   },
   data () {
     return {
