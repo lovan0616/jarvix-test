@@ -16,7 +16,9 @@
             v-model="switchInfo.selected"
             :active-text="switchInfo.on"
             :inactive-text="switchInfo.off"
+            :disabled="isLoading"
             active-color="#2AD2E2"
+            width="32"
             inactive-color="#324B4E"/>
         </div>
 
@@ -256,6 +258,16 @@ export default {
       /deep/ .el-switch__label {
         color: #CCCCCC;
       }
+
+      /deep/ .el-switch__core {
+        height: 10px;
+        border: unset;
+
+        &::after {
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
     }
 
     &__title {
@@ -273,8 +285,12 @@ export default {
       }
 
       /deep/ .el-input__inner {
-        font-size: 1rem;
+        font-size: 14px;
         padding-left: 0;
+
+        &::placeholder {
+          color: #AAAAAA;
+        }
       }
     }
 
@@ -293,6 +309,7 @@ export default {
 
       &__label {
         line-height: 40px;
+        font-size: 14px;
       }
 
       &__select,
