@@ -40,7 +40,7 @@
               inactive-color="#324B4E"/>
           </div>
           <template v-if="switchInfo.selected" >
-            <div class="setting-block__input-field input-field">
+            <div class="input-field">
               <label class="input-field__label">{{ $t('batchLoad.builtTimeColumn') }}</label>
               <div class="input-field__input">
                 <default-select 
@@ -59,7 +59,7 @@
                 >{{ errors.first('builtTimeColumn') }}</div>
               </div>
             </div>
-            <div class="setting-block__input-field input-field">
+            <div class="input-field">
               <label class="input-field__label">{{ $t('batchLoad.updatedTimeColumn') }}</label>
               <div class="input-field__input">
                 <default-select 
@@ -78,7 +78,7 @@
                 >{{ errors.first('updatedTimeColumn') }}</div>
               </div>
             </div>
-            <div class="setting-block__input-field  input-field">
+            <div class=" input-field">
               <label class="input-field__label">{{ $t('batchLoad.primaryKeyColumns') }}</label>
               <div class="input-field__input">
                 <default-multi-select
@@ -106,7 +106,7 @@
           class="setting-block"
         >
           <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
-          <div class="setting-block__input-field input-field">
+          <div class="input-field">
             <label class="input-field__label">{{ $t('batchLoad.basicSetting') }}</label>
             <div class="input-field__input">
               <default-select 
@@ -404,25 +404,14 @@ export default {
       margin-bottom: 20px;
     }
 
-    &__input-field {
+    .input-field {
       display: flex;
       flex-direction: column;
 
       &:not(:last-of-type) {
         margin-bottom: 16px;
       }
-
-      /deep/ .el-input__inner {
-        font-size: 14px;
-        padding-left: 0;
-
-        &::placeholder {
-          color: #AAAAAA;
-        }
-      }
-    }
-
-    .input-field {
+      
       &__multi-select {
         width: 70%;
       }
@@ -434,6 +423,15 @@ export default {
       &__select,
       &__multi-select {
         border-bottom: 1px solid #fff;
+      }
+
+      /deep/ .el-input__inner {
+        font-size: 14px;
+        padding-left: 0;
+
+        &::placeholder {
+          color: #AAAAAA;
+        }
       }
     }
   }
