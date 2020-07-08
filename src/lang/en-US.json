@@ -67,7 +67,7 @@
     "userAlreadyExisting": "This account already exists",
     "changePasswordSuccess": "Password changed successfully",
     "editNameSuccess": "Edit Name Success",
-    "changeStatusSuccess": "Change StatusSuccess",
+    "changeStatusSuccess": "Change Status Success",
     "pleaseConfirmPassword": "Those passwords didn't match. Try again.",
     "addFilter": "Save successfully",
     "emptyResult": "There is no corresponding data for this search condition",
@@ -339,7 +339,8 @@
     },
     "createGroup": "Create Project",
     "sortSetting": "Sorting settings",
-    "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change."
+    "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change.",
+    "lastUpdateResult": "Latest Update Result"
   },
   "algorithm": {
     "name": "Algorithm",
@@ -408,6 +409,18 @@
     "dataFrameName": "Data Table Name",
     "sql": "SQL Syntax"
   },
+  "monitorSetting": {
+    "settingDialogTitle": "System Monitor Setting",
+    "enableMonitoring": "Monitor",
+    "autoRefresh": "Auto Refresh",
+    "monitorColumn": "Monitor Column",
+    "dateColumn": "Date Column",
+    "timeScope": "Time Scope",
+    "timeScopeUnit": "Time Scope Unit",
+    "aggregationType": "Aggregation Type",
+    "monitorThreshold": "Threshold",
+    "mail": "E-mail"
+  },
   "etl": {
     "dataFrameList": "Data Table List",
     "columnList": "Column List",
@@ -455,6 +468,29 @@
     "null": "Null",
     "columnSelected": "Number of columns selected",
     "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field for each table"
+  },
+  "batchLoad": {
+    "primaryKeyColumns": "Primary Keys",
+    "updatedTimeColumn": "Updated Time",
+    "builtTimeColumn": "Built Time",
+    "chooseColumn": "Select Column",
+    "columnSetting": "Column Setting",
+    "scheduleSetting": "Schedule Setting",
+    "setBatchLoad": "Set Batch Load",
+    "batchLoad": "Batch Load",
+    "basicSetting": "Basic Setting",
+    "chooseCycle": "Select Cycle",
+    "on": "On",
+    "off": "Off",
+    "everyMinute": "Every {number} minutes",
+    "everyHour": "Hourly",
+    "everyDay": "Daily",
+    "everyWeek": "Weekly",
+    "everyMonth": "Monthly",
+    "noRecord": "No Record",
+    "updateSuccessfully": "Update Successfully",
+    "updateFailed": "Update Failed",
+    "updating": "Updating"
   },
   "feature": {
     "value": "Value",
@@ -639,6 +675,7 @@
     "editEtlSetting": "Edit Etl Setting",
     "reviewEtlSetting": "Review Etl Setting",
     "dateTimeColumnSetting": "Default Time",
+    "batchLoadSetting": "Batch Loading Data",
     "select": "Select",
     "download": "Data Download",
     "restrict": "Analysis Condition Restriction",
@@ -663,7 +700,18 @@
     "resumeDefault": "Restore Default",
     "sortSetting": "Sort",
     "addSqlScript": "Add Customized SQL",
-    "testConnecting": "Testing Connection..."
+    "testConnecting": "Testing Connection...",
+    "monitorSetting": "Monitor Setting"
+  },
+  "timeScopeUnit": {
+    "second": "seconds",
+    "minute": "minutes",
+    "hour": "hours",
+    "day": "days",
+    "week": "weeks",
+    "month": "months",
+    "season": "seasons",
+    "year": "years"
   },
   "aggregation": {
     "mean": "Average",

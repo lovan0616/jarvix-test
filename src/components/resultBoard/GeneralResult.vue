@@ -19,6 +19,7 @@
           v-for="(chartTask, index) in resultInfo.key_result"
           :key="'chart-' + index"
           :component-id="chartTask"
+          :data-frame-id="dataFrameId"
           intend="key_result"
         />
       </template>
@@ -75,6 +76,10 @@ export default {
     restrictions: {
       type: Array,
       default: () => []
+    },
+    dataFrameId: {
+      type: Number,
+      default: null
     }
   },
   methods: {

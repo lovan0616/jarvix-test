@@ -21,6 +21,7 @@
         <task
           v-if="resultInfo.root_cause_phenomenon.length > 0"
           :component-id="resultInfo.root_cause_phenomenon[0]"
+          :data-frame-id="dataFrameId"
           intend="root_cause_phenomenon"
         />
       </template>
@@ -48,6 +49,10 @@ export default {
     restrictions: {
       type: Array,
       default: () => []
+    },
+    dataFrameId: {
+      type: Number,
+      default: null
     }
   }
 }

@@ -317,3 +317,55 @@ export function getDataFrameEtlSetting (dataFrameId) {
     method: 'GET'
   })
 }
+
+/**
+ * get batch load setting
+ * @param {Number} dataFrameId - 欲查閱的資料表 ID
+ */
+export function getBatchLoadSetting(dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/corntabConfig`,
+    method: 'GET'
+  })
+}
+
+/**
+ * set batch load
+ * @param {Number} dataFrameId - 欲設定的資料表 ID
+ * @param {Object} data - 送給後端的設定資料
+ */
+export function setBatchLoad(dataFrameId, data) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/corntabConfig`,
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * update batch load setting
+ * @param {Number} dataFrameId - 欲更新的資料表 ID
+ * @param {Object} data - 送給後端的設定資料
+ */
+export function updateBatchLoadSetting(dataFrameId, data) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/corntabConfig`,
+    method: 'PUT',
+    data
+  })
+}
+
+/**
+ * change batch load setting status
+ * @param {Number} dataFrameId - 欲更新的資料表 ID
+ * @param {Object} status - 是否啟動設定
+ */
+export function changeBatchLoadSettingStatus(dataFrameId, status = 'Disable') {
+  return request({
+    url: `/dataFrame/${dataFrameId}/corntabConfig/status`,
+    method: 'PATCH',
+    data: {
+      status
+    }
+  })
+}

@@ -45,6 +45,7 @@
                   v-if="resultInfo.sub_key_result[displayFactorIndex]"
                   :key="`sub-key-result-${displayFactorIndex}`"
                   :component-id="resultInfo.sub_key_result[displayFactorIndex]"
+                  :data-frame-id="dataFrameId"
                   intend="sub_key_result"
                 />
               </keep-alive>
@@ -98,6 +99,10 @@ export default {
     restrictions: {
       type: Array,
       default: () => []
+    },
+    dataFrameId: {
+      type: Number,
+      default: null
     }
   },
   data () {
