@@ -11,6 +11,10 @@
       is-vertical
       @click.native="$emit('next')"
     />
+    <div 
+      v-if="hasNegativeData"
+      class="remark-info"
+    >{{ $t('resultNote.pieChartFilterNote') }}</div>
   </div>
 </template>
 
@@ -47,7 +51,8 @@ export default {
   },
   data () {
     return {
-      showPagination: true
+      showPagination: true,
+      hasNegativeData: true
     }
   },
   computed: {
