@@ -117,6 +117,8 @@ Vue.mixin({
           return 'CorrelationExplorationResult'
         case 'root_cause':
           return 'RootCauseResult'
+        case 'preview_data_source':
+          return 'DataPreviewLayout'
         case 'no_answer':
           return 'EmptyResult'
       }
