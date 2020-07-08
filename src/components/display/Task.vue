@@ -147,12 +147,12 @@ export default {
               let responseData = response.data
 
               let isAutoRefresh = response.isAutoRefresh
-              if(isAutoRefresh && this.$route.name !== 'PageResult') {
+              if(isAutoRefresh && this.isPinboardPage) {
                 this.autoRefreshFunction = window.setTimeout(() => {
                   this.fetchData().then(task => {
                     resolve(task)
                   })
-                }, 3*60*1000)
+                }, 1000)
               }
               // 取樣
               if (responseData.sampling) {

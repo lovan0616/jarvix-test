@@ -11,7 +11,6 @@
     <form class="setting-form">
       <div class="info-block">
         <label 
-          for="" 
           class="info-block__label">{{ $t('monitorSetting.enableMonitoring') }}</label>
         <ToggleButton
           v-model="settingInfo.status"
@@ -21,7 +20,6 @@
       </div>
       <div class="info-block">
         <label 
-          for="" 
           class="info-block__label">{{ $t('monitorSetting.autoRefresh') }}</label>
         <ToggleButton
           v-model="settingInfo.isAutoRefresh"
@@ -31,27 +29,44 @@
       </div> 
       <div class="info-block">
         <label 
-          for="" 
           class="info-block__label">{{ $t('monitorSetting.monitorColumn') }}</label>
-        <default-select
-          v-model="settingInfo.monitorColumnId"
-          :option-list="monitorColumnList"
-          class="tag-select input"
-        />
+        <div class="info-block__input-block">
+          <default-select
+            v-validate="'required'" 
+            :class="{'has-error': errors.has('monitorColumnList')}"
+            v-model="settingInfo.monitorColumnId"
+            :option-list="monitorColumnList"
+            class="tag-select input"
+            name="monitorColumnList"
+          />
+          <div
+            v-if="errors.has('monitorColumnList')"
+            class="error-text"
+          >{{ errors.first('monitorColumnList') }}</div>
+        </div>
       </div>
       <div class="info-block">
         <label 
-          for="" 
           class="info-block__label">{{ $t('monitorSetting.dateColumn') }}</label>
-        <default-select
-          v-model="settingInfo.dateColumnId"
-          :option-list="dateColumnList"
-          class="tag-select input"
-        />
+        <div class="info-block__input-block">
+          <default-select
+            v-validate="'required'" 
+            :class="{'has-error': errors.has('dateColumnList')}"
+            v-model="settingInfo.dateColumnId"
+            :option-list="dateColumnList"
+            class="tag-select input"
+            name="dateColumnList"
+          />
+          <div
+            v-if="errors.has('dateColumnList')"
+            class="error-text"
+          >{{ errors.first('dateColumnList') }}</div>
+        </div>
       </div>
-      <div class="info-block">
+      <div 
+        :class="{'has-error': errors.has('monitorTimeScope')}"
+        class="info-block">
         <label 
-          for="" 
           class="info-block__label">{{ $t('monitorSetting.timeScope') }}</label>
         <input-verify
           v-validate="'required'"
@@ -63,27 +78,44 @@
       </div>
       <div class="info-block">
         <label 
-          for="" 
           class="info-block__label">{{ $t('monitorSetting.timeScopeUnit') }}</label>
-        <default-select
-          v-model="settingInfo.timeScopeUnit"
-          :option-list="timeScopeUnitOptionList"
-          class="tag-select input"
-        />
+        <div class="info-block__input-block">
+          <default-select
+            v-validate="'required'" 
+            :class="{'has-error': errors.has('timeScopeUnit')}"
+            v-model="settingInfo.timeScopeUnit"
+            :option-list="timeScopeUnitOptionList"
+            class="tag-select input"
+            name="timeScopeUnit"
+          />
+          <div
+            v-if="errors.has('timeScopeUnit')"
+            class="error-text"
+          >{{ errors.first('timeScopeUnit') }}</div>
+        </div>
       </div>
       <div class="info-block">
         <label 
-          for="" 
           class="info-block__label">{{ $t('monitorSetting.aggregationType') }}</label>
-        <default-select
-          v-model="settingInfo.aggregation"
-          :option-list="aggregationOptionList"
-          class="tag-select input"
-        />
+        <div class="info-block__input-block">
+          <default-select
+            v-validate="'required'" 
+            :class="{'has-error': errors.has('aggregation')}"
+            v-model="settingInfo.aggregation"
+            :option-list="aggregationOptionList"
+            class="tag-select input"
+            name="aggregation"
+          />
+          <div
+            v-if="errors.has('aggregation')"
+            class="error-text"
+          >{{ errors.first('aggregation') }}</div>
+        </div>
       </div>
-      <div class="info-block">
+      <div 
+        :class="{'has-error': errors.has('monitorThreshold')}" 
+        class="info-block">
         <label 
-          for="" 
           class="info-block__label">{{ $t('monitorSetting.monitorThreshold') }}</label>
         <input-verify
           v-validate="'required'"
@@ -235,8 +267,12 @@ export default {
           this.settingInfo = {...response}
         }
         this.settingInfo.status = this.settingInfo.status === 'Enable' ? true : false
-        this.settingInfo.timeScope = String(this.settingInfo.timeScope)
-        this.settingInfo.threshold.max = String(this.settingInfo.threshold.max)
+        this.settingInfo.timeScope = this.settingInfo.timeScope === null 
+          ? null
+          : String(this.settingInfo.timeScope)
+        this.settingInfo.threshold.max = this.settingInfo.threshold.max === null 
+          ? null
+          : String(this.settingInfo.threshold.max)
       })
     },
     monitorSetting () {
@@ -294,6 +330,14 @@ export default {
 
     &:not(:last-child) {
       margin-bottom: 10px;
+    }
+
+    .has-error {
+      border-bottom: 1px solid #F1616D;
+    }
+
+    .error-text {
+
     }
 
     /deep/ .input-verify {
