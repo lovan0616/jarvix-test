@@ -118,7 +118,7 @@ export default {
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
-    window.clearTimeout(this.autoRefreshFunction)
+    if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
   },
   methods: {
     fetchData (page = 0) {
@@ -152,7 +152,7 @@ export default {
                   this.fetchData().then(task => {
                     resolve(task)
                   })
-                }, 1000)
+                }, 3*60*1000)
               }
               // 取樣
               if (responseData.sampling) {

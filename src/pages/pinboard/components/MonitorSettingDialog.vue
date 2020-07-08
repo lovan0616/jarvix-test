@@ -199,43 +199,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('userManagement', ['userId']),
-    timeScopeUnit () {
-      return [
-        {
-          name: this.$t('timeScopeUnit.second'),
-          value: 'Second'
-        },
-        {
-          name: this.$t('timeScopeUnit.minute'),
-          value: 'Minute'
-        },
-        {
-          name: this.$t('timeScopeUnit.hour'),
-          value: 'Hour'
-        },
-        {
-          name: this.$t('timeScopeUnit.day'),
-          value: 'Day'
-        },
-        {
-          name: this.$t('timeScopeUnit.week'),
-          value: 'Week'
-        },
-        {
-          name: this.$t('timeScopeUnit.month'),
-          value: 'Month'
-        },
-        {
-          name: this.$t('timeScopeUnit.season'),
-          value: 'Season'
-        },
-        {
-          name: this.$t('timeScopeUnit.year'),
-          value: 'Year'
-        }
-      ]
-    }
+    ...mapState('userManagement', ['userId'])
   },
   mounted () {
     this.getDataFrameColumnInfo()
@@ -267,12 +231,6 @@ export default {
           this.settingInfo = {...response}
         }
         this.settingInfo.status = this.settingInfo.status === 'Enable' ? true : false
-        this.settingInfo.timeScope = this.settingInfo.timeScope === null 
-          ? null
-          : String(this.settingInfo.timeScope)
-        this.settingInfo.threshold.max = this.settingInfo.threshold.max === null 
-          ? null
-          : String(this.settingInfo.threshold.max)
       })
     },
     monitorSetting () {
@@ -283,25 +241,20 @@ export default {
         currentInfo.isAutoRefresh = !!currentInfo.isAutoRefresh
         currentInfo.status = currentInfo.status ? 'Enable' : 'Disable'
 
+        let promise
         if(currentInfo.id === null) {
-          newMonitorSetting(currentInfo).then(response => {
-            Message({
-              message: this.$t('message.changeStatusSuccess'),
-              type: 'success',
-              duration: 3 * 1000
-            })
-            this.cancelSetting()
-          })
+          promise = newMonitorSetting(currentInfo)
         } else {
-          updateMonitorSetting(currentInfo).then(response => {
-            Message({
-              message: this.$t('message.changeStatusSuccess'),
-              type: 'success',
-              duration: 3 * 1000
-            })
-            this.cancelSetting()
-          })
+          promise = updateMonitorSetting(currentInfo)
         }
+        promise.then(response => {
+          Message({
+            message: this.$t('message.changeStatusSuccess'),
+            type: 'success',
+            duration: 3 * 1000
+          })
+          this.cancelSetting()
+        })
       })
     },
     cancelSetting () {

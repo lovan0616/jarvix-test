@@ -5,8 +5,11 @@ import request from '@/utils/publicRequest'
  */
 export function getMonitorSetting (componentId) {
   return request({
-    url: `/monitor?componentId=${componentId}`,
-    method: 'GET'
+    url: '/monitor',
+    method: 'GET',
+    params: {
+      componentId
+    }
   })
 }
 
