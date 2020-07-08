@@ -9,75 +9,88 @@
     @confirmBtn="monitorSetting"
   >
     <form class="setting-form">
-      <div class="input-block">
+      <div class="info-block">
         <label 
           for="" 
-          class="input-block__label">{{ $t('monitorSetting.enableMonitoring') }}</label>
+          class="info-block__label">{{ $t('monitorSetting.enableMonitoring') }}</label>
         <ToggleButton
           v-model="settingInfo.status"
           :title="$t('monitorSetting.enableMonitoring')"
           name="status"
         />
       </div>
-      <div class="input-block">
+      <div class="info-block">
         <label 
           for="" 
-          class="input-block__label">{{ $t('monitorSetting.autoRefresh') }}</label>
+          class="info-block__label">{{ $t('monitorSetting.autoRefresh') }}</label>
         <ToggleButton
           v-model="settingInfo.isAutoRefresh"
           :title="$t('monitorSetting.autoRefresh')"
           name="autoRefresh"
         />
       </div> 
-      <div class="input-block">
+      <div class="info-block">
         <label 
           for="" 
-          class="input-block__label">{{ $t('monitorSetting.monitorColumn') }}</label>
+          class="info-block__label">{{ $t('monitorSetting.monitorColumn') }}</label>
         <default-select
           v-model="settingInfo.monitorColumnId"
           :option-list="monitorColumnList"
           class="tag-select input"
         />
       </div>
-      <div class="input-block">
+      <div class="info-block">
         <label 
           for="" 
-          class="input-block__label">{{ $t('monitorSetting.dateColumn') }}</label>
+          class="info-block__label">{{ $t('monitorSetting.dateColumn') }}</label>
         <default-select
           v-model="settingInfo.dateColumnId"
           :option-list="dateColumnList"
           class="tag-select input"
         />
       </div>
-      <div class="input-block">
+      <div class="info-block">
         <label 
           for="" 
-          class="input-block__label">{{ $t('monitorSetting.timeScopeUnit') }}</label>
+          class="info-block__label">{{ $t('monitorSetting.timeScope') }}</label>
+        <input-verify
+          v-validate="'required'"
+          v-model="settingInfo.timeScope"
+          :placeholder="$t('editing.numericOnly')"
+          name="monitorTimeScope"
+          class="info-block__input"
+        />
+      </div>
+      <div class="info-block">
+        <label 
+          for="" 
+          class="info-block__label">{{ $t('monitorSetting.timeScopeUnit') }}</label>
         <default-select
           v-model="settingInfo.timeScopeUnit"
           :option-list="timeScopeUnitOptionList"
           class="tag-select input"
         />
       </div>
-      <div class="input-block">
+      <div class="info-block">
         <label 
           for="" 
-          class="input-block__label">{{ $t('monitorSetting.aggregationType') }}</label>
+          class="info-block__label">{{ $t('monitorSetting.aggregationType') }}</label>
         <default-select
           v-model="settingInfo.aggregation"
           :option-list="aggregationOptionList"
           class="tag-select input"
         />
       </div>
-      <div class="input-block">
+      <div class="info-block">
         <label 
           for="" 
-          class="input-block__label">{{ $t('monitorSetting.monitorThreshold') }}</label>
+          class="info-block__label">{{ $t('monitorSetting.monitorThreshold') }}</label>
         <input-verify
           v-validate="'required'"
           v-model="settingInfo.threshold.max"
           :placeholder="$t('editing.numericOnly')"
           name="monitorThreshold"
+          class="info-block__input"
         />
       </div>
     </form>
@@ -145,7 +158,7 @@ export default {
         threshold: {
           max: null
         },
-        userId: null,
+        userIdList: [],
         status: false,
         isAutoRefresh: false,
       }
@@ -215,26 +228,27 @@ export default {
       getMonitorSetting(this.componentId).then(response => {
         if(response.id === null) {
           this.settingInfo.componentId = this.componentId
-          this.settingInfo.userId = this.userId
+          this.settingInfo.userIdList.push(this.userId)
         } else {
           this.settingInfo = {...response}
         }
+        this.settingInfo.status = this.settingInfo.status === 'Enable' ? true : false
+        this.settingInfo.timeScope = String(this.settingInfo.timeScope)
+        this.settingInfo.threshold.max = String(this.settingInfo.threshold.max)
       })
     },
     monitorSetting () {
       this.$validator.validateAll().then(isValidated => {
         if(!isValidated) return
-        this.settingInfo.isAutoRefresh = this.settingInfo.status === true
-        ? true
-        : false
-        this.settingInfo.status = this.settingInfo.status === true
-        ? 'Enable'
-        : 'Disable'
 
-        if(this.settingInfo.id === null) {
-          newMonitorSetting(this.settingInfo)
+        let currentInfo = Object.assign({}, this.settingInfo)
+        currentInfo.isAutoRefresh = currentInfo.status ? true : false
+        currentInfo.status = currentInfo.status ? 'Enable' : 'Disable'
+
+        if(currentInfo.id === null) {
+          newMonitorSetting(currentInfo)
         } else {
-          updateMonitorSetting(this.settingInfo)
+          updateMonitorSetting(currentInfo)
         }
 
         
@@ -250,7 +264,7 @@ export default {
 .setting-form {
   padding: 30px;
 
-  .input-block {
+  .info-block {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -273,9 +287,13 @@ export default {
       height: 30px;
 
       .input-verify-text {
-        float: right;
+        padding-left: 15px; 
         margin-bottom: 10px;
       }
+    }
+
+    /deep/ .input-error {
+      bottom: -28px;
     }
   }
 

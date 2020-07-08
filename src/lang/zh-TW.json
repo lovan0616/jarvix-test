@@ -414,6 +414,7 @@
     "autoRefresh": "自動更新",
     "monitorColumn": "監測欄位",
     "dateColumn": "時間欄位",
+    "timeScope": "時間範圍",
     "timeScopeUnit": "時間範圍單位",
     "aggregationType": "集合功能",
     "monitorThreshold": "監測閾值",
