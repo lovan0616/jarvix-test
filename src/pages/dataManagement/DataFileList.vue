@@ -285,9 +285,11 @@ export default {
     fileUploadSuccess () {
       return this.$store.state.dataManagement.fileUploadSuccess
     },
-    hasDataFrameProcessing () {
+    hasDataFrameProcessingOrBatchLoading () {
       if (!this.dataList.length) return false
-      return this.dataList.some(element => element.type === 'PROCESS' || element.state === 'Process' || element.state === 'Pending')
+      return this.dataList.some((element) => (
+        element.type === 'PROCESS' || element.state === 'Process' || element.state === 'Pending' || element.crontabConfigStatus === 'Enable'
+      ))
     },
     enableDataFrameCount () {
       return this.dataList.reduce((acc, cur) => {
@@ -317,7 +319,7 @@ export default {
         this.$store.dispatch('dataSource/getDataSourceList', {})
       }
     },
-    hasDataFrameProcessing (value) {
+    hasDataFrameProcessingOrBatchLoading (value) {
       if (value) {
         this.checkDataFrameIntervalFunction = window.setInterval(() => {
           this.updateDataTable()
