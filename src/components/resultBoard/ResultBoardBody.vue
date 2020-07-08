@@ -30,9 +30,10 @@
         </template>
       </slot-dialog>
     </div>
+    <slot name="InsightRootCause"/>
     <div 
       v-if="isShowInsightRecommended" 
-      name="InsightRootCause">
+      name="InsightRecommended">
       <div class="insights-info recommended">
         <div class="insights-info-title">{{ $t('resultDescription.recommendedInsight') }}</div>
         <div class="insights-info__wrapper">
