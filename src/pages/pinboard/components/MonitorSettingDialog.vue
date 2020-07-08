@@ -194,7 +194,7 @@ export default {
         },
         userIdList: [],
         status: false,
-        isAutoRefresh: false,
+        isAutoRefresh: false
       }
     }
   },
@@ -231,7 +231,6 @@ export default {
           this.settingInfo = {...response}
         }
         this.settingInfo.status = this.settingInfo.status === 'Enable' ? true : false
-        this.settingInfo.isAutoRefresh = !!this.settingInfo.isAutoRefresh
       })
     },
     monitorSetting () {

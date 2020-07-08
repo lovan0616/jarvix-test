@@ -152,7 +152,7 @@ export default {
                   this.fetchData().then(task => {
                     resolve(task)
                   })
-                }, 3*60*1000)
+                }, 60*1000)
               }
               // 取樣
               if (responseData.sampling) {
