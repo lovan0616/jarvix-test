@@ -59,6 +59,7 @@
       v-if="isShowMonitorSettingDialog"
       :component-id="componentId"
       :data-frame-id="dataFrameId"
+      @confirm="updateMonitorSetting"
       @close="closeMonitorSettingDialog"
     />
   </div>
@@ -389,9 +390,17 @@ export default {
     openMonitorSettingDialog () {
       this.isShowMonitorSettingDialog = true
     },
+    updateMonitorSetting () {
+      this.closeMonitorSettingDialog()
+      this.loading = true
+      this.fetchData().then(taskData => {
+        this.componentData = taskData
+        this.loading = false
+        this.hasNextPage = false
+      })
+    },
     closeMonitorSettingDialog () {
       this.isShowMonitorSettingDialog = false
-      this.fetchData()
     }
   }
 }

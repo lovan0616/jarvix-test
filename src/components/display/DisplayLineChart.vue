@@ -205,10 +205,13 @@ export default {
       // 圖表 threshold
       if (this.title.yAxis[0].upperLimit !== undefined) {
         let upperLimit = this.title.yAxis[0].upperLimit
-        // 找出 Y 的最小值
+        // 找出 Y 的最大、最小值
+        let maxY = this.dataset.data[0][0]
         let minY = this.dataset.data[0][0]
         this.dataset.data.forEach(element => {
           if (element[0] !== null) {
+            if (maxY === null) maxY = element[0]
+            maxY = element[0] > maxY ? element[0] : maxY
             if (minY === null) minY = element[0]
             minY = element[0] < minY ? element[0] : minY
           }
@@ -220,7 +223,11 @@ export default {
         config.visualMap = [{
           type: 'piecewise',
           show: false,
-          pieces: [{
+          pieces: upperLimit < minY ? [{
+            lte: maxY,
+            gt: upperLimit,
+            color: '#EB5959'
+          }] : [{
             gte: upperLimit,
             color: '#EB5959'
           }, {
