@@ -17,7 +17,7 @@
     />
     <template v-else-if="diagram">
       <button
-        v-if="intend === 'key_result' && isPinboardPage"
+        v-if="intend === 'key_result' && isPinboardPage && diagram === 'line_chart' && componentData.dataset.columns.length === 1"
         type="button"
         class="btn-m btn-default btn-monitor"
         @click="openMonitorSettingDialog"
