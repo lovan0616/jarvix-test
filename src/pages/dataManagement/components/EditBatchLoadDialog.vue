@@ -18,8 +18,8 @@
         size="50"
       />
       <empty-info-block
-        v-else-if="dateTimeColumnList.length === 0"
-        :msg="$t('editing.emptyDateTime')"
+        v-else-if="dateTimeColumnList.length === 0 || hasError"
+        :msg="hasError ? $t('message.systemIsError') : $t('editing.emptyDateTime')"
       />
       <template v-else>
         <div class="setting-block">
@@ -157,26 +157,6 @@ import {
 } from '@/API/DataSource'
 import { Message } from 'element-ui'
 
-// const dummySetting = {
-//   createDateColumn: 75399,
-//   cron: "*/30 * * * *",
-//   dataframeId: 4690,
-//   id: 1,
-//   status: "Enable",
-//   updateDateColumn: 75401,
-//   primaryKey: [75397, 75398]
-// }
-
-const dummySetting = {
-  createDateColumn: null,
-  cron: null,
-  dataframeId: null,
-  id: null,
-  status: "Disable",
-  updateDateColumn: null,
-  primaryKey: []
-}
-
 export default {
   name: 'EditBatchLoadDialog',
   inject: ['$validator'],
@@ -244,7 +224,8 @@ export default {
         ],
       },
       isLoading: false,
-      isProcessing: false
+      isProcessing: false,
+      hasError: false
     }
   },
   computed: {
@@ -259,18 +240,24 @@ export default {
     getBatchSetting () {
       this.isLoading = true
       getBatchLoadSetting(this.dataFrameInfo.id)
-        .then(settingData => {
-          this.switchInfo.selected = dummySetting.id && dummySetting.status === 'Enable'
-          this.settingId = dummySetting.id
-          this.columnInfo = {
-            builtTime: dummySetting.createDateColumn || null,
-            updatedTime: dummySetting.updateDateColumn || null,
-            primaryKeys: dummySetting.primaryKey || []
+        .then(({ crontabConfigDo, primaryKey }) => {
+          // 如果還沒設定過 crontabConfigDo 會是空的
+          if (crontabConfigDo) {
+            this.switchInfo.selected = crontabConfigDo.id && crontabConfigDo.status === 'Enable'
+            this.settingId = crontabConfigDo.id
+            this.columnInfo = {
+              builtTime: crontabConfigDo.createDateColumn || null,
+              updatedTime: crontabConfigDo.updateDateColumn || null,
+              primaryKeys: primaryKey || []
+            }
+            this.scheduleInfo.selectedBasicSchedule = crontabConfigDo.cron || null
           }
-          this.scheduleInfo.selectedBasicSchedule = dummySetting .cron || null
           this.fetchDataColumnList()
         })
-        .catch(() => this.isLoading = false)
+        .catch(() => {
+          this.isLoading = false
+          this.hasError = true
+        })
     },
     fetchDataColumnList () {
       const hasFeatureColumn = false
@@ -281,8 +268,12 @@ export default {
             name: column.primaryAlias || column.name,
             value: column.id
           }))
+          this.isLoading = false
         })
-        .finally(() => this.isLoading = false)
+        .catch(() => {
+          this.isLoading = false
+          this.hasError = true
+        })
     },
     formatSettingData () {
       return {
@@ -346,7 +337,7 @@ export default {
         })
     },
     updateBatchLoad () {
-      if (!this.switchInfo.selected) return this.updateBatchLoadStatus
+      if (!this.switchInfo.selected) return this.updateBatchLoadStatus()
       this.updateBatchLoadSetting()
     },
     closeDialog () {
