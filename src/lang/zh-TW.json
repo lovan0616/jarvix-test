@@ -339,8 +339,7 @@
     },
     "createGroup": "建立專案",
     "sortSetting": "排序設定",
-    "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。",
-    "moreInfo": "瞭解更多"
+    "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。"
   },
   "algorithm": {
     "name": "演算法",

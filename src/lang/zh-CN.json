@@ -339,8 +339,7 @@
     },
     "createGroup": "建立专案",
     "sortSetting": "排序设定",
-    "dragAndSort": "请按住项目上下拖曳移动排序位置，项目排序变更后即生效。",
-    "moreInfo": "了解更多"
+    "dragAndSort": "请按住项目上下拖曳移动排序位置，项目排序变更后即生效。"
   },
   "algorithm": {
     "name": "演算法",

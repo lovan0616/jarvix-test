@@ -1,10 +1,9 @@
 <template>
-  <div class="recommended-insights__card">
+  <div 
+    class="recommended-insights__card" 
+    @click="learnMore">
     <div class="card__header">
       <div class="header__title">{{ question }}</div>
-      <button 
-        class="header__link btn btn-outline" 
-        @click="learnMore">{{ $t('editing.moreInfo') }}</button>
     </div>
     <div class="card__body">
       <task
@@ -47,15 +46,18 @@ export default {
 
 <style lang="scss" scoped>
 .recommended-insights__card {
+  @include card();
   background: rgba(35, 61, 64, 0.6);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   overflow: hidden;
   height: 100%;
   width: 0; // 讓卡片能響應式縮小
-  height: 342px;
+  height: auto;
   flex-basis: calc(50% - 10px);
-  &:first-child {
+  cursor: pointer;
+
+  &:first-child, &:nth-child(2) {
     margin-bottom: 20px;
   }
 
@@ -66,15 +68,12 @@ export default {
       align-items: center;
       padding: 14px 20px;
       background: rgba(50, 75, 78, 0.6);
-      &__title {
-        color: red;
-      }
-      &__link {
-        color: red;
-      }
     }
     &__body {
       padding: 20px;
+      .task {
+        pointer-events: none;
+      }
     }
   }
 }

@@ -339,8 +339,7 @@
     },
     "createGroup": "Create Project",
     "sortSetting": "Sorting settings",
-    "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change.",
-    "moreInfo": "Learn More"
+    "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change."
   },
   "algorithm": {
     "name": "Algorithm",
