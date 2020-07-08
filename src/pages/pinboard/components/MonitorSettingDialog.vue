@@ -69,7 +69,7 @@
         <label 
           class="info-block__label">{{ $t('monitorSetting.timeScope') }}</label>
         <input-verify
-          v-validate="'required'"
+          v-validate="'required|numeric'"
           v-model="settingInfo.timeScope"
           :placeholder="$t('editing.numericOnly')"
           name="monitorTimeScope"
@@ -118,7 +118,7 @@
         <label 
           class="info-block__label">{{ $t('monitorSetting.monitorThreshold') }}</label>
         <input-verify
-          v-validate="'required'"
+          v-validate="'required|numeric'"
           v-model="settingInfo.threshold.max"
           :placeholder="$t('editing.numericOnly')"
           name="monitorThreshold"
