@@ -231,6 +231,7 @@ export default {
           this.settingInfo = {...response}
         }
         this.settingInfo.status = this.settingInfo.status === 'Enable' ? true : false
+        this.settingInfo.isAutoRefresh = !!this.settingInfo.isAutoRefresh
       })
     },
     monitorSetting () {
@@ -238,7 +239,6 @@ export default {
         if(!isValidated) return
 
         let currentInfo = Object.assign({}, this.settingInfo)
-        currentInfo.isAutoRefresh = !!currentInfo.isAutoRefresh
         currentInfo.status = currentInfo.status ? 'Enable' : 'Disable'
 
         let promise
