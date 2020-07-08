@@ -416,7 +416,7 @@
     "dateColumn": "時間欄位",
     "timeScope": "時間範圍",
     "timeScopeUnit": "時間範圍單位",
-    "aggregationType": "集合功能",
+    "aggregationType": "計算方式",
     "monitorThreshold": "監測閾值",
     "mail": "通知信箱"
   },
