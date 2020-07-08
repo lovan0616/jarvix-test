@@ -98,12 +98,14 @@
 </template>
 <script>
 import { getMonitorSetting, newMonitorSetting, updateMonitorSetting } from '@/API/Monitor'
+import { getDataFrameColumnInfoById } from '@/API/DataSource'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'
 import ToggleButton from '@/components/ToggleButton'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { mapState } from 'vuex'
-import { getDataFrameColumnInfoById } from '@/API/DataSource'
+import { Message } from 'element-ui'
+
 
 export default {
   inject: ['$validator'],
@@ -246,9 +248,23 @@ export default {
         currentInfo.status = currentInfo.status ? 'Enable' : 'Disable'
 
         if(currentInfo.id === null) {
-          newMonitorSetting(currentInfo)
+          newMonitorSetting(currentInfo).then(response => {
+            Message({
+              message: this.$t('message.changeStatusSuccess'),
+              type: 'success',
+              duration: 3 * 1000
+            })
+            this.cancelSetting()
+          })
         } else {
-          updateMonitorSetting(currentInfo)
+          updateMonitorSetting(currentInfo).then(response => {
+            Message({
+              message: this.$t('message.changeStatusSuccess'),
+              type: 'success',
+              duration: 3 * 1000
+            })
+            this.cancelSetting()
+          })
         }
       })
     },
@@ -285,7 +301,6 @@ export default {
       height: 30px;
 
       .input-verify-text {
-        padding-left: 15px; 
         margin-bottom: 10px;
       }
     }

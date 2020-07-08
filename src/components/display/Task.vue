@@ -62,6 +62,7 @@
 </template>
 <script>
 import MonitorSettingDialog from '@/pages/pinboard/components/MonitorSettingDialog'
+
 export default {
   name: 'Task',
   components: {
@@ -92,6 +93,7 @@ export default {
       errorMessage: '',
       notes: [],
       timeoutFunction: null,
+      autoRefreshFunction: null,
       pagination: {
         currentPage: 0,
         totalPages: 1
@@ -116,6 +118,7 @@ export default {
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+    window.clearTimeout(this.autoRefreshFunction)
   },
   methods: {
     fetchData (page = 0) {
@@ -143,6 +146,14 @@ export default {
               this.componentName = this.getChartTemplate(this.diagram)
               let responseData = response.data
 
+              let isAutoRefresh = response.isAutoRefresh
+              if(isAutoRefresh && this.$route.name !== 'PageResult') {
+                this.autoRefreshFunction = window.setTimeout(() => {
+                  this.fetchData().then(task => {
+                    resolve(task)
+                  })
+                }, 3*60*1000)
+              }
               // 取樣
               if (responseData.sampling) {
                 this.appendNote(this.genSamplingNote(responseData.sampling))

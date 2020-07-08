@@ -67,7 +67,7 @@
     "userAlreadyExisting": "This account already exists",
     "changePasswordSuccess": "Password changed successfully",
     "editNameSuccess": "Edit Name Success",
-    "changeStatusSuccess": "Change StatusSuccess",
+    "changeStatusSuccess": "Change Status Success",
     "pleaseConfirmPassword": "Those passwords didn't match. Try again.",
     "addFilter": "Save successfully",
     "emptyResult": "There is no corresponding data for this search condition",
