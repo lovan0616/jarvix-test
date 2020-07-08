@@ -52,6 +52,18 @@
       <div class="info-block">
         <label 
           for="" 
+          class="info-block__label">{{ $t('monitorSetting.timeScope') }}</label>
+        <input-verify
+          v-validate="'required'"
+          v-model="settingInfo.timeScope"
+          :placeholder="$t('editing.numericOnly')"
+          name="monitorTimeScope"
+          class="info-block__input"
+        />
+      </div>
+      <div class="info-block">
+        <label 
+          for="" 
           class="info-block__label">{{ $t('monitorSetting.timeScopeUnit') }}</label>
         <default-select
           v-model="settingInfo.timeScopeUnit"
@@ -146,7 +158,7 @@ export default {
         threshold: {
           max: null
         },
-        userId: null,
+        userIdList: [],
         status: false,
         isAutoRefresh: false,
       }
@@ -216,10 +228,13 @@ export default {
       getMonitorSetting(this.componentId).then(response => {
         if(response.id === null) {
           this.settingInfo.componentId = this.componentId
-          this.settingInfo.userId = this.userId
+          this.settingInfo.userIdList.push(this.userId)
         } else {
           this.settingInfo = {...response}
         }
+        this.settingInfo.status = this.settingInfo.status === 'Enable' ? true : false
+        this.settingInfo.timeScope = String(this.settingInfo.timeScope)
+        this.settingInfo.threshold.max = String(this.settingInfo.threshold.max)
       })
     },
     monitorSetting () {
@@ -227,12 +242,8 @@ export default {
         if(!isValidated) return
 
         let currentInfo = Object.assign({}, this.settingInfo)
-        currentInfo.isAutoRefresh = currentInfo.status === true
-        ? true
-        : false
-        currentInfo.status = currentInfo.status === true
-        ? 'Enable'
-        : 'Disable'
+        currentInfo.isAutoRefresh = currentInfo.status ? true : false
+        currentInfo.status = currentInfo.status ? 'Enable' : 'Disable'
 
         if(currentInfo.id === null) {
           newMonitorSetting(currentInfo)
@@ -276,7 +287,7 @@ export default {
       height: 30px;
 
       .input-verify-text {
-        float: right;
+        padding-left: 15px; 
         margin-bottom: 10px;
       }
     }

@@ -414,6 +414,7 @@
     "autoRefresh": "Auto Refresh",
     "monitorColumn": "Monitor Column",
     "dateColumn": "Date Column",
+    "timeScope": "Time Scope",
     "timeScopeUnit": "Time Scope Unit",
     "aggregationType": "Aggregation Type",
     "monitorThreshold": "Threshold",
