@@ -465,7 +465,7 @@
     "columnSetting": "對應欄位設定",
     "scheduleSetting": "更新週期設定",
     "setBatchLoad": "設定批次更新資料",
-    "batchLoadSetting": "批次更新資料設定",
+    "batchLoad": "批次更新資料",
     "basicSetting": "基本設定",
     "chooseCycle": "選擇週期",
     "on": "開啟",

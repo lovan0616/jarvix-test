@@ -23,12 +23,7 @@
       />
       <template v-else>
         <div class="setting-block">
-          <div 
-            v-if="!switchInfo.selected" 
-            class="setting-block__title">{{ $t('batchLoad.batchLoadSetting') }}</div>
-          <div 
-            v-else 
-            class="setting-block__title">{{ $t('batchLoad.columnSetting') }}</div>
+          <div class="setting-block__title">{{ $t('batchLoad.batchLoad') }}</div>
           <div class="setting-block__switch">
             <el-switch
               v-model="switchInfo.selected"
@@ -39,7 +34,10 @@
               active-color="#2AD2E2"
               inactive-color="#324B4E"/>
           </div>
-          <template v-if="switchInfo.selected" >
+        </div>
+        <template v-if="switchInfo.selected" >
+          <div class="setting-block">
+            <div class="setting-block__title">{{ $t('batchLoad.columnSetting') }}</div>
             <div class="input-field">
               <label class="input-field__label">{{ $t('batchLoad.builtTimeColumn') }}</label>
               <div class="input-field__input">
@@ -78,7 +76,7 @@
                 >{{ errors.first('updatedTimeColumn') }}</div>
               </div>
             </div>
-            <div class=" input-field">
+            <div class="input-field">
               <label class="input-field__label">{{ $t('batchLoad.primaryKeyColumns') }}</label>
               <div class="input-field__input">
                 <default-multi-select
@@ -99,32 +97,29 @@
                 >{{ errors.first('primaryKeyColumn') }}</div>
               </div>
             </div>
-          </template>
-        </div>
-        <div 
-          v-if="switchInfo.selected" 
-          class="setting-block"
-        >
-          <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
-          <div class="input-field">
-            <label class="input-field__label">{{ $t('batchLoad.basicSetting') }}</label>
-            <div class="input-field__input">
-              <default-select 
-                v-validate="'required'"
-                v-model="scheduleInfo.selectedBasicSchedule"
-                :option-list="scheduleInfo.basicScheduleList"
-                :placeholder="$t('batchLoad.chooseCycle')"
-                :is-disabled="isProcessing"
-                class="input-field__select"
-                name="basicScheduleColumn"
-              />
-              <div 
-                v-show="errors.has('basicScheduleColumn')"
-                class="error-text"
-              >{{ errors.first('basicScheduleColumn') }}</div>
+          </div>
+          <div class="setting-block">
+            <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
+            <div class="input-field">
+              <label class="input-field__label">{{ $t('batchLoad.basicSetting') }}</label>
+              <div class="input-field__input">
+                <default-select 
+                  v-validate="'required'"
+                  v-model="scheduleInfo.selectedBasicSchedule"
+                  :option-list="scheduleInfo.basicScheduleList"
+                  :placeholder="$t('batchLoad.chooseCycle')"
+                  :is-disabled="isProcessing"
+                  class="input-field__select"
+                  name="basicScheduleColumn"
+                />
+                <div 
+                  v-show="errors.has('basicScheduleColumn')"
+                  class="error-text"
+                >{{ errors.first('basicScheduleColumn') }}</div>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
         <div class="button__block">
           <button 
             class="btn btn-outline"

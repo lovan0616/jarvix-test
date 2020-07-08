@@ -464,7 +464,7 @@
     "columnSetting": "Column Setting",
     "scheduleSetting": "Schedule Setting",
     "setBatchLoad": "Set Batch Load",
-    "batchLoadSetting": "Batch Load Setting",
+    "batchLoad": "Batch Load",
     "basicSetting": "Basic Setting",
     "chooseCycle": "Select Cycle",
     "on": "On",

@@ -465,7 +465,7 @@
     "columnSetting": "对应栏位设定",
     "scheduleSetting": "更新周期设定",
     "setBatchLoad": "设定批次更新资料",
-    "batchLoadSetting": "批次更新资料设定",
+    "batchLoad": "批次更新资料",
     "basicSetting": "基本设置",
     "chooseCycle": "选择周期",
     "on": "开启",
