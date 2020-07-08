@@ -194,7 +194,7 @@ export default {
     },
     selectPinboard (id) {
       this.isLoading = true
-      this.$store.dispatch('pinboard/pinToBoard', {folderId: id, resultId: this.currentResultId, name: "", userId: 0})
+      this.$store.dispatch('pinboard/pinToBoard', {folderId: id, resultId: this.currentResultId})
         .then(res => {
           this.pinBoardId = res.id
           this.isLoading = false
