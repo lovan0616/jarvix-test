@@ -164,6 +164,7 @@ export default {
               // 推薦洞察 需要將 question 傳給外層組件顯示用
               if (responseData.question) {
                 this.$emit('setQuestion', responseData.question)
+              }
 
               let isAutoRefresh = response.isAutoRefresh
               if(isAutoRefresh && this.isPinboardPage) {
