@@ -8,7 +8,13 @@
     @closeDialog="cancelSetting"
     @confirmBtn="monitorSetting"
   >
-    <form class="setting-form">
+    <spinner
+      v-if="isLoading"
+    />
+    <form 
+      v-else
+      class="setting-form"
+    >
       <div class="info-block">
         <label 
           class="info-block__label">{{ $t('monitorSetting.enableMonitoring') }}</label>
@@ -160,7 +166,7 @@ export default {
   },
   data () {
     return {
-      isLoading: false,
+      isLoading: true,
       monitorColumnList: [],
       dateColumnList: [],
       aggregationOptionList: [
@@ -202,12 +208,17 @@ export default {
     ...mapState('userManagement', ['userId'])
   },
   mounted () {
-    this.getDataFrameColumnInfo()
-    this.getMonitorSettingInfo()
+    this.getInitData()
   },
   methods: {
+    getInitData () {
+      Promise.all([this.getDataFrameColumnInfo(), this.getMonitorSettingInfo()])
+      .finally(() => {
+        this.isLoading = false
+      })
+    },
     getDataFrameColumnInfo () {
-      getDataFrameColumnInfoById(this.dataFrameId, true, true).then(response => {
+      return getDataFrameColumnInfoById(this.dataFrameId, true, true).then(response => {
         response.forEach(column => { 
           this.monitorColumnList.push({
               value: column.id,
@@ -223,7 +234,7 @@ export default {
       })
     },
     getMonitorSettingInfo() {
-      getMonitorSetting(this.componentId).then(response => {
+      return getMonitorSetting(this.componentId).then(response => {
         if(response.id === null) {
           this.settingInfo.componentId = this.componentId
           this.settingInfo.userIdList.push(this.userId)
@@ -252,7 +263,7 @@ export default {
             type: 'success',
             duration: 3 * 1000
           })
-          this.cancelSetting()
+          this.$emit('confirm')
         })
       })
     },
