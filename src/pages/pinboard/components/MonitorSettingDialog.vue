@@ -244,7 +244,7 @@ export default {
         if(!isValidated) return
 
         let currentInfo = Object.assign({}, this.settingInfo)
-        currentInfo.isAutoRefresh = currentInfo.isAutoRefresh === null ? false : true
+        currentInfo.isAutoRefresh = !!currentInfo.isAutoRefresh
         currentInfo.status = currentInfo.status ? 'Enable' : 'Disable'
 
         if(currentInfo.id === null) {
@@ -301,6 +301,7 @@ export default {
       height: 30px;
 
       .input-verify-text {
+        padding-left: 15px;
         margin-bottom: 10px;
       }
     }

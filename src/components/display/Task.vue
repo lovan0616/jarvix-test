@@ -371,6 +371,7 @@ export default {
     },
     closeMonitorSettingDialog () {
       this.isShowMonitorSettingDialog = false
+      this.fetchData()
     }
   }
 }
