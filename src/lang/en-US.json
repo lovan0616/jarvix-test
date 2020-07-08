@@ -338,7 +338,8 @@
     },
     "createGroup": "Create Project",
     "sortSetting": "Sorting settings",
-    "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change."
+    "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change.",
+    "lastUpdateResult": "Latest Update Result"
   },
   "algorithm": {
     "name": "Algorithm",
@@ -454,6 +455,29 @@
     "null": "Null",
     "columnSelected": "Number of columns selected",
     "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field for each table"
+  },
+  "batchLoad": {
+    "primaryKeyColumns": "Primary Keys",
+    "updatedTimeColumn": "Updated Time",
+    "builtTimeColumn": "Built Time",
+    "chooseColumn": "Select Column",
+    "columnSetting": "Column Setting",
+    "scheduleSetting": "Schedule Setting",
+    "setBatchLoad": "Set Batch Load",
+    "batchLoad": "Batch Load",
+    "basicSetting": "Basic Setting",
+    "chooseCycle": "Select Cycle",
+    "on": "On",
+    "off": "Off",
+    "everyMinute": "Every {number} minutes",
+    "everyHour": "Hourly",
+    "everyDay": "Daily",
+    "everyWeek": "Weekly",
+    "everyMonth": "Monthly",
+    "noRecord": "No Record",
+    "updateSuccessfully": "Update Successfully",
+    "updateFailed": "Update Failed",
+    "updating": "Updating"
   },
   "feature": {
     "value": "Value",
@@ -638,6 +662,7 @@
     "editEtlSetting": "Edit Etl Setting",
     "reviewEtlSetting": "Review Etl Setting",
     "dateTimeColumnSetting": "Default Time",
+    "batchLoadSetting": "Batch Loading Data",
     "select": "Select",
     "download": "Data Download",
     "restrict": "Analysis Condition Restriction",

@@ -71,6 +71,7 @@
         @columnSet="editColumnSet"
         @dateTime="editDateTime"
         @etlSetting="editEtlSetting"
+        @batchLoad="editBatchLoadSetting"
       />
     </div>
     <file-upload-dialog
@@ -117,6 +118,11 @@
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditDateTimeDialog"
     />
+    <edit-batch-load-dialog
+      v-if="showEditBatchLoadDialog"
+      :data-frame-info="currentEditDataFrameInfo"
+      @close="closeEditBatchLoadDialog"
+    />
     <feature-management-dialog
       v-if="showEditFeatureDialog"
       @close="toggleEditFeatureDialog"
@@ -136,6 +142,7 @@ import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRel
 import EditColumnDialog from './components/EditColumnDialog'
 import EditColumnSetDialog from './components/columnSet/EditColumnSetDialog'
 import EditEtlDialog from './components/EditEtlDialog'
+import EditBatchLoadDialog from './components/EditBatchLoadDialog'
 import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
@@ -157,7 +164,8 @@ export default {
     ValueAliasDialog,
     EditDateTimeDialog,
     FeatureManagementDialog,
-    EditEtlDialog
+    EditEtlDialog,
+    EditBatchLoadDialog
   },
   data () {
     return {
@@ -168,6 +176,7 @@ export default {
       showEditColumnDialog: false,
       showEditDateTimeDialog: false,
       showEditEtlDialog: false,
+      showEditBatchLoadDialog: false,
       deleteId: null,
       renameDataSource: null,
       // 資料處理中
@@ -235,6 +244,11 @@ export default {
         {
           text: this.$t('editing.status'),
           value: 'state',
+          width: '115px'
+        },
+        {
+          text: this.$t('editing.lastUpdateResult'),
+          value: 'crontabState',
           width: '140px'
         },
         {
@@ -249,12 +263,13 @@ export default {
                 { icon: '', title: 'button.editColumn', dialogName: 'edit' },
                 { icon: '', title: 'button.editDataValue', dialogName: 'valueAlias' },
                 { icon: '', title: 'button.editColumnSet', dialogName: 'columnSet' },
-                { icon: '', title: 'button.editEtlSetting', dialogName: 'etlSetting' }
+                { icon: '', title: 'button.editEtlSetting', dialogName: 'etlSetting' },
+                { icon: '', title: 'button.dateTimeColumnSetting', dialogName: 'dateTime' }
               ]
             },
             {
-              name: this.$t('button.dateTimeColumnSetting'),
-              value: 'dateTime'
+              name: this.$t('button.batchLoadSetting'),
+              value: 'batchLoad'
             },
             {
               name: this.$t('button.delete'),
@@ -270,9 +285,11 @@ export default {
     fileUploadSuccess () {
       return this.$store.state.dataManagement.fileUploadSuccess
     },
-    hasDataFrameProcessing () {
+    hasDataFrameProcessingOrBatchLoading () {
       if (!this.dataList.length) return false
-      return this.dataList.some(element => element.type === 'PROCESS' || element.state === 'Process' || element.state === 'Pending')
+      return this.dataList.some((element) => (
+        element.type === 'PROCESS' || element.state === 'Process' || element.state === 'Pending' || element.crontabConfigStatus === 'Enable'
+      ))
     },
     enableDataFrameCount () {
       return this.dataList.reduce((acc, cur) => {
@@ -302,7 +319,7 @@ export default {
         this.$store.dispatch('dataSource/getDataSourceList', {})
       }
     },
-    hasDataFrameProcessing (value) {
+    hasDataFrameProcessingOrBatchLoading (value) {
       if (value) {
         this.checkDataFrameIntervalFunction = window.setInterval(() => {
           this.updateDataTable()
@@ -474,6 +491,10 @@ export default {
       this.currentEditDataFrameInfo = { id, primaryAlias }
       this.showEditEtlDialog = true
     },
+    editBatchLoadSetting ({ id, primaryAlias }) {
+      this.currentEditDataFrameInfo = { id, primaryAlias }
+      this.showEditBatchLoadDialog = true
+    },
     closeDataFrameAliasDialog () {
       this.showDataFrameAliasDialog = false
       this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
@@ -492,6 +513,11 @@ export default {
     },
     closeEditEtlDialog () {
       this.showEditEtlDialog = false
+      this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
+      this.fetchData()
+    },
+    closeEditBatchLoadDialog () {
+      this.showEditBatchLoadDialog = false
       this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
       this.fetchData()
     }

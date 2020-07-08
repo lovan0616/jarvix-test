@@ -339,7 +339,8 @@
     },
     "createGroup": "建立专案",
     "sortSetting": "排序设定",
-    "dragAndSort": "请按住项目上下拖曳移动排序位置，项目排序变更后即生效。"
+    "dragAndSort": "请按住项目上下拖曳移动排序位置，项目排序变更后即生效。",
+    "lastUpdateResult": "近一次更新结果"
   },
   "algorithm": {
     "name": "演算法",
@@ -455,6 +456,29 @@
     "null": "Null",
     "columnSelected": "已选择栏位数",
     "pleaseSelectAtLeastOneColumnPerTable": "每张表格请至少选择一个栏位"
+  },
+  "batchLoad": {
+    "primaryKeyColumns": "主键（可复选）",
+    "updatedTimeColumn": "更新时间",
+    "builtTimeColumn": "建置时间",
+    "chooseColumn": "选择栏位",
+    "columnSetting": "对应栏位设定",
+    "scheduleSetting": "更新周期设定",
+    "setBatchLoad": "设定批次更新资料",
+    "batchLoad": "批次更新资料",
+    "basicSetting": "基本设置",
+    "chooseCycle": "选择周期",
+    "on": "开启",
+    "off": "关闭",
+    "everyMinute": "每 {number} 分钟",
+    "everyHour": "每小时",
+    "everyDay": "每天",
+    "everyWeek": "每周",
+    "everyMonth": "每月",
+    "noRecord": "无纪录",
+    "updateSuccessfully": "更新成功",
+    "updateFailed": "更新失败",
+    "updating": "更新中"
   },
   "feature": {
     "value": "数值",
@@ -639,6 +663,7 @@
     "editEtlSetting": "数据处理设定",
     "reviewEtlSetting": "检视数据处理设定",
     "dateTimeColumnSetting": "日期栏位设定",
+    "batchLoadSetting": "资料更新设定",
     "select": "选择",
     "download": "资料下载",
     "restrict": "分析条件限制",

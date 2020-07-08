@@ -25,7 +25,8 @@ import {
   Pagination,
   Collapse,
   CollapseItem,
-  Tooltip
+  Tooltip,
+  Switch
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -116,6 +117,7 @@ Vue.use(Pagination)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Tooltip)
+Vue.use(Switch)
 
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)
