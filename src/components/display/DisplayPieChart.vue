@@ -11,19 +11,24 @@
       is-vertical
       @click.native="$emit('next')"
     />
-    <div 
+    <hint-info-block
       v-if="hasNegativeData"
-      class="remark-info"
-    >{{ $t('resultNote.pieChartFilterNote') }}</div>
+      :msg-list="[$t('resultNote.pieChartFilterNote')]"
+      inline
+    />
   </div>
 </template>
 
 <script>
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { color12, getDrillDownTool } from './common/addons'
+import HintInfoBlock from '@/components/display/HintInfoBlock'
 
 export default {
   name: 'DisplayPieChart',
+  components: {
+    HintInfoBlock
+  },
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     title: {
@@ -51,8 +56,7 @@ export default {
   },
   data () {
     return {
-      showPagination: true,
-      hasNegativeData: true
+      showPagination: true
     }
   },
   computed: {
@@ -122,6 +126,9 @@ export default {
     },
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
+    },
+    hasNegativeData () {
+      return this.dataset.data.some(element => element[0] < 0)
     }
   },
   mounted () {
@@ -151,13 +158,16 @@ export default {
        * 檢查是否有 “其他” 的類別
        * 透過 total 扣除資料的總和的餘額來判斷是不是有 “其他”
        **/
-      let totalSum = this.dataset.data.reduce((acc, cur) => acc + cur[0], 0)
+      let totalSum = dataset.data.reduce((acc, cur) => acc + cur[0], 0)
       let otherCount = this.total - totalSum
 
       let result = dataset.data.map((element, index) => {
         return dataset.display_index ? [dataset.display_index[index], ...element] : [dataset.index[index], ...element]
+      }).filter((element, index) => {
+        // 過濾負值
+        return element[1] >= 0
       })
-      if (this.itemCount - dataset.data.length > 0) {
+      if (this.itemCount - dataset.data.length > 0 && otherCount > 0) {
         result.push([this.$t('resultDescription.other'), otherCount])
       }
       return [['index', ...dataset.display_columns ? dataset.display_columns : dataset.columns], ...result]
