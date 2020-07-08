@@ -242,7 +242,7 @@ export default {
         if(!isValidated) return
 
         let currentInfo = Object.assign({}, this.settingInfo)
-        currentInfo.isAutoRefresh = currentInfo.status ? true : false
+        currentInfo.isAutoRefresh = currentInfo.isAutoRefresh === null ? false : true
         currentInfo.status = currentInfo.status ? 'Enable' : 'Disable'
 
         if(currentInfo.id === null) {
@@ -250,8 +250,6 @@ export default {
         } else {
           updateMonitorSetting(currentInfo)
         }
-
-        
       })
     },
     cancelSetting () {
