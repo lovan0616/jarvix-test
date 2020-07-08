@@ -156,7 +156,7 @@ export default {
     dataSourceList: {
       handler () {
         /**
-         * 注意！這邊要重新 assign 是因為頁面上有排序功能，不希望排序時影響到 bookmark select 的順序
+         * 注意！這邊要重新 assign 是因為頁面上有排序功能，不希望排序時影響到 dataSource select 的順序
          */
         this.dataList = this.dataSourceList.map(dataInfo => {
           // 注意！這邊只會做資料表數計算，時間的顯示在 DataTable 處理，主要是為了時間排序的準確

@@ -409,6 +409,18 @@
     "dataFrameName": "资料表名称",
     "sql": "SQL 语法"
   },
+  "monitorSetting": {
+    "settingDialogTitle": "系统监测设定",
+    "enableMonitoring": "启用系统监测",
+    "autoRefresh": "自动更新",
+    "monitorColumn": "监测栏位",
+    "dateColumn": "时间栏位",
+    "timeScope": "时间范围",
+    "timeScopeUnit": "时间范围单位",
+    "aggregationType": "集合功能",
+    "monitorThreshold": "监测阈值",
+    "mail": "通知信箱"
+  },
   "etl": {
     "dataFrameList": "资料表列表",
     "columnList": "栏位列表",
@@ -688,7 +700,18 @@
     "resumeDefault": "恢复预设值",
     "sortSetting": "排序设定",
     "addSqlScript": "使用自定义 SQL",
-    "testConnecting": "测试连线中..."
+    "testConnecting": "测试连线中...",
+    "monitorSetting": "监测设定"
+  },
+  "timeScopeUnit": {
+    "second": "秒",
+    "minute": "分",
+    "hour": "时",
+    "day": "日",
+    "week": "周",
+    "month": "月",
+    "season": "季",
+    "year": "年"
   },
   "aggregation": {
     "mean": "平均",

@@ -40,6 +40,7 @@
       :data-pinboard-id="result.pinboardId"
       :data-data-source-id="result.dataSourceId"
       :data-data-frame-id="result.dataFrameId"
+      :data-frame-id="result.dataFrameId"
       :result-info="result.info"
       :restrictions="result.restrictions"
       :question="result.question"
@@ -84,7 +85,7 @@ export default {
       return this.$route.params.group_id
     },
     isPersonalPinboard () {
-      return this.groupId === undefined
+      return this.$route.name === 'PersonalPagePinboard'
     },
     isSortable () {
       return this.boardList.length > 1

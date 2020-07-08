@@ -409,6 +409,18 @@
     "dataFrameName": "資料表名稱",
     "sql": "SQL 語法"
   },
+  "monitorSetting": {
+    "settingDialogTitle": "系統監測設定",
+    "enableMonitoring": "啟用系統監測",
+    "autoRefresh": "自動更新",
+    "monitorColumn": "監測欄位",
+    "dateColumn": "時間欄位",
+    "timeScope": "時間範圍",
+    "timeScopeUnit": "時間範圍單位",
+    "aggregationType": "集合功能",
+    "monitorThreshold": "監測閾值",
+    "mail": "通知信箱"
+  },
   "etl": {
     "dataFrameList": "資料表列表",
     "columnList": "欄位列表",
@@ -688,7 +700,18 @@
     "resumeDefault": "恢復預設值",
     "sortSetting": "排序設定",
     "addSqlScript": "使用自定義 SQL",
-    "testConnecting": "測試連線中..."
+    "testConnecting": "測試連線中...",
+    "monitorSetting": "監測設定"
+  },
+  "timeScopeUnit": {
+    "second": "秒",
+    "minute": "分",
+    "hour": "時",
+    "day": "日",
+    "week": "週",
+    "month": "月",
+    "season": "季",
+    "year": "年"
   },
   "aggregation": {
     "mean": "平均",

@@ -99,18 +99,6 @@ export default {
     dataSourcetableId () {
       return this.dataSourceTable ? this.dataSourceTable.id : null
     },
-    metaTableRightText () {
-      if (!this.bookmarkTableDataMeta) return ''
-      const rowNum = this.bookmarkTableDataMeta.rows_num || '' + ''
-      const colNum = this.bookmarkTableDataMeta.columns_num || '' + ''
-      let result = ''
-      if (rowNum && colNum) result = `${rowNum} rows x ${colNum} columns`
-      else {
-        if (rowNum) result = `${rowNum} rows`
-        if (colNum) result = `${colNum} columns`
-      }
-      return result
-    },
     availableDataFrames () {
       const dataFrameList = this.$store.state.dataSource.dataFrameList
       return dataFrameList.filter(dataFrame => dataFrame.state === 'Enable')
