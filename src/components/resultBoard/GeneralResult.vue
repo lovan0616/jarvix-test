@@ -48,10 +48,10 @@
         </template>
       </template>
       <template 
-        v-if="fakeResultInfo.recommended_insight.length > 0" 
+        v-if="resultInfo.recommended_insight.length > 0" 
         slot="InsightRecommended">
         <recommended-insight 
-          v-for="(id, index) in fakeResultInfo.recommended_insight" 
+          v-for="(id, index) in resultInfo.recommended_insight" 
           :key="index"
           :component-id="id"
         />
@@ -75,13 +75,6 @@ export default {
     restrictions: {
       type: Array,
       default: () => []
-    }
-  },
-  data () {
-    return {
-      fakeResultInfo: {
-        recommended_insight: [197209, 198006, 200779, 198660]
-      }
     }
   },
   methods: {

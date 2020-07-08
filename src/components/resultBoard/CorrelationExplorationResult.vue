@@ -69,10 +69,10 @@
         />
       </template>
       <template 
-        v-if="fakeResultInfo.recommended_insight.length > 0" 
+        v-if="resultInfo.recommended_insight.length > 0" 
         slot="InsightRecommended">
         <recommended-insight 
-          v-for="(id, index) in fakeResultInfo.recommended_insight" 
+          v-for="(id, index) in resultInfo.recommended_insight" 
           :key="index"
           :component-id="id"
         />
@@ -102,10 +102,7 @@ export default {
   },
   data () {
     return {
-      isLoading: true,
-      fakeResultInfo: {
-        recommended_insight: [198005, 198006, 198007, 197995]
-      }
+      isLoading: true
     }
   },
   computed: {
