@@ -69,12 +69,12 @@
         />
       </template>
       <template 
-        v-if="resultInfo.recommended_insight && resultInfo.recommended_insight.length > 0" 
+        v-if="resultInfo.recommended_insight && resultInfo.recommended_insight.length > 0"
         slot="InsightRecommended">
         <recommended-insight 
-          v-for="(id, index) in resultInfo.recommended_insight" 
+          v-for="(componentId, index) in resultInfo.recommended_insight" 
           :key="index"
-          :component-id="id"
+          :component-id="componentId"
         />
       </template>
     </result-board-body>

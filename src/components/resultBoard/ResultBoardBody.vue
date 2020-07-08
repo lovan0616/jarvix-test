@@ -33,7 +33,6 @@
     <div 
       v-if="isShowInsightRecommended" 
       name="InsightRootCause">
-      <!-- {{ $slots }} -->
       <div class="insights-info recommended">
         <div class="insights-info-title">{{ $t('resultDescription.recommendedInsight') }}</div>
         <div class="insights-info__wrapper">
@@ -92,7 +91,8 @@ export default {
     display: flex;
     flex-wrap: nowrap;
     margin-bottom: 32px;
-    & ~ div:not(:last-child) {
+    & ~ [name="InsightRootCause"]:not(:last-child),
+    & ~ [name="CorrelationAnalysis"]:not(:last-child) {
       margin-bottom: 32px;
     }
 
