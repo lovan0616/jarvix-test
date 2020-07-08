@@ -42,6 +42,9 @@
         :total="componentData.total"
         :item-count="componentData.item_count"
         :key="componentId"
+        :show-toolbox="showToolbox"
+        :custom-chart-style="customChartStyle"
+        :arrow-btn-right="arrowBtnRight"
         @next="getNewPageInfo"
       />
       <div
@@ -80,6 +83,18 @@ export default {
     intend: {
       type: String,
       default: null
+    },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
+    },
+    arrowBtnRight: {
+      type: Number,
+      default: 80
     }
   },
   data () {
@@ -145,6 +160,11 @@ export default {
               this.resultId = response.resultId
               this.componentName = this.getChartTemplate(this.diagram)
               let responseData = response.data
+              
+              // 推薦洞察 需要將 question 傳給外層組件顯示用
+              if (responseData.question) {
+                this.$emit('setQuestion', responseData.question)
+              }
 
               let isAutoRefresh = response.isAutoRefresh
               if(isAutoRefresh && this.isPinboardPage) {

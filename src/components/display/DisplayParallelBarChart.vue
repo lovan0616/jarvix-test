@@ -78,7 +78,15 @@ export default {
     hasPagination: {
       type: Boolean,
       default: false
-    }
+    },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
+    },
   },
   data () {
     echartAddon.mapping({
@@ -103,7 +111,8 @@ export default {
       return {
         width: '100%',
         // minHeight: this.height,
-        overflow: 'auto'
+        overflow: 'auto',
+        ...this.customChartStyle
       }
     },
     series () {
@@ -167,6 +176,7 @@ export default {
         config.dataZoom = verticalZoomIn()
         config.animation = false
       }
+      config.toolbox.show = this.showToolbox
 
       return config
     },

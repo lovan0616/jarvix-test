@@ -81,6 +81,14 @@ export default {
           yAxis: null
         }
       }
+    },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   computed: {
@@ -149,6 +157,8 @@ export default {
         table += '</tbody></table>'
         return table
       }
+      // 是否顯示 toolbox
+      chartAddon.toolbox.show = this.showToolbox
       // export data
       this.$nextTick(() => {
         this.$el.addEventListener('click', (e) => {
@@ -199,7 +209,8 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: '420px'
+        height: '420px',
+        ...this.customChartStyle
       }
     },
     appQuestion () {

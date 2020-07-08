@@ -72,7 +72,6 @@ export default {
 
   .feature-header {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
     padding: 12px;
     border-top-left-radius: 4px;
@@ -89,9 +88,11 @@ export default {
   }
 
   .feature-header-left {
+    flex: 1;
     display: flex;
     flex-flow: column;
     justify-content: space-between;
+    margin-right: 10px;
   }
 
   .feature-header-title {
@@ -116,7 +117,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
+    flex: 0 0 60px;
     height: 60px;
     border: 1px solid $theme-color-warning;
     border-radius: 100%;
