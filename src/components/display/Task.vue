@@ -131,7 +131,13 @@ export default {
               this.resultId = response.resultId
               this.componentName = this.getChartTemplate(this.diagram)
               let responseData = response.data
-
+              // // MOCK question
+              responseData.question = response.diagram
+              
+              // 推薦洞察 需要將 question 傳給外層組件顯示用
+              if (responseData.question) {
+                this.$emit('setQuestion', responseData.question)
+              }
               // 取樣
               if (responseData.sampling) {
                 this.appendNote(this.genSamplingNote(responseData.sampling))

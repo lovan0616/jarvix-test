@@ -71,15 +71,10 @@
       <template 
         v-if="fakeResultInfo.recommended_insight.length > 0" 
         slot="InsightRecommended">
-        <!-- 這個換動態轉換成 RecommendedInsight-->
-        <task-fake
-          v-for="id in fakeResultInfo.recommended_insight"
-          :key="id"
+        <recommended-insight 
+          v-for="(id, index) in fakeResultInfo.recommended_insight" 
+          :key="index"
           :component-id="id"
-          :show-toolbox="false"
-          :custom-chart-style="{ width: '100%', height: '240px' }"
-          :arrow-btn-right="20"
-          intend="recommended_insight"
         />
       </template>
     </result-board-body>
@@ -87,13 +82,13 @@
 </template>
 <script>
 import HintInfoBlock from '@/components/display/HintInfoBlock'
-import TaskFake from '@/components/display/TaskFake'
+import RecommendedInsight from '@/components/display/RecommendedInsight'
 
 export default {
   name: 'CorrelationExplorationResult',
   components: {
     HintInfoBlock,
-    TaskFake
+    RecommendedInsight
   },
   props: {
     resultInfo: {

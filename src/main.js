@@ -95,7 +95,6 @@ import PreviewResultBoard from '@/components/PreviewResultBoard'
 import TrendRootCause from '@/components/display/TrendRootCause'
 import RootCauseItem from '@/components/display/RootCauseItem'
 import CorrelationInsight from '@/components/display/CorrelationInsight'
-import RecommendedInsight from '@/components/display/RecommendedInsight'
 import RootCauseDescription from '@/components/display/RootCauseDescription'
 import Spinner from '@/components/Spinner'
 import ArrowButton from '@/components/resultBoard/ArrowButton'
@@ -168,7 +167,6 @@ Vue.component(PreviewResultBoard.name, PreviewResultBoard)
 Vue.component(TrendRootCause.name, TrendRootCause)
 Vue.component(RootCauseItem.name, RootCauseItem)
 Vue.component(CorrelationInsight.name, CorrelationInsight)
-Vue.component(RecommendedInsight.name, RecommendedInsight)
 Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(Spinner.name, Spinner)
 Vue.component(ArrowButton.name, ArrowButton)
