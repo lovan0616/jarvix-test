@@ -232,7 +232,7 @@ export default {
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
               this.restrictInfo = componentResponse.restrictions
-              this.layout = this.getLayout(res.layout)
+              this.layout = this.getLayout(componentResponse.layout)
               this.segmentationAnalysis(componentResponse.segmentationPayload)
               this.isLoading = false
               break
