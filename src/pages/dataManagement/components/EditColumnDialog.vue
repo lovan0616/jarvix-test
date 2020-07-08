@@ -84,7 +84,7 @@
                       v-validate="`max:${max}`"
                       v-model="tempRowInfo.aliasList[aliasIndex].name"
                       :name="'alias' + '-' + column.id + '-' + aliasIndex"
-                      :placeholder="$t('editing.dataFrameInputPlaceholder')"
+                      :placeholder="$t('editing.dataFrameColumnAliasInputPlaceholder')"
                       class="edit-alias-input-block"
                     />
                     <div 
