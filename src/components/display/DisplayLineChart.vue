@@ -188,7 +188,8 @@ export default {
       }
 
       // 圖表 threshold
-      if (this.title.yAxis.upperLimit !== undefined) {
+      if (this.title.yAxis[0].upperLimit !== undefined) {
+        let upperLimit = this.title.yAxis[0].upperLimit
         // 找出 Y 的最小值
         let minY = this.dataset.data[0][0]
         this.dataset.data.forEach(element => {
@@ -205,10 +206,10 @@ export default {
           type: 'piecewise',
           show: false,
           pieces: [{
-            gte: this.title.yAxis.upperLimit,
+            gte: upperLimit,
             color: '#EB5959'
           }, {
-            lt: this.title.yAxis.upperLimit,
+            lt: upperLimit,
             gt: minY
           }]
         }]
@@ -220,7 +221,7 @@ export default {
             width: 2
           },
           data: [{
-            yAxis: this.title.yAxis.upperLimit
+            yAxis: upperLimit
           }]
         }
       }

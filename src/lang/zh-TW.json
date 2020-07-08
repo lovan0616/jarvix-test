@@ -1743,7 +1743,8 @@
   },
   "resultNote": {
     "groupLimitNote": "此結果為原資料取前 {randomLimit} 筆得來",
-    "samplingNote": "此結果為原資料取樣 {randomLimit} 筆計算得來"
+    "samplingNote": "此結果為原資料取樣 {randomLimit} 筆計算得來",
+    "pieChartFilterNote": "此結果為原資料過濾負值得來"
   },
   "userManagement": {
     "createUser": "新增使用者",

@@ -1742,8 +1742,9 @@
     "networkError": "An error occurred in the network connection, please check the connection and try again later"
   },
   "resultNote": {
-    "groupLimitNote": "The result is before the original data {randomLimit} 笔得来",
-    "samplingNote": "This result is calculated from the original sample {randomLimit} pens"
+    "groupLimitNote": "The result is get sampling from top {randomLimit} data",
+    "samplingNote": "This result is calculated from the original sample {randomLimit} pens",
+    "pieChartFilterNote": "The result is filtered negative data"
   },
   "userManagement": {
     "createUser": "New User",
