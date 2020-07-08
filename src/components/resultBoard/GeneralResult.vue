@@ -80,7 +80,7 @@ export default {
   data () {
     return {
       fakeResultInfo: {
-        recommended_insight: [197209, 198006, 199050, 198660]
+        recommended_insight: [197209, 198006, 200779, 198660]
       }
     }
   },
