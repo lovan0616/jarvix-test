@@ -340,7 +340,8 @@
     },
     "createGroup": "建立專案",
     "sortSetting": "排序設定",
-    "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。"
+    "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。",
+    "lastUpdateResult": "近一次更新結果"
   },
   "algorithm": {
     "name": "演算法",
@@ -409,6 +410,18 @@
     "dataFrameName": "資料表名稱",
     "sql": "SQL 語法"
   },
+  "monitorSetting": {
+    "settingDialogTitle": "系統監測設定",
+    "enableMonitoring": "啟用系統監測",
+    "autoRefresh": "自動更新",
+    "monitorColumn": "監測欄位",
+    "dateColumn": "時間欄位",
+    "timeScope": "時間範圍",
+    "timeScopeUnit": "時間範圍單位",
+    "aggregationType": "計算方式",
+    "monitorThreshold": "監測閾值",
+    "mail": "通知信箱"
+  },
   "etl": {
     "dataFrameList": "資料表列表",
     "columnList": "欄位列表",
@@ -456,6 +469,29 @@
     "null": "Null",
     "columnSelected": "已選擇欄位數",
     "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位"
+  },
+  "batchLoad": {
+    "primaryKeyColumns": "主鍵（可複選）",
+    "updatedTimeColumn": "更新時間",
+    "builtTimeColumn": "建置時間",
+    "chooseColumn": "選擇欄位",
+    "columnSetting": "對應欄位設定",
+    "scheduleSetting": "更新週期設定",
+    "setBatchLoad": "設定批次更新資料",
+    "batchLoad": "批次更新資料",
+    "basicSetting": "基本設定",
+    "chooseCycle": "選擇週期",
+    "on": "開啟",
+    "off": "關閉",
+    "everyMinute": "每 {number} 分鐘",
+    "everyHour": "每小時",
+    "everyDay": "每天",
+    "everyWeek": "每週",
+    "everyMonth": "每月",
+    "noRecord": "無紀錄",
+    "updateSuccessfully": "更新成功",
+    "updateFailed": "更新失敗",
+    "updating": "更新中"
   },
   "feature": {
     "value": "數值",
@@ -640,6 +676,7 @@
     "editEtlSetting": "資料處理設定",
     "reviewEtlSetting": "檢視資料處理設定",
     "dateTimeColumnSetting": "日期欄位設定",
+    "batchLoadSetting": "資料更新設定",
     "select": "選擇",
     "download": "資料下載",
     "restrict": "分析條件限制",
@@ -664,7 +701,18 @@
     "resumeDefault": "恢復預設值",
     "sortSetting": "排序設定",
     "addSqlScript": "使用自定義 SQL",
-    "testConnecting": "測試連線中..."
+    "testConnecting": "測試連線中...",
+    "monitorSetting": "監測設定"
+  },
+  "timeScopeUnit": {
+    "second": "秒",
+    "minute": "分",
+    "hour": "時",
+    "day": "日",
+    "week": "週",
+    "month": "月",
+    "season": "季",
+    "year": "年"
   },
   "aggregation": {
     "mean": "平均",
@@ -1488,6 +1536,7 @@
     "pivotTable": "樞紐分析",
     "weight": "權重",
     "dataInsight": "資料洞察",
+    "recommendedInsight": "推薦洞察",
     "keyInsight": "關鍵洞察",
     "total": "整體",
     "is": "為",
@@ -1696,7 +1745,8 @@
   },
   "resultNote": {
     "groupLimitNote": "此結果為原資料取前 {randomLimit} 筆得來",
-    "samplingNote": "此結果為原資料取樣 {randomLimit} 筆計算得來"
+    "samplingNote": "此結果為原資料取樣 {randomLimit} 筆計算得來",
+    "pieChartFilterNote": "此結果為原資料過濾負值得來"
   },
   "userManagement": {
     "createUser": "新增使用者",

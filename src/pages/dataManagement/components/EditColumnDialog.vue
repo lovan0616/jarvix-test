@@ -206,9 +206,6 @@ export default {
     }
   },
   computed: {
-    currentBookmarkInfo () {
-      return this.$store.state.dataManagement.currentBookmarkInfo
-    },
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     },

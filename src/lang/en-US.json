@@ -340,7 +340,8 @@
     },
     "createGroup": "Create Project",
     "sortSetting": "Sort Settings",
-    "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change."
+    "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change.",
+    "lastUpdateResult": "Latest Update Result"
   },
   "algorithm": {
     "name": "Algorithm",
@@ -409,6 +410,18 @@
     "dataFrameName": "Data Table Name",
     "sql": "SQL Script"
   },
+  "monitorSetting": {
+    "settingDialogTitle": "System Monitor Setting",
+    "enableMonitoring": "Monitor",
+    "autoRefresh": "Auto Refresh",
+    "monitorColumn": "Monitor Column",
+    "dateColumn": "Date Column",
+    "timeScope": "Time Scope",
+    "timeScopeUnit": "Time Scope Unit",
+    "aggregationType": "Aggregation Type",
+    "monitorThreshold": "Threshold",
+    "mail": "E-mail"
+  },
   "etl": {
     "dataFrameList": "Data Table List",
     "columnList": "Column List",
@@ -456,6 +469,29 @@
     "null": "Null",
     "columnSelected": "Number of columns selected",
     "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field from each table."
+  },
+  "batchLoad": {
+    "primaryKeyColumns": "Primary Keys",
+    "updatedTimeColumn": "Updated Time",
+    "builtTimeColumn": "Built Time",
+    "chooseColumn": "Select Column",
+    "columnSetting": "Column Setting",
+    "scheduleSetting": "Schedule Setting",
+    "setBatchLoad": "Set Batch Load",
+    "batchLoad": "Batch Load",
+    "basicSetting": "Basic Setting",
+    "chooseCycle": "Select Cycle",
+    "on": "On",
+    "off": "Off",
+    "everyMinute": "Every {number} minutes",
+    "everyHour": "Hourly",
+    "everyDay": "Daily",
+    "everyWeek": "Weekly",
+    "everyMonth": "Monthly",
+    "noRecord": "No Record",
+    "updateSuccessfully": "Update Successfully",
+    "updateFailed": "Update Failed",
+    "updating": "Updating"
   },
   "feature": {
     "value": "Value",
@@ -640,6 +676,7 @@
     "editEtlSetting": "Edit ETL Setting",
     "reviewEtlSetting": "Review ETL Setting",
     "dateTimeColumnSetting": "Default DateTime",
+    "batchLoadSetting": "Batch Loading Data",
     "select": "Select",
     "download": "Data Download",
     "restrict": "Filter Restriction",
@@ -664,7 +701,18 @@
     "resumeDefault": "Restore Default",
     "sortSetting": "Sort",
     "addSqlScript": "Add Customized SQL",
-    "testConnecting": "Testing Connection..."
+    "testConnecting": "Testing Connection...",
+    "monitorSetting": "Monitor Setting"
+  },
+  "timeScopeUnit": {
+    "second": "seconds",
+    "minute": "minutes",
+    "hour": "hours",
+    "day": "days",
+    "week": "weeks",
+    "month": "months",
+    "season": "seasons",
+    "year": "years"
   },
   "aggregation": {
     "mean": "Average",
@@ -1488,6 +1536,7 @@
     "pivotTable": "Pivot Analysis",
     "weight": "Weight",
     "dataInsight": "Data Insight",
+    "recommendedInsight": "Recommended Insight",
     "keyInsight": "Key Insight",
     "total": "Total",
     "is": "is",
@@ -1527,7 +1576,7 @@
     "prompt": "Prompt",
     "filterRule": "Filter conditions will affect the results of subsequent question analysis",
     "restrict": "Restrict",
-    "featureList": "Relation List",
+    "featureList": "Relations",
     "hereIsFeatures": "The following are related factors",
     "modelConfidence": "Model Confidence",
     "displayTotalData": "Total {count} records",
@@ -1696,7 +1745,8 @@
   },
   "resultNote": {
     "groupLimitNote": "The result is before the original data {randomLimit} rows",
-    "samplingNote": "This result is calculated from the original sample {randomLimit} rows"
+    "samplingNote": "This result is calculated from the original sample {randomLimit} rows",
+    "pieChartFilterNote": "The result is filtered negative data"
   },
   "userManagement": {
     "createUser": "New User",

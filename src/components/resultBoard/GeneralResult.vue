@@ -19,6 +19,7 @@
           v-for="(chartTask, index) in resultInfo.key_result"
           :key="'chart-' + index"
           :component-id="chartTask"
+          :data-frame-id="dataFrameId"
           intend="key_result"
         />
       </template>
@@ -47,12 +48,26 @@
           />
         </template>
       </template>
+      <template 
+        v-if="resultInfo.recommended_insight && resultInfo.recommended_insight.length > 0"
+        slot="InsightRecommended">
+        <recommended-insight 
+          v-for="(componentId, index) in resultInfo.recommended_insight" 
+          :key="index"
+          :component-id="componentId"
+        />
+      </template>
     </result-board-body>
   </result-board>
 </template>
 <script>
+import RecommendedInsight from '@/components/display/RecommendedInsight'
+
 export default {
   name: 'GeneralResult',
+  components: {
+    RecommendedInsight
+  },
   props: {
     resultInfo: {
       type: Object,
@@ -61,6 +76,10 @@ export default {
     restrictions: {
       type: Array,
       default: () => []
+    },
+    dataFrameId: {
+      type: Number,
+      default: null
     }
   },
   methods: {

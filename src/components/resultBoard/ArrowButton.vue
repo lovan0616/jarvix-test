@@ -27,9 +27,10 @@ export default {
 <style lang="scss" scoped>
 .arrow-block {
   position: absolute;
-  top: 190px;
+  top: 50%;
   width: 45px;
   height: 45px;
+  transform: translateY(-50%);
   display: flex;
   justify-content: center;
   align-items: center;

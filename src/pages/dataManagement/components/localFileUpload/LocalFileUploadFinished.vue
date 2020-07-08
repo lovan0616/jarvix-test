@@ -43,7 +43,7 @@
       <div class="dialog-button-block">
         <button 
           class="btn btn-outline"
-          @click="buildBookmark"
+          @click="buildDataFrame"
         >{{ $t('button.finish') }}</button>
         <!-- <button class="btn btn-default"
           @click="toSetJoinTable"
@@ -81,7 +81,7 @@ export default {
     }
   },
   methods: {
-    buildBookmark () {
+    buildDataFrame () {
       if (this.$route.name === 'DataSourceList') {
         this.$store.dispatch('dataSource/getDataSourceList', {})
       } else {

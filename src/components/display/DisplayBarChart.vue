@@ -9,6 +9,7 @@
     <arrow-button
       v-show="showPagination"
       v-if="hasPagination"
+      :right="arrowBtnRight"
       @click.native="$emit('next')"
     />
     <selected-region
@@ -100,6 +101,18 @@ export default {
     hasPagination: {
       type: Boolean,
       default: false
+    },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
+    },
+    arrowBtnRight: {
+      type: Number,
+      default: 80
     }
   },
   data () {
@@ -125,7 +138,8 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: this.height
+        height: this.height,
+        ...this.customChartStyle
       }
     },
     series () {
@@ -188,6 +202,7 @@ export default {
         config.dataZoom = parallelZoomIn()
         config.animation = false
       }
+      config.toolbox.show = this.showToolbox
 
       return config
     },

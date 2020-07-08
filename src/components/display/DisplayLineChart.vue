@@ -9,6 +9,7 @@
     <arrow-button
       v-show="showPagination"
       v-if="hasPagination"
+      :right="arrowBtnRight"
       @click.native="$emit('next')"
     />
     <selected-region
@@ -94,6 +95,18 @@ export default {
     hasPagination: {
       type: Boolean,
       default: false
+    },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
+    },
+    arrowBtnRight: {
+      type: Number,
+      default: 80
     }
   },
   data () {
@@ -101,7 +114,6 @@ export default {
       'seriesItem:line': {
         'large': true
       },
-      'color:10': {},
       'grid:default': {},
       'xAxis:default': {},
       'yAxis:default': {}
@@ -118,7 +130,8 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: this.height
+        height: this.height,
+        ...this.customChartStyle
       }
     },
     series () {
@@ -186,6 +199,46 @@ export default {
       // 數量大的時候出現 scroll bar
       if (this.dataset.index.length > 10) {
         config.dataZoom = parallelZoomIn()
+      }
+      config.toolbox.show = this.showToolbox
+
+      // 圖表 threshold
+      if (this.title.yAxis[0].upperLimit !== undefined) {
+        let upperLimit = this.title.yAxis[0].upperLimit
+        // 找出 Y 的最小值
+        let minY = this.dataset.data[0][0]
+        this.dataset.data.forEach(element => {
+          if (element[0] !== null) {
+            if (minY === null) minY = element[0]
+            minY = element[0] < minY ? element[0] : minY
+          }
+        })
+        /**
+         * 將超出警示的上色
+         * 注意！！ 最小值的 gt 一定要設！！ 不然線不會上色，應該是 echarts bug
+         **/
+        config.visualMap = [{
+          type: 'piecewise',
+          show: false,
+          pieces: [{
+            gte: upperLimit,
+            color: '#EB5959'
+          }, {
+            lt: upperLimit,
+            gt: minY
+          }]
+        }]
+        // 門檻線
+        config.series[0].markLine = {
+          symbol: 'none',
+          lineStyle: {
+            color: '#EB5959',
+            width: 2
+          },
+          data: [{
+            yAxis: upperLimit
+          }]
+        }
       }
 
       return config
