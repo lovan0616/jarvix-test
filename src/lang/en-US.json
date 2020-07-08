@@ -1527,7 +1527,7 @@
     "prompt": "Prompt",
     "filterRule": "Filter conditions will affect the results of subsequent question analysis",
     "restrict": "Restrict",
-    "featureList": "Relation List",
+    "featureList": "Relations",
     "hereIsFeatures": "The following are related factors",
     "modelConfidence": "Model Confidence",
     "displayTotalData": "Total {count} records",
