@@ -419,6 +419,14 @@ export default {
           color: #AAAAAA;
         }
       }
+
+      /deep/ .el-input {
+        &.is-disabled {
+          .el-input__inner {
+            background-color: transparent;
+          }
+        }
+      }
     }
   }
 
