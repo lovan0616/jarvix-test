@@ -203,7 +203,7 @@ export default {
       config.toolbox.show = this.showToolbox
 
       // 圖表 threshold
-      if (this.title.yAxis[0].upperLimit !== undefined) {
+      if (this.title.yAxis[0].upperLimit !== null) {
         let upperLimit = this.title.yAxis[0].upperLimit
         // 找出 Y 的最大、最小值
         let maxY = this.dataset.data[0][0]
