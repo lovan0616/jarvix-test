@@ -248,7 +248,7 @@ export default {
         },
         {
           text: this.$t('editing.lastUpdateResult'),
-          value: 'crontabState',
+          value: 'latestLogStatus',
           width: '140px'
         },
         {
