@@ -21,8 +21,9 @@
       :data-result-id="currentResultId"
       :result-info="resultInfo"
       :restrictions="restrictInfo"
+      :segmentation-payload="segmentationPayload"
     />
-    <div 
+    <div
       v-if="relatedQuestionList.length > 0" 
       class="related-question-block">
       <div class="block-title">{{ $t('editing.relatedQuestion') }}</div>
@@ -63,6 +64,7 @@ export default {
         unknownToken: [],
         nlpToken: []
       },
+      segmentationPayload: null,
       totalSec: 50,
       periodSec: 200
     }
@@ -115,6 +117,7 @@ export default {
       this.resultInfo = null
       this.restrictInfo = []
       this.relatedQuestionList = []
+      this.segmentationPayload = null
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {
@@ -233,6 +236,7 @@ export default {
               this.resultInfo = componentResponse.componentIds
               this.restrictInfo = componentResponse.restrictions
               this.layout = this.getLayout(componentResponse.layout)
+              this.segmentationPayload = componentResponse.segmentationPayload
               this.segmentationAnalysis(componentResponse.segmentationPayload)
               this.isLoading = false
               break
