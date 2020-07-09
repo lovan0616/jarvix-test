@@ -396,7 +396,6 @@ export default {
       this.fetchData().then(taskData => {
         this.componentData = taskData
         this.loading = false
-        this.hasNextPage = false
       })
     },
     closeMonitorSettingDialog () {
