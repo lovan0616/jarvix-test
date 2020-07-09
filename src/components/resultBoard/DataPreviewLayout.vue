@@ -15,6 +15,7 @@
         slot="PageResultBoardChart"
         :key="segmentationPayload.dataframeId"
         :data-frame-id="segmentationPayload.dataframeId"
+        :show-correlation-matrix="false"
         mode="display"
       />
     </result-board-body>

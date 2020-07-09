@@ -69,6 +69,7 @@
     </div>
     <!--欄位關聯概況-->
     <column-correlation-overview
+      v-if="showCorrelationMatrix"
       :data-frame-id="dataFrameId"
       class="board-body-section"
     />
@@ -96,6 +97,10 @@ export default {
     mode: {
       type: String,
       required: true
+    },
+    showCorrelationMatrix: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -199,21 +204,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.page-preview-bookmark {
-  .bookmark-header {
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 32px;
-    margin-bottom: 24px;
-  }
-
-  .dataset-info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
+.data-frame-data {
   .board-body-section {
     .title {
       margin-bottom: 13px;
@@ -247,29 +238,6 @@ export default {
     }
     .summary {
       padding: 10px;
-    }
-  }
-}
-
-.result-board {
-  .board-header {
-    border-top: unset;
-    padding-bottom: 0;
-  }
-  .board-body {
-    padding: 16px 24px;
-  }
-
-  .overview {
-    margin-bottom: 10px;
-    font-size: 14px;
-
-    &__data {
-      display: flex;
-    }
-
-    &__item {
-      margin-right: 45px;
     }
   }
 }
