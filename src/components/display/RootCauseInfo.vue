@@ -1,8 +1,10 @@
 <template>
-  <div class="insights-info root-cause">
+  <div 
+    v-if="info.rootCause.length > 0"
+    class="insights-info root-cause"
+  >
     <div class="insights-info-title">{{ $t('resultDescription.dataInsight') }}</div>
     <el-tabs
-      v-if="info.rootCause.length > 0"
       v-model="activeTab"
     >
       <el-tab-pane
@@ -82,9 +84,6 @@
         </div>
       </el-tab-pane>
     </el-tabs>
-    <no-result
-      v-else
-    />
   </div>
 </template>
 <script>
