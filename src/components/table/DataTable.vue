@@ -185,7 +185,7 @@
               <span class="dataframe-name">{{ data[headInfo.value] }}</span>
             </el-tooltip>
           </span>
-          <span v-else-if="headInfo.value === 'crontabState'">
+          <span v-else-if="headInfo.value === 'latestLogStatus'">
             {{ batchLoadStatus(data) }}
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
@@ -411,7 +411,7 @@ export default {
     },
     batchLoadStatus (data) {
       if (data.originType !== 'database') return '-'
-      switch (data['crontabState']) {
+      switch (data['latestLogStatus']) {
         case null:
           return this.$t('batchLoad.noRecord')
         case 'Complete':
