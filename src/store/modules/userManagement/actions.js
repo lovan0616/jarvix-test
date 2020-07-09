@@ -18,46 +18,46 @@ export default {
     let groupPermissionList = []
     let defaultAccount = {}
 
-    await getPermission()
-      .then((userInfo) => {
-        if (userInfo.accountList.length) {
-          defaultAccount = userInfo.accountList.find(account => account.isDefault)
-          accountPermissionList = defaultAccount.accountPermissionList
-          licensePermissionList = defaultAccount.licensePermissionList
-          if (defaultAccount.groupList.length) {
-            let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
-            groupPermissionList = defaultGroup.groupPermissionList
-          }
+    try {
+      // get user permission
+      const userInfo = await getPermission()
+      if (userInfo.accountList.length) {
+        defaultAccount = userInfo.accountList.find(account => account.isDefault)
+        accountPermissionList = defaultAccount.accountPermissionList
+        licensePermissionList = defaultAccount.licensePermissionList
+        if (defaultAccount.groupList.length) {
+          let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
+          groupPermissionList = defaultGroup.groupPermissionList
         }
-    
-        commit('setUserInfo', {
-          userId: userInfo.userData.id,
-          userName: userInfo.userData.name,
-          accountList: userInfo.accountList,
-          groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
-          permission: [
-            ...accountPermissionList,
-            ...groupPermissionList,
-            ...licensePermissionList
-          ]
-        })
-        
-        let locale = userInfo.userData.language
-        if (locale && locale !== rootState.setting.locale) {
-          commit('setting/setLocale', locale, { root: true })
-        }
+      }
+      
+      commit('setUserInfo', {
+        userId: userInfo.userData.id,
+        userName: userInfo.userData.name,
+        accountList: userInfo.accountList,
+        groupList: userInfo.accountList.length ? defaultAccount.groupList : [],
+        permission: [
+          ...accountPermissionList,
+          ...groupPermissionList,
+          ...licensePermissionList
+        ]
       })
-      .catch(() => {})
-    
-    await getAccountInfo(defaultAccount.id)
-      .then((accountInfo) => {
-        commit('setLicenseInfo', accountInfo.license)
-      })
-      .catch(() => {})
 
-    await refreshToken().then(res => {
-      localStorage.setItem('token', res.accessToken)
-    })
+      let locale = userInfo.userData.language
+      if (locale && locale !== rootState.setting.locale) {
+        commit('setting/setLocale', locale, { root: true })
+      }
+
+      // get account info
+      const accountInfo = await getAccountInfo(defaultAccount.id)
+      commit('setLicenseInfo', accountInfo.license)
+
+      // refresh token
+      const { accessToken } = await refreshToken()
+      localStorage.setItem('token', accessToken)
+    } catch(error) {
+      return Promise.reject(error)
+    }
   },
   updateUserGroupList ({ dispatch, commit, getters }) {
     return dispatch('getUserInfo')
