@@ -14,9 +14,8 @@
       class="correlation-result-body"
     >
       <template slot="PageResultBoardIndicator">
-        <hint-info-block
-          :msg-list="[$t('editing.resultOverSizeMessage')]"
-          inline
+        <notify-info-block
+          :msg="$t('editing.resultOverSizeMessage')"
         />
       </template>
       <template slot="PageResultBoardChart">
@@ -82,13 +81,13 @@
   </result-board>
 </template>
 <script>
-import HintInfoBlock from '@/components/display/HintInfoBlock'
+import NotifyInfoBlock from '@/components/display/NotifyInfoBlock'
 import RecommendedInsight from '@/components/display/RecommendedInsight'
 
 export default {
   name: 'CorrelationExplorationResult',
   components: {
-    HintInfoBlock,
+    NotifyInfoBlock,
     RecommendedInsight
   },
   props: {

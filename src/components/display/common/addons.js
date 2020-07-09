@@ -119,7 +119,13 @@ export function yAxisParallel () {
         fontSize: config.axisLabelFontSize
       },
       rotate: 0,
-      color: chartVariable['xAxisLabelColor']
+      color: chartVariable['xAxisLabelColor'],
+      formatter (value) {
+        if (value.length > 20) {
+          return value.slice(0, 19) + '...'
+        }
+        return value
+      }
     }
   }
 }
