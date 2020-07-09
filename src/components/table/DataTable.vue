@@ -185,7 +185,14 @@
               <span class="dataframe-name">{{ data[headInfo.value] }}</span>
             </el-tooltip>
           </span>
-          <span v-else-if="headInfo.value === 'latestLogStatus'">
+          <span 
+            v-else-if="headInfo.value === 'latestLogStatus'"
+            :class="{ 'is-processing': data[headInfo.value] === 'Ready' || data[headInfo.value] === 'Process' }"
+          >
+            <svg-icon
+              v-if="data[headInfo.value] === 'Ready' || data[headInfo.value] === 'Process'"
+              icon-class="spinner"
+            />
             {{ batchLoadStatus(data) }}
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
@@ -419,6 +426,7 @@ export default {
         case 'Fail':
           return this.$t('batchLoad.updateFailed')
         case 'Process':
+        case 'Ready':
           return this.$t('batchLoad.updating')
       }
     },
