@@ -324,7 +324,7 @@ export function getDataFrameEtlSetting (dataFrameId) {
  */
 export function getBatchLoadSetting(dataFrameId) {
   return request({
-    url: `/dataFrame/${dataFrameId}/corntabConfig`,
+    url: `/dataFrame/${dataFrameId}/crontab/config`,
     method: 'GET'
   })
 }
@@ -336,7 +336,7 @@ export function getBatchLoadSetting(dataFrameId) {
  */
 export function setBatchLoad(dataFrameId, data) {
   return request({
-    url: `/dataFrame/${dataFrameId}/corntabConfig`,
+    url: `/dataFrame/${dataFrameId}/crontab/config`,
     method: 'POST',
     data
   })
@@ -349,7 +349,7 @@ export function setBatchLoad(dataFrameId, data) {
  */
 export function updateBatchLoadSetting(dataFrameId, data) {
   return request({
-    url: `/dataFrame/${dataFrameId}/corntabConfig`,
+    url: `/dataFrame/${dataFrameId}/crontab/config`,
     method: 'PUT',
     data
   })
@@ -362,7 +362,7 @@ export function updateBatchLoadSetting(dataFrameId, data) {
  */
 export function changeBatchLoadSettingStatus(dataFrameId, status = 'Disable') {
   return request({
-    url: `/dataFrame/${dataFrameId}/corntabConfig/status`,
+    url: `/dataFrame/${dataFrameId}/crontab/config/status`,
     method: 'PATCH',
     data: {
       status
