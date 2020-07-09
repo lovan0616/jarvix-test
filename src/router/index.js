@@ -328,7 +328,7 @@ router.beforeEach(async (to, from, next) => {
     try {
       await store.dispatch('userManagement/getUserInfo')
     } catch (error) {
-      next({ name: 'PageLogin' })
+      return next({ name: 'PageLogin' })
     }
 
     // 處理路由的 group 和 account id 與 store 中 default 不相同時：切換成路由的 id
