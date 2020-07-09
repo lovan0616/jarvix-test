@@ -70,8 +70,8 @@ export default {
             email: this.userInfo.account,
             password: this.userInfo.password
           })
-            .then(res => {
-              localStorage.setItem('token', res.accessToken)
+            .then(({ accessToken }) => {
+              localStorage.setItem('token', accessToken)
               return this.getUserInfo()
             })
             .then(() => {
