@@ -240,7 +240,7 @@ export default {
     getBatchSetting () {
       this.isLoading = true
       getBatchLoadSetting(this.dataFrameInfo.id)
-        .then(({ crontabConfigDo, primaryKey }) => {
+        .then(({ crontabConfigDo, primaryKeys }) => {
           // 如果還沒設定過 crontabConfigDo 會是空的
           if (crontabConfigDo) {
             this.switchInfo.selected = crontabConfigDo.id && crontabConfigDo.status === 'Enable'
@@ -248,7 +248,7 @@ export default {
             this.columnInfo = {
               builtTime: crontabConfigDo.createDateColumn || null,
               updatedTime: crontabConfigDo.updateDateColumn || null,
-              primaryKeys: primaryKey || []
+              primaryKeys: primaryKeys || []
             }
             this.scheduleInfo.selectedBasicSchedule = crontabConfigDo.cron || null
           }
@@ -279,9 +279,9 @@ export default {
       return {
         createDateColumn: this.columnInfo.builtTime,
         cron: this.scheduleInfo.selectedBasicSchedule,
-        primaryKey: this.columnInfo.primaryKeys,
+        primaryKeys: this.columnInfo.primaryKeys,
         status: "Enable",
-        update_date_column: this.columnInfo.updatedTime
+        updateDateColumn: this.columnInfo.updatedTime
       }
     },
     setBatchLoad () {

@@ -254,7 +254,7 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '300px',
+          width: '270px',
           action: [
             {
               name: this.$t('button.edit'),
@@ -264,12 +264,9 @@ export default {
                 { icon: '', title: 'button.editDataValue', dialogName: 'valueAlias' },
                 { icon: '', title: 'button.editColumnSet', dialogName: 'columnSet' },
                 { icon: '', title: 'button.editEtlSetting', dialogName: 'etlSetting' },
-                { icon: '', title: 'button.dateTimeColumnSetting', dialogName: 'dateTime' }
+                { icon: '', title: 'button.dateTimeColumnSetting', dialogName: 'dateTime' },
+                { icon: '', title: 'button.batchLoadSetting', dialogName: 'batchLoad' }
               ]
-            },
-            {
-              name: this.$t('button.batchLoadSetting'),
-              value: 'batchLoad'
             },
             {
               name: this.$t('button.delete'),
