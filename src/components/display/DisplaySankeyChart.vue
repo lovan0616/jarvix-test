@@ -27,7 +27,7 @@ const sankeyConfig = {
       type: 'sankey',
       data: [],
       links: [],
-      nodeGap: 10,
+      nodeGap: 14,
       top: 16,
       nodeAlign: 'left',
       focusNodeAdjacency: 'allEdges',
