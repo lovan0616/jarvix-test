@@ -16,6 +16,7 @@ export default {
     state.license.currentDataStorageSize = data
   },
   clearUserInfo (state) {
+    state.userId = null
     state.userName = ''
     state.accountList = []
     state.groupList = []
