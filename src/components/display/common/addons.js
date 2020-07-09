@@ -74,7 +74,14 @@ export function xAxisDefault () {
         fontSize: config.axisLabelFontSize
       },
       rotate: 30,
+      formatter (value) {
+        if (value.length > 20) {
+          return value.slice(0, 19) + '...'
+        }
+        return value
+      },
       color: chartVariable['xAxisLabelColor']
+      
     }
   }
 }
