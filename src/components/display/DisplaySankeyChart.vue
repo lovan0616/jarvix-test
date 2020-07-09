@@ -27,6 +27,9 @@ const sankeyConfig = {
       type: 'sankey',
       data: [],
       links: [],
+      nodeGap: 20,
+      top: 16,
+      nodeAlign: 'left',
       focusNodeAdjacency: 'allEdges',
       itemStyle: {
         normal: {
@@ -74,7 +77,6 @@ export default {
       }
       // 不顯示“全選”按鈕
       sankeyOptions.legend.selector = false
-      sankeyOptions.nodeGap = 20
       sankeyOptions.series[0].data = this.dataList
       sankeyOptions.series[0].links = this.linkList
       sankeyOptions.tooltip.trigger = 'item'
@@ -116,14 +118,9 @@ export default {
       return sankeyOptions
     },
     chartStyle () {
-      // let columns = this.dataset.columns
-      // return {
-      //   width: '100%',
-      //   height: `${this.dataset.data[columns[0]][columns[1]].length * 32}px` || '420px'
-      // }
       return {
         width: '100%',
-        height: '420px'
+        height: `${this.dataList.length * 32}px` || '420px'
       }
     },
     appQuestion () {
