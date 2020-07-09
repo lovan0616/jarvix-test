@@ -66,7 +66,6 @@ import {
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
-  'xAxis:default': xAxisDefault(),
   'yAxis:default': yAxisDefault(),
   'seriesItem:line': seriesItemLine()
 })
@@ -115,7 +114,6 @@ export default {
         'large': true
       },
       'grid:default': {},
-      'xAxis:default': {},
       'yAxis:default': {}
     })
     return {
@@ -143,6 +141,9 @@ export default {
     },
     options () {
       let config = {
+        xAxis: {
+          ...xAxisDefault()
+        },
         ...this.addonOptions,
         ...getDrillDownTool(this.$route.name, this.title),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
@@ -160,7 +161,7 @@ export default {
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur) => {
-            return acc + `<td style="padding: 4px 12px;">${cur || ''}</td>`
+            return acc + `<td style="padding: 4px 12px;max-width: 200px;white-space: break-spaces;">${cur || ''}</td>`
           }, '')
           table += `<tr ${i % 2 === 0 ? (i === 0 ? 'style="background-color:#2B4D51"' : 'style="background-color:rgba(50, 75, 78, 0.6)"') : ''}>${tableData}</tr>`
         }
