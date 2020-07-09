@@ -146,6 +146,9 @@ export default {
         }).then(response => {
           // 是否只有一個頁面
           this.singlePage = response.singlePage
+          if (response.isAutoRefresh) {
+            this.singlePage = true
+          }
           switch (response.status) {
             case 'Process':
             case 'Ready':
@@ -170,10 +173,10 @@ export default {
               let isAutoRefresh = response.isAutoRefresh
               if(isAutoRefresh && this.isPinboardPage) {
                 this.autoRefreshFunction = window.setTimeout(() => {
-                  this.fetchData().then(task => {
+                  this.fetchData(0).then(task => {
                     resolve(task)
                   })
-                }, 60*1000)
+                }, 60 * 1000)
               }
               // 取樣
               if (responseData.sampling) {
