@@ -1013,6 +1013,20 @@ export default {
       return this.$store.state.setting.locale
     }
   },
+  mounted () {
+    // 檢查如果是英文版（沒有功能說明），就先導回首頁
+    if (!this.lang.includes('zh')) {
+      const currentAccount = this.$store.getters['userManagement/getCurrentAccountId']
+      const currentGroup = this.$store.getters['userManagement/getCurrentGroupId']
+      this.$router.push({
+        name: 'PageIndex',
+        params: {
+          'account_id': currentAccount,
+          'group_id': currentGroup 
+        }
+      })
+    }
+  },
   methods: {
     getImgUrl (fileName) {
       return require(`@/assets/images/${this.lang}/function-description/${fileName}.png`)
