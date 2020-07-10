@@ -22,6 +22,7 @@ export default {
   position: absolute;
   top: $header-height;
   right: 0;
+  overflow: auto;
 }
 
 .main {
