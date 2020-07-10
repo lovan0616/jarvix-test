@@ -270,7 +270,7 @@ const router = new Router({
                           name: 'GroupUserList',
                           meta: {
                             layers: ['account/:account_id', 'group', ':group_id', 'users'],
-                            permission: ['account_read_group']
+                            permission: ['group_read_user']
                           }
                         },
                         {
