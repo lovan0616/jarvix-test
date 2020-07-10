@@ -59,17 +59,6 @@ let scatterChartConfig = {
   }
 }
 
-let tooltipFormatterWrapper = function ({xAxis, yAxis}) {
-  return function (params, ticket, callback) {
-    return params.reduce((res, item, index) => {
-      return `
-        ${xAxis[0].display_name}: ${item.data[0]}<br/>
-        ${yAxis[0].display_name}: ${item.data[1]}<br/>
-      `
-    }, '')
-  }
-}
-
 export default {
   name: 'DisplayScatterChart',
   props: {
@@ -103,7 +92,14 @@ export default {
       let scatterOptions = JSON.parse(JSON.stringify(scatterChartConfig))
       this.$set(chartAddon.xAxis, 'splitLine', scatterOptions.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterOptions.yAxisSplitLine)
-      chartAddon.tooltip.formatter = tooltipFormatterWrapper(this.title)
+      chartAddon.tooltip.formatter = (params, ticket, callback) => {
+        return params.reduce((res, item, index) => {
+          return `
+            ${this.title.xAxis[0].display_name}: ${this.formatComma(item.data[0])}<br/>
+            ${this.title.yAxis[0].display_name}: ${this.formatComma(item.data[1])}<br/>
+          `
+        }, '')
+      }
       // 不顯示“全選”按鈕
       chartAddon.legend.selector = false
       // 開啟工具列的 dataZoom 工具
