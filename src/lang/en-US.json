@@ -65,7 +65,7 @@
     "userCreateSuccess": "User created.",
     "userInviteSuccess": "User invited.",
     "userInviteRepetitive": "Same email has been invited.",
-    "userAlreadyExisting": "This account already exists.",
+    "userAlreadyExisting": "account already exists. | accounts already exist.",
     "changePasswordSuccess": "Password changed successfully.",
     "editNameSuccess": "Name Edited.",
     "changeStatusSuccess": "Status changed.",
@@ -116,8 +116,8 @@
     },
     "goAdjust": "Adjust",
     "notBelongToGroups": "This feature cannot be used because you are not affiliated with any project.",
-    "pleaseCreateOrJoinGroup": "please",
-    "pleaseInformManager": "for adding you to projects, please inform your manager"
+    "pleaseCreateOrJoinGroup": "Please join a group or create a group.",
+    "pleaseInformManager": "To join a project, please inform your manager."
   },
   "editing": {
     "localUpload": "File Upload",
@@ -1653,7 +1653,7 @@
     "PossessionToken": "Connective Word",
     "ChangeToken": "Other Vocabulary",
     "DataColumnToken": "From {dataFrame}'s {dataColumn} @:segmentationToken.Datacolumn recognized as {matchedWord}",
-    "ColumnSetToken": "From{dataFrame}'s {matchedWord}",
+    "ColumnSetToken": "From {dataFrame}'s {matchedWord}",
     "DataValueToken": "From {dataFrame}'s {dataColumn} @:segmentationToken.Datavalue recognized as {matchedWord}",
     "DatarowToken": "From {dataFrame}'s @:segmentationToken.Datarow {matchedWord}",
     "ElseToken": "Other Vocabulary",

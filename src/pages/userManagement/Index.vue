@@ -333,7 +333,7 @@ export default {
         if (existingUsers.size > 0) {
           const html = [...existingUsers].join(',<br>')
           Message({
-            message: html + ',<br>' + this.$t('message.userAlreadyExisting'),
+            message: html + ',<br>' + this.$tc('message.userAlreadyExisting', existingUsers.size),
             dangerouslyUseHTMLString: true,
             type: 'warning',
             duration: 5 * 1000
@@ -597,7 +597,7 @@ export default {
         height: 21px;
         overflow: visible;
         .label-invitee-email {
-          flex: 0 0 269px;
+          flex: 0 0 244px;
         }
         .label-user-role-authority {
           flex: 0 0 168px;
