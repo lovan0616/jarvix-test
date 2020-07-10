@@ -12,7 +12,7 @@
       <span class="divider">/</span>
       <span class="page">{{ boardName }}</span>
       <a
-        :class="{'unSortable': !isSortable}"
+        v-if="isSortable"
         class="sort-btn"
         href="javascript:void(0)"
         @click="isShowSortingDialog=true">
@@ -30,7 +30,7 @@
       v-if="isLoading"
     />
     <empty-info-block
-      v-else-if="boardList.length === 0"
+      v-else-if="availableList.length === 0"
       :msg="$t('editing.emptyPinboard')"
     />
     <component
@@ -78,6 +78,9 @@ export default {
        ? this.$store.state.pinboard.pinboardInfo
        : this.$store.state.pinboard.groupPinboardInfo
     },
+    availableList () {
+      return this.boardList.filter(element => !element.isDeleted)
+    },
     prevPage () {
       return this.isPersonalPinboard ? 'PersonalPagePinboardList' : 'ProjectPagePinboardList'
     },
@@ -88,7 +91,7 @@ export default {
       return this.$route.name === 'PersonalPagePinboard'
     },
     isSortable () {
-      return this.boardList.length > 1
+      return this.availableList.length > 1
     }
   },
   mounted () {
@@ -219,10 +222,6 @@ export default {
         background-color: #63cbd5;
         color: #fff;
       }
-    }
-
-    .unSortable {
-      display: none;
     }
   }
   .page-title {
