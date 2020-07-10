@@ -30,7 +30,7 @@
       v-if="isLoading"
     />
     <empty-info-block
-      v-else-if="filterList.length === 0"
+      v-else-if="availableList.length === 0"
       :msg="$t('editing.emptyPinboard')"
     />
     <component
@@ -78,7 +78,7 @@ export default {
        ? this.$store.state.pinboard.pinboardInfo
        : this.$store.state.pinboard.groupPinboardInfo
     },
-    filterList () {
+    availableList () {
       return this.boardList.filter(element => !element.isDeleted)
     },
     prevPage () {
@@ -91,7 +91,7 @@ export default {
       return this.$route.name === 'PersonalPagePinboard'
     },
     isSortable () {
-      return this.filterList.length > 1
+      return this.availableList.length > 1
     }
   },
   mounted () {
