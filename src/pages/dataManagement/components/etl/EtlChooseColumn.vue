@@ -43,7 +43,6 @@
           :min-column-width="'270px'"
           :current-table-index="currentTableIndex"
           :is-processing="isProcessing"
-          height="calc(100vh - 400px)"
           fixed-index
         >
           <template #index-header>

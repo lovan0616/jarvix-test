@@ -155,7 +155,7 @@ export default {
       return boardHeaderData ? boardHeaderData.segmentation.question : ''
     },
     shareUrl () {
-      return `${window.location.origin}/account/${this.accountId}/group/${this.accountId}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&dataFrameId=${this.dataFrameId}&action=share`
+      return `${window.location.origin}/account/${this.accountId}/group/${this.groupId}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&dataFrameId=${this.dataFrameId}&action=share`
     },
     hasFilter () {
       return (this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult') || this.restrictions.length > 0
@@ -219,12 +219,10 @@ export default {
             // 這邊是為了 transition 所以先抓高度
             let elem = document.getElementById(this.pinBoardId)
             elem.style.height = elem.offsetHeight + 'px'
-            window.setTimeout(() => {
-              elem.style.height = 0
-              elem.style.overflow = 'hidden'
-              elem.style.padding = 0
-              elem.style.margin = 0
-            }, 300)
+            elem.style.height = 0
+            elem.style.overflow = 'hidden'
+            elem.style.padding = 0
+            elem.style.margin = 0
             window.setTimeout(() => {
               this.isLoading = false
               this.$store.commit('pinboard/deletePinboardById', { accountId: this.accountId, id: this.pinBoardId })

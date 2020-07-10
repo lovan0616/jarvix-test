@@ -8,6 +8,7 @@
     </div>
     <el-table 
       v-bind="tableProps"
+      :empty-text="$t('editing.noData')"
       class="sy-table"
       style="width: 100%;"
     >

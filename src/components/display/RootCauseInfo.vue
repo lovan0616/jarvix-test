@@ -33,7 +33,7 @@
               <div class="sub-title">
                 <span class="sub-title__text">{{ rootCauseInfo.name }}</span>
                 <span class="sub-title__text">{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}</span>
-                <span class="sub-title__text">{{ $t('aggregatedValue.mean') }}</span>
+                <span class="sub-title__text">{{ $t('aggregatedValue.mean').toLowerCase() }}</span>
               </div>
               <div class="amount-block">
                 <div class="count">{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</div>
@@ -46,23 +46,21 @@
             <div class="detail-info">
               <div class="detail-info__list">
                 <i18n
-                  :for="['interpolation', 'interpolation']"
                   path="resultDescription.totalColumnAverage"
                   tag="pre"
                   class="detail-info__list__item" 
                 >
-                  <span class="text name">{{ $t('interpolation', { interpolation: rootCauseInfo.name }) }}</span>
-                  <span class="text">{{ $t('interpolation', { interpolation: tableInfo.totalAverage }) }}</span>
+                  <span class="text name">{{ rootCauseInfo.name }}</span>
+                  <span class="text">{{ tableInfo.totalAverage }}</span>
                 </i18n>
                 <i18n
-                  :for="['interpolation', 'interpolation', 'interpolation']"
                   path="resultDescription.compareToAverage"
                   tag="pre"
                   class="detail-info__list__item" 
                 >
-                  <span class="text name">{{ $t('interpolation', { interpolation: tableInfo.columnName + tableInfo.columnValue }) }}</span>
-                  <span class="text percentage">{{ $t('interpolation', { interpolation: Math.abs(tableInfo.diffAverageRate) + '%' }) }}</span>
-                  <span class="text">{{ $t('interpolation', { interpolation: tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }) }}</span>
+                  <span class="text name">{{ tableInfo.columnName + tableInfo.columnValue }}</span>
+                  <span class="text percentage">{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</span>
+                  <span class="text">{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}</span>
                 </i18n>
               </div>
               <div class="info-block">
@@ -215,11 +213,12 @@ export default {
 
       .column-title {
         @include text-hidden
+        margin-bottom: 4px;
       }
 
       .sub-title {
         font-size: 14px;
-        line-height: 26px;
+        line-height: 20px;
         margin-bottom: 6px;
         display: flex;
         justify-content: center;

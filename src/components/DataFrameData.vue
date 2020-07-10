@@ -241,4 +241,17 @@ export default {
     }
   }
 }
+
+.overview {
+  margin-bottom: 10px;
+  font-size: 14px;
+
+  &__data {
+    display: flex;
+  }
+
+  &__item {
+    margin-right: 45px;
+  }
+}
 </style>
