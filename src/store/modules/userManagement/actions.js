@@ -12,7 +12,7 @@ export default {
       localStorage.removeItem('token')
     })
   },
-  async getUserInfo ({ commit, rootState }) {
+  async getUserInfo({ commit, rootState }, defaultGroupId) {
     let accountPermissionList = []
     let licensePermissionList = []
     let groupPermissionList = []
@@ -20,7 +20,7 @@ export default {
 
     try {
       // get user permission
-      const userInfo = await getPermission()
+      const userInfo = await getPermission(defaultGroupId)
       if (userInfo.accountList.length) {
         defaultAccount = userInfo.accountList.find(account => account.isDefault)
         accountPermissionList = defaultAccount.accountPermissionList
@@ -98,7 +98,7 @@ export default {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
     return switchGroup({ accountId, groupId })
-      .then(() => dispatch('getUserInfo'))
+      .then(() => dispatch('getUserInfo', groupId))
       .then(() => {
         // 先清空，因為新群組有可能沒有 dataSource
         commit('dataSource/setDataSourceId', null, { root: true })

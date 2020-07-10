@@ -286,7 +286,7 @@ export default {
   }
 
   /deep/ .dropdown {
-    &__list {
+    &__list-container {
       left: calc(100% + 16px);
     }
 
