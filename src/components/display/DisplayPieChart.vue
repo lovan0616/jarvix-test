@@ -90,7 +90,7 @@ export default {
         color: this.colorList
       }
       config.tooltip.trigger = 'item'
-      config.tooltip.formatter = params => `${this.dataset.columns[0]}<br>${params.marker}${params.name}: ${params.value[1]}（${params.percent}%）`
+      config.tooltip.formatter = params => `${this.dataset.columns[0]}<br>${params.marker}${params.name}: ${this.formatComma(params.value[1])}（${params.percent}%）`
 
       // 數據顯示
       config.toolbox.feature.dataView.optionToContent = (opt) => {
