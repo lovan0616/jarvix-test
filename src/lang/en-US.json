@@ -1,6 +1,5 @@
 {
   "lang": "English",
-  "interpolation": "{interpolation}",
   "nav": {
     "index": "Intellignet Analysis",
     "pinboard": "Personal Pinboard",
@@ -65,7 +64,7 @@
     "userCreateSuccess": "User created.",
     "userInviteSuccess": "User invited.",
     "userInviteRepetitive": "Same email has been invited.",
-    "userAlreadyExisting": "This account already exists.",
+    "userAlreadyExisting": "account already exists. | accounts already exist.",
     "changePasswordSuccess": "Password changed successfully.",
     "editNameSuccess": "Name Edited.",
     "changeStatusSuccess": "Status changed.",
@@ -116,8 +115,8 @@
     },
     "goAdjust": "Adjust",
     "notBelongToGroups": "This feature cannot be used because you are not affiliated with any project.",
-    "pleaseCreateOrJoinGroup": "please",
-    "pleaseInformManager": "for adding you to projects, please inform your manager"
+    "pleaseCreateOrJoinGroup": "Please join a group or create a group.",
+    "pleaseInformManager": "To join a project, please inform your manager."
   },
   "editing": {
     "localUpload": "File Upload",
@@ -341,7 +340,8 @@
     "createGroup": "Create Project",
     "sortSetting": "Sort Settings",
     "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change.",
-    "lastUpdateResult": "Latest Update Result"
+    "lastUpdateResult": "Latest Update Result",
+    "noData": "No Data"
   },
   "algorithm": {
     "name": "Algorithm",
@@ -1519,8 +1519,8 @@
     ]
   },
   "resultDescription": {
-    "totalColumnAverage": "The average of {0} is {1}",
-    "compareToAverage": "{0} is {1} {2} average",
+    "totalColumnAverage": "The average of {0} is {1}.",
+    "compareToAverage": "{0} is {1} {2} average.",
     "high": "High",
     "low": "Low",
     "higher": "higher than",
@@ -1653,7 +1653,7 @@
     "PossessionToken": "Connective Word",
     "ChangeToken": "Other Vocabulary",
     "DataColumnToken": "From {dataFrame}'s {dataColumn} @:segmentationToken.Datacolumn recognized as {matchedWord}",
-    "ColumnSetToken": "From{dataFrame}'s {matchedWord}",
+    "ColumnSetToken": "From {dataFrame}'s {matchedWord}",
     "DataValueToken": "From {dataFrame}'s {dataColumn} @:segmentationToken.Datavalue recognized as {matchedWord}",
     "DatarowToken": "From {dataFrame}'s @:segmentationToken.Datarow {matchedWord}",
     "ElseToken": "Other Vocabulary",
