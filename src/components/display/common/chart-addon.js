@@ -12,6 +12,7 @@ export function commonChartOptions () {
       itemHeight: 12,
       icon: 'circle',
       itemGap: 20,
+      selectorButtonGap: 20,
       textStyle: {
         color: chartVariable['textColor']
       },
@@ -42,7 +43,7 @@ export function commonChartOptions () {
         align: 'center',
         verticalAlign: 'middle',
         lineHeight: 12,
-        padding: [2, 4, 2, 4]
+        padding: [2, 10, 2, 10]
       }
     },
     toolbox: {
