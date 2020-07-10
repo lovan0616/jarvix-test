@@ -341,7 +341,8 @@
     "createGroup": "建立专案",
     "sortSetting": "排序设定",
     "dragAndSort": "请按住项目上下拖曳移动排序位置，项目排序变更后即生效。",
-    "lastUpdateResult": "近一次更新结果"
+    "lastUpdateResult": "近一次更新结果",
+    "noData": "暂无数据"
   },
   "algorithm": {
     "name": "演算法",
