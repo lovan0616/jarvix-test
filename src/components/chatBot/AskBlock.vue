@@ -139,10 +139,10 @@ export default {
     questionTokenList () {
       let tokenList = []
       // 處理問句字串
-      if (!this.cursorPositionQuestion) return []
-      for (let i = 0; i < this.cursorPositionQuestion.length; i++) {
-        for (let j = this.cursorPositionQuestion.length; j >= i + 1; j--) {
-          let currentText = this.cursorPositionQuestion.slice(i, j)
+      if (!this.userQuestion) return []
+      for (let i = 0; i < this.userQuestion.length; i++) {
+        for (let j = this.userQuestion.length; j >= i + 1; j--) {
+          let currentText = this.userQuestion.slice(i, j)
           // 找出是否有符合的 token
           let tokenIndex = this.dictionaries.findIndex(element => element.text.toLowerCase() === currentText.toLowerCase())
           if (tokenIndex > -1) {
@@ -152,7 +152,7 @@ export default {
           }
 
           if (j === i + 1) {
-            tokenList.push({type: 'unknown', text: this.cursorPositionQuestion[i]})
+            tokenList.push({type: 'unknown', text: this.userQuestion[i]})
           }
         }
       }
@@ -163,6 +163,11 @@ export default {
   watch: {
     questionTokenList (value, oldValue) {
       if (value.length === 0) return
+      // token 減少不處理
+      let newRecognizeTokenList = value.filter(element => element.type !== 'unknown')
+      let oldRecognizeTokenList = oldValue.filter(element => element.type !== 'unknown')
+      if (newRecognizeTokenList.length <= oldRecognizeTokenList.length) return
+
       // 如果最後一個是認得出來的 token 就問問題
       let lastToken = value[value.length - 1]
       if (lastToken.type !== 'unknown') {
