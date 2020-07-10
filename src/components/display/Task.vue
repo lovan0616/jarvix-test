@@ -9,6 +9,7 @@
   >
     <spinner
       v-if="loading"
+      :class="{'key-result-spinner': intend === 'key_result'}"
       class="task-spinner"
     />
     <no-result
@@ -173,9 +174,7 @@ export default {
               let isAutoRefresh = response.isAutoRefresh
               if(isAutoRefresh && this.isPinboardPage) {
                 this.autoRefreshFunction = window.setTimeout(() => {
-                  this.fetchData(0).then(task => {
-                    resolve(task)
-                  })
+                  this.autoRefreshData()
                 }, 60 * 1000)
               }
               // 取樣
@@ -395,6 +394,9 @@ export default {
     },
     updateMonitorSetting () {
       this.closeMonitorSettingDialog()
+      this.autoRefreshData()
+    },
+    autoRefreshData () {
       this.loading = true
       this.fetchData().then(taskData => {
         this.componentData = taskData
@@ -411,6 +413,10 @@ export default {
 .task {
   position: relative;
   width: 100%;
+
+  .task-spinner.key-result-spinner {
+    height: 420px;
+  }
 
   .task-note {
     &::before {
