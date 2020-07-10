@@ -29,6 +29,7 @@
           @keyup.shift.ctrl.72="toggleHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
+          @keyup="handleAskText"
           @focus="focusInput"
         >
         <a 
@@ -103,7 +104,8 @@ export default {
       showHistoryQuestion: false,
       showAskHelper: false,
       websocketHandler: null,
-      recommendList: []
+      recommendList: [],
+      cursorPositionQuestion: null
     }
   },
   computed: {
@@ -137,10 +139,10 @@ export default {
     questionTokenList () {
       let tokenList = []
       // 處理問句字串
-      if (!this.userQuestion) return 0
-      for (let i = 0; i < this.userQuestion.length; i++) {
-        for (let j = this.userQuestion.length; j >= i + 1; j--) {
-          let currentText = this.userQuestion.slice(i, j)
+      if (!this.cursorPositionQuestion) return []
+      for (let i = 0; i < this.cursorPositionQuestion.length; i++) {
+        for (let j = this.cursorPositionQuestion.length; j >= i + 1; j--) {
+          let currentText = this.cursorPositionQuestion.slice(i, j)
           // 找出是否有符合的 token
           let tokenIndex = this.dictionaries.findIndex(element => element.text.toLowerCase() === currentText.toLowerCase())
           if (tokenIndex > -1) {
@@ -150,7 +152,7 @@ export default {
           }
 
           if (j === i + 1) {
-            tokenList.push({type: 'unknown', text: this.userQuestion[i]})
+            tokenList.push({type: 'unknown', text: this.cursorPositionQuestion[i]})
           }
         }
       }
@@ -271,6 +273,9 @@ export default {
     },
     focusInput () {
       this.$store.dispatch('chatBot/openAskInMemory')
+    },
+    handleAskText (e) {
+      this.cursorPositionQuestion = this.userQuestion.slice(0, e.target.selectionStart)
     }
   },
 }
