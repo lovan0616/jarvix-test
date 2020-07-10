@@ -1,6 +1,5 @@
 {
   "lang": "English",
-  "interpolation": "{interpolation}",
   "nav": {
     "index": "Intellignet Analysis",
     "pinboard": "Personal Pinboard",
@@ -1520,8 +1519,8 @@
     ]
   },
   "resultDescription": {
-    "totalColumnAverage": "The average of {0} is {1}",
-    "compareToAverage": "{0} is {1} {2} average",
+    "totalColumnAverage": "The average of {0} is {1}.",
+    "compareToAverage": "{0} is {1} {2} average.",
     "high": "High",
     "low": "Low",
     "higher": "higher than",
