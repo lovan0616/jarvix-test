@@ -88,13 +88,17 @@ export default {
       chartAddon.xAxis = {...chartAddon.xAxis, ...boxPlotConfig.xAxis}
       chartAddon.tooltip.trigger = boxPlotConfig.tooltip.trigger
       chartAddon.tooltip.formatter = (param) => {
-        return [
-          'upper: ' + this.formatComma(param.data[5]),
-          'Q3: ' + this.formatComma(param.data[4]),
-          'median: ' + this.formatComma(param.data[3]),
-          'Q1: ' + this.formatComma(param.data[2]),
-          'lower: ' + this.formatComma(param.data[1])
-        ].join('<br/>')
+        if (param.componentSubType === 'boxplot') {
+          return [
+            'upper: ' + this.formatComma(param.data[5]),
+            'Q3: ' + this.formatComma(param.data[4]),
+            'median: ' + this.formatComma(param.data[3]),
+            'Q1: ' + this.formatComma(param.data[2]),
+            'lower: ' + this.formatComma(param.data[1])
+          ].join('<br/>')
+        } else {
+          return `outlier<br/>${param.name}: ${this.formatComma(param.data[1])}`
+        }
       }
       chartAddon.xAxis.data = this.dataset.index
       chartAddon.xAxis.name = this.title.xAxis[0].display_name

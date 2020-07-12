@@ -91,7 +91,7 @@ export default {
               }
 
               // 用戶若因 token 失效需重新登入，登入後導回原頁面
-              if (currentRoute && currentRoute.path) {
+              if (currentRoute && currentRoute.path && currentRoute.path !== '/') {
                 const { name, query, params } = currentRoute
                 return this.$router.push({ name, query, params })
               } 
