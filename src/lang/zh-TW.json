@@ -765,6 +765,7 @@
     "ask": "問",
     "example": "範例",
     "exampleDesc": "因 Boolean 和 Unique 類型問句方式與 Category 一致，以下均以 Category 類型舉例。",
+    "emptyColumn": "無此類別的欄位",
     "questionSampleList": [
       {
         "name": "一般問句",

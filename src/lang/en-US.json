@@ -765,6 +765,7 @@
     "ask": "Ask",
     "example": "Example",
     "exampleDesc": "Because Boolean and Unique questions are in the same category as Category, the following are all examples of Category.",
+    "emptyColumn": "None",
     "questionSampleList": [
       {
         "name": "General question",
