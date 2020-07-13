@@ -1521,7 +1521,7 @@
   },
   "resultDescription": {
     "totalColumnAverage": "整体 {0} 平均值为 {1}",
-    "compareToAverage": "{0} {2}平均值{1}",
+    "compareToAverage": "{0} {2}平均值 {1}",
     "high": "高",
     "low": "低",
     "higher": "高于",

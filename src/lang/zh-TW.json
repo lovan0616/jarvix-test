@@ -1520,8 +1520,8 @@
     ]
   },
   "resultDescription": {
-    "totalColumnAverage": "整體{0}平均值為{1}",
-    "compareToAverage": "{0}{2}平均值{1}",
+    "totalColumnAverage": "整體 {0} 平均值為 {1}",
+    "compareToAverage": "{0} {2}平均值 {1}",
     "high": "高",
     "low": "低",
     "higher": "高於",
