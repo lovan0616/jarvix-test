@@ -217,6 +217,8 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.loading = false
               this.isGetPagination = false
+              // 推薦洞察 若 component Fail 要從外層將組件隱藏起來
+              this.$emit('failed')
               // 如果取分頁資料 fail，當作無資料來處理
               if (page > 0) {
                 this.hasNextPage = false

@@ -1,6 +1,7 @@
 <template>
   <div 
-    class="recommended-insights__card" 
+    v-show="completed" 
+    class="recommended-insights__card"
     @click="learnMore">
     <div class="card__header">
       <div class="header__title">{{ question }}</div>
@@ -13,6 +14,7 @@
         :arrow-btn-right="20"
         intend="recommended_insight"
         @setQuestion="setQuestion"
+        @failed="setComponentStatus(false)"
       />
     </div>
   </div>
@@ -29,7 +31,8 @@ export default {
   },
   data () {
     return {
-      question: ''
+      question: '',
+      completed: true
     }
   },
   methods: {
@@ -39,6 +42,9 @@ export default {
     },
     setQuestion (question) {
       this.question = question
+    },
+    setComponentStatus (value) {
+      this.completed = value
     }
   }
 }
