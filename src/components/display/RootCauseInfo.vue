@@ -26,9 +26,9 @@
           >
             <div class="abstract-info">
               <el-tooltip
-                :content="tableInfo.columnName + tableInfo.columnValue"
+                :content="tableInfo.columnValue"
               >
-                <div class="column-title">{{ tableInfo.columnName }}{{ tableInfo.columnValue }}</div>
+                <div class="column-title">{{ tableInfo.columnValue }}</div>
               </el-tooltip>
               <div class="sub-title">
                 <span class="sub-title__text">{{ rootCauseInfo.name }}</span>
@@ -58,7 +58,7 @@
                   tag="pre"
                   class="detail-info__list__item" 
                 >
-                  <span class="text name">{{ tableInfo.columnName + tableInfo.columnValue }}</span>
+                  <span class="text name">[{{ tableInfo.columnName }}] {{ tableInfo.columnValue }} </span>
                   <span class="text percentage">{{ Math.abs(tableInfo.diffAverageRate) + '%' }}</span>
                   <span class="text">{{ tableInfo.diffAverageRate > 0 ? $t('resultDescription.higher') : $t('resultDescription.lower') }}</span>
                 </i18n>
@@ -212,7 +212,7 @@ export default {
       width: 32%;
 
       .column-title {
-        @include text-hidden
+        @include text-hidden;
         margin-bottom: 4px;
       }
 
