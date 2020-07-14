@@ -348,13 +348,15 @@ router.beforeEach(async (to, from, next) => {
         groupId: paramsGroupId
       })
     }
-    
+
+    // 檢查是否為 group 層下的路由: 變免在 account 層 $router 物件中 params 帶有 group id
+    const isGroupRoute = to.matched.some(route => route.name === 'group')
     return next({ 
       name: to.name,
       params: {
         ...to.params,
         account_id: paramsAccountId,
-        group_id: paramsGroupId || currentGroupId
+        ...(isGroupRoute && { group_id: paramsGroupId || currentGroupId })
       },
       query: to.query
     })

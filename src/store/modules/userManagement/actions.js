@@ -59,16 +59,26 @@ export default {
       return Promise.reject(error)
     }
   },
-  updateUserGroupList ({ dispatch, commit, getters }) {
-    return dispatch('getUserInfo')
+  updateUserGroupList ({ dispatch, commit, getters }, groupId) {
+    const originalGroupId = getters.getCurrentGroupId
+    return dispatch('getUserInfo', groupId)
       .then(() => {
-        const currentGroupId = getters.getCurrentGroupId
-        if (currentGroupId) {
-          dispatch('dataSource/getDataSourceList', {}, { root: true })
-        } else {
+        const newGroupId = getters.getCurrentGroupId
+
+        // 更新後無隸屬任何群組
+        if(!newGroupId) {
           commit('dataSource/setDataSourceList', [], { root: true })
-          dispatch('dataSource/handleEmptyDataSource', null, { root: true })
+          return dispatch('dataSource/handleEmptyDataSource', null, { root: true })
         }
+        
+        // default 群組在更新前後相同
+        if (newGroupId === originalGroupId) return dispatch('dataSource/getDataSourceList', {}, { root: true })
+
+        // 更新後 default 已變更
+        return dispatch('switchGroupById', { 
+          accountId: getters.getCurrentAccountId, 
+          groupId: newGroupId
+        })
       })
   },
   switchAccountById({ state, dispatch, commit, getters }, { accountId, defaultGroupId }) {

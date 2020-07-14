@@ -129,7 +129,7 @@ export default {
           groupRole: dummyGroupRole,
           userId: this.userList.find(user => user.value === this.selectedInvitee).id
         }, this.currentGroupId)
-          .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
+          .then(() => this.$store.dispatch('userManagement/updateUserGroupList', this.$route.params.group_id))
           .then(() => {
             this.backToUserList()
             return Message({

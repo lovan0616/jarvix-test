@@ -41,6 +41,7 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import {getGroupUserList, deleteGroupUser} from '@/API/Group'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
+import i18n from '@/lang/index.js'
 
 export default {
   name: 'GroupUserList',
@@ -60,7 +61,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupId']),
     tableHeaders () {
       return [
         {
@@ -124,35 +125,41 @@ export default {
     },
     deleteGroupUser (data) {
       this.isLoading = true
-      const prevGroupName = this.$store.getters['userManagement/getCurrentGroupName']
       deleteGroupUser(this.selectedUser.id, this.currentGroupId)
-        .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
+        .then(() => this.$store.dispatch('userManagement/updateUserGroupList', this.currentGroupId))
         .then(() => {
-          this.fetchData(this.currentGroupId)
-          this.closeDelete()
           setTimeout(() => {
             Message({
-              message: this.$t('message.memberDeleteSuccess'),
+              message: i18n.t('message.memberDeleteSuccess'),
               type: 'success',
               duration: 3 * 1000
             })
           }, 0)
 
-          // 若因刪除群組而造成使用者 default 群組變動，給予提示訊息
-          const currentGroupName = this.$store.getters['userManagement/getCurrentGroupName']
-          if (!currentGroupName) {
-            Message({
+          // 處理將自己從當前 group 刪除的情況: 無群組
+          if (!this.getCurrentGroupId) {
+            this.$router.push({ name: 'PageGrouplessGuidance' })
+            return Message({
               message: this.$t('message.youAreGroupless'),
               type: 'warning',
               duration: 3 * 1000
             })
-          } else if (prevGroupName !== currentGroupName) {
-            Message({
+          }
+          
+          // 處理將自己從當前 group 刪除的情況: 切換群組
+          if (Number(this.currentGroupId) !== Number(this.getCurrentGroupId)) {
+            this.$router.push({ name: 'PageIndex', params: { 'group_id': this.getCurrentGroupId } })
+            // 若因刪除群組而造成使用者 default 群組變動，給予提示訊息
+            const currentGroupName = this.$store.getters['userManagement/getCurrentGroupName']
+            return Message({
               message: this.$t('message.switchToGroupBySys', { groupName: currentGroupName }),
               type: 'info',
               duration: 3 * 1000
             })
           }
+          
+          this.fetchData(this.currentGroupId)
+          this.closeDelete()
         })
         .catch(() => { this.isLoading = false })
     },
