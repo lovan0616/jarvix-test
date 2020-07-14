@@ -23,6 +23,7 @@ export default {
   top: $header-height;
   right: 0;
   overflow: auto;
+  padding-left: 24px;
 }
 
 .main {
