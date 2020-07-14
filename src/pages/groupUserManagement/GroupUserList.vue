@@ -96,11 +96,6 @@ export default {
     this.currentGroupId = this.$route.params.group_id
     this.fetchData(this.currentGroupId)
   },
-  beforeRouteUpdate (to, from, next) {
-    this.currentGroupId = to.params.group_id
-    this.fetchData(this.currentGroupId)
-    next()
-  },
   methods: {
     fetchData (currentGroupId) {
       this.isLoading = true
