@@ -3,16 +3,12 @@
     <transition 
       name="fade" 
       mode="out-in">
-      <ChatRoomBlock/>
+      <chat-room-block/>
     </transition>
-    <chat-bot-btn 
-      v-if="!isShowChatRoom"
-      class="chat-bot-btn"
-      @click.native="toggleChatRoom"
-    />
+    <basic-data-frame-setting/>
     <div 
-      :class="{'is-open': isShowChatRoom}"
-      class="wrapper"
+      :class="{'wrapper--has-basic-df-setting': isShowBasicDataFrameSetting}"
+      class="wrapper wrapper--has-chat-room"
     >
       <main class="main">
         <div class="center">
@@ -46,6 +42,7 @@
 import ChatRoomBlock from '@/components/chatBot/ChatRoom'
 import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
 import PreviewDataSource from '@/components/PreviewDataSource'
+import BasicDataFrameSetting from '@/components/BasicDataFrameSetting'
 import store from '@/store'
 
 export default {
@@ -53,14 +50,15 @@ export default {
   components: {
     ChatRoomBlock,
     ChatBotBtn,
-    PreviewDataSource
+    PreviewDataSource,
+    BasicDataFrameSetting
   },
   computed: {
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
-    isShowChatRoom () {
-      return this.$store.state.isShowChatRoom
+    isShowBasicDataFrameSetting () {
+      return this.$store.state.isShowBasicDataFrameSetting
     },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
@@ -75,17 +73,7 @@ export default {
     if (this.isShowPreviewDataSource) this.closePreviewDataSource()
     next()
   },
-  mounted () {
-    this.toggleChatRoom(true)
-  },
-  destroyed () {
-    this.toggleChatRoom(false)
-  },
   methods: {
-    toggleChatRoom (isOpened = true) {
-      this.$store.commit('updateChatRoomStatus', isOpened)
-      if (!isOpened) this.closePreviewDataSource()
-    },
     closePreviewDataSource () {
       this.$store.commit('previewDataSource/togglePreviewDataSource', false)
     }
@@ -97,28 +85,14 @@ export default {
   width: 100%;
   position: relative;
 
-  .wrapper {
-    width: 100%;
-    height: calc(100vh - #{$header-height});
-    position: absolute;
-    top: $header-height;
-    right: 0;
-    // transition: width 0.1s;
-
-    &.is-open {
-      width: calc(100% - #{$chat-room-width});
-    }
-  }
-
   .main {
     padding-top: 32px;
     padding-bottom: 64px;
-    min-height: calc(100vh - 136px);
-    min-height: calc(100vh - #{$header-height});
+    min-height: calc(100vh - #{$header-height + $chat-room-height});
   }
 
   .preview-datasource {
-    width: calc(100% - #{$chat-room-width});
+    width: calc(100% - #{$basic-df-setting-width});
     height: calc(100vh - #{$header-height});
     position: absolute;
     top: $header-height;
@@ -134,33 +108,6 @@ export default {
       right: 40px;
       color: #fff;
       font-size: 14px;
-    }
-  }
-
-  .chat-bot-btn {
-    position: fixed;
-    bottom: 16px;
-    left: 70px;
-    z-index: 999;
-    cursor: pointer;
-    width: 80px;
-    height: 80px;
-
-     &:after {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      margin: auto;
-      content: "";
-      display: block;
-      width: 70px;
-      height: 70px;
-      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.5);
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 50%;
-      z-index: -1;
     }
   }
 }

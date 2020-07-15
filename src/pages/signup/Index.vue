@@ -86,7 +86,8 @@ export default {
       return Message({
         message: this.$t('errorMessage.lackOfSignUpToken'),
         type: 'error',
-        duration: 3 * 1000
+        duration: 3 * 1000,
+        showClose: true
       })
     }
     this.confirmEmailToken(emailToken)
@@ -116,7 +117,8 @@ export default {
             Message({
               message: this.$t('message.signUpSuccessPleaseLogin'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           })
           .catch(() => { this.isProcessing = false })

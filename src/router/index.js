@@ -270,7 +270,7 @@ const router = new Router({
                           name: 'GroupUserList',
                           meta: {
                             layers: ['account/:account_id', 'group', ':group_id', 'users'],
-                            permission: ['account_read_group']
+                            permission: ['group_read_user']
                           }
                         },
                         {
@@ -351,13 +351,15 @@ router.beforeEach(async (to, from, next) => {
         groupId: paramsGroupId
       })
     }
-    
+
+    // 檢查是否為 group 層下的路由: 變免在 account 層 $router 物件中 params 帶有 group id
+    const isGroupRoute = to.matched.some(route => route.name === 'group')
     return next({ 
       name: to.name,
       params: {
         ...to.params,
         account_id: paramsAccountId,
-        group_id: paramsGroupId || currentGroupId
+        ...(isGroupRoute && { group_id: paramsGroupId || currentGroupId })
       },
       query: to.query
     })
@@ -372,7 +374,8 @@ router.beforeEach(async (to, from, next) => {
     return Message({
       message: i18n.t('errorMessage.lackOfPermission'),
       type: 'error',
-      duration: 3 * 1000
+      duration: 3 * 1000,
+      showClose: true
     })
   }
   next()
@@ -387,7 +390,8 @@ router.onError((error) => {
     Message({
       message: i18n.t('errorMessage.versionUpdate'),
       type: 'error',
-      duration: 3 * 1000
+      duration: 3 * 1000,
+      showClose: true
     })
     window.setTimeout(() => {
       window.location.reload()

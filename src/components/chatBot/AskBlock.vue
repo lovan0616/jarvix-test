@@ -11,7 +11,8 @@
         :class="{
           'has-filter': hasFilter,
           'is-use-algorithm': isUseAlgorithm,
-          'is-connect-channel': websocketHandler
+          'is-connect-channel': websocketHandler,
+          'is-focus': isFocus
         }"
         class="user-question-block"
       >
@@ -31,6 +32,7 @@
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
           @keyup="handleAskText"
           @focus="focusInput"
+          @blur="blurInput"
         >
         <a 
           href="javascript:void(0);" 
@@ -49,12 +51,9 @@
       </div>
       <div 
         :class="{ 'disabled': dataSourceList.length === 0 }" 
-        class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}
-        <a 
-          href="javascript:void(0)" 
-          class="link help-link"
-          @click="showHelper"
-        >{{ $t('askHelper.helpLink') }}</a>
+        class="ask-remark-block"
+        @click="openBasicDataFrameSetting">
+        <svg-icon icon-class="ask-helper"/>
       </div>
     </div>
     <div 
@@ -105,7 +104,8 @@ export default {
       showAskHelper: false,
       websocketHandler: null,
       recommendList: [],
-      cursorPositionQuestion: null
+      cursorPositionQuestion: null,
+      isFocus: false
     }
   },
   computed: {
@@ -200,6 +200,10 @@ export default {
     if (this.websocketHandler) this.closeWebSocketConnection()
   },
   methods: {
+    // TODO 暫時先由這邊打開基表設定，等datasource選單做好再拔掉
+    openBasicDataFrameSetting () {
+      this.$store.commit('updateBasicDataFrameSettingStatus', true)
+    },
     toggleWebSocketConnection () {
       if (this.websocketHandler) return this.closeWebSocketConnection()
       this.createWebSocketConnection()
@@ -277,7 +281,11 @@ export default {
       this.$store.commit('chatBot/updateIsUseAlgorithm', !this.isUseAlgorithm)
     },
     focusInput () {
+      this.isFocus = true
       this.$store.dispatch('chatBot/openAskInMemory')
+    },
+    blurInput () {
+      this.isFocus = false
     },
     handleAskText (e) {
       this.cursorPositionQuestion = this.userQuestion.slice(0, e.target.selectionStart)
@@ -288,12 +296,22 @@ export default {
 <style lang="scss" scoped>
 .ask-container {
   position: relative;
-  padding: 16px 32px;
-  background-color: var(--color-bg-1);
+  flex: 1;
+
+  .ask-block {
+    display: flex;
+    align-items: center;
+  }
 
   .user-question-block {
-    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
     z-index: 999;
+    background-color: #2D3033;
+    border-radius: 5px;
+    padding: 0 10px;
+    border: 1px solid #2D3033;
 
     &.has-filter {
       &:after {
@@ -315,23 +333,23 @@ export default {
         color: $theme-color-danger;
       }
     }
-
-    &:after {
-      content: '';
-      display: block;
-      width: 100%;
-      height: 2px;
-      background-image: linear-gradient(90deg, $theme-color-primary 0%, rgba(77, 226, 240, 0.2) 100%);
+    &.is-focus {
+      box-shadow: 0px 0px 20px rgba(12, 209, 222, 0.5);
+      border: 1px solid #0CD1DE;
     }
 
     .question-input {
       width: 100%;
-      font-size: 20px;
+      font-size: 14px;
       line-height: 36px;
-      height: 48px;
+      height: 38px;
       overflow: auto;
-      padding-right: 74px;
+      padding-right: 30px;
       border-bottom: none;
+
+      &::placeholder {
+        opacity: #888;
+      }
 
       &:disabled {
         &::placeholder {
@@ -346,17 +364,12 @@ export default {
     }
 
     .clean-btn {
-      position: absolute;
-      top: 14px;
-      right: 44px;
       font-size: 16px;
       color: rgba(255, 255, 255, 0.5);
+      margin-right: 16px;
     }
 
     .ask-btn {
-      position: absolute;
-      top: 11px;
-      right: 2px;
       font-size: 20px;
       color: $theme-color-primary;
     }
@@ -378,10 +391,22 @@ export default {
   }
 
   .ask-remark-block {
-    font-size: 13px;
-    line-height: 30px;
+    font-size: 16px;
+    height: 40px;
+    width: 40px;
     text-align: left;
     letter-spacing: 0.05em;
+    border: 1px solid #2D3033;
+    border-radius: 5px;
+    margin-left: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    .svg-icon {
+      color: #AAAAAA;
+    }
 
     &.disabled {
       opacity: .3;
@@ -413,15 +438,14 @@ export default {
     position: absolute;
     text-align: left;
     left: 0;
-    bottom: 100%;
-    width: 100%;
+    top: 100%;
+    width: calc(100% - 56px);
     height: 0;
     overflow: hidden;
     padding: 0 32px;
     transition: height 0.3s;
     z-index: 90;
     background-color: rgba(40, 71, 74, 0.95);
-    border-top: 1px solid #415E60;
 
     &.has-filter {
       bottom: 137px;

@@ -146,7 +146,8 @@ export default {
           Message({
             message: this.$t('message.analysisFailed'),
             type: 'error',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         })
         .finally(() => {

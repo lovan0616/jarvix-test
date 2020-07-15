@@ -98,7 +98,8 @@ export default {
         Message({
           message: this.$t('etl.pleaseSelectAtLeastOneColumnPerTable'),
           type: 'warning',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
         return
       }
@@ -122,7 +123,8 @@ export default {
           Message({
             message: this.$t('message.analysisFailed'),
             type: 'error',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         })
         .finally(() => {

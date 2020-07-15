@@ -53,7 +53,8 @@ export default {
           Message({
             message: i18n.t('message.dataSourceNotExist'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         }
       } else {
@@ -100,7 +101,8 @@ export default {
       return Message({
         message: i18n.t('message.dataFrameNotExist'),
         type: 'success',
-        duration: 3 * 1000
+        duration: 3 * 1000,
+        showClose: true
       })
     }
     return dispatch('changeDataFrameById', dataFrameId)

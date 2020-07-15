@@ -102,7 +102,8 @@ export default {
             Message({
               message: this.$t('message.connectionFail'),
               type: 'error',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
             this.isLoading = false
           })

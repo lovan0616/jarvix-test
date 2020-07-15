@@ -1,7 +1,22 @@
 .app-layout {
   .wrapper {
-    height: 100vh;
     overflow: auto;
+    padding: 0 24px;
+    width: 100%;
+    height: calc(100vh - #{$header-height});
+    position: absolute;
+    top: $header-height;
+    right: 0;
+
+    &--has-chat-room {
+      height: calc(100vh - #{$header-height + $chat-room-height});
+      top: $header-height + $chat-room-height;
+    }
+
+    &--has-basic-df-setting {
+      width: calc(100% - #{$basic-df-setting-width});
+      padding-left: 0;
+    }
   }
 
   .container {
@@ -21,5 +36,5 @@
 }
 
 .main {
-  @extend %maxWidth;
+  width: 100%;
 }

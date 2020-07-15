@@ -15,12 +15,17 @@
         </div>
       </template>
       <div class="column-name">{{ $t('askHelper.columnName') }}</div>
-      <div 
-        v-for="(columnInfo, index) in dataSourceColumnInfoList.category"
-        :key="'category' + index"
-        class="single-column"
-      >{{ columnInfo ? columnInfo : '-' }}
+      <div v-if="dataSourceColumnInfoList.category.length > 0">
+        <div 
+          v-for="(columnInfo, index) in dataSourceColumnInfoList.category"
+          :key="'category' + index"
+          class="single-column"
+        >{{ columnInfo ? columnInfo : '-' }}
+        </div>
       </div>
+      <div 
+        v-else 
+        class="empty-column">{{ $t('askHelper.emptyColumn') }}</div>
     </el-collapse-item>
     <el-collapse-item name="numeric">
       <template slot="title">
@@ -34,12 +39,17 @@
         </div>
       </template>
       <div class="column-name">{{ $t('askHelper.columnName') }}</div>
-      <div 
-        v-for="(columnInfo, index) in dataSourceColumnInfoList.numeric"
-        :key="'numeric' + index"
-        class="single-column"
-      >{{ columnInfo ? columnInfo : '-' }}
+      <div v-if="dataSourceColumnInfoList.numeric.length > 0">
+        <div 
+          v-for="(columnInfo, index) in dataSourceColumnInfoList.numeric"
+          :key="'numeric' + index"
+          class="single-column"
+        >{{ columnInfo ? columnInfo : '-' }}
+        </div>
       </div>
+      <div 
+        v-else 
+        class="empty-column">{{ $t('askHelper.emptyColumn') }}</div>
     </el-collapse-item>
     <el-collapse-item name="datetime">
       <template slot="title">
@@ -53,12 +63,17 @@
         </div>
       </template>
       <div class="column-name">{{ $t('askHelper.columnName') }}</div>
-      <div 
-        v-for="(columnInfo, index) in dataSourceColumnInfoList.dateTime"
-        :key="'category' + index"
-        class="single-column"
-      >{{ columnInfo ? columnInfo : '-' }}
+      <div v-if="dataSourceColumnInfoList.dateTime.length > 0">
+        <div 
+          v-for="(columnInfo, index) in dataSourceColumnInfoList.dateTime"
+          :key="'category' + index"
+          class="single-column"
+        >{{ columnInfo ? columnInfo : '-' }}
+        </div>
       </div>
+      <div 
+        v-else 
+        class="empty-column">{{ $t('askHelper.emptyColumn') }}</div>
     </el-collapse-item>
     <el-collapse-item name="boolean">
       <template slot="title">
@@ -72,12 +87,17 @@
         </div>
       </template>
       <div class="column-name">{{ $t('askHelper.columnName') }}</div>
-      <div 
-        v-for="(columnInfo, index) in dataSourceColumnInfoList.booleanList"
-        :key="'category' + index"
-        class="single-column"
-      >{{ columnInfo ? columnInfo : '-' }}
+      <div v-if="dataSourceColumnInfoList.booleanList.length > 0">
+        <div
+          v-for="(columnInfo, index) in dataSourceColumnInfoList.booleanList"
+          :key="'category' + index"
+          class="single-column"
+        >{{ columnInfo ? columnInfo : '-' }}
+        </div>
       </div>
+      <div 
+        v-else 
+        class="empty-column">{{ $t('askHelper.emptyColumn') }}</div>
     </el-collapse-item>
     <el-collapse-item name="unique">
       <template slot="title">
@@ -91,12 +111,17 @@
         </div>
       </template>
       <div class="column-name">{{ $t('askHelper.columnName') }}</div>
-      <div 
-        v-for="(columnInfo, index) in dataSourceColumnInfoList.uniqueList"
-        :key="'category' + index"
-        class="single-column"
-      >{{ columnInfo ? columnInfo : '-' }}
+      <div v-if="dataSourceColumnInfoList.uniqueList.length > 0">
+        <div 
+          v-for="(columnInfo, index) in dataSourceColumnInfoList.uniqueList"
+          :key="'category' + index"
+          class="single-column"
+        >{{ columnInfo ? columnInfo : '-' }}
+        </div>
       </div>
+      <div 
+        v-else 
+        class="empty-column">{{ $t('askHelper.emptyColumn') }}</div>
     </el-collapse-item>
     <el-collapse-item name="value">
       <template slot="title">
@@ -111,12 +136,17 @@
       </template>
       <div class="category-list">
         <div class="column-name">{{ $t('askHelper.datavalueTitle') }}</div>
-        <div 
-          v-for="(columnInfo, index) in dataSourceDataValueList"
-          :key="'datavalue' + index"
-          class="single-column"
-        >{{ columnInfo ? columnInfo : '-' }}
+        <div v-if="dataSourceDataValueList.length > 0">
+          <div  
+            v-for="(columnInfo, index) in dataSourceDataValueList"
+            :key="'datavalue' + index"
+            class="single-column"
+          >{{ columnInfo ? columnInfo : '-' }}
+          </div>
         </div>
+        <div 
+          v-else 
+          class="empty-column">{{ $t('askHelper.emptyColumn') }}</div>
       </div>
     </el-collapse-item>
   </el-collapse>
@@ -201,6 +231,12 @@ export default {
         &:nth-child(odd) {
           background-color: rgba(50, 75, 78, 0.6);
         }
+      }
+
+      .empty-column {
+        color: var(--gray-100);
+        padding-top: 10px;
+        text-align: center;
       }
     }
   }
