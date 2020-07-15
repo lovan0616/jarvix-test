@@ -143,7 +143,7 @@ export default {
       // 如果刪掉使用者當前 account 的 default group 則需要切換至新的 group
       const isDeleteCurrentGroup = this.getCurrentGroupId === this.selectedGroup.groupId
       deleteGroup(this.selectedGroup.groupId)
-        .then(() => this.$store.dispatch('userManagement/updateUserGroupList', !isDeleteCurrentGroup && this.getCurrentGroupId))
+        .then(() => this.$store.dispatch('userManagement/updateUserGroupList', isDeleteCurrentGroup ? null : this.getCurrentGroupId))
         .then(() => {
           this.fetchData()
           this.showConfirmDeleteDialog = false

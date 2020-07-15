@@ -20,14 +20,12 @@ export function updateUserPermission (userId) {
   })
 }
 
-export function getPermission (defaultGroupId) {
+export function getPermission (defaultGroupId = null) {
   return request({
     url: `/permission`,
     method: 'GET',
-    ...(defaultGroupId && {
-      params: {
-        groupId: defaultGroupId
-      }
-    })
+    params: {
+      groupId: defaultGroupId
+    }
   })
 }
