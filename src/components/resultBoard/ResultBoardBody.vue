@@ -3,14 +3,14 @@
     <!-- indicator -->
     <slot name="PageResultBoardIndicator"/>
     <div 
-      :class="{'is-open': isShowBasicDataFrameSetting}"
+      :class="{ 'is-open': isShowSettingBox }"
       class="chart-container"
     >
       <!-- <QuestionAnalysisAlert/> -->
       <button 
         v-if="$slots.InsightBasicInfo" 
-        v-show="isShowBasicDataFrameSetting"
-        :class="{active: showBasicInfo}"
+        v-show="isShowSettingBox"
+        :class="{ active: showBasicInfo }"
         type="button"
         class="btn-m btn-default control-btn"
         @click.stop="toggleBasicInfoDialog"
@@ -20,7 +20,7 @@
       </div>
       <slot-dialog 
         v-if="$slots.InsightBasicInfo"
-        v-show="showBasicInfo || !isShowBasicDataFrameSetting"
+        v-show="showBasicInfo || !isShowSettingBox"
         :show="showBasicInfo"
         class="basic-info-container"
         @close="closeBasicInfoDialog"
@@ -47,6 +47,7 @@
 <script>
 import SlotDialog from '@/components/dialog/SlotDialog'
 import QuestionAnalysisAlert from './QuestionAnalysisAlert'
+import { mapState } from 'vuex'
 
 export default {
   name: 'ResultBoardBody',
@@ -60,15 +61,13 @@ export default {
     }
   },
   computed: {
-    isShowBasicDataFrameSetting () {
-      return this.$store.state.isShowBasicDataFrameSetting
-    },
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     isShowInsightRecommended () {
       return Object.prototype.hasOwnProperty.call(this.$slots, 'InsightRecommended')
     }
   },
   watch: {
-    isShowBasicDataFrameSetting (value, oldValue) {
+    isShowSettingBox (value, oldValue) {
       this.closeBasicInfoDialog()
     }
   },

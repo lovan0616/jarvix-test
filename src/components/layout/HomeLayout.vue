@@ -5,9 +5,9 @@
       mode="out-in">
       <chat-room-block/>
     </transition>
-    <basic-data-frame-setting/>
+    <advance-data-frame-setting/>
     <div 
-      :class="{'wrapper--has-basic-df-setting': isShowBasicDataFrameSetting}"
+      :class="{ 'wrapper--has-basic-df-setting': isShowSettingBox }"
       class="wrapper wrapper--has-chat-room"
     >
       <main class="main">
@@ -42,8 +42,9 @@
 import ChatRoomBlock from '@/components/chatBot/ChatRoom'
 import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
 import PreviewDataSource from '@/components/PreviewDataSource'
-import BasicDataFrameSetting from '@/components/BasicDataFrameSetting'
+import AdvanceDataFrameSetting from '@/components/AdvanceDataFrameSetting'
 import store from '@/store'
+import { mapState } from 'vuex'
 
 export default {
   name: 'HomeLayout',
@@ -51,14 +52,12 @@ export default {
     ChatRoomBlock,
     ChatBotBtn,
     PreviewDataSource,
-    BasicDataFrameSetting
+    AdvanceDataFrameSetting
   },
   computed: {
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
-    },
-    isShowBasicDataFrameSetting () {
-      return this.$store.state.isShowBasicDataFrameSetting
     },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource

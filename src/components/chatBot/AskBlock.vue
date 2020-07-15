@@ -52,7 +52,7 @@
       <div 
         :class="{ 'disabled': dataSourceList.length === 0 }" 
         class="ask-remark-block"
-        @click="openBasicDataFrameSetting">
+        @click="toggleAdvanceDataFrameSetting">
         <svg-icon icon-class="ask-helper"/>
       </div>
     </div>
@@ -89,7 +89,7 @@
 </template>
 <script>
 import AskHelperDialog from './AskHelperDialog'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 
 export default {
@@ -110,6 +110,7 @@ export default {
   },
   computed: {
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     dictionaries () {
       return [
         ...this.dataSourceColumnInfoList.booleanList.map(element => ({type: 'boolean', text: element})),
@@ -200,9 +201,10 @@ export default {
     if (this.websocketHandler) this.closeWebSocketConnection()
   },
   methods: {
+    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
     // TODO 暫時先由這邊打開基表設定，等datasource選單做好再拔掉
-    openBasicDataFrameSetting () {
-      this.$store.commit('updateBasicDataFrameSettingStatus', true)
+    toggleAdvanceDataFrameSetting () {
+      this.toggleSettingBox(!this.isShowSettingBox)
     },
     toggleWebSocketConnection () {
       if (this.websocketHandler) return this.closeWebSocketConnection()

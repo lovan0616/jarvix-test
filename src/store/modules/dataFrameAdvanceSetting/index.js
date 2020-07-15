@@ -5,7 +5,7 @@ import getters from './getters'
 export default {
   namespaced: true,
   state: {
-    isShowSetting: false,
+    isShowSettingBox: false,
     columnList: [],
     filterList: []
   },

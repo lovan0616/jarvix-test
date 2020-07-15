@@ -20,18 +20,7 @@ export default {
     ConversationBlock,
     AskBlock,
     DataFrameSelect
-  },
-  computed: {
-    isShowBasicDataFrameSetting () {
-      return this.$store.state.isShowBasicDataFrameSetting
-    },
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
-    dataFrameId () {
-      return this.$store.state.dataSource.dataFrameId
-    }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

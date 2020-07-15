@@ -1,13 +1,13 @@
 <template>
   <div 
-    :class="{'is-show': isShowBasicDataFrameSetting}"
+    :class="{ 'is-show': isShowSettingBox }"
     class="setting__wrapper">
     <div class="setting__body">
       <div class="setting__body__header">
         <div class="setting__body__header--title">SalesForCourseSalesForCourse</div>
         <div 
           class="setting__body__header--icon" 
-          @click="closeBasicDataFrameSetting">
+          @click="closeAdvanceDataFrameSetting">
           <svg-icon icon-class="close" />
         </div>
       </div>
@@ -16,19 +16,20 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
+
 export default {
-  name: 'BasicDataFrameSetting',
+  name: 'AdvanceDataFrameSetting',
   data () {
     return {}
   },
   computed: {
-    isShowBasicDataFrameSetting () {
-      return this.$store.state.isShowBasicDataFrameSetting
-    }
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
   },
   methods: {
-    closeBasicDataFrameSetting () {
-      this.$store.commit('updateBasicDataFrameSettingStatus', false)
+    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
+    closeAdvanceDataFrameSetting () {
+      this.toggleSettingBox(false)
     },
   }
 }
