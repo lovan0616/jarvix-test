@@ -297,7 +297,6 @@ export default {
 .ask-container {
   position: relative;
   flex: 1;
-  margin-left: 16px;
 
   .ask-block {
     display: flex;
@@ -439,8 +438,8 @@ export default {
     position: absolute;
     text-align: left;
     left: 0;
-    bottom: 100%;
-    width: 100%;
+    top: 100%;
+    width: calc(100% - 56px);
     height: 0;
     overflow: hidden;
     padding: 0 32px;
