@@ -30,6 +30,11 @@
     "dataFileManagement": "資料表管理",
     "dataFileList": "資料表列表"
   },
+  "dataFrameAdvanceSetting": {
+    "searchColumn": "搜尋欄位",
+    "columnList": "欄位列表",
+    "filterCriteria": "篩選條件"
+  },
   "message": {
     "joinTableBuilding": "資料表建置中，建置完成即可使用",
     "remindAdjustMainDate": "此表可能有多個日期欄位，您可用資料表的”日期欄位調整“功能進行設定。",
