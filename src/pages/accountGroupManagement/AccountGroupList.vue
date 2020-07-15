@@ -23,11 +23,26 @@
         :data-list.sync="groupList"
         :loading="isLoading"
         :empty-message="$t('editing.notYetCreateGroup')"
-        @delete="confirmDelete"
-        @cancel="cancelDelete"
-        @edit="editGroup($event)"
-        @manage="confirmEnterGroup"
-      />
+      >
+        <template v-slot:action="{ data }">
+          <a
+            :disabled="!hasPermission('account_delete_group')" 
+            href="javascript:void(0);"
+            class="link action-link"
+            @click="confirmDelete(data)">{{ $t('button.delete') }}</a>
+          <a
+            :disabled="!hasPermission('account_update_group')" 
+            href="javascript:void(0);"
+            class="link action-link"
+            @click="editGroup(data)">{{ $t('editing.editingName') }}</a>
+          <a
+            v-if="license.maxUser > 1"
+            :disabled="!hasGroupReadUserPermission(data)" 
+            href="javascript:void(0);"
+            class="link action-link"
+            @click="confirmEnterGroup(data)">{{ $t('editing.memberManagement') }}</a>
+        </template>
+      </crud-table>
       <decide-dialog
         v-if="showConfirmDeleteDialog"
         :title="$t('editing.confirmDeleteBelowGroupOrNot')"
@@ -96,29 +111,12 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '220px',
-          action: [
-            {
-              type: 'event',
-              name: this.$t('button.delete'),
-              value: 'delete',
-              permission: 'account_delete_group'
-            },
-            {
-              type: 'event',
-              name: this.$t('editing.editingName'),
-              value: 'edit',
-              permission: 'account_update_group'
-            },
-            ...(this.license.maxUser > 1) ? [{
-              type: 'event',
-              name: this.$t('editing.memberManagement'),
-              value: 'manage',
-              permission: 'account_read_group'
-            }] : {}
-          ]
+          width: '220px'
         }
       ]
+    },
+    userGroupList() {
+      return this.$store.state.userManagement.groupList
     }
   },
   mounted () {
@@ -133,6 +131,7 @@ export default {
         .finally(() => { this.isLoading = false })
     },
     confirmDelete (dataObj) {
+      if (!this.hasPermission('account_delete_group')) return
       this.selectedGroup = dataObj
       this.showConfirmDeleteDialog = true
     },
@@ -141,22 +140,30 @@ export default {
       this.showConfirmDeleteDialog = false
     },
     deleteGroup (data) {
+      // 如果刪掉使用者當前 account 的 default group 則需要切換至新的 group
+      const isDeleteCurrentGroup = this.getCurrentGroupId === this.selectedGroup.groupId
       deleteGroup(this.selectedGroup.groupId)
-        .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
+        .then(() => this.$store.dispatch('userManagement/updateUserGroupList', isDeleteCurrentGroup ? null : this.getCurrentGroupId))
         .then(() => {
           this.fetchData()
           this.showConfirmDeleteDialog = false
           Message({
             message: this.$t('message.groupDeleteSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         })
     },
     showCreateButton () {
       return this.hasPermission('account_create_group')
     },
+    hasGroupReadUserPermission (data) {
+      const currentGroupData = this.userGroupList.find(group => group.groupId === data.groupId)
+      return currentGroupData && currentGroupData.groupPermissionList.includes('group_read_user')
+    },
     confirmEnterGroup (dataObj) {
+      if (!this.hasGroupReadUserPermission(dataObj)) return
       this.selectedGroup = dataObj
       if (this.getCurrentGroupId === this.selectedGroup.groupId) return this.enterGroup()
       // 如果欲前往的群組與當前的不同，會切換群組，因此需要先提醒使用者
@@ -180,6 +187,7 @@ export default {
         .then(() => this.$router.push({ name: 'GroupUserList', params: { group_id: selectedGroupId } }))
     },
     editGroup (data) {
+      if (!this.hasPermission('account_update_group')) return
       this.$router.push({ name: 'EditAccountGroup', params: { id: data.groupId } })
     }
   }

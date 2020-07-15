@@ -29,13 +29,13 @@ export default new Vuex.Store({
     advanceSetting
   },
   state: {
-    isShowChatRoom: false,
+    isShowBasicDataFrameSetting: false,
     isShowFullSideNav: false,
     isAppLoading: false
   },
   mutations: {
-    updateChatRoomStatus (state, data) {
-      state.isShowChatRoom = data
+    updateBasicDataFrameSettingStatus (state, data) {
+      state.isShowBasicDataFrameSetting = data
     },
     updateSideNavStatus(state, data) {
       state.isShowFullSideNav = data

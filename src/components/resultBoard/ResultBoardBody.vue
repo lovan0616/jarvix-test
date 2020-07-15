@@ -3,13 +3,13 @@
     <!-- indicator -->
     <slot name="PageResultBoardIndicator"/>
     <div 
-      :class="{'is-open': isShowChatRoom}"
+      :class="{'is-open': isShowBasicDataFrameSetting}"
       class="chart-container"
     >
       <!-- <QuestionAnalysisAlert/> -->
       <button 
         v-if="$slots.InsightBasicInfo" 
-        v-show="isShowChatRoom"
+        v-show="isShowBasicDataFrameSetting"
         :class="{active: showBasicInfo}"
         type="button"
         class="btn-m btn-default control-btn"
@@ -20,7 +20,7 @@
       </div>
       <slot-dialog 
         v-if="$slots.InsightBasicInfo"
-        v-show="showBasicInfo || !isShowChatRoom"
+        v-show="showBasicInfo || !isShowBasicDataFrameSetting"
         :show="showBasicInfo"
         class="basic-info-container"
         @close="closeBasicInfoDialog"
@@ -60,15 +60,15 @@ export default {
     }
   },
   computed: {
-    isShowChatRoom () {
-      return this.$store.state.isShowChatRoom
+    isShowBasicDataFrameSetting () {
+      return this.$store.state.isShowBasicDataFrameSetting
     },
     isShowInsightRecommended () {
       return Object.prototype.hasOwnProperty.call(this.$slots, 'InsightRecommended')
     }
   },
   watch: {
-    isShowChatRoom (value, oldValue) {
+    isShowBasicDataFrameSetting (value, oldValue) {
       this.closeBasicInfoDialog()
     }
   },

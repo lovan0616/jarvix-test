@@ -175,7 +175,8 @@ export default {
           Message({
             message: this.$t('message.saveSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           this.columnSet.dataColumnList.push(response)
           this.columnOptionList.splice(index, 1)
@@ -203,7 +204,8 @@ export default {
           Message({
             message: this.$t('message.deleteSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         })
       }
@@ -216,7 +218,8 @@ export default {
           Message({
             message: this.$t('message.columnSetNameEmpty'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }
@@ -224,7 +227,8 @@ export default {
           Message({
             message: this.$t('message.columnSetChosenEmpty'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }
@@ -236,7 +240,8 @@ export default {
           Message({
             message: this.$t('message.saveSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           this.columnSet.id = response.id
           this.columnSet.dataColumnList = response.dataColumnList
@@ -250,7 +255,8 @@ export default {
           Message({
             message: this.$t('message.deleteSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           this.$emit('remove')
         })

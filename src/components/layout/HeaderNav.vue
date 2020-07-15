@@ -319,7 +319,7 @@ export default {
   }
 
   /deep/ .dropdown {
-    &__list {
+    &__list-container {
       left: 0;
       top: calc(100% + 10px);
       text-align: left;
@@ -343,6 +343,15 @@ export default {
         border-bottom: 12px solid #2B3839;
         border-left: 12px solid transparent;
         border-right: 12px solid transparent;
+      }
+    }
+
+    &__list {
+      max-height: 200px;
+      overflow-y: auto;
+
+      &::-webkit-scrollbar-track {
+        border-radius: 5px;
       }
     }
   }

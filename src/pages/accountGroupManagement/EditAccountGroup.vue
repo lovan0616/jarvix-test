@@ -72,6 +72,7 @@ import { getAccountGroupList, getAccountUsers, updateGroupInfo, createGroup } fr
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputBlock from '@/components/InputBlock'
 import { Message } from 'element-ui'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'EditAccountGroup',
@@ -90,6 +91,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
     editType () {
       const groupId = this.$route.params.id
       return groupId ? 'edit' : 'create'
@@ -138,13 +140,14 @@ export default {
               name: this.groupName,
               ownerId: this.userList.find(user => user.email === this.selectedOwner).id
             })
-              .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
+              .then(() => this.$store.dispatch('userManagement/updateUserGroupList', this.getCurrentGroupId))
               .then(() => {
                 this.quitEditGroup()
                 return Message({
                   message: this.$t('message.groupCreateSuccess'),
                   type: 'success',
-                  duration: 3 * 1000
+                  duration: 3 * 1000,
+                  showClose: true
                 })
               })
               .catch(() => { this.isLoading = false })
@@ -154,13 +157,14 @@ export default {
               name: this.groupName,
               id: this.$route.params.id
             })
-              .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
+              .then(() => this.$store.dispatch('userManagement/updateUserGroupList', this.getCurrentGroupId))
               .then(() => {
                 this.quitEditGroup()
                 return Message({
                   message: this.$t('message.groupInfoUpdatedSuccess'),
                   type: 'success',
-                  duration: 3 * 1000
+                  duration: 3 * 1000,
+                  showClose: true
                 })
               })
               .catch(() => { this.isLoading = false })

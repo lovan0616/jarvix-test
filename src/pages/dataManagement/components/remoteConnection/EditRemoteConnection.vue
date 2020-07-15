@@ -94,7 +94,8 @@ export default {
         Message({
           message: this.$t('message.connectionFail'),
           type: 'error',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
         this.isProcessing = false
       })
@@ -110,7 +111,8 @@ export default {
               Message({
                 message: this.$t('message.saveSuccess'),
                 type: 'success',
-                duration: 3 * 1000
+                duration: 3 * 1000,
+                showClose: true
               })
               onlySave ? this.prevStep() : this.chooseConnection(id)
             })

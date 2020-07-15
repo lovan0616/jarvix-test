@@ -173,13 +173,15 @@ export default {
             Message({
             message: this.$t('message.connectionInterrupted'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         } else {
           Message({
             message: this.$t('message.connectionFail'),
             type: 'error',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         }
       }).finally(() => {
@@ -204,7 +206,8 @@ export default {
         Message({
           message: this.$t('message.deleteSuccess'),
           type: 'success',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
       })
       this.currentDeleteIndex = null

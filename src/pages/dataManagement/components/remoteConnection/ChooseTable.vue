@@ -196,7 +196,8 @@ export default {
         Message({
           message: this.$t('etl.tableChosenLimit', {number: this.tableConnectionLimt}),
           type: 'warning',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
         return false
       }

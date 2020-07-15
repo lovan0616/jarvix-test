@@ -47,7 +47,8 @@ service.interceptors.response.use(
     Message({
       message: i18n.t(`errorMessage.${res.error.code}`) || i18n.t('message.systemIsError'),
       type: 'error',
-      duration: 3 * 1000
+      duration: 3 * 1000,
+      showClose: true
     })
 
     switch (res.error.code) {

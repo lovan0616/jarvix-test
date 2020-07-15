@@ -14,7 +14,7 @@
         :name="rootCauseInfo.name"
       >
         <div
-          :class="{'is-open': isShowChatRoom}"
+          :class="{'is-open': isShowBasicDataFrameSetting}"
           class="root-cause-container"
         >
           <div
@@ -120,8 +120,8 @@ export default {
       })
       return info
     },
-    isShowChatRoom () {
-      return this.$store.state.isShowChatRoom
+    isShowBasicDataFrameSetting () {
+      return this.$store.state.isShowBasicDataFrameSetting
     },
     inPinboard () {
       return this.$route.name === 'PersonalPagePinboard' || this.$route.name === 'ProjectPagePinboard'
