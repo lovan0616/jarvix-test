@@ -163,7 +163,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-left: 1px solid #3E4B4B;
+    border-left: 1px solid #292C2E;
   
     &__icon {
       font-size: 18px;
@@ -183,18 +183,34 @@ export default {
     }
   }
   
-  /deep/ .el-menu {
+  /deep/ .el-submenu {
+    width: 100%;
+
     .el-submenu__title {
+      display: flex;
+      align-items: center;
       height: 40px;
       line-height: 40px;
       background-color: transparent !important;
     }
+
+    .data-frame-select__icon {
+      margin-right: 6px;
+    }
+
+    .submenu__data-source-title {
+      flex: 1;
+      width: 100%;
+      @include text-hidden;
+    } 
   }
 }
 
 .el-menu--horizontal {
   flex: auto;
   border-bottom: unset;
+  border-radius: 5px;
+  max-width: 162px;
 }
 
 </style>
