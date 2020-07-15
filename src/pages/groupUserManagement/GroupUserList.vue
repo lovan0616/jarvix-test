@@ -41,7 +41,6 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import {getGroupUserList, deleteGroupUser} from '@/API/Group'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
-import i18n from '@/lang/index.js'
 
 export default {
   name: 'GroupUserList',
@@ -125,7 +124,7 @@ export default {
         .then(() => {
           setTimeout(() => {
             Message({
-              message: i18n.t('message.memberDeleteSuccess'),
+              message: this.$t('message.memberDeleteSuccess'),
               type: 'success',
               duration: 3 * 1000
             })

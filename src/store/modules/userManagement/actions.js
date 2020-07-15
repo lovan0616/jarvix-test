@@ -72,7 +72,7 @@ export default {
         }
         
         // default 群組在更新前後相同
-        if (newGroupId === originalGroupId) return dispatch('dataSource/getDataSourceList', {}, { root: true })
+        if (newGroupId === originalGroupId) return
 
         // 更新後 default 已變更
         return dispatch('switchGroupById', { 
