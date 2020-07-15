@@ -15,6 +15,7 @@
     <div class="chat-room__header select-group">
       <data-source-select class="select-group__select"/>
       <data-frame-select class="select-group__select"/>
+      <data-frame-menu class="select-group__select"/>
     </div>
     <conversation-block/>
     <ask-block/>
@@ -25,6 +26,7 @@ import ConversationBlock from './ConversationBlock'
 import AskBlock from './AskBlock'
 import DataSourceSelect from '@/components/select/DataSourceSelect'
 import DataFrameSelect from '@/components/select/DataFrameSelect'
+import DataFrameMenu from '@/components/select/DataFrameMenu'
 
 export default {
   name: 'ChatRoomBlock',
@@ -32,7 +34,8 @@ export default {
     DataSourceSelect,
     ConversationBlock,
     AskBlock,
-    DataFrameSelect
+    DataFrameSelect,
+    DataFrameMenu
   },
   computed: {
     isShowChatRoom () {
@@ -66,7 +69,7 @@ export default {
   width: $chat-room-width;
   height: calc(100vh - #{$header-height});
   background-color: var(--color-bg-1);
-  overflow: auto;
+  overflow: visible;
   transform: translateX(-$chat-room-width);
   z-index: 1;
   // transition: transform 0.1s;
