@@ -138,7 +138,7 @@ export default {
   flex-direction: column;
   transform: translateX(-$basic-df-setting-width);
   overflow: hidden;
-  background-color: #070B0B;
+  background-color: rgba(0, 0, 0, 0.55);;
   border: 1px solid #2B3638;
   display: flex;
   flex-direction: column;

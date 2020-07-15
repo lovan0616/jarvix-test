@@ -34,7 +34,7 @@ export default {
   overflow: auto;
   padding: 16px 34px 8px 0;
   z-index: 3;
-  background-color: #070B0B;
+  background-color: rgba(0, 0, 0, 0.55);;
   overflow: visible;
 
   .select-group {
