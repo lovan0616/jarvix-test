@@ -7,8 +7,8 @@
     </transition>
     <basic-data-frame-setting/>
     <div 
-      :class="{'is-open': isShowBasicDataFrameSetting}"
-      class="wrapper"
+      :class="{'wrapper--has-basic-df-setting': isShowBasicDataFrameSetting}"
+      class="wrapper wrapper--has-chat-room"
     >
       <main class="main">
         <div class="center">
@@ -84,20 +84,6 @@ export default {
 .home-layout {
   width: 100%;
   position: relative;
-
-  .wrapper {
-    width: 100%;
-    height: calc(100vh - #{$header-height + $chat-room-height});
-    position: absolute;
-    top: $header-height + $chat-room-height;
-    right: 0;
-    // transition: width 0.1s;
-
-    &.is-open {
-      width: calc(100% - #{$basic-df-setting-width});
-      padding-left: 0;
-    }
-  }
 
   .main {
     padding-top: 32px;

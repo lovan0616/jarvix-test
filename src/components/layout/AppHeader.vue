@@ -115,7 +115,7 @@ export default {
     width: calc(100% - #{$app-side-nav-closed-width});
     height: 100%;
     margin: 0 0 0 auto;
-    padding: 0 32px 0 24px;
+    padding: 0 34px 0 24px;
   }
 
   &__root {
