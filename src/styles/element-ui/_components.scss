@@ -141,3 +141,31 @@
 .el-tooltip__popper {
   box-shadow: 0px 4px 10px rgba(58, 178, 189, .5);
 }
+
+.el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow {
+  -webkit-transform: rotateZ(180deg) translate(-6.9px, 0);
+  transform: rotateZ(180deg) translate(-6.9px, 0);
+  transform-origin: center;
+}
+
+.data-frame-select__popper {
+  max-height: 218px;
+  border-bottom: unset;
+  border-radius: 5px;
+  top: 0px;
+  overflow-y: auto;
+
+  .el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow {
+    -webkit-transform: rotateZ(-90deg) translate(-6.9px, 0);
+    transform: rotateZ(-90deg) translate(-6.9px, 0);
+    transform-origin: center;
+  }
+}
+
+.el-submenu__icon-arrow::before{
+  content: '';
+  position: absolute;
+  border-style: solid;
+  border-width: 6.9px 4px 0 4px;
+  border-color: #ccc transparent transparent transparent;
+}

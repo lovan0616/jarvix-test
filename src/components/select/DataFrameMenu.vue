@@ -1,10 +1,19 @@
 <template>
-  <div class="data-frame-select">
-    <el-menu 
+  <div class="data-frame-select-block">
+    <el-menu
+      mode="horizontal"
       class="data-frame-select__menu"
+      background-color="#1E2122"
+      text-color="#CCC"
       @select="handleSelect">
-      <el-submenu index="1">
+      <el-submenu 
+        v-if="buildDataSourceList.length > 0" 
+        popper-class="data-frame-select__popper"
+        index="1">
         <template slot="title" >
+          <svg-icon 
+            icon-class="data-source" 
+            class="data-frame-select__icon"/>
           <span class="submenu__data-source-title">{{ selectedDataSource }}</span>
         </template>
         <div 
@@ -22,12 +31,49 @@
           </el-submenu>
         </div>
       </el-submenu>
+      <el-submenu 
+        v-else 
+        index="2">
+        <template slot="title" >
+          <span class="submenu__data-source-title">{{ $t('editing.emptyKey') }}</span>
+        </template>
+      </el-submenu>
     </el-menu>
+    <a 
+      href="javascript:void(0)" 
+      class="preview-datasource-btn"
+      @click="togglePreviewDataSource"
+    >
+      <el-tooltip
+        slot="label"
+        :content="previewDataSourceTooltipContent"
+      >
+        <svg-icon 
+          :class="{'preview-datasource-btn__icon--show': isShowPreviewDataSource}"
+          icon-class="view-data"
+          class="preview-datasource-btn__icon"/>
+      </el-tooltip>
+    </a>
+    <a 
+      href="javascript:void(0)" 
+      class="filter-setting-btn"
+      @click="toggleBasicDataFrameSetting"
+    >
+      <el-tooltip
+        slot="label"
+        :content="previewDataSourceTooltipContent"
+      >
+        <svg-icon 
+          :class="{'preview-datasource-btn__icon--show': isShowBasicDataFrameSetting}"
+          icon-class="filter-setting"
+          class="preview-datasource-btn__icon"/>
+      </el-tooltip>
+    </a>
   </div>
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'DataFrameMenu',
@@ -37,7 +83,6 @@ export default {
   computed: {
     ...mapGetters('dataSource', ['dataSourceList']),
     ...mapGetters('userManagement', ['getCurrentGroupId']),
-    ...mapState('previewDataSource', ['isShowPreviewDataSource']),
     dataFrameId () {
       return this.$store.state.dataSource.dataFrameId
     },
@@ -48,6 +93,15 @@ export default {
       return this.dataSourceList.filter(dataSource => {
         return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
       })
+    },
+    isShowPreviewDataSource () {
+      return this.$store.state.previewDataSource.isShowPreviewDataSource
+    },
+    isShowBasicDataFrameSetting () {
+      return this.$store.state.isShowBasicDataFrameSetting
+    },
+    previewDataSourceTooltipContent () {
+      return this.isShowPreviewDataSource ? this.$t('bot.closeDataSource') : this.$t('bot.previewDataSource')
     },
     availableDataFrames () {
       const dataFrameList = this.$store.state.dataSource.dataFrameList
@@ -84,66 +138,63 @@ export default {
     },
     handleSelect () {
 
+    },
+    togglePreviewDataSource () {
+      this.$store.commit('previewDataSource/togglePreviewDataSource', !this.isShowPreviewDataSource)
+    },
+    toggleBasicDataFrameSetting () {
+      this.$store.commit('updateBasicDataFrameSettingStatus', !this.isShowBasicDataFrameSetting)
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.data-frame-select {
-  display: inline-block;
+.data-frame-select-block {
+  display: flex;
   position: relative;
-  border-radius: 4px;
   width: 100%;
-  height: 36px;
-  line-height: 36px;
-  color: #fff;
-  background-color: #233131;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 5px;
+  border: 1px solid #292C2E;
 
-  &__icon {
-    position: absolute;
-    top: 10px;
-    left: 14px;
-  }
+  .preview-datasource-btn, .filter-setting-btn {
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: 1px solid #3E4B4B;
+  
+    &__icon {
+      font-size: 18px;
+      fill: rgba(255, 255, 255, .8);
 
-  &__menu {
-    width: 100%;
-
-    .submenu__data-source-title {
-      padding-left: 16px;
-      margin-right: 4px;
-
-      & + .el-submenu__icon-arrow {
-        right: unset;
+      &:hover {
+        fill: rgba(255, 255, 255, 1);
       }
-    }
 
-    .submenu__data-frame-title {
-      padding-left: 33px;
+      &--show {
+        fill: rgba(42, 210, 226, .8);
+
+        &:hover {
+          fill: #2AD2E2;
+        }
+      }
     }
   }
   
   /deep/ .el-menu {
-    border-right: unset;
-
-    &.el-menu--inline {
-      max-height: 218px;
-      overflow-y: auto;
-      background-color: #233131;
-      z-index: 999;
-    }
-
     .el-submenu__title {
-      padding: 0 !important;
-      height: 36px;
-      line-height: 36px;
-      color: #fff;
-      background-color: #233131;
-      
-      &:not(:last-child) {
-        border-bottom: 1px solid #555555;;
-      }
+      height: 40px;
+      line-height: 40px;
+      background-color: transparent !important;
     }
   }
+}
+
+.el-menu--horizontal {
+  flex: auto;
+  border-bottom: unset;
 }
 
 </style>

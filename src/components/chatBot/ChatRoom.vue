@@ -1,9 +1,9 @@
 <template>
   <div class="chat-room">
     <div class="chat-room__header select-group">
-      <data-source-select class="select-group__select"/>
-      <data-frame-select class="select-group__select"/>
       <data-frame-menu class="select-group__select"/>
+      <!-- <data-source-select class="select-group__select"/>
+      <data-frame-select class="select-group__select"/> -->
     </div>
     <ask-block/>
   </div>
@@ -54,7 +54,6 @@ export default {
   .select-group {
     width: $basic-df-setting-width;
     padding: 0 16px 0 24px;
-    overflow: hidden;
     
     &__select {
       width: 100%;
