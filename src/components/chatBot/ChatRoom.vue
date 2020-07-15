@@ -43,9 +43,9 @@ export default {
   width: calc(100% - #{$app-side-nav-closed-width});
   height: $chat-room-height;
   overflow: auto;
-  padding: 16px 34px 8px 0;
+  padding: 16px 34px 16px 0;
   z-index: 3;
-  background-color: #1E2122;
+  background-color: rgba(0, 0, 0, 0.55);
   overflow: visible;
 
   .select-group {
