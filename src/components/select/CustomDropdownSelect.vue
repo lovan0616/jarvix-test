@@ -10,26 +10,28 @@
     >
       <slot name="display" />
     </div>
-    <ul
-      :class="{ 'dropdown__list--show': isShowDropdownList }"
-      class="dropdown__list"
+    <div 
+      :class="{ 'dropdown__list-container--show': isShowDropdownList }"
+      class="dropdown__list-container"
     >
-      <li
-        v-for="item in dataList"
-        :key="item.id"
-        :class="{ 'dropdown__item--disabled': isLoading }"
-        class="dropdown__item"
-      >
-        <a
-          :class="{ 'dropdown__link--selected': isSelectedItem(item.id) }" 
-          href="javascript:void(0);"
-          class="dropdown__link"
-          @click="selectItem(item.id)"
+      <ul class="dropdown__list">
+        <li
+          v-for="item in dataList"
+          :key="item.id"
+          :class="{ 'dropdown__item--disabled': isLoading }"
+          class="dropdown__item"
         >
-          {{ item.name }}
-        </a>
-      </li>
-    </ul>
+          <a
+            :class="{ 'dropdown__link--selected': isSelectedItem(item.id) }" 
+            href="javascript:void(0);"
+            class="dropdown__link"
+            @click="selectItem(item.id)"
+          >
+            {{ item.name }}
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -95,21 +97,26 @@ export default {
 .dropdown {
   position: relative;
 
-  &__list {
+  &__list-container {
     position: absolute;
     top: 0;
     left: 100%;
     width: 207px;
-    margin: 0;
+    
     visibility: hidden;
     background: #2B3839;
-    padding: 0;
     border-radius: 5px;
     box-shadow: 0px 4px 10px rgba(58, 178, 189, 0.5);
 
     &--show {
       visibility: visible;
     }
+  }
+
+  &__list {
+    width: 100%;
+    margin: 0;
+    padding: 0;
   }
 
   &__item {

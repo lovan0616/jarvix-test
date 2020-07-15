@@ -299,7 +299,8 @@ export default {
         Message({
           message: this.$t('algorithm.algoProcessFinished', { demoDatasource }),
           type: 'success',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
         localStorage.setItem('isDemoEnd', 'true')
         // trigger refresh list

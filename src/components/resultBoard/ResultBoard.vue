@@ -202,7 +202,8 @@ export default {
           Message({
             message: this.$t('message.pinboardSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         }).catch(() => {
           this.isLoading = false
@@ -252,7 +253,8 @@ export default {
       Message({
         message: this.$t('message.copiedToBoard'),
         type: 'success',
-        duration: 3 * 1000
+        duration: 3 * 1000,
+        showClose: true
       })
       this.$nextTick(() => {
 

@@ -129,13 +129,13 @@ export default {
           groupRole: dummyGroupRole,
           userId: this.userList.find(user => user.value === this.selectedInvitee).id
         }, this.currentGroupId)
-          .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
           .then(() => {
             this.backToUserList()
             return Message({
               message: this.$t('message.memberCreateSuccess'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           })
           .catch(() => { this.isLoading = false })

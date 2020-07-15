@@ -43,7 +43,8 @@ service.interceptors.response.use(
       Message({
         message: res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg'),
         type: res.error.type,
-        duration: 3 * 1000
+        duration: 3 * 1000,
+        showClose: true
       })
     }
 
@@ -60,7 +61,8 @@ service.interceptors.response.use(
       Message({
         message: i18n.t('errorMessage.networkError'),
         type: 'error',
-        duration: 3 * 1000
+        duration: 3 * 1000,
+        showClose: true
       })
     } else {
       let statusCode = error.response.status
@@ -76,7 +78,8 @@ service.interceptors.response.use(
           Message({
             message: i18n.t('errorMessage.authFail'),
             type: 'error',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
 
           break
@@ -89,7 +92,8 @@ service.interceptors.response.use(
           Message({
             message: i18n.t('errorMessage.permissionChanged'),
             type: 'error',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
 
           break
