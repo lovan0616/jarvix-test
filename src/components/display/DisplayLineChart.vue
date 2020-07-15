@@ -1,6 +1,7 @@
 <template>
   <div class="display-line-chart">
     <v-echart
+      ref="chart"
       :style="chartStyle"
       :options="options"
       auto-resize
@@ -273,6 +274,20 @@ export default {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
+    robotDrillDownEvent () {
+      this.$refs.chart.dispatchAction({
+        type: 'brush',
+        areas: [
+          {
+            xAxisIndex: 0,
+            brushType: 'lineX',
+            coordRange: [
+              10, 12
+            ]
+          }
+        ]
+      })
+    },
     composeColumn (element, colIndex) {
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
