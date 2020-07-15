@@ -56,18 +56,10 @@
         <svg-icon icon-class="ask-helper"/>
       </div>
     </div>
-    <div 
+    <div
       :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
       class="history-question-block"
     >
-      <a 
-        href="javascript:void(0)" 
-        class="close-btn"
-        @click="hideHistory"
-      >
-        <svg-icon icon-class="close"/>
-      </a>
-      <div class="title">{{ $t('askHelper.historyTitle') }}</div>
       <div 
         v-for="singleHistory in historyQuestionList"
         :key="singleHistory.id"
@@ -442,10 +434,10 @@ export default {
     width: calc(100% - 56px);
     height: 0;
     overflow: hidden;
-    padding: 0 32px;
     transition: height 0.3s;
     z-index: 90;
-    background-color: rgba(40, 71, 74, 0.95);
+    background-color: #2D3033;
+    border-radius: 5px;
 
     &.has-filter {
       bottom: 137px;
@@ -454,35 +446,24 @@ export default {
     &.show {
       height: 160px;
       overflow: auto;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 12px;
-      right: 16px;
-      color: #fff;
-      font-size: 14px;
-    }
-
-    .title {
-      line-height: 50px;
+      padding: 4px 0;
     }
 
     .history-question {
-      background: rgba(255, 255, 255, 0.1);
       border-radius: 5px;
       font-size: 14px;
       line-height: 20px;
-      padding: 8px 12px;
-      color: $theme-color-primary;
+      padding: 8px 32px;
+      color: #ccc;
       cursor: pointer;
+      border-bottom: 1px solid #323538;
 
       &:not(:last-child) {
         margin-bottom: 8px;
       }
 
       .icon {
-        margin-right: 4px;
+        margin-right: 14px;
       }
     }
   }
