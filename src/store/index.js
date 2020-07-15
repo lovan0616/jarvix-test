@@ -10,6 +10,7 @@ import userManagement from './modules/userManagement'
 import algorithm from './modules/algorithm'
 import validation from './modules/validation'
 import previewDataSource from './modules/previewDataSource'
+import advanceSetting from './modules/advanceSetting'
 
 Vue.use(Vuex)
 
@@ -24,7 +25,8 @@ export default new Vuex.Store({
     result,
     algorithm,
     validation,
-    previewDataSource
+    previewDataSource,
+    advanceSetting
   },
   state: {
     isShowChatRoom: false,
