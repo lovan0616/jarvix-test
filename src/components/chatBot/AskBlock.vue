@@ -308,10 +308,10 @@ export default {
     display: flex;
     align-items: center;
     z-index: 999;
-    background-color: #2D3033;
+    background-color: #1D2424;
     border-radius: 5px;
     padding: 0 10px;
-    border: 1px solid #2D3033;
+    border: 1px solid #1D2424;
 
     &.has-filter {
       &:after {

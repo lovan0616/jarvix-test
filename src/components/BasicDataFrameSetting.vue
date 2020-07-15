@@ -39,13 +39,14 @@ export default {
   position: absolute;
   top: $header-height + $chat-room-height;
   left: 0;
-  padding: 8px 16px 24px 24px;
+  padding: 8px 16px 0 0;
   min-height: calc(100vh - #{$header-height + $chat-room-height});
   width: $basic-df-setting-width;
   display: flex;
   flex-direction: column;
   transform: translateX(-$basic-df-setting-width);
   overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.55);
 
   &.is-show {
     transform: translateX(0);
@@ -53,14 +54,14 @@ export default {
   
   .setting {
     &__body {
-      background-color: #2D3033;
-      border-radius: 5px;
       flex: 1;
+      border: 0.5px solid #232C2E;
+      padding: 0 0 24px 0;
 
       &__header {
         display: flex;
         align-items: center;
-        padding: 16px 18px;
+        padding: 16px 24px;
         color: $theme-color-primary;
 
         &--title {
