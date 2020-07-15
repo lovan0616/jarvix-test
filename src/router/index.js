@@ -374,7 +374,8 @@ router.beforeEach(async (to, from, next) => {
     return Message({
       message: i18n.t('errorMessage.lackOfPermission'),
       type: 'error',
-      duration: 3 * 1000
+      duration: 3 * 1000,
+      showClose: true
     })
   }
   next()
@@ -389,7 +390,8 @@ router.onError((error) => {
     Message({
       message: i18n.t('errorMessage.versionUpdate'),
       type: 'error',
-      duration: 3 * 1000
+      duration: 3 * 1000,
+      showClose: true
     })
     window.setTimeout(() => {
       window.location.reload()

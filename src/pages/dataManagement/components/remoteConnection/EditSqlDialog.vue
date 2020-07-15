@@ -121,7 +121,8 @@ export default {
           Message({
             message: this.$t('remoteConnection.tableNameDuplicate'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }

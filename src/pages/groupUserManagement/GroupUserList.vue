@@ -41,6 +41,7 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import {getGroupUserList, deleteGroupUser} from '@/API/Group'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
+import i18n from '@/lang/index.js'
 
 export default {
   name: 'GroupUserList',
@@ -123,10 +124,12 @@ export default {
         .then(() => this.$store.dispatch('userManagement/updateUserGroupList', this.currentGroupId))
         .then(() => {
           setTimeout(() => {
+            // 無法透過 this 使用 i18n: 如果更新後無群組或被切換群組，此 component 會被 destroyed 掉
             Message({
-              message: this.$t('message.memberDeleteSuccess'),
+              message: i18n.t('message.memberDeleteSuccess'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           }, 0)
 
@@ -136,7 +139,8 @@ export default {
             return Message({
               message: this.$t('message.youAreGroupless'),
               type: 'warning',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           }
           
@@ -148,7 +152,8 @@ export default {
             return Message({
               message: this.$t('message.switchToGroupBySys', { groupName: currentGroupName }),
               type: 'info',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           }
           

@@ -206,7 +206,8 @@ export default {
               Message({
                 message: this.$t('message.builded'),
                 type: 'success',
-                duration: 3 * 1000
+                duration: 3 * 1000,
+                showClose: true
               })
             })
         })

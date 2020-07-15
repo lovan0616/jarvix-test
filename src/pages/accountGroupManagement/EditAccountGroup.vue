@@ -146,7 +146,8 @@ export default {
                 return Message({
                   message: this.$t('message.groupCreateSuccess'),
                   type: 'success',
-                  duration: 3 * 1000
+                  duration: 3 * 1000,
+                  showClose: true
                 })
               })
               .catch(() => { this.isLoading = false })
@@ -162,7 +163,8 @@ export default {
                 return Message({
                   message: this.$t('message.groupInfoUpdatedSuccess'),
                   type: 'success',
-                  duration: 3 * 1000
+                  duration: 3 * 1000,
+                  showClose: true
                 })
               })
               .catch(() => { this.isLoading = false })

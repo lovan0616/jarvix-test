@@ -336,7 +336,8 @@ export default {
             message: html + ',<br>' + this.$t('message.userAlreadyExisting'),
             dangerouslyUseHTMLString: true,
             type: 'warning',
-            duration: 5 * 1000
+            duration: 5 * 1000,
+            showClose: true
           })
           return
         }
@@ -344,7 +345,8 @@ export default {
           Message({
             message: this.$t('message.userInviteRepetitive'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return
         }
@@ -367,7 +369,8 @@ export default {
             Message({
               message: this.$t('message.userInviteSuccess'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           })
           .catch(() => {})
@@ -422,7 +425,8 @@ export default {
           Message({
             message: this.$t('message.changeStatusSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         })
         .catch(error => {
@@ -448,7 +452,8 @@ export default {
               Message({
                 message: this.$t('message.changePasswordSuccess'),
                 type: 'success',
-                duration: 3 * 1000
+                duration: 3 * 1000,
+                showClose: true
               })
             })
             .catch(error => {
@@ -471,7 +476,8 @@ export default {
           Message({
             message: this.$t('message.deleteSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         })
         .catch(() => {})
