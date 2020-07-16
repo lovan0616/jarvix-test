@@ -97,9 +97,6 @@ export default {
   computed: {
     ...mapGetters('dataSource', ['dataSourceList']),
     ...mapGetters('userManagement', ['getCurrentGroupId']),
-    dataFrameId () {
-      return this.$store.state.dataSource.dataFrameId
-    },
     selectedDataName () {
       if (Object.entries(this.selectInfo).length === 0) {
         return this.availableDataList[0].name
@@ -169,8 +166,8 @@ export default {
             'group_id': this.getCurrentGroupId
           },
           query: {
-            dataSourceId,
-            dataFrameId
+            dataSourceId: dataSourceId,
+            dataFrameId: dataFrameId
           }
         })
       })
