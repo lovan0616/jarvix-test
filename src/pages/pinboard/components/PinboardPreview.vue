@@ -177,7 +177,8 @@ export default {
       Message({
         message: this.$t('message.copiedToBoard'),
         type: 'success',
-        duration: 3 * 1000
+        duration: 3 * 1000,
+        showClose: true
       })
       this.$nextTick(() => {
         this.cancelShare()

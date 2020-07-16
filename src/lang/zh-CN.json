@@ -765,6 +765,7 @@
     "ask": "问",
     "example": "范例",
     "exampleDesc": "因 Boolean 和 Unique 类型问句方式与 Category 一致，以下均以 Category 类型举例。",
+    "emptyColumn": "无此类别的栏位",
     "questionSampleList": [
       {
         "name": "一般问句",
@@ -1519,8 +1520,8 @@
     ]
   },
   "resultDescription": {
-    "totalColumnAverage": "整体{0}平均值为{1}",
-    "compareToAverage": "{0}{2}平均值{1}",
+    "totalColumnAverage": "整体 {0} 平均值为 {1}",
+    "compareToAverage": "{0} {2}平均值 {1}",
     "high": "高",
     "low": "低",
     "higher": "高于",

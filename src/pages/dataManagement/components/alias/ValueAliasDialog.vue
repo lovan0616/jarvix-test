@@ -353,7 +353,8 @@ export default {
           Message({
             message: this.$t('message.saveSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           // 更新問句說明資訊
           this.$store.dispatch('dataSource/getDataSourceDataValue')

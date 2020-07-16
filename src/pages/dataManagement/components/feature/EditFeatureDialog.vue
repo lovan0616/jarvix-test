@@ -272,7 +272,8 @@ export default {
         Message({
           message: validateMsg,
           type: 'error',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
         return false
       }
@@ -298,7 +299,8 @@ export default {
             Message({
               message: this.$t('message.saveSuccess'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
             this.$emit('update')
           }).catch(() => {})

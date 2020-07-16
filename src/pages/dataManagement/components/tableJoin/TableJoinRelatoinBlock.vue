@@ -273,7 +273,8 @@ export default {
         Message({
           message: this.$t('message.formColumnEmpty'),
           type: 'warning',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
         return false
       }
@@ -282,7 +283,8 @@ export default {
           Message({
             message: this.$t('message.formColumnEmpty'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }
@@ -290,7 +292,8 @@ export default {
           Message({
             message: this.$t('message.joinTypeEmpty'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }
@@ -298,7 +301,8 @@ export default {
           Message({
             message: this.$t('message.remindNotAllowSelfJoin'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }
@@ -306,7 +310,8 @@ export default {
           Message({
             message: this.$t('message.remindSameDataTypeColumns'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }
@@ -346,7 +351,8 @@ export default {
             Message({
               message: this.$t('message.joinTableBuilding'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           })
           .finally(() => { this.isLoading = false })
@@ -371,7 +377,8 @@ export default {
             Message({
               message: this.$t('message.joinTableBuilding'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           })
           .finally(() => { this.isLoading = false })
@@ -394,7 +401,8 @@ export default {
               return Message({
                 message: this.$t('message.noMatchedKey'),
                 type: 'warning',
-                duration: 3 * 1000
+                duration: 3 * 1000,
+                showClose: true
               })
             }
             this.previewResultData = previewResultData
