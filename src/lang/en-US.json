@@ -10,7 +10,8 @@
     "languagePlaceholder": "Language",
     "setting": "Setting",
     "projectManagement": "Project Management",
-    "algorithm": "Algorithm"
+    "algorithm": "Algorithm",
+    "helper": "Help"
   },
   "sideNav": {
     "functionList": "Functions",

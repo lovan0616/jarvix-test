@@ -10,7 +10,8 @@
     "languagePlaceholder": "語系",
     "setting": "設定",
     "projectManagement": "專案管理",
-    "algorithm": "演算法"
+    "algorithm": "演算法",
+    "helper": "幫助"
   },
   "sideNav": {
     "functionList": "功能選單",
