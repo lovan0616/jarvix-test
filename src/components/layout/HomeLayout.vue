@@ -5,7 +5,7 @@
       mode="out-in">
       <chat-room-block/>
     </transition>
-    <advance-data-frame-setting/>
+    <advance-data-frame-setting v-if="isShowSettingBox" />
     <div 
       :class="{ 'wrapper--has-basic-df-setting': isShowSettingBox }"
       class="wrapper wrapper--has-chat-room"

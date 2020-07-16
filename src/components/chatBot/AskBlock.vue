@@ -204,6 +204,8 @@ export default {
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
     // TODO 暫時先由這邊打開基表設定，等datasource選單做好再拔掉
     toggleAdvanceDataFrameSetting () {
+      const dataFrameId = this.$route.query.dataFrameId
+      if (dataFrameId === 'all') return 
       this.toggleSettingBox(!this.isShowSettingBox)
     },
     toggleWebSocketConnection () {

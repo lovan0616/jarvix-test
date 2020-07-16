@@ -66,12 +66,15 @@ export function renameDataSourceById (dataSourceId, name) {
  * get dataSource column info
  * @param {Number} dataSourceId - 資料源 ID
  */
-export function getDataSourceColumnInfoById(dataSourceId, dataFrameId) {
+export function getDataSourceColumnInfoById(dataSourceId, dataFrameId, columns) {
   return request({
-    url: `/datasources/${dataSourceId}/dataColumns/name`,
-    method: 'GET',
+    url: `/datasources/${dataSourceId}/dataColumns/name/search`,
+    method: 'POST',
     params: {
       dataFrameId
+    },
+    data: {
+      columns // TODO
     }
   })
 }
@@ -80,13 +83,16 @@ export function getDataSourceColumnInfoById(dataSourceId, dataFrameId) {
  * get dataSource data value
  * @param {Number} dataSourceId - 資料源 ID
  */
-export function getDataSourceDataValueById(dataSourceId, dataFrameId, size = 50) {
+export function getDataSourceDataValueById(dataSourceId, dataFrameId, size = 50, columns) {
   return request({
-    url: `/datasources/${dataSourceId}/dataValue`,
-    method: 'GET',
+    url: `/datasources/${dataSourceId}/dataValue/search`,
+    method: 'POST',
     params: {
       dataFrameId,
       size
+    },
+    data: {
+      columns // TODO
     }
   })
 }

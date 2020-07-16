@@ -76,6 +76,7 @@ export default {
     // 清空 dataFrame list 和 id
     commit('setDataFrameId', null)
     commit('setDataFrameList', [])
+    dispatch('dataFrameAdvanceSetting/clearColumnList', null, { root: true })
     
     if (!dataSourceId) return Promise.resolve(state)
 
@@ -109,13 +110,13 @@ export default {
   },
   changeDataFrameById ({ dispatch, commit, state }, dataFrameId) {
     dispatch('clearChatbot')
+    dispatch('dataFrameAdvanceSetting/clearColumnList', null, { root: true })
+
     // 更新 DataFrame 資料
     commit('setDataFrameId', dataFrameId)
     return co(function* () {
       yield dispatch('chatBot/updateChatConversation', false, { root: true })
       yield dispatch('getHistoryQuestionList')
-      yield dispatch('getDataSourceColumnInfo')
-      yield dispatch('getDataSourceDataValue')
       return Promise.resolve(state)
     })
   },
