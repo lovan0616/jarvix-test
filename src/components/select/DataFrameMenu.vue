@@ -12,22 +12,35 @@
         index="1">
         <template slot="title" >
           <svg-icon 
-            icon-class="data-source" 
+            :icon-class="selectedIconType" 
             class="data-frame-select__icon"/>
-          <span class="submenu__data-source-title">{{ selectedDataSource }}</span>
+          <span class="submenu__data-source-title">{{ selectedDataName }}</span>
         </template>
         <div 
-          v-for="(dataSource, idx) in buildDataSourceList"
-          :key="idx">
+          v-for="(dataSource, dataSourceIndex) in availableDataList"
+          :key="'dataSource' + dataSourceIndex">
           <el-submenu 
-            :index="'1-'+idx" 
+            :index="'1-' + dataSourceIndex" 
             class="data-frame-select__submenu">
             <template slot="title">
               <svg-icon 
                 icon-class="data-source" 
-                class="data-frame-select__icon"/>
-              <span class="submenu__data-frame-title">{{ dataSource.name }}</span>
+                class="data-frame-source__icon"/>
+              <span class="submenu__data-source-title">{{ dataSource.name }}</span>
             </template>
+            <div 
+              v-for="(dataFrame, dataFrameIndex) in dataSource.dataFrames"
+              :key="'dataFrame' + dataFrameIndex">
+              <el-menu-item :index="dataSourceIndex + '-' + dataFrameIndex">
+                <template slot="title">
+                  <svg-icon 
+                    icon-class="table" 
+                    class="data-frame-select__icon"/>
+                  <span class="submenu__data-frame-title">{{ dataFrame.name }}</span>
+                </template>
+              </el-menu-item>
+            </div>
+
           </el-submenu>
         </div>
       </el-submenu>
@@ -72,13 +85,14 @@
   </div>
 </template>
 <script>
-import SySelect from '@/components/select/SySelect'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'DataFrameMenu',
-  components: {
-    SySelect
+  data () {
+    return {
+      selectInfo: {}
+    }
   },
   computed: {
     ...mapGetters('dataSource', ['dataSourceList']),
@@ -86,12 +100,38 @@ export default {
     dataFrameId () {
       return this.$store.state.dataSource.dataFrameId
     },
-    selectedDataSource () {
-      return this.buildDataSourceList[0].name
+    selectedDataName () {
+      if (Object.entries(this.selectInfo).length === 0) {
+        return this.availableDataList[0].name
+      } else {
+        return this.selectInfo.dataFrameId === 'all' 
+        ? this.selectInfo.dataSource 
+        : this.selectInfo.dataFrame
+      }
+    },
+    selectedIconType () {
+      return this.selectInfo.dataFrameId === 'all' || Object.entries(this.selectInfo).length === 0
+        ? 'data-source' 
+        : 'table'
     },
     buildDataSourceList () {
       return this.dataSourceList.filter(dataSource => {
         return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
+      })
+    },
+    availableDataList () {
+      const defaultOption = {
+        name: this.$t('editing.allDataFrames'),
+        id: 'all'
+      }
+      return this.buildDataSourceList.map(dataSource => {
+        return {
+          ...dataSource,
+          dataFrames: dataSource.dataFrames.reduce((acc, cur) => {
+            acc.push({name: cur.primaryAlias, id: cur.id})
+            return acc
+          }, [defaultOption])
+        }
       })
     },
     isShowPreviewDataSource () {
@@ -102,24 +142,23 @@ export default {
     },
     previewDataSourceTooltipContent () {
       return this.isShowPreviewDataSource ? this.$t('bot.closeDataSource') : this.$t('bot.previewDataSource')
-    },
-    availableDataFrames () {
-      const dataFrameList = this.$store.state.dataSource.dataFrameList
-      if (dataFrameList.length === 0) return []
-      const defaultOption = {
-        name: this.$t('editing.allDataFrames'),
-        id: 'all'
-      }
-      return dataFrameList.reduce((acc, cur) => {
-        if (cur.state !== 'Enable') return acc
-        acc.push({name: cur.primaryAlias, id: cur.id})
-        return acc
-      }, [defaultOption])
     }
   },
   methods: {
     ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
-    onDataFrameChange (dataFrameId) {
+    handleSelect (key, keyPath) {
+      let selectKey = keyPath[2].split('-')
+      const dataSourceIndex = selectKey[0]
+      const dataFrameIndex = selectKey[1]
+      this.selectInfo = {
+        dataSource: this.availableDataList[dataSourceIndex].name,
+        dataSourceId: this.availableDataList[dataSourceIndex].id,
+        dataFrame: this.availableDataList[dataSourceIndex].dataFrames[dataFrameIndex].name,
+        dataFrameId: this.availableDataList[dataSourceIndex].dataFrames[dataFrameIndex].id,
+      }
+        this.onDataFrameChange(this.selectInfo.dataSourceId, this.selectInfo.dataFrameId)
+    },
+    onDataFrameChange (dataSourceId, dataFrameId) {
       // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
       if (this.isShowPreviewDataSource) this.togglePreviewDataSource(false)
       this.$store.dispatch('dataSource/changeDataFrameById', dataFrameId)
@@ -130,14 +169,11 @@ export default {
             'group_id': this.getCurrentGroupId
           },
           query: {
-            dataSourceId: this.$route.query.dataSourceId,
+            dataSourceId,
             dataFrameId
           }
         })
       })
-    },
-    handleSelect () {
-
     },
     togglePreviewDataSource () {
       this.$store.commit('previewDataSource/togglePreviewDataSource', !this.isShowPreviewDataSource)
@@ -182,7 +218,7 @@ export default {
       }
     }
   }
-  
+
   /deep/ .el-submenu {
     width: 100%;
 

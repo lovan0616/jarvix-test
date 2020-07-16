@@ -155,11 +155,28 @@
   top: 0px;
   overflow-y: auto;
 
+  .el-menu, .el-submenu__title {
+    background-color: #303435;
+  }
+
   .el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow {
     -webkit-transform: rotateZ(-90deg) translate(-6.9px, 0);
     transform: rotateZ(-90deg) translate(-6.9px, 0);
     transform-origin: center;
   }
+}
+
+.data-frame-select__icon {
+  margin-right: 6px;
+}
+
+.el-menu--horizontal>.el-submenu.is-active .el-submenu__title {
+  border-bottom: 2px solid transparent;
+  color: #FFF;
+}
+
+.el-menu--horizontal {
+  border-radius: 5px;
 }
 
 .el-submenu__icon-arrow::before{
