@@ -132,7 +132,8 @@ export default {
         this.$store.dispatch('chatBot/askResult', {
           questionId: this.currentQuestionId,
           segmentationPayload: this.currentQuestionInfo,
-          restrictions: this.filterRestrictionList
+          restrictions: this.filterRestrictionList,
+          selectedColumnList: this.selectedColumnList || null
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.getComponent(res)
@@ -179,7 +180,8 @@ export default {
             this.$store.dispatch('chatBot/askResult', {
               questionId,
               segmentationPayload: segmentationList[0],
-              restrictions: this.filterRestrictionList
+              restrictions: this.filterRestrictionList,
+              selectedColumnList: this.selectedColumnList || null
             }).then(res => {
               this.getComponent(res)
               this.getRelatedQuestion(res.resultId)
