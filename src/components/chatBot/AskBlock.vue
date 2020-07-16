@@ -105,7 +105,8 @@ export default {
       showAskHelper: false,
       websocketHandler: null,
       recommendList: [],
-      cursorPositionQuestion: null
+      cursorPositionQuestion: null,
+      closeQuickAsk: localStorage.getItem('closeQuickAsk') || false
     }
   },
   computed: {
@@ -162,6 +163,7 @@ export default {
   },
   watch: {
     questionTokenList (value, oldValue) {
+      if (this.closeQuickAsk === 'true') return
       if (value.length === 0) return
       // token 減少不處理
       let newRecognizeTokenList = value.filter(element => element.type !== 'unknown')
