@@ -1,10 +1,6 @@
 <template>
   <div class="home-layout">
-    <transition 
-      name="fade" 
-      mode="out-in">
-      <chat-room-block/>
-    </transition>
+    <chat-room-block/>
     <basic-data-frame-setting/>
     <div 
       :class="{'wrapper--has-basic-df-setting': isShowBasicDataFrameSetting}"

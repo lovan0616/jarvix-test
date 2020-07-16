@@ -1,18 +1,13 @@
 <template>
-  <div class="ask-container">
+  <div 
+    :class="{'is-focus': isFocus}" 
+    class="ask-container">
     <div class="ask-block">
-      <div 
-        v-show="hasFilter"
-        class="filter-block"
-      ><svg-icon 
-        icon-class="filter" 
-        class="icon"/> {{ $t('resultDescription.filterRestrictions') }}</div>
       <div 
         :class="{
           'has-filter': hasFilter,
           'is-use-algorithm': isUseAlgorithm,
           'is-connect-channel': websocketHandler,
-          'is-focus': isFocus
         }"
         class="user-question-block"
       >
@@ -48,6 +43,18 @@
         >
           <svg-icon icon-class="go-right"/>
         </a>
+        <div class="ask-target">
+          <svg-icon
+            icon-class="database" 
+            class="ask-target--icon"/>
+          <!-- TODO 待從store拿當前資料源 -->
+          <span class="ask-target--label">運動產品銷售</span>
+          <svg-icon
+            icon-class="table" 
+            class="ask-target--icon"/>
+          <!-- TODO 待從store拿當前資料表 -->
+          <span class="ask-target--label">全部資料表</span>
+        </div>
       </div>
       <div 
         :class="{ 'disabled': dataSourceList.length === 0 }" 
@@ -57,7 +64,7 @@
       </div>
     </div>
     <div
-      :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
+      :class="{show: isFocus && showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
       class="history-question-block"
     >
       <div 
@@ -65,9 +72,12 @@
         :key="singleHistory.id"
         class="history-question"
         @click="copyQuestion(singleHistory.question)"
-      ><svg-icon 
-        icon-class="clock" 
-        class="icon"/> {{ singleHistory.question }}</div>
+      >
+        <svg-icon 
+          icon-class="clock" 
+          class="icon"/>
+        {{ singleHistory.question }}
+      </div>
     </div>
     <ask-helper-dialog 
       ref="helperDialog"
@@ -290,20 +300,36 @@ export default {
   position: relative;
   flex: 1;
 
+  &.is-focus {
+
+    .user-question-block {
+      border-radius: 5px 5px 0 0;
+      border: 1px solid #0CD1DE;
+      box-shadow: 0px 0px 20px rgba(12, 209, 222, .5);
+      border-radius: 5px;
+    }
+
+    .user-question-block .ask-target {
+      height: 32px;
+    }
+  }
+  
   .ask-block {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .user-question-block {
     flex: 1;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     z-index: 999;
     background-color: #1D2424;
-    border-radius: 5px;
-    padding: 0 10px;
     border: 1px solid #1D2424;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all .1s;
 
     &.has-filter {
       &:after {
@@ -325,19 +351,16 @@ export default {
         color: $theme-color-danger;
       }
     }
-    &.is-focus {
-      box-shadow: 0px 0px 20px rgba(12, 209, 222, 0.5);
-      border: 1px solid #0CD1DE;
-    }
 
     .question-input {
-      width: 100%;
+      flex-basis: calc(100% - 65px);
       font-size: 14px;
       line-height: 36px;
       height: 38px;
       overflow: auto;
       padding-right: 30px;
       border-bottom: none;
+      padding: 0 10px;
 
       &::placeholder {
         opacity: #888;
@@ -356,29 +379,37 @@ export default {
     }
 
     .clean-btn {
+      flex-basis: 16px;
       font-size: 16px;
       color: rgba(255, 255, 255, 0.5);
       margin-right: 16px;
     }
 
     .ask-btn {
+      flex-basis: 16px;
       font-size: 20px;
       color: $theme-color-primary;
     }
-  }
 
-  .filter-block {
-    color: $filter-color;
-    border: 1px solid $filter-color;
-    border-radius: 5px;
-    padding: 6px 10px;
-    font-size: 12px;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
+    .ask-target {
+      flex-basis: 100%;
+      height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-size: 12px;
+      background-color: #282E2E;
+      padding: 0 10px;
+      transition: height .3s;
+      overflow: hidden;
 
-    .icon {
-      margin-right: 4px;
+      &--label {
+        margin-right: 10px;
+      }
+      &--icon {
+        margin-right: 6px;
+        fill: $theme-color-primary;
+      }
     }
   }
 
@@ -434,7 +465,7 @@ export default {
     width: calc(100% - 56px);
     height: 0;
     overflow: hidden;
-    transition: height 0.3s;
+    transition: all .1s;
     z-index: 90;
     background-color: #2D3033;
     border-radius: 5px;
@@ -444,23 +475,27 @@ export default {
     }
 
     &.show {
+      top: calc(100% +  32px);
       height: 160px;
       overflow: auto;
       padding: 4px 0;
     }
 
     .history-question {
-      border-radius: 5px;
       font-size: 14px;
       line-height: 20px;
-      padding: 8px 32px;
+      padding: 10px 32px;
       color: #ccc;
       cursor: pointer;
       border-bottom: 1px solid #323538;
 
-      &:not(:last-child) {
-        margin-bottom: 8px;
+      &:hover {
+        background-color: #464A50;
       }
+
+      // &:not(:last-child) { 
+      //   padding-bottom: 8px;
+      // }
 
       .icon {
         margin-right: 14px;
