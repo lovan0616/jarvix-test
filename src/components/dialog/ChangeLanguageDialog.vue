@@ -57,8 +57,8 @@ export default {
       // 在登入、註冊頁面修改語言
       if (!this.userId) {
         this.$store.commit('setting/setLocale', this.selectedLanguage)
+        this.$store.commit('setting/isChangeLangBeforeLogin', true)
         this.$emit('closeDialog')
-        this.$emit('chang')
         return
       }
       this.isLoading = true

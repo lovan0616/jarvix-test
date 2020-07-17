@@ -9,8 +9,8 @@
       name="fade" 
       mode="out-in">
       <router-view 
-        v-if="init" 
-      />
+        v-if="init"
+        :key="locale"/>
       <spinner 
         v-else 
         style="height: 100vh;"/>
