@@ -66,7 +66,7 @@ export function renameDataSourceById (dataSourceId, name) {
  * get dataSource column info
  * @param {Number} dataSourceId - 資料源 ID
  */
-export function getDataSourceColumnInfoById(dataSourceId, dataFrameId, columns) {
+export function getDataSourceColumnInfoById(dataSourceId, dataFrameId, columns = []) {
   return request({
     url: `/datasources/${dataSourceId}/dataColumns/name/search`,
     method: 'POST',
