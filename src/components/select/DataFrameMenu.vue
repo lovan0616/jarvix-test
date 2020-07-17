@@ -158,7 +158,7 @@ export default {
     onDataFrameChange (dataSourceId, dataFrameId) {
       // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
       if (this.isShowPreviewDataSource) this.togglePreviewDataSource(false)
-      this.$store.dispatch('dataSource/changeDataFrameById', dataFrameId)
+      this.$store.dispatch('dataSource/changeDataSourceById', { dataSourceId, dataFrameId })
       .then(() => {
         this.$router.push({ 
           name: 'PageIndex', 

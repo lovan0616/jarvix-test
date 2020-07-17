@@ -54,7 +54,6 @@ export default {
             message: i18n.t('message.dataSourceNotExist'),
             type: 'success',
             duration: 3 * 1000,
-            showClose: true
           })
         }
       } else {
@@ -67,7 +66,7 @@ export default {
       }
     })
   },
-  async changeDataSourceById({ dispatch, commit, state, rootGetters }, {dataSourceId, dataFrameId = 'all'}) {
+  async changeDataSourceById({ dispatch, commit, state, rootGetters }, {dataSourceId, dataFrameId}) {
     if (state.dataSourceId === dataSourceId  && state.dataFrameId === dataFrameId) return Promise.resolve(state)
     // 清空對話紀錄
     if (state.dataSourceId) dispatch('clearChatbot')
@@ -94,15 +93,14 @@ export default {
         },
         query: {
           dataSourceId: dataSourceId,
-          dataFrameId: 'all'
+          dataFrameId: dataFrameId
         }
       })
 
       return Message({
         message: i18n.t('message.dataFrameNotExist'),
         type: 'success',
-        duration: 3 * 1000,
-        showClose: true
+        duration: 3 * 1000
       })
     }
     return dispatch('changeDataFrameById', dataFrameId)
