@@ -238,9 +238,9 @@ export default {
     .el-submenu__title {
       display: flex;
       align-items: center;
-      height: 40px;
-      line-height: 40px;
-      background-color: transparent !important;
+      height: 38px;
+      line-height: 38px;
+      border-radius: 5px 0 0 5px;
     }
 
     .data-frame-select__icon {
@@ -252,6 +252,12 @@ export default {
       width: 100%;
       @include text-hidden;
     } 
+  }
+
+  /deep/ .is-opened {
+    .el-submenu__title {
+      background-color: #1D2424 !important; 
+    }
   }
 }
 
