@@ -1,13 +1,26 @@
 <template>
-  <el-tooltip
-    :popper-class="popperClass"
-    placement="bottom-start"
+  <label 
+    :class="{ 'single-filter-block--checked': checked }"
+    class="single-filter-block"
   >
-    <div slot="content">
+    <div class="single-filter-block__checkbox">
+      <div class="checkbox-group">
+        <div class="checkbox-label">
+          <input
+            v-model="checked"
+            type="checkbox"
+            @change="onCheckedChange(checked)"
+          >
+          <div class="checkbox-square"/>
+        </div>
+      </div>
+      {{ columnNames.join(', ') }}
+    </div>
+    <div class="single-filter-block__description">
       <div
         v-for="(restraint, index) in restriction"
         :key="index"
-        class="tooltip-content-item"
+        class="description"
       >
         <template
           v-if="restraint.type === 'compound'"
@@ -28,15 +41,15 @@
             </template>
             <span
               v-if="restraintsIndex < restraint.restraints.length - 1"
-              class="tooltip-content-item-condition"
-            >、</span>
+              class="description__condition"
+            >〝</span>
           </div>
         </template>
         <template v-else>
-          <div class="tooltip-content-item-title">
+          <div class="description__condition__title">
             {{ $t('resultDescription.restrict') + (index + 1) }}:
           </div>
-          <div class="tooltip-content-item-description">
+          <div class="description__condition__content">
             <template v-if="restraint.type === 'enum'">
               {{ restraint.properties['display_name'] }} = {{ restraint.properties['display_datavalues'].join(', ') }}
             </template>
@@ -50,18 +63,7 @@
         </template>
       </div>
     </div>
-    <div :class="['single-filter-block', {checked: checked}]">
-      <div class="column-name">{{ columnNames.join(', ') }}</div>
-      <label class="checkbox-label filer-checkbox">
-        <input
-          v-model="checked"
-          type="checkbox"
-          @change="onCheckedChange(checked)"
-        >
-        <div class="checkbox-square"/>
-      </label>
-    </div>
-  </el-tooltip>
+  </label>
 </template>
 <script>
 
@@ -95,11 +97,6 @@ export default {
       }, []).filter((element, index, self) => {
         return self.findIndex(item => item === element) === index
       })
-    },
-    popperClass () {
-      let result = 'filter-block-tooltip'
-      if (!this.checked) result += ' checked'
-      return result
     }
   },
   watch: {
@@ -120,103 +117,66 @@ export default {
 </script>
 <style lang="scss" scoped>
 .single-filter-block {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-width: 70px;
-  background-color: transparent;
-  border-radius: 5px;
-  padding: 8px;
-  margin-bottom: 8px;
-  border: 1px solid #839699;
-  color: #839699;
+  color: #CCCCCC;
+  opacity: 0.5;
   cursor: pointer;
 
-  &:not(:first-child) {
-    margin-left: 12px;
+  &__checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 5px;
+
+    .checkbox-group {
+      margin-right: 11px;
+    }
+  }
+
+  &__description {
     position: relative;
+    margin-left: 26px;
+    color: #CCCCCC;
+    font-size: 12px;
+    opacity: 0.5;
 
     &:before {
       content: "";
-      display: inline-flex;
-      width: 12px;
+      width: 2px;
       position: absolute;
-      top: 15px;
-      left: -12px;
-      border-top: 2px solid #839699;
+      top: -10px;
+      bottom: -6px;
+      left: -20px;
+      background: #839699;
     }
   }
 
-  &.checked {
-    background-color: $filter-color;
-    border-color: $filter-color;
-    color: #fff;
+  &--checked {
+    color: #FFFFFF;
+    opacity: 1;
 
-    &:not(:first-child):before {
-      border-top: 2px solid $filter-color;
+    .single-filter-block {
+      &__description {
+        margin-left: 26px;
+        color: #CCCCCC;
+        font-size: 12px;
+        opacity: 1;
+
+        &:before {
+          background: #4F93FF;
+        }
+      }
     }
-
-    &:hover {
-      background-color: #57A4FF;
-    }
-
-    .checkbox-label.filer-checkbox .checkbox-square {
-      background: #fff;
-      border-color: #fff;
-    }
   }
 
-  .column-name {
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 1;
-    margin-right: 8px;
-  }
-}
 
-.tooltip-content-item {
-  max-width: 400px;
-  margin-bottom: 8px;
-  font-size: 13px;
-  line-height: 16px;
-
-  .tooltip-content-item-title {
-    margin-bottom: 4px;
+  .checkbox-square {
+    border-radius: 3px;
   }
 
-  .tooltip-content-item-description {
-    margin-left: 16px;
-  }
-
-  .tooltip-content-item-condition {
-    margin: 4px 0;
-    color: #757575;
-  }
-}
-</style>
-
-<style lang="scss">
-.filter-block-tooltip.el-tooltip__popper {
-  background-color: #323A3A;
-  box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
-  border-radius: 8px;
-  padding: 8px;
-
-  &.el-tooltip__popper[x-placement^=top] .popper__arrow:after {
-    border-top-color: #323A3A;
-  }
-
-  &.el-tooltip__popper[x-placement^=top] .popper__arrow {
-      border-top-color: #323A3A;
-  }
-
-  &.el-tooltip__popper[x-placement^=bottom] .popper__arrow:after {
-      border-bottom-color: #323A3A;
-  }
-
-  &.el-tooltip__popper[x-placement^=bottom] .popper__arrow {
-      border-bottom-color: #323A3A;
+  .checkbox-label input:checked ~ .checkbox-square {
+    background: #4F93FF;
+    border-radius: 3px;
+    border-color: #4F93FF;;
   }
 }
 </style>

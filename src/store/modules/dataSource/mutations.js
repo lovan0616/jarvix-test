@@ -57,6 +57,9 @@ export default {
       showClose: true
     })
   },
+  setUpdatedFilterList(state, data) {
+    state.filterList = data
+  },
   setDataFrameList(state, data) {
     state.dataFrameList = data
   },

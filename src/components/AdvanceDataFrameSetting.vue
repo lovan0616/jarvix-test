@@ -70,50 +70,10 @@
         </div>
       </template>
     </div>
-    <div class="filter-block filter-block--bottom">
-      <div class="filter-block__title">
-        <svg-icon 
-          icon-class="filter" 
-          class="filter-block__title--icon" />
-        {{ $t('dataFrameAdvanceSetting.filterCriteria') }}
-      </div>
-      <div class="filter-block__select-box">
-        <div class="filter-block__select-box--checkbox filter-block__select-box--checkbox-connect">
-          <label class="filter-block__select-box--checkbox-label">
-            <div class="checkbox-group">
-              <div class="checkbox-label">
-                <input 
-                
-                  type="checkbox"
-                >
-                <div class="checkbox-square"/>
-              </div>
-            </div>
-            日期
-          </label>
-          <div class="filter-block__select-box--checkbox-description">
-            description
-          </div>
-        </div>
-        <div class="filter-block__select-box--checkbox">
-          <label class="filter-block__select-box--checkbox-label">
-            <div class="checkbox-group">
-              <div class="checkbox-label">
-                <input 
-
-                  type="checkbox"
-                >
-                <div class="checkbox-square"/>
-              </div>
-            </div>
-            日期
-          </label>
-          <div class="filter-block__select-box--checkbox-description">
-            description
-          </div>
-        </div>
-      </div>
-    </div>
+    <filter-info 
+      :temp-filter-list.sync="tempFilterList"
+      class="filter-block--bottom" 
+    />
     <div class="setting__button-block">
       <button 
         type="button"
@@ -128,25 +88,32 @@
 import { Message } from 'element-ui'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import { getDataFrameColumnInfoById } from '@/API/DataSource'
+import FilterInfo from './display/FilterInfo'
 
 export default {
   name: 'AdvanceDataFrameSetting',
   components: {
+    FilterInfo,
     Message
   },
   data () {
     return {
       isLoading: true,
       tempColumnList: [],
+      tempFilterList: [],
       searchedColumn: ''
     }
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox', 'columnList', 'isInit']),
+    ...mapState('dataSource', ['filterList']),
   },
   watch: {
     columnList (newList, oldList) {
       this.tempColumnList = newList
+    },
+    filterList (newList, oldList) {
+      this.tempFilterList = newList
     },
     '$route.query.dataFrameId'(value) {
       if (!value) return
@@ -157,16 +124,18 @@ export default {
   mounted () {
     const { dataFrameId } = this.$route.query
     this.fetchDataColumns(dataFrameId)
+    this.tempFilterList = JSON.parse(JSON.stringify(this.filterList))
   },
   methods: {
-     ...mapActions('dataFrameAdvanceSetting', ['clearColumnList']),
+    ...mapActions('dataSource', ['updateFilterList']),
+    ...mapActions('dataFrameAdvanceSetting', ['clearColumnList']),
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setColumnList', 'toggleIsInit']),
     fetchDataColumns (dataFrameId) {
       this.isLoading = true
-
+      
       // fetch existing list from store
       if (this.isInit) {
-        this.tempColumnList = this.columnList
+        this.tempColumnList = JSON.parse(JSON.stringify(this.columnList))
         this.isLoading = false
         return
       }
@@ -208,6 +177,8 @@ export default {
     },
     saveFilter () {
       this.setColumnList(this.tempColumnList)
+      const updatedFilterList = this.tempFilterList.filter(filter => filter.status)
+      this.updateFilterList(updatedFilterList)
       Message({
         message: this.$t('message.addFilter'),
         type: 'success',
@@ -236,7 +207,6 @@ export default {
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.55);;
   border: 1px solid #2B3638;
-  display: flex;
   flex-direction: column;
   flex: 1;
 
@@ -258,7 +228,7 @@ export default {
     }
   }
 
-  .filter-block {
+  /deep/ .filter-block {
     max-height: 350px;
     padding: 16px 24px;
     border-bottom: 1px solid #464A50;
@@ -317,30 +287,6 @@ export default {
 
         .checkbox-group {
           margin-right: 11px;
-        }
-      }
-
-      &--checkbox-description {
-        margin-left: 26px;
-        color: #CCCCCC;
-        font-size: 12px;
-      }
-
-      &--checkbox-connect {
-        &:not(:last-of-type) {
-          .filter-block__select-box--checkbox-description {
-            position: relative;
-          
-            &::before {
-              position: absolute;
-              content: '';
-              top: -5px;
-              bottom: -13px;
-              left: -20px;
-              width: 2px;
-              background-color: #4F93FF;
-            }
-          }
         }
       }
     }

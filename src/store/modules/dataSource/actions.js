@@ -76,7 +76,7 @@ export default {
     // 清空 dataFrame list 和 id
     commit('setDataFrameId', null)
     commit('setDataFrameList', [])
-    commit('toggleIsInit', false)
+    commit('dataFrameAdvanceSetting/toggleIsInit', false, { root: true })
     dispatch('dataFrameAdvanceSetting/clearColumnList', null, { root: true })
     
     if (!dataSourceId) return Promise.resolve(state)
@@ -111,7 +111,7 @@ export default {
   },
   changeDataFrameById ({ dispatch, commit, state }, dataFrameId) {
     dispatch('clearChatbot')
-    commit('toggleIsInit', false)
+    commit('dataFrameAdvanceSetting/toggleIsInit', false, { root: true })
     dispatch('dataFrameAdvanceSetting/clearColumnList', null, { root: true })
 
     // 更新 DataFrame 資料
@@ -208,6 +208,9 @@ export default {
     return getHistoryQuestionList(dataSourceId, dataFrameId).then(res => {
       commit('setHistoryQuestionList', res)
     })
+  },
+  updateFilterList({ commit }, filterList) {
+    commit('setUpdatedFilterList', filterList)
   },
   updateFilterStatusList ({commit, state}, statusList) {
     commit('setStatusList', statusList)
