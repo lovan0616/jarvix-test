@@ -169,14 +169,23 @@
       margin: 0 0 1px 0;
       background-color: #303435;
 
+      &.is-active>.el-submenu__title {
+        color: #FFF;
+        background-color: #666 !important;
+      }
+
       .el-submenu__title:hover {
         background-color: #666 !important;
       }
 
-
       .el-menu-item {
         margin: 0 0 1px 0;
-        
+
+        &.is-active {
+          color: #FFF;
+          background-color: #666 !important;
+        }
+
         &:hover {
           background-color: #666 !important;
         }
