@@ -306,10 +306,13 @@ export function dataFrameColumnSummary (dataFrameId, cancelToken) {
  * get column correlation matrix
  * @param {Number} dataFrameId - 欲查閱的資料表 ID
  */
-export function getColumnCorrelationMatrix (dataFrameId) {
+export function getColumnCorrelationMatrix(dataFrameId, selectedColumnList) {
   return request({
-    url: `/dataFrame/${dataFrameId}/relationMatrix`,
-    method: 'GET'
+    url: `/dataFrame/${dataFrameId}/relationMatrix/search`,
+    method: 'POST',
+    data: {
+      selectedColumnList
+    }
   })
 }
 

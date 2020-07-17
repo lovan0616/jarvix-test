@@ -78,7 +78,7 @@
         {{ $t('dataFrameAdvanceSetting.filterCriteria') }}
       </div>
       <div class="filter-block__select-box">
-        <div class="filter-block__select-box--checkbox">
+        <div class="filter-block__select-box--checkbox filter-block__select-box--checkbox-connect">
           <label class="filter-block__select-box--checkbox-label">
             <div class="checkbox-group">
               <div class="checkbox-label">
@@ -119,17 +119,21 @@
         type="button"
         class="btn btn-default"
         @click="saveFilter"
-      >{{ $t('button.save') }}</button>
+      >{{ $t('button.update') }}</button>
     </div>
   </div>
 </template>
 
 <script>
+import { Message } from 'element-ui'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import { getDataFrameColumnInfoById } from '@/API/DataSource'
 
 export default {
   name: 'AdvanceDataFrameSetting',
+  components: {
+    Message
+  },
   data () {
     return {
       isLoading: true,
@@ -138,7 +142,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox', 'columnList']),
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox', 'columnList', 'isInit']),
   },
   watch: {
     columnList (newList, oldList) {
@@ -156,8 +160,18 @@ export default {
   },
   methods: {
      ...mapActions('dataFrameAdvanceSetting', ['clearColumnList']),
-    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setColumnList']),
+    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setColumnList', 'toggleIsInit']),
     fetchDataColumns (dataFrameId) {
+      this.isLoading = true
+
+      // fetch existing list from store
+      if (this.isInit) {
+        this.tempColumnList = this.columnList
+        this.isLoading = false
+        return
+      }
+
+      // fetch column list from backend
       getDataFrameColumnInfoById(dataFrameId)
         .then(data => {
           const formatedColumnList = data.map(column => ({
@@ -165,8 +179,10 @@ export default {
             isSelected: true
           }))
           this.setColumnList(formatedColumnList)
+          this.toggleIsInit(true)
           this.isLoading = false
         })
+        .catch(error => this.isLoading = false)
     },
     closeAdvanceDataFrameSetting () {
       this.toggleSettingBox(false)
@@ -192,6 +208,12 @@ export default {
     },
     saveFilter () {
       this.setColumnList(this.tempColumnList)
+      Message({
+        message: this.$t('message.addFilter'),
+        type: 'success',
+        duration: 3 * 1000,
+        showClose: true
+      })
     },
     isShowColumn (column) {
       const columnName = column.name.toLowerCase()
@@ -295,17 +317,6 @@ export default {
 
         .checkbox-group {
           margin-right: 11px;
-
-          // &--connect {
-          //   position: relative;
-          //   &::before {
-          //     position: absolute;
-          //     content: '';
-          //     height: 10px;
-          //     width: 2px;
-          //     background-color: red;
-          //   }
-          // }
         }
       }
 
@@ -315,18 +326,20 @@ export default {
         font-size: 12px;
       }
 
-      &:not(:last-of-type) {
-        .filter-block__select-box--checkbox-description {
-          position: relative;
-        
-          &::before {
-            position: absolute;
-            content: '';
-            top: -5px;
-            bottom: -13px;
-            left: -20px;
-            width: 2px;
-            background-color: #4F93FF;
+      &--checkbox-connect {
+        &:not(:last-of-type) {
+          .filter-block__select-box--checkbox-description {
+            position: relative;
+          
+            &::before {
+              position: absolute;
+              content: '';
+              top: -5px;
+              bottom: -13px;
+              left: -20px;
+              width: 2px;
+              background-color: #4F93FF;
+            }
           }
         }
       }

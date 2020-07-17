@@ -76,6 +76,7 @@ export default {
     // 清空 dataFrame list 和 id
     commit('setDataFrameId', null)
     commit('setDataFrameList', [])
+    commit('toggleIsInit', false)
     dispatch('dataFrameAdvanceSetting/clearColumnList', null, { root: true })
     
     if (!dataSourceId) return Promise.resolve(state)
@@ -110,6 +111,7 @@ export default {
   },
   changeDataFrameById ({ dispatch, commit, state }, dataFrameId) {
     dispatch('clearChatbot')
+    commit('toggleIsInit', false)
     dispatch('dataFrameAdvanceSetting/clearColumnList', null, { root: true })
 
     // 更新 DataFrame 資料
@@ -163,8 +165,8 @@ export default {
       dispatch('getDataFrameColumnSummary', { id, page, cancelToken })
     ])
   },
-  getDataFrameColumnCorrelation ({ state }, { id }) {
-    return getColumnCorrelationMatrix(id)
+  getDataFrameColumnCorrelation({ state }, { id, selectedColumnList }) {
+    return getColumnCorrelationMatrix(id, selectedColumnList)
   },
   getDataSourceColumnInfo({ commit, state, getters }) {
     if (!state.dataSourceId) return

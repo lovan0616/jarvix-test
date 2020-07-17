@@ -70,6 +70,7 @@
 import DisplayHeatMapChart from '@/pages/datasourceDashboard/components/DisplayHeatMapChart'
 import CrudTable from '@/components/table/CrudTable'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import { mapGetters } from 'vuex'
 
 // const dummyData = {
 //   overview: {
@@ -100,7 +101,11 @@ export default {
     dataFrameId: {
       type: Number,
       required: true
-    }
+    },
+    mode: {
+      type: String,
+      required: true
+    },
   },
   data () {
     return {
@@ -139,6 +144,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('dataFrameAdvanceSetting', ['getSelectedColumnList']),
     reminderMsg () {
       if (this.isCalculating) return this.$t('message.calculatingPleaseTryLater')
       return this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
@@ -150,7 +156,12 @@ export default {
   methods: {
     fetchData () {
       this.isLoading = true
-      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { id: this.dataFrameId })
+      let selectedColumnList = null
+      
+      // 智能分析頁面需要帶入 column list
+      if (this.mode === 'display') selectedColumnList = this.getSelectedColumnList
+      
+      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { id: this.dataFrameId, selectedColumnList })
         .then(response => {
           const columnNameList = response.columnNameList
           const columnDataList = response.data

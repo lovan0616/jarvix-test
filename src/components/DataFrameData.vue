@@ -71,6 +71,7 @@
     <column-correlation-overview
       v-if="showCorrelationMatrix"
       :data-frame-id="dataFrameId"
+      :mode="mode"
       class="board-body-section"
     />
   </div>
