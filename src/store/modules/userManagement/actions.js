@@ -1,4 +1,4 @@
-import { logout, refreshToken, switchAccount, switchGroup } from '@/API/User'
+import { logout, refreshToken, switchAccount, switchGroup, updateLocale } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
 
@@ -12,7 +12,7 @@ export default {
       localStorage.removeItem('token')
     })
   },
-  async getUserInfo({ commit, rootState }, defaultGroupId) {
+  async getUserInfo({ commit, rootState }, { groupId, changeLangBeforeLogin }) {
     let accountPermissionList = []
     let licensePermissionList = []
     let groupPermissionList = []
@@ -20,7 +20,7 @@ export default {
 
     try {
       // get user permission
-      const userInfo = await getPermission(defaultGroupId)
+      const userInfo = await getPermission(groupId)
       if (userInfo.accountList.length) {
         defaultAccount = userInfo.accountList.find(account => account.isDefault)
         accountPermissionList = defaultAccount.accountPermissionList
@@ -43,8 +43,13 @@ export default {
         ]
       })
 
+      // get locale info
       let locale = userInfo.userData.language
-      if (locale && locale !== rootState.setting.locale) {
+      if (changeLangBeforeLogin) {
+        if (locale && locale !== rootState.setting.locale) {
+          updateLocale(rootState.setting.locale)
+        }
+      } else if (locale && locale !== rootState.setting.locale) {
         commit('setting/setLocale', locale, { root: true })
       }
 
@@ -61,7 +66,7 @@ export default {
   },
   updateUserGroupList ({ dispatch, commit, getters }, groupId) {
     const originalGroupId = getters.getCurrentGroupId
-    return dispatch('getUserInfo', groupId)
+    return dispatch('getUserInfo', { groupId })
       .then(() => {
         const newGroupId = getters.getCurrentGroupId
 
@@ -81,7 +86,7 @@ export default {
         })
       })
   },
-  switchAccountById({ state, dispatch, commit, getters }, { accountId, defaultGroupId }) {
+  switchAccountById({ state, dispatch, commit }, { accountId, groupId }) {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
     return switchAccount({ accountId })
@@ -94,7 +99,7 @@ export default {
         }
 
         // 處理路徑中帶有指定的 group id
-        if (defaultGroupId) return dispatch('switchGroupById', { accountId, groupId: defaultGroupId })
+        if (groupId) return dispatch('switchGroupById', { accountId, groupId })
 
         // 先清空，因為新群組有可能沒有 dataSource
         commit('dataSource/setDataSourceId', null, { root: true })
@@ -108,7 +113,7 @@ export default {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
     return switchGroup({ accountId, groupId })
-      .then(() => dispatch('getUserInfo', groupId))
+      .then(() => dispatch('getUserInfo', { groupId }))
       .then(() => {
         // 先清空，因為新群組有可能沒有 dataSource
         commit('dataSource/setDataSourceId', null, { root: true })

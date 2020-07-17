@@ -18,6 +18,7 @@
       <change-language-dialog
         v-show="isShowLanguage"
         @closeDialog="isShowLanguage = false"
+        @chang="$emit('changeLangBeforeLogin')"
       />
     </div>
   </div>

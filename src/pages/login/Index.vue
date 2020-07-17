@@ -1,5 +1,7 @@
 <template>
-  <page-layout>
+  <page-layout
+    @changeLangBeforeLogin="updateLang"
+  >
     <div class="login-page">
       <h1 class="page-title">{{ $t('editing.userLogin') }}</h1>
       <form
@@ -51,6 +53,7 @@ export default {
         account: null,
         password: null
       },
+      changedLang: false,
       isSubmit: false
     }
   },
@@ -72,7 +75,9 @@ export default {
           })
             .then(({ accessToken }) => {
               localStorage.setItem('token', accessToken)
-              return this.getUserInfo()
+              return this.getUserInfo({
+                changeLangBeforeLogin: this.changedLang
+              })
             })
             .then(() => {
               // 取得前一次停留或拜訪的資訊
@@ -115,6 +120,9 @@ export default {
             .catch(() => this.isSubmit = false)
         }
       })
+    },
+    updateLang () {
+      this.changedLang = true
     }
   }
 }
