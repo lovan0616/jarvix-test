@@ -52,8 +52,7 @@
         </template>
       </el-submenu>
     </el-menu>
-    <a 
-      href="javascript:void(0)" 
+    <button 
       class="preview-datasource-btn"
       @click="togglePreviewDataSource"
     >
@@ -66,22 +65,22 @@
           icon-class="view-data"
           class="preview-datasource-btn__icon"/>
       </el-tooltip>
-    </a>
-    <a 
-      href="javascript:void(0)" 
-      class="filter-setting-btn"
+    </button>
+    <button
+      :disabled="isSelectedAllDataFrame" 
+      class="dataframe-setting-btn"
       @click="toggleBasicDataFrameSetting"
     >
       <el-tooltip
         slot="label"
-        :content="previewDataSourceTooltipContent"
+        :content="previewDataFrameSettingTooltipContent"
       >
         <svg-icon 
-          :class="{'preview-datasource-btn__icon--show': isShowBasicDataFrameSetting}"
+          :class="{'dataframe-setting-btn__icon--show': isShowBasicDataFrameSetting, 'dataframe-setting-btn__icon--disabled': isSelectedAllDataFrame}"
           icon-class="filter-setting"
           class="preview-datasource-btn__icon"/>
       </el-tooltip>
-    </a>
+    </button>
   </div>
 </template>
 <script>
@@ -139,7 +138,14 @@ export default {
     },
     previewDataSourceTooltipContent () {
       return this.isShowPreviewDataSource ? this.$t('bot.closeDataSource') : this.$t('bot.previewDataSource')
-    }
+    },
+    previewDataFrameSettingTooltipContent () {
+      if (this.isSelectedAllDataFrame) return this.$t('bot.switchSpecificDataFrame') 
+      return this.isShowBasicDataFrameSetting ? this.$t('bot.closeDataFrameSetting') : this.$t('bot.openDataFrameSetting')
+    },
+    isSelectedAllDataFrame () {
+      return this.selectInfo.dataFrameId === 'all'
+    },
   },
   methods: {
     ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
@@ -191,12 +197,14 @@ export default {
   border-radius: 5px;
   border: 1px solid #292C2E;
 
-  .preview-datasource-btn, .filter-setting-btn {
+  .preview-datasource-btn, .dataframe-setting-btn {
     width: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border: unset;
     border-left: 1px solid #292C2E;
+    background-color: transparent;
   
     &__icon {
       font-size: 18px;
@@ -211,6 +219,14 @@ export default {
 
         &:hover {
           fill: #2AD2E2;
+        }
+      }
+
+      &--disabled {
+        fill: rgba(153, 153, 153, .8);
+
+        &:hover {
+          fill: rgba(153, 153, 153, 1);
         }
       }
     }
