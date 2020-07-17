@@ -90,7 +90,7 @@ export default {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
     return switchAccount({ accountId })
-      .then(() => dispatch('getUserInfo'))
+      .then(() => dispatch('getUserInfo', {}))
       .then(() => {
         // 處理帳戶下沒有群組的狀況
         if (state.groupList.length === 0) {
