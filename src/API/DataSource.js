@@ -83,13 +83,16 @@ export function getDataSourceColumnInfoById(dataSourceId, dataFrameId, columns =
  * get dataSource data value
  * @param {Number} dataSourceId - 資料源 ID
  */
-export function getDataSourceDataValueById(dataSourceId, dataFrameId, size = 50) {
+export function getDataSourceDataValueById(dataSourceId, dataFrameId, columns = [], size = 50) {
   return request({
     url: `/datasources/${dataSourceId}/dataValue/search`,
     method: 'POST',
     params: {
       dataFrameId,
       size
+    },
+    data: {
+      columns
     }
   })
 }
