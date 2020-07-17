@@ -46,14 +46,14 @@
         <div class="ask-target">
           <svg-icon
             icon-class="database" 
-            class="ask-target--icon"/>
+            class="ask-target__icon"/>
           <!-- TODO 待從store拿當前資料源 -->
-          <span class="ask-target--label">運動產品銷售</span>
+          <span class="ask-target__label">運動產品銷售</span>
           <svg-icon
             icon-class="table" 
-            class="ask-target--icon"/>
+            class="ask-target__icon"/>
           <!-- TODO 待從store拿當前資料表 -->
-          <span class="ask-target--label">全部資料表</span>
+          <span class="ask-target__label">全部資料表</span>
         </div>
       </div>
       <div 
@@ -403,10 +403,10 @@ export default {
       transition: height .3s;
       overflow: hidden;
 
-      &--label {
+      &__label {
         margin-right: 10px;
       }
-      &--icon {
+      &__icon {
         margin-right: 6px;
         fill: $theme-color-primary;
       }

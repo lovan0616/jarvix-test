@@ -133,7 +133,7 @@ export default {
           questionId: this.currentQuestionId,
           segmentationPayload: this.currentQuestionInfo,
           restrictions: this.filterRestrictionList,
-          selectedColumnList: this.selectedColumnList || null
+          // selectedColumnList: TODO
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.getComponent(res)
@@ -181,7 +181,7 @@ export default {
               questionId,
               segmentationPayload: segmentationList[0],
               restrictions: this.filterRestrictionList,
-              selectedColumnList: this.selectedColumnList || null
+              // selectedColumnList: TODO
             }).then(res => {
               this.getComponent(res)
               this.getRelatedQuestion(res.resultId)
