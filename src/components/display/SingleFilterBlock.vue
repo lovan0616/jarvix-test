@@ -1,9 +1,9 @@
 <template>
   <label 
     :class="{ 'single-filter-block--checked': checked }"
-    class="single-filter-block"
+    class="single-filter-block single-select"
   >
-    <div class="single-filter-block__checkbox">
+    <div class="single-filter-block__header">
       <div class="checkbox-group">
         <div class="checkbox-label">
           <input
@@ -121,7 +121,7 @@ export default {
   opacity: 0.5;
   cursor: pointer;
 
-  &__checkbox {
+  &__header {
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -166,11 +166,6 @@ export default {
         }
       }
     }
-  }
-
-
-  .checkbox-square {
-    border-radius: 3px;
   }
 
   .checkbox-label input:checked ~ .checkbox-square {

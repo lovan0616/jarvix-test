@@ -8,11 +8,11 @@
     <column-select-info
       :temp-column-list.sync="tempColumnList"
       :is-loading="isLoading"
-      class="filter-block--top"
+      class="setting__filter-block--top"
     />
     <filter-info 
       :temp-filter-list.sync="tempFilterList"
-      class="filter-block--bottom" 
+      class="setting__filter-block--bottom" 
     />
     <div class="setting__button-block">
       <button 
@@ -57,8 +57,7 @@ export default {
       this.tempFilterList = newList
     },
     '$route.query.dataFrameId'(value) {
-      if (!value) return
-      if (value === 'all') return this.closeAdvanceDataFrameSetting()
+      if (!value || value === 'all') return this.closeAdvanceDataFrameSetting()
       this.fetchDataColumns(value)
     },
   },
@@ -117,15 +116,13 @@ export default {
   position: absolute;
   top: $header-height + $chat-room-height;
   left: 0;
-  min-height: calc(100vh - #{$header-height + $chat-room-height});
+  height: calc(100vh - #{$header-height + $chat-room-height});
   width: $basic-df-setting-width;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.55);;
   border: 1px solid #2B3638;
-  flex-direction: column;
-  flex: 1;
 
   .setting {
     &__close-icon {
@@ -136,9 +133,21 @@ export default {
       cursor: pointer;
     }
 
-    &__button-block {
-      padding: 16px 24px;
+    &__filter-block {
+      &--top {
+        flex: 6 6 400px;
+        border-bottom: 1px solid #464A50;
+      }
+      
+      &--bottom {
+        flex: 4 4 250px;
+      }
+    }
 
+    &__button-block {
+      padding: 12px 24px;
+      height: 60px;
+      background: rgba(35, 61, 64, 0.6);
       .btn {
         width: 100%;
       }
@@ -146,58 +155,29 @@ export default {
   }
 
   /deep/ .filter-block {
-    max-height: 350px;
+    overflow: hidden;
     padding: 16px 24px;
-    border-bottom: 1px solid #464A50;
     display: flex;
     flex-direction: column;
 
-    &--top {
-      flex: 6 6 auto;
-      min-height: 400px
-    }
-
-    &--bottom {
-      flex: 4 4 auto;
-      min-height: 250px
-    }
-
     &__title {
       font-weight: 600;
-
       &--icon {
         margin-right: 6px;
       }
     }
 
-    &__action-box {
-      &--link {
-        font-weight: 600;
-        &:not(:last-of-type) {
-          margin-right: 8px;
-        }
+    &__action-box-link {
+      font-weight: 600;
+      &:not(:last-of-type) {
+        margin-right: 8px;
       }
     }
 
     &__select-box {
       overflow: auto;
-      &--checkbox {
+      .single-select {
         margin-bottom: 8px;
-      }
-
-      &--checkbox-list {
-        display: block;
-        overflow: auto;
-      }
-
-      &--checkbox-label {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-
-        .checkbox-group {
-          margin-right: 11px;
-        }
       }
     }
   }

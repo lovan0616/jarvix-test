@@ -3,7 +3,7 @@
     <div class="filter-block__title">
       <svg-icon 
         icon-class="column" 
-        class="filter-block__title--icon" />
+        class="filter-block__title-icon" />
       {{ $t('dataFrameAdvanceSetting.columnList') }}
     </div>
     <spinner 
@@ -30,36 +30,34 @@
       <div class="filter-block__action-box">
         <a 
           href="javascript:void(0);" 
-          class="link filter-block__action-box--link"
+          class="link filter-block__action-box-link"
           @click="toggleAllColumns(true)"
         >{{ $t('dataFrameAdvanceSetting.selectAll') }}</a>
         <a 
           href="javascript:void(0);" 
-          class="link filter-block__action-box--link"
+          class="link filter-block__action-box-link"
           @click="toggleAllColumns(false)"
         >{{ $t('dataFrameAdvanceSetting.cancelSelect') }}</a>
       </div>
       <div class="filter-block__select-box">
-        <div
+        <label
           v-for="column in tempColumnList"
           v-show="!searchedColumn || (searchedColumn && isShowColumn(column))"
           :key="column.id"
-          class="filter-block__select-box--checkbox"
+          class="single-select"
         >
-          <label class="filter-block__select-box--checkbox-label">
-            <div class="checkbox-group">
-              <div class="checkbox-label">
-                <input
-                  v-model="column.isSelected"
-                  :checked="column.isSelected"
-                  type="checkbox"
-                >
-                <div class="checkbox-square"/>
-              </div>
+          <div class="checkbox-group">
+            <div class="checkbox-label">
+              <input
+                v-model="column.isSelected"
+                :checked="column.isSelected"
+                type="checkbox"
+              >
+              <div class="checkbox-square"/>
             </div>
-            {{ column.name }}
-          </label>
-        </div>
+          </div>
+          {{ column.name }}
+        </label>
       </div>
     </template>
   </div>
@@ -106,9 +104,10 @@ export default {
 .filter-block {
   &__title {
     padding-bottom: 18px;
-    &--icon {
-      color: #0CD1DE;
-    }
+  }
+
+  &__title-icon {
+    color: #0CD1DE;
   }
 
   &__search-box {
@@ -138,6 +137,20 @@ export default {
         color: #888888;
         font-size: 14px;
       }
+    }
+  }
+
+  .single-select {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    .checkbox-square {
+      border-radius: 3px;
+    }
+
+    .checkbox-group {
+      margin-right: 11px;
     }
   }
 }

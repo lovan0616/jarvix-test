@@ -207,7 +207,7 @@ export default {
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
     // TODO 暫時先由這邊打開基表設定，等datasource選單做好再拔掉
     toggleAdvanceDataFrameSetting () {
-      if (this.isDisableAskHelper()) return 
+      if (this.isDisableAskHelper) return 
       this.toggleSettingBox(!this.isShowSettingBox)
     },
     toggleWebSocketConnection () {
@@ -305,6 +305,7 @@ export default {
   flex: 1;
 
   .ask-block {
+    padding-left: 13px;
     display: flex;
     align-items: center;
   }

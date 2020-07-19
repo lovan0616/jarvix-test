@@ -39,7 +39,7 @@ export default {
 
   .select-group {
     width: $basic-df-setting-width;
-    padding: 0 16px 0 24px;
+    padding: 0 3px 0 24px;
     overflow: hidden;
     
     &__select {

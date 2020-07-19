@@ -3,7 +3,7 @@
     <div class="filter-block__title">
       <svg-icon 
         icon-class="filter" 
-        class="filter-block__title--icon" />
+        class="filter-block__title-icon" />
       {{ $t('dataFrameAdvanceSetting.filterCriteria') + '(' + tempFilterList.length + ')' }}
     </div>
     <div 
@@ -12,7 +12,7 @@
     >
       <a 
         href="javascript:void(0);" 
-        class="link filter-block__action-box--link"
+        class="link filter-block__action-box-link"
         @click="onClearAll"
       >{{ $t('dataFrameAdvanceSetting.clearCriteria') }}</a>
     </div>
@@ -64,9 +64,10 @@ export default {
 .filter-block {
   &__title {
     padding-bottom: 8px;
-    &--icon {
-      color: #4F93FF;
-    }
+  }
+
+  &__title-icon {
+    color: #4F93FF;
   }
 
   &__action-box {
