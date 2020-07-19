@@ -2,12 +2,6 @@
   <div class="ask-container">
     <div class="ask-block">
       <div 
-        v-show="hasFilter"
-        class="filter-block"
-      ><svg-icon 
-        icon-class="filter" 
-        class="icon"/> {{ $t('resultDescription.filterRestrictions') }}</div>
-      <div 
         :class="{
           'has-filter': hasFilter,
           'is-use-algorithm': isUseAlgorithm,

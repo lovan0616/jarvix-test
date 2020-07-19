@@ -1,6 +1,5 @@
 <template>
   <div class="result-layout">
-    <filter-info/>
     <unknown-info-block
       v-if="segmentationInfo.unknownToken.length > 0 || segmentationInfo.nlpToken.length > 0"
       :segmentation-info="segmentationInfo"
@@ -40,13 +39,11 @@
 </template>
 
 <script>
-import FilterInfo from '@/components/display/FilterInfo'
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
 
 export default {
   name: 'ResultDisplay',
   components: {
-    FilterInfo,
     UnknownInfoBlock
   },
   data () {
