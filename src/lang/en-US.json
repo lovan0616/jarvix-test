@@ -30,6 +30,14 @@
     "dataFileManagement": "Data Set",
     "dataFileList": "List"
   },
+  "dataFrameAdvanceSetting": {
+    "searchColumn": "Search Column",
+    "columnList": "Column List",
+    "filterCriteria": "Filter Conditions",
+    "selectAll": "Select All",
+    "cancelSelect": "Deselect All",
+    "clearCriteria": "Clear Filter Conditions"
+  },
   "message": {
     "joinTableBuilding": "Data Set will be available for analysis once it is processed.",
     "remindAdjustMainDate": "This Data Set may have multiple DateTime fields, you can use 'Default Datetime' to set default Datetime.",
