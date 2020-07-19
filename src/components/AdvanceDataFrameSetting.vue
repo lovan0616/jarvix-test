@@ -46,7 +46,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox', 'columnList', 'isInit']),
+    ...mapState('dataFrameAdvanceSetting', ['columnList', 'isInit']),
     ...mapState('dataSource', ['filterList']),
   },
   watch: {
