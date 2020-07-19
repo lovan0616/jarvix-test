@@ -43,12 +43,17 @@
           <svg-icon icon-class="go-right"/>
         </a>
       </div>
-      <div 
-        :class="{ 'disabled': dataSourceList.length === 0 }" 
-        class="ask-remark-block"
-        @click="toggleAdvanceDataFrameSetting">
-        <svg-icon icon-class="ask-helper"/>
-      </div>
+      <el-tooltip
+        slot="label"
+        :content="isDisableAskHelper ? $t('askHelper.chooseDataFrameToEnableSetting') : $t('askHelper.title')"
+        placement="bottom-start">
+        <div 
+          :class="{ 'disabled': isDisableAskHelper }" 
+          class="ask-remark-block"
+          @click="toggleAdvanceDataFrameSetting">
+          <svg-icon icon-class="ask-helper"/>
+        </div>
+      </el-tooltip>
     </div>
     <div 
       :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
@@ -153,6 +158,10 @@ export default {
       }
 
       return tokenList
+    },
+    isDisableAskHelper () {
+      const queryDataFrameId = this.$route.query.dataFrameId
+      return this.dataSourceList.length === 0 || queryDataFrameId === 'all'
     }
   },
   watch: {
@@ -198,8 +207,7 @@ export default {
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
     // TODO 暫時先由這邊打開基表設定，等datasource選單做好再拔掉
     toggleAdvanceDataFrameSetting () {
-      const dataFrameId = this.$route.query.dataFrameId
-      if (dataFrameId === 'all') return 
+      if (this.isDisableAskHelper()) return 
       this.toggleSettingBox(!this.isShowSettingBox)
     },
     toggleWebSocketConnection () {

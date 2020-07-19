@@ -748,6 +748,7 @@
     "countStd": "數量標準差"
   },
   "askHelper": {
+    "chooseDataFrameToEnableSetting": "選擇單一資料表以開啟問句說明",
     "title": "問句說明",
     "historyTitle": "歷史問句",
     "askHelpRemark": "問句提示請查看",

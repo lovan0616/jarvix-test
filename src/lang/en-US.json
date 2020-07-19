@@ -748,6 +748,7 @@
     "countStd": "Count Standard Deviation"
   },
   "askHelper": {
+    "chooseDataFrameToEnableSetting": "Choose a data set to view question explanation",
     "title": "Question Explanation",
     "historyTitle": "History Question",
     "askHelpRemark": "",
