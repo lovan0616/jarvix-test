@@ -62,6 +62,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .filter-block {
+  &__title {
+    &--icon {
+      color: #4F93FF;
+    }
+  }
+
   /deep/ .single-filter-block {
     &:last-of-type {
       .single-filter-block {
