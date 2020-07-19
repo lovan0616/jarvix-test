@@ -163,7 +163,6 @@ export default {
     }
 
     &__title {
-      padding-bottom: 18px;
       font-weight: 600;
 
       &--icon {
@@ -172,7 +171,6 @@ export default {
     }
 
     &__action-box {
-      padding-bottom: 16px;
       &--link {
         font-weight: 600;
         &:not(:last-of-type) {

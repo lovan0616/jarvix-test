@@ -63,9 +63,14 @@ export default {
 <style lang="scss" scoped>
 .filter-block {
   &__title {
+    padding-bottom: 8px;
     &--icon {
       color: #4F93FF;
     }
+  }
+
+  &__action-box {
+    padding-bottom: 8px;
   }
 
   /deep/ .single-filter-block {

@@ -105,6 +105,7 @@ export default {
 <style lang="scss" scoped>
 .filter-block {
   &__title {
+    padding-bottom: 18px;
     &--icon {
       color: #0CD1DE;
     }
@@ -112,6 +113,10 @@ export default {
 
   &__search-box {
     padding-bottom: 12px;
+  }
+
+  &__action-box {
+    padding-bottom: 16px;
   }
 
   .input-group {
