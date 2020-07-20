@@ -36,7 +36,8 @@
     "filterCriteria": "筛选条件",
     "selectAll": "全部选取",
     "cancelSelect": "取消选取",
-    "clearCriteria": "清除条件"
+    "clearCriteria": "清除条件",
+    "noCriteriaYet": "尚未加入筛选条件"
   },
   "message": {
     "joinTableBuilding": "资料表建置中，建置完成即可使用",

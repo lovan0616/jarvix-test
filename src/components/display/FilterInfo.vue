@@ -1,6 +1,9 @@
 <template>
   <div class="filter-block">
-    <div class="filter-block__title">
+    <div 
+      :class="[tempFilterList.length > 0 ? 'filter-block__title--small' : 'filter-block__title--large']"
+      class="filter-block__title"
+    >
       <svg-icon 
         icon-class="filter" 
         class="filter-block__title-icon" />
@@ -17,8 +20,14 @@
       >{{ $t('dataFrameAdvanceSetting.clearCriteria') }}</a>
     </div>
     <div class="filter-block__select-box">
+      <div 
+        v-if="tempFilterList.length === 0" 
+        class="empty-message">
+        {{ $t('dataFrameAdvanceSetting.noCriteriaYet') }}
+      </div>
       <single-filter-block
         v-for="(filter, index) in tempFilterList"
+        v-else
         :key="index"
         :restriction="filter.restriction"
         :status="filter.status"
@@ -29,11 +38,13 @@
 </template>
 <script>
 import SingleFilterBlock from './SingleFilterBlock'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 export default {
   name: 'FilterInfo',
   components: {
-    SingleFilterBlock
+    SingleFilterBlock,
+    EmptyInfoBlock
   },
   props: {
     tempFilterList: {
@@ -63,7 +74,13 @@ export default {
 <style lang="scss" scoped>
 .filter-block {
   &__title {
-    padding-bottom: 8px;
+    &--small {
+      padding-bottom: 8px;
+    }
+
+    &--large {
+      padding-bottom: 18px;
+    }
   }
 
   &__title-icon {
@@ -72,6 +89,13 @@ export default {
 
   &__action-box {
     padding-bottom: 8px;
+  }
+
+  &__select-box {
+    .empty-message {
+      color: #AAAAAA;
+      font-size: 12px;
+    }
   }
 
   /deep/ .single-filter-block {
