@@ -1,5 +1,8 @@
 <template>
   <div class="question-sample">
+    <div class="question-sample-menu">
+      dsa
+    </div>
     <div class="question-sample-block">
       <div class="question-description">
         <span class="question-lamp">
@@ -73,6 +76,12 @@ export default {
 <style lang="scss" scoped>
 .question-sample {
   position: relative;
+  display: flex;
+  flex-direction: row;
+
+  &-menu {
+    width: 200px;
+  }
 
   .question-sample-block {
 
