@@ -443,9 +443,9 @@ export default {
   .history-question-block {
     position: absolute;
     text-align: left;
-    left: 0;
+    left: 13px;
     top: 100%;
-    width: calc(100% - 56px);
+    width: calc(100% - 69px);
     height: 0;
     overflow: hidden;
     padding: 0 32px;
