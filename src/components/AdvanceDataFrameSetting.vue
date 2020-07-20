@@ -9,6 +9,7 @@
       :temp-column-list.sync="tempColumnList"
       :is-loading="isLoading"
       class="setting__filter-block--top"
+      @columnAdded="updateColumnList"
     />
     <filter-info 
       :temp-filter-list.sync="tempFilterList"
@@ -107,6 +108,13 @@ export default {
         showClose: true
       })
     },
+    updateColumnList ({ dataFrameId: updatedDataFrameId }) {
+      // 如果使用者在其他表新增自定義欄位則不更新當前表的 column list
+      const { dataFrameId: queryDataFrameId } = this.$route.query
+      if (Number(queryDataFrameId) !== updatedDataFrameId) return
+      this.toggleIsInit(false)
+      this.fetchDataColumns(updatedDataFrameId)
+    }
   },
 }
 </script>

@@ -59,13 +59,31 @@
           {{ column.name }}
         </label>
       </div>
+      <div class="filter-block__button-block">
+        <button 
+          type="button"
+          class="btn-m btn-outline"
+          @click="editFeature"
+        >{{ $t('button.featureManagement') }}</button>
+      </div>
     </template>
+    <edit-feature-dialog
+      v-if="showEditFeatureDialog"
+      :edit-feature-info="editFeatureInfo"
+      @update="updateTempColumnList"
+      @cancel="closeEditDialog"
+    />
   </div>
 </template>
 
 <script>
+import EditFeatureDialog from '@/pages/dataManagement/components/feature/EditFeatureDialog'
+
 export default {
   name: 'ColumnSelectInfo',
+  components: {
+    EditFeatureDialog
+  },
   props: {
     tempColumnList: {
       type: Array,
@@ -78,7 +96,9 @@ export default {
   },
   data () {
     return {
-      searchedColumn: ''
+      searchedColumn: '',
+      showEditFeatureDialog: false,
+      editFeatureInfo: null
     }
   },
   methods: {
@@ -95,6 +115,25 @@ export default {
       const columnName = column.name.toLowerCase()
       const searchedColumn = this.searchedColumn.toLowerCase()
       return columnName.includes(searchedColumn)
+    },
+    editFeature () {
+      this.editFeatureInfo = {
+        dataColumnIdList: [],
+        dataFrameId: Number(this.$route.query.dataFrameId),
+        dataSourceId: Number(this.$route.query.dataSourceId),
+        name: null,
+        description: '[]',
+        operator: null
+      }
+      this.showEditFeatureDialog = true
+    },
+    closeEditDialog () {
+      this.editFeatureInfo = null
+      this.showEditFeatureDialog = false
+    },
+    updateTempColumnList (data) {
+      this.$emit('columnAdded', data)
+      this.closeEditDialog()
     }
   }
 }
@@ -118,6 +157,30 @@ export default {
     padding-bottom: 16px;
   }
 
+  &__select-box {
+    margin-bottom: 15px;
+    .single-select {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      .checkbox-square {
+        border-radius: 3px;
+      }
+
+      .checkbox-group {
+        margin-right: 11px;
+      }
+    }
+  }
+
+  &__button-block {
+    .btn-m {
+      width: 100%;
+      height: 28px;
+    }
+  }
+
   .input-group {
     background: rgba(35, 61, 64, 0.6);
     padding: 10px;
@@ -137,20 +200,6 @@ export default {
         color: #888888;
         font-size: 14px;
       }
-    }
-  }
-
-  .single-select {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-
-    .checkbox-square {
-      border-radius: 3px;
-    }
-
-    .checkbox-group {
-      margin-right: 11px;
     }
   }
 }
