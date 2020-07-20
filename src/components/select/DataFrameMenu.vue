@@ -25,7 +25,7 @@
             <template slot="title">
               <svg-icon 
                 icon-class="data-source" 
-                class="data-frame-source__icon"/>
+                class="data-frame-select__icon"/>
               <span class="submenu__data-source-title">{{ dataSource.name }}</span>
             </template>
             <div 
