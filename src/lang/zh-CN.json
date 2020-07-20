@@ -741,6 +741,7 @@
   },
   "askHelper": {
     "title": "问句说明",
+    "catalog": "问句类型",
     "historyTitle": "历史问句",
     "askHelpRemark": "问句提示请查看",
     "helpLink": "问句说明",
@@ -762,6 +763,7 @@
     "type": "类型",
     "description": "说明",
     "columnName": "栏位名称",
+    "columnCatalog": "栏位类型",
     "ask": "问",
     "example": "范例",
     "exampleDesc": "因 Boolean 和 Unique 类型问句方式与 Category 一致，以下均以 Category 类型举例。",

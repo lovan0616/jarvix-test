@@ -515,7 +515,7 @@ export default {
     position: fixed;
     top: $header-height + $chat-room-height;
     right: 0;
-    background: rgba(0, 0, 0, 0.95);
+    background: #000;
     overflow: auto;
     padding: 32px 40px 0 40px;
 

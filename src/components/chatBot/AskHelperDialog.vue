@@ -60,6 +60,7 @@ export default {
 .ask-helper-tab.el-tabs--card {
   &>.el-tabs__header {
     border: none;
+    margin: 0 0 27px;
 
     .el-tabs__nav {
       width: 100%;

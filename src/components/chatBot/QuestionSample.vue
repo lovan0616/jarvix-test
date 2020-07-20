@@ -1,45 +1,43 @@
 <template>
   <div class="question-sample">
-    <div class="question-sample-menu">
-      dsa
+    <div class="question-sample__menu">
+      <div class="question-sample__menu__title">{{ $t('askHelper.catalog') }}</div>
+      <div 
+        v-for="(questionCategory, index) in questionSampleList"
+        :key="index"
+        :class="{'question-sample__menu__item--active': index === selectedIndex}"
+        class="question-sample__menu__item"
+        @click="selectCatelog(index)"
+      >{{ questionCategory.name }}</div>
     </div>
-    <div class="question-sample-block">
-      <div class="question-description">
+    <div class="question-sample__block">
+      <div class="question-sample__block__title">
+        <span>{{ $t('askHelper.catalog') }}: </span>
+        <span>{{ questionSampleList[selectedIndex].name }}</span>
+      </div>
+      <div class="question-sample__block__description">
         <span class="question-lamp">
           <svg-icon icon-class="lamp"/>
           {{ $t('askHelper.description') }}:
         </span>
-        {{ $t('askHelper.exampleDesc') }}</div>
-      <el-collapse 
-        v-model="activeName"
-        class="question-sample-collapse"
-        accordion
-      >
-        <el-collapse-item
-          v-for="(questionCategory, index) in $t('askHelper.questionSampleList')"
-          :key="index"
-          :title="questionCategory.name"
-          class="question-title"
-        >
-          <div
-            v-for="(question, questionIndex) in questionCategory.questionList"
-            :key="index + '-' + questionIndex"
-            class="question-box"
-          >
-            <div class="question-ask">
-              <p class="question-ask-text">{{ $t('askHelper.ask') }}: </p>
-              <p>{{ question.questionText }}</p>
-            </div>
-            <div class="question-example">{{ $t('askHelper.example') }}:</div>
-            <single-question
-              v-for="(exampleQuestion, exampleQuestionIndex) in question.questionExample"
-              :example-question="exampleQuestion"
-              :key="index + '-' + exampleQuestionIndex"
-              class="question-sentence"
-            />
-          </div>
-        </el-collapse-item>
-      </el-collapse>
+        {{ $t('askHelper.exampleDesc') }}
+      </div>
+      <div
+        v-for="(question, index) in questionList"
+        :key="index"
+        class="question-box">
+        <div class="question-ask">
+          <p class="question-ask-text">{{ $t('askHelper.ask') }}: </p>
+          <p>{{ question.questionText }}</p>
+        </div>
+        <div class="question-example">{{ $t('askHelper.example') }}:</div>
+        <single-question
+          v-for="(exampleQuestion, exampleQuestionIndex) in question.questionExample"
+          :example-question="exampleQuestion"
+          :key="index + '-' + exampleQuestionIndex"
+          class="question-sentence"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -52,23 +50,19 @@ export default {
   },
   data () {
     return {
-      activeName: null
+      activeName: null,
+      selectedIndex: 0,
+      questionSampleList: this.$t('askHelper.questionSampleList')
     }
   },
   computed: {
-    askSampleList () {
-      return [
-        {
-          type: {
-
-          },
-          questionList: [
-            {
-
-            }
-          ]
-        }
-      ]
+    questionList () {
+      return this.questionSampleList[this.selectedIndex].questionList
+    }
+  },
+  methods: {
+    selectCatelog (index) {
+      this.selectedIndex = index
     }
   }
 }
@@ -78,21 +72,82 @@ export default {
   position: relative;
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
 
-  &-menu {
+  &__menu {
     width: 200px;
+    border-radius: 5px;
+    margin-right: 24px;
+    background: rgba(35, 61, 64, 0.6);
+    
+    &__title {
+      height: 42px;
+      padding: 5px 24px;
+      border-radius: 5px 5px 0px 0px;
+      font-size: 16px;
+      line-height: 200%;
+      background: #2B4A4E;
+
+      &::before {
+        position: absolute;
+        top: 18px;
+        left: 12px;
+        content: "";
+        width: 4px;
+        height: 6px;
+        background: #4DE2F0;
+      }
+    }
+
+    &__item {
+      position: relative;
+      cursor: pointer;
+      padding: 4px 12px;
+      font-size: 14px;
+      line-height: 32px;
+      color: #999999;
+      border-bottom: 1px solid rgba(50, 75, 78, 0.6);
+
+      &:last-child {
+        border-radius: 5px;
+      }
+
+      &:hover, &.active, &--active{
+        background-color: rgba(50, 75, 78, 0.6);;
+        color: #fff;
+
+        &:after {
+          position: absolute;
+          right: 12px;
+          top: calc(50% - 4px);
+          content: "";
+          display: block;
+          width: 0;
+          height: 0;
+          border: 4px solid transparent;
+          border-left-color: #fff;
+        }
+      }
+    }
   }
 
-  .question-sample-block {
+  &__block {
+    flex: 1;
+    padding-right: 10px;
+    
+    &__title {
+      font-size: 18px;
+      line-height: 32px;
+    }
 
-    .question-description {
+    &__description {
       font-size: 12px;
       line-height: 32px;
       word-break: keep-all;
-    }
 
-    .question-lamp {
-      color: $theme-color-warning;
+      .question-lamp {
+        color: $theme-color-warning;
+      }
     }
 
     .question-list {
@@ -102,10 +157,6 @@ export default {
       &:nth-child(odd) {
         background-color: rgba(50, 75, 78, 0.6);
       }
-    }
-
-    .question-title {
-      font-size: 14px;
     }
 
     .question-ask {
