@@ -2,8 +2,6 @@
   <div class="chat-room">
     <div class="chat-room__header select-group">
       <data-frame-menu class="select-group__select"/>
-      <!-- <data-source-select class="select-group__select"/>
-      <data-frame-select class="select-group__select"/> -->
     </div>
     <ask-block/>
   </div>
