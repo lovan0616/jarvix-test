@@ -7,17 +7,17 @@
       text-color="#CCC"
       @select="handleSelect">
       <el-submenu 
-        v-if="buildDataSourceList.length > 0" 
+        v-if="availableDataSourceList.length > 0" 
         popper-class="data-frame-select__popper"
         index="1">
         <template slot="title" >
           <svg-icon 
             :icon-class="selectedIconType" 
             class="data-frame-select__icon"/>
-          <span class="submenu__data-source-title">{{ selectedDataName }}</span>
+          <span class="data-source-title">{{ selectedDataName }}</span>
         </template>
         <div 
-          v-for="(dataSource, dataSourceIndex) in availableDataList"
+          v-for="(dataSource, dataSourceIndex) in availableDataSourceList"
           :key="'dataSource' + dataSourceIndex">
           <el-submenu 
             :index="'1-' + dataSourceIndex" 
@@ -26,7 +26,7 @@
               <svg-icon 
                 icon-class="data-source" 
                 class="data-frame-select__icon"/>
-              <span class="submenu__data-source-title">{{ dataSource.name }}</span>
+              <span class="data-source-title">{{ dataSource.name }}</span>
             </template>
             <div 
               v-for="(dataFrame, dataFrameIndex) in dataSource.dataFrames"
@@ -36,11 +36,10 @@
                   <svg-icon 
                     icon-class="table" 
                     class="data-frame-select__icon"/>
-                  <span class="submenu__data-frame-title">{{ dataFrame.name }}</span>
+                  <span class="data-frame-title">{{ dataFrame.name }}</span>
                 </template>
               </el-menu-item>
             </div>
-
           </el-submenu>
         </div>
       </el-submenu>
@@ -94,16 +93,25 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('dataSource', ['dataSourceList']),
+    ...mapGetters('dataSource', ['dataSourceList', 'getDataSourceName', 'getDataFrameName']),
     ...mapGetters('userManagement', ['getCurrentGroupId']),
+    dataSourceId () {
+      return this.$store.state.dataSource.dataSourceId
+    },
+    dataFrameId () {
+      return this.$store.state.dataSource.dataFrameId
+    },
     selectedDataName () {
-      if (Object.entries(this.selectInfo).length === 0) {
-        return this.availableDataList[0].name
-      } else {
-        return this.selectInfo.dataFrameId === 'all' 
-        ? this.selectInfo.dataSource 
-        : this.selectInfo.dataFrame
-      }
+      return this.getDataFrameName === 'all' 
+        ? this.getDataSourceName
+        : this.getDataFrameName
+      // if (Object.entries(this.selectInfo).length === 0) {
+      //   return this.availableDataSourceList[0].name
+      // } else {
+      //   return this.selectInfo.dataFrameName === 'all' 
+      //   ? this.selectInfo.dataSourceName
+      //   : this.selectInfo.dataFrameName
+      // }
     },
     selectedIconType () {
       return this.selectInfo.dataFrameId === 'all' || Object.entries(this.selectInfo).length === 0
@@ -115,7 +123,7 @@ export default {
         return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
       })
     },
-    availableDataList () {
+    availableDataSourceList () {
       const defaultOption = {
         name: this.$t('editing.allDataFrames'),
         id: 'all'
@@ -154,12 +162,12 @@ export default {
       const dataSourceIndex = selectKey[0]
       const dataFrameIndex = selectKey[1]
       this.selectInfo = {
-        dataSource: this.availableDataList[dataSourceIndex].name,
-        dataSourceId: this.availableDataList[dataSourceIndex].id,
-        dataFrame: this.availableDataList[dataSourceIndex].dataFrames[dataFrameIndex].name,
-        dataFrameId: this.availableDataList[dataSourceIndex].dataFrames[dataFrameIndex].id,
+        dataSourceName: this.availableDataSourceList[dataSourceIndex].name,
+        dataSourceId: this.availableDataSourceList[dataSourceIndex].id,
+        dataFrameName: this.availableDataSourceList[dataSourceIndex].dataFrames[dataFrameIndex].name,
+        dataFrameId: this.availableDataSourceList[dataSourceIndex].dataFrames[dataFrameIndex].id
       }
-        this.onDataFrameChange(this.selectInfo.dataSourceId, this.selectInfo.dataFrameId)
+      this.onDataFrameChange(this.selectInfo.dataSourceId, this.selectInfo.dataFrameId)
     },
     onDataFrameChange (dataSourceId, dataFrameId) {
       // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
@@ -240,6 +248,7 @@ export default {
       align-items: center;
       height: 38px;
       line-height: 38px;
+      padding: 0 30px 0 10px;
       border-radius: 5px 0 0 5px;
     }
 
@@ -247,7 +256,7 @@ export default {
       margin-right: 6px;
     }
 
-    .submenu__data-source-title {
+    .data-source-title {
       flex: 1;
       width: 100%;
       @include text-hidden;
