@@ -67,15 +67,13 @@ export default {
       }
     })
   },
-  async changeDataSourceById({ dispatch, commit, state, rootGetters }, {dataSourceId, dataFrameId = 'all'}) {
+  async changeDataSourceById({ dispatch, commit, state, rootGetters }, {dataSourceId, dataFrameId}) {
     if (state.dataSourceId === dataSourceId  && state.dataFrameId === dataFrameId) return Promise.resolve(state)
     // 清空對話紀錄
     if (state.dataSourceId) dispatch('clearChatbot')
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
-    // 清空 dataFrame list 和 id
-    commit('setDataFrameId', null)
-    commit('setDataFrameList', [])
+    commit('setDataFrameId', dataFrameId)
     
     if (!dataSourceId) return Promise.resolve(state)
 
@@ -94,7 +92,7 @@ export default {
         },
         query: {
           dataSourceId: dataSourceId,
-          dataFrameId: 'all'
+          dataFrameId: dataFrameId
         }
       })
 

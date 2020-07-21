@@ -523,7 +523,10 @@
     "multiplePossibilities": "很抱歉，经系统分析后，发现词汇具有多重意义，请参考以下项目：",
     "similarQuestionDescription": "很抱歉，系统没有找到对应问题的栏位或资料，但有相关词意的栏位，请参考以下项目：",
     "previewDataSource": "查看资料源",
-    "closeDataSource": "关闭资料源"
+    "closeDataSource": "关闭资料源",
+    "openDataFrameSetting": "开启进阶设定",
+    "closeDataFrameSetting": "关闭进阶设定",
+    "switchSpecificDataFrame": "请先切换至单一资料表"
   },
   "description": {
     "basic": {

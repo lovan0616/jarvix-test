@@ -523,7 +523,10 @@
     "multiplePossibilities": "Sorry, your search matched multiple results. Did you mean: ",
     "similarQuestionDescription": "Sorry, your search matched multiple results. Did you mean:",
     "previewDataSource": "View Data Source",
-    "closeDataSource": "Close Data Source"
+    "closeDataSource": "Close Data Source",
+    "openDataFrameSetting": "Open Basic Data Frame Setting",
+    "closeDataFrameSetting": "Close Basic Data Frame Setting",
+    "switchSpecificDataFrame": "Please switch to specific Data Frame"
   },
   "description": {
     "basic": {
