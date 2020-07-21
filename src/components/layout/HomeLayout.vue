@@ -23,6 +23,7 @@
     <transition name="fast-fade-in">
       <section 
         v-if="isShowPreviewDataSource"
+        :class="{'preview-datasource--has-basic-df-setting': isShowBasicDataFrameSetting}"
         class="preview-datasource">
         <preview-data-source 
           :key="dataSourceId" 
@@ -60,6 +61,9 @@ export default {
     isShowBasicDataFrameSetting () {
       return this.$store.state.isShowBasicDataFrameSetting
     },
+    isShowAskHelper () {
+      return this.$store.state.isShowAskHelper
+    },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     }
@@ -92,15 +96,19 @@ export default {
   }
 
   .preview-datasource {
-    width: calc(100% - #{$basic-df-setting-width});
-    height: calc(100vh - #{$header-height});
+    width: 100%;
+    height: calc(100vh - #{$header-height + $chat-room-height});
     position: absolute;
-    top: $header-height;
+    top: $header-height + $chat-room-height;
     right: 0;
     background: rgba(0, 0, 0, 0.95);
     overflow: auto;
     padding: 32px 40px 0 40px;
     z-index: 3;
+
+    &--has-basic-df-setting {
+      width: calc(100% - #{$basic-df-setting-width});
+    }
 
     &__close-btn {
       position: absolute;

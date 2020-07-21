@@ -744,6 +744,7 @@
   },
   "askHelper": {
     "title": "Question Explanation",
+    "catalog": "Question Type",
     "historyTitle": "History Question",
     "askHelpRemark": "",
     "helpLink": "How to Ask Questions",
@@ -765,6 +766,7 @@
     "type": "Type",
     "description": "Description",
     "columnName": "Column Name",
+    "columnCatalog": "Column Type",
     "ask": "Ask",
     "example": "Example",
     "exampleDesc": "Because Boolean and Unique questions are in the same category as Category, the following are all examples of Category.",
