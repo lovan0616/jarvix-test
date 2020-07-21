@@ -53,6 +53,7 @@ export default {
     return state.dataFrameId === 'all' ? '' : state.dataFrameId
   },
   getDataSourceName (state) {
+    console.log('getDataSourceName')
     if (state.dataSourceId) {
       let selectedDataSource = state.dataSourceList.find(dataSource => dataSource.id === state.dataSourceId)
       return selectedDataSource.name
@@ -60,6 +61,7 @@ export default {
     return null
   },
   getDataFrameName (state) {
+    console.log('getDataFrameName')
     if (state.dataSourceId) {
       if (state.dataFrameId === 'all') {
         return state.dataFrameId

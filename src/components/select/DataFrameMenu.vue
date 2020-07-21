@@ -1,5 +1,5 @@
 <template>
-  <div class="data-frame-select-block">
+  <div class="data-frame-select-block">{{ selectedDataName }}
     <el-menu
       mode="horizontal"
       class="data-frame-select__menu"
@@ -92,6 +92,11 @@ export default {
       selectInfo: {}
     }
   },
+  watch: {
+    getDataFrameName(value, oldValue) { 
+      console.log(value, oldValue)
+    }
+  },
   computed: {
     ...mapGetters('dataSource', ['dataSourceList', 'getDataSourceName', 'getDataFrameName']),
     ...mapGetters('userManagement', ['getCurrentGroupId']),
@@ -174,7 +179,7 @@ export default {
       if (this.isShowPreviewDataSource) this.togglePreviewDataSource(false)
       this.$store.dispatch('dataSource/changeDataSourceById', { dataSourceId, dataFrameId })
       .then(() => {
-        this.$router.push({ 
+        this.$router.push({
           name: 'PageIndex', 
           params: { 
             'group_id': this.getCurrentGroupId
