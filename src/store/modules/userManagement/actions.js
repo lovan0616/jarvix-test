@@ -13,7 +13,7 @@ export default {
       localStorage.removeItem('token')
     })
   },
-  async getUserInfo({ commit, rootState }, { groupId }) {
+  async getUserInfo({ commit, rootState }, defaultGroupId) {
     let accountPermissionList = []
     let licensePermissionList = []
     let groupPermissionList = []
@@ -21,7 +21,7 @@ export default {
 
     try {
       // get user permission
-      const userInfo = await getPermission(groupId)
+      const userInfo = await getPermission(defaultGroupId)
       if (userInfo.accountList.length) {
         defaultAccount = userInfo.accountList.find(account => account.isDefault)
         accountPermissionList = defaultAccount.accountPermissionList
@@ -70,7 +70,7 @@ export default {
   },
   updateUserGroupList ({ dispatch, commit, getters }, groupId) {
     const originalGroupId = getters.getCurrentGroupId
-    return dispatch('getUserInfo', { groupId })
+    return dispatch('getUserInfo', groupId)
       .then(() => {
         const newGroupId = getters.getCurrentGroupId
 
@@ -90,11 +90,11 @@ export default {
         })
       })
   },
-  switchAccountById({ state, dispatch, commit }, { accountId, groupId }) {
+  switchAccountById({ state, dispatch, commit }, { accountId, defaultGroupId }) {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
     return switchAccount({ accountId })
-      .then(() => dispatch('getUserInfo', {}))
+      .then(() => dispatch('getUserInfo'))
       .then(() => {
         // 處理帳戶下沒有群組的狀況
         if (state.groupList.length === 0) {
@@ -103,7 +103,7 @@ export default {
         }
 
         // 處理路徑中帶有指定的 group id
-        if (groupId) return dispatch('switchGroupById', { accountId, groupId })
+        if (defaultGroupId) return dispatch('switchGroupById', { accountId, defaultGroupId })
 
         // 先清空，因為新群組有可能沒有 dataSource
         commit('dataSource/setDataSourceId', null, { root: true })
@@ -117,7 +117,7 @@ export default {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
     return switchGroup({ accountId, groupId })
-      .then(() => dispatch('getUserInfo', { groupId }))
+      .then(() => dispatch('getUserInfo', groupId))
       .then(() => {
         // 先清空，因為新群組有可能沒有 dataSource
         commit('dataSource/setDataSourceId', null, { root: true })

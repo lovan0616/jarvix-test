@@ -72,7 +72,7 @@ export default {
           })
             .then(({ accessToken }) => {
               localStorage.setItem('token', accessToken)
-              return this.getUserInfo({})
+              return this.getUserInfo()
             })
             .then(() => {
               // 取得前一次停留或拜訪的資訊
