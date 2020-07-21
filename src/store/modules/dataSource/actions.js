@@ -74,7 +74,7 @@ export default {
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
     // 清空 dataFrame list 和 id
-    commit('setDataFrameId', null)
+    commit('setDataFrameId', dataFrameId)
     commit('setDataFrameList', [])
     
     if (!dataSourceId) return Promise.resolve(state)

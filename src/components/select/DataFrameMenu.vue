@@ -1,5 +1,5 @@
 <template>
-  <div class="data-frame-select-block">{{ selectedDataName }}
+  <div class="data-frame-select-block">
     <el-menu
       mode="horizontal"
       class="data-frame-select__menu"
@@ -92,11 +92,6 @@ export default {
       selectInfo: {}
     }
   },
-  watch: {
-    getDataFrameName(value, oldValue) { 
-      console.log(value, oldValue)
-    }
-  },
   computed: {
     ...mapGetters('dataSource', ['dataSourceList', 'getDataSourceName', 'getDataFrameName']),
     ...mapGetters('userManagement', ['getCurrentGroupId']),
@@ -110,13 +105,6 @@ export default {
       return this.getDataFrameName === 'all' 
         ? this.getDataSourceName
         : this.getDataFrameName
-      // if (Object.entries(this.selectInfo).length === 0) {
-      //   return this.availableDataSourceList[0].name
-      // } else {
-      //   return this.selectInfo.dataFrameName === 'all' 
-      //   ? this.selectInfo.dataSourceName
-      //   : this.selectInfo.dataFrameName
-      // }
     },
     selectedIconType () {
       return this.selectInfo.dataFrameId === 'all' || Object.entries(this.selectInfo).length === 0
@@ -167,9 +155,7 @@ export default {
       const dataSourceIndex = selectKey[0]
       const dataFrameIndex = selectKey[1]
       this.selectInfo = {
-        dataSourceName: this.availableDataSourceList[dataSourceIndex].name,
         dataSourceId: this.availableDataSourceList[dataSourceIndex].id,
-        dataFrameName: this.availableDataSourceList[dataSourceIndex].dataFrames[dataFrameIndex].name,
         dataFrameId: this.availableDataSourceList[dataSourceIndex].dataFrames[dataFrameIndex].id
       }
       this.onDataFrameChange(this.selectInfo.dataSourceId, this.selectInfo.dataFrameId)
