@@ -85,6 +85,7 @@ export default {
       this.tmpColumnInfoList = JSON.parse(JSON.stringify(this.dataSourceColumnInfoList))
       this.tmpColumnInfoList['value'] = this.dataSourceDataValueList
       this.columnInfoList = this.tmpColumnInfoList[key]
+      // Number of columns must be multiples of 3
       let emptyValue = this.columnInfoList.length % 3 ===  0 ? 0 : 3 - this.columnInfoList.length % 3
       while (emptyValue--) {
         this.columnInfoList.push('')
