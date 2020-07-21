@@ -146,26 +146,30 @@ export default {
     if (state.dataSourceId === null) return []
     return getDataFrameById(state.dataSourceId)
   },
-  getDataFrameColumnSummary ({ state }, { id, page, cancelToken }) {
+  getDataFrameColumnSummary({ state }, { id, selectedColumnList = null, page, cancelToken }) {
     if (page > 0) return
-    return dataFrameColumnSummary(id, cancelToken)
+    return dataFrameColumnSummary(id, selectedColumnList, cancelToken)
   },
-  getDataFrameData ({ state }, { id, page = 0, cancelToken }) {
-    return getDataFrameData(id, page, cancelToken)
+  getDataFrameData({ state }, { id, selectedColumnList = null, page = 0, cancelToken }) {
+    return getDataFrameData(id, selectedColumnList, page, cancelToken)
   },
-  getDataFrameIntro ({ dispatch, state }, { id, page, mode }) {
+  getDataFrameIntro ({ dispatch, state, rootGetters }, { id, page, mode }) {
     dispatch('cancelRequest', mode)
+    let selectedColumnList = null
     const cancelToken = new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
       if (mode === 'popup') popupCancelFunction = c
-      if (mode === 'display') displayCancelFunction = c
+      if (mode === 'display') {
+        displayCancelFunction = c
+        selectedColumnList = rootGetters['dataFrameAdvanceSetting/getSelectedColumnList']
+      }
     })
     return Promise.all([
-      dispatch('getDataFrameData', { id, page, cancelToken }),
-      dispatch('getDataFrameColumnSummary', { id, page, cancelToken })
+      dispatch('getDataFrameData', { id, selectedColumnList, page, cancelToken }),
+      dispatch('getDataFrameColumnSummary', { id, selectedColumnList, page, cancelToken })
     ])
   },
-  getDataFrameColumnCorrelation({ state }, { id, selectedColumnList }) {
+  getDataFrameColumnCorrelation({ state }, { id, selectedColumnList = null }) {
     return getColumnCorrelationMatrix(id, selectedColumnList)
   },
   getDataSourceColumnInfo({ commit, state, getters }) {

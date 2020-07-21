@@ -40,6 +40,7 @@
 
 <script>
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ResultDisplay',
@@ -67,6 +68,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('dataFrameAdvanceSetting', ['getAskCondition']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
@@ -90,6 +92,17 @@ export default {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
       this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'dataFrameId': this.dataFrameId})
+    },
+    getAskCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (oldValue.isInit === false || newValue.isInit === false) return
+         this.fetchApiAsk({
+          question: this.$route.query.question, 
+          'dataSourceId': this.$route.query.dataSourceId, 
+          'dataFrameId': this.$route.query.dataFrameId
+        })
+      }
     }
   },
   mounted () {

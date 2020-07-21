@@ -81,6 +81,7 @@ import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/Co
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import EmptyInfoBlock from './EmptyInfoBlock'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'DataFrameData',
@@ -122,10 +123,20 @@ export default {
       tableSummaryList: []
     }
   },
+  computed: {
+    ...mapGetters('dataFrameAdvanceSetting', ['getAskCondition']),
+  },
   watch: {
     dataFrameId (value) {
       this.isLoading = true
       this.fetchDataFrameData(value, 0, true)
+    },
+    getAskCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (this.mode === 'popup' || oldValue.isInit === false || newValue.isInit === false) return
+        this.fetchDataFrameData(this.dataFrameId, 0, true)
+      }
     }
   },
   mounted () {

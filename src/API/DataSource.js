@@ -115,14 +115,17 @@ export function getDataFrameById (dataSourceId, getAllState = false) {
  * get data of dataframe by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
-export function getDataFrameData (dataFrameId, page = 0, cancelToken) {
+export function getDataFrameData(dataFrameId, selectedColumnList, page = 0, cancelToken) {
   // FIXME just default a big size, doesn't implement with pagination
   return request({
-    url: `/dataFrame/${dataFrameId}/data`,
-    method: 'GET',
+    url: `/dataFrame/${dataFrameId}/data/search`,
+    method: 'POST',
     params: {
       page,
       size: 20
+    },
+    data: {
+      selectedColumnList
     },
     cancelToken
   })
@@ -294,10 +297,13 @@ export function dataRepreprocessor (data) {
 /*
  * Dataframe column summary
  */
-export function dataFrameColumnSummary (dataFrameId, cancelToken) {
+export function dataFrameColumnSummary(dataFrameId, selectedColumnList, cancelToken) {
   return request({
-    url: `/dataFrame/${dataFrameId}/summary`,
-    method: 'GET',
+    url: `/dataFrame/${dataFrameId}/summary/search`,
+    method: 'POST',
+    data: {
+      selectedColumnList
+    },
     cancelToken
   })
 }

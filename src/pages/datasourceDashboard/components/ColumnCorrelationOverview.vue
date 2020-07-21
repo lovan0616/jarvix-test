@@ -144,10 +144,19 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('dataFrameAdvanceSetting', ['getSelectedColumnList']),
+    ...mapGetters('dataFrameAdvanceSetting', ['getSelectedColumnList', 'getAskCondition']),
     reminderMsg () {
       if (this.isCalculating) return this.$t('message.calculatingPleaseTryLater')
       return this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
+    },
+  },
+  watch: {
+    getAskCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (this.mode === 'popup' || oldValue.isInit === false || newValue.isInit === false) return
+        this.fetchData()
+      }
     }
   },
   mounted () {

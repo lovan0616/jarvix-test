@@ -4,7 +4,7 @@
       <svg-icon 
         icon-class="column" 
         class="filter-block__title-icon" />
-      {{ $t('dataFrameAdvanceSetting.columnList') }}
+      {{ $t('dataFrameAdvanceSetting.columnList') + '(' + columnListSelectedStatus + ')' }}
     </div>
     <spinner 
       v-if="isLoading"
@@ -99,6 +99,12 @@ export default {
       searchedColumn: '',
       showEditFeatureDialog: false,
       editFeatureInfo: null
+    }
+  },
+  computed: {
+    columnListSelectedStatus () {
+      const selectedColumnList = this.tempColumnList.filter(column => column.isSelected)
+      return `${selectedColumnList.length}/${this.tempColumnList.length}`
     }
   },
   methods: {

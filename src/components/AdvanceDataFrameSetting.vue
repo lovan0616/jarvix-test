@@ -9,13 +9,16 @@
       :temp-column-list.sync="tempColumnList"
       :is-loading="isLoading"
       class="setting__filter-block--top"
-      @columnAdded="updateColumnList"
+      @columnAdded="addColumnList"
     />
     <filter-info 
       :temp-filter-list.sync="tempFilterList"
       class="setting__filter-block--bottom" 
     />
-    <div class="setting__button-block">
+    <div
+      v-if="hasSettingChanged"
+      class="setting__button-block"
+    >
       <button 
         type="button"
         class="btn btn-default"
@@ -49,13 +52,24 @@ export default {
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['columnList', 'isInit']),
     ...mapState('dataSource', ['filterList']),
+    hasSettingChanged () {
+      const isColumnListUntouched = this.tempColumnList.every(tempColumn => {
+        const storedColumn = this.columnList.find(column => column.id === tempColumn.id)
+        return storedColumn.isSelected === tempColumn.isSelected
+      })
+      const isFilterListLengthUntouched = this.tempFilterList.length === this.filterList.length
+      const isFilterListConditionUntouched = this.tempFilterList.every((tempFilter, index) => {
+        return tempFilter.status === this.filterList[index].status
+      })
+      return !isColumnListUntouched || !isFilterListLengthUntouched || !isFilterListConditionUntouched
+    }
   },
   watch: {
     columnList (newList, oldList) {
-      this.tempColumnList = newList
+      this.tempColumnList = JSON.parse(JSON.stringify(newList))
     },
     filterList (newList, oldList) {
-      this.tempFilterList = newList
+      this.tempFilterList = JSON.parse(JSON.stringify(newList))
     },
     '$route.query.dataFrameId'(value) {
       if (!value || value === 'all') return this.closeAdvanceDataFrameSetting()
@@ -71,7 +85,7 @@ export default {
     ...mapActions('dataSource', ['updateFilterList']),
     ...mapActions('dataFrameAdvanceSetting', ['clearColumnList']),
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setColumnList', 'toggleIsInit']),
-    fetchDataColumns (dataFrameId) {
+    fetchDataColumns (dataFrameId, existingColumnList = []) {
       this.isLoading = true
       
       // fetch existing list from store
@@ -84,10 +98,13 @@ export default {
       // fetch column list from backend
       getDataFrameColumnInfoById(dataFrameId)
         .then(data => {
-          const formatedColumnList = data.map(column => ({
-            ...column,
-            isSelected: true
-          }))
+          const formatedColumnList = data.map(newColumn => {
+            const existingColumn = existingColumnList.find(oldColumn => oldColumn.id === newColumn.id)
+            return {
+              ...newColumn,
+              isSelected: existingColumn ? existingColumn.isSelected : true
+            }
+          })
           this.setColumnList(formatedColumnList)
           this.toggleIsInit(true)
           this.isLoading = false
@@ -108,12 +125,12 @@ export default {
         showClose: true
       })
     },
-    updateColumnList ({ dataFrameId: updatedDataFrameId }) {
+    addColumnList ({ dataFrameId: updatedDataFrameId }) {
       // 如果使用者在其他表新增自定義欄位則不更新當前表的 column list
       const { dataFrameId: queryDataFrameId } = this.$route.query
       if (Number(queryDataFrameId) !== updatedDataFrameId) return
       this.toggleIsInit(false)
-      this.fetchDataColumns(updatedDataFrameId)
+      this.fetchDataColumns(updatedDataFrameId, this.columnList)
     }
   },
 }
