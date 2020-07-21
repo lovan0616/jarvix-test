@@ -248,6 +248,7 @@ export default {
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
               this.segmentationAnalysis(componentResponse.segmentationPayload)
+              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', componentResponse.segmentationPayload.dataframeId)
               this.isLoading = false
               break
             case 'Disable':

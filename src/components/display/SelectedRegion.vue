@@ -28,15 +28,26 @@ export default {
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
+    ...mapState('dataSource', ['currentQuestionDataFrameId', 'dataFrameId']),
   },
   methods: {
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
-    save () {
-      if (this.$route.name === 'PageResult' && !this.isShowSettingBox) this.openAdvanceDataFrameSetting()
+    async save () {
+      // ?????????? dataFrame ???????? 
+      if (this.currentQuestionDataFrameId !== this.dataFrameId) {
+        await this.$store.dispatch('dataSource/changeDataFrameById', this.currentQuestionDataFrameId )
+        // ?????? dataframe id
+        this.$router.push({
+          name: 'PageResult',
+          params: this.$route.params,
+          query: {
+            ...this.$route.query,
+            dataFrameId: String(this.currentQuestionDataFrameId)
+          }
+        })
+      }
+      if (this.$route.name === 'PageResult' && !this.isShowSettingBox) this.toggleSettingBox(true)
       this.$emit('save')
-    },
-    openAdvanceDataFrameSetting () {
-      this.toggleSettingBox(true)
     },
   }
 }

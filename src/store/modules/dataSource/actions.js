@@ -110,6 +110,7 @@ export default {
     return dispatch('changeDataFrameById', dataFrameId)
   },
   changeDataFrameById ({ dispatch, commit, state }, dataFrameId) {
+    if (state.dataFrameId === dataFrameId) return Promise.resolve(state)
     dispatch('clearChatbot')
     commit('dataFrameAdvanceSetting/toggleIsInit', false, { root: true })
     dispatch('dataFrameAdvanceSetting/clearColumnList', null, { root: true })
