@@ -81,22 +81,15 @@
         class="icon"/> {{ singleHistory.question }}</div>
     </div>
     <transition name="fast-fade-in">
-      <section 
+      <ask-helper-dialog 
         v-if="isShowAskHelper"
+        ref="helperDialog"
         :class="{'ask-helper--has-basic-df-setting': isShowBasicDataFrameSetting}"
-        class="ask-helper">
-        <ask-helper-dialog 
-          ref="helperDialog"
-          :key="dataSourceId"
-          mode="popup"
-          @close="closeHelper"
-        />
-        <a 
-          href="javascript:void(0)" 
-          class="ask-helper__close-btn"
-          @click="closeHelper"
-        ><svg-icon icon-class="close"/></a>
-      </section>
+        :key="dataSourceId"
+        class="ask-helper"
+        mode="popup"
+        @close="closeHelper"
+      />
     </transition>
   </div>
 </template>
@@ -521,14 +514,6 @@ export default {
 
     &--has-basic-df-setting {
       width: calc(100% - #{$app-side-nav-closed-width} - #{$basic-df-setting-width});
-    }
-
-    &__close-btn {
-      position: absolute;
-      top: 32px;
-      right: 40px;
-      color: #fff;
-      font-size: 14px;
     }
   }
 }

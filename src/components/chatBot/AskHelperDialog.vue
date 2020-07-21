@@ -3,6 +3,11 @@
     class="ask-helper-dialog"
   >
     <div class="helper-header">{{ $t('askHelper.title') }}</div>
+    <a 
+      href="javascript:void(0)" 
+      class="ask-helper__close-btn"
+      @click="closeDialog"
+    ><svg-icon icon-class="close"/></a>
     <el-tabs 
       v-model="activeTab"
       class="ask-helper-tab"
@@ -53,6 +58,14 @@ export default {
     font-size: 24px;
     line-height: 32px;
     margin-bottom: 24px;
+  }
+
+  .ask-helper__close-btn {
+    position: absolute;
+    top: 32px;
+    right: 40px;
+    color: #fff;
+    font-size: 14px;
   }
 }
 </style>

@@ -1,28 +1,28 @@
 <template>
   <div class="column-info">
-    <div class="column-info__menu">
-      <div class="column-info__menu__title">{{ $t('askHelper.columnCatalog') }}</div>
+    <div class="column-info__menu menu">
+      <div class="menu__title">{{ $t('askHelper.columnCatalog') }}</div>
       <div 
         v-for="(columnInfo, index) in columnTypeList"
         :key="index"
-        :class="{'column-info__menu__item--active': index === selectedIndex}"
-        class="column-info__menu__item"
+        :class="{'menu__item--active': index === selectedIndex}"
+        class="menu__item"
         @click="selectCatelog(index)"
       >{{ columnInfo }}</div>
     </div>
-    <div class="column-info__block">
-      <div class="column-info__block__title">
+    <div class="column-info__block block">
+      <div class="block__title">
         <span>{{ $t('askHelper.catalog') }}: </span>
         <span>{{ columnTypeList[selectedIndex] }}</span>
       </div>
-      <div class="column-info__block__description">
+      <div class="block__description">
         <span class="column-lamp">
           <svg-icon icon-class="lamp"/>
           {{ $t('askHelper.description') }}:
         </span>
         {{ $t('askHelper.category') }}
       </div>
-      <table class="column-info__block__table">
+      <table class="block__table">
         <tr>
           <th 
             class="column-name" 
@@ -106,7 +106,9 @@ export default {
     border-radius: 5px;
     margin-right: 24px;
     background: rgba(35, 61, 64, 0.6);
-    
+  }
+  
+  .menu {
     &__title {
       height: 42px;
       padding: 5px 24px;
@@ -161,7 +163,9 @@ export default {
   &__block {
     flex: 1;
     padding-right: 10px;
-    
+  }
+
+  .block {
     &__title {
       font-size: 18px;
       line-height: 32px;
