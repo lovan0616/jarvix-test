@@ -66,13 +66,13 @@
           @click="editFeature"
         >{{ $t('button.featureManagement') }}</button>
       </div>
+      <edit-feature-dialog
+        v-if="showEditFeatureDialog"
+        :edit-feature-info="editFeatureInfo"
+        @update="updateTempColumnList"
+        @cancel="closeEditDialog"
+      />
     </template>
-    <edit-feature-dialog
-      v-if="showEditFeatureDialog"
-      :edit-feature-info="editFeatureInfo"
-      @update="updateTempColumnList"
-      @cancel="closeEditDialog"
-    />
   </div>
 </template>
 

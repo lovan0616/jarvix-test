@@ -54,6 +54,7 @@ export default {
     ...mapState('dataSource', ['filterList']),
     hasSettingChanged () {
       const isColumnListUntouched = this.tempColumnList.every(tempColumn => {
+        if (this.columnList === null) return true
         const storedColumn = this.columnList.find(column => column.id === tempColumn.id)
         return storedColumn.isSelected === tempColumn.isSelected
       })
