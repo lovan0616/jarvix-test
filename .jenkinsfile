@@ -1,33 +1,50 @@
 pipeline {
     agent any
-
     environment {
-        ARTIFACT_NAME  = "dist.tar.gz"
+        GIT_INFO = sh(script: 'git log -1 --pretty=format:"%h - %an : %s"', , returnStdout: true).trim()
+
+        ARTIFACT_NAME           = "dist.tar.gz"
     }
 
     stages {
         stage('Starting') {
             steps {
-                sh '~/.scripts/ci/slack-starting.sh'
+                sh '~/.scripts/multibranch_notify_v1.sh jarvix-bot starting'
             }
         }
+
+        stage('Version') {
+            steps {
+                sh '''
+                    rm -f version
+                    echo "ref=${GIT_BRANCH}"  >> version
+                    echo "hash=${GIT_COMMIT}" >> version
+               '''
+            }
+        }
+
         stage('Build') {
             steps {
                 sh '''
                     npm install
                     npm run build
-
-                    rm -f version
-                    echo "ref=${GIT_BRANCH}" >> dist/version
-                    echo "hash=${GIT_COMMIT}" >> dist/version
-
-                    tar zcf ${ARTIFACT_NAME} dist
+                    cp version dist/
                 '''
             }
         }
+
         stage('Artifact') {
             steps {
                 sh '''
+                    set +e
+                    # dist
+                    tar -C dist -zcf ${ARTIFACT_NAME} .
+                    exitcode=$?
+                    if [ "$exitcode" != "1" ] && [ "$exitcode" != "0" ]; then
+                        exit $exitcode
+                    fi
+                    set -e
+
                     set +x
                     curl -v -f -u ${NEXUS_USER}:${NEXUS_PASS} \
                         --upload-file ${ARTIFACT_NAME} \
@@ -36,15 +53,69 @@ pipeline {
                 '''
             }
         }
+
+        stage('Checkout script') {
+            steps {
+                script {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: "master"]],
+                        userRemoteConfigs: [[
+                            url: 'https://gitlab.com/synergies.ai/devops/ansible.git',
+                            credentialsId: '6aec5db7-0064-4cf8-ba7f-3781d2fd5bbc'
+                        ]]
+                    ])
+                }
+            }
+        }
+
+        stage('Deploy - jenkins-pipe') {
+            when { branch 'jenkins-pipe' }
+            environment {
+                INVENTORY = "inventory_jarvix/dev/hosts.yaml"
+            }
+            steps {
+                sh '''
+                    ansible-playbook jarvix/playbook/borabora/borabora-download.yaml -e "artifact_path=${JOB_NAME}"
+                    ansible-playbook -i $INVENTORY jarvix/playbook/borabora/borabora-config.yaml
+                    #ansible-playbook -i $INVENTORY jarvix/playbook/borabora/borabora-setup.yaml
+                '''
+            }
+        }
+
+        stage('Deploy - dev') {
+            when { branch 'develop' }
+            environment {
+                INVENTORY = "inventory_jarvix/dev/hosts.yaml"
+            }
+            steps {
+                sh '''
+                    ansible-playbook -i $INVENTORY jarvix/playbook/borabora-setup.yaml -e "artifact_path=${JOB_NAME}"
+                '''
+            }
+        }
+
+        stage('Deploy - qa') {
+            when { branch 'qa' }
+            environment {
+                INVENTORY = "inventory_jarvix/qa/hosts.yaml"
+            }
+            steps {
+                sh '''
+                    ansible-playbook -i $INVENTORY jarvix/playbook/borabora-setup.yaml -e "artifact_path=${JOB_NAME}"
+                '''
+            }
+        }
     }
 
     post {
         success {
-            sh 'sh ~/.scripts/ci/slack-success.sh'
+            sh '~/.scripts/multibranch_notify_v1.sh jarvix-bot success'
         }
         failure {
-            sh 'sh ~/.scripts/ci/slack-failure.sh'
-            sh 'sh ~/.scripts/ci/slack-send-log.sh'
+            sh '~/.scripts/multibranch_notify_v1.sh jarvix-bot failure'
+        }
+        cleanup {
+            deleteDir()
         }
     }
 }
