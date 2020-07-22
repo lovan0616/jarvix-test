@@ -268,6 +268,17 @@ export default {
     },
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
+    },
+    doDrillDown () {
+      return this.$store.state.chatBot.doDrillDown
+    }
+  },
+  watch: {
+    doDrillDown (val) {
+      if (!val) return
+      this.robotDrillDownEvent()
+      this.saveFilter()
+      this.$store.commit('chatBot/setDoDrillDown', false)
     }
   },
   mounted () {

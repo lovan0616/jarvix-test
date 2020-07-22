@@ -90,7 +90,7 @@
 </template>
 <script>
 import AskHelperDialog from './AskHelperDialog'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 
 export default {
@@ -111,6 +111,7 @@ export default {
   },
   computed: {
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
     dictionaries () {
       return [
         ...this.dataSourceColumnInfoList.booleanList.map(element => ({type: 'boolean', text: element})),
@@ -220,6 +221,32 @@ export default {
     onWebSocketOpen () {
     },
     onWebSocketReceiveMessage (evt) {
+      if (evt.data === '圈選2018年11月至2019年1月') {
+        // drill down
+        this.$store.commit('chatBot/setDoDrillDown', true)
+        return
+      }
+      if (evt.data === '回到資料集') {
+        // 回到首頁
+        this.$router.push({ 
+          name: 'PageIndex', 
+          params: {
+            'account_id': this.getCurrentAccountId,
+            'group_id': this.getCurrentGroupId
+          },
+          query: {
+            dataSourceId: this.$route.query.dataSourceId,
+            dataFrameId: this.$route.query.dataFrameId
+          }
+        })
+        return
+      }
+      if (evt.data === '點擊環境濕度') {
+        // 點擊環境溫度
+        this.$store.commit('chatBot/setDoClickCorrelation', true)
+        return
+      }
+
       this.userQuestion = evt.data
       this.enterQuestion()
     },

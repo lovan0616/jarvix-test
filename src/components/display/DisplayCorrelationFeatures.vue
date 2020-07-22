@@ -55,6 +55,17 @@ export default {
   computed: {
     displayFactorIndex () {
       return this.$store.state.result.displayFactorIndex
+    },
+    doClickCorrelation () {
+      return this.$store.state.chatBot.doClickCorrelation
+    }
+  },
+  watch: {
+    doClickCorrelation (val) {
+      if (!val) return
+      let clickIndex = this.features.findIndex(element => element.alias === '環境溼度')
+      this.onClickItem(clickIndex)
+      this.$store.commit('chatBot/setDoClickCorrelation', false)
     }
   },
   methods: {
