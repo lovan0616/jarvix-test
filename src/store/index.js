@@ -29,10 +29,14 @@ export default new Vuex.Store({
     dataFrameAdvanceSetting
   },
   state: {
+    isShowAskHelper: false,
     isShowFullSideNav: false,
     isAppLoading: false
   },
   mutations: {
+    updateAskHelperStatus (state, data) {
+      state.isShowAskHelper = data
+    },
     updateSideNavStatus(state, data) {
       state.isShowFullSideNav = data
     },

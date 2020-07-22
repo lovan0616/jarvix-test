@@ -532,7 +532,10 @@
     "multiplePossibilities": "很抱歉，经系统分析后，发现词汇具有多重意义，请参考以下项目：",
     "similarQuestionDescription": "很抱歉，系统没有找到对应问题的栏位或资料，但有相关词意的栏位，请参考以下项目：",
     "previewDataSource": "查看资料源",
-    "closeDataSource": "关闭资料源"
+    "closeDataSource": "关闭资料源",
+    "openDataFrameSetting": "开启进阶设定",
+    "closeDataFrameSetting": "关闭进阶设定",
+    "switchSpecificDataFrame": "请先切换至单一资料表"
   },
   "description": {
     "basic": {
@@ -751,11 +754,12 @@
   "askHelper": {
     "chooseDataFrameToEnableSetting": "选择单一资料表以开启问句说明",
     "title": "问句说明",
+    "catalog": "问句类型",
     "historyTitle": "历史问句",
     "askHelpRemark": "问句提示请查看",
     "helpLink": "问句说明",
     "tabToken": "词汇总览",
-    "tabSample": "问句范例",
+    "tabSample": "问句组合范例",
     "columnTitle": "资料栏位名称",
     "categoryTitle": "Category 类型",
     "numericTitle": "Numeric 类型",
@@ -772,6 +776,7 @@
     "type": "类型",
     "description": "说明",
     "columnName": "栏位名称",
+    "columnCatalog": "栏位类型",
     "ask": "问",
     "example": "范例",
     "exampleDesc": "因 Boolean 和 Unique 类型问句方式与 Category 一致，以下均以 Category 类型举例。",
