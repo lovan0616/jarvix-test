@@ -7,7 +7,9 @@ export default {
   state: {
     conversationList: [],
     isAnalyzing: false,
-    isUseAlgorithm: false
+    isUseAlgorithm: false,
+    doDrillDown: false,
+    doClickCorrelation: false
   },
   actions,
   mutations,
