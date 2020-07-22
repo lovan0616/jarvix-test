@@ -57,6 +57,7 @@ export default {
         const storedColumn = this.columnList.find(column => column.id === tempColumn.id)
         return storedColumn.isSelected === tempColumn.isSelected
       })
+      // 處理當清除所有條件時 tempFilterList 會是空陣列：比較長度
       const isFilterListLengthUntouched = this.tempFilterList.length === this.filterList.length
       const isFilterListConditionUntouched = this.tempFilterList.every((tempFilter, index) => {
         return tempFilter.status === this.filterList[index].status
