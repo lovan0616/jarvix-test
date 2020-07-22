@@ -1,6 +1,6 @@
 <template>
   <result-board
-    :result-info="resultInfo"
+    :result-id="resultId"
     :restrictions="restrictions"
     @unPin="unPin"
   >
@@ -29,10 +29,6 @@ export default {
     DataFrameData
   },
   props: {
-    resultInfo: {
-      type: Object,
-      required: true
-    },
     restrictions: {
       type: Array,
       default: () => []
@@ -40,10 +36,15 @@ export default {
     segmentationPayload: {
       type: Object,
       default: () => {}
+    },
+    resultId: {
+      type: Number,
+      default: null
     }
   },
   methods: {
     unPin (pinBoardId) {
+      console.log(pinBoardId, 'pinBoardId')
       this.$emit('unPin', pinBoardId)
     }
   }
