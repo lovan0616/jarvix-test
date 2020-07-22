@@ -54,8 +54,8 @@ export default {
         this.$emit('closeDialog')
         return
       }
-      // 在登入、註冊頁面修改語言
-      if (!this.userId) {
+      // 在登入、註冊頁面修改語言 或是在 pinboard 分享頁面
+      if (!this.userId || this.$route.name === 'ShareResult') {
         this.$store.commit('setting/setLocale', this.selectedLanguage)
         this.$store.commit('setting/isChangeLangBeforeLogin', true)
         this.$emit('closeDialog')

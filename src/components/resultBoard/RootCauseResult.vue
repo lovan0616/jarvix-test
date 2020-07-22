@@ -1,5 +1,6 @@
 <template>
   <result-board
+    :result-id="resultId"
     :result-info="resultInfo"
     :restrictions="restrictions"
   >
@@ -51,6 +52,10 @@ export default {
       default: () => []
     },
     dataFrameId: {
+      type: Number,
+      default: null
+    },
+    resultId: {
       type: Number,
       default: null
     }

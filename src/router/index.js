@@ -303,6 +303,11 @@ const router = new Router({
       name: 'PageSignup',
       component: () => import('@/pages/signup/Index')
     },
+    {
+      path: '/share-result/:id',
+      name: 'ShareResult',
+      component: () => import('@/pages/result/SingleResult')
+    }
   ],
   linkActiveClass: 'active',
   scrollBehavior (to, from, savedPosition) {
