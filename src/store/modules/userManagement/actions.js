@@ -1,4 +1,4 @@
-import { logout, refreshToken, switchAccount, switchGroup } from '@/API/User'
+import { logout, refreshToken, switchAccount, switchGroup, updateLocale } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
 
@@ -9,6 +9,7 @@ export default {
       commit('dataSource/setDataSourceId', null, { root: true })
       commit('clearUserInfo')
       commit('setting/setCurrentRoute', null, { root: true })
+      commit('setting/isChangeLangBeforeLogin', false, { root: true })
       localStorage.removeItem('token')
     })
   },
@@ -43,9 +44,17 @@ export default {
         ]
       })
 
+      // get locale info
       let locale = userInfo.userData.language
+      // 未設定語系，並在登入前曾修改語系
+      if (!locale && rootState.setting.changeLangBeforeLogin) {
+        updateLocale(rootState.setting.locale)
+      }
+      // 曾設定語系，且發現前後端儲存的語系不同，需判斷該取用前端還是後端語系
       if (locale && locale !== rootState.setting.locale) {
-        commit('setting/setLocale', locale, { root: true })
+        rootState.setting.changeLangBeforeLogin
+          ? updateLocale(rootState.setting.locale)
+          : commit('setting/setLocale', locale, { root: true })
       }
 
       // get account info
@@ -81,7 +90,7 @@ export default {
         })
       })
   },
-  switchAccountById({ state, dispatch, commit, getters }, { accountId, defaultGroupId }) {
+  switchAccountById({ state, dispatch, commit }, { accountId, defaultGroupId }) {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
     return switchAccount({ accountId })
@@ -94,7 +103,7 @@ export default {
         }
 
         // 處理路徑中帶有指定的 group id
-        if (defaultGroupId) return dispatch('switchGroupById', { accountId, groupId: defaultGroupId })
+        if (defaultGroupId) return dispatch('switchGroupById', { accountId, defaultGroupId })
 
         // 先清空，因為新群組有可能沒有 dataSource
         commit('dataSource/setDataSourceId', null, { root: true })

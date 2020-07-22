@@ -7,5 +7,8 @@ export default {
   },
   setCurrentRoute (state, data) {
     state.currentRoute = data
+  },
+  isChangeLangBeforeLogin (state, data) {
+    state.changeLangBeforeLogin = data
   }
 }

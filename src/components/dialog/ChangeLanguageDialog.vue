@@ -36,18 +36,13 @@ export default {
     }
   },
   computed: {
-    ...mapState('setting', ['locale']),
+    ...mapState('setting', ['locale', 'languages']),
     ...mapState('userManagement', ['userId']),
-    languages () {
-      return this.$store.state.setting.languages
-    },
     selectItems () {
-      return Object.keys(this.languages).map(key => {
-        return {
-          id: key,
-          name: this.languages[key]
-        }
-      })
+      return Object.keys(this.languages).map(key => ({
+        id: key,
+        name: this.languages[key]
+      }))
     },
   },
   mounted () {
@@ -62,6 +57,8 @@ export default {
       // 在登入、註冊頁面修改語言
       if (!this.userId) {
         this.$store.commit('setting/setLocale', this.selectedLanguage)
+        this.$store.commit('setting/isChangeLangBeforeLogin', true)
+        this.$emit('closeDialog')
         return
       }
       this.isLoading = true
