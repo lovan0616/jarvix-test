@@ -149,6 +149,9 @@ export default {
       if (this.isCalculating) return this.$t('message.calculatingPleaseTryLater')
       return this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
     },
+    filterRestrictionList () {
+      return this.$store.getters['dataSource/filterRestrictionList']
+    }
   },
   watch: {
     getAskCondition: {
@@ -172,11 +175,19 @@ export default {
     fetchData () {
       this.isLoading = true
       let selectedColumnList = null
+      let restrictions = []
       
       // 智能分析頁面需要帶入 column list
-      if (this.mode === 'display') selectedColumnList = this.getSelectedColumnList
+      if (this.mode === 'display') {
+        selectedColumnList = this.getSelectedColumnList
+        restrictions = this.filterRestrictionList
+      }
       
-      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { id: this.dataFrameId, selectedColumnList })
+      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { 
+        id: this.dataFrameId, 
+        selectedColumnList, 
+        restrictions 
+      })
         .then(response => {
           const columnNameList = response.columnNameList
           const columnDataList = response.data

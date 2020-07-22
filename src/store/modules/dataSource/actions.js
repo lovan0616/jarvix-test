@@ -145,31 +145,33 @@ export default {
     if (state.dataSourceId === null) return []
     return getDataFrameById(state.dataSourceId)
   },
-  getDataFrameColumnSummary({ state }, { id, selectedColumnList = null, page, cancelToken }) {
+  getDataFrameColumnSummary({ state }, { id, selectedColumnList = null, restrictions, page, cancelToken }) {
     if (page > 0) return
-    return dataFrameColumnSummary(id, selectedColumnList, cancelToken)
+    return dataFrameColumnSummary(id, selectedColumnList, restrictions, cancelToken)
   },
-  getDataFrameData({ state }, { id, selectedColumnList = null, page = 0, cancelToken }) {
-    return getDataFrameData(id, selectedColumnList, page, cancelToken)
+  getDataFrameData({ state }, { id, selectedColumnList = null, restrictions, page = 0, cancelToken }) {
+    return getDataFrameData(id, selectedColumnList, restrictions, page, cancelToken)
   },
-  getDataFrameIntro ({ dispatch, state, rootGetters }, { id, page, mode }) {
+  getDataFrameIntro ({ dispatch, state, getters, rootGetters }, { id, page, mode }) {
     dispatch('cancelRequest', mode)
     let selectedColumnList = null
+    let restrictions = []
     const cancelToken = new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
       if (mode === 'popup') popupCancelFunction = c
       if (mode === 'display') {
         displayCancelFunction = c
         selectedColumnList = rootGetters['dataFrameAdvanceSetting/getSelectedColumnList']
+        restrictions = getters.filterRestrictionList
       }
     })
     return Promise.all([
-      dispatch('getDataFrameData', { id, selectedColumnList, page, cancelToken }),
-      dispatch('getDataFrameColumnSummary', { id, selectedColumnList, page, cancelToken })
+      dispatch('getDataFrameData', { id, selectedColumnList, restrictions, page, cancelToken }),
+      dispatch('getDataFrameColumnSummary', { id, selectedColumnList, restrictions, page, cancelToken })
     ])
   },
-  getDataFrameColumnCorrelation({ state }, { id, selectedColumnList = null }) {
-    return getColumnCorrelationMatrix(id, selectedColumnList)
+  getDataFrameColumnCorrelation({ state }, { id, selectedColumnList = null, restrictions = [] }) {
+    return getColumnCorrelationMatrix(id, selectedColumnList, restrictions)
   },
   getDataSourceColumnInfo({ commit, state, getters }) {
     if (!state.dataSourceId) return

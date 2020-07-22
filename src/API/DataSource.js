@@ -117,7 +117,7 @@ export function getDataFrameById (dataSourceId, getAllState = false) {
  * get data of dataframe by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
-export function getDataFrameData(dataFrameId, selectedColumnList, page = 0, cancelToken) {
+export function getDataFrameData(dataFrameId, selectedColumnList, restrictions, page = 0, cancelToken) {
   // FIXME just default a big size, doesn't implement with pagination
   return request({
     url: `/dataFrame/${dataFrameId}/data/search`,
@@ -127,7 +127,8 @@ export function getDataFrameData(dataFrameId, selectedColumnList, page = 0, canc
       size: 20
     },
     data: {
-      selectedColumnList
+      selectedColumnList,
+      restrictions
     },
     cancelToken
   })
@@ -299,12 +300,13 @@ export function dataRepreprocessor (data) {
 /*
  * Dataframe column summary
  */
-export function dataFrameColumnSummary(dataFrameId, selectedColumnList, cancelToken) {
+export function dataFrameColumnSummary(dataFrameId, selectedColumnList, restrictions, cancelToken) {
   return request({
     url: `/dataFrame/${dataFrameId}/summary/search`,
     method: 'POST',
     data: {
-      selectedColumnList
+      selectedColumnList,
+      restrictions
     },
     cancelToken
   })
@@ -314,12 +316,13 @@ export function dataFrameColumnSummary(dataFrameId, selectedColumnList, cancelTo
  * get column correlation matrix
  * @param {Number} dataFrameId - 欲查閱的資料表 ID
  */
-export function getColumnCorrelationMatrix(dataFrameId, selectedColumnList) {
+export function getColumnCorrelationMatrix(dataFrameId, selectedColumnList, restrictions) {
   return request({
     url: `/dataFrame/${dataFrameId}/relationMatrix/search`,
     method: 'POST',
     data: {
-      selectedColumnList
+      selectedColumnList,
+      restrictions
     }
   })
 }
