@@ -77,10 +77,11 @@ export default {
     background: var(--color-bg-3);
 
     .toggle {
-      padding: 21px;
+      padding: ($app-side-nav-closed-width - 20px) / 2;
       display: flex;
       align-items: center;
       &__icon {
+        flex: 0 0 20px;
         color: #2AD2E2;
         font-size: 20px;
         margin-right: 0;
