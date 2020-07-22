@@ -51,7 +51,8 @@ export default {
     if (closeFilterIndex > -1) {
       state.filterList = state.filterList.slice(0, closeFilterIndex)
     }
-    state.filterList.push(newRestriction)
+
+    state.filterList = [...state.filterList, newRestriction]
 
     Message({
       message: i18n.t('message.addFilter'),

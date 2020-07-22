@@ -33,11 +33,11 @@ export default {
   methods: {
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
     async save () {
-      // ?????????? dataFrame ???????? 
+      // ????? dataframe id ??????????? dataframe
       if (this.currentQuestionDataFrameId !== this.dataFrameId) {
         await this.$store.dispatch('dataSource/changeDataFrameById', this.currentQuestionDataFrameId )
-        // ?????? dataframe id
-        this.$router.push({
+        // ?? URL ? dataframe id
+        this.$router.replace({
           name: 'PageResult',
           params: this.$route.params,
           query: {

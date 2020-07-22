@@ -7,8 +7,7 @@ export default {
   state: {
     isInit: false,
     isShowSettingBox: false,
-    columnList: [],
-    filterList: []
+    columnList: null
   },
   actions,
   mutations,

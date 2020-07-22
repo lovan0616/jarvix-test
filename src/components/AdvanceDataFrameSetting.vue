@@ -65,7 +65,7 @@ export default {
     }
   },
   watch: {
-    columnList (newList, oldList) {
+    columnList (newList = [], oldList) {
       this.tempColumnList = JSON.parse(JSON.stringify(newList))
     },
     filterList (newList, oldList) {

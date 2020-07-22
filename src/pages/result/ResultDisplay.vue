@@ -96,7 +96,13 @@ export default {
     getAskCondition: {
       deep: true,
       handler (newValue, oldValue) {
-        if (oldValue.isInit === false || newValue.isInit === false) return
+        if (
+          // 切換 dataframe 被清空時不重新問問題
+          newValue.columnList === null && newValue.filterList.length === 0
+          // 開啟進階設定取得欄位資料時也不重新問問題
+          || oldValue.columnList === null && (oldValue.filterList.length === newValue.filterList.length)
+        ) return
+
          this.fetchApiAsk({
           question: this.$route.query.question, 
           'dataSourceId': this.$route.query.dataSourceId, 

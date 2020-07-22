@@ -1,5 +1,5 @@
 export default {
   clearColumnList ({ commit }) {
-    commit('setColumnList', [])
+    commit('setColumnList', null)
   },
 }
