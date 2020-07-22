@@ -524,7 +524,10 @@
     "multiplePossibilities": "Sorry, your search matched multiple results. Did you mean: ",
     "similarQuestionDescription": "Sorry, your search matched multiple results. Did you mean:",
     "previewDataSource": "View Data Source",
-    "closeDataSource": "Close Data Source"
+    "closeDataSource": "Close Data Source",
+    "openDataFrameSetting": "Open Basic Data Frame Setting",
+    "closeDataFrameSetting": "Close Basic Data Frame Setting",
+    "switchSpecificDataFrame": "Please switch to specific Data Frame"
   },
   "description": {
     "basic": {
@@ -742,6 +745,7 @@
   },
   "askHelper": {
     "title": "Question Explanation",
+    "catalog": "Question Type",
     "historyTitle": "History Question",
     "askHelpRemark": "",
     "helpLink": "How to Ask Questions",
@@ -763,6 +767,7 @@
     "type": "Type",
     "description": "Description",
     "columnName": "Column Name",
+    "columnCatalog": "Column Type",
     "ask": "Ask",
     "example": "Example",
     "exampleDesc": "Because Boolean and Unique questions are in the same category as Category, the following are all examples of Category.",

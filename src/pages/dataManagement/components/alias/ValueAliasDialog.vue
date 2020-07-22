@@ -37,7 +37,7 @@
         </div>
         <div class="dialog-content-block">
           <div class="data-column-block">
-            <div class="data-column-row block-title">{{ $t('editing.columnName') }}</div>
+            <div class="block-title">{{ $t('editing.columnName') }}</div>
             <div class="data-column-block-body">
               <div 
                 v-for="column in dataColumnListInfo"

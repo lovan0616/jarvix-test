@@ -57,6 +57,9 @@ export default {
     isShowBasicDataFrameSetting () {
       return this.$store.state.isShowBasicDataFrameSetting
     },
+    isShowAskHelper () {
+      return this.$store.state.isShowAskHelper
+    },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     }

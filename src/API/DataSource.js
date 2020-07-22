@@ -65,13 +65,17 @@ export function renameDataSourceById (dataSourceId, name) {
 /**
  * get dataSource column info
  * @param {Number} dataSourceId - 資料源 ID
+ * @param {Array} columns - 篩選的欄位(帶入勾選的選項, 全部選為 null, 都沒選為 [])
  */
-export function getDataSourceColumnInfoById(dataSourceId, dataFrameId) {
+export function getDataSourceColumnInfoById(dataSourceId, dataFrameId, columns = null) {
   return request({
-    url: `/datasources/${dataSourceId}/dataColumns/name`,
-    method: 'GET',
+    url: `/datasources/${dataSourceId}/dataColumns/name/search`,
+    method: 'POST',
     params: {
       dataFrameId
+    },
+    data: {
+      columns
     }
   })
 }
@@ -79,14 +83,18 @@ export function getDataSourceColumnInfoById(dataSourceId, dataFrameId) {
 /**
  * get dataSource data value
  * @param {Number} dataSourceId - 資料源 ID
+ * @param {Array} columns - 篩選的欄位(帶入勾選的選項, 全部選為 null, 都沒選為 [])
  */
-export function getDataSourceDataValueById(dataSourceId, dataFrameId, size = 50) {
+export function getDataSourceDataValueById(dataSourceId, dataFrameId, columns = null, size = 50) {
   return request({
-    url: `/datasources/${dataSourceId}/dataValue`,
-    method: 'GET',
+    url: `/datasources/${dataSourceId}/dataValue/search`,
+    method: 'POST',
     params: {
       dataFrameId,
       size
+    },
+    data: {
+      columns
     }
   })
 }

@@ -26,7 +26,10 @@ import {
   Collapse,
   CollapseItem,
   Tooltip,
-  Switch
+  Switch,
+  Menu,
+  Submenu,
+  MenuItem
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -119,6 +122,9 @@ Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Tooltip)
 Vue.use(Switch)
+Vue.use(Menu)
+Vue.use(Submenu)
+Vue.use(MenuItem)
 
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)
