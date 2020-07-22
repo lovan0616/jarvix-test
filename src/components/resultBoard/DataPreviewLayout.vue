@@ -44,7 +44,6 @@ export default {
   },
   methods: {
     unPin (pinBoardId) {
-      console.log(pinBoardId, 'pinBoardId')
       this.$emit('unPin', pinBoardId)
     }
   }

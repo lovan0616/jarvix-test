@@ -1,7 +1,7 @@
 <template>
   <page-layout>
     <div class="share-result">
-      <spinner 
+      <spinner
         v-if="isLoading"
         :title="$t('resultDescription.analysisProcessing')"
         class="layout-spinner"
