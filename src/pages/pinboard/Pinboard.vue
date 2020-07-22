@@ -41,7 +41,9 @@
       :data-data-source-id="result.dataSourceId"
       :data-data-frame-id="result.dataFrameId"
       :data-frame-id="result.dataFrameId"
+      :result-id="result.resultId"
       :result-info="result.info"
+      :segmentation-payload="result.segmentationPayload"
       :restrictions="result.restrictions"
       :question="result.question"
       @unPin="unPin"
@@ -132,6 +134,7 @@ export default {
             dataFrameId: element.dataFrameId,
             layout: null,
             info: null,
+            segmentationPayload: null,
             isDeleted: false
           })
           this.getComponent(element)
@@ -156,6 +159,7 @@ export default {
               currentResult.info = componentResponse.componentIds
               currentResult.restrictions = componentResponse.restrictions
               currentResult.layout = this.getLayout(componentResponse.layout)
+              currentResult.segmentationPayload = componentResponse.segmentationPayload
               currentResult.question = componentResponse.segmentationPayload.question
               this.$nextTick(() => {
                 this.isLoading = false

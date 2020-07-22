@@ -12,7 +12,8 @@ export default {
       'zh-CN': i18n.t('lang', 'zh-CN'),
       'en-US': i18n.t('lang', 'en-US')
     },
-    currentRoute: {}
+    currentRoute: {},
+    changeLangBeforeLogin: false
   },
   actions,
   mutations,

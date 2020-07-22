@@ -9,7 +9,7 @@
       name="fade" 
       mode="out-in">
       <router-view 
-        v-if="init" 
+        v-if="init"
         :key="locale"/>
       <spinner 
         v-else 
@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'App',
   data () {
@@ -29,9 +31,7 @@ export default {
     }
   },
   computed: {
-    locale () {
-      return this.$store.state.setting.locale
-    },
+    ...mapState('setting', ['locale', 'languageDefault']),
     getLang () {
       return this.locale.split('-')[0]
     },
@@ -55,15 +55,15 @@ export default {
   methods: {
     checkLocale () {
       let prevLocale = localStorage.getItem('locale')
-      let browserScale = (navigator.language || navigator.browserLanguage).toLowerCase()
-      if (browserScale.includes('en')) {
-        browserScale = 'en-US'
-      } else if (browserScale === 'zh-tw') {
-        browserScale = 'zh-TW'
+      let browserLocale = (navigator.language || navigator.browserLanguage).toLowerCase()
+      if (browserLocale.includes('en')) {
+        browserLocale = 'en-US'
+      } else if (browserLocale === 'zh-tw') {
+        browserLocale = 'zh-TW'
       } else {
-        browserScale = 'zh-CN'
+        browserLocale = this.languageDefault
       }
-      let locale = prevLocale || browserScale
+      let locale = prevLocale || browserLocale
       this.$store.commit('setting/setLocale', locale)
     }
   },
