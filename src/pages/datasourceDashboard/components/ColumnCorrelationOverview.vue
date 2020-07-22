@@ -144,7 +144,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('dataFrameAdvanceSetting', ['getSelectedColumnList', 'getAskCondition']),
+    ...mapGetters('dataFrameAdvanceSetting', ['selectedColumnList', 'askCondition']),
     reminderMsg () {
       if (this.isCalculating) return this.$t('message.calculatingPleaseTryLater')
       return this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
@@ -154,7 +154,7 @@ export default {
     }
   },
   watch: {
-    getAskCondition: {
+    askCondition: {
       deep: true,
       handler (newValue, oldValue) {
         if (
@@ -179,7 +179,7 @@ export default {
       
       // 智能分析頁面需要帶入 column list
       if (this.mode === 'display') {
-        selectedColumnList = this.getSelectedColumnList
+        selectedColumnList = this.selectedColumnList
         restrictions = this.filterRestrictionList
       }
       

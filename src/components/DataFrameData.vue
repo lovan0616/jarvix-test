@@ -124,14 +124,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('dataFrameAdvanceSetting', ['getAskCondition']),
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
   },
   watch: {
     dataFrameId (value) {
       this.isLoading = true
       this.fetchDataFrameData(value, 0, true)
     },
-    getAskCondition: {
+    askCondition: {
       deep: true,
       handler (newValue, oldValue) {
         if (

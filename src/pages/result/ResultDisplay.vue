@@ -68,7 +68,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('dataFrameAdvanceSetting', ['getAskCondition']),
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
@@ -93,7 +93,7 @@ export default {
       if (!question) return false
       this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'dataFrameId': this.dataFrameId})
     },
-    getAskCondition: {
+    askCondition: {
       deep: true,
       handler (newValue, oldValue) {
         if (

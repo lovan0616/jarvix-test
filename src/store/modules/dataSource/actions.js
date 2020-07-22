@@ -161,7 +161,7 @@ export default {
       if (mode === 'popup') popupCancelFunction = c
       if (mode === 'display') {
         displayCancelFunction = c
-        selectedColumnList = rootGetters['dataFrameAdvanceSetting/getSelectedColumnList']
+        selectedColumnList = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
         restrictions = getters.filterRestrictionList
       }
     })
