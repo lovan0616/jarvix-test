@@ -19,6 +19,7 @@
       v-else
       :is="layout"
       :data-result-id="currentResultId"
+      :data-dataframe-id="segmentationPayload.dataframeId"
       :result-info="resultInfo"
       :restrictions="restrictInfo"
       :segmentation-payload="segmentationPayload"

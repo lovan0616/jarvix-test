@@ -31,5 +31,11 @@ export default {
   },
   updateIsUseAlgorithm (state, data) {
     state.isUseAlgorithm = data
+  },
+  setDoDrillDown (state, data) {
+    state.doDrillDown = data
+  },
+  setDoClickCorrelation (state, data) {
+    state.doClickCorrelation = data
   }
 }

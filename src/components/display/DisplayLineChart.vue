@@ -1,6 +1,7 @@
 <template>
   <div class="display-line-chart">
     <v-echart
+      ref="chart"
       :style="chartStyle"
       :options="options"
       auto-resize
@@ -267,12 +268,54 @@ export default {
     },
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
+    },
+    doDrillDown () {
+      return this.$store.state.chatBot.doDrillDown
+    }
+  },
+  watch: {
+    doDrillDown (val) {
+      if (!val) return
+      this.robotDrillDownEvent()
+      window.setTimeout(() => {
+        this.saveFilter()
+      }, 1000)
+      this.$store.commit('chatBot/setDoDrillDown', false)
     }
   },
   mounted () {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
+    robotDrillDownEvent () {
+      this.$refs.chart.dispatchAction({
+        type: 'brush',
+        areas: [
+          {
+            xAxisIndex: 0,
+            brushType: 'lineX',
+            coordRange: [
+              10, 11
+            ]
+          }
+        ]
+      })
+      // 為了要看起來有動態效果，只好圈兩次
+      window.setTimeout(() => {
+        this.$refs.chart.dispatchAction({
+          type: 'brush',
+          areas: [
+            {
+              xAxisIndex: 0,
+              brushType: 'lineX',
+              coordRange: [
+                10, 12
+              ]
+            }
+          ]
+        })
+      }, 0)
+    },
     composeColumn (element, colIndex) {
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
