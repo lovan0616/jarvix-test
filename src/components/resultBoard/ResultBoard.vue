@@ -18,8 +18,8 @@
             class="head-btn restrict"
             @click.stop.prevent="toggleFilterInfo"
           >
-            {{ $t('button.restrict') }}
-            <filter-info-dialog
+            {{ $t('button.dataExplanation') }}
+            <pinboard-info-dialog
               v-if="isShowFilterInfo"
               :filter-info="restrictions"
               @close="closeFilterInfo"
@@ -111,7 +111,7 @@ import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
-import FilterInfoDialog from '@/pages/pinboard/components/filter/FilterInfoDialog'
+import PinboardInfoDialog from '@/pages/pinboard/components/filter/PinboardInfoDialog'
 import { Message } from 'element-ui'
 
 export default {
@@ -121,7 +121,7 @@ export default {
     ShareDialog,
     DecideDialog,
     WritingDialog,
-    FilterInfoDialog
+    PinboardInfoDialog
   },
   props: {
     resultInfo: {

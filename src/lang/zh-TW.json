@@ -479,6 +479,10 @@
     "columnSelected": "已選擇欄位數",
     "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位"
   },
+  "pinboard": {
+    "source": "資料來源",
+    "restrict": "分析條件限制"
+  },
   "batchLoad": {
     "primaryKeyColumns": "主鍵（可複選）",
     "updatedTimeColumn": "更新時間",
@@ -691,7 +695,7 @@
     "batchLoadSetting": "資料更新設定",
     "select": "選擇",
     "download": "資料下載",
-    "restrict": "分析條件限制",
+    "dataExplanation": "資料說明",
     "start": "開始",
     "copyAndBuild": "複製並建置",
     "createGroup": "新建專案",
@@ -1594,7 +1598,7 @@
     "restrict": "限制",
     "featureList": "關連列表",
     "hereIsFeatures": "以下為關連因子",
-    "modelConfidence": "模型的信心度",
+    "modelConfidence": "模型的信心度f",
     "displayTotalData": "共 {count} 筆資料",
     "displayTopData": "顯示前 {count} 筆資料",
     "min": "最小值",

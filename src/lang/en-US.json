@@ -479,6 +479,10 @@
     "columnSelected": "Number of columns selected",
     "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field from each table."
   },
+  "pinboard": {
+    "source": "資料來源",
+    "restrict": "Filter Restriction"
+  },
   "batchLoad": {
     "primaryKeyColumns": "Primary Keys",
     "updatedTimeColumn": "Updated Time",
@@ -691,7 +695,7 @@
     "batchLoadSetting": "Batch Loading Data",
     "select": "Select",
     "download": "Data Download",
-    "restrict": "Filter Restriction",
+    "dataExplanation": "資料說明",
     "start": "Start",
     "copyAndBuild": "Copy and Build",
     "createGroup": "New Project",
