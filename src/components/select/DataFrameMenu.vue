@@ -87,11 +87,6 @@ import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'DataFrameMenu',
-  data () {
-    return {
-      selectInfo: {}
-    }
-  },
   computed: {
     ...mapGetters('dataSource', ['dataSourceList', 'getDataSourceName', 'getDataFrameName']),
     ...mapGetters('userManagement', ['getCurrentGroupId']),
@@ -102,26 +97,25 @@ export default {
       return this.$store.state.dataSource.dataFrameId
     },
     selectedDataName () {
-      return this.getDataFrameName === 'all' 
+      return this.dataFrameId === 'all' 
         ? this.getDataSourceName
         : this.getDataFrameName
     },
     selectedIconType () {
-      return this.selectInfo.dataFrameId === 'all' || Object.entries(this.selectInfo).length === 0
+      return this.dataFrameId === 'all'
         ? 'data-source' 
         : 'table'
-    },
-    buildDataSourceList () {
-      return this.dataSourceList.filter(dataSource => {
-        return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
-      })
     },
     availableDataSourceList () {
       const defaultOption = {
         name: this.$t('editing.allDataFrames'),
         id: 'all'
       }
-      return this.buildDataSourceList.map(dataSource => {
+      let buildDataSourceList = this.dataSourceList.filter(dataSource => {
+        return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
+      })
+
+      return buildDataSourceList.map(dataSource => {
         return {
           ...dataSource,
           dataFrames: dataSource.dataFrames.reduce((acc, cur) => {
@@ -145,7 +139,7 @@ export default {
       return this.isShowBasicDataFrameSetting ? this.$t('bot.closeDataFrameSetting') : this.$t('bot.openDataFrameSetting')
     },
     isSelectedAllDataFrame () {
-      return this.selectInfo.dataFrameId === 'all'
+      return this.dataFrameId === 'all'
     },
   },
   methods: {
@@ -154,11 +148,11 @@ export default {
       let selectKey = keyPath[2].split('-')
       const dataSourceIndex = selectKey[0]
       const dataFrameIndex = selectKey[1]
-      this.selectInfo = {
+      let selectInfo = {
         dataSourceId: this.availableDataSourceList[dataSourceIndex].id,
         dataFrameId: this.availableDataSourceList[dataSourceIndex].dataFrames[dataFrameIndex].id
       }
-      this.onDataFrameChange(this.selectInfo.dataSourceId, this.selectInfo.dataFrameId)
+      this.onDataFrameChange(selectInfo.dataSourceId, selectInfo.dataFrameId)
     },
     onDataFrameChange (dataSourceId, dataFrameId) {
       // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
