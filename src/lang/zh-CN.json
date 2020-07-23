@@ -30,6 +30,15 @@
     "dataFileManagement": "资料表管理",
     "dataFileList": "资料表列表"
   },
+  "dataFrameAdvanceSetting": {
+    "searchColumn": "搜寻栏位",
+    "columnList": "栏位列表",
+    "filterCriteria": "筛选条件",
+    "selectAll": "全部选取",
+    "cancelSelect": "取消选取",
+    "clearCriteria": "清除条件",
+    "noCriteriaYet": "尚未加入筛选条件"
+  },
   "message": {
     "joinTableBuilding": "资料表建置中，建置完成即可使用",
     "remindAdjustMainDate": "此表可能有多个日期栏位，您可用资料表的”日期栏位调整“功能进行设定。",
@@ -743,12 +752,14 @@
     "countStd": "数量标准差"
   },
   "askHelper": {
+    "chooseDataFrameToEnableSetting": "选择单一资料表以开启问句说明",
     "title": "问句说明",
+    "catalog": "问句类型",
     "historyTitle": "历史问句",
     "askHelpRemark": "问句提示请查看",
     "helpLink": "问句说明",
     "tabToken": "词汇总览",
-    "tabSample": "问句范例",
+    "tabSample": "问句组合范例",
     "columnTitle": "资料栏位名称",
     "categoryTitle": "Category 类型",
     "numericTitle": "Numeric 类型",
@@ -765,6 +776,7 @@
     "type": "类型",
     "description": "说明",
     "columnName": "栏位名称",
+    "columnCatalog": "栏位类型",
     "ask": "问",
     "example": "范例",
     "exampleDesc": "因 Boolean 和 Unique 类型问句方式与 Category 一致，以下均以 Category 类型举例。",

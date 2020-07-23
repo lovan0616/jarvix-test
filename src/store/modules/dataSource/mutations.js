@@ -29,6 +29,9 @@ export default {
   setCurrentQuestionId (state, data) {
     state.currentQuestionId = data
   },
+  setCurrentQuestionDataFrameId(state, data) {
+    state.currentQuestionDataFrameId = data
+  },
   setFilterList (state, data) {
     if (data.length === 0) return false
     // 判斷要從哪邊開始取代新的
@@ -48,7 +51,8 @@ export default {
     if (closeFilterIndex > -1) {
       state.filterList = state.filterList.slice(0, closeFilterIndex)
     }
-    state.filterList.push(newRestriction)
+
+    state.filterList = [...state.filterList, newRestriction]
 
     Message({
       message: i18n.t('message.addFilter'),
@@ -56,6 +60,9 @@ export default {
       duration: 3 * 1000,
       showClose: true
     })
+  },
+  setUpdatedFilterList(state, data) {
+    state.filterList = data
   },
   setDataFrameList(state, data) {
     state.dataFrameList = data

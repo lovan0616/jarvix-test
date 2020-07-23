@@ -7,32 +7,15 @@
   </div>
 </template>
 <script>
-import ConversationBlock from './ConversationBlock'
 import AskBlock from './AskBlock'
-import DataSourceSelect from '@/components/select/DataSourceSelect'
-import DataFrameSelect from '@/components/select/DataFrameSelect'
 import DataFrameMenu from '@/components/select/DataFrameMenu'
 
 export default {
   name: 'ChatRoomBlock',
   components: {
-    DataSourceSelect,
-    ConversationBlock,
     AskBlock,
-    DataFrameSelect,
     DataFrameMenu
-  },
-  computed: {
-    isShowBasicDataFrameSetting () {
-      return this.$store.state.isShowBasicDataFrameSetting
-    },
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
-    dataFrameId () {
-      return this.$store.state.dataSource.dataFrameId
-    }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -44,9 +27,9 @@ export default {
   width: calc(100% - #{$app-side-nav-closed-width});
   height: $chat-room-height;
   overflow: auto;
-  padding: 16px 34px 8px 0;
-  z-index: 3;
-  background-color: #1E2122;
+  padding: 16px 34px 16px 0;
+  z-index: 4;
+  background-color: rgba(0, 0, 0, 0.55);
   overflow: visible;
 
   .select-group {

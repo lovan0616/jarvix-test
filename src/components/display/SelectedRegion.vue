@@ -15,7 +15,9 @@
     <slot name="selectedFilterRegion"/>
   </div>
 </template>
+
 <script>
+import { mapMutations, mapState } from 'vuex'
 export default {
   name: 'SelectedRegion',
   props: {
@@ -24,10 +26,29 @@ export default {
       default: null
     }
   },
+  computed: {
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
+    ...mapState('dataSource', ['currentQuestionDataFrameId', 'dataFrameId']),
+  },
   methods: {
-    save () {
+    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
+    async save () {
+      // store ?? dataframe id ???? dataframe ???????
+      if (this.currentQuestionDataFrameId !== this.dataFrameId) {
+        await this.$store.dispatch('dataSource/changeDataFrameById', this.currentQuestionDataFrameId )
+        // ?? URL ?? dataframe id
+        this.$router.replace({
+          name: 'PageResult',
+          params: this.$route.params,
+          query: {
+            ...this.$route.query,
+            dataFrameId: String(this.currentQuestionDataFrameId)
+          }
+        })
+      }
+      if (this.$route.name === 'PageResult' && !this.isShowSettingBox) this.toggleSettingBox(true)
       this.$emit('save')
-    }
+    },
   }
 }
 </script>

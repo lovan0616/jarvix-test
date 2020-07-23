@@ -1,6 +1,5 @@
 <template>
   <div class="page-index">
-    <filter-info/>
     <preview-data-source
       :key="dataSourceId"
       mode="display"
@@ -13,14 +12,12 @@
 </template>
 
 <script>
-import FilterInfo from '@/components/display/FilterInfo'
 import QuickStart from './components/QuickStart'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'PageIndex',
   components: {
-    FilterInfo,
     QuickStart
   },
   data () {

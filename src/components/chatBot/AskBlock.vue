@@ -2,12 +2,6 @@
   <div class="ask-container">
     <div class="ask-block">
       <div 
-        v-show="hasFilter"
-        class="filter-block"
-      ><svg-icon 
-        icon-class="filter" 
-        class="icon"/> {{ $t('resultDescription.filterRestrictions') }}</div>
-      <div 
         :class="{
           'has-filter': hasFilter,
           'is-use-algorithm': isUseAlgorithm,
@@ -52,8 +46,11 @@
       <div 
         :class="{ 'disabled': dataSourceList.length === 0 }" 
         class="ask-remark-block"
-        @click="openBasicDataFrameSetting">
-        <svg-icon icon-class="ask-helper"/>
+        @click="openAskHelperDialog">
+        <svg-icon 
+          :class="{'ask-btn__icon--show': isShowAskHelper}" 
+          icon-class="ask-helper"
+          class="ask-btn__icon"/>
       </div>
     </div>
     <div 
@@ -77,14 +74,17 @@
         icon-class="clock" 
         class="icon"/> {{ singleHistory.question }}</div>
     </div>
-    <ask-helper-dialog 
-      ref="helperDialog"
-      :class="{'has-filter': hasFilter}"
-      :key="dataSourceId"
-      :show="showAskHelper"
-      class="ask-helper-dialog"
-      @close="closeHelper"
-    />
+    <transition name="fast-fade-in">
+      <ask-helper-dialog 
+        v-if="isShowAskHelper"
+        ref="helperDialog"
+        :class="{ 'ask-helper--has-basic-df-setting': isShowSettingBox }"
+        :key="dataSourceId"
+        class="ask-helper"
+        mode="popup"
+        @close="closeHelper"
+      />
+    </transition>
   </div>
 </template>
 <script>
@@ -101,7 +101,6 @@ export default {
     return {
       userQuestion: null,
       showHistoryQuestion: false,
-      showAskHelper: false,
       websocketHandler: null,
       recommendList: [],
       cursorPositionQuestion: null,
@@ -110,6 +109,7 @@ export default {
   },
   computed: {
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     dictionaries () {
       return [
         ...this.dataSourceColumnInfoList.booleanList.map(element => ({type: 'boolean', text: element})),
@@ -123,6 +123,9 @@ export default {
     },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
+    },
+    isShowAskHelper () {
+      return this.$store.state.isShowAskHelper
     },
     historyQuestionList () {
       // 過濾 boomark 以及 問題字串
@@ -158,7 +161,7 @@ export default {
       }
 
       return tokenList
-    }
+    },
   },
   watch: {
     questionTokenList (value, oldValue) {
@@ -200,10 +203,6 @@ export default {
     if (this.websocketHandler) this.closeWebSocketConnection()
   },
   methods: {
-    // TODO 暫時先由這邊打開基表設定，等datasource選單做好再拔掉
-    openBasicDataFrameSetting () {
-      this.$store.commit('updateBasicDataFrameSettingStatus', true)
-    },
     toggleWebSocketConnection () {
       if (this.websocketHandler) return this.closeWebSocketConnection()
       this.createWebSocketConnection()
@@ -232,9 +231,6 @@ export default {
       if (this.showHistoryQuestion && !clickInside) {
         this.showHistoryQuestion = false
       }
-      if (this.showAskHelper && !clickInside) {
-        this.showAskHelper = false
-      }
       // 歷史問句與問句提示同時顯示時，若是點擊到問句提示則關閉歷史問句
       if (this.showHistoryQuestion && this.$refs.helperDialog.$el.contains(evt.target)) {
         this.showHistoryQuestion = false
@@ -256,25 +252,29 @@ export default {
       this.$refs.questionInput.focus()
     },
     showHistory () {
-      if (this.showHistoryQuestion || this.showAskHelper) return
+      if (this.showHistoryQuestion || this.isShowAskHelper) return
       this.showHistoryQuestion = true
     },
     hideHistory () {
       this.showHistoryQuestion = false
     },
-    showHelper () {
+    closePreviewDataSource () {
+      this.$store.commit('previewDataSource/togglePreviewDataSource', false)
+    },
+    openAskHelperDialog () {
       if (this.dataSourceList.length === 0) return
-      this.showAskHelper = true
+      this.$store.commit('updateAskHelperStatus', !this.isShowAskHelper)
+      this.closePreviewDataSource()
       this.hideHistory()
     },
     closeHelper () {
-      this.showAskHelper = false
+      this.$store.commit('updateAskHelperStatus', false)
     },
     toggleHelper () {
-      if (this.showAskHelper) {
+      if (this.isShowAskHelper) {
         this.closeHelper()
       } else {
-        this.showHelper()
+        this.openAskHelperDialog()
       }
     },
     toggleAlgorithm () {
@@ -299,6 +299,7 @@ export default {
   flex: 1;
 
   .ask-block {
+    padding-left: 13px;
     display: flex;
     align-items: center;
   }
@@ -308,10 +309,10 @@ export default {
     display: flex;
     align-items: center;
     z-index: 999;
-    background-color: #2D3033;
+    background-color: #1D2424;
     border-radius: 5px;
     padding: 0 10px;
-    border: 1px solid #2D3033;
+    border: 1px solid #1D2424;
 
     &.has-filter {
       &:after {
@@ -404,8 +405,23 @@ export default {
     justify-content: center;
     cursor: pointer;
 
-    .svg-icon {
-      color: #AAAAAA;
+    .ask-btn {
+      &__icon {
+        font-size: 18px;
+        fill: rgba(255, 255, 255, .8);
+
+        &:hover {
+          fill: rgba(255, 255, 255, 1);
+        }
+
+        &--show {
+          fill: rgba(42, 210, 226, .8);
+
+          &:hover {
+            fill: #2AD2E2;
+          }
+        }
+      }
     }
 
     &.disabled {
@@ -414,14 +430,6 @@ export default {
 
     .help-link {
       font-size: 13px;
-    }
-  }
-
-  .ask-helper-dialog {
-    bottom: 100%;
-
-    &.has-filter {
-      bottom: 137px;
     }
   }
 
@@ -437,9 +445,9 @@ export default {
   .history-question-block {
     position: absolute;
     text-align: left;
-    left: 0;
+    left: 13px;
     top: 100%;
-    width: calc(100% - 56px);
+    width: calc(100% - 69px);
     height: 0;
     overflow: hidden;
     padding: 0 32px;
@@ -484,6 +492,21 @@ export default {
       .icon {
         margin-right: 4px;
       }
+    }
+  }
+
+  .ask-helper {
+    width: calc(100% - #{$app-side-nav-closed-width});
+    height: calc(100vh - #{$header-height + $chat-room-height});
+    position: fixed;
+    top: $header-height + $chat-room-height;
+    right: 0;
+    background: #000;
+    overflow: auto;
+    padding: 32px 40px 0 40px;
+
+    &--has-basic-df-setting {
+      width: calc(100% - #{$app-side-nav-closed-width} - #{$basic-df-setting-width});
     }
   }
 }
