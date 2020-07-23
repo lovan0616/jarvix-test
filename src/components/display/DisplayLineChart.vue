@@ -39,7 +39,7 @@
           >
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
             </div>
           </div>
         </div>
