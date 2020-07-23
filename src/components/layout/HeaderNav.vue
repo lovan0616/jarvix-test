@@ -78,7 +78,7 @@
         <svg-icon 
           icon-class="description" 
           class="icon icon-description"/>
-        {{ $t('sideNav.functionDescription') }}
+        {{ $t('nav.helper') }}
       </router-link>
     </section>
   </nav>

@@ -10,7 +10,8 @@
     "languagePlaceholder": "語系",
     "setting": "設定",
     "projectManagement": "專案管理",
-    "algorithm": "演算法"
+    "algorithm": "演算法",
+    "helper": "幫助"
   },
   "sideNav": {
     "functionList": "功能選單",
@@ -37,7 +38,9 @@
     "selectAll": "全部選取",
     "cancelSelect": "取消選取",
     "clearCriteria": "清除條件",
-    "noCriteriaYet": "尚未加入篩選條件"
+    "noCriteriaYet": "尚未加入篩選條件",
+    "allColumns": "全部欄位",
+    "dataColumns": "資料欄位"
   },
   "message": {
     "joinTableBuilding": "資料表建置中，建置完成即可使用",
@@ -1586,6 +1589,7 @@
     "currentChosenData": "目前所選擇的資料",
     "currentChosenArea": "目前所選取的區塊",
     "saveFilterCondition": "保存過濾條件",
+    "saveFilterReminding": "保存過濾條件後，系統將自動切換至該資料表。",
     "area": "區塊",
     "between": "落在 {start} 到 {end} 之間",
     "filterRestrictions": "過濾條件限制",
