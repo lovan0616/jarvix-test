@@ -31,7 +31,7 @@ export default {
     ...mapState('dataSource', ['currentQuestionDataFrameId', 'dataFrameId']),
   },
   methods: {
-    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
+    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setDisplaySection']),
     async save () {
       // store ?? dataframe id ???? dataframe ???????
       if (this.currentQuestionDataFrameId !== this.dataFrameId) {
@@ -46,7 +46,10 @@ export default {
           }
         })
       }
-      if (this.$route.name === 'PageResult' && !this.isShowSettingBox) this.toggleSettingBox(true)
+      if (this.$route.name === 'PageResult') {
+        this.setDisplaySection('filter')
+        if (!this.isShowSettingBox) this.toggleSettingBox(true)
+      }
       this.$emit('save')
     },
   }

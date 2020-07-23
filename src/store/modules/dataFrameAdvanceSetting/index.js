@@ -7,6 +7,7 @@ export default {
   state: {
     isInit: false,
     isShowSettingBox: false,
+    displaySection: 'column',
     columnList: null
   },
   actions,

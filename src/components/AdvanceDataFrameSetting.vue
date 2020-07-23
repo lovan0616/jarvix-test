@@ -6,8 +6,9 @@
       <svg-icon icon-class="close"/>
     </span>
     <el-collapse
-      v-model="activeCollapseName"
+      :value="activeCollapseName"
       accordion
+      @change="updateActiveCollapseName"
     >
       <el-collapse-item
         :disabled="activeCollapseName === 'column'"
@@ -81,11 +82,10 @@ export default {
       isLoading: true,
       tempColumnList: [],
       tempFilterList: [],
-      activeCollapseName: 'column'
     }
   },
   computed: {
-    ...mapState('dataFrameAdvanceSetting', ['columnList', 'isInit']),
+    ...mapState('dataFrameAdvanceSetting', ['columnList', 'isInit', 'displaySection']),
     ...mapState('dataSource', ['filterList']),
     hasSettingChanged () {
       const isColumnListUntouched = this.tempColumnList.every(tempColumn => {
@@ -103,6 +103,9 @@ export default {
     columnListSelectedStatus () {
       const selectedColumnList = this.tempColumnList.filter(column => column.isSelected)
       return `${selectedColumnList.length}/${this.tempColumnList.length}`
+    },
+    activeCollapseName () {
+      return this.displaySection
     }
   },
   watch: {
@@ -121,10 +124,13 @@ export default {
     this.fetchDataColumns(dataFrameId)
     this.tempFilterList = JSON.parse(JSON.stringify(this.filterList))
   },
+  destroyed () {
+    this.setDisplaySection('column')
+  },
   methods: {
     ...mapActions('dataSource', ['updateFilterList']),
     ...mapActions('dataFrameAdvanceSetting', ['clearColumnList']),
-    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setColumnList', 'toggleIsInit']),
+    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setColumnList', 'toggleIsInit', 'setDisplaySection']),
     fetchDataColumns (dataFrameId, existingColumnList = []) {
       this.isLoading = true
       
@@ -171,6 +177,10 @@ export default {
       if (Number(queryDataFrameId) !== updatedDataFrameId) return
       this.toggleIsInit(false)
       this.fetchDataColumns(updatedDataFrameId, this.columnList)
+    },
+    updateActiveCollapseName (section) {
+      if (!section) return
+      this.setDisplaySection(section)
     }
   },
 }
