@@ -15,10 +15,10 @@
         name="column"
       >
         <template slot="title">
-          <div class="filter-block__title">
+          <div class="setting__collapse-title">
             <svg-icon 
               icon-class="column" 
-              class="filter-block__title-icon filter-block__title-icon--light-blue" />
+              class="setting__collapse-title-icon setting__collapse-title-icon--light-blue" />
             {{ $t('dataFrameAdvanceSetting.columnList') + '(' + columnListSelectedStatus + ')' }}
           </div>
         </template>
@@ -34,13 +34,10 @@
         name="filter"
       >
         <template slot="title">
-          <div 
-            :class="[tempFilterList.length > 0 ? 'filter-block__title--small' : 'filter-block__title--large']"
-            class="filter-block__title"
-          >
+          <div class="setting__collapse-title">
             <svg-icon 
               icon-class="filter" 
-              class="filter-block__title-icon filter-block__title-icon--dark-blue" />
+              class="setting__collapse-title-icon setting__collapse-title-icon--dark-blue" />
             {{ $t('dataFrameAdvanceSetting.filterCriteria') + '(' + tempFilterList.length + ')' }}
           </div>
         </template>
@@ -210,6 +207,23 @@ export default {
       cursor: pointer;
     }
 
+    &__collapse-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    &__collapse-title-icon {
+      margin-right: 6px;
+
+      &--light-blue {
+        color: #0CD1DE;
+      }
+
+      &--dark-blue {
+        color: #4F93FF;
+      }
+    }
+
     &__filter-block {
       &--top {
         flex: 6 6 400px;
@@ -236,23 +250,6 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
-
-    &__title {
-      font-size: 16px;
-      font-weight: 600;
-    }
-    
-    &__title-icon {
-      margin-right: 6px;
-
-      &--light-blue {
-        color: #0CD1DE;
-      }
-
-      &--dark-blue {
-        color: #4F93FF;
-      }
-    }
 
     &__action-box-link {
       font-weight: 600;
@@ -303,6 +300,11 @@ export default {
     &__header {
       border-bottom: none;
       opacity: .5;
+      cursor: pointer;
+
+      &:hover {
+        opacity: .7;
+      }
 
       &.is-active {
         opacity: 1;  
