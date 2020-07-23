@@ -254,7 +254,7 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '270px',
+          width: '140px',
           action: [
             {
               name: this.$t('button.edit'),
