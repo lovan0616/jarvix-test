@@ -129,6 +129,9 @@ export default {
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     },
+    isShowAskHelper () {
+      return this.$store.state.isShowAskHelper
+    },
     previewDataSourceTooltipContent () {
       return this.isShowPreviewDataSource ? this.$t('bot.closeDataSource') : this.$t('bot.previewDataSource')
     },
@@ -173,12 +176,15 @@ export default {
       })
     },
     togglePreviewDataSource () {
+      if(this.isShowAskHelper) this.closeHelper()
       this.$store.commit('previewDataSource/togglePreviewDataSource', !this.isShowPreviewDataSource)
     },
     toggleAdvanceDataFrameSetting () {
-      if (this.isDisableDataFrameAdvanceSetting) return 
       this.toggleSettingBox(!this.isShowSettingBox)
     },
+    closeHelper () {
+      this.$store.commit('updateAskHelperStatus', false)
+    }
   }
 }
 </script>
