@@ -151,6 +151,8 @@ export default {
         dataSourceId: this.availableDataSourceList[dataSourceIndex].id,
         dataFrameId: this.availableDataSourceList[dataSourceIndex].dataFrames[dataFrameIndex].id
       }
+      // To prevent NavigationDuplicated error
+      if (selectInfo.dataFrameId === this.dataFrameId) return
       this.onDataFrameChange(selectInfo.dataSourceId, selectInfo.dataFrameId)
     },
     onDataFrameChange (dataSourceId, dataFrameId) {
