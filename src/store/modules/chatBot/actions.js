@@ -15,7 +15,7 @@ export default {
       domain: 'GENERAL',
       isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null,
       dataFrameId: dataFrameId === 'all' ? '' : dataFrameId,
-      // selectedColumnList: TODO
+      selectedColumnList: rootGetters['dataFrameAdvanceSetting/selectedColumnList']
     }, new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
       cancelFunction = c
