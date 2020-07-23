@@ -189,6 +189,7 @@ export default {
   line-height: 40px;
   border-radius: 5px;
   border: 1px solid #292C2E;
+  background-color: rgba(0, 0, 0, 0.55);
 
   .preview-datasource-btn, .dataframe-setting-btn {
     width: 40px;
@@ -235,6 +236,7 @@ export default {
       line-height: 38px;
       padding: 0 30px 0 10px;
       border-radius: 5px 0 0 5px;
+      background-color: rgba(0, 0, 0, 0.55) !important;
     }
 
     .data-frame-select__icon {
@@ -258,8 +260,12 @@ export default {
 .el-menu--horizontal {
   flex: auto;
   border-bottom: unset;
-  border-radius: 5px;
+  border-radius: 5px 0 0 5px;
   max-width: 162px;
+
+  &>>>.el-submenu .el-submenu__icon-arrow::before {
+    transform: rotateZ(0); 
+  }
 }
 
 </style>
