@@ -239,6 +239,7 @@ export default {
             dataFrameId: this.$route.query.dataFrameId
           }
         })
+        this.cleanQuestion()
         return
       }
       if (evt.data === '點擊環境濕度') {
