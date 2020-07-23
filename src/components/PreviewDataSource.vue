@@ -9,8 +9,8 @@
           size="50"
         />
         <div
-          v-if="dataSourceTables.length > 0"
-          :class="{'is-previewing': isPreviewing}"
+          v-if="mode === 'popup' && dataSourceTables.length > 0"
+          :class="{ 'is-previewing': isPreviewing }"
           class="board-header"
         >
           <el-tabs

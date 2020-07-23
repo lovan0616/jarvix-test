@@ -14,7 +14,7 @@
         :name="rootCauseInfo.name"
       >
         <div
-          :class="{'is-open': isShowBasicDataFrameSetting}"
+          :class="{ 'is-open': isShowSettingBox }"
           class="root-cause-container"
         >
           <div
@@ -84,7 +84,9 @@
     </el-tabs>
   </div>
 </template>
+
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'RootCauseInfo',
   props: {
@@ -103,6 +105,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     // 遇到同名稱的 column 就將其合併
     rootCauseInfoList () {
       let info = []
@@ -119,9 +122,6 @@ export default {
         }
       })
       return info
-    },
-    isShowBasicDataFrameSetting () {
-      return this.$store.state.isShowBasicDataFrameSetting
     },
     inPinboard () {
       return this.$route.name === 'PersonalPagePinboard' || this.$route.name === 'ProjectPagePinboard'

@@ -66,16 +66,16 @@
       </el-tooltip>
     </button>
     <button
-      :disabled="isSelectedAllDataFrame" 
+      :disabled="isDisableDataFrameAdvanceSetting" 
       class="dataframe-setting-btn"
-      @click="toggleBasicDataFrameSetting"
+      @click="toggleAdvanceDataFrameSetting"
     >
       <el-tooltip
         slot="label"
         :content="previewDataFrameSettingTooltipContent"
       >
         <svg-icon 
-          :class="{'dataframe-setting-btn__icon--show': isShowBasicDataFrameSetting, 'dataframe-setting-btn__icon--disabled': isSelectedAllDataFrame}"
+          :class="{'dataframe-setting-btn__icon--show': isShowSettingBox, 'dataframe-setting-btn__icon--disabled': isDisableDataFrameAdvanceSetting}"
           icon-class="filter-setting"
           class="preview-datasource-btn__icon"/>
       </el-tooltip>
@@ -83,7 +83,7 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'DataFrameMenu',
@@ -95,6 +95,7 @@ export default {
   computed: {
     ...mapGetters('dataSource', ['dataSourceList', 'getDataSourceName', 'getDataFrameName']),
     ...mapGetters('userManagement', ['getCurrentGroupId']),
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
@@ -134,22 +135,20 @@ export default {
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     },
-    isShowBasicDataFrameSetting () {
-      return this.$store.state.isShowBasicDataFrameSetting
-    },
     previewDataSourceTooltipContent () {
       return this.isShowPreviewDataSource ? this.$t('bot.closeDataSource') : this.$t('bot.previewDataSource')
     },
     previewDataFrameSettingTooltipContent () {
-      if (this.isSelectedAllDataFrame) return this.$t('bot.switchSpecificDataFrame') 
-      return this.isShowBasicDataFrameSetting ? this.$t('bot.closeDataFrameSetting') : this.$t('bot.openDataFrameSetting')
+      if (this.isDisableDataFrameAdvanceSetting) return this.$t('bot.switchSpecificDataFrame') 
+      return this.isShowSettingBox ? this.$t('bot.closeDataFrameSetting') : this.$t('bot.openDataFrameSetting')
     },
-    isSelectedAllDataFrame () {
-      return this.selectInfo.dataFrameId === 'all'
+    isDisableDataFrameAdvanceSetting () {
+      return this.availableDataSourceList === 0 || this.selectInfo.dataFrameId === 'all'
     },
   },
   methods: {
     ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
+    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
     handleSelect (key, keyPath) {
       let selectKey = keyPath[2].split('-')
       const dataSourceIndex = selectKey[0]
@@ -180,9 +179,10 @@ export default {
     togglePreviewDataSource () {
       this.$store.commit('previewDataSource/togglePreviewDataSource', !this.isShowPreviewDataSource)
     },
-    toggleBasicDataFrameSetting () {
-      this.$store.commit('updateBasicDataFrameSettingStatus', !this.isShowBasicDataFrameSetting)
-    }
+    toggleAdvanceDataFrameSetting () {
+      if (this.isDisableDataFrameAdvanceSetting) return 
+      this.toggleSettingBox(!this.isShowSettingBox)
+    },
   }
 }
 </script>

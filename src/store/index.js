@@ -10,6 +10,7 @@ import userManagement from './modules/userManagement'
 import algorithm from './modules/algorithm'
 import validation from './modules/validation'
 import previewDataSource from './modules/previewDataSource'
+import dataFrameAdvanceSetting from './modules/dataFrameAdvanceSetting'
 
 Vue.use(Vuex)
 
@@ -24,18 +25,15 @@ export default new Vuex.Store({
     result,
     algorithm,
     validation,
-    previewDataSource
+    previewDataSource,
+    dataFrameAdvanceSetting
   },
   state: {
-    isShowBasicDataFrameSetting: false,
     isShowAskHelper: false,
     isShowFullSideNav: false,
     isAppLoading: false
   },
   mutations: {
-    updateBasicDataFrameSettingStatus (state, data) {
-      state.isShowBasicDataFrameSetting = data
-    },
     updateAskHelperStatus (state, data) {
       state.isShowAskHelper = data
     },

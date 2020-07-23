@@ -30,6 +30,15 @@
     "dataFileManagement": "資料表管理",
     "dataFileList": "資料表列表"
   },
+  "dataFrameAdvanceSetting": {
+    "searchColumn": "搜尋欄位",
+    "columnList": "欄位列表",
+    "filterCriteria": "篩選條件",
+    "selectAll": "全部選取",
+    "cancelSelect": "取消選取",
+    "clearCriteria": "清除條件",
+    "noCriteriaYet": "尚未加入篩選條件"
+  },
   "message": {
     "joinTableBuilding": "資料表建置中，建置完成即可使用",
     "remindAdjustMainDate": "此表可能有多個日期欄位，您可用資料表的”日期欄位調整“功能進行設定。",
@@ -743,6 +752,7 @@
     "countStd": "數量標準差"
   },
   "askHelper": {
+    "chooseDataFrameToEnableSetting": "選擇單一資料表以開啟問句說明",
     "title": "問句說明",
     "catalog": "問句類型",
     "historyTitle": "歷史問句",

@@ -5,9 +5,9 @@
       mode="out-in">
       <chat-room-block/>
     </transition>
-    <basic-data-frame-setting/>
+    <advance-data-frame-setting v-if="isShowSettingBox" />
     <div 
-      :class="{'wrapper--has-basic-df-setting': isShowBasicDataFrameSetting}"
+      :class="{ 'wrapper--has-basic-df-setting': isShowSettingBox }"
       class="wrapper wrapper--has-chat-room"
     >
       <main class="main">
@@ -23,7 +23,7 @@
     <transition name="fast-fade-in">
       <section 
         v-if="isShowPreviewDataSource"
-        :class="{'preview-datasource--has-basic-df-setting': isShowBasicDataFrameSetting}"
+        :class="{ 'preview-datasource--has-basic-df-setting': isShowSettingBox }"
         class="preview-datasource">
         <preview-data-source 
           :key="dataSourceId" 
@@ -43,8 +43,9 @@
 import ChatRoomBlock from '@/components/chatBot/ChatRoom'
 import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
 import PreviewDataSource from '@/components/PreviewDataSource'
-import BasicDataFrameSetting from '@/components/BasicDataFrameSetting'
+import AdvanceDataFrameSetting from '@/components/AdvanceDataFrameSetting'
 import store from '@/store'
+import { mapState } from 'vuex'
 
 export default {
   name: 'HomeLayout',
@@ -52,17 +53,12 @@ export default {
     ChatRoomBlock,
     ChatBotBtn,
     PreviewDataSource,
-    BasicDataFrameSetting
+    AdvanceDataFrameSetting
   },
   computed: {
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
-    },
-    isShowBasicDataFrameSetting () {
-      return this.$store.state.isShowBasicDataFrameSetting
-    },
-    isShowAskHelper () {
-      return this.$store.state.isShowAskHelper
     },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
