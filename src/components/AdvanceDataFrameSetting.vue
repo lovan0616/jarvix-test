@@ -5,16 +5,48 @@
       @click="closeAdvanceDataFrameSetting">
       <svg-icon icon-class="close"/>
     </span>
-    <column-select-info
-      :temp-column-list.sync="tempColumnList"
-      :is-loading="isLoading"
-      class="setting__filter-block--top"
-      @columnAdded="addColumnList"
-    />
-    <filter-info 
-      :temp-filter-list.sync="tempFilterList"
-      class="setting__filter-block--bottom" 
-    />
+    <el-collapse
+      :value="activeCollapseName"
+      accordion
+      @change="updateActiveCollapseName"
+    >
+      <el-collapse-item
+        :disabled="activeCollapseName === 'column'"
+        name="column"
+      >
+        <template slot="title">
+          <div class="setting__collapse-title">
+            <svg-icon 
+              icon-class="column" 
+              class="setting__collapse-title-icon setting__collapse-title-icon--light-blue" />
+            {{ $t('dataFrameAdvanceSetting.columnList') + '(' + columnListSelectedStatus + ')' }}
+          </div>
+        </template>
+        <column-select-info
+          :temp-column-list.sync="tempColumnList"
+          :is-loading="isLoading"
+          class="setting__filter-block--top"
+          @columnAdded="addColumnList"
+        />
+      </el-collapse-item>
+      <el-collapse-item 
+        :disabled="activeCollapseName === 'filter'"
+        name="filter"
+      >
+        <template slot="title">
+          <div class="setting__collapse-title">
+            <svg-icon 
+              icon-class="filter" 
+              class="setting__collapse-title-icon setting__collapse-title-icon--dark-blue" />
+            {{ $t('dataFrameAdvanceSetting.filterCriteria') + '(' + tempFilterList.length + ')' }}
+          </div>
+        </template>
+        <filter-info 
+          :temp-filter-list.sync="tempFilterList"
+          class="setting__filter-block--bottom" 
+        />
+      </el-collapse-item>
+    </el-collapse>
     <div
       v-if="hasSettingChanged"
       class="setting__button-block"
@@ -46,11 +78,11 @@ export default {
     return {
       isLoading: true,
       tempColumnList: [],
-      tempFilterList: []
+      tempFilterList: [],
     }
   },
   computed: {
-    ...mapState('dataFrameAdvanceSetting', ['columnList', 'isInit']),
+    ...mapState('dataFrameAdvanceSetting', ['columnList', 'isInit', 'displaySection']),
     ...mapState('dataSource', ['filterList']),
     hasSettingChanged () {
       const isColumnListUntouched = this.tempColumnList.every(tempColumn => {
@@ -64,6 +96,13 @@ export default {
         return tempFilter.status === this.filterList[index].status
       })
       return !isColumnListUntouched || !isFilterListLengthUntouched || !isFilterListConditionUntouched
+    },
+    columnListSelectedStatus () {
+      const selectedColumnList = this.tempColumnList.filter(column => column.isSelected)
+      return `${selectedColumnList.length}/${this.tempColumnList.length}`
+    },
+    activeCollapseName () {
+      return this.displaySection
     }
   },
   watch: {
@@ -73,9 +112,8 @@ export default {
     filterList (newList, oldList) {
       this.tempFilterList = JSON.parse(JSON.stringify(newList))
     },
-    '$route.query.dataFrameId'(value) {
-      if (!value || value === 'all') return this.closeAdvanceDataFrameSetting()
-      this.fetchDataColumns(value)
+    '$route.query.dataFrameId'() {
+      this.closeAdvanceDataFrameSetting()
     },
   },
   mounted () {
@@ -83,10 +121,13 @@ export default {
     this.fetchDataColumns(dataFrameId)
     this.tempFilterList = JSON.parse(JSON.stringify(this.filterList))
   },
+  destroyed () {
+    this.setDisplaySection('column')
+  },
   methods: {
     ...mapActions('dataSource', ['updateFilterList']),
     ...mapActions('dataFrameAdvanceSetting', ['clearColumnList']),
-    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setColumnList', 'toggleIsInit']),
+    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setColumnList', 'toggleIsInit', 'setDisplaySection']),
     fetchDataColumns (dataFrameId, existingColumnList = []) {
       this.isLoading = true
       
@@ -133,6 +174,10 @@ export default {
       if (Number(queryDataFrameId) !== updatedDataFrameId) return
       this.toggleIsInit(false)
       this.fetchDataColumns(updatedDataFrameId, this.columnList)
+    },
+    updateActiveCollapseName (section) {
+      if (!section) return
+      this.setDisplaySection(section)
     }
   },
 }
@@ -154,16 +199,34 @@ export default {
   .setting {
     &__close-icon {
       position: absolute;
-      top: 18px;
+      top: 16px;
       right: 24px;
+      z-index: 1;
       color: #0CD1DE;
+      font-size: 12px;
       cursor: pointer;
+    }
+
+    &__collapse-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    &__collapse-title-icon {
+      margin-right: 6px;
+
+      &--light-blue {
+        color: #0CD1DE;
+      }
+
+      &--dark-blue {
+        color: #4F93FF;
+      }
     }
 
     &__filter-block {
       &--top {
         flex: 6 6 400px;
-        border-bottom: 1px solid #464A50;
       }
       
       &--bottom {
@@ -186,13 +249,7 @@ export default {
     padding: 16px 24px;
     display: flex;
     flex-direction: column;
-
-    &__title {
-      font-weight: 600;
-      &--icon {
-        margin-right: 6px;
-      }
-    }
+    height: 100%;
 
     &__action-box-link {
       font-weight: 600;
@@ -208,5 +265,60 @@ export default {
       }
     }
   }
+
+  /deep/ .el-collapse {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    border-top: none;
+    border-bottom: none;
+    overflow: hidden;
+  }
+
+  /deep/ .el-collapse-item {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #464A50;
+    overflow: hidden;
+    transition: flex 0.3s ease-out;
+
+    &.is-disabled {
+      .el-collapse-item__header {
+        color: #ffffff;
+      }
+    }
+
+    &.is-active {
+      flex: 1 1 48px;
+    }
+
+    &__wrap {
+      flex: 1 1 auto;
+      border-bottom: none;
+    }
+
+    &__header {
+      border-bottom: none;
+      opacity: .5;
+      cursor: pointer;
+
+      &:hover {
+        opacity: .7;
+      }
+
+      &.is-active {
+        opacity: 1;  
+      }
+    }
+
+    &__content {
+      padding-bottom: 0;
+      height: 100%;
+    }
+
+    &__arrow {
+      display: none;
+    }
+  } 
 }
 </style>

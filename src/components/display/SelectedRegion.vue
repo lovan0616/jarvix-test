@@ -38,12 +38,12 @@ export default {
     ...mapState('dataSource', ['currentQuestionDataFrameId', 'dataFrameId']),
   },
   methods: {
-    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
+    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setDisplaySection']),
     async save () {
-      // store ?? dataframe id ???? dataframe ???????
+      // 如果 store 中的 dataframe id 與當前結果的 dataframe 不同須先切換
       if (this.currentQuestionDataFrameId !== this.dataFrameId) {
         await this.$store.dispatch('dataSource/changeDataFrameById', this.currentQuestionDataFrameId )
-        // ?? URL ?? dataframe id
+        // 更新 URL 中的 dataframe id
         this.$router.replace({
           name: 'PageResult',
           params: this.$route.params,
@@ -53,7 +53,10 @@ export default {
           }
         })
       }
-      if (this.$route.name === 'PageResult' && !this.isShowSettingBox) this.toggleSettingBox(true)
+      if (this.$route.name === 'PageResult') {
+        this.setDisplaySection('filter')
+        if (!this.isShowSettingBox) this.toggleSettingBox(true)
+      }
       this.$emit('save')
     },
   }

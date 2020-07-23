@@ -7,5 +7,8 @@ export default {
   },
   setColumnList (state, data) {
     state.columnList = data
+  },
+  setDisplaySection (state, data) {
+    state.displaySection = data
   }
 }

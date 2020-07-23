@@ -1,7 +1,13 @@
 <template>
   <div class="home-layout">
-    <chat-room-block/>
-    <advance-data-frame-setting v-if="isShowSettingBox" />
+    <transition 
+      name="fade" 
+      mode="out-in">
+      <chat-room-block/>
+    </transition>
+    <transition name="fast-fade-in">
+      <advance-data-frame-setting v-if="isShowSettingBox" />
+    </transition>
     <div 
       :class="{ 'wrapper--has-basic-df-setting': isShowSettingBox }"
       class="wrapper wrapper--has-chat-room"
