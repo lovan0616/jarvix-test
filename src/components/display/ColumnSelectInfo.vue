@@ -1,11 +1,5 @@
 <template>
   <div class="filter-block">
-    <div class="filter-block__title">
-      <svg-icon 
-        icon-class="column" 
-        class="filter-block__title-icon" />
-      {{ $t('dataFrameAdvanceSetting.columnList') + '(' + columnListSelectedStatus + ')' }}
-    </div>
     <spinner 
       v-if="isLoading"
       :title="$t('editing.loading')"
@@ -101,12 +95,6 @@ export default {
       editFeatureInfo: null
     }
   },
-  computed: {
-    columnListSelectedStatus () {
-      const selectedColumnList = this.tempColumnList.filter(column => column.isSelected)
-      return `${selectedColumnList.length}/${this.tempColumnList.length}`
-    }
-  },
   methods: {
     toggleAllColumns (isTargetSelectAll) {
       const updatedTempColumnList = this.tempColumnList.map(column => {
@@ -147,14 +135,6 @@ export default {
 
 <style lang="scss" scoped>
 .filter-block {
-  &__title {
-    padding-bottom: 18px;
-  }
-
-  &__title-icon {
-    color: #0CD1DE;
-  }
-
   &__search-box {
     padding-bottom: 12px;
   }
@@ -181,6 +161,7 @@ export default {
   }
 
   &__button-block {
+    margin: auto 0 0 0;
     .btn-m {
       width: 100%;
       height: 28px;

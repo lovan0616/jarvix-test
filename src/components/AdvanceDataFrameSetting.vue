@@ -5,16 +5,50 @@
       @click="closeAdvanceDataFrameSetting">
       <svg-icon icon-class="close"/>
     </span>
-    <column-select-info
-      :temp-column-list.sync="tempColumnList"
-      :is-loading="isLoading"
-      class="setting__filter-block--top"
-      @columnAdded="addColumnList"
-    />
-    <filter-info 
-      :temp-filter-list.sync="tempFilterList"
-      class="setting__filter-block--bottom" 
-    />
+    <el-collapse
+      v-model="activeCollapseName"
+      accordion
+    >
+      <el-collapse-item
+        :disabled="activeCollapseName === 'column'"
+        name="column"
+      >
+        <template slot="title">
+          <div class="filter-block__title">
+            <svg-icon 
+              icon-class="column" 
+              class="filter-block__title-icon filter-block__title-icon--light-blue" />
+            {{ $t('dataFrameAdvanceSetting.columnList') + '(' + columnListSelectedStatus + ')' }}
+          </div>
+        </template>
+        <column-select-info
+          :temp-column-list.sync="tempColumnList"
+          :is-loading="isLoading"
+          class="setting__filter-block--top"
+          @columnAdded="addColumnList"
+        />
+      </el-collapse-item>
+      <el-collapse-item 
+        :disabled="activeCollapseName === 'filter'"
+        name="filter"
+      >
+        <template slot="title">
+          <div 
+            :class="[tempFilterList.length > 0 ? 'filter-block__title--small' : 'filter-block__title--large']"
+            class="filter-block__title"
+          >
+            <svg-icon 
+              icon-class="filter" 
+              class="filter-block__title-icon filter-block__title-icon--dark-blue" />
+            {{ $t('dataFrameAdvanceSetting.filterCriteria') + '(' + tempFilterList.length + ')' }}
+          </div>
+        </template>
+        <filter-info 
+          :temp-filter-list.sync="tempFilterList"
+          class="setting__filter-block--bottom" 
+        />
+      </el-collapse-item>
+    </el-collapse>
     <div
       v-if="hasSettingChanged"
       class="setting__button-block"
@@ -46,7 +80,8 @@ export default {
     return {
       isLoading: true,
       tempColumnList: [],
-      tempFilterList: []
+      tempFilterList: [],
+      activeCollapseName: 'column'
     }
   },
   computed: {
@@ -64,6 +99,10 @@ export default {
         return tempFilter.status === this.filterList[index].status
       })
       return !isColumnListUntouched || !isFilterListLengthUntouched || !isFilterListConditionUntouched
+    },
+    columnListSelectedStatus () {
+      const selectedColumnList = this.tempColumnList.filter(column => column.isSelected)
+      return `${selectedColumnList.length}/${this.tempColumnList.length}`
     }
   },
   watch: {
@@ -73,9 +112,8 @@ export default {
     filterList (newList, oldList) {
       this.tempFilterList = JSON.parse(JSON.stringify(newList))
     },
-    '$route.query.dataFrameId'(value) {
-      if (!value || value === 'all') return this.closeAdvanceDataFrameSetting()
-      this.fetchDataColumns(value)
+    '$route.query.dataFrameId'() {
+      this.closeAdvanceDataFrameSetting()
     },
   },
   mounted () {
@@ -154,16 +192,17 @@ export default {
   .setting {
     &__close-icon {
       position: absolute;
-      top: 18px;
+      top: 16px;
       right: 24px;
+      z-index: 1;
       color: #0CD1DE;
+      font-size: 12px;
       cursor: pointer;
     }
 
     &__filter-block {
       &--top {
         flex: 6 6 400px;
-        border-bottom: 1px solid #464A50;
       }
       
       &--bottom {
@@ -186,11 +225,22 @@ export default {
     padding: 16px 24px;
     display: flex;
     flex-direction: column;
+    height: 100%;
 
     &__title {
+      font-size: 16px;
       font-weight: 600;
-      &--icon {
-        margin-right: 6px;
+    }
+    
+    &__title-icon {
+      margin-right: 6px;
+
+      &--light-blue {
+        color: #0CD1DE;
+      }
+
+      &--dark-blue {
+        color: #4F93FF;
       }
     }
 
@@ -208,5 +258,55 @@ export default {
       }
     }
   }
+
+  /deep/ .el-collapse {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    border-top: none;
+    border-bottom: none;
+    overflow: hidden;
+  }
+
+  /deep/ .el-collapse-item {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #464A50;
+    overflow: hidden;
+    transition: flex 0.3s ease-out;
+
+    &.is-disabled {
+      .el-collapse-item__header {
+        color: #ffffff;
+      }
+    }
+
+    &.is-active {
+      flex: 1 1 48px;
+    }
+
+    &__wrap {
+      flex: 1 1 auto;
+      border-bottom: none;
+    }
+
+    &__header {
+      border-bottom: none;
+      opacity: .5;
+
+      &.is-active {
+        opacity: 1;  
+      }
+    }
+
+    &__content {
+      padding-bottom: 0;
+      height: 100%;
+    }
+
+    &__arrow {
+      display: none;
+    }
+  } 
 }
 </style>
