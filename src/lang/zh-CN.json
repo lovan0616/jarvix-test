@@ -1589,6 +1589,7 @@
     "currentChosenData": "目前所选择的资料",
     "currentChosenArea": "目前所选取的区块",
     "saveFilterCondition": "保存过滤条件",
+    "saveFilterReminding": "保存过滤条件后，系统将自动切换至该资料表。",
     "area": "区块",
     "between": "落在 {start} 到 {end} 之间",
     "filterRestrictions": "过滤条件限制",

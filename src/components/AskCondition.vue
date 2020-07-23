@@ -43,7 +43,7 @@ export default {
   computed: {
     ...mapGetters('dataSource', ['getDataSourceName', 'getDataFrameName']),
     ...mapGetters('dataFrameAdvanceSetting', ['selectedColumnList']),
-    ...mapState('dataSource', ['filterList', 'dataSourceId', 'dataFrameId']),
+    ...mapState('dataSource', ['filterList']),
     ...mapState('dataFrameAdvanceSetting', ['columnList']),
     getDataFrameDisplayName () {
       return this.getDataFrameName === 'all'
