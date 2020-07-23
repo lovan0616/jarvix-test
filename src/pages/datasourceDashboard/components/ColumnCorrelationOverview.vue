@@ -70,6 +70,7 @@
 import DisplayHeatMapChart from '@/pages/datasourceDashboard/components/DisplayHeatMapChart'
 import CrudTable from '@/components/table/CrudTable'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import { mapGetters } from 'vuex'
 
 // const dummyData = {
 //   overview: {
@@ -100,7 +101,11 @@ export default {
     dataFrameId: {
       type: Number,
       required: true
-    }
+    },
+    mode: {
+      type: String,
+      required: true
+    },
   },
   data () {
     return {
@@ -139,9 +144,28 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('dataFrameAdvanceSetting', ['selectedColumnList', 'askCondition']),
     reminderMsg () {
       if (this.isCalculating) return this.$t('message.calculatingPleaseTryLater')
       return this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
+    },
+    filterRestrictionList () {
+      return this.$store.getters['dataSource/filterRestrictionList']
+    }
+  },
+  watch: {
+    askCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (
+          this.mode === 'popup' 
+          // 初次開啟設定時不觸發
+          || (oldValue.isInit === false && oldValue.columnList === null)
+          // 切換 dataframe 清空設定時不觸發
+          || newValue.isInit === false
+        ) return
+        this.fetchData()
+      }
     }
   },
   mounted () {
@@ -150,7 +174,20 @@ export default {
   methods: {
     fetchData () {
       this.isLoading = true
-      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { id: this.dataFrameId })
+      let selectedColumnList = null
+      let restrictions = []
+      
+      // 智能分析頁面需要帶入 column list
+      if (this.mode === 'display') {
+        selectedColumnList = this.selectedColumnList
+        restrictions = this.filterRestrictionList
+      }
+      
+      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { 
+        id: this.dataFrameId, 
+        selectedColumnList, 
+        restrictions 
+      })
         .then(response => {
           const columnNameList = response.columnNameList
           const columnDataList = response.data

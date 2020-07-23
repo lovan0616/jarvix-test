@@ -86,7 +86,7 @@
       <ask-helper-dialog 
         v-if="isShowAskHelper"
         ref="helperDialog"
-        :class="{'ask-helper--has-basic-df-setting': isShowBasicDataFrameSetting}"
+        :class="{ 'ask-helper--has-basic-df-setting': isShowSettingBox }"
         :key="dataSourceId"
         class="ask-helper"
         mode="popup"
@@ -117,6 +117,7 @@ export default {
   },
   computed: {
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     dictionaries () {
       return [
         ...this.dataSourceColumnInfoList.booleanList.map(element => ({type: 'boolean', text: element})),
@@ -130,9 +131,6 @@ export default {
     },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
-    },
-    isShowBasicDataFrameSetting () {
-      return this.$store.state.isShowBasicDataFrameSetting
     },
     isShowAskHelper () {
       return this.$store.state.isShowAskHelper
@@ -171,7 +169,7 @@ export default {
       }
 
       return tokenList
-    }
+    },
   },
   watch: {
     questionTokenList (value, oldValue) {
@@ -323,6 +321,7 @@ export default {
   }
   
   .ask-block {
+    padding-left: 13px;
     display: flex;
     align-items: flex-start;
   }
@@ -475,9 +474,9 @@ export default {
   .history-question-block {
     position: absolute;
     text-align: left;
-    left: 0;
+    left: 13px;
     top: 100%;
-    width: calc(100% - 56px);
+    width: calc(100% - 69px);
     height: 0;
     overflow: hidden;
     transition: all .1s;

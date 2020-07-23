@@ -7,32 +7,15 @@
   </div>
 </template>
 <script>
-import ConversationBlock from './ConversationBlock'
 import AskBlock from './AskBlock'
-import DataSourceSelect from '@/components/select/DataSourceSelect'
-import DataFrameSelect from '@/components/select/DataFrameSelect'
 import DataFrameMenu from '@/components/select/DataFrameMenu'
 
 export default {
   name: 'ChatRoomBlock',
   components: {
-    DataSourceSelect,
-    ConversationBlock,
     AskBlock,
-    DataFrameSelect,
     DataFrameMenu
-  },
-  computed: {
-    isShowBasicDataFrameSetting () {
-      return this.$store.state.isShowBasicDataFrameSetting
-    },
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
-    dataFrameId () {
-      return this.$store.state.dataSource.dataFrameId
-    }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

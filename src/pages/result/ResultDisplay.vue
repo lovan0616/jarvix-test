@@ -1,6 +1,5 @@
 <template>
   <div class="result-layout">
-    <filter-info/>
     <unknown-info-block
       v-if="segmentationInfo.unknownToken.length > 0 || segmentationInfo.nlpToken.length > 0"
       :segmentation-info="segmentationInfo"
@@ -40,13 +39,12 @@
 </template>
 
 <script>
-import FilterInfo from '@/components/display/FilterInfo'
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ResultDisplay',
   components: {
-    FilterInfo,
     UnknownInfoBlock
   },
   data () {
@@ -70,6 +68,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
@@ -93,6 +92,23 @@ export default {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
       this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'dataFrameId': this.dataFrameId})
+    },
+    askCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (
+          // 切換 dataframe 被清空時不重新問問題
+          newValue.columnList === null && newValue.filterList.length === 0
+          // 開啟進階設定取得欄位資料時也不重新問問題
+          || oldValue.columnList === null && (oldValue.filterList.length === newValue.filterList.length)
+        ) return
+
+         this.fetchApiAsk({
+          question: this.$route.query.question, 
+          'dataSourceId': this.$route.query.dataSourceId, 
+          'dataFrameId': this.$route.query.dataFrameId
+        })
+      }
     }
   },
   mounted () {
@@ -240,6 +256,7 @@ export default {
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
               this.segmentationAnalysis(componentResponse.segmentationPayload)
+              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', componentResponse.segmentationPayload.dataframeId)
               this.isLoading = false
               break
             case 'Disable':

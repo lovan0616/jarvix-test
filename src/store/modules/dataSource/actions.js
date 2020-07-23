@@ -74,6 +74,8 @@ export default {
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
     commit('setDataFrameId', dataFrameId)
+    commit('dataFrameAdvanceSetting/toggleIsInit', false, { root: true })
+    dispatch('dataFrameAdvanceSetting/clearColumnList', null, { root: true })
     
     if (!dataSourceId) return Promise.resolve(state)
 
@@ -106,14 +108,16 @@ export default {
     return dispatch('changeDataFrameById', dataFrameId)
   },
   changeDataFrameById ({ dispatch, commit, state }, dataFrameId) {
+    if (state.dataFrameId === dataFrameId) return Promise.resolve(state)
     dispatch('clearChatbot')
+    commit('dataFrameAdvanceSetting/toggleIsInit', false, { root: true })
+    dispatch('dataFrameAdvanceSetting/clearColumnList', null, { root: true })
+
     // 更新 DataFrame 資料
     commit('setDataFrameId', dataFrameId)
     return co(function* () {
       yield dispatch('chatBot/updateChatConversation', false, { root: true })
       yield dispatch('getHistoryQuestionList')
-      yield dispatch('getDataSourceColumnInfo')
-      yield dispatch('getDataSourceDataValue')
       return Promise.resolve(state)
     })
   },
@@ -141,27 +145,33 @@ export default {
     if (state.dataSourceId === null) return []
     return getDataFrameById(state.dataSourceId)
   },
-  getDataFrameColumnSummary ({ state }, { id, page, cancelToken }) {
+  getDataFrameColumnSummary({ state }, { id, selectedColumnList = null, restrictions, page, cancelToken }) {
     if (page > 0) return
-    return dataFrameColumnSummary(id, cancelToken)
+    return dataFrameColumnSummary(id, selectedColumnList, restrictions, cancelToken)
   },
-  getDataFrameData ({ state }, { id, page = 0, cancelToken }) {
-    return getDataFrameData(id, page, cancelToken)
+  getDataFrameData({ state }, { id, selectedColumnList = null, restrictions, page = 0, cancelToken }) {
+    return getDataFrameData(id, selectedColumnList, restrictions, page, cancelToken)
   },
-  getDataFrameIntro ({ dispatch, state }, { id, page, mode }) {
+  getDataFrameIntro ({ dispatch, state, getters, rootGetters }, { id, page, mode }) {
     dispatch('cancelRequest', mode)
+    let selectedColumnList = null
+    let restrictions = []
     const cancelToken = new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
       if (mode === 'popup') popupCancelFunction = c
-      if (mode === 'display') displayCancelFunction = c
+      if (mode === 'display') {
+        displayCancelFunction = c
+        selectedColumnList = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
+        restrictions = getters.filterRestrictionList
+      }
     })
     return Promise.all([
-      dispatch('getDataFrameData', { id, page, cancelToken }),
-      dispatch('getDataFrameColumnSummary', { id, page, cancelToken })
+      dispatch('getDataFrameData', { id, selectedColumnList, restrictions, page, cancelToken }),
+      dispatch('getDataFrameColumnSummary', { id, selectedColumnList, restrictions, page, cancelToken })
     ])
   },
-  getDataFrameColumnCorrelation ({ state }, { id }) {
-    return getColumnCorrelationMatrix(id)
+  getDataFrameColumnCorrelation({ state }, { id, selectedColumnList = null, restrictions = [] }) {
+    return getColumnCorrelationMatrix(id, selectedColumnList, restrictions)
   },
   getDataSourceColumnInfo({ commit, state, getters }) {
     if (!state.dataSourceId) return
@@ -203,6 +213,9 @@ export default {
     return getHistoryQuestionList(dataSourceId, dataFrameId).then(res => {
       commit('setHistoryQuestionList', res)
     })
+  },
+  updateFilterList({ commit }, filterList) {
+    commit('setUpdatedFilterList', filterList)
   },
   updateFilterStatusList ({commit, state}, statusList) {
     commit('setStatusList', statusList)

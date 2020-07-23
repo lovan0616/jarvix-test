@@ -31,6 +31,15 @@
     "dataFileManagement": "资料表管理",
     "dataFileList": "资料表列表"
   },
+  "dataFrameAdvanceSetting": {
+    "searchColumn": "搜寻栏位",
+    "columnList": "栏位列表",
+    "filterCriteria": "筛选条件",
+    "selectAll": "全部选取",
+    "cancelSelect": "取消选取",
+    "clearCriteria": "清除条件",
+    "noCriteriaYet": "尚未加入筛选条件"
+  },
   "message": {
     "joinTableBuilding": "资料表建置中，建置完成即可使用",
     "remindAdjustMainDate": "此表可能有多个日期栏位，您可用资料表的”日期栏位调整“功能进行设定。",
@@ -744,6 +753,7 @@
     "countStd": "数量标准差"
   },
   "askHelper": {
+    "chooseDataFrameToEnableSetting": "选择单一资料表以开启问句说明",
     "title": "问句说明",
     "catalog": "问句类型",
     "historyTitle": "历史问句",

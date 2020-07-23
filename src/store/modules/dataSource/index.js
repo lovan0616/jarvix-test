@@ -13,6 +13,7 @@ export default {
     appQuestion: null,
     currentQuestionInfo: null,
     currentQuestionId: null,
+    currentQuestionDataFrameId: null,
     historyQuestionList: [],
     filterList: [],
     dataFrameId: null,
