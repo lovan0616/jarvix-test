@@ -18,9 +18,7 @@ export default {
 <style lang="scss" scoped>
 
 .main {
-  padding-top: 32px;
-  padding-bottom: 64px;
-  min-height: calc(100vh - 136px);
+  padding: 32px 24px 64px 24px;
   min-height: calc(100vh - #{$header-height});
 }
 </style>

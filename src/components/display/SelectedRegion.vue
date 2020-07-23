@@ -7,6 +7,13 @@
           class="filter-icon"
         />{{ title }}：
       </div>
+      <div class="region-reminder">
+        <span class="warning">
+          <svg-icon icon-class="lamp" />
+          {{ $t('resultDescription.prompt') }}:
+        </span>
+        <span>{{ $t('resultDescription.saveFilterReminding') }}</span>
+      </div>
       <button
         class="btn-m btn-outline"
         @click="save"
@@ -66,11 +73,23 @@ export default {
   .region-title-block {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
   }
 
   .region-title {
     font-size: 14px;
-    margin-bottom: 16px;
+  }
+  .region-reminder {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.2;
+    text-align: right;
+    margin-right: 12px;
+    padding-left: 20px;
+    .warning {
+      color: $theme-color-warning;
+    }
   }
   .filter-icon {
     margin-right: 4px;

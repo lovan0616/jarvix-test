@@ -68,7 +68,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
@@ -148,7 +148,8 @@ export default {
         this.$store.dispatch('chatBot/askResult', {
           questionId: this.currentQuestionId,
           segmentationPayload: this.currentQuestionInfo,
-          restrictions: this.filterRestrictionList
+          restrictions: this.filterRestrictionList,
+          selectedColumnList: this.selectedColumnList
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.getComponent(res)
@@ -195,7 +196,8 @@ export default {
             this.$store.dispatch('chatBot/askResult', {
               questionId,
               segmentationPayload: segmentationList[0],
-              restrictions: this.filterRestrictionList
+              restrictions: this.filterRestrictionList,
+              selectedColumnList: this.selectedColumnList
             }).then(res => {
               this.getComponent(res)
               this.getRelatedQuestion(res.resultId)
