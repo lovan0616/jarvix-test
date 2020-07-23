@@ -112,23 +112,23 @@ export default {
           text: this.$t('editing.createDate'),
           value: 'createDate',
           sort: true,
-          width: '90px',
+          width: '120px',
           time: 'YYYY-MM-DD'
         },
         {
           text: this.$t('editing.updateDate'),
           value: 'updateDate',
           sort: true,
-          width: '90px',
+          width: '120px',
           time: 'YYYY-MM-DD'
         },
         {text: this.$t('editing.status'), value: 'state', width: '7.26%'},
         {text: this.$t('editing.countOfTable'), value: 'dataFrameCount', width: '65px'},
-        {text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '65px'},
+        {text: this.$t('editing.dataFrameStatus'), value: 'dataFrameStatus', width: '160px'},
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '140px',
+          width: '200px',
           action: [
             {
               name: this.$t('button.rename'),
@@ -156,7 +156,7 @@ export default {
     dataSourceList: {
       handler () {
         /**
-         * 注意！這邊要重新 assign 是因為頁面上有排序功能，不希望排序時影響到 bookmark select 的順序
+         * 注意！這邊要重新 assign 是因為頁面上有排序功能，不希望排序時影響到 dataSource select 的順序
          */
         this.dataList = this.dataSourceList.map(dataInfo => {
           // 注意！這邊只會做資料表數計算，時間的顯示在 DataTable 處理，主要是為了時間排序的準確
@@ -206,7 +206,8 @@ export default {
               Message({
                 message: this.$t('message.builded'),
                 type: 'success',
-                duration: 3 * 1000
+                duration: 3 * 1000,
+                showClose: true
               })
             })
         })

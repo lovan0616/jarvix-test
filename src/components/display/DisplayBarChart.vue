@@ -9,6 +9,7 @@
     <arrow-button
       v-show="showPagination"
       v-if="hasPagination"
+      :right="arrowBtnRight"
       @click.native="$emit('next')"
     />
     <selected-region
@@ -71,7 +72,6 @@ import {
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
-  'xAxis:default': xAxisDefault(),
   'yAxis:default': yAxisDefault(),
   'seriesItem:bar': seriesItemBar(),
   'seriesItem:line': seriesItemLine(),
@@ -100,6 +100,18 @@ export default {
     hasPagination: {
       type: Boolean,
       default: false
+    },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
+    },
+    arrowBtnRight: {
+      type: Number,
+      default: 80
     }
   },
   data () {
@@ -109,7 +121,6 @@ export default {
       },
       'color:10': {},
       'grid:default': {},
-      'xAxis:default': {},
       'yAxis:default': {}
     })
     return {
@@ -125,7 +136,8 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: this.height
+        height: this.height,
+        ...this.customChartStyle
       }
     },
     series () {
@@ -137,6 +149,9 @@ export default {
     },
     options () {
       let config = {
+        xAxis: {
+          ...xAxisDefault()
+        },
         ...this.addonOptions,
         ...getDrillDownTool(this.$route.name, this.title),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
@@ -154,7 +169,7 @@ export default {
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur) => {
-            return acc + `<td style="padding: 4px 12px;">${cur || ''}</td>`
+            return acc + `<td style="padding: 4px 12px;white-space:nowrap;">${cur || ''}</td>`
           }, '')
           table += `<tr ${i % 2 === 0 ? (i === 0 ? 'style="background-color:#2B4D51"' : 'style="background-color:rgba(50, 75, 78, 0.6)"') : ''}>${tableData}</tr>`
         }
@@ -168,7 +183,7 @@ export default {
         for (let i = 0, length = datas.length; i < length; i++) {
           if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined) continue
           let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
-          res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '<br/>'
+          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[i + 1]) + '<br/>'
         }
         return res
       }
@@ -180,8 +195,6 @@ export default {
       }
       config.xAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : null
       config.yAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
-      // 如果是 bar chart
-      config.yAxis.scale = false
 
       // 數量大的時候出現 scroll bar
       if (this.dataset.data.length > 30) {
@@ -190,6 +203,7 @@ export default {
         config.dataZoom = parallelZoomIn()
         config.animation = false
       }
+      config.toolbox.show = this.showToolbox
 
       return config
     },

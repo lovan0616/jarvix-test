@@ -1,8 +1,7 @@
 <template>
   <div class="result-board-body root-cause-board-body">
-    <hint-info-block
-      :msg-list="[$t('editing.resultOverSizeMessage')]"
-      inline
+    <notify-info-block
+      :msg="$t('editing.resultOverSizeMessage')"
     />
     <div class="title-block">{{ $t('resultDescription.summaryReport') }}</div>
     <div class="main-chart-container">
@@ -20,12 +19,12 @@
   </div>
 </template>
 <script>
-import HintInfoBlock from '@/components/display/HintInfoBlock'
+import NotifyInfoBlock from '@/components/display/NotifyInfoBlock'
 
 export default {
   name: 'RootCauseBoardBody',
   components: {
-    HintInfoBlock
+    NotifyInfoBlock
   },
   data () {
     return {
@@ -41,7 +40,7 @@ export default {
   .title-block {
     font-size: 20px;
     line-height: 34px;
-    letter-spacing: 0.1em;
+    letter-spacing: var(--theme-letter-spacing-semi-wide);
     color: #fff;
     margin-bottom: 16px;
   }

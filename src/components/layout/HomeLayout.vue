@@ -31,6 +31,7 @@
         <preview-data-source 
           :key="dataSourceId" 
           :is-previewing="true"
+          mode="popup"
         />
         <a 
           href="javascript:void(0)" 
@@ -139,7 +140,7 @@ export default {
   .chat-bot-btn {
     position: fixed;
     bottom: 16px;
-    left: 20px;
+    left: 70px;
     z-index: 999;
     cursor: pointer;
     width: 80px;

@@ -69,6 +69,7 @@
     </div>
     <!--欄位關聯概況-->
     <column-correlation-overview
+      v-if="showCorrelationMatrix"
       :data-frame-id="dataFrameId"
       class="board-body-section"
     />
@@ -92,6 +93,14 @@ export default {
     dataFrameId: {
       type: Number,
       default: null
+    },
+    mode: {
+      type: String,
+      required: true
+    },
+    showCorrelationMatrix: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -125,7 +134,7 @@ export default {
   methods: {
     fetchDataFrameData (id, page = 0, resetPagination = false) {
       this.isProcessing = true
-      this.$store.dispatch('dataSource/getDataFrameIntro', {id, page})
+      this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode })
         .then(([dataFrameData, dataColumnSummary]) => {
           if (resetPagination) {
             this.pagination = dataFrameData.pagination
@@ -195,21 +204,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.page-preview-bookmark {
-  .bookmark-header {
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 32px;
-    margin-bottom: 24px;
-  }
-
-  .dataset-info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
+.data-frame-data {
   .board-body-section {
     .title {
       margin-bottom: 13px;
@@ -247,26 +242,16 @@ export default {
   }
 }
 
-.result-board {
-  .board-header {
-    border-top: unset;
-    padding-bottom: 0;
+.overview {
+  margin-bottom: 10px;
+  font-size: 14px;
+
+  &__data {
+    display: flex;
   }
-  .board-body {
-    padding: 16px 24px;
-  }
 
-  .overview {
-    margin-bottom: 10px;
-    font-size: 14px;
-
-    &__data {
-      display: flex;
-    }
-
-    &__item {
-      margin-right: 45px;
-    }
+  &__item {
+    margin-right: 45px;
   }
 }
 </style>

@@ -39,7 +39,7 @@
   />
 </template>
 <script>
-import { dataSourcePreprocessor } from '@/API/DataSource'
+import { dataPreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
 import EtlColumnSetting from '../etl/EtlColumnSetting'
 import { Message } from 'element-ui'
@@ -82,7 +82,7 @@ export default {
       this.isProcessing = true
       let promiseList = []
       this.etlTableList.forEach((element, index) => {
-        promiseList.push(dataSourcePreprocessor(element))
+        promiseList.push(dataPreprocessor(element))
       })
 
       Promise.all(promiseList)
@@ -90,7 +90,8 @@ export default {
           Message({
             message: this.$t('message.etlSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           this.$emit('next')
         })

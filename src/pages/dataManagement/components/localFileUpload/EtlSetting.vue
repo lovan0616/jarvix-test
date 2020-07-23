@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { dataSourcePreprocessor } from '@/API/DataSource'
+import { dataPreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
 import EtlChooseColumn from '../etl/EtlChooseColumn'
 import { Message } from 'element-ui'
@@ -86,7 +86,8 @@ export default {
         Message({
           message: this.$t('etl.pleaseSelectAtLeastOneColumnPerTable'),
           type: 'warning',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
         return
       }
@@ -94,7 +95,7 @@ export default {
 
       let promiseList = []
       this.etlTableList.forEach((element, index) => {
-        promiseList.push(dataSourcePreprocessor(element))
+        promiseList.push(dataPreprocessor(element))
       })
 
       Promise.all(promiseList)

@@ -80,7 +80,7 @@ export default {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   methods: {
@@ -96,12 +96,14 @@ export default {
           this.isLoading = true
 
           testConnection(this.connectInfo).then(() => {
+            this.$store.commit('dataManagement/updateCurrentConnectionDB', this.connectInfo.databaseType)
             this.dataSourceId ? this.createConnection() : this.createDataSource()
           }).catch(() => {
             Message({
               message: this.$t('message.connectionFail'),
               type: 'error',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
             this.isLoading = false
           })

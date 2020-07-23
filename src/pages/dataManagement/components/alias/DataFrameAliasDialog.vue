@@ -26,10 +26,10 @@
         :key="index"
         class="alias-item"
       >
-        <input-block
+        <input-verify
           v-validate="`required|max:${max}`"
           v-model="alias.name"
-          :label="$t('editing.dataFrameAliasInputPlaceholder')"
+          :placeholder="$t('editing.dataFrameAliasInputPlaceholder')"
           :name="'alias' + '-' + index"
           class="dialog-input"
         />
@@ -52,7 +52,7 @@
 
 <script>
 import { getDataFrameAlias, patchDataFrameAlias } from '@/API/Alias'
-import InputBlock from '@/components/InputBlock'
+import InputVerify from '@/components/InputVerify'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import { Message } from 'element-ui'
@@ -62,7 +62,7 @@ export default {
   inject: ['$validator'],
   components: {
     WritingDialog,
-    InputBlock,
+    InputVerify,
     EmptyInfoBlock
   },
   props: {
@@ -83,7 +83,7 @@ export default {
       return this.isLoading ? this.$t('editing.loading') : this.$t('editing.isSaving')
     },
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   mounted () {
@@ -119,7 +119,8 @@ export default {
             Message({
               message: this.$t('message.saveSuccess'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
             this.isSaving = false
             this.$emit('close')
@@ -158,7 +159,6 @@ export default {
     justify-content: space-between;
     .dialog-input {
       flex: 1;
-      margin-bottom: 56px;
     }
     .link.remove {
       margin-left: 12px;

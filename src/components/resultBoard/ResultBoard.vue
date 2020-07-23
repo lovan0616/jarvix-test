@@ -50,21 +50,18 @@
           </a>
         </div>
         <div 
-          v-else
+          v-else-if="$route.name === 'PageResult'"
           class="pin-button-block"
         >
           <a 
-            :class="{'is-pinned': pinStatus, 'is-loading': isLoading}"
-            :data-text="pinButtonText"
             class="pin-button"
             href="javascript:void(0)"
             @click="pinToBoard"
-            @mouseover="isMouseoverPinButton = true"
-            @mouseleave="isMouseoverPinButton = false"
           >
             <span class="pin-slash"><svg-icon 
               :icon-class="isLoading ? 'spinner' : 'pin'" 
               class="pin-icon"/></span>
+            {{ $t('button.pinToBoard') }}
           </a>
           <pinboard-dialog
             v-if="showPinboardList"
@@ -127,6 +124,10 @@ export default {
     FilterInfoDialog
   },
   props: {
+    resultId: {
+      type: Number,
+      default: null
+    },
     resultInfo: {
       type: Object,
       default: () => {}
@@ -138,48 +139,39 @@ export default {
   },
   data () {
     return {
-      isPinned: false,
       isLoading: false,
       pinBoardId: null,
       dataSourceId: null,
       dataFrameId: null,
       showPinboardList: false,
       isShowShareDialog: false,
-      isMouseoverPinButton: false,
       isShowDelete: false,
       isShowShare: false,
       isShowFilterInfo: false
     }
   },
   computed: {
-    pinButtonText () {
-      if (this.isLoading) return this.$t('button.processing')
-      if (this.isPinned && !this.isMouseoverPinButton) return this.$t('button.pinned')
-      if (this.isPinned && this.isMouseoverPinButton) return this.$t('button.cancelPinned')
-      return this.$t('button.pinToBoard')
-    },
     isPinboardPage () {
-      return this.$route.name === 'PagePinboard'
-    },
-    pinStatus () {
-      // 目前 pinboard 頁，只會有 pinned 的狀態
-      return this.isPinned || this.$route.name === 'PagePinboard'
-    },
-    pinboardList () {
-      return this.$store.state.pinboard.pinboardList
+      return this.$route.name === 'PersonalPagePinboard' || this.$route.name === 'ProjectPagePinboard'
     },
     questionName () {
-      let boardHeaderData = this.$children.filter(element => element.componentName === 'ResultBoardHeader')[0].componentData
-      return boardHeaderData ? boardHeaderData.segmentation.question : ''
+      let boardHeader = this.$children.filter(element => element.componentName === 'ResultBoardHeader')[0]
+      return boardHeader ? boardHeader.componentData.title : ''
     },
     shareUrl () {
-      return `${window.location.origin}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&dataFrameId=${this.dataFrameId}&action=share`
+      return `${window.location.origin}/share-result/${this.resultId}`
     },
     hasFilter () {
       return (this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult') || this.restrictions.length > 0
     },
     currentResultId () {
       return this.$store.state.result.currentResultId
+    },
+    accountId () {
+      return this.$route.params.account_id
+    },
+    isPersonalPinboard () {
+      return this.$route.name === 'PersonalPagePinboardList'
     }
   },
   mounted () {
@@ -193,60 +185,31 @@ export default {
   methods: {
     pinToBoard () {
       if (this.isLoading) return false
-      if (this.isPinned) {
-        this.isLoading = true
-
-        this.$store.dispatch('pinboard/unPinById', this.pinBoardId)
-          .then(res => {
-            if (this.isPinboardPage) {
-              // 這邊是為了 transition 所以先抓高度
-              let elem = document.getElementById(this.pinBoardId)
-              elem.style.height = elem.offsetHeight + 'px'
-              window.setTimeout(() => {
-                elem.style.height = 0
-                elem.style.overflow = 'hidden'
-                elem.style.padding = 0
-                elem.style.margin = 0
-              }, 300)
-              window.setTimeout(() => {
-                this.isLoading = false
-                this.$store.commit('pinboard/unPinById', this.pinBoardId)
-              }, 900)
-            } else {
-              this.isLoading = false
-              this.pinBoardId = null
-            }
-            // 更新 pinned 狀態
-            this.updatePinnedStatus()
-          }).catch(() => {
-            this.isLoading = false
-          })
-      } else {
-        if (this.showPinboardList) {
-          this.showPinboardList = false
-          return false
-        }
-        // 取得最新的 pinboardList
-        this.$store.dispatch('pinboard/getPinboardList').then(() => {
-          this.showPinboardList = true
-        })
+      if (this.showPinboardList) {
+        this.showPinboardList = false
+        return false
       }
+      setTimeout(() => {
+        this.showPinboardList = true
+      })
     },
     selectPinboard (id) {
       this.isLoading = true
       this.$store.dispatch('pinboard/pinToBoard', {folderId: id, resultId: this.currentResultId})
         .then(res => {
           this.pinBoardId = res.id
-          this.updatePinnedStatus()
           this.isLoading = false
           this.showPinboardList = false
+          Message({
+            message: this.$t('message.pinboardSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
         }).catch(() => {
           this.isLoading = false
           this.showPinboardList = false
         })
-    },
-    updatePinnedStatus () {
-      this.isPinned = !this.isPinned
     },
     closePinboardList () {
       this.showPinboardList = false
@@ -258,16 +221,15 @@ export default {
             // 這邊是為了 transition 所以先抓高度
             let elem = document.getElementById(this.pinBoardId)
             elem.style.height = elem.offsetHeight + 'px'
-            window.setTimeout(() => {
-              elem.style.height = 0
-              elem.style.overflow = 'hidden'
-              elem.style.padding = 0
-              elem.style.margin = 0
-            }, 300)
+            elem.style.height = 0
+            elem.style.overflow = 'hidden'
+            elem.style.padding = 0
+            elem.style.margin = 0
             window.setTimeout(() => {
               this.isLoading = false
-              this.$store.commit('pinboard/deletePinboardById', this.pinBoardId)
+              this.$store.commit('pinboard/deletePinboardById', { accountId: this.accountId, id: this.pinBoardId })
             }, 900)
+            this.$emit('unPin', this.pinBoardId)
           } else {
             this.isLoading = false
             this.pinBoardId = null
@@ -292,7 +254,8 @@ export default {
       Message({
         message: this.$t('message.copiedToBoard'),
         type: 'success',
-        duration: 3 * 1000
+        duration: 3 * 1000,
+        showClose: true
       })
       this.$nextTick(() => {
 

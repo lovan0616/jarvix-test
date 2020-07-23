@@ -19,10 +19,12 @@
       v-else
       :is="layout"
       :data-result-id="currentResultId"
+      :data-dataframe-id="segmentationPayload.dataframeId"
       :result-info="resultInfo"
       :restrictions="restrictInfo"
+      :segmentation-payload="segmentationPayload"
     />
-    <div 
+    <div
       v-if="relatedQuestionList.length > 0" 
       class="related-question-block">
       <div class="block-title">{{ $t('editing.relatedQuestion') }}</div>
@@ -62,7 +64,10 @@ export default {
         question: null,
         unknownToken: [],
         nlpToken: []
-      }
+      },
+      segmentationPayload: null,
+      totalSec: 50,
+      periodSec: 200
     }
   },
   computed: {
@@ -113,6 +118,7 @@ export default {
       this.resultInfo = null
       this.restrictInfo = []
       this.relatedQuestionList = []
+      this.segmentationPayload = null
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {
@@ -220,12 +226,18 @@ export default {
             case 'Ready':
               this.timeoutFunction = window.setTimeout(() => {
                 this.getComponent(res)
-              }, 1000)
+              }, this.totalSec)
+
+              this.totalSec += this.periodSec
+              this.periodSec = this.totalSec
               break
             case 'Complete':
+              this.totalSec = 50
+              this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
               this.restrictInfo = componentResponse.restrictions
-              this.layout = this.getLayout(res.layout)
+              this.layout = this.getLayout(componentResponse.layout)
+              this.segmentationPayload = componentResponse.segmentationPayload
               this.segmentationAnalysis(componentResponse.segmentationPayload)
               this.isLoading = false
               break
@@ -303,7 +315,7 @@ export default {
   }
 
   .related-question-block {
-    background-color: $theme-bg-color;
+    background-color: var(--color-bg-5);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     padding: 28px 28px 4px;

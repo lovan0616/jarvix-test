@@ -210,7 +210,7 @@ export default {
   },
   computed: {
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   mounted () {
@@ -272,7 +272,8 @@ export default {
         Message({
           message: validateMsg,
           type: 'error',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
         return false
       }
@@ -298,7 +299,8 @@ export default {
             Message({
               message: this.$t('message.saveSuccess'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
             this.$emit('update')
           }).catch(() => {})
@@ -358,7 +360,6 @@ export default {
     line-height: 1;
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 8px;
 
     &.last {
       margin-bottom: 16px;
@@ -368,6 +369,7 @@ export default {
       display: flex;
       align-items: center;
       margin-right: 20px;
+      margin-bottom: 8px;
     }
   }
 

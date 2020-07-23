@@ -90,6 +90,14 @@ export default {
           yAxis: null
         }
       }
+    },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
@@ -145,7 +153,6 @@ export default {
       chartAddon.xAxis.max = max
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramConfig.yAxis}
-      chartAddon.yAxis.scale = false
       chartAddon.yAxis.name = this.title.yAxis[0].display_name
 
       histogramConfig.chartData.renderItem = this.renderItem
@@ -153,13 +160,14 @@ export default {
       chartAddon.series[0] = histogramConfig.chartData
       // 不顯示“全選”按鈕
       chartAddon.legend.selector = false
-
-      return {...chartAddon, ...getDrillDownTool(this.$route.name, this.title)}
+      chartAddon.toolbox.show = this.showToolbox
+      return { ...chartAddon, ...getDrillDownTool(this.$route.name, this.title) }
     },
     chartStyle () {
       return {
         width: '100%',
-        height: '420px'
+        height: '420px',
+        ...this.customChartStyle
       }
     },
     appQuestion () {

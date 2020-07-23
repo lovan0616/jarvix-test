@@ -37,7 +37,12 @@
       v-if="!isEditing"
       class="title-block"
     >
-      <h3 class="table-name">{{ relationInfo.name }}</h3>
+      <el-tooltip
+        :content="relationInfo.name"
+        placement="bottom"
+      >
+        <h3 class="table-name">{{ relationInfo.name }}</h3>
+      </el-tooltip>
       <h6 class="join-type">
         {{ $t('editing.joinType') }}
         <span
@@ -235,7 +240,7 @@ export default {
   },
   computed: {
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   methods: {
@@ -268,7 +273,8 @@ export default {
         Message({
           message: this.$t('message.formColumnEmpty'),
           type: 'warning',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
         return false
       }
@@ -277,7 +283,8 @@ export default {
           Message({
             message: this.$t('message.formColumnEmpty'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }
@@ -285,7 +292,8 @@ export default {
           Message({
             message: this.$t('message.joinTypeEmpty'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }
@@ -293,7 +301,8 @@ export default {
           Message({
             message: this.$t('message.remindNotAllowSelfJoin'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }
@@ -301,7 +310,8 @@ export default {
           Message({
             message: this.$t('message.remindSameDataTypeColumns'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }
@@ -341,7 +351,8 @@ export default {
             Message({
               message: this.$t('message.joinTableBuilding'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           })
           .finally(() => { this.isLoading = false })
@@ -366,7 +377,8 @@ export default {
             Message({
               message: this.$t('message.joinTableBuilding'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           })
           .finally(() => { this.isLoading = false })
@@ -389,7 +401,8 @@ export default {
               return Message({
                 message: this.$t('message.noMatchedKey'),
                 type: 'warning',
-                duration: 3 * 1000
+                duration: 3 * 1000,
+                showClose: true
               })
             }
             this.previewResultData = previewResultData
@@ -423,6 +436,8 @@ export default {
 
   .title-block {
     display: flex;
+    justify-content: space-between;
+    padding-right: 80px;
 
     .table-name,
     .join-type {
@@ -433,7 +448,9 @@ export default {
 
     .table-name {
       font-size: 18px;
-      width: 290px;
+      flex: 1;
+      @include text-hidden;
+      margin-right: 16px;
     }
 
     .join-type {

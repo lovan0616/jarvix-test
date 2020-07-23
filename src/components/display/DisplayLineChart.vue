@@ -1,6 +1,7 @@
 <template>
   <div class="display-line-chart">
     <v-echart
+      ref="chart"
       :style="chartStyle"
       :options="options"
       auto-resize
@@ -9,6 +10,7 @@
     <arrow-button
       v-show="showPagination"
       v-if="hasPagination"
+      :right="arrowBtnRight"
       @click.native="$emit('next')"
     />
     <selected-region
@@ -65,7 +67,6 @@ import {
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
-  'xAxis:default': xAxisDefault(),
   'yAxis:default': yAxisDefault(),
   'seriesItem:line': seriesItemLine()
 })
@@ -94,6 +95,18 @@ export default {
     hasPagination: {
       type: Boolean,
       default: false
+    },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
+    },
+    arrowBtnRight: {
+      type: Number,
+      default: 80
     }
   },
   data () {
@@ -101,9 +114,7 @@ export default {
       'seriesItem:line': {
         'large': true
       },
-      'color:10': {},
       'grid:default': {},
-      'xAxis:default': {},
       'yAxis:default': {}
     })
     return {
@@ -118,7 +129,8 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: this.height
+        height: this.height,
+        ...this.customChartStyle
       }
     },
     series () {
@@ -130,6 +142,9 @@ export default {
     },
     options () {
       let config = {
+        xAxis: {
+          ...xAxisDefault()
+        },
         ...this.addonOptions,
         ...getDrillDownTool(this.$route.name, this.title),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
@@ -147,7 +162,7 @@ export default {
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur) => {
-            return acc + `<td style="padding: 4px 12px;">${cur || ''}</td>`
+            return acc + `<td style="padding: 4px 12px;white-space:nowrap;">${cur || ''}</td>`
           }, '')
           table += `<tr ${i % 2 === 0 ? (i === 0 ? 'style="background-color:#2B4D51"' : 'style="background-color:rgba(50, 75, 78, 0.6)"') : ''}>${tableData}</tr>`
         }
@@ -161,7 +176,7 @@ export default {
         for (let i = 0, length = datas.length; i < length; i++) {
           if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined) continue
           let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
-          res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '<br/>'
+          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[i + 1]) + '<br/>'
         }
         return res
       }
@@ -181,10 +196,58 @@ export default {
         config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
         config.yAxis.name = this.title.yAxis[0].display_name
       }
+      config.yAxis.scale = true
 
       // 數量大的時候出現 scroll bar
       if (this.dataset.index.length > 10) {
         config.dataZoom = parallelZoomIn()
+      }
+      config.toolbox.show = this.showToolbox
+
+      // 圖表 threshold
+      if (this.title.yAxis[0].upperLimit !== null) {
+        let upperLimit = this.title.yAxis[0].upperLimit
+        // 找出 Y 的最大、最小值
+        let maxY = this.dataset.data[0][0]
+        let minY = this.dataset.data[0][0]
+        this.dataset.data.forEach(element => {
+          if (element[0] !== null) {
+            if (maxY === null) maxY = element[0]
+            maxY = element[0] > maxY ? element[0] : maxY
+            if (minY === null) minY = element[0]
+            minY = element[0] < minY ? element[0] : minY
+          }
+        })
+        /**
+         * 將超出警示的上色
+         * 注意！！ 最小值的 gt 一定要設！！ 不然線不會上色，應該是 echarts bug
+         **/
+        config.visualMap = [{
+          type: 'piecewise',
+          show: false,
+          pieces: upperLimit < minY ? [{
+            lte: maxY,
+            gt: upperLimit,
+            color: '#EB5959'
+          }] : [{
+            gte: upperLimit,
+            color: '#EB5959'
+          }, {
+            lt: upperLimit,
+            gt: minY
+          }]
+        }]
+        // 門檻線
+        config.series[0].markLine = {
+          symbol: 'none',
+          lineStyle: {
+            color: '#EB5959',
+            width: 2
+          },
+          data: [{
+            yAxis: upperLimit
+          }]
+        }
       }
 
       return config
@@ -205,12 +268,54 @@ export default {
     },
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
+    },
+    doDrillDown () {
+      return this.$store.state.chatBot.doDrillDown
+    }
+  },
+  watch: {
+    doDrillDown (val) {
+      if (!val) return
+      this.robotDrillDownEvent()
+      window.setTimeout(() => {
+        this.saveFilter()
+      }, 1000)
+      this.$store.commit('chatBot/setDoDrillDown', false)
     }
   },
   mounted () {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
+    robotDrillDownEvent () {
+      this.$refs.chart.dispatchAction({
+        type: 'brush',
+        areas: [
+          {
+            xAxisIndex: 0,
+            brushType: 'lineX',
+            coordRange: [
+              10, 11
+            ]
+          }
+        ]
+      })
+      // 為了要看起來有動態效果，只好圈兩次
+      window.setTimeout(() => {
+        this.$refs.chart.dispatchAction({
+          type: 'brush',
+          areas: [
+            {
+              xAxisIndex: 0,
+              brushType: 'lineX',
+              coordRange: [
+                10, 12
+              ]
+            }
+          ]
+        })
+      }, 0)
+    },
     composeColumn (element, colIndex) {
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他

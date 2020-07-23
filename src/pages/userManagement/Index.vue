@@ -10,7 +10,7 @@
           class="btn-m btn-default btn-has-icon"
           @click="showCreateUser">
           <svg-icon 
-            icon-class="user" 
+            icon-class="user-plus" 
             class="icon"/>
           {{ $t('userManagement.createUser') }}
         </button>
@@ -35,21 +35,15 @@
           <a
             :disabled="isNotAllowChangePsd(data)"
             class="link action-link"
-            @click="showPasswordChange(data, !isNotAllowChangePsd(data))">
-            {{ $t('editing.changePassword') }}
-          </a>
+            @click="showPasswordChange(data, !isNotAllowChangePsd(data))">{{ $t('editing.changePassword') }}</a>
           <a
             :disabled="btnDisabled(data)"
             class="link action-link"
-            @click="showChangeRole(data, !btnDisabled(data))">
-            {{ $t('userManagement.updateRole') }}
-          </a>
+            @click="showChangeRole(data, !btnDisabled(data))">{{ $t('userManagement.updateRole') }}</a>
           <a
             :disabled="btnDisabled(data)"
             class="link action-link"
-            @click="showDeleteAccount(data, !btnDisabled(data))">
-            {{ $t('button.remove') }}
-          </a>
+            @click="showDeleteAccount(data, !btnDisabled(data))">{{ $t('button.remove') }}</a>
         </template>
       </crud-table>
     </div>
@@ -245,12 +239,10 @@ export default {
           text: this.$t('editing.userAccount'),
           value: 'email',
           sort: true,
-          width: '35%'
         },
         {
           text: this.$t('userManagement.userRoleAuthority'),
           value: 'roleZhName',
-          width: '35%',
           tooltip: {
             width: '212px'
           }
@@ -258,7 +250,7 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '30%'
+          width: '300px'
         }
       ]
     }
@@ -341,10 +333,11 @@ export default {
         if (existingUsers.size > 0) {
           const html = [...existingUsers].join(',<br>')
           Message({
-            message: html + ',<br>' + this.$t('message.userAlreadyExisting'),
+            message: html + ',<br>' + this.$tc('message.userAlreadyExisting', existingUsers.size),
             dangerouslyUseHTMLString: true,
             type: 'warning',
-            duration: 5 * 1000
+            duration: 5 * 1000,
+            showClose: true
           })
           return
         }
@@ -352,7 +345,8 @@ export default {
           Message({
             message: this.$t('message.userInviteRepetitive'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return
         }
@@ -365,7 +359,7 @@ export default {
               mail: invitee.email
             }
           }),
-          webURL: window.location.origin + this.$router.resolve({name: 'PageSignup'}).href,
+          webURL: window.location.origin + this.$router.resolve({ name: 'PageSignup' }).href,
           accountId: this.$store.getters['userManagement/getCurrentAccountId']
         })
           .then(() => {
@@ -375,7 +369,8 @@ export default {
             Message({
               message: this.$t('message.userInviteSuccess'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           })
           .catch(() => {})
@@ -411,7 +406,7 @@ export default {
               return {
                 value: role.id,
                 key: role.name,
-                name: this.getZhRoleName(role.name)
+                name: this.getLocaleName(role.name)
               }
             })
         })
@@ -430,7 +425,8 @@ export default {
           Message({
             message: this.$t('message.changeStatusSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         })
         .catch(error => {
@@ -456,7 +452,8 @@ export default {
               Message({
                 message: this.$t('message.changePasswordSuccess'),
                 type: 'success',
-                duration: 3 * 1000
+                duration: 3 * 1000,
+                showClose: true
               })
             })
             .catch(error => {
@@ -479,7 +476,8 @@ export default {
           Message({
             message: this.$t('message.deleteSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         })
         .catch(() => {})
@@ -505,7 +503,7 @@ export default {
     showChangeRole (user, hasPermission) {
       if (!hasPermission) return
 
-      const option = this.roleOptions.find(option => option.name === this.getZhRoleName(user.role)) || user.role
+      const option = this.roleOptions.find(option => option.name === this.getLocaleName(user.role)) || user.role
       this.currentUser.roleId = option.value
       this.currentId = user.id
       this.isShowChangeRole = true
@@ -548,7 +546,7 @@ export default {
     toCamelCase (str) {
       return str.replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
     },
-    getZhRoleName (accountRole) {
+    getLocaleName (accountRole) {
       return this.$t(`userManagement.${this.toCamelCase(accountRole)}`)
     },
     checkExistingUsers () {
@@ -589,7 +587,7 @@ export default {
   }
   .table-board {
     padding: 24px;
-    background: $theme-bg-color;
+    background: var(--color-bg-5);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
   }
@@ -605,7 +603,7 @@ export default {
         height: 21px;
         overflow: visible;
         .label-invitee-email {
-          flex: 0 0 269px;
+          flex: 0 0 244px;
         }
         .label-user-role-authority {
           flex: 0 0 168px;
@@ -619,7 +617,10 @@ export default {
         font-size: 0;
         .input-verify {
           display: inline-block;
-          width: 269px;
+          width: 260px;
+          [lang="en"] & {
+            width: 244px;
+          }
         }
         .el-select {
           display: inline-block;

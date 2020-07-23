@@ -4,7 +4,7 @@
       <h1 class="title">{{ editTypeName }}</h1>
       <div class="bread-crumb">
         <router-link
-          :to="{name: 'AccountGroupManagement'}"
+          :to="{ name: 'AccountGroupManagement' }"
           class="title-link"
           @click="quitEditGroup"
         >
@@ -40,6 +40,7 @@
               v-validate="'required'"
               v-model="selectedOwner"
               :option-list="userEmailList"
+              filterable
               class="input"
               name="owner"
             />
@@ -71,6 +72,7 @@ import { getAccountGroupList, getAccountUsers, updateGroupInfo, createGroup } fr
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputBlock from '@/components/InputBlock'
 import { Message } from 'element-ui'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'EditAccountGroup',
@@ -89,6 +91,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
     editType () {
       const groupId = this.$route.params.id
       return groupId ? 'edit' : 'create'
@@ -97,7 +100,7 @@ export default {
       return this.editType === 'create' ? this.$t('button.createGroup') : this.$t('button.editGroupName')
     },
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   mounted () {
@@ -105,7 +108,7 @@ export default {
   },
   methods: {
     quitEditGroup () {
-      this.$router.push({name: 'AccountGroupManagement'})
+      this.$router.push({ name: 'AccountGroupManagement' })
     },
     fetchGroupName () {
       this.isLoading = true
@@ -137,13 +140,14 @@ export default {
               name: this.groupName,
               ownerId: this.userList.find(user => user.email === this.selectedOwner).id
             })
-              .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
+              .then(() => this.$store.dispatch('userManagement/updateUserGroupList', this.getCurrentGroupId))
               .then(() => {
                 this.quitEditGroup()
                 return Message({
                   message: this.$t('message.groupCreateSuccess'),
                   type: 'success',
-                  duration: 3 * 1000
+                  duration: 3 * 1000,
+                  showClose: true
                 })
               })
               .catch(() => { this.isLoading = false })
@@ -153,13 +157,14 @@ export default {
               name: this.groupName,
               id: this.$route.params.id
             })
-              .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
+              .then(() => this.$store.dispatch('userManagement/updateUserGroupList', this.getCurrentGroupId))
               .then(() => {
                 this.quitEditGroup()
                 return Message({
                   message: this.$t('message.groupInfoUpdatedSuccess'),
                   type: 'success',
-                  duration: 3 * 1000
+                  duration: 3 * 1000,
+                  showClose: true
                 })
               })
               .catch(() => { this.isLoading = false })
@@ -202,7 +207,7 @@ export default {
 
 .group-info-form {
   .input-wrapper {
-    background: $theme-bg-color;
+    background: var(--color-bg-5);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     padding: 24px;

@@ -74,7 +74,14 @@ export function xAxisDefault () {
         fontSize: config.axisLabelFontSize
       },
       rotate: 30,
+      formatter (value) {
+        if (value.length > 20) {
+          return value.slice(0, 19) + '...'
+        }
+        return value
+      },
       color: chartVariable['xAxisLabelColor']
+      
     }
   }
 }
@@ -112,7 +119,13 @@ export function yAxisParallel () {
         fontSize: config.axisLabelFontSize
       },
       rotate: 0,
-      color: chartVariable['xAxisLabelColor']
+      color: chartVariable['xAxisLabelColor'],
+      formatter (value) {
+        if (value.length > 20) {
+          return value.slice(0, 19) + '...'
+        }
+        return value
+      }
     }
   }
 }
@@ -125,7 +138,8 @@ export function yAxisDefault () {
   return {
     nameGap: config.nameGap,
     nameTextStyle: {
-      color: chartVariable['textColor']
+      color: chartVariable['textColor'],
+      align: 'left'
     },
     splitLine: {
       show: true,
@@ -142,7 +156,7 @@ export function yAxisDefault () {
         color: chartVariable['xAxisColor']
       }
     },
-    scale: true,
+    scale: false,
     axisLabel: {
       show: true,
       textStyle: {
@@ -487,8 +501,7 @@ export function getDrillDownTool (routeName, titleObject, isParallel = false, tw
 
   let xAxisDrillable = titleObject.xAxis.some(element => element.drillable)
   let yAxisDrillable = titleObject.yAxis.some(element => element.drillable)
-
-  if (routeName === 'PagePinboard') {
+  if (routeName === 'PersonalPagePinboard' || routeName === 'ProjectPagePinboard') {
     toolbox = ['']
   } else if (titleObject.xAxis.length === 0 && titleObject.yAxis.length === 0) {
     toolbox = ['']
@@ -531,14 +544,4 @@ export function getDrillDownTool (routeName, titleObject, isParallel = false, tw
 
 export function paddingZero (n) {
   return n < 10 ? '0' + n : n
-}
-
-export function timeToDateTime (time) {
-  let datetime = new Date(parseInt(time))
-  let year = datetime.getFullYear()
-  let month = datetime.getMonth() + 1
-  let date = datetime.getDate()
-  let hour = datetime.getHours()
-  let minute = datetime.getMinutes()
-  return `${year}-${paddingZero(month)}-${paddingZero(date)}-${paddingZero(hour)}${paddingZero(minute)}`
 }

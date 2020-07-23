@@ -8,6 +8,7 @@
     </div>
     <el-table 
       v-bind="tableProps"
+      :empty-text="$t('editing.noData')"
       class="sy-table"
       style="width: 100%;"
     >
@@ -85,6 +86,7 @@ export default {
     dataset: {
       type: [ Object, Array ],
       validator: value => {
+        if (Object.prototype.hasOwnProperty.call(value, 'enableEdit') && value.columns) return true
         if (typeof value !== 'object') return false
         if (!(value instanceof Array)) {
           return value.index && value.data && value.columns
@@ -131,6 +133,10 @@ export default {
         rootMargin: '300px',
         columnPerScroll: 6
       })
+    },
+    height: {
+      type: String,
+      default: null
     }
   },
   data () {
@@ -145,6 +151,7 @@ export default {
       if (!this.$props.maxHeight) {
         this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 600)
       }
+      if (this.$props.height) this.$set(tableProps, 'height', this.height)
       return tableProps
     },
     loadMore () {

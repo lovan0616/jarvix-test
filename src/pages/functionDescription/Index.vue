@@ -14,7 +14,7 @@
             :title="$t('description.basic.ui')" 
             name="uiIntro">
             <div class="description-image-box">
-              <img src="@/assets/images/function-description/basic/index.png">
+              <img :src="getImgUrl('basic/index')">
               <frame 
                 width="100%" 
                 height="30px" 
@@ -50,7 +50,7 @@
             :title="$t('description.basic.navIntro')" 
             name="navIntro">
             <div class="description-image-box">
-              <img src="@/assets/images/function-description/basic/nav-group-management.png">
+              <img :src="getImgUrl('basic/nav-group-management')">
               <frame 
                 width="180px" 
                 height="90px" 
@@ -64,7 +64,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/basic/nav-group.png" 
+                :src="getImgUrl('basic/nav-group')" 
                 alt="">
               <frame 
                 width="205px" 
@@ -79,7 +79,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/basic/nav-account.png" 
+                :src="getImgUrl('basic/nav-account')" 
                 alt="">
               <frame 
                 width="205px" 
@@ -94,7 +94,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/basic/nav-func-desc.png" 
+                :src="getImgUrl('basic/nav-func-desc')" 
                 alt="">
               <frame 
                 width="34px" 
@@ -113,7 +113,7 @@
             name="indexFuncIntro">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/basic/index.png" 
+                :src="getImgUrl('basic/index')" 
                 alt="">
               <frame 
                 width="447px" 
@@ -150,7 +150,7 @@
             name="how">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/question/entry.png" 
+                :src="getImgUrl('question/entry')" 
                 alt="">
               <frame 
                 width="184px" 
@@ -179,10 +179,10 @@
             <p class="sub-title">{{ $t('description.question.info1') }}</p>
             <div class="description-image-box space-between">
               <img 
-                src="@/assets/images/function-description/question/entry.png" 
+                :src="getImgUrl('question/entry')" 
                 alt="">
               <img 
-                src="@/assets/images/function-description/question/vocabulary.png" 
+                :src="getImgUrl('question/vocabulary')" 
                 alt="">
               <frame 
                 width="30px" 
@@ -207,10 +207,10 @@
             <p class="sub-title">{{ $t('description.question.info2') }}</p>
             <div class="description-image-box space-between">
               <img 
-                src="@/assets/images/function-description/question/entry.png" 
+                :src="getImgUrl('question/entry')" 
                 alt="">
               <img 
-                src="@/assets/images/function-description/question/vocabulary.png" 
+                :src="getImgUrl('question/vocabulary')" 
                 alt="">
               <frame 
                 width="30px" 
@@ -238,7 +238,7 @@
             name="resultInfo">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/question/result.png" 
+                :src="getImgUrl('question/result')" 
                 alt="">
               <frame 
                 width="451px" 
@@ -253,7 +253,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/question/result.png" 
+                :src="getImgUrl('question/result')" 
                 alt="">
               <frame 
                 width="55px" 
@@ -292,7 +292,7 @@
             name="howToDeepen">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/question/result.png" 
+                :src="getImgUrl('question/result')" 
                 alt="">
               <frame 
                 width="185px" 
@@ -327,7 +327,7 @@
             name="how">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/pinboard/entry.png" 
+                :src="getImgUrl('pinboard/entry')" 
                 alt="">
               <frame 
                 width="67px" 
@@ -342,7 +342,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/pinboard/classification.png" 
+                :src="getImgUrl('pinboard/classification')" 
                 alt="">
               <frame 
                 width="102px" 
@@ -357,7 +357,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/pinboard/cancel.png" 
+                :src="getImgUrl('pinboard/cancel')" 
                 alt="">
               <frame 
                 width="59px" 
@@ -376,7 +376,7 @@
             name="howToClassify">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/pinboard/entry-personal.png" 
+                :src="getImgUrl('pinboard/entry-personal')" 
                 alt="">
               <frame 
                 width="111px" 
@@ -391,7 +391,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/pinboard/personal-panel.png" 
+                :src="getImgUrl('pinboard/personal-panel')" 
                 alt="">
               <frame 
                 width="61px" 
@@ -405,7 +405,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/pinboard/personal-panel-action.png" 
+                :src="getImgUrl('pinboard/personal-panel-action')" 
                 alt="">
               <frame 
                 width="88px" 
@@ -424,7 +424,7 @@
             <p class="sub-title">{{ $t('description.pinboard.title1') }}</p>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/pinboard/personal-panel-action.png" 
+                :src="getImgUrl('pinboard/personal-panel-action')" 
                 alt="">
               <frame 
                 width="81px" 
@@ -438,7 +438,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/pinboard/personal-share-pop.png" 
+                :src="getImgUrl('pinboard/personal-share-pop')" 
                 alt="">
               <frame 
                 width="249px" 
@@ -453,7 +453,7 @@
             <p class="sub-title">{{ $t('description.pinboard.title2') }}</p>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/pinboard/personal-panel.png" 
+                :src="getImgUrl('pinboard/personal-panel')" 
                 alt="">
               <frame 
                 width="164px" 
@@ -467,7 +467,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/pinboard/panel.png" 
+                :src="getImgUrl('pinboard/panel')" 
                 alt="">
               <frame 
                 width="45px" 
@@ -482,7 +482,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/pinboard/panel-share-pop.png" 
+                :src="getImgUrl('pinboard/panel-share-pop')" 
                 alt="">
               <frame 
                 width="249px" 
@@ -509,7 +509,7 @@
             <p class="sub-title">{{ $t('description.data.byFile') }}</p>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/entry-nav.png" 
+                :src="getImgUrl('data/entry-nav')" 
                 alt="">
               <frame 
                 width="184px" 
@@ -524,7 +524,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/list-data-source.png" 
+                :src="getImgUrl('data/list-data-source')" 
                 alt="">
               <frame 
                 width="66px" 
@@ -538,7 +538,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/upload-by-file.png" 
+                :src="getImgUrl('data/upload-by-file')" 
                 alt="">
               <frame 
                 width="146px" 
@@ -552,7 +552,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/upload-by-file-select-file.png" 
+                :src="getImgUrl('data/upload-by-file-select-file')" 
                 alt="">
               <frame 
                 width="405px" 
@@ -566,7 +566,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/upload-by-file-processing.png" 
+                :src="getImgUrl('data/upload-by-file-processing')" 
                 alt="">
               <frame 
                 width="405px" 
@@ -580,7 +580,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/upload-select-column.png" 
+                :src="getImgUrl('data/upload-select-column')" 
                 alt="">
               <frame 
                 width="405px" 
@@ -594,7 +594,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/upload-data-clean.png" 
+                :src="getImgUrl('data/upload-data-clean')" 
                 alt="">
               <frame 
                 width="405px" 
@@ -608,7 +608,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/data-building.png" 
+                :src="getImgUrl('data/data-building')" 
                 alt="">
               <frame 
                 width="92%" 
@@ -623,7 +623,7 @@
             <p class="sub-title">{{ $t('description.data.byDB') }}</p>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/upload-by-db.png" 
+                :src="getImgUrl('data/upload-by-db')" 
                 alt="">
               <frame 
                 width="148px" 
@@ -638,7 +638,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/upload-by-db-connection-setting.png" 
+                :src="getImgUrl('data/upload-by-db-connection-setting')" 
                 alt="">
               <frame 
                 width="405px" 
@@ -652,7 +652,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/upload-by-db-select-table.png" 
+                :src="getImgUrl('data/upload-by-db-select-table')" 
                 alt="">
               <frame 
                 width="405px" 
@@ -666,7 +666,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/upload-select-column.png" 
+                :src="getImgUrl('data/upload-select-column')" 
                 alt="">
               <frame 
                 width="405px" 
@@ -680,7 +680,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/upload-data-clean.png" 
+                :src="getImgUrl('data/upload-data-clean')" 
                 alt="">
               <frame 
                 width="405px" 
@@ -694,7 +694,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/data-building.png" 
+                :src="getImgUrl('data/data-building')" 
                 alt="">
               <frame 
                 width="92%" 
@@ -712,7 +712,7 @@
             name="howToAddDataFrame">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/list-data-source.png" 
+                :src="getImgUrl('data/list-data-source')" 
                 alt="">
               <frame 
                 width="66px" 
@@ -726,7 +726,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/list-table.png" 
+                :src="getImgUrl('data/list-table')" 
                 alt="">
               <frame 
                 width="66px" 
@@ -744,7 +744,7 @@
             name="howToAddColumnAlias">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/table-action.png" 
+                :src="getImgUrl('data/table-action')" 
                 alt="">
               <frame 
                 width="84px" 
@@ -759,7 +759,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/table-column.png" 
+                :src="getImgUrl('data/table-column')" 
                 alt="">
               <frame 
                 width="34px" 
@@ -774,7 +774,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/table-column-edit.png" 
+                :src="getImgUrl('data/table-column-edit')" 
                 alt="">
               <frame 
                 width="59px" 
@@ -798,7 +798,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/data/table-column-build.png" 
+                :src="getImgUrl('data/table-column-build')" 
                 alt="">
               <frame 
                 width="44px" 
@@ -825,7 +825,7 @@
             name="howToEnter">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/account/entry-nav.png" 
+                :src="getImgUrl('account/entry-nav')" 
                 alt="">
               <frame 
                 width="206px" 
@@ -840,7 +840,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/account/entry-sidenav.png" 
+                :src="getImgUrl('account/entry-sidenav')" 
                 alt="">
               <frame 
                 width="112px" 
@@ -856,7 +856,7 @@
             name="howToInvite">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/account/list.png" 
+                :src="getImgUrl('account/list')" 
                 alt="">
               <frame 
                 width="67px" 
@@ -870,7 +870,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/account/pop-add.png" 
+                :src="getImgUrl('account/pop-add')" 
                 alt="">
               <frame 
                 width="306px" 
@@ -888,7 +888,7 @@
             name="howToUpdateRole">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/account/list.png" 
+                :src="getImgUrl('account/list')" 
                 alt="">
               <frame 
                 width="46px" 
@@ -903,7 +903,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/account/pop-update.png" 
+                :src="getImgUrl('account/pop-update')" 
                 alt="">
               <frame 
                 width="253px" 
@@ -929,7 +929,7 @@
             name="howToEnter">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/group-member/entry-nav.png" 
+                :src="getImgUrl('group-member/entry-nav')" 
                 alt="">
               <frame 
                 width="184px" 
@@ -944,7 +944,7 @@
             </div>
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/group-member/list.png" 
+                :src="getImgUrl('group-member/list')" 
                 alt="">
               <frame 
                 width="111px" 
@@ -960,7 +960,7 @@
             name="howToInvite">
             <div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/group-member/list.png" 
+                :src="getImgUrl('group-member/list')" 
                 alt="">
               <frame 
                 width="67px" 
@@ -973,7 +973,7 @@
                 top="63px" />
             </div><div class="description-image-box">
               <img 
-                src="@/assets/images/function-description/group-member/add.png" 
+                :src="getImgUrl('group-member/add')" 
                 alt="">
               <frame 
                 width="173px" 
@@ -1006,6 +1006,30 @@ export default {
     return {
       activeTab: 'basic',
       activeCollapse: 'uiIntro'
+    }
+  },
+  computed: {
+    lang () {
+      return this.$store.state.setting.locale
+    }
+  },
+  mounted () {
+    // 檢查如果是英文版（沒有功能說明），就先導回首頁
+    if (!this.lang.includes('zh')) {
+      const currentAccount = this.$store.getters['userManagement/getCurrentAccountId']
+      const currentGroup = this.$store.getters['userManagement/getCurrentGroupId']
+      this.$router.push({
+        name: 'PageIndex',
+        params: {
+          'account_id': currentAccount,
+          'group_id': currentGroup 
+        }
+      })
+    }
+  },
+  methods: {
+    getImgUrl (fileName) {
+      return require(`@/assets/images/${this.lang}/function-description/${fileName}.png`)
     }
   }
 }

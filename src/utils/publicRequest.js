@@ -43,44 +43,63 @@ service.interceptors.response.use(
       Message({
         message: res.error.type === 'warning' ? res.error.message : i18n.t('errorMessage.defaultMsg'),
         type: res.error.type,
-        duration: 3 * 1000
+        duration: 3 * 1000,
+        showClose: true
       })
     }
 
     return Promise.reject(res)
   },
   error => {
-    if (error.response && error.response.status === 401) {
-      // 避免單一頁面多個請求，token 失效被登出時跳出多個訊息
-      if (router.currentRoute.path === '/login') return Promise.reject(error)
-      store.commit('dataSource/setIsInit', false)
-      store.commit('userManagement/clearUserInfo')
-      router.push('/login')
-
-      Message({
-        message: i18n.t('errorMessage.authFail'),
-        type: 'error',
-        duration: 3 * 1000
-      })
-    }
-
-    if (error.response && error.response.status === 403) {
-      store.commit('dataSource/setIsInit', false)
-      store.commit('dataSource/setDataSourceId', null)
-      store.commit('userManagement/clearUserInfo')
-      router.push('/login')
-
-      Message({
-        message: i18n.t('errorMessage.permissionChanged'),
-        type: 'error',
-        duration: 3 * 1000
-      })
-    }
-
     // cancel request
     if (axios.isCancel(error)) {
       return Promise.reject(error)
     }
+    
+    if (!error.response) {
+      // network error
+      Message({
+        message: i18n.t('errorMessage.networkError'),
+        type: 'error',
+        duration: 3 * 1000,
+        showClose: true
+      })
+    } else {
+      let statusCode = error.response.status
+
+      switch (statusCode) {
+        case 401:
+          // 避免單一頁面多個請求，token 失效被登出時跳出多個訊息
+          if (router.currentRoute.path === '/login') return Promise.reject(error)
+          store.commit('dataSource/setIsInit', false)
+          store.commit('userManagement/clearUserInfo')
+          router.push('/login')
+
+          Message({
+            message: i18n.t('errorMessage.authFail'),
+            type: 'error',
+            duration: 3 * 1000,
+            showClose: true
+          })
+
+          break
+        case 403:
+          store.commit('dataSource/setIsInit', false)
+          store.commit('dataSource/setDataSourceId', null)
+          store.commit('userManagement/clearUserInfo')
+          router.push('/login')
+
+          Message({
+            message: i18n.t('errorMessage.permissionChanged'),
+            type: 'error',
+            duration: 3 * 1000,
+            showClose: true
+          })
+
+          break
+      }
+    }
+
     // rollbar 留存
     if (window.location.hostname !== 'localhost') {
       Vue.rollbar.error(JSON.stringify(error))

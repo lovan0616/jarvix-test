@@ -80,7 +80,7 @@ export default {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   methods: {
@@ -94,7 +94,8 @@ export default {
         Message({
           message: this.$t('message.connectionFail'),
           type: 'error',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
         this.isProcessing = false
       })
@@ -106,10 +107,12 @@ export default {
           const {id, ...connectionInfo} = this.connectInfo
           return updateDatabaseConnection (id, connectionInfo)
             .then (() => {
+              this.$store.commit('dataManagement/updateCurrentConnectionDB', connectionInfo.databaseType)
               Message({
                 message: this.$t('message.saveSuccess'),
                 type: 'success',
-                duration: 3 * 1000
+                duration: 3 * 1000,
+                showClose: true
               })
               onlySave ? this.prevStep() : this.chooseConnection(id)
             })

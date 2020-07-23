@@ -24,7 +24,7 @@
           :key="headInfo.value"
           :class="{sort: headInfo.sort, hasWidth: headInfo.width}"
           :style="{
-            width: headInfo.width,
+            flex: `${headInfo.width ? 0 : 1} 0 ${headInfo.width}`,
             'text-align': headInfo.align
           }"
           class="data-table-cell"
@@ -96,7 +96,7 @@
           :class="{action: headInfo.action, hasWidth: headInfo.width}"
           :key="headInfo.value"
           :style="{
-            width: headInfo.width,
+            flex: `${headInfo.width ? 0 : 1} 0 ${headInfo.width}`,
             'text-align': headInfo.align
           }"
           class="data-table-cell"
@@ -352,7 +352,7 @@ export default {
     overflow: visible;
   }
   .data-table-row.is-processing {
-    background-color: $theme-bg-color;
+    background-color: var(--color-bg-5);
   }
   .data-table-cell {
     .is-processing {
@@ -369,6 +369,10 @@ export default {
   .link-dropdown {
     position: relative;
     cursor: pointer;
+
+    &[disabled] {
+      cursor: not-allowed;
+    }
 
     &:hover {
       .dropdown {

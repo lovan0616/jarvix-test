@@ -136,10 +136,12 @@ export function deleteDataFrameById (dataFrameId) {
 /**
  * get data column by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
+ * @param {Boolean} hasFeature
+ * @param {Boolean} hasAliasLimit - ture: get one primary alias, false: get all alias
  */
-export function getDataFrameColumnInfoById (dataFrameId, hasFeature = true) {
+export function getDataFrameColumnInfoById (dataFrameId, hasFeature = true, hasAliasLimit = true) {
   return request({
-    url: `/dataColumn/dataFrame/${dataFrameId}?hasFeature=${hasFeature}`,
+    url: `/dataColumn/dataFrame/${dataFrameId}?hasFeature=${hasFeature}&hasAliasLimit=${hasAliasLimit}`,
     method: 'GET'
   })
 }
@@ -262,13 +264,24 @@ export function setMainDateTimeColumn (dataFrameId, dataColumnData) {
 }
 
 /*
- * dataSource preprocessor
+ * data preprocessor
  */
-export function dataSourcePreprocessor (dataSourceInfo) {
+export function dataPreprocessor (data) {
   return request({
     url: `/data/preprocessor`,
     method: 'POST',
-    data: dataSourceInfo
+    data
+  })
+}
+
+/*
+ * data re-preprocessor
+ */
+export function dataRepreprocessor (data) {
+  return request({
+    url: `/data/repreprocessor`,
+    method: 'POST',
+    data
   })
 }
 
@@ -291,5 +304,68 @@ export function getColumnCorrelationMatrix (dataFrameId) {
   return request({
     url: `/dataFrame/${dataFrameId}/relationMatrix`,
     method: 'GET'
+  })
+}
+
+/**
+ * get dataframe etl setting
+ * @param {Number} dataFrameId - 欲查閱的資料表 ID
+ */
+export function getDataFrameEtlSetting (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/importSetting`,
+    method: 'GET'
+  })
+}
+
+/**
+ * get batch load setting
+ * @param {Number} dataFrameId - 欲查閱的資料表 ID
+ */
+export function getBatchLoadSetting(dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/crontab/config`,
+    method: 'GET'
+  })
+}
+
+/**
+ * set batch load
+ * @param {Number} dataFrameId - 欲設定的資料表 ID
+ * @param {Object} data - 送給後端的設定資料
+ */
+export function setBatchLoad(dataFrameId, data) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/crontab/config`,
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * update batch load setting
+ * @param {Number} dataFrameId - 欲更新的資料表 ID
+ * @param {Object} data - 送給後端的設定資料
+ */
+export function updateBatchLoadSetting(dataFrameId, data) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/crontab/config`,
+    method: 'PUT',
+    data
+  })
+}
+
+/**
+ * change batch load setting status
+ * @param {Number} dataFrameId - 欲更新的資料表 ID
+ * @param {Object} status - 是否啟動設定
+ */
+export function changeBatchLoadSettingStatus(dataFrameId, status = 'Disable') {
+  return request({
+    url: `/dataFrame/${dataFrameId}/crontab/config/status`,
+    method: 'PATCH',
+    data: {
+      status
+    }
   })
 }

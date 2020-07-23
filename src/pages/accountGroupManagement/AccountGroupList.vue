@@ -8,8 +8,8 @@
         <div class="button-block">
           <router-link
             v-if="showCreateButton()"
-            :to="{name: 'CreateAccountGroup'}"
-            :class="{disabled: isLoading}"
+            :to="{ name: 'CreateAccountGroup' }"
+            :class="{ disabled: isLoading }"
             class="btn-m btn-default btn-has-icon"
           >
             <svg-icon
@@ -20,15 +20,29 @@
       </div>
       <crud-table
         :headers="tableHeaders"
-        :data-list="groupList"
+        :data-list.sync="groupList"
         :loading="isLoading"
         :empty-message="$t('editing.notYetCreateGroup')"
-        @update:dataList="$emit('update:groupList', $event)"
-        @delete="confirmDelete"
-        @cancel="cancelDelete"
-        @edit="editGroup($event)"
-        @manage="confirmEnterGroup"
-      />
+      >
+        <template v-slot:action="{ data }">
+          <a
+            :disabled="!hasPermission('account_delete_group')" 
+            href="javascript:void(0);"
+            class="link action-link"
+            @click="confirmDelete(data)">{{ $t('button.delete') }}</a>
+          <a
+            :disabled="!hasPermission('account_update_group')" 
+            href="javascript:void(0);"
+            class="link action-link"
+            @click="editGroup(data)">{{ $t('editing.editingName') }}</a>
+          <a
+            v-if="license.maxUser > 1"
+            :disabled="!hasGroupReadUserPermission(data)" 
+            href="javascript:void(0);"
+            class="link action-link"
+            @click="confirmEnterGroup(data)">{{ $t('editing.memberManagement') }}</a>
+        </template>
+      </crud-table>
       <decide-dialog
         v-if="showConfirmDeleteDialog"
         :title="$t('editing.confirmDeleteBelowGroupOrNot')"
@@ -55,7 +69,7 @@ import { getAccountGroupList, deleteGroup } from '@/API/User'
 import CrudTable from '@/components/table/CrudTable'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState, mapActions } from 'vuex'
 
 export default {
   name: 'AccountGroupList',
@@ -73,7 +87,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupId']),
     ...mapState('userManagement', ['license']),
     tableHeaders () {
       return [
@@ -81,7 +95,6 @@ export default {
           text: this.$t('editing.groupName'),
           value: 'groupName',
           sort: true,
-          width: '30%'
         },
         {
           text: this.$t('editing.groupOwner'),
@@ -93,40 +106,24 @@ export default {
           text: this.$t('editing.groupMemberAmount'),
           value: 'memberCount',
           sort: true,
-          width: '10%'
+          width: '150px'
         },
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '35%',
-          action: [
-            {
-              type: 'event',
-              name: this.$t('button.delete'),
-              value: 'delete',
-              permission: 'account_delete_group'
-            },
-            {
-              type: 'event',
-              name: this.$t('editing.editingName'),
-              value: 'edit',
-              permission: 'account_update_group'
-            },
-            ...(this.license.maxUser > 1) ? [{
-              type: 'event',
-              name: this.$t('editing.memberManagement'),
-              value: 'manage',
-              permission: 'account_read_group'
-            }] : {}
-          ]
+          width: '220px'
         }
       ]
+    },
+    userGroupList() {
+      return this.$store.state.userManagement.groupList
     }
   },
   mounted () {
     this.fetchData()
   },
   methods: {
+    ...mapActions('userManagement', ['switchGroupById']),
     fetchData () {
       this.isLoading = true
       getAccountGroupList()
@@ -134,6 +131,7 @@ export default {
         .finally(() => { this.isLoading = false })
     },
     confirmDelete (dataObj) {
+      if (!this.hasPermission('account_delete_group')) return
       this.selectedGroup = dataObj
       this.showConfirmDeleteDialog = true
     },
@@ -142,23 +140,33 @@ export default {
       this.showConfirmDeleteDialog = false
     },
     deleteGroup (data) {
+      // 如果刪掉使用者當前 account 的 default group 則需要切換至新的 group
+      const isDeleteCurrentGroup = this.getCurrentGroupId === this.selectedGroup.groupId
       deleteGroup(this.selectedGroup.groupId)
-        .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
+        .then(() => this.$store.dispatch('userManagement/updateUserGroupList', isDeleteCurrentGroup ? null : this.getCurrentGroupId))
         .then(() => {
           this.fetchData()
           this.showConfirmDeleteDialog = false
           Message({
             message: this.$t('message.groupDeleteSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         })
     },
     showCreateButton () {
       return this.hasPermission('account_create_group')
     },
+    hasGroupReadUserPermission (data) {
+      const currentGroupData = this.userGroupList.find(group => group.groupId === data.groupId)
+      return currentGroupData && currentGroupData.groupPermissionList.includes('group_read_user')
+    },
     confirmEnterGroup (dataObj) {
+      if (!this.hasGroupReadUserPermission(dataObj)) return
       this.selectedGroup = dataObj
+      if (this.getCurrentGroupId === this.selectedGroup.groupId) return this.enterGroup()
+      // 如果欲前往的群組與當前的不同，會切換群組，因此需要先提醒使用者
       this.showConfirmEnterGroupDialog = true
     },
     cancelEnterGroup () {
@@ -166,10 +174,21 @@ export default {
       this.showConfirmEnterGroupDialog = false
     },
     enterGroup () {
-      this.$router.push({name: 'GroupUserList', params: {group_id: this.selectedGroup.groupId}})
+      const selectedGroupId = this.selectedGroup.groupId
+      if (this.getCurrentGroupId === selectedGroupId) {
+        return this.$router.push({ name: 'GroupUserList', params: { group_id: selectedGroupId } })
+      }
+
+      // 如果欲前往的群組與當前的不同，須先切換群組再導頁
+      this.switchGroupById({
+        accountId: this.$route.params.account_id,
+        groupId: selectedGroupId
+      })
+        .then(() => this.$router.push({ name: 'GroupUserList', params: { group_id: selectedGroupId } }))
     },
     editGroup (data) {
-      this.$router.push({name: 'EditAccountGroup', params: {id: data.groupId}})
+      if (!this.hasPermission('account_update_group')) return
+      this.$router.push({ name: 'EditAccountGroup', params: { id: data.groupId } })
     }
   }
 }
@@ -188,7 +207,7 @@ export default {
 }
 
 .table-board {
-  background: $theme-bg-color;
+  background: var(--color-bg-5);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   padding: 24px;
@@ -215,10 +234,6 @@ export default {
 
   & >>> .empty-info-block {
     background: rgba(35, 61, 64, 0.6);
-  }
-
-  & >>> .dialog-box {
-    z-index: 999;
   }
 }
 </style>

@@ -25,7 +25,8 @@ import {
   Pagination,
   Collapse,
   CollapseItem,
-  Tooltip
+  Tooltip,
+  Switch
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -56,6 +57,7 @@ import GeneralResult from '@/components/resultBoard/GeneralResult'
 import CorrelationExplorationResult from '@/components/resultBoard/CorrelationExplorationResult'
 import RootCauseResult from '@/components/resultBoard/RootCauseResult'
 import MultiResult from '@/components/resultBoard/MultiResult'
+import DataPreviewLayout from '@/components/resultBoard/DataPreviewLayout'
 import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
@@ -116,6 +118,7 @@ Vue.use(Pagination)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Tooltip)
+Vue.use(Switch)
 
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)
@@ -131,6 +134,7 @@ Vue.component(GeneralResult.name, GeneralResult)
 Vue.component(CorrelationExplorationResult.name, CorrelationExplorationResult)
 Vue.component(RootCauseResult.name, RootCauseResult)
 Vue.component(MultiResult.name, MultiResult)
+Vue.component(DataPreviewLayout.name, DataPreviewLayout)
 Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
 Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)

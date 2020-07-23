@@ -27,11 +27,19 @@ export default new Vuex.Store({
     previewDataSource
   },
   state: {
-    isShowChatRoom: false
+    isShowChatRoom: false,
+    isShowFullSideNav: false,
+    isAppLoading: false
   },
   mutations: {
     updateChatRoomStatus (state, data) {
       state.isShowChatRoom = data
+    },
+    updateSideNavStatus(state, data) {
+      state.isShowFullSideNav = data
+    },
+    updateAppLoadingStatus(state, data) {
+      state.isAppLoading = data
     }
   }
 })

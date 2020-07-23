@@ -9,6 +9,7 @@
   >
     <spinner
       v-if="loading"
+      :class="{'key-result-spinner': intend === 'key_result'}"
       class="task-spinner"
     />
     <no-result
@@ -16,6 +17,12 @@
       :message="errorMessage"
     />
     <template v-else-if="diagram">
+      <button
+        v-if="intend === 'key_result' && isPinboardPage && diagram === 'line_chart' && componentData.dataset.columns.length === 1"
+        type="button"
+        class="btn-m btn-default btn-monitor"
+        @click="openMonitorSettingDialog"
+      >{{ $t('button.monitorSetting') }}</button>
       <!-- TODO: 調整寫法 -->
       <component
         :is="componentName"
@@ -36,6 +43,9 @@
         :total="componentData.total"
         :item-count="componentData.item_count"
         :key="componentId"
+        :show-toolbox="showToolbox"
+        :custom-chart-style="customChartStyle"
+        :arrow-btn-right="arrowBtnRight"
         @next="getNewPageInfo"
       />
       <div
@@ -46,12 +56,28 @@
         {{ note }}
       </div>
     </template>
+    <monitor-setting-dialog
+      v-if="isShowMonitorSettingDialog"
+      :component-id="componentId"
+      :data-frame-id="dataFrameId"
+      @confirm="updateMonitorSetting"
+      @close="closeMonitorSettingDialog"
+    />
   </div>
 </template>
 <script>
+import MonitorSettingDialog from '@/pages/pinboard/components/MonitorSettingDialog'
+
 export default {
   name: 'Task',
+  components: {
+    MonitorSettingDialog
+  },
   props: {
+    dataFrameId: {
+      type: Number,
+      default: null
+    },
     componentId: {
       type: Number,
       default: null
@@ -59,6 +85,18 @@ export default {
     intend: {
       type: String,
       default: null
+    },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
+    },
+    arrowBtnRight: {
+      type: Number,
+      default: 80
     }
   },
   data () {
@@ -72,6 +110,7 @@ export default {
       errorMessage: '',
       notes: [],
       timeoutFunction: null,
+      autoRefreshFunction: null,
       pagination: {
         currentPage: 0,
         totalPages: 1
@@ -82,7 +121,13 @@ export default {
       maxDataLengthPerPage: 200,
       // 下個分頁資料
       nextPageData: null,
-      singlePage: true
+      singlePage: true,
+      isShowMonitorSettingDialog: false
+    }
+  },
+  computed: {
+    isPinboardPage () {
+      return this.$route.name === 'PersonalPagePinboard' || this.$route.name === 'ProjectPagePinboard'
     }
   },
   mounted () {
@@ -90,6 +135,7 @@ export default {
   },
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+    if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
   },
   methods: {
     fetchData (page = 0) {
@@ -101,6 +147,9 @@ export default {
         }).then(response => {
           // 是否只有一個頁面
           this.singlePage = response.singlePage
+          if (response.isAutoRefresh) {
+            this.singlePage = true
+          }
           switch (response.status) {
             case 'Process':
             case 'Ready':
@@ -116,7 +165,18 @@ export default {
               this.resultId = response.resultId
               this.componentName = this.getChartTemplate(this.diagram)
               let responseData = response.data
+              
+              // 推薦洞察 需要將 question 傳給外層組件顯示用
+              if (responseData.question) {
+                this.$emit('setQuestion', responseData.question)
+              }
 
+              let isAutoRefresh = response.isAutoRefresh
+              if(isAutoRefresh && this.isPinboardPage) {
+                this.autoRefreshFunction = window.setTimeout(() => {
+                  this.autoRefreshData()
+                }, 60 * 1000)
+              }
               // 取樣
               if (responseData.sampling) {
                 this.appendNote(this.genSamplingNote(responseData.sampling))
@@ -157,6 +217,8 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.loading = false
               this.isGetPagination = false
+              // 推薦洞察 若 component Fail 要從外層將組件隱藏起來
+              this.$emit('failed')
               // 如果取分頁資料 fail，當作無資料來處理
               if (page > 0) {
                 this.hasNextPage = false
@@ -328,6 +390,23 @@ export default {
     },
     genGroupLimitNote (randomLimit) {
       return this.$t('resultNote.groupLimitNote', {randomLimit})
+    },
+    openMonitorSettingDialog () {
+      this.isShowMonitorSettingDialog = true
+    },
+    updateMonitorSetting () {
+      this.closeMonitorSettingDialog()
+      this.autoRefreshData()
+    },
+    autoRefreshData () {
+      this.loading = true
+      this.fetchData().then(taskData => {
+        this.componentData = taskData
+        this.loading = false
+      })
+    },
+    closeMonitorSettingDialog () {
+      this.isShowMonitorSettingDialog = false
     }
   }
 }
@@ -337,12 +416,23 @@ export default {
   position: relative;
   width: 100%;
 
+  .task-spinner.key-result-spinner {
+    height: 420px;
+  }
+
   .task-note {
     &::before {
       content: '#';
     }
     color: #A7A7A7;
     font-size: 12px;
+  }
+
+  .btn-monitor {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
   }
 
   // pagination 遮罩

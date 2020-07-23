@@ -29,7 +29,7 @@
 </template>
 <script>
 import SySelect from '@/components/select/SySelect'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'DataSourceSelect',
@@ -37,11 +37,13 @@ export default {
     SySelect
   },
   computed: {
+    ...mapGetters('dataSource', ['dataSourceList']),
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
+    ...mapState('previewDataSource', ['isShowPreviewDataSource']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
-    ...mapGetters('dataSource', ['dataSourceList']),
-    // 過濾掉正在 build 的 bookmark
+    // 過濾掉正在 build 的 dataSource
     buildDataSourceList () {
       return this.dataSourceList.filter(dataSource => {
         return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
@@ -55,10 +57,22 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
     onDataSourceChange (dataSourceId) {
-      this.$store.dispatch('dataSource/changeDataSourceById', {dataSourceId})
+      // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
+      if (this.isShowPreviewDataSource) this.togglePreviewDataSource(false)
+      this.$store.dispatch('dataSource/changeDataSourceById', { dataSourceId })
         .then(() => {
-          if (this.$route.name !== 'PageIndex') this.$router.push('/')
+          this.$router.push({ 
+            name: 'PageIndex', 
+            params: { 
+              'group_id': this.getCurrentGroupId
+            },
+            query: {
+              dataSourceId: this.dataSourceId,
+              dataFrameId: 'all'
+            }
+          })
         })
     },
     togglePreviewDataSource () {
@@ -78,11 +92,11 @@ export default {
   .data-source-select-icon {
     position: absolute;
     top: 10px;
-    left: 10px;
+    left: 14px;
   }
 
   .preview-datasource-btn {
-    width: 36px;
+    width: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -114,7 +128,7 @@ export default {
 <style lang="scss">
 .data-source-select.sy-select.theme-default {
   .el-input__inner {
-    padding-left: 36px;
+    padding-left: 42px;
   }
   .el-input__icon {
     width: 40px;

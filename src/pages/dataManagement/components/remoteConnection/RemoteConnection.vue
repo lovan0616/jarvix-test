@@ -169,7 +169,7 @@ export default {
       return this.$store.getters['userManagement/getCurrentGroupId']
     },
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   methods: {
@@ -190,7 +190,8 @@ export default {
             Message({
               message: this.$t('message.connectionFail'),
               type: 'error',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
             this.isLoading = false
           })
@@ -302,10 +303,6 @@ export default {
     .el-input__inner {
       padding-left: 0;
     }
-  }
-
-  .el-select-dropdown__item {
-    padding-left: 0;
   }
 }
 .remote-connection {

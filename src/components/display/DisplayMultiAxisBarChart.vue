@@ -49,6 +49,7 @@
 
 <script>
 import EchartAddon from './common/addon.js'
+import chartVariable from '@/styles/chart/variables.scss'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { getDrillDownTool } from '@/components/display/common/addons'
 import {
@@ -144,7 +145,7 @@ export default {
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur) => {
-            return acc + `<td style="padding: 4px 12px;">${cur || ''}</td>`
+            return acc + `<td style="padding: 4px 12px;white-space:nowrap;">${cur || ''}</td>`
           }, '')
           table += `<tr ${i % 2 === 0 ? (i === 0 ? 'style="background-color:#2B4D51"' : 'style="background-color:rgba(50, 75, 78, 0.6)"') : ''}>${tableData}</tr>`
         }
@@ -158,7 +159,7 @@ export default {
         for (let i = 0, length = datas.length; i < length; i++) {
           if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined) continue
           let marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color || datas[i].color.colorStops[0].color};"></span>`
-          res += marker + datas[i].seriesName + '：' + datas[i].value[i + 1] + '<br/>'
+          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[i + 1]) + '<br/>'
         }
         return res
       }
@@ -193,6 +194,10 @@ export default {
           ...config.yAxis,
           type: 'value',
           name: axis.display_name,
+          nameTextStyle: {
+            color: chartVariable['textColor'],
+            align: index % 2 === 0 ? 'left' : 'right'
+          },
           offset: Math.floor(index / 2) * 35,
           scale: false,
           min: (value) => {

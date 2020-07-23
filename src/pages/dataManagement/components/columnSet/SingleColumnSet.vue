@@ -27,10 +27,14 @@
         @click="toggleIsEditing()"
       >{{ $t('button.close') }}</button>
     </div>
-    <div 
-      v-if="!isEditing" 
-      class="region-title">
-      {{ columnSet.primaryAlias }}
+    <div
+      v-if="!isEditing">
+      <el-tooltip
+        :content="columnSet.primaryAlias"
+        placement="bottom"
+      >
+        <div class="region-title">{{ columnSet.primaryAlias }}</div>
+      </el-tooltip>
     </div>
     <template v-else>
       <div class="input-block">
@@ -137,7 +141,7 @@ export default {
   },
   computed: {
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   mounted () {
@@ -171,7 +175,8 @@ export default {
           Message({
             message: this.$t('message.saveSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           this.columnSet.dataColumnList.push(response)
           this.columnOptionList.splice(index, 1)
@@ -199,7 +204,8 @@ export default {
           Message({
             message: this.$t('message.deleteSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         })
       }
@@ -212,7 +218,8 @@ export default {
           Message({
             message: this.$t('message.columnSetNameEmpty'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }
@@ -220,7 +227,8 @@ export default {
           Message({
             message: this.$t('message.columnSetChosenEmpty'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           return false
         }
@@ -232,7 +240,8 @@ export default {
           Message({
             message: this.$t('message.saveSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           this.columnSet.id = response.id
           this.columnSet.dataColumnList = response.dataColumnList
@@ -246,7 +255,8 @@ export default {
           Message({
             message: this.$t('message.deleteSuccess'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
           this.$emit('remove')
         })
@@ -268,6 +278,11 @@ export default {
   background: rgba(50, 58, 58, 0.95);
   border-radius: 5px;
   margin-bottom: 12px;
+  &::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
 
   .button-block {
     position: absolute;
@@ -321,8 +336,10 @@ export default {
   }
 
   .region-title {
-    width: 301px;
+    float: left;
+    max-width: calc(100% - 80px);
     line-height: 36px;
+    @include text-hidden;
   }
 
   .select-container {
@@ -376,6 +393,7 @@ export default {
       .info {
         font-size: 14px;
         line-height: 20px;
+        width: calc(100% - 80px);
 
         &:first-child {
           margin-bottom: 4px;

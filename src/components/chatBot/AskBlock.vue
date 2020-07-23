@@ -29,6 +29,8 @@
           @keyup.shift.ctrl.72="toggleHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
+          @keyup="handleAskText"
+          @focus="focusInput"
         >
         <a 
           href="javascript:void(0);" 
@@ -47,11 +49,13 @@
       </div>
       <div 
         :class="{ 'disabled': dataSourceList.length === 0 }" 
-        class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}<a 
+        class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}
+        <a 
           href="javascript:void(0)" 
           class="link help-link"
           @click="showHelper"
-      >{{ $t('askHelper.helpLink') }}</a> </div>
+        >{{ $t('askHelper.helpLink') }}</a>
+      </div>
     </div>
     <div 
       :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
@@ -86,6 +90,8 @@
 </template>
 <script>
 import AskHelperDialog from './AskHelperDialog'
+import { mapState, mapGetters } from 'vuex'
+import { Message } from 'element-ui'
 
 export default {
   name: 'AskBlock',
@@ -97,15 +103,25 @@ export default {
       userQuestion: null,
       showHistoryQuestion: false,
       showAskHelper: false,
-      websocketHandler: null
+      websocketHandler: null,
+      recommendList: [],
+      cursorPositionQuestion: null,
+      closeQuickAsk: localStorage.getItem('closeQuickAsk') || false
     }
   },
   computed: {
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
-    appQuestion () {
-      return this.$store.state.dataSource.appQuestion
+    ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    dictionaries () {
+      return [
+        ...this.dataSourceColumnInfoList.booleanList.map(element => ({type: 'boolean', text: element})),
+        ...this.dataSourceColumnInfoList.category.map(element => ({type: 'category', text: element})),
+        ...this.dataSourceColumnInfoList.dateTime.map(element => ({type: 'dateTime', text: element})),
+        ...this.dataSourceColumnInfoList.numeric.map(element => ({type: 'numeric', text: element})),
+        ...this.dataSourceColumnInfoList.uniqueList.map(element => ({type: 'unique', text: element})),
+        ...this.dataSourceDataValueList.map(element => ({type: 'dataValue', text: element})),
+        ...this.$t('questionToken')
+      ]
     },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
@@ -121,10 +137,52 @@ export default {
     },
     dataSourceList () {
       return this.$store.state.dataSource.dataSourceList
+    },
+    questionTokenList () {
+      let tokenList = []
+      // 處理問句字串
+      if (!this.userQuestion) return []
+      for (let i = 0; i < this.userQuestion.length; i++) {
+        for (let j = this.userQuestion.length; j >= i + 1; j--) {
+          let currentText = this.userQuestion.slice(i, j)
+          // 找出是否有符合的 token
+          let tokenIndex = this.dictionaries.findIndex(element => element.text.toLowerCase() === currentText.toLowerCase())
+          if (tokenIndex > -1) {
+            tokenList.push(this.dictionaries[tokenIndex])
+            i = j - 1
+            break
+          }
+
+          if (j === i + 1) {
+            tokenList.push({type: 'unknown', text: this.userQuestion[i]})
+          }
+        }
+      }
+
+      return tokenList
     }
   },
   watch: {
-    userQuestion () {
+    questionTokenList (value, oldValue) {
+      if (this.closeQuickAsk === 'true') return
+      if (value.length === 0) return
+      // token 減少不處理
+      let newRecognizeTokenList = value.filter(element => element.type !== 'unknown')
+      let oldRecognizeTokenList = oldValue.filter(element => element.type !== 'unknown')
+      if (newRecognizeTokenList.length <= oldRecognizeTokenList.length) return
+
+      // 如果最後一個是認得出來的 token 就問問題
+      let lastToken = value[value.length - 1]
+      if (lastToken.type !== 'unknown') {
+        this.enterQuestion()
+      } else {
+        // 未來作推薦問句的處理
+        // this.recommendList = this.dictionaries.filter(element => {
+        //   return element.text.indexOf(lastToken.text) !== -1
+        // }).map(element => element.text)
+      }
+    },
+    userQuestion (val) {
       if (document.activeElement === this.$refs.questionInput) {
         this.showHistory()
       }
@@ -142,7 +200,7 @@ export default {
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
-    this.closeWebSocketConnection()
+    if (this.websocketHandler) this.closeWebSocketConnection()
   },
   methods: {
     toggleWebSocketConnection () {
@@ -163,6 +221,44 @@ export default {
     onWebSocketOpen () {
     },
     onWebSocketReceiveMessage (evt) {
+      if (evt.data === '圈選2018年11月至2019年1月') {
+        // drill down
+        this.$store.commit('chatBot/setDoDrillDown', true)
+        return
+      }
+      if (evt.data === '回到資料集') {
+        // 回到首頁
+        this.$router.push({ 
+          name: 'PageIndex', 
+          params: {
+            'account_id': this.getCurrentAccountId,
+            'group_id': this.getCurrentGroupId
+          },
+          query: {
+            dataSourceId: this.$route.query.dataSourceId,
+            dataFrameId: this.$route.query.dataFrameId
+          }
+        })
+        this.cleanQuestion()
+        return
+      }
+      if (evt.data === '點擊環境濕度') {
+        // 點擊環境溫度
+        this.$store.commit('chatBot/setDoClickCorrelation', true)
+        return
+      }
+      if (evt.data === '取消過濾條件') {
+        // 清空 drill down
+        this.$store.commit('dataSource/clearFilterList')
+        Message({
+          message: '已取消過濾條件',
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
+        return
+      }
+
       this.userQuestion = evt.data
       this.enterQuestion()
     },
@@ -220,6 +316,12 @@ export default {
     },
     toggleAlgorithm () {
       this.$store.commit('chatBot/updateIsUseAlgorithm', !this.isUseAlgorithm)
+    },
+    focusInput () {
+      this.$store.dispatch('chatBot/openAskInMemory')
+    },
+    handleAskText (e) {
+      this.cursorPositionQuestion = this.userQuestion.slice(0, e.target.selectionStart)
     }
   },
 }
@@ -228,7 +330,7 @@ export default {
 .ask-container {
   position: relative;
   padding: 16px 32px;
-  background-color: rgba(35, 61, 64, 0.6);
+  background-color: var(--color-bg-1);
 
   .user-question-block {
     position: relative;
@@ -328,12 +430,11 @@ export default {
 
     .help-link {
       font-size: 13px;
-      margin-left: 4px;
     }
   }
 
   .ask-helper-dialog {
-    bottom: 111px;
+    bottom: 100%;
 
     &.has-filter {
       bottom: 137px;
@@ -353,7 +454,7 @@ export default {
     position: absolute;
     text-align: left;
     left: 0;
-    bottom: 111px;
+    bottom: 100%;
     width: 100%;
     height: 0;
     overflow: hidden;

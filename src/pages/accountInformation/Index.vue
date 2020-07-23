@@ -18,7 +18,8 @@
               {{ $t('accountInfo.currentUserAmount') }}
             </h6>
             <p class="sub-info-desciption">
-              {{ license.currentUser || '-' }}{{ $t('accountInfo.person') }}
+              {{ license.currentUser || '-' }}
+              {{ $tc('accountInfo.person', license.currentUser) }}
             </p>
           </div>
           <div class="sub-info-block">
@@ -26,7 +27,8 @@
               {{ $t('accountInfo.userAmountLimit') }}
             </h6>
             <p class="sub-info-desciption">
-              {{ license.maxUser || '-' }}{{ $t('accountInfo.person') }}
+              {{ license.maxUser || '-' }}
+              {{ $tc('accountInfo.person', license.maxUser) }}
             </p>
           </div>
         </div>
@@ -117,7 +119,7 @@ export default {
   grid-template-columns: 1fr;
   grid-template-rows: repeat(2, 76px) 50px;
   grid-gap: 12px;
-  background: $theme-bg-color;
+  background: var(--color-bg-5);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   padding: 24px 20px;
@@ -128,7 +130,7 @@ export default {
 
   .info-block {
     display: grid;
-    grid-template-columns: 144px 195px auto;
+    grid-template-columns: 180px 260px auto;
     background: rgba(35, 61, 64, 0.6);
     padding: 12px 16px;
   }

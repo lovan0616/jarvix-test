@@ -24,7 +24,7 @@
           :key="headInfo.value"
           :class="{sort: headInfo.sort, hasWidth: headInfo.width}"
           :style="{
-            width: headInfo.width,
+            flex: `${headInfo.width ? 0 : 1} 0 ${headInfo.width}`,
             'text-align': headInfo.align
           }"
           class="data-table-cell"
@@ -83,30 +83,34 @@
           :class="{action: headInfo.action, hasWidth: headInfo.width}"
           :key="headInfo.value"
           :style="{
-            width: headInfo.width,
+            flex: `${headInfo.width ? 0 : 1} 0 ${headInfo.width}`,
             'text-align': headInfo.align
           }"
           class="data-table-cell"
         >
-          <a 
+          <el-tooltip
             v-if="headInfo.link && checkLinkEnable(headInfo, data)" 
-            href="javascript:void(0)"
-            class="link name-link"
-            @click="linkTo(headInfo.link, data.id)"
-          >{{ data[headInfo.value] }}</a>
-
+            :content="data[headInfo.value]"
+            placement="bottom-start"
+          >
+            <a 
+              href="javascript:void(0)"
+              class="link name-link"
+              @click="linkTo(headInfo.link, data.id)"
+            >{{ data[headInfo.value] }}</a>
+          </el-tooltip>
           <a 
             v-for="action in headInfo.action" 
             v-else-if="headInfo.action"
             :key="action.name"
-            :disabled="isProcessing || isInProcess(data) || ((isFail(data) || isPending(data)) && action.value !== 'delete')"
+            :disabled="isDisabledActionButton(action.value, data)"
             href="javascript:void(0)"
             class="link action-link link-dropdown"
             @click="doAction(action.value, data)"
           >
             <dropdown-select
               v-if="showActionDropdown(action.subAction, data)"
-              :bar-data="action.subAction"
+              :bar-data="showSubAction(action.subAction, data)"
               class="dropdown"
               @switchDialogName="doAction($event, data)"
             />
@@ -172,6 +176,24 @@
             <span class="dataframe-status failed">
               {{ $t('editing.buildFailed') }}：{{ data.failDataFrameCount }}
             </span>
+          </span>
+          <span v-else-if="headInfo.value === 'primaryAlias'">
+            <el-tooltip
+              :content="data[headInfo.value]"
+              placement="bottom-start"
+            >
+              <span class="dataframe-name">{{ data[headInfo.value] }}</span>
+            </el-tooltip>
+          </span>
+          <span 
+            v-else-if="headInfo.value === 'latestLogStatus'"
+            :class="{ 'is-processing': data[headInfo.value] === 'Ready' || data[headInfo.value] === 'Process' }"
+          >
+            <svg-icon
+              v-if="data[headInfo.value] === 'Ready' || data[headInfo.value] === 'Process'"
+              icon-class="spinner"
+            />
+            {{ batchLoadStatus(data) }}
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
@@ -350,8 +372,20 @@ export default {
       }
     },
     doAction (actionName, data) {
-      if (!actionName || this.isProcessing || this.isInProcess(data) || ((this.isFail(data) || this.isPending(data)) && actionName !== 'delete')) return false
+      if (
+        !actionName 
+        || this.isDisabledActionButton(actionName, data)
+      ) return false
       this.$emit(actionName, data)
+    },
+    isDisabledActionButton(actionName, data) {
+      if (
+        this.isProcessing 
+        || this.isInProcess(data) 
+        || ((this.isFail(data) || this.isPending(data)) && actionName !== 'delete')
+        || (actionName === 'batchLoad' && data.originType !== 'database')
+      ) return true
+      return false
     },
     /**
      * TODO
@@ -382,8 +416,29 @@ export default {
           return i18n.t('editing.dataInQueue')
       }
     },
+    batchLoadStatus (data) {
+      if (data.originType !== 'database') return '-'
+      switch (data['latestLogStatus']) {
+        case null:
+          return this.$t('batchLoad.noRecord')
+        case 'Complete':
+          return this.$t('batchLoad.updateSuccessfully')
+        case 'Fail':
+          return this.$t('batchLoad.updateFailed')
+        case 'Process':
+        case 'Ready':
+          return this.$t('batchLoad.updating')
+      }
+    },
     showActionDropdown (subAction, data) {
       return subAction && !this.isProcessing && !this.isInProcess(data) && !this.isFail(data) && !this.isPending(data)
+    },
+    showSubAction (subAction, data) {
+      return subAction.filter(action => {
+        if (action.dialogName === 'etlSetting') return data.etlExists
+        if (action.dialogName === 'batchLoad') return data.originType === 'database'
+        return true
+      })
     },
     isInProcess (data) {
       return data['state'] === 'Process' || data['state'] === 'PROCESSING'
@@ -414,12 +469,13 @@ export default {
     display: inline-block;
     width: 100%;
     color: #42A5B3;
+    @include text-hidden;
   }
   .data-table-body {
     overflow: visible;
   }
   .data-table-row.is-processing {
-    background-color: $theme-bg-color;
+    background-color: var(--color-bg-5);
   }
   .data-table-cell {
     .is-processing {
@@ -437,6 +493,9 @@ export default {
       &.failed {
         color: $theme-color-danger;
       }
+    }
+    .dataframe-name {
+      @include text-hidden;
     }
   }
   .hasWidth {

@@ -1,0 +1,19 @@
+:root, [lang="zh"] {
+  --theme-letter-spacing-small: 0.5px;
+  --theme-letter-spacing-regular: 1px;
+  --theme-letter-spacing-semi-wide: 1.5px;
+  --theme-letter-spacing-wide: 2px;
+  --theme-letter-spacing-x-wide: 3px;
+}
+
+[lang="en"] {
+  --theme-letter-spacing-small: 0;
+  --theme-letter-spacing-regular: 0.5px;
+  --theme-letter-spacing-semi-wide: 1px;
+  --theme-letter-spacing-wide: 1px;
+  --theme-letter-spacing-x-wide: 1.5px;
+}
+
+[lang="en"] {
+  word-break: initial;
+}

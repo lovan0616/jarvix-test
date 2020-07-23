@@ -44,7 +44,7 @@
   />
 </template>
 <script>
-import { dataSourcePreprocessor } from '@/API/DataSource'
+import { dataPreprocessor } from '@/API/DataSource'
 import UploadProcessBlock from './UploadProcessBlock'
 import EtlColumnSetting from '../etl/EtlColumnSetting'
 import EtlChooseColumn from '../etl/EtlChooseColumn'
@@ -98,7 +98,8 @@ export default {
         Message({
           message: this.$t('etl.pleaseSelectAtLeastOneColumnPerTable'),
           type: 'warning',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
         return
       }
@@ -106,7 +107,7 @@ export default {
       this.isProcessing = true
       let promiseList = []
       this.etlTableList.forEach((element, index) => {
-        let promise = dataSourcePreprocessor(element).then(response => {
+        let promise = dataPreprocessor(element).then(response => {
           this.tableIdList[index].connectionStatus = 'success'
         }).catch(() => {
           this.tableIdList[index].connectionStatus = 'fail'
@@ -122,7 +123,8 @@ export default {
           Message({
             message: this.$t('message.analysisFailed'),
             type: 'error',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         })
         .finally(() => {

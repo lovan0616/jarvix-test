@@ -53,7 +53,8 @@ export default {
     Message({
       message: i18n.t('message.addFilter'),
       type: 'success',
-      duration: 3 * 1000
+      duration: 3 * 1000,
+      showClose: true
     })
   },
   setDataFrameList(state, data) {

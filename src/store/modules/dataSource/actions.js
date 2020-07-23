@@ -6,7 +6,8 @@ import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
 import axios from 'axios'
 const CancelToken = axios.CancelToken
-let cancelFunction
+let popupCancelFunction
+let displayCancelFunction
 
 export default {
   init ({ commit, dispatch, state, getters, rootGetters }) {
@@ -22,7 +23,7 @@ export default {
     }
     commit('setIsInit', true)
   },
-  getDataSourceList({ dispatch, commit, state }, {dataSourceId, dataFrameId}) {
+  getDataSourceList({ dispatch, commit, state, rootGetters }, { dataSourceId, dataFrameId }) {
     return getDataSourceList().then(res => {
       commit('setDataSourceList', res)
       // 找出第一個可以使用的 dataSourceId
@@ -30,17 +31,30 @@ export default {
       if (dataSourceId) {
         // 判斷路由的 DataSource 是否存在，且該 DataSource 是有可使用的 DataFrame
         if (res.some(element => element.id === dataSourceId && element.enableDataFrameCount)) {
-          dispatch('changeDataSourceById', {dataSourceId, dataFrameId})
+          dispatch('changeDataSourceById', { dataSourceId, dataFrameId })
         } else {
           const dataSourceId = firstEnableDataSourceIndex > -1 ? res[firstEnableDataSourceIndex].id : null
-          dispatch('changeDataSourceById', {dataSourceId, dataFrameId: 'all'})
+          dispatch('changeDataSourceById', { dataSourceId, dataFrameId: 'all' })
           if (firstEnableDataSourceIndex < 0) dispatch('handleEmptyDataSource')
-          router.push('/')
+          const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
+          router.push({
+            name: 'PageIndex', 
+            params: { 
+              'group_id': currentGroupId
+            },
+            query: {
+              ...(dataSourceId && {
+                dataSourceId: dataSourceId,
+                dataFrameId: 'all'
+              })
+            }
+          })
 
           Message({
             message: i18n.t('message.dataSourceNotExist'),
             type: 'success',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         }
       } else {
@@ -48,14 +62,13 @@ export default {
           dispatch('handleEmptyDataSource')
         } else if (!state.dataSourceId || res.findIndex(element => element.id === state.dataSourceId) < 0) {
           // 如果沒有 dataSourceId 或是 dataSourceId 被刪掉了，就設第一個可使用的 dataSource
-          dispatch('changeDataSourceById', {dataSourceId: res[firstEnableDataSourceIndex].id, dataFrameId: 'all'})
+          return dispatch('changeDataSourceById', { dataSourceId: res[firstEnableDataSourceIndex].id, dataFrameId: 'all' })
         }
       }
     })
   },
-  async changeDataSourceById({ dispatch, commit, state }, {dataSourceId, dataFrameId = 'all'}) {
-    if (state.dataSourceId === dataSourceId) return Promise.resolve(state)
-
+  async changeDataSourceById({ dispatch, commit, state, rootGetters }, {dataSourceId, dataFrameId = 'all'}) {
+    if (state.dataSourceId === dataSourceId  && state.dataFrameId === dataFrameId) return Promise.resolve(state)
     // 清空對話紀錄
     if (state.dataSourceId) dispatch('clearChatbot')
     // 更新 DataSource 資料
@@ -69,9 +82,28 @@ export default {
     // 更新 DataFrame 資料
     const dataFrameList = await dispatch('getDataSourceTables')
     commit('setDataFrameList', dataFrameList)
+
     // 當指定 DataFrame 時，確認是否存在
     if (dataFrameId !== 'all' && !dataFrameList.some(element => element.id === dataFrameId)) {
-      return dispatch('changeDataFrameById', 'all')
+      dispatch('changeDataFrameById', 'all')
+      const currentGroupId = rootGetters['userManagement/getCurrentGroupId']
+      router.push({
+        name: 'PageIndex',
+        params: {
+          'group_id': currentGroupId
+        },
+        query: {
+          dataSourceId: dataSourceId,
+          dataFrameId: 'all'
+        }
+      })
+
+      return Message({
+        message: i18n.t('message.dataFrameNotExist'),
+        type: 'success',
+        duration: 3 * 1000,
+        showClose: true
+      })
     }
     return dispatch('changeDataFrameById', dataFrameId)
   },
@@ -118,11 +150,12 @@ export default {
   getDataFrameData ({ state }, { id, page = 0, cancelToken }) {
     return getDataFrameData(id, page, cancelToken)
   },
-  getDataFrameIntro ({ dispatch, state }, { id, page }) {
-    dispatch('cancelRequest')
+  getDataFrameIntro ({ dispatch, state }, { id, page, mode }) {
+    dispatch('cancelRequest', mode)
     const cancelToken = new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
-      cancelFunction = c
+      if (mode === 'popup') popupCancelFunction = c
+      if (mode === 'display') displayCancelFunction = c
     })
     return Promise.all([
       dispatch('getDataFrameData', { id, page, cancelToken }),
@@ -179,9 +212,12 @@ export default {
   clearAllFilter ({ commit }) {
     commit('clearFilterList')
   },
-  cancelRequest () {
-    if (typeof cancelFunction === 'function') {
-      cancelFunction('cancel request')
+  cancelRequest ({ state }, mode) {
+    if (mode === 'popup' && typeof popupCancelFunction === 'function') {
+      popupCancelFunction('cancel request')
+    } 
+    if (mode === 'display' && typeof displayCancelFunction === 'function') {
+      displayCancelFunction('cancel request')
     }
   },
   async updateDataFrameList({ commit, state, dispatch }) {

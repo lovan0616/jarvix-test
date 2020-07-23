@@ -1,5 +1,6 @@
 <template>
   <result-board
+    :result-id="resultId"
     :result-info="resultInfo"
     :restrictions="restrictions"
   >
@@ -14,9 +15,8 @@
       class="correlation-result-body"
     >
       <template slot="PageResultBoardIndicator">
-        <hint-info-block
-          :msg-list="[$t('editing.resultOverSizeMessage')]"
-          inline
+        <notify-info-block
+          :msg="$t('editing.resultOverSizeMessage')"
         />
       </template>
       <template slot="PageResultBoardChart">
@@ -45,6 +45,7 @@
                   v-if="resultInfo.sub_key_result[displayFactorIndex]"
                   :key="`sub-key-result-${displayFactorIndex}`"
                   :component-id="resultInfo.sub_key_result[displayFactorIndex]"
+                  :data-frame-id="dataFrameId"
                   intend="sub_key_result"
                 />
               </keep-alive>
@@ -68,16 +69,27 @@
           intend="sub_basic_info"
         />
       </template>
+      <template 
+        v-if="resultInfo.recommended_insight && resultInfo.recommended_insight.length > 0"
+        slot="InsightRecommended">
+        <recommended-insight 
+          v-for="(componentId, index) in resultInfo.recommended_insight" 
+          :key="index"
+          :component-id="componentId"
+        />
+      </template>
     </result-board-body>
   </result-board>
 </template>
 <script>
-import HintInfoBlock from '@/components/display/HintInfoBlock'
+import NotifyInfoBlock from '@/components/display/NotifyInfoBlock'
+import RecommendedInsight from '@/components/display/RecommendedInsight'
 
 export default {
   name: 'CorrelationExplorationResult',
   components: {
-    HintInfoBlock
+    NotifyInfoBlock,
+    RecommendedInsight
   },
   props: {
     resultInfo: {
@@ -87,6 +99,14 @@ export default {
     restrictions: {
       type: Array,
       default: () => []
+    },
+    dataFrameId: {
+      type: Number,
+      default: null
+    },
+    resultId: {
+      type: Number,
+      default: null
     }
   },
   data () {

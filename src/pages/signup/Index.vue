@@ -75,18 +75,19 @@ export default {
   },
   computed: {
     max () {
-      return this.$store.state.validation.fieldCommonMaxLength
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   created () {
     // retrieve email token for validation
     const emailToken = this.$route.query.token
     if (!emailToken) {
-      this.$router.push({name: 'PageLogin'})
+      this.$router.push({ name: 'PageLogin' })
       return Message({
         message: this.$t('errorMessage.lackOfSignUpToken'),
         type: 'error',
-        duration: 3 * 1000
+        duration: 3 * 1000,
+        showClose: true
       })
     }
     this.confirmEmailToken(emailToken)
@@ -102,7 +103,7 @@ export default {
           this.userInfo.accountRoleId = res.accountRole
         })
         .catch(() => {
-          this.$router.push({name: 'PageLogin'})
+          this.$router.push({ name: 'PageLogin' })
         })
     },
     submitForm () {
@@ -112,11 +113,12 @@ export default {
         const {verifyPassword, ...userInfo} = this.userInfo
         signup(userInfo)
           .then(() => {
-            this.$router.push({name: 'PageLogin'})
+            this.$router.push({ name: 'PageLogin' })
             Message({
               message: this.$t('message.signUpSuccessPleaseLogin'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           })
           .catch(() => { this.isProcessing = false })
@@ -137,7 +139,7 @@ export default {
 
   .signup-form {
     text-align: left;
-    background-color: $theme-bg-color;
+    background-color: var(--color-bg-5);
     padding: 28px;
     border-radius: 5px;
 
@@ -148,6 +150,10 @@ export default {
 
       &:not(:last-child) {
         margin-bottom: 37px;
+
+        &.has-error {
+          margin-bottom: 55px;
+        }
       }
 
       &:first-of-type {

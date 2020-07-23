@@ -27,6 +27,9 @@ const sankeyConfig = {
       type: 'sankey',
       data: [],
       links: [],
+      nodeGap: 14,
+      top: 16,
+      nodeAlign: 'left',
       focusNodeAdjacency: 'allEdges',
       itemStyle: {
         normal: {
@@ -74,10 +77,17 @@ export default {
       }
       // 不顯示“全選”按鈕
       sankeyOptions.legend.selector = false
-      sankeyOptions.nodeGap = 20
       sankeyOptions.series[0].data = this.dataList
       sankeyOptions.series[0].links = this.linkList
       sankeyOptions.tooltip.trigger = 'item'
+      sankeyOptions.tooltip.formatter = (datas) => {
+        if (datas.dataType === 'node') {
+          return `${datas.name}: ${this.formatComma(datas.value)}`        
+        } else {
+          let item = datas.data
+          return `${item.source} -- ${item.target}: ${this.formatComma(item.value)}`
+        }
+      }
       sankeyOptions.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.series[0].links.sort((a, b) => {
           return a.source > b.source ? 1 : -1
@@ -116,14 +126,9 @@ export default {
       return sankeyOptions
     },
     chartStyle () {
-      // let columns = this.dataset.columns
-      // return {
-      //   width: '100%',
-      //   height: `${this.dataset.data[columns[0]][columns[1]].length * 32}px` || '420px'
-      // }
       return {
         width: '100%',
-        height: '420px'
+        height: `${this.dataList.length * 32}px` || '420px'
       }
     },
     appQuestion () {
@@ -142,6 +147,10 @@ export default {
            * 如果 target / source 是數字的話會有問題，只好先轉 String 再送進去
            */
           this.dataset.data[element][column].forEach(singleLink => {
+            // null 轉 toString 會壞掉
+            if (singleLink[0] === null) singleLink[0] = 'null'
+            if (singleLink[1] === null) singleLink[1] = 'null'
+
             this.linkList.push({
               source: singleLink[0].toString() + '-' + this.dataset.columns[0],
               target: singleLink[1].toString() + '-' + this.dataset.columns[1],

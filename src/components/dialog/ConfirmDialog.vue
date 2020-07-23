@@ -106,7 +106,7 @@ export default {
   .dialog-container {
     position: relative;
     width: 800px;
-    top: 194px;
+    top: 160px;
     left: 0;
     right: 0;
     bottom: 0;

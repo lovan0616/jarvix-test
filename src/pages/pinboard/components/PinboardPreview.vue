@@ -116,7 +116,10 @@ export default {
   computed: {
     shareUrl () {
       return `${window.location.origin}/pinboard/${this.boardInfo.id}`
-    }
+    },
+    accountId () {
+      return this.$route.params.account_id
+    },
   },
   methods: {
     editName () {
@@ -127,6 +130,7 @@ export default {
       this.isAskDelete = true
     },
     confirmEdit () {
+      this.tempEditInfo.accountId = this.accountId
       this.$store.dispatch('pinboard/updatePinboardName', this.tempEditInfo).then(() => {
         this.cancelEdit()
       })
@@ -139,7 +143,7 @@ export default {
       this.isAskDelete = false
     },
     deletePinboard () {
-      this.$store.dispatch('pinboard/deletePinboard', this.boardInfo.id).then(() => {
+      this.$store.dispatch('pinboard/deletePinboard', { accountId: this.accountId, id: this.boardInfo.id }).then(() => {
         this.cancelDelete()
       })
     },
@@ -173,7 +177,8 @@ export default {
       Message({
         message: this.$t('message.copiedToBoard'),
         type: 'success',
-        duration: 3 * 1000
+        duration: 3 * 1000,
+        showClose: true
       })
       this.$nextTick(() => {
         this.cancelShare()

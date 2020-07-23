@@ -8,11 +8,11 @@
         <div class="button-block">
           <router-link
             v-if="showCreateButton()"
-            :to="{name: 'GroupCreateUser', params: {group_id: currentGroupId}}"
+            :to="{ name: 'GroupCreateUser' }"
             class="btn-m btn-default btn-has-icon"
           >
             <svg-icon
-              icon-class="user"
+              icon-class="user-plus"
               class="icon"/>{{ $t('button.addNewMember') }}
           </router-link>
         </div>
@@ -41,6 +41,7 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import {getGroupUserList, deleteGroupUser} from '@/API/Group'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
+import i18n from '@/lang/index.js'
 
 export default {
   name: 'GroupUserList',
@@ -60,7 +61,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupId']),
     tableHeaders () {
       return [
         {
@@ -95,11 +96,6 @@ export default {
     this.currentGroupId = this.$route.params.group_id
     this.fetchData(this.currentGroupId)
   },
-  beforeRouteUpdate (to, from, next) {
-    this.currentGroupId = to.params.group_id
-    this.fetchData(this.currentGroupId)
-    next()
-  },
   methods: {
     fetchData (currentGroupId) {
       this.isLoading = true
@@ -124,35 +120,45 @@ export default {
     },
     deleteGroupUser (data) {
       this.isLoading = true
-      const prevGroupName = this.$store.getters['userManagement/getCurrentGroupName']
       deleteGroupUser(this.selectedUser.id, this.currentGroupId)
-        .then(() => this.$store.dispatch('userManagement/updateUserGroupList'))
+        .then(() => this.$store.dispatch('userManagement/updateUserGroupList', this.currentGroupId))
         .then(() => {
-          this.fetchData(this.currentGroupId)
-          this.closeDelete()
           setTimeout(() => {
+            // 無法透過 this 使用 i18n: 如果更新後無群組或被切換群組，此 component 會被 destroyed 掉
             Message({
-              message: this.$t('message.memberDeleteSuccess'),
+              message: i18n.t('message.memberDeleteSuccess'),
               type: 'success',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           }, 0)
 
-          // 若因刪除群組而造成使用者 default 群組變動，給予提示訊息
-          const currentGroupName = this.$store.getters['userManagement/getCurrentGroupName']
-          if (!currentGroupName) {
-            Message({
+          // 處理將自己從當前 group 刪除的情況: 無群組
+          if (!this.getCurrentGroupId) {
+            this.$router.push({ name: 'PageGrouplessGuidance' })
+            return Message({
               message: this.$t('message.youAreGroupless'),
               type: 'warning',
-              duration: 3 * 1000
-            })
-          } else if (prevGroupName !== currentGroupName) {
-            Message({
-              message: this.$t('message.switchToGroupBySys', { groupName: currentGroupName }),
-              type: 'info',
-              duration: 3 * 1000
+              duration: 3 * 1000,
+              showClose: true
             })
           }
+          
+          // 處理將自己從當前 group 刪除的情況: 切換群組
+          if (Number(this.currentGroupId) !== Number(this.getCurrentGroupId)) {
+            this.$router.push({ name: 'PageIndex', params: { 'group_id': this.getCurrentGroupId } })
+            // 若因刪除群組而造成使用者 default 群組變動，給予提示訊息
+            const currentGroupName = this.$store.getters['userManagement/getCurrentGroupName']
+            return Message({
+              message: this.$t('message.switchToGroupBySys', { groupName: currentGroupName }),
+              type: 'info',
+              duration: 3 * 1000,
+              showClose: true
+            })
+          }
+          
+          this.fetchData(this.currentGroupId)
+          this.closeDelete()
         })
         .catch(() => { this.isLoading = false })
     },
@@ -196,7 +202,7 @@ export default {
 }
 
 .table-board {
-  background: $theme-bg-color;
+  background: var(--color-bg-5);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   padding: 24px;
@@ -223,10 +229,6 @@ export default {
 
   & >>> .empty-info-block {
     background: rgba(35, 61, 64, 0.6);
-  }
-
-  & >>> .dialog-box {
-    z-index: 999;
   }
 }
 </style>

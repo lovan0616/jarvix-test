@@ -1,5 +1,6 @@
 export default {
   setUserInfo (state, data) {
+    state.userId = data.userId
     state.userName = data.userName
     state.accountList = data.accountList
     state.groupList = data.groupList
@@ -15,6 +16,7 @@ export default {
     state.license.currentDataStorageSize = data
   },
   clearUserInfo (state) {
+    state.userId = null
     state.userName = ''
     state.accountList = []
     state.groupList = []

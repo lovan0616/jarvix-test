@@ -1,13 +1,37 @@
 <template>
   <div class="pinboard-dialog">
+    <div
+      v-show="pinStep === 1"
+      class="pinboard-option-list">
+      <div
+        class="single-board"
+        @click="choosePersonalPinboard(true)">
+        {{ $t('editing.onlyPersonal') }}
+      </div>
+      <div
+        class="single-board"
+        @click="choosePersonalPinboard(false)">
+        {{ $t('editing.shareToProject') }}
+      </div>
+    </div>
     <div 
-      v-if="!isEdit"
+      v-show="pinStep === 2"
       class="pinboard-option-list"
     >
+      <div class="return-block-container">
+        <div class="block__arrow" />
+        <a
+          href="javascript:void(0);" 
+          class="link action-link"
+          @click.prevent="prevStep"
+        >
+          {{ $t('editing.prevStep') }}
+        </a>
+      </div>
       <div 
         class="single-board default"
-        @click="editBoard"
-      ><span class="add-icon">+</span>{{ $t('editing.createBoard') }}</div>
+        @click="nextStep"
+      ><span class="add-icon">+</span>{{ $t('editing.newPinboard') }}</div>
       <div 
         v-for="pinboardInfo in pinboardList"
         :key="pinboardInfo.id"
@@ -16,11 +40,12 @@
       >{{ pinboardInfo.name }}</div>
     </div>
     <div 
-      v-else
+      v-show="pinStep === 3"
       class="edit-block"
     >
       <input 
         v-model="newBoardName" 
+        :placeholder="$t('editing.pinboardName')"
         type="text"
         class="input board-name-input"
       >
@@ -38,21 +63,34 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'PinboardDialog',
   data () {
     return {
-      isEdit: false,
-      newBoardName: null
+      newBoardName: null,
+      pinStep: 1,
+      isPersonal: true
     }
   },
   computed: {
+    ...mapState('userManagement', ['userId']),
     pinboardList () {
-      return this.$store.state.pinboard.pinboardList
+      return this.isPersonal 
+        ? this.$store.state.pinboard.pinboardList
+        : this.$store.state.pinboard.groupPinboardList
+    },
+    userId () {
+      return this.$store.state.userManagement.userId
+    },
+    groupId () {
+      return this.$store.getters['userManagement/getCurrentGroupId']
     }
   },
   mounted () {
     document.addEventListener('click', this.autoHide, false)
+    this.getPinboardInfo()
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
@@ -63,21 +101,39 @@ export default {
         this.$emit('close')
       }
     },
+    getPinboardInfo () {
+      this.$store.dispatch('pinboard/getPinboardList')
+      this.$store.dispatch('pinboard/getGroupPinboardList', this.groupId)
+    },
     pin (id) {
       this.$emit('pin', id)
     },
     cancelCreate () {
-      this.isEdit = false
       this.newBoardName = null
+      this.$emit('close')
     },
     createPinboard () {
-      this.$store.dispatch('pinboard/createPinboard', this.newBoardName).then(response => {
-        this.$emit('pin', response.id)
-        this.cancelCreate()
-      })
+      if(this.isPersonal) {
+        this.$store.dispatch('pinboard/createPinboard', this.newBoardName).then(response => {
+          this.$emit('pin', response.id)
+          this.cancelCreate()
+        })
+      } else {
+        this.$store.dispatch('pinboard/createGroupPinboard', { name: this.newBoardName, groupId: this.groupId }).then(response => {
+          this.$emit('pin', response.id)
+          this.cancelCreate()
+        })
+      }
     },
-    editBoard () {
-      this.isEdit = true
+    prevStep () {
+      this.pinStep -= 1
+    },
+    nextStep () {
+      this.pinStep += 1
+    },
+    choosePersonalPinboard (isPersonal) {
+      this.isPersonal = isPersonal
+      this.nextStep()
     }
   },
 }
@@ -88,10 +144,10 @@ export default {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  background-color: rgba(60, 60, 60, 0.85);
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.1);
+  background-color: rgba(60, 60, 60, 0.95);
+  box-shadow: 0px 4px 10px rgba(58, 178, 189, 0.5);
   border-radius: 8px;
-  padding: 16px;
+  padding: 20px;
   z-index: 999;
 
   &:before {
@@ -108,20 +164,45 @@ export default {
     border-width: 10px;
   }
 
+ .return-block-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .block__arrow {
+      width: 8px;
+      height: 8px;
+      margin-right: 8px;
+      border-radius: 1px;
+      border-left: 2px solid $button-color;
+      border-bottom: 2px solid $button-color;
+      transform: rotate(45deg)
+    }
+
+    .block__label {
+      font-weight: 600;
+      font-size: 14px;
+      color: $button-color;
+      &:hover {
+        border-bottom: 2px solid;
+      }
+    }
+  }
+
   .pinboard-option-list {
     max-height: 300px;
     overflow: auto;
   }
 
   .single-board {
-    background-color: $theme-bg-color;
     padding: 4px 12px;
-    border-radius: 8px;
+    border-radius: 4px;
     font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     cursor: pointer;
+    border: 1px solid #FFF;
 
     &:hover {
       background-color: rgba(0, 0, 0, 0.6);
@@ -131,19 +212,17 @@ export default {
       margin-bottom: 8px;
     }
 
-    &.default {
-      background-color: rgba(255, 255, 255, 0.16);
-    }
-
     .add-icon {
       margin-right: 4px;
     }
   }
 
   .edit-block {
-    padding: 12px 0;
     .board-name-input {
-      margin-bottom: 16px;
+      height: 39px;
+      font-size: 16px;
+      line-height: 22px;
+      margin-bottom: 12px;
     }
     .button-block {
       display: flex;
@@ -153,6 +232,12 @@ export default {
         margin-right: 16px;
       }
     }
+  }
+}
+
+[lang="en"] {
+  .pinboard-dialog {
+    width: 240px;
   }
 }
 </style>

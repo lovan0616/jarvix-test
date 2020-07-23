@@ -153,11 +153,7 @@ export default {
     fetchData () {
       this.isLoading = true
       getConnectionInfoList(this.groupId).then(response => {
-        if (response.length > 0) {
-          this.connectionList = response
-        } else {
-          this.$emit('skip')
-        }
+        this.connectionList = response
         this.isLoading = false
       }).catch(() => {
         this.isLoading = false
@@ -170,19 +166,22 @@ export default {
       testOldConnection(id, new axios.CancelToken(function executor (c) {
         _this.askCancelFunction = c
       })).then(() => {
+        this.$store.commit('dataManagement/updateCurrentConnectionDB', this.connectionList.find(element => element.id === id).databaseType)
         this.$emit('next', id)
       }).catch((response) => {
         if(response.message === 'cancel request') {
             Message({
             message: this.$t('message.connectionInterrupted'),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         } else {
           Message({
             message: this.$t('message.connectionFail'),
             type: 'error',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         }
       }).finally(() => {
@@ -207,7 +206,8 @@ export default {
         Message({
           message: this.$t('message.deleteSuccess'),
           type: 'success',
-          duration: 3 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
       })
       this.currentDeleteIndex = null

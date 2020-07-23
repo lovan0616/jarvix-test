@@ -1,11 +1,15 @@
 <template>
-  <div id="app">
+  <div 
+    id="app" 
+    :lang="getLang"
+    :theme="getColor"
+  >
     <div class="app-bg"/>
     <transition 
       name="fade" 
       mode="out-in">
       <router-view 
-        v-if="init" 
+        v-if="init"
         :key="locale"/>
       <spinner 
         v-else 
@@ -15,6 +19,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'App',
   data () {
@@ -25,8 +31,12 @@ export default {
     }
   },
   computed: {
-    locale () {
-      return this.$store.state.setting.locale
+    ...mapState('setting', ['locale', 'languageDefault']),
+    getLang () {
+      return this.locale.split('-')[0]
+    },
+    getColor () {
+      return sessionStorage.getItem('themeColor')
     }
   },
   watch: {
@@ -40,13 +50,20 @@ export default {
   },
   mounted () {
     this.init = true
+    sessionStorage.setItem('themeColor', 'default')
   },
   methods: {
     checkLocale () {
       let prevLocale = localStorage.getItem('locale')
-      let browserScale = (navigator.language || navigator.browserLanguage).toLowerCase()
-      browserScale = browserScale === 'zh-tw' ? 'zh-TW' : 'zh-CN'
-      let locale = prevLocale || browserScale
+      let browserLocale = (navigator.language || navigator.browserLanguage).toLowerCase()
+      if (browserLocale.includes('en')) {
+        browserLocale = 'en-US'
+      } else if (browserLocale === 'zh-tw') {
+        browserLocale = 'zh-TW'
+      } else {
+        browserLocale = this.languageDefault
+      }
+      let locale = prevLocale || browserLocale
       this.$store.commit('setting/setLocale', locale)
     }
   },

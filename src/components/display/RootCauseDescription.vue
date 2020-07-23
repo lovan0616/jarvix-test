@@ -40,6 +40,8 @@ export default {
 .root-cause-description {
   letter-spacing: 0.2em;
   padding-right: 36px;
+  max-height: 400px;
+  overflow: auto;
 
   .description {
     font-size: 14px;

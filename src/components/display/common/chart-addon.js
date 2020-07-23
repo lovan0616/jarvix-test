@@ -1,5 +1,5 @@
 import i18n from '@/lang/index.js'
-import { timeToDateTime } from './addons'
+import moment from 'moment'
 import chartVariable from '@/styles/chart/variables.scss'
 // 與 DisplayBasicChart 共用的部分，這邊為了 i18n 改成 function
 export function commonChartOptions () {
@@ -12,6 +12,7 @@ export function commonChartOptions () {
       itemHeight: 12,
       icon: 'circle',
       itemGap: 20,
+      selectorButtonGap: 20,
       textStyle: {
         color: chartVariable['textColor']
       },
@@ -27,10 +28,22 @@ export function commonChartOptions () {
           title: i18n.t('button.selectAll')
         }
       ],
+      emphasis: {
+        selectorLabel: {
+          backgroundColor: '#0a3c42',
+          borderColor: '#0a3c42',
+          borderWidth: 2
+        }
+      },
       selectorLabel: {
         color: '#fff',
         backgroundColor: '#2AD2E2',
-        borderColor: 'transparent'
+        borderColor: '#2AD2E2',
+        borderWidth: 2,
+        align: 'center',
+        verticalAlign: 'middle',
+        lineHeight: 12,
+        padding: [2, 10, 2, 10]
       }
     },
     toolbox: {
@@ -109,7 +122,7 @@ export function commonChartOptions () {
           icon: 'M17.773 22.652c0.033 0.043 0.076 0.077 0.124 0.101s0.102 0.036 0.155 0.036c0.054 0 0.107-0.012 0.155-0.036s0.091-0.058 0.124-0.101l4.966-6.326c0.182-0.232 0.018-0.576-0.279-0.576h-3.286v-15.107c0-0.196-0.16-0.357-0.355-0.357h-2.66c-0.195 0-0.355 0.161-0.355 0.357v15.103h-3.277c-0.297 0-0.461 0.344-0.279 0.576l4.966 6.33zM34.28 21.089h-2.66c-0.195 0-0.355 0.161-0.355 0.357v6.875h-26.426v-6.875c0-0.196-0.16-0.357-0.355-0.357h-2.66c-0.195 0-0.355 0.161-0.355 0.357v8.839c0 0.79 0.634 1.429 1.419 1.429h30.328c0.785 0 1.419-0.638 1.419-1.429v-8.839c0-0.196-0.16-0.357-0.355-0.357z',
           title: i18n.t('chart.download'),
           backgroundColor: '#0D1B1D',
-          name: window.location.search ? timeToDateTime(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + decodeURI(window.location.search.split('&')[0].split('question=')[1]) : i18n.t('chart.download'),
+          name: window.location.search ? moment(Number(window.location.search.split('&')[1].split('stamp=')[1])).format('YYYY-MM-DD-HH_mm') + '_' + decodeURI(window.location.search.split('&')[0].split('question=')[1]) : i18n.t('chart.download'),
           excludeComponents: ['toolbox', 'dataZoom', 'brush'],
           pixelRatio: 2
         }
@@ -126,8 +139,17 @@ export function commonChartOptions () {
           textBackgroundColor: '#0a3c42'
         }
       },
-      showTitle: true,
-      top: 54
+      showTitle: false,
+      top: 54,
+      tooltip: {
+        show: true,
+        padding: 4,
+        position: 'left',
+        textStyle: {
+          width: '100%',
+          fontSize: 12
+        }
+      }
     },
     tooltip: {
       show: true,
@@ -176,10 +198,10 @@ export function chartOptions () {
       type: 'value',
       name: '',
       // nameGap: 58,
-      // nameLocation: 'middle',
       nameTextStyle: {
         fontSize: 12,
-        color: chartVariable['textColor']
+        color: chartVariable['textColor'],
+        align: 'left'
       },
       axisLabel: {
         color: chartVariable['yAxisLabelColor']
@@ -190,7 +212,7 @@ export function chartOptions () {
       axisTick: {
         show: false
       },
-      scale: true
+      scale: false
     },
     series: []
   }

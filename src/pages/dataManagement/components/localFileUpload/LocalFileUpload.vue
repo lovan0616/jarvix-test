@@ -190,7 +190,8 @@ export default {
           Message({
             message: this.$t('message.fileTypeNotSupported', {fileType: notSupportedFileTypeString}),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         }, 0)
       }
@@ -231,7 +232,8 @@ export default {
           Message({
             message: this.$t('editing.reachUploadCountLimit', {countLimit: this.fileCountLimit}),
             type: 'warning',
-            duration: 3 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
 
           return false
