@@ -277,7 +277,9 @@ export default {
     doDrillDown (val) {
       if (!val) return
       this.robotDrillDownEvent()
-      this.saveFilter()
+      window.setTimeout(() => {
+        this.saveFilter()
+      }, 1000)
       this.$store.commit('chatBot/setDoDrillDown', false)
     }
   },
@@ -293,11 +295,26 @@ export default {
             xAxisIndex: 0,
             brushType: 'lineX',
             coordRange: [
-              10, 12
+              10, 11
             ]
           }
         ]
       })
+      // 為了要看起來有動態效果，只好圈兩次
+      window.setTimeout(() => {
+        this.$refs.chart.dispatchAction({
+          type: 'brush',
+          areas: [
+            {
+              xAxisIndex: 0,
+              brushType: 'lineX',
+              coordRange: [
+                10, 12
+              ]
+            }
+          ]
+        })
+      }, 0)
     },
     composeColumn (element, colIndex) {
       return {
