@@ -9,7 +9,7 @@
           :label="$t('pinboard.source')"
           :name="$t('pinboard.source')"
         >
-          hello
+          <pinboard-data-info/>
         </el-tab-pane>
         <el-tab-pane
           :label="$t('pinboard.restrict')"
@@ -27,11 +27,13 @@
 </template>
 <script>
 import PinboardFilterInfo from './PinboardFilterInfo'
+import PinboardDataInfo from './PinboardDataInfo'
 
 export default {
   name: 'PinboardInfoDialog',
   components: {
-    PinboardFilterInfo
+    PinboardFilterInfo,
+    PinboardDataInfo
   },
   props: {
     filterInfo: {
@@ -41,7 +43,7 @@ export default {
   },
   data () {
     return {
-      activeTab: this.$t('pinboard.restrict')
+      activeTab: this.$t('pinboard.source')
     }
   },
   mounted () {
@@ -64,11 +66,11 @@ export default {
   width: 380px;
   position: absolute;
   top: 100%;
-  right: 0;
+  right: 188px;
   background-color: #323A3A;
   box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
   border-radius: 8px;
-  padding: 24px 20px;
+  padding: 10px 20px;
   text-align: left;
   z-index: 999;
 
@@ -87,47 +89,43 @@ export default {
   }
 
   .pinboard-info-block {
-    max-height: 350px;
-    overflow: auto;
-  }
+    max-height: 280px;
+    overflow: hidden;
 
-  .pinboard-info-tab.el-tabs--card {
-    &>.el-tabs__header {
-      border: none;
-      margin: 0 0 27px;
+    >>> .el-tabs--card {
+      &>.el-tabs__header {
+        margin: 0 0 25px;
+        border-bottom: 3px solid #414848;
 
-      .el-tabs__nav {
-        width: 100%;
-        border: none;
-
-        &::before {
-          content: '';
-          position: absolute;
-          bottom: 0;
+        .el-tabs__nav {
           width: 100%;
-          height: 3px;
-          background: #324B4E;
+          border: none;
+
+          &::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            height: 3px;
+            background: #324B4E;
+          }
+        }
+
+        .el-tabs__item {
+          border: none;
+          color:  #AAAAAA;
+          text-align: center;
+
+          &.is-active {
+            color: #fff;
+            background: linear-gradient(360deg, #324B4E 0%, rgba(50, 75, 78, 0) 100%);
+            border-bottom: 3px solid $theme-color-primary;
+          }
         }
       }
-
-      .el-tabs__item {
-        border: none;
-        width: 160px;
-        color:  #AAAAAA;
-        border-bottom: 3px solid #324B4E;
-        text-align: center;
-
-        &.is-active {
-          color: #fff;
-          background: linear-gradient(360deg, #324B4E 0%, rgba(50, 75, 78, 0) 100%);
-          border-bottom: 3px solid $theme-color-primary;
-        }
+      .el-tabs__content {
+        max-height: 210px;
+        overflow-y: auto;
       }
-    }
-
-    .el-tabs__content {
-      overflow-y: auto;
-      height: calc(100vh - 280px - #{$header-height});
     }
   }
 }

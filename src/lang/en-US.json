@@ -480,8 +480,10 @@
     "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field from each table."
   },
   "pinboard": {
-    "source": "資料來源",
-    "restrict": "Filter Restriction"
+    "source": "Source",
+    "restrict": "Filter Restriction",
+    "dataFrame":"Data Set",
+    "relativeDataColun":"Data Columns"
   },
   "batchLoad": {
     "primaryKeyColumns": "Primary Keys",
@@ -695,7 +697,7 @@
     "batchLoadSetting": "Batch Loading Data",
     "select": "Select",
     "download": "Data Download",
-    "dataExplanation": "資料說明",
+    "dataExplanation": "Details",
     "start": "Start",
     "copyAndBuild": "Copy and Build",
     "createGroup": "New Project",

@@ -16,15 +16,15 @@
           <button 
             v-if="hasFilter"
             class="head-btn restrict"
-            @click.stop.prevent="toggleFilterInfo"
+            @click.stop.prevent="togglePinboardInfo"
           >
             {{ $t('button.dataExplanation') }}
-            <pinboard-info-dialog
-              v-if="isShowFilterInfo"
-              :filter-info="restrictions"
-              @close="closeFilterInfo"
-            />
           </button>
+          <pinboard-info-dialog
+            v-if="isShowPinboardInfo"
+            :filter-info="restrictions"
+            @close="closePinboardInfo"
+          />
           <a 
             class="head-btn share"
             href="javascript:void(0)"
@@ -143,7 +143,7 @@ export default {
       isShowShareDialog: false,
       isShowDelete: false,
       isShowShare: false,
-      isShowFilterInfo: false
+      isShowPinboardInfo: false
     }
   },
   computed: {
@@ -276,11 +276,11 @@ export default {
     closeDelete () {
       this.isShowDelete = false
     },
-    toggleFilterInfo () {
-      this.isShowFilterInfo = !this.isShowFilterInfo
+    togglePinboardInfo () {
+      this.isShowPinboardInfo = !this.isShowPinboardInfo
     },
-    closeFilterInfo () {
-      this.isShowFilterInfo = false
+    closePinboardInfo () {
+      this.isShowPinboardInfo = false
     }
   },
 }
