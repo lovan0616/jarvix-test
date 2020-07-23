@@ -73,7 +73,6 @@ export default {
     if (state.dataSourceId) dispatch('clearChatbot')
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
-    commit('setDataFrameId', dataFrameId)
     commit('dataFrameAdvanceSetting/toggleIsInit', false, { root: true })
     dispatch('dataFrameAdvanceSetting/clearColumnList', null, { root: true })
     
