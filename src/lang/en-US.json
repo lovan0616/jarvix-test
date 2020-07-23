@@ -38,7 +38,9 @@
     "selectAll": "Select All",
     "cancelSelect": "Deselect All",
     "clearCriteria": "Clear Filter Conditions",
-    "noCriteriaYet": "No filter condition has been set"
+    "noCriteriaYet": "No filter condition has been set",
+    "allColumns": "All Columns",
+    "dataColumns": "Columns"
   },
   "message": {
     "joinTableBuilding": "Data Set will be available for analysis once it is processed.",

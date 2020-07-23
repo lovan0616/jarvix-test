@@ -43,18 +43,6 @@
         >
           <svg-icon icon-class="go-right"/>
         </a>
-        <div class="ask-target">
-          <svg-icon
-            icon-class="database" 
-            class="ask-target__icon"/>
-          <!-- TODO 待從store拿當前資料源 -->
-          <span class="ask-target__label">運動產品銷售</span>
-          <svg-icon
-            icon-class="table" 
-            class="ask-target__icon"/>
-          <!-- TODO 待從store拿當前資料表 -->
-          <span class="ask-target__label">全部資料表</span>
-        </div>
       </div>
       <div 
         :class="{ 'disabled': dataSourceList.length === 0 }" 
@@ -67,7 +55,7 @@
       </div>
     </div>
     <div
-      :class="{show: isFocus && showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
+      :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
       class="history-question-block"
     >
       <div 
@@ -314,24 +302,17 @@ export default {
       box-shadow: 0px 0px 20px rgba(12, 209, 222, .5);
       border-radius: 5px;
     }
-
-    .user-question-block .ask-target {
-      height: 32px;
-    }
   }
   
   .ask-block {
-    padding-left: 13px;
-    display: flex;
-    align-items: flex-start;
+    position: relative;
+    height: 100%;
   }
 
   .user-question-block {
-    flex: 1;
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    z-index: 999;
+    width: calc(100% - 54px);
     background-color: #1D2424;
     border: 1px solid #1D2424;
     border-radius: 5px;
@@ -397,30 +378,12 @@ export default {
       font-size: 20px;
       color: $theme-color-primary;
     }
-
-    .ask-target {
-      flex-basis: 100%;
-      height: 0;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      font-size: 12px;
-      background-color: #282E2E;
-      padding: 0 10px;
-      transition: height .3s;
-      overflow: hidden;
-
-      &__label {
-        margin-right: 10px;
-      }
-      &__icon {
-        margin-right: 6px;
-        fill: $theme-color-primary;
-      }
-    }
   }
 
   .ask-remark-block {
+    position: absolute;
+    right: 0;
+    top: 0;
     font-size: 16px;
     height: 40px;
     width: 40px;
@@ -474,9 +437,9 @@ export default {
   .history-question-block {
     position: absolute;
     text-align: left;
-    left: 13px;
+    left: 0;
     top: 100%;
-    width: calc(100% - 69px);
+    width: calc(100% - 56px);
     height: 0;
     overflow: hidden;
     transition: all .1s;
@@ -489,7 +452,6 @@ export default {
     }
 
     &.show {
-      top: calc(100% +  32px);
       height: 160px;
       overflow: auto;
       padding: 4px 0;
@@ -507,9 +469,6 @@ export default {
         background-color: #464A50;
       }
 
-      // &:not(:last-child) { 
-      //   padding-bottom: 8px;
-      // }
 
       .icon {
         margin-right: 14px;
@@ -519,9 +478,9 @@ export default {
 
   .ask-helper {
     width: calc(100% - #{$app-side-nav-closed-width});
-    height: calc(100vh - #{$header-height + $chat-room-height});
+    height: calc(100vh - #{$header-height + $chat-room-height + $ask-condition-height});
     position: fixed;
-    top: $header-height + $chat-room-height;
+    top: $header-height + $chat-room-height + $ask-condition-height;
     right: 0;
     background: #000;
     overflow: auto;

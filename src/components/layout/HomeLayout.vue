@@ -6,6 +6,7 @@
       :class="{ 'wrapper--has-basic-df-setting': isShowSettingBox }"
       class="wrapper wrapper--has-chat-room"
     >
+      <ask-condition />
       <main class="main">
         <div class="center">
           <transition 
@@ -40,6 +41,7 @@ import ChatRoomBlock from '@/components/chatBot/ChatRoom'
 import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
 import PreviewDataSource from '@/components/PreviewDataSource'
 import AdvanceDataFrameSetting from '@/components/AdvanceDataFrameSetting'
+import AskCondition from '@/components/AskCondition'
 import store from '@/store'
 import { mapState } from 'vuex'
 
@@ -49,7 +51,8 @@ export default {
     ChatRoomBlock,
     ChatBotBtn,
     PreviewDataSource,
-    AdvanceDataFrameSetting
+    AdvanceDataFrameSetting,
+    AskCondition,
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
@@ -82,9 +85,9 @@ export default {
   position: relative;
 
   .main {
-    padding-top: 32px;
-    padding-bottom: 64px;
-    min-height: calc(100vh - #{$header-height + $chat-room-height});
+    padding: 32px 24px 64px 24px;
+    height: calc(100% - 32px);
+    overflow: auto;
   }
 
   .preview-datasource {

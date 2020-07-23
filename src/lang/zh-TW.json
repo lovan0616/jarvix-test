@@ -38,7 +38,9 @@
     "selectAll": "全部選取",
     "cancelSelect": "取消選取",
     "clearCriteria": "清除條件",
-    "noCriteriaYet": "尚未加入篩選條件"
+    "noCriteriaYet": "尚未加入篩選條件",
+    "allColumns": "全部欄位",
+    "dataColumns": "資料欄位"
   },
   "message": {
     "joinTableBuilding": "資料表建置中，建置完成即可使用",
