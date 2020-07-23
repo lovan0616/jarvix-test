@@ -91,7 +91,7 @@
 <script>
 import AskHelperDialog from './AskHelperDialog'
 import { mapState, mapGetters } from 'vuex'
-
+import { Message } from 'element-ui'
 
 export default {
   name: 'AskBlock',
@@ -244,6 +244,17 @@ export default {
       if (evt.data === '點擊環境濕度') {
         // 點擊環境溫度
         this.$store.commit('chatBot/setDoClickCorrelation', true)
+        return
+      }
+      if (evt.data === '取消過濾條件') {
+        // 清空 drill down
+        this.$store.commit('dataSource/clearFilterList')
+        Message({
+          message: '已取消過濾條件',
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
         return
       }
 
