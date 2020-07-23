@@ -6,7 +6,7 @@
       :class="{ 'wrapper--has-basic-df-setting': isShowSettingBox }"
       class="wrapper wrapper--has-chat-room"
     >
-      <ask-condition />
+      <ask-condition :key="`${dataSourceId}-${dataFrameId}`"/>
       <main class="main">
         <div class="center">
           <transition 
@@ -56,9 +56,7 @@ export default {
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     }
