@@ -193,6 +193,7 @@ export default {
       this.$store.commit('previewDataSource/togglePreviewDataSource', !this.isShowPreviewDataSource)
     },
     toggleAdvanceDataFrameSetting () {
+      if (this.isDisableDataFrameAdvanceSetting) return 
       this.toggleSettingBox(!this.isShowSettingBox)
     },
     closeHelper () {
