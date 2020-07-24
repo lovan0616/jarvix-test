@@ -174,7 +174,12 @@
         background-color: #303435 !important;
       }
 
-      &.is-active>.el-submenu__title {
+      &.is-active,>.el-submenu__title {
+        color: #FFF;
+        background-color: #666 !important;
+      }
+
+      &.is-opened>.el-submenu__title {
         color: #FFF;
         background-color: #666 !important;
       }

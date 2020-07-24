@@ -20,7 +20,8 @@
           v-for="(dataSource, dataSourceIndex) in availableDataSourceList"
           :key="'dataSource' + dataSourceIndex">
           <el-submenu 
-            :index="'1-' + dataSourceIndex" 
+            :index="'1-' + dataSourceIndex"
+            :class="{'is-active': dataSourceIndex === getDataSourceIndex}"
             class="data-frame-select__submenu">
             <template slot="title">
               <svg-icon 
@@ -31,7 +32,9 @@
             <div 
               v-for="(dataFrame, dataFrameIndex) in dataSource.dataFrames"
               :key="'dataFrame' + dataFrameIndex">
-              <el-menu-item :index="dataSourceIndex + '-' + dataFrameIndex">
+              <el-menu-item 
+                :index="dataSourceIndex + '-' + dataFrameIndex"
+                :class="{'is-active': dataSourceIndex === getDataSourceIndex && dataFrameIndex === getDataFrameIndex}">
                 <template slot="title">
                   <svg-icon 
                     icon-class="table" 
@@ -125,6 +128,16 @@ export default {
           }, [defaultOption])
         }
       })
+    },
+    getDataSourceIndex() {
+      return this.availableDataSourceList.findIndex(dataSource => (
+        dataSource.id === this.dataSourceId
+      ))
+    },
+    getDataFrameIndex() {
+      return this.availableDataSourceList[this.getDataSourceIndex].dataFrames.findIndex(dataFrame => (
+        dataFrame.id === this.dataFrameId
+      ))
     },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
