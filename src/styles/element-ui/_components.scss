@@ -172,6 +172,10 @@
 
       &__title {
         background-color: #303435 !important;
+
+        &:hover {
+          background-color: #666 !important;
+        }
       }
 
       &.is-active, &.is-opened {
@@ -181,20 +185,12 @@
         }
       }
 
-      .el-submenu__title:hover {
-        background-color: #666 !important;
-      }
-
       .el-menu-item {
         margin: 0 0 1px 0;
         background-color: #303435 !important;
 
-        &.is-active {
+        &.is-active, &:hover {
           color: #FFF;
-          background-color: #666 !important;
-        }
-
-        &:hover {
           background-color: #666 !important;
         }
       }
