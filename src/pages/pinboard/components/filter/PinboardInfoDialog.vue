@@ -70,7 +70,7 @@ export default {
   background-color: #323A3A;
   box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
   border-radius: 8px;
-  padding: 10px 20px;
+  padding: 10px 20px 0;
   text-align: left;
   z-index: 999;
 
