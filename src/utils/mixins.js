@@ -44,7 +44,7 @@ Vue.mixin({
     formatComma (str) {
       if (!str) return str
       // 只處理整數位，不處理小數點位
-      const isInt = Number.isInteger(str)
+      const isInt = Number.isInteger(Number(str))
       if (isInt) return str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
       return str.toString().split('.')[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + str.toString().split('.')[1]
     },
