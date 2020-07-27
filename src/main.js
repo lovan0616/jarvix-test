@@ -14,6 +14,7 @@ import './styles/App.scss'
 import i18n from './lang/index.js'
 
 import {
+  Input,
   Select,
   Option,
   Table,
@@ -109,6 +110,7 @@ var Rollbar = require('vue-rollbar')
 
 Vue.use(VueEvents)
 // Element UI components
+Vue.use(Input)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Table)
