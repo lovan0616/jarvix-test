@@ -136,6 +136,7 @@ export default {
       ))
     },
     getDataFrameIndex() {
+      if (this.availableDataSourceList.length === 0) return -1
       return this.availableDataSourceList[this.getDataSourceIndex].dataFrames.findIndex(dataFrame => (
         dataFrame.id === this.dataFrameId
       ))
