@@ -303,6 +303,11 @@ const router = new Router({
       name: 'PageSignup',
       component: () => import('@/pages/signup/Index')
     },
+    {
+      path: '/sis-setting',
+      name: 'SisSetting',
+      component: () => import('@/pages/sisSetting/Index')
+    }
   ],
   linkActiveClass: 'active',
   scrollBehavior (to, from, savedPosition) {
