@@ -52,6 +52,7 @@
       </el-submenu>
     </el-menu>
     <button 
+      :disabled="isDisablePreviewDataSource"
       class="preview-datasource-btn"
       @click="togglePreviewDataSource"
     >
@@ -60,7 +61,7 @@
         :content="previewDataSourceTooltipContent"
       >
         <svg-icon 
-          :class="{'preview-datasource-btn__icon--show': isShowPreviewDataSource}"
+          :class="{ 'preview-datasource-btn__icon--show': isShowPreviewDataSource, 'preview-datasource-btn__icon--disabled': isDisablePreviewDataSource }"
           icon-class="view-data"
           class="preview-datasource-btn__icon"/>
       </el-tooltip>
@@ -75,7 +76,7 @@
         :content="previewDataFrameSettingTooltipContent"
       >
         <svg-icon 
-          :class="{'dataframe-setting-btn__icon--show': isShowSettingBox, 'dataframe-setting-btn__icon--disabled': isDisableDataFrameAdvanceSetting}"
+          :class="{ 'dataframe-setting-btn__icon--show': isShowSettingBox, 'dataframe-setting-btn__icon--disabled': isDisableDataFrameAdvanceSetting }"
           icon-class="filter-setting"
           class="preview-datasource-btn__icon"/>
       </el-tooltip>
@@ -136,8 +137,11 @@ export default {
       if (this.isDisableDataFrameAdvanceSetting) return this.$t('bot.switchSpecificDataFrame') 
       return this.isShowSettingBox ? this.$t('bot.closeDataFrameSetting') : this.$t('bot.openDataFrameSetting')
     },
+    isDisablePreviewDataSource () {
+      return this.availableDataSourceList.length === 0 || !this.dataSourceId
+    },
     isDisableDataFrameAdvanceSetting () {
-      return this.availableDataSourceList === 0 || this.dataFrameId === 'all'
+      return this.availableDataSourceList.length === 0 || this.dataFrameId === 'all' || this.dataFrameId === null
     },
   },
   methods: {
@@ -171,6 +175,7 @@ export default {
       })
     },
     togglePreviewDataSource () {
+      if (this.isDisablePreviewDataSource) return
       this.$store.commit('previewDataSource/togglePreviewDataSource', !this.isShowPreviewDataSource)
     },
     toggleAdvanceDataFrameSetting () {
