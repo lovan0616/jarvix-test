@@ -196,8 +196,7 @@ export default {
       showEditFeatureDialog: false,
       intervalFunction: null,
       checkDataFrameIntervalFunction: null,
-      isLoading: false,
-      showJoinTable: localStorage.getItem('showJoinTable')
+      isLoading: false
     }
   },
   computed: {
@@ -331,7 +330,6 @@ export default {
   mounted () {
     this.fetchData()
     this.checkDataSourceStatus()
-    this.checkJoinTable()
     this.checkIfReachFileSizeLimit()
   },
   beforeDestroy () {
@@ -349,11 +347,6 @@ export default {
           this.$store.commit('userManagement/setLicenseCurrentDataStorageSize', accountInfo.license.currentDataStorageSize)
         })
         .catch(() => {})
-    },
-    checkJoinTable () {
-      if (!this.showJoinTable) {
-        localStorage.setItem('showJoinTable', false)
-      }
     },
     fetchData () {
       this.isLoading = true
