@@ -40,7 +40,8 @@ export default {
   computed: {
     ...mapState(['isShowFullSideNav']),
     ...mapState('userManagement', ['groupList']),
-    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId'])
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
@@ -49,8 +50,23 @@ export default {
     },
     directToHomePage() {
       const groupLessPage = { name: 'PageGrouplessGuidance', params: { 'account_id': this.getCurrentAccountId } }
-      const accountHomePage = { name: 'PageIndex', params: { 'account_id': this.getCurrentAccountId, 'group_id': this.getCurrentGroupId } }
-      this.$router.push(this.groupList.length === 0 ? groupLessPage : accountHomePage)
+      const accountHomePage = {
+        name: 'PageIndex', 
+        params: { 
+          'account_id': this.getCurrentAccountId, 
+          'group_id': this.getCurrentGroupId
+        },
+        ...(this.dataSourceId && { 
+          query: {
+            'dataSourceId': this.dataSourceId,
+            'dataFrameId': this.dataFrameId
+          }
+        })
+      }
+      
+      // catch error when trying to navigate to same location as the current one
+      // to avoid displaying a warning in the console
+      this.$router.push(this.groupList.length === 0 ? groupLessPage : accountHomePage).catch(err => {})
     }
   }
 }

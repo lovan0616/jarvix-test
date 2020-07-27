@@ -223,6 +223,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .data-frame-data {
+  .empty-info-block {
+    margin-bottom: 2rem;
+  }
+
   .board-body-section {
     .title {
       margin-bottom: 13px;

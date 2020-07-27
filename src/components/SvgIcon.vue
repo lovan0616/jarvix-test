@@ -40,5 +40,11 @@ export default {
   fill: currentColor;
   overflow: hidden;
   user-select: none;
+
+  use {
+    &:focus {
+      outline: none;
+    }
+  }
 }
 </style>
