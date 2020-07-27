@@ -117,6 +117,8 @@ export default {
     return co(function* () {
       yield dispatch('chatBot/updateChatConversation', false, { root: true })
       yield dispatch('getHistoryQuestionList')
+      yield dispatch('getDataSourceColumnInfo')
+      yield dispatch('getDataSourceDataValue')
       return Promise.resolve(state)
     })
   },
@@ -172,18 +174,22 @@ export default {
   getDataFrameColumnCorrelation({ state }, { id, selectedColumnList = null, restrictions = [] }) {
     return getColumnCorrelationMatrix(id, selectedColumnList, restrictions)
   },
-  getDataSourceColumnInfo({ commit, state, getters }) {
+  getDataSourceColumnInfo({ commit, state, getters, rootGetters }, shouldStore = true) {
     if (!state.dataSourceId) return
     const dataFrameId = getters.currentDataFrameId
-    return getDataSourceColumnInfoById(state.dataSourceId, dataFrameId).then(response => {
-      commit('setDataSourceColumnInfoList', response)
+    const columns = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
+    const restrictions = getters.filterRestrictionList
+    return getDataSourceColumnInfoById(state.dataSourceId, dataFrameId, columns, restrictions).then(response => {
+      return shouldStore ? commit('setDataSourceColumnInfoList', response) : response
     })
   },
-  getDataSourceDataValue ({ commit, state, getters }) {
-    if (!state.dataSourceId) return
+  getDataSourceDataValue({ commit, state, getters, rootGetters }, shouldStore = true) {
+    if (!state.dataSourceId) return []
     const dataFrameId = getters.currentDataFrameId
-    return getDataSourceDataValueById(state.dataSourceId, dataFrameId).then(response => {
-      commit('setDataSourceDataValueList', response)
+    const columns = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
+    const restrictions = getters.filterRestrictionList
+    return getDataSourceDataValueById(state.dataSourceId, dataFrameId, columns, restrictions).then(response => {
+      return shouldStore ? commit('setDataSourceDataValueList', response) : response
     })
   },
   updateResultRouter ({commit, state, rootGetters}, actionTag) {

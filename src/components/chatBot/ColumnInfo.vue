@@ -1,5 +1,11 @@
 <template>
-  <div class="column-info">
+  <spinner
+    v-if="isLoading"
+    class="spinner"
+  />
+  <div 
+    v-else 
+    class="column-info">
     <div class="column-info__menu menu">
       <div class="menu__title">{{ $t('askHelper.columnCatalog') }}</div>
       <div 
@@ -49,7 +55,10 @@
     </div>
   </div>
 </template>
+
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'ColumnInfo',
   data () {
@@ -59,21 +68,26 @@ export default {
       columnTypeList: [
         'Category', 'Numeric', 'DateTime', 'Boolean', 'Unique', 'Value'
       ],
-      columnInfoList: []
-    }
-  },
-  computed: {
-    dataSourceColumnInfoList () {
-      return this.$store.state.dataSource.dataSourceColumnInfoList
-    },
-    dataSourceDataValueList () {
-      return this.$store.state.dataSource.dataSourceDataValueList
+      columnInfoList: [],
+      dataSourceColumnInfoList: [],
+      dataSourceDataValueList: [],
+      isLoading: true
     }
   },
   mounted () {
-    this.selectCatelog(this.selectedIndex)
+    this.fetchColumnInfo()
   },
   methods: {
+    ...mapActions('dataSource', ['getDataSourceColumnInfo', 'getDataSourceDataValue']),
+    fetchColumnInfo () {
+      Promise.all([this.getDataSourceColumnInfo(false), this.getDataSourceDataValue(false)])
+        .then(([columnInfo, dataValue]) => {
+          this.dataSourceColumnInfoList = columnInfo
+          this.dataSourceDataValueList = dataValue
+          this.selectCatelog(this.selectedIndex)
+          this.isLoading = false
+        })
+    },
     selectCatelog (index) {
       this.selectedIndex = index
       let key = this.columnTypeList[index].charAt(0).toLowerCase() + this.columnTypeList[index].slice(1)
@@ -82,9 +96,9 @@ export default {
       this.setColumnInfoList(key)
     },
     setColumnInfoList (key) {
-      this.tmpColumnInfoList = JSON.parse(JSON.stringify(this.dataSourceColumnInfoList))
-      this.tmpColumnInfoList['value'] = this.dataSourceDataValueList
-      this.columnInfoList = this.tmpColumnInfoList[key]
+      const tmpColumnInfoList = JSON.parse(JSON.stringify(this.dataSourceColumnInfoList))
+      tmpColumnInfoList['value'] = this.dataSourceDataValueList
+      this.columnInfoList = tmpColumnInfoList[key]
       // Number of columns must be multiples of 3
       let emptyValue = this.columnInfoList.length % 3 ===  0 ? 0 : 3 - this.columnInfoList.length % 3
       while (emptyValue--) {
