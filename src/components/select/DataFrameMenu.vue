@@ -123,7 +123,6 @@ export default {
         return {
           ...dataSource,
           dataFrames: dataSource.dataFrames.reduce((acc, cur) => {
-            if (cur.state !== 'Enable') return acc
             acc.push({name: cur.primaryAlias, id: cur.id})
             return acc
           }, [defaultOption])
