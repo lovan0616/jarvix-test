@@ -20,7 +20,8 @@
           v-for="(dataSource, dataSourceIndex) in availableDataSourceList"
           :key="'dataSource' + dataSourceIndex">
           <el-submenu 
-            :index="'1-' + dataSourceIndex" 
+            :index="'1-' + dataSourceIndex"
+            :class="{'is-active': dataSourceIndex === getDataSourceIndex}"
             class="data-frame-select__submenu">
             <template slot="title">
               <svg-icon 
@@ -31,7 +32,9 @@
             <div 
               v-for="(dataFrame, dataFrameIndex) in dataSource.dataFrames"
               :key="'dataFrame' + dataFrameIndex">
-              <el-menu-item :index="dataSourceIndex + '-' + dataFrameIndex">
+              <el-menu-item 
+                :index="dataSourceIndex + '-' + dataFrameIndex"
+                :class="{'is-active': dataSourceIndex === getDataSourceIndex && dataFrameIndex === getDataFrameIndex}">
                 <template slot="title">
                   <svg-icon 
                     icon-class="table" 
@@ -126,8 +129,21 @@ export default {
         }
       })
     },
+    getDataSourceIndex() {
+      return this.availableDataSourceList.findIndex(dataSource => (
+        dataSource.id === this.dataSourceId
+      ))
+    },
+    getDataFrameIndex() {
+      return this.availableDataSourceList[this.getDataSourceIndex].dataFrames.findIndex(dataFrame => (
+        dataFrame.id === this.dataFrameId
+      ))
+    },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
+    },
+    isShowAskHelper () {
+      return this.$store.state.isShowAskHelper
     },
     previewDataSourceTooltipContent () {
       return this.isShowPreviewDataSource ? this.$t('bot.closeDataSource') : this.$t('bot.previewDataSource')
@@ -151,6 +167,8 @@ export default {
         dataSourceId: this.availableDataSourceList[dataSourceIndex].id,
         dataFrameId: this.availableDataSourceList[dataSourceIndex].dataFrames[dataFrameIndex].id
       }
+      // To prevent NavigationDuplicated error
+      if (selectInfo.dataFrameId === this.dataFrameId) return
       this.onDataFrameChange(selectInfo.dataSourceId, selectInfo.dataFrameId)
     },
     onDataFrameChange (dataSourceId, dataFrameId) {
@@ -171,12 +189,16 @@ export default {
       })
     },
     togglePreviewDataSource () {
+      if(this.isShowAskHelper) this.closeHelper()
       this.$store.commit('previewDataSource/togglePreviewDataSource', !this.isShowPreviewDataSource)
     },
     toggleAdvanceDataFrameSetting () {
       if (this.isDisableDataFrameAdvanceSetting) return 
       this.toggleSettingBox(!this.isShowSettingBox)
     },
+    closeHelper () {
+      this.$store.commit('updateAskHelperStatus', false)
+    }
   }
 }
 </script>
@@ -189,6 +211,7 @@ export default {
   line-height: 40px;
   border-radius: 5px;
   border: 1px solid #292C2E;
+  background-color: rgba(0, 0, 0, 0.55);
 
   .preview-datasource-btn, .dataframe-setting-btn {
     width: 40px;
@@ -235,6 +258,7 @@ export default {
       line-height: 38px;
       padding: 0 30px 0 10px;
       border-radius: 5px 0 0 5px;
+      background-color: rgba(0, 0, 0, 0.55) !important;
     }
 
     .data-frame-select__icon {
@@ -258,8 +282,12 @@ export default {
 .el-menu--horizontal {
   flex: auto;
   border-bottom: unset;
-  border-radius: 5px;
+  border-radius: 5px 0 0 5px;
   max-width: 162px;
+
+  &>>>.el-submenu .el-submenu__icon-arrow::before {
+    transform: rotateZ(0); 
+  }
 }
 
 </style>
