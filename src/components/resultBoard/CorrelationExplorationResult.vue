@@ -23,6 +23,7 @@
         <div class="key-result-wrapper">
           <div class="key-result-selector">
             <task
+              v-if="resultInfo.key_result_selector && resultInfo.key_result_selector.length > 0"
               :component-id="resultInfo.key_result_selector[0]"
               intend="key_result_selector"
             />
