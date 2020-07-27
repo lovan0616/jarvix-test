@@ -1,6 +1,7 @@
 <template>
-  <div 
-    class="ask-condition" >
+  <div
+    v-show="isShow"
+    class="ask-condition">
     <div class="ask-condition__item">
       <svg-icon
         icon-class="database" 
@@ -43,8 +44,11 @@ export default {
   computed: {
     ...mapGetters('dataSource', ['getDataSourceName', 'getDataFrameName']),
     ...mapGetters('dataFrameAdvanceSetting', ['selectedColumnList']),
-    ...mapState('dataSource', ['filterList']),
+    ...mapState('dataSource', ['filterList', 'dataSourceId']),
     ...mapState('dataFrameAdvanceSetting', ['columnList']),
+    isShow () {
+      return Boolean(this.dataSourceId)
+    },
     getDataFrameDisplayName () {
       return this.getDataFrameName === 'all'
         ? this.$t('editing.allDataFrames')
