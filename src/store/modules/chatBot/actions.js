@@ -42,7 +42,8 @@ export default {
   getQuickStartQuestion({ rootState, rootGetters }, dataSourceIdData) {
     const dataSourceId = rootState.dataSource.dataSourceId || dataSourceIdData
     const dataFrameId = rootGetters['dataSource/currentDataFrameId']
-    return getQuickStartQuestion(dataSourceId, dataFrameId)
+    const restrictions = rootGetters['dataSource/filterRestrictionList']
+    return getQuickStartQuestion(dataSourceId, dataFrameId, restrictions)
   },
   cancelRequest () {
     if (typeof cancelFunction === 'function') {
