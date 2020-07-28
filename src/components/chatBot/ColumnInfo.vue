@@ -22,7 +22,7 @@
     </div>
     <div class="column-info__block block">
       <div class="block__title">
-        <span>{{ $t('askHelper.catalog') }}: </span>
+        <span>{{ $t('askHelper.columnCatalog') }}: </span>
         <span>{{ columnTypeList[selectedIndex] }}</span>
       </div>
       <div class="block__description">
@@ -258,6 +258,7 @@ export default {
       }
 
       .empty-column {
+        font-size: 13px;
         color: var(--gray-100);
         padding: 10px 0;
         text-align: center;
