@@ -102,6 +102,9 @@ export default {
         },
         formatter: (params, ticket, callback) => {
           return params.reduce((res, item, index) => {
+            // 過濾掉回歸線
+            if (item.seriesType !== 'scatter') return
+            // 多個點同一個 x 軸時增加間距
             if (index > 0 && index < params.length) res += '<div style="padding-bottom: 4px;"></div>'
             return res + `
               ${this.title.xAxis[0].display_name}: ${this.formatComma(item.data[0])}<br/>
