@@ -103,7 +103,7 @@ export default {
         }
 
         // 處理路徑中帶有指定的 group id
-        if (defaultGroupId) return dispatch('switchGroupById', { accountId, defaultGroupId })
+        if (defaultGroupId) return dispatch('switchGroupById', { accountId, groupId: defaultGroupId })
 
         // 先清空，因為新群組有可能沒有 dataSource
         commit('dataSource/setDataSourceId', null, { root: true })
