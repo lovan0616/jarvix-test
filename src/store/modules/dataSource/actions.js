@@ -1,5 +1,14 @@
 import co from 'co'
-import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById, getDataFrameById, getDataFrameData, dataFrameColumnSummary, getColumnCorrelationMatrix } from '@/API/DataSource'
+import { 
+  getDataSourceList, 
+  getDataSourceColumnInfoById, 
+  getDataSourceDataValueById, 
+  getDataFrameById, 
+  getDataFrameData, 
+  dataFrameColumnSummary, 
+  getColumnCorrelationMatrix,
+  triggerColumnDataCalculation
+} from '@/API/DataSource'
 import { getHistoryQuestionList } from '@/API/NewAsk'
 import router from '../../../router'
 import { Message } from 'element-ui'
@@ -255,5 +264,9 @@ export default {
 
     // 如果 dataFrame 被刪掉則恢復預設 all
     return dispatch('changeDataFrameById', 'all')
+  },
+  triggerColumnDataCalculation({ state, getters }) {
+    const restrictions = getters.filterRestrictionList
+    return triggerColumnDataCalculation(state.dataFrameId, restrictions)
   }
 }
