@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapMutations, mapState, mapActions } from 'vuex'
 export default {
   name: 'SelectedRegion',
   props: {
@@ -38,6 +38,7 @@ export default {
     ...mapState('dataSource', ['currentQuestionDataFrameId', 'dataFrameId']),
   },
   methods: {
+    ...mapActions('dataSource', ['triggerColumnDataCalculation']),
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setDisplaySection']),
     async save () {
       // 如果 store 中的 dataframe id 與當前結果的 dataframe 不同須先切換
@@ -54,6 +55,8 @@ export default {
         })
       }
       if (this.$route.name === 'PageResult') {
+        // 預先觸發重新計算 column summary 和 column correlation
+        this.triggerColumnDataCalculation()
         this.setDisplaySection('filter')
         if (!this.isShowSettingBox) this.toggleSettingBox(true)
       }

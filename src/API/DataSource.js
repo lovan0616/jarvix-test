@@ -391,3 +391,17 @@ export function changeBatchLoadSettingStatus(dataFrameId, status = 'Disable') {
     }
   })
 }
+
+/**
+ * trigger calculated data summary and relation matrix
+ * @param {Number} dataFrameId - 欲計算的資料表 ID
+ */
+export function triggerColumnDataCalculation(dataFrameId, restrictions) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/calculated/data/trigger`,
+    method: 'POST',
+    data: {
+      restrictions
+    }
+  })
+}
