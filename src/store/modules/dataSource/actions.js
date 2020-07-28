@@ -117,8 +117,8 @@ export default {
     return co(function* () {
       yield dispatch('chatBot/updateChatConversation', false, { root: true })
       yield dispatch('getHistoryQuestionList')
-      yield dispatch('getDataSourceColumnInfo')
-      yield dispatch('getDataSourceDataValue')
+      yield dispatch('getDataSourceColumnInfo', true)
+      yield dispatch('getDataSourceDataValue', true)
       return Promise.resolve(state)
     })
   },
