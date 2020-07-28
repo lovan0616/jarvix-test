@@ -34,7 +34,10 @@
         <template #columns-header="{ column, index }">
           <div class="header-block">
             <div class="header">
-              <span class="icon">
+              <span 
+                v-if="showColumnSummaryRow"
+                class="icon"
+              >
                 <el-tooltip
                   slot="label"
                   :enterable="false"
