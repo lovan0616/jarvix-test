@@ -26,7 +26,7 @@
           <svg-icon icon-class="lamp"/>
           {{ $t('askHelper.description') }}:
         </span>
-        {{ $t('askHelper.category') }}
+        {{ generateDescription(columnTypeList[selectedIndex]) }}
       </div>
       <table class="block__table">
         <tr>
@@ -103,6 +103,22 @@ export default {
       let emptyValue = this.columnInfoList.length % 3 ===  0 ? 0 : 3 - this.columnInfoList.length % 3
       while (emptyValue--) {
         this.columnInfoList.push('')
+      }
+    },
+    generateDescription (category) {
+      switch (category) {
+        case 'Category':
+          return this.$t('askHelper.category')
+        case 'Numeric':
+          return this.$t('askHelper.numeric')
+        case 'DateTime':
+          return this.$t('askHelper.datetime')
+        case 'Boolean':
+          return this.$t('askHelper.boolean')
+        case 'Unique':
+          return this.$t('askHelper.unique')
+        case 'Value':
+          return this.$t('askHelper.value')
       }
     }
   }
