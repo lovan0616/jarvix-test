@@ -3,6 +3,10 @@
     v-if="isLoading"
     class="spinner"
   />
+  <empty-info-block
+    v-else-if="hasError"
+    :msg="$t('message.systemIsError')"
+  />
   <div 
     v-else 
     class="column-info">
@@ -58,9 +62,13 @@
 
 <script>
 import { mapActions } from 'vuex'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 export default {
   name: 'ColumnInfo',
+  components: {
+    EmptyInfoBlock
+  },
   data () {
     return {
       activeName: null,
@@ -71,7 +79,8 @@ export default {
       columnInfoList: [],
       dataSourceColumnInfoList: [],
       dataSourceDataValueList: [],
-      isLoading: true
+      isLoading: true,
+      hasError: false
     }
   },
   mounted () {
@@ -86,6 +95,10 @@ export default {
           this.dataSourceDataValueList = dataValue
           this.selectCatelog(this.selectedIndex)
           this.isLoading = false
+        })
+        .catch(() => {
+          this.isLoading = false
+          this.hasError = true
         })
     },
     selectCatelog (index) {
