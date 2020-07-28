@@ -47,7 +47,7 @@ export default {
     ...mapState('dataSource', ['filterList', 'dataSourceId']),
     ...mapState('dataFrameAdvanceSetting', ['columnList']),
     isShow () {
-      return Boolean(this.dataSourceId)
+      return this.dataSourceId !== null
     },
     getDataFrameDisplayName () {
       return this.getDataFrameName === 'all'
