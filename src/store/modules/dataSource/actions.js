@@ -175,7 +175,7 @@ export default {
     return getColumnCorrelationMatrix(id, selectedColumnList, restrictions)
   },
   getDataSourceColumnInfo({ commit, state, getters, rootGetters }, shouldStore = true) {
-    if (!state.dataSourceId) return
+    if (!state.dataSourceId) return Promise.reject()
     const dataFrameId = getters.currentDataFrameId
     const columns = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
     const restrictions = getters.filterRestrictionList
@@ -184,7 +184,7 @@ export default {
     })
   },
   getDataSourceDataValue({ commit, state, getters, rootGetters }, shouldStore = true) {
-    if (!state.dataSourceId) return []
+    if (!state.dataSourceId) return Promise.reject()
     const dataFrameId = getters.currentDataFrameId
     const columns = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
     const restrictions = getters.filterRestrictionList
