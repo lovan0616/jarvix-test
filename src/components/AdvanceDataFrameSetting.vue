@@ -112,7 +112,8 @@ export default {
     filterList (newList, oldList) {
       this.tempFilterList = JSON.parse(JSON.stringify(newList))
     },
-    '$route.query.dataFrameId'() {
+    '$route.query.dataFrameId'(newValue, oldValue) {
+      if (Number(newValue) === Number(oldValue)) return
       this.closeAdvanceDataFrameSetting()
     },
   },
