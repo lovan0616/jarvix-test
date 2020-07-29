@@ -227,8 +227,9 @@ export default {
       if (this.showHistoryQuestion && !clickInside) {
         this.showHistoryQuestion = false
       }
+      
       // 歷史問句與問句提示同時顯示時，若是點擊到問句提示則關閉歷史問句
-      if (this.showHistoryQuestion && this.$refs.helperDialog.$el.contains(evt.target)) {
+      if (this.showHistoryQuestion && this.$refs.helperDialog && this.$refs.helperDialog.$el.contains(evt.target)) {
         this.showHistoryQuestion = false
       }
     },
