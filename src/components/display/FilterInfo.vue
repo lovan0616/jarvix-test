@@ -1,29 +1,27 @@
 <template>
-  <div 
-    v-show="filterStatusList.length > 0" 
-    class="filter-info-block">
-    <div class="info-title-block">
-      <div class="block-title">
-        <span class="filter-icon"><svg-icon icon-class="filter"/></span>
-        <span class="title-text">{{ $t('resultDescription.filterRestrictions') }}</span>
-        <button 
-          class="btn btn-m btn-outline"
-          @click="onClearAll"
-        >
-          {{ $t('resultDescription.clearAllFilter') }}
-        </button>
-      </div>
-      <div class="remark-info">
-        <span class="remark-title"><svg-icon 
-          icon-class="lamp" 
-          class="lamp-icon"/>{{ $t('resultDescription.prompt') }}：</span>{{ $t('resultDescription.filterRule') }}</div>
+  <div class="filter-block">
+    <div 
+      v-if="tempFilterList.length > 0" 
+      class="filter-block__action-box"
+    >
+      <a 
+        href="javascript:void(0);" 
+        class="link filter-block__action-box-link"
+        @click="onClearAll"
+      >{{ $t('dataFrameAdvanceSetting.clearCriteria') }}</a>
     </div>
-    <div class="info-body-block">
+    <div class="filter-block__select-box">
+      <div 
+        v-if="tempFilterList.length === 0" 
+        class="empty-message">
+        {{ $t('dataFrameAdvanceSetting.noCriteriaYet') }}
+      </div>
       <single-filter-block
-        v-for="(f, index) in filterList"
+        v-for="(filter, index) in tempFilterList"
+        v-else
         :key="index"
-        :restriction="f.restriction"
-        :status="filterStatusList[index]"
+        :restriction="filter.restriction"
+        :status="filter.status"
         @status-change="onFilterStatusChange(index, $event)"
       />
     </div>
@@ -31,96 +29,62 @@
 </template>
 <script>
 import SingleFilterBlock from './SingleFilterBlock'
-import { mapState, mapGetters } from 'vuex'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 export default {
   name: 'FilterInfo',
   components: {
-    SingleFilterBlock
+    SingleFilterBlock,
+    EmptyInfoBlock
   },
-  computed: {
-    ...mapState('dataSource', ['filterList']),
-    ...mapGetters('dataSource', ['filterStatusList'])
+  props: {
+    tempFilterList: {
+      type: Array,
+      default: () => ([])
+    }
   },
   methods: {
     onFilterStatusChange (index, updated) {
-      const result = this.filterStatusList.map((status, i) => {
+      const updatedTempFilterList = this.tempFilterList.map((filter, i) => {
         if (updated) {
-          if (index >= i) return updated
-          else return !updated
+          if (index >= i) return { ...filter, status: true }
+          else return filter
         } else {
-          if (index <= i) return updated
-          else return !updated
+          if (index <= i) return { ...filter, status: false }
+          else return filter
         }
       })
-      this.$store.dispatch('dataSource/updateFilterStatusList', result)
+      this.$emit('update:tempFilterList', updatedTempFilterList)
     },
-    onClearAll (e) {
-      this.$store.dispatch('dataSource/clearAllFilter')
+    onClearAll () {
+      this.$emit('update:tempFilterList', [])
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.filter-info-block {
-  background: rgba(0, 0, 0, 0.55);
-  border-radius: 5px;
-  margin-bottom: 16px;
-  padding: 16px 24px 24px;
-
-  .filter-icon {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    background-color: $filter-color;
-    margin-right: 6px;
-    font-size: 12px;
-    line-height: 24px;
-    border-radius: 8px;
-    text-align: center;
+.filter-block {
+  &__action-box {
+    padding-bottom: 8px;
   }
 
-  .info-title-block {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 16px;
-  }
-
-  .block-title {
-    display: flex;
-    align-items: center;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 24px;
-    margin-right: 20px;
-
-    .title-text {
-      margin-right: 16px;
+  &__select-box {
+    .empty-message {
+      color: #AAAAAA;
+      font-size: 12px;
     }
   }
 
-  .remark-info {
-    flex: 1;
-    display: flex;
-    align-items: flex-start;
-    font-size: 12px;
-    align-self: flex-start;
-    justify-content: flex-end;
-
-    .remark-title {
-      display: inline-flex;
-      align-items: center;
-      color: $theme-color-warning;
+  /deep/ .single-filter-block {
+    &:last-of-type {
+      .single-filter-block {
+        &__description {
+          &:before {
+           display: none;
+          }
+        }
+      }
     }
-    .lamp-icon {
-      margin-right: 4px;
-    }
-  }
-
-  .info-body-block {
-    display: flex;
-    flex-wrap: wrap;
   }
 }
 </style>

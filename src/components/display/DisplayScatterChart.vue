@@ -24,7 +24,7 @@
             v-for="(singleRestraint, restraintIndex) in singleArea.restraints"
             :key="'restraint' + index + '-' + restraintIndex"
           >
-            {{ singleRestraint.properties.display_name }}{{ $t('resultDescription.between', {start: roundNumber(singleRestraint.properties.start), end: roundNumber(singleRestraint.properties.end) }) }}
+            {{ singleRestraint.properties.display_name }} {{ $t('resultDescription.between', {start: roundNumber(singleRestraint.properties.start), end: roundNumber(singleRestraint.properties.end) }) }}
             <span
               v-show="restraintIndex !== singleArea.restraints.length - 1"
             >、</span>

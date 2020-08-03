@@ -1,6 +1,5 @@
 <template>
   <div class="result-layout">
-    <filter-info/>
     <unknown-info-block
       v-if="segmentationInfo.unknownToken.length > 0 || segmentationInfo.nlpToken.length > 0"
       :segmentation-info="segmentationInfo"
@@ -40,13 +39,12 @@
 </template>
 
 <script>
-import FilterInfo from '@/components/display/FilterInfo'
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ResultDisplay',
   components: {
-    FilterInfo,
     UnknownInfoBlock
   },
   data () {
@@ -70,6 +68,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
@@ -93,6 +92,25 @@ export default {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
       this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'dataFrameId': this.dataFrameId})
+    },
+    askCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (
+          // 切換 dataframe 被清空時不重新問問題
+          newValue.columnList === null && newValue.filterList.length === 0
+          // 開啟進階設定取得欄位資料時也不重新問問題
+          || oldValue.columnList === null && (oldValue.filterList.length === newValue.filterList.length)
+        ) return
+
+        // 預先觸發重新計算 column summary 和 column correlation
+        this.triggerColumnDataCalculation()
+        this.fetchApiAsk({
+          question: this.$route.query.question, 
+          'dataSourceId': this.$route.query.dataSourceId, 
+          'dataFrameId': this.$route.query.dataFrameId
+        })
+      }
     }
   },
   mounted () {
@@ -103,6 +121,7 @@ export default {
     if (this.addConversationTimeout) window.clearTimeout(this.addConversationTimeout)
   },
   methods: {
+    ...mapActions('dataSource', ['triggerColumnDataCalculation']),
     fetchData () {
       const {dataSourceId, dataFrameId, question} = this.$route.query
       if (!question) return
@@ -132,7 +151,8 @@ export default {
         this.$store.dispatch('chatBot/askResult', {
           questionId: this.currentQuestionId,
           segmentationPayload: this.currentQuestionInfo,
-          restrictions: this.filterRestrictionList
+          restrictions: this.filterRestrictionList,
+          selectedColumnList: this.selectedColumnList
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.getComponent(res)
@@ -179,7 +199,8 @@ export default {
             this.$store.dispatch('chatBot/askResult', {
               questionId,
               segmentationPayload: segmentationList[0],
-              restrictions: this.filterRestrictionList
+              restrictions: this.filterRestrictionList,
+              selectedColumnList: this.selectedColumnList
             }).then(res => {
               this.getComponent(res)
               this.getRelatedQuestion(res.resultId)
@@ -238,6 +259,7 @@ export default {
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
               this.segmentationAnalysis(componentResponse.segmentationPayload)
+              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', componentResponse.segmentationPayload.dataframeId)
               this.isLoading = false
               break
             case 'Disable':

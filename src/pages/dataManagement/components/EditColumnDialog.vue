@@ -261,8 +261,6 @@ export default {
       const statsTypePromise = updateDataFrameAlias(this.userEditInfo)
       Promise.all([aliasPromise, statsTypePromise])
         .then(() => {
-        // 更新問句說明資訊
-          this.$store.dispatch('dataSource/getDataSourceColumnInfo')
           this.closeDialog()
           Message({
             message: this.$t('message.saveSuccess'),

@@ -218,6 +218,7 @@ export default {
       this.featureInfo = this.editFeatureInfo
       this.featureFormula = JSON.parse(this.editFeatureInfo.description)
       this.getDataFrameColumnInfo(this.featureInfo.dataFrameId)
+      this.dataSourceId = this.editFeatureInfo.dataSourceId
     }
     this.getDataFrameList()
   },
@@ -302,7 +303,7 @@ export default {
               duration: 3 * 1000,
               showClose: true
             })
-            this.$emit('update')
+            this.$emit('update', { dataFrameId: this.featureInfo.dataFrameId })
           }).catch(() => {})
         }
       })

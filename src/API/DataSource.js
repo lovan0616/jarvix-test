@@ -65,13 +65,18 @@ export function renameDataSourceById (dataSourceId, name) {
 /**
  * get dataSource column info
  * @param {Number} dataSourceId - 資料源 ID
+ * @param {Array} columns - 篩選的欄位(帶入勾選的選項, 全部選為 null, 都沒選為 [])
  */
-export function getDataSourceColumnInfoById(dataSourceId, dataFrameId) {
+export function getDataSourceColumnInfoById(dataSourceId, dataFrameId, columns = null, restrictions) {
   return request({
-    url: `/datasources/${dataSourceId}/dataColumns/name`,
-    method: 'GET',
+    url: `/datasources/${dataSourceId}/dataColumns/name/search`,
+    method: 'POST',
     params: {
       dataFrameId
+    },
+    data: {
+      columns,
+      restrictions
     }
   })
 }
@@ -79,14 +84,19 @@ export function getDataSourceColumnInfoById(dataSourceId, dataFrameId) {
 /**
  * get dataSource data value
  * @param {Number} dataSourceId - 資料源 ID
+ * @param {Array} columns - 篩選的欄位(帶入勾選的選項, 全部選為 null, 都沒選為 [])
  */
-export function getDataSourceDataValueById(dataSourceId, dataFrameId, size = 50) {
+export function getDataSourceDataValueById(dataSourceId, dataFrameId, columns = null, restrictions, size = 50) {
   return request({
-    url: `/datasources/${dataSourceId}/dataValue`,
-    method: 'GET',
+    url: `/datasources/${dataSourceId}/dataValue/search`,
+    method: 'POST',
     params: {
       dataFrameId,
       size
+    },
+    data: {
+      columns,
+      restrictions
     }
   })
 }
@@ -109,14 +119,18 @@ export function getDataFrameById (dataSourceId, getAllState = false) {
  * get data of dataframe by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  */
-export function getDataFrameData (dataFrameId, page = 0, cancelToken) {
+export function getDataFrameData(dataFrameId, selectedColumnList, restrictions, page = 0, cancelToken) {
   // FIXME just default a big size, doesn't implement with pagination
   return request({
-    url: `/dataFrame/${dataFrameId}/data`,
-    method: 'GET',
+    url: `/dataFrame/${dataFrameId}/data/search`,
+    method: 'POST',
     params: {
       page,
       size: 20
+    },
+    data: {
+      selectedColumnList,
+      restrictions
     },
     cancelToken
   })
@@ -288,10 +302,14 @@ export function dataRepreprocessor (data) {
 /*
  * Dataframe column summary
  */
-export function dataFrameColumnSummary (dataFrameId, cancelToken) {
+export function dataFrameColumnSummary(dataFrameId, selectedColumnList, restrictions, cancelToken) {
   return request({
-    url: `/dataFrame/${dataFrameId}/summary`,
-    method: 'GET',
+    url: `/dataFrame/${dataFrameId}/summary/search`,
+    method: 'POST',
+    data: {
+      selectedColumnList,
+      restrictions
+    },
     cancelToken
   })
 }
@@ -300,10 +318,14 @@ export function dataFrameColumnSummary (dataFrameId, cancelToken) {
  * get column correlation matrix
  * @param {Number} dataFrameId - 欲查閱的資料表 ID
  */
-export function getColumnCorrelationMatrix (dataFrameId) {
+export function getColumnCorrelationMatrix(dataFrameId, selectedColumnList, restrictions) {
   return request({
-    url: `/dataFrame/${dataFrameId}/relationMatrix`,
-    method: 'GET'
+    url: `/dataFrame/${dataFrameId}/relationMatrix/search`,
+    method: 'POST',
+    data: {
+      selectedColumnList,
+      restrictions
+    }
   })
 }
 
@@ -366,6 +388,20 @@ export function changeBatchLoadSettingStatus(dataFrameId, status = 'Disable') {
     method: 'PATCH',
     data: {
       status
+    }
+  })
+}
+
+/**
+ * trigger calculated data summary and relation matrix
+ * @param {Number} dataFrameId - 欲計算的資料表 ID
+ */
+export function triggerColumnDataCalculation(dataFrameId, restrictions) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/calculated/data/trigger`,
+    method: 'POST',
+    data: {
+      restrictions
     }
   })
 }

@@ -14,7 +14,8 @@ export default {
       previewQuestionId: rootGetters['dataSource/drillDownQuestionId'],
       domain: 'GENERAL',
       isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null,
-      dataFrameId: dataFrameId === 'all' ? '' : dataFrameId
+      dataFrameId: dataFrameId === 'all' ? '' : dataFrameId,
+      selectedColumnList: rootGetters['dataFrameAdvanceSetting/selectedColumnList']
     }, new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
       cancelFunction = c
@@ -41,7 +42,8 @@ export default {
   getQuickStartQuestion({ rootState, rootGetters }, dataSourceIdData) {
     const dataSourceId = rootState.dataSource.dataSourceId || dataSourceIdData
     const dataFrameId = rootGetters['dataSource/currentDataFrameId']
-    return getQuickStartQuestion(dataSourceId, dataFrameId)
+    const restrictions = rootGetters['dataSource/filterRestrictionList']
+    return getQuickStartQuestion(dataSourceId, dataFrameId, restrictions)
   },
   cancelRequest () {
     if (typeof cancelFunction === 'function') {

@@ -10,7 +10,8 @@
     "languagePlaceholder": "語系",
     "setting": "設定",
     "projectManagement": "專案管理",
-    "algorithm": "演算法"
+    "algorithm": "演算法",
+    "helper": "幫助"
   },
   "sideNav": {
     "functionList": "功能選單",
@@ -29,6 +30,17 @@
     "dataSourceList": "資料源列表",
     "dataFileManagement": "資料表管理",
     "dataFileList": "資料表列表"
+  },
+  "dataFrameAdvanceSetting": {
+    "searchColumn": "搜尋欄位",
+    "columnList": "欄位列表",
+    "filterCriteria": "篩選條件",
+    "selectAll": "全部選取",
+    "cancelSelect": "取消選取",
+    "clearCriteria": "清除條件",
+    "noCriteriaYet": "尚未加入篩選條件",
+    "allColumns": "全部欄位",
+    "dataColumns": "資料欄位"
   },
   "message": {
     "joinTableBuilding": "資料表建置中，建置完成即可使用",
@@ -523,7 +535,10 @@
     "multiplePossibilities": "很抱歉，經系統分析後，發現詞彙具有多重意義，請參考以下項目：",
     "similarQuestionDescription": "很抱歉，系統沒有找到對應問題的欄位或資料，但有相關詞意的欄位，請參考以下項目：",
     "previewDataSource": "查看資料源",
-    "closeDataSource": "關閉資料源"
+    "closeDataSource": "關閉資料源",
+    "openDataFrameSetting": "開啟進階設定",
+    "closeDataFrameSetting": "關閉進階設定",
+    "switchSpecificDataFrame": "請先切換至單一資料表"
   },
   "description": {
     "basic": {
@@ -740,12 +755,14 @@
     "countStd": "數量標準差"
   },
   "askHelper": {
+    "chooseDataFrameToEnableSetting": "選擇單一資料表以開啟問句說明",
     "title": "問句說明",
+    "catalog": "問句類型",
     "historyTitle": "歷史問句",
     "askHelpRemark": "問句提示請查看",
     "helpLink": "問句說明",
     "tabToken": "詞彙總覽",
-    "tabSample": "問句範例",
+    "tabSample": "問句組合範例",
     "columnTitle": "資料欄位名稱",
     "categoryTitle": "Category 類型",
     "numericTitle": "Numeric 類型",
@@ -762,6 +779,7 @@
     "type": "類型",
     "description": "說明",
     "columnName": "欄位名稱",
+    "columnCatalog": "欄位類型",
     "ask": "問",
     "example": "範例",
     "exampleDesc": "因 Boolean 和 Unique 類型問句方式與 Category 一致，以下均以 Category 類型舉例。",
@@ -1571,6 +1589,7 @@
     "currentChosenData": "目前所選擇的資料",
     "currentChosenArea": "目前所選取的區塊",
     "saveFilterCondition": "保存過濾條件",
+    "saveFilterReminding": "保存過濾條件後，系統將自動切換至該資料表。",
     "area": "區塊",
     "between": "落在 {start} 到 {end} 之間",
     "filterRestrictions": "過濾條件限制",

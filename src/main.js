@@ -14,6 +14,7 @@ import './styles/App.scss'
 import i18n from './lang/index.js'
 
 import {
+  Input,
   Select,
   Option,
   Table,
@@ -26,7 +27,10 @@ import {
   Collapse,
   CollapseItem,
   Tooltip,
-  Switch
+  Switch,
+  Menu,
+  Submenu,
+  MenuItem
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -106,6 +110,7 @@ var Rollbar = require('vue-rollbar')
 
 Vue.use(VueEvents)
 // Element UI components
+Vue.use(Input)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Table)
@@ -119,6 +124,9 @@ Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Tooltip)
 Vue.use(Switch)
+Vue.use(Menu)
+Vue.use(Submenu)
+Vue.use(MenuItem)
 
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)

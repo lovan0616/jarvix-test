@@ -1,17 +1,13 @@
 <template>
-  <div class="ask-container">
+  <div 
+    :class="{'is-focus': isFocus}" 
+    class="ask-container">
     <div class="ask-block">
-      <div 
-        v-show="hasFilter"
-        class="filter-block"
-      ><svg-icon 
-        icon-class="filter" 
-        class="icon"/> {{ $t('resultDescription.filterRestrictions') }}</div>
       <div 
         :class="{
           'has-filter': hasFilter,
           'is-use-algorithm': isUseAlgorithm,
-          'is-connect-channel': websocketHandler
+          'is-connect-channel': websocketHandler,
         }"
         class="user-question-block"
       >
@@ -31,6 +27,7 @@
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
           @keyup="handleAskText"
           @focus="focusInput"
+          @blur="blurInput"
         >
         <a 
           href="javascript:void(0);" 
@@ -49,43 +46,41 @@
       </div>
       <div 
         :class="{ 'disabled': dataSourceList.length === 0 }" 
-        class="ask-remark-block">{{ $t('askHelper.askHelpRemark') }}
-        <a 
-          href="javascript:void(0)" 
-          class="link help-link"
-          @click="showHelper"
-        >{{ $t('askHelper.helpLink') }}</a>
+        class="ask-remark-block"
+        @click="openAskHelperDialog">
+        <svg-icon 
+          :class="{'ask-btn__icon--show': isShowAskHelper}" 
+          icon-class="ask-helper"
+          class="ask-btn__icon"/>
       </div>
     </div>
-    <div 
+    <div
       :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
       class="history-question-block"
     >
-      <a 
-        href="javascript:void(0)" 
-        class="close-btn"
-        @click="hideHistory"
-      >
-        <svg-icon icon-class="close"/>
-      </a>
-      <div class="title">{{ $t('askHelper.historyTitle') }}</div>
       <div 
         v-for="singleHistory in historyQuestionList"
         :key="singleHistory.id"
         class="history-question"
         @click="copyQuestion(singleHistory.question)"
-      ><svg-icon 
-        icon-class="clock" 
-        class="icon"/> {{ singleHistory.question }}</div>
+      >
+        <svg-icon 
+          icon-class="clock" 
+          class="icon"/>
+        {{ singleHistory.question }}
+      </div>
     </div>
-    <ask-helper-dialog 
-      ref="helperDialog"
-      :class="{'has-filter': hasFilter}"
-      :key="dataSourceId"
-      :show="showAskHelper"
-      class="ask-helper-dialog"
-      @close="closeHelper"
-    />
+    <transition name="fast-fade-in">
+      <ask-helper-dialog 
+        v-if="isShowAskHelper"
+        ref="helperDialog"
+        :class="{ 'ask-helper--has-basic-df-setting': isShowSettingBox }"
+        :key="dataSourceId"
+        class="ask-helper"
+        mode="popup"
+        @close="closeHelper"
+      />
+    </transition>
   </div>
 </template>
 <script>
@@ -102,15 +97,16 @@ export default {
     return {
       userQuestion: null,
       showHistoryQuestion: false,
-      showAskHelper: false,
       websocketHandler: null,
       recommendList: [],
       cursorPositionQuestion: null,
+      isFocus: false,
       closeQuickAsk: localStorage.getItem('closeQuickAsk') || false
     }
   },
   computed: {
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
     dictionaries () {
       return [
@@ -125,6 +121,9 @@ export default {
     },
     hasFilter () {
       return this.$store.state.dataSource.filterList.length > 0
+    },
+    isShowAskHelper () {
+      return this.$store.state.isShowAskHelper
     },
     historyQuestionList () {
       // 過濾 boomark 以及 問題字串
@@ -160,7 +159,7 @@ export default {
       }
 
       return tokenList
-    }
+    },
   },
   watch: {
     questionTokenList (value, oldValue) {
@@ -269,11 +268,9 @@ export default {
       if (this.showHistoryQuestion && !clickInside) {
         this.showHistoryQuestion = false
       }
-      if (this.showAskHelper && !clickInside) {
-        this.showAskHelper = false
-      }
+      
       // 歷史問句與問句提示同時顯示時，若是點擊到問句提示則關閉歷史問句
-      if (this.showHistoryQuestion && this.$refs.helperDialog.$el.contains(evt.target)) {
+      if (this.showHistoryQuestion && this.$refs.helperDialog && this.$refs.helperDialog.$el.contains(evt.target)) {
         this.showHistoryQuestion = false
       }
     },
@@ -293,32 +290,40 @@ export default {
       this.$refs.questionInput.focus()
     },
     showHistory () {
-      if (this.showHistoryQuestion || this.showAskHelper) return
+      if (this.showHistoryQuestion || this.isShowAskHelper) return
       this.showHistoryQuestion = true
     },
     hideHistory () {
       this.showHistoryQuestion = false
     },
-    showHelper () {
+    closePreviewDataSource () {
+      this.$store.commit('previewDataSource/togglePreviewDataSource', false)
+    },
+    openAskHelperDialog () {
       if (this.dataSourceList.length === 0) return
-      this.showAskHelper = true
+      this.$store.commit('updateAskHelperStatus', !this.isShowAskHelper)
+      this.closePreviewDataSource()
       this.hideHistory()
     },
     closeHelper () {
-      this.showAskHelper = false
+      this.$store.commit('updateAskHelperStatus', false)
     },
     toggleHelper () {
-      if (this.showAskHelper) {
+      if (this.isShowAskHelper) {
         this.closeHelper()
       } else {
-        this.showHelper()
+        this.openAskHelperDialog()
       }
     },
     toggleAlgorithm () {
       this.$store.commit('chatBot/updateIsUseAlgorithm', !this.isUseAlgorithm)
     },
     focusInput () {
+      this.isFocus = true
       this.$store.dispatch('chatBot/openAskInMemory')
+    },
+    blurInput () {
+      this.isFocus = false
     },
     handleAskText (e) {
       this.cursorPositionQuestion = this.userQuestion.slice(0, e.target.selectionStart)
@@ -329,12 +334,32 @@ export default {
 <style lang="scss" scoped>
 .ask-container {
   position: relative;
-  padding: 16px 32px;
-  background-color: var(--color-bg-1);
+  flex: 1;
+
+  &.is-focus {
+
+    .user-question-block {
+      border-radius: 5px 5px 0 0;
+      border: 1px solid #0CD1DE;
+      box-shadow: 0px 0px 20px rgba(12, 209, 222, .5);
+      border-radius: 5px;
+    }
+  }
+  
+  .ask-block {
+    position: relative;
+    height: 100%;
+  }
 
   .user-question-block {
-    position: relative;
-    z-index: 999;
+    display: flex;
+    align-items: center;
+    width: calc(100% - 54px);
+    background-color: #1D2424;
+    border: 1px solid #1D2424;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all .1s;
 
     &.has-filter {
       &:after {
@@ -357,22 +382,19 @@ export default {
       }
     }
 
-    &:after {
-      content: '';
-      display: block;
-      width: 100%;
-      height: 2px;
-      background-image: linear-gradient(90deg, $theme-color-primary 0%, rgba(77, 226, 240, 0.2) 100%);
-    }
-
     .question-input {
-      width: 100%;
-      font-size: 20px;
+      flex-basis: calc(100% - 65px);
+      font-size: 14px;
       line-height: 36px;
-      height: 48px;
+      height: 38px;
       overflow: auto;
-      padding-right: 74px;
+      padding-right: 30px;
       border-bottom: none;
+      padding: 0 10px;
+
+      &::placeholder {
+        opacity: #888;
+      }
 
       &:disabled {
         &::placeholder {
@@ -387,42 +409,54 @@ export default {
     }
 
     .clean-btn {
-      position: absolute;
-      top: 14px;
-      right: 44px;
+      flex-basis: 16px;
       font-size: 16px;
       color: rgba(255, 255, 255, 0.5);
+      margin-right: 16px;
     }
 
     .ask-btn {
-      position: absolute;
-      top: 11px;
-      right: 2px;
+      flex-basis: 16px;
       font-size: 20px;
       color: $theme-color-primary;
     }
   }
 
-  .filter-block {
-    color: $filter-color;
-    border: 1px solid $filter-color;
-    border-radius: 5px;
-    padding: 6px 10px;
-    font-size: 12px;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-
-    .icon {
-      margin-right: 4px;
-    }
-  }
-
   .ask-remark-block {
-    font-size: 13px;
-    line-height: 30px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 16px;
+    height: 40px;
+    width: 40px;
     text-align: left;
     letter-spacing: 0.05em;
+    border: 1px solid #2D3033;
+    border-radius: 5px;
+    margin-left: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    .ask-btn {
+      &__icon {
+        font-size: 18px;
+        fill: rgba(255, 255, 255, .8);
+
+        &:hover {
+          fill: rgba(255, 255, 255, 1);
+        }
+
+        &--show {
+          fill: rgba(42, 210, 226, .8);
+
+          &:hover {
+            fill: #2AD2E2;
+          }
+        }
+      }
+    }
 
     &.disabled {
       opacity: .3;
@@ -430,14 +464,6 @@ export default {
 
     .help-link {
       font-size: 13px;
-    }
-  }
-
-  .ask-helper-dialog {
-    bottom: 100%;
-
-    &.has-filter {
-      bottom: 137px;
     }
   }
 
@@ -454,15 +480,14 @@ export default {
     position: absolute;
     text-align: left;
     left: 0;
-    bottom: 100%;
-    width: 100%;
+    top: 100%;
+    width: calc(100% - 56px);
     height: 0;
     overflow: hidden;
-    padding: 0 32px;
-    transition: height 0.3s;
+    transition: all .1s;
     z-index: 90;
-    background-color: rgba(40, 71, 74, 0.95);
-    border-top: 1px solid #415E60;
+    background-color: #2D3033;
+    border-radius: 5px;
 
     &.has-filter {
       bottom: 137px;
@@ -471,36 +496,40 @@ export default {
     &.show {
       height: 160px;
       overflow: auto;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 12px;
-      right: 16px;
-      color: #fff;
-      font-size: 14px;
-    }
-
-    .title {
-      line-height: 50px;
+      padding: 4px 0;
     }
 
     .history-question {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 5px;
       font-size: 14px;
       line-height: 20px;
-      padding: 8px 12px;
-      color: $theme-color-primary;
+      padding: 10px 32px;
+      color: #ccc;
       cursor: pointer;
+      border-bottom: 1px solid #323538;
 
-      &:not(:last-child) {
-        margin-bottom: 8px;
+      &:hover {
+        background-color: #464A50;
       }
+
 
       .icon {
-        margin-right: 4px;
+        margin-right: 14px;
       }
+    }
+  }
+
+  .ask-helper {
+    width: calc(100% - #{$app-side-nav-closed-width});
+    height: calc(100vh - #{$header-height + $chat-room-height + $ask-condition-height});
+    position: fixed;
+    top: $header-height + $chat-room-height + $ask-condition-height;
+    right: 0;
+    background: #000;
+    overflow: auto;
+    padding: 32px 40px 0 40px;
+
+    &--has-basic-df-setting {
+      width: calc(100% - #{$app-side-nav-closed-width} - #{$basic-df-setting-width});
     }
   }
 }

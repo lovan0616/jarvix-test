@@ -10,7 +10,8 @@
     "languagePlaceholder": "Language",
     "setting": "Setting",
     "projectManagement": "Project Management",
-    "algorithm": "Algorithm"
+    "algorithm": "Algorithm",
+    "helper": "Help"
   },
   "sideNav": {
     "functionList": "Functions",
@@ -29,6 +30,17 @@
     "dataSourceList": "List",
     "dataFileManagement": "Data Set",
     "dataFileList": "List"
+  },
+  "dataFrameAdvanceSetting": {
+    "searchColumn": "Search Column",
+    "columnList": "Column List",
+    "filterCriteria": "Filter Conditions",
+    "selectAll": "Select All",
+    "cancelSelect": "Deselect All",
+    "clearCriteria": "Clear Filter Conditions",
+    "noCriteriaYet": "No filter condition has been set",
+    "allColumns": "All Columns",
+    "dataColumns": "Columns"
   },
   "message": {
     "joinTableBuilding": "Data Set will be available for analysis once it is processed.",
@@ -523,7 +535,10 @@
     "multiplePossibilities": "Sorry, your search matched multiple results. Did you mean: ",
     "similarQuestionDescription": "Sorry, your search matched multiple results. Did you mean:",
     "previewDataSource": "View Data Source",
-    "closeDataSource": "Close Data Source"
+    "closeDataSource": "Close Data Source",
+    "openDataFrameSetting": "Open Basic Data Frame Setting",
+    "closeDataFrameSetting": "Close Basic Data Frame Setting",
+    "switchSpecificDataFrame": "Please switch to specific Data Frame"
   },
   "description": {
     "basic": {
@@ -740,7 +755,9 @@
     "countStd": "Count Standard Deviation"
   },
   "askHelper": {
+    "chooseDataFrameToEnableSetting": "Choose a data set to view question explanation",
     "title": "Question Explanation",
+    "catalog": "Question Type",
     "historyTitle": "History Question",
     "askHelpRemark": "",
     "helpLink": "How to Ask Questions",
@@ -762,6 +779,7 @@
     "type": "Type",
     "description": "Description",
     "columnName": "Column Name",
+    "columnCatalog": "Column Type",
     "ask": "Ask",
     "example": "Example",
     "exampleDesc": "Because Boolean and Unique questions are in the same category as Category, the following are all examples of Category.",
@@ -1570,9 +1588,10 @@
     "closeFilter": "Close Condition",
     "currentChosenData": "Currently selected data",
     "currentChosenArea": "Currently selected block",
-    "saveFilterCondition": "Save Filter Condition",
+    "saveFilterCondition": "Save",
+    "saveFilterReminding": "After drilling down, the designated Data Set will automatically be set.",
     "area": "Block",
-    "between": "Fall between {start} and {end}",
+    "between": "fall between {start} and {end}.",
     "filterRestrictions": "Filter Restrictions",
     "prompt": "Prompt",
     "filterRule": "Filter conditions will affect the results of subsequent question analysis",

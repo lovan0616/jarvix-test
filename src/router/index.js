@@ -304,6 +304,11 @@ const router = new Router({
       component: () => import('@/pages/signup/Index')
     },
     {
+      path: '/sis-setting',
+      name: 'SisSetting',
+      component: () => import('@/pages/sisSetting/Index')
+    },
+    {
       path: '/share-result/:id',
       name: 'ShareResult',
       component: () => import('@/pages/result/SingleResult')

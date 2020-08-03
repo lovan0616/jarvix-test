@@ -34,7 +34,10 @@
         <template #columns-header="{ column, index }">
           <div class="header-block">
             <div class="header">
-              <span class="icon">
+              <span 
+                v-if="showColumnSummaryRow"
+                class="icon"
+              >
                 <el-tooltip
                   slot="label"
                   :enterable="false"
@@ -71,6 +74,7 @@
     <column-correlation-overview
       v-if="showCorrelationMatrix"
       :data-frame-id="dataFrameId"
+      :mode="mode"
       class="board-body-section"
     />
   </div>
@@ -80,6 +84,7 @@ import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/Co
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import EmptyInfoBlock from './EmptyInfoBlock'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'DataFrameData',
@@ -121,10 +126,26 @@ export default {
       tableSummaryList: []
     }
   },
+  computed: {
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
+  },
   watch: {
     dataFrameId (value) {
       this.isLoading = true
       this.fetchDataFrameData(value, 0, true)
+    },
+    askCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (
+          this.mode === 'popup' 
+          // 初次開啟設定時不觸發
+          || (oldValue.isInit === false && oldValue.columnList === null) 
+          // 切換 dataframe 清空設定時不觸發
+          || newValue.isInit === false
+        ) return
+        this.fetchDataFrameData(this.dataFrameId, 0, true)
+      }
     }
   },
   mounted () {
@@ -205,6 +226,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .data-frame-data {
+  .empty-info-block {
+    margin-bottom: 2rem;
+  }
+
   .board-body-section {
     .title {
       margin-bottom: 13px;
