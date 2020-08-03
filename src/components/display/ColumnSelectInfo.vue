@@ -50,7 +50,7 @@
               <div class="checkbox-square"/>
             </div>
           </div>
-          {{ column.name }}
+          {{ column.aliasList.length > 0 ? column.aliasList[0] : column.name }}
         </label>
       </div>
       <div class="filter-block__button-block">
