@@ -128,7 +128,7 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: `${this.dataList.length * 32}px` || '420px'
+        height: this.dataList.length * 32 > 420 ? `${this.dataList.length * 32}px` : '420px'
       }
     },
     appQuestion () {

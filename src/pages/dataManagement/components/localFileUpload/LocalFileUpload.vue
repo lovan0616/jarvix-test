@@ -173,15 +173,16 @@ export default {
   },
   methods: {
     dropFiles (event) {
-      if (!event.dataTransfer.items) return
+      if (!event.dataTransfer.files) return
 
-      const files = Array.from(event.dataTransfer.items)
+      const files = Array.from(event.dataTransfer.files)
         .filter(item => {
-          if (this.acceptFileTypes.includes(item.type)) return true
+          // 遇到有 MIME tpye 為空的情形，改為使用副檔名判斷
+          var pattern = new RegExp('.csv$|.xls$|.xlsx$');
+          if (item.name.match(pattern)) return true
           // 格式不支援者，最後一併跳提示訊息
           this.notSupportedFileType.add(this.getFileShortExtension(item.type))
         })
-        .map(item => item.getAsFile())
 
       if (this.notSupportedFileType.size > 0) {
         const notSupportedFileTypeString = [...this.notSupportedFileType].join(', ')

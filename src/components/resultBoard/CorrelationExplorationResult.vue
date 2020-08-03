@@ -1,5 +1,6 @@
 <template>
   <result-board
+    :result-id="resultId"
     :result-info="resultInfo"
     :restrictions="restrictions"
   >
@@ -22,6 +23,7 @@
         <div class="key-result-wrapper">
           <div class="key-result-selector">
             <task
+              v-if="resultInfo.key_result_selector && resultInfo.key_result_selector.length > 0"
               :component-id="resultInfo.key_result_selector[0]"
               intend="key_result_selector"
             />
@@ -100,6 +102,10 @@ export default {
       default: () => []
     },
     dataFrameId: {
+      type: Number,
+      default: null
+    },
+    resultId: {
       type: Number,
       default: null
     }

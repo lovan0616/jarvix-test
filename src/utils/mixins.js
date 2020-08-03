@@ -42,7 +42,11 @@ Vue.mixin({
     },
     // 標註千分位
     formatComma (str) {
-      return str ? str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : str
+      if (!str) return str
+      // 只處理整數位，不處理小數點位
+      const isInt = Number.isInteger(Number(str))
+      if (isInt) return str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      return str.toString().split('.')[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + str.toString().split('.')[1]
     },
     transformInt (num1, num2, padZeno, compute) {
       num1 = '' + num1

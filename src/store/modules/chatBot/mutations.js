@@ -5,6 +5,10 @@ export default {
       type: 'User',
       text: data
     })
+
+    if (state.conversationList.length > 50) {
+      state.conversationList.shift()
+    }
   },
   // Robot 回覆
   addSystemConversation (state, {text, options}) {
@@ -13,6 +17,10 @@ export default {
       text,
       options
     })
+
+    if (state.conversationList.length > 50) {
+      state.conversationList.shift()
+    }
   },
   // 清除對話紀錄
   clearConversation (state, data) {
@@ -23,5 +31,11 @@ export default {
   },
   updateIsUseAlgorithm (state, data) {
     state.isUseAlgorithm = data
+  },
+  setDoDrillDown (state, data) {
+    state.doDrillDown = data
+  },
+  setDoClickCorrelation (state, data) {
+    state.doClickCorrelation = data
   }
 }

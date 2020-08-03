@@ -307,6 +307,11 @@ const router = new Router({
       path: '/sis-setting',
       name: 'SisSetting',
       component: () => import('@/pages/sisSetting/Index')
+    },
+    {
+      path: '/share-result/:id',
+      name: 'ShareResult',
+      component: () => import('@/pages/result/SingleResult')
     }
   ],
   linkActiveClass: 'active',
