@@ -174,10 +174,10 @@ export default {
       config.tooltip.formatter = (datas) => {
         let res = datas[0].name + '<br/>'
         for (let i = 0, length = datas.length; i < length; i++) {
-          let seriesIndex = datas[i].seriesIndex + 1
-          if (datas[i].value[seriesIndex] === null || datas[i].value[seriesIndex] === undefined) continue
+          let componentIndex = datas[i].componentIndex + 1
+          if (datas[i].value[componentIndex] === null || datas[i].value[componentIndex] === undefined) continue
           let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
-          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[seriesIndex]) + '<br/>'
+          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[componentIndex]) + '<br/>'
         }
         return res
       }
