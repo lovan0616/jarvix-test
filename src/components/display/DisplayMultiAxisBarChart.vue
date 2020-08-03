@@ -63,6 +63,7 @@ import {
   seriesItemBar,
   parallelZoomIn
 } from './common/addons'
+import DataSourceSelectVue from '../select/DataSourceSelect.vue'
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
@@ -157,9 +158,10 @@ export default {
       config.tooltip.formatter = (datas) => {
         let res = datas[0].name + '<br/>'
         for (let i = 0, length = datas.length; i < length; i++) {
-          if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined) continue
+          let componentIndex = datas[i].componentIndex + 1
+          if (datas[i].value[componentIndex] === null || datas[i].value[componentIndex] === undefined) continue
           let marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color || datas[i].color.colorStops[0].color};"></span>`
-          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[i + 1]) + '<br/>'
+          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[componentIndex]) + '<br/>'
         }
         return res
       }
