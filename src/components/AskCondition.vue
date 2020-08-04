@@ -82,7 +82,7 @@ export default {
   }
   &__icon {
     margin-right: 6px;
-    fill: $theme-color-primary;
+    color: $theme-color-primary;
     &.filter {
       fill: $filter-color;
     }
