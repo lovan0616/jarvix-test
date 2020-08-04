@@ -38,7 +38,7 @@
             <svg-icon 
               icon-class="filter" 
               class="setting__collapse-title-icon setting__collapse-title-icon--dark-blue" />
-            {{ $t('dataFrameAdvanceSetting.filterCriteria') + '(' + tempFilterList.length + ')' }}
+            {{ $t('dataFrameAdvanceSetting.filterCriteria') + '(' + filterListStatus + ')' }}
           </div>
         </template>
         <filter-info 
@@ -103,6 +103,9 @@ export default {
     },
     activeCollapseName () {
       return this.displaySection
+    },
+    filterListStatus () {
+      return this.tempFilterList.filter(filter => filter.status).length
     }
   },
   watch: {
@@ -160,8 +163,7 @@ export default {
     },
     saveFilter () {
       this.setColumnList(this.tempColumnList)
-      const updatedFilterList = this.tempFilterList.filter(filter => filter.status)
-      this.updateFilterList(updatedFilterList)
+      this.updateFilterList(this.tempFilterList)
       Message({
         message: this.$t('message.addFilter'),
         type: 'success',
