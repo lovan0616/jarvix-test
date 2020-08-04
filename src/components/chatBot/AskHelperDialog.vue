@@ -2,7 +2,6 @@
   <div 
     class="ask-helper-dialog"
   >
-    <div class="helper-header">{{ $t('askHelper.title') }}</div>
     <a 
       href="javascript:void(0)" 
       class="ask-helper__close-btn"
@@ -53,13 +52,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .ask-helper-dialog {
-  .helper-header {
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 32px;
-    margin-bottom: 24px;
-  }
-
   .ask-helper__close-btn {
     position: absolute;
     top: 32px;
@@ -91,7 +83,7 @@ export default {
 
     .el-tabs__item {
       border: none;
-      width: 160px;
+      min-width: 160px;
       color:  #AAAAAA;
       border-bottom: 3px solid #324B4E;
       text-align: center;
@@ -105,8 +97,8 @@ export default {
   }
 
   .el-tabs__content {
-    overflow-y: auto;
     height: calc(100vh - 280px - #{$header-height});
+    .el-tab-pane { height: 100%; }
   }
 }
 </style>

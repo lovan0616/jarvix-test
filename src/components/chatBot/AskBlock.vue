@@ -48,10 +48,16 @@
         :class="{ 'disabled': dataSourceList.length === 0 }" 
         class="ask-remark-block"
         @click="openAskHelperDialog">
-        <svg-icon 
-          :class="{'ask-btn__icon--show': isShowAskHelper}" 
-          icon-class="ask-helper"
-          class="ask-btn__icon"/>
+        <el-tooltip
+          slot="label"
+          :content="$t('askHelper.title')"
+        >
+          <svg-icon 
+            :class="{'ask-btn__icon--show': isShowAskHelper}" 
+            icon-class="ask-helper"
+            class="ask-btn__icon"/>
+        </el-tooltip>
+        
       </div>
     </div>
     <div
