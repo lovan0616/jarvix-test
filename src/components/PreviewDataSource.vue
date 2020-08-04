@@ -1,7 +1,11 @@
 <template>
   <div class="page-preview-bookmark">
     <template v-if="dataSourceId">
-      <div class="bookmark-header">{{ $t('resultDescription.dataSourceIntro') }}</div>
+      <div
+        v-if="mode === 'display'"
+        class="bookmark-header">
+        {{ $t('resultDescription.dataSourceIntro') }}
+      </div>
       <div class="result-board">
         <spinner
           v-if="isLoading"
@@ -245,12 +249,7 @@ export default {
 .result-board {
   .board-header {
     border-top: unset;
-    padding-bottom: 0;
-
-    &.is-previewing {
-      padding-left: 0;
-      padding-right: 0;
-    }
+    padding: 0;
   }
   .board-body {
     padding: 16px 24px;
