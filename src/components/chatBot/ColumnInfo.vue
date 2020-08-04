@@ -12,13 +12,15 @@
     class="column-info">
     <div class="column-info__menu menu">
       <div class="menu__title">{{ $t('askHelper.columnCatalog') }}</div>
-      <div 
-        v-for="(columnInfo, index) in columnTypeList"
-        :key="index"
-        :class="{'menu__item--active': index === selectedIndex}"
-        class="menu__item"
-        @click="selectCatelog(index)"
-      >{{ columnInfo }}</div>
+      <div class="menu__list">
+        <div 
+          v-for="(columnInfo, index) in columnTypeList"
+          :key="index"
+          :class="{'menu__item--active': index === selectedIndex}"
+          class="menu__item"
+          @click="selectCatelog(index)"
+        >{{ columnInfo }}</div>
+      </div>
     </div>
     <div class="column-info__block block">
       <div class="block__title">
@@ -140,12 +142,13 @@ export default {
 <style lang="scss" scoped>
 .column-info {
   position: relative;
+  height: 100%;
+  display: flex;
   
   &__menu {
-    position: fixed;
     width: 200px;
-    border-radius: 5px;
-    background: rgba(35, 61, 64, 0.6);
+    height: 100%;
+    margin-right: 20px;
   }
   
   .menu {
@@ -168,6 +171,13 @@ export default {
       }
     }
 
+    &__list {
+      height: calc(100% - 42px);
+      overflow: hidden;
+      border-radius: 5px;
+      &:hover { overflow: auto; }
+    }
+
     &__item {
       position: relative;
       cursor: pointer;
@@ -175,6 +185,7 @@ export default {
       font-size: 14px;
       line-height: 32px;
       color: #999999;
+      background: rgba(35, 61, 64, 0.6);
 
       &:not(:last-of-type) {
         border-bottom: 1px solid rgba(50, 75, 78, 0.6);
@@ -208,6 +219,7 @@ export default {
     margin-left: auto;
     margin-right: 0;
     padding-right: 10px;
+    overflow: auto;
   }
 
   .block {

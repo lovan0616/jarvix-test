@@ -97,8 +97,8 @@ export default {
   }
 
   .el-tabs__content {
-    overflow-y: auto;
     height: calc(100vh - 280px - #{$header-height});
+    .el-tab-pane { height: 100%; }
   }
 }
 </style>

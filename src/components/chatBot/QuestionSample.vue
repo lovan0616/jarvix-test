@@ -2,13 +2,15 @@
   <div class="question-sample">
     <div class="question-sample__menu">
       <div class="question-sample__menu__title">{{ $t('askHelper.catalog') }}</div>
-      <div 
-        v-for="(questionCategory, index) in questionSampleList"
-        :key="index"
-        :class="{'question-sample__menu__item--active': index === selectedIndex}"
-        class="question-sample__menu__item"
-        @click="selectCatelog(index)"
-      >{{ questionCategory.name }}</div>
+      <div class="question-sample__menu__list">
+        <div 
+          v-for="(questionCategory, index) in questionSampleList"
+          :key="index"
+          :class="{'question-sample__menu__item--active': index === selectedIndex}"
+          class="question-sample__menu__item"
+          @click="selectCatelog(index)"
+        >{{ questionCategory.name }}</div>
+      </div>
     </div>
     <div class="question-sample__block">
       <div class="question-sample__block__title">
@@ -70,12 +72,13 @@ export default {
 <style lang="scss" scoped>
 .question-sample {
   position: relative;
+  height: 100%;
+  display: flex;
 
   &__menu {
-    position: fixed;
     width: 200px;
-    border-radius: 5px;
-    background: rgba(35, 61, 64, 0.6);
+    height: 100%;
+    margin-right: 20px;
     
     &__title {
       height: 42px;
@@ -96,6 +99,13 @@ export default {
       }
     }
 
+    &__list {
+      height: calc(100% - 42px);
+      overflow: hidden;
+      border-radius: 5px;
+      &:hover { overflow: auto; }
+    }
+
     &__item {
       position: relative;
       cursor: pointer;
@@ -103,6 +113,7 @@ export default {
       font-size: 14px;
       line-height: 32px;
       color: #999999;
+      background: rgba(35, 61, 64, 0.6);
       
       &:not(:last-of-type) {
         border-bottom: 1px solid rgba(50, 75, 78, 0.6);
@@ -133,8 +144,7 @@ export default {
 
   &__block {
     width: calc(100% - 224px);
-    margin-left: auto;
-    margin-right: 0;
+    overflow: auto;
     padding-right: 10px;
     
     &__title {
