@@ -83,7 +83,7 @@ export default {
 
     .el-tabs__item {
       border: none;
-      width: 160px;
+      min-width: 160px;
       color:  #AAAAAA;
       border-bottom: 3px solid #324B4E;
       text-align: center;
