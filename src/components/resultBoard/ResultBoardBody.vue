@@ -129,6 +129,7 @@ export default {
 
     .chart-block {
       width: 100%;
+      min-width: 0;
       flex: 1;
       margin-right: 32px;
     }
