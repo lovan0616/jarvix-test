@@ -14,7 +14,6 @@
         />
         <div
           v-if="mode === 'popup' && dataSourceTables.length > 0"
-          :class="{ 'is-previewing': isPreviewing }"
           class="board-header"
         >
           <el-tabs
@@ -251,6 +250,7 @@ export default {
     border-top: unset;
     padding: 0;
   }
+  
   .board-body {
     padding: 16px 24px;
 
