@@ -61,11 +61,11 @@ export default {
       if (!this.restriction.length) return
       if (this.restriction[0].type === 'compound') {
         return this.restriction[0].restraints.reduce((result, curr) => {
-          result.push(curr.properties.dc_name)
+          result.push(curr.restrictionsAlias)
           return result
         }, []).join(' & ')
       } else {
-        return this.restriction[0].properties['dc_name']
+        return this.restriction[0].restrictionsAlias
       }
     }
   }

@@ -93,6 +93,7 @@ export default {
     overflow: hidden;
 
     >>> .el-tabs--card {
+
       &>.el-tabs__header {
         margin: 0 0 25px;
         border-bottom: 3px solid #414848;
@@ -123,6 +124,7 @@ export default {
         }
       }
       .el-tabs__content {
+        padding-right: 10px;
         max-height: 210px;
         overflow-y: auto;
       }
