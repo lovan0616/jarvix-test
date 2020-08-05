@@ -15,13 +15,14 @@
 export default {
   name: 'PinboardDataInfo',
   props: {
-		dataFrameId: {
-      type: Number,
-      default: null
+		dataFrameName: {
+      type: String,
+      default: ''
+    },
+    filterColumns: {
+      type: Array,
+      default: () => []
     }
-  },
-  computed: {
-
   }
 }
 </script>
