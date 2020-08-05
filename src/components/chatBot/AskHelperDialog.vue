@@ -2,8 +2,8 @@
   <div 
     class="ask-helper-dialog"
   >
-    <a 
-      href="javascript:void(0)" 
+    <a
+      href="javascript:void(0)"
       class="ask-helper__close-btn"
       @click="closeDialog"
     ><svg-icon icon-class="close"/></a>
@@ -53,11 +53,16 @@ export default {
 <style lang="scss" scoped>
 .ask-helper-dialog {
   .ask-helper__close-btn {
+    display: block;
     position: absolute;
     top: 32px;
     right: 40px;
     color: #fff;
     font-size: 14px;
+    z-index: 5;
+  }
+  .ask-helper-tab {
+    z-index: 0;
   }
 }
 </style>

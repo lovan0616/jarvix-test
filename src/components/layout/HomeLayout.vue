@@ -115,6 +115,7 @@ export default {
       right: 40px;
       color: #fff;
       font-size: 14px;
+      z-index: 5;
     }
   }
 }
