@@ -124,10 +124,11 @@
         <label 
           class="info-block__label">{{ $t('monitorSetting.monitorThreshold') }}</label>
         <input-verify
-          v-validate="'required|numeric'"
+          v-validate="'required'"
           v-model="settingInfo.threshold.max"
           :placeholder="$t('editing.numericOnly')"
           name="monitorThreshold"
+          type="number"
           class="info-block__input"
         />
       </div>
