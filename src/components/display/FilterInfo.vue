@@ -1,15 +1,6 @@
 <template>
   <div class="filter-block">
     <div 
-      :class="[tempFilterList.length > 0 ? 'filter-block__title--small' : 'filter-block__title--large']"
-      class="filter-block__title"
-    >
-      <svg-icon 
-        icon-class="filter" 
-        class="filter-block__title-icon" />
-      {{ $t('dataFrameAdvanceSetting.filterCriteria') + '(' + tempFilterList.length + ')' }}
-    </div>
-    <div 
       v-if="tempFilterList.length > 0" 
       class="filter-block__action-box"
     >
@@ -73,20 +64,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .filter-block {
-  &__title {
-    &--small {
-      padding-bottom: 8px;
-    }
-
-    &--large {
-      padding-bottom: 18px;
-    }
-  }
-
-  &__title-icon {
-    color: #4F93FF;
-  }
-
   &__action-box {
     padding-bottom: 8px;
   }

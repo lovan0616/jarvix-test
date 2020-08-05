@@ -21,7 +21,7 @@
           <div class="region-description">
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
             </div>
           </div>
         </div>
@@ -169,10 +169,11 @@ export default {
       config.tooltip.formatter = (datas) => {
         let res = datas[0].name + '<br/>'
         for (let i = 0, length = datas.length; i < length; i++) {
+          let componentIndex = datas[i].componentIndex + 1
           // 過濾掉 null、undefined、以及 為了 stck 的 0
-          if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined || (datas[i].value[i + 1] === 0 && datas[i].value[2] === 0 && datas[i].value[3] === 0 && datas[i].value[4] === null)) continue
+          if (datas[i].value[componentIndex] === null || datas[i].value[componentIndex] === undefined || (datas[i].value[componentIndex] === 0 && datas[i].value[2] === 0 && datas[i].value[3] === 0 && datas[i].value[4] === null)) continue
           let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
-          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[i + 1]) + '<br/>'
+          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[componentIndex]) + '<br/>'
         }
         return res
       }

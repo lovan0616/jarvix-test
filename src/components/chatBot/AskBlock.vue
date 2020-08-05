@@ -1,12 +1,13 @@
 <template>
-  <div class="ask-container">
+  <div 
+    :class="{'is-focus': isFocus}" 
+    class="ask-container">
     <div class="ask-block">
       <div 
         :class="{
           'has-filter': hasFilter,
           'is-use-algorithm': isUseAlgorithm,
           'is-connect-channel': websocketHandler,
-          'is-focus': isFocus
         }"
         class="user-question-block"
       >
@@ -53,26 +54,21 @@
           class="ask-btn__icon"/>
       </div>
     </div>
-    <div 
+    <div
       :class="{show: showHistoryQuestion && historyQuestionList.length > 0, 'has-filter': hasFilter}"
       class="history-question-block"
     >
-      <a 
-        href="javascript:void(0)" 
-        class="close-btn"
-        @click="hideHistory"
-      >
-        <svg-icon icon-class="close"/>
-      </a>
-      <div class="title">{{ $t('askHelper.historyTitle') }}</div>
       <div 
         v-for="singleHistory in historyQuestionList"
         :key="singleHistory.id"
         class="history-question"
         @click="copyQuestion(singleHistory.question)"
-      ><svg-icon 
-        icon-class="clock" 
-        class="icon"/> {{ singleHistory.question }}</div>
+      >
+        <svg-icon 
+          icon-class="clock" 
+          class="icon"/>
+        {{ singleHistory.question }}
+      </div>
     </div>
     <transition name="fast-fade-in">
       <ask-helper-dialog 
@@ -89,8 +85,8 @@
 </template>
 <script>
 import AskHelperDialog from './AskHelperDialog'
-import { mapState } from 'vuex'
-
+import { mapState, mapGetters } from 'vuex'
+import { Message } from 'element-ui'
 
 export default {
   name: 'AskBlock',
@@ -104,12 +100,14 @@ export default {
       websocketHandler: null,
       recommendList: [],
       cursorPositionQuestion: null,
-      isFocus: false
+      isFocus: false,
+      closeQuickAsk: localStorage.getItem('closeQuickAsk') || false
     }
   },
   computed: {
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
     dictionaries () {
       return [
         ...this.dataSourceColumnInfoList.booleanList.map(element => ({type: 'boolean', text: element})),
@@ -165,6 +163,7 @@ export default {
   },
   watch: {
     questionTokenList (value, oldValue) {
+      if (this.closeQuickAsk === 'true') return
       if (value.length === 0) return
       // token 減少不處理
       let newRecognizeTokenList = value.filter(element => element.type !== 'unknown')
@@ -221,6 +220,44 @@ export default {
     onWebSocketOpen () {
     },
     onWebSocketReceiveMessage (evt) {
+      if (evt.data === '圈選2018年11月至2019年1月') {
+        // drill down
+        this.$store.commit('chatBot/setDoDrillDown', true)
+        return
+      }
+      if (evt.data === '回到資料集') {
+        // 回到首頁
+        this.$router.push({ 
+          name: 'PageIndex', 
+          params: {
+            'account_id': this.getCurrentAccountId,
+            'group_id': this.getCurrentGroupId
+          },
+          query: {
+            dataSourceId: this.$route.query.dataSourceId,
+            dataFrameId: this.$route.query.dataFrameId
+          }
+        })
+        this.cleanQuestion()
+        return
+      }
+      if (evt.data === '點擊環境濕度') {
+        // 點擊環境溫度
+        this.$store.commit('chatBot/setDoClickCorrelation', true)
+        return
+      }
+      if (evt.data === '取消過濾條件') {
+        // 清空 drill down
+        this.$store.commit('dataSource/clearFilterList')
+        Message({
+          message: '已取消過濾條件',
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
+        return
+      }
+
       this.userQuestion = evt.data
       this.enterQuestion()
     },
@@ -231,8 +268,9 @@ export default {
       if (this.showHistoryQuestion && !clickInside) {
         this.showHistoryQuestion = false
       }
+      
       // 歷史問句與問句提示同時顯示時，若是點擊到問句提示則關閉歷史問句
-      if (this.showHistoryQuestion && this.$refs.helperDialog.$el.contains(evt.target)) {
+      if (this.showHistoryQuestion && this.$refs.helperDialog && this.$refs.helperDialog.$el.contains(evt.target)) {
         this.showHistoryQuestion = false
       }
     },
@@ -298,21 +336,30 @@ export default {
   position: relative;
   flex: 1;
 
+  &.is-focus {
+
+    .user-question-block {
+      border-radius: 5px 5px 0 0;
+      border: 1px solid #0CD1DE;
+      box-shadow: 0px 0px 20px rgba(12, 209, 222, .5);
+      border-radius: 5px;
+    }
+  }
+  
   .ask-block {
-    padding-left: 13px;
-    display: flex;
-    align-items: center;
+    position: relative;
+    height: 100%;
   }
 
   .user-question-block {
-    flex: 1;
     display: flex;
     align-items: center;
-    z-index: 999;
+    width: calc(100% - 54px);
     background-color: #1D2424;
-    border-radius: 5px;
-    padding: 0 10px;
     border: 1px solid #1D2424;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all .1s;
 
     &.has-filter {
       &:after {
@@ -334,19 +381,16 @@ export default {
         color: $theme-color-danger;
       }
     }
-    &.is-focus {
-      box-shadow: 0px 0px 20px rgba(12, 209, 222, 0.5);
-      border: 1px solid #0CD1DE;
-    }
 
     .question-input {
-      width: 100%;
+      flex-basis: calc(100% - 65px);
       font-size: 14px;
       line-height: 36px;
       height: 38px;
       overflow: auto;
       padding-right: 30px;
       border-bottom: none;
+      padding: 0 10px;
 
       &::placeholder {
         opacity: #888;
@@ -365,33 +409,23 @@ export default {
     }
 
     .clean-btn {
+      flex-basis: 16px;
       font-size: 16px;
       color: rgba(255, 255, 255, 0.5);
       margin-right: 16px;
     }
 
     .ask-btn {
+      flex-basis: 16px;
       font-size: 20px;
       color: $theme-color-primary;
     }
   }
 
-  .filter-block {
-    color: $filter-color;
-    border: 1px solid $filter-color;
-    border-radius: 5px;
-    padding: 6px 10px;
-    font-size: 12px;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-
-    .icon {
-      margin-right: 4px;
-    }
-  }
-
   .ask-remark-block {
+    position: absolute;
+    right: 0;
+    top: 0;
     font-size: 16px;
     height: 40px;
     width: 40px;
@@ -445,15 +479,15 @@ export default {
   .history-question-block {
     position: absolute;
     text-align: left;
-    left: 13px;
+    left: 0;
     top: 100%;
-    width: calc(100% - 69px);
+    width: calc(100% - 56px);
     height: 0;
     overflow: hidden;
-    padding: 0 32px;
-    transition: height 0.3s;
+    transition: all .1s;
     z-index: 90;
-    background-color: rgba(40, 71, 74, 0.95);
+    background-color: #2D3033;
+    border-radius: 5px;
 
     &.has-filter {
       bottom: 137px;
@@ -462,44 +496,33 @@ export default {
     &.show {
       height: 160px;
       overflow: auto;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 12px;
-      right: 16px;
-      color: #fff;
-      font-size: 14px;
-    }
-
-    .title {
-      line-height: 50px;
+      padding: 4px 0;
     }
 
     .history-question {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 5px;
       font-size: 14px;
       line-height: 20px;
-      padding: 8px 12px;
-      color: $theme-color-primary;
+      padding: 10px 32px;
+      color: #ccc;
       cursor: pointer;
+      border-bottom: 1px solid #323538;
 
-      &:not(:last-child) {
-        margin-bottom: 8px;
+      &:hover {
+        background-color: #464A50;
       }
 
+
       .icon {
-        margin-right: 4px;
+        margin-right: 14px;
       }
     }
   }
 
   .ask-helper {
     width: calc(100% - #{$app-side-nav-closed-width});
-    height: calc(100vh - #{$header-height + $chat-room-height});
+    height: calc(100vh - #{$header-height + $chat-room-height + $ask-condition-height});
     position: fixed;
-    top: $header-height + $chat-room-height;
+    top: $header-height + $chat-room-height + $ask-condition-height;
     right: 0;
     background: #000;
     overflow: auto;

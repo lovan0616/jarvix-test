@@ -24,7 +24,7 @@
             v-for="(singleRestraint, restraintIndex) in singleArea.restraints"
             :key="'restraint' + index + '-' + restraintIndex"
           >
-            {{ singleRestraint.properties.display_name }}{{ $t('resultDescription.between', {start: roundNumber(singleRestraint.properties.start), end: roundNumber(singleRestraint.properties.end) }) }}
+            {{ singleRestraint.properties.display_name }} {{ $t('resultDescription.between', {start: roundNumber(singleRestraint.properties.start), end: roundNumber(singleRestraint.properties.end) }) }}
             <span
               v-show="restraintIndex !== singleArea.restraints.length - 1"
             >、</span>
@@ -92,14 +92,28 @@ export default {
       let scatterOptions = JSON.parse(JSON.stringify(scatterChartConfig))
       this.$set(chartAddon.xAxis, 'splitLine', scatterOptions.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterOptions.yAxisSplitLine)
-      chartAddon.tooltip.formatter = (params, ticket, callback) => {
-        return params.reduce((res, item, index) => {
-          return `
-            ${this.title.xAxis[0].display_name}: ${this.formatComma(item.data[0])}<br/>
-            ${this.title.yAxis[0].display_name}: ${this.formatComma(item.data[1])}<br/>
-          `
-        }, '')
+      chartAddon.tooltip = {
+        confine: true,
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          axis: 'auto',
+          snap: true
+        },
+        formatter: (params, ticket, callback) => {
+          return params.reduce((res, item, index) => {
+            // 過濾掉回歸線
+            if (item.seriesType !== 'scatter') return
+            // 多個點同一個 x 軸時增加間距
+            if (index > 0 && index < params.length) res += '<div style="padding-bottom: 4px;"></div>'
+            return res + `
+              ${this.title.xAxis[0].display_name}: ${this.formatComma(item.data[0])}<br/>
+              ${this.title.yAxis[0].display_name}: ${this.formatComma(item.data[1])}
+            `
+          }, '')
+        }
       }
+
       // 不顯示“全選”按鈕
       chartAddon.legend.selector = false
       // 開啟工具列的 dataZoom 工具

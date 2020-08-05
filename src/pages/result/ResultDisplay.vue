@@ -40,7 +40,7 @@
 
 <script>
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ResultDisplay',
@@ -68,7 +68,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
@@ -103,7 +103,9 @@ export default {
           || oldValue.columnList === null && (oldValue.filterList.length === newValue.filterList.length)
         ) return
 
-         this.fetchApiAsk({
+        // 預先觸發重新計算 column summary 和 column correlation
+        this.triggerColumnDataCalculation()
+        this.fetchApiAsk({
           question: this.$route.query.question, 
           'dataSourceId': this.$route.query.dataSourceId, 
           'dataFrameId': this.$route.query.dataFrameId
@@ -119,6 +121,7 @@ export default {
     if (this.addConversationTimeout) window.clearTimeout(this.addConversationTimeout)
   },
   methods: {
+    ...mapActions('dataSource', ['triggerColumnDataCalculation']),
     fetchData () {
       const {dataSourceId, dataFrameId, question} = this.$route.query
       if (!question) return
@@ -148,7 +151,8 @@ export default {
         this.$store.dispatch('chatBot/askResult', {
           questionId: this.currentQuestionId,
           segmentationPayload: this.currentQuestionInfo,
-          restrictions: this.filterRestrictionList
+          restrictions: this.filterRestrictionList,
+          selectedColumnList: this.selectedColumnList
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.getComponent(res)
@@ -195,7 +199,8 @@ export default {
             this.$store.dispatch('chatBot/askResult', {
               questionId,
               segmentationPayload: segmentationList[0],
-              restrictions: this.filterRestrictionList
+              restrictions: this.filterRestrictionList,
+              selectedColumnList: this.selectedColumnList
             }).then(res => {
               this.getComponent(res)
               this.getRelatedQuestion(res.resultId)

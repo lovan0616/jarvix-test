@@ -27,17 +27,16 @@ export default {
   width: calc(100% - #{$app-side-nav-closed-width});
   height: $chat-room-height;
   overflow: auto;
-  padding: 16px 34px 16px 0;
+  padding: 16px 34px 16px 24px;
   z-index: 4;
-  background-color: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.55);
   overflow: visible;
 
   .select-group {
     width: $basic-df-setting-width;
-    padding: 0 16px 0 24px;
     
     &__select {
-      width: 100%;
+      width: calc(100% - 24px);
       height: 40px;
       display: flex;
       

@@ -10,7 +10,8 @@
     "languagePlaceholder": "Language",
     "setting": "Setting",
     "projectManagement": "Project Management",
-    "algorithm": "Algorithm"
+    "algorithm": "Algorithm",
+    "helper": "Help"
   },
   "sideNav": {
     "functionList": "Functions",
@@ -37,7 +38,9 @@
     "selectAll": "Select All",
     "cancelSelect": "Deselect All",
     "clearCriteria": "Clear Filter Conditions",
-    "noCriteriaYet": "No filter condition has been set"
+    "noCriteriaYet": "No filter condition has been set",
+    "allColumns": "All Columns",
+    "dataColumns": "Columns"
   },
   "message": {
     "joinTableBuilding": "Data Set will be available for analysis once it is processed.",
@@ -1591,9 +1594,10 @@
     "closeFilter": "Close Condition",
     "currentChosenData": "Currently selected data",
     "currentChosenArea": "Currently selected block",
-    "saveFilterCondition": "Save Filter Condition",
+    "saveFilterCondition": "Save",
+    "saveFilterReminding": "After drilling down, the designated Data Set will automatically be set.",
     "area": "Block",
-    "between": "Fall between {start} and {end}",
+    "between": "fall between {start} and {end}.",
     "filterRestrictions": "Filter Restrictions",
     "prompt": "Prompt",
     "filterRule": "Filter conditions will affect the results of subsequent question analysis",

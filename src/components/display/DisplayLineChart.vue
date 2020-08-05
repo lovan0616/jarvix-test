@@ -1,6 +1,7 @@
 <template>
   <div class="display-line-chart">
     <v-echart
+      ref="chart"
       :style="chartStyle"
       :options="options"
       auto-resize
@@ -39,7 +40,7 @@
           >
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
             </div>
           </div>
         </div>
@@ -161,7 +162,7 @@ export default {
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur) => {
-            return acc + `<td style="padding: 4px 12px;white-space:nowrap;">${cur || ''}</td>`
+            return acc + `<td style="padding: 4px 12px;white-space:nowrap;">${cur === null ? '' : cur}</td>`
           }, '')
           table += `<tr ${i % 2 === 0 ? (i === 0 ? 'style="background-color:#2B4D51"' : 'style="background-color:rgba(50, 75, 78, 0.6)"') : ''}>${tableData}</tr>`
         }
@@ -173,9 +174,10 @@ export default {
       config.tooltip.formatter = (datas) => {
         let res = datas[0].name + '<br/>'
         for (let i = 0, length = datas.length; i < length; i++) {
-          if (datas[i].value[i + 1] === null || datas[i].value[i + 1] === undefined) continue
+          let componentIndex = datas[i].componentIndex + 1
+          if (datas[i].value[componentIndex] === null || datas[i].value[componentIndex] === undefined) continue
           let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
-          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[i + 1]) + '<br/>'
+          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[componentIndex]) + '<br/>'
         }
         return res
       }
@@ -252,6 +254,7 @@ export default {
       return config
     },
     colorList () {
+      if (this.hasPagination) return color12
       switch (this.series.length) {
         case 1:
           return colorOnly1
@@ -267,12 +270,54 @@ export default {
     },
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
+    },
+    doDrillDown () {
+      return this.$store.state.chatBot.doDrillDown
+    }
+  },
+  watch: {
+    doDrillDown (val) {
+      if (!val) return
+      this.robotDrillDownEvent()
+      window.setTimeout(() => {
+        this.saveFilter()
+      }, 1000)
+      this.$store.commit('chatBot/setDoDrillDown', false)
     }
   },
   mounted () {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
+    robotDrillDownEvent () {
+      this.$refs.chart.dispatchAction({
+        type: 'brush',
+        areas: [
+          {
+            xAxisIndex: 0,
+            brushType: 'lineX',
+            coordRange: [
+              10, 11
+            ]
+          }
+        ]
+      })
+      // 為了要看起來有動態效果，只好圈兩次
+      window.setTimeout(() => {
+        this.$refs.chart.dispatchAction({
+          type: 'brush',
+          areas: [
+            {
+              xAxisIndex: 0,
+              brushType: 'lineX',
+              coordRange: [
+                10, 12
+              ]
+            }
+          ]
+        })
+      }, 0)
+    },
     composeColumn (element, colIndex) {
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他

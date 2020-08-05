@@ -50,7 +50,7 @@
           </a>
         </div>
         <div 
-          v-else
+          v-else-if="$route.name === 'PageResult'"
           class="pin-button-block"
         >
           <a 
@@ -124,6 +124,10 @@ export default {
     PinboardInfoDialog
   },
   props: {
+    resultId: {
+      type: Number,
+      default: null
+    },
     resultInfo: {
       type: Object,
       default: () => {}
@@ -151,11 +155,11 @@ export default {
       return this.$route.name === 'PersonalPagePinboard' || this.$route.name === 'ProjectPagePinboard'
     },
     questionName () {
-      let boardHeaderData = this.$children.filter(element => element.componentName === 'ResultBoardHeader')[0].componentData
-      return boardHeaderData ? boardHeaderData.segmentation.question : ''
+      let boardHeader = this.$children.filter(element => element.componentName === 'ResultBoardHeader')[0]
+      return boardHeader ? boardHeader.componentData.title : ''
     },
     shareUrl () {
-      return `${window.location.origin}/account/${this.accountId}/group/${this.groupId}/result?question=${this.questionName}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&dataFrameId=${this.dataFrameId}&action=share`
+      return `${window.location.origin}/share-result/${this.resultId}`
     },
     hasFilter () {
       return (this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult') || this.restrictions.length > 0
@@ -165,9 +169,6 @@ export default {
     },
     accountId () {
       return this.$route.params.account_id
-    },
-    groupId () {
-      return this.$route.params.group_id
     },
     isPersonalPinboard () {
       return this.$route.name === 'PersonalPagePinboardList'

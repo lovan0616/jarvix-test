@@ -20,7 +20,8 @@
           v-for="(dataSource, dataSourceIndex) in availableDataSourceList"
           :key="'dataSource' + dataSourceIndex">
           <el-submenu 
-            :index="'1-' + dataSourceIndex" 
+            :index="'1-' + dataSourceIndex"
+            :class="{'is-active': dataSourceIndex === getDataSourceIndex}"
             class="data-frame-select__submenu">
             <template slot="title">
               <svg-icon 
@@ -31,7 +32,9 @@
             <div 
               v-for="(dataFrame, dataFrameIndex) in dataSource.dataFrames"
               :key="'dataFrame' + dataFrameIndex">
-              <el-menu-item :index="dataSourceIndex + '-' + dataFrameIndex">
+              <el-menu-item 
+                :index="dataSourceIndex + '-' + dataFrameIndex"
+                :class="{'is-active': dataSourceIndex === getDataSourceIndex && dataFrameIndex === getDataFrameIndex}">
                 <template slot="title">
                   <svg-icon 
                     icon-class="table" 
@@ -52,6 +55,7 @@
       </el-submenu>
     </el-menu>
     <button 
+      :disabled="isDisablePreviewDataSource"
       class="preview-datasource-btn"
       @click="togglePreviewDataSource"
     >
@@ -60,7 +64,7 @@
         :content="previewDataSourceTooltipContent"
       >
         <svg-icon 
-          :class="{'preview-datasource-btn__icon--show': isShowPreviewDataSource}"
+          :class="{ 'preview-datasource-btn__icon--show': isShowPreviewDataSource, 'preview-datasource-btn__icon--disabled': isDisablePreviewDataSource }"
           icon-class="view-data"
           class="preview-datasource-btn__icon"/>
       </el-tooltip>
@@ -75,7 +79,7 @@
         :content="previewDataFrameSettingTooltipContent"
       >
         <svg-icon 
-          :class="{'dataframe-setting-btn__icon--show': isShowSettingBox, 'dataframe-setting-btn__icon--disabled': isDisableDataFrameAdvanceSetting}"
+          :class="{ 'dataframe-setting-btn__icon--show': isShowSettingBox, 'dataframe-setting-btn__icon--disabled': isDisableDataFrameAdvanceSetting }"
           icon-class="filter-setting"
           class="preview-datasource-btn__icon"/>
       </el-tooltip>
@@ -87,11 +91,6 @@ import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'DataFrameMenu',
-  data () {
-    return {
-      selectInfo: {}
-    }
-  },
   computed: {
     ...mapGetters('dataSource', ['dataSourceList', 'getDataSourceName', 'getDataFrameName']),
     ...mapGetters('userManagement', ['getCurrentGroupId']),
@@ -103,26 +102,25 @@ export default {
       return this.$store.state.dataSource.dataFrameId
     },
     selectedDataName () {
-      return this.getDataFrameName === 'all' 
+      return this.dataFrameId === 'all' 
         ? this.getDataSourceName
         : this.getDataFrameName
     },
     selectedIconType () {
-      return this.selectInfo.dataFrameId === 'all' || Object.entries(this.selectInfo).length === 0
+      return this.dataFrameId === 'all'
         ? 'data-source' 
         : 'table'
-    },
-    buildDataSourceList () {
-      return this.dataSourceList.filter(dataSource => {
-        return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
-      })
     },
     availableDataSourceList () {
       const defaultOption = {
         name: this.$t('editing.allDataFrames'),
         id: 'all'
       }
-      return this.buildDataSourceList.map(dataSource => {
+      let buildDataSourceList = this.dataSourceList.filter(dataSource => {
+        return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
+      })
+
+      return buildDataSourceList.map(dataSource => {
         return {
           ...dataSource,
           dataFrames: dataSource.dataFrames.reduce((acc, cur) => {
@@ -132,8 +130,22 @@ export default {
         }
       })
     },
+    getDataSourceIndex() {
+      return this.availableDataSourceList.findIndex(dataSource => (
+        dataSource.id === this.dataSourceId
+      ))
+    },
+    getDataFrameIndex() {
+      if (this.availableDataSourceList.length === 0) return -1
+      return this.availableDataSourceList[this.getDataSourceIndex].dataFrames.findIndex(dataFrame => (
+        dataFrame.id === this.dataFrameId
+      ))
+    },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
+    },
+    isShowAskHelper () {
+      return this.$store.state.isShowAskHelper
     },
     previewDataSourceTooltipContent () {
       return this.isShowPreviewDataSource ? this.$t('bot.closeDataSource') : this.$t('bot.previewDataSource')
@@ -142,8 +154,11 @@ export default {
       if (this.isDisableDataFrameAdvanceSetting) return this.$t('bot.switchSpecificDataFrame') 
       return this.isShowSettingBox ? this.$t('bot.closeDataFrameSetting') : this.$t('bot.openDataFrameSetting')
     },
+    isDisablePreviewDataSource () {
+      return this.availableDataSourceList.length === 0 || !this.dataSourceId
+    },
     isDisableDataFrameAdvanceSetting () {
-      return this.availableDataSourceList === 0 || this.selectInfo.dataFrameId === 'all'
+      return this.availableDataSourceList.length === 0 || this.dataFrameId === 'all' || this.dataFrameId === null
     },
   },
   methods: {
@@ -153,11 +168,18 @@ export default {
       let selectKey = keyPath[2].split('-')
       const dataSourceIndex = selectKey[0]
       const dataFrameIndex = selectKey[1]
-      this.selectInfo = {
+      let selectInfo = {
         dataSourceId: this.availableDataSourceList[dataSourceIndex].id,
         dataFrameId: this.availableDataSourceList[dataSourceIndex].dataFrames[dataFrameIndex].id
       }
-      this.onDataFrameChange(this.selectInfo.dataSourceId, this.selectInfo.dataFrameId)
+      
+      // To prevent NavigationDuplicated error
+      if (
+        selectInfo.dataSourceId === this.dataSourceId
+        && selectInfo.dataFrameId === this.dataFrameId
+      ) return
+      
+      this.onDataFrameChange(selectInfo.dataSourceId, selectInfo.dataFrameId)
     },
     onDataFrameChange (dataSourceId, dataFrameId) {
       // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
@@ -177,12 +199,17 @@ export default {
       })
     },
     togglePreviewDataSource () {
+      if (this.isDisablePreviewDataSource) return
+      if (this.isShowAskHelper) this.closeHelper()
       this.$store.commit('previewDataSource/togglePreviewDataSource', !this.isShowPreviewDataSource)
     },
     toggleAdvanceDataFrameSetting () {
       if (this.isDisableDataFrameAdvanceSetting) return 
       this.toggleSettingBox(!this.isShowSettingBox)
     },
+    closeHelper () {
+      this.$store.commit('updateAskHelperStatus', false)
+    }
   }
 }
 </script>
@@ -195,6 +222,7 @@ export default {
   line-height: 40px;
   border-radius: 5px;
   border: 1px solid #292C2E;
+  background-color: rgba(0, 0, 0, 0.55);
 
   .preview-datasource-btn, .dataframe-setting-btn {
     width: 40px;
@@ -241,6 +269,7 @@ export default {
       line-height: 38px;
       padding: 0 30px 0 10px;
       border-radius: 5px 0 0 5px;
+      background-color: rgba(0, 0, 0, 0.55) !important;
     }
 
     .data-frame-select__icon {
@@ -264,8 +293,12 @@ export default {
 .el-menu--horizontal {
   flex: auto;
   border-bottom: unset;
-  border-radius: 5px;
+  border-radius: 5px 0 0 5px;
   max-width: 162px;
+
+  &>>>.el-submenu .el-submenu__icon-arrow::before {
+    transform: rotateZ(0); 
+  }
 }
 
 </style>

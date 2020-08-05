@@ -34,7 +34,10 @@
         <template #columns-header="{ column, index }">
           <div class="header-block">
             <div class="header">
-              <span class="icon">
+              <span 
+                v-if="showColumnSummaryRow"
+                class="icon"
+              >
                 <el-tooltip
                   slot="label"
                   :enterable="false"
@@ -223,6 +226,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .data-frame-data {
+  .empty-info-block {
+    margin-bottom: 2rem;
+  }
+
   .board-body-section {
     .title {
       margin-bottom: 13px;

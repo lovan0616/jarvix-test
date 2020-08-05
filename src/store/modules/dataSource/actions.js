@@ -1,5 +1,14 @@
 import co from 'co'
-import { getDataSourceList, getDataSourceColumnInfoById, getDataSourceDataValueById, getDataFrameById, getDataFrameData, dataFrameColumnSummary, getColumnCorrelationMatrix } from '@/API/DataSource'
+import { 
+  getDataSourceList, 
+  getDataSourceColumnInfoById, 
+  getDataSourceDataValueById, 
+  getDataFrameById, 
+  getDataFrameData, 
+  dataFrameColumnSummary, 
+  getColumnCorrelationMatrix,
+  triggerColumnDataCalculation
+} from '@/API/DataSource'
 import { getHistoryQuestionList } from '@/API/NewAsk'
 import router from '../../../router'
 import { Message } from 'element-ui'
@@ -73,7 +82,6 @@ export default {
     if (state.dataSourceId) dispatch('clearChatbot')
     // 更新 DataSource 資料
     commit('setDataSourceId', dataSourceId)
-    commit('setDataFrameId', dataFrameId)
     commit('dataFrameAdvanceSetting/toggleIsInit', false, { root: true })
     dispatch('dataFrameAdvanceSetting/clearColumnList', null, { root: true })
     
@@ -118,6 +126,8 @@ export default {
     return co(function* () {
       yield dispatch('chatBot/updateChatConversation', false, { root: true })
       yield dispatch('getHistoryQuestionList')
+      yield dispatch('getDataSourceColumnInfo', true)
+      yield dispatch('getDataSourceDataValue', true)
       return Promise.resolve(state)
     })
   },
@@ -173,18 +183,22 @@ export default {
   getDataFrameColumnCorrelation({ state }, { id, selectedColumnList = null, restrictions = [] }) {
     return getColumnCorrelationMatrix(id, selectedColumnList, restrictions)
   },
-  getDataSourceColumnInfo({ commit, state, getters }) {
-    if (!state.dataSourceId) return
+  getDataSourceColumnInfo({ commit, state, getters, rootGetters }, shouldStore = true) {
+    if (!state.dataSourceId) return Promise.reject()
     const dataFrameId = getters.currentDataFrameId
-    return getDataSourceColumnInfoById(state.dataSourceId, dataFrameId).then(response => {
-      commit('setDataSourceColumnInfoList', response)
+    const columns = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
+    const restrictions = getters.filterRestrictionList
+    return getDataSourceColumnInfoById(state.dataSourceId, dataFrameId, columns, restrictions).then(response => {
+      return shouldStore ? commit('setDataSourceColumnInfoList', response) : response
     })
   },
-  getDataSourceDataValue ({ commit, state, getters }) {
-    if (!state.dataSourceId) return
+  getDataSourceDataValue({ commit, state, getters, rootGetters }, shouldStore = true) {
+    if (!state.dataSourceId) return Promise.reject()
     const dataFrameId = getters.currentDataFrameId
-    return getDataSourceDataValueById(state.dataSourceId, dataFrameId).then(response => {
-      commit('setDataSourceDataValueList', response)
+    const columns = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
+    const restrictions = getters.filterRestrictionList
+    return getDataSourceDataValueById(state.dataSourceId, dataFrameId, columns, restrictions).then(response => {
+      return shouldStore ? commit('setDataSourceDataValueList', response) : response
     })
   },
   updateResultRouter ({commit, state, rootGetters}, actionTag) {
@@ -250,5 +264,9 @@ export default {
 
     // 如果 dataFrame 被刪掉則恢復預設 all
     return dispatch('changeDataFrameById', 'all')
+  },
+  triggerColumnDataCalculation({ state, getters }) {
+    const restrictions = getters.filterRestrictionList
+    return triggerColumnDataCalculation(state.dataFrameId, restrictions)
   }
 }

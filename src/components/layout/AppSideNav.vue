@@ -227,10 +227,11 @@ export default {
     height: calc(100vh - #{$header-height});
     background: var(--color-bg-3);
     border-right: 1px solid var(--color-border);
+    padding-bottom: 10px;
   }
   
   &__account {
-    padding: 12px 16px;
+    padding: 12px ($app-side-nav-closed-width - 32px) / 2;
   }
 
   &__list {
@@ -253,7 +254,7 @@ export default {
     }
 
     &__link {
-      padding: 22px 21px;
+      padding: 10px ($app-side-nav-closed-width - 24px) / 2;
       display: flex;
       align-items: center;
       color: #CCCCCC;

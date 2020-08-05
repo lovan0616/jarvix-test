@@ -70,14 +70,11 @@ export default {
 <style lang="scss" scoped>
 .question-sample {
   position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
 
   &__menu {
+    position: fixed;
     width: 200px;
     border-radius: 5px;
-    margin-right: 24px;
     background: rgba(35, 61, 64, 0.6);
     
     &__title {
@@ -106,7 +103,10 @@ export default {
       font-size: 14px;
       line-height: 32px;
       color: #999999;
-      border-bottom: 1px solid rgba(50, 75, 78, 0.6);
+      
+      &:not(:last-of-type) {
+        border-bottom: 1px solid rgba(50, 75, 78, 0.6);
+      }
 
       &:last-child {
         border-radius: 5px;
@@ -132,7 +132,9 @@ export default {
   }
 
   &__block {
-    flex: 1;
+    width: calc(100% - 224px);
+    margin-left: auto;
+    margin-right: 0;
     padding-right: 10px;
     
     &__title {
