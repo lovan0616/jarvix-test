@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 export default {
@@ -82,6 +82,24 @@ export default {
       dataSourceColumnInfoList: [],
       isLoading: true,
       hasError: false
+    }
+  },
+  computed: {
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
+  },
+  watch: {
+    askCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (
+          this.mode === 'popup' 
+          // 初次開啟設定時不觸發
+          || (oldValue.isInit === false && oldValue.columnList === null) 
+          // 切換 dataframe 清空設定時不觸發
+          || newValue.isInit === false
+        ) return
+        this.fetchColumnInfo()
+      }
     }
   },
   mounted () {
