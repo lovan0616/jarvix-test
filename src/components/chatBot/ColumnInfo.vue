@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 export default {
@@ -76,13 +76,30 @@ export default {
       activeName: null,
       selectedIndex: 0,
       columnTypeList: [
-        'Category', 'Numeric', 'DateTime', 'Boolean', 'Unique', 'Value'
+        'Category', 'Numeric', 'DateTime', 'Boolean', 'Value'
       ],
       columnInfoList: [],
       dataSourceColumnInfoList: [],
-      dataSourceDataValueList: [],
       isLoading: true,
       hasError: false
+    }
+  },
+  computed: {
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
+  },
+  watch: {
+    askCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (
+          this.mode === 'popup' 
+          // 初次開啟設定時不觸發
+          || (oldValue.isInit === false && oldValue.columnList === null) 
+          // 切換 dataframe 清空設定時不觸發
+          || newValue.isInit === false
+        ) return
+        this.fetchColumnInfo()
+      }
     }
   },
   mounted () {
@@ -93,8 +110,7 @@ export default {
     fetchColumnInfo () {
       Promise.all([this.getDataSourceColumnInfo(false), this.getDataSourceDataValue(false)])
         .then(([columnInfo, dataValue]) => {
-          this.dataSourceColumnInfoList = columnInfo
-          this.dataSourceDataValueList = dataValue
+          this.dataSourceColumnInfoList = {...columnInfo, ...dataValue}
           this.selectCatelog(this.selectedIndex)
           this.isLoading = false
         })
@@ -103,16 +119,27 @@ export default {
           this.hasError = true
         })
     },
+    columnTypeSwitch (value) {
+      switch (value) {
+        case 'Category':
+          return 'category'
+        case 'Numeric':
+          return 'numeric'
+        case 'DateTime':
+          return 'dateTime'
+        case 'Boolean':
+          return 'booleanList'
+        case 'Value':
+          return 'values'
+      }
+    },
     selectCatelog (index) {
       this.selectedIndex = index
-      let key = this.columnTypeList[index].charAt(0).toLowerCase() + this.columnTypeList[index].slice(1)
-      key = key === 'unique' ? 'uniqueList' : key
-      key = key === 'boolean' ? 'booleanList' : key
+      let key = this.columnTypeSwitch(this.columnTypeList[index])
       this.setColumnInfoList(key)
     },
     setColumnInfoList (key) {
       const tmpColumnInfoList = JSON.parse(JSON.stringify(this.dataSourceColumnInfoList))
-      tmpColumnInfoList['value'] = this.dataSourceDataValueList
       this.columnInfoList = tmpColumnInfoList[key]
       // Number of columns must be multiples of 3
       let emptyValue = this.columnInfoList.length % 3 ===  0 ? 0 : 3 - this.columnInfoList.length % 3
