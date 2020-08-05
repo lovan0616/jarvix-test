@@ -173,7 +173,12 @@ export default {
   },
   methods: {
     fetchData () {
+      // reset status
       this.isLoading = true
+      this.hasError = false
+      this.isEmpty = false
+      this.isCalculating = false
+
       let selectedColumnList = null
       let restrictions = []
       
@@ -197,7 +202,7 @@ export default {
             return
           }
           // 無資料或計算錯誤時，不顯示結果
-          if (response.statusType === 'Fail' || !columnNameList.length || !columnDataList.length) {
+          if (response.statusType === 'Fail' || !columnNameList || !columnDataList) {
             this.isEmpty = true
             return
           }
