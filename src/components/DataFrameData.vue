@@ -23,7 +23,7 @@
         </div>
       </div>
       <pagination-table
-        v-if="dataSourceTableData"
+        v-if="dataSourceTableData && dataSourceTableData.columns.titles.length > 0"
         :is-processing="isProcessing"
         :dataset="dataSourceTableData"
         :pagination-info="pagination"
@@ -155,6 +155,10 @@ export default {
   methods: {
     fetchDataFrameData (id, page = 0, resetPagination = false) {
       this.isProcessing = true
+      if (resetPagination) {
+        this.dataSourceTableData = null
+        this.isLoading = true
+      }
       this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode })
         .then(([dataFrameData, dataColumnSummary]) => {
           if (resetPagination) {
