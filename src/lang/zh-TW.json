@@ -1605,7 +1605,7 @@
     "restrict": "限制",
     "featureList": "關連列表",
     "hereIsFeatures": "以下為關連因子",
-    "modelConfidence": "模型的信心度f",
+    "modelConfidence": "模型的信心度",
     "displayTotalData": "共 {count} 筆資料",
     "displayTopData": "顯示前 {count} 筆資料",
     "min": "最小值",
