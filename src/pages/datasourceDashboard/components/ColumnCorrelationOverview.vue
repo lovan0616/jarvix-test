@@ -259,9 +259,9 @@ export default {
 
   .chart {
     position: relative;
-    width: 70%;
+    width: 50%;
     /* 讓圖表盡量呈現正方形 */
-    padding-top: 70%;
+    padding-top: 40%;
     margin: 0 auto;
 
     &__display {
