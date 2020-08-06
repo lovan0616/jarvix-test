@@ -46,26 +46,40 @@
   </div>
 </template>
 <script>
+import {mapState} from 'vuex'
 
 export default {
   name: 'PinboardFilterInfo',
   props: {
-    restriction: { type: Array, default: () => [] },
+    resultId: {
+      type: Number,
+      default: null
+    },
+    restriction: { 
+      type: Array, 
+      default: () => [] 
+    },
     isLast: {
       type: Boolean,
       default: true
     }
   },
   computed: {
+    ...mapState('pinboard', ['pinboardData']),
+    getDataInfo() {
+      return this.pinboardData.find(data => data.resultId === this.resultId)
+    },
     dataColumnNames () {
       if (!this.restriction.length) return
       if (this.restriction[0].type === 'compound') {
         return this.restriction[0].restraints.reduce((result, curr) => {
-          result.push(curr.restrictionsAlias)
+          let dcName = curr.properties.dc_name
+          result.push(this.getDataInfo.dataColumnMap[dcName].primary_alias)
           return result
         }, []).join(' & ')
       } else {
-        return this.restriction[0].restrictionsAlias
+        let dcName = this.restriction[0].properties['dc_name']
+        return this.getDataInfo.dataColumnMap[dcName].primary_alias
       }
     }
   }

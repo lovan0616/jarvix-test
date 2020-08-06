@@ -486,7 +486,8 @@
     "source": "Source",
     "restrict": "Filter Restriction",
     "dataFrame":"Data Set",
-    "relativeDataColun":"Data Columns"
+    "relativeDataColun":"Data Columns",
+    "allColumns": "All Columns"
   },
   "batchLoad": {
     "primaryKeyColumns": "Primary Keys",

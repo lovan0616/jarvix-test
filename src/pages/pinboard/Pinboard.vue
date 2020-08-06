@@ -44,6 +44,8 @@
       :result-id="result.resultId"
       :result-info="result.info"
       :segmentation-payload="result.segmentationPayload"
+      :data-column-map="result.dataColumnMap"
+      :selected-columns="result.selectedColumns"
       :restrictions="result.restrictions"
       :question="result.question"
       @unPin="unPin"
@@ -66,7 +68,8 @@ export default {
       isShowSortingDialog: false,
       timeoutFunction: null,
       boardList: [],
-      boardName: null
+      boardName: null,
+      pinboardData: []
     }
   },
   computed: {
@@ -137,8 +140,17 @@ export default {
             segmentationPayload: null,
             isDeleted: false
           })
+
+          this.pinboardData.push({
+            pinboardId: element.id,
+            resultId: element.resultId,
+            dataframeName: null,
+            dataColumnMap: null,
+            selectedColumns: null
+          })
           this.getComponent(element)
         })
+        this.$store.commit('pinboard/setpinboardData', this.pinboardData)
       }).catch(() => {
         this.isLoading = false
       })
@@ -146,6 +158,7 @@ export default {
     getComponent (res) {
       window.clearTimeout(this.timeoutFunction)
       let currentResult = this.getResult(res.id)
+      let currentData = this.getData(res.id)
       this.$store.dispatch('chatBot/getComponentList', res.resultId)
         .then(componentResponse => {
           switch (componentResponse.status) {
@@ -161,6 +174,9 @@ export default {
               currentResult.layout = this.getLayout(componentResponse.layout)
               currentResult.segmentationPayload = componentResponse.segmentationPayload
               currentResult.question = componentResponse.segmentationPayload.question
+              currentData.dataframeName = componentResponse.dataframeName
+              currentData.dataColumnMap = componentResponse.dataColumnMap
+              currentData.selectedColumns = componentResponse.selectedColumns
               this.$nextTick(() => {
                 this.isLoading = false
               })
@@ -178,6 +194,9 @@ export default {
     },
     getResult (pinboardId) {
       return this.boardList.filter(element => element.pinboardId === pinboardId)[0]
+    },
+    getData (pinboardId) {
+      return this.pinboardData.filter(element => element.pinboardId === pinboardId)[0]
     },
     closeSortingDialog (isSorted) {
       this.isShowSortingDialog = false

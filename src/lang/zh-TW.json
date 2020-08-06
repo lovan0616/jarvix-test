@@ -486,7 +486,8 @@
     "source": "資料來源",
     "restrict": "分析條件限制",
     "dataFrame":"來源資料表",
-    "relativeDataColun":"資料相關欄位"
+    "relativeDataColun":"資料相關欄位",
+    "allColumns": "所有欄位"
   },
   "batchLoad": {
     "primaryKeyColumns": "主鍵（可複選）",

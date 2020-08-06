@@ -9,13 +9,15 @@
           :label="$t('pinboard.source')"
           :name="$t('pinboard.source')"
         >
-          <pinboard-data-info/>
+          <pinboard-data-info
+            :result-id="resultId"/>
         </el-tab-pane>
         <el-tab-pane
           :label="$t('pinboard.restrict')"
           :name="$t('pinboard.restrict')">
           <pinboard-filter-info
             v-for="(restrict, index) in filterInfo"
+            :result-id="resultId"
             :key="index"
             :restriction="restrict"
             :is-last="index === filterInfo.length - 1"
@@ -36,6 +38,10 @@ export default {
     PinboardDataInfo
   },
   props: {
+    resultId: {
+      type: Number,
+      default: null
+    },
     filterInfo: {
       type: Array,
       default: () => []

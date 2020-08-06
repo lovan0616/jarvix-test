@@ -22,6 +22,7 @@
           </button>
           <pinboard-info-dialog
             v-if="isShowPinboardInfo"
+            :result-id="resultId"
             :filter-info="restrictions"
             @close="closePinboardInfo"
           />

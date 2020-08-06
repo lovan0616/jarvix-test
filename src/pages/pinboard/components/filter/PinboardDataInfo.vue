@@ -2,26 +2,33 @@
   <div class="pinboard-data-info">
     <div class="pinboard-data-info__title">{{ $t('pinboard.dataFrame') }}</div>
     <ul class="pinboard-data-info__list">
-      <li>haha</li>
+      <li>{{ getDataInfo.dataframeName }}</li>
     </ul>
     <div class="pinboard-data-info__title">{{ $t('pinboard.relativeDataColun') }}</div>
     <ul class="pinboard-data-info__list">
-      <li>haha </li>
+      <li v-if="getDataInfo.selectedColumns === null"> {{ $t('pinboard.allColumns') }} </li>
+      <li
+        v-for="(column, index) in getDataInfo.selectedColumns"
+        :key="index"
+      >{{ column }} </li>
     </ul>
   </div>
 </template>
 <script>
+import {mapState} from 'vuex'
 
 export default {
   name: 'PinboardDataInfo',
   props: {
-		dataFrameName: {
-      type: String,
-      default: ''
-    },
-    filterColumns: {
-      type: Array,
-      default: () => []
+    resultId: {
+      type: Number,
+      default: null
+    }
+  },
+  computed: {
+    ...mapState('pinboard', ['pinboardData']),
+    getDataInfo() {
+      return this.pinboardData.find(data => data.resultId === this.resultId)
     }
   }
 }
@@ -34,6 +41,9 @@ export default {
 	}
 
 	&__list {
+    font-size: 14px;
+    line-height: 24px;
+    padding-left: 25px;
 		margin: 4px 0 16px;
 	}
 }
