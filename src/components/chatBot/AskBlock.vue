@@ -294,6 +294,7 @@ export default {
     copyQuestion (value) {
       this.userQuestion = value
       this.$refs.questionInput.focus()
+      this.enterQuestion()
     },
     showHistory () {
       if (this.showHistoryQuestion || this.isShowAskHelper) return
@@ -508,10 +509,10 @@ export default {
     .history-question {
       font-size: 14px;
       line-height: 20px;
-      padding: 10px 32px;
-      color: #ccc;
+      padding: 10px 18px;
+      color: #fff;
       cursor: pointer;
-      border-bottom: 1px solid #323538;
+      border-bottom: 1px solid #464A50;
 
       &:hover {
         background-color: #464A50;
