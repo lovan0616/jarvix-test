@@ -44,8 +44,6 @@
       :result-id="result.resultId"
       :result-info="result.info"
       :segmentation-payload="result.segmentationPayload"
-      :data-column-map="result.dataColumnMap"
-      :selected-columns="result.selectedColumns"
       :restrictions="result.restrictions"
       :question="result.question"
       @unPin="unPin"
