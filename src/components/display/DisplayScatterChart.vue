@@ -224,7 +224,7 @@ export default {
             let xPoint = minX + interval * i
             lineData.push([xPoint, this.roundNumber(gradient * xPoint + offset, 4)])
           }
-          expression = `y = ${gradient}x ${offset > 0 ? '+' : '-'} ${Math.abs(offset)}`
+          expression = `y = ${offset} ${gradient > 0 ? '+' : '-'} ${Math.abs(gradient)}x`
         } else {
           // ax^2 + bx + c
           let offset = this.formula[0]
@@ -235,7 +235,7 @@ export default {
             let xPoint = minX + interval * i
             lineData.push([xPoint, secondDegree * xPoint * xPoint + firstDegree * xPoint + offset])
           }
-          expression = `y = ${Number((secondDegree).toFixed(4))}x^2 ${firstDegree > 0 ? '+' : '-'} ${Math.abs(Number((firstDegree).toFixed(4)))}x ${offset > 0 ? '+' : '-'} ${Math.abs(Number((offset).toFixed(4)))}`
+          expression = `y = ${Number((offset).toFixed(4))} ${firstDegree > 0 ? '+' : '-'} ${Math.abs(Number((firstDegree).toFixed(4)))}x ${secondDegree > 0 ? '+' : '-'} ${Math.abs(Number((secondDegree).toFixed(4)))}x^2`
         }
 
         // markLine
