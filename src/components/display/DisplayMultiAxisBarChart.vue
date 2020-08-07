@@ -63,7 +63,6 @@ import {
   seriesItemBar,
   parallelZoomIn
 } from './common/addons'
-import DataSourceSelectVue from '../select/DataSourceSelect.vue'
 
 const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),

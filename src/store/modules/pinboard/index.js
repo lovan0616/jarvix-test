@@ -7,6 +7,7 @@ export default {
   state: {
     pinboardList: [],
     pinboardInfo: [],
+    pinboardData: [],
     groupPinboardList: [],
     groupPinboardInfo: []
   },

@@ -482,6 +482,13 @@
     "columnSelected": "Number of columns selected",
     "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field from each table."
   },
+  "pinboard": {
+    "source": "Source",
+    "restrict": "Filter Restriction",
+    "dataFrame":"Data Set",
+    "relativeDataColun":"Data Columns",
+    "allColumns": "All Columns"
+  },
   "batchLoad": {
     "primaryKeyColumns": "Primary Keys",
     "updatedTimeColumn": "Updated Time",
@@ -694,7 +701,7 @@
     "batchLoadSetting": "Batch Loading Data",
     "select": "Select",
     "download": "Data Download",
-    "restrict": "Filter Restriction",
+    "dataExplanation": "Details",
     "start": "Start",
     "copyAndBuild": "Copy and Build",
     "createGroup": "New Project",

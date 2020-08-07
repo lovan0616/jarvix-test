@@ -482,6 +482,13 @@
     "columnSelected": "已选择栏位数",
     "pleaseSelectAtLeastOneColumnPerTable": "每张表格请至少选择一个栏位"
   },
+  "pinboard": {
+    "source": "资料来源",
+    "restrict": "分析条件限制",
+    "dataFrame":"来源资料表",
+    "relativeDataColun":"资料相关栏位",
+    "allColumns": "所有栏位"
+  },
   "batchLoad": {
     "primaryKeyColumns": "主键（可复选）",
     "updatedTimeColumn": "更新时间",
@@ -694,7 +701,7 @@
     "batchLoadSetting": "资料更新设定",
     "select": "选择",
     "download": "资料下载",
-    "restrict": "分析条件限制",
+    "dataExplanation": "资料说明",
     "start": "开始",
     "copyAndBuild": "复制并建置",
     "createGroup": "新建专案",
