@@ -14,7 +14,6 @@
           class="pin-button-block"
         >
           <button 
-            v-if="hasFilter"
             class="head-btn restrict"
             @click.stop.prevent="togglePinboardInfo"
           >

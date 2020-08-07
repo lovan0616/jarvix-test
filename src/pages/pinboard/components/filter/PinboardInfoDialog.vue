@@ -13,6 +13,7 @@
             :result-id="resultId"/>
         </el-tab-pane>
         <el-tab-pane
+          v-if="hasFilter"
           :label="$t('pinboard.restrict')"
           :name="$t('pinboard.restrict')">
           <pinboard-filter-info
@@ -30,6 +31,7 @@
 <script>
 import PinboardFilterInfo from './PinboardFilterInfo'
 import PinboardDataInfo from './PinboardDataInfo'
+import {mapState} from 'vuex'
 
 export default {
   name: 'PinboardInfoDialog',
@@ -51,6 +53,15 @@ export default {
     return {
       activeTab: this.$t('pinboard.source')
     }
+  },
+  computed: {
+    ...mapState('pinboard', ['pinboardData']),
+    getDataInfo() {
+      return this.pinboardData.find(data => data.resultId === this.resultId)
+    },
+    hasFilter () {
+      return (this.$store.state.dataSource.filterList.length > 0 && this.$route.name === 'PageResult') || this.getDataInfo.restrictions.length > 0
+    },
   },
   mounted () {
     document.addEventListener('click', this.autoHide, false)

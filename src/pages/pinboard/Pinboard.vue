@@ -144,7 +144,9 @@ export default {
             resultId: element.resultId,
             dataframeName: null,
             dataColumnMap: null,
-            selectedColumns: null
+            selectedColumns: null,
+            restrictions: null
+
           })
           this.getComponent(element)
         })
@@ -175,6 +177,7 @@ export default {
               currentData.dataframeName = componentResponse.dataframeName
               currentData.dataColumnMap = componentResponse.dataColumnMap
               currentData.selectedColumns = componentResponse.selectedColumns
+              currentData.restrictions = componentResponse.restrictions
               this.$nextTick(() => {
                 this.isLoading = false
               })
