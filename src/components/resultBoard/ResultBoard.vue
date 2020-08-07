@@ -14,17 +14,17 @@
           class="pin-button-block"
         >
           <button 
-            v-if="hasFilter"
             class="head-btn restrict"
-            @click.stop.prevent="toggleFilterInfo"
+            @click.stop.prevent="togglePinboardInfo"
           >
-            {{ $t('button.restrict') }}
-            <filter-info-dialog
-              v-if="isShowFilterInfo"
-              :filter-info="restrictions"
-              @close="closeFilterInfo"
-            />
+            {{ $t('button.dataExplanation') }}
           </button>
+          <pinboard-info-dialog
+            v-if="isShowPinboardInfo"
+            :result-id="resultId"
+            :filter-info="restrictions"
+            @close="closePinboardInfo"
+          />
           <a 
             class="head-btn share"
             href="javascript:void(0)"
@@ -111,7 +111,7 @@ import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
-import FilterInfoDialog from '@/pages/pinboard/components/filter/FilterInfoDialog'
+import PinboardInfoDialog from '@/pages/pinboard/components/filter/PinboardInfoDialog'
 import { Message } from 'element-ui'
 
 export default {
@@ -121,7 +121,7 @@ export default {
     ShareDialog,
     DecideDialog,
     WritingDialog,
-    FilterInfoDialog
+    PinboardInfoDialog
   },
   props: {
     resultId: {
@@ -147,7 +147,7 @@ export default {
       isShowShareDialog: false,
       isShowDelete: false,
       isShowShare: false,
-      isShowFilterInfo: false
+      isShowPinboardInfo: false
     }
   },
   computed: {
@@ -277,11 +277,11 @@ export default {
     closeDelete () {
       this.isShowDelete = false
     },
-    toggleFilterInfo () {
-      this.isShowFilterInfo = !this.isShowFilterInfo
+    togglePinboardInfo () {
+      this.isShowPinboardInfo = !this.isShowPinboardInfo
     },
-    closeFilterInfo () {
-      this.isShowFilterInfo = false
+    closePinboardInfo () {
+      this.isShowPinboardInfo = false
     }
   },
 }
