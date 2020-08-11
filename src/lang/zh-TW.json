@@ -510,7 +510,8 @@
     "noRecord": "無紀錄",
     "updateSuccessfully": "更新成功",
     "updateFailed": "更新失敗",
-    "updating": "更新中"
+    "updating": "更新中",
+    "startUpdate": "開始更新"
   },
   "feature": {
     "value": "數值",
@@ -724,7 +725,8 @@
     "sortSetting": "排序設定",
     "addSqlScript": "使用自定義 SQL",
     "testConnecting": "測試連線中...",
-    "monitorSetting": "監測設定"
+    "monitorSetting": "監測設定",
+    "updateImmediately": "立即更新"
   },
   "timeScopeUnit": {
     "second": "秒",

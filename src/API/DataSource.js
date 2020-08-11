@@ -405,3 +405,14 @@ export function triggerColumnDataCalculation(dataFrameId, restrictions) {
     }
   })
 }
+
+/**
+ * trigger get data immediately
+ * @param {Number} dataFrameId - 欲更新的資料表 ID
+ */
+export function triggerUpdateData (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/crontab/config/triggerUpdateData`,
+    method: 'PATCH'
+  })
+}

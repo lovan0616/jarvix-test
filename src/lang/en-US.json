@@ -510,7 +510,8 @@
     "noRecord": "No Record",
     "updateSuccessfully": "Update Successfully",
     "updateFailed": "Update Failed",
-    "updating": "Updating"
+    "updating": "Updating",
+    "startUpdate": "Start Update"
   },
   "feature": {
     "value": "Value",
@@ -724,7 +725,8 @@
     "sortSetting": "Sort",
     "addSqlScript": "Add Customized SQL",
     "testConnecting": "Testing Connection...",
-    "monitorSetting": "Monitor Setting"
+    "monitorSetting": "Monitor Setting",
+    "updateImmediately": "Update Immediately"
   },
   "timeScopeUnit": {
     "second": "seconds",

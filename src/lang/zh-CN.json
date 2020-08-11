@@ -510,7 +510,8 @@
     "noRecord": "无纪录",
     "updateSuccessfully": "更新成功",
     "updateFailed": "更新失败",
-    "updating": "更新中"
+    "updating": "更新中",
+    "startUpdate": "开始更新"
   },
   "feature": {
     "value": "数值",
@@ -724,7 +725,8 @@
     "sortSetting": "排序设定",
     "addSqlScript": "使用自定义 SQL",
     "testConnecting": "测试连线中...",
-    "monitorSetting": "监测设定"
+    "monitorSetting": "监测设定",
+    "updateImmediately": "立即更新"
   },
   "timeScopeUnit": {
     "second": "秒",
