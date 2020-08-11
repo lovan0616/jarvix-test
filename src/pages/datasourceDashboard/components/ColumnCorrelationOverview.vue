@@ -160,7 +160,7 @@ export default {
             return
           }
           // 無資料或計算錯誤時，不顯示結果
-          if (response.statusType === 'Fail' || !columnNameList.length || !columnDataList.length) {
+          if (response.statusType === 'Fail' || !columnNameList || !columnDataList) {
             this.isEmpty = true
             return
           }
