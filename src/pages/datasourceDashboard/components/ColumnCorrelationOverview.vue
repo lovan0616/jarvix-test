@@ -211,8 +211,6 @@ export default {
             return
           }
 
-          if (!columnNameList || !columnDataList) return
-
           this.componentData = {
             dataset: {
               data: this.formatData(columnDataList, columnNameList),
