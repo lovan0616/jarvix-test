@@ -1,4 +1,4 @@
-import { askQuestion, askResult, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory } from '@/API/NewAsk'
+import { askQuestion, askQuestionV2, askResult, askResultV2, getComponentList, getComponentListV2, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
 const CancelToken = axios.CancelToken
@@ -8,7 +8,7 @@ export default {
   askQuestion ({dispatch, commit, state, rootState, rootGetters}, data) {
     dispatch('cancelRequest')
     const dataFrameId = rootState.dataSource.dataFrameId || data.dataFrameId
-    return askQuestion({
+    let askCondition = {
       question: rootState.dataSource.appQuestion || data.question,
       dataSourceId: rootState.dataSource.dataSourceId || data.dataSourceId,
       previewQuestionId: rootGetters['dataSource/drillDownQuestionId'],
@@ -16,22 +16,47 @@ export default {
       isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null,
       dataFrameId: dataFrameId === 'all' ? '' : dataFrameId,
       selectedColumnList: rootGetters['dataFrameAdvanceSetting/selectedColumnList']
-    }, new CancelToken(function executor (c) {
-      // An executor function receives a cancel function as a parameter
-      cancelFunction = c
-    }))
+    }
+
+    if (localStorage.getItem('newParser') === 'true') {
+      return askQuestionV2(askCondition, new CancelToken(function executor (c) {
+        // An executor function receives a cancel function as a parameter
+        cancelFunction = c
+      }))
+    } else {
+      return askQuestion(askCondition, new CancelToken(function executor (c) {
+        // An executor function receives a cancel function as a parameter
+        cancelFunction = c
+      }))
+    }
+
+    
   },
   askResult ({dispatch}, data) {
-    return askResult(data, new CancelToken(function executor (c) {
-      // An executor function receives a cancel function as a parameter
-      cancelFunction = c
-    }))
+    if (localStorage.getItem('newParser') === 'true') {
+      return askResultV2(data, new CancelToken(function executor (c) {
+        // An executor function receives a cancel function as a parameter
+        cancelFunction = c
+      }))
+    } else {
+      return askResult(data, new CancelToken(function executor (c) {
+        // An executor function receives a cancel function as a parameter
+        cancelFunction = c
+      }))
+    }
   },
   getComponentList ({dispatch, state}, data) {
-    return getComponentList(data, new CancelToken(function executor (c) {
-      // An executor function receives a cancel function as a parameter
-      cancelFunction = c
-    }))
+    if (localStorage.getItem('newParser') === 'true') {
+      return getComponentListV2(data, new CancelToken(function executor (c) {
+        // An executor function receives a cancel function as a parameter
+        cancelFunction = c
+      }))
+    } else {
+      return getComponentList(data, new CancelToken(function executor (c) {
+        // An executor function receives a cancel function as a parameter
+        cancelFunction = c
+      }))
+    }
   },
   getComponentData ({dispatch}, data) {
     return getComponentData(data)

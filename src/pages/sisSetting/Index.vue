@@ -1,6 +1,17 @@
 <template>
   <div class="page-sis-setting">
     <div class="setting-block">
+      <div class="setting-block__title">新 parser 設定</div>
+      <div class="setting-block__content">
+        <div class="input-block">
+          <label for="">開啟新 parser：</label>
+          <el-switch
+            v-model="useNewParser"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="setting-block">
       <div class="setting-block__title">演算法設定</div>
       <div class="setting-block__content">
         <div class="input-block">
@@ -85,7 +96,8 @@ export default {
       demoDatasource: localStorage.getItem('demoDatasource'),
       demoWaitTime: localStorage.getItem('demoWaitTime'),
       uploadLimit: localStorage.getItem('uploadLimit'),
-      joinLimit: localStorage.getItem('joinLimit')
+      joinLimit: localStorage.getItem('joinLimit'),
+      newParser: localStorage.getItem('newParser')
     }
   },
   computed: {
@@ -141,6 +153,15 @@ export default {
       set (value) {
         this.joinLimit = value
         localStorage.setItem('joinLimit', value)
+      }
+    },
+    useNewParser: {
+      get () {
+        return this.newParser === 'true' || this.newParser
+      },
+      set (value) {
+        this.newParser = value
+        localStorage.setItem('newParser', value)
       }
     }
   }
