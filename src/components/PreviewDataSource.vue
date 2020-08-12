@@ -13,7 +13,7 @@
           size="50"
         />
         <div
-          v-if="mode === 'popup' && dataSourceTables.length > 0"
+          v-if="(mode === 'popup' || dataFrameId === 'all') && dataSourceTables.length > 1"
           class="board-header"
         >
           <el-tabs
