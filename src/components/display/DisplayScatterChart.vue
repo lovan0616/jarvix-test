@@ -152,33 +152,24 @@ export default {
       const parallelZoomConfig = parallelZoomIn()
       let xAxisBuffer = (maxX - minX) / 2
       let xAxisPadding = (maxX - minX) / 10
-
       displayXaxisMax = maxX + xAxisBuffer < 0 ? 0 : maxX + xAxisBuffer
       displayXaxisMin = minX - xAxisBuffer > 0 ? 0 : minX - xAxisBuffer
       let xAxisDisplayRange = displayXaxisMax - displayXaxisMin
       parallelZoomConfig[0].start = (minX - xAxisPadding - displayXaxisMin) * 100 / xAxisDisplayRange
       parallelZoomConfig[0].end = (maxX + xAxisPadding - displayXaxisMin) * 100 / xAxisDisplayRange
+      // x 軸顯示區間
+      chartAddon.xAxis.max = this.roundNumber(displayXaxisMax, 4)
+      chartAddon.xAxis.min = this.roundNumber(displayXaxisMin, 4)
 
       /**
        * 處理 Y 軸
        */
       let displayYaxisMin
       let displayYaxisMax
-      const verticalZoomConfig = verticalZoomIn()
       let yAxisBuffer = (maxY - minY) / 2
-      let yAxisPadding = (maxY - minY) / 10
 
       displayYaxisMax = maxY + yAxisBuffer < 0 ? 0 : maxY + yAxisBuffer
       displayYaxisMin = minY - yAxisBuffer > 0 ? 0 : minY - yAxisBuffer
-      let yAxisDisplayRange = displayYaxisMax - displayYaxisMin
-      verticalZoomConfig[0].start = (minY - yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
-      verticalZoomConfig[0].end = (maxY + yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
-
-      chartAddon.xAxis.max = this.roundNumber(displayXaxisMax, 4)
-      chartAddon.xAxis.min = this.roundNumber(displayXaxisMin, 4)
-      chartAddon.yAxis.max = this.roundNumber(displayYaxisMax, 4)
-      chartAddon.yAxis.min = this.roundNumber(displayYaxisMin, 4)
-      chartAddon.dataZoom = [...parallelZoomConfig, ...verticalZoomConfig]
 
       scatterOptions.chartData.data = this.dataset.data
       scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)
@@ -238,6 +229,11 @@ export default {
           expression = `y = ${Number((secondDegree).toFixed(4))}x^2 ${firstDegree > 0 ? '+' : '-'} ${Math.abs(Number((firstDegree).toFixed(4)))}x ${offset > 0 ? '+' : '-'} ${Math.abs(Number((offset).toFixed(4)))}`
         }
 
+        // 確保回歸線最後一個點要顯示在畫面上，因為 label 標示在最後一個點
+        let lastFormulaPoint = lineData[lineData.length - 1]
+        displayYaxisMax = lastFormulaPoint[1] > displayYaxisMax ? lastFormulaPoint[1] + yAxisBuffer : displayYaxisMax
+        displayYaxisMin = lastFormulaPoint[1] < displayYaxisMin ? lastFormulaPoint[1] - yAxisBuffer : displayYaxisMin
+
         // markLine
         chartAddon.series[1] = {
           name: '',
@@ -274,6 +270,22 @@ export default {
           }
         }
       }
+
+      
+      // y 的顯示區間，暫時先不調整
+      // let yAxisBuffer = (maxY - minY) / 2
+      // let yAxisPadding = (maxY - minY) / 10
+      // displayYaxisMax = maxY + yAxisBuffer < 0 ? 0 : maxY + yAxisBuffer
+      // displayYaxisMin = minY - yAxisBuffer > 0 ? 0 : minY - yAxisBuffer
+      // let yAxisDisplayRange = displayYaxisMax - displayYaxisMin
+      // verticalZoomConfig[0].start = (minY - yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
+      // verticalZoomConfig[0].end = (maxY + yAxisPadding - displayYaxisMin) * 100 / yAxisDisplayRange
+
+      // zoom 的預設範圍，因為需要考慮回歸線的點所以寫在這邊
+      const verticalZoomConfig = verticalZoomIn()
+      chartAddon.yAxis.max = this.roundNumber(displayYaxisMax, 4)
+      chartAddon.yAxis.min = this.roundNumber(displayYaxisMin, 4)
+      chartAddon.dataZoom = [...parallelZoomConfig, ...verticalZoomConfig]
 
       return chartAddon
     },

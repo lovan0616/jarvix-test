@@ -149,6 +149,7 @@ export default {
           this.singlePage = response.singlePage
           if (response.isAutoRefresh) {
             this.singlePage = true
+            this.hasNextPage = false
           }
           switch (response.status) {
             case 'Process':
