@@ -148,6 +148,23 @@ export default {
       document.title = `JarviX-${data.question}`
 
       if (this.currentQuestionInfo) {
+        if (localStorage.getItem('newParser') === 'true') {
+          this.$store.dispatch('chatBot/askResult', {
+            questionId: this.currentQuestionId,
+            segmentation: this.currentQuestionInfo,
+            restrictions: this.filterRestrictionList,
+            selectedColumnList: this.selectedColumnList
+          }).then(res => {
+            this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+            this.getComponent(res)
+            this.getRelatedQuestion(res.resultId)
+          }).catch(() => {
+            this.isLoading = false
+            this.$store.commit('chatBot/updateAnalyzeStatus', false)
+            this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+          })
+          return
+        }
         this.$store.dispatch('chatBot/askResult', {
           questionId: this.currentQuestionId,
           segmentationPayload: this.currentQuestionInfo,
@@ -171,8 +188,54 @@ export default {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           let questionId = response.questionId
           this.$store.commit('dataSource/setCurrentQuestionId', questionId)
-          let segmentationList = response.parseQuestionPayload.segmentations
 
+          if (localStorage.getItem('newParser') === 'true') {
+            let segmentationList = response.segmentationList
+            if (segmentationList.length === 1) {
+              // 介紹資料集的處理
+              switch (segmentationList[0].denotation) {
+                case 'INTRODUCTION': {
+                  this.layout = 'PreviewDataSource'
+                  this.resultInfo = null
+                  this.isLoading = false
+                  this.setRelatedQuestions()
+                  return false
+                }
+                case 'NO_ANSWER': {
+                  let segmentation = segmentationList[0]
+                  this.layout = 'EmptyResult'
+                  this.resultInfo = {
+                    title: segmentation.errorCategory,
+                    description: segmentation.errorMessage
+                  }
+                  this.isLoading = false
+                  this.setRelatedQuestions()
+                  return false
+                }
+              }
+              
+              this.$store.dispatch('chatBot/askResult', {
+                questionId,
+                segmentation: segmentationList[0],
+                restrictions: this.filterRestrictionList,
+                selectedColumnList: this.selectedColumnList
+              }).then(res => {
+                this.getComponentV2(res)
+                this.getRelatedQuestion(res.resultId)
+              }).catch((error) => {
+                if (error.constructor.name !== 'Cancel') this.isLoading = false
+              })
+            } else {
+              // 多個結果
+              this.layout = 'MultiResultV2'
+              this.resultInfo = {...response, question: data.question}
+              this.isLoading = false
+              this.setRelatedQuestions()
+            }
+            return
+          }
+          
+          let segmentationList = response.parseQuestionPayload.segmentations
           if (segmentationList.length === 1) {
             // 介紹資料集的處理
             switch (segmentationList[0].implication.intent) {
@@ -259,6 +322,52 @@ export default {
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
               this.segmentationAnalysis(componentResponse.segmentationPayload)
+              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', componentResponse.segmentationPayload.dataframeId)
+              this.isLoading = false
+              break
+            case 'Disable':
+            case 'Delete':
+            case 'Warn':
+            case 'Fail':
+              this.layout = 'EmptyResult'
+              this.isLoading = false
+              break
+          }
+        })
+    },
+    getComponentV2 (res) {
+      window.clearTimeout(this.timeoutFunction)
+      this.$store.commit('result/updateCurrentResultId', res.resultId)
+      if (res.layout === 'no_answer') {
+        this.layout = 'EmptyResult'
+        this.resultInfo = {
+          title: res.noAnswerTitle,
+          description: res.noAnswerDescription
+        }
+        this.isLoading = false
+        return false
+      }
+
+      this.$store.dispatch('chatBot/getComponentList', res.resultId)
+        .then(componentResponse => {
+          switch (componentResponse.status) {
+            case 'Process':
+            case 'Ready':
+              this.timeoutFunction = window.setTimeout(() => {
+                this.getComponentV2(res)
+              }, this.totalSec)
+
+              this.totalSec += this.periodSec
+              this.periodSec = this.totalSec
+              break
+            case 'Complete':
+              this.totalSec = 50
+              this.periodSec = 200
+              this.resultInfo = componentResponse.componentIds
+              this.restrictInfo = componentResponse.restrictions
+              this.layout = this.getLayout(componentResponse.layout)
+              this.segmentationPayload = componentResponse.segmentationPayload
+              // this.segmentationAnalysis(componentResponse.segmentationPayload)
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', componentResponse.segmentationPayload.dataframeId)
               this.isLoading = false
               break
