@@ -143,3 +143,12 @@ export function addTableToMemory(accountId, dataFrameId, dataSourceId) {
   })
 }
 
+/**
+ * get available language parser
+ */
+export function getParserLanguageList() {
+  return request({
+    url: `/ask/question/languages`,
+    method: 'GET'
+  })
+}
