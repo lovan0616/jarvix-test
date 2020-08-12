@@ -78,6 +78,10 @@ export default {
     formula: {
       type: Array,
       default: null
+    },
+    coefficients: {
+      type: Array,
+      default: null
     }
   },
   data () {
@@ -202,31 +206,36 @@ export default {
         })
       })
 
-      if (this.formula) {
+      if (this.coefficients) {
         let lineData = []
         let expression = ''
         let interval = this.floatSub(maxX, minX) / this.correlationLinePoint
-        if (this.formula.length === 2) {
+        if (this.coefficients.length === 2) {
           // ax + b
-          let offset = Number((this.formula[0]).toFixed(4))
-          let gradient = Number((this.formula[1]).toFixed(4))
+          let offset = this.coefficients[0]
+          let gradient = this.coefficients[1]
           // 迴歸線點
           for (let i = 0; i < this.correlationLinePoint; i++) {
             let xPoint = minX + interval * i
             lineData.push([xPoint, this.roundNumber(gradient * xPoint + offset, 4)])
           }
-          expression = `y = ${offset} ${gradient > 0 ? '+' : '-'} ${Math.abs(gradient)}x`
+          let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
+          let displayGradient = this.formula ? this.formula[1] : Number((gradient).toFixed(4))
+          expression = `y = ${displayOffset} ${displayGradient > 0 ? '+' : '-'} ${Math.abs(displayGradient)}x`
         } else {
           // ax^2 + bx + c
-          let offset = this.formula[0]
-          let firstDegree = this.formula[1]
-          let secondDegree = this.formula[2]
+          let offset = this.coefficients[0]
+          let firstDegree = this.coefficients[1]
+          let secondDegree = this.coefficients[2]
           // 迴歸線點
           for (let i = 0; i < this.correlationLinePoint; i++) {
             let xPoint = minX + interval * i
             lineData.push([xPoint, secondDegree * xPoint * xPoint + firstDegree * xPoint + offset])
           }
-          expression = `y = ${Number((offset).toFixed(4))} ${firstDegree > 0 ? '+' : '-'} ${Math.abs(Number((firstDegree).toFixed(4)))}x ${secondDegree > 0 ? '+' : '-'} ${Math.abs(Number((secondDegree).toFixed(4)))}x^2`
+          let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
+          let displayFirstDegree = this.formula ? this.formula[1] : Number((firstDegree).toFixed(4))
+          let displaySecondDegree = this.formula ? this.formula[2] : Number((secondDegree).toFixed(4))
+          expression = `y = ${displayOffset} ${displayFirstDegree > 0 ? '+' : '-'} ${Math.abs(displayFirstDegree)}x ${displaySecondDegree > 0 ? '+' : '-'} ${Math.abs(displaySecondDegree)}x^2`
         }
 
         // 確保回歸線最後一個點要顯示在畫面上，因為 label 標示在最後一個點
@@ -255,7 +264,7 @@ export default {
               formatter: expression,
               width: '100%',
               lineHeight: 14,
-              padding: this.formula.length === 2 ? [1, 2, 1, 22] : [1, 2, 1, 50],
+              padding: this.coefficients.length === 2 ? [1, 2, 1, 22] : [1, 2, 1, 50],
               textStyle: {
                 color: '#FF9559',
                 fontSize: 14
