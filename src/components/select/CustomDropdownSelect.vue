@@ -49,7 +49,7 @@ export default {
       required: true
     },
     selectedId: {
-      type: Number,
+      type: [Number, String],
       default: null
     },
     isLoading: {
