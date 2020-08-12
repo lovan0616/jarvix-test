@@ -1,4 +1,4 @@
-import { askQuestion, askQuestionV2, askResult, askResultV2, getComponentList, getComponentListV2, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory } from '@/API/NewAsk'
+import { askQuestion, askQuestionV2, askResult, askResultV2, getComponentList, getComponentListV2, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
 const CancelToken = axios.CancelToken
@@ -19,7 +19,7 @@ export default {
     }
 
     if (localStorage.getItem('newParser') === 'true') {
-      return askQuestionV2(askCondition, new CancelToken(function executor (c) {
+      return askQuestionV2({...askCondition, language: state.parserLanguage}, new CancelToken(function executor (c) {
         // An executor function receives a cancel function as a parameter
         cancelFunction = c
       }))
@@ -92,5 +92,24 @@ export default {
   openAskInMemory ({rootGetters, rootState}) {
     if (!rootGetters['userManagement/hasPermission']('in_memory')) return
     addTableToMemory(rootGetters['userManagement/getCurrentAccountId'], rootGetters['dataSource/currentDataFrameId'], rootState.dataSource.dataSourceId)
+  },
+  getParserList ({commit, rootState}) {
+    getParserLanguageList().then(res => {
+      let currentLanguage
+      switch (rootState.setting.locale) {
+        case 'zh-TW':
+          currentLanguage = 'ZH_TW'
+          break
+        case 'zh-CN':
+          currentLanguage = 'ZH_CN'
+          break
+        case 'en-US':
+          currentLanguage = 'EN_US'
+          break
+      }
+      let languageParser = res.some(element => element.language === currentLanguage) ? currentLanguage : res[0]
+      commit('setParserLanguageList', res)
+      commit('setParserLanguage', languageParser)
+    })
   }
 }

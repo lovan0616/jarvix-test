@@ -11,6 +11,11 @@
         }"
         class="user-question-block"
       >
+        <default-select
+          v-if="newParserMode"
+          v-model="selectParser"
+          :option-list="languageList"
+        />
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
         <input 
           ref="questionInput"
@@ -93,11 +98,13 @@
 import AskHelperDialog from './AskHelperDialog'
 import { mapState, mapGetters } from 'vuex'
 import { Message } from 'element-ui'
+import DefaultSelect from '@/components/select/DefaultSelect'
 
 export default {
   name: 'AskBlock',
   components: {
-    AskHelperDialog
+    AskHelperDialog,
+    DefaultSelect
   },
   data () {
     return {
@@ -111,9 +118,29 @@ export default {
     }
   },
   computed: {
+    ...mapState('chatBot', ['parserLanguageList', 'parserLanguage']),
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    newParserMode () {
+      return localStorage.getItem('newParser') === 'true'
+    },
+    languageList () {
+      return this.parserLanguageList.map(option => {
+        return {
+          name: option.description,
+          value: option.language
+        }
+      })
+    },
+    selectParser: {
+      get () {
+        return this.parserLanguage
+      },
+      set (value) {
+        this.$store.commit('chatBot/setParserLanguage', value)
+      }
+    },
     dictionaries () {
       return [
         ...this.dataSourceColumnInfoList.booleanList.map(element => ({type: 'boolean', text: element})),
@@ -202,6 +229,8 @@ export default {
   },
   mounted () {
     document.addEventListener('click', this.autoHide, false)
+    // 取得可以使用的 parser 語系
+    this.$store.dispatch('chatBot/getParserList')
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
