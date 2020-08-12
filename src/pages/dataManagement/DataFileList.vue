@@ -284,7 +284,7 @@ export default {
     hasDataFrameProcessingOrBatchLoading () {
       if (!this.dataList.length) return false
       return this.dataList.some((element) => (
-        element.type === 'PROCESS' || element.state === 'Process' || element.state === 'Pending' || element.crontabConfigStatus === 'Enable'
+        element.type === 'PROCESS' || element.state === 'Process' || element.state === 'Pending' || element.crontabConfigStatus === 'Enable' || element.latestLogStatus === 'Ready'
       ))
     },
     enableDataFrameCount () {
