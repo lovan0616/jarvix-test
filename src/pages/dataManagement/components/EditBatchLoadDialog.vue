@@ -157,7 +157,6 @@ import {
   getBatchLoadSetting, 
   setBatchLoad, 
   updateBatchLoadSetting,
-  changeBatchLoadSettingStatus,
   triggerUpdateData
 } from '@/API/DataSource'
 import { Message } from 'element-ui'
@@ -315,20 +314,6 @@ export default {
             .finally(() => this.isProcessing = false)
         })
     },
-    // updateBatchLoadStatus () {
-    //   this.isProcessing = true
-    //   changeBatchLoadSettingStatus(this.dataFrameInfo.id, 'Disable')
-    //     .then(() => {
-    //       Message({
-    //         message: this.$t('message.saveSuccess'),
-    //         type: 'success',
-    //         duration: 3 * 1000,
-    //         showClose: true
-    //       })
-    //       this.closeDialog()
-    //     })
-    //     .finally(() => this.isProcessing = false)
-    // },
     updateSetting () {
       const dataFrameId = this.dataFrameInfo.id
       const settingData = this.formatSettingData()
