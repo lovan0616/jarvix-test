@@ -14,6 +14,7 @@ export function commonChartOptions () {
       itemGap: 20,
       selectorButtonGap: 20,
       textStyle: {
+        lineHeight: 14,
         color: chartVariable['textColor']
       },
       pageButtonPosition: 'start',
