@@ -585,7 +585,10 @@
     "pleaseEnterValue": "請輸入數值",
     "notChosen": "未選擇",
     "indexTypeContent": "指標型內容",
-    "chartTypeContent": "圖表型內容"
+    "chartTypeContent": "圖表型內容",
+    "notPublished": "未發佈",
+    "hasPublished": "已發佈",
+    "updateTime": "更新時間"
   },
   "description": {
     "basic": {

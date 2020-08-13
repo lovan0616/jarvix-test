@@ -16,10 +16,24 @@
         </div>
         <div class="war-room__header--right button-container">
           <div class="button-container--top">
+            <span class="button-container__time">
+              {{ $t('warRoom.updateTime') + '：' + '2020/08/22' }}
+            </span>
+            <!--判斷是否已發布，更改內容與燈號-->
+            <span class="button-container__status">
+              {{ $t('warRoom.notPublished') }}
+            </span>
+            <!--TODO: 未發布時顯示-->
             <button 
               type="button"
               class="btn-m btn-default button-container__button"
             >{{ $t('warRoom.publish') }}</button>
+            <!--TODO: 已發布時顯示-->
+            <button 
+              type="button"
+              class="btn-m btn-default button-container__button"
+            >{{ $t('button.update') }}</button>
+            <!--TODO: 未發布時顯示-->
             <button 
               type="button"
               class="btn-m btn-secondary button-container__button"
@@ -206,7 +220,7 @@ export default {
   &__header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
 
   &__title {
@@ -222,6 +236,7 @@ export default {
     &--bottom {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
     }
 
     &--top {
@@ -234,6 +249,30 @@ export default {
       line-height: 20px;
       &:not(:first-child) {
         margin-left: 8px;
+      }
+    }
+
+    &__time {
+      font-size: 12px;
+      color: #DDDDDD;
+    }
+
+    &__status {
+      display: inline-block;
+      padding: 4px 8px;
+      background: #333333;
+      border-radius: 24px;
+      margin-left: 16px;
+      font-size: 12px;
+
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #2FECB3;
+        border-radius: 50%;
+        margin: auto 0;
       }
     }
   }
