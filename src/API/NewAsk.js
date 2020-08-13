@@ -96,6 +96,19 @@ export function getHistoryQuestionList(dataSourceId, dataFrameId) {
 }
 
 /**
+ * get question history
+ */
+export function getHistoryQuestionListV2(dataSourceId, dataFrameId) {
+  return request({
+    url: `/ask/questionHistoryList/${dataSourceId}/v2`,
+    method: 'GET',
+    params: {
+      dataFrameId
+    }
+  })
+}
+
+/**
  * get related question
  * @param resultId
  */
