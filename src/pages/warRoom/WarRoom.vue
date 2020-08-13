@@ -95,7 +95,11 @@
         </div>
       </div>
     </section>
-    <component-setting class="war-room__side-setting" />
+    <component-setting
+      v-if="showComponentSetting"
+      class="war-room__side-setting"
+      @close="closeComponentSetting"
+    />
   </section>
 </template>
 
@@ -132,7 +136,9 @@ export default {
           id: 'number',
           name: this.$t('warRoom.addNumberComponent')
         }
-      ]
+      ],
+      createdComponentType: null,
+      showComponentSetting: false
     }
   },
   computed: {
@@ -149,7 +155,13 @@ export default {
   },
   methods: {
     addComponent (value) {
-      console.log(value)
+      // TODO: check if has reached max before creation
+      this.createdComponentType = value
+      this.showComponentSetting = true
+    },
+    closeComponentSetting () {
+      this.showComponentSetting = false
+      this.createdComponentType = null
     }
   }
 }

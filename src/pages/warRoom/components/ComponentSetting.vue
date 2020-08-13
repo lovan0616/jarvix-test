@@ -7,8 +7,9 @@
           class="setting__header-icon"/>
         {{ $t('warRoom.setting') }}
       </div>
-      <span 
-        class="setting__close-icon">
+      <span
+        class="setting__close-icon"
+        @click="$emit('close')">
         <svg-icon 
           icon-class="close" 
           class="setting__header-icon"/>
@@ -302,6 +303,10 @@ $setting-header-height: 57px;
     padding: 16px 26px;
     border-bottom: 1px solid #464A50;
     height: $setting-header-height;
+  }
+
+  &__close-icon {
+    cursor: pointer;
   }
 
   &__header-icon {
