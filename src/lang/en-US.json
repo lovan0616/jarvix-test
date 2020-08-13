@@ -1684,7 +1684,7 @@
     "DataColumnToken": "From {dataFrame}'s {dataColumn} @:segmentationToken.Datacolumn recognized as {matchedWord}",
     "ColumnSetToken": "From {dataFrame}'s {matchedWord}",
     "DataValueToken": "From {dataFrame}'s {dataColumn} @:segmentationToken.Datavalue recognized as {matchedWord}",
-    "DatarowToken": "From {dataFrame}'s @:segmentationToken.Datarow {matchedWord}",
+    "DatarowToken": "From {dataFrame}'s @:segmentationToken.Datarow",
     "ElseToken": "Other Vocabulary",
     "IgnoreToken": "Neglectable Word",
     "Datarow": "Datarow",

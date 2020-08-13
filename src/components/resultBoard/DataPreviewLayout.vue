@@ -1,20 +1,16 @@
 <template>
   <result-board
+    :segmentation-payload="segmentationPayload"
     :result-id="resultId"
     :restrictions="restrictions"
     @unPin="unPin"
   >
-    <result-board-header
-      slot="PageResultBoardHeader"
-      :title="segmentationPayload.question"
-      :segmentation="segmentationPayload"
-    />
     <result-board-body slot="PageResultBoardBody">
       <data-frame-data
-        v-if="segmentationPayload.dataframeId"
+        v-if="dataFrameId"
         slot="PageResultBoardChart"
-        :key="segmentationPayload.dataframeId"
-        :data-frame-id="segmentationPayload.dataframeId"
+        :key="dataFrameId"
+        :data-frame-id="dataFrameId"
         :show-correlation-matrix="false"
         mode="display"
       />
@@ -38,6 +34,10 @@ export default {
       default: () => {}
     },
     resultId: {
+      type: Number,
+      default: null
+    },
+    dataFrameId: {
       type: Number,
       default: null
     }
