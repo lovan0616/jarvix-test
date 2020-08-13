@@ -16,9 +16,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.wrapper {
+  overflow: hidden;
+}
+
 
 .main {
   padding: 0;
-  min-height: calc(100vh - #{$header-height});
+  height: calc(100vh - #{$header-height});
 }
 </style>

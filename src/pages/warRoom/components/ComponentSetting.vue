@@ -14,152 +14,161 @@
           class="setting__header-icon"/>
       </span>
     </div>
-    <section class="general-setting">
-      <div class="setting__block">
-        <div class="setting__block-title">
-          {{ $t('warRoom.displayName') }}
-        </div>
-        <input
-          v-model="componentName"
-          class="input setting__block-text-input">
-      </div>
-      <div class="setting__block">
-        <div class="setting__block-title">
-          {{ $t('warRoom.sourceData') }}
-          <a
-            href="javascript:void(0);" 
-            class="link"
-          >
-            {{ $t('button.delete') }}
-          </a>
-        </div>
-        <div class="setting__block-choose">
-          {{ selectedDataSource }}
-          <svg-icon 
-            icon-class="arrow-right" 
-            class="icon"/>
-        </div>
-      </div>
-      <div class="setting__block">
-        <div class="setting__block-title">
-          {{ $t('warRoom.updateFrequency') }}
-          <el-switch
-            v-model="updateFrequency.active"
-            :disabled="isProcessing"
-            :width="Number('32')"
-            active-color="#2AD2E2"
-            inactive-color="#324B4E"/>
-        </div>
-        <div
-          v-if="updateFrequency.active"
-          class="setting__block-select-field"
-        >
-          <default-select 
-            v-validate="'required'"
-            v-model="updateFrequency.selectedBasicSchedule"
-            :option-list="updateFrequency.basicScheduleList"
-            :placeholder="$t('warRoom.chooseUpdateFrequency')"
-            :is-disabled="isProcessing"
-            class="setting__block-select"
-            name="updateFrequency"
-          />
-          <div 
-            v-show="errors.has('updateFrequency')"
-            class="error-text"
-          >{{ errors.first('updateFrequency') }}</div>
-        </div>
-      </div>
-      <div class="setting__block">
-        <div class="setting__block-title">
-          {{ $t('warRoom.timeIntervalConstraint') }}
-          <el-switch
-            v-model="timeIntervalConstraint.active"
-            :disabled="isProcessing"
-            :width="Number('32')"
-            active-color="#2AD2E2"
-            inactive-color="#324B4E"/>
-        </div>
-        <div
-          v-if="timeIntervalConstraint.active"
-          class="setting__block-select-field"
-        >
-          <default-select 
-            v-validate="'required'"
-            v-model="timeIntervalConstraint.selectedTimeInterval"
-            :option-list="timeIntervalConstraint.timeIntervalList"
-            :placeholder="$t('warRoom.chooseTimeInterval')"
-            :is-disabled="isProcessing"
-            class="setting__block-select"
-            name="timeIntervalConstraint"
-          />
-          <div 
-            v-show="errors.has('timeIntervalConstraint')"
-            class="error-text"
-          >{{ errors.first('timeIntervalConstraint') }}</div>
-        </div>
-        <div
-          v-if="timeIntervalConstraint.active && timeIntervalConstraint.selectedTimeInterval === 'others'"
-          :class="{ 'has-error': errors.first('startTime') }"
-          class="setting__block-date-field date-picker"
-        >
-          <div class="date-picker__container">
-            <el-date-picker
-              v-model="timeIntervalConstraint.customTimeInterval.startTime"
-              :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
-              :placeholder="'*' + $t('warRoom.startDate')"
-              :clearable="true"
-              class="date-picker__item"
-              size="small"
-              type="date"
-              name="startTime"/>
-            <div class="date-picker__seperator">-</div>
-            <el-date-picker
-              v-model="timeIntervalConstraint.customTimeInterval.endTime"
-              :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
-              :placeholder="$t('warRoom.endDate')"
-              :clearable="true"
-              class="date-picker__item"
-              size="small"
-              type="date"
-              name="endTime"/>
+    <section class="setting__content">
+      <div class="setting__block-container">
+        <div class="setting__block">
+          <div class="setting__block-title">
+            {{ $t('warRoom.displayName') }}
           </div>
-          <div 
-            class="error-text"
-          >{{ errors.first('startTime') }}</div>
-          <div class="date-picker__reminder">{{ '*' + $t('warRoom.timeIntervalReminder') }}</div>
+          <input
+            v-model="componentName"
+            class="input setting__block-text-input">
+        </div>
+        <div class="setting__block">
+          <div class="setting__block-title">
+            {{ $t('warRoom.sourceData') }}
+            <a
+              href="javascript:void(0);" 
+              class="link"
+            >
+              {{ $t('button.delete') }}
+            </a>
+          </div>
+          <div class="setting__block-choose">
+            {{ selectedDataSource }}
+            <svg-icon 
+              icon-class="arrow-right" 
+              class="icon"/>
+          </div>
+        </div>
+        <div class="setting__block">
+          <div class="setting__block-title">
+            {{ $t('warRoom.updateFrequency') }}
+            <el-switch
+              v-model="updateFrequency.active"
+              :disabled="isProcessing"
+              :width="Number('32')"
+              active-color="#2AD2E2"
+              inactive-color="#324B4E"/>
+          </div>
+          <div
+            v-if="updateFrequency.active"
+            class="setting__block-select-field"
+          >
+            <default-select 
+              v-validate="'required'"
+              v-model="updateFrequency.selectedBasicSchedule"
+              :option-list="updateFrequency.basicScheduleList"
+              :placeholder="$t('warRoom.chooseUpdateFrequency')"
+              :is-disabled="isProcessing"
+              class="setting__block-select"
+              name="updateFrequency"
+            />
+            <div 
+              v-show="errors.has('updateFrequency')"
+              class="error-text"
+            >{{ errors.first('updateFrequency') }}</div>
+          </div>
+        </div>
+        <div class="setting__block">
+          <div class="setting__block-title">
+            {{ $t('warRoom.timeIntervalConstraint') }}
+            <el-switch
+              v-model="timeIntervalConstraint.active"
+              :disabled="isProcessing"
+              :width="Number('32')"
+              active-color="#2AD2E2"
+              inactive-color="#324B4E"/>
+          </div>
+          <div
+            v-if="timeIntervalConstraint.active"
+            class="setting__block-select-field"
+          >
+            <default-select 
+              v-validate="'required'"
+              v-model="timeIntervalConstraint.selectedTimeInterval"
+              :option-list="timeIntervalConstraint.timeIntervalList"
+              :placeholder="$t('warRoom.chooseTimeInterval')"
+              :is-disabled="isProcessing"
+              class="setting__block-select"
+              name="timeIntervalConstraint"
+            />
+            <div 
+              v-show="errors.has('timeIntervalConstraint')"
+              class="error-text"
+            >{{ errors.first('timeIntervalConstraint') }}</div>
+          </div>
+          <div
+            v-if="timeIntervalConstraint.active && timeIntervalConstraint.selectedTimeInterval === 'others'"
+            :class="{ 'has-error': errors.first('startTime') }"
+            class="setting__block-date-field date-picker"
+          >
+            <div class="date-picker__container">
+              <el-date-picker
+                v-model="timeIntervalConstraint.customTimeInterval.startTime"
+                :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
+                :placeholder="'*' + $t('warRoom.startDate')"
+                :clearable="true"
+                class="date-picker__item"
+                size="small"
+                type="date"
+                name="startTime"/>
+              <div class="date-picker__seperator">-</div>
+              <el-date-picker
+                v-model="timeIntervalConstraint.customTimeInterval.endTime"
+                :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
+                :placeholder="$t('warRoom.endDate')"
+                :clearable="true"
+                class="date-picker__item"
+                size="small"
+                type="date"
+                name="endTime"/>
+            </div>
+            <div 
+              class="error-text"
+            >{{ errors.first('startTime') }}</div>
+            <div class="date-picker__reminder">{{ '*' + $t('warRoom.timeIntervalReminder') }}</div>
+          </div>
+        </div>
+        <div class="setting__block">
+          <div class="setting__block-title">
+            {{ $t('warRoom.thresholdSetting') }}
+            <el-switch
+              v-model="thresholdSetting.active"
+              :disabled="isProcessing"
+              :width="Number('32')"
+              active-color="#2AD2E2"
+              inactive-color="#324B4E"/>
+          </div>
+          <div
+            v-if="thresholdSetting.active"
+            class="setting__block-text"
+          >
+            <label class="input setting__block-text-label">
+              {{ $t('warRoom.maxThreshold') }}
+            </label>
+            <input
+              v-model="thresholdSetting.max"
+              :placeholder="$t('warRoom.pleaseEnterValue')"
+              name="maxThreshold"
+              class="input setting__block-text-input">
+            <label class="input setting__block-text-label">
+              {{ $t('warRoom.minThreshold') }}
+            </label>
+            <input
+              v-model="thresholdSetting.min"
+              :placeholder="$t('warRoom.pleaseEnterValue')"
+              name="minThreshold"
+              class="input setting__block-text-input">
+          </div>
         </div>
       </div>
-      <div class="setting__block">
-        <div class="setting__block-title">
-          {{ $t('warRoom.thresholdSetting') }}
-          <el-switch
-            v-model="thresholdSetting.active"
-            :disabled="isProcessing"
-            :width="Number('32')"
-            active-color="#2AD2E2"
-            inactive-color="#324B4E"/>
-        </div>
-        <div
-          v-if="thresholdSetting.active"
-          class="setting__block-text"
-        >
-          <label class="input setting__block-text-label">
-            {{ $t('warRoom.maxThreshold') }}
-          </label>
-          <input
-            v-model="thresholdSetting.max"
-            :placeholder="$t('warRoom.pleaseEnterValue')"
-            name="maxThreshold"
-            class="input setting__block-text-input">
-          <label class="input setting__block-text-label">
-            {{ $t('warRoom.minThreshold') }}
-          </label>
-          <input
-            v-model="thresholdSetting.min"
-            :placeholder="$t('warRoom.pleaseEnterValue')"
-            name="minThreshold"
-            class="input setting__block-text-input">
-        </div>
+      <div class="setting__button-block">
+        <button 
+          type="button"
+          class="btn btn-default"
+          @click="saveSetting"
+        >{{ $t('button.save') }}</button>
       </div>
     </section>
   </section>
@@ -263,22 +272,46 @@ export default {
         min: ''
       }
     }
+  },
+  methods: {
+    saveSetting () {
+
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+$setting-button-block-height: 60px;
+$setting-header-height: 57px;
+
 .setting {
+  display: flex;
+  flex-direction: column;
   width: 280px;
   &__header {
     display: flex;
     justify-content: space-between;
     padding: 16px 26px;
     border-bottom: 1px solid #464A50;
+    height: $setting-header-height;
   }
 
   &__header-icon {
     color: #2AD2E2;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    height: calc(100% - #{$setting-header-height});
+  }
+
+  &__block-container {
+    overflow: auto;
+    height: calc(100% - #{$setting-button-block-height});
   }
 
   &__block {
@@ -333,6 +366,15 @@ export default {
     display: block;
     margin-top: 16px;
     border: 0;
+  }
+
+  &__button-block {
+    padding: 12px 24px;
+    height: $setting-button-block-height;
+    background: rgba(35, 61, 64, 0.6);
+    .btn {
+      width: 100%;
+    }
   }
 
   .date-picker {

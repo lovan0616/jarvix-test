@@ -159,11 +159,13 @@ export default {
 .war-room {
   display: flex;
   width: 100%;
+  height: 100%;
 
   &__content {
     flex: 1;
     padding: 32px 24px 64px 24px;
-    min-height: calc(100vh - #{$header-height});
+    height: 100%;
+    overflow: scroll;
     border: 1px solid #464A50;
   }
 
