@@ -13,6 +13,20 @@
             {{ $t('warRoom.backToList') }}
           </a>
           <h1 class="war-room__title">未命名戰情室</h1>
+          <!--TODO: 新增編輯功能-->
+          <!-- <div class="war-room__title-edit">
+            <input
+              v-model="publishedName"
+              class="input war-room__title-input">
+            <button 
+              type="button"
+              class="btn btn-default"
+            >{{ $t('button.save') }}</button>
+            <button 
+              type="button"
+              class="btn btn-outline"
+            >{{ $t('button.cancel') }}</button>
+          </div> -->
         </div>
         <div class="war-room__header--right button-container">
           <div class="button-container--top">
@@ -229,6 +243,23 @@ export default {
   &__title {
     margin: 16px 0 0 0;
     line-height: 32px;
+  }
+
+  &__title-edit {
+    margin-top: 16px;
+    display: flex;
+
+    .btn {
+      margin-right: 8px;
+      min-width: 49px;
+      padding: 0;
+    }
+  }
+
+  &__title-input {
+    line-height: 32px;
+    margin-right: 12px;
+    width: 400px;
   }
 
   &__display {
