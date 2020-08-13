@@ -172,6 +172,10 @@ export default {
 
 <style lang="scss" scoped>
 .setting {
+  &__content {
+    justify-content: space-between;
+  }
+
   &__button-block-button {
     &--left {
       min-width: 40px;

@@ -15,7 +15,10 @@
           class="setting__header-icon"/>
       </span>
     </div>
-    <section class="setting__content">
+    <section
+      v-if="!isShowComponentDataSourceList"
+      class="setting__content"
+    >
       <div class="setting__block-container">
         <div class="setting__block">
           <div class="setting__block-title">
@@ -31,12 +34,16 @@
             <a
               href="javascript:void(0);" 
               class="link"
+              @click="clearSelectedDataSource"
             >
               {{ $t('button.delete') }}
             </a>
           </div>
-          <div class="setting__block-choose">
-            {{ selectedDataSource }}
+          <div
+            class="setting__block-choose"
+            @click="showComponentDataSourceList"
+          >
+            {{ componentDataSource.selectedDataSource.name || $t('warRoom.notChosen') }}
             <svg-icon 
               icon-class="arrow-right" 
               class="icon"/>
@@ -179,22 +186,44 @@
         >{{ $t('button.save') }}</button>
       </div>
     </section>
+    <component-data-source-list
+      v-if="isShowComponentDataSourceList"
+      :component-type="componentType"
+      :data-souce-list="componentDataSource.dataSouceList"
+      @back="hideComponentDataSourceList"
+      @select="updateSelectedDataSource"
+    />
   </section>
 </template>
 
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
+import ComponentDataSourceList from './ComponentDataSourceList'
 
 export default {
   name: 'ComponentSetting',
   inject: ['$validator'],
   components: {
-    DefaultSelect
+    DefaultSelect,
+    ComponentDataSourceList
+  },
+  props: {
+    componentType: {
+      type: String,
+      required: true
+    }
   },
   data () {
     return {
       componentName: '未命名標題',
-      selectedDataSource: '營運銷售概況',
+      isShowComponentDataSourceList: false,
+      componentDataSource: {
+        selectedDataSource: {},
+        dataSouceList: {
+          indexList: [],
+          diagramList: []
+        }
+      },
       isProcessing: false,
       updateFrequency: {
         active: false,
@@ -284,6 +313,19 @@ export default {
   methods: {
     saveSetting () {
 
+    },
+    showComponentDataSourceList () {
+      this.isShowComponentDataSourceList = true
+    },
+    hideComponentDataSourceList () {
+      this.isShowComponentDataSourceList = false
+    },
+    clearSelectedDataSource () {
+      this.componentDataSource.selectedDataSource = {}
+    },
+    updateSelectedDataSource (item) {
+      this.componentDataSource.selectedDataSource = item
+      this.hideComponentDataSourceList()
     }
   }
 }
@@ -291,6 +333,10 @@ export default {
 
 <style lang="scss" scoped>
 .setting {
+  &__content {
+    justify-content: space-between;
+  }
+
   &__button-block-button {
     &--left {
       min-width: 40px;

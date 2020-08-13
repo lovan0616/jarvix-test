@@ -24,7 +24,6 @@ $setting-header-height: 57px;
   &__content {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     flex: 1;
     height: calc(100% - #{$setting-header-height});
   }

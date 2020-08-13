@@ -549,6 +549,7 @@
   },
   "warRoom": {
     "backToList": "返回列表",
+    "back": "返回",
     "publish": "發布",
     "unpublish": "取消發布",
     "warRoomSetting": "戰情室設定",
@@ -581,7 +582,10 @@
     "thresholdSetting": "上下限標記",
     "maxThreshold": "上限設定",
     "minThreshold": "下限設定",
-    "pleaseEnterValue": "請輸入數值"
+    "pleaseEnterValue": "請輸入數值",
+    "notChosen": "未選擇",
+    "indexTypeContent": "指標型內容",
+    "chartTypeContent": "圖表型內容"
   },
   "description": {
     "basic": {

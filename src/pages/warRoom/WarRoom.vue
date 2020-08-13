@@ -98,6 +98,7 @@
     </section>
     <component-setting
       v-if="showComponentSetting"
+      :component-type="createdComponentType"
       class="war-room__side-setting"
       @close="closeComponentSetting"
     />
