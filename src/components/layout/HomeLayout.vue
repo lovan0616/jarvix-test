@@ -3,17 +3,16 @@
     <transition 
       name="fade" 
       mode="out-in">
-      <ChatRoomBlock/>
+      <chat-room-block/>
     </transition>
-    <chat-bot-btn 
-      v-if="!isShowChatRoom"
-      class="chat-bot-btn"
-      @click.native="toggleChatRoom"
-    />
+    <transition name="fast-fade-in">
+      <advance-data-frame-setting v-if="isShowSettingBox" />
+    </transition>
     <div 
-      :class="{'is-open': isShowChatRoom}"
-      class="wrapper"
+      :class="{ 'wrapper--has-basic-df-setting': isShowSettingBox }"
+      class="wrapper wrapper--has-chat-room"
     >
+      <ask-condition :key="`${dataSourceId}-${dataFrameId}`"/>
       <main class="main">
         <div class="center">
           <transition 
@@ -27,6 +26,7 @@
     <transition name="fast-fade-in">
       <section 
         v-if="isShowPreviewDataSource"
+        :class="{ 'preview-datasource--has-basic-df-setting': isShowSettingBox }"
         class="preview-datasource">
         <preview-data-source 
           :key="dataSourceId" 
@@ -46,22 +46,23 @@
 import ChatRoomBlock from '@/components/chatBot/ChatRoom'
 import ChatBotBtn from '@/components/chatBot/ChatBotBtn'
 import PreviewDataSource from '@/components/PreviewDataSource'
+import AdvanceDataFrameSetting from '@/components/AdvanceDataFrameSetting'
+import AskCondition from '@/components/AskCondition'
 import store from '@/store'
+import { mapState } from 'vuex'
 
 export default {
   name: 'HomeLayout',
   components: {
     ChatRoomBlock,
     ChatBotBtn,
-    PreviewDataSource
+    PreviewDataSource,
+    AdvanceDataFrameSetting,
+    AskCondition,
   },
   computed: {
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
-    isShowChatRoom () {
-      return this.$store.state.isShowChatRoom
-    },
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
     }
@@ -75,17 +76,7 @@ export default {
     if (this.isShowPreviewDataSource) this.closePreviewDataSource()
     next()
   },
-  mounted () {
-    this.toggleChatRoom(true)
-  },
-  destroyed () {
-    this.toggleChatRoom(false)
-  },
   methods: {
-    toggleChatRoom (isOpened = true) {
-      this.$store.commit('updateChatRoomStatus', isOpened)
-      if (!isOpened) this.closePreviewDataSource()
-    },
     closePreviewDataSource () {
       this.$store.commit('previewDataSource/togglePreviewDataSource', false)
     }
@@ -97,36 +88,26 @@ export default {
   width: 100%;
   position: relative;
 
-  .wrapper {
-    width: 100%;
-    height: calc(100vh - #{$header-height});
-    position: absolute;
-    top: $header-height;
-    right: 0;
-    // transition: width 0.1s;
-
-    &.is-open {
-      width: calc(100% - #{$chat-room-width});
-    }
-  }
-
   .main {
-    padding-top: 32px;
-    padding-bottom: 64px;
-    min-height: calc(100vh - 136px);
-    min-height: calc(100vh - #{$header-height});
+    padding: 32px 24px 64px 24px;
+    height: calc(100% - 32px);
+    overflow: auto;
   }
 
   .preview-datasource {
-    width: calc(100% - #{$chat-room-width});
-    height: calc(100vh - #{$header-height});
+    width: 100%;
+    height: calc(100vh - #{$header-height + $chat-room-height});
     position: absolute;
-    top: $header-height;
+    top: $header-height + $chat-room-height;
     right: 0;
     background: rgba(0, 0, 0, 0.95);
     overflow: auto;
     padding: 32px 40px 0 40px;
     z-index: 3;
+
+    &--has-basic-df-setting {
+      width: calc(100% - #{$basic-df-setting-width});
+    }
 
     &__close-btn {
       position: absolute;
@@ -134,33 +115,7 @@ export default {
       right: 40px;
       color: #fff;
       font-size: 14px;
-    }
-  }
-
-  .chat-bot-btn {
-    position: fixed;
-    bottom: 16px;
-    left: 70px;
-    z-index: 999;
-    cursor: pointer;
-    width: 80px;
-    height: 80px;
-
-     &:after {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      margin: auto;
-      content: "";
-      display: block;
-      width: 70px;
-      height: 70px;
-      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.5);
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 50%;
-      z-index: -1;
+      z-index: 5;
     }
   }
 }

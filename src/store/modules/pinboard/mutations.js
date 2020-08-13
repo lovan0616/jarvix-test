@@ -11,6 +11,9 @@ export default {
   setGroupPinboardInfo (state, data) {
     state.groupPinboardInfo = data
   },
+  setpinboardData (state, data) {
+    state.pinboardData = data
+  },
   deletePinboardById (state, data) {
     state.pinboardInfo = state.pinboardInfo.filter(element => {
       return element.id !== data

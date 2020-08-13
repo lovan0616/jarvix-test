@@ -14,6 +14,7 @@ import './styles/App.scss'
 import i18n from './lang/index.js'
 
 import {
+  Input,
   Select,
   Option,
   Table,
@@ -26,7 +27,10 @@ import {
   Collapse,
   CollapseItem,
   Tooltip,
-  Switch
+  Switch,
+  Menu,
+  Submenu,
+  MenuItem
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -57,6 +61,7 @@ import GeneralResult from '@/components/resultBoard/GeneralResult'
 import CorrelationExplorationResult from '@/components/resultBoard/CorrelationExplorationResult'
 import RootCauseResult from '@/components/resultBoard/RootCauseResult'
 import MultiResult from '@/components/resultBoard/MultiResult'
+import MultiResultV2 from '@/components/resultBoard/MultiResultV2'
 import DataPreviewLayout from '@/components/resultBoard/DataPreviewLayout'
 import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
@@ -106,6 +111,7 @@ var Rollbar = require('vue-rollbar')
 
 Vue.use(VueEvents)
 // Element UI components
+Vue.use(Input)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Table)
@@ -119,6 +125,9 @@ Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Tooltip)
 Vue.use(Switch)
+Vue.use(Menu)
+Vue.use(Submenu)
+Vue.use(MenuItem)
 
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)
@@ -134,6 +143,7 @@ Vue.component(GeneralResult.name, GeneralResult)
 Vue.component(CorrelationExplorationResult.name, CorrelationExplorationResult)
 Vue.component(RootCauseResult.name, RootCauseResult)
 Vue.component(MultiResult.name, MultiResult)
+Vue.component(MultiResultV2.name, MultiResultV2)
 Vue.component(DataPreviewLayout.name, DataPreviewLayout)
 Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)

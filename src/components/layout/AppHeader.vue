@@ -40,7 +40,8 @@ export default {
   computed: {
     ...mapState(['isShowFullSideNav']),
     ...mapState('userManagement', ['groupList']),
-    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId'])
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
@@ -49,8 +50,23 @@ export default {
     },
     directToHomePage() {
       const groupLessPage = { name: 'PageGrouplessGuidance', params: { 'account_id': this.getCurrentAccountId } }
-      const accountHomePage = { name: 'PageIndex', params: { 'account_id': this.getCurrentAccountId, 'group_id': this.getCurrentGroupId } }
-      this.$router.push(this.groupList.length === 0 ? groupLessPage : accountHomePage)
+      const accountHomePage = {
+        name: 'PageIndex', 
+        params: { 
+          'account_id': this.getCurrentAccountId, 
+          'group_id': this.getCurrentGroupId
+        },
+        ...(this.dataSourceId && { 
+          query: {
+            'dataSourceId': this.dataSourceId,
+            'dataFrameId': this.dataFrameId
+          }
+        })
+      }
+      
+      // catch error when trying to navigate to same location as the current one
+      // to avoid displaying a warning in the console
+      this.$router.push(this.groupList.length === 0 ? groupLessPage : accountHomePage).catch(err => {})
     }
   }
 }
@@ -65,7 +81,7 @@ export default {
   height: $header-height;
   z-index: $header-z-index;
   box-shadow: $header-shadow;
-  background-color: var(--color-bg-2);
+  background-color: rgba(0, 0, 0, 0.55);
   border-bottom: 1px solid #04262B;
   // transition: all 0.1s;
 
@@ -77,10 +93,11 @@ export default {
     background: var(--color-bg-3);
 
     .toggle {
-      padding: 21px;
+      padding: ($app-side-nav-closed-width - 20px) / 2;
       display: flex;
       align-items: center;
       &__icon {
+        flex: 0 0 20px;
         color: #2AD2E2;
         font-size: 20px;
         margin-right: 0;
@@ -115,7 +132,7 @@ export default {
     width: calc(100% - #{$app-side-nav-closed-width});
     height: 100%;
     margin: 0 0 0 auto;
-    padding: 0 40px;
+    padding: 0 34px 0 24px;
   }
 
   &__root {

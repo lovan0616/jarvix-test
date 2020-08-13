@@ -1,5 +1,5 @@
 <template>
-  <div class="pinboard-wrapper">
+  <div class="wrapper">
     <main class="main">
       <transition 
         name="fade" 
@@ -16,19 +16,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.pinboard-wrapper {
-  width: 100%;
-  height: calc(100vh - #{$header-height});
-  position: absolute;
-  top: $header-height;
-  right: 0;
-  overflow: auto;
-}
 
 .main {
-  padding-top: 32px;
-  padding-bottom: 64px;
-  min-height: calc(100vh - 136px);
+  padding: 32px 24px 64px 24px;
   min-height: calc(100vh - #{$header-height});
 }
 </style>

@@ -4,7 +4,7 @@
     class="column-correlation"
   >
     <div class="overview-section">
-      <div class="title">
+      <div class="overview-section__title">
         {{ $t('resultDescription.columnCorrelationOverview') }}
         <span class="nav-item nav-function tooltip-container">
           <svg-icon
@@ -19,11 +19,15 @@
       />
       <div
         v-else-if="!isLoading && componentData && !hasError && !isCalculating"
+        class="chart"
       >
         <display-heat-map-chart
           :dataset="componentData.dataset"
+          class="chart__display"
+          width="100%"
+          height="100%"
         />
-        <div class="descrtipion">
+        <div class="chart__description description">
           <div class="description__container">
             <div class="description__item description__item--min">
               {{ $t('resultDescription.highlyNegativeCorrelated') }}
@@ -70,6 +74,7 @@
 import DisplayHeatMapChart from '@/pages/datasourceDashboard/components/DisplayHeatMapChart'
 import CrudTable from '@/components/table/CrudTable'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import { mapGetters } from 'vuex'
 
 // const dummyData = {
 //   overview: {
@@ -100,7 +105,11 @@ export default {
     dataFrameId: {
       type: Number,
       required: true
-    }
+    },
+    mode: {
+      type: String,
+      required: true
+    },
   },
   data () {
     return {
@@ -139,9 +148,28 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('dataFrameAdvanceSetting', ['selectedColumnList', 'askCondition']),
     reminderMsg () {
       if (this.isCalculating) return this.$t('message.calculatingPleaseTryLater')
       return this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
+    },
+    filterRestrictionList () {
+      return this.$store.getters['dataSource/filterRestrictionList']
+    }
+  },
+  watch: {
+    askCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (
+          this.mode === 'popup' 
+          // 初次開啟設定時不觸發
+          || (oldValue.isInit === false && oldValue.columnList === null)
+          // 切換 dataframe 清空設定時不觸發
+          || newValue.isInit === false
+        ) return
+        this.fetchData()
+      }
     }
   },
   mounted () {
@@ -149,8 +177,26 @@ export default {
   },
   methods: {
     fetchData () {
+      // reset status
       this.isLoading = true
-      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { id: this.dataFrameId })
+      this.hasError = false
+      this.isEmpty = false
+      this.isCalculating = false
+
+      let selectedColumnList = null
+      let restrictions = []
+      
+      // 智能分析頁面需要帶入 column list
+      if (this.mode === 'display') {
+        selectedColumnList = this.selectedColumnList
+        restrictions = this.filterRestrictionList
+      }
+      
+      this.$store.dispatch('dataSource/getDataFrameColumnCorrelation', { 
+        id: this.dataFrameId, 
+        selectedColumnList, 
+        restrictions 
+      })
         .then(response => {
           const columnNameList = response.columnNameList
           const columnDataList = response.data
@@ -203,25 +249,32 @@ export default {
     margin-bottom: 1.3rem;
   }
 
-  .title {
+  &__title {
     font-weight: 600;
     font-size: 20px;
     margin-bottom: 14px;
   }
 
-  .tooltip-container {
-    z-index: 1;
-    .tooltip {
-      width: 190px;
-      text-align: center;
-      white-space: normal;
-      padding: 8px;
-      line-height: 14px;
-      color: #DDDDDD;
+  .chart {
+    position: relative;
+    width: 50%;
+    /* 讓圖表盡量呈現正方形 */
+    padding-top: 40%;
+    margin: 0 auto;
+
+    &__display {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
     }
 
-    .icon {
-      color: $theme-color-warning;
+    &__description {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
     }
   }
 
@@ -257,6 +310,22 @@ export default {
       &--max {
         transform: translateX(50%);
       }
+    }
+  }
+
+  .tooltip-container {
+    z-index: 1;
+    .tooltip {
+      width: 190px;
+      text-align: center;
+      white-space: normal;
+      padding: 8px;
+      line-height: 14px;
+      color: #DDDDDD;
+    }
+
+    .icon {
+      color: $theme-color-warning;
     }
   }
 }

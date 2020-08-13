@@ -121,6 +121,10 @@ export default {
       .then(() => {
         // 先清空，因為新群組有可能沒有 dataSource
         commit('dataSource/setDataSourceId', null, { root: true })
+        // 關閉基表設定
+        commit('dataFrameAdvanceSetting/toggleSettingBox', false, { root: true })
+        // 關閉問句說明
+        commit('updateAskHelperStatus', false, { root: true })
 
         // 取得新的列表
         return dispatch('dataSource/getDataSourceList', {}, { root: true })

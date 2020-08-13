@@ -1,18 +1,12 @@
 <template>
   <div 
-    :class="{show}"
     class="ask-helper-dialog"
   >
-    <div class="title-block">
-      <div class="dialog-title">{{ $t('askHelper.title') }}</div>
-      <a 
-        href="javascript:void(0)" 
-        class="close-btn"
-        @click="closeDialog"
-      >
-        <svg-icon icon-class="close"/>
-      </a>
-    </div>
+    <a
+      href="javascript:void(0)"
+      class="ask-helper__close-btn"
+      @click="closeDialog"
+    ><svg-icon icon-class="close"/></a>
     <el-tabs 
       v-model="activeTab"
       class="ask-helper-tab"
@@ -44,12 +38,6 @@ export default {
     QuestionSample,
     ColumnInfo
   },
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
   data () {
     return {
       activeTab: this.$t('askHelper.tabToken')
@@ -64,34 +52,17 @@ export default {
 </script>
 <style lang="scss" scoped>
 .ask-helper-dialog {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 0;
-  overflow: hidden;
-  background-color: rgba(35, 61, 64, 0.97);
-  transition: height 0.3s;
-
-  &.show {
-    overflow: auto;
-    height: calc(100vh - 110px - #{$header-height});
-    padding: 24px 32px;
+  .ask-helper__close-btn {
+    display: block;
+    position: absolute;
+    top: 32px;
+    right: 40px;
+    color: #fff;
+    font-size: 14px;
+    z-index: 5;
   }
-
-  .title-block {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-
-    .dialog-title {
-      font-size: 20px;
-      line-height: 50px;
-    }
-
-    .close-btn {
-      color: #fff;
-    }
+  .ask-helper-tab {
+    z-index: 0;
   }
 }
 </style>
@@ -99,15 +70,25 @@ export default {
 .ask-helper-tab.el-tabs--card {
   &>.el-tabs__header {
     border: none;
+    margin: 0 0 27px;
 
     .el-tabs__nav {
       width: 100%;
       border: none;
+
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 3px;
+        background: #324B4E;
+      }
     }
 
     .el-tabs__item {
       border: none;
-      width: 50%;
+      min-width: 160px;
       color:  #AAAAAA;
       border-bottom: 3px solid #324B4E;
       text-align: center;
@@ -121,8 +102,8 @@ export default {
   }
 
   .el-tabs__content {
-    overflow-y: auto;
     height: calc(100vh - 280px - #{$header-height});
+    .el-tab-pane { height: 100%; }
   }
 }
 </style>
