@@ -374,6 +374,9 @@ router.beforeEach(async (to, from, next) => {
       query: to.query
     })
   }
+
+  // 取得可以使用的 parser 語系
+  await store.dispatch('chatBot/getParserList')
   
   // 確認 account 和 group 權限都符合
   const hasPermission = store.getters['userManagement/hasPermission']

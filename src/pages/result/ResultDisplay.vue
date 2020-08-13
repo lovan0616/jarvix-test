@@ -18,9 +18,11 @@
       v-else
       :is="layout"
       :data-result-id="currentResultId"
+      :data-frame-id="currentQuestionDataFrameId"
       :result-info="resultInfo"
       :restrictions="restrictInfo"
       :segmentation-payload="segmentationPayload"
+      :transcript="transcript"
     />
     <div
       v-if="relatedQuestionList.length > 0" 
@@ -63,6 +65,9 @@ export default {
         nlpToken: []
       },
       segmentationPayload: null,
+      transcript: null,
+      // 目前兩版 transcript 過渡期先放這
+      currentQuestionDataFrameId: null,
       totalSec: 50,
       periodSec: 200
     }
@@ -137,6 +142,8 @@ export default {
       this.restrictInfo = []
       this.relatedQuestionList = []
       this.segmentationPayload = null
+      this.currentQuestionDataFrameId = null
+      this.transcript = null
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {
@@ -321,8 +328,10 @@ export default {
               this.restrictInfo = componentResponse.restrictions
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
+              this.transcript = componentResponse.transcript
               this.segmentationAnalysis(componentResponse.segmentationPayload)
-              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', componentResponse.segmentationPayload.dataframeId)
+              this.currentQuestionDataFrameId = this.transcript.dataframe.id
+              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.isLoading = false
               break
             case 'Disable':
@@ -367,8 +376,10 @@ export default {
               this.restrictInfo = componentResponse.restrictions
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
-              // this.segmentationAnalysis(componentResponse.segmentationPayload)
-              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', componentResponse.segmentationPayload.dataframeId)
+              this.segmentationAnalysisV2(componentResponse.segmentationPayload)
+              this.transcript = componentResponse.transcript
+              this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
+              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.isLoading = false
               break
             case 'Disable':
@@ -406,6 +417,15 @@ export default {
         return element.type === 'UnknownToken'
       })
       this.segmentationInfo.question = payloadInfo.executedQuestion
+    },
+    segmentationAnalysisV2 (payloadInfo) {
+      // this.segmentationInfo.nlpToken = payloadInfo.sentence.filter(element => {
+      //   return element.isMatchedByNlp || element.isSynonym
+      // })
+      this.segmentationInfo.unknownToken = payloadInfo.sentence.filter(element => {
+        return element.type === 'UNKNOWN'
+      })
+      this.segmentationInfo.question = this.$route.query.question
     },
     closeUnknowInfoBlock () {
       this.segmentationInfo = {

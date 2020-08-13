@@ -1684,7 +1684,7 @@
     "DataColumnToken": "来自{dataFrame}的{dataColumn}@:segmentationToken.Datacolumn，辨识为{matchedWord}",
     "ColumnSetToken": "来自{dataFrame}的{matchedWord}",
     "DataValueToken": "来自{dataFrame}的{dataColumn}@:segmentationToken.Datavalue，辨识为{matchedWord}",
-    "DatarowToken": "来自{dataFrame}的@:segmentationToken.Datarow{matchedWord}",
+    "DatarowToken": "来自{dataFrame}的@:segmentationToken.Datarow",
     "ElseToken": "其他词汇",
     "IgnoreToken": "可忽略的词汇",
     "Datarow": "资料列",
