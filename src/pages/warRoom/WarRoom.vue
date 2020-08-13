@@ -30,16 +30,17 @@
             >{{ $t('warRoom.preview') }}</button>
           </div>
           <div class="button-container--bottom">
-            <button 
+            <button
               type="button"
               class="btn-m btn-outline btn-has-icon button-container__button"
+              @click="openWarRoomSetting"
             >
               <svg-icon 
                 icon-class="filter-setting" 
                 class="icon"/>
               {{ $t('warRoom.warRoomSetting') }}
             </button>
-
+            <!--TODO: Disable button if number reaches max-->
             <custom-dropdown-select
               :data-list="addComponentList"
               trigger="hover"
@@ -100,12 +101,18 @@
       class="war-room__side-setting"
       @close="closeComponentSetting"
     />
+    <war-room-setting
+      v-if="showWarRoomSetting"
+      class="war-room__side-setting"
+      @close="closeWarRoomSetting"
+    />
   </section>
 </template>
 
 <script>
 import ComponentSetting from './components/ComponentSetting'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
+import WarRoomSetting from './components/WarRoomSetting'
 
 const dummyNumbers = []
 for (let i = 0; i < 4; i++) {
@@ -121,7 +128,8 @@ export default {
   name: 'WarRoom',
   components: {
     ComponentSetting,
-    CustomDropdownSelect
+    CustomDropdownSelect,
+    WarRoomSetting
   },
   data () {
     return {
@@ -138,7 +146,8 @@ export default {
         }
       ],
       createdComponentType: null,
-      showComponentSetting: false
+      showComponentSetting: false,
+      showWarRoomSetting: false
     }
   },
   computed: {
@@ -155,6 +164,7 @@ export default {
   },
   methods: {
     addComponent (value) {
+      if (this.showWarRoomSetting) this.closeWarRoomSetting()
       // TODO: check if has reached max before creation
       this.createdComponentType = value
       this.showComponentSetting = true
@@ -162,6 +172,13 @@ export default {
     closeComponentSetting () {
       this.showComponentSetting = false
       this.createdComponentType = null
+    },
+    openWarRoomSetting () {
+      if (this.showComponentSetting) this.closeComponentSetting()
+      this.showWarRoomSetting = true
+    },
+    closeWarRoomSetting () {
+      this.showWarRoomSetting = false
     }
   }
 }

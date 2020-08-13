@@ -556,6 +556,7 @@
     "add": "新增",
     "setting": "設定",
     "displayName": "顯示名稱",
+    "publishedName": "發佈名稱",
     "sourceData": "來源資料",
     "updateFrequency": "更新頻率",
     "chooseUpdateFrequency": "選擇更新頻率",
