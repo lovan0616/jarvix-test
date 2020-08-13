@@ -82,7 +82,8 @@
             :key="number"
             class="number__item"
           >
-            {{ number }}
+            <div class="number__item-title">公司總銷售額</div>
+            {{ 'number' + number }}
           </div>
         </div>
         <div class="chart">
@@ -92,7 +93,8 @@
               :key="chart"
               class="chart__item"
             >
-              {{ chart }}
+              <div class="chart__item-title">公司總銷售額</div>
+              {{ 'chart' + chart }}
             </div>
           </div>
           <div
@@ -104,6 +106,7 @@
               :key="chart"
               class="chart__item"
             >
+              <div class="chart__item-title">公司總銷售額</div>
               {{ chart }}
             </div>
           </div>
@@ -130,12 +133,12 @@ import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import WarRoomSetting from './components/WarRoomSetting'
 
 const dummyNumbers = []
-for (let i = 0; i < 4; i++) {
+for (let i = 0; i < 3; i++) {
   dummyNumbers.push(i + 1)
 }
 
 const dummyChart = []
-for (let i = 0; i < 7; i++) {
+for (let i = 0; i < 6; i++) {
   dummyChart.push(i + 1)
 }
 
@@ -228,6 +231,11 @@ export default {
     line-height: 32px;
   }
 
+  &__display {
+    display: flex;
+    flex-direction: column;
+  }
+
   .button-container {
     display: flex;
     flex-direction: column;
@@ -279,30 +287,65 @@ export default {
 
   .number {
     display: flex;
-    border: 1px solid rgb(255, 255, 255);
-    height: 94px;
+    height: 95px;
     width: 100%;
+    margin-bottom: 24px;
 
     &__item {
-      border: 1px solid green;
       flex: 1;
-      max-width: (100% / 3);
+      max-width: calc(calc(100% - 40px) / 3);
+      background: #1C2424;
+      border-radius: 5px;
+      padding: 16px;
+      &:not(:last-of-type) {
+        margin-right: 20px;
+      }
+    }
+
+    &__item-title {
+      font-size: 14px;
+      color: #999999;
+      margin-bottom: 8px;
     }
   }
 
   .chart {
     display: flex;
     flex-direction: column;
-    height: 474px;
+    height: 490px;
+    flex: 1;
 
     &__container {
       flex: 1;
       display: flex;
+      &:not(:last-of-type) {
+        margin-bottom: 20px;
+      }
     }
 
     &__item {
-      border: 1px solid green;
       flex: 1;
+      border-radius: 5px;
+      background: #1C2424;
+      padding: 16px;
+      &:not(:last-of-type) {
+        margin-right: 20px;
+      }
+    }
+
+    &__item-title {
+      font-size: 14px;
+      color: #999999;
+      margin-bottom: 8px;
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #2FECB3;
+        border-radius: 50%;
+        margin-right: 4px;
+      }
     }
   }
 
