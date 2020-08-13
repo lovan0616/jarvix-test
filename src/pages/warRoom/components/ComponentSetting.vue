@@ -166,7 +166,14 @@
       <div class="setting__button-block">
         <button 
           type="button"
-          class="btn btn-default"
+          class="btn btn-outline setting__button-block-button--left"
+          @click="saveSetting"
+        >
+          <svg-icon icon-class="delete" />
+        </button>
+        <button 
+          type="button"
+          class="btn btn-default setting__button-block-button--right"
           @click="saveSetting"
         >{{ $t('button.save') }}</button>
       </div>
@@ -369,11 +376,22 @@ $setting-header-height: 57px;
   }
 
   &__button-block {
+    display: flex;
+    justify-content: space-between;
     padding: 12px 24px;
     height: $setting-button-block-height;
     background: rgba(35, 61, 64, 0.6);
-    .btn {
-      width: 100%;
+  }
+
+  &__button-block-button {
+    &--left {
+      min-width: 40px;
+      padding: 0 2px;
+    }
+
+    &--right {
+      min-width: 180px;
+      font-weight: 600;
     }
   }
 

@@ -20,7 +20,6 @@ export default {
   overflow: hidden;
 }
 
-
 .main {
   padding: 0;
   height: calc(100vh - #{$header-height});
