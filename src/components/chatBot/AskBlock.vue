@@ -30,7 +30,6 @@
           @keyup.shift.ctrl.72="toggleHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
-          @keyup="handleAskText"
           @focus="focusInput"
           @blur="blurInput"
         >
@@ -358,11 +357,8 @@ export default {
     },
     blurInput () {
       this.isFocus = false
-    },
-    handleAskText (e) {
-      this.cursorPositionQuestion = this.userQuestion.slice(0, e.target.selectionStart)
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

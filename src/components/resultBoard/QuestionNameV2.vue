@@ -2,7 +2,7 @@
   <div class="question-name-block">
     <span class="question-mark">Q</span>
     <span 
-      v-if="questionSegmentation && questionSegmentation.sentence.length"
+      v-if="questionSegmentation.sentence && questionSegmentation.sentence.length"
       class="question-name"
     >
       <question-name-token-v2
@@ -27,8 +27,8 @@ export default {
   },
   props: {
     questionSegmentation: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => null
     },
     question: {
       type: String,

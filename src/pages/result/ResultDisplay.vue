@@ -163,7 +163,7 @@ export default {
             selectedColumnList: this.selectedColumnList
           }).then(res => {
             this.$store.commit('dataSource/setCurrentQuestionInfo', null)
-            this.getComponent(res)
+            this.getComponentV2(res)
             this.getRelatedQuestion(res.resultId)
           }).catch(() => {
             this.isLoading = false

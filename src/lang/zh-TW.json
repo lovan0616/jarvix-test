@@ -1649,6 +1649,12 @@
     "emptyString": "空字串"
   },
   "segmentationToken": {
+    "UNKNOWN": "無法辨識的詞彙",
+    "DATA_COLUMN": "資料欄位",
+    "DATA_VALUE": "欄位資料",
+    "COLUMN_SET": "欄位組合",
+    "DATA_ROW": "資料列",
+    "AGGREGATE": "數據計算方式",
     "UnknownToken": "無法辨識的詞彙",
     "Datacolumn": "資料欄位",
     "Datavalue": "欄位資料",
