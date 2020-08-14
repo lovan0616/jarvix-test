@@ -12,46 +12,79 @@
               class="icon"/>
             {{ $t('warRoom.backToList') }}
           </a>
-          <h1 class="war-room__title">未命名戰情室</h1>
+          <div
+            v-if="!isEditingWarRoomName"
+            class="war-room__title"
+          >
+            {{ warRoomConfig.publishName }}
+            <a
+              href="javascript:void(0);"
+              class="link action-link" 
+              @click="editWarRoomName"
+            >
+              <svg-icon
+                icon-class="edit" 
+                class="icon"/>
+            </a>
+          </div>
           <!--TODO: 新增編輯功能-->
-          <!-- <div class="war-room__title-edit">
-            <input
-              v-model="publishedName"
-              class="input war-room__title-input">
+          <div
+            v-else
+            class="war-room__title-edit"
+          >
+            <div class="war-room__title-input">
+              <input
+                v-validate="'required'"
+                v-model="tempWarRoomPublishedName"
+                name="warRoomName"
+                class="input war-room__title-input">
+              <div 
+                v-show="errors.has('warRoomName')"
+                class="error-text"
+              >{{ errors.first('warRoomName') }}</div>
+            </div>
             <button 
               type="button"
               class="btn btn-default"
+              @click="updateWarRoomName"
             >{{ $t('button.save') }}</button>
-            <button 
+            <button
               type="button"
               class="btn btn-outline"
+              @click="stopEditingWarRoomName"
             >{{ $t('button.cancel') }}</button>
-          </div> -->
+          </div>
         </div>
         <div class="war-room__header--right button-container">
           <div class="button-container--top">
-            <span class="button-container__time">
-              {{ $t('warRoom.updateTime') + '：' + '2020/08/22' }}
+            <span
+              v-if="warRoomBasicInfo.publishUpdateTime"
+              class="button-container__time"
+            >
+              {{ $t('warRoom.updateTime') + '：' + warRoomBasicInfo.publishUpdateTime }}
             </span>
             <!--判斷是否已發布，更改內容與燈號-->
-            <span class="button-container__status">
-              {{ $t('warRoom.notPublished') }}
+            <span
+              :class="{ 'button-container__status--active': warRoomBasicInfo.isPublishing }"
+              class="button-container__status"
+            >
+              {{ warRoomBasicInfo.isPublishing ? $t('warRoom.hasPublished') : $t('warRoom.notPublished') }}
             </span>
-            <!--TODO: 未發布時顯示-->
-            <button 
+            <button
+              v-if="!warRoomBasicInfo.isPublishing"
               type="button"
               class="btn-m btn-default button-container__button"
             >{{ $t('warRoom.publish') }}</button>
-            <!--TODO: 已發布時顯示-->
-            <button 
-              type="button"
-              class="btn-m btn-default button-container__button"
-            >{{ $t('button.update') }}</button>
-            <!--TODO: 未發布時顯示-->
-            <button 
-              type="button"
-              class="btn-m btn-secondary button-container__button"
-            >{{ $t('warRoom.unpublish') }}</button>
+            <template v-if="warRoomBasicInfo.isPublishing">
+              <button
+                type="button"
+                class="btn-m btn-default button-container__button"
+              >{{ $t('button.update') }}</button>
+              <button
+                type="button"
+                class="btn-m btn-secondary button-container__button"
+              >{{ $t('warRoom.unpublish') }}</button>
+            </template>
             <button 
               type="button"
               class="btn-m btn-secondary button-container__button"
@@ -68,8 +101,8 @@
                 class="icon"/>
               {{ $t('warRoom.warRoomSetting') }}
             </button>
-            <!--TODO: Disable button if number reaches max-->
             <custom-dropdown-select
+              v-if="addComponentList.length > 0"
               :data-list="addComponentList"
               trigger="hover"
               @select="addComponent"
@@ -92,23 +125,23 @@
       <div class="war-room__display">
         <div class="number">
           <div
-            v-for="number in dummyNumbers"
-            :key="number"
+            v-for="number in numberComponent"
+            :key="number.componentId"
             class="number__item"
           >
             <div class="number__item-title">公司總銷售額</div>
-            {{ 'number' + number }}
+            {{ 'number' + number.componentId }}
           </div>
         </div>
         <div class="chart">
           <div class="chart__container">
             <div
               v-for="chart in chartFirstRow"
-              :key="chart"
+              :key="chart.componentId"
               class="chart__item"
             >
               <div class="chart__item-title">公司總銷售額</div>
-              {{ 'chart' + chart }}
+              {{ 'chart' + chart.componentId }}
             </div>
           </div>
           <div
@@ -117,11 +150,11 @@
           >
             <div
               v-for="chart in chartSecondRow"
-              :key="chart"
+              :key="chart.componentId"
               class="chart__item"
             >
               <div class="chart__item-title">公司總銷售額</div>
-              {{ chart }}
+              {{ 'chart' + chart.componentId }}
             </div>
           </div>
         </div>
@@ -135,6 +168,7 @@
     />
     <war-room-setting
       v-if="isShowWarRoomSetting"
+      :config-data.sync="warRoomConfig"
       class="war-room__side-setting"
       @close="closeWarRoomSetting"
     />
@@ -151,6 +185,11 @@ import ComponentSetting from './components/ComponentSetting'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import WarRoomSetting from './components/WarRoomSetting'
 import ComponentConstraint from './components/ComponentConstraint'
+import {
+  getWarRoomInfo,
+  getWarRoomPool,
+  updateWarRoomSetting
+} from '@/API/WarRoom'
 
 const dummyNumbers = []
 for (let i = 0; i < 3; i++) {
@@ -162,8 +201,51 @@ for (let i = 0; i < 6; i++) {
   dummyChart.push(i + 1)
 }
 
+const dummyWarRoom =  {
+  "config": {
+    "customEndTime": "2020-08-14T08:30:15.626Z",
+    "customStartTime": null,
+    "displayDateRangeSwitch": true,
+    "publishName": "string",
+    "recentTimeIntervalAmount": 1,
+    "recentTimeIntervalUnit": "Year"
+  },
+  "diagramTypeComponents": [
+    {
+      "componentId": 0,
+      "orderSequence": 0
+    },
+    {
+      "componentId": 1,
+      "orderSequence": 0
+    },
+    {
+      "componentId": 2,
+      "orderSequence": 0
+    },
+    {
+      "componentId": 3,
+      "orderSequence": 0
+    }
+  ],
+  "indexTypeComponents": [
+    {
+      "componentId": 0,
+      "orderSequence": 0
+    }
+  ],
+  "isPublishing": true,
+  "name": "string",
+  "publishUpdateTime": "string",
+  "publishUpdaterId": 0,
+  "publishUpdaterName": "string",
+  "urlIdentifier": "string",
+  "warRoomId": 0
+}
+
 export default {
   name: 'WarRoom',
+  inject: ['$validator'],
   components: {
     ComponentSetting,
     CustomDropdownSelect,
@@ -172,38 +254,63 @@ export default {
   },
   data () {
     return {
-      dummyChart: dummyChart,
-      dummyNumbers: dummyNumbers,
-      addComponentList: [
-        {
-          id: 'chart',
-          name: this.$t('warRoom.addChartComponent')
-        },
-        {
-          id: 'number',
-          name: this.$t('warRoom.addNumberComponent')
-        }
-      ],
+      chartComponent: null,
+      numberComponent: null,
       createdComponentType: null,
       isShowComponentSetting: false,
       isShowWarRoomSetting: false,
       isShowComponentConstraint: false,
-      selectedComponent: {}
+      selectedComponent: {},
+      isLoading: false,
+      warRoomConfig: null,
+      warRoomBasicInfo: {},
+      isEditingWarRoomName: false,
+      tempWarRoomPublishedName: null,
+      isProcessing: false
     }
   },
   computed: {
+    addComponentList () {
+      return [
+        (this.chartComponent && this.chartComponent.length < 8) && {
+          id: 'chart',
+          name: this.$t('warRoom.addChartComponent')
+        },
+        (this.numberComponent && this.numberComponent.length < 4) && {
+          id: 'number',
+          name: this.$t('warRoom.addNumberComponent')
+        }
+      ]
+    },
     chartFirstRow () {
-      if (this.dummyChart.length <= 3) return this.dummyChart
-      const endChartIndex = Math.floor(this.dummyChart.length / 2)
-      return this.dummyChart.slice(0, endChartIndex)
+      if (!this.chartComponent || this.chartComponent.length === 0) return []
+      if (this.chartComponent.length <= 3) return this.chartComponent
+      const endChartIndex = Math.floor(this.chartComponent.length / 2)
+      return this.chartComponent.slice(0, endChartIndex)
     },
     chartSecondRow () {
-      if (this.dummyChart.length <= 3) return []
-      const startChartIndex = Math.floor(this.dummyChart.length / 2)
-      return this.dummyChart.slice(startChartIndex)
+      if (!this.chartComponent || this.chartComponent.length <= 3) return []
+      const startChartIndex = Math.floor(this.chartComponent.length / 2)
+      return this.chartComponent.slice(startChartIndex)
     }
   },
+  mounted () {
+    const { war_room_id: warRoomId } = this.$route.params
+    this.fetchData(warRoomId)
+  },
   methods: {
+    fetchData (id) {
+      this.isLoading = true
+      Promise.all([getWarRoomInfo(id), getWarRoomPool(id)])
+        .then(([warRoomData, warRoomPoolData]) => {
+          const { config, diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = dummyWarRoom
+          this.warRoomConfig = config
+          this.chartComponent = diagramTypeComponents
+          this.numberComponent = indexTypeComponents
+          this.warRoomBasicInfo = warRoomBasicInfo
+        })
+        .catch(() => { this.isLoading = false })
+    },
     addComponent (value) {
       if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
       if (this.isShowComponentConstraint) this.closeComponentConstraint()
@@ -225,6 +332,25 @@ export default {
     },
     closeComponentConstraint () {
       this.isShowComponentConstraint = false
+    },
+    editWarRoomName () {
+      this.tempWarRoomPublishedName = this.warRoomConfig.publishName
+      this.isEditingWarRoomName = true
+    },
+    stopEditingWarRoomName () {
+      this.isEditingWarRoomName = false
+      this.tempWarRoomPublishedName = null
+    },
+    updateWarRoomName () {
+      this.$validator.validateAll().then(result => {
+        if (!result) return
+        this.isProcessing = true
+        this.warRoomConfig.publishName = this.tempWarRoomPublishedName
+        const { war_room_id: warRoomId } = this.$route.params
+        updateWarRoomSetting(warRoomId, this.warRoomConfig)
+          .then(() => this.stopEditingWarRoomName())
+          .finally(() => { this.isProcessing = false })
+      })
     }
   }
 }
@@ -323,9 +449,17 @@ export default {
         display: inline-block;
         width: 8px;
         height: 8px;
-        background: #2FECB3;
+        border: 1px solid #999999;
+        background: transparent;
         border-radius: 50%;
         margin: auto 0;
+      }
+
+      &--active {
+        &::before {
+          border: none;
+          background: #2FECB3;
+        }
       }
     }
   }
@@ -382,15 +516,6 @@ export default {
       font-size: 14px;
       color: #999999;
       margin-bottom: 8px;
-      &::before {
-        content: '';
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        background: #2FECB3;
-        border-radius: 50%;
-        margin-right: 4px;
-      }
     }
   }
 

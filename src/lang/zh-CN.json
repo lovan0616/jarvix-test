@@ -573,6 +573,7 @@
     "inDays": "近 {number} 日",
     "inWeeks": "近 {number} 周",
     "inMonths": "近 {number} 月",
+    "inSeasons": "近 {number} 季",
     "inYears": "近 {number} 年",
     "customize": "自订",
     "addChartComponent": "新增图表元件",

@@ -11,7 +11,7 @@
 </template>
 <script>
 export default {
-  name: 'Pinboard'
+  name: 'WarRoomIndex'
 }
 </script>
 
