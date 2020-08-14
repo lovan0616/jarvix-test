@@ -1649,6 +1649,12 @@
     "emptyString": "Empty String"
   },
   "segmentationToken": {
+    "UNKNOWN": "Unrecognized Word",
+    "DATA_COLUMN": "Data Column",
+    "DATA_VALUE": "Data Value",
+    "COLUMN_SET": "Column Set",
+    "DATA_ROW": "Data Row",
+    "AGGREGATE": "Data Calculation Method",
     "UnknownToken": "Unrecognized Word",
     "Datacolumn": "Data Column",
     "Datavalue": "Data Value",
