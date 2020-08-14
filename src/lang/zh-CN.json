@@ -589,7 +589,10 @@
     "chartTypeContent": "图表型内容",
     "notPublished": "未发布",
     "hasPublished": "已发布",
-    "updateTime": "更新时间"
+    "updateTime": "更新时间",
+    "dataConstraint": "资料限制",
+    "selectedColumns": "选择栏位",
+    "filterConstraint": "筛选条件"
   },
   "description": {
     "basic": {

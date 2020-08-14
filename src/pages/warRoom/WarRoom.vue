@@ -128,15 +128,20 @@
       </div>
     </section>
     <component-setting
-      v-if="showComponentSetting"
+      v-if="isShowComponentSetting"
       :component-type="createdComponentType"
       class="war-room__side-setting"
       @close="closeComponentSetting"
     />
     <war-room-setting
-      v-if="showWarRoomSetting"
+      v-if="isShowWarRoomSetting"
       class="war-room__side-setting"
       @close="closeWarRoomSetting"
+    />
+    <component-constraint
+      v-if="isShowComponentConstraint"
+      :component-data="selectedComponent"
+      @close="closeComponentConstraint"
     />
   </section>
 </template>
@@ -145,6 +150,7 @@
 import ComponentSetting from './components/ComponentSetting'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import WarRoomSetting from './components/WarRoomSetting'
+import ComponentConstraint from './components/ComponentConstraint'
 
 const dummyNumbers = []
 for (let i = 0; i < 3; i++) {
@@ -161,7 +167,8 @@ export default {
   components: {
     ComponentSetting,
     CustomDropdownSelect,
-    WarRoomSetting
+    WarRoomSetting,
+    ComponentConstraint
   },
   data () {
     return {
@@ -178,8 +185,10 @@ export default {
         }
       ],
       createdComponentType: null,
-      showComponentSetting: false,
-      showWarRoomSetting: false
+      isShowComponentSetting: false,
+      isShowWarRoomSetting: false,
+      isShowComponentConstraint: false,
+      selectedComponent: {}
     }
   },
   computed: {
@@ -196,21 +205,26 @@ export default {
   },
   methods: {
     addComponent (value) {
-      if (this.showWarRoomSetting) this.closeWarRoomSetting()
+      if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
+      if (this.isShowComponentConstraint) this.closeComponentConstraint()
       // TODO: check if has reached max before creation
       this.createdComponentType = value
-      this.showComponentSetting = true
+      this.isShowComponentSetting = true
     },
     closeComponentSetting () {
-      this.showComponentSetting = false
+      this.isShowComponentSetting = false
       this.createdComponentType = null
     },
     openWarRoomSetting () {
-      if (this.showComponentSetting) this.closeComponentSetting()
-      this.showWarRoomSetting = true
+      if (this.isShowComponentSetting) this.closeComponentSetting()
+      if (this.isShowComponentConstraint) this.closeComponentConstraint()
+      this.isShowWarRoomSetting = true
     },
     closeWarRoomSetting () {
-      this.showWarRoomSetting = false
+      this.isShowWarRoomSetting = false
+    },
+    closeComponentConstraint () {
+      this.isShowComponentConstraint = false
     }
   }
 }
