@@ -21,7 +21,7 @@
         </div>
         <div class="segmentation-info-block">
           <div 
-            v-for="(segmentation, segmentationIndex) in singleQuestion.segmentation"
+            v-for="(segmentation, segmentationIndex) in singleQuestion.sentence"
             :key="index + '-' + segmentationIndex"
             class="single-segmentation"
           >
@@ -35,16 +35,16 @@
                   :class="segmentation.type"
                   class="column-name"
                 >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from') }}
-                <span class="alias-name">{{ segmentation.properties[0].dataframePrimaryAlias }}</span>{{ $t('resultDescription.has') }}
+                <span class="alias-name">{{ segmentation.properties[0].dataFramePrimaryAlias }}</span>{{ $t('resultDescription.has') }}
                 <span
-                  v-if="segmentation.type === 'Datavalue'"
+                  v-if="segmentation.type === 'DATA_VALUE'"
                 >
-                  <span class="alias-name">{{ segmentation.properties[0].datacolumnPrimaryAlias }}</span>{{ $t('resultDescription.has') }}{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                  <span class="alias-name">{{ segmentation.properties[0].dataColumnPrimaryAlias }}</span>{{ $t('resultDescription.has') }}{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
                 </span>
                 <span
-                  v-else-if="segmentation.type === 'Datacolumn'"
+                  v-else-if="segmentation.type === 'DATA_COLUMN'"
                 >
-                  <span class="alias-name">{{ segmentation.properties[0].datacolumnPrimaryAlias }}<span v-if="segmentation.properties[0].isFeature">({{ $t('resultDescription.feature') }})</span></span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                  <span class="alias-name">{{ segmentation.properties[0].dataColumnPrimaryAlias }}<span v-if="segmentation.properties[0].isFeature">({{ $t('resultDescription.feature') }})</span></span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
                 </span>
                 <span
                   v-else-if="segmentation.type === 'NumRuleToken'"
@@ -52,14 +52,14 @@
                   <template
                     v-if="segmentation.properties"
                   >
-                    <span class="alias-name">{{ segmentation.properties[0].datacolumnPrimaryAlias }}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                    <span class="alias-name">{{ segmentation.properties[0].dataColumnPrimaryAlias }}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
                   </template>
                   <template v-else>
                     {{ $t(`segmentationToken.${segmentation.type}`) }}
                   </template>
                 </span>
                 <span
-                  v-else-if="segmentation.type === 'Datarow'"
+                  v-else-if="segmentation.type === 'DATA_ROW'"
                 >
                   {{ $t(`segmentationToken.${segmentation.type}`) }}
                 </span>
@@ -73,7 +73,7 @@
                     <span
                       v-for="(property, propertyIndex) in segmentation.properties"
                       :key="propertyIndex"
-                    >{{ property.datacolumnPrimaryAlias }}<span v-show="propertyIndex < segmentation.properties.length - 1">、</span></span>
+                    >{{ property.dataColumnPrimaryAlias }}<span v-show="propertyIndex < segmentation.properties.length - 1">、</span></span>
                   </div>
                   <b class="question-token">'{{ segmentation.matchedWord }}'</b>
                 </el-tooltip>
@@ -121,16 +121,38 @@ export default {
   computed: {
     // 哪些 segmentation 需要顯示
     displayStatusList () {
-      let standard = this.resultInfo.segmentationsList[0].sentence
+      let standard = this.resultInfo.segmentationList[0].sentence
       let statusList = []
       for (let i = 0; i < standard.length; i++) {
         statusList.push(false)
       }
+
       this.resultInfo.segmentationList.forEach(element => {
         element.sentence.forEach((segmentationElement, index) => {
-          if (standard[index] && segmentationElement.type === standard[index].type) {
-            if (segmentationElement.matchedWord !== standard[index].matchedWord) {
-              statusList[index] = true
+          if (segmentationElement.type === standard[index].type) {
+            switch (segmentationElement.type) {
+              case 'DATA_VALUE':
+                if (segmentationElement.dataFramePrimaryAlias !== standard[index].dataFramePrimaryAlias ||
+                  segmentationElement.dataColumnPrimaryAlias !== standard[index].dataColumnPrimaryAlias) {
+                  statusList[index] = true
+                }
+                break
+              case 'DATA_COLUMN':
+                if (segmentationElement.dataFramePrimaryAlias !== standard[index].dataFramePrimaryAlias ||
+                  segmentationElement.dataColumnPrimaryAlias !== standard[index].dataColumnPrimaryAlias ||
+                  segmentationElement.dataColumnId !== standard[index].dataColumnId) {
+                  statusList[index] = true
+                }
+                break
+              case 'DATA_ROW':
+                if (segmentationElement.dataFramePrimaryAlias !== standard[index].dataFramePrimaryAlias) {
+                  statusList[index] = true
+                }
+                break
+              default:
+                if (segmentationElement.matchedWord !== standard[index].matchedWord) {
+                  statusList[index] = true
+                }
             }
           } else {
             statusList[index] = true
@@ -177,10 +199,10 @@ export default {
     },
     tooltipContent (tokenInfo) {
       switch (tokenInfo.type) {
-        case 'Datavalue':
-        case 'Datacolumn':
-        case 'Datarow':
-          return this.$t('resultDescription.recognizeTo', {dataFrame: tokenInfo.properties[0].dataframePrimaryAlias, token: this.$t(`segmentationToken.${this.tokenInfo.type}`)}) + tokenInfo.matchedWord
+        case 'DATA_VALUE':
+        case 'DATA_COLUMN':
+        case 'DATA_ROW':
+          return this.$t('resultDescription.recognizeTo', {dataFrame: tokenInfo.properties[0].dataFramePrimaryAlias, token: this.$t(`segmentationToken.${this.tokenInfo.type}`)}) + tokenInfo.matchedWord
         default:
           return this.$t(`segmentationToken.${this.tokenInfo.type}`)
       }
@@ -259,13 +281,13 @@ export default {
         color: #FF9559;
       }
 
-      &.Datacolumn {
+      &.DATA_COLUMN {
         color: #44D2FF;
       }
       &.numeric {
         color: #CA66DA;
       }
-      &.Datavalue {
+      &.DATA_VALUE {
         color: #CA66DA;
       }
       &.DtToken, &.FuzzyDtToken, &.TimeScope, &.NumRuleToken {

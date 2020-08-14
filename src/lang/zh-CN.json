@@ -1649,6 +1649,12 @@
     "emptyString": "空字串"
   },
   "segmentationToken": {
+    "UNKNOWN": "无法辨识的词彙",
+    "DATA_COLUMN": "资料栏位",
+    "DATA_VALUE": "栏位资料",
+    "COLUMN_SET": "栏位组合",
+    "DATA_ROW": "资料列",
+    "AGGREGATE": "数据计算方式",
     "UnknownToken": "无法辨识的词彙",
     "Datacolumn": "资料栏位",
     "Datavalue": "栏位资料",
