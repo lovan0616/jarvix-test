@@ -229,8 +229,6 @@ export default {
   },
   mounted () {
     document.addEventListener('click', this.autoHide, false)
-    // 取得可以使用的 parser 語系
-    this.$store.dispatch('chatBot/getParserList')
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)

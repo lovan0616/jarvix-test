@@ -19,6 +19,16 @@ export default {
     tokenInfo: {
       type: Object,
       required: true
+    },
+    dataFrame: {
+      type: Object,
+      default () {
+        return {
+          dataFrameAlias: null,
+          dataFrameId: null,
+          dataFrameName: null
+        }
+      }
     }
   },
   computed: {
@@ -28,19 +38,23 @@ export default {
       switch (tokenInfo.type) {
         case 'COLUMN_SET':
           return this.$t('segmentationToken.ColumnSetToken', {
+            dataFrame: this.dataFrame.dataFrameAlias,
             matchedWord: tokenInfo.matchedWord
           })
         case 'DATA_VALUE':
           return this.$t('segmentationToken.DataValueToken', {
+            dataFrame: this.dataFrame.dataFrameAlias,
             matchedWord: tokenInfo.matchedWord
           })
         case 'DATA_COLUMN':
           return this.$t('segmentationToken.DataColumnToken', {
+            dataFrame: this.dataFrame.dataFrameAlias,
             matchedWord: tokenInfo.matchedWord
           })
         case 'NUMBER_RULE':
           if (tokenInfo.properties) {
             return this.$t('segmentationToken.NumRuleTokenHasProperty', {
+              dataFrame: this.dataFrame.dataFrameAlias,
               matchedWord: tokenInfo.matchedWord
             })
           } else {
@@ -48,7 +62,7 @@ export default {
           }
         case 'DATA_ROW':
           return this.$t('segmentationToken.DatarowToken', {
-            matchedWord: tokenInfo.matchedWord
+            dataFrame: this.dataFrame.dataFrameAlias
           })
         default:
           return this.$t(`segmentationToken.${tokenInfo.type}`)
@@ -68,7 +82,7 @@ export default {
     border-color: #FF9559;
   }
 
-  &.Datacolumn {
+  &.DATA_COLUMN {
     border-bottom: 1px solid #44D2FF;
 
     &:hover {
@@ -78,7 +92,7 @@ export default {
   &.numeric {
     border-color: #CA66DA;
   }
-  &.Datavalue {
+  &.DATA_VALUE {
     border-bottom: 1px solid #CA66DA;
 
     &:hover {
@@ -107,7 +121,7 @@ export default {
     @include tokenTooltip(#000);
   }
 
-  &.Datacolumn {
+  &.DATA_COLUMN {
     @include tokenTooltip(#44D2FF);
 
     &:after {
@@ -115,7 +129,7 @@ export default {
     }
   }
 
-  &.Datavalue {
+  &.DATA_VALUE {
     @include tokenTooltip(#CA66DA);
 
     &:after {

@@ -7,7 +7,15 @@
     >
       <div class="board-header">
         <div class="header-block">
-          <slot name="PageResultBoardHeader"/>
+          <result-board-header-v2
+            v-if="newParserMode"
+            :segmentation="segmentationPayload"
+          />
+          <result-board-header
+            v-else
+            :title="segmentationPayload.question"
+            :segmentation="segmentationPayload"
+          />
         </div>
         <div 
           v-if="isPinboardPage"
@@ -107,6 +115,8 @@
   </div>
 </template>
 <script>
+import ResultBoardHeader from './ResultBoardHeader'
+import ResultBoardHeaderV2 from './ResultBoardHeaderV2'
 import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
@@ -117,6 +127,8 @@ import { Message } from 'element-ui'
 export default {
   name: 'ResultBoard',
   components: {
+    ResultBoardHeader,
+    ResultBoardHeaderV2,
     PinboardDialog,
     ShareDialog,
     DecideDialog,
@@ -135,6 +147,10 @@ export default {
     restrictions: {
       type: Array,
       default: () => []
+    },
+    segmentationPayload: {
+      type: Object,
+      default: () => null
     }
   },
   data () {
@@ -172,6 +188,9 @@ export default {
     },
     isPersonalPinboard () {
       return this.$route.name === 'PersonalPagePinboardList'
+    },
+    newParserMode () {
+      return localStorage.getItem('newParser') === 'true'
     }
   },
   mounted () {
