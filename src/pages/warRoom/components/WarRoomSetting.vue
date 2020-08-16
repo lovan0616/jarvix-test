@@ -22,8 +22,14 @@
             {{ $t('warRoom.publishedName') }}
           </div>
           <input
+            v-validate="'required'"
             v-model="warRoomData.publishName"
+            name="warRoomName"
             class="input setting__block-text-input">
+          <div 
+            v-show="errors.has('warRoomName')"
+            class="error-text"
+          >{{ errors.first('warRoomName') }}</div>
         </div>
         <div class="setting__block">
           <div class="setting__block-title">
@@ -55,32 +61,34 @@
             >{{ errors.first('timeIntervalConstraint') }}</div>
           </div>
           <div
-            v-if="timeIntervalConstraint.active && timeIntervalConstraint.selectedTimeInterval === 'others'"
-            :class="{ 'has-error': errors.first('startTime') }"
+            v-if="warRoomData.displayDateRangeSwitch && selectedTimeInterval === 'others'"
             class="setting__block-date-field date-picker"
           >
             <div class="date-picker__container">
               <el-date-picker
-                v-model="timeIntervalConstraint.customTimeInterval.startTime"
+                v-validate="'required'"
+                v-model="warRoomData.customStartTime"
                 :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
-                :placeholder="'*' + $t('warRoom.startDate')"
+                :placeholder="$t('warRoom.startDate')"
                 :clearable="true"
+                :class="{ 'has-error': errors.first('startTime') }"
                 class="date-picker__item"
                 size="small"
                 type="date"
                 name="startTime"/>
               <div class="date-picker__seperator">-</div>
               <el-date-picker
-                v-model="timeIntervalConstraint.customTimeInterval.endTime"
+                v-model="warRoomData.customEndTime"
                 :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
-                :placeholder="$t('warRoom.endDate')"
+                :placeholder="'*' + $t('warRoom.endDate')"
                 :clearable="true"
                 class="date-picker__item"
                 size="small"
                 type="date"
                 name="endTime"/>
             </div>
-            <div 
+            <div
+              v-show="errors.has('startTime')"
               class="error-text"
             >{{ errors.first('startTime') }}</div>
             <div class="date-picker__reminder">{{ '*' + $t('warRoom.timeIntervalReminder') }}</div>
@@ -107,6 +115,11 @@
 
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
+import { Message } from 'element-ui'
+import {
+  updateWarRoomSetting,
+  deleteWarRoom
+} from '@/API/WarRoom'
 
 export default {
   name: 'WarRoomSetting',
@@ -135,27 +148,27 @@ export default {
       timeIntervalConstraint: {
         timeIntervalList: [
           {
-            value: '1Hour',
+            value: '1+Hour',
             name: this.$t('warRoom.inHours', { number: 1 })
           },
           {
-            value: '1Day',
+            value: '1+Day',
             name: this.$t('warRoom.inDays', { number: 1 })
           },
           {
-            value: '1Week',
+            value: '1+Week',
             name: this.$t('warRoom.inWeeks', { number: 1 })
           },
           {
-            value: '1Month',
+            value: '1+Month',
             name: this.$t('warRoom.inMonths', { number: 1 })
           },
           {
-            value: '1Season',
+            value: '1+Season',
             name: this.$t('warRoom.inSeasons', { number: 1 })
           },
           {
-            value: '1Year',
+            value: '1+Year',
             name: this.$t('warRoom.inYears', { number: 1 })
           },
           {
@@ -178,10 +191,15 @@ export default {
   },
   computed: {
     selectedTimeInterval () {
-      if (!this.warRoomData) return null
-      // 確認使用者是自訂時間區間或選擇預設選項
-      if (!this.warRoomData.customStartTime) return 'others'
-      return this.warRoomData.recentTimeIntervalAmount + this.warRoomData.recentTimeIntervalUnit
+      if (!this.warRoomData || !this.warRoomData.displayDateRangeSwitch) return null
+      
+      // 確認是否選擇預設區間
+      if (this.warRoomData.recentTimeIntervalAmount && this.warRoomData.recentTimeIntervalUnit) {
+        return `${this.warRoomData.recentTimeIntervalAmount}+${this.warRoomData.recentTimeIntervalUnit}`
+      }
+      
+      // 如果沒有選擇預設則為自訂區間
+      return 'others'
     }
   },
   mounted () {
@@ -189,13 +207,50 @@ export default {
   },
   methods: {
     saveSetting () {
-
+      this.$validator.validateAll().then(result => {
+        if (!result) return
+        this.isProcessing = true
+        const { war_room_id: warRoomId } = this.$route.params
+        updateWarRoomSetting(warRoomId, this.warRoomData)
+          .then(() => {
+            this.$emit('update:config-data', this.warRoomData)
+            this.$emit('close')
+          })
+          .finally(() => { this.isProcessing = false })
+      })
     },
     deleteWarRoom () {
-
+      const { war_room_id: warRoomId } = this.$route.params
+      this.isProcessing = true
+      deleteWarRoom(warRoomId)
+        .then(() => {
+          this.$router.push({ name: 'WarRoomList' })
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => { this.isProcessing = false })
     },
     updateTimeInterval (value) {
-    
+      const isDefaultTimeInterval = value.indexOf('+') !== -1
+
+      // 選擇自訂
+      if (!isDefaultTimeInterval) {
+        this.warRoomData.recentTimeIntervalAmount = null
+        this.warRoomData.recentTimeIntervalUnit = null
+        return
+      }
+
+      // 選擇預設時間區間
+      // 避免自訂欄位資料被清空觸發重新驗證，但欄位已經被 v-if 移除產生錯誤
+      this.$validator.detach('startTime')
+      this.warRoomData.recentTimeIntervalAmount = value.split('+')[0]
+      this.warRoomData.recentTimeIntervalUnit = value.split('+')[1]
+      this.warRoomData.customEndTime = null
+      this.warRoomData.customStartTime = null
     }
   }
 }
@@ -203,6 +258,12 @@ export default {
 
 <style lang="scss" scoped>
 .setting {
+  &__block-select {
+    /deep/ .el-input__inner {
+      border-bottom: 1px solid #FFFFFF;
+    }
+  }
+
   &__content {
     justify-content: space-between;
   }

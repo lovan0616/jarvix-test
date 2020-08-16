@@ -203,12 +203,12 @@ for (let i = 0; i < 6; i++) {
 
 const dummyWarRoom =  {
   "config": {
-    "customEndTime": "2020-08-14T08:30:15.626Z",
+    "customEndTime": null,
     "customStartTime": null,
     "displayDateRangeSwitch": true,
     "publishName": "string",
-    "recentTimeIntervalAmount": 1,
-    "recentTimeIntervalUnit": "Year"
+    "recentTimeIntervalAmount": null,
+    "recentTimeIntervalUnit": null,
   },
   "diagramTypeComponents": [
     {
