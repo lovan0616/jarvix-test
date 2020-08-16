@@ -163,6 +163,7 @@
     <component-setting
       v-if="isShowComponentSetting"
       :component-type="createdComponentType"
+      :data-source-pool="dataSourcePool"
       class="war-room__side-setting"
       @close="closeComponentSetting"
     />
@@ -213,19 +214,19 @@ const dummyWarRoom =  {
   "diagramTypeComponents": [
     {
       "componentId": 0,
-      "orderSequence": 0
+      "orderSequence": 3
     },
     {
       "componentId": 1,
-      "orderSequence": 0
+      "orderSequence": 2
     },
     {
       "componentId": 2,
-      "orderSequence": 0
+      "orderSequence": 1
     },
     {
       "componentId": 3,
-      "orderSequence": 0
+      "orderSequence": 4
     }
   ],
   "indexTypeComponents": [
@@ -241,6 +242,21 @@ const dummyWarRoom =  {
   "publishUpdaterName": "string",
   "urlIdentifier": "string",
   "warRoomId": 0
+}
+
+const dummyPool = {
+  "diagramTypeItems": [
+    {
+      "itemId": 0,
+      "question": "string"
+    }
+  ],
+  "indexTypeItems": [
+    {
+      "itemId": 0,
+      "question": "string"
+    }
+  ]
 }
 
 export default {
@@ -266,7 +282,8 @@ export default {
       warRoomBasicInfo: {},
       isEditingWarRoomName: false,
       tempWarRoomPublishedName: null,
-      isProcessing: false
+      isProcessing: false,
+      dataSourcePool: {}
     }
   },
   computed: {
@@ -305,11 +322,16 @@ export default {
         .then(([warRoomData, warRoomPoolData]) => {
           const { config, diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = dummyWarRoom
           this.warRoomConfig = config
-          this.chartComponent = diagramTypeComponents
-          this.numberComponent = indexTypeComponents
+          this.chartComponent = this.sortComponents(diagramTypeComponents)
+          this.numberComponent = this.sortComponents(indexTypeComponents)
           this.warRoomBasicInfo = warRoomBasicInfo
+          this.dataSourcePool = dummyPool
         })
         .catch(() => { this.isLoading = false })
+    },
+    sortComponents (componentList) {
+      componentList.sort((a, b) => a.orderSequence - b.orderSequence)
+      return componentList
     },
     addComponent (value) {
       if (this.isShowWarRoomSetting) this.closeWarRoomSetting()

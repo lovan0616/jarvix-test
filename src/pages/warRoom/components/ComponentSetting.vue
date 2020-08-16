@@ -25,13 +25,14 @@
             {{ $t('warRoom.displayName') }}
           </div>
           <input
-            v-model="componentName"
+            v-model="componentData.config.displayName"
             class="input setting__block-text-input">
         </div>
         <div class="setting__block">
           <div class="setting__block-title">
             {{ $t('warRoom.sourceData') }}
             <a
+              v-if="!componentData.componentId"
               href="javascript:void(0);" 
               class="link"
               @click="clearSelectedDataSource"
@@ -41,10 +42,11 @@
           </div>
           <div
             class="setting__block-choose"
-            @click="showComponentDataSourceList"
+            @click="componentData.componentId ? null : showComponentDataSourceList()"
           >
-            {{ componentDataSource.selectedDataSource.name || $t('warRoom.notChosen') }}
-            <svg-icon 
+            {{ selectedDataSource.name || $t('warRoom.notChosen') }}
+            <svg-icon
+              v-if="!componentData.componentId"
               icon-class="arrow-right" 
               class="icon"/>
           </div>
@@ -53,19 +55,19 @@
           <div class="setting__block-title">
             {{ $t('warRoom.updateFrequency') }}
             <el-switch
-              v-model="updateFrequency.active"
+              v-model="componentData.config.isAutoRefresh"
               :disabled="isProcessing"
               :width="Number('32')"
               active-color="#2AD2E2"
               inactive-color="#324B4E"/>
           </div>
           <div
-            v-if="updateFrequency.active"
+            v-if="componentData.config.isAutoRefresh"
             class="setting__block-select-field"
           >
             <default-select 
               v-validate="'required'"
-              v-model="updateFrequency.selectedBasicSchedule"
+              v-model="componentData.config.refreshFrequency"
               :option-list="updateFrequency.basicScheduleList"
               :placeholder="$t('warRoom.chooseUpdateFrequency')"
               :is-disabled="isProcessing"
@@ -82,24 +84,25 @@
           <div class="setting__block-title">
             {{ $t('warRoom.timeIntervalConstraint') }}
             <el-switch
-              v-model="timeIntervalConstraint.active"
+              v-model="componentData.config.displayDateRangeSwitch"
               :disabled="isProcessing"
               :width="Number('32')"
               active-color="#2AD2E2"
               inactive-color="#324B4E"/>
           </div>
           <div
-            v-if="timeIntervalConstraint.active"
+            v-if="componentData.config.displayDateRangeSwitch"
             class="setting__block-select-field"
           >
             <default-select 
               v-validate="'required'"
-              v-model="timeIntervalConstraint.selectedTimeInterval"
+              :value="selectedTimeInterval"
               :option-list="timeIntervalConstraint.timeIntervalList"
               :placeholder="$t('warRoom.chooseTimeInterval')"
               :is-disabled="isProcessing"
               class="setting__block-select"
               name="timeIntervalConstraint"
+              @change="updateTimeInterval"
             />
             <div 
               v-show="errors.has('timeIntervalConstraint')"
@@ -107,23 +110,23 @@
             >{{ errors.first('timeIntervalConstraint') }}</div>
           </div>
           <div
-            v-if="timeIntervalConstraint.active && timeIntervalConstraint.selectedTimeInterval === 'others'"
-            :class="{ 'has-error': errors.first('startTime') }"
+            v-if="componentData.config.displayDateRangeSwitch && selectedTimeInterval === 'others'"
             class="setting__block-date-field date-picker"
           >
             <div class="date-picker__container">
               <el-date-picker
-                v-model="timeIntervalConstraint.customTimeInterval.startTime"
+                v-model="componentData.config.customStartTime"
                 :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
                 :placeholder="'*' + $t('warRoom.startDate')"
                 :clearable="true"
+                :class="{ 'has-error': errors.first('startTime') }"
                 class="date-picker__item"
                 size="small"
                 type="date"
                 name="startTime"/>
               <div class="date-picker__seperator">-</div>
               <el-date-picker
-                v-model="timeIntervalConstraint.customTimeInterval.endTime"
+                v-model="componentData.config.customEndTime"
                 :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
                 :placeholder="$t('warRoom.endDate')"
                 :clearable="true"
@@ -142,21 +145,21 @@
           <div class="setting__block-title">
             {{ $t('warRoom.thresholdSetting') }}
             <el-switch
-              v-model="thresholdSetting.active"
+              v-model="componentData.config.boundSwitch"
               :disabled="isProcessing"
               :width="Number('32')"
               active-color="#2AD2E2"
               inactive-color="#324B4E"/>
           </div>
           <div
-            v-if="thresholdSetting.active"
+            v-if="componentData.config.boundSwitch"
             class="setting__block-text"
           >
             <label class="input setting__block-text-label">
               {{ $t('warRoom.maxThreshold') }}
             </label>
             <input
-              v-model="thresholdSetting.max"
+              v-model="componentData.config.upperBound"
               :placeholder="$t('warRoom.pleaseEnterValue')"
               name="maxThreshold"
               class="input setting__block-text-input">
@@ -164,7 +167,7 @@
               {{ $t('warRoom.minThreshold') }}
             </label>
             <input
-              v-model="thresholdSetting.min"
+              v-model="componentData.config.lowerBound"
               :placeholder="$t('warRoom.pleaseEnterValue')"
               name="minThreshold"
               class="input setting__block-text-input">
@@ -189,7 +192,7 @@
     <component-data-source-list
       v-if="isShowComponentDataSourceList"
       :component-type="componentType"
-      :data-souce-list="componentDataSource.dataSouceList"
+      :data-souce-list="dataSourcePool"
       @back="hideComponentDataSourceList"
       @select="updateSelectedDataSource"
     />
@@ -211,23 +214,47 @@ export default {
     componentType: {
       type: String,
       required: true
+    },
+    originalComponentData: {
+      type: Object,
+      default: () => ({
+        componentId: null,
+        config: {
+          boundSwitch: false,
+          customEndTime: null,
+          customStartTime: null,
+          displayDateRangeSwitch: false,
+          displayName: null,
+          isAutoRefresh: false,
+          lowerBound: null,
+          question: null,
+          recentTimeIntervalAmount: null,
+          recentTimeIntervalUnit: null,
+          refreshFrequency: null,
+          upperBound: null
+        },
+        diagramData: {},
+        diagramName: null,
+        orderSequence: null,
+        restriction: {},
+        selectedColumns: {}
+      })
+    },
+    dataSourcePool: {
+      type: Object,
+      default: () => ({
+        diagramTypeItems: [],
+        indexTypeItems: []
+      })
     }
   },
   data () {
     return {
-      componentName: '未命名標題',
+      componentData: {},
       isShowComponentDataSourceList: false,
-      componentDataSource: {
-        selectedDataSource: {},
-        dataSouceList: {
-          indexList: [],
-          diagramList: []
-        }
-      },
+      selectedDataSource: {},
       isProcessing: false,
       updateFrequency: {
-        active: false,
-        selectedBasicSchedule: null,
         basicScheduleList: [
           {
             value: '*/5 * * * *',
@@ -264,27 +291,29 @@ export default {
         ],
       },
       timeIntervalConstraint: {
-        active: false,
-        selectedTimeInterval: null,
         timeIntervalList: [
           {
-            value: '*/5 * * * *',
+            value: '1+Hour',
             name: this.$t('warRoom.inHours', { number: 1 })
           },
           {
-            value: '*/15 * * * *',
+            value: '1+Day',
             name: this.$t('warRoom.inDays', { number: 1 })
           },
           {
-            value: '*/30 * * * *',
+            value: '1+Week',
             name: this.$t('warRoom.inWeeks', { number: 1 })
           },
           {
-            value: '*/45 * * * *',
+            value: '1+Month',
             name: this.$t('warRoom.inMonths', { number: 1 })
           },
           {
-            value: '0 * * * *',
+            value: '1+Season',
+            name: this.$t('warRoom.inSeasons', { number: 1 })
+          },
+          {
+            value: '1+Year',
             name: this.$t('warRoom.inYears', { number: 1 })
           },
           {
@@ -302,13 +331,24 @@ export default {
             firstDayOfWeek: 1
           }
         }
-      },
-      thresholdSetting: {
-        active: false,
-        max: '',
-        min: ''
       }
     }
+  },
+  computed: {
+    selectedTimeInterval () {
+      if (!this.componentData || !this.componentData.config.displayDateRangeSwitch) return null
+      
+      // 確認是否選擇預設區間
+      if (this.componentData.config.recentTimeIntervalAmount && this.componentData.config.recentTimeIntervalUnit) {
+        return `${this.componentData.config.recentTimeIntervalAmount}+${this.componentData.config.recentTimeIntervalUnit}`
+      }
+      
+      // 如果沒有選擇預設則為自訂區間
+      return 'others'
+    }
+  },
+  mounted () {
+    this.componentData = JSON.parse(JSON.stringify(this.originalComponentData))
   },
   methods: {
     saveSetting () {
@@ -321,11 +361,29 @@ export default {
       this.isShowComponentDataSourceList = false
     },
     clearSelectedDataSource () {
-      this.componentDataSource.selectedDataSource = {}
+      this.selectedDataSource = {}
     },
     updateSelectedDataSource (item) {
-      this.componentDataSource.selectedDataSource = item
+      this.selectedDataSource = item
       this.hideComponentDataSourceList()
+    },
+    updateTimeInterval (value) {
+      const isDefaultTimeInterval = value.indexOf('+') !== -1
+
+      // 選擇自訂
+      if (!isDefaultTimeInterval) {
+        this.componentData.config.recentTimeIntervalAmount = null
+        this.componentData.config.recentTimeIntervalUnit = null
+        return
+      }
+
+      // 選擇預設時間區間
+      // 避免自訂欄位資料被清空觸發重新驗證，但欄位已經被 v-if 移除產生錯誤
+      this.$validator.detach('startTime')
+      this.componentData.config.recentTimeIntervalAmount = value.split('+')[0]
+      this.componentData.config.recentTimeIntervalUnit = value.split('+')[1]
+      this.componentData.config.customEndTime = null
+      this.componentData.config.customStartTime = null
     }
   }
 }
@@ -333,6 +391,12 @@ export default {
 
 <style lang="scss" scoped>
 .setting {
+  &__block-select {
+    /deep/ .el-input__inner {
+      border-bottom: 1px solid #FFFFFF;
+    }
+  }
+
   &__content {
     justify-content: space-between;
   }

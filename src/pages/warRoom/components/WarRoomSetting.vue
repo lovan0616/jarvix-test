@@ -143,7 +143,6 @@ export default {
   data () {
     return {
       warRoomData: null,
-      publishedName: '未命名戰情室',
       isProcessing: false,
       timeIntervalConstraint: {
         timeIntervalList: [
