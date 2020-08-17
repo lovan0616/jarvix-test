@@ -326,6 +326,8 @@
     "databaseType": "資料庫類型",
     "currentLoadedDataFrame": "目前讀取的資料表",
     "dataFrameContent": "資料表內容",
+    "currentDataContent": "當前資料內容",
+    "originalDataContent": "原始資料內容",
     "dataType": "資料類型",
     "chooseConnection": "選擇連線",
     "emptyConnection": "尚未建立任何連線",

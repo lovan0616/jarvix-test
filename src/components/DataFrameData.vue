@@ -1,74 +1,78 @@
 <template>
   <div class="data-frame-data">
-    <spinner
-      v-if="isLoading"
-    />
+    <spinner v-if="isLoading"/>
     <empty-info-block
       v-else-if="!isLoading && hasError"
-      :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
+      :msg="$t('message.systemIsError')"
     />
     <div 
       v-else
       class="board-body-section"
     >
       <div class="title">{{ $t('editing.dataFrameContent') }}</div>
-      <div class="overview">
-        <div class="overview__data">
-          <div class="overview__item">
-            {{ $t('resultDescription.totalDataRows') + ': ' + formatComma(dataFrameOverviewData.totalRows) }}
-          </div>
-          <div class="overview__item">
-            {{ $t('resultDescription.totalDataColumns') + ': ' + formatComma(dataFrameOverviewData.totalColumns) }}
+      <template v-if="dataSourceTableData && dataSourceTableData.columns.titles.length > 0">
+        <div class="overview">
+          <div class="overview__data">
+            <div class="overview__item">
+              {{ $t('resultDescription.totalDataRows') + ': ' + formatComma(dataFrameOverviewData.totalRows) }}
+            </div>
+            <div class="overview__item">
+              {{ $t('resultDescription.totalDataColumns') + ': ' + formatComma(dataFrameOverviewData.totalColumns) }}
+            </div>
           </div>
         </div>
-      </div>
-      <pagination-table
-        v-if="dataSourceTableData && dataSourceTableData.columns.titles.length > 0"
-        :is-processing="isProcessing"
-        :dataset="dataSourceTableData"
-        :pagination-info="pagination"
-        :min-column-width="'270px'"
-        fixed-index
-        @change-page="updatePage"
-      >
-        <template #columns-header="{ column, index }">
-          <div class="header-block">
-            <div class="header">
-              <span 
+        <pagination-table
+          v-if="dataSourceTableData && dataSourceTableData.columns.titles.length > 0"
+          :is-processing="isProcessing"
+          :dataset="dataSourceTableData"
+          :pagination-info="pagination"
+          :min-column-width="'270px'"
+          fixed-index
+          @change-page="updatePage"
+        >
+          <template #columns-header="{ column, index }">
+            <div class="header-block">
+              <div class="header">
+                <span 
+                  v-if="showColumnSummaryRow"
+                  class="icon"
+                >
+                  <el-tooltip
+                    slot="label"
+                    :enterable="false"
+                    :visible-arrow="false"
+                    :content="`${getStatesTypeName(index)}`"
+                    class="icon">
+                    <svg-icon :icon-class="getHeaderIcon(index)" />
+                  </el-tooltip>
+                </span>
+                <span class="text">
+                  <el-tooltip
+                    slot="label"
+                    :visible-arrow="false"
+                    :enterable="false"
+                    :content="`${column.titles[index]}`"
+                    placement="bottom-start">
+                    <span>{{ column.titles[index] }}</span>
+                  </el-tooltip>
+                </span>
+              </div>
+              <div
                 v-if="showColumnSummaryRow"
-                class="icon"
+                class="summary"
               >
-                <el-tooltip
-                  slot="label"
-                  :enterable="false"
-                  :visible-arrow="false"
-                  :content="`${getStatesTypeName(index)}`"
-                  class="icon">
-                  <svg-icon :icon-class="getHeaderIcon(index)" />
-                </el-tooltip>
-              </span>
-              <span class="text">
-                <el-tooltip
-                  slot="label"
-                  :visible-arrow="false"
-                  :enterable="false"
-                  :content="`${column.titles[index]}`"
-                  placement="bottom-start">
-                  <span>{{ column.titles[index] }}</span>
-                </el-tooltip>
-              </span>
+                <data-column-summary
+                  :summary-data="tableSummaryList[index]"
+                />
+              </div>
             </div>
-            <div
-              v-if="showColumnSummaryRow"
-              class="summary"
-            >
-              <data-column-summary
-                :summary-data="tableSummaryList[index]"
-              />
-            </div>
-          </div>
-        </template>
-      </pagination-table>
+          </template>
+        </pagination-table>
+      </template>
+      <empty-info-block
+        v-else
+        :msg="$t('message.noData')"
+      />
     </div>
     <!--欄位關聯概況-->
     <column-correlation-overview
@@ -236,9 +240,22 @@ export default {
 
   .board-body-section {
     .title {
-      margin-bottom: 13px;
+      position: relative;
+      margin-bottom: 16px;
+      margin-left: 16px;
       font-size: 20px;
       font-weight: 600;
+      &::before {
+        position: absolute;
+        top: 50%;
+        left: -12px;
+        transform: translateY(-50%);
+        content: '';
+        display: inline-block;
+        width: 6.44px;
+        height: 6px;
+        background: #2AD2E2;
+      }
     }
 
     &:not(:last-child) {
@@ -272,8 +289,9 @@ export default {
 }
 
 .overview {
-  margin-bottom: 10px;
+  margin-bottom: 17px;
   font-size: 14px;
+  color: #CCCCCC;
 
   &__data {
     display: flex;
