@@ -1659,6 +1659,7 @@
     "COLUMN_SET": "栏位组合",
     "DATA_ROW": "资料列",
     "AGGREGATE": "数据计算方式",
+    "OTHER": "其他词汇",
     "UnknownToken": "无法辨识的词彙",
     "Datacolumn": "资料栏位",
     "Datavalue": "栏位资料",

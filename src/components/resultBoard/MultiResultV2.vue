@@ -129,6 +129,7 @@ export default {
 
       this.resultInfo.segmentationList.forEach(element => {
         element.sentence.forEach((segmentationElement, index) => {
+          if (!standard[index]) return
           if (segmentationElement.type === standard[index].type) {
             switch (segmentationElement.type) {
               case 'DATA_VALUE':
