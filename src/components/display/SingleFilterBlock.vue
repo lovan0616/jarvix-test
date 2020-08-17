@@ -39,10 +39,6 @@
                 end: isNaN(sub_restraint.properties.end) ? sub_restraint.properties.end : roundNumber(sub_restraint.properties.end)
               }) }}
             </template>
-            <span
-              v-if="restraintsIndex < restraint.restraints.length - 1"
-              class="description__condition"
-            >〝</span>
           </div>
         </template>
         <template v-else>
