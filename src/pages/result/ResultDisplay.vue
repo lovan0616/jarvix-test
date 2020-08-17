@@ -165,7 +165,7 @@ export default {
           }).then(res => {
             this.$store.commit('dataSource/setCurrentQuestionInfo', null)
             this.getComponentV2(res)
-            this.getRelatedQuestion(res.resultId)
+            // this.getRelatedQuestion(res.resultId)
           }).catch(() => {
             this.isLoading = false
             this.$store.commit('chatBot/updateAnalyzeStatus', false)
@@ -181,7 +181,7 @@ export default {
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.getComponent(res)
-          this.getRelatedQuestion(res.resultId)
+          // this.getRelatedQuestion(res.resultId)
         }).catch(() => {
           this.isLoading = false
           this.$store.commit('chatBot/updateAnalyzeStatus', false)
@@ -229,7 +229,7 @@ export default {
                 selectedColumnList: this.selectedColumnList
               }).then(res => {
                 this.getComponentV2(res)
-                this.getRelatedQuestion(res.resultId)
+                // this.getRelatedQuestion(res.resultId)
               }).catch((error) => {
                 if (error.constructor.name !== 'Cancel') this.isLoading = false
               })
@@ -274,7 +274,7 @@ export default {
               selectedColumnList: this.selectedColumnList
             }).then(res => {
               this.getComponent(res)
-              this.getRelatedQuestion(res.resultId)
+              // this.getRelatedQuestion(res.resultId)
             }).catch((error) => {
               if (error.constructor.name !== 'Cancel') this.isLoading = false
             })
