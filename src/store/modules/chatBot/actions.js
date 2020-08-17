@@ -67,8 +67,9 @@ export default {
   getQuickStartQuestion({ rootState, rootGetters }, dataSourceIdData) {
     const dataSourceId = rootState.dataSource.dataSourceId || dataSourceIdData
     const dataFrameId = rootGetters['dataSource/currentDataFrameId']
+    const selectedColumnList = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
     const restrictions = rootGetters['dataSource/filterRestrictionList']
-    return getQuickStartQuestion(dataSourceId, dataFrameId, restrictions)
+    return getQuickStartQuestion(dataSourceId, dataFrameId, restrictions, selectedColumnList)
   },
   cancelRequest () {
     if (typeof cancelFunction === 'function') {
