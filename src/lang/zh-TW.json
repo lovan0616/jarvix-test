@@ -328,6 +328,8 @@
     "dataFrameContent": "資料表內容",
     "currentDataContent": "當前資料內容",
     "originalDataContent": "原始資料內容",
+    "currentDataContentReminder": "資料內容受到欄位和條件篩選影響",
+    "originalDataContentReminder": "資料內容不受欄位和條件篩選影響",
     "dataType": "資料類型",
     "chooseConnection": "選擇連線",
     "emptyConnection": "尚未建立任何連線",
