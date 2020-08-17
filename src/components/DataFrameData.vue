@@ -236,9 +236,22 @@ export default {
 
   .board-body-section {
     .title {
-      margin-bottom: 13px;
+      position: relative;
+      margin-bottom: 16px;
+      margin-left: 16px;
       font-size: 20px;
       font-weight: 600;
+      &::before {
+        position: absolute;
+        top: 50%;
+        left: -12px;
+        transform: translateY(-50%);
+        content: '';
+        display: inline-block;
+        width: 6.44px;
+        height: 6px;
+        background: #2AD2E2;
+      }
     }
 
     &:not(:last-child) {
@@ -272,8 +285,9 @@ export default {
 }
 
 .overview {
-  margin-bottom: 10px;
+  margin-bottom: 17px;
   font-size: 14px;
+  color: #CCCCCC;
 
   &__data {
     display: flex;
