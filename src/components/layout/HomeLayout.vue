@@ -100,7 +100,7 @@ export default {
     position: absolute;
     top: $header-height + $chat-room-height;
     right: 0;
-    background: rgba(0, 0, 0, 0.83);
+    background: rgba(0, 0, 0, 0.89);
     overflow: auto;
     padding: 40px;
     z-index: 3;
