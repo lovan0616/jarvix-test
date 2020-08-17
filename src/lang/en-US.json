@@ -1659,6 +1659,7 @@
     "COLUMN_SET": "Column Set",
     "DATA_ROW": "Data Row",
     "AGGREGATE": "Data Calculation Method",
+    "OTHER": "Other Vocabulary",
     "UnknownToken": "Unrecognized Word",
     "Datacolumn": "Data Column",
     "Datavalue": "Data Value",
