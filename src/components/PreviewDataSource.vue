@@ -1,10 +1,8 @@
 <template>
   <div class="page-preview-bookmark">
     <template v-if="dataSourceId">
-      <div
-        v-if="mode === 'display'"
-        class="bookmark-header">
-        {{ $t('resultDescription.dataSourceIntro') }}
+      <div class="bookmark-header">
+        {{ mode === 'popup' ? $t('editing.originalDataContent') : $t('editing.currentDataContent') }}
       </div>
       <div class="result-board">
         <spinner
@@ -198,7 +196,6 @@ export default {
     font-weight: 600;
     font-size: 24px;
     line-height: 32px;
-    margin-bottom: 24px;
   }
 
   .dataset-info {
@@ -246,20 +243,18 @@ export default {
 }
 
 .result-board {
+  background: transparent;
   .board-header {
+    margin-top: 24px;
     border-top: unset;
     padding: 0;
   }
   
   .board-body {
-    padding: 16px 24px;
+    padding: 23px 0;
 
     &.is-loading {
       padding: 0 24px;
-    }
-
-    &.is-previewing {
-      padding: 16px 0;
     }
   }
 

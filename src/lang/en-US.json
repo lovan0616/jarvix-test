@@ -326,6 +326,8 @@
     "databaseType": "Database Type",
     "currentLoadedDataFrame": "Current Data Set",
     "dataFrameContent": "Data Profiling",
+    "currentDataContent": "Current Data Profiling",
+    "originalDataContent": "Original Data Profiling",
     "dataType": "DataType",
     "chooseConnection": "choose connection",
     "emptyConnection": "No connection has been established",

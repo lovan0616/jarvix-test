@@ -97,10 +97,12 @@ export default {
   },
   methods: {
     toggleAllColumns (isTargetSelectAll) {
+      const searchedColumn = this.searchedColumn.toLowerCase()
       const updatedTempColumnList = this.tempColumnList.map(column => {
+        const columnName = column.name.toLowerCase()
         return ({
           ...column,
-          isSelected: isTargetSelectAll
+          ...(columnName.includes(searchedColumn) && { isSelected: isTargetSelectAll })
         })
       })
       this.$emit('update:tempColumnList', updatedTempColumnList)
