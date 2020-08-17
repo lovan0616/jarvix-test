@@ -23,6 +23,7 @@
       :restrictions="restrictInfo"
       :segmentation-payload="segmentationPayload"
       :transcript="transcript"
+      mode="display"
     />
     <div
       v-if="relatedQuestionList.length > 0" 
