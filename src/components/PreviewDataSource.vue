@@ -3,6 +3,13 @@
     <template v-if="dataSourceId">
       <div class="bookmark-header">
         {{ mode === 'popup' ? $t('editing.originalDataContent') : $t('editing.currentDataContent') }}
+        <span class="tooltip-container">
+          <svg-icon
+            class="icon"
+            icon-class="information-circle"
+          />
+          <div class="tooltip">{{ mode === 'popup' ? $t('editing.originalDataContentReminder') : $t('editing.currentDataContentReminder') }}</div>
+        </span>
       </div>
       <div class="result-board">
         <spinner
@@ -196,6 +203,22 @@ export default {
     font-weight: 600;
     font-size: 24px;
     line-height: 32px;
+  }
+
+  .tooltip-container {
+    z-index: 1;
+    .tooltip {
+      width: 190px;
+      text-align: center;
+      white-space: normal;
+      padding: 8px;
+      line-height: 14px;
+      color: #DDDDDD;
+    }
+
+    .icon {
+      color: $theme-color-warning;
+    }
   }
 
   .dataset-info {

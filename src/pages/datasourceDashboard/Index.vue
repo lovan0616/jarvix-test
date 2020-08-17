@@ -28,6 +28,7 @@ export default {
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
@@ -39,6 +40,18 @@ export default {
     dataFrameId (newValue) {
       this.quickStartQuestionList = []
       if (newValue) this.getQuickQuestionList()
+    },
+    askCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (
+          // 初次開啟設定時不觸發
+          (oldValue.isInit === false && oldValue.columnList === null) 
+          // 切換 dataframe 清空設定時不觸發
+          || newValue.isInit === false
+        ) return
+        this.getQuickQuestionList()
+      }
     }
   },
   created() {
