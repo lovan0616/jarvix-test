@@ -131,6 +131,10 @@ export default {
       min-width: 0;
       flex: 1;
       margin-right: 32px;
+
+      /deep/ .task:not(:first-child) {
+        padding-top: 30px;
+      }
     }
 
     .basic-info-container {
