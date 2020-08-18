@@ -11,6 +11,7 @@
           :key="index"
           :token-info="tokenInfo"
           :data-frame="segmentation.transcript.dataFrame"
+          :style="enMargin"
         />
       </div>
     </div>
@@ -18,6 +19,7 @@
 </template>
 <script>
 import QuestionNameTokenV2 from './QuestionNameTokenV2'
+import { mapState } from 'vuex'
 
 export default {
   name: 'ResultBoardHeaderV2',
@@ -28,6 +30,16 @@ export default {
     segmentation: {
       type: Object,
       default: () => ({})
+    }
+  },
+  computed: {
+    ...mapState('chatBot', ['parserLanguage']),
+    ...mapState('setting', ['locale']),
+    enMargin () {
+      if (this.parserLanguage === 'EN_US' || this.locale === 'en-US') {
+        return {'margin-right': '10px'}
+      }
+      return null
     }
   }
 }

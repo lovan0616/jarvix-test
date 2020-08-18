@@ -126,14 +126,15 @@ export function getRelatedQuestionList(resultId, dataSourceId) {
 /**
  * get quick start question
  */
-export function getQuickStartQuestion(dataSourceId, dataFrameId, restrictions) {
+export function getQuickStartQuestion(dataSourceId, dataFrameId, restrictions, selectedColumnList = null) {
   return request({
     url: `/ask/quickQuestionList/search`,
     method: 'POST',
     data: {
       dataSourceId, 
       dataFrameId,
-      restrictions
+      restrictions,
+      selectedColumnList
     }
   })
 }
