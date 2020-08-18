@@ -60,7 +60,7 @@ export default {
     return null
   },
   getDataFrameName (state) {
-    if (state.dataSourceId) {
+    if (state.dataSourceId && state.dataSourceList.length > 0) {
       if (state.dataFrameId === 'all') {
         return state.dataFrameId
       }
