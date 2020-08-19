@@ -145,7 +145,10 @@ export default {
       ))
     },
     selectedMenuIndex () {
-      return `${this.getDataSourceIndex}-${this.getDataFrameIndex}`
+      if (this.getDataSourceIndex > -1 && this.getDataFrameIndex > -1) {
+        return `${this.getDataSourceIndex}-${this.getDataFrameIndex}`
+      }
+      return null
     },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
