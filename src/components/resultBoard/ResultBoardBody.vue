@@ -7,6 +7,7 @@
       class="chart-container"
     >
       <button
+        v-if="$slots.InsightBasicInfo" 
         v-show="isShowSettingBox && hasBasicInfo"
         :class="{ active: showBasicInfo }"
         type="button"
@@ -17,6 +18,7 @@
         <slot name="PageResultBoardChart"/>
       </div>
       <slot-dialog
+        v-if="$slots.InsightBasicInfo" 
         v-show="(showBasicInfo || !isShowSettingBox) && hasBasicInfo"
         :show="showBasicInfo"
         class="basic-info-container"

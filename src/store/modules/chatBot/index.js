@@ -12,7 +12,7 @@ export default {
     doClickCorrelation: false,
     parserLanguage: null,
     parserLanguageList: [],
-    hasBasicInfo: true,
+    hasBasicInfo: false,
   },
   actions,
   mutations,
