@@ -221,9 +221,18 @@ export default {
     appQuestion (value) {
       this.copyQuestion(value)
     },
-    dataSourceId (value, oldValue) {
-      if (!oldValue) return
-      this.userQuestion = null
+    '$route' (to, from) {
+      // 透過 geodown 切換 dataframe 時不清空問句 input
+      if (from.name === 'PageResult' && to.name === 'PageResult') return
+
+      // 其他情況切換 datasource 或 dataframe 時會觸發回首頁，此變化才清空問句 input
+      if (
+        (to.query.dataSourceId).toString() !== (from.query.dataSourceId).toString()
+        || (to.query.dataFrameId).toString() !== (from.query.dataFrameId).toString()
+      ) {
+        this.userQuestion = null
+        this.closeHelper()
+      }
     }
   },
   mounted () {

@@ -99,7 +99,7 @@ export default {
       background-color: rgba(202, 102, 218, 0.7);
     }
   }
-  &.DtToken, &.FuzzyDtToken, &.TimeScope, &.NumRuleToken {
+  &.DtToken, &.FuzzyDtToken, &.TimeScope, &.NumRuleToken, &.TIME_SCOPE, &.DATE_RANGE, &.NUMBER_RULE {
     border-bottom: 1px solid #FF9559;
 
     &:hover {
@@ -137,7 +137,7 @@ export default {
     }
   }
 
-  &.DtToken, &.FuzzyDtToken, &.TimeScope {
+  &.DtToken, &.FuzzyDtToken, &.TimeScope, &.TIME_SCOPE, &.DATE_RANGE, &.NUMBER_RULE {
     @include tokenTooltip(#FF9559);
 
     &:after {

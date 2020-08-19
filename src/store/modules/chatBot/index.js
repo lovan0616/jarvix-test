@@ -11,7 +11,8 @@ export default {
     doDrillDown: false,
     doClickCorrelation: false,
     parserLanguage: null,
-    parserLanguageList: []
+    parserLanguageList: [],
+    hasBasicInfo: false,
   },
   actions,
   mutations,

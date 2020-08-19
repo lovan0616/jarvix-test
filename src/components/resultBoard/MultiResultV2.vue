@@ -47,7 +47,7 @@
                   <span class="alias-name">{{ segmentation.properties[0].dataColumnPrimaryAlias }}<span v-if="segmentation.properties[0].isFeature">({{ $t('resultDescription.feature') }})</span></span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
                 </span>
                 <span
-                  v-else-if="segmentation.type === 'NumRuleToken'"
+                  v-else-if="segmentation.type === 'NUMBER_RULE'"
                 >
                   <template
                     v-if="segmentation.properties"
@@ -171,9 +171,7 @@ export default {
     },
     isMeaningFul (value) {
       switch (value) {
-        case 'IgnoreToken':
-        case 'PossessionToken':
-        case 'ConjunctionToken':
+        case 'IGNORE':
           return false
         default:
           return true
@@ -181,18 +179,7 @@ export default {
     },
     isIntend (value) {
       switch (value) {
-        case 'IntroductionToken':
-        case 'GenericToken':
-        case 'ComparisonToken':
-        case 'TrendToken':
-        case 'PredictionToken':
-        case 'RootCauseToken':
-        case 'PivotTableToken':
-        case 'ProportionToken':
-        case 'CorrelationToken':
-        case 'CorrExplorationToken':
-        case 'CorrVerificationToken':
-        case 'DiffExplorationToken':
+        case 'DENOTATION':
           return true
         default:
           return false

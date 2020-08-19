@@ -39,24 +39,31 @@ export default {
   },
   methods: {
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox', 'setDisplaySection']),
+    openSettingBox() {
+      if (this.$route.name === 'PageResult') {
+        this.setDisplaySection('filter')
+        if (!this.isShowSettingBox) this.toggleSettingBox(true)
+      }
+    },
     async save () {
       // 如果 store 中的 dataframe id 與當前結果的 dataframe 不同須先切換
       if (this.currentQuestionDataFrameId !== this.dataFrameId) {
         await this.$store.dispatch('dataSource/changeDataFrameById', this.currentQuestionDataFrameId )
         // 更新 URL 中的 dataframe id
-        this.$router.replace({
+        return this.$router.replace({
           name: 'PageResult',
           params: this.$route.params,
           query: {
             ...this.$route.query,
             dataFrameId: String(this.currentQuestionDataFrameId)
           }
+        }, () => {
+          // 確保 URL 更新完成才開啟，避免開啟時 dataFrameId 仍為 all
+          this.openSettingBox()
+          this.$emit('save')
         })
       }
-      if (this.$route.name === 'PageResult') {
-        this.setDisplaySection('filter')
-        if (!this.isShowSettingBox) this.toggleSettingBox(true)
-      }
+      this.openSettingBox()
       this.$emit('save')
     },
   }
