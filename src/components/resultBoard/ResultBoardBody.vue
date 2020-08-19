@@ -6,10 +6,8 @@
       :class="{ 'is-open': isShowSettingBox }"
       class="chart-container"
     >
-      <!-- <QuestionAnalysisAlert/> -->
-      <button 
-        v-if="$slots.InsightBasicInfo" 
-        v-show="isShowSettingBox"
+      <button
+        v-show="isShowSettingBox && hasBasicInfo"
         :class="{ active: showBasicInfo }"
         type="button"
         class="btn-m btn-default control-btn"
@@ -18,9 +16,8 @@
       <div class="chart-block">
         <slot name="PageResultBoardChart"/>
       </div>
-      <slot-dialog 
-        v-if="$slots.InsightBasicInfo"
-        v-show="showBasicInfo || !isShowSettingBox"
+      <slot-dialog
+        v-show="(showBasicInfo || !isShowSettingBox) && hasBasicInfo"
         :show="showBasicInfo"
         class="basic-info-container"
         @close="closeBasicInfoDialog"
@@ -46,14 +43,12 @@
 </template>
 <script>
 import SlotDialog from '@/components/dialog/SlotDialog'
-import QuestionAnalysisAlert from './QuestionAnalysisAlert'
 import { mapState } from 'vuex'
 
 export default {
   name: 'ResultBoardBody',
   components: {
-    SlotDialog,
-    QuestionAnalysisAlert
+    SlotDialog
   },
   data () {
     return {
@@ -62,6 +57,7 @@ export default {
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
+    ...mapState('chatBot', ['hasBasicInfo']),
     isShowInsightRecommended () {
       return Object.prototype.hasOwnProperty.call(this.$slots, 'InsightRecommended')
     }
