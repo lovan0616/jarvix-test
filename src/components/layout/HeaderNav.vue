@@ -69,7 +69,7 @@
           class="nav-item">{{ $t('nav.projectPinboard') }}</router-link>
       </template>
     </section>
-    <section class="nav-right">
+    <!-- <section class="nav-right">
       <router-link
         v-if="isShowFunctionDescription"
         :to="{ name: 'FunctionDescription', params: { 'account_id': accountId } }"
@@ -80,7 +80,7 @@
           class="icon icon-description"/>
         {{ $t('nav.helper') }}
       </router-link>
-    </section>
+    </section> -->
   </nav>
 </template>
 <script>
@@ -110,9 +110,9 @@ export default {
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
-    isShowFunctionDescription () {
-      return this.$store.state.setting.locale.includes('zh')
-    },
+    // isShowFunctionDescription () {
+    //   return this.$store.state.setting.locale.includes('zh')
+    // },
     groupName () {
       return this.$store.getters['userManagement/getCurrentGroupName']
     },
