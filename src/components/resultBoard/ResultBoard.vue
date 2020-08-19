@@ -8,12 +8,6 @@
       <div class="board-header">
         <div class="header-block">
           <result-board-header-v2
-            v-if="newParserMode"
-            :segmentation="segmentationPayload"
-          />
-          <result-board-header
-            v-else
-            :title="segmentationPayload.question"
             :segmentation="segmentationPayload"
           />
         </div>
@@ -188,9 +182,6 @@ export default {
     },
     isPersonalPinboard () {
       return this.$route.name === 'PersonalPagePinboardList'
-    },
-    newParserMode () {
-      return localStorage.getItem('newParser') === 'true'
     }
   },
   mounted () {

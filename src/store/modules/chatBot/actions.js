@@ -1,4 +1,4 @@
-import { askQuestion, askQuestionV2, askResult, askResultV2, getComponentList, getComponentListV2, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
+import { askQuestionV2, askResultV2, getComponentListV2, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
 const CancelToken = axios.CancelToken
@@ -18,45 +18,22 @@ export default {
       selectedColumnList: rootGetters['dataFrameAdvanceSetting/selectedColumnList']
     }
 
-    if (localStorage.getItem('newParser') === 'true') {
-      return askQuestionV2({...askCondition, language: state.parserLanguage}, new CancelToken(function executor (c) {
-        // An executor function receives a cancel function as a parameter
-        cancelFunction = c
-      }))
-    } else {
-      return askQuestion(askCondition, new CancelToken(function executor (c) {
-        // An executor function receives a cancel function as a parameter
-        cancelFunction = c
-      }))
-    }
-
-    
+    return askQuestionV2({...askCondition, language: state.parserLanguage}, new CancelToken(function executor (c) {
+      // An executor function receives a cancel function as a parameter
+      cancelFunction = c
+    }))
   },
   askResult ({dispatch}, data) {
-    if (localStorage.getItem('newParser') === 'true') {
-      return askResultV2(data, new CancelToken(function executor (c) {
-        // An executor function receives a cancel function as a parameter
-        cancelFunction = c
-      }))
-    } else {
-      return askResult(data, new CancelToken(function executor (c) {
-        // An executor function receives a cancel function as a parameter
-        cancelFunction = c
-      }))
-    }
+    return askResultV2(data, new CancelToken(function executor (c) {
+      // An executor function receives a cancel function as a parameter
+      cancelFunction = c
+    }))
   },
   getComponentList ({dispatch, state}, data) {
-    if (localStorage.getItem('newParser') === 'true') {
-      return getComponentListV2(data, new CancelToken(function executor (c) {
-        // An executor function receives a cancel function as a parameter
-        cancelFunction = c
-      }))
-    } else {
-      return getComponentList(data, new CancelToken(function executor (c) {
-        // An executor function receives a cancel function as a parameter
-        cancelFunction = c
-      }))
-    }
+    return getComponentListV2(data, new CancelToken(function executor (c) {
+      // An executor function receives a cancel function as a parameter
+      cancelFunction = c
+    }))
   },
   getComponentData ({dispatch}, data) {
     return getComponentData(data)
