@@ -191,6 +191,8 @@ export default {
               this.isLoading = false
               break
           }
+        }).catch(() => {
+          this.isLoading = false
         })
     },
     getResult (pinboardId) {
