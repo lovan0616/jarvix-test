@@ -1660,6 +1660,8 @@
     "DATA_ROW": "資料列",
     "AGGREGATE": "數據計算方式",
     "OTHER": "其他詞彙",
+    "TIME_SCOPE": "時間範圍",
+    "DATE_RANGE": "時間範圍",
     "UnknownToken": "無法辨識的詞彙",
     "Datacolumn": "資料欄位",
     "Datavalue": "欄位資料",

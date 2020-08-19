@@ -1660,6 +1660,8 @@
     "DATA_ROW": "Data Row",
     "AGGREGATE": "Data Calculation Method",
     "OTHER": "Other Vocabulary",
+    "TIME_SCOPE": "Time Scope",
+    "DATE_RANGE": "Time Range",
     "UnknownToken": "Unrecognized Word",
     "Datacolumn": "Data Column",
     "Datavalue": "Data Value",
