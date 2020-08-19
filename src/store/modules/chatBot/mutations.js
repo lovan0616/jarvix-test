@@ -43,5 +43,8 @@ export default {
   },
   setParserLanguage (state, data) {
     state.parserLanguage = data
+  },
+  updateHasBasicInfo (state, data) {
+    state.hasBasicInfo = data
   }
 }

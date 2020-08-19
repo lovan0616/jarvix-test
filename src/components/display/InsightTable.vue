@@ -135,18 +135,10 @@
       >{{ commentInfo }}</div>
     </div>
   </div>
-  <empty-info-block
-    v-else
-  />
 </template>
 <script>
-import EmptyInfoBlock from '@/components/EmptyInfoBlock'
-
 export default {
   name: 'InsightTable',
-  components: {
-    EmptyInfoBlock
-  },
   props: {
     info: {
       type: Object,
@@ -158,20 +150,15 @@ export default {
   data () {
     return {
       basicInfo: [],
-      activeTab: null
-    }
-  },
-  computed: {
-    isEmpty () {
-      return this.info &&
-        this.info.cTable.length === 0 &&
-        this.info.nTable.length === 0
+      activeTab: null,
+      isEmpty: this.info && this.info.cTable.length === 0 && this.info.nTable.length === 0
     }
   },
   mounted () {
     this.basicInfo = this.info.nTable.concat(this.info.cTable)
-    this.activeTab = this.basicInfo[0].name
-  },
+    if (this.basicInfo.length > 0) this.activeTab = this.basicInfo[0].name
+    this.$store.commit('chatBot/updateHasBasicInfo', !this.isEmpty)
+  }
 }
 </script>
 <style lang="scss" scoped>
