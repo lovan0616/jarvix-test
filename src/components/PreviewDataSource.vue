@@ -263,37 +263,40 @@ export default {
       padding: 10px;
     }
   }
+
+  .result-board {
+    background: transparent;
+    .board-header {
+      margin-top: 24px;
+      border-top: unset;
+      padding: 0;
+      background-color: transparent;
+    }
+                                                                                                                                                                  
+    .board-body {
+      padding: 23px 0;
+
+      &.is-loading {
+        padding: 0 24px;
+      }
+    }
+
+    .overview {
+      margin-bottom: 10px;
+      font-size: 14px;
+
+      &__data {
+        display: flex;
+      }
+
+      &__item {
+        margin-right: 45px;
+      }
+    }
+  }
 }
 
-.result-board {
-  background: transparent;
-  .board-header {
-    margin-top: 24px;
-    border-top: unset;
-    padding: 0;
-  }
-  
-  .board-body {
-    padding: 23px 0;
 
-    &.is-loading {
-      padding: 0 24px;
-    }
-  }
-
-  .overview {
-    margin-bottom: 10px;
-    font-size: 14px;
-
-    &__data {
-      display: flex;
-    }
-
-    &__item {
-      margin-right: 45px;
-    }
-  }
-}
 
 /deep/ .el-tabs {
   width: 100%;

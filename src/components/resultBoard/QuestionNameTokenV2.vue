@@ -1,7 +1,7 @@
 <template>
   <el-tooltip 
     :tabindex="999"
-    :popper-class="tokenInfo.type"
+    :popper-class="`${tokenInfo.type} name-token-tooltip`"
     :hide-after="0"
     placement="bottom"
   >
@@ -14,7 +14,7 @@
 </template>
 <script>
 export default {
-  name: 'QuestionNameToken',
+  name: 'QuestionNameTokenV2',
   props: {
     tokenInfo: {
       type: Object,
@@ -38,23 +38,23 @@ export default {
       switch (tokenInfo.type) {
         case 'COLUMN_SET':
           return this.$t('segmentationToken.ColumnSetToken', {
-            dataFrame: this.dataFrame.dataFrameAlias,
+            dataFrame: tokenInfo.dataFramePrimaryAlias,
             matchedWord: tokenInfo.matchedWord
           })
         case 'DATA_VALUE':
           return this.$t('segmentationToken.DataValueToken', {
-            dataFrame: this.dataFrame.dataFrameAlias,
+            dataFrame: tokenInfo.dataFramePrimaryAlias,
             matchedWord: tokenInfo.matchedWord
           })
         case 'DATA_COLUMN':
           return this.$t('segmentationToken.DataColumnToken', {
-            dataFrame: this.dataFrame.dataFrameAlias,
+            dataFrame: tokenInfo.dataFramePrimaryAlias,
             matchedWord: tokenInfo.matchedWord
           })
         case 'NUMBER_RULE':
           if (tokenInfo.properties) {
             return this.$t('segmentationToken.NumRuleTokenHasProperty', {
-              dataFrame: this.dataFrame.dataFrameAlias,
+              dataFrame: tokenInfo.dataFramePrimaryAlias,
               matchedWord: tokenInfo.matchedWord
             })
           } else {
@@ -62,7 +62,7 @@ export default {
           }
         case 'DATA_ROW':
           return this.$t('segmentationToken.DatarowToken', {
-            dataFrame: this.dataFrame.dataFrameAlias
+            dataFrame: tokenInfo.dataFramePrimaryAlias
           })
         default:
           return this.$t(`segmentationToken.${tokenInfo.type}`)
@@ -109,7 +109,7 @@ export default {
 }
 </style>
 <style lang="scss">
-.el-tooltip__popper {
+.el-tooltip__popper.name-token-tooltip {
   box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);
   border-radius: 8px;
   padding: 5px 8px;
