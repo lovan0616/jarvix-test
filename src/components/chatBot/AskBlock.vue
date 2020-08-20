@@ -12,9 +12,9 @@
         class="user-question-block"
       >
         <default-select
-          v-if="newParserMode"
           v-model="selectParser"
           :option-list="languageList"
+          class="parser-select"
         />
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
         <input 
@@ -121,9 +121,6 @@ export default {
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
-    newParserMode () {
-      return localStorage.getItem('newParser') === 'true'
-    },
     languageList () {
       return this.parserLanguageList.map(option => {
         return {
@@ -388,12 +385,19 @@ export default {
   .ask-block {
     position: relative;
     height: 100%;
+    display: flex;
+  }
+
+  .parser-select {
+    width: 140px;
   }
 
   .user-question-block {
     display: flex;
     align-items: center;
     width: calc(100% - 54px);
+    margin-right: 16px;
+    padding-right: 16px;
     background-color: #1D2424;
     border: 1px solid #1D2424;
     border-radius: 5px;
@@ -462,9 +466,6 @@ export default {
   }
 
   .ask-remark-block {
-    position: absolute;
-    right: 0;
-    top: 0;
     font-size: 16px;
     height: 40px;
     width: 40px;
@@ -472,7 +473,6 @@ export default {
     letter-spacing: 0.05em;
     border: 1px solid #2D3033;
     border-radius: 5px;
-    margin-left: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
