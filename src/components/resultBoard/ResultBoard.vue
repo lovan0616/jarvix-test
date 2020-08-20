@@ -7,11 +7,18 @@
     >
       <div class="board-header">
         <div class="header-block">
+          <!-- 這邊要注意因為 pinboard 會有舊的 segmentation -->
+          <result-board-header
+            v-if="segmentationPayload.question"
+            :title="segmentationPayload.question"
+            :segmentation="segmentationPayload"
+          />
           <result-board-header-v2
+            v-else
             :segmentation="segmentationPayload"
           />
         </div>
-        <div 
+        <div
           v-if="isPinboardPage"
           class="pin-button-block"
         >

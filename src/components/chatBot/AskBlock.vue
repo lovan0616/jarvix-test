@@ -12,6 +12,7 @@
         class="user-question-block"
       >
         <default-select
+          v-if="newParserMode"
           v-model="selectParser"
           :option-list="languageList"
           class="parser-select"
@@ -121,13 +122,16 @@ export default {
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    newParserMode () {
+      return localStorage.getItem('newParser') === 'true'
+    },
     languageList () {
       return this.parserLanguageList.map(option => {
         return {
-          name: option.description,
+          name: option.language === 'ZH_TW' ? '中文' : option.description,
           value: option.language
         }
-      })
+      }).filter(element => element.value !== 'ZH_CN')
     },
     selectParser: {
       get () {
@@ -230,10 +234,16 @@ export default {
         this.userQuestion = null
         this.closeHelper()
       }
+
+      // 回首頁的話，關閉彈出視窗，有需要清問句的話，再加進上方條件
+      if (to.name === 'PageIndex') {
+        this.closeHelper()
+      }
     }
   },
   mounted () {
     document.addEventListener('click', this.autoHide, false)
+    this.userQuestion = this.$route.query.question
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
@@ -389,7 +399,7 @@ export default {
   }
 
   .parser-select {
-    width: 140px;
+    width: 160px;
 
     & >>> .el-input__inner {
       font-size: 14px;

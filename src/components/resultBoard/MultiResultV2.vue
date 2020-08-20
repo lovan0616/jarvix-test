@@ -29,22 +29,22 @@
               v-if="displayStatusList[segmentationIndex]"
             >
               <template
-                v-if="segmentation.properties"
+                v-if="segmentation.dataFrameId"
               >
                 <span 
                   :class="segmentation.type"
                   class="column-name"
                 >[{{ segmentation.word }}]</span>{{ $t('resultDescription.from') }}
-                <span class="alias-name">{{ segmentation.properties[0].dataFramePrimaryAlias }}</span>{{ $t('resultDescription.has') }}
+                <span class="alias-name">{{ segmentation.dataFramePrimaryAlias }}</span>{{ $t('resultDescription.has') }}
                 <span
                   v-if="segmentation.type === 'DATA_VALUE'"
                 >
-                  <span class="alias-name">{{ segmentation.properties[0].dataColumnPrimaryAlias }}</span>{{ $t('resultDescription.has') }}{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                  <span class="alias-name">{{ segmentation.dataColumnPrimaryAlias }}</span>{{ $t('resultDescription.has') }}{{ $t(`segmentationToken.${segmentation.type}`) }}
                 </span>
                 <span
                   v-else-if="segmentation.type === 'DATA_COLUMN'"
                 >
-                  <span class="alias-name">{{ segmentation.properties[0].dataColumnPrimaryAlias }}<span v-if="segmentation.properties[0].isFeature">({{ $t('resultDescription.feature') }})</span></span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                  <span class="alias-name">{{ segmentation.dataColumnPrimaryAlias }}<span v-if="segmentation.isFeature">({{ $t('resultDescription.feature') }})</span></span>{{ $t(`segmentationToken.${segmentation.type}`) }}
                 </span>
                 <span
                   v-else-if="segmentation.type === 'NUMBER_RULE'"
@@ -52,7 +52,7 @@
                   <template
                     v-if="segmentation.properties"
                   >
-                    <span class="alias-name">{{ segmentation.properties[0].dataColumnPrimaryAlias }}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
+                    <span class="alias-name">{{ segmentation.dataColumnPrimaryAlias }}</span>{{ $t(`segmentationToken.${segmentation.type}`) }}{{ $t(`resultDescription.recognize`) }}
                   </template>
                   <template v-else>
                     {{ $t(`segmentationToken.${segmentation.type}`) }}
@@ -77,7 +77,6 @@
                   </div>
                   <b class="question-token">'{{ segmentation.matchedWord }}'</b>
                 </el-tooltip>
-                <b>'{{ segmentation.matchedWord }}'</b>
               </template>
               <template
                 v-else-if="isIntend(segmentation.type)"
@@ -190,7 +189,7 @@ export default {
         case 'DATA_VALUE':
         case 'DATA_COLUMN':
         case 'DATA_ROW':
-          return this.$t('resultDescription.recognizeTo', {dataFrame: tokenInfo.properties[0].dataFramePrimaryAlias, token: this.$t(`segmentationToken.${this.tokenInfo.type}`)}) + tokenInfo.matchedWord
+          return this.$t('resultDescription.recognizeTo', {dataFrame: tokenInfo.dataFramePrimaryAlias, token: this.$t(`segmentationToken.${this.tokenInfo.type}`)}) + tokenInfo.matchedWord
         default:
           return this.$t(`segmentationToken.${this.tokenInfo.type}`)
       }

@@ -73,26 +73,24 @@ export default {
   },
   getParserList ({commit, rootState}) {
     getParserLanguageList().then(res => {
-      let currentLanguage
-      switch (rootState.setting.locale) {
-        case 'zh-TW':
-        case 'en-US':
-          currentLanguage = 'ZH_TW'
-          break
-        case 'zh-CN':
-          currentLanguage = 'ZH_CN'
-          break
-        // case 'en-US':
-        //   currentLanguage = 'EN_US'
-        //   break
-        default:
-          currentLanguage = 'ZH_TW'
-          break
-      }
+      let currentLanguage = 'ZH_TW'
+      // switch (rootState.setting.locale) {
+      //   case 'zh-TW':
+      //     currentLanguage = 'ZH_TW'
+      //     break
+      //   case 'zh-CN':
+      //     currentLanguage = 'ZH_CN'
+      //     break
+      //   case 'en-US':
+      //     currentLanguage = 'EN_US'
+      //     break
+      //   default:
+      //     currentLanguage = 'ZH_TW'
+      //     break
+      // }
       let languageParser = res.some(element => element.language === currentLanguage) ? currentLanguage : res[0]
 
-      let languageList = localStorage.getItem('newParser') === 'true' ? res : res.filter(element => element.language !== 'EN_US')
-      commit('setParserLanguageList', languageList)
+      commit('setParserLanguageList', res)
       commit('setParserLanguage', languageParser)
     })
   }

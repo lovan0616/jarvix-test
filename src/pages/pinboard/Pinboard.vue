@@ -174,7 +174,9 @@ export default {
               currentResult.layout = this.getLayout(componentResponse.layout)
               currentResult.segmentationPayload = componentResponse.segmentationPayload
               currentResult.question = componentResponse.segmentationPayload.question
-              currentData.dataframeName = componentResponse.dataframeName
+              currentData.dataframeName = componentResponse.transcript
+                ? componentResponse.transcript.dataFrame ? componentResponse.transcript.dataFrame.dataFrameAlias : componentResponse.transcript.dataframe.alias 
+                : componentResponse.dataframeName
               currentData.dataColumnMap = componentResponse.dataColumnMap
               currentData.selectedColumns = componentResponse.selectedColumns
               currentData.restrictions = componentResponse.restrictions

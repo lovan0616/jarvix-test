@@ -9,6 +9,7 @@
         v-for="(segmentation, index) in questionSegmentation.sentence"
         :key="index"
         :token-info="segmentation"
+        :style="enMargin"
       />
     </span>
     <span 
@@ -19,6 +20,7 @@
 </template>
 <script>
 import QuestionNameTokenV2 from './QuestionNameTokenV2'
+import { mapState } from 'vuex'
 
 export default {
   name: 'QuestionNameV2',
@@ -33,6 +35,16 @@ export default {
     question: {
       type: String,
       default: ''
+    }
+  },
+  computed: {
+    ...mapState('chatBot', ['parserLanguage']),
+    ...mapState('setting', ['locale']),
+    enMargin () {
+      if (this.parserLanguage === 'EN_US' || this.locale === 'en-US') {
+        return {'margin-right': '10px'}
+      }
+      return null
     }
   }
 }
