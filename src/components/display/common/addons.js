@@ -98,7 +98,8 @@ export function yAxisParallel () {
     nameGap: config.nameGap,
     inverse: true,
     nameTextStyle: {
-      color: chartVariable['textColor']
+      color: chartVariable['textColor'],
+      align: 'left'
     },
     splitLine: {
       show: false
