@@ -390,6 +390,10 @@ export default {
 
   .parser-select {
     width: 140px;
+
+    & >>> .el-input__inner {
+      font-size: 14px;
+    }
   }
 
   .user-question-block {
