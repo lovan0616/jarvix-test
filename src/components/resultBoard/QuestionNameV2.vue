@@ -9,6 +9,7 @@
         v-for="(segmentation, index) in questionSegmentation.sentence"
         :key="index"
         :token-info="segmentation"
+        :data-frame="questionSegmentation.transcript.dataFrame"
         :style="enMargin"
       />
     </span>
