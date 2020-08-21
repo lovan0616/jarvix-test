@@ -6,3 +6,13 @@
   color: var(--color-theme);
   background-color: transparent;
 }
+
+.el-picker-panel.el-date-range-picker {
+  .el-date-table td.in-range div {
+    background-color: #2B4D51;
+
+    &:hover {
+      background-color: #2B4D51;
+    }
+  }
+}
