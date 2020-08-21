@@ -23,8 +23,69 @@
       />
       <template v-else>
         <div class="setting-block">
-          <div class="setting-block__title">{{ $t('batchLoad.columnSetting') }}</div>
-          <div class="input-field">
+          <div class="setting-block__title">{{ $t('batchLoad.updateSetting') }}</div>
+          <div
+            class="input-radio-group"
+          >
+            <input
+              :id="$t('batchLoad.noUpdate')"
+              :v-model="$t('batchLoad.noUpdate')"
+              class="input-radio"
+              type="radio"
+              name="mainDate"
+            >
+            <label
+              :for="$t('batchLoad.noUpdate')"
+              class="input-radio-label"
+            >
+              {{ $t('batchLoad.noUpdate') }}
+            </label>
+          </div>
+          <div
+            class="input-radio-group"
+          >
+            <input
+              :id="$t('batchLoad.autoUpdate')"
+              :v-model="$t('batchLoad.autoUpdate')"
+              class="input-radio"
+              type="radio"
+              name="mainDate"
+            >
+            <label
+              :for="$t('batchLoad.autoUpdate')"
+              class="input-radio-label"
+            >
+              {{ $t('batchLoad.autoUpdate') }}
+            </label>
+          </div>
+          <div
+            class="input-radio-group"
+          >
+            <input
+              :id="$t('batchLoad.manualUpdate')"
+              :v-model="$t('batchLoad.manualUpdate')"
+              class="input-radio"
+              type="radio"
+              name="mainDate"
+            >
+            <label
+              :for="$t('batchLoad.manualUpdate')"
+              class="input-radio-label"
+            >
+              {{ $t('batchLoad.manualUpdate') }}
+            </label>
+          </div>
+          <button
+            v-if="!switchInfo.selected"
+            :disabled="isProcessing"
+            class="btn btn-default"
+            @click="updateImmediately"
+          >{{ $t('button.updateImmediately') }}</button>
+        </div>
+
+        <div class="setting-block">
+          <div class="setting-block__title">{{ $t('batchLoad.updateContent') }}</div>
+          <!-- <div class="input-field">
             <label class="input-field__label">{{ $t('batchLoad.builtTimeColumn') }}</label>
             <div class="input-field__input">
               <default-select 
@@ -41,6 +102,45 @@
                 v-show="errors.has('builtTimeColumn')"
                 class="error-text"
               >{{ errors.first('builtTimeColumn') }}</div>
+            </div>
+          </div> -->
+          <div class="input-field">
+            <div class="input-field__label">{{ $t('batchLoad.updateMode') }}</div>
+            <div class="input-field__input-wrapper">
+              <div
+                class="input-radio-group"
+              >
+                <input
+                  :id="$t('batchLoad.dataFrameUpdate')"
+                  :v-model="$t('batchLoad.dataFrameUpdate')"
+                  class="input-radio"
+                  type="radio"
+                  name="mainDate"
+                >
+                <label
+                  :for="$t('batchLoad.dataFrameUpdate')"
+                  class="input-radio-label"
+                >
+                  {{ $t('batchLoad.dataFrameUpdate') }}
+                </label>
+              </div>
+              <div
+                class="input-radio-group"
+              >
+                <input
+                  :id="$t('batchLoad.rebuild')"
+                  :v-model="$t('batchLoad.rebuild')"
+                  class="input-radio"
+                  type="radio"
+                  name="mainDate"
+                >
+                <label
+                  :for="$t('batchLoad.rebuild')"
+                  class="input-radio-label"
+                >
+                  {{ $t('batchLoad.rebuild') }}
+                </label>
+              </div>
             </div>
           </div>
           <div class="input-field">
@@ -86,21 +186,10 @@
         </div>
         <div class="setting-block">
           <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
-          <div class="setting-block__switch">
-            <el-switch
-              v-model="switchInfo.selected"
-              :active-text="switchInfo.on"
-              :inactive-text="switchInfo.off"
-              :disabled="isProcessing"
-              :width="Number('32')"
-              active-color="#2AD2E2"
-              inactive-color="#324B4E"/>
-          </div>
           <div
-            v-if="switchInfo.selected"
+            v-if="true"
             class="input-field"
           >
-            <label class="input-field__label">{{ $t('batchLoad.basicSetting') }}</label>
             <div class="input-field__input">
               <default-select 
                 v-validate="'required'"
@@ -135,12 +224,6 @@
             class="btn btn-default"
             @click="updateBatchLoad"
           >{{ $t('button.update') }}</button>
-          <button
-            v-if="!switchInfo.selected"
-            :disabled="isProcessing"
-            class="btn btn-default"
-            @click="updateImmediately"
-          >{{ $t('button.updateImmediately') }}</button>
         </div>
       </template>
     </div>
@@ -375,6 +458,10 @@ export default {
 
 <style lang="scss" scoped>
 .edit-batch-load-dialog {
+  .dialog-container {
+    width: 652px;
+  }
+
   .dialog {
     &__sub-title {
       margin-bottom: 12px;
@@ -413,7 +500,7 @@ export default {
       font-weight: 600;
       font-size: 18px;
       line-height: 1;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .input-field {
@@ -421,20 +508,25 @@ export default {
       flex-direction: column;
 
       &:not(:last-of-type) {
-        margin-bottom: 16px;
+        margin-bottom: 24px;
       }
       
       &__multi-select {
-        width: 70%;
+        width: 100%;
       }
 
       &__label {
         font-size: 14px;
+        color: #CCCCCC;
       }
 
       &__select,
       &__multi-select {
         border-bottom: 1px solid #fff;
+      }
+
+      &__input-wrapper {
+        margin-top: 8px;
       }
 
       /deep/ .el-input__inner {
@@ -464,6 +556,17 @@ export default {
       .btn:not(:last-child) {
         margin-right: 20px;
       }
+    }
+  }
+
+  .input-radio-group {
+    display: inline-block;
+
+    &:not(:last-of-type) {
+      margin-right: 40px;
+    }
+    &:last-of-type {
+      margin-right: 16px;
     }
   }
 

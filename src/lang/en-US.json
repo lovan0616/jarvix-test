@@ -500,7 +500,7 @@
     "chooseColumn": "Select Column",
     "columnSetting": "Column Setting",
     "scheduleSetting": "Schedule Setting",
-    "setBatchLoad": "Set Batch Load",
+    "setBatchLoad": "Data Update",
     "batchLoad": "Batch Load",
     "basicSetting": "Basic Setting",
     "chooseCycle": "Select Cycle",
@@ -515,7 +515,15 @@
     "updateSuccessfully": "Update Successfully",
     "updateFailed": "Update Failed",
     "updating": "Updating",
-    "startUpdate": "Start Update"
+    "startUpdate": "Start Update",
+    "noUpdate": "No Update Needed",
+    "autoUpdate": "Auto-update",
+    "manualUpdate": "Update Manually",
+    "updateSetting": "Update Setting",
+    "updateContent": "Update Content",
+    "updateMode": "Update Mode",
+    "dataFrameUpdate": "Update Existing Table",
+    "rebuild": "Rebuild Table"
   },
   "feature": {
     "value": "Value",
