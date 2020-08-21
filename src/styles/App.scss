@@ -60,3 +60,6 @@ $--font-path: '../assets/fonts/Oswald';
 
 /* chart */
 @import './chart/insights';
+
+/* 排程 */
+@import '@/schedule/styles/schedule.scss';

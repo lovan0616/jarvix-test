@@ -1,0 +1,227 @@
+<template>
+  <div class="pagination-table">
+    <div
+      v-show="isProcessing"
+      class="spinner-block"
+    >
+      <spinner class="spinner" />
+    </div>
+    <el-table
+      ref="multipleTable"
+      v-bind="tableProps"
+      :empty-text="$t('schedule.table.noData')"
+      class="sy-table"
+      style="width: 100%;"
+    >
+      <el-table-column
+        v-for="(col, index) in dataset.columns.titles"
+        :key="index"
+        :prop="col.title"
+        :label="col.name"
+        :width="col.width"
+        :min-width="minColumnWidth"
+      />
+      <el-table-column
+        v-if="layout === 'unscheduled'"
+        :label="$t('schedule.simulation.table.priority')"
+        width="120"
+      >
+        <template slot-scope="prorityColumn">
+          {{ priortyOptions[dataset.data[prorityColumn.$index].priority - 1].label }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="layout === 'scheduled'"
+        :label="$t('schedule.simulation.table.priority')"
+        width="120"
+      >
+        <template slot-scope="prorityColumn">
+          <el-select
+            v-model="dataset.data[prorityColumn.$index].priority"
+          >
+            <el-option
+              v-for="item in priortyOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="selection"
+        fixed="right"
+        :label="$t('schedule.simulation.table.click')"
+        width="103"
+      >
+        <template slot-scope="selectionColumn">
+          <el-checkbox
+            v-model="dataset.data[selectionColumn.$index].isChecked"
+            :disabled="layout === 'unscheduled' && dataset.data[selectionColumn.$index].isScheduled"
+            @change="changeCheck(dataset.data[selectionColumn.$index])"
+          />
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      v-if="paginationInfo.totalPages > 1"
+      :total="paginationInfo.totalItems"
+      :page-size="paginationInfo.itemPerPage"
+      :current-page="paginationInfo.currentPage + 1"
+      class="table-pagination"
+      layout="prev, pager, next"
+      @current-change="changePage"
+      @prev-click="prevPage"
+      @next-click="nextPage"
+    />
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'JobSelectionPaginationTable',
+  props: {
+    dataset: {
+      type: [Object, Array],
+      validator: value => {
+        if (Object.prototype.hasOwnProperty.call(value, 'enableEdit') && value.columns) return true
+        if (typeof value !== 'object') return false
+        if (!(value instanceof Array)) {
+          return value.index && value.data && value.columns
+        } else return true
+      },
+      default: () => {
+        return {
+          data: [],
+          columns: [],
+          index: []
+        }
+      }
+    },
+    fixedIndex: { type: Boolean, default: false },
+    selection: { type: Boolean, default: false },
+    layout: {
+      type: String,
+      default: ''
+    },
+    indexWidth: {
+      type: Number,
+      default: 40
+    },
+    minColumnWidth: {
+      type: String,
+      default: '120'
+    },
+    paginationInfo: {
+      type: Object,
+      default () {
+        return {
+          currentPage: 0,
+          totalPages: 0,
+          totalItems: 0,
+          itemPerPage: 0
+        }
+      }
+    },
+    isProcessing: {
+      type: Boolean,
+      default: false
+    },
+    height: {
+      type: String,
+      default: null
+    }
+  },
+  data () {
+    return {
+      priortyOptions: [
+        { value: 1, label: this.$t('schedule.simulation.table.highPriority') },
+        { value: 2, label: this.$t('schedule.simulation.table.secondPriority') },
+        { value: 3, label: this.$t('schedule.simulation.table.lowPriority') }
+      ]
+    }
+  },
+  computed: {
+    tableProps () {
+      const tableProps = { ...this.$props, data: this.dataset.data }
+      if (!this.$props.maxHeight) {
+        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 220)
+      }
+      if (this.$props.height) this.$set(tableProps, 'height', this.height)
+      return tableProps
+    }
+  },
+  methods: {
+    changeCheck (checkedRow) {
+      this.$emit('change-check', checkedRow)
+    },
+    changePage (value) {
+      this.paginationInfo.currentPage = value - 1
+      this.$emit('change-page', value)
+    },
+    nextPage () {
+      if (this.paginationInfo.currentPage + 1 <= this.paginationInfo.totalPages) {
+        this.paginationInfo.currentPage += 1
+        this.$emit('change-page', this.paginationInfo.currentPage)
+      }
+    },
+    prevPage () {
+      if (this.paginationInfo.currentPage - 1 > 0) {
+        this.paginationInfo.currentPage -= 1
+        this.$emit('change-page', this.paginationInfo.currentPage)
+      }
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.pagination-table {
+  position: relative;
+  width: 100%;
+  height: auto;
+
+  .spinner-block {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.25);
+    z-index: 100;
+  }
+
+  /deep/ .spinner-block {
+    padding: 0;
+  }
+
+  /deep/ .sy-table.el-table {
+    border: 1px solid #555858;
+    th, td {
+      border-bottom: 1px solid #555858;
+      border-right: 1px solid #555858;
+    }
+  }
+
+  /deep/ .el-input--small .el-input__inner {
+    border: none;
+    background-color: transparent;
+  }
+
+  /deep/ .el-select .el-input .el-select__caret {
+    font-weight: bold;
+    color: var(--color-white);
+  }
+
+  /deep/ .el-checkbox__inner {
+    background-color: transparent;
+  }
+
+  /deep/ .el-checkbox__input.is-checked .el-checkbox__inner {
+    background-color: var(--color-theme);
+  }
+
+    /deep/ .el-checkbox__input.is-disabled .el-checkbox__inner {
+    background-color: var(--color-text-disabled);
+  }
+}
+</style>

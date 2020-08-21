@@ -299,7 +299,7 @@ export default {
   }
 }
 
-.el-menu--horizontal {
+.el-menu.el-menu--horizontal {
   flex: auto;
   border-bottom: unset;
   border-radius: 5px 0 0 5px;

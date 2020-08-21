@@ -1,0 +1,20 @@
+.el-input-number {
+  &--small {
+    width: 180px;
+  }
+  .el-input__inner {
+    background-color: transparent;
+  }
+  .el-input-number {
+    &__increase, &__decrease {
+      background-color: transparent;
+      color: var(--color-text);
+      border: 0;
+    }
+  }
+  .el-input__inner {
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid var(--color-text);
+  }
+}

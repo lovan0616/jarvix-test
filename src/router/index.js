@@ -4,6 +4,7 @@ import AppLayout from '@/components/layout/AppLayout'
 import store from '../store'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
+import ScheduleRouter from '@/schedule/router'
 
 Vue.use(Router)
 
@@ -288,7 +289,8 @@ const router = new Router({
                   ]
                 },
               ]
-            }
+            },
+            ...ScheduleRouter.options.routes
           ]
         }
       ]

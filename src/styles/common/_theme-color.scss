@@ -45,6 +45,29 @@
   --color-text-table: var(--white-000);
   --color-text-hover: var(--white-000);
   --color-border: var(--green-600);
+
+  // TODO 這段待處理！！
+  --color-white:   #FFFFFF;
+  --color-black:   #000000;
+  --color-bg:      #101919;
+  --color-bg-gray: #303435;
+  --color-bg-green:#006464;
+  --color-theme:   #2AD2E2;
+  --color-border:  #303435;
+  
+  // font
+  --color-text:          #FFFFFF;
+  --color-text-gray:     #a7a7a7;
+  --color-text-light:     #DDDDDD;
+  --color-text-disabled: #777777;
+  // --color-text-hover:    #444444;
+  --color-text-theme:    #2AD2E2;
+  
+  // status
+  --color-success: #58D297;
+  --color-warning: #FFDF6F;
+  --color-danger:  #FF665C;
+  --color-info:    #5AD0F5;
 }
 
 [theme="dark"] {

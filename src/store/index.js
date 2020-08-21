@@ -11,6 +11,8 @@ import algorithm from './modules/algorithm'
 import validation from './modules/validation'
 import previewDataSource from './modules/previewDataSource'
 import dataFrameAdvanceSetting from './modules/dataFrameAdvanceSetting'
+import scheduleSetting from '@/schedule/store/modules/scheduleSetting'
+import simulation from '@/schedule/store/modules/simulation'
 
 Vue.use(Vuex)
 
@@ -26,7 +28,9 @@ export default new Vuex.Store({
     algorithm,
     validation,
     previewDataSource,
-    dataFrameAdvanceSetting
+    dataFrameAdvanceSetting,
+    scheduleSetting,
+    simulation
   },
   state: {
     isShowAskHelper: false,
