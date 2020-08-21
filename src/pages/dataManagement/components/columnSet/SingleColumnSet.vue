@@ -56,18 +56,23 @@
         <div class="select-block">
           <div class="block-title">{{ $t('editing.notSelect') }}</div>
           <div class="option-list-block">
-            <div 
-              v-for="(column, index) in columnOptionList"
-              :key="column.id"
-              class="single-option"
-            >
-              <div class="info name">{{ column.name }}</div>
-              <div class="info alias">{{ column.primaryAlias }}</div>
-              <button 
-                class="btn-m btn-default btn-select"
-                @click="selectColumn(index)"
-              >{{ $t('button.select') }}</button>
-            </div>
+            <draggable
+              :list="columnOptionList" 
+              class="list-group" 
+              group="people">
+              <div 
+                v-for="(column, index) in columnOptionList"
+                :key="column.id"
+                class="single-option"
+              >
+                <div class="info name">{{ column.name }}</div>
+                <div class="info alias">{{ column.primaryAlias }}</div>
+                <button 
+                  class="btn-m btn-default btn-select"
+                  @click="selectColumn(index)"
+                >{{ $t('button.select') }}</button>
+              </div>
+            </draggable>            
           </div>
         </div>
         <div class="icon-block">
@@ -81,19 +86,27 @@
         <div class="select-block">
           <div class="block-title">{{ $t('editing.alreadySelect') }}</div>
           <div class="option-list-block">
-            <div 
-              v-for="(column, index) in columnSet.dataColumnList"
-              :key="column.id"
-              class="single-option"
-            >
-              <div class="info name">{{ column.name }}</div>
-              <div class="info alias">{{ column.primaryAlias }}</div>
-              <button 
-                v-if="columnSet.dataColumnList.length > 1"
-                class="btn-m btn-secondary btn-select"
-                @click="cancelSelect(index)"
-              >{{ $t('button.cancel') }}</button>
-            </div>
+            <draggable
+              :value="columnSet.dataColumnList" 
+              :clone="cloneSelectedColumn"
+              class="list-group" 
+              group="people"
+              @change="updateSelectedList">
+              <div 
+                v-for="(column, index) in columnSet.dataColumnList"
+                :key="column.id"
+                class="single-option"
+              >
+                <div class="info name">{{ column.name }}</div>
+                <div class="info alias">{{ column.primaryAlias }}</div>
+                <button 
+                  v-if="columnSet.dataColumnList.length > 1"
+                  class="btn-m btn-secondary btn-select"
+                  @click="cancelSelect(index)"
+                >{{ $t('button.cancel') }}</button>
+              </div>
+            </draggable>
+            
             <div 
               v-if="columnSet.dataColumnList.length === 0"
               class="empty-select"
@@ -105,6 +118,7 @@
   </div>
 </template>
 <script>
+import draggable from 'vuedraggable';
 import { createColumnSet, addColumnSetColumn, removeColumnSetColumn, deleteColumnSet } from '@/API/ColumnSet'
 import inputBlock from '@/components/InputBlock'
 import { Message } from 'element-ui'
@@ -113,7 +127,8 @@ export default {
   name: 'SingleColumnSet',
   inject: ['$validator'],
   components: {
-    inputBlock
+    inputBlock,
+    draggable
   },
   props: {
     columnList: {
@@ -161,7 +176,7 @@ export default {
         // 過濾已經被選擇的欄位
         this.columnOptionList = this.columnList.filter(element => {
           return this.columnSet.dataColumnList.findIndex(column => column.dataColumnId === element.id) === -1
-        })
+        }).map(column => ({ ...column, primaryAlias: column.aliasList[0] }))
       } else {
         this.columnOptionList = JSON.parse(JSON.stringify(this.columnList))
       }
@@ -186,6 +201,16 @@ export default {
         this.columnOptionList.splice(index, 1)
       }
     },
+    removeColumnSetColumn (id) {
+      return removeColumnSetColumn(id).then(() => {
+        Message({
+          message: this.$t('message.deleteSuccess'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      })
+    },
     cancelSelect (index) {
       // if (this.columnSet.dataColumnList.length <= 1) {
       //   Message({
@@ -199,16 +224,7 @@ export default {
       const {id: dataColumnId, dataColumnId: id, ...otherData} = cancelColumnInfo[0]
       this.columnOptionList.push({id, dataColumnId, ...otherData})
 
-      if (this.columnSet.id) {
-        removeColumnSetColumn(dataColumnId).then(() => {
-          Message({
-            message: this.$t('message.deleteSuccess'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
-          })
-        })
-      }
+      if (this.columnSet.id) this.removeColumnSetColumn(dataColumnId)
     },
     saveColumnSet () {
       this.$validator.validate(this.validateFieldKey).then((isValidate) => {
@@ -266,6 +282,43 @@ export default {
     },
     toggleIsEditing () {
       this.isEditing = !this.isEditing
+    },
+    updateDataSetOrder (oldIndex, newIndex) {
+      if (this.columnSet.id) {
+        // update order api
+      }
+      const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
+      this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
+    },
+    updateSelectedList (e) {
+      if (e.hasOwnProperty('moved')) {
+        return this.updateDataSetOrder(e.moved.oldIndex, e.moved.newIndex)
+      } else if (e.hasOwnProperty('removed')) {
+        if (!this.columnSet.id) return this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1)
+        this.removeColumnSetColumn(e.removed.element.id)
+          .then(() => this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1))
+      } else if (e.hasOwnProperty('added')) {
+        if (!this.columnSet.id) return this.columnSet.dataColumnList.push(e.added.element)
+        addColumnSetColumn({
+          columnSetId: this.columnSet.id,
+          dataColumnId: e.added.element.id
+        }).then(response => {
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+          this.columnSet.dataColumnList.splice(e.added.newIndex, 0, response)
+        })
+      }
+    },
+    cloneSelectedColumn (columnData) {
+      return {
+        ...columnData,
+        id: columnData.dataColumnId,
+        dataColumnId: columnData.id
+      }
     }
   },
 }
