@@ -321,7 +321,6 @@ export default {
               this.restrictInfo = componentResponse.restrictions
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
-              console.log(componentResponse.segmentationPayload)
               this.segmentationAnalysisV2(componentResponse.segmentationPayload)
               this.transcript = componentResponse.transcript
               this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
