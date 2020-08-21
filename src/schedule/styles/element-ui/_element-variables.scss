@@ -1,0 +1,21 @@
+/*
+* Element Chalk Variables
+* https://github.com/PanJiaChen/custom-element-theme/blob/master/element-variables.scss
+*/
+
+/* 改变主题色变量 */
+$--color-primary: #2AD2E2;
+$--color-text-regular: var(--color-text);
+$--color-text-primary: var(--color-text);
+$--color-text-placeholder: var(--color-text-gray);
+$--border-color-extra-light: var(--color-text-hover);
+
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+@import "~element-ui/packages/theme-chalk/src/index";
+
+/* DatePicker
+--------------------------*/
+$--datepicker-active-color: $--color-primary !default;
+$--datepicker-text-hover-color: $--color-primary !default;

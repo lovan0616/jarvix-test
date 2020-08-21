@@ -1,0 +1,31 @@
+div.el-collapse {
+  width: 100%;
+  background-color: transparent;
+  border-top: 0;
+  border-bottom: 0;
+  /deep/ .el-collapse-item {
+    &+.el-collapse-item {
+      margin-top: 16px;
+    }
+    &__header {
+      padding-left: 20px;
+      padding-right: 10px;
+      border-bottom: 0;
+      color: var(--color-text);
+      background: rgba(35, 61, 64, 0.6);
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 8px;
+      &.is-active {
+        border-radius: 8px 8px 0 0;
+      }
+    }
+    &__wrap {
+      padding-left: 20px;
+      padding-right: 20px;
+      border-bottom: 0;
+      background: rgba(35, 61, 64, 0.6);
+      border-radius: 0 0 8px 8px ;
+    }
+  }
+}

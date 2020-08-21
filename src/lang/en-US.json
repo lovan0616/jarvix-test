@@ -29,7 +29,8 @@
     "dataSourceManagement": "Data Source",
     "dataSourceList": "List",
     "dataFileManagement": "Data Set",
-    "dataFileList": "List"
+    "dataFileList": "List",
+    "schedule": "Schedule"
   },
   "dataFrameAdvanceSetting": {
     "searchColumn": "Search Column",

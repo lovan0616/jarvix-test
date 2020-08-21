@@ -1,0 +1,3 @@
+[submodule "modules/schedule"]
+	path = modules/schedule
+	url = git@gitlab.com:synergies.ai/smart_scheduling/frontend.git

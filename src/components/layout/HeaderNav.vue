@@ -69,6 +69,30 @@
           class="nav-item">{{ $t('nav.projectPinboard') }}</router-link>
       </template>
     </section>
+    <section
+      v-if="$route.meta.isModule"
+      class="nav-left"
+    >
+      <router-link 
+        :to="{name: 'CurrentSimulation'}"
+        class="nav-item"
+      >
+        {{ $t('schedule.header.schedule') }}
+      </router-link>
+      <router-link 
+        :to="{name: 'Simulation'}"
+        
+        class="nav-item"
+      >
+        {{ $t('schedule.header.simulate') }}
+      </router-link>
+      <router-link 
+        :to="{name: 'ScheduleSetting'}"
+        class="nav-item"
+      >
+        {{ $t('schedule.header.setting') }}
+      </router-link>
+    </section>
     <!-- <section class="nav-right">
       <router-link
         v-if="isShowFunctionDescription"

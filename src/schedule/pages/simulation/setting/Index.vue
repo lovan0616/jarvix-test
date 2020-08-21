@@ -1,0 +1,318 @@
+<template>
+  <div class="page page--simulation">
+    <div class="page__side-nav">
+      <div class="step step--choose-job">
+        <div class="step__title">
+          STEP.1 {{ $t('schedule.simulation.selectJobs') }}
+        </div>
+        <div class="step__content">
+          <div
+            class="selected-jobs__info"
+            @click="onClickSelectJobStep"
+          >
+            {{ displaySelectedJobCounter }}
+          </div>
+        </div>
+      </div>
+      <div class="step step--choose-solution">
+        <div class="step__title">
+          STEP.2 {{ $t('schedule.simulation.solutionSetting') }}
+          <default-button
+            class="add-btn"
+            type="outline"
+            @click="onClickAddSolution"
+          >
+            <i class="el-icon-plus" />
+            {{ $t('schedule.simulation.addSolution') }}
+          </default-button>
+        </div>
+        <div class="step__content">
+          <div
+            v-for="(solution, index) in solutions"
+            :key="solution.sequence"
+            class="solution card-like"
+            :class="{'is-active': editSolutionSequence === solution.sequence}"
+            @click="editSolution(solution.sequence)"
+          >
+            <div class="solution__title">
+              <div class="solution__valid-status">
+                <i
+                  v-if="solution.valid"
+                  class="success-icon el-icon-success"
+                />
+                <i
+                  v-else
+                  class="error-icon el-icon-error"
+                />
+              </div>
+              {{ $t('schedule.simulation.solution') + solution.sequence }}
+            </div>
+            <div class="solution__simulated-status">
+              {{ solution.simulated ? $t('schedule.simulation.simulated') : $t('schedule.simulation.notYetSimulated') }}
+            </div>
+            <i
+              class="icon-remove el-icon-delete"
+              @click.stop="onClickRemoveSolution(index, solution.solutionId)"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="step step--start-simulate">
+        <default-button
+          :disabled="scheduledJobs.length === 0 || solutions.length === 0 || hasInvalidSolution"
+          :show-spinner="isSimulatingDialogOpen"
+          @click="startSimulation"
+        >
+          {{ $t('schedule.simulation.startSimulation') }}
+        </default-button>
+      </div>
+    </div>
+    <div
+      v-show="editSolutionSequence"
+      class="page__main"
+    >
+      <default-setting
+        :key="editSolutionSequence"
+        :solution-sequence="editSolutionSequence"
+      />
+    </div>
+    <div
+      v-show="!editSolutionSequence"
+      class="page__main"
+    >
+      <h2 class="header__title">
+        {{ $t('schedule.simulation.title') }}
+      </h2>
+      <plan-simulation />
+    </div>
+    <simulating-dialog
+      v-if="isSimulatingDialogOpen"
+      @cancel="cancelSimulation"
+    />
+    <decide-dialog
+      v-if="isShowChangeAlert"
+      :title="$t('schedule.simulation.changeAlert')"
+      :content="$t('schedule.simulation.changeAlertContent')"
+      :type="'showCancel'"
+      :btn-text="$t('schedule.button.confirm')"
+      @closeDialog="isShowChangeAlert = false"
+      @confirmBtn="onConfirmResetScheduledJobs"
+    />
+  </div>
+</template>
+<script>
+import DecideDialog from '@/schedule/components/dialog/DecideDialog'
+import DefaultSetting from '../../scheduleSetting/Index'
+import PlanSimulation from './components/PlanSimulation'
+import SimulatingDialog from './components/SimulatingDialog'
+import moment from 'moment'
+import { mapState, mapMutations } from 'vuex'
+import { validateSimulationSetting } from '@/schedule/utils/mixins'
+import { Message } from 'element-ui'
+
+export default {
+  name: 'SimulationSetting',
+  components: {
+    DefaultSetting,
+    DecideDialog,
+    PlanSimulation,
+    SimulatingDialog
+  },
+  data () {
+    return {
+      editSolutionSequence: null,
+      isShowChangeAlert: false,
+      solutionSerialNumber: 0,
+      isSimulatingDialogOpen: false,
+      isJobReSelected: false
+    }
+  },
+  computed: {
+    ...mapState('scheduleSetting', ['defaultSetting']),
+    ...mapState('simulation', ['solutions', 'scheduledJobs', 'planId']),
+    displaySelectedJobCounter () {
+      return this.scheduledJobs.length > 0
+        ? this.$t('schedule.simulation.selectedJobsCount', { count: this.scheduledJobs.length })
+        : this.$t('schedule.simulation.noSelectedJobs')
+    },
+    hasInvalidSolution () {
+      return this.solutions.some(s => !s.valid)
+    }
+  },
+  mounted () {
+    this.solutions.forEach(s => {
+      if (s.sequence > this.solutionSerialNumber) this.solutionSerialNumber = s.sequence
+      // 返回設定or重新模擬時，先做一次表單檢查以初始化 valid 狀態
+      s.valid = validateSimulationSetting(s)
+    })
+    this.editSolutionSequence = this.solutionSerialNumber
+  },
+  methods: {
+    ...mapMutations('simulation', ['addSolution', 'removeSolution']),
+    isSolutionFocus (id) {
+      return this.editSolutionSequence === id
+    },
+    onClickSelectJobStep () {
+      if (this.planId) {
+        this.isShowChangeAlert = true
+      } else {
+        this.editSolutionSequence = null
+      }
+    },
+    onConfirmResetScheduledJobs () {
+      this.$store.commit('simulation/setPlanId', null)
+      this.$store.commit('simulation/setSolutions', this.solutions.map(solution => ({ ...solution, simulated: false })))
+      this.editSolutionSequence = null
+      this.isShowChangeAlert = false
+    },
+    onClickAddSolution () {
+      this.solutionSerialNumber += 1
+      this.editSolutionSequence = this.solutionSerialNumber
+
+      this.addSolution({
+        solutionId: null,
+        sequence: this.solutionSerialNumber,
+        scheduleStartDate: moment().startOf('day').add(1, 'day').format('YYYY/MM/DD'),
+        simulated: false,
+        overtimes: [],
+        leavetimes: [],
+        valid: true,
+        ...this.defaultSetting
+      })
+    },
+    onClickRemoveSolution (index, solutionId) {
+      // 若為已經模擬過的方案，也要告訴後端把它刪掉
+      if (this.planId && solutionId) {
+        this.$store.dispatch('simulation/deleteSimulatedSolution', solutionId)
+          .then(res => {
+            Message({
+              message: this.$t('schedule.successMessage.solutionDeleted'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
+          })
+          .catch(() => {})
+      }
+
+      // 若刪除自己，預設 focus 到第一個方案
+      const isRemoveSelf = this.editSolutionSequence === this.solutions[index].sequence
+      if (isRemoveSelf) {
+        this.removeSolution(index)
+        this.editSolutionSequence = this.solutions.length > 0 ? this.solutions[0].solutionId : null
+        Message({
+          message: this.$t('schedule.successMessage.solutionDeleted'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
+        return
+      }
+
+      this.removeSolution(index)
+    },
+    editSolution (solutionSequence) {
+      this.editSolutionSequence = solutionSequence
+    },
+    startSimulation () {
+      this.isSimulatingDialogOpen = true
+    },
+    cancelSimulation () {
+      this.isSimulatingDialogOpen = false
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.page {
+  &--simulation {
+    display: flex;
+    height: 100%;
+  }
+  /deep/ &--setting {
+    height: 100%;
+    padding: 0;
+    overflow: auto;
+  }
+  &__side-nav {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 267px;
+  }
+  &__main {
+    flex: 1;
+    width: 0;
+    padding: 25px;
+    border-left: 1px solid var(--color-border);
+    overflow: auto;
+
+    .header__title {
+      font-size: 24px;
+      line-height: 32px;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.step {
+  .step__title {
+    font-size: 14px;
+  }
+  .step__content {
+    margin-top: 12px;
+  }
+  &--choose-job {
+    padding: 24px;
+    .step__content {
+      text-indent: 16px;
+      .selected-jobs__info {
+        height: 52px;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        background-color: var(--color-bg-gray);
+      }
+    }
+  }
+  &--choose-solution {
+    flex: 1;
+    height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 24px 0 24px;
+    .step__title {
+      margin-bottom: 8px;
+      .add-btn {
+        width: 100%;
+        margin-top: 12px;
+        border-radius: 6px;
+      }
+    }
+    .step__content {
+      flex: 1;
+      overflow-y: overlay;
+      .solution {
+        &__checked {
+          position: absolute;
+          left: 16px;
+          top: 14px;
+        }
+        &__status {
+          font-size: 14px;
+          color: var(--color-text-gray);
+        }
+      }
+    }
+  }
+  &--start-simulate {
+    padding: 24px;
+    background-color: rgba(35, 61, 64, 0.6);
+    .default-button {
+      width: 100%;
+    }
+  }
+}
+</style>

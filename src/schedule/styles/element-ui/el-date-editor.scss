@@ -1,0 +1,8 @@
+.el-time-panel.el-popper {
+  background-color: var(--color-black);
+}
+
+.el-time-spinner__list .el-time-spinner__item:hover:not(.disabled):not(.active) {
+  color: var(--color-theme);
+  background-color: transparent;
+}
