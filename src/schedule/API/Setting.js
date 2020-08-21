@@ -46,3 +46,10 @@ export function uploadSingleFile (formData) {
     data: formData
   })
 }
+
+export function downloadCurrentSetting (fileId) {
+  return request({
+    url: `/uploadfile/download/${fileId}`,
+    method: 'GET'
+  })
+}

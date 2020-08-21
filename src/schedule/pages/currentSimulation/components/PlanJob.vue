@@ -20,7 +20,7 @@
     <el-tabs
       :value="resultType"
       :class="{'job__tabs--close': !isCollapseOpen}"
-      class="job__tabs"
+      class="job__tabs schedule-tab"
       type="card"
       @tab-click="switchTab($event.name)"
     >

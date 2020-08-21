@@ -30,6 +30,8 @@ const service = axios.create({
 // 攔截 response
 service.interceptors.response.use(
   response => {
+    if (response.headers['content-type'] === 'application/octet-stream') return { data: response.data }
+
     const res = response.data
     if (res.success) return res.meta.pagination ? { data: res.data, ...res.meta } : res.data
 

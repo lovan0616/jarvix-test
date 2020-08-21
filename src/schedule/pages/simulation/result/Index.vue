@@ -44,7 +44,7 @@
         </div>
         <el-tabs
           :value="resultType"
-          class="page__tabs"
+          class="page__tabs schedule-tab"
           type="card"
           @tab-click="switchTab($event.name)"
         >

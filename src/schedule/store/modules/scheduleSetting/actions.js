@@ -1,4 +1,4 @@
-import { getSetting, setSetting } from '@/schedule/API/Setting'
+import { getSetting, setSetting, downloadCurrentSetting } from '@/schedule/API/Setting'
 import { getEquipments } from '@/schedule/API/Equipment'
 
 export default {
@@ -10,5 +10,8 @@ export default {
   },
   getEquipments () {
     return getEquipments()
+  },
+  downloadCurrentSetting ({ state }, fileId) {
+    return downloadCurrentSetting(fileId)
   }
 }

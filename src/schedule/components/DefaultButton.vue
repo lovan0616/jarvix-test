@@ -73,7 +73,6 @@ export default {
 
 .btn {
   @include btn();
-  padding: 7px 24px;
   height: 32px;
 }
 

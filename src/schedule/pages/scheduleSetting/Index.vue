@@ -216,34 +216,7 @@
             :key="file.id"
             class="file__item"
           >
-            <div class="file__item-info">
-              <div class="file__item-title">
-                {{ file.alias }}
-              </div>
-              <div class="file__item-description">
-                <div class="file__item-name">
-                  {{ $t('schedule.setting.fileName') }}：{{ file.originFileName || $t('schedule.setting.noFileSelected') }}
-                </div>
-                <div class="file__item-date">
-                  {{ $t('schedule.setting.updatedDate') }}：{{ file.updateDate }}
-                </div>
-              </div>
-            </div>
-            <div class="file__item-button-block">
-              <a
-                class="file__item-button btn btn-secondary"
-                :href="file.downloadPath"
-              >
-                {{ $t('schedule.button.downloadFile') }}
-              </a>
-              <a
-                class="file__item-button btn btn-secondary"
-                :href="`../../files/${file.code}.csv`"
-                download
-              >
-                {{ $t('schedule.button.templateFileDownload') }}
-              </a>
-            </div>
+            <single-common-file :file-data="file" />
           </div>
         </div>
       </div>
@@ -263,6 +236,7 @@ import ExcludeSetting from './components/excludeSetting/ExcludeSetting'
 import KpiSetting from './components/kpiSetting/KpiSetting'
 import FileUploadDialog from './components/commonDataSetting/FileUploadDialog'
 import SingleConstraintFile from './components/constraintSetting/SingleConstraintFile'
+import SingleCommonFile from './components/commonDataSetting/SingleCommonFile'
 import ExceptionTimeSetting from '@/schedule/pages/simulation/setting/components/ExceptionTimeSetting'
 import { getUploadFileList } from '@/schedule/API/Setting'
 import { Message } from 'element-ui'
@@ -277,7 +251,8 @@ export default {
     KpiSetting,
     ExceptionTimeSetting,
     FileUploadDialog,
-    SingleConstraintFile
+    SingleConstraintFile,
+    SingleCommonFile
   },
   props: {
     solutionSequence: {
@@ -541,6 +516,7 @@ export default {
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
         border-radius: 8px;
         &__item {
+          width: 100%;
           padding: 24px;
           margin-bottom: 16px;
           border-radius: 8px;
