@@ -6,9 +6,9 @@
     </ul>
     <div class="pinboard-data-info__title">{{ $t('pinboard.relativeDataColun') }}</div>
     <ul class="pinboard-data-info__list">
-      <li v-if="getDataInfo.selectedColumns === null"> {{ $t('pinboard.allColumns') }} </li>
+      <li v-if="selectedColumnsInfo === null"> {{ $t('pinboard.allColumns') }} </li>
       <li
-        v-for="(column, index) in getDataInfo.selectedColumns"
+        v-for="(column, index) in selectedColumnsInfo"
         :key="index"
       >{{ column }} </li>
     </ul>
@@ -29,6 +29,18 @@ export default {
     ...mapState('pinboard', ['pinboardData']),
     getDataInfo() {
       return this.pinboardData.find(data => data.resultId === this.resultId)
+    },
+    selectedColumnsInfo () {
+      if (this.getDataInfo.selectedColumns === null) return null
+
+      return this.getDataInfo.selectedColumns.map(element => {
+        let columnMap = this.getDataInfo.dataColumnMap
+        for (let column in columnMap) {
+          if (columnMap[column].id === element) {
+            return columnMap[column].primary_alias
+          }
+        }
+      })
     }
   }
 }
