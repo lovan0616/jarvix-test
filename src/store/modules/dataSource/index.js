@@ -17,7 +17,9 @@ export default {
     historyQuestionList: [],
     filterList: [],
     dataFrameId: null,
-    dataFrameList: []
+    dataFrameList: [],
+    // 使用者自己建立的資料源
+    processingDataFrameList: []
   },
   actions,
   mutations,
