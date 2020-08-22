@@ -95,7 +95,10 @@ export default {
 
       let promiseList = []
       this.etlTableList.forEach((element, index) => {
-        promiseList.push(dataPreprocessor(element))
+        let promise = dataPreprocessor(element).then(() => {
+          this.$store.commit('dataSource/setProcessingDataFrameList', element)
+        })
+        promiseList.push(promise)
       })
 
       Promise.all(promiseList)

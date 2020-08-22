@@ -51,7 +51,7 @@
     "remindNotAllowSelfJoin": "不能選擇相同資料表",
     "joinTypeEmpty": "請選擇關聯方式",
     "builded": "資料源建立完成",
-    "dataFrameBuilt": "資料表建立完成",
+    "dataFrameBuilt": "資料表 {name} 建立完成",
     "noMatchedKey": "沒有成功對上的值，請嘗試設定其他關聯表或欄位",
     "previewFailed": "設定失敗，請稍候再試",
     "noData": "目前沒有資料",
