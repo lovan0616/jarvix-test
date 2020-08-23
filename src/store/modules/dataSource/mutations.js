@@ -80,5 +80,27 @@ export default {
   },
   clearCurrentQuestionId (state) {
     state.currentQuestionId = null
+  },
+  setProcessingDataFrameList (state, data) {
+    state.processingDataFrameList.push({
+      dataSourceId: data.dataSourceId,
+      dataFrameId: data.dataFrameId,
+      primaryAlias: data.primaryAlias,
+      state: 'ready'
+    })
+  },
+  updateProcessingDataFrameList (state, data) {
+    Message({
+      message: i18n.t('message.dataFrameBuilt', {name: data.primaryAlias}),
+      type: 'success',
+      duration: 3 * 1000,
+      showClose: true
+    })
+    state.processingDataFrameList = state.processingDataFrameList.filter(dataFrame => {
+      return dataFrame.dataFrameId !== data.id
+    })
+  },
+  clearProcessingDataFrameList (state, data) {
+    state.processingDataFrameList = []
   }
 }

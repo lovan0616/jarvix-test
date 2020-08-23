@@ -8,6 +8,7 @@
     <div slot="content">{{ tooltipContent(tokenInfo) }}</div>
     <span 
       :class="tokenInfo.type"
+      :style="textSpace"
       class="question-token"
     >{{ tokenInfo.word }}</span>
   </el-tooltip>
@@ -32,29 +33,34 @@ export default {
     }
   },
   computed: {
+    textSpace () {
+      let lastCharacter = this.tokenInfo.word.slice(-1)
+      let isNeedSpace = /[A-Za-z0-9]/.test(lastCharacter)
+      return isNeedSpace ? {'margin-right': '10px'} : null
+    }
   },
   methods: {
     tooltipContent (tokenInfo) {
       switch (tokenInfo.type) {
         case 'COLUMN_SET':
           return this.$t('segmentationToken.ColumnSetToken', {
-            dataFrame: tokenInfo.dataFramePrimaryAlias,
+            dataFrame: this.dataFrame.dataFrameAlias,
             matchedWord: tokenInfo.matchedWord
           })
         case 'DATA_VALUE':
           return this.$t('segmentationToken.DataValueToken', {
-            dataFrame: tokenInfo.dataFramePrimaryAlias,
+            dataFrame: this.dataFrame.dataFrameAlias,
             matchedWord: tokenInfo.matchedWord
           })
         case 'DATA_COLUMN':
           return this.$t('segmentationToken.DataColumnToken', {
-            dataFrame: tokenInfo.dataFramePrimaryAlias,
+            dataFrame: this.dataFrame.dataFrameAlias,
             matchedWord: tokenInfo.matchedWord
           })
         case 'NUMBER_RULE':
           if (tokenInfo.properties) {
             return this.$t('segmentationToken.NumRuleTokenHasProperty', {
-              dataFrame: tokenInfo.dataFramePrimaryAlias,
+              dataFrame: this.dataFrame.dataFrameAlias,
               matchedWord: tokenInfo.matchedWord
             })
           } else {
@@ -62,7 +68,7 @@ export default {
           }
         case 'DATA_ROW':
           return this.$t('segmentationToken.DatarowToken', {
-            dataFrame: tokenInfo.dataFramePrimaryAlias
+            dataFrame: this.dataFrame.dataFrameAlias
           })
         default:
           return this.$t(`segmentationToken.${tokenInfo.type}`)

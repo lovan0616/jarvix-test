@@ -26,8 +26,8 @@
 import AppHeader from './AppHeader'
 import HeaderNav from './HeaderNav'
 import AppSideNav from './AppSideNav'
-import { Message } from 'element-ui'
 import { mapState } from 'vuex'
+import { getDataFrameById } from '@/API/DataSource'
 
 export default {
   name: 'AppLayout',
@@ -38,11 +38,13 @@ export default {
   },
   data () {
     return {
-      intervalFunction: null
+      intervalFunction: null,
+      processingDataFrameIntervalFunction: null
     }
   },
   computed: {
     ...mapState(['isAppLoading']),
+    ...mapState('dataSource', ['processingDataFrameList']),
     dataSourceBuildingStatusList () {
       return this.$store.getters['dataSource/dataSourceBuildingStatusList']
     },
@@ -51,6 +53,23 @@ export default {
     }
   },
   watch: {
+    // 監聽是否有資料表建置完成
+    processingDataFrameList (value, oldValue) {
+      if (value.length === 0 && oldValue.length === 0) return
+      window.clearInterval(this.processingDataFrameIntervalFunction)
+      if (value.length > 0) {
+        this.processingDataFrameIntervalFunction = window.setInterval(() => {
+          value.forEach(dataFrame => {
+            getDataFrameById(dataFrame.dataSourceId, true).then(response => {
+              let currentDataFrame = response.find(element => element.id === dataFrame.dataFrameId)
+              if (currentDataFrame.state === 'Enable') {
+                this.$store.commit('dataSource/updateProcessingDataFrameList', currentDataFrame)
+              }
+            })
+          })
+        }, 5000)
+      }
+    },
     // 監聽有 dataframe 建置中的 dataSource 清單是否有變化
     dataSourceBuildingStatusList (newValue, oldValue) {
       if (newValue.length === 0 && oldValue.length === 0) return
@@ -66,14 +85,6 @@ export default {
 
       // 避免建置完的 datasource 為當前的，需要重新取得其新的 dataframe list
       this.$store.dispatch('dataSource/updateDataFrameList')
-        .then(() => {
-          Message({
-            message: this.$t('message.dataFrameBuilt'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
-          })
-        })
     },
     currentGroupId (value, oldValue) {
       if (value && oldValue) {
@@ -88,6 +99,7 @@ export default {
     window.clearInterval(this.intervalFunction)
     this.$store.commit('dataSource/setDataSourceList', [])
     this.$store.commit('dataSource/setIsInit', false)
+    this.$store.commit('dataSource/clearProcessingDataFrameList')
   },
   methods: {
     setDataSourceInfo () {
