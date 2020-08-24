@@ -25,171 +25,113 @@
         <div class="setting-block">
           <div class="setting-block__title">{{ $t('batchLoad.updateSetting') }}</div>
           <div
+            v-for="status in updateStatusList"
+            :key="status.type"
             class="input-radio-group"
           >
             <input
-              :id="$t('batchLoad.noUpdate')"
-              :v-model="$t('batchLoad.noUpdate')"
+              :id="status.type.toLowerCase()"
+              :checked="status.type === columnInfo.status"
+              :value="status.type"
+              name="status"
               class="input-radio"
               type="radio"
-              name="mainDate"
+              @change="columnInfo.status = status.type"
             >
             <label
-              :for="$t('batchLoad.noUpdate')"
+              :for="status.type.toLowerCase()"
               class="input-radio-label"
-            >
-              {{ $t('batchLoad.noUpdate') }}
-            </label>
-          </div>
-          <div
-            class="input-radio-group"
-          >
-            <input
-              :id="$t('batchLoad.autoUpdate')"
-              :v-model="$t('batchLoad.autoUpdate')"
-              class="input-radio"
-              type="radio"
-              name="mainDate"
-            >
-            <label
-              :for="$t('batchLoad.autoUpdate')"
-              class="input-radio-label"
-            >
-              {{ $t('batchLoad.autoUpdate') }}
-            </label>
-          </div>
-          <div
-            class="input-radio-group"
-          >
-            <input
-              :id="$t('batchLoad.manualUpdate')"
-              :v-model="$t('batchLoad.manualUpdate')"
-              class="input-radio"
-              type="radio"
-              name="mainDate"
-            >
-            <label
-              :for="$t('batchLoad.manualUpdate')"
-              class="input-radio-label"
-            >
-              {{ $t('batchLoad.manualUpdate') }}
-            </label>
+            >{{ status.name }}</label>
           </div>
           <button
-            v-if="!switchInfo.selected"
+            v-if="columnInfo.id && columnInfo.status === 'MANUAL' && !hasSettingDataChanged"
             :disabled="isProcessing"
             class="btn btn-default"
             @click="updateImmediately"
           >{{ $t('button.updateImmediately') }}</button>
         </div>
-
-        <div class="setting-block">
-          <div class="setting-block__title">{{ $t('batchLoad.updateContent') }}</div>
-          <!-- <div class="input-field">
-            <label class="input-field__label">{{ $t('batchLoad.builtTimeColumn') }}</label>
-            <div class="input-field__input">
-              <default-select 
-                v-validate="'required'"
-                v-model="columnInfo.updatedTime"
-                :option-list="dateTimeColumnList"
-                :placeholder="$t('batchLoad.chooseColumn')"
-                :is-disabled="isProcessing"
-                filterable
-                class="input-field__select"
-                name="builtTimeColumn"
-              />
-              <div 
-                v-show="errors.has('builtTimeColumn')"
-                class="error-text"
-              >{{ errors.first('builtTimeColumn') }}</div>
-            </div>
-          </div> -->
-          <div class="input-field">
-            <div class="input-field__label">{{ $t('batchLoad.updateMode') }}</div>
-            <div class="input-field__input-wrapper">
-              <div
-                class="input-radio-group"
-              >
-                <input
-                  :id="$t('batchLoad.dataFrameUpdate')"
-                  :v-model="$t('batchLoad.dataFrameUpdate')"
-                  class="input-radio"
-                  type="radio"
-                  name="mainDate"
+        <template v-if="columnInfo.status !== 'DISABLE'">
+          <div class="setting-block">
+            <div class="setting-block__title">{{ $t('batchLoad.updateContent') }}</div>
+            <div class="input-field">
+              <div class="input-field__label">{{ $t('batchLoad.updateMode') }}</div>
+              <div class="input-field__input-wrapper">
+                <div
+                  v-for="mode in updateTypeList"
+                  :key="mode.type"
+                  class="input-radio-group"
                 >
-                <label
-                  :for="$t('batchLoad.dataFrameUpdate')"
-                  class="input-radio-label"
-                >
-                  {{ $t('batchLoad.dataFrameUpdate') }}
-                </label>
-              </div>
-              <div
-                class="input-radio-group"
-              >
-                <input
-                  :id="$t('batchLoad.rebuild')"
-                  :v-model="$t('batchLoad.rebuild')"
-                  class="input-radio"
-                  type="radio"
-                  name="mainDate"
-                >
-                <label
-                  :for="$t('batchLoad.rebuild')"
-                  class="input-radio-label"
-                >
-                  {{ $t('batchLoad.rebuild') }}
-                </label>
+                  <input
+                    v-validate="'required'"
+                    :id="mode.type.toLowerCase()"
+                    :checked="mode.type === columnInfo.type"
+                    :value="mode.type"
+                    name="mode"
+                    class="input-radio"
+                    type="radio"
+                    @change="columnInfo.type = mode.type"
+                  >
+                  <label
+                    :for="mode.type.toLowerCase()"
+                    class="input-radio-label"
+                  >{{ mode.name }}</label>
+                </div>
+                <div 
+                  v-show="errors.has('mode')"
+                  class="error-text"
+                >{{ errors.first('mode') }}</div>
               </div>
             </div>
+            <template v-if="columnInfo.type === 'UPDATE'">
+              <div class="input-field">
+                <label class="input-field__label">{{ $t('batchLoad.updatedTimeColumn') }}</label>
+                <div class="input-field__input">
+                  <default-select 
+                    v-validate="'required'"
+                    v-model="columnInfo.updateDateColumn"
+                    :option-list="dateTimeColumnList"
+                    :placeholder="$t('batchLoad.chooseColumn')"
+                    :is-disabled="isProcessing"
+                    filterable
+                    class="input-field__select"
+                    name="updatedTimeColumn"
+                  />
+                  <div 
+                    v-show="errors.has('updatedTimeColumn')"
+                    class="error-text"
+                  >{{ errors.first('updatedTimeColumn') }}</div>
+                </div>
+              </div>
+              <div class="input-field">
+                <label class="input-field__label">{{ $t('batchLoad.primaryKeyColumns') }}</label>
+                <div class="input-field__input">
+                  <default-multi-select
+                    v-validate="'required'"
+                    :value="primaryKeys"
+                    :option-list="columnInfo.columnList"
+                    :placeholder="$t('batchLoad.chooseColumn')"
+                    :is-disabled="isProcessing"
+                    filterable
+                    multiple
+                    class="input-field__multi-select"
+                    name="primaryKeyColumn"
+                    @input="primaryKeys = $event"
+                  />
+                  <div 
+                    v-show="errors.has('primaryKeyColumn')"
+                    class="error-text"
+                  >{{ errors.first('primaryKeyColumn') }}</div>
+                </div>
+              </div>
+            </template>
           </div>
-          <div class="input-field">
-            <label class="input-field__label">{{ $t('batchLoad.updatedTimeColumn') }}</label>
-            <div class="input-field__input">
-              <default-select 
-                v-validate="'required'"
-                v-model="columnInfo.builtTime"
-                :option-list="dateTimeColumnList"
-                :placeholder="$t('batchLoad.chooseColumn')"
-                :is-disabled="isProcessing"
-                filterable
-                class="input-field__select"
-                name="updatedTimeColumn"
-              />
-              <div 
-                v-show="errors.has('updatedTimeColumn')"
-                class="error-text"
-              >{{ errors.first('updatedTimeColumn') }}</div>
-            </div>
-          </div>
-          <div class="input-field">
-            <label class="input-field__label">{{ $t('batchLoad.primaryKeyColumns') }}</label>
-            <div class="input-field__input">
-              <default-multi-select
-                v-validate="'required'"
-                :value="columnInfo.primaryKeys"
-                :option-list="columnInfo.columnList"
-                :placeholder="$t('batchLoad.chooseColumn')"
-                :is-disabled="isProcessing"
-                filterable
-                multiple
-                class="input-field__multi-select"
-                name="primaryKeyColumn"
-                @input="columnInfo.primaryKeys = $event"
-              />
-              <div 
-                v-show="errors.has('primaryKeyColumn')"
-                class="error-text"
-              >{{ errors.first('primaryKeyColumn') }}</div>
-            </div>
-          </div>
-        </div>
-        <div class="setting-block">
+        </template>
+        <div
+          v-if="columnInfo.status === 'AUTO'"
+          class="setting-block"
+        >
           <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
-          <div
-            v-if="true"
-            class="input-field"
-          >
+          <div class="input-field">
             <div class="input-field__input">
               <default-select 
                 v-validate="'required'"
@@ -207,24 +149,19 @@
             </div>
           </div>
         </div>
-        <div class="button__block">
-          <button 
-            class="btn btn-outline"
-            @click="closeDialog"
-          >{{ $t('button.cancel') }}</button>
-          <button 
-            v-if="!settingId"
-            :disabled="isProcessing || !switchInfo.selected"
-            class="btn btn-default"
-            @click="setBatchLoad"
-          >{{ $t('button.confirm') }}</button>
-          <button 
-            v-else
-            :disabled="isProcessing"
-            class="btn btn-default"
-            @click="updateBatchLoad"
-          >{{ $t('button.update') }}</button>
-        </div>
+        <template v-if="hasSettingDataChanged">
+          <div class="button__block">
+            <button 
+              class="btn btn-outline"
+              @click="closeDialog"
+            >{{ $t('button.cancel') }}</button>
+            <button 
+              :disabled="isProcessing"
+              class="btn btn-default"
+              @click="columnInfo.id ? updateBatchLoad() : setBatchLoad()"
+            >{{ $t('button.save') }}</button>
+          </div>
+        </template>
       </template>
     </div>
   </div>
@@ -261,18 +198,34 @@ export default {
   },
   data () {
     return {
-      settingId: null,
-      switchInfo: {
-        on: this.$t('batchLoad.on'),
-        off: this.$t('batchLoad.off'),
-        selected: false
-      },
-      columnInfo: {
-        builtTime: null,
-        updatedTime: null,
-        primaryKeys: [],
-        columnList: []
-      },
+      columnInfo: {},
+      originalColumnInfo: {},
+      primaryKeys: [],
+      originalPrimaryKeys: [],
+      updateStatusList: [
+        {
+          type: 'DISABLE',
+          name: this.$t('batchLoad.noUpdate')
+        },
+        {
+          type: 'AUTO',
+          name: this.$t('batchLoad.autoUpdate')
+        },
+        {
+          type: 'MANUAL',
+          name: this.$t('batchLoad.manualUpdate')
+        }
+      ],
+      updateTypeList: [
+        {
+          type: 'UPDATE',
+          name: this.$t('batchLoad.dataFrameUpdate')
+        },
+        {
+          type: 'REIMPORT',
+          name: this.$t('batchLoad.rebuild')
+        }
+      ],
       scheduleInfo: {
         selectedBasicSchedule: null,
         basicScheduleList: [
@@ -318,6 +271,18 @@ export default {
   computed: {
     dateTimeColumnList () {
       return this.columnInfo.columnList.filter(column => column.dataType === "DATETIME")
+    },
+    hasSettingDataChanged () {
+      // compare primary key lists
+      const primaryKeysSet = new Set(this.primaryKeys)
+      const isSamePrimaryKeyList = this.originalPrimaryKeys.every(key => primaryKeysSet.has(key))
+      if (this.primaryKeys.length !== this.originalPrimaryKeys.length || !isSamePrimaryKeyList) return true
+
+      // compare column info objects
+      for (let key in this.originalColumnInfo) {
+        if (this.originalColumnInfo[key] !== this.columnInfo[key]) return true
+      }
+      return false
     }
   },
   mounted () {
@@ -327,18 +292,11 @@ export default {
     getBatchSetting () {
       this.isLoading = true
       getBatchLoadSetting(this.dataFrameInfo.id)
-        .then(({ crontabConfigDo, primaryKeys }) => {
-          // 如果還沒設定過 crontabConfigDo 會是空的
-          if (crontabConfigDo) {
-            this.switchInfo.selected = crontabConfigDo.id && crontabConfigDo.status === 'Enable'
-            this.settingId = crontabConfigDo.id
-            this.columnInfo = {
-              builtTime: crontabConfigDo.createDateColumn || null,
-              updatedTime: crontabConfigDo.updateDateColumn || null,
-              primaryKeys: primaryKeys || []
-            }
-            this.scheduleInfo.selectedBasicSchedule = crontabConfigDo.cron || null
-          }
+        .then(({ crontabConfigContent, primaryKeys }) => {
+          this.columnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
+          this.originalColumnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
+          this.primaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
+          this.originalPrimaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
           this.fetchDataColumnList()
         })
         .catch(() => {
@@ -364,11 +322,11 @@ export default {
     },
     formatSettingData () {
       return {
-        createDateColumn: this.columnInfo.builtTime,
         cron: this.scheduleInfo.selectedBasicSchedule,
-        primaryKeys: this.columnInfo.primaryKeys,
-        status: this.switchInfo.selected ? 'Enable' : 'Disable',
-        updateDateColumn: this.columnInfo.updatedTime
+        primaryKeys: this.primaryKeys,
+        status: this.columnInfo.status,
+        type: this.columnInfo.type,
+        updateDateColumn: this.columnInfo.updateDateColumn
       }
     },
     setSetting () {
@@ -385,7 +343,6 @@ export default {
         })
     },
     setBatchLoad () {
-      if (!this.switchInfo.selected) return
       this.$validator.validateAll()
         .then(result => {
           if (!result) return
@@ -423,7 +380,8 @@ export default {
             .finally(() => this.isProcessing = false)
         })
     },
-    triggerUpdateImmediately () {
+    updateImmediately () {
+      this.isProcessing = true
       const dataFrameId = this.dataFrameInfo.id
       triggerUpdateData(dataFrameId).then(() => {
         Message({
@@ -434,17 +392,6 @@ export default {
         })
         this.closeDialog()
       }).finally(() => this.isProcessing = false)
-    },
-    updateImmediately () {
-      this.$validator.validateAll()
-        .then(result => {
-          if (!result) return
-          this.isProcessing = true
-          let promise = this.settingId ? this.updateSetting() : this.setSetting()
-          promise.then(() => {
-            this.triggerUpdateImmediately()
-          })
-        })
     },
     updateBatchLoad () {
       this.updateBatchLoadSetting()
@@ -458,10 +405,6 @@ export default {
 
 <style lang="scss" scoped>
 .edit-batch-load-dialog {
-  .dialog-container {
-    width: 652px;
-  }
-
   .dialog {
     &__sub-title {
       margin-bottom: 12px;
