@@ -306,6 +306,7 @@
     "emptyValueAlias": "There are currently no data values ​​to edit in the data table",
     "emptyValueAliasDescription": "Editable data types include: category (unrepeated number less than 200), Boolean",
     "mainDateTimeColumnSetting": "Default Datetime Field Setting",
+    "builtInfo": "Created Info",
     "dataFrame": "Data Set",
     "rebuildRemark": "Data needs to rebuild again after editing",
     "dataValue": "DataValue",
@@ -358,7 +359,10 @@
     "sortSetting": "Sort Settings",
     "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change.",
     "lastUpdateResult": "Latest Update Result",
-    "noData": "No Data"
+    "noData": "No Data",
+    "SQLSyntax": "SQL Syntax",
+    "copyTableFromDatabase": "Copied existing table from database",
+    "useSqlScript": "Used Customized SQL Query"
   },
   "algorithm": {
     "name": "Algorithm",
@@ -705,6 +709,7 @@
     "reviewEtlSetting": "Review ETL Setting",
     "dateTimeColumnSetting": "Default DateTime",
     "batchLoadSetting": "Batch Loading Data",
+    "tableCreatedInfo": "Table Created Info",
     "select": "Select",
     "download": "Data Download",
     "dataExplanation": "Details",

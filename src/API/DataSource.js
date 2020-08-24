@@ -416,3 +416,14 @@ export function triggerUpdateData (dataFrameId) {
     method: 'PATCH'
   })
 }
+
+/**
+ * 取得dataFrame DB連線資訊
+ * @param {Number} dataFrameId - 欲查閱的資料表 ID
+ */
+export function getDataFrameCreatedInfo(dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/advanced/info`,
+    method: 'GET'
+  })
+}
