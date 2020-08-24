@@ -137,21 +137,17 @@ export default {
 <style lang="scss" scoped>
 .current-simulation {
   position: relative;
-  height: 100%;
   padding: 24px;
 
   .header {
     display: inline-block;
-    margin-bottom: 12px;
+    margin: 0 0 12px 0;
   }
 
   .simulate-btn {
     position: absolute;
     top: 24px;
     right: 24px;
-  }
-
-  .simulation-content {
   }
 
   .KPI {
@@ -165,7 +161,7 @@ export default {
     &__title {
       font-size: 18px;
       line-height: 22px;
-      margin-right: 30px;
+      margin: 0 30px 0 0;
 
       &:before {
         content: "";
