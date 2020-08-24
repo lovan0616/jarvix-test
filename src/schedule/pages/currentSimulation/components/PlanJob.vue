@@ -1,25 +1,16 @@
 <template>
   <div
-    :class="{'job--open': isCollapseOpen}"
     class="plan-job job"
   >
     <div
       class="job__header"
-      @click="isCollapseOpen = !isCollapseOpen"
     >
       <h3 class="job__title">
         {{ $t('schedule.schedule.jobInfo') }}
       </h3>
-      <div
-        :class="{'job__collapse--close': !isCollapseOpen}"
-        class="job__collapse"
-      >
-        {{ collapseText }}
-      </div>
     </div>
     <el-tabs
       :value="resultType"
-      :class="{'job__tabs--close': !isCollapseOpen}"
       class="job__tabs schedule-tab"
       type="card"
       @tab-click="switchTab($event.name)"
@@ -42,9 +33,9 @@
       :is-processing="isProcessing"
       :pagination-info="pagination"
       :column-width="'180'"
-      :height="'200'"
+      :max-height="'600'"
       :dataset="resultType === 'order' ? jobData : machineData"
-      :class="{'job__table--close': !isCollapseOpen}"
+      fixed-index
       class="job__table"
       @change-page="updatePage"
     />
@@ -62,7 +53,6 @@ export default {
   },
   data () {
     return {
-      isCollapseOpen: true,
       isLoading: false,
       isProcessing: false,
       resultType: 'order',
@@ -115,9 +105,6 @@ export default {
     }
   },
   computed: {
-    collapseText () {
-      return this.isCollapseOpen ? this.$t('schedule.schedule.close') : this.$t('schedule.schedule.open')
-    },
     isDataAvailable () {
       return (this.resultType === 'order' && this.jobData) || (this.resultType === 'machine' && this.machineData)
     }
@@ -187,28 +174,18 @@ export default {
 
 <style lang="scss" scoped>
 .job {
-  margin-bottom: 12px;
-
-  &--open {
-    height: 300px;
-    margin-bottom: 24px;
-  }
+  margin-bottom: 24px;
 
   &__header {
     position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
     padding: 0 14px;
     margin-bottom: 12px;
-    cursor: pointer;
   }
 
   &__title {
     font-size: 18px;
     line-height: 22px;
-    margin-right: 30px;
+    margin: 0 30px 0 0;
 
     &::before {
       content: "";
@@ -221,40 +198,11 @@ export default {
     }
   }
 
-  &__collapse {
-    position: relative;
-    font-size: 14px;
-    line-height: 18px;
-
-    &::after {
-      content: "";
-      position: absolute;
-      right: -14px;
-      top: 5px;
-      width: 6px;
-      height: 6px;
-      border-right: 2px solid var(--color-white);
-      border-bottom: 2px solid var(--color-white);
-      transform: rotate(45deg)
-    }
-
-    &--close {
-      &::after{
-        transform: rotate(-45deg)
-      }
-    }
-  }
-
   &__tabs {
     margin-bottom: 8px;
-
-    &--close {
-      display: none;
-    }
   }
 
   &__table {
-    height: 215px;
 
     /deep/ .sy-table.el-table {
       border: 1px solid #555858;
@@ -269,9 +217,6 @@ export default {
       background-color: transparent;
     }
 
-    &--close {
-      display: none;
-    }
   }
 
   .empty-block {

@@ -54,10 +54,14 @@
       </div>
     </div>
     <div
-      v-if="isLoading"
+      v-if="isLoading || !jobData"
       class="empty-dialog"
     >
-      <spinner />
+      <spinner v-if="jobData" />
+      <span
+        v-else
+        class="empty-block__text"
+      > {{ $t('schedule.table.noData') }} </span>
     </div>
     <job-selection-pagination-table
       v-if="jobData"
@@ -65,6 +69,7 @@
       :layout="'unscheduled'"
       :is-processing="isProcessing"
       :pagination-info="pagination"
+      fixed-index
       selection
       @change-check="updateSelectedData"
       @change-page="updatePage"
@@ -166,7 +171,7 @@ export default {
             isScheduled: isScheduled
           }
         }) || [],
-        index: []
+        index: [...Array(tmpJobData ? tmpJobData.length : [])].map((x, i) => i)
       }
     },
     searchJobData () {
@@ -302,6 +307,12 @@ export default {
     height: 249px;
     background: var(--color-bg-gray);
     border-radius: 8px;
+
+    &__text {
+      font-size: 16px;
+      line-height: 20px;
+      color: var(--color-text-gray);
+    }
   }
 }
 </style>

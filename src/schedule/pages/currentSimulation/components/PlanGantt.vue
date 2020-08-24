@@ -1,24 +1,15 @@
 <template>
   <div
-    :class="{'gantt--open': isCollapseOpen}"
     class="plan-gantt gantt"
   >
     <div
       class="gantt__header"
-      @click="isCollapseOpen = !isCollapseOpen"
     >
       <h3 class="gantt__title">
         {{ $t('schedule.schedule.ganttChart') }}
       </h3>
-      <div
-        :class="{'gantt__collapse--close': !isCollapseOpen}"
-        class="gantt__collapse"
-      >
-        {{ collapseText }}
-      </div>
     </div>
     <div
-      :class="{'gantt__info--close': !isCollapseOpen}"
       class="gantt__info"
     >
       <span
@@ -98,7 +89,6 @@ export default {
   },
   data () {
     return {
-      isCollapseOpen: true,
       isLoading: true,
       isJobEmpty: false,
       isProcessing: false,
@@ -133,9 +123,6 @@ export default {
           label
         }
       })
-    },
-    collapseText () {
-      return this.isCollapseOpen ? this.$t('schedule.schedule.close') : this.$t('schedule.schedule.open')
     }
   },
   mounted () {
@@ -234,7 +221,6 @@ export default {
 
 <style lang="scss" scoped>
 .gantt {
-  margin-bottom: 64px;
 
   &__header {
     position: relative;
@@ -262,30 +248,6 @@ export default {
     }
   }
 
-  &__collapse {
-    position: relative;
-    font-size: 14px;
-    line-height: 18px;
-
-    &::after {
-      content: "";
-      position: absolute;
-      right: -14px;
-      top: 5px;
-      width: 6px;
-      height: 6px;
-      border-right: 2px solid var(--color-white);
-      border-bottom: 2px solid var(--color-white);
-      transform: rotate(45deg)
-    }
-
-    &--close {
-      &::after{
-        transform: rotate(-45deg)
-      }
-    }
-  }
-
   &__info {
     display: flex;
     flex-direction: row;
@@ -294,10 +256,6 @@ export default {
       font-size: 14px;
       line-height: 18px;
       color: var(--color-text-light);
-    }
-
-    &--close {
-      display: none;
     }
   }
 

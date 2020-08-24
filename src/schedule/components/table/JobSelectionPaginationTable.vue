@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination-table">
+  <div class="pagination-table ss-pagination-table ">
     <div
       v-show="isProcessing"
       class="spinner-block"
@@ -13,6 +13,17 @@
       class="sy-table"
       style="width: 100%;"
     >
+      <el-table-column
+        v-if="dataset.index && dataset.index.length > 0"
+        :width="indexWidth"
+        :fixed="fixedIndex"
+        type="index"
+        align="center"
+      >
+        <template slot="header">
+          <slot name="index-header" />
+        </template>
+      </el-table-column>
       <el-table-column
         v-for="(col, index) in dataset.columns.titles"
         :key="index"
@@ -145,7 +156,7 @@ export default {
     tableProps () {
       const tableProps = { ...this.$props, data: this.dataset.data }
       if (!this.$props.maxHeight) {
-        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 220)
+        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 450)
       }
       if (this.$props.height) this.$set(tableProps, 'height', this.height)
       return tableProps
@@ -175,7 +186,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.pagination-table {
+.ss-pagination-table {
   position: relative;
   width: 100%;
   height: auto;

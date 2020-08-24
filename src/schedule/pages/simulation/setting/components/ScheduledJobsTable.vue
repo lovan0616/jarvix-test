@@ -42,6 +42,7 @@
       :dataset="pageFilterJobData"
       :layout="'scheduled'"
       :pagination-info="pagination"
+      fixed-index
       selection
       @change-check="updateSelectedData"
       @change-page="updatePage"
@@ -102,10 +103,11 @@ export default {
       return this.scheduledJobs || []
     },
     pageFilterJobData () {
+      const sliceDate = this.filterJobData.slice(this.sliceInfo.start, this.sliceInfo.end) || []
       return ({
         columns: { titles: this.jobTableHeaderList },
-        data: this.filterJobData.slice(this.sliceInfo.start, this.sliceInfo.end) || [],
-        index: []
+        data: sliceDate,
+        index: [...Array(sliceDate ? sliceDate.length : [])].map((x, i) => i)
       })
     }
   },
