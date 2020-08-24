@@ -7,11 +7,10 @@
     >
       <div class="dialog__title">
         {{ $t('schedule.setting.updateFiles') }}
-        <a
-          href="javascript:void(0)"
-          class="dialog__close-button"
+        ><i
+          class="el-icon-close dialog__close-button"
           @click="$emit('close')"
-        ><i class="el-icon-close" /></a>
+        />
       </div>
       <div class="dialog__body setting-file">
         <div class="setting-file__list">
@@ -25,9 +24,9 @@
               <span class="setting-file__item-name">{{ $t('schedule.setting.fileName') }}：{{ file.originFileName || $t('schedule.setting.noFileSelected') }}</span>
               <!--上傳檔案須將 file upload id 帶入 formData 中-->
               <input
-                type="number"
                 :name="'importFileUploadId' + (index + 1)"
                 :value="file.id"
+                type="number"
                 hidden
               >
               <label

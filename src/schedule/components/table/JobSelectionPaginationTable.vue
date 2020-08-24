@@ -12,6 +12,7 @@
       :empty-text="$t('schedule.table.noData')"
       class="sy-table"
       style="width: 100%;"
+      cell-class-name="schedule-table-cell"
     >
       <el-table-column
         v-if="dataset.index && dataset.index.length > 0"
@@ -62,12 +63,23 @@
       <el-table-column
         v-if="selection"
         fixed="right"
-        :label="$t('schedule.simulation.table.click')"
         width="103"
       >
+        <template
+          slot="header"
+          slot-scope="scope"
+        >
+          <el-checkbox
+            v-model="isCheckAll"
+            class="job-select-checkbox"
+            :name="scope[0]"
+            @change="handleCheckAllChange()"
+          />
+        </template>
         <template slot-scope="selectionColumn">
           <el-checkbox
             v-model="dataset.data[selectionColumn.$index].isChecked"
+            class="job-select-checkbox"
             :disabled="layout === 'unscheduled' && dataset.data[selectionColumn.$index].isScheduled"
             @change="changeCheck(dataset.data[selectionColumn.$index])"
           />
@@ -145,6 +157,7 @@ export default {
   },
   data () {
     return {
+      isCheckAllList: [],
       priortyOptions: [
         { value: 1, label: this.$t('schedule.simulation.table.highPriority') },
         { value: 2, label: this.$t('schedule.simulation.table.secondPriority') },
@@ -160,10 +173,50 @@ export default {
       }
       if (this.$props.height) this.$set(tableProps, 'height', this.height)
       return tableProps
+    },
+    isCheckAll: {
+      get () {
+        return this.isCheckAllList[this.paginationInfo.currentPage]
+      },
+      set (value) {
+        this.$set(this.isCheckAllList, this.paginationInfo.currentPage, value)
+      }
+
+    }
+  },
+  watch: {
+    dataset: {
+      handler () {
+        this.$set(this.isCheckAllList, this.paginationInfo.currentPage, this.dataset.data.every(data => data.isChecked))
+      },
+      immediate: true
+    }
+  },
+  mounted () {
+    for (let i = 0; i < this.paginationInfo.totalPages; i++) {
+      this.isCheckAllList.push(false)
     }
   },
   methods: {
+    handleCheckAllChange () {
+      if (this.isCheckAllList[this.paginationInfo.currentPage]) {
+        this.dataset.data.forEach(item => {
+          if (!item.isChecked) {
+            item.isChecked = true
+            this.changeCheck(item)
+          }
+        })
+      } else {
+        this.dataset.data.forEach(item => {
+          if (this.layout === 'scheduled' || (this.layout === 'unscheduled' && !item.isScheduled)) {
+            item.isChecked = false
+            this.changeCheck(item)
+          }
+        })
+      }
+    },
     changeCheck (checkedRow) {
+      this.$set(this.isCheckAllList, this.paginationInfo.currentPage, this.dataset.data.every(data => data.isChecked))
       this.$emit('change-check', checkedRow)
     },
     changePage (value) {
@@ -231,8 +284,16 @@ export default {
     background-color: var(--color-theme);
   }
 
-    /deep/ .el-checkbox__input.is-disabled .el-checkbox__inner {
+  /deep/ .el-checkbox__input.is-disabled .el-checkbox__inner {
     background-color: var(--color-text-disabled);
+  }
+
+  .job-select-checkbox {
+    width: 100%;
+  }
+
+  .sy-table /deep/ td.schedule-table-cell:last-child {
+    padding: 0;
   }
 }
 </style>

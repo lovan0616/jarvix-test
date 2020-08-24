@@ -21,5 +21,8 @@ export default {
   },
   updateScheduledJobs (state, scheduledJobs) {
     state.scheduledJobs = scheduledJobs
+  },
+  setSimulationResult (state, result) {
+    state.simulationResult = result
   }
 }

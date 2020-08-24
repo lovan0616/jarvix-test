@@ -1,8 +1,8 @@
 <template>
   <el-select
     v-model="selectedValue"
-    class="default-select"
     :placeholder="$t('schedule.base.pleaseSelect')"
+    class="default-select"
   >
     <el-option
       v-for="option in options"

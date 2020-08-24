@@ -24,8 +24,8 @@
         {{ $t('schedule.button.downloadFile') }}
       </default-button>
       <a
-        class="file__item-button btn btn-secondary"
         :href="`../../../files/${fileData.code}.csv`"
+        class="file__item-button btn btn-secondary"
         download
       >
         {{ $t('schedule.button.templateFileDownload') }}

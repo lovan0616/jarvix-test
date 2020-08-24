@@ -40,7 +40,6 @@
     </div>
     <v-gantt-chart
       v-else
-      class="schedule-gantt-chart"
       :start-time="startTime"
       :end-time="endTime"
       :datas="ganttChartDataList"
@@ -50,6 +49,7 @@
       :title-width="168"
       :scale="scale"
       :scroll-to-postion="position"
+      class="schedule-gantt-chart"
       @scroll-left="scrollToLeft"
     >
       <template v-slot:block="{ data, item }">
@@ -107,22 +107,28 @@ export default {
   computed: {
     ...mapState('scheduleSetting', ['equipments']),
     scaleList () {
-      const scales = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180, 240, 360, 720, 1440]
-      return scales.map(scale => {
-        const value = parseInt(scale)
-        let label
-        if (value < 60) {
-          label = value + this.$t('schedule.simulation.scheduleResult.minute')
-        } else if (value >= 60 && value < 1440) {
-          label = value / 60 + this.$t('schedule.simulation.scheduleResult.hour')
-        } else {
-          label = value / 1440 + this.$t('schedule.simulation.scheduleResult.day')
+      return [
+        {
+          label: this.$t('schedule.simulation.scheduleResult.halfDay'),
+          value: 60
+        },
+        {
+          label: 1 + this.$t('schedule.simulation.scheduleResult.day'),
+          value: 120
+        },
+        {
+          label: 3 + this.$t('schedule.simulation.scheduleResult.day'),
+          value: 360
+        },
+        {
+          label: 7 + this.$t('schedule.simulation.scheduleResult.day'),
+          value: 720
+        },
+        {
+          label: 14 + this.$t('schedule.simulation.scheduleResult.day'),
+          value: 1440
         }
-        return {
-          value,
-          label
-        }
-      })
+      ]
     }
   },
   mounted () {

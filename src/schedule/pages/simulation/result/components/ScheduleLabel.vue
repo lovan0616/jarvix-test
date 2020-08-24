@@ -1,7 +1,7 @@
 <template>
   <div
-    class="eqip-name"
     :style="{height: cellHeight + 'px', lineHeight: cellHeight + 'px'}"
+    class="eqip-name"
   >
     {{ info.name }}
   </div>

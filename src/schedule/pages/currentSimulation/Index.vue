@@ -8,8 +8,8 @@
     </h2>
     <default-button
       v-if="planInfo.planId"
-      class="simulate-btn"
       :loading="isLoadingLastSolution"
+      class="simulate-btn"
       @click="reSimulate"
     >
       {{ $t('schedule.schedule.reSimulate') }}

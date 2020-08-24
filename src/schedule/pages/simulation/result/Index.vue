@@ -14,14 +14,17 @@
         </div>
         <div class="solution__list">
           <div
-            v-for="(solution, index) in solutions"
+            v-for="solution in solutions"
             :key="solution.solutionId"
             class="solution card-like"
-            :class="{ 'is-active': solution.solutionId === currentSolutionId }"
+            :class="{ 'is-active': solution.solutionId === currentSolutionId, 'is-failed': isSolutionFailed(solution.solutionId) }"
             @click="switchSolution(solution.solutionId)"
           >
             <div class="solution__title">
-              {{ $t('schedule.simulation.plan') + (index + 1) }}
+              {{ $t('schedule.simulation.plan') + solution.sequence }}
+            </div>
+            <div class="solution__result--failed">
+              {{ $t('schedule.simulation.simulationFailed') }}
             </div>
           </div>
         </div>
@@ -65,12 +68,13 @@
           :is-processing="isProcessing"
           :pagination-info="pagination"
           :dataset="resultType === 'order' ? orderData : machineData"
+          height="100%"
           @change-page="updatePage"
         />
         <template v-else-if="resultType === 'schedule'">
           <div class="schedule__header">
             <span class="schedule__header-description">
-              機台(工單可以追蹤時段連結 / 維護保養時間 / 前置＆換線時間 / 製作時間)
+              {{ $t('schedule.schedule.ganttInfo') }}
             </span>
             <div class="schedule__header-select">
               <span class="schedule__header-select-label">
@@ -97,7 +101,6 @@
           </div>
           <v-gantt-chart
             v-else
-            class="schedule-gantt-chart"
             :start-time="startTime"
             :end-time="endTime"
             :datas="ganttChartDataList"
@@ -107,6 +110,7 @@
             :title-width="168"
             :scale="scale"
             :scroll-to-postion="position"
+            class="schedule-gantt-chart"
             @scroll-left="scrollToLeft"
           >
             <template v-slot:block="{ data, item }">
@@ -208,26 +212,26 @@ export default {
         { title: 'targetDelivery', name: this.$t('schedule.simulation.orderResult.targetDelivery') },
         { title: 'completeDate', name: this.$t('schedule.simulation.orderResult.completeDate') },
         { title: 'startDate', name: this.$t('schedule.simulation.orderResult.startDate') },
-        { title: 'material', name: this.$t('schedule.simulation.orderResult.material') },
-        { title: 'product', name: this.$t('schedule.simulation.orderResult.product') },
+        { title: 'material', name: this.$t('schedule.simulation.orderResult.material'), width: '200' },
+        { title: 'product', name: this.$t('schedule.simulation.orderResult.product'), width: '200' },
         { title: 'priority', name: this.$t('schedule.simulation.orderResult.priority') },
         { title: 'quantity', name: this.$t('schedule.simulation.orderResult.quantity') },
         { title: 'cycleTime', name: this.$t('schedule.simulation.orderResult.cycleTime') }
       ],
       machineTableHeaderList: [
-        { title: 'arriveTime', name: this.$t('schedule.simulation.machineResult.arriveTime') },
-        { title: 'checkinTime', name: this.$t('schedule.simulation.machineResult.checkinTime') },
-        { title: 'checkoutTime', name: this.$t('schedule.simulation.machineResult.checkoutTime') },
-        { title: 'endTime', name: this.$t('schedule.simulation.machineResult.endTime') },
+        { title: 'arriveTime', name: this.$t('schedule.simulation.machineResult.arriveTime'), width: '140' },
+        { title: 'checkinTime', name: this.$t('schedule.simulation.machineResult.checkinTime'), width: '140' },
+        { title: 'checkoutTime', name: this.$t('schedule.simulation.machineResult.checkoutTime'), width: '140' },
+        { title: 'endTime', name: this.$t('schedule.simulation.machineResult.endTime'), width: '140' },
         { title: 'equipment', name: this.$t('schedule.simulation.machineResult.equipment') },
         { title: 'factorySite', name: this.$t('schedule.simulation.machineResult.factorySite') },
         { title: 'job', name: this.$t('schedule.simulation.machineResult.job') },
-        { title: 'material', name: this.$t('schedule.simulation.machineResult.material') },
+        { title: 'material', name: this.$t('schedule.simulation.machineResult.material'), width: '200' },
         { title: 'operation', name: this.$t('schedule.simulation.machineResult.operation') },
         { title: 'order', name: this.$t('schedule.simulation.machineResult.order') },
-        { title: 'product', name: this.$t('schedule.simulation.machineResult.product') },
+        { title: 'product', name: this.$t('schedule.simulation.machineResult.product'), width: '200' },
         { title: 'stage', name: this.$t('schedule.simulation.machineResult.stage') },
-        { title: 'startTime', name: this.$t('schedule.simulation.machineResult.startTime') },
+        { title: 'startTime', name: this.$t('schedule.simulation.machineResult.startTime'), width: '140' },
         { title: 'task', name: this.$t('schedule.simulation.machineResult.task') }
       ],
       pagination: {
@@ -247,26 +251,36 @@ export default {
     ...mapState('simulation', ['planId', 'solutions']),
     ...mapState('scheduleSetting', ['equipments']),
     scaleList () {
-      const scales = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180, 240, 360, 720, 1440]
-      return scales.map(scale => {
-        const value = parseInt(scale)
-        let label
-        if (value < 60) {
-          label = value + this.$t('schedule.simulation.scheduleResult.minute')
-        } else if (value >= 60 && value < 1440) {
-          label = value / 60 + this.$t('schedule.simulation.scheduleResult.hour')
-        } else {
-          label = value / 1440 + this.$t('schedule.simulation.scheduleResult.day')
+      return [
+        {
+          label: this.$t('schedule.simulation.scheduleResult.halfDay'),
+          value: 60
+        },
+        {
+          label: 1 + this.$t('schedule.simulation.scheduleResult.day'),
+          value: 120
+        },
+        {
+          label: 3 + this.$t('schedule.simulation.scheduleResult.day'),
+          value: 360
+        },
+        {
+          label: 7 + this.$t('schedule.simulation.scheduleResult.day'),
+          value: 720
+        },
+        {
+          label: 14 + this.$t('schedule.simulation.scheduleResult.day'),
+          value: 1440
         }
-        return {
-          value,
-          label
-        }
-      })
+      ]
     }
   },
   mounted () {
-    this.currentSolutionId = this.solutions[0].solutionId
+    // 找出第一個 演算成功 的方案
+    const completedSolutions = this.solutions.filter(solution => {
+      return !this.$store.state.simulation.simulationResult.failedSolutionIds.includes(solution.solutionId)
+    })
+    this.currentSolutionId = completedSolutions[0].solutionId
     this.fetchOrderSimulateResult()
     this.fetchKpiResult()
   },
@@ -396,6 +410,7 @@ export default {
         })
     },
     switchSolution (solutionId) {
+      if (this.isSolutionFailed(solutionId)) return
       if (this.currentSolutionId === solutionId) return
       this.resultType = 'order'
       this.currentSolutionId = solutionId
@@ -433,6 +448,9 @@ export default {
     },
     cancelSearchOrder () {
       this.searchedOrderId = null
+    },
+    isSolutionFailed (solutionId) {
+      return this.$store.state.simulation.simulationResult.failedSolutionIds.includes(solutionId)
     }
   }
 }
@@ -441,12 +459,16 @@ export default {
 <style lang="scss" scoped>
 .page {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 
   &__spinner {
     margin-top: 30vh;
   }
   &__section {
     &.detail {
+      flex: 1;
+      height: 0;
       display: flex;
 
       .section {
@@ -462,6 +484,10 @@ export default {
           }
           .solution__list {
             overflow: auto;
+            .card-like {
+              height: auto;
+              padding: 16px 0 16px 16px;
+            }
           }
         }
         &__header {
@@ -484,6 +510,7 @@ export default {
           }
           .pagination-table {
             flex: 1;
+            height: 0;
             /deep/ .el-table {
               height: 100%;
             }

@@ -1,9 +1,9 @@
 <template>
   <el-input
     v-model.trim="inputValue"
-    size="small"
     :placeholder="placeholder"
     :type="type"
+    size="small"
   >
     <template slot="prepend">
       <slot name="prepend" />

@@ -15,9 +15,9 @@
       </div>
       <v-echart
         v-else
-        auto-resize
         :style="chartStyle"
         :options="options"
+        auto-resize
       />
     </div>
   </div>
@@ -84,7 +84,7 @@ export default {
         grid: {
           left: '8px',
           right: '8px',
-          top: '50px',
+          top: '70px',
           bottom: '20px',
           containLabel: true
         }
