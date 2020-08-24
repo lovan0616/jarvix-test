@@ -57,9 +57,9 @@
           <div class="block-title">{{ $t('editing.notSelect') }}</div>
           <div class="option-list-block">
             <draggable
-              :list="columnOptionList" 
-              class="list-group" 
-              group="people">
+              :list="columnOptionList"
+              :group="draggableGroupName"
+              class="list-group">
               <div 
                 v-for="(column, index) in columnOptionList"
                 :key="column.id"
@@ -89,28 +89,29 @@
             <draggable
               :value="columnSet.dataColumnList" 
               :clone="cloneSelectedColumn"
-              class="list-group" 
-              group="people"
+              :group="selectedListGroup"
+              class="list-group"
               @change="updateSelectedList">
               <div 
                 v-for="(column, index) in columnSet.dataColumnList"
                 :key="column.id"
+                :class="{ 'disabled': columnSet.id && columnSet.dataColumnList.length <= 1 }"
                 class="single-option"
               >
                 <div class="info name">{{ column.name }}</div>
                 <div class="info alias">{{ column.primaryAlias }}</div>
-                <button 
-                  v-if="columnSet.dataColumnList.length > 1"
+                <button
+                  v-if="!(columnSet.id && columnSet.dataColumnList.length <= 1)"
                   class="btn-m btn-secondary btn-select"
                   @click="cancelSelect(index)"
                 >{{ $t('button.cancel') }}</button>
               </div>
+              <div
+                v-if="columnSet.dataColumnList.length === 0"
+                slot="footer"
+                class="empty-select"
+              >{{ $t('editing.selectYet') }}</div>
             </draggable>
-            
-            <div 
-              v-if="columnSet.dataColumnList.length === 0"
-              class="empty-select"
-            >{{ $t('editing.selectYet') }}</div>
           </div>
         </div>
       </div>
@@ -157,6 +158,14 @@ export default {
   computed: {
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
+    },
+    selectedListGroup () {
+      const isPullable =  !(this.columnSet.id && this.columnSet.dataColumnList.length <= 1)
+      // put 限定接受當前 dataset 來的 column
+      return { name: this.draggableGroupName, pull: isPullable, put: this.draggableGroupName }
+    },
+    draggableGroupName () {
+      return 'columnSetColumn' + this.$vnode.key
     }
   },
   mounted () {
@@ -181,21 +190,25 @@ export default {
         this.columnOptionList = JSON.parse(JSON.stringify(this.columnList))
       }
     },
-    selectColumn (index) {
-      if (this.columnSet.id) {
-        addColumnSetColumn({
-          columnSetId: this.columnSet.id,
-          dataColumnId: this.columnOptionList[index].id
-        }).then(response => {
+    addColumnSetColumn (columnSetId, dataColumnId) {
+      return addColumnSetColumn({ columnSetId, dataColumnId })
+        .then(response => {
           Message({
             message: this.$t('message.saveSuccess'),
             type: 'success',
             duration: 3 * 1000,
             showClose: true
           })
-          this.columnSet.dataColumnList.push(response)
-          this.columnOptionList.splice(index, 1)
+          return response
         })
+    },
+    selectColumn (index) {
+      if (this.columnSet.id) {
+        this.addColumnSetColumn(this.columnSet.id, this.columnOptionList[index].id)
+          .then(response => {
+            this.columnSet.dataColumnList.push(response)
+            this.columnOptionList.splice(index, 1)
+          })
       } else {
         this.columnSet.dataColumnList.push(this.columnOptionList[index])
         this.columnOptionList.splice(index, 1)
@@ -299,18 +312,8 @@ export default {
           .then(() => this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1))
       } else if (e.hasOwnProperty('added')) {
         if (!this.columnSet.id) return this.columnSet.dataColumnList.push(e.added.element)
-        addColumnSetColumn({
-          columnSetId: this.columnSet.id,
-          dataColumnId: e.added.element.id
-        }).then(response => {
-          Message({
-            message: this.$t('message.saveSuccess'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
-          })
-          this.columnSet.dataColumnList.splice(e.added.newIndex, 0, response)
-        })
+        this.addColumnSetColumn(this.columnSet.id, e.added.element.id)
+          .then(response => this.columnSet.dataColumnList.splice(e.added.newIndex, 0, response))
       }
     },
     cloneSelectedColumn (columnData) {
@@ -438,9 +441,23 @@ export default {
       background: #475353;
       border-radius: 5px;
       padding: 12px;
+      cursor: grab;
 
       &:not(:last-child) {
         margin-bottom: 8px;
+      }
+
+      &.sortable-chosen,
+      &.sortable-drag {
+        cursor: grabbing;
+      }
+
+      &.sortable-ghost {
+        opacity: .4;
+      }
+
+      &.disabled {
+        cursor: no-drop;
       }
 
       .info {
