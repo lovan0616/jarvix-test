@@ -135,7 +135,7 @@
             <div class="input-field__input">
               <default-select 
                 v-validate="'required'"
-                v-model="scheduleInfo.selectedBasicSchedule"
+                v-model="columnInfo.cron"
                 :option-list="scheduleInfo.basicScheduleList"
                 :placeholder="$t('batchLoad.chooseCycle')"
                 :is-disabled="isProcessing"
@@ -227,7 +227,6 @@ export default {
         }
       ],
       scheduleInfo: {
-        selectedBasicSchedule: null,
         basicScheduleList: [
           {
             value: '*/5 * * * *',
@@ -322,7 +321,7 @@ export default {
     },
     formatSettingData () {
       return {
-        cron: this.scheduleInfo.selectedBasicSchedule,
+        cron: this.columnInfo.cron,
         primaryKeys: this.primaryKeys,
         status: this.columnInfo.status,
         type: this.columnInfo.type,
