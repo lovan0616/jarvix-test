@@ -119,7 +119,7 @@ export default {
   },
   computed: {
     ...mapState('chatBot', ['parserLanguageList', 'parserLanguage']),
-    ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
+    ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
     newParserMode () {
@@ -148,7 +148,6 @@ export default {
         ...this.dataSourceColumnInfoList.dateTime.map(element => ({type: 'dateTime', text: element})),
         ...this.dataSourceColumnInfoList.numeric.map(element => ({type: 'numeric', text: element})),
         ...this.dataSourceColumnInfoList.uniqueList.map(element => ({type: 'unique', text: element})),
-        ...this.dataSourceDataValueList.map(element => ({type: 'dataValue', text: element})),
         ...this.$t('questionToken')
       ]
     },
