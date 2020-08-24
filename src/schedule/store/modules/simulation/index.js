@@ -6,7 +6,12 @@ export default {
   state: {
     solutions: [],
     scheduledJobs: [],
-    planId: null
+    planId: null,
+    simulationResult: {
+      completedSolutionIds: [],
+      failedSolutionIds: [],
+      inProgressIds: []
+    }
   },
   mutations,
   actions

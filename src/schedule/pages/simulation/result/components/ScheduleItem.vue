@@ -15,7 +15,7 @@
     </div>
     <div class="job__detail">
       <div class="job__detail-title">
-        {{ item.reason ? $t(`schedule.setting.${item.reason}`) : `${$t('schedule.simulation.scheduleResult.job')}：${item.order}` }}
+        {{ item.reason ? $t(`schedule.setting.${item.reason}`) : `${$t('schedule.simulation.scheduleResult.jobNo')}：${item.order}` }}
       </div>
       <div class="job__detail-description">
         <template v-if="item.reason">
@@ -28,19 +28,10 @@
         </template>
         <template v-else>
           <div class="job__detail-info-row">
-            {{ $t('schedule.simulation.machineResult.arriveTime') }}：{{ item.end }}
+            {{ $t('schedule.simulation.machineResult.changeLineTime') }}：{{ getHoursDiff(item.checkinTime, item.startTime) }}
           </div>
           <div class="job__detail-info-row">
-            {{ $t('schedule.simulation.machineResult.checkinTime') }}：{{ item.checkinTime }}
-          </div>
-          <div class="job__detail-info-row">
-            {{ $t('schedule.simulation.machineResult.checkoutTime') }}：{{ item.checkoutTime }}
-          </div>
-          <div class="job__detail-info-row">
-            {{ $t('schedule.simulation.machineResult.endTime') }}：{{ item.endTime }}
-          </div>
-          <div class="job__detail-info-row">
-            {{ $t('schedule.simulation.machineResult.startTime') }}：{{ item.startTime }}
+            {{ $t('schedule.simulation.machineResult.produceTime') }}：{{ getHoursDiff(item.startTime, item.endTime) }}
           </div>
         </template>
       </div>
@@ -48,6 +39,8 @@
   </el-popover>
 </template>
 <script>
+import moment from 'moment'
+
 export default {
   name: 'ScheduleItem',
   props: {
@@ -68,6 +61,13 @@ export default {
     handleMouseLeave (orderId) {
       if (!orderId) return
       this.$emit('cancel-search-order')
+    },
+    getHoursDiff (startTime, endTime) {
+      const duration = moment(endTime).diff(moment(startTime), 'minutes')
+      return `${this.padZero(Math.floor(duration / 60))} ${this.$t('schedule.base.hour')} ${this.padZero(duration % 60)} ${this.$t('schedule.base.minute')}`
+    },
+    padZero (value) {
+      return value < 10 ? `0${value}` : value
     }
   }
 }
@@ -76,8 +76,17 @@ export default {
 .job {
   &__detail-title {
     font-weight: 600;
-    color: #43bac3;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
+    position: relative;
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: #555858;
+    }
   }
 
   &__chart {

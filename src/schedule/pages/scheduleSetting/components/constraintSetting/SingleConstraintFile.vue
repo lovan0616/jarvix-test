@@ -33,17 +33,17 @@
         size="20"
       />
       <default-button
-        type="secondary"
         :show-spinner="isDownloading"
         :disabled="isDownloading"
+        type="secondary"
         class="file__item-button btn btn-secondary"
         @click="onClickDownloadCurrentSetting(fileData.id, fileData.originFileName)"
       >
         {{ $t('schedule.button.downloadFile') }}
       </default-button>
       <a
-        class="file__item-button btn btn-secondary"
         :href="`../../../files/${fileData.code}.csv`"
+        class="file__item-button btn btn-secondary"
         download
       >
         {{ $t('schedule.button.templateFileDownload') }}

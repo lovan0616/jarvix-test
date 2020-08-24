@@ -2,7 +2,7 @@
   "schedule": {
     "lang": "繁中",
     "header": {
-      "schedule": "排程計畫",
+      "schedule": "當前計畫",
       "simulate": "模擬排程",
       "setting": "後台設定"
     },
@@ -23,7 +23,9 @@
       "to": "至",
       "pleaseSelect": "請選擇",
       "add": "加入",
-      "remove": "移除"
+      "remove": "移除",
+      "hour": "時",
+      "minute": "分"
     },
     "setting": {
       "title": "基本設定",
@@ -96,6 +98,7 @@
       "planSimulating": "計畫演算中",
       "backToSetting": "返回設定",
       "simulationKpiResult": "模擬方案 KPI 綜合比較",
+      "simulationFailed": "模擬失敗",
       "count": "數量",
       "dayCount": "天數",
       "percentage": "百分比",
@@ -114,6 +117,9 @@
         "complete":  "狀態"
       },
       "machineResult": {
+        "preWorkTime": "前置時間",
+        "produceTime": "製作時間",
+        "changeLineTime": "換線時間",
         "arriveTime": "抵達時間",
         "checkinTime": "開始時間",
         "checkoutTime": "結束時間",
@@ -146,13 +152,14 @@
       },
       "scheduleResult": {
         "equipmentId": "設備編號",
-        "job": "工單",
+        "jobNo": "工單編號",
         "pre": "前置",
         "startTime": "開始時間",
         "endTime": "結束時間",
         "minute": "分",
         "hour": "時",
         "day": "日",
+        "halfDay": "半日",
         "viewScale": "觀看維度"
       },
       "dataSync": {
@@ -173,7 +180,7 @@
       "jobSchedule": "排程計畫",
       "jobDeliver": "交付計畫",
       "ganttChart": "甘特圖",
-      "ganttInfo": "機台(工單可以追蹤時段連結 / 維護保養時間 / 前置＆換線時間 / 製作時間",
+      "ganttInfo": "機台(工單可以追蹤時段連結 / 維護保養時間 / 前置＆換線時間 / 製作時間)",
       "noPlan": "目前沒有計畫",
       "reSimulate": "重新模擬",
       "open": "開啟內容",

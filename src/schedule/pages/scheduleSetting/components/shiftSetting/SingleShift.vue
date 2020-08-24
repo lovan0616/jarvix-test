@@ -4,20 +4,19 @@
     <el-time-select
       v-model="startTime"
       :placeholder="$t('schedule.base.startTime')"
-      prefix-icon="null"
       :clearable="false"
       :picker-options="{
         start: '00:00',
         step: '00:30',
         end: '24:00'
       }"
+      prefix-icon="null"
       @change="changeTime"
     />
     <span class="conjunction">{{ $t('schedule.base.to') }}</span>
     <el-time-select
       v-model="endTime"
       :placeholder="$t('schedule.base.endTime')"
-      prefix-icon="null"
       :clearable="false"
       :picker-options="{
         start: '00:00',
@@ -25,6 +24,7 @@
         end: '24:00',
         minTime: startTime
       }"
+      prefix-icon="null"
       @change="changeTime"
     />
     <i

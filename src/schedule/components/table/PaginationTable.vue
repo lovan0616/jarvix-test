@@ -11,6 +11,7 @@
       :empty-text="$t('schedule.table.noData')"
       class="sy-table"
       style="width: 100%;"
+      :height="height"
     >
       <el-table-column
         v-if="dataset.index && dataset.index.length > 0"
@@ -28,7 +29,7 @@
         :key="index"
         :prop="col.title"
         :label="col.name"
-        :width="columnWidth"
+        :width="col.width"
         :min-width="minColumnWidth"
       />
     </el-table>

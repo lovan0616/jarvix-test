@@ -30,8 +30,8 @@
           <div
             v-for="(solution, index) in solutions"
             :key="solution.sequence"
-            class="solution card-like"
             :class="{'is-active': editSolutionSequence === solution.sequence}"
+            class="solution card-like"
             @click="editSolution(solution.sequence)"
           >
             <div class="solution__title">
@@ -48,7 +48,12 @@
               {{ $t('schedule.simulation.solution') + solution.sequence }}
             </div>
             <div class="solution__simulated-status">
-              {{ solution.simulated ? $t('schedule.simulation.simulated') : $t('schedule.simulation.notYetSimulated') }}
+              <span v-if="isSolutionFailed(solution.solutionId)">
+                {{ $t('schedule.simulation.simulationFailed') }}
+              </span>
+              <span v-else>
+                {{ solution.simulated ? $t('schedule.simulation.simulated') : $t('schedule.simulation.notYetSimulated') }}
+              </span>
             </div>
             <i
               class="icon-remove el-icon-delete"
@@ -219,6 +224,9 @@ export default {
     },
     cancelSimulation () {
       this.isSimulatingDialogOpen = false
+    },
+    isSolutionFailed (solutionId) {
+      return this.$store.state.simulation.simulationResult.failedSolutionIds.includes(solutionId)
     }
   }
 }
@@ -250,6 +258,7 @@ export default {
     .header__title {
       font-size: 24px;
       line-height: 32px;
+      margin-top: 0;
       margin-bottom: 20px;
     }
   }

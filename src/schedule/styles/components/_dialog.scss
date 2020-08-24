@@ -21,7 +21,7 @@
     z-index: -1;
   }
 
-  &__inner-box{
+  &__inner-box {
     position: relative;
     width: 520px;
     padding: 24px;
@@ -31,7 +31,7 @@
     border-radius: 5px;
     text-align: center;
 
-    .dialog-close{
+    .dialog-close {
       width: 14px;
       height: 14px;
       position: absolute;
@@ -64,6 +64,11 @@
     position: absolute;
     right: 0;
     top: 0;
+    width: 1em;
+    height: 1em;
+    color: var(--color-theme);
+    font-weight: bold;
+    cursor: pointer;
   }
 
   &__body {

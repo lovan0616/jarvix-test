@@ -34,7 +34,7 @@ const routes = [
         path: 'simulation',
         name: 'Simulation',
         redirect: () => (
-          store.state.simulation.planId
+          store.state.simulation.planId && store.state.simulation.solutions.length > 0
             ? { name: 'SimulationResult' }
             : { name: 'SimulationSetting' }
         ),

@@ -18,6 +18,15 @@
   &.is-active {
     background-color: #2B4D51;
   }
+  &.is-failed {
+    background-color: #555858;
+    color: var(--color-text-gray);
+    cursor: not-allowed;
+    user-select: none;
+    .solution__result--failed {
+      display: block;
+    }
+  }
   &+.card-like {
     margin-top: 8px;
   }
@@ -48,5 +57,9 @@
     top: 18px;
     right: 20px;
     color: var(--color-text-gray);
+  }
+  .solution__result--failed {
+    color: var(--color-danger);
+    display: none;
   }
 }
