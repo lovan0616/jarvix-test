@@ -56,18 +56,23 @@
         <div class="select-block">
           <div class="block-title">{{ $t('editing.notSelect') }}</div>
           <div class="option-list-block">
-            <div 
-              v-for="(column, index) in columnOptionList"
-              :key="column.id"
-              class="single-option"
-            >
-              <div class="info name">{{ column.name }}</div>
-              <div class="info alias">{{ column.primaryAlias }}</div>
-              <button 
-                class="btn-m btn-default btn-select"
-                @click="selectColumn(index)"
-              >{{ $t('button.select') }}</button>
-            </div>
+            <draggable
+              :list="columnOptionList"
+              :group="draggableGroupName"
+              class="list-group">
+              <div 
+                v-for="(column, index) in columnOptionList"
+                :key="column.id"
+                class="single-option"
+              >
+                <div class="info name">{{ column.name }}</div>
+                <div class="info alias">{{ column.primaryAlias }}</div>
+                <button 
+                  class="btn-m btn-default btn-select"
+                  @click="selectColumn(index)"
+                >{{ $t('button.select') }}</button>
+              </div>
+            </draggable>            
           </div>
         </div>
         <div class="icon-block">
@@ -81,23 +86,31 @@
         <div class="select-block">
           <div class="block-title">{{ $t('editing.alreadySelect') }}</div>
           <div class="option-list-block">
-            <div 
-              v-for="(column, index) in columnSet.dataColumnList"
-              :key="column.id"
-              class="single-option"
-            >
-              <div class="info name">{{ column.name }}</div>
-              <div class="info alias">{{ column.primaryAlias }}</div>
-              <button 
-                v-if="columnSet.dataColumnList.length > 1"
-                class="btn-m btn-secondary btn-select"
-                @click="cancelSelect(index)"
-              >{{ $t('button.cancel') }}</button>
-            </div>
-            <div 
-              v-if="columnSet.dataColumnList.length === 0"
-              class="empty-select"
-            >{{ $t('editing.selectYet') }}</div>
+            <draggable
+              :value="columnSet.dataColumnList" 
+              :group="selectedListGroup"
+              class="list-group"
+              @change="updateSelectedList">
+              <div 
+                v-for="(column, index) in columnSet.dataColumnList"
+                :key="column.id"
+                :class="{ 'disabled': columnSet.id && columnSet.dataColumnList.length <= 1 }"
+                class="single-option"
+              >
+                <div class="info name">{{ column.name }}</div>
+                <div class="info alias">{{ column.primaryAlias }}</div>
+                <button
+                  v-if="!(columnSet.id && columnSet.dataColumnList.length <= 1)"
+                  class="btn-m btn-secondary btn-select"
+                  @click="cancelSelect(index)"
+                >{{ $t('button.cancel') }}</button>
+              </div>
+              <div
+                v-if="columnSet.dataColumnList.length === 0"
+                slot="footer"
+                class="empty-select"
+              >{{ $t('editing.selectYet') }}</div>
+            </draggable>
           </div>
         </div>
       </div>
@@ -105,7 +118,8 @@
   </div>
 </template>
 <script>
-import { createColumnSet, addColumnSetColumn, removeColumnSetColumn, deleteColumnSet } from '@/API/ColumnSet'
+import draggable from 'vuedraggable';
+import { createColumnSet, deleteColumnSet, updateColumnSet } from '@/API/ColumnSet'
 import inputBlock from '@/components/InputBlock'
 import { Message } from 'element-ui'
 
@@ -113,7 +127,8 @@ export default {
   name: 'SingleColumnSet',
   inject: ['$validator'],
   components: {
-    inputBlock
+    inputBlock,
+    draggable
   },
   props: {
     columnList: {
@@ -136,84 +151,93 @@ export default {
     return {
       columnOptionList: [],
       isEditing: !this.columnSet.id,
-      validateFieldKey: new Date().getTime().toString()
+      validateFieldKey: new Date().getTime().toString(),
+      sortedColumnSet: {}
     }
   },
   computed: {
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
+    },
+    selectedListGroup () {
+      const isPullable =  !(this.columnSet.id && this.columnSet.dataColumnList.length <= 1)
+      // put 限定接受當前 dataset 來的 column
+      return { name: this.draggableGroupName, pull: isPullable, put: this.draggableGroupName }
+    },
+    draggableGroupName () {
+      return 'columnSetColumn' + this.$vnode.key
     }
   },
   mounted () {
+    this.sortColumnSet()
     this.filterColumnList()
   },
   methods: {
+    sortColumnSet () {
+      if (this.columnSet.dataColumnList.length === 0) return this.columnSet
+      this.columnSet.dataColumnList = this.columnSet.dataColumnList.map(column => ({ ...column, id: column.dataColumnId }))
+      this.columnSet.dataColumnList.sort((a, b) => a.sequence - b.sequence)
+    },
     filterColumnList () {
+      let columnOptionList
       if (this.columnSet.dataColumnList.length > 0) {
-        // 調整資料格式
-        // this.columnSet.dataColumnList = this.columnSet.dataColumnList.map(column => {
-        //   return {
-        //     id: column.dataColumnId,
-        //     name: column.name,
-        //     primaryAlias: column.primaryAlias
-        //   }
-        // })
         // 過濾已經被選擇的欄位
-        this.columnOptionList = this.columnList.filter(element => {
+        columnOptionList = this.columnList.filter(element => {
           return this.columnSet.dataColumnList.findIndex(column => column.dataColumnId === element.id) === -1
         })
       } else {
-        this.columnOptionList = JSON.parse(JSON.stringify(this.columnList))
+        columnOptionList = JSON.parse(JSON.stringify(this.columnList))
       }
+      return this.columnOptionList = columnOptionList.map(column => ({ ...column, primaryAlias: column.aliasList[0] }))
+    },
+    updateColumnSetColumn (columnSetId, columnList) {
+      return updateColumnSet(columnSetId, {
+        dataFrameId: this.columnSet.dataFrameId,
+        columnSetColumnList: columnList.map((column, index) => (
+          { 
+            columnId: column.id,
+            sequence: index + 1
+          }
+        ))
+      }).then(response => {
+        Message({
+          message: this.$t('message.saveSuccess'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      })
     },
     selectColumn (index) {
       if (this.columnSet.id) {
-        addColumnSetColumn({
-          columnSetId: this.columnSet.id,
-          dataColumnId: this.columnOptionList[index].id
-        }).then(response => {
-          Message({
-            message: this.$t('message.saveSuccess'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
+        const newColumnList = [...this.columnSet.dataColumnList, this.columnOptionList[index]]
+        this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+          .then(response => {
+            const selectedColumn = this.columnOptionList.splice(index, 1)[0]
+            this.columnSet.dataColumnList.push(selectedColumn)
           })
-          this.columnSet.dataColumnList.push(response)
-          this.columnOptionList.splice(index, 1)
-        })
       } else {
         this.columnSet.dataColumnList.push(this.columnOptionList[index])
         this.columnOptionList.splice(index, 1)
       }
     },
     cancelSelect (index) {
-      // if (this.columnSet.dataColumnList.length <= 1) {
-      //   Message({
-      //     message: this.$t('message.columnSetAtLeastOne'),
-      //     type: 'warning',
-      //     duration: 3 * 1000
-      //   })
-      //   return
-      // }
-      let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)
-      const {id: dataColumnId, dataColumnId: id, ...otherData} = cancelColumnInfo[0]
-      this.columnOptionList.push({id, dataColumnId, ...otherData})
-
+      const newColumnList = [...this.columnSet.dataColumnList]
       if (this.columnSet.id) {
-        removeColumnSetColumn(dataColumnId).then(() => {
-          Message({
-            message: this.$t('message.deleteSuccess'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
+        newColumnList.splice(index, 1)
+        return this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+          .then(response => {
+            let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)[0]
+            this.columnOptionList.push(cancelColumnInfo)
+            return
           })
-        })
       }
+      let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)[0]
+      this.columnOptionList.push(cancelColumnInfo)
     },
     saveColumnSet () {
       this.$validator.validate(this.validateFieldKey).then((isValidate) => {
         if (!isValidate) return
-
         if (!this.columnSet.primaryAlias) {
           Message({
             message: this.$t('message.columnSetNameEmpty'),
@@ -232,10 +256,16 @@ export default {
           })
           return false
         }
+
         createColumnSet({
           primaryAlias: this.columnSet.primaryAlias,
           dataFrameId: this.columnSet.dataFrameId,
-          dataColumnIdList: this.columnSet.dataColumnList.map(column => column.id)
+          dataColumnIdList: this.columnSet.dataColumnList.map((column, index) => (
+            { 
+              columnId: column.id,
+              sequence: index + 1
+            }
+          ))
         }).then(response => {
           Message({
             message: this.$t('message.saveSuccess'),
@@ -244,7 +274,6 @@ export default {
             showClose: true
           })
           this.columnSet.id = response.id
-          this.columnSet.dataColumnList = response.dataColumnList
           this.toggleIsEditing()
         })
       })
@@ -266,6 +295,38 @@ export default {
     },
     toggleIsEditing () {
       this.isEditing = !this.isEditing
+    },
+    updateDataSetOrder (oldIndex, newIndex) {  
+      if (!this.columnSet.id) {
+        const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
+        this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
+        return
+      }
+      const newColumnList = [...this.columnSet.dataColumnList]
+      const tempMovingColumn = newColumnList.splice(oldIndex, 1)[0]
+      newColumnList.splice(newIndex, 0, tempMovingColumn)
+      this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+        .then(() => {
+          const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
+          this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
+        })
+    },
+    updateSelectedList (e) {
+      if (e.hasOwnProperty('moved')) {
+        return this.updateDataSetOrder(e.moved.oldIndex, e.moved.newIndex)
+      } else if (e.hasOwnProperty('removed')) {
+        if (!this.columnSet.id) return this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1)
+        const newColumnList = [...this.columnSet.dataColumnList]
+        newColumnList.splice(e.removed.oldIndex, 1)
+        this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+          .then(() => this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1))
+      } else if (e.hasOwnProperty('added')) {
+        if (!this.columnSet.id) return this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element)
+        const newColumnList = [...this.columnSet.dataColumnList]
+        newColumnList.splice(e.added.newIndex, 0, e.added.element)
+        this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+          .then(() => this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element))
+      }
     }
   },
 }
@@ -385,9 +446,23 @@ export default {
       background: #475353;
       border-radius: 5px;
       padding: 12px;
+      cursor: grab;
 
       &:not(:last-child) {
         margin-bottom: 8px;
+      }
+
+      &.sortable-chosen,
+      &.sortable-drag {
+        cursor: grabbing;
+      }
+
+      &.sortable-ghost {
+        opacity: .4;
+      }
+
+      &.disabled {
+        cursor: no-drop;
       }
 
       .info {

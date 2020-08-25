@@ -51,3 +51,14 @@ export function removeColumnSetColumn (columnSetColumnId) {
     method: 'DELETE'
   })
 }
+
+/**
+ * add columnSet column
+ */
+export function updateColumnSet(columnSetId, columnSetInfo) {
+  return request({
+    url: `/columnSet/${columnSetId}`,
+    method: 'PATCH',
+    data: columnSetInfo
+  })
+}

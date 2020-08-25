@@ -306,6 +306,7 @@
     "emptyValueAlias": "目前资料表尚无数据值可编辑",
     "emptyValueAliasDescription": "可编辑的资料类型包含：类别（不重复的数量小于 200 个）、布林值",
     "mainDateTimeColumnSetting": "主要日期栏位设定",
+    "builtInfo": "建立资讯",
     "dataFrame": "资料表",
     "rebuildRemark": "编辑后需再次建置资料",
     "dataValue": "数据值",
@@ -358,7 +359,10 @@
     "sortSetting": "排序设定",
     "dragAndSort": "请按住项目上下拖曳移动排序位置，项目排序变更后即生效。",
     "lastUpdateResult": "近一次更新结果",
-    "noData": "暂无数据"
+    "noData": "暂无数据",
+    "SQLSyntax": "SQL语法",
+    "copyTableFromDatabase": "复制资料库资料表",
+    "useSqlScript": "使用自定义 SQL"
   },
   "algorithm": {
     "name": "演算法",
@@ -714,6 +718,7 @@
     "reviewEtlSetting": "检视数据处理设定",
     "dateTimeColumnSetting": "日期栏位设定",
     "batchLoadSetting": "资料更新设定",
+    "tableCreatedInfo": "资料表建立资讯",
     "select": "选择",
     "download": "资料下载",
     "dataExplanation": "资料说明",
@@ -1816,7 +1821,8 @@
     "accountMaintainerDesc": "拥有帐户管理权限",
     "accountViewerDesc": "无法使用帐户管理相关功能",
     "updateRole": "角色变更",
-    "confirmDeleteAccountText": "使用者移除后，此使用者将无法使用此帐户任何功能，您确认要继续移除此使用者？"
+    "confirmDeleteAccountText": "使用者移除后，此使用者将无法使用此帐户任何功能，您确认要继续移除此使用者？",
+    "userName": "使用者名称"
   },
   "accountInfo": {
     "userAmount": "使用者数量",
