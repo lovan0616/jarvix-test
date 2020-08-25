@@ -29,7 +29,8 @@
     "dataSourceManagement": "資料源管理",
     "dataSourceList": "資料源列表",
     "dataFileManagement": "資料表管理",
-    "dataFileList": "資料表列表"
+    "dataFileList": "資料表列表",
+    "schedule": "生產排程"
   },
   "dataFrameAdvanceSetting": {
     "searchColumn": "搜尋欄位",
@@ -501,7 +502,7 @@
     "chooseColumn": "選擇欄位",
     "columnSetting": "對應欄位設定",
     "scheduleSetting": "更新週期設定",
-    "setBatchLoad": "設定批次更新資料",
+    "setBatchLoad": "更新資料",
     "batchLoad": "批次更新資料",
     "basicSetting": "基本設定",
     "chooseCycle": "選擇週期",
@@ -516,7 +517,15 @@
     "updateSuccessfully": "更新成功",
     "updateFailed": "更新失敗",
     "updating": "更新中",
-    "startUpdate": "開始更新"
+    "startUpdate": "開始更新",
+    "noUpdate": "不更新",
+    "autoUpdate": "自動更新",
+    "manualUpdate": "手動更新",
+    "updateSetting": "更新設定",
+    "updateContent": "更新內容",
+    "updateMode": "更新模式",
+    "dataFrameUpdate": "資料表更新",
+    "rebuild": "重新建置"
   },
   "feature": {
     "value": "數值",

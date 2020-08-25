@@ -1,0 +1,44 @@
+.schedule-gantt-chart.gantt-chart {
+  outline: none;
+  height: auto;
+  margin-top: 8px;
+
+  .gantt-header {
+    background-color: #2B4D51;
+    outline: none;
+    padding-top: 8px;
+    border-bottom: 1px solid #52696a;
+    border-radius: 6px 6px 0px 0px;
+  }
+  .gantt-header-title {
+    background-color: transparent;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .gantt-leftbar-wrapper {
+    background: #2B4D51;
+    height: calc(100% + 8px) !important;
+    border-radius: 0px 0px 0px 6px;
+    outline: none;
+  }
+  .gantt-leftbar {
+    background: #2B4D51;
+    border-radius: 0px 0px 0px 6px;
+    color: #fff;
+  }
+  .gantt-timeline-day {
+    color: #fff;
+  }
+  .gantt-timeline-scale>div {
+    color: #fff;
+  }
+  .gantt-blocks {
+    padding: 0 3.5px;
+  }
+  .gantt-block {
+    background-image: none;
+  }
+  .gantt-markline-label {
+    word-break: normal;
+  }
+}
