@@ -6,6 +6,7 @@
   <div
     v-else
     class="page"
+    :class="{'is-kpi-collapse': isKpiCollapse}"
   >
     <div class="page__section detail">
       <div class="section__side-nav">
@@ -138,6 +139,13 @@
     <div class="page__section kpi">
       <h3 class="section__header">
         {{ $t('schedule.simulation.simulationKpiResult') }}
+        <div
+          class="section__collapse-controller"
+          @click="isKpiCollapse = !isKpiCollapse"
+        >
+          {{ isKpiCollapse ? $t('schedule.base.open') : $t('schedule.base.close') }}
+          <i class="icon-controller el-icon-arrow-down"/>
+        </div>
       </h3>
       <spinner v-if="isLoadingKpiResult" />
       <div
@@ -179,6 +187,7 @@ export default {
       isProcessing: false,
       isSubmitting: false,
       isJobEmpty: false,
+      isKpiCollapse: false,
       resultType: 'order', // order, machine, schedule
       currentSolutionId: null,
       orderData: {},
@@ -290,7 +299,7 @@ export default {
     this.fetchKpiResult()
   },
   methods: {
-    fetchOrderSimulateResult (page = 0, size = 20, resetPagination = false) {
+    fetchOrderSimulateResult (page = 0, size = 20, resetPagination = true) {
       this.isProcessing = true
       if (resetPagination) this.isLoading = true
       getOrderSimulateResult(this.planId, this.currentSolutionId, page, size)
@@ -312,7 +321,7 @@ export default {
           this.isProcessing = false
         })
     },
-    fetchMachineSimulateResult (page = 0, size = 20, resetPagination = false) {
+    fetchMachineSimulateResult (page = 0, size = 20, resetPagination = true) {
       this.isProcessing = true
       if (resetPagination) this.isLoading = true
       getMachineSimulateResult(this.planId, this.currentSolutionId, page, size)
@@ -548,8 +557,11 @@ export default {
       flex: 0 0 342px;
       padding: 24px;
       border-top: 1px solid var(--color-border);
+      transition: all .3s ease;
       .section {
         &__header {
+          margin-top: 0;
+          margin-bottom: 0;
           padding-bottom: 12px;
         }
         &__content {
@@ -558,7 +570,30 @@ export default {
             flex: 1;
           }
         }
+        &__collapse-controller {
+          font-size: 12px;
+          color: var(--color-text);
+          cursor: pointer;
+          .icon-controller {
+            margin-left: 6px;
+            font-size: 14px;
+          }
+        }
       }
+    }
+  }
+  &.is-kpi-collapse {
+    .page__section.kpi {
+      flex: 0 0 50px;
+    }
+    .section__header {
+      padding-bottom: 0;
+    }
+    .section__content {
+      display: none;
+    }
+    .icon-controller {
+      transform: rotate(180deg);
     }
   }
 
@@ -589,6 +624,10 @@ export default {
       flex-direction: column;
       padding: 24px;
       border-left: 1px solid var(--color-border);
+      .section__title {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
       .spinner {
         height: calc(100% - 40px)
       }

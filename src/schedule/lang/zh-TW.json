@@ -25,7 +25,9 @@
       "add": "加入",
       "remove": "移除",
       "hour": "時",
-      "minute": "分"
+      "minute": "分",
+      "open": "開啟內容",
+      "close": "收起內容"
     },
     "setting": {
       "title": "基本設定",
