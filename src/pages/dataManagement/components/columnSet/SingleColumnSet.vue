@@ -441,6 +441,10 @@ export default {
       overflow: auto;
     }
 
+    .list-group {
+      height: 100%;
+    }
+
     .single-option {
       position: relative;
       background: #475353;
