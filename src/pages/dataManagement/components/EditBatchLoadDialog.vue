@@ -348,6 +348,7 @@ export default {
           this.isProcessing = true
           this.setSetting()
             .then(() => {
+              if (this.columnInfo.status === 'MANUAL') this.updateImmediately()
               this.closeDialog()
             })
             .finally(() => this.isProcessing = false)
@@ -374,6 +375,7 @@ export default {
 
           this.updateSetting()
             .then(() => {
+              if (this.columnInfo.status === 'MANUAL') this.updateImmediately()
               this.closeDialog()
             })
             .finally(() => this.isProcessing = false)
