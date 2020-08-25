@@ -175,31 +175,33 @@ export default {
   methods: {
     sortColumnSet () {
       if (this.columnSet.dataColumnList.length === 0) return this.columnSet
-      this.columnSet.dataColumnList = this.columnSet.dataColumnList.map(column => ({ ...column, id: column.dataColumnId }))
       this.columnSet.dataColumnList.sort((a, b) => a.sequence - b.sequence)
     },
     filterColumnList () {
-      let columnOptionList
+      let columnOptionList = this.columnList.map(column => {
+        // 統一 columnList 和 columnSet.dataColumnList 中的 column id 為 dataColumnId
+        const { id: dataColumnId, ...otherData } = column
+        return { dataColumnId, ...otherData, primaryAlias: column.aliasList[0] }
+      })
+
+      // 過濾已經被選擇的欄位
       if (this.columnSet.dataColumnList.length > 0) {
-        // 過濾已經被選擇的欄位
-        columnOptionList = this.columnList.filter(element => {
-          return this.columnSet.dataColumnList.findIndex(column => column.dataColumnId === element.id) === -1
+        columnOptionList = columnOptionList.filter(element => {
+          return this.columnSet.dataColumnList.findIndex(column => column.dataColumnId === element.dataColumnId) === -1
         })
-      } else {
-        columnOptionList = JSON.parse(JSON.stringify(this.columnList))
-      }
-      return this.columnOptionList = columnOptionList.map(column => ({ ...column, primaryAlias: column.aliasList[0] }))
+      } 
+      this.columnOptionList = columnOptionList
     },
     updateColumnSetColumn (columnSetId, columnList) {
       return updateColumnSet(columnSetId, {
         dataFrameId: this.columnSet.dataFrameId,
         columnSetColumnList: columnList.map((column, index) => (
           { 
-            columnId: column.id,
+            columnId: column.dataColumnId,
             sequence: index + 1
           }
         ))
-      }).then(response => {
+      }).then(() => {
         Message({
           message: this.$t('message.saveSuccess'),
           type: 'success',
@@ -208,29 +210,27 @@ export default {
         })
       })
     },
-    selectColumn (index) {
+    async selectColumn (index) {
       if (this.columnSet.id) {
         const newColumnList = [...this.columnSet.dataColumnList, this.columnOptionList[index]]
-        this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-          .then(response => {
-            const selectedColumn = this.columnOptionList.splice(index, 1)[0]
-            this.columnSet.dataColumnList.push(selectedColumn)
-          })
-      } else {
-        this.columnSet.dataColumnList.push(this.columnOptionList[index])
-        this.columnOptionList.splice(index, 1)
-      }
+        try {
+          await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+        } catch(e) {
+          return
+        }
+      } 
+      this.columnSet.dataColumnList.push(this.columnOptionList[index])
+      this.columnOptionList.splice(index, 1)
     },
-    cancelSelect (index) {
-      const newColumnList = [...this.columnSet.dataColumnList]
+    async cancelSelect (index) {
       if (this.columnSet.id) {
+        const newColumnList = [...this.columnSet.dataColumnList]
         newColumnList.splice(index, 1)
-        return this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-          .then(response => {
-            let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)[0]
-            this.columnOptionList.push(cancelColumnInfo)
-            return
-          })
+        try {
+          await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+        } catch(e) {
+          return 
+        }
       }
       let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)[0]
       this.columnOptionList.push(cancelColumnInfo)
@@ -262,7 +262,7 @@ export default {
           dataFrameId: this.columnSet.dataFrameId,
           dataColumnIdList: this.columnSet.dataColumnList.map((column, index) => (
             { 
-              columnId: column.id,
+              columnId: column.dataColumnId,
               sequence: index + 1
             }
           ))
