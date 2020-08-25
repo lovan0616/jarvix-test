@@ -2,6 +2,7 @@
   <el-select
     v-model="selectedValue"
     :placeholder="$t('schedule.base.pleaseSelect')"
+    :filterable="filterable"
     class="default-select"
   >
     <el-option
@@ -24,6 +25,10 @@ export default {
     value: {
       type: [String, Number],
       default: ''
+    },
+    filterable: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

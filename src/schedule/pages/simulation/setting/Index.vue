@@ -76,8 +76,13 @@
       v-show="editSolutionSequence"
       class="page__main"
     >
+      <spinner
+        v-if="renderingSetting"
+        size="50"
+        class="page__spinner"
+      />
       <default-setting
-        :key="editSolutionSequence"
+        v-else
         :solution-sequence="editSolutionSequence"
       />
     </div>
@@ -127,6 +132,7 @@ export default {
     return {
       editSolutionSequence: null,
       isShowChangeAlert: false,
+      renderingSetting: false,
       solutionSerialNumber: 0,
       isSimulatingDialogOpen: false,
       isJobReSelected: false
@@ -182,22 +188,13 @@ export default {
         overtimes: [],
         leavetimes: [],
         valid: true,
-        ...this.defaultSetting
+        ...JSON.parse(JSON.stringify(this.defaultSetting))
       })
     },
-    onClickRemoveSolution (index, solutionId) {
+    async onClickRemoveSolution (index, solutionId) {
       // 若為已經模擬過的方案，也要告訴後端把它刪掉
       if (this.planId && solutionId) {
-        this.$store.dispatch('simulation/deleteSimulatedSolution', solutionId)
-          .then(res => {
-            Message({
-              message: this.$t('schedule.successMessage.solutionDeleted'),
-              type: 'success',
-              duration: 3 * 1000,
-              showClose: true
-            })
-          })
-          .catch(() => {})
+        await this.$store.dispatch('simulation/deleteSimulatedSolution', solutionId)
       }
 
       // 若刪除自己，預設 focus 到第一個方案
@@ -205,19 +202,22 @@ export default {
       if (isRemoveSelf) {
         this.removeSolution(index)
         this.editSolutionSequence = this.solutions.length > 0 ? this.solutions[0].solutionId : null
-        Message({
-          message: this.$t('schedule.successMessage.solutionDeleted'),
-          type: 'success',
-          duration: 3 * 1000,
-          showClose: true
-        })
-        return
+      } else {
+        this.removeSolution(index)
       }
-
-      this.removeSolution(index)
+      Message({
+        message: this.$t('schedule.successMessage.solutionDeleted'),
+        type: 'success',
+        duration: 3 * 1000,
+        showClose: true
+      })
     },
     editSolution (solutionSequence) {
       this.editSolutionSequence = solutionSequence
+      this.renderingSetting = true
+      setTimeout(() => {
+        this.renderingSetting = false
+      }, 0)
     },
     startSimulation () {
       this.isSimulatingDialogOpen = true
@@ -261,6 +261,9 @@ export default {
       margin-top: 0;
       margin-bottom: 20px;
     }
+  }
+  &__spinner {
+    margin-top: 30vh;
   }
 }
 

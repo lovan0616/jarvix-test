@@ -12,6 +12,7 @@
           <default-select
             v-model="equipment.equipmentId"
             :options="equipments"
+            filterable
           />
         </template>
         <single-excluded-machine
