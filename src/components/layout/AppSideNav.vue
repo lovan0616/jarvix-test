@@ -68,7 +68,10 @@
             </span>
           </router-link>
         </li>
-        <li class="list__item">
+        <li 
+          v-if="showSchedule === 'true'"
+          class="list__item"
+        >
           <router-link
             :to="{ name: 'CurrentSimulation'}"
             class="list__link"
@@ -158,6 +161,9 @@ export default {
         {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
       ]
     },
+    showSchedule () {
+      return localStorage.getItem('isShowScheduleModule')
+    }
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
