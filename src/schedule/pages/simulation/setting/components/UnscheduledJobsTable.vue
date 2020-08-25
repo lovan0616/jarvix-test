@@ -205,6 +205,8 @@ export default {
     },
     dataSyncCompletion () {
       this.closeDataSyncDialog()
+      this.updateScheduledJobs([])
+      this.selectedData = []
       this.fetchJobData(0, this.pagination.itemPerPage, this.jobSearchNumber, true)
     }
   }

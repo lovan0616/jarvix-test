@@ -169,7 +169,7 @@ export default {
     tableProps () {
       const tableProps = { ...this.$props, data: this.dataset.data }
       if (!this.$props.maxHeight) {
-        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 450)
+        this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 350)
       }
       if (this.$props.height) this.$set(tableProps, 'height', this.height)
       return tableProps
