@@ -3,7 +3,7 @@
   z-index: 10 !important;
 }
 
-.sy-table.el-table {
+.ss-table.el-table {
   background-color: transparent;
   border: 1px solid #555858;
   color: #fff;
@@ -36,7 +36,14 @@
     border-bottom: 1px solid #555858;
     border-right: 1px solid #555858;
     color: #DDDDDD;
-    font-size: 14px;
+    font-size: 14px;font-size: 14px;
+  }
+  th {
+    padding: 4px 0;
+    background-color: #2B4D51;
+  }
+  td {
+    padding: 1px 0;
   }
 
   tr.el-table__row.hover-row>td {
@@ -49,11 +56,6 @@
 
   thead {
     color: #fff;
-  }
-
-  &--small td {
-    font-size: 14px;
-    padding: 1px 0;
   }
 
   .el-table__fixed {

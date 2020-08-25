@@ -1,6 +1,6 @@
 <template>
   <div
-    class="unscheduled-jobs-table"
+    class="scheduled-jobs-table"
   >
     <div class="header">
       <h3 class="header__title">
@@ -174,7 +174,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.unscheduled-jobs-table {
+.scheduled-jobs-table {
   .header {
     position: relative;
     padding: 0px 14px;
@@ -187,6 +187,8 @@ export default {
       font-size: 20px;
       line-height: 24px;
       margin-right: 16px;
+      margin-top: 0;
+      margin-bottom: 0;
 
       &:before {
         content: "";
@@ -248,6 +250,9 @@ export default {
     .el-input__inner {
       height: 22px;
       line-height: 22px;
+      background-color: transparent;
+      border: none;
+      color: #DDDDDD;
     }
     .el-input__icon {
       line-height: 22px;
