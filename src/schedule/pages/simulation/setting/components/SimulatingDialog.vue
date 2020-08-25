@@ -36,7 +36,7 @@ export default {
     if (this.planId) {
       this.$store.dispatch('simulation/reSimulate')
         .then(({ solutions }) => {
-          this.$store.commit('simulation/setSolutions', solutions.map(solution => ({ ...this.defaultSetting, ...solution, simulated: true, valid: null })))
+          this.$store.commit('simulation/setSolutions', solutions.map(solution => ({ ...this.defaultSetting, ...solution, simulated: true, valid: true })))
           this.checkStatus()
         }).catch(() => {
           this.$emit('cancel')
@@ -48,7 +48,7 @@ export default {
     this.$store.dispatch('simulation/newPlan')
       .then(({ planId, solutions }) => {
         this.$store.commit('simulation/setPlanId', planId)
-        this.$store.commit('simulation/setSolutions', solutions.map(solution => ({ ...this.defaultSetting, ...solution, simulated: true, valid: null })))
+        this.$store.commit('simulation/setSolutions', solutions.map(solution => ({ ...this.defaultSetting, ...solution, simulated: true, valid: true })))
         this.checkStatus()
       }).catch(() => {
         this.$emit('cancel')
@@ -100,6 +100,7 @@ export default {
       }, 5 * 1000)
     },
     cancelSimulation () {
+      this.$store.commit('simulation/setSolutions', this.solutions.map(solution => ({ ...solution, simulated: false })))
       this.$emit('cancel')
       this.$store.dispatch('simulation/cancelSimulationPlan')
         .then(() => {})

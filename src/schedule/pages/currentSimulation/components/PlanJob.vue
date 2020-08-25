@@ -74,33 +74,38 @@ export default {
       ],
       orderTableHeaderList: [
         { title: 'orderId', name: this.$t('schedule.simulation.orderResult.orderId') },
-        { title: 'order', name: this.$t('schedule.simulation.orderResult.order') },
-        { title: 'job', name: this.$t('schedule.simulation.orderResult.job') },
+        { title: 'order', name: this.$t('schedule.simulation.orderResult.order'), width: '160' },
+        { title: 'job', name: this.$t('schedule.simulation.orderResult.job'), width: '160' },
         { title: 'targetDelivery', name: this.$t('schedule.simulation.orderResult.targetDelivery') },
         { title: 'completeDate', name: this.$t('schedule.simulation.orderResult.completeDate') },
         { title: 'startDate', name: this.$t('schedule.simulation.orderResult.startDate') },
-        { title: 'material', name: this.$t('schedule.simulation.orderResult.material') },
-        { title: 'product', name: this.$t('schedule.simulation.orderResult.product') },
+        { title: 'material', name: this.$t('schedule.simulation.orderResult.material'), width: '160' },
+        { title: 'product', name: this.$t('schedule.simulation.orderResult.product'), width: '160' },
         { title: 'priority', name: this.$t('schedule.simulation.orderResult.priority') },
         { title: 'quantity', name: this.$t('schedule.simulation.orderResult.quantity') },
         { title: 'cycleTime', name: this.$t('schedule.simulation.orderResult.cycleTime') },
         { title: 'complete', name: this.$t('schedule.simulation.orderResult.complete') }
       ],
       machineTableHeaderList: [
-        { title: 'arriveTime', name: this.$t('schedule.simulation.machineResult.arriveTime') },
-        { title: 'checkinTime', name: this.$t('schedule.simulation.machineResult.checkinTime') },
-        { title: 'checkoutTime', name: this.$t('schedule.simulation.machineResult.checkoutTime') },
-        { title: 'endTime', name: this.$t('schedule.simulation.machineResult.endTime') },
+        { title: 'arriveTime', name: this.$t('schedule.simulation.machineResult.arriveTime'), width: '220' },
+        { title: 'checkinTime', name: this.$t('schedule.simulation.machineResult.checkinTime'), width: '220' },
+        { title: 'checkoutTime', name: this.$t('schedule.simulation.machineResult.checkoutTime'), width: '220' },
+        { title: 'endTime', name: this.$t('schedule.simulation.machineResult.endTime'), width: '220' },
         { title: 'equipment', name: this.$t('schedule.simulation.machineResult.equipment') },
         { title: 'factorySite', name: this.$t('schedule.simulation.machineResult.factorySite') },
-        { title: 'job', name: this.$t('schedule.simulation.machineResult.job') },
-        { title: 'material', name: this.$t('schedule.simulation.machineResult.material') },
+        { title: 'job', name: this.$t('schedule.simulation.machineResult.job'), width: '160' },
+        { title: 'material', name: this.$t('schedule.simulation.machineResult.material'), width: '160' },
         { title: 'operation', name: this.$t('schedule.simulation.machineResult.operation') },
-        { title: 'order', name: this.$t('schedule.simulation.machineResult.order') },
-        { title: 'product', name: this.$t('schedule.simulation.machineResult.product') },
+        { title: 'order', name: this.$t('schedule.simulation.machineResult.order'), width: '160' },
+        { title: 'product', name: this.$t('schedule.simulation.machineResult.product'), width: '160' },
         { title: 'stage', name: this.$t('schedule.simulation.machineResult.stage') },
-        { title: 'startTime', name: this.$t('schedule.simulation.machineResult.startTime') },
+        { title: 'startTime', name: this.$t('schedule.simulation.machineResult.startTime'), width: '220' },
         { title: 'task', name: this.$t('schedule.simulation.machineResult.task') }
+      ],
+      priortyOptions: [
+        { value: 1, label: this.$t('schedule.simulation.table.highPriority') },
+        { value: 2, label: this.$t('schedule.simulation.table.secondPriority') },
+        { value: 3, label: this.$t('schedule.simulation.table.lowPriority') }
       ]
     }
   },
@@ -130,6 +135,7 @@ export default {
             data: res.data.map(data => {
               return {
                 ...data,
+                priority: this.priortyOptions[data.priority - 1].label,
                 complete: data.complete ? this.$t('schedule.simulation.table.completed') : this.$t('schedule.simulation.table.uncompleted')
               }
             }) || [],

@@ -5,18 +5,16 @@
 
 .sy-table.el-table {
   background-color: transparent;
+  border: 1px solid #555858;
   color: #fff;
 
   &::before {
     background-color: transparent;
   }
 
-  tr, th {
+  tr,
+  th {
     background-color: transparent;
-
-    &.is-leaf {
-      border-bottom: none;
-    }
   }
 
   thead {
@@ -27,19 +25,25 @@
     &:nth-child(even) {
       background: rgba(22, 37, 39, 0.9);
     }
+
     &:nth-child(odd) {
       background: rgba(27, 46, 48, 0.9);
     }
   }
 
+  th,
   td {
-    border-bottom: none;
+    border-bottom: 1px solid #555858;
+    border-right: 1px solid #555858;
+    color: #DDDDDD;
+    font-size: 14px;
   }
 
-  tr.el-table__row.hover-row > td {
+  tr.el-table__row.hover-row>td {
     background-color: transparent;
   }
-  &.el-table--enable-row-hover .el-table__body tr:hover > td {
+
+  &.el-table--enable-row-hover .el-table__body tr:hover>td {
     background-color: transparent;
   }
 
@@ -47,20 +51,28 @@
     color: #fff;
   }
 
+  &--small td {
+    font-size: 14px;
+    padding: 1px 0;
+  }
+
   .el-table__fixed {
     &::before {
       background-color: transparent;
     }
+
     .el-table__fixed-header-wrapper {
       tr {
         background: rgb(41, 64, 66);
       }
     }
+
     .el-table__fixed-body-wrapper {
       tr {
         :nth-child(odd) {
           background-color: rgb(41, 64, 66);
         }
+
         :nth-child(even) {
           background-color: rgb(49, 67, 69);
         }
@@ -68,7 +80,7 @@
     }
   }
 
-  .el-table__body tr.current-row > td {
+  .el-table__body tr.current-row>td {
     background-color: transparent;
   }
 
@@ -77,6 +89,7 @@
       background-color: transparent;
       border-bottom: none;
     }
+
     &::before {
       background-color: transparent;
     }
@@ -85,14 +98,17 @@
 
 .el-collapse {
   border-top: none;
+
   .el-collapse-item__header {
     background-color: transparent;
     color: #fff;
     padding-left: 16px;
   }
+
   .el-collapse-item__wrap {
     background-color: transparent;
   }
+
   .el-collapse-item__content {
     color: #fff;
   }
@@ -138,7 +154,8 @@
         }
       }
 
-      &.is-active, &.is-opened {
+      &.is-active,
+      &.is-opened {
         &>.el-submenu__title {
           color: #FFF;
           background-color: #666 !important;
@@ -149,7 +166,8 @@
         margin: 0 0 1px 0;
         background-color: #303435 !important;
 
-        &.is-active, &:hover {
+        &.is-active,
+        &:hover {
           color: #FFF;
           background-color: #666 !important;
         }
@@ -176,11 +194,11 @@
   color: #FFF;
 }
 
-.el-submenu__icon-arrow::before{
+.el-submenu__icon-arrow::before {
   content: '';
   position: absolute;
   border-style: solid;
   border-width: 6.9px 4px 0 4px;
   border-color: #ccc transparent transparent transparent;
-  transform: rotateZ(-90deg) 
+  transform: rotateZ(-90deg)
 }
