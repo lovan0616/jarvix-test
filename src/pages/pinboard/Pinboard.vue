@@ -53,12 +53,14 @@
 <script>
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import SortingDialog from './components/SortingDialog'
+import EmptyPinboard from './components/EmptyPinboard'
 
 export default {
   name: 'PagePinboard',
   components: {
     EmptyInfoBlock,
-    SortingDialog
+    SortingDialog,
+    EmptyPinboard
   },
   data () {
     return {
@@ -173,7 +175,7 @@ export default {
               currentResult.restrictions = componentResponse.restrictions
               currentResult.layout = this.getLayout(componentResponse.layout)
               currentResult.segmentationPayload = componentResponse.segmentationPayload
-              currentResult.question = componentResponse.segmentationPayload.question
+              currentResult.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.matchedWord, '')
               currentData.dataframeName = componentResponse.transcript
                 ? componentResponse.transcript.dataFrame ? componentResponse.transcript.dataFrame.dataFrameAlias : componentResponse.transcript.dataframe.alias 
                 : componentResponse.dataframeName
@@ -188,8 +190,9 @@ export default {
             case 'Delete':
             case 'Warn':
             case 'Fail':
-              currentResult.info = []
-              currentResult.layout = 'EmptyResult'
+              currentResult.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.matchedWord, '')
+              currentResult.info = null
+              currentResult.layout = 'EmptyPinboard'
               this.isLoading = false
               break
           }

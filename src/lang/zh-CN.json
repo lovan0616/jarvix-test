@@ -492,7 +492,8 @@
     "restrict": "分析条件限制",
     "dataFrame":"来源资料表",
     "relativeDataColun":"资料相关栏位",
-    "allColumns": "所有栏位"
+    "allColumns": "所有栏位",
+    "emptyInfo": "{name} 资料已不存在"
   },
   "batchLoad": {
     "primaryKeyColumns": "主键（可复选）",
