@@ -296,20 +296,15 @@ export default {
     toggleIsEditing () {
       this.isEditing = !this.isEditing
     },
-    updateDataSetOrder (oldIndex, newIndex) {  
-      if (!this.columnSet.id) {
-        const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
-        this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
-        return
+    async updateDataSetOrder (oldIndex, newIndex) {  
+      if (this.columnSet.id) {
+        const newColumnList = [...this.columnSet.dataColumnList]
+        const tempMovingColumn = newColumnList.splice(oldIndex, 1)[0]
+        newColumnList.splice(newIndex, 0, tempMovingColumn)
+        await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
       }
-      const newColumnList = [...this.columnSet.dataColumnList]
-      const tempMovingColumn = newColumnList.splice(oldIndex, 1)[0]
-      newColumnList.splice(newIndex, 0, tempMovingColumn)
-      this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-        .then(() => {
-          const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
-          this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
-        })
+      const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
+      this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
     },
     updateSelectedList (e) {
       if (e.hasOwnProperty('moved')) {
