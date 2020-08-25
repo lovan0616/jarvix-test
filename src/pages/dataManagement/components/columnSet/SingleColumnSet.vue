@@ -175,31 +175,33 @@ export default {
   methods: {
     sortColumnSet () {
       if (this.columnSet.dataColumnList.length === 0) return this.columnSet
-      this.columnSet.dataColumnList = this.columnSet.dataColumnList.map(column => ({ ...column, id: column.dataColumnId }))
       this.columnSet.dataColumnList.sort((a, b) => a.sequence - b.sequence)
     },
     filterColumnList () {
-      let columnOptionList
+      let columnOptionList = this.columnList.map(column => {
+        // 統一 columnList 和 columnSet.dataColumnList 中的 column id 為 dataColumnId
+        const { id: dataColumnId, ...otherData } = column
+        return { dataColumnId, ...otherData, primaryAlias: column.aliasList[0] }
+      })
+
+      // 過濾已經被選擇的欄位
       if (this.columnSet.dataColumnList.length > 0) {
-        // 過濾已經被選擇的欄位
-        columnOptionList = this.columnList.filter(element => {
-          return this.columnSet.dataColumnList.findIndex(column => column.dataColumnId === element.id) === -1
+        columnOptionList = columnOptionList.filter(element => {
+          return this.columnSet.dataColumnList.findIndex(column => column.dataColumnId === element.dataColumnId) === -1
         })
-      } else {
-        columnOptionList = JSON.parse(JSON.stringify(this.columnList))
-      }
-      return this.columnOptionList = columnOptionList.map(column => ({ ...column, primaryAlias: column.aliasList[0] }))
+      } 
+      this.columnOptionList = columnOptionList
     },
     updateColumnSetColumn (columnSetId, columnList) {
       return updateColumnSet(columnSetId, {
         dataFrameId: this.columnSet.dataFrameId,
         columnSetColumnList: columnList.map((column, index) => (
           { 
-            columnId: column.id,
+            columnId: column.dataColumnId,
             sequence: index + 1
           }
         ))
-      }).then(response => {
+      }).then(() => {
         Message({
           message: this.$t('message.saveSuccess'),
           type: 'success',
@@ -208,29 +210,21 @@ export default {
         })
       })
     },
-    selectColumn (index) {
+    async selectColumn (index) {
       if (this.columnSet.id) {
         const newColumnList = [...this.columnSet.dataColumnList, this.columnOptionList[index]]
-        this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-          .then(response => {
-            const selectedColumn = this.columnOptionList.splice(index, 1)[0]
-            this.columnSet.dataColumnList.push(selectedColumn)
-          })
-      } else {
-        this.columnSet.dataColumnList.push(this.columnOptionList[index])
-        this.columnOptionList.splice(index, 1)
-      }
+        try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
+        catch(e) { return }
+      } 
+      this.columnSet.dataColumnList.push(this.columnOptionList[index])
+      this.columnOptionList.splice(index, 1)
     },
-    cancelSelect (index) {
-      const newColumnList = [...this.columnSet.dataColumnList]
+    async cancelSelect (index) {
       if (this.columnSet.id) {
+        const newColumnList = [...this.columnSet.dataColumnList]
         newColumnList.splice(index, 1)
-        return this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-          .then(response => {
-            let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)[0]
-            this.columnOptionList.push(cancelColumnInfo)
-            return
-          })
+        try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
+        catch(e) { return }
       }
       let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)[0]
       this.columnOptionList.push(cancelColumnInfo)
@@ -262,7 +256,7 @@ export default {
           dataFrameId: this.columnSet.dataFrameId,
           dataColumnIdList: this.columnSet.dataColumnList.map((column, index) => (
             { 
-              columnId: column.id,
+              columnId: column.dataColumnId,
               sequence: index + 1
             }
           ))
@@ -296,36 +290,35 @@ export default {
     toggleIsEditing () {
       this.isEditing = !this.isEditing
     },
-    updateDataSetOrder (oldIndex, newIndex) {  
-      if (!this.columnSet.id) {
-        const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
-        this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
-        return
+    async updateDataSetOrder (oldIndex, newIndex) {  
+      if (this.columnSet.id) {
+        const newColumnList = [...this.columnSet.dataColumnList]
+        const tempMovingColumn = newColumnList.splice(oldIndex, 1)[0]
+        newColumnList.splice(newIndex, 0, tempMovingColumn)
+        await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
       }
-      const newColumnList = [...this.columnSet.dataColumnList]
-      const tempMovingColumn = newColumnList.splice(oldIndex, 1)[0]
-      newColumnList.splice(newIndex, 0, tempMovingColumn)
-      this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-        .then(() => {
-          const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
-          this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
-        })
+      const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
+      this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
     },
-    updateSelectedList (e) {
+    async updateSelectedList (e) {
       if (e.hasOwnProperty('moved')) {
         return this.updateDataSetOrder(e.moved.oldIndex, e.moved.newIndex)
       } else if (e.hasOwnProperty('removed')) {
-        if (!this.columnSet.id) return this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1)
-        const newColumnList = [...this.columnSet.dataColumnList]
-        newColumnList.splice(e.removed.oldIndex, 1)
-        this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-          .then(() => this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1))
+        if (this.columnSet.id) {
+          const newColumnList = [...this.columnSet.dataColumnList]
+          newColumnList.splice(e.removed.oldIndex, 1)
+          try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
+          catch(e) { return }
+        }
+        this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1)
       } else if (e.hasOwnProperty('added')) {
-        if (!this.columnSet.id) return this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element)
-        const newColumnList = [...this.columnSet.dataColumnList]
-        newColumnList.splice(e.added.newIndex, 0, e.added.element)
-        this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-          .then(() => this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element))
+        if (this.columnSet.id) {
+          const newColumnList = [...this.columnSet.dataColumnList]
+          newColumnList.splice(e.added.newIndex, 0, e.added.element)
+          try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
+          catch (e) { return }
+        }
+        this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element)
       }
     }
   },
@@ -439,6 +432,9 @@ export default {
     .option-list-block {
       height: 308px;
       overflow: auto;
+      .list-group {
+        height: 100%;
+      }
     }
 
     .list-group {
