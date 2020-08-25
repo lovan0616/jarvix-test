@@ -306,6 +306,7 @@
     "emptyValueAlias": "目前資料表尚無數據值可編輯",
     "emptyValueAliasDescription": "可編輯的資料類型包含：類別（不重複的數量小於 200 個）、布林值",
     "mainDateTimeColumnSetting": "主要日期欄位設定",
+    "builtInfo": "建立資訊",
     "dataFrame": "資料表",
     "rebuildRemark": "編輯後需再次建置資料",
     "dataValue": "數據值",
@@ -358,7 +359,10 @@
     "sortSetting": "排序設定",
     "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。",
     "lastUpdateResult": "近一次更新結果",
-    "noData": "暫無數據"
+    "noData": "暫無數據",
+    "SQLSyntax": "SQL語法",
+    "copyTableFromDatabase": "複製資料庫資料表",
+    "useSqlScript": "使用自定義 SQL"
   },
   "algorithm": {
     "name": "演算法",
@@ -714,6 +718,7 @@
     "reviewEtlSetting": "檢視資料處理設定",
     "dateTimeColumnSetting": "日期欄位設定",
     "batchLoadSetting": "資料更新設定",
+    "tableCreatedInfo": "資料表建立資訊",
     "select": "選擇",
     "download": "資料下載",
     "dataExplanation": "資料說明",
