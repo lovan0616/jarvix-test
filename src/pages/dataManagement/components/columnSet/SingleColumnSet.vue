@@ -215,9 +215,7 @@ export default {
         const newColumnList = [...this.columnSet.dataColumnList, this.columnOptionList[index]]
         try {
           await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-        } catch(e) {
-          return
-        }
+        } catch(e) { return }
       } 
       this.columnSet.dataColumnList.push(this.columnOptionList[index])
       this.columnOptionList.splice(index, 1)
@@ -310,22 +308,23 @@ export default {
       if (e.hasOwnProperty('moved')) {
         return this.updateDataSetOrder(e.moved.oldIndex, e.moved.newIndex)
       } else if (e.hasOwnProperty('removed')) {
-        if (!this.columnSet.id) {
+        if (this.columnSet.id) {
           const newColumnList = [...this.columnSet.dataColumnList]
           newColumnList.splice(e.removed.oldIndex, 1)
           try {
             await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-          } catch(e) {
-            return
-          }
+          } catch(e) { return }
         }
         this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1)
       } else if (e.hasOwnProperty('added')) {
-        if (!this.columnSet.id) return this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element)
-        const newColumnList = [...this.columnSet.dataColumnList]
-        newColumnList.splice(e.added.newIndex, 0, e.added.element)
-        this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-          .then(() => this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element))
+        if (this.columnSet.id) {
+          const newColumnList = [...this.columnSet.dataColumnList]
+          newColumnList.splice(e.added.newIndex, 0, e.added.element)
+          try {
+            await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+          } catch (e) { return }
+        }
+        this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element)
       }
     }
   },
@@ -439,6 +438,9 @@ export default {
     .option-list-block {
       height: 308px;
       overflow: auto;
+      .list-group {
+        height: 100%;
+      }
     }
 
     .single-option {
