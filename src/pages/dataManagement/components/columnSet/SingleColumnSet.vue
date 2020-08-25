@@ -306,15 +306,20 @@ export default {
       const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
       this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
     },
-    updateSelectedList (e) {
+    async updateSelectedList (e) {
       if (e.hasOwnProperty('moved')) {
         return this.updateDataSetOrder(e.moved.oldIndex, e.moved.newIndex)
       } else if (e.hasOwnProperty('removed')) {
-        if (!this.columnSet.id) return this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1)
-        const newColumnList = [...this.columnSet.dataColumnList]
-        newColumnList.splice(e.removed.oldIndex, 1)
-        this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-          .then(() => this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1))
+        if (!this.columnSet.id) {
+          const newColumnList = [...this.columnSet.dataColumnList]
+          newColumnList.splice(e.removed.oldIndex, 1)
+          try {
+            await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+          } catch(e) {
+            return
+          }
+        }
+        this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1)
       } else if (e.hasOwnProperty('added')) {
         if (!this.columnSet.id) return this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element)
         const newColumnList = [...this.columnSet.dataColumnList]
