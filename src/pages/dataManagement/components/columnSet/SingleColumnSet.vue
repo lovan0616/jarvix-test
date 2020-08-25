@@ -213,9 +213,8 @@ export default {
     async selectColumn (index) {
       if (this.columnSet.id) {
         const newColumnList = [...this.columnSet.dataColumnList, this.columnOptionList[index]]
-        try {
-          await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-        } catch(e) { return }
+        try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
+        catch(e) { return }
       } 
       this.columnSet.dataColumnList.push(this.columnOptionList[index])
       this.columnOptionList.splice(index, 1)
@@ -224,11 +223,8 @@ export default {
       if (this.columnSet.id) {
         const newColumnList = [...this.columnSet.dataColumnList]
         newColumnList.splice(index, 1)
-        try {
-          await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-        } catch(e) {
-          return 
-        }
+        try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
+        catch(e) { return }
       }
       let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)[0]
       this.columnOptionList.push(cancelColumnInfo)
@@ -311,18 +307,16 @@ export default {
         if (this.columnSet.id) {
           const newColumnList = [...this.columnSet.dataColumnList]
           newColumnList.splice(e.removed.oldIndex, 1)
-          try {
-            await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-          } catch(e) { return }
+          try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
+          catch(e) { return }
         }
         this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1)
       } else if (e.hasOwnProperty('added')) {
         if (this.columnSet.id) {
           const newColumnList = [...this.columnSet.dataColumnList]
           newColumnList.splice(e.added.newIndex, 0, e.added.element)
-          try {
-            await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
-          } catch (e) { return }
+          try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
+          catch (e) { return }
         }
         this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element)
       }
