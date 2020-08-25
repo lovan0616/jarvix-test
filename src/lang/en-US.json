@@ -1821,7 +1821,8 @@
     "accountMaintainerDesc": "With account management permissions",
     "accountViewerDesc": "Unable to use account management related functions",
     "updateRole": "Role",
-    "confirmDeleteAccountText": "After the user is removed, this user will not be able to use any features of this account. Are you sure you want to continue removing this user?"
+    "confirmDeleteAccountText": "After the user is removed, this user will not be able to use any features of this account. Are you sure you want to continue removing this user?",
+    "userName": "User Name"
   },
   "accountInfo": {
     "userAmount": "User Limit",

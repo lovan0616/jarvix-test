@@ -241,6 +241,11 @@ export default {
           sort: true,
         },
         {
+          text: this.$t('userManagement.userName'),
+          value: 'name',
+          width: '200px'
+        },
+        {
           text: this.$t('userManagement.userRoleAuthority'),
           value: 'roleZhName',
           tooltip: {

@@ -1821,7 +1821,8 @@
     "accountMaintainerDesc": "擁有帳戶管理權限",
     "accountViewerDesc": "無法使用帳戶管理相關功能",
     "updateRole": "角色變更",
-    "confirmDeleteAccountText": "使用者移除後，此使用者將無法使用此帳戶任何功能，您確認要繼續移除此使用者？"
+    "confirmDeleteAccountText": "使用者移除後，此使用者將無法使用此帳戶任何功能，您確認要繼續移除此使用者？",
+    "userName": "使用者名稱"
   },
   "accountInfo": {
     "userAmount": "使用者數量",
