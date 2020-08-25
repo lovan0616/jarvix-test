@@ -88,7 +88,6 @@
           <div class="option-list-block">
             <draggable
               :value="columnSet.dataColumnList" 
-              :clone="cloneSelectedColumn"
               :group="selectedListGroup"
               class="list-group"
               @change="updateSelectedList">
@@ -120,7 +119,7 @@
 </template>
 <script>
 import draggable from 'vuedraggable';
-import { createColumnSet, addColumnSetColumn, removeColumnSetColumn, deleteColumnSet } from '@/API/ColumnSet'
+import { createColumnSet, deleteColumnSet, updateColumnSet } from '@/API/ColumnSet'
 import inputBlock from '@/components/InputBlock'
 import { Message } from 'element-ui'
 
@@ -152,7 +151,8 @@ export default {
     return {
       columnOptionList: [],
       isEditing: !this.columnSet.id,
-      validateFieldKey: new Date().getTime().toString()
+      validateFieldKey: new Date().getTime().toString(),
+      sortedColumnSet: {}
     }
   },
   computed: {
@@ -169,80 +169,75 @@ export default {
     }
   },
   mounted () {
+    this.sortColumnSet()
     this.filterColumnList()
   },
   methods: {
+    sortColumnSet () {
+      if (this.columnSet.dataColumnList.length === 0) return this.columnSet
+      this.columnSet.dataColumnList = this.columnSet.dataColumnList.map(column => ({ ...column, id: column.dataColumnId }))
+      this.columnSet.dataColumnList.sort((a, b) => a.sequence - b.sequence)
+    },
     filterColumnList () {
+      let columnOptionList
       if (this.columnSet.dataColumnList.length > 0) {
-        // 調整資料格式
-        // this.columnSet.dataColumnList = this.columnSet.dataColumnList.map(column => {
-        //   return {
-        //     id: column.dataColumnId,
-        //     name: column.name,
-        //     primaryAlias: column.primaryAlias
-        //   }
-        // })
         // 過濾已經被選擇的欄位
-        this.columnOptionList = this.columnList.filter(element => {
+        columnOptionList = this.columnList.filter(element => {
           return this.columnSet.dataColumnList.findIndex(column => column.dataColumnId === element.id) === -1
-        }).map(column => ({ ...column, primaryAlias: column.aliasList[0] }))
-      } else {
-        this.columnOptionList = JSON.parse(JSON.stringify(this.columnList))
-      }
-    },
-    addColumnSetColumn (columnSetId, dataColumnId) {
-      return addColumnSetColumn({ columnSetId, dataColumnId })
-        .then(response => {
-          Message({
-            message: this.$t('message.saveSuccess'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
-          })
-          return response
         })
-    },
-    selectColumn (index) {
-      if (this.columnSet.id) {
-        this.addColumnSetColumn(this.columnSet.id, this.columnOptionList[index].id)
-          .then(response => {
-            this.columnSet.dataColumnList.push(response)
-            this.columnOptionList.splice(index, 1)
-          })
       } else {
-        this.columnSet.dataColumnList.push(this.columnOptionList[index])
-        this.columnOptionList.splice(index, 1)
+        columnOptionList = JSON.parse(JSON.stringify(this.columnList))
       }
+      return this.columnOptionList = columnOptionList.map(column => ({ ...column, primaryAlias: column.aliasList[0] }))
     },
-    removeColumnSetColumn (id) {
-      return removeColumnSetColumn(id).then(() => {
+    updateColumnSetColumn (columnSetId, columnList) {
+      return updateColumnSet(columnSetId, {
+        dataFrameId: this.columnSet.dataFrameId,
+        columnSetColumnList: columnList.map((column, index) => (
+          { 
+            columnId: column.id,
+            sequence: index + 1
+          }
+        ))
+      }).then(response => {
         Message({
-          message: this.$t('message.deleteSuccess'),
+          message: this.$t('message.saveSuccess'),
           type: 'success',
           duration: 3 * 1000,
           showClose: true
         })
       })
     },
+    selectColumn (index) {
+      if (this.columnSet.id) {
+        const newColumnList = [...this.columnSet.dataColumnList, this.columnOptionList[index]]
+        this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+          .then(response => {
+            const selectedColumn = this.columnOptionList.splice(index, 1)[0]
+            this.columnSet.dataColumnList.push(selectedColumn)
+          })
+      } else {
+        this.columnSet.dataColumnList.push(this.columnOptionList[index])
+        this.columnOptionList.splice(index, 1)
+      }
+    },
     cancelSelect (index) {
-      // if (this.columnSet.dataColumnList.length <= 1) {
-      //   Message({
-      //     message: this.$t('message.columnSetAtLeastOne'),
-      //     type: 'warning',
-      //     duration: 3 * 1000
-      //   })
-      //   return
-      // }
-      let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)
-      const {id: dataColumnId, dataColumnId: id, ...otherData} = cancelColumnInfo[0]
-      this.columnOptionList.push({id, dataColumnId, ...otherData})
-
-      if (this.columnSet.id) this.removeColumnSetColumn(dataColumnId)
+      const newColumnList = [...this.columnSet.dataColumnList]
+      if (this.columnSet.id) {
+        newColumnList.splice(index, 1)
+        return this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+          .then(response => {
+            let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)[0]
+            this.columnOptionList.push(cancelColumnInfo)
+            return
+          })
+      }
+      let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)[0]
+      this.columnOptionList.push(cancelColumnInfo)
     },
     saveColumnSet () {
       this.$validator.validate(this.validateFieldKey).then((isValidate) => {
         if (!isValidate) return
-
         if (!this.columnSet.primaryAlias) {
           Message({
             message: this.$t('message.columnSetNameEmpty'),
@@ -261,10 +256,16 @@ export default {
           })
           return false
         }
+
         createColumnSet({
           primaryAlias: this.columnSet.primaryAlias,
           dataFrameId: this.columnSet.dataFrameId,
-          dataColumnIdList: this.columnSet.dataColumnList.map(column => column.id)
+          dataColumnIdList: this.columnSet.dataColumnList.map((column, index) => (
+            { 
+              columnId: column.id,
+              sequence: index + 1
+            }
+          ))
         }).then(response => {
           Message({
             message: this.$t('message.saveSuccess'),
@@ -273,7 +274,6 @@ export default {
             showClose: true
           })
           this.columnSet.id = response.id
-          this.columnSet.dataColumnList = response.dataColumnList
           this.toggleIsEditing()
         })
       })
@@ -296,31 +296,35 @@ export default {
     toggleIsEditing () {
       this.isEditing = !this.isEditing
     },
-    updateDataSetOrder (oldIndex, newIndex) {
-      if (this.columnSet.id) {
-        // update order api
+    updateDataSetOrder (oldIndex, newIndex) {  
+      if (!this.columnSet.id) {
+        const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
+        this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
       }
-      const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
-      this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
+      const newColumnList = [...this.columnSet.dataColumnList]
+      const tempMovingColumn = newColumnList.splice(oldIndex, 1)[0]
+      newColumnList.splice(newIndex, 0, tempMovingColumn)
+      this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+        .then(() => {
+          const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
+          this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
+        })
     },
     updateSelectedList (e) {
       if (e.hasOwnProperty('moved')) {
         return this.updateDataSetOrder(e.moved.oldIndex, e.moved.newIndex)
       } else if (e.hasOwnProperty('removed')) {
         if (!this.columnSet.id) return this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1)
-        this.removeColumnSetColumn(e.removed.element.id)
+        const newColumnList = [...this.columnSet.dataColumnList]
+        newColumnList.splice(e.removed.oldIndex, 1)
+        this.updateColumnSetColumn(this.columnSet.id, newColumnList)
           .then(() => this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1))
       } else if (e.hasOwnProperty('added')) {
-        if (!this.columnSet.id) return this.columnSet.dataColumnList.push(e.added.element)
-        this.addColumnSetColumn(this.columnSet.id, e.added.element.id)
-          .then(response => this.columnSet.dataColumnList.splice(e.added.newIndex, 0, response))
-      }
-    },
-    cloneSelectedColumn (columnData) {
-      return {
-        ...columnData,
-        id: columnData.dataColumnId,
-        dataColumnId: columnData.id
+        if (!this.columnSet.id) return this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element)
+        const newColumnList = [...this.columnSet.dataColumnList]
+        newColumnList.splice(e.added.newIndex, 0, e.added.element)
+        this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+          .then(() => this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element))
       }
     }
   },
