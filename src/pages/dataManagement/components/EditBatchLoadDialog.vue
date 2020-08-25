@@ -348,6 +348,7 @@ export default {
           this.isProcessing = true
           this.setSetting()
             .then(() => {
+              if (this.columnInfo.status === 'MANUAL') return this.updateImmediately()
               this.closeDialog()
             })
             .finally(() => this.isProcessing = false)
@@ -374,6 +375,7 @@ export default {
 
           this.updateSetting()
             .then(() => {
+              if (this.columnInfo.status === 'MANUAL') return this.updateImmediately()
               this.closeDialog()
             })
             .finally(() => this.isProcessing = false)
@@ -382,7 +384,7 @@ export default {
     updateImmediately () {
       this.isProcessing = true
       const dataFrameId = this.dataFrameInfo.id
-      triggerUpdateData(dataFrameId).then(() => {
+      return triggerUpdateData(dataFrameId).then(() => {
         Message({
           message: this.$t('batchLoad.startUpdate'),
           type: 'success',
