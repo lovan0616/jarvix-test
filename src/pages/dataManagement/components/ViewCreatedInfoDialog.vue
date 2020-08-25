@@ -98,7 +98,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 22px;
 
     .data-frame-name {
       font-size: 14px;
