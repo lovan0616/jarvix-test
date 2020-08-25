@@ -300,6 +300,7 @@ export default {
       if (!this.columnSet.id) {
         const movingColumn = this.columnSet.dataColumnList.splice(oldIndex, 1)[0]
         this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
+        return
       }
       const newColumnList = [...this.columnSet.dataColumnList]
       const tempMovingColumn = newColumnList.splice(oldIndex, 1)[0]
