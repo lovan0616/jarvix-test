@@ -501,7 +501,7 @@
     "chooseColumn": "选择栏位",
     "columnSetting": "对应栏位设定",
     "scheduleSetting": "更新周期设定",
-    "setBatchLoad": "设定批次更新资料",
+    "setBatchLoad": "更新资料",
     "batchLoad": "批次更新资料",
     "basicSetting": "基本设置",
     "chooseCycle": "选择周期",
@@ -516,7 +516,15 @@
     "updateSuccessfully": "更新成功",
     "updateFailed": "更新失败",
     "updating": "更新中",
-    "startUpdate": "开始更新"
+    "startUpdate": "开始更新",
+    "noUpdate": "不更新",
+    "autoUpdate": "自动更新",
+    "manualUpdate": "手动更新",
+    "updateSetting": "更新设定",
+    "updateContent": "更新内容",
+    "updateMode": "更新模式",
+    "dataFrameUpdate": "资料表更新",
+    "rebuild": "重新建置"
   },
   "feature": {
     "value": "数值",
