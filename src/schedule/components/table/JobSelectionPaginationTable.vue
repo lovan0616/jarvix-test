@@ -10,7 +10,7 @@
       ref="multipleTable"
       v-bind="tableProps"
       :empty-text="$t('schedule.table.noData')"
-      class="sy-table"
+      class="ss-table"
       style="width: 100%;"
       cell-class-name="schedule-table-cell"
     >
@@ -71,16 +71,16 @@
         >
           <el-checkbox
             v-model="isCheckAll"
-            class="job-select-checkbox"
             :name="scope[0]"
+            class="job-select-checkbox"
             @change="handleCheckAllChange()"
           />
         </template>
         <template slot-scope="selectionColumn">
           <el-checkbox
             v-model="dataset.data[selectionColumn.$index].isChecked"
-            class="job-select-checkbox"
             :disabled="layout === 'unscheduled' && dataset.data[selectionColumn.$index].isScheduled"
+            class="job-select-checkbox"
             @change="changeCheck(dataset.data[selectionColumn.$index])"
           />
         </template>
@@ -258,7 +258,7 @@ export default {
     padding: 0;
   }
 
-  /deep/ .sy-table.el-table {
+  /deep/ .ss-table.el-table {
     border: 1px solid #555858;
     th, td {
       border-bottom: 1px solid #555858;
@@ -292,7 +292,7 @@ export default {
     width: 100%;
   }
 
-  .sy-table /deep/ td.schedule-table-cell:last-child {
+  .ss-table /deep/ td.schedule-table-cell:last-child {
     padding: 0;
   }
 }

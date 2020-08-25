@@ -9,7 +9,7 @@
     <el-table
       v-bind="tableProps"
       :empty-text="$t('schedule.table.noData')"
-      class="sy-table"
+      class="ss-table"
       style="width: 100%;"
       :height="height"
     >

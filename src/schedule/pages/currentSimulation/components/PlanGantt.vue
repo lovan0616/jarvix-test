@@ -242,6 +242,8 @@ export default {
   &__title {
     font-size: 18px;
     line-height: 22px;
+    margin-top: 0;
+    margin-bottom: 0;
 
     &:before {
       content: "";
@@ -291,6 +293,17 @@ export default {
 
   /deep/.gantt-timeline {
     margin-left: 0 !important;
+  }
+
+  /deep/ .gantt-container {
+    width: 100% !important;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /deep/ .gantt-scroll-y {
+    display: none;
   }
 
   .empty-block {

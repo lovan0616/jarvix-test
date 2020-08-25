@@ -47,7 +47,10 @@
               </div>
               {{ $t('schedule.simulation.solution') + solution.sequence }}
             </div>
-            <div class="solution__simulated-status">
+            <div
+              :key="solution.simulated"
+              class="solution__simulated-status"
+            >
               <span v-if="isSolutionFailed(solution.solutionId)">
                 {{ $t('schedule.simulation.simulationFailed') }}
               </span>
@@ -76,13 +79,14 @@
       v-show="editSolutionSequence"
       class="page__main"
     >
-      <spinner
-        v-if="renderingSetting"
+      <!-- <spinner
+        v-show="renderingSetting"
         size="50"
         class="page__spinner"
-      />
+      /> -->
       <default-setting
-        v-else
+        v-show="editSolutionSequence"
+        :key="editSolutionSequence"
         :solution-sequence="editSolutionSequence"
       />
     </div>
@@ -181,14 +185,14 @@ export default {
       this.editSolutionSequence = this.solutionSerialNumber
 
       this.addSolution({
+        ...JSON.parse(JSON.stringify(this.defaultSetting)),
         solutionId: null,
         sequence: this.solutionSerialNumber,
         scheduleStartDate: moment().startOf('day').add(1, 'day').format('YYYY/MM/DD'),
         simulated: false,
         overtimes: [],
         leavetimes: [],
-        valid: true,
-        ...JSON.parse(JSON.stringify(this.defaultSetting))
+        valid: true
       })
     },
     async onClickRemoveSolution (index, solutionId) {
@@ -214,10 +218,10 @@ export default {
     },
     editSolution (solutionSequence) {
       this.editSolutionSequence = solutionSequence
-      this.renderingSetting = true
-      setTimeout(() => {
-        this.renderingSetting = false
-      }, 0)
+      // this.renderingSetting = true
+      // setTimeout(() => {
+      //   this.renderingSetting = false
+      // }, 0)
     },
     startSimulation () {
       this.isSimulatingDialogOpen = true
@@ -238,7 +242,7 @@ export default {
     display: flex;
     height: 100%;
   }
-  /deep/ &--setting {
+  /deep/ &.page--setting {
     height: 100%;
     padding: 0;
     overflow: auto;
