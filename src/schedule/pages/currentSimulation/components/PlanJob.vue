@@ -73,7 +73,6 @@ export default {
         }
       ],
       orderTableHeaderList: [
-        { title: 'orderId', name: this.$t('schedule.simulation.orderResult.orderId') },
         { title: 'order', name: this.$t('schedule.simulation.orderResult.order'), width: '160' },
         { title: 'job', name: this.$t('schedule.simulation.orderResult.job'), width: '160' },
         { title: 'targetDelivery', name: this.$t('schedule.simulation.orderResult.targetDelivery') },
