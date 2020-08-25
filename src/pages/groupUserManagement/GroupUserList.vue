@@ -67,8 +67,12 @@ export default {
         {
           text: this.$t('editing.userAccount'),
           value: 'email',
-          sort: true,
-          width: '70%'
+          sort: true
+        },
+        {
+          text: this.$t('userManagement.userName'),
+          value: 'name',
+          width: '200px'
         },
         // {
         //   text: this.$t('editing.groupRolePermission'),
