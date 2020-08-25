@@ -395,6 +395,8 @@ export default {
     .header__title {
       font-size: 24px;
       line-height: 32px;
+      margin-top: 0;
+      margin-bottom: 0;
     }
   }
   &__section {
@@ -438,6 +440,10 @@ export default {
       align-items: center;
       margin-bottom: 16px;
       .header {
+        &__title {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
         &__action {
           margin-left: 20px;
         }
@@ -450,6 +456,10 @@ export default {
       .body__block {
         &:not(:first-child) {
           margin-top: 48px;
+        }
+        .block__title {
+          margin-top: 0;
+          margin-bottom: 0;
         }
         &--shift, &--equipment, &--kpi {
           .block__title {

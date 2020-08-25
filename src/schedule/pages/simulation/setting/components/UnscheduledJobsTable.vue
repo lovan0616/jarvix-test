@@ -228,6 +228,8 @@ export default {
       font-size: 20px;
       line-height: 24px;
       margin-right: 16px;
+      margin-top: 0;
+      margin-bottom: 0;
 
       &:before {
         content: "";
