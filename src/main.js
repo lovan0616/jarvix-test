@@ -37,7 +37,6 @@ import {
   Menu,
   Submenu,
   MenuItem,
-  DatePicker
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -149,7 +148,6 @@ Vue.use(Switch)
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
-Vue.use(DatePicker)
 
 Vue.use(vGanttChart)
 

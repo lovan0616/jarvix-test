@@ -166,6 +166,7 @@
       :data-source-pool="dataSourcePool"
       class="war-room__side-setting"
       @close="closeComponentSetting"
+      @updated="fetchData"
     />
     <war-room-setting
       v-if="isShowWarRoomSetting"
@@ -290,11 +291,11 @@ export default {
     addComponentList () {
       return [
         (this.chartComponent && this.chartComponent.length < 8) && {
-          id: 'chart',
+          id: 'diagram',
           name: this.$t('warRoom.addChartComponent')
         },
         (this.numberComponent && this.numberComponent.length < 4) && {
-          id: 'number',
+          id: 'index',
           name: this.$t('warRoom.addNumberComponent')
         }
       ]
@@ -373,6 +374,9 @@ export default {
           .then(() => this.stopEditingWarRoomName())
           .finally(() => { this.isProcessing = false })
       })
+    },
+    createComponent (componentId) {
+
     }
   }
 }

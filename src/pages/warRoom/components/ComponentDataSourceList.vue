@@ -17,25 +17,25 @@
         {{ $t('warRoom.indexTypeContent') }}
       </div>
       <div
-        v-if="dataSouceList.indexList.length > 0"
-        :class="{ 'setting__block-list--disabled': componentType !== 'number' }"
+        v-if="dataSouceList.indexTypeItems.length > 0"
         class="setting__block-list"
       >
         <div
-          v-for="item in dataSouceList.indexList"
-          :key="item.id"
+          v-for="(item, index) in dataSouceList.indexTypeItems"
+          :key="item.itemId"
+          :class="{ 'disabled': isProcessing || componentType !== 'index' }"
           class="setting__block-list-item"
         >
           <a
             href="javascript:void(0);"
             class="link" 
             @click="selectedDataSourceItem(item)"
-          >{{ item.name }}</a>
+          >{{ item.question }}</a>
           <a
             href="javascript:void(0);"
             class="link icon" 
-            @click="deleteDataSourceItem()"
-          ><svg-iconicon-class="delete"/></a>
+            @click="deleteDataSourceItem(item.itemId, 'index', index)"
+          ><svg-icon icon-class="delete"/></a>
         </div>
       </div>
     </div>
@@ -44,25 +44,25 @@
         {{ $t('warRoom.chartTypeContent') }}
       </div>
       <div
-        v-if="dataSouceList.diagramList.length > 0"
-        :class="{ 'setting__block-list--disabled': componentType !== 'chart' }"
+        v-if="dataSouceList.diagramTypeItems.length > 0"
         class="setting__block-list"
       >
         <div
-          v-for="item in dataSouceList.diagramList"
-          :key="item.id"
+          v-for="(item, index) in dataSouceList.diagramTypeItems"
+          :key="item.itemId"
+          :class="{ 'disabled': isProcessing || componentType !== 'diagram' }"
           class="setting__block-list-item"
         >
           <a
             href="javascript:void(0);"
             class="link" 
             @click="selectedDataSourceItem(item)"
-          >{{ item.name }}</a>
+          >{{ item.question }}</a>
           <a
             href="javascript:void(0);"
             class="link icon" 
-            @click="deleteDataSourceItem"
-          ><svg-iconicon-class="delete"/></a>
+            @click="deleteDataSourceItem(item.itemId, 'diagram', index)"
+          ><svg-icon icon-class="delete"/></a>
         </div>
       </div>
     </div>
@@ -70,6 +70,9 @@
 </template>
 
 <script>
+import { removeResultFromWarRoomPool } from '@/API/WarRoom'
+import { Message } from 'element-ui'
+
 export default {
   name: 'ComponentDataSourceList',
   props: {
@@ -85,12 +88,29 @@ export default {
       })
     }
   },
+  data () {
+    return {
+      isProcessing: false
+    }
+  },
   methods: {
     selectedDataSourceItem (item) {
       this.$emit('select', item)
     },
-    deleteDataSourceItem () {
-      // TODO: delete
+    deleteDataSourceItem (itemId, componentType, index) {
+      this.isProcessing = true
+      const { war_room_id: warRoomId } = this.$route.params
+      removeResultFromWarRoomPool(warRoomId, itemId)
+        .then(() => {
+          this.dataSouceList[componentType + 'TypeItems'].splice(index, 1)
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => { this.isProcessing = false })
     }
   }
 }
@@ -115,13 +135,6 @@ export default {
     margin-top: 8px;
     flex: 1;
     overflow: auto;
-
-    &--disabled {
-      opacity: .5;
-      .setting__block-list-item {
-        pointer-events: none;
-      }
-    }
   }
 
   &__block-list-item {
@@ -136,6 +149,11 @@ export default {
       background: #171E1E;
       .link { color: #4DE2F0; }
       .icon { opacity: 1; }
+    }
+
+    &.disabled {
+      opacity: .5;
+      pointer-events: none;
     }
 
     .link {

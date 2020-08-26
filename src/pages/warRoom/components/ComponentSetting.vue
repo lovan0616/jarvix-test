@@ -25,15 +25,23 @@
             {{ $t('warRoom.displayName') }}
           </div>
           <input
+            v-validate="'required'"
+            :disabled="isProcessing"
             v-model="componentData.config.displayName"
+            name="displayName"
             class="input setting__block-text-input">
+          <div 
+            v-show="errors.has('displayName')"
+            class="error-text"
+          >{{ errors.first('displayName') }}</div>
         </div>
         <div class="setting__block">
           <div class="setting__block-title">
             {{ $t('warRoom.sourceData') }}
             <a
               v-if="!componentData.componentId"
-              href="javascript:void(0);" 
+              :disabled="isProcessing" 
+              href="javascript:void(0);"
               class="link"
               @click="clearSelectedDataSource"
             >
@@ -44,7 +52,7 @@
             class="setting__block-choose"
             @click="componentData.componentId ? null : showComponentDataSourceList()"
           >
-            {{ selectedDataSource.name || $t('warRoom.notChosen') }}
+            {{ selectedDataSource.question || $t('warRoom.notChosen') }}
             <svg-icon
               v-if="!componentData.componentId"
               icon-class="arrow-right" 
@@ -115,6 +123,8 @@
           >
             <div class="date-picker__container">
               <el-date-picker
+                v-validate="'required'"
+                :disabled="isProcessing"
                 v-model="componentData.config.customStartTime"
                 :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
                 :placeholder="'*' + $t('warRoom.startDate')"
@@ -126,6 +136,7 @@
                 name="startTime"/>
               <div class="date-picker__seperator">-</div>
               <el-date-picker
+                :disabled="isProcessing"
                 v-model="componentData.config.customEndTime"
                 :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
                 :placeholder="$t('warRoom.endDate')"
@@ -135,7 +146,8 @@
                 type="date"
                 name="endTime"/>
             </div>
-            <div 
+            <div
+              v-show="errors.has('startTime')"
               class="error-text"
             >{{ errors.first('startTime') }}</div>
             <div class="date-picker__reminder">{{ '*' + $t('warRoom.timeIntervalReminder') }}</div>
@@ -159,33 +171,48 @@
               {{ $t('warRoom.maxThreshold') }}
             </label>
             <input
+              v-validate="'required'"
+              :disabled="isProcessing"
               v-model="componentData.config.upperBound"
               :placeholder="$t('warRoom.pleaseEnterValue')"
-              name="maxThreshold"
+              name="upperBound"
               class="input setting__block-text-input">
+            <div 
+              v-show="errors.has('upperBound')"
+              class="error-text"
+            >{{ errors.first('upperBound') }}</div>
             <label class="input setting__block-text-label">
               {{ $t('warRoom.minThreshold') }}
             </label>
             <input
+              v-validate="'required'"
+              :disabled="isProcessing"
               v-model="componentData.config.lowerBound"
               :placeholder="$t('warRoom.pleaseEnterValue')"
-              name="minThreshold"
+              name="lowerBound"
               class="input setting__block-text-input">
+            <div 
+              v-show="errors.has('lowerBound')"
+              class="error-text"
+            >{{ errors.first('lowerBound') }}</div>
           </div>
         </div>
       </div>
       <div class="setting__button-block">
-        <button 
+        <button
+          v-if="componentData.componentId"
+          :disabled="isProcessing"
           type="button"
           class="btn btn-outline setting__button-block-button--left"
-          @click="saveSetting"
+          @click="deleteComponent"
         >
           <svg-icon icon-class="delete" />
         </button>
-        <button 
+        <button
+          :disabled="isProcessing"
           type="button"
           class="btn btn-default setting__button-block-button--right"
-          @click="saveSetting"
+          @click="componentData.componentId ? saveComponentSetting() : buildComponent()"
         >{{ $t('button.save') }}</button>
       </div>
     </section>
@@ -202,13 +229,16 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import ComponentDataSourceList from './ComponentDataSourceList'
+import { createComponent, deleteComponent, updateComponent } from '@/API/WarRoom'
+import { Message } from 'element-ui'
 
 export default {
   name: 'ComponentSetting',
   inject: ['$validator'],
   components: {
     DefaultSelect,
-    ComponentDataSourceList
+    ComponentDataSourceList,
+    Message
   },
   props: {
     componentType: {
@@ -351,8 +381,70 @@ export default {
     this.componentData = JSON.parse(JSON.stringify(this.originalComponentData))
   },
   methods: {
-    saveSetting () {
-
+    buildComponent () {
+      this.$validator.validate(this.validateFieldKey).then((isValidate) => {
+        if (!isValidate) return
+        if (!this.selectedDataSource.question) {
+          return Message({
+            message: this.$t('message.pleaseSelectQuestion'),
+            type: 'error',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }
+        const { war_room_id: warRoomId } = this.$route.params
+        const { question, ...config } = this.componentData.config
+        const componentData = { config, itemId: this.selectedDataSource.itemId }
+        this.isProcessing = true
+        createComponent(warRoomId, componentData)
+          .then(response => {
+            this.$emit('close')
+            this.$emit('updated')
+            Message({
+              message: this.$t('message.addFilter'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
+          })
+          .catch(() => { this.isProcessing = false })
+      })
+    },
+    saveComponentSetting () {
+      this.$validator.validate(this.validateFieldKey).then((isValidate) => {
+        if (!isValidate) return
+        const { war_room_id: warRoomId } = this.$route.params
+        const { question, ...config } = this.componentData.config
+        this.isProcessing = true
+        updateComponent(warRoomId, this.componentData.componentId, config)
+          .then(() => {
+            this.$emit('close')
+            this.$emit('updated')
+            Message({
+              message: this.$t('message.addFilter'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
+          })
+          .catch(() => { this.isProcessing = false })
+      })
+    },
+    deleteComponent () {
+      const { war_room_id: warRoomId } = this.$route.params
+      this.isProcessing = true
+      deleteComponent(warRoomId, this.componentData.componentId)
+        .then(() => {
+          this.$emit('close')
+          this.$emit('updated')
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => { this.isProcessing = false })
     },
     showComponentDataSourceList () {
       this.isShowComponentDataSourceList = true
@@ -402,13 +494,15 @@ export default {
   }
 
   &__button-block-button {
+    display: flex;
     &--left {
       min-width: 40px;
       padding: 0 2px;
+      margin-right: 12px;
     }
 
     &--right {
-      min-width: 180px;
+      flex: 1 1 180px;
       font-weight: 600;
     }
   }

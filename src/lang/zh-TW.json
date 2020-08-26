@@ -109,7 +109,8 @@
     "switchToGroupBySys": "系统已將您切換至群組：{groupName}",
     "youAreGroupless": "您目前無隸屬群組",
     "pinboardSuccess": "釘板成功",
-    "switching": "切換中"
+    "switching": "切換中",
+    "pleaseSelectQuestion": "請選擇來源資料"
   },
   "guiding": {
     "prevStep": "上一步",
