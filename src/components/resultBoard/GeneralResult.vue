@@ -4,6 +4,7 @@
     :result-id="resultId"
     :result-info="resultInfo"
     :restrictions="restrictions"
+    :is-war-room-addable="isWarRoomAddable"
     @unPin="unPin"
   >
     <result-board-body slot="PageResultBoardBody">
@@ -84,6 +85,10 @@ export default {
     segmentationPayload: {
       type: Object,
       default: () => null
+    },
+    isWarRoomAddable: {
+      type: Boolean,
+      default: null
     }
   },
   methods: {

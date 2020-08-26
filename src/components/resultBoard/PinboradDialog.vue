@@ -13,9 +13,11 @@
         @click="choosePersonalPinboard(false)">
         {{ $t('editing.shareToProject') }}
       </div>
+      <!-- TODO v-if="isWarRoomAddable"-->
       <div
+        v-if="true"
         class="single-board"
-        @click="choosePersonalPinboard(false)">
+        @click="chooseWarRoom()">
         {{ $t('editing.addToWarRoom') }}
       </div>
     </div>
@@ -33,16 +35,34 @@
           {{ $t('editing.prevStep') }}
         </a>
       </div>
-      <div 
-        class="single-board default"
-        @click="nextStep"
-      ><span class="add-icon">+</span>{{ $t('editing.newPinboard') }}</div>
-      <div 
-        v-for="pinboardInfo in pinboardList"
-        :key="pinboardInfo.id"
-        class="single-board"
-        @click="pin(pinboardInfo.id)"
-      >{{ pinboardInfo.name }}</div>
+      <div v-if="addToWarRoom">
+        <div 
+          class="single-board default"
+          @click="nextStep"
+        >
+          <span class="add-icon">+</span>{{ $t('editing.newWarRoom') }}
+        </div>
+        <div 
+          v-for="warRoomInfo in warRoomList"
+          :key="warRoomInfo.warRoomId"
+          class="single-board"
+          @click="pinToWarRoom(warRoomInfo.id)"
+        >{{ warRoomInfo.name }}</div>
+      </div>
+      <div v-else>
+        <div 
+          class="single-board default"
+          @click="nextStep"
+        >
+          <span class="add-icon">+</span>{{ $t('editing.newPinboard') }}
+        </div>
+        <div 
+          v-for="pinboardInfo in pinboardList"
+          :key="pinboardInfo.id"
+          class="single-board"
+          @click="pin(pinboardInfo.id)"
+        >{{ pinboardInfo.name }}</div>
+      </div>
     </div>
     <div 
       v-show="pinStep === 3"
@@ -50,7 +70,7 @@
     >
       <input 
         v-model="newBoardName" 
-        :placeholder="$t('editing.pinboardName')"
+        :placeholder="addToWarRoom ? $t('editing.warRoomName') : $t('editing.pinboardName')"
         type="text"
         class="input board-name-input"
       >
@@ -68,15 +88,24 @@
   </div>
 </template>
 <script>
+import { getWarRoomList, createWarRoom } from '@/API/WarRoom'
 import { mapState } from 'vuex'
 
 export default {
   name: 'PinboardDialog',
+  props: {
+    isWarRoomAddable: {
+      type: Boolean,
+      default: null
+    }
+  },
   data () {
     return {
       newBoardName: null,
       pinStep: 1,
-      isPersonal: true
+      isPersonal: true,
+      addToWarRoom: false,
+      warRoomList: null
     }
   },
   computed: {
@@ -96,6 +125,7 @@ export default {
   mounted () {
     document.addEventListener('click', this.autoHide, false)
     this.getPinboardInfo()
+    this.getWarRoomList()
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
@@ -110,24 +140,62 @@ export default {
       this.$store.dispatch('pinboard/getPinboardList')
       this.$store.dispatch('pinboard/getGroupPinboardList', this.groupId)
     },
+    getWarRoomList () {
+      getWarRoomList(this.groupId).then(res => {
+        res = [
+          {
+            "isPublishing": true,
+            "name": "AA",
+            "urlIdentifier": "AA",
+            "warRoomId": 1
+          },
+          {
+            "isPublishing": true,
+            "name": "BB",
+            "urlIdentifier": "BB",
+            "warRoomId": 2
+          },
+          {
+            "isPublishing": true,
+            "name": "CC",
+            "urlIdentifier": "CC",
+            "warRoomId": 3
+          }
+        ]
+        this.warRoomList = res
+      })
+    },
     pin (id) {
       this.$emit('pin', id)
+    },
+    pinToWarRoom (id) {
+      this.$emit('pinToWarRoom', id)
     },
     cancelCreate () {
       this.newBoardName = null
       this.$emit('close')
     },
     createPinboard () {
+      if(this.addToWarRoom) {
+        createWarRoom({ name: this.newBoardName, groupId: this.groupId })
+          .then(response => {
+            this.$emit('pinToWarRoom', response)
+            this.cancelCreate()
+          })
+        return 
+      }
       if(this.isPersonal) {
-        this.$store.dispatch('pinboard/createPinboard', this.newBoardName).then(response => {
-          this.$emit('pin', response.id)
-          this.cancelCreate()
-        })
+        this.$store.dispatch('pinboard/createPinboard', this.newBoardName)
+          .then(response => {
+            this.$emit('pin', response.id)
+            this.cancelCreate()
+          })
       } else {
-        this.$store.dispatch('pinboard/createGroupPinboard', { name: this.newBoardName, groupId: this.groupId }).then(response => {
-          this.$emit('pin', response.id)
-          this.cancelCreate()
-        })
+        this.$store.dispatch('pinboard/createGroupPinboard', { name: this.newBoardName, groupId: this.groupId })
+          .then(response => {
+            this.$emit('pin', response.id)
+            this.cancelCreate()
+          })
       }
     },
     prevStep () {
@@ -138,6 +206,11 @@ export default {
     },
     choosePersonalPinboard (isPersonal) {
       this.isPersonal = isPersonal
+      this.addToWarRoom = false
+      this.nextStep()
+    },
+    chooseWarRoom () {
+      this.addToWarRoom = true
       this.nextStep()
     }
   },

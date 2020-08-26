@@ -1,4 +1,4 @@
-<template>
+b<template>
   <div class="result-board-container">
     <div 
       :id="pinBoardId"
@@ -7,18 +7,9 @@
     >
       <div class="board-header">
         <div class="header-block">
-          <!-- 這邊要注意因為 pinboard 會有舊的 segmentation -->
-          <result-board-header
-            v-if="segmentationPayload.question"
-            :title="segmentationPayload.question"
-            :segmentation="segmentationPayload"
-          />
-          <result-board-header-v2
-            v-else
-            :segmentation="segmentationPayload"
-          />
+          <slot name="PageResultBoardHeader"/>
         </div>
-        <div
+        <div 
           v-if="isPinboardPage"
           class="pin-button-block"
         >
@@ -73,9 +64,11 @@
             {{ $t('button.pinToBoard') }}
           </a>
           <pinboard-dialog
-            v-if="showPinboardList"
+            v-if="showPinboardDialog"
+            :is-war-room-addable="isWarRoomAddable"
             @pin="selectPinboard"
-            @close="closePinboardList"
+            @pinToWarRoom="pinToWarRoom"
+            @close="closePinboardDialog"
           />
         </div>
       </div>
@@ -116,20 +109,17 @@
   </div>
 </template>
 <script>
-import ResultBoardHeader from './ResultBoardHeader'
-import ResultBoardHeaderV2 from './ResultBoardHeaderV2'
 import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import PinboardInfoDialog from '@/pages/pinboard/components/filter/PinboardInfoDialog'
+import { addResultToWarRoomPool } from '@/API/WarRoom'
 import { Message } from 'element-ui'
 
 export default {
   name: 'ResultBoard',
   components: {
-    ResultBoardHeader,
-    ResultBoardHeaderV2,
     PinboardDialog,
     ShareDialog,
     DecideDialog,
@@ -149,9 +139,9 @@ export default {
       type: Array,
       default: () => []
     },
-    segmentationPayload: {
-      type: Object,
-      default: () => null
+    isWarRoomAddable: {
+      type: Boolean,
+      default: null
     }
   },
   data () {
@@ -160,7 +150,7 @@ export default {
       pinBoardId: null,
       dataSourceId: null,
       dataFrameId: null,
-      showPinboardList: false,
+      showPinboardDialog: false,
       isShowShareDialog: false,
       isShowDelete: false,
       isShowShare: false,
@@ -202,12 +192,12 @@ export default {
   methods: {
     pinToBoard () {
       if (this.isLoading) return false
-      if (this.showPinboardList) {
-        this.showPinboardList = false
+      if (this.showPinboardDialog) {
+        this.showPinboardDialog = false
         return false
       }
       setTimeout(() => {
-        this.showPinboardList = true
+        this.showPinboardDialog = true
       })
     },
     selectPinboard (id) {
@@ -216,7 +206,7 @@ export default {
         .then(res => {
           this.pinBoardId = res.id
           this.isLoading = false
-          this.showPinboardList = false
+          this.showPinboardDialog = false
           Message({
             message: this.$t('message.pinboardSuccess'),
             type: 'success',
@@ -225,11 +215,28 @@ export default {
           })
         }).catch(() => {
           this.isLoading = false
-          this.showPinboardList = false
+          this.showPinboardDialog = false
         })
     },
-    closePinboardList () {
-      this.showPinboardList = false
+    pinToWarRoom (id) {
+      this.isLoading = true
+      addResultToWarRoomPool(id, this.resultId)
+        .then(() => {
+          this.isLoading = false
+          this.closePinboardDialog()
+          Message({
+            message: this.$t('message.pinboardSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }).catch(() => {
+          this.isLoading = false
+          this.showPinboardDialog = false
+        })
+    },
+    closePinboardDialog () {
+      this.showPinboardDialog = false
     },
     unPin () {
       this.$store.dispatch('pinboard/unPinById', this.pinBoardId)

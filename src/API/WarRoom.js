@@ -3,13 +3,15 @@ import request from '@/utils/publicRequest'
 /**
  * 將問句結果加入戰情室 Pool
  * @param {String} id - 戰情室 ID
- * @param {Object} data - result 資訊
+ * @param {Number} resultId - result 資訊
  */
-export function addResultToWarRoomPool(id, data) {
+export function addResultToWarRoomPool(id, resultId) {
   return request({
     url: `/war-room/${id}/pool/item`,
     method: 'POST',
-    data
+    data: {
+      resultId
+    }
   })
 }
 
@@ -41,10 +43,13 @@ export function createWarRoom(data) {
  * 取得戰情室列表
  * @param {String} id - 戰情室 ID
  */
-export function getWarRoomList() {
+export function getWarRoomList(groupId) {
   return request({
     url: `/war-room/list`,
-    method: 'GET'
+    method: 'GET',
+    params: {
+      groupId
+    }
   })
 }
 
