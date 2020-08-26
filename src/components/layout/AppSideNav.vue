@@ -68,6 +68,22 @@
             </span>
           </router-link>
         </li>
+        <li 
+          v-if="showSchedule === 'true'"
+          class="list__item"
+        >
+          <router-link
+            :to="{ name: 'CurrentSimulation'}"
+            class="list__link"
+          >
+            <svg-icon 
+              icon-class="schedule" 
+              class="list__icon" />
+            <span class="list__text">
+              {{ $t('sideNav.schedule') }}
+            </span>
+          </router-link>
+        </li>
       </ul>
       <ul class="sidenav__list--bottom list">
         <li
@@ -145,6 +161,9 @@ export default {
         {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
       ]
     },
+    showSchedule () {
+      return localStorage.getItem('isShowScheduleModule')
+    }
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),

@@ -109,6 +109,7 @@ export default {
       this.etlTableList.forEach((element, index) => {
         let promise = dataPreprocessor(element).then(response => {
           this.tableIdList[index].connectionStatus = 'success'
+          this.$store.commit('dataSource/setProcessingDataFrameList', element)
         }).catch(() => {
           this.tableIdList[index].connectionStatus = 'fail'
         })

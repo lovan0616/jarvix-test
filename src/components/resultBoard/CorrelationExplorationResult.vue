@@ -1,15 +1,10 @@
 <template>
   <result-board
+    :segmentation-payload="segmentationPayload"
     :result-id="resultId"
     :result-info="resultInfo"
     :restrictions="restrictions"
   >
-    <template slot="PageResultBoardHeader">
-      <task
-        :component-id="resultInfo.title[0]"
-        intend="title"
-      />
-    </template>
     <result-board-body
       slot="PageResultBoardBody"
       class="correlation-result-body"
@@ -108,6 +103,10 @@ export default {
     resultId: {
       type: Number,
       default: null
+    },
+    segmentationPayload: {
+      type: Object,
+      default: () => null
     }
   },
   data () {

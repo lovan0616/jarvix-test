@@ -18,7 +18,7 @@
     />
     <template v-else-if="diagram">
       <button
-        v-if="intend === 'key_result' && isPinboardPage && diagram === 'line_chart' && componentData.dataset.columns.length === 1"
+        v-if="isPinboardPage && componentData.dataset && componentData.dataset.allowMonitorConfig"
         type="button"
         class="btn-m btn-default btn-monitor"
         @click="openMonitorSettingDialog"
@@ -34,7 +34,8 @@
         :info="componentData.info || componentData.data"
         :features="componentData.features"
         :confidence="componentData.confidence"
-        :formula="componentData.coeffs"
+        :formula="componentData.displayCoefficients"
+        :coefficients="componentData.coeffs"
         :text="componentData.text"
         :chart-data="componentData.chart_data"
         :notes="componentData.notes"
@@ -149,6 +150,7 @@ export default {
           this.singlePage = response.singlePage
           if (response.isAutoRefresh) {
             this.singlePage = true
+            this.hasNextPage = false
           }
           switch (response.status) {
             case 'Process':

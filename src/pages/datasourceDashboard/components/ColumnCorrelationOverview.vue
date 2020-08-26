@@ -206,12 +206,10 @@ export default {
             return
           }
           // 無資料或計算錯誤時，不顯示結果
-          if (response.statusType === 'Fail' || !columnNameList || !columnDataList) {
+          if (response.statusType === 'Fail' || !columnNameList || columnNameList.length === 0 || !columnDataList || columnDataList.length === 0) {
             this.isEmpty = true
             return
           }
-
-          if (!columnNameList || !columnDataList) return
 
           this.componentData = {
             dataset: {

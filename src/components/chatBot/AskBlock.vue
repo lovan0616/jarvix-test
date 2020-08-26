@@ -11,6 +11,12 @@
         }"
         class="user-question-block"
       >
+        <default-select
+          v-if="newParserMode"
+          v-model="selectParser"
+          :option-list="languageList"
+          class="parser-select"
+        />
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
         <input 
           ref="questionInput"
@@ -25,7 +31,6 @@
           @keyup.shift.ctrl.72="toggleHelper()"
           @keyup.shift.ctrl.90="toggleAlgorithm()"
           @keyup.shift.ctrl.88="toggleWebSocketConnection()"
-          @keyup="handleAskText"
           @focus="focusInput"
           @blur="blurInput"
         >
@@ -93,11 +98,13 @@
 import AskHelperDialog from './AskHelperDialog'
 import { mapState, mapGetters } from 'vuex'
 import { Message } from 'element-ui'
+import DefaultSelect from '@/components/select/DefaultSelect'
 
 export default {
   name: 'AskBlock',
   components: {
-    AskHelperDialog
+    AskHelperDialog,
+    DefaultSelect
   },
   data () {
     return {
@@ -111,9 +118,29 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList', 'dataSourceDataValueList']),
+    ...mapState('chatBot', ['parserLanguageList', 'parserLanguage']),
+    ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    newParserMode () {
+      return localStorage.getItem('newParser') === 'true'
+    },
+    languageList () {
+      return this.parserLanguageList.map(option => {
+        return {
+          name: option.language === 'ZH_TW' ? '中文' : option.description,
+          value: option.language
+        }
+      }).filter(element => element.value !== 'ZH_CN')
+    },
+    selectParser: {
+      get () {
+        return this.parserLanguage
+      },
+      set (value) {
+        this.$store.commit('chatBot/setParserLanguage', value)
+      }
+    },
     dictionaries () {
       return [
         ...this.dataSourceColumnInfoList.booleanList.map(element => ({type: 'boolean', text: element})),
@@ -121,7 +148,6 @@ export default {
         ...this.dataSourceColumnInfoList.dateTime.map(element => ({type: 'dateTime', text: element})),
         ...this.dataSourceColumnInfoList.numeric.map(element => ({type: 'numeric', text: element})),
         ...this.dataSourceColumnInfoList.uniqueList.map(element => ({type: 'unique', text: element})),
-        ...this.dataSourceDataValueList.map(element => ({type: 'dataValue', text: element})),
         ...this.$t('questionToken')
       ]
     },
@@ -195,13 +221,28 @@ export default {
     appQuestion (value) {
       this.copyQuestion(value)
     },
-    dataSourceId (value, oldValue) {
-      if (!oldValue) return
-      this.userQuestion = null
+    '$route' (to, from) {
+      // 透過 geodown 切換 dataframe 時不清空問句 input
+      if (from.name === 'PageResult' && to.name === 'PageResult') return
+
+      // 其他情況切換 datasource 或 dataframe 時會觸發回首頁，此變化才清空問句 input
+      if (
+        (to.query.dataSourceId).toString() !== (from.query.dataSourceId).toString()
+        || (to.query.dataFrameId).toString() !== (from.query.dataFrameId).toString()
+      ) {
+        this.userQuestion = null
+        this.closeHelper()
+      }
+
+      // 回首頁的話，關閉彈出視窗，有需要清問句的話，再加進上方條件
+      if (to.name === 'PageIndex') {
+        this.closeHelper()
+      }
     }
   },
   mounted () {
     document.addEventListener('click', this.autoHide, false)
+    this.userQuestion = this.$route.query.question
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
@@ -331,11 +372,8 @@ export default {
     },
     blurInput () {
       this.isFocus = false
-    },
-    handleAskText (e) {
-      this.cursorPositionQuestion = this.userQuestion.slice(0, e.target.selectionStart)
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -356,12 +394,23 @@ export default {
   .ask-block {
     position: relative;
     height: 100%;
+    display: flex;
+  }
+
+  .parser-select {
+    width: 160px;
+
+    & >>> .el-input__inner {
+      font-size: 14px;
+    }
   }
 
   .user-question-block {
     display: flex;
     align-items: center;
     width: calc(100% - 54px);
+    margin-right: 16px;
+    padding-right: 16px;
     background-color: #1D2424;
     border: 1px solid #1D2424;
     border-radius: 5px;
@@ -430,9 +479,6 @@ export default {
   }
 
   .ask-remark-block {
-    position: absolute;
-    right: 0;
-    top: 0;
     font-size: 16px;
     height: 40px;
     width: 40px;
@@ -440,7 +486,6 @@ export default {
     letter-spacing: 0.05em;
     border: 1px solid #2D3033;
     border-radius: 5px;
-    margin-left: 16px;
     display: flex;
     align-items: center;
     justify-content: center;

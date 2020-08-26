@@ -1,18 +1,44 @@
 <template>
   <div class="page-sis-setting">
     <div class="setting-block">
+      <div class="setting-block__title">排程模組設定</div>
+      <div class="setting-block__content">
+        <div class="input-block">
+          <label for="">啟用排程模組：</label>
+          <el-switch 
+            v-model="openScheduleModule"
+            class="setting-switch"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="setting-block">
+      <div class="setting-block__title">新 parser 設定</div>
+      <div class="setting-block__content">
+        <div class="input-block">
+          <label for="">開啟新 parser：</label>
+          <el-switch 
+            v-model="useNewParser"
+            class="setting-switch"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="setting-block">
       <div class="setting-block__title">演算法設定</div>
       <div class="setting-block__content">
         <div class="input-block">
           <label for="">開啟演算法：</label>
-          <el-switch
+          <el-switch 
             v-model="showAlgorithmBtn"
+            class="setting-switch"
           />
         </div>
         <div class="input-block">
           <label for="">Demo 已經結束：</label>
-          <el-switch
+          <el-switch 
             v-model="demoEnd"
+            class="setting-switch"
           />
         </div>
         <div class="input-block">
@@ -52,6 +78,7 @@
           <label for="">開啟 Join Table 檢查資料量的限制：</label>
           <el-switch 
             v-model="hasJoinLimit"
+            class="setting-switch"
           />
         </div>
       </div>
@@ -80,15 +107,26 @@ export default {
   name: 'PageSisSetting',
   data () {
     return {
+      isShowScheduleModule: localStorage.getItem('isShowScheduleModule'),
       isShowAlgorithmBtn: localStorage.getItem('isShowAlgorithmBtn'),
       isDemoEnd: localStorage.getItem('isDemoEnd'),
       demoDatasource: localStorage.getItem('demoDatasource'),
       demoWaitTime: localStorage.getItem('demoWaitTime'),
       uploadLimit: localStorage.getItem('uploadLimit'),
-      joinLimit: localStorage.getItem('joinLimit')
+      joinLimit: localStorage.getItem('joinLimit'),
+      newParser: localStorage.getItem('newParser')
     }
   },
   computed: {
+    openScheduleModule: {
+      get () {
+        return this.isShowScheduleModule === 'true' || this.isShowScheduleModule
+      },
+      set (value) {
+        this.isShowScheduleModule = value
+        localStorage.setItem('isShowScheduleModule', value)
+      }
+    },
     showAlgorithmBtn: {
       get () {
         return this.isShowAlgorithmBtn === 'true' || this.isShowAlgorithmBtn
@@ -142,6 +180,15 @@ export default {
         this.joinLimit = value
         localStorage.setItem('joinLimit', value)
       }
+    },
+    useNewParser: {
+      get () {
+        return this.newParser === 'true' || this.newParser
+      },
+      set (value) {
+        this.newParser = value
+        localStorage.setItem('newParser', value)
+      }
     }
   }
 }
@@ -182,6 +229,13 @@ export default {
     padding: 4px;
     font-size: 14px;
     border-radius: 4px;
+  }
+
+  .setting-switch {
+    &.is-checked /deep/ .el-switch__core {
+      background-color: #409EFF;
+      border-color: #409EFF;
+    }
   }
 }
 </style>

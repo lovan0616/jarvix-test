@@ -4,6 +4,7 @@ import AppLayout from '@/components/layout/AppLayout'
 import store from '../store'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
+import ScheduleRouter from '@/schedule/router'
 
 Vue.use(Router)
 
@@ -304,7 +305,8 @@ const router = new Router({
                   ]
                 },
               ]
-            }
+            },
+            ...ScheduleRouter.options.routes
           ]
         }
       ]
@@ -389,6 +391,11 @@ router.beforeEach(async (to, from, next) => {
       },
       query: to.query
     })
+  }
+
+  // 取得可以使用的 parser 語系
+  if (!store.state.chatBot.parserLanguage) {
+    await store.dispatch('chatBot/getParserList')
   }
   
   // 確認 account 和 group 權限都符合

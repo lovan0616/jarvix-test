@@ -1,16 +1,11 @@
 <template>
   <result-board
+    :segmentation-payload="segmentationPayload"
     :result-id="resultId"
     :result-info="resultInfo"
     :restrictions="restrictions"
     @unPin="unPin"
   >
-    <template slot="PageResultBoardHeader">
-      <task
-        :component-id="resultInfo.title[0]"
-        intend="title"
-      />
-    </template>
     <result-board-body slot="PageResultBoardBody">
       <template 
         v-if="resultInfo.key_result && resultInfo.key_result.length > 0"
@@ -85,6 +80,10 @@ export default {
     resultId: {
       type: Number,
       default: null
+    },
+    segmentationPayload: {
+      type: Object,
+      default: () => null
     }
   },
   methods: {

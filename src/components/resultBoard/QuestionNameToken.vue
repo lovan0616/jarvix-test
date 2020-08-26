@@ -63,8 +63,7 @@ export default {
           }
         case 'Datarow':
           return this.$t('segmentationToken.DatarowToken', {
-            dataFrame: tokenInfo.properties[0].dataframePrimaryAlias,
-            matchedWord: tokenInfo.matchedWord
+            dataFrame: tokenInfo.properties[0].dataframePrimaryAlias
           })
         default:
           return this.$t(`segmentationToken.${tokenInfo.type}`)

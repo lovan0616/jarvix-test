@@ -30,7 +30,8 @@
     "dataSourceManagement": "資料源管理",
     "dataSourceList": "資料源列表",
     "dataFileManagement": "資料表管理",
-    "dataFileList": "資料表列表"
+    "dataFileList": "資料表列表",
+    "schedule": "生產排程"
   },
   "dataFrameAdvanceSetting": {
     "searchColumn": "搜尋欄位",
@@ -51,7 +52,7 @@
     "remindNotAllowSelfJoin": "不能選擇相同資料表",
     "joinTypeEmpty": "請選擇關聯方式",
     "builded": "資料源建立完成",
-    "dataFrameBuilt": "資料表建立完成",
+    "dataFrameBuilt": "資料表 {name} 建立完成",
     "noMatchedKey": "沒有成功對上的值，請嘗試設定其他關聯表或欄位",
     "previewFailed": "設定失敗，請稍候再試",
     "noData": "目前沒有資料",
@@ -307,6 +308,7 @@
     "emptyValueAlias": "目前資料表尚無數據值可編輯",
     "emptyValueAliasDescription": "可編輯的資料類型包含：類別（不重複的數量小於 200 個）、布林值",
     "mainDateTimeColumnSetting": "主要日期欄位設定",
+    "builtInfo": "建立資訊",
     "dataFrame": "資料表",
     "rebuildRemark": "編輯後需再次建置資料",
     "dataValue": "數據值",
@@ -328,6 +330,10 @@
     "databaseType": "資料庫類型",
     "currentLoadedDataFrame": "目前讀取的資料表",
     "dataFrameContent": "資料表內容",
+    "currentDataContent": "當前資料內容",
+    "originalDataContent": "原始資料內容",
+    "currentDataContentReminder": "資料內容受到欄位和條件篩選影響",
+    "originalDataContentReminder": "資料內容不受欄位和條件篩選影響",
     "dataType": "資料類型",
     "chooseConnection": "選擇連線",
     "emptyConnection": "尚未建立任何連線",
@@ -355,7 +361,10 @@
     "sortSetting": "排序設定",
     "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。",
     "lastUpdateResult": "近一次更新結果",
-    "noData": "暫無數據"
+    "noData": "暫無數據",
+    "SQLSyntax": "SQL語法",
+    "copyTableFromDatabase": "複製資料庫資料表",
+    "useSqlScript": "使用自定義 SQL"
   },
   "algorithm": {
     "name": "演算法",
@@ -489,7 +498,8 @@
     "restrict": "分析條件限制",
     "dataFrame":"來源資料表",
     "relativeDataColun":"資料相關欄位",
-    "allColumns": "所有欄位"
+    "allColumns": "所有欄位",
+    "emptyInfo": "{name} 資料已不存在"
   },
   "batchLoad": {
     "primaryKeyColumns": "主鍵（可複選）",
@@ -498,7 +508,7 @@
     "chooseColumn": "選擇欄位",
     "columnSetting": "對應欄位設定",
     "scheduleSetting": "更新週期設定",
-    "setBatchLoad": "設定批次更新資料",
+    "setBatchLoad": "更新資料",
     "batchLoad": "批次更新資料",
     "basicSetting": "基本設定",
     "chooseCycle": "選擇週期",
@@ -512,7 +522,16 @@
     "noRecord": "無紀錄",
     "updateSuccessfully": "更新成功",
     "updateFailed": "更新失敗",
-    "updating": "更新中"
+    "updating": "更新中",
+    "startUpdate": "開始更新",
+    "noUpdate": "不更新",
+    "autoUpdate": "自動更新",
+    "manualUpdate": "手動更新",
+    "updateSetting": "更新設定",
+    "updateContent": "更新內容",
+    "updateMode": "更新模式",
+    "dataFrameUpdate": "資料表更新",
+    "rebuild": "重新建置"
   },
   "feature": {
     "value": "數值",
@@ -748,6 +767,7 @@
     "reviewEtlSetting": "檢視資料處理設定",
     "dateTimeColumnSetting": "日期欄位設定",
     "batchLoadSetting": "資料更新設定",
+    "tableCreatedInfo": "資料表建立資訊",
     "select": "選擇",
     "download": "資料下載",
     "dataExplanation": "資料說明",
@@ -773,7 +793,8 @@
     "sortSetting": "排序設定",
     "addSqlScript": "使用自定義 SQL",
     "testConnecting": "測試連線中...",
-    "monitorSetting": "監測設定"
+    "monitorSetting": "監測設定",
+    "updateImmediately": "立即更新"
   },
   "timeScopeUnit": {
     "second": "秒",
@@ -1696,6 +1717,19 @@
     "emptyString": "空字串"
   },
   "segmentationToken": {
+    "UNKNOWN": "無法辨識的詞彙",
+    "DATA_COLUMN": "資料欄位",
+    "DATA_VALUE": "欄位資料",
+    "COLUMN_SET": "欄位組合",
+    "DATA_ROW": "資料列",
+    "AGGREGATE": "數據計算方式",
+    "OTHER": "其他詞彙",
+    "TIME_SCOPE": "時間範圍",
+    "DATE_RANGE": "時間範圍",
+    "NUMBER_RULE": "篩選條件限制",
+    "LIMIT_SORT": "篩選條件限制",
+    "IGNORE": "可忽略的詞彙",
+    "DENOTATION": "問句意圖",
     "UnknownToken": "無法辨識的詞彙",
     "Datacolumn": "資料欄位",
     "Datavalue": "欄位資料",
@@ -1731,7 +1765,7 @@
     "DataColumnToken": "來自{dataFrame}的{dataColumn}@:segmentationToken.Datacolumn，辨識為{matchedWord}",
     "ColumnSetToken": "來自{dataFrame}的{matchedWord}",
     "DataValueToken": "來自{dataFrame}的{dataColumn}@:segmentationToken.Datavalue，辨識為{matchedWord}",
-    "DatarowToken": "來自{dataFrame}的@:segmentationToken.Datarow{matchedWord}",
+    "DatarowToken": "來自{dataFrame}的@:segmentationToken.Datarow",
     "ElseToken": "其他詞彙",
     "IgnoreToken": "可忽略的詞彙",
     "Datarow": "資料列",
@@ -1836,7 +1870,8 @@
     "accountMaintainerDesc": "擁有帳戶管理權限",
     "accountViewerDesc": "無法使用帳戶管理相關功能",
     "updateRole": "角色變更",
-    "confirmDeleteAccountText": "使用者移除後，此使用者將無法使用此帳戶任何功能，您確認要繼續移除此使用者？"
+    "confirmDeleteAccountText": "使用者移除後，此使用者將無法使用此帳戶任何功能，您確認要繼續移除此使用者？",
+    "userName": "使用者名稱"
   },
   "accountInfo": {
     "userAmount": "使用者數量",

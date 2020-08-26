@@ -1,4 +1,4 @@
-import { askQuestion, askResult, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory } from '@/API/NewAsk'
+import { askQuestionV2, askResultV2, getComponentListV2, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
 const CancelToken = axios.CancelToken
@@ -8,7 +8,7 @@ export default {
   askQuestion ({dispatch, commit, state, rootState, rootGetters}, data) {
     dispatch('cancelRequest')
     const dataFrameId = rootState.dataSource.dataFrameId || data.dataFrameId
-    return askQuestion({
+    let askCondition = {
       question: rootState.dataSource.appQuestion || data.question,
       dataSourceId: rootState.dataSource.dataSourceId || data.dataSourceId,
       previewQuestionId: rootGetters['dataSource/drillDownQuestionId'],
@@ -16,19 +16,21 @@ export default {
       isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null,
       dataFrameId: dataFrameId === 'all' ? '' : dataFrameId,
       selectedColumnList: rootGetters['dataFrameAdvanceSetting/selectedColumnList']
-    }, new CancelToken(function executor (c) {
+    }
+
+    return askQuestionV2({...askCondition, language: state.parserLanguage}, new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
       cancelFunction = c
     }))
   },
   askResult ({dispatch}, data) {
-    return askResult(data, new CancelToken(function executor (c) {
+    return askResultV2(data, new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
       cancelFunction = c
     }))
   },
   getComponentList ({dispatch, state}, data) {
-    return getComponentList(data, new CancelToken(function executor (c) {
+    return getComponentListV2(data, new CancelToken(function executor (c) {
       // An executor function receives a cancel function as a parameter
       cancelFunction = c
     }))
@@ -42,8 +44,9 @@ export default {
   getQuickStartQuestion({ rootState, rootGetters }, dataSourceIdData) {
     const dataSourceId = rootState.dataSource.dataSourceId || dataSourceIdData
     const dataFrameId = rootGetters['dataSource/currentDataFrameId']
+    const selectedColumnList = rootGetters['dataFrameAdvanceSetting/selectedColumnList']
     const restrictions = rootGetters['dataSource/filterRestrictionList']
-    return getQuickStartQuestion(dataSourceId, dataFrameId, restrictions)
+    return getQuickStartQuestion(dataSourceId, dataFrameId, restrictions, selectedColumnList)
   },
   cancelRequest () {
     if (typeof cancelFunction === 'function') {
@@ -67,5 +70,28 @@ export default {
   openAskInMemory ({rootGetters, rootState}) {
     if (!rootGetters['userManagement/hasPermission']('in_memory')) return
     addTableToMemory(rootGetters['userManagement/getCurrentAccountId'], rootGetters['dataSource/currentDataFrameId'], rootState.dataSource.dataSourceId)
+  },
+  getParserList ({commit, rootState}) {
+    getParserLanguageList().then(res => {
+      let currentLanguage = 'ZH_TW'
+      // switch (rootState.setting.locale) {
+      //   case 'zh-TW':
+      //     currentLanguage = 'ZH_TW'
+      //     break
+      //   case 'zh-CN':
+      //     currentLanguage = 'ZH_CN'
+      //     break
+      //   case 'en-US':
+      //     currentLanguage = 'EN_US'
+      //     break
+      //   default:
+      //     currentLanguage = 'ZH_TW'
+      //     break
+      // }
+      let languageParser = res.some(element => element.language === currentLanguage) ? currentLanguage : res[0]
+
+      commit('setParserLanguageList', res)
+      commit('setParserLanguage', languageParser)
+    })
   }
 }

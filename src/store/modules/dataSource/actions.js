@@ -9,7 +9,7 @@ import {
   getColumnCorrelationMatrix,
   triggerColumnDataCalculation
 } from '@/API/DataSource'
-import { getHistoryQuestionList } from '@/API/NewAsk'
+import { getHistoryQuestionListV2 } from '@/API/NewAsk'
 import router from '../../../router'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
@@ -84,6 +84,9 @@ export default {
     commit('setDataSourceId', dataSourceId)
     commit('dataFrameAdvanceSetting/toggleIsInit', false, { root: true })
     dispatch('dataFrameAdvanceSetting/clearColumnList', null, { root: true })
+
+    // 避免切換 dataSource 但 dataFrame 皆為 all 沒有觸發到 dataFrame id 變化
+    commit('setDataFrameId', null)
     
     if (!dataSourceId) return Promise.resolve(state)
 
@@ -224,7 +227,8 @@ export default {
   getHistoryQuestionList ({commit, state, getters}, dataSourceIdData) {
     const dataSourceId = state.dataSourceId || dataSourceIdData
     const dataFrameId = getters.currentDataFrameId
-    return getHistoryQuestionList(dataSourceId, dataFrameId).then(res => {
+
+    return getHistoryQuestionListV2(dataSourceId, dataFrameId).then(res => {
       commit('setHistoryQuestionList', res)
     })
   },

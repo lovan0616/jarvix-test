@@ -13,6 +13,18 @@ export function askQuestion (askInfo, cancelFunction) {
 }
 
 /**
+ * ask question v2
+ */
+export function askQuestionV2 (askInfo, cancelFunction) {
+  return request({
+    url: '/ask/question/v2',
+    method: 'POST',
+    data: askInfo,
+    cancelToken: cancelFunction
+  })
+}
+
+/**
  * ask result
  */
 export function askResult (askInfo, cancelFunction) {
@@ -25,11 +37,34 @@ export function askResult (askInfo, cancelFunction) {
 }
 
 /**
+ * ask result v2
+ */
+export function askResultV2 (askInfo, cancelFunction) {
+  return request({
+    url: '/ask/result/v2',
+    method: 'POST',
+    data: askInfo,
+    cancelToken: cancelFunction
+  })
+}
+
+/**
  * get component list
  */
 export function getComponentList (resultId, cancelFunction) {
   return request({
     url: `/ask/componentList/${resultId}`,
+    method: 'GET',
+    cancelToken: cancelFunction
+  })
+}
+
+/**
+ * get component list v2
+ */
+export function getComponentListV2 (resultId, cancelFunction) {
+  return request({
+    url: `/ask/componentList/${resultId}/v2`,
     method: 'GET',
     cancelToken: cancelFunction
   })
@@ -61,6 +96,19 @@ export function getHistoryQuestionList(dataSourceId, dataFrameId) {
 }
 
 /**
+ * get question history
+ */
+export function getHistoryQuestionListV2(dataSourceId, dataFrameId) {
+  return request({
+    url: `/ask/questionHistoryList/${dataSourceId}/v2`,
+    method: 'GET',
+    params: {
+      dataFrameId
+    }
+  })
+}
+
+/**
  * get related question
  * @param resultId
  */
@@ -78,14 +126,15 @@ export function getRelatedQuestionList(resultId, dataSourceId) {
 /**
  * get quick start question
  */
-export function getQuickStartQuestion(dataSourceId, dataFrameId, restrictions) {
+export function getQuickStartQuestion(dataSourceId, dataFrameId, restrictions, selectedColumnList = null) {
   return request({
     url: `/ask/quickQuestionList/search`,
     method: 'POST',
     data: {
       dataSourceId, 
       dataFrameId,
-      restrictions
+      restrictions,
+      selectedColumnList
     }
   })
 }
@@ -108,3 +157,12 @@ export function addTableToMemory(accountId, dataFrameId, dataSourceId) {
   })
 }
 
+/**
+ * get available language parser
+ */
+export function getParserLanguageList() {
+  return request({
+    url: `/ask/question/languages`,
+    method: 'GET'
+  })
+}

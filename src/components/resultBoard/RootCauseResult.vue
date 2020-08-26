@@ -1,5 +1,6 @@
 <template>
   <result-board
+    :segmentation-payload="segmentationPayload"
     :result-id="resultId"
     :result-info="resultInfo"
     :restrictions="restrictions"
@@ -58,6 +59,10 @@ export default {
     resultId: {
       type: Number,
       default: null
+    },
+    segmentationPayload: {
+      type: Object,
+      default: () => null
     }
   }
 }

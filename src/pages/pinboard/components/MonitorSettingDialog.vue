@@ -220,15 +220,20 @@ export default {
     },
     getDataFrameColumnInfo () {
       return getDataFrameColumnInfoById(this.dataFrameId, true, true).then(response => {
-        response.forEach(column => { 
-          this.monitorColumnList.push({
+        response.forEach(column => {
+          let columnName = column.aliasList.length > 0 ? column.aliasList[0] : column.name
+
+          if(column.statsType === 'NUMERIC') {
+            this.monitorColumnList.push({
               value: column.id,
-              name: column.name
+              name: columnName
             })
-          if(column.dataType === "DATETIME") {
+          }
+
+          if(column.dataType === 'DATETIME') {
             this.dateColumnList.push({
               value: column.id,
-              name: column.name
+              name: columnName
             })
           }
         })

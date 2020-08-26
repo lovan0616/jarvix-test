@@ -405,3 +405,25 @@ export function triggerColumnDataCalculation(dataFrameId, restrictions) {
     }
   })
 }
+
+/**
+ * trigger get data immediately
+ * @param {Number} dataFrameId - 欲更新的資料表 ID
+ */
+export function triggerUpdateData (dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/crontab/config/triggerUpdateData`,
+    method: 'PATCH'
+  })
+}
+
+/**
+ * 取得dataFrame DB連線資訊
+ * @param {Number} dataFrameId - 欲查閱的資料表 ID
+ */
+export function getDataFrameCreatedInfo(dataFrameId) {
+  return request({
+    url: `/dataFrame/${dataFrameId}/advanced/info`,
+    method: 'GET'
+  })
+}

@@ -111,7 +111,7 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '220px'
+          width: '280px'
         }
       ]
     },
