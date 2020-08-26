@@ -13,6 +13,11 @@
         @click="choosePersonalPinboard(false)">
         {{ $t('editing.shareToProject') }}
       </div>
+      <div
+        class="single-board"
+        @click="choosePersonalPinboard(false)">
+        {{ $t('editing.addToWarRoom') }}
+      </div>
     </div>
     <div 
       v-show="pinStep === 2"
