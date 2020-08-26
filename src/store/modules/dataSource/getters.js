@@ -60,13 +60,13 @@ export default {
     return null
   },
   getDataFrameName (state) {
-    if (state.dataSourceId) {
+    if (state.dataSourceId && state.dataSourceList.length > 0) {
       if (state.dataFrameId === 'all') {
         return state.dataFrameId
       }
       let selectedDataSource = state.dataSourceList.find(dataSource => dataSource.id === state.dataSourceId)
       let selectedDataFrame = selectedDataSource.dataFrames.find(dataFrame => dataFrame.id === state.dataFrameId)
-      return  selectedDataFrame.primaryAlias
+      return selectedDataFrame && selectedDataFrame.primaryAlias ? selectedDataFrame.primaryAlias : null
     }
     return null
   }

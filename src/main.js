@@ -14,6 +14,12 @@ import './styles/App.scss'
 import i18n from './lang/index.js'
 
 import {
+  Button,
+  DatePicker,
+  TimeSelect,
+  Popover,
+  InputNumber,
+  Checkbox,
   Input,
   Select,
   Option,
@@ -62,6 +68,7 @@ import GeneralResult from '@/components/resultBoard/GeneralResult'
 import CorrelationExplorationResult from '@/components/resultBoard/CorrelationExplorationResult'
 import RootCauseResult from '@/components/resultBoard/RootCauseResult'
 import MultiResult from '@/components/resultBoard/MultiResult'
+import MultiResultV2 from '@/components/resultBoard/MultiResultV2'
 import DataPreviewLayout from '@/components/resultBoard/DataPreviewLayout'
 import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
@@ -107,10 +114,24 @@ import Spinner from '@/components/Spinner'
 import ArrowButton from '@/components/resultBoard/ArrowButton'
 import DisplayNoAnswerInfo from '@/components/display/DisplayNoAnswerInfo'
 
+// 排程
+import vGanttChart from 'v-gantt-chart'
+import DefaultButton from '@/schedule/components/DefaultButton.vue'
+import DefaultInput from '@/schedule/components/DefaultInput.vue'
+import DefaultSelect from '@/schedule/components/DefaultSelect.vue'
+import DefaultDatePicker from '@/schedule/components/DefaultDatePicker.vue'
+// import Spinner from '@/schedule/components/Spinner.vue'
+
 var Rollbar = require('vue-rollbar')
 
 Vue.use(VueEvents)
 // Element UI components
+Vue.use(Button)
+Vue.use(DatePicker)
+Vue.use(TimeSelect)
+Vue.use(Popover)
+Vue.use(InputNumber)
+Vue.use(Checkbox)
 Vue.use(Input)
 Vue.use(Select)
 Vue.use(Option)
@@ -130,6 +151,8 @@ Vue.use(Submenu)
 Vue.use(MenuItem)
 Vue.use(DatePicker)
 
+Vue.use(vGanttChart)
+
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)
 Vue.component(Task.name, Task)
@@ -144,6 +167,7 @@ Vue.component(GeneralResult.name, GeneralResult)
 Vue.component(CorrelationExplorationResult.name, CorrelationExplorationResult)
 Vue.component(RootCauseResult.name, RootCauseResult)
 Vue.component(MultiResult.name, MultiResult)
+Vue.component(MultiResultV2.name, MultiResultV2)
 Vue.component(DataPreviewLayout.name, DataPreviewLayout)
 Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
@@ -185,6 +209,12 @@ Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(Spinner.name, Spinner)
 Vue.component(ArrowButton.name, ArrowButton)
 Vue.component(DisplayNoAnswerInfo.name, DisplayNoAnswerInfo)
+
+Vue.component('DefaultButton', DefaultButton)
+Vue.component('DefaultInput', DefaultInput)
+Vue.component('DefaultSelect', DefaultSelect)
+Vue.component('DefaultDatePicker', DefaultDatePicker)
+// Vue.component('Spinner', Spinner)
 
 /** Custom Rule */
 Validator.extend('requireOneNumeric', function (value) {

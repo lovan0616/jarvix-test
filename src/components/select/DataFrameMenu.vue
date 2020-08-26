@@ -1,6 +1,7 @@
 <template>
   <div class="data-frame-select-block">
     <el-menu
+      :default-active="selectedMenuIndex"
       mode="horizontal"
       class="data-frame-select__menu"
       background-color="#1E2122"
@@ -8,6 +9,8 @@
       @select="handleSelect">
       <el-submenu 
         v-if="availableDataSourceList.length > 0" 
+        :show-timeout="0"
+        :hide-timeout="0"
         popper-class="data-frame-select__popper"
         index="1">
         <template slot="title" >
@@ -140,6 +143,12 @@ export default {
       return this.availableDataSourceList[this.getDataSourceIndex].dataFrames.findIndex(dataFrame => (
         dataFrame.id === this.dataFrameId
       ))
+    },
+    selectedMenuIndex () {
+      if (this.getDataSourceIndex > -1 && this.getDataFrameIndex > -1) {
+        return `${this.getDataSourceIndex}-${this.getDataFrameIndex}`
+      }
+      return null
     },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
@@ -290,7 +299,7 @@ export default {
   }
 }
 
-.el-menu--horizontal {
+.el-menu.el-menu--horizontal {
   flex: auto;
   border-bottom: unset;
   border-radius: 5px 0 0 5px;

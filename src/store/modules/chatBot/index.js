@@ -9,7 +9,10 @@ export default {
     isAnalyzing: false,
     isUseAlgorithm: false,
     doDrillDown: false,
-    doClickCorrelation: false
+    doClickCorrelation: false,
+    parserLanguage: null,
+    parserLanguageList: [],
+    hasBasicInfo: false,
   },
   actions,
   mutations,

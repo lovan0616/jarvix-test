@@ -383,7 +383,6 @@ export default {
         this.isProcessing 
         || this.isInProcess(data) 
         || ((this.isFail(data) || this.isPending(data)) && actionName !== 'delete')
-        || (actionName === 'batchLoad' && data.originType !== 'database')
       ) return true
       return false
     },
@@ -437,6 +436,7 @@ export default {
       return subAction.filter(action => {
         if (action.dialogName === 'etlSetting') return data.etlExists
         if (action.dialogName === 'batchLoad') return data.originType === 'database'
+        if (action.dialogName === 'createdInfo') return data.originType === 'database'
         return true
       })
     },

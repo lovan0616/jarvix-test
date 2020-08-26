@@ -7,9 +7,18 @@
     >
       <div class="board-header">
         <div class="header-block">
-          <slot name="PageResultBoardHeader"/>
+          <!-- 這邊要注意因為 pinboard 會有舊的 segmentation -->
+          <result-board-header
+            v-if="segmentationPayload.question"
+            :title="segmentationPayload.question"
+            :segmentation="segmentationPayload"
+          />
+          <result-board-header-v2
+            v-else
+            :segmentation="segmentationPayload"
+          />
         </div>
-        <div 
+        <div
           v-if="isPinboardPage"
           class="pin-button-block"
         >
@@ -107,6 +116,8 @@
   </div>
 </template>
 <script>
+import ResultBoardHeader from './ResultBoardHeader'
+import ResultBoardHeaderV2 from './ResultBoardHeaderV2'
 import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
@@ -117,6 +128,8 @@ import { Message } from 'element-ui'
 export default {
   name: 'ResultBoard',
   components: {
+    ResultBoardHeader,
+    ResultBoardHeaderV2,
     PinboardDialog,
     ShareDialog,
     DecideDialog,
@@ -135,6 +148,10 @@ export default {
     restrictions: {
       type: Array,
       default: () => []
+    },
+    segmentationPayload: {
+      type: Object,
+      default: () => null
     }
   },
   data () {

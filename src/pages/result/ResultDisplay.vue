@@ -18,9 +18,12 @@
       v-else
       :is="layout"
       :data-result-id="currentResultId"
+      :data-frame-id="currentQuestionDataFrameId"
       :result-info="resultInfo"
       :restrictions="restrictInfo"
       :segmentation-payload="segmentationPayload"
+      :transcript="transcript"
+      mode="display"
     />
     <div
       v-if="relatedQuestionList.length > 0" 
@@ -63,6 +66,9 @@ export default {
         nlpToken: []
       },
       segmentationPayload: null,
+      transcript: null,
+      // 目前兩版 transcript 過渡期先放這
+      currentQuestionDataFrameId: null,
       totalSec: 50,
       periodSec: 200
     }
@@ -137,6 +143,8 @@ export default {
       this.restrictInfo = []
       this.relatedQuestionList = []
       this.segmentationPayload = null
+      this.currentQuestionDataFrameId = null
+      this.transcript = null
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {
@@ -148,21 +156,24 @@ export default {
       document.title = `JarviX-${data.question}`
 
       if (this.currentQuestionInfo) {
-        this.$store.dispatch('chatBot/askResult', {
-          questionId: this.currentQuestionId,
-          segmentationPayload: this.currentQuestionInfo,
-          restrictions: this.filterRestrictionList,
-          selectedColumnList: this.selectedColumnList
-        }).then(res => {
-          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
-          this.getComponent(res)
-          this.getRelatedQuestion(res.resultId)
-        }).catch(() => {
-          this.isLoading = false
-          this.$store.commit('chatBot/updateAnalyzeStatus', false)
-          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
-        })
-        return false
+
+          this.$store.dispatch('chatBot/askResult', {
+            questionId: this.currentQuestionId,
+            segmentation: this.currentQuestionInfo,
+            restrictions: this.filterRestrictionList,
+            selectedColumnList: this.selectedColumnList
+          }).then(res => {
+            this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+            this.getComponentV2(res)
+            // this.getRelatedQuestion(res.resultId)
+          }).catch(() => {
+            this.isLoading = false
+            this.$store.commit('chatBot/updateAnalyzeStatus', false)
+            this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+          })
+          return
+        
+        
       }
 
       this.$store.dispatch('chatBot/askQuestion', data)
@@ -171,49 +182,53 @@ export default {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           let questionId = response.questionId
           this.$store.commit('dataSource/setCurrentQuestionId', questionId)
-          let segmentationList = response.parseQuestionPayload.segmentations
 
-          if (segmentationList.length === 1) {
-            // 介紹資料集的處理
-            switch (segmentationList[0].implication.intent) {
-              case 'Introduction': {
-                this.layout = 'PreviewDataSource'
-                this.resultInfo = null
-                this.isLoading = false
-                this.setRelatedQuestions()
-                return false
-              }
-              case 'NoAnswer': {
-                let implication = segmentationList[0].implication
-                this.layout = 'EmptyResult'
-                this.resultInfo = {
-                  title: implication.title,
-                  description: implication.description
+          
+            let segmentationList = response.segmentationList
+            if (segmentationList.length === 1) {
+              // 介紹資料集的處理
+              switch (segmentationList[0].denotation) {
+                case 'INTRODUCTION': {
+                  this.layout = 'PreviewDataSource'
+                  this.resultInfo = null
+                  this.isLoading = false
+                  this.setRelatedQuestions()
+                  return false
                 }
-                this.isLoading = false
-                this.setRelatedQuestions()
-                return false
+                case 'NO_ANSWER': {
+                  let segmentation = segmentationList[0]
+                  this.layout = 'EmptyResult'
+                  this.resultInfo = {
+                    title: segmentation.errorCategory,
+                    description: segmentation.errorMessage
+                  }
+                  this.isLoading = false
+                  this.setRelatedQuestions()
+                  return false
+                }
               }
+              
+              this.$store.dispatch('chatBot/askResult', {
+                questionId,
+                segmentation: segmentationList[0],
+                restrictions: this.filterRestrictionList,
+                selectedColumnList: this.selectedColumnList
+              }).then(res => {
+                this.getComponentV2(res)
+                // this.getRelatedQuestion(res.resultId)
+              }).catch((error) => {
+                if (error.constructor.name !== 'Cancel') this.isLoading = false
+              })
+            } else {
+              // 多個結果
+              this.layout = 'MultiResultV2'
+              this.resultInfo = {...response, question: data.question}
+              this.isLoading = false
+              this.setRelatedQuestions()
             }
-
-            this.$store.dispatch('chatBot/askResult', {
-              questionId,
-              segmentationPayload: segmentationList[0],
-              restrictions: this.filterRestrictionList,
-              selectedColumnList: this.selectedColumnList
-            }).then(res => {
-              this.getComponent(res)
-              this.getRelatedQuestion(res.resultId)
-            }).catch((error) => {
-              if (error.constructor.name !== 'Cancel') this.isLoading = false
-            })
-          } else {
-            // 多個結果
-            this.layout = 'MultiResult'
-            this.resultInfo = response
-            this.isLoading = false
-            this.setRelatedQuestions()
-          }
+            
+          
+          
         }).catch((error) => {
           // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
           if (error.constructor.name !== 'Cancel') this.isLoading = false
@@ -258,8 +273,58 @@ export default {
               this.restrictInfo = componentResponse.restrictions
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
+              this.transcript = componentResponse.transcript
               this.segmentationAnalysis(componentResponse.segmentationPayload)
-              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', componentResponse.segmentationPayload.dataframeId)
+              this.currentQuestionDataFrameId = this.transcript.dataframe.id
+              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
+              this.isLoading = false
+              break
+            case 'Disable':
+            case 'Delete':
+            case 'Warn':
+            case 'Fail':
+              this.layout = 'EmptyResult'
+              this.isLoading = false
+              break
+          }
+        })
+    },
+    getComponentV2 (res) {
+      window.clearTimeout(this.timeoutFunction)
+      this.$store.commit('result/updateCurrentResultId', res.resultId)
+      if (res.layout === 'no_answer') {
+        this.layout = 'EmptyResult'
+        this.resultInfo = {
+          title: res.noAnswerTitle,
+          description: res.noAnswerDescription
+        }
+        this.isLoading = false
+        return false
+      }
+
+      this.$store.dispatch('chatBot/getComponentList', res.resultId)
+        .then(componentResponse => {
+          switch (componentResponse.status) {
+            case 'Process':
+            case 'Ready':
+              this.timeoutFunction = window.setTimeout(() => {
+                this.getComponentV2(res)
+              }, this.totalSec)
+
+              this.totalSec += this.periodSec
+              this.periodSec = this.totalSec
+              break
+            case 'Complete':
+              this.totalSec = 50
+              this.periodSec = 200
+              this.resultInfo = componentResponse.componentIds
+              this.restrictInfo = componentResponse.restrictions
+              this.layout = this.getLayout(componentResponse.layout)
+              this.segmentationPayload = componentResponse.segmentationPayload
+              this.segmentationAnalysisV2(componentResponse.segmentationPayload)
+              this.transcript = componentResponse.transcript
+              this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
+              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.isLoading = false
               break
             case 'Disable':
@@ -297,6 +362,15 @@ export default {
         return element.type === 'UnknownToken'
       })
       this.segmentationInfo.question = payloadInfo.executedQuestion
+    },
+    segmentationAnalysisV2 (payloadInfo) {
+      // this.segmentationInfo.nlpToken = payloadInfo.sentence.filter(element => {
+      //   return element.isMatchedByNlp || element.isSynonym
+      // })
+      this.segmentationInfo.unknownToken = payloadInfo.sentence.filter(element => {
+        return element.type === 'UNKNOWN'
+      })
+      this.segmentationInfo.question = this.$route.query.question
     },
     closeUnknowInfoBlock () {
       this.segmentationInfo = {

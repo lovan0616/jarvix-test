@@ -37,9 +37,14 @@
   &:checked + label:after {
     opacity: 1;
   }
+
+  &:checked + label {
+    color: #FFFFFF;
+  }
 }
 
 .input-radio-label {
   position: relative;
   padding-left: 28px;
+  color: #CCCCCC;
 }

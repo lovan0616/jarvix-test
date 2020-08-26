@@ -28,7 +28,7 @@
       <svg-icon
         icon-class="filter" 
         class="ask-condition__icon filter"/>
-      <span class="ask-condition__label">{{ $t('dataFrameAdvanceSetting.filterCriteria') }}({{ filterList.length }})</span>
+      <span class="ask-condition__label">{{ $t('dataFrameAdvanceSetting.filterCriteria') }}({{ selectedFilterCount }})</span>
     </div>
   </div>
 </template>
@@ -43,7 +43,6 @@ export default {
   },
   computed: {
     ...mapGetters('dataSource', ['getDataSourceName', 'getDataFrameName']),
-    ...mapGetters('dataFrameAdvanceSetting', ['selectedColumnList']),
     ...mapState('dataSource', ['filterList', 'dataSourceId']),
     ...mapState('dataFrameAdvanceSetting', ['columnList']),
     isShow () {
@@ -55,9 +54,12 @@ export default {
         : this.getDataFrameName
     },
     selectedColumnCount () {
-      return this.columnList
-        ? `${this.$t('dataFrameAdvanceSetting.dataColumns')}(${this.selectedColumnList.length}/${this.columnList.length})`
-        : this.$t('dataFrameAdvanceSetting.allColumns')
+      if (!this.columnList) return this.$t('dataFrameAdvanceSetting.allColumns')
+      const selectedColumnListLength = this.columnList.filter(column => column.isSelected).length
+      return `${this.$t('dataFrameAdvanceSetting.dataColumns')}(${selectedColumnListLength}/${this.columnList.length})`
+    },
+    selectedFilterCount () {
+      return this.filterList.filter(filterItem => filterItem.status).length
     }
   }
 }
