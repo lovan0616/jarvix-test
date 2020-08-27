@@ -63,7 +63,10 @@ export default {
   props: {
     componentData: {
       type: Object,
-      required: true
+      default: () => ({
+        selectedColumns: [],
+        restriction: []
+      })
     }
   },
   data () {

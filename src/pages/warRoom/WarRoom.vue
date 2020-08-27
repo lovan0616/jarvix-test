@@ -102,13 +102,13 @@
               {{ $t('warRoom.warRoomSetting') }}
             </button>
             <custom-dropdown-select
-              v-if="addComponentList.length > 0"
               :data-list="addComponentList"
               trigger="hover"
               @select="addComponent"
             >
               <template #display>
                 <button
+                  :disabled="addComponentList.length === 0"
                   type="button"
                   class="btn-m btn-outline btn-has-icon button-container__button"
                 >
@@ -131,6 +131,8 @@
             :component-id="number.componentId"
             :is-editable="true"
             class="number__item"
+            @check-constraint="viewComponentConstraint"
+            @check-setting="editComponenSetting"
           />
         </div>
         <div class="chart">
@@ -141,6 +143,8 @@
               :component-id="chart.componentId"
               :is-editable="true"
               class="chart__item"
+              @check-constraint="viewComponentConstraint"
+              @check-setting="editComponenSetting"
             />
           </div>
           <div
@@ -153,6 +157,8 @@
               :component-id="chart.componentId"
               :is-editable="true"
               class="chart__item"
+              @check-constraint="viewComponentConstraint"
+              @check-setting="editComponenSetting"
             />
           </div>
         </div>
@@ -162,6 +168,7 @@
       v-if="isShowComponentSetting"
       :component-type="createdComponentType"
       :data-source-pool="dataSourcePool"
+      :original-component-data="selectedComponent"
       class="war-room__side-setting"
       @close="closeComponentSetting"
       @updated="fetchData"
@@ -175,6 +182,7 @@
     <component-constraint
       v-if="isShowComponentConstraint"
       :component-data="selectedComponent"
+      class="war-room__side-setting"
       @close="closeComponentConstraint"
     />
   </section>
@@ -239,10 +247,6 @@ const dummyWarRoom =  {
     {
       "componentId": 6,
       "orderSequence": 7
-    },
-    {
-      "componentId": 7,
-      "orderSequence": 8
     }
   ],
   "indexTypeComponents": [
@@ -318,11 +322,11 @@ export default {
   computed: {
     addComponentList () {
       return [
-        (this.chartComponent && this.chartComponent.length < 8) && {
+        ...(this.chartComponent && this.chartComponent.length < 8) && {
           id: 'diagram',
           name: this.$t('warRoom.addChartComponent')
         },
-        (this.numberComponent && this.numberComponent.length < 4) && {
+        ...(this.numberComponent && this.numberComponent.length < 4) && {
           id: 'index',
           name: this.$t('warRoom.addNumberComponent')
         }
@@ -369,9 +373,16 @@ export default {
       this.createdComponentType = value
       this.isShowComponentSetting = true
     },
+    editComponenSetting (data) {
+      if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
+      if (this.isShowComponentConstraint) this.closeComponentConstraint()
+      this.selectedComponent = data
+      this.isShowComponentSetting = true
+    },
     closeComponentSetting () {
       this.isShowComponentSetting = false
       this.createdComponentType = null
+      this.selectedComponent = {}
     },
     openWarRoomSetting () {
       if (this.isShowComponentSetting) this.closeComponentSetting()
@@ -381,7 +392,14 @@ export default {
     closeWarRoomSetting () {
       this.isShowWarRoomSetting = false
     },
+    viewComponentConstraint (data) {
+      if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
+      if (this.isShowComponentSetting) this.closeComponentSetting()
+      this.selectedComponent = data
+      this.isShowComponentConstraint = true
+    },
     closeComponentConstraint () {
+      this.selectedComponent = {}
       this.isShowComponentConstraint = false
     },
     editWarRoomName () {

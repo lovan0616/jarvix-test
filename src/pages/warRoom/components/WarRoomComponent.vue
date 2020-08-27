@@ -3,7 +3,7 @@
     class="card"
   >
     <div class="card__header">
-      <div class="card__title">{{ config.displayName }}</div>
+      <div class="card__title">{{ componentBasicInfo.config.displayName }}</div>
       <div
         v-if="isEditable"
         class="card__control"
@@ -11,6 +11,7 @@
         <a
           href="javascript:void(0);" 
           class="link action-link"
+          @click="editSetting"
         >
           <svg-icon
             icon-class="filter-setting" 
@@ -19,6 +20,7 @@
         <a
           href="javascript:void(0);" 
           class="link action-link"
+          @click="viewConstraint"
         >
           <svg-icon
             icon-class="filter" 
@@ -134,7 +136,7 @@ const dummyIndexComponentData = {
 }
 
 const dummyDiagramComponentData = {
-  "componentId": 0,
+  "componentId": 2,
   "config": {
     "boundSwitch": true,
     "customEndTime": "2020-01-23",
@@ -254,7 +256,7 @@ export default {
       errorMessage: '',
       timeoutFunction: null,
       autoRefreshFunction: null,
-      config: {}
+      componentBasicInfo: {}
     }
   },
   destroyed () {
@@ -278,6 +280,7 @@ export default {
       this.isLoading = true
       getComponentInfo(warRoomId, this.componentId)
         .then(response => {
+          const { diagramData, ...componentBasicInfo } = dummyDiagramComponentData
           switch (dummyDiagramComponentData.diagramData.status) {
             case 'Process':
             case 'Ready':
@@ -289,12 +292,12 @@ export default {
               this.componentName = this.getChartTemplate(this.diagram)
               let responseData = dummyDiagramComponentData.diagramData.data
 
-              let isAutoRefresh = dummyDiagramComponentData.config.isAutoRefresh
+              let isAutoRefresh = componentBasicInfo.config.isAutoRefresh
               if(isAutoRefresh && !this.isEditable) {
                 this.autoRefreshFunction = window.setTimeout(() => {
                   this.fetchData()
                   // TODO: parse crontab 格式
-                }, dummyDiagramComponentData.config * 1000)
+                }, componentBasicInfo.config * 1000)
               }
               
               // 判斷是否為 圖表
@@ -312,7 +315,7 @@ export default {
                 this.isLoading = false
               }
 
-              this.config = dummyDiagramComponentData.config
+              this.componentBasicInfo = componentBasicInfo
               this.isLoading = false
               break
             }
@@ -334,6 +337,12 @@ export default {
           // TODO: update error message
           this.errorMessage = this.$t('message.emptyResult')
         })
+    },
+    viewConstraint() {
+      this.$emit('check-constraint', this.componentBasicInfo)
+    },
+    editSetting() {
+      this.$emit('check-setting', this.componentBasicInfo)
     }
   }
 }

@@ -243,7 +243,7 @@ export default {
   props: {
     componentType: {
       type: String,
-      required: true
+      default: 'diagram'
     },
     originalComponentData: {
       type: Object,
@@ -375,6 +375,11 @@ export default {
       
       // 如果沒有選擇預設則為自訂區間
       return 'others'
+    }
+  },
+  watch: {
+    originalComponentData () {
+      this.componentData = JSON.parse(JSON.stringify(this.originalComponentData))
     }
   },
   mounted () {
