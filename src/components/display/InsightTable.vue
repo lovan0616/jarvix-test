@@ -13,53 +13,53 @@
         :name="singleBasicInfo.name"
       >
         <div
-          v-if="singleBasicInfo['sum']"
+          v-if="checkProperty(singleBasicInfo, 'sum')"
           class="insight-vertical-table"
         >
           <div 
-            v-if="singleBasicInfo.sum"
+            v-if="checkProperty(singleBasicInfo, 'sum')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.sum') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.sum }}</div>
           </div>
           <div 
-            v-if="singleBasicInfo.count"
+            v-if="checkProperty(singleBasicInfo, 'count')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.count') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.count }}</div>
           </div>
           <div 
-            v-if="singleBasicInfo.max"
+            v-if="checkProperty(singleBasicInfo, 'max')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.max') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.max }}</div>
           </div>
           <div 
-            v-if="singleBasicInfo.min"
+            v-if="checkProperty(singleBasicInfo, 'min')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.min') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.min }}</div>
           </div>
           <div 
-            v-if="singleBasicInfo.avg"
+            v-if="checkProperty(singleBasicInfo, 'avg')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.mean') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.avg }}</div>
           </div>
           <div 
-            v-if="singleBasicInfo.sd"
+            v-if="checkProperty(singleBasicInfo, 'sd')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.std') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.sd }}</div>
           </div>
           <div 
-            v-if="singleBasicInfo.comment"
+            v-if="checkProperty(singleBasicInfo, 'comment')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.note') }}</div>
@@ -71,49 +71,49 @@
           class="insight-vertical-table"
         >
           <div 
-            v-if="singleBasicInfo.total"
+            v-if="checkProperty(singleBasicInfo, 'total')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.count') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.total }}</div>
           </div>
           <div 
-            v-if="singleBasicInfo.max"
+            v-if="checkProperty(singleBasicInfo, 'max')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.maxCategory') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.max }}</div>
           </div>
           <div 
-            v-if="singleBasicInfo.max_n"
+            v-if="checkProperty(singleBasicInfo, 'max_n')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.maxCategoryCount') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.max_n }}</div>
           </div>
           <div 
-            v-if="singleBasicInfo.min"
+            v-if="checkProperty(singleBasicInfo, 'min')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.minCategory') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.min }}</div>
           </div>
           <div 
-            v-if="singleBasicInfo.min_n"
+            v-if="checkProperty(singleBasicInfo, 'min_n')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.minCategoryCount') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.min_n }}</div>
           </div>
           <div 
-            v-if="singleBasicInfo.avg"
+            v-if="checkProperty(singleBasicInfo, 'avg')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.countMean') }}</div>
             <div class="insight-table-content">{{ singleBasicInfo.avg }}</div>
           </div>
           <div 
-            v-if="singleBasicInfo.sd"
+            v-if="checkProperty(singleBasicInfo, 'sd')"
             class="insight-table-row"
           >
             <div class="insight-table-head">{{ $t('aggregatedValue.countStd') }}</div>
