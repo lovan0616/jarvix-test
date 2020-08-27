@@ -42,9 +42,9 @@
         {{ $t('schedule.button.downloadFile') }}
       </default-button>
       <a
-        :href="`/static/files/${fileData.code}.csv`"
+        :href="require(`@/schedule/files/${fileData.code}.csv`)"
+        :download="`${fileData.code}.csv`"
         class="file__item-button btn btn-secondary"
-        download
       >
         {{ $t('schedule.button.templateFileDownload') }}
       </a>

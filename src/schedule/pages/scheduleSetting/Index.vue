@@ -214,7 +214,6 @@
             v-for="file in commonDataSetting"
             v-else
             :key="file.id"
-            class="file__item"
           >
             <single-common-file :file-data="file" />
           </div>
