@@ -69,7 +69,7 @@ export default {
       segmentationPayload: null,
       transcript: null,
       // 目前兩版 transcript 過渡期先放這
-      isWarRoomAddable: null,
+      isWarRoomAddable: false,
       currentQuestionDataFrameId: null,
       totalSec: 50,
       periodSec: 200
@@ -147,7 +147,7 @@ export default {
       this.segmentationPayload = null
       this.currentQuestionDataFrameId = null
       this.transcript = null
-      this.isWarRoomAddable = null
+      this.isWarRoomAddable = false
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {

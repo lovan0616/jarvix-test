@@ -96,7 +96,7 @@ export default {
   props: {
     isWarRoomAddable: {
       type: Boolean,
-      default: null
+      default: false
     }
   },
   data () {

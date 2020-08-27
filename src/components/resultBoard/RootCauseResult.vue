@@ -67,7 +67,7 @@ export default {
     },
     isWarRoomAddable: {
       type: Boolean,
-      default: null
+      default: false
     }
   }
 }
