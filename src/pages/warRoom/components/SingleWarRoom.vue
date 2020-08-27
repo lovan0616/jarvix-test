@@ -123,7 +123,7 @@ export default {
   height: 121px;
   background-color: var(--color-bg-5);
   border-radius: 8px;
-  padding: 24px;
+  padding: 16px 24px 24px;
   cursor: pointer;
   background-color: rgba(0, 0, 0, .35);
   transition: all 0.3s;
@@ -166,7 +166,7 @@ export default {
       width: 6px;
       height: 6px;
       background: transparent;
-      border-radius: 5px;
+      border-radius: 50%;
       border: 1px solid #999;
     }
 
