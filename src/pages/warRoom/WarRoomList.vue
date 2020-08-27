@@ -208,6 +208,9 @@ export default {
       //TODO: live board router + urlIdentifier
       this.shareLink = warRoomInfo.urlIdentifier
     },
+    showAdd () {
+      this.isShowAdd = true
+    },
     confirmEdit () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
@@ -240,9 +243,6 @@ export default {
       this.$nextTick(() => {
         this.isShowShare = false
       })
-    },
-    showAdd () {
-      this.isShowAdd = true
     },
     closeAdd () {
       this.isShowAdd = false
