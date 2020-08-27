@@ -27,7 +27,6 @@
                 class="icon"/>
             </a>
           </div>
-          <!--TODO: 新增編輯功能-->
           <div
             v-else
             class="war-room__title-edit"
@@ -453,6 +452,8 @@ export default {
   }
 
   &__title {
+    font-weight: 600;
+    font-size: 24px;
     margin: 16px 0 0 0;
     line-height: 32px;
   }
