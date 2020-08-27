@@ -18,7 +18,7 @@
         v-if="true"
         class="single-board"
         @click="chooseWarRoom()">
-        {{ $t('editing.addToWarRoom') }}
+        {{ $t('editing.isAddToWarRoom') }}
       </div>
     </div>
     <div 
@@ -35,7 +35,7 @@
           {{ $t('editing.prevStep') }}
         </a>
       </div>
-      <div v-if="addToWarRoom">
+      <div v-if="isAddToWarRoom">
         <div 
           class="single-board default"
           @click="nextStep"
@@ -70,7 +70,7 @@
     >
       <input 
         v-model="newBoardName" 
-        :placeholder="addToWarRoom ? $t('editing.warRoomName') : $t('editing.pinboardName')"
+        :placeholder="isAddToWarRoom ? $t('editing.warRoomName') : $t('editing.pinboardName')"
         type="text"
         class="input board-name-input"
       >
@@ -103,15 +103,15 @@ export default {
     return {
       newBoardName: null,
       pinStep: 1,
-      isPersonal: true,
-      addToWarRoom: false,
-      warRoomList: null
+      isAddToPersonalPinboard: true,
+      isAddToWarRoom: false,
+      warRoomList: []
     }
   },
   computed: {
     ...mapState('userManagement', ['userId']),
     pinboardList () {
-      return this.isPersonal 
+      return this.isAddToPersonalPinboard 
         ? this.$store.state.pinboard.pinboardList
         : this.$store.state.pinboard.groupPinboardList
     },
@@ -176,7 +176,7 @@ export default {
       this.$emit('close')
     },
     createPinboard () {
-      if(this.addToWarRoom) {
+      if(this.isAddToWarRoom) {
         createWarRoom({ name: this.newBoardName, groupId: this.groupId })
           .then(response => {
             this.$emit('pinToWarRoom', response)
@@ -184,7 +184,7 @@ export default {
           })
         return 
       }
-      if(this.isPersonal) {
+      if(this.isAddToPersonalPinboard) {
         this.$store.dispatch('pinboard/createPinboard', this.newBoardName)
           .then(response => {
             this.$emit('pin', response.id)
@@ -204,13 +204,13 @@ export default {
     nextStep () {
       this.pinStep += 1
     },
-    choosePersonalPinboard (isPersonal) {
-      this.isPersonal = isPersonal
-      this.addToWarRoom = false
+    choosePersonalPinboard (isAddToPersonalPinboard) {
+      this.isAddToPersonalPinboard = isAddToPersonalPinboard
+      this.isAddToWarRoom = false
       this.nextStep()
     },
     chooseWarRoom () {
-      this.addToWarRoom = true
+      this.isAddToWarRoom = true
       this.nextStep()
     }
   },
