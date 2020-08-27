@@ -211,7 +211,7 @@ export default {
   computed: {
     ...mapState('userManagement', ['license']),
     reachLicenseFileSizeLimit () {
-      return this.license.currentDataStorageSize >= this.license.maxDataStorageSize
+      return this.license.currentDataStorageSize >= this.license.maxDataStorageSize && this.license.maxDataStorageSize !== -1
     },
     fileCountLimit () {
       return this.$store.state.dataManagement.fileCountLimit
