@@ -124,38 +124,36 @@
       </div>
       <div class="war-room__display">
         <div class="number">
-          <div
+          <!--待補編輯狀態-->
+          <war-room-component
             v-for="number in numberComponent"
             :key="number.componentId"
+            :component-id="number.componentId"
+            :is-editable="true"
             class="number__item"
-          >
-            <div class="number__item-title">公司總銷售額</div>
-            {{ 'number' + number.componentId }}
-          </div>
+          />
         </div>
         <div class="chart">
           <div class="chart__container">
-            <div
+            <war-room-component
               v-for="chart in chartFirstRow"
               :key="chart.componentId"
+              :component-id="chart.componentId"
+              :is-editable="true"
               class="chart__item"
-            >
-              <div class="chart__item-title">公司總銷售額</div>
-              {{ 'chart' + chart.componentId }}
-            </div>
+            />
           </div>
           <div
             v-if="chartSecondRow.length > 0"
             class="chart__container"
           >
-            <div
+            <war-room-component
               v-for="chart in chartSecondRow"
               :key="chart.componentId"
+              :component-id="chart.componentId"
+              :is-editable="true"
               class="chart__item"
-            >
-              <div class="chart__item-title">公司總銷售額</div>
-              {{ 'chart' + chart.componentId }}
-            </div>
+            />
           </div>
         </div>
       </div>
@@ -187,6 +185,7 @@ import ComponentSetting from './components/ComponentSetting'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import WarRoomSetting from './components/WarRoomSetting'
 import ComponentConstraint from './components/ComponentConstraint'
+import WarRoomComponent from './components/WarRoomComponent'
 import {
   getWarRoomInfo,
   getWarRoomPool,
@@ -215,7 +214,7 @@ const dummyWarRoom =  {
   "diagramTypeComponents": [
     {
       "componentId": 0,
-      "orderSequence": 3
+      "orderSequence": 1
     },
     {
       "componentId": 1,
@@ -223,17 +222,45 @@ const dummyWarRoom =  {
     },
     {
       "componentId": 2,
-      "orderSequence": 1
+      "orderSequence": 3
     },
     {
       "componentId": 3,
       "orderSequence": 4
+    },
+    {
+      "componentId": 4,
+      "orderSequence": 5
+    },
+    {
+      "componentId": 5,
+      "orderSequence": 6
+    },
+    {
+      "componentId": 6,
+      "orderSequence": 7
+    },
+    {
+      "componentId": 7,
+      "orderSequence": 8
     }
   ],
   "indexTypeComponents": [
     {
-      "componentId": 0,
-      "orderSequence": 0
+      "componentId": 8,
+      "orderSequence": 1
+    },
+    {
+      "componentId": 9,
+      "orderSequence": 2
+    },
+    {
+      "componentId": 10,
+      "orderSequence": 3
+    },
+    {
+      "componentId": 11,
+      "orderSequence": 4
     }
   ],
   "isPublishing": true,
@@ -267,7 +294,8 @@ export default {
     ComponentSetting,
     CustomDropdownSelect,
     WarRoomSetting,
-    ComponentConstraint
+    ComponentConstraint,
+    WarRoomComponent
   },
   data () {
     return {
@@ -499,18 +527,9 @@ export default {
     &__item {
       flex: 1;
       max-width: calc(calc(100% - 40px) / 3);
-      background: #1C2424;
-      border-radius: 5px;
-      padding: 16px;
       &:not(:last-of-type) {
         margin-right: 20px;
       }
-    }
-
-    &__item-title {
-      font-size: 14px;
-      color: #999999;
-      margin-bottom: 8px;
     }
   }
 
@@ -530,18 +549,9 @@ export default {
 
     &__item {
       flex: 1;
-      border-radius: 5px;
-      background: #1C2424;
-      padding: 16px;
       &:not(:last-of-type) {
         margin-right: 20px;
       }
-    }
-
-    &__item-title {
-      font-size: 14px;
-      color: #999999;
-      margin-bottom: 8px;
     }
   }
 
