@@ -36,7 +36,7 @@
         </div>
         <div class="button-block dataframe-action">
           <button 
-            :disabled="reachLimit || enableDataFrameCount === 0"
+            :disabled="enableDataFrameCount === 0"
             class="btn-m btn-secondary btn-has-icon"
             @click="toggleEditFeatureDialog"
           >
