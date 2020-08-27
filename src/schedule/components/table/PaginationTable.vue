@@ -8,10 +8,10 @@
     </div>
     <el-table
       v-bind="tableProps"
+      :height="height"
       :empty-text="$t('schedule.table.noData')"
       class="ss-table"
       style="width: 100%;"
-      :height="height"
     >
       <el-table-column
         v-if="dataset.index && dataset.index.length > 0"

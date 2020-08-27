@@ -5,8 +5,8 @@
   />
   <div
     v-else
-    class="page"
     :class="{'is-kpi-collapse': isKpiCollapse}"
+    class="page"
   >
     <div class="page__section detail">
       <div class="section__side-nav">
@@ -17,8 +17,8 @@
           <div
             v-for="solution in solutions"
             :key="solution.solutionId"
-            class="solution card-like"
             :class="{ 'is-active': solution.solutionId === currentSolutionId, 'is-failed': isSolutionFailed(solution.solutionId) }"
+            class="solution card-like"
             @click="switchSolution(solution.solutionId)"
           >
             <div class="solution__title">
@@ -65,11 +65,11 @@
         />
         <pagination-table
           v-else-if="resultType === 'order' || resultType === 'machine'"
-          fixed-index
           :is-processing="isProcessing"
           :pagination-info="pagination"
           :dataset="resultType === 'order' ? orderData : machineData"
           height="100%"
+          fixed-index
           @change-page="updatePage"
         />
         <template v-else-if="resultType === 'schedule'">

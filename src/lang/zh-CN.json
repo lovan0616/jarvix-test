@@ -571,10 +571,16 @@
     "switchSpecificDataFrame": "请先切换至单一资料表"
   },
   "warRoom": {
+    "warRoom": "战情室",
     "backToList": "返回列表",
     "back": "返回",
     "publish": "发布",
     "unpublish": "取消发布",
+    "getPublishedUrl": "取得发布连结",
+    "rename": "变更名称",
+    "delete": "删除",
+    "viewDetail": "查看内容",
+    "edit": "编辑",
     "warRoomSetting": "战情室设定",
     "preview": "预览",
     "add": "新增",
@@ -796,7 +802,8 @@
     "addSqlScript": "使用自定义 SQL",
     "testConnecting": "测试连线中...",
     "monitorSetting": "监测设定",
-    "updateImmediately": "立即更新"
+    "updateImmediately": "立即更新",
+    "AddNewWarRoom": "新增戰情室"
   },
   "timeScopeUnit": {
     "second": "秒",

@@ -36,9 +36,9 @@
                 {{ $t('schedule.button.chooseFile') }}
                 <input
                   :accept="acceptFileTypes.join(',').toString()"
+                  :name="'file' + (index + 1)"
                   type="file"
                   class="setting-file__item-upload-input"
-                  :name="'file' + (index + 1)"
                   hidden
                   @change="updateFileName(index, $event.target.files)"
                 >

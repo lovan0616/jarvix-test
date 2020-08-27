@@ -571,10 +571,16 @@
     "switchSpecificDataFrame": "請先切換至單一資料表"
   },
   "warRoom": {
+    "warRoom": "戰情室",
     "backToList": "返回列表",
     "back": "返回",
     "publish": "發布",
     "unpublish": "取消發布",
+    "getPublishedUrl": "取得發布連結",
+    "rename": "變更名稱",
+    "delete": "刪除",
+    "viewDetail": "查看內容",
+    "edit": "編輯",
     "warRoomSetting": "戰情室設定",
     "preview": "預覽",
     "add": "新增",
@@ -796,7 +802,8 @@
     "addSqlScript": "使用自定義 SQL",
     "testConnecting": "測試連線中...",
     "monitorSetting": "監測設定",
-    "updateImmediately": "立即更新"
+    "updateImmediately": "立即更新",
+    "AddNewWarRoom": "新增戰情室"
   },
   "timeScopeUnit": {
     "second": "秒",
