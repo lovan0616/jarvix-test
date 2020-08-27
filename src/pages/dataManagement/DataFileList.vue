@@ -36,7 +36,7 @@
         </div>
         <div class="button-block dataframe-action">
           <button 
-            :disabled="reachLimit || enableDataFrameCount === 0"
+            :disabled="enableDataFrameCount === 0"
             class="btn-m btn-secondary btn-has-icon"
             @click="toggleEditFeatureDialog"
           >
@@ -211,7 +211,7 @@ export default {
   computed: {
     ...mapState('userManagement', ['license']),
     reachLicenseFileSizeLimit () {
-      return this.license.currentDataStorageSize >= this.license.maxDataStorageSize
+      return this.license.currentDataStorageSize >= this.license.maxDataStorageSize && this.license.maxDataStorageSize !== -1
     },
     fileCountLimit () {
       return this.$store.state.dataManagement.fileCountLimit

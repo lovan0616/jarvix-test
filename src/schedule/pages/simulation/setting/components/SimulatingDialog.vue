@@ -74,6 +74,7 @@ export default {
                   showClose: true
                 })
                 this.$emit('cancel')
+                return
               }
 
               // 部分方案失敗 -> 進到模擬結果並跳訊息告知

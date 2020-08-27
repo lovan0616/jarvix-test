@@ -103,6 +103,9 @@ export default {
     this.getPinboardInfo()
     this.getPinboardName()
   },
+  destroyed () {
+    window.clearTimeout(this.timeoutFunction)
+  },
   methods: {
     getPinboardName () {
       if (this.pinboardList.length > 0) {

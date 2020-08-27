@@ -27,8 +27,7 @@
               {{ $t('accountInfo.userAmountLimit') }}
             </h6>
             <p class="sub-info-desciption">
-              {{ license.maxUser || '-' }}
-              {{ $tc('accountInfo.person', license.maxUser) }}
+              {{ license.maxUser === -1 ? '&#8734;' : (`${license.maxUser} ${$tc('accountInfo.person', license.maxUser)}` || '-') }}
             </p>
           </div>
         </div>
@@ -49,7 +48,7 @@
               {{ $t('accountInfo.dataUsageProvided') }}
             </h6>
             <p class="sub-info-desciption">
-              {{ shortenDataCapacityNumber(license.showMaxDataStorageSize) || '-' }}
+              {{ license.showMaxDataStorageSize === -1 ? '&#8734;' : (shortenDataCapacityNumber(license.showMaxDataStorageSize) || '-') }}
             </p>
           </div>
         </div>

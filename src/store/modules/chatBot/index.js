@@ -13,6 +13,7 @@ export default {
     parserLanguage: null,
     parserLanguageList: [],
     hasBasicInfo: false,
+    askCancelToken: null
   },
   actions,
   mutations,

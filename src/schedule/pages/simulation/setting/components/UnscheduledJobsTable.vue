@@ -18,8 +18,8 @@
       <div class="header__search">
         <default-input
           v-model="jobSearchNumber"
-          type="text"
           :placeholder="$t('schedule.simulation.searchJobs')"
+          type="text"
           class="header__search--input"
         >
           <i
