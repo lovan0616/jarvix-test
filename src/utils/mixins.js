@@ -400,6 +400,9 @@ Vue.mixin({
     shortenDataCapacityNumber (gb, digit = 2) {
       if (gb <= 0.5) return this.formatComma((gb * 1024).toFixed(digit)) + ' MB'
       return this.formatComma((gb).toFixed(digit)) + ' GB'
+    },
+    checkProperty (testObject, key) {
+      return Object.prototype.hasOwnProperty.call(testObject, key)
     }
   }
 })
