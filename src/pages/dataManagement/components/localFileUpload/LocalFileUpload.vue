@@ -33,7 +33,7 @@
           <div class="conten-container">
             <div class="content">1. {{ $t('editing.uploadLimitFileType') }}</div>
             <div class="content">2. {{ $t('editing.uploadLimitCount', {countLimit: fileCountLimit}) }}</div>
-            <div class="content">3. {{ $t('editing.uploadLimitSize', {limitSize: shortenDataCapacityNumber(license.showMaxDataStorageSize)}) }}</div>
+            <div class="content">3. {{ $t('editing.uploadLimitSize', {limitSize: license.showMaxDataStorageSize === -1 ? '&#8734;' : shortenDataCapacityNumber(license.showMaxDataStorageSize)}) }}</div>
           </div>
           <div class="content">4. {{ $t('editing.uploadLimitContent') }}</div>
         </div>
@@ -163,7 +163,7 @@ export default {
     } else {
       getAccountInfo()
         .then(accountInfo => {
-          const licenseMaxSize = accountInfo.license.maxDataStorageSize * 1024
+          const licenseMaxSize = accountInfo.license.maxDataStorageSize === -1 ? -1 : accountInfo.license.maxDataStorageSize * 1024
           this.uploadFileSizeLimit = licenseMaxSize ? licenseMaxSize : 3000
         })
         .catch(() => {
@@ -254,7 +254,7 @@ export default {
         formData.append('fileFullName', file.name)
 
         // 判斷是否有檔案超過大小限制
-        if (file.size > this.uploadFileSizeLimit * 1024 * 1024) {
+        if (file.size > this.uploadFileSizeLimit * 1024 * 1024 && this.uploadFileSizeLimit !== -1) {
           this.unableFileList.push({
             data: formData,
             status: uploadStatus.forbidden,
