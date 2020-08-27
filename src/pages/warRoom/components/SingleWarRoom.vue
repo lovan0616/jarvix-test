@@ -1,7 +1,5 @@
 <template>
-  <div 
-    class="single-war-room war-room"
-    @click.stop="goToBoard">
+  <div class="single-war-room war-room">
     <div 
       :class="{ 'war-room__status--published': warRoomInfo.isPublishing}"
       class="war-room__status">
@@ -87,20 +85,16 @@ export default {
     }
   },
   methods: {
-    goToBoard () {
-      let routerName = this.isPersonalPinboard ? 'PersonalPagePinboard' : 'ProjectPagePinboard'
-      this.$router.push({
-        name: routerName,
-        params: {
-          id: this.boardInfo.id
-        }
-      })
-    },
     viewDetail () {
-
+      //TODO: live router + urlIdentifier
     },
     edit () {
-
+      this.$router.push({
+        name: 'WarRoom',
+        params: {
+          war_room_id: this.warRoomInfo.warRoomId
+        }
+      })
     },
     publish () {
       this.$emit('publish', this.warRoomInfo.warRoomId )

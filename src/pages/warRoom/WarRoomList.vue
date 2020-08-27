@@ -17,7 +17,7 @@
       <div 
         v-if="warRoomList.length > 0" 
         class="war-room-list">
-        <single-pinboard
+        <single-war-room
           v-for="warRoomInfo in warRoomList"
           :key="warRoomInfo.id"
           :war-room-info="warRoomInfo"
@@ -84,7 +84,7 @@
         ref="shareInput" 
         v-model="shareLink" 
         type="text" 
-        class="input pinboard-name-input">
+        class="input name-input">
     </writing-dialog>
   </div>
 </template>
@@ -272,9 +272,15 @@ export default {
   .add-btn {
     margin-bottom: 16px;
   }
+  
   .war-room-list {
     display: flex;
     flex-wrap: wrap;
+  }
+
+  .name-input {
+    margin: 24px 0px;
+    padding-bottom: 8px;
   }
 }
 

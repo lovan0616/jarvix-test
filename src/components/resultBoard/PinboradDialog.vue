@@ -18,7 +18,7 @@
         v-if="true"
         class="single-board"
         @click="chooseWarRoom()">
-        {{ $t('editing.isAddToWarRoom') }}
+        {{ $t('editing.addToWarRoom') }}
       </div>
     </div>
     <div 
@@ -35,34 +35,26 @@
           {{ $t('editing.prevStep') }}
         </a>
       </div>
-      <div v-if="isAddToWarRoom">
-        <div 
-          class="single-board default"
-          @click="nextStep"
-        >
-          <span class="add-icon">+</span>{{ $t('editing.newWarRoom') }}
-        </div>
-        <div 
-          v-for="warRoomInfo in warRoomList"
-          :key="warRoomInfo.warRoomId"
-          class="single-board"
-          @click="pinToWarRoom(warRoomInfo.id)"
-        >{{ warRoomInfo.name }}</div>
+      <div 
+        class="single-board default"
+        @click="nextStep"
+      >
+        <span class="add-icon">+</span>{{ isAddToWarRoom ? $t('editing.newWarRoom') : $t('editing.newPinboard') }}
       </div>
-      <div v-else>
-        <div 
-          class="single-board default"
-          @click="nextStep"
-        >
-          <span class="add-icon">+</span>{{ $t('editing.newPinboard') }}
-        </div>
-        <div 
-          v-for="pinboardInfo in pinboardList"
-          :key="pinboardInfo.id"
-          class="single-board"
-          @click="pin(pinboardInfo.id)"
-        >{{ pinboardInfo.name }}</div>
-      </div>
+      <div
+        v-for="warRoomInfo in warRoomList"
+        v-if="isAddToWarRoom"
+        :key="warRoomInfo.warRoomId"
+        class="single-board"
+        @click="pinToWarRoom(warRoomInfo.warRoomId)"
+      >{{ warRoomInfo.name }}</div>
+      <div 
+        v-for="pinboardInfo in pinboardList"
+        v-else
+        :key="pinboardInfo.id"
+        class="single-board"
+        @click="pin(pinboardInfo.id)"
+      >{{ pinboardInfo.name }}</div>
     </div>
     <div 
       v-show="pinStep === 3"
