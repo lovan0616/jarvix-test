@@ -205,6 +205,7 @@ export default {
     showShareDialog (warRoomInfo) {
       this.holdWarRoomInfo(warRoomInfo)
       this.isShowShare = true
+      //TODO: live board router + urlIdentifier
       this.shareLink = warRoomInfo.urlIdentifier
     },
     confirmEdit () {
@@ -272,7 +273,7 @@ export default {
   .add-btn {
     margin-bottom: 16px;
   }
-  
+
   .war-room-list {
     display: flex;
     flex-wrap: wrap;

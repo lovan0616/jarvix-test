@@ -13,9 +13,8 @@
         @click="choosePersonalPinboard(false)">
         {{ $t('editing.shareToProject') }}
       </div>
-      <!-- TODO v-if="isWarRoomAddable"-->
       <div
-        v-if="true"
+        v-if="isWarRoomAddable"
         class="single-board"
         @click="chooseWarRoom()">
         {{ $t('editing.addToWarRoom') }}
