@@ -43,6 +43,7 @@
               >{{ errors.first('warRoomName') }}</div>
             </div>
             <button 
+              :disabled="isProcessing"
               type="button"
               class="btn btn-default"
               @click="updateWarRoomName"
@@ -62,7 +63,6 @@
             >
               {{ $t('warRoom.updateTime') + '：' + warRoomBasicInfo.publishUpdateTime }}
             </span>
-            <!--判斷是否已發布，更改內容與燈號-->
             <span
               :class="{ 'button-container__status--active': warRoomBasicInfo.isPublishing }"
               class="button-container__status"
@@ -71,17 +71,24 @@
             </span>
             <button
               v-if="!warRoomBasicInfo.isPublishing"
+              :disabled="isProcessing"
               type="button"
               class="btn-m btn-default button-container__button"
+              @click="publishWarRoom"
             >{{ $t('warRoom.publish') }}</button>
             <template v-if="warRoomBasicInfo.isPublishing">
+              <!--待確認是否使用重新發佈即可-->
               <button
+                :disabled="isProcessing"
                 type="button"
                 class="btn-m btn-default button-container__button"
+                @click="publishWarRoom"
               >{{ $t('button.update') }}</button>
               <button
+                :disabled="isProcessing"
                 type="button"
                 class="btn-m btn-secondary button-container__button"
+                @click="unpublishWarRoom"
               >{{ $t('warRoom.unpublish') }}</button>
             </template>
             <button 
@@ -193,10 +200,13 @@ import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import WarRoomSetting from './components/WarRoomSetting'
 import ComponentConstraint from './components/ComponentConstraint'
 import WarRoomComponent from './components/WarRoomComponent'
+import { Message } from 'element-ui'
 import {
   getWarRoomInfo,
   getWarRoomPool,
-  updateWarRoomSetting
+  updateWarRoomSetting,
+  publishWarRoom,
+  unpublishWarRoom
 } from '@/API/WarRoom'
 
 const dummyNumbers = []
@@ -298,7 +308,8 @@ export default {
     CustomDropdownSelect,
     WarRoomSetting,
     ComponentConstraint,
-    WarRoomComponent
+    WarRoomComponent,
+    Message
   },
   data () {
     return {
@@ -420,8 +431,35 @@ export default {
           .finally(() => { this.isProcessing = false })
       })
     },
-    createComponent (componentId) {
-
+    publishWarRoom () {
+      const { war_room_id: warRoomId } = this.$route.params
+      publishWarRoom(warRoomId)
+        .then(() => {
+          this.isProcessing = true
+          this.warRoomBasicInfo.isPublishing = true
+          Message({
+            message: this.$t('message.publishSuccessfully'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => { this.isProcessing = false })
+    },
+    unpublishWarRoom () {
+      const { war_room_id: warRoomId } = this.$route.params
+      unpublishWarRoom(warRoomId)
+        .then(() => {
+          this.isProcessing = true
+          this.warRoomBasicInfo.isPublishing = false
+          Message({
+            message: this.$t('message.unPublishSuccessfully'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => { this.isProcessing = false })
     }
   }
 }

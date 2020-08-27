@@ -110,7 +110,9 @@
     "youAreGroupless": "您目前無隸屬群組",
     "pinboardSuccess": "釘板成功",
     "switching": "切換中",
-    "pleaseSelectQuestion": "請選擇來源資料"
+    "pleaseSelectQuestion": "請選擇來源資料",
+    "publishSuccessfully": "成功發布",
+    "unPublishSuccessfully": "成功取消發布"
   },
   "guiding": {
     "prevStep": "上一步",
