@@ -124,7 +124,7 @@ export default {
       isShowShare: false,
       shareLink: '',
       tempEditInfo: {
-        warRoomId: null,
+        id: null,
         name: null,
         isPublishing: false,
         urlIdentifier: null
@@ -151,17 +151,17 @@ export default {
             "isPublishing": true,
             "name": "0A0",
             "urlIdentifier": "string",
-            "warRoomId": 0
+            "id": 0
           },{
             "isPublishing": false,
             "name": "OAO",
             "urlIdentifier": "string",
-            "warRoomId": 1
+            "id": 1
           },{
             "isPublishing": true,
             "name": ">A<",
             "urlIdentifier": "string",
-            "warRoomId": 2
+            "id": 2
           }
         ]
         this.warRoomList = res
@@ -214,7 +214,7 @@ export default {
     confirmEdit () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
-        updateWarRoomName(this.tempEditInfo.warRoomId, this.tempEditInfo.name)
+        updateWarRoomName(this.tempEditInfo.id, this.tempEditInfo.name)
           .then(() => {
             this.isShowEdit = false
             this.fetchData()
@@ -222,7 +222,7 @@ export default {
       })
     },
     confirmDelete () {
-      deleteWarRoom(this.tempEditInfo.warRoomId).then(() => {
+      deleteWarRoom(this.tempEditInfo.id).then(() => {
         this.isShowDelete = false
         this.fetchData()
       })

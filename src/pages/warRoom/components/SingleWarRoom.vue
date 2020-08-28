@@ -79,7 +79,7 @@ export default {
           isPublishing: false,
           name: null,
           urlIdentifier: null,
-          warRoomId: null
+          id: null
          }
       }
     }
@@ -92,15 +92,15 @@ export default {
       this.$router.push({
         name: 'WarRoom',
         params: {
-          war_room_id: this.warRoomInfo.warRoomId
+          war_room_id: this.warRoomInfo.id
         }
       })
     },
     publish () {
-      this.$emit('publish', this.warRoomInfo.warRoomId )
+      this.$emit('publish', this.warRoomInfo.id )
     },
     unpublish () {
-      this.$emit('publish', this.warRoomInfo.warRoomId )
+      this.$emit('publish', this.warRoomInfo.id )
     },
     getPublishedUrl () {
       this.$emit('showShare')
