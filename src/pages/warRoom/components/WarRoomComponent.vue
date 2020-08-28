@@ -68,7 +68,10 @@
 </template>
 
 <script>
-import { getComponentInfo } from '@/API/WarRoom'
+import {
+  getComponentInfo,
+  getPublishedComponentInfo
+} from '@/API/WarRoom'
 import DisplayIndexInfo from './DisplayIndexInfo'
 
 const dummyIndexComponentData = {
@@ -232,10 +235,6 @@ export default {
       type: Number,
       default: null
     },
-    // componentType: {
-    //   type: String,
-    //   required: true
-    // },
     isEditable: {
       type: Boolean,
       default: true
@@ -302,23 +301,16 @@ export default {
               if(isAutoRefresh && !this.isEditable) {
                 this.autoRefreshFunction = window.setTimeout(() => {
                   this.fetchData()
-                  // TODO: parse crontab 格式
-                }, componentBasicInfo.config * 1000)
+                }, this.convertRefreshFrequency(componentBasicInfo.config) * 1000)
               }
               
               // 判斷是否為 圖表
-              if (responseData.dataset) {
-                if (responseData.dataset.data.length === 0) {
-                  this.isLoading = false
-                  this.isError = true
-                  this.errorMessage = this.$t('message.emptyResult')
-                } else {
-                  this.componentData = responseData
-                }
-              } else {
-                // 圖表以外的 task
-                this.componentData = responseData
+              if (responseData.dataset.data.length === 0) {
                 this.isLoading = false
+                this.isError = true
+                this.errorMessage = this.$t('message.emptyResult')
+              } else {
+                this.componentData = responseData
               }
 
               this.componentBasicInfo = componentBasicInfo
@@ -331,17 +323,14 @@ export default {
             case 'Fail':
               window.clearTimeout(this.timeoutFunction)
               this.isLoading = false
-
               this.isError = true
-              // TODO: update error message
-              this.errorMessage = this.$t('message.emptyResult')
+              this.errorMessage = this.$t('message.systemIsError')
               break
           }
         }).catch(() => {
           this.isLoading = false
           this.isError = true
-          // TODO: update error message
-          this.errorMessage = this.$t('message.emptyResult')
+          this.errorMessage = this.$t('message.systemIsError')
         })
     },
     viewConstraint() {
@@ -349,6 +338,26 @@ export default {
     },
     editSetting() {
       this.$emit('check-setting', this.componentBasicInfo)
+    },
+    convertRefreshFrequency (cronTab) {
+      switch (cronTab) {
+        case '*/5 * * * *':
+          return 5 * 60 * 1000
+        case '*/15 * * * *':
+          return 15 * 60 * 1000
+        case '*/30 * * * *':
+          return 30 * 60 * 1000
+        case '*/45 * * * *':
+          return 45 * 60 * 1000
+        case '0 * * * *':
+          return 60 * 60 * 1000
+        case '0 0 * * *':
+          return 24 * 60 * 60 * 1000
+        case '0 0 * * 0':
+          return 7 * 24 * 60 * 1000
+        case '0 0 1 * *':
+          return 30 * 7 * 24 * 60 * 1000
+      }
     }
   }
 }

@@ -617,7 +617,9 @@
     "updateTime": "更新時間",
     "dataConstraint": "資料限制",
     "selectedColumns": "選擇欄位",
-    "filterConstraint": "篩選條件"
+    "filterConstraint": "篩選條件",
+    "reachedLowerBound": "低於下限",
+    "reachedUpperBound": "高於上限"
   },
   "description": {
     "basic": {

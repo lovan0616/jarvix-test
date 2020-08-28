@@ -325,6 +325,16 @@ const router = new Router({
       path: '/share-result/:id',
       name: 'ShareResult',
       component: () => import('@/pages/result/SingleResult')
+    },
+    {
+      path: '/war-room',
+      name: 'WarRoomLivePage',
+      component: () => import('@/pages/warRoom/ActiveWarRoom')
+    },
+    {
+      path: '/war-room/:war_room_id',
+      name: 'WarRoomPreviewPage',
+      component: () => import('@/pages/warRoom/ActiveWarRoom')
     }
   ],
   linkActiveClass: 'active',
