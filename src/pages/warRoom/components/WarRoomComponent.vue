@@ -306,19 +306,13 @@ export default {
                 }, componentBasicInfo.config * 1000)
               }
               
-              // 判斷是否為 圖表
-              if (responseData.dataset) {
-                if (responseData.dataset.data.length === 0) {
-                  this.isLoading = false
-                  this.isError = true
-                  this.errorMessage = this.$t('message.emptyResult')
-                } else {
-                  this.componentData = responseData
-                }
-              } else {
-                // 圖表以外的 task
-                this.componentData = responseData
+              // 儲存圖表資料
+              if (responseData.dataset.data.length === 0) {
                 this.isLoading = false
+                this.isError = true
+                this.errorMessage = this.$t('message.emptyResult')
+              } else {
+                this.componentData = responseData
               }
 
               this.componentBasicInfo = componentBasicInfo
@@ -331,17 +325,14 @@ export default {
             case 'Fail':
               window.clearTimeout(this.timeoutFunction)
               this.isLoading = false
-
               this.isError = true
-              // TODO: update error message
-              this.errorMessage = this.$t('message.emptyResult')
+              this.errorMessage = this.$t('message.systemIsError')
               break
           }
         }).catch(() => {
           this.isLoading = false
           this.isError = true
-          // TODO: update error message
-          this.errorMessage = this.$t('message.emptyResult')
+          this.errorMessage = this.$t('message.systemIsError')
         })
     },
     viewConstraint() {
