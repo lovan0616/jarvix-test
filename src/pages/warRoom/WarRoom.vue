@@ -128,28 +128,41 @@
           </div>
         </div>
       </div>
-      <div class="war-room__display">
-        <draggable
-          :list="numberComponent"
-          group="index"
-          class="number">
-          <war-room-component
-            v-for="number in numberComponent"
-            :key="number.componentId"
-            :component-id="number.componentId"
-            :is-editable="true"
-            :is-focusing="selectedComponent.componentId === number.componentId"
-            class="number__item"
-            @check-constraint="viewComponentConstraint"
-            @check-setting="editComponenSetting"
-          />
-        </draggable>     
+      <div
+        :class="{ 'war-room__display--disabled': isProcessing }"
+        class="war-room__display"
+      >
+        <spinner 
+          v-if="isProcessing"
+          :title="$t('message.componentLayoutUpdating')"
+          class="spinner"
+          size="50"
+        />
+        <div class="number">
+          <draggable
+            :value="numberComponent"
+            group="index"
+            class="chart__container"
+            @end="updateIndexLayout">
+            <war-room-component
+              v-for="number in numberComponent"
+              :key="number.componentId"
+              :component-id="number.componentId"
+              :is-editable="true"
+              :is-focusing="selectedComponent.componentId === number.componentId"
+              class="number__item"
+              @check-constraint="viewComponentConstraint"
+              @check-setting="editComponenSetting"
+            />
+          </draggable>     
+        </div>
         <div class="chart">
           <draggable
             :value="chartFirstRow"
-            :group="{ name: 'chartFirstRow', pull: true, put: 'chartSecondRow' }"
+            data-row="1"
+            group="diagram"
             class="chart__container"
-            @change="updateFirstRowLayout">
+            @end="updateDiagramLayout">
             <war-room-component
               v-for="chart in chartFirstRow"
               :key="chart.componentId"
@@ -164,9 +177,10 @@
           <draggable
             v-if="chartSecondRow.length > 0"
             :value="chartSecondRow"
-            :group="{ name: 'chartSecondRow', pull: true, put: 'chartFirstRow' }"
+            data-row="2"
+            group="diagram"
             class="chart__container"
-            @change="updateSecondRowLayout">
+            @end="updateDiagramLayout">
             <war-room-component
               v-for="chart in chartSecondRow"
               :key="chart.componentId"
@@ -218,7 +232,8 @@ import {
   getWarRoomPool,
   updateWarRoomSetting,
   publishWarRoom,
-  unpublishWarRoom
+  unpublishWarRoom,
+  updateWarRoomLayout
 } from '@/API/WarRoom'
 
 const dummyNumbers = []
@@ -345,14 +360,14 @@ export default {
   computed: {
     addComponentList () {
       return [
-        ...(this.chartComponent && this.chartComponent.length < 8) && {
+        ...(this.chartComponent && this.chartComponent.length < 8) && [{
           id: 'diagram',
           name: this.$t('warRoom.addChartComponent')
-        },
-        ...(this.numberComponent && this.numberComponent.length < 4) && {
+        }],
+        ...(this.numberComponent && this.numberComponent.length < 4) && [{
           id: 'index',
           name: this.$t('warRoom.addNumberComponent')
-        }
+        }]
       ]
     },
     chartFirstRow () {
@@ -474,43 +489,65 @@ export default {
         })
         .finally(() => { this.isProcessing = false })
     },
-    updateFirstRowLayout (e, row = 1) {
-      console.log(e, row)
-      // if ((e.hasOwnProperty('removed'))) return
-      // if (e.hasOwnProperty('moved')) {
-      //   const oldIndex = row === 1 ? e.moved.oldIndex : this.chartFirstRow.length + e.moved.oldIndex
-      //   const newIndex = row === 1 ? e.moved.newIndex : this.chartFirstRow.length + e.moved.newIndex
-      //   const draggedComponent = this.chartComponent.splice(oldIndex, 1)[0]
-      //   this.chartComponent.splice(newIndex, 0, draggedComponent)
-      //   return
-      // }
-      // if (e.hasOwnProperty('added')) {
-      //   const newIndex = row === 1 ? e.added.newIndex : this.chartFirstRow.length + e.added.newIndex
-      //   // console.log(e, newIndex)
-      //   this.chartComponent = this.chartComponent.filter(component => component.componentId !== e.added.element.componentId)
-      //   this.chartComponent.splice(newIndex, 0, e.added.element)
-      //   // console.log(this.chartComponent)
-      //   return
-      // }
+    updateLayout (newLayout) {
+      const { war_room_id: warRoomId } = this.$route.params
+      this.isProcessing = true
+      return updateWarRoomLayout(warRoomId, newLayout)
+        .then(() => {
+          Message({
+            message: this.$t('message.componentLayoutUpdated'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
     },
-    updateSecondRowLayout (e, row = 2) {
-      console.log(e, row)
-      // if ((e.hasOwnProperty('removed'))) return
-      // if (e.hasOwnProperty('moved')) {
-      //   const oldIndex = row === 1 ? e.moved.oldIndex : this.chartFirstRow.length + e.moved.oldIndex
-      //   const newIndex = row === 1 ? e.moved.newIndex : this.chartFirstRow.length + e.moved.newIndex
-      //   const draggedComponent = this.chartComponent.splice(oldIndex, 1)[0]
-      //   this.chartComponent.splice(newIndex, 0, draggedComponent)
-      //   return
-      // }
-      // if (e.hasOwnProperty('added')) {
-      //   const newIndex = row === 1 ? e.added.newIndex : this.chartFirstRow.length + e.added.newIndex
-      //   // console.log(e, newIndex)
-      //   this.chartComponent = this.chartComponent.filter(component => component.componentId !== e.added.element.componentId)
-      //   this.chartComponent.splice(newIndex, 0, e.added.element)
-      //   // console.log(this.chartComponent)
-      //   return
-      // }
+    async updateIndexLayout (e) {
+      const { oldIndex, newIndex } = e
+      let tempNumberComponent = [...this.numberComponent]
+      const tempDraggedComponent = tempNumberComponent.splice(oldIndex, 1)[0]
+      tempNumberComponent.splice(newIndex, 0, tempDraggedComponent)
+      tempNumberComponent = tempNumberComponent.map((component, index) => ({
+        ...component,
+        orderSequence: index + 1
+      }))
+
+      try {
+        await this.updateLayout ({
+          diagramTypeComponents: this.chartComponent,
+          indexTypeComponents: tempNumberComponent
+        })
+        // 確保透過 API 更新成功才在頁面上變換位置
+        this.numberComponent = tempNumberComponent
+        this.isProcessing = false
+      } catch (e) { return this.isProcessing = false }
+    },
+    async updateDiagramLayout (e) {
+      const oldRow = Number(e.from.dataset.row)
+      const newRow = Number(e.to.dataset.row)
+      // 位置如果沒改變就不處理
+      if ((oldRow === newRow) && (e.oldIndex === e.newIndex)) return
+      // 如果為第二列，要處理的 index 需加上第一列的元件數量
+      const oldIndex = oldRow === 1 ? e.oldIndex : this.chartFirstRow.length + e.oldIndex
+      const newIndex = newRow === 1 ? e.newIndex : this.chartFirstRow.length + e.newIndex
+
+      let tempChartComponent = [...this.chartComponent]
+      const tempDraggedComponent = tempChartComponent.splice(oldIndex, 1)[0]
+      tempChartComponent.splice(newIndex, 0, tempDraggedComponent)
+      tempChartComponent = tempChartComponent.map((chart, index) => ({
+        ...chart,
+        orderSequence: index + 1
+      }))
+      
+      try {
+        await this.updateLayout ({
+          diagramTypeComponents: tempChartComponent,
+          indexTypeComponents: this.numberComponent
+        })
+        // 確保透過 API 更新成功才在頁面上變換位置
+        this.chartComponent = tempChartComponent
+        this.isProcessing = false
+      } catch (e) { return this.isProcessing = false }
     }
   }
 }
@@ -565,8 +602,30 @@ export default {
   }
 
   &__display {
+    position: relative;
     display: flex;
     flex-direction: column;
+    &--disabled {
+      .number,
+      .chart {
+        opacity: .4;
+        pointer-events: none;
+      }
+    }
+
+    .spinner {
+      position: absolute;;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      /* 避免點擊文字 */
+      user-select: none;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
   }
 
   .button-container {

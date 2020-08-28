@@ -112,7 +112,9 @@
     "switching": "切换中",
     "pleaseSelectQuestion": "请选择来源资料",
     "publishSuccessfully": "成功发布",
-    "unPublishSuccessfully": "成功取消发布"
+    "unPublishSuccessfully": "成功取消发布",
+    "componentLayoutUpdated": "元件位置更新成功",
+    "componentLayoutUpdating": "元件位置更新中"
   },
   "guiding": {
     "prevStep": "上一步",
