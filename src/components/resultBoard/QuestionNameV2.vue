@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     needSpaceList () {
-      if (this.this.questionSegmentation.sentence.length === 0) return []
+      if (this.questionSegmentation.sentence.length === 0) return []
       // 英數字或是空白
       let isEnOrEnumList = this.questionSegmentation.sentence.map(singleSegmentation => {
         return /^[a-zA-Z0-9_]+( [a-zA-Z0-9_]+)*$/.test(singleSegmentation.word)
