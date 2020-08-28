@@ -60,6 +60,7 @@
           :key="componentId"
           :show-toolbox="showToolbox"
           :custom-chart-style="customChartStyle"
+          class="card__body-data"
         />
       </template>
     </div>
@@ -251,7 +252,7 @@ export default {
       showToolbox: false,
       customChartStyle: {
         width: '100%', 
-        height: '162px'
+        height: '100%',
       },
       diagram: null,
       isLoading: true,
@@ -390,6 +391,10 @@ export default {
 
   &__body {
     flex: 1;
+  }
+
+  &__body-data {
+    height: 100%;
   }
 
   &--focused {

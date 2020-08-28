@@ -19,6 +19,7 @@ export default {
 <style lang="scss" scoped>
 .index-info {
   font-size: 32px;
+  height: 37px;
   line-height: 37px;
   font-family: Oswald;
   font-weight: bold;
