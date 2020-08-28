@@ -1,5 +1,6 @@
 <template>
   <div
+    :class="{ 'card--focused': isFocusing }"
     class="card"
   >
     <div class="card__header">
@@ -237,7 +238,11 @@ export default {
     isEditable: {
       type: Boolean,
       default: true
-    }
+    },
+    isFocusing: {
+      type: Boolean,
+      default: false
+    },
   },
   data () {
     return {
@@ -360,6 +365,8 @@ export default {
   background: #192323;
   display: flex;
   flex-direction: column;
+  cursor: grab;
+  border: 1px solid transparent;
 
   &__header {
     display: flex;
@@ -383,6 +390,23 @@ export default {
 
   &__body {
     flex: 1;
+  }
+
+  &--focused {
+    border: 1px solid #2AD2E2;
+  }
+
+  &.sortable-chosen,
+  &.sortable-drag {
+    cursor: grabbing;
+  }
+
+  &.sortable-ghost {
+    opacity: .4;
+  }
+
+  &.disabled {
+    cursor: no-drop;
   }
 
   &:hover {

@@ -129,44 +129,55 @@
         </div>
       </div>
       <div class="war-room__display">
-        <div class="number">
-          <!--待補編輯狀態-->
+        <draggable
+          :list="numberComponent"
+          group="index"
+          class="number">
           <war-room-component
             v-for="number in numberComponent"
             :key="number.componentId"
             :component-id="number.componentId"
             :is-editable="true"
+            :is-focusing="selectedComponent.componentId === number.componentId"
             class="number__item"
             @check-constraint="viewComponentConstraint"
             @check-setting="editComponenSetting"
           />
-        </div>
+        </draggable>     
         <div class="chart">
-          <div class="chart__container">
+          <draggable
+            :value="chartFirstRow"
+            :group="{ name: 'chartFirstRow', pull: true, put: 'chartSecondRow' }"
+            class="chart__container"
+            @change="updateFirstRowLayout">
             <war-room-component
               v-for="chart in chartFirstRow"
               :key="chart.componentId"
               :component-id="chart.componentId"
               :is-editable="true"
+              :is-focusing="selectedComponent.componentId === chart.componentId"
               class="chart__item"
               @check-constraint="viewComponentConstraint"
               @check-setting="editComponenSetting"
             />
-          </div>
-          <div
+          </draggable>
+          <draggable
             v-if="chartSecondRow.length > 0"
+            :value="chartSecondRow"
+            :group="{ name: 'chartSecondRow', pull: true, put: 'chartFirstRow' }"
             class="chart__container"
-          >
+            @change="updateSecondRowLayout">
             <war-room-component
               v-for="chart in chartSecondRow"
               :key="chart.componentId"
               :component-id="chart.componentId"
               :is-editable="true"
+              :is-focusing="selectedComponent.componentId === chart.componentId"
               class="chart__item"
               @check-constraint="viewComponentConstraint"
               @check-setting="editComponenSetting"
             />
-          </div>
+          </draggable>
         </div>
       </div>
     </section>
@@ -200,6 +211,7 @@ import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import WarRoomSetting from './components/WarRoomSetting'
 import ComponentConstraint from './components/ComponentConstraint'
 import WarRoomComponent from './components/WarRoomComponent'
+import draggable from 'vuedraggable';
 import { Message } from 'element-ui'
 import {
   getWarRoomInfo,
@@ -309,7 +321,8 @@ export default {
     WarRoomSetting,
     ComponentConstraint,
     WarRoomComponent,
-    Message
+    Message,
+    draggable
   },
   data () {
     return {
@@ -460,6 +473,44 @@ export default {
           })
         })
         .finally(() => { this.isProcessing = false })
+    },
+    updateFirstRowLayout (e, row = 1) {
+      console.log(e, row)
+      // if ((e.hasOwnProperty('removed'))) return
+      // if (e.hasOwnProperty('moved')) {
+      //   const oldIndex = row === 1 ? e.moved.oldIndex : this.chartFirstRow.length + e.moved.oldIndex
+      //   const newIndex = row === 1 ? e.moved.newIndex : this.chartFirstRow.length + e.moved.newIndex
+      //   const draggedComponent = this.chartComponent.splice(oldIndex, 1)[0]
+      //   this.chartComponent.splice(newIndex, 0, draggedComponent)
+      //   return
+      // }
+      // if (e.hasOwnProperty('added')) {
+      //   const newIndex = row === 1 ? e.added.newIndex : this.chartFirstRow.length + e.added.newIndex
+      //   // console.log(e, newIndex)
+      //   this.chartComponent = this.chartComponent.filter(component => component.componentId !== e.added.element.componentId)
+      //   this.chartComponent.splice(newIndex, 0, e.added.element)
+      //   // console.log(this.chartComponent)
+      //   return
+      // }
+    },
+    updateSecondRowLayout (e, row = 2) {
+      console.log(e, row)
+      // if ((e.hasOwnProperty('removed'))) return
+      // if (e.hasOwnProperty('moved')) {
+      //   const oldIndex = row === 1 ? e.moved.oldIndex : this.chartFirstRow.length + e.moved.oldIndex
+      //   const newIndex = row === 1 ? e.moved.newIndex : this.chartFirstRow.length + e.moved.newIndex
+      //   const draggedComponent = this.chartComponent.splice(oldIndex, 1)[0]
+      //   this.chartComponent.splice(newIndex, 0, draggedComponent)
+      //   return
+      // }
+      // if (e.hasOwnProperty('added')) {
+      //   const newIndex = row === 1 ? e.added.newIndex : this.chartFirstRow.length + e.added.newIndex
+      //   // console.log(e, newIndex)
+      //   this.chartComponent = this.chartComponent.filter(component => component.componentId !== e.added.element.componentId)
+      //   this.chartComponent.splice(newIndex, 0, e.added.element)
+      //   // console.log(this.chartComponent)
+      //   return
+      // }
     }
   }
 }
