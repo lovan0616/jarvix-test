@@ -13,9 +13,10 @@
             :title="segmentationPayload.question"
             :segmentation="segmentationPayload"
           />
-          <result-board-header-v2
+          <question-name-v2
             v-else
-            :segmentation="segmentationPayload"
+            :question-segmentation="segmentationPayload"
+            class="result-board__header"
           />
         </div>
         <div
@@ -117,7 +118,7 @@
 </template>
 <script>
 import ResultBoardHeader from './ResultBoardHeader'
-import ResultBoardHeaderV2 from './ResultBoardHeaderV2'
+import QuestionNameV2 from './QuestionNameV2'
 import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
@@ -129,7 +130,7 @@ export default {
   name: 'ResultBoard',
   components: {
     ResultBoardHeader,
-    ResultBoardHeaderV2,
+    QuestionNameV2,
     PinboardDialog,
     ShareDialog,
     DecideDialog,
@@ -316,6 +317,13 @@ export default {
     align-items: center;
     padding: 20px 28px;
     background-color: rgba(35, 61, 64, 0.6);
+  }
+
+  &__header {
+    /deep/ .question-name {
+      font-size: 30px;
+      line-height: 38px;
+    }
   }
 
   .header-block {
