@@ -55,6 +55,11 @@
                   class="action-link link"
                   @click="editFeature(feature)"
                 >{{ $t('button.edit') }}</a>
+                <a 
+                  href="javascript:void(0)" 
+                  class="action-link link"
+                  @click="deleteFeature(feature.dataColumnId)"
+                >{{ $t('button.delete') }}</a>
               </div>
             </div>
           </div>
@@ -66,6 +71,13 @@
           @cancel="closeEditDialog"
         />
       </div>
+      <decide-dialog
+        v-if="isShowDelete"
+        :title="`${$t('editing.confirmDelete')}？`"
+        :type="'delete'"
+        @closeDialog="closeDelete"
+        @confirmBtn="confirmDelete"
+      />
     </div>
   </div>
 </template>
@@ -73,15 +85,17 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 import EditFeatureDialog from './EditFeatureDialog'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import DecideDialog from '@/components/dialog/DecideDialog'
 import { getDataFrameById } from '@/API/DataSource'
-import { getCustomFeatureList } from '@/API/Feature'
+import { getCustomFeatureList, deleteCustomFeature } from '@/API/Feature'
 
 export default {
   name: 'FeatureManagementDialog',
   components: {
     DefaultSelect,
     EditFeatureDialog,
-    EmptyInfoBlock
+    EmptyInfoBlock,
+    DecideDialog
   },
   data () {
     return {
@@ -90,7 +104,9 @@ export default {
       currentDataFrame: null,
       featureList: [],
       showEditFeatureDialog: false,
-      editFeatureInfo: null
+      isShowDelete: false,
+      editFeatureInfo: null,
+      deleteFeatureId: null
     }
   },
   mounted () {
@@ -123,6 +139,25 @@ export default {
     editFeature (id) {
       this.editFeatureInfo = id
       this.showEditDialog()
+    },
+    closeDelete () {
+      this.isShowDelete = false
+    },
+    deleteFeature (id) {
+      this.isShowDelete = true
+      this.deleteFeatureId = id
+    },
+    confirmDelete () {
+      console.log(this.deleteFeatureId)
+      deleteCustomFeature(this.deleteFeatureId).then(() => {
+        const sliceIndex = this.featureList.findIndex(item => {
+          console.log(item.dataColumnId)
+          
+          item.dataColumnId === this.deleteFeatureId
+        })
+        this.featureList.splice(sliceIndex, 1)
+        this.isShowDelete = false
+      })
     },
     closeEditDialog () {
       this.editFeatureInfo = null
