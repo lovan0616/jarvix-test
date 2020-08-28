@@ -148,13 +148,8 @@ export default {
       this.deleteFeatureId = id
     },
     confirmDelete () {
-      console.log(this.deleteFeatureId)
       deleteCustomFeature(this.deleteFeatureId).then(() => {
-        const sliceIndex = this.featureList.findIndex(item => {
-          console.log(item.dataColumnId)
-          
-          item.dataColumnId === this.deleteFeatureId
-        })
+        const sliceIndex = this.featureList.findIndex(item => item.dataColumnId === this.deleteFeatureId)
         this.featureList.splice(sliceIndex, 1)
         this.isShowDelete = false
       })
