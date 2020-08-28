@@ -12,7 +12,7 @@
       <div class="custom-feature-list">
         <div class="title-block">
           <default-select 
-            v-model="currentDataFrame"
+            v-model="currentDataFrameId"
             :option-list="dataFrameList"
             class="data-frame-select"
             @change="getDataFrameFeature"
@@ -55,6 +55,11 @@
                   class="action-link link"
                   @click="editFeature(feature)"
                 >{{ $t('button.edit') }}</a>
+                <a 
+                  href="javascript:void(0)" 
+                  class="action-link link"
+                  @click="deleteFeature(feature.dataColumnId)"
+                >{{ $t('button.delete') }}</a>
               </div>
             </div>
           </div>
@@ -62,10 +67,18 @@
         <edit-feature-dialog
           v-if="showEditFeatureDialog"
           :edit-feature-info="editFeatureInfo"
+          :current-data-frame-info="currentDataFrameInfo"
           @update="updateFeature"
           @cancel="closeEditDialog"
         />
       </div>
+      <decide-dialog
+        v-if="isShowDelete"
+        :title="`${$t('editing.confirmDelete')}？`"
+        :type="'delete'"
+        @closeDialog="closeDelete"
+        @confirmBtn="confirmDelete"
+      />
     </div>
   </div>
 </template>
@@ -73,24 +86,33 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 import EditFeatureDialog from './EditFeatureDialog'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import DecideDialog from '@/components/dialog/DecideDialog'
 import { getDataFrameById } from '@/API/DataSource'
-import { getCustomFeatureList } from '@/API/Feature'
+import { getCustomFeatureList, deleteCustomFeature } from '@/API/Feature'
 
 export default {
   name: 'FeatureManagementDialog',
   components: {
     DefaultSelect,
     EditFeatureDialog,
-    EmptyInfoBlock
+    EmptyInfoBlock,
+    DecideDialog
   },
   data () {
     return {
       dataSourceId: parseInt(this.$route.params.id),
       dataFrameList: [],
-      currentDataFrame: null,
+      currentDataFrameId: null,
       featureList: [],
       showEditFeatureDialog: false,
-      editFeatureInfo: null
+      isShowDelete: false,
+      editFeatureInfo: null,
+      deleteFeatureId: null
+    }
+  },
+  computed: {
+    currentDataFrameInfo () {
+      return this.dataFrameList.filter(element => element.value === this.currentDataFrameId)[0]
     }
   },
   mounted () {
@@ -105,8 +127,8 @@ export default {
             value: element.id
           }
         })
-        this.currentDataFrame = this.dataFrameList[0].value
-        this.getDataFrameFeature(this.currentDataFrame)
+        this.currentDataFrameId = this.dataFrameList[0].value
+        this.getDataFrameFeature(this.currentDataFrameId)
       })
     },
     getDataFrameFeature (id) {
@@ -124,12 +146,26 @@ export default {
       this.editFeatureInfo = id
       this.showEditDialog()
     },
+    closeDelete () {
+      this.isShowDelete = false
+    },
+    deleteFeature (id) {
+      this.isShowDelete = true
+      this.deleteFeatureId = id
+    },
+    confirmDelete () {
+      deleteCustomFeature(this.deleteFeatureId).then(() => {
+        const sliceIndex = this.featureList.findIndex(item => item.dataColumnId === this.deleteFeatureId)
+        this.featureList.splice(sliceIndex, 1)
+        this.isShowDelete = false
+      })
+    },
     closeEditDialog () {
       this.editFeatureInfo = null
       this.showEditFeatureDialog = false
     },
     updateFeature () {
-      this.getDataFrameFeature(this.currentDataFrame)
+      this.getDataFrameFeature(this.currentDataFrameId)
       this.closeEditDialog()
     }
     // descriptionTransform (value) {

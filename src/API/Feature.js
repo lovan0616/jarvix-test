@@ -33,6 +33,16 @@ export function updateCustomFeature (featureInfo) {
 }
 
 /**
+ * delete custom feature
+ */
+export function deleteCustomFeature (dataColumnId) {
+  return request({
+    url: `/feature/custom/column/${dataColumnId}`,
+    method: 'DELETE'
+  })
+}
+
+/**
  * update system feature
  */
 export function updateSystemFeature (featureInfo) {

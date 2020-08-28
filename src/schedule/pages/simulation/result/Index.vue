@@ -5,8 +5,8 @@
   />
   <div
     v-else
-    class="page"
     :class="{'is-kpi-collapse': isKpiCollapse}"
+    class="page"
   >
     <div class="page__section detail">
       <div class="section__side-nav">
