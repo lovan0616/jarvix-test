@@ -3,6 +3,7 @@
     <section class="war-room__content">
       <div class="war-room__header">
         <div class="war-room__header--left">
+          <!--待補連結-->
           <a
             href="javascript:void(0);" 
             class="link action-link"
@@ -563,7 +564,7 @@ export default {
     flex: 1;
     padding: 32px 24px 64px 24px;
     height: 100%;
-    overflow: scroll;
+    overflow: auto;
     border: 1px solid #464A50;
   }
 
