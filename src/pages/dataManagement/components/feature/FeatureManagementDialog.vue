@@ -12,7 +12,7 @@
       <div class="custom-feature-list">
         <div class="title-block">
           <default-select 
-            v-model="currentDataFrame"
+            v-model="currentDataFrameId"
             :option-list="dataFrameList"
             class="data-frame-select"
             @change="getDataFrameFeature"
@@ -67,6 +67,7 @@
         <edit-feature-dialog
           v-if="showEditFeatureDialog"
           :edit-feature-info="editFeatureInfo"
+          :current-data-frame-info="currentDataFrameInfo"
           @update="updateFeature"
           @cancel="closeEditDialog"
         />
@@ -101,12 +102,17 @@ export default {
     return {
       dataSourceId: parseInt(this.$route.params.id),
       dataFrameList: [],
-      currentDataFrame: null,
+      currentDataFrameId: null,
       featureList: [],
       showEditFeatureDialog: false,
       isShowDelete: false,
       editFeatureInfo: null,
       deleteFeatureId: null
+    }
+  },
+  computed: {
+    currentDataFrameInfo () {
+      return this.dataFrameList.filter(element => element.value === this.currentDataFrameId)[0]
     }
   },
   mounted () {
@@ -121,8 +127,8 @@ export default {
             value: element.id
           }
         })
-        this.currentDataFrame = this.dataFrameList[0].value
-        this.getDataFrameFeature(this.currentDataFrame)
+        this.currentDataFrameId = this.dataFrameList[0].value
+        this.getDataFrameFeature(this.currentDataFrameId)
       })
     },
     getDataFrameFeature (id) {
@@ -159,7 +165,7 @@ export default {
       this.showEditFeatureDialog = false
     },
     updateFeature () {
-      this.getDataFrameFeature(this.currentDataFrame)
+      this.getDataFrameFeature(this.currentDataFrameId)
       this.closeEditDialog()
     }
     // descriptionTransform (value) {

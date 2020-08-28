@@ -5,28 +5,11 @@
         {{ $t('feature.createFeature') }}
       </div>
       <div class="feature-block">
-        <div class="block-title">Step1: {{ $t('editing.chooseDataFrame') }}</div>
-        <div 
-          :class="{'has-error': errors.has('dataFrameName')}"
-          class="input-block name"
-        >
-          <default-select 
-            v-validate="'required'"
-            v-model="featureInfo.dataFrameId"
-            :option-list="dataFrameList"
-            :placeholder="$t('editing.chooseDataFrame')"
-            class="data-frame-select"
-            name="dataFrameName"
-            @change="getDataFrameColumnInfo"
-          />
-          <div 
-            v-show="errors.has('dataFrameName')"
-            class="error-text"
-          >{{ errors.first('dataFrameName') }}</div>
-        </div>
+        <div class="block-title">{{ $t('editing.tableName') }}</div>
+        {{ currentDataFrameInfo.name }}
       </div>
       <div class="feature-block">
-        <div class="block-title">Step2: {{ $t('feature.featureColumnName') }}（{{ $t('editing.isRequired') }}）</div>
+        <div class="block-title">Step1: {{ $t('feature.featureColumnName') }}（{{ $t('editing.isRequired') }}）</div>
         <div class="input-block name">
           <input-block
             v-validate="`required|max:${max}`"
@@ -36,7 +19,7 @@
         </div>
       </div>
       <div class="feature-block">
-        <div class="block-title">Step3: {{ $t('feature.featureSetting') }}（{{ $t('editing.isRequired') }}）</div>
+        <div class="block-title">Step2: {{ $t('feature.featureSetting') }}（{{ $t('editing.isRequired') }}）</div>
         <!-- <div class="setting">
           <div class="rule">{{ $t('feature.value') }} = <span class="token value">100</span></div>
           <div class="rule">{{ $t('feature.columnValue') }} = <span class="token column">“{{ $t('editing.columnName') }}”</span></div>
@@ -172,7 +155,7 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputBlock from '@/components/InputBlock'
 import HintInfoBlock from '@/components/display/HintInfoBlock'
-import { getDataFrameById, getDataFrameColumnInfoById } from '@/API/DataSource'
+import { getDataFrameColumnInfoById } from '@/API/DataSource'
 import { createCustomFeature, updateCustomFeature } from '@/API/Feature'
 import { Message } from 'element-ui'
 import draggable from 'vuedraggable'
@@ -190,6 +173,15 @@ export default {
     editFeatureInfo: {
       type: Object,
       default: () => {}
+    },
+    currentDataFrameInfo: {
+      type: Object,
+      default: () => { 
+        return {
+          name: '',
+          value: null
+        }
+      }
     }
   },
   data () {
@@ -219,20 +211,12 @@ export default {
       this.featureFormula = JSON.parse(this.editFeatureInfo.description)
       this.getDataFrameColumnInfo(this.featureInfo.dataFrameId)
       this.dataSourceId = this.editFeatureInfo.dataSourceId
-    }
-    this.getDataFrameList()
+    } else {
+      this.featureInfo.dataFrameId = this.currentDataFrameInfo.value
+      this.getDataFrameColumnInfo (this.featureInfo.dataFrameId)
+    } 
   },
   methods: {
-    getDataFrameList () {
-      getDataFrameById(this.dataSourceId).then(response => {
-        this.dataFrameList = response.map(element => {
-          return {
-            name: element.primaryAlias,
-            value: element.id
-          }
-        })
-      })
-    },
     getDataFrameColumnInfo (value) {
       // 過濾掉特徵欄位
       let hasFeature = false
