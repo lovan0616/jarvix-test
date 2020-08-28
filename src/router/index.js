@@ -172,11 +172,6 @@ const router = new Router({
                       component: () => import('@/pages/warRoom/Index'),
                       children: [
                         {
-                          path: '/',
-                          name: 'WarRoomList',
-                          component: () => import('@/pages/warRoom/WarRoomList')
-                        },
-                        {
                           path: ':war_room_id',
                           name: 'WarRoom',
                           component: () => import('@/pages/warRoom/WarRoom')
