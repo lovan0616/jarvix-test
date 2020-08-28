@@ -45,16 +45,19 @@ export default {
   data () {
     return {
       loading: false,
-      chartList: []
-    }
-  },
-  computed: {
-    chartHeight () {
-      return (document.body.clientHeight - 260) / 2 + 'px'
+      chartList: [],
+      chartHeight: 0
     }
   },
   mounted () {
     this.getRandomChart()
+    this.getChartHeight()
+    window.addEventListener('resize', () => {
+      this.getChartHeight()
+    })
+  },
+  destroyed () {
+    window.removeEventListener('resize')
   },
   methods: {
     getRandomChart () {
@@ -63,6 +66,9 @@ export default {
         this.chartList = chartList
         this.loading = false
       }).catch(() => {})
+    },
+    getChartHeight () {
+      this.chartHeight = (document.body.clientHeight - 260) / 2 + 'px'
     }
   }
 }
@@ -87,10 +93,20 @@ export default {
     }
     &__logo {
       height: 30px;
-      margin-right: 50px;
+      margin-right: 24px;
     }
     &__title {
       font-size: 20px;
+      letter-spacing: 4px;
+      display: flex;
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 1px;
+        height: 30px;
+        margin-right: 24px;
+        background-color: #404949;
+      }
     }
     &__content {
       height: 0;
@@ -106,6 +122,7 @@ export default {
       display: flex;
       flex-direction: column;
       flex: 0 0 calc(calc(100% - 16px) / 2);
+      width: 0;
       padding: 16px;
       background: #192323;
       border-radius: 5px;
