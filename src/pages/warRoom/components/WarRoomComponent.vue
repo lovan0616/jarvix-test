@@ -28,10 +28,20 @@
             class="icon"/>
         </a>
       </div>
+      <div
+        v-if="isAboveUpperBound || isBelowLowerBound"
+        class="card__message"
+      >
+        <svg-icon
+          :icon-class="isAboveUpperBound ? 'arrow-solid-up' : 'arrow-solid-down'" 
+          class="icon"/>
+        {{ isAboveUpperBound ? $t('warRoom.reachedUpperBound') : $t('warRoom.reachedLowerBound') }}
+      </div>
     </div>
     <div class="card__body">
       <spinner
         v-if="isLoading"
+        :title="$t('message.dataLoading')"
         class="task-spinner"
       />
       <no-result
@@ -60,6 +70,7 @@
           :key="componentId"
           :show-toolbox="showToolbox"
           :custom-chart-style="customChartStyle"
+          :is-show-alert="isAboveUpperBound || isBelowLowerBound"
           class="card__body-data"
         />
       </template>
@@ -235,6 +246,10 @@ export default {
       type: Number,
       default: null
     },
+    isShowWarningMessage: {
+      type: Boolean,
+      default: false
+    },
     isEditable: {
       type: Boolean,
       default: true
@@ -262,6 +277,16 @@ export default {
       timeoutFunction: null,
       autoRefreshFunction: null,
       componentBasicInfo: {}
+    }
+  },
+  computed: {
+    isAboveUpperBound () {
+      if (this.isLoading || !this.isShowWarningMessage) return false
+      return this.componentData.dataset.data > this.componentBasicInfo.config.upperBound
+    },
+    isBelowLowerBound () {
+      if (this.isLoading || !this.isShowWarningMessage) return false
+      return this.componentData.dataset.data < this.componentBasicInfo.config.lowerBound
     }
   },
   destroyed () {
@@ -297,14 +322,15 @@ export default {
               this.componentName = this.getChartTemplate(this.diagram)
               let responseData = dummyDiagramComponentData.diagramData.data
 
+              // 定期更新 component 資料
               let isAutoRefresh = componentBasicInfo.config.isAutoRefresh
               if(isAutoRefresh && !this.isEditable) {
                 this.autoRefreshFunction = window.setTimeout(() => {
                   this.fetchData()
-                }, this.convertRefreshFrequency(componentBasicInfo.config) * 1000)
+                }, this.convertRefreshFrequency(componentBasicInfo.config.refreshFrequency))
               }
               
-              // 判斷是否為 圖表
+              // 更新圖表資料
               if (responseData.dataset.data.length === 0) {
                 this.isLoading = false
                 this.isError = true
@@ -390,6 +416,12 @@ export default {
     font-size: 14px;
     font-weight: 600;
     color: #DDDDDD;
+  }
+
+  &__message {
+    color: #FF5C46;
+    font-weight: 600;
+    font-size: 12px;
   }
 
   &__control {

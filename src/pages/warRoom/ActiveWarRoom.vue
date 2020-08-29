@@ -43,6 +43,7 @@
             :key="number.componentId"
             :component-id="number.componentId"
             :is-editable="false"
+            :is-show-warning-message="true"
             class="number__item"
           />
         </div>

@@ -1,6 +1,9 @@
 <template>
-  <div class="index-info">
-    {{ dataset.data }}
+  <div
+    :class="{ 'index-info--warning': isShowAlert }"
+    class="index-info"
+  >
+    {{ formatComma(dataset.data) }}
   </div>
 </template>
 
@@ -12,6 +15,10 @@ export default {
       type: Object, 
       default: () => ([])
     },
+    isShowAlert: {
+      type: Boolean,
+      default: false
+    }
   }
 }
 </script>
@@ -29,7 +36,7 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  &__warning {
+  &--warning {
     color: #FF5C46;
   }
 }
