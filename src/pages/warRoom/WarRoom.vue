@@ -32,7 +32,7 @@
             v-else
             class="war-room__title-edit"
           >
-            <div class="war-room__title-input">
+            <div class="war-room__title-input-wrapper">
               <input
                 v-validate="'required'"
                 v-model="tempWarRoomPublishedName"
@@ -446,6 +446,8 @@ export default {
       this.isEditingWarRoomName = true
     },
     stopEditingWarRoomName () {
+      // 避免名稱欄位資料被清空觸發重新驗證，但欄位已經被 v-if 移除產生錯誤
+      this.$validator.detach('warRoomName')
       this.isEditingWarRoomName = false
       this.tempWarRoomPublishedName = null
     },
