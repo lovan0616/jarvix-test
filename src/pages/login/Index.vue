@@ -93,6 +93,9 @@ export default {
               // 用戶若因 token 失效需重新登入，登入後導回原頁面
               if (currentRoute && currentRoute.path && currentRoute.path !== '/') {
                 const { name, query, params } = currentRoute
+                // 因無帳戶或專案權限導致 token 失效的情境，登入後 url 掛回預設的帳戶或專案
+                params.account_id = this.getCurrentAccountId
+                params.group_id = this.getCurrentGroupId
                 return this.$router.push({ name, query, params })
               } 
               
