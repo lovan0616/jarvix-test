@@ -3,16 +3,15 @@
     <section class="war-room__content">
       <div class="war-room__header">
         <div class="war-room__header--left">
-          <!--待補連結-->
-          <a
-            href="javascript:void(0);" 
+          <router-link
+            :to="{ name: 'WarRoomList' }" 
             class="link action-link"
           >
             <svg-icon
               icon-class="arrow-left" 
               class="icon"/>
             {{ $t('warRoom.backToList') }}
-          </a>
+          </router-link>
           <div
             v-if="!isEditingWarRoomName"
             class="war-room__title"
