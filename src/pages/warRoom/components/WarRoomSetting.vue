@@ -1,57 +1,57 @@
 <template>
-  <section class="setting">
-    <div class="setting__header">
-      <div class="setting__title">
+  <section class="war-room-setting">
+    <div class="war-room-setting__header">
+      <div class="war-room-setting__title">
         <svg-icon 
           icon-class="control-board" 
-          class="setting__header-icon"/>
+          class="war-room-setting__header-icon"/>
         {{ $t('warRoom.warRoomSetting') }}
       </div>
       <span
-        class="setting__close-icon"
+        class="war-room-setting__close-icon"
         @click="$emit('close')">
         <svg-icon 
           icon-class="close" 
-          class="setting__header-icon"/>
+          class="war-room-setting__header-icon"/>
       </span>
     </div>
-    <section class="setting__content">
-      <div class="setting__block-container">
-        <div class="setting__block">
-          <div class="setting__block-title">
+    <section class="war-room-setting__content">
+      <div class="war-room-setting__block-container">
+        <div class="war-room-setting__block">
+          <div class="war-room-setting__block-title">
             {{ $t('warRoom.publishedName') }}
           </div>
           <input
             v-validate="'required'"
             v-model="warRoomData.publishName"
             name="warRoomName"
-            class="input setting__block-text-input">
+            class="input war-room-setting__block-text-input">
           <div 
             v-show="errors.has('warRoomName')"
             class="error-text"
           >{{ errors.first('warRoomName') }}</div>
         </div>
-        <div class="setting__block">
-          <div class="setting__block-title">
+        <div class="war-room-setting__block">
+          <div class="war-room-setting__block-title">
             {{ $t('warRoom.timeIntervalConstraint') }}
             <el-switch
               v-model="warRoomData.displayDateRangeSwitch"
               :disabled="isProcessing"
-              :width="Number('32')"
+              :width="32"
               active-color="#2AD2E2"
               inactive-color="#324B4E"/>
           </div>
           <div
             v-if="warRoomData.displayDateRangeSwitch"
-            class="setting__block-select-field"
+            class="war-room-setting__block-select-field"
           >
             <default-select 
               v-validate="'required'"
               :value="selectedTimeInterval"
-              :option-list="timeIntervalConstraint.timeIntervalList"
+              :option-list="timeIntervalList"
               :placeholder="$t('warRoom.chooseTimeInterval')"
               :is-disabled="isProcessing"
-              class="setting__block-select"
+              class="war-room-setting__block-select"
               name="timeIntervalConstraint"
               @change="updateTimeInterval"
             />
@@ -62,13 +62,13 @@
           </div>
           <div
             v-if="warRoomData.displayDateRangeSwitch && selectedTimeInterval === 'others'"
-            class="setting__block-date-field date-picker"
+            class="war-room-setting__block-date-field date-picker"
           >
             <div class="date-picker__container">
               <el-date-picker
                 v-validate="'required'"
                 v-model="warRoomData.customStartTime"
-                :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
+                :picker-options="customTimeInterval.pickerOptions"
                 :placeholder="$t('warRoom.startDate')"
                 :clearable="true"
                 :class="{ 'has-error': errors.first('startTime') }"
@@ -79,7 +79,7 @@
               <div class="date-picker__seperator">-</div>
               <el-date-picker
                 v-model="warRoomData.customEndTime"
-                :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
+                :picker-options="customTimeInterval.pickerOptions"
                 :placeholder="'*' + $t('warRoom.endDate')"
                 :clearable="true"
                 class="date-picker__item"
@@ -95,17 +95,17 @@
           </div>
         </div>
       </div>
-      <div class="setting__button-block">
+      <div class="war-room-setting__button-block">
         <button 
           type="button"
-          class="btn btn-outline setting__button-block-button--left"
+          class="btn btn-outline war-room-setting__button-block-button--left"
           @click="deleteWarRoom"
         >
           <svg-icon icon-class="delete" />
         </button>
         <button 
           type="button"
-          class="btn btn-default setting__button-block-button--right"
+          class="btn btn-default war-room-setting__button-block-button--right"
           @click="saveSetting"
         >{{ $t('button.save') }}</button>
       </div>
@@ -144,46 +144,44 @@ export default {
     return {
       warRoomData: null,
       isProcessing: false,
-      timeIntervalConstraint: {
-        timeIntervalList: [
-          {
-            value: '1+Hour',
-            name: this.$t('warRoom.inHours', { number: 1 })
+      timeIntervalList: [
+        {
+          value: '1+Hour',
+          name: this.$t('warRoom.inHours', { number: 1 })
+        },
+        {
+          value: '1+Day',
+          name: this.$t('warRoom.inDays', { number: 1 })
+        },
+        {
+          value: '1+Week',
+          name: this.$t('warRoom.inWeeks', { number: 1 })
+        },
+        {
+          value: '1+Month',
+          name: this.$t('warRoom.inMonths', { number: 1 })
+        },
+        {
+          value: '1+Season',
+          name: this.$t('warRoom.inSeasons', { number: 1 })
+        },
+        {
+          value: '1+Year',
+          name: this.$t('warRoom.inYears', { number: 1 })
+        },
+        {
+          value: 'others',
+          name: this.$t('warRoom.customize')
+        }
+      ],
+      customTimeInterval: {
+        startTime: '',
+        endTime: '',
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
           },
-          {
-            value: '1+Day',
-            name: this.$t('warRoom.inDays', { number: 1 })
-          },
-          {
-            value: '1+Week',
-            name: this.$t('warRoom.inWeeks', { number: 1 })
-          },
-          {
-            value: '1+Month',
-            name: this.$t('warRoom.inMonths', { number: 1 })
-          },
-          {
-            value: '1+Season',
-            name: this.$t('warRoom.inSeasons', { number: 1 })
-          },
-          {
-            value: '1+Year',
-            name: this.$t('warRoom.inYears', { number: 1 })
-          },
-          {
-            value: 'others',
-            name: this.$t('warRoom.customize')
-          }
-        ],
-        customTimeInterval: {
-          startTime: '',
-          endTime: '',
-          pickerOptions: {
-            disabledDate(time) {
-              return time.getTime() > Date.now();
-            },
-            firstDayOfWeek: 1
-          }
+          firstDayOfWeek: 1
         }
       }
     }
@@ -256,7 +254,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.setting {
+.war-room-setting {
   &__block-select {
     /deep/ .el-input__inner {
       border-bottom: 1px solid #FFFFFF;

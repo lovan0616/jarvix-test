@@ -1,44 +1,44 @@
 <template>
-  <section class="setting">
-    <div class="setting__header">
-      <div class="setting__title">
+  <section class="war-room-setting">
+    <div class="war-room-setting__header">
+      <div class="war-room-setting__title">
         <svg-icon 
           icon-class="filter" 
-          class="setting__header-icon"/>
+          class="war-room-setting__header-icon"/>
         {{ $t('warRoom.dataConstraint') }}
       </div>
       <span
-        class="setting__close-icon"
+        class="war-room-setting__close-icon"
         @click="$emit('close')">
         <svg-icon 
           icon-class="close" 
-          class="setting__header-icon"/>
+          class="war-room-setting__header-icon"/>
       </span>
     </div>
-    <section class="setting__content">
-      <div class="setting__block-container">
+    <section class="war-room-setting__content">
+      <div class="war-room-setting__block-container">
         <div
           v-if="componentData.selectedColumns && componentData.selectedColumns.length > 0"
-          class="setting__block"
+          class="war-room-setting__block"
         >
-          <div class="setting__block-title">
+          <div class="war-room-setting__block-title">
             {{ $t('warRoom.selectedColumns') }}
           </div>
           <div
             v-for="(column, index) in componentData.selectedColumns"
             :key="index"
-            class="setting__filter"
+            class="war-room-setting__filter"
           >
-            <div class="setting__filter-title">
+            <div class="war-room-setting__filter-title">
               {{ column }}
             </div>
           </div>
         </div>
         <div
           v-if="componentData.restriction && componentData.restriction.length > 0"
-          class="setting__block"
+          class="war-room-setting__block"
         >
-          <div class="setting__block-title">
+          <div class="war-room-setting__block-title">
             {{ $t('warRoom.filterConstraint') }}
           </div>
           <component-filter-info
@@ -124,7 +124,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.setting {
+.war-room-setting {
   &__content {
     justify-content: space-between;
   }

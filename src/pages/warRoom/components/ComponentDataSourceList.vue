@@ -1,6 +1,6 @@
 <template>
-  <section class="setting__content">
-    <div class="setting__block">
+  <section class="war-room-setting__content">
+    <div class="war-room-setting__block">
       <a
         href="javascript:void(0);"
         class="link action-link" 
@@ -12,19 +12,19 @@
         {{ $t('warRoom.back') }}
       </a>
     </div>
-    <div class="setting__block">
-      <div class="setting__block-title">
+    <div class="war-room-setting__block">
+      <div class="war-room-setting__block-title">
         {{ $t('warRoom.indexTypeContent') }}
       </div>
       <div
         v-if="dataSouceList.indexTypeItems.length > 0"
-        class="setting__block-list"
+        class="war-room-setting__block-list"
       >
         <div
           v-for="(item, index) in dataSouceList.indexTypeItems"
           :key="item.itemId"
           :class="{ 'disabled': isProcessing || componentType !== 'index' }"
-          class="setting__block-list-item"
+          class="war-room-setting__block-list-item"
         >
           <a
             href="javascript:void(0);"
@@ -39,19 +39,19 @@
         </div>
       </div>
     </div>
-    <div class="setting__block">
-      <div class="setting__block-title">
+    <div class="war-room-setting__block">
+      <div class="war-room-setting__block-title">
         {{ $t('warRoom.chartTypeContent') }}
       </div>
       <div
         v-if="dataSouceList.diagramTypeItems.length > 0"
-        class="setting__block-list"
+        class="war-room-setting__block-list"
       >
         <div
           v-for="(item, index) in dataSouceList.diagramTypeItems"
           :key="item.itemId"
           :class="{ 'disabled': isProcessing || componentType !== 'diagram' }"
-          class="setting__block-list-item"
+          class="war-room-setting__block-list-item"
         >
           <a
             href="javascript:void(0);"
@@ -117,7 +117,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.setting {
+.war-room-setting {
   &__content {
     justify-content: flex-start;
   }
