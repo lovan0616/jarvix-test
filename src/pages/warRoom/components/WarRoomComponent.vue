@@ -1,54 +1,62 @@
 <template>
   <div
-    :class="{ 'card--focused': isFocusing }"
+    :class="{
+      'card--focused': isFocusing,
+      'card--no-bg': isError
+    }"
     class="card"
   >
-    <div class="card__header">
-      <div class="card__title">{{ componentBasicInfo.config.displayName }}</div>
-      <div
-        v-if="isEditable"
-        class="card__control"
-      >
-        <a
-          href="javascript:void(0);" 
-          class="link action-link"
-          @click="editSetting"
-        >
-          <svg-icon
-            icon-class="filter-setting" 
-            class="icon"/>
-        </a>
-        <a
-          href="javascript:void(0);" 
-          class="link action-link"
-          @click="viewConstraint"
-        >
-          <svg-icon
-            icon-class="filter" 
-            class="icon"/>
-        </a>
-      </div>
-      <div
-        v-if="isAboveUpperBound || isBelowLowerBound"
-        class="card__message"
-      >
-        <svg-icon
-          :icon-class="isAboveUpperBound ? 'arrow-solid-up' : 'arrow-solid-down'" 
-          class="icon"/>
-        {{ isAboveUpperBound ? $t('warRoom.reachedUpperBound') : $t('warRoom.reachedLowerBound') }}
-      </div>
+    <spinner
+      v-if="isLoading"
+      :title="$t('message.dataLoading')"
+      class="task-spinner"
+    />
+    <div
+      v-else-if="isError"
+      class="card__error-message"
+    >
+      <svg-icon
+        icon-class="alert" 
+        class="icon"/>
+      {{ errorMessage }}
     </div>
-    <div class="card__body">
-      <spinner
-        v-if="isLoading"
-        :title="$t('message.dataLoading')"
-        class="task-spinner"
-      />
-      <no-result
-        v-else-if="isError"
-        :message="errorMessage"
-      />
-      <template v-else-if="diagram">
+    <template v-else>
+      <div class="card__header">
+        <div class="card__title">{{ componentBasicInfo.config.displayName }}</div>
+        <div
+          v-if="isEditable"
+          class="card__control"
+        >
+          <a
+            href="javascript:void(0);" 
+            class="link action-link"
+            @click="editSetting"
+          >
+            <svg-icon
+              icon-class="filter-setting" 
+              class="icon"/>
+          </a>
+          <a
+            href="javascript:void(0);" 
+            class="link action-link"
+            @click="viewConstraint"
+          >
+            <svg-icon
+              icon-class="filter" 
+              class="icon"/>
+          </a>
+        </div>
+        <div
+          v-if="isAboveUpperBound || isBelowLowerBound"
+          class="card__message"
+        >
+          <svg-icon
+            :icon-class="isAboveUpperBound ? 'arrow-solid-up' : 'arrow-solid-down'" 
+            class="icon"/>
+          {{ isAboveUpperBound ? $t('warRoom.reachedUpperBound') : $t('warRoom.reachedLowerBound') }}
+        </div>
+      </div>
+      <div class="card__body">
         <component
           :is="componentName"
           :dataset="componentData.dataset"
@@ -75,8 +83,8 @@
           :is-show-label-data="true"
           class="card__body-data"
         />
-      </template>
-    </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -276,6 +284,10 @@ export default {
       type: Boolean,
       default: false
     },
+    isPreviewing: {
+      type: Boolean,
+      default: true
+    },
   },
   data () {
     return {
@@ -315,18 +327,13 @@ export default {
     this.fetchData()
   },
   methods: {
-    autoRefreshData () {
-      this.isLoading = true
-      this.fetchData().then(taskData => {
-        this.componentData = taskData
-        this.isLoading = false
-      })
-    },
     fetchData () {
-      const { war_room_id: warRoomId } = this.$route.params
       window.clearTimeout(this.timeoutFunction)
       this.isLoading = true
-      getComponentInfo(warRoomId, this.componentId)
+      const promise = this.isPreviewing ? getComponentInfo : getPublishedComponentInfo
+      const id = this.isPreviewing ? this.$route.params.war_room_id : this.$route.query.id
+
+      promise(id, this.componentId)
         .then(response => {
           const { diagramData, ...componentBasicInfo } = dummyDiagramComponentData
           switch (dummyDiagramComponentData.diagramData.status) {
@@ -372,6 +379,8 @@ export default {
               break
           }
         }).catch(() => {
+          window.clearTimeout(this.timeoutFunction)
+          window.clearTimeout(this.autoRefreshFunction)
           this.isLoading = false
           this.isError = true
           this.errorMessage = this.$t('message.systemIsError')
@@ -409,6 +418,7 @@ export default {
 
 <style lang="scss" scoped>
 .card {
+  position: relative;
   overflow: hidden;
   height: 100%;
   width: 0; // 讓卡片能響應式縮小
@@ -416,7 +426,6 @@ export default {
   border-radius: 5px;
   background: #1C2424;
   padding: 16px;
-  background: #192323;
   display: flex;
   flex-direction: column;
   cursor: grab;
@@ -456,8 +465,22 @@ export default {
     height: 100%;
   }
 
+  &__error-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #999999;
+    font-size: 14px;
+  }
+
   &--focused {
     border: 1px solid #2AD2E2;
+  }
+
+  &--no-bg {
+    background: transparent;
+    border: 2px solid #202D2D;
   }
 
   &.sortable-chosen,

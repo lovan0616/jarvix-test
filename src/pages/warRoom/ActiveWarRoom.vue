@@ -26,23 +26,34 @@
         </span>
       </div>
     </header>
-    <section class="war-room__content">
+    <section
+      :class="{ 'war-room__content--disabled': isLoading }"
+      class="war-room__content"
+    >
+      <spinner 
+        v-if="isLoading"
+        :title="$t('editing.loading')"
+        class="spinner"
+        size="50"
+      />
       <div
-        :class="{ 'war-room__display--disabled': isLoading }"
-        class="war-room__display"
+        v-else-if="isEmptyData || hasError"
+        class="war-room__error-message"
       >
-        <spinner 
-          v-if="isLoading"
-          :title="$t('editing.loading')"
-          class="spinner"
-          size="50"
-        />
+        <svg-icon
+          icon-class="alert" 
+          class="icon"/>
+        戰情室內容已失效
+        請確認發布狀態或與系統管理員聯繫
+      </div>
+      <template v-else>
         <div class="number">
           <war-room-component
             v-for="number in numberComponent"
             :key="number.componentId"
             :component-id="number.componentId"
             :is-editable="false"
+            :is-previewing="isPreviewing"
             :is-show-warning-message="true"
             class="number__item"
           />
@@ -54,6 +65,7 @@
               :key="chart.componentId"
               :component-id="chart.componentId"
               :is-editable="false"
+              :is-previewing="isPreviewing"
               class="chart__item"
             />
           </div>
@@ -63,11 +75,12 @@
               :key="chart.componentId"
               :component-id="chart.componentId"
               :is-editable="false"
+              :is-previewing="isPreviewing"
               class="chart__item"
             />
           </div>
         </div>
-      </div>
+      </template>
     </section>
   </section>
 </template>
@@ -182,7 +195,9 @@ export default {
       numberComponent: null,
       isLoading: false,
       warRoomBasicInfo: {},
-      autoRefreshFunction: null
+      autoRefreshFunction: null,
+      hasError: false,
+      isEmptyData: false
     }
   },
   computed: {
@@ -221,21 +236,24 @@ export default {
           this.chartComponent = this.sortComponents(diagramTypeComponents)
           this.numberComponent = this.sortComponents(indexTypeComponents)
           this.warRoomBasicInfo = warRoomBasicInfo
-          this.dataSourcePool = dummyPool
+          throw new Error('error')
+          if (diagramTypeComponents.length === 0 && indexTypeComponents.length === 0) {
+            this.isEmptyData = true
+          }
 
           // 每小時自動刷新頁面資料
           this.autoRefreshFunction = window.setTimeout(() => {
             this.fetchData()
           }, 3600 * 1000)
         })
+        .catch(() => {
+          window.clearTimeout(this.autoRefreshFunction)
+          this.hasError = true
+         })
         .finally(() => { this.isLoading = false })
-
-        const { diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = dummyWarRoom
-        this.chartComponent = this.sortComponents(diagramTypeComponents)
-        this.numberComponent = this.sortComponents(indexTypeComponents)
-        this.warRoomBasicInfo = warRoomBasicInfo
     },
     sortComponents (componentList) {
+      if (componentList.length === 0) return componentList
       componentList.sort((a, b) => a.orderSequence - b.orderSequence)
       return componentList
     }
@@ -248,7 +266,7 @@ export default {
   position: relative;
   padding: 32px;
   width: 100%;
-  height: 100%;
+  height: 100vh;
 
   &__reminder {
     position: absolute;
@@ -263,48 +281,19 @@ export default {
     text-align: center;
   }
 
+  &__error-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #999999;
+    font-size: 18px;
+  }
+
   &__content {
-    height: 100%;
-    overflow: auto;
-  }
-
-  &__side-setting {
-    border: 1px solid #464A50;
-  }
-
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 22px;
-    height: 30px;
-
-    &--left {
-      display: flex;
-    }
-  }
-
-  &__header-logo {
-    line-height: 30px;
-    padding-right: 24px;
-  }
-
-  &__header-title {
-    padding-left: 24px;
-    line-height: 30px;
-    font-weight: 600;
-    font-size: 20px;
-    letter-spacing: 4px;
-    border-left: 1px solid #404949;
-  }
-
-  &__header-time {
-    line-height: 30px;
-    font-size: 12px;
-    color: #DDDDDD;
-  }
-
-  &__display {
     position: relative;
+    height: calc(100% - 52px);
+    overflow: auto;
     display: flex;
     flex-direction: column;
     &--disabled {
@@ -328,6 +317,41 @@ export default {
       -webkit-user-select: none;
       -ms-user-select: none;
     }
+  }
+
+  &__side-setting {
+    border: 1px solid #464A50;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 22px;
+    line-height: 30px;
+
+    &--left {
+      display: flex;
+    }
+  }
+
+  &__header-logo {
+    height: 30px;
+    padding-right: 24px;
+  }
+
+  &__header-title {
+    padding-left: 24px;
+    line-height: 30px;
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: 4px;
+    border-left: 1px solid #404949;
+  }
+
+  &__header-time {
+    line-height: 30px;
+    font-size: 12px;
+    color: #DDDDDD;
   }
 
   .number {
