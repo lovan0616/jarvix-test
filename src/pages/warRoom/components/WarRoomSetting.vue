@@ -209,8 +209,8 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return
         this.isProcessing = true
-        const { war_room_id: warRoomId } = this.$route.params
-        updateWarRoomSetting(warRoomId, this.warRoomData)
+        const { war_room_id: id } = this.$route.params
+        updateWarRoomSetting(id, this.warRoomData)
           .then(() => {
             this.$emit('update:config-data', this.warRoomData)
             this.$emit('close')
@@ -219,9 +219,9 @@ export default {
       })
     },
     deleteWarRoom () {
-      const { war_room_id: warRoomId } = this.$route.params
+      const { war_room_id: id } = this.$route.params
       this.isProcessing = true
-      deleteWarRoom(warRoomId)
+      deleteWarRoom(id)
         .then(() => {
           this.$router.push({ name: 'WarRoomList' })
           Message({

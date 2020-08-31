@@ -1,4 +1,4 @@
-import { logout, refreshToken, switchAccount, switchGroup, updateLocale } from '@/API/User'
+import { logout, switchAccount, switchGroup, updateLocale } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
 

@@ -172,6 +172,11 @@ const router = new Router({
                       component: () => import('@/pages/warRoom/Index'),
                       children: [
                         {
+                          path: '/',
+                          name: 'WarRoomList',
+                          component: () => import('@/pages/warRoom/WarRoomList')
+                        },
+                        {
                           path: ':war_room_id',
                           name: 'WarRoom',
                           component: () => import('@/pages/warRoom/WarRoom')
@@ -264,7 +269,7 @@ const router = new Router({
                       component: () => import('@/pages/management/Index'),
                       beforeEnter: (to, from, next) => {
                         // 個人版 不能進入成員管理頁面
-                        store.state.userManagement.license.maxUser > 1 ? next() : next(from)
+                        store.state.userManagement.license.maxUser !== 1 ? next() : next(from)
                       },
                       children: [
                         {
@@ -325,6 +330,11 @@ const router = new Router({
       path: '/share-result/:id',
       name: 'ShareResult',
       component: () => import('@/pages/result/SingleResult')
+    },
+    {
+      path: '/oe-exhibition',
+      name: 'OeExhibition',
+      component: () => import('@/pages/oeExhibition/Index')
     }
   ],
   linkActiveClass: 'active',

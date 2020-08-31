@@ -310,7 +310,7 @@ const dummyWarRoom =  {
   "publishUpdaterId": 0,
   "publishUpdaterName": "string",
   "urlIdentifier": "string",
-  "warRoomId": 0
+  "id": 0
 }
 
 const dummyPool = {
@@ -384,8 +384,8 @@ export default {
     }
   },
   mounted () {
-    const { war_room_id: warRoomId } = this.$route.params
-    this.fetchData(warRoomId)
+    const { war_room_id: id } = this.$route.params
+    this.fetchData(id)
   },
   methods: {
     fetchData (id) {
@@ -456,8 +456,8 @@ export default {
         if (!result) return
         this.isProcessing = true
         this.warRoomConfig.publishName = this.tempWarRoomPublishedName
-        const { war_room_id: warRoomId } = this.$route.params
-        updateWarRoomSetting(warRoomId, this.warRoomConfig)
+        const { war_room_id: id } = this.$route.params
+        updateWarRoomSetting(id, this.warRoomConfig)
           .then(() => this.stopEditingWarRoomName())
           .finally(() => { this.isProcessing = false })
       })
