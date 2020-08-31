@@ -626,7 +626,8 @@
     "updateTime": "更新时间",
     "dataConstraint": "资料限制",
     "selectedColumns": "选择栏位",
-    "filterConstraint": "筛选条件"
+    "filterConstraint": "筛选条件",
+    "confirmDeleteWarRoom": "您确定要删除此战情室吗？"
   },
   "description": {
     "basic": {

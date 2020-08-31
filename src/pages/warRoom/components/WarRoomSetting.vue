@@ -99,7 +99,7 @@
         <button 
           type="button"
           class="btn btn-outline war-room-setting__button-block-button--left"
-          @click="deleteWarRoom"
+          @click="confirmDeleteWarRoom"
         >
           <svg-icon icon-class="delete" />
         </button>
@@ -110,11 +110,21 @@
         >{{ $t('button.save') }}</button>
       </div>
     </section>
+    <decide-dialog
+      v-if="isShowDeleteWarRoom"
+      :title="$t('warRoom.confirmDeleteWarRoom')"
+      :type="'delete'"
+      :btn-text="$t('button.remove')"
+      :is-processing="isProcessing"
+      @closeDialog="closeConfirmDeleteWarRoom"
+      @confirmBtn="deleteWarRoom"
+    />
   </section>
 </template>
 
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
+import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
 import {
   updateWarRoomSetting,
@@ -125,7 +135,8 @@ export default {
   name: 'WarRoomSetting',
   inject: ['$validator'],
   components: {
-    DefaultSelect
+    DefaultSelect,
+    DecideDialog
   },
   props: {
     configData: {
@@ -183,7 +194,8 @@ export default {
           },
           firstDayOfWeek: 1
         }
-      }
+      },
+      isShowDeleteWarRoom: false
     }
   },
   computed: {
@@ -216,6 +228,12 @@ export default {
           .finally(() => { this.isProcessing = false })
       })
     },
+    confirmDeleteWarRoom () {
+      this.isShowDeleteWarRoom = true
+    },
+    closeConfirmDeleteWarRoom () {
+      this.isShowDeleteWarRoom = false
+    },
     deleteWarRoom () {
       const { war_room_id: id } = this.$route.params
       this.isProcessing = true
@@ -228,6 +246,7 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
+          this.closeConfirmDeleteWarRoom()
         })
         .finally(() => { this.isProcessing = false })
     },
