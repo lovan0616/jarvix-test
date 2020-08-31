@@ -280,7 +280,28 @@ export default {
   },
   data () {
     return {
-      componentData: {},
+      componentData: {
+        componentId: null,
+        config: {
+          boundSwitch: false,
+          customEndTime: null,
+          customStartTime: null,
+          displayDateRangeSwitch: false,
+          displayName: null,
+          isAutoRefresh: false,
+          lowerBound: null,
+          question: null,
+          recentTimeIntervalAmount: null,
+          recentTimeIntervalUnit: null,
+          refreshFrequency: null,
+          upperBound: null
+        },
+        diagramData: {},
+        diagramName: null,
+        orderSequence: null,
+        restriction: {},
+        selectedColumns: {}
+      },
       isShowComponentDataSourceList: false,
       selectedDataSource: {},
       isProcessing: false,
@@ -378,12 +399,13 @@ export default {
     }
   },
   watch: {
-    originalComponentData () {
-      this.componentData = JSON.parse(JSON.stringify(this.originalComponentData))
+    originalComponentData: {
+      handler (newData) { this.componentData = JSON.parse(JSON.stringify(newData)) },
+      deep: true
     }
   },
   mounted () {
-    this.componentData = JSON.parse(JSON.stringify(this.originalComponentData))
+    if (this.componentData) this.componentData = JSON.parse(JSON.stringify(this.originalComponentData))
   },
   methods: {
     buildComponent () {

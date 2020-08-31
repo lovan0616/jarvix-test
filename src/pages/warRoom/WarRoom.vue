@@ -150,7 +150,7 @@
               :key="number.componentId"
               :component-id="number.componentId"
               :is-editable="true"
-              :is-focusing="selectedComponent.componentId === number.componentId"
+              :is-focusing="selectedComponent && selectedComponent.componentId === number.componentId"
               class="number__item"
               @check-constraint="viewComponentConstraint"
               @check-setting="editComponenSetting"
@@ -169,7 +169,7 @@
               :key="chart.componentId"
               :component-id="chart.componentId"
               :is-editable="true"
-              :is-focusing="selectedComponent.componentId === chart.componentId"
+              :is-focusing="selectedComponent && selectedComponent.componentId === chart.componentId"
               class="chart__item"
               @check-constraint="viewComponentConstraint"
               @check-setting="editComponenSetting"
@@ -187,7 +187,7 @@
               :key="chart.componentId"
               :component-id="chart.componentId"
               :is-editable="true"
-              :is-focusing="selectedComponent.componentId === chart.componentId"
+              :is-focusing="selectedComponent && selectedComponent.componentId === chart.componentId"
               class="chart__item"
               @check-constraint="viewComponentConstraint"
               @check-setting="editComponenSetting"
@@ -348,7 +348,7 @@ export default {
       isShowComponentSetting: false,
       isShowWarRoomSetting: false,
       isShowComponentConstraint: false,
-      selectedComponent: {},
+      selectedComponent: null,
       isLoading: false,
       warRoomConfig: null,
       warRoomBasicInfo: {},
@@ -421,7 +421,7 @@ export default {
     closeComponentSetting () {
       this.isShowComponentSetting = false
       this.createdComponentType = null
-      this.selectedComponent = {}
+      this.selectedComponent = null
     },
     openWarRoomSetting () {
       if (this.isShowComponentSetting) this.closeComponentSetting()
@@ -438,7 +438,7 @@ export default {
       this.isShowComponentConstraint = true
     },
     closeComponentConstraint () {
-      this.selectedComponent = {}
+      this.selectedComponent = null
       this.isShowComponentConstraint = false
     },
     editWarRoomName () {
