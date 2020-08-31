@@ -3,7 +3,7 @@
     <div
       v-if="isPreviewing"
       class="war-room__reminder">
-      此頁為預覽畫面
+      {{ $t('warRoom.previewPageReminder') }}
     </div>
     <header class="war-room__header">
       <div class="war-room__header--left">
@@ -11,19 +11,17 @@
           <img src="@/assets/images/logo-light.svg">
         </div>
         <div
-          v-if="warRoomBasicInfo.name"
+          v-if="!hasError"
           class="war-room__header-title"
         >
           {{ warRoomBasicInfo.name }}
         </div>
       </div>
-      <div class="war-room__header--right">
-        <span
-          v-if="warRoomBasicInfo.dateRangeStart && warRoomBasicInfo.dateRangeEnd"
-          class="war-room__header-time"
-        >
-          {{ $t('warRoom.updateTime') + '：' + warRoomBasicInfo.dateRangeStart + '-' + warRoomBasicInfo.dateRangeEnd }}
-        </span>
+      <div
+        v-if="showTimeInterval"
+        class="war-room__header--right"
+      >
+        {{ $t('warRoom.updateTime') + '：' + warRoomStartTime + '-' + warRoomEndTime }}
       </div>
     </header>
     <section
@@ -203,6 +201,17 @@ export default {
     isPreviewing () {
       const { war_room_id: warRoomId = null } = this.$route.params
       return warRoomId !== null
+    },
+    showTimeInterval () {
+      return this.warRoomStartTime && this.warRoomEndTime
+    },
+    warRoomStartTime () {
+      if (this.isLoading || this.hasError) return
+      return this.isPreviewing ? this.warRoomBasicInfo.config.customStartTime : this.warRoomBasicInfo.config.dateRangeStart
+    },
+    warRoomEndTime () {
+      if (this.isLoading || this.hasError) return
+      return this.isPreviewing ? this.warRoomBasicInfo.config.customEndTime : this.warRoomBasicInfo.config.dateRangeEnd
     }
   },
   mounted () {
@@ -263,8 +272,8 @@ export default {
     line-height: 20px;
     font-weight: 600;
     font-size: 12px;
-    color: #CCCCCC;
-    background: #192323;
+    color: #fff;
+    background: #2AD2E2;
     text-align: center;
   }
 
@@ -329,6 +338,12 @@ export default {
     &--left {
       display: flex;
     }
+
+    &--right {
+      line-height: 30px;
+      font-size: 12px;
+      color: #DDDDDD;
+    }
   }
 
   &__header-logo {
@@ -343,12 +358,6 @@ export default {
     font-size: 20px;
     letter-spacing: 4px;
     border-left: 1px solid #404949;
-  }
-
-  &__header-time {
-    line-height: 30px;
-    font-size: 12px;
-    color: #DDDDDD;
   }
 
   .number {
