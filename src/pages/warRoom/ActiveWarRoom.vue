@@ -41,10 +41,10 @@
         class="war-room__error-message"
       >
         <svg-icon
+          v-if="hasError"
           icon-class="alert" 
           class="icon"/>
-        戰情室內容已失效
-        請確認發布狀態或與系統管理員聯繫
+        <div class="war-room__error-message-title">{{ isEmptyData ? $t('warRoom.emptyComponentMessage') : $t('warRoom.warRoomDisplayErrorMessage') }}</div>
       </div>
       <template v-else>
         <div class="number">
@@ -69,7 +69,10 @@
               class="chart__item"
             />
           </div>
-          <div class="chart__container">
+          <div
+            v-if="chartSecondRow.length > 0"
+            class="chart__container"
+          >
             <war-room-component
               v-for="chart in chartSecondRow"
               :key="chart.componentId"
@@ -168,21 +171,6 @@ const dummyWarRoom =  {
   "warRoomId": 0
 }
 
-const dummyPool = {
-  "diagramTypeItems": [
-    {
-      "itemId": 0,
-      "question": "string"
-    }
-  ],
-  "indexTypeItems": [
-    {
-      "itemId": 0,
-      "question": "string"
-    }
-  ]
-}
-
 export default {
   name: 'WarRoom',
   inject: ['$validator'],
@@ -236,7 +224,6 @@ export default {
           this.chartComponent = this.sortComponents(diagramTypeComponents)
           this.numberComponent = this.sortComponents(indexTypeComponents)
           this.warRoomBasicInfo = warRoomBasicInfo
-          throw new Error('error')
           if (diagramTypeComponents.length === 0 && indexTypeComponents.length === 0) {
             this.isEmptyData = true
           }
@@ -282,12 +269,22 @@ export default {
   }
 
   &__error-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: #999999;
     font-size: 18px;
+    .icon { font-size: 60px; }
+  }
+
+  &__error-message-title {
+    margin-top: 16px;
+    white-space: pre-wrap;
+    text-align: center;
   }
 
   &__content {
@@ -373,7 +370,6 @@ export default {
     display: flex;
     flex-direction: column;
     height: 552px;
-    flex: 1;
 
     &__container {
       flex: 1;

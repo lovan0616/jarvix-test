@@ -620,7 +620,9 @@
     "selectedColumns": "选择栏位",
     "filterConstraint": "筛选条件",
     "reachedLowerBound": "低于下限",
-    "reachedUpperBound": "高于上限"
+    "reachedUpperBound": "高于上限",
+    "emptyComponentMessage": "尚未加入元件",
+    "warRoomDisplayErrorMessage": "战情室内容已失效\n请确认发布状态或与系统管理员联系"
   },
   "description": {
     "basic": {
