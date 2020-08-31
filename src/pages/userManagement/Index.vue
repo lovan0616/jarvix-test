@@ -302,7 +302,7 @@ export default {
   methods: {
     checkIfReachUserLimit () {
       getAccountInfo().then(({ license }) => {
-        this.reachUserLimit = license.currentUser >= license.maxUser
+        this.reachUserLimit = license.currentUser >= license.maxUser && license.maxUser !== -1
         this.$store.commit('userManagement/setLicenseCurrentUser', license.currentUser)
       })
     },

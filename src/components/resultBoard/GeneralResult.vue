@@ -1,10 +1,11 @@
 <template>
-  <result-board
+  <result-board 
     :segmentation-payload="segmentationPayload"
     :result-id="resultId"
     :result-info="resultInfo"
     :restrictions="restrictions"
     :is-war-room-addable="isWarRoomAddable"
+    class="general-result"
     @unPin="unPin"
   >
     <result-board-body slot="PageResultBoardBody">
@@ -18,6 +19,15 @@
           :component-id="chartTask"
           :data-frame-id="dataFrameId"
           intend="key_result"
+        />
+      </template>
+      <template
+        v-if="resultInfo.key_result && resultInfo.key_result.length === 0"
+        slot="PageResultBoardChart"
+      >
+        <no-result
+          :message="$t('message.emptyResult')"
+          class="general-result--empty"
         />
       </template>
       <template slot="InsightBasicInfo">
@@ -98,3 +108,13 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.general-result {
+  &--empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+}
+</style>

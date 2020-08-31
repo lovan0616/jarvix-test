@@ -1,12 +1,11 @@
 import { askQuestionV2, askResultV2, getComponentListV2, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
-const CancelToken = axios.CancelToken
-let cancelFunction
 
 export default {
   askQuestion ({dispatch, commit, state, rootState, rootGetters}, data) {
     dispatch('cancelRequest')
+    state.askCancelToken = axios.CancelToken.source()
     const dataFrameId = rootState.dataSource.dataFrameId || data.dataFrameId
     let askCondition = {
       question: rootState.dataSource.appQuestion || data.question,
@@ -18,22 +17,15 @@ export default {
       selectedColumnList: rootGetters['dataFrameAdvanceSetting/selectedColumnList']
     }
 
-    return askQuestionV2({...askCondition, language: state.parserLanguage}, new CancelToken(function executor (c) {
-      // An executor function receives a cancel function as a parameter
-      cancelFunction = c
-    }))
+    return askQuestionV2({...askCondition, language: state.parserLanguage}, state.askCancelToken.token)
   },
-  askResult ({dispatch}, data) {
-    return askResultV2(data, new CancelToken(function executor (c) {
-      // An executor function receives a cancel function as a parameter
-      cancelFunction = c
-    }))
+  askResult ({dispatch, state}, data) {
+    let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
+    return askResultV2(data, cancelToken)
   },
   getComponentList ({dispatch, state}, data) {
-    return getComponentListV2(data, new CancelToken(function executor (c) {
-      // An executor function receives a cancel function as a parameter
-      cancelFunction = c
-    }))
+    let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
+    return getComponentListV2(data, cancelToken)
   },
   getComponentData ({dispatch}, data) {
     return getComponentData(data)
@@ -48,9 +40,9 @@ export default {
     const restrictions = rootGetters['dataSource/filterRestrictionList']
     return getQuickStartQuestion(dataSourceId, dataFrameId, restrictions, selectedColumnList)
   },
-  cancelRequest () {
-    if (typeof cancelFunction === 'function') {
-      cancelFunction('cancel request')
+  cancelRequest ({state}) {
+    if (state.askCancelToken) {
+      state.askCancelToken.cancel()
     }
   },
   async updateChatConversation({ dispatch, commit, state, rootState }) {

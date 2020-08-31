@@ -68,8 +68,8 @@
           :is-processing="isProcessing"
           :pagination-info="pagination"
           :dataset="resultType === 'order' ? orderData : machineData"
-          height="100%"
           fixed-index
+          height="100%"
           @change-page="updatePage"
         />
         <template v-else-if="resultType === 'schedule'">
@@ -144,7 +144,7 @@
           @click="isKpiCollapse = !isKpiCollapse"
         >
           {{ isKpiCollapse ? $t('schedule.base.open') : $t('schedule.base.close') }}
-          <i class="icon-controller el-icon-arrow-down"/>
+          <i class="icon-controller el-icon-arrow-down" />
         </div>
       </h3>
       <spinner v-if="isLoadingKpiResult" />
@@ -616,6 +616,7 @@ export default {
       position: relative;
       display: flex;
       justify-content: space-between;
+      align-items: center;
     }
     &__main {
       flex: 1;

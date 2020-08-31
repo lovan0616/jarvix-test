@@ -190,7 +190,6 @@ export default {
       this.pinStep += 1
     },
     chooseTargetBoard (choosedBoard) {
-      console.log('choosedBoard', choosedBoard)
       this.choosedBoard = choosedBoard
       this.nextStep()
     }

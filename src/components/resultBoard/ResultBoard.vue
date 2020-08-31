@@ -1,4 +1,4 @@
-b<template>
+<template>
   <div class="result-board-container">
     <div 
       :id="pinBoardId"
@@ -7,7 +7,17 @@ b<template>
     >
       <div class="board-header">
         <div class="header-block">
-          <slot name="PageResultBoardHeader"/>
+          <!-- 這邊要注意因為 pinboard 會有舊的 segmentation -->
+          <result-board-header
+            v-if="segmentationPayload.question"
+            :title="segmentationPayload.question"
+            :segmentation="segmentationPayload"
+          />
+          <question-name-v2
+            v-else
+            :question-segmentation="segmentationPayload"
+            class="result-board__header"
+          />
         </div>
         <div 
           v-if="isPinboardPage"
@@ -109,6 +119,8 @@ b<template>
   </div>
 </template>
 <script>
+import ResultBoardHeader from './ResultBoardHeader'
+import QuestionNameV2 from './QuestionNameV2'
 import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
@@ -120,6 +132,8 @@ import { Message } from 'element-ui'
 export default {
   name: 'ResultBoard',
   components: {
+    ResultBoardHeader,
+    QuestionNameV2,
     PinboardDialog,
     ShareDialog,
     DecideDialog,
@@ -138,6 +152,10 @@ export default {
     restrictions: {
       type: Array,
       default: () => []
+    },
+    segmentationPayload: {
+      type: Object,
+      default: () => null
     },
     isWarRoomAddable: {
       type: Boolean,
@@ -323,6 +341,13 @@ export default {
     align-items: center;
     padding: 20px 28px;
     background-color: rgba(35, 61, 64, 0.6);
+  }
+
+  &__header {
+    /deep/ .question-name {
+      font-size: 30px;
+      line-height: 38px;
+    }
   }
 
   .header-block {

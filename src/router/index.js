@@ -269,7 +269,7 @@ const router = new Router({
                       component: () => import('@/pages/management/Index'),
                       beforeEnter: (to, from, next) => {
                         // 個人版 不能進入成員管理頁面
-                        store.state.userManagement.license.maxUser > 1 ? next() : next(from)
+                        store.state.userManagement.license.maxUser !== 1 ? next() : next(from)
                       },
                       children: [
                         {
