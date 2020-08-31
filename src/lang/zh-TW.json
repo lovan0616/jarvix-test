@@ -109,7 +109,12 @@
     "switchToGroupBySys": "系统已將您切換至群組：{groupName}",
     "youAreGroupless": "您目前無隸屬群組",
     "pinboardSuccess": "釘板成功",
-    "switching": "切換中"
+    "switching": "切換中",
+    "pleaseSelectQuestion": "請選擇來源資料",
+    "publishSuccessfully": "成功發布",
+    "unPublishSuccessfully": "成功取消發布",
+    "componentLayoutUpdated": "元件位置更新成功",
+    "componentLayoutUpdating": "元件位置更新中"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -621,7 +626,8 @@
     "updateTime": "更新時間",
     "dataConstraint": "資料限制",
     "selectedColumns": "選擇欄位",
-    "filterConstraint": "篩選條件"
+    "filterConstraint": "篩選條件",
+    "confirmDeleteWarRoom": "您確定要刪除此戰情室嗎？"
   },
   "description": {
     "basic": {

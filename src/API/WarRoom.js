@@ -87,7 +87,7 @@ export function getWarRoomPool(id) {
 }
 
 /**
- * 刪除戰情室 Component
+ * 刪除戰情室
  * @param {String} id - 戰情室 ID
  */
 export function deleteWarRoom(id) {

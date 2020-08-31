@@ -1,39 +1,47 @@
 <template>
-  <section class="setting">
-    <div class="setting__header">
-      <div class="setting__title">
+  <section class="war-room-setting">
+    <div class="war-room-setting__header">
+      <div class="war-room-setting__title">
         <svg-icon 
           icon-class="filter-setting" 
-          class="setting__header-icon"/>
+          class="war-room-setting__header-icon"/>
         {{ $t('warRoom.setting') }}
       </div>
       <span
-        class="setting__close-icon"
+        class="war-room-setting__close-icon"
         @click="$emit('close')">
         <svg-icon 
           icon-class="close" 
-          class="setting__header-icon"/>
+          class="war-room-setting__header-icon"/>
       </span>
     </div>
     <section
       v-if="!isShowComponentDataSourceList"
-      class="setting__content"
+      class="war-room-setting__content"
     >
-      <div class="setting__block-container">
-        <div class="setting__block">
-          <div class="setting__block-title">
+      <div class="war-room-setting__block-container">
+        <div class="war-room-setting__block">
+          <div class="war-room-setting__block-title">
             {{ $t('warRoom.displayName') }}
           </div>
           <input
+            v-validate="'required'"
+            :disabled="isProcessing"
             v-model="componentData.config.displayName"
-            class="input setting__block-text-input">
+            name="displayName"
+            class="input war-room-setting__block-text-input">
+          <div 
+            v-show="errors.has('displayName')"
+            class="error-text"
+          >{{ errors.first('displayName') }}</div>
         </div>
-        <div class="setting__block">
-          <div class="setting__block-title">
+        <div class="war-room-setting__block">
+          <div class="war-room-setting__block-title">
             {{ $t('warRoom.sourceData') }}
             <a
               v-if="!componentData.componentId"
-              href="javascript:void(0);" 
+              :disabled="isProcessing" 
+              href="javascript:void(0);"
               class="link"
               @click="clearSelectedDataSource"
             >
@@ -41,18 +49,18 @@
             </a>
           </div>
           <div
-            class="setting__block-choose"
+            class="war-room-setting__block-choose"
             @click="componentData.componentId ? null : showComponentDataSourceList()"
           >
-            {{ selectedDataSource.name || $t('warRoom.notChosen') }}
+            {{ selectedDataSource.question || $t('warRoom.notChosen') }}
             <svg-icon
               v-if="!componentData.componentId"
               icon-class="arrow-right" 
               class="icon"/>
           </div>
         </div>
-        <div class="setting__block">
-          <div class="setting__block-title">
+        <div class="war-room-setting__block">
+          <div class="war-room-setting__block-title">
             {{ $t('warRoom.updateFrequency') }}
             <el-switch
               v-model="componentData.config.isAutoRefresh"
@@ -63,7 +71,7 @@
           </div>
           <div
             v-if="componentData.config.isAutoRefresh"
-            class="setting__block-select-field"
+            class="war-room-setting__block-select-field"
           >
             <default-select 
               v-validate="'required'"
@@ -71,7 +79,7 @@
               :option-list="updateFrequency.basicScheduleList"
               :placeholder="$t('warRoom.chooseUpdateFrequency')"
               :is-disabled="isProcessing"
-              class="setting__block-select"
+              class="war-room-setting__block-select"
               name="updateFrequency"
             />
             <div 
@@ -80,8 +88,8 @@
             >{{ errors.first('updateFrequency') }}</div>
           </div>
         </div>
-        <div class="setting__block">
-          <div class="setting__block-title">
+        <div class="war-room-setting__block">
+          <div class="war-room-setting__block-title">
             {{ $t('warRoom.timeIntervalConstraint') }}
             <el-switch
               v-model="componentData.config.displayDateRangeSwitch"
@@ -92,7 +100,7 @@
           </div>
           <div
             v-if="componentData.config.displayDateRangeSwitch"
-            class="setting__block-select-field"
+            class="war-room-setting__block-select-field"
           >
             <default-select 
               v-validate="'required'"
@@ -100,7 +108,7 @@
               :option-list="timeIntervalConstraint.timeIntervalList"
               :placeholder="$t('warRoom.chooseTimeInterval')"
               :is-disabled="isProcessing"
-              class="setting__block-select"
+              class="war-room-setting__block-select"
               name="timeIntervalConstraint"
               @change="updateTimeInterval"
             />
@@ -111,10 +119,12 @@
           </div>
           <div
             v-if="componentData.config.displayDateRangeSwitch && selectedTimeInterval === 'others'"
-            class="setting__block-date-field date-picker"
+            class="war-room-setting__block-date-field date-picker"
           >
             <div class="date-picker__container">
               <el-date-picker
+                v-validate="'required'"
+                :disabled="isProcessing"
                 v-model="componentData.config.customStartTime"
                 :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
                 :placeholder="'*' + $t('warRoom.startDate')"
@@ -126,6 +136,7 @@
                 name="startTime"/>
               <div class="date-picker__seperator">-</div>
               <el-date-picker
+                :disabled="isProcessing"
                 v-model="componentData.config.customEndTime"
                 :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
                 :placeholder="$t('warRoom.endDate')"
@@ -135,14 +146,15 @@
                 type="date"
                 name="endTime"/>
             </div>
-            <div 
+            <div
+              v-show="errors.has('startTime')"
               class="error-text"
             >{{ errors.first('startTime') }}</div>
             <div class="date-picker__reminder">{{ '*' + $t('warRoom.timeIntervalReminder') }}</div>
           </div>
         </div>
-        <div class="setting__block">
-          <div class="setting__block-title">
+        <div class="war-room-setting__block">
+          <div class="war-room-setting__block-title">
             {{ $t('warRoom.thresholdSetting') }}
             <el-switch
               v-model="componentData.config.boundSwitch"
@@ -153,39 +165,54 @@
           </div>
           <div
             v-if="componentData.config.boundSwitch"
-            class="setting__block-text"
+            class="war-room-setting__block-text"
           >
-            <label class="input setting__block-text-label">
+            <label class="input war-room-setting__block-text-label">
               {{ $t('warRoom.maxThreshold') }}
             </label>
             <input
+              v-validate="'required'"
+              :disabled="isProcessing"
               v-model="componentData.config.upperBound"
               :placeholder="$t('warRoom.pleaseEnterValue')"
-              name="maxThreshold"
-              class="input setting__block-text-input">
-            <label class="input setting__block-text-label">
+              name="upperBound"
+              class="input war-room-setting__block-text-input">
+            <div 
+              v-show="errors.has('upperBound')"
+              class="error-text"
+            >{{ errors.first('upperBound') }}</div>
+            <label class="input war-room-setting__block-text-label">
               {{ $t('warRoom.minThreshold') }}
             </label>
             <input
+              v-validate="'required'"
+              :disabled="isProcessing"
               v-model="componentData.config.lowerBound"
               :placeholder="$t('warRoom.pleaseEnterValue')"
-              name="minThreshold"
-              class="input setting__block-text-input">
+              name="lowerBound"
+              class="input war-room-setting__block-text-input">
+            <div 
+              v-show="errors.has('lowerBound')"
+              class="error-text"
+            >{{ errors.first('lowerBound') }}</div>
           </div>
         </div>
       </div>
-      <div class="setting__button-block">
-        <button 
+      <div class="war-room-setting__button-block">
+        <button
+          v-if="componentData.componentId"
+          :disabled="isProcessing"
           type="button"
-          class="btn btn-outline setting__button-block-button--left"
-          @click="saveSetting"
+          class="btn btn-outline war-room-setting__button-block-button--left"
+          @click="deleteComponent"
         >
           <svg-icon icon-class="delete" />
         </button>
-        <button 
+        <button
+          :disabled="isProcessing"
           type="button"
-          class="btn btn-default setting__button-block-button--right"
-          @click="saveSetting"
+          class="btn btn-default war-room-setting__button-block-button--right"
+          @click="componentData.componentId ? saveComponentSetting() : buildComponent()"
         >{{ $t('button.save') }}</button>
       </div>
     </section>
@@ -202,18 +229,21 @@
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import ComponentDataSourceList from './ComponentDataSourceList'
+import { createComponent, deleteComponent, updateComponent } from '@/API/WarRoom'
+import { Message } from 'element-ui'
 
 export default {
   name: 'ComponentSetting',
   inject: ['$validator'],
   components: {
     DefaultSelect,
-    ComponentDataSourceList
+    ComponentDataSourceList,
+    Message
   },
   props: {
     componentType: {
       type: String,
-      required: true
+      default: 'diagram'
     },
     originalComponentData: {
       type: Object,
@@ -250,7 +280,28 @@ export default {
   },
   data () {
     return {
-      componentData: {},
+      componentData: {
+        componentId: null,
+        config: {
+          boundSwitch: false,
+          customEndTime: null,
+          customStartTime: null,
+          displayDateRangeSwitch: false,
+          displayName: null,
+          isAutoRefresh: false,
+          lowerBound: null,
+          question: null,
+          recentTimeIntervalAmount: null,
+          recentTimeIntervalUnit: null,
+          refreshFrequency: null,
+          upperBound: null
+        },
+        diagramData: {},
+        diagramName: null,
+        orderSequence: null,
+        restriction: {},
+        selectedColumns: {}
+      },
       isShowComponentDataSourceList: false,
       selectedDataSource: {},
       isProcessing: false,
@@ -347,12 +398,80 @@ export default {
       return 'others'
     }
   },
+  watch: {
+    originalComponentData: {
+      handler (newData) { this.componentData = JSON.parse(JSON.stringify(newData)) },
+      deep: true
+    }
+  },
   mounted () {
-    this.componentData = JSON.parse(JSON.stringify(this.originalComponentData))
+    if (this.componentData) this.componentData = JSON.parse(JSON.stringify(this.originalComponentData))
   },
   methods: {
-    saveSetting () {
-
+    buildComponent () {
+      this.$validator.validate(this.validateFieldKey).then((isValidate) => {
+        if (!isValidate) return
+        if (!this.selectedDataSource.question) {
+          return Message({
+            message: this.$t('message.pleaseSelectQuestion'),
+            type: 'error',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }
+        const { war_room_id: warRoomId } = this.$route.params
+        const { question, ...config } = this.componentData.config
+        const componentData = { config, itemId: this.selectedDataSource.itemId }
+        this.isProcessing = true
+        createComponent(warRoomId, componentData)
+          .then(response => {
+            this.$emit('close')
+            this.$emit('updated')
+            Message({
+              message: this.$t('message.addFilter'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
+          })
+          .catch(() => { this.isProcessing = false })
+      })
+    },
+    saveComponentSetting () {
+      this.$validator.validate(this.validateFieldKey).then((isValidate) => {
+        if (!isValidate) return
+        const { war_room_id: warRoomId } = this.$route.params
+        const { question, ...config } = this.componentData.config
+        this.isProcessing = true
+        updateComponent(warRoomId, this.componentData.componentId, config)
+          .then(() => {
+            this.$emit('close')
+            this.$emit('updated')
+            Message({
+              message: this.$t('message.addFilter'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
+          })
+          .catch(() => { this.isProcessing = false })
+      })
+    },
+    deleteComponent () {
+      const { war_room_id: warRoomId } = this.$route.params
+      this.isProcessing = true
+      deleteComponent(warRoomId, this.componentData.componentId)
+        .then(() => {
+          this.$emit('close')
+          this.$emit('updated')
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => { this.isProcessing = false })
     },
     showComponentDataSourceList () {
       this.isShowComponentDataSourceList = true
@@ -390,7 +509,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.setting {
+.war-room-setting {
   &__block-select {
     /deep/ .el-input__inner {
       border-bottom: 1px solid #FFFFFF;
@@ -402,13 +521,15 @@ export default {
   }
 
   &__button-block-button {
+    display: flex;
     &--left {
       min-width: 40px;
       padding: 0 2px;
+      margin-right: 12px;
     }
 
     &--right {
-      min-width: 180px;
+      flex: 1 1 180px;
       font-weight: 600;
     }
   }

@@ -3,15 +3,15 @@
     <section class="war-room__content">
       <div class="war-room__header">
         <div class="war-room__header--left">
-          <a
-            href="javascript:void(0);" 
+          <router-link
+            :to="{ name: 'WarRoomList' }" 
             class="link action-link"
           >
             <svg-icon
               icon-class="arrow-left" 
               class="icon"/>
             {{ $t('warRoom.backToList') }}
-          </a>
+          </router-link>
           <div
             v-if="!isEditingWarRoomName"
             class="war-room__title"
@@ -27,12 +27,11 @@
                 class="icon"/>
             </a>
           </div>
-          <!--TODO: 新增編輯功能-->
           <div
             v-else
             class="war-room__title-edit"
           >
-            <div class="war-room__title-input">
+            <div class="war-room__title-input-wrapper">
               <input
                 v-validate="'required'"
                 v-model="tempWarRoomPublishedName"
@@ -44,6 +43,7 @@
               >{{ errors.first('warRoomName') }}</div>
             </div>
             <button 
+              :disabled="isProcessing"
               type="button"
               class="btn btn-default"
               @click="updateWarRoomName"
@@ -63,7 +63,6 @@
             >
               {{ $t('warRoom.updateTime') + '：' + warRoomBasicInfo.publishUpdateTime }}
             </span>
-            <!--判斷是否已發布，更改內容與燈號-->
             <span
               :class="{ 'button-container__status--active': warRoomBasicInfo.isPublishing }"
               class="button-container__status"
@@ -72,17 +71,24 @@
             </span>
             <button
               v-if="!warRoomBasicInfo.isPublishing"
+              :disabled="isProcessing"
               type="button"
               class="btn-m btn-default button-container__button"
+              @click="publishWarRoom"
             >{{ $t('warRoom.publish') }}</button>
             <template v-if="warRoomBasicInfo.isPublishing">
+              <!--待確認是否使用重新發佈即可-->
               <button
+                :disabled="isProcessing"
                 type="button"
                 class="btn-m btn-default button-container__button"
+                @click="publishWarRoom"
               >{{ $t('button.update') }}</button>
               <button
+                :disabled="isProcessing"
                 type="button"
                 class="btn-m btn-secondary button-container__button"
+                @click="unpublishWarRoom"
               >{{ $t('warRoom.unpublish') }}</button>
             </template>
             <button 
@@ -102,13 +108,13 @@
               {{ $t('warRoom.warRoomSetting') }}
             </button>
             <custom-dropdown-select
-              v-if="addComponentList.length > 0"
               :data-list="addComponentList"
               trigger="hover"
               @select="addComponent"
             >
               <template #display>
                 <button
+                  :disabled="addComponentList.length === 0"
                   type="button"
                   class="btn-m btn-outline btn-has-icon button-container__button"
                 >
@@ -122,41 +128,70 @@
           </div>
         </div>
       </div>
-      <div class="war-room__display">
+      <div
+        :class="{ 'war-room__display--disabled': isProcessing }"
+        class="war-room__display"
+      >
+        <spinner 
+          v-if="isProcessing"
+          :title="$t('message.componentLayoutUpdating')"
+          class="spinner"
+          size="50"
+        />
         <div class="number">
-          <div
-            v-for="number in numberComponent"
-            :key="number.componentId"
-            class="number__item"
-          >
-            <div class="number__item-title">公司總銷售額</div>
-            {{ 'number' + number.componentId }}
-          </div>
+          <draggable
+            :value="numberComponent"
+            group="index"
+            class="chart__container"
+            @end="updateIndexLayout">
+            <war-room-component
+              v-for="number in numberComponent"
+              :key="number.componentId"
+              :component-id="number.componentId"
+              :is-editable="true"
+              :is-focusing="selectedComponent && selectedComponent.componentId === number.componentId"
+              class="number__item"
+              @check-constraint="viewComponentConstraint"
+              @check-setting="editComponenSetting"
+            />
+          </draggable>     
         </div>
         <div class="chart">
-          <div class="chart__container">
-            <div
+          <draggable
+            :value="chartFirstRow"
+            data-row="1"
+            group="diagram"
+            class="chart__container"
+            @end="updateDiagramLayout">
+            <war-room-component
               v-for="chart in chartFirstRow"
               :key="chart.componentId"
+              :component-id="chart.componentId"
+              :is-editable="true"
+              :is-focusing="selectedComponent && selectedComponent.componentId === chart.componentId"
               class="chart__item"
-            >
-              <div class="chart__item-title">公司總銷售額</div>
-              {{ 'chart' + chart.componentId }}
-            </div>
-          </div>
-          <div
+              @check-constraint="viewComponentConstraint"
+              @check-setting="editComponenSetting"
+            />
+          </draggable>
+          <draggable
             v-if="chartSecondRow.length > 0"
+            :value="chartSecondRow"
+            data-row="2"
+            group="diagram"
             class="chart__container"
-          >
-            <div
+            @end="updateDiagramLayout">
+            <war-room-component
               v-for="chart in chartSecondRow"
               :key="chart.componentId"
+              :component-id="chart.componentId"
+              :is-editable="true"
+              :is-focusing="selectedComponent && selectedComponent.componentId === chart.componentId"
               class="chart__item"
-            >
-              <div class="chart__item-title">公司總銷售額</div>
-              {{ 'chart' + chart.componentId }}
-            </div>
-          </div>
+              @check-constraint="viewComponentConstraint"
+              @check-setting="editComponenSetting"
+            />
+          </draggable>
         </div>
       </div>
     </section>
@@ -164,8 +199,10 @@
       v-if="isShowComponentSetting"
       :component-type="createdComponentType"
       :data-source-pool="dataSourcePool"
+      :original-component-data="selectedComponent"
       class="war-room__side-setting"
       @close="closeComponentSetting"
+      @updated="fetchData"
     />
     <war-room-setting
       v-if="isShowWarRoomSetting"
@@ -176,6 +213,7 @@
     <component-constraint
       v-if="isShowComponentConstraint"
       :component-data="selectedComponent"
+      class="war-room__side-setting"
       @close="closeComponentConstraint"
     />
   </section>
@@ -186,10 +224,16 @@ import ComponentSetting from './components/ComponentSetting'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import WarRoomSetting from './components/WarRoomSetting'
 import ComponentConstraint from './components/ComponentConstraint'
+import WarRoomComponent from './components/WarRoomComponent'
+import draggable from 'vuedraggable';
+import { Message } from 'element-ui'
 import {
   getWarRoomInfo,
   getWarRoomPool,
-  updateWarRoomSetting
+  updateWarRoomSetting,
+  publishWarRoom,
+  unpublishWarRoom,
+  updateWarRoomLayout
 } from '@/API/WarRoom'
 
 const dummyNumbers = []
@@ -214,7 +258,7 @@ const dummyWarRoom =  {
   "diagramTypeComponents": [
     {
       "componentId": 0,
-      "orderSequence": 3
+      "orderSequence": 1
     },
     {
       "componentId": 1,
@@ -222,17 +266,41 @@ const dummyWarRoom =  {
     },
     {
       "componentId": 2,
-      "orderSequence": 1
+      "orderSequence": 3
     },
     {
       "componentId": 3,
       "orderSequence": 4
+    },
+    {
+      "componentId": 4,
+      "orderSequence": 5
+    },
+    {
+      "componentId": 5,
+      "orderSequence": 6
+    },
+    {
+      "componentId": 6,
+      "orderSequence": 7
     }
   ],
   "indexTypeComponents": [
     {
-      "componentId": 0,
-      "orderSequence": 0
+      "componentId": 8,
+      "orderSequence": 1
+    },
+    {
+      "componentId": 9,
+      "orderSequence": 2
+    },
+    {
+      "componentId": 10,
+      "orderSequence": 3
+    },
+    {
+      "componentId": 11,
+      "orderSequence": 4
     }
   ],
   "isPublishing": true,
@@ -266,7 +334,10 @@ export default {
     ComponentSetting,
     CustomDropdownSelect,
     WarRoomSetting,
-    ComponentConstraint
+    ComponentConstraint,
+    WarRoomComponent,
+    Message,
+    draggable
   },
   data () {
     return {
@@ -276,7 +347,7 @@ export default {
       isShowComponentSetting: false,
       isShowWarRoomSetting: false,
       isShowComponentConstraint: false,
-      selectedComponent: {},
+      selectedComponent: null,
       isLoading: false,
       warRoomConfig: null,
       warRoomBasicInfo: {},
@@ -289,14 +360,14 @@ export default {
   computed: {
     addComponentList () {
       return [
-        (this.chartComponent && this.chartComponent.length < 8) && {
-          id: 'chart',
+        ...(this.chartComponent && this.chartComponent.length < 8) && [{
+          id: 'diagram',
           name: this.$t('warRoom.addChartComponent')
-        },
-        (this.numberComponent && this.numberComponent.length < 4) && {
-          id: 'number',
+        }],
+        ...(this.numberComponent && this.numberComponent.length < 4) && [{
+          id: 'index',
           name: this.$t('warRoom.addNumberComponent')
-        }
+        }]
       ]
     },
     chartFirstRow () {
@@ -340,9 +411,16 @@ export default {
       this.createdComponentType = value
       this.isShowComponentSetting = true
     },
+    editComponenSetting (data) {
+      if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
+      if (this.isShowComponentConstraint) this.closeComponentConstraint()
+      this.selectedComponent = data
+      this.isShowComponentSetting = true
+    },
     closeComponentSetting () {
       this.isShowComponentSetting = false
       this.createdComponentType = null
+      this.selectedComponent = null
     },
     openWarRoomSetting () {
       if (this.isShowComponentSetting) this.closeComponentSetting()
@@ -352,7 +430,14 @@ export default {
     closeWarRoomSetting () {
       this.isShowWarRoomSetting = false
     },
+    viewComponentConstraint (data) {
+      if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
+      if (this.isShowComponentSetting) this.closeComponentSetting()
+      this.selectedComponent = data
+      this.isShowComponentConstraint = true
+    },
     closeComponentConstraint () {
+      this.selectedComponent = null
       this.isShowComponentConstraint = false
     },
     editWarRoomName () {
@@ -360,6 +445,8 @@ export default {
       this.isEditingWarRoomName = true
     },
     stopEditingWarRoomName () {
+      // 避免名稱欄位資料被清空觸發重新驗證，但欄位已經被 v-if 移除產生錯誤
+      this.$validator.detach('warRoomName')
       this.isEditingWarRoomName = false
       this.tempWarRoomPublishedName = null
     },
@@ -373,6 +460,96 @@ export default {
           .then(() => this.stopEditingWarRoomName())
           .finally(() => { this.isProcessing = false })
       })
+    },
+    publishWarRoom () {
+      const { war_room_id: warRoomId } = this.$route.params
+      publishWarRoom(warRoomId)
+        .then(() => {
+          this.isProcessing = true
+          this.warRoomBasicInfo.isPublishing = true
+          Message({
+            message: this.$t('message.publishSuccessfully'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => { this.isProcessing = false })
+    },
+    unpublishWarRoom () {
+      const { war_room_id: warRoomId } = this.$route.params
+      unpublishWarRoom(warRoomId)
+        .then(() => {
+          this.isProcessing = true
+          this.warRoomBasicInfo.isPublishing = false
+          Message({
+            message: this.$t('message.unPublishSuccessfully'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => { this.isProcessing = false })
+    },
+    updateLayout (newLayout) {
+      const { war_room_id: warRoomId } = this.$route.params
+      this.isProcessing = true
+      return updateWarRoomLayout(warRoomId, newLayout)
+        .then(() => {
+          Message({
+            message: this.$t('message.componentLayoutUpdated'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+    },
+    async updateIndexLayout (e) {
+      const { oldIndex, newIndex } = e
+      let tempNumberComponent = [...this.numberComponent]
+      const tempDraggedComponent = tempNumberComponent.splice(oldIndex, 1)[0]
+      tempNumberComponent.splice(newIndex, 0, tempDraggedComponent)
+      tempNumberComponent = tempNumberComponent.map((component, index) => ({
+        ...component,
+        orderSequence: index + 1
+      }))
+
+      try {
+        await this.updateLayout ({
+          diagramTypeComponents: this.chartComponent,
+          indexTypeComponents: tempNumberComponent
+        })
+        // 確保透過 API 更新成功才在頁面上變換位置
+        this.numberComponent = tempNumberComponent
+        this.isProcessing = false
+      } catch (e) { return this.isProcessing = false }
+    },
+    async updateDiagramLayout (e) {
+      const oldRow = Number(e.from.dataset.row)
+      const newRow = Number(e.to.dataset.row)
+      // 位置如果沒改變就不處理
+      if ((oldRow === newRow) && (e.oldIndex === e.newIndex)) return
+      // 如果為第二列，要處理的 index 需加上第一列的元件數量
+      const oldIndex = oldRow === 1 ? e.oldIndex : this.chartFirstRow.length + e.oldIndex
+      const newIndex = newRow === 1 ? e.newIndex : this.chartFirstRow.length + e.newIndex
+
+      let tempChartComponent = [...this.chartComponent]
+      const tempDraggedComponent = tempChartComponent.splice(oldIndex, 1)[0]
+      tempChartComponent.splice(newIndex, 0, tempDraggedComponent)
+      tempChartComponent = tempChartComponent.map((chart, index) => ({
+        ...chart,
+        orderSequence: index + 1
+      }))
+      
+      try {
+        await this.updateLayout ({
+          diagramTypeComponents: tempChartComponent,
+          indexTypeComponents: this.numberComponent
+        })
+        // 確保透過 API 更新成功才在頁面上變換位置
+        this.chartComponent = tempChartComponent
+        this.isProcessing = false
+      } catch (e) { return this.isProcessing = false }
     }
   }
 }
@@ -388,7 +565,7 @@ export default {
     flex: 1;
     padding: 32px 24px 64px 24px;
     height: 100%;
-    overflow: scroll;
+    overflow: auto;
     border: 1px solid #464A50;
   }
 
@@ -403,6 +580,8 @@ export default {
   }
 
   &__title {
+    font-weight: 600;
+    font-size: 24px;
     margin: 16px 0 0 0;
     line-height: 32px;
   }
@@ -425,8 +604,30 @@ export default {
   }
 
   &__display {
+    position: relative;
     display: flex;
     flex-direction: column;
+    &--disabled {
+      .number,
+      .chart {
+        opacity: .4;
+        pointer-events: none;
+      }
+    }
+
+    .spinner {
+      position: absolute;;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      /* 避免點擊文字 */
+      user-select: none;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
   }
 
   .button-container {
@@ -495,18 +696,9 @@ export default {
     &__item {
       flex: 1;
       max-width: calc(calc(100% - 40px) / 3);
-      background: #1C2424;
-      border-radius: 5px;
-      padding: 16px;
       &:not(:last-of-type) {
         margin-right: 20px;
       }
-    }
-
-    &__item-title {
-      font-size: 14px;
-      color: #999999;
-      margin-bottom: 8px;
     }
   }
 
@@ -526,18 +718,9 @@ export default {
 
     &__item {
       flex: 1;
-      border-radius: 5px;
-      background: #1C2424;
-      padding: 16px;
       &:not(:last-of-type) {
         margin-right: 20px;
       }
-    }
-
-    &__item-title {
-      font-size: 14px;
-      color: #999999;
-      margin-bottom: 8px;
     }
   }
 
