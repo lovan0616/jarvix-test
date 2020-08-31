@@ -107,6 +107,14 @@ export default {
     arrowBtnRight: {
       type: Number,
       default: 80
+    },
+    isShowLegend: {
+      type: Boolean,
+      default: true
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -204,6 +212,9 @@ export default {
         config.dataZoom = parallelZoomIn()
       }
       config.toolbox.show = this.showToolbox
+
+      // 是否隱藏 legend
+      if (!this.isShowLegend) config.legend.show = false
 
       // 圖表 threshold
       if (this.title.yAxis[0].upperLimit !== null) {
@@ -324,7 +335,16 @@ export default {
         name: isNaN(Number(element)) ? element : ' ' + element,
         ...this.addonSeriesItem,
         ...this.addonSeriesItems[colIndex],
-        connectNulls: true
+        connectNulls: true,
+        ...(this.isShowLabelData && {
+          label: {
+            position: 'top',
+            show: true,
+            textStyle: {
+              color: '#fff'
+            }
+          }
+        })
       }
     },
     controlPagination () {

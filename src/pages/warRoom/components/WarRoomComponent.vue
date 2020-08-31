@@ -71,6 +71,8 @@
           :show-toolbox="showToolbox"
           :custom-chart-style="customChartStyle"
           :is-show-alert="isAboveUpperBound || isBelowLowerBound"
+          :is-show-legend="false"
+          :is-show-label-data="true"
           class="card__body-data"
         />
       </template>
@@ -168,9 +170,9 @@ const dummyDiagramComponentData = {
     "upperBound": "string"
   },
   diagramData: {
-    "id":286931,
-    "resultId":55025,
-    "diagram":"computed_histogram",
+    "id":289660,
+    "resultId":55725,
+    "diagram":"bar_chart",
     "data":{
       "title":{
         "xAxis":[
@@ -178,12 +180,12 @@ const dummyDiagramComponentData = {
             "dc_id":null,
             "dc_name":"c0",
             "operator":null,
-            "data_type":"int",
+            "data_type":"string",
             "drillable":true,
             "is_feature":null,
-            "stats_type":"numeric",
+            "stats_type":"category",
             "upperLimit":null,
-            "display_name":"Number"
+            "display_name":"訂單編號"
           }
         ],
         "yAxis":[
@@ -196,39 +198,55 @@ const dummyDiagramComponentData = {
             "is_feature":null,
             "stats_type":null,
             "upperLimit":null,
-            "display_name":"總數量"
+            "display_name":"資料總數"
           }
         ]
       },
       "dataset":{
         "data":[
-          null,
-          2.0,
-          2.0,
-          4.0,
-          2.0,
-          1.0,
-          2.0,
-          1.0,
-          1.0,
-          2.0,
-          2.0,
-          4.0,
-          null,
-          8.0
+          [
+            2.0
+          ],
+          [
+            3.0
+          ],
+          [
+            4.0
+          ],
+          [
+            41.0
+          ],
+          [
+            5.0
+          ],
+          [
+            21.0
+          ]
         ],
-        "range":[
-          7952.59,
-          1123213.32
+        "index":[
+          "160466A001",
+          "160466A002",
+          "160466A003",
+          "160466A004",
+          "160466A005",
+          "160466A006",
+        ],
+        "columns":[
+          "資料總數"
+        ],
+        "display_index":[
+          "160466A001",
+          "160466A002",
+          "160466A003",
+          "160466A004",
+          "160466A005",
+          "160466A006"
+        ],
+        "display_columns":[
+          "資料總數"
         ]
-      },
-      "question":null
+      }
     },
-    "status":"Complete",
-    "handlerFunction":null,
-    "page":0,
-    "singlePage":true,
-    "isAutoRefresh":null
   },
   "diagramName": "string",
   "orderSequence": 0,

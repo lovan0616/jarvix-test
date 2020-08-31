@@ -52,6 +52,14 @@ export default {
     hasPagination: {
       type: Boolean,
       default: false
+    },
+    isShowLegend: {
+      type: Boolean,
+      default: true
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -78,7 +86,8 @@ export default {
           minShowLabelAngle: 10,
           label: {
             fontSize: 12,
-            alignTo: 'labelLine'
+            alignTo: 'labelLine',
+            ...(this.isShowLabelData && { formatter: '{b}({d}%)' })
           },
           labelLine: {
             normal: {
@@ -118,6 +127,9 @@ export default {
         table += '</tbody></table>'
         return table
       }
+
+      // 是否隱藏 legend
+      if (!this.isShowLegend) config.legend.show = false
 
       return config
     },

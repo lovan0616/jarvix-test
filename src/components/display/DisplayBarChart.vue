@@ -112,6 +112,14 @@ export default {
     arrowBtnRight: {
       type: Number,
       default: 80
+    },
+    isShowLegend: {
+      type: Boolean,
+      default: true
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -205,6 +213,8 @@ export default {
       }
       config.toolbox.show = this.showToolbox
 
+      // 是否隱藏 legend
+      if (!this.isShowLegend) config.legend.show = false
       return config
     },
     colorList () {
@@ -235,7 +245,16 @@ export default {
         name: isNaN(Number(element)) ? element : ' ' + element,
         ...this.addonSeriesItem,
         ...this.addonSeriesItems[colIndex],
-        connectNulls: true
+        connectNulls: true,
+        ...(this.isShowLabelData && {
+          label: {
+            position: 'top',
+            show: true,
+            textStyle: {
+              color: '#fff'
+            }
+          }
+        })
       }
     },
     controlPagination () {
