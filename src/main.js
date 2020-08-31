@@ -148,6 +148,7 @@ Vue.use(Switch)
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
+Vue.use(DatePicker)
 
 Vue.use(vGanttChart)
 

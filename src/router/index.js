@@ -167,6 +167,22 @@ const router = new Router({
                         }
                       ]
                     },
+                    {
+                      path: 'war-room',
+                      component: () => import('@/pages/warRoom/Index'),
+                      children: [
+                        {
+                          path: '/',
+                          name: 'WarRoomList',
+                          component: () => import('@/pages/warRoom/WarRoomList')
+                        },
+                        {
+                          path: ':war_room_id',
+                          name: 'WarRoom',
+                          component: () => import('@/pages/warRoom/WarRoom')
+                        }
+                      ]
+                    },
                     // FIXME for poc/foxconn_molding
                     {
                       path: 'algorithm',

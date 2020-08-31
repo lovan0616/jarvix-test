@@ -23,6 +23,7 @@
       :restrictions="restrictInfo"
       :segmentation-payload="segmentationPayload"
       :transcript="transcript"
+      :is-war-room-addable="isWarRoomAddable"
       mode="display"
     />
     <div
@@ -68,6 +69,7 @@ export default {
       segmentationPayload: null,
       transcript: null,
       // 目前兩版 transcript 過渡期先放這
+      isWarRoomAddable: false,
       currentQuestionDataFrameId: null,
       totalSec: 50,
       periodSec: 200
@@ -145,6 +147,7 @@ export default {
       this.segmentationPayload = null
       this.currentQuestionDataFrameId = null
       this.transcript = null
+      this.isWarRoomAddable = false
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {
@@ -316,6 +319,7 @@ export default {
               this.segmentationPayload = componentResponse.segmentationPayload
               this.segmentationAnalysisV2(componentResponse.segmentationPayload)
               this.transcript = componentResponse.transcript
+              this.isWarRoomAddable = componentResponse.isWarRoomAddable
               this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.isLoading = false

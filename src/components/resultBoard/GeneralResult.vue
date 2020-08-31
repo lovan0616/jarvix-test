@@ -4,6 +4,7 @@
     :result-id="resultId"
     :result-info="resultInfo"
     :restrictions="restrictions"
+    :is-war-room-addable="isWarRoomAddable"
     class="general-result"
     @unPin="unPin"
   >
@@ -94,6 +95,10 @@ export default {
     segmentationPayload: {
       type: Object,
       default: () => null
+    },
+    isWarRoomAddable: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {

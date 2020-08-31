@@ -67,6 +67,9 @@
         <router-link 
           :to="{name: 'ProjectPagePinboardList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}" 
           class="nav-item">{{ $t('nav.projectPinboard') }}</router-link>
+        <router-link 
+          :to="{ name: 'WarRoomList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId } }" 
+          class="nav-item">{{ $t('nav.warRoom') }}</router-link>
       </template>
     </section>
     <section

@@ -8,8 +8,8 @@
     </div>
     <el-table
       v-bind="tableProps"
-      :empty-text="$t('schedule.table.noData')"
       :height="height"
+      :empty-text="$t('schedule.table.noData')"
       class="ss-table"
       style="width: 100%;"
     >
