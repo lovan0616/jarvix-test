@@ -623,7 +623,8 @@
     "reachedUpperBound": "高於上限",
     "emptyComponentMessage": "尚未加入元件",
     "warRoomDisplayErrorMessage": "戰情室內容已失效\n請確認發布狀態或與系統管理員聯繫",
-    "previewPageReminder": "此頁為預覽畫面"
+    "previewPageReminder": "此頁為預覽畫面",
+    "allColumns": "所有欄位"
   },
   "description": {
     "basic": {

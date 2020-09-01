@@ -18,21 +18,27 @@
     <section class="setting__content">
       <div class="setting__block-container">
         <div
-          v-if="componentData.selectedColumns && componentData.selectedColumns.length > 0"
+          v-if="convertedSelectedColumns === null || convertedSelectedColumns.length > 0"
           class="setting__block"
         >
           <div class="setting__block-title">
             {{ $t('warRoom.selectedColumns') }}
           </div>
           <div
-            v-for="(column, index) in componentData.selectedColumns"
-            :key="index"
+            v-if="convertedSelectedColumns === null"
             class="setting__filter"
           >
-            <div class="setting__filter-title">
-              {{ column }}
-            </div>
+            <div class="setting__filter-title">{{ $t('warRoom.allColumns') }} </div>
           </div>
+          <template v-else>
+            <div
+              v-for="(column, index) in convertedSelectedColumns"
+              :key="index"
+              class="setting__filter"
+            >
+              <div class="setting__filter-title">{{ column }}</div>
+            </div>
+          </template>
         </div>
         <div
           v-if="componentData.restriction && componentData.restriction.length > 0"
@@ -45,6 +51,7 @@
             v-for="(restriction, index) in componentData.restriction"
             :key="index"
             :restriction="restriction"
+            :data-column-map="componentData.dataColumnMap"
           />
         </div>
       </div>
@@ -118,6 +125,19 @@ export default {
         }
       ]
     ]
+    }
+  },
+  computed: {
+    convertedSelectedColumns () {
+      const selectedColumns = this.componentData.selectedColumns
+      if (selectedColumns === null) return null
+      if (!selectedColumns || selectedColumns.length === 0) return []
+      const columnMap = {}
+      for (let column in this.componentData.dataColumnMap) {
+        const { id, primary_alias: primaryAlias } = this.componentData.dataColumnMap[column]
+        columnMap[id] = primaryAlias
+      }
+      return selectedColumns.map(columnId => columnMap[columnId])
     }
   }
 }

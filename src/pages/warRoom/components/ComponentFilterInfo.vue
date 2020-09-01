@@ -50,6 +50,10 @@ export default {
     restriction: { 
       type: Array, 
       default: () => [] 
+    },
+    dataColumnMap: {
+      type: Object,
+      default: () => ({})
     }
   },
   computed: {
@@ -58,14 +62,12 @@ export default {
       if (this.restriction[0].type === 'compound') {
         return this.restriction[0].restraints.reduce((result, curr) => {
           let dcName = curr.properties.dc_name
-          // TODO: 待改成 column 的 primary alias
-          result.push(dcName)
+          result.push(this.getDataInfo.dataColumnMap[dcName].primary_alias)
           return result
         }, []).join(' & ')
       } else {
         let dcName = this.restriction[0].properties['dc_name']
-        // TODO: 待改成 column 的 primary alias
-        return dcName
+        return this.dataColumnMap[dcName].primary_alias
       }
     }
   }
