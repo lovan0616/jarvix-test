@@ -93,21 +93,21 @@ export default {
   },
   methods: {
     viewDetail () {
-      //TODO: live router + urlIdentifier
+      this.$router.push({
+        name: 'WarRoomLivePage', 
+        query: { 'id': this.warRoomInfo.urlIdentifier } })
     },
     edit () {
       this.$router.push({
         name: 'WarRoom',
-        params: {
-          war_room_id: this.warRoomInfo.id
-        }
+        params: { war_room_id: this.warRoomInfo.id }
       })
     },
     publish () {
       this.$emit('publish', this.warRoomInfo.id )
     },
     unpublish () {
-      this.$emit('publish', this.warRoomInfo.id )
+      this.$emit('unpublish', this.warRoomInfo.id )
     },
     getPublishedUrl () {
       this.$emit('showShare')

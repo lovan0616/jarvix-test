@@ -115,7 +115,8 @@
     "unPublishSuccessfully": "成功取消發布",
     "componentLayoutUpdated": "元件位置更新成功",
     "componentLayoutUpdating": "元件位置更新中",
-    "dataLoading": "資料讀取中"
+    "dataLoading": "資料讀取中",
+    "createdSuccessfully": "建立成功"
   },
   "guiding": {
     "prevStep": "上一步",
