@@ -96,7 +96,8 @@
         </div>
       </div>
       <div class="war-room-setting__button-block">
-        <button 
+        <button
+          v-if="hasPermission('group_delete_data')"
           type="button"
           class="btn btn-outline war-room-setting__button-block-button--left"
           @click="confirmDeleteWarRoom"
@@ -130,6 +131,7 @@ import {
   updateWarRoomSetting,
   deleteWarRoom
 } from '@/API/WarRoom'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'WarRoomSetting',
@@ -199,6 +201,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['hasPermission']),
     selectedTimeInterval () {
       if (!this.warRoomData || !this.warRoomData.displayDateRangeSwitch) return null
       
