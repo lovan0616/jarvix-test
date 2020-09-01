@@ -172,6 +172,9 @@ export default {
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramConfig.yAxis}
       chartAddon.yAxis.name = this.title.yAxis[0].display_name
+      chartAddon.xAxis.axisLabel.formatter = (value, index) => {
+        return index === dataLength ? max : value
+      }
 
       histogramConfig.chartData.renderItem = this.renderItem
       histogramConfig.chartData.data = chartData
