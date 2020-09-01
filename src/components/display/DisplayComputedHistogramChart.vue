@@ -112,8 +112,24 @@ export default {
       let min = this.dataset.range[0]
       let max = this.dataset.range[1]
       let dataLength = this.dataset.data.length
-      let interval = this.displayFloat(this.floatSub(max, min) / dataLength)
-      
+      let interval = this.floatSub(max, min) / dataLength
+
+      // 預設 無條件進位 到小數點後第幾位
+      const defaultDisplayDigit = 2
+
+      if (Number(interval) >= 1) {
+        interval = Math.ceil(interval * Math.pow(10, defaultDisplayDigit)) / Math.pow(10, defaultDisplayDigit)
+      } else {
+        // 找出例如0.0000031432的.到有3之間有幾個零
+        let count = 0
+        let _interval = interval
+        while (_interval < 1) {
+          _interval = _interval * 10
+          count += 1
+        }
+        interval = Math.ceil(this.displayFloat(interval * Math.pow(10, count + defaultDisplayDigit))) / Math.pow(10, count + defaultDisplayDigit)
+      }
+
       let chartData = this.dataset.data.map((element, index) => {
         return [
           this.floatAdd(min, interval * index), this.floatAdd(min, interval * (index + 1)), element
