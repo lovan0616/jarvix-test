@@ -116,7 +116,8 @@
     "componentLayoutUpdated": "元件位置更新成功",
     "componentLayoutUpdating": "元件位置更新中",
     "dataLoading": "資料讀取中",
-    "createdSuccessfully": "建立成功"
+    "createdSuccessfully": "建立成功",
+    "successfullyAddedToWarRoom": "成功加入戰情室"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -604,12 +605,12 @@
     "everyDay": "每天",
     "everyWeek": "每週",
     "everyMonth": "每月",
-    "inHours": "近 {number} 小時",
-    "inDays": "近 {number} 日",
-    "inWeeks": "近 {number} 週",
-    "inMonths": "近 {number} 月",
-    "inSeasons": "近 {number} 季",
-    "inYears": "近 {number} 年",
+    "inHours": "當前小時",
+    "inDays": "今天",
+    "inWeeks": "本週",
+    "inMonths": "本月",
+    "inSeasons": "本季",
+    "inYears": "今年",
     "customize": "自訂",
     "addChartComponent": "新增圖表元件",
     "addNumberComponent": "新增指數元件",
@@ -635,7 +636,8 @@
     "warRoomDisplayErrorMessage": "戰情室內容已失效\n請確認發布狀態或與系統管理員聯繫",
     "previewPageReminder": "此頁為預覽畫面",
     "allColumns": "所有欄位",
-    "confirmDeleteWarRoom": "您確定要刪除此戰情室嗎？"
+    "confirmDeleteWarRoom": "您確定要刪除此戰情室嗎？",
+    "emptyDataSource": "尚未加入任何來源資料"
   },
   "description": {
     "basic": {

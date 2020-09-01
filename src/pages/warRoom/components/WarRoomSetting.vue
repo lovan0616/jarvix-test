@@ -160,27 +160,27 @@ export default {
       timeIntervalList: [
         {
           value: '1+Hour',
-          name: this.$t('warRoom.inHours', { number: 1 })
+          name: this.$t('warRoom.inHours')
         },
         {
           value: '1+Day',
-          name: this.$t('warRoom.inDays', { number: 1 })
+          name: this.$t('warRoom.inDays')
         },
         {
           value: '1+Week',
-          name: this.$t('warRoom.inWeeks', { number: 1 })
+          name: this.$t('warRoom.inWeeks')
         },
         {
           value: '1+Month',
-          name: this.$t('warRoom.inMonths', { number: 1 })
+          name: this.$t('warRoom.inMonths')
         },
         {
           value: '1+Season',
-          name: this.$t('warRoom.inSeasons', { number: 1 })
+          name: this.$t('warRoom.inSeasons')
         },
         {
           value: '1+Year',
-          name: this.$t('warRoom.inYears', { number: 1 })
+          name: this.$t('warRoom.inYears')
         },
         {
           value: 'others',
@@ -225,6 +225,12 @@ export default {
         const { war_room_id: id } = this.$route.params
         updateWarRoomSetting(id, this.warRoomData)
           .then(() => {
+            Message({
+              message: this.$t('message.saveSuccess'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
             this.$emit('update:config-data', this.warRoomData)
             this.$emit('close')
           })

@@ -39,7 +39,7 @@
           <div class="war-room-setting__block-title">
             {{ $t('warRoom.sourceData') }}
             <a
-              v-if="!componentData.componentId"
+              v-if="!componentData.componentId && !isEmptyPool && selectedDataSource.question"
               :disabled="isProcessing" 
               href="javascript:void(0);"
               class="link"
@@ -50,11 +50,11 @@
           </div>
           <div
             class="war-room-setting__block-choose"
-            @click="componentData.componentId ? null : showComponentDataSourceList()"
+            @click="componentData.componentId || isEmptyPool ? null : showComponentDataSourceList()"
           >
-            {{ selectedDataSource.question || $t('warRoom.notChosen') }}
+            {{ isEmptyPool ? $t('warRoom.emptyDataSource') : selectedDataSource.question || $t('warRoom.notChosen') }}
             <svg-icon
-              v-if="!componentData.componentId"
+              v-if="!componentData.componentId && !isEmptyPool"
               icon-class="arrow-right" 
               class="icon"/>
           </div>
@@ -130,6 +130,7 @@
                 :placeholder="'*' + $t('warRoom.startDate')"
                 :clearable="true"
                 :class="{ 'has-error': errors.first('startTime') }"
+                :format="'yyyy-MM-dd HH:mm:ss'"
                 class="date-picker__item"
                 size="small"
                 type="date"
@@ -141,6 +142,7 @@
                 :picker-options="timeIntervalConstraint.customTimeInterval.pickerOptions"
                 :placeholder="$t('warRoom.endDate')"
                 :clearable="true"
+                :format="'yyyy-MM-dd HH:mm:ss'"
                 class="date-picker__item"
                 size="small"
                 type="date"
@@ -346,27 +348,27 @@ export default {
         timeIntervalList: [
           {
             value: '1+Hour',
-            name: this.$t('warRoom.inHours', { number: 1 })
+            name: this.$t('warRoom.inHours')
           },
           {
             value: '1+Day',
-            name: this.$t('warRoom.inDays', { number: 1 })
+            name: this.$t('warRoom.inDays')
           },
           {
             value: '1+Week',
-            name: this.$t('warRoom.inWeeks', { number: 1 })
+            name: this.$t('warRoom.inWeeks')
           },
           {
             value: '1+Month',
-            name: this.$t('warRoom.inMonths', { number: 1 })
+            name: this.$t('warRoom.inMonths')
           },
           {
             value: '1+Season',
-            name: this.$t('warRoom.inSeasons', { number: 1 })
+            name: this.$t('warRoom.inSeasons')
           },
           {
             value: '1+Year',
-            name: this.$t('warRoom.inYears', { number: 1 })
+            name: this.$t('warRoom.inYears')
           },
           {
             value: 'others',
@@ -398,6 +400,11 @@ export default {
       
       // 如果沒有選擇預設則為自訂區間
       return 'others'
+    },
+    isEmptyPool () {
+      if (!this.dataSourcePool) return false
+      const { diagramTypeItems, indexTypeItems } = this.dataSourcePool
+      return [...diagramTypeItems, ...indexTypeItems].length === 0
     }
   },
   watch: {
@@ -407,7 +414,7 @@ export default {
     }
   },
   mounted () {
-    if (this.componentData) this.componentData = JSON.parse(JSON.stringify(this.originalComponentData))
+    if (this.originalComponentData) this.componentData = JSON.parse(JSON.stringify(this.originalComponentData))
   },
   methods: {
     buildComponent () {

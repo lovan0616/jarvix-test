@@ -94,6 +94,7 @@
             <button 
               type="button"
               class="btn-m btn-secondary button-container__button"
+              @click="previewWarRoom"
             >{{ $t('warRoom.preview') }}</button>
           </div>
           <div class="button-container--bottom">
@@ -394,12 +395,12 @@ export default {
       this.isLoading = true
       Promise.all([getWarRoomInfo(id), getWarRoomPool(id)])
         .then(([warRoomData, warRoomPoolData]) => {
-          const { config, diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = dummyWarRoom
+          const { config, diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = warRoomData
           this.warRoomConfig = config
           this.chartComponent = this.sortComponents(diagramTypeComponents)
           this.numberComponent = this.sortComponents(indexTypeComponents)
           this.warRoomBasicInfo = warRoomBasicInfo
-          this.dataSourcePool = dummyPool
+          this.dataSourcePool = warRoomPoolData
         })
         .catch(() => { this.isLoading = false })
     },
@@ -450,8 +451,10 @@ export default {
     stopEditingWarRoomName () {
       // 避免名稱欄位資料被清空觸發重新驗證，但欄位已經被 v-if 移除產生錯誤
       this.$validator.detach('warRoomName')
-      this.isEditingWarRoomName = false
-      this.tempWarRoomPublishedName = null
+      this.$nextTick(() => {
+        this.isEditingWarRoomName = false
+        this.tempWarRoomPublishedName = null
+      })
     },
     updateWarRoomName () {
       this.$validator.validateAll().then(result => {
@@ -460,7 +463,15 @@ export default {
         this.warRoomConfig.publishName = this.tempWarRoomPublishedName
         const { war_room_id: id } = this.$route.params
         updateWarRoomSetting(id, this.warRoomConfig)
-          .then(() => this.stopEditingWarRoomName())
+          .then(() => {
+            Message({
+              message: this.$t('message.editNameSuccess'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
+            this.stopEditingWarRoomName()
+          })
           .finally(() => { this.isProcessing = false })
       })
     },
@@ -553,6 +564,10 @@ export default {
         this.chartComponent = tempChartComponent
         this.isProcessing = false
       } catch (e) { return this.isProcessing = false }
+    },
+    previewWarRoom () {
+      const { war_room_id: warRoomId } = this.$route.params
+      this.$router.push({ name: 'WarRoomPreviewPage', params: { 'war_room_id': warRoomId } })
     }
   }
 }

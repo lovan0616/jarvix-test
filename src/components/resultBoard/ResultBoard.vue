@@ -238,12 +238,12 @@ export default {
     },
     pinToWarRoom (id) {
       this.isLoading = true
-      addResultToWarRoomPool(id, this.resultId)
+      addResultToWarRoomPool(id, this.currentResultId)
         .then(() => {
           this.isLoading = false
           this.closePinboardDialog()
           Message({
-            message: this.$t('message.pinboardSuccess'),
+            message: this.$t('message.successfullyAddedToWarRoom'),
             type: 'success',
             duration: 3 * 1000,
             showClose: true
