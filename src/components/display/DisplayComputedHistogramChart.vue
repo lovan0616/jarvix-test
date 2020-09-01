@@ -114,11 +114,11 @@ export default {
       let dataLength = this.dataset.data.length
       let interval = this.floatSub(max, min) / dataLength
 
-      // 預設 無條件進位 到小數點後第幾位
+      // 預設 四捨五入 到小數點後第幾位
       const defaultDisplayDigit = 2
 
       if (Number(interval) >= 1) {
-        interval = Math.ceil(interval * Math.pow(10, defaultDisplayDigit)) / Math.pow(10, defaultDisplayDigit)
+        interval = Math.round(interval * Math.pow(10, defaultDisplayDigit)) / Math.pow(10, defaultDisplayDigit)
       } else {
         // 找出例如0.0000031432的.到有3之間有幾個零
         let count = 0
@@ -127,7 +127,7 @@ export default {
           _interval = _interval * 10
           count += 1
         }
-        interval = Math.ceil(this.displayFloat(interval * Math.pow(10, count + defaultDisplayDigit))) / Math.pow(10, count + defaultDisplayDigit)
+        interval = Math.round(this.displayFloat(interval * Math.pow(10, count + defaultDisplayDigit))) / Math.pow(10, count + defaultDisplayDigit)
       }
 
       let chartData = this.dataset.data.map((element, index) => {
