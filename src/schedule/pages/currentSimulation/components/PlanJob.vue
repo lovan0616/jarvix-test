@@ -129,13 +129,15 @@ export default {
         .then(res => {
           if (resetPagination) this.pagination = res.pagination
           if (!res.data) return
+          const completedLabel = this.$t('schedule.simulation.table.completed')
+          const uncompletedLabel = this.$t('schedule.simulation.table.completed')
           this.jobData = {
             columns: { titles: this.orderTableHeaderList },
             data: res.data.map(data => {
               return {
                 ...data,
                 priority: this.priortyOptions[data.priority - 1].label,
-                complete: data.complete ? this.$t('schedule.simulation.table.completed') : this.$t('schedule.simulation.table.uncompleted')
+                complete: data.complete ? completedLabel : uncompletedLabel
               }
             }) || [],
             index: [...Array(res.data ? res.data.length : [])].map((x, i) => i)

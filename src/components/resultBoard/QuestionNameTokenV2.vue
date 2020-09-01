@@ -8,7 +8,6 @@
     <div slot="content">{{ tooltipContent(tokenInfo) }}</div>
     <span 
       :class="tokenInfo.type"
-      :style="textSpace"
       class="question-token"
     >{{ tokenInfo.word }}</span>
   </el-tooltip>
@@ -30,13 +29,6 @@ export default {
           dataFrameName: null
         }
       }
-    }
-  },
-  computed: {
-    textSpace () {
-      let lastCharacter = this.tokenInfo.word.slice(-1)
-      let isNeedSpace = /[A-Za-z0-9]/.test(lastCharacter)
-      return isNeedSpace ? {'margin-right': '10px'} : null
     }
   },
   methods: {

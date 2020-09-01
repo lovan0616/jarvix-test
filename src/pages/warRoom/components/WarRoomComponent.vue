@@ -355,7 +355,7 @@ export default {
                 }, this.convertRefreshFrequency(componentBasicInfo.config.refreshFrequency))
               }
               
-              // 更新圖表資料
+              // 儲存圖表資料
               if (responseData.dataset.data.length === 0) {
                 this.isLoading = false
                 this.isError = true

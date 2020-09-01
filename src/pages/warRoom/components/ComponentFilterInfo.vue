@@ -1,18 +1,18 @@
 <template>
-  <div class="setting__filter">
-    <div class="setting__filter-title">
+  <div class="war-room-setting__filter">
+    <div class="war-room-setting__filter-title">
       {{ dataColumnNames }}
     </div>
     <ul 
       v-for="(restraint, index) in restriction"
       :key="index"
-      class="setting__filter-description"
+      class="war-room-setting__filter-description"
     >
       <template v-if="restraint.type === 'compound'">
         <li 
           v-for="(sub_restraint, restraintsIndex) in restraint.restraints"
           :key="'restraints-' + index + '-' + restraintsIndex"
-          class="setting__filter-description-item"
+          class="war-room-setting__filter-description-item"
         >
           <template v-if="sub_restraint.type === 'enum'">
             {{ sub_restraint.properties.dc_name }} = {{ sub_restraint.properties['datavalues'].join(', ') }}
@@ -27,12 +27,12 @@
         </li>
       </template>
       <template v-else-if="restraint.type === 'enum'">
-        <li class="setting__filter-description-item">
+        <li class="war-room-setting__filter-description-item">
           {{ restraint.properties['datavalues'].join(', ') }}
         </li>
       </template>
       <template v-else-if="restraint.type === 'range'">
-        <li class="setting__filter-description-item">
+        <li class="war-room-setting__filter-description-item">
           {{ $t('resultDescription.between', {
             start: isNaN(restraint.properties.start) ? restraint.properties.start : roundNumber(restraint.properties.start),
             end: isNaN(restraint.properties.end) ? restraint.properties.end : roundNumber(restraint.properties.end)
@@ -74,7 +74,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.setting {
+.war-room-setting {
   &__filter-description {
     padding: 0;
     margin: 0;

@@ -3,16 +3,15 @@
     <section class="war-room__content">
       <div class="war-room__header">
         <div class="war-room__header--left">
-          <!--待補連結-->
-          <a
-            href="javascript:void(0);" 
+          <router-link
+            :to="{ name: 'WarRoomList' }" 
             class="link action-link"
           >
             <svg-icon
               icon-class="arrow-left" 
               class="icon"/>
             {{ $t('warRoom.backToList') }}
-          </a>
+          </router-link>
           <div
             v-if="!isEditingWarRoomName"
             class="war-room__title"
@@ -32,7 +31,7 @@
             v-else
             class="war-room__title-edit"
           >
-            <div class="war-room__title-input">
+            <div class="war-room__title-input-wrapper">
               <input
                 v-validate="'required'"
                 v-model="tempWarRoomPublishedName"
@@ -150,7 +149,7 @@
               :key="number.componentId"
               :component-id="number.componentId"
               :is-editable="true"
-              :is-focusing="selectedComponent.componentId === number.componentId"
+              :is-focusing="selectedComponent && selectedComponent.componentId === number.componentId"
               class="number__item"
               @check-constraint="viewComponentConstraint"
               @check-setting="editComponenSetting"
@@ -169,7 +168,7 @@
               :key="chart.componentId"
               :component-id="chart.componentId"
               :is-editable="true"
-              :is-focusing="selectedComponent.componentId === chart.componentId"
+              :is-focusing="selectedComponent && selectedComponent.componentId === chart.componentId"
               class="chart__item"
               @check-constraint="viewComponentConstraint"
               @check-setting="editComponenSetting"
@@ -187,7 +186,7 @@
               :key="chart.componentId"
               :component-id="chart.componentId"
               :is-editable="true"
-              :is-focusing="selectedComponent.componentId === chart.componentId"
+              :is-focusing="selectedComponent && selectedComponent.componentId === chart.componentId"
               class="chart__item"
               @check-constraint="viewComponentConstraint"
               @check-setting="editComponenSetting"
@@ -310,7 +309,7 @@ const dummyWarRoom =  {
   "publishUpdaterId": 0,
   "publishUpdaterName": "string",
   "urlIdentifier": "string",
-  "warRoomId": 0
+  "id": 0
 }
 
 const dummyPool = {
@@ -348,7 +347,7 @@ export default {
       isShowComponentSetting: false,
       isShowWarRoomSetting: false,
       isShowComponentConstraint: false,
-      selectedComponent: {},
+      selectedComponent: null,
       isLoading: false,
       warRoomConfig: null,
       warRoomBasicInfo: {},
@@ -384,8 +383,8 @@ export default {
     }
   },
   mounted () {
-    const { war_room_id: warRoomId } = this.$route.params
-    this.fetchData(warRoomId)
+    const { war_room_id: id } = this.$route.params
+    this.fetchData(id)
   },
   methods: {
     fetchData (id) {
@@ -421,7 +420,7 @@ export default {
     closeComponentSetting () {
       this.isShowComponentSetting = false
       this.createdComponentType = null
-      this.selectedComponent = {}
+      this.selectedComponent = null
     },
     openWarRoomSetting () {
       if (this.isShowComponentSetting) this.closeComponentSetting()
@@ -438,7 +437,7 @@ export default {
       this.isShowComponentConstraint = true
     },
     closeComponentConstraint () {
-      this.selectedComponent = {}
+      this.selectedComponent = null
       this.isShowComponentConstraint = false
     },
     editWarRoomName () {
@@ -446,6 +445,8 @@ export default {
       this.isEditingWarRoomName = true
     },
     stopEditingWarRoomName () {
+      // 避免名稱欄位資料被清空觸發重新驗證，但欄位已經被 v-if 移除產生錯誤
+      this.$validator.detach('warRoomName')
       this.isEditingWarRoomName = false
       this.tempWarRoomPublishedName = null
     },
@@ -454,8 +455,8 @@ export default {
         if (!result) return
         this.isProcessing = true
         this.warRoomConfig.publishName = this.tempWarRoomPublishedName
-        const { war_room_id: warRoomId } = this.$route.params
-        updateWarRoomSetting(warRoomId, this.warRoomConfig)
+        const { war_room_id: id } = this.$route.params
+        updateWarRoomSetting(id, this.warRoomConfig)
           .then(() => this.stopEditingWarRoomName())
           .finally(() => { this.isProcessing = false })
       })

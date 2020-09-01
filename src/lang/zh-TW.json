@@ -149,9 +149,12 @@
     "createBoard": "建立新版",
     "prevStep": "返回上層",
     "newPinboard": "新增釘板",
-    "onlyPersonal": "僅個人使用",
-    "shareToProject": "共享至專案",
+    "newWarRoom": "新增戰情室",
+    "onlyPersonal": "僅個人使用釘板",
+    "shareToProject": "共享至專案釘板",
+    "addToWarRoom": "加入至戰情室",
     "pinboardName": "釘板名稱",
+    "warRoomName": "戰情室名稱",
     "questionPlaceHolder": "請輸入問題，例如：價格和成本的相關性",
     "askPlaceHolder": "請輸入問句後按Enter送出",
     "dataBuilding": "資料處理中",
@@ -574,10 +577,16 @@
     "switchSpecificDataFrame": "請先切換至單一資料表"
   },
   "warRoom": {
+    "warRoom": "戰情室",
     "backToList": "返回列表",
     "back": "返回",
     "publish": "發布",
     "unpublish": "取消發布",
+    "getPublishedUrl": "取得發布連結",
+    "rename": "變更名稱",
+    "delete": "刪除",
+    "viewDetail": "查看內容",
+    "edit": "編輯",
     "warRoomSetting": "戰情室設定",
     "preview": "預覽",
     "add": "新增",
@@ -624,7 +633,8 @@
     "emptyComponentMessage": "尚未加入元件",
     "warRoomDisplayErrorMessage": "戰情室內容已失效\n請確認發布狀態或與系統管理員聯繫",
     "previewPageReminder": "此頁為預覽畫面",
-    "allColumns": "所有欄位"
+    "allColumns": "所有欄位",
+    "confirmDeleteWarRoom": "您確定要刪除此戰情室嗎？"
   },
   "description": {
     "basic": {
@@ -805,7 +815,8 @@
     "addSqlScript": "使用自定義 SQL",
     "testConnecting": "測試連線中...",
     "monitorSetting": "監測設定",
-    "updateImmediately": "立即更新"
+    "updateImmediately": "立即更新",
+    "AddNewWarRoom": "新增戰情室"
   },
   "timeScopeUnit": {
     "second": "秒",
