@@ -132,7 +132,8 @@ export default {
 
       let chartData = this.dataset.data.map((element, index) => {
         return [
-          this.floatAdd(min, interval * index), this.floatAdd(min, interval * (index + 1)), element
+          // 數字過大或過小時，使用 toFixed 將科學符號轉回來
+          this.floatAdd(min, (interval * index).toFixed(20)), this.floatAdd(min, (interval * (index + 1)).toFixed(20)), element
         ]
       })
 
