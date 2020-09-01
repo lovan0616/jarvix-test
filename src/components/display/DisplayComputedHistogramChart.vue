@@ -76,21 +76,21 @@ let histogramChartConfig = {
 export default {
   name: 'DisplayComputedHistogramChart',
   props: {
-    // dataset: {
-    //   type: Object,
-    //   default () {
-    //     return {}
-    //   }
-    // },
-    // title: {
-    //   type: Object,
-    //   default: () => {
-    //     return {
-    //       xAxis: null,
-    //       yAxis: null
-    //     }
-    //   }
-    // },
+    dataset: {
+      type: Object,
+      default () {
+        return {}
+      }
+    },
+    title: {
+      type: Object,
+      default: () => {
+        return {
+          xAxis: null,
+          yAxis: null
+        }
+      }
+    },
     showToolbox: {
       type: Boolean,
       default: true
@@ -102,11 +102,6 @@ export default {
   },
   data () {
     return {
-      dataset: {
-        data: [267, 46, 79, 77, 71, 84, 107, 150, 151, 140, 144, 126, 151, 108, 87, 45, 49, 21, 5, 9],
-        range: [0.1, 0.10008]
-      },
-      title: {"xAxis":[{"dc_id":null,"dc_name":"c20","operator":null,"data_type":"int","drillable":true,"is_feature":null,"stats_type":"numeric","upperLimit":null,"display_name":"DOF"}],"yAxis":[{"dc_id":null,"dc_name":null,"operator":null,"data_type":null,"drillable":false,"is_feature":null,"stats_type":null,"upperLimit":null,"display_name":"總數量"}]},
       selectedData: []
     }
   },
@@ -117,14 +112,8 @@ export default {
       let min = this.dataset.range[0]
       let max = this.dataset.range[1]
       let dataLength = this.dataset.data.length
-      let interval = this.floatSub(max, min) / dataLength
-
-      // 動態計算要取到小數點後幾位
-      // const reducer = (accumulator, currentValue) => accumulator + (currentValue === '0' ? 1 : 0);
-      // const arrayedInterval = String(interval).split('')
-
-      // const zeroCount = arrayedInterval.reduce(reducer, 0) + 2;
-      // interval = Number(Number.parseFloat(interval).toPrecision(zeroCount));
+      let interval = this.displayFloat(this.floatSub(max, min) / dataLength)
+      
       let chartData = this.dataset.data.map((element, index) => {
         return [
           this.floatAdd(min, interval * index), this.floatAdd(min, interval * (index + 1)), element
