@@ -99,6 +99,10 @@ Vue.mixin({
         return (int1 / int2) / Math.pow(10, p1 - p2)
       })
     },
+    /* 去除浮點數計算 造成的長尾數 https://www.itread01.com/content/1545644704.html */
+    displayFloat (num, precision = 12) {
+      return parseFloat(num.toPrecision(precision));
+    },
     timeToDate (time) {
       return moment(time).format('YYYY-MM-DD')
     },
