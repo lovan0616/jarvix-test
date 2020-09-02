@@ -13,7 +13,7 @@
     />
     <component
       v-else
-      :is="layout"
+      :is="layout || 'EmptyResult'"
       :data-result-id="currentResultId"
       :data-frame-id="currentQuestionDataFrameId"
       :result-info="resultInfo"
@@ -145,8 +145,8 @@ export default {
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {
-      this.isLoading = true
       this.clearLayout()
+      this.isLoading = true
       this.$store.commit('chatBot/addUserConversation', data.question)
       this.$store.commit('chatBot/updateAnalyzeStatus', true)
       // 動態變更 title 為了方便前一頁、下一頁變更時可以快速找到
@@ -210,10 +210,7 @@ export default {
               this.getComponentV2(res)
               // this.getRelatedQuestion(res.resultId)
             }).catch((error) => {
-              if (error.constructor.name !== 'Cancel') {
-                this.isLoading = false
-                this.layout = 'EmptyResult'
-              }
+              if (error.message !== 'cancel') this.isLoading = false
             })
           } else {
             // 多個結果
@@ -224,10 +221,7 @@ export default {
           }
         }).catch((error) => {
           // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
-          if (error.constructor.name !== 'Cancel') {
-            this.isLoading = false
-            this.layout = 'EmptyResult'
-          }
+          if (error.message !== 'cancel') this.isLoading = false
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
     },
@@ -273,7 +267,7 @@ export default {
               this.transcript = componentResponse.transcript
               this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
-              window.setTimeout(() => {this.isLoading = false}, 0)
+              this.isLoading = false
               break
             case 'Disable':
             case 'Delete':
@@ -284,10 +278,7 @@ export default {
               break
           }
         }).catch((error) => {
-          if (error.constructor.name !== 'Cancel') {
-            this.isLoading = false
-            this.layout = 'EmptyResult'
-          }
+          if (error.message !== 'cancel') this.isLoading = false
         })
     },
     getRelatedQuestion (id) {
