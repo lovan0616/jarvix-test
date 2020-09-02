@@ -53,6 +53,7 @@ import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { getDrillDownTool } from '@/components/display/common/addons'
 import {
+  warningColor,
   colorOnly1,
   colorOnly2,
   color5,
@@ -158,7 +159,8 @@ export default {
     options () {
       let config = {
         xAxis: {
-          ...xAxisDefault()
+          ...xAxisDefault(),
+          data: this.dataset.display_index
         },
         ...this.addonOptions,
         ...getDrillDownTool(this.$route.name, this.title),
@@ -215,6 +217,38 @@ export default {
 
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
+      this.$set(this.title.yAxis[0], 'upperLimit', 1200)
+      this.$set(this.title.yAxis[0], 'lowerLimit', 200)
+
+      if (this.title.yAxis[0].upperLimit !== null || this.title.yAxis[0].lowerLimit !== null) {
+        let upperLimit = this.title.yAxis[0].upperLimit || Number.MAX_VALUE
+        let lowerLimit = this.title.yAxis[0].lowerLimit || Number.MIN_VALUE
+        
+        config.series[0].data = this.dataset.data.map(data => {
+          return {
+            value: data[0],
+            itemStyle: {
+              color: data[0] > upperLimit || data[0] < lowerLimit 
+                ? warningColor[0]
+                : colorOnly1[0]
+            }
+          }
+        })
+
+        // 門檻線
+        config.series[0].markLine = {
+          symbol: 'none',
+          lineStyle: {
+            color: '#EB5959',
+            width: 2
+          },
+          data: [{
+            yAxis: upperLimit,
+          },{
+            yAxis: lowerLimit,
+          }]
+        }
+      }
       return config
     },
     colorList () {
