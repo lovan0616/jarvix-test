@@ -228,7 +228,6 @@ export default {
       }
     },
     updatePage (page) {
-      console.log(page)
       this.fetchDataFrameData(this.dataFrameId, page - 1)
     }
   }
