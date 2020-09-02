@@ -13,7 +13,7 @@
     />
     <component
       v-else
-      :is="layout || 'EmptyResult'"
+      :is="layout"
       :data-result-id="currentResultId"
       :data-frame-id="currentQuestionDataFrameId"
       :result-info="resultInfo"
@@ -210,7 +210,10 @@ export default {
               this.getComponentV2(res)
               // this.getRelatedQuestion(res.resultId)
             }).catch((error) => {
-              if (error.constructor.name !== 'Cancel') this.isLoading = false
+              if (error.constructor.name !== 'Cancel') {
+                this.isLoading = false
+                this.layout = 'EmptyResult'
+              }
             })
           } else {
             // 多個結果
@@ -221,7 +224,10 @@ export default {
           }
         }).catch((error) => {
           // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
-          if (error.constructor.name !== 'Cancel') this.isLoading = false
+          if (error.constructor.name !== 'Cancel') {
+            this.isLoading = false
+            this.layout = 'EmptyResult'
+          }
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
     },
@@ -278,7 +284,10 @@ export default {
               break
           }
         }).catch((error) => {
-          if (error.constructor.name !== 'Cancel') this.isLoading = false
+          if (error.constructor.name !== 'Cancel') {
+            this.isLoading = false
+            this.layout = 'EmptyResult'
+          }
         })
     },
     getRelatedQuestion (id) {
