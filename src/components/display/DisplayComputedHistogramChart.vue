@@ -113,9 +113,27 @@ export default {
       let max = this.dataset.range[1]
       let dataLength = this.dataset.data.length
       let interval = this.floatSub(max, min) / dataLength
+
+      // 預設 四捨五入 到小數點後第幾位
+      const defaultDisplayDigit = 2
+
+      if (Number(interval) >= 1) {
+        interval = Math.round(interval * Math.pow(10, defaultDisplayDigit)) / Math.pow(10, defaultDisplayDigit)
+      } else {
+        // 找出例如0.0000031432的.到有3之間有幾個零
+        let count = 0
+        let _interval = interval
+        while (_interval < 1) {
+          _interval = _interval * 10
+          count += 1
+        }
+        interval = Math.round(this.displayFloat(interval * Math.pow(10, count + defaultDisplayDigit))) / Math.pow(10, count + defaultDisplayDigit)
+      }
+
       let chartData = this.dataset.data.map((element, index) => {
         return [
-          this.floatAdd(min, interval * index), this.floatAdd(min, interval * (index + 1)), element
+          // 數字過大或過小時，使用 toFixed 將科學符號轉回來
+          this.floatAdd(min, (interval * index).toFixed(20)), this.floatAdd(min, (interval * (index + 1)).toFixed(20)), element
         ]
       })
 
@@ -154,6 +172,9 @@ export default {
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramConfig.yAxis}
       chartAddon.yAxis.name = this.title.yAxis[0].display_name
+      chartAddon.xAxis.axisLabel.formatter = (value, index) => {
+        return index === dataLength ? max : value
+      }
 
       histogramConfig.chartData.renderItem = this.renderItem
       histogramConfig.chartData.data = chartData
