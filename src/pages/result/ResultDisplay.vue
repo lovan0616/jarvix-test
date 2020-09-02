@@ -43,7 +43,7 @@
 
 <script>
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ResultDisplay',
@@ -110,7 +110,7 @@ export default {
         ) return
 
         // 預先觸發重新計算 column summary 和 column correlation
-        this.triggerColumnDataCalculation()
+        // this.triggerColumnDataCalculation()
         this.fetchApiAsk({
           question: this.$route.query.question, 
           'dataSourceId': this.$route.query.dataSourceId, 
@@ -127,7 +127,7 @@ export default {
     if (this.addConversationTimeout) window.clearTimeout(this.addConversationTimeout)
   },
   methods: {
-    ...mapActions('dataSource', ['triggerColumnDataCalculation']),
+    // ...mapActions('dataSource', ['triggerColumnDataCalculation']),
     fetchData () {
       const {dataSourceId, dataFrameId, question} = this.$route.query
       if (!question) return
