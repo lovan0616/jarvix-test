@@ -217,8 +217,6 @@ export default {
 
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
-      this.$set(this.title.yAxis[0], 'upperLimit', 1200)
-      this.$set(this.title.yAxis[0], 'lowerLimit', 200)
 
       if (this.title.yAxis[0].upperLimit !== null || this.title.yAxis[0].lowerLimit !== null) {
         let upperLimit = this.title.yAxis[0].upperLimit || Number.MAX_VALUE
