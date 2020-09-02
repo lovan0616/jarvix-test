@@ -267,7 +267,7 @@ export default {
               this.transcript = componentResponse.transcript
               this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
-              this.isLoading = false
+              window.setTimeout(() => {this.isLoading = false}, 0)
               break
             case 'Disable':
             case 'Delete':
