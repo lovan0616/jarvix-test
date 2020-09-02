@@ -161,15 +161,16 @@ export default {
 
       histogramConfig.chartData.renderItem = this.renderItem
       histogramConfig.chartData.data = chartData
+      const shortenNumberMethod = this.shortenNumber
       chartAddon.series[0] = {
         ...histogramConfig.chartData,
         ...(this.isShowLabelData && {
           label: {
             position: 'top',
             show: true,
-            textStyle: {
-              color: '#fff'
-            }
+            fontSize: 10,
+            color: '#fff',
+            formatter (value) { return shortenNumberMethod(value.data[2], 2) }
           }
         })
       }
