@@ -29,7 +29,7 @@
 </template>
 <script>
 import { chartOptions } from '@/components/display/common/chart-addon.js'
-import { getDrillDownTool } from '@/components/display/common/addons'
+import { warningColor, colorOnly1, getDrillDownTool } from '@/components/display/common/addons'
 
 // 直方圖的參數設定
 let histogramChartConfig = {
@@ -45,19 +45,7 @@ let histogramChartConfig = {
   chartData: {
     symbolSize: 8,
     itemStyle: {
-      color: {
-        type: 'linear',
-        x: 0,
-        y: 0,
-        x2: 0,
-        y2: 1,
-        colorStops: [{
-          offset: 0, color: '#4CE2F0'
-        }, {
-          offset: 1, color: '#438AF8'
-        }],
-        global: false
-      }
+      color: colorOnly1[0]
     },
     data: [],
     type: 'custom',
@@ -183,18 +171,50 @@ export default {
       histogramConfig.chartData.renderItem = this.renderItem
       histogramConfig.chartData.data = chartData
       const shortenNumberMethod = this.shortenNumber
-      chartAddon.series[0] = {
-        ...histogramConfig.chartData,
-        ...(this.isShowLabelData && {
-          label: {
-            position: 'top',
-            show: true,
-            fontSize: 10,
-            color: '#fff',
-            formatter (value) { return shortenNumberMethod(value.data[2], 0) }
+
+      if (this.title.yAxis[0].upperLimit !== null || this.title.yAxis[0].lowerLimit !== null) {
+        let upperLimit = this.title.yAxis[0].upperLimit || Number.MAX_VALUE
+        let lowerLimit = this.title.yAxis[0].lowerLimit || Number.MIN_VALUE
+
+        histogramConfig.chartData.data = chartData.map(data => {
+          return {
+            value: data,
+            itemStyle: {
+              color: data[2] > upperLimit || data[2] < lowerLimit 
+                ? warningColor[0]
+                : colorOnly1[0]
+            }
+          }
+        })
+        chartAddon.series[0] = {
+          ...histogramConfig.chartData,
+          ...(this.isShowLabelData && {
+            label: {
+              position: 'top',
+              show: true,
+              fontSize: 10,
+              color: '#fff',
+              formatter (value) { return shortenNumberMethod(value.data[2], 0) }
+            }
+          })
+        }
+        chartAddon.series.push({
+          type: 'line',
+          markLine: {
+            symbol: 'none',
+            lineStyle: {
+              color: '#EB5959',
+              width: 2
+            },
+            data: [{
+              yAxis: upperLimit,
+            },{
+              yAxis: lowerLimit,
+            }]
           }
         })
       }
+
       // 不顯示“全選”按鈕
       chartAddon.legend.selector = false
       chartAddon.toolbox.show = this.showToolbox
