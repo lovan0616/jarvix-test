@@ -189,7 +189,7 @@ export default {
           this.isProcessing = false
         })
         .catch(error => {
-          if (error.constructor.name === 'Cancel') return
+          if (error.message === 'cancel') return
           this.hasError = true
           this.isLoading = false
           this.isProcessing = false
