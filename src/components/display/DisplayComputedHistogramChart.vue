@@ -206,13 +206,11 @@ export default {
               color: '#EB5959',
               width: 2
             },
-            data: [{
-              yAxis: upperLimit,
-            },{
-              yAxis: lowerLimit,
-            }]
+            data: []
           }
         })
+        if (this.title.yAxis[0].upperLimit) chartAddon.series[1].markLine.data.push({yAxis: upperLimit})
+        if (this.title.yAxis[0].lowerLimit) chartAddon.series[1].markLine.data.push({yAxis: lowerLimit})
       }
 
       // 不顯示“全選”按鈕
