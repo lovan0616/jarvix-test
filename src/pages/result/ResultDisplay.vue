@@ -320,7 +320,9 @@ export default {
               this.transcript = componentResponse.transcript
               this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
-              this.isLoading = false
+              this.$nextTick(() => {
+                this.isLoading = false
+              })
               break
             case 'Disable':
             case 'Delete':
