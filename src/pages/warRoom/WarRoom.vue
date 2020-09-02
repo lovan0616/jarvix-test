@@ -140,7 +140,10 @@
           class="spinner"
           size="50"
         />
-        <div class="number">
+        <div
+          v-if="numberComponent && numberComponent.length > 0"
+          class="number"
+        >
           <draggable
             :value="numberComponent"
             group="index"
@@ -158,7 +161,10 @@
             />
           </draggable>     
         </div>
-        <div class="chart">
+        <div
+          v-if="chartComponent && chartComponent.length > 0"
+          class="chart"
+        >
           <draggable
             :value="chartFirstRow"
             data-row="1"
@@ -387,12 +393,12 @@ export default {
     }
   },
   mounted () {
-    const { war_room_id: id } = this.$route.params
-    this.fetchData(id)
+    this.fetchData()
   },
   methods: {
-    fetchData (id) {
+    fetchData () {
       this.isLoading = true
+      const { war_room_id: id } = this.$route.params
       Promise.all([getWarRoomInfo(id), getWarRoomPool(id)])
         .then(([warRoomData, warRoomPoolData]) => {
           const { config, diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = warRoomData
@@ -411,9 +417,23 @@ export default {
     addComponent (value) {
       if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
       if (this.isShowComponentConstraint) this.closeComponentConstraint()
-      // TODO: check if has reached max before creation
-      this.createdComponentType = value
-      this.isShowComponentSetting = true
+      // 再次點擊或切換新增不同類型元件時，重開一個新設定視窗
+      if (this.isShowComponentSetting) this.closeComponentSetting()
+      this.$nextTick(() => {
+        if (
+          (value === 'index' && this.numberComponent.length === 4)
+          || (value === 'diagram' && this.chartComponent.length === 8)
+        ) {
+          return Message({
+            message: this.$t('message.componentAmountReachedLimit'),
+            type: 'warning',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }
+        this.createdComponentType = value
+        this.isShowComponentSetting = true
+      })
     },
     editComponenSetting (data) {
       if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
@@ -567,7 +587,8 @@ export default {
     },
     previewWarRoom () {
       const { war_room_id: warRoomId } = this.$route.params
-      this.$router.push({ name: 'WarRoomPreviewPage', params: { 'war_room_id': warRoomId } })
+      const routeData = this.$router.resolve({ name: 'WarRoomPreviewPage', params: { 'war_room_id': warRoomId } });
+      window.open(routeData.href, '_blank');
     }
   }
 }

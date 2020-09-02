@@ -335,17 +335,17 @@ export default {
 
       promise(id, this.componentId)
         .then(response => {
-          const { diagramData, ...componentBasicInfo } = dummyDiagramComponentData
-          switch (dummyDiagramComponentData.diagramData.status) {
+          const { diagramData, ...componentBasicInfo } = response
+          switch (componentBasicInfo.status) {
             case 'Process':
             case 'Ready':
               this.timeoutFunction = window.setTimeout(() => { this.fetchData() }, 1000)
               break
             case 'Complete': {
               window.clearTimeout(this.timeoutFunction)
-              this.diagram = dummyDiagramComponentData.diagramData.diagram
+              this.diagram = componentBasicInfo.diagram
               this.componentName = this.getChartTemplate(this.diagram)
-              let responseData = dummyDiagramComponentData.diagramData.data
+              let responseData = diagramData.data
 
               // 定期更新 component 資料
               let isAutoRefresh = componentBasicInfo.config.isAutoRefresh
@@ -375,7 +375,7 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.isLoading = false
               this.isError = true
-              this.errorMessage = this.$t('message.systemIsError')
+              this.errorMessage = componentBasicInfo.errorMessage
               break
           }
         }).catch(() => {

@@ -67,21 +67,25 @@
             <div class="date-picker__container">
               <el-date-picker
                 v-validate="'required'"
+                ref="startTime"
                 v-model="warRoomData.customStartTime"
-                :picker-options="customTimeInterval.pickerOptions"
+                :picker-options="customTimeInterval.startTimePickerOptions"
                 :placeholder="$t('warRoom.startDate')"
                 :clearable="true"
                 :class="{ 'has-error': errors.first('startTime') }"
+                :disabled="isProcessing"
                 class="date-picker__item"
                 size="small"
                 type="date"
                 name="startTime"/>
               <div class="date-picker__seperator">-</div>
               <el-date-picker
+                v-validate="'after:startTime'"
                 v-model="warRoomData.customEndTime"
-                :picker-options="customTimeInterval.pickerOptions"
+                :picker-options="customTimeInterval.endTimePickerOptions"
                 :placeholder="'*' + $t('warRoom.endDate')"
                 :clearable="true"
+                :disabled="isProcessing || !warRoomData.customStartTime"
                 class="date-picker__item"
                 size="small"
                 type="date"
@@ -190,10 +194,14 @@ export default {
       customTimeInterval: {
         startTime: '',
         endTime: '',
-        pickerOptions: {
+        startTimePickerOptions: {
           disabledDate(time) {
-            return time.getTime() > Date.now();
+            return time.getTime() > Date.now()
           },
+          firstDayOfWeek: 1
+        },
+        endTimePickerOptions: {
+          disabledDate: this.disabledDueDate,
           firstDayOfWeek: 1
         }
       },
@@ -276,7 +284,11 @@ export default {
       this.warRoomData.recentTimeIntervalUnit = value.split('+')[1]
       this.warRoomData.customEndTime = null
       this.warRoomData.customStartTime = null
-    }
+    },
+    disabledDueDate (time) {
+      console.log(time)
+      return time.getTime() < this.warRoomData.customStartTime.getTime() || time.getTime() > Date.now()
+    },
   }
 }
 </script>

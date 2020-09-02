@@ -18,10 +18,10 @@
         </div>
       </div>
       <div
-        v-if="showTimeInterval"
+        v-if="warRoomStartTime"
         class="war-room__header--right"
       >
-        {{ $t('warRoom.updateTime') + '：' + warRoomStartTime + '-' + warRoomEndTime }}
+        {{ $t('warRoom.timeInterval') + '：' + warRoomStartTime + ' - ' + warRoomEndTime }}
       </div>
     </header>
     <section
@@ -202,16 +202,14 @@ export default {
       const { war_room_id: warRoomId = null } = this.$route.params
       return warRoomId !== null
     },
-    showTimeInterval () {
-      return this.warRoomStartTime && this.warRoomEndTime
-    },
     warRoomStartTime () {
       if (this.isLoading || this.hasError) return
-      return this.isPreviewing ? this.warRoomBasicInfo.config.customStartTime : this.warRoomBasicInfo.config.dateRangeStart
+      return this.isPreviewing ? this.warRoomBasicInfo.config.customStartTime : this.warRoomBasicInfo.dateRangeStart
     },
     warRoomEndTime () {
       if (this.isLoading || this.hasError) return
-      return this.isPreviewing ? this.warRoomBasicInfo.config.customEndTime : this.warRoomBasicInfo.config.dateRangeEnd
+      const endTime = this.isPreviewing ? this.warRoomBasicInfo.config.customEndTime : this.warRoomBasicInfo.dateRangeEnd
+      return (this.warRoomStartTime && endTime) ? endTime : this.$t('warRoom.now')
     }
   },
   mounted () {
@@ -229,7 +227,7 @@ export default {
 
       promise(id)
         .then(response => {
-          const { diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = dummyWarRoom
+          const { diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = response
           this.chartComponent = this.sortComponents(diagramTypeComponents)
           this.numberComponent = this.sortComponents(indexTypeComponents)
           this.warRoomBasicInfo = warRoomBasicInfo

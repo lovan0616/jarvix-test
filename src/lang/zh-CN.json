@@ -117,7 +117,8 @@
     "componentLayoutUpdating": "元件位置更新中",
     "dataLoading": "资料读取中",
     "createdSuccessfully": "建立成功",
-    "successfullyAddedToWarRoom": "成功加入战情室"
+    "successfullyAddedToWarRoom": "成功加入战情室",
+    "componentAmountReachedLimit": "元件数量已达上限"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -637,7 +638,11 @@
     "previewPageReminder": "此页为预览画面",
     "allColumns": "所有栏位",
     "confirmDeleteWarRoom": "您确定要删除此战情室吗？",
-    "emptyDataSource": "尚未加入任何来源资料"
+    "emptyDataSource": "尚未加入任何{type}来源资料",
+    "timeInterval": "时间范围",
+    "now": "现在",
+    "indexType": "指标型",
+    "diagramType": "图表型"
   },
   "description": {
     "basic": {
