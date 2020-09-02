@@ -11,12 +11,9 @@
       class="layout-spinner"
       size="50"
     />
-    <empty-result
-      v-else-if="!layout"
-    />
     <component
       v-else
-      :is="layout"
+      :is="layout || 'EmptyResult'"
       :data-result-id="currentResultId"
       :data-frame-id="currentQuestionDataFrameId"
       :result-info="resultInfo"
@@ -234,56 +231,6 @@ export default {
       })
       this.$store.commit('chatBot/updateAnalyzeStatus', false)
     },
-    getComponent (res) {
-      window.clearTimeout(this.timeoutFunction)
-      this.$store.commit('result/updateCurrentResultId', res.resultId)
-      if (res.layout === 'no_answer') {
-        this.layout = 'EmptyResult'
-        this.resultInfo = {
-          title: res.noAnswerTitle,
-          description: res.noAnswerDescription
-        }
-        this.isLoading = false
-        return false
-      }
-
-      this.$store.dispatch('chatBot/getComponentList', res.resultId)
-        .then(componentResponse => {
-          switch (componentResponse.status) {
-            case 'Process':
-            case 'Ready':
-              this.timeoutFunction = window.setTimeout(() => {
-                this.getComponent(res)
-              }, this.totalSec)
-
-              this.totalSec += this.periodSec
-              this.periodSec = this.totalSec
-              break
-            case 'Complete':
-              this.totalSec = 50
-              this.periodSec = 200
-              this.resultInfo = componentResponse.componentIds
-              this.restrictInfo = componentResponse.restrictions
-              this.layout = this.getLayout(componentResponse.layout)
-              this.segmentationPayload = componentResponse.segmentationPayload
-              this.transcript = componentResponse.transcript
-              this.segmentationAnalysis(componentResponse.segmentationPayload)
-              this.currentQuestionDataFrameId = this.transcript.dataframe.id
-              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
-              this.$nextTick(() => {
-                this.isLoading = false
-              })
-              break
-            case 'Disable':
-            case 'Delete':
-            case 'Warn':
-            case 'Fail':
-              this.layout = 'EmptyResult'
-              this.isLoading = false
-              break
-          }
-        })
-    },
     getComponentV2 (res) {
       window.clearTimeout(this.timeoutFunction)
       this.$store.commit('result/updateCurrentResultId', res.resultId)
@@ -320,9 +267,7 @@ export default {
               this.transcript = componentResponse.transcript
               this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
-              this.$nextTick(() => {
-                this.isLoading = false
-              })
+              this.isLoading = false
               break
             case 'Disable':
             case 'Delete':
@@ -352,15 +297,6 @@ export default {
         })
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
       })
-    },
-    segmentationAnalysis (payloadInfo) {
-      this.segmentationInfo.nlpToken = payloadInfo.segmentation.filter(element => {
-        return element.isMatchedByNlp || element.isSynonym
-      })
-      this.segmentationInfo.unknownToken = payloadInfo.segmentation.filter(element => {
-        return element.type === 'UnknownToken'
-      })
-      this.segmentationInfo.question = payloadInfo.executedQuestion
     },
     segmentationAnalysisV2 (payloadInfo) {
       // this.segmentationInfo.nlpToken = payloadInfo.sentence.filter(element => {
