@@ -52,7 +52,7 @@ export default {
   },
   data () {
     return {
-      isLoading: false,
+      isLoading: true,
       layout: null,
       resultInfo: null,
       restrictInfo: [],
@@ -270,7 +270,9 @@ export default {
               this.segmentationAnalysis(componentResponse.segmentationPayload)
               this.currentQuestionDataFrameId = this.transcript.dataframe.id
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
-              this.isLoading = false
+              this.$nextTick(() => {
+                this.isLoading = false
+              })
               break
             case 'Disable':
             case 'Delete':
@@ -328,6 +330,8 @@ export default {
               this.isLoading = false
               break
           }
+        }).catch((error) => {
+          if (error.constructor.name !== 'Cancel') this.isLoading = false
         })
     },
     getRelatedQuestion (id) {
