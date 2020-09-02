@@ -243,10 +243,10 @@ export default {
   },
   cancelRequest ({ state }, mode) {
     if (mode === 'popup' && typeof popupCancelFunction === 'function') {
-      popupCancelFunction('cancel request')
+      popupCancelFunction('cancel')
     } 
     if (mode === 'display' && typeof displayCancelFunction === 'function') {
-      displayCancelFunction('cancel request')
+      displayCancelFunction('cancel')
     }
   },
   async updateDataFrameList({ commit, state, dispatch }) {

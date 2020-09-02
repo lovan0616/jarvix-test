@@ -42,7 +42,7 @@ export default {
   },
   cancelRequest ({state}) {
     if (state.askCancelToken) {
-      state.askCancelToken.cancel()
+      state.askCancelToken.cancel('cancel')
     }
   },
   async updateChatConversation({ dispatch, commit, state, rootState }) {
