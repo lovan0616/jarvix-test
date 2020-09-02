@@ -11,9 +11,6 @@
       class="layout-spinner"
       size="50"
     />
-    <empty-result
-      v-else-if="!layout"
-    />
     <component
       v-else
       :is="layout"
@@ -44,7 +41,7 @@
 
 <script>
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ResultDisplay',
@@ -112,7 +109,7 @@ export default {
         ) return
 
         // 預先觸發重新計算 column summary 和 column correlation
-        this.triggerColumnDataCalculation()
+        // this.triggerColumnDataCalculation()
         this.fetchApiAsk({
           question: this.$route.query.question, 
           'dataSourceId': this.$route.query.dataSourceId, 
@@ -129,7 +126,7 @@ export default {
     if (this.addConversationTimeout) window.clearTimeout(this.addConversationTimeout)
   },
   methods: {
-    ...mapActions('dataSource', ['triggerColumnDataCalculation']),
+    // ...mapActions('dataSource', ['triggerColumnDataCalculation']),
     fetchData () {
       const {dataSourceId, dataFrameId, question} = this.$route.query
       if (!question) return
@@ -151,8 +148,8 @@ export default {
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {
-      this.clearLayout()
       this.isLoading = true
+      this.clearLayout()
       this.$store.commit('chatBot/addUserConversation', data.question)
       this.$store.commit('chatBot/updateAnalyzeStatus', true)
       // 動態變更 title 為了方便前一頁、下一頁變更時可以快速找到
@@ -216,7 +213,10 @@ export default {
               this.getComponentV2(res)
               // this.getRelatedQuestion(res.resultId)
             }).catch((error) => {
-              if (error.constructor.name !== 'Cancel') this.isLoading = false
+              if (error.constructor.name !== 'Cancel') {
+                this.isLoading = false
+                this.layout = 'EmptyResult'
+              }
             })
           } else {
             // 多個結果
@@ -227,7 +227,10 @@ export default {
           }
         }).catch((error) => {
           // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
-          if (error.constructor.name !== 'Cancel') this.isLoading = false
+          if (error.constructor.name !== 'Cancel') {
+            this.isLoading = false
+            this.layout = 'EmptyResult'
+          }
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
         })
     },
@@ -236,56 +239,6 @@ export default {
         text: this.$t('bot.finish'), options
       })
       this.$store.commit('chatBot/updateAnalyzeStatus', false)
-    },
-    getComponent (res) {
-      window.clearTimeout(this.timeoutFunction)
-      this.$store.commit('result/updateCurrentResultId', res.resultId)
-      if (res.layout === 'no_answer') {
-        this.layout = 'EmptyResult'
-        this.resultInfo = {
-          title: res.noAnswerTitle,
-          description: res.noAnswerDescription
-        }
-        this.isLoading = false
-        return false
-      }
-
-      this.$store.dispatch('chatBot/getComponentList', res.resultId)
-        .then(componentResponse => {
-          switch (componentResponse.status) {
-            case 'Process':
-            case 'Ready':
-              this.timeoutFunction = window.setTimeout(() => {
-                this.getComponent(res)
-              }, this.totalSec)
-
-              this.totalSec += this.periodSec
-              this.periodSec = this.totalSec
-              break
-            case 'Complete':
-              this.totalSec = 50
-              this.periodSec = 200
-              this.resultInfo = componentResponse.componentIds
-              this.restrictInfo = componentResponse.restrictions
-              this.layout = this.getLayout(componentResponse.layout)
-              this.segmentationPayload = componentResponse.segmentationPayload
-              this.transcript = componentResponse.transcript
-              this.segmentationAnalysis(componentResponse.segmentationPayload)
-              this.currentQuestionDataFrameId = this.transcript.dataframe.id
-              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
-              this.$nextTick(() => {
-                this.isLoading = false
-              })
-              break
-            case 'Disable':
-            case 'Delete':
-            case 'Warn':
-            case 'Fail':
-              this.layout = 'EmptyResult'
-              this.isLoading = false
-              break
-          }
-        })
     },
     getComponentV2 (res) {
       window.clearTimeout(this.timeoutFunction)
@@ -324,7 +277,7 @@ export default {
               this.isWarRoomAddable = componentResponse.isWarRoomAddable
               this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
-              this.isLoading = false
+              window.setTimeout(() => {this.isLoading = false}, 0)
               break
             case 'Disable':
             case 'Delete':
@@ -335,7 +288,10 @@ export default {
               break
           }
         }).catch((error) => {
-          if (error.constructor.name !== 'Cancel') this.isLoading = false
+          if (error.constructor.name !== 'Cancel') {
+            this.isLoading = false
+            this.layout = 'EmptyResult'
+          }
         })
     },
     getRelatedQuestion (id) {
@@ -354,15 +310,6 @@ export default {
         })
         this.$store.commit('chatBot/updateAnalyzeStatus', false)
       })
-    },
-    segmentationAnalysis (payloadInfo) {
-      this.segmentationInfo.nlpToken = payloadInfo.segmentation.filter(element => {
-        return element.isMatchedByNlp || element.isSynonym
-      })
-      this.segmentationInfo.unknownToken = payloadInfo.segmentation.filter(element => {
-        return element.type === 'UnknownToken'
-      })
-      this.segmentationInfo.question = payloadInfo.executedQuestion
     },
     segmentationAnalysisV2 (payloadInfo) {
       // this.segmentationInfo.nlpToken = payloadInfo.sentence.filter(element => {
