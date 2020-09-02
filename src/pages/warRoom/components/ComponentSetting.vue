@@ -52,14 +52,14 @@
             class="war-room-setting__block-choose"
             @click="componentData.componentId || isEmptyPool ? null : showComponentDataSourceList()"
           >
-            {{ isEmptyPool ? emptyPoolMessage : selectedDataSource.question || $t('warRoom.notChosen') }}
+            {{ selectedDataSourceDisplay }}
             <svg-icon
               v-if="!componentData.componentId && !isEmptyPool"
               icon-class="arrow-right" 
               class="icon"/>
           </div>
         </div>
-        <template v-if="selectedDataSource.question">
+        <template v-if="isShowAdvanceSetting">
           <div class="war-room-setting__block">
             <div class="war-room-setting__block-title">
               {{ $t('warRoom.updateFrequency') }}
@@ -135,7 +135,8 @@
                   class="date-picker__item"
                   size="small"
                   type="date"
-                  name="startTime"/>
+                  name="startTime"
+                  @change="clearEndTime"/>
                 <div class="date-picker__seperator">-</div>
                 <el-date-picker
                   v-validate="'after:startTime'"
@@ -216,7 +217,7 @@
           <svg-icon icon-class="delete" />
         </button>
         <button
-          :disabled="isProcessing || !selectedDataSource.question || !componentData.config.displayName"
+          :disabled="disableSaveButton"
           type="button"
           class="btn btn-default war-room-setting__button-block-button--right"
           @click="componentData.componentId ? saveComponentSetting() : buildComponent()"
@@ -411,12 +412,24 @@ export default {
       return 'others'
     },
     isEmptyPool () {
-      if (!this.dataSourcePool) return false
+      if (!this.dataSourcePool || !this.componentType) return false
       return this.dataSourcePool[this.componentType + 'TypeItems'].length === 0
     },
     emptyPoolMessage () {
       const type = this.$t(`warRoom.${this.componentType}Type`)
       return this.$t('warRoom.emptyDataSource', { type })
+    },
+    isShowAdvanceSetting () {
+      if (this.componentData.componentId) return true
+      return this.selectedDataSource.question
+    },
+    selectedDataSourceDisplay () {
+      if (this.componentData.componentId) return this.originalComponentData.config.question
+      return this.isEmptyPool ? this.emptyPoolMessage : this.selectedDataSource.question || this.$t('warRoom.notChosen')
+    },
+    disableSaveButton () {
+      if (this.componentData.componentId) return this.isProcessing
+      return this.isProcessing  || !this.selectedDataSource.question || !this.componentData.config.displayName
     }
   },
   watch: {
@@ -526,8 +539,11 @@ export default {
       this.componentData.config.customStartTime = null
     },
     disabledDueDate (time) {
-      return time.getTime() < this.componentData.config.customStartTime.getTime() || time.getTime() > Date.now()
+      return time.getTime() < new Date(this.componentData.config.customStartTime).getTime() || time.getTime() > Date.now()
     },
+    clearEndTime () {
+      this.componentData.config.customEndTime = null
+    }
   }
 }
 </script>

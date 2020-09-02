@@ -1,6 +1,15 @@
 <template>
   <section class="war-room">
-    <section class="war-room__content">
+    <spinner 
+      v-if="isLoading"
+      :title="$t('editing.loading')"
+      class="spinner"
+      size="50"
+    />
+    <section
+      v-else
+      class="war-room__content"
+    >
       <div class="war-room__header">
         <div class="war-room__header--left">
           <router-link
@@ -77,7 +86,6 @@
               @click="publishWarRoom"
             >{{ $t('warRoom.publish') }}</button>
             <template v-if="warRoomBasicInfo.isPublishing">
-              <!--待確認是否使用重新發佈即可-->
               <button
                 :disabled="isProcessing"
                 type="button"
@@ -408,7 +416,7 @@ export default {
           this.warRoomBasicInfo = warRoomBasicInfo
           this.dataSourcePool = warRoomPoolData
         })
-        .catch(() => { this.isLoading = false })
+        .finally(() => { this.isLoading = false })
     },
     sortComponents (componentList) {
       componentList.sort((a, b) => a.orderSequence - b.orderSequence)
@@ -599,6 +607,8 @@ export default {
   display: flex;
   width: 100%;
   height: 100%;
+  justify-content: center;
+  align-items: center;
 
   &__content {
     flex: 1;
@@ -610,6 +620,7 @@ export default {
 
   &__side-setting {
     border: 1px solid #464A50;
+    height: 100%;
   }
 
   &__header {

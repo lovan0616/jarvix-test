@@ -77,7 +77,8 @@
                 class="date-picker__item"
                 size="small"
                 type="date"
-                name="startTime"/>
+                name="startTime"
+                @change="clearEndTime"/>
               <div class="date-picker__seperator">-</div>
               <el-date-picker
                 v-validate="'after:startTime'"
@@ -286,9 +287,11 @@ export default {
       this.warRoomData.customStartTime = null
     },
     disabledDueDate (time) {
-      console.log(time)
-      return time.getTime() < this.warRoomData.customStartTime.getTime() || time.getTime() > Date.now()
+      return time.getTime() < new Date(this.warRoomData.customStartTime).getTime() || time.getTime() > Date.now()
     },
+    clearEndTime () {
+      this.warRoomData.customEndTime = null
+    }
   }
 }
 </script>

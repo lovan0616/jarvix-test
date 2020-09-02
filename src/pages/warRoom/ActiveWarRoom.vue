@@ -325,6 +325,7 @@ export default {
 
   &__side-setting {
     border: 1px solid #464A50;
+    height: 100%;
   }
 
   &__header {

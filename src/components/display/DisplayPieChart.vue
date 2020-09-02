@@ -60,6 +60,14 @@ export default {
     isShowLabelData: {
       type: Boolean,
       default: false
+    },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
@@ -71,7 +79,8 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: this.height
+        height: this.height,
+        ...this.customChartStyle
       }
     },
     options () {
@@ -130,6 +139,7 @@ export default {
 
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
+      config.toolbox.show = this.showToolbox
 
       return config
     },
