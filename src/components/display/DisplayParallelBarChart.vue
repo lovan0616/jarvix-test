@@ -41,7 +41,7 @@
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { getDrillDownTool } from '@/components/display/common/addons'
+import { getDrillDownTool, monitorVisualMap, monitorMarkLine } from '@/components/display/common/addons'
 import {
   parallelColorOnly1,
   parallelColorOnly2,
@@ -51,6 +51,7 @@ import {
   yAxisParallel,
   yAxisDefault,
   seriesItemBar,
+  seriesItemMarkLine,
   verticalZoomIn
 } from './common/addons'
 
@@ -58,7 +59,8 @@ const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
   'yAxis:parallel': yAxisParallel(),
   'xAxis:parallel': yAxisDefault(),
-  'seriesItem:bar': seriesItemBar()
+  'seriesItem:bar': seriesItemBar(),
+  'seriesItem:markLine': seriesItemMarkLine()
 })
 
 export default {
@@ -189,7 +191,14 @@ export default {
 
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
-
+      // 上下限
+      let upperLimit = this.title.xAxis[0].upperLimit
+      let lowerLimit = this.title.xAxis[0].lowerLimit
+      if (upperLimit !== null || lowerLimit !== null) {
+        config.visualMap = monitorVisualMap(upperLimit, lowerLimit, parallelColorOnly1[0])
+        // 門檻線
+        config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit, true)
+      }
       return config
     },
     colorList () {

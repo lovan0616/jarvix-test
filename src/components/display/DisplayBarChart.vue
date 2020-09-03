@@ -51,7 +51,7 @@
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { getDrillDownTool } from '@/components/display/common/addons'
+import { monitorVisualMap, monitorMarkLine, getDrillDownTool } from '@/components/display/common/addons'
 import {
   colorOnly1,
   colorOnly2,
@@ -215,6 +215,16 @@ export default {
 
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
+      // 上下限
+      let upperLimit = this.title.yAxis[0].upperLimit
+      let lowerLimit = this.title.yAxis[0].lowerLimit
+      if (upperLimit !== null || lowerLimit !== null) {
+        // 處理顏色
+        config.visualMap = monitorVisualMap(upperLimit, lowerLimit)
+        // markline
+        config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit)
+      }
+
       return config
     },
     colorList () {

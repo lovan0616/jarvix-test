@@ -52,7 +52,7 @@
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { getDrillDownTool } from '@/components/display/common/addons'
+import { getDrillDownTool, monitorMarkLine } from '@/components/display/common/addons'
 import {
   colorOnly1,
   colorOnly2,
@@ -217,8 +217,9 @@ export default {
       if (!this.isShowLegend) config.legend.show = false
 
       // 圖表 threshold
-      if (this.title.yAxis[0].upperLimit !== null) {
-        let upperLimit = this.title.yAxis[0].upperLimit
+      let upperLimit = this.title.yAxis[0].upperLimit
+      let lowerLimit = this.title.yAxis[0].lowerLimit
+      if (upperLimit !== null || lowerLimit !== null) {
         // 找出 Y 的最大、最小值
         let maxY = this.dataset.data[0][0]
         let minY = this.dataset.data[0][0]
@@ -230,34 +231,58 @@ export default {
             minY = element[0] < minY ? element[0] : minY
           }
         })
-        /**
-         * 將超出警示的上色
-         * 注意！！ 最小值的 gt 一定要設！！ 不然線不會上色，應該是 echarts bug
-         **/
-        config.visualMap = [{
-          type: 'piecewise',
-          show: false,
-          pieces: upperLimit < minY ? [{
-            lte: maxY,
-            gt: upperLimit,
-            color: '#EB5959'
-          }] : [{
-            gte: upperLimit,
-            color: '#EB5959'
-          }, {
-            lt: upperLimit,
-            gt: minY
+
+        // markline
+        config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit)
+        
+        if (upperLimit && lowerLimit) {
+          config.visualMap = [{
+            type: 'piecewise',
+            show: false,
+            pieces: [{
+              gt: upperLimit,
+              color: '#EB5959'
+            },{
+              lte: upperLimit,
+              gt: lowerLimit,
+              color: '#438AF8'
+            },{
+              lte: lowerLimit,
+              color: '#EB5959'
+            }]
           }]
-        }]
-        // 門檻線
-        config.series[0].markLine = {
-          symbol: 'none',
-          lineStyle: {
-            color: '#EB5959',
-            width: 2
-          },
-          data: [{
-            yAxis: upperLimit
+        } else if (lowerLimit === null) {
+          config.visualMap = [{
+            type: 'piecewise',
+            show: false,
+            pieces: upperLimit > minY ? [{
+              gt: upperLimit,
+              color: '#EB5959'
+            },{
+              lte: upperLimit,
+              gt: minY,
+              color: '#438AF8'
+            }] : [{
+              gt: upperLimit,
+              color: '#EB5959'
+            }]
+          }]
+        } else {
+          config.visualMap = [{
+            type: 'piecewise',
+            show: false,
+            pieces: lowerLimit > minY ? [{
+              gt: lowerLimit,
+              color: '#438AF8'
+            },{
+              lte: lowerLimit,
+              gt: minY,
+              color: '#EB5959'
+            }] : [{
+              lte: maxY,
+              gt: lowerLimit,
+              color: '#438AF8'
+            }]
           }]
         }
       }
