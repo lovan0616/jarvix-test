@@ -222,7 +222,7 @@ export default {
       this.copyQuestion(value)
     },
     '$route' (to, from) {
-      // 透過 geodown 切換 dataframe 時不清空問句 input
+      // 透過 drilldown 切換 dataframe 時不清空問句 input
       if (from.name === 'PageResult' && to.name === 'PageResult') return
 
       // 其他情況切換 datasource 或 dataframe 時會觸發回首頁，此變化才清空問句 input
@@ -245,6 +245,7 @@ export default {
     this.userQuestion = this.$route.query.question
   },
   destroyed () {
+    this.closeHelper()
     document.removeEventListener('click', this.autoHide, false)
     if (this.websocketHandler) this.closeWebSocketConnection()
   },
