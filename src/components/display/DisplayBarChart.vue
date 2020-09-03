@@ -164,9 +164,9 @@ export default {
         ...this.addonOptions,
         ...getDrillDownTool(this.$route.name, this.title),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
-        // dataset: {
-        //   source: this.datasetTransform(this.dataset)
-        // },
+        dataset: {
+          source: this.datasetTransform(this.dataset)
+        },
         series: this.series,
         color: this.colorList
       }
@@ -216,43 +216,68 @@ export default {
 
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
-
+      // 上下限
       let upperLimit = this.title.yAxis[0].upperLimit
       let lowerLimit = this.title.yAxis[0].lowerLimit
-
-      upperLimit = 1500
-      lowerLimit = 500
       if (upperLimit !== null || lowerLimit !== null) {
-        config.series[0].data = this.datasetTransform(this.dataset).map(item => {
-          return item
-        })
-        // .map(data => {
-        //   console.log(data, 'data')
-        //   if (data[0] > upperLimit || data[0] < lowerLimit) {
-        //     return {
-        //       value: data[0],
-        //       itemStyle: {
-        //         color: warningColor[0]
-        //       }
-        //     }
-        //   } else {
-        //     return data[0]
-        //   }
-        // })
-
+        let visualMap
+        if (upperLimit !== null && lowerLimit !== null) {
+          // 上下限都有設
+          visualMap = [{
+            type: 'piecewise',
+            show: false,
+            pieces: [{
+              gte: upperLimit,
+              color: warningColor[0]
+            }, {
+              gt: lowerLimit,
+              lte: upperLimit,
+              color: colorOnly1[0]
+            }, {
+              lt: lowerLimit,
+              color: warningColor[0]
+            }]
+          }]
+        } else if (upperLimit === null) {
+          // 只有下限
+          visualMap = [{
+            type: 'piecewise',
+            show: false,
+            pieces: [{
+              gt: lowerLimit,
+              color: colorOnly1[0]
+            }, {
+              lt: lowerLimit,
+              color: warningColor[0]
+            }]
+          }]
+        } else {
+          // 只有上限
+          visualMap = [{
+            type: 'piecewise',
+            show: false,
+            pieces: [{
+              gte: upperLimit,
+              color: warningColor[0]
+            }, {
+              lte: upperLimit,
+              color: colorOnly1[0]
+            }]
+          }]
+        }
+        config.visualMap = visualMap
         // 門檻線
-        // config.series[0].markLine = {
-        //   symbol: 'none',
-        //   lineStyle: {
-        //     color: '#EB5959',
-        //     width: 2
-        //   },
-        //   data: [{
-        //     yAxis: upperLimit,
-        //   },{
-        //     yAxis: lowerLimit,
-        //   }]
-        // }
+        let markLineData = []
+        if (upperLimit !== null) markLineData.push({yAxis: upperLimit})
+        if (lowerLimit !== null) markLineData.push({yAxis: lowerLimit})
+        config.series[0].markLine = {
+          symbol: 'none',
+          lineStyle: {
+            color: '#EB5959',
+            width: 2
+          },
+          data: markLineData
+        }
       }
       return config
     },
