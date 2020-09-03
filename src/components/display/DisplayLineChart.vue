@@ -52,7 +52,7 @@
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { getDrillDownTool } from '@/components/display/common/addons'
+import { getDrillDownTool, monitorMarkLine } from '@/components/display/common/addons'
 import {
   colorOnly1,
   colorOnly2,
@@ -217,9 +217,9 @@ export default {
       if (!this.isShowLegend) config.legend.show = false
 
       // 圖表 threshold
-      if (this.title.yAxis[0].upperLimit !== null || this.title.yAxis[0].lowerLimit !== null) {
-        let upperLimit = this.title.yAxis[0].upperLimit
-        let lowerLimit = this.title.yAxis[0].lowerLimit
+      let upperLimit = this.title.yAxis[0].upperLimit
+      let lowerLimit = this.title.yAxis[0].lowerLimit
+      if (upperLimit !== null || lowerLimit !== null) {
         // 找出 Y 的最大、最小值
         let maxY = this.dataset.data[0][0]
         let minY = this.dataset.data[0][0]
@@ -232,17 +232,10 @@ export default {
           }
         })
 
-        // 門檻線
-          config.series[0].markLine = {
-            symbol: 'none',
-            lineStyle: {
-              color: '#EB5959',
-              width: 2
-            },
-            data: []
-          }
+        // markline
+        config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit)
         
-        if (this.title.yAxis[0].upperLimit && this.title.yAxis[0].lowerLimit) {
+        if (upperLimit && lowerLimit) {
           config.visualMap = [{
             type: 'piecewise',
             show: false,
@@ -258,9 +251,7 @@ export default {
               color: '#EB5959'
             }]
           }]
-          config.series[0].markLine.data.push({yAxis: upperLimit})
-          config.series[0].markLine.data.push({yAxis: lowerLimit})
-        } else if (this.title.yAxis[0].upperLimit && this.title.yAxis[0].lowerLimit === null){
+        } else if (lowerLimit === null) {
           config.visualMap = [{
             type: 'piecewise',
             show: false,
@@ -276,8 +267,7 @@ export default {
               color: '#EB5959'
             }]
           }]
-          config.series[0].markLine.data.push({yAxis: upperLimit})
-        } else if (this.title.yAxis[0].upperLimit === null && this.title.yAxis[0].lowerLimit){
+        } else {
           config.visualMap = [{
             type: 'piecewise',
             show: false,
@@ -294,7 +284,6 @@ export default {
               color: '#438AF8'
             }]
           }]
-          config.series[0].markLine.data.push({yAxis: lowerLimit})
         }
       }
 

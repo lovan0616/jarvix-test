@@ -43,7 +43,6 @@ import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { getDrillDownTool, monitorVisualMap, monitorMarkLine } from '@/components/display/common/addons'
 import {
-  warningColor,
   parallelColorOnly1,
   parallelColorOnly2,
   color5,
