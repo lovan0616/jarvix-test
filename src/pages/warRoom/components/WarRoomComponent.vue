@@ -212,6 +212,8 @@ export default {
               break
           }
         }).catch((error) => {
+          // 若為 live 頁面，需確認是否有更新版本上線
+          if (!this.isPreviewing) this.$emit('check-update')
           window.clearTimeout(this.timeoutFunction)
           window.clearTimeout(this.autoRefreshFunction)
           this.isLoading = false

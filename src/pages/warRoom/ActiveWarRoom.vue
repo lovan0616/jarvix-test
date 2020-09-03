@@ -54,6 +54,7 @@
             :is-previewing="isPreviewing"
             :is-show-warning-message="true"
             class="number__item"
+            @check-update="checkForUpdate"
           />
         </div>
         <div class="chart">
@@ -65,6 +66,7 @@
               :is-editable="false"
               :is-previewing="isPreviewing"
               class="chart__item"
+              @check-update="checkForUpdate"
             />
           </div>
           <div
@@ -78,6 +80,7 @@
               :is-editable="false"
               :is-previewing="isPreviewing"
               class="chart__item"
+              @check-update="checkForUpdate"
             />
           </div>
         </div>
@@ -143,13 +146,15 @@ export default {
     if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
   },
   methods: {
+    requestData () {
+      const promise = this.isPreviewing ? getWarRoomInfo : getPublishedWarRoomInfo
+      const id = this.isPreviewing ? this.$route.params.war_room_id : this.$route.query.id
+      return promise(id)
+    },
     fetchData () {
       this.isLoading = true
       if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
-      const promise = this.isPreviewing ? getWarRoomInfo : getPublishedWarRoomInfo
-      const id = this.isPreviewing ? this.$route.params.war_room_id : this.$route.query.id
-
-      promise(id)
+      this.requestData()
         .then(response => {
           const { diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = response
           this.chartComponent = this.sortComponents(diagramTypeComponents)
@@ -163,6 +168,7 @@ export default {
           this.autoRefreshFunction = window.setTimeout(() => {
             this.fetchData()
           }, 3600 * 1000)
+          return warRoomBasicInfo
         })
         .catch(() => {
           window.clearTimeout(this.autoRefreshFunction)
@@ -174,6 +180,16 @@ export default {
       if (componentList.length === 0) return componentList
       componentList.sort((a, b) => a.orderSequence - b.orderSequence)
       return componentList
+    },
+    checkForUpdate () {
+      this.requestData()
+        .then(response => {
+          const previousUpdateTime = this.warRoomBasicInfo.updateTime
+          const newUpdateTime = response.updateTime
+          // 比對上一次和這一次的更新時間，若有更新則會不同，需重拿戰情室資料
+          if (newUpdateTime === previousUpdateTime) return
+          this.fetchData()
+        })
     }
   }
 }
