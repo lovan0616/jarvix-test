@@ -82,7 +82,6 @@
                 @change="clearEndTime"/>
               <div class="date-picker__seperator">-</div>
               <el-date-picker
-                v-validate="'after:startTime'"
                 v-model="warRoomData.customEndTime"
                 :picker-options="customTimeInterval.endTimePickerOptions"
                 :placeholder="'*' + $t('warRoom.endDate')"
