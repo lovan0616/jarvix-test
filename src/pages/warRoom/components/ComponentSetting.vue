@@ -158,7 +158,10 @@
               <div class="date-picker__reminder">{{ '*' + $t('warRoom.timeIntervalReminder') }}</div>
             </div>
           </div>
-          <div class="war-room-setting__block">
+          <div
+            v-if="selectedDataSource.isSetBoundAvailable || componentData.isSetBoundAvailable"
+            class="war-room-setting__block"
+          >
             <div class="war-room-setting__block-title">
               {{ $t('warRoom.thresholdSetting') }}
               <el-switch
@@ -176,7 +179,6 @@
                 {{ $t('warRoom.maxThreshold') }}
               </label>
               <input
-                v-validate="'required'"
                 :disabled="isProcessing"
                 v-model="componentData.config.upperBound"
                 :min="componentData.config.lowerBound"
@@ -192,7 +194,6 @@
                 {{ $t('warRoom.minThreshold') }}
               </label>
               <input
-                v-validate="'required'"
                 :disabled="isProcessing"
                 v-model="componentData.config.lowerBound"
                 :placeholder="$t('warRoom.pleaseEnterValue')"
@@ -454,6 +455,19 @@ export default {
             showClose: true
           })
         }
+      
+        // 上下限至少擇一填寫
+        if (
+          this.componentData.config.boundSwitch 
+          && (!this.componentData.config.upperBound && !this.componentData.config.lowerBound)
+        ) {
+          return Message({
+            message: this.$t('message.eitherBoundIsRequired'),
+            type: 'error',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }
         const { war_room_id: warRoomId } = this.$route.params
         const { question, ...config } = this.componentData.config
         const componentData = { config, itemId: this.selectedDataSource.itemId }
@@ -475,6 +489,19 @@ export default {
     saveComponentSetting () {
       this.$validator.validate(this.validateFieldKey).then((isValidate) => {
         if (!isValidate) return
+        
+        // 上下限至少擇一填寫
+        if (
+          this.componentData.config.boundSwitch 
+          && (!this.componentData.config.upperBound && !this.componentData.config.lowerBound)
+        ) {
+          return Message({
+            message: this.$t('message.eitherBoundIsRequired'),
+            type: 'error',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }
         const { war_room_id: warRoomId } = this.$route.params
         const { question, ...config } = this.componentData.config
         this.isProcessing = true

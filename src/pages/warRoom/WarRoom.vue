@@ -106,6 +106,13 @@
             >{{ $t('warRoom.preview') }}</button>
           </div>
           <div class="button-container--bottom">
+            <div class="button-container__description">
+              <span class="question-lamp">
+                <svg-icon icon-class="lamp"/>
+                {{ $t('warRoom.hint') }}:
+              </span>
+              {{ $t('warRoom.chartReminder') }}
+            </div>
             <button
               type="button"
               class="btn-m btn-outline btn-has-icon button-container__button"
@@ -535,6 +542,10 @@ export default {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+
+    &--left {
+      max-width: 50%;
+    }
   }
 
   &__title {
@@ -641,6 +652,14 @@ export default {
           border: none;
           background: #2FECB3;
         }
+      }
+    }
+
+    &__description {
+      font-size: 14px;
+      line-height: 32px;
+      .question-lamp {
+        color: $theme-color-warning;
       }
     }
   }

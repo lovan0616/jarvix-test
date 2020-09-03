@@ -118,7 +118,8 @@
     "dataLoading": "资料读取中",
     "createdSuccessfully": "建立成功",
     "successfullyAddedToWarRoom": "成功加入战情室",
-    "componentAmountReachedLimit": "元件数量已达上限"
+    "componentAmountReachedLimit": "元件数量已达上限",
+    "eitherBoundIsRequired": "上限和下限至少需设定一个"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -642,7 +643,9 @@
     "timeInterval": "时间范围",
     "now": "现在",
     "indexType": "指标型",
-    "diagramType": "图表型"
+    "diagramType": "图表型",
+    "hint": "提示",
+    "chartReminder": "资料过多或时间区间过长时，图表将自动进行显示限制。"
   },
   "description": {
     "basic": {
