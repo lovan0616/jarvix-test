@@ -74,6 +74,7 @@
                 :clearable="true"
                 :class="{ 'has-error': errors.first('startTime') }"
                 :disabled="isProcessing"
+                value-format="yyyy-MM-dd"
                 class="date-picker__item"
                 size="small"
                 type="date"
@@ -81,12 +82,12 @@
                 @change="clearEndTime"/>
               <div class="date-picker__seperator">-</div>
               <el-date-picker
-                v-validate="'after:startTime'"
                 v-model="warRoomData.customEndTime"
                 :picker-options="customTimeInterval.endTimePickerOptions"
                 :placeholder="'*' + $t('warRoom.endDate')"
                 :clearable="true"
                 :disabled="isProcessing || !warRoomData.customStartTime"
+                value-format="yyyy-MM-dd"
                 class="date-picker__item"
                 size="small"
                 type="date"

@@ -208,10 +208,12 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.isLoading = false
               this.isError = true
-              this.errorMessage = componentBasicInfo.errorMessage
+              this.errorMessage = componentBasicInfo.errorMessage || this.$t('message.systemIsError')
               break
           }
         }).catch((error) => {
+          // 若為 live 頁面，需確認是否有更新版本上線
+          if (!this.isPreviewing) this.$emit('check-update')
           window.clearTimeout(this.timeoutFunction)
           window.clearTimeout(this.autoRefreshFunction)
           this.isLoading = false
@@ -272,7 +274,7 @@ export default {
   }
 
   &__title {
-    width: calc(100% - 67px);
+    width: calc(100% - 70px);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

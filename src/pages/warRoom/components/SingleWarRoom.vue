@@ -1,5 +1,8 @@
 <template>
-  <div class="single-war-room war-room">
+  <div
+    class="single-war-room war-room"
+    @click.stop="edit"
+  >
     <div 
       :class="{ 'war-room__status--published': warRoomInfo.isPublishing}"
       class="war-room__status">
@@ -8,6 +11,7 @@
     <div class="war-room__name">{{ warRoomInfo.name }}</div>
     <div class="war-room__link">
       <a
+        v-if="warRoomInfo.isPublishing"
         href="javascript:void(0);" 
         class="link action-link"
         @click.stop="viewDetail"
@@ -95,8 +99,8 @@ export default {
     viewDetail () {
       const routeData = this.$router.resolve({
         name: 'WarRoomLivePage', 
-        query: { 'id': this.warRoomInfo.urlIdentifier } });
-      window.open(routeData.href, '_blank');
+        query: { 'id': this.warRoomInfo.urlIdentifier } })
+      window.open(routeData.href, '_blank')
     },
     edit () {
       this.$router.push({

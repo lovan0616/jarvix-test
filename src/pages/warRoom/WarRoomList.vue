@@ -241,6 +241,12 @@ export default {
     confirmDelete () {
       this.isProcessing = true
       deleteWarRoom(this.tempEditInfo.id).then(() => {
+        Message({
+          message: this.$t('message.deleteSuccess'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
         this.isShowDelete = false
         this.fetchData()
       })

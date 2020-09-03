@@ -503,8 +503,8 @@ export default {
     },
     previewWarRoom () {
       const { war_room_id: warRoomId } = this.$route.params
-      const routeData = this.$router.resolve({ name: 'WarRoomPreviewPage', params: { 'war_room_id': warRoomId } });
-      window.open(routeData.href, '_blank');
+      const routeData = this.$router.resolve({ name: 'WarRoomPreviewPage', params: { 'war_room_id': warRoomId } })
+      window.open(routeData.href, '_blank')
     }
   }
 }
