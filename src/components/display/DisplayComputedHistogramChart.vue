@@ -172,24 +172,28 @@ export default {
       histogramConfig.chartData.data = chartData
       const shortenNumberMethod = this.shortenNumber
       chartAddon.series[0] = {
-          ...histogramConfig.chartData,
-          ...(this.isShowLabelData && {
-            label: {
-              position: 'top',
-              show: true,
-              fontSize: 10,
-              color: '#fff',
-              formatter (value) { return shortenNumberMethod(value.data[2], 0) }
-            }
-          })
-        }
+        ...histogramConfig.chartData,
+        ...(this.isShowLabelData && {
+          label: {
+            position: 'top',
+            show: true,
+            fontSize: 10,
+            color: '#fff',
+            formatter (value) { return shortenNumberMethod(value.data[2], 0) }
+          }
+        })
+      }
 
       let upperLimit = this.title.yAxis[0].upperLimit
       let lowerLimit = this.title.yAxis[0].lowerLimit
       if (upperLimit !== null || lowerLimit !== null) {
         // 處理顏色
         chartAddon.visualMap = monitorVisualMap(upperLimit, lowerLimit)
-        chartAddon.series.push(monitorMarkLine(upperLimit, lowerLimit))
+        // markline
+        chartAddon.series.push({
+          type: 'line',
+          markLine: monitorMarkLine(upperLimit, lowerLimit)
+        })
       }
 
       // 不顯示“全選”按鈕

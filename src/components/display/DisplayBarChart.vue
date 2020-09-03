@@ -51,7 +51,7 @@
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { getDrillDownTool } from '@/components/display/common/addons'
+import { monitorVisualMap, monitorMarkLine, getDrillDownTool } from '@/components/display/common/addons'
 import {
   warningColor,
   colorOnly1,
@@ -220,65 +220,12 @@ export default {
       let upperLimit = this.title.yAxis[0].upperLimit
       let lowerLimit = this.title.yAxis[0].lowerLimit
       if (upperLimit !== null || lowerLimit !== null) {
-        let visualMap
-        if (upperLimit !== null && lowerLimit !== null) {
-          // 上下限都有設
-          visualMap = [{
-            type: 'piecewise',
-            show: false,
-            pieces: [{
-              gte: upperLimit,
-              color: warningColor[0]
-            }, {
-              gt: lowerLimit,
-              lte: upperLimit,
-              color: colorOnly1[0]
-            }, {
-              lt: lowerLimit,
-              color: warningColor[0]
-            }]
-          }]
-        } else if (upperLimit === null) {
-          // 只有下限
-          visualMap = [{
-            type: 'piecewise',
-            show: false,
-            pieces: [{
-              gt: lowerLimit,
-              color: colorOnly1[0]
-            }, {
-              lt: lowerLimit,
-              color: warningColor[0]
-            }]
-          }]
-        } else {
-          // 只有上限
-          visualMap = [{
-            type: 'piecewise',
-            show: false,
-            pieces: [{
-              gte: upperLimit,
-              color: warningColor[0]
-            }, {
-              lte: upperLimit,
-              color: colorOnly1[0]
-            }]
-          }]
-        }
-        config.visualMap = visualMap
-        // 門檻線
-        let markLineData = []
-        if (upperLimit !== null) markLineData.push({yAxis: upperLimit})
-        if (lowerLimit !== null) markLineData.push({yAxis: lowerLimit})
-        config.series[0].markLine = {
-          symbol: 'none',
-          lineStyle: {
-            color: '#EB5959',
-            width: 2
-          },
-          data: markLineData
-        }
+        // 處理顏色
+        config.visualMap = monitorVisualMap(upperLimit, lowerLimit)
+        // markline
+        config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit)
       }
+
       return config
     },
     colorList () {

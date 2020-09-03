@@ -600,14 +600,11 @@ export function monitorMarkLine (upperLimit, lowerLimit) {
   if (upperLimit !== null) markLineData.push({yAxis: upperLimit})
   if (lowerLimit !== null) markLineData.push({yAxis: lowerLimit})
   return {
-    type: 'line',
-    markLine: {
-      symbol: 'none',
-      lineStyle: {
-        color: '#EB5959',
-        width: 2
-      },
-      data: markLineData
-    }
+    symbol: 'none',
+    lineStyle: {
+      color: '#EB5959',
+      width: 2
+    },
+    data: markLineData
   }
 }
