@@ -24,29 +24,6 @@
       <div class="card__header">
         <div class="card__title">{{ componentBasicInfo.config.displayName }}</div>
         <div
-          v-if="isEditable"
-          class="card__control"
-        >
-          <a
-            href="javascript:void(0);" 
-            class="link action-link"
-            @click="editSetting"
-          >
-            <svg-icon
-              icon-class="filter-setting" 
-              class="icon"/>
-          </a>
-          <a
-            href="javascript:void(0);" 
-            class="link action-link"
-            @click="viewConstraint"
-          >
-            <svg-icon
-              icon-class="filter" 
-              class="icon"/>
-          </a>
-        </div>
-        <div
           v-if="isAboveUpperBound || isBelowLowerBound"
           class="card__message"
         >
@@ -85,6 +62,29 @@
         />
       </div>
     </template>
+    <div
+      v-if="!isLoading && isEditable"
+      class="card__control"
+    >
+      <a
+        href="javascript:void(0);" 
+        class="link action-link"
+        @click="editSetting"
+      >
+        <svg-icon
+          icon-class="filter-setting" 
+          class="icon"/>
+      </a>
+      <a
+        href="javascript:void(0);" 
+        class="link action-link"
+        @click="viewConstraint"
+      >
+        <svg-icon
+          icon-class="filter" 
+          class="icon"/>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -273,6 +273,10 @@ export default {
   }
 
   &__title {
+    width: calc(100% - 67px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: 14px;
     font-weight: 600;
     color: #DDDDDD;
@@ -285,6 +289,9 @@ export default {
   }
 
   &__control {
+    position: absolute;
+    top: 16px;
+    right: 16px;
     display: none;
     line-height: 20px;
     .icon { color: #2AD2E2; }
