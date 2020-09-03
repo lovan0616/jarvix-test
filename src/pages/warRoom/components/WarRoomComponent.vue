@@ -211,12 +211,12 @@ export default {
               this.errorMessage = componentBasicInfo.errorMessage
               break
           }
-        }).catch(() => {
+        }).catch((error) => {
           window.clearTimeout(this.timeoutFunction)
           window.clearTimeout(this.autoRefreshFunction)
           this.isLoading = false
           this.isError = true
-          this.errorMessage = this.$t('message.systemIsError')
+          this.errorMessage = error.error.message || this.$t('message.systemIsError')
         })
     },
     viewConstraint() {
