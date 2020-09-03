@@ -548,7 +548,7 @@ export function paddingZero (n) {
   return n < 10 ? '0' + n : n
 }
 
-export function monitorVisualMap (upperLimit, lowerLimit) {
+export function monitorVisualMap (upperLimit, lowerLimit, chartColor = colorOnly1[0]) {
   if (upperLimit !== null && lowerLimit !== null) {
     // 上下限都有設
     return [{
@@ -560,7 +560,7 @@ export function monitorVisualMap (upperLimit, lowerLimit) {
       }, {
         gt: lowerLimit,
         lte: upperLimit,
-        color: colorOnly1[0]
+        color: chartColor
       }, {
         lt: lowerLimit,
         color: warningColor[0]
@@ -573,7 +573,7 @@ export function monitorVisualMap (upperLimit, lowerLimit) {
       show: false,
       pieces: [{
         gt: lowerLimit,
-        color: colorOnly1[0]
+        color: chartColor
       }, {
         lt: lowerLimit,
         color: warningColor[0]
@@ -589,16 +589,16 @@ export function monitorVisualMap (upperLimit, lowerLimit) {
         color: warningColor[0]
       }, {
         lte: upperLimit,
-        color: colorOnly1[0]
+        color: chartColor
       }]
     }]
   }
 }
 
-export function monitorMarkLine (upperLimit, lowerLimit) {
+export function monitorMarkLine (upperLimit, lowerLimit, isParallel = false) {
   let markLineData = []
-  if (upperLimit !== null) markLineData.push({yAxis: upperLimit})
-  if (lowerLimit !== null) markLineData.push({yAxis: lowerLimit})
+  if (upperLimit !== null) markLineData.push(isParallel ? {xAxis: upperLimit} : {yAxis: upperLimit})
+  if (lowerLimit !== null) markLineData.push(isParallel ? {xAxis: lowerLimit} : {yAxis: lowerLimit})
   return {
     symbol: 'none',
     lineStyle: {

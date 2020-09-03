@@ -41,7 +41,7 @@
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { getDrillDownTool } from '@/components/display/common/addons'
+import { getDrillDownTool, monitorVisualMap, monitorMarkLine } from '@/components/display/common/addons'
 import {
   warningColor,
   parallelColorOnly1,
@@ -177,7 +177,6 @@ export default {
       config.xAxis = yAxisDefault()
       config.xAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
       config.yAxis = yAxisParallel()
-      config.yAxis.data = this.dataset.display_index
       config.yAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis.reduce((acc, cur, index) => acc + (index !== 0 ? ', ' : '') + cur.display_name.replace(/ /g, '\r\n'), '') : null
       // 如果是 bar chart
       config.yAxis.scale = true
@@ -193,38 +192,13 @@ export default {
 
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
-
-      if (this.title.xAxis[0].upperLimit !== null || this.title.xAxis[0].lowerLimit !== null) {
-        let upperLimit = this.title.xAxis[0].upperLimit || Number.MAX_VALUE
-        let lowerLimit = this.title.xAxis[0].lowerLimit || Number.MIN_VALUE
-        
-        config.series[0].data = this.dataset.data.map(data => {
-          return {
-            value: data[0],
-            itemStyle: {
-              color: data[0] > upperLimit || data[0] < lowerLimit 
-                ? warningColor[0]
-                : parallelColorOnly1[0]
-            }
-          }
-        })
-
+      // 上下限
+      let upperLimit = this.title.xAxis[0].upperLimit
+      let lowerLimit = this.title.xAxis[0].lowerLimit
+      if (upperLimit !== null || lowerLimit !== null) {
+        config.visualMap = monitorVisualMap(upperLimit, lowerLimit, parallelColorOnly1[0])
         // 門檻線
-        config.series[0].markLine = {
-          symbol: 'none',
-          label: {
-            distance: 20
-          },
-          lineStyle: {
-            color: '#EB5959',
-            width: 2
-          },
-          data: [{
-            xAxis: upperLimit,
-          },{
-            xAxis: lowerLimit,
-          }]
-        }
+        config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit, true)
       }
       return config
     },
