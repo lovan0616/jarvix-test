@@ -343,7 +343,7 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { return shortenNumberMethod(value.data[2], 2) }
+            formatter (value) { return shortenNumberMethod(value.data[1], 2) }
           }
         })
       }
