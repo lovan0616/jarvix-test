@@ -49,7 +49,7 @@ import PreviewDataSource from '@/components/PreviewDataSource'
 import AdvanceDataFrameSetting from '@/components/AdvanceDataFrameSetting'
 import AskCondition from '@/components/AskCondition'
 import store from '@/store'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'HomeLayout',
@@ -72,11 +72,12 @@ export default {
     const currentGroup = store.getters['userManagement/getCurrentGroupId']
     currentAccount && !currentGroup ? next({ name: 'PageGrouplessGuidance' }) : next()
   },
-  beforeRouteUpdate(to, from, next) {
+  destroyed () {
     if (this.isShowPreviewDataSource) this.closePreviewDataSource()
-    next()
+    if (this.isShowSettingBox) this.toggleSettingBox(false)
   },
   methods: {
+    ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
     closePreviewDataSource () {
       this.$store.commit('previewDataSource/togglePreviewDataSource', false)
     }
