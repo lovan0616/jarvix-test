@@ -62,12 +62,12 @@ export default {
       if (this.restriction[0].type === 'compound') {
         return this.restriction[0].restraints.reduce((result, curr) => {
           let dcName = curr.properties.dc_name
-          result.push(this.getDataInfo.dataColumnMap[dcName].primary_alias)
+          result.push(this.getDataInfo.dataColumnMap[dcName].primary_alias || dcName)
           return result
         }, []).join(' & ')
       } else {
         let dcName = this.restriction[0].properties['dc_name']
-        return this.dataColumnMap[dcName].primary_alias
+        return this.dataColumnMap[dcName].primary_alias || dcName
       }
     }
   }

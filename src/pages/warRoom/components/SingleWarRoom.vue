@@ -95,8 +95,8 @@ export default {
     viewDetail () {
       const routeData = this.$router.resolve({
         name: 'WarRoomLivePage', 
-        query: { 'id': this.warRoomInfo.urlIdentifier } });
-      window.open(routeData.href, '_blank');
+        query: { 'id': this.warRoomInfo.urlIdentifier } })
+      window.open(routeData.href, '_blank')
     },
     edit () {
       this.$router.push({

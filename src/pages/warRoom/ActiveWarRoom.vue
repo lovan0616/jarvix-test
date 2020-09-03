@@ -171,9 +171,12 @@ export default {
           return warRoomBasicInfo
         })
         .catch(() => {
-          window.clearTimeout(this.autoRefreshFunction)
+          // 15 分鐘後再確認一次
+          this.autoRefreshFunction = window.setTimeout(() => {
+            this.fetchData()
+          }, 900 * 1000)
           this.hasError = true
-         })
+        })
         .finally(() => { this.isLoading = false })
     },
     sortComponents (componentList) {

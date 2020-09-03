@@ -208,7 +208,7 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.isLoading = false
               this.isError = true
-              this.errorMessage = componentBasicInfo.errorMessage
+              this.errorMessage = componentBasicInfo.errorMessage || this.$t('message.systemIsError')
               break
           }
         }).catch((error) => {
@@ -274,7 +274,7 @@ export default {
   }
 
   &__title {
-    width: calc(100% - 67px);
+    width: calc(100% - 70px);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
