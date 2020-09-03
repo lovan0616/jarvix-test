@@ -118,7 +118,8 @@
     "dataLoading": "資料讀取中",
     "createdSuccessfully": "建立成功",
     "successfullyAddedToWarRoom": "成功加入戰情室",
-    "componentAmountReachedLimit": "元件數量已達上限"
+    "componentAmountReachedLimit": "元件數量已達上限",
+    "eitherBoundIsRequired": "上限和下限至少需設定一個"
   },
   "guiding": {
     "prevStep": "上一步",

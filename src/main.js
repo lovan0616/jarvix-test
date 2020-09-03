@@ -256,6 +256,9 @@ Vue.use(VeeValidate, {
         },
         letterSpace () {
           return i18n.t('message.formLetterSpaceEmpty')
+        },
+        required_if () {
+          return 'error'
         }
       }
     },
