@@ -98,6 +98,10 @@ export default {
     customChartStyle: {
       type: Object,
       default: () => {}
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -178,7 +182,19 @@ export default {
 
       histogramConfig.chartData.renderItem = this.renderItem
       histogramConfig.chartData.data = chartData
-      chartAddon.series[0] = histogramConfig.chartData
+      const shortenNumberMethod = this.shortenNumber
+      chartAddon.series[0] = {
+        ...histogramConfig.chartData,
+        ...(this.isShowLabelData && {
+          label: {
+            position: 'top',
+            show: true,
+            fontSize: 10,
+            color: '#fff',
+            formatter (value) { return shortenNumberMethod(value.data[2], 0) }
+          }
+        })
+      }
       // 不顯示“全選”按鈕
       chartAddon.legend.selector = false
       chartAddon.toolbox.show = this.showToolbox

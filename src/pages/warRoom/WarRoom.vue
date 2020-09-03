@@ -1,6 +1,15 @@
 <template>
   <section class="war-room">
-    <section class="war-room__content">
+    <spinner 
+      v-if="isLoading"
+      :title="$t('editing.loading')"
+      class="spinner"
+      size="50"
+    />
+    <section
+      v-else
+      class="war-room__content"
+    >
       <div class="war-room__header">
         <div class="war-room__header--left">
           <router-link
@@ -77,7 +86,6 @@
               @click="publishWarRoom"
             >{{ $t('warRoom.publish') }}</button>
             <template v-if="warRoomBasicInfo.isPublishing">
-              <!--待確認是否使用重新發佈即可-->
               <button
                 :disabled="isProcessing"
                 type="button"
@@ -94,6 +102,7 @@
             <button 
               type="button"
               class="btn-m btn-secondary button-container__button"
+              @click="previewWarRoom"
             >{{ $t('warRoom.preview') }}</button>
           </div>
           <div class="button-container--bottom">
@@ -108,6 +117,7 @@
               {{ $t('warRoom.warRoomSetting') }}
             </button>
             <custom-dropdown-select
+              v-if="hasPermission('group_create_data')"
               :data-list="addComponentList"
               trigger="hover"
               @select="addComponent"
@@ -138,7 +148,10 @@
           class="spinner"
           size="50"
         />
-        <div class="number">
+        <div
+          v-if="numberComponent && numberComponent.length > 0"
+          class="number"
+        >
           <draggable
             :value="numberComponent"
             group="index"
@@ -156,7 +169,10 @@
             />
           </draggable>     
         </div>
-        <div class="chart">
+        <div
+          v-if="chartComponent && chartComponent.length > 0"
+          class="chart"
+        >
           <draggable
             :value="chartFirstRow"
             data-row="1"
@@ -235,98 +251,7 @@ import {
   unpublishWarRoom,
   updateWarRoomLayout
 } from '@/API/WarRoom'
-
-const dummyNumbers = []
-for (let i = 0; i < 3; i++) {
-  dummyNumbers.push(i + 1)
-}
-
-const dummyChart = []
-for (let i = 0; i < 6; i++) {
-  dummyChart.push(i + 1)
-}
-
-const dummyWarRoom =  {
-  "config": {
-    "customEndTime": null,
-    "customStartTime": null,
-    "displayDateRangeSwitch": true,
-    "publishName": "string",
-    "recentTimeIntervalAmount": null,
-    "recentTimeIntervalUnit": null,
-  },
-  "diagramTypeComponents": [
-    {
-      "componentId": 0,
-      "orderSequence": 1
-    },
-    {
-      "componentId": 1,
-      "orderSequence": 2
-    },
-    {
-      "componentId": 2,
-      "orderSequence": 3
-    },
-    {
-      "componentId": 3,
-      "orderSequence": 4
-    },
-    {
-      "componentId": 4,
-      "orderSequence": 5
-    },
-    {
-      "componentId": 5,
-      "orderSequence": 6
-    },
-    {
-      "componentId": 6,
-      "orderSequence": 7
-    }
-  ],
-  "indexTypeComponents": [
-    {
-      "componentId": 8,
-      "orderSequence": 1
-    },
-    {
-      "componentId": 9,
-      "orderSequence": 2
-    },
-    {
-      "componentId": 10,
-      "orderSequence": 3
-    },
-    {
-      "componentId": 11,
-      "orderSequence": 4
-    }
-  ],
-  "isPublishing": true,
-  "name": "string",
-  "publishUpdateTime": "string",
-  "publishUpdaterId": 0,
-  "publishUpdaterName": "string",
-  "urlIdentifier": "string",
-  "id": 0
-}
-
-const dummyPool = {
-  "diagramTypeItems": [
-    {
-      "itemId": 0,
-      "question": "string"
-    }
-  ],
-  "indexTypeItems": [
-    {
-      "itemId": 0,
-      "question": "string"
-    }
-  ]
-}
-
+import { mapGetters } from 'vuex'
 export default {
   name: 'WarRoom',
   inject: ['$validator'],
@@ -358,6 +283,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['hasPermission']),
     addComponentList () {
       return [
         ...(this.chartComponent && this.chartComponent.length < 8) && [{
@@ -383,22 +309,22 @@ export default {
     }
   },
   mounted () {
-    const { war_room_id: id } = this.$route.params
-    this.fetchData(id)
+    this.fetchData()
   },
   methods: {
-    fetchData (id) {
+    fetchData () {
       this.isLoading = true
+      const { war_room_id: id } = this.$route.params
       Promise.all([getWarRoomInfo(id), getWarRoomPool(id)])
         .then(([warRoomData, warRoomPoolData]) => {
-          const { config, diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = dummyWarRoom
+          const { config, diagramTypeComponents, indexTypeComponents, ...warRoomBasicInfo } = warRoomData
           this.warRoomConfig = config
           this.chartComponent = this.sortComponents(diagramTypeComponents)
           this.numberComponent = this.sortComponents(indexTypeComponents)
           this.warRoomBasicInfo = warRoomBasicInfo
-          this.dataSourcePool = dummyPool
+          this.dataSourcePool = warRoomPoolData
         })
-        .catch(() => { this.isLoading = false })
+        .finally(() => { this.isLoading = false })
     },
     sortComponents (componentList) {
       componentList.sort((a, b) => a.orderSequence - b.orderSequence)
@@ -407,9 +333,23 @@ export default {
     addComponent (value) {
       if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
       if (this.isShowComponentConstraint) this.closeComponentConstraint()
-      // TODO: check if has reached max before creation
-      this.createdComponentType = value
-      this.isShowComponentSetting = true
+      // 再次點擊或切換新增不同類型元件時，重開一個新設定視窗
+      if (this.isShowComponentSetting) this.closeComponentSetting()
+      this.$nextTick(() => {
+        if (
+          (value === 'index' && this.numberComponent.length === 4)
+          || (value === 'diagram' && this.chartComponent.length === 8)
+        ) {
+          return Message({
+            message: this.$t('message.componentAmountReachedLimit'),
+            type: 'warning',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }
+        this.createdComponentType = value
+        this.isShowComponentSetting = true
+      })
     },
     editComponenSetting (data) {
       if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
@@ -447,8 +387,10 @@ export default {
     stopEditingWarRoomName () {
       // 避免名稱欄位資料被清空觸發重新驗證，但欄位已經被 v-if 移除產生錯誤
       this.$validator.detach('warRoomName')
-      this.isEditingWarRoomName = false
-      this.tempWarRoomPublishedName = null
+      this.$nextTick(() => {
+        this.isEditingWarRoomName = false
+        this.tempWarRoomPublishedName = null
+      })
     },
     updateWarRoomName () {
       this.$validator.validateAll().then(result => {
@@ -457,7 +399,15 @@ export default {
         this.warRoomConfig.publishName = this.tempWarRoomPublishedName
         const { war_room_id: id } = this.$route.params
         updateWarRoomSetting(id, this.warRoomConfig)
-          .then(() => this.stopEditingWarRoomName())
+          .then(() => {
+            Message({
+              message: this.$t('message.editNameSuccess'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
+            this.stopEditingWarRoomName()
+          })
           .finally(() => { this.isProcessing = false })
       })
     },
@@ -550,6 +500,11 @@ export default {
         this.chartComponent = tempChartComponent
         this.isProcessing = false
       } catch (e) { return this.isProcessing = false }
+    },
+    previewWarRoom () {
+      const { war_room_id: warRoomId } = this.$route.params
+      const routeData = this.$router.resolve({ name: 'WarRoomPreviewPage', params: { 'war_room_id': warRoomId } });
+      window.open(routeData.href, '_blank');
     }
   }
 }
@@ -560,6 +515,8 @@ export default {
   display: flex;
   width: 100%;
   height: 100%;
+  justify-content: center;
+  align-items: center;
 
   &__content {
     flex: 1;
@@ -571,6 +528,7 @@ export default {
 
   &__side-setting {
     border: 1px solid #464A50;
+    height: 100%;
   }
 
   &__header {

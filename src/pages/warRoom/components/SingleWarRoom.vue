@@ -15,6 +15,7 @@
         {{ $t('warRoom.viewDetail') }}
       </a>
       <a
+        v-if="hasPermission('group_edit_data')"
         href="javascript:void(0);" 
         class="link action-link"
         @click.stop="edit"
@@ -35,13 +36,13 @@
           :class="{'war-room__popup--published': warRoomInfo.isPublishing}"
           class="war-room__popup">
           <div
-            v-if="warRoomInfo.isPublishing"
+            v-if="warRoomInfo.isPublishing && hasPermission('group_edit_data')"
             class="popup-box" 
             @click.stop="unpublish">
             <div class="popup-text">{{ $t('warRoom.unpublish') }}</div>
           </div>
           <div 
-            v-else
+            v-else-if="!warRoomInfo.isPublishing && hasPermission('group_edit_data')"
             class="popup-box" 
             @click.stop="publish">
             <div class="popup-text">{{ $t('warRoom.publish') }}</div>
@@ -53,11 +54,13 @@
             <div class="popup-text">{{ $t('warRoom.getPublishedUrl') }}</div>
           </div>
           <div
+            v-if="hasPermission('group_edit_data')"
             class="popup-box" 
             @click.stop="renameWarRoom">
             <div class="popup-text">{{ $t('warRoom.rename') }}</div>
           </div>
           <div
+            v-if="hasPermission('group_delete_data')"
             class="popup-box" 
             @click.stop="deleteWarRoom">
             <div class="popup-text">{{ $t('warRoom.delete') }}</div>
@@ -67,8 +70,9 @@
     </div>
   </div>
 </template>
-<script>
 
+<script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'SingleWarRoom',
   props: {
@@ -84,23 +88,27 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters('userManagement', ['hasPermission'])
+  },
   methods: {
     viewDetail () {
-      //TODO: live router + urlIdentifier
+      const routeData = this.$router.resolve({
+        name: 'WarRoomLivePage', 
+        query: { 'id': this.warRoomInfo.urlIdentifier } });
+      window.open(routeData.href, '_blank');
     },
     edit () {
       this.$router.push({
         name: 'WarRoom',
-        params: {
-          war_room_id: this.warRoomInfo.id
-        }
+        params: { war_room_id: this.warRoomInfo.id }
       })
     },
     publish () {
       this.$emit('publish', this.warRoomInfo.id )
     },
     unpublish () {
-      this.$emit('publish', this.warRoomInfo.id )
+      this.$emit('unpublish', this.warRoomInfo.id )
     },
     getPublishedUrl () {
       this.$emit('showShare')

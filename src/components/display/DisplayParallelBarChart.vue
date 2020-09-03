@@ -87,6 +87,14 @@ export default {
       type: Object,
       default: () => {}
     },
+    isShowLegend: {
+      type: Boolean,
+      default: true
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     echartAddon.mapping({
@@ -179,6 +187,9 @@ export default {
       }
       config.toolbox.show = this.showToolbox
 
+      // 是否隱藏 legend
+      if (!this.isShowLegend) config.legend.show = false
+
       return config
     },
     colorList () {
@@ -204,12 +215,22 @@ export default {
   },
   methods: {
     composeColumn (element, colIndex) {
+      const shortenNumberMethod = this.shortenNumber
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
         ...this.addonSeriesItem,
         ...this.addonSeriesItems[colIndex],
-        connectNulls: true
+        connectNulls: true,
+        ...(this.isShowLabelData && {
+          label: {
+            position: 'right',
+            show: true,
+            fontSize: 10,
+            color: '#fff',
+            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+          }
+        })
       }
     },
     controlPagination () {

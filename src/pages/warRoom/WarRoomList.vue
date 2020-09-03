@@ -1,7 +1,8 @@
 <template>
   <div class="war-room-list-page list-page">
     <h1 class="list-page__title">{{ $t('warRoom.warRoom') }}</h1>
-    <button 
+    <button
+      v-if="hasPermission('group_create_data')"
       class="btn-m btn-default btn-has-icon add-btn" 
       @click="showAdd">
       <svg-icon 
@@ -38,6 +39,7 @@
       :title="$t('warRoom.add') + $t('warRoom.warRoom')"
       :button="$t('button.create')"
       :show-both="true"
+      :is-loading="isProcessing"
       @closeDialog="closeAdd"
       @confirmBtn="addNewWarRoom"
     >
@@ -52,6 +54,7 @@
 
     <writing-dialog
       v-if="isShowEdit"
+      :is-loading="isProcessing"
       :title="$t('editing.editingName')"
       :button="$t('button.change')"
       :show-both="true"
@@ -67,6 +70,7 @@
     </writing-dialog>
     <decide-dialog
       v-if="isShowDelete"
+      :is-processing="isProcessing"
       :title="`${confirmDeleteText} ${tempEditInfo.name}？`"
       :type="'delete'"
       @closeDialog="closeDelete"
@@ -102,6 +106,7 @@ import {
   publishWarRoom,
   unpublishWarRoom } from '@/API/WarRoom'
 import { Message } from 'element-ui'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'WarRoomList',
@@ -129,10 +134,12 @@ export default {
         isPublishing: false,
         urlIdentifier: null
       },
-      confirmDeleteText: this.$t('editing.confirmDelete')
+      confirmDeleteText: this.$t('editing.confirmDelete'),
+      isProcessing: false
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['hasPermission']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     },
@@ -145,50 +152,53 @@ export default {
   },
   methods: {
     fetchData () {
+      this.isLoading = true
       getWarRoomList(this.groupId).then(res => {
-        res = [
-          {
-            "isPublishing": true,
-            "name": "0A0",
-            "urlIdentifier": "string",
-            "id": 0
-          },{
-            "isPublishing": false,
-            "name": "OAO",
-            "urlIdentifier": "string",
-            "id": 1
-          },{
-            "isPublishing": true,
-            "name": ">A<",
-            "urlIdentifier": "string",
-            "id": 2
-          }
-        ]
         this.warRoomList = res
         this.isLoading = false
       })
     },
     publish(id) {
       publishWarRoom(id).then(() => {
+        Message({
+          message: this.$t('message.publishSuccessfully'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
         this.fetchData()
       })
     },
     unpublish (id) {
       unpublishWarRoom(id).then(() => {
+        Message({
+          message: this.$t('message.unPublishSuccessfully'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
         this.fetchData()
       })
     },
     addNewWarRoom () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
+        this.isProcessing = true
         createWarRoom({ name: this.newWarRoomName, groupId: this.groupId })
           .then(response => {
+            Message({
+              message: this.$t('message.createdSuccessfully'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
             this.fetchData()
             this.isShowAdd = false
             this.$nextTick(() => {
               this.newWarRoomName = null
             })
-          }).catch(() => {})
+          })
+          .finally(() => { this.isProcessing = false })
       })
     },
     holdWarRoomInfo (warRoomInfo) {
@@ -205,8 +215,7 @@ export default {
     showShareDialog (warRoomInfo) {
       this.holdWarRoomInfo(warRoomInfo)
       this.isShowShare = true
-      //TODO: live board router + urlIdentifier
-      this.shareLink = warRoomInfo.urlIdentifier
+      this.shareLink = `${window.location.origin}/war-room?id=${warRoomInfo.urlIdentifier}`
     },
     showAdd () {
       this.isShowAdd = true
@@ -214,18 +223,28 @@ export default {
     confirmEdit () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
-        updateWarRoomName(this.tempEditInfo.id, this.tempEditInfo.name)
+        this.isProcessing = true
+        updateWarRoomName(this.tempEditInfo.id, { name: this.tempEditInfo.name })
           .then(() => {
+            Message({
+              message: this.$t('message.editNameSuccess'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
             this.isShowEdit = false
             this.fetchData()
           })
+          .finally(() => { this.isProcessing = false })
       })
     },
     confirmDelete () {
+      this.isProcessing = true
       deleteWarRoom(this.tempEditInfo.id).then(() => {
         this.isShowDelete = false
         this.fetchData()
       })
+      .finally(() => { this.isProcessing = false })
     },
     confirmShare () {
       let input = this.$refs.shareInput

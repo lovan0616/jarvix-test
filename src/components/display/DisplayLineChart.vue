@@ -107,6 +107,14 @@ export default {
     arrowBtnRight: {
       type: Number,
       default: 80
+    },
+    isShowLegend: {
+      type: Boolean,
+      default: true
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -204,6 +212,9 @@ export default {
         config.dataZoom = parallelZoomIn()
       }
       config.toolbox.show = this.showToolbox
+
+      // 是否隱藏 legend
+      if (!this.isShowLegend) config.legend.show = false
 
       // 圖表 threshold
       if (this.title.yAxis[0].upperLimit !== null) {
@@ -319,12 +330,23 @@ export default {
       }, 0)
     },
     composeColumn (element, colIndex) {
+      const shortenNumberMethod = this.shortenNumber
+      const seriesAmount = this.dataset.display_columns ? this.dataset.display_columns.length : this.dataset.columns.length
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
         ...this.addonSeriesItem,
         ...this.addonSeriesItems[colIndex],
-        connectNulls: true
+        connectNulls: true,
+        ...((this.isShowLabelData && seriesAmount <= 4) && {
+          label: {
+            position: 'top',
+            show: true,
+            fontSize: 10,
+            color: '#fff',
+            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+          }
+        })
       }
     },
     controlPagination () {

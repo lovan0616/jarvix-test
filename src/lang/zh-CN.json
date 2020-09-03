@@ -114,7 +114,11 @@
     "publishSuccessfully": "成功发布",
     "unPublishSuccessfully": "成功取消发布",
     "componentLayoutUpdated": "元件位置更新成功",
-    "componentLayoutUpdating": "元件位置更新中"
+    "componentLayoutUpdating": "元件位置更新中",
+    "dataLoading": "资料读取中",
+    "createdSuccessfully": "建立成功",
+    "successfullyAddedToWarRoom": "成功加入战情室",
+    "componentAmountReachedLimit": "元件数量已达上限"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -602,12 +606,12 @@
     "everyDay": "每天",
     "everyWeek": "每周",
     "everyMonth": "每月",
-    "inHours": "近 {number} 小时",
-    "inDays": "近 {number} 日",
-    "inWeeks": "近 {number} 周",
-    "inMonths": "近 {number} 月",
-    "inSeasons": "近 {number} 季",
-    "inYears": "近 {number} 年",
+    "inHours": "当前小时",
+    "inDays": "今天",
+    "inWeeks": "本周",
+    "inMonths": "本月",
+    "inSeasons": "本季",
+    "inYears": "今年",
     "customize": "自订",
     "addChartComponent": "新增图表元件",
     "addNumberComponent": "新增指数元件",
@@ -627,7 +631,18 @@
     "dataConstraint": "资料限制",
     "selectedColumns": "选择栏位",
     "filterConstraint": "筛选条件",
-    "confirmDeleteWarRoom": "您确定要删除此战情室吗？"
+    "reachedLowerBound": "低于下限",
+    "reachedUpperBound": "高于上限",
+    "emptyComponentMessage": "尚未加入元件",
+    "warRoomDisplayErrorMessage": "战情室内容已失效\n请确认发布状态或与系统管理员联系",
+    "previewPageReminder": "此页为预览画面",
+    "allColumns": "所有栏位",
+    "confirmDeleteWarRoom": "您确定要删除此战情室吗？",
+    "emptyDataSource": "尚未加入任何{type}来源资料",
+    "timeInterval": "时间范围",
+    "now": "现在",
+    "indexType": "指标型",
+    "diagramType": "图表型"
   },
   "description": {
     "basic": {

@@ -67,21 +67,26 @@
             <div class="date-picker__container">
               <el-date-picker
                 v-validate="'required'"
+                ref="startTime"
                 v-model="warRoomData.customStartTime"
-                :picker-options="customTimeInterval.pickerOptions"
+                :picker-options="customTimeInterval.startTimePickerOptions"
                 :placeholder="$t('warRoom.startDate')"
                 :clearable="true"
                 :class="{ 'has-error': errors.first('startTime') }"
+                :disabled="isProcessing"
                 class="date-picker__item"
                 size="small"
                 type="date"
-                name="startTime"/>
+                name="startTime"
+                @change="clearEndTime"/>
               <div class="date-picker__seperator">-</div>
               <el-date-picker
+                v-validate="'after:startTime'"
                 v-model="warRoomData.customEndTime"
-                :picker-options="customTimeInterval.pickerOptions"
+                :picker-options="customTimeInterval.endTimePickerOptions"
                 :placeholder="'*' + $t('warRoom.endDate')"
                 :clearable="true"
+                :disabled="isProcessing || !warRoomData.customStartTime"
                 class="date-picker__item"
                 size="small"
                 type="date"
@@ -96,7 +101,8 @@
         </div>
       </div>
       <div class="war-room-setting__button-block">
-        <button 
+        <button
+          v-if="hasPermission('group_delete_data')"
           type="button"
           class="btn btn-outline war-room-setting__button-block-button--left"
           @click="confirmDeleteWarRoom"
@@ -130,6 +136,7 @@ import {
   updateWarRoomSetting,
   deleteWarRoom
 } from '@/API/WarRoom'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'WarRoomSetting',
@@ -158,27 +165,27 @@ export default {
       timeIntervalList: [
         {
           value: '1+Hour',
-          name: this.$t('warRoom.inHours', { number: 1 })
+          name: this.$t('warRoom.inHours')
         },
         {
           value: '1+Day',
-          name: this.$t('warRoom.inDays', { number: 1 })
+          name: this.$t('warRoom.inDays')
         },
         {
           value: '1+Week',
-          name: this.$t('warRoom.inWeeks', { number: 1 })
+          name: this.$t('warRoom.inWeeks')
         },
         {
           value: '1+Month',
-          name: this.$t('warRoom.inMonths', { number: 1 })
+          name: this.$t('warRoom.inMonths')
         },
         {
           value: '1+Season',
-          name: this.$t('warRoom.inSeasons', { number: 1 })
+          name: this.$t('warRoom.inSeasons')
         },
         {
           value: '1+Year',
-          name: this.$t('warRoom.inYears', { number: 1 })
+          name: this.$t('warRoom.inYears')
         },
         {
           value: 'others',
@@ -188,10 +195,14 @@ export default {
       customTimeInterval: {
         startTime: '',
         endTime: '',
-        pickerOptions: {
+        startTimePickerOptions: {
           disabledDate(time) {
-            return time.getTime() > Date.now();
+            return time.getTime() > Date.now()
           },
+          firstDayOfWeek: 1
+        },
+        endTimePickerOptions: {
+          disabledDate: this.disabledDueDate,
           firstDayOfWeek: 1
         }
       },
@@ -199,6 +210,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['hasPermission']),
     selectedTimeInterval () {
       if (!this.warRoomData || !this.warRoomData.displayDateRangeSwitch) return null
       
@@ -222,6 +234,12 @@ export default {
         const { war_room_id: id } = this.$route.params
         updateWarRoomSetting(id, this.warRoomData)
           .then(() => {
+            Message({
+              message: this.$t('message.saveSuccess'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
             this.$emit('update:config-data', this.warRoomData)
             this.$emit('close')
           })
@@ -267,6 +285,12 @@ export default {
       this.warRoomData.recentTimeIntervalUnit = value.split('+')[1]
       this.warRoomData.customEndTime = null
       this.warRoomData.customStartTime = null
+    },
+    disabledDueDate (time) {
+      return time.getTime() < new Date(this.warRoomData.customStartTime).getTime() || time.getTime() > Date.now()
+    },
+    clearEndTime () {
+      this.warRoomData.customEndTime = null
     }
   }
 }

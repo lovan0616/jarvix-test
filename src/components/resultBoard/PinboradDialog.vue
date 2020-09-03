@@ -44,7 +44,7 @@
         v-for="boardInfo in boardList"
         :key="boardInfo.id"
         class="single-board"
-        @click="pin(boardInfo.id)"
+        @click="choosedBoard === 'warRoom' ? pinToWarRoom(boardInfo.id) : pin(boardInfo.id)"
       >{{ boardInfo.name }}</div>
     </div>
     <div 
@@ -127,26 +127,6 @@ export default {
     },
     getWarRoomList () {
       getWarRoomList(this.groupId).then(res => {
-        res = [
-          {
-            "isPublishing": true,
-            "name": "AA",
-            "urlIdentifier": "AA",
-            "id": 1
-          },
-          {
-            "isPublishing": true,
-            "name": "BB",
-            "urlIdentifier": "BB",
-            "id": 2
-          },
-          {
-            "isPublishing": true,
-            "name": "CC",
-            "urlIdentifier": "CC",
-            "id": 3
-          }
-        ]
         this.warRoomList =  res
       })
     },

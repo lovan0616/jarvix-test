@@ -174,12 +174,18 @@ const router = new Router({
                         {
                           path: '/',
                           name: 'WarRoomList',
-                          component: () => import('@/pages/warRoom/WarRoomList')
+                          component: () => import('@/pages/warRoom/WarRoomList'),
+                          meta: {
+                            permission: ['group_read_data']
+                          }
                         },
                         {
                           path: ':war_room_id',
                           name: 'WarRoom',
-                          component: () => import('@/pages/warRoom/WarRoom')
+                          component: () => import('@/pages/warRoom/WarRoom'),
+                          meta: {
+                            permission: ['group_edit_data']
+                          }
                         }
                       ]
                     },
@@ -330,6 +336,16 @@ const router = new Router({
       path: '/share-result/:id',
       name: 'ShareResult',
       component: () => import('@/pages/result/SingleResult')
+    },
+    {
+      path: '/war-room',
+      name: 'WarRoomLivePage',
+      component: () => import('@/pages/warRoom/ActiveWarRoom')
+    },
+    {
+      path: '/war-room/:war_room_id',
+      name: 'WarRoomPreviewPage',
+      component: () => import('@/pages/warRoom/ActiveWarRoom')
     },
     {
       path: '/oe-exhibition',

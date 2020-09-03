@@ -112,7 +112,8 @@ $setting-header-height: 57px;
       font-size: 12px;
     }
 
-    /deep/ .el-input {
+    /deep/ .el-input,
+    .el-input.is-disabled .el-input {
       &__prefix {
         display: none;
       }
@@ -132,5 +133,23 @@ $setting-header-height: 57px;
         color: $theme-text-color;
       }
     }
+
+    /deep/ .el-input.is-disabled .el-input {
+      &__inner {
+        opacity: .5;
+      }
+    }
+  }
+
+  /deep/ .el-input.is-disabled .el-input__inner {
+    border: none;
+    border-bottom: 1px solid #FFFFFF;
+    border-radius: 0;
+    font-size: 16px;
+    padding-left: 0;
+    padding-right: 20px;
+    background-color: transparent;
+    color: $theme-text-color;
   }
 }
+
