@@ -29,7 +29,7 @@
 </template>
 <script>
 import { chartOptions } from '@/components/display/common/chart-addon.js'
-import { warningColor, colorOnly1, getDrillDownTool } from '@/components/display/common/addons'
+import { monitorVisualMap, monitorMarkLine, colorOnly1, getDrillDownTool } from '@/components/display/common/addons'
 
 // 直方圖的參數設定
 let histogramChartConfig = {
@@ -171,22 +171,7 @@ export default {
       histogramConfig.chartData.renderItem = this.renderItem
       histogramConfig.chartData.data = chartData
       const shortenNumberMethod = this.shortenNumber
-
-      if (this.title.yAxis[0].upperLimit !== null || this.title.yAxis[0].lowerLimit !== null) {
-        let upperLimit = this.title.yAxis[0].upperLimit || Number.MAX_VALUE
-        let lowerLimit = this.title.yAxis[0].lowerLimit || Number.MIN_VALUE
-
-        histogramConfig.chartData.data = chartData.map(data => {
-          return {
-            value: data,
-            itemStyle: {
-              color: data[2] > upperLimit || data[2] < lowerLimit 
-                ? warningColor[0]
-                : colorOnly1[0]
-            }
-          }
-        })
-        chartAddon.series[0] = {
+      chartAddon.series[0] = {
           ...histogramConfig.chartData,
           ...(this.isShowLabelData && {
             label: {
@@ -198,19 +183,13 @@ export default {
             }
           })
         }
-        chartAddon.series.push({
-          type: 'line',
-          markLine: {
-            symbol: 'none',
-            lineStyle: {
-              color: '#EB5959',
-              width: 2
-            },
-            data: []
-          }
-        })
-        if (this.title.yAxis[0].upperLimit) chartAddon.series[1].markLine.data.push({yAxis: upperLimit})
-        if (this.title.yAxis[0].lowerLimit) chartAddon.series[1].markLine.data.push({yAxis: lowerLimit})
+
+      let upperLimit = this.title.yAxis[0].upperLimit
+      let lowerLimit = this.title.yAxis[0].lowerLimit
+      if (upperLimit !== null || lowerLimit !== null) {
+        // 處理顏色
+        chartAddon.visualMap = monitorVisualMap(upperLimit, lowerLimit)
+        chartAddon.series.push(monitorMarkLine(upperLimit, lowerLimit))
       }
 
       // 不顯示“全選”按鈕

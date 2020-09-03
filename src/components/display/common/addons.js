@@ -547,3 +547,67 @@ export function getDrillDownTool (routeName, titleObject, isParallel = false, tw
 export function paddingZero (n) {
   return n < 10 ? '0' + n : n
 }
+
+export function monitorVisualMap (upperLimit, lowerLimit) {
+  if (upperLimit !== null && lowerLimit !== null) {
+    // 上下限都有設
+    return [{
+      type: 'piecewise',
+      show: false,
+      pieces: [{
+        gte: upperLimit,
+        color: warningColor[0]
+      }, {
+        gt: lowerLimit,
+        lte: upperLimit,
+        color: colorOnly1[0]
+      }, {
+        lt: lowerLimit,
+        color: warningColor[0]
+      }]
+    }]
+  } else if (upperLimit === null) {
+    // 只有下限
+    return [{
+      type: 'piecewise',
+      show: false,
+      pieces: [{
+        gt: lowerLimit,
+        color: colorOnly1[0]
+      }, {
+        lt: lowerLimit,
+        color: warningColor[0]
+      }]
+    }]
+  } else {
+    // 只有上限
+    return [{
+      type: 'piecewise',
+      show: false,
+      pieces: [{
+        gte: upperLimit,
+        color: warningColor[0]
+      }, {
+        lte: upperLimit,
+        color: colorOnly1[0]
+      }]
+    }]
+  }
+}
+
+export function monitorMarkLine (upperLimit, lowerLimit) {
+  let markLineData = []
+  if (upperLimit !== null) markLineData.push({yAxis: upperLimit})
+  if (lowerLimit !== null) markLineData.push({yAxis: lowerLimit})
+  return {
+    type: 'line',
+    markLine: {
+      symbol: 'none',
+      lineStyle: {
+        color: '#EB5959',
+        width: 2
+      },
+      data: markLineData
+    }
+  }
+}
