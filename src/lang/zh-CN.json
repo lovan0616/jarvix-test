@@ -642,7 +642,9 @@
     "timeInterval": "时间范围",
     "now": "现在",
     "indexType": "指标型",
-    "diagramType": "图表型"
+    "diagramType": "图表型",
+    "hint": "提示",
+    "chartReminder": "资料过多或时间区间过长时，图表将自动进行显示限制。"
   },
   "description": {
     "basic": {
