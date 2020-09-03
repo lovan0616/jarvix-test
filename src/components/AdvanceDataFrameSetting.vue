@@ -285,6 +285,10 @@ export default {
     overflow: hidden;
     transition: flex 0.3s ease-out;
 
+    &+.el-collapse-item {
+      margin-top: 0;
+    }
+
     &.is-disabled {
       .el-collapse-item__header {
         color: #ffffff;
@@ -298,19 +302,23 @@ export default {
     &__wrap {
       flex: 1 1 auto;
       border-bottom: none;
+      padding: 0;
+      border-radius: 0;
     }
 
     &__header {
       border-bottom: none;
       opacity: .5;
       cursor: pointer;
+      border-radius: 0;
 
       &:hover {
         opacity: .7;
       }
 
       &.is-active {
-        opacity: 1;  
+        opacity: 1;
+        border-radius: 0;
       }
     }
 
