@@ -159,15 +159,14 @@ export default {
     options () {
       let config = {
         xAxis: {
-          ...xAxisDefault(),
-          data: this.dataset.display_index
+          ...xAxisDefault()
         },
         ...this.addonOptions,
         ...getDrillDownTool(this.$route.name, this.title),
         ...JSON.parse(JSON.stringify((commonChartOptions()))),
-        dataset: {
-          source: this.datasetTransform(this.dataset)
-        },
+        // dataset: {
+        //   source: this.datasetTransform(this.dataset)
+        // },
         series: this.series,
         color: this.colorList
       }
@@ -218,34 +217,42 @@ export default {
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
 
-      if (this.title.yAxis[0].upperLimit !== null || this.title.yAxis[0].lowerLimit !== null) {
-        let upperLimit = this.title.yAxis[0].upperLimit || Number.MAX_VALUE
-        let lowerLimit = this.title.yAxis[0].lowerLimit || Number.MIN_VALUE
-        
-        config.series[0].data = this.dataset.data.map(data => {
-          return {
-            value: data[0],
-            itemStyle: {
-              color: data[0] > upperLimit || data[0] < lowerLimit 
-                ? warningColor[0]
-                : colorOnly1[0]
-            }
-          }
+      let upperLimit = this.title.yAxis[0].upperLimit
+      let lowerLimit = this.title.yAxis[0].lowerLimit
+
+      upperLimit = 1500
+      lowerLimit = 500
+      if (upperLimit !== null || lowerLimit !== null) {
+        config.series[0].data = this.datasetTransform(this.dataset).map(item => {
+          return item
         })
+        // .map(data => {
+        //   console.log(data, 'data')
+        //   if (data[0] > upperLimit || data[0] < lowerLimit) {
+        //     return {
+        //       value: data[0],
+        //       itemStyle: {
+        //         color: warningColor[0]
+        //       }
+        //     }
+        //   } else {
+        //     return data[0]
+        //   }
+        // })
 
         // 門檻線
-        config.series[0].markLine = {
-          symbol: 'none',
-          lineStyle: {
-            color: '#EB5959',
-            width: 2
-          },
-          data: [{
-            yAxis: upperLimit,
-          },{
-            yAxis: lowerLimit,
-          }]
-        }
+        // config.series[0].markLine = {
+        //   symbol: 'none',
+        //   lineStyle: {
+        //     color: '#EB5959',
+        //     width: 2
+        //   },
+        //   data: [{
+        //     yAxis: upperLimit,
+        //   },{
+        //     yAxis: lowerLimit,
+        //   }]
+        // }
       }
       return config
     },
