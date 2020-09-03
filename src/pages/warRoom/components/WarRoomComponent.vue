@@ -208,6 +208,7 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.isLoading = false
               this.isError = true
+              this.componentBasicInfo = componentBasicInfo
               this.errorMessage = componentBasicInfo.errorMessage || this.$t('message.systemIsError')
               break
           }
