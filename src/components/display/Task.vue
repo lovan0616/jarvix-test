@@ -31,7 +31,7 @@
         :title="componentData.title"
         :message="componentData.message"
         :segmentation="componentData.segmentation"
-        :info="componentData.info || componentData.data || componentData"
+        :info="componentData.info || componentData.data"
         :features="componentData.features"
         :confidence="componentData.confidence"
         :formula="componentData.displayCoefficients"
