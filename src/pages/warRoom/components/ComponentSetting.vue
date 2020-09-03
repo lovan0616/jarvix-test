@@ -158,7 +158,10 @@
               <div class="date-picker__reminder">{{ '*' + $t('warRoom.timeIntervalReminder') }}</div>
             </div>
           </div>
-          <div class="war-room-setting__block">
+          <div
+            v-if="selectedDataSource.isSetBoundAvailable || componentData.isSetBoundAvailable"
+            class="war-room-setting__block"
+          >
             <div class="war-room-setting__block-title">
               {{ $t('warRoom.thresholdSetting') }}
               <el-switch
