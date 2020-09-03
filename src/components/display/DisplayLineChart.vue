@@ -331,13 +331,14 @@ export default {
     },
     composeColumn (element, colIndex) {
       const shortenNumberMethod = this.shortenNumber
+      const seriesAmount = this.dataset.display_columns ? this.dataset.display_columns.length : this.dataset.columns.length
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
         ...this.addonSeriesItem,
         ...this.addonSeriesItems[colIndex],
         connectNulls: true,
-        ...(this.isShowLabelData && {
+        ...((this.isShowLabelData && seriesAmount <= 4) && {
           label: {
             position: 'top',
             show: true,

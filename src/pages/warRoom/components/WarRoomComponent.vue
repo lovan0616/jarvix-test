@@ -252,7 +252,6 @@ export default {
 <style lang="scss" scoped>
 .card {
   position: relative;
-  overflow: hidden;
   height: 100%;
   width: 0; // 讓卡片能響應式縮小
   height: auto;
