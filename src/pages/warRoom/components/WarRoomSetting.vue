@@ -121,7 +121,7 @@
       v-if="isShowDeleteWarRoom"
       :title="$t('warRoom.confirmDeleteWarRoom')"
       :type="'delete'"
-      :btn-text="$t('button.remove')"
+      :btn-text="$t('button.confirm')"
       :is-processing="isProcessing"
       @closeDialog="closeConfirmDeleteWarRoom"
       @confirmBtn="deleteWarRoom"

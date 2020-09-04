@@ -639,6 +639,7 @@
     "previewPageReminder": "此頁為預覽畫面",
     "allColumns": "所有欄位",
     "confirmDeleteWarRoom": "您確定要刪除此戰情室嗎？",
+    "confirmDeleteComponent": "您確定要刪除此元件嗎？",
     "emptyDataSource": "尚未加入任何{type}來源資料",
     "timeInterval": "時間範圍",
     "now": "現在",
