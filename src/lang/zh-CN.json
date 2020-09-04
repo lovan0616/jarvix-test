@@ -33,6 +33,12 @@
     "dataFileList": "资料表列表",
     "schedule": "生产排程"
   },
+  "user": {
+    "changePwd": "变更密码",
+    "oldPassword": "原密码",
+    "newPassword": "新密码",
+    "confirmPassword": "确认新密码"
+  },
   "dataFrameAdvanceSetting": {
     "searchColumn": "搜寻栏位",
     "columnList": "栏位列表",
@@ -110,6 +116,7 @@
     "youAreGroupless": "您目前无隶属群组",
     "pinboardSuccess": "钉板成功",
     "switching": "切换中",
+    "changePersonalPasswordSuccess": "密码变更成功，即将导向登入页，请重新登入",
     "pleaseSelectQuestion": "请选择来源资料",
     "publishSuccessfully": "成功发布",
     "unPublishSuccessfully": "成功取消发布",

@@ -72,6 +72,10 @@ export default {
     const currentGroup = store.getters['userManagement/getCurrentGroupId']
     currentAccount && !currentGroup ? next({ name: 'PageGrouplessGuidance' }) : next()
   },
+  beforeRouteUpdate(to, from, next) {
+    if (this.isShowPreviewDataSource) this.closePreviewDataSource()
+    next()
+  },
   destroyed () {
     if (this.isShowPreviewDataSource) this.closePreviewDataSource()
     if (this.isShowSettingBox) this.toggleSettingBox(false)
