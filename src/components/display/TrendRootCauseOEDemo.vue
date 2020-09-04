@@ -11,7 +11,7 @@
       class="single-root-cause"
     >
       <span class="info-index">{{ index + 1 }}</span>
-      <div class="info-content">{{ singleInfo }}</div>
+      <div class="info-content">{{ singleInfo.information }}</div>
     </div>
   </div>
 </template>
