@@ -144,11 +144,11 @@ export default {
   },
   computed: {
     isAboveUpperBound () {
-      if (this.isLoading || !this.isShowWarningMessage) return false
+      if (this.isLoading || !this.isShowWarningMessage || !this.componentBasicInfo.config.boundSwitch || !this.componentBasicInfo.config.upperBound) return false
       return Number(this.componentData.dataset.data) > Number(this.componentBasicInfo.config.upperBound)
     },
     isBelowLowerBound () {
-      if (this.isLoading || !this.isShowWarningMessage) return false
+      if (this.isLoading || !this.isShowWarningMessage || !this.componentBasicInfo.config.boundSwitch || !this.componentBasicInfo.config.lowerBound) return false
       return Number(this.componentData.dataset.data) < Number(this.componentBasicInfo.config.lowerBound)
     }
   },
