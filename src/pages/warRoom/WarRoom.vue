@@ -336,7 +336,7 @@ export default {
     },
     sortComponents (componentList) {
       componentList.sort((a, b) => a.orderSequence - b.orderSequence)
-      return componentList
+      return componentList.map((component, index) => ({ ...component, orderSequence: index + 1 }))
     },
     addComponent (value) {
       if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
