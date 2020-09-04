@@ -8,6 +8,7 @@
         二極體特性曲線
       </div>
       <button 
+        :disabled="loading"
         type="button"
         class="btn btn-outline refresh-btn"
         @click="getRandomChart"

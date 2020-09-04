@@ -219,6 +219,8 @@ Vue.mixin({
           return 'DisplaySankeyChart'
         case 'trend_insight':
           return 'TrendRootCause'
+        case 'DEMO1_INSIGHT': // 光電展特殊元件
+          return 'TrendRootCauseOEDemo'
         case 'heat_map_chart':
           return 'DisplayHeatMapChart'
         case 'no_answer':
