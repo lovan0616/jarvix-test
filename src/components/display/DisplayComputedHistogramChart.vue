@@ -184,8 +184,8 @@ export default {
         })
       }
 
-      let upperLimit = this.title.yAxis[0].upperLimit
-      let lowerLimit = this.title.yAxis[0].lowerLimit
+      let upperLimit = this.title.yAxis[0].upperLimit || null
+      let lowerLimit = this.title.yAxis[0].lowerLimit || null
       if (upperLimit !== null || lowerLimit !== null) {
         // 處理顏色
         chartAddon.visualMap = monitorVisualMap(upperLimit, lowerLimit)
