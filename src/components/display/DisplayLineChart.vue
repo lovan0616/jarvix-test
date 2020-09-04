@@ -217,8 +217,8 @@ export default {
       if (!this.isShowLegend) config.legend.show = false
 
       // 圖表 threshold
-      let upperLimit = this.title.yAxis[0].upperLimit
-      let lowerLimit = this.title.yAxis[0].lowerLimit
+      let upperLimit = this.title.yAxis[0].upperLimit || null
+      let lowerLimit = this.title.yAxis[0].lowerLimit || null
       if (upperLimit !== null || lowerLimit !== null) {
         // 找出 Y 的最大、最小值
         let maxY = this.dataset.data[0][0]

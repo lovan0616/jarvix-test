@@ -192,8 +192,8 @@ export default {
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
       // 上下限
-      let upperLimit = this.title.xAxis[0].upperLimit
-      let lowerLimit = this.title.xAxis[0].lowerLimit
+      let upperLimit = this.title.xAxis[0].upperLimit || null
+      let lowerLimit = this.title.xAxis[0].lowerLimit || null
       if (upperLimit !== null || lowerLimit !== null) {
         config.visualMap = monitorVisualMap(upperLimit, lowerLimit, parallelColorOnly1[0])
         // 門檻線
