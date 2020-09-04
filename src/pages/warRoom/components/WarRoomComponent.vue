@@ -145,11 +145,11 @@ export default {
   computed: {
     isAboveUpperBound () {
       if (this.isLoading || !this.isShowWarningMessage) return false
-      return this.componentData.dataset.data > this.componentBasicInfo.config.upperBound
+      return Number(this.componentData.dataset.data) > Number(this.componentBasicInfo.config.upperBound)
     },
     isBelowLowerBound () {
       if (this.isLoading || !this.isShowWarningMessage) return false
-      return this.componentData.dataset.data < this.componentBasicInfo.config.lowerBound
+      return Number(this.componentData.dataset.data) < Number(this.componentBasicInfo.config.lowerBound)
     }
   },
   destroyed () {

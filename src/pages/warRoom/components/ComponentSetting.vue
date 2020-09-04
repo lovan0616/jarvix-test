@@ -180,12 +180,13 @@
               </label>
               <input
                 :disabled="isProcessing"
-                v-model="componentData.config.upperBound"
+                :value="componentData.config.upperBound === null ? '' : Number(componentData.config.upperBound)"
                 :min="componentData.config.lowerBound"
                 :placeholder="$t('warRoom.pleaseEnterValue')"
                 type="number"
                 name="upperBound"
-                class="input war-room-setting__block-text-input">
+                class="input war-room-setting__block-text-input"
+                @input="componentData.config.upperBound = $event.target.value || null">
               <div 
                 v-show="errors.has('upperBound')"
                 class="error-text"
@@ -195,11 +196,12 @@
               </label>
               <input
                 :disabled="isProcessing"
-                v-model="componentData.config.lowerBound"
+                :value="componentData.config.lowerBound === null ? '' : Number(componentData.config.lowerBound)"
                 :placeholder="$t('warRoom.pleaseEnterValue')"
                 type="number"
                 name="lowerBound"
-                class="input war-room-setting__block-text-input">
+                class="input war-room-setting__block-text-input"
+                @input="componentData.config.lowerBound = $event.target.value || null">
               <div 
                 v-show="errors.has('lowerBound')"
                 class="error-text"
