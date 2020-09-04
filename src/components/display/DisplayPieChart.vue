@@ -52,6 +52,22 @@ export default {
     hasPagination: {
       type: Boolean,
       default: false
+    },
+    isShowLegend: {
+      type: Boolean,
+      default: true
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
+    },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
@@ -63,7 +79,8 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: this.height
+        height: this.height,
+        ...this.customChartStyle
       }
     },
     options () {
@@ -78,7 +95,8 @@ export default {
           minShowLabelAngle: 10,
           label: {
             fontSize: 12,
-            alignTo: 'labelLine'
+            alignTo: 'labelLine',
+            ...(this.isShowLabelData && { formatter: '{b}({d}%)' })
           },
           labelLine: {
             normal: {
@@ -114,6 +132,10 @@ export default {
         table += '</tbody></table>'
         return table
       }
+
+      // 是否隱藏 legend
+      if (!this.isShowLegend) config.legend.show = false
+      config.toolbox.show = this.showToolbox
 
       return config
     },

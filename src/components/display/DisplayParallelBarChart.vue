@@ -41,7 +41,7 @@
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { getDrillDownTool } from '@/components/display/common/addons'
+import { getDrillDownTool, monitorVisualMap, monitorMarkLine } from '@/components/display/common/addons'
 import {
   parallelColorOnly1,
   parallelColorOnly2,
@@ -51,6 +51,7 @@ import {
   yAxisParallel,
   yAxisDefault,
   seriesItemBar,
+  seriesItemMarkLine,
   verticalZoomIn
 } from './common/addons'
 
@@ -58,7 +59,8 @@ const echartAddon = new EchartAddon({
   'grid:default': gridDefault(),
   'yAxis:parallel': yAxisParallel(),
   'xAxis:parallel': yAxisDefault(),
-  'seriesItem:bar': seriesItemBar()
+  'seriesItem:bar': seriesItemBar(),
+  'seriesItem:markLine': seriesItemMarkLine()
 })
 
 export default {
@@ -87,6 +89,14 @@ export default {
       type: Object,
       default: () => {}
     },
+    isShowLegend: {
+      type: Boolean,
+      default: true
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     echartAddon.mapping({
@@ -179,6 +189,16 @@ export default {
       }
       config.toolbox.show = this.showToolbox
 
+      // 是否隱藏 legend
+      if (!this.isShowLegend) config.legend.show = false
+      // 上下限
+      let upperLimit = this.title.xAxis[0].upperLimit
+      let lowerLimit = this.title.xAxis[0].lowerLimit
+      if (upperLimit !== null || lowerLimit !== null) {
+        config.visualMap = monitorVisualMap(upperLimit, lowerLimit, parallelColorOnly1[0])
+        // 門檻線
+        config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit, true)
+      }
       return config
     },
     colorList () {
@@ -204,12 +224,22 @@ export default {
   },
   methods: {
     composeColumn (element, colIndex) {
+      const shortenNumberMethod = this.shortenNumber
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
         ...this.addonSeriesItem,
         ...this.addonSeriesItems[colIndex],
-        connectNulls: true
+        connectNulls: true,
+        ...(this.isShowLabelData && {
+          label: {
+            position: 'right',
+            show: true,
+            fontSize: 10,
+            color: '#fff',
+            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+          }
+        })
       }
     },
     controlPagination () {

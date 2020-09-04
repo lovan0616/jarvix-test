@@ -36,7 +36,7 @@ import {
   Switch,
   Menu,
   Submenu,
-  MenuItem
+  MenuItem,
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'

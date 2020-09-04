@@ -223,6 +223,8 @@ Vue.mixin({
           return 'DisplayHeatMapChart'
         case 'no_answer':
           return 'DisplayNoAnswerInfo'
+        case 'index_info':
+          return 'DisplayIndexInfo'
       }
     },
     // 整個結果頁的 layout
