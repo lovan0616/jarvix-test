@@ -121,7 +121,7 @@
       v-if="isShowDeleteWarRoom"
       :title="$t('warRoom.confirmDeleteWarRoom')"
       :type="'delete'"
-      :btn-text="$t('button.remove')"
+      :btn-text="$t('button.confirm')"
       :is-processing="isProcessing"
       @closeDialog="closeConfirmDeleteWarRoom"
       @confirmBtn="deleteWarRoom"
@@ -242,6 +242,7 @@ export default {
               showClose: true
             })
             this.$emit('update:config-data', this.warRoomData)
+            this.$emit('updated')
             this.$emit('close')
           })
           .finally(() => { this.isProcessing = false })

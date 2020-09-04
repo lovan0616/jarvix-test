@@ -71,7 +71,7 @@
             <span class="pin-slash"><svg-icon 
               :icon-class="isLoading ? 'spinner' : 'pin'" 
               class="pin-icon"/></span>
-            {{ $t('button.pinToBoard') }}
+            {{ isWarRoomAddable ? $t('button.pinToBoard') + ' / ' + $t('button.warRoom') : $t('button.pinToBoard') }}
           </a>
           <pinboard-dialog
             v-if="showPinboardDialog"

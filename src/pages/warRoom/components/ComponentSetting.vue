@@ -214,7 +214,7 @@
           :disabled="isProcessing"
           type="button"
           class="btn btn-outline war-room-setting__button-block-button--left"
-          @click="deleteComponent"
+          @click="confirmDeleteWarRoomComponent"
         >
           <svg-icon icon-class="delete" />
         </button>
@@ -233,12 +233,22 @@
       @back="hideComponentDataSourceList"
       @select="updateSelectedDataSource"
     />
+    <decide-dialog
+      v-if="isShowDeleteWarRoomComponent"
+      :title="$t('warRoom.confirmDeleteComponent')"
+      :type="'delete'"
+      :btn-text="$t('button.confirm')"
+      :is-processing="isProcessing"
+      @closeDialog="closeConfirmDeleteWarRoomComponent"
+      @confirmBtn="deleteComponent"
+    />
   </section>
 </template>
 
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
 import ComponentDataSourceList from './ComponentDataSourceList'
+import DecideDialog from '@/components/dialog/DecideDialog'
 import { createComponent, deleteComponent, updateComponent } from '@/API/WarRoom'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
@@ -249,7 +259,8 @@ export default {
   components: {
     DefaultSelect,
     ComponentDataSourceList,
-    Message
+    Message,
+    DecideDialog
   },
   props: {
     componentType: {
@@ -397,7 +408,8 @@ export default {
             firstDayOfWeek: 1
           }
         }
-      }
+      },
+      isShowDeleteWarRoomComponent: false
     }
   },
   computed: {
@@ -519,11 +531,18 @@ export default {
           .catch(() => { this.isProcessing = false })
       })
     },
+    confirmDeleteWarRoomComponent () {
+      this.isShowDeleteWarRoomComponent = true
+    },
+    closeConfirmDeleteWarRoomComponent () {
+      this.isShowDeleteWarRoomComponent = false
+    },
     deleteComponent () {
       const { war_room_id: warRoomId } = this.$route.params
       this.isProcessing = true
       deleteComponent(warRoomId, this.componentData.componentId)
         .then(() => {
+          this.closeConfirmDeleteWarRoomComponent()
           this.$emit('close')
           this.$emit('updated')
           Message({

@@ -16,10 +16,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.wrapper {
-  overflow: hidden;
-}
-
 .main {
   padding: 0;
   height: calc(100vh - #{$header-height});
