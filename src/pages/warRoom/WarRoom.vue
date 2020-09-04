@@ -232,6 +232,7 @@
       :config-data.sync="warRoomConfig"
       class="war-room__side-setting"
       @close="closeWarRoomSetting"
+      @updated="fetchData"
     />
     <component-constraint
       v-if="isShowComponentConstraint"

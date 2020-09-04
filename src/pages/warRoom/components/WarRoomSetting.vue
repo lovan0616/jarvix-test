@@ -242,6 +242,7 @@ export default {
               showClose: true
             })
             this.$emit('update:config-data', this.warRoomData)
+            this.$emit('updated')
             this.$emit('close')
           })
           .finally(() => { this.isProcessing = false })
