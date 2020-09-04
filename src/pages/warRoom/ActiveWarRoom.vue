@@ -320,7 +320,8 @@ export default {
   .chart {
     display: flex;
     flex-direction: column;
-    height: 552px;
+    // height: 552px;
+    flex: 1;
 
     &__container {
       flex: 1;
