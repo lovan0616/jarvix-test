@@ -94,7 +94,7 @@
           <a 
             href="javascript:void(0);" 
             class="list__link"
-            @click="switchDialogName(item.dialogName)"
+            @click="switchDialogName(item.dialogDisplayHandler)"
           >
             <svg-icon 
               :icon-class="item.icon" 
@@ -105,6 +105,10 @@
           </a>
         </li>
       </ul>
+      <change-pwd-dialog
+        v-if="isShowChangePwdDialog"
+        @closeDialog="controlChangePwdDialog(false)"
+      />
       <change-language-dialog
         v-show="isShowLanguage"
         @closeDialog="isShowLanguage = false"
@@ -124,6 +128,7 @@
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
 import ChangeLanguageDialog from '@/components/dialog/ChangeLanguageDialog';
+import ChangePwdDialog from '@/components/dialog/ChangePwdDialog';
 import SySelect from '@/components/select/SySelect'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
@@ -134,12 +139,14 @@ export default {
     DecideDialog,
     SySelect,
     CustomDropdownSelect,
-    ChangeLanguageDialog
+    ChangeLanguageDialog,
+    ChangePwdDialog
   },
   data () {
     return {
       isShowLanguage: false,
       isShowLogout: false,
+      isShowChangePwdDialog: false,
       selectedLanguage: null,
       isLoading: false
     }
@@ -157,8 +164,9 @@ export default {
     },
     settingList () {
       return [
-        {icon: 'language', title: 'lang', dialogName: 'isShowLanguage'},
-        {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
+        {icon: 'key', title: 'user.changePwd', dialogDisplayHandler: 'isShowChangePwdDialog'},
+        {icon: 'language', title: 'lang', dialogDisplayHandler: 'isShowLanguage'},
+        {icon: 'logout', title: 'button.logout', dialogDisplayHandler: 'isShowLogout'}
       ]
     },
     showSchedule () {
@@ -170,6 +178,9 @@ export default {
     ...mapActions('userManagement', ['switchAccountById']),
     switchDialogName (dialog) {
       this[dialog] = true
+    },
+    controlChangePwdDialog (data) {
+      this.isShowChangePwdDialog = data
     },
     onBtnExitClick () {
       this.$store.dispatch('userManagement/logout')

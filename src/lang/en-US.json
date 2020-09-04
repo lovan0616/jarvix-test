@@ -32,6 +32,12 @@
     "dataFileList": "List",
     "schedule": "Schedule"
   },
+  "user": {
+    "changePwd": "Change Password",
+    "oldPassword": "Old Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password"
+  },
   "dataFrameAdvanceSetting": {
     "searchColumn": "Search Column",
     "columnList": "Column List",
@@ -108,7 +114,8 @@
     "switchToGroupBySys": "You are now being swithced to project: {groupName}.",
     "youAreGroupless": "You are currently not affiliated with any project.",
     "pinboardSuccess": "Successfully Pinned.",
-    "switching": "Switching."
+    "switching": "Switching.",
+    "changePersonalPasswordSuccess": "Password changed successfully. Please login."
   },
   "guiding": {
     "prevStep": "Prev Step",
