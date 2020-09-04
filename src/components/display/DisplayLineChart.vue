@@ -263,6 +263,7 @@ export default {
               gt: minY,
               color: '#438AF8'
             }] : [{
+              lte: maxY,
               gt: upperLimit,
               color: '#EB5959'
             }]
