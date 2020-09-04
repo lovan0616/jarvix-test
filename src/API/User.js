@@ -283,3 +283,14 @@ export async function updateLocale (language) {
     data: { language, userId }
   })
 }
+
+/**
+ * 變更密碼
+ */
+export function changePassword(passwordInfo) {
+  return request({
+    url: '/users/password',
+    method: 'PATCH',
+    data: passwordInfo
+  })
+}
