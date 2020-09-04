@@ -132,14 +132,17 @@ export default {
 
       let chartData = this.dataset.data.map((element, index) => {
         return [
-          // 數字過大或過小時，使用 toFixed 將科學符號轉回來
-          this.floatAdd(min, (interval * index).toFixed(20)), this.floatAdd(min, (interval * (index + 1)).toFixed(20)), element
+          // bar start
+          this.displayFloat(min + interval * index),
+          // bar end
+          index === dataLength - 1 ? max : this.displayFloat(min + interval * (index + 1)),
+          element
         ]
       })
 
       // 數據顯示
-      chartAddon.toolbox.feature.dataView.optionToContent = (opt) => {
-        let dataset = opt.series[0].data
+      chartAddon.toolbox.feature.dataView.optionToContent = (chartData) => {
+        let dataset = chartData.series[0].data
         let table = `<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">${this.$t('chart.export')}</button></div>
           <table style="width:100%;padding: 0 16px;margin-top: 48px;"><tbody><tr style="background-color:#2B4D51">` +
           '<td>' + this.title.xAxis[0].display_name + '</td>' +
