@@ -172,9 +172,27 @@ export default {
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramConfig.yAxis}
       chartAddon.yAxis.name = this.title.yAxis[0].display_name
+      let labelInterval = Math.floor(dataLength / 15)
+      let labelCount = 0
       chartAddon.xAxis.axisLabel.formatter = (value, index) => {
-        return index === dataLength ? max : value
+        if (dataLength > 20) {
+          if (index === Math.floor(labelCount + labelInterval)) {
+            labelCount += labelInterval
+            return value
+          }
+        } else {
+          return index === dataLength ? max : value
+        }
       }
+      // 考慮要不要用
+      // chartAddon.xAxis.axisLabel.formatter = (value, index) => {
+      //   if (dataLength > 20) {
+      //     let labelInterval = Math.floor(dataLength / 15)
+      //     if (index % labelInterval === 0) return value
+      //   } else {
+      //     return index === dataLength ? max : value
+      //   }
+      // }
 
       histogramConfig.chartData.renderItem = this.renderItem
       histogramConfig.chartData.data = chartData
