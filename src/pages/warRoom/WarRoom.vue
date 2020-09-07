@@ -683,7 +683,7 @@ export default {
   .chart {
     display: flex;
     flex-direction: column;
-    height: 490px;
+    height: 680px;
     flex: 1;
 
     &__container {
