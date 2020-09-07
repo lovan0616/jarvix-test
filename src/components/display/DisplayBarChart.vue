@@ -216,13 +216,15 @@ export default {
       // 是否隱藏 legend
       if (!this.isShowLegend) config.legend.show = false
       // 上下限
-      let upperLimit = this.title.yAxis[0].upperLimit || null
-      let lowerLimit = this.title.yAxis[0].lowerLimit || null
-      if (upperLimit !== null || lowerLimit !== null) {
-        // 處理顏色
-        config.visualMap = monitorVisualMap(upperLimit, lowerLimit)
-        // markline
-        config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit)
+      if (this.title.yAxis.length > 0) {
+        let upperLimit = this.title.yAxis[0].upperLimit || null
+        let lowerLimit = this.title.yAxis[0].lowerLimit || null
+        if (upperLimit !== null || lowerLimit !== null) {
+          // 處理顏色
+          config.visualMap = monitorVisualMap(upperLimit, lowerLimit)
+          // markline
+          config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit)
+        }
       }
 
       return config
