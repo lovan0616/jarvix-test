@@ -9,7 +9,7 @@ import {
   getColumnCorrelationMatrix,
   triggerColumnDataCalculation
 } from '@/API/DataSource'
-import { getHistoryQuestionListV2 } from '@/API/NewAsk'
+import { getHistoryQuestionList } from '@/API/NewAsk'
 import router from '../../../router'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
@@ -228,7 +228,7 @@ export default {
     const dataSourceId = state.dataSourceId || dataSourceIdData
     const dataFrameId = getters.currentDataFrameId
 
-    return getHistoryQuestionListV2(dataSourceId, dataFrameId).then(res => {
+    return getHistoryQuestionList(dataSourceId, dataFrameId).then(res => {
       commit('setHistoryQuestionList', res)
     })
   },
