@@ -16,7 +16,7 @@
         class="link action-link"
         @click.stop="viewDetail"
       >
-        {{ $t('warRoom.viewDetail') }}
+        {{ $t('warRoom.goToLivePage') }}
       </a>
       <a
         v-if="hasPermission('group_edit_data')"

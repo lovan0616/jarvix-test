@@ -653,7 +653,8 @@
     "indexType": "指标型",
     "diagramType": "图表型",
     "hint": "提示",
-    "chartReminder": "资料过多或时间区间过长时，图表将自动进行显示限制。"
+    "chartReminder": "资料过多或时间区间过长时，图表将自动进行显示限制。",
+    "goToLivePage": "前往发布页面"
   },
   "description": {
     "basic": {
