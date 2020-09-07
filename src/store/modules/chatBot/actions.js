@@ -1,4 +1,4 @@
-import { askQuestionV2, askResultV2, getComponentListV2, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
+import { askQuestion, askResult, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
 
@@ -17,15 +17,15 @@ export default {
       selectedColumnList: rootGetters['dataFrameAdvanceSetting/selectedColumnList']
     }
 
-    return askQuestionV2({...askCondition, language: state.parserLanguage}, state.askCancelToken.token)
+    return askQuestion({...askCondition, language: state.parserLanguage}, state.askCancelToken.token)
   },
   askResult ({dispatch, state}, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
-    return askResultV2(data, cancelToken)
+    return askResult(data, cancelToken)
   },
   getComponentList ({dispatch, state}, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
-    return getComponentListV2(data, cancelToken)
+    return getComponentList(data, cancelToken)
   },
   getComponentData ({dispatch}, data) {
     return getComponentData(data)

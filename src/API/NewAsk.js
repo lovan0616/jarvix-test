@@ -13,18 +13,6 @@ export function askQuestion (askInfo, cancelFunction) {
 }
 
 /**
- * ask question v2
- */
-export function askQuestionV2 (askInfo, cancelFunction) {
-  return request({
-    url: '/ask/question/v2',
-    method: 'POST',
-    data: askInfo,
-    cancelToken: cancelFunction
-  })
-}
-
-/**
  * ask result
  */
 export function askResult (askInfo, cancelFunction) {
@@ -37,34 +25,11 @@ export function askResult (askInfo, cancelFunction) {
 }
 
 /**
- * ask result v2
- */
-export function askResultV2 (askInfo, cancelFunction) {
-  return request({
-    url: '/ask/result/v2',
-    method: 'POST',
-    data: askInfo,
-    cancelToken: cancelFunction
-  })
-}
-
-/**
  * get component list
  */
 export function getComponentList (resultId, cancelFunction) {
   return request({
     url: `/ask/componentList/${resultId}`,
-    method: 'GET',
-    cancelToken: cancelFunction
-  })
-}
-
-/**
- * get component list v2
- */
-export function getComponentListV2 (resultId, cancelFunction) {
-  return request({
-    url: `/ask/componentList/${resultId}/v2`,
     method: 'GET',
     cancelToken: cancelFunction
   })
@@ -88,19 +53,6 @@ export function getComponentData (componentInfo, cancelFunction) {
 export function getHistoryQuestionList(dataSourceId, dataFrameId) {
   return request({
     url: `/ask/questionHistoryList/${dataSourceId}`,
-    method: 'GET',
-    params: {
-      dataFrameId
-    }
-  })
-}
-
-/**
- * get question history
- */
-export function getHistoryQuestionListV2(dataSourceId, dataFrameId) {
-  return request({
-    url: `/ask/questionHistoryList/${dataSourceId}/v2`,
     method: 'GET',
     params: {
       dataFrameId
