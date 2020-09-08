@@ -365,7 +365,7 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
   // Declare routes without authentication
-  const pathWithoutAuth = ['PageLogin', 'PageSignup']
+  const pathWithoutAuth = ['PageLogin', 'PageSignup', 'WarRoomLivePage']
   if (pathWithoutAuth.includes(to.name)) {
     next()
     return

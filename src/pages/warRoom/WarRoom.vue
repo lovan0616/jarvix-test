@@ -104,6 +104,23 @@
               class="btn-m btn-secondary button-container__button"
               @click="previewWarRoom"
             >{{ $t('warRoom.preview') }}</button>
+            <custom-dropdown-select
+              v-if="warRoomBasicInfo.isPublishing"
+              :data-list="otherFeatureList"
+              trigger="hover"
+              @select="doOtherFeature"
+            >
+              <template #display>
+                <button
+                  type="button"
+                  class="btn-m btn-secondary button-container__button"
+                >
+                  <svg-icon 
+                    icon-class="more" 
+                    class="icon"/>
+                </button>
+              </template>
+            </custom-dropdown-select>
           </div>
           <div class="button-container--bottom">
             <div class="button-container__description">
@@ -240,6 +257,20 @@
       class="war-room__side-setting"
       @close="closeComponentConstraint"
     />
+    <writing-dialog
+      v-if="isShowShare"
+      :title="$t('warRoom.getPublishedUrl')"
+      :button="$t('button.copy')"
+      :show-both="false"
+      @closeDialog="closeShare"
+      @confirmBtn="copyLink"
+    >
+      <input 
+        ref="shareInput" 
+        v-model="shareLink" 
+        type="text" 
+        class="input war-room__dialog-input">
+    </writing-dialog>
   </section>
 </template>
 
@@ -249,6 +280,7 @@ import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import WarRoomSetting from './components/WarRoomSetting'
 import ComponentConstraint from './components/ComponentConstraint'
 import WarRoomComponent from './components/WarRoomComponent'
+import WritingDialog from '@/components/dialog/WritingDialog'
 import draggable from 'vuedraggable';
 import { Message } from 'element-ui'
 import {
@@ -270,6 +302,7 @@ export default {
     ComponentConstraint,
     WarRoomComponent,
     Message,
+    WritingDialog,
     draggable
   },
   data () {
@@ -287,7 +320,19 @@ export default {
       isEditingWarRoomName: false,
       tempWarRoomPublishedName: null,
       isProcessing: false,
-      dataSourcePool: {}
+      dataSourcePool: {},
+      isShowShare: false,
+      shareLink: null,
+      otherFeatureList: [
+        {
+          id: 'shareUrl',
+          name: this.$t('warRoom.getPublishedUrl')
+        },
+        {
+          id: 'viewLivePage',
+          name: this.$t('warRoom.goToLivePage')
+        }
+      ]
     }
   },
   computed: {
@@ -513,6 +558,35 @@ export default {
       const { war_room_id: warRoomId } = this.$route.params
       const routeData = this.$router.resolve({ name: 'WarRoomPreviewPage', params: { 'war_room_id': warRoomId } })
       window.open(routeData.href, '_blank')
+    },
+    showShareDialog () {
+      this.isShowShare = true
+      this.shareLink = `${window.location.origin}/war-room?id=${this.warRoomBasicInfo.urlIdentifier}`
+    },
+    closeShare () {
+      this.isShowShare = false
+    },
+    copyLink () {
+      let input = this.$refs.shareInput
+      input.select()
+      /* For mobile devices */
+      input.setSelectionRange(0, 99999)
+      document.execCommand('copy')
+
+      Message({
+        message: this.$t('message.copiedToBoard'),
+        type: 'success',
+        duration: 3 * 1000,
+        showClose: true
+      })
+      this.isShowShare = false
+    },
+    doOtherFeature (action) {
+      if (action === 'shareUrl') return this.showShareDialog()
+      if (action === 'viewLivePage') {
+        const routeData = this.$router.resolve({ name: 'WarRoomLivePage', query: { 'id': this.warRoomBasicInfo.urlIdentifier } })
+        return window.open(routeData.href, '_blank')
+      }
     }
   }
 }
@@ -600,6 +674,11 @@ export default {
     }
   }
 
+  &__dialog-input {
+    margin: 24px 0px;
+    padding-bottom: 8px;
+  }
+
   .button-container {
     display: flex;
     flex-direction: column;
@@ -613,6 +692,10 @@ export default {
 
     &--top {
       margin-bottom: 11px;
+      /deep/ .dropdown__list-container {
+        left: -126px;
+        &::after { left: 82%; }
+      }
     }
 
     &__button {
@@ -683,7 +766,7 @@ export default {
   .chart {
     display: flex;
     flex-direction: column;
-    height: 490px;
+    height: 680px;
     flex: 1;
 
     &__container {
