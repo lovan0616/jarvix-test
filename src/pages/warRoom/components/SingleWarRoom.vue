@@ -15,17 +15,13 @@
         href="javascript:void(0);" 
         class="link action-link"
         @click.stop="viewDetail"
-      >
-        {{ $t('warRoom.goToLivePage') }}
-      </a>
+      >{{ $t('warRoom.goToLivePage') }}</a>
       <a
         v-if="hasPermission('group_edit_data')"
         href="javascript:void(0);" 
         class="link action-link"
         @click.stop="edit"
-      >
-        {{ $t('warRoom.edit') }}
-      </a>
+      >{{ $t('warRoom.edit') }}</a>
     </div>
     <div 
       class="war-room__action-block"
