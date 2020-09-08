@@ -61,6 +61,12 @@
           class="card__body-data"
         />
       </div>
+      <div
+        v-if="timeInterval"
+        class="card__description"
+      >
+        {{ $t('warRoom.timeInterval') + '：' + timeInterval }}
+      </div>
     </template>
     <div
       v-if="!isLoading && isEditable"
@@ -121,6 +127,10 @@ export default {
       type: Boolean,
       default: true
     },
+    warRoomDefaultTime: {
+      type: String,
+      default: null
+    }
   },
   data () {
     return {
@@ -150,6 +160,39 @@ export default {
     isBelowLowerBound () {
       if (this.isLoading || !this.isShowWarningMessage || !this.componentBasicInfo.config.boundSwitch || !this.componentBasicInfo.config.lowerBound) return false
       return Number(this.componentData.dataset.data) < Number(this.componentBasicInfo.config.lowerBound)
+    },
+    componentConfigTimeInterval () {
+      if (
+        this.isLoading
+        || this.isError
+        || this.isEditable
+        || !this.componentBasicInfo.config
+        || !this.componentBasicInfo.config.displayDateRangeSwitch
+      ) return null
+
+      const {
+        recentTimeIntervalAmount, 
+        recentTimeIntervalUnit, 
+        customEndTime, 
+        customStartTime 
+      } = this.componentBasicInfo.config
+
+      // 如果沒有選擇預設則為自訂區間
+      if (!recentTimeIntervalAmount || !recentTimeIntervalUnit) {
+        return customStartTime + ' - ' + (customEndTime || this.$t('warRoom.now'))
+      }
+
+      const timeInterval = `${recentTimeIntervalAmount}+${recentTimeIntervalUnit}`
+      return this.warRoomTimeIntervalList.find(interval => interval.value === timeInterval).name
+    },
+    timeInterval () {
+      if (
+        this.isLoading
+        || this.isError
+        || this.isEditable
+        || (!this.componentConfigTimeInterval && !this.warRoomDefaultTime)
+      ) return null
+      return this.componentConfigTimeInterval || this.warRoomDefaultTime
     }
   },
   destroyed () {
@@ -314,6 +357,11 @@ export default {
     transform: translate(-50%, -50%);
     color: #999999;
     font-size: 14px;
+  }
+
+  &__description {
+    color: #999999;
+    font-size: 10px;
   }
 
   &--focused {

@@ -106,7 +106,7 @@
               <default-select 
                 v-validate="'required'"
                 :value="selectedTimeInterval"
-                :option-list="timeIntervalConstraint.timeIntervalList"
+                :option-list="warRoomTimeIntervalList"
                 :placeholder="$t('warRoom.chooseTimeInterval')"
                 :is-disabled="isProcessing"
                 class="war-room-setting__block-select"
@@ -128,7 +128,7 @@
                   ref="startTime"
                   :disabled="isProcessing"
                   v-model="componentData.config.customStartTime"
-                  :picker-options="timeIntervalConstraint.customTimeInterval.startTimePickerOptions"
+                  :picker-options="customTimeInterval.startTimePickerOptions"
                   :placeholder="'*' + $t('warRoom.startDate')"
                   :clearable="true"
                   :class="{ 'has-error': errors.first('startTime') }"
@@ -142,7 +142,7 @@
                 <el-date-picker
                   :disabled="isProcessing || !componentData.config.customStartTime"
                   v-model="componentData.config.customEndTime"
-                  :picker-options="timeIntervalConstraint.customTimeInterval.endTimePickerOptions"
+                  :picker-options="customTimeInterval.endTimePickerOptions"
                   :placeholder="$t('warRoom.endDate')"
                   :clearable="true"
                   value-format="yyyy-MM-dd"
@@ -365,50 +365,18 @@ export default {
           }
         ],
       },
-      timeIntervalConstraint: {
-        timeIntervalList: [
-          {
-            value: '1+Hour',
-            name: this.$t('warRoom.inHours')
+      customTimeInterval: {
+        startTime: '',
+        endTime: '',
+        startTimePickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now()
           },
-          {
-            value: '1+Day',
-            name: this.$t('warRoom.inDays')
-          },
-          {
-            value: '1+Week',
-            name: this.$t('warRoom.inWeeks')
-          },
-          {
-            value: '1+Month',
-            name: this.$t('warRoom.inMonths')
-          },
-          {
-            value: '1+Season',
-            name: this.$t('warRoom.inSeasons')
-          },
-          {
-            value: '1+Year',
-            name: this.$t('warRoom.inYears')
-          },
-          {
-            value: 'others',
-            name: this.$t('warRoom.customize')
-          }
-        ],
-        customTimeInterval: {
-          startTime: '',
-          endTime: '',
-          startTimePickerOptions: {
-            disabledDate(time) {
-              return time.getTime() > Date.now()
-            },
-            firstDayOfWeek: 1
-          },
-          endTimePickerOptions: {
-            disabledDate: this.disabledDueDate,
-            firstDayOfWeek: 1
-          }
+          firstDayOfWeek: 1
+        },
+        endTimePickerOptions: {
+          disabledDate: this.disabledDueDate,
+          firstDayOfWeek: 1
         }
       },
       isShowDeleteWarRoomComponent: false

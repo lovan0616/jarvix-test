@@ -53,6 +53,7 @@
             :is-editable="false"
             :is-previewing="isPreviewing"
             :is-show-warning-message="true"
+            :war-room-default-time="warRoomDefaultTime"
             class="number__item"
             @check-update="checkForUpdate"
           />
@@ -65,6 +66,7 @@
               :component-id="chart.componentId"
               :is-editable="false"
               :is-previewing="isPreviewing"
+              :war-room-default-time="warRoomDefaultTime"
               class="chart__item"
               @check-update="checkForUpdate"
             />
@@ -79,6 +81,7 @@
               :component-id="chart.componentId"
               :is-editable="false"
               :is-previewing="isPreviewing"
+              :war-room-default-time="warRoomDefaultTime"
               class="chart__item"
               @check-update="checkForUpdate"
             />
@@ -137,6 +140,17 @@ export default {
       if (this.isLoading || this.hasError) return
       const endTime = this.isPreviewing ? this.warRoomBasicInfo.config.customEndTime : this.warRoomBasicInfo.dateRangeEnd
       return (this.warRoomStartTime && endTime) ? endTime : this.$t('warRoom.now')
+    },
+    warRoomDefaultTime () {
+      if (this.isLoading || this.hasError) return null
+      if (!this.isPreviewing) return this.warRoomStartTime + '-' + this.warRoomEndTime
+      const { recentTimeIntervalAmount, recentTimeIntervalUnit } = this.warRoomBasicInfo.config
+
+      // 如果沒有選擇預設則為自訂區間
+      if (!recentTimeIntervalAmount || !recentTimeIntervalUnit) return this.warRoomStartTime + '-' + this.warRoomEndTime
+      
+      const timeInterval = `${recentTimeIntervalAmount}+${recentTimeIntervalUnit}`
+      return this.warRoomTimeIntervalList.find(interval => interval.value === timeInterval).name
     }
   },
   mounted () {
