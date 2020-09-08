@@ -17,12 +17,6 @@
           {{ warRoomBasicInfo.name }}
         </div>
       </div>
-      <div
-        v-if="warRoomStartTime"
-        class="war-room__header--right"
-      >
-        {{ $t('warRoom.timeInterval') + '：' + warRoomStartTime + ' - ' + warRoomEndTime }}
-      </div>
     </header>
     <section
       :class="{ 'war-room__content--disabled': isLoading }"
@@ -45,7 +39,10 @@
         <div class="war-room__error-message-title">{{ isEmptyData ? $t('warRoom.emptyComponentMessage') : $t('warRoom.warRoomDisplayErrorMessage') }}</div>
       </div>
       <template v-else>
-        <div class="number">
+        <div
+          v-if="numberComponent && numberComponent.length > 0"
+          class="number"
+        >
           <war-room-component
             v-for="number in numberComponent"
             :key="number.componentId"
