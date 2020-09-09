@@ -315,7 +315,7 @@ export default {
 
   .number {
     display: flex;
-    height: 103px;
+    height: 116px;
     width: 100%;
     margin-bottom: 20px;
 
