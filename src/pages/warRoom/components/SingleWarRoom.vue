@@ -127,7 +127,7 @@ export default {
 
 .war-room {
   position: relative;
-  width: 24%;
+  flex: 1 1 24%;
   height: 121px;
   background-color: var(--color-bg-5);
   border-radius: 8px;
@@ -136,26 +136,22 @@ export default {
   background-color: rgba(0, 0, 0, .35);
   transition: all 0.3s;
   margin-bottom: 12px;
+  border: 1px solid #202E31;
 
   &:not(:nth-child(4n)) {
     margin-right: 1%;
   }
 
-  &::before {
-    content: '';
-    width: 5px;
-    height: 100%;
-    display: block;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    background: #4DE2F0;
-    border-radius: 5px 0px 0px 5px;
-  }
-
   &:hover {
-    background: var(--color-bg-5);
+    background: #202E31;
     transform: translateY(-2px);
+
+    .war-room__link,
+    .war-room__action-block {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity .1s linear;
+    }
   }
 
   &__status {
@@ -193,6 +189,11 @@ export default {
     @include text-hidden;
   }
 
+  &__link {
+    visibility: hidden;
+    opacity: 0;
+  }
+
   .link {
     margin-right: 8px;
     &:hover {
@@ -204,6 +205,8 @@ export default {
     position: absolute;
     right: 24px;
     bottom: 24px;
+    visibility: hidden;
+    opacity: 0;
   }
 
   &__hover-box {
@@ -240,6 +243,7 @@ export default {
     background: #233131;
     border-radius: 8px;
     cursor: pointer;
+    box-shadow: 0px 4px 10px rgba(58, 178, 189, .5);
 
     &::after {
       content: '';

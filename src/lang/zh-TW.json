@@ -654,7 +654,9 @@
     "diagramType": "圖表型",
     "hint": "提示",
     "chartReminder": "資料過多或時間區間過長時，圖表將自動進行顯示限制。",
-    "goToLivePage": "前往發布頁面"
+    "goToLivePage": "前往發布頁面",
+    "all": "全部",
+    "displaySetting": "顯示設定"
   },
   "description": {
     "basic": {
