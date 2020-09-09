@@ -100,7 +100,6 @@
               v-model="replaceValue.newValue"
             />
             <input-verify
-              v-validate="'required'"
               v-else
               :name="replaceValue.id + '-1'"
               v-model="replaceValue.newValue"
