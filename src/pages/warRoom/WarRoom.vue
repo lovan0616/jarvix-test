@@ -745,6 +745,10 @@ export default {
     &__description {
       font-size: 14px;
       line-height: 32px;
+      [lang="en"] & {
+        text-align: right;
+        line-height: 24px;
+      }
       .question-lamp {
         color: $theme-color-warning;
       }
