@@ -262,7 +262,7 @@ export default {
           window.clearTimeout(this.autoRefreshFunction)
           this.isLoading = false
           this.isError = true
-          this.errorMessage = error.error.message || this.$t('message.systemIsError')
+          this.errorMessage = error.error && error.error.message ? error.error.message : this.$t('message.systemIsError')
         })
     },
     viewConstraint() {
