@@ -69,7 +69,7 @@ export default {
       }).catch(() => {})
     },
     getChartHeight () {
-      this.chartHeight = (document.body.clientHeight - 260) / 2 + 'px'
+      this.chartHeight = (document.body.clientHeight - 360) / 2 + 'px'
     }
   }
 }
@@ -93,11 +93,11 @@ export default {
       }
     }
     &__logo {
-      height: 30px;
+      height: 50px;
       margin-right: 24px;
     }
     &__title {
-      font-size: 20px;
+      font-size: 48px;
       letter-spacing: 4px;
       display: flex;
       &::before {
@@ -136,6 +136,8 @@ export default {
       }
     }
     &__title {
+      font-size: 32px;
+      letter-spacing: 3px;
       margin-bottom: 20px;
     }
     &__content {
