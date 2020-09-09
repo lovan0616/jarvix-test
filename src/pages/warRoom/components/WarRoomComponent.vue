@@ -325,6 +325,9 @@ export default {
     font-size: 14px;
     font-weight: 600;
     color: #DDDDDD;
+    [lang="en"] & {
+      width: calc(100% - 155px);
+    }
   }
 
   &__message {

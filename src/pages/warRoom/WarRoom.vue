@@ -638,6 +638,9 @@ export default {
       margin-right: 8px;
       min-width: 49px;
       padding: 0;
+      [lang="en"] & {
+        min-width: 60px;
+      }
     }
   }
 
