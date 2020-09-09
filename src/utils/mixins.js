@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import moment from 'moment'
+import i18n from '@/lang/index.js'
 
 // 全站共用的 function，會注入每個 component 當中
 Vue.mixin({
@@ -13,6 +14,40 @@ Vue.mixin({
       const hour = date.getHours().toString().padStart(2, '0')
       const minute = date.getMinutes().toString().padStart(2, '0')
       return `${year}/${month}/${day} ${hour}:${minute}`
+    }
+  },
+  data () {
+    return {
+      warRoomTimeIntervalList: [
+        {
+          value: '1+Hour',
+          name: i18n.t('warRoom.inHours')
+        },
+        {
+          value: '1+Day',
+          name: i18n.t('warRoom.inDays')
+        },
+        {
+          value: '1+Week',
+          name: i18n.t('warRoom.inWeeks')
+        },
+        {
+          value: '1+Month',
+          name: i18n.t('warRoom.inMonths')
+        },
+        {
+          value: '1+Season',
+          name: i18n.t('warRoom.inSeasons')
+        },
+        {
+          value: '1+Year',
+          name: i18n.t('warRoom.inYears')
+        },
+        {
+          value: 'others',
+          name: i18n.t('warRoom.customize')
+        }
+      ]
     }
   },
   methods: {

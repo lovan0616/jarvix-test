@@ -48,7 +48,7 @@
             <default-select 
               v-validate="'required'"
               :value="selectedTimeInterval"
-              :option-list="timeIntervalList"
+              :option-list="warRoomTimeIntervalList"
               :placeholder="$t('warRoom.chooseTimeInterval')"
               :is-disabled="isProcessing"
               class="war-room-setting__block-select"
@@ -163,36 +163,6 @@ export default {
     return {
       warRoomData: null,
       isProcessing: false,
-      timeIntervalList: [
-        {
-          value: '1+Hour',
-          name: this.$t('warRoom.inHours')
-        },
-        {
-          value: '1+Day',
-          name: this.$t('warRoom.inDays')
-        },
-        {
-          value: '1+Week',
-          name: this.$t('warRoom.inWeeks')
-        },
-        {
-          value: '1+Month',
-          name: this.$t('warRoom.inMonths')
-        },
-        {
-          value: '1+Season',
-          name: this.$t('warRoom.inSeasons')
-        },
-        {
-          value: '1+Year',
-          name: this.$t('warRoom.inYears')
-        },
-        {
-          value: 'others',
-          name: this.$t('warRoom.customize')
-        }
-      ],
       customTimeInterval: {
         startTime: '',
         endTime: '',
