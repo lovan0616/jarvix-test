@@ -143,7 +143,7 @@ export default {
   }
 
   &:hover {
-    background: var(--color-bg-5);
+    background: #202E31;
     transform: translateY(-2px);
 
     .war-room__link,
@@ -243,6 +243,7 @@ export default {
     background: #233131;
     border-radius: 8px;
     cursor: pointer;
+    filter: drop-shadow(0px 4px 10px rgba(58, 178, 189, 0.5));
 
     &::after {
       content: '';
