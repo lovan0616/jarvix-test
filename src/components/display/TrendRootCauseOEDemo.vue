@@ -3,7 +3,7 @@
     v-if="info.length > 0"
     class="trend-root-cause"
   >
-    <div class="block-title">IV 曲線異常洞察</div>
+    <div class="block-title">I-V 曲線異常洞察</div>
     <div
       v-for="(singleInfo, index) in info"
       :key="index"
