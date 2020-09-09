@@ -1,15 +1,28 @@
 <template>
   <div class="war-room-list-page list-page">
     <h1 class="list-page__title">{{ $t('warRoom.warRoom') }}</h1>
-    <button
-      v-if="hasPermission('group_create_data')"
-      class="btn-m btn-default btn-has-icon add-btn" 
-      @click="showAdd">
-      <svg-icon 
-        icon-class="plus" 
-        class="icon"/>
-      {{ $t('button.AddNewWarRoom') }}
-    </button>
+    <div class="list-page__action-container">
+      <button
+        v-if="hasPermission('group_create_data')"
+        class="btn-m btn-default btn-has-icon add-btn" 
+        @click="showAdd">
+        <svg-icon 
+          icon-class="plus" 
+          class="icon"/>
+        {{ $t('button.AddNewWarRoom') }}
+      </button>
+      <div
+        v-if="!isLoading && warRoomList.length > 0"
+        class="list-page__filter-select-wrapper"
+      >
+        <div class="list-page__filter-select-label">{{ $t('warRoom.displaySetting') }}</div>
+        <default-select
+          v-model="selectedFilterOption"
+          :option-list="filterOptions"
+          class="list-page__filter-select"
+        />
+      </div>
+    </div>
     <spinner
       v-if="isLoading" 
       :title="$t('editing.loading')"
@@ -19,7 +32,7 @@
         v-if="warRoomList.length > 0" 
         class="war-room-list">
         <single-war-room
-          v-for="warRoomInfo in warRoomList"
+          v-for="warRoomInfo in displayedFilterList"
           :key="warRoomInfo.id"
           :war-room-info="warRoomInfo"
           @publish="publish"
@@ -98,6 +111,7 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import InputVerify from '@/components/InputVerify'
+import DefaultSelect from '@/components/select/DefaultSelect'
 import { 
   createWarRoom, 
   deleteWarRoom, 
@@ -116,7 +130,8 @@ export default {
     DecideDialog,
     WritingDialog,
     EmptyInfoBlock,
-    InputVerify
+    InputVerify,
+    DefaultSelect
   },
   data () {
     return {
@@ -135,7 +150,22 @@ export default {
         urlIdentifier: null
       },
       confirmDeleteText: this.$t('editing.confirmDelete'),
-      isProcessing: false
+      isProcessing: false,
+      filterOptions: [
+        {
+          name: this.$t('warRoom.all'),
+          value: 'all'
+        },
+        {
+          name: this.$t('warRoom.hasPublished'),
+          value: 'published'
+        },
+        {
+          name: this.$t('warRoom.notPublished'),
+          value: 'not-published'
+        }
+      ],
+      selectedFilterOption: 'all'
     }
   },
   computed: {
@@ -145,6 +175,10 @@ export default {
     },
     groupId () {
       return this.$route.params.group_id
+    },
+    displayedFilterList () {
+      if (this.selectedFilterOption === 'all') return this.warRoomList
+      return this.warRoomList.filter(warRoom => warRoom.isPublishing === (this.selectedFilterOption === 'published'))
     }
   },
   mounted () {
@@ -293,10 +327,34 @@ export default {
 
   &__title {
     margin-top: 0;
+    margin-bottom: 8px;
   }
 
-  .add-btn {
+  &__action-container {
     margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__filter-select-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  &__filter-select-label {
+    font-size: 14px;
+    color: #CCCCCC;
+    margin-right: 8px;
+  }
+
+  &__filter-select {
+    width: 120px;
+    border-bottom: 1px solid #fff;
+    /deep/ .el-input__inner {
+      height: 30px;
+      line-height: 30px;
+      font-size: 14px;
+    }
   }
 
   .war-room-list {

@@ -127,7 +127,7 @@ export default {
 
 .war-room {
   position: relative;
-  width: 24%;
+  flex: 1 1 24%;
   height: 121px;
   background-color: var(--color-bg-5);
   border-radius: 8px;
