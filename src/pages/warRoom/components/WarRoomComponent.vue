@@ -98,7 +98,9 @@
 <script>
 import {
   getComponentInfo,
-  getPublishedComponentInfo
+  getPublishedComponentInfo,
+  checkComponentUpdateStatus,
+  checkPublishedComponentUpdateStatus
 } from '@/API/WarRoom'
 import DisplayIndexInfo from './DisplayIndexInfo'
 

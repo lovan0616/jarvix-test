@@ -149,6 +149,20 @@ export function getComponentInfo(id, componentId) {
 }
 
 /**
+ * 取得戰情室 Component 更新狀態
+ * @param {String} id - 戰情室 ID
+ * @param {String} componentId - 戰情室 Component ID
+ * @param {String} previousUpdateDate - 戰情室 Component 前次更新時間，若沒有前次更新時間，則直接給當下時間
+ */
+export function checkComponentUpdateStatus(id, componentId, previousUpdateDate) {
+  return request({
+    url: `/war-room/${id}/component/${componentId}/refresh-status`,
+    method: 'GET',
+    params: { previousUpdateDate }
+  })
+}
+
+/**
  * 取得指定發布戰情室 Component
  * @param {String} urlIdentifier - 發布戰情室 URL 辨識字串
  * @param {String} componentId - 戰情室 Component ID
@@ -157,6 +171,20 @@ export function getPublishedComponentInfo(urlIdentifier, componentId) {
   return request({
     url: `/war-room/publishing/${urlIdentifier}/component/${componentId}`,
     method: 'GET'
+  })
+}
+
+/**
+ * 取得指定發布戰情室 Component 更新狀態
+ * @param {String} urlIdentifier - 發布戰情室 URL 辨識字串
+ * @param {String} componentId - 戰情室 Component ID
+ * @param {String} previousUpdateDate - 戰情室 Component 前次更新時間，若沒有前次更新時間，則直接給當下時間
+ */
+export function checkPublishedComponentUpdateStatus(urlIdentifier, componentId, previousUpdateDate) {
+  return request({
+    url: `/war-room/publishing/${urlIdentifier}/component/${componentId}/refresh-status`,
+    method: 'GET',
+    params: { previousUpdateDate }
   })
 }
 
