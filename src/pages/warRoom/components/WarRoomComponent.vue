@@ -212,13 +212,14 @@ export default {
       const promise = this.isPreviewing ? checkComponentUpdateStatus : checkPublishedComponentUpdateStatus
       const id = this.isPreviewing ? this.$route.params.war_room_id : this.$route.query.id
       // 第一次渲染拿當前時間作為給後端的前次更新時間，因為與 component 上的更新時間不同，所以一定會回傳 UPDATABLE
-      const updateDate = this.updateDate || moment().format('YYYY-MM-DD HH:mm:ss.SSS')
+      const updateDate = this.updateDate || moment().toISOString()
       // 確認 component config 資料有無更新或需要重新計算，需要才去拿 component 資料
       promise(id, this.componentId, updateDate)
         .then(res => { if (res === 'UPDATABLE') this.fetchData() })
         .catch(() => {
           // 若為 live 頁面，需確認是否有更新版本上線
           if (!this.isPreviewing) this.$emit('check-update')
+          if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
           this.isLoading = false
           this.isError = true
           this.errorMessage = this.$t('message.systemIsError')
