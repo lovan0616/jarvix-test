@@ -1,6 +1,6 @@
 <template>
   <div class="full-create-dialog">
-    <h2>{{ $t('editing.addUser') }}</h2>
+    <h2>{{ $t('userManagement.inviteUser') }}</h2>
     <div 
       class="full-create-dialog-box" 
       @click.stop>
@@ -22,7 +22,7 @@
         <svg-icon 
           v-if="isProcessing" 
           icon-class="spinner"/>
-        {{ $t('button.submit') }}
+        {{ $t('button.sendInvitation') }}
       </button>
     </div>
   </div>

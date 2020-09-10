@@ -118,11 +118,65 @@
     border-radius: 4px;
     color: #fff;
     background-color: transparent;
+
+    &:hover {
+      opacity: .8;
+    }
   }
 
   .dialog-create {
     margin-left: 16px;
     background-color: $button-color;
     border: 0px solid;
+  }
+}
+
+.fill-dialog {
+  .form.new-invitee {
+    width: 652px;
+    padding: 36px 76px;
+    .form-labels {
+      display: flex;
+      margin-bottom: 20px;
+      font-size: 14px;
+      height: 21px;
+      overflow: visible;
+      .label-invitee-email {
+        flex: 0 0 244px;
+      }
+      .label-user-role-authority {
+        flex: 0 0 168px;
+        margin-left: 13px;
+        display: flex;
+        align-items: center;
+      }
+    }
+    .form-item {
+      position: relative;
+      font-size: 0;
+      .input-verify {
+        display: inline-block;
+        width: 260px;
+        [lang="en"] & {
+          width: 244px;
+        }
+      }
+      .el-select {
+        display: inline-block;
+        width: 168px;
+        height: 40px;
+        border-bottom-color: #fff;
+        margin-left: 13px;
+        /deep/ .el-input__inner {
+          padding-left: 0;
+        }
+      }
+      .remove {
+        position: absolute;
+        top: 0;
+        right: 0;
+        line-height: 40px;
+      }
+    }
   }
 }

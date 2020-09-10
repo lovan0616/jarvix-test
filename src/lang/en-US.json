@@ -267,7 +267,6 @@
     "sureLogout": "Are you sure you want to log out of your account?",
     "questionFeedback": "QuestionFeedback",
     "functionDescription": "Function Description",
-    "addUser": "New User",
     "notYetCreateUser": "User has not been created",
     "inviteeEmail": "Invited Email",
     "pleaseSelectInviteeEmail": "Please select invitee email",
@@ -756,7 +755,8 @@
     "addSqlScript": "Add Customized SQL",
     "testConnecting": "Testing Connection...",
     "monitorSetting": "Monitor Setting",
-    "updateImmediately": "Update Immediately"
+    "updateImmediately": "Update Immediately",
+    "sendInvitation": "寄送邀请信"
   },
   "timeScopeUnit": {
     "second": "seconds",
@@ -1822,6 +1822,7 @@
   },
   "userManagement": {
     "createUser": "New User",
+    "inviteUser": "邀请使用者",
     "inviteeEmailPlaceholder": "Please enter the email of the invitee",
     "userRoleAuthority": "Role",
     "accountOwner": "Account Owner",

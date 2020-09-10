@@ -8,6 +8,15 @@
         <button
           :disabled="isLoading || isProcessing || reachUserLimit"
           class="btn-m btn-default btn-has-icon"
+          @click="showInviteUser">
+          <svg-icon 
+            icon-class="user-invite" 
+            class="icon"/>
+          {{ $t('userManagement.inviteUser') }}
+        </button>
+        <button
+          :disabled="isLoading || isProcessing || reachUserLimit"
+          class="btn-m btn-default btn-has-icon"
           @click="showCreateUser">
           <svg-icon 
             icon-class="user-plus" 
@@ -114,12 +123,20 @@
       @closeDialog="closeDeleteAccount"
       @confirmBtn="deleteAccount"
     />
-
-    <fill-dialog
-      v-if="isShowCreateUser"
+    <create-user-dialog
+      v-if="isshowCreateUser"
       :is-processing="isProcessing"
+      :role-options="roleOptions"
+      :account-viewer-role-id="accountViewerRoleId"
       class="fill-dialog"
       @closeDialog="closeCreateUser"
+      @confirmBtn="createUsers"
+    />
+    <fill-dialog
+      v-if="isshowInviteUser"
+      :is-processing="isProcessing"
+      class="fill-dialog"
+      @closeDialog="closeInviteUser"
       @confirmBtn="createUsers"
     >
       <div class="form new-invitee">
@@ -177,6 +194,7 @@
 <script>
 import { getAccountUsers, deleteUserAccount, inviteUser, getAccountRoles, updateRole, getSelfInfo, updateUser } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
+import CreateUserDialog from './components/CreateUserDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'
@@ -191,6 +209,7 @@ export default {
   inject: ['$validator'],
   name: 'UserManagement',
   components: {
+    CreateUserDialog,
     DecideDialog,
     WritingDialog,
     FillDialog,
@@ -202,7 +221,8 @@ export default {
   data () {
     return {
       roleOptions: [],
-      isShowCreateUser: false,
+      isshowCreateUser: false,
+      isshowInviteUser: false,
       inviteeList: [],
       userInfo: {
         username: '',
@@ -322,13 +342,19 @@ export default {
     isNotAllowChangePsd (user) {
       return this.selfUser.role !== 'account_owner'
     },
-    showCreateUser () {
+    showInviteUser () {
       this.addNewInvitee()
-      this.isShowCreateUser = true
+      this.isshowInviteUser = true
+    },
+    showCreateUser () {
+      this.isshowCreateUser = true
+    },
+    closeInviteUser () {
+      this.isshowInviteUser = false
+      this.inviteeList = []
     },
     closeCreateUser () {
-      this.isShowCreateUser = false
-      this.inviteeList = []
+      this.isshowCreateUser = false
     },
     createUsers () {
       this.$validator.validateAll().then(result => {
@@ -368,7 +394,7 @@ export default {
           accountId: this.$store.getters['userManagement/getCurrentAccountId']
         })
           .then(() => {
-            this.isShowCreateUser = false
+            this.isshowInviteUser = false
             this.inviteeList = []
             this.getUserList()
             Message({
@@ -595,56 +621,6 @@ export default {
     background: var(--color-bg-5);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
-  }
-
-  .fill-dialog {
-    .form.new-invitee {
-      width: 652px;
-      padding: 36px 76px;
-      .form-labels {
-        display: flex;
-        margin-bottom: 20px;
-        font-size: 14px;
-        height: 21px;
-        overflow: visible;
-        .label-invitee-email {
-          flex: 0 0 244px;
-        }
-        .label-user-role-authority {
-          flex: 0 0 168px;
-          margin-left: 13px;
-          display: flex;
-          align-items: center;
-        }
-      }
-      .form-item {
-        position: relative;
-        font-size: 0;
-        .input-verify {
-          display: inline-block;
-          width: 260px;
-          [lang="en"] & {
-            width: 244px;
-          }
-        }
-        .el-select {
-          display: inline-block;
-          width: 168px;
-          height: 40px;
-          border-bottom-color: #fff;
-          margin-left: 13px;
-          /deep/ .el-input__inner {
-            padding-left: 0;
-          }
-        }
-        .remove {
-          position: absolute;
-          top: 0;
-          right: 0;
-          line-height: 40px;
-        }
-      }
-    }
   }
 
   .tooltip-container {

@@ -278,7 +278,6 @@
     "sureLogout": "您确认要登出帐号？",
     "questionFeedback": "问题/建议回馈",
     "functionDescription": "功能说明",
-    "addUser": "新增使用者",
     "notYetCreateUser": "尚未建立使用者",
     "inviteeEmail": "受邀者 email",
     "pleaseSelectInviteeEmail": "请选择受邀者 email",
@@ -839,7 +838,8 @@
     "testConnecting": "测试连线中...",
     "monitorSetting": "监测设定",
     "updateImmediately": "立即更新",
-    "AddNewWarRoom": "新增戰情室"
+    "AddNewWarRoom": "新增戰情室",
+    "sendInvitation": "寄送邀请信"
   },
   "timeScopeUnit": {
     "second": "秒",
@@ -1904,7 +1904,8 @@
     "pieChartFilterNote": "此结果为原资料过滤负值得来"
   },
   "userManagement": {
-    "createUser": "新增使用者",
+    "createUser": "建立使用者",
+    "inviteUser": "邀请使用者",
     "inviteeEmailPlaceholder": "请输入受邀者email",
     "userRoleAuthority": "帐户角色权限",
     "accountOwner": "帐户拥有者",
