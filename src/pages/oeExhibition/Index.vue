@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { test1 } from '@/API/OEExhibition'
+import { getRandomChart } from '@/API/OEExhibition'
 
 export default {
   name: 'OEExhibition',
@@ -62,7 +62,7 @@ export default {
   methods: {
     getRandomChart () {
       this.loading = true
-      test1().then(chartList => {
+      getRandomChart().then(chartList => {
         this.chartList = chartList
         this.loading = false
       }).catch(() => {})
