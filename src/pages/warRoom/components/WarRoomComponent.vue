@@ -216,6 +216,13 @@ export default {
       // 確認 component config 資料有無更新或需要重新計算，需要才去拿 component 資料
       promise(id, this.componentId, updateDate)
         .then(res => { if (res === 'UPDATABLE') this.fetchData() })
+        .catch(() => {
+          // 若為 live 頁面，需確認是否有更新版本上線
+          if (!this.isPreviewing) this.$emit('check-update')
+          this.isLoading = false
+          this.isError = true
+          this.errorMessage = this.$t('message.systemIsError')
+        })
     },
     fetchData () {
       window.clearTimeout(this.timeoutFunction)
