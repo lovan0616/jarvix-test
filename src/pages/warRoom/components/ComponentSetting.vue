@@ -25,7 +25,7 @@
           class="war-room-setting__block is-error">
           {{ componentData.errorMessage }}
         </div>
-        <section v-show="!componentData.isError || (componentData.isError && componentData.componentId)">
+        <section v-else>
           <div class="war-room-setting__block">
             <div class="war-room-setting__block-title">
               {{ $t('warRoom.displayName') }}
@@ -392,7 +392,7 @@ export default {
   computed: {
     ...mapGetters('userManagement', ['hasPermission']),
     selectedTimeInterval () {
-      if (!this.componentData || !this.componentData.config.displayDateRangeSwitch) return null
+      if (!this.componentData || !this.componentData.config || !this.componentData.config.displayDateRangeSwitch) return null
       
       // 確認是否選擇預設區間
       if (this.componentData.config.recentTimeIntervalAmount && this.componentData.config.recentTimeIntervalUnit) {
@@ -423,13 +423,7 @@ export default {
       return this.isProcessing  || !this.selectedDataSource.question || !this.componentData.config.displayName
     }
   },
-  watch: {
-    originalComponentData: {
-      handler (newData) { this.componentData = JSON.parse(JSON.stringify(newData)) },
-      deep: true
-    }
-  },
-  mounted () {
+  created () {
     if (this.originalComponentData) this.componentData = JSON.parse(JSON.stringify(this.originalComponentData))
   },
   methods: {
