@@ -127,8 +127,8 @@ export default {
 
 .war-room {
   position: relative;
-  flex: 1 1 24%;
   height: 121px;
+  width: calc((100% - 60px) / 4);
   background-color: var(--color-bg-5);
   border-radius: 8px;
   padding: 16px 24px 24px;
@@ -139,7 +139,7 @@ export default {
   border: 1px solid #202E31;
 
   &:not(:nth-child(4n)) {
-    margin-right: 1%;
+    margin-right: 20px;
   }
 
   &:hover {

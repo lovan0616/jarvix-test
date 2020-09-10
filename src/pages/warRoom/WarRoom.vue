@@ -386,7 +386,7 @@ export default {
     addComponent (value) {
       if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
       if (this.isShowComponentConstraint) this.closeComponentConstraint()
-      // 再次點擊或切換新增不同類型元件時，重開一個新設定視窗
+      // 再次點擊或切換新增不同類型元件時，重開一個新設定視窗，避免資料變化觸發驗證錯誤
       if (this.isShowComponentSetting) this.closeComponentSetting()
       this.$nextTick(() => {
         if (
@@ -407,8 +407,12 @@ export default {
     editComponenSetting (data) {
       if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
       if (this.isShowComponentConstraint) this.closeComponentConstraint()
-      this.selectedComponent = data
-      this.isShowComponentSetting = true
+      // 切換不同元件時，重開一個新的編輯視窗，避免資料變化觸發驗證錯誤
+      if (this.isShowComponentSetting) this.closeComponentSetting()
+      this.$nextTick(() => {
+        this.selectedComponent = data
+        this.isShowComponentSetting = true
+      })
     },
     closeComponentSetting () {
       this.isShowComponentSetting = false
