@@ -82,6 +82,7 @@
           class="icon"/>
       </a>
       <a
+        v-if="!isError"
         href="javascript:void(0);" 
         class="link action-link"
         @click="viewConstraint"
@@ -232,7 +233,7 @@ export default {
               }
               
               // 儲存圖表資料
-              if (responseData.dataset.data.length === 0) {
+              if (!responseData.dataset.data || responseData.dataset.data.length === 0) {
                 this.isLoading = false
                 this.isError = true
                 this.errorMessage = this.$t('message.emptyResult')
@@ -269,7 +270,11 @@ export default {
       this.$emit('check-constraint', this.componentBasicInfo)
     },
     editSetting() {
-      this.$emit('check-setting', this.componentBasicInfo)
+      this.$emit('check-setting', {
+        ...this.componentBasicInfo,
+        ...(this.isError && { isError: this.isError }),
+        ...(this.errorMessage && { errorMessage: this.errorMessage }),
+      })
     },
     convertRefreshFrequency (cronTab) {
       switch (cronTab) {
