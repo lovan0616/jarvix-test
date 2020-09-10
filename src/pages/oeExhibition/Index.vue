@@ -5,7 +5,7 @@
         class="page__logo"
         src="@/assets/images/logo-green-x.svg">
       <div class="page__title">
-        二極體特性曲線
+        太陽能案場 I-V 曲線
       </div>
       <button 
         :disabled="loading"
