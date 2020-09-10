@@ -32,6 +32,8 @@ const service = axios.create({
 service.interceptors.response.use(
   response => {
     const res = response.data
+    // 特殊情況 光電展 response 無 meta
+    if (res.success && !res.meta) return res.data
     if (res.success) return res.meta.pagination ? {...res.data, ...res.meta} : res.data
 
     // rollbar 留存
