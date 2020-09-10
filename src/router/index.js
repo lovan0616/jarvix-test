@@ -314,6 +314,11 @@ const router = new Router({
       path: '/share-result/:id',
       name: 'ShareResult',
       component: () => import('@/pages/result/SingleResult')
+    },
+    {
+      path: '/oe-exhibition',
+      name: 'OeExhibition',
+      component: () => import('@/pages/oeExhibition/Index')
     }
   ],
   linkActiveClass: 'active',
