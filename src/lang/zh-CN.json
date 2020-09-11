@@ -1904,6 +1904,7 @@
     "pieChartFilterNote": "此结果为原资料过滤负值得来"
   },
   "userManagement": {
+    "accountUserList": "帐户使用者列表",
     "createUser": "建立使用者",
     "inviteUser": "邀请使用者",
     "inviteeEmailPlaceholder": "请输入受邀者email",
@@ -1917,7 +1918,11 @@
     "accountViewerDesc": "无法使用帐户管理相关功能",
     "updateRole": "角色变更",
     "confirmDeleteAccountText": "使用者移除后，此使用者将无法使用此帐户任何功能，您确认要继续移除此使用者？",
-    "userName": "使用者名称"
+    "userName": "使用者名称",
+    "userAccount": "使用者帐号",
+    "userPassword": "使用者密码",
+    "emailPlaceholder": "请输入email",
+    "userNamePlaceholder": "请输入名称"
   },
   "accountInfo": {
     "userAmount": "使用者数量",

@@ -756,7 +756,8 @@
     "testConnecting": "Testing Connection...",
     "monitorSetting": "Monitor Setting",
     "updateImmediately": "Update Immediately",
-    "sendInvitation": "寄送邀请信"
+    "AddNewWarRoom": "新增戰情室",
+    "sendInvitation": "Send Invitation"
   },
   "timeScopeUnit": {
     "second": "seconds",
@@ -1630,7 +1631,7 @@
     "saveFilterCondition": "Save",
     "saveFilterReminding": "After drilling down, the designated Data Set will automatically be set.",
     "area": "Block",
-    "between": "fall between {start} and {end}.",
+    "between": " fall between {start} and {end}.",
     "filterRestrictions": "Filter Restrictions",
     "prompt": "Prompt",
     "filterRule": "Filter conditions will affect the results of subsequent question analysis",
@@ -1821,8 +1822,9 @@
     "pieChartFilterNote": "The result is filtered negative data"
   },
   "userManagement": {
+    "accountUserList": "Account Users",
     "createUser": "New User",
-    "inviteUser": "邀请使用者",
+    "inviteUser": "Invite User",
     "inviteeEmailPlaceholder": "Please enter the email of the invitee",
     "userRoleAuthority": "Role",
     "accountOwner": "Account Owner",
@@ -1834,7 +1836,11 @@
     "accountViewerDesc": "Unable to use account management related functions",
     "updateRole": "Role",
     "confirmDeleteAccountText": "After the user is removed, this user will not be able to use any features of this account. Are you sure you want to continue removing this user?",
-    "userName": "User Name"
+    "userName": "User Name",
+    "userAccount": "Username",
+    "userPassword": "Password",
+    "emailPlaceholder": "Input Email",
+    "userNamePlaceholder": "Input Name"
   },
   "accountInfo": {
     "userAmount": "User Limit",
