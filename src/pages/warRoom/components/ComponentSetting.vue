@@ -103,7 +103,9 @@
                   :disabled="isProcessing"
                   :width="Number('32')"
                   active-color="#2AD2E2"
-                  inactive-color="#324B4E"/>
+                  inactive-color="#324B4E"
+                  @change="updateDateRangeSwitch"
+                />
               </div>
               <div
                 v-if="componentData.config.displayDateRangeSwitch"
@@ -561,6 +563,22 @@ export default {
     },
     clearEndTime () {
       this.componentData.config.customEndTime = null
+    },
+    updateDateRangeSwitch (isTurnedOn) {
+      if(isTurnedOn) return
+      const {
+        customStartTime,
+        customEndTime,
+        recentTimeIntervalAmount,
+        recentTimeIntervalUnit
+      } = JSON.parse(JSON.stringify(this.originalComponentData.config))
+      // 關閉時，恢復原本預設，避免存取時送錯的格式給後端
+      this.$nextTick(() => {
+        this.componentData.config.customEndTime = customEndTime
+        this.componentData.config.customStartTime = customStartTime
+        this.componentData.config.recentTimeIntervalAmount = recentTimeIntervalAmount
+        this.componentData.config.recentTimeIntervalUnit = recentTimeIntervalUnit
+      })
     }
   }
 }
@@ -577,8 +595,10 @@ export default {
   }
 
   &__block-select {
-    /deep/ .el-input__inner {
-      border-bottom: 1px solid #FFFFFF;
+    /deep/.sy-select.theme-dark {
+      .el-input__inner {
+        border-bottom: 1px solid #FFFFFF;
+      }
     }
   }
 
