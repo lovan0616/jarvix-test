@@ -12,7 +12,7 @@
         class="user-question-block"
       >
         <default-select
-          v-if="newParserMode || hasPermission('ENGLISH_PARSER')"
+          v-if="newParserMode || hasPermission('english_parser')"
           v-model="selectParser"
           :option-list="languageList"
           class="parser-select"
