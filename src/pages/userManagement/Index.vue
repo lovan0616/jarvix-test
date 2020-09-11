@@ -233,10 +233,9 @@ export default {
   },
   computed: {
     hasRepetitiveInvitee () {
-      let hasRepetitive = this.inviteeList
+      return this.inviteeList
         .map(invitee => invitee.email)
-        .filter((email, index, array) => array.indexOf(email) !== index)
-      return hasRepetitive.length > 0
+        .some((email, index, array) => array.indexOf(email) !== index)
     },
     currentAccountId () {
       return this.$store.getters['userManagement/getCurrentAccountId']
@@ -282,13 +281,8 @@ export default {
         this.selfUser = this.userData.filter(user => user.id === response.id)[0]
       })
     },
-    btnDisabled (user) { // 待改善
-      if (this.selfUser.role === 'account_maintainer' && user.role === 'account_owner') {
-        return true
-      } else if (this.selfUser.id === user.id) {
-        return true
-      }
-      return false
+    btnDisabled (user) {
+      return (this.selfUser.role === 'account_maintainer' && user.role === 'account_owner') || this.selfUser.id === user.id
     },
     isNotAllowChangePsd (user) {
       return this.selfUser.role !== 'account_owner'
