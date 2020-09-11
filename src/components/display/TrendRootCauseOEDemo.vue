@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     v-if="info.length > 0"
     class="trend-root-cause"
   >
