@@ -1,6 +1,18 @@
 <template>
   <div class="page-sis-setting">
     <div class="setting-block">
+      <div class="setting-block__title">戰情室設定</div>
+      <div class="setting-block__content">
+        <div class="input-block">
+          <label for="">啟用戰情室模組：</label>
+          <el-switch
+            v-model="openWarRoomModule"
+            class="setting-switch"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="setting-block">
       <div class="setting-block__title">排程模組設定</div>
       <div class="setting-block__content">
         <div class="input-block">
@@ -107,6 +119,7 @@ export default {
   name: 'PageSisSetting',
   data () {
     return {
+      isShowWarRoomModule: localStorage.getItem('isShowWarRoomModule'),
       isShowScheduleModule: localStorage.getItem('isShowScheduleModule'),
       isShowAlgorithmBtn: localStorage.getItem('isShowAlgorithmBtn'),
       isDemoEnd: localStorage.getItem('isDemoEnd'),
@@ -118,6 +131,15 @@ export default {
     }
   },
   computed: {
+    openWarRoomModule: {
+      get () {
+        return this.isShowWarRoomModule === 'true' || this.isShowWarRoomModule
+      },
+      set (value) {
+        this.isShowWarRoomModule = value
+        localStorage.setItem('isShowWarRoomModule', value)
+      }
+    },
     openScheduleModule: {
       get () {
         return this.isShowScheduleModule === 'true' || this.isShowScheduleModule
