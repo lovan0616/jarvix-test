@@ -39,7 +39,9 @@
               :disabled="isProcessing"
               :width="32"
               active-color="#2AD2E2"
-              inactive-color="#324B4E"/>
+              inactive-color="#324B4E"
+              @change="updateDateRangeSwitch"
+            />
           </div>
           <div
             v-if="warRoomData.displayDateRangeSwitch"
@@ -263,6 +265,20 @@ export default {
     },
     clearEndTime () {
       this.warRoomData.customEndTime = null
+    },
+    updateDateRangeSwitch (isTurnedOn) {
+      if(isTurnedOn) return
+      const {
+        customStartTime,
+        customEndTime,
+        recentTimeIntervalAmount,
+        recentTimeIntervalUnit
+      } = JSON.parse(JSON.stringify(this.configData))
+      // 關閉時，恢復原本預設，避免存取時送錯的格式給後端
+      this.warRoomData.customStartTime = customStartTime
+      this.warRoomData.customEndTime = customEndTime
+      this.warRoomData.recentTimeIntervalAmount = recentTimeIntervalAmount
+      this.warRoomData.recentTimeIntervalUnit = recentTimeIntervalUnit
     }
   }
 }
@@ -271,8 +287,10 @@ export default {
 <style lang="scss" scoped>
 .war-room-setting {
   &__block-select {
-    /deep/ .el-input__inner {
-      border-bottom: 1px solid #FFFFFF;
+    /deep/.sy-select.theme-dark {
+      .el-input__inner {
+        border-bottom: 1px solid #FFFFFF;
+      }
     }
   }
 
