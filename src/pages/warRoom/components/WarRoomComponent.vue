@@ -98,8 +98,11 @@
 <script>
 import {
   getComponentInfo,
-  getPublishedComponentInfo
+  getPublishedComponentInfo,
+  checkComponentUpdateStatus,
+  checkPublishedComponentUpdateStatus
 } from '@/API/WarRoom'
+import moment from 'moment'
 import DisplayIndexInfo from './DisplayIndexInfo'
 
 export default {
@@ -150,7 +153,8 @@ export default {
       errorMessage: '',
       timeoutFunction: null,
       autoRefreshFunction: null,
-      componentBasicInfo: {}
+      componentBasicInfo: {},
+      updateDate: null
     }
   },
   computed: {
@@ -201,18 +205,35 @@ export default {
     if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
   },
   mounted () {
-    this.fetchData()
+    this.checkRefreshStatus()
   },
   methods: {
+    checkRefreshStatus () {
+      const promise = this.isPreviewing ? checkComponentUpdateStatus : checkPublishedComponentUpdateStatus
+      const id = this.isPreviewing ? this.$route.params.war_room_id : this.$route.query.id
+      // 第一次渲染拿當前時間作為給後端的前次更新時間，因為與 component 上的更新時間不同，所以一定會回傳 UPDATABLE
+      const updateDate = this.updateDate || moment().toISOString()
+      // 確認 component config 資料有無更新或需要重新計算，需要才去拿 component 資料
+      promise(id, this.componentId, updateDate)
+        .then(res => { if (res === 'UPDATABLE') this.fetchData() })
+        .catch(() => {
+          // 若為 live 頁面，需確認是否有更新版本上線
+          if (!this.isPreviewing) this.$emit('check-update')
+          if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
+          this.isLoading = false
+          this.isError = true
+          this.errorMessage = this.$t('message.systemIsError')
+        })
+    },
     fetchData () {
       window.clearTimeout(this.timeoutFunction)
+      // 需要拿 component 資料時才改新狀態
       this.isLoading = true
       const promise = this.isPreviewing ? getComponentInfo : getPublishedComponentInfo
       const id = this.isPreviewing ? this.$route.params.war_room_id : this.$route.query.id
-
       promise(id, this.componentId)
         .then(response => {
-          const { diagramData, ...componentBasicInfo } = response
+          const { diagramData, updateDate, ...componentBasicInfo } = response
           switch (componentBasicInfo.status) {
             case 'Process':
             case 'Ready':
@@ -222,13 +243,14 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.diagram = componentBasicInfo.diagram
               this.componentName = this.getChartTemplate(this.diagram)
+              this.updateDate = updateDate
               let responseData = diagramData.data
 
               // 定期更新 component 資料
               let isAutoRefresh = componentBasicInfo.config.isAutoRefresh
               if(isAutoRefresh && !this.isEditable) {
                 this.autoRefreshFunction = window.setTimeout(() => {
-                  this.fetchData()
+                  this.checkRefreshStatus()
                 }, this.convertRefreshFrequency(componentBasicInfo.config.refreshFrequency))
               }
               
