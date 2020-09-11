@@ -1,7 +1,7 @@
 <template>
   <div class="user-management">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('sideNav.accountUserManagement') }}</h1>
+      <h1 class="title">{{ $t('userManagement.accountUserList') }}</h1>
     </div>
     <div class="table-board">
       <div class="button-block">

@@ -1904,6 +1904,7 @@
     "pieChartFilterNote": "此結果為原資料過濾負值得來"
   },
   "userManagement": {
+    "accountUserList": "帳戶使用者列表",
     "createUser": "建立使用者",
     "inviteUser": "邀請使用者",
     "inviteeEmailPlaceholder": "請輸入受邀者email",

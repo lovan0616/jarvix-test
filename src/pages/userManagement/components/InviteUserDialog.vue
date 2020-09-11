@@ -5,7 +5,7 @@
       class="full-create-dialog-box" 
       @click.stop>
       <div class="form new-invitee">
-        <div class="form-labels">
+        <div class="form__labels">
           <span class="label-invitee-email">{{ $t('editing.inviteeEmail') }}</span>
           <span class="label-user-role-authority">
             {{ $t('userManagement.userRoleAuthority') }}
@@ -22,7 +22,7 @@
         <div 
           v-for="(invitee, index) in inviteeList"
           :key="invitee.id"
-          class="form-item">
+          class="form__item">
           <input-verify
             v-validate="'required|email'"
             v-model="invitee.email"
@@ -35,14 +35,14 @@
             :option-list="roleOptions"
             class="input"
           />
-          <a
+          <div
             v-if="inviteeList.length > 1"
-            href="javascript:void(0)"
-            class="link remove"
-            @click="removeInvitee(index)"
-          >
-            {{ $t('button.remove') }}
-          </a>
+            class="form__delete"
+            @click="removeInvitee(index)">
+            <svg-icon 
+              icon-class="delete" 
+              class="icon"/>
+          </div>
         </div>
         <button
           class="btn btn-m btn-outline"
@@ -140,6 +140,60 @@ export default {
 </script>
 <style lang="scss" scoped>
 .invite-user-dialog {
+
+  .form {
+
+    &__delete {
+      display: inline-block;
+      &:hover {
+        color: #4DE2F0;
+      }
+    }
+
+    &__labels {
+      display: flex;
+      margin-bottom: 20px;
+      font-size: 14px;
+      height: 21px;
+      overflow: visible;
+      .label-invitee-email {
+        flex: 0 0 262px;
+      }
+      .label-user-role-authority {
+        flex: 0 0 168px;
+        margin-left: 13px;
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    &__item {
+      .input-verify {
+        display: inline-block;
+        width: 260px;
+        [lang="en"] & {
+          width: 244px;
+        }
+      }
+      .el-select {
+        display: inline-block;
+        width: 168px;
+        height: 40px;
+        border-bottom-color: #fff;
+        margin: 0 13px;
+        /deep/ .el-input__inner {
+          padding-left: 0;
+        }
+      }
+      .remove {
+        position: absolute;
+        top: 0;
+        right: 0;
+        line-height: 40px;
+      }
+    }
+  }
+  
   .tooltip-container {
     margin: 0 3px;
     .tooltip {
