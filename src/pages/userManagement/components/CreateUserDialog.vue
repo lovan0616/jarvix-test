@@ -21,6 +21,7 @@
           <input-verify
             v-validate="'required|email'"
             v-model="invitee.email"
+            :class="{'has-error': errors.has('email' + '-' + invitee.id)}"
             :placeholder="$t('userManagement.emailPlaceholder')"
             :name="'email' + '-' + invitee.id"
             type="email"
@@ -39,7 +40,7 @@
             </span>
           </span>
           <default-select 
-            v-model="invitee.roleId"
+            v-model="invitee.accountRoleId"
             :option-list="roleOptions"
             class="input"
           />
@@ -48,7 +49,7 @@
           <span class="form__label"> {{ $t('userManagement.userName') }} </span>
           <input-verify
             v-validate="'required'"
-            v-model="invitee.userName"
+            v-model="invitee.username"
             :placeholder="$t('userManagement.userNamePlaceholder')"
             :name="'name' + '-' + invitee.id"
           />
@@ -136,6 +137,11 @@ export default {
       inviteeList: []
     }
   },
+  computed: {
+    currentAccountId () {
+      return this.$store.getters['userManagement/getCurrentAccountId']
+    }
+  },
   mounted (){
     this.addNewInvitee()
   },
@@ -146,10 +152,11 @@ export default {
     addNewInvitee () {
       this.inviteeList.push({
         id: inviteeId++,
+        accountId: this.currentAccountId,
+        accountRoleId: this.accountViewerRoleId,
         email: '',
-        roleId: this.accountViewerRoleId,
-        userName: '',
-        userPassword: '',
+        password: '00000000',
+        username: '',
         inputType: 'password'
       })
     },
@@ -163,7 +170,10 @@ export default {
       this.$emit('closeDialog')
     },
     confirmBtn () {
-      this.$emit('confirmBtn')
+      this.$validator.validateAll().then(result => {
+        if (!result) return
+        this.$emit('confirmBtn', this.inviteeList, 'createUser')
+      })
     }
   }
 }
@@ -223,6 +233,10 @@ export default {
       &-text {
         margin-bottom: 0;
       }
+    }
+
+    .has-error {
+      margin-bottom: 32px;
     }
   }
 
