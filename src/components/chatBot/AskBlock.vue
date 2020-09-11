@@ -12,7 +12,7 @@
         class="user-question-block"
       >
         <default-select
-          v-if="newParserMode"
+          v-if="newParserMode || hasPermission('ENGLISH_PARSER')"
           v-model="selectParser"
           :option-list="languageList"
           class="parser-select"
@@ -121,7 +121,7 @@ export default {
     ...mapState('chatBot', ['parserLanguageList', 'parserLanguage']),
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
-    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'hasPermission']),
     newParserMode () {
       return localStorage.getItem('newParser') === 'true'
     },
