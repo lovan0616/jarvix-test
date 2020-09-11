@@ -386,7 +386,7 @@ export default {
     addComponent (value) {
       if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
       if (this.isShowComponentConstraint) this.closeComponentConstraint()
-      // 再次點擊或切換新增不同類型元件時，重開一個新設定視窗
+      // 再次點擊或切換新增不同類型元件時，重開一個新設定視窗，避免資料變化觸發驗證錯誤
       if (this.isShowComponentSetting) this.closeComponentSetting()
       this.$nextTick(() => {
         if (
@@ -407,8 +407,12 @@ export default {
     editComponenSetting (data) {
       if (this.isShowWarRoomSetting) this.closeWarRoomSetting()
       if (this.isShowComponentConstraint) this.closeComponentConstraint()
-      this.selectedComponent = data
-      this.isShowComponentSetting = true
+      // 切換不同元件時，重開一個新的編輯視窗，避免資料變化觸發驗證錯誤
+      if (this.isShowComponentSetting) this.closeComponentSetting()
+      this.$nextTick(() => {
+        this.selectedComponent = data
+        this.isShowComponentSetting = true
+      })
     },
     closeComponentSetting () {
       this.isShowComponentSetting = false
@@ -638,6 +642,9 @@ export default {
       margin-right: 8px;
       min-width: 49px;
       padding: 0;
+      [lang="en"] & {
+        min-width: 60px;
+      }
     }
   }
 
@@ -742,6 +749,10 @@ export default {
     &__description {
       font-size: 14px;
       line-height: 32px;
+      [lang="en"] & {
+        text-align: right;
+        line-height: 24px;
+      }
       .question-lamp {
         color: $theme-color-warning;
       }

@@ -28,6 +28,7 @@ export default {
   font-size: 32px;
   height: 37px;
   line-height: 37px;
+  margin-bottom: 4px;
   font-family: Oswald;
   font-weight: bold;
   color: #44D2FF;

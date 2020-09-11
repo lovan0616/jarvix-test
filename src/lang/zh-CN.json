@@ -588,6 +588,7 @@
   },
   "warRoom": {
     "warRoom": "战情室",
+    "addWarRoom": "新增战情室",
     "backToList": "返回列表",
     "back": "返回",
     "publish": "发布",
@@ -838,7 +839,7 @@
     "testConnecting": "测试连线中...",
     "monitorSetting": "监测设定",
     "updateImmediately": "立即更新",
-    "AddNewWarRoom": "新增戰情室",
+    "AddNewWarRoom": "新增战情室",
     "sendInvitation": "寄送邀请信"
   },
   "timeScopeUnit": {

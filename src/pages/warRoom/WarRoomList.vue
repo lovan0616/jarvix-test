@@ -49,7 +49,7 @@
     </div>
     <writing-dialog
       v-if="isShowAdd"
-      :title="$t('warRoom.add') + $t('warRoom.warRoom')"
+      :title="$t('warRoom.addWarRoom')"
       :button="$t('button.create')"
       :show-both="true"
       :is-loading="isProcessing"
@@ -350,6 +350,9 @@ export default {
   &__filter-select {
     width: 120px;
     border-bottom: 1px solid #fff;
+    [lang="en"] & {
+      width: 160px;
+    }
     /deep/ .el-input__inner {
       height: 30px;
       line-height: 30px;

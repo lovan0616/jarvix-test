@@ -20,199 +20,208 @@
       class="war-room-setting__content"
     >
       <div class="war-room-setting__block-container">
-        <div class="war-room-setting__block">
-          <div class="war-room-setting__block-title">
-            {{ $t('warRoom.displayName') }}
-          </div>
-          <input
-            v-validate="'required'"
-            :disabled="isProcessing"
-            v-model="componentData.config.displayName"
-            name="displayName"
-            class="input war-room-setting__block-text-input">
-          <div 
-            v-show="errors.has('displayName')"
-            class="error-text"
-          >{{ errors.first('displayName') }}</div>
+        <div 
+          v-if="componentData.isError && !componentData.componentId" 
+          class="war-room-setting__block is-error">
+          {{ componentData.errorMessage }}
         </div>
-        <div class="war-room-setting__block">
-          <div class="war-room-setting__block-title">
-            {{ $t('warRoom.sourceData') }}
-            <a
-              v-if="!componentData.componentId && !isEmptyPool && selectedDataSource.question"
-              :disabled="isProcessing" 
-              href="javascript:void(0);"
-              class="link"
-              @click="clearSelectedDataSource"
-            >
-              {{ $t('button.delete') }}
-            </a>
-          </div>
-          <div
-            class="war-room-setting__block-choose"
-            @click="componentData.componentId || isEmptyPool ? null : showComponentDataSourceList()"
-          >
-            {{ selectedDataSourceDisplay }}
-            <svg-icon
-              v-if="!componentData.componentId && !isEmptyPool"
-              icon-class="arrow-right" 
-              class="icon"/>
-          </div>
-        </div>
-        <template v-if="isShowAdvanceSetting">
+        <section v-else>
           <div class="war-room-setting__block">
             <div class="war-room-setting__block-title">
-              {{ $t('warRoom.updateFrequency') }}
-              <el-switch
-                v-model="componentData.config.isAutoRefresh"
-                :disabled="isProcessing"
-                :width="Number('32')"
-                active-color="#2AD2E2"
-                inactive-color="#324B4E"/>
+              {{ $t('warRoom.displayName') }}
             </div>
-            <div
-              v-if="componentData.config.isAutoRefresh"
-              class="war-room-setting__block-select-field"
-            >
-              <default-select 
-                v-validate="'required'"
-                v-model="componentData.config.refreshFrequency"
-                :option-list="updateFrequency.basicScheduleList"
-                :placeholder="$t('warRoom.chooseUpdateFrequency')"
-                :is-disabled="isProcessing"
-                class="war-room-setting__block-select"
-                name="updateFrequency"
-              />
-              <div 
-                v-show="errors.has('updateFrequency')"
-                class="error-text"
-              >{{ errors.first('updateFrequency') }}</div>
-            </div>
+            <input
+              v-validate="'required'"
+              :disabled="isProcessing"
+              v-model="componentData.config.displayName"
+              name="displayName"
+              class="input war-room-setting__block-text-input">
+            <div 
+              v-show="errors.has('displayName')"
+              class="error-text"
+            >{{ errors.first('displayName') }}</div>
           </div>
           <div class="war-room-setting__block">
             <div class="war-room-setting__block-title">
-              {{ $t('warRoom.timeIntervalConstraint') }}
-              <el-switch
-                v-model="componentData.config.displayDateRangeSwitch"
-                :disabled="isProcessing"
-                :width="Number('32')"
-                active-color="#2AD2E2"
-                inactive-color="#324B4E"/>
+              {{ $t('warRoom.sourceData') }}
+              <a
+                v-if="!componentData.componentId && !isEmptyPool && selectedDataSource.question"
+                :disabled="isProcessing" 
+                href="javascript:void(0);"
+                class="link"
+                @click="clearSelectedDataSource"
+              >
+                {{ $t('button.delete') }}
+              </a>
             </div>
             <div
-              v-if="componentData.config.displayDateRangeSwitch"
-              class="war-room-setting__block-select-field"
+              class="war-room-setting__block-choose"
+              @click="componentData.componentId || isEmptyPool ? null : showComponentDataSourceList()"
             >
-              <default-select 
-                v-validate="'required'"
-                :value="selectedTimeInterval"
-                :option-list="warRoomTimeIntervalList"
-                :placeholder="$t('warRoom.chooseTimeInterval')"
-                :is-disabled="isProcessing"
-                class="war-room-setting__block-select"
-                name="timeIntervalConstraint"
-                @change="updateTimeInterval"
-              />
-              <div 
-                v-show="errors.has('timeIntervalConstraint')"
-                class="error-text"
-              >{{ errors.first('timeIntervalConstraint') }}</div>
+              {{ selectedDataSourceDisplay }}
+              <svg-icon
+                v-if="!componentData.componentId && !isEmptyPool"
+                icon-class="arrow-right" 
+                class="icon"/>
             </div>
-            <div
-              v-if="componentData.config.displayDateRangeSwitch && selectedTimeInterval === 'others'"
-              class="war-room-setting__block-date-field date-picker"
-            >
-              <div class="date-picker__container">
-                <el-date-picker
-                  v-validate="'required'"
-                  ref="startTime"
+          </div>
+          <template v-if="isShowAdvanceSetting">
+            <div class="war-room-setting__block">
+              <div class="war-room-setting__block-title">
+                {{ $t('warRoom.updateFrequency') }}
+                <el-switch
+                  v-model="componentData.config.isAutoRefresh"
                   :disabled="isProcessing"
-                  v-model="componentData.config.customStartTime"
-                  :picker-options="customTimeInterval.startTimePickerOptions"
-                  :placeholder="'*' + $t('warRoom.startDate')"
-                  :clearable="true"
-                  :class="{ 'has-error': errors.first('startTime') }"
-                  value-format="yyyy-MM-dd"
-                  class="date-picker__item"
-                  size="small"
-                  type="date"
-                  name="startTime"
-                  @change="clearEndTime"/>
-                <div class="date-picker__seperator">-</div>
-                <el-date-picker
-                  :disabled="isProcessing || !componentData.config.customStartTime"
-                  v-model="componentData.config.customEndTime"
-                  :picker-options="customTimeInterval.endTimePickerOptions"
-                  :placeholder="$t('warRoom.endDate')"
-                  :clearable="true"
-                  value-format="yyyy-MM-dd"
-                  class="date-picker__item"
-                  size="small"
-                  type="date"
-                  name="endTime"/>
+                  :width="Number('32')"
+                  active-color="#2AD2E2"
+                  inactive-color="#324B4E"/>
               </div>
               <div
-                v-show="errors.has('startTime')"
-                class="error-text"
-              >{{ errors.first('startTime') }}</div>
-              <div class="date-picker__reminder">{{ '*' + $t('warRoom.timeIntervalReminder') }}</div>
+                v-if="componentData.config.isAutoRefresh"
+                class="war-room-setting__block-select-field"
+              >
+                <default-select 
+                  v-validate="'required'"
+                  v-model="componentData.config.refreshFrequency"
+                  :option-list="updateFrequency.basicScheduleList"
+                  :placeholder="$t('warRoom.chooseUpdateFrequency')"
+                  :is-disabled="isProcessing"
+                  class="war-room-setting__block-select"
+                  name="updateFrequency"
+                />
+                <div 
+                  v-show="errors.has('updateFrequency')"
+                  class="error-text"
+                >{{ errors.first('updateFrequency') }}</div>
+              </div>
             </div>
-          </div>
-          <div
-            v-if="selectedDataSource.isSetBoundAvailable || componentData.isSetBoundAvailable"
-            class="war-room-setting__block"
-          >
-            <div class="war-room-setting__block-title">
-              {{ $t('warRoom.thresholdSetting') }}
-              <el-switch
-                v-model="componentData.config.boundSwitch"
-                :disabled="isProcessing"
-                :width="Number('32')"
-                active-color="#2AD2E2"
-                inactive-color="#324B4E"/>
+            <div class="war-room-setting__block">
+              <div class="war-room-setting__block-title">
+                {{ $t('warRoom.timeIntervalConstraint') }}
+                <el-switch
+                  v-model="componentData.config.displayDateRangeSwitch"
+                  :disabled="isProcessing"
+                  :width="Number('32')"
+                  active-color="#2AD2E2"
+                  inactive-color="#324B4E"
+                  @change="updateDateRangeSwitch"
+                />
+              </div>
+              <div
+                v-if="componentData.config.displayDateRangeSwitch"
+                class="war-room-setting__block-select-field"
+              >
+                <default-select 
+                  v-validate="'required'"
+                  :value="selectedTimeInterval"
+                  :option-list="warRoomTimeIntervalList"
+                  :placeholder="$t('warRoom.chooseTimeInterval')"
+                  :is-disabled="isProcessing"
+                  class="war-room-setting__block-select"
+                  name="timeIntervalConstraint"
+                  @change="updateTimeInterval"
+                />
+                <div 
+                  v-show="errors.has('timeIntervalConstraint')"
+                  class="error-text"
+                >{{ errors.first('timeIntervalConstraint') }}</div>
+              </div>
+              <div
+                v-if="componentData.config.displayDateRangeSwitch && selectedTimeInterval === 'others'"
+                class="war-room-setting__block-date-field date-picker"
+              >
+                <div class="date-picker__container">
+                  <el-date-picker
+                    v-validate="'required'"
+                    ref="startTime"
+                    :disabled="isProcessing"
+                    v-model="componentData.config.customStartTime"
+                    :picker-options="customTimeInterval.startTimePickerOptions"
+                    :placeholder="'*' + $t('warRoom.startDate')"
+                    :clearable="true"
+                    :class="{ 'has-error': errors.first('startTime') }"
+                    value-format="yyyy-MM-dd"
+                    class="date-picker__item"
+                    size="small"
+                    type="date"
+                    name="startTime"
+                    @change="clearEndTime"/>
+                  <div class="date-picker__seperator">-</div>
+                  <el-date-picker
+                    :disabled="isProcessing || !componentData.config.customStartTime"
+                    v-model="componentData.config.customEndTime"
+                    :picker-options="customTimeInterval.endTimePickerOptions"
+                    :placeholder="$t('warRoom.endDate')"
+                    :clearable="true"
+                    value-format="yyyy-MM-dd"
+                    class="date-picker__item"
+                    size="small"
+                    type="date"
+                    name="endTime"/>
+                </div>
+                <div
+                  v-show="errors.has('startTime')"
+                  class="error-text"
+                >{{ errors.first('startTime') }}</div>
+                <div class="date-picker__reminder">{{ '*' + $t('warRoom.timeIntervalReminder') }}</div>
+              </div>
             </div>
             <div
-              v-if="componentData.config.boundSwitch"
-              class="war-room-setting__block-text"
+              v-if="selectedDataSource.isSetBoundAvailable || componentData.isSetBoundAvailable"
+              class="war-room-setting__block"
             >
-              <label class="input war-room-setting__block-text-label">
-                {{ $t('warRoom.maxThreshold') }}
-              </label>
-              <input
-                :disabled="isProcessing"
-                :value="componentData.config.upperBound === null ? '' : Number(componentData.config.upperBound)"
-                :min="componentData.config.lowerBound"
-                :placeholder="$t('warRoom.pleaseEnterValue')"
-                type="number"
-                name="upperBound"
-                class="input war-room-setting__block-text-input"
-                @input="componentData.config.upperBound = $event.target.value || null">
-              <div 
-                v-show="errors.has('upperBound')"
-                class="error-text"
-              >{{ errors.first('upperBound') }}</div>
-              <label class="input war-room-setting__block-text-label">
-                {{ $t('warRoom.minThreshold') }}
-              </label>
-              <input
-                :disabled="isProcessing"
-                :value="componentData.config.lowerBound === null ? '' : Number(componentData.config.lowerBound)"
-                :placeholder="$t('warRoom.pleaseEnterValue')"
-                type="number"
-                name="lowerBound"
-                class="input war-room-setting__block-text-input"
-                @input="componentData.config.lowerBound = $event.target.value || null">
-              <div 
-                v-show="errors.has('lowerBound')"
-                class="error-text"
-              >{{ errors.first('lowerBound') }}</div>
+              <div class="war-room-setting__block-title">
+                {{ $t('warRoom.thresholdSetting') }}
+                <el-switch
+                  v-model="componentData.config.boundSwitch"
+                  :disabled="isProcessing"
+                  :width="Number('32')"
+                  active-color="#2AD2E2"
+                  inactive-color="#324B4E"/>
+              </div>
+              <div
+                v-if="componentData.config.boundSwitch"
+                class="war-room-setting__block-text"
+              >
+                <label class="input war-room-setting__block-text-label">
+                  {{ $t('warRoom.maxThreshold') }}
+                </label>
+                <input
+                  :disabled="isProcessing"
+                  :value="componentData.config.upperBound === null ? '' : Number(componentData.config.upperBound)"
+                  :min="componentData.config.lowerBound"
+                  :placeholder="$t('warRoom.pleaseEnterValue')"
+                  type="number"
+                  name="upperBound"
+                  class="input war-room-setting__block-text-input"
+                  @input="componentData.config.upperBound = $event.target.value || null">
+                <div 
+                  v-show="errors.has('upperBound')"
+                  class="error-text"
+                >{{ errors.first('upperBound') }}</div>
+                <label class="input war-room-setting__block-text-label">
+                  {{ $t('warRoom.minThreshold') }}
+                </label>
+                <input
+                  :disabled="isProcessing"
+                  :value="componentData.config.lowerBound === null ? '' : Number(componentData.config.lowerBound)"
+                  :placeholder="$t('warRoom.pleaseEnterValue')"
+                  type="number"
+                  name="lowerBound"
+                  class="input war-room-setting__block-text-input"
+                  @input="componentData.config.lowerBound = $event.target.value || null">
+                <div 
+                  v-show="errors.has('lowerBound')"
+                  class="error-text"
+                >{{ errors.first('lowerBound') }}</div>
+              </div>
             </div>
-          </div>
-        </template>
+          </template>
+        </section>
       </div>
       <div class="war-room-setting__button-block">
         <button
-          v-if="componentData.componentId && hasPermission('group_delete_data')"
+          v-if="(componentData.isError || componentData.componentId) && hasPermission('group_delete_data')"
           :disabled="isProcessing"
           type="button"
           class="btn btn-outline war-room-setting__button-block-button--left"
@@ -385,7 +394,7 @@ export default {
   computed: {
     ...mapGetters('userManagement', ['hasPermission']),
     selectedTimeInterval () {
-      if (!this.componentData || !this.componentData.config.displayDateRangeSwitch) return null
+      if (!this.componentData || !this.componentData.config || !this.componentData.config.displayDateRangeSwitch) return null
       
       // 確認是否選擇預設區間
       if (this.componentData.config.recentTimeIntervalAmount && this.componentData.config.recentTimeIntervalUnit) {
@@ -416,13 +425,7 @@ export default {
       return this.isProcessing  || !this.selectedDataSource.question || !this.componentData.config.displayName
     }
   },
-  watch: {
-    originalComponentData: {
-      handler (newData) { this.componentData = JSON.parse(JSON.stringify(newData)) },
-      deep: true
-    }
-  },
-  mounted () {
+  created () {
     if (this.originalComponentData) this.componentData = JSON.parse(JSON.stringify(this.originalComponentData))
   },
   methods: {
@@ -560,6 +563,22 @@ export default {
     },
     clearEndTime () {
       this.componentData.config.customEndTime = null
+    },
+    updateDateRangeSwitch (isTurnedOn) {
+      if(isTurnedOn) return
+      const {
+        customStartTime,
+        customEndTime,
+        recentTimeIntervalAmount,
+        recentTimeIntervalUnit
+      } = JSON.parse(JSON.stringify(this.originalComponentData.config))
+      // 關閉時，恢復原本預設，避免存取時送錯的格式給後端
+      this.$nextTick(() => {
+        this.componentData.config.customEndTime = customEndTime
+        this.componentData.config.customStartTime = customStartTime
+        this.componentData.config.recentTimeIntervalAmount = recentTimeIntervalAmount
+        this.componentData.config.recentTimeIntervalUnit = recentTimeIntervalUnit
+      })
     }
   }
 }
@@ -567,9 +586,19 @@ export default {
 
 <style lang="scss" scoped>
 .war-room-setting {
+  &__block {
+    &.is-error {
+      font-size: 14px;
+      color: #999999;
+      border-bottom: none;
+    }
+  }
+
   &__block-select {
-    /deep/ .el-input__inner {
-      border-bottom: 1px solid #FFFFFF;
+    /deep/.sy-select.theme-dark {
+      .el-input__inner {
+        border-bottom: 1px solid #FFFFFF;
+      }
     }
   }
 

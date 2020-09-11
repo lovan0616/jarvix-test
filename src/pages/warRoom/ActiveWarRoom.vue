@@ -139,7 +139,7 @@ export default {
       return (this.warRoomStartTime && endTime) ? endTime : this.$t('warRoom.now')
     },
     warRoomDefaultTime () {
-      if (this.isLoading || this.hasError) return null
+      if (this.isLoading || this.hasError || !this.warRoomStartTime) return null
       if (!this.isPreviewing) return this.warRoomStartTime + '-' + this.warRoomEndTime
       const { recentTimeIntervalAmount, recentTimeIntervalUnit } = this.warRoomBasicInfo.config
 
@@ -315,7 +315,8 @@ export default {
 
   .number {
     display: flex;
-    height: 103px;
+    min-height: 103px;
+    max-height: 116px;
     width: 100%;
     margin-bottom: 20px;
 
