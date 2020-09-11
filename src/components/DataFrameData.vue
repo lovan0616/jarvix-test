@@ -1,76 +1,84 @@
 <template>
   <div class="data-frame-data">
-    <spinner
-      v-if="isLoading"
-    />
+    <spinner v-if="isLoading"/>
     <empty-info-block
       v-else-if="!isLoading && hasError"
-      :msg="hasError ? $t('message.systemIsError') : $t('message.noData')"
+      :msg="$t('message.systemIsError')"
     />
     <div 
       v-else
       class="board-body-section"
     >
       <div class="title">{{ $t('editing.dataFrameContent') }}</div>
-      <div class="overview">
-        <div class="overview__data">
-          <div class="overview__item">
-            {{ $t('resultDescription.totalDataRows') + ': ' + formatComma(dataFrameOverviewData.totalRows) }}
-          </div>
-          <div class="overview__item">
-            {{ $t('resultDescription.totalDataColumns') + ': ' + formatComma(dataFrameOverviewData.totalColumns) }}
+      <template v-if="dataSourceTableData && dataSourceTableData.columns.titles.length > 0">
+        <div class="overview">
+          <div class="overview__data">
+            <div class="overview__item">
+              {{ $t('resultDescription.totalDataRows') + ': ' + formatComma(dataFrameOverviewData.totalRows) }}
+            </div>
+            <div class="overview__item">
+              {{ $t('resultDescription.totalDataColumns') + ': ' + formatComma(dataFrameOverviewData.totalColumns) }}
+            </div>
           </div>
         </div>
-      </div>
-      <pagination-table
-        v-if="dataSourceTableData"
-        :is-processing="isProcessing"
-        :dataset="dataSourceTableData"
-        :pagination-info="pagination"
-        :min-column-width="'270px'"
-        fixed-index
-        @change-page="updatePage"
-      >
-        <template #columns-header="{ column, index }">
-          <div class="header-block">
-            <div class="header">
-              <span class="icon">
-                <el-tooltip
-                  slot="label"
-                  :enterable="false"
-                  :visible-arrow="false"
-                  :content="`${getStatesTypeName(index)}`"
-                  class="icon">
-                  <svg-icon :icon-class="getHeaderIcon(index)" />
-                </el-tooltip>
-              </span>
-              <span class="text">
-                <el-tooltip
-                  slot="label"
-                  :visible-arrow="false"
-                  :enterable="false"
-                  :content="`${column.titles[index]}`"
-                  placement="bottom-start">
-                  <span>{{ column.titles[index] }}</span>
-                </el-tooltip>
-              </span>
+        <pagination-table
+          v-if="dataSourceTableData && dataSourceTableData.columns.titles.length > 0"
+          :is-processing="isProcessing"
+          :dataset="dataSourceTableData"
+          :pagination-info="pagination"
+          :min-column-width="'270px'"
+          fixed-index
+          @change-page="updatePage"
+        >
+          <template #columns-header="{ column, index }">
+            <div class="header-block">
+              <div class="header">
+                <span 
+                  v-if="showColumnSummaryRow"
+                  class="icon"
+                >
+                  <el-tooltip
+                    slot="label"
+                    :enterable="false"
+                    :visible-arrow="false"
+                    :content="`${getStatesTypeName(index)}`"
+                    class="icon">
+                    <svg-icon :icon-class="getHeaderIcon(index)" />
+                  </el-tooltip>
+                </span>
+                <span class="text">
+                  <el-tooltip
+                    slot="label"
+                    :visible-arrow="false"
+                    :enterable="false"
+                    :content="`${column.titles[index]}`"
+                    placement="bottom-start">
+                    <span>{{ column.titles[index] }}</span>
+                  </el-tooltip>
+                </span>
+              </div>
+              <div
+                v-if="showColumnSummaryRow"
+                class="summary"
+              >
+                <data-column-summary
+                  :summary-data="tableSummaryList[index]"
+                />
+              </div>
             </div>
-            <div
-              v-if="showColumnSummaryRow"
-              class="summary"
-            >
-              <data-column-summary
-                :summary-data="tableSummaryList[index]"
-              />
-            </div>
-          </div>
-        </template>
-      </pagination-table>
+          </template>
+        </pagination-table>
+      </template>
+      <empty-info-block
+        v-else
+        :msg="$t('message.noData')"
+      />
     </div>
     <!--欄位關聯概況-->
     <column-correlation-overview
       v-if="showCorrelationMatrix"
       :data-frame-id="dataFrameId"
+      :mode="mode"
       class="board-body-section"
     />
   </div>
@@ -80,6 +88,7 @@ import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/Co
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import EmptyInfoBlock from './EmptyInfoBlock'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'DataFrameData',
@@ -121,10 +130,26 @@ export default {
       tableSummaryList: []
     }
   },
+  computed: {
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
+  },
   watch: {
     dataFrameId (value) {
       this.isLoading = true
       this.fetchDataFrameData(value, 0, true)
+    },
+    askCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (
+          this.mode === 'popup' 
+          // 初次開啟設定時不觸發
+          || (oldValue.isInit === false && oldValue.columnList === null) 
+          // 切換 dataframe 清空設定時不觸發
+          || newValue.isInit === false
+        ) return
+        this.fetchDataFrameData(this.dataFrameId, 0, true)
+      }
     }
   },
   mounted () {
@@ -134,6 +159,10 @@ export default {
   methods: {
     fetchDataFrameData (id, page = 0, resetPagination = false) {
       this.isProcessing = true
+      if (resetPagination) {
+        this.dataSourceTableData = null
+        this.isLoading = true
+      }
       this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode })
         .then(([dataFrameData, dataColumnSummary]) => {
           if (resetPagination) {
@@ -159,7 +188,8 @@ export default {
           this.isLoading = false
           this.isProcessing = false
         })
-        .catch(() => {
+        .catch(error => {
+          if (error.message === 'cancel') return
           this.hasError = true
           this.isLoading = false
           this.isProcessing = false
@@ -205,11 +235,28 @@ export default {
 </script>
 <style lang="scss" scoped>
 .data-frame-data {
+  .empty-info-block {
+    margin-bottom: 2rem;
+  }
+
   .board-body-section {
     .title {
-      margin-bottom: 13px;
+      position: relative;
+      margin-bottom: 16px;
+      margin-left: 16px;
       font-size: 20px;
       font-weight: 600;
+      &::before {
+        position: absolute;
+        top: 50%;
+        left: -12px;
+        transform: translateY(-50%);
+        content: '';
+        display: inline-block;
+        width: 6.44px;
+        height: 6px;
+        background: #2AD2E2;
+      }
     }
 
     &:not(:last-child) {
@@ -243,8 +290,9 @@ export default {
 }
 
 .overview {
-  margin-bottom: 10px;
+  margin-bottom: 17px;
   font-size: 14px;
+  color: #CCCCCC;
 
   &__data {
     display: flex;

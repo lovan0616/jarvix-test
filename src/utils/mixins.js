@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import moment from 'moment'
+import i18n from '@/lang/index.js'
 
 // 全站共用的 function，會注入每個 component 當中
 Vue.mixin({
@@ -13,6 +14,40 @@ Vue.mixin({
       const hour = date.getHours().toString().padStart(2, '0')
       const minute = date.getMinutes().toString().padStart(2, '0')
       return `${year}/${month}/${day} ${hour}:${minute}`
+    }
+  },
+  data () {
+    return {
+      warRoomTimeIntervalList: [
+        {
+          value: '1+Hour',
+          name: i18n.t('warRoom.inHours')
+        },
+        {
+          value: '1+Day',
+          name: i18n.t('warRoom.inDays')
+        },
+        {
+          value: '1+Week',
+          name: i18n.t('warRoom.inWeeks')
+        },
+        {
+          value: '1+Month',
+          name: i18n.t('warRoom.inMonths')
+        },
+        {
+          value: '1+Season',
+          name: i18n.t('warRoom.inSeasons')
+        },
+        {
+          value: '1+Year',
+          name: i18n.t('warRoom.inYears')
+        },
+        {
+          value: 'others',
+          name: i18n.t('warRoom.customize')
+        }
+      ]
     }
   },
   methods: {
@@ -98,6 +133,10 @@ Vue.mixin({
       return this.transformInt(num1, num2, false, (int1, int2, p1, p2) => {
         return (int1 / int2) / Math.pow(10, p1 - p2)
       })
+    },
+    /* 去除浮點數計算 造成的長尾數 https://www.itread01.com/content/1545644704.html */
+    displayFloat (num, precision = 12) {
+      return parseFloat(num.toPrecision(precision));
     },
     timeToDate (time) {
       return moment(time).format('YYYY-MM-DD')
@@ -215,10 +254,14 @@ Vue.mixin({
           return 'DisplaySankeyChart'
         case 'trend_insight':
           return 'TrendRootCause'
+        case 'DEMO1_INSIGHT': // 光電展特殊元件
+          return 'TrendRootCauseOEDemo'
         case 'heat_map_chart':
           return 'DisplayHeatMapChart'
         case 'no_answer':
           return 'DisplayNoAnswerInfo'
+        case 'index_info':
+          return 'DisplayIndexInfo'
       }
     },
     // 整個結果頁的 layout
@@ -400,6 +443,9 @@ Vue.mixin({
     shortenDataCapacityNumber (gb, digit = 2) {
       if (gb <= 0.5) return this.formatComma((gb * 1024).toFixed(digit)) + ' MB'
       return this.formatComma((gb).toFixed(digit)) + ' GB'
+    },
+    checkProperty (testObject, key) {
+      return Object.prototype.hasOwnProperty.call(testObject, key)
     }
   }
 })

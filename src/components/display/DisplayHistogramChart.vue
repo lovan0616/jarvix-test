@@ -19,7 +19,7 @@
           <div class="region-description">
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: roundNumber(singleType.properties.start), end: roundNumber(singleType.properties.end) }) }}
+              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: roundNumber(singleType.properties.start), end: roundNumber(singleType.properties.end) }) }}
             </div>
           </div>
         </div>

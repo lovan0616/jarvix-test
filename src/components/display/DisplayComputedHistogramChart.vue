@@ -19,7 +19,7 @@
           <div class="region-description">
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: roundNumber(singleType.properties.start), end: roundNumber(singleType.properties.end) }) }}
+              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: roundNumber(singleType.properties.start), end: roundNumber(singleType.properties.end) }) }}
             </div>
           </div>
         </div>
@@ -29,7 +29,7 @@
 </template>
 <script>
 import { chartOptions } from '@/components/display/common/chart-addon.js'
-import { getDrillDownTool } from '@/components/display/common/addons'
+import { monitorVisualMap, monitorMarkLine, colorOnly1, getDrillDownTool } from '@/components/display/common/addons'
 
 // 直方圖的參數設定
 let histogramChartConfig = {
@@ -45,19 +45,7 @@ let histogramChartConfig = {
   chartData: {
     symbolSize: 8,
     itemStyle: {
-      color: {
-        type: 'linear',
-        x: 0,
-        y: 0,
-        x2: 0,
-        y2: 1,
-        colorStops: [{
-          offset: 0, color: '#4CE2F0'
-        }, {
-          offset: 1, color: '#438AF8'
-        }],
-        global: false
-      }
+      color: colorOnly1[0]
     },
     data: [],
     type: 'custom',
@@ -98,6 +86,10 @@ export default {
     customChartStyle: {
       type: Object,
       default: () => {}
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -113,15 +105,36 @@ export default {
       let max = this.dataset.range[1]
       let dataLength = this.dataset.data.length
       let interval = this.floatSub(max, min) / dataLength
+
+      // 預設 四捨五入 到小數點後第幾位
+      const defaultDisplayDigit = 2
+
+      if (Number(interval) >= 1) {
+        interval = Math.round(interval * Math.pow(10, defaultDisplayDigit)) / Math.pow(10, defaultDisplayDigit)
+      } else {
+        // 找出例如0.0000031432的.到有3之間有幾個零
+        let count = 0
+        let _interval = interval
+        while (_interval < 1) {
+          _interval = _interval * 10
+          count += 1
+        }
+        interval = Math.round(this.displayFloat(interval * Math.pow(10, count + defaultDisplayDigit))) / Math.pow(10, count + defaultDisplayDigit)
+      }
+
       let chartData = this.dataset.data.map((element, index) => {
         return [
-          this.floatAdd(min, interval * index), this.floatAdd(min, interval * (index + 1)), element
+          // bar start
+          this.displayFloat(min + interval * index),
+          // bar end
+          index === dataLength - 1 ? max : this.displayFloat(min + interval * (index + 1)),
+          element
         ]
       })
 
       // 數據顯示
-      chartAddon.toolbox.feature.dataView.optionToContent = (opt) => {
-        let dataset = opt.series[0].data
+      chartAddon.toolbox.feature.dataView.optionToContent = (chartData) => {
+        let dataset = chartData.series[0].data
         let table = `<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">${this.$t('chart.export')}</button></div>
           <table style="width:100%;padding: 0 16px;margin-top: 48px;"><tbody><tr style="background-color:#2B4D51">` +
           '<td>' + this.title.xAxis[0].display_name + '</td>' +
@@ -154,10 +167,56 @@ export default {
       chartAddon.xAxis.name = this.title.xAxis[0].display_name
       chartAddon.yAxis = {...chartAddon.yAxis, ...histogramConfig.yAxis}
       chartAddon.yAxis.name = this.title.yAxis[0].display_name
+      // let labelInterval = Math.floor(dataLength / 15)
+      // let labelCount = 0
+      // chartAddon.xAxis.axisLabel.formatter = (value, index) => {
+      //   if (dataLength > 20) {
+      //     if (index === Math.floor(labelCount + labelInterval)) {
+      //       labelCount += labelInterval
+      //       return value
+      //     }
+      //   } else {
+      //     return index === dataLength ? max : value
+      //   }
+      // }
+      // 考慮要不要用
+      chartAddon.xAxis.axisLabel.formatter = (value, index) => {
+        if (dataLength > 20) {
+          let labelInterval = Math.floor(dataLength / 15)
+          if (index % labelInterval === 0) return value
+        } else {
+          return index === dataLength ? max : value
+        }
+      }
 
       histogramConfig.chartData.renderItem = this.renderItem
       histogramConfig.chartData.data = chartData
-      chartAddon.series[0] = histogramConfig.chartData
+      const shortenNumberMethod = this.shortenNumber
+      chartAddon.series[0] = {
+        ...histogramConfig.chartData,
+        ...(this.isShowLabelData && {
+          label: {
+            position: 'top',
+            show: true,
+            fontSize: 10,
+            color: '#fff',
+            formatter (value) { return shortenNumberMethod(value.data[2], 0) }
+          }
+        })
+      }
+
+      let upperLimit = this.title.yAxis[0].upperLimit || null
+      let lowerLimit = this.title.yAxis[0].lowerLimit || null
+      if (upperLimit !== null || lowerLimit !== null) {
+        // 處理顏色
+        chartAddon.visualMap = monitorVisualMap(upperLimit, lowerLimit)
+        // markline
+        chartAddon.series.push({
+          type: 'line',
+          markLine: monitorMarkLine(upperLimit, lowerLimit)
+        })
+      }
+
       // 不顯示“全選”按鈕
       chartAddon.legend.selector = false
       chartAddon.toolbox.show = this.showToolbox

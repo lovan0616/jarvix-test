@@ -36,10 +36,6 @@
           type="button"
           @click="prev"
         >{{ $t('button.chooseFileUpload') }}</button>
-        <!-- <button class="btn btn-default"
-          :disabled="successList.length === 0 || isProcessing"
-          @click="buildData"
-        >{{ $t('editing.buildImmediately') }}</button> -->
         <button 
           :disabled="successList.length === 0 || isProcessing"
           class="btn btn-default"
@@ -58,13 +54,11 @@
   </div>
 </template>
 <script>
-import { dataPreprocessor } from '@/API/DataSource'
 import { analysisFile } from '@/API/File'
 import { uploadStatus } from '@/utils/general'
 import { mapState } from 'vuex'
 import FileListBlock from './FileListBlock'
 import UploadProcessBlock from './UploadProcessBlock'
-import { Message } from 'element-ui'
 
 export default {
   name: 'LocalFileUploadStatus',
@@ -130,29 +124,6 @@ export default {
       // 清空 imported table list
       this.$store.commit('dataManagement/clearImportedTableList')
       this.$emit('prev')
-    },
-    buildData () {
-      let promiseList = []
-      this.etlTableList.forEach((element, index) => {
-        promiseList.push(dataPreprocessor(element))
-      })
-
-      Promise.all(promiseList)
-        .then(() => {
-          // 全部資料表都設置成功才進入 ConfirmPage 結束導入流程
-          this.$emit('dataBuilt')
-        })
-        .catch(() => {
-          Message({
-            message: this.$t('message.analysisFailed'),
-            type: 'error',
-            duration: 3 * 1000,
-            showClose: true
-          })
-        })
-        .finally(() => {
-          this.isProcessing = false
-        })
     }
   }
 }

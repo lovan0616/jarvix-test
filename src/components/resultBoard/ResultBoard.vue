@@ -7,24 +7,34 @@
     >
       <div class="board-header">
         <div class="header-block">
-          <slot name="PageResultBoardHeader"/>
+          <!-- 這邊要注意因為 pinboard 會有舊的 segmentation -->
+          <result-board-header
+            v-if="segmentationPayload.question"
+            :title="segmentationPayload.question"
+            :segmentation="segmentationPayload"
+          />
+          <question-name-v2
+            v-else
+            :question-segmentation="segmentationPayload"
+            class="result-board__header"
+          />
         </div>
         <div 
           v-if="isPinboardPage"
           class="pin-button-block"
         >
           <button 
-            v-if="hasFilter"
             class="head-btn restrict"
-            @click.stop.prevent="toggleFilterInfo"
+            @click.stop.prevent="togglePinboardInfo"
           >
-            {{ $t('button.restrict') }}
-            <filter-info-dialog
-              v-if="isShowFilterInfo"
-              :filter-info="restrictions"
-              @close="closeFilterInfo"
-            />
+            {{ $t('button.dataExplanation') }}
           </button>
+          <pinboard-info-dialog
+            v-if="isShowPinboardInfo"
+            :result-id="resultId"
+            :filter-info="restrictions"
+            @close="closePinboardInfo"
+          />
           <a 
             class="head-btn share"
             href="javascript:void(0)"
@@ -61,12 +71,14 @@
             <span class="pin-slash"><svg-icon 
               :icon-class="isLoading ? 'spinner' : 'pin'" 
               class="pin-icon"/></span>
-            {{ $t('button.pinToBoard') }}
+            {{ isWarRoomAddable ? $t('button.pinToBoard') + ' / ' + $t('button.warRoom') : $t('button.pinToBoard') }}
           </a>
           <pinboard-dialog
-            v-if="showPinboardList"
+            v-if="showPinboardDialog"
+            :is-war-room-addable="isWarRoomAddable"
             @pin="selectPinboard"
-            @close="closePinboardList"
+            @pinToWarRoom="pinToWarRoom"
+            @close="closePinboardDialog"
           />
         </div>
       </div>
@@ -107,21 +119,26 @@
   </div>
 </template>
 <script>
+import ResultBoardHeader from './ResultBoardHeader'
+import QuestionNameV2 from './QuestionNameV2'
 import PinboardDialog from './PinboradDialog'
 import ShareDialog from '@/pages/pinboard/components/ShareDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
-import FilterInfoDialog from '@/pages/pinboard/components/filter/FilterInfoDialog'
+import PinboardInfoDialog from '@/pages/pinboard/components/filter/PinboardInfoDialog'
+import { addResultToWarRoomPool } from '@/API/WarRoom'
 import { Message } from 'element-ui'
 
 export default {
   name: 'ResultBoard',
   components: {
+    ResultBoardHeader,
+    QuestionNameV2,
     PinboardDialog,
     ShareDialog,
     DecideDialog,
     WritingDialog,
-    FilterInfoDialog
+    PinboardInfoDialog
   },
   props: {
     resultId: {
@@ -135,6 +152,14 @@ export default {
     restrictions: {
       type: Array,
       default: () => []
+    },
+    segmentationPayload: {
+      type: Object,
+      default: () => null
+    },
+    isWarRoomAddable: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -143,11 +168,11 @@ export default {
       pinBoardId: null,
       dataSourceId: null,
       dataFrameId: null,
-      showPinboardList: false,
+      showPinboardDialog: false,
       isShowShareDialog: false,
       isShowDelete: false,
       isShowShare: false,
-      isShowFilterInfo: false
+      isShowPinboardInfo: false
     }
   },
   computed: {
@@ -185,12 +210,12 @@ export default {
   methods: {
     pinToBoard () {
       if (this.isLoading) return false
-      if (this.showPinboardList) {
-        this.showPinboardList = false
+      if (this.showPinboardDialog) {
+        this.showPinboardDialog = false
         return false
       }
       setTimeout(() => {
-        this.showPinboardList = true
+        this.showPinboardDialog = true
       })
     },
     selectPinboard (id) {
@@ -199,7 +224,7 @@ export default {
         .then(res => {
           this.pinBoardId = res.id
           this.isLoading = false
-          this.showPinboardList = false
+          this.showPinboardDialog = false
           Message({
             message: this.$t('message.pinboardSuccess'),
             type: 'success',
@@ -208,11 +233,28 @@ export default {
           })
         }).catch(() => {
           this.isLoading = false
-          this.showPinboardList = false
+          this.showPinboardDialog = false
         })
     },
-    closePinboardList () {
-      this.showPinboardList = false
+    pinToWarRoom (id) {
+      this.isLoading = true
+      addResultToWarRoomPool(id, this.currentResultId)
+        .then(() => {
+          this.isLoading = false
+          this.closePinboardDialog()
+          Message({
+            message: this.$t('message.successfullyAddedToWarRoom'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }).catch(() => {
+          this.isLoading = false
+          this.showPinboardDialog = false
+        })
+    },
+    closePinboardDialog () {
+      this.showPinboardDialog = false
     },
     unPin () {
       this.$store.dispatch('pinboard/unPinById', this.pinBoardId)
@@ -277,11 +319,11 @@ export default {
     closeDelete () {
       this.isShowDelete = false
     },
-    toggleFilterInfo () {
-      this.isShowFilterInfo = !this.isShowFilterInfo
+    togglePinboardInfo () {
+      this.isShowPinboardInfo = !this.isShowPinboardInfo
     },
-    closeFilterInfo () {
-      this.isShowFilterInfo = false
+    closePinboardInfo () {
+      this.isShowPinboardInfo = false
     }
   },
 }
@@ -299,6 +341,13 @@ export default {
     align-items: center;
     padding: 20px 28px;
     background-color: rgba(35, 61, 64, 0.6);
+  }
+
+  &__header {
+    /deep/ .question-name {
+      font-size: 30px;
+      line-height: 38px;
+    }
   }
 
   .header-block {

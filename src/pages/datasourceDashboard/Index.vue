@@ -1,6 +1,5 @@
 <template>
   <div class="page-index">
-    <filter-info/>
     <preview-data-source
       :key="dataSourceId"
       mode="display"
@@ -13,14 +12,12 @@
 </template>
 
 <script>
-import FilterInfo from '@/components/display/FilterInfo'
 import QuickStart from './components/QuickStart'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'PageIndex',
   components: {
-    FilterInfo,
     QuickStart
   },
   data () {
@@ -31,6 +28,7 @@ export default {
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
     },
@@ -42,6 +40,18 @@ export default {
     dataFrameId (newValue) {
       this.quickStartQuestionList = []
       if (newValue) this.getQuickQuestionList()
+    },
+    askCondition: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (
+          // 初次開啟設定時不觸發
+          (oldValue.isInit === false && oldValue.columnList === null) 
+          // 切換 dataframe 清空設定時不觸發
+          || newValue.isInit === false
+        ) return
+        this.getQuickQuestionList()
+      }
     }
   },
   created() {

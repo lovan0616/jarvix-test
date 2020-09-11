@@ -14,6 +14,13 @@ import './styles/App.scss'
 import i18n from './lang/index.js'
 
 import {
+  Button,
+  DatePicker,
+  TimeSelect,
+  Popover,
+  InputNumber,
+  Checkbox,
+  Input,
   Select,
   Option,
   Table,
@@ -26,7 +33,10 @@ import {
   Collapse,
   CollapseItem,
   Tooltip,
-  Switch
+  Switch,
+  Menu,
+  Submenu,
+  MenuItem,
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -57,6 +67,7 @@ import GeneralResult from '@/components/resultBoard/GeneralResult'
 import CorrelationExplorationResult from '@/components/resultBoard/CorrelationExplorationResult'
 import RootCauseResult from '@/components/resultBoard/RootCauseResult'
 import MultiResult from '@/components/resultBoard/MultiResult'
+import MultiResultV2 from '@/components/resultBoard/MultiResultV2'
 import DataPreviewLayout from '@/components/resultBoard/DataPreviewLayout'
 import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
@@ -95,6 +106,7 @@ import NoResult from '@/components/display/NoResult'
 import EmptyResult from '@/pages/result/components/EmptyResult'
 import PreviewResultBoard from '@/components/PreviewResultBoard'
 import TrendRootCause from '@/components/display/TrendRootCause'
+import TrendRootCauseOEDemo from '@/components/display/TrendRootCauseOEDemo'
 import RootCauseItem from '@/components/display/RootCauseItem'
 import CorrelationInsight from '@/components/display/CorrelationInsight'
 import RootCauseDescription from '@/components/display/RootCauseDescription'
@@ -102,10 +114,25 @@ import Spinner from '@/components/Spinner'
 import ArrowButton from '@/components/resultBoard/ArrowButton'
 import DisplayNoAnswerInfo from '@/components/display/DisplayNoAnswerInfo'
 
+// 排程
+import vGanttChart from 'v-gantt-chart'
+import DefaultButton from '@/schedule/components/DefaultButton.vue'
+import DefaultInput from '@/schedule/components/DefaultInput.vue'
+import DefaultSelect from '@/schedule/components/DefaultSelect.vue'
+import DefaultDatePicker from '@/schedule/components/DefaultDatePicker.vue'
+// import Spinner from '@/schedule/components/Spinner.vue'
+
 var Rollbar = require('vue-rollbar')
 
 Vue.use(VueEvents)
 // Element UI components
+Vue.use(Button)
+Vue.use(DatePicker)
+Vue.use(TimeSelect)
+Vue.use(Popover)
+Vue.use(InputNumber)
+Vue.use(Checkbox)
+Vue.use(Input)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Table)
@@ -119,6 +146,11 @@ Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Tooltip)
 Vue.use(Switch)
+Vue.use(Menu)
+Vue.use(Submenu)
+Vue.use(MenuItem)
+
+Vue.use(vGanttChart)
 
 Vue.component('v-echart', ECharts)
 Vue.component(Layout.name, Layout)
@@ -134,6 +166,7 @@ Vue.component(GeneralResult.name, GeneralResult)
 Vue.component(CorrelationExplorationResult.name, CorrelationExplorationResult)
 Vue.component(RootCauseResult.name, RootCauseResult)
 Vue.component(MultiResult.name, MultiResult)
+Vue.component(MultiResultV2.name, MultiResultV2)
 Vue.component(DataPreviewLayout.name, DataPreviewLayout)
 Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
@@ -169,12 +202,19 @@ Vue.component(NoResult.name, NoResult)
 Vue.component(EmptyResult.name, EmptyResult)
 Vue.component(PreviewResultBoard.name, PreviewResultBoard)
 Vue.component(TrendRootCause.name, TrendRootCause)
+Vue.component(TrendRootCauseOEDemo.name, TrendRootCauseOEDemo)
 Vue.component(RootCauseItem.name, RootCauseItem)
 Vue.component(CorrelationInsight.name, CorrelationInsight)
 Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(Spinner.name, Spinner)
 Vue.component(ArrowButton.name, ArrowButton)
 Vue.component(DisplayNoAnswerInfo.name, DisplayNoAnswerInfo)
+
+Vue.component('DefaultButton', DefaultButton)
+Vue.component('DefaultInput', DefaultInput)
+Vue.component('DefaultSelect', DefaultSelect)
+Vue.component('DefaultDatePicker', DefaultDatePicker)
+// Vue.component('Spinner', Spinner)
 
 /** Custom Rule */
 Validator.extend('requireOneNumeric', function (value) {

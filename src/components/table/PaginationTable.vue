@@ -174,17 +174,11 @@ export default {
     changePage (value) {
       this.$emit('change-page', value)
     },
-    nextPage () {
-      if (this.paginationInfo.currentPage + 1 <= this.paginationInfo.totalPages) {
-        this.paginationInfo.currentPage += 1
-        this.$emit('change-page', this.paginationInfo.currentPage)
-      }
+    nextPage (value) {
+      this.$emit('change-page', value)
     },
-    prevPage () {
-      if (this.paginationInfo.currentPage - 1 > 0) {
-        this.paginationInfo.currentPage -= 1
-        this.$emit('change-page', this.paginationInfo.currentPage)
-      }
+    prevPage (value) {
+      this.$emit('change-page', value)
     },
     formOptions () {
       return {

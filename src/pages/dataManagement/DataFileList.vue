@@ -36,7 +36,7 @@
         </div>
         <div class="button-block dataframe-action">
           <button 
-            :disabled="reachLimit || enableDataFrameCount === 0"
+            :disabled="enableDataFrameCount === 0"
             class="btn-m btn-secondary btn-has-icon"
             @click="toggleEditFeatureDialog"
           >
@@ -72,6 +72,7 @@
         @dateTime="editDateTime"
         @etlSetting="editEtlSetting"
         @batchLoad="editBatchLoadSetting"
+        @createdInfo="viewCreatedInfo"
       />
     </div>
     <file-upload-dialog
@@ -132,6 +133,11 @@
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditEtlDialog"
     />
+    <view-created-info-dialog
+      v-if="showCreatedInfoDialog"
+      :data-frame-info="currentEditDataFrameInfo"
+      @close="closeCreatedInfoDialog"
+    />
   </div>
 </template>
 <script>
@@ -146,6 +152,7 @@ import EditBatchLoadDialog from './components/EditBatchLoadDialog'
 import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
 import EditDateTimeDialog from './components/EditDateTimeDialog'
+import ViewCreatedInfoDialog from './components/ViewCreatedInfoDialog'
 import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from '@/API/DataSource'
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 import { getAccountInfo } from '@/API/Account'
@@ -165,7 +172,8 @@ export default {
     EditDateTimeDialog,
     FeatureManagementDialog,
     EditEtlDialog,
-    EditBatchLoadDialog
+    EditBatchLoadDialog,
+    ViewCreatedInfoDialog 
   },
   data () {
     return {
@@ -194,16 +202,16 @@ export default {
       showValueAliasDialog: false,
       showEditColumnSetDialog: false,
       showEditFeatureDialog: false,
+      showCreatedInfoDialog: false,
       intervalFunction: null,
       checkDataFrameIntervalFunction: null,
-      isLoading: false,
-      showJoinTable: localStorage.getItem('showJoinTable')
+      isLoading: false
     }
   },
   computed: {
     ...mapState('userManagement', ['license']),
     reachLicenseFileSizeLimit () {
-      return this.license.currentDataStorageSize >= this.license.maxDataStorageSize
+      return this.license.currentDataStorageSize >= this.license.maxDataStorageSize && this.license.maxDataStorageSize !== -1
     },
     fileCountLimit () {
       return this.$store.state.dataManagement.fileCountLimit
@@ -254,7 +262,7 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '270px',
+          width: '140px',
           action: [
             {
               name: this.$t('button.edit'),
@@ -265,7 +273,8 @@ export default {
                 { icon: '', title: 'button.editColumnSet', dialogName: 'columnSet' },
                 { icon: '', title: 'button.editEtlSetting', dialogName: 'etlSetting' },
                 { icon: '', title: 'button.dateTimeColumnSetting', dialogName: 'dateTime' },
-                { icon: '', title: 'button.batchLoadSetting', dialogName: 'batchLoad' }
+                { icon: '', title: 'button.batchLoadSetting', dialogName: 'batchLoad' },
+                { icon: '', title: 'button.tableCreatedInfo', dialogName: 'createdInfo' }
               ]
             },
             {
@@ -285,7 +294,12 @@ export default {
     hasDataFrameProcessingOrBatchLoading () {
       if (!this.dataList.length) return false
       return this.dataList.some((element) => (
-        element.type === 'PROCESS' || element.state === 'Process' || element.state === 'Pending' || element.crontabConfigStatus === 'Enable'
+        element.type === 'PROCESS'
+        || element.state === 'Process' 
+        || element.state === 'Pending' 
+        || element.crontabConfigStatus === 'AUTO' 
+        || element.latestLogStatus === 'Ready'
+        || element.latestLogStatus === 'Process'
       ))
     },
     enableDataFrameCount () {
@@ -331,7 +345,6 @@ export default {
   mounted () {
     this.fetchData()
     this.checkDataSourceStatus()
-    this.checkJoinTable()
     this.checkIfReachFileSizeLimit()
   },
   beforeDestroy () {
@@ -349,11 +362,6 @@ export default {
           this.$store.commit('userManagement/setLicenseCurrentDataStorageSize', accountInfo.license.currentDataStorageSize)
         })
         .catch(() => {})
-    },
-    checkJoinTable () {
-      if (!this.showJoinTable) {
-        localStorage.setItem('showJoinTable', false)
-      }
     },
     fetchData () {
       this.isLoading = true
@@ -492,6 +500,10 @@ export default {
       this.currentEditDataFrameInfo = { id, primaryAlias }
       this.showEditBatchLoadDialog = true
     },
+    viewCreatedInfo ({ id, primaryAlias }) {
+      this.currentEditDataFrameInfo = { id, primaryAlias }
+      this.showCreatedInfoDialog = true
+    },
     closeDataFrameAliasDialog () {
       this.showDataFrameAliasDialog = false
       this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
@@ -517,6 +529,10 @@ export default {
       this.showEditBatchLoadDialog = false
       this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
       this.fetchData()
+    },
+    closeCreatedInfoDialog () {
+      this.showCreatedInfoDialog = false
+      this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
     }
   }
 }

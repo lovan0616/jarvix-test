@@ -29,6 +29,9 @@ export default {
   setCurrentQuestionId (state, data) {
     state.currentQuestionId = data
   },
+  setCurrentQuestionDataFrameId(state, data) {
+    state.currentQuestionDataFrameId = data
+  },
   setFilterList (state, data) {
     if (data.length === 0) return false
     // 判斷要從哪邊開始取代新的
@@ -48,7 +51,8 @@ export default {
     if (closeFilterIndex > -1) {
       state.filterList = state.filterList.slice(0, closeFilterIndex)
     }
-    state.filterList.push(newRestriction)
+
+    state.filterList = [...state.filterList, newRestriction]
 
     Message({
       message: i18n.t('message.addFilter'),
@@ -56,6 +60,9 @@ export default {
       duration: 3 * 1000,
       showClose: true
     })
+  },
+  setUpdatedFilterList(state, data) {
+    state.filterList = data
   },
   setDataFrameList(state, data) {
     state.dataFrameList = data
@@ -73,5 +80,27 @@ export default {
   },
   clearCurrentQuestionId (state) {
     state.currentQuestionId = null
+  },
+  setProcessingDataFrameList (state, data) {
+    state.processingDataFrameList.push({
+      dataSourceId: data.dataSourceId,
+      dataFrameId: data.dataFrameId,
+      primaryAlias: data.primaryAlias,
+      state: 'ready'
+    })
+  },
+  updateProcessingDataFrameList (state, data) {
+    Message({
+      message: i18n.t('message.dataFrameBuilt', {name: data.primaryAlias}),
+      type: 'success',
+      duration: 3 * 1000,
+      showClose: true
+    })
+    state.processingDataFrameList = state.processingDataFrameList.filter(dataFrame => {
+      return dataFrame.dataFrameId !== data.id
+    })
+  },
+  clearProcessingDataFrameList (state, data) {
+    state.processingDataFrameList = []
   }
 }

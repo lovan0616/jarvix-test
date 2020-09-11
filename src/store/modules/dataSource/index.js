@@ -13,10 +13,13 @@ export default {
     appQuestion: null,
     currentQuestionInfo: null,
     currentQuestionId: null,
+    currentQuestionDataFrameId: null,
     historyQuestionList: [],
     filterList: [],
     dataFrameId: null,
-    dataFrameList: []
+    dataFrameList: [],
+    // 使用者自己建立的資料源
+    processingDataFrameList: []
   },
   actions,
   mutations,

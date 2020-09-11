@@ -51,5 +51,23 @@ export default {
   },
   currentDataFrameId (state) {
     return state.dataFrameId === 'all' ? '' : state.dataFrameId
+  },
+  getDataSourceName (state) {
+    if (state.dataSourceId && state.dataSourceList.length > 0) {
+      let selectedDataSource = state.dataSourceList.find(dataSource => dataSource.id === state.dataSourceId)
+      return selectedDataSource.name
+    }
+    return null
+  },
+  getDataFrameName (state) {
+    if (state.dataSourceId && state.dataSourceList.length > 0) {
+      if (state.dataFrameId === 'all') {
+        return state.dataFrameId
+      }
+      let selectedDataSource = state.dataSourceList.find(dataSource => dataSource.id === state.dataSourceId)
+      let selectedDataFrame = selectedDataSource.dataFrames.find(dataFrame => dataFrame.id === state.dataFrameId)
+      return selectedDataFrame && selectedDataFrame.primaryAlias ? selectedDataFrame.primaryAlias : null
+    }
+    return null
   }
 }

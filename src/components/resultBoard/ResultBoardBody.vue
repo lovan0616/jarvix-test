@@ -3,14 +3,13 @@
     <!-- indicator -->
     <slot name="PageResultBoardIndicator"/>
     <div 
-      :class="{'is-open': isShowChatRoom}"
+      :class="{ 'is-open': isShowSettingBox }"
       class="chart-container"
     >
-      <!-- <QuestionAnalysisAlert/> -->
-      <button 
+      <button
         v-if="$slots.InsightBasicInfo" 
-        v-show="isShowChatRoom"
-        :class="{active: showBasicInfo}"
+        v-show="isShowSettingBox && hasBasicInfo"
+        :class="{ active: showBasicInfo }"
         type="button"
         class="btn-m btn-default control-btn"
         @click.stop="toggleBasicInfoDialog"
@@ -18,9 +17,9 @@
       <div class="chart-block">
         <slot name="PageResultBoardChart"/>
       </div>
-      <slot-dialog 
-        v-if="$slots.InsightBasicInfo"
-        v-show="showBasicInfo || !isShowChatRoom"
+      <slot-dialog
+        v-if="$slots.InsightBasicInfo" 
+        v-show="(showBasicInfo || !isShowSettingBox) && hasBasicInfo"
         :show="showBasicInfo"
         class="basic-info-container"
         @close="closeBasicInfoDialog"
@@ -46,13 +45,12 @@
 </template>
 <script>
 import SlotDialog from '@/components/dialog/SlotDialog'
-import QuestionAnalysisAlert from './QuestionAnalysisAlert'
+import { mapState } from 'vuex'
 
 export default {
   name: 'ResultBoardBody',
   components: {
-    SlotDialog,
-    QuestionAnalysisAlert
+    SlotDialog
   },
   data () {
     return {
@@ -60,15 +58,14 @@ export default {
     }
   },
   computed: {
-    isShowChatRoom () {
-      return this.$store.state.isShowChatRoom
-    },
+    ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
+    ...mapState('chatBot', ['hasBasicInfo']),
     isShowInsightRecommended () {
       return Object.prototype.hasOwnProperty.call(this.$slots, 'InsightRecommended')
     }
   },
   watch: {
-    isShowChatRoom (value, oldValue) {
+    isShowSettingBox (value, oldValue) {
       this.closeBasicInfoDialog()
     }
   },
@@ -132,6 +129,10 @@ export default {
       min-width: 0;
       flex: 1;
       margin-right: 32px;
+
+      /deep/ .task:not(:first-child) {
+        padding-top: 30px;
+      }
     }
 
     .basic-info-container {

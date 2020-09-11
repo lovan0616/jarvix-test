@@ -52,6 +52,22 @@ export default {
     hasPagination: {
       type: Boolean,
       default: false
+    },
+    isShowLegend: {
+      type: Boolean,
+      default: true
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
+    },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
@@ -63,7 +79,8 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: this.height
+        height: this.height,
+        ...this.customChartStyle
       }
     },
     options () {
@@ -78,7 +95,8 @@ export default {
           minShowLabelAngle: 10,
           label: {
             fontSize: 12,
-            alignTo: 'labelLine'
+            alignTo: 'labelLine',
+            ...(this.isShowLabelData && { formatter: '{b}({d}%)' })
           },
           labelLine: {
             normal: {
@@ -98,26 +116,26 @@ export default {
           this.$el.addEventListener('click', this.controlPagination, false)
         }
         let dataset = opt.dataset[0].source
-        let valueSum = dataset.reduce((acc, cur, index) => {
-          return index === 0 ? acc : acc + cur[1]
-        }, 0)
 
         let table = `<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">${this.$t('chart.export')}</button></div>` +
           '<table style="width:100%;padding: 0 16px;margin-top: 48px;"><tbody><tr style="background-color:#2B4D51">' +
           '<td>' + dataset[0][0] + '</td>' +
           '<td>' + dataset[0][1] + '</td>' +
-          '<td>' + 'percentage(%)' + '</td>' +
+          '<td>' + dataset[0][2] + '</td>' +
           '</tr>'
-
-        // 注意 valueSum 有可能為 0
+        
         for (let i = 1; i < dataset.length; i++) {
           table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>
-            <td>${dataset[i][0]}</td><td>${dataset[i][1]}</td><td>${valueSum === 0 ? dataset[i][1] : (dataset[i][1] * 100 / valueSum).toFixed(2)}</td>
+            <td>${dataset[i][0]}</td><td>${dataset[i][1]}</td><td>${dataset[i][2]}</td>
           </tr>`
         }
         table += '</tbody></table>'
         return table
       }
+
+      // 是否隱藏 legend
+      if (!this.isShowLegend) config.legend.show = false
+      config.toolbox.show = this.showToolbox
 
       return config
     },
@@ -160,17 +178,21 @@ export default {
        **/
       let totalSum = dataset.data.reduce((acc, cur) => acc + cur[0], 0)
       let otherCount = this.total - totalSum
-
+      // 這邊注意塞的時候多塞了一個自己算的百分比欄位
       let result = dataset.data.map((element, index) => {
-        return dataset.display_index ? [dataset.display_index[index], ...element] : [dataset.index[index], ...element]
+        let display_index = dataset.display_index ? dataset.display_index[index] : dataset.index[index]
+        // 注意 total 有可能為 0
+        let percentage = this.total === 0 ? element[0] : (element[0] * 100 / this.total).toFixed(2)
+        return [display_index, ...element, percentage]
       }).filter((element, index) => {
         // 過濾負值
         return element[1] >= 0
       })
       if (this.itemCount - dataset.data.length > 0 && otherCount > 0) {
-        result.push([this.$t('resultDescription.other'), otherCount])
+        let percentage = this.total === 0 ? otherCount : (otherCount * 100 / this.total).toFixed(2)
+        result.push([this.$t('resultDescription.other'), otherCount, percentage])
       }
-      return [['index', ...dataset.display_columns ? dataset.display_columns : dataset.columns], ...result]
+      return [['index', ...dataset.display_columns ? dataset.display_columns : dataset.columns, 'percentage(%)'], ...result]
     }
   }
 }

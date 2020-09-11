@@ -11,6 +11,7 @@ export function linearGradient (colorStart, colorEnd, isParallel = false) {
   }], false)
 }
 
+export const warningColor = [linearGradient('#FF7246', '#FF5C46')]
 export const colorOnly1 = [linearGradient('#4CE2F0', '#438AF8')]
 export const colorOnly2 = [linearGradient('#4CE2F0', '#438AF8'), linearGradient('#79ACFF', '#5A3FFA')]
 export const color3 = ['#44D2FF', '#6C55FA', '#CA66DA']
@@ -98,7 +99,8 @@ export function yAxisParallel () {
     nameGap: config.nameGap,
     inverse: true,
     nameTextStyle: {
-      color: chartVariable['textColor']
+      color: chartVariable['textColor'],
+      align: 'left'
     },
     splitLine: {
       show: false
@@ -544,4 +546,65 @@ export function getDrillDownTool (routeName, titleObject, isParallel = false, tw
 
 export function paddingZero (n) {
   return n < 10 ? '0' + n : n
+}
+
+export function monitorVisualMap (upperLimit, lowerLimit, chartColor = colorOnly1[0]) {
+  if (upperLimit !== null && lowerLimit !== null) {
+    // 上下限都有設
+    return [{
+      type: 'piecewise',
+      show: false,
+      pieces: [{
+        gte: upperLimit,
+        color: warningColor[0]
+      }, {
+        gt: lowerLimit,
+        lte: upperLimit,
+        color: chartColor
+      }, {
+        lt: lowerLimit,
+        color: warningColor[0]
+      }]
+    }]
+  } else if (upperLimit === null) {
+    // 只有下限
+    return [{
+      type: 'piecewise',
+      show: false,
+      pieces: [{
+        gt: lowerLimit,
+        color: chartColor
+      }, {
+        lt: lowerLimit,
+        color: warningColor[0]
+      }]
+    }]
+  } else {
+    // 只有上限
+    return [{
+      type: 'piecewise',
+      show: false,
+      pieces: [{
+        gte: upperLimit,
+        color: warningColor[0]
+      }, {
+        lte: upperLimit,
+        color: chartColor
+      }]
+    }]
+  }
+}
+
+export function monitorMarkLine (upperLimit, lowerLimit, isParallel = false) {
+  let markLineData = []
+  if (upperLimit !== null) markLineData.push(isParallel ? {xAxis: upperLimit} : {yAxis: upperLimit})
+  if (lowerLimit !== null) markLineData.push(isParallel ? {xAxis: lowerLimit} : {yAxis: lowerLimit})
+  return {
+    symbol: 'none',
+    lineStyle: {
+      color: '#EB5959',
+      width: 2
+    },
+    data: markLineData
+  }
 }

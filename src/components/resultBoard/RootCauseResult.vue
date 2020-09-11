@@ -1,8 +1,10 @@
 <template>
   <result-board
+    :segmentation-payload="segmentationPayload"
     :result-id="resultId"
     :result-info="resultInfo"
     :restrictions="restrictions"
+    :is-war-room-addable="isWarRoomAddable"
   >
     <template slot="PageResultBoardHeader">
       <task
@@ -58,6 +60,14 @@ export default {
     resultId: {
       type: Number,
       default: null
+    },
+    segmentationPayload: {
+      type: Object,
+      default: () => null
+    },
+    isWarRoomAddable: {
+      type: Boolean,
+      default: false
     }
   }
 }

@@ -68,6 +68,22 @@
             </span>
           </router-link>
         </li>
+        <li 
+          v-if="showSchedule === 'true'"
+          class="list__item"
+        >
+          <router-link
+            :to="{ name: 'CurrentSimulation'}"
+            class="list__link"
+          >
+            <svg-icon 
+              icon-class="schedule" 
+              class="list__icon" />
+            <span class="list__text">
+              {{ $t('sideNav.schedule') }}
+            </span>
+          </router-link>
+        </li>
       </ul>
       <ul class="sidenav__list--bottom list">
         <li
@@ -78,7 +94,7 @@
           <a 
             href="javascript:void(0);" 
             class="list__link"
-            @click="switchDialogName(item.dialogName)"
+            @click="switchDialogName(item.dialogDisplayHandler)"
           >
             <svg-icon 
               :icon-class="item.icon" 
@@ -89,6 +105,10 @@
           </a>
         </li>
       </ul>
+      <change-pwd-dialog
+        v-if="isShowChangePwdDialog"
+        @closeDialog="controlChangePwdDialog(false)"
+      />
       <change-language-dialog
         v-show="isShowLanguage"
         @closeDialog="isShowLanguage = false"
@@ -108,6 +128,7 @@
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
 import ChangeLanguageDialog from '@/components/dialog/ChangeLanguageDialog';
+import ChangePwdDialog from '@/components/dialog/ChangePwdDialog';
 import SySelect from '@/components/select/SySelect'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
@@ -118,12 +139,14 @@ export default {
     DecideDialog,
     SySelect,
     CustomDropdownSelect,
-    ChangeLanguageDialog
+    ChangeLanguageDialog,
+    ChangePwdDialog
   },
   data () {
     return {
       isShowLanguage: false,
       isShowLogout: false,
+      isShowChangePwdDialog: false,
       selectedLanguage: null,
       isLoading: false
     }
@@ -141,16 +164,23 @@ export default {
     },
     settingList () {
       return [
-        {icon: 'language', title: 'lang', dialogName: 'isShowLanguage'},
-        {icon: 'logout', title: 'button.logout', dialogName: 'isShowLogout'}
+        {icon: 'key', title: 'user.changePwd', dialogDisplayHandler: 'isShowChangePwdDialog'},
+        {icon: 'language', title: 'lang', dialogDisplayHandler: 'isShowLanguage'},
+        {icon: 'logout', title: 'button.logout', dialogDisplayHandler: 'isShowLogout'}
       ]
     },
+    showSchedule () {
+      return localStorage.getItem('isShowScheduleModule')
+    }
   },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
     ...mapActions('userManagement', ['switchAccountById']),
     switchDialogName (dialog) {
       this[dialog] = true
+    },
+    controlChangePwdDialog (data) {
+      this.isShowChangePwdDialog = data
     },
     onBtnExitClick () {
       this.$store.dispatch('userManagement/logout')
@@ -227,10 +257,11 @@ export default {
     height: calc(100vh - #{$header-height});
     background: var(--color-bg-3);
     border-right: 1px solid var(--color-border);
+    padding-bottom: 10px;
   }
   
   &__account {
-    padding: 12px 16px;
+    padding: 12px ($app-side-nav-closed-width - 32px) / 2;
   }
 
   &__list {
@@ -253,7 +284,7 @@ export default {
     }
 
     &__link {
-      padding: 22px 21px;
+      padding: 10px ($app-side-nav-closed-width - 24px) / 2;
       display: flex;
       align-items: center;
       color: #CCCCCC;

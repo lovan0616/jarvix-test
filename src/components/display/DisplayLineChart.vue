@@ -40,7 +40,7 @@
           >
             <div class="single-area">
               {{ $t('resultDescription.area') + (index + 1) }}:
-              {{ singleType.properties.display_name }}{{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { getDrillDownTool } from '@/components/display/common/addons'
+import { getDrillDownTool, monitorMarkLine } from '@/components/display/common/addons'
 import {
   colorOnly1,
   colorOnly2,
@@ -107,6 +107,14 @@ export default {
     arrowBtnRight: {
       type: Number,
       default: 80
+    },
+    isShowLegend: {
+      type: Boolean,
+      default: true
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -205,9 +213,13 @@ export default {
       }
       config.toolbox.show = this.showToolbox
 
+      // 是否隱藏 legend
+      if (!this.isShowLegend) config.legend.show = false
+
       // 圖表 threshold
-      if (this.title.yAxis[0].upperLimit !== null) {
-        let upperLimit = this.title.yAxis[0].upperLimit
+      let upperLimit = this.title.yAxis[0].upperLimit || null
+      let lowerLimit = this.title.yAxis[0].lowerLimit || null
+      if (upperLimit !== null || lowerLimit !== null) {
         // 找出 Y 的最大、最小值
         let maxY = this.dataset.data[0][0]
         let minY = this.dataset.data[0][0]
@@ -219,34 +231,59 @@ export default {
             minY = element[0] < minY ? element[0] : minY
           }
         })
-        /**
-         * 將超出警示的上色
-         * 注意！！ 最小值的 gt 一定要設！！ 不然線不會上色，應該是 echarts bug
-         **/
-        config.visualMap = [{
-          type: 'piecewise',
-          show: false,
-          pieces: upperLimit < minY ? [{
-            lte: maxY,
-            gt: upperLimit,
-            color: '#EB5959'
-          }] : [{
-            gte: upperLimit,
-            color: '#EB5959'
-          }, {
-            lt: upperLimit,
-            gt: minY
+
+        // markline
+        config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit)
+        
+        if (upperLimit && lowerLimit) {
+          config.visualMap = [{
+            type: 'piecewise',
+            show: false,
+            pieces: [{
+              gt: upperLimit,
+              color: '#EB5959'
+            },{
+              lte: upperLimit,
+              gt: lowerLimit,
+              color: '#438AF8'
+            },{
+              lte: lowerLimit,
+              color: '#EB5959'
+            }]
           }]
-        }]
-        // 門檻線
-        config.series[0].markLine = {
-          symbol: 'none',
-          lineStyle: {
-            color: '#EB5959',
-            width: 2
-          },
-          data: [{
-            yAxis: upperLimit
+        } else if (lowerLimit === null) {
+          config.visualMap = [{
+            type: 'piecewise',
+            show: false,
+            pieces: upperLimit > minY ? [{
+              gt: upperLimit,
+              color: '#EB5959'
+            },{
+              lte: upperLimit,
+              gt: minY,
+              color: '#438AF8'
+            }] : [{
+              lte: maxY,
+              gt: upperLimit,
+              color: '#EB5959'
+            }]
+          }]
+        } else {
+          config.visualMap = [{
+            type: 'piecewise',
+            show: false,
+            pieces: lowerLimit > minY ? [{
+              gt: lowerLimit,
+              color: '#438AF8'
+            },{
+              lte: lowerLimit,
+              gt: minY,
+              color: '#EB5959'
+            }] : [{
+              lte: maxY,
+              gt: lowerLimit,
+              color: '#438AF8'
+            }]
           }]
         }
       }
@@ -319,12 +356,23 @@ export default {
       }, 0)
     },
     composeColumn (element, colIndex) {
+      const shortenNumberMethod = this.shortenNumber
+      const seriesAmount = this.dataset.display_columns ? this.dataset.display_columns.length : this.dataset.columns.length
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
         ...this.addonSeriesItem,
         ...this.addonSeriesItems[colIndex],
-        connectNulls: true
+        connectNulls: true,
+        ...((this.isShowLabelData && seriesAmount <= 4) && {
+          label: {
+            position: 'top',
+            show: true,
+            fontSize: 10,
+            color: '#fff',
+            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+          }
+        })
       }
     },
     controlPagination () {

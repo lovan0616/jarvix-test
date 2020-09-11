@@ -122,7 +122,7 @@ export default {
     },
     cancelUpload () {
       if (typeof this.askCancelFunction === 'function') {
-        this.askCancelFunction('cancel request')
+        this.askCancelFunction('cancel')
       }
     }
   },

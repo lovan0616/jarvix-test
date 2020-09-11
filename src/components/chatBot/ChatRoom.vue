@@ -1,59 +1,21 @@
 <template>
-  <div 
-    :class="{'is-show': isShowChatRoom}"
-    class="chat-room"
-  >
-    <a 
-      href="javascript:void(0)" 
-      class="chat-room__close-btn"
-      @click="closeChatRoom"
-    >
-      <svg-icon 
-        icon-class="double-arrow-left" 
-        class="arrow-icon"/>
-    </a>
+  <div class="chat-room">
     <div class="chat-room__header select-group">
-      <data-source-select class="select-group__select"/>
-      <data-frame-select class="select-group__select"/>
+      <data-frame-menu class="select-group__select"/>
     </div>
-    <conversation-block/>
     <ask-block/>
   </div>
 </template>
 <script>
-import ConversationBlock from './ConversationBlock'
 import AskBlock from './AskBlock'
-import DataSourceSelect from '@/components/select/DataSourceSelect'
-import DataFrameSelect from '@/components/select/DataFrameSelect'
+import DataFrameMenu from '@/components/select/DataFrameMenu'
 
 export default {
   name: 'ChatRoomBlock',
   components: {
-    DataSourceSelect,
-    ConversationBlock,
     AskBlock,
-    DataFrameSelect
-  },
-  computed: {
-    isShowChatRoom () {
-      return this.$store.state.isShowChatRoom
-    },
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
-    dataFrameId () {
-      return this.$store.state.dataSource.dataFrameId
-    }
-  },
-  methods: {
-    closeChatRoom () {
-      this.$store.commit('updateChatRoomStatus', false)
-      this.closePreviewDataSource()
-    },
-    closePreviewDataSource () {
-      this.$store.commit('previewDataSource/togglePreviewDataSource', false)
-    }
-  },
+    DataFrameMenu
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -62,46 +24,26 @@ export default {
   top: $header-height;
   left: $app-side-nav-closed-width;
   display: flex;
-  flex-direction: column;
-  width: $chat-room-width;
-  height: calc(100vh - #{$header-height});
-  background-color: var(--color-bg-1);
+  width: calc(100% - #{$app-side-nav-closed-width});
+  height: $chat-room-height;
   overflow: auto;
-  transform: translateX(-$chat-room-width);
-  z-index: 1;
-  // transition: transform 0.1s;
-
-  &.is-show {
-    transform: translateX(0);
-  }
-
-  &__header {
-    padding: 32px 32px 0;
-    margin-bottom: 24px;
-  }
-
-  &__close-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-    display: block;
-    width: 50px;
-    height: 50px;
-    z-index: 999;
-
-    .arrow-icon {
-      font-size: 48px;
-    }
-  }
+  padding: 16px 34px 16px 24px;
+  z-index: 4;
+  background: rgba(0, 0, 0, 0.55);
+  overflow: visible;
 
   .select-group {
+    width: $basic-df-setting-width;
+    
     &__select {
-      width: 100%;
-      height: 36px;
+      width: calc(100% - 24px);
+      height: 40px;
       display: flex;
       
+      >>> .el-input .el-input__inner {
+        height: 40px;
+        line-height: 40px;
+      }
       &:not(:last-of-type) {
         margin-bottom: 8px;
       }

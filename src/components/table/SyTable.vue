@@ -184,7 +184,7 @@ export default {
 
   .btn-download {
     position: absolute;
-    top: -30px;
+    top: -32px;
     left: 0;
   }
 

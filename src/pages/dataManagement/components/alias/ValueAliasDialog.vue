@@ -37,7 +37,7 @@
         </div>
         <div class="dialog-content-block">
           <div class="data-column-block">
-            <div class="data-column-row block-title">{{ $t('editing.columnName') }}</div>
+            <div class="block-title">{{ $t('editing.columnName') }}</div>
             <div class="data-column-block-body">
               <div 
                 v-for="column in dataColumnListInfo"
@@ -356,8 +356,6 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
-          // 更新問句說明資訊
-          this.$store.dispatch('dataSource/getDataSourceDataValue')
           this.closeDialog()
         })
         .catch(() => { this.isSaving = false })

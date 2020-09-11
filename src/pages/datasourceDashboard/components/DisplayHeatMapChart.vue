@@ -118,8 +118,8 @@ export default {
         return value.slice(0, 5) + '...'
       }
 
-      // 欄位超過 15x15 的時候出現 scroll bar 並隱藏 label
-      if (this.dataset.data.length > 225) {
+      // 欄位超過 12x12 的時候出現 scroll bar 並隱藏 label
+      if (this.dataset.data.length > 144) {
         const verticalZoomConfig = verticalZoomIn()
         const parallelZoomConfig = parallelZoomIn()
         verticalZoomConfig[1].top = 40

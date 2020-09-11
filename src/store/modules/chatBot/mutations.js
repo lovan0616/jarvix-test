@@ -37,5 +37,14 @@ export default {
   },
   setDoClickCorrelation (state, data) {
     state.doClickCorrelation = data
+  },
+  setParserLanguageList (state, data) {
+    state.parserLanguageList = data
+  },
+  setParserLanguage (state, data) {
+    state.parserLanguage = data
+  },
+  updateHasBasicInfo (state, data) {
+    state.hasBasicInfo = data
   }
 }

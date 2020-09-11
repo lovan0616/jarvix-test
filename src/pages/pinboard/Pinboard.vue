@@ -53,12 +53,14 @@
 <script>
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import SortingDialog from './components/SortingDialog'
+import EmptyPinboard from './components/EmptyPinboard'
 
 export default {
   name: 'PagePinboard',
   components: {
     EmptyInfoBlock,
-    SortingDialog
+    SortingDialog,
+    EmptyPinboard
   },
   data () {
     return {
@@ -66,7 +68,8 @@ export default {
       isShowSortingDialog: false,
       timeoutFunction: null,
       boardList: [],
-      boardName: null
+      boardName: null,
+      pinboardData: []
     }
   },
   computed: {
@@ -99,6 +102,9 @@ export default {
   mounted () {
     this.getPinboardInfo()
     this.getPinboardName()
+  },
+  destroyed () {
+    window.clearTimeout(this.timeoutFunction)
   },
   methods: {
     getPinboardName () {
@@ -137,8 +143,19 @@ export default {
             segmentationPayload: null,
             isDeleted: false
           })
+
+          this.pinboardData.push({
+            pinboardId: element.id,
+            resultId: element.resultId,
+            dataframeName: null,
+            dataColumnMap: null,
+            selectedColumns: null,
+            restrictions: null
+
+          })
           this.getComponent(element)
         })
+        this.$store.commit('pinboard/setpinboardData', this.pinboardData)
       }).catch(() => {
         this.isLoading = false
       })
@@ -146,6 +163,7 @@ export default {
     getComponent (res) {
       window.clearTimeout(this.timeoutFunction)
       let currentResult = this.getResult(res.id)
+      let currentData = this.getData(res.id)
       this.$store.dispatch('chatBot/getComponentList', res.resultId)
         .then(componentResponse => {
           switch (componentResponse.status) {
@@ -160,7 +178,13 @@ export default {
               currentResult.restrictions = componentResponse.restrictions
               currentResult.layout = this.getLayout(componentResponse.layout)
               currentResult.segmentationPayload = componentResponse.segmentationPayload
-              currentResult.question = componentResponse.segmentationPayload.question
+              currentResult.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.matchedWord, '')
+              currentData.dataframeName = componentResponse.transcript
+                ? componentResponse.transcript.dataFrame ? componentResponse.transcript.dataFrame.dataFrameAlias : componentResponse.transcript.dataframe.alias 
+                : componentResponse.dataframeName
+              currentData.dataColumnMap = componentResponse.dataColumnMap
+              currentData.selectedColumns = componentResponse.selectedColumns
+              currentData.restrictions = componentResponse.restrictions
               this.$nextTick(() => {
                 this.isLoading = false
               })
@@ -169,15 +193,21 @@ export default {
             case 'Delete':
             case 'Warn':
             case 'Fail':
-              currentResult.info = []
-              currentResult.layout = 'EmptyResult'
+              currentResult.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.matchedWord, '')
+              currentResult.info = null
+              currentResult.layout = 'EmptyPinboard'
               this.isLoading = false
               break
           }
+        }).catch(() => {
+          this.isLoading = false
         })
     },
     getResult (pinboardId) {
       return this.boardList.filter(element => element.pinboardId === pinboardId)[0]
+    },
+    getData (pinboardId) {
+      return this.pinboardData.filter(element => element.pinboardId === pinboardId)[0]
     },
     closeSortingDialog (isSorted) {
       this.isShowSortingDialog = false

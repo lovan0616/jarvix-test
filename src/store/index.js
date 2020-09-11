@@ -10,6 +10,9 @@ import userManagement from './modules/userManagement'
 import algorithm from './modules/algorithm'
 import validation from './modules/validation'
 import previewDataSource from './modules/previewDataSource'
+import dataFrameAdvanceSetting from './modules/dataFrameAdvanceSetting'
+import scheduleSetting from '@/schedule/store/modules/scheduleSetting'
+import simulation from '@/schedule/store/modules/simulation'
 
 Vue.use(Vuex)
 
@@ -24,16 +27,19 @@ export default new Vuex.Store({
     result,
     algorithm,
     validation,
-    previewDataSource
+    previewDataSource,
+    dataFrameAdvanceSetting,
+    scheduleSetting,
+    simulation
   },
   state: {
-    isShowChatRoom: false,
+    isShowAskHelper: false,
     isShowFullSideNav: false,
     isAppLoading: false
   },
   mutations: {
-    updateChatRoomStatus (state, data) {
-      state.isShowChatRoom = data
+    updateAskHelperStatus (state, data) {
+      state.isShowAskHelper = data
     },
     updateSideNavStatus(state, data) {
       state.isShowFullSideNav = data

@@ -1,7 +1,16 @@
 <template>
   <div class="page-preview-bookmark">
     <template v-if="dataSourceId">
-      <div class="bookmark-header">{{ $t('resultDescription.dataSourceIntro') }}</div>
+      <div class="bookmark-header">
+        {{ mode === 'popup' ? $t('editing.originalDataContent') : $t('editing.currentDataContent') }}
+        <span class="tooltip-container">
+          <svg-icon
+            class="icon"
+            icon-class="information-circle"
+          />
+          <div class="tooltip">{{ mode === 'popup' ? $t('editing.originalDataContentReminder') : $t('editing.currentDataContentReminder') }}</div>
+        </span>
+      </div>
       <div class="result-board">
         <spinner
           v-if="isLoading"
@@ -9,8 +18,7 @@
           size="50"
         />
         <div
-          v-if="dataSourceTables.length > 0"
-          :class="{'is-previewing': isPreviewing}"
+          v-if="(mode === 'popup' || dataFrameId === 'all') && dataSourceTables.length > 1"
           class="board-header"
         >
           <el-tabs
@@ -195,7 +203,22 @@ export default {
     font-weight: 600;
     font-size: 24px;
     line-height: 32px;
-    margin-bottom: 24px;
+  }
+
+  .tooltip-container {
+    z-index: 1;
+    .tooltip {
+      width: 190px;
+      text-align: center;
+      white-space: normal;
+      padding: 8px;
+      line-height: 14px;
+      color: #DDDDDD;
+    }
+
+    .icon {
+      color: $theme-color-warning;
+    }
   }
 
   .dataset-info {
@@ -240,43 +263,40 @@ export default {
       padding: 10px;
     }
   }
-}
 
-.result-board {
-  .board-header {
-    border-top: unset;
-    padding-bottom: 0;
-
-    &.is-previewing {
-      padding-left: 0;
-      padding-right: 0;
+  .result-board {
+    background: transparent;
+    .board-header {
+      margin-top: 24px;
+      border-top: unset;
+      padding: 0;
+      background-color: transparent;
     }
-  }
-  .board-body {
-    padding: 16px 24px;
+                                                                                                                                                                  
+    .board-body {
+      padding: 23px 0;
 
-    &.is-loading {
-      padding: 0 24px;
-    }
-
-    &.is-previewing {
-      padding: 16px 0;
-    }
-  }
-
-  .overview {
-    margin-bottom: 10px;
-    font-size: 14px;
-
-    &__data {
-      display: flex;
+      &.is-loading {
+        padding: 0 24px;
+      }
     }
 
-    &__item {
-      margin-right: 45px;
+    .overview {
+      margin-bottom: 10px;
+      font-size: 14px;
+
+      &__data {
+        display: flex;
+      }
+
+      &__item {
+        margin-right: 45px;
+      }
     }
   }
 }
+
+
 
 /deep/ .el-tabs {
   width: 100%;

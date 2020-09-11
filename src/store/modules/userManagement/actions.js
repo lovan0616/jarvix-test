@@ -1,4 +1,4 @@
-import { logout, refreshToken, switchAccount, switchGroup, updateLocale } from '@/API/User'
+import { logout, switchAccount, switchGroup, updateLocale } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
 
@@ -62,8 +62,8 @@ export default {
       commit('setLicenseInfo', accountInfo.license)
 
       // refresh token
-      const { accessToken } = await refreshToken()
-      localStorage.setItem('token', accessToken)
+      // const { accessToken } = await refreshToken()
+      // localStorage.setItem('token', accessToken)
     } catch(error) {
       return Promise.reject(error)
     }
@@ -121,6 +121,10 @@ export default {
       .then(() => {
         // 先清空，因為新群組有可能沒有 dataSource
         commit('dataSource/setDataSourceId', null, { root: true })
+        // 關閉基表設定
+        commit('dataFrameAdvanceSetting/toggleSettingBox', false, { root: true })
+        // 關閉問句說明
+        commit('updateAskHelperStatus', false, { root: true })
 
         // 取得新的列表
         return dispatch('dataSource/getDataSourceList', {}, { root: true })

@@ -67,9 +67,37 @@
         <router-link 
           :to="{name: 'ProjectPagePinboardList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}" 
           class="nav-item">{{ $t('nav.projectPinboard') }}</router-link>
+        <router-link
+          v-if="hasPermission('group_read_data') && isShowWarRoomModule"
+          :to="{ name: 'WarRoomList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId } }" 
+          class="nav-item">{{ $t('nav.warRoom') }}</router-link>
       </template>
     </section>
-    <section class="nav-right">
+    <section
+      v-if="$route.meta.isModule"
+      class="nav-left"
+    >
+      <router-link 
+        :to="{name: 'CurrentSimulation'}"
+        class="nav-item"
+      >
+        {{ $t('schedule.header.schedule') }}
+      </router-link>
+      <router-link 
+        :to="{name: 'Simulation'}"
+        
+        class="nav-item"
+      >
+        {{ $t('schedule.header.simulate') }}
+      </router-link>
+      <router-link 
+        :to="{name: 'ScheduleSetting'}"
+        class="nav-item"
+      >
+        {{ $t('schedule.header.setting') }}
+      </router-link>
+    </section>
+    <!-- <section class="nav-right">
       <router-link
         v-if="isShowFunctionDescription"
         :to="{ name: 'FunctionDescription', params: { 'account_id': accountId } }"
@@ -78,9 +106,9 @@
         <svg-icon 
           icon-class="description" 
           class="icon icon-description"/>
-        {{ $t('sideNav.functionDescription') }}
+        {{ $t('nav.helper') }}
       </router-link>
-    </section>
+    </section> -->
   </nav>
 </template>
 <script>
@@ -110,9 +138,12 @@ export default {
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
-    isShowFunctionDescription () {
-      return this.$store.state.setting.locale.includes('zh')
+    isShowWarRoomModule () {
+      return localStorage.getItem('isShowWarRoomModule') === 'true'
     },
+    // isShowFunctionDescription () {
+    //   return this.$store.state.setting.locale.includes('zh')
+    // },
     groupName () {
       return this.$store.getters['userManagement/getCurrentGroupName']
     },

@@ -78,12 +78,15 @@ export function getRelatedQuestionList(resultId, dataSourceId) {
 /**
  * get quick start question
  */
-export function getQuickStartQuestion(dataSourceId, dataFrameId) {
+export function getQuickStartQuestion(dataSourceId, dataFrameId, restrictions, selectedColumnList = null) {
   return request({
-    url: `/ask/quickQuestionList/${dataSourceId}`,
-    method: 'GET',
-    params: {
-      dataFrameId
+    url: `/ask/quickQuestionList/search`,
+    method: 'POST',
+    data: {
+      dataSourceId, 
+      dataFrameId,
+      restrictions,
+      selectedColumnList
     }
   })
 }
@@ -106,3 +109,12 @@ export function addTableToMemory(accountId, dataFrameId, dataSourceId) {
   })
 }
 
+/**
+ * get available language parser
+ */
+export function getParserLanguageList() {
+  return request({
+    url: `/ask/question/languages`,
+    method: 'GET'
+  })
+}

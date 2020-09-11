@@ -241,6 +241,11 @@ export default {
           sort: true,
         },
         {
+          text: this.$t('userManagement.userName'),
+          value: 'name',
+          width: '200px'
+        },
+        {
           text: this.$t('userManagement.userRoleAuthority'),
           value: 'roleZhName',
           tooltip: {
@@ -297,7 +302,7 @@ export default {
   methods: {
     checkIfReachUserLimit () {
       getAccountInfo().then(({ license }) => {
-        this.reachUserLimit = license.currentUser >= license.maxUser
+        this.reachUserLimit = license.currentUser >= license.maxUser && license.maxUser !== -1
         this.$store.commit('userManagement/setLicenseCurrentUser', license.currentUser)
       })
     },

@@ -36,7 +36,7 @@
             class="link action-link"
             @click="editGroup(data)">{{ $t('editing.editingName') }}</a>
           <a
-            v-if="license.maxUser > 1"
+            v-if="license.maxUser !== 1"
             :disabled="!hasGroupReadUserPermission(data)" 
             href="javascript:void(0);"
             class="link action-link"
@@ -111,7 +111,7 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '220px'
+          width: '280px'
         }
       ]
     },

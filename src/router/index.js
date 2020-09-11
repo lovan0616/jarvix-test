@@ -4,6 +4,7 @@ import AppLayout from '@/components/layout/AppLayout'
 import store from '../store'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
+import ScheduleRouter from '@/schedule/router'
 
 Vue.use(Router)
 
@@ -166,6 +167,28 @@ const router = new Router({
                         }
                       ]
                     },
+                    {
+                      path: 'war-room',
+                      component: () => import('@/pages/warRoom/Index'),
+                      children: [
+                        {
+                          path: '/',
+                          name: 'WarRoomList',
+                          component: () => import('@/pages/warRoom/WarRoomList'),
+                          meta: {
+                            permission: ['group_read_data']
+                          }
+                        },
+                        {
+                          path: ':war_room_id',
+                          name: 'WarRoom',
+                          component: () => import('@/pages/warRoom/WarRoom'),
+                          meta: {
+                            permission: ['group_edit_data']
+                          }
+                        }
+                      ]
+                    },
                     // FIXME for poc/foxconn_molding
                     {
                       path: 'algorithm',
@@ -252,7 +275,7 @@ const router = new Router({
                       component: () => import('@/pages/management/Index'),
                       beforeEnter: (to, from, next) => {
                         // 個人版 不能進入成員管理頁面
-                        store.state.userManagement.license.maxUser > 1 ? next() : next(from)
+                        store.state.userManagement.license.maxUser !== 1 ? next() : next(from)
                       },
                       children: [
                         {
@@ -288,7 +311,8 @@ const router = new Router({
                   ]
                 },
               ]
-            }
+            },
+            ...ScheduleRouter.options.routes
           ]
         }
       ]
@@ -304,9 +328,29 @@ const router = new Router({
       component: () => import('@/pages/signup/Index')
     },
     {
+      path: '/sis-setting',
+      name: 'SisSetting',
+      component: () => import('@/pages/sisSetting/Index')
+    },
+    {
       path: '/share-result/:id',
       name: 'ShareResult',
       component: () => import('@/pages/result/SingleResult')
+    },
+    {
+      path: '/war-room',
+      name: 'WarRoomLivePage',
+      component: () => import('@/pages/warRoom/ActiveWarRoom')
+    },
+    {
+      path: '/war-room/:war_room_id',
+      name: 'WarRoomPreviewPage',
+      component: () => import('@/pages/warRoom/ActiveWarRoom')
+    },
+    {
+      path: '/oe-exhibition',
+      name: 'OeExhibition',
+      component: () => import('@/pages/oeExhibition/Index')
     }
   ],
   linkActiveClass: 'active',
@@ -321,7 +365,7 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
   // Declare routes without authentication
-  const pathWithoutAuth = ['PageLogin', 'PageSignup']
+  const pathWithoutAuth = ['PageLogin', 'PageSignup', 'WarRoomLivePage']
   if (pathWithoutAuth.includes(to.name)) {
     next()
     return
@@ -368,6 +412,11 @@ router.beforeEach(async (to, from, next) => {
       },
       query: to.query
     })
+  }
+
+  // 取得可以使用的 parser 語系
+  if (!store.state.chatBot.parserLanguage) {
+    await store.dispatch('chatBot/getParserList')
   }
   
   // 確認 account 和 group 權限都符合
