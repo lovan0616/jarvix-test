@@ -99,6 +99,8 @@ export default {
 
   .dialog-decide-cancel {
     margin-right: 15px;
+    background: transparent;
+    color: #FFF;
     border: 1px solid #FFFFFF;
     line-height: 36px;
     cursor: pointer;
@@ -119,6 +121,10 @@ export default {
     color: #2AD2E2;
     line-height: 36px;
     cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
 }
 </style>

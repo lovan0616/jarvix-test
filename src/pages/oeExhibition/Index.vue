@@ -8,6 +8,7 @@
         太陽能案場 I-V 曲線
       </div>
       <button 
+        :disabled="loading"
         type="button"
         class="btn btn-outline refresh-btn"
         @click="getRandomChart"

@@ -51,7 +51,7 @@
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { getDrillDownTool } from '@/components/display/common/addons'
+import { monitorVisualMap, monitorMarkLine, getDrillDownTool } from '@/components/display/common/addons'
 import {
   colorOnly1,
   colorOnly2,
@@ -112,6 +112,14 @@ export default {
     arrowBtnRight: {
       type: Number,
       default: 80
+    },
+    isShowLegend: {
+      type: Boolean,
+      default: true
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -205,6 +213,20 @@ export default {
       }
       config.toolbox.show = this.showToolbox
 
+      // 是否隱藏 legend
+      if (!this.isShowLegend) config.legend.show = false
+      // 上下限
+      if (this.title.yAxis.length > 0) {
+        let upperLimit = this.title.yAxis[0].upperLimit || null
+        let lowerLimit = this.title.yAxis[0].lowerLimit || null
+        if (upperLimit !== null || lowerLimit !== null) {
+          // 處理顏色
+          config.visualMap = monitorVisualMap(upperLimit, lowerLimit)
+          // markline
+          config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit)
+        }
+      }
+
       return config
     },
     colorList () {
@@ -230,12 +252,22 @@ export default {
   },
   methods: {
     composeColumn (element, colIndex) {
+      const shortenNumberMethod = this.shortenNumber
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
         ...this.addonSeriesItem,
         ...this.addonSeriesItems[colIndex],
-        connectNulls: true
+        connectNulls: true,
+        ...(this.isShowLabelData && {
+          label: {
+            position: 'top',
+            show: true,
+            fontSize: 10,
+            color: '#fff',
+            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+          }
+        })
       }
     },
     controlPagination () {

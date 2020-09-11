@@ -67,6 +67,10 @@
         <router-link 
           :to="{name: 'ProjectPagePinboardList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}" 
           class="nav-item">{{ $t('nav.projectPinboard') }}</router-link>
+        <router-link
+          v-if="hasPermission('group_read_data') && isShowWarRoomModule"
+          :to="{ name: 'WarRoomList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId } }" 
+          class="nav-item">{{ $t('nav.warRoom') }}</router-link>
       </template>
     </section>
     <section
@@ -133,6 +137,9 @@ export default {
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
+    },
+    isShowWarRoomModule () {
+      return localStorage.getItem('isShowWarRoomModule') === 'true'
     },
     // isShowFunctionDescription () {
     //   return this.$store.state.setting.locale.includes('zh')
