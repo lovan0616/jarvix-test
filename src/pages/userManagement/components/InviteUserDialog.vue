@@ -84,7 +84,7 @@ let inviteeId = 0
 
 export default {
   inject: ['$validator'],
-  name: 'FillDialog',
+  name: 'InviteUserDialog',
   components: {
     RoleDescPop,
     InputVerify,
