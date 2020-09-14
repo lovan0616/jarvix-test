@@ -8,14 +8,14 @@
         v-for="(invitee, index) in inviteeList"
         :key="invitee.id"
         class="form new-invitee">
-        <div
+        <a
           v-if="inviteeList.length > 1"
           class="form__delete"
           @click="removeInvitee(index)">
           <svg-icon 
             icon-class="delete" 
             class="icon"/>
-        </div>
+        </a>
         <div class="form__block">
           <span class="form__label">{{ $t('userManagement.userAccount') }}</span>
           <input-verify
@@ -62,15 +62,15 @@
             v-model="invitee.password"
             :placeholder="$t('editing.newPassword')"
             :name="'password' + '-' + invitee.id"
-            :type="invitee.inputType"
+            :type="passwordTypeList[index]"
           />
-          <div 
+          <a
             class="form__see-password"
             @click="seePassword(index)">
             <svg-icon
               icon-class="view-data" 
               class="icon" />
-          </div>
+          </a>
         </div>
       </div>
       <button
@@ -134,7 +134,8 @@ export default {
   },
   data (){
     return {
-      inviteeList: []
+      inviteeList: [],
+      passwordTypeList: []
     }
   },
   computed: {
@@ -147,6 +148,7 @@ export default {
   },
   destroyed () {
     this.inviteeList = []
+    this.passwordTypeList = []
   },
   methods: {
     addNewInvitee () {
@@ -156,15 +158,16 @@ export default {
         accountRoleId: this.accountViewerRoleId,
         email: '',
         password: '00000000',
-        username: '',
-        inputType: 'password'
+        username: ''
       })
+      this.passwordTypeList.push('password')
     },
     removeInvitee (index) {
       this.inviteeList.splice(index, 1)
+      this.passwordTypeList.splice(index, 1)
     },
     seePassword (index){
-      this.inviteeList[index].inputType = this.inviteeList[index].inputType === 'password' ? 'text' : 'password'
+      this.$set(this.passwordTypeList, index, this.passwordTypeList[index] === 'password' ? 'text' : 'password')
     },
     closeDialog () {
       this.$emit('closeDialog')
