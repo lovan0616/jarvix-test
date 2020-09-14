@@ -1714,7 +1714,7 @@
     "saveFilterCondition": "Save",
     "saveFilterReminding": "After drilling down, the designated Data Set will automatically be set.",
     "area": "Block",
-    "between": " fall between {start} and {end}.",
+    "between": "fall between {start} and {end}.",
     "filterRestrictions": "Filter Restrictions",
     "prompt": "Prompt",
     "filterRule": "Filter conditions will affect the results of subsequent question analysis",

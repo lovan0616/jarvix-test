@@ -34,7 +34,7 @@
               {{ sub_restraint.properties.display_name }} = {{ sub_restraint.properties['display_datavalues'].join(', ') }}
             </template>
             <template v-else>
-              {{ sub_restraint.properties.display_name }}{{ $t('resultDescription.between', {
+              {{ sub_restraint.properties.display_name }} {{ $t('resultDescription.between', {
                 start: isNaN(sub_restraint.properties.start) ? sub_restraint.properties.start : roundNumber(sub_restraint.properties.start),
                 end: isNaN(sub_restraint.properties.end) ? sub_restraint.properties.end : roundNumber(sub_restraint.properties.end)
               }) }}
