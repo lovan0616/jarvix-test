@@ -272,70 +272,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-preferences {
-  position: absolute;
-  left: $app-side-nav-closed-width;
-  bottom: 12px;
-  width: 207px;
-  background: #232D2D;
-  border-radius: 5px;
-  filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
-}
-.preferences {
-  padding-top: 10px;
-  &__name {
-    margin: 0 0 8px 14px;
-    font-size: 18px;
-    line-height: 21px;
-  }
-
-  &__email {
-    margin: 0 0 8px 14px;
-    font-size: 13px;
-    line-height: 15px;
-    color: #AAAAAA;
-  }
-
-  &__role {
-    margin: 0 0 8px 14px;
-    font-size: 13px;
-    line-height: 15px;
-    color: #AAAAAA;
-  }
-
-  &__item {
-    border-top: 1px solid #394045;
-    list-style-type: none;
-    white-space: nowrap;
-
-    &:hover {
-      opacity: .8;
-    }
-  }
-
-  &__link {
-    padding: 14px;
-    display: flex;
-    align-items: center;
-    color: #CCCCCC;
-  }
-
-  &__icon {
-    display: inline-block;
-    margin-right: 10px;
-    color: #7496A0;
-    font-size: 17px;
-  }
-
-  &__text {
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 20px;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
-}
 .sidenav {
   position: fixed;
   top: 0;
@@ -487,6 +423,71 @@ export default {
 
     .user-preferences {
       left: $app-side-nav-opened-width;
+    }
+  }
+
+  .user-preferences {
+    position: absolute;
+    left: $app-side-nav-closed-width;
+    bottom: 12px;
+    width: 207px;
+    background: #232D2D;
+    border-radius: 5px;
+    filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
+  }
+  
+  .preferences {
+    padding-top: 10px;
+    &__name {
+      margin: 0 0 8px 14px;
+      font-size: 18px;
+      line-height: 21px;
+    }
+
+    &__email {
+      margin: 0 0 8px 14px;
+      font-size: 13px;
+      line-height: 15px;
+      color: #AAAAAA;
+    }
+
+    &__role {
+      margin: 0 0 8px 14px;
+      font-size: 13px;
+      line-height: 15px;
+      color: #AAAAAA;
+    }
+
+    &__item {
+      border-top: 1px solid #394045;
+      list-style-type: none;
+      white-space: nowrap;
+
+      &:hover {
+        opacity: .8;
+      }
+    }
+
+    &__link {
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      color: #CCCCCC;
+    }
+
+    &__icon {
+      display: inline-block;
+      margin-right: 10px;
+      color: #7496A0;
+      font-size: 17px;
+    }
+
+    &__text {
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 20px;
+      overflow: hidden;
+      white-space: nowrap;
     }
   }
 }
