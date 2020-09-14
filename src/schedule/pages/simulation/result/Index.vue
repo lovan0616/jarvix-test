@@ -68,6 +68,11 @@
           :is-processing="isProcessing"
           :pagination-info="pagination"
           :dataset="resultType === 'order' ? orderData : machineData"
+<<<<<<< Updated upstream
+=======
+          fixed-index
+          height="100%"
+>>>>>>> Stashed changes
           fixed-index
           height="100%"
           @change-page="updatePage"

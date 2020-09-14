@@ -213,7 +213,11 @@ export default {
               this.getComponentV2(res)
               // this.getRelatedQuestion(res.resultId)
             }).catch((error) => {
+<<<<<<< Updated upstream
               if (error.message !== 'cancel') this.isLoading = false
+=======
+              if (error.constructor.name !== 'Cancel') this.isLoading = false
+>>>>>>> Stashed changes
             })
           } else {
             // 多個結果

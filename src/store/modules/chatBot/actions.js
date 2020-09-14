@@ -17,6 +17,7 @@ export default {
       selectedColumnList: rootGetters['dataFrameAdvanceSetting/selectedColumnList']
     }
 
+<<<<<<< Updated upstream
     return askQuestion({...askCondition, language: state.parserLanguage}, state.askCancelToken.token)
   },
   askResult ({dispatch, state}, data) {
@@ -26,6 +27,17 @@ export default {
   getComponentList ({dispatch, state}, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
     return getComponentList(data, cancelToken)
+=======
+    return askQuestionV2({...askCondition, language: state.parserLanguage}, state.askCancelToken.token)
+  },
+  askResult ({dispatch, state}, data) {
+    let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
+    return askResultV2(data, cancelToken)
+  },
+  getComponentList ({dispatch, state}, data) {
+    let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
+    return getComponentListV2(data, cancelToken)
+>>>>>>> Stashed changes
   },
   getComponentData ({dispatch}, data) {
     return getComponentData(data)
@@ -42,7 +54,11 @@ export default {
   },
   cancelRequest ({state}) {
     if (state.askCancelToken) {
+<<<<<<< Updated upstream
       state.askCancelToken.cancel('cancel')
+=======
+      state.askCancelToken.cancel()
+>>>>>>> Stashed changes
     }
   },
   async updateChatConversation({ dispatch, commit, state, rootState }) {
