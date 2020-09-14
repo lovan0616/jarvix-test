@@ -341,6 +341,7 @@ export default {
       
       promise.then(() => {
         this.isshowInviteUser = false
+        this.isshowCreateUser = false
         this.inviteeList = []
         this.getUserList()
         Message({
