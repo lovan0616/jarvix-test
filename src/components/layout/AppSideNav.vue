@@ -86,25 +86,48 @@
         </li>
       </ul>
       <ul class="sidenav__list--bottom list">
+        <li>
+          <a 
+            :class="{'active': isShoUserPreferences}" 
+            href="javascript:void(0);"
+            class="list__link"
+            @click="isShoUserPreferences = !isShoUserPreferences"
+          >
+            <svg-icon
+              icon-class="user-setting"
+              class="list__icon" />
+            <span class="list__text">
+              {{ $t('sideNav.preferences' ) }}
+            </span>
+            <div class="list__arrow" />
+          </a>
+        </li>
+      </ul>
+      <div 
+        v-if="isShoUserPreferences"
+        class="user-preferences preferences">
+        <h3 class="preferences__name"> {{ userName }} </h3>
+        <p class="preferences__email"> {{ userEmail }} </p>
+        <p class="preferences__role"> {{ $t(accountRoleList[currentUserRole]) }} </p>
         <li
           v-for="item in settingList"
           :key="item.title"
-          class="list__item"
+          class="preferences__item"
         >
           <a 
             href="javascript:void(0);" 
-            class="list__link"
+            class="preferences__link"
             @click="switchDialogName(item.dialogDisplayHandler)"
           >
             <svg-icon 
-              :icon-class="item.icon" 
-              class="list__icon" />
-            <span class="list__text">
+              :icon-class="item.icon"
+              class="preferences__icon" />
+            <span class="preferences__text">
               {{ $t(item.title) }}
             </span>
           </a>
         </li>
-      </ul>
+      </div>
       <change-pwd-dialog
         v-if="isShowChangePwdDialog"
         @closeDialog="controlChangePwdDialog(false)"
@@ -147,25 +170,34 @@ export default {
       isShowLanguage: false,
       isShowLogout: false,
       isShowChangePwdDialog: false,
+      isShoUserPreferences: false,
       selectedLanguage: null,
-      isLoading: false
+      isLoading: false,
+      accountRoleList:{
+        account_owner: 'userManagement.accountOwner',
+        account_maintainer: 'userManagement.accountMaintainer',
+        account_viewer: 'userManagement.accountViewer'
+      }
     }
   },
   computed: {
     ...mapState(['isShowFullSideNav']),
-    ...mapState('userManagement', ['accountList', 'groupList']),
+    ...mapState('userManagement', ['userName', 'userEmail', 'accountList', 'groupList']),
     ...mapState('setting', ['locale']),
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     ...mapGetters('userManagement', ['getCurrentAccountName', 'getCurrentAccountId', 'hasPermission', 'getCurrentGroupId']),
-    currentAccountName() {
+    currentAccountName () {
       const fullName = this.getCurrentAccountName
       if (!fullName) return '-'
       return this.isShowFullSideNav ? fullName : fullName[0]
     },
+    currentUserRole () {
+      return this.accountList.filter(element => element.id === this.getCurrentAccountId)[0]['role']
+    },
     settingList () {
       return [
         {icon: 'key', title: 'user.changePwd', dialogDisplayHandler: 'isShowChangePwdDialog'},
-        {icon: 'language', title: 'lang', dialogDisplayHandler: 'isShowLanguage'},
+        {icon: 'language', title: 'editing.languageSetting', dialogDisplayHandler: 'isShowLanguage'},
         {icon: 'logout', title: 'button.logout', dialogDisplayHandler: 'isShowLogout'}
       ]
     },
@@ -191,7 +223,8 @@ export default {
         })
     },
     closeSideNav() {
-      if(this.isShowFullSideNav) this.updateSideNavStatus(false)
+      if(this.isShowFullSideNav)
+        this.updateSideNavStatus(false)
     },
     accountHomePageRoute() {
       const groupLessPage = { name: 'PageGrouplessGuidance', params: { 'account_id': this.getCurrentAccountId } }
@@ -239,6 +272,70 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.user-preferences {
+  position: absolute;
+  left: $app-side-nav-closed-width;
+  bottom: 12px;
+  width: 207px;
+  background: #232D2D;
+  border-radius: 5px;
+  filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
+}
+.preferences {
+  padding-top: 10px;
+  &__name {
+    margin: 0 0 8px 14px;
+    font-size: 18px;
+    line-height: 21px;
+  }
+
+  &__email {
+    margin: 0 0 8px 14px;
+    font-size: 13px;
+    line-height: 15px;
+    color: #AAAAAA;
+  }
+
+  &__role {
+    margin: 0 0 8px 14px;
+    font-size: 13px;
+    line-height: 15px;
+    color: #AAAAAA;
+  }
+
+  &__item {
+    border-top: 1px solid #394045;
+    list-style-type: none;
+    white-space: nowrap;
+
+    &:hover {
+      opacity: .8;
+    }
+  }
+
+  &__link {
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    color: #CCCCCC;
+  }
+
+  &__icon {
+    display: inline-block;
+    margin-right: 10px;
+    color: #7496A0;
+    font-size: 17px;
+  }
+
+  &__text {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+}
 .sidenav {
   position: fixed;
   top: 0;
@@ -270,6 +367,7 @@ export default {
     }
 
     &--bottom {
+      position: relative;
       border-top: 1px solid var(--color-border);
       margin: auto 0 0 0;
     }
@@ -290,10 +388,10 @@ export default {
       color: #CCCCCC;
 
       &.active {
-        color: #2AD2E2;
+        color: var(--color-theme);
 
         .list__icon {
-          color: #2AD2E2;
+          color: var(--color-theme);
         }
       }
     }
@@ -308,10 +406,22 @@ export default {
 
     &__text {
       font-weight: bold;
+      font-size: 14px;
       flex: 1;
       overflow: hidden;
       width: 0;
       white-space: nowrap;
+      opacity: 0;
+    }
+
+    &__arrow {
+      width: 8px;
+      height: 8px;
+      right: 13px;
+      border: solid #CCCCCC;
+      border-width: 2px 2px 0 0;
+      border-radius: 1px;
+      transform: rotate(45deg);
       opacity: 0;
     }
   }
@@ -361,6 +471,11 @@ export default {
         transition: opacity .1s linear .1s;
         opacity: 1;
       }
+
+      &__arrow {
+        transition: opacity .1s linear .1s;
+        opacity: 1;
+      }
     }
 
     /deep/ .dropdown {
@@ -368,6 +483,10 @@ export default {
         text-align: left;
         padding: 0 12px;
       }
+    }
+
+    .user-preferences {
+      left: $app-side-nav-opened-width;
     }
   }
 }

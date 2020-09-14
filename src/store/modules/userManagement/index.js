@@ -7,6 +7,7 @@ export default {
   state: {
     userId: null,
     userName: '',
+    userEmail: '',
     accountList: [],
     groupList: [],
     permission: [],
