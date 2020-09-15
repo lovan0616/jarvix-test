@@ -116,7 +116,7 @@ export default {
           this.userList = userList.map(user => {
             return {
               ...user,
-              roleZhName: this.$t(`userManagement.${this.toCamelCase(user.role)}`)
+              roleZhName: this.getLocaleName(user.role)
             }
           })
           this.canEditList = true
