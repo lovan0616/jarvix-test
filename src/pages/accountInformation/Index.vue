@@ -75,32 +75,33 @@
         {{ $t('accountInfo.accountUsageStatus') }}
       </h2>
       <h3 class="account-info-block__description">
-        {{ $t('accountInfo.projectAmount', {projectAmount}) }}
+        {{ $t('accountInfo.projectAmount', { amount: groupStatus.groupCount }) }}
       </h3>
       <spinner
-        v-if="isLoading"
+        v-if="isLoading || !groupStatus.groupUsageList.length > 0"
         class="spinner"
       />
       <template v-else>
-        <div class="usage-status__item item">
+        <div 
+          v-for="(groupUsage, index) in groupStatus.groupUsageList"
+          :key="index"
+          class="usage-status__item item">
           <h3 class="item__title">
-            市場行銷分析
+            {{ groupUsage.groupName }}
           </h3>
           <div class="item__info">
             <h3 class="item__info--title"> {{ $t('accountInfo.dataframeAmount') }} </h3>
-            <div class="item__info--amount"> 12 </div>
+            <div class="item__info--amount"> {{ groupUsage.datasourceCount }} </div>
           </div>
           <div class="item__info">
             <h3 class="item__info--title"> {{ $t('accountInfo.pinboardAmount') }} </h3>
-            <div class="item__info--amount"> 9999 </div>
+            <div class="item__info--amount"> {{ groupUsage.pinBoardCount }} </div>
           </div>
           <div class="item__info">
             <h3 class="item__info--title"> {{ $t('accountInfo.warroomAmount') }} </h3>
-            <div class="item__info--amount"> 9999 </div>
+            <div class="item__info--amount"> {{ groupUsage.warRoomCount }} </div>
           </div>
-
         </div>
-
       </template>
     </section>
   </div>
@@ -119,7 +120,11 @@ export default {
         maxDataStorageSize: null,
         currentDataStorageSize: null,
         expiredTime: null
-      }
+      },
+      groupStatus: {
+        groupCount: null,
+        groupUsageList: []
+      },
     }
   },
   mounted () {
@@ -130,6 +135,7 @@ export default {
       this.isLoading = true
       getAccountInfo()
         .then(accountInfo => {
+          this.groupStatus = accountInfo.groupStatus
           this.license = accountInfo.license
           this.$store.commit('userManagement/setLicenseInfo', accountInfo.license)
         })
@@ -225,6 +231,7 @@ export default {
 
   .sub-info-title {
     margin: 0;
+    font-weight: normal;
     font-size: 13px;
     color: #CCCCCC;
   }
@@ -245,6 +252,10 @@ export default {
     padding: 16px 64px 20px 20px;
     background: rgba(35, 61, 64, 0.6);
 
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+
     &__title {
       flex: 1;
       margin: 0;
@@ -264,8 +275,9 @@ export default {
       &--title {
         margin-right: 8px;
         color: #CCCCCC;
+        font-weight: normal;
         font-size: 16px;
-        line-height: 24px;
+        line-height: 22px;
       }
 
       &--amount {
