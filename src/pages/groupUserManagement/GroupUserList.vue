@@ -116,7 +116,7 @@ export default {
           this.userList = userList.map(user => {
             return {
               ...user,
-              roleZhName: this.getLocaleName(user.role)
+              roleZhName: this.getAccountRoleLocaleName(user.role)
             }
           })
           this.canEditList = true

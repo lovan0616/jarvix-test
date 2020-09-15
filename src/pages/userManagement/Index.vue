@@ -364,7 +364,7 @@ export default {
           this.userData = response.map(user => {
             return {
               ...user,
-              roleZhName: this.$t(`userManagement.${this.toCamelCase(user.role)}`)
+              roleZhName: this.getAccountRoleLocaleName(user.role)
             }
           })
         })
@@ -383,7 +383,7 @@ export default {
               return {
                 value: role.id,
                 key: role.name,
-                name: this.getLocaleName(role.name)
+                name: this.getAccountRoleLocaleName(role.name)
               }
             })
         })
@@ -480,7 +480,7 @@ export default {
     showChangeRole (user, hasPermission) {
       if (!hasPermission) return
 
-      const option = this.roleOptions.find(option => option.name === this.getLocaleName(user.role)) || user.role
+      const option = this.roleOptions.find(option => option.name === this.getAccountRoleLocaleName(user.role)) || user.role
       this.currentUser.roleId = option.value
       this.currentId = user.id
       this.isShowChangeRole = true
