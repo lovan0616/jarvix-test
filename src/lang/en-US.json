@@ -278,7 +278,6 @@
     "sureLogout": "Are you sure you want to log out of your account?",
     "questionFeedback": "QuestionFeedback",
     "functionDescription": "Function Description",
-    "addUser": "New User",
     "notYetCreateUser": "User has not been created",
     "inviteeEmail": "Invited Email",
     "pleaseSelectInviteeEmail": "Please select invitee email",
@@ -840,7 +839,8 @@
     "testConnecting": "Testing Connection...",
     "monitorSetting": "Monitor Setting",
     "updateImmediately": "Update Immediately",
-    "AddNewWarRoom": "Add war room"
+    "AddNewWarRoom": "Add war room",
+    "sendInvitation": "Send Invitation"
   },
   "timeScopeUnit": {
     "second": "seconds",
@@ -1905,7 +1905,9 @@
     "pieChartFilterNote": "The result is filtered negative data"
   },
   "userManagement": {
+    "accountUserList": "Account Users",
     "createUser": "New User",
+    "inviteUser": "Invite User",
     "inviteeEmailPlaceholder": "Please enter the email of the invitee",
     "userRoleAuthority": "Role",
     "accountOwner": "Account Owner",
@@ -1917,7 +1919,11 @@
     "accountViewerDesc": "Unable to use account management related functions",
     "updateRole": "Role",
     "confirmDeleteAccountText": "After the user is removed, this user will not be able to use any features of this account. Are you sure you want to continue removing this user?",
-    "userName": "User Name"
+    "userName": "User Name",
+    "userAccount": "Username",
+    "userPassword": "Password",
+    "emailPlaceholder": "Input Email",
+    "userNamePlaceholder": "Input Name"
   },
   "accountInfo": {
     "userAmount": "User Limit",
