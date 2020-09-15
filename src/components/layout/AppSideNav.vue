@@ -86,7 +86,7 @@
         </li>
       </ul>
       <ul class="sidenav__list--bottom list">
-        <li id="preferences-icon">
+        <li ref="preferencesIcon">
           <a 
             :class="{'active': isShowUserPreferences}" 
             href="javascript:void(0);"
@@ -105,7 +105,7 @@
       </ul>
       <div 
         v-if="isShowUserPreferences"
-        id="preferences"
+        ref="preferences"
         class="user-preferences preferences">
         <h3 class="preferences__name"> {{ userName }} </h3>
         <p class="preferences__email"> {{ userEmail }} </p>
@@ -214,15 +214,9 @@ export default {
     ...mapMutations(['updateSideNavStatus']),
     ...mapActions('userManagement', ['switchAccountById']),
     autoHide (evt) {
-      if (this.isShowUserPreferences && !document.getElementById("preferences").contains(evt.target) && !document.getElementById("preferences-icon").contains(evt.target)) {
+      if (this.isShowUserPreferences && !this.$refs.preferences.contains(evt.target) && !this.$refs.preferencesIcon.contains(evt.target)) {
         this.closeUserPreferences()
       }
-    },
-    toCamelCase (str) {
-      return str.replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
-    },
-    getLocaleName (accountRole) {
-      return this.$t(`userManagement.${this.toCamelCase(accountRole)}`)
     },
     getAccountRoleList () {
       return getAccountRoles(this.getCurrentAccountId)
