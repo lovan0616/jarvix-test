@@ -5,7 +5,7 @@
     </div>
     <section class="account-info-block">
       <h2 class="account-info-block__title">
-        {{ $t('accountInfo.accountLimitation') }}
+        {{ $t('accountInfo.accountRestrictions') }}
       </h2>
       <spinner
         v-if="isLoading"
