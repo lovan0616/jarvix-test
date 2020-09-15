@@ -177,7 +177,9 @@
                   :disabled="isProcessing"
                   :width="Number('32')"
                   active-color="#2AD2E2"
-                  inactive-color="#324B4E"/>
+                  inactive-color="#324B4E"
+                  @change="updateBoundSwitch"
+                />
               </div>
               <div
                 v-if="componentData.config.boundSwitch"
@@ -187,33 +189,36 @@
                   {{ $t('warRoom.maxThreshold') }}
                 </label>
                 <input
+                  v-validate="upperBoundRules"
+                  ref="upperBound"
                   :disabled="isProcessing"
-                  :value="componentData.config.upperBound === null ? '' : Number(componentData.config.upperBound)"
-                  :min="componentData.config.lowerBound"
+                  :value="componentData.config.upperBound"
                   :placeholder="$t('warRoom.pleaseEnterValue')"
-                  type="number"
                   name="upperBound"
                   class="input war-room-setting__block-text-input"
-                  @input="updateUpperBoundValue">
+                  @input="updateUpperBoundValue"
+                >
                 <div 
-                  v-show="upperBoundValidationMessage"
+                  v-show="errors.has('upperBound')"
                   class="error-text"
-                >{{ upperBoundValidationMessage }}</div>
+                >{{ errors.first('upperBound') }}</div>
                 <label class="input war-room-setting__block-text-label">
                   {{ $t('warRoom.minThreshold') }}
                 </label>
                 <input
+                  v-validate="lowerBoundRules"
+                  ref="lowerBound"
                   :disabled="isProcessing"
-                  :value="componentData.config.lowerBound === null ? '' : Number(componentData.config.lowerBound)"
+                  :value="componentData.config.lowerBound"
                   :placeholder="$t('warRoom.pleaseEnterValue')"
-                  type="number"
                   name="lowerBound"
                   class="input war-room-setting__block-text-input"
-                  @input="updateLowerBoundValue">
+                  @input="updateLowerBoundValue"
+                >
                 <div 
-                  v-show="lowerBoundValidationMessage"
+                  v-show="errors.has('lowerBound')"
                   class="error-text"
-                >{{ lowerBoundValidationMessage }}</div>
+                >{{ errors.first('lowerBound') }}</div>
               </div>
             </div>
           </template>
@@ -425,21 +430,15 @@ export default {
       if (this.componentData.componentId) return this.isProcessing
       return this.isProcessing  || !this.selectedDataSource.question || !this.componentData.config.displayName
     },
-    upperBoundValidationMessage () {
-      if (!this.isEitherBoundInputTouched || !this.componentData || !this.componentData.config) return
-      if (!this.componentData.config.lowerBound && !this.componentData.config.upperBound) return this.$t('message.eitherBoundIsRequired')
-      if (
-        (this.componentData.config.lowerBound && this.componentData.config.upperBound)
-        && (Number(this.componentData.config.upperBound) <= Number(this.componentData.config.lowerBound))
-      ) return this.$t('message.upperBoundShouldBeLargerThanLowerBound')
+    upperBoundRules () {
+      if (!this.componentData || !this.componentData.config) return
+      if ((this.componentData.config.lowerBound && this.componentData.config.upperBound)) return 'validUpperBound:lowerBound'
+      return 'eitherOneIsRequired:lowerBound'
     },
-    lowerBoundValidationMessage () {
-      if (!this.isEitherBoundInputTouched || !this.componentData || !this.componentData.config) return
-      if (!this.componentData.config.lowerBound && !this.componentData.config.upperBound) return this.$t('message.eitherBoundIsRequired')
-      if (
-        (this.componentData.config.lowerBound && this.componentData.config.upperBound)
-        && (Number(this.componentData.config.upperBound) <= Number(this.componentData.config.lowerBound))
-      ) return this.$t('message.lowerBoundShouldBeSmallerThanUpperBound')
+    lowerBoundRules () {
+      if (!this.componentData || !this.componentData.config) return
+      if ((this.componentData.config.lowerBound && this.componentData.config.upperBound)) return 'validLowerBound:upperBound'
+      return 'eitherOneIsRequired:upperBound'
     }
   },
   created () {
@@ -585,13 +584,29 @@ export default {
         this.componentData.config.recentTimeIntervalUnit = recentTimeIntervalUnit
       })
     },
+    updateBoundSwitch (isTurnedOn) {
+      if(isTurnedOn) return
+      const {
+        upperBound,
+        lowerBound
+      } = JSON.parse(JSON.stringify(this.originalComponentData.config))
+      // 關閉時，恢復原本預設，避免存取時送錯的格式給後端
+      this.$nextTick(() => {
+        this.componentData.config.upperBound = upperBound
+        this.componentData.config.lowerBound = lowerBound
+      })
+    },
     updateUpperBoundValue (e) {
-      if (!this.isEitherBoundInputTouched) this.isEitherBoundInputTouched = true
-      this.componentData.config.upperBound = e.target.value || null
+      const newInput = e.target.value.trim()
+      if (newInput.length === 0) return this.componentData.config.upperBound = null
+      if (!newInput.match(/^[-]?([0-9]+)?[.]?([0-9]+)?$/)) return this.$forceUpdate()
+      this.componentData.config.upperBound = newInput
     },
     updateLowerBoundValue (e) {
-      if (!this.isEitherBoundInputTouched) this.isEitherBoundInputTouched = true
-      this.componentData.config.lowerBound = e.target.value || null
+      const newInput = e.target.value.trim()
+      if (newInput.length === 0) return this.componentData.config.lowerBound = null
+      if (!newInput.match(/^[-]?([0-9]+)?[.]?([0-9]+)?$/)) return this.$forceUpdate()
+      this.componentData.config.lowerBound = newInput
     }
   }
 }

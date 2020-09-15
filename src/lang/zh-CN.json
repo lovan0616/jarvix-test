@@ -126,9 +126,12 @@
     "createdSuccessfully": "建立成功",
     "successfullyAddedToWarRoom": "成功加入战情室",
     "componentAmountReachedLimit": "元件数量已达上限",
-    "eitherBoundIsRequired": "上限和下限至少需设定一个",
+    "eitherOneIsRequired": "至少需填写一个",
     "upperBoundShouldBeLargerThanLowerBound": "上限值需大于下限值",
-    "lowerBoundShouldBeSmallerThanUpperBound": "下限值需小于上限值"
+    "lowerBoundShouldBeSmallerThanUpperBound": "下限值需小于上限值",
+    "and": "和",
+    "upperBound": "上限",
+    "lowerBound": "下限"
   },
   "guiding": {
     "prevStep": "上一步",
