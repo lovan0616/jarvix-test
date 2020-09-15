@@ -279,7 +279,6 @@
     "sureLogout": "您確認要登出帳號？",
     "questionFeedback": "問題/建議回饋",
     "functionDescription": "功能說明",
-    "addUser": "新增使用者",
     "notYetCreateUser": "尚未建立使用者",
     "inviteeEmail": "受邀者 email",
     "pleaseSelectInviteeEmail": "請選擇受邀者 email",
@@ -841,7 +840,8 @@
     "testConnecting": "測試連線中...",
     "monitorSetting": "監測設定",
     "updateImmediately": "立即更新",
-    "AddNewWarRoom": "新增戰情室"
+    "AddNewWarRoom": "新增戰情室",
+    "sendInvitation": "寄送邀請信"
   },
   "timeScopeUnit": {
     "second": "秒",
@@ -1906,19 +1906,31 @@
     "pieChartFilterNote": "此結果為原資料過濾負值得來"
   },
   "userManagement": {
-    "createUser": "新增使用者",
+    "accountUserList": "帳戶使用者列表",
+    "createUser": "建立使用者",
+    "inviteUser": "邀請使用者",
     "inviteeEmailPlaceholder": "請輸入受邀者email",
     "userRoleAuthority": "帳戶角色權限",
     "accountOwner": "帳戶擁有者",
     "accountMaintainer": "帳戶管理者",
     "accountViewer": "一般使用者",
+    "groupOwner": "專案擁有者",
+    "groupMaintainer": "專案管理者",
+    "groupViewer": "一般使用者",
     "accountRoleDesc": "角色權限說明",
     "accountOwnerDesc": "無任何使用限制",
     "accountMaintainerDesc": "擁有帳戶管理權限",
     "accountViewerDesc": "無法使用帳戶管理相關功能",
+    "groupOwnerDesc": "無任何使用限制",
+    "groupMaintainerDesc": "擁有專案管理權限",
+    "groupViewerDesc": "無法使用專案管理相關功能",
     "updateRole": "角色變更",
     "confirmDeleteAccountText": "使用者移除後，此使用者將無法使用此帳戶任何功能，您確認要繼續移除此使用者？",
-    "userName": "使用者名稱"
+    "userName": "使用者名稱",
+    "userAccount": "使用者帳號",
+    "userPassword": "使用者密碼",
+    "emailPlaceholder": "請輸入email",
+    "userNamePlaceholder": "請輸入名稱"
   },
   "accountInfo": {
     "userAmount": "使用者數量",

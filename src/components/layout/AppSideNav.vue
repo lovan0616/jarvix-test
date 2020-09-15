@@ -223,7 +223,7 @@ export default {
         .then(response => {
           this.roleOptions = {}
           response.forEach(role => {
-            this.roleOptions[role.name] = this.getLocaleName(role.name)
+            this.roleOptions[role.name] = this.getAccountRoleLocaleName(role.name)
           })
         })
         .catch(() => {})

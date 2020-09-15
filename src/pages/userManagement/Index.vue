@@ -1,10 +1,19 @@
 <template>
   <div class="user-management">
     <div class="page-title-row">
-      <h1 class="title">{{ $t('sideNav.accountUserManagement') }}</h1>
+      <h1 class="title">{{ $t('userManagement.accountUserList') }}</h1>
     </div>
     <div class="table-board">
       <div class="button-block">
+        <button
+          :disabled="isLoading || isProcessing || reachUserLimit"
+          class="btn-m btn-default btn-has-icon"
+          @click="showInviteUser">
+          <svg-icon 
+            icon-class="user-invite" 
+            class="icon"/>
+          {{ $t('userManagement.inviteUser') }}
+        </button>
         <button
           :disabled="isLoading || isProcessing || reachUserLimit"
           class="btn-m btn-default btn-has-icon"
@@ -114,86 +123,47 @@
       @closeDialog="closeDeleteAccount"
       @confirmBtn="deleteAccount"
     />
-
-    <fill-dialog
+    <create-user-dialog
       v-if="isShowCreateUser"
       :is-processing="isProcessing"
+      :role-options="roleOptions"
+      :account-viewer-role-id="accountViewerRoleId"
       class="fill-dialog"
       @closeDialog="closeCreateUser"
       @confirmBtn="createUsers"
-    >
-      <div class="form new-invitee">
-        <div class="form-labels">
-          <span class="label-invitee-email">{{ $t('editing.inviteeEmail') }}</span>
-          <span class="label-user-role-authority">
-            {{ $t('userManagement.userRoleAuthority') }}
-            <span class="tooltip-container">
-              <svg-icon 
-                icon-class="information-circle" 
-                class="icon" />
-              <div class="tooltip">
-                <role-desc-pop />
-              </div>
-            </span>
-          </span>
-        </div>
-        <div 
-          v-for="(invitee, index) in inviteeList"
-          :key="invitee.id"
-          class="form-item">
-          <input-verify
-            v-validate="'required|email'"
-            v-model="invitee.email"
-            :placeholder="$t('userManagement.inviteeEmailPlaceholder')"
-            :name="'invitee' + '-' + invitee.id"
-            type="email"
-          />
-          <default-select 
-            v-model="invitee.roleId"
-            :option-list="roleOptions"
-            class="input"
-          />
-          <a
-            v-if="inviteeList.length > 1"
-            href="javascript:void(0)"
-            class="link remove"
-            @click="removeInvitee(index)"
-          >
-            {{ $t('button.remove') }}
-          </a>
-        </div>
-        <button
-          class="btn btn-m btn-outline"
-          @click="addNewInvitee()"
-        >
-          <svg-icon 
-            icon-class="plus" 
-            class="icon" />{{ $t('button.add') }}
-        </button>
-      </div>
-    </fill-dialog>
+    />
+    <invite-user-dialog
+      v-if="isShowInviteUser"
+      :is-processing="isProcessing"
+      :role-options="roleOptions"
+      :account-viewer-role-id="accountViewerRoleId"
+      class="fill-dialog"
+      @closeDialog="closeInviteUser"
+      @confirmBtn="createUsers"
+    />
   </div>
 </template>
 <script>
-import { getAccountUsers, deleteUserAccount, inviteUser, getAccountRoles, updateRole, getSelfInfo, updateUser } from '@/API/User'
+import { getAccountUsers, deleteUserAccount, inviteUser, batchInviteUser, getAccountRoles, updateRole, getSelfInfo, updateUser } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
+import CreateUserDialog from './components/CreateUserDialog'
+import InviteUserDialog from './components/InviteUserDialog'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'
-import FillDialog from '@/components/dialog/FillDialog'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import RoleDescPop from '@/pages/userManagement/components/RoleDescPop'
 import CrudTable from '@/components/table/CrudTable'
 import { Message } from 'element-ui'
-let inviteeId = 0
 
 export default {
   inject: ['$validator'],
   name: 'UserManagement',
   components: {
+    CreateUserDialog,
+    InviteUserDialog,
     DecideDialog,
     WritingDialog,
-    FillDialog,
     InputVerify,
     DefaultSelect,
     RoleDescPop,
@@ -201,8 +171,9 @@ export default {
   },
   data () {
     return {
-      roleOptions: [],
       isShowCreateUser: false,
+      isShowInviteUser: false,
+      roleOptions: [],
       inviteeList: [],
       userInfo: {
         username: '',
@@ -262,10 +233,9 @@ export default {
   },
   computed: {
     hasRepetitiveInvitee () {
-      let hasRepetitive = this.inviteeList
+      return this.inviteeList
         .map(invitee => invitee.email)
-        .filter((email, index, array) => array.indexOf(email) !== index)
-      return hasRepetitive.length > 0
+        .some((email, index, array) => array.indexOf(email) !== index)
     },
     currentAccountId () {
       return this.$store.getters['userManagement/getCurrentAccountId']
@@ -311,77 +281,79 @@ export default {
         this.selfUser = this.userData.filter(user => user.id === response.id)[0]
       })
     },
-    btnDisabled (user) { // 待改善
-      if (this.selfUser.role === 'account_maintainer' && user.role === 'account_owner') {
-        return true
-      } else if (this.selfUser.id === user.id) {
-        return true
-      }
-      return false
+    btnDisabled (user) {
+      return (this.selfUser.role === 'account_maintainer' && user.role === 'account_owner') || this.selfUser.id === user.id
     },
     isNotAllowChangePsd (user) {
       return this.selfUser.role !== 'account_owner'
     },
+    showInviteUser () {
+      this.isShowInviteUser = true
+    },
     showCreateUser () {
-      this.addNewInvitee()
       this.isShowCreateUser = true
+    },
+    closeInviteUser () {
+      this.isShowInviteUser = false
+      this.inviteeList = []
     },
     closeCreateUser () {
       this.isShowCreateUser = false
       this.inviteeList = []
     },
-    createUsers () {
-      this.$validator.validateAll().then(result => {
-        if (!result) return
-
-        let existingUsers = this.checkExistingUsers()
-        if (existingUsers.size > 0) {
-          const html = [...existingUsers].join(',<br>')
-          Message({
-            message: html + ',<br>' + this.$tc('message.userAlreadyExisting', existingUsers.size),
-            dangerouslyUseHTMLString: true,
-            type: 'warning',
-            duration: 5 * 1000,
-            showClose: true
-          })
-          return
-        }
-        if (this.hasRepetitiveInvitee) {
-          Message({
-            message: this.$t('message.userInviteRepetitive'),
-            type: 'warning',
-            duration: 3 * 1000,
-            showClose: true
-          })
-          return
-        }
-        this.isProcessing = true
-        inviteUser({
-          emailList: this.inviteeList.map(invitee => {
-            return {
-              accountRole: invitee.roleId,
-              groupId: 1, // 暫定預設 1 為 default group
-              mail: invitee.email
-            }
-          }),
-          webURL: window.location.origin + this.$router.resolve({ name: 'PageSignup' }).href,
-          accountId: this.$store.getters['userManagement/getCurrentAccountId']
+    createUsers (inviteeList, inviteType) {
+      this.inviteeList = inviteeList
+      let existingUsers = this.checkExistingUsers()
+      if (existingUsers.size > 0) {
+        const html = [...existingUsers].join(',<br>')
+        Message({
+          message: html + ',<br>' + this.$tc('message.userAlreadyExisting', existingUsers.size),
+          dangerouslyUseHTMLString: true,
+          type: 'warning',
+          duration: 5 * 1000,
+          showClose: true
         })
-          .then(() => {
-            this.isShowCreateUser = false
-            this.inviteeList = []
-            this.getUserList()
-            Message({
-              message: this.$t('message.userInviteSuccess'),
-              type: 'success',
-              duration: 3 * 1000,
-              showClose: true
-            })
+        return
+      }
+      if (this.hasRepetitiveInvitee) {
+        Message({
+          message: this.$t('message.userInviteRepetitive'),
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+        return
+      }
+      this.isProcessing = true
+      let promise = inviteType === 'inviteUser'
+        ? inviteUser({
+            emailList: this.inviteeList.map(invitee => {
+              return {
+                accountRole: invitee.roleId,
+                groupId: 1, // 暫定預設 1 為 default group
+                mail: invitee.email
+              }
+            }),
+            webURL: window.location.origin + this.$router.resolve({ name: 'PageSignup' }).href,
+            accountId: this.currentAccountId
           })
-          .catch(() => {})
-          .finally(() => {
-            this.isProcessing = false
-          })
+        : batchInviteUser(this.inviteeList)
+      
+      promise.then(() => {
+        this.isShowInviteUser = false
+        this.isShowCreateUser = false
+        this.inviteeList = []
+        this.getUserList()
+        Message({
+          message: this.$t('message.userInviteSuccess'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      })
+      .catch(() => {})
+      .finally(() => {
+        this.isProcessing = false
       })
     },
     getUserList () {
@@ -392,7 +364,7 @@ export default {
           this.userData = response.map(user => {
             return {
               ...user,
-              roleZhName: this.$t(`userManagement.${this.toCamelCase(user.role)}`)
+              roleZhName: this.getAccountRoleLocaleName(user.role)
             }
           })
         })
@@ -411,7 +383,7 @@ export default {
               return {
                 value: role.id,
                 key: role.name,
-                name: this.getLocaleName(role.name)
+                name: this.getAccountRoleLocaleName(role.name)
               }
             })
         })
@@ -420,7 +392,7 @@ export default {
     changeRole () {
       this.isProcessing = true
       updateRole({
-        accountId: this.$store.getters['userManagement/getCurrentAccountId'],
+        accountId: this.currentAccountId,
         newRole: this.currentUser.roleId,
         userId: this.currentId
       })
@@ -449,7 +421,7 @@ export default {
             password: this.currentUser.password,
             userId: this.currentId,
             username: this.currentUser.name,
-            accountId: this.$store.getters['userManagement/getCurrentAccountId']
+            accountId: this.currentAccountId
           })
             .then(response => {
               this.closePasswordChange()
@@ -472,7 +444,7 @@ export default {
     deleteAccount () {
       this.isProcessing = true
       deleteUserAccount(
-        this.$store.getters['userManagement/getCurrentAccountId'],
+        this.currentAccountId,
         this.currentId
       )
         .then(response => {
@@ -508,7 +480,7 @@ export default {
     showChangeRole (user, hasPermission) {
       if (!hasPermission) return
 
-      const option = this.roleOptions.find(option => option.name === this.getLocaleName(user.role)) || user.role
+      const option = this.roleOptions.find(option => option.name === this.getAccountRoleLocaleName(user.role)) || user.role
       this.currentUser.roleId = option.value
       this.currentId = user.id
       this.isShowChangeRole = true
@@ -524,16 +496,6 @@ export default {
     },
     closeDeleteAccount () {
       this.isShowDeleteAccount = false
-    },
-    addNewInvitee () {
-      this.inviteeList.push({
-        id: inviteeId++,
-        email: '',
-        roleId: this.accountViewerRoleId
-      })
-    },
-    removeInvitee (index) {
-      this.inviteeList.splice(index, 1)
     },
     groupName (list) {
       // 暫時只呈現第一個名稱
@@ -589,93 +551,6 @@ export default {
     background: var(--color-bg-5);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
-  }
-
-  .fill-dialog {
-    .form.new-invitee {
-      width: 652px;
-      padding: 36px 76px;
-      .form-labels {
-        display: flex;
-        margin-bottom: 20px;
-        font-size: 14px;
-        height: 21px;
-        overflow: visible;
-        .label-invitee-email {
-          flex: 0 0 244px;
-        }
-        .label-user-role-authority {
-          flex: 0 0 168px;
-          margin-left: 13px;
-          display: flex;
-          align-items: center;
-        }
-      }
-      .form-item {
-        position: relative;
-        font-size: 0;
-        .input-verify {
-          display: inline-block;
-          width: 260px;
-          [lang="en"] & {
-            width: 244px;
-          }
-        }
-        .el-select {
-          display: inline-block;
-          width: 168px;
-          height: 40px;
-          border-bottom-color: #fff;
-          margin-left: 13px;
-          /deep/ .el-input__inner {
-            padding-left: 0;
-          }
-        }
-        .remove {
-          position: absolute;
-          top: 0;
-          right: 0;
-          line-height: 40px;
-        }
-      }
-    }
-  }
-
-  .tooltip-container {
-    margin: 0 3px;
-    .tooltip {
-      width: 212px;
-      white-space: normal;
-      padding: 12px;
-      line-height: 14px;
-      z-index: 2010;
-    }
-
-    .icon {
-      color: $theme-color-warning;
-    }
-  }
-
-  /deep/ .dialog-box {
-    .dialog-inner-box {
-      .label {
-        font-size: 13px;
-        text-align: left;
-        margin-bottom: 8px;
-      }
-      .dialog-select-input-box {
-        margin-bottom: 16px;
-        .el-input__inner {
-          padding-left: 0;
-        }
-      }
-      .dialog-button-block {
-        .btn.dialog-decide-cancel {
-          background-color: #2AD2E2;
-          border: none;
-        }
-      }
-    }
   }
 }
 

@@ -47,6 +47,15 @@ const router = new Router({
                   }
                 },
                 {
+                  path: 'info',
+                  component: () => import('@/pages/accountInformation/Index'),
+                  name: 'AccountInformation',
+                  meta: {
+                    layers: ['account/:account_id', 'management'],
+                    permission: ['account_read_user']
+                  }
+                },
+                {
                   path: 'users',
                   component: () => import('@/pages/userManagement/Index'),
                   name: 'AccountUserManagement',
@@ -82,15 +91,6 @@ const router = new Router({
                     layers: ['account/:account_id', 'management'],
                     accountPermission: ['account_update_group'],
                     isHiddenNav: true
-                  }
-                },
-                {
-                  path: 'info',
-                  component: () => import('@/pages/accountInformation/Index'),
-                  name: 'AccountInformation',
-                  meta: {
-                    layers: ['account/:account_id', 'management'],
-                    permission: ['account_read_user']
                   }
                 },
                 {

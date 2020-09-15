@@ -24,7 +24,12 @@
         :loading="isLoading"
         @delete="confirmDelete"
         @cancel="closeDelete"
-      />
+      >
+        <template v-slot:roleZhName>
+          <role-desc-pop
+            manage-type="group" />
+        </template>
+      </crud-table>
       <decide-dialog
         v-if="showConfirmDeleteDialog"
         :title="this.$t('editing.confirmDeleteProjectUserText')"
@@ -38,7 +43,8 @@
 <script>
 import CrudTable from '@/components/table/CrudTable'
 import DecideDialog from '@/components/dialog/DecideDialog'
-import {getGroupUserList, deleteGroupUser} from '@/API/Group'
+import RoleDescPop from '@/pages/userManagement/components/RoleDescPop'
+import { getGroupUserList, deleteGroupUser } from '@/API/Group'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
 import i18n from '@/lang/index.js'
@@ -47,7 +53,8 @@ export default {
   name: 'GroupUserList',
   components: {
     CrudTable,
-    DecideDialog
+    DecideDialog,
+    RoleDescPop
   },
   data () {
     return {
@@ -74,12 +81,13 @@ export default {
           value: 'name',
           width: '200px'
         },
-        // {
-        //   text: this.$t('editing.groupRolePermission'),
-        //   value: 'role',
-        //   sort: true,
-        //   width: '25%'
-        // },
+        {
+          text: this.$t('editing.groupRolePermission'),
+          value: 'roleZhName',
+          tooltip: {
+            width: '212px'
+          }
+        },
         {
           text: this.$t('editing.action'),
           value: 'action',
@@ -105,7 +113,12 @@ export default {
       this.isLoading = true
       getGroupUserList(currentGroupId)
         .then(userList => {
-          this.userList = userList
+          this.userList = userList.map(user => {
+            return {
+              ...user,
+              roleZhName: this.getAccountRoleLocaleName(user.role)
+            }
+          })
           this.canEditList = true
           this.isLoading = false
         })

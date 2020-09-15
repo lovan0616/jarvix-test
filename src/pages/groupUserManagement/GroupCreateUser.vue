@@ -114,7 +114,10 @@ export default {
           this.userList = accountUsers.reduce((acc, cur) => {
             const userExist = groupUsers.find(user => user.id === cur.id)
             if (userExist) return acc
-            acc.push({value: cur.email, id: cur.id})
+            acc.push({
+              value: cur.email + ` (${cur.name})`,
+              id: cur.id
+            })
             return acc
           }, [])
         })
@@ -127,7 +130,7 @@ export default {
         const dummyGroupRole = null
         createGroupUser({
           groupRole: dummyGroupRole,
-          userId: this.userList.find(user => user.value === this.selectedInvitee).id
+          userId: this.userList.find(user => this.getEmail(user.value) === this.selectedInvitee).id
         }, this.currentGroupId)
           .then(() => {
             this.backToUserList()
@@ -144,8 +147,11 @@ export default {
     backToUserList () {
       this.$router.push({ name: 'GroupUserList' })
     },
+    getEmail (email) {
+      return email.split(' ')[0]
+    },
     updateSelectedInvitee (invitee) {
-      this.selectedInvitee = this.userList.find(user => user.value === invitee).value
+      this.selectedInvitee = this.getEmail(this.userList.find(user => user.value === invitee).value)
     }
   }
 }
