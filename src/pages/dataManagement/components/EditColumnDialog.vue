@@ -51,12 +51,26 @@
           <div 
             ref="dataTableBody" 
             class="data-table-body">
-            <div 
+            <spinner v-if="columnList.length === 0" />
+            <div
               v-for="(column, index) in columnList"
+              v-else
               :key="column.id"
               class="data-table-row"
             >
-              <div class="data-table-cell name">{{ column.name }}</div>
+              <div class="data-table-cell name">
+                <span
+                  v-show="!isEditing(column.id)"
+                  :class="{'is-modified': column.name.isModified}"
+                >{{ column.name.primaryAlias }}</span>
+                <input-verify
+                  v-validate="'required'"
+                  v-show="isEditing(column.id)"
+                  v-model="tempRowInfo.primaryAlias"
+                  :name="'name-' + column.id"
+                  class="edit-alias-input-block"
+                />
+              </div>
               <div 
                 v-if="isJoinTable"
                 class="data-table-cell source"
@@ -163,9 +177,8 @@
   </div>
 </template>
 <script>
-import { getDataFrameColumnInfoById } from '@/API/DataSource'
 import { patchColumnAlias } from '@/API/Alias'
-import { updateDataFrameAlias } from '@/API/DataSource.js'
+import { getDataFrameColumnInfoById, updateDataFrameAlias, patchDataColumnPrimaryAlias } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { Message } from 'element-ui'
 import InputVerify from '@/components/InputVerify'
@@ -193,6 +206,7 @@ export default {
       currentEditColumn: null,
       // 目前編輯的欄位資訊
       tempRowInfo: {
+        primaryAlias: null,
         dataColumnId: null,
         aliasList: [],
         columnStatsType: null
@@ -226,6 +240,10 @@ export default {
               isModified: false
             }
           })
+          element.name = {
+            primaryAlias: element.name,
+            isModified: false
+          }
         })
         this.columnList = response
       })
@@ -243,6 +261,7 @@ export default {
       this.$emit('close')
     },
     edit (columnInfo) {
+      this.tempRowInfo.primaryAlias = columnInfo.name.primaryAlias
       this.tempRowInfo.dataColumnId = columnInfo.id
       this.tempRowInfo.aliasList = JSON.parse(JSON.stringify(columnInfo.aliasList))
       this.tempRowInfo.columnStatsType = JSON.parse(JSON.stringify(columnInfo.statsType))
@@ -252,14 +271,21 @@ export default {
       let filterList = this.columnList.map(element => {
         return {
           dataColumnId: element.id,
-          dataValue: element.name,
+          dataValue: element.name.primaryAlias,
           alias: element.aliasList.map(dataValue => dataValue.name)
         }
       })
+      const modifiedPrimaryAliases = this.columnList
+        .filter(column => column.name.isModified)
+        .map(column => ({ id: column.id, primaryAlias: column.name.primaryAlias }))
 
       const aliasPromise = patchColumnAlias(filterList)
       const statsTypePromise = updateDataFrameAlias(this.userEditInfo)
-      Promise.all([aliasPromise, statsTypePromise])
+      const promises = [aliasPromise, statsTypePromise]
+      if (modifiedPrimaryAliases.length > 0) {
+        promises.push(patchDataColumnPrimaryAlias(modifiedPrimaryAliases))
+      }
+      Promise.all(promises)
         .then(() => {
           this.closeDialog()
           Message({
@@ -277,6 +303,11 @@ export default {
         if (!isValidate) return
 
         if (this.isProcessing) return
+
+        if (this.tempRowInfo.primaryAlias !== this.columnList[index].name.primaryAlias) {
+          this.columnList[index].name.isModified = true
+          this.columnList[index].name.primaryAlias = this.tempRowInfo.primaryAlias
+        }
 
         this.tempRowInfo.aliasList = this.tempRowInfo.aliasList.reduce((result, element) => {
           // 過濾掉空字串
@@ -310,6 +341,7 @@ export default {
     },
     cancel () {
       this.tempRowInfo = {
+        primaryAlias: null,
         dataColumnId: null,
         aliasList: null,
         columnStatsType: null
@@ -355,6 +387,9 @@ export default {
 
     .data-table-row {
       align-items: flex-start;
+      .is-modified {
+        color: $theme-color-warning;
+      }
     }
   }
   .name {
@@ -370,10 +405,6 @@ export default {
 
     .alias__item {
       display: inline;
-
-      &.is-modified {
-        color: $theme-color-warning;
-      }
     }
   }
   .tag {
