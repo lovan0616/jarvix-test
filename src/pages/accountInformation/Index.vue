@@ -93,7 +93,7 @@
             {{ groupUsage.groupName }}
           </h3>
           <div class="item__info">
-            <h3 class="item__info--title"> {{ $t('accountInfo.dataframeAmount') }} </h3>
+            <h3 class="item__info--title"> {{ $t('accountInfo.dataFrameAmount') }} </h3>
             <div class="item__info--amount"> {{ groupUsage.datasourceCount }} </div>
           </div>
           <div class="item__info">
@@ -101,7 +101,7 @@
             <div class="item__info--amount"> {{ groupUsage.pinBoardCount }} </div>
           </div>
           <div class="item__info">
-            <h3 class="item__info--title"> {{ $t('accountInfo.warroomAmount') }} </h3>
+            <h3 class="item__info--title"> {{ $t('accountInfo.warRoomAmount') }} </h3>
             <div class="item__info--amount"> {{ groupUsage.warRoomCount }} </div>
           </div>
         </div>
