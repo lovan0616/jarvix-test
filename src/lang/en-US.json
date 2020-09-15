@@ -31,7 +31,8 @@
     "dataSourceList": "List",
     "dataFileManagement": "Data Set",
     "dataFileList": "List",
-    "schedule": "Schedule"
+    "schedule": "Schedule",
+    "preferences": "Settings"
   },
   "user": {
     "changePwd": "Change Password",

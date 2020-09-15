@@ -31,7 +31,8 @@
     "dataSourceList": "資料源列表",
     "dataFileManagement": "資料表管理",
     "dataFileList": "資料表列表",
-    "schedule": "生產排程"
+    "schedule": "生產排程",
+    "preferences": "個人設定"
   },
   "user": {
     "changePwd": "變更密碼",
