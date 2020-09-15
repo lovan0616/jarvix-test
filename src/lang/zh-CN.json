@@ -1927,7 +1927,13 @@
     "currentDataUsage": "目前数据使用容量",
     "dataUsageProvided": "数据容量上限",
     "expireDate": "到期时间",
-    "person": "人"
+    "person": "人",
+    "accountLimitation":"帐户使用状况",
+    "accountUsageStatus":"帐户使用状况",
+    "projectAmount":"专案数量: {amount} 个",
+    "dataframeAmount":"资料集数量",
+    "pinboardAmount":"钉板数量",
+    "warroomAmount":"战情室数量"
   },
   "dataType": {
     "numeric": "数值",

@@ -1930,7 +1930,7 @@
     "person": "人",
     "accountLimitation": "帳戶使用狀況",
     "accountUsageStatus": "帳戶使用狀況",
-    "projectAmount": "專案數量： {amount} 個",
+    "projectAmount": "專案數量: {amount} 個",
     "dataframeAmount": "資料集數量",
     "pinboardAmount": "釘板數量",
     "warroomAmount": "戰情室數量"
