@@ -15,6 +15,7 @@
     white-space: nowrap;
     transition: opacity .2s linear;
     font-size: 13px;
+    z-index: 1;
       
     &::before {
       position: absolute;

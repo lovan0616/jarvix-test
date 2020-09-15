@@ -124,7 +124,7 @@
       @confirmBtn="deleteAccount"
     />
     <create-user-dialog
-      v-if="isshowCreateUser"
+      v-if="isShowCreateUser"
       :is-processing="isProcessing"
       :role-options="roleOptions"
       :account-viewer-role-id="accountViewerRoleId"
@@ -133,7 +133,7 @@
       @confirmBtn="createUsers"
     />
     <invite-user-dialog
-      v-if="isshowInviteUser"
+      v-if="isShowInviteUser"
       :is-processing="isProcessing"
       :role-options="roleOptions"
       :account-viewer-role-id="accountViewerRoleId"
@@ -171,8 +171,8 @@ export default {
   },
   data () {
     return {
-      isshowCreateUser: false,
-      isshowInviteUser: false,
+      isShowCreateUser: false,
+      isShowInviteUser: false,
       roleOptions: [],
       inviteeList: [],
       userInfo: {
@@ -288,17 +288,17 @@ export default {
       return this.selfUser.role !== 'account_owner'
     },
     showInviteUser () {
-      this.isshowInviteUser = true
+      this.isShowInviteUser = true
     },
     showCreateUser () {
-      this.isshowCreateUser = true
+      this.isShowCreateUser = true
     },
     closeInviteUser () {
-      this.isshowInviteUser = false
+      this.isShowInviteUser = false
       this.inviteeList = []
     },
     closeCreateUser () {
-      this.isshowCreateUser = false
+      this.isShowCreateUser = false
       this.inviteeList = []
     },
     createUsers (inviteeList, inviteType) {
@@ -340,8 +340,8 @@ export default {
         : batchInviteUser(this.inviteeList)
       
       promise.then(() => {
-        this.isshowInviteUser = false
-        this.isshowCreateUser = false
+        this.isShowInviteUser = false
+        this.isShowCreateUser = false
         this.inviteeList = []
         this.getUserList()
         Message({
@@ -509,12 +509,6 @@ export default {
         // 原本為開通狀態使用者
         return `${this.closeText} ${this.currentUser.username} ${this.unableLoginText}？`
       }
-    },
-    toCamelCase (str) {
-      return str.replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
-    },
-    getLocaleName (accountRole) {
-      return this.$t(`userManagement.${this.toCamelCase(accountRole)}`)
     },
     checkExistingUsers () {
       let existingUsers = new Set()
