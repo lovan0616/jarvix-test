@@ -126,7 +126,9 @@
     "createdSuccessfully": "Successfully created.",
     "successfullyAddedToWarRoom": "Successfully joined the war room.",
     "componentAmountReachedLimit": "Exceed the maximum numbers of elements.",
-    "eitherBoundIsRequired": "At least one of the upper and lower bound should be set."
+    "eitherBoundIsRequired": "At least one of the upper and lower bound should be set.",
+    "upperBoundShouldBeLargerThanLowerBound": "Upper bound value should be larger than lower bound value",
+    "lowerBoundShouldBeSmallerThanUpperBound": "Lower bound value should be smaller than upper bound value"
   },
   "guiding": {
     "prevStep": "Prev Step",

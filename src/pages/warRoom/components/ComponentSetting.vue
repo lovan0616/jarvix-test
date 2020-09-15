@@ -194,11 +194,11 @@
                   type="number"
                   name="upperBound"
                   class="input war-room-setting__block-text-input"
-                  @input="componentData.config.upperBound = $event.target.value || null">
+                  @input="updateUpperBoundValue">
                 <div 
-                  v-show="errors.has('upperBound')"
+                  v-show="upperBoundValidationMessage"
                   class="error-text"
-                >{{ errors.first('upperBound') }}</div>
+                >{{ upperBoundValidationMessage }}</div>
                 <label class="input war-room-setting__block-text-label">
                   {{ $t('warRoom.minThreshold') }}
                 </label>
@@ -209,11 +209,11 @@
                   type="number"
                   name="lowerBound"
                   class="input war-room-setting__block-text-input"
-                  @input="componentData.config.lowerBound = $event.target.value || null">
+                  @input="updateLowerBoundValue">
                 <div 
-                  v-show="errors.has('lowerBound')"
+                  v-show="lowerBoundValidationMessage"
                   class="error-text"
-                >{{ errors.first('lowerBound') }}</div>
+                >{{ lowerBoundValidationMessage }}</div>
               </div>
             </div>
           </template>
@@ -388,7 +388,8 @@ export default {
           firstDayOfWeek: 1
         }
       },
-      isShowDeleteWarRoomComponent: false
+      isShowDeleteWarRoomComponent: false,
+      isEitherBoundInputTouched: false
     }
   },
   computed: {
@@ -423,6 +424,22 @@ export default {
     disableSaveButton () {
       if (this.componentData.componentId) return this.isProcessing
       return this.isProcessing  || !this.selectedDataSource.question || !this.componentData.config.displayName
+    },
+    upperBoundValidationMessage () {
+      if (!this.isEitherBoundInputTouched || !this.componentData || !this.componentData.config) return
+      if (!this.componentData.config.lowerBound && !this.componentData.config.upperBound) return this.$t('message.eitherBoundIsRequired')
+      if (
+        (this.componentData.config.lowerBound && this.componentData.config.upperBound)
+        && (Number(this.componentData.config.upperBound) <= Number(this.componentData.config.lowerBound))
+      ) return this.$t('message.upperBoundShouldBeLargerThanLowerBound')
+    },
+    lowerBoundValidationMessage () {
+      if (!this.isEitherBoundInputTouched || !this.componentData || !this.componentData.config) return
+      if (!this.componentData.config.lowerBound && !this.componentData.config.upperBound) return this.$t('message.eitherBoundIsRequired')
+      if (
+        (this.componentData.config.lowerBound && this.componentData.config.upperBound)
+        && (Number(this.componentData.config.upperBound) <= Number(this.componentData.config.lowerBound))
+      ) return this.$t('message.lowerBoundShouldBeSmallerThanUpperBound')
     }
   },
   created () {
@@ -444,15 +461,9 @@ export default {
         // 上下限至少擇一填寫
         if (
           this.componentData.config.boundSwitch 
-          && (!this.componentData.config.upperBound && !this.componentData.config.lowerBound)
-        ) {
-          return Message({
-            message: this.$t('message.eitherBoundIsRequired'),
-            type: 'error',
-            duration: 3 * 1000,
-            showClose: true
-          })
-        }
+          && (this.upperBoundValidationMessage || this.lowerBoundValidationMessage)
+        ) return 
+
         const { war_room_id: warRoomId } = this.$route.params
         const { question, ...config } = this.componentData.config
         const componentData = { config, itemId: this.selectedDataSource.itemId }
@@ -478,15 +489,9 @@ export default {
         // 上下限至少擇一填寫
         if (
           this.componentData.config.boundSwitch 
-          && (!this.componentData.config.upperBound && !this.componentData.config.lowerBound)
-        ) {
-          return Message({
-            message: this.$t('message.eitherBoundIsRequired'),
-            type: 'error',
-            duration: 3 * 1000,
-            showClose: true
-          })
-        }
+          && (this.upperBoundValidationMessage || this.lowerBoundValidationMessage)
+        ) return 
+
         const { war_room_id: warRoomId } = this.$route.params
         const { question, ...config } = this.componentData.config
         this.isProcessing = true
@@ -579,6 +584,14 @@ export default {
         this.componentData.config.recentTimeIntervalAmount = recentTimeIntervalAmount
         this.componentData.config.recentTimeIntervalUnit = recentTimeIntervalUnit
       })
+    },
+    updateUpperBoundValue (e) {
+      if (!this.isEitherBoundInputTouched) this.isEitherBoundInputTouched = true
+      this.componentData.config.upperBound = e.target.value || null
+    },
+    updateLowerBoundValue (e) {
+      if (!this.isEitherBoundInputTouched) this.isEitherBoundInputTouched = true
+      this.componentData.config.lowerBound = e.target.value || null
     }
   }
 }
