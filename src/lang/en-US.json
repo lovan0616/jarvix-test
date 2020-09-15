@@ -1940,7 +1940,13 @@
     "currentDataUsage": "Current Data Storage",
     "dataUsageProvided": "Max Data Capacity",
     "expireDate": "Expiration Date",
-    "person": "person | people"
+    "person": "person | people",
+    "accountRestrictions": "Account Restrictions",
+    "accountUsageStatus": "Account Statuses",
+    "projectAmount": "Number of Project: {amount}",
+    "dataFrameAmount": "Number of Data Set",
+    "pinBoardAmount": "Number of Pinboard",
+    "warRoomAmount": "Number of War Room"
   },
   "dataType": {
     "numeric": "Numeric",

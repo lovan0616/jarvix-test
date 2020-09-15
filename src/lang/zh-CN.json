@@ -1940,7 +1940,13 @@
     "currentDataUsage": "目前数据使用容量",
     "dataUsageProvided": "数据容量上限",
     "expireDate": "到期时间",
-    "person": "人"
+    "person": "人",
+    "accountRestrictions":"帐户限制",
+    "accountUsageStatus":"帐户使用状况",
+    "projectAmount":"专案数量: {amount} 个",
+    "dataFrameAmount":"资料集数量",
+    "pinBoardAmount":"钉板数量",
+    "warRoomAmount":"战情室数量"
   },
   "dataType": {
     "numeric": "数值",
