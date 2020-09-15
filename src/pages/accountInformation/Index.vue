@@ -78,10 +78,13 @@
         {{ $t('accountInfo.projectAmount', { amount: groupStatus.groupCount }) }}
       </h3>
       <spinner
-        v-if="isLoading || !groupStatus.groupUsageList.length > 0"
+        v-if="isLoading"
         class="spinner"
       />
       <template v-else>
+        <empty-info-block
+          v-if="groupStatus.groupUsageList.length === 0"
+        />
         <div 
           v-for="(groupUsage, index) in groupStatus.groupUsageList"
           :key="index"
@@ -108,9 +111,13 @@
 </template>
 <script>
 import { getAccountInfo } from '@/API/Account'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 export default {
   name: 'AccountInfo',
+    components: {
+      EmptyInfoBlock
+  },
   data () {
     return {
       isLoading: true,
