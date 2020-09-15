@@ -1930,7 +1930,7 @@
     "person": "person | people",
     "accountRestrictions": "Account Restrictions",
     "accountUsageStatus": "Account Statuses",
-    "projectAmount": "Number of Project",
+    "projectAmount": "Number of Project: {amount}",
     "dataFrameAmount": "Number of Data Set",
     "pinBoardAmount": "Number of Pinboard",
     "warRoomAmount": "Number of War Room"
