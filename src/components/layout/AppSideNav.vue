@@ -86,12 +86,12 @@
         </li>
       </ul>
       <ul class="sidenav__list--bottom list">
-        <li>
+        <li id="preferences-icon">
           <a 
-            :class="{'active': isShoUserPreferences}" 
+            :class="{'active': isShowUserPreferences}" 
             href="javascript:void(0);"
             class="list__link"
-            @click="isShoUserPreferences = !isShoUserPreferences"
+            @click="isShowUserPreferences = !isShowUserPreferences"
           >
             <svg-icon
               icon-class="user-setting"
@@ -104,11 +104,12 @@
         </li>
       </ul>
       <div 
-        v-if="isShoUserPreferences"
+        v-if="isShowUserPreferences"
+        id="preferences"
         class="user-preferences preferences">
         <h3 class="preferences__name"> {{ userName }} </h3>
         <p class="preferences__email"> {{ userEmail }} </p>
-        <p class="preferences__role"> {{ $t(accountRoleList[currentUserRole]) }} </p>
+        <p class="preferences__role"> {{ roleOptions[currentUserRole] }} </p>
         <li
           v-for="item in settingList"
           :key="item.title"
@@ -149,6 +150,7 @@
 </template>
 
 <script>
+import { getAccountRoles } from '@/API/User'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import ChangeLanguageDialog from '@/components/dialog/ChangeLanguageDialog';
 import ChangePwdDialog from '@/components/dialog/ChangePwdDialog';
@@ -170,14 +172,10 @@ export default {
       isShowLanguage: false,
       isShowLogout: false,
       isShowChangePwdDialog: false,
-      isShoUserPreferences: false,
+      isShowUserPreferences: false,
       selectedLanguage: null,
       isLoading: false,
-      accountRoleList:{
-        account_owner: 'userManagement.accountOwner',
-        account_maintainer: 'userManagement.accountMaintainer',
-        account_viewer: 'userManagement.accountViewer'
-      }
+      roleOptions: {}
     }
   },
   computed: {
@@ -205,9 +203,37 @@ export default {
       return localStorage.getItem('isShowScheduleModule')
     }
   },
+  mounted () {
+    document.addEventListener('click', this.autoHide, false)
+    this.getAccountRoleList()
+  },
+  destroyed () {
+    document.removeEventListener('click', this.autoHide, false)
+  },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
     ...mapActions('userManagement', ['switchAccountById']),
+    autoHide (evt) {
+      if (this.isShowUserPreferences && !document.getElementById("preferences").contains(evt.target) && !document.getElementById("preferences-icon").contains(evt.target)) {
+        this.closeUserPreferences()
+      }
+    },
+    toCamelCase (str) {
+      return str.replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
+    },
+    getLocaleName (accountRole) {
+      return this.$t(`userManagement.${this.toCamelCase(accountRole)}`)
+    },
+    getAccountRoleList () {
+      return getAccountRoles(this.getCurrentAccountId)
+        .then(response => {
+          this.roleOptions = {}
+          response.forEach(role => {
+            this.roleOptions[role.name] = this.getLocaleName(role.name)
+          })
+        })
+        .catch(() => {})
+    },
     switchDialogName (dialog) {
       this[dialog] = true
     },
@@ -222,16 +248,19 @@ export default {
           this.closeSideNav()
         })
     },
-    closeSideNav() {
+    closeSideNav () {
       if(this.isShowFullSideNav)
         this.updateSideNavStatus(false)
     },
-    accountHomePageRoute() {
+    closeUserPreferences () {
+      this.isShowUserPreferences = false
+    },
+    accountHomePageRoute () {
       const groupLessPage = { name: 'PageGrouplessGuidance', params: { 'account_id': this.getCurrentAccountId } }
       const accountHomePage = { name: 'PageIndex', params: { 'account_id': this.getCurrentAccountId, 'group_id': this.getCurrentGroupId } }
       return this.groupList.length === 0 ? groupLessPage : accountHomePage
     },
-    accountListData() {
+    accountListData () {
       if (!this.accountList) return []
       return this.accountList
         .map(account => ({
@@ -240,7 +269,7 @@ export default {
         }))
         .sort((accountOne, accountTwo) => (accountOne.name.toLowerCase() > accountTwo.name.toLowerCase()) ? 1 : -1) 
     },
-    switchAccount(accountId) {
+    switchAccount (accountId) {
       this.isLoading = true
       this.switchAccountById({ accountId })
         .then(() => {
