@@ -142,6 +142,8 @@ export default {
 .invite-user-dialog {
 
   .form {
+    width: 652px;
+    padding: 36px 76px;
 
     &__delete {
       display: inline-block;

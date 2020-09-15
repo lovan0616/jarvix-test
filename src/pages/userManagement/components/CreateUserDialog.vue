@@ -4,75 +4,13 @@
     <div 
       class="full-create-dialog-box" 
       @click.stop>
-      <div
+      <create-user-form
         v-for="(invitee, index) in inviteeList"
         :key="invitee.id"
-        class="form new-invitee">
-        <a
-          v-if="inviteeList.length > 1"
-          class="form__delete"
-          @click="removeInvitee(index)">
-          <svg-icon 
-            icon-class="delete" 
-            class="icon"/>
-        </a>
-        <div class="form__block">
-          <span class="form__label">{{ $t('userManagement.userAccount') }}</span>
-          <input-verify
-            v-validate="'required|email'"
-            v-model="invitee.email"
-            :class="{'has-error': errors.has('email' + '-' + invitee.id)}"
-            :placeholder="$t('userManagement.emailPlaceholder')"
-            :name="'email' + '-' + invitee.id"
-            type="email"
-          />
-        </div>
-        <div class="form__block">
-          <span class="form__label">
-            {{ $t('userManagement.userRoleAuthority') }}
-            <span class="tooltip-container">
-              <svg-icon 
-                icon-class="information-circle" 
-                class="icon" />
-              <div class="tooltip">
-                <role-desc-pop />
-              </div>
-            </span>
-          </span>
-          <default-select 
-            v-model="invitee.accountRoleId"
-            :option-list="roleOptions"
-            class="input"
-          />
-        </div>
-        <div class="form__block">
-          <span class="form__label"> {{ $t('userManagement.userName') }} </span>
-          <input-verify
-            v-validate="'required'"
-            v-model="invitee.username"
-            :placeholder="$t('userManagement.userNamePlaceholder')"
-            :name="'name' + '-' + invitee.id"
-          />
-        </div>
-        <div class="form__block">
-          <span class="form__label"> {{ $t('userManagement.userPassword') }} </span>
-          <input-verify
-            v-validate="'required|min:8|requireOneNumeric'"
-            ref="confirmPassword"
-            v-model="invitee.password"
-            :placeholder="$t('editing.newPassword')"
-            :name="'password' + '-' + invitee.id"
-            :type="passwordTypeList[index]"
-          />
-          <a
-            class="form__see-password"
-            @click="seePassword(index)">
-            <svg-icon
-              icon-class="view-data" 
-              class="icon" />
-          </a>
-        </div>
-      </div>
+        :invitee="invitee"
+        :role-options="roleOptions"
+        :is-show-delete="inviteeList.length > 1"
+        @removeInvitee="removeInvitee(index)" />
       <button
         class="btn btn-m btn-outline"
         @click="addNewInvitee()"
@@ -105,18 +43,14 @@
 </template>
 
 <script>
-import RoleDescPop from './RoleDescPop'
-import InputVerify from '@/components/InputVerify'
-import DefaultSelect from '@/components/select/DefaultSelect'
+import CreateUserForm from './CreateUserForm.vue'
 let inviteeId = 0
 
 export default {
   inject: ['$validator'],
   name: 'CreateUserDialog',
   components: {
-    RoleDescPop,
-    InputVerify,
-    DefaultSelect
+    CreateUserForm
   },
   props: {
     isProcessing: {
@@ -134,8 +68,7 @@ export default {
   },
   data (){
     return {
-      inviteeList: [],
-      passwordTypeList: []
+      inviteeList: []
     }
   },
   computed: {
@@ -148,7 +81,6 @@ export default {
   },
   destroyed () {
     this.inviteeList = []
-    this.passwordTypeList = []
   },
   methods: {
     addNewInvitee () {
@@ -160,14 +92,9 @@ export default {
         password: '00000000',
         username: ''
       })
-      this.passwordTypeList.push('password')
     },
     removeInvitee (index) {
       this.inviteeList.splice(index, 1)
-      this.passwordTypeList.splice(index, 1)
-    },
-    seePassword (index){
-      this.$set(this.passwordTypeList, index, this.passwordTypeList[index] === 'password' ? 'text' : 'password')
     },
     closeDialog () {
       this.$emit('closeDialog')
@@ -186,76 +113,6 @@ export default {
 
   &-box {
     padding: 19px 16px;
-  }
-  
-  .form {
-    position: relative;
-    padding: 16px;
-    background: rgba(72, 84, 84, 0.9);
-    border-radius: 12px;
-    margin-bottom: 16px;
-
-    &__delete {
-      position: absolute;
-      top: 18px;
-      right: 18px;
-
-      &:hover {
-        color: #4DE2F0;
-      }
-    }
-
-    &__see-password {
-      position: absolute;
-      top: 33px;
-      right: 0;
-      
-      &:hover {
-        color: #4DE2F0;
-      }
-    }
-
-    &__block {
-      position: relative;
-      display: inline-block;
-      width: 48%;
-      margin-right: 1%;
-    }
-
-    &__label {
-      margin-bottom: 3px;
-    }
-
-    /deep/ .input-verify {
-      margin-bottom: 16px;
-
-      .error-text {
-        bottom: -20px;
-      }
-      
-      &-text {
-        margin-bottom: 0;
-      }
-    }
-
-    .has-error {
-      margin-bottom: 32px;
-    }
-  }
-
-  .tooltip-container {
-    margin: 0 3px;
-    .tooltip {
-      width: 212px;
-      white-space: normal;
-      padding: 12px;
-      line-height: 14px;
-      z-index: 2010;
-    }
-
-    .icon {
-      color: $theme-color-warning;
-    }
   }
 
   /deep/ .dialog-box {

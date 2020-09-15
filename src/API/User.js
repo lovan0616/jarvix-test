@@ -148,7 +148,7 @@ export function inviteUser (inviteeInfo) {
 export function batchInviteUser (inviteeInfo) {
   return request({
     url: '/users/batch',
-    method: 'PUT',
+    method: 'POST',
     data: inviteeInfo
   })
 }
