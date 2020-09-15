@@ -1932,7 +1932,7 @@
     "accountUsageStatus": "帳戶使用狀況",
     "projectAmount": "專案數量: {amount} 個",
     "dataFrameAmount": "資料集數量",
-    "pinboardAmount": "釘板數量",
+    "pinBoardAmount": "釘板數量",
     "warRoomAmount": "戰情室數量"
   },
   "dataType": {

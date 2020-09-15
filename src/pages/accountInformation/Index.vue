@@ -97,7 +97,7 @@
             <div class="item__info--amount"> {{ groupUsage.datasourceCount }} </div>
           </div>
           <div class="item__info">
-            <h3 class="item__info--title"> {{ $t('accountInfo.pinboardAmount') }} </h3>
+            <h3 class="item__info--title"> {{ $t('accountInfo.pinBoardAmount') }} </h3>
             <div class="item__info--amount"> {{ groupUsage.pinBoardCount }} </div>
           </div>
           <div class="item__info">
@@ -256,7 +256,7 @@ export default {
     display: flex;
     align-items: center;
     height: 80px;
-    padding: 16px 64px 20px 20px;
+    padding: 20px 64px 20px 16px;
     background: rgba(35, 61, 64, 0.6);
 
     &:not(:last-child) {
