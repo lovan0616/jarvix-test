@@ -510,12 +510,6 @@ export default {
         return `${this.closeText} ${this.currentUser.username} ${this.unableLoginText}？`
       }
     },
-    toCamelCase (str) {
-      return str.replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
-    },
-    getLocaleName (accountRole) {
-      return this.$t(`userManagement.${this.toCamelCase(accountRole)}`)
-    },
     checkExistingUsers () {
       let existingUsers = new Set()
 
