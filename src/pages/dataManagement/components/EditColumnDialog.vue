@@ -216,6 +216,7 @@ export default {
         dataSourceId: this.tableInfo.dataSourceId,
         userEditedColumnInputList: []
       },
+      isLoading: false,
       isProcessing: false
     }
   },
@@ -232,6 +233,7 @@ export default {
   },
   methods: {
     fetchData () {
+      this.isLoading = true
       getDataFrameColumnInfoById(this.tableId, true, false).then(response => {
         response.forEach((element, index) => {
           element.aliasList = element.aliasList.map(alias => {
@@ -246,7 +248,7 @@ export default {
           }
         })
         this.columnList = response
-      })
+      }).finally(() => { this.isLoading = false })
     },
     // 依據 type 決定選單選項
     typeOptionList (optionList) {
