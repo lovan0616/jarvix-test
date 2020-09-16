@@ -74,7 +74,9 @@
                   :disabled="isProcessing"
                   :width="Number('32')"
                   active-color="#2AD2E2"
-                  inactive-color="#324B4E"/>
+                  inactive-color="#324B4E"
+                  @change="updateRefreshFrequency"
+                />
               </div>
               <div
                 v-if="componentData.config.isAutoRefresh"
@@ -530,6 +532,15 @@ export default {
     updateSelectedDataSource (item) {
       this.selectedDataSource = item
       this.hideComponentDataSourceList()
+    },
+    updateRefreshFrequency (isTurnedOn) {
+      if(isTurnedOn) return
+      const { refreshFrequency } = JSON.parse(JSON.stringify(this.originalComponentData.config))
+
+      // 關閉時，恢復原本預設，避免存取時送錯的格式給後端
+      this.$nextTick(() => {
+        this.componentData.config.refreshFrequency = refreshFrequency
+      })
     },
     updateTimeInterval (value) {
       const isDefaultTimeInterval = value.indexOf('+') !== -1
