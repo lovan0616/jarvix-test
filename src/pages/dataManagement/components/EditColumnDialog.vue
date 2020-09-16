@@ -51,7 +51,7 @@
           <div 
             ref="dataTableBody" 
             class="data-table-body">
-            <spinner v-if="columnList.length === 0" />
+            <spinner v-if="isLoading" />
             <div
               v-for="(column, index) in columnList"
               v-else
