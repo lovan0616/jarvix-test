@@ -206,7 +206,7 @@ export default {
   }
 
   .tooltip-container {
-    z-index: 1;
+    z-index: 3;
     .tooltip {
       width: 190px;
       text-align: center;
