@@ -5,103 +5,135 @@
     @click.self="closeSideNav"
   >
     <div class="sidenav__container">
-      <div 
+      <el-tooltip
         v-if="accountList && accountList.length > 0" 
-        class="sidenav__account">
-        <custom-dropdown-select
-          :data-list="accountListData()"
-          :selected-id="getCurrentAccountId"
-          :is-loading="isLoading"
-          trigger="click"
-          @select="switchAccount"
-        >
-          <template #display>
-            <div class="dropdown__badge">
-              {{ currentAccountName }}
-            </div>
-          </template>
-        </custom-dropdown-select>
-      </div>
+        slot="label"
+        :content="$t('editing.switchAccount')"
+        :disabled="isShowFullSideNav"
+        :enterable="false"
+        placement="right">
+        <div class="sidenav__account">
+          <custom-dropdown-select
+            :data-list="accountListData()"
+            :selected-id="getCurrentAccountId"
+            :is-loading="isLoading"
+            trigger="click"
+            @select="switchAccount"
+          >
+            <template #display>
+              <div class="dropdown__badge">
+                {{ currentAccountName }}
+              </div>
+            </template>
+          </custom-dropdown-select>
+        </div>
+      </el-tooltip>
       <ul 
         class="sidenav__list--top list"
         @click="closeSideNav"
       >
-        <li class="list__item">
-          <router-link
-            :to="accountHomePageRoute()"
-            class="list__link"
-          >
-            <svg-icon 
-              icon-class="home" 
-              class="list__icon" />
-            <span class="list__text">
-              {{ $t('sideNav.home') }}
-            </span>
-          </router-link>
-        </li>
-        <li class="list__item">
-          <router-link
-            :to="{ name: 'PersonalPagePinboardList', params: { 'account_id': getCurrentAccountId }}"
-            class="list__link"
-          >
-            <svg-icon 
-              icon-class="pin" 
-              class="list__icon" />
-            <span class="list__text">
-              {{ $t('sideNav.pinboard') }}
-            </span>
-          </router-link>
-        </li>
-        <li
+        <el-tooltip
+          slot="label"
+          :content="$t('sideNav.home')"
+          :disabled="isShowFullSideNav"
+          placement="right">
+          <li class="list__item">
+            <router-link
+              :to="accountHomePageRoute()"
+              class="list__link"
+            >
+              <svg-icon 
+                icon-class="home" 
+                class="list__icon" />
+              <span class="list__text">
+                {{ $t('sideNav.home') }}
+              </span>
+            </router-link>
+          </li>
+        </el-tooltip>
+        <el-tooltip
+          slot="label"
+          :content="$t('sideNav.pinboard')"
+          :disabled="isShowFullSideNav"
+          placement="right">
+          <li class="list__item">
+            <router-link
+              :to="{ name: 'PersonalPagePinboardList', params: { 'account_id': getCurrentAccountId }}"
+              class="list__link"
+            >
+              <svg-icon 
+                icon-class="pin" 
+                class="list__icon" />
+              <span class="list__text">
+                {{ $t('sideNav.pinboard') }}
+              </span>
+            </router-link>
+          </li>
+        </el-tooltip>
+        <el-tooltip
           v-if="hasPermission('account_update_user')"
-          class="list__item"
-        >
-          <router-link
-            :to="{ name: 'AccountManagement', params: { 'account_id': getCurrentAccountId } }"
-            class="list__link"
-          >
-            <svg-icon 
-              icon-class="account-management" 
-              class="list__icon" />
-            <span class="list__text">
-              {{ $t('sideNav.accountManagement') }}
-            </span>
-          </router-link>
-        </li>
-        <li 
+          slot="label"
+          :content="$t('sideNav.accountManagement')"
+          :disabled="isShowFullSideNav"
+          placement="right">
+          <li class="list__item">
+            <router-link
+              :to="{ name: 'AccountManagement', params: { 'account_id': getCurrentAccountId } }"
+              class="list__link"
+            >
+              <svg-icon 
+                icon-class="account-management" 
+                class="list__icon" />
+              <span class="list__text">
+                {{ $t('sideNav.accountManagement') }}
+              </span>
+            </router-link>
+          </li>
+        </el-tooltip>
+        <el-tooltip
           v-if="showSchedule === 'true'"
-          class="list__item"
-        >
-          <router-link
-            :to="{ name: 'CurrentSimulation'}"
-            class="list__link"
-          >
-            <svg-icon 
-              icon-class="schedule" 
-              class="list__icon" />
-            <span class="list__text">
-              {{ $t('sideNav.schedule') }}
-            </span>
-          </router-link>
-        </li>
+          slot="label"
+          :content="$t('sideNav.schedule')"
+          :disabled="isShowFullSideNav"
+          placement="right">
+          <li class="list__item">
+            <router-link
+              :to="{ name: 'CurrentSimulation'}"
+              class="list__link"
+            >
+              <svg-icon 
+                icon-class="schedule" 
+                class="list__icon" />
+              <span class="list__text">
+                {{ $t('sideNav.schedule') }}
+              </span>
+            </router-link>
+          </li>
+        </el-tooltip>
       </ul>
       <ul class="sidenav__list--bottom list">
-        <li ref="preferencesIcon">
-          <a 
-            :class="{'active': isShowUserPreferences}" 
-            href="javascript:void(0);"
-            class="list__link"
-            @click="isShowUserPreferences = !isShowUserPreferences"
-          >
-            <svg-icon
-              icon-class="user-setting"
-              class="list__icon" />
-            <span class="list__text">
-              {{ $t('sideNav.preferences' ) }}
-            </span>
-            <div class="list__arrow" />
-          </a>
-        </li>
+        <el-tooltip
+          slot="label"
+          :content="$t('sideNav.preferences')"
+          :disabled="isShowFullSideNav"
+          placement="right">
+          <li ref="preferencesIcon">
+            <a 
+              :class="{'active': isShowUserPreferences}" 
+              href="javascript:void(0);"
+              class="list__link"
+              @click="isShowUserPreferences = !isShowUserPreferences"
+            >
+              <svg-icon
+                icon-class="user-setting"
+                class="list__icon" />
+              <span class="list__text">
+                {{ $t('sideNav.preferences' ) }}
+              </span>
+              <div class="list__arrow" />
+            </a>
+          </li>
+        </el-tooltip>
       </ul>
       <div 
         v-if="isShowUserPreferences"
