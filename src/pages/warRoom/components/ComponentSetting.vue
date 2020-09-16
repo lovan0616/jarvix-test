@@ -456,12 +456,6 @@ export default {
             showClose: true
           })
         }
-      
-        // 上下限至少擇一填寫
-        if (
-          this.componentData.config.boundSwitch 
-          && (this.upperBoundValidationMessage || this.lowerBoundValidationMessage)
-        ) return 
 
         const { war_room_id: warRoomId } = this.$route.params
         const { question, ...config } = this.componentData.config
@@ -484,13 +478,7 @@ export default {
     saveComponentSetting () {
       this.$validator.validate(this.validateFieldKey).then((isValidate) => {
         if (!isValidate) return
-        
-        // 上下限至少擇一填寫
-        if (
-          this.componentData.config.boundSwitch 
-          && (this.upperBoundValidationMessage || this.lowerBoundValidationMessage)
-        ) return 
-
+       
         const { war_room_id: warRoomId } = this.$route.params
         const { question, ...config } = this.componentData.config
         this.isProcessing = true
