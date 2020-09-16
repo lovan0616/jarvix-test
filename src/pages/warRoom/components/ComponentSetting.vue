@@ -393,8 +393,7 @@ export default {
           firstDayOfWeek: 1
         }
       },
-      isShowDeleteWarRoomComponent: false,
-      isEitherBoundInputTouched: false
+      isShowDeleteWarRoomComponent: false
     }
   },
   computed: {
