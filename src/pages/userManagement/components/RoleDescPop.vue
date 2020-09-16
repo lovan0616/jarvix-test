@@ -2,21 +2,32 @@
   <div 
     slot="content" 
     class="tooltip-content">
-    <p class="content-title">[{{ $t('userManagement.accountRoleDesc') }}]</p>
+    <p class="content-title">[{{ $t(`userManagement.accountRoleDesc`) }}]</p>
     <div class="content-item">
-      <p class="item-label">{{ $t('userManagement.accountOwner') + ':' }}</p>
-      <p class="item-description">{{ $t('userManagement.accountOwnerDesc') }}</p>
+      <p class="item-label">{{ $t(`userManagement.${manageType}Owner`) + ':' }}</p>
+      <p class="item-description">{{ $t(`userManagement.${manageType}OwnerDesc`) }}</p>
     </div>
     <div class="content-item">
-      <p class="item-label">{{ $t('userManagement.accountMaintainer') + ':' }}</p>
-      <p class="item-description">{{ $t('userManagement.accountMaintainerDesc') }}</p>
+      <p class="item-label">{{ $t(`userManagement.${manageType}Maintainer`) + ':' }}</p>
+      <p class="item-description">{{ $t(`userManagement.${manageType}MaintainerDesc`) }}</p>
     </div>
     <div class="content-item">
-      <p class="item-label">{{ $t('userManagement.accountViewer') + ':' }}</p>
-      <p class="item-description">{{ $t('userManagement.accountViewerDesc') }}</p>
+      <p class="item-label">{{ $t(`userManagement.${manageType}Viewer`) + ':' }}</p>
+      <p class="item-description">{{ $t(`userManagement.${manageType}ViewerDesc`) }}</p>
     </div>
   </div>
 </template>
+<script>
+export default {
+  name: 'RoleDescPop',
+  props: {
+    manageType: {
+      type: String,
+      default: 'account'
+    }
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 .tooltip-content {

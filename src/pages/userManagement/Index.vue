@@ -124,7 +124,7 @@
       @confirmBtn="deleteAccount"
     />
     <create-user-dialog
-      v-if="isshowCreateUser"
+      v-if="isShowCreateUser"
       :is-processing="isProcessing"
       :role-options="roleOptions"
       :account-viewer-role-id="accountViewerRoleId"
@@ -133,7 +133,7 @@
       @confirmBtn="createUsers"
     />
     <invite-user-dialog
-      v-if="isshowInviteUser"
+      v-if="isShowInviteUser"
       :is-processing="isProcessing"
       :role-options="roleOptions"
       :account-viewer-role-id="accountViewerRoleId"
@@ -171,8 +171,8 @@ export default {
   },
   data () {
     return {
-      isshowCreateUser: false,
-      isshowInviteUser: false,
+      isShowCreateUser: false,
+      isShowInviteUser: false,
       roleOptions: [],
       inviteeList: [],
       userInfo: {
@@ -288,17 +288,17 @@ export default {
       return this.selfUser.role !== 'account_owner'
     },
     showInviteUser () {
-      this.isshowInviteUser = true
+      this.isShowInviteUser = true
     },
     showCreateUser () {
-      this.isshowCreateUser = true
+      this.isShowCreateUser = true
     },
     closeInviteUser () {
-      this.isshowInviteUser = false
+      this.isShowInviteUser = false
       this.inviteeList = []
     },
     closeCreateUser () {
-      this.isshowCreateUser = false
+      this.isShowCreateUser = false
       this.inviteeList = []
     },
     createUsers (inviteeList, inviteType) {
@@ -340,8 +340,8 @@ export default {
         : batchInviteUser(this.inviteeList)
       
       promise.then(() => {
-        this.isshowInviteUser = false
-        this.isshowCreateUser = false
+        this.isShowInviteUser = false
+        this.isShowCreateUser = false
         this.inviteeList = []
         this.getUserList()
         Message({
@@ -364,7 +364,7 @@ export default {
           this.userData = response.map(user => {
             return {
               ...user,
-              roleZhName: this.$t(`userManagement.${this.toCamelCase(user.role)}`)
+              roleZhName: this.getAccountRoleLocaleName(user.role)
             }
           })
         })
@@ -383,7 +383,7 @@ export default {
               return {
                 value: role.id,
                 key: role.name,
-                name: this.getLocaleName(role.name)
+                name: this.getAccountRoleLocaleName(role.name)
               }
             })
         })
@@ -480,7 +480,7 @@ export default {
     showChangeRole (user, hasPermission) {
       if (!hasPermission) return
 
-      const option = this.roleOptions.find(option => option.name === this.getLocaleName(user.role)) || user.role
+      const option = this.roleOptions.find(option => option.name === this.getAccountRoleLocaleName(user.role)) || user.role
       this.currentUser.roleId = option.value
       this.currentId = user.id
       this.isShowChangeRole = true

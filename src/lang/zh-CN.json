@@ -31,7 +31,8 @@
     "dataSourceList": "资料源列表",
     "dataFileManagement": "资料表管理",
     "dataFileList": "资料表列表",
-    "schedule": "生产排程"
+    "schedule": "生产排程",
+    "preferences": "个人设定"
   },
   "user": {
     "changePwd": "变更密码",
@@ -1913,10 +1914,16 @@
     "accountOwner": "帐户拥有者",
     "accountMaintainer": "帐户管理者",
     "accountViewer": "一般使用者",
+    "groupOwner": "专案拥有者",
+    "groupMaintainer": "专案管理者",
+    "groupViewer": "一般使用者",
     "accountRoleDesc": "角色权限说明",
     "accountOwnerDesc": "无任何使用限制",
     "accountMaintainerDesc": "拥有帐户管理权限",
     "accountViewerDesc": "无法使用帐户管理相关功能",
+    "groupOwnerDesc": "无任何使用限制",
+    "groupMaintainerDesc": "拥有专案管理权限",
+    "groupViewerDesc": "无法使用专案管理相关功能",
     "updateRole": "角色变更",
     "confirmDeleteAccountText": "使用者移除后，此使用者将无法使用此帐户任何功能，您确认要继续移除此使用者？",
     "userName": "使用者名称",
@@ -1933,7 +1940,13 @@
     "currentDataUsage": "目前数据使用容量",
     "dataUsageProvided": "数据容量上限",
     "expireDate": "到期时间",
-    "person": "人"
+    "person": "人",
+    "accountRestrictions":"帐户限制",
+    "accountUsageStatus":"帐户使用状况",
+    "projectAmount":"专案数量: {amount} 个",
+    "dataFrameAmount":"资料集数量",
+    "pinBoardAmount":"钉板数量",
+    "warRoomAmount":"战情室数量"
   },
   "dataType": {
     "numeric": "数值",

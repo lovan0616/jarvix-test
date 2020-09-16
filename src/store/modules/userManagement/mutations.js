@@ -2,6 +2,7 @@ export default {
   setUserInfo (state, data) {
     state.userId = data.userId
     state.userName = data.userName
+    state.userEmail = data.userEmail
     state.accountList = data.accountList
     state.groupList = data.groupList
     state.permission = data.permission

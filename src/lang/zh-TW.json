@@ -31,7 +31,8 @@
     "dataSourceList": "資料源列表",
     "dataFileManagement": "資料表管理",
     "dataFileList": "資料表列表",
-    "schedule": "生產排程"
+    "schedule": "生產排程",
+    "preferences": "個人設定"
   },
   "user": {
     "changePwd": "變更密碼",
@@ -1913,10 +1914,16 @@
     "accountOwner": "帳戶擁有者",
     "accountMaintainer": "帳戶管理者",
     "accountViewer": "一般使用者",
+    "groupOwner": "專案擁有者",
+    "groupMaintainer": "專案管理者",
+    "groupViewer": "一般使用者",
     "accountRoleDesc": "角色權限說明",
     "accountOwnerDesc": "無任何使用限制",
     "accountMaintainerDesc": "擁有帳戶管理權限",
     "accountViewerDesc": "無法使用帳戶管理相關功能",
+    "groupOwnerDesc": "無任何使用限制",
+    "groupMaintainerDesc": "擁有專案管理權限",
+    "groupViewerDesc": "無法使用專案管理相關功能",
     "updateRole": "角色變更",
     "confirmDeleteAccountText": "使用者移除後，此使用者將無法使用此帳戶任何功能，您確認要繼續移除此使用者？",
     "userName": "使用者名稱",
@@ -1933,7 +1940,13 @@
     "currentDataUsage": "目前數據使用容量",
     "dataUsageProvided": "數據容量上限",
     "expireDate": "到期時間",
-    "person": "人"
+    "person": "人",
+    "accountRestrictions": "帳戶限制",
+    "accountUsageStatus": "帳戶使用狀況",
+    "projectAmount": "專案數量: {amount} 個",
+    "dataFrameAmount": "資料集數量",
+    "pinBoardAmount": "釘板數量",
+    "warRoomAmount": "戰情室數量"
   },
   "dataType": {
     "numeric": "數值",
