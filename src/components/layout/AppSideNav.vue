@@ -5,29 +5,31 @@
     @click.self="closeSideNav"
   >
     <div class="sidenav__container">
-      <el-tooltip
+      <div
         v-if="accountList && accountList.length > 0" 
-        slot="label"
-        :content="$t('editing.switchAccount')"
-        :disabled="isShowFullSideNav"
-        :enterable="false"
-        placement="right">
-        <div class="sidenav__account">
-          <custom-dropdown-select
-            :data-list="accountListData()"
-            :selected-id="getCurrentAccountId"
-            :is-loading="isLoading"
-            trigger="click"
-            @select="switchAccount"
-          >
-            <template #display>
+        class="sidenav__account"
+      >
+        <custom-dropdown-select
+          :data-list="accountListData()"
+          :selected-id="getCurrentAccountId"
+          :is-loading="isLoading"
+          trigger="click"
+          @select="switchAccount"
+        >
+          <template #display>
+            <el-tooltip
+              slot="label"
+              :content="$t('editing.switchAccount')"
+              :disabled="isShowFullSideNav"
+              :enterable="false"
+              placement="right">
               <div class="dropdown__badge">
                 {{ currentAccountName }}
               </div>
-            </template>
-          </custom-dropdown-select>
-        </div>
-      </el-tooltip>
+            </el-tooltip>
+          </template>
+        </custom-dropdown-select>
+      </div>
       <ul 
         class="sidenav__list--top list"
         @click="closeSideNav"
@@ -36,6 +38,7 @@
           slot="label"
           :content="$t('sideNav.home')"
           :disabled="isShowFullSideNav"
+          :enterable="false"
           placement="right">
           <li class="list__item">
             <router-link
@@ -55,6 +58,7 @@
           slot="label"
           :content="$t('sideNav.pinboard')"
           :disabled="isShowFullSideNav"
+          :enterable="false"
           placement="right">
           <li class="list__item">
             <router-link
@@ -75,6 +79,7 @@
           slot="label"
           :content="$t('sideNav.accountManagement')"
           :disabled="isShowFullSideNav"
+          :enterable="false"
           placement="right">
           <li class="list__item">
             <router-link
@@ -95,6 +100,7 @@
           slot="label"
           :content="$t('sideNav.schedule')"
           :disabled="isShowFullSideNav"
+          :enterable="false"
           placement="right">
           <li class="list__item">
             <router-link
@@ -116,6 +122,7 @@
           slot="label"
           :content="$t('sideNav.preferences')"
           :disabled="isShowFullSideNav"
+          :enterable="false"
           placement="right">
           <li ref="preferencesIcon">
             <a 
