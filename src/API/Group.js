@@ -11,6 +11,31 @@ export function getGroupUserList (groupId) {
 }
 
 /**
+ * 取得帳戶下所有使用者的帳戶角色
+ */
+export function getGroupRoles (groupId) {
+  return request({
+    url: `/group/${groupId}/role`,
+    method: 'GET'
+  })
+}
+
+/**
+ * 更新帳戶使用者角色
+ * @param {Object} info 更新資訊
+ * @param {Number} info.groupId - 帳戶 ID
+ * @param {Number} info.newRole - 使用者角色
+ * @param {Number} info.userId - 使用者 ID
+ */
+export function updateGroupRole (info) {
+  return request({
+    url: `/group/role`,
+    method: 'PUT',
+    data: info
+  })
+}
+
+/**
  * 新增群組使用者
  * @param {Number} groupId - 群組 ID
  * @param {Object} userInfo - 使用者資訊

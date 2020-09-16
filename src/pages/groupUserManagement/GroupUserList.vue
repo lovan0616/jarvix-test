@@ -23,6 +23,7 @@
         :empty-message="this.$t('message.noMember')"
         :loading="isLoading"
         @delete="confirmDelete"
+        @changeRole="showChangeRole"
         @cancel="closeDelete"
       >
         <template v-slot:roleZhName>
@@ -30,6 +31,35 @@
             manage-type="group" />
         </template>
       </crud-table>
+      <writing-dialog
+        v-if="isShowChangeRole"
+        :title="$t('userManagement.updateRole')"
+        :button="$t('button.change')"
+        :is-loading="isProcessing"
+        :show-both="true"
+        @closeDialog="closeChangeRole"
+        @confirmBtn="changeRole"
+      >
+        <div class="dialog-select-input-box">
+          <div class="label">
+            {{ $t('editing.groupRolePermission') }}
+            <span class="tooltip-container">
+              <svg-icon 
+                icon-class="information-circle" 
+                class="icon" />
+              <div class="tooltip">
+                <role-desc-pop
+                  manage-type="group" />
+              </div>
+            </span>
+          </div>
+          <default-select 
+            v-model="currentUserRoleId"
+            :option-list="roleOptions"
+            class="input"
+          />
+        </div>
+      </writing-dialog>
       <decide-dialog
         v-if="showConfirmDeleteDialog"
         :title="this.$t('editing.confirmDeleteProjectUserText')"
@@ -43,8 +73,10 @@
 <script>
 import CrudTable from '@/components/table/CrudTable'
 import DecideDialog from '@/components/dialog/DecideDialog'
+import WritingDialog from '@/components/dialog/WritingDialog'
+import DefaultSelect from '@/components/select/DefaultSelect'
 import RoleDescPop from '@/pages/userManagement/components/RoleDescPop'
-import { getGroupUserList, deleteGroupUser } from '@/API/Group'
+import { getGroupUserList, getGroupRoles, updateGroupRole, deleteGroupUser } from '@/API/Group'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
 import i18n from '@/lang/index.js'
@@ -54,17 +86,23 @@ export default {
   components: {
     CrudTable,
     DecideDialog,
+    WritingDialog,
+    DefaultSelect,
     RoleDescPop
   },
   data () {
     return {
       isLoading: false,
+      isProcessing: false,
+      roleOptions: [],
       userList: [],
       editData: {},
       selectedUser: {},
       showConfirmDeleteDialog: false,
+      isShowChangeRole: false,
       currentGroupId: '',
-      canEditList: false
+      canEditList: false,
+      currentUserRoleId: null
     }
   },
   computed: {
@@ -93,6 +131,12 @@ export default {
           value: 'action',
           width: '30%',
           action: [
+            {
+              type: 'event',
+              name: this.$t('userManagement.updateRole'),
+              value: 'changeRole',
+              permission: ['account_delete_group_user', 'group_delete_user']
+            },
             {
               type: 'event',
               name: this.$t('button.remove'),
@@ -126,6 +170,20 @@ export default {
           this.isLoading = false
           this.canEditList = false
         })
+      getGroupRoles(currentGroupId)
+        .then(response => {
+          this.roleOptions = []
+          this.roleOptions = response
+            .map(role => {
+              const groupRole = role.name
+              return {
+                value: role.id,
+                key: groupRole,
+                name: this.getAccountRoleLocaleName(groupRole)
+              }
+            })
+        })
+        .catch(() => {})
     },
     confirmDelete (dataObj) {
       this.selectedUser = dataObj
@@ -179,10 +237,46 @@ export default {
         })
         .catch(() => { this.isLoading = false })
     },
+    // btnDisabled (user) {
+    //   return (this.selfUser.role === 'account_maintainer' && user.role === 'account_owner') || this.selfUser.id === user.id
+    // },
     showCreateButton () {
       const permissionList = ['account_create_group_user', 'group_create_user']
       return this.canEditList ? this.hasPermission(permissionList) : false
-    }
+    },
+    showChangeRole (user, hasPermission) {
+      //if (!hasPermission) return
+      const option = this.roleOptions.find(option => option.name === this.getAccountRoleLocaleName(user.role)) || user.role
+      this.currentUserRoleId = option.value || option
+      this.currentId = user.id
+      this.isShowChangeRole = true
+    },
+    closeChangeRole () {
+      this.isShowChangeRole = false
+    },
+    changeRole () {
+      this.isProcessing = true
+      updateGroupRole({
+        groupId: this.currentGroupId,
+        newRole: this.currentUserRoleId,
+        userId: this.currentId
+      })
+        .then(response => {
+          this.closeChangeRole()
+          this.fetchData(this.currentGroupId)
+          Message({
+            message: this.$t('message.changeStatusSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .catch(error => {
+        })
+        .finally(() => {
+          this.isProcessing = false
+        })
+    },
   }
 }
 </script>
@@ -216,6 +310,20 @@ export default {
     }
   }
 
+  .tooltip-container {
+    margin: 0 3px;
+    .tooltip {
+      width: 212px;
+      white-space: normal;
+      padding: 12px;
+      line-height: 14px;
+      z-index: 2010;
+    }
+
+    .icon {
+      color: $theme-color-warning;
+    }
+  }
 }
 
 .table-board {
