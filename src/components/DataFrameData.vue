@@ -46,13 +46,17 @@
                     <svg-icon :icon-class="getHeaderIcon(index)" />
                   </el-tooltip>
                 </span>
-                <span class="text">
+                <span
+                  class="text"
+                  @click="copyTitle(column.titles[index])"
+                >
                   <el-tooltip
                     slot="label"
                     :visible-arrow="false"
                     :enterable="false"
                     :content="`${column.titles[index]}`"
-                    placement="bottom-start">
+                    placement="bottom-start"
+                  >
                     <span>{{ column.titles[index] }}</span>
                   </el-tooltip>
                 </span>
@@ -89,6 +93,7 @@ import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import EmptyInfoBlock from './EmptyInfoBlock'
 import { mapGetters } from 'vuex'
+import { Message } from 'element-ui'
 
 export default {
   name: 'DataFrameData',
@@ -229,6 +234,44 @@ export default {
     },
     updatePage (page) {
       this.fetchDataFrameData(this.dataFrameId, page - 1)
+    },
+    fallbackCopyTextToClipboard (value) {
+      const input = document.createElement('input')
+      input.setAttribute('value', value)
+      document.body.appendChild(input)
+      input.select()
+      document.execCommand('copy')
+      document.body.removeChild(input)
+      Message({
+        message: this.$t('message.copiedToBoard'),
+        type: 'success',
+        duration: 3 * 1000,
+        showClose: true
+      })
+    },
+    copyTitle (value) {
+      // 確認 Clipboard API 是否支援
+      if (!navigator.clipboard) return this.fallbackCopyTextToClipboard(value)
+
+      navigator.clipboard.writeText(value)
+        .then(() => {
+          // clipboard successfully set
+          Message({
+            message: this.$t('message.copiedToBoard'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }, () => {
+          // clipboard write failed
+          Message({
+            message: this.$t('message.copiedToBoard'),
+            type: 'error',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .catch(() => this.fallbackCopyTextToClipboard(value))
     }
   }
 }
@@ -281,6 +324,15 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        cursor: pointer;
+      }
+
+      .text-input {
+        background-color: transparent;
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
       }
     }
     .summary {

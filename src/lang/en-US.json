@@ -74,6 +74,7 @@
     "formCharacterOverMin": "At least {min} characters.",
     "formNumericeOverOne": "Contain at least 1 number.",
     "copiedToBoard": "Copied to clipboard.",
+    "copiedToBoardFailed": "Failed to copied it to clipboard",
     "systemIsError": "An Exception occurred in the system.",
     "saveSuccess": "Saved.",
     "correlationDeleteSuccess": "Relation has been removed.",
