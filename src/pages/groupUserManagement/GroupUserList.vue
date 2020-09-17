@@ -34,10 +34,10 @@
             class="link action-link"
             @click="showChangeRole(data)">{{ $t('userManagement.updateRole') }}</a>
           <a
-            :disabled="!hasDeletePermission"
+            :disabled="!hasDeletePermission(data)"
             href="javascript:void(0)"
             class="link action-link"
-            @click="confirmDelete(data, hasDeletePermission)">{{ $t('button.remove') }}</a>
+            @click="confirmDelete(data)">{{ $t('button.remove') }}</a>
         </template>
       </crud-table>
       <writing-dialog
@@ -181,10 +181,10 @@ export default {
         })
         .catch(() => {})
     },
-    confirmDelete (dataObj, hasPermission) {
-      if (!hasPermission) return
+    confirmDelete (data) {
+      if (!this.hasDeletePermission(data)) return
 
-      this.selectedUser = dataObj
+      this.selectedUser = data
       this.showConfirmDeleteDialog = true
     },
     closeDelete () {
@@ -239,15 +239,17 @@ export default {
       const permissionList = ['account_create_group_user', 'group_create_user']
       return this.canEditList ? this.hasPermission(permissionList) : false
     },
-    hasDeletePermission () {
+    isOnlyOneOwner (data) {
+      const hasOneMoreOwner = this.userList.filter(user => user.role === 'group_owner').length > 1
+      return data.role === 'group_owner' && !hasOneMoreOwner
+    },
+    hasDeletePermission (data) {
       const permissionList = ['account_delete_group_user', 'group_delete_user']
-      return this.canEditList ? this.hasPermission(permissionList) : false
+      return this.canEditList ? this.hasPermission(permissionList) && !this.isOnlyOneOwner(data) : false
     },
     hasChangeRolePermission (data) {
-      const hasOneMoreOwner = this.userList.filter(user => user.role === 'group_owner').length > 1
-      const isOnlyOwner = data.role === 'group_owner' && !hasOneMoreOwner
       const isGroupViewer = this.userList.find(user => user.id === this.userId).role === 'group_viewer'
-      return this.canEditList && !isOnlyOwner && !isGroupViewer
+      return this.canEditList && !this.isOnlyOneOwner(data) && !isGroupViewer
     },
     showChangeRole (user) {
       if (!this.hasChangeRolePermission(user)) return
