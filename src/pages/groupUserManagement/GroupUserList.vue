@@ -41,7 +41,7 @@
         </template>
       </crud-table>
       <writing-dialog
-        v-if="isShowChangeRole"
+        v-if="isShowChangeRoleDialog"
         :title="$t('userManagement.updateRole')"
         :button="$t('button.change')"
         :is-loading="isProcessing"
@@ -108,7 +108,7 @@ export default {
       editData: {},
       selectedUser: {},
       showConfirmDeleteDialog: false,
-      isShowChangeRole: false,
+      isShowChangeRoleDialog: false,
       currentGroupId: '',
       currentUserRoleId: null,
       canEditList: false
@@ -140,14 +140,6 @@ export default {
           text: this.$t('editing.action'),
           value: 'action',
           width: '30%'
-          // action: [
-          //   {
-          //     type: 'event',
-          //     name: this.$t('button.remove'),
-          //     value: 'delete',
-          //     permission: ['account_delete_group_user', 'group_delete_user']
-          //   }
-          // ]
         }
       ]
     }
@@ -167,7 +159,6 @@ export default {
               roleZhName: this.getAccountRoleLocaleName(user.role)
             }
           })
-
           this.canEditList = true
           this.isLoading = false
         })
@@ -264,11 +255,11 @@ export default {
       this.selectedUser = user
       const option = this.roleOptions.find(option => option.name === this.getAccountRoleLocaleName(user.role))
       this.currentUserRoleId = option.value
-      this.isShowChangeRole = true
+      this.isShowChangeRoleDialog = true
     },
     closeChangeRole () {
       this.selectedUser = {}
-      this.isShowChangeRole = false
+      this.isShowChangeRoleDialog = false
     },
     changeRole () {
       this.isProcessing = true
