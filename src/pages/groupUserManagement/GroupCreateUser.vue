@@ -147,11 +147,9 @@ export default {
     backToUserList () {
       this.$router.push({ name: 'GroupUserList' })
     },
-    getEmail (email) {
-      return email.split(' ')[0]
-    },
     updateSelectedInvitee (invitee) {
-      this.selectedInvitee = this.getEmail(this.userList.find(user => user.value === invitee).value)
+      const getEmail = email => email.split(' ')[0]
+      this.selectedInvitee = getEmail(this.userList.find(user => user.value === invitee).value)
     }
   }
 }

@@ -247,7 +247,6 @@ export default {
       const hasOneMoreOwner = this.userList.filter(user => user.role === 'group_owner').length > 1
       const isOnlyOwner = data.role === 'group_owner' && !hasOneMoreOwner
       const isGroupViewer = this.userList.find(user => user.id === this.userId).role === 'group_viewer'
-      console.log('hasChangeRolePermission')
       return this.canEditList && !isOnlyOwner && !isGroupViewer
     },
     showChangeRole (user) {
@@ -257,7 +256,6 @@ export default {
       const option = this.roleOptions.find(option => option.name === this.getAccountRoleLocaleName(user.role))
       this.currentUserRoleId = option.value
       this.isShowChangeRoleDialog = true
-      console.log('showChangeRole')
     },
     closeChangeRole () {
       this.selectedUser = {}
