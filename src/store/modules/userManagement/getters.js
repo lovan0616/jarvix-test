@@ -6,6 +6,10 @@ export default {
     // validate a list of permission
     return permissionCode.some(permission => userPermission.has(permission))
   },
+  getCurrentAccountInfo: state => {
+    const defaultAccount = state.accountList.find(account => account.isDefault)
+    return defaultAccount
+  },
   getCurrentAccountName: state => {
     const defaultAccount = state.accountList.find(account => account.isDefault)
     if (!defaultAccount) return

@@ -116,7 +116,7 @@ export default {
   },
   computed: {
     ...mapState('userManagement', ['userId']),
-    ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupId']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentAccountInfo', 'getCurrentGroupId']),
     tableHeaders () {
       return [
         {
@@ -249,9 +249,14 @@ export default {
     },
     hasChangeRolePermission (data) {
       const currentUser = this.userList.find(user => user.id === this.userId)
-      const isAccountOnwer = currentUser.accountRole === 'account_owner'
+      let isAccountOnwer
+      if(!currentUser) {
+        isAccountOnwer = this.getCurrentAccountInfo.role === 'account_owner'
+        return this.canEditList && !this.isOnlyOneOwner(data) && isAccountOnwer
+      }
+      isAccountOnwer = currentUser.accountRole === 'account_owner'
       const isGroupViewer = currentUser.role === 'group_viewer'
-      return this.canEditList && ((!this.isOnlyOneOwner(data) && !isGroupViewer) || isAccountOnwer)
+      return this.canEditList && (!this.isOnlyOneOwner(data) && (!isGroupViewer || isAccountOnwer))
     },
     showChangeRole (user) {
       if (!this.hasChangeRolePermission(user)) return
