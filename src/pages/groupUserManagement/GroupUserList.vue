@@ -245,11 +245,13 @@ export default {
     },
     hasDeletePermission (data) {
       const permissionList = ['account_delete_group_user', 'group_delete_user']
-      return this.canEditList ? this.hasPermission(permissionList) && !this.isOnlyOneOwner(data) : false
+      return this.canEditList && this.hasPermission(permissionList) && !this.isOnlyOneOwner(data)
     },
     hasChangeRolePermission (data) {
-      const isGroupViewer = this.userList.find(user => user.id === this.userId).role === 'group_viewer'
-      return this.canEditList && !this.isOnlyOneOwner(data) && !isGroupViewer
+      const currentUser = this.userList.find(user => user.id === this.userId)
+      const isAccountOnwer = currentUser.accountRole === 'account_owner'
+      const isGroupViewer = currentUser.role === 'group_viewer'
+      return this.canEditList && ((!this.isOnlyOneOwner(data) && !isGroupViewer) || isAccountOnwer)
     },
     showChangeRole (user) {
       if (!this.hasChangeRolePermission(user)) return
