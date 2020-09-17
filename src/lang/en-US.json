@@ -72,6 +72,8 @@
     "formCharacterOverMax": "Maximum {max} characters.",
     "formCharacterOverMin": "At least {min} characters.",
     "formNumericeOverOne": "Contain at least 1 number.",
+    "formDecimal": "Please enter a number(May contain decimal points)",
+    "formDecimalWithMaxDecimalPointNumbers": "Please enter a number(May contains {max} digits after the decimal place)",
     "copiedToBoard": "Copied to clipboard.",
     "systemIsError": "An Exception occurred in the system.",
     "saveSuccess": "Saved.",

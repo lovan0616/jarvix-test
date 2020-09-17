@@ -194,11 +194,10 @@
                   v-validate="upperBoundRules"
                   ref="upperBound"
                   :disabled="isProcessing"
-                  :value="componentData.config.upperBound"
+                  v-model.trim="componentData.config.upperBound"
                   :placeholder="$t('warRoom.pleaseEnterValue')"
                   name="upperBound"
                   class="input war-room-setting__block-text-input"
-                  @input="updateUpperBoundValue"
                 >
                 <div 
                   v-show="errors.has('upperBound')"
@@ -211,11 +210,10 @@
                   v-validate="lowerBoundRules"
                   ref="lowerBound"
                   :disabled="isProcessing"
-                  :value="componentData.config.lowerBound"
+                  v-model.trim="componentData.config.lowerBound"
                   :placeholder="$t('warRoom.pleaseEnterValue')"
                   name="lowerBound"
                   class="input war-room-setting__block-text-input"
-                  @input="updateLowerBoundValue"
                 >
                 <div 
                   v-show="errors.has('lowerBound')"
@@ -433,12 +431,22 @@ export default {
     },
     upperBoundRules () {
       if (!this.componentData || !this.componentData.config) return
-      if ((this.componentData.config.lowerBound && this.componentData.config.upperBound)) return 'validUpperBound:lowerBound'
+      const decimalRegex = /^[-]?([0-9]+)?[.]?([0-9]+)?$/
+      if (
+        (this.componentData.config.lowerBound && decimalRegex.test(this.componentData.config.lowerBound))
+        && this.componentData.config.upperBound
+      ) return 'decimal|validUpperBound:lowerBound'
+      if (this.componentData.config.upperBound) return 'decimal'
       return 'eitherOneIsRequired:lowerBound'
     },
     lowerBoundRules () {
       if (!this.componentData || !this.componentData.config) return
-      if ((this.componentData.config.lowerBound && this.componentData.config.upperBound)) return 'validLowerBound:upperBound'
+      const decimalRegex = /^[-]?([0-9]+)?[.]?([0-9]+)?$/
+      if (
+        (this.componentData.config.upperBound && decimalRegex.test(this.componentData.config.upperBound))
+        && this.componentData.config.lowerBound
+      ) return 'decimal|validLowerBound:upperBound'
+      if (this.componentData.config.lowerBound) return 'decimal'      
       return 'eitherOneIsRequired:upperBound'
     }
   },
@@ -593,18 +601,6 @@ export default {
         this.componentData.config.upperBound = upperBound
         this.componentData.config.lowerBound = lowerBound
       })
-    },
-    updateUpperBoundValue (e) {
-      const newInput = e.target.value.trim()
-      if (newInput.length === 0) return this.componentData.config.upperBound = null
-      if (!newInput.match(/^[-]?([0-9]+)?[.]?([0-9]+)?$/)) return this.$forceUpdate()
-      this.componentData.config.upperBound = newInput
-    },
-    updateLowerBoundValue (e) {
-      const newInput = e.target.value.trim()
-      if (newInput.length === 0) return this.componentData.config.lowerBound = null
-      if (!newInput.match(/^[-]?([0-9]+)?[.]?([0-9]+)?$/)) return this.$forceUpdate()
-      this.componentData.config.lowerBound = newInput
     }
   }
 }

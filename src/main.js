@@ -291,6 +291,10 @@ Vue.use(VeeValidate, {
         },
         eitherOneIsRequired(field, params) {
           return i18n.t(`message.${field}`) + i18n.t('message.and') + i18n.t(`message.${params}`) + i18n.t('message.eitherOneIsRequired')
+        },
+        decimal(field, params) {
+          if (params.length === 0) return i18n.t('message.formDecimal')
+          return i18n.t('message.formDecimalWithMaxDecimalPointNumbers', { max: params[0] })
         }
       }
     },
@@ -328,6 +332,10 @@ Vue.use(VeeValidate, {
         },
         eitherOneIsRequired(field, params) {
           return i18n.t(`message.${field}`) + i18n.t('message.and') + i18n.t(`message.${params}`) + i18n.t('message.eitherOneIsRequired')
+        },
+        decimal(field, params) {
+          if (params.length === 0) return i18n.t('message.formDecimal')
+          return i18n.t('message.formDecimalWithMaxDecimalPointNumbers', { max: params[0] })
         }
       }
     }
