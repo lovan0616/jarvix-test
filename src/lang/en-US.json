@@ -290,6 +290,7 @@
     "confirmPassword": "Confirm Password",
     "pleaseConfirmPassword": "Please confirm the password",
     "confirmPasswordAgain": "Confirm Password",
+    "switchAccount": "Switch Account",
     "group": "Project",
     "groupOwner": "Project Owner",
     "groupMemberAmount": "Number of Project Members",
