@@ -479,7 +479,7 @@ export default {
     },
     showChangeRole (user, hasPermission) {
       if (!hasPermission) return
-
+      console.log(user)
       const option = this.roleOptions.find(option => option.name === this.getAccountRoleLocaleName(user.role)) || user.role
       this.currentUser.roleId = option.value
       this.currentId = user.id

@@ -22,13 +22,22 @@
         :data-list.sync="userList"
         :empty-message="this.$t('message.noMember')"
         :loading="isLoading"
-        @delete="confirmDelete"
-        @changeRole="showChangeRole"
-        @cancel="closeDelete"
       >
         <template v-slot:roleZhName>
           <role-desc-pop
             manage-type="group" />
+        </template>
+        <template v-slot:action="{ data }">
+          <a
+            :disabled="!hasChangeRolePermission(data)"
+            href="javascript:void(0)"
+            class="link action-link"
+            @click="showChangeRole(data)">{{ $t('userManagement.updateRole') }}</a>
+          <a
+            :disabled="!hasDeletePermission"
+            href="javascript:void(0)"
+            class="link action-link"
+            @click="confirmDelete(data, hasDeletePermission)">{{ $t('button.remove') }}</a>
         </template>
       </crud-table>
       <writing-dialog
@@ -78,7 +87,7 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import RoleDescPop from '@/pages/userManagement/components/RoleDescPop'
 import { getGroupUserList, getGroupRoles, updateGroupRole, deleteGroupUser } from '@/API/Group'
 import { Message } from 'element-ui'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import i18n from '@/lang/index.js'
 
 export default {
@@ -101,11 +110,12 @@ export default {
       showConfirmDeleteDialog: false,
       isShowChangeRole: false,
       currentGroupId: '',
-      canEditList: false,
-      currentUserRoleId: null
+      currentUserRoleId: null,
+      canEditList: false
     }
   },
   computed: {
+    ...mapState('userManagement', ['userId']),
     ...mapGetters('userManagement', ['hasPermission', 'getCurrentGroupId']),
     tableHeaders () {
       return [
@@ -129,21 +139,15 @@ export default {
         {
           text: this.$t('editing.action'),
           value: 'action',
-          width: '30%',
-          action: [
-            {
-              type: 'event',
-              name: this.$t('userManagement.updateRole'),
-              value: 'changeRole',
-              permission: ['account_delete_group_user', 'group_delete_user']
-            },
-            {
-              type: 'event',
-              name: this.$t('button.remove'),
-              value: 'delete',
-              permission: ['account_delete_group_user', 'group_delete_user']
-            }
-          ]
+          width: '30%'
+          // action: [
+          //   {
+          //     type: 'event',
+          //     name: this.$t('button.remove'),
+          //     value: 'delete',
+          //     permission: ['account_delete_group_user', 'group_delete_user']
+          //   }
+          // ]
         }
       ]
     }
@@ -163,6 +167,7 @@ export default {
               roleZhName: this.getAccountRoleLocaleName(user.role)
             }
           })
+
           this.canEditList = true
           this.isLoading = false
         })
@@ -185,7 +190,9 @@ export default {
         })
         .catch(() => {})
     },
-    confirmDelete (dataObj) {
+    confirmDelete (dataObj, hasPermission) {
+      if (!hasPermission) return
+
       this.selectedUser = dataObj
       this.showConfirmDeleteDialog = true
     },
@@ -237,21 +244,30 @@ export default {
         })
         .catch(() => { this.isLoading = false })
     },
-    // btnDisabled (user) {
-    //   return (this.selfUser.role === 'account_maintainer' && user.role === 'account_owner') || this.selfUser.id === user.id
-    // },
     showCreateButton () {
       const permissionList = ['account_create_group_user', 'group_create_user']
       return this.canEditList ? this.hasPermission(permissionList) : false
     },
-    showChangeRole (user, hasPermission) {
-      //if (!hasPermission) return
-      const option = this.roleOptions.find(option => option.name === this.getAccountRoleLocaleName(user.role)) || user.role
-      this.currentUserRoleId = option.value || option
-      this.currentId = user.id
+    hasDeletePermission () {
+      const permissionList = ['account_delete_group_user', 'group_delete_user']
+      return this.canEditList ? this.hasPermission(permissionList) : false
+    },
+    hasChangeRolePermission (data) {
+      const hasOneMoreOwner = this.userList.filter(user => user.role === 'group_owner').length > 1
+      const isOnlyOwner = data.role === 'group_owner' && !hasOneMoreOwner
+      const isGroupViewer = this.userList.find(user => user.id === this.userId).role === 'group_viewer'
+      return this.canEditList && !isOnlyOwner && !isGroupViewer
+    },
+    showChangeRole (user) {
+      if (!this.hasChangeRolePermission(user)) return
+
+      this.selectedUser = user
+      const option = this.roleOptions.find(option => option.name === this.getAccountRoleLocaleName(user.role))
+      this.currentUserRoleId = option.value
       this.isShowChangeRole = true
     },
     closeChangeRole () {
+      this.selectedUser = {}
       this.isShowChangeRole = false
     },
     changeRole () {
@@ -259,7 +275,7 @@ export default {
       updateGroupRole({
         groupId: this.currentGroupId,
         newRole: this.currentUserRoleId,
-        userId: this.currentId
+        userId: this.selectedUser.id
       })
         .then(response => {
           this.closeChangeRole()
