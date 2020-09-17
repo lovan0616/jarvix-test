@@ -333,14 +333,6 @@ export default {
         white-space: nowrap;
         cursor: pointer;
       }
-
-      .text-input {
-        background-color: transparent;
-        border: none;
-        color: #fff;
-        font-weight: 600;
-        font-size: 14px;
-      }
     }
     .summary {
       padding: 10px;
