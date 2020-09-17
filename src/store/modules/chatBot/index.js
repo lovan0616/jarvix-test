@@ -13,7 +13,8 @@ export default {
     parserLanguage: null,
     parserLanguageList: [],
     hasBasicInfo: false,
-    askCancelToken: null
+    askCancelToken: null,
+    copiedColumnName: null
   },
   actions,
   mutations,

@@ -92,7 +92,7 @@ import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/Co
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import EmptyInfoBlock from './EmptyInfoBlock'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
 
 export default {
@@ -162,6 +162,7 @@ export default {
     this.fetchDataFrameData(this.dataFrameId, 0, true)
   },
   methods: {
+    ...mapMutations('chatBot', ['setCopiedColumnName']),
     fetchDataFrameData (id, page = 0, resetPagination = false) {
       this.isProcessing = true
       if (resetPagination) {
@@ -249,7 +250,7 @@ export default {
         showClose: true
       })
     },
-    copyTitle (value) {
+    copyTextToClipboard (value) {
       // 確認 Clipboard API 是否支援
       if (!navigator.clipboard) return this.fallbackCopyTextToClipboard(value)
 
@@ -272,6 +273,12 @@ export default {
           })
         })
         .catch(() => this.fallbackCopyTextToClipboard(value))
+    },
+    copyTitle (value) {
+      // 自動貼到問句搜尋功能：暫時關閉
+      // this.setCopiedColumnName(value)
+      // 純複製到剪貼簿功能
+      this.copyTextToClipboard(value)
     }
   }
 }
