@@ -22,6 +22,7 @@
               :content="$t('editing.switchAccount')"
               :disabled="isShowFullSideNav"
               :enterable="false"
+              transition=""
               placement="right">
               <div class="dropdown__badge">
                 {{ currentAccountName }}
@@ -39,6 +40,7 @@
           :content="$t('sideNav.home')"
           :disabled="isShowFullSideNav"
           :enterable="false"
+          transition=""
           placement="right">
           <li class="list__item">
             <router-link
@@ -59,6 +61,7 @@
           :content="$t('sideNav.pinboard')"
           :disabled="isShowFullSideNav"
           :enterable="false"
+          transition=""
           placement="right">
           <li class="list__item">
             <router-link
@@ -80,6 +83,7 @@
           :content="$t('sideNav.accountManagement')"
           :disabled="isShowFullSideNav"
           :enterable="false"
+          transition=""
           placement="right">
           <li class="list__item">
             <router-link
@@ -101,6 +105,7 @@
           :content="$t('sideNav.schedule')"
           :disabled="isShowFullSideNav"
           :enterable="false"
+          transition=""
           placement="right">
           <li class="list__item">
             <router-link
@@ -123,6 +128,7 @@
           :content="$t('sideNav.preferences')"
           :disabled="isShowFullSideNav"
           :enterable="false"
+          transition=""
           placement="right">
           <li ref="preferencesIcon">
             <a 
