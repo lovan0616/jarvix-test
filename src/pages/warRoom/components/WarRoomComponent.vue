@@ -209,17 +209,25 @@ export default {
   },
   methods: {
     checkRefreshStatus () {
+      this.isLoading = true
       const promise = this.isPreviewing ? checkComponentUpdateStatus : checkPublishedComponentUpdateStatus
       const id = this.isPreviewing ? this.$route.params.war_room_id : this.$route.query.id
       // 第一次渲染拿當前時間作為給後端的前次更新時間，因為與 component 上的更新時間不同，所以一定會回傳 UPDATABLE
       const updateDate = this.updateDate || moment().toISOString()
+      if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
       // 確認 component config 資料有無更新或需要重新計算，需要才去拿 component 資料
       promise(id, this.componentId, updateDate)
-        .then(res => { if (res === 'UPDATABLE') this.fetchData() })
+        .then(res => {
+          // 第一次一定會是可更新狀態
+          if (res === 'UPDATABLE') return this.fetchData()
+          this.autoRefreshFunction = window.setTimeout(() => {
+            this.checkRefreshStatus()
+          }, this.convertRefreshFrequency(this.componentBasicInfo.config.refreshFrequency))
+          this.isLoading = false
+         })
         .catch(() => {
           // 若為 live 頁面，需確認是否有更新版本上線
           if (!this.isPreviewing) this.$emit('check-update')
-          if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
           this.isLoading = false
           this.isError = true
           this.errorMessage = this.$t('message.systemIsError')
@@ -227,8 +235,6 @@ export default {
     },
     fetchData () {
       window.clearTimeout(this.timeoutFunction)
-      // 需要拿 component 資料時才改新狀態
-      this.isLoading = true
       const promise = this.isPreviewing ? getComponentInfo : getPublishedComponentInfo
       const id = this.isPreviewing ? this.$route.params.war_room_id : this.$route.query.id
       promise(id, this.componentId)
@@ -300,6 +306,8 @@ export default {
     },
     convertRefreshFrequency (cronTab) {
       switch (cronTab) {
+        case '* * * * *':
+          return 60 * 1000
         case '*/5 * * * *':
           return 5 * 60 * 1000
         case '*/15 * * * *':

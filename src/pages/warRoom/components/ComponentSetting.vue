@@ -346,6 +346,10 @@ export default {
       updateFrequency: {
         basicScheduleList: [
           {
+            value: '* * * * *',
+            name: this.$t('warRoom.everyMinute', { number: 1 })
+          },
+          {
             value: '*/5 * * * *',
             name: this.$t('warRoom.everyMinute', { number: 5 })
           },
