@@ -65,7 +65,7 @@
           <default-select 
             v-model="currentUserRoleId"
             :option-list="roleOptions"
-            class="input"
+            class="input group-role-select"
           />
         </div>
       </writing-dialog>
@@ -339,6 +339,10 @@ export default {
     .icon {
       color: $theme-color-warning;
     }
+  }
+
+  .group-role-select {
+    margin-bottom: 16px;
   }
 }
 
