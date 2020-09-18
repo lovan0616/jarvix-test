@@ -454,46 +454,6 @@ export default {
     }
   }
 
-  &--opened {
-    left: $app-side-nav-opened-width;;
-    right: 0;
-    background: rgba(0, 0, 0, 0.7);
-
-    .sidenav {
-      &__container {
-        width: $app-side-nav-opened-width;
-        transition: width .1s linear;
-      }
-    }
-
-    .list {
-      &__icon {
-        margin-right: 13px;
-      }
-
-      &__text {
-        transition: opacity .1s linear .1s;
-        opacity: 1;
-      }
-
-      &__arrow {
-        transition: opacity .1s linear .1s;
-        opacity: 1;
-      }
-    }
-
-    /deep/ .dropdown {
-      &__badge {
-        text-align: left;
-        padding: 0 12px;
-      }
-    }
-
-    .user-preferences {
-      left: $app-side-nav-opened-width;
-    }
-  }
-
   .user-preferences {
     position: absolute;
     left: $app-side-nav-closed-width;
@@ -556,6 +516,46 @@ export default {
       line-height: 20px;
       overflow: hidden;
       white-space: nowrap;
+    }
+  }
+
+  &--opened {
+    left: $app-side-nav-opened-width;;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+
+    .sidenav {
+      &__container {
+        width: $app-side-nav-opened-width;
+        transition: width .1s linear;
+      }
+    }
+
+    .list {
+      &__icon {
+        margin-right: 13px;
+      }
+
+      &__text {
+        transition: opacity .1s linear .1s;
+        opacity: 1;
+      }
+
+      &__arrow {
+        transition: opacity .1s linear .1s;
+        opacity: 1;
+      }
+    }
+
+    /deep/ .dropdown {
+      &__badge {
+        text-align: left;
+        padding: 0 12px;
+      }
+    }
+
+    .user-preferences {
+      left: $app-side-nav-opened-width;
     }
   }
 }
