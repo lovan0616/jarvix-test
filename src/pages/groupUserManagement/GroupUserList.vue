@@ -248,15 +248,17 @@ export default {
       return this.canEditList && this.hasPermission(permissionList) && !this.isOnlyOneOwner(data)
     },
     hasChangeRolePermission (data) {
+      const isAccountOnwer = data.accountRole === 'account_owner'
       const currentUser = this.userList.find(user => user.id === this.userId)
-      let isAccountOnwer
+      // 最高原則為: account_owner 一定為 group_owner, 且 group_owner 至少有一個
+      // 使用者沒有在該群組內, 且使用者為 account_owner 時，可以有 更改和刪除 的權限
       if(!currentUser) {
-        isAccountOnwer = this.getCurrentAccountInfo.role === 'account_owner'
-        return this.canEditList && !this.isOnlyOneOwner(data) && isAccountOnwer
+        const isCurrentAccountOnwer = this.getCurrentAccountInfo.role === 'account_owner'
+        return this.canEditList && !this.isOnlyOneOwner(data) && !isAccountOnwer && isCurrentAccountOnwer
       }
-      isAccountOnwer = currentUser.accountRole === 'account_owner'
-      const isGroupViewer = currentUser.role === 'group_viewer'
-      return this.canEditList && (!this.isOnlyOneOwner(data) && (!isGroupViewer || isAccountOnwer))
+      // 使用者在該群組內, 是 group_owner 時可以有更改權限
+      const isGroupOnwer = currentUser.role === 'group_owner'
+      return this.canEditList && !this.isOnlyOneOwner(data) && isGroupOnwer &&!isAccountOnwer
     },
     showChangeRole (user) {
       if (!this.hasChangeRolePermission(user)) return
