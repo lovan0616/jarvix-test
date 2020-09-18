@@ -73,6 +73,8 @@
     "formCharacterOverMax": "最多{max}個字元",
     "formCharacterOverMin": "最少{min}個字元",
     "formNumericeOverOne": "最少包含1個數字",
+    "formDecimal": "請輸入數字(可含小數位)",
+    "formDecimalWithMaxDecimalPointNumbers": "請輸入數字(至多為小數 {max} 位)",
     "copiedToBoard": "已複製至剪貼簿",
     "systemIsError": "系統發生異常",
     "saveSuccess": "儲存成功",
@@ -127,7 +129,12 @@
     "createdSuccessfully": "建立成功",
     "successfullyAddedToWarRoom": "成功加入戰情室",
     "componentAmountReachedLimit": "元件數量已達上限",
-    "eitherBoundIsRequired": "上限和下限至少需設定一個"
+    "eitherOneIsRequired": "至少需填寫一個",
+    "upperBoundShouldBeLargerThanLowerBound": "上限值需大於下限值",
+    "lowerBoundShouldBeSmallerThanUpperBound": "下限值需小於上限值",
+    "and": "和",
+    "upperBound": "上限",
+    "lowerBound": "下限"
   },
   "guiding": {
     "prevStep": "上一步",
