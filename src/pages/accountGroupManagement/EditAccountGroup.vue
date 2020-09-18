@@ -38,11 +38,12 @@
           >
             <default-select
               v-validate="'required'"
-              v-model="selectedOwner"
+              :value="selectedOwner"
               :option-list="userEmailList"
               filterable
               class="input"
               name="owner"
+              @input="updateSelectedOwner"
             />
             <div
               v-if="errors.has('owner')"
@@ -124,7 +125,9 @@ export default {
       getAccountUsers()
         .then(userList => {
           this.userList = userList
-          this.userEmailList = userList.map(user => ({value: user.email}))
+          this.userEmailList = userList.map(user => ({
+            value: user.email + ` (${user.name})`,
+          }))
           this.isLoading = false
         })
         .catch(() => this.quitEditGroup())
@@ -170,6 +173,10 @@ export default {
               .catch(() => { this.isLoading = false })
           }
         })
+    },
+    updateSelectedOwner (owner) {
+      const getEmail = email => email.split(' ')[0]
+      this.selectedOwner = getEmail(this.userEmailList.find(user => user.value === owner).value)
     }
   }
 }

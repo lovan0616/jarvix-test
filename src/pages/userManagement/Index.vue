@@ -546,6 +546,22 @@ export default {
       letter-spacing: 1px;
     }
   }
+
+  .tooltip-container {
+    margin: 0 3px;
+    .tooltip {
+      width: 212px;
+      white-space: normal;
+      padding: 12px;
+      line-height: 14px;
+      z-index: 2010;
+    }
+
+    .icon {
+      color: $theme-color-warning;
+    }
+  }
+
   .table-board {
     padding: 24px;
     background: var(--color-bg-5);
