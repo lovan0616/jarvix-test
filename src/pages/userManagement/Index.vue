@@ -109,7 +109,7 @@
         <default-select 
           v-model="currentUser.roleId"
           :option-list="roleOptions"
-          class="input"
+          class="input account-role-select"
         />
       </div>
     </writing-dialog>
@@ -560,6 +560,10 @@ export default {
     .icon {
       color: $theme-color-warning;
     }
+  }
+
+  .account-role-select {
+    margin-bottom: 16px;
   }
 
   .table-board {
