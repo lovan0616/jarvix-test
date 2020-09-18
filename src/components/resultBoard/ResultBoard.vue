@@ -71,7 +71,7 @@
             <span class="pin-slash"><svg-icon 
               :icon-class="isLoading ? 'spinner' : 'pin'" 
               class="pin-icon"/></span>
-            {{ isWarRoomAddable ? $t('button.pinToBoard') + ' / ' + $t('button.warRoom') : $t('button.pinToBoard') }}
+            {{ isWarRoomAddable && hasPermission('group_create_data') ? $t('button.pinToBoard') + ' / ' + $t('button.warRoom') : $t('button.pinToBoard') }}
           </a>
           <pinboard-dialog
             v-if="showPinboardDialog"
@@ -128,6 +128,7 @@ import WritingDialog from '@/components/dialog/WritingDialog'
 import PinboardInfoDialog from '@/pages/pinboard/components/filter/PinboardInfoDialog'
 import { addResultToWarRoomPool } from '@/API/WarRoom'
 import { Message } from 'element-ui'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ResultBoard',
@@ -176,6 +177,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['hasPermission']),
     isPinboardPage () {
       return this.$route.name === 'PersonalPagePinboard' || this.$route.name === 'ProjectPagePinboard'
     },
