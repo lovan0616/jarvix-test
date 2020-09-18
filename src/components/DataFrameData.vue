@@ -266,7 +266,7 @@ export default {
         }, () => {
           // clipboard write failed
           Message({
-            message: this.$t('message.copiedToBoard'),
+            message: this.$t('message.copiedToBoardFailed'),
             type: 'error',
             duration: 3 * 1000,
             showClose: true
