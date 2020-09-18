@@ -76,6 +76,7 @@
     "formDecimal": "Please enter a number(May contain decimal points)",
     "formDecimalWithMaxDecimalPointNumbers": "Please enter a number(May contains {max} digits after the decimal place)",
     "copiedToBoard": "Copied to clipboard.",
+    "copiedToBoardFailed": "Failed to copied it to clipboard",
     "systemIsError": "An Exception occurred in the system.",
     "saveSuccess": "Saved.",
     "correlationDeleteSuccess": "Relation has been removed.",

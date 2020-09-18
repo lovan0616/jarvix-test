@@ -76,6 +76,7 @@
     "formDecimal": "请输入数字(可含小数位)",
     "formDecimalWithMaxDecimalPointNumbers": "请输入数字(至多为小数 {max} 位)",
     "copiedToBoard": "已复制至剪贴簿",
+    "copiedToBoardFailed": "复制失败",
     "systemIsError": "系统发生异常",
     "saveSuccess": "储存成功",
     "correlationDeleteSuccess": "关联已删除",
