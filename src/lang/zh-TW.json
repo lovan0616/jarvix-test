@@ -31,7 +31,8 @@
     "dataSourceList": "資料源列表",
     "dataFileManagement": "資料表管理",
     "dataFileList": "資料表列表",
-    "schedule": "生產排程"
+    "schedule": "生產排程",
+    "preferences": "個人設定"
   },
   "user": {
     "changePwd": "變更密碼",
@@ -72,7 +73,10 @@
     "formCharacterOverMax": "最多{max}個字元",
     "formCharacterOverMin": "最少{min}個字元",
     "formNumericeOverOne": "最少包含1個數字",
+    "formDecimal": "請輸入數字(可含小數位)",
+    "formDecimalWithMaxDecimalPointNumbers": "請輸入數字(至多為小數 {max} 位)",
     "copiedToBoard": "已複製至剪貼簿",
+    "copiedToBoardFailed": "複製失敗",
     "systemIsError": "系統發生異常",
     "saveSuccess": "儲存成功",
     "correlationDeleteSuccess": "關聯已刪除",
@@ -126,7 +130,12 @@
     "createdSuccessfully": "建立成功",
     "successfullyAddedToWarRoom": "成功加入戰情室",
     "componentAmountReachedLimit": "元件數量已達上限",
-    "eitherBoundIsRequired": "上限和下限至少需設定一個"
+    "eitherOneIsRequired": "至少需填寫一個",
+    "upperBoundShouldBeLargerThanLowerBound": "上限值需大於下限值",
+    "lowerBoundShouldBeSmallerThanUpperBound": "下限值需小於上限值",
+    "and": "和",
+    "upperBound": "上限",
+    "lowerBound": "下限"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -278,7 +287,6 @@
     "sureLogout": "您確認要登出帳號？",
     "questionFeedback": "問題/建議回饋",
     "functionDescription": "功能說明",
-    "addUser": "新增使用者",
     "notYetCreateUser": "尚未建立使用者",
     "inviteeEmail": "受邀者 email",
     "pleaseSelectInviteeEmail": "請選擇受邀者 email",
@@ -290,6 +298,7 @@
     "confirmPassword": "確認密碼",
     "pleaseConfirmPassword": "請確認密碼",
     "confirmPasswordAgain": "再次確認密碼",
+    "switchAccount": "切換帳戶",
     "group": "專案",
     "groupOwner": "專案擁有者",
     "groupMemberAmount": "專案人數",
@@ -840,7 +849,8 @@
     "testConnecting": "測試連線中...",
     "monitorSetting": "監測設定",
     "updateImmediately": "立即更新",
-    "AddNewWarRoom": "新增戰情室"
+    "AddNewWarRoom": "新增戰情室",
+    "sendInvitation": "寄送邀請信"
   },
   "timeScopeUnit": {
     "second": "秒",
@@ -1905,19 +1915,31 @@
     "pieChartFilterNote": "此結果為原資料過濾負值得來"
   },
   "userManagement": {
-    "createUser": "新增使用者",
+    "accountUserList": "帳戶使用者列表",
+    "createUser": "建立使用者",
+    "inviteUser": "邀請使用者",
     "inviteeEmailPlaceholder": "請輸入受邀者email",
     "userRoleAuthority": "帳戶角色權限",
     "accountOwner": "帳戶擁有者",
     "accountMaintainer": "帳戶管理者",
     "accountViewer": "一般使用者",
+    "groupOwner": "專案擁有者",
+    "groupMaintainer": "專案管理者",
+    "groupViewer": "一般使用者",
     "accountRoleDesc": "角色權限說明",
     "accountOwnerDesc": "無任何使用限制",
     "accountMaintainerDesc": "擁有帳戶管理權限",
     "accountViewerDesc": "無法使用帳戶管理相關功能",
+    "groupOwnerDesc": "無任何使用限制",
+    "groupMaintainerDesc": "擁有專案管理權限",
+    "groupViewerDesc": "無法使用專案管理相關功能",
     "updateRole": "角色變更",
     "confirmDeleteAccountText": "使用者移除後，此使用者將無法使用此帳戶任何功能，您確認要繼續移除此使用者？",
-    "userName": "使用者名稱"
+    "userName": "使用者名稱",
+    "userAccount": "使用者帳號",
+    "userPassword": "使用者密碼",
+    "emailPlaceholder": "請輸入email",
+    "userNamePlaceholder": "請輸入名稱"
   },
   "accountInfo": {
     "userAmount": "使用者數量",
@@ -1927,7 +1949,13 @@
     "currentDataUsage": "目前數據使用容量",
     "dataUsageProvided": "數據容量上限",
     "expireDate": "到期時間",
-    "person": "人"
+    "person": "人",
+    "accountRestrictions": "帳戶限制",
+    "accountUsageStatus": "帳戶使用狀況",
+    "projectAmount": "專案數量: {amount} 個",
+    "dataFrameAmount": "資料集數量",
+    "pinBoardAmount": "釘板數量",
+    "warRoomAmount": "戰情室數量"
   },
   "dataType": {
     "numeric": "數值",

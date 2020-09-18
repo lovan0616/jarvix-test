@@ -332,7 +332,29 @@ export default {
           id: 'viewLivePage',
           name: this.$t('warRoom.goToLivePage')
         }
-      ]
+      ],
+      defaultComponentData: {
+        componentId: null,
+        config: {
+          boundSwitch: false,
+          customEndTime: null,
+          customStartTime: null,
+          displayDateRangeSwitch: false,
+          displayName: null,
+          isAutoRefresh: false,
+          lowerBound: null,
+          question: null,
+          recentTimeIntervalAmount: null,
+          recentTimeIntervalUnit: null,
+          refreshFrequency: null,
+          upperBound: null
+        },
+        diagramData: {},
+        diagramName: null,
+        orderSequence: null,
+        restriction: {},
+        selectedColumns: {}
+      }
     }
   },
   computed: {
@@ -400,6 +422,7 @@ export default {
             showClose: true
           })
         }
+        this.selectedComponent = this.defaultComponentData
         this.createdComponentType = value
         this.isShowComponentSetting = true
       })

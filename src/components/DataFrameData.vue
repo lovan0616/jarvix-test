@@ -46,13 +46,17 @@
                     <svg-icon :icon-class="getHeaderIcon(index)" />
                   </el-tooltip>
                 </span>
-                <span class="text">
+                <span
+                  class="text"
+                  @click="copyTitle(column.titles[index])"
+                >
                   <el-tooltip
                     slot="label"
                     :visible-arrow="false"
                     :enterable="false"
                     :content="`${column.titles[index]}`"
-                    placement="bottom-start">
+                    placement="bottom-start"
+                  >
                     <span>{{ column.titles[index] }}</span>
                   </el-tooltip>
                 </span>
@@ -88,7 +92,8 @@ import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/Co
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import EmptyInfoBlock from './EmptyInfoBlock'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
+import { Message } from 'element-ui'
 
 export default {
   name: 'DataFrameData',
@@ -157,6 +162,7 @@ export default {
     this.fetchDataFrameData(this.dataFrameId, 0, true)
   },
   methods: {
+    ...mapMutations('chatBot', ['setCopiedColumnName']),
     fetchDataFrameData (id, page = 0, resetPagination = false) {
       this.isProcessing = true
       if (resetPagination) {
@@ -229,6 +235,50 @@ export default {
     },
     updatePage (page) {
       this.fetchDataFrameData(this.dataFrameId, page - 1)
+    },
+    fallbackCopyTextToClipboard (value) {
+      const input = document.createElement('input')
+      input.setAttribute('value', value)
+      document.body.appendChild(input)
+      input.select()
+      document.execCommand('copy')
+      document.body.removeChild(input)
+      Message({
+        message: this.$t('message.copiedToBoard'),
+        type: 'success',
+        duration: 3 * 1000,
+        showClose: true
+      })
+    },
+    copyTextToClipboard (value) {
+      // 確認 Clipboard API 是否支援
+      if (!navigator.clipboard) return this.fallbackCopyTextToClipboard(value)
+
+      navigator.clipboard.writeText(value)
+        .then(() => {
+          // clipboard successfully set
+          Message({
+            message: this.$t('message.copiedToBoard'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }, () => {
+          // clipboard write failed
+          Message({
+            message: this.$t('message.copiedToBoardFailed'),
+            type: 'error',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .catch(() => this.fallbackCopyTextToClipboard(value))
+    },
+    copyTitle (value) {
+      // 自動貼到問句搜尋功能：暫時關閉
+      // this.setCopiedColumnName(value)
+      // 純複製到剪貼簿功能
+      this.copyTextToClipboard(value)
     }
   }
 }
@@ -281,6 +331,7 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        cursor: pointer;
       }
     }
     .summary {

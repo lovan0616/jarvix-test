@@ -74,7 +74,9 @@
                   :disabled="isProcessing"
                   :width="Number('32')"
                   active-color="#2AD2E2"
-                  inactive-color="#324B4E"/>
+                  inactive-color="#324B4E"
+                  @change="updateRefreshFrequency"
+                />
               </div>
               <div
                 v-if="componentData.config.isAutoRefresh"
@@ -177,7 +179,9 @@
                   :disabled="isProcessing"
                   :width="Number('32')"
                   active-color="#2AD2E2"
-                  inactive-color="#324B4E"/>
+                  inactive-color="#324B4E"
+                  @change="updateBoundSwitch"
+                />
               </div>
               <div
                 v-if="componentData.config.boundSwitch"
@@ -187,14 +191,14 @@
                   {{ $t('warRoom.maxThreshold') }}
                 </label>
                 <input
+                  v-validate="upperBoundRules"
+                  ref="upperBound"
                   :disabled="isProcessing"
-                  :value="componentData.config.upperBound === null ? '' : Number(componentData.config.upperBound)"
-                  :min="componentData.config.lowerBound"
+                  v-model.trim="componentData.config.upperBound"
                   :placeholder="$t('warRoom.pleaseEnterValue')"
-                  type="number"
                   name="upperBound"
                   class="input war-room-setting__block-text-input"
-                  @input="componentData.config.upperBound = $event.target.value || null">
+                >
                 <div 
                   v-show="errors.has('upperBound')"
                   class="error-text"
@@ -203,13 +207,14 @@
                   {{ $t('warRoom.minThreshold') }}
                 </label>
                 <input
+                  v-validate="lowerBoundRules"
+                  ref="lowerBound"
                   :disabled="isProcessing"
-                  :value="componentData.config.lowerBound === null ? '' : Number(componentData.config.lowerBound)"
+                  v-model.trim="componentData.config.lowerBound"
                   :placeholder="$t('warRoom.pleaseEnterValue')"
-                  type="number"
                   name="lowerBound"
                   class="input war-room-setting__block-text-input"
-                  @input="componentData.config.lowerBound = $event.target.value || null">
+                >
                 <div 
                   v-show="errors.has('lowerBound')"
                   class="error-text"
@@ -423,6 +428,26 @@ export default {
     disableSaveButton () {
       if (this.componentData.componentId) return this.isProcessing
       return this.isProcessing  || !this.selectedDataSource.question || !this.componentData.config.displayName
+    },
+    upperBoundRules () {
+      if (!this.componentData || !this.componentData.config) return
+      const decimalRegex = /^[-]?([0-9]+)?[.]?([0-9]+)?$/
+      if (
+        (this.componentData.config.lowerBound && decimalRegex.test(this.componentData.config.lowerBound))
+        && this.componentData.config.upperBound
+      ) return 'decimal|validUpperBound:lowerBound'
+      if (this.componentData.config.upperBound) return 'decimal'
+      return 'eitherOneIsRequired:lowerBound'
+    },
+    lowerBoundRules () {
+      if (!this.componentData || !this.componentData.config) return
+      const decimalRegex = /^[-]?([0-9]+)?[.]?([0-9]+)?$/
+      if (
+        (this.componentData.config.upperBound && decimalRegex.test(this.componentData.config.upperBound))
+        && this.componentData.config.lowerBound
+      ) return 'decimal|validLowerBound:upperBound'
+      if (this.componentData.config.lowerBound) return 'decimal'      
+      return 'eitherOneIsRequired:upperBound'
     }
   },
   created () {
@@ -440,19 +465,7 @@ export default {
             showClose: true
           })
         }
-      
-        // 上下限至少擇一填寫
-        if (
-          this.componentData.config.boundSwitch 
-          && (!this.componentData.config.upperBound && !this.componentData.config.lowerBound)
-        ) {
-          return Message({
-            message: this.$t('message.eitherBoundIsRequired'),
-            type: 'error',
-            duration: 3 * 1000,
-            showClose: true
-          })
-        }
+
         const { war_room_id: warRoomId } = this.$route.params
         const { question, ...config } = this.componentData.config
         const componentData = { config, itemId: this.selectedDataSource.itemId }
@@ -474,19 +487,7 @@ export default {
     saveComponentSetting () {
       this.$validator.validate(this.validateFieldKey).then((isValidate) => {
         if (!isValidate) return
-        
-        // 上下限至少擇一填寫
-        if (
-          this.componentData.config.boundSwitch 
-          && (!this.componentData.config.upperBound && !this.componentData.config.lowerBound)
-        ) {
-          return Message({
-            message: this.$t('message.eitherBoundIsRequired'),
-            type: 'error',
-            duration: 3 * 1000,
-            showClose: true
-          })
-        }
+       
         const { war_room_id: warRoomId } = this.$route.params
         const { question, ...config } = this.componentData.config
         this.isProcessing = true
@@ -540,6 +541,15 @@ export default {
       this.selectedDataSource = item
       this.hideComponentDataSourceList()
     },
+    updateRefreshFrequency (isTurnedOn) {
+      if(isTurnedOn) return
+      const { refreshFrequency } = JSON.parse(JSON.stringify(this.originalComponentData.config))
+
+      // 關閉時，恢復原本預設，避免存取時送錯的格式給後端
+      this.$nextTick(() => {
+        this.componentData.config.refreshFrequency = refreshFrequency
+      })
+    },
     updateTimeInterval (value) {
       const isDefaultTimeInterval = value.indexOf('+') !== -1
 
@@ -578,6 +588,18 @@ export default {
         this.componentData.config.customStartTime = customStartTime
         this.componentData.config.recentTimeIntervalAmount = recentTimeIntervalAmount
         this.componentData.config.recentTimeIntervalUnit = recentTimeIntervalUnit
+      })
+    },
+    updateBoundSwitch (isTurnedOn) {
+      if(isTurnedOn) return
+      const {
+        upperBound,
+        lowerBound
+      } = JSON.parse(JSON.stringify(this.originalComponentData.config))
+      // 關閉時，恢復原本預設，避免存取時送錯的格式給後端
+      this.$nextTick(() => {
+        this.componentData.config.upperBound = upperBound
+        this.componentData.config.lowerBound = lowerBound
       })
     }
   }

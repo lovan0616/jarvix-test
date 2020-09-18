@@ -31,7 +31,8 @@
     "dataSourceList": "资料源列表",
     "dataFileManagement": "资料表管理",
     "dataFileList": "资料表列表",
-    "schedule": "生产排程"
+    "schedule": "生产排程",
+    "preferences": "个人设定"
   },
   "user": {
     "changePwd": "变更密码",
@@ -72,7 +73,10 @@
     "formCharacterOverMax": "最多{max}个字元",
     "formCharacterOverMin": "最少{min}个字元",
     "formNumericeOverOne": "最少包含1个数字",
+    "formDecimal": "请输入数字(可含小数位)",
+    "formDecimalWithMaxDecimalPointNumbers": "请输入数字(至多为小数 {max} 位)",
     "copiedToBoard": "已复制至剪贴簿",
+    "copiedToBoardFailed": "复制失败",
     "systemIsError": "系统发生异常",
     "saveSuccess": "储存成功",
     "correlationDeleteSuccess": "关联已删除",
@@ -126,7 +130,12 @@
     "createdSuccessfully": "建立成功",
     "successfullyAddedToWarRoom": "成功加入战情室",
     "componentAmountReachedLimit": "元件数量已达上限",
-    "eitherBoundIsRequired": "上限和下限至少需设定一个"
+    "eitherOneIsRequired": "至少需填写一个",
+    "upperBoundShouldBeLargerThanLowerBound": "上限值需大于下限值",
+    "lowerBoundShouldBeSmallerThanUpperBound": "下限值需小于上限值",
+    "and": "和",
+    "upperBound": "上限",
+    "lowerBound": "下限"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -278,7 +287,6 @@
     "sureLogout": "您确认要登出帐号？",
     "questionFeedback": "问题/建议回馈",
     "functionDescription": "功能说明",
-    "addUser": "新增使用者",
     "notYetCreateUser": "尚未建立使用者",
     "inviteeEmail": "受邀者 email",
     "pleaseSelectInviteeEmail": "请选择受邀者 email",
@@ -290,6 +298,7 @@
     "confirmPassword": "确认密码",
     "pleaseConfirmPassword": "请确认密码",
     "confirmPasswordAgain": "再次确认密码",
+    "switchAccount": "切換帳戶",
     "group": "专案",
     "groupOwner": "专案拥有者",
     "groupMemberAmount": "专案人数",
@@ -840,7 +849,8 @@
     "testConnecting": "测试连线中...",
     "monitorSetting": "监测设定",
     "updateImmediately": "立即更新",
-    "AddNewWarRoom": "新增战情室"
+    "AddNewWarRoom": "新增战情室",
+    "sendInvitation": "寄送邀请信"
   },
   "timeScopeUnit": {
     "second": "秒",
@@ -1905,19 +1915,31 @@
     "pieChartFilterNote": "此结果为原资料过滤负值得来"
   },
   "userManagement": {
-    "createUser": "新增使用者",
+    "accountUserList": "帐户使用者列表",
+    "createUser": "建立使用者",
+    "inviteUser": "邀请使用者",
     "inviteeEmailPlaceholder": "请输入受邀者email",
     "userRoleAuthority": "帐户角色权限",
     "accountOwner": "帐户拥有者",
     "accountMaintainer": "帐户管理者",
     "accountViewer": "一般使用者",
+    "groupOwner": "专案拥有者",
+    "groupMaintainer": "专案管理者",
+    "groupViewer": "一般使用者",
     "accountRoleDesc": "角色权限说明",
     "accountOwnerDesc": "无任何使用限制",
     "accountMaintainerDesc": "拥有帐户管理权限",
     "accountViewerDesc": "无法使用帐户管理相关功能",
+    "groupOwnerDesc": "无任何使用限制",
+    "groupMaintainerDesc": "拥有专案管理权限",
+    "groupViewerDesc": "无法使用专案管理相关功能",
     "updateRole": "角色变更",
     "confirmDeleteAccountText": "使用者移除后，此使用者将无法使用此帐户任何功能，您确认要继续移除此使用者？",
-    "userName": "使用者名称"
+    "userName": "使用者名称",
+    "userAccount": "使用者帐号",
+    "userPassword": "使用者密码",
+    "emailPlaceholder": "请输入email",
+    "userNamePlaceholder": "请输入名称"
   },
   "accountInfo": {
     "userAmount": "使用者数量",
@@ -1927,7 +1949,13 @@
     "currentDataUsage": "目前数据使用容量",
     "dataUsageProvided": "数据容量上限",
     "expireDate": "到期时间",
-    "person": "人"
+    "person": "人",
+    "accountRestrictions":"帐户限制",
+    "accountUsageStatus":"帐户使用状况",
+    "projectAmount":"专案数量: {amount} 个",
+    "dataFrameAmount":"资料集数量",
+    "pinBoardAmount":"钉板数量",
+    "warRoomAmount":"战情室数量"
   },
   "dataType": {
     "numeric": "数值",

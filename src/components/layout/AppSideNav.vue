@@ -5,9 +5,10 @@
     @click.self="closeSideNav"
   >
     <div class="sidenav__container">
-      <div 
+      <div
         v-if="accountList && accountList.length > 0" 
-        class="sidenav__account">
+        class="sidenav__account"
+      >
         <custom-dropdown-select
           :data-list="accountListData()"
           :selected-id="getCurrentAccountId"
@@ -16,9 +17,17 @@
           @select="switchAccount"
         >
           <template #display>
-            <div class="dropdown__badge">
-              {{ currentAccountName }}
-            </div>
+            <el-tooltip
+              slot="label"
+              :content="$t('editing.switchAccount')"
+              :disabled="isShowFullSideNav"
+              :enterable="false"
+              transition=""
+              placement="right">
+              <div class="dropdown__badge">
+                {{ currentAccountName }}
+              </div>
+            </el-tooltip>
           </template>
         </custom-dropdown-select>
       </div>
@@ -26,85 +35,145 @@
         class="sidenav__list--top list"
         @click="closeSideNav"
       >
-        <li class="list__item">
-          <router-link
-            :to="accountHomePageRoute()"
-            class="list__link"
-          >
-            <svg-icon 
-              icon-class="home" 
-              class="list__icon" />
-            <span class="list__text">
-              {{ $t('sideNav.home') }}
-            </span>
-          </router-link>
-        </li>
-        <li class="list__item">
-          <router-link
-            :to="{ name: 'PersonalPagePinboardList', params: { 'account_id': getCurrentAccountId }}"
-            class="list__link"
-          >
-            <svg-icon 
-              icon-class="pin" 
-              class="list__icon" />
-            <span class="list__text">
-              {{ $t('sideNav.pinboard') }}
-            </span>
-          </router-link>
-        </li>
-        <li
+        <el-tooltip
+          slot="label"
+          :content="$t('sideNav.home')"
+          :disabled="isShowFullSideNav"
+          :enterable="false"
+          transition=""
+          placement="right">
+          <li class="list__item">
+            <router-link
+              :to="accountHomePageRoute()"
+              class="list__link"
+            >
+              <svg-icon 
+                icon-class="home" 
+                class="list__icon" />
+              <span class="list__text">
+                {{ $t('sideNav.home') }}
+              </span>
+            </router-link>
+          </li>
+        </el-tooltip>
+        <el-tooltip
+          slot="label"
+          :content="$t('sideNav.pinboard')"
+          :disabled="isShowFullSideNav"
+          :enterable="false"
+          transition=""
+          placement="right">
+          <li class="list__item">
+            <router-link
+              :to="{ name: 'PersonalPagePinboardList', params: { 'account_id': getCurrentAccountId }}"
+              class="list__link"
+            >
+              <svg-icon 
+                icon-class="pin" 
+                class="list__icon" />
+              <span class="list__text">
+                {{ $t('sideNav.pinboard') }}
+              </span>
+            </router-link>
+          </li>
+        </el-tooltip>
+        <el-tooltip
           v-if="hasPermission('account_update_user')"
-          class="list__item"
-        >
-          <router-link
-            :to="{ name: 'AccountManagement', params: { 'account_id': getCurrentAccountId } }"
-            class="list__link"
-          >
-            <svg-icon 
-              icon-class="account-management" 
-              class="list__icon" />
-            <span class="list__text">
-              {{ $t('sideNav.accountManagement') }}
-            </span>
-          </router-link>
-        </li>
-        <li 
+          slot="label"
+          :content="$t('sideNav.accountManagement')"
+          :disabled="isShowFullSideNav"
+          :enterable="false"
+          transition=""
+          placement="right">
+          <li class="list__item">
+            <router-link
+              :to="{ name: 'AccountManagement', params: { 'account_id': getCurrentAccountId } }"
+              class="list__link"
+            >
+              <svg-icon 
+                icon-class="account-management" 
+                class="list__icon" />
+              <span class="list__text">
+                {{ $t('sideNav.accountManagement') }}
+              </span>
+            </router-link>
+          </li>
+        </el-tooltip>
+        <el-tooltip
           v-if="showSchedule === 'true'"
-          class="list__item"
-        >
-          <router-link
-            :to="{ name: 'CurrentSimulation'}"
-            class="list__link"
-          >
-            <svg-icon 
-              icon-class="schedule" 
-              class="list__icon" />
-            <span class="list__text">
-              {{ $t('sideNav.schedule') }}
-            </span>
-          </router-link>
-        </li>
+          slot="label"
+          :content="$t('sideNav.schedule')"
+          :disabled="isShowFullSideNav"
+          :enterable="false"
+          transition=""
+          placement="right">
+          <li class="list__item">
+            <router-link
+              :to="{ name: 'CurrentSimulation'}"
+              class="list__link"
+            >
+              <svg-icon 
+                icon-class="schedule" 
+                class="list__icon" />
+              <span class="list__text">
+                {{ $t('sideNav.schedule') }}
+              </span>
+            </router-link>
+          </li>
+        </el-tooltip>
       </ul>
       <ul class="sidenav__list--bottom list">
+        <el-tooltip
+          slot="label"
+          :content="$t('sideNav.preferences')"
+          :disabled="isShowFullSideNav"
+          :enterable="false"
+          transition=""
+          placement="right">
+          <li ref="preferencesIcon">
+            <a 
+              :class="{'active': isShowUserPreferences}" 
+              href="javascript:void(0);"
+              class="list__link"
+              @click="isShowUserPreferences = !isShowUserPreferences"
+            >
+              <svg-icon
+                icon-class="user-setting"
+                class="list__icon" />
+              <span class="list__text">
+                {{ $t('sideNav.preferences' ) }}
+              </span>
+              <div class="list__arrow" />
+            </a>
+          </li>
+        </el-tooltip>
+      </ul>
+      <div 
+        v-if="isShowUserPreferences"
+        ref="preferences"
+        class="user-preferences preferences">
+        <h3 class="preferences__name"> {{ userName }} </h3>
+        <p class="preferences__email"> {{ userEmail }} </p>
+        <p class="preferences__role"> {{ roleOptions[currentUserRole] }} </p>
         <li
           v-for="item in settingList"
           :key="item.title"
-          class="list__item"
+          class="preferences__item"
         >
           <a 
             href="javascript:void(0);" 
-            class="list__link"
+            class="preferences__link"
             @click="switchDialogName(item.dialogDisplayHandler)"
           >
             <svg-icon 
-              :icon-class="item.icon" 
-              class="list__icon" />
-            <span class="list__text">
+              :icon-class="item.icon"
+              class="preferences__icon" />
+            <span class="preferences__text">
               {{ $t(item.title) }}
             </span>
           </a>
         </li>
-      </ul>
+      </div>
       <change-pwd-dialog
         v-if="isShowChangePwdDialog"
         @closeDialog="controlChangePwdDialog(false)"
@@ -126,6 +195,7 @@
 </template>
 
 <script>
+import { getAccountRoles } from '@/API/User'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import ChangeLanguageDialog from '@/components/dialog/ChangeLanguageDialog';
 import ChangePwdDialog from '@/components/dialog/ChangePwdDialog';
@@ -147,25 +217,30 @@ export default {
       isShowLanguage: false,
       isShowLogout: false,
       isShowChangePwdDialog: false,
+      isShowUserPreferences: false,
       selectedLanguage: null,
-      isLoading: false
+      isLoading: false,
+      roleOptions: {}
     }
   },
   computed: {
     ...mapState(['isShowFullSideNav']),
-    ...mapState('userManagement', ['accountList', 'groupList']),
+    ...mapState('userManagement', ['userName', 'userEmail', 'accountList', 'groupList']),
     ...mapState('setting', ['locale']),
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     ...mapGetters('userManagement', ['getCurrentAccountName', 'getCurrentAccountId', 'hasPermission', 'getCurrentGroupId']),
-    currentAccountName() {
+    currentAccountName () {
       const fullName = this.getCurrentAccountName
       if (!fullName) return '-'
       return this.isShowFullSideNav ? fullName : fullName[0]
     },
+    currentUserRole () {
+      return this.accountList.filter(element => element.id === this.getCurrentAccountId)[0]['role']
+    },
     settingList () {
       return [
         {icon: 'key', title: 'user.changePwd', dialogDisplayHandler: 'isShowChangePwdDialog'},
-        {icon: 'language', title: 'lang', dialogDisplayHandler: 'isShowLanguage'},
+        {icon: 'language', title: 'editing.languageSetting', dialogDisplayHandler: 'isShowLanguage'},
         {icon: 'logout', title: 'button.logout', dialogDisplayHandler: 'isShowLogout'}
       ]
     },
@@ -173,9 +248,31 @@ export default {
       return localStorage.getItem('isShowScheduleModule')
     }
   },
+  mounted () {
+    document.addEventListener('click', this.autoHide, false)
+    this.getAccountRoleList()
+  },
+  destroyed () {
+    document.removeEventListener('click', this.autoHide, false)
+  },
   methods: {
     ...mapMutations(['updateSideNavStatus']),
     ...mapActions('userManagement', ['switchAccountById']),
+    autoHide (evt) {
+      if (this.isShowUserPreferences && !this.$refs.preferences.contains(evt.target) && !this.$refs.preferencesIcon.contains(evt.target)) {
+        this.closeUserPreferences()
+      }
+    },
+    getAccountRoleList () {
+      return getAccountRoles(this.getCurrentAccountId)
+        .then(response => {
+          this.roleOptions = {}
+          response.forEach(role => {
+            this.roleOptions[role.name] = this.getAccountRoleLocaleName(role.name)
+          })
+        })
+        .catch(() => {})
+    },
     switchDialogName (dialog) {
       this[dialog] = true
     },
@@ -190,15 +287,19 @@ export default {
           this.closeSideNav()
         })
     },
-    closeSideNav() {
-      if(this.isShowFullSideNav) this.updateSideNavStatus(false)
+    closeSideNav () {
+      if(this.isShowFullSideNav)
+        this.updateSideNavStatus(false)
     },
-    accountHomePageRoute() {
+    closeUserPreferences () {
+      this.isShowUserPreferences = false
+    },
+    accountHomePageRoute () {
       const groupLessPage = { name: 'PageGrouplessGuidance', params: { 'account_id': this.getCurrentAccountId } }
       const accountHomePage = { name: 'PageIndex', params: { 'account_id': this.getCurrentAccountId, 'group_id': this.getCurrentGroupId } }
       return this.groupList.length === 0 ? groupLessPage : accountHomePage
     },
-    accountListData() {
+    accountListData () {
       if (!this.accountList) return []
       return this.accountList
         .map(account => ({
@@ -207,7 +308,7 @@ export default {
         }))
         .sort((accountOne, accountTwo) => (accountOne.name.toLowerCase() > accountTwo.name.toLowerCase()) ? 1 : -1) 
     },
-    switchAccount(accountId) {
+    switchAccount (accountId) {
       this.isLoading = true
       this.switchAccountById({ accountId })
         .then(() => {
@@ -270,6 +371,7 @@ export default {
     }
 
     &--bottom {
+      position: relative;
       border-top: 1px solid var(--color-border);
       margin: auto 0 0 0;
     }
@@ -290,10 +392,10 @@ export default {
       color: #CCCCCC;
 
       &.active {
-        color: #2AD2E2;
+        color: var(--color-theme);
 
         .list__icon {
-          color: #2AD2E2;
+          color: var(--color-theme);
         }
       }
     }
@@ -308,10 +410,22 @@ export default {
 
     &__text {
       font-weight: bold;
+      font-size: 14px;
       flex: 1;
       overflow: hidden;
       width: 0;
       white-space: nowrap;
+      opacity: 0;
+    }
+
+    &__arrow {
+      width: 8px;
+      height: 8px;
+      right: 13px;
+      border: solid #CCCCCC;
+      border-width: 2px 2px 0 0;
+      border-radius: 1px;
+      transform: rotate(45deg);
       opacity: 0;
     }
   }
@@ -361,6 +475,11 @@ export default {
         transition: opacity .1s linear .1s;
         opacity: 1;
       }
+
+      &__arrow {
+        transition: opacity .1s linear .1s;
+        opacity: 1;
+      }
     }
 
     /deep/ .dropdown {
@@ -368,6 +487,75 @@ export default {
         text-align: left;
         padding: 0 12px;
       }
+    }
+
+    .user-preferences {
+      left: $app-side-nav-opened-width;
+    }
+  }
+
+  .user-preferences {
+    position: absolute;
+    left: $app-side-nav-closed-width;
+    bottom: 12px;
+    width: 207px;
+    background: #232D2D;
+    border-radius: 5px;
+    filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
+  }
+  
+  .preferences {
+    padding-top: 10px;
+    &__name {
+      margin: 0 0 8px 14px;
+      font-size: 18px;
+      line-height: 21px;
+    }
+
+    &__email {
+      margin: 0 0 8px 14px;
+      font-size: 13px;
+      line-height: 15px;
+      color: #AAAAAA;
+    }
+
+    &__role {
+      margin: 0 0 8px 14px;
+      font-size: 13px;
+      line-height: 15px;
+      color: #AAAAAA;
+    }
+
+    &__item {
+      border-top: 1px solid #394045;
+      list-style-type: none;
+      white-space: nowrap;
+
+      &:hover {
+        opacity: .8;
+      }
+    }
+
+    &__link {
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      color: #CCCCCC;
+    }
+
+    &__icon {
+      display: inline-block;
+      margin-right: 10px;
+      color: #7496A0;
+      font-size: 17px;
+    }
+
+    &__text {
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 20px;
+      overflow: hidden;
+      white-space: nowrap;
     }
   }
 }

@@ -96,7 +96,7 @@
 </template>
 <script>
 import AskHelperDialog from './AskHelperDialog'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
 import DefaultSelect from '@/components/select/DefaultSelect'
 
@@ -118,7 +118,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('chatBot', ['parserLanguageList', 'parserLanguage']),
+    ...mapState('chatBot', ['parserLanguageList', 'parserLanguage', 'copiedColumnName']),
     ...mapState('dataSource', ['dataSourceId', 'appQuestion', 'dataSourceColumnInfoList']),
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
     ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'hasPermission']),
@@ -238,6 +238,11 @@ export default {
       if (to.name === 'PageIndex') {
         this.closeHelper()
       }
+    },
+    copiedColumnName (value) {
+      if(!value) return
+      this.userQuestion = this.userQuestion ? this.userQuestion + value : value
+      this.clearCopiedColumnName()
     }
   },
   mounted () {
@@ -250,6 +255,7 @@ export default {
     if (this.websocketHandler) this.closeWebSocketConnection()
   },
   methods: {
+    ...mapMutations('chatBot', ['clearCopiedColumnName']),
     toggleWebSocketConnection () {
       if (this.websocketHandler) return this.closeWebSocketConnection()
       this.createWebSocketConnection()

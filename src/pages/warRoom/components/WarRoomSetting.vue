@@ -275,10 +275,12 @@ export default {
         recentTimeIntervalUnit
       } = JSON.parse(JSON.stringify(this.configData))
       // 關閉時，恢復原本預設，避免存取時送錯的格式給後端
-      this.warRoomData.customStartTime = customStartTime
-      this.warRoomData.customEndTime = customEndTime
-      this.warRoomData.recentTimeIntervalAmount = recentTimeIntervalAmount
-      this.warRoomData.recentTimeIntervalUnit = recentTimeIntervalUnit
+      this.$nextTick(() => {
+        this.warRoomData.customStartTime = customStartTime
+        this.warRoomData.customEndTime = customEndTime
+        this.warRoomData.recentTimeIntervalAmount = recentTimeIntervalAmount
+        this.warRoomData.recentTimeIntervalUnit = recentTimeIntervalUnit
+      })
     }
   }
 }

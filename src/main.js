@@ -226,6 +226,30 @@ Validator.extend('letterSpace', function (value) {
   return /^[\u4e00-\u9fa5_a-zA-Z0-9\s]*$/i.test(value) && !Number(value)
 })
 
+Validator.extend('validUpperBound', (upperBoundValue, [lowerBoundValue]) => {
+  return Number(upperBoundValue) > Number(lowerBoundValue)
+}, {
+  hasTarget: true
+})
+
+Validator.extend('validLowerBound', (lowerBoundValue, [upperBoundValue]) => {
+  return Number(lowerBoundValue) < Number(upperBoundValue)
+}, {
+  hasTarget: true
+})
+
+Validator.extend('eitherOneIsRequired', (value, [otherValue]) => {
+  return {
+    valid: `${value}`.length > 0 || `${otherValue}`.length > 0,
+    data: {
+      required: true
+    }
+  }
+}, {
+  hasTarget: true,
+  computesRequired: true
+})
+
 Vue.use(VeeValidate, {
   // 避免自動 inject 到所有 component
   inject: false,
@@ -258,6 +282,19 @@ Vue.use(VeeValidate, {
         },
         letterSpace () {
           return i18n.t('message.formLetterSpaceEmpty')
+        },
+        validUpperBound () {
+          return i18n.t('message.upperBoundShouldBeLargerThanLowerBound')
+        },
+        validLowerBound() {
+          return i18n.t('message.lowerBoundShouldBeSmallerThanUpperBound')
+        },
+        eitherOneIsRequired(field, params) {
+          return i18n.t(`message.${field}`) + i18n.t('message.and') + i18n.t(`message.${params}`) + i18n.t('message.eitherOneIsRequired')
+        },
+        decimal(field, params) {
+          if (params.length === 0) return i18n.t('message.formDecimal')
+          return i18n.t('message.formDecimalWithMaxDecimalPointNumbers', { max: params[0] })
         }
       }
     },
@@ -286,6 +323,19 @@ Vue.use(VeeValidate, {
         },
         letterSpace () {
           return i18n.t('message.formLetterSpaceEmpty')
+        },
+        validUpperBound() {
+          return i18n.t('message.upperBoundShouldBeLargerThanLowerBound')
+        },
+        validLowerBound() {
+          return i18n.t('message.lowerBoundShouldBeSmallerThanUpperBound')
+        },
+        eitherOneIsRequired(field, params) {
+          return i18n.t(`message.${field}`) + i18n.t('message.and') + i18n.t(`message.${params}`) + i18n.t('message.eitherOneIsRequired')
+        },
+        decimal(field, params) {
+          if (params.length === 0) return i18n.t('message.formDecimal')
+          return i18n.t('message.formDecimalWithMaxDecimalPointNumbers', { max: params[0] })
         }
       }
     }

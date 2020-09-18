@@ -161,6 +161,20 @@ export function getDataFrameColumnInfoById (dataFrameId, hasFeature = true, hasA
 }
 
 /**
+ * update dataColumn primaryAlias by dataColumnId
+ * @param {Object} dataColumn - 欲更新的欄位
+ * @param {Number} dataColumn.id - id
+ * @param {string} dataColumn.primaryAlias - primaryAlias
+ */
+export function patchDataColumnPrimaryAlias (dataColumn) {
+  return request({
+    url: `/dataColumn/display-alias`,
+    method: 'PATCH',
+    data: dataColumn
+  })
+}
+
+/**
  * update dataFrame alias
  * @param {Object} userEditedInput - 欲更新的資料
  * @param {Number} userEditedInput.dataFrameId - dataFrameId
