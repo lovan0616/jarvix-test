@@ -13,7 +13,7 @@ export default {
       localStorage.removeItem('token')
     })
   },
-  async getUserInfo({ commit, rootState }, defaultGroupId) {
+  async getUserInfo({ commit, rootState, rootGetters }, defaultGroupId) {
     let accountPermissionList = []
     let licensePermissionList = []
     let groupPermissionList = []
@@ -46,16 +46,25 @@ export default {
       })
 
       // get locale info
-      let locale = userInfo.userData.language
+      const hasPermission = rootGetters['userManagement/hasPermission']
+      
+      // 待改善
+      const locale = hasPermission('english_ui') && userInfo.userData.language === 'en-US' 
+        ? userInfo.userData.language
+        : rootState.setting.languageDefault
+      
+      const lang = hasPermission('english_ui') && rootState.setting.locale === 'en-US' 
+        ? rootState.setting.locale 
+        : rootState.setting.languageDefault
+
       // 未設定語系，並在登入前曾修改語系
-      if (!locale && rootState.setting.changeLangBeforeLogin) {
-        updateLocale(rootState.setting.locale)
+      if (!locale && rootState.setting.changeLangBeforeLogin ) {
+        updateLocale(lang)
       }
       // 曾設定語系，且發現前後端儲存的語系不同，需判斷該取用前端還是後端語系
       if (locale && locale !== rootState.setting.locale) {
-        rootState.setting.changeLangBeforeLogin
-          ? updateLocale(rootState.setting.locale)
-          : commit('setting/setLocale', locale, { root: true })
+        if (rootState.setting.changeLangBeforeLogin) updateLocale(lang)
+        commit('setting/setLocale', locale, { root: true })
       }
 
       // get account info
