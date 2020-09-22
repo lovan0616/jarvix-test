@@ -41,7 +41,19 @@
           class="info__item"
         >
           <div class="info__title">{{ $t('editing.SQLSyntax') }}</div>
-          <div class="info__description">{{ createdInfo.sql }}</div>
+          <div class="info__sql sql">
+            <textarea 
+              ref="SQL" 
+              :value="createdInfo.sql"
+              class="info__description info__sql--code"
+              readonly/>
+            <button
+              class="btn btn-secondary info__sql--btn"
+              @click="copySQL"
+            >
+              <span>{{ $t('button.copySQL') }}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -49,6 +61,7 @@
 </template>
 <script>
 import { getDataFrameCreatedInfo } from '@/API/DataSource'
+import { Message } from 'element-ui'
 
 export default {
   name: 'ViewCreatedInfoDialog',
@@ -60,6 +73,7 @@ export default {
   },
   data () {
     return {
+      test: 'fmkdsolfkdslnfksdlfkndsfdsfewfwffwfefsdlfnkslfnksld',
       isLoading: true,
       createdInfo: {}
     }
@@ -73,6 +87,20 @@ export default {
       getDataFrameCreatedInfo(dataFrameId)
         .then(response => { this.createdInfo = response })
         .finally(() => { this.isLoading = false })
+    },
+    copySQL () {
+      let input = this.$refs.SQL
+      input.select()
+      /* For mobile devices */
+      input.setSelectionRange(0, 99999)
+      document.execCommand('copy')
+
+      Message({
+        message: this.$t('message.copiedToBoard'),
+        type: 'success',
+        duration: 3 * 1000,
+        showClose: true
+      })
     },
     closeDialog () {
       this.$emit('close')
@@ -128,6 +156,23 @@ export default {
     &__description {
       color: #DDDDDD;
       font-size: 14px;
+    }
+
+    &__sql {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      &--code {
+        margin-bottom: 8px;
+        width: 100%;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      &--btn {
+        width: fit-content;
+      }
     }
   }
 }

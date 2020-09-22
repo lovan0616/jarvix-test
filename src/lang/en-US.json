@@ -802,6 +802,7 @@
     "confirmSignup": "Create Account",
     "logout": "Logout",
     "copy": "Copy",
+    "copySQL": "複製語法",
     "change": "Change",
     "pinToBoard": "Add to Pinboard",
     "warRoom": "War Room",
