@@ -73,7 +73,6 @@ export default {
   },
   data () {
     return {
-      test: 'fmkdsolfkdslnfksdlfkndsfdsfewfwffwfefsdlfnkslfnksld',
       isLoading: true,
       createdInfo: {}
     }
