@@ -47,23 +47,32 @@ export default {
 
       // get locale info
       const hasPermission = rootGetters['userManagement/hasPermission']
-      
-      // 待改善
-      const locale = hasPermission('english_ui') && userInfo.userData.language === 'en-US' 
-        ? userInfo.userData.language
-        : rootState.setting.languageDefault
-      
-      const lang = hasPermission('english_ui') && rootState.setting.locale === 'en-US' 
-        ? rootState.setting.locale 
-        : rootState.setting.languageDefault
+      console.log(userInfo.userData.language)
+      console.log(rootState.setting.locale )
 
+      // 待改善
+      const locale = !hasPermission('english_ui') && userInfo.userData.language === 'en-US' 
+        ? rootState.setting.languageDefault
+        : rootState.setting.locale 
+      
+      const tempLocale = !hasPermission('english_ui') && rootState.setting.locale === 'en-US' 
+        ? rootState.setting.languageDefault
+        : rootState.setting.locale 
+
+      updateLocale(locale)
+      
       // 未設定語系，並在登入前曾修改語系
       if (!locale && rootState.setting.changeLangBeforeLogin ) {
-        updateLocale(lang)
+        console.log('未設定語系，並在登入前曾修改語系')
+        console.log('rootState.setting.locale ', tempLocale)
+        updateLocale(tempLocale)
       }
       // 曾設定語系，且發現前後端儲存的語系不同，需判斷該取用前端還是後端語系
       if (locale && locale !== rootState.setting.locale) {
-        if (rootState.setting.changeLangBeforeLogin) updateLocale(lang)
+        console.log('曾設定語系')
+        console.log('rootState.setting.locale ', tempLocale)
+        console.log('userInfo.userData.language ', locale)
+        if (rootState.setting.changeLangBeforeLogin) updateLocale(tempLocale)
         commit('setting/setLocale', locale, { root: true })
       }
 
