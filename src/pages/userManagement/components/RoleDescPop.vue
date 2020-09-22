@@ -7,10 +7,13 @@
       <p class="item-label">{{ $t(`userManagement.${manageType}Owner`) + ':' }}</p>
       <p class="item-description">{{ $t(`userManagement.${manageType}OwnerDesc`) }}</p>
     </div>
-    <!-- <div class="content-item">
+    <div
+      v-if="manageType !== 'group'"
+      class="content-item"
+    >
       <p class="item-label">{{ $t(`userManagement.${manageType}Maintainer`) + ':' }}</p>
       <p class="item-description">{{ $t(`userManagement.${manageType}MaintainerDesc`) }}</p>
-    </div> -->
+    </div>
     <div class="content-item">
       <p class="item-label">{{ $t(`userManagement.${manageType}Viewer`) + ':' }}</p>
       <p class="item-description">{{ $t(`userManagement.${manageType}ViewerDesc`) }}</p>
