@@ -100,7 +100,10 @@
             <h3 class="item__info--title"> {{ $t('accountInfo.pinBoardAmount') }} </h3>
             <div class="item__info--amount"> {{ groupUsage.pinBoardCount }} </div>
           </div>
-          <div class="item__info">
+          <div
+            v-if="hasPermission('group_read_data') && isShowWarRoomModule"
+            class="item__info"
+          >
             <h3 class="item__info--title"> {{ $t('accountInfo.warRoomAmount') }} </h3>
             <div class="item__info--amount"> {{ groupUsage.warRoomCount }} </div>
           </div>
@@ -112,6 +115,7 @@
 <script>
 import { getAccountInfo } from '@/API/Account'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'AccountInfo',
@@ -132,6 +136,12 @@ export default {
         groupCount: null,
         groupUsageList: []
       },
+    }
+  },
+  computed: {
+    ...mapGetters('userManagement', ['hasPermission']),
+    isShowWarRoomModule () {
+      return localStorage.getItem('isShowWarRoomModule') === 'true'
     }
   },
   mounted () {

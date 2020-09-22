@@ -71,7 +71,7 @@
             <span class="pin-slash"><svg-icon 
               :icon-class="isLoading ? 'spinner' : 'pin'" 
               class="pin-icon"/></span>
-            {{ isWarRoomAddable && hasPermission('group_create_data') ? $t('button.pinToBoard') + ' / ' + $t('button.warRoom') : $t('button.pinToBoard') }}
+            {{ showAddToWarRoomButton ? $t('button.pinToBoard') + ' / ' + $t('button.warRoom') : $t('button.pinToBoard') }}
           </a>
           <pinboard-dialog
             v-if="showPinboardDialog"
@@ -199,6 +199,10 @@ export default {
     },
     isPersonalPinboard () {
       return this.$route.name === 'PersonalPagePinboardList'
+    },
+    showAddToWarRoomButton () {
+      const isShowWarRoomModule = localStorage.getItem('isShowWarRoomModule') === 'true'
+      return this.isWarRoomAddable && isShowWarRoomModule && this.hasPermission('group_create_data')
     }
   },
   mounted () {

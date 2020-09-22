@@ -8,7 +8,7 @@
     >
       <button
         v-if="$slots.InsightBasicInfo" 
-        v-show="isShowSettingBox && hasBasicInfo"
+        v-show="hasBasicInfo"
         :class="{ active: showBasicInfo }"
         type="button"
         class="btn-m btn-default control-btn"
@@ -19,7 +19,7 @@
       </div>
       <slot-dialog
         v-if="$slots.InsightBasicInfo" 
-        v-show="(showBasicInfo || !isShowSettingBox) && hasBasicInfo"
+        v-show="showBasicInfo && hasBasicInfo"
         :show="showBasicInfo"
         class="basic-info-container"
         @close="closeBasicInfoDialog"
@@ -94,53 +94,41 @@ export default {
       margin-bottom: 32px;
     }
 
-    &.is-open {
-      .chart-block {
-        width: 100%;
-        margin-right: 0;
-      }
-      .basic-info-container {
-        width: 40%;
-        position: absolute;
-        top: 0;
-        right: 0;
-        border: 1px solid $theme-color-primary;
-        background-color: rgba(24, 24, 24, 0.95);
-        z-index: 10000000; // echart 裡面的 tooltip z-index 給 9999999，逼不得已給這麼大
-
-        &:before {
-          position: absolute;
-          top: -20px;
-          right: 30px;
-          display: block;
-          border: solid transparent;
-          content: " ";
-          height: 0;
-          width: 0;
-          pointer-events: none;
-          border-bottom-color: $theme-color-primary;
-          border-width: 10px;
-        }
-      }
-    }
-
     .chart-block {
       width: 100%;
       min-width: 0;
       flex: 1;
-      margin-right: 32px;
+      margin-right: 0;
 
       /deep/ .task:not(:first-child) {
         padding-top: 30px;
       }
     }
-
+    
     .basic-info-container {
-      flex: initial;
-      width: 28.5%;
       padding: 20px;
       border-radius: 8px;
-      background-color: var(--color-bg-5);
+      width: 40%;
+      position: absolute;
+      top: 0;
+      right: 0;
+      border: 1px solid $theme-color-primary;
+      background-color: rgba(24, 24, 24, 0.95);
+      z-index: 10000000; // echart 裡面的 tooltip z-index 給 9999999，逼不得已給這麼大
+
+      &:before {
+        position: absolute;
+        top: -20px;
+        right: 30px;
+        display: block;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        pointer-events: none;
+        border-bottom-color: $theme-color-primary;
+        border-width: 10px;
+      }
     }
 
     .control-btn {
