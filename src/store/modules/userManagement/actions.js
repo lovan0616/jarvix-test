@@ -47,33 +47,24 @@ export default {
 
       // get locale info
       const hasPermission = rootGetters['userManagement/hasPermission']
-      console.log(userInfo.userData.language)
-      console.log(rootState.setting.locale )
+      const userLanguage = userInfo.userData.language
+      const LocalLanguage = rootState.setting.locale
 
-      // 待改善
-      const locale = !hasPermission('english_ui') && userInfo.userData.language === 'en-US' 
+      const tempLocale = !hasPermission('english_ui') && LocalLanguage === 'en-US' 
         ? rootState.setting.languageDefault
-        : rootState.setting.locale 
-      
-      const tempLocale = !hasPermission('english_ui') && rootState.setting.locale === 'en-US' 
-        ? rootState.setting.languageDefault
-        : rootState.setting.locale 
-
-      updateLocale(locale)
+        : LocalLanguage 
       
       // 未設定語系，並在登入前曾修改語系
-      if (!locale && rootState.setting.changeLangBeforeLogin ) {
-        console.log('未設定語系，並在登入前曾修改語系')
-        console.log('rootState.setting.locale ', tempLocale)
+      if (!userLanguage && rootState.setting.changeLangBeforeLogin ) {
         updateLocale(tempLocale)
-      }
-      // 曾設定語系，且發現前後端儲存的語系不同，需判斷該取用前端還是後端語系
-      if (locale && locale !== rootState.setting.locale) {
-        console.log('曾設定語系')
-        console.log('rootState.setting.locale ', tempLocale)
-        console.log('userInfo.userData.language ', locale)
+      } else if (userLanguage && userLanguage !== LocalLanguage) {
+        // 曾設定語系，且發現前後端儲存的語系不同，需判斷該取用前端還是後端語系
         if (rootState.setting.changeLangBeforeLogin) updateLocale(tempLocale)
-        commit('setting/setLocale', locale, { root: true })
+        commit('setting/setLocale', tempLocale, { root: true })
+      } else {
+        // 處理切換帳號後，帳號對英文語系的權限不同
+        updateLocale(tempLocale)
+        commit('setting/setLocale', tempLocale, { root: true })
       }
 
       // get account info
