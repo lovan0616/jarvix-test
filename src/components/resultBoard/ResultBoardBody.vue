@@ -11,7 +11,7 @@
         v-show="hasBasicInfo"
         :class="{ active: showBasicInfo }"
         type="button"
-        class="btn-m btn-default control-btn"
+        class="btn-m btn-secondary control-btn"
         @click.stop="toggleBasicInfoDialog"
       >{{ $t('resultDescription.basicInfo') }}</button>
       <div class="chart-block">
@@ -133,7 +133,7 @@ export default {
 
     .control-btn {
       position: absolute;
-      top: -30px;
+      top: -35px;
       right: 0;
       padding: 7px 15px;
 
