@@ -1,6 +1,5 @@
 <template>
-  <div 
-    class="result-board-container">
+  <div class="result-board-container">
     <div 
       :id="pinBoardId"
       :class="{'has-filter': hasFilter}"
