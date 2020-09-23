@@ -49,8 +49,9 @@ export default {
       const hasPermission = rootGetters['userManagement/hasPermission']
       const userLanguage = userInfo.userData.language
       const LocalLanguage = rootState.setting.locale
+      const isNeededtoChangeLanguage = !hasPermission('english_ui') && LocalLanguage === 'en-US' 
 
-      const tempLocale = !hasPermission('english_ui') && LocalLanguage === 'en-US' 
+      const tempLocale = isNeededtoChangeLanguage
         ? rootState.setting.languageDefault
         : LocalLanguage 
       
@@ -61,8 +62,9 @@ export default {
         // 曾設定語系，且發現前後端儲存的語系不同，需判斷該取用前端還是後端語系
         if (rootState.setting.changeLangBeforeLogin) updateLocale(tempLocale)
         commit('setting/setLocale', tempLocale, { root: true })
-      } else {
-        // 處理切換帳號後，帳號對英文語系的權限不同
+      } else if (isNeededtoChangeLanguage) {
+        // 處理切換帳號且新帳號無英文語系的權限
+        console.log('處理切換帳號後')
         updateLocale(tempLocale)
         commit('setting/setLocale', tempLocale, { root: true })
       }
