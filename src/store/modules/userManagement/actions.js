@@ -1,4 +1,4 @@
-import { logout, switchAccount, switchGroup, updateLocale, refreshToken } from '@/API/User'
+import { logout, switchAccount, switchGroup, updateLocale } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
 
@@ -62,16 +62,6 @@ export default {
       const accountInfo = await getAccountInfo(defaultAccount.id)
       commit('setLicenseInfo', accountInfo.license)
       
-      // 判斷是否刷新頁面，或是直接從 router 進入
-      if (window.performance.getEntriesByType("navigation")){
-        let enterPageType = window.performance.getEntriesByType("navigation")[0].type
-        
-        if (enterPageType === 'reload') {
-          // const { accessToken } = await refreshToken() 
-          // localStorage.setItem('token', accessToken)
-        }
-      }  
-
       // refresh token
       // const { accessToken } = await refreshToken() 
       // localStorage.setItem('token', accessToken)

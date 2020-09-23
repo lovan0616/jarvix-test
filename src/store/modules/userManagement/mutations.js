@@ -34,8 +34,5 @@ export default {
     })
     // merge the latest permission list into existing one and exclude duplicate items
     state.permission = [...new Set([...state.permission, ...groupPermission])]
-  },
-  updateTokenTimestamp (state, data) {
-    state.tokenTimestamp = data
   }
 }

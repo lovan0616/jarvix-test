@@ -17,7 +17,7 @@ const service = axios.create({
   headers: {
     access_token: {
       toString () {
-        return localStorage.getItem('token')
+        return store.state.userManagement.token || localStorage.getItem('token')
       }
     },
     'Accept-Language': {
@@ -27,6 +27,16 @@ const service = axios.create({
     }
   }
 })
+
+service.interceptors.request.use(config => {
+  // const isRefreshToken = config.url.includes('/auth/refresh')
+  // if(!isRefreshToken) 
+  //   store.dispatch('setting/checkToken')
+  return config
+  }, error => {
+      Promise.reject(error)
+  }
+)
 
 // 攔截 response
 service.interceptors.response.use(

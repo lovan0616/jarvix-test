@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     ...mapActions('userManagement', ['getUserInfo']),
-    ...mapMutations('userManagement', ['updateTokenTimestamp']),
+    ...mapMutations('setting', ['updateToken', 'updateTokenTimestamp']),
     submitForm () {
       this.$validator.validateAll().then(result => {
         if (result) {
@@ -73,6 +73,7 @@ export default {
           })
             .then(({ accessToken }) => {
               this.updateTokenTimestamp(new Date().getTime())
+              this.updateToken(accessToken)
               localStorage.setItem('token', accessToken)
               return this.getUserInfo()
             })

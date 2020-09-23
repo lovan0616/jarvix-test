@@ -11,8 +11,7 @@ export default {
     accountList: [],
     groupList: [],
     permission: [],
-    license: null,
-    tokenTimestamp: null
+    license: null
   },
   actions,
   mutations,

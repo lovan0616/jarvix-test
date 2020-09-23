@@ -13,7 +13,9 @@ export default {
       'en-US': i18n.t('lang', 'en-US')
     },
     currentRoute: {},
-    changeLangBeforeLogin: false
+    changeLangBeforeLogin: false,
+    token: null,
+    tokenTimestamp: null
   },
   actions,
   mutations,
