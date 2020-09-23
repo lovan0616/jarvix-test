@@ -327,7 +327,6 @@ export default {
         showClose: true
       })
       this.$nextTick(() => {
-
       })
     },
     confirmDelete () {

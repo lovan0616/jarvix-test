@@ -1,6 +1,7 @@
 import { logout, switchAccount, switchGroup, updateLocale } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
+import { Message } from 'element-ui'
 
 export default {
   logout ({ commit }) {
@@ -22,6 +23,15 @@ export default {
     try {
       // get user permission
       const userInfo = await getPermission(defaultGroupId)
+      if(userInfo.error) {
+        Message({
+          message: userInfo.error.message,
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      }
+
       if (userInfo.accountList.length) {
         defaultAccount = userInfo.accountList.find(account => account.isDefault)
         accountPermissionList = defaultAccount.accountPermissionList
@@ -64,7 +74,6 @@ export default {
         commit('setting/setLocale', tempLocale, { root: true })
       } else if (isNeededtoChangeLanguage) {
         // 處理切換帳號且新帳號無英文語系的權限
-        console.log('處理切換帳號後')
         updateLocale(tempLocale)
         commit('setting/setLocale', tempLocale, { root: true })
       }
@@ -72,9 +81,9 @@ export default {
       // get account info
       const accountInfo = await getAccountInfo(defaultAccount.id)
       commit('setLicenseInfo', accountInfo.license)
-
+      
       // refresh token
-      // const { accessToken } = await refreshToken()
+      // const { accessToken } = await refreshToken() 
       // localStorage.setItem('token', accessToken)
     } catch(error) {
       return Promise.reject(error)

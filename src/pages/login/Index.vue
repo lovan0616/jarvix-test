@@ -36,7 +36,7 @@
 import { login } from '@/API/User'
 import InputBlock from '@/components/InputBlock'
 import PageLayout from '@/components/layout/PageLayout'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
   inject: ['$validator'],
@@ -62,6 +62,7 @@ export default {
   },
   methods: {
     ...mapActions('userManagement', ['getUserInfo']),
+    ...mapMutations('setting', ['updateToken', 'updateTokenTimestamp']),
     submitForm () {
       this.$validator.validateAll().then(result => {
         if (result) {
@@ -71,6 +72,8 @@ export default {
             password: this.userInfo.password
           })
             .then(({ accessToken }) => {
+              this.updateTokenTimestamp(new Date().getTime())
+              this.updateToken(accessToken)
               localStorage.setItem('token', accessToken)
               return this.getUserInfo()
             })

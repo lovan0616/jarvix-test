@@ -111,7 +111,6 @@
     "memberDeleteSuccess": "Member deleted.",
     "etlSuccess": "Data preprocessed. Initializing Data Set.",
     "etlSettingTempSave": "Settings have been temporarily saved.",
-    "calculatingPleaseTryLater": "Calculating data. Please try again later.",
     "analysisFailed": "An error occurred when parsing file.",
     "confirmColumnStateTypeChange": "This change will clear the advanced settings. Are you sure you want to make changes?",
     "fileTypeNotSupported": "{fileType} file format is not supported.",

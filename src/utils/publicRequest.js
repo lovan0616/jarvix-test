@@ -17,9 +17,9 @@ const service = axios.create({
   headers: {
     access_token: {
       toString () {
-        return localStorage.getItem('token')
+        return store.state.userManagement.token || localStorage.getItem('token')
       }
-    },
+    }, 
     'Accept-Language': {
       toString () {
         return localStorage.getItem('locale')
@@ -31,6 +31,7 @@ const service = axios.create({
 // 攔截 response
 service.interceptors.response.use(
   response => {
+    store.dispatch('setting/checkToken')
     const res = response.data
     // 特殊情況 光電展 response 無 meta
     if (res.success && !res.meta) return res.data

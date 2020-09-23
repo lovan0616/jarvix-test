@@ -18,7 +18,7 @@
         v-if="isLoading"
       />
       <div
-        v-else-if="!isLoading && componentData && !hasError && !isCalculating"
+        v-else-if="!isLoading && componentData && !hasError"
         class="chart"
       >
         <display-heat-map-chart
@@ -115,7 +115,6 @@ export default {
     return {
       componentData: null,
       isLoading: true,
-      isCalculating: false,
       hasError: false,
       tableHeaders: [
         {
@@ -144,13 +143,13 @@ export default {
       // TODO: 待 DS 關聯度區間
       degreeMin: 0.3,
       degreeMax: 1,
-      isEmpty: false
+      isEmpty: false,
+      timeoutFunction: null
     }
   },
   computed: {
     ...mapGetters('dataFrameAdvanceSetting', ['selectedColumnList', 'askCondition']),
     reminderMsg () {
-      if (this.isCalculating) return this.$t('message.calculatingPleaseTryLater')
       return this.hasError ? this.$t('message.systemIsError') : this.$t('message.noData')
     },
     filterRestrictionList () {
@@ -175,13 +174,17 @@ export default {
   mounted () {
     this.fetchData()
   },
+  destroyed() {
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+  },
   methods: {
     fetchData () {
+       window.clearTimeout(this.timeoutFunction)
+
       // reset status
       this.isLoading = true
       this.hasError = false
       this.isEmpty = false
-      this.isCalculating = false
 
       let selectedColumnList = null
       let restrictions = []
@@ -198,16 +201,26 @@ export default {
         restrictions 
       })
         .then(response => {
+          switch (response.statusType) {
+            // 處理舊資料或新資料需重新被計算的狀態
+            case 'Process':
+            case 'Ready': 
+              this.timeoutFunction = window.setTimeout(() => this.fetchData(), 10000)
+              return
+            // 計算錯誤時，不顯示結果
+            case 'Fail':
+              this.isEmpty = true
+              this.isLoading = false
+              return
+          }
+
           const columnNameList = response.columnNameList
           const columnDataList = response.data
-          // 處理舊資料需被計算的狀態
-          if (response.statusType === 'Process' || response.statusType === 'Ready') {
-            this.isCalculating = true
-            return
-          }
-          // 無資料或計算錯誤時，不顯示結果
-          if (response.statusType === 'Fail' || !columnNameList || columnNameList.length === 0 || !columnDataList || columnDataList.length === 0) {
+
+          // 無資料時，不顯示結果
+          if (!columnNameList || columnNameList.length === 0 || !columnDataList || columnDataList.length === 0) {
             this.isEmpty = true
+            this.isLoading = false
             return
           }
 
@@ -219,6 +232,8 @@ export default {
             }
           }
 
+          this.isLoading = false
+
           // this.correlationData = dummyData.top
           // //  TODO: 增加關聯欄位間的正確 icon
           // this.correlationData = this.correlationData.map(data => ({
@@ -226,8 +241,10 @@ export default {
           //   icon: 'arrow-right'
           // }))
         })
-        .catch(() => { this.hasError = true })
-        .finally(() => { this.isLoading = false })
+        .catch(() => {
+          this.isLoading = false
+          this.hasError = true
+        })
     },
     formatData (dataList, nameList) {
       const result = []
