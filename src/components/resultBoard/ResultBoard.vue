@@ -69,15 +69,9 @@
         <div 
           v-else-if="$route.name === 'PageResult'"
         >
-          <<<<<<< HEAD
           <button
             class="btn-m btn-default pin-button"
-            =="====="
-            <a 
-            class="btn-m btn-default btn-has-icon pin-button"
-            href="javascript:void(0)"
-          >>>>>>> qa
-          @click="pinToBoard"
+            @click="pinToBoard"
           >
             <span class="pin-slash"><svg-icon 
               :icon-class="isLoading ? 'spinner' : 'pin'" 
