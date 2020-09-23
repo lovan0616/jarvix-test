@@ -851,7 +851,8 @@
     "monitorSetting": "監測設定",
     "updateImmediately": "立即更新",
     "AddNewWarRoom": "新增戰情室",
-    "sendInvitation": "寄送邀請信"
+    "sendInvitation": "寄送邀請信",
+    "downloadPage": "下載"
   },
   "timeScopeUnit": {
     "second": "秒",
