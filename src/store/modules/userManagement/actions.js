@@ -64,7 +64,6 @@ export default {
         commit('setting/setLocale', tempLocale, { root: true })
       } else if (isNeededtoChangeLanguage) {
         // 處理切換帳號且新帳號無英文語系的權限
-        console.log('處理切換帳號後')
         updateLocale(tempLocale)
         commit('setting/setLocale', tempLocale, { root: true })
       }
