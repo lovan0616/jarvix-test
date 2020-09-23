@@ -1,5 +1,5 @@
-import { logout, switchAccount, switchGroup, updateLocale } from '@/API/User'
-import { getAccountInfo, refreshToken } from '@/API/Account'
+import { logout, switchAccount, switchGroup, updateLocale, refreshToken } from '@/API/User'
+import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
 
 export default {
