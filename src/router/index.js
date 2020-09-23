@@ -364,8 +364,8 @@ const router = new Router({
 })
 
 router.beforeEach(async (to, from, next) => {
-  console.log('beforeEach')
-  await store.dispatch('setting/checkToken')
+  // console.log('beforeEach')
+  // await store.dispatch('setting/checkToken')
   // Declare routes without authentication
   const pathWithoutAuth = ['PageLogin', 'PageSignup', 'WarRoomLivePage']
   if (pathWithoutAuth.includes(to.name)) {

@@ -1,6 +1,7 @@
 import { logout, switchAccount, switchGroup, updateLocale } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
+import { Message } from 'element-ui'
 
 export default {
   logout ({ commit }) {
@@ -22,6 +23,15 @@ export default {
     try {
       // get user permission
       const userInfo = await getPermission(defaultGroupId)
+      if(userInfo.error) {
+        Message({
+          message: userInfo.error.message,
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      }
+
       if (userInfo.accountList.length) {
         defaultAccount = userInfo.accountList.find(account => account.isDefault)
         accountPermissionList = defaultAccount.accountPermissionList

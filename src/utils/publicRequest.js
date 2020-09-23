@@ -19,7 +19,7 @@ const service = axios.create({
       toString () {
         return store.state.userManagement.token || localStorage.getItem('token')
       }
-    },
+    }, 
     'Accept-Language': {
       toString () {
         return localStorage.getItem('locale')
@@ -28,19 +28,10 @@ const service = axios.create({
   }
 })
 
-service.interceptors.request.use(config => {
-  // const isRefreshToken = config.url.includes('/auth/refresh')
-  // if(!isRefreshToken) 
-  //   store.dispatch('setting/checkToken')
-  return config
-  }, error => {
-      Promise.reject(error)
-  }
-)
-
 // 攔截 response
 service.interceptors.response.use(
   response => {
+    store.dispatch('setting/checkToken')
     const res = response.data
     // 特殊情況 光電展 response 無 meta
     if (res.success && !res.meta) return res.data
