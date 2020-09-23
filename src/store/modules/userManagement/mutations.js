@@ -36,6 +36,6 @@ export default {
     state.permission = [...new Set([...state.permission, ...groupPermission])]
   },
   updateTokenTimestamp (state, data) {
-    state.timestamp = data
+    state.tokenTimestamp = data
   }
 }
