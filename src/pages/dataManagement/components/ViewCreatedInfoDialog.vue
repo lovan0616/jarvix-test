@@ -158,19 +158,14 @@ export default {
     }
 
     &__sql {
-      display: flex;
-      flex-direction: column;
       width: 100%;
 
       &--code {
         margin-bottom: 8px;
         width: 100%;
         padding: 0;
+        line-height: 20px;
         overflow: hidden;
-      }
-
-      &--btn {
-        width: fit-content;
       }
     }
   }
