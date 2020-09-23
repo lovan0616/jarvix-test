@@ -802,6 +802,7 @@
     "confirmSignup": "確認註冊",
     "logout": "登出",
     "copy": "複製",
+    "copySQL": "複製語法",
     "change": "變更",
     "pinToBoard": "加入釘板",
     "warRoom": "戰情室",

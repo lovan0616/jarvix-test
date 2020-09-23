@@ -1,6 +1,5 @@
 <template>
   <div 
-    id="result-board" 
     class="result-board-container">
     <div 
       :id="pinBoardId"
@@ -227,7 +226,7 @@ export default {
     downloadResult () {
       if(this.isDownloading) return
       this.isDownloading = true
-      const node = document.getElementById('result-board')
+      const node = this.$el
       const fileName = this.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
 
       const excludeNode = node => node.tagName !== 'BUTTON'
