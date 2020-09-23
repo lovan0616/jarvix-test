@@ -64,7 +64,7 @@
           class="pin-button-block"
         >
           <a 
-            class="pin-button"
+            class="btn-m btn-default btn-has-icon pin-button"
             href="javascript:void(0)"
             @click="pinToBoard"
           >
@@ -394,25 +394,15 @@ export default {
   }
 
   .pin-button {
-    display: flex;
-    align-items: center;
-    height: 32px;
-    font-size: 14px;
-    line-height: 26px;
     letter-spacing: 0.02em;
-    color: $theme-color-primary;
-    background-color: rgba(255, 255, 255, 0.16);
     padding: 15px 12px;
-    border-radius: 4px;
-    transition: all 0.3s;
+
+    &:hover {
+      color: #fff;
+    }
 
     &:after {
       content: attr(data-text);
-    }
-
-    &:hover {
-      background-color: #63cbd5;
-      color: #fff;
     }
 
     &.is-loading {
