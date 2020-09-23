@@ -379,6 +379,8 @@ router.beforeEach(async (to, from, next) => {
   if (!userName) {
     try {
       await store.dispatch('userManagement/getUserInfo')
+      console.log(new Date().getTime())
+      // this.updateTokenTimestamp(new Date().getTime())
     } catch (error) {
       return next({ name: 'PageLogin' })
     }

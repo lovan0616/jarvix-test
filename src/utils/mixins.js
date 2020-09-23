@@ -452,6 +452,10 @@ Vue.mixin({
     },
     getAccountRoleLocaleName (accountRole) {
       return this.$t(`userManagement.${this.accountRoleToCamelCase(accountRole)}`)
+    },
+    // Refresh token every 5 minutes
+    isTokenStale (oldTime, newTime, freshPeriod = 5) {
+      return newTime - oldTime >= freshPeriod * 60 * 1000
     }
   }
 })
