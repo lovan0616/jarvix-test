@@ -13,7 +13,7 @@ export default {
       localStorage.removeItem('token')
     })
   },
-  async getUserInfo({ commit, rootState }, defaultGroupId) {
+  async getUserInfo({ commit, rootState, rootGetters }, defaultGroupId) {
     let accountPermissionList = []
     let licensePermissionList = []
     let groupPermissionList = []
@@ -46,16 +46,27 @@ export default {
       })
 
       // get locale info
-      let locale = userInfo.userData.language
+      const hasPermission = rootGetters['userManagement/hasPermission']
+      const userLanguage = userInfo.userData.language
+      const LocalLanguage = rootState.setting.locale
+      const isNeededtoChangeLanguage = !hasPermission('english_ui') && LocalLanguage === 'en-US' 
+
+      const tempLocale = isNeededtoChangeLanguage
+        ? rootState.setting.languageDefault
+        : LocalLanguage 
+      
       // 未設定語系，並在登入前曾修改語系
-      if (!locale && rootState.setting.changeLangBeforeLogin) {
-        updateLocale(rootState.setting.locale)
-      }
-      // 曾設定語系，且發現前後端儲存的語系不同，需判斷該取用前端還是後端語系
-      if (locale && locale !== rootState.setting.locale) {
-        rootState.setting.changeLangBeforeLogin
-          ? updateLocale(rootState.setting.locale)
-          : commit('setting/setLocale', locale, { root: true })
+      if (!userLanguage && rootState.setting.changeLangBeforeLogin ) {
+        updateLocale(tempLocale)
+      } else if (userLanguage && userLanguage !== LocalLanguage) {
+        // 曾設定語系，且發現前後端儲存的語系不同，需判斷該取用前端還是後端語系
+        if (rootState.setting.changeLangBeforeLogin) updateLocale(tempLocale)
+        commit('setting/setLocale', tempLocale, { root: true })
+      } else if (isNeededtoChangeLanguage) {
+        // 處理切換帳號且新帳號無英文語系的權限
+        console.log('處理切換帳號後')
+        updateLocale(tempLocale)
+        commit('setting/setLocale', tempLocale, { root: true })
       }
 
       // get account info
