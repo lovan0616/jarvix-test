@@ -20,7 +20,7 @@
       <button
         v-if="isPinboardPage && componentData.dataset && componentData.dataset.allowMonitorConfig"
         type="button"
-        class="btn-m btn-default btn-monitor"
+        class="btn-m btn-secondary btn-monitor"
         @click="openMonitorSettingDialog"
       >{{ $t('button.monitorSetting') }}</button>
       <!-- TODO: 調整寫法 -->
