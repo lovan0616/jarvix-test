@@ -10,5 +10,11 @@ export default {
   },
   isChangeLangBeforeLogin (state, data) {
     state.changeLangBeforeLogin = data
+  },
+  updateToken (state, data) {
+    state.token = data
+  },
+  updateTokenTimestamp (state, data) {
+    state.tokenTimestamp = data
   }
 }
