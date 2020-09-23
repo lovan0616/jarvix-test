@@ -10,7 +10,7 @@
     <sy-select 
       :placeholder="$t('nav.languagePlaceholder')"
       :selected="locale"
-      :items="selectItems"
+      :items="langOptions"
       class="dialog-select"
       @update:selected="langOnSelected"
     />
@@ -21,7 +21,7 @@
 import WritingDialog from '@/components/dialog/WritingDialog'
 import SySelect from '@/components/select/SySelect';
 import { updateLocale } from '@/API/User'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'ChangeLanguageDialog',
@@ -36,14 +36,23 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['hasPermission']),
     ...mapState('setting', ['locale', 'languages']),
     ...mapState('userManagement', ['userId']),
+    isLoginPage () {
+      return this.$route.name === 'PageLogin'
+    },
     selectItems () {
       return Object.keys(this.languages).map(key => ({
         id: key,
         name: this.languages[key]
       }))
     },
+    langOptions () {
+      return this.hasPermission('english_ui') || this.isLoginPage
+        ? this.selectItems
+        : this.selectItems.filter(item => item.name !== 'English')
+    }
   },
   mounted () {
     this.selectedLanguage = this.locale

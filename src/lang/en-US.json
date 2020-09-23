@@ -802,6 +802,7 @@
     "confirmSignup": "Create Account",
     "logout": "Logout",
     "copy": "Copy",
+    "copySQL": "Copy Script",
     "change": "Change",
     "pinToBoard": "Add to Pinboard",
     "warRoom": "War Room",
@@ -850,7 +851,8 @@
     "monitorSetting": "Monitor Setting",
     "updateImmediately": "Update Immediately",
     "AddNewWarRoom": "Add war room",
-    "sendInvitation": "Send Invitation"
+    "sendInvitation": "Send Invitation",
+    "downloadPage": "Download"
   },
   "timeScopeUnit": {
     "second": "seconds",

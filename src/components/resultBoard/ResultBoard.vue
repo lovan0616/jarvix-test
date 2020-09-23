@@ -19,12 +19,21 @@
             class="result-board__header"
           />
         </div>
+        <button 
+          class="btn-m btn-default download-button"
+          @click="downloadResult"
+        >
+          <svg-icon 
+            :icon-class="isDownloading ? 'spinner' : 'download'" 
+            class="icon"/>
+          {{ $t('button.downloadPage') }}
+        </button>
         <div 
           v-if="isPinboardPage"
           class="pin-button-block"
         >
           <button 
-            class="head-btn restrict"
+            class="btn-m btn-default restrict-btn"
             @click.stop.prevent="togglePinboardInfo"
           >
             {{ $t('button.dataExplanation') }}
@@ -35,9 +44,8 @@
             :filter-info="restrictions"
             @close="closePinboardInfo"
           />
-          <a 
-            class="head-btn share"
-            href="javascript:void(0)"
+          <button
+            class="btn-m btn-default share-btn"
             @click="showShare"
           >
             <svg-icon 
@@ -48,31 +56,28 @@
               :share-url="shareUrl"
               @cancel="closeShareDialog"
             />
-          </a>
-          <a 
-            class="head-btn delete"
-            href="javascript:void(0)"
+          </button>
+          <button
+            class="btn-m head-btn delete"
             @click="showDelete"
           >
             <svg-icon 
               icon-class="delete" 
               class="icon"/>{{ $t('button.delete') }}
-          </a>
+          </button>
         </div>
         <div 
           v-else-if="$route.name === 'PageResult'"
-          class="pin-button-block"
         >
-          <a 
-            class="btn-m btn-default btn-has-icon pin-button"
-            href="javascript:void(0)"
+          <button
+            class="btn-m btn-default pin-button"
             @click="pinToBoard"
           >
             <span class="pin-slash"><svg-icon 
               :icon-class="isLoading ? 'spinner' : 'pin'" 
-              class="pin-icon"/></span>
+              class="icon"/></span>
             {{ showAddToWarRoomButton ? $t('button.pinToBoard') + ' / ' + $t('button.warRoom') : $t('button.pinToBoard') }}
-          </a>
+          </button>
           <pinboard-dialog
             v-if="showPinboardDialog"
             :is-war-room-addable="isWarRoomAddable"
@@ -129,6 +134,8 @@ import PinboardInfoDialog from '@/pages/pinboard/components/filter/PinboardInfoD
 import { addResultToWarRoomPool } from '@/API/WarRoom'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
+import { toPng } from 'html-to-image'
+import * as download from 'downloadjs'
 
 export default {
   name: 'ResultBoard',
@@ -166,6 +173,7 @@ export default {
   data () {
     return {
       isLoading: false,
+      isDownloading: false,
       pinBoardId: null,
       dataSourceId: null,
       dataFrameId: null,
@@ -214,6 +222,19 @@ export default {
     }
   },
   methods: {
+    downloadResult () {
+      if(this.isDownloading) return
+      this.isDownloading = true
+      const node = this.$el
+      const fileName = this.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
+
+      const excludeNode = node => node.tagName !== 'BUTTON'
+      toPng(node, { filter: excludeNode })
+        .then(dataUrl => {
+          this.isDownloading = !download(dataUrl, fileName)
+        })
+        .catch(() => {})
+    },
     pinToBoard () {
       if (this.isLoading) return false
       if (this.showPinboardDialog) {
@@ -336,7 +357,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .result-board {
-  background: rgba(0, 0, 0, 0.55);
+  background: rgb(0, 0, 0);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   margin-bottom: 48px;
@@ -361,93 +382,33 @@ export default {
   }
 
   .pin-button-block {
-    position: relative;
+    font-size: 0;
 
     .head-btn {
-      display: inline-block;
-      position: relative;
-      font-size: 14px;
-      line-height: 26px;
       color: $theme-text-color;
-      padding: 2px 12px;
-      border-radius: 4px;
-      border: none;
-
-      &.share, &.restrict {
-        background-color: #1EB8C7;
-        margin-right: 12px;
-      }
+      background-color: transparent;
 
       &.delete {
         border: 1px solid #fff;
       }
 
       &:hover {
-        background-color: #63cbd5;
+        background-color: $theme-color-primary;
         color: #fff;
       }
+    }
 
-      .icon {
-        margin-right: 8px;
-      }
+    .btn-default {
+      margin-right: 11px;
+    }
+
+    .icon {
+      margin-right: 8px;
     }
   }
-
-  .pin-button {
-    letter-spacing: 0.02em;
-    padding: 15px 12px;
-
-    &:hover {
-      color: #fff;
-    }
-
-    &:after {
-      content: attr(data-text);
-    }
-
-    &.is-loading {
-      cursor: not-allowed;
-      min-width: 120px;
-      background: $theme-color-primary;
-      opacity: 0.5;
-      color: #fff;
-      padding-left: 15px;
-    }
-
-    &.is-pinned:not(.is-loading) {
-      min-width: 100px;
-      background: #57B4BD;
-      color: #fff;
-      padding-left: 15px;
-      transition: all 0.3s;
-
-      &:hover {
-        background-color: #67888E;
-
-        // unpin icon 的斜線
-        .pin-slash {
-          position: relative;
-
-          &:before {
-            display: block;
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 16px;
-            height: 12px;
-            border-bottom: 1px solid #fff;
-            transform-origin: bottom center;
-            transform: rotateZ(-45deg) scale(1.2);
-          }
-        }
-      }
-    }
-
-    .pin-icon {
-      font-size: 16px;
-      margin-right: 9px;
-    }
+  
+  .download-button {
+    margin-right: 11px;
   }
 }
 .related-question-block {

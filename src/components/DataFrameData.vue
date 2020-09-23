@@ -80,7 +80,7 @@
     </div>
     <!--欄位關聯概況-->
     <column-correlation-overview
-      v-if="showCorrelationMatrix"
+      v-if="showCorrelationMatrix && hasPermission('correlation_matrix')"
       :data-frame-id="dataFrameId"
       :mode="mode"
       class="board-body-section"
@@ -137,6 +137,7 @@ export default {
   },
   computed: {
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
+    ...mapGetters('userManagement', ['hasPermission']),
   },
   watch: {
     dataFrameId (value) {
