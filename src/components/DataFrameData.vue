@@ -61,12 +61,16 @@
                   </el-tooltip>
                 </span>
               </div>
-              <div
-                v-if="showColumnSummaryRow"
-                class="summary"
-              >
+              <div class="summary">
                 <data-column-summary
+                  v-if="showColumnSummaryRow"
                   :summary-data="tableSummaryList[index]"
+                />
+                <spinner
+                  v-else
+                  :title="$t('etl.dataCalculate')"
+                  class="spinner-conatiner"
+                  size="30"
                 />
               </div>
             </div>
@@ -132,7 +136,8 @@ export default {
         totalColumns: '-'
       },
       showColumnSummaryRow: true,
-      tableSummaryList: []
+      tableSummaryList: [],
+      timeoutFunction: null
     }
   },
   computed: {
@@ -162,16 +167,49 @@ export default {
     this.isLoading = true
     this.fetchDataFrameData(this.dataFrameId, 0, true)
   },
+  destroyed() {
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+  },
   methods: {
     ...mapMutations('chatBot', ['setCopiedColumnName']),
-    fetchDataFrameData (id, page = 0, resetPagination = false) {
-      this.isProcessing = true
+    fetchDataFrameData (id, page = 0, resetPagination = false, isOnlyFetchSummary = false) {
       if (resetPagination) {
-        this.dataSourceTableData = null
         this.isLoading = true
+        this.dataSourceTableData = null
       }
-      this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode })
-        .then(([dataFrameData, dataColumnSummary]) => {
+
+      // 避免換頁中，輪詢取得 summary 資訊，因此仍需看前一個 process 結束與否
+      this.isProcessing = this.isProcessing || !isOnlyFetchSummary
+      if (isOnlyFetchSummary || resetPagination) window.clearTimeout(this.timeoutFunction)
+
+      // 依照條件取得部分或全部的資料表資訊
+      this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode, isOnlyFetchSummary })
+        .then(res => {
+          const watingTime = 10000
+
+          // 如果只輪詢 summary, res 陣列中只會帶有取的 summary 的結果
+          let dataFrameData = isOnlyFetchSummary ? null : res[0]
+          let dataColumnSummary = isOnlyFetchSummary ? res[0] : res[1]
+
+          // 只輪詢 summary 資訊時
+          if (isOnlyFetchSummary) {
+            // summary 計算中或失敗時，回傳資料皆為空陣列
+            this.showColumnSummaryRow = !dataColumnSummary.every(column => !column.dataSummary)
+            // 如為空陣列，則輪詢取得最新的 summary 資訊
+            if (!this.showColumnSummaryRow) {
+              return this.timeoutFunction = window.setTimeout(() => {
+                this.fetchDataFrameData(id, page, false, true) 
+              }, watingTime)
+            } else {
+              return this.tableSummaryList = dataColumnSummary.map(column => ({
+                ...column.dataSummary,
+                statsType: column.statsType,
+                totalRows: this.pagination.totalItems
+              }))
+            }
+          } 
+
+          // 若選擇重新取得資料表所有資料時
           if (resetPagination) {
             this.pagination = dataFrameData.pagination
             this.dataFrameOverviewData = {
@@ -179,12 +217,20 @@ export default {
               totalColumns: dataFrameData.columns.length
             }
             this.showColumnSummaryRow = !dataColumnSummary.every(column => !column.dataSummary)
-            this.tableSummaryList = dataColumnSummary.map(column => ({
-              ...column.dataSummary,
-              statsType: column.statsType,
-              totalRows: dataFrameData.pagination.totalItems
-            }))
+
+            if (!this.showColumnSummaryRow) {
+              this.timeoutFunction = window.setTimeout(() => {
+                this.fetchDataFrameData(id, page, false, true) 
+              }, watingTime)
+            } else {
+              this.tableSummaryList = dataColumnSummary.map(column => ({
+                ...column.dataSummary,
+                statsType: column.statsType,
+                totalRows: dataFrameData.pagination.totalItems
+              }))
+            }
           }
+          
           this.dataSourceTableData = {
             columns: {
               titles: dataFrameData.columns
@@ -337,6 +383,11 @@ export default {
     }
     .summary {
       padding: 10px;
+      min-height: 200px; /* 避免 loading 消失後 table index 高度錯亂 */
+    }
+
+    .spinner-conatiner {
+      margin: 50px;
     }
   }
 }
