@@ -23,6 +23,7 @@ export default {
     try {
       // get user permission
       const userInfo = await getPermission(defaultGroupId)
+
       if(userInfo.error) {
         Message({
           message: userInfo.error.message,
@@ -83,7 +84,7 @@ export default {
       commit('setLicenseInfo', accountInfo.license)
       
       // refresh token
-      // const { accessToken } = await refreshToken() 
+      // const { accessToken } = await refreshToken()
       // localStorage.setItem('token', accessToken)
     } catch(error) {
       return Promise.reject(error)
