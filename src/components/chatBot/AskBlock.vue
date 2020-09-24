@@ -20,10 +20,10 @@
         <!-- 這裡的 prevent 要避免在 firefox 產生換行的問題 -->
         <input 
           ref="questionInput"
-          :class="{'disabled': !dataSourceList.length}"
+          :class="{ 'disabled': availableDataSourceList.length === 0 }"
           :name="new Date().getTime()"
           :placeholder="$t('editing.askPlaceHolder')"
-          :disabled="!dataSourceList.length"
+          :disabled="availableDataSourceList.length === 0"
           v-model.trim="userQuestion"
           class="question-input input"
           autocomplete="off"
@@ -50,7 +50,7 @@
         </a>
       </div>
       <div 
-        :class="{ 'disabled': dataSourceList.length === 0 }" 
+        :class="{ 'disabled': availableDataSourceList.length === 0 }" 
         class="ask-remark-block"
         @click="openAskHelperDialog">
         <el-tooltip
@@ -192,6 +192,10 @@ export default {
 
       return tokenList
     },
+    availableDataSourceList () {
+      if (!this.dataSourceList) return []
+      return this.dataSourceList.filter(dataSource => dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount > 0)
+    }
   },
   watch: {
     questionTokenList (value, oldValue) {
@@ -224,10 +228,11 @@ export default {
     '$route' (to, from) {
       // 透過 drilldown 切換 dataframe 時不清空問句 input
       if (from.name === 'PageResult' && to.name === 'PageResult') return
-
-      // 其他情況切換 datasource 或 dataframe 時會觸發回首頁，此變化才清空問句 input
+      // 其他情況切換 datasource 或 dataframe 時會觸發回首頁，此變化才清空問句 input: 可能切換至沒有 datasource 的群組
       if (
-        (to.query.dataSourceId).toString() !== (from.query.dataSourceId).toString()
+        !to.query.dataSourceId
+        || !to.query.dataFrameId
+        || (to.query.dataSourceId).toString() !== (from.query.dataSourceId).toString()
         || (to.query.dataFrameId).toString() !== (from.query.dataFrameId).toString()
       ) {
         this.userQuestion = null
@@ -329,11 +334,11 @@ export default {
       }
     },
     cleanQuestion () {
-      if (!this.dataSourceList.length) return
+      if (this.availableDataSourceList.length === 0) return
       this.userQuestion = null
     },
     enterQuestion () {
-      if (!this.dataSourceList.length) return
+      if (this.availableDataSourceList.length === 0) return
       this.$store.commit('dataSource/setAppQuestion', this.userQuestion)
       this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
       this.hideHistory()
@@ -355,7 +360,7 @@ export default {
       this.$store.commit('previewDataSource/togglePreviewDataSource', false)
     },
     openAskHelperDialog () {
-      if (this.dataSourceList.length === 0) return
+      if (this.availableDataSourceList.length === 0) return
       this.$store.commit('updateAskHelperStatus', !this.isShowAskHelper)
       this.closePreviewDataSource()
       this.hideHistory()
