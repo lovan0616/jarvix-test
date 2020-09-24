@@ -312,26 +312,6 @@ export default {
       this.isLoading = true
       this.switchAccountById({ accountId })
         .then(() => {
-          if (this.groupList.length === 0) {
-            return this.$router.push({ 
-              name: 'PageGrouplessGuidance',
-              params: { 'account_id': accountId }
-            })
-          } 
-
-          this.$router.push({
-            name: 'PageIndex', 
-            params: { 
-              account_id: accountId, 
-              group_id: this.getCurrentGroupId 
-            },
-            query: {
-              ...(this.dataSourceId && { 
-                dataSourceId: this.dataSourceId,
-                dataFrameId: this.dataFrameId
-              })
-            }
-          })
         })
         .finally(() => this.isLoading = false)
     }
