@@ -45,6 +45,7 @@
             <textarea 
               ref="SQL" 
               :value="createdInfo.sql"
+              :style="getTextAreaHeight"
               class="info__description info__sql--code"
               readonly/>
             <button
@@ -75,6 +76,14 @@ export default {
     return {
       isLoading: true,
       createdInfo: {}
+    }
+  },
+  computed: {
+    getTextAreaHeight () {
+      const textAreaLineHeight = 20
+      return {
+        height: this.createdInfo.sql.split('\n').length * textAreaLineHeight + 'px'
+      }
     }
   },
   mounted () {
@@ -163,9 +172,9 @@ export default {
       &--code {
         margin-bottom: 8px;
         width: 100%;
+        max-height: 300px;
         padding: 0;
         line-height: 20px;
-        overflow: hidden;
       }
     }
   }
