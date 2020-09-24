@@ -23,6 +23,7 @@ export default {
     try {
       // get user permission
       const userInfo = await getPermission(defaultGroupId)
+
       if(userInfo.error) {
         Message({
           message: userInfo.error.message,
