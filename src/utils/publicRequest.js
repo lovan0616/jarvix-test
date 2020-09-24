@@ -19,7 +19,7 @@ const service = axios.create({
       toString () {
         return store.state.userManagement.token || localStorage.getItem('token')
       }
-    }, 
+    },
     'Accept-Language': {
       toString () {
         return localStorage.getItem('locale')
@@ -68,10 +68,16 @@ service.interceptors.response.use(
         showClose: true
       })
     } else {
-      let statusCode = error.response.status
+      const statusCode = error.response.status
+      const originalRequest = error.config
 
       switch (statusCode) {
         case 401:
+          if(!originalRequest._retry && originalRequest.headers.access_token.toString() !== store.state.userManagement.token) {
+            originalRequest._retry = true
+            return axios(originalRequest)
+          }
+          
           // 避免單一頁面多個請求，token 失效被登出時跳出多個訊息
           if (router.currentRoute.path === '/login') return Promise.reject(error)
           store.commit('dataSource/setIsInit', false)
