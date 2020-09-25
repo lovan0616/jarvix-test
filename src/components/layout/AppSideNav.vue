@@ -333,21 +333,6 @@ export default {
             }
           })
         })
-        .catch(() => {
-          // const account_id = rootGetters['userManagement/getCurrentAccountId']
-          // const group_id = rootGetters['userManagement/getCurrentGroupId']
-          // if (defaultGroup) {
-          //   router.push({
-          //     name: 'PageIndex', 
-          //     params: { account_id, group_id }
-          //   })
-          // } else {
-          //   router.push({ 
-          //     name: 'PageGrouplessGuidance',
-          //     params: { account_id }
-          //   })
-          // }
-        })
         .finally(() => this.isLoading = false)
     }
   }
