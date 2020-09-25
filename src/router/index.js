@@ -395,25 +395,27 @@ router.beforeEach(async (to, from, next) => {
         })
       } catch (error) {
         // 當想去的 account 人數已達上限
-        const groupList = store.state.userManagement.groupList
-        let defaultGroup = null
-        if (groupList && groupList.length) {
-          defaultGroup = groupList.find(group => group.isDefault)
-        }
-        if (defaultGroup) {
-          next({
-            name: 'PageIndex', 
-            params: { 
-              account_id: currentAccountId,
-              group_id: currentGroupId
-            }
-          })
-        } else {
-          next({ 
-            name: 'PageGrouplessGuidance',
-            params: { currentAccountId }
-          })
-        }
+        // const groupList = store.state.userManagement.groupList
+        // let defaultGroup = null
+        // if (groupList && groupList.length) {
+        //   defaultGroup = groupList.find(group => group.isDefault)
+        // }
+        // if (defaultGroup) {
+        //   next({
+        //     name: 'PageIndex', 
+        //     params: { 
+        //       account_id: currentAccountId,
+        //       group_id: currentGroupId
+        //     }
+        //   })
+        // } else {
+        //   next({ 
+        //     name: 'PageGrouplessGuidance',
+        //     params: { 
+        //       account_id: currentAccountId 
+        //     }
+        //   })
+        // }
         return
       }
     }
