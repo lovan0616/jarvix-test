@@ -2,7 +2,6 @@ import { logout, switchAccount, switchGroup, updateLocale } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
 import { Message } from 'element-ui'
-import router from '../../../router'
 
 export default {
   logout ({ commit }) {
@@ -85,19 +84,6 @@ export default {
       const accountInfo = await getAccountInfo(defaultAccount.id)
       commit('setLicenseInfo', accountInfo.license)
       
-      const account_id = rootGetters['userManagement/getCurrentAccountId']
-      const group_id = rootGetters['userManagement/getCurrentGroupId']
-      if (defaultGroup) {
-        router.push({
-          name: 'PageIndex', 
-          params: { account_id, group_id }
-        })
-      } else {
-        router.push({ 
-          name: 'PageGrouplessGuidance',
-          params: { account_id }
-        })
-      }
       // refresh token
       // const { accessToken } = await refreshToken()
       // localStorage.setItem('token', accessToken)
@@ -133,7 +119,6 @@ export default {
     return switchAccount({ accountId })
       .then(() => dispatch('getUserInfo'))
       .then(() => {
-
         // 處理帳戶下沒有群組的狀況
         if (state.groupList.length === 0) {
           commit('dataSource/setDataSourceList', [], { root: true })

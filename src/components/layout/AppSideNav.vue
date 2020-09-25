@@ -312,6 +312,41 @@ export default {
       this.isLoading = true
       this.switchAccountById({ accountId })
         .then(() => {
+          if (this.groupList.length === 0) {
+            return this.$router.push({ 
+              name: 'PageGrouplessGuidance',
+              params: { 'account_id': accountId }
+            })
+          } 
+
+          this.$router.push({
+            name: 'PageIndex', 
+            params: { 
+              account_id: accountId, 
+              group_id: this.getCurrentGroupId 
+            },
+            query: {
+              ...(this.dataSourceId && { 
+                dataSourceId: this.dataSourceId,
+                dataFrameId: this.dataFrameId
+              })
+            }
+          })
+        })
+        .catch(() => {
+          // const account_id = rootGetters['userManagement/getCurrentAccountId']
+          // const group_id = rootGetters['userManagement/getCurrentGroupId']
+          // if (defaultGroup) {
+          //   router.push({
+          //     name: 'PageIndex', 
+          //     params: { account_id, group_id }
+          //   })
+          // } else {
+          //   router.push({ 
+          //     name: 'PageGrouplessGuidance',
+          //     params: { account_id }
+          //   })
+          // }
         })
         .finally(() => this.isLoading = false)
     }

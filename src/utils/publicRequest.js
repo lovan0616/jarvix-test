@@ -32,7 +32,7 @@ const service = axios.create({
 service.interceptors.response.use(
   response => {
     store.dispatch('setting/checkToken')
-    
+
     const res = response.data
     // 特殊情況 光電展 response 無 meta
     if (res.success && !res.meta) return res.data
