@@ -19,7 +19,6 @@ export default {
     let licensePermissionList = []
     let groupPermissionList = []
     let defaultAccount = {}
-    let defaultGroup = null
 
     try {
       // get user permission
@@ -39,7 +38,7 @@ export default {
         accountPermissionList = defaultAccount.accountPermissionList
         licensePermissionList = defaultAccount.licensePermissionList
         if (defaultAccount.groupList.length) {
-          defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
+          let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
           groupPermissionList = defaultGroup.groupPermissionList
         }
       }
