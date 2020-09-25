@@ -2,6 +2,7 @@ import { logout, switchAccount, switchGroup, updateLocale } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
 import { Message } from 'element-ui'
+import router from '../../../router'
 
 export default {
   logout ({ commit }) {
@@ -19,6 +20,7 @@ export default {
     let licensePermissionList = []
     let groupPermissionList = []
     let defaultAccount = {}
+    let defaultGroup = null
 
     try {
       // get user permission
@@ -38,7 +40,7 @@ export default {
         accountPermissionList = defaultAccount.accountPermissionList
         licensePermissionList = defaultAccount.licensePermissionList
         if (defaultAccount.groupList.length) {
-          let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
+          defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
           groupPermissionList = defaultGroup.groupPermissionList
         }
       }
@@ -83,6 +85,19 @@ export default {
       const accountInfo = await getAccountInfo(defaultAccount.id)
       commit('setLicenseInfo', accountInfo.license)
       
+      const account_id = rootGetters['userManagement/getCurrentAccountId']
+      const group_id = rootGetters['userManagement/getCurrentGroupId']
+      if (defaultGroup) {
+        router.push({
+          name: 'PageIndex', 
+          params: { account_id, group_id }
+        })
+      } else {
+        router.push({ 
+          name: 'PageGrouplessGuidance',
+          params: { account_id }
+        })
+      }
       // refresh token
       // const { accessToken } = await refreshToken()
       // localStorage.setItem('token', accessToken)
