@@ -446,6 +446,12 @@ Vue.mixin({
     },
     checkProperty (testObject, key) {
       return Object.prototype.hasOwnProperty.call(testObject, key)
+    },
+    accountRoleToCamelCase (str) {
+      return str.replace(/(\w)(_)(\w)/g, (match, $1, $2, $3) => `${$1}${$3.toUpperCase()}`)
+    },
+    getAccountRoleLocaleName (accountRole) {
+      return this.$t(`userManagement.${this.accountRoleToCamelCase(accountRole)}`)
     }
   }
 })

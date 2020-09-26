@@ -46,5 +46,11 @@ export default {
   },
   updateHasBasicInfo (state, data) {
     state.hasBasicInfo = data
+  },
+  setCopiedColumnName(state, data) {
+    state.copiedColumnName = data
+  },
+  clearCopiedColumnName(state, data) {
+    state.copiedColumnName = null
   }
 }

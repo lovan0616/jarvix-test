@@ -165,7 +165,7 @@ export default {
   getDataFrameData({ state }, { id, selectedColumnList = null, restrictions, page = 0, cancelToken }) {
     return getDataFrameData(id, selectedColumnList, restrictions, page, cancelToken)
   },
-  getDataFrameIntro ({ dispatch, state, getters, rootGetters }, { id, page, mode }) {
+  getDataFrameIntro ({ dispatch, state, getters, rootGetters }, { id, page, mode, isOnlyFetchSummary }) {
     dispatch('cancelRequest', mode)
     let selectedColumnList = null
     let restrictions = []
@@ -178,8 +178,9 @@ export default {
         restrictions = getters.filterRestrictionList
       }
     })
+    // 依照條件取得部分或全部的資料表
     return Promise.all([
-      dispatch('getDataFrameData', { id, selectedColumnList, restrictions, page, cancelToken }),
+      ...(!isOnlyFetchSummary && [dispatch('getDataFrameData', { id, selectedColumnList, restrictions, page, cancelToken })]),
       dispatch('getDataFrameColumnSummary', { id, selectedColumnList, restrictions, page, cancelToken })
     ])
   },

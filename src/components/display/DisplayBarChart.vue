@@ -4,6 +4,7 @@
       :style="chartStyle"
       :options="options"
       auto-resize
+      @magictypechanged="magicTypeChanged"
       @brushselected="brushRegionSelected"
     />
     <arrow-button
@@ -137,7 +138,8 @@ export default {
       addonSeriesData: JSON.parse(JSON.stringify(echartAddon.seriesData)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
       selectedData: [],
-      showPagination: true
+      showPagination: true,
+      currentChartType: 'bar'
     }
   },
   computed: {
@@ -279,11 +281,15 @@ export default {
         this.$el.removeEventListener('click', this.controlPagination, false)
       }
     },
+    magicTypeChanged (params) {
+      if (!params.currentType || params.currentType === this.currentChartType) return
+      this.currentChartType = params.currentType
+    },
     brushRegionSelected (params) {
-      if (params.batch[0].selected[0].dataIndex.length === 0) {
-        this.selectedData = []
-        return
-      }
+      if (
+        (this.currentChartType === 'bar' && params.batch[0].selected[0].dataIndex.length === 0)
+        || (this.currentChartType === 'line' && params.batch[0].areas.length === 0)
+      ) return this.selectedData = []
 
       // 垂直方向 drill down
       if (this.title.yAxis[0].drillable) {
@@ -302,16 +308,29 @@ export default {
         })
       } else {
         // 水平方向 drill down
+        let dataValueIndexs
+        if (this.currentChartType === 'bar') {
+          dataValueIndexs = params.batch[0].selected[0].dataIndex
+        } else if (this.currentChartType === 'line') {
+          // 取出所有選項的始末 index 組合
+          const allDataValueIndexs = params.batch[0].areas.reduce((accIndexs, curAreaElement) => {
+            const [startIndex, endIndex] = curAreaElement.coordRange
+            // 補足始末間的連續數值
+            accIndexs.push(...[...Array(endIndex - startIndex + 1).keys()].map(i =>  i + startIndex))
+            return accIndexs
+          }, [])
+          // 只取不重複的 index 升冪排序
+          dataValueIndexs  = [...new Set(allDataValueIndexs)].sort((a, b) => a - b)
+        }
+
         this.selectedData = [{
           type: 'enum',
           properties: {
             dc_name: this.title.xAxis[0].dc_name,
             data_type: this.title.xAxis[0].data_type,
             display_name: this.title.xAxis[0].display_name,
-            datavalues: params.batch[0].selected[0].dataIndex.map(element => {
-              return this.dataset.index[element]
-            }),
-            display_datavalues: params.batch[0].selected[0].dataIndex.map(element => {
+            datavalues: dataValueIndexs.map(element => this.dataset.index[element]),
+            display_datavalues: dataValueIndexs.map(element => {
               return this.dataset.display_index ? this.dataset.display_index[element] : this.dataset.index[element]
             })
           }

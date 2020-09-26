@@ -125,12 +125,29 @@ export function getSelfInfo (id) {
 /**
  * 邀請使用者
  * @param {Object} inviteeInfo - 受邀者者資訊
- * @param {Array}} inviteeInfo.email - 受邀者者郵件
+ * @param {Array} inviteeInfo.email - 受邀者者郵件
  * @param {String} inviteeInfo.webURL - 註冊頁面連結
  */
 export function inviteUser (inviteeInfo) {
   return request({
     url: '/mail/inviteMail',
+    method: 'POST',
+    data: inviteeInfo
+  })
+}
+
+/**
+ * 邀請使用者
+ * @param {Array} inviteeInfo - 受邀者資訊
+ * @param {Number} inviteeInfo.accountId - 邀請者 accountId
+ * @param {Number} inviteeInfo.accountRoleId - 受邀者帳號權限
+ * @param {String} inviteeInfo.email - 受邀者郵件
+ * @param {String} inviteeInfo.password - 受邀者密碼
+ * @param {String} inviteeInfo.username - 受邀者名稱
+ */
+export function batchInviteUser (inviteeInfo) {
+  return request({
+    url: '/users/batch',
     method: 'POST',
     data: inviteeInfo
   })

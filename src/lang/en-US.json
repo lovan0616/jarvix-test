@@ -31,7 +31,8 @@
     "dataSourceList": "List",
     "dataFileManagement": "Data Set",
     "dataFileList": "List",
-    "schedule": "Schedule"
+    "schedule": "Schedule",
+    "preferences": "Settings"
   },
   "user": {
     "changePwd": "Change Password",
@@ -72,7 +73,10 @@
     "formCharacterOverMax": "Maximum {max} characters.",
     "formCharacterOverMin": "At least {min} characters.",
     "formNumericeOverOne": "Contain at least 1 number.",
+    "formDecimal": "Please enter a number(May contain decimal points)",
+    "formDecimalWithMaxDecimalPointNumbers": "Please enter a number(May contains {max} digits after the decimal place)",
     "copiedToBoard": "Copied to clipboard.",
+    "copiedToBoardFailed": "Failed to copied it to clipboard",
     "systemIsError": "An Exception occurred in the system.",
     "saveSuccess": "Saved.",
     "correlationDeleteSuccess": "Relation has been removed.",
@@ -107,7 +111,6 @@
     "memberDeleteSuccess": "Member deleted.",
     "etlSuccess": "Data preprocessed. Initializing Data Set.",
     "etlSettingTempSave": "Settings have been temporarily saved.",
-    "calculatingPleaseTryLater": "Calculating data. Please try again later.",
     "analysisFailed": "An error occurred when parsing file.",
     "confirmColumnStateTypeChange": "This change will clear the advanced settings. Are you sure you want to make changes?",
     "fileTypeNotSupported": "{fileType} file format is not supported.",
@@ -126,7 +129,12 @@
     "createdSuccessfully": "Successfully created.",
     "successfullyAddedToWarRoom": "Successfully joined the war room.",
     "componentAmountReachedLimit": "Exceed the maximum numbers of elements.",
-    "eitherBoundIsRequired": "At least one of the upper and lower bound should be set."
+    "eitherBoundIsRequired": "At least one of the upper and lower bound should be set.",
+    "upperBoundShouldBeLargerThanLowerBound": "Upper bound value should be larger than lower bound value",
+    "lowerBoundShouldBeSmallerThanUpperBound": "Lower bound value should be smaller than upper bound value",
+    "and": "and",
+    "upperBound": "Upper bound value",
+    "lowerBound": "Lower bound value"
   },
   "guiding": {
     "prevStep": "Prev Step",
@@ -278,7 +286,6 @@
     "sureLogout": "Are you sure you want to log out of your account?",
     "questionFeedback": "QuestionFeedback",
     "functionDescription": "Function Description",
-    "addUser": "New User",
     "notYetCreateUser": "User has not been created",
     "inviteeEmail": "Invited Email",
     "pleaseSelectInviteeEmail": "Please select invitee email",
@@ -290,6 +297,7 @@
     "confirmPassword": "Confirm Password",
     "pleaseConfirmPassword": "Please confirm the password",
     "confirmPasswordAgain": "Confirm Password",
+    "switchAccount": "Switch Account",
     "group": "Project",
     "groupOwner": "Project Owner",
     "groupMemberAmount": "Number of Project Members",
@@ -793,6 +801,7 @@
     "confirmSignup": "Create Account",
     "logout": "Logout",
     "copy": "Copy",
+    "copySQL": "Copy Script",
     "change": "Change",
     "pinToBoard": "Add to Pinboard",
     "warRoom": "War Room",
@@ -840,7 +849,9 @@
     "testConnecting": "Testing Connection...",
     "monitorSetting": "Monitor Setting",
     "updateImmediately": "Update Immediately",
-    "AddNewWarRoom": "Add war room"
+    "AddNewWarRoom": "Add war room",
+    "sendInvitation": "Send Invitation",
+    "downloadPage": "Download"
   },
   "timeScopeUnit": {
     "second": "seconds",
@@ -1905,19 +1916,31 @@
     "pieChartFilterNote": "The result is filtered negative data"
   },
   "userManagement": {
+    "accountUserList": "Account Users",
     "createUser": "New User",
+    "inviteUser": "Invite User",
     "inviteeEmailPlaceholder": "Please enter the email of the invitee",
     "userRoleAuthority": "Role",
     "accountOwner": "Account Owner",
     "accountMaintainer": "Account Manager",
     "accountViewer": "General User",
+    "groupOwner": "Project Owner",
+    "groupMaintainer": "Project Manager",
+    "groupViewer": "General User",
     "accountRoleDesc": "Description",
     "accountOwnerDesc": "No restrictions on use",
     "accountMaintainerDesc": "With account management permissions",
     "accountViewerDesc": "Unable to use account management related functions",
+    "groupOwnerDesc": "No restrictions on use",
+    "groupMaintainerDesc": "With project management permissions",
+    "groupViewerDesc": "Unable to use project management related functions",
     "updateRole": "Role",
     "confirmDeleteAccountText": "After the user is removed, this user will not be able to use any features of this account. Are you sure you want to continue removing this user?",
-    "userName": "User Name"
+    "userName": "User Name",
+    "userAccount": "Username",
+    "userPassword": "Password",
+    "emailPlaceholder": "Input Email",
+    "userNamePlaceholder": "Input Name"
   },
   "accountInfo": {
     "userAmount": "User Limit",
@@ -1927,7 +1950,13 @@
     "currentDataUsage": "Current Data Storage",
     "dataUsageProvided": "Max Data Capacity",
     "expireDate": "Expiration Date",
-    "person": "person | people"
+    "person": "person | people",
+    "accountRestrictions": "Account Restrictions",
+    "accountUsageStatus": "Account Statuses",
+    "projectAmount": "Number of Project: {amount}",
+    "dataFrameAmount": "Number of Data Set",
+    "pinBoardAmount": "Number of Pinboard",
+    "warRoomAmount": "Number of War Room"
   },
   "dataType": {
     "numeric": "Numeric",

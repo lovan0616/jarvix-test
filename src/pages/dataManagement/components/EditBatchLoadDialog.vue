@@ -229,6 +229,10 @@ export default {
       scheduleInfo: {
         basicScheduleList: [
           {
+            value: '* * * * *',
+            name: this.$t('warRoom.everyMinute', { number: 1 })
+          },
+          {
             value: '*/5 * * * *',
             name: this.$t('batchLoad.everyMinute', { number: 5 })
           },

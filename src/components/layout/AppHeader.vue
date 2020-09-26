@@ -91,6 +91,7 @@ export default {
     border-right: 1px solid var(--color-border);
     width: $app-side-nav-closed-width;
     background: var(--color-bg-3);
+    z-index: 1000;
 
     .toggle {
       padding: ($app-side-nav-closed-width - 20px) / 2;

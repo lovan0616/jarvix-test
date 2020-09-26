@@ -46,23 +46,31 @@
                     <svg-icon :icon-class="getHeaderIcon(index)" />
                   </el-tooltip>
                 </span>
-                <span class="text">
+                <span
+                  class="text"
+                  @click="copyTitle(column.titles[index])"
+                >
                   <el-tooltip
                     slot="label"
                     :visible-arrow="false"
                     :enterable="false"
                     :content="`${column.titles[index]}`"
-                    placement="bottom-start">
+                    placement="bottom-start"
+                  >
                     <span>{{ column.titles[index] }}</span>
                   </el-tooltip>
                 </span>
               </div>
-              <div
-                v-if="showColumnSummaryRow"
-                class="summary"
-              >
+              <div class="summary">
                 <data-column-summary
+                  v-if="showColumnSummaryRow"
                   :summary-data="tableSummaryList[index]"
+                />
+                <spinner
+                  v-else
+                  :title="$t('etl.dataCalculate')"
+                  class="spinner-conatiner"
+                  size="30"
                 />
               </div>
             </div>
@@ -76,7 +84,7 @@
     </div>
     <!--欄位關聯概況-->
     <column-correlation-overview
-      v-if="showCorrelationMatrix"
+      v-if="showCorrelationMatrix && hasPermission('correlation_matrix')"
       :data-frame-id="dataFrameId"
       :mode="mode"
       class="board-body-section"
@@ -88,7 +96,8 @@ import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/Co
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import EmptyInfoBlock from './EmptyInfoBlock'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
+import { Message } from 'element-ui'
 
 export default {
   name: 'DataFrameData',
@@ -127,11 +136,13 @@ export default {
         totalColumns: '-'
       },
       showColumnSummaryRow: true,
-      tableSummaryList: []
+      tableSummaryList: [],
+      timeoutFunction: null
     }
   },
   computed: {
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
+    ...mapGetters('userManagement', ['hasPermission']),
   },
   watch: {
     dataFrameId (value) {
@@ -156,15 +167,49 @@ export default {
     this.isLoading = true
     this.fetchDataFrameData(this.dataFrameId, 0, true)
   },
+  destroyed() {
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+  },
   methods: {
-    fetchDataFrameData (id, page = 0, resetPagination = false) {
-      this.isProcessing = true
+    ...mapMutations('chatBot', ['setCopiedColumnName']),
+    fetchDataFrameData (id, page = 0, resetPagination = false, isOnlyFetchSummary = false) {
       if (resetPagination) {
-        this.dataSourceTableData = null
         this.isLoading = true
+        this.dataSourceTableData = null
       }
-      this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode })
-        .then(([dataFrameData, dataColumnSummary]) => {
+
+      // 避免換頁中，輪詢取得 summary 資訊，因此仍需看前一個 process 結束與否
+      this.isProcessing = this.isProcessing || !isOnlyFetchSummary
+      if (isOnlyFetchSummary || resetPagination) window.clearTimeout(this.timeoutFunction)
+
+      // 依照條件取得部分或全部的資料表資訊
+      this.$store.dispatch('dataSource/getDataFrameIntro', { id, page, mode: this.mode, isOnlyFetchSummary })
+        .then(res => {
+          const watingTime = 10000
+
+          // 如果只輪詢 summary, res 陣列中只會帶有取的 summary 的結果
+          let dataFrameData = isOnlyFetchSummary ? null : res[0]
+          let dataColumnSummary = isOnlyFetchSummary ? res[0] : res[1]
+
+          // 只輪詢 summary 資訊時
+          if (isOnlyFetchSummary) {
+            // summary 計算中或失敗時，回傳資料皆為空陣列
+            this.showColumnSummaryRow = !dataColumnSummary.every(column => !column.dataSummary)
+            // 如為空陣列，則輪詢取得最新的 summary 資訊
+            if (!this.showColumnSummaryRow) {
+              return this.timeoutFunction = window.setTimeout(() => {
+                this.fetchDataFrameData(id, page, false, true) 
+              }, watingTime)
+            } else {
+              return this.tableSummaryList = dataColumnSummary.map(column => ({
+                ...column.dataSummary,
+                statsType: column.statsType,
+                totalRows: this.pagination.totalItems
+              }))
+            }
+          } 
+
+          // 若選擇重新取得資料表所有資料時
           if (resetPagination) {
             this.pagination = dataFrameData.pagination
             this.dataFrameOverviewData = {
@@ -172,12 +217,20 @@ export default {
               totalColumns: dataFrameData.columns.length
             }
             this.showColumnSummaryRow = !dataColumnSummary.every(column => !column.dataSummary)
-            this.tableSummaryList = dataColumnSummary.map(column => ({
-              ...column.dataSummary,
-              statsType: column.statsType,
-              totalRows: dataFrameData.pagination.totalItems
-            }))
+
+            if (!this.showColumnSummaryRow) {
+              this.timeoutFunction = window.setTimeout(() => {
+                this.fetchDataFrameData(id, page, false, true) 
+              }, watingTime)
+            } else {
+              this.tableSummaryList = dataColumnSummary.map(column => ({
+                ...column.dataSummary,
+                statsType: column.statsType,
+                totalRows: dataFrameData.pagination.totalItems
+              }))
+            }
           }
+          
           this.dataSourceTableData = {
             columns: {
               titles: dataFrameData.columns
@@ -229,6 +282,50 @@ export default {
     },
     updatePage (page) {
       this.fetchDataFrameData(this.dataFrameId, page - 1)
+    },
+    fallbackCopyTextToClipboard (value) {
+      const input = document.createElement('input')
+      input.setAttribute('value', value)
+      document.body.appendChild(input)
+      input.select()
+      document.execCommand('copy')
+      document.body.removeChild(input)
+      Message({
+        message: this.$t('message.copiedToBoard'),
+        type: 'success',
+        duration: 3 * 1000,
+        showClose: true
+      })
+    },
+    copyTextToClipboard (value) {
+      // 確認 Clipboard API 是否支援
+      if (!navigator.clipboard) return this.fallbackCopyTextToClipboard(value)
+
+      navigator.clipboard.writeText(value)
+        .then(() => {
+          // clipboard successfully set
+          Message({
+            message: this.$t('message.copiedToBoard'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }, () => {
+          // clipboard write failed
+          Message({
+            message: this.$t('message.copiedToBoardFailed'),
+            type: 'error',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .catch(() => this.fallbackCopyTextToClipboard(value))
+    },
+    copyTitle (value) {
+      // 自動貼到問句搜尋功能：暫時關閉
+      // this.setCopiedColumnName(value)
+      // 純複製到剪貼簿功能
+      this.copyTextToClipboard(value)
     }
   }
 }
@@ -281,10 +378,16 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        cursor: pointer;
       }
     }
     .summary {
       padding: 10px;
+      min-height: 200px; /* 避免 loading 消失後 table index 高度錯亂 */
+    }
+
+    .spinner-conatiner {
+      margin: 50px;
     }
   }
 }

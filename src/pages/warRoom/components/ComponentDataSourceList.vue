@@ -32,6 +32,7 @@
             @click="selectedDataSourceItem(item)"
           >{{ item.question }}</a>
           <a
+            v-if="hasPermission('group_delete_data')"
             href="javascript:void(0);"
             class="link icon" 
             @click="deleteDataSourceItem(item.itemId, 'index', index)"
@@ -72,6 +73,7 @@
 <script>
 import { removeResultFromWarRoomPool } from '@/API/WarRoom'
 import { Message } from 'element-ui'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ComponentDataSourceList',
@@ -92,6 +94,9 @@ export default {
     return {
       isProcessing: false
     }
+  },
+  computed: {
+    ...mapGetters('userManagement', ['hasPermission']),
   },
   methods: {
     selectedDataSourceItem (item) {

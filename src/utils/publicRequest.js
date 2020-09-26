@@ -17,7 +17,7 @@ const service = axios.create({
   headers: {
     access_token: {
       toString () {
-        return localStorage.getItem('token')
+        return store.state.userManagement.token || localStorage.getItem('token')
       }
     },
     'Accept-Language': {
@@ -31,6 +31,8 @@ const service = axios.create({
 // 攔截 response
 service.interceptors.response.use(
   response => {
+    store.dispatch('setting/checkToken')
+
     const res = response.data
     // 特殊情況 光電展 response 無 meta
     if (res.success && !res.meta) return res.data
@@ -52,7 +54,7 @@ service.interceptors.response.use(
 
     return Promise.reject(res)
   },
-  error => {
+  async error => {
     // cancel request
     if (axios.isCancel(error)) {
       return Promise.reject(error)
@@ -67,10 +69,20 @@ service.interceptors.response.use(
         showClose: true
       })
     } else {
-      let statusCode = error.response.status
+      const statusCode = error.response.status
+      const originalRequest = error.config
 
       switch (statusCode) {
         case 401:
+          if(!originalRequest._retry && originalRequest.headers.access_token.toString() !== store.state.userManagement.token) {
+            originalRequest._retry = true
+            try {
+              return await service(originalRequest)
+            } catch (err) {
+              return Promise.reject(error)
+            }
+          }
+          
           // 避免單一頁面多個請求，token 失效被登出時跳出多個訊息
           if (router.currentRoute.path === '/login') return Promise.reject(error)
           store.commit('dataSource/setIsInit', false)
