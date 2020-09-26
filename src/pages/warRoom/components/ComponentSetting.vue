@@ -472,7 +472,15 @@ export default {
 
         const { war_room_id: warRoomId } = this.$route.params
         const { question, ...config } = this.componentData.config
-        const componentData = { config, itemId: this.selectedDataSource.itemId }
+        const componentData = { 
+          config: {
+            ...config,
+            upperBound: config.upperBound || null,
+            lowerBound: config.lowerBound || null
+          }, 
+          itemId: this.selectedDataSource.itemId 
+        }
+
         this.isProcessing = true
         createComponent(warRoomId, componentData)
           .then(response => {
@@ -494,8 +502,13 @@ export default {
        
         const { war_room_id: warRoomId } = this.$route.params
         const { question, ...config } = this.componentData.config
+
         this.isProcessing = true
-        updateComponent(warRoomId, this.componentData.componentId, config)
+        updateComponent(warRoomId, this.componentData.componentId, {
+          ...config,
+          upperBound: config.upperBound || null,
+          lowerBound: config.lowerBound || null
+        })
           .then(() => {
             this.$emit('close')
             this.$emit('updated')
