@@ -28,9 +28,11 @@ const service = axios.create({
   }
 })
 
+let oldToken
 // 攔截 response
 service.interceptors.response.use(
   response => {
+    oldToken = localStorage.getItem('token')
     store.dispatch('setting/checkToken')
 
     const res = response.data
@@ -74,7 +76,7 @@ service.interceptors.response.use(
 
       switch (statusCode) {
         case 401:
-          if(store.state.setting.oldToken !== store.state.setting.token) {
+          if(oldToken !== store.state.setting.token) {
             try {
               return await service(originalRequest)
             } catch (err) {
