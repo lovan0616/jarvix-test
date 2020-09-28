@@ -28,12 +28,13 @@ const service = axios.create({
   }
 })
 
-let oldToken
 // 攔截 response
 service.interceptors.response.use(
   response => {
-    oldToken = localStorage.getItem('token')
-    store.dispatch('setting/checkToken')
+    const currentUrl = response.config.baseURL + 'auth/logout'
+    if(currentUrl !== response.config.url) {
+      store.dispatch('setting/checkToken')
+    }
 
     const res = response.data
     // 特殊情況 光電展 response 無 meta
@@ -76,7 +77,7 @@ service.interceptors.response.use(
 
       switch (statusCode) {
         case 401:
-          if(oldToken !== store.state.setting.token) {
+          if(store.state.setting.oldToken !== store.state.setting.token) {
             try {
               return await service(originalRequest)
             } catch (err) {
