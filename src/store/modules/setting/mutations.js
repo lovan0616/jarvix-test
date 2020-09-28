@@ -12,7 +12,8 @@ export default {
     state.changeLangBeforeLogin = data
   },
   updateToken (state, data) {
-    state.token = data
+    state.oldToken = data.oldToken
+    state.token = data.newToken
   },
   updateTokenTimestamp (state, data) {
     state.tokenTimestamp = data

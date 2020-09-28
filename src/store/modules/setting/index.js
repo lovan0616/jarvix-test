@@ -14,6 +14,7 @@ export default {
     },
     currentRoute: {},
     changeLangBeforeLogin: false,
+    oldToken: null,
     token: null,
     tokenTimestamp: null
   },
