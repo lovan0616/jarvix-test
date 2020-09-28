@@ -73,7 +73,10 @@ export default {
           })
             .then(({ accessToken }) => {
               this.updateTokenTimestamp(new Date().getTime())
-              this.updateToken(accessToken) 
+              this.updateToken({ 
+                oldToken: localStorage.getItem('token'),
+                newToken: accessToken 
+              }) 
               localStorage.setItem('token', accessToken)
               return this.getUserInfo()
             })
