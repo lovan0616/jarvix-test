@@ -17,7 +17,7 @@ const service = axios.create({
   headers: {
     access_token: {
       toString () {
-        return store.state.userManagement.token || localStorage.getItem('token')
+        return store.state.setting.token || localStorage.getItem('token')
       }
     },
     'Accept-Language': {
@@ -74,8 +74,7 @@ service.interceptors.response.use(
 
       switch (statusCode) {
         case 401:
-          if(!originalRequest._retry && originalRequest.headers.access_token.toString() !== store.state.userManagement.token) {
-            originalRequest._retry = true
+          if(store.state.setting.oldToken !== store.state.setting.token) {
             try {
               return await service(originalRequest)
             } catch (err) {
