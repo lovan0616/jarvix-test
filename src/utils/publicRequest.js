@@ -28,10 +28,11 @@ const service = axios.create({
   }
 })
 
+let oldToken
 service.interceptors.request.use(
   async config => {
+    oldToken = localStorage.getItem('token')
     await store.dispatch('setting/checkToken')
-    config.headers.access_token.toString()
     return config
   }
 )
@@ -40,11 +41,6 @@ service.interceptors.request.use(
 // 攔截 response
 service.interceptors.response.use(
   response => {
-    // const currentUrl = response.config.baseURL + 'auth/logout'
-    // if(currentUrl !== response.config.url) {
-    //   store.dispatch('setting/checkToken')
-    // }
-
     const res = response.data
     // 特殊情況 光電展 response 無 meta
     if (res.success && !res.meta) return res.data
@@ -86,7 +82,7 @@ service.interceptors.response.use(
 
       switch (statusCode) {
         case 401:
-          if(!originalRequest._retry && store.state.setting.oldToken !== store.state.setting.token) {
+          if(!originalRequest._retry && oldToken !== store.state.setting.token) {
             originalRequest._retry = true
             try {
               return await service(originalRequest)

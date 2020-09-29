@@ -16,10 +16,7 @@ export default {
       commit('updateTokenTimestamp', newTime)
       return refreshToken()
         .then(({ accessToken }) => {
-          commit('updateToken', { 
-            oldToken: localStorage.getItem('token'),
-            newToken: accessToken 
-          }) 
+          commit('updateToken', accessToken) 
           localStorage.setItem('token', accessToken)
         })   
     }
