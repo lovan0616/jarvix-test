@@ -86,7 +86,8 @@ service.interceptors.response.use(
 
       switch (statusCode) {
         case 401:
-          if(store.state.setting.oldToken !== store.state.setting.token) {
+          if(!originalRequest._retry && store.state.setting.oldToken !== store.state.setting.token) {
+            originalRequest._retry = true
             try {
               return await service(originalRequest)
             } catch (err) {
