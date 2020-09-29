@@ -17,7 +17,7 @@ const service = axios.create({
   headers: {
     access_token: {
       toString () {
-        return store.state.setting.token || localStorage.getItem('token')
+        return localStorage.getItem('token')
       }
     },
     'Accept-Language': {
