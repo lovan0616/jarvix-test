@@ -28,13 +28,22 @@ const service = axios.create({
   }
 })
 
+service.interceptors.request.use(
+  async config => {
+    await store.dispatch('setting/checkToken')
+    config.headers.access_token.toString()
+    return config
+  }
+)
+
+
 // 攔截 response
 service.interceptors.response.use(
   response => {
-    const currentUrl = response.config.baseURL + 'auth/logout'
-    if(currentUrl !== response.config.url) {
-      store.dispatch('setting/checkToken')
-    }
+    // const currentUrl = response.config.baseURL + 'auth/logout'
+    // if(currentUrl !== response.config.url) {
+    //   store.dispatch('setting/checkToken')
+    // }
 
     const res = response.data
     // 特殊情況 光電展 response 無 meta
