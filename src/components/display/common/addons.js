@@ -608,3 +608,61 @@ export function monitorMarkLine (upperLimit, lowerLimit, isParallel = false) {
     data: markLineData
   }
 }
+
+export function lineChartMonitorVisualMap (upperLimit, lowerLimit, maxY, minY, dimension, chartColor = '#438AF8', warningColor = '#EB5959') {
+  if (upperLimit !== null && lowerLimit !== null) {
+    // 上下限都有設
+    return {
+      type: 'piecewise',
+      dimension: dimension,
+      show: false,
+      pieces: [{
+        gte: upperLimit,
+        color: warningColor
+      }, {
+        gt: lowerLimit,
+        lte: upperLimit,
+        color: chartColor
+      }, {
+        lt: lowerLimit,
+        color: warningColor
+      }]
+    }
+  } else if (lowerLimit === null) {
+      return {
+        type: 'piecewise',
+        dimension: dimension,
+        show: false,
+        pieces: upperLimit > minY ? [{
+          gt: upperLimit,
+          color: warningColor
+        },{
+          lte: upperLimit,
+          gt: minY,
+          color: chartColor
+        }] : [{
+          lte: maxY,
+          gt: upperLimit,
+          color: warningColor
+        }]
+      }
+  } else {
+    return {
+      type: 'piecewise',
+      dimension: dimension,
+      show: false,
+      pieces: lowerLimit > minY ? [{
+        gt: lowerLimit,
+        color: chartColor
+      },{
+        lte: lowerLimit,
+        gt: minY,
+        color: warningColor
+      }] : [{
+        lte: maxY,
+        gt: lowerLimit,
+        color: chartColor
+      }]
+    }
+  }
+}
