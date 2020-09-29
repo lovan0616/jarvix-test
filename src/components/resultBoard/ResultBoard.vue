@@ -80,7 +80,7 @@
           </button>
           <pinboard-dialog
             v-if="showPinboardDialog"
-            :is-war-room-addable="isWarRoomAddable"
+            :is-war-room-addable="showAddToWarRoomButton"
             @pin="selectPinboard"
             @pinToWarRoom="pinToWarRoom"
             @close="closePinboardDialog"
