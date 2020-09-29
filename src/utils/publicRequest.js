@@ -32,9 +32,6 @@ let oldToken
 service.interceptors.request.use(
   async config => {
     oldToken = localStorage.getItem('token')
-    console.log('*******request')
-    console.log('oldToken', oldToken)
-    console.log('response', store.state.setting.token)
     await store.dispatch('setting/checkToken')
     return config
   }
@@ -43,9 +40,6 @@ service.interceptors.request.use(
 // 攔截 response
 service.interceptors.response.use(
   response => {
-    console.log('&&&&&&&&&& response')
-    console.log('oldToken', oldToken)
-    console.log('response', store.state.setting.token)
     const res = response.data
     // 特殊情況 光電展 response 無 meta
     if (res.success && !res.meta) return res.data
@@ -87,9 +81,6 @@ service.interceptors.response.use(
 
       switch (statusCode) {
         case 401:
-          console.log('-----------401')
-          console.log('oldToken', oldToken)
-          console.log('response', store.state.setting.token)
           if(!originalRequest._retry && oldToken !== store.state.setting.token) {
             originalRequest._retry = true
             try {

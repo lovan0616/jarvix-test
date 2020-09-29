@@ -9,7 +9,7 @@ export default {
       return Promise.resolve(state) 
     }
     
-    const isTokenStale = (oldTime, newTime, freshPeriod = 0.05) => {
+    const isTokenStale = (oldTime, newTime, freshPeriod = 5) => {
       return newTime - oldTime >= freshPeriod * 60 * 1000
     }
     if (isTokenStale(state.tokenTimestamp, newTime)) {
