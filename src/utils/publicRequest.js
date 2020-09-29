@@ -17,7 +17,7 @@ const service = axios.create({
   headers: {
     access_token: {
       toString () {
-        return store.state.userManagement.token || localStorage.getItem('token')
+        return store.state.setting.token || localStorage.getItem('token')
       }
     },
     'Accept-Language': {
@@ -28,11 +28,18 @@ const service = axios.create({
   }
 })
 
+let oldToken
+service.interceptors.request.use(
+  async config => {
+    oldToken = localStorage.getItem('token')
+    await store.dispatch('setting/checkToken')
+    return config
+  }
+)
+
 // 攔截 response
 service.interceptors.response.use(
   response => {
-    store.dispatch('setting/checkToken')
-
     const res = response.data
     // 特殊情況 光電展 response 無 meta
     if (res.success && !res.meta) return res.data
@@ -74,7 +81,7 @@ service.interceptors.response.use(
 
       switch (statusCode) {
         case 401:
-          if(!originalRequest._retry && originalRequest.headers.access_token.toString() !== store.state.userManagement.token) {
+          if(!originalRequest._retry && oldToken !== store.state.setting.token) {
             originalRequest._retry = true
             try {
               return await service(originalRequest)
