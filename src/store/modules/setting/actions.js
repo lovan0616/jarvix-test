@@ -9,7 +9,7 @@ export default {
       return Promise.resolve(state) 
     }
     
-    const isTokenStale = (oldTime, newTime, freshPeriod = 5) => {
+    const isTokenStale = (oldTime, newTime, freshPeriod = 0.1) => {
       return newTime - oldTime >= freshPeriod * 60 * 1000
     }
     if (isTokenStale(state.tokenTimestamp, newTime)) {
@@ -20,7 +20,6 @@ export default {
           localStorage.setItem('token', accessToken)
         })   
     }
-    commit('updateTokenTimestamp', newTime)
     return Promise.resolve(state)
   }
 }
