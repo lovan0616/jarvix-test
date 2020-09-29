@@ -32,15 +32,20 @@ let oldToken
 service.interceptors.request.use(
   async config => {
     oldToken = localStorage.getItem('token')
+    console.log('*******request')
+    console.log('oldToken', oldToken)
+    console.log('response', store.state.setting.token)
     await store.dispatch('setting/checkToken')
     return config
   }
 )
 
-
 // 攔截 response
 service.interceptors.response.use(
   response => {
+    console.log('&&&&&&&&&& response')
+    console.log('oldToken', oldToken)
+    console.log('response', store.state.setting.token)
     const res = response.data
     // 特殊情況 光電展 response 無 meta
     if (res.success && !res.meta) return res.data
@@ -78,9 +83,22 @@ service.interceptors.response.use(
       })
     } else {
       const statusCode = error.response.status
+      const originalRequest = error.config
 
       switch (statusCode) {
         case 401:
+          console.log('-----------401')
+          console.log('oldToken', oldToken)
+          console.log('response', store.state.setting.token)
+          if(!originalRequest._retry && oldToken !== store.state.setting.token) {
+            originalRequest._retry = true
+            try {
+              return await service(originalRequest)
+            } catch (err) {
+              return Promise.reject(error)
+            }
+          }
+          
           // 避免單一頁面多個請求，token 失效被登出時跳出多個訊息
           if (router.currentRoute.path === '/login') return Promise.reject(error)
           store.commit('dataSource/setIsInit', false)
