@@ -78,19 +78,9 @@ service.interceptors.response.use(
       })
     } else {
       const statusCode = error.response.status
-      const originalRequest = error.config
 
       switch (statusCode) {
         case 401:
-          if(!originalRequest._retry && oldToken !== store.state.setting.token) {
-            originalRequest._retry = true
-            try {
-              return await service(originalRequest)
-            } catch (err) {
-              return Promise.reject(error)
-            }
-          }
-          
           // 避免單一頁面多個請求，token 失效被登出時跳出多個訊息
           if (router.currentRoute.path === '/login') return Promise.reject(error)
           store.commit('dataSource/setIsInit', false)
