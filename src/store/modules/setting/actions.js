@@ -20,7 +20,6 @@ export default {
           localStorage.setItem('token', accessToken)
         })   
     }
-    commit('updateTokenTimestamp', newTime)
     return Promise.resolve(state)
   }
 }
