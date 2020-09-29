@@ -65,6 +65,7 @@ export default {
     ...mapMutations('setting', ['updateToken', 'updateTokenTimestamp']),
     submitForm () {
       this.$validator.validateAll().then(result => {
+        this.updateTokenTimestamp(new Date().getTime())
         if (result) {
           this.isSubmit = true
           login({
@@ -73,7 +74,7 @@ export default {
           })
             .then(({ accessToken }) => {
               this.updateTokenTimestamp(new Date().getTime())
-              this.updateToken(accessToken)
+              this.updateToken(accessToken) 
               localStorage.setItem('token', accessToken)
               return this.getUserInfo()
             })
