@@ -10,6 +10,32 @@
   >
     <result-board-body slot="PageResultBoardBody">
       <template 
+        v-if="hasMultiAnalysis" 
+        slot="multiAnalyPanel"
+      >
+        <ul class="multi-analysis__list">
+          <li class="multi-analysis__item" >
+            <svg-icon icon-class="basic-info"/>
+            <span 
+              class="multi-analysis__item-label" 
+              @click="fetchOverview">概況分析</span>
+          </li>
+          <li class="multi-analysis__item">
+            <svg-icon icon-class="clustering"/>
+            <span 
+              class="multi-analysis__item-label" 
+              @click="fetchClustering">分群分析</span>
+            <div class="multi-analysis__item-dropdownlist">
+              <svg-icon icon-class="more"/>
+              <dropdown-select
+                :bar-data="barData"
+                class="dropdown"
+              />
+            </div>
+          </li>
+        </ul>
+      </template>
+      <template 
         v-if="resultInfo.key_result && resultInfo.key_result.length > 0"
         slot="PageResultBoardChart"
       >
@@ -69,11 +95,15 @@
 </template>
 <script>
 import RecommendedInsight from '@/components/display/RecommendedInsight'
+import DropdownSelect from '@/components/select/DropdownSelect'
+
+import { mapState } from 'vuex'
 
 export default {
   name: 'GeneralResult',
   components: {
-    RecommendedInsight
+    RecommendedInsight,
+    DropdownSelect
   },
   props: {
     resultInfo: {
@@ -101,10 +131,43 @@ export default {
       default: false
     }
   },
+  data: () => {
+    return {
+      test: 0,
+      currentResultInfo: null
+    }
+  },
+  computed: {
+    ...mapState('result', ['currentResultId']),
+    // TODO 改成從 result info 拿
+    hasMultiAnalysis () {
+      return true
+    },
+    // TODO
+    barData () {
+      return [{ title:'儲存分群結果為欄位', icon: 'feature' }]
+    }
+  },
   methods: {
     unPin (pinBoardId) {
       this.$emit('unPin', pinBoardId)
-    }
+    },
+    fetchOverview () {
+      // 拿現在的 result id 去交換 概況分析
+      this.$store.dispatch('chatBot/askOverview', this.currentResultId)
+        .then(resultId => {
+          this.$store.commit('result/updateCurrentResultId', resultId)
+          this.$emit('fetch-new-components-list')
+        })
+    },
+    fetchClustering () {
+      // 拿現在的 result id 去交換 分群分析
+      this.$store.dispatch('chatBot/askClustering', this.currentResultId)
+        .then(resultId => {
+          this.$store.commit('result/updateCurrentResultId', resultId)
+          this.$emit('fetch-new-components-list')
+        })
+    },
   }
 }
 </script>

@@ -1,4 +1,4 @@
-import { askQuestion, askResult, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
+import { askQuestion, askResult, askClustering, askOverview, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
 
@@ -22,6 +22,16 @@ export default {
   askResult ({dispatch, state}, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
     return askResult(data, cancelToken)
+  },
+  askClustering ({ commit }, resultId) {
+    askClustering(resultId).then(resultId => {
+      commit('result/updateCurrentResultId', resultId, { root: true })
+    })
+  },
+  askOverview ({ commit }, resultId) {
+    askOverview(resultId).then(resultId => {
+      commit('result/updateCurrentResultId', resultId, { root: true })
+    })
   },
   getComponentList ({dispatch, state}, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null

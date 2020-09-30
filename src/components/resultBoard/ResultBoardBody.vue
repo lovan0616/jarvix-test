@@ -14,6 +14,9 @@
         class="btn-m btn-secondary control-btn"
         @click.stop="toggleBasicInfoDialog"
       >{{ $t('resultDescription.basicInfo') }}</button>
+      <div class="multi-analysis__block">
+        <slot name="multiAnalyPanel"/>
+      </div>
       <div class="chart-block">
         <slot name="PageResultBoardChart"/>
       </div>
@@ -147,6 +150,53 @@ export default {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
+    }
+  }
+  .multi-analysis {
+    &__block {
+      &:not(:empty) {
+        flex-basis: 180px;
+      }
+    }
+    &__list {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+    &__item {
+      display: flex;
+      align-items: center;
+      &:not(:first-child) {
+        margin-top: 24px;
+      }
+      &:hover, &.selected {
+        color: $theme-color-primary;
+      }
+      &-label {
+        flex: 1;
+        cursor: pointer;
+        text-indent: 6px;
+      }
+      &-dropdownlist {
+        position: relative;
+        cursor: pointer;
+        &:hover {
+          .dropdown {
+            visibility: visible;
+          }
+        }
+        /deep/ .dropdown {
+          visibility: hidden;
+          .dropdown-select-box {
+            top: 30px;
+            left: -140px;
+            z-index: 1;
+            .dropdown-flex {
+              cursor: pointer;
+            }
+          }
+        }
+      }
     }
   }
 }

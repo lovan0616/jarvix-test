@@ -14,7 +14,7 @@
     <component
       v-else
       :is="layout || 'EmptyResult'"
-      :data-result-id="currentResultId"
+      :result-id="currentResultId"
       :data-frame-id="currentQuestionDataFrameId"
       :result-info="resultInfo"
       :restrictions="restrictInfo"
@@ -22,6 +22,7 @@
       :transcript="transcript"
       :is-war-room-addable="isWarRoomAddable"
       mode="display"
+      @fetch-new-components-list="fetNewComponentsList"
     />
     <div
       v-if="relatedQuestionList.length > 0" 
@@ -284,6 +285,9 @@ export default {
         }).catch((error) => {
           if (error.message !== 'cancel') this.isLoading = false
         })
+    },
+    fetNewComponentsList () {
+      // TODO
     },
     getRelatedQuestion (id) {
       this.$store.dispatch('chatBot/getRelatedQuestionList', id).then(response => {

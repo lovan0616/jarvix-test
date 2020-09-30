@@ -89,8 +89,9 @@ export default {
     }
 
     .dropdown-icon{
-        margin: 12px;
+        margin: 0 12px;
         flex-shrink: 0;
+        font-size: 20px;
     }
 }
 
