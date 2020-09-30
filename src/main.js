@@ -72,6 +72,7 @@ import DataPreviewLayout from '@/components/resultBoard/DataPreviewLayout'
 import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
+import DisplayScatterProbabilityDensityChart from '@/components/display/DisplayScatterProbabilityDensityChart'
 // import DisplayHistogramChart from '@/components/display/DisplayHistogramChart'
 import DisplayComputedHistogramChart from '@/components/display/DisplayComputedHistogramChart'
 // import DisplayBoxPlotChart from '@/components/display/DisplayBoxPlotChart'
@@ -172,6 +173,7 @@ Vue.component(RootCauseBoardBody.name, RootCauseBoardBody)
 Vue.component(DisplayBasicChart.name, DisplayBasicChart)
 Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
 Vue.component(DisplayScatterChart.name, DisplayScatterChart)
+Vue.component(DisplayScatterProbabilityDensityChart.name, DisplayScatterProbabilityDensityChart)
 Vue.component(DisplayGroupScatterChart.name, DisplayGroupScatterChart)
 // Vue.component(DisplayHistogramChart.name, DisplayHistogramChart)
 Vue.component(DisplayComputedHistogramChart.name, DisplayComputedHistogramChart)
