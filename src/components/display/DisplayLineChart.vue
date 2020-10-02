@@ -292,6 +292,12 @@ export default {
           //   }]
           // }
         } 
+        /* 註解部分是處理多條線的上下限問題
+         * 但 chart 的 label 會因為使用 visualMap 的關係
+         * 沒辦法應映每條線而有不同的 label 顏色
+         * 目前只有加上兩條 mark line 
+         * 待找到分別設定多條線的 label 顏色後再使用 visualMap
+        */
         // else {
         //   const allIsNull = arr => arr.every(element => element === null)
         //   let maxY = allIsNull(this.dataset.data[0]) ? null : Math.max(...this.dataset.data[0])
