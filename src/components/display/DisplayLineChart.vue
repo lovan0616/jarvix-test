@@ -52,7 +52,7 @@
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { getDrillDownTool, monitorMarkLine } from '@/components/display/common/addons'
+import { getDrillDownTool, monitorMarkLine, lineChartMonitorVisualMap } from '@/components/display/common/addons'
 import {
   colorOnly1,
   colorOnly2,
@@ -220,72 +220,106 @@ export default {
       let upperLimit = this.title.yAxis[0].upperLimit || null
       let lowerLimit = this.title.yAxis[0].lowerLimit || null
       if (upperLimit !== null || lowerLimit !== null) {
-        // 找出 Y 的最大、最小值
-        let maxY = this.dataset.data[0][0]
-        let minY = this.dataset.data[0][0]
-        this.dataset.data.forEach(element => {
-          if (element[0] !== null) {
-            if (maxY === null) maxY = element[0]
-            maxY = element[0] > maxY ? element[0] : maxY
-            if (minY === null) minY = element[0]
-            minY = element[0] < minY ? element[0] : minY
-          }
-        })
-
         // markline
         config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit)
         
-        if (upperLimit && lowerLimit) {
-          config.visualMap = [{
-            type: 'piecewise',
-            show: false,
-            pieces: [{
-              gt: upperLimit,
-              color: '#EB5959'
-            },{
-              lte: upperLimit,
-              gt: lowerLimit,
-              color: '#438AF8'
-            },{
-              lte: lowerLimit,
-              color: '#EB5959'
-            }]
-          }]
-        } else if (lowerLimit === null) {
-          config.visualMap = [{
-            type: 'piecewise',
-            show: false,
-            pieces: upperLimit > minY ? [{
-              gt: upperLimit,
-              color: '#EB5959'
-            },{
-              lte: upperLimit,
-              gt: minY,
-              color: '#438AF8'
-            }] : [{
-              lte: maxY,
-              gt: upperLimit,
-              color: '#EB5959'
-            }]
-          }]
-        } else {
-          config.visualMap = [{
-            type: 'piecewise',
-            show: false,
-            pieces: lowerLimit > minY ? [{
-              gt: lowerLimit,
-              color: '#438AF8'
-            },{
-              lte: lowerLimit,
-              gt: minY,
-              color: '#EB5959'
-            }] : [{
-              lte: maxY,
-              gt: lowerLimit,
-              color: '#438AF8'
-            }]
-          }]
-        }
+        // 找出 Y 的最大、最小值
+        if(this.dataset.data[0].length === 1) {
+          // 找出 Y 的最大、最小值
+          let maxY = this.dataset.data[0][0]
+          let minY = this.dataset.data[0][0]
+          this.dataset.data.forEach(element => {
+            if (element[0] !== null) {
+              if (maxY === null) maxY = element[0]
+              maxY = element[0] > maxY ? element[0] : maxY
+              if (minY === null) minY = element[0]
+              minY = element[0] < minY ? element[0] : minY
+            }
+          })
+
+          config.visualMap = []
+          config.visualMap.push(lineChartMonitorVisualMap(upperLimit, lowerLimit, maxY, minY, 1))
+
+          // if (upperLimit && lowerLimit) {
+          //   config.visualMap = [{
+          //     type: 'piecewise',
+          //     show: false,
+          //     pieces: [{
+          //       gt: upperLimit,
+          //       color: '#EB5959'
+          //     },{
+          //       lte: upperLimit,
+          //       gt: lowerLimit,
+          //       color: '#438AF8'
+          //     },{
+          //       lte: lowerLimit,
+          //       color: '#EB5959'
+          //     }]
+          //   }]
+          // } else if (lowerLimit === null) {
+          //   config.visualMap = [{
+          //     type: 'piecewise',
+          //     show: false,
+          //     pieces: upperLimit > minY ? [{
+          //       gt: upperLimit,
+          //       color: '#EB5959'
+          //     },{
+          //       lte: upperLimit,
+          //       gt: minY,
+          //       color: '#438AF8'
+          //     }] : [{
+          //       lte: maxY,
+          //       gt: upperLimit,
+          //       color: '#EB5959'
+          //     }]
+          //   }]
+          // } else {
+          //   config.visualMap = [{
+          //     type: 'piecewise',
+          //     show: false,
+          //     pieces: lowerLimit > minY ? [{
+          //       gt: lowerLimit,
+          //       color: '#438AF8'
+          //     },{
+          //       lte: lowerLimit,
+          //       gt: minY,
+          //       color: '#EB5959'
+          //     }] : [{
+          //       lte: maxY,
+          //       gt: lowerLimit,
+          //       color: '#438AF8'
+          //     }]
+          //   }]
+          // }
+        } 
+        /* 註解部分是處理多條線的上下限問題
+         * 但 chart 的 label 會因為使用 visualMap 的關係
+         * 沒辦法應映每條線而有不同的 label 顏色
+         * 目前只有加上兩條 mark line 
+         * 待找到分別設定多條線的 label 顏色後再使用 visualMap
+        */
+        // else {
+        //   const allIsNull = arr => arr.every(element => element === null)
+        //   let maxY = allIsNull(this.dataset.data[0]) ? null : Math.max(...this.dataset.data[0])
+        //   let minY = maxY
+        //   this.dataset.data.forEach(element => {
+        //     if (!allIsNull(element)) {
+        //       let maxValue = Math.max(...element)
+        //       let minValue = Math.min(...element)
+        //       if (maxY === null) maxY = maxValue
+        //       maxY = maxValue > maxY ? maxValue : maxY
+        //       if (minY === null) minY = minValue
+        //       minY = minValue < minY ? minValue : minY
+        //     }
+        //   })
+
+        //   config.visualMap = []
+        //   let dimensionAmount = this.dataset.data[0].length
+        //   while(dimensionAmount) {
+        //     config.visualMap.push(lineChartMonitorVisualMap(upperLimit, lowerLimit, maxY, minY, dimensionAmount))
+        //     dimensionAmount -= 1
+        //   }
+        // }
       }
 
       return config
