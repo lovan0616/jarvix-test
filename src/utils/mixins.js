@@ -191,7 +191,7 @@ Vue.mixin({
       switch (value) {
         case 'root_cause_chart':
         case 'bar_chart':
-          return 'DisplayScatterProbabilityDensityChart'
+          return 'DisplayBarChart'
         case 'bar_chart_average':
           return 'DisplayAverageBarChart'
         case 'multi_axis_bar_chart':

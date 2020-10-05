@@ -310,11 +310,11 @@ export default {
     grid () {
       return [
         {
-          height: '65%'
+          height: '63%'
         },
         {
-          top: '80%',
-          height: '41px'
+          top: '78.5%',
+          height: '60'
         }
       ]
     },
@@ -322,7 +322,7 @@ export default {
       const intervalAmount = 20
       const xAxisMin = title.xAxis[0].min
       const xAxisMax = title.xAxis[0].max
-      const xAxisTick = [...Array(intervalAmount).keys()].map((index) => xAxisMin + (index + 1) * (((xAxisMax - xAxisMin) / intervalAmount) / 2))
+      const xAxisTick = [...Array(intervalAmount).keys()].map((index) => xAxisMin + (((xAxisMax - xAxisMin) / intervalAmount) / 2) + (index + 1) * ((xAxisMax - xAxisMin) / intervalAmount))
       // min: 0, max: 100, 50 為中心
       const yAxisPosition = 50
       // 包含各分群及離群值資料
@@ -399,58 +399,136 @@ export default {
       ]
     },
     chartOption () {
-      let config = {
-        grid: this.grid,
-        xAxis: [
-          {
-            ...xAxisDefault(),
-            name: title.xAxis[0].display_name,
-            gridIndex: 0,
-            boundaryGap: false,
-            axisLabel: {
-              show: false
-            },
-            min: title.xAxis[0].min,
-            max: title.xAxis[0].max
-          },
-          {
-            ...xAxisDefault(),
-            ...scatterChartConfig.xAxis,
-            min: title.xAxis[0].min,
-            max: title.xAxis[0].max,
-            splitNumber: dataset.buckets.length,
-            interval: (title.xAxis[0].max - title.xAxis[0].min) / dataset.buckets.length,
-          }
-        ],
-        yAxis: [
-          {
-            ...yAxisDefault(),
-            name: title.yAxis[0].display_name,
-            gridIndex: 0
-          },
-          scatterChartConfig.yAxis
-        ],
+      const config = {
         ...JSON.parse(JSON.stringify(commonChartOptions())),
         ...getDrillDownTool(this.$route.name, this.title),
         tooltip: {
           ...commonChartOptions().tooltip,
           trigger: 'item',
           formatter (params) {
-            console.log(params)
             return `${params.seriesName}<br />${params.value}`
           },
         },
+        grid: this.grid,
         dataset: [
           this.lineChartDataset,
           ...this.scatterChartDataset
         ],
+        // Use visualMap to perform visual encoding.
         visualMap: this.visualMap,
+        xAxis: [
+            {
+              ...xAxisDefault(),
+              name: title.xAxis[0].display_name,
+              type: 'category',
+              gridIndex: 0,
+              boundaryGap: false,
+              axisTick: {
+                show: false
+              },
+              axisLabel: {
+                show: false
+              }
+            },
+            {
+              ...xAxisDefault(),
+              ...scatterChartConfig.xAxis,
+              type: 'value',
+              boundaryGap: false,
+              min: title.xAxis[0].min,
+              max: title.xAxis[0].max,
+              scale: true,
+              splitNumber: dataset.buckets[0].length,
+              interval: (title.xAxis[0].max - title.xAxis[0].min) / dataset.buckets[0].length,
+              gridIndex: 1,
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                lineStyle: {
+                  type: 'dashed'
+                }
+              },
+              axisTick: {
+                length: 0
+              },
+              axisLabel: {
+                show: true, //false
+                color: '#fff'
+              }
+            }
+        ],
+        yAxis: [
+          {
+            ...yAxisDefault(),
+            name: title.yAxis[0].display_name,
+            gridIndex: 0,
+            axisLabel: {
+              show: true, //false
+              color: '#fff'
+            }
+          },
+          scatterChartConfig.yAxis
+        ],
         series: this.series,
         color: color5
       }
 
       return config
     },
+    // chartOption () {
+    //   let config = {
+    //     grid: this.grid,
+    //     xAxis: [
+    //       {
+    //         ...xAxisDefault(),
+    //         name: title.xAxis[0].display_name,
+    //         gridIndex: 0,
+    //         boundaryGap: false,
+    //         axisLabel: {
+    //           show: false
+    //         },
+    //         min: title.xAxis[0].min,
+    //         max: title.xAxis[0].max
+    //       },
+    //       {
+    //         ...xAxisDefault(),
+    //         ...scatterChartConfig.xAxis,
+    //         min: title.xAxis[0].min,
+    //         max: title.xAxis[0].max,
+    //         splitNumber: dataset.buckets.length,
+    //         interval: (title.xAxis[0].max - title.xAxis[0].min) / dataset.buckets.length,
+    //       }
+    //     ],
+    //     yAxis: [
+    //       {
+    //         ...yAxisDefault(),
+    //         name: title.yAxis[0].display_name,
+    //         gridIndex: 0
+    //       },
+    //       scatterChartConfig.yAxis
+    //     ],
+    //     ...JSON.parse(JSON.stringify(commonChartOptions())),
+    //     ...getDrillDownTool(this.$route.name, this.title),
+    //     tooltip: {
+    //       ...commonChartOptions().tooltip,
+    //       trigger: 'item',
+    //       formatter (params) {
+    //         console.log(params)
+    //         return `${params.seriesName}<br />${params.value}`
+    //       },
+    //     },
+    //     dataset: [
+    //       this.lineChartDataset,
+    //       ...this.scatterChartDataset
+    //     ],
+    //     visualMap: this.visualMap,
+    //     series: this.series,
+    //     color: color5
+    //   }
+
+    //   return config
+    // },
     chartStyle () {
       return {
         width: '100%',
