@@ -100,7 +100,7 @@ export default {
           '</tr>'
         for (let i = 0; i < dataset.length; i++) {
           table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>
-            <td>${dataset[i].source}</td><td>${dataset[i].target}</td><td>${dataset[i].value}</td>
+            <td>${dataset[i].source}</td><td>${dataset[i].target}</td><td>${this.formatComma(dataset[i].value)}</td>
           </tr>`
         }
         table += '</tbody></table>'
