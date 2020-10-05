@@ -10,18 +10,28 @@
   >
     <result-board-body slot="PageResultBoardBody">
       <template 
-        v-if="hasMultiAnalysis" 
+        v-if="resultInfo.canClustering" 
         slot="multiAnalyPanel"
       >
         <ul class="multi-analysis__list">
           <li class="multi-analysis__item" >
-            <svg-icon icon-class="basic-info"/>
+            <spinner 
+              v-if="isProcessing.overview" 
+              size="16"/>
+            <svg-icon 
+              v-else 
+              icon-class="basic-info"/>
             <span 
               class="multi-analysis__item-label" 
               @click="fetchOverview">概況分析</span>
           </li>
           <li class="multi-analysis__item">
-            <svg-icon icon-class="clustering"/>
+            <spinner 
+              v-if="isProcessing.clustering" 
+              size="16"/>
+            <svg-icon 
+              v-else 
+              icon-class="clustering"/>
             <span 
               class="multi-analysis__item-label" 
               @click="fetchClustering">分群分析</span>
@@ -40,9 +50,9 @@
         slot="PageResultBoardChart"
       >
         <task
-          v-for="(chartTask, index) in resultInfo.key_result"
-          :key="'chart-' + index"
-          :component-id="chartTask"
+          v-for="componentId in resultInfo.key_result"
+          :key="componentId"
+          :component-id="componentId"
           :data-frame-id="dataFrameId"
           intend="key_result"
         />
@@ -66,17 +76,17 @@
       <template slot="InsightRootCause">
         <template v-if="resultInfo.general_insight && resultInfo.general_insight.length > 0">
           <task
-            v-for="(otherTask, index) in resultInfo.general_insight"
-            :key="'other-' + index"
-            :component-id="otherTask"
+            v-for="componentId in resultInfo.general_insight"
+            :key="componentId"
+            :component-id="componentId"
             intend="general_insight"
           />
         </template>
         <template v-if="resultInfo.correlation_insight && resultInfo.correlation_insight.length > 0">
           <task
-            v-for="(otherTask, index) in resultInfo.correlation_insight"
-            :key="'other-' + index"
-            :component-id="otherTask"
+            v-for="componentId in resultInfo.correlation_insight"
+            :key="componentId"
+            :component-id="componentId"
             intend="correlation_insight"
           />
         </template>
@@ -85,8 +95,8 @@
         v-if="resultInfo.recommended_insight && resultInfo.recommended_insight.length > 0"
         slot="InsightRecommended">
         <recommended-insight 
-          v-for="(componentId, index) in resultInfo.recommended_insight" 
-          :key="index"
+          v-for="componentId in resultInfo.recommended_insight" 
+          :key="componentId"
           :component-id="componentId"
         />
       </template>
@@ -133,19 +143,28 @@ export default {
   },
   data: () => {
     return {
-      test: 0,
-      currentResultInfo: null
+      currentResultInfo: null,
+      isProcessing: {
+        overview: false,
+        clustering: false
+      }
     }
   },
   computed: {
     ...mapState('result', ['currentResultId']),
-    // TODO 改成從 result info 拿
-    hasMultiAnalysis () {
-      return true
-    },
     // TODO
     barData () {
       return [{ title:'儲存分群結果為欄位', icon: 'feature' }]
+    }
+  },
+  watch: {
+    resultInfo: {
+      deep: true,
+      handler () {
+        for (const key in this.isProcessing) {
+          this.isProcessing[key] = false
+        }
+      }
     }
   },
   methods: {
@@ -153,19 +172,25 @@ export default {
       this.$emit('unPin', pinBoardId)
     },
     fetchOverview () {
+      if (Object.values(this.isProcessing).some(item => item)) return
       // 拿現在的 result id 去交換 概況分析
       this.$store.dispatch('chatBot/askOverview', this.currentResultId)
-        .then(resultId => {
-          this.$store.commit('result/updateCurrentResultId', resultId)
-          this.$emit('fetch-new-components-list')
+        .then(() => {
+          this.isProcessing.overview = true
+          setTimeout(() => {
+            this.$emit('fetch-new-components-list', this.currentResultId - 200)
+          }, 3 * 1000)
         })
     },
     fetchClustering () {
+      if (Object.values(this.isProcessing).some(item => item)) return
       // 拿現在的 result id 去交換 分群分析
       this.$store.dispatch('chatBot/askClustering', this.currentResultId)
-        .then(resultId => {
-          this.$store.commit('result/updateCurrentResultId', resultId)
-          this.$emit('fetch-new-components-list')
+        .then(() => {
+          this.isProcessing.clustering = true
+          setTimeout(() => {
+            this.$emit('fetch-new-components-list', this.currentResultId - 100)
+          }, 3 * 1000)
         })
     },
   }

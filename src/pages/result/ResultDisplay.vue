@@ -22,7 +22,7 @@
       :transcript="transcript"
       :is-war-room-addable="isWarRoomAddable"
       mode="display"
-      @fetch-new-components-list="fetNewComponentsList"
+      @fetch-new-components-list="getComponentV2"
     />
     <div
       v-if="relatedQuestionList.length > 0" 
@@ -42,7 +42,7 @@
 
 <script>
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'ResultDisplay',
@@ -74,6 +74,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('result', ['currentResultId']),
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
@@ -164,6 +165,8 @@ export default {
           selectedColumnList: this.selectedColumnList
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+          this.$store.commit('result/updateCurrentResultId', res.resultId)
+          this.checkEmptyLayout(res)
           this.getComponentV2(res)
           // this.getRelatedQuestion(res.resultId)
         }).catch(() => {
@@ -211,7 +214,9 @@ export default {
               restrictions: this.filterRestrictionList,
               selectedColumnList: this.selectedColumnList
             }).then(res => {
-              this.getComponentV2(res)
+              this.$store.commit('result/updateCurrentResultId', res.resultId)
+              this.checkEmptyLayout(res)
+              this.getComponentV2(res.resultId)
               // this.getRelatedQuestion(res.resultId)
             }).catch((error) => {
               if (error.message !== 'cancel') this.isLoading = false
@@ -235,9 +240,7 @@ export default {
       })
       this.$store.commit('chatBot/updateAnalyzeStatus', false)
     },
-    getComponentV2 (res) {
-      window.clearTimeout(this.timeoutFunction)
-      this.$store.commit('result/updateCurrentResultId', res.resultId)
+    checkEmptyLayout (res) {
       if (res.layout === 'no_answer') {
         this.layout = 'EmptyResult'
         this.resultInfo = {
@@ -245,16 +248,17 @@ export default {
           description: res.noAnswerDescription
         }
         this.isLoading = false
-        return false
       }
-
-      this.$store.dispatch('chatBot/getComponentList', res.resultId)
+    },
+    getComponentV2 (resultId) {
+      window.clearTimeout(this.timeoutFunction)
+      this.$store.dispatch('chatBot/getComponentList', resultId)
         .then(componentResponse => {
           switch (componentResponse.status) {
             case 'Process':
             case 'Ready':
               this.timeoutFunction = window.setTimeout(() => {
-                this.getComponentV2(res)
+                this.getComponentV2(resultId)
               }, this.totalSec)
 
               this.totalSec += this.periodSec
@@ -265,6 +269,12 @@ export default {
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
               this.restrictInfo = componentResponse.restrictions
+              
+              // TODO 後端會新增這三個屬性
+              this.resultInfo.canClustering = true
+              this.resultInfo.canOverView = true
+              this.resultInfo.canSaveResult = true
+
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
               this.segmentationAnalysisV2(componentResponse.segmentationPayload)
@@ -285,9 +295,6 @@ export default {
         }).catch((error) => {
           if (error.message !== 'cancel') this.isLoading = false
         })
-    },
-    fetNewComponentsList () {
-      // TODO
     },
     getRelatedQuestion (id) {
       this.$store.dispatch('chatBot/getRelatedQuestionList', id).then(response => {

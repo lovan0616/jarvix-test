@@ -24,14 +24,12 @@ export default {
     return askResult(data, cancelToken)
   },
   askClustering ({ commit }, resultId) {
-    askClustering(resultId).then(resultId => {
-      commit('result/updateCurrentResultId', resultId, { root: true })
-    })
+    // TODO 串接 API
+    commit('result/updateCurrentResultId', resultId - 200, { root: true })
   },
   askOverview ({ commit }, resultId) {
-    askOverview(resultId).then(resultId => {
-      commit('result/updateCurrentResultId', resultId, { root: true })
-    })
+    // TODO 串接 API
+    commit('result/updateCurrentResultId', resultId - 100, { root: true })
   },
   getComponentList ({dispatch, state}, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null

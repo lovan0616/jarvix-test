@@ -28,15 +28,9 @@ export function askResult (askInfo, cancelFunction) {
  * ask clustering by resultId
  */
 export function askClustering (resultId) {
-  // return request({
-  //   url: `/ask/result/${resultId}/to/clustering`,
-  //   method: 'POST'
-  // })
-  // MOCL DATA
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(60000)
-    }, 5)
+  return request({
+    url: `/ask/result/${resultId}/to/clustering`,
+    method: 'POST'
   })
 }
 
@@ -44,15 +38,9 @@ export function askClustering (resultId) {
  * ask overview by resultId
  */
 export function askOverview (resultId) {
-  // return request({
-  //   url: `/ask/result/${resultId}/to/overview`,
-  //   method: 'POST'
-  // })
-  // MOCL DATA
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(50000)
-    }, 5)
+  return request({
+    url: `/ask/result/${resultId}/to/overview`,
+    method: 'POST'
   })
 }
 /**

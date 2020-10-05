@@ -34,7 +34,7 @@
     </div>
     <slot name="InsightRootCause"/>
     <div 
-      v-if="isShowInsightRecommended" 
+      v-if="$slots.InsightRecommended" 
       name="InsightRecommended">
       <div class="insights-info recommended">
         <div class="insights-info-title">{{ $t('resultDescription.recommendedInsight') }}</div>
@@ -62,10 +62,7 @@ export default {
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
-    ...mapState('chatBot', ['hasBasicInfo']),
-    isShowInsightRecommended () {
-      return Object.prototype.hasOwnProperty.call(this.$slots, 'InsightRecommended')
-    }
+    ...mapState('chatBot', ['hasBasicInfo'])
   },
   watch: {
     isShowSettingBox (value, oldValue) {
@@ -166,11 +163,15 @@ export default {
     &__item {
       display: flex;
       align-items: center;
+      color: #A7A7A7;
       &:not(:first-child) {
         margin-top: 24px;
       }
       &:hover, &.selected {
         color: $theme-color-primary;
+      }
+      /deep/ .spinner-block {
+        padding: 0;
       }
       &-label {
         flex: 1;
