@@ -237,12 +237,10 @@ export default {
               numericIndex.push(index)
             }
           })
-
+          
           dataFrameData.data.forEach(data => {
-            data.forEach((element, index) => {
-              if(numericIndex.includes(index)) {
-                data[index] = this.formatComma(data[index])
-              }
+            numericIndex.forEach(index => {
+              data[index] = this.formatComma(data[index])
             })
           })
 
