@@ -121,6 +121,7 @@
       @closeDialog="closeDelete"
       @confirmBtn="confirmDelete"
     />
+    <slot name="dialogs"/>
   </div>
 </template>
 <script>

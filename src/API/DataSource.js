@@ -441,3 +441,17 @@ export function getDataFrameCreatedInfo(dataFrameId) {
     method: 'GET'
   })
 }
+
+/**
+ * 將分群結果儲存為欄位
+ * @param {Object} inputData
+ * @param {Number} inputData.askResultId - 欲儲存的分群結果
+ * @param {String} inputData.primaryAlias - 儲存的欄位名稱
+ */
+export function saveClusteringColumn (data) {
+  return request({
+    url: `/dataColumn/clustering-columns`,
+    method: 'POST',
+    data
+  })
+}

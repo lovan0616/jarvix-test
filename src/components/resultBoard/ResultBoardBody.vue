@@ -192,9 +192,6 @@ export default {
             top: 30px;
             left: -140px;
             z-index: 1;
-            .dropdown-flex {
-              cursor: pointer;
-            }
           }
         }
       }

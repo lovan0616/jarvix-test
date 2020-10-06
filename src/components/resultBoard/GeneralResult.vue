@@ -40,6 +40,7 @@
               <dropdown-select
                 :bar-data="barData"
                 class="dropdown"
+                @switchDialogName="switchDialogName"
               />
             </div>
           </li>
@@ -101,11 +102,20 @@
         />
       </template>
     </result-board-body>
+    <template slot="dialogs">
+      <save-clustering-dialog
+        v-show="isShowSaveClusteringDialog"
+        :data-frame-alias="transcript.dataFrame.dataFrameAlias"
+        :result-id="tempResultId.clustering"
+        @close="isShowSaveClusteringDialog = false"
+      />
+    </template>
   </result-board>
 </template>
 <script>
 import RecommendedInsight from '@/components/display/RecommendedInsight'
 import DropdownSelect from '@/components/select/DropdownSelect'
+import SaveClusteringDialog from '@/components/dialog/SaveClusteringDialog'
 
 import { mapState } from 'vuex'
 
@@ -113,7 +123,8 @@ export default {
   name: 'GeneralResult',
   components: {
     RecommendedInsight,
-    DropdownSelect
+    DropdownSelect,
+    SaveClusteringDialog
   },
   props: {
     resultInfo: {
@@ -136,6 +147,10 @@ export default {
       type: Object,
       default: () => null
     },
+    transcript: {
+      type: Object,
+      default: () => null
+    },
     isWarRoomAddable: {
       type: Boolean,
       default: false
@@ -147,14 +162,24 @@ export default {
       isProcessing: {
         overview: false,
         clustering: false
+      },
+      tempResultId: {
+        clustering: 0
+      },
+      isShowSaveClusteringDialog: false
       }
     }
   },
   computed: {
     ...mapState('result', ['currentResultId']),
-    // TODO
     barData () {
-      return [{ title:'儲存分群結果為欄位', icon: 'feature' }]
+      return [
+        { title:'儲存分群結果為欄位',
+          icon: 'feature',
+          dialogName: 'saveClustering',
+          disabled: !this.resultInfo.canSaveResult || this.hasSavedClustering
+        },
+      ]
     }
   },
   watch: {
@@ -193,6 +218,9 @@ export default {
           }, 3 * 1000)
         })
     },
+    switchDialogName (action) {
+      if (action === 'saveClustering') this.isShowSaveClusteringDialog = true
+    }
   }
 }
 </script>
