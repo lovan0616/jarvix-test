@@ -8,27 +8,20 @@
     />
     <selected-region
       v-if="selectedData.length > 0"
-      :title="$t('resultDescription.currentChosenArea')"
+      :title="$t('resultDescription.currentChosenData')"
       @save="saveFilter"
     >
-      <div 
-        slot="selectedFilterRegion" 
-        class="region-description">
-        <div 
-          v-for="(singleArea, index) in selectedData"
+      <div slot="selectedFilterRegion">
+        <div
+          v-for="(singleType, index) in selectedData"
           :key="index"
-          class="single-area"
         >
-          {{ $t('resultDescription.area') + (index + 1) }}:
-          <span
-            v-for="(singleRestraint, restraintIndex) in singleArea.restraints"
-            :key="'restraint' + index + '-' + restraintIndex"
-          >
-            {{ singleRestraint.properties.display_name }} {{ $t('resultDescription.between', {start: roundNumber(singleRestraint.properties.start), end: roundNumber(singleRestraint.properties.end) }) }}
-            <span
-              v-show="restraintIndex !== singleArea.restraints.length - 1"
-            >、</span>
-          </span>
+          <div class="region-description">
+            <div class="single-area">
+              {{ $t('resultDescription.area') + (index + 1) }}:
+              {{ singleType.properties.display_name }} {{ $t('resultDescription.between', {start: singleType.properties.start, end: singleType.properties.end }) }}
+            </div>
+          </div>
         </div>
       </div>
     </selected-region>
@@ -41,7 +34,11 @@ import {
   getDrillDownTool, 
   xAxisDefault,
   yAxisDefault,
-  color5
+  colorOnly1,
+  colorOnly2,
+  color5,
+  color12,
+  convertHexToRGBA
 } from '@/components/display/common/addons.js'
 
 const dataset = {
@@ -141,7 +138,7 @@ const dataset = {
     "分群3",
     "分群4"
   ],
-  outliersBuckets: null
+  outliersBuckets: [0.0, 3, 0.0, 0.0, 4545, 0.0, 5, 0.0, 0.0, 0.0, 44444, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 }
 
 const title = {
@@ -303,26 +300,26 @@ export default {
   data () {
     return {
       selectedData: [],
-      correlationLinePoint: 100
+      lineChartPointAmount: 130,
+      scatterChartIntervalAmount: 20
     }
   },
   computed: {
     grid () {
       return [
         {
-          height: '63%'
+          height: '69%'
         },
         {
-          top: '78.5%',
-          height: '60'
+          top: '84.5%',
+          height: '42'
         }
       ]
     },
     scatterChartDataset () {
-      const intervalAmount = 20
       const xAxisMin = title.xAxis[0].min
       const xAxisMax = title.xAxis[0].max
-      const xAxisTick = [...Array(intervalAmount).keys()].map((index) => xAxisMin + (((xAxisMax - xAxisMin) / intervalAmount) / 2) + (index + 1) * ((xAxisMax - xAxisMin) / intervalAmount))
+      const xAxisTick = [...Array(this.scatterChartIntervalAmount).keys()].map((index) => xAxisMin + (((xAxisMax - xAxisMin) / this.scatterChartIntervalAmount) / 2) + (index + 1) * ((xAxisMax - xAxisMin) / this.scatterChartIntervalAmount))
       // min: 0, max: 100, 50 為中心
       const yAxisPosition = 50
       // 包含各分群及離群值資料
@@ -333,17 +330,21 @@ export default {
         source: group.map((density, densityIndex) => ([xAxisTick[densityIndex], yAxisPosition, density]))
       }))
     },
-    lineChartDataset () {
-      const lineChartPointAmount = 20
+    lineChartAxisTick () {
       const xAxisMin = title.xAxis[0].min
       const xAxisMax = title.xAxis[0].max
-      const xAxisTick = [...Array(lineChartPointAmount).keys()].map((index) => xAxisMin + index * ((xAxisMax - xAxisMin) / lineChartPointAmount))
+      return [...Array(this.lineChartPointAmount).keys()].map((index) => {
+        // 確保 x 軸最後一個值對齊資料最大值
+        return this.lineChartPointAmount - 1 === index ? xAxisMax : xAxisMin + index * ((xAxisMax - xAxisMin) / this.lineChartPointAmount)
+      })
+    },
+    lineChartDataset () {
       return {
         source: [
-          ['group', ...xAxisTick],
+          ['group', ...this.lineChartAxisTick],
           ...dataset.columns.map((column, index) => ([
             column,
-            ...xAxisTick.map((tick, tickIndex) => this.calculateProbability (coeffs[index].mean, coeffs[index].sigma, tickIndex))
+            ...this.lineChartAxisTick.map(tick => this.calculateProbability (coeffs[index].mean, coeffs[index].sigma, tick))
           ]))
         ]
       }
@@ -358,7 +359,7 @@ export default {
         // Scatter 最小點的值
         min: 0,
         // Scatter 最大點的值
-        max: 15,
+        max: Math.max(...dataset.buckets.flat()),
         inRange: {
           // Scatter 點最小和最大的尺寸(pixel)
           symbolSize: [0, 40]
@@ -372,6 +373,7 @@ export default {
         ...dataset.columns.map((column, index) => {
           return { 
             type: 'line',
+            name: column,
             smooth: true,
             datasetIndex: 0,
             seriesLayoutBy: 'row',
@@ -390,13 +392,36 @@ export default {
           }
         }),
         ...(dataset.outliersBuckets !== null && [{
-          name: 'outlier',
+          name: this.$t('clustering.outlier'),
           type: 'scatter',
           datasetIndex: dataset.buckets.length + 1,
           xAxisIndex: 1, 
           yAxisIndex: 1
         }])
       ]
+    },
+    colorSet () {
+      const opacity = 0.7
+      const hasOutlier = dataset.outliersBuckets !== null
+      const colorAmountNeeded = hasOutlier ? dataset.columns.length + 1 : dataset.columns.length
+      let colorList
+      switch (colorAmountNeeded) {
+        case 2:
+          colorList = colorOnly1
+          break
+        case 3:
+          colorList = colorOnly2
+          break
+        case 4:
+        case 5:
+        case 6:
+          colorList = color5
+          break
+        default:
+          colorList = color12
+          break
+      }
+      return colorList.map(color => convertHexToRGBA(color, opacity))
     },
     chartOption () {
       const config = {
@@ -406,8 +431,9 @@ export default {
           ...commonChartOptions().tooltip,
           trigger: 'item',
           formatter (params) {
-            return `${params.seriesName}<br />${params.value}`
-          },
+            const marker = params.marker ? params.marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params.color};"></span>`
+            return marker + params.seriesName + '<br/>' + '資料密集程度：' + params.data[2]
+          }
         },
         grid: this.grid,
         dataset: [
@@ -417,118 +443,68 @@ export default {
         // Use visualMap to perform visual encoding.
         visualMap: this.visualMap,
         xAxis: [
-            {
-              ...xAxisDefault(),
-              name: title.xAxis[0].display_name,
-              type: 'category',
-              gridIndex: 0,
-              boundaryGap: false,
-              axisTick: {
-                show: false
-              },
-              axisLabel: {
-                show: false
+          {
+            ...xAxisDefault(),
+            name: title.xAxis[0].display_name,
+            type: 'category',
+            gridIndex: 0,
+            boundaryGap: false,
+            axisTick: {
+              show: false
+            },
+            axisLabel: {
+              show: false
+            }
+          },
+          {
+            ...xAxisDefault(),
+            ...scatterChartConfig.xAxis,
+            type: 'value',
+            boundaryGap: false,
+            min: title.xAxis[0].min,
+            max: title.xAxis[0].max,
+            scale: true,
+            splitNumber: dataset.buckets[0].length,
+            interval: (title.xAxis[0].max - title.xAxis[0].min) / dataset.buckets[0].length,
+            gridIndex: 1,
+            axisLine: {
+              show: false
+            },
+            splitLine: {
+              lineStyle: {
+                type: 'dashed',
+                color: '#A7A7A7'
               }
             },
-            {
-              ...xAxisDefault(),
-              ...scatterChartConfig.xAxis,
-              type: 'value',
-              boundaryGap: false,
-              min: title.xAxis[0].min,
-              max: title.xAxis[0].max,
-              scale: true,
-              splitNumber: dataset.buckets[0].length,
-              interval: (title.xAxis[0].max - title.xAxis[0].min) / dataset.buckets[0].length,
-              gridIndex: 1,
-              axisLine: {
-                show: false
-              },
-              splitLine: {
-                lineStyle: {
-                  type: 'dashed'
-                }
-              },
-              axisTick: {
-                length: 0
-              },
-              axisLabel: {
-                show: true, //false
-                color: '#fff'
-              }
+            axisTick: {
+              length: 0
             }
+          }
         ],
         yAxis: [
           {
             ...yAxisDefault(),
             name: title.yAxis[0].display_name,
             gridIndex: 0,
-            axisLabel: {
-              show: true, //false
-              color: '#fff'
-            }
           },
           scatterChartConfig.yAxis
         ],
         series: this.series,
-        color: color5
+        color: this.colorSet,
+        legend: {
+          ...commonChartOptions().legend,
+          data: [
+            ...dataset.columns,
+            ...(dataset.outliersBuckets !== null && [this.$t('clustering.outlier')])
+          ]
+        }
       }
+      
+      // 目前不提供觀看原始資料的功能
+      config.toolbox.feature.dataView.show = false
 
       return config
     },
-    // chartOption () {
-    //   let config = {
-    //     grid: this.grid,
-    //     xAxis: [
-    //       {
-    //         ...xAxisDefault(),
-    //         name: title.xAxis[0].display_name,
-    //         gridIndex: 0,
-    //         boundaryGap: false,
-    //         axisLabel: {
-    //           show: false
-    //         },
-    //         min: title.xAxis[0].min,
-    //         max: title.xAxis[0].max
-    //       },
-    //       {
-    //         ...xAxisDefault(),
-    //         ...scatterChartConfig.xAxis,
-    //         min: title.xAxis[0].min,
-    //         max: title.xAxis[0].max,
-    //         splitNumber: dataset.buckets.length,
-    //         interval: (title.xAxis[0].max - title.xAxis[0].min) / dataset.buckets.length,
-    //       }
-    //     ],
-    //     yAxis: [
-    //       {
-    //         ...yAxisDefault(),
-    //         name: title.yAxis[0].display_name,
-    //         gridIndex: 0
-    //       },
-    //       scatterChartConfig.yAxis
-    //     ],
-    //     ...JSON.parse(JSON.stringify(commonChartOptions())),
-    //     ...getDrillDownTool(this.$route.name, this.title),
-    //     tooltip: {
-    //       ...commonChartOptions().tooltip,
-    //       trigger: 'item',
-    //       formatter (params) {
-    //         console.log(params)
-    //         return `${params.seriesName}<br />${params.value}`
-    //       },
-    //     },
-    //     dataset: [
-    //       this.lineChartDataset,
-    //       ...this.scatterChartDataset
-    //     ],
-    //     visualMap: this.visualMap,
-    //     series: this.series,
-    //     color: color5
-    //   }
-
-    //   return config
-    // },
     chartStyle () {
       return {
         width: '100%',
@@ -544,37 +520,22 @@ export default {
       return (1 / (Math.sqrt(2 * Math.PI) * sigma)) * Math.exp(-1 * (Math.pow((xAxisIndex - mean), 2) / (2 * Math.pow(sigma, 2))))
     },
     brushRegionSelected (params) {
-      console.log(params)
       if (params.batch[0].areas.length === 0) {
         this.selectedData = []
         return
       }
+
       this.selectedData = params.batch[0].areas.map(areaElement => {
         let coordRange = areaElement.coordRange
         return {
-          type: 'compound',
-          restraints: [
-            {
-              type: 'range',
-              properties: {
-                dc_name: this.title.xAxis[0].dc_name,
-                data_type: this.title.xAxis[0].data_type,
-                display_name: this.title.xAxis[0].display_name,
-                start: this.title.xAxis[0].stats_type === 'numeric' ? coordRange[0][0] : this.dataset.index[coordRange[0][0]],
-                end: this.title.xAxis[0].stats_type === 'numeric' ? coordRange[0][1] : this.dataset.index[coordRange[0][1]]
-              }
-            },
-            {
-              type: 'range',
-              properties: {
-                dc_name: this.title.yAxis[0].dc_name,
-                data_type: this.title.yAxis[0].data_type,
-                display_name: this.title.yAxis[0].display_name,
-                start: coordRange[1][0],
-                end: coordRange[1][1]
-              }
-            }
-          ]
+          type: 'range',
+          properties: {
+            dc_name: title.xAxis[0].dc_name,
+            data_type: title.xAxis[0].data_type,
+            display_name: title.xAxis[0].display_name,
+            start: this.lineChartAxisTick[coordRange[0]],
+            end: this.lineChartAxisTick[coordRange[1]]
+          }
         }
       })
     },
