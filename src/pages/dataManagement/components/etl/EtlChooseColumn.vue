@@ -210,19 +210,19 @@ export default {
     },
     currentTableInfo () {
       const tableInfo = this.etlTableList[this.currentTableIndex]
-      let numericIndex = []
-      tableInfo.columns.forEach((element, index) => {
-        if (element.originalStatsType === "NUMERIC") {
-          numericIndex.push(index)
-        }
-      })
-      tableInfo.rowData.forEach(data => {
-        numericIndex.forEach(index => {
-          data[index] = this.formatComma(data[index])
-        })
-      })
 
       if (tableInfo.rowData) {
+        let numericIndex = []
+        tableInfo.columns.forEach((element, index) => {
+          if (element.originalStatsType === "NUMERIC") {
+            numericIndex.push(index)
+          }
+        })
+        tableInfo.rowData.forEach(data => {
+          numericIndex.forEach(index => {
+            data[index] = this.formatComma(data[index])
+          })
+        })
         tableInfo.data = tableInfo.rowData
         tableInfo.index = [...Array(tableInfo.data.length)].map((x, i) => i)
         delete tableInfo.rowData
