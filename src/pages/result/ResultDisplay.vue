@@ -167,7 +167,7 @@ export default {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.$store.commit('result/updateCurrentResultId', res.resultId)
           this.checkEmptyLayout(res)
-          this.getComponentV2(res)
+          this.getComponentV2(res.resultId)
           // this.getRelatedQuestion(res.resultId)
         }).catch(() => {
           this.isLoading = false

@@ -14,7 +14,7 @@
         slot="multiAnalyPanel"
       >
         <ul class="multi-analysis__list">
-          <li class="multi-analysis__item" >
+          <li :class="['multi-analysis__item', 'is-default-active', 'is-active']">
             <spinner 
               v-if="isProcessing.overview" 
               size="16"/>
@@ -166,8 +166,8 @@ export default {
       tempResultId: {
         clustering: 0
       },
+      hasSavedClustering: false,
       isShowSaveClusteringDialog: false
-      }
     }
   },
   computed: {
@@ -198,23 +198,27 @@ export default {
     },
     fetchOverview () {
       if (Object.values(this.isProcessing).some(item => item)) return
-      // 拿現在的 result id 去交換 概況分析
       this.$store.dispatch('chatBot/askOverview', this.currentResultId)
         .then(() => {
+          // MOCK DATA
+          const resultId = this.currentResultId - 2000
           this.isProcessing.overview = true
+          this.tempResultId.overview = resultId
           setTimeout(() => {
-            this.$emit('fetch-new-components-list', this.currentResultId - 200)
+            this.$emit('fetch-new-components-list', resultId)
           }, 3 * 1000)
         })
     },
     fetchClustering () {
       if (Object.values(this.isProcessing).some(item => item)) return
-      // 拿現在的 result id 去交換 分群分析
       this.$store.dispatch('chatBot/askClustering', this.currentResultId)
         .then(() => {
+          // MOCK DATA
+          const resultId = this.currentResultId - 2000
           this.isProcessing.clustering = true
+          this.tempResultId.clustering = resultId
           setTimeout(() => {
-            this.$emit('fetch-new-components-list', this.currentResultId - 100)
+            this.$emit('fetch-new-components-list', resultId)
           }, 3 * 1000)
         })
     },
