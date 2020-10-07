@@ -35,7 +35,6 @@
             </div>
           </li>
           <li
-            v-if="resultInfo.canDoList.indexOf(intentType.CLUSTERING) >= 0"
             :class="{'is-active': activeTab === intentType.CLUSTERING}"
             class="multi-analysis__item"
             @click="clickTab(intentType.CLUSTERING)"
@@ -235,21 +234,18 @@ export default {
       this.$emit('unPin', pinBoardId)
     },
     fetchSpecificType (type) {
+      // 有資料正在 fetching 則擋掉
       if (Object.values(this.isProcessing).some(item => item)) return
       this.isProcessing[type] = true
       this.$store.dispatch('chatBot/askSpecificType', {
         resultId: this.currentResultId,
         type: type.toLowerCase()
       })
-        .then(() => {
-          // MOCK DATA
-          const resultId = this.tempResultId[type] || this.currentResultId - 2000
+        .then(({ resultId }) => {
           this.isProcessing[type] = false
           this.tempResultId[type] = resultId
-          setTimeout(() => {
-            this.activeTab = this.intentType[type]
-            this.$emit('fetch-new-components-list', resultId)
-          }, 3 * 1000)
+          this.activeTab = this.intentType[type]
+          this.$emit('fetch-new-components-list', resultId)
         })
     },
     clickTab (tabName) {
@@ -257,9 +253,7 @@ export default {
       if (!this.tempResultId[tabName]) return
       this.activeTab = this.intentType[tabName]
       this.isProcessing[tabName] = true
-      setTimeout(() => {
-        this.$emit('fetch-new-components-list', this.tempResultId[tabName])
-      }, 3 * 1000)
+      this.$emit('fetch-new-components-list', this.tempResultId[tabName])
     },
     switchDialogName (action) {
       if (action === 'saveClustering') this.isShowSaveClusteringDialog = true

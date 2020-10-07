@@ -32,7 +32,10 @@
         </template>
       </slot-dialog>
     </div>
-    <div class="other-result-container">
+    <div
+      v-if="isShowOtherResultContainer"
+      class="other-result-container"
+    >
       <slot name="InsightRootCause"/>
       <div 
         v-if="$slots.InsightRecommended" 
@@ -64,7 +67,10 @@ export default {
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['isShowSettingBox']),
-    ...mapState('chatBot', ['hasBasicInfo'])
+    ...mapState('chatBot', ['hasBasicInfo']),
+    isShowOtherResultContainer () {
+      return this.$slots.InsightRootCause || this.$slots.InsightRecommended || this.$slots.CorrelationAnalysis
+    }
   },
   watch: {
     isShowSettingBox (value, oldValue) {
@@ -97,11 +103,12 @@ export default {
 
     .chart-block {
       width: 100%;
-      padding-top: 40px;
-      padding-right: 30px;
+      padding: 40px 30px 0 30px;
       min-width: 0;
       flex: 1;
       margin-right: 0;
+      // TODO 等分群圖長出來就可以拔掉
+      min-height: 500px;
       
       /deep/ .task:not(:first-child) {
         padding-top: 30px;
@@ -136,7 +143,7 @@ export default {
 
     .control-btn {
       position: absolute;
-      top: 20px;
+      top: 5px;
       right: 30px;
       padding: 7px 15px;
 
@@ -146,10 +153,7 @@ export default {
     }
   }
   .other-result-container {
-    padding: 30px 30px 40px 30px;
-    &:empty {
-      display: none;
-    }
+    padding: 30px;
   }
   .insights-info.recommended {
     .insights-info__wrapper {

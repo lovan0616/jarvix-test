@@ -272,12 +272,8 @@ export default {
               this.totalSec = 50
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
+              this.resultInfo.canDoList = componentResponse.canDoList
               this.restrictInfo = componentResponse.restrictions
-              
-              // TODO 串接 API 後這段可以拿掉
-              this.resultInfo.canDoList = ['CLUSTERING']
-              this.resultInfo.isJoinTable = false
-
               this.intent = componentResponse.intent
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
