@@ -71,22 +71,27 @@ export default {
   },
   methods: {
     save () {
-      this.isProcessing = true
-      saveClusteringColumn({
-        primaryAlias: this.columnPrimaryAlias,
-        askResultId: this.resultId
-      }).then(() => {
-          Message({
-            message: this.$t('message.saveSuccess'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
-          })
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.$emit('close')
-          this.isProcessing = false
+      this.$validator.validate('columnPrimaryAlias')
+        .then(isValid => {
+          if (!isValid) return
+
+          this.isProcessing = true
+          saveClusteringColumn({
+            primaryAlias: this.columnPrimaryAlias,
+            askResultId: this.resultId
+          }).then(() => {
+              Message({
+                message: this.$t('message.saveSuccess'),
+                type: 'success',
+                duration: 3 * 1000,
+                showClose: true
+              })
+            })
+            .catch(() => {})
+            .finally(() => {
+              this.$emit('close')
+              this.isProcessing = false
+            })
         })
     }
   }
