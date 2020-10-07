@@ -25,6 +25,15 @@
         </div>
       </div>
     </selected-region>
+    <div 
+      v-if="tempdataset.descriptions.length > 0"
+      class="description"
+    >
+      <span 
+        v-for="(description, index) in tempdataset.descriptions" 
+        :key="index" 
+        class="description__item">{{ description }}</span>
+    </div>
   </div>
 </template>
 <script>
@@ -302,7 +311,130 @@ export default {
   props: {
     dataset: {
       type: Object,
-      default: null
+      default: () => ({
+  buckets: [
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      166669,
+      166083,
+      82875,
+      166474,
+      166384
+    ],
+    [
+      166863,
+      166259,
+      83320,
+      166493,
+      83033,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      83302,
+      166261,
+      82891,
+      166693,
+      166034,
+      83181,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      82730,
+      83329,
+      166127,
+      166561,
+      83325,
+      82772,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  columns: [
+    '分群1',
+    '分群2',
+    '分群3',
+    '分群4'
+  ],
+  descriptions: [
+    'JarviX發現收入有 4 種群體並且有 0 %的異常資料。',
+    '各群體佔比是相近的'
+  ],
+  outliersBuckets: [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    22220,
+    0,
+    43234320,
+    0,
+    0
+  ]
+})
     },
     title: {
       type: Object,
@@ -326,7 +458,8 @@ export default {
     return {
       selectedData: [],
       lineChartPointAmount: 130,
-      scatterChartIntervalAmount: 20
+      scatterChartIntervalAmount: 20,
+      tempdataset: null
     }
   },
   computed: {
@@ -527,7 +660,6 @@ export default {
       
       // 目前不提供觀看原始資料的功能
       config.toolbox.feature.dataView.show = false
-
       return config
     },
     chartStyle () {
@@ -540,6 +672,9 @@ export default {
       return this.$store.state.dataSource.appQuestion
     }
   },
+  created() {
+    this.tempdataset = dataset
+  },
   methods: {
     calculateProbability (mean, sigma, xAxisIndex) {
       return (1 / (Math.sqrt(2 * Math.PI) * sigma)) * Math.exp(-1 * (Math.pow((xAxisIndex - mean), 2) / (2 * Math.pow(sigma, 2))))
@@ -551,7 +686,7 @@ export default {
       }
 
       this.selectedData = params.batch[0].areas.map(areaElement => {
-        let coordRange = areaElement.coordRange
+        const coordRange = areaElement.coordRange
         return {
           type: 'range',
           properties: {
@@ -573,6 +708,16 @@ export default {
 
 <style lang="scss" scoped>
 .display-scatter-probability-density-chart {
+  .description {
+    margin-top: 40px;
+    background: #141C1D;
+    border-radius: 8px;
+    padding: 10px 20px;
 
+    &__item {
+      font-size: 14px;
+      letter-spacing: 0.1em;
+    }
+  }
 }
 </style>
