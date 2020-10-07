@@ -1,4 +1,4 @@
-import { askQuestion, askResult, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
+import { askQuestion, askResult, askSpecificType, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
 
@@ -23,13 +23,10 @@ export default {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
     return askResult(data, cancelToken)
   },
-  askClustering ({ commit }, resultId) {
-    // TODO 串接 API
-    commit('result/updateCurrentResultId', resultId - 200, { root: true })
-  },
-  askOverview ({ commit }, resultId) {
-    // TODO 串接 API
-    commit('result/updateCurrentResultId', resultId - 100, { root: true })
+  askSpecificType ({ state, commit }, data) {
+    let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
+    commit('result/updateCurrentResultId', data.resultId, { root: true })
+    return askSpecificType(data, cancelToken)
   },
   getComponentList ({dispatch, state}, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null

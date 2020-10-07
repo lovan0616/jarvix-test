@@ -17,7 +17,7 @@
           <li
             :class="{'is-active': activeTab === intentType.OVERVIEW}"
             class="multi-analysis__item"
-            @click="clickOverviewTab"
+            @click="clickTab(intentType.OVERVIEW)"
           >
             <span class="multi-analysis__item-label">
               <svg-icon icon-class="basic-info"/>
@@ -25,11 +25,11 @@
             </span>
             <div class="multi-analysis__item-status">
               <spinner 
-                v-if="isProcessing.overview" 
+                v-if="isProcessing[intentType.OVERVIEW]" 
                 size="16"/>
               <div
-                v-else-if="!tempResultId.overview"
-                @click="fetchOverview">
+                v-else-if="!tempResultId[intentType.OVERVIEW]"
+                @click="fetchSpecificType(intentType.OVERVIEW)">
                 <svg-icon icon-class="trigger-analysis"/>
               </div>
             </div>
@@ -38,10 +38,10 @@
             v-if="resultInfo.canDoList.indexOf(intentType.CLUSTERING) >= 0"
             :class="{'is-active': activeTab === intentType.CLUSTERING}"
             class="multi-analysis__item"
-            @click="clickClusteringTab"
+            @click="clickTab(intentType.CLUSTERING)"
           >
             <span
-              :class="{'is-disabled': !tempResultId.clustering}"
+              :class="{'is-disabled': !tempResultId[intentType.CLUSTERING]}"
               class="multi-analysis__item-label"
             >
               <svg-icon icon-class="clustering"/>
@@ -49,7 +49,7 @@
             </span>
             <div class="multi-analysis__item-status">
               <spinner 
-                v-if="isProcessing.clustering" 
+                v-if="isProcessing[intentType.CLUSTERING]" 
                 size="16"/>
               <div
                 v-else-if="hasFetchedClustering"
@@ -64,7 +64,7 @@
               </div>
               <div
                 v-else
-                @click="fetchClustering">
+                @click="fetchSpecificType(intentType.CLUSTERING)">
                 <svg-icon icon-class="trigger-analysis"/>
               </div>
             </div>
@@ -178,7 +178,7 @@ export default {
     },
     intent: {
       type: String,
-      default: ''
+      default: null
     },
     isWarRoomAddable: {
       type: Boolean,
@@ -189,16 +189,16 @@ export default {
     return {
       currentResultInfo: null,
       isProcessing: {
-        overview: false,
-        clustering: false
+        OVERVIEW: false,
+        CLUSTERING: false
       },
       tempResultId: {
-        overview: null,
-        clustering: null
+        OVERVIEW: null,
+        CLUSTERING: null
       },
       activeTab: null,
       isShowSaveClusteringDialog: false,
-      intentType
+      intentType,
     }
   },
   computed: {
@@ -213,7 +213,7 @@ export default {
       ]
     },
     hasFetchedClustering () {
-      return this.intent === this.intentType.CLUSTERING || this.tempResultId.clustering
+      return this.intent === this.intentType.CLUSTERING || this.tempResultId.CLUSTERING
     }
   },
   watch: {
@@ -227,54 +227,39 @@ export default {
     }
   },
   mounted () {
-    this.tempResultId[this.intent.toLowerCase()] = this.resultId
+    this.tempResultId[this.intent] = this.resultId
     this.activeTab = this.intent
   },
   methods: {
     unPin (pinBoardId) {
       this.$emit('unPin', pinBoardId)
     },
-    fetchOverview () {
+    fetchSpecificType (type) {
       if (Object.values(this.isProcessing).some(item => item)) return
-      this.isProcessing.overview = true
-      this.$store.dispatch('chatBot/askOverview', this.currentResultId)
+      this.isProcessing[type] = true
+      this.$store.dispatch('chatBot/askSpecificType', {
+        resultId: this.currentResultId,
+        type: type.toLowerCase()
+      })
         .then(() => {
           // MOCK DATA
-          const resultId = this.tempResultId.overview || this.currentResultId - 2000
-          this.isProcessing.overview = false
-          this.tempResultId.overview = resultId
+          const resultId = this.tempResultId[type] || this.currentResultId - 2000
+          this.isProcessing[type] = false
+          this.tempResultId[type] = resultId
           setTimeout(() => {
-            this.activeTab = this.intentType.OVERVIEW
+            this.activeTab = this.intentType[type]
             this.$emit('fetch-new-components-list', resultId)
           }, 3 * 1000)
         })
     },
-    fetchClustering () {
-      if (Object.values(this.isProcessing).some(item => item)) return
-      this.isProcessing.clustering = true
-      this.$store.dispatch('chatBot/askClustering', this.currentResultId)
-        .then(() => {
-          // MOCK DATA
-          const resultId = this.tempResultId.clustering || this.currentResultId - 2000
-          this.isProcessing.clustering = false
-          this.tempResultId.clustering = resultId
-          setTimeout(() => {
-            this.activeTab = this.intentType.CLUSTERING
-            this.$emit('fetch-new-components-list', resultId)
-          }, 3 * 1000)
-        })
-    },
-    clickOverviewTab () {
-      if (this.activeTab === this.intentType.OVERVIEW) return
-      if (!this.tempResultId.overview) return
-      this.activeTab = this.intentType.OVERVIEW
-      this.$emit('fetch-new-components-list', this.tempResultId.overview)
-    },
-    clickClusteringTab () {
-      if (this.activeTab === this.intentType.CLUSTERING) return
-      if (!this.tempResultId.clustering) return
-      this.activeTab = this.intentType.CLUSTERING
-      this.$emit('fetch-new-components-list', this.tempResultId.clustering)
+    clickTab (tabName) {
+      if (this.activeTab === this.intentType[tabName]) return
+      if (!this.tempResultId[tabName]) return
+      this.activeTab = this.intentType[tabName]
+      this.isProcessing[tabName] = true
+      setTimeout(() => {
+        this.$emit('fetch-new-components-list', this.tempResultId[tabName])
+      }, 3 * 1000)
     },
     switchDialogName (action) {
       if (action === 'saveClustering') this.isShowSaveClusteringDialog = true

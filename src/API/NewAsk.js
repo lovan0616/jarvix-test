@@ -25,24 +25,17 @@ export function askResult (askInfo, cancelFunction) {
 }
 
 /**
- * ask clustering by resultId
+ * exchange result id to specific type
+ * ex: overview to clustering, or clustering to overview
  */
-export function askClustering (resultId) {
+export function askSpecificType ({ resultId, type }, cancelFunction) {
   return request({
-    url: `/ask/result/${resultId}/to/clustering`,
-    method: 'POST'
+    url: `/ask/result/${resultId}/to/${type}`,
+    method: 'POST',
+    cancelToken: cancelFunction
   })
 }
 
-/**
- * ask overview by resultId
- */
-export function askOverview (resultId) {
-  return request({
-    url: `/ask/result/${resultId}/to/overview`,
-    method: 'POST'
-  })
-}
 /**
  * get component list
  */
