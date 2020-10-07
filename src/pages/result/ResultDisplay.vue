@@ -20,6 +20,7 @@
       :restrictions="restrictInfo"
       :segmentation-payload="segmentationPayload"
       :transcript="transcript"
+      :intent="intent"
       :is-war-room-addable="isWarRoomAddable"
       mode="display"
       @fetch-new-components-list="getComponentV2"
@@ -70,7 +71,8 @@ export default {
       isWarRoomAddable: false,
       currentQuestionDataFrameId: null,
       totalSec: 50,
-      periodSec: 200
+      periodSec: 200,
+      intent: null
     }
   },
   computed: {
@@ -147,6 +149,7 @@ export default {
       this.currentQuestionDataFrameId = null
       this.transcript = null
       this.isWarRoomAddable = false
+      this.intent = null
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {
@@ -252,6 +255,7 @@ export default {
     },
     getComponentV2 (resultId) {
       window.clearTimeout(this.timeoutFunction)
+      console.log('getComponentV2', resultId)
       this.$store.dispatch('chatBot/getComponentList', resultId)
         .then(componentResponse => {
           switch (componentResponse.status) {
@@ -270,11 +274,11 @@ export default {
               this.resultInfo = componentResponse.componentIds
               this.restrictInfo = componentResponse.restrictions
               
-              // TODO 後端會新增這三個屬性
-              this.resultInfo.canClustering = true
-              this.resultInfo.canOverView = true
-              this.resultInfo.canSaveResult = true
+              // TODO 串接 API 後這段可以拿掉
+              this.resultInfo.canDoList = ['CLUSTERING']
+              this.resultInfo.isJoinTable = false
 
+              this.intent = componentResponse.intent
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
               this.segmentationAnalysisV2(componentResponse.segmentationPayload)

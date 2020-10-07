@@ -10,38 +10,63 @@
   >
     <result-board-body slot="PageResultBoardBody">
       <template 
-        v-if="resultInfo.canClustering" 
+        v-if="resultInfo.canDoList.length > 0" 
         slot="multiAnalyPanel"
       >
         <ul class="multi-analysis__list">
-          <li :class="['multi-analysis__item', 'is-default-active', 'is-active']">
-            <spinner 
-              v-if="isProcessing.overview" 
-              size="16"/>
-            <svg-icon 
-              v-else 
-              icon-class="basic-info"/>
-            <span 
-              class="multi-analysis__item-label" 
-              @click="fetchOverview">概況分析</span>
+          <li
+            :class="{'is-active': activeTab === intentType.OVERVIEW}"
+            class="multi-analysis__item"
+            @click="clickOverviewTab"
+          >
+            <span class="multi-analysis__item-label">
+              <svg-icon icon-class="basic-info"/>
+              資料概況
+            </span>
+            <div class="multi-analysis__item-status">
+              <spinner 
+                v-if="isProcessing.overview" 
+                size="16"/>
+              <div
+                v-else-if="!tempResultId.overview"
+                @click="fetchOverview">
+                <svg-icon icon-class="trigger-analysis"/>
+              </div>
+            </div>
           </li>
-          <li class="multi-analysis__item">
-            <spinner 
-              v-if="isProcessing.clustering" 
-              size="16"/>
-            <svg-icon 
-              v-else 
-              icon-class="clustering"/>
-            <span 
-              class="multi-analysis__item-label" 
-              @click="fetchClustering">分群分析</span>
-            <div class="multi-analysis__item-dropdownlist">
-              <svg-icon icon-class="more"/>
-              <dropdown-select
-                :bar-data="barData"
-                class="dropdown"
-                @switchDialogName="switchDialogName"
-              />
+          <li
+            v-if="resultInfo.canDoList.indexOf(intentType.CLUSTERING) >= 0"
+            :class="{'is-active': activeTab === intentType.CLUSTERING}"
+            class="multi-analysis__item"
+            @click="clickClusteringTab"
+          >
+            <span
+              :class="{'is-disabled': !tempResultId.clustering}"
+              class="multi-analysis__item-label"
+            >
+              <svg-icon icon-class="clustering"/>
+              分群分析
+            </span>
+            <div class="multi-analysis__item-status">
+              <spinner 
+                v-if="isProcessing.clustering" 
+                size="16"/>
+              <div
+                v-else-if="hasFetchedClustering"
+                class="multi-analysis__item-dropdownlist"
+              >
+                <svg-icon icon-class="more"/>
+                <dropdown-select
+                  :bar-data="barData"
+                  class="dropdown"
+                  @switchDialogName="switchDialogName"
+                />
+              </div>
+              <div
+                v-else
+                @click="fetchClustering">
+                <svg-icon icon-class="trigger-analysis"/>
+              </div>
             </div>
           </li>
         </ul>
@@ -116,7 +141,7 @@
 import RecommendedInsight from '@/components/display/RecommendedInsight'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import SaveClusteringDialog from '@/components/dialog/SaveClusteringDialog'
-
+import { intentType } from '@/utils/general'
 import { mapState } from 'vuex'
 
 export default {
@@ -151,6 +176,10 @@ export default {
       type: Object,
       default: () => null
     },
+    intent: {
+      type: String,
+      default: ''
+    },
     isWarRoomAddable: {
       type: Boolean,
       default: false
@@ -164,10 +193,12 @@ export default {
         clustering: false
       },
       tempResultId: {
-        clustering: 0
+        overview: null,
+        clustering: null
       },
-      hasSavedClustering: false,
-      isShowSaveClusteringDialog: false
+      activeTab: null,
+      isShowSaveClusteringDialog: false,
+      intentType
     }
   },
   computed: {
@@ -177,9 +208,12 @@ export default {
         { title:'儲存分群結果為欄位',
           icon: 'feature',
           dialogName: 'saveClustering',
-          disabled: !this.resultInfo.canSaveResult || this.hasSavedClustering
+          disabled: this.resultInfo.isJoinTable || this.hasSavedClustering
         },
       ]
+    },
+    hasFetchedClustering () {
+      return this.intent === this.intentType.CLUSTERING || this.tempResultId.clustering
     }
   },
   watch: {
@@ -192,35 +226,55 @@ export default {
       }
     }
   },
+  mounted () {
+    this.tempResultId[this.intent.toLowerCase()] = this.resultId
+    this.activeTab = this.intent
+  },
   methods: {
     unPin (pinBoardId) {
       this.$emit('unPin', pinBoardId)
     },
     fetchOverview () {
       if (Object.values(this.isProcessing).some(item => item)) return
+      this.isProcessing.overview = true
       this.$store.dispatch('chatBot/askOverview', this.currentResultId)
         .then(() => {
           // MOCK DATA
-          const resultId = this.currentResultId - 2000
-          this.isProcessing.overview = true
+          const resultId = this.tempResultId.overview || this.currentResultId - 2000
+          this.isProcessing.overview = false
           this.tempResultId.overview = resultId
           setTimeout(() => {
+            this.activeTab = this.intentType.OVERVIEW
             this.$emit('fetch-new-components-list', resultId)
           }, 3 * 1000)
         })
     },
     fetchClustering () {
       if (Object.values(this.isProcessing).some(item => item)) return
+      this.isProcessing.clustering = true
       this.$store.dispatch('chatBot/askClustering', this.currentResultId)
         .then(() => {
           // MOCK DATA
-          const resultId = this.currentResultId - 2000
-          this.isProcessing.clustering = true
+          const resultId = this.tempResultId.clustering || this.currentResultId - 2000
+          this.isProcessing.clustering = false
           this.tempResultId.clustering = resultId
           setTimeout(() => {
+            this.activeTab = this.intentType.CLUSTERING
             this.$emit('fetch-new-components-list', resultId)
           }, 3 * 1000)
         })
+    },
+    clickOverviewTab () {
+      if (this.activeTab === this.intentType.OVERVIEW) return
+      if (!this.tempResultId.overview) return
+      this.activeTab = this.intentType.OVERVIEW
+      this.$emit('fetch-new-components-list', this.tempResultId.overview)
+    },
+    clickClusteringTab () {
+      if (this.activeTab === this.intentType.CLUSTERING) return
+      if (!this.tempResultId.clustering) return
+      this.activeTab = this.intentType.CLUSTERING
+      this.$emit('fetch-new-components-list', this.tempResultId.clustering)
     },
     switchDialogName (action) {
       if (action === 'saveClustering') this.isShowSaveClusteringDialog = true
