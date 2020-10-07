@@ -4,7 +4,7 @@
     <slot name="PageResultBoardIndicator"/>
     <div 
       :class="{ 'is-open': isShowSettingBox }"
-      class="chart-container"
+      class="key-result-container"
     >
       <button
         v-if="$slots.InsightBasicInfo" 
@@ -32,18 +32,20 @@
         </template>
       </slot-dialog>
     </div>
-    <slot name="InsightRootCause"/>
-    <div 
-      v-if="$slots.InsightRecommended" 
-      name="InsightRecommended">
-      <div class="insights-info recommended">
-        <div class="insights-info-title">{{ $t('resultDescription.recommendedInsight') }}</div>
-        <div class="insights-info__wrapper">
-          <slot name="InsightRecommended"/>
+    <div class="other-result-container">
+      <slot name="InsightRootCause"/>
+      <div 
+        v-if="$slots.InsightRecommended" 
+        name="InsightRecommended">
+        <div class="insights-info recommended">
+          <div class="insights-info-title">{{ $t('resultDescription.recommendedInsight') }}</div>
+          <div class="insights-info__wrapper">
+            <slot name="InsightRecommended"/>
+          </div>
         </div>
       </div>
+      <slot name="CorrelationAnalysis"/>
     </div>
-    <slot name="CorrelationAnalysis"/>
   </div>
 </template>
 <script>
@@ -81,14 +83,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .result-board-body {
-  padding: 40px 30px 30px;
 
-  .chart-container {
+  .key-result-container {
     position: relative;
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
-    margin-bottom: 32px;
+    border-bottom: 1px solid $theme-border-color;
     & ~ [name="InsightRootCause"]:not(:last-child),
     & ~ [name="CorrelationAnalysis"]:not(:last-child) {
       margin-bottom: 32px;
@@ -96,10 +97,12 @@ export default {
 
     .chart-block {
       width: 100%;
+      padding-top: 40px;
+      padding-right: 30px;
       min-width: 0;
       flex: 1;
       margin-right: 0;
-
+      
       /deep/ .task:not(:first-child) {
         padding-top: 30px;
       }
@@ -133,13 +136,19 @@ export default {
 
     .control-btn {
       position: absolute;
-      top: -35px;
+      top: 5px;
       right: 0;
       padding: 7px 15px;
 
       &.active {
         background-color: #42A5B3;
       }
+    }
+  }
+  .other-result-container {
+    padding: 30px 30px 40px 30px;
+    &:empty {
+      display: none;
     }
   }
   .insights-info.recommended {
@@ -151,6 +160,8 @@ export default {
   }
   .multi-analysis {
     &__block {
+      border-right: 1px solid $theme-border-color;
+      border-bottom: 1px solid $theme-border-color;
       &:not(:empty) {
         flex-basis: 180px;
       }
@@ -161,22 +172,50 @@ export default {
       list-style: none;
     }
     &__item {
+      position: relative;
       display: flex;
       align-items: center;
       color: #A7A7A7;
-      &:not(:first-child) {
-        margin-top: 24px;
-      }
-      &:hover, &.selected {
+      height: 54px;
+      padding-left: 20px;
+      padding-right: 20px;
+      border-bottom: 1px solid $theme-border-color;
+      &.is-active {
         color: $theme-color-primary;
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 4px;
+          background-color: $theme-color-primary;
+        }
       }
       /deep/ .spinner-block {
         padding: 0;
       }
       &-label {
-        flex: 1;
         cursor: pointer;
-        text-indent: 6px;
+        &:hover {
+          color: $theme-color-primary;
+        }
+        &.is-disabled {
+          color: #646464;
+          cursor: not-allowed;
+        }
+        .svg-icon {
+          margin-right: 6px;
+        }
+      }
+      &-status {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        cursor: pointer;
+        &:hover {
+          color: $theme-color-primary;
+        }
       }
       &-dropdownlist {
         position: relative;

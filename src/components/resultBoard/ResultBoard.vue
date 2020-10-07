@@ -360,7 +360,7 @@ export default {
   background: rgb(0, 0, 0);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
-  margin-bottom: 48px;
+  border: 1px solid $theme-border-color;
 
   .board-header {
     position: relative;
@@ -368,6 +368,7 @@ export default {
     align-items: center;
     padding: 20px 28px;
     background-color: rgba(35, 61, 64, 0.6);
+    border-bottom: 1px solid $theme-border-color;
   }
 
   &__header {
