@@ -113,8 +113,8 @@ export default {
       border-radius: 8px;
       width: 40%;
       position: absolute;
-      top: 0;
-      right: 0;
+      top: 60px;
+      right: 30px;
       border: 1px solid $theme-color-primary;
       background-color: rgba(24, 24, 24, 0.95);
       z-index: 10000000; // echart 裡面的 tooltip z-index 給 9999999，逼不得已給這麼大
@@ -136,8 +136,8 @@ export default {
 
     .control-btn {
       position: absolute;
-      top: 5px;
-      right: 0;
+      top: 20px;
+      right: 30px;
       padding: 7px 15px;
 
       &.active {
