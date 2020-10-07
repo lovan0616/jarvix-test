@@ -236,6 +236,13 @@ export default {
     fetchSpecificType (type) {
       // 有資料正在 fetching 則擋掉
       if (Object.values(this.isProcessing).some(item => item)) return
+      // 已經拿過 result id 就重複使用
+      if (this.tempResultId[type]) {
+        this.isProcessing[type] = true
+        this.$emit('fetch-new-components-list', this.tempResultId[type])
+        return
+      }
+
       this.isProcessing[type] = true
       this.$store.dispatch('chatBot/askSpecificType', {
         resultId: this.currentResultId,
