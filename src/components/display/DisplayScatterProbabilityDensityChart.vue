@@ -26,11 +26,11 @@
       </div>
     </selected-region>
     <div 
-      v-if="tempdataset.descriptions.length > 0"
+      v-if="dataset.descriptions.length > 0"
       class="description"
     >
       <span 
-        v-for="(description, index) in tempdataset.descriptions" 
+        v-for="(description, index) in dataset.descriptions" 
         :key="index" 
         class="description__item">{{ description }}</span>
     </div>
@@ -311,130 +311,7 @@ export default {
   props: {
     dataset: {
       type: Object,
-      default: () => ({
-  buckets: [
-    [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      166669,
-      166083,
-      82875,
-      166474,
-      166384
-    ],
-    [
-      166863,
-      166259,
-      83320,
-      166493,
-      83033,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
-    ],
-    [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      83302,
-      166261,
-      82891,
-      166693,
-      166034,
-      83181,
-      0,
-      0,
-      0,
-      0,
-      0
-    ],
-    [
-      0,
-      0,
-      0,
-      0,
-      82730,
-      83329,
-      166127,
-      166561,
-      83325,
-      82772,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
-    ]
-  ],
-  columns: [
-    '分群1',
-    '分群2',
-    '分群3',
-    '分群4'
-  ],
-  descriptions: [
-    'JarviX發現收入有 4 種群體並且有 0 %的異常資料。',
-    '各群體佔比是相近的'
-  ],
-  outliersBuckets: [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    22220,
-    0,
-    43234320,
-    0,
-    0
-  ]
-})
+      default: () => ({})
     },
     title: {
       type: Object,
@@ -458,8 +335,7 @@ export default {
     return {
       selectedData: [],
       lineChartPointAmount: 130,
-      scatterChartIntervalAmount: 20,
-      tempdataset: null
+      scatterChartIntervalAmount: 20
     }
   },
   computed: {
@@ -475,22 +351,22 @@ export default {
       ]
     },
     scatterChartDataset () {
-      const xAxisMin = title.xAxis[0].min
-      const xAxisMax = title.xAxis[0].max
+      const xAxisMin = this.title.xAxis[0].min
+      const xAxisMax = this.title.xAxis[0].max
       const xAxisTick = [...Array(this.scatterChartIntervalAmount).keys()].map((index) => xAxisMin + (((xAxisMax - xAxisMin) / this.scatterChartIntervalAmount) / 2) + (index + 1) * ((xAxisMax - xAxisMin) / this.scatterChartIntervalAmount))
       // min: 0, max: 100, 50 為中心
       const yAxisPosition = 50
       // 包含各分群及離群值資料
       return [
-        ...dataset.buckets,
-        ...(dataset.outliersBuckets.length > 0 && [dataset.outliersBuckets])
+        ...this.dataset.buckets,
+        ...(this.dataset.outliersBuckets.length > 0 && [this.dataset.outliersBuckets])
       ].map((group, index) => ({
         source: group.map((density, densityIndex) => ([xAxisTick[densityIndex], yAxisPosition, density]))
       }))
     },
     lineChartAxisTick () {
-      const xAxisMin = title.xAxis[0].min
-      const xAxisMax = title.xAxis[0].max
+      const xAxisMin = this.title.xAxis[0].min
+      const xAxisMax = this.title.xAxis[0].max
       return [...Array(this.lineChartPointAmount).keys()].map((index) => {
         // 確保 x 軸最後一個值對齊資料最大值
         return this.lineChartPointAmount - 1 === index ? xAxisMax : xAxisMin + index * ((xAxisMax - xAxisMin) / this.lineChartPointAmount)
@@ -500,16 +376,16 @@ export default {
       return {
         source: [
           ['group', ...this.lineChartAxisTick],
-          ...dataset.columns.map((column, index) => ([
+          ...this.dataset.columns.map((column, index) => ([
             column,
-            ...this.lineChartAxisTick.map(tick => this.calculateProbability (coeffs[index].mean, coeffs[index].sigma, tick))
+            ...this.lineChartAxisTick.map(tick => this.calculateProbability(this.coeffs[index].mean, this.coeffs[index].sigma, tick))
           ]))
         ]
       }
     },
     visualMap () {
       // 確認是否有離群
-      const scatterSeriesAmount = dataset.outliersBuckets.length > 0 ? dataset.buckets.length + 1 : dataset.buckets.length
+      const scatterSeriesAmount = this.dataset.outliersBuckets.length > 0 ? this.dataset.buckets.length + 1 : this.dataset.buckets.length
       return {
         show: false,
         // Scatter 取第三行作為畫點的資料依據
@@ -517,18 +393,18 @@ export default {
         // Scatter 最小點的值
         min: 0,
         // Scatter 最大點的值
-        max: Math.max(...dataset.buckets.flat()),
+        max: Math.max(...this.dataset.buckets.flat()),
         inRange: {
           // Scatter 點最小和最大的尺寸(pixel)
           symbolSize: [0, 40]
         },
         // 取第幾筆 series 來畫點: scatter 排在 line chart 之後
-        seriesIndex: [...Array(scatterSeriesAmount).keys()].map(i => dataset.columns.length + i)
+        seriesIndex: [...Array(scatterSeriesAmount).keys()].map(i => this.dataset.columns.length + i)
       }
     },
     series () {
       return [
-        ...dataset.columns.map((column, index) => {
+        ...this.dataset.columns.map((column, index) => {
           return { 
             type: 'line',
             name: column,
@@ -540,19 +416,19 @@ export default {
             symbol: 'none'
           }
         }),
-        ...dataset.buckets.map((bucket, index) => {
+        ...this.dataset.buckets.map((bucket, index) => {
           return {
-            name: dataset.columns[index],
+            name: this.dataset.columns[index],
             type: 'scatter',
             datasetIndex: index + 1,
             xAxisIndex: 1, 
             yAxisIndex: 1
           }
         }),
-        ...(dataset.outliersBuckets.length > 0 && [{
+        ...(this.dataset.outliersBuckets.length > 0 && [{
           name: this.$t('clustering.outlier'),
           type: 'scatter',
-          datasetIndex: dataset.buckets.length + 1,
+          datasetIndex: this.dataset.buckets.length + 1,
           xAxisIndex: 1, 
           yAxisIndex: 1
         }])
@@ -560,8 +436,8 @@ export default {
     },
     colorSet () {
       const opacity = 0.7
-      const hasOutlier = dataset.outliersBuckets.length > 0
-      const colorAmountNeeded = hasOutlier ? dataset.columns.length + 1 : dataset.columns.length
+      const hasOutlier = this.dataset.outliersBuckets.length > 0
+      const colorAmountNeeded = hasOutlier ? this.dataset.columns.length + 1 : this.dataset.columns.length
       let colorList
       switch (colorAmountNeeded) {
         case 2:
@@ -603,7 +479,7 @@ export default {
         xAxis: [
           {
             ...xAxisDefault(),
-            name: title.xAxis[0].display_name,
+            name: this.title.xAxis[0].display_name,
             type: 'category',
             gridIndex: 0,
             boundaryGap: false,
@@ -619,11 +495,11 @@ export default {
             ...scatterChartConfig.xAxis,
             type: 'value',
             boundaryGap: false,
-            min: title.xAxis[0].min,
-            max: title.xAxis[0].max,
+            min: this.title.xAxis[0].min,
+            max: this.title.xAxis[0].max,
             scale: true,
-            splitNumber: dataset.buckets[0].length,
-            interval: (title.xAxis[0].max - title.xAxis[0].min) / dataset.buckets[0].length,
+            splitNumber: this.dataset.buckets[0].length,
+            interval: (this.title.xAxis[0].max - this.title.xAxis[0].min) / this.dataset.buckets[0].length,
             gridIndex: 1,
             axisLine: {
               show: false
@@ -642,7 +518,7 @@ export default {
         yAxis: [
           {
             ...yAxisDefault(),
-            name: title.yAxis[0].display_name,
+            name: this.title.yAxis[0].display_name,
             gridIndex: 0,
           },
           scatterChartConfig.yAxis
@@ -652,8 +528,8 @@ export default {
         legend: {
           ...commonChartOptions().legend,
           data: [
-            ...dataset.columns,
-            ...(dataset.outliersBuckets.length > 0 && [this.$t('clustering.outlier')])
+            ...this.dataset.columns,
+            ...(this.dataset.outliersBuckets.length > 0 && [this.$t('clustering.outlier')])
           ]
         }
       }
@@ -672,9 +548,6 @@ export default {
       return this.$store.state.dataSource.appQuestion
     }
   },
-  created() {
-    this.tempdataset = dataset
-  },
   methods: {
     calculateProbability (mean, sigma, xAxisIndex) {
       return (1 / (Math.sqrt(2 * Math.PI) * sigma)) * Math.exp(-1 * (Math.pow((xAxisIndex - mean), 2) / (2 * Math.pow(sigma, 2))))
@@ -690,9 +563,9 @@ export default {
         return {
           type: 'range',
           properties: {
-            dc_name: title.xAxis[0].dc_name,
-            data_type: title.xAxis[0].data_type,
-            display_name: title.xAxis[0].display_name,
+            dc_name: this.title.xAxis[0].dc_name,
+            data_type: this.title.xAxis[0].data_type,
+            display_name: this.title.xAxis[0].display_name,
             start: this.lineChartAxisTick[coordRange[0]],
             end: this.lineChartAxisTick[coordRange[1]]
           }
