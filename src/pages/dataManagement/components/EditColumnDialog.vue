@@ -120,66 +120,88 @@
                 </div>
               </div>
               <div class="data-table-cell tag">
-                <span
-                  v-if="tempRowInfo.dataColumnId !== column.id"
-                >{{ column.statsType }}</span>
                 <default-select 
-                  v-else
+                  v-if="tempRowInfo.dataColumnId === column.id && !column.isClustering"
                   v-model="tempRowInfo.columnStatsType"
                   :option-list="typeOptionList(column.statsTypeOptionList)"
                   class="tag-select input"
                 />
+                <span
+                  v-else
+                >{{ column.statsType }}</span>
               </div>
               <div class="data-table-cell action">
-                <a 
-                  v-if="tempRowInfo.dataColumnId !== column.id" 
-                  class="link action-link"
-                  href="javascript:void(0)"
-                  @click="edit(column)"
-                >{{ $t('button.edit') }}</a>
-                <el-tooltip
-                  v-if="tempRowInfo.dataColumnId === column.id"
-                  :enterable="false"
-                  :visible-arrow="false"
-                  :content="$t('button.save')"
-                  placement="bottom"
-                >
-                  <div 
-                    class="svg-wrapper"
-                    @click="saveAlias(index)">
-                    <svg-icon
-                      icon-class="save"
-                    />
-                  </div>
-                </el-tooltip>
-                <el-tooltip
-                  v-if="tempRowInfo.dataColumnId === column.id"
-                  :enterable="false"
-                  :visible-arrow="false"
-                  :content="$t('button.cancel')"
-                  placement="bottom"
-                >
-                  <div 
-                    class="svg-wrapper" 
-                    @click="cancel">
-                    <svg-icon
-                      icon-class="close"
-                      class="icon-close"
-                    />
-                  </div>
-                </el-tooltip>
+                <template v-if="tempRowInfo.dataColumnId !== column.id">
+                  <a 
+                    class="link action-link"
+                    href="javascript:void(0)"
+                    @click="edit(column)"
+                  >{{ $t('button.edit') }}</a>
+                  <!--分群欄位才可刪除-->
+                  <a 
+                    v-if="column.isClustering" 
+                    class="link action-link"
+                    href="javascript:void(0)"
+                    @click="confirmDelete(column)"
+                  >{{ $t('button.delete') }}</a>
+                </template>
+                <template v-else>
+                  <el-tooltip
+                    :enterable="false"
+                    :visible-arrow="false"
+                    :content="$t('button.save')"
+                    placement="bottom"
+                  >
+                    <div 
+                      class="svg-wrapper"
+                      @click="saveAlias(index)">
+                      <svg-icon
+                        icon-class="save"
+                      />
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip
+                    :enterable="false"
+                    :visible-arrow="false"
+                    :content="$t('button.cancel')"
+                    placement="bottom"
+                  >
+                    <div 
+                      class="svg-wrapper" 
+                      @click="cancel">
+                      <svg-icon
+                        icon-class="close"
+                        class="icon-close"
+                      />
+                    </div>
+                  </el-tooltip>
+                </template>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <decide-dialog
+        v-if="showConfirmDeleteDialog"
+        :title="this.$t('editing.confirmDeleteColumnText')"
+        :type="'delete'"
+        :is-processing="isProcessing"
+        @closeDialog="closeDeleteDialog"
+        @confirmBtn="deleteColumn"
+      />
     </div>
   </div>
 </template>
 <script>
 import { patchColumnAlias } from '@/API/Alias'
-import { getDataFrameColumnInfoById, updateDataFrameAlias, patchDataColumnPrimaryAlias } from '@/API/DataSource'
+import {
+  getDataFrameColumnInfoById,
+  updateDataFrameAlias,
+  patchDataColumnPrimaryAlias,
+  deleteDataColumnById
+} from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
 import InputVerify from '@/components/InputVerify'
 
@@ -188,7 +210,8 @@ export default {
   inject: ['$validator'],
   components: {
     DefaultSelect,
-    InputVerify
+    InputVerify,
+    DecideDialog
   },
   props: {
     tableInfo: {
@@ -202,8 +225,8 @@ export default {
     return {
       columnList: [],
       tableId: this.tableInfo.id,
-      // 目前編輯的欄位
-      currentEditColumn: null,
+      // 目前選定的欄位
+      currentSelectColumn: null,
       // 目前編輯的欄位資訊
       tempRowInfo: {
         primaryAlias: null,
@@ -217,7 +240,8 @@ export default {
         userEditedColumnInputList: []
       },
       isLoading: false,
-      isProcessing: false
+      isProcessing: false,
+      showConfirmDeleteDialog: false
     }
   },
   computed: {
@@ -361,6 +385,28 @@ export default {
     },
     removeAlias (index) {
       this.tempRowInfo.aliasList.splice(index, 1)
+    },
+    confirmDelete (column) {
+      this.currentSelectColumn = column
+      this.showConfirmDeleteDialog = true
+    },
+    closeDeleteDialog () {
+      this.currentSelectColumn = null
+      this.showConfirmDeleteDialog = false
+    },
+    deleteColumn () {
+      this.isProcessing = true
+      deleteDataColumnById(this.currentSelectColumn.id)
+        .then(() => {
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+          this.closeDeleteDialog()
+        })
+        .finally(() => { this.isProcessing = false })
     }
   },
 }

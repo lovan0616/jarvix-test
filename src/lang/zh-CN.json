@@ -391,7 +391,8 @@
     "noData": "暂无数据",
     "SQLSyntax": "SQL语法",
     "copyTableFromDatabase": "复制资料库资料表",
-    "useSqlScript": "使用自定义 SQL"
+    "useSqlScript": "使用自定义 SQL",
+    "confirmDeleteColumnText": "您确定要删除此栏位吗？"
   },
   "algorithm": {
     "name": "演算法",
