@@ -674,7 +674,8 @@
     "notAllowedToSaveClusteringResultAsColumnFromJoinedTable": "Columns coming from any joined table cannot be saved as a new column.",
     "createClusteringColumn": "New Clustering Field",
     "clusteringColumnName": "Clustering Column Name",
-    "outlier": "outlier"
+    "outlier": "outlier",
+    "piecesOfData": "{amount} pieces of data"
   },
   "description": {
     "basic": {

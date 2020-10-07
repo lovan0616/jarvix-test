@@ -213,7 +213,7 @@ Vue.mixin({
         case 'computed_histogram':
           return 'DisplayComputedHistogramChart'
         case 'line_chart':
-          return 'DisplayLineChart'
+          return 'DisplayScatterProbabilityDensityChart'
         case 'stack_line_chart':
           return 'DisplayStackLineChart'
         case 'composition_line_chart':

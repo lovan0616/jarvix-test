@@ -1,5 +1,5 @@
 <template>
-  <div class="display-scatter-chart">
+  <div class="display-scatter-probability-density-chart">
     <v-echart
       :style="chartStyle"
       :options="chartOption"
@@ -29,7 +29,7 @@
 </template>
 <script>
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-// import { chartOptions } from '@/components/display/common/chart-addon.js'
+import i18n from '@/lang/index.js'
 import { 
   getDrillDownTool, 
   xAxisDefault,
@@ -42,14 +42,36 @@ import {
 } from '@/components/display/common/addons.js'
 
 const dataset = {
-  "buckets": [
+  buckets: [
     [
       0,
       0,
       0,
-      69228,
-      139624,
-      92214,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      166669,
+      166083,
+      82875,
+      166474,
+      166384
+    ],
+    [
+      166863,
+      166259,
+      83320,
+      166493,
+      83033,
+      0,
       0,
       0,
       0,
@@ -74,35 +96,13 @@ const dataset = {
       0,
       0,
       0,
-      15235,
-      47311,
-      50981,
-      21432,
-      19413,
-      7854,
-      2635,
-      1336,
-      171,
       0,
-      0,
-      0
-    ],
-    [
-      62346,
-      68676,
-      114855,
-      37137,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
+      83302,
+      166261,
+      82891,
+      166693,
+      166034,
+      83181,
       0,
       0,
       0,
@@ -114,12 +114,12 @@ const dataset = {
       0,
       0,
       0,
-      0,
-      0,
-      114328,
-      76773,
-      58516,
-      0,
+      82730,
+      83329,
+      166127,
+      166561,
+      83325,
+      82772,
       0,
       0,
       0,
@@ -133,108 +133,133 @@ const dataset = {
     ]
   ],
   columns: [
-    "分群1",
-    "分群2",
-    "分群3",
-    "分群4"
+    '分群1',
+    '分群2',
+    '分群3',
+    '分群4'
   ],
-  outliersBuckets: [0.0, 3, 0.0, 0.0, 4545, 0.0, 5, 0.0, 0.0, 0.0, 44444, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  descriptions: [
+    'JarviX發現收入有 4 種群體並且有 0 %的異常資料。',
+    '各群體佔比是相近的'
+  ],
+  outliersBuckets: [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    22220,
+    0,
+    43234320,
+    0,
+    0
+  ]
 }
 
 const title = {
-  "xAxis": [
+  xAxis: [
     {
-      "max": 87,
-      "min": 17,
-      "dc_id": 76503,
-      "dc_name": "c2",
-      "operator": null,
-      "data_type": "float",
-      "drillable": true,
-      "is_feature": null,
-      "lowerLimit": null,
-      "stats_type": "numeric",
-      "upperLimit": null,
-      "display_name": "Customer Age"
+      max: 34,
+      min: 1,
+      dc_id: 85523,
+      dc_name: 'c14',
+      operator: null,
+      data_type: 'float',
+      drillable: true,
+      is_feature: null,
+      lowerLimit: null,
+      stats_type: 'numeric',
+      upperLimit: null,
+      display_name: '产业分类'
     }
   ],
-  "yAxis": [
+  yAxis: [
     {
-      "max": null,
-      "min": null,
-      "dc_id": null,
-      "dc_name": null,
-      "operator": null,
-      "data_type": "float",
-      "drillable": false,
-      "is_feature": null,
-      "lowerLimit": null,
-      "stats_type": "numeric",
-      "upperLimit": null,
-      "display_name": "机率密度"
+      max: null,
+      min: null,
+      dc_id: null,
+      dc_name: null,
+      operator: null,
+      data_type: 'float',
+      drillable: false,
+      is_feature: null,
+      lowerLimit: null,
+      stats_type: 'numeric',
+      upperLimit: null,
+      display_name: '機率密度'
     }
   ]
 }
 
 const coeffs = [
   {
-    "mean": 32.593814296451704,
-    "sigma": 3.5178274853382203
+    mean: 29.89549808649133,
+    sigma: 2.8500383413556407
   },
   {
-    "mean": 52.409166442280224,
-    "sigma": 7.310968102541258
+    mean: 4.585607921365213,
+    sigma: 2.529768736285726
   },
   {
-    "mean": 23.874248868056263,
-    "sigma": 3.8420538879024315
+    mean: 21.064455017673314,
+    sigma: 3.3602524970243968
   },
   {
-    "mean": 41.89275214357233,
-    "sigma": 4.149040604210672
+    mean: 12.446362832805706,
+    sigma: 3.0366968420488014
   }
 ]
 
 const clusterInfos = [
   {
-    "q1":4.01,
-    "q3":25.0,
-    "max":46.43,
-    "min":-21.01,
-    "std":13.578603473347332,
-    "mean":15.220344027141243,
-    "count":16801,
-    "media":null
+    q1: 28,
+    q3: 32,
+    max: 34,
+    min: 26,
+    std: 2.582930385664334,
+    mean: 30.000086842087683,
+    count: 748485,
+    media: null
   },
   {
-    "q1":379.0,
-    "q3":630.5,
-    "max":855.5,
-    "min":302.0,
-    "std":154.4791649415892,
-    "mean":512.7103524037416,
-    "count":4597,
-    "media":null
+    q1: 2,
+    q3: 6,
+    max: 8,
+    min: 1,
+    std: 2.2915316814337983,
+    mean: 4.497241609206449,
+    count: 665968,
+    media: null
   },
   {
-    "q1":71.0,
-    "q3":187.0,
-    "max":301.71,
-    "min":-142.0,
-    "std":80.41516664973683,
-    "mean":129.6391881527415,
-    "count":12256,
-    "media":null
+    q1: 19,
+    q3: 23,
+    max: 25,
+    min: 17,
+    std: 2.582260457415511,
+    mean: 20.999533648154234,
+    count: 748362,
+    media: null
   },
   {
-    "q1":942.5,
-    "q3":1251.9025,
-    "max":2291.99,
-    "min":-620.0,
-    "std":357.57576241185376,
-    "mean":1087.4730741797432,
-    "count":1402,
-    "media":null
+    q1: 11,
+    q3: 14,
+    max: 16,
+    min: 9,
+    std: 2.289851225778988,
+    mean: 12.501113043059725,
+    count: 664844,
+    media: null
   }
 ]
 
@@ -308,10 +333,10 @@ export default {
     grid () {
       return [
         {
-          height: '69%'
+          height: '67%'
         },
         {
-          top: '84.5%',
+          top: '82.5%',
           height: '42'
         }
       ]
@@ -325,7 +350,7 @@ export default {
       // 包含各分群及離群值資料
       return [
         ...dataset.buckets,
-        ...(dataset.outliersBuckets !== null && [dataset.outliersBuckets])
+        ...(dataset.outliersBuckets.length > 0 && [dataset.outliersBuckets])
       ].map((group, index) => ({
         source: group.map((density, densityIndex) => ([xAxisTick[densityIndex], yAxisPosition, density]))
       }))
@@ -351,7 +376,7 @@ export default {
     },
     visualMap () {
       // 確認是否有離群
-      const scatterSeriesAmount = dataset.outliersBuckets ? dataset.buckets.length + 1 : dataset.buckets.length
+      const scatterSeriesAmount = dataset.outliersBuckets.length > 0 ? dataset.buckets.length + 1 : dataset.buckets.length
       return {
         show: false,
         // Scatter 取第三行作為畫點的資料依據
@@ -391,7 +416,7 @@ export default {
             yAxisIndex: 1
           }
         }),
-        ...(dataset.outliersBuckets !== null && [{
+        ...(dataset.outliersBuckets.length > 0 && [{
           name: this.$t('clustering.outlier'),
           type: 'scatter',
           datasetIndex: dataset.buckets.length + 1,
@@ -402,7 +427,7 @@ export default {
     },
     colorSet () {
       const opacity = 0.7
-      const hasOutlier = dataset.outliersBuckets !== null
+      const hasOutlier = dataset.outliersBuckets.length > 0
       const colorAmountNeeded = hasOutlier ? dataset.columns.length + 1 : dataset.columns.length
       let colorList
       switch (colorAmountNeeded) {
@@ -432,7 +457,7 @@ export default {
           trigger: 'item',
           formatter (params) {
             const marker = params.marker ? params.marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params.color};"></span>`
-            return marker + params.seriesName + '<br/>' + '資料密集程度：' + params.data[2]
+            return marker + params.seriesName + '<br/>' + i18n.t('clustering.piecesOfData', { amount: params.data[2] })
           }
         },
         grid: this.grid,
@@ -495,7 +520,7 @@ export default {
           ...commonChartOptions().legend,
           data: [
             ...dataset.columns,
-            ...(dataset.outliersBuckets !== null && [this.$t('clustering.outlier')])
+            ...(dataset.outliersBuckets.length > 0 && [this.$t('clustering.outlier')])
           ]
         }
       }
@@ -545,3 +570,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.display-scatter-probability-density-chart {
+
+}
+</style>
