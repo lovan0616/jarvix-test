@@ -45,6 +45,7 @@
               </div>
               <div class="data-table-cell alias">{{ $t('editing.alias') }}</div>
               <div class="data-table-cell tag">{{ $t('editing.columnTag') }}</div>
+              <div class="data-table-cell created-method">{{ $t('editing.createdMethod') }}</div>
               <div class="data-table-cell action">{{ $t('editing.action') }}</div>
             </div>
           </div>
@@ -129,6 +130,9 @@
                 <span
                   v-else
                 >{{ column.statsType }}</span>
+              </div>
+              <div class="data-table-cell created-method">
+                <span>{{ column.createdMethod }}</span>
               </div>
               <div class="data-table-cell action">
                 <template v-if="tempRowInfo.dataColumnId !== column.id">
@@ -269,6 +273,14 @@ export default {
           element.name = {
             primaryAlias: element.name,
             isModified: false
+          }
+
+          if (element.isClustering) {
+            element.createdMethod = this.$t('editing.tagColumn')
+          } else if (element.isFeature) {
+            element.createdMethod = this.$t('editing.featureColumn')
+          } else {
+            element.createdMethod = this.$t('editing.originalField')
           }
         })
         this.columnList = response

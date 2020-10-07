@@ -392,7 +392,11 @@
     "SQLSyntax": "SQL Syntax",
     "copyTableFromDatabase": "Copied existing table from database",
     "useSqlScript": "Used Customized SQL Query",
-    "confirmDeleteColumnText": "Are you sure you want to delete this column?"
+    "confirmDeleteColumnText": "Are you sure you want to delete this column?",
+    "featureColumn": "Custom Field",
+    "tagColumn": "Tagged Field",
+    "originalField": "Original Field",
+    "createdMethod": "Created Method"
   },
   "algorithm": {
     "name": "Algorithm",
