@@ -11,8 +11,9 @@ import i18n from '@/lang/index.js'
  * 主要是為了讓每個 request 每次都會去拿 localStorage 的資料
  * 避免 token 過期了，結果還在拿 instance 建立時的 token 使用
  */
+const API_URL = window.env.SAME_ORIGIN ? `${window.location.protocol}//${window.location.hostname}:8081/` : window.env.PUBLIC_API_ROOT_URL
 const service = axios.create({
-  baseURL: window.env.PUBLIC_API_ROOT_URL, // api 的 base_url
+  baseURL: API_URL, // api 的 base_url
   // timeout: 15000,
   headers: {
     access_token: {
