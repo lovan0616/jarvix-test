@@ -117,9 +117,9 @@
     </result-board-body>
     <template slot="dialogs">
       <save-clustering-dialog
-        v-show="isShowSaveClusteringDialog"
+        v-if="isShowSaveClusteringDialog"
         :data-frame-alias="transcript.dataFrame.dataFrameAlias"
-        :result-id="cachedResultId.clustering"
+        :result-id="cachedResultId[intentType.CLUSTERING]"
         @close="isShowSaveClusteringDialog = false"
       />
     </template>
