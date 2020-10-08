@@ -169,6 +169,7 @@ export default {
     visualMap () {
       // 確認是否有離群
       const scatterSeriesAmount = this.dataset.outliersBuckets.length > 0 ? this.dataset.buckets.length + 1 : this.dataset.buckets.length
+      const maxValue = Math.max(...this.dataset.buckets.flat())
       return {
         show: false,
         // Scatter 取第三行作為畫點的資料依據
@@ -176,10 +177,17 @@ export default {
         // Scatter 最小點的值
         min: 0,
         // Scatter 最大點的值
-        max: Math.max(...this.dataset.buckets.flat()),
+        max: maxValue,
+        // 無資料的點需額外處理，所以設定在範圍外
+        range: [1, maxValue],
         inRange: {
           // Scatter 點最小和最大的尺寸(pixel)
-          symbolSize: [0, 40]
+          // 只要有資料就有 5px：大小足以讓使用者看得到
+          symbolSize: [5, 40]
+        },
+        outOfRange: {
+          // 零比資料算範圍外，預設不顯示
+          symbol: 'none'
         },
         // 取第幾筆 series 來畫點: scatter 排在 line chart 之後
         seriesIndex: [...Array(scatterSeriesAmount).keys()].map(i => this.dataset.columns.length + i)
