@@ -24,7 +24,7 @@
               class="multi-analysis__item-label"
             >
               <svg-icon icon-class="basic-info"/>
-              資料概況
+              {{ $t('clustering.dataOverview') }}
             </span>
             <div class="multi-analysis__item-status">
               <spinner 
@@ -49,7 +49,7 @@
               class="multi-analysis__item-label"
             >
               <svg-icon icon-class="clustering"/>
-              分群分析
+              {{ $t('clustering.clusteringAnalysis') }}
             </span>
             <div class="multi-analysis__item-status">
               <spinner 
@@ -212,7 +212,7 @@ export default {
     ...mapState('result', ['currentResultId']),
     barData () {
       return [
-        { title:'儲存分群結果為欄位',
+        { title: this.$t('clustering.saveClusteringResultAsColumn'),
           icon: 'feature',
           dialogName: 'saveClustering',
           disabled: this.resultInfo.isJoinTable

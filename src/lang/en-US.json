@@ -667,6 +667,14 @@
     "all": "All",
     "displaySetting": "Show Setting"
   },
+  "clustering": {
+    "dataOverview": "Overview",
+    "clusteringAnalysis": "Clustering",
+    "saveClusteringResultAsColumn": "Save clustering result as a new column",
+    "notAllowedToSaveClusteringResultAsColumnFromJoinedTable": "Columns coming from any joined table cannot be saved as a new column.",
+    "createClusteringColumn": "New Clustering Field",
+    "clusteringColumnName": "Clustering Column Name"
+  },
   "description": {
     "basic": {
       "intro": "Basic Introduction",

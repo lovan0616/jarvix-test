@@ -2,14 +2,14 @@
   <div class="edit-feature-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="dialog-title">
-        {{ $t('feature.createFeature') }}
+        {{ $t('clustering.createClusteringColumn') }}
       </div>
       <div class="feature-block">
         <div class="block-title">{{ $t('editing.tableName') }}</div>
         {{ dataFrameAlias }}
       </div>
       <div class="feature-block">
-        <div class="block-title">{{ $t('feature.featureColumnName') }}（{{ $t('editing.isRequired') }}）</div>
+        <div class="block-title">{{ $t('clustering.clusteringColumnName') }}（{{ $t('editing.isRequired') }}）</div>
         <div class="input-block name">
           <input-block
             v-validate="`required|max:${max}`"

@@ -667,6 +667,14 @@
     "all": "全部",
     "displaySetting": "显示设定"
   },
+  "clustering": {
+    "dataOverview": "资料概况",
+    "clusteringAnalysis": "分群分析",
+    "saveClusteringResultAsColumn": "储存分群结果为标签栏位",
+    "notAllowedToSaveClusteringResultAsColumnFromJoinedTable": "关联资料表的栏位，无法储存为标签栏位。",
+    "createClusteringColumn": "新增标签栏位",
+    "clusteringColumnName": "标签栏位名称"
+  },
   "description": {
     "basic": {
       "intro": "基本介绍",
