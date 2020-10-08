@@ -169,7 +169,10 @@ export default {
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.$store.commit('result/updateCurrentResultId', res.resultId)
-          this.checkEmptyLayout(res)
+          if (res.layout === 'no_answer') {
+            this.setEmptyLayout(res)
+            return
+          }
           this.getComponentV2(res.resultId)
           // this.getRelatedQuestion(res.resultId)
         }).catch(() => {
@@ -218,7 +221,10 @@ export default {
               selectedColumnList: this.selectedColumnList
             }).then(res => {
               this.$store.commit('result/updateCurrentResultId', res.resultId)
-              this.checkEmptyLayout(res)
+              if (res.layout === 'no_answer') {
+                this.setEmptyLayout(res)
+                return
+              }
               this.getComponentV2(res.resultId)
               // this.getRelatedQuestion(res.resultId)
             }).catch((error) => {
@@ -243,19 +249,16 @@ export default {
       })
       this.$store.commit('chatBot/updateAnalyzeStatus', false)
     },
-    checkEmptyLayout (res) {
-      if (res.layout === 'no_answer') {
-        this.layout = 'EmptyResult'
-        this.resultInfo = {
-          title: res.noAnswerTitle,
-          description: res.noAnswerDescription
-        }
-        this.isLoading = false
+    setEmptyLayout (res) {
+      this.layout = 'EmptyResult'
+      this.resultInfo = {
+        title: res.noAnswerTitle,
+        description: res.noAnswerDescription
       }
+      this.isLoading = false
     },
     getComponentV2 (resultId) {
       window.clearTimeout(this.timeoutFunction)
-      console.log('getComponentV2', resultId)
       this.$store.dispatch('chatBot/getComponentList', resultId)
         .then(componentResponse => {
           switch (componentResponse.status) {
