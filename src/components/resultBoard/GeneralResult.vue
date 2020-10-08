@@ -129,6 +129,7 @@
 import RecommendedInsight from '@/components/display/RecommendedInsight'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import SaveClusteringDialog from '@/components/dialog/SaveClusteringDialog'
+import { Message } from 'element-ui'
 import { intentType } from '@/utils/general'
 import { mapState } from 'vuex'
 
@@ -246,7 +247,16 @@ export default {
       this.fetchSpecificType(tabName)
     },
     switchDialogName (action) {
-      if (action === 'saveClustering') this.isShowSaveClusteringDialog = true
+      if (action !== 'saveClustering') return
+      if (this.resultInfo.isJoinTable) {
+        return Message({
+          message: this.$t('clustering.notAllowedToSaveClusteringResultAsColumnFromJoinedTable'),
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      }
+      this.isShowSaveClusteringDialog = true
     }
   }
 }
