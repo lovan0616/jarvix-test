@@ -293,7 +293,10 @@ export default {
               break
           }
         }).catch((error) => {
-          if (error.message !== 'cancel') this.isLoading = false
+          if (error.message !== 'cancel') {
+            this.isLoading = false
+            this.resultInfo = null
+          }
         })
     },
     getRelatedQuestion (id) {
