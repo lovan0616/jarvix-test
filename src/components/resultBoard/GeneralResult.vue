@@ -215,13 +215,11 @@ export default {
     }
   },
   watch: {
-    resultInfo: {
-      deep: true,
-      handler () {
-        for (const key in this.isProcessing) {
-          this.isProcessing[key] = false
-        }
+    'resultInfo.key_result' () {
+      for (const key in this.isProcessing) {
+        this.isProcessing[key] = false
       }
+    }
   },
   mounted () {
     this.cachedResultId[this.intent] = this.currentResultId
