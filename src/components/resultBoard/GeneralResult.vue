@@ -186,7 +186,6 @@ export default {
   },
   data: () => {
     return {
-      currentResultInfo: null,
       isProcessing: {
         OVERVIEW: false,
         CLUSTERING: false
@@ -207,7 +206,7 @@ export default {
         { title:'儲存分群結果為欄位',
           icon: 'feature',
           dialogName: 'saveClustering',
-          disabled: this.resultInfo.isJoinTable || this.hasSavedClustering
+          disabled: this.resultInfo.isJoinTable
         },
       ]
     },
@@ -223,10 +222,9 @@ export default {
           this.isProcessing[key] = false
         }
       }
-    }
   },
   mounted () {
-    this.cachedResultId[this.intent] = this.resultId
+    this.cachedResultId[this.intent] = this.currentResultId
     this.activeTab = this.intent
   },
   methods: {
