@@ -43,8 +43,6 @@ import {
   getDrillDownTool, 
   xAxisDefault,
   yAxisDefault,
-  colorOnly1,
-  colorOnly2,
   color5,
   color12,
   convertHexToRGBA
@@ -234,15 +232,11 @@ export default {
       const colorAmountNeeded = hasOutlier ? this.dataset.columns.length + 1 : this.dataset.columns.length
       let colorList
       switch (colorAmountNeeded) {
+        case 1:
         case 2:
-          colorList = colorOnly1
-          break
         case 3:
-          colorList = colorOnly2
-          break
         case 4:
         case 5:
-        case 6:
           colorList = color5
           break
         default:
