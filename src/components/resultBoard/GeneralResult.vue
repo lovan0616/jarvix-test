@@ -19,7 +19,10 @@
             class="multi-analysis__item"
             @click="clickTab(intentType.OVERVIEW)"
           >
-            <span class="multi-analysis__item-label">
+            <span
+              :class="{'is-disabled': !cachedResultId[intentType.OVERVIEW]}"
+              class="multi-analysis__item-label"
+            >
               <svg-icon icon-class="basic-info"/>
               資料概況
             </span>
@@ -30,7 +33,9 @@
               <div
                 v-else-if="!cachedResultId[intentType.OVERVIEW]"
                 @click="fetchSpecificType(intentType.OVERVIEW)">
-                <svg-icon icon-class="trigger-analysis"/>
+                <svg-icon 
+                  icon-class="trigger-analysis" 
+                  class="trigger-analysis-icon"/>
               </div>
             </div>
           </li>
@@ -54,7 +59,9 @@
                 v-else-if="hasFetchedClustering"
                 class="multi-analysis__item-dropdownlist"
               >
-                <svg-icon icon-class="more"/>
+                <svg-icon 
+                  icon-class="more"
+                  class="more-icon" />
                 <dropdown-select
                   :bar-data="barData"
                   class="dropdown"
@@ -64,7 +71,9 @@
               <div
                 v-else
                 @click="fetchSpecificType(intentType.CLUSTERING)">
-                <svg-icon icon-class="trigger-analysis"/>
+                <svg-icon 
+                  icon-class="trigger-analysis"
+                  class="trigger-analysis-icon" />
               </div>
             </div>
           </li>

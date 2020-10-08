@@ -165,7 +165,6 @@ export default {
   .multi-analysis {
     &__block {
       border-right: 1px solid $theme-border-color;
-      border-bottom: 1px solid $theme-border-color;
       &:not(:empty) {
         flex-basis: 180px;
       }
@@ -217,8 +216,11 @@ export default {
         display: flex;
         justify-content: flex-end;
         cursor: pointer;
-        &:hover {
+        .trigger-analysis-icon {
           color: $theme-color-primary;
+        }
+        .more-icon {
+          color: #A7A7A7;
         }
       }
       &-dropdownlist {

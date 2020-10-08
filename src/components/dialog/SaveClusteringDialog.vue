@@ -1,5 +1,5 @@
 <template>
-  <div class="full-page-dialog">
+  <div class="edit-feature-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="dialog-title">
         {{ $t('feature.createFeature') }}
@@ -97,51 +97,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.full-page-dialog {
-  .feature-block {
-    padding: 24px;
-    background-color: rgba(50, 58, 58, 0.95);
-    border-radius: 5px;
-    margin-bottom: 12px;
-
-    &:last-child {
-      margin-bottom: 16px;
-    }
-
-    .block-title {
-      font-weight: 600;
-      font-size: 18px;
-      line-height: 1;
-      margin-bottom: 10px;
-    }
-
-    & >>> .input-block {
-
-      &.name {
-        width: 300px;
-      }
-
-      &.has-error {
-        .data-frame-select {
-          border-color: $theme-color-danger;
-        }
-
-        .error-text {
-          bottom: -10px;
-        }
-      }
-    }
-  }
-  .button-block {
-    display: flex;
-    justify-content: flex-end;
-    padding-bottom: 64px;
-
-    .btn:not(:last-child) {
-      margin-right: 20px;
-    }
-  }
-}
-</style>
