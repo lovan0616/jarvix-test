@@ -1,15 +1,17 @@
 <template>
-  <div class="local-file-upload">
-    <slot name="header">
-      <div class="dialog-title">{{ $t('editing.newData') }}</div>
-      <upload-process-block
-        :step="currntUploadStatus === uploadStatus.uploading ? 2 : 1"
-      />
-    </slot>
+  <div class="file-upload">
+    <div class="dialog-title">
+      {{ title }}
+    </div>
+    <upload-process-block
+      :step="step"
+      :process-text="processText"
+    />
+    <div 
+      class="dialog-sub-title">
+      {{ $t('editing.dataFrame') }}: {{ dataFrameInfo.primaryAlias }}
+    </div>
     <div class="dialog-body">
-      <slot name="source">
-        <div class="data-source-name">{{ $t('editing.dataSourceName') }}：{{ currentUploadInfo.name }}</div>
-      </slot>
       <input 
         ref="fileUploadInput" 
         :accept="acceptFileTypes.join(',').toString()" 
@@ -73,7 +75,7 @@
             @click="chooseFile"
           ><svg-icon 
             icon-class="file-plus" 
-            class="icon"/>{{ $t('editing.addFile') }}</button>
+            class="icon"/>{{ fileCountLimit > 1 ? $t('editing.addFile') : $t('fileDataUpdate.reChoose') }}</button>
         </div>
       </div>
     </div>
@@ -87,6 +89,9 @@
           class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
+        <slot 
+          v-if="currntUploadStatus === uploadStatus.wait" 
+          name="additionalButton"/>
         <button 
           v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait"
           class="btn btn-default"
@@ -100,20 +105,42 @@
   </div>
 </template>
 <script>
-import { uploadStatus } from '@/utils/general'
-import { Message } from 'element-ui'
-import { mapState } from 'vuex'
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
 import UploadProcessBlock from './UploadProcessBlock'
 import { getAccountInfo } from '@/API/Account'
+import { uploadStatus } from '@/utils/general'
+import { Message } from 'element-ui'
+import { mapState } from 'vuex'
 
 export default {
-  name: 'LocalFileUpload',
+  name: 'FileUpload',
   components: {
     UploadBlock,
     FileListBlock,
     UploadProcessBlock
+  },
+  props: {
+    dataFrameInfo: {
+      type: Object,
+      required: true
+    },
+    fileCountLimit: {
+      type: Number,
+      required: true
+    },
+    step: {
+      type: Number,
+      required: true
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    processText: {
+      type: Array,
+      required: true
+    }
   },
   data () {
     return {
@@ -136,9 +163,6 @@ export default {
     ...mapState('userManagement', ['license']),
     currentGroupId () {
       return this.$store.getters['userManagement/getCurrentGroupId']
-    },
-    fileCountLimit () {
-      return this.$store.state.dataManagement.fileCountLimit
     },
     uploadFileStatusList () {
       return this.uploadFileList.map(element => {
@@ -232,6 +256,10 @@ export default {
     fileImport (files) {
       // 有選到檔案才執行
       if (files) {
+        // 資料更新一次只能選一個檔案
+        if(this.fileCountLimit === 1) {
+          this.$store.commit('dataManagement/updateUploadFileList', [])
+        }
         // 判斷數量是否超過限制
         if (files.length + this.uploadFileList.length > this.fileCountLimit) {
           Message({
@@ -284,13 +312,22 @@ export default {
       this.currntUploadStatus = uploadStatus.uploading
     },
     cancelFileUpload () {
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
+      this.$emit('close')
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.local-file-upload {
+.file-upload {
+  
+  .dialog {
+    &-sub-title {
+      margin-bottom: 12px;
+      font-size: 14px;
+			text-align: right;
+    }
+  }
+
   .empty-upload-block {
     display: flex;
     height: 400px;

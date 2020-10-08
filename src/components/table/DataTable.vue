@@ -435,7 +435,6 @@ export default {
     showSubAction (subAction, data) {
       return subAction.filter(action => {
         if (action.dialogName === 'etlSetting') return data.etlExists
-        if (action.dialogName === 'batchLoad') return data.originType === 'database'
         if (action.dialogName === 'createdInfo') return data.originType === 'database'
         return true
       })
