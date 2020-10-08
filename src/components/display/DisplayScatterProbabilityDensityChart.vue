@@ -123,10 +123,10 @@ export default {
     grid () {
       return [
         {
-          height: '67%'
+          height: '65%'
         },
         {
-          top: '82.5%',
+          top: '80.5%',
           height: '42'
         }
       ]
@@ -246,6 +246,7 @@ export default {
       return colorList.map(color => convertHexToRGBA(color, opacity))
     },
     chartOption () {
+      const formatComma = this.formatComma
       const config = {
         ...JSON.parse(JSON.stringify(commonChartOptions())),
         ...getDrillDownTool(this.$route.name, this.title),
@@ -254,7 +255,7 @@ export default {
           trigger: 'item',
           formatter (params) {
             const marker = params.marker ? params.marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params.color};"></span>`
-            return marker + params.seriesName + '<br/>' + i18n.t('clustering.piecesOfData', { amount: params.data[2] })
+            return marker + params.seriesName + '<br/>' + i18n.t('clustering.piecesOfData', { amount: formatComma(params.data[2]) })
           }
         },
         grid: this.grid,
@@ -329,6 +330,9 @@ export default {
       
       // 目前不提供觀看原始資料的功能
       config.toolbox.feature.dataView.show = false
+      // 補上千分為逗號
+      config.xAxis[1].axisLabel.formatter = value => formatComma(value)
+
       return config
     },
     chartStyle () {
