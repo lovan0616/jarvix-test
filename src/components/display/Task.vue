@@ -43,6 +43,8 @@
         :description="componentData.description"
         :total="componentData.total"
         :item-count="componentData.item_count"
+        :coeffs="componentData.coeffs"
+        :cluster-infos="componentData.clusterInfos"
         :key="componentId"
         :show-toolbox="showToolbox"
         :custom-chart-style="customChartStyle"

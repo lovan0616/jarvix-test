@@ -50,228 +50,6 @@ import {
   convertHexToRGBA
 } from '@/components/display/common/addons.js'
 
-const dataset = {
-  buckets: [
-    [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      166669,
-      166083,
-      82875,
-      166474,
-      166384
-    ],
-    [
-      166863,
-      166259,
-      83320,
-      166493,
-      83033,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
-    ],
-    [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      83302,
-      166261,
-      82891,
-      166693,
-      166034,
-      83181,
-      0,
-      0,
-      0,
-      0,
-      0
-    ],
-    [
-      0,
-      0,
-      0,
-      0,
-      82730,
-      83329,
-      166127,
-      166561,
-      83325,
-      82772,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
-    ]
-  ],
-  columns: [
-    '分群1',
-    '分群2',
-    '分群3',
-    '分群4'
-  ],
-  descriptions: [
-    'JarviX發現收入有 4 種群體並且有 0 %的異常資料。',
-    '各群體佔比是相近的'
-  ],
-  outliersBuckets: [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    22220,
-    0,
-    43234320,
-    0,
-    0
-  ]
-}
-
-const title = {
-  xAxis: [
-    {
-      max: 34,
-      min: 1,
-      dc_id: 85523,
-      dc_name: 'c14',
-      operator: null,
-      data_type: 'float',
-      drillable: true,
-      is_feature: null,
-      lowerLimit: null,
-      stats_type: 'numeric',
-      upperLimit: null,
-      display_name: '产业分类'
-    }
-  ],
-  yAxis: [
-    {
-      max: null,
-      min: null,
-      dc_id: null,
-      dc_name: null,
-      operator: null,
-      data_type: 'float',
-      drillable: false,
-      is_feature: null,
-      lowerLimit: null,
-      stats_type: 'numeric',
-      upperLimit: null,
-      display_name: '機率密度'
-    }
-  ]
-}
-
-const coeffs = [
-  {
-    mean: 29.89549808649133,
-    sigma: 2.8500383413556407
-  },
-  {
-    mean: 4.585607921365213,
-    sigma: 2.529768736285726
-  },
-  {
-    mean: 21.064455017673314,
-    sigma: 3.3602524970243968
-  },
-  {
-    mean: 12.446362832805706,
-    sigma: 3.0366968420488014
-  }
-]
-
-const clusterInfos = [
-  {
-    q1: 28,
-    q3: 32,
-    max: 34,
-    min: 26,
-    std: 2.582930385664334,
-    mean: 30.000086842087683,
-    count: 748485,
-    media: null
-  },
-  {
-    q1: 2,
-    q3: 6,
-    max: 8,
-    min: 1,
-    std: 2.2915316814337983,
-    mean: 4.497241609206449,
-    count: 665968,
-    media: null
-  },
-  {
-    q1: 19,
-    q3: 23,
-    max: 25,
-    min: 17,
-    std: 2.582260457415511,
-    mean: 20.999533648154234,
-    count: 748362,
-    media: null
-  },
-  {
-    q1: 11,
-    q3: 14,
-    max: 16,
-    min: 9,
-    std: 2.289851225778988,
-    mean: 12.501113043059725,
-    count: 664844,
-    media: null
-  }
-]
-
 let scatterChartConfig = {
   xAxis: {
     type: 'value',
@@ -311,24 +89,29 @@ export default {
   props: {
     dataset: {
       type: Object,
-      default: () => ({})
+      default: () => ({
+        buckets: [],
+        columns: [],
+        descriptions: [],
+        outliersBuckets: []
+      })
     },
     title: {
       type: Object,
       default: () => {
         return {
-          xAxis: null,
-          yAxis: null
+          xAxis: [],
+          yAxis: []
         }
       }
     },
     clusterInfos: {
       type: Array,
-      default: null
+      default: () => ([])
     },
-    coefficients: {
+    coeffs: {
       type: Array,
-      default: null
+      default: () => ([])
     }
   },
   data () {
