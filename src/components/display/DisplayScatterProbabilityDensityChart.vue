@@ -118,7 +118,7 @@ export default {
     return {
       selectedData: [],
       lineChartPointAmount: 130,
-      scatterChartIntervalAmount: 20
+      scatterChartIntervalAmount: this.dataset.buckets[0].length
     }
   },
   computed: {
@@ -136,29 +136,29 @@ export default {
     scatterChartDataset () {
       const xAxisMin = this.title.xAxis[0].min
       const xAxisMax = this.title.xAxis[0].max
-      const xAxisTick = [...Array(this.scatterChartIntervalAmount).keys()].map((index) => xAxisMin + (((xAxisMax - xAxisMin) / this.scatterChartIntervalAmount) / 2) + (index + 1) * ((xAxisMax - xAxisMin) / this.scatterChartIntervalAmount))
-      // min: 0, max: 100, 50 為中心
+      const xAxisTick = [...Array(this.scatterChartIntervalAmount).keys()].map(index => xAxisMin + (((xAxisMax - xAxisMin) / this.scatterChartIntervalAmount) / 2) + index * ((xAxisMax - xAxisMin) / this.scatterChartIntervalAmount))
+      // y軸高度為 100, 50 為中心點
       const yAxisPosition = 50
       // 包含各分群及離群值資料
       return [
         ...this.dataset.buckets,
         ...(this.dataset.outliersBuckets.length > 0 && [this.dataset.outliersBuckets])
-      ].map((group, index) => ({
-        source: group.map((density, densityIndex) => ([xAxisTick[densityIndex], yAxisPosition, density]))
+      ].map((cluster, index) => ({
+        source: cluster.map((density, densityIndex) => ([xAxisTick[densityIndex], yAxisPosition, density]))
       }))
     },
     lineChartAxisTick () {
       const xAxisMin = this.title.xAxis[0].min
       const xAxisMax = this.title.xAxis[0].max
-      return [...Array(this.lineChartPointAmount).keys()].map((index) => {
-        // 確保 x 軸最後一個值對齊資料最大值
+      return [...Array(this.lineChartPointAmount).keys()].map(index => {
+        // 確保 x 軸最後一個值對齊資料最大值 
         return this.lineChartPointAmount - 1 === index ? xAxisMax : xAxisMin + index * ((xAxisMax - xAxisMin) / this.lineChartPointAmount)
       })
     },
     lineChartDataset () {
       return {
         source: [
-          ['group', ...this.lineChartAxisTick],
+          ['cluster', ...this.lineChartAxisTick],
           ...this.dataset.columns.map((column, index) => ([
             column,
             ...this.lineChartAxisTick.map(tick => this.calculateProbability(this.coeffs[index].mean, this.coeffs[index].sigma, tick))
@@ -208,6 +208,7 @@ export default {
             yAxisIndex: 1
           }
         }),
+        // 如果有離群值，呈現在 Scatter chart 上
         ...(this.dataset.outliersBuckets.length > 0 && [{
           name: this.$t('clustering.outlier'),
           type: 'scatter',
@@ -218,7 +219,9 @@ export default {
       ]
     },
     colorSet () {
+      // 設定透明度讓 scatter chart 中重疊的點能被凸顯出來
       const opacity = 0.7
+      // 如果沒有 outlier 會拿到空陣列
       const hasOutlier = this.dataset.outliersBuckets.length > 0
       const colorAmountNeeded = hasOutlier ? this.dataset.columns.length + 1 : this.dataset.columns.length
       let colorList
@@ -260,6 +263,7 @@ export default {
         // Use visualMap to perform visual encoding.
         visualMap: this.visualMap,
         xAxis: [
+          // line chart xAxis
           {
             ...xAxisDefault(),
             name: this.title.xAxis[0].display_name,
@@ -269,10 +273,12 @@ export default {
             axisTick: {
               show: false
             },
+            // 統一由 scatter chart 顯示數值
             axisLabel: {
               show: false
             }
           },
+          // scatter chart xAxis
           {
             ...xAxisDefault(),
             ...scatterChartConfig.xAxis,
@@ -281,8 +287,8 @@ export default {
             min: this.title.xAxis[0].min,
             max: this.title.xAxis[0].max,
             scale: true,
-            splitNumber: this.dataset.buckets[0].length,
-            interval: (this.title.xAxis[0].max - this.title.xAxis[0].min) / this.dataset.buckets[0].length,
+            splitNumber: this.scatterChartIntervalAmount,
+            interval: (this.title.xAxis[0].max - this.title.xAxis[0].min) / this.scatterChartIntervalAmount,
             gridIndex: 1,
             axisLine: {
               show: false
@@ -299,11 +305,13 @@ export default {
           }
         ],
         yAxis: [
+          // line chart yAxis
           {
             ...yAxisDefault(),
             name: this.title.yAxis[0].display_name,
             gridIndex: 0,
           },
+          // scatter chart yAxis
           scatterChartConfig.yAxis
         ],
         series: this.series,
