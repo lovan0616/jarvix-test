@@ -120,7 +120,7 @@ export default {
       border-radius: 8px;
       width: 40%;
       position: absolute;
-      top: 60px;
+      top: 40px;
       right: 30px;
       border: 1px solid $theme-color-primary;
       background-color: rgba(24, 24, 24, 0.95);
@@ -183,6 +183,10 @@ export default {
       padding-left: 20px;
       padding-right: 20px;
       border-bottom: 1px solid $theme-border-color;
+      cursor: pointer;
+      &:hover {
+        color: $theme-color-primary;
+      }
       &.is-active {
         color: $theme-color-primary;
         &::before {
@@ -199,14 +203,6 @@ export default {
         padding: 0;
       }
       &-label {
-        cursor: pointer;
-        &:hover {
-          color: $theme-color-primary;
-        }
-        &.is-disabled {
-          color: #646464;
-          cursor: not-allowed;
-        }
         .svg-icon {
           margin-right: 6px;
         }
@@ -235,8 +231,11 @@ export default {
           visibility: hidden;
           .dropdown-select-box {
             top: 30px;
-            left: -140px;
+            left: -20px;
             z-index: 1;
+            &:before {
+              left: 18px;
+            }
           }
         }
       }

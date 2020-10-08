@@ -19,10 +19,7 @@
             class="multi-analysis__item"
             @click="clickTab(intentType.OVERVIEW)"
           >
-            <span
-              :class="{'is-disabled': !cachedResultId[intentType.OVERVIEW]}"
-              class="multi-analysis__item-label"
-            >
+            <span class="multi-analysis__item-label">
               <svg-icon icon-class="basic-info"/>
               {{ $t('clustering.dataOverview') }}
             </span>
@@ -30,13 +27,6 @@
               <spinner 
                 v-if="isProcessing[intentType.OVERVIEW]" 
                 size="16"/>
-              <div
-                v-else-if="!cachedResultId[intentType.OVERVIEW]"
-                @click="fetchSpecificType(intentType.OVERVIEW)">
-                <svg-icon 
-                  icon-class="trigger-analysis" 
-                  class="trigger-analysis-icon"/>
-              </div>
             </div>
           </li>
           <li
@@ -44,10 +34,7 @@
             class="multi-analysis__item"
             @click="clickTab(intentType.CLUSTERING)"
           >
-            <span
-              :class="{'is-disabled': !cachedResultId[intentType.CLUSTERING]}"
-              class="multi-analysis__item-label"
-            >
+            <span class="multi-analysis__item-label">
               <svg-icon icon-class="clustering"/>
               {{ $t('clustering.clusteringAnalysis') }}
             </span>
@@ -67,13 +54,6 @@
                   class="dropdown"
                   @switchDialogName="switchDialogName"
                 />
-              </div>
-              <div
-                v-else
-                @click="fetchSpecificType(intentType.CLUSTERING)">
-                <svg-icon 
-                  icon-class="trigger-analysis"
-                  class="trigger-analysis-icon" />
               </div>
             </div>
           </li>
@@ -205,7 +185,7 @@ export default {
       },
       activeTab: null,
       isShowSaveClusteringDialog: false,
-      intentType,
+      intentType
     }
   },
   computed: {
@@ -244,6 +224,7 @@ export default {
       // 已經拿過 result id 就重複使用
       if (this.cachedResultId[type]) {
         this.isProcessing[type] = true
+        this.activeTab = this.intentType[type]
         this.$emit('fetch-new-components-list', this.cachedResultId[type])
         return
       }
@@ -262,10 +243,7 @@ export default {
     },
     clickTab (tabName) {
       if (this.activeTab === this.intentType[tabName]) return
-      if (!this.cachedResultId[tabName]) return
-      this.activeTab = this.intentType[tabName]
-      this.isProcessing[tabName] = true
-      this.$emit('fetch-new-components-list', this.cachedResultId[tabName])
+      this.fetchSpecificType(tabName)
     },
     switchDialogName (action) {
       if (action === 'saveClustering') this.isShowSaveClusteringDialog = true
