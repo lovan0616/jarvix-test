@@ -230,7 +230,20 @@ export default {
               }))
             }
           }
+
+          let numericIndex = []
+          this.tableSummaryList.forEach((element, index) => {
+            if (element.statsType === "NUMERIC") {
+              numericIndex.push(index)
+            }
+          })
           
+          dataFrameData.data.forEach(data => {
+            numericIndex.forEach(index => {
+              data[index] = this.formatComma(data[index])
+            })
+          })
+
           this.dataSourceTableData = {
             columns: {
               titles: dataFrameData.columns

@@ -126,7 +126,7 @@ export default {
         
         for (let i = 1; i < dataset.length; i++) {
           table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>
-            <td>${dataset[i][0]}</td><td>${dataset[i][1]}</td><td>${dataset[i][2]}</td>
+            <td>${dataset[i][0]}</td><td>${this.formatComma(dataset[i][1])}</td><td>${dataset[i][2]}</td>
           </tr>`
         }
         table += '</tbody></table>'
