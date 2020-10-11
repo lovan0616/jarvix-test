@@ -175,6 +175,17 @@ export function patchDataColumnPrimaryAlias (dataColumn) {
 }
 
 /**
+ * delete dataColumn by id
+ * @param {Number} dataColumnId - id
+ */
+export function deleteDataColumnById(dataColumnId) {
+  return request({
+    url: `/dataColumn/clustering-columns/${dataColumnId}  `,
+    method: 'DELETE'
+  })
+}
+
+/**
  * update dataFrame alias
  * @param {Object} userEditedInput - 欲更新的資料
  * @param {Number} userEditedInput.dataFrameId - dataFrameId
