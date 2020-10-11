@@ -673,7 +673,9 @@
     "saveClusteringResultAsColumn": "儲存分群結果為標籤欄位",
     "notAllowedToSaveClusteringResultAsColumnFromJoinedTable": "關聯資料表的欄位，無法儲存為標籤欄位。",
     "createClusteringColumn": "新增標籤欄位",
-    "clusteringColumnName": "標籤欄位名稱"
+    "clusteringColumnName": "標籤欄位名稱",
+    "outlier": "離群",
+    "piecesOfData": "{amount} 筆資料"
   },
   "description": {
     "basic": {

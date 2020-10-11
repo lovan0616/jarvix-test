@@ -673,7 +673,9 @@
     "saveClusteringResultAsColumn": "储存分群结果为标签栏位",
     "notAllowedToSaveClusteringResultAsColumnFromJoinedTable": "关联资料表的栏位，无法储存为标签栏位。",
     "createClusteringColumn": "新增标签栏位",
-    "clusteringColumnName": "标签栏位名称"
+    "clusteringColumnName": "标签栏位名称",
+    "outlier": "离群",
+    "piecesOfData": "{amount} 笔资料"
   },
   "description": {
     "basic": {

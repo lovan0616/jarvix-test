@@ -9,7 +9,7 @@
     @unPin="unPin"
   >
     <result-board-body slot="PageResultBoardBody">
-      <template 
+      <template
         v-if="resultInfo.canDoList.length > 0" 
         slot="multiAnalyPanel"
       >
@@ -58,6 +58,11 @@
             </div>
           </li>
         </ul>
+      </template>
+      <template  
+        v-if="isShowInfo" 
+        slot="PageResultBoardIndicator">
+        <notify-info-block :msg="displayedInfo" />
       </template>
       <template 
         v-if="resultInfo.key_result && resultInfo.key_result.length > 0"
@@ -132,13 +137,15 @@ import SaveClusteringDialog from '@/components/dialog/SaveClusteringDialog'
 import { Message } from 'element-ui'
 import { intentType } from '@/utils/general'
 import { mapState } from 'vuex'
+import NotifyInfoBlock from '@/components/display/NotifyInfoBlock'
 
 export default {
   name: 'GeneralResult',
   components: {
     RecommendedInsight,
     DropdownSelect,
-    SaveClusteringDialog
+    SaveClusteringDialog,
+    NotifyInfoBlock
   },
   props: {
     resultInfo: {
@@ -202,6 +209,17 @@ export default {
     },
     hasFetchedClustering () {
       return this.intent === this.intentType.CLUSTERING || this.cachedResultId.CLUSTERING
+    },
+    isShowInfo () {
+      const intentsWithInfo = ['CLUSTERING']
+      return intentsWithInfo.includes(this.intent)
+    },
+    displayedInfo () {
+      if (!this.isShowInfo) return
+      switch (this.intent) {
+        case 'CLUSTERING': 
+        return this.$t('editing.resultOverSizeMessage')
+      }
     }
   },
   watch: {
