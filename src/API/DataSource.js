@@ -151,11 +151,12 @@ export function deleteDataFrameById (dataFrameId) {
  * get data column by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  * @param {Boolean} hasFeature
- * @param {Boolean} hasAliasLimit - ture: get one primary alias, false: get all alias
+ * @param {Boolean} hasAliasLimit - true: get one primary alias, false: get all alias
+ * @param {Boolean} hasBlockClustering - whether to filter out clustering columns
  */
-export function getDataFrameColumnInfoById (dataFrameId, hasFeature = true, hasAliasLimit = true) {
+export function getDataFrameColumnInfoById(dataFrameId, hasFeature = true, hasAliasLimit = true, hasBlockClustering = false) {
   return request({
-    url: `/dataColumn/dataFrame/${dataFrameId}?hasFeature=${hasFeature}&hasAliasLimit=${hasAliasLimit}`,
+    url: `/dataColumn/dataFrame/${dataFrameId}?hasFeature=${hasFeature}&hasAliasLimit=${hasAliasLimit}&hasBlockClustering=${hasBlockClustering}`,
     method: 'GET'
   })
 }
