@@ -61,6 +61,7 @@
       </div>
       <confirm-page 
         v-else 
+        :content="$t('editing.dataBuildingReminding')"
         @next="closeDialog"/>
     </div>
   </div>
@@ -69,7 +70,7 @@
 <script>
 import { getDataFrameEtlSetting, dataRepreprocessor } from '@/API/DataSource'
 import EtlSetting from '@/pages/dataManagement/components/etl/EtlChooseColumn';
-import ConfirmPage from '@/pages/dataManagement/components/localFileUpload/ConfirmPage'
+import ConfirmPage from '@/pages/dataManagement/components/fileUpload/ConfirmPage'
 import { Message } from 'element-ui'
 import { mapState } from 'vuex'
 

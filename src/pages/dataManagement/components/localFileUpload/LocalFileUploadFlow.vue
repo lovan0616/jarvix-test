@@ -20,6 +20,7 @@
       />
       <confirm-page
         v-if="step === 3"
+        :content="$t('editing.dataBuildingReminding')"
         @next="uploadFinish"
       />
     </transition>
@@ -29,7 +30,7 @@
 import LocalFileUpload from './LocalFileUpload'
 import LocalFileUploadStatus from './LocalFileUploadStatus'
 import EtlSetting from './EtlSetting'
-import ConfirmPage from './ConfirmPage'
+import ConfirmPage from '../fileUpload/ConfirmPage'
 
 export default {
   name: 'LocalFileUploadFlow',

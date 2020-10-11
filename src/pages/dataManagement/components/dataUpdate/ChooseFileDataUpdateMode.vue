@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import UploadProcessBlock from './fileUpload/UploadProcessBlock'
+import UploadProcessBlock from '../fileUpload/UploadProcessBlock'
 
 export default {
  name: 'ChooseFileDataUpdateMode',

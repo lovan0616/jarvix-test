@@ -1,38 +1,11 @@
 <template>
   <div class="file-upload-finished">
-    <div class="dialog-title">
-      {{ title }}
-    </div>
-    <upload-process-block
-      :step="step"
-      :process-text="processText"
+    <file-list-block
+      v-if="failList.length > 0"
+      :title="$t('editing.unuploaded')"
+      :file-list="failList"
+      type="fail"
     />
-    <div class="dialog-body">
-      <file-list-block
-        v-if="successList.length > 0"
-        :title="$t('editing.uploaded')"
-        :file-list="successList"
-      >
-        <div 
-          slot="fileListTitle" 
-          class="uploaded-data-info">
-          {{ getDataInfo }}
-        </div>
-      </file-list-block>
-      <file-list-block
-        v-if="failList.length > 0"
-        :title="$t('editing.unuploaded')"
-        :file-list="failList"
-        type="fail"
-      />
-    </div>
-    <div class="dialog-footer">
-      <div class="dialog-button-block">
-        <slot 
-          :success-list="successList" 
-          name="button"/>
-      </div>
-    </div>
   </div>
 </template>
 <script>
@@ -47,24 +20,6 @@ export default {
     FileListBlock,
     UploadProcessBlock
   },
-  props: {
-    dataFrameName: {
-      type: String,
-      default: null
-    },
-    step: {
-      type: Number,
-      required: true
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    processText: {
-      type: Array,
-      required: true
-    }
-  },
   data () {
     return {
       uploadStatus,
@@ -74,11 +29,6 @@ export default {
   },
   computed: {
     ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
-    getDataInfo () {
-      return this.dataFrameName 
-        ? this.$t('editing.dataFrame') + ':' + this.dataFrameName
-        : this.$t('editing.dataSourceInfo', {type: this.currentUploadInfo.type, dataSourceName: this.currentUploadInfo.name})
-    },
     successList () {
       return this.uploadFileList.filter(element => {
         return element.status === uploadStatus.success

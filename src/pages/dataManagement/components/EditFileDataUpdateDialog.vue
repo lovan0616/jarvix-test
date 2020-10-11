@@ -9,56 +9,25 @@
         :process-text="processText"
         @next="chooseFile"
         @close="cancelFileUpdate"/>
-      <file-upload
+      <data-update-file-upload
         v-if="step === 2"
         :step="step"
         :data-frame-info="dataFrameInfo"
-        :file-count-limit="1"
-        :title="$t('fileDataUpdate.dataUpdateSetting')"
         :process-text="processText"
+        @prev="prevStep"
         @next="nextStep"
-        @close="cancelFileUpdate">
-        <template v-slot:additionalButton>
-          <button 
-            class="btn btn-outline"
-            @click="reChooseMode"
-          >{{ $t('fileDataUpdate.reSetting') }}</button>
-        </template>
-      </file-upload>
-      <file-upload-status
+        @close="cancelFileUpdate"/>
+      <data-update-file-upload-status
         v-if="step === 3"
         :step="step"
+        :data-frame-info="dataFrameInfo"
         :data-frame-name="dataFrameInfo.primaryAlias"
-        :title="$t('fileDataUpdate.dataUpdateSetting')"
         :process-text="processText"
-      >
-        <template v-slot:button="slotProps">
-          <button 
-            :disabled="isProcessing"
-            class="btn btn-outline"
-            @click="cancelFileUpdate"
-          >{{ $t('button.cancel') }}</button>
-          <button 
-            :disabled="isProcessing" 
-            class="btn btn-outline"
-            type="button"
-            @click="reChooseMode"
-          >{{ $t('button.chooseFileUpload') }}</button>
-          <button 
-            :disabled="slotProps.successList.length === 0 || isProcessing"
-            class="btn btn-default"
-            @click="build"
-          >
-            <span v-if="isProcessing">
-              <svg-icon 
-                v-if="isProcessing" 
-                icon-class="spinner"/>
-              {{ $t('button.processing') }}
-            </span>
-            <span v-else>{{ $t('fileDataUpdate.build') }}</span>
-          </button>
-        </template>
-      </file-upload-status>
+        :update-mode="updateMode"
+        @prev="prevStep"
+        @next="nextStep"
+        @close="cancelFileUpdate"
+      />
       <confirm-page
         v-if="step === 4"
         :content="$t('fileDataUpdate.dataUpdatingReminding')"
@@ -69,21 +38,18 @@
 </template>
 
 <script>
-import { appendFile, reimportFile } from '@/API/File'
-import UploadProcessBlock from './fileUpload/UploadProcessBlock'
-import ChooseFileDataUpdateMode from './ChooseFileDataUpdateMode'
-import FileUpload from './fileUpload/FileUpload'
-import FileUploadStatus from './fileUpload/FileUploadStatus'
+import ChooseFileDataUpdateMode from './dataUpdate/ChooseFileDataUpdateMode'
+import DataUpdateFileUpload from './dataUpdate/DataUpdateFileUpload'
+import DataUpdateFileUploadStatus from './dataUpdate/DataUpdateFileUploadStatus'
 import ConfirmPage from './fileUpload/ConfirmPage'
 import { mapState } from 'vuex'
 
 export default {
  name: 'EditFileDataUploadDialog',
   components: {
-		UploadProcessBlock,
 		ChooseFileDataUpdateMode,
-		FileUpload,
-		FileUploadStatus,
+		DataUpdateFileUpload,
+		DataUpdateFileUploadStatus,
 		ConfirmPage
 	},
 	props: {
@@ -105,10 +71,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapState('dataSource', ['processingDataFrameList']),
-		importedFileList () {
-      return this.$store.state.dataManagement.importedFileList
-    }
+		...mapState('dataSource', ['processingDataFrameList'])
 	},
 	destroyed () {
 		this.$store.commit('dataManagement/updateUploadFileList', [])
@@ -119,11 +82,6 @@ export default {
 		chooseFile (updateMode) {
 			this.updateMode = updateMode
 			this.nextStep()
-		},
-		reChooseMode () {
-			this.$store.commit('dataManagement/updateUploadFileList', [])
-			this.$store.commit('dataManagement/clearImportedTableList')
-			this.prevStep()
 		},
 		cancelFileUpdate () {
 			this.$emit('close')
@@ -137,42 +95,6 @@ export default {
 		uploadFinish () {
 			this.$store.commit('dataManagement/updateFileUploadSuccess', true)
 			this.$emit('close')
-		},
-		build () {
-			this.isProcessing = true
-			const fileId = this.importedFileList[0].id
-			switch(this.updateMode) {
-				case 'append':
-					appendFile(fileId, this.dataFrameInfo.id)
-						.then (() => {
-							this.$store.commit('dataSource/setProcessingDataFrameList', {
-								dataSourceId: this.$route.params.id,
-								dataFrameId: this.dataFrameInfo.id,
-								primaryAlias: this.dataFrameInfo.primaryAlias,
-							})
-							this.nextStep()
-						})
-						.catch(() => {})
-						.finally(() => {
-							this.isProcessing = false
-						})
-					break
-				case 'reimport':
-					reimportFile(fileId, this.dataFrameInfo.id)
-						.then (() => {
-							this.$store.commit('dataSource/setProcessingDataFrameList', {
-								dataSourceId: this.$route.params.id,
-								dataFrameId: this.dataFrameInfo.id,
-								primaryAlias: this.dataFrameInfo.primaryAlias,
-							})
-							this.nextStep()
-						})
-						.catch(() => {})
-						.finally(() => {
-							this.isProcessing = false
-						})
-					break
-			}
 		}
 	}
 }

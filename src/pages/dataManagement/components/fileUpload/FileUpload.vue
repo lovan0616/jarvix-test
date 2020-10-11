@@ -1,16 +1,5 @@
 <template>
   <div class="file-upload">
-    <div class="dialog-title">
-      {{ title }}
-    </div>
-    <upload-process-block
-      :step="step"
-      :process-text="processText"
-    />
-    <div 
-      class="dialog-sub-title">
-      {{ $t('editing.dataFrame') }}: {{ dataFrameInfo.primaryAlias }}
-    </div>
     <div class="dialog-body">
       <input 
         ref="fileUploadInput" 
@@ -73,9 +62,12 @@
           <button 
             class="btn-m btn-secondary btn-has-icon"
             @click="chooseFile"
-          ><svg-icon 
-            icon-class="file-plus" 
-            class="icon"/>{{ fileCountLimit > 1 ? $t('editing.addFile') : $t('fileDataUpdate.reChoose') }}</button>
+          >
+            <svg-icon 
+              icon-class="file-plus" 
+              class="icon"/>
+            {{ fileCountLimit > 1 ? $t('editing.addFile') : $t('fileDataUpdate.reChoose') }}
+          </button>
         </div>
       </div>
     </div>
@@ -121,24 +113,8 @@ export default {
     UploadProcessBlock
   },
   props: {
-    dataFrameInfo: {
-      type: Object,
-      required: true
-    },
     fileCountLimit: {
       type: Number,
-      required: true
-    },
-    step: {
-      type: Number,
-      required: true
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    processText: {
-      type: Array,
       required: true
     }
   },
@@ -319,7 +295,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .file-upload {
-  
+
   .dialog {
     &-sub-title {
       margin-bottom: 12px;
