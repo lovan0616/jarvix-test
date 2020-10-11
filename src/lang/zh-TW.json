@@ -667,6 +667,14 @@
     "all": "全部",
     "displaySetting": "顯示設定"
   },
+  "clustering": {
+    "dataOverview": "資料概況",
+    "clusteringAnalysis": "分群分析",
+    "saveClusteringResultAsColumn": "儲存分群結果為標籤欄位",
+    "notAllowedToSaveClusteringResultAsColumnFromJoinedTable": "關聯資料表的欄位，無法儲存為標籤欄位。",
+    "createClusteringColumn": "新增標籤欄位",
+    "clusteringColumnName": "標籤欄位名稱"
+  },
   "description": {
     "basic": {
       "intro": "基本介紹",

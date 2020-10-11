@@ -91,3 +91,8 @@ export const booleanOptionList = [
   { name: 'True', value: true },
   { name: 'False', value: false }
 ]
+
+export const intentType = {
+  OVERVIEW: 'OVERVIEW',
+  CLUSTERING: 'CLUSTERING'
+}

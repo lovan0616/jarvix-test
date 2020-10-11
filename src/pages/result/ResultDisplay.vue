@@ -20,8 +20,10 @@
       :restrictions="restrictInfo"
       :segmentation-payload="segmentationPayload"
       :transcript="transcript"
+      :intent="intent"
       :is-war-room-addable="isWarRoomAddable"
       mode="display"
+      @fetch-new-components-list="getComponentV2"
     />
     <div
       v-if="relatedQuestionList.length > 0" 
@@ -41,7 +43,7 @@
 
 <script>
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'ResultDisplay',
@@ -69,10 +71,12 @@ export default {
       isWarRoomAddable: false,
       currentQuestionDataFrameId: null,
       totalSec: 50,
-      periodSec: 200
+      periodSec: 200,
+      intent: null
     }
   },
   computed: {
+    ...mapState('result', ['currentResultId']),
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
@@ -145,6 +149,7 @@ export default {
       this.currentQuestionDataFrameId = null
       this.transcript = null
       this.isWarRoomAddable = false
+      this.intent = null
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {
@@ -163,7 +168,12 @@ export default {
           selectedColumnList: this.selectedColumnList
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
-          this.getComponentV2(res)
+          this.$store.commit('result/updateCurrentResultId', res.resultId)
+          if (res.layout === 'no_answer') {
+            this.setEmptyLayout(res)
+            return
+          }
+          this.getComponentV2(res.resultId)
           // this.getRelatedQuestion(res.resultId)
         }).catch(() => {
           this.isLoading = false
@@ -210,7 +220,12 @@ export default {
               restrictions: this.filterRestrictionList,
               selectedColumnList: this.selectedColumnList
             }).then(res => {
-              this.getComponentV2(res)
+              this.$store.commit('result/updateCurrentResultId', res.resultId)
+              if (res.layout === 'no_answer') {
+                this.setEmptyLayout(res)
+                return
+              }
+              this.getComponentV2(res.resultId)
               // this.getRelatedQuestion(res.resultId)
             }).catch((error) => {
               if (error.message !== 'cancel') this.isLoading = false
@@ -234,26 +249,23 @@ export default {
       })
       this.$store.commit('chatBot/updateAnalyzeStatus', false)
     },
-    getComponentV2 (res) {
-      window.clearTimeout(this.timeoutFunction)
-      this.$store.commit('result/updateCurrentResultId', res.resultId)
-      if (res.layout === 'no_answer') {
-        this.layout = 'EmptyResult'
-        this.resultInfo = {
-          title: res.noAnswerTitle,
-          description: res.noAnswerDescription
-        }
-        this.isLoading = false
-        return false
+    setEmptyLayout (res) {
+      this.layout = 'EmptyResult'
+      this.resultInfo = {
+        title: res.noAnswerTitle,
+        description: res.noAnswerDescription
       }
-
-      this.$store.dispatch('chatBot/getComponentList', res.resultId)
+      this.isLoading = false
+    },
+    getComponentV2 (resultId) {
+      window.clearTimeout(this.timeoutFunction)
+      this.$store.dispatch('chatBot/getComponentList', resultId)
         .then(componentResponse => {
           switch (componentResponse.status) {
             case 'Process':
             case 'Ready':
               this.timeoutFunction = window.setTimeout(() => {
-                this.getComponentV2(res)
+                this.getComponentV2(resultId)
               }, this.totalSec)
 
               this.totalSec += this.periodSec
@@ -263,7 +275,10 @@ export default {
               this.totalSec = 50
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
+              this.resultInfo.canDoList = componentResponse.canDoList
+              this.resultInfo.isJoinTable = componentResponse.isJoinTable
               this.restrictInfo = componentResponse.restrictions
+              this.intent = componentResponse.intent
               this.layout = this.getLayout(componentResponse.layout)
               this.segmentationPayload = componentResponse.segmentationPayload
               this.segmentationAnalysisV2(componentResponse.segmentationPayload)
@@ -282,7 +297,10 @@ export default {
               break
           }
         }).catch((error) => {
-          if (error.message !== 'cancel') this.isLoading = false
+          if (error.message !== 'cancel') {
+            this.isLoading = false
+            this.resultInfo = null
+          }
         })
     },
     getRelatedQuestion (id) {
