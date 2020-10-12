@@ -43,6 +43,7 @@
       :data-frame-id="result.dataFrameId"
       :result-id="result.resultId"
       :result-info="result.info"
+      :intent="result.intent"
       :segmentation-payload="result.segmentationPayload"
       :restrictions="result.restrictions"
       :question="result.question"
@@ -141,7 +142,8 @@ export default {
             layout: null,
             info: null,
             segmentationPayload: null,
-            isDeleted: false
+            isDeleted: false,
+            intent: element.intent
           })
 
           this.pinboardData.push({

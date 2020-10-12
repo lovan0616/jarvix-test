@@ -10,7 +10,7 @@
   >
     <result-board-body slot="PageResultBoardBody">
       <template
-        v-if="resultInfo.canDoList.length > 0" 
+        v-if="currentResultId && resultInfo.canDoList.length > 0" 
         slot="multiAnalyPanel"
       >
         <ul class="multi-analysis__list">
@@ -122,7 +122,7 @@
     </result-board-body>
     <template slot="dialogs">
       <save-clustering-dialog
-        v-if="isShowSaveClusteringDialog"
+        v-if="currentResultId && isShowSaveClusteringDialog"
         :data-frame-alias="transcript.dataFrame.dataFrameAlias"
         :result-id="cachedResultId[intentType.CLUSTERING]"
         @close="isShowSaveClusteringDialog = false"
@@ -231,8 +231,10 @@ export default {
     }
   },
   mounted () {
-    this.cachedResultId[this.intent] = this.currentResultId
-    this.activeTab = this.intent
+    if (this.currentResultId) {
+      this.cachedResultId[this.intent] = this.currentResultId
+      this.activeTab = this.intent
+    }
   },
   methods: {
     unPin (pinBoardId) {
@@ -245,6 +247,7 @@ export default {
       if (this.cachedResultId[type]) {
         this.isProcessing[type] = true
         this.activeTab = this.intentType[type]
+        this.$store.commit('result/updateCurrentResultId', this.cachedResultId[type])
         this.$emit('fetch-new-components-list', this.cachedResultId[type])
         return
       }
@@ -258,6 +261,7 @@ export default {
           this.isProcessing[type] = false
           this.cachedResultId[type] = resultId
           this.activeTab = this.intentType[type]
+          this.$store.commit('result/updateCurrentResultId', resultId)
           this.$emit('fetch-new-components-list', resultId)
         })
     },

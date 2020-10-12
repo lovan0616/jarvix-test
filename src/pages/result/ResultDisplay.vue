@@ -128,6 +128,7 @@ export default {
   destroyed () {
     if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
     if (this.addConversationTimeout) window.clearTimeout(this.addConversationTimeout)
+    this.$store.commit('result/updateCurrentResultId', null)
   },
   methods: {
     // ...mapActions('dataSource', ['triggerColumnDataCalculation']),
