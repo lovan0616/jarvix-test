@@ -18,6 +18,7 @@
         <slot name="multiAnalyPanel"/>
       </div>
       <div class="chart-block">
+        <slot name="PageResultBoardIndicator"/>
         <slot name="PageResultBoardChart"/>
       </div>
       <slot-dialog
