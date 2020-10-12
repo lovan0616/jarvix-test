@@ -82,7 +82,7 @@ export default {
 .pinboard-info-dialog {
   width: 380px;
   position: absolute;
-  top: 100%;
+  top: 70%;
   right: 188px;
   background-color: #323A3A;
   box-shadow: 0px 2px 15px rgba(71, 235, 251, 0.5);

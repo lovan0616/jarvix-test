@@ -825,6 +825,7 @@
     "select": "Select",
     "download": "Data Download",
     "dataExplanation": "Details",
+    "dataUpdate": "Data Update",
     "start": "Start",
     "copyAndBuild": "Copy and Build",
     "createGroup": "New Project",

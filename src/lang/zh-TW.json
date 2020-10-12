@@ -825,6 +825,7 @@
     "select": "選擇",
     "download": "資料下載",
     "dataExplanation": "資料說明",
+    "dataUpdate": "資料更新",
     "start": "開始",
     "copyAndBuild": "複製並建置",
     "createGroup": "新建專案",
