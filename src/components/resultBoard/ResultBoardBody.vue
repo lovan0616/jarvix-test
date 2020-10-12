@@ -141,6 +141,7 @@ export default {
       top: 30px;
       right: 30px;
       padding: 7px 15px;
+      z-index: 1;
 
       &.active {
         background-color: #42A5B3;
