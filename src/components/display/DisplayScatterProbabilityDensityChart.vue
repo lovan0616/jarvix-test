@@ -148,10 +148,14 @@ export default {
     lineChartAxisTick () {
       const xAxisMin = this.title.xAxis[0].min
       const xAxisMax = this.title.xAxis[0].max
-      return [...Array(this.lineChartPointAmount).keys()].map(index => {
-        // 確保 x 軸最後一個值對齊資料最大值 
-        return this.lineChartPointAmount - 1 === index ? xAxisMax : xAxisMin + index * ((xAxisMax - xAxisMin) / this.lineChartPointAmount)
-      })
+      const getSingleAxisTick = currentIndex => xAxisMin + currentIndex * ((xAxisMax - xAxisMin) / this.lineChartPointAmount)
+      const axisTickList = [...Array(this.lineChartPointAmount).keys()].map(getSingleAxisTick)
+      return [
+        // 依照給定要畫的點數量依序產生的 x 軸 index
+        ...axisTickList,
+        // 適時在最後補值來確保 x 軸最後一個值對齊資料最大值
+        ...((axisTickList[axisTickList.length - 1] !== xAxisMax) && [xAxisMax])
+      ]
     },
     lineChartDataset () {
       return {
