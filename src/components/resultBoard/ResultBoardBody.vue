@@ -1,7 +1,5 @@
 <template>
   <div class="result-board-body">
-    <!-- indicator -->
-    <slot name="PageResultBoardIndicator"/>
     <div 
       :class="{ 'is-open': isShowSettingBox }"
       class="key-result-container"
@@ -14,7 +12,9 @@
         class="btn-m btn-secondary control-btn"
         @click.stop="toggleBasicInfoDialog"
       >{{ $t('resultDescription.basicInfo') }}</button>
-      <div class="multi-analysis__block">
+      <div 
+        v-if="$slots.multiAnalyPanel"
+        class="multi-analysis__block">
         <slot name="multiAnalyPanel"/>
       </div>
       <div class="chart-block">
@@ -163,9 +163,7 @@ export default {
   .multi-analysis {
     &__block {
       border-right: 1px solid $theme-border-color;
-      &:not(:empty) {
-        flex-basis: 180px;
-      }
+      flex-basis: 180px;
     }
     &__list {
       margin: 0;
