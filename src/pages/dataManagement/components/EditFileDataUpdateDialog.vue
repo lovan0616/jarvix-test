@@ -21,7 +21,6 @@
         v-if="step === 3"
         :step="step"
         :data-frame-info="dataFrameInfo"
-        :data-frame-name="dataFrameInfo.primaryAlias"
         :process-text="processText"
         :update-mode="updateMode"
         @prev="prevStep"

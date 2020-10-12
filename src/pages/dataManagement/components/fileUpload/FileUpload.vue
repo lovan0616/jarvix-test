@@ -286,6 +286,7 @@ export default {
       })
       this.$store.commit('dataManagement/updateUploadFileList', fileList)
       this.currntUploadStatus = uploadStatus.uploading
+      this.$emit('updateCurrntUploadStatus', this.currntUploadStatus)
     },
     cancelFileUpload () {
       this.$emit('close')
