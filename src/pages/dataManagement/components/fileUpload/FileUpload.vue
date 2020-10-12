@@ -295,15 +295,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .file-upload {
-
-  .dialog {
-    &-sub-title {
-      margin-bottom: 12px;
-      font-size: 14px;
-			text-align: right;
-    }
-  }
-
   .empty-upload-block {
     display: flex;
     height: 400px;
@@ -345,18 +336,6 @@ export default {
   // 為了讓右上角的資料源名稱共用
   .file-list-container {
     margin-top: -28px;
-  }
-
-  .choose-file-block {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .choose-file {
-    font-size: 16px;
-    line-height: 1;
-    letter-spacing: 0.5px;
-    color: $theme-color-primary;
   }
 
   .file-chosen-info {

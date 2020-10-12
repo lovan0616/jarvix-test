@@ -26,14 +26,12 @@
 </template>
 <script>
 import FileUpload from '../fileUpload/FileUpload'
-import FileListBlock from '../fileUpload/FileListBlock'
 import UploadProcessBlock from '../fileUpload/UploadProcessBlock'
 
 export default {
   name: 'DataUpdateFileUpload',
   components: {
     FileUpload,
-    FileListBlock,
     UploadProcessBlock
   },
   props: {

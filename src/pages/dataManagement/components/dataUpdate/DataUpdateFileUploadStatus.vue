@@ -20,7 +20,8 @@
         </div>
       </file-list-block>
       <file-upload-status />
-    </div>  <div class="dialog-footer">
+    </div>
+    <div class="dialog-footer">
       <div class="dialog-button-block">
         <button 
           :disabled="isProcessing"
@@ -85,21 +86,14 @@ export default {
   },
   data () {
     return {
-      uploadStatus,
-      dataSourceId: parseInt(this.$route.params.id),
       isProcessing: false
     }
   },
   computed: {
-    ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
+    ...mapState('dataManagement', ['uploadFileList']),
     successList () {
       return this.uploadFileList.filter(element => {
         return element.status === uploadStatus.success
-      })
-    },
-    failList () {
-      return this.uploadFileList.filter(element => {
-        return element.status === uploadStatus.fail
       })
     },
     importedFileList () {

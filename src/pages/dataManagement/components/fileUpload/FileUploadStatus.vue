@@ -20,27 +20,12 @@ export default {
     FileListBlock,
     UploadProcessBlock
   },
-  data () {
-    return {
-      uploadStatus,
-      dataSourceId: parseInt(this.$route.params.id),
-      isProcessing: false
-    }
-  },
   computed: {
-    ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
-    successList () {
-      return this.uploadFileList.filter(element => {
-        return element.status === uploadStatus.success
-      })
-    },
+    ...mapState('dataManagement', ['uploadFileList']),
     failList () {
       return this.uploadFileList.filter(element => {
         return element.status === uploadStatus.fail
       })
-    },
-    importedFileList () {
-      return this.$store.state.dataManagement.importedFileList
     }
   }
 }

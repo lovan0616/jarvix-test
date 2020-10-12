@@ -7,7 +7,7 @@
         :title="$t('fileDataUpdate.dataUpdateSetting')"
         :data-frame-info="dataFrameInfo"
         :process-text="processText"
-        @next="chooseFile"
+        @next="chooseMode"
         @close="cancelFileUpdate"/>
       <data-update-file-upload
         v-if="step === 2"
@@ -42,7 +42,6 @@ import ChooseFileDataUpdateMode from './dataUpdate/ChooseFileDataUpdateMode'
 import DataUpdateFileUpload from './dataUpdate/DataUpdateFileUpload'
 import DataUpdateFileUploadStatus from './dataUpdate/DataUpdateFileUploadStatus'
 import ConfirmPage from './fileUpload/ConfirmPage'
-import { mapState } from 'vuex'
 
 export default {
  name: 'EditFileDataUploadDialog',
@@ -70,16 +69,13 @@ export default {
 			],
 		}
 	},
-	computed: {
-		...mapState('dataSource', ['processingDataFrameList'])
-	},
 	destroyed () {
 		this.$store.commit('dataManagement/updateUploadFileList', [])
     this.$store.commit('dataManagement/clearCurrentUploadInfo')
     this.$store.commit('dataManagement/clearImportedTableList')
   },
 	methods: {
-		chooseFile (updateMode) {
+		chooseMode (updateMode) {
 			this.updateMode = updateMode
 			this.nextStep()
 		},
