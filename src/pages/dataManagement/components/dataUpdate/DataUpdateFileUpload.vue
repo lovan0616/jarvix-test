@@ -41,7 +41,7 @@ export default {
     },
     step: {
       type: Number,
-      required: true
+      default: 2
     },
     processText: {
       type: Array,

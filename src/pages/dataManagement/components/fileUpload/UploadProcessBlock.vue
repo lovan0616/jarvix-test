@@ -22,7 +22,7 @@ export default {
   props: {
     step: {
       type: Number,
-      default: 1
+      required: true
     },
 		processText: {
 			type: Array,

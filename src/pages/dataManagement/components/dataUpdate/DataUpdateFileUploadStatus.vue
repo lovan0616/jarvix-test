@@ -73,7 +73,7 @@ export default {
     },
     step: {
       type: Number,
-      required: true
+      default: 3
     },
     processText: {
       type: Array,

@@ -42,7 +42,7 @@
         <button 
           class="btn btn-primary"
           @click="chooseFile"
-        >{{ $t('fileDataUpdate.chooseFile') }}</button>
+        >{{ $t('fileDataUpdate.processStep2') }}</button>
       </div>
     </div>
   </div>
@@ -63,7 +63,7 @@ export default {
     },
     step: {
       type: Number,
-      required: true
+      default: 1
     },
     title: {
       type: String,

@@ -560,6 +560,20 @@
     "dataFrameUpdate": "资料表更新",
     "rebuild": "重新建置"
   },
+  "fileDataUpdate": {
+    "dataUpdateSetting": "资料更新设定",
+    "processStep1": "更新模式",
+    "processStep2": "选择档案",
+    "processStep3": "上传档案",
+    "updateMode": "更新模式",
+    "append": "资料表更新",
+    "reimport": "重新建置",
+    "reChoose": "重新选择",
+    "reUploadFile" :"重新上传档案",
+    "build": "立即建置",
+    "reSetting": "重新设定模式",
+    "dataUpdatingReminding": "资料表更新将以背景执行方式进行，更新进度将显示在资料表状态。"
+  },
   "feature": {
     "value": "数值",
     "columnValue": "栏位值",

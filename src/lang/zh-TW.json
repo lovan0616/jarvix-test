@@ -562,7 +562,6 @@
   },
   "fileDataUpdate": {
     "dataUpdateSetting": "資料更新設定",
-    "chooseFile": "選擇檔案",
     "processStep1": "更新模式",
     "processStep2": "選擇檔案",
     "processStep3": "上傳檔案",
