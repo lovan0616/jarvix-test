@@ -19,7 +19,12 @@
           {{ $t('editing.dataFrame') }}: {{ dataFrameInfo.primaryAlias }}
         </div>
       </file-list-block>
-      <file-upload-status />
+      <file-list-block
+        v-if="failList.length > 0"
+        :title="$t('editing.unuploaded')"
+        :file-list="failList"
+        type="fail"
+      />
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
@@ -56,14 +61,12 @@ import { appendFile, reimportFile } from '@/API/File'
 import { uploadStatus } from '@/utils/general'
 import { mapState } from 'vuex'
 import FileListBlock from '../fileUpload/FileListBlock'
-import FileUploadStatus from '../fileUpload/FileUploadStatus'
 import UploadProcessBlock from '../fileUpload/UploadProcessBlock'
 
 export default {
   name: 'DataUpdateFileUploadStatus',
   components: {
     FileListBlock,
-    FileUploadStatus,
     UploadProcessBlock
   },
   props: {
@@ -94,6 +97,11 @@ export default {
     successList () {
       return this.uploadFileList.filter(element => {
         return element.status === uploadStatus.success
+      })
+    },
+    failList () {
+      return this.uploadFileList.filter(element => {
+        return element.status === uploadStatus.fail
       })
     },
     importedFileList () {

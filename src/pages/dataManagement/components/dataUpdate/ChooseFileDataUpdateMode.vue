@@ -19,13 +19,12 @@
         class="input-radio-group"
       >
         <input
+          v-model="updateMode"
           :id="status.type"
-          :checked="status.type === updateMode"
           :value="status.type"
           name="status"
           class="input-radio"
           type="radio"
-          @change="updateMode = status.type"
         >
         <label
           :for="status.type"
@@ -132,7 +131,11 @@ export default {
 			}
 			&:last-of-type {
 				margin-right: 16px;
-			}
+      }
+      
+      .input-radio-label {
+        cursor: pointer;
+      }
   }
 
   }
