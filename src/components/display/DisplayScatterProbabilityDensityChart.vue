@@ -167,7 +167,7 @@ export default {
     visualMap () {
       // 確認是否有離群
       const scatterSeriesAmount = this.dataset.outliersBuckets.length > 0 ? this.dataset.buckets.length + 1 : this.dataset.buckets.length
-      const maxValue = Math.max(...this.dataset.buckets.flat())
+      const maxValue = Math.max(...[].concat(...this.dataset.buckets))
       return {
         show: false,
         // Scatter 取第三行作為畫點的資料依據
