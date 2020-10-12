@@ -60,6 +60,7 @@
     "joinTypeEmpty": "Please choose a type of join.",
     "builded": "Data Source has been created.",
     "dataFrameBuilt": "Data Set {name} has been created.",
+    "dataFrameUpdated": "Data Set {name} has been Updated.",
     "noMatchedKey": "No successful match. Please try to set other related Data Set or fields",
     "previewFailed": "Setting failed. Please try again later.",
     "noData": "No data found",
