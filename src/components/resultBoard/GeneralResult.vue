@@ -288,8 +288,8 @@ export default {
     align-items: center;
     height: 100%;
   }
-  /deep/ .hint-info {
-    margin-bottom: 30px;
+  .task {
+    padding-top: 30px;
   }
 }
 </style>
