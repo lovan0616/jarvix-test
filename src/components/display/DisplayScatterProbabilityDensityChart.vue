@@ -123,6 +123,9 @@ export default {
     grid () {
       return [
         {
+          tooltip: {
+            show: false
+          },
           height: '65%'
         },
         {
@@ -148,10 +151,14 @@ export default {
     lineChartAxisTick () {
       const xAxisMin = this.title.xAxis[0].min
       const xAxisMax = this.title.xAxis[0].max
-      return [...Array(this.lineChartPointAmount).keys()].map(index => {
-        // 確保 x 軸最後一個值對齊資料最大值 
-        return this.lineChartPointAmount - 1 === index ? xAxisMax : xAxisMin + index * ((xAxisMax - xAxisMin) / this.lineChartPointAmount)
-      })
+      const getSingleAxisTick = currentIndex => xAxisMin + currentIndex * ((xAxisMax - xAxisMin) / this.lineChartPointAmount)
+      const axisTickList = [...Array(this.lineChartPointAmount).keys()].map(getSingleAxisTick)
+      return [
+        // 依照給定要畫的點數量依序產生的 x 軸 index
+        ...axisTickList,
+        // 適時在最後補值來確保 x 軸最後一個值對齊資料最大值
+        ...((axisTickList[axisTickList.length - 1] !== xAxisMax) && [xAxisMax])
+      ]
     },
     lineChartDataset () {
       return {
@@ -167,7 +174,7 @@ export default {
     visualMap () {
       // 確認是否有離群
       const scatterSeriesAmount = this.dataset.outliersBuckets.length > 0 ? this.dataset.buckets.length + 1 : this.dataset.buckets.length
-      const maxValue = Math.max(...this.dataset.buckets.flat())
+      const maxValue = Math.max(...[].concat(...this.dataset.buckets))
       return {
         show: false,
         // Scatter 取第三行作為畫點的資料依據
@@ -211,7 +218,9 @@ export default {
             type: 'scatter',
             datasetIndex: index + 1,
             xAxisIndex: 1, 
-            yAxisIndex: 1
+            yAxisIndex: 1,
+            // 定義維度資訊供未來 tooltip 中使用
+            dimensions: [this.title.xAxis[0].display_name, this.title.yAxis[0].display_name, 'position']
           }
         }),
         // 如果有離群值，呈現在 Scatter chart 上
@@ -220,7 +229,9 @@ export default {
           type: 'scatter',
           datasetIndex: this.dataset.buckets.length + 1,
           xAxisIndex: 1, 
-          yAxisIndex: 1
+          yAxisIndex: 1,
+          // 定義維度資訊供未來 tooltip 中使用
+          dimensions: [this.title.xAxis[0].display_name, this.title.yAxis[0].display_name, 'position']
         }])
       ]
     },
@@ -252,10 +263,12 @@ export default {
         ...getDrillDownTool(this.$route.name, this.title),
         tooltip: {
           ...commonChartOptions().tooltip,
-          trigger: 'item',
+          trigger: 'axis',
           formatter (params) {
-            const marker = params.marker ? params.marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params.color};"></span>`
-            return marker + params.seriesName + '<br/>' + i18n.t('clustering.piecesOfData', { amount: formatComma(params.data[2]) })
+            return params.reduce((acc, cur) => {
+              const marker = cur.marker ? cur.marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${cur.color};"></span>`
+              return acc += `${marker}${cur.seriesName}：${i18n.t('clustering.piecesOfData', { amount: formatComma(cur.data[2]) })}<br/>`
+            }, '')
           }
         },
         grid: this.grid,
