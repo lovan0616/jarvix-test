@@ -55,7 +55,7 @@
 <script>
 import { uploadStatus } from '@/utils/general'
 import { mapState } from 'vuex'
-import FileListBlock from './FileListBlock'
+import FileListBlock from '../fileUpload/FileListBlock'
 
 export default {
   name: 'LocalFileUploadFinished',

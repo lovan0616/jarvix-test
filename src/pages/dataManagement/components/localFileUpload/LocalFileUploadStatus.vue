@@ -53,7 +53,7 @@
 import { analysisFile } from '@/API/File'
 import { uploadStatus } from '@/utils/general'
 import { mapState } from 'vuex'
-import FileListBlock from './FileListBlock'
+import FileListBlock from '../fileUpload/FileListBlock'
 import FileUploadStatus from '../fileUpload/FileUploadStatus'
 import UploadProcessBlock from '../fileUpload/UploadProcessBlock'
 
