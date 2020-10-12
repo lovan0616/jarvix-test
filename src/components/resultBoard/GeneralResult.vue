@@ -288,5 +288,8 @@ export default {
     align-items: center;
     height: 100%;
   }
+  .task {
+    padding-top: 30px;
+  }
 }
 </style>

@@ -1,7 +1,5 @@
 <template>
   <div class="result-board-body">
-    <!-- indicator -->
-    <slot name="PageResultBoardIndicator"/>
     <div 
       :class="{ 'is-open': isShowSettingBox }"
       class="key-result-container"
@@ -14,10 +12,13 @@
         class="btn-m btn-secondary control-btn"
         @click.stop="toggleBasicInfoDialog"
       >{{ $t('resultDescription.basicInfo') }}</button>
-      <div class="multi-analysis__block">
+      <div 
+        v-if="$slots.multiAnalyPanel"
+        class="multi-analysis__block">
         <slot name="multiAnalyPanel"/>
       </div>
       <div class="chart-block">
+        <slot name="PageResultBoardIndicator"/>
         <slot name="PageResultBoardChart"/>
       </div>
       <slot-dialog
@@ -103,14 +104,10 @@ export default {
 
     .chart-block {
       width: 100%;
-      padding: 40px 30px 30px 30px;
+      padding: 30px;
       min-width: 0;
       flex: 1;
       margin-right: 0;
-      
-      /deep/ .task:not(:first-child) {
-        padding-top: 30px;
-      }
     }
     
     .basic-info-container {
@@ -118,7 +115,7 @@ export default {
       border-radius: 8px;
       width: 40%;
       position: absolute;
-      top: 40px;
+      top: 65px;
       right: 30px;
       border: 1px solid $theme-color-primary;
       background-color: rgba(24, 24, 24, 0.95);
@@ -141,9 +138,10 @@ export default {
 
     .control-btn {
       position: absolute;
-      top: 5px;
+      top: 30px;
       right: 30px;
       padding: 7px 15px;
+      z-index: 1;
 
       &.active {
         background-color: #42A5B3;
@@ -163,9 +161,7 @@ export default {
   .multi-analysis {
     &__block {
       border-right: 1px solid $theme-border-color;
-      &:not(:empty) {
-        flex-basis: 180px;
-      }
+      flex-basis: 180px;
     }
     &__list {
       margin: 0;
