@@ -239,8 +239,8 @@ export default {
           })
           
           dataFrameData.data.forEach(data => {
-            numericIndex.forEach(index => {
-              data[index] = this.formatComma(data[index])
+            numericIndex.forEach(numeric => {
+              data[numeric] = this.formatComma(data[numeric])
             })
           })
 
