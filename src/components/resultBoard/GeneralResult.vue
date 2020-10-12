@@ -200,7 +200,8 @@ export default {
     ...mapState('result', ['currentResultId']),
     barData () {
       return [
-        { title: this.$t('clustering.saveClusteringResultAsColumn'),
+        {
+          title: 'clustering.saveClusteringResultAsColumn',
           icon: 'feature',
           dialogName: 'saveClustering',
           disabled: this.resultInfo.isJoinTable
