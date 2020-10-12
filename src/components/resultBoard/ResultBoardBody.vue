@@ -103,12 +103,10 @@ export default {
 
     .chart-block {
       width: 100%;
-      padding: 40px 30px 0 30px;
+      padding: 40px 30px 30px 30px;
       min-width: 0;
       flex: 1;
       margin-right: 0;
-      // TODO 等分群圖長出來就可以拔掉
-      min-height: 500px;
       
       /deep/ .task:not(:first-child) {
         padding-top: 30px;
