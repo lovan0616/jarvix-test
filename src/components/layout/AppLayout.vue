@@ -61,8 +61,6 @@ export default {
         this.processingDataFrameIntervalFunction = window.setInterval(() => {
           value.forEach(dataFrame => {
             getDataFrameById(dataFrame.dataSourceId, true).then(response => {
-              console.log('processingDataFrameList', value)
-              console.log(response)
               let currentDataFrame = response.find(element => element.id === dataFrame.dataFrameId)
               if (currentDataFrame && currentDataFrame.state === 'Enable') {
                 this.$store.commit('dataSource/updateProcessingDataFrameList', currentDataFrame)
