@@ -264,9 +264,12 @@ export default {
       this.isRefreshing = true
       refreshResult(this.resultId)
         .then(res => {
-          this.$emit('refresh', this.pinBoardId)
+          let promise = new Promise(resolve => this.$emit('refresh', {resolveFunction: resolve, pinBoardId: this.pinBoardId}))
+          promise.then(() => {
+            this.isRefreshing = false
+          })
         })
-        .finally(() => {
+        .catch(() => {
           this.isRefreshing = false
         })
     },

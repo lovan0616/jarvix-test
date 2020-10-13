@@ -44,8 +44,8 @@ export default {
     }
   },
   methods: {
-    refreshPinboardData (pinBoardId) {
-      this.$emit('refresh', pinBoardId)
+    refreshPinboardData (refreshInfo) {
+      this.$emit('refresh', refreshInfo)
     },
     unPin (pinBoardId) {
       this.$emit('unPin', pinBoardId)

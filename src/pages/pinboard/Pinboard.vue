@@ -161,7 +161,7 @@ export default {
           this.isLoading = false
         })
     },
-    getComponent (res) {
+    getComponent (res, resolveFunction = null) {
       window.clearTimeout(this.timeoutFunction)
       let currentResult = this.getResult(res.id)
       let currentData = this.getData(res.id)
@@ -171,7 +171,7 @@ export default {
             case 'Process':
             case 'Ready':
               this.timeoutFunction = window.setTimeout(() => {
-                this.getComponent(res)
+                this.getComponent(res, resolveFunction)
               }, 1000)
               break
             case 'Complete':
@@ -188,6 +188,7 @@ export default {
               currentData.restrictions = componentResponse.restrictions
               this.$nextTick(() => {
                 this.isLoading = false
+                if (resolveFunction) resolveFunction()
               })
               break
             case 'Disable':
@@ -223,10 +224,10 @@ export default {
           element.isDeleted = true
       })
     },
-    refreshPinboardData (pinBoardId) {
-      let currentPinboardInfo = this.pinboardData.filter(data => data.pinboardId === pinBoardId)[0]
+    refreshPinboardData (refreshInfo) {
+      let currentPinboardInfo = this.pinboardData.filter(data => data.pinboardId === refreshInfo.pinBoardId)[0]
       currentPinboardInfo.id = currentPinboardInfo.pinboardId
-      this.getComponent(currentPinboardInfo)
+      this.getComponent(currentPinboardInfo, refreshInfo.resolveFunction)
     }
   },
 }
