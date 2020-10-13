@@ -209,8 +209,7 @@ export default {
       return this.$route.name === 'PersonalPagePinboardList'
     },
     showAddToWarRoomButton () {
-      const isShowWarRoomModule = localStorage.getItem('isShowWarRoomModule') === 'true'
-      return this.isWarRoomAddable && isShowWarRoomModule && this.hasPermission('group_create_data')
+      return this.isWarRoomAddable && this.hasPermission('war_room')
     }
   },
   mounted () {
