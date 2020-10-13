@@ -265,10 +265,9 @@ export default {
       this.isLoading = true
       refreshResult(this.resultId)
         .then(res => {
-          console.log('then')
+          this.$emit('refresh', this.pinBoardId)
         })
         .finally(() => {
-          console.log('finally')
           this.isRefreshing = false
           this.isLoading = false
         })
