@@ -5,6 +5,7 @@
     :data-result-id="resultId"
     :data-diagram-type="diagram"
     :data-intend="intend"
+    :key="componentId"
     class="task"
   >
     <spinner
@@ -55,7 +56,7 @@
         class="task-note"
       >
         {{ note }}
-      </div>
+      </div>{{ componentId }}
     </template>
     <monitor-setting-dialog
       v-if="isShowMonitorSettingDialog"

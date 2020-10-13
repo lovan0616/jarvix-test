@@ -262,16 +262,13 @@ export default {
     },
     refreshData () {
       this.isRefreshing = true
-      this.isLoading = true
       refreshResult(this.resultId)
         .then(res => {
           this.$emit('refresh', this.pinBoardId)
         })
         .finally(() => {
           this.isRefreshing = false
-          this.isLoading = false
         })
-
     },
     pinToBoard () {
       if (this.isLoading) return false

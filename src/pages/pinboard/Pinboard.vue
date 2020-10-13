@@ -224,10 +224,8 @@ export default {
       })
     },
     refreshPinboardData (pinBoardId) {
-     let currentPinboardInfo = this.pinboardData.filter(data => data.pinboardId === pinBoardId)[0]
+      let currentPinboardInfo = this.pinboardData.filter(data => data.pinboardId === pinBoardId)[0]
       currentPinboardInfo.id = currentPinboardInfo.pinboardId
-      delete currentPinboardInfo.pinboardId
-      console.log(currentPinboardInfo)
       this.getComponent(currentPinboardInfo)
     }
   },
