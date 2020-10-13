@@ -58,8 +58,8 @@
 import { analysisFile } from '@/API/File'
 import { uploadStatus } from '@/utils/general'
 import { mapState } from 'vuex'
-import FileListBlock from '../fileUpload/FileListBlock'
-import UploadProcessBlock from '../fileUpload/UploadProcessBlock'
+import FileListBlock from './fileUpload/FileListBlock'
+import UploadProcessBlock from './fileUpload/UploadProcessBlock'
 
 export default {
   name: 'LocalFileUploadStatus',

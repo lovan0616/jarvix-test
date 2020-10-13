@@ -16,8 +16,8 @@
 <script>
 import { uploadStatus } from '@/utils/general'
 import { mapState } from 'vuex'
-import FileUpload from '../fileUpload/FileUpload'
-import UploadProcessBlock from '../fileUpload/UploadProcessBlock'
+import FileUpload from './fileUpload/FileUpload'
+import UploadProcessBlock from './fileUpload/UploadProcessBlock'
 
 export default {
   name: 'LocalFileUpload',

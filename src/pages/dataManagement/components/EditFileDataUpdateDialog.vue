@@ -37,10 +37,10 @@
 </template>
 
 <script>
-import ChooseFileDataUpdateMode from './dataUpdate/ChooseFileDataUpdateMode'
-import DataUpdateFileUpload from './dataUpdate/DataUpdateFileUpload'
-import DataUpdateFileUploadStatus from './dataUpdate/DataUpdateFileUploadStatus'
-import ConfirmPage from './fileUpload/ConfirmPage'
+import ChooseFileDataUpdateMode from './localFileUpload/dataUpdate/ChooseFileDataUpdateMode'
+import DataUpdateFileUpload from './localFileUpload/dataUpdate/DataUpdateFileUpload'
+import DataUpdateFileUploadStatus from './localFileUpload/dataUpdate/DataUpdateFileUploadStatus'
+import ConfirmPage from './localFileUpload/fileUpload/ConfirmPage'
 
 export default {
  name: 'EditFileDataUploadDialog',
