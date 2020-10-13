@@ -3,6 +3,7 @@
     :segmentation-payload="segmentationPayload"
     :result-id="resultId"
     :restrictions="restrictions"
+    @refresh="refreshPinboardData"
     @unPin="unPin"
   >
     <result-board-body slot="PageResultBoardBody">
@@ -43,6 +44,9 @@ export default {
     }
   },
   methods: {
+    refreshPinboardData (pinBoardId) {
+      this.$emit('refresh', pinBoardId)
+    },
     unPin (pinBoardId) {
       this.$emit('unPin', pinBoardId)
     }

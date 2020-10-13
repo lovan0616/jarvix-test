@@ -5,6 +5,7 @@
     :result-info="resultInfo"
     :restrictions="restrictions"
     :is-war-room-addable="isWarRoomAddable"
+    @refresh="refreshPinboardData"
   >
     <result-board-body
       slot="PageResultBoardBody"
@@ -142,6 +143,11 @@ export default {
       this.isLoading = false
     })
   },
+  methods: {
+    refreshPinboardData (pinBoardId) {
+      this.$emit('refresh', pinBoardId)
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
