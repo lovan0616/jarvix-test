@@ -34,7 +34,7 @@
       <template slot="InsightBasicInfo">
         <task
           v-if="resultInfo.basic_info && resultInfo.basic_info.length > 0"
-          :key="componentId"
+          :key="resultInfo.basic_info[0]"
           :component-id="resultInfo.basic_info[0]"
           intend="basic_info"
         />
