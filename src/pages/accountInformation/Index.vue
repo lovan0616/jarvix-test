@@ -101,7 +101,7 @@
             <div class="item__info--amount"> {{ formatComma(groupUsage.pinBoardCount) }} </div>
           </div>
           <div
-            v-if="hasPermission('group_read_data') && isShowWarRoomModule"
+            v-if="hasPermission('war_room')"
             class="item__info"
           >
             <h3 class="item__info--title"> {{ $t('accountInfo.warRoomAmount') }} </h3>
@@ -139,10 +139,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
-    isShowWarRoomModule () {
-      return localStorage.getItem('isShowWarRoomModule') === 'true'
-    }
+    ...mapGetters('userManagement', ['hasPermission'])
   },
   mounted () {
     this.fetchData()
