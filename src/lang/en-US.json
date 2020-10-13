@@ -60,6 +60,7 @@
     "joinTypeEmpty": "Please choose a type of join.",
     "builded": "Data Source has been created.",
     "dataFrameBuilt": "Data Set {name} has been created.",
+    "dataFrameUpdated": "Data Set {name} has been Updated.",
     "noMatchedKey": "No successful match. Please try to set other related Data Set or fields",
     "previewFailed": "Setting failed. Please try again later.",
     "noData": "No data found",
@@ -559,6 +560,20 @@
     "updateMode": "Update Mode",
     "dataFrameUpdate": "Update Existing Table",
     "rebuild": "Rebuild Table"
+  },
+  "fileDataUpdate": {
+    "dataUpdateSetting": "資料更新設定",
+    "processStep1": "更新模式",
+    "processStep2": "選擇檔案",
+    "processStep3": "上傳檔案",
+    "updateMode": "更新模式",
+    "append": "資料表更新",
+    "reimport": "重新建置",
+    "reChoose": "重新選擇",
+    "reUploadFile" :"重新上傳檔案",
+    "build": "立即建置",
+    "reSetting": "重新設定模式",
+    "dataUpdatingReminding": "資料表更新將以背景執行方式進行，更新進度將顯示在資料表狀態。"
   },
   "feature": {
     "value": "Value",

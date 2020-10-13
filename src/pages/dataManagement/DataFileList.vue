@@ -124,6 +124,11 @@
       :data-frame-info="currentEditDataFrameInfo"
       @close="closeEditBatchLoadDialog"
     />
+    <edit-file-data-update-dialog
+      v-if="showEditFileDataUpdateDialog"
+      :data-frame-info="currentEditDataFrameInfo"
+      @close="closeEditFileDataUpdateDialog"
+    />
     <feature-management-dialog
       v-if="showEditFeatureDialog"
       @close="toggleEditFeatureDialog"
@@ -148,6 +153,7 @@ import EditTableJoinRelationDialog from './components/tableJoin/EditTableJoinRel
 import EditColumnDialog from './components/EditColumnDialog'
 import EditColumnSetDialog from './components/columnSet/EditColumnSetDialog'
 import EditEtlDialog from './components/EditEtlDialog'
+import EditFileDataUpdateDialog from './components/EditFileDataUpdateDialog'
 import EditBatchLoadDialog from './components/EditBatchLoadDialog'
 import DataFrameAliasDialog from './components/alias/DataFrameAliasDialog'
 import ValueAliasDialog from './components/alias/ValueAliasDialog'
@@ -173,6 +179,7 @@ export default {
     FeatureManagementDialog,
     EditEtlDialog,
     EditBatchLoadDialog,
+    EditFileDataUpdateDialog,
     ViewCreatedInfoDialog 
   },
   data () {
@@ -185,6 +192,7 @@ export default {
       showEditDateTimeDialog: false,
       showEditEtlDialog: false,
       showEditBatchLoadDialog: false,
+      showEditFileDataUpdateDialog:false, 
       deleteId: null,
       renameDataSource: null,
       // 資料處理中
@@ -496,9 +504,16 @@ export default {
       this.currentEditDataFrameInfo = { id, primaryAlias }
       this.showEditEtlDialog = true
     },
-    editBatchLoadSetting ({ id, primaryAlias }) {
+    editBatchLoadSetting ({ id, primaryAlias, originType }) {
       this.currentEditDataFrameInfo = { id, primaryAlias }
-      this.showEditBatchLoadDialog = true
+      switch(originType) {
+        case 'database': 
+          this.showEditBatchLoadDialog = true
+          break
+        case 'file':
+          this.showEditFileDataUpdateDialog = true
+          break
+      }
     },
     viewCreatedInfo ({ id, primaryAlias }) {
       this.currentEditDataFrameInfo = { id, primaryAlias }
@@ -527,6 +542,11 @@ export default {
     },
     closeEditBatchLoadDialog () {
       this.showEditBatchLoadDialog = false
+      this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
+      this.fetchData()
+    },
+    closeEditFileDataUpdateDialog () {
+      this.showEditFileDataUpdateDialog = false
       this.currentEditDataFrameInfo = { id: null, primaryAlias: null }
       this.fetchData()
     },

@@ -60,6 +60,7 @@
     "joinTypeEmpty": "請選擇關聯方式",
     "builded": "資料源建立完成",
     "dataFrameBuilt": "資料表 {name} 建立完成",
+    "dataFrameUpdated": "資料表 {name} 更新完成",
     "noMatchedKey": "沒有成功對上的值，請嘗試設定其他關聯表或欄位",
     "previewFailed": "設定失敗，請稍候再試",
     "noData": "目前沒有資料",
@@ -560,6 +561,20 @@
     "dataFrameUpdate": "資料表更新",
     "rebuild": "重新建置"
   },
+  "fileDataUpdate": {
+    "dataUpdateSetting": "資料更新設定",
+    "processStep1": "更新模式",
+    "processStep2": "選擇檔案",
+    "processStep3": "上傳檔案",
+    "updateMode": "更新模式",
+    "append": "資料表更新",
+    "reimport": "重新建置",
+    "reChoose": "重新選擇",
+    "reUploadFile" :"重新上傳檔案",
+    "build": "立即建置",
+    "reSetting": "重新設定模式",
+    "dataUpdatingReminding": "資料表更新將以背景執行方式進行，更新進度將顯示在資料表狀態。"
+  },
   "feature": {
     "value": "數值",
     "columnValue": "欄位值",
@@ -825,6 +840,7 @@
     "select": "選擇",
     "download": "資料下載",
     "dataExplanation": "資料說明",
+    "dataUpdate": "資料更新",
     "start": "開始",
     "copyAndBuild": "複製並建置",
     "createGroup": "新建專案",
