@@ -271,7 +271,7 @@ export default {
     },
     switchDialogName (action) {
       if (action !== 'saveClustering') return
-      if (this.resultInfo.isJoinTable) {
+      if (!this.resultInfo.canSaveResult) {
         return Message({
           message: this.$t('clustering.notAllowedToSaveClusteringResultAsColumnFromJoinedTable'),
           type: 'warning',

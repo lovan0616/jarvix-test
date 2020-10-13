@@ -277,7 +277,7 @@ export default {
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
               this.resultInfo.canDoList = componentResponse.canDoList
-              this.resultInfo.isJoinTable = componentResponse.isJoinTable
+              this.resultInfo.canSaveResult = componentResponse.canSaveResult
               this.restrictInfo = componentResponse.restrictions
               this.intent = componentResponse.intent
               this.layout = this.getLayout(componentResponse.layout)
