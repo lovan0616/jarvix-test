@@ -680,7 +680,8 @@
     "createClusteringColumn": "新增標籤欄位",
     "clusteringColumnName": "標籤欄位名稱",
     "outlier": "離群",
-    "piecesOfData": "{amount} 筆資料"
+    "piecesOfData": "{amount} 筆資料",
+    "buildingClusteringColumn": "欄位建置中，建置完成即可使用。"
   },
   "description": {
     "basic": {

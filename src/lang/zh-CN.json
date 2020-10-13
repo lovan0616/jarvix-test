@@ -680,7 +680,8 @@
     "createClusteringColumn": "新增标签栏位",
     "clusteringColumnName": "标签栏位名称",
     "outlier": "离群",
-    "piecesOfData": "{amount} 笔资料"
+    "piecesOfData": "{amount} 笔资料",
+    "buildingClusteringColumn": "栏位建置中，建置完成即可使用。"
   },
   "description": {
     "basic": {

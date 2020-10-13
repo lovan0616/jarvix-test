@@ -81,7 +81,7 @@ export default {
             askResultId: this.resultId
           }).then(() => {
               Message({
-                message: this.$t('message.saveSuccess'),
+                message: this.$t('clustering.buildingClusteringColumn'),
                 type: 'success',
                 duration: 3 * 1000,
                 showClose: true

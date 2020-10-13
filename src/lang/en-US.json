@@ -680,7 +680,8 @@
     "createClusteringColumn": "New Clustering Field",
     "clusteringColumnName": "Clustering Column Name",
     "outlier": "outlier",
-    "piecesOfData": "{amount} pieces of data"
+    "piecesOfData": "{amount} pieces of data",
+    "buildingClusteringColumn": "The field is being built, and it can be used after it is built."
   },
   "description": {
     "basic": {
