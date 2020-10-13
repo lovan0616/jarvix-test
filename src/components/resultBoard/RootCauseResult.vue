@@ -5,6 +5,7 @@
     :result-info="resultInfo"
     :restrictions="restrictions"
     :is-war-room-addable="isWarRoomAddable"
+    @refresh="refreshPinboardData"
   >
     <template slot="PageResultBoardHeader">
       <task
@@ -71,6 +72,11 @@ export default {
     isWarRoomAddable: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    refreshPinboardData (pinBoardId) {
+      this.$emit('refresh', pinBoardId)
     }
   }
 }
