@@ -171,6 +171,11 @@ export default {
         series: this.series,
         color: this.colorList
       }
+
+      config.toolbox.feature.myShowValue.onclick = () => {
+        alert('seee')
+      }
+
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         if (this.hasPagination) {
           this.$el.addEventListener('click', this.controlPagination, false)
