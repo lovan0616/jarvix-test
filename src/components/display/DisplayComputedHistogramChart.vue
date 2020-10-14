@@ -86,15 +86,12 @@ export default {
     customChartStyle: {
       type: Object,
       default: () => {}
-    },
-    isShowLabelData: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
     return {
-      selectedData: []
+      selectedData: [],
+      isShowLabelData: false
     }
   },
   computed: {
@@ -131,6 +128,10 @@ export default {
           element
         ]
       })
+
+      chartAddon.toolbox.feature.myShowLabel.onclick = () => {
+        this.toggleLabel()
+      }
 
       // 數據顯示
       chartAddon.toolbox.feature.dataView.optionToContent = (chartData) => {
@@ -233,6 +234,9 @@ export default {
     }
   },
   methods: {
+    toggleLabel () {
+      this.isShowLabelData = !this.isShowLabelData
+    },
     renderItem (params, api) {
       let yValue = api.value(2)
       let start = api.coord([api.value(0), yValue])

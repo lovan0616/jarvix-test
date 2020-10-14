@@ -117,10 +117,6 @@ export default {
     isShowLegend: {
       type: Boolean,
       default: true
-    },
-    isShowLabelData: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
@@ -139,6 +135,7 @@ export default {
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
       selectedData: [],
       showPagination: true,
+      isShowLabelData: false,
       currentChartType: 'bar'
     }
   },
@@ -172,8 +169,9 @@ export default {
         color: this.colorList
       }
 
-      config.toolbox.feature.myShowValue.onclick = () => {
-        alert('seee')
+      config.toolbox.feature.myShowLabel.show = true
+      config.toolbox.feature.myShowLabel.onclick = () => {
+        this.toggleLabel()
       }
 
       config.toolbox.feature.dataView.optionToContent = (opt) => {
@@ -259,6 +257,9 @@ export default {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
+    toggleLabel () {
+      this.isShowLabelData = !this.isShowLabelData
+    },
     composeColumn (element, colIndex) {
       const shortenNumberMethod = this.shortenNumber
       return {

@@ -57,10 +57,6 @@ export default {
       type: Boolean,
       default: true
     },
-    isShowLabelData: {
-      type: Boolean,
-      default: false
-    },
     showToolbox: {
       type: Boolean,
       default: true
@@ -72,7 +68,8 @@ export default {
   },
   data () {
     return {
-      showPagination: true
+      showPagination: true,
+      isShowLabelData: false
     }
   },
   computed: {
@@ -109,6 +106,11 @@ export default {
       }
       config.tooltip.trigger = 'item'
       config.tooltip.formatter = params => `${this.dataset.columns[0]}<br>${params.marker}${params.name}: ${this.formatComma(params.value[1])}（${params.percent}%）`
+
+      config.toolbox.feature.myShowLabel.show = true
+      config.toolbox.feature.myShowLabel.onclick = () => {
+        this.toggleLabel()
+      }
 
       // 數據顯示
       config.toolbox.feature.dataView.optionToContent = (opt) => {
@@ -153,6 +155,9 @@ export default {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
+    toggleLabel () {
+      this.isShowLabelData = !this.isShowLabelData
+    },
     controlPagination () {
       let exportBtn = document.getElementById('export-btn')
       if (exportBtn) {

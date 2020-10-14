@@ -1874,7 +1874,8 @@
     "rangeStart": "rangeStart",
     "rangeEnd": "rangeEnd",
     "count": "Count",
-    "download": "Download image"
+    "download": "Download image",
+    "showLabel": "Show Label"
   },
   "errorMessage": {
     "SYERR0001": "Unexpected error occurred in the system",
