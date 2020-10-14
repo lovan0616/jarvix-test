@@ -23,7 +23,7 @@
         min-width="120"
       />
       <el-table-column
-        v-if="loadMore"
+        v-if="hasMoreColumn"
         width="0px"
         align="center"
       >
@@ -174,7 +174,7 @@ export default {
       })
       return ({ row, column, rowIndex, columnIndex }) => result[rowIndex][columnIndex]
     },
-    loadMore () {
+    hasMoreColumn () {
       const headerList = this.dataset.columns
       const isBigData = headerList.length > this.lazyLoadInfo.columnPerScroll
       const hasReachedEnd = this.offset >= headerList.length
