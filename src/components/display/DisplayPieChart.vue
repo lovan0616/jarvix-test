@@ -53,13 +53,17 @@ export default {
       type: Boolean,
       default: false
     },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
     isShowLegend: {
       type: Boolean,
       default: true
     },
-    showToolbox: {
+    isShowLabelData: {
       type: Boolean,
-      default: true
+      default: false
     },
     customChartStyle: {
       type: Object,
@@ -68,8 +72,7 @@ export default {
   },
   data () {
     return {
-      showPagination: true,
-      isShowLabelData: false
+      showPagination: true
     }
   },
   computed: {
@@ -109,7 +112,7 @@ export default {
 
       config.toolbox.feature.myShowLabel.show = true
       config.toolbox.feature.myShowLabel.onclick = () => {
-        this.toggleLabel()
+        this.$emit('toggleLabel')
       }
 
       // 數據顯示
@@ -155,9 +158,6 @@ export default {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
-    toggleLabel () {
-      this.isShowLabelData = !this.isShowLabelData
-    },
     controlPagination () {
       let exportBtn = document.getElementById('export-btn')
       if (exportBtn) {

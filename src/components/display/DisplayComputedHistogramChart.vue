@@ -83,6 +83,10 @@ export default {
       type: Boolean,
       default: true
     },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
+    },
     customChartStyle: {
       type: Object,
       default: () => {}
@@ -90,8 +94,7 @@ export default {
   },
   data () {
     return {
-      selectedData: [],
-      isShowLabelData: false
+      selectedData: []
     }
   },
   computed: {
@@ -129,8 +132,9 @@ export default {
         ]
       })
 
+      chartAddon.toolbox.feature.myShowLabel.show = true
       chartAddon.toolbox.feature.myShowLabel.onclick = () => {
-        this.toggleLabel()
+        this.$emit('toggleLabel')
       }
 
       // 數據顯示
@@ -234,9 +238,6 @@ export default {
     }
   },
   methods: {
-    toggleLabel () {
-      this.isShowLabelData = !this.isShowLabelData
-    },
     renderItem (params, api) {
       let yValue = api.value(2)
       let start = api.coord([api.value(0), yValue])

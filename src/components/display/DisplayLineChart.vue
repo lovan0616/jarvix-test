@@ -111,6 +111,10 @@ export default {
     isShowLegend: {
       type: Boolean,
       default: true
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -126,8 +130,7 @@ export default {
       addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
       selectedData: [],
-      showPagination: true,
-      isShowLabelData: false
+      showPagination: true
     }
   },
   computed: {
@@ -162,7 +165,7 @@ export default {
 
       config.toolbox.feature.myShowLabel.show = true
       config.toolbox.feature.myShowLabel.onclick = () => {
-        this.toggleLabel()
+        this.$emit('toggleLabel')
       }
 
       config.toolbox.feature.dataView.optionToContent = (opt) => {
@@ -363,9 +366,6 @@ export default {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
-    toggleLabel () {
-      this.isShowLabelData = !this.isShowLabelData
-    },
     robotDrillDownEvent () {
       this.$refs.chart.dispatchAction({
         type: 'brush',
