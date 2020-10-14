@@ -27,7 +27,7 @@ import AppHeader from './AppHeader'
 import HeaderNav from './HeaderNav'
 import AppSideNav from './AppSideNav'
 import { mapState } from 'vuex'
-import { getDataFrameById } from '@/API/DataSource'
+import { getDataFrameById, checkClusteringColumnStatus } from '@/API/DataSource'
 
 export default {
   name: 'AppLayout',
@@ -45,6 +45,7 @@ export default {
   computed: {
     ...mapState(['isAppLoading']),
     ...mapState('dataSource', ['processingDataFrameList']),
+    ...mapState('dataSource', ['processingDataColumnList']),
     dataSourceBuildingStatusList () {
       return this.$store.getters['dataSource/dataSourceBuildingStatusList']
     },
@@ -94,6 +95,7 @@ export default {
   },
   created () {
     this.setDataSourceInfo()
+    this.getBgColumnTasksFromStorage()
   },
   destroyed () {
     window.clearInterval(this.intervalFunction)
@@ -114,6 +116,23 @@ export default {
         ) return true
       }
       return false
+    },
+    getBgColumnTasksFromStorage () {
+      const prevBgColumnTasks = localStorage.getItem('bgColumnTasks')
+      if (prevBgColumnTasks) {
+        // TODO 輪詢 task 狀態
+        this.$store.commit('dataSource/setProcessingDataColumnList', prevBgColumnTasks.split(','))
+        const promises = prevBgColumnTasks.split(',').map(taskId => checkClusteringColumnStatus(taskId))
+        Promise.all(promises)
+          .then(columns => {
+            console.log('res', columns)
+            const message = columns.reduce((acc, cur, idx) => {
+              return acc + `<div class="single-message">${cur.dataColumnPrimaryAlias}<br>資料源：${cur.dataSourceName}<br>資料表：${cur.dataFramePrimaryAlias}</div>`
+            }, '')
+            console.log(message)
+          })
+          .catch(() => {})
+      }
     }
   },
 }

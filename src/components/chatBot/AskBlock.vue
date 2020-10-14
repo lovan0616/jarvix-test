@@ -49,6 +49,7 @@
           <svg-icon icon-class="go-right"/>
         </a>
       </div>
+      <task-messages />
       <div 
         :class="{ 'disabled': availableDataSourceList.length === 0 }" 
         class="ask-remark-block"
@@ -62,7 +63,6 @@
             icon-class="ask-helper"
             class="ask-btn__icon"/>
         </el-tooltip>
-        
       </div>
     </div>
     <div
@@ -96,6 +96,7 @@
 </template>
 <script>
 import AskHelperDialog from './AskHelperDialog'
+import TaskMessages from '@/components/TaskMessages'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
 import DefaultSelect from '@/components/select/DefaultSelect'
@@ -104,7 +105,8 @@ export default {
   name: 'AskBlock',
   components: {
     AskHelperDialog,
-    DefaultSelect
+    DefaultSelect,
+    TaskMessages
   },
   data () {
     return {
