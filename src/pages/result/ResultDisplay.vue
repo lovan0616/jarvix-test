@@ -115,7 +115,7 @@ export default {
         // 預先觸發重新計算 column summary 和 column correlation
         // this.triggerColumnDataCalculation()
         this.fetchApiAsk({
-          question: this.$route.query.question, 
+          question: this.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
           'dataSourceId': this.$route.query.dataSourceId, 
           'dataFrameId': this.$route.query.dataFrameId
         })
