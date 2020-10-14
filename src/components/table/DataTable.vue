@@ -186,11 +186,11 @@
             </el-tooltip>
           </span>
           <span 
-            v-else-if="headInfo.value === 'latestLogStatus'"
-            :class="{ 'is-processing': data[headInfo.value] === 'Ready' || data[headInfo.value] === 'Process' }"
+            v-else-if="headInfo.value === 'latestImportStatus'"
+            :class="{ 'is-processing': data[headInfo.value] === 'Process' }"
           >
             <svg-icon
-              v-if="data[headInfo.value] === 'Ready' || data[headInfo.value] === 'Process'"
+              v-if="data[headInfo.value] === 'Process'"
               icon-class="spinner"
             />
             {{ batchLoadStatus(data) }}
@@ -416,8 +416,7 @@ export default {
       }
     },
     batchLoadStatus (data) {
-      if (data.originType !== 'database') return '-'
-      switch (data['latestLogStatus']) {
+      switch (data['latestImportStatus']) {
         case null:
           return this.$t('batchLoad.noRecord')
         case 'Complete':

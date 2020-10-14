@@ -264,7 +264,7 @@ export default {
         },
         {
           text: this.$t('editing.lastUpdateResult'),
-          value: 'latestLogStatus',
+          value: 'latestImportStatus',
           width: '140px'
         },
         {
@@ -329,11 +329,13 @@ export default {
     isProcessing (value) {
       if (value) {
         this.intervalFunction = window.setInterval(() => {
+          console.log('value')
           this.checkDataSourceStatus()
         }, 5000)
       }
       // 建置完成
       if (!value) {
+        console.log('!value')
         window.clearInterval(this.intervalFunction)
         this.$store.dispatch('dataSource/getDataSourceList', {})
       }
@@ -398,6 +400,7 @@ export default {
     },
     checkDataSourceStatus () {
       return checkDataSourceStatusById(this.currentDataSourceId).then(response => {
+        console.log(response)
         this.isProcessing = response.state === 'PROCESSING'
         this.dataSourceName = response.name
       })
