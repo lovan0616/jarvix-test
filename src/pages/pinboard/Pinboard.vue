@@ -46,6 +46,7 @@
       :segmentation-payload="result.segmentationPayload"
       :restrictions="result.restrictions"
       :question="result.question"
+      @refresh="refreshPinboardData"
       @unPin="unPin"
     />
   </div>
@@ -127,40 +128,40 @@ export default {
       this.boardName = currentBoard.length > 0 ? currentBoard[0].name : null
     },
     getPinboardInfo () {
-      this.$store.dispatch('pinboard/getPinboardById', this.$route.params.id).then(response => {
-        if (response.length === 0) {
+      this.$store.dispatch('pinboard/getPinboardById', this.$route.params.id)
+        .then(response => {
+          if (response.length === 0) {
+            this.isLoading = false
+            return false
+          }
+          response.forEach(element => {
+            this.boardList.push({
+              pinboardId: element.id,
+              resultId: element.resultId,
+              dataSourceId: element.dataSourceId,
+              dataFrameId: element.dataFrameId,
+              layout: null,
+              info: null,
+              segmentationPayload: null,
+              isDeleted: false
+            })
+
+            this.pinboardData.push({
+              pinboardId: element.id,
+              resultId: element.resultId,
+              dataframeName: null,
+              dataColumnMap: null,
+              selectedColumns: null,
+              restrictions: null
+            })
+            this.getComponent(element)
+          })
+          this.$store.commit('pinboard/setpinboardData', this.pinboardData)
+        }).catch(() => {
           this.isLoading = false
-          return false
-        }
-        response.forEach(element => {
-          this.boardList.push({
-            pinboardId: element.id,
-            resultId: element.resultId,
-            dataSourceId: element.dataSourceId,
-            dataFrameId: element.dataFrameId,
-            layout: null,
-            info: null,
-            segmentationPayload: null,
-            isDeleted: false
-          })
-
-          this.pinboardData.push({
-            pinboardId: element.id,
-            resultId: element.resultId,
-            dataframeName: null,
-            dataColumnMap: null,
-            selectedColumns: null,
-            restrictions: null
-
-          })
-          this.getComponent(element)
         })
-        this.$store.commit('pinboard/setpinboardData', this.pinboardData)
-      }).catch(() => {
-        this.isLoading = false
-      })
     },
-    getComponent (res) {
+    getComponent (res, resolveFunction = null) {
       window.clearTimeout(this.timeoutFunction)
       let currentResult = this.getResult(res.id)
       let currentData = this.getData(res.id)
@@ -170,7 +171,7 @@ export default {
             case 'Process':
             case 'Ready':
               this.timeoutFunction = window.setTimeout(() => {
-                this.getComponent(res)
+                this.getComponent(res, resolveFunction)
               }, 1000)
               break
             case 'Complete':
@@ -187,6 +188,7 @@ export default {
               currentData.restrictions = componentResponse.restrictions
               this.$nextTick(() => {
                 this.isLoading = false
+                if (resolveFunction) resolveFunction()
               })
               break
             case 'Disable':
@@ -221,6 +223,11 @@ export default {
         if(element.pinboardId === pinBoardId)
           element.isDeleted = true
       })
+    },
+    refreshPinboardData (refreshInfo) {
+      let currentPinboardInfo = this.pinboardData.filter(data => data.pinboardId === refreshInfo.pinBoardId)[0]
+      currentPinboardInfo.id = currentPinboardInfo.pinboardId
+      this.getComponent(currentPinboardInfo, refreshInfo.resolveFunction)
     }
   },
 }

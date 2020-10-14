@@ -6,6 +6,7 @@
     :restrictions="restrictions"
     :is-war-room-addable="isWarRoomAddable"
     class="general-result"
+    @refresh="refreshPinboardData"
     @unPin="unPin"
   >
     <result-board-body slot="PageResultBoardBody">
@@ -14,9 +15,9 @@
         slot="PageResultBoardChart"
       >
         <task
-          v-for="(chartTask, index) in resultInfo.key_result"
-          :key="'chart-' + index"
-          :component-id="chartTask"
+          v-for="componentId in resultInfo.key_result"
+          :key="componentId"
+          :component-id="componentId"
           :data-frame-id="dataFrameId"
           intend="key_result"
         />
@@ -33,6 +34,7 @@
       <template slot="InsightBasicInfo">
         <task
           v-if="resultInfo.basic_info && resultInfo.basic_info.length > 0"
+          :key="resultInfo.basic_info[0]"
           :component-id="resultInfo.basic_info[0]"
           intend="basic_info"
         />
@@ -40,17 +42,17 @@
       <template slot="InsightRootCause">
         <template v-if="resultInfo.general_insight && resultInfo.general_insight.length > 0">
           <task
-            v-for="(otherTask, index) in resultInfo.general_insight"
-            :key="'other-' + index"
-            :component-id="otherTask"
+            v-for="componentId in resultInfo.general_insight"
+            :key="componentId"
+            :component-id="componentId"
             intend="general_insight"
           />
         </template>
         <template v-if="resultInfo.correlation_insight && resultInfo.correlation_insight.length > 0">
           <task
-            v-for="(otherTask, index) in resultInfo.correlation_insight"
-            :key="'other-' + index"
-            :component-id="otherTask"
+            v-for="componentId in resultInfo.correlation_insight"
+            :key="componentId"
+            :component-id="componentId"
             intend="correlation_insight"
           />
         </template>
@@ -102,6 +104,9 @@ export default {
     }
   },
   methods: {
+    refreshPinboardData (refreshInfo) {
+      this.$emit('refresh', refreshInfo)
+    },
     unPin (pinBoardId) {
       this.$emit('unPin', pinBoardId)
     }

@@ -562,18 +562,18 @@
     "rebuild": "Rebuild Table"
   },
   "fileDataUpdate": {
-    "dataUpdateSetting": "資料更新設定",
-    "processStep1": "更新模式",
-    "processStep2": "選擇檔案",
-    "processStep3": "上傳檔案",
-    "updateMode": "更新模式",
-    "append": "資料表更新",
-    "reimport": "重新建置",
-    "reChoose": "重新選擇",
-    "reUploadFile" :"重新上傳檔案",
-    "build": "立即建置",
-    "reSetting": "重新設定模式",
-    "dataUpdatingReminding": "資料表更新將以背景執行方式進行，更新進度將顯示在資料表狀態。"
+    "dataUpdateSetting": "Data update settings",
+    "processStep1": "Update Mode",
+    "processStep2": "Select Files",
+    "processStep3": "Upload Files",
+    "updateMode": "Update Mode",
+    "append": "Update Data Set",
+    "reimport": "Reimport With New Files",
+    "reChoose": "Select Files",
+    "reUploadFile" :"Upload New Files",
+    "build": "Build",
+    "reSetting": "Reset Update Mode",
+    "dataUpdatingReminding": "New data set will be uploading in the background. The update progress will display in the data set status."
   },
   "feature": {
     "value": "Value",
@@ -840,6 +840,7 @@
     "select": "Select",
     "download": "Data Download",
     "dataExplanation": "Details",
+    "dataUpdate": "Data Update",
     "start": "Start",
     "copyAndBuild": "Copy and Build",
     "createGroup": "New Project",
