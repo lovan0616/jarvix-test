@@ -108,6 +108,7 @@ export default {
       min-width: 0;
       flex: 1;
       margin-right: 0;
+      min-height: 500px;
     }
     
     .basic-info-container {

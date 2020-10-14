@@ -203,8 +203,7 @@ export default {
         {
           title: 'clustering.saveClusteringResultAsColumn',
           icon: 'feature',
-          dialogName: 'saveClustering',
-          disabled: this.resultInfo.isJoinTable
+          dialogName: 'saveClustering'
         },
       ]
     },
@@ -225,9 +224,7 @@ export default {
   },
   watch: {
     'resultInfo.key_result' () {
-      for (const key in this.isProcessing) {
-        this.isProcessing[key] = false
-      }
+      this.clearAllProcessingStatus()
     }
   },
   mounted () {
@@ -264,6 +261,9 @@ export default {
           this.$store.commit('result/updateCurrentResultId', resultId)
           this.$emit('fetch-new-components-list', resultId)
         })
+        .catch(() => {
+          this.clearAllProcessingStatus()
+        })
     },
     clickTab (tabName) {
       if (this.activeTab === this.intentType[tabName]) return
@@ -280,6 +280,11 @@ export default {
         })
       }
       this.isShowSaveClusteringDialog = true
+    },
+    clearAllProcessingStatus () {
+      for (const key in this.isProcessing) {
+        this.isProcessing[key] = false
+      }
     }
   }
 }
@@ -294,6 +299,9 @@ export default {
   }
   .task {
     padding-top: 30px;
+    &:first-child {
+      padding-top: 40px;
+    }
   }
 }
 </style>
