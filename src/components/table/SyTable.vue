@@ -16,12 +16,25 @@
         type="index"
       />
       <el-table-column
-        v-for="(col, i) in dataset.columns"
+        v-for="(col, i) in columnList"
         :key="i"
         :prop="i.toString()"
         :label="(typeof col === 'number') ? col.toString() : col"
         min-width="120"
       />
+      <el-table-column
+        v-if="hasMoreColumn"
+        width="0px"
+        align="center"
+      >
+        <template 
+          slot="header" 
+          slot-scope="scope">
+          <Observer 
+            :options="formOptions()" 
+            @intersect="getData"/>
+        </template>
+      </el-table-column>
     </el-table>
     <arrow-button
       v-if="hasPagination"
@@ -45,9 +58,13 @@
 
 <script>
 import { Table } from 'element-ui'
+import Observer from '../Observer'
 
 export default {
   name: 'SyTable',
+  components: {
+    Observer
+  },
   props: {
     ...Table.props,
     dataset: {
@@ -68,12 +85,21 @@ export default {
     hasPagination: {
       type: Boolean,
       default: false
+    },
+    lazyLoadInfo: {
+      type: Object,
+      default: () => ({
+        rootMargin: '130px',
+        columnPerScroll: 16
+      })
     }
   },
   data () {
     return {
       currentPage: 1,
-      countPerPage: 20
+      countPerPage: 20,
+      columnList: [],
+      offset: 0
     }
   },
   computed: {
@@ -147,9 +173,31 @@ export default {
         })
       })
       return ({ row, column, rowIndex, columnIndex }) => result[rowIndex][columnIndex]
+    },
+    hasMoreColumn () {
+      const headerList = this.dataset.columns
+      const isBigData = headerList.length > this.lazyLoadInfo.columnPerScroll
+      const hasReachedEnd = this.offset >= headerList.length
+      return isBigData && !hasReachedEnd
     }
   },
+  mounted () {
+    this.getData()
+  },
   methods: {
+    getData () {
+      const headerList = this.dataset.columns
+      if (headerList.length <= this.offset) return
+      this.columnList.push(...headerList.slice(this.offset, this.offset + this.lazyLoadInfo.columnPerScroll))
+      this.offset += this.lazyLoadInfo.columnPerScroll
+    },
+    formOptions () {
+      return {
+        rootClassName: '.el-table__header-wrapper',
+        rootMargin: this.lazyLoadInfo.rootMargin,
+        threshold: 0,
+      }
+    },
     changePage (value) {
       this.currentPage = value
     },
@@ -192,6 +240,15 @@ export default {
     top: 0;
     bottom: 0;
     margin: auto;
+  }
+
+  /* 解決 lazy loading 新增欄位時，寬度增長速度大於資料顯示，造成短暫 word wrap */
+  /deep/ .sy-table td {
+    width: 150px
+  }
+
+  /deep/ .sy-table th {
+    width: 150px
   }
 }
 </style>
