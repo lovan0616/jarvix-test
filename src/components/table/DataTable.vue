@@ -194,7 +194,7 @@
               icon-class="spinner"
             />
             <el-tooltip
-              :disabled="data['dbConnectionStartTime'] || data['dbConnectionEndTime'] || data['dbConnectionElapsedTime']"
+              :disabled="!(data['dbConnectionStartTime'] && data['dbConnectionEndTime'] && data['dbConnectionElapsedTime'])"
               placement="bottom-start"
             >
               <template #content>
