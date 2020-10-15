@@ -163,7 +163,8 @@ export default {
         color: this.colorList
       }
 
-      config.toolbox.feature.myShowLabel.show = true
+      const seriesAmount = this.dataset.display_columns ? this.dataset.display_columns.length : this.dataset.columns.length
+      config.toolbox.feature.myShowLabel.show = seriesAmount <= 4
       config.toolbox.feature.myShowLabel.onclick = () => {
         this.$emit('toggleLabel')
       }
