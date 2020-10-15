@@ -1875,7 +1875,8 @@
     "rangeStart": "範圍起始",
     "rangeEnd": "範圍結束",
     "count": "統計數量",
-    "download": "下載圖片"
+    "download": "下載圖片",
+    "showLabel": "顯示標籤"
   },
   "errorMessage": {
     "SYERR0001": "系統發生非預期錯誤",

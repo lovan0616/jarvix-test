@@ -83,13 +83,13 @@ export default {
       type: Boolean,
       default: true
     },
-    customChartStyle: {
-      type: Object,
-      default: () => {}
-    },
     isShowLabelData: {
       type: Boolean,
       default: false
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
@@ -131,6 +131,11 @@ export default {
           element
         ]
       })
+
+      chartAddon.toolbox.feature.myShowLabel.show = true
+      chartAddon.toolbox.feature.myShowLabel.onclick = () => {
+        this.$emit('toggleLabel')
+      }
 
       // 數據顯示
       chartAddon.toolbox.feature.dataView.optionToContent = (chartData) => {

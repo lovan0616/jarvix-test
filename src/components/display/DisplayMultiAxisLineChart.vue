@@ -90,6 +90,10 @@ export default {
     hasPagination: {
       type: Boolean,
       default: false
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -135,6 +139,12 @@ export default {
         series: this.series,
         color: this.colorList
       }
+
+      config.toolbox.feature.myShowLabel.show = true
+      config.toolbox.feature.myShowLabel.onclick = () => {
+        this.$emit('toggleLabel')
+      }
+
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         if (this.hasPagination) {
           this.$el.addEventListener('click', this.controlPagination, false)
@@ -220,13 +230,23 @@ export default {
   },
   methods: {
     composeColumn (element, colIndex) {
+      const shortenNumberMethod = this.shortenNumber
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
         ...this.addonSeriesItem,
         ...this.addonSeriesItems[colIndex],
         connectNulls: true,
-        yAxisIndex: colIndex
+        yAxisIndex: colIndex,
+        ...(this.isShowLabelData && {
+          label: {
+            position: 'top',
+            show: true,
+            fontSize: 10,
+            color: '#fff',
+            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+          }
+        })
       }
     },
     controlPagination () {

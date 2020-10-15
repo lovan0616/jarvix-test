@@ -53,6 +53,10 @@ export default {
       type: Boolean,
       default: false
     },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
     isShowLegend: {
       type: Boolean,
       default: true
@@ -60,10 +64,6 @@ export default {
     isShowLabelData: {
       type: Boolean,
       default: false
-    },
-    showToolbox: {
-      type: Boolean,
-      default: true
     },
     customChartStyle: {
       type: Object,
@@ -109,6 +109,11 @@ export default {
       }
       config.tooltip.trigger = 'item'
       config.tooltip.formatter = params => `${this.dataset.columns[0]}<br>${params.marker}${params.name}: ${this.formatComma(params.value[1])}（${params.percent}%）`
+
+      config.toolbox.feature.myShowLabel.show = true
+      config.toolbox.feature.myShowLabel.onclick = () => {
+        this.$emit('toggleLabel')
+      }
 
       // 數據顯示
       config.toolbox.feature.dataView.optionToContent = (opt) => {

@@ -162,6 +162,13 @@ export default {
         series: this.series,
         color: this.colorList
       }
+
+      const seriesAmount = this.dataset.display_columns ? this.dataset.display_columns.length : this.dataset.columns.length
+      config.toolbox.feature.myShowLabel.show = seriesAmount <= 4
+      config.toolbox.feature.myShowLabel.onclick = () => {
+        this.$emit('toggleLabel')
+      }
+
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         if (this.hasPagination) {
           this.$el.addEventListener('click', this.controlPagination, false)
