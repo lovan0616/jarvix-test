@@ -41,7 +41,6 @@
 import { saveClusteringColumn } from '@/API/DataSource'
 import { Message } from 'element-ui'
 import InputBlock from '@/components/InputBlock'
-let mockTaskId = 1
 
 export default {
   name: 'SaveClusteringDialog',
@@ -87,10 +86,6 @@ export default {
                 duration: 3 * 1000,
                 showClose: true
               })
-              // TOTO 串接 API
-              const prevBgColumnTasks = localStorage.getItem('bgColumnTasks')
-              const bgColumnTasks = prevBgColumnTasks ? prevBgColumnTasks.split(',').concat(mockTaskId++) : mockTaskId++
-              localStorage.setItem('bgColumnTasks', bgColumnTasks)
             })
             .catch(() => {})
             .finally(() => {

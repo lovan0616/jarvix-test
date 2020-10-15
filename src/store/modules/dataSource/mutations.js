@@ -102,12 +102,5 @@ export default {
   },
   clearProcessingDataFrameList (state, data) {
     state.processingDataFrameList = []
-  },
-  setProcessingDataColumnList (state, data) {
-    console.log(data)
-    state.processingDataColumnList = data
-  },
-  pushProcessingDataColumnList (state, data) {
-    state.processingDataColumnList.push(data)
   }
 }
