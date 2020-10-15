@@ -113,19 +113,10 @@ export default {
       if (typeof this.dataset !== 'object') return []
       if (!(this.dataset instanceof Array)) {
         // is object
-        let minIndex = (this.currentPage - 1) * this.countPerPage
-        let maxIndex = this.currentPage * this.countPerPage - 1
-        let columnLength = this.dataset.columns.length
-        let displayData = []
-        for (let i = minIndex; i <= maxIndex; i++) {
-          let newData = {}
-          if (!this.dataset.data[i]) break
-          for (let j = 0; j < columnLength; j++) {
-            newData[j.toString()] = this.dataset.data[i][j]
-          }
-          displayData.push(newData)
-        }
-        return displayData
+        const minIndex = (this.currentPage - 1) * this.countPerPage
+        const maxIndex = this.currentPage * this.countPerPage
+        const currentPageData = this.dataset.data.slice(minIndex, maxIndex)
+        return currentPageData.map(data => ({ ...data }))
       } else {
         // is array
         return []
