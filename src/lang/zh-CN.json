@@ -389,6 +389,9 @@
     "sortSetting": "排序设定",
     "dragAndSort": "请按住项目上下拖曳移动排序位置，项目排序变更后即生效。",
     "lastUpdateResult": "近一次更新结果",
+    "startTime": "开始时间",
+    "endTime": "结束时间",
+    "elapsedTime": "更新花费时间",
     "noData": "暂无数据",
     "SQLSyntax": "SQL语法",
     "copyTableFromDatabase": "复制资料库资料表",
@@ -877,7 +880,12 @@
     "week": "周",
     "month": "月",
     "season": "季",
-    "year": "年"
+    "year": "年",
+    "allowArg": {
+      "second": "{n} 秒",
+      "minute": "{n} 分",
+      "hour": "{n} 时"
+    }
   },
   "aggregation": {
     "mean": "平均",
