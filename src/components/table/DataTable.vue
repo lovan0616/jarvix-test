@@ -193,7 +193,16 @@
               placement="bottom-start"
             >
               <template #content>
-                rere
+                <div 
+                  v-for="info in dbConnectionLogInfo"
+                  :key="info.title"
+                  class="db-connection-log-info info"
+                >
+                  <p class="info__label">{{ info.label }}: </p>
+                  <p class="info__description">
+                    {{ info.label === "dbConnectionElapsedTime" ? elapsedTimeFormat(data[info.label]) : data[info.label] }}
+                  </p>
+                </div>
               </template>
               <span>{{ batchLoadStatus(data) }}</span>
             </el-tooltip>
@@ -240,7 +249,6 @@ import DropdownSelect from '@/components/select/DropdownSelect'
     }
  */
 import i18n from '@/lang/index.js'
-
 export default {
   name: 'DataTable',
   components: {
@@ -281,10 +289,18 @@ export default {
   data () {
     return {
       sortStatus: null,
-      dbLogInfo: {
-        
-
-      }
+      dbConnectionLogInfo: [{
+        title: 'dbConnectionStartTime',
+        label: this.$t('editing.startTime')
+      },
+      {
+        title: 'dbConnectionEndTime',
+        label: this.$t('editing.endTime')
+      },
+      {
+        title: 'dbConnectionElapsedTime',
+        label: this.$t('editing.elapsedTime')
+      }]
     }
   },
   computed: {
@@ -457,6 +473,12 @@ export default {
     },
     isFail (data) {
       return data['state'] === 'Disable' || data['type'] === 'DISABLE' || data['state'] === 'Fail' || data['type'] === 'FAIL'
+    },
+    elapsedTimeFormat (time) {
+      let hour = this.$t('timeScopeUnit.allowArg.hour', {n: Math.floor(time / 3600)}) + ' '
+      let minute = this.$t('timeScopeUnit.allowArg.minute', {n: Math.floor(time % 3600 / 60)}) + ' '
+      let second = this.$t('timeScopeUnit.allowArg.second', {n: time % 60})
+      return  hour + minute + second
     }
   },
 }
@@ -572,6 +594,30 @@ export default {
   &.el-tooltip__popper[x-placement^=bottom] .popper__arrow {
     border-bottom-color: #007783;
   }
+}
+.db-connection-log-info {
+  line-height: 14px;
+
+  &:not(:first-child) {
+    margin-top: 15px;
+  }
+  
+  .info {
+    &__label, &__description {
+      margin: 0;
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    &__label {
+      font-weight: 600;
+      color: $theme-color-white;
+    }
+    
+    &__description {
+      color: #DDDDDD;
+    }
+  } 
 }
 
 .data-source-list-table {
