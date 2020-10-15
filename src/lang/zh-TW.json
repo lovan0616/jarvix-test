@@ -389,6 +389,9 @@
     "sortSetting": "排序設定",
     "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。",
     "lastUpdateResult": "近一次更新結果",
+    "startTime": "開始時間",
+    "endTime": "結束時間",
+    "updateTime": "更新花費時間",
     "noData": "暫無數據",
     "SQLSyntax": "SQL語法",
     "copyTableFromDatabase": "複製資料庫資料表",
@@ -877,7 +880,12 @@
     "week": "週",
     "month": "月",
     "season": "季",
-    "year": "年"
+    "year": "年",
+    "allowValue": {
+      "second": "{n} 秒",
+      "minute": "{n} 分",
+      "hour": "{n} 時"
+    }
   },
   "aggregation": {
     "mean": "平均",

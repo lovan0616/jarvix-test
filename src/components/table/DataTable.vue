@@ -189,11 +189,18 @@
             v-else-if="headInfo.value === 'latestImportStatus'"
             :class="{ 'is-processing': data[headInfo.value] === 'Process' }"
           >
+            <el-tooltip
+              placement="bottom-start"
+            >
+              <template #content>
+                rere
+              </template>
+              <span>{{ batchLoadStatus(data) }}</span>
+            </el-tooltip>
             <svg-icon
               v-if="data[headInfo.value] === 'Process'"
               icon-class="spinner"
             />
-            {{ batchLoadStatus(data) }}
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
         </div>
@@ -273,7 +280,11 @@ export default {
   },
   data () {
     return {
-      sortStatus: null
+      sortStatus: null,
+      dbLogInfo: {
+        
+
+      }
     }
   },
   computed: {
