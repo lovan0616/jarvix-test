@@ -79,13 +79,14 @@ export default {
           saveClusteringColumn({
             primaryAlias: this.columnPrimaryAlias,
             askResultId: this.resultId
-          }).then(() => {
+          }).then(({ taskId }) => {
               Message({
                 message: this.$t('clustering.buildingClusteringColumn'),
                 type: 'success',
                 duration: 3 * 1000,
                 showClose: true
               })
+              this.$store.commit('dataSource/addProcessingDataColumnList', taskId)
             })
             .catch(() => {})
             .finally(() => {

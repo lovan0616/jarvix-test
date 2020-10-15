@@ -461,9 +461,54 @@ export function getDataFrameCreatedInfo(dataFrameId) {
  * @param {String} inputData.primaryAlias - 儲存的欄位名稱
  */
 export function saveClusteringColumn (data) {
-  return request({
-    url: `/dataColumn/clustering-columns`,
-    method: 'POST',
-    data
+  // return request({
+  //   url: `/dataColumn/clustering-columns`,
+  //   method: 'POST',
+  //   data
+  // })
+  // MOCK DATA
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({
+        taskId: data.primaryAlias
+      })
+    }, 1 * 1000)
+  })
+}
+
+/**
+ * 確認分群欄位的建置狀態
+ * @param {Number} taskId - 背景建置工作 id
+ */
+export function checkClusteringColumnStatus (taskId) {
+  // return request({
+  //   url: `/dataColumn/clustering-columns/${taskId}`,
+  //   method: 'GET'
+  // })
+  // MOCK DATA
+  function getStatus (taskId) {
+    switch (taskId % 3) {
+      case 0:
+        return 'Complete'
+      case 1:
+        return 'Process'
+      case 2:
+      default:
+        return 'Fail'
+    }
+  }
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({
+        "dataColumnId": taskId,
+        "dataColumnPrimaryAlias": '欄位蔚蔚為為為為' + taskId,
+        "dataFrameId": taskId,
+        "dataFramePrimaryAlias": '表表表表表表表表' + taskId,
+        "dataSourceId": taskId,
+        "dataSourceName": '源源源源源源' + taskId,
+        "status": getStatus(taskId),
+        "taskId": taskId
+      })
+    }, 1 * 1000)
   })
 }

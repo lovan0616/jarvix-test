@@ -681,7 +681,10 @@
     "clusteringColumnName": "标签栏位名称",
     "outlier": "离群",
     "piecesOfData": "{amount} 笔资料",
-    "buildingClusteringColumn": "栏位建置中，建置完成即可使用。"
+    "buildingClusteringColumn": "栏位建置中，建置完成即可使用。",
+    "buildingClusteringColumnSuccess": "标签栏位「{columnName}」建置成功。",
+    "buildingClusteringColumnFailed": "标签栏位「{columnName}」建置失败。",
+    "clusteringColumnOriginFrom": "(来自 [资料源]{dataSourceName} [资料表]{dataFrameName})"
   },
   "description": {
     "basic": {
@@ -1853,7 +1856,8 @@
     "uploadLimitNotification": "资料数量或数据容量已达上限",
     "uploadLimit": "资料表限制：最多{count}笔",
     "userLimitNotification": "使用者数量已达上限",
-    "columnSummarySampleNotification": "栏位摘要经数值估算，会有些微误差，仅供参考"
+    "columnSummarySampleNotification": "栏位摘要经数值估算，会有些微误差，仅供参考",
+    "unfinishedTasks": "未完成项目"
   },
   "chart": {
     "zoom": "区域缩放",
