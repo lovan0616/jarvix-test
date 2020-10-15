@@ -306,7 +306,6 @@ export default {
         || element.state === 'Process' 
         || element.state === 'Pending' 
         || element.crontabConfigStatus === 'AUTO' 
-        || element.latestImportStatus === 'Ready'
         || element.latestImportStatus === 'Process'
       ))
     },
