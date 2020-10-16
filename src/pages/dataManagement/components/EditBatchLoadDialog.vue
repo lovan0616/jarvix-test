@@ -136,7 +136,27 @@
           class="setting-block"
         >
           <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
-          <div class="input-field">
+          <div
+            v-for="option in updateCronSettingOptionList"
+            :key="option.type"
+            class="input-radio-group cron-seletor"
+          >
+            <input
+              v-model="columnInfo.option"
+              :id="option.type.toLowerCase()"
+              :value="option.type"
+              name="option"
+              class="input-radio"
+              type="radio"
+            >
+            <label
+              :for="option.type.toLowerCase()"
+              class="input-radio-label"
+            >{{ option.name }}</label>
+          </div>
+          <div 
+            v-if="columnInfo.option === 'BASIC'" 
+            class="input-field">
             <div class="input-field__input">
               <default-select 
                 v-validate="'required'"
@@ -151,6 +171,36 @@
                 v-show="errors.has('basicScheduleColumn')"
                 class="error-text"
               >{{ errors.first('basicScheduleColumn') }}</div>
+            </div>
+          </div>
+          <div 
+            v-else-if="columnInfo.option === 'ADVANCED'"
+            class="cron-time">
+            <div class="cron-time__setting">
+              <div 
+                v-for="time in timeScopeUnitList"
+                :key="time.unit"
+                class="cron-time__input">
+                <input-block
+                  :label="time.unit"
+                  :value="time.value" />
+              </div>
+            </div>
+            <div class="cron-info">
+              <div 
+                v-for="info in settingInfo"
+                :key="info.title"
+                class="cron-info__block">
+                <span class="cron-info__title"> {{ info.title }} </span>
+                <ul>
+                  <li
+                    v-for="(item, index) in info.content"
+                    :key="index"
+                    class="cron-info__list">
+                    {{ item }}
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -231,6 +281,59 @@ export default {
           name: this.$t('batchLoad.rebuild')
         }
       ],
+      updateCronSettingOptionList: [
+        {
+          type: 'BASIC',
+          name: this.$t('batchLoad.basicSetting')
+        },
+        {
+          type: 'ADVANCED',
+          name: this.$t('batchLoad.AdvancedSetting')
+        }
+      ],
+      timeScopeUnitList: [
+        {
+          unit: this.$t('batchLoad.minute'),
+          value: '*'
+        },
+        {
+          unit: this.$t('batchLoad.hour'),
+          value: '*'
+        },
+        {
+          unit: this.$t('batchLoad.day'),
+          value: '*'
+        },
+        {
+          unit: this.$t('batchLoad.month'),
+          value: '*'
+        },
+        {
+          unit: this.$t('batchLoad.week'),
+          value: '*'
+        },
+      ],
+      settingInfo: [
+        {
+          title: this.$t('batchLoad.settingInfo.value'),
+          content: [
+            this.$t('batchLoad.settingInfo.minute'),
+            this.$t('batchLoad.settingInfo.hour'),
+            this.$t('batchLoad.settingInfo.day'),
+            this.$t('batchLoad.settingInfo.month'),
+            this.$t('batchLoad.settingInfo.week')
+          ]
+        },
+        {
+          title: this.$t('batchLoad.settingInfo.specialCharacters'),
+          content: [
+            this.$t('batchLoad.settingInfo.star'),
+            this.$t('batchLoad.settingInfo.comma'),
+            this.$t('batchLoad.settingInfo.minus'),
+            this.$t('batchLoad.settingInfo.slash')
+          ]
+        }
+      ],
       scheduleInfo: {
         basicScheduleList: [
           {
@@ -305,6 +408,7 @@ export default {
       getBatchLoadSetting(this.dataFrameInfo.id)
         .then(({ crontabConfigContent, primaryKeys }) => {
           this.columnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
+          this.columnInfo.option = 'ADVANCED'
           this.originalColumnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
           this.primaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
           this.originalPrimaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
@@ -337,6 +441,7 @@ export default {
         primaryKeys: this.primaryKeys,
         status: this.columnInfo.status,
         type: this.columnInfo.type,
+       // option: this.columnInfo.option,
         updateDateColumn: this.columnInfo.updateDateColumn
       }
     },
@@ -498,6 +603,63 @@ export default {
         &.is-disabled {
           .el-input__inner {
             background-color: transparent;
+          }
+        }
+      }
+    }
+
+    .cron-seletor {
+      margin-bottom: 37px;
+    }
+
+    .cron-time {
+      display: flex;
+      flex-direction: row;
+      height: 360px;
+
+      &__setting {
+        width: 50%;
+        margin-right: 16px;
+      }
+
+      &__input {
+        margin-bottom: 37px;
+
+        >>> .input-block .placeholder {
+          color: #CCC;
+        }
+      }
+
+      .cron-info {
+        width: 48%;
+        padding: 16px;
+        background: rgba(72, 84, 84, 0.95);
+        border-radius: 8px;
+        overflow-y: scroll;
+
+        &__block {
+          margin-bottom: 16px;
+
+          ul {
+            margin-block-start: 6px;
+            margin-block-end: 16px;
+            padding-inline-start: 20px !important;
+          }
+        }
+
+        &__title, &__list {
+          font-size: 14px;
+          line-height: 20px;
+          color: #CCC;
+        }
+
+        &__title {
+          color: $theme-color-white;
+        }
+
+        &__list { 
+          &:not(:last-child) {
+            margin-bottom: 6px;
           }
         }
       }
