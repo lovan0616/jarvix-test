@@ -676,7 +676,7 @@
     "dataOverview": "Overview",
     "clusteringAnalysis": "Clustering",
     "saveClusteringResultAsColumn": "Save clustering result as a new column",
-    "notAllowedToSaveClusteringResultAsColumnFromJoinedTable": "Columns coming from any joined table cannot be saved as a new column.",
+    "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "Featrue columns or columns coming from any joined table cannot be saved as a new column.",
     "createClusteringColumn": "New Clustering Field",
     "clusteringColumnName": "Clustering Column Name",
     "outlier": "outlier",

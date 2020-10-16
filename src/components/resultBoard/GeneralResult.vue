@@ -273,7 +273,7 @@ export default {
       if (action !== 'saveClustering') return
       if (!this.resultInfo.canSaveResult) {
         return Message({
-          message: this.$t('clustering.notAllowedToSaveClusteringResultAsColumnFromJoinedTable'),
+          message: this.$t('clustering.reasonsOfnotAllowedToSaveClusteringResultAsColumn'),
           type: 'warning',
           duration: 3 * 1000,
           showClose: true
