@@ -108,5 +108,8 @@ export default {
   },
   addProcessingDataColumnList (state, data) {
     state.processingDataColumnList.push(data)
-  }
+  },
+  spliceProcessingDataColumnList (state, index) {
+    state.processingDataColumnList.splice(index, 1)
+  },
 }

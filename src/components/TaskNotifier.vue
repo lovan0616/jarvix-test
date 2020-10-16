@@ -9,12 +9,11 @@
     @hide="toggleIsOpen"
   >
     <div>
-      <spinner v-show="isLoading"/>
       <div 
-        v-show="!isLoading && processingTasks.length === 0" 
+        v-show="processingTasks.length === 0" 
         class="task-notifier__content--empty">{{ $t('resultDescription.noData') }}</div>
       <div
-        v-show="!isLoading && processingTasks.length > 0"
+        v-show="processingTasks.length > 0"
         class="task-notifier__content">
         <div
           v-for="(task, index) in processingTasks"
@@ -55,8 +54,6 @@ export default {
     return {
       intervalTimer: [],
       processingTasks: [],
-      unfinishedTasks: [],
-      isLoading: true,
       isOpen: false
     }
   },
@@ -71,26 +68,28 @@ export default {
   },
   destroyed () {
     clearInterval(this.intervalTimer)
-    this.$store.commit('dataSource/setProcessingDataColumnList', this.processingTasks.map(task => task.taskId))
-    if (this.processingTasks.length > 0) {
-      localStorage.setItem('bgColumnTasks', this.processingTasks.map(task => task.taskId))
+    if (this.processingDataColumnList.length > 0) {
+      localStorage.setItem('bgColumnTasks', this.processingDataColumnList)
     } else {
       localStorage.removeItem('bgColumnTasks')
     }
   },
   methods: {
     getBgColumnTasksFromStorage () {
-      const taskPromises = this.processingDataColumnList.map(taskId => checkClusteringColumnStatus(taskId))
-      Promise.all(taskPromises)
-        .then(response => {
-          this.unfinishedTasks = []
-          response.forEach(task => {
+      for (let i = this.processingDataColumnList.length - 1; i >= 0; i--) {
+        const taskId = this.processingDataColumnList[i]
+        checkClusteringColumnStatus(taskId)
+          .then(task => {
             switch (task.status) {
               case 'Ready':
               case 'Process':
-                this.unfinishedTasks.push(task)
+                if (!this.processingTasks.find(item => item.taskId === task.taskId)) {
+                  this.processingTasks.push(task)
+                }
                 break
               case 'Complete':
+                this.$store.commit('dataSource/spliceProcessingDataColumnList', i)
+                this.processingTasks.splice(this.processingTasks.findIndex(item => item.taskId === task.taskId), 1)
                 setTimeout(() => {
                   Message({
                     message: this.$t('clustering.buildingClusteringColumnSuccess', {
@@ -107,6 +106,8 @@ export default {
                 }, 0)
                 break
               case 'Fail':
+                this.$store.commit('dataSource/spliceProcessingDataColumnList', i)
+                this.processingTasks.splice(this.processingTasks.findIndex(task => task.taskId === task.taskId), 1)
                 setTimeout(() => {
                   Message({
                     message: this.$t('clustering.buildingClusteringColumnFailed', {
@@ -123,14 +124,11 @@ export default {
                 }, 0)
             }
           })
-          this.isLoading = true
-          this.processingTasks = [ ...this.unfinishedTasks ]
-          this.$store.commit('dataSource/setProcessingDataColumnList', this.processingTasks.map(task => task.taskId))
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.isLoading = false
-        })
+          .catch(err => {
+            this.$store.commit('dataSource/spliceProcessingDataColumnList', i)
+            this.processingTasks.splice(this.processingTasks.findIndex(item => item.taskId === taskId), 1)
+          })
+      }
     },
     toggleIsOpen () {
       this.isOpen = !this.isOpen

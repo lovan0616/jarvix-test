@@ -461,18 +461,10 @@ export function getDataFrameCreatedInfo(dataFrameId) {
  * @param {String} inputData.primaryAlias - 儲存的欄位名稱
  */
 export function saveClusteringColumn (data) {
-  // return request({
-  //   url: `/dataColumn/clustering-columns`,
-  //   method: 'POST',
-  //   data
-  // })
-  // MOCK DATA
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve({
-        taskId: data.primaryAlias
-      })
-    }, 1 * 1000)
+  return request({
+    url: `/dataColumn/clustering-columns`,
+    method: 'POST',
+    data
   })
 }
 
@@ -487,18 +479,21 @@ export function checkClusteringColumnStatus (taskId) {
   // })
   // MOCK DATA
   function getStatus (taskId) {
-    switch (taskId % 3) {
+    switch (taskId % 4) {
       case 0:
         return 'Complete'
       case 1:
         return 'Process'
       case 2:
-      default:
         return 'Fail'
+      case 3:
+        return 'Exception'
     }
   }
-  return new Promise(resolve => {
-    setTimeout(() => {
+  return new Promise((resolve, reject) => {
+    if (getStatus(taskId) === 'Exception') {
+      reject({ type: "warning", message: "匯入來源欄位不存在" })
+    } else {
       resolve({
         "dataColumnId": taskId,
         "dataColumnPrimaryAlias": '欄位蔚蔚為為為為' + taskId,
@@ -509,6 +504,6 @@ export function checkClusteringColumnStatus (taskId) {
         "status": getStatus(taskId),
         "taskId": taskId
       })
-    }, 1 * 1000)
+    }
   })
 }
