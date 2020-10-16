@@ -60,11 +60,18 @@ export default {
   computed: {
     ...mapState('dataSource', ['processingDataColumnList'])
   },
+  watch: {
+    processingDataColumnList: {
+      deep: true,
+      handler (value) {
+        clearInterval(this.intervalTimer)
+        this.startTaskPolling()
+      }
+    }
+  },
   mounted () {
     this.getBgColumnTasksFromStorage()
-    this.intervalTimer = setInterval(() => {
-      this.getBgColumnTasksFromStorage()
-    }, 10 * 1000) // 太頻繁打可能遇到尚未處理完畢而拋錯誤，已討論請後端改壓 處理中 狀態
+    this.startTaskPolling()
   },
   destroyed () {
     clearInterval(this.intervalTimer)
@@ -75,6 +82,11 @@ export default {
     }
   },
   methods: {
+    startTaskPolling () {
+      this.intervalTimer = setInterval(() => {
+        this.getBgColumnTasksFromStorage()
+      }, 10 * 1000)
+    },
     getBgColumnTasksFromStorage () {
       for (let i = this.processingDataColumnList.length - 1; i >= 0; i--) {
         const taskId = this.processingDataColumnList[i]
