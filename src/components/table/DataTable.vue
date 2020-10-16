@@ -205,7 +205,7 @@
                 >
                   <p class="info__label">{{ info.label }}: </p>
                   <p class="info__description">
-                    {{ info.label === "dbConnectionElapsedTime" ? elapsedTimeFormat(data[info.label]) : data[info.label] }}
+                    {{ info.title === "dbConnectionElapsedTime" ? elapsedTimeFormat(data[info.title]) : timeToDateTimeSecondPrecision(data[info.title]) }}
                   </p>
                 </div>
               </template>
