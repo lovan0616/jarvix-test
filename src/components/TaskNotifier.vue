@@ -64,7 +64,7 @@ export default {
     this.getBgColumnTasksFromStorage()
     this.intervalTimer = setInterval(() => {
       this.getBgColumnTasksFromStorage()
-    }, 5 * 1000)
+    }, 10 * 1000) // 太頻繁打可能遇到尚未處理完畢而拋錯誤，已討論請後端改壓 處理中 狀態
   },
   destroyed () {
     clearInterval(this.intervalTimer)

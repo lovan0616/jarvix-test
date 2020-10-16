@@ -473,37 +473,8 @@ export function saveClusteringColumn (data) {
  * @param {Number} taskId - 背景建置工作 id
  */
 export function checkClusteringColumnStatus (taskId) {
-  // return request({
-  //   url: `/dataColumn/clustering-columns/${taskId}`,
-  //   method: 'GET'
-  // })
-  // MOCK DATA
-  function getStatus (taskId) {
-    switch (taskId % 4) {
-      case 0:
-        return 'Complete'
-      case 1:
-        return 'Process'
-      case 2:
-        return 'Fail'
-      case 3:
-        return 'Exception'
-    }
-  }
-  return new Promise((resolve, reject) => {
-    if (getStatus(taskId) === 'Exception') {
-      reject({ type: "warning", message: "匯入來源欄位不存在" })
-    } else {
-      resolve({
-        "dataColumnId": taskId,
-        "dataColumnPrimaryAlias": '欄位蔚蔚為為為為' + taskId,
-        "dataFrameId": taskId,
-        "dataFramePrimaryAlias": '表表表表表表表表' + taskId,
-        "dataSourceId": taskId,
-        "dataSourceName": '源源源源源源' + taskId,
-        "status": getStatus(taskId),
-        "taskId": taskId
-      })
-    }
+  return request({
+    url: `/dataColumn/clustering-columns/${taskId}`,
+    method: 'GET'
   })
 }
