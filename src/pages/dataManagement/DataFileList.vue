@@ -264,7 +264,7 @@ export default {
         },
         {
           text: this.$t('editing.lastUpdateResult'),
-          value: 'latestLogStatus',
+          value: 'latestImportStatus',
           width: '140px'
         },
         {
@@ -306,8 +306,7 @@ export default {
         || element.state === 'Process' 
         || element.state === 'Pending' 
         || element.crontabConfigStatus === 'AUTO' 
-        || element.latestLogStatus === 'Ready'
-        || element.latestLogStatus === 'Process'
+        || element.latestImportStatus === 'Process'
       ))
     },
     enableDataFrameCount () {

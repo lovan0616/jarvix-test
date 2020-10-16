@@ -389,6 +389,9 @@
     "sortSetting": "Sort Settings",
     "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change.",
     "lastUpdateResult": "Latest Update Result",
+    "startTime": "Start Time",
+    "endTime": "Elapsed Time",
+    "elapsedTime": "Start Time",
     "noData": "No Data",
     "SQLSyntax": "SQL Syntax",
     "copyTableFromDatabase": "Copied existing table from database",
@@ -877,7 +880,12 @@
     "week": "weeks",
     "month": "months",
     "season": "seasons",
-    "year": "years"
+    "year": "years",
+    "allowArg": {
+      "second": "1 sec | {n} secs",
+      "minute": "1 min | {n} mins",
+      "hour": "1 hr | {n} hrs"
+    }
   },
   "aggregation": {
     "mean": "Average",
