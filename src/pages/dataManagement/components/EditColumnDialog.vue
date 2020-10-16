@@ -236,7 +236,8 @@ export default {
         primaryAlias: null,
         dataColumnId: null,
         aliasList: [],
-        columnStatsType: null
+        columnStatsType: null,
+        isClustering: null
       },
       userEditInfo: {
         dataFrameId: this.tableInfo.id,
@@ -303,6 +304,7 @@ export default {
       this.tempRowInfo.dataColumnId = columnInfo.id
       this.tempRowInfo.aliasList = JSON.parse(JSON.stringify(columnInfo.aliasList))
       this.tempRowInfo.columnStatsType = JSON.parse(JSON.stringify(columnInfo.statsType))
+      this.tempRowInfo.isClustering = columnInfo.isClustering
     },
     buildAlias () {
       this.isProcessing = true
@@ -318,8 +320,16 @@ export default {
         .map(column => ({ id: column.id, primaryAlias: column.name.primaryAlias }))
 
       const aliasPromise = patchColumnAlias(filterList)
-      const statsTypePromise = updateDataFrameAlias(this.userEditInfo)
-      const promises = [aliasPromise, statsTypePromise]
+      const promises = [aliasPromise]
+      // 更新標籤時，需要排除分群欄位
+      const filteredUserEditInfo = {
+        ...this.userEditInfo,
+        userEditedColumnInputList: this.userEditInfo.userEditedColumnInputList.filter(column => !column.isClustering)
+      }
+      if (filteredUserEditInfo.userEditedColumnInputList.length > 0){
+        promises.push(updateDataFrameAlias(filteredUserEditInfo))
+      }
+
       if (modifiedPrimaryAliases.length > 0) {
         promises.push(patchDataColumnPrimaryAlias(modifiedPrimaryAliases))
       }
@@ -417,6 +427,7 @@ export default {
             showClose: true
           })
           this.closeDeleteDialog()
+          this.fetchData()
         })
         .finally(() => { this.isProcessing = false })
     }
