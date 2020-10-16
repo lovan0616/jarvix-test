@@ -676,12 +676,15 @@
     "dataOverview": "資料概況",
     "clusteringAnalysis": "分群分析",
     "saveClusteringResultAsColumn": "儲存分群結果為標籤欄位",
-    "notAllowedToSaveClusteringResultAsColumnFromJoinedTable": "關聯資料表的欄位，無法儲存為標籤欄位。",
+    "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "自定義欄位或來自關聯資料表的欄位，無法儲存為標籤欄位。",
     "createClusteringColumn": "新增標籤欄位",
     "clusteringColumnName": "標籤欄位名稱",
     "outlier": "離群",
     "piecesOfData": "{amount} 筆資料",
-    "buildingClusteringColumn": "欄位建置中，建置完成即可使用。"
+    "buildingClusteringColumn": "欄位建置中，建置完成即可使用。",
+    "buildingClusteringColumnSuccess": "標籤欄位「{columnName}」建置成功。",
+    "buildingClusteringColumnFailed": "標籤欄位「{columnName}」建置失敗。",
+    "clusteringColumnOriginFrom": "(來自 [資料源]{dataSourceName} [資料表]{dataFrameName})"
   },
   "description": {
     "basic": {
@@ -1853,7 +1856,8 @@
     "uploadLimitNotification": "資料數量或數據容量已達上限",
     "uploadLimit": "資料表限制：最多{count}筆",
     "userLimitNotification": "使用者數量已達上限",
-    "columnSummarySampleNotification": "欄位摘要經數值估算，會有些微誤差，僅供參考"
+    "columnSummarySampleNotification": "欄位摘要經數值估算，會有些微誤差，僅供參考",
+    "unfinishedTasks": "未完成項目"
   },
   "chart": {
     "zoom": "區域縮放",

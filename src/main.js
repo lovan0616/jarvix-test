@@ -37,6 +37,7 @@ import {
   Menu,
   Submenu,
   MenuItem,
+  Badge
 } from 'element-ui'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
@@ -150,6 +151,7 @@ Vue.use(Switch)
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
+Vue.use(Badge)
 
 Vue.use(vGanttChart)
 

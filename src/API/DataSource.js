@@ -467,3 +467,14 @@ export function saveClusteringColumn (data) {
     data
   })
 }
+
+/**
+ * 確認分群欄位的建置狀態
+ * @param {Number} taskId - 背景建置工作 id
+ */
+export function checkClusteringColumnStatus (taskId) {
+  return request({
+    url: `/dataColumn/clustering-columns/${taskId}`,
+    method: 'GET'
+  })
+}

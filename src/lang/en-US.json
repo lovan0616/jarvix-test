@@ -676,12 +676,15 @@
     "dataOverview": "Overview",
     "clusteringAnalysis": "Clustering",
     "saveClusteringResultAsColumn": "Save clustering result as a new column",
-    "notAllowedToSaveClusteringResultAsColumnFromJoinedTable": "Columns coming from any joined table cannot be saved as a new column.",
+    "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "Featrue columns or columns coming from any joined table cannot be saved as a new column.",
     "createClusteringColumn": "New Clustering Field",
     "clusteringColumnName": "Clustering Column Name",
     "outlier": "outlier",
     "piecesOfData": "{amount} pieces of data",
-    "buildingClusteringColumn": "The field is being built, and it can be used after it is built."
+    "buildingClusteringColumn": "The field is being built, and it can be used after it is built.",
+    "buildingClusteringColumnSuccess": "The label field '{columnName}' was successfully created.",
+    "buildingClusteringColumnFailed": "Failed to build label field '{columnName}'.",
+    "clusteringColumnOriginFrom": "(From [DataSource]{dataSourceName} [DataFrame]{dataFrameName})"
   },
   "description": {
     "basic": {
@@ -1853,7 +1856,8 @@
     "uploadLimitNotification": "Reached Data Set or Data Size limit. ",
     "uploadLimit": "Table limit: up to {count} rows",
     "userLimitNotification": "Reached user limit.",
-    "columnSummarySampleNotification": "The estimated values for column summary are for reference only."
+    "columnSummarySampleNotification": "The estimated values for column summary are for reference only.",
+    "unfinishedTasks": "Unfinished Tasks"
   },
   "chart": {
     "zoom": "Zoom",
