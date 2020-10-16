@@ -427,6 +427,7 @@ export default {
             showClose: true
           })
           this.closeDeleteDialog()
+          this.fetchData()
         })
         .finally(() => { this.isProcessing = false })
     }
