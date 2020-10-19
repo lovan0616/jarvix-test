@@ -238,6 +238,7 @@ export default {
           }
         }).catch(() => {
           this.loading = false
+          this.$emit('failed')
           if (this.intend === 'key_result') {
             if (page === 0) {
               this.isError = true

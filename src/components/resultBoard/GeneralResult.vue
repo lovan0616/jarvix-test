@@ -43,6 +43,10 @@
               <spinner 
                 v-if="isProcessing[intentType.CLUSTERING]" 
                 size="16"/>
+              <svg-icon 
+                v-else-if="!isKeyResultTaskComplete"
+                class="exclamation-triangle-icon"
+                icon-class="exclamation-triangle" />
               <div
                 v-else-if="hasFetchedClustering"
                 class="multi-analysis__item-dropdownlist"
@@ -75,6 +79,7 @@
           :component-id="componentId"
           :data-frame-id="dataFrameId"
           intend="key_result"
+          @failed="setTaskStatus(false)"
         />
       </template>
       <template
@@ -195,6 +200,7 @@ export default {
       },
       activeTab: null,
       isShowSaveClusteringDialog: false,
+      isKeyResultTaskComplete: true,
       intentType
     }
   },
@@ -205,7 +211,8 @@ export default {
         {
           title: 'clustering.saveClusteringResultAsColumn',
           icon: 'feature',
-          dialogName: 'saveClustering'
+          dialogName: 'saveClustering',
+          disabled: !this.isKeyResultTaskComplete
         },
       ]
     },
@@ -275,6 +282,7 @@ export default {
       this.fetchSpecificType(tabName)
     },
     switchDialogName (action) {
+      if (!this.isKeyResultTaskComplete) return
       if (action !== 'saveClustering') return
       if (!this.resultInfo.canSaveResult) {
         return Message({
@@ -290,6 +298,9 @@ export default {
       for (const key in this.isProcessing) {
         this.isProcessing[key] = false
       }
+    },
+    setTaskStatus (value) {
+      this.isKeyResultTaskComplete = value
     }
   }
 }

@@ -213,6 +213,9 @@ export default {
         .more-icon {
           color: #A7A7A7;
         }
+        .exclamation-triangle-icon {
+          color: $theme-color-danger;
+        }
       }
       &-dropdownlist {
         position: relative;
