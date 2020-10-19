@@ -22,7 +22,7 @@
                 {{ $t('accountInfo.currentUserAmount') }}
               </h6>
               <p class="sub-info-desciption">
-                {{ license.currentUser || '-' }}
+                {{ formatComma(license.currentUser) || '-' }}
                 {{ $tc('accountInfo.person', license.currentUser) }}
               </p>
             </div>
@@ -75,7 +75,7 @@
         {{ $t('accountInfo.accountUsageStatus') }}
       </h2>
       <h3 class="account-info-block__description">
-        {{ $t('accountInfo.projectAmount', { amount: groupStatus.groupCount }) }}
+        {{ $t('accountInfo.projectAmount', { amount: formatComma(groupStatus.groupCount) }) }}
       </h3>
       <spinner
         v-if="isLoading"
@@ -94,18 +94,18 @@
           </h3>
           <div class="item__info">
             <h3 class="item__info--title"> {{ $t('accountInfo.dataFrameAmount') }} </h3>
-            <div class="item__info--amount"> {{ groupUsage.dataSourceCount }} </div>
+            <div class="item__info--amount"> {{ formatComma(groupUsage.dataSourceCount) }} </div>
           </div>
           <div class="item__info">
             <h3 class="item__info--title"> {{ $t('accountInfo.pinBoardAmount') }} </h3>
-            <div class="item__info--amount"> {{ groupUsage.pinBoardCount }} </div>
+            <div class="item__info--amount"> {{ formatComma(groupUsage.pinBoardCount) }} </div>
           </div>
           <div
-            v-if="hasPermission('group_read_data') && isShowWarRoomModule"
+            v-if="hasPermission('war_room')"
             class="item__info"
           >
             <h3 class="item__info--title"> {{ $t('accountInfo.warRoomAmount') }} </h3>
-            <div class="item__info--amount"> {{ groupUsage.warRoomCount }} </div>
+            <div class="item__info--amount"> {{ formatComma(groupUsage.warRoomCount) }} </div>
           </div>
         </div>
       </template>
@@ -139,10 +139,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
-    isShowWarRoomModule () {
-      return localStorage.getItem('isShowWarRoomModule') === 'true'
-    }
+    ...mapGetters('userManagement', ['hasPermission'])
   },
   mounted () {
     this.fetchData()
@@ -301,11 +298,11 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
         border: 1px solid var(--color-theme);
-        font-size: 14px;
+        font-size: 12px;
         line-height: 20px;
       }
     }

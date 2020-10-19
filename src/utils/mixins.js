@@ -148,6 +148,9 @@ Vue.mixin({
     timeToDateTime (time) {
       return moment(time).format('YYYY-MM-DD HH:mm')
     },
+    timeToDateTimeSecondPrecision (time) {
+      return moment(time).format('YYYY-MM-DD HH:mm:ss')
+    },
     // 時間補十分位，為了滿足 YYYY-MM-DD 格式
     paddingZero (n) {
       return n < 10 ? '0' + n : n
@@ -225,6 +228,8 @@ Vue.mixin({
         case 'scatter_correlation_chart':
         case 'scatter_chart':
           return 'DisplayScatterChart'
+        case 'scatter_probability_density_chart':
+          return 'DisplayScatterProbabilityDensityChart'
         case 'table':
           return 'SyTable'
         case 'tree_map':

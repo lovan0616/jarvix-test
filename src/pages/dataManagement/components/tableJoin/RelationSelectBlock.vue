@@ -76,7 +76,9 @@ export default {
   methods: {
     fetchDataColumnList (dataFrameId) {
       const hasFeatureColumn = false
-      getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn).then(response => {
+      // 過濾掉分群欄位
+      const hasBlockClustering = true
+      getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn, true, hasBlockClustering).then(response => {
         this.columnList = response.map(column => ({
           ...column,
           name: `${column.primaryAlias || column.name}（${column.dataType}）`,

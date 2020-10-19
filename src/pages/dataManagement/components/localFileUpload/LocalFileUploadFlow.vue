@@ -5,10 +5,12 @@
       mode="out-in">
       <local-file-upload
         v-if="step === 0"
+        :process-text="processText"
         @next="nextStep"
       />
       <local-file-upload-status
         v-if="step === 1"
+        :process-text="processText"
         @next="nextStep"
         @prev="prevStep"
         @dataBuilt="step = 3"
@@ -20,6 +22,7 @@
       />
       <confirm-page
         v-if="step === 3"
+        :content="$t('editing.dataBuildingReminding')"
         @next="uploadFinish"
       />
     </transition>
@@ -29,7 +32,7 @@
 import LocalFileUpload from './LocalFileUpload'
 import LocalFileUploadStatus from './LocalFileUploadStatus'
 import EtlSetting from './EtlSetting'
-import ConfirmPage from './ConfirmPage'
+import ConfirmPage from './fileUpload/ConfirmPage'
 
 export default {
   name: 'LocalFileUploadFlow',
@@ -42,7 +45,12 @@ export default {
   data () {
     return {
       step: 0,
-      dataSourceId: parseInt(this.$route.params.id)
+      dataSourceId: parseInt(this.$route.params.id),
+      processText: [
+        this.$t('editing.processStep1'),
+        this.$t('editing.processStep2'),
+        this.$t('editing.processStep3')
+      ]
     }
   },
   methods: {

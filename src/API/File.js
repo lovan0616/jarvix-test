@@ -66,6 +66,37 @@ export function analysisFile (fileId, dataSourceId) {
 }
 
 /**
+ * append file
+ * @param {Number} fileId - 欲取得的 file ID
+ * @param {Number} dataFrameId - 欲取得的資料源 ID
+ */
+export function appendFile (fileId, dataFrameId) {
+  return request({
+    url: `/files/${fileId}/append`,
+    method: 'POST',
+    data: {
+      dataFrameId
+    }
+  })
+}
+
+/**
+ * append file
+ * @param {Number} fileId - 欲取得的 file ID
+ * @param {Number} dataFrameId - 欲取得的資料源 ID
+ */
+export function reimportFile (fileId, dataFrameId) {
+  return request({
+    url: '/data/reimport',
+    method: 'POST',
+    data: {
+      dataFrameId,
+      fileId
+    }
+  })
+}
+
+/**
  * delete file
  */
 export function deleteFile (fileId) {
