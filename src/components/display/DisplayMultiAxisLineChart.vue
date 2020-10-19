@@ -90,6 +90,10 @@ export default {
     hasPagination: {
       type: Boolean,
       default: false
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -135,6 +139,12 @@ export default {
         series: this.series,
         color: this.colorList
       }
+
+      config.toolbox.feature.myShowLabel.show = true
+      config.toolbox.feature.myShowLabel.onclick = () => {
+        this.$emit('toggleLabel')
+      }
+
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         if (this.hasPagination) {
           this.$el.addEventListener('click', this.controlPagination, false)
@@ -142,8 +152,8 @@ export default {
         let dataset = opt.dataset[0].source
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
-          let tableData = dataset[i].reduce((acc, cur) => {
-            return acc + `<td style="padding: 4px 12px;white-space:nowrap;">${cur === null ? '' : cur}</td>`
+          let tableData = dataset[i].reduce((acc, cur, idx) => {
+            return acc + `<td style="padding: 4px 12px;white-space:nowrap;">${i && idx && cur ? this.formatComma(cur) : cur || ''}</td>`
           }, '')
           table += `<tr ${i % 2 === 0 ? (i === 0 ? 'style="background-color:#2B4D51"' : 'style="background-color:rgba(50, 75, 78, 0.6)"') : ''}>${tableData}</tr>`
         }
@@ -220,13 +230,23 @@ export default {
   },
   methods: {
     composeColumn (element, colIndex) {
+      const shortenNumberMethod = this.shortenNumber
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
         ...this.addonSeriesItem,
         ...this.addonSeriesItems[colIndex],
         connectNulls: true,
-        yAxisIndex: colIndex
+        yAxisIndex: colIndex,
+        ...(this.isShowLabelData && {
+          label: {
+            position: 'top',
+            show: true,
+            fontSize: 10,
+            color: '#fff',
+            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+          }
+        })
       }
     },
     controlPagination () {

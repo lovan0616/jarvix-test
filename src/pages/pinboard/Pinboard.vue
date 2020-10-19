@@ -47,6 +47,7 @@
       :segmentation-payload="result.segmentationPayload"
       :restrictions="result.restrictions"
       :question="result.question"
+      @refresh="refreshPinboardData"
       @unPin="unPin"
     />
   </div>
@@ -153,7 +154,6 @@ export default {
             dataColumnMap: null,
             selectedColumns: null,
             restrictions: null
-
           })
           this.getComponent(element)
         })
@@ -162,7 +162,7 @@ export default {
         this.isLoading = false
       })
     },
-    getComponent (res) {
+    getComponent (res, resolveFunction = null) {
       window.clearTimeout(this.timeoutFunction)
       let currentResult = this.getResult(res.id)
       let currentData = this.getData(res.id)
@@ -172,7 +172,7 @@ export default {
             case 'Process':
             case 'Ready':
               this.timeoutFunction = window.setTimeout(() => {
-                this.getComponent(res)
+                this.getComponent(res, resolveFunction)
               }, 1000)
               break
             case 'Complete':
@@ -189,6 +189,7 @@ export default {
               currentData.restrictions = componentResponse.restrictions
               this.$nextTick(() => {
                 this.isLoading = false
+                if (resolveFunction) resolveFunction()
               })
               break
             case 'Disable':
@@ -223,6 +224,11 @@ export default {
         if(element.pinboardId === pinBoardId)
           element.isDeleted = true
       })
+    },
+    refreshPinboardData (refreshInfo) {
+      let currentPinboardInfo = this.pinboardData.filter(data => data.pinboardId === refreshInfo.pinBoardId)[0]
+      currentPinboardInfo.id = currentPinboardInfo.pinboardId
+      this.getComponent(currentPinboardInfo, refreshInfo.resolveFunction)
     }
   },
 }

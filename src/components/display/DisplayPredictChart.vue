@@ -78,6 +78,10 @@ export default {
       default () {
         return []
       }
+    },
+    isShowLabelData: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -129,7 +133,19 @@ export default {
             }
             break
         }
-        return item
+        const shortenNumberMethod = this.shortenNumber
+        return {
+          ...item,
+          ...(this.isShowLabelData && colIndex !== 2 && {
+            label: {
+              position: colIndex === 1 ? 'bottom' : 'top',
+              show: true,
+              fontSize: 10,
+              color: '#fff',
+              formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+            }
+          })
+        }
       })
     },
     options () {
@@ -144,6 +160,12 @@ export default {
         series: this.series,
         color: this.colorList
       }
+
+      config.toolbox.feature.myShowLabel.show = true
+      config.toolbox.feature.myShowLabel.onclick = () => {
+        this.$emit('toggleLabel')
+      }
+
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
       config.yAxis.name = this.title.yAxis[0].display_name

@@ -60,6 +60,7 @@
     "joinTypeEmpty": "请选择关联方式",
     "builded": "资料源建立完成",
     "dataFrameBuilt": "资料表 {name} 建立完成",
+    "dataFrameUpdated": "资料表 {name} 更新完成",
     "noMatchedKey": "没有成功对上的值，请尝试设定其他关联表或栏位",
     "previewFailed": "设定失败，请稍候再试",
     "noData": "目前没有资料",
@@ -388,6 +389,9 @@
     "sortSetting": "排序设定",
     "dragAndSort": "请按住项目上下拖曳移动排序位置，项目排序变更后即生效。",
     "lastUpdateResult": "近一次更新结果",
+    "startTime": "开始时间",
+    "endTime": "结束时间",
+    "elapsedTime": "更新花费时间",
     "noData": "暂无数据",
     "SQLSyntax": "SQL语法",
     "copyTableFromDatabase": "复制资料库资料表",
@@ -564,6 +568,20 @@
     "updateMode": "更新模式",
     "dataFrameUpdate": "资料表更新",
     "rebuild": "重新建置"
+  },
+  "fileDataUpdate": {
+    "dataUpdateSetting": "资料更新设定",
+    "processStep1": "更新模式",
+    "processStep2": "选择档案",
+    "processStep3": "上传档案",
+    "updateMode": "更新模式",
+    "append": "资料表更新",
+    "reimport": "重新建置",
+    "reChoose": "重新选择",
+    "reUploadFile" :"重新上传档案",
+    "build": "立即建置",
+    "reSetting": "重新设定模式",
+    "dataUpdatingReminding": "资料表更新将以背景执行方式进行，更新进度将显示在资料表状态。"
   },
   "feature": {
     "value": "数值",
@@ -843,7 +861,8 @@
     "tableCreatedInfo": "资料表建立资讯",
     "select": "选择",
     "download": "资料下载",
-    "dataExplanation": "资料说明",
+    "dataExplanation": "资料说明", 
+    "dataUpdate": "资料更新",
     "start": "开始",
     "copyAndBuild": "复制并建置",
     "createGroup": "新建专案",
@@ -880,7 +899,12 @@
     "week": "周",
     "month": "月",
     "season": "季",
-    "year": "年"
+    "year": "年",
+    "allowArg": {
+      "second": "{n} 秒",
+      "minute": "{n} 分",
+      "hour": "{n} 时"
+    }
   },
   "aggregation": {
     "mean": "平均",
@@ -1879,7 +1903,8 @@
     "rangeStart": "范围起始",
     "rangeEnd": "范围结束",
     "count": "统计数量",
-    "download": "下载图片"
+    "download": "下载图片",
+    "showLabel": "显示标籤"
   },
   "errorMessage": {
     "SYERR0001": "系统发生非预期错误",

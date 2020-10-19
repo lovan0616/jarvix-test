@@ -1,8 +1,10 @@
 <template>
   <div class="file-upload-finished">
-    <div class="dialog-title">{{ $t('editing.newData') }}</div>
+    <div class="dialog-title">
+      {{ $t('fileDataUpdate.dataUpdateSetting') }}
+    </div>
     <upload-process-block
-      :step="3"
+      :step="step"
       :process-text="processText"
     />
     <div class="dialog-body">
@@ -14,7 +16,7 @@
         <div 
           slot="fileListTitle" 
           class="uploaded-data-info">
-          {{ $t('editing.dataSourceInfo', {type: currentUploadInfo.type, dataSourceName: currentUploadInfo.name}) }}
+          {{ $t('editing.dataFrame') }}: {{ dataFrameInfo.primaryAlias }}
         </div>
       </file-list-block>
       <file-list-block
@@ -29,18 +31,18 @@
         <button 
           :disabled="isProcessing"
           class="btn btn-outline"
-          @click="cancel"
+          @click="cancelFileUpdate"
         >{{ $t('button.cancel') }}</button>
         <button 
           :disabled="isProcessing" 
           class="btn btn-outline"
           type="button"
-          @click="prev"
+          @click="chooseFileUpload"
         >{{ $t('button.chooseFileUpload') }}</button>
         <button 
           :disabled="successList.length === 0 || isProcessing"
           class="btn btn-default"
-          @click="next"
+          @click="build"
         >
           <span v-if="isProcessing">
             <svg-icon 
@@ -48,40 +50,50 @@
               icon-class="spinner"/>
             {{ $t('button.processing') }}
           </span>
-          <span v-else>{{ $t('button.nextStep') }}：{{ $t('editing.processStep3') }}</span>
+          <span v-else>{{ $t('fileDataUpdate.build') }}</span>
         </button>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { analysisFile } from '@/API/File'
+import { appendFile, reimportFile } from '@/API/File'
 import { uploadStatus } from '@/utils/general'
 import { mapState } from 'vuex'
-import FileListBlock from './fileUpload/FileListBlock'
-import UploadProcessBlock from './fileUpload/UploadProcessBlock'
+import FileListBlock from '../fileUpload/FileListBlock'
+import UploadProcessBlock from '../fileUpload/UploadProcessBlock'
 
 export default {
-  name: 'LocalFileUploadStatus',
+  name: 'DataUpdateFileUploadStatus',
   components: {
     FileListBlock,
     UploadProcessBlock
   },
   props: {
+    dataFrameInfo: {
+      type: Object,
+      default: null
+    },
+    step: {
+      type: Number,
+      default: 3
+    },
     processText: {
       type: Array,
+      required: true
+    },
+    updateMode: {
+      type: String,
       required: true
     }
   },
   data () {
     return {
-      uploadStatus,
-      dataSourceId: parseInt(this.$route.params.id),
       isProcessing: false
     }
   },
   computed: {
-    ...mapState('dataManagement', ['currentUploadInfo', 'uploadFileList']),
+    ...mapState('dataManagement', ['uploadFileList']),
     successList () {
       return this.uploadFileList.filter(element => {
         return element.status === uploadStatus.success
@@ -92,53 +104,64 @@ export default {
         return element.status === uploadStatus.fail
       })
     },
-    etlTableList () {
-      return this.$store.state.dataManagement.etlTableList
-    },
     importedFileList () {
       return this.$store.state.dataManagement.importedFileList
     }
   },
   methods: {
-    cancel () {
-      this.$store.commit('dataManagement/updateShowCreateDataSourceDialog', false)
-    },
-    next () {
-      this.isProcessing = true
-      let promiseList = []
-      this.importedFileList.forEach((element, index) => {
-        promiseList.push(analysisFile(element.id, this.dataSourceId))
-      })
-
-      Promise.all(promiseList)
-        .then((response) => {
-          response.forEach(file => {
-            file.dataSourceId = this.dataSourceId
-            this.$store.commit('dataManagement/updateEtlTableList', file)
-          })
-          this.$emit('next')
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.isProcessing = false
-        })
-    },
-    prev () {
-      // 清空上傳檔案
+    chooseFileUpload () {
       this.$store.commit('dataManagement/updateUploadFileList', [])
-      // 清空 imported table list
-      this.$store.commit('dataManagement/clearImportedTableList')
-      this.$emit('prev')
-    }
+			this.$store.commit('dataManagement/clearImportedTableList')
+      this.$emit("prev")
+    },
+    cancelFileUpdate () {
+      this.$emit("close")
+    },
+		build () {
+			this.isProcessing = true
+			const fileId = this.importedFileList[0].id
+			switch(this.updateMode) {
+				case 'append':
+					appendFile(fileId, this.dataFrameInfo.id)
+						.then (() => {
+							this.$store.commit('dataSource/setProcessingDataFrameList', {
+								dataSourceId: this.$route.params.id,
+								dataFrameId: this.dataFrameInfo.id,
+								primaryAlias: this.dataFrameInfo.primaryAlias,
+							})
+							this.$emit('next')
+						})
+						.catch(() => {})
+						.finally(() => {
+							this.isProcessing = false
+						})
+					break
+				case 'reimport':
+					reimportFile(fileId, this.dataFrameInfo.id)
+						.then (() => {
+							this.$store.commit('dataSource/setProcessingDataFrameList', {
+								dataSourceId: this.$route.params.id,
+								dataFrameId: this.dataFrameInfo.id,
+								primaryAlias: this.dataFrameInfo.primaryAlias,
+							})
+							this.$emit('next')
+						})
+						.catch(() => {})
+						.finally(() => {
+							this.isProcessing = false
+						})
+					break
+			}
+		}
   }
 }
 </script>
 <style lang="scss" scoped>
 .file-upload-finished {
   .dialog-title {
-    margin-bottom: 16px;
+    margin-bottom: 32px;
   }
-  
+
   .uploaded-data-info {
     font-size: 14px;
     line-height: 20px;

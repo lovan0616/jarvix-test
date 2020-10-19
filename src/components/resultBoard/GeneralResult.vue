@@ -6,6 +6,7 @@
     :restrictions="restrictions"
     :is-war-room-addable="isWarRoomAddable"
     class="general-result"
+    @refresh="refreshPinboardData"
     @unPin="unPin"
   >
     <result-board-body slot="PageResultBoardBody">
@@ -88,6 +89,7 @@
       <template slot="InsightBasicInfo">
         <task
           v-if="resultInfo.basic_info && resultInfo.basic_info.length > 0"
+          :key="resultInfo.basic_info[0]"
           :component-id="resultInfo.basic_info[0]"
           intend="basic_info"
         />
@@ -234,6 +236,9 @@ export default {
     }
   },
   methods: {
+    refreshPinboardData (refreshInfo) {
+      this.$emit('refresh', refreshInfo)
+    },
     unPin (pinBoardId) {
       this.$emit('unPin', pinBoardId)
     },

@@ -19,7 +19,8 @@
             class="result-board__header"
           />
         </div>
-        <button 
+        <button
+          v-if="!isPinboardPage"
           class="btn-m btn-default download-button"
           @click="downloadResult"
         >
@@ -33,10 +34,21 @@
           class="pin-button-block"
         >
           <button 
-            class="btn-m btn-default restrict-btn"
+            class="btn-m btn-default"
             @click.stop.prevent="togglePinboardInfo"
           >
-            {{ $t('button.dataExplanation') }}
+            <svg-icon
+              icon-class="data-explanation"
+              class="icon"/>{{ $t('button.dataExplanation') }}
+          </button>
+          <button 
+            :disabled="isRefreshing"
+            class="btn-m btn-default"
+            @click.stop.prevent="refreshData"
+          >
+            <svg-icon
+              :icon-class="isRefreshing ? 'spinner' : 'refresh'"
+              class="icon"/>{{ $t('button.dataUpdate') }}
           </button>
           <pinboard-info-dialog
             v-if="isShowPinboardInfo"
@@ -44,26 +56,38 @@
             :filter-info="restrictions"
             @close="closePinboardInfo"
           />
-          <button
-            class="btn-m btn-default share-btn"
-            @click="showShare"
-          >
+          <button class="hover-box">
             <svg-icon 
-              icon-class="share" 
-              class="icon"/>{{ $t('button.share') }}
-            <share-dialog
-              v-if="isShowShareDialog"
-              :share-url="shareUrl"
-              @cancel="closeShareDialog"
-            />
-          </button>
-          <button
-            class="btn-m head-btn delete"
-            @click="showDelete"
-          >
-            <svg-icon 
-              icon-class="delete" 
-              class="icon"/>{{ $t('button.delete') }}
+              icon-class="more" 
+              class="icon more-icon"/>
+            <div class="pinboard-popup hover-box__popup">
+              <div 
+                class="popup-box" 
+                @click.stop="showShare">
+                <svg-icon 
+                  icon-class="share" 
+                  class="icon popup-icon"/>
+                <div class="popup-text">{{ $t('button.share') }}</div>
+              </div>
+
+              <div 
+                class="popup-box border-line" 
+                @click.stop="downloadResult">
+                <svg-icon 
+                  :icon-class="isDownloading ? 'spinner' : 'download'" 
+                  class="icon popup-icon"/>
+                <div class="popup-text">{{ $t('button.downloadPage') }}</div>
+              </div>
+              <div 
+                class="popup-box" 
+                @click.stop="showDelete">
+                <svg-icon 
+                  icon-class="delete" 
+                  class="icon popup-icon"/>
+                <div class="popup-text">{{ $t('button.delete') }}</div>
+              </div>
+              
+            </div>
           </button>
         </div>
         <div 
@@ -133,6 +157,7 @@ import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import PinboardInfoDialog from '@/pages/pinboard/components/filter/PinboardInfoDialog'
 import { addResultToWarRoomPool } from '@/API/WarRoom'
+import { refreshResult } from '@/API/NewAsk'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
 import { toPng } from 'html-to-image'
@@ -175,11 +200,11 @@ export default {
     return {
       isLoading: false,
       isDownloading: false,
+      isRefreshing: false,
       pinBoardId: null,
       dataSourceId: null,
       dataFrameId: null,
       showPinboardDialog: false,
-      isShowShareDialog: false,
       isShowDelete: false,
       isShowShare: false,
       isShowPinboardInfo: false
@@ -210,8 +235,7 @@ export default {
       return this.$route.name === 'PersonalPagePinboardList'
     },
     showAddToWarRoomButton () {
-      const isShowWarRoomModule = localStorage.getItem('isShowWarRoomModule') === 'true'
-      return this.isWarRoomAddable && isShowWarRoomModule && this.hasPermission('group_create_data')
+      return this.isWarRoomAddable && this.hasPermission('war_room')
     }
   },
   mounted () {
@@ -235,6 +259,19 @@ export default {
           this.isDownloading = !download(dataUrl, fileName)
         })
         .catch(() => {})
+    },
+    refreshData () {
+      this.isRefreshing = true
+      refreshResult(this.resultId)
+        .then(res => {
+          let promise = new Promise(resolve => this.$emit('refresh', {resolveFunction: resolve, pinBoardId: this.pinBoardId}))
+          promise.then(() => {
+            this.isRefreshing = false
+          })
+        })
+        .catch(() => {
+          this.isRefreshing = false
+        })
     },
     pinToBoard () {
       if (this.isLoading) return false
@@ -308,12 +345,6 @@ export default {
           this.isLoading = false
         })
     },
-    showShareDialog () {
-      this.isShowShareDialog = true
-    },
-    closeShareDialog () {
-      this.isShowShareDialog = false
-    },
     confirmShare () {
       let input = this.$refs.shareInput
       input.select()
@@ -365,6 +396,7 @@ export default {
   .board-header {
     position: relative;
     display: flex;
+    z-index: 1;
     align-items: center;
     padding: 20px 28px;
     background-color: rgba(35, 61, 64, 0.6);
@@ -383,7 +415,7 @@ export default {
   }
 
   .pin-button-block {
-    font-size: 0;
+    display: flex;
 
     .head-btn {
       color: $theme-text-color;
@@ -401,10 +433,56 @@ export default {
 
     .btn-default {
       margin-right: 11px;
+      .icon {
+        margin-right: 6px;
+      }
     }
 
-    .icon {
-      margin-right: 8px;
+    .hover-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 30px;
+      background-color: $button-color;
+      border: none;
+      border-radius: 4px;
+
+      &__popup {
+        top: 30px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          right: 30px;
+          top: -10px;
+          width: 0px;
+          height: 0px;
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
+          border-bottom: 10px solid #233131;
+        }
+
+        &::after {
+          display: none;
+        }
+      }
+
+      &:hover {
+        .more-icon {
+          color: #444;
+        }
+
+        .hover-box__popup {
+          visibility: visible;
+        }
+      }
+
+      .more-icon {
+        color: $theme-color-white;
+        transform: rotate(90deg);
+      }
     }
   }
   

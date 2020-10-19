@@ -37,6 +37,16 @@ export function askSpecificType ({ resultId, type }, cancelFunction) {
 }
 
 /**
+ * refresh result
+ */
+export function refreshResult (resultId) {
+  return request({
+    url: `/ask/result/${resultId}/refresh`,
+    method: 'POST'
+  })
+}
+
+/**
  * get component list
  */
 export function getComponentList (resultId, cancelFunction) {

@@ -49,7 +49,9 @@
         :show-toolbox="showToolbox"
         :custom-chart-style="customChartStyle"
         :arrow-btn-right="arrowBtnRight"
+        :is-show-label-data="isShowLabelData"
         @next="getNewPageInfo"
+        @toggleLabel="toggleLabel"
       />
       <div
         v-for="(note, index) in notes"
@@ -125,7 +127,8 @@ export default {
       // 下個分頁資料
       nextPageData: null,
       singlePage: true,
-      isShowMonitorSettingDialog: false
+      isShowMonitorSettingDialog: false,
+      isShowLabelData: false
     }
   },
   computed: {
@@ -411,7 +414,10 @@ export default {
     },
     closeMonitorSettingDialog () {
       this.isShowMonitorSettingDialog = false
-    }
+    },
+    toggleLabel () {
+      this.isShowLabelData = !this.isShowLabelData
+    },
   }
 }
 </script>

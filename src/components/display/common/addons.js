@@ -23,7 +23,7 @@ export function convertHexToRGBA (hexCode, opacity) {
 
 export const warningColor = [linearGradient('#FF7246', '#FF5C46')]
 export const colorOnly1 = [linearGradient('#4CE2F0', '#438AF8')]
-export const colorOnly2 = [linearGradient('#4CE2F0', '#438AF8'), linearGradient('#79ACFF', '#5A3FFA')]
+export const colorOnly2 = ['#44D2FF', '#CA66DA']
 export const color3 = ['#44D2FF', '#6C55FA', '#CA66DA']
 export const color5 = ['#44D2FF', '#6C55FA', '#CA66DA', '#FF9559', '#EDF86C']
 

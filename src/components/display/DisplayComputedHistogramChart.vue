@@ -83,13 +83,13 @@ export default {
       type: Boolean,
       default: true
     },
-    customChartStyle: {
-      type: Object,
-      default: () => {}
-    },
     isShowLabelData: {
       type: Boolean,
       default: false
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
@@ -121,7 +121,7 @@ export default {
         }
         interval = Math.round(this.displayFloat(interval * Math.pow(10, count + defaultDisplayDigit))) / Math.pow(10, count + defaultDisplayDigit)
       }
-
+      
       let chartData = this.dataset.data.map((element, index) => {
         return [
           // bar start
@@ -131,6 +131,11 @@ export default {
           element
         ]
       })
+
+      chartAddon.toolbox.feature.myShowLabel.show = true
+      chartAddon.toolbox.feature.myShowLabel.onclick = () => {
+        this.$emit('toggleLabel')
+      }
 
       // 數據顯示
       chartAddon.toolbox.feature.dataView.optionToContent = (chartData) => {
@@ -142,7 +147,7 @@ export default {
           '</tr>'
         for (let i = 0; i < dataset.length; i++) {
           table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>
-            <td>${dataset[i][0]} ~ ${dataset[i][1]}</td><td>${dataset[i][2]}</td>
+            <td>${ this.formatComma(dataset[i][0]) } ~ ${ this.formatComma(dataset[i][1]) }</td><td>${ this.formatComma(dataset[i][2]) }</td>
           </tr>`
         }
         table += '</tbody></table>'
@@ -183,14 +188,13 @@ export default {
       chartAddon.xAxis.axisLabel.formatter = (value, index) => {
         if (dataLength > 20) {
           let labelInterval = Math.floor(dataLength / 15)
-          if (index % labelInterval === 0) return value
+          if (index % labelInterval === 0) return this.formatComma(value)
         } else {
-          return index === dataLength ? max : value
+          return index === dataLength ? this.formatComma(max) : this.formatComma(value)
         }
       }
-
       histogramConfig.chartData.renderItem = this.renderItem
-      histogramConfig.chartData.data = chartData
+      histogramConfig.chartData.data = chartData 
       const shortenNumberMethod = this.shortenNumber
       chartAddon.series[0] = {
         ...histogramConfig.chartData,

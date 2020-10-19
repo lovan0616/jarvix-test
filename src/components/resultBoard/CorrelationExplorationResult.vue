@@ -5,6 +5,7 @@
     :result-info="resultInfo"
     :restrictions="restrictions"
     :is-war-room-addable="isWarRoomAddable"
+    @refresh="refreshPinboardData"
   >
     <result-board-body
       slot="PageResultBoardBody"
@@ -20,6 +21,7 @@
           <div class="key-result-selector">
             <task
               v-if="resultInfo.key_result_selector && resultInfo.key_result_selector.length > 0"
+              :key="resultInfo.key_result_selector[0]"
               :component-id="resultInfo.key_result_selector[0]"
               intend="key_result_selector"
             />
@@ -40,7 +42,7 @@
               <keep-alive>
                 <task
                   v-if="resultInfo.sub_key_result[displayFactorIndex]"
-                  :key="`sub-key-result-${displayFactorIndex}`"
+                  :key="resultInfo.sub_key_result[displayFactorIndex]"
                   :component-id="resultInfo.sub_key_result[displayFactorIndex]"
                   :data-frame-id="dataFrameId"
                   intend="sub_key_result"
@@ -49,7 +51,7 @@
               <keep-alive>
                 <task
                   v-if="resultInfo.sub_insight[displayFactorIndex]"
-                  :key="`sub-insight-${displayFactorIndex}`"
+                  :key="resultInfo.sub_insight[displayFactorIndex]"
                   :component-id="resultInfo.sub_insight[displayFactorIndex]"
                   intend="sub_insight"
                 />
@@ -61,7 +63,7 @@
       <template slot="InsightBasicInfo">
         <task
           v-if="resultInfo.sub_basic_info[displayFactorIndex]"
-          :key="`sub-basic-info-${displayFactorIndex}`"
+          :key="resultInfo.sub_basic_info[displayFactorIndex]"
           :component-id="resultInfo.sub_basic_info[displayFactorIndex]"
           intend="sub_basic_info"
         />
@@ -141,6 +143,11 @@ export default {
       this.isLoading = false
     })
   },
+  methods: {
+    refreshPinboardData (refreshInfo) {
+      this.$emit('refresh', refreshInfo)
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

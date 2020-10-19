@@ -90,8 +90,11 @@ export default {
     })
   },
   updateProcessingDataFrameList (state, data) {
+    let messageString = data.lastImportType === 'UPDATE' || data.lastImportType === 'REIMPORT'
+      ? 'message.dataFrameUpdated'
+      : 'message.dataFrameBuilt'
     Message({
-      message: i18n.t('message.dataFrameBuilt', {name: data.primaryAlias}),
+      message: i18n.t(messageString, {name: data.primaryAlias}),
       type: 'success',
       duration: 3 * 1000,
       showClose: true
