@@ -69,5 +69,11 @@ export default {
       return selectedDataFrame && selectedDataFrame.primaryAlias ? selectedDataFrame.primaryAlias : null
     }
     return null
+  },
+  getOwnProcessingTasks (state, getters, rootState, rootGetters) {
+    const userId = rootState.userManagement.userId
+    const accountId = rootGetters['userManagement/getCurrentAccountId']
+    const groupId = rootGetters['userManagement/getCurrentGroupId']
+    return state.processingDataColumnList.filter(item => item.userId === userId && item.accountId === accountId && item.groupId === groupId)
   }
 }

@@ -40,6 +40,7 @@
 <script>
 import { saveClusteringColumn } from '@/API/DataSource'
 import { Message } from 'element-ui'
+import { mapState, mapGetters } from 'vuex'
 import InputBlock from '@/components/InputBlock'
 
 export default {
@@ -65,6 +66,8 @@ export default {
     }
   },
   computed: {
+    ...mapState('userManagement', ['userId']),
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     }
@@ -86,7 +89,12 @@ export default {
                 duration: 3 * 1000,
                 showClose: true
               })
-              this.$store.commit('dataSource/addProcessingDataColumnList', taskId)
+              this.$store.commit('dataSource/addProcessingDataColumnList', {
+                taskId,
+                userId: this.userId,
+                accountId: this.getCurrentAccountId,
+                groupId: this.getCurrentGroupId
+              })
             })
             .catch(() => {})
             .finally(() => {

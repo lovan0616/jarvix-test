@@ -45,7 +45,7 @@
 
 <script>
 import { checkClusteringColumnStatus } from '@/API/DataSource'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { Message } from 'element-ui'
 
 export default {
@@ -58,25 +58,29 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataSource', ['processingDataColumnList'])
+    ...mapState('dataSource', ['processingDataColumnList']),
+    ...mapGetters('dataSource', ['getOwnProcessingTasks']),
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId'])
   },
   watch: {
-    processingDataColumnList: {
-      deep: true,
-      handler (value) {
-        clearInterval(this.intervalTimer)
-        this.startTaskPolling()
-      }
+    getCurrentAccountId () {
+      this.processingTasks = []
+      this.checkBgColumnTasks()
+    },
+    getCurrentGroupId () {
+      this.processingTasks = []
+      this.checkBgColumnTasks()
     }
   },
   mounted () {
+    this.checkBgColumnTasks()
     this.getBgColumnTasksFromStorage()
     this.startTaskPolling()
   },
   destroyed () {
     clearInterval(this.intervalTimer)
     if (this.processingDataColumnList.length > 0) {
-      localStorage.setItem('bgColumnTasks', this.processingDataColumnList)
+      localStorage.setItem('bgColumnTasks', JSON.stringify(this.processingDataColumnList))
     } else {
       localStorage.removeItem('bgColumnTasks')
     }
@@ -88,19 +92,19 @@ export default {
       }, 10 * 1000)
     },
     getBgColumnTasksFromStorage () {
-      for (let i = this.processingDataColumnList.length - 1; i >= 0; i--) {
-        const taskId = this.processingDataColumnList[i]
+      for (let i = this.getOwnProcessingTasks.length - 1; i >= 0; i--) {
+        const taskId = this.getOwnProcessingTasks[i].taskId
         checkClusteringColumnStatus(taskId)
           .then(task => {
             switch (task.status) {
               case 'Ready':
               case 'Process':
-                if (!this.processingTasks.find(item => item.taskId === task.taskId)) {
-                  this.processingTasks.push(task)
+                if (!this.processingTasks.find(item => item.taskId === taskId)) {
+                  this.processingTasks.push({ ...task, taskId })
                 }
                 break
               case 'Complete':
-                this.$store.commit('dataSource/spliceProcessingDataColumnList', i)
+                this.$store.commit('dataSource/spliceProcessingDataColumnList', this.processingDataColumnList.findIndex(item => item.taskId === taskId))
                 this.processingTasks.splice(this.processingTasks.findIndex(item => item.taskId === task.taskId), 1)
                 setTimeout(() => {
                   Message({
@@ -118,7 +122,7 @@ export default {
                 }, 0)
                 break
               case 'Fail':
-                this.$store.commit('dataSource/spliceProcessingDataColumnList', i)
+                this.$store.commit('dataSource/spliceProcessingDataColumnList', this.processingDataColumnList.findIndex(item => item.taskId === taskId))
                 this.processingTasks.splice(this.processingTasks.findIndex(task => task.taskId === task.taskId), 1)
                 setTimeout(() => {
                   Message({
@@ -137,13 +141,19 @@ export default {
             }
           })
           .catch(err => {
-            this.$store.commit('dataSource/spliceProcessingDataColumnList', i)
+            this.$store.commit('dataSource/spliceProcessingDataColumnList', this.processingDataColumnList.findIndex(item => item.taskId === taskId))
             this.processingTasks.splice(this.processingTasks.findIndex(item => item.taskId === taskId), 1)
           })
       }
     },
     toggleIsOpen () {
       this.isOpen = !this.isOpen
+    },
+    checkBgColumnTasks () {
+      const prevBgColumnTasks = JSON.parse(localStorage.getItem('bgColumnTasks'))
+      if (prevBgColumnTasks.length > 0) {
+        this.$store.commit('dataSource/setProcessingDataColumnList', prevBgColumnTasks)
+      }
     }
   }
 }
