@@ -1,4 +1,4 @@
-import { askQuestion, askResult, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
+import { askQuestion, askResult, askSpecificType, getComponentList, getComponentData, getRelatedQuestionList, getQuickStartQuestion, addTableToMemory, getParserLanguageList } from '@/API/NewAsk'
 import axios from 'axios'
 import i18n from '@/lang/index.js'
 
@@ -8,7 +8,7 @@ export default {
     state.askCancelToken = axios.CancelToken.source()
     const dataFrameId = rootState.dataSource.dataFrameId || data.dataFrameId
     let askCondition = {
-      question: rootState.dataSource.appQuestion || data.question,
+      question: data.question === rootState.dataSource.appQuestion ? rootState.dataSource.appQuestion : data.question,
       dataSourceId: rootState.dataSource.dataSourceId || data.dataSourceId,
       previewQuestionId: rootGetters['dataSource/drillDownQuestionId'],
       domain: 'GENERAL',
@@ -22,6 +22,11 @@ export default {
   askResult ({dispatch, state}, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
     return askResult(data, cancelToken)
+  },
+  askSpecificType ({ state, commit }, data) {
+    let cancelToken = state.askCancelToken ? state.askCancelToken.token : null
+    commit('result/updateCurrentResultId', data.resultId, { root: true })
+    return askSpecificType(data, cancelToken)
   },
   getComponentList ({dispatch, state}, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null

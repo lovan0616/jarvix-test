@@ -105,5 +105,14 @@ export default {
   },
   clearProcessingDataFrameList (state, data) {
     state.processingDataFrameList = []
-  }
+  },
+  setProcessingDataColumnList (state, data) {
+    state.processingDataColumnList = data
+  },
+  addProcessingDataColumnList (state, data) {
+    state.processingDataColumnList.push(data)
+  },
+  spliceProcessingDataColumnList (state, index) {
+    state.processingDataColumnList.splice(index, 1)
+  },
 }

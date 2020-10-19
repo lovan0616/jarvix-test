@@ -43,6 +43,7 @@
       :data-frame-id="result.dataFrameId"
       :result-id="result.resultId"
       :result-info="result.info"
+      :intent="result.intent"
       :segmentation-payload="result.segmentationPayload"
       :restrictions="result.restrictions"
       :question="result.question"
@@ -128,38 +129,38 @@ export default {
       this.boardName = currentBoard.length > 0 ? currentBoard[0].name : null
     },
     getPinboardInfo () {
-      this.$store.dispatch('pinboard/getPinboardById', this.$route.params.id)
-        .then(response => {
-          if (response.length === 0) {
-            this.isLoading = false
-            return false
-          }
-          response.forEach(element => {
-            this.boardList.push({
-              pinboardId: element.id,
-              resultId: element.resultId,
-              dataSourceId: element.dataSourceId,
-              dataFrameId: element.dataFrameId,
-              layout: null,
-              info: null,
-              segmentationPayload: null,
-              isDeleted: false
-            })
-
-            this.pinboardData.push({
-              pinboardId: element.id,
-              resultId: element.resultId,
-              dataframeName: null,
-              dataColumnMap: null,
-              selectedColumns: null,
-              restrictions: null
-            })
-            this.getComponent(element)
-          })
-          this.$store.commit('pinboard/setpinboardData', this.pinboardData)
-        }).catch(() => {
+      this.$store.dispatch('pinboard/getPinboardById', this.$route.params.id).then(response => {
+        if (response.length === 0) {
           this.isLoading = false
+          return false
+        }
+        response.forEach(element => {
+          this.boardList.push({
+            pinboardId: element.id,
+            resultId: element.resultId,
+            dataSourceId: element.dataSourceId,
+            dataFrameId: element.dataFrameId,
+            layout: null,
+            info: null,
+            segmentationPayload: null,
+            isDeleted: false,
+            intent: element.intent
+          })
+
+          this.pinboardData.push({
+            pinboardId: element.id,
+            resultId: element.resultId,
+            dataframeName: null,
+            dataColumnMap: null,
+            selectedColumns: null,
+            restrictions: null
+          })
+          this.getComponent(element)
         })
+        this.$store.commit('pinboard/setpinboardData', this.pinboardData)
+      }).catch(() => {
+        this.isLoading = false
+      })
     },
     getComponent (res, resolveFunction = null) {
       window.clearTimeout(this.timeoutFunction)

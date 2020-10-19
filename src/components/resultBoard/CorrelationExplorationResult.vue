@@ -151,10 +151,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.correlation-result-body.result-board-body {
-  padding-top: 16px;
-}
-
 .key-result-wrapper {
   display: flex;
   .key-result-selector {
