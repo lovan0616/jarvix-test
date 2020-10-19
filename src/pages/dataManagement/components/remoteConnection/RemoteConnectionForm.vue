@@ -130,6 +130,10 @@ export default {
         {
           name: 'POSTGRESQL',
           value: 'POSTGRESQL'
+        },
+        {
+          name: 'ORACLE',
+          value: 'ORACLE'
         }
       ]
     }

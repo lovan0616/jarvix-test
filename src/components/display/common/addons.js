@@ -11,9 +11,19 @@ export function linearGradient (colorStart, colorEnd, isParallel = false) {
   }], false)
 }
 
+// 顏色增加 opacity
+export function convertHexToRGBA (hexCode, opacity) {
+  let hex = hexCode.replace('#', '')
+  if (hex.length === 3) hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`
+  const r = parseInt(hex.substring(0, 2), 16)
+  const g = parseInt(hex.substring(2, 4), 16)
+  const b = parseInt(hex.substring(4, 6), 16)
+  return `rgba(${r},${g},${b},${opacity})`
+}
+
 export const warningColor = [linearGradient('#FF7246', '#FF5C46')]
 export const colorOnly1 = [linearGradient('#4CE2F0', '#438AF8')]
-export const colorOnly2 = [linearGradient('#4CE2F0', '#438AF8'), linearGradient('#79ACFF', '#5A3FFA')]
+export const colorOnly2 = ['#44D2FF', '#CA66DA']
 export const color3 = ['#44D2FF', '#6C55FA', '#CA66DA']
 export const color5 = ['#44D2FF', '#6C55FA', '#CA66DA', '#FF9559', '#EDF86C']
 
@@ -606,5 +616,63 @@ export function monitorMarkLine (upperLimit, lowerLimit, isParallel = false) {
       width: 2
     },
     data: markLineData
+  }
+}
+
+export function lineChartMonitorVisualMap (upperLimit, lowerLimit, maxY, minY, dimension, chartColor = '#438AF8', warningColor = '#EB5959') {
+  if (upperLimit !== null && lowerLimit !== null) {
+    // 上下限都有設
+    return {
+      type: 'piecewise',
+      dimension: dimension,
+      show: false,
+      pieces: [{
+        gte: upperLimit,
+        color: warningColor
+      }, {
+        gt: lowerLimit,
+        lte: upperLimit,
+        color: chartColor
+      }, {
+        lt: lowerLimit,
+        color: warningColor
+      }]
+    }
+  } else if (lowerLimit === null) {
+      return {
+        type: 'piecewise',
+        dimension: dimension,
+        show: false,
+        pieces: upperLimit > minY ? [{
+          gt: upperLimit,
+          color: warningColor
+        },{
+          lte: upperLimit,
+          gt: minY,
+          color: chartColor
+        }] : [{
+          lte: maxY,
+          gt: upperLimit,
+          color: warningColor
+        }]
+      }
+  } else {
+    return {
+      type: 'piecewise',
+      dimension: dimension,
+      show: false,
+      pieces: lowerLimit > minY ? [{
+        gt: lowerLimit,
+        color: chartColor
+      },{
+        lte: lowerLimit,
+        gt: minY,
+        color: warningColor
+      }] : [{
+        lte: maxY,
+        gt: lowerLimit,
+        color: chartColor
+      }]
+    }
   }
 }

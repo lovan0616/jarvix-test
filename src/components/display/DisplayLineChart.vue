@@ -52,7 +52,7 @@
 <script>
 import EchartAddon from './common/addon.js'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
-import { getDrillDownTool, monitorMarkLine } from '@/components/display/common/addons'
+import { getDrillDownTool, monitorMarkLine, lineChartMonitorVisualMap } from '@/components/display/common/addons'
 import {
   colorOnly1,
   colorOnly2,
@@ -162,6 +162,13 @@ export default {
         series: this.series,
         color: this.colorList
       }
+
+      const seriesAmount = this.dataset.display_columns ? this.dataset.display_columns.length : this.dataset.columns.length
+      config.toolbox.feature.myShowLabel.show = seriesAmount <= 4
+      config.toolbox.feature.myShowLabel.onclick = () => {
+        this.$emit('toggleLabel')
+      }
+
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         if (this.hasPagination) {
           this.$el.addEventListener('click', this.controlPagination, false)
@@ -169,8 +176,8 @@ export default {
         let dataset = opt.dataset[0].source
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
-          let tableData = dataset[i].reduce((acc, cur) => {
-            return acc + `<td style="padding: 4px 12px;white-space:nowrap;">${cur === null ? '' : cur}</td>`
+          let tableData = dataset[i].reduce((acc, cur, idx) => {
+            return acc + `<td style="padding: 4px 12px;white-space:nowrap;">${i && idx && cur ? this.formatComma(cur) : cur || ''}</td>`
           }, '')
           table += `<tr ${i % 2 === 0 ? (i === 0 ? 'style="background-color:#2B4D51"' : 'style="background-color:rgba(50, 75, 78, 0.6)"') : ''}>${tableData}</tr>`
         }
@@ -220,72 +227,106 @@ export default {
       let upperLimit = this.title.yAxis[0].upperLimit || null
       let lowerLimit = this.title.yAxis[0].lowerLimit || null
       if (upperLimit !== null || lowerLimit !== null) {
-        // 找出 Y 的最大、最小值
-        let maxY = this.dataset.data[0][0]
-        let minY = this.dataset.data[0][0]
-        this.dataset.data.forEach(element => {
-          if (element[0] !== null) {
-            if (maxY === null) maxY = element[0]
-            maxY = element[0] > maxY ? element[0] : maxY
-            if (minY === null) minY = element[0]
-            minY = element[0] < minY ? element[0] : minY
-          }
-        })
-
         // markline
         config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit)
         
-        if (upperLimit && lowerLimit) {
-          config.visualMap = [{
-            type: 'piecewise',
-            show: false,
-            pieces: [{
-              gt: upperLimit,
-              color: '#EB5959'
-            },{
-              lte: upperLimit,
-              gt: lowerLimit,
-              color: '#438AF8'
-            },{
-              lte: lowerLimit,
-              color: '#EB5959'
-            }]
-          }]
-        } else if (lowerLimit === null) {
-          config.visualMap = [{
-            type: 'piecewise',
-            show: false,
-            pieces: upperLimit > minY ? [{
-              gt: upperLimit,
-              color: '#EB5959'
-            },{
-              lte: upperLimit,
-              gt: minY,
-              color: '#438AF8'
-            }] : [{
-              lte: maxY,
-              gt: upperLimit,
-              color: '#EB5959'
-            }]
-          }]
-        } else {
-          config.visualMap = [{
-            type: 'piecewise',
-            show: false,
-            pieces: lowerLimit > minY ? [{
-              gt: lowerLimit,
-              color: '#438AF8'
-            },{
-              lte: lowerLimit,
-              gt: minY,
-              color: '#EB5959'
-            }] : [{
-              lte: maxY,
-              gt: lowerLimit,
-              color: '#438AF8'
-            }]
-          }]
-        }
+        // 找出 Y 的最大、最小值
+        if(this.dataset.data[0].length === 1) {
+          // 找出 Y 的最大、最小值
+          let maxY = this.dataset.data[0][0]
+          let minY = this.dataset.data[0][0]
+          this.dataset.data.forEach(element => {
+            if (element[0] !== null) {
+              if (maxY === null) maxY = element[0]
+              maxY = element[0] > maxY ? element[0] : maxY
+              if (minY === null) minY = element[0]
+              minY = element[0] < minY ? element[0] : minY
+            }
+          })
+
+          config.visualMap = []
+          config.visualMap.push(lineChartMonitorVisualMap(upperLimit, lowerLimit, maxY, minY, 1))
+
+          // if (upperLimit && lowerLimit) {
+          //   config.visualMap = [{
+          //     type: 'piecewise',
+          //     show: false,
+          //     pieces: [{
+          //       gt: upperLimit,
+          //       color: '#EB5959'
+          //     },{
+          //       lte: upperLimit,
+          //       gt: lowerLimit,
+          //       color: '#438AF8'
+          //     },{
+          //       lte: lowerLimit,
+          //       color: '#EB5959'
+          //     }]
+          //   }]
+          // } else if (lowerLimit === null) {
+          //   config.visualMap = [{
+          //     type: 'piecewise',
+          //     show: false,
+          //     pieces: upperLimit > minY ? [{
+          //       gt: upperLimit,
+          //       color: '#EB5959'
+          //     },{
+          //       lte: upperLimit,
+          //       gt: minY,
+          //       color: '#438AF8'
+          //     }] : [{
+          //       lte: maxY,
+          //       gt: upperLimit,
+          //       color: '#EB5959'
+          //     }]
+          //   }]
+          // } else {
+          //   config.visualMap = [{
+          //     type: 'piecewise',
+          //     show: false,
+          //     pieces: lowerLimit > minY ? [{
+          //       gt: lowerLimit,
+          //       color: '#438AF8'
+          //     },{
+          //       lte: lowerLimit,
+          //       gt: minY,
+          //       color: '#EB5959'
+          //     }] : [{
+          //       lte: maxY,
+          //       gt: lowerLimit,
+          //       color: '#438AF8'
+          //     }]
+          //   }]
+          // }
+        } 
+        /* 註解部分是處理多條線的上下限問題
+         * 但 chart 的 label 會因為使用 visualMap 的關係
+         * 沒辦法應映每條線而有不同的 label 顏色
+         * 目前只有加上兩條 mark line 
+         * 待找到分別設定多條線的 label 顏色後再使用 visualMap
+        */
+        // else {
+        //   const allIsNull = arr => arr.every(element => element === null)
+        //   let maxY = allIsNull(this.dataset.data[0]) ? null : Math.max(...this.dataset.data[0])
+        //   let minY = maxY
+        //   this.dataset.data.forEach(element => {
+        //     if (!allIsNull(element)) {
+        //       let maxValue = Math.max(...element)
+        //       let minValue = Math.min(...element)
+        //       if (maxY === null) maxY = maxValue
+        //       maxY = maxValue > maxY ? maxValue : maxY
+        //       if (minY === null) minY = minValue
+        //       minY = minValue < minY ? minValue : minY
+        //     }
+        //   })
+
+        //   config.visualMap = []
+        //   let dimensionAmount = this.dataset.data[0].length
+        //   while(dimensionAmount) {
+        //     config.visualMap.push(lineChartMonitorVisualMap(upperLimit, lowerLimit, maxY, minY, dimensionAmount))
+        //     dimensionAmount -= 1
+        //   }
+        // }
       }
 
       return config

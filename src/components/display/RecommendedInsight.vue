@@ -8,6 +8,7 @@
     </div>
     <div class="card__body">
       <task
+        :key="componentId"
         :component-id="componentId"
         :show-toolbox="false"
         :custom-chart-style="{ width: '100%', height: '240px' }"

@@ -19,7 +19,8 @@ export default {
     dataFrameId: null,
     dataFrameList: [],
     // 使用者自己建立的資料源
-    processingDataFrameList: []
+    processingDataFrameList: [],
+    processingDataColumnList: []
   },
   actions,
   mutations,

@@ -536,6 +536,8 @@ export default {
     },
     async updateIndexLayout (e) {
       const { oldIndex, newIndex } = e
+      // 位置如果沒改變就不處理
+      if (oldIndex === newIndex) return
       let tempNumberComponent = [...this.numberComponent]
       const tempDraggedComponent = tempNumberComponent.splice(oldIndex, 1)[0]
       tempNumberComponent.splice(newIndex, 0, tempDraggedComponent)

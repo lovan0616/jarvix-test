@@ -21,7 +21,7 @@
     >
       <div class="war-room-setting__block-container">
         <div 
-          v-if="componentData.isError && !componentData.componentId" 
+          v-if="componentData.isError && !componentData.config" 
           class="war-room-setting__block is-error">
           {{ componentData.errorMessage }}
         </div>
@@ -228,6 +228,7 @@
         <button
           v-if="(componentData.isError || componentData.componentId) && hasPermission('group_delete_data')"
           :disabled="isProcessing"
+          :class="{ 'is-error': componentData.isError && !componentData.config }"
           type="button"
           class="btn btn-outline war-room-setting__button-block-button--left"
           @click="confirmDeleteWarRoomComponent"
@@ -235,6 +236,7 @@
           <svg-icon icon-class="delete" />
         </button>
         <button
+          v-if="!(componentData.isError && !componentData.config)"
           :disabled="disableSaveButton"
           type="button"
           class="btn btn-default war-room-setting__button-block-button--right"
@@ -648,9 +650,14 @@ export default {
   &__button-block-button {
     display: flex;
     &--left {
+      flex: 1 1 40px;
       min-width: 40px;
       padding: 0 2px;
       margin-right: 12px;
+
+      &.is-error {
+        margin-right: 0;
+      }
     }
 
     &--right {
