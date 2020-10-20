@@ -104,7 +104,7 @@ export default {
 
     .chart-block {
       width: 100%;
-      padding: 30px;
+      padding: 50px 30px 30px 30px;
       min-width: 0;
       flex: 1;
       margin-right: 0;
@@ -116,7 +116,7 @@ export default {
       border-radius: 8px;
       width: 40%;
       position: absolute;
-      top: 65px;
+      top: 50px;
       right: 30px;
       border: 1px solid $theme-color-primary;
       background-color: rgba(24, 24, 24, 0.95);
@@ -139,7 +139,7 @@ export default {
 
     .control-btn {
       position: absolute;
-      top: 30px;
+      top: 15px;
       right: 30px;
       padding: 7px 15px;
       z-index: 1;
@@ -151,6 +151,9 @@ export default {
   }
   .other-result-container {
     padding: 30px;
+    .task:first-child {
+      padding-top: 0;
+    }
   }
   .insights-info.recommended {
     .insights-info__wrapper {

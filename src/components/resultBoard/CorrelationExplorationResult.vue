@@ -151,22 +151,35 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.key-result-wrapper {
-  display: flex;
-  .key-result-selector {
-    min-width: 200px;
-  }
+.correlation-result-body {
+  /deep/ .key-result-container {
+    & > .chart-block {
+      padding-top: 20px;
+    }
+    .key-result-wrapper {
+      display: flex;
+      .key-result-selector {
+        min-width: 200px;
+      }
 
-  .key-result-viewer {
-    min-width: calc(100% - 200px);
-    padding-left: 24px;
-  }
+      .key-result-viewer {
+        min-width: calc(100% - 200px);
+        padding-left: 24px;
+        .chart-block {
+          padding-top: 10px;
+        }
+        .task ~ .task {
+          padding-top: 30px;
+        }
+      }
 
-  .key-result-spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+      .key-result-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+    }
   }
 }
 </style>

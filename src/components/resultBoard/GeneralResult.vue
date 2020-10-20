@@ -315,9 +315,6 @@ export default {
   }
   .task {
     padding-top: 30px;
-    &:first-child {
-      padding-top: 40px;
-    }
   }
 }
 </style>
