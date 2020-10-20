@@ -691,6 +691,7 @@
     "displaySetting": "Show Setting"
   },
   "clustering": {
+    "cluster": "Cluster",
     "dataOverview": "Overview",
     "clusteringAnalysis": "Clustering",
     "saveClusteringResultAsColumn": "Save clustering result as a new column",
