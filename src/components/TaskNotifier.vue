@@ -83,14 +83,10 @@ export default {
   computed: {
     ...mapState('dataSource', ['processingDataColumnList']),
     ...mapGetters('dataSource', ['getOwnProcessingTasks']),
-    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId'])
+    ...mapGetters('userManagement', ['getCurrentAccountId'])
   },
   watch: {
     getCurrentAccountId () {
-      this.processingTasks = []
-      this.checkBgColumnTasks()
-    },
-    getCurrentGroupId () {
       this.processingTasks = []
       this.checkBgColumnTasks()
     },

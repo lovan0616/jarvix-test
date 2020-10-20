@@ -73,7 +73,6 @@ export default {
   getOwnProcessingTasks (state, getters, rootState, rootGetters) {
     const userId = rootState.userManagement.userId
     const accountId = rootGetters['userManagement/getCurrentAccountId']
-    const groupId = rootGetters['userManagement/getCurrentGroupId']
-    return state.processingDataColumnList.filter(item => item.userId === userId && item.accountId === accountId && item.groupId === groupId)
+    return state.processingDataColumnList.filter(item => item.userId === userId && item.accountId === accountId)
   }
 }
