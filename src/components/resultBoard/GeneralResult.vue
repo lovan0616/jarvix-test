@@ -28,6 +28,10 @@
               <spinner 
                 v-if="isProcessing[intentType.OVERVIEW]" 
                 size="16"/>
+              <svg-icon 
+                v-else-if="!isKeyResultTaskComplete[intentType.OVERVIEW]"
+                class="exclamation-triangle-icon"
+                icon-class="exclamation-triangle" />
             </div>
           </li>
           <li
@@ -44,7 +48,7 @@
                 v-if="isProcessing[intentType.CLUSTERING]" 
                 size="16"/>
               <svg-icon 
-                v-else-if="!isKeyResultTaskComplete"
+                v-else-if="!isKeyResultTaskComplete[intentType.CLUSTERING]"
                 class="exclamation-triangle-icon"
                 icon-class="exclamation-triangle" />
               <div
@@ -198,9 +202,12 @@ export default {
         OVERVIEW: null,
         CLUSTERING: null
       },
+      isKeyResultTaskComplete: {
+        OVERVIEW: true,
+        CLUSTERING: true
+      },
       activeTab: null,
       isShowSaveClusteringDialog: false,
-      isKeyResultTaskComplete: true,
       intentType
     }
   },
@@ -300,7 +307,7 @@ export default {
       }
     },
     setTaskStatus (value) {
-      this.isKeyResultTaskComplete = value
+      this.isKeyResultTaskComplete[this.activeTab] = value
     }
   }
 }
