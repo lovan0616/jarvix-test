@@ -289,7 +289,6 @@ export default {
       this.fetchSpecificType(tabName)
     },
     switchDialogName (action) {
-      if (!this.isKeyResultTaskComplete) return
       if (action !== 'saveClustering') return
       if (!this.resultInfo.canSaveResult) {
         return Message({

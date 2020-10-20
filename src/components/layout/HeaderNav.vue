@@ -141,7 +141,7 @@ export default {
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
     },
-    // isShowFunctionDescription () {`
+    // isShowFunctionDescription () {
     //   return this.$store.state.setting.locale.includes('zh')
     // },
     groupName () {
