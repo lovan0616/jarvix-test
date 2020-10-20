@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     ...mapState('userManagement', ['userId']),
-    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId']),
+    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'getCurrentGroupName']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     }
@@ -93,7 +93,8 @@ export default {
                 taskId,
                 userId: this.userId,
                 accountId: this.getCurrentAccountId,
-                groupId: this.getCurrentGroupId
+                groupId: this.getCurrentGroupId,
+                groupName: this.getCurrentGroupName
               })
             })
             .catch(() => {})

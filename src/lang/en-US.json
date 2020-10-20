@@ -400,7 +400,8 @@
     "featureColumn": "Custom Field",
     "tagColumn": "Tagged Field",
     "originalField": "Original Field",
-    "createdMethod": "Created Method"
+    "createdMethod": "Created Method",
+    "buildingNewColumn": "Building New Column"
   },
   "algorithm": {
     "name": "Algorithm",

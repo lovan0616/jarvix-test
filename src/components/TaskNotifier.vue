@@ -23,22 +23,45 @@
           <svg-icon 
             icon-class="spinner" 
             class="task__icon"/>
-          <span class="task__title">{{ task.dataColumnPrimaryAlias }}</span>
-          <span class="task__desc">{{ $t('editing.dataSource') }} : {{ task.dataSourceName }}</span>
-          <span class="task__desc">{{ $t('editing.dataFrame') }} : {{ task.dataFramePrimaryAlias }}</span>
+          <span class="task__title">{{ $t('editing.buildingNewColumn') }}</span>
+          <ul class="task__desc">
+            <li class="task__desc-item">
+              <span class="task__desc-title">{{ $t('editing.groupName') }}</span>
+              <span class="task__desc-content">{{ task.groupName }}</span>
+            </li>
+            <li class="task__desc-item">
+              <span class="task__desc-title">{{ $t('editing.dataSource') }}</span>
+              <span class="task__desc-content">{{ task.dataSourceName }}</span>
+            </li>
+            <li class="task__desc-item">
+              <span class="task__desc-title">{{ $t('editing.dataFrame') }}</span>
+              <span class="task__desc-content">{{ task.dataFramePrimaryAlias }}</span>
+            </li>
+            <li class="task__desc-item">
+              <span class="task__desc-title">{{ $t('editing.columnName') }}</span>
+              <span class="task__desc-content">{{ task.dataColumnPrimaryAlias }}</span>
+            </li>
+          </ul>
+          
         </div>
       </div>
     </div>
     <div
       slot="reference"
       :class="{'is-open': isOpen}"
-      class="task-messages__icon"
+      class="task-notifier__icon"
     >
-      <el-badge 
-        :value="processingTasks.length" 
-        :hidden="processingTasks.length === 0">
-        <svg-icon icon-class="task" />
-      </el-badge>
+      <el-tooltip 
+        :content="$t('notification.unfinishedTasks')" 
+        class="item" 
+        effect="dark" 
+        placement="bottom">
+        <el-badge
+          :value="processingTasks.length"
+          :hidden="processingTasks.length === 0">
+          <svg-icon icon-class="task" />
+        </el-badge>
+      </el-tooltip>
     </div>
   </el-popover>
 </template>
@@ -70,6 +93,12 @@ export default {
     getCurrentGroupId () {
       this.processingTasks = []
       this.checkBgColumnTasks()
+    },
+    getOwnProcessingTasks (newList, oldList) {
+      if (newList.length > oldList.length) {
+        clearInterval(this.intervalTimer)
+        this.startTaskPolling()
+      }
     }
   },
   mounted () {
@@ -94,13 +123,14 @@ export default {
     getBgColumnTasksFromStorage () {
       for (let i = this.getOwnProcessingTasks.length - 1; i >= 0; i--) {
         const taskId = this.getOwnProcessingTasks[i].taskId
+        const groupName = this.getOwnProcessingTasks[i].groupName
         checkClusteringColumnStatus(taskId)
           .then(task => {
             switch (task.status) {
               case 'Ready':
               case 'Process':
                 if (!this.processingTasks.find(item => item.taskId === taskId)) {
-                  this.processingTasks.push({ ...task, taskId })
+                  this.processingTasks.push({ ...task, taskId, groupName })
                 }
                 break
               case 'Complete':
@@ -160,21 +190,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.task-messages {
+.task-notifier {
   &__icon {
     display: flex;
     justify-content: center;
-    margin-right: 16px;
-    height: 40px;
-    width: 40px;
+    width: 30px;
     font-size: 16px;
     letter-spacing: 0.05em;
-    border: 1px solid #2D3033;
-    border-radius: 5px;
     user-select: none;
     outline: none;
     cursor: pointer;
-    line-height: 40px;
     &.is-open {
       color: $theme-color-primary;
     }
@@ -186,6 +211,11 @@ export default {
     color: $theme-text-color-dark;
     background-color: $theme-color-warning;
     border: none;
+    padding: 0 4px;
+    border-radius: 50%;
+    font-size: 10px;
+    height: 16px;
+    line-height: 16px;
   }
 }
 </style>
