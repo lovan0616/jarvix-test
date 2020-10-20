@@ -95,10 +95,14 @@ export default {
       this.checkBgColumnTasks()
     },
     getOwnProcessingTasks (newList, oldList) {
+      // 增加task時，重新計時10秒再詢問，免得遇到來不及將status壓成Ready而噴錯
       if (newList.length > oldList.length) {
         clearInterval(this.intervalTimer)
         this.startTaskPolling()
       }
+    },
+    processingDataColumnList (value) {
+      localStorage.setItem('bgColumnTasks', JSON.stringify(value))
     }
   },
   mounted () {
@@ -108,11 +112,6 @@ export default {
   },
   destroyed () {
     clearInterval(this.intervalTimer)
-    if (this.processingDataColumnList.length > 0) {
-      localStorage.setItem('bgColumnTasks', JSON.stringify(this.processingDataColumnList))
-    } else {
-      localStorage.removeItem('bgColumnTasks')
-    }
   },
   methods: {
     startTaskPolling () {
