@@ -80,14 +80,6 @@ export default {
     ...mapGetters('userManagement', ['getCurrentAccountId'])
   },
   watch: {
-    getOwnProcessingTasks (newList, oldList) {
-      if (newList.length > oldList.length) {
-        // task增加時，清掉timer然後馬上先詢問一次再開始polling
-        clearInterval(this.intervalTimer)
-        this.getBgColumnTasksFromStorage()
-        this.startTaskPolling()
-      }
-    },
     getCurrentAccountId () {
       this.processingTasks = []
       this.checkBgColumnTasks()
@@ -106,7 +98,7 @@ export default {
   },
   methods: {
     startTaskPolling () {
-      this.intervalTimer = window.setInterval(() => {
+      this.intervalTimer = setInterval(() => {
         this.getBgColumnTasksFromStorage()
       }, 10 * 1000)
     },
