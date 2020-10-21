@@ -80,6 +80,14 @@ export default {
     ...mapGetters('userManagement', ['getCurrentAccountId'])
   },
   watch: {
+    getOwnProcessingTasks (newList, oldList) {
+      if (newList.length > oldList.length) {
+        // task增加時，清掉timer並馬上詢問後開始polling，讓未完成項目數立即更新
+        clearInterval(this.intervalTimer)
+        this.getBgColumnTasksFromStorage()
+        this.startTaskPolling()
+      }
+    },
     getCurrentAccountId () {
       this.processingTasks = []
       this.checkBgColumnTasks()
@@ -162,9 +170,15 @@ export default {
       this.isOpen = !this.isOpen
     },
     checkBgColumnTasks () {
-      const prevBgColumnTasks = JSON.parse(localStorage.getItem('bgColumnTasks'))
-      if (prevBgColumnTasks.length > 0) {
-        this.$store.commit('dataSource/setProcessingDataColumnList', prevBgColumnTasks)
+      const prevBgColumnTasks = localStorage.getItem('bgColumnTasks')
+      if (!prevBgColumnTasks) {
+        this.$store.commit('dataSource/setProcessingDataColumnList', [])
+        localStorage.setItem('bgColumnTasks', '[]')
+        return
+      }
+      const parsedPrevBgColumnTasks = JSON.parse(prevBgColumnTasks)
+      if (parsedPrevBgColumnTasks.length >= 0) {
+        this.$store.commit('dataSource/setProcessingDataColumnList', parsedPrevBgColumnTasks)
       }
     }
   }
