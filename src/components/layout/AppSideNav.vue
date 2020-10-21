@@ -100,7 +100,7 @@
           </li>
         </el-tooltip>
         <el-tooltip
-          v-if="showSchedule === 'true'"
+          v-if="showSchedule"
           slot="label"
           :content="$t('sideNav.schedule')"
           :disabled="isShowFullSideNav"
@@ -245,7 +245,7 @@ export default {
       ]
     },
     showSchedule () {
-      return localStorage.getItem('isShowScheduleModule')
+      return localStorage.getItem('isShowScheduleModule') === 'true' || (this.getCurrentAccountId === 11 && window.location.hostname === 'jarvix.sis.ai')
     }
   },
   mounted () {
