@@ -94,7 +94,6 @@ export default {
     chartOption () {
       let chartAddon = {...JSON.parse(JSON.stringify(chartOptions())), ...getDrillDownTool(this.$route.name, this.title)}
       let scatterOptions = JSON.parse(JSON.stringify(scatterChartConfig))
-      console.log(chartAddon)
       this.$set(chartAddon.xAxis, 'splitLine', scatterOptions.xAxisSplitLine)
       this.$set(chartAddon.yAxis, 'splitLine', scatterOptions.yAxisSplitLine)
       chartAddon.tooltip = {
