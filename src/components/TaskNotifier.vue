@@ -4,7 +4,7 @@
     placement="bottom-end"
     width="300"
     popper-class="el-popover--task-notifier"
-    trigger="click"
+    trigger="hover"
     @show="toggleIsOpen"
     @hide="toggleIsOpen"
   >
@@ -51,17 +51,11 @@
       :class="{'is-open': isOpen}"
       class="task-notifier__icon"
     >
-      <el-tooltip 
-        :content="$t('notification.unfinishedTasks')" 
-        class="item" 
-        effect="dark" 
-        placement="bottom">
-        <el-badge
-          :value="processingTasks.length"
-          :hidden="processingTasks.length === 0">
-          <svg-icon icon-class="task" />
-        </el-badge>
-      </el-tooltip>
+      <el-badge
+        :value="processingTasks.length"
+        :hidden="processingTasks.length === 0">
+        <svg-icon icon-class="task" />
+      </el-badge>
     </div>
   </el-popover>
 </template>
