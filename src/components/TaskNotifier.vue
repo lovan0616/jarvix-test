@@ -162,9 +162,15 @@ export default {
       this.isOpen = !this.isOpen
     },
     checkBgColumnTasks () {
-      const prevBgColumnTasks = JSON.parse(localStorage.getItem('bgColumnTasks'))
-      if (prevBgColumnTasks.length > 0) {
-        this.$store.commit('dataSource/setProcessingDataColumnList', prevBgColumnTasks)
+      const prevBgColumnTasks = localStorage.getItem('bgColumnTasks')
+      if (!prevBgColumnTasks) {
+        this.$store.commit('dataSource/setProcessingDataColumnList', [])
+        localStorage.setItem('bgColumnTasks', '[]')
+        return
+      }
+      const parsedPrevBgColumnTasks = JSON.parse(prevBgColumnTasks)
+      if (parsedPrevBgColumnTasks.length >= 0) {
+        this.$store.commit('dataSource/setProcessingDataColumnList', parsedPrevBgColumnTasks)
       }
     }
   }
