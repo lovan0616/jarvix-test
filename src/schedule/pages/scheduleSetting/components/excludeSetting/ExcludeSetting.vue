@@ -1,6 +1,9 @@
 <template>
   <div class="excluded-setting">
-    <el-collapse v-model="activeCollapseItems">
+    <el-collapse
+      v-model="activeCollapseItems"
+      class="ss-collapse"
+    >
       <el-collapse-item
         v-for="(equipment, equipmentIndex) in excludedEquipment"
         :key="`${equipmentIndex}-${equipment.reasons.length}`"
@@ -105,11 +108,16 @@ export default {
       this.excludedEquipment[equipmentIndex].reasons.push({ ...this.defaultExcludedVal })
     },
     addEquipment () {
+      // 找出第一個不重複的 equipment
+      const selectedIds = this.excludedEquipment.map(item => item.equipmentId)
+      const eq = this.equipments.find(item => !selectedIds.includes(item.value))
+
       this.excludedEquipment.push({
-        equipmentId: null,
-        equipmentName: null,
+        equipmentId: eq.value,
+        equipmentName: eq.label,
         reasons: [{ ...this.defaultExcludedVal }]
       })
+      this.activeCollapseItems.push(eq.value)
     },
     deleteEquipment (equipmentIndex) {
       this.excludedEquipment.splice(equipmentIndex, 1)

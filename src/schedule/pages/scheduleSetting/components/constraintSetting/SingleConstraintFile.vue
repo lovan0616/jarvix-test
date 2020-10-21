@@ -123,5 +123,6 @@ export default {
 .spinner-block {
   height: 32px;
   width: 100px;
+  padding: 2px 0;
 }
 </style>

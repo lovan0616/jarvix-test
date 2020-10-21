@@ -7,7 +7,7 @@
     >
       <div class="dialog__title">
         {{ $t('schedule.setting.updateFiles') }}
-        ><i
+        <i
           class="el-icon-close dialog__close-button"
           @click="$emit('close')"
         />

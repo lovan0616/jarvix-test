@@ -4,6 +4,7 @@
     :placeholder="$t('schedule.base.pleaseSelect')"
     :filterable="filterable"
     class="default-select"
+    popper-class="ss-select"
   >
     <el-option
       v-for="option in options"

@@ -1,5 +1,8 @@
 <template>
-  <el-collapse v-model="activeCollapseItems">
+  <el-collapse
+    v-model="activeCollapseItems"
+    class="ss-collapse"
+  >
     <el-collapse-item
       v-for="(shifts, day, dayIndex) in worktimes"
       :key="`${dayIndex}-${shifts.length}`"

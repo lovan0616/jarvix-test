@@ -1,7 +1,6 @@
 @import './common/variables';
 
-// element-ui
-@import './element-ui/_element-variables.scss';
+// 覆蓋 element-ui 樣式
 @import './element-ui/el-tab.scss';
 @import './element-ui/el-table';
 @import './element-ui/el-collapse.scss';

@@ -238,6 +238,7 @@ export default {
           }
         }).catch(() => {
           this.loading = false
+          this.$emit('failed')
           if (this.intend === 'key_result') {
             if (page === 0) {
               this.isError = true
@@ -442,7 +443,6 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 1;
   }
 
   // pagination 遮罩
