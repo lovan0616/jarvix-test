@@ -182,14 +182,14 @@ export default {
         let dataset = opt.series[0].data
         let maxLength = dataset.length > 1000 ? 1000 : dataset.length
         let table = '<div style="text-align: text;padding: 0 16px;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div>' +
-          `<div style="margin-top: 16px;padding: 0 16px;">${maxLength === 1000 ? this.$t('resultDescription.displayTopData', {count: maxLength}) : this.$t('resultDescription.displayTotalData', {count: maxLength})}</div>` +
+          `<div style="margin-top: 16px;padding: 0 16px;">${maxLength === 1000 ? this.$t('resultDescription.displayTopData', {count: this.formatComma(maxLength)}) : this.$t('resultDescription.displayTotalData', {count: maxLength})}</div>` +
           '<table style="width:100%;padding: 0 16px;"><tbody><tr>' +
           '<td style="padding: 4px 12px;">' + this.title.xAxis[0].display_name + '</td>' +
           '<td style="padding: 4px 12px;">' + this.title.yAxis[0].display_name + '</td>' +
           '</tr>'
         for (let i = 1; i < maxLength; i++) {
           table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>
-            <td style="padding: 4px 12px;">${dataset[i][0]}</td><td style="padding: 4px 12px;">${dataset[i][1]}</td>
+            <td style="padding: 4px 12px;">${this.formatComma(dataset[i][0])}</td><td style="padding: 4px 12px;">${this.formatComma(dataset[i][1])}</td>
           </tr>`
         }
         table += '</tbody></table>'
@@ -235,7 +235,7 @@ export default {
           let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
           let displayFirstDegree = this.formula ? this.formula[1] : Number((firstDegree).toFixed(4))
           let displaySecondDegree = this.formula ? this.formula[2] : Number((secondDegree).toFixed(4))
-          expression = `y = ${displayOffset} ${displayFirstDegree > 0 ? '+' : '-'} ${Math.abs(displayFirstDegree)}x ${displaySecondDegree > 0 ? '+' : '-'} ${Math.abs(displaySecondDegree)}x^2`
+          expression = `y = ${this.formatComma(displayOffset)} ${displayFirstDegree > 0 ? '+' : '-'} ${this.formatComma(Math.abs(displayFirstDegree))}x ${displaySecondDegree > 0 ? '+' : '-'} ${this.formatComma(Math.abs(displaySecondDegree))}x^2`
         }
 
         // 確保回歸線最後一個點要顯示在畫面上，因為 label 標示在最後一個點

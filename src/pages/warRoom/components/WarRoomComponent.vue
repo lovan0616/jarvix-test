@@ -280,7 +280,10 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.isLoading = false
               this.isError = true
-              this.componentBasicInfo = componentBasicInfo
+              this.componentBasicInfo = {
+                ...componentBasicInfo,
+                componentId: this.componentId
+              }
               this.errorMessage = componentBasicInfo.errorMessage || this.$t('message.systemIsError')
               break
           }
@@ -289,6 +292,7 @@ export default {
           if (!this.isPreviewing) this.$emit('check-update')
           window.clearTimeout(this.timeoutFunction)
           window.clearTimeout(this.autoRefreshFunction)
+          this.componentBasicInfo = { componentId: this.componentId }
           this.isLoading = false
           this.isError = true
           this.errorMessage = error.error && error.error.message ? error.error.message : this.$t('message.systemIsError')

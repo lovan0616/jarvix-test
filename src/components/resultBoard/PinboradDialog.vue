@@ -14,7 +14,7 @@
         {{ $t('editing.shareToProject') }}
       </div>
       <div
-        v-if="isWarRoomAddable && hasPermission('group_create_data')"
+        v-if="isWarRoomAddable"
         class="single-board"
         @click="chooseTargetBoard('warRoom')">
         {{ $t('editing.addToWarRoom') }}
@@ -72,7 +72,7 @@
 </template>
 <script>
 import { getWarRoomList, createWarRoom } from '@/API/WarRoom'
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   name: 'PinboardDialog',
@@ -92,7 +92,6 @@ export default {
   },
   computed: {
     ...mapState('userManagement', ['userId']),
-    ...mapGetters('userManagement', ['hasPermission']),
     boardList () {
       if(this.choosedBoard === 'personalPinboard') 
         return this.$store.state.pinboard.pinboardList
@@ -181,8 +180,8 @@ export default {
 .pinboard-dialog {
   width: 200px;
   position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
+  top: 60px;
+  right: 28px;
   background-color: rgba(60, 60, 60, 0.95);
   box-shadow: 0px 4px 10px rgba(58, 178, 189, 0.5);
   border-radius: 8px;

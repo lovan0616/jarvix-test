@@ -148,6 +148,10 @@ export default {
         {
           name: 'POSTGRESQL',
           value: 'POSTGRESQL'
+        },
+        {
+          name: 'ORACLE',
+          value: 'ORACLE'
         }
       ],
       dataSourceId: this.$route.params ? parseInt(this.$route.params.id) : null,

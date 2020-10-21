@@ -1,6 +1,8 @@
 import { logout, switchAccount, switchGroup, updateLocale } from '@/API/User'
 import { getAccountInfo } from '@/API/Account'
 import { getPermission } from '@/API/Permission'
+import { Message } from 'element-ui'
+import router from '../../../router'
 
 export default {
   logout ({ commit }) {
@@ -13,21 +15,32 @@ export default {
       localStorage.removeItem('token')
     })
   },
-  async getUserInfo({ commit, rootState }, defaultGroupId) {
+  async getUserInfo({ commit, rootState, rootGetters }, defaultGroupId) {
     let accountPermissionList = []
     let licensePermissionList = []
     let groupPermissionList = []
     let defaultAccount = {}
+    let defaultGroup = null
 
     try {
       // get user permission
       const userInfo = await getPermission(defaultGroupId)
+
+      if(userInfo.error) {
+        Message({
+          message: userInfo.error.message,
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      }
+
       if (userInfo.accountList.length) {
         defaultAccount = userInfo.accountList.find(account => account.isDefault)
         accountPermissionList = defaultAccount.accountPermissionList
         licensePermissionList = defaultAccount.licensePermissionList
         if (defaultAccount.groupList.length) {
-          let defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
+          defaultGroup = defaultAccount.groupList.find(group => group.isDefault)
           groupPermissionList = defaultGroup.groupPermissionList
         }
       }
@@ -46,22 +59,45 @@ export default {
       })
 
       // get locale info
-      let locale = userInfo.userData.language
+      const hasPermission = rootGetters['userManagement/hasPermission']
+      const userLanguage = userInfo.userData.language
+      const LocalLanguage = rootState.setting.locale
+      const isNeededtoChangeLanguage = !hasPermission('english_ui') && LocalLanguage === 'en-US' 
+
+      const tempLocale = isNeededtoChangeLanguage
+        ? rootState.setting.languageDefault
+        : LocalLanguage 
+      
       // 未設定語系，並在登入前曾修改語系
-      if (!locale && rootState.setting.changeLangBeforeLogin) {
-        updateLocale(rootState.setting.locale)
-      }
-      // 曾設定語系，且發現前後端儲存的語系不同，需判斷該取用前端還是後端語系
-      if (locale && locale !== rootState.setting.locale) {
-        rootState.setting.changeLangBeforeLogin
-          ? updateLocale(rootState.setting.locale)
-          : commit('setting/setLocale', locale, { root: true })
+      if (!userLanguage && rootState.setting.changeLangBeforeLogin ) {
+        updateLocale(tempLocale)
+      } else if (userLanguage && userLanguage !== LocalLanguage) {
+        // 曾設定語系，且發現前後端儲存的語系不同，需判斷該取用前端還是後端語系
+        if (rootState.setting.changeLangBeforeLogin) updateLocale(tempLocale)
+        commit('setting/setLocale', tempLocale, { root: true })
+      } else if (isNeededtoChangeLanguage) {
+        // 處理切換帳號且新帳號無英文語系的權限
+        updateLocale(tempLocale)
+        commit('setting/setLocale', tempLocale, { root: true })
       }
 
       // get account info
       const accountInfo = await getAccountInfo(defaultAccount.id)
       commit('setLicenseInfo', accountInfo.license)
-
+      
+      const account_id = rootGetters['userManagement/getCurrentAccountId']
+      const group_id = rootGetters['userManagement/getCurrentGroupId']
+      if (defaultGroup) {
+        router.push({
+          name: 'PageIndex', 
+          params: { account_id, group_id }
+        })
+      } else {
+        router.push({ 
+          name: 'PageGrouplessGuidance',
+          params: { account_id }
+        })
+      }
       // refresh token
       // const { accessToken } = await refreshToken()
       // localStorage.setItem('token', accessToken)

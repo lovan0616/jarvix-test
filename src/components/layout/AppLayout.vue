@@ -62,7 +62,7 @@ export default {
           value.forEach(dataFrame => {
             getDataFrameById(dataFrame.dataSourceId, true).then(response => {
               let currentDataFrame = response.find(element => element.id === dataFrame.dataFrameId)
-              if (currentDataFrame.state === 'Enable') {
+              if (currentDataFrame && currentDataFrame.state === 'Enable' && currentDataFrame.latestImportStatus !== 'Process') {
                 this.$store.commit('dataSource/updateProcessingDataFrameList', currentDataFrame)
               }
             })

@@ -60,6 +60,7 @@
     "joinTypeEmpty": "请选择关联方式",
     "builded": "资料源建立完成",
     "dataFrameBuilt": "资料表 {name} 建立完成",
+    "dataFrameUpdated": "资料表 {name} 更新完成",
     "noMatchedKey": "没有成功对上的值，请尝试设定其他关联表或栏位",
     "previewFailed": "设定失败，请稍候再试",
     "noData": "目前没有资料",
@@ -111,7 +112,6 @@
     "memberDeleteSuccess": "成员删除成功",
     "etlSuccess": "资料预处理成功，开始建置资料表",
     "etlSettingTempSave": "设定已经暂存",
-    "calculatingPleaseTryLater": "资料计算中，请稍后再试",
     "analysisFailed": "档案解析发生错误",
     "confirmColumnStateTypeChange": "此变更将会清除进阶设定内容，您确认要进行变更？",
     "fileTypeNotSupported": "不支援 {fileType} 档案格式",
@@ -389,10 +389,19 @@
     "sortSetting": "排序设定",
     "dragAndSort": "请按住项目上下拖曳移动排序位置，项目排序变更后即生效。",
     "lastUpdateResult": "近一次更新结果",
+    "startTime": "开始时间",
+    "endTime": "结束时间",
+    "elapsedTime": "更新花费时间",
     "noData": "暂无数据",
     "SQLSyntax": "SQL语法",
     "copyTableFromDatabase": "复制资料库资料表",
-    "useSqlScript": "使用自定义 SQL"
+    "useSqlScript": "使用自定义 SQL",
+    "confirmDeleteColumnText": "您确定要删除此栏位吗？",
+    "featureColumn": "自定义栏位",
+    "tagColumn": "标签栏位",
+    "originalField": "原始栏位",
+    "createdMethod": "建立方式",
+    "buildingNewColumn": "建置新栏位"
   },
   "algorithm": {
     "name": "演算法",
@@ -561,6 +570,20 @@
     "dataFrameUpdate": "资料表更新",
     "rebuild": "重新建置"
   },
+  "fileDataUpdate": {
+    "dataUpdateSetting": "资料更新设定",
+    "processStep1": "更新模式",
+    "processStep2": "选择档案",
+    "processStep3": "上传档案",
+    "updateMode": "更新模式",
+    "append": "资料表更新",
+    "reimport": "重新建置",
+    "reChoose": "重新选择",
+    "reUploadFile" :"重新上传档案",
+    "build": "立即建置",
+    "reSetting": "重新设定模式",
+    "dataUpdatingReminding": "资料表更新将以背景执行方式进行，更新进度将显示在资料表状态。"
+  },
   "feature": {
     "value": "数值",
     "columnValue": "栏位值",
@@ -667,6 +690,20 @@
     "goToLivePage": "前往发布页面",
     "all": "全部",
     "displaySetting": "显示设定"
+  },
+  "clustering": {
+    "dataOverview": "资料概况",
+    "clusteringAnalysis": "分群分析",
+    "saveClusteringResultAsColumn": "储存分群结果为标签栏位",
+    "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "自定义栏位或来自关联资料表的栏位，无法储存为标签栏位。",
+    "createClusteringColumn": "新增标签栏位",
+    "clusteringColumnName": "标签栏位名称",
+    "outlier": "离群",
+    "piecesOfData": "{amount} 笔资料",
+    "buildingClusteringColumn": "栏位建置中，建置完成即可使用。",
+    "buildingClusteringColumnSuccess": "标签栏位「{columnName}」建置成功。",
+    "buildingClusteringColumnFailed": "标签栏位「{columnName}」建置失败。",
+    "clusteringColumnOriginFrom": "(来自 [资料源]{dataSourceName} [资料表]{dataFrameName})"
   },
   "description": {
     "basic": {
@@ -803,6 +840,7 @@
     "logout": "登出",
     "change": "变更",
     "copy": "复制",
+    "copySQL": "复制语法",
     "pinToBoard": "加入钉板",
     "warRoom": "战情室",
     "built": "建立",
@@ -824,7 +862,8 @@
     "tableCreatedInfo": "资料表建立资讯",
     "select": "选择",
     "download": "资料下载",
-    "dataExplanation": "资料说明",
+    "dataExplanation": "资料说明", 
+    "dataUpdate": "资料更新",
     "start": "开始",
     "copyAndBuild": "复制并建置",
     "createGroup": "新建专案",
@@ -850,7 +889,8 @@
     "monitorSetting": "监测设定",
     "updateImmediately": "立即更新",
     "AddNewWarRoom": "新增战情室",
-    "sendInvitation": "寄送邀请信"
+    "sendInvitation": "寄送邀请信",
+    "downloadPage": "下载"
   },
   "timeScopeUnit": {
     "second": "秒",
@@ -860,7 +900,12 @@
     "week": "周",
     "month": "月",
     "season": "季",
-    "year": "年"
+    "year": "年",
+    "allowArg": {
+      "second": "{n} 秒",
+      "minute": "{n} 分",
+      "hour": "{n} 时"
+    }
   },
   "aggregation": {
     "mean": "平均",
@@ -1836,7 +1881,8 @@
     "uploadLimitNotification": "资料数量或数据容量已达上限",
     "uploadLimit": "资料表限制：最多{count}笔",
     "userLimitNotification": "使用者数量已达上限",
-    "columnSummarySampleNotification": "栏位摘要经数值估算，会有些微误差，仅供参考"
+    "columnSummarySampleNotification": "栏位摘要经数值估算，会有些微误差，仅供参考",
+    "unfinishedTasks": "未完成项目"
   },
   "chart": {
     "zoom": "区域缩放",
@@ -1858,7 +1904,8 @@
     "rangeStart": "范围起始",
     "rangeEnd": "范围结束",
     "count": "统计数量",
-    "download": "下载图片"
+    "download": "下载图片",
+    "showLabel": "显示标籤"
   },
   "errorMessage": {
     "SYERR0001": "系统发生非预期错误",

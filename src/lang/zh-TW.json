@@ -60,6 +60,7 @@
     "joinTypeEmpty": "請選擇關聯方式",
     "builded": "資料源建立完成",
     "dataFrameBuilt": "資料表 {name} 建立完成",
+    "dataFrameUpdated": "資料表 {name} 更新完成",
     "noMatchedKey": "沒有成功對上的值，請嘗試設定其他關聯表或欄位",
     "previewFailed": "設定失敗，請稍候再試",
     "noData": "目前沒有資料",
@@ -111,7 +112,6 @@
     "memberDeleteSuccess": "成員刪除成功",
     "etlSuccess": "資料預處理成功，開始建置資料表",
     "etlSettingTempSave": "設定已經暫存",
-    "calculatingPleaseTryLater": "資料計算中，請稍後再試",
     "analysisFailed": "檔案解析發生錯誤",
     "confirmColumnStateTypeChange": "此變更將會清除進階設定內容，您確認要進行變更？",
     "fileTypeNotSupported": "不支援 {fileType} 檔案格式",
@@ -389,10 +389,19 @@
     "sortSetting": "排序設定",
     "dragAndSort": "請按住項目上下拖曳移動排序位置，項目排序變更後即生效。",
     "lastUpdateResult": "近一次更新結果",
+    "startTime": "開始時間",
+    "endTime": "結束時間",
+    "elapsedTime": "更新花費時間",
     "noData": "暫無數據",
     "SQLSyntax": "SQL語法",
     "copyTableFromDatabase": "複製資料庫資料表",
-    "useSqlScript": "使用自定義 SQL"
+    "useSqlScript": "使用自定義 SQL",
+    "confirmDeleteColumnText": "您確定要刪除此欄位嗎？",
+    "featureColumn": "自定義欄位",
+    "tagColumn": "標籤欄位",
+    "originalField": "原始欄位",
+    "createdMethod": "建立方式",
+    "buildingNewColumn": "建置新欄位"
   },
   "algorithm": {
     "name": "演算法",
@@ -561,6 +570,20 @@
     "dataFrameUpdate": "資料表更新",
     "rebuild": "重新建置"
   },
+  "fileDataUpdate": {
+    "dataUpdateSetting": "資料更新設定",
+    "processStep1": "更新模式",
+    "processStep2": "選擇檔案",
+    "processStep3": "上傳檔案",
+    "updateMode": "更新模式",
+    "append": "資料表更新",
+    "reimport": "重新建置",
+    "reChoose": "重新選擇",
+    "reUploadFile" :"重新上傳檔案",
+    "build": "立即建置",
+    "reSetting": "重新設定模式",
+    "dataUpdatingReminding": "資料表更新將以背景執行方式進行，更新進度將顯示在資料表狀態。"
+  },
   "feature": {
     "value": "數值",
     "columnValue": "欄位值",
@@ -667,6 +690,20 @@
     "goToLivePage": "前往發布頁面",
     "all": "全部",
     "displaySetting": "顯示設定"
+  },
+  "clustering": {
+    "dataOverview": "資料概況",
+    "clusteringAnalysis": "分群分析",
+    "saveClusteringResultAsColumn": "儲存分群結果為標籤欄位",
+    "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "自定義欄位或來自關聯資料表的欄位，無法儲存為標籤欄位。",
+    "createClusteringColumn": "新增標籤欄位",
+    "clusteringColumnName": "標籤欄位名稱",
+    "outlier": "離群",
+    "piecesOfData": "{amount} 筆資料",
+    "buildingClusteringColumn": "欄位建置中，建置完成即可使用。",
+    "buildingClusteringColumnSuccess": "標籤欄位「{columnName}」建置成功。",
+    "buildingClusteringColumnFailed": "標籤欄位「{columnName}」建置失敗。",
+    "clusteringColumnOriginFrom": "(來自 [資料源]{dataSourceName} [資料表]{dataFrameName})"
   },
   "description": {
     "basic": {
@@ -802,6 +839,7 @@
     "confirmSignup": "確認註冊",
     "logout": "登出",
     "copy": "複製",
+    "copySQL": "複製語法",
     "change": "變更",
     "pinToBoard": "加入釘板",
     "warRoom": "戰情室",
@@ -825,6 +863,7 @@
     "select": "選擇",
     "download": "資料下載",
     "dataExplanation": "資料說明",
+    "dataUpdate": "資料更新",
     "start": "開始",
     "copyAndBuild": "複製並建置",
     "createGroup": "新建專案",
@@ -850,7 +889,8 @@
     "monitorSetting": "監測設定",
     "updateImmediately": "立即更新",
     "AddNewWarRoom": "新增戰情室",
-    "sendInvitation": "寄送邀請信"
+    "sendInvitation": "寄送邀請信",
+    "downloadPage": "下載"
   },
   "timeScopeUnit": {
     "second": "秒",
@@ -860,7 +900,12 @@
     "week": "週",
     "month": "月",
     "season": "季",
-    "year": "年"
+    "year": "年",
+    "allowArg": {
+      "second": "{n} 秒",
+      "minute": "{n} 分",
+      "hour": "{n} 時"
+    }
   },
   "aggregation": {
     "mean": "平均",
@@ -1836,7 +1881,8 @@
     "uploadLimitNotification": "資料數量或數據容量已達上限",
     "uploadLimit": "資料表限制：最多{count}筆",
     "userLimitNotification": "使用者數量已達上限",
-    "columnSummarySampleNotification": "欄位摘要經數值估算，會有些微誤差，僅供參考"
+    "columnSummarySampleNotification": "欄位摘要經數值估算，會有些微誤差，僅供參考",
+    "unfinishedTasks": "未完成項目"
   },
   "chart": {
     "zoom": "區域縮放",
@@ -1858,7 +1904,8 @@
     "rangeStart": "範圍起始",
     "rangeEnd": "範圍結束",
     "count": "統計數量",
-    "download": "下載圖片"
+    "download": "下載圖片",
+    "showLabel": "顯示標籤"
   },
   "errorMessage": {
     "SYERR0001": "系統發生非預期錯誤",

@@ -388,10 +388,36 @@ router.beforeEach(async (to, from, next) => {
     const currentAccountId = Number(store.getters['userManagement/getCurrentAccountId'])
     const currentGroupId = Number(store.getters['userManagement/getCurrentGroupId'])
     if ((paramsAccountId) && (Number(paramsAccountId) !== currentAccountId)) {
-      await store.dispatch('userManagement/switchAccountById', {
-        accountId: paramsAccountId,
-        defaultGroupId: paramsGroupId
-      })
+      try {
+        await store.dispatch('userManagement/switchAccountById', {
+          accountId: paramsAccountId,
+          defaultGroupId: paramsGroupId
+        })
+      } catch (error) {
+        // 當想去的 account 人數已達上限
+        // const groupList = store.state.userManagement.groupList
+        // let defaultGroup = null
+        // if (groupList && groupList.length) {
+        //   defaultGroup = groupList.find(group => group.isDefault)
+        // }
+        // if (defaultGroup) {
+        //   next({
+        //     name: 'PageIndex', 
+        //     params: { 
+        //       account_id: currentAccountId,
+        //       group_id: currentGroupId
+        //     }
+        //   })
+        // } else {
+        //   next({ 
+        //     name: 'PageGrouplessGuidance',
+        //     params: { 
+        //       account_id: currentAccountId 
+        //     }
+        //   })
+        // }
+        return
+      }
     }
     
     if ((paramsGroupId) && (Number(paramsGroupId) !== currentGroupId)) {

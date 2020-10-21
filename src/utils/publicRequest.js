@@ -11,8 +11,9 @@ import i18n from '@/lang/index.js'
  * 主要是為了讓每個 request 每次都會去拿 localStorage 的資料
  * 避免 token 過期了，結果還在拿 instance 建立時的 token 使用
  */
+const API_URL = window.env.SAME_ORIGIN ? `${window.location.protocol}//${window.location.hostname}:8081/` : window.env.PUBLIC_API_ROOT_URL
 const service = axios.create({
-  baseURL: window.env.PUBLIC_API_ROOT_URL, // api 的 base_url
+  baseURL: API_URL, // api 的 base_url
   // timeout: 15000,
   headers: {
     access_token: {
@@ -27,6 +28,15 @@ const service = axios.create({
     }
   }
 })
+
+let oldToken
+service.interceptors.request.use(
+  async config => {
+    oldToken = localStorage.getItem('token')
+    await store.dispatch('setting/checkToken')
+    return config
+  }
+)
 
 // 攔截 response
 service.interceptors.response.use(
@@ -52,7 +62,7 @@ service.interceptors.response.use(
 
     return Promise.reject(res)
   },
-  error => {
+  async error => {
     // cancel request
     if (axios.isCancel(error)) {
       return Promise.reject(error)
@@ -67,10 +77,20 @@ service.interceptors.response.use(
         showClose: true
       })
     } else {
-      let statusCode = error.response.status
+      const statusCode = error.response.status
+      const originalRequest = error.config
 
       switch (statusCode) {
         case 401:
+          if(!originalRequest._retry && oldToken !== store.state.setting.token) {
+            originalRequest._retry = true
+            try {
+              return await service(originalRequest)
+            } catch (err) {
+              return Promise.reject(error)
+            }
+          }
+          
           // 避免單一頁面多個請求，token 失效被登出時跳出多個訊息
           if (router.currentRoute.path === '/login') return Promise.reject(error)
           store.commit('dataSource/setIsInit', false)

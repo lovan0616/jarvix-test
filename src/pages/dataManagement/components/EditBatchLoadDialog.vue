@@ -18,8 +18,8 @@
         size="50"
       />
       <empty-info-block
-        v-else-if="dateTimeColumnList.length === 0 || hasError"
-        :msg="hasError ? $t('message.systemIsError') : $t('editing.emptyDateTime')"
+        v-else-if="hasError"
+        :msg="$t('message.systemIsError')"
       />
       <template v-else>
         <div class="setting-block">
@@ -82,7 +82,7 @@
                 >{{ errors.first('mode') }}</div>
               </div>
             </div>
-            <template v-if="columnInfo.type === 'UPDATE'">
+            <template v-if="columnInfo.type === 'UPDATE' && dateTimeColumnList.length > 0">
               <div class="input-field">
                 <label class="input-field__label">{{ $t('batchLoad.updatedTimeColumn') }}</label>
                 <div class="input-field__input">
@@ -124,6 +124,11 @@
                 </div>
               </div>
             </template>
+            <template v-if="isUpdateWithoutDateTimeColumn">
+              <empty-info-block
+                :msg="$t('editing.emptyDateTime')"
+              />
+            </template>
           </div>
         </template>
         <div
@@ -156,7 +161,7 @@
               @click="closeDialog"
             >{{ $t('button.cancel') }}</button>
             <button 
-              :disabled="isProcessing"
+              :disabled="isProcessing || isUpdateWithoutDateTimeColumn"
               class="btn btn-default"
               @click="columnInfo.id ? updateBatchLoad() : setBatchLoad()"
             >{{ $t('button.save') }}</button>
@@ -229,6 +234,10 @@ export default {
       scheduleInfo: {
         basicScheduleList: [
           {
+            value: '* * * * *',
+            name: this.$t('warRoom.everyMinute', { number: 1 })
+          },
+          {
             value: '*/5 * * * *',
             name: this.$t('batchLoad.everyMinute', { number: 5 })
           },
@@ -268,6 +277,9 @@ export default {
     }
   },
   computed: {
+    isUpdateWithoutDateTimeColumn () {
+      return this.columnInfo.type === 'UPDATE' && this.dateTimeColumnList.length === 0
+    },
     dateTimeColumnList () {
       return this.columnInfo.columnList.filter(column => column.dataType === "DATETIME")
     },

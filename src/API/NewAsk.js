@@ -25,6 +25,28 @@ export function askResult (askInfo, cancelFunction) {
 }
 
 /**
+ * exchange result id to specific type
+ * ex: overview to clustering, or clustering to overview
+ */
+export function askSpecificType ({ resultId, type }, cancelFunction) {
+  return request({
+    url: `/ask/result/${resultId}/to/${type}`,
+    method: 'POST',
+    cancelToken: cancelFunction
+  })
+}
+
+/**
+ * refresh result
+ */
+export function refreshResult (resultId) {
+  return request({
+    url: `/ask/result/${resultId}/refresh`,
+    method: 'POST'
+  })
+}
+
+/**
  * get component list
  */
 export function getComponentList (resultId, cancelFunction) {

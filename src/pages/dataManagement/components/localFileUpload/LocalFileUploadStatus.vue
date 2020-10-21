@@ -3,6 +3,7 @@
     <div class="dialog-title">{{ $t('editing.newData') }}</div>
     <upload-process-block
       :step="3"
+      :process-text="processText"
     />
     <div class="dialog-body">
       <file-list-block
@@ -57,14 +58,20 @@
 import { analysisFile } from '@/API/File'
 import { uploadStatus } from '@/utils/general'
 import { mapState } from 'vuex'
-import FileListBlock from './FileListBlock'
-import UploadProcessBlock from './UploadProcessBlock'
+import FileListBlock from './fileUpload/FileListBlock'
+import UploadProcessBlock from './fileUpload/UploadProcessBlock'
 
 export default {
   name: 'LocalFileUploadStatus',
   components: {
     FileListBlock,
     UploadProcessBlock
+  },
+  props: {
+    processText: {
+      type: Array,
+      required: true
+    }
   },
   data () {
     return {
@@ -91,8 +98,6 @@ export default {
     importedFileList () {
       return this.$store.state.dataManagement.importedFileList
     }
-  },
-  mounted () {
   },
   methods: {
     cancel () {
@@ -133,13 +138,7 @@ export default {
   .dialog-title {
     margin-bottom: 16px;
   }
-
-  .spinner-container {
-    height: 60vh;
-    background: rgba(50, 58, 58, 0.95);
-    border-radius: 5px;
-  }
-
+  
   .uploaded-data-info {
     font-size: 14px;
     line-height: 20px;

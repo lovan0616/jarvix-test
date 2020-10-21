@@ -53,6 +53,10 @@ export default {
       type: Boolean,
       default: false
     },
+    showToolbox: {
+      type: Boolean,
+      default: true
+    },
     isShowLegend: {
       type: Boolean,
       default: true
@@ -60,10 +64,6 @@ export default {
     isShowLabelData: {
       type: Boolean,
       default: false
-    },
-    showToolbox: {
-      type: Boolean,
-      default: true
     },
     customChartStyle: {
       type: Object,
@@ -110,6 +110,11 @@ export default {
       config.tooltip.trigger = 'item'
       config.tooltip.formatter = params => `${this.dataset.columns[0]}<br>${params.marker}${params.name}: ${this.formatComma(params.value[1])}（${params.percent}%）`
 
+      config.toolbox.feature.myShowLabel.show = true
+      config.toolbox.feature.myShowLabel.onclick = () => {
+        this.$emit('toggleLabel')
+      }
+
       // 數據顯示
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         if (this.hasPagination) {
@@ -126,7 +131,7 @@ export default {
         
         for (let i = 1; i < dataset.length; i++) {
           table += `<tr ${i % 2 === 0 ? 'style="background-color:rgba(50, 75, 78, 0.6)"' : ''}>
-            <td>${dataset[i][0]}</td><td>${dataset[i][1]}</td><td>${dataset[i][2]}</td>
+            <td>${dataset[i][0]}</td><td>${this.formatComma(dataset[i][1])}</td><td>${dataset[i][2]}</td>
           </tr>`
         }
         table += '</tbody></table>'

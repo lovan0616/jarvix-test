@@ -4,6 +4,7 @@
       :style="chartStyle"
       :options="options"
       auto-resize
+      @magictypechanged="magicTypeChanged"
       @brushselected="brushRegionSelected"
     />
     <arrow-button
@@ -137,7 +138,8 @@ export default {
       addonSeriesData: JSON.parse(JSON.stringify(echartAddon.seriesData)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
       selectedData: [],
-      showPagination: true
+      showPagination: true,
+      currentChartType: 'bar'
     }
   },
   computed: {
@@ -169,6 +171,12 @@ export default {
         series: this.series,
         color: this.colorList
       }
+
+      config.toolbox.feature.myShowLabel.show = true
+      config.toolbox.feature.myShowLabel.onclick = () => {
+        this.$emit('toggleLabel')
+      }
+
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         if (this.hasPagination) {
           this.$el.addEventListener('click', this.controlPagination, false)
@@ -176,8 +184,9 @@ export default {
         let dataset = opt.dataset[0].source
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
-          let tableData = dataset[i].reduce((acc, cur) => {
-            return acc + `<td style="padding: 4px 12px;white-space:nowrap;">${cur || ''}</td>`
+          let tableData = dataset[i].reduce((acc, cur, idx) => {
+            // barChart 為 1C1N(2N) 問句，原始資料第一欄為 Category，因此和第一列(header)都不用 formatComma
+            return acc + `<td style="padding: 4px 12px;white-space:nowrap;">${i && idx && cur ? this.formatComma(cur) : cur || ''}</td>`
           }, '')
           table += `<tr ${i % 2 === 0 ? (i === 0 ? 'style="background-color:#2B4D51"' : 'style="background-color:rgba(50, 75, 78, 0.6)"') : ''}>${tableData}</tr>`
         }
@@ -279,11 +288,15 @@ export default {
         this.$el.removeEventListener('click', this.controlPagination, false)
       }
     },
+    magicTypeChanged (params) {
+      if (!params.currentType || params.currentType === this.currentChartType) return
+      this.currentChartType = params.currentType
+    },
     brushRegionSelected (params) {
-      if (params.batch[0].selected[0].dataIndex.length === 0) {
-        this.selectedData = []
-        return
-      }
+      if (
+        (this.currentChartType === 'bar' && params.batch[0].selected[0].dataIndex.length === 0)
+        || (this.currentChartType === 'line' && params.batch[0].areas.length === 0)
+      ) return this.selectedData = []
 
       // 垂直方向 drill down
       if (this.title.yAxis[0].drillable) {
@@ -302,16 +315,29 @@ export default {
         })
       } else {
         // 水平方向 drill down
+        let dataValueIndexs
+        if (this.currentChartType === 'bar') {
+          dataValueIndexs = params.batch[0].selected[0].dataIndex
+        } else if (this.currentChartType === 'line') {
+          // 取出所有選項的始末 index 組合
+          const allDataValueIndexs = params.batch[0].areas.reduce((accIndexs, curAreaElement) => {
+            const [startIndex, endIndex] = curAreaElement.coordRange
+            // 補足始末間的連續數值
+            accIndexs.push(...[...Array(endIndex - startIndex + 1).keys()].map(i =>  i + startIndex))
+            return accIndexs
+          }, [])
+          // 只取不重複的 index 升冪排序
+          dataValueIndexs  = [...new Set(allDataValueIndexs)].sort((a, b) => a - b)
+        }
+
         this.selectedData = [{
           type: 'enum',
           properties: {
             dc_name: this.title.xAxis[0].dc_name,
             data_type: this.title.xAxis[0].data_type,
             display_name: this.title.xAxis[0].display_name,
-            datavalues: params.batch[0].selected[0].dataIndex.map(element => {
-              return this.dataset.index[element]
-            }),
-            display_datavalues: params.batch[0].selected[0].dataIndex.map(element => {
+            datavalues: dataValueIndexs.map(element => this.dataset.index[element]),
+            display_datavalues: dataValueIndexs.map(element => {
               return this.dataset.display_index ? this.dataset.display_index[element] : this.dataset.index[element]
             })
           }

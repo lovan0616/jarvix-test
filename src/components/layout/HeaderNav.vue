@@ -68,7 +68,7 @@
           :to="{name: 'ProjectPagePinboardList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}" 
           class="nav-item">{{ $t('nav.projectPinboard') }}</router-link>
         <router-link
-          v-if="hasPermission('group_read_data') && isShowWarRoomModule"
+          v-if="hasPermission('war_room')"
           :to="{ name: 'WarRoomList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId } }" 
           class="nav-item">{{ $t('nav.warRoom') }}</router-link>
       </template>
@@ -97,8 +97,9 @@
         {{ $t('schedule.header.setting') }}
       </router-link>
     </section>
-    <!-- <section class="nav-right">
-      <router-link
+    <section class="nav-right">
+      <task-notifier />
+      <!-- <router-link
         v-if="isShowFunctionDescription"
         :to="{ name: 'FunctionDescription', params: { 'account_id': accountId } }"
         class="nav-item nav-function"
@@ -107,8 +108,8 @@
           icon-class="description" 
           class="icon icon-description"/>
         {{ $t('nav.helper') }}
-      </router-link>
-    </section> -->
+      </router-link>-->
+    </section>
   </nav>
 </template>
 <script>
@@ -116,6 +117,7 @@ import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
+import TaskNotifier from '@/components/TaskNotifier'
 import { mapGetters, mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -124,7 +126,8 @@ export default {
     SySelect,
     DropdownSelect,
     WritingDialog,
-    CustomDropdownSelect
+    CustomDropdownSelect,
+    TaskNotifier
   },
   data () {
     return {
@@ -137,9 +140,6 @@ export default {
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId']),
     isShowAlgorithmBtn () {
       return localStorage.getItem('isShowAlgorithmBtn') === 'true'
-    },
-    isShowWarRoomModule () {
-      return localStorage.getItem('isShowWarRoomModule') === 'true'
     },
     // isShowFunctionDescription () {
     //   return this.$store.state.setting.locale.includes('zh')
