@@ -234,7 +234,7 @@ export default {
         /deep/ .dropdown {
           visibility: hidden;
           .dropdown-select-box {
-            top: 43px;
+            top: 25px;
             left: -20px;
             z-index: 1;
             &:before {
