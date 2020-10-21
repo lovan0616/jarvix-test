@@ -38,7 +38,7 @@
       :total="paginationInfo.totalItems"
       :page-size="paginationInfo.itemPerPage"
       :current-page="paginationInfo.currentPage + 1"
-      class="table-pagination"
+      class="ss-pagination"
       layout="prev, pager, next"
       @current-change="changePage"
       @prev-click="prevPage"
