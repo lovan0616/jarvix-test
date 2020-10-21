@@ -142,7 +142,6 @@ export default {
       top: 15px;
       right: 30px;
       padding: 7px 15px;
-      z-index: 1;
 
       &.active {
         background-color: #42A5B3;
@@ -209,6 +208,7 @@ export default {
         flex: 1;
         display: flex;
         justify-content: flex-end;
+        align-items: center;
         padding-right: 20px;
         cursor: pointer;
         &:hover {
