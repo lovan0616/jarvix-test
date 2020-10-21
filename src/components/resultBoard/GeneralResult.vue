@@ -29,7 +29,7 @@
                 v-if="isProcessing[intentType.OVERVIEW]" 
                 size="16"/>
               <svg-icon 
-                v-else-if="!isKeyResultTaskComplete[intentType.OVERVIEW]"
+                v-else-if="isKeyResultTaskFailed[intentType.OVERVIEW]"
                 class="exclamation-triangle-icon"
                 icon-class="exclamation-triangle" />
             </div>
@@ -48,7 +48,7 @@
                 v-if="isProcessing[intentType.CLUSTERING]" 
                 size="16"/>
               <svg-icon 
-                v-else-if="!isKeyResultTaskComplete[intentType.CLUSTERING]"
+                v-else-if="isKeyResultTaskFailed[intentType.CLUSTERING]"
                 class="exclamation-triangle-icon"
                 icon-class="exclamation-triangle" />
               <div
@@ -83,7 +83,7 @@
           :component-id="componentId"
           :data-frame-id="dataFrameId"
           intend="key_result"
-          @failed="setTaskStatus(false)"
+          @failed="setTaskFailed"
         />
       </template>
       <template
@@ -202,9 +202,9 @@ export default {
         OVERVIEW: null,
         CLUSTERING: null
       },
-      isKeyResultTaskComplete: {
-        OVERVIEW: true,
-        CLUSTERING: true
+      isKeyResultTaskFailed: {
+        OVERVIEW: false,
+        CLUSTERING: false
       },
       activeTab: null,
       isShowSaveClusteringDialog: false,
@@ -218,8 +218,7 @@ export default {
         {
           title: 'clustering.saveClusteringResultAsColumn',
           icon: 'feature',
-          dialogName: 'saveClustering',
-          disabled: !this.isKeyResultTaskComplete
+          dialogName: 'saveClustering'
         },
       ]
     },
@@ -305,8 +304,8 @@ export default {
         this.isProcessing[key] = false
       }
     },
-    setTaskStatus (value) {
-      this.isKeyResultTaskComplete[this.activeTab] = value
+    setTaskFailed () {
+      this.isKeyResultTaskFailed[this.activeTab] = true
     }
   }
 }

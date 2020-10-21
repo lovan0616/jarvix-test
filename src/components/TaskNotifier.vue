@@ -90,13 +90,6 @@ export default {
       this.processingTasks = []
       this.checkBgColumnTasks()
     },
-    getOwnProcessingTasks (newList, oldList) {
-      // 增加task時，重新計時10秒再詢問，免得遇到來不及將status壓成Ready而噴錯
-      if (newList.length > oldList.length) {
-        clearInterval(this.intervalTimer)
-        this.startTaskPolling()
-      }
-    },
     processingDataColumnList (value) {
       localStorage.setItem('bgColumnTasks', JSON.stringify(value))
     }
