@@ -179,7 +179,6 @@ export default {
       color: #A7A7A7;
       height: 54px;
       padding-left: 20px;
-      padding-right: 20px;
       border-bottom: 1px solid $theme-border-color;
       cursor: pointer;
       &:hover {
@@ -206,10 +205,17 @@ export default {
         }
       }
       &-status {
+        height: 100%;
         flex: 1;
         display: flex;
         justify-content: flex-end;
+        padding-right: 20px;
         cursor: pointer;
+        &:hover {
+          .dropdown {
+            visibility: visible;
+          }
+        }
         .trigger-analysis-icon {
           color: $theme-color-primary;
         }
@@ -222,16 +228,13 @@ export default {
       }
       &-dropdownlist {
         position: relative;
+        display: flex;
+        align-items: center;
         cursor: pointer;
-        &:hover {
-          .dropdown {
-            visibility: visible;
-          }
-        }
         /deep/ .dropdown {
           visibility: hidden;
           .dropdown-select-box {
-            top: 30px;
+            top: 43px;
             left: -20px;
             z-index: 1;
             &:before {
