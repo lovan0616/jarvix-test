@@ -80,6 +80,14 @@ export default {
     ...mapGetters('userManagement', ['getCurrentAccountId'])
   },
   watch: {
+    getOwnProcessingTasks (newList, oldList) {
+      if (newList.length > oldList.length) {
+        // task增加時，清掉timer並馬上詢問後開始polling，讓未完成項目數立即更新
+        clearInterval(this.intervalTimer)
+        this.getBgColumnTasksFromStorage()
+        this.startTaskPolling()
+      }
+    },
     getCurrentAccountId () {
       this.processingTasks = []
       this.checkBgColumnTasks()
