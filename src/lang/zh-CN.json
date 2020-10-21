@@ -400,7 +400,8 @@
     "featureColumn": "自定义栏位",
     "tagColumn": "标签栏位",
     "originalField": "原始栏位",
-    "createdMethod": "建立方式"
+    "createdMethod": "建立方式",
+    "buildingNewColumn": "建置新栏位"
   },
   "algorithm": {
     "name": "演算法",

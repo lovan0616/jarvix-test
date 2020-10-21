@@ -97,8 +97,9 @@
         {{ $t('schedule.header.setting') }}
       </router-link>
     </section>
-    <!-- <section class="nav-right">
-      <router-link
+    <section class="nav-right">
+      <task-notifier />
+      <!-- <router-link
         v-if="isShowFunctionDescription"
         :to="{ name: 'FunctionDescription', params: { 'account_id': accountId } }"
         class="nav-item nav-function"
@@ -107,8 +108,8 @@
           icon-class="description" 
           class="icon icon-description"/>
         {{ $t('nav.helper') }}
-      </router-link>
-    </section> -->
+      </router-link>-->
+    </section>
   </nav>
 </template>
 <script>
@@ -116,6 +117,7 @@ import SySelect from '@/components/select/SySelect'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
+import TaskNotifier from '@/components/TaskNotifier'
 import { mapGetters, mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -124,7 +126,8 @@ export default {
     SySelect,
     DropdownSelect,
     WritingDialog,
-    CustomDropdownSelect
+    CustomDropdownSelect,
+    TaskNotifier
   },
   data () {
     return {

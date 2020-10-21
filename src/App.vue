@@ -47,7 +47,6 @@ export default {
   },
   created () {
     this.checkLocale()
-    this.checkBgColumnTasks()
   },
   mounted () {
     this.init = true
@@ -66,12 +65,6 @@ export default {
       }
       let locale = prevLocale || browserLocale
       this.$store.commit('setting/setLocale', locale)
-    },
-    checkBgColumnTasks () {
-      const prevBgColumnTasks = localStorage.getItem('bgColumnTasks')
-      if (prevBgColumnTasks && prevBgColumnTasks.split(',').length > 0) {
-        this.$store.commit('dataSource/setProcessingDataColumnList', prevBgColumnTasks.split(','))
-      }
     }
   },
 }

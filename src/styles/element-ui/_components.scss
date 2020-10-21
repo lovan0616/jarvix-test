@@ -244,7 +244,7 @@
     }
     .task-notifier {
       &__content {
-        max-height: 194px;
+        max-height: 240px;
         overflow-y: auto;
         color: $theme-color-white;
         &::-webkit-scrollbar-thumb {
@@ -267,7 +267,7 @@
         margin-left: 24px;
         margin-right: 14px;
         padding: 16px 0 14px 0;
-        font-size: 14px;
+        font-size: 12px;
         line-height: 14px;
         &:not(:first-child) {
           border-top: 1px solid #52696A;
@@ -275,17 +275,27 @@
         .task {
           &__icon {
             position: absolute;
-            top: 20px;
+            top: 19px;
             left: -24px;
           }
           &__title {
-            margin-bottom: 8px;
             line-height: 1.5;
           }
           &__desc {
+            margin-top: 8px;
             margin-bottom: 4px;
             line-height: 1.5;
-            color: #CCC;
+            padding-left: 0;
+            &-title {
+              color: #CCC;
+            }
+            &-item {
+              color: #A7A7A7;
+              list-style: none;
+              display: flex;
+              flex-direction: column;
+              margin-bottom: 4px;
+            }
           }
         }
       }

@@ -28,6 +28,10 @@
               <spinner 
                 v-if="isProcessing[intentType.OVERVIEW]" 
                 size="16"/>
+              <svg-icon 
+                v-else-if="isKeyResultTaskFailed[intentType.OVERVIEW]"
+                class="exclamation-triangle-icon"
+                icon-class="exclamation-triangle" />
             </div>
           </li>
           <li
@@ -43,6 +47,10 @@
               <spinner 
                 v-if="isProcessing[intentType.CLUSTERING]" 
                 size="16"/>
+              <svg-icon 
+                v-else-if="isKeyResultTaskFailed[intentType.CLUSTERING]"
+                class="exclamation-triangle-icon"
+                icon-class="exclamation-triangle" />
               <div
                 v-else-if="hasFetchedClustering"
                 class="multi-analysis__item-dropdownlist"
@@ -75,6 +83,7 @@
           :component-id="componentId"
           :data-frame-id="dataFrameId"
           intend="key_result"
+          @failed="setTaskFailed"
         />
       </template>
       <template
@@ -193,6 +202,10 @@ export default {
         OVERVIEW: null,
         CLUSTERING: null
       },
+      isKeyResultTaskFailed: {
+        OVERVIEW: false,
+        CLUSTERING: false
+      },
       activeTab: null,
       isShowSaveClusteringDialog: false,
       intentType
@@ -290,6 +303,9 @@ export default {
       for (const key in this.isProcessing) {
         this.isProcessing[key] = false
       }
+    },
+    setTaskFailed () {
+      this.isKeyResultTaskFailed[this.activeTab] = true
     }
   }
 }
@@ -304,9 +320,6 @@ export default {
   }
   .task {
     padding-top: 30px;
-    &:first-child {
-      padding-top: 40px;
-    }
   }
 }
 </style>
