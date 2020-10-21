@@ -59,6 +59,7 @@ export default {
   display: flex;
   align-items: center;
   border-radius: 8px;
+  padding: 48px 0;
 
   &.is-theme-color .spinner-circle .sp-circle:before {
     background-color: var(--color-theme);

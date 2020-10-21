@@ -45,6 +45,10 @@
 <script>
 import PaginationTable from '@/schedule/components/table/PaginationTable'
 import { getOrderPlanResult, getMachinePlanResult } from '@/schedule/API/Plan'
+import i18n from '@/lang/index.js'
+
+const completedLabel = i18n.t('schedule.simulation.table.completed')
+const uncompletedLabel = i18n.t('schedule.simulation.table.uncompleted')
 
 export default {
   name: 'PlanJob',
@@ -129,8 +133,6 @@ export default {
         .then(res => {
           if (resetPagination) this.pagination = res.pagination
           if (!res.data) return
-          const completedLabel = this.$t('schedule.simulation.table.completed')
-          const uncompletedLabel = this.$t('schedule.simulation.table.completed')
           this.jobData = {
             columns: { titles: this.orderTableHeaderList },
             data: res.data.map(data => {

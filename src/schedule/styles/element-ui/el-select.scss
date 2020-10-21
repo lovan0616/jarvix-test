@@ -1,15 +1,11 @@
-.el-select-dropdown {
+.ss-select.el-select-dropdown {
   background-color: rgba(0, 0, 0, 0.75);
-}
-
-.el-select-dropdown__list {
-  padding: 0;
-}
-
-.el-select-dropdown, .el-autocomplete-suggestion {
   border: none !important;
   box-shadow: 0px 4px 12px rgba(73, 128, 132, 0.48);
 
+  .el-select-dropdown__list {
+    padding: 0;
+  }
   &.el-popper[x-placement^="bottom"] {
     margin-top: -1px;
 
@@ -32,7 +28,7 @@
     color: #A7A7A7;
 
     &.hover, &:hover, &.selected {
-      background-color: var(--color-bg-5);
+      background-color: rgba(0, 0, 0, 0.55);
       color: var(--color-text);
     }
   }
