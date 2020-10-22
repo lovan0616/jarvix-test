@@ -140,6 +140,11 @@ export default {
                     showClose: true
                   })
                 }, 0)
+                // 若智能分析也正在使用同一個資料表，則通知相關組件去重拿欄位列表
+                if (this.$route.query.dataFrameId && Number(this.$route.query.dataFrameId) === task.dataFrameId) {
+                  this.$store.commit('dataSource/setShouldDataFrameDataRefetchDataColumn', true)
+                  this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
+                }
                 break
               case 'Fail':
                 this.$store.commit('dataSource/spliceProcessingDataColumnList', this.processingDataColumnList.findIndex(item => item.taskId === taskId))

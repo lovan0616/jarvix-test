@@ -115,4 +115,10 @@ export default {
   spliceProcessingDataColumnList (state, index) {
     state.processingDataColumnList.splice(index, 1)
   },
+  setShouldDataFrameDataRefetchDataColumn (state, value) {
+    state.shouldDataFrameDataRefetchDataColumn = value
+  },
+  setShouldAdvanceDataFrameSettingRefetchDataColumn (state, value) {
+    state.shouldAdvanceDataFrameSettingRefetchDataColumn = value
+  }
 }

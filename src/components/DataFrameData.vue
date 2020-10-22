@@ -96,7 +96,7 @@ import ColumnCorrelationOverview from '@/pages/datasourceDashboard/components/Co
 import PaginationTable from '@/components/table/PaginationTable'
 import DataColumnSummary from '@/pages/datasourceDashboard/components/DataColumnSummary'
 import EmptyInfoBlock from './EmptyInfoBlock'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import { Message } from 'element-ui'
 
 export default {
@@ -143,6 +143,7 @@ export default {
   computed: {
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition']),
     ...mapGetters('userManagement', ['hasPermission']),
+    ...mapState('dataSource', ['shouldDataFrameDataRefetchDataColumn'])
   },
   watch: {
     dataFrameId (value) {
@@ -160,6 +161,13 @@ export default {
           || newValue.isInit === false
         ) return
         this.fetchDataFrameData(this.dataFrameId, 0, true)
+      }
+    },
+    shouldDataFrameDataRefetchDataColumn (value) {
+      if (value) {
+        this.isLoading = true
+        const { dataFrameId } = this.$route.query
+        this.fetchDataFrameData(dataFrameId, 0, false, false)
       }
     }
   },
@@ -253,6 +261,7 @@ export default {
           }
           this.isLoading = false
           this.isProcessing = false
+          this.$store.commit('dataSource/setShouldDataFrameDataRefetchDataColumn', false)
         })
         .catch(error => {
           if (error.message === 'cancel') return
