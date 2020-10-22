@@ -81,6 +81,14 @@ export default {
     ...mapState('dataFrameAdvanceSetting', ['isInit']),
   },
   watch: {
+    getOwnProcessingTasks (newList, oldList) {
+      if (newList.length > oldList.length) {
+        // task增加時，清掉timer並馬上詢問後開始polling，讓未完成項目數立即更新
+        clearInterval(this.intervalTimer)
+        this.getBgColumnTasksFromStorage()
+        this.startTaskPolling()
+      }
+    },
     getCurrentAccountId () {
       this.processingTasks = []
       this.checkBgColumnTasks()
@@ -118,7 +126,7 @@ export default {
                 break
               case 'Complete':
                 this.$store.commit('dataSource/spliceProcessingDataColumnList', this.processingDataColumnList.findIndex(item => item.taskId === taskId))
-                this.processingTasks.splice(this.processingTasks.findIndex(item => item.taskId === task.taskId), 1)
+                this.processingTasks.splice(this.processingTasks.findIndex(item => item.taskId === taskId), 1)
                 setTimeout(() => {
                   Message({
                     message: this.$t('clustering.buildingClusteringColumnSuccess', {
@@ -145,7 +153,7 @@ export default {
                 break
               case 'Fail':
                 this.$store.commit('dataSource/spliceProcessingDataColumnList', this.processingDataColumnList.findIndex(item => item.taskId === taskId))
-                this.processingTasks.splice(this.processingTasks.findIndex(task => task.taskId === task.taskId), 1)
+                this.processingTasks.splice(this.processingTasks.findIndex(item => item.taskId === taskId), 1)
                 setTimeout(() => {
                   Message({
                     message: this.$t('clustering.buildingClusteringColumnFailed', {
