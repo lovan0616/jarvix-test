@@ -43,11 +43,15 @@
         :description="componentData.description"
         :total="componentData.total"
         :item-count="componentData.item_count"
+        :coeffs="componentData.coeffs"
+        :cluster-infos="componentData.clusterInfos"
         :key="componentId"
         :show-toolbox="showToolbox"
         :custom-chart-style="customChartStyle"
         :arrow-btn-right="arrowBtnRight"
+        :is-show-label-data="isShowLabelData"
         @next="getNewPageInfo"
+        @toggleLabel="toggleLabel"
       />
       <div
         v-for="(note, index) in notes"
@@ -123,7 +127,8 @@ export default {
       // 下個分頁資料
       nextPageData: null,
       singlePage: true,
-      isShowMonitorSettingDialog: false
+      isShowMonitorSettingDialog: false,
+      isShowLabelData: false
     }
   },
   computed: {
@@ -189,8 +194,8 @@ export default {
               }
               // 判斷是否為 圖表
               if (responseData.dataset) {
-                // 如果拿到的資料為空 表示這一頁已經是最後一頁了
-                if (responseData.dataset.data.length === 0) {
+                // 如果拿到的資料為空陣列 表示這一頁已經是最後一頁了
+                if (responseData.dataset.data && responseData.dataset.data.length === 0) {
                   this.loading = false
                   this.hasNextPage = false
                   this.nextPageData = null
@@ -233,6 +238,7 @@ export default {
           }
         }).catch(() => {
           this.loading = false
+          this.$emit('failed')
           if (this.intend === 'key_result') {
             if (page === 0) {
               this.isError = true
@@ -409,7 +415,10 @@ export default {
     },
     closeMonitorSettingDialog () {
       this.isShowMonitorSettingDialog = false
-    }
+    },
+    toggleLabel () {
+      this.isShowLabelData = !this.isShowLabelData
+    },
   }
 }
 </script>
@@ -434,7 +443,6 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 1;
   }
 
   // pagination 遮罩

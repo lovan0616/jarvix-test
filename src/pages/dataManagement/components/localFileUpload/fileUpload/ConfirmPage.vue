@@ -1,7 +1,7 @@
 <template>
   <div class="build-data">
     <div class="dialog-body">
-      {{ $t('editing.dataBuildingReminding') }}
+      {{ content }}
     </div>
     <div class="dialog-footer">
       <div class="dialog-button-block">
@@ -17,10 +17,12 @@
 <script>
 export default {
   name: 'ConfirmPage',
-  data () {
-    return {
+  props: {
+    content: {
+      type: String,
+      required: true
     }
-  }
+  },
 }
 </script>
 

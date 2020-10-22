@@ -151,11 +151,12 @@ export function deleteDataFrameById (dataFrameId) {
  * get data column by dataFrameId
  * @param {Number} dataFrameId - 欲檢查的資料表 ID
  * @param {Boolean} hasFeature
- * @param {Boolean} hasAliasLimit - ture: get one primary alias, false: get all alias
+ * @param {Boolean} hasAliasLimit - true: get one primary alias, false: get all alias
+ * @param {Boolean} hasBlockClustering - whether to filter out clustering columns
  */
-export function getDataFrameColumnInfoById (dataFrameId, hasFeature = true, hasAliasLimit = true) {
+export function getDataFrameColumnInfoById(dataFrameId, hasFeature = true, hasAliasLimit = true, hasBlockClustering = false) {
   return request({
-    url: `/dataColumn/dataFrame/${dataFrameId}?hasFeature=${hasFeature}&hasAliasLimit=${hasAliasLimit}`,
+    url: `/dataColumn/dataFrame/${dataFrameId}?hasFeature=${hasFeature}&hasAliasLimit=${hasAliasLimit}&hasBlockClustering=${hasBlockClustering}`,
     method: 'GET'
   })
 }
@@ -171,6 +172,17 @@ export function patchDataColumnPrimaryAlias (dataColumn) {
     url: `/dataColumn/display-alias`,
     method: 'PATCH',
     data: dataColumn
+  })
+}
+
+/**
+ * delete dataColumn by id
+ * @param {Number} dataColumnId - id
+ */
+export function deleteDataColumnById(dataColumnId) {
+  return request({
+    url: `/dataColumn/clustering-columns/${dataColumnId}  `,
+    method: 'DELETE'
   })
 }
 
@@ -438,6 +450,31 @@ export function triggerUpdateData (dataFrameId) {
 export function getDataFrameCreatedInfo(dataFrameId) {
   return request({
     url: `/dataFrame/${dataFrameId}/advanced/info`,
+    method: 'GET'
+  })
+}
+
+/**
+ * 將分群結果儲存為欄位
+ * @param {Object} inputData
+ * @param {Number} inputData.askResultId - 欲儲存的分群結果
+ * @param {String} inputData.primaryAlias - 儲存的欄位名稱
+ */
+export function saveClusteringColumn (data) {
+  return request({
+    url: `/dataColumn/clustering-columns`,
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 確認分群欄位的建置狀態
+ * @param {Number} taskId - 背景建置工作 id
+ */
+export function checkClusteringColumnStatus (taskId) {
+  return request({
+    url: `/dataColumn/clustering-columns/${taskId}`,
     method: 'GET'
   })
 }

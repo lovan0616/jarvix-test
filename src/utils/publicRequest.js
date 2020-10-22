@@ -11,13 +11,14 @@ import i18n from '@/lang/index.js'
  * 主要是為了讓每個 request 每次都會去拿 localStorage 的資料
  * 避免 token 過期了，結果還在拿 instance 建立時的 token 使用
  */
+const API_URL = window.env.SAME_ORIGIN ? `${window.location.protocol}//${window.location.hostname}:8081/` : window.env.PUBLIC_API_ROOT_URL
 const service = axios.create({
-  baseURL: window.env.PUBLIC_API_ROOT_URL, // api 的 base_url
+  baseURL: API_URL, // api 的 base_url
   // timeout: 15000,
   headers: {
     access_token: {
       toString () {
-        return store.state.userManagement.token || localStorage.getItem('token')
+        return localStorage.getItem('token')
       }
     },
     'Accept-Language': {
@@ -28,11 +29,18 @@ const service = axios.create({
   }
 })
 
+let oldToken
+service.interceptors.request.use(
+  async config => {
+    oldToken = localStorage.getItem('token')
+    await store.dispatch('setting/checkToken')
+    return config
+  }
+)
+
 // 攔截 response
 service.interceptors.response.use(
   response => {
-    store.dispatch('setting/checkToken')
-
     const res = response.data
     // 特殊情況 光電展 response 無 meta
     if (res.success && !res.meta) return res.data
@@ -74,7 +82,7 @@ service.interceptors.response.use(
 
       switch (statusCode) {
         case 401:
-          if(!originalRequest._retry && originalRequest.headers.access_token.toString() !== store.state.userManagement.token) {
+          if(!originalRequest._retry && oldToken !== store.state.setting.token) {
             originalRequest._retry = true
             try {
               return await service(originalRequest)

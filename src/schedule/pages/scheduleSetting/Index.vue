@@ -35,6 +35,7 @@
                 <el-input-number
                   v-model="settingInfo.scheduleDays"
                   :min="1"
+                  class="ss-input-number"
                 />
                 <span class="schedule-duration__input-unit">{{ $t('schedule.base.day') }}</span>
               </div>
