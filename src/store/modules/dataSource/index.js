@@ -22,7 +22,7 @@ export default {
     processingDataFrameList: [],
     processingDataColumnList: [],
     // 新增或刪除欄位時，通知相關組件重新fetch欄位的flag
-    shouldDataFrameDataRefetchDataColumn: false,
+    shouldDataFrameDataRefetchDataColumn: null,
     shouldAdvanceDataFrameSettingRefetchDataColumn: false
   },
   actions,

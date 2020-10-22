@@ -134,8 +134,8 @@ export default {
                   })
                 }, 0)
                 // 若在智能分析頁面且也正在使用同一個資料表，則通知它重拿
-                if (this.$route.query.dataFrameId && Number(this.$route.query.dataFrameId) === task.dataFrameId) {
-                  this.$store.commit('dataSource/setShouldDataFrameDataRefetchDataColumn', true)
+                if (this.$route.query.dataFrameId === 'all' || (this.$route.query.dataFrameId && Number(this.$route.query.dataFrameId) === task.dataFrameId)) {
+                  this.$store.commit('dataSource/setShouldDataFrameDataRefetchDataColumn', task.dataFrameId)
                 }
                 // 若基表設定已暫存欄位，則通知它重拿
                 if (this.isInit) {

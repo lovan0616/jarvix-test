@@ -165,9 +165,10 @@ export default {
     },
     shouldDataFrameDataRefetchDataColumn (value) {
       if (value) {
+        // 不是呈現在使用者面前的那張表就不用重拿資料
+        if (value !== this.dataFrameId) return
         this.isLoading = true
-        const { dataFrameId } = this.$route.query
-        this.fetchDataFrameData(dataFrameId, 0, false, false)
+        this.fetchDataFrameData(this.dataFrameId, 0, true, false)
       }
     }
   },
@@ -261,7 +262,7 @@ export default {
           }
           this.isLoading = false
           this.isProcessing = false
-          this.$store.commit('dataSource/setShouldDataFrameDataRefetchDataColumn', false)
+          this.$store.commit('dataSource/setShouldDataFrameDataRefetchDataColumn', null)
         })
         .catch(error => {
           if (error.message === 'cancel') return
