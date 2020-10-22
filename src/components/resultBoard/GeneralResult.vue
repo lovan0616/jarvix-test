@@ -214,10 +214,12 @@ export default {
     },
     isShowInfo () {
       const intentsWithInfo = ['CLUSTERING']
+      // 切分群時不會有 intent，所以從 active tab 取值
       return intentsWithInfo.includes(this.intent || this.activeTab)
     },
     displayedInfo () {
       if (!this.isShowInfo) return
+      // 切分群時不會有 intent，所以從 active tab 取值
       switch (this.intent || this.activeTab) {
         case 'CLUSTERING': 
         return this.$t('editing.resultOverSizeMessage')
