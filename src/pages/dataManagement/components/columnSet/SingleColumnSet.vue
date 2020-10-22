@@ -15,7 +15,7 @@
         type="button"
         class="btn btn-delete"
         @click="removeColumnSet"
-      >{{ columnSet.id ? $t('button.delete') : $t('button.cancel') }}</button>
+      >{{ columnSet.id ? (isProcessing ? $t('button.processing') : $t('button.delete')) : $t('button.cancel') }}</button>
       <button 
         v-if="!isEditing" 
         type="button"
@@ -200,6 +200,7 @@ export default {
       this.columnOptionList = columnOptionList
     },
     updateColumnSetColumn (columnSetId, columnList) {
+      this.isProcessing = true
       return updateColumnSet(columnSetId, {
         dataFrameId: this.columnSet.dataFrameId,
         columnSetColumnList: columnList.map((column, index) => (
@@ -215,30 +216,28 @@ export default {
           duration: 3 * 1000,
           showClose: true
         })
+      }).finally(() => {
+        this.isProcessing = false
       })
     },
     async selectColumn (index) {
       if (this.columnSet.id) {
-        this.isProcessing = true
         const newColumnList = [...this.columnSet.dataColumnList, this.columnOptionList[index]]
         try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
-        catch(e) { return this.isProcessing = false }
+        catch(e) { return }
       } 
       this.columnSet.dataColumnList.push(this.columnOptionList[index])
       this.columnOptionList.splice(index, 1)
-      this.isProcessing = false
     },
     async cancelSelect (index) {
       if (this.columnSet.id) {
-        this.isProcessing = true
         const newColumnList = [...this.columnSet.dataColumnList]
         newColumnList.splice(index, 1)
         try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
-        catch(e) { return this.isProcessing = false }
+        catch(e) { return }
       }
       let cancelColumnInfo = this.columnSet.dataColumnList.splice(index, 1)[0]
       this.columnOptionList.push(cancelColumnInfo)
-      this.isProcessing = false
     },
     saveColumnSet () {
       this.$validator.validate(this.validateFieldKey).then((isValidate) => {
