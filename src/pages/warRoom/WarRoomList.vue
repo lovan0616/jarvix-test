@@ -189,6 +189,7 @@ export default {
       this.isLoading = true
       getWarRoomList(this.groupId).then(res => {
         this.warRoomList = res
+      }).finally(() => {
         this.isLoading = false
       })
     },
