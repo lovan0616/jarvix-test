@@ -77,17 +77,10 @@ export default {
   computed: {
     ...mapState('dataSource', ['processingDataColumnList']),
     ...mapGetters('dataSource', ['getOwnProcessingTasks']),
-    ...mapGetters('userManagement', ['getCurrentAccountId'])
+    ...mapGetters('userManagement', ['getCurrentAccountId']),
+    ...mapState('dataFrameAdvanceSetting', ['isInit']),
   },
   watch: {
-    getOwnProcessingTasks (newList, oldList) {
-      if (newList.length > oldList.length) {
-        // task增加時，清掉timer並馬上詢問後開始polling，讓未完成項目數立即更新
-        clearInterval(this.intervalTimer)
-        this.getBgColumnTasksFromStorage()
-        this.startTaskPolling()
-      }
-    },
     getCurrentAccountId () {
       this.processingTasks = []
       this.checkBgColumnTasks()
@@ -140,9 +133,13 @@ export default {
                     showClose: true
                   })
                 }, 0)
-                // 若智能分析也正在使用同一個資料表，則通知相關組件去重拿欄位列表
+                // 若在智能分析頁面且也正在使用同一個資料表，則通知它重拿
                 if (this.$route.query.dataFrameId && Number(this.$route.query.dataFrameId) === task.dataFrameId) {
                   this.$store.commit('dataSource/setShouldDataFrameDataRefetchDataColumn', true)
+                }
+                // 若基表設定已暫存欄位，則通知它重拿
+                if (this.isInit) {
+                  this.$store.commit('dataFrameAdvanceSetting/toggleIsInit', false)
                   this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
                 }
                 break

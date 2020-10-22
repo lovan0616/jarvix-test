@@ -208,7 +208,7 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
 import InputVerify from '@/components/InputVerify'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'EditColumnDialog',
@@ -252,6 +252,7 @@ export default {
   },
   computed: {
     ...mapGetters('dataSource', ['currentDataFrameId']),
+    ...mapState('dataFrameAdvanceSetting', ['isInit']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     },
@@ -431,7 +432,7 @@ export default {
           this.closeDeleteDialog()
           this.fetchData()
           // 若基表設定已儲存同張表的欄位，要重新init以取得新欄位列表
-          if (this.currentDataFrameId === this.tableId) {
+          if (this.currentDataFrameId === this.tableId && this.isInit) {
             this.$store.commit('dataFrameAdvanceSetting/toggleIsInit', false)
             this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
           }
