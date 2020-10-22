@@ -76,7 +76,7 @@ export default {
   },
   computed: {
     ...mapState('dataSource', ['processingDataColumnList']),
-    ...mapGetters('dataSource', ['getOwnProcessingTasks']),
+    ...mapGetters('dataSource', ['getOwnProcessingTasks', 'currentDataFrameId']),
     ...mapGetters('userManagement', ['getCurrentAccountId']),
     ...mapState('dataFrameAdvanceSetting', ['isInit']),
   },
@@ -137,8 +137,8 @@ export default {
                 if (this.$route.query.dataFrameId === 'all' || (this.$route.query.dataFrameId && Number(this.$route.query.dataFrameId) === task.dataFrameId)) {
                   this.$store.commit('dataSource/setShouldDataFrameDataRefetchDataColumn', task.dataFrameId)
                 }
-                // 若基表設定已暫存欄位，則通知它重拿
-                if (this.isInit) {
+                // 若基表設定已暫存同一資料表的欄位，則通知它重拿
+                if (this.currentDataFrameId === task.dataFrameId && this.isInit) {
                   this.$store.commit('dataFrameAdvanceSetting/toggleIsInit', false)
                   this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
                 }
