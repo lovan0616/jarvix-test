@@ -41,6 +41,10 @@ service.interceptors.request.use(
 // 攔截 response
 service.interceptors.response.use(
   response => {
+    // TODO
+    // if (response.headers['content-type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    //   return { data: response.data }
+    // }
     const res = response.data
     // 特殊情況 光電展 response 無 meta
     if (res.success && !res.meta) return res.data

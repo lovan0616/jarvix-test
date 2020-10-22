@@ -25,6 +25,19 @@
             @click="buildAlias"
           >{{ $t('button.build') }}</button>
         </div>
+        <div style="flex-basis: 100%">
+          <div>
+            欄位別名批次更新檔
+            <button
+              @disabled="isLoadingPrimaryAliasTemplate"
+              @click="getPrimaryAliasTemplate">下載</button>
+          </div>
+          <div>
+            上傳欄位別名批次更新檔
+            <input type="file">
+            <button>送出</button>
+          </div>
+        </div>
       </div>
       <div class="edit-table-block">
         <div class="data-table">
@@ -207,6 +220,7 @@ import {
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
+import { fetchPrimaryAliasTemplate } from '@/API/AutomationScript'
 import InputVerify from '@/components/InputVerify'
 import { mapGetters, mapState } from 'vuex'
 
@@ -246,6 +260,7 @@ export default {
         userEditedColumnInputList: []
       },
       isLoading: false,
+      isLoadingPrimaryAliasTemplate: false,
       isProcessing: false,
       showConfirmDeleteDialog: false
     }
@@ -438,6 +453,37 @@ export default {
           }
         })
         .finally(() => { this.isProcessing = false })
+    },
+    getPrimaryAliasTemplate () {
+      this.isLoadingPrimaryAliasTemplate = true
+      fetchPrimaryAliasTemplate(this.tableId)
+        .then(({ data }) => {
+          // console.log('response', data)
+          const blob = new Blob(['\uFEFF' + data], { type: 'application/vnd.ms-excel;' })
+          if (navigator.msSaveBlob) {
+            // IE 10+
+            navigator.msSaveBlob(blob, 'fileName')
+          } else {
+            const link = document.createElement('a')
+            if (link.download !== undefined) {
+              // Browsers that support HTML5 download attribute
+              const url = URL.createObjectURL(blob)
+              link.setAttribute('href', url)
+              link.setAttribute('download', 'fileName')
+              link.style.visibility = 'hidden'
+              document.body.appendChild(link)
+              link.click()
+              document.body.removeChild(link)
+            }
+          }
+        })
+        .catch(error => {
+          // console.log(error)
+        })
+        .finally(() => {
+          // console.log('finally')
+          this.isLoadingPrimaryAliasTemplate = false
+        })
     }
   },
 }
@@ -447,6 +493,7 @@ export default {
   .dialog-header-block {
     margin-bottom: 12px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     line-height: 30px;
 
