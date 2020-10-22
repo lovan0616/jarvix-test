@@ -3,6 +3,7 @@
     <div class="button-block">
       <button 
         v-if="!columnSet.id && isEditing" 
+        :disabled="isProcessing"
         type="button"
         class="btn btn-default btn-save"
         @click="saveColumnSet"
@@ -10,10 +11,11 @@
       <button 
         v-if="isEditing" 
         :class="columnSet.id ? 'btn-secondary' : 'btn-outline'"
+        :disabled="isProcessing"
         type="button"
         class="btn btn-delete"
         @click="removeColumnSet"
-      >{{ columnSet.id ? $t('button.delete') : $t('button.cancel') }}</button>
+      >{{ columnSet.id ? (isProcessing ? $t('button.processing') : $t('button.delete')) : $t('button.cancel') }}</button>
       <button 
         v-if="!isEditing" 
         type="button"
@@ -57,6 +59,7 @@
           <div class="block-title">{{ $t('editing.notSelect') }}</div>
           <div class="option-list-block">
             <draggable
+              :disabled="isProcessing"
               :list="columnOptionList"
               :group="draggableGroupName"
               class="list-group">
@@ -67,7 +70,8 @@
               >
                 <div class="info name">{{ column.name }}</div>
                 <div class="info alias">{{ column.primaryAlias }}</div>
-                <button 
+                <button
+                  :disabled="isProcessing"
                   class="btn-m btn-default btn-select"
                   @click="selectColumn(index)"
                 >{{ $t('button.select') }}</button>
@@ -87,6 +91,7 @@
           <div class="block-title">{{ $t('editing.alreadySelect') }}</div>
           <div class="option-list-block">
             <draggable
+              :disabled="isProcessing"
               :value="columnSet.dataColumnList" 
               :group="selectedListGroup"
               class="list-group"
@@ -101,6 +106,7 @@
                 <div class="info alias">{{ column.primaryAlias }}</div>
                 <button
                   v-if="!(columnSet.id && columnSet.dataColumnList.length <= 1)"
+                  :disabled="isProcessing"
                   class="btn-m btn-secondary btn-select"
                   @click="cancelSelect(index)"
                 >{{ $t('button.cancel') }}</button>
@@ -152,7 +158,8 @@ export default {
       columnOptionList: [],
       isEditing: !this.columnSet.id,
       validateFieldKey: new Date().getTime().toString(),
-      sortedColumnSet: {}
+      sortedColumnSet: {},
+      isProcessing: false
     }
   },
   computed: {
@@ -193,6 +200,7 @@ export default {
       this.columnOptionList = columnOptionList
     },
     updateColumnSetColumn (columnSetId, columnList) {
+      this.isProcessing = true
       return updateColumnSet(columnSetId, {
         dataFrameId: this.columnSet.dataFrameId,
         columnSetColumnList: columnList.map((column, index) => (
@@ -208,6 +216,8 @@ export default {
           duration: 3 * 1000,
           showClose: true
         })
+      }).finally(() => {
+        this.isProcessing = false
       })
     },
     async selectColumn (index) {
@@ -251,6 +261,7 @@ export default {
           return false
         }
 
+        this.isProcessing = true
         createColumnSet({
           primaryAlias: this.columnSet.primaryAlias,
           dataFrameId: this.columnSet.dataFrameId,
@@ -270,10 +281,12 @@ export default {
           this.columnSet.id = response.id
           this.toggleIsEditing()
         })
+        .finally(() => this.isProcessing = false)
       })
     },
     removeColumnSet () {
       if (this.columnSet.id) {
+        this.isProcessing = true
         deleteColumnSet(this.columnSet.id).then(() => {
           Message({
             message: this.$t('message.deleteSuccess'),
@@ -283,6 +296,7 @@ export default {
           })
           this.$emit('remove')
         })
+        .finally(() => this.isProcessing = false)
       } else {
         this.$emit('remove')
       }
@@ -301,24 +315,29 @@ export default {
       this.columnSet.dataColumnList.splice(newIndex, 0, movingColumn)
     },
     async updateSelectedList (e) {
-      if (e.hasOwnProperty('moved')) {
-        return this.updateDataSetOrder(e.moved.oldIndex, e.moved.newIndex)
-      } else if (e.hasOwnProperty('removed')) {
-        if (this.columnSet.id) {
-          const newColumnList = [...this.columnSet.dataColumnList]
-          newColumnList.splice(e.removed.oldIndex, 1)
-          try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
-          catch(e) { return }
+      try {
+        this.isProcessing = true
+        if (e.hasOwnProperty('moved')) {
+          await this.updateDataSetOrder(e.moved.oldIndex, e.moved.newIndex)
+        } else if (e.hasOwnProperty('removed')) {
+          if (this.columnSet.id) {
+            const newColumnList = [...this.columnSet.dataColumnList]
+            newColumnList.splice(e.removed.oldIndex, 1)
+            await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+          }
+          this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1)
+        } else if (e.hasOwnProperty('added')) {
+          if (this.columnSet.id) {
+            const newColumnList = [...this.columnSet.dataColumnList]
+            newColumnList.splice(e.added.newIndex, 0, e.added.element)
+            await this.updateColumnSetColumn(this.columnSet.id, newColumnList)
+          }
+          this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element)
         }
-        this.columnSet.dataColumnList.splice(e.removed.oldIndex, 1)
-      } else if (e.hasOwnProperty('added')) {
-        if (this.columnSet.id) {
-          const newColumnList = [...this.columnSet.dataColumnList]
-          newColumnList.splice(e.added.newIndex, 0, e.added.element)
-          try { await this.updateColumnSetColumn(this.columnSet.id, newColumnList) } 
-          catch (e) { return }
-        }
-        this.columnSet.dataColumnList.splice(e.added.newIndex, 0, e.added.element)
+      } catch(e) {
+        return  
+      } finally {
+        this.isProcessing = false
       }
     }
   },

@@ -76,8 +76,9 @@ export default {
   },
   computed: {
     ...mapState('dataSource', ['processingDataColumnList']),
-    ...mapGetters('dataSource', ['getOwnProcessingTasks']),
-    ...mapGetters('userManagement', ['getCurrentAccountId'])
+    ...mapGetters('dataSource', ['getOwnProcessingTasks', 'currentDataFrameId']),
+    ...mapGetters('userManagement', ['getCurrentAccountId']),
+    ...mapState('dataFrameAdvanceSetting', ['isInit']),
   },
   watch: {
     getCurrentAccountId () {
@@ -132,6 +133,15 @@ export default {
                     showClose: true
                   })
                 }, 0)
+                // 若在智能分析頁面且也正在使用同一個資料表，則通知它重拿
+                if (this.$route.query.dataFrameId === 'all' || (this.$route.query.dataFrameId && Number(this.$route.query.dataFrameId) === task.dataFrameId)) {
+                  this.$store.commit('dataSource/setShouldDataFrameDataRefetchDataColumn', task.dataFrameId)
+                }
+                // 若基表設定已暫存同一資料表的欄位，則通知它重拿
+                if (this.currentDataFrameId === task.dataFrameId && this.isInit) {
+                  this.$store.commit('dataFrameAdvanceSetting/toggleIsInit', false)
+                  this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
+                }
                 break
               case 'Fail':
                 this.$store.commit('dataSource/spliceProcessingDataColumnList', this.processingDataColumnList.findIndex(item => item.taskId === taskId))
@@ -162,9 +172,15 @@ export default {
       this.isOpen = !this.isOpen
     },
     checkBgColumnTasks () {
-      const prevBgColumnTasks = JSON.parse(localStorage.getItem('bgColumnTasks'))
-      if (prevBgColumnTasks.length > 0) {
-        this.$store.commit('dataSource/setProcessingDataColumnList', prevBgColumnTasks)
+      const prevBgColumnTasks = localStorage.getItem('bgColumnTasks')
+      if (!prevBgColumnTasks) {
+        this.$store.commit('dataSource/setProcessingDataColumnList', [])
+        localStorage.setItem('bgColumnTasks', '[]')
+        return
+      }
+      const parsedPrevBgColumnTasks = JSON.parse(prevBgColumnTasks)
+      if (parsedPrevBgColumnTasks.length >= 0) {
+        this.$store.commit('dataSource/setProcessingDataColumnList', parsedPrevBgColumnTasks)
       }
     }
   }

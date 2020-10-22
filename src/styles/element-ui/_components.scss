@@ -252,6 +252,8 @@
     background: #233131;
     border-color: $theme-color-primary;
     .el-popover__title {
+      margin-bottom: 6px;
+      font-size: 14px;
       color: $theme-color-primary;
       line-height: 24px;
       font-weight: bold;
@@ -280,7 +282,7 @@
         flex-direction: column;
         margin-left: 24px;
         margin-right: 14px;
-        padding: 16px 0 14px 0;
+        padding: 4px 0;
         font-size: 12px;
         line-height: 14px;
         &:not(:first-child) {
@@ -289,7 +291,7 @@
         .task {
           &__icon {
             position: absolute;
-            top: 19px;
+            top: 6px;
             left: -24px;
           }
           &__title {
