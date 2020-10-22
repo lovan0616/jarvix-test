@@ -214,11 +214,11 @@ export default {
     },
     isShowInfo () {
       const intentsWithInfo = ['CLUSTERING']
-      return intentsWithInfo.includes(this.intent)
+      return intentsWithInfo.includes(this.intent || this.activeTab)
     },
     displayedInfo () {
       if (!this.isShowInfo) return
-      switch (this.intent) {
+      switch (this.intent || this.activeTab) {
         case 'CLUSTERING': 
         return this.$t('editing.resultOverSizeMessage')
       }
