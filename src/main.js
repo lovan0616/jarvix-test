@@ -96,6 +96,7 @@ import DisplayParallelBarChart from '@/components/display/DisplayParallelBarChar
 import DisplayChinaMap from '@/components/display/DisplayChinaMap'
 import DisplayWorldMap from '@/components/display/DisplayWorldMap'
 import DisplayPredictChart from '@/components/display/DisplayPredictChart'
+import DisplayLineConfidentialIntervalChart from '@/components/display/DisplayLineConfidentialIntervalChart'
 import DisplayHeatMapChart from '@/components/display/DisplayHeatMapChart'
 import DisplaySankeyChart from '@/components/display/DisplaySankeyChart'
 import DisplayCorrelationFeatures from '@/components/display/DisplayCorrelationFeatures'
@@ -196,6 +197,7 @@ Vue.component(DisplayParallelBarChart.name, DisplayParallelBarChart)
 Vue.component(DisplayChinaMap.name, DisplayChinaMap)
 Vue.component(DisplayWorldMap.name, DisplayWorldMap)
 Vue.component(DisplayPredictChart.name, DisplayPredictChart)
+Vue.component(DisplayLineConfidentialIntervalChart.name, DisplayLineConfidentialIntervalChart)
 // Vue.component(DisplayPivot.name, DisplayPivot)
 Vue.component(DisplayPivotTable.name, DisplayPivotTable)
 Vue.component(DisplayHeatMapChart.name, DisplayHeatMapChart)

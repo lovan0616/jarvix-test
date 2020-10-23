@@ -1904,7 +1904,12 @@
     "rangeEnd": "範圍結束",
     "count": "統計數量",
     "download": "下載圖片",
-    "showLabel": "顯示標籤"
+    "showLabel": "顯示標籤",
+    "forecastValue": "預測值",
+    "upperBoundValue": "上限值",
+    "lowerBoundValue": "下限值",
+    "normalValue": "正常值",
+    "anomalousValue": "異常值"
   },
   "errorMessage": {
     "SYERR0001": "系統發生非預期錯誤",

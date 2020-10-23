@@ -223,6 +223,8 @@ Vue.mixin({
           return 'DisplayCompositionLineChart'
         case 'predict_line_chart':
           return 'DisplayPredictChart'
+        case 'line_confidential_interval_chart':
+          return 'DisplayLineConfidentialIntervalChart'
         case 'pie_chart':
           return 'DisplayPieChart'
         case 'scatter_correlation_chart':

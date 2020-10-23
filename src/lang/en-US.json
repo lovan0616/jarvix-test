@@ -1904,7 +1904,12 @@
     "rangeEnd": "rangeEnd",
     "count": "Count",
     "download": "Download image",
-    "showLabel": "Show Label"
+    "showLabel": "Show Label",
+    "forecastValue": "Forecasted value",
+    "upperBoundValue": "Upper bound",
+    "lowerBoundValue": "Lower bound",
+    "normalValue": "Normal values",
+    "anomalousValue": "Anomalous values"
   },
   "errorMessage": {
     "SYERR0001": "Unexpected error occurred in the system",
