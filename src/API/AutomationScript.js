@@ -7,7 +7,8 @@ import request from '@/utils/publicRequest'
 export function fetchPrimaryAliasTemplate (dataFrameId) {
   return request({
     url: `/automationScript/primaryAlias/${dataFrameId}`,
-    method: 'GET'
+    method: 'GET',
+    responseType: 'blob'
   })
 }
 

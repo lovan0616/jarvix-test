@@ -25,17 +25,25 @@
             @click="buildAlias"
           >{{ $t('button.build') }}</button>
         </div>
+        <!-- TODO 樣式 -->
         <div style="flex-basis: 100%">
           <div>
             欄位別名批次更新檔
             <button
-              @disabled="isLoadingPrimaryAliasTemplate"
+              :disabled="isLoadingPrimaryAliasTemplate"
               @click="getPrimaryAliasTemplate">下載</button>
           </div>
           <div>
             上傳欄位別名批次更新檔
-            <input type="file">
-            <button>送出</button>
+            <input
+              accept="application/vnd.ms-excel" 
+              type="file"
+              @change="onInputPrimaryAliasTemplate($event.target.files)"
+            >
+            <button
+              :disabled="isUploadingPrimaryAliasTemplate"
+              @click="updatePrimaryAliasTemplate"
+            >送出</button>
           </div>
         </div>
       </div>
@@ -220,7 +228,7 @@ import {
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
-import { fetchPrimaryAliasTemplate } from '@/API/AutomationScript'
+import { fetchPrimaryAliasTemplate, updatePrimaryAliasTemplate } from '@/API/AutomationScript'
 import InputVerify from '@/components/InputVerify'
 import { mapGetters, mapState } from 'vuex'
 
@@ -261,12 +269,15 @@ export default {
       },
       isLoading: false,
       isLoadingPrimaryAliasTemplate: false,
+      isUploadingPrimaryAliasTemplate: false,
       isProcessing: false,
-      showConfirmDeleteDialog: false
+      showConfirmDeleteDialog: false,
+      primaryAliasTemplateInput: null
     }
   },
   computed: {
     ...mapGetters('dataSource', ['currentDataFrameId']),
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
     ...mapState('dataFrameAdvanceSetting', ['isInit']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
@@ -458,18 +469,18 @@ export default {
       this.isLoadingPrimaryAliasTemplate = true
       fetchPrimaryAliasTemplate(this.tableId)
         .then(({ data }) => {
-          // console.log('response', data)
-          const blob = new Blob(['\uFEFF' + data], { type: 'application/vnd.ms-excel;' })
+          const blob = new Blob([data], { type: 'application/vnd.ms-excel;' })
           if (navigator.msSaveBlob) {
             // IE 10+
-            navigator.msSaveBlob(blob, 'fileName')
+            navigator.msSaveBlob(blob, this.tableInfo.primaryAlias)
           } else {
             const link = document.createElement('a')
             if (link.download !== undefined) {
               // Browsers that support HTML5 download attribute
               const url = URL.createObjectURL(blob)
               link.setAttribute('href', url)
-              link.setAttribute('download', 'fileName')
+              // TODO 待確認下載黨名
+              link.setAttribute('download', this.tableInfo.primaryAlias + '範例檔' + '.xls')
               link.style.visibility = 'hidden'
               document.body.appendChild(link)
               link.click()
@@ -477,12 +488,34 @@ export default {
             }
           }
         })
-        .catch(error => {
-          // console.log(error)
-        })
+        .catch(error => {})
         .finally(() => {
-          // console.log('finally')
           this.isLoadingPrimaryAliasTemplate = false
+        })
+    },
+    onInputPrimaryAliasTemplate (file) {
+      this.primaryAliasTemplateInput = file[0]
+    },
+    updatePrimaryAliasTemplate () {
+      if (!this.primaryAliasTemplateInput) return
+
+      this.isUploadingPrimaryAliasTemplate = true
+      let formData = new FormData()
+      formData.append('file', this.primaryAliasTemplateInput)
+      formData.append('groupId', this.getCurrentGroupId)
+      updatePrimaryAliasTemplate(formData, this.tableId)
+        .then(res => {
+          Message({
+            message: this.$t('editing.uploadSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+          this.fetchData()
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.isUploadingPrimaryAliasTemplate = false
         })
     }
   },

@@ -34,6 +34,27 @@
               @click="buildAlias"
             >{{ $t('button.build') }}</button>
           </div>
+          <!-- TODO 樣式 -->
+          <div style="flex-basis: 100%">
+            <div>
+              數據別名批次更新檔
+              <button
+                :disabled="isLoadingValueAliasTemplate"
+                @click="getValueAliasTemplate">下載</button>
+            </div>
+            <div>
+              上傳數據別名批次更新檔
+              <input
+                accept="application/vnd.ms-excel" 
+                type="file"
+                @change="onInputValueAliasTemplate($event.target.files)"
+              >
+              <button
+                :disabled="isUploadingValueAliasTemplate"
+                @click="updateBooleanAndCategoryValueAliasTemplate"
+              >送出</button>
+            </div>
+          </div>
         </div>
         <div class="dialog-content-block">
           <div class="data-column-block">
@@ -176,6 +197,7 @@
 <script>
 import { getDataColumnDataValue } from '@/API/DataSource'
 import { getValueAlias, saveValueAlias } from '@/API/Alias'
+import { fetchBooleanAndCategoryValueAliasTemplate, updateBooleanAndCategoryValueAliasTemplate } from '@/API/AutomationScript'
 import { getSelfInfo } from '@/API/User'
 import { Message } from 'element-ui'
 import DataInputVerify from '../DataInputVerify'
@@ -204,7 +226,10 @@ export default {
       },
       userId: null,
       isSaving: false,
-      isLoading: true
+      isLoading: true,
+      isLoadingValueAliasTemplate: false,
+      isUploadingValueAliasTemplate: false,
+      valueAliasTemplateInput: null
     }
   },
   computed: {
@@ -362,6 +387,59 @@ export default {
     },
     closeDialog () {
       this.$emit('close')
+    },
+    getValueAliasTemplate () {
+      this.isLoadingValueAliasTemplate = true
+      fetchBooleanAndCategoryValueAliasTemplate(this.dataFrameInfo.id)
+        .then(({ data }) => {
+          const blob = new Blob([data], { type: 'application/vnd.ms-excel;' })
+          if (navigator.msSaveBlob) {
+            // IE 10+
+            navigator.msSaveBlob(blob, this.dataFrameInfo.primaryAlias)
+          } else {
+            const link = document.createElement('a')
+            if (link.download !== undefined) {
+              // Browsers that support HTML5 download attribute
+              const url = URL.createObjectURL(blob)
+              link.setAttribute('href', url)
+              // TODO 待確認下載黨名
+              link.setAttribute('download', this.dataFrameInfo.primaryAlias + '範例檔' + '.xls')
+              link.style.visibility = 'hidden'
+              document.body.appendChild(link)
+              link.click()
+              document.body.removeChild(link)
+            }
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.isLoadingValueAliasTemplate = false
+        })
+    },
+    onInputValueAliasTemplate (file) {
+      this.valueAliasTemplateInput = file[0]
+    },
+    updateBooleanAndCategoryValueAliasTemplate () {
+      if (!this.valueAliasTemplateInput) return
+
+      this.isUploadingValueAliasTemplate = true
+      let formData = new FormData()
+      formData.append('file', this.valueAliasTemplateInput)
+      formData.append('groupId', this.getCurrentGroupId)
+      updateBooleanAndCategoryValueAliasTemplate(formData, this.tableId)
+        .then(res => {
+          Message({
+            message: this.$t('editing.uploadSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+          this.fetchData()
+        })
+        .catch(error => {})
+        .finally(() => {
+          this.isUploadingValueAliasTemplate = false
+        })
     }
   },
 }
@@ -371,6 +449,7 @@ export default {
   .dialog-header-block {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
     margin-bottom: 12px;
 
