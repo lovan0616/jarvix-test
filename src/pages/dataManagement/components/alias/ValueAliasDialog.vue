@@ -200,6 +200,7 @@ import { getValueAlias, saveValueAlias } from '@/API/Alias'
 import { fetchBooleanAndCategoryValueAliasTemplate, updateBooleanAndCategoryValueAliasTemplate } from '@/API/AutomationScript'
 import { getSelfInfo } from '@/API/User'
 import { Message } from 'element-ui'
+import { mapGetters } from 'vuex'
 import DataInputVerify from '../DataInputVerify'
 
 export default {
@@ -233,6 +234,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     }
@@ -425,8 +427,7 @@ export default {
       this.isUploadingValueAliasTemplate = true
       let formData = new FormData()
       formData.append('file', this.valueAliasTemplateInput)
-      formData.append('groupId', this.getCurrentGroupId)
-      updateBooleanAndCategoryValueAliasTemplate(formData, this.tableId)
+      updateBooleanAndCategoryValueAliasTemplate(formData, this.getCurrentGroupId, this.dataFrameInfo.id)
         .then(res => {
           Message({
             message: this.$t('editing.uploadSuccess'),
@@ -434,7 +435,7 @@ export default {
             duration: 3 * 1000,
             showClose: true
           })
-          this.fetchData()
+          this.fetchColumnInfo()
         })
         .catch(error => {})
         .finally(() => {

@@ -32,7 +32,8 @@ export function updatePrimaryAliasTemplate (fileData, dataFrameId) {
 export function fetchBooleanAndCategoryValueAliasTemplate (dataFrameId) {
   return request({
     url: `/automationScript/booleanAndCategoryValueAlias/${dataFrameId}`,
-    method: 'GET'
+    method: 'GET',
+    responseType: 'blob'
   })
 }
 
