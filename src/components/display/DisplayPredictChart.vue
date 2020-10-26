@@ -60,6 +60,219 @@ import {
   yAxisDefault
 } from './common/addons'
 
+const dummyDataset = {
+  data: [
+    [
+      63232,
+      51232,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      63194.53,
+      52194.53,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      65943.33,
+      54943.33,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      57752.06,
+      46752.06,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      65972.57,
+      54972.57,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      68669.76,
+      57669.76,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      69221.69,
+      58221.69,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      51377.82,
+      40377.82,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      68446.95,
+      57446.95,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      47914.07,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      45689.79,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      64378,
+      53378,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      80346.6,
+      69346.6,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      70946.35,
+      59946.35,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      27143.18,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      53700.23,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      54081.33,
+      43081.33,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      62822.08,
+      49822.08,
+      49822.08,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      44153.5,
+      36007.95,
+      16291.1,
+      52299.05
+    ],
+    [
+      null,
+      null,
+      54670.805,
+      49687.02,
+      9967.57,
+      59654.59
+    ],
+    [
+      null,
+      null,
+      48790.825,
+      45358.14,
+      6865.38,
+      52223.51
+    ],
+    [
+      null,
+      null,
+      49394.355,
+      48032.35,
+      2724.02,
+      50756.36
+    ]
+  ],
+  index: [
+    '2018年02月',
+    '2018年03月',
+    '2018年04月',
+    '2018年05月',
+    '2018年06月',
+    '2018年07月',
+    '2018年08月',
+    '2018年09月',
+    '2018年10月',
+    '2018年11月',
+    '2018年12月',
+    '2019年01月',
+    '2019年02月',
+    '2019年03月',
+    '2019年04月',
+    '2019年05月',
+    '2019年06月',
+    '2019年07月',
+    '2020年06月',
+    '2020年07月',
+    '2020年08月',
+    '2020年09月'
+  ],
+  columns: [
+    '實際資料',
+    '系統模擬',
+    '系統模擬(預測)',
+    '預測極小值',
+    '預測誤差區間',
+    '預測極大值'
+  ]
+}
+
 export default {
   name: 'DisplayPredictChart',
   props: {
@@ -100,36 +313,54 @@ export default {
       return this.dataset.columns.map((v, colIndex) => {
         let item = {
           name: v,
-          type: 'line'
+          type: 'line',
+          symbol: 'circle' ,
         }
         switch (colIndex) {
-          case 0:
-            item['stack'] = 'predict'
-            item['areaStyle'] = {
-              color: 'transparent'
-            }
-            break
           case 1:
-            item['stack'] = 'predict'
-            item['areaStyle'] = {
-              color: 'transparent'
-            }
-            item['lineStyle'] = {
-              type: 'dashed'
+            item['itemStyle'] = {
+              color: color12[2]
             }
             break
           case 2:
-            item['stack'] = 'predict'
             item['areaStyle'] = {
-              color: colorOnly1
+              color: 'transparent'
+            }
+            item['itemStyle'] = {
+              color: color12[2]
             }
             item['lineStyle'] = {
               type: 'dashed'
             }
             break
           case 3:
+            item['stack'] = 'predict'
+            item['areaStyle'] = {
+              color: 'transparent'
+            }
+            item['itemStyle'] = {
+              color: color12[3]
+            }
             item['lineStyle'] = {
               type: 'dashed'
+            }
+            break
+          case 4:
+            item['stack'] = 'predict'
+            item['areaStyle'] = {
+              color: color12[3],
+              opacity: 0.2
+            }
+            item['lineStyle'] = {
+              type: 'dashed'
+            }
+            break
+          case 5:
+            item['lineStyle'] = {
+              type: 'dashed'
+            }
+            item['itemStyle'] = {
+              color: color12[3]
             }
             break
         }
@@ -192,8 +423,8 @@ export default {
         let res = datas[0].name + '<br/>'
         for (let i = 0, length = datas.length; i < length; i++) {
           let componentIndex = datas[i].componentIndex + 1
-          // 過濾掉 null、undefined、以及 為了 stck 的 0
-          if (datas[i].value[componentIndex] === null || datas[i].value[componentIndex] === undefined || (datas[i].value[componentIndex] === 0 && datas[i].value[2] === 0 && datas[i].value[3] === 0 && datas[i].value[4] === null)) continue
+          // 過濾掉 null、undefined、以及 為了 stck 的 0 和模擬預測的第一個點
+          if (datas[i].value[componentIndex] === null || datas[i].value[componentIndex] === undefined || (datas[i].value[componentIndex] === 0 && datas[i].value[2] === 0 && datas[i].value[3] === 0 && datas[i].value[4] === null) || (componentIndex === 3 && datas[i].value[componentIndex] && datas[i].value[componentIndex - 1])) continue
           let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
           res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[componentIndex]) + '<br/>'
         }
