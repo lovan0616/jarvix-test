@@ -448,7 +448,7 @@ export default {
           this.originalPrimaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
 
           // 將原cron設定還原到表單上
-          if (crontabConfigContent.id) {
+          if (crontabConfigContent.cron) {
             const crons = crontabConfigContent.cron.split(' ')
             this.cronSettingValueAdvanced.forEach((item, index) => item.value = crons[index])
             const matchedOption = this.scheduleInfo.basicScheduleList.find(item => item.value === crontabConfigContent.cron)
