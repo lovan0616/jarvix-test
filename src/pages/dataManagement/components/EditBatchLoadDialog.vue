@@ -66,7 +66,7 @@
                     :id="mode.type.toLowerCase()"
                     :checked="mode.type === columnInfo.type"
                     :value="mode.type"
-                    name="mode"
+                    name="type"
                     class="input-radio"
                     type="radio"
                     @change="columnInfo.type = mode.type"
@@ -77,9 +77,9 @@
                   >{{ mode.name }}</label>
                 </div>
                 <div 
-                  v-show="errors.has('mode')"
+                  v-show="errors.has('type')"
                   class="error-text"
-                >{{ errors.first('mode') }}</div>
+                >{{ errors.first('type') }}</div>
               </div>
             </div>
             <template v-if="columnInfo.type === 'UPDATE' && dateTimeColumnList.length > 0">
@@ -127,9 +127,8 @@
                 <label class="deletable-checkbox">
                   <div class="checkbox-label">
                     <input
-                      :checked="columnInfo.deletable"
+                      v-model="columnInfo.deletable"
                       type="checkbox"
-                      @change="columnInfo.deletable = !columnInfo.deletable"
                     >
                     <div class="checkbox-square"/>
                   </div>
@@ -159,16 +158,20 @@
               :id="option.mode.toLowerCase()"
               :checked="option.mode === columnInfo.mode"
               :value="option.mode"
-              name="option"
+              v-model="columnInfo.mode"
+              name="mode"
               class="input-radio"
               type="radio"
-              @change="columnInfo.mode = option.mode"
             >
             <label
               :for="option.mode.toLowerCase()"
               class="input-radio-label"
             >{{ option.name }}</label>
           </div>
+          <div 
+            v-show="errors.has('mode')"
+            class="error-text"
+          >{{ errors.first('mode') }}</div>
           <div 
             v-if="columnInfo.mode === 'BASIC'" 
             class="input-field">
@@ -445,10 +448,12 @@ export default {
           this.originalPrimaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
 
           // 將原cron設定還原到表單上
-          const crons = crontabConfigContent.cron.split(' ')
-          this.cronSettingValueAdvanced.forEach((item, index) => item.value = crons[index])
-          const matchedOption = this.scheduleInfo.basicScheduleList.find(item => item.value === crontabConfigContent.cron)
-          this.cronSettingValueBasic = matchedOption ? crontabConfigContent.cron : null
+          if (crontabConfigContent.id) {
+            const crons = crontabConfigContent.cron.split(' ')
+            this.cronSettingValueAdvanced.forEach((item, index) => item.value = crons[index])
+            const matchedOption = this.scheduleInfo.basicScheduleList.find(item => item.value === crontabConfigContent.cron)
+            this.cronSettingValueBasic = matchedOption ? crontabConfigContent.cron : null
+          }
 
           this.fetchDataColumnList()
         })
@@ -481,7 +486,7 @@ export default {
         type: this.columnInfo.type,
         mode: this.columnInfo.mode,
         updateDateColumn: this.columnInfo.updateDateColumn,
-        deletable: this.columnInfo.deletable
+        deletable: this.columnInfo.deletable === null ? false : true
       }
     },
     setSetting () {
@@ -655,13 +660,10 @@ export default {
       }
     }
 
-    .cron-seletor {
-      margin-bottom: 37px;
-    }
-
     .cron-time {
       display: flex;
       flex-direction: row;
+      margin-top: 37px;
       height: 360px;
 
       &__setting {
