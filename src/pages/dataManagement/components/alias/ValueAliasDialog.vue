@@ -26,37 +26,69 @@
           >
             <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
           </el-tooltip>
-          <div class="button-block">
-            <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
-            <button 
-              type="button" 
-              class="btn-m btn-default"
-              @click="buildAlias"
-            >{{ $t('button.build') }}</button>
-          </div>
-          <!-- TODO 樣式 -->
-          <div style="flex-basis: 100%">
-            <div>
-              數據別名批次更新檔
-              <button
-                :disabled="isLoadingValueAliasTemplate"
-                @click="getValueAliasTemplate">下載</button>
-            </div>
-            <div>
-              上傳數據別名批次更新檔
-              <input
-                accept="application/vnd.ms-excel" 
-                type="file"
-                @change="onInputValueAliasTemplate($event.target.files)"
-              >
-              <button
-                :disabled="isUploadingValueAliasTemplate"
-                @click="updateBooleanAndCategoryValueAliasTemplate"
-              >送出</button>
-            </div>
-          </div>
         </div>
         <div class="dialog-content-block">
+          <div class="data-template-block">
+            <el-popover
+              trigger="click"
+              popper-class="el-popover--value-alias-template-uploader"
+            >
+              <label
+                for="valueAliasTemplateInput"
+                class="data-template-block__input-label"
+              >
+                <span class="file-name">{{ valueAliasTemplateInput ? valueAliasTemplateInput.name : this.$t('editing.chooseFile') }}</span>
+                <input
+                  id="valueAliasTemplateInput" 
+                  type="file"
+                  hidden
+                  @change="onInputValueAliasTemplate($event.target.files)"
+                >
+              </label>
+              <div 
+                v-show="valueAliasTemplateInput" 
+                class="button-block">
+                <a 
+                  href="javascript:void(0);" 
+                  class="link btn-cancel"
+                  @click="onCancelUploadValueAliasTemplate"
+                >{{ $t('button.cancel') }}</a>
+                <a
+                  :disabled="isUploadingValueAliasTemplate" 
+                  href="javascript:void(0);"
+                  class="link btn-confirm"
+                  @click="updateBooleanAndCategoryValueAliasTemplate"
+                > 
+                  <svg-icon
+                    v-show="isUploadingValueAliasTemplate"
+                    icon-class="spinner"/>
+                  {{ $t('button.upload') }}
+                </a>
+              </div>
+              <button
+                slot="reference"
+                class="btn btn-secondary"
+              >{{ $t('editing.uploadAliasTemplate') }}</button>
+            </el-popover>
+            <button
+              :disabled="isLoadingValueAliasTemplate"
+              class="btn btn-secondary"
+              @click="
+              getValueAliasTemplate">
+              <svg-icon 
+                v-show="isLoadingValueAliasTemplate" 
+                icon-class="spinner"/>
+              {{ $t('editing.downloadAliasTemplate') }}
+            </button>
+            <div class="button-block">
+              <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
+              <button 
+                type="button" 
+                class="btn-m btn-default"
+                @click="buildAlias"
+              >{{ $t('button.build') }}</button>
+            </div>
+          </div>
           <div class="data-column-block">
             <div class="block-title">{{ $t('editing.columnName') }}</div>
             <div class="data-column-block-body">
@@ -404,8 +436,7 @@ export default {
               // Browsers that support HTML5 download attribute
               const url = URL.createObjectURL(blob)
               link.setAttribute('href', url)
-              // TODO 待確認下載黨名
-              link.setAttribute('download', this.dataFrameInfo.primaryAlias + '範例檔' + '.xls')
+              link.setAttribute('download', `${this.dataFrameInfo.primaryAlias}_${this.$t('editing.aliasTemplate')}.xls`)
               link.style.visibility = 'hidden'
               document.body.appendChild(link)
               link.click()
@@ -423,6 +454,7 @@ export default {
     },
     updateBooleanAndCategoryValueAliasTemplate () {
       if (!this.valueAliasTemplateInput) return
+      if (this.isUploadingValueAliasTemplate) return
 
       this.isUploadingValueAliasTemplate = true
       let formData = new FormData()
@@ -440,9 +472,13 @@ export default {
         .catch(error => {})
         .finally(() => {
           this.isUploadingValueAliasTemplate = false
+          document.querySelector('#app').click()
         })
+    },
+    onCancelUploadValueAliasTemplate () {
+      document.querySelector('#app').click()
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -452,22 +488,16 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 
     .data-frame-name {
       font-size: 14px;
       @include text-hidden
     }
-
-    .remark-text {
-      color: $theme-color-warning;
-      font-size: 14px;
-      margin-right: 12px;
-      white-space: nowrap;
-    }
   }
   .dialog-content-block {
     display: flex;
+    flex-wrap: wrap;
     max-height: 70vh;
 
     .data-column-block {

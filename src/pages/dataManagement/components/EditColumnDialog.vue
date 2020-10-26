@@ -25,29 +25,68 @@
             @click="buildAlias"
           >{{ $t('button.build') }}</button>
         </div>
-        <!-- TODO 樣式 -->
-        <div style="flex-basis: 100%">
-          <div>
-            欄位別名批次更新檔
-            <button
-              :disabled="isLoadingPrimaryAliasTemplate"
-              @click="getPrimaryAliasTemplate">下載</button>
-          </div>
-          <div>
-            上傳欄位別名批次更新檔
-            <input
-              accept="application/vnd.ms-excel" 
-              type="file"
-              @change="onInputPrimaryAliasTemplate($event.target.files)"
-            >
-            <button
-              :disabled="isUploadingPrimaryAliasTemplate"
-              @click="updatePrimaryAliasTemplate"
-            >送出</button>
-          </div>
-        </div>
       </div>
       <div class="edit-table-block">
+        <div class="data-template-block">
+          <el-popover
+            trigger="click"
+            popper-class="el-popover--value-alias-template-uploader"
+          >
+            <label
+              for="primaryAliasTemplateInput"
+              class="data-template-block__input-label"
+            >
+              <span class="file-name">{{ primaryAliasTemplateInput ? primaryAliasTemplateInput.name : this.$t('editing.chooseFile') }}</span>
+              <input
+                id="primaryAliasTemplateInput" 
+                type="file"
+                hidden
+                @change="onInputPrimaryAliasTemplate($event.target.files)"
+              >
+            </label>
+            <div 
+              v-show="primaryAliasTemplateInput" 
+              class="button-block">
+              <a
+                href="javascript:void(0);"
+                class="link btn-cancel" 
+                @click="onCancelUploadPrimaryAliasTemplate">{{ $t('button.cancel') }}</a>
+              <a
+                :disabled="isUploadingPrimaryAliasTemplate" 
+                href="javascript:void(0);"
+                class="link btn-confirm"
+                @click="updatePrimaryAliasTemplate"
+              > 
+                <svg-icon
+                  v-show="isUploadingPrimaryAliasTemplate"
+                  icon-class="spinner"/>
+                {{ $t('button.upload') }}
+              </a>
+            </div>
+            <button
+              slot="reference"
+              class="btn btn-secondary"
+            >{{ $t('editing.uploadAliasTemplate') }}</button>
+          </el-popover>
+          <button
+            :disabled="isLoadingPrimaryAliasTemplate"
+            class="btn btn-secondary"
+            @click="
+            getPrimaryAliasTemplate">
+            <svg-icon 
+              v-show="isLoadingPrimaryAliasTemplate" 
+              icon-class="spinner"/>
+            {{ $t('editing.downloadAliasTemplate') }}
+          </button>
+          <div class="button-block">
+            <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
+            <button 
+              type="button" 
+              class="btn-m btn-default"
+              @click="buildAlias"
+            >{{ $t('button.build') }}</button>
+          </div>
+        </div>
         <div class="data-table">
           <div class="data-table-head is-scrolling">
             <div class="data-table-row table-head">
@@ -479,8 +518,7 @@ export default {
               // Browsers that support HTML5 download attribute
               const url = URL.createObjectURL(blob)
               link.setAttribute('href', url)
-              // TODO 待確認下載黨名
-              link.setAttribute('download', this.tableInfo.primaryAlias + '範例檔' + '.xls')
+              link.setAttribute('download', `${this.tableInfo.primaryAlias}_${this.$t('editing.aliasTemplate')}.xls`)
               link.style.visibility = 'hidden'
               document.body.appendChild(link)
               link.click()
@@ -516,7 +554,11 @@ export default {
         .catch(() => {})
         .finally(() => {
           this.isUploadingPrimaryAliasTemplate = false
+          document.querySelector('#app').click()
         })
+    },
+    onCancelUploadPrimaryAliasTemplate () {
+      document.querySelector('#app').click()
     }
   },
 }

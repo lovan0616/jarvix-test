@@ -401,7 +401,11 @@
     "tagColumn": "Tagged Field",
     "originalField": "Original Field",
     "createdMethod": "Created Method",
-    "buildingNewColumn": "Building New Column"
+    "buildingNewColumn": "Building New Column",
+    "downloadAliasTemplate": "Download Aliases",
+    "uploadAliasTemplate": "Upload Aliases",
+    "chooseFile": "Choose File",
+    "aliasTemplate": "AliasTemplate"
   },
   "algorithm": {
     "name": "Algorithm",
