@@ -38,7 +38,8 @@
             >
               <span class="file-name">{{ primaryAliasTemplateInput ? primaryAliasTemplateInput.name : this.$t('editing.chooseFile') }}</span>
               <input
-                id="primaryAliasTemplateInput" 
+                id="primaryAliasTemplateInput"
+                :accept="acceptFileTypes.join(',').toString()"
                 type="file"
                 hidden
                 @change="onInputPrimaryAliasTemplate($event.target.files)"
@@ -311,7 +312,13 @@ export default {
       isUploadingPrimaryAliasTemplate: false,
       isProcessing: false,
       showConfirmDeleteDialog: false,
-      primaryAliasTemplateInput: null
+      primaryAliasTemplateInput: null,
+      acceptFileTypes: [
+        '.csv',
+        'text/csv',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel'
+      ]
     }
   },
   computed: {
@@ -553,6 +560,7 @@ export default {
         })
         .catch(() => {})
         .finally(() => {
+          this.primaryAliasTemplateInput = null
           this.isUploadingPrimaryAliasTemplate = false
           document.querySelector('#app').click()
         })
