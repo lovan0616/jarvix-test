@@ -123,6 +123,19 @@
                   >{{ errors.first('primaryKeyColumn') }}</div>
                 </div>
               </div>
+              <div class="input-field">
+                <label class="deletable-checkbox">
+                  <div class="checkbox-label">
+                    <input
+                      :checked="columnInfo.deletable"
+                      type="checkbox"
+                      @change="columnInfo.deletable = !columnInfo.deletable"
+                    >
+                    <div class="checkbox-square"/>
+                  </div>
+                  <span>{{ $t('batchLoad.checkDatarowDeletable') }}</span>
+                </label>
+              </div>
             </template>
             <template v-if="isUpdateWithoutDateTimeColumn">
               <empty-info-block
@@ -138,29 +151,31 @@
           <div class="setting-block__title">{{ $t('batchLoad.scheduleSetting') }}</div>
           <div
             v-for="option in updateCronSettingOptionList"
-            :key="option.type"
+            :key="option.mode"
             class="input-radio-group cron-seletor"
           >
             <input
-              v-model="columnInfo.option"
-              :id="option.type.toLowerCase()"
-              :value="option.type"
+              v-validate="'required'"
+              :id="option.mode.toLowerCase()"
+              :checked="option.mode === columnInfo.mode"
+              :value="option.mode"
               name="option"
               class="input-radio"
               type="radio"
+              @change="columnInfo.mode = option.mode"
             >
             <label
-              :for="option.type.toLowerCase()"
+              :for="option.mode.toLowerCase()"
               class="input-radio-label"
             >{{ option.name }}</label>
           </div>
           <div 
-            v-if="columnInfo.option === 'BASIC'" 
+            v-if="columnInfo.mode === 'BASIC'" 
             class="input-field">
             <div class="input-field__input">
               <default-select 
                 v-validate="'required'"
-                v-model="columnInfo.cron"
+                v-model="cronSettingValueBasic"
                 :option-list="scheduleInfo.basicScheduleList"
                 :placeholder="$t('batchLoad.chooseCycle')"
                 :is-disabled="isProcessing"
@@ -174,16 +189,16 @@
             </div>
           </div>
           <div 
-            v-else-if="columnInfo.option === 'ADVANCED'"
+            v-else-if="columnInfo.mode === 'ADVANCED'"
             class="cron-time">
             <div class="cron-time__setting">
               <div 
-                v-for="time in timeScopeUnitList"
+                v-for="time in cronSettingValueAdvanced"
                 :key="time.unit"
                 class="cron-time__input">
                 <input-block
                   :label="time.unit"
-                  :value="time.value" />
+                  v-model="time.value" />
               </div>
             </div>
             <div class="cron-info">
@@ -283,15 +298,16 @@ export default {
       ],
       updateCronSettingOptionList: [
         {
-          type: 'BASIC',
+          mode: 'BASIC',
           name: this.$t('batchLoad.basicSetting')
         },
         {
-          type: 'ADVANCED',
-          name: this.$t('batchLoad.AdvancedSetting')
+          mode: 'ADVANCED',
+          name: this.$t('batchLoad.advancedSetting')
         }
       ],
-      timeScopeUnitList: [
+      cronSettingValueBasic: '',
+      cronSettingValueAdvanced: [
         {
           unit: this.$t('batchLoad.minute'),
           value: '*'
@@ -311,7 +327,7 @@ export default {
         {
           unit: this.$t('batchLoad.week'),
           value: '*'
-        },
+        }
       ],
       settingInfo: [
         {
@@ -336,6 +352,10 @@ export default {
       ],
       scheduleInfo: {
         basicScheduleList: [
+          {
+            value: null,
+            name: this.$t('editing.defaultOption')
+          },
           {
             value: '* * * * *',
             name: this.$t('warRoom.everyMinute', { number: 1 })
@@ -396,7 +416,18 @@ export default {
       for (let key in this.originalColumnInfo) {
         if (this.originalColumnInfo[key] !== this.columnInfo[key]) return true
       }
+
+      // compare cron setting
+      if (this.columnInfo.mode === 'ADVANCED') {
+        if (this.composedAdvancedCronSetting !== this.originalColumnInfo.cron) return true
+      }
+      if (this.columnInfo.mode === 'BASIC') {
+        if (this.cronSettingValueBasic !== this.originalColumnInfo.cron) return true
+      }
       return false
+    },
+    composedAdvancedCronSetting () {
+      return this.cronSettingValueAdvanced.reduce((acc, cur, index, arr) => acc + cur.value + (index === arr.length - 1 ? '' : ' '), '')
     }
   },
   mounted () {
@@ -408,10 +439,17 @@ export default {
       getBatchLoadSetting(this.dataFrameInfo.id)
         .then(({ crontabConfigContent, primaryKeys }) => {
           this.columnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
-          this.columnInfo.option = 'ADVANCED'
+          this.columnInfo.mode = crontabConfigContent.mode
           this.originalColumnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
           this.primaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
           this.originalPrimaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
+
+          // 將原cron設定還原到表單上
+          const crons = crontabConfigContent.cron.split(' ')
+          this.cronSettingValueAdvanced.forEach((item, index) => item.value = crons[index])
+          const matchedOption = this.scheduleInfo.basicScheduleList.find(item => item.value === crontabConfigContent.cron)
+          this.cronSettingValueBasic = matchedOption ? crontabConfigContent.cron : null
+
           this.fetchDataColumnList()
         })
         .catch(() => {
@@ -437,12 +475,13 @@ export default {
     },
     formatSettingData () {
       return {
-        cron: this.columnInfo.cron,
+        cron: this.columnInfo.mode === 'BASIC' ? this.cronSettingValueBasic : this.composedAdvancedCronSetting,
         primaryKeys: this.primaryKeys,
         status: this.columnInfo.status,
         type: this.columnInfo.type,
-       // option: this.columnInfo.option,
-        updateDateColumn: this.columnInfo.updateDateColumn
+        mode: this.columnInfo.mode,
+        updateDateColumn: this.columnInfo.updateDateColumn,
+        deletable: this.columnInfo.deletable
       }
     },
     setSetting () {
@@ -589,7 +628,15 @@ export default {
       &__input-wrapper {
         margin-top: 8px;
       }
-
+      
+      .deletable-checkbox {
+        display: flex;
+        align-items: center;
+        width: fit-content;
+        .checkbox-label {
+          margin-right: 12px;
+        }
+      }
       /deep/ .el-input__inner {
         font-size: 14px;
         padding-left: 0;
@@ -636,6 +683,9 @@ export default {
         background: rgba(72, 84, 84, 0.95);
         border-radius: 8px;
         overflow-y: scroll;
+        ::-webkit-scrollbar-track {
+          background-color: transparent;
+        }
 
         &__block {
           margin-bottom: 16px;
@@ -685,6 +735,10 @@ export default {
     }
     &:last-of-type {
       margin-right: 16px;
+    }
+
+    .input-radio-label {
+      line-height: 40px;
     }
   }
 

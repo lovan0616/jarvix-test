@@ -548,7 +548,7 @@
     "setBatchLoad": "更新資料",
     "batchLoad": "批次更新資料",
     "basicSetting": "基本設定",
-    "AdvancedSetting": "進階設定",
+    "advancedSetting": "進階設定",
     "chooseCycle": "選擇週期",
     "on": "開啟",
     "off": "關閉",
@@ -587,7 +587,8 @@
       "comma": "逗號(,)：分隔多個不同時間點。例如若要指定 3:00、6:00 與 9:00 三個時間點執行指令，就填入 3,6,9。",
       "minus": "減號(-)：代表一段時間區間，例如填入 8-12 就代表從 8 點到 12 點的意思，也就是等同於 8,9,10,11,12。",
       "slash": "斜線加數字(/n)：n 代表數字，這樣寫的意思就是「每隔 n 的單位」的意思，例如填入 */5 就代表每間隔五分鐘執行一次的意思，也可以寫成 0-59/5。"
-    }
+    },
+    "checkDatarowDeletable": "檢查有無資料刪除"
   },
   "fileDataUpdate": {
     "dataUpdateSetting": "資料更新設定",
