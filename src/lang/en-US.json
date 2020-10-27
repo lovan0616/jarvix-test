@@ -405,7 +405,8 @@
     "downloadAliasTemplate": "Download Aliases",
     "uploadAliasTemplate": "Upload Aliases",
     "chooseFile": "Choose File",
-    "aliasTemplate": "AliasTemplate"
+    "columnAliasTemplate": "ColumnAliasTemplate",
+    "valueAliasTemplate": "ValueAliasTemplate"
   },
   "algorithm": {
     "name": "Algorithm",

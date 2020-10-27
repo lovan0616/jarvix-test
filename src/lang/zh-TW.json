@@ -405,7 +405,8 @@
     "downloadAliasTemplate": "下載別名",
     "uploadAliasTemplate": "上傳別名",
     "chooseFile": "選擇檔案",
-    "aliasTemplate": "別名範例檔"
+    "columnAliasTemplate": "欄位別名範例檔",
+    "valueAliasTemplate": "數據別名範例檔"
   },
   "algorithm": {
     "name": "演算法",

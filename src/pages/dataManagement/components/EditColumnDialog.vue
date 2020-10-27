@@ -29,6 +29,7 @@
       <div class="edit-table-block">
         <div class="data-template-block">
           <el-popover
+            v-model="isUploadPopoverVisible"
             trigger="click"
             popper-class="el-popover--value-alias-template-uploader"
           >
@@ -313,7 +314,8 @@ export default {
       isUploadingPrimaryAliasTemplate: false,
       isProcessing: false,
       showConfirmDeleteDialog: false,
-      primaryAliasTemplateInput: null
+      primaryAliasTemplateInput: null,
+      isUploadPopoverVisible: false
     }
   },
   computed: {
@@ -520,7 +522,7 @@ export default {
               // Browsers that support HTML5 download attribute
               const url = URL.createObjectURL(blob)
               link.setAttribute('href', url)
-              link.setAttribute('download', `${this.tableInfo.primaryAlias}_${this.$t('editing.aliasTemplate')}.xlsx`)
+              link.setAttribute('download', `${this.tableInfo.primaryAlias}_${this.$t('editing.columnAliasTemplate')}.xlsx`)
               link.style.visibility = 'hidden'
               document.body.appendChild(link)
               link.click()
@@ -558,11 +560,11 @@ export default {
         .finally(() => {
           this.primaryAliasTemplateInput = null
           this.isUploadingPrimaryAliasTemplate = false
-          document.querySelector('#app').click()
+          this.isUploadPopoverVisible = false
         })
     },
     onCancelUploadPrimaryAliasTemplate () {
-      document.querySelector('#app').click()
+      this.isUploadPopoverVisible = false
       this.primaryAliasTemplateInput = null
     }
   },
