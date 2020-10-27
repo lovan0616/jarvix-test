@@ -14,17 +14,6 @@
           placement="bottom">
           <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ tableInfo.primaryAlias }}</div>
         </el-tooltip>
-        <div
-          v-if="userEditInfo.userEditedColumnInputList.length > 0"
-          class="button-block"
-        >
-          <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
-          <button 
-            :disabled="isProcessing"
-            class="btn-m btn-default"
-            @click="buildAlias"
-          >{{ $t('button.build') }}</button>
-        </div>
       </div>
       <div class="edit-table-block">
         <div class="data-template-block">
@@ -81,10 +70,13 @@
               icon-class="spinner"/>
             {{ $t('editing.downloadAliasTemplate') }}
           </button>
-          <div class="button-block">
+          <div
+            v-if="userEditInfo.userEditedColumnInputList.length > 0"
+            class="button-block"
+          >
             <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
             <button 
-              type="button" 
+              :disabled="isProcessing"
               class="btn-m btn-default"
               @click="buildAlias"
             >{{ $t('button.build') }}</button>
