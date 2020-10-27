@@ -401,7 +401,12 @@
     "tagColumn": "標籤欄位",
     "originalField": "原始欄位",
     "createdMethod": "建立方式",
-    "buildingNewColumn": "建置新欄位"
+    "buildingNewColumn": "建置新欄位",
+    "downloadAliasTemplate": "下載別名",
+    "uploadAliasTemplate": "上傳別名",
+    "chooseFile": "選擇檔案",
+    "columnAliasTemplate": "欄位別名範例檔",
+    "valueAliasTemplate": "數據別名範例檔"
   },
   "algorithm": {
     "name": "演算法",
