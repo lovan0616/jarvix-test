@@ -39,7 +39,8 @@
               <span class="file-name">{{ primaryAliasTemplateInput ? primaryAliasTemplateInput.name : this.$t('editing.chooseFile') }}</span>
               <input
                 id="primaryAliasTemplateInput"
-                :accept="acceptFileTypes.join(',').toString()"
+                :key="primaryAliasTemplateInput ? primaryAliasTemplateInput.name : 'empty'"
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 type="file"
                 hidden
                 @change="onInputPrimaryAliasTemplate($event.target.files)"
@@ -312,13 +313,7 @@ export default {
       isUploadingPrimaryAliasTemplate: false,
       isProcessing: false,
       showConfirmDeleteDialog: false,
-      primaryAliasTemplateInput: null,
-      acceptFileTypes: [
-        '.csv',
-        'text/csv',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/vnd.ms-excel'
-      ]
+      primaryAliasTemplateInput: null
     }
   },
   computed: {
@@ -525,11 +520,12 @@ export default {
               // Browsers that support HTML5 download attribute
               const url = URL.createObjectURL(blob)
               link.setAttribute('href', url)
-              link.setAttribute('download', `${this.tableInfo.primaryAlias}_${this.$t('editing.aliasTemplate')}.xls`)
+              link.setAttribute('download', `${this.tableInfo.primaryAlias}_${this.$t('editing.aliasTemplate')}.xlsx`)
               link.style.visibility = 'hidden'
               document.body.appendChild(link)
               link.click()
               document.body.removeChild(link)
+              URL.revokeObjectURL(url)
             }
           }
         })
@@ -539,7 +535,7 @@ export default {
         })
     },
     onInputPrimaryAliasTemplate (file) {
-      this.primaryAliasTemplateInput = file[0]
+      if (file) this.primaryAliasTemplateInput = file[0]
     },
     updatePrimaryAliasTemplate () {
       if (!this.primaryAliasTemplateInput) return
@@ -567,6 +563,7 @@ export default {
     },
     onCancelUploadPrimaryAliasTemplate () {
       document.querySelector('#app').click()
+      this.primaryAliasTemplateInput = null
     }
   },
 }

@@ -40,7 +40,8 @@
                 <span class="file-name">{{ valueAliasTemplateInput ? valueAliasTemplateInput.name : this.$t('editing.chooseFile') }}</span>
                 <input
                   id="valueAliasTemplateInput" 
-                  :accept="acceptFileTypes.join(',').toString()"
+                  :key="valueAliasTemplateInput ? valueAliasTemplateInput.name : 'empty'"
+                  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                   type="file"
                   hidden
                   @change="onInputValueAliasTemplate($event.target.files)"
@@ -263,13 +264,7 @@ export default {
       isLoading: true,
       isLoadingValueAliasTemplate: false,
       isUploadingValueAliasTemplate: false,
-      valueAliasTemplateInput: null,
-      acceptFileTypes: [
-        '.csv',
-        'text/csv',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/vnd.ms-excel'
-      ]
+      valueAliasTemplateInput: null
     }
   },
   computed: {
@@ -433,7 +428,7 @@ export default {
       this.isLoadingValueAliasTemplate = true
       fetchBooleanAndCategoryValueAliasTemplate(this.dataFrameInfo.id)
         .then(({ data }) => {
-          const blob = new Blob([data], { type: 'application/vnd.ms-excel;' })
+          const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
           if (navigator.msSaveBlob) {
             // IE 10+
             navigator.msSaveBlob(blob, this.dataFrameInfo.primaryAlias)
@@ -443,11 +438,12 @@ export default {
               // Browsers that support HTML5 download attribute
               const url = URL.createObjectURL(blob)
               link.setAttribute('href', url)
-              link.setAttribute('download', `${this.dataFrameInfo.primaryAlias}_${this.$t('editing.aliasTemplate')}.xls`)
+              link.setAttribute('download', `${this.dataFrameInfo.primaryAlias}_${this.$t('editing.aliasTemplate')}.xlsx`)
               link.style.visibility = 'hidden'
               document.body.appendChild(link)
               link.click()
               document.body.removeChild(link)
+              URL.revokeObjectURL(url)
             }
           }
         })
@@ -457,7 +453,7 @@ export default {
         })
     },
     onInputValueAliasTemplate (file) {
-      this.valueAliasTemplateInput = file[0]
+      if (file) this.valueAliasTemplateInput = file[0]
     },
     updateBooleanAndCategoryValueAliasTemplate () {
       if (!this.valueAliasTemplateInput) return
@@ -485,6 +481,7 @@ export default {
     },
     onCancelUploadValueAliasTemplate () {
       document.querySelector('#app').click()
+      this.valueAliasTemplateInput = null
     }
   }
 }
