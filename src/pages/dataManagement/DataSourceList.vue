@@ -217,6 +217,7 @@ export default {
         .then(response => {
           this.fetchData()
             .then(() => {
+              this.$store.commit('dataSource/updateProcessingDataFrameListAfterDeleteDataSource', this.deleteId)
               this.cancelDelete()
               resolve()
             })
