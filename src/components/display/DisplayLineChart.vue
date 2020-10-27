@@ -46,6 +46,15 @@
         </div>
       </div>
     </selected-region>
+    <div 
+      v-if="dataset.descriptions && dataset.descriptions.length > 0"
+      class="description"
+    >
+      <span 
+        v-for="(description, index) in dataset.descriptions" 
+        :key="index" 
+        class="description__item">{{ description }}</span>
+    </div>
   </div>
 </template>
 
@@ -451,3 +460,20 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.display-line-chart {
+  height: 100%;
+  .description {
+    margin-top: 16px;
+    background: #141C1D;
+    border-radius: 8px;
+    padding: 10px 20px;
+
+    &__item {
+      font-size: 14px;
+      letter-spacing: 0.1em;
+    }
+  }
+}
+</style>
