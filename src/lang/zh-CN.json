@@ -188,6 +188,7 @@
     "editTable": "编辑资料表",
     "editTableColumn": "编辑资料表栏位",
     "columnName": "栏位名称",
+    "columnDisplayName": "显示名称",
     "columnSource": "栏位来源",
     "columnSourceRemind": "透过关联方式建置的资料表才会显示栏位来源资料表资讯",
     "alias": "别名",
@@ -404,6 +405,10 @@
     "buildingNewColumn": "建置新栏位",
     "downloadAliasTemplate": "下载别名",
     "uploadAliasTemplate": "发布别名",
+    "downloadDisplayNameTemplate": "下载显示名称范本",
+    "uploadDisplayNameTemplate": "批次修改显示名称",
+    "downloadValueAliasTemplate": "下载数据别名范本",
+    "uploadValueAliasTemplate": "批次修改数据别名",
     "chooseFile": "选择档案",
     "columnAliasTemplate": "栏位别名范例档",
     "valueAliasTemplate": "数据别名范例档"

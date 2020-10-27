@@ -599,7 +599,7 @@ export default {
   display: flex;
   margin-bottom: 12px;
   & > .btn-secondary {
-    margin-left: 8px;
+    margin-right: 8px;
   }
   .button-block {
     margin-left: auto;

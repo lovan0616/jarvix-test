@@ -17,6 +17,17 @@
       </div>
       <div class="edit-table-block">
         <div class="data-template-block">
+          <el-tooltip :content="$t('editing.downloadDisplayNameTemplate')">
+            <button
+              :disabled="isLoadingPrimaryAliasTemplate"
+              class="btn btn-secondary"
+              @click="getPrimaryAliasTemplate">
+              <svg-icon 
+                v-show="isLoadingPrimaryAliasTemplate" 
+                icon-class="spinner"/>
+              {{ $t('editing.downloadAliasTemplate') }}
+            </button>
+          </el-tooltip>
           <el-popover
             v-model="isUploadPopoverVisible"
             trigger="click"
@@ -55,21 +66,15 @@
                 {{ $t('button.upload') }}
               </a>
             </div>
-            <button
+            <el-tooltip
               slot="reference"
-              class="btn btn-secondary"
-            >{{ $t('editing.uploadAliasTemplate') }}</button>
+              :content="$t('editing.uploadDisplayNameTemplate')"
+            >
+              <button
+                class="btn btn-secondary"
+              >{{ $t('editing.uploadAliasTemplate') }}</button>
+            </el-tooltip>
           </el-popover>
-          <button
-            :disabled="isLoadingPrimaryAliasTemplate"
-            class="btn btn-secondary"
-            @click="
-            getPrimaryAliasTemplate">
-            <svg-icon 
-              v-show="isLoadingPrimaryAliasTemplate" 
-              icon-class="spinner"/>
-            {{ $t('editing.downloadAliasTemplate') }}
-          </button>
           <div
             v-if="userEditInfo.userEditedColumnInputList.length > 0"
             class="button-block"
@@ -85,7 +90,7 @@
         <div class="data-table">
           <div class="data-table-head is-scrolling">
             <div class="data-table-row table-head">
-              <div class="data-table-cell name">{{ $t('editing.columnName') }}</div>
+              <div class="data-table-cell name">{{ $t('editing.columnDisplayName') }}</div>
               <div 
                 v-if="isJoinTable"
                 class="data-table-cell source"

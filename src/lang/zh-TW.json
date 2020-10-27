@@ -188,6 +188,7 @@
     "editTable": "編輯資料表",
     "editTableColumn": "編輯資料表欄位",
     "columnName": "欄位名稱",
+    "columnDisplayName": "顯示名稱",
     "columnSource": "欄位來源",
     "columnSourceRemind": "透過關聯方式建置的資料表才會顯示欄位來源資料表資訊",
     "alias": "別名",
@@ -404,6 +405,10 @@
     "buildingNewColumn": "建置新欄位",
     "downloadAliasTemplate": "下載別名",
     "uploadAliasTemplate": "上傳別名",
+    "downloadDisplayNameTemplate": "下載顯示名稱範本",
+    "uploadDisplayNameTemplate": "批次修改顯示名稱",
+    "downloadValueAliasTemplate": "下載數據別名範本",
+    "uploadValueAliasTemplate": "批次修改數據別名",
     "chooseFile": "選擇檔案",
     "columnAliasTemplate": "欄位別名範例檔",
     "valueAliasTemplate": "數據別名範例檔"

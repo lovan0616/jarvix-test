@@ -188,6 +188,7 @@
     "editTable": "Edit Table",
     "editTableColumn": "Edit Table Column",
     "columnName": "Column Name",
+    "columnDisplayName": "Display Name",
     "columnSource": "Column Source",
     "columnSourceRemind": "Database information about field sources will only be displayed for tables built through association.",
     "alias": "Alias",
@@ -404,6 +405,10 @@
     "buildingNewColumn": "Building New Column",
     "downloadAliasTemplate": "Download Aliases",
     "uploadAliasTemplate": "Upload Aliases",
+    "downloadDisplayNameTemplate": "Download Display Name Template",
+    "uploadDisplayNameTemplate": "Upload Edited Display Name",
+    "downloadValueAliasTemplate": "Download Value Alias Template",
+    "uploadValueAliasTemplate": "Upload Edited Value Alias",
     "chooseFile": "Choose File",
     "columnAliasTemplate": "ColumnAliasTemplate",
     "valueAliasTemplate": "ValueAliasTemplate"
