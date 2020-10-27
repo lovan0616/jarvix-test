@@ -230,6 +230,8 @@ Vue.mixin({
           return 'DisplayScatterChart'
         case 'scatter_probability_density_chart':
           return 'DisplayScatterProbabilityDensityChart'
+        case 'scatter_cluster_chart':
+          return 'DisplayScatterClusterChart'
         case 'table':
           return 'SyTable'
         case 'tree_map':

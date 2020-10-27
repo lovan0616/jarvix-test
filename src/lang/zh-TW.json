@@ -691,6 +691,7 @@
     "displaySetting": "顯示設定"
   },
   "clustering": {
+    "cluster": "群體",
     "dataOverview": "資料概況",
     "clusteringAnalysis": "分群分析",
     "saveClusteringResultAsColumn": "儲存分群結果為標籤欄位",
