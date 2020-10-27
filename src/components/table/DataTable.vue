@@ -420,13 +420,13 @@ export default {
      */
     buildStatus (value) {
       switch (value) {
-        case 'Warn':
-        case 'WARN':
         case 'Ready':
         case 'READY':
         case 'Enable':
         case 'ENABLE':
           return i18n.t('editing.dataManageable')
+        case 'Warn':
+        case 'WARN':
         case 'Fail':
         case 'FAIL':
         case 'Delete':
@@ -473,7 +473,7 @@ export default {
       return data['state'] === 'Pending'
     },
     isFail (data) {
-      return data['state'] === 'Disable' || data['type'] === 'DISABLE' || data['state'] === 'Fail' || data['type'] === 'FAIL'
+      return data['state'] === 'Disable' || data['type'] === 'DISABLE' || data['state'] === 'Fail' || data['type'] === 'FAIL' || data['state'] === 'Warn' || data['type'] === 'WARN'
     },
     elapsedTimeFormat (time) {
       let hour = this.$t('timeScopeUnit.allowArg.hour', {n: Math.floor(time / 3600)}) + ' '
