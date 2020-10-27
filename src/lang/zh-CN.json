@@ -553,6 +553,7 @@
     "setBatchLoad": "更新资料",
     "batchLoad": "批次更新资料",
     "basicSetting": "基本设置",
+    "advancedSetting": "进阶设定",
     "chooseCycle": "选择周期",
     "on": "开启",
     "off": "关闭",
@@ -573,7 +574,26 @@
     "updateContent": "更新内容",
     "updateMode": "更新模式",
     "dataFrameUpdate": "资料表更新",
-    "rebuild": "重新建置"
+    "rebuild": "重新建置",
+    "minute": "分钟",
+    "hour": "小时",
+    "day": "日期",
+    "month": "月份",
+    "week": "星期",
+    "settingInfo": {
+      "value": "设定值说明",
+      "minute": "分钟：0 到 59",
+      "hour": "小时：0 到 23",
+      "day": "日期：1 到 31",
+      "month": "月份：1 到 12，亦可用英文简称取代，例如一月也可以写 Jan。",
+      "week": "星期：0(周日) 到6(周六), 7也代表周日。亦可用英文简称取代，例如周日可以写 Sun。",
+      "specialCharacters": "特殊字元代表意义",
+      "star": "星号(*)：代表任意时刻，例如若在月份那一栏填入星号，则代表任一月份皆可。",
+      "comma": "逗号(,)：分隔多个不同时间点。例如若要指定 3:00、6:00 与 9:00 三个时间点执行指令，就填入 3,6,9。",
+      "minus": "减号(-)：代表一段时间区间，例如填入 8-12 就代表从 8 点到 12 点的意思，也就是等同于 8,9,10,11,12。",
+      "slash": "斜线加数字(/n)：n 代表数字，这样写的意思就是「每隔n 的单位」的意思，例如填入*/5 就代表每间隔五分钟执行一次的意思，也可以写成0-59/5。 "
+    },
+    "checkDatarowDeletable": "检查有无资料删除"
   },
   "fileDataUpdate": {
     "dataUpdateSetting": "资料更新设定",
