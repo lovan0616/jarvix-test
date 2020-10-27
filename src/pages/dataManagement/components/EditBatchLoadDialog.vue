@@ -442,7 +442,6 @@ export default {
       getBatchLoadSetting(this.dataFrameInfo.id)
         .then(({ crontabConfigContent, primaryKeys }) => {
           this.columnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
-          this.columnInfo.mode = crontabConfigContent.mode
           this.originalColumnInfo = JSON.parse(JSON.stringify(crontabConfigContent))
           this.primaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
           this.originalPrimaryKeys = JSON.parse(JSON.stringify(primaryKeys)) || []
@@ -486,7 +485,7 @@ export default {
         type: this.columnInfo.type,
         mode: this.columnInfo.mode,
         updateDateColumn: this.columnInfo.updateDateColumn,
-        deletable: this.columnInfo.deletable === null ? false : true
+        deletable: this.columnInfo.deletable === null ? false : this.columnInfo.deletable
       }
     },
     setSetting () {
