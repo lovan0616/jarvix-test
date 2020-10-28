@@ -259,7 +259,7 @@ export default {
       this.isProcessing[type] = true
       this.$store.dispatch('chatBot/askSpecificType', {
         resultId: this.currentResultId,
-        type: type.toLowerCase()
+        type: type
       })
         .then(({ resultId }) => {
           this.isProcessing[type] = false
