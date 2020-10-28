@@ -135,7 +135,8 @@
     "lowerBoundShouldBeSmallerThanUpperBound": "下限值需小於上限值",
     "and": "和",
     "upperBound": "上限",
-    "lowerBound": "下限"
+    "lowerBound": "下限",
+    "noPeriodicResult": "沒有找到週期結果"
   },
   "guiding": {
     "prevStep": "上一步",
