@@ -90,7 +90,7 @@ const dummyResponse = {
         ]
       },
       dataset: {
-        rawData: [
+        data: [
           240, 
           222, 
           80, 
@@ -99,7 +99,7 @@ const dummyResponse = {
           300, 
           340
         ],
-        data: [
+        predictData: [
           270, 
           232, 
           241, 
@@ -140,7 +140,7 @@ const dummyResponse = {
 }
 
 const dummyDataset = {
-  rawData: [
+  data: [
     240, 
     222, 
     80, 
@@ -149,7 +149,7 @@ const dummyDataset = {
     300, 
     340
   ],
-  data: [
+  predictData: [
     270, 
     232, 
     241, 
@@ -233,17 +233,17 @@ export default {
       }
     },
     lowerBoundList () {
-      return dummyDataset.data.map(item => item - this.zValue * dummyDataset.sigma)
+      return dummyDataset.predictData.map(item => item - this.zValue * dummyDataset.sigma)
     },
     toUpperBoundIntervalList () {
-      return dummyDataset.data.map(item => 2 * this.zValue * dummyDataset.sigma)
+      return dummyDataset.predictData.map(item => 2 * this.zValue * dummyDataset.sigma)
     },
     actualDataList () {
       const actualDataList = {
         validDataList: [],
         invalidDataList: []
       }
-      dummyDataset.rawData.forEach((actualValue, index) => {
+      dummyDataset.data.forEach((actualValue, index) => {
         const upperBound = this.lowerBoundList[index] + this.toUpperBoundIntervalList[index]
         const lowerBound = this.lowerBoundList[index]
         const isValidValue = actualValue <= upperBound && actualValue >= lowerBound
@@ -258,7 +258,7 @@ export default {
       dummyDataset.index.forEach((value, index) => {
         source.push([
           value, 
-          dummyDataset.data[index], 
+          dummyDataset.predictData[index], 
           this.lowerBoundList[index], 
           this.toUpperBoundIntervalList[index],
           this.actualDataList.validDataList[index],
