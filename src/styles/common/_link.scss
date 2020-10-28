@@ -9,7 +9,7 @@
     text-decoration-line: underline;
   }
 
-  &:disabled {
+  &:disabled, &[disabled] {
     opacity: 0.15;
     cursor: not-allowed;
   }

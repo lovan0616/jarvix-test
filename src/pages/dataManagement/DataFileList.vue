@@ -592,4 +592,23 @@ export default {
     }
   }
 }
+
+// 別名範本下載與上傳 共用樣式
+/deep/ .data-template-block {
+  flex-basis: 100%;
+  display: flex;
+  margin-bottom: 12px;
+  & > .btn-secondary {
+    margin-right: 8px;
+  }
+  .button-block {
+    margin-left: auto;
+    .remark-text {
+      color: $theme-color-warning;
+      font-size: 14px;
+      margin-right: 12px;
+      white-space: nowrap;
+    }
+  }
+}
 </style>
