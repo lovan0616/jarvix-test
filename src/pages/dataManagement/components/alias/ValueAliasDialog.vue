@@ -29,6 +29,17 @@
         </div>
         <div class="dialog-content-block">
           <div class="data-template-block">
+            <el-tooltip :content="$t('editing.downloadValueAliasTemplate')">
+              <button
+                :disabled="isLoadingValueAliasTemplate"
+                class="btn btn-secondary"
+                @click="getValueAliasTemplate">
+                <svg-icon 
+                  v-show="isLoadingValueAliasTemplate" 
+                  icon-class="spinner"/>
+                {{ $t('editing.downloadAliasTemplate') }}
+              </button>
+            </el-tooltip>
             <el-popover
               v-model="isUploadPopoverVisible"
               trigger="click"
@@ -68,21 +79,14 @@
                   {{ $t('button.upload') }}
                 </a>
               </div>
-              <button
+              <el-tooltip
                 slot="reference"
-                class="btn btn-secondary"
-              >{{ $t('editing.uploadAliasTemplate') }}</button>
+                :content="$t('editing.uploadValueAliasTemplate')" >
+                <button
+                  class="btn btn-secondary"
+                >{{ $t('editing.uploadAliasTemplate') }}</button>
+              </el-tooltip>
             </el-popover>
-            <button
-              :disabled="isLoadingValueAliasTemplate"
-              class="btn btn-secondary"
-              @click="
-              getValueAliasTemplate">
-              <svg-icon 
-                v-show="isLoadingValueAliasTemplate" 
-                icon-class="spinner"/>
-              {{ $t('editing.downloadAliasTemplate') }}
-            </button>
             <div class="button-block">
               <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
               <button 
