@@ -405,7 +405,7 @@ export default {
             },
             data: [
               {
-                coord: [this.dataset.index[lineData.length - 1], 1]
+                coord: [lineData.length - 1, lineData[lineData.length - 1]]
               }
             ]
           }
