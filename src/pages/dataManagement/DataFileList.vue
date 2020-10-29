@@ -163,6 +163,7 @@ import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 import { getAccountInfo } from '@/API/Account'
 import { mapState } from 'vuex'
+import { Message } from 'element-ui'
 
 export default {
   name: 'DataFileList',
@@ -426,6 +427,12 @@ export default {
       const {id: dataframeId, dataSourceId: selectedDataSourceId} = this.selectList[0]
       deleteDataFrameById(dataframeId)
         .then(res => {
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
           this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
           this.fetchData()
           this.deleteFinish()
