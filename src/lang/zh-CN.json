@@ -541,6 +541,7 @@
     "pleaseSelectAtLeastOneColumnPerTable": "每张表格请至少选择一个栏位"
   },
   "pinboard": {
+    "intelligentAnalysis": "智能分析",
     "source": "资料来源",
     "restrict": "分析条件限制",
     "dataFrame":"来源资料表",

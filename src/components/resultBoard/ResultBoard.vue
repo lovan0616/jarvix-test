@@ -35,6 +35,14 @@
         >
           <button 
             class="btn-m btn-default"
+            @click="askPinboardTitleQuestion"
+          >
+            <svg-icon 
+              icon-class="len-with-line-chart" 
+              class="icon icon-ask-jarvix"/>{{ $t('pinboard.intelligentAnalysis') }}
+          </button>
+          <button 
+            class="btn-m btn-default"
             @click.stop.prevent="togglePinboardInfo"
           >
             <svg-icon
@@ -194,6 +202,10 @@ export default {
     isWarRoomAddable: {
       type: Boolean,
       default: false
+    },
+    groupId: {
+      type: Number,
+      default: null
     }
   },
   data () {
@@ -211,7 +223,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentAccountId']),
     isPinboardPage () {
       return this.$route.name === 'PersonalPagePinboard' || this.$route.name === 'ProjectPagePinboard'
     },
@@ -382,6 +394,10 @@ export default {
     },
     closePinboardInfo () {
       this.isShowPinboardInfo = false
+    },
+    askPinboardTitleQuestion () {
+      const question = this.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
+      window.open(`${location.origin}/account/${this.getCurrentAccountId}/group/${this.groupId}/result?question=${question}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&dataFrameId=${this.dataFrameId}&action=click_pinboard`);
     }
   },
 }
@@ -416,6 +432,7 @@ export default {
 
   .pin-button-block {
     display: flex;
+    align-items: center;
 
     .head-btn {
       color: $theme-text-color;
@@ -429,6 +446,9 @@ export default {
         background-color: $theme-color-primary;
         color: #fff;
       }
+    }
+    .icon-ask-jarvix {
+      color: #FFF;
     }
 
     .btn-default {

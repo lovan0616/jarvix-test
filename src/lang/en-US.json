@@ -541,6 +541,7 @@
     "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field from each table."
   },
   "pinboard": {
+    "intelligentAnalysis": "Intelligent Analysis",
     "source": "Source",
     "restrict": "Filter Restriction",
     "dataFrame":"Data Set",

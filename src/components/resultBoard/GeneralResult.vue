@@ -5,6 +5,7 @@
     :result-info="resultInfo"
     :restrictions="restrictions"
     :is-war-room-addable="isWarRoomAddable"
+    :group-id="groupId"
     class="general-result"
     @refresh="refreshPinboardData"
     @unPin="unPin"
@@ -190,6 +191,10 @@ export default {
     isWarRoomAddable: {
       type: Boolean,
       default: false
+    },
+    groupId: {
+      type: Number,
+      default: null
     }
   },
   data: () => {
@@ -320,7 +325,7 @@ export default {
     align-items: center;
     height: 100%;
   }
-  .task {
+  .task[data-intend="key_result"] {
     padding-top: 30px;
   }
 }
