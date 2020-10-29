@@ -1908,6 +1908,15 @@
     "download": "Download image",
     "showLabel": "Show Label"
   },
+  "denotation": {
+    "dataOverview": "Overview",
+    "clusteringAnalysis": "Clustering",
+    "correlationAnalysis": "Correlation",
+    "predictionAnalysis": "Prediction",
+    "trendAnalysis": "Trend",
+    "anomalyAnalysis": "Anomaly",
+    "periodicityAnalysis": "Periodicity"
+  },
   "errorMessage": {
     "SYERR0001": "Unexpected error occurred in the system",
     "SYERR0002": "plural storage type handler",

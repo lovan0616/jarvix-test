@@ -273,6 +273,28 @@ Vue.mixin({
           return 'DisplayIndexInfo'
       }
     },
+    // 藉由後端的 result denotation 名稱取得前端的顯示資訊
+    getSwitchTypeInfoList (denotation) {
+      switch (denotation) {
+        case 'OVERVIEW':
+          return { name: i18n.t('denotation.dataOverview'), icon: 'basic-info' }
+        case 'CLUSTERING': 
+          return { name: i18n.t('denotation.clusteringAnalysis'), icon: 'clustering' }
+        case 'CORRELATION_VERIFICATION':
+          // TODO: update icon 
+          return { name: i18n.t('denotation.correlationAnalysis'), icon: 'clustering' }
+        case 'PREDICTION':
+          // TODO: update icon 
+          return { name: i18n.t('denotation.predictionAnalysis'), icon: 'clustering' }
+        case 'TREND':
+          return { name: i18n.t('denotation.trendAnalysis'), icon: 'trend' }
+        case 'ANOMALY':
+          // TODO: update icon 
+          return { name: i18n.t('denotation.anomalyAnalysis'), icon: 'clustering' }
+        case 'SEASONALITY':
+          return { name: i18n.t('denotation.periodicityAnalysis'), icon: 'cycle' }
+      }
+    },
     // 整個結果頁的 layout
     getLayoutTemplate (value) {
       switch (value) {

@@ -1908,6 +1908,15 @@
     "download": "下载图片",
     "showLabel": "显示标籤"
   },
+  "denotation": {
+    "dataOverview": "资料概况",
+    "clusteringAnalysis": "分群分析",
+    "correlationAnalysis": "关联分析",
+    "predictionAnalysis": "预测分析",
+    "trendAnalysis": "趋势分析",
+    "anomalyAnalysis": "异常分析",
+    "periodicityAnalysis": "周期分析"
+  },
   "errorMessage": {
     "SYERR0001": "系统发生非预期错误",
     "SYERR0002": "复数storage type handler",
