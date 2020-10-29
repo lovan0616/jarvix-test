@@ -411,7 +411,8 @@
     "uploadValueAliasTemplate": "Upload Edited Value Alias",
     "chooseFile": "Choose File",
     "columnAliasTemplate": "ColumnAliasTemplate",
-    "valueAliasTemplate": "ValueAliasTemplate"
+    "valueAliasTemplate": "ValueAliasTemplate",
+    "searchDataSourceOrDataFrame": "Search DataSource or DataFrame"
   },
   "algorithm": {
     "name": "Algorithm",
