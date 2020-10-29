@@ -203,13 +203,24 @@
                   :key="info.title"
                   class="db-connection-log-info info"
                 >
-                  <p class="info__label">{{ info.label }}: </p>
+                  <p class="info__label">{{ info.label }}</p>
                   <p class="info__description">
                     {{ info.title === "dbConnectionElapsedTime" ? elapsedTimeFormat(data[info.title]) : timeToDateTimeSecondPrecision(data[info.title]) }}
                   </p>
                 </div>
+                <div 
+                  v-if="data.dataImportErrorMessage" 
+                  class="db-connection-log-info">
+                  <p class="info__label">{{ $t('editing.dbConnectionUpdateResult') }}</p>
+                  <p class="info__description">{{ data.dataImportErrorMessage }}</p>
+                </div>
               </template>
-              <span>{{ batchLoadStatus(data) }}</span>
+              <span :class="data.latestImportStatus ? `db-connection-status--${data.latestImportStatus.toLowerCase()}` : null">
+                {{ batchLoadStatus(data) }}
+                <svg-icon
+                  v-show="data.latestImportStatus === 'Fail' || data.latestImportStatus === 'Complete'"
+                  icon-class="information-circle" />
+              </span>
             </el-tooltip>
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
@@ -528,6 +539,14 @@ export default {
     }
     .dataframe-name {
       @include text-hidden;
+    }
+    .db-connection-status {
+      &--fail {
+        color: #FF5C46;
+      }
+      &--complete {
+        color: #2FECB3;
+      }
     }
   }
   .hasWidth {
