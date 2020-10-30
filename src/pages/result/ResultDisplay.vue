@@ -293,6 +293,9 @@ export default {
             case 'Delete':
             case 'Warn':
             case 'Fail':
+              this.resultInfo = {
+                description: componentResponse.errorMessage
+              }
               this.layout = 'EmptyResult'
               this.isLoading = false
               break
