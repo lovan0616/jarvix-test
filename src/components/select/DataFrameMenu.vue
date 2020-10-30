@@ -7,10 +7,14 @@
       class="data-frame-select__title"
       @mouseenter="isShowMenu = true"
     >
-      <svg-icon 
+      <svg-icon
+        v-show="selectedDataName"
         :icon-class="selectedIconType"
         class="data-frame-select__icon"/>
-      <span class="data-source-title">{{ selectedDataName }}</span>
+      <span
+        :class="selectedDataName ? null : 'is-empty'"
+        class="data-source-title"
+      >{{ dataFrameMenuTitle }}</span>
     </div>
     <transition
       name="fade"
@@ -21,6 +25,7 @@
         class="data-frame-select__menu"
       >
         <input-block
+          v-show="availableDataSourceList.length > 0"
           v-model="filterText"
           :placeholder="$t('editing.searchDataSourceOrDataFrame')"
           class="data-frame-select__filter"
@@ -77,7 +82,7 @@
         <div
           v-show="!hasResult"
           class="data-frame-select__empty-result"
-        >{{ $t('resultDescription.noData') }}</div>
+        >{{ $t('editing.emptyKey') }}</div>
       </div>
     </transition>
     <button 
@@ -148,6 +153,10 @@ export default {
         ? 'data-source' 
         : 'table'
     },
+    dataFrameMenuTitle () {
+      if (this.selectedDataName) return this.selectedDataName
+      return this.availableDataSourceList.length === 0 ? this.$t('editing.emptyKey') : this.$t('message.switching') + '...'
+    },
     getDataSourceIndex() {
       return this.availableDataSourceList.findIndex(dataSource => (
         dataSource.id === this.dataSourceId
@@ -192,15 +201,18 @@ export default {
     filterText (newVal, oldVal) {
       if (newVal === oldVal) return
       this.filterMenu()
+    },
+    dataSourceList () {
+      this.getMenuList()
     }
   },
   mounted () {
-    this.formatMenuList()
+    this.getMenuList()
   },
   methods: {
     ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
-    formatMenuList () {
+    getMenuList () {
       const defaultOption = {
         name: this.$t('editing.allDataFrames'),
         id: 'all'
@@ -354,12 +366,16 @@ export default {
   }
   &__title {
     flex: 1;
+    width: 0;
     padding-left: 12px;
     font-size: 14px;
     display: flex;
     align-items: center;
     .data-source-title {
       @include text-hidden;
+      &.is-empty {
+        color: #888;
+      }
     }
   }
   &__icon {
@@ -387,7 +403,7 @@ export default {
 
     &-datasource {
       max-height: 400px;
-      overflow-y: auto;
+      overflow-y: overlay;
       overflow-x: hidden;
       white-space: nowrap;
       padding-left: 0;
@@ -404,7 +420,7 @@ export default {
           border-top: 1px solid #3F4546;
         }
         .icon-arrow {
-          font-size: 10px;
+          font-size: 7px;
           transition: all .3s ease;
         }
         &.is-current {
@@ -445,9 +461,8 @@ export default {
           font-size: 14px;
           color: #CCC;
           display: flex;
-          // justify-content: flex-start;
           align-items: center;
-          padding-right: 12px;
+          padding-right: 16px;
           width: 100%;
           height: 100%;
           &:hover {
@@ -470,7 +485,6 @@ export default {
     font-size: 14px;
     text-align: center;
     line-height: 6;
-    margin-bottom: 12px;
     color: #AAA;
   }
 }
