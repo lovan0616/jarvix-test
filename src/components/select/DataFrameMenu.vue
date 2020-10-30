@@ -371,6 +371,7 @@ export default {
     font-size: 14px;
     display: flex;
     align-items: center;
+    background: #1D2424;
     .data-source-title {
       @include text-hidden;
       &.is-empty {
