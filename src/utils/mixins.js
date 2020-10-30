@@ -281,16 +281,13 @@ Vue.mixin({
         case 'CLUSTERING': 
           return { name: i18n.t('denotation.clusteringAnalysis'), icon: 'clustering' }
         case 'CORRELATION_VERIFICATION':
-          // TODO: update icon 
-          return { name: i18n.t('denotation.correlationAnalysis'), icon: 'clustering' }
+          return { name: i18n.t('denotation.correlationAnalysis'), icon: 'correlation-analysis' }
         case 'PREDICTION':
-          // TODO: update icon 
-          return { name: i18n.t('denotation.predictionAnalysis'), icon: 'clustering' }
+          return { name: i18n.t('denotation.predictionAnalysis'), icon: 'telescope' }
         case 'TREND':
           return { name: i18n.t('denotation.trendAnalysis'), icon: 'trend' }
         case 'ANOMALY':
-          // TODO: update icon 
-          return { name: i18n.t('denotation.anomalyAnalysis'), icon: 'clustering' }
+          return { name: i18n.t('denotation.anomalyAnalysis'), icon: 'anomaly-analysis' }
         case 'SEASONALITY':
           return { name: i18n.t('denotation.periodicityAnalysis'), icon: 'cycle' }
       }
