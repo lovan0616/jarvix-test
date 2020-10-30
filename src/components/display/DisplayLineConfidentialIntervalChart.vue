@@ -140,41 +140,55 @@ const dummyResponse = {
 }
 
 const dummyDataset = {
-  data: [
-    240, 
-    222, 
-    80, 
-    294, 
-    300, 
-    300, 
-    340
-  ],
-  predictData: [
-    270, 
-    232, 
-    241, 
-    284, 
-    340, 
-    380, 
-    360
-  ],
-  index: [
-    '2018年12月',
-    '2019年01月',
-    '2019年02月',
-    '2019年03月',
-    '2019年04月',
-    '2019年05月',
-    '2019年06月'
-  ],
-  sigma: 20,
-  // 後端先給固定值，保留未來能被彈性挑整
-  confidenceLevel: 99,
-  descriptions: [
-    'JarviX發現收入有 4 種群體並且有 0 %的異常資料。',
-    '各群體佔比是相近的'
-  ],
-}
+        data: [
+          287.1,
+          288.63,
+          289.42,
+          288.57,
+          292.49,
+          288.62,
+          289.47,
+          289.33,
+          292.67,
+          289.24,
+          291.12,
+          288.07
+        ],
+        index: [
+          "2015年01月",
+          "2015年02月",
+          "2015年03月",
+          "2015年04月",
+          "2015年05月",
+          "2015年06月",
+          "2015年07月",
+          "2015年08月",
+          "2015年09月",
+          "2015年10月",
+          "2015年11月",
+          "2015年12月"
+        ],
+        sigma: 1.5,
+        descriptions: [
+          "异常值上下界为模型在95.0%信心水准下展出的预测信赖区间。",
+          "模型发现2015年05月时间收入有最大的正异常，异常值为287.4855522070555。"
+        ],
+        confidenceLevel: 95,
+        predictDataList: [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      }
 
 export default {
   name: 'DisplayLineConfidentialIntervalChart',
@@ -233,10 +247,13 @@ export default {
       }
     },
     lowerBoundList () {
-      return dummyDataset.predictData.map(item => item - this.zValue * dummyDataset.sigma)
+      return dummyDataset.predictDataList.map(item => item - this.zValue * dummyDataset.sigma)
+    },
+    yAxisOffsetValue () {
+      return Math.floor(Math.min(0, ...this.lowerBoundList))
     },
     toUpperBoundIntervalList () {
-      return dummyDataset.predictData.map(item => 2 * this.zValue * dummyDataset.sigma)
+      return dummyDataset.predictDataList.map(item => 2 * this.zValue * dummyDataset.sigma)
     },
     actualDataList () {
       const actualDataList = {
@@ -258,11 +275,11 @@ export default {
       dummyDataset.index.forEach((value, index) => {
         source.push([
           value, 
-          dummyDataset.predictData[index], 
-          this.lowerBoundList[index], 
+          this.adjustValueWithOffsetValue(dummyDataset.predictDataList[index]),
+          this.adjustValueWithOffsetValue(this.lowerBoundList[index]), 
           this.toUpperBoundIntervalList[index],
-          this.actualDataList.validDataList[index],
-          this.actualDataList.invalidDataList[index]
+          this.adjustValueWithOffsetValue(this.actualDataList.validDataList[index]),
+          this.adjustValueWithOffsetValue(this.actualDataList.invalidDataList[index])
         ])
       })
       return source
@@ -288,6 +305,28 @@ export default {
           lineStyle: {
             type: 'dashed'
           },
+          markLine: {
+            symbol: 'none',
+            lineStyle: {
+              color: chartVariable['xAxisColor'],
+              type: 'solid'
+            },
+            animation: false,
+            data: [{
+              yAxis: Math.abs(this.yAxisOffsetValue),
+              label: {
+              position: 'start',
+              formatter: '0',
+            },
+            }, {
+              yAxis: Math.abs(this.yAxisOffsetValue),
+              label: {
+                position: 'end',
+                formatter: this.title.xAxis[0].display_name
+              },
+            }],
+            silent: true
+          }
         },
         // upperbound data
         {
@@ -335,11 +374,16 @@ export default {
       let config = {
         xAxis: {
           ...xAxisDefault(),
-          name: this.title.xAxis[0].display_name
+          axisLine: {
+            show: false
+          }
         },
         yAxis: {
           ...yAxisDefault(),
-          name: this.title.yAxis[0].display_name
+          name: this.title.yAxis[0].display_name,
+          axisLabel: {
+            formatter: value => this.yAxisOffsetValue + value
+          }
         },
         ...JSON.parse(JSON.stringify(commonChartOptions())),
         ...getDrillDownTool(this.$route.name, this.title),
@@ -360,7 +404,7 @@ export default {
         for (let i = 0, length = params.length; i < length; i++) {
           let componentIndex = params[i].componentIndex + 1
           // upperbound 需額外計算
-          let diaplayValue = i === 2 ? params[i].value[componentIndex] + params[i].value[1] : params[i].value[componentIndex]
+          let diaplayValue = i === 2 ? params[i].value[componentIndex] + params[i].value[2] : params[i].value[componentIndex]
           // 過濾掉 null 值
           if ((i === 3 || i === 4) && params[i].value[componentIndex] === null) continue
           let marker = params[i].marker ? params[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params[i].color.colorStops[0].color};"></span>`
@@ -415,6 +459,13 @@ export default {
     }
   },
   methods: {
+    // 處理堆疊圖目前無法處理橫跨正負的計算：正值只能加正值的區間值，負值只能加負值的區間值
+    // 追蹤當前 echarts issue: https://github.com/apache/incubator-echarts/issues/9317
+    adjustValueWithOffsetValue (value) {
+      // 如果堆疊區間沒有橫跨正負值或當前的值是空值則保留原狀
+      if (this.yAxisOffsetValue === 0 || value === null) return value
+      return value +  Math.abs(this.yAxisOffsetValue)
+    },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {
         this.selectedData = []
