@@ -2,7 +2,7 @@
   <label 
     :class="{ 'single-filter-block--checked': checked }"
     class="single-filter-block single-select"
-  >
+  > 
     <div class="single-filter-block__header">
       <div class="checkbox-group">
         <div class="checkbox-label">
@@ -15,6 +15,22 @@
         </div>
       </div>
       {{ columnNames.join(', ') }}
+    </div>
+    <div class="single-filter-block__action">
+      <div
+        class="single-filter-block__action--edit"
+        @click.prevent="editFilter"
+      >
+        <svg-icon
+          icon-class="edit"/>
+      </div>
+      <div
+        class="single-filter-block__action--delete"
+        @click.prevent="deleteFilter"
+      >
+        <svg-icon
+          icon-class="delete"/>
+      </div>
     </div>
     <div class="single-filter-block__description">
       <div
@@ -107,15 +123,28 @@ export default {
     },
     onCheckedChange (checked) {
       this.$emit('status-change', checked)
+    },
+    editFilter () {
+      this.$emit('filter-edit')
+    },
+    deleteFilter () {
+      this.$emit('filter-delete')
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .single-filter-block {
+  position: relative;
   color: #CCCCCC;
   opacity: 0.5;
   cursor: pointer;
+
+  &:hover {
+   .single-filter-block__action {
+      visibility: visible;
+    }
+  }
 
   &__header {
     display: flex;
@@ -125,6 +154,28 @@ export default {
 
     .checkbox-group {
       margin-right: 11px;
+    }
+  }
+
+  &__action {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 170px;
+    display: flex;
+    flex-direction: row;
+
+    &--edit, &--delete {
+      font-size: 14px;
+      color: #FFF;
+
+      &:hover {
+        color: $theme-color-primary;
+      }
+    }
+
+    &--edit {
+      margin-right: 8px;
     }
   }
 

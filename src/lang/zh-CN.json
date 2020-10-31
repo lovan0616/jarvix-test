@@ -49,7 +49,15 @@
     "clearCriteria": "清除条件",
     "noCriteriaYet": "尚未加入筛选条件",
     "allColumns": "全部栏位",
-    "dataColumns": "资料栏位"
+    "dataColumns": "资料栏位",
+    "addFilter": "新增条件",
+    "restrictionSetting": "条件限制",
+    "addRestriction": "新增限制",
+    "noRestrictionYet": "尚未设定任何条件",
+    "restraintSetting": "限制设定",
+    "noRestraintYet": "尚未设定任何项目",
+    "emptyValueMsg": "*空值将採用当前资料的上下限。",
+    "chooseValue": "选择资料"
   },
   "message": {
     "joinTableBuilding": "资料表建置中，建置完成即可使用",

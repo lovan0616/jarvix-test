@@ -6,6 +6,7 @@
       <svg-icon icon-class="close"/>
     </span>
     <el-collapse
+      v-if="step === 1"
       :value="activeCollapseName"
       accordion
       @change="updateActiveCollapseName"
@@ -43,15 +44,32 @@
         </template>
         <filter-info 
           :temp-filter-list.sync="tempFilterList"
-          class="setting__filter-block--bottom" 
+          class="setting__filter-block--bottom"
+          @addRestriction="addRestriction"
+          @editRestriction="editRestriction" 
         />
       </el-collapse-item>
     </el-collapse>
+    <filter-restriction-setting 
+      v-else-if="step === 2"
+      :restriction="currentEditedFilter"
+      @edit-restraint="editRestraint"
+      @updated:restriction="updateRestriction"
+      @prev="prevStep"
+      @next="nextStep"
+    />
+    <filter-restraint-setting 
+      v-else-if="step === 3"
+      :restraint="currentEditedRestraint"
+      @updated:restraint="updateRestraint"
+      @prev="prevStep"
+      @next="nextStep"
+    />
     <div
-      v-if="hasSettingChanged"
+      v-if="hasSettingChanged && step === 1"
       class="setting__button-block"
     >
-      <button 
+      <button
         type="button"
         class="btn btn-default"
         @click="saveFilter"
@@ -66,24 +84,33 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import { getDataFrameColumnInfoById } from '@/API/DataSource'
 import ColumnSelectInfo from './display/ColumnSelectInfo'
 import FilterInfo from './display/FilterInfo'
+import FilterRestrictionSetting from './setting/FilterRestrictionSetting'
+import FilterRestraintSetting from './setting/FilterRestraintSetting'
 
 export default {
   name: 'AdvanceDataFrameSetting',
   components: {
     FilterInfo,
     ColumnSelectInfo,
-    Message
+    Message,
+    FilterRestrictionSetting,
+    FilterRestraintSetting
   },
   data () {
     return {
+      step: 1,
       isLoading: true,
       tempColumnList: [],
       tempFilterList: [],
+      currentEditedFilter: [],
+      currentEditedRestraint: [],
+      currentEditedFilterIndex: null,
+      currentEditedRestraintIndex: null
     }
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['columnList', 'isInit', 'displaySection']),
-    ...mapState('dataSource', ['filterList']),
+    ...mapState('dataSource', ['filterList', 'currentQuestionId']),
     hasSettingChanged () {
       const isColumnListUntouched = this.tempColumnList.every(tempColumn => {
         if (this.columnList === null) return true
@@ -181,6 +208,48 @@ export default {
     updateActiveCollapseName (section) {
       if (!section) return
       this.setDisplaySection(section)
+    },
+    prevStep () {
+      this.step -= 1
+    },
+    nextStep () {
+      this.step += 1
+    },
+    editRestriction (index) {
+      this.currentEditedFilterIndex = index
+      this.currentEditedFilter = this.tempFilterList[index].restriction
+      this.nextStep()
+    },
+    editRestraint (index) {
+      this.currentEditedRestraintIndex = index
+      this.currentEditedRestraint = this.currentEditedFilter[index]
+      this.nextStep()
+    },
+    addRestriction () {
+      this.currentEditedFilterIndex = this.tempFilterList.length
+      this.currentEditedFilter = []
+      this.nextStep()
+    },
+    updateRestriction (updatedRestriction) {
+      this.tempFilterList[this.currentEditedFilterIndex].restriction = JSON.parse(JSON.stringify(updatedRestriction))
+      this.currentEditedFilter = JSON.parse(JSON.stringify(updatedRestriction))
+      this.saveFilter()
+    },
+    updateRestraint (updatedRestraint) {
+      this.currentEditedFilter[this.currentEditedRestraintIndex] = JSON.parse(JSON.stringify(updatedRestraint))
+      this.currentEditedRestraint = JSON.parse(JSON.stringify(updatedRestraint))
+      if(this.currentEditedFilterIndex > this.tempFilterList.length - 1) {
+        // 表示為新加入的 restriction
+        let newRestriction = {
+          status: true,
+          restriction: this.currentEditedFilter,
+          questionId: this.currentQuestionId
+        }
+        this.tempFilterList.push(newRestriction)
+      } else {
+        this.tempFilterList[this.currentEditedFilterIndex].restriction = JSON.parse(JSON.stringify(this.currentEditedFilter))
+      }
+      this.saveFilter()
     }
   },
 }
@@ -196,7 +265,7 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.55);;
+  background-color: rgba(0, 0, 0, 0.55);
   border: 1px solid #2B3638;
 
   .setting {
@@ -240,7 +309,7 @@ export default {
     &__button-block {
       padding: 12px 24px;
       height: 60px;
-      background: rgba(35, 61, 64, 0.6);
+      background: rgba(0, 0, 0, .55);
       .btn {
         width: 100%;
       }
@@ -292,6 +361,7 @@ export default {
     &.is-disabled {
       .el-collapse-item__header {
         color: #ffffff;
+        background: rgba(0, 0, 0, .55);
       }
     }
 
@@ -301,16 +371,18 @@ export default {
 
     &__wrap {
       flex: 1 1 auto;
-      border-bottom: none;
       padding: 0;
       border-radius: 0;
+      border-bottom: none;
+      background: rgba(0, 0, 0, .55);
     }
 
     &__header {
-      border-bottom: none;
       opacity: .5;
       cursor: pointer;
       border-radius: 0;
+      border-bottom: none;
+      background: rgba(0, 0, 0, .55);
 
       &:hover {
         opacity: .7;
