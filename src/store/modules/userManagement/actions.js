@@ -86,18 +86,11 @@ export default {
       commit('setLicenseInfo', accountInfo.license)
       
       const account_id = rootGetters['userManagement/getCurrentAccountId']
-      const group_id = rootGetters['userManagement/getCurrentGroupId']
-      if (defaultGroup) {
-        router.push({
-          name: 'PageIndex', 
-          params: { account_id, group_id }
-        })
-      } else {
+      if (!defaultGroup) {
         router.push({ 
           name: 'PageGrouplessGuidance',
           params: { account_id }
-        })
-      }
+      })}
       // refresh token
       // const { accessToken } = await refreshToken()
       // localStorage.setItem('token', accessToken)
@@ -127,7 +120,7 @@ export default {
         })
       })
   },
-  switchAccountById({ state, dispatch, commit }, { accountId, defaultGroupId }) {
+  switchAccountById({ state, dispatch, commit }, { accountId, defaultGroupId, dataSourceId, dataFrameId }) {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
     return switchAccount({ accountId })
@@ -140,7 +133,7 @@ export default {
         }
 
         // 處理路徑中帶有指定的 group id
-        if (defaultGroupId) return dispatch('switchGroupById', { accountId, groupId: defaultGroupId })
+        if (defaultGroupId) return dispatch('switchGroupById', { accountId, groupId: defaultGroupId, dataSourceId, dataFrameId })
 
         // 先清空，因為新群組有可能沒有 dataSource
         commit('dataSource/setDataSourceId', null, { root: true })
@@ -150,7 +143,7 @@ export default {
       })
       .finally(() => commit('updateAppLoadingStatus', false, { root: true }))
   },
-  switchGroupById({ dispatch, commit }, { accountId, groupId }) {
+  switchGroupById({ dispatch, commit }, { accountId, groupId, dataSourceId, dataFrameId }) {
     // 更新全域狀態
     commit('updateAppLoadingStatus', true, { root: true })
     return switchGroup({ accountId, groupId })
@@ -164,7 +157,7 @@ export default {
         commit('updateAskHelperStatus', false, { root: true })
 
         // 取得新的列表
-        return dispatch('dataSource/getDataSourceList', {}, { root: true })
+        return dispatch('dataSource/getDataSourceList', { dataSourceId, dataFrameId }, { root: true })
       })
       .finally(() => commit('updateAppLoadingStatus', false, { root: true }))
   }

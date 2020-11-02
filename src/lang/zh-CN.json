@@ -547,7 +547,9 @@
     "dataFrame":"来源资料表",
     "relativeDataColun":"资料相关栏位",
     "allColumns": "所有栏位",
-    "emptyInfo": "{name} 资料已不存在"
+    "emptyInfo": "{name} 资料已不存在",
+    "reminding": "提示",
+    "switchAccountReminding": "此钉版属于帐户「{accountName}」，前往智能分析页面将同时切换您的预设帐户，确定是否继续？"
   },
   "batchLoad": {
     "primaryKeyColumns": "主键（可复选）",

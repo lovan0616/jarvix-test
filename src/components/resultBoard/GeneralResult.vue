@@ -5,7 +5,8 @@
     :result-info="resultInfo"
     :restrictions="restrictions"
     :is-war-room-addable="isWarRoomAddable"
-    :group-id="groupId"
+    :pinboard-group-id="pinboardGroupId"
+    :pinboard-account-id="pinboardAccountId"
     class="general-result"
     @refresh="refreshPinboardData"
     @unPin="unPin"
@@ -192,7 +193,11 @@ export default {
       type: Boolean,
       default: false
     },
-    groupId: {
+    pinboardGroupId: {
+      type: Number,
+      default: null
+    },
+    pinboardAccountId: {
       type: Number,
       default: null
     }

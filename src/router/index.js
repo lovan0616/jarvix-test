@@ -386,12 +386,14 @@ router.beforeEach(async (to, from, next) => {
     // 處理路由的 group 和 account id 與 store 中 default 不相同時：切換成路由的 id
     const { account_id: paramsAccountId, group_id: paramsGroupId } = to.params
     const currentAccountId = Number(store.getters['userManagement/getCurrentAccountId'])
-    const currentGroupId = Number(store.getters['userManagement/getCurrentGroupId'])
     if ((paramsAccountId) && (Number(paramsAccountId) !== currentAccountId)) {
+      console.log('換acc')
       try {
         await store.dispatch('userManagement/switchAccountById', {
           accountId: paramsAccountId,
-          defaultGroupId: paramsGroupId
+          defaultGroupId: paramsGroupId,
+          dataSourceId: parseInt(to.query.dataSourceId),
+          dataFrameId: to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId)
         })
       } catch (error) {
         // 當想去的 account 人數已達上限
@@ -420,10 +422,20 @@ router.beforeEach(async (to, from, next) => {
       }
     }
     
-    if ((paramsGroupId) && (Number(paramsGroupId) !== currentGroupId)) {
+    const currentGroupId = Number(store.getters['userManagement/getCurrentGroupId'])
+    if (paramsGroupId && (Number(paramsGroupId) !== currentGroupId)) {
       await store.dispatch('userManagement/switchGroupById', {
         accountId: paramsAccountId,
-        groupId: paramsGroupId
+        groupId: paramsGroupId,
+        dataSourceId: parseInt(to.query.dataSourceId),
+        dataFrameId: to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId)
+      })
+    } else if (currentGroupId) {
+      // 若使用者指定的群組和 default 相同，不切換，但仍需取得資料表
+      // 若使用者不指定群組，但當前有 default group 時，仍需取得資料表
+      await store.dispatch('dataSource/getDataSourceList', {
+        dataSourceId: parseInt(to.query.dataSourceId),
+        dataFrameId: to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId)
       })
     }
 

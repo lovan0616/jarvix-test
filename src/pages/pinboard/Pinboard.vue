@@ -47,7 +47,8 @@
       :segmentation-payload="result.segmentationPayload"
       :restrictions="result.restrictions"
       :question="result.question"
-      :group-id="result.groupId"
+      :pinboard-account-id="result.pinboardAccountId"
+      :pinboard-group-id="result.pinboardGroupId"
       @refresh="refreshPinboardData"
       @unPin="unPin"
     />
@@ -146,7 +147,9 @@ export default {
             segmentationPayload: null,
             isDeleted: false,
             intent: element.intent,
-            groupId: element.groupId
+            pinboardGroupId: element.groupId,
+            // TODO API會當前釘板 accountId
+            pinboardAccountId: element.accountId
           })
 
           this.pinboardData.push({
