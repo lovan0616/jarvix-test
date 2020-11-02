@@ -36,6 +36,7 @@
           <template v-for="(column, index) in columnFilterOption">
             <label 
               :key="index"
+              :class="{'checkbox--active': column.active}"
               class="checkbox">
               <div class="checkbox-label">
                 <input
@@ -340,6 +341,10 @@ export default {
         height: 32px;
         cursor: pointer;
 
+        &--active {
+          cursor: not-allowed;
+        }
+
         &:not(:first-child) {
           border-top: 1px solid #3F4546;
         }
@@ -348,12 +353,12 @@ export default {
           margin: 0 8px 0 12px;
 
           & input:checked ~ .checkbox-square {
-            background: #1EB8C7;
-            border-color: #1EB8C7;
+            background: #777777;
+            border-color: #DCDFE6;
           }
 
           & input:disabled ~ .checkbox-square:after {
-            border-color: #FFF;
+            border-color: #C0C4CC;
           }
         }
 
