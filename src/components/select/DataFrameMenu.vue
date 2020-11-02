@@ -301,7 +301,8 @@ export default {
         this.availableDataSourceList[targetIndex].isExpanded = !this.availableDataSourceList[targetIndex].isExpanded
       } else {
         // accordian 模式
-        this.availableDataSourceList.forEach((item, index) => item.isExpanded = targetIndex === index)
+        const alreadyExpanded = this.availableDataSourceList[targetIndex].isExpanded
+        this.availableDataSourceList.forEach((item, index) => item.isExpanded = !alreadyExpanded && targetIndex === index)
       }
     }
   }
