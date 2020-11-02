@@ -393,7 +393,7 @@
     "startTime": "開始時間",
     "endTime": "結束時間",
     "elapsedTime": "花費時間",
-    "dbConnectionUpdateResult": "更新結果",
+    "errorReason": "失敗原因",
     "noData": "暫無數據",
     "SQLSyntax": "SQL語法",
     "copyTableFromDatabase": "複製資料庫資料表",

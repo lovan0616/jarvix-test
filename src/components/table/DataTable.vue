@@ -211,14 +211,14 @@
                 <div 
                   v-if="data.dataImportErrorMessage" 
                   class="db-connection-log-info">
-                  <p class="info__label">{{ $t('editing.dbConnectionUpdateResult') }}</p>
+                  <p class="info__label">{{ $t('editing.errorReason') }}</p>
                   <p class="info__description">{{ data.dataImportErrorMessage }}</p>
                 </div>
               </template>
               <span :class="data.latestImportStatus ? `db-connection-status--${data.latestImportStatus.toLowerCase()}` : null">
                 {{ batchLoadStatus(data) }}
                 <svg-icon
-                  v-show="data.latestImportStatus === 'Fail' || data.latestImportStatus === 'Complete'"
+                  v-show="data['dbConnectionStartTime'] && data['dbConnectionEndTime'] && data['dbConnectionElapsedTime']"
                   icon-class="information-circle" />
               </span>
             </el-tooltip>
@@ -487,9 +487,9 @@ export default {
       return data['state'] === 'Disable' || data['type'] === 'DISABLE' || data['state'] === 'Fail' || data['type'] === 'FAIL' || data['state'] === 'Warn' || data['type'] === 'WARN'
     },
     elapsedTimeFormat (time) {
-      let hour = this.$t('timeScopeUnit.allowArg.hour', {n: Math.floor(time / 3600)}) + ' '
-      let minute = this.$t('timeScopeUnit.allowArg.minute', {n: Math.floor(time % 3600 / 60)}) + ' '
-      let second = this.$t('timeScopeUnit.allowArg.second', {n: time % 60})
+      let hour = this.$tc('timeScopeUnit.allowArg.hour', Math.floor(time / 3600)) + ' '
+      let minute = this.$tc('timeScopeUnit.allowArg.minute', Math.floor(time % 3600 / 60)) + ' '
+      let second = this.$tc('timeScopeUnit.allowArg.second', time % 60)
       return  hour + minute + second
     }
   },

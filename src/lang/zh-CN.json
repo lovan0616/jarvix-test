@@ -393,7 +393,7 @@
     "startTime": "开始时间",
     "endTime": "结束时间",
     "elapsedTime": "花费时间",
-    "dbConnectionUpdateResult": "更新结果",
+    "errorReason": "失败原因",
     "noData": "暂无数据",
     "SQLSyntax": "SQL语法",
     "copyTableFromDatabase": "复制资料库资料表",
