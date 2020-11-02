@@ -58,7 +58,7 @@
     "noRestraintYet": "尚未設定任何項目",
     "emptyValueMsg": "*空值將採用當前資料的上下限。",
     "chooseValue": "選擇資料",
-    "selectData": "選擇日期",
+    "selectDate": "選擇日期",
     "selectTime": "選擇時間"
   },
   "message": {

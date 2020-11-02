@@ -77,8 +77,7 @@
             <el-date-picker
               ref="datatimeUpperBound"
               v-model="subRestraint.properties.end"
-              :start-placeholder="$t('dataFrameAdvanceSetting.selectDate')"
-              :end-placeholder="$t('dataFrameAdvanceSetting.selectTime')"
+              :format="valueList.datePattern"
               :name="index + '-' + 'datatimeUpperBound'"
               type="datetime"
               class="date-picker" />
@@ -98,8 +97,7 @@
             <el-date-picker
               ref="datatimeLowerBound"
               v-model="subRestraint.properties.start"
-              :start-placeholder="$t('dataFrameAdvanceSetting.selectDate')"
-              :end-placeholder="$t('dataFrameAdvanceSetting.selectTime')"
+              :format="valueList.datePattern"
               :name="index + '-' + 'datatimeLowerBound'"
               type="datetime"
               class="date-picker" />
@@ -225,8 +223,9 @@ export default {
         this.valueList = this.statsType === 'BOOLEAN' && response['bool']
           ? ["true", "false"]
           : response[this.statsType.toLowerCase()]
-
-        if(this.valueList && this.statsType === 'CATEGORY') {
+        if(!this.valueList) return 
+        
+        if (this.statsType === 'CATEGORY') {
           this.valueList = this.valueList.map(element => {
             return {
               value: element,
@@ -234,6 +233,13 @@ export default {
               active: false
             }
           })
+        } else if (this.statsType === 'DATETIME') {
+          // 目前後端有用到 13 種日期格式，先預設所有日期最小單位都到秒
+          let dateFormat = date => date.toString().replace(/[日秒]/g, '').replace(/[年月]/g, '-').replace(/[點分]/g, ':')
+          this.valueList.datePattern = 'yyyy-MM-dd HH:mm:ss'
+          this.subRestraint.properties.start = dateFormat(this.subRestraint.properties.start)
+          this.subRestraint.properties.end = dateFormat(this.subRestraint.properties.end)
+
         }
       }).finally(() => {
         this.isLoading = false
@@ -359,7 +365,7 @@ export default {
       height: 30px;
     }
 
-    .el-input__suffix {
+    /deep/ .el-input__suffix {
       .el-input__icon {      
         line-height: 30px;
       }
