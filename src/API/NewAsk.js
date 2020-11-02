@@ -30,7 +30,7 @@ export function askResult (askInfo, cancelFunction) {
  */
 export function askSpecificType ({ resultId, type }, cancelFunction) {
   return request({
-    url: `/ask/result/${resultId}/to/${type}`,
+    url: `/ask/result/${resultId}/denotation/alteration/${type}`,
     method: 'POST',
     cancelToken: cancelFunction
   })
