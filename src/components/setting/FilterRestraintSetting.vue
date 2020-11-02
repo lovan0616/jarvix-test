@@ -109,7 +109,7 @@ export default {
     columnOption () {
       return this.columnList.map((column, index) => {
         return {
-          value: index,
+          id: column.id,
           name: column.name,
           active: this.tempRestraintList.some(restraint => restraint.properties.display_name === column.name)
         }
@@ -150,19 +150,17 @@ export default {
         this.isShowSeletor = false
       }
     },
-    getColumnId (displayName) {
-      return this.columnList.filter(column => column.name === displayName)[0]['id']
-    },
     backToPreviousPage () {
       this.$emit("prev")
     },
     selectColumn (index) {
-      const columnStatsType = this.columnList[index]['statsType']
+      const selectColumn = this.columnList.filter(column => this.columnFilterOption[index].id === column.id)[0]
+      const columnStatsType = selectColumn.statsType
+
       const isColumnInList = this.tempRestraintList.some(restraint => {
-        return restraint.properties.display_name === this.columnList[index]['name']
+        return restraint.properties['dc_id'] === selectColumn.id
       })
       if(isColumnInList) return 
-
 
       let subStraintType, subStraintProperties
       switch (columnStatsType) {
@@ -170,19 +168,19 @@ export default {
         case 'CATEGORY':
           subStraintType = 'enum'
           subStraintProperties = {
-            data_type: this.columnList[index]['dataType'].toLowerCase(),
+            data_type: columnStatsType.toLowerCase(),
             datavalues: [],
-            dc_name: 'customer_id',
+            dc_id: selectColumn.id,
             display_datavalues: [],
-            display_name: this.columnList[index]['name']
+            display_name: selectColumn.name
           }
           break
         case 'DATETIME':
           subStraintType = 'range'
           subStraintProperties = {
-            data_type: this.columnList[index]['dataType'].toLowerCase(),
-            dc_name: this.columnList[index]['name'],
-            display_name: this.columnList[index]['name'],
+            data_type: columnStatsType.toLowerCase(),
+            dc_id: selectColumn.id,
+            display_name: selectColumn.name,
             end: null,
             start: null 
           }
@@ -190,9 +188,9 @@ export default {
         case 'NUMERIC':
           subStraintType = 'range'
           subStraintProperties = {
-            data_type: this.columnList[index]['dataType'].toLowerCase(),
-            dc_name: this.columnList[index]['name'],
-            display_name: this.columnList[index]['name'],
+            data_type: columnStatsType.toLowerCase(),
+            dc_id: selectColumn.id,
+            display_name: selectColumn.name,
             end: null,
             start: null 
           }
@@ -302,6 +300,7 @@ export default {
       margin: 0 12px 8px 12px;
       padding: 9px 12px;
       width: calc(100% - 24px);
+      font-size: 14px;
       color: #888888;
       border: none;
       border-radius: 8px;
@@ -368,6 +367,7 @@ export default {
 
     .empty-message {
       margin-bottom: 12px;
+      padding: 0 12px;
       font-size: 12px;
       line-height: 20px;
       color: #CCC;

@@ -75,17 +75,13 @@
               {{ $t('message.upperBound') }}
             </label>
             <el-date-picker
-              v-model="value1"
+              ref="datatimeUpperBound"
+              v-model="subRestraint.properties.end"
+              :start-placeholder="$t('dataFrameAdvanceSetting.selectDate')"
+              :end-placeholder="$t('dataFrameAdvanceSetting.selectTime')"
+              :name="index + '-' + 'datatimeUpperBound'"
               type="datetime"
               class="date-picker" />
-              <!-- <input
-              v-validate="upperBoundRules"
-              ref="upperBound"
-              v-model.trim="subRestraint.properties.end"
-              :placeholder="subRestraint.properties.end"
-              :name="index + '-' + 'upperBound'"
-              class="input item__input"
-            > -->
           </div>
           <div 
             v-show="errors.has(index + '-' + 'upperBound')"
@@ -99,14 +95,14 @@
             <label class="item__label"> 
               {{ $t('message.lowerBound') }}
             </label>
-            <input
-              v-validate="lowerBoundRules"
-              ref="lowerBound"
-              v-model.trim="subRestraint.properties.start"
-              :placeholder="subRestraint.properties.start"
-              :name="index + '-' + 'lowerBound'"
-              class="input item__input"
-            >
+            <el-date-picker
+              ref="datatimeLowerBound"
+              v-model="subRestraint.properties.start"
+              :start-placeholder="$t('dataFrameAdvanceSetting.selectDate')"
+              :end-placeholder="$t('dataFrameAdvanceSetting.selectTime')"
+              :name="index + '-' + 'datatimeLowerBound'"
+              type="datetime"
+              class="date-picker" />
           </div>
           <div 
             v-show="errors.has(index + '-' + 'lowerBound')"
@@ -178,7 +174,8 @@
 </template>
 
 <script>
-import { getDataColumnValue, dataValueFuzzySearch } from '@/API/DataSource'
+import { getDataColumnValue } from '@/API/DataSource'
+//dataValueFuzzySearch
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { mapState } from 'vuex'
 
@@ -222,7 +219,7 @@ export default {
   methods: {
     fetchData () {
       this.isLoading = true
-      const columnId = this.getColumnId(this.subRestraint.properties.display_name)
+      const columnId = this.subRestraint.properties['dc_id']
       getDataColumnValue(columnId).then(response => {
         this.statsType = response.type
         this.valueList = this.statsType === 'BOOLEAN' && response['bool']
@@ -241,12 +238,6 @@ export default {
       }).finally(() => {
         this.isLoading = false
       })
-    },
-    getColumnId (columnName) {
-      return this.columnList.filter(column => column.name === columnName)[0]['id']
-    },
-    getStatsType (columnName) {
-      return this.columnList.filter(column => column.name === columnName)[0]['statsType']
     },
     changeBoolean (index, option) {
       this.subRestraint[index].properties.datavalues[0] = option
@@ -367,6 +358,12 @@ export default {
     /deep/ .el-input__inner {
       height: 30px;
     }
+
+    .el-input__suffix {
+      .el-input__icon {      
+        line-height: 30px;
+      }
+    }
   }
 
   .boolean-block {
@@ -386,7 +383,7 @@ export default {
       z-index: 1;
     }
 
-    &__selector{
+    &__selector {
       width: 100%;
       border-radius: 5px;
       background-color: #141C1D;
