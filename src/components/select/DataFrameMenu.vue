@@ -222,10 +222,11 @@ export default {
       })
 
       this.availableDataSourceList = buildDataSourceList.map(dataSource => {
+        const existingDataSource = this.availableDataSourceList.find(item => item.id === dataSource.id)
         return {
           ...dataSource,
           isShow: true,
-          isExpanded: false,
+          isExpanded: existingDataSource ? existingDataSource.isExpanded : false,
           dataFrames: dataSource.dataFrames.reduce((acc, cur) => {
             acc.push({ name: cur.primaryAlias, id: cur.id })
             return acc
