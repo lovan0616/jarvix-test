@@ -363,6 +363,10 @@ export default {
 
   .date-picker {
     max-width: 150px;
+
+    /deep/ .el-input__inner {
+      height: 30px;
+    }
   }
 
   .boolean-block {

@@ -32,11 +32,46 @@
       background-color: #252C2C;
       border: none;
     }
+
+    .el-time-panel {
+      background-color: #303435;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0px 0px 8px rgba(58, 178, 189, .5);
+
+      &__content {
+        &::before, &::after {
+          border-top: 1px solid #3F4546;
+          border-bottom: 1px solid #3F4546;
+        }
+      }
+
+      .el-time-spinner__item {
+        color: #AAA;
+
+        &.active {
+          color: #FFF;
+        }
+      }
+
+      &__footer {
+        border-top: 1px solid #3F4546;
+      }
+
+      &__btn.cancel {
+        color: #AAA;
+      }
+    }
   }
 
   .el-picker-panel__content {
     th {
       color: #FFF;
+      border-bottom: solid 1px #3F4546 !important;
+    }
+    
+    td {
+      padding: 0;
     }
   }
 

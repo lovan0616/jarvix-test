@@ -192,7 +192,7 @@ export function deleteDataColumnById(dataColumnId) {
  */
 export function dataValueFuzzySearch(dataColumnId) {
   return request({
-    url: `/dataColumn/${dataColumnId}/fuzzy-search`,
+    url: `/dataColumn/${dataColumnId}/dataValue-search`,
     method: 'GET'
   })
 }
