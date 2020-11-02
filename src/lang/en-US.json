@@ -135,7 +135,8 @@
     "lowerBoundShouldBeSmallerThanUpperBound": "Lower bound value should be smaller than upper bound value",
     "and": "and",
     "upperBound": "Upper bound value",
-    "lowerBound": "Lower bound value"
+    "lowerBound": "Lower bound value",
+    "noPeriodicResult": "No cycle found"
   },
   "guiding": {
     "prevStep": "Prev Step",
@@ -691,6 +692,7 @@
     "displaySetting": "Show Setting"
   },
   "clustering": {
+    "cluster": "Cluster",
     "dataOverview": "Overview",
     "clusteringAnalysis": "Clustering",
     "saveClusteringResultAsColumn": "Save clustering result as a new column",

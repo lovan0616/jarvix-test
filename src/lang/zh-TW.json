@@ -135,7 +135,8 @@
     "lowerBoundShouldBeSmallerThanUpperBound": "下限值需小於上限值",
     "and": "和",
     "upperBound": "上限",
-    "lowerBound": "下限"
+    "lowerBound": "下限",
+    "noPeriodicResult": "沒有找到週期結果"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -691,6 +692,7 @@
     "displaySetting": "顯示設定"
   },
   "clustering": {
+    "cluster": "群體",
     "dataOverview": "資料概況",
     "clusteringAnalysis": "分群分析",
     "saveClusteringResultAsColumn": "儲存分群結果為標籤欄位",

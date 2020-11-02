@@ -225,6 +225,8 @@ Vue.mixin({
           return 'DisplayPredictChart'
         case 'line_confidential_interval_chart':
           return 'DisplayLineConfidentialIntervalChart'
+        case 'periodic_line_charts':
+          return 'DisplayPeriodicLineCharts'
         case 'pie_chart':
           return 'DisplayPieChart'
         case 'scatter_correlation_chart':
@@ -232,6 +234,8 @@ Vue.mixin({
           return 'DisplayScatterChart'
         case 'scatter_probability_density_chart':
           return 'DisplayScatterProbabilityDensityChart'
+        case 'scatter_cluster_chart':
+          return 'DisplayScatterClusterChart'
         case 'table':
           return 'SyTable'
         case 'tree_map':

@@ -45,6 +45,7 @@
         :item-count="componentData.item_count"
         :coeffs="componentData.coeffs"
         :cluster-infos="componentData.clusterInfos"
+        :sub-components="componentData.subComponents"
         :key="componentId"
         :show-toolbox="showToolbox"
         :custom-chart-style="customChartStyle"

@@ -135,7 +135,8 @@
     "lowerBoundShouldBeSmallerThanUpperBound": "下限值需小于上限值",
     "and": "和",
     "upperBound": "上限",
-    "lowerBound": "下限"
+    "lowerBound": "下限",
+    "noPeriodicResult": "没有找到周期结果"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -691,6 +692,7 @@
     "displaySetting": "显示设定"
   },
   "clustering": {
+    "cluster": "群體",
     "dataOverview": "资料概况",
     "clusteringAnalysis": "分群分析",
     "saveClusteringResultAsColumn": "储存分群结果为标签栏位",
