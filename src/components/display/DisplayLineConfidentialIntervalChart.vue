@@ -52,144 +52,6 @@ import {
   yAxisDefault
 } from './common/addons'
 
-const dummyResponse = {
-  success: true,
-  data: {
-    id: 337345,
-    resultId: 65821,
-    diagram: 'line_confidential_interval_chart',
-    data: {
-      title: {
-        xAxis: [
-          {
-            dc_id: null,
-            dc_name: 'date',
-            operator: null,
-            data_type: 'datetime',
-            drillable: true,
-            is_feature: null,
-            lowerLimit: null,
-            stats_type: 'datetime',
-            upperLimit: null,
-            display_name: '日期(月)'
-          }
-        ],
-        yAxis: [
-          {
-            dc_id: null,
-            dc_name: null,
-            operator: null,
-            data_type: null,
-            drillable: false,
-            is_feature: null,
-            lowerLimit: null,
-            stats_type: null,
-            upperLimit: null,
-            display_name: '數量的平均值'
-          }
-        ]
-      },
-      dataset: {
-        data: [
-          240, 
-          222, 
-          80, 
-          294, 
-          300, 
-          300, 
-          340
-        ],
-        predictData: [
-          270, 
-          232, 
-          241, 
-          284, 
-          340, 
-          380, 
-          360
-        ],
-        index: [
-          '2018年12月',
-          '2019年01月',
-          '2019年02月',
-          '2019年03月',
-          '2019年04月',
-          '2019年05月',
-          '2019年06月'
-        ],
-        sigma: 3.2,
-        // 先給死
-        confidenceLevel: 99,
-        descriptions: [
-          'JarviX發現收入有 4 種群體並且有 0 %的異常資料。',
-          '各群體佔比是相近的'
-        ],
-      }
-    },
-    status: 'Complete',
-    handlerFunction: null,
-    // 要做分頁
-    page: 0,
-    singlePage: false,
-    isAutoRefresh: null
-  },
-  meta: {
-    responseTime: '312 ms',
-    timestamp: '2020-10-23 02:18:10.355'
-  }
-}
-
-const dummyDataset = {
-        data: [
-          287.1,
-          288.63,
-          289.42,
-          288.57,
-          292.49,
-          288.62,
-          289.47,
-          289.33,
-          292.67,
-          289.24,
-          291.12,
-          288.07
-        ],
-        index: [
-          "2015年01月",
-          "2015年02月",
-          "2015年03月",
-          "2015年04月",
-          "2015年05月",
-          "2015年06月",
-          "2015年07月",
-          "2015年08月",
-          "2015年09月",
-          "2015年10月",
-          "2015年11月",
-          "2015年12月"
-        ],
-        sigma: 1.5,
-        descriptions: [
-          "异常值上下界为模型在95.0%信心水准下展出的预测信赖区间。",
-          "模型发现2015年05月时间收入有最大的正异常，异常值为287.4855522070555。"
-        ],
-        confidenceLevel: 95,
-        predictDataList: [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12
-        ]
-      }
-
 export default {
   name: 'DisplayLineConfidentialIntervalChart',
   props: {
@@ -236,7 +98,7 @@ export default {
       ]
    },
     zValue () {
-      const confidentialValue = dummyDataset.confidenceLevel || 99
+      const confidentialValue = this.dataset.confidenceLevel || 99
       switch (confidentialValue) {
         case 90:
           return 1.645
@@ -247,20 +109,20 @@ export default {
       }
     },
     lowerBoundList () {
-      return dummyDataset.predictDataList.map(item => item - this.zValue * dummyDataset.sigma)
+      return this.dataset.predictDataList.map(item => item - this.zValue * this.dataset.sigma)
     },
     yAxisOffsetValue () {
       return Math.floor(Math.min(0, ...this.lowerBoundList))
     },
     toUpperBoundIntervalList () {
-      return dummyDataset.predictDataList.map(item => 2 * this.zValue * dummyDataset.sigma)
+      return this.dataset.predictDataList.map(item => 2 * this.zValue * this.dataset.sigma)
     },
     actualDataList () {
       const actualDataList = {
         validDataList: [],
         invalidDataList: []
       }
-      dummyDataset.data.forEach((actualValue, index) => {
+      this.dataset.data.forEach((actualValue, index) => {
         const upperBound = this.lowerBoundList[index] + this.toUpperBoundIntervalList[index]
         const lowerBound = this.lowerBoundList[index]
         const isValidValue = actualValue <= upperBound && actualValue >= lowerBound
@@ -272,10 +134,10 @@ export default {
     transformedData () {
       const source = []
       source.push(this.seriesName)
-      dummyDataset.index.forEach((value, index) => {
+      this.dataset.index.forEach((value, index) => {
         source.push([
           value, 
-          this.adjustValueWithOffsetValue(dummyDataset.predictDataList[index]),
+          this.adjustValueWithOffsetValue(this.dataset.predictDataList[index]),
           this.adjustValueWithOffsetValue(this.lowerBoundList[index]), 
           this.toUpperBoundIntervalList[index],
           this.adjustValueWithOffsetValue(this.actualDataList.validDataList[index]),
@@ -312,19 +174,23 @@ export default {
               type: 'solid'
             },
             animation: false,
-            data: [{
-              yAxis: Math.abs(this.yAxisOffsetValue),
-              label: {
-              position: 'start',
-              formatter: '0',
-            },
-            }, {
-              yAxis: Math.abs(this.yAxisOffsetValue),
-              label: {
-                position: 'end',
-                formatter: this.title.xAxis[0].display_name
-              },
-            }],
+            data: [
+              // 暫時不顯示左側 0 以避免和自動產生的 label 重疊
+              // {
+              //   yAxis: Math.abs(this.yAxisOffsetValue),
+              //   label: {
+              //     position: 'start',
+              //     formatter: '0',
+              //   },
+              // }, 
+              {
+                yAxis: Math.abs(this.yAxisOffsetValue),
+                label: {
+                  position: 'end',
+                  formatter: this.title.xAxis[0].display_name
+                },
+              }
+            ],
             silent: true
           }
         },
@@ -403,12 +269,14 @@ export default {
         let res = params[0].name + '<br/>'
         for (let i = 0, length = params.length; i < length; i++) {
           let componentIndex = params[i].componentIndex + 1
-          // upperbound 需額外計算
-          let diaplayValue = i === 2 ? params[i].value[componentIndex] + params[i].value[2] : params[i].value[componentIndex]
           // 過濾掉 null 值
           if ((i === 3 || i === 4) && params[i].value[componentIndex] === null) continue
+          // upperbound 需額外計算
+          let displayValue = i === 2 ? params[i].value[componentIndex] + params[i].value[2] : params[i].value[componentIndex]
+          // 如果畫圖表時有因為 offset 做調整，欲顯示原始資訊時，需要 undo
+          displayValue += this.yAxisOffsetValue
           let marker = params[i].marker ? params[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params[i].color.colorStops[0].color};"></span>`
-          res += marker + params[i].seriesName + '：' + this.formatComma(diaplayValue) + '<br/>'
+          res += marker + params[i].seriesName + '：' + this.formatComma(displayValue) + '<br/>'
         }
         return res
       }
@@ -419,12 +287,14 @@ export default {
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur, index) => {
-            let diaplayedValue = cur
+            let displayedValue = cur
             // 計算上限值
-            if (index === 3) diaplayedValue = dataset[i][1] + cur
+            if (index === 3) displayedValue = dataset[i][2] + cur
             // 如果為 null 則留空
-            if ((index === 4 || index === 5) && cur === null) diaplayedValue = ''
-            return acc + '<td style="padding: 4px 12px;">' + diaplayedValue+ '</td>'
+            if ((index === 4 || index === 5) && cur === null) displayedValue = ''
+            // 如果畫圖表時有因為 offset 做調整，欲顯示原始資訊時，需要 undo
+            if (i !== 0 && index !== 0 && displayedValue !== '') displayedValue += this.yAxisOffsetValue
+            return acc + '<td style="padding: 4px 12px;">' + displayedValue + '</td>'
           }, '')
           table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>${tableData}</tr>`
         }
@@ -441,10 +311,11 @@ export default {
                 // header 不額外處理
                 if (index === 0) return element
                 // 計算上限值
-                element[3] = element[1] + element[3]
+                element[3] = element[2] + element[3]
+                // 如果畫圖表時有因為 offset 做調整，欲顯示原始資訊時，需要 undo
+                element = element.map((item, index) => (index === 0 || item === null) ? item : item + this.yAxisOffsetValue)
                 return element
               })
-
               this.exportToCSV(this.appQuestion, exportData)
             }
           }, false)
@@ -479,8 +350,8 @@ export default {
             dc_name: this.title.xAxis[0].dc_name,
             data_type: this.title.xAxis[0].data_type,
             display_name: this.title.xAxis[0].display_name,
-            start: dummyDataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
-            end: dummyDataset.index[coordRange[1] > dummyDataset.index.length - 1 ? dummyDataset.index.length - 1 : coordRange[1]]
+            start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
+            end: this.dataset.index[coordRange[1] > this.dataset.index.length - 1 ? this.dataset.index.length - 1 : coordRange[1]]
           }
         }
       })
