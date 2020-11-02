@@ -225,7 +225,7 @@ export default {
         const existingDataSource = this.availableDataSourceList.find(item => item.id === dataSource.id)
         return {
           ...dataSource,
-          isShow: true,
+          isShow: existingDataSource ? existingDataSource.isShow : true,
           isExpanded: existingDataSource ? existingDataSource.isExpanded : false,
           dataFrames: dataSource.dataFrames.reduce((acc, cur) => {
             acc.push({ name: cur.primaryAlias, id: cur.id })
@@ -296,8 +296,13 @@ export default {
         item.isExpanded = false
       })
     },
-    toggleDataSource (index) {
-      this.availableDataSourceList[index].isExpanded = !this.availableDataSourceList[index].isExpanded
+    toggleDataSource (targetIndex) {
+      if (this.filterText) {
+        this.availableDataSourceList[targetIndex].isExpanded = !this.availableDataSourceList[targetIndex].isExpanded
+      } else {
+        // accordian 模式
+        this.availableDataSourceList.forEach((item, index) => item.isExpanded = targetIndex === index)
+      }
     }
   }
 }
