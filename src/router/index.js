@@ -387,13 +387,14 @@ router.beforeEach(async (to, from, next) => {
     const { account_id: paramsAccountId, group_id: paramsGroupId } = to.params
     const currentAccountId = Number(store.getters['userManagement/getCurrentAccountId'])
     if ((paramsAccountId) && (Number(paramsAccountId) !== currentAccountId)) {
-      console.log('換acc')
       try {
         await store.dispatch('userManagement/switchAccountById', {
           accountId: paramsAccountId,
           defaultGroupId: paramsGroupId,
-          ...(to.query.dataSourceId && { dataSourceId: parseInt(to.query.dataSourceId) }),
-          ...(to.query.dataFrameId && { dataFrameId: to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId) }),
+          ...(to.query.dataSourceId && {
+            dataSourceId: parseInt(to.query.dataSourceId),
+            dataFrameId: to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId)
+          })
         })
       } catch (error) {
         // 當想去的 account 人數已達上限
@@ -427,15 +428,19 @@ router.beforeEach(async (to, from, next) => {
       await store.dispatch('userManagement/switchGroupById', {
         accountId: paramsAccountId,
         groupId: paramsGroupId,
-        dataSourceId: parseInt(to.query.dataSourceId),
-        dataFrameId: to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId)
+        ...(to.query.dataSourceId && {
+          dataSourceId: parseInt(to.query.dataSourceId),
+          dataFrameId: to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId)
+        })
       })
     } else if (currentGroupId) {
       // 若使用者指定的群組和 default 相同，不切換，但仍需取得資料表
       // 若使用者不指定群組，但當前有 default group 時，仍需取得資料表
       await store.dispatch('dataSource/getDataSourceList', {
-        dataSourceId: parseInt(to.query.dataSourceId),
-        dataFrameId: to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId)
+        dataSourceId: to.query.dataSourceId ? parseInt(to.query.dataSourceId) : null,
+        dataFrameId: to.query.dataFrameId
+          ? to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId)
+          : null
       })
     }
 
