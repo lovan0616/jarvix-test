@@ -920,7 +920,8 @@
     "updateImmediately": "立即更新",
     "AddNewWarRoom": "新增戰情室",
     "sendInvitation": "寄送邀請信",
-    "downloadPage": "下載"
+    "downloadPage": "下載圖片",
+    "changeDiagram": "切換圖表"
   },
   "timeScopeUnit": {
     "second": "秒",
