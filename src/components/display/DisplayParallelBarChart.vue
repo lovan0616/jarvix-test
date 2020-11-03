@@ -364,7 +364,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.change-diagram-btn {
-  float: right;
+.display-basic-chart {
+  position: relative;
+
+  .change-diagram-btn {
+    position: absolute;
+    top: -32px;
+    right: 0;
+  }
 }
 </style>
