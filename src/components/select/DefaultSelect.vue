@@ -62,7 +62,6 @@ export default {
       this.$emit('filter', query)
     },
     focusInput () {
-      console.log('input')
       this.$refs.input.focus()
     }
   }
