@@ -1,5 +1,6 @@
 <template>
   <el-select
+    ref="input"
     v-model="selectedValue"
     :placeholder="placeholder"
     :no-data-text="$t('message.noData')"
@@ -59,6 +60,10 @@ export default {
   methods: {
     categoryFilter (query) {
       this.$emit('filter', query)
+    },
+    focusInput () {
+      console.log('input')
+      this.$refs.input.focus()
     }
   }
 }

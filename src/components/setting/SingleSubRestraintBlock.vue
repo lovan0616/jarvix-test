@@ -148,8 +148,8 @@
       <div 
         v-if="valueList"
         @click="searchValue">
-        <svg-icon 
-          icon-class="search" 
+        <svg-icon
+          :icon-class="isProcessing ? 'spinner' : 'search'" 
           class="category-block__icon" />
       </div>
       <div 
@@ -157,11 +157,10 @@
         class="empty-message">
         {{ $t('editing.emptyKey') }}
       </div>
-      <spinner
-        v-else-if="isProcessing"/>
       <default-select
         v-else
-        v-model="subRestraint.properties.datavalues" 
+        :ref="index + '-select'"
+        v-model="subRestraint.properties.datavalues"
         :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
         :option-list="valueList"
         filterable
@@ -270,6 +269,7 @@ export default {
         .finally(() => {
           this.isProcessing = false
           this.queryString = ''
+          this.$refs[`${this.index}-select`].focusInput()
         })
     },
     updateDataValue (value) {
