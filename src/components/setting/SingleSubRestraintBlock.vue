@@ -263,8 +263,8 @@ export default {
       this.queryString = query
     },
     changeBoolean (option) {
-      this.subRestraint.properties.datavalues[0] = option
-      this.subRestraint.properties.display_datavalues[0] = option
+      this.subRestraint.properties.datavalues = [option]
+      this.subRestraint.properties.display_datavalues = [option]
     },
     searchValue () {
       this.isProcessing = true

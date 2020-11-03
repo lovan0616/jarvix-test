@@ -62,7 +62,7 @@
       <template v-else>
         <single-sub-restraint-block
           v-for="(sub, index) in tempRestraintList"
-          :key="index"
+          :key="sub.properties.dc_id"
           :index="index"
           :sub-restraint="sub"
           @delete="deleteSubRestraint(index)"
