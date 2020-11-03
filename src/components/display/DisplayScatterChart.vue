@@ -215,7 +215,7 @@ export default {
           let offset = this.coefficients[0]
           let gradient = this.coefficients[1]
           // 迴歸線點
-          for (let i = 0; i < this.correlationLinePoint; i++) {
+          for (let i = 0; i <= this.correlationLinePoint; i++) {
             let xPoint = minX + interval * i
             lineData.push([xPoint, this.roundNumber(gradient * xPoint + offset, 4)])
           }
