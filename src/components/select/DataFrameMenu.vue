@@ -246,6 +246,7 @@ export default {
         && selectInfo.dataFrameId === this.dataFrameId
       ) return
       
+      if (this.filterText) this.filterText = ''
       this.isShowMenu = false
       this.onDataFrameChange(selectInfo.dataSourceId, selectInfo.dataFrameId)
     },
@@ -293,7 +294,7 @@ export default {
     resetMenu () {
       this.availableDataSourceList.forEach(item => {
         item.isShow = true
-        item.isExpanded = false
+        item.isExpanded = this.dataSourceId === item.id
       })
     },
     toggleDataSource (targetIndex) {
