@@ -265,10 +265,7 @@ export default {
             lineChartData[i].push(null)
           }
         }
-        
-        for (let i = 0; i < currentSeriesLength; i++) {
-          lineChartData[xAxisIndex][seriesIndex] += this.dataset.data[index][0]
-        }
+        lineChartData[xAxisIndex][seriesIndex] += this.dataset.data[index][0]
       })
       // 關掉 drill down
       let xAxis = {...this.title.xAxis[0]}
