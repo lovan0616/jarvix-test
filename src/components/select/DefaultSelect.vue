@@ -10,6 +10,7 @@
     :multiple="multiple"
     :collapse-tags="collapseTags"
     :filterable="filterable"
+    :filter-method="categoryFilter"
     class="sy-select theme-dark"
     style="text-align:left;"
     @change="$emit('change', $event)"
@@ -53,6 +54,11 @@ export default {
         if (value === this.value) return
         this.$emit('input', value)
       }
+    }
+  },
+  methods: {
+    categoryFilter (query) {
+      this.$emit('filter', query)
     }
   }
 }

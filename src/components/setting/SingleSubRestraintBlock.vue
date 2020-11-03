@@ -133,7 +133,7 @@
             :name="index"
             class="input-radio"
             type="radio"
-            @change="changeBoolean(index, option)"
+            @change="changeBoolean(option)"
           >
           <label
             :for="index + '-' + option"
@@ -157,23 +157,26 @@
         class="empty-message">
         {{ $t('editing.emptyKey') }}
       </div>
+      <spinner
+        v-else-if="isProcessing"/>
       <default-select
         v-else
         v-model="subRestraint.properties.datavalues" 
         :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
         :option-list="valueList"
         filterable
+        filter-method
         multiple
         class="category-block__selector"
         @input="updateDataValue"
+        @filter="categoryFilter"
       />
     </div>
   </div>
 </template>
 
 <script>
-import { getDataColumnValue } from '@/API/DataSource'
-//dataValueFuzzySearch
+import { getDataColumnValue, dataValueFuzzySearch } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { mapState } from 'vuex'
 
@@ -196,8 +199,11 @@ export default {
   data () {
     return {
       isLoading: false,
+      isProcessing: false,
+      columnId: null,
       valueList: [],
-      statsType: null
+      statsType: null,
+      queryString: ''
     }
   },
   computed: {
@@ -217,40 +223,54 @@ export default {
   methods: {
     fetchData () {
       this.isLoading = true
-      const columnId = this.subRestraint.properties['dc_id']
-      getDataColumnValue(columnId).then(response => {
+      this.columnId = this.subRestraint.properties['dc_id']
+      getDataColumnValue(this.columnId).then(response => {
         this.statsType = response.type
         this.valueList = this.statsType === 'BOOLEAN' && response['bool']
           ? ["true", "false"]
           : response[this.statsType.toLowerCase()]
-        if(!this.valueList) return 
         
-        if (this.statsType === 'CATEGORY') {
-          this.valueList = this.valueList.map(element => {
-            return {
-              value: element,
-              name: element,
-              active: false
-            }
-          })
-        } else if (this.statsType === 'DATETIME') {
+
+        if(!this.valueList && this.statsType === 'CATEGORY') {
+          this.searchValue(this.columnId, '')
+        } else if (!this.valueList) {
+          return
+        } 
+        
+        if (this.statsType === 'DATETIME') {
           // 目前後端有用到 13 種日期格式，先預設所有日期最小單位都到秒
           let dateFormat = date => date.toString().replace(/[日秒]/g, '').replace(/[年月]/g, '-').replace(/[點分]/g, ':')
           this.valueList.datePattern = 'yyyy-MM-dd HH:mm:ss'
           this.subRestraint.properties.start = dateFormat(this.subRestraint.properties.start)
           this.subRestraint.properties.end = dateFormat(this.subRestraint.properties.end)
-
         }
       }).finally(() => {
         this.isLoading = false
       })
     },
-    changeBoolean (index, option) {
-      this.subRestraint[index].properties.datavalues[0] = option
-      this.subRestraint[index].properties.display_datavalues[0] = option
+    categoryFilter (query) {
+      this.queryString = query
+    },
+    changeBoolean (option) {
+      this.subRestraint.properties.datavalues[0] = option
+      this.subRestraint.properties.display_datavalues[0] = option
     },
     searchValue () {
-
+      this.isProcessing = true
+      dataValueFuzzySearch(this.columnId, this.queryString)
+        .then(response => {
+          this.valueList = response.fuzzySearchResult.map(element => {
+            return {
+              value: element,
+              name: element,
+              active: this.subRestraint.properties.datavalues.includes(element)
+            }
+          })
+        })
+        .finally(() => {
+          this.isProcessing = false
+          this.queryString = ''
+        })
     },
     updateDataValue (value) {
       this.subRestraint.properties.display_datavalues = value
