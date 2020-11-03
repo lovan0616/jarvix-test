@@ -120,17 +120,18 @@
         class="empty-message">
         {{ $t('editing.emptyKey') }}
       </div>
-      <template v-else>
+      <template v-show="valueList">
         <div
           v-for="option in valueList"
           :key="index + '-' + option"
           class="input-radio-group"
         >
           <input
+            v-validate="'required'"
             :id="index + '-' + option"
             :checked="option === subRestraint.properties.datavalues[0]"
             :value="subRestraint.properties.datavalues[0]"
-            :name="index"
+            :name="index + '-boolean'"
             class="input-radio"
             type="radio"
             @change="changeBoolean(option)"
@@ -140,6 +141,10 @@
             class="input-radio-label"
           >{{ option }}</label>
         </div>
+        <div 
+          v-show="errors.has(index + '-' + 'boolean')"
+          class="error-text"
+        >{{ errors.first(index + '-' + 'boolean') }}</div>
       </template>
     </div>
     <div 
@@ -147,6 +152,7 @@
       class="single-sub-restraint__content category-block">
       <div 
         v-if="valueList"
+        :class="{'has-error': errors.has(index + '-' + 'select')}"
         @click="searchValue">
         <svg-icon
           :icon-class="isProcessing ? 'spinner' : 'search'" 
@@ -158,11 +164,13 @@
         {{ $t('editing.emptyKey') }}
       </div>
       <default-select
-        v-else
+        v-validate="'required'"
+        v-show="valueList"
         :ref="index + '-select'"
         v-model="subRestraint.properties.datavalues"
         :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
         :option-list="valueList"
+        :name="index + '-select'"
         filterable
         filter-method
         multiple
@@ -170,6 +178,10 @@
         @input="updateDataValue"
         @filter="categoryFilter"
       />
+      <div 
+        v-show="errors.has(index + '-' + 'select')"
+        class="error-text"
+      >{{ errors.first(index + '-' + 'select') }}</div>
     </div>
   </div>
 </template>
@@ -400,9 +412,15 @@ export default {
     position: relative;
     overflow: unset;
 
+    .has-error {
+      .category-block__icon {
+        top: calc(50% - 16px);
+      }
+    }
+
     &__icon {
       position: absolute;
-      top: calc((100% - 16px) / 2);
+      top: calc(50% - 8px);
       right: 9px;
       background: #141C1D;
       cursor: pointer;
