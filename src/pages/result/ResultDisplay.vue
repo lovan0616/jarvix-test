@@ -116,8 +116,8 @@ export default {
         // this.triggerColumnDataCalculation()
         this.fetchApiAsk({
           question: this.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
-          'dataSourceId': Number(this.$route.query.dataSourceId), 
-          'dataFrameId': Number(this.$route.query.dataFrameId)
+          'dataSourceId': this.$route.query.dataSourceId, 
+          'dataFrameId': this.$route.query.dataFrameId
         })
       }
     }

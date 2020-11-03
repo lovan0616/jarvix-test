@@ -148,7 +148,6 @@ export default {
             isDeleted: false,
             intent: element.intent,
             pinboardGroupId: element.groupId,
-            // TODO API會當前釘板 accountId
             pinboardAccountId: element.accountId
           })
 

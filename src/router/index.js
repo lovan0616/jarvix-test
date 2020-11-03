@@ -392,8 +392,8 @@ router.beforeEach(async (to, from, next) => {
         await store.dispatch('userManagement/switchAccountById', {
           accountId: paramsAccountId,
           defaultGroupId: paramsGroupId,
-          dataSourceId: parseInt(to.query.dataSourceId),
-          dataFrameId: to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId)
+          ...(to.query.dataSourceId && { dataSourceId: parseInt(to.query.dataSourceId) }),
+          ...(to.query.dataFrameId && { dataFrameId: to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId) }),
         })
       } catch (error) {
         // 當想去的 account 人數已達上限
