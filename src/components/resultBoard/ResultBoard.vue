@@ -268,7 +268,7 @@ export default {
       return this.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
     },
     pinboardAccountName () {
-      const pinboardAccount = this.accoutList.find(item => item.id === this.pinboardAccountId)
+      const pinboardAccount = this.accountList.find(item => item.id === this.pinboardAccountId)
       return pinboardAccount ? pinboardAccount.name : null
     }
   },
