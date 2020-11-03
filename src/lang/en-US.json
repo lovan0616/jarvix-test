@@ -920,7 +920,8 @@
     "updateImmediately": "Update Immediately",
     "AddNewWarRoom": "Add war room",
     "sendInvitation": "Send Invitation",
-    "downloadPage": "Download"
+    "downloadPage": "Download Image",
+    "changeDiagram": "Change Diagram"
   },
   "timeScopeUnit": {
     "second": "seconds",
