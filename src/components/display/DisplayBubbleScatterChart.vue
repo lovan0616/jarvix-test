@@ -167,7 +167,9 @@ export default {
       let maxValue = -Infinity
       let minValue = Infinity
       const minXaxis = this.title.xAxis[0].min
+      const maxXaxis = this.title.xAxis[0].max
       const minYaxis = this.title.yAxis[0].min
+      const maxYaxis = this.title.yAxis[0].max
 
       // 準備所有群的資料
       const groupList = [
@@ -224,7 +226,8 @@ export default {
         ...chartAddon.xAxis, 
         ...scatterBubleChartConfig.xAxis,
         name: this.title.xAxis[0].display_name,
-        min: minXaxis
+        min: minXaxis,
+        max: maxXaxis
       }
 
       // y 軸設定
@@ -232,7 +235,8 @@ export default {
         ...chartAddon.yAxis,
         ...scatterBubleChartConfig.yAxis,
         name: this.title.yAxis[0].display_name,
-        min: minYaxis
+        min: minYaxis,
+        max: maxYaxis
       }
 
       chartAddon.tooltip.trigger = scatterBubleChartConfig.tooltip.trigger
