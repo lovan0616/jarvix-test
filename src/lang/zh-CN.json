@@ -412,7 +412,8 @@
     "uploadValueAliasTemplate": "批次修改数据别名",
     "chooseFile": "选择档案",
     "columnAliasTemplate": "栏位别名范例档",
-    "valueAliasTemplate": "数据别名范例档"
+    "valueAliasTemplate": "数据别名范例档",
+    "searchDataSourceOrDataFrame": "搜寻资料源 / 资料表"
   },
   "algorithm": {
     "name": "演算法",
