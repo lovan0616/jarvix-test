@@ -74,6 +74,7 @@ import RootCauseBoardBody from '@/components/resultBoard/RootCauseBoardBody'
 import DisplayAverageBarChart from '@/components/display/DisplayAverageBarChart'
 import DisplayScatterChart from '@/components/display/DisplayScatterChart'
 import DisplayScatterProbabilityDensityChart from '@/components/display/DisplayScatterProbabilityDensityChart'
+import DisplayScatterClusterChart from '@/components/display/DisplayScatterClusterChart'
 // import DisplayHistogramChart from '@/components/display/DisplayHistogramChart'
 import DisplayComputedHistogramChart from '@/components/display/DisplayComputedHistogramChart'
 // import DisplayBoxPlotChart from '@/components/display/DisplayBoxPlotChart'
@@ -96,6 +97,8 @@ import DisplayParallelBarChart from '@/components/display/DisplayParallelBarChar
 import DisplayChinaMap from '@/components/display/DisplayChinaMap'
 import DisplayWorldMap from '@/components/display/DisplayWorldMap'
 import DisplayPredictChart from '@/components/display/DisplayPredictChart'
+import DisplayLineConfidentialIntervalChart from '@/components/display/DisplayLineConfidentialIntervalChart'
+import DisplayPeriodicLineCharts from '@/components/display/DisplayPeriodicLineCharts'
 import DisplayHeatMapChart from '@/components/display/DisplayHeatMapChart'
 import DisplaySankeyChart from '@/components/display/DisplaySankeyChart'
 import DisplayCorrelationFeatures from '@/components/display/DisplayCorrelationFeatures'
@@ -176,6 +179,7 @@ Vue.component(DisplayBasicChart.name, DisplayBasicChart)
 Vue.component(DisplayAverageBarChart.name, DisplayAverageBarChart)
 Vue.component(DisplayScatterChart.name, DisplayScatterChart)
 Vue.component(DisplayScatterProbabilityDensityChart.name, DisplayScatterProbabilityDensityChart)
+Vue.component(DisplayScatterClusterChart.name, DisplayScatterClusterChart)
 Vue.component(DisplayGroupScatterChart.name, DisplayGroupScatterChart)
 // Vue.component(DisplayHistogramChart.name, DisplayHistogramChart)
 Vue.component(DisplayComputedHistogramChart.name, DisplayComputedHistogramChart)
@@ -196,6 +200,8 @@ Vue.component(DisplayParallelBarChart.name, DisplayParallelBarChart)
 Vue.component(DisplayChinaMap.name, DisplayChinaMap)
 Vue.component(DisplayWorldMap.name, DisplayWorldMap)
 Vue.component(DisplayPredictChart.name, DisplayPredictChart)
+Vue.component(DisplayLineConfidentialIntervalChart.name, DisplayLineConfidentialIntervalChart)
+Vue.component(DisplayPeriodicLineCharts.name, DisplayPeriodicLineCharts)
 // Vue.component(DisplayPivot.name, DisplayPivot)
 Vue.component(DisplayPivotTable.name, DisplayPivotTable)
 Vue.component(DisplayHeatMapChart.name, DisplayHeatMapChart)

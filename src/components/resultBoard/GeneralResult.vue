@@ -16,35 +16,22 @@
       >
         <ul class="multi-analysis__list">
           <li
-            :class="{'is-active': activeTab === intentType.OVERVIEW}"
+            v-for="(typeInfo, index) in switchTypeList"
+            :key="typeInfo.denotation"
+            :class="{ 'is-active': activeTab === typeInfo.denotation }"
             class="multi-analysis__item"
-            @click="clickTab(intentType.OVERVIEW)"
+            @click="clickTab(typeInfo.denotation, index)"
           >
             <span class="multi-analysis__item-label">
-              <svg-icon icon-class="basic-info"/>
-              {{ $t('clustering.dataOverview') }}
+              <svg-icon :icon-class="typeInfo.icon"/>
+              {{ typeInfo.name }}
             </span>
             <div class="multi-analysis__item-status">
               <spinner 
-                v-if="isProcessing[intentType.OVERVIEW]" 
-                size="16"/>
-            </div>
-          </li>
-          <li
-            :class="{'is-active': activeTab === intentType.CLUSTERING}"
-            class="multi-analysis__item"
-            @click="clickTab(intentType.CLUSTERING)"
-          >
-            <span class="multi-analysis__item-label">
-              <svg-icon icon-class="clustering"/>
-              {{ $t('clustering.clusteringAnalysis') }}
-            </span>
-            <div class="multi-analysis__item-status">
-              <spinner 
-                v-if="isProcessing[intentType.CLUSTERING]" 
+                v-if="typeInfo.isProcessing" 
                 size="16"/>
               <div
-                v-else-if="hasFetchedClustering"
+                v-else-if="hasFetchedClustering(index)"
                 class="multi-analysis__item-dropdownlist"
               >
                 <svg-icon 
@@ -53,7 +40,7 @@
                 <dropdown-select
                   :bar-data="barData"
                   class="dropdown"
-                  @switchDialogName="switchDialogName"
+                  @switchDialogName="switchDialogName($event, typeInfo)"
                 />
               </div>
             </div>
@@ -126,8 +113,8 @@
       <save-clustering-dialog
         v-if="currentResultId && isShowSaveClusteringDialog"
         :data-frame-alias="transcript.dataFrame.dataFrameAlias"
-        :result-id="cachedResultId[intentType.CLUSTERING]"
-        @close="isShowSaveClusteringDialog = false"
+        :result-id="selectedTypeInfo.cachedResultId"
+        @close="closeDialog"
       />
     </template>
   </result-board>
@@ -185,17 +172,11 @@ export default {
   },
   data: () => {
     return {
-      isProcessing: {
-        OVERVIEW: false,
-        CLUSTERING: false
-      },
-      cachedResultId: {
-        OVERVIEW: null,
-        CLUSTERING: null
-      },
       activeTab: null,
       isShowSaveClusteringDialog: false,
-      intentType
+      intentType,
+      switchTypeList: [],
+      selectedTypeInfo: null
     }
   },
   computed: {
@@ -209,16 +190,15 @@ export default {
         },
       ]
     },
-    hasFetchedClustering () {
-      return this.intent === this.intentType.CLUSTERING || this.cachedResultId.CLUSTERING
-    },
     isShowInfo () {
       const intentsWithInfo = ['CLUSTERING']
-      return intentsWithInfo.includes(this.intent)
+      // 切分群時不會有 intent，所以從 active tab 取值
+      return intentsWithInfo.includes(this.intent || this.activeTab)
     },
     displayedInfo () {
       if (!this.isShowInfo) return
-      switch (this.intent) {
+      // 切分群時不會有 intent，所以從 active tab 取值
+      switch (this.intent || this.activeTab) {
         case 'CLUSTERING': 
         return this.$t('editing.resultOverSizeMessage')
       }
@@ -231,8 +211,13 @@ export default {
   },
   mounted () {
     if (this.currentResultId) {
-      this.cachedResultId[this.intent] = this.currentResultId
       this.activeTab = this.intent
+      this.switchTypeList = this.resultInfo.canDoList.map(type => ({
+        denotation: type,
+        ...this.getSwitchTypeInfoList(type),
+        isProcessing: false,
+        cachedResultId: type === this.intent ? this.currentResultId : null
+      }))
     }
   },
   methods: {
@@ -242,39 +227,44 @@ export default {
     unPin (pinBoardId) {
       this.$emit('unPin', pinBoardId)
     },
-    fetchSpecificType (type) {
+    fetchSpecificType (type, index) {
       // 有資料正在 fetching 則擋掉
-      if (Object.values(this.isProcessing).some(item => item)) return
+      const isFetching = this.switchTypeList.some(typeInfo => typeInfo.isProcessing)
+      if (isFetching) return
+
+      const targetTypeInfo = this.switchTypeList[index]
+
       // 已經拿過 result id 就重複使用
-      if (this.cachedResultId[type]) {
-        this.isProcessing[type] = true
-        this.activeTab = this.intentType[type]
-        this.$store.commit('result/updateCurrentResultId', this.cachedResultId[type])
-        this.$emit('fetch-new-components-list', this.cachedResultId[type])
+      if (targetTypeInfo.cachedResultId) {
+        targetTypeInfo.isProcessing = true
+        this.activeTab = type
+        this.$store.commit('result/updateCurrentResultId', targetTypeInfo.cachedResultId)
+        this.$emit('fetch-new-components-list', targetTypeInfo.cachedResultId)
         return
       }
 
-      this.isProcessing[type] = true
+      targetTypeInfo.isProcessing = true
       this.$store.dispatch('chatBot/askSpecificType', {
         resultId: this.currentResultId,
-        type: type.toLowerCase()
+        type: type
       })
         .then(({ resultId }) => {
-          this.isProcessing[type] = false
-          this.cachedResultId[type] = resultId
-          this.activeTab = this.intentType[type]
+          this.switchTypeList[index] = {
+            ...targetTypeInfo,
+            isProcessing: false,
+            cachedResultId: resultId
+          }
+          this.activeTab = type
           this.$store.commit('result/updateCurrentResultId', resultId)
           this.$emit('fetch-new-components-list', resultId)
         })
-        .catch(() => {
-          this.clearAllProcessingStatus()
-        })
+        .catch(() => this.clearAllProcessingStatus())
     },
-    clickTab (tabName) {
-      if (this.activeTab === this.intentType[tabName]) return
-      this.fetchSpecificType(tabName)
+    clickTab (tabName, index) {
+      if (this.activeTab === tabName) return
+      this.fetchSpecificType(tabName, index)
     },
-    switchDialogName (action) {
+    switchDialogName (action, typeInfo) {
       if (action !== 'saveClustering') return
       if (!this.resultInfo.canSaveResult) {
         return Message({
@@ -284,13 +274,19 @@ export default {
           showClose: true
         })
       }
+      this.selectedTypeInfo = typeInfo
       this.isShowSaveClusteringDialog = true
     },
+    closeDialog () {
+      this.isShowSaveClusteringDialog = false
+      this.selectedTypeInfo = null
+    },
     clearAllProcessingStatus () {
-      for (const key in this.isProcessing) {
-        this.isProcessing[key] = false
-      }
-    }
+      this.switchTypeList.forEach(type => type.isProcessing = false)
+    },
+    hasFetchedClustering (index) {
+      return this.switchTypeList[index].denotation === this.intentType.CLUSTERING && (this.intent === this.intentType.CLUSTERING || this.switchTypeList[index].cachedResultId)
+    },
   }
 }
 </script>
