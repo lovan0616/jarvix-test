@@ -81,12 +81,14 @@
   </div>
 </template>
 <script>
+import { getDataColumnValue } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import SingleSubRestraintBlock from '@/components/setting/SingleSubRestraintBlock'
 import { mapState } from 'vuex'
 
 export default {
   name: 'FilterRestraintSetting',
+  inject: ['$validator'],
   components: {
     DefaultSelect,
     SingleSubRestraintBlock
@@ -154,7 +156,7 @@ export default {
     backToPreviousPage () {
       this.$emit("prev")
     },
-    selectColumn (index) {
+    async selectColumn (index) {
       const selectColumn = this.columnList.filter(column => this.columnFilterOption[index].id === column.id)[0]
       const columnStatsType = selectColumn.statsType
 
@@ -163,6 +165,10 @@ export default {
       })
       if(isColumnInList) return 
 
+      let response
+      if(columnStatsType === 'DATETIME' || columnStatsType === 'NUMERIC')
+        response = await getDataColumnValue(selectColumn.id)
+        
       let subStraintType, subStraintProperties
       switch (columnStatsType) {
         case 'BOOLEAN':
@@ -182,8 +188,8 @@ export default {
             data_type: columnStatsType.toLowerCase(),
             dc_id: selectColumn.id,
             display_name: selectColumn.name,
-            end: null,
-            start: null 
+            end: response.datetime.max,
+            start: response.datetime.min 
           }
           break
         case 'NUMERIC':
@@ -192,8 +198,8 @@ export default {
             data_type: columnStatsType.toLowerCase(),
             dc_id: selectColumn.id,
             display_name: selectColumn.name,
-            end: null,
-            start: null 
+            end:response.numeric.max,
+            start: response.numeric.min 
           }
           break
       }
@@ -209,19 +215,39 @@ export default {
       this.tempRestraintList.splice(index, 1)
     },
     save () {
-      // TODO: 驗證
-      let updatedRestraint
-      if(this.tempRestraintList.length > 1){
-        updatedRestraint = {
-          type: 'compound',
-          restraints: this.tempRestraintList
-        }
-      } else if(this.tempRestraintList.length === 1) {
-        [updatedRestraint] = this.tempRestraintList
-      } else {
-        updatedRestraint = {}
-      }
-      this.$emit('updated:restraint', updatedRestraint)
+      this.$validator.validateAll().then(isValidate => {
+        if (!isValidate) return
+
+        // Reconstruct restraints
+          let updatedRestraint
+          if(this.tempRestraintList.length > 1){
+            updatedRestraint = {
+              type: 'compound',
+              restraints: this.tempRestraintList
+            }
+          } else if(this.tempRestraintList.length === 1) {
+            [updatedRestraint] = this.tempRestraintList
+          } else {
+            updatedRestraint = {}
+          }
+          this.$emit('updated:restraint', updatedRestraint)
+
+        // handle empty range value 先拿掉，現在強制都要有值
+
+        // const tempRestraintRangeList = this.tempRestraintList.filter(restraint => restraint.type === 'range')
+        // Promise.all(tempRestraintRangeList.map(async(restraint) => await getDataColumnValue(restraint.properties.dc_id)))
+        //   .then(response => {
+        //     let responseIndex = 0
+        //     this.tempRestraintList.forEach(restraint =>{
+        //       if(restraint.type === 'range') {
+        //         const valueBound = response[responseIndex][response[responseIndex].type.toLowerCase()]
+        //         restraint.properties.end = restraint.properties.end || valueBound.max
+        //         restraint.properties.start = restraint.properties.start || valueBound.min
+        //         responseIndex += 1
+        //       }
+        //     })
+        //   })
+      })
     }
   },
 }

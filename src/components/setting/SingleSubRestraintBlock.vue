@@ -59,9 +59,6 @@
           >{{ errors.first(index + '-' + 'lowerBound') }}</div>
         </div>
       </div>
-      <div class="numeric-block__warning">
-        {{ $t('dataFrameAdvanceSetting.emptyValueMsg') }}
-      </div>
     </div>
     <div 
       v-else-if="statsType === 'DATETIME'"
@@ -107,9 +104,6 @@
             class="error-text"
           >{{ errors.first(index + '-' + 'lowerBound') }}</div>
         </div>
-      </div>
-      <div class="datetime-block__warning">
-        {{ $t('dataFrameAdvanceSetting.emptyValueMsg') }}
       </div>
     </div>
     <div 
@@ -220,12 +214,10 @@ export default {
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['columnList']), 
     upperBoundRules () {
-      //const decimalRegex = /^[-]?([0-9]+)?[.]?([0-9]+)?$/
-      return 'decimal'
+      return 'required|decimal|validUpperBound:lowerBound'
     },
     lowerBoundRules () {
-      //const decimalRegex = /^[-]?([0-9]+)?[.]?([0-9]+)?$/
-      return 'decimal'
+      return 'required|decimal|validLowerBound:upperBound'
     }
   },
   mounted () {
@@ -240,7 +232,6 @@ export default {
         this.valueList = this.statsType === 'BOOLEAN' && response['bool']
           ? ["true", "false"]
           : response[this.statsType.toLowerCase()]
-        
 
         if(!this.valueList && this.statsType === 'CATEGORY') {
           this.searchValue(this.columnId, '')
@@ -381,12 +372,6 @@ export default {
         font-size: 12px;
         line-height: 22px;
       }
-    }
-
-    &__warning {
-      font-size: 12px;
-      line-height: 22px;
-      color: #A7A7A7;
     }
   }
 
