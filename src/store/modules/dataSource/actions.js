@@ -40,7 +40,7 @@ export default {
       if (dataSourceId) {
         // 判斷路由的 DataSource 是否存在，且該 DataSource 是有可使用的 DataFrame
         if (res.some(element => element.id === dataSourceId && element.enableDataFrameCount)) {
-          dispatch('changeDataSourceById', { dataSourceId, dataFrameId })
+          return dispatch('changeDataSourceById', { dataSourceId, dataFrameId })
         } else {
           const dataSourceId = firstEnableDataSourceIndex > -1 ? res[firstEnableDataSourceIndex].id : null
           dispatch('changeDataSourceById', { dataSourceId, dataFrameId: 'all' })

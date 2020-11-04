@@ -543,12 +543,15 @@
     "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位"
   },
   "pinboard": {
+    "intelligentAnalysis": "智能分析",
     "source": "資料來源",
     "restrict": "分析條件限制",
     "dataFrame":"來源資料表",
     "relativeDataColun":"資料相關欄位",
     "allColumns": "所有欄位",
-    "emptyInfo": "{name} 資料已不存在"
+    "emptyInfo": "{name} 資料已不存在",
+    "reminding": "提示",
+    "switchAccountReminding": "此釘版屬於帳戶「{accountName}」，前往智能分析頁面將同時切換您的預設帳戶，確定是否繼續？"
   },
   "batchLoad": {
     "primaryKeyColumns": "主鍵（可複選）",
