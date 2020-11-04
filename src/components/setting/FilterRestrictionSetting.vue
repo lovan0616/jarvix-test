@@ -35,15 +35,6 @@
         />
       </template>
     </div>
-    <div class="restriction-setting__button-block">
-      <button
-        v-if="tempRestrictionList.length !== 0 && hasSettingChanged"
-        type="button"
-        class="btn btn-default"
-        @click="saveRestriction"
-      >{{ $t('button.save') }}
-      </button>
-    </div>
   </div>
 </template>
 <script>
@@ -79,17 +70,10 @@ export default {
           active: false
         }
       })
-    },
-    hasSettingChanged () {
-      const isRestrictionLengthUntouched = this.restriction.length === this.tempRestrictionList.length
-      return !isRestrictionLengthUntouched
     }
   },
   mounted () {
     this.tempRestrictionList = JSON.parse(JSON.stringify(this.restriction))
-  },
-  destroyed () {
-
   },
   methods: {
     backToPreviousPage () {
@@ -107,9 +91,8 @@ export default {
     },
     deleteRestraint (index) {
       this.tempRestrictionList.splice(index, 1)
-    },
-    saveRestriction () {
-      this.$emit('updated:restriction', this.tempRestrictionList)
+      if(this.tempRestrictionList.length === 0)
+        this.$emit('empty-restraint')
     }
   },
 }
@@ -161,13 +144,6 @@ export default {
     .empty-message {
       color: #AAAAAA;
       font-size: 12px;
-    }
-  }
-
-  &__button-block {
-    .btn {
-      width: 100%;
-      height: 28px;
     }
   }
 }

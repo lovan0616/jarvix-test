@@ -81,7 +81,7 @@
   </div>
 </template>
 <script>
-import { getDataColumnValue } from '@/API/DataSource'
+// import { getDataColumnValue } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import SingleSubRestraintBlock from '@/components/setting/SingleSubRestraintBlock'
 import { mapState } from 'vuex'
@@ -109,12 +109,15 @@ export default {
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['columnList']),
+    NoDatetimeColumn () {
+      return this.columnList.filter(column => column.statsType !== "DATETIME")
+    },
     columnOption () {
-      return this.columnList.map((column, index) => {
+      return this.NoDatetimeColumn.map((column, index) => {
         return {
           id: column.id,
           name: column.name,
-          active: this.tempRestraintList.some(restraint => restraint.properties.display_name === column.name)
+          active: this.tempRestraintList.some(restraint => restraint.properties.dc_id === column.id)
         }
       })
     },

@@ -262,9 +262,7 @@ export default {
           // 目前後端有用到 13 種日期格式，先預設所有日期最小單位都到秒
           this.valueList.datePattern = 'yyyy-MM-dd HH:mm:ss'
           if(this.subRestraint.properties.start && this.subRestraint.properties.end) {
-            let dateFormat = date => date.toString().replace(/[日秒]/g, '').replace(/[年月]/g, '-').replace(/[點分]/g, ':')
-            this.subRestraint.properties.start = dateFormat(this.subRestraint.properties.start)
-            this.subRestraint.properties.end = dateFormat(this.subRestraint.properties.end)
+            return 
           } else {
             this.subRestraint.properties.start = this.valueList.start
             this.subRestraint.properties.end = this.valueList.end
@@ -316,6 +314,7 @@ export default {
 
     .btn-delete {
       color: #CCC;
+      cursor: pointer;
 
       &:hover {
         color: $theme-color-primary;

@@ -16,8 +16,11 @@
       </div>
       {{ columnNames.join(', ') }}
     </div>
-    <div class="single-filter-block__action">
+    <div 
+      class="single-filter-block__action"
+    >
       <div
+        :class="{'single-filter-block__action--hidden': notEditable}"
         class="single-filter-block__action--edit"
         @click.prevent="editFilter"
       >
@@ -109,6 +112,9 @@ export default {
       }, []).filter((element, index, self) => {
         return self.findIndex(item => item === element) === index
       })
+    },
+    notEditable () {
+      return this.restriction.some(element => element.type === 'range' && element.properties.data_type === "datetime")
     }
   },
   watch: {
@@ -176,6 +182,10 @@ export default {
 
     &--edit {
       margin-right: 8px;
+    }
+
+    &--hidden {
+      visibility: hidden;
     }
   }
 

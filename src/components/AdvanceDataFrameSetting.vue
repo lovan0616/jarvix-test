@@ -54,6 +54,7 @@
       v-else-if="step === 2"
       :restriction="currentEditedFilter"
       @edit-restraint="editRestraint"
+      @empty-restraint="emptyRestraint"
       @updated:restriction="updateRestriction"
       @prev="prevStep"
       @next="nextStep"
@@ -63,7 +64,6 @@
       :restraint="currentEditedRestraint"
       @updated:restraint="updateRestraint"
       @prev="prevStep"
-      @next="nextStep"
     />
     <div
       v-if="hasSettingChanged && step === 1"
@@ -225,6 +225,13 @@ export default {
       this.currentEditedRestraint = this.currentEditedFilter[index]
       this.nextStep()
     },
+    emptyRestraint () {
+      this.tempFilterList.splice(this.currentEditedFilterIndex, 1)
+      this.currentEditedFilterIndex = null
+      this.currentEditedFilter = []
+      this.prevStep()
+      this.saveFilter()
+    },
     addRestriction () {
       this.currentEditedFilterIndex = this.tempFilterList.length
       this.currentEditedFilter = []
@@ -250,6 +257,7 @@ export default {
         this.tempFilterList[this.currentEditedFilterIndex].restriction = JSON.parse(JSON.stringify(this.currentEditedFilter))
       }
       this.saveFilter()
+      this.prevStep()
     }
   },
 }
