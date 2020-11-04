@@ -392,7 +392,8 @@
     "lastUpdateResult": "近一次更新結果",
     "startTime": "開始時間",
     "endTime": "結束時間",
-    "elapsedTime": "更新花費時間",
+    "elapsedTime": "花費時間",
+    "errorReason": "失敗原因",
     "noData": "暫無數據",
     "SQLSyntax": "SQL語法",
     "copyTableFromDatabase": "複製資料庫資料表",
@@ -411,7 +412,8 @@
     "uploadValueAliasTemplate": "批次修改數據別名",
     "chooseFile": "選擇檔案",
     "columnAliasTemplate": "欄位別名範例檔",
-    "valueAliasTemplate": "數據別名範例檔"
+    "valueAliasTemplate": "數據別名範例檔",
+    "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表"
   },
   "algorithm": {
     "name": "演算法",
@@ -541,12 +543,15 @@
     "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位"
   },
   "pinboard": {
+    "intelligentAnalysis": "智能分析",
     "source": "資料來源",
     "restrict": "分析條件限制",
     "dataFrame":"來源資料表",
     "relativeDataColun":"資料相關欄位",
     "allColumns": "所有欄位",
-    "emptyInfo": "{name} 資料已不存在"
+    "emptyInfo": "{name} 資料已不存在",
+    "reminding": "提示",
+    "switchAccountReminding": "此釘版屬於帳戶「{accountName}」，前往智能分析頁面將同時切換您的預設帳戶，確定是否繼續？"
   },
   "batchLoad": {
     "primaryKeyColumns": "主鍵（可複選）",

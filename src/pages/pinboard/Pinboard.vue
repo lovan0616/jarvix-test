@@ -47,6 +47,8 @@
       :segmentation-payload="result.segmentationPayload"
       :restrictions="result.restrictions"
       :question="result.question"
+      :pinboard-account-id="result.pinboardAccountId"
+      :pinboard-group-id="result.pinboardGroupId"
       @refresh="refreshPinboardData"
       @unPin="unPin"
     />
@@ -144,7 +146,9 @@ export default {
             info: null,
             segmentationPayload: null,
             isDeleted: false,
-            intent: element.intent
+            intent: element.intent,
+            pinboardGroupId: element.groupId,
+            pinboardAccountId: element.accountId
           })
 
           this.pinboardData.push({

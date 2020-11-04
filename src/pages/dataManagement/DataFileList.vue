@@ -266,7 +266,7 @@ export default {
         {
           text: this.$t('editing.lastUpdateResult'),
           value: 'latestImportStatus',
-          width: '140px'
+          width: '160px'
         },
         {
           text: this.$t('editing.action'),
