@@ -165,10 +165,6 @@ export default {
       })
       if(isColumnInList) return 
 
-      let response
-      if(columnStatsType === 'DATETIME' || columnStatsType === 'NUMERIC')
-        response = await getDataColumnValue(selectColumn.id)
-        
       let subStraintType, subStraintProperties
       switch (columnStatsType) {
         case 'BOOLEAN':
@@ -188,8 +184,8 @@ export default {
             data_type: columnStatsType.toLowerCase(),
             dc_id: selectColumn.id,
             display_name: selectColumn.name,
-            end: response.datetime.max,
-            start: response.datetime.min 
+            end: null,
+            start: null 
           }
           break
         case 'NUMERIC':
@@ -198,8 +194,8 @@ export default {
             data_type: columnStatsType.toLowerCase(),
             dc_id: selectColumn.id,
             display_name: selectColumn.name,
-            end:response.numeric.max,
-            start: response.numeric.min 
+            end: null,
+            start: null 
           }
           break
       }

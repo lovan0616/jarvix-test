@@ -65,44 +65,48 @@
       class="single-sub-restraint__content">
       <div class="datetime-block">
         <div 
-          :class="{'has-error': errors.has(index + '-' + 'upperBound')}" 
+          :class="{'has-error': errors.has(index + '-' + 'datatimeUpperBound')}" 
           class="datetime-block__item item">
           <div class="item__input-block">
             <label class="item__label"> 
               {{ $t('message.upperBound') }}
             </label>
             <el-date-picker
+              v-validate="datatimeUpperBoundRules"
               ref="datatimeUpperBound"
               v-model="subRestraint.properties.end"
               :format="valueList.datePattern"
               :name="index + '-' + 'datatimeUpperBound'"
+              value-format="timestamp"
               type="datetime"
               class="date-picker" />
           </div>
           <div 
-            v-show="errors.has(index + '-' + 'upperBound')"
+            v-show="errors.has(index + '-' + 'datatimeUpperBound')"
             class="error-text"
-          >{{ errors.first(index + '-' + 'upperBound') }}</div>
+          >{{ errors.first(index + '-' + 'datatimeUpperBound') }}</div>
         </div>
         <div 
-          :class="{'has-error': errors.has(index + '-' + 'lowerBound')}" 
+          :class="{'has-error': errors.has(index + '-' + 'datatimeLowerBound')}" 
           class="item">
           <div class="item__input-block">
             <label class="item__label"> 
               {{ $t('message.lowerBound') }}
             </label>
             <el-date-picker
+              v-validate="datatimeLowerBoundRules"
               ref="datatimeLowerBound"
               v-model="subRestraint.properties.start"
               :format="valueList.datePattern"
               :name="index + '-' + 'datatimeLowerBound'"
+              value-format="timestamp"
               type="datetime"
               class="date-picker" />
           </div>
           <div 
-            v-show="errors.has(index + '-' + 'lowerBound')"
+            v-show="errors.has(index + '-' + 'datatimeLowerBound')"
             class="error-text"
-          >{{ errors.first(index + '-' + 'lowerBound') }}</div>
+          >{{ errors.first(index + '-' + 'datatimeLowerBound') }}</div>
         </div>
       </div>
     </div>
@@ -218,6 +222,16 @@ export default {
     },
     lowerBoundRules () {
       return 'required|decimal|validLowerBound:upperBound'
+    },
+    datatimeUpperBoundRules () {
+      return this.subRestraint.properties.start 
+        ? 'required|validUpperBound:datatimeLowerBound'
+        : 'required'
+    },
+    datatimeLowerBoundRules () {
+      return this.subRestraint.properties.end
+        ? 'required|validLowerBound:datatimeUpperBound'
+        : 'required'
     }
   },
   mounted () {
@@ -233,18 +247,31 @@ export default {
           ? ["true", "false"]
           : response[this.statsType.toLowerCase()]
 
-        if(!this.valueList && this.statsType === 'CATEGORY') {
-          this.searchValue(this.columnId, '')
-        } else if (!this.valueList) {
-          return
-        } 
-        
-        if (this.statsType === 'DATETIME') {
+        if(this.statsType === 'CATEGORY') {
+          // CATEGORY 值太多的時候會回傳空的
+          if(!this.valueList)
+            this.searchValue(this.columnId, '')
+          this.valueList = this.valueList.map(element => {
+            return {
+              value: element,
+              name: element,
+              active: this.subRestraint.properties.datavalues.includes(element)
+            }
+          })
+        } else if (this.statsType === 'DATETIME') {
           // 目前後端有用到 13 種日期格式，先預設所有日期最小單位都到秒
-          let dateFormat = date => date.toString().replace(/[日秒]/g, '').replace(/[年月]/g, '-').replace(/[點分]/g, ':')
           this.valueList.datePattern = 'yyyy-MM-dd HH:mm:ss'
-          this.subRestraint.properties.start = dateFormat(this.subRestraint.properties.start)
-          this.subRestraint.properties.end = dateFormat(this.subRestraint.properties.end)
+          if(this.subRestraint.properties.start && this.subRestraint.properties.end) {
+            let dateFormat = date => date.toString().replace(/[日秒]/g, '').replace(/[年月]/g, '-').replace(/[點分]/g, ':')
+            this.subRestraint.properties.start = dateFormat(this.subRestraint.properties.start)
+            this.subRestraint.properties.end = dateFormat(this.subRestraint.properties.end)
+          } else {
+            this.subRestraint.properties.start = this.valueList.start
+            this.subRestraint.properties.end = this.valueList.end
+          }
+        } else if (this.statsType === 'NUMERIC') {
+          this.subRestraint.properties.start = this.valueList.min
+          this.subRestraint.properties.end = this.valueList.max
         }
       }).finally(() => {
         this.isLoading = false
@@ -261,13 +288,7 @@ export default {
       this.isProcessing = true
       dataValueFuzzySearch(this.columnId, this.queryString)
         .then(response => {
-          this.valueList = response.fuzzySearchResult.map(element => {
-            return {
-              value: element,
-              name: element,
-              active: this.subRestraint.properties.datavalues.includes(element)
-            }
-          })
+          this.valueList = response.fuzzySearchResult
         })
         .finally(() => {
           this.isProcessing = false
