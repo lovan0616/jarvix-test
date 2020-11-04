@@ -1,62 +1,90 @@
 <template>
-  <div class="data-frame-select-block">
-    <el-menu
-      :default-active="selectedMenuIndex"
-      mode="horizontal"
-      class="data-frame-select__menu"
-      background-color="#1E2122"
-      text-color="#CCC"
-      @select="handleSelect">
-      <el-submenu 
-        v-if="availableDataSourceList.length > 0" 
-        :show-timeout="0"
-        :hide-timeout="0"
-        popper-class="data-frame-select__popper"
-        index="1">
-        <template slot="title" >
-          <svg-icon 
-            :icon-class="selectedIconType" 
-            class="data-frame-select__icon"/>
-          <span class="data-source-title">{{ selectedDataName }}</span>
-        </template>
-        <div 
-          v-for="(dataSource, dataSourceIndex) in availableDataSourceList"
-          :key="'dataSource' + dataSourceIndex">
-          <el-submenu 
-            :index="'1-' + dataSourceIndex"
-            :class="{'is-active': dataSourceIndex === getDataSourceIndex}"
-            class="data-frame-select__submenu">
-            <template slot="title">
-              <svg-icon 
-                icon-class="data-source" 
-                class="data-frame-select__icon"/>
-              <span class="data-source-title">{{ dataSource.name }}</span>
-            </template>
-            <div 
-              v-for="(dataFrame, dataFrameIndex) in dataSource.dataFrames"
-              :key="'dataFrame' + dataFrameIndex">
-              <el-menu-item 
-                :index="dataSourceIndex + '-' + dataFrameIndex"
-                :class="{'is-active': dataSourceIndex === getDataSourceIndex && dataFrameIndex === getDataFrameIndex}">
-                <template slot="title">
+  <div
+    class="data-frame-select-block"
+    @mouseleave="isShowMenu = false"
+  >
+    <div
+      class="data-frame-select__title"
+      @mouseenter="isShowMenu = true"
+    >
+      <svg-icon
+        v-show="selectedDataName"
+        :icon-class="selectedIconType"
+        class="data-frame-select__icon"/>
+      <span
+        :class="selectedDataName ? null : 'is-empty'"
+        class="data-source-title"
+      >{{ dataFrameMenuTitle }}</span>
+    </div>
+    <transition
+      name="fade"
+      mode="out-in"
+    >
+      <div
+        v-show="isShowMenu"
+        class="data-frame-select__menu"
+      >
+        <input-block
+          v-show="availableDataSourceList.length > 0"
+          v-model="filterText"
+          :placeholder="$t('editing.searchDataSourceOrDataFrame')"
+          class="data-frame-select__filter"
+        />
+        <!-- 資料源清單 -->
+        <ul
+          v-show="hasResult"
+          class="data-frame-select__menu-datasource"
+        >
+          <li
+            v-for="(dataSource, dataSourceIndex) in availableDataSourceList"
+            v-show="dataSource.isShow"
+            :key="`dataSource-${dataSourceIndex}`"
+            :class="{'is-expanded': dataSource.isExpanded, 'is-current': dataSourceId === dataSource.id}"
+            class="menu__item"
+          >
+            <!-- 資料源名稱 -->
+            <div
+              class="menu__item-label"
+              @click="toggleDataSource(dataSourceIndex)"
+            >
+              <svg-icon icon-class="data-source"/>
+              <span class="data-title">{{ dataSource.name }}</span>
+              <svg-icon
+                icon-class="triangle"
+                class="icon-arrow"/>
+            </div>
+            <!-- 資料表清單 -->
+            <ul
+              v-show="dataSource.isExpanded"
+              class="data-frame-select__menu-dataframe"
+            >
+              <li
+                v-for="(dataFrame, dataFrameIndex) in dataSource.dataFrames"
+                :key="`dataFrame-${dataFrameIndex}`"
+                :class="{'is-current': dataSourceId === dataSource.id && dataFrameId === dataFrame.id}"
+                class="menu__item"
+                @click="handleSelect(dataSourceIndex, dataFrameIndex)"
+              >
+                <!-- 資料表名稱 -->
+                <div class="menu__item-label">
                   <svg-icon 
                     icon-class="table" 
                     class="data-frame-select__icon"/>
-                  <span class="data-frame-title">{{ dataFrame.name }}</span>
-                </template>
-              </el-menu-item>
-            </div>
-          </el-submenu>
-        </div>
-      </el-submenu>
-      <el-submenu 
-        v-else 
-        index="2">
-        <template slot="title" >
-          <span class="submenu__data-source-title">{{ $t('editing.emptyKey') }}</span>
-        </template>
-      </el-submenu>
-    </el-menu>
+                  <span class="data-title">{{ dataFrame.name }}</span>
+                  <svg-icon
+                    icon-class="checked"
+                    class="icon-current"/>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <div
+          v-show="!hasResult"
+          class="data-frame-select__empty-result"
+        >{{ $t('editing.emptyKey') }}</div>
+      </div>
+    </transition>
     <button 
       :disabled="isDisablePreviewDataSource"
       class="preview-datasource-btn"
@@ -91,9 +119,20 @@
 </template>
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex'
+import InputBlock from '@/components/InputBlock'
 
 export default {
   name: 'DataFrameMenu',
+  components: {
+    InputBlock
+  },
+  data: () => {
+    return {
+      isShowMenu: false,
+      filterText: '',
+      availableDataSourceList: []
+    }
+  },
   computed: {
     ...mapGetters('dataSource', ['dataSourceList', 'getDataSourceName', 'getDataFrameName']),
     ...mapGetters('userManagement', ['getCurrentGroupId']),
@@ -114,24 +153,9 @@ export default {
         ? 'data-source' 
         : 'table'
     },
-    availableDataSourceList () {
-      const defaultOption = {
-        name: this.$t('editing.allDataFrames'),
-        id: 'all'
-      }
-      let buildDataSourceList = this.dataSourceList.filter(dataSource => {
-        return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
-      })
-
-      return buildDataSourceList.map(dataSource => {
-        return {
-          ...dataSource,
-          dataFrames: dataSource.dataFrames.reduce((acc, cur) => {
-            acc.push({name: cur.primaryAlias, id: cur.id})
-            return acc
-          }, [defaultOption])
-        }
-      })
+    dataFrameMenuTitle () {
+      if (this.selectedDataName) return this.selectedDataName
+      return this.availableDataSourceList.length === 0 ? this.$t('editing.emptyKey') : this.$t('message.switching') + '...'
     },
     getDataSourceIndex() {
       return this.availableDataSourceList.findIndex(dataSource => (
@@ -169,14 +193,48 @@ export default {
     isDisableDataFrameAdvanceSetting () {
       return this.availableDataSourceList.length === 0 || this.dataFrameId === 'all' || this.dataFrameId === null
     },
+    hasResult () {
+      return this.availableDataSourceList.some(item => item.isShow)
+    }
+  },
+  watch: {
+    filterText (newVal, oldVal) {
+      if (newVal === oldVal) return
+      this.filterMenu()
+    },
+    dataSourceList () {
+      this.getMenuList()
+    }
+  },
+  mounted () {
+    this.getMenuList()
   },
   methods: {
     ...mapMutations('previewDataSource', ['togglePreviewDataSource']),
     ...mapMutations('dataFrameAdvanceSetting', ['toggleSettingBox']),
-    handleSelect (key, keyPath) {
-      let selectKey = keyPath[2].split('-')
-      const dataSourceIndex = selectKey[0]
-      const dataFrameIndex = selectKey[1]
+    getMenuList () {
+      const defaultOption = {
+        name: this.$t('editing.allDataFrames'),
+        id: 'all'
+      }
+      let buildDataSourceList = this.dataSourceList.filter(dataSource => {
+        return dataSource.state === 'ENABLE' && dataSource.enableDataFrameCount
+      })
+
+      this.availableDataSourceList = buildDataSourceList.map(dataSource => {
+        const existingDataSource = this.availableDataSourceList.find(item => item.id === dataSource.id)
+        return {
+          ...dataSource,
+          isShow: existingDataSource ? existingDataSource.isShow : true,
+          isExpanded: existingDataSource ? existingDataSource.isExpanded : false,
+          dataFrames: dataSource.dataFrames.reduce((acc, cur) => {
+            acc.push({ name: cur.primaryAlias, id: cur.id })
+            return acc
+          }, [defaultOption])
+        }
+      })
+    },
+    handleSelect (dataSourceIndex, dataFrameIndex) {
       let selectInfo = {
         dataSourceId: this.availableDataSourceList[dataSourceIndex].id,
         dataFrameId: this.availableDataSourceList[dataSourceIndex].dataFrames[dataFrameIndex].id
@@ -188,6 +246,8 @@ export default {
         && selectInfo.dataFrameId === this.dataFrameId
       ) return
       
+      if (this.filterText) this.filterText = ''
+      this.isShowMenu = false
       this.onDataFrameChange(selectInfo.dataSourceId, selectInfo.dataFrameId)
     },
     onDataFrameChange (dataSourceId, dataFrameId) {
@@ -218,6 +278,33 @@ export default {
     },
     closeHelper () {
       this.$store.commit('updateAskHelperStatus', false)
+    },
+    filterMenu () {
+      if (!this.filterText) return this.resetMenu()
+
+      const loweredText = this.filterText
+      this.availableDataSourceList.forEach(dataSource => {
+        const showDataSource = dataSource.name.toLowerCase().includes(loweredText)
+        const showDataFrames = dataSource.dataFrames.some(dataFrame => dataFrame.name.toLowerCase().includes(loweredText))
+
+        dataSource.isShow = showDataSource || showDataFrames
+        dataSource.isExpanded = showDataFrames
+      })
+    },
+    resetMenu () {
+      this.availableDataSourceList.forEach(item => {
+        item.isShow = true
+        item.isExpanded = this.dataSourceId === item.id
+      })
+    },
+    toggleDataSource (targetIndex) {
+      if (this.filterText) {
+        this.availableDataSourceList[targetIndex].isExpanded = !this.availableDataSourceList[targetIndex].isExpanded
+      } else {
+        // accordian 模式
+        const alreadyExpanded = this.availableDataSourceList[targetIndex].isExpanded
+        this.availableDataSourceList.forEach((item, index) => item.isExpanded = !alreadyExpanded && targetIndex === index)
+      }
     }
   }
 }
@@ -267,46 +354,147 @@ export default {
       }
     }
   }
-
-  /deep/ .el-submenu {
-    width: 100%;
-
-    .el-submenu__title {
-      display: flex;
-      align-items: center;
-      height: 38px;
-      line-height: 38px;
-      padding: 0 30px 0 10px;
-      border-radius: 5px 0 0 5px;
-      background-color: rgba(0, 0, 0, 0.55) !important;
-    }
-
-    .data-frame-select__icon {
-      margin-right: 6px;
-    }
-
-    .data-source-title {
-      flex: 1;
-      width: 100%;
-      @include text-hidden;
-    } 
-  }
-
-  /deep/ .is-opened {
-    .el-submenu__title {
-      background-color: #1D2424 !important; 
-    }
-  }
 }
 
-.el-menu.el-menu--horizontal {
-  flex: auto;
-  border-bottom: unset;
-  border-radius: 5px 0 0 5px;
-  max-width: 162px;
+.data-frame-select {
+  &__filter {
+    padding: 12px;
+    /deep/ .input {
+      height: 40px;
+      font-size: 14px;
+      background-color: #141C1D;
+      padding-left: 12px;
+      padding-bottom: 0;
+      border-bottom: none;
+      border-radius: 5px;
+      &::placeholder {
+        color: #888;
+      }
+    }
+  }
+  &__title {
+    flex: 1;
+    width: 0;
+    padding-left: 12px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    background: #1D2424;
+    .data-source-title {
+      @include text-hidden;
+      &.is-empty {
+        color: #888;
+      }
+    }
+  }
+  &__icon {
+    flex-shrink: 0;
+  }
+  &__menu {
+    width: 300px;
+    position: absolute;
+    top: calc(100% + 1px);
+    left: -1px;
+    color: #CCC;
+    background-color: #303435;
+    border-radius: 5px;
+    filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 78px;
+      border-style: solid;
+      border-width: 8.5px 6px 0 6px;
+      border-color: #303435 transparent transparent transparent;
+      transform: rotateZ(-180deg);
+    }
 
-  &>>>.el-submenu .el-submenu__icon-arrow::before {
-    transform: rotateZ(0); 
+    &-datasource {
+      max-height: 400px;
+      overflow-y: overlay;
+      overflow-x: hidden;
+      white-space: nowrap;
+      padding-left: 0;
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, .45);
+      }
+      &::-webkit-scrollbar-track {
+        background-color: #333;
+      }
+      &>.menu__item {
+        line-height: 44px;
+        padding-left: 12px;
+        &:not(:first-child) {
+          border-top: 1px solid #3F4546;
+        }
+        .icon-arrow {
+          font-size: 7px;
+          transition: all .3s ease;
+        }
+        &.is-current {
+          &>.menu__item-label {
+            color: $theme-color-primary;
+          }
+        }
+        &.is-expanded {
+          .icon-arrow {
+            transform: rotate(180deg);
+          }
+        }
+      }
+    }
+    &-dataframe {
+      padding-left: 0;
+      &>.menu__item {
+        padding-left: 26px;
+        .icon-current {
+          visibility: hidden;
+        }
+        &.is-current {
+          .menu__item-label {
+            color: $theme-color-primary;
+            .icon-current {
+              visibility: visible;
+            }
+          }
+        }
+      }
+    }
+    &-datasource, &-dataframe {
+      margin: 0;
+      list-style: none;
+      .menu__item {
+        cursor: pointer;
+        &-label {
+          font-size: 14px;
+          color: #CCC;
+          display: flex;
+          align-items: center;
+          padding-right: 16px;
+          width: 100%;
+          height: 100%;
+          &:hover {
+            color: #FFF;
+          }
+          .data-title {
+            flex: 1;
+            margin: 0 12px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+          .svg-icon {
+            flex-shrink: 0;
+          }
+        }
+      }
+    }
+  }
+  &__empty-result {
+    font-size: 14px;
+    text-align: center;
+    line-height: 6;
+    color: #AAA;
   }
 }
 

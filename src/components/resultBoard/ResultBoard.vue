@@ -35,6 +35,14 @@
         >
           <button 
             class="btn-m btn-default"
+            @click="askPinboardTitleQuestion"
+          >
+            <svg-icon 
+              icon-class="len-with-line-chart" 
+              class="icon icon-ask-jarvix"/>{{ $t('pinboard.intelligentAnalysis') }}
+          </button>
+          <button 
+            class="btn-m btn-default"
             @click.stop.prevent="togglePinboardInfo"
           >
             <svg-icon
@@ -145,6 +153,15 @@
       @closeDialog="closeDelete"
       @confirmBtn="confirmDelete"
     />
+    <decide-dialog
+      v-if="isShowConfimAccountSwitch"
+      :title="$t('pinboard.reminding')"
+      :content="$t('pinboard.switchAccountReminding', { accountName: pinboardAccountName })"
+      :btn-text="$t('button.confirm')"
+      type="delete"
+      @closeDialog="isShowConfimAccountSwitch = false"
+      @confirmBtn="confirmOpenJarviX"
+    />
     <slot name="dialogs"/>
   </div>
 </template>
@@ -159,7 +176,7 @@ import PinboardInfoDialog from '@/pages/pinboard/components/filter/PinboardInfoD
 import { addResultToWarRoomPool } from '@/API/WarRoom'
 import { refreshResult } from '@/API/NewAsk'
 import { Message } from 'element-ui'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { toPng } from 'html-to-image'
 import * as download from 'downloadjs'
 
@@ -194,6 +211,14 @@ export default {
     isWarRoomAddable: {
       type: Boolean,
       default: false
+    },
+    pinboardGroupId: {
+      type: Number,
+      default: null
+    },
+    pinboardAccountId: {
+      type: Number,
+      default: null
     }
   },
   data () {
@@ -207,11 +232,13 @@ export default {
       showPinboardDialog: false,
       isShowDelete: false,
       isShowShare: false,
-      isShowPinboardInfo: false
+      isShowPinboardInfo: false,
+      isShowConfimAccountSwitch: false
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
+    ...mapGetters('userManagement', ['hasPermission', 'getCurrentAccountId']),
+    ...mapState('userManagement', ['accountList']),
     isPinboardPage () {
       return this.$route.name === 'PersonalPagePinboard' || this.$route.name === 'ProjectPagePinboard'
     },
@@ -236,6 +263,13 @@ export default {
     },
     showAddToWarRoomButton () {
       return this.isWarRoomAddable && this.hasPermission('war_room')
+    },
+    question () {
+      return this.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
+    },
+    pinboardAccountName () {
+      const pinboardAccount = this.accountList.find(item => item.id === this.pinboardAccountId)
+      return pinboardAccount ? pinboardAccount.name : null
     }
   },
   mounted () {
@@ -382,6 +416,20 @@ export default {
     },
     closePinboardInfo () {
       this.isShowPinboardInfo = false
+    },
+    askPinboardTitleQuestion () {
+      if (this.pinboardAccountId !== this.getCurrentAccountId) {
+        this.isShowConfimAccountSwitch = true
+        return
+      }
+      this.openJarviX()
+    },
+    confirmOpenJarviX () {
+      this.isShowConfimAccountSwitch = false
+      this.openJarviX()
+    },
+    openJarviX () {
+      window.open(`${location.origin}/account/${this.pinboardAccountId}/group/${this.pinboardGroupId}/result?question=${this.question}&stamp=${new Date().getTime()}&dataSourceId=${this.dataSourceId}&dataFrameId=${this.dataFrameId}&action=click_pinboard`);
     }
   },
 }
@@ -416,6 +464,7 @@ export default {
 
   .pin-button-block {
     display: flex;
+    align-items: center;
 
     .head-btn {
       color: $theme-text-color;

@@ -4,7 +4,7 @@
     class="ask-condition">
     <div class="ask-condition__item">
       <svg-icon
-        icon-class="database" 
+        icon-class="data-source" 
         class="ask-condition__icon"/>
       <span class="ask-condition__label">{{ getDataSourceName }}</span>
     </div>

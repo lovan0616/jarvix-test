@@ -392,7 +392,8 @@
     "lastUpdateResult": "近一次更新结果",
     "startTime": "开始时间",
     "endTime": "结束时间",
-    "elapsedTime": "更新花费时间",
+    "elapsedTime": "花费时间",
+    "errorReason": "失败原因",
     "noData": "暂无数据",
     "SQLSyntax": "SQL语法",
     "copyTableFromDatabase": "复制资料库资料表",
@@ -411,7 +412,8 @@
     "uploadValueAliasTemplate": "批次修改数据别名",
     "chooseFile": "选择档案",
     "columnAliasTemplate": "栏位别名范例档",
-    "valueAliasTemplate": "数据别名范例档"
+    "valueAliasTemplate": "数据别名范例档",
+    "searchDataSourceOrDataFrame": "搜寻资料源 / 资料表"
   },
   "algorithm": {
     "name": "演算法",
@@ -541,12 +543,15 @@
     "pleaseSelectAtLeastOneColumnPerTable": "每张表格请至少选择一个栏位"
   },
   "pinboard": {
+    "intelligentAnalysis": "智能分析",
     "source": "资料来源",
     "restrict": "分析条件限制",
     "dataFrame":"来源资料表",
     "relativeDataColun":"资料相关栏位",
     "allColumns": "所有栏位",
-    "emptyInfo": "{name} 资料已不存在"
+    "emptyInfo": "{name} 资料已不存在",
+    "reminding": "提示",
+    "switchAccountReminding": "此钉版属于帐户「{accountName}」，前往智能分析页面将同时切换您的预设帐户，确定是否继续？"
   },
   "batchLoad": {
     "primaryKeyColumns": "主键（可复选）",
