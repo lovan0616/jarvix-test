@@ -132,7 +132,7 @@ export default {
       }
       let isRestraintConditionUntouched
       if(this.restraint.type !== 'compound') {
-        isRestraintConditionUntouched = this.tempRestraintList.length === 1 && JSON.stringify(this.restraint) === JSON.stringify(this.tempRestraintList[0]) 
+        isRestraintConditionUntouched = JSON.stringify(this.restraint) === JSON.stringify(this.tempRestraintList[0]) 
       } else {
         isRestraintConditionUntouched = JSON.stringify(this.restraint.restraints) === JSON.stringify(this.tempRestraintList) 
       }
@@ -408,7 +408,9 @@ export default {
   &__content {
     flex: 1;
     margin-bottom: 22px;
+    overflow-x: hidden;
     overflow-y: auto;
+    
     .empty-message {
       color: #AAAAAA;
       font-size: 12px;
