@@ -268,8 +268,8 @@ export default {
             this.subRestraint.properties.end = this.valueList.end
           }
         } else if (this.statsType === 'NUMERIC') {
-          this.subRestraint.properties.start = this.valueList.min
-          this.subRestraint.properties.end = this.valueList.max
+          this.subRestraint.properties.start = this.subRestraint.properties.start || this.valueList.min
+          this.subRestraint.properties.end = this.subRestraint.properties.end || this.valueList.max
         }
       }).finally(() => {
         this.isLoading = false
