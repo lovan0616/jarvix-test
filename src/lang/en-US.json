@@ -145,7 +145,8 @@
     "lowerBoundShouldBeSmallerThanUpperBound": "Lower bound value should be smaller than upper bound value",
     "and": "and",
     "upperBound": "Upper bound value",
-    "lowerBound": "Lower bound value"
+    "lowerBound": "Lower bound value",
+    "noPeriodicResult": "No cycle found"
   },
   "guiding": {
     "prevStep": "Prev Step",
@@ -701,6 +702,7 @@
     "displaySetting": "Show Setting"
   },
   "clustering": {
+    "cluster": "Cluster",
     "dataOverview": "Overview",
     "clusteringAnalysis": "Clustering",
     "saveClusteringResultAsColumn": "Save clustering result as a new column",
@@ -1914,7 +1916,21 @@
     "rangeEnd": "rangeEnd",
     "count": "Count",
     "download": "Download image",
-    "showLabel": "Show Label"
+    "showLabel": "Show Label",
+    "forecastValue": "Forecasted value",
+    "upperBoundValue": "Upper bound",
+    "lowerBoundValue": "Lower bound",
+    "normalValue": "Normal values",
+    "anomalousValue": "Anomalous values"
+  },
+  "denotation": {
+    "dataOverview": "Overview",
+    "clusteringAnalysis": "Clustering",
+    "correlationAnalysis": "Correlation",
+    "predictionAnalysis": "Prediction",
+    "trendAnalysis": "Trend",
+    "anomalyAnalysis": "Anomaly",
+    "periodicityAnalysis": "Periodicity"
   },
   "errorMessage": {
     "SYERR0001": "Unexpected error occurred in the system",
