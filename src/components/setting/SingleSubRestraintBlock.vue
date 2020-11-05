@@ -442,6 +442,7 @@ export default {
           height: 26px;
           font-weight: 600;
           font-size: 14px;
+          line-height: 26px;
           background-color: transparent;
           border-color: $theme-color-primary;
           color: $theme-color-primary;
@@ -483,7 +484,7 @@ export default {
             font-size: 12px;
             font-weight: bold;
             line-height: 15px;
-            border: 1px solid #FFF;
+            border: 1.1px solid #FFF;
           }
 
           &.selected {
