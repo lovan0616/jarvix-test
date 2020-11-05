@@ -388,8 +388,8 @@ export default {
         if (this.componentData.dataset.display_index) {
           this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
         }
-        if (this.componentData.dataset.predictData) {
-          this.componentData.dataset.predictData = this.componentData.dataset.predictData.concat(taskData.dataset.predictData)
+        if (this.componentData.dataset.predictDataList) {
+          this.componentData.dataset.predictDataList = this.componentData.dataset.predictDataList.concat(taskData.dataset.predictDataList)
         }
       }
     },

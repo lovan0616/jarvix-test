@@ -229,6 +229,8 @@ export default {
           lineStyle: {
             opacity: 0
           },
+          // 顯示所有點，不省略
+          showAllSymbol: true
         },
         // invalid data
         {
@@ -242,6 +244,8 @@ export default {
           lineStyle: {
             opacity: 0
           },
+          // 顯示所有點，不省略
+          showAllSymbol: true
         }
       ]
     },
