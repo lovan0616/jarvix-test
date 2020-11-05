@@ -41,6 +41,15 @@
         :key="index" 
         class="description__item">{{ description }}</span>
     </div>
+    <div 
+      v-if="dataset.warningMessage && dataset.warningMessage.length > 0"
+      class="description"
+    >
+      <span 
+        v-for="(message, index) in dataset.warningMessage" 
+        :key="index" 
+        class="description__item description__item--warning">{{ message }}</span>
+    </div>
   </div>
 </template>
 <script>
@@ -371,9 +380,17 @@ export default {
     border-radius: 8px;
     padding: 10px 20px;
 
+    &:nth-of-type(2n+1) {
+      margin-top: 20px;
+    }
+
     &__item {
       font-size: 14px;
       letter-spacing: 0.1em;
+
+      &--warning {
+        color: #FF5C46;
+      }
     }
   }
 }
