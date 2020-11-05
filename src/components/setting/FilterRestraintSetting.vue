@@ -132,7 +132,7 @@ export default {
       }
       let isRestraintConditionUntouched
       if(this.restraint.type !== 'compound') {
-        isRestraintConditionUntouched = JSON.stringify(this.restraint) === JSON.stringify(this.tempRestraintList[0]) 
+        isRestraintConditionUntouched = this.tempRestraintList.length === 1 && JSON.stringify(this.restraint) === JSON.stringify(this.tempRestraintList[0]) 
       } else {
         isRestraintConditionUntouched = JSON.stringify(this.restraint.restraints) === JSON.stringify(this.tempRestraintList) 
       }
