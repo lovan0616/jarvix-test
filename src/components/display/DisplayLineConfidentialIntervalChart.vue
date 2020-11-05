@@ -39,7 +39,7 @@
       <span 
         v-for="(description, index) in dataset.descriptions" 
         :key="index" 
-        class="description__item">{{ description }}</span>
+        class="description__item">{{ dataset.descriptions.length > 0 ? (index + 1) + '. ' + description : description }}</span>
     </div>
     <div 
       v-if="dataset.warningMessage && dataset.warningMessage.length > 0"
@@ -48,7 +48,7 @@
       <span 
         v-for="(message, index) in dataset.warningMessage" 
         :key="index" 
-        class="description__item description__item--warning">{{ message }}</span>
+        class="description__item description__item--warning">{{ dataset.warningMessage.length > 0 ? (index + 1) + '. ' + message : message }}</span>
     </div>
   </div>
 </template>
@@ -387,6 +387,8 @@ export default {
     &__item {
       font-size: 14px;
       letter-spacing: 0.1em;
+      display: block;
+      line-height: 24px;
 
       &--warning {
         color: #FF5C46;

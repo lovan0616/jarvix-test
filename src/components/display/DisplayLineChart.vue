@@ -359,7 +359,6 @@ export default {
           }
           let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
           let displayGradient = this.formula ? this.formula[1] : Number((gradient).toFixed(4))
-
           expression = `y = ${displayOffset} ${displayGradient > 0 ? '+' : '-'} ${Math.abs(displayGradient)}x`
         } else {
           // ax^2 + bx + c
