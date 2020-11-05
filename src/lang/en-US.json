@@ -49,7 +49,17 @@
     "clearCriteria": "Clear Filter Conditions",
     "noCriteriaYet": "No filter condition has been set",
     "allColumns": "All Columns",
-    "dataColumns": "Columns"
+    "dataColumns": "Columns",
+    "addFilter": "Add Filter",
+    "restrictionSetting": "Filter Limits",
+    "addRestriction": "Add limit",
+    "noRestrictionYet": "No Filter Set",
+    "restraintSetting": "Limit Setting",
+    "noRestraintYet": "No Limit Set",
+    "emptyValueMsg": "*If no value is entered, the upper and lower limits of the current data will be used.",
+    "chooseValue": "Select Data",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time"
   },
   "message": {
     "joinTableBuilding": "Data Set will be available for analysis once it is processed.",

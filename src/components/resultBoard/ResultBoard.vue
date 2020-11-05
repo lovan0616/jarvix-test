@@ -396,7 +396,7 @@ export default {
   .board-header {
     position: relative;
     display: flex;
-    z-index: 1;
+    z-index: 2;
     align-items: center;
     padding: 20px 28px;
     background-color: rgba(35, 61, 64, 0.6);
