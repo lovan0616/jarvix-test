@@ -174,18 +174,12 @@ const router = new Router({
                         {
                           path: '/',
                           name: 'WarRoomList',
-                          component: () => import('@/pages/warRoom/WarRoomList'),
-                          meta: {
-                            permission: ['group_read_data']
-                          }
+                          component: () => import('@/pages/warRoom/WarRoomList')
                         },
                         {
                           path: ':war_room_id',
                           name: 'WarRoom',
-                          component: () => import('@/pages/warRoom/WarRoom'),
-                          meta: {
-                            permission: ['group_edit_data']
-                          }
+                          component: () => import('@/pages/warRoom/WarRoom')
                         }
                       ]
                     },
