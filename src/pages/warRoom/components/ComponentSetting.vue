@@ -226,7 +226,7 @@
       </div>
       <div class="war-room-setting__button-block">
         <button
-          v-if="(componentData.isError || componentData.componentId) && hasPermission('group_delete_data')"
+          v-if="componentData.isError || componentData.componentId"
           :disabled="isProcessing"
           :class="{ 'is-error': componentData.isError && !componentData.config }"
           type="button"
@@ -269,7 +269,6 @@ import ComponentDataSourceList from './ComponentDataSourceList'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { createComponent, deleteComponent, updateComponent } from '@/API/WarRoom'
 import { Message } from 'element-ui'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'ComponentSetting',
@@ -403,7 +402,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
     selectedTimeInterval () {
       if (!this.componentData || !this.componentData.config || !this.componentData.config.displayDateRangeSwitch) return null
       

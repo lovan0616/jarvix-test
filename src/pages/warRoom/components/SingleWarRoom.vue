@@ -58,7 +58,6 @@
             <div class="popup-text">{{ $t('warRoom.rename') }}</div>
           </div>
           <div
-            v-if="hasPermission('group_delete_data')"
             class="popup-box" 
             @click.stop="deleteWarRoom">
             <div class="popup-text">{{ $t('warRoom.delete') }}</div>
@@ -70,7 +69,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
   name: 'SingleWarRoom',
   props: {
@@ -85,9 +83,6 @@ export default {
          }
       }
     }
-  },
-  computed: {
-    ...mapGetters('userManagement', ['hasPermission'])
   },
   methods: {
     viewDetail () {
