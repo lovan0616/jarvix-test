@@ -71,153 +71,6 @@ let scatterChartConfig = {
   }
 }
 
-const dummyDataSet = {
-  buckets: [
-    [
-      [
-        20,
-        15
-      ],
-      [
-        60,
-        15
-      ],
-      [
-        100,
-        15
-      ],
-      [
-        20,
-        45
-      ],
-      [
-        60,
-        45
-      ],
-      [
-        100,
-        45
-      ],
-      [
-        20,
-        75
-      ],
-      [
-        60,
-        75
-      ],
-      [
-        100,
-        75
-      ],
-      [
-        20,
-        105
-      ],
-      [
-        60,
-        105
-      ],
-      [
-        100,
-        105
-      ]
-    ]
-  ],
-  columns: [
-    '分群1'
-  ],
-  descriptions: [
-    'JarviX發現收入有 4 種群體並且有 0 %的異常資料。',
-    '各群體佔比是相近的'
-  ],
-  outliersBuckets: [
-    [
-      20,
-      15
-    ],
-    [
-      60,
-      15
-    ],
-    [
-      100,
-      15
-    ],
-    [
-      20,
-      45
-    ],
-    [
-      60,
-      45
-    ],
-    [
-      100,
-      45
-    ],
-    [
-      20,
-      75
-    ],
-    [
-      60,
-      75
-    ],
-    [
-      100,
-      75
-    ],
-    [
-      20,
-      105
-    ],
-    [
-      60,
-      105
-    ],
-    [
-      100,
-      105
-    ]
-  ]
-}
-
-const dummyTitle = {
-  xAxis: [
-    {
-      max: 120,
-      min: 0,
-      dc_id: null,
-      dc_name: null,
-      operator: null,
-      data_type: null,
-      drillable: true,
-      is_feature: null,
-      lowerLimit: null,
-      stats_type: 'numeric',
-      upperLimit: null,
-      display_name: 'x'
-    }
-  ],
-  yAxis: [
-    {
-      max: 120,
-      min: 0,
-      dc_id: null,
-      dc_name: null,
-      operator: null,
-      data_type: null,
-      drillable: true,
-      is_feature: null,
-      lowerLimit: null,
-      stats_type: 'numeric',
-      upperLimit: null,
-      display_name: 'y'
-    }
-  ]
-}
-
 export default {
   name: 'DisplayScatterClusterChart',
   props: {
@@ -424,7 +277,7 @@ export default {
             {
               type: 'range',
               properties: {
-                dc_name: this.title.xAxis[0].dc_name,
+                dc_id: this.title.xAxis[0].dc_id,
                 data_type: this.title.xAxis[0].data_type,
                 display_name: this.title.xAxis[0].display_name,
                 start: this.title.xAxis[0].stats_type.toLowerCase() === 'numeric' ? coordRange[0][0] : this.dataset.index[coordRange[0][0]],
@@ -434,7 +287,7 @@ export default {
             {
               type: 'range',
               properties: {
-                dc_name: this.title.yAxis[0].dc_name,
+                dc_id: this.title.yAxis[0].dc_id,
                 data_type: this.title.yAxis[0].data_type,
                 display_name: this.title.yAxis[0].display_name,
                 start: coordRange[1][0],
