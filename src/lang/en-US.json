@@ -1930,7 +1930,7 @@
     "predictionAnalysis": "Prediction",
     "trendAnalysis": "Trend",
     "anomalyAnalysis": "Anomaly",
-    "periodicityAnalysis": "Periodicity"
+    "periodicityAnalysis": "Seasonality"
   },
   "errorMessage": {
     "SYERR0001": "Unexpected error occurred in the system",
