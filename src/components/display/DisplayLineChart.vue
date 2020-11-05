@@ -354,11 +354,12 @@ export default {
           let offset = this.coefficients[0]
           let gradient = this.coefficients[1]
           // 迴歸線點
-          for (let i = 0; i < this.dataset.index.length; i++) {
+          for (let i = 1; i <= this.dataset.index.length; i++) {
             lineData.push(this.roundNumber(gradient * i + offset, 4))
           }
           let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
           let displayGradient = this.formula ? this.formula[1] : Number((gradient).toFixed(4))
+
           expression = `y = ${displayOffset} ${displayGradient > 0 ? '+' : '-'} ${Math.abs(displayGradient)}x`
         } else {
           // ax^2 + bx + c
