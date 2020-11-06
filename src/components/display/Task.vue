@@ -233,7 +233,10 @@ export default {
                 this.isGetPagination = false
                 this.nextPageData = null
               } else {
-                if (this.intend === 'key_result') this.isError = true
+                if (this.intend === 'key_result') {
+                  this.isError = true
+                  this.errorMessage = response.errorMessage
+                }
               }
               break
           }
