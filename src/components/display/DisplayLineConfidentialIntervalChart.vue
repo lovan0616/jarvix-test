@@ -41,7 +41,7 @@
         :key="index" 
         class="description__item">{{ dataset.descriptions.length > 1 ? (index + 1) + '. ' + description : description }}</span>
     </div>
-    <div 
+    <!-- <div 
       v-if="dataset.errorMessage && dataset.errorMessage.length > 0"
       class="description"
     >
@@ -49,7 +49,7 @@
         v-for="(message, index) in dataset.errorMessage" 
         :key="index" 
         class="description__item description__item--warning">{{ dataset.errorMessage.length > 1 ? (index + 1) + '. ' + message : message }}</span>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
