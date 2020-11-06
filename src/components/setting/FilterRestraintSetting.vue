@@ -162,6 +162,7 @@ export default {
     async selectColumn (index) {
       const selectColumn = this.columnList.filter(column => this.columnFilterOption[index].id === column.id)[0]
       const columnStatsType = selectColumn.statsType
+      const columnDataType = selectColumn.dataType
 
       const isColumnInList = this.tempRestraintList.some(restraint => {
         return restraint.properties['dc_id'] === selectColumn.id
@@ -174,7 +175,7 @@ export default {
         case 'CATEGORY':
           subStraintType = 'enum'
           subStraintProperties = {
-            data_type: columnStatsType.toLowerCase(),
+            data_type: columnDataType.toLowerCase(),
             datavalues: [],
             dc_id: selectColumn.id,
             display_datavalues: [],
@@ -184,7 +185,7 @@ export default {
         case 'DATETIME':
           subStraintType = 'range'
           subStraintProperties = {
-            data_type: columnStatsType.toLowerCase(),
+            data_type: columnDataType.toLowerCase(),
             dc_id: selectColumn.id,
             display_name: selectColumn.name,
             end: null,
@@ -194,7 +195,7 @@ export default {
         case 'NUMERIC':
           subStraintType = 'range'
           subStraintProperties = {
-            data_type: columnStatsType.toLowerCase(),
+            data_type: columnDataType.toLowerCase(),
             dc_id: selectColumn.id,
             display_name: selectColumn.name,
             end: null,
@@ -366,6 +367,10 @@ export default {
         height: 32px;
         cursor: pointer;
 
+        &:hover {
+          background-color: rgba(0, 0, 0, .6);
+        }
+
         &--active {
           cursor: not-allowed;
         }
@@ -410,6 +415,10 @@ export default {
     margin-bottom: 22px;
     overflow-x: hidden;
     overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
     
     .empty-message {
       color: #AAAAAA;
