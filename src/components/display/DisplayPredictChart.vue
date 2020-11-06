@@ -184,6 +184,17 @@ export default {
         this.$emit('toggleLabel')
       }
 
+      // 調整 y 軸初始值
+      let yAxisMinValue = Infinity
+      this.dataset.data.forEach(dataset => {
+        // 排除 null 值和區間值
+        const datasetWithoutNull = dataset.filter((data, index) => data !== null && index !== 4)
+        const datasetMinValue = Math.min(...datasetWithoutNull)
+        yAxisMinValue = Math.min(yAxisMinValue, datasetMinValue)
+      })
+      // y 軸初始值和最小值的點產生一個間隔
+      config.yAxis.min = yAxisMinValue === Infinity ? 0 : yAxisMinValue * 0.9
+
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
       config.yAxis.name = this.title.yAxis[0].display_name
