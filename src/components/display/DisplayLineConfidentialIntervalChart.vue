@@ -39,16 +39,16 @@
       <span 
         v-for="(description, index) in dataset.descriptions" 
         :key="index" 
-        class="description__item">{{ dataset.descriptions.length > 0 ? (index + 1) + '. ' + description : description }}</span>
+        class="description__item">{{ dataset.descriptions.length > 1 ? (index + 1) + '. ' + description : description }}</span>
     </div>
     <div 
-      v-if="dataset.warningMessage && dataset.warningMessage.length > 0"
+      v-if="dataset.errorMessage && dataset.errorMessage.length > 0"
       class="description"
     >
       <span 
-        v-for="(message, index) in dataset.warningMessage" 
+        v-for="(message, index) in dataset.errorMessage" 
         :key="index" 
-        class="description__item description__item--warning">{{ dataset.warningMessage.length > 0 ? (index + 1) + '. ' + message : message }}</span>
+        class="description__item description__item--warning">{{ dataset.errorMessage.length > 1 ? (index + 1) + '. ' + message : message }}</span>
     </div>
   </div>
 </template>
