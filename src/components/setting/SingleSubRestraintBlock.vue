@@ -211,6 +211,7 @@ export default {
       isProcessing: false,
       columnId: null,
       valueList: [],
+      tempValueList: [],
       statsType: null,
       queryString: ''
     }
@@ -248,16 +249,20 @@ export default {
           : response[this.statsType.toLowerCase()]
 
         if(this.statsType === 'CATEGORY') {
-          // CATEGORY 值太多的時候會回傳空的
-          if(!this.valueList)
+          /// CATEGORY 值超過 200 筆時候會回傳 null
+          if(!this.valueList) {
+            this.isCategoryValueEmpty = true
             this.searchValue(this.columnId, '')
-          this.valueList = this.valueList.map(element => {
-            return {
-              value: element,
-              name: element,
-              active: this.subRestraint.properties.datavalues.includes(element)
-            }
-          })
+          } else {
+            this.valueList = this.valueList.map(element => {
+              return {
+                value: element,
+                name: element,
+                active: this.subRestraint.properties.datavalues.includes(element)
+              }
+            })
+            this.tempValueList = JSON.parse(JSON.stringify(this.valueList))
+          }
         } else if (this.statsType === 'DATETIME') {
           // 目前後端有用到 13 種日期格式，先預設所有日期最小單位都到秒
           this.valueList.datePattern = 'yyyy-MM-dd HH:mm:ss'
@@ -284,18 +289,29 @@ export default {
     },
     searchValue () {
       this.isProcessing = true
-      dataValueFuzzySearch(this.columnId, this.queryString)
+      // category value 如果一開始有值，表示資料筆數小於 200，不需用後端的 search
+      if(!this.isCategoryValueEmpty) {
+        this.valueList = this.tempValueList.filter(element => !this.queryString || element.name === this.queryString)
+      } else {
+        dataValueFuzzySearch(this.columnId, this.queryString)
         .then(response => {
           this.valueList = response.fuzzySearchResult
+          this.valueList = this.valueList.map(element => {
+            return {
+              value: element,
+              name: element,
+              active: this.subRestraint.properties.datavalues.includes(element)
+            }
+          })
         })
-        .finally(() => {
-          this.isProcessing = false
-          this.queryString = ''
-          this.$refs[`${this.index}-select`].focusInput()
-        })
+      }
+      this.isProcessing = false
+      this.queryString = ''
+      this.$refs[`${this.index}-select`] && this.$refs[`${this.index}-select`].focusInput()
     },
     updateDataValue (value) {
       this.subRestraint.properties.display_datavalues = value
+      this.$refs[`${this.index}-select`].blurInput()
     },
     deleteSubRestraint () {
       this.$emit('delete')
@@ -409,10 +425,6 @@ export default {
     }
   }
 
-  .boolean-block {
-
-  }
-
   .category-block {
     position: relative;
     overflow: unset;
@@ -473,6 +485,10 @@ export default {
           font-weight: normal;
           color: #CCC;
           background-color: transparent;
+
+          &:hover {
+            background-color: rgba(0, 0, 0, .6);
+          }
 
           &::after {
             content: '\E6DA';

@@ -93,6 +93,8 @@ export default {
       this.tempRestrictionList.splice(index, 1)
       if(this.tempRestrictionList.length === 0)
         this.$emit('empty-restraint')
+      else
+        this.$emit('updated:restriction', this.tempRestrictionList)
     }
   },
 }
