@@ -166,7 +166,7 @@ export default {
           ['cluster', ...this.lineChartAxisTick],
           ...this.dataset.columns.map((column, index) => ([
             column,
-            ...this.lineChartAxisTick.map(tick => this.calculateProbability(this.coeffs[index].mean, this.coeffs[index].sigma, tick))
+            ...this.lineChartAxisTick.map(tick => this.calculateProbability(this.coeffs[index].mean, this.coeffs[index].sigma, tick) * this.coeffs[index].weight)
           ]))
         ]
       }

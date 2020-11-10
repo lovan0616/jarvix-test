@@ -104,7 +104,7 @@ export default {
 
     .chart-block {
       width: 100%;
-      padding: 30px;
+      padding: 50px 30px 30px 30px;
       min-width: 0;
       flex: 1;
       margin-right: 0;
@@ -116,7 +116,7 @@ export default {
       border-radius: 8px;
       width: 40%;
       position: absolute;
-      top: 65px;
+      top: 50px;
       right: 30px;
       border: 1px solid $theme-color-primary;
       background-color: rgba(24, 24, 24, 0.95);
@@ -139,10 +139,9 @@ export default {
 
     .control-btn {
       position: absolute;
-      top: 30px;
+      top: 15px;
       right: 30px;
       padding: 7px 15px;
-      z-index: 1;
 
       &.active {
         background-color: #42A5B3;
@@ -151,6 +150,9 @@ export default {
   }
   .other-result-container {
     padding: 30px;
+    .task:first-child {
+      padding-top: 0;
+    }
   }
   .insights-info.recommended {
     .insights-info__wrapper {
@@ -176,7 +178,6 @@ export default {
       color: #A7A7A7;
       height: 54px;
       padding-left: 20px;
-      padding-right: 20px;
       border-bottom: 1px solid $theme-border-color;
       cursor: pointer;
       &:hover {
@@ -203,29 +204,37 @@ export default {
         }
       }
       &-status {
+        height: 100%;
         flex: 1;
         display: flex;
         justify-content: flex-end;
-        cursor: pointer;
-        .trigger-analysis-icon {
-          color: $theme-color-primary;
-        }
-        .more-icon {
-          color: #A7A7A7;
-        }
-      }
-      &-dropdownlist {
-        position: relative;
+        align-items: center;
+        padding-right: 20px;
         cursor: pointer;
         &:hover {
           .dropdown {
             visibility: visible;
           }
         }
+        .trigger-analysis-icon {
+          color: $theme-color-primary;
+        }
+        .more-icon {
+          color: #A7A7A7;
+        }
+        .exclamation-triangle-icon {
+          color: $theme-color-danger;
+        }
+      }
+      &-dropdownlist {
+        position: relative;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
         /deep/ .dropdown {
           visibility: hidden;
           .dropdown-select-box {
-            top: 30px;
+            top: 25px;
             left: -20px;
             z-index: 1;
             &:before {

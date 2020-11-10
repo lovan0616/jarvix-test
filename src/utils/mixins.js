@@ -344,6 +344,9 @@ Vue.mixin({
           if (row[j] instanceof Date) {
             innerValue = row[j].toLocaleString()
           }
+          if (typeof row[j] === 'number') {
+            innerValue = this.formatComma(innerValue)
+          }
           let result = innerValue.replace(/"/g, '""')
           if (result.search(/("|,|\n)/g) >= 0) {
             result = '"' + result + '"'

@@ -215,8 +215,16 @@ export default {
     deleteDataSource (resolve) {
       deleteDataSourceById(this.deleteId)
         .then(response => {
+          // 清除此資料源在建置中的資料表
+          this.$store.commit('dataSource/updateProcessingDataFrameListAfterDeleteDataSource', this.deleteId)
           this.fetchData()
             .then(() => {
+              Message({
+                message: this.$t('message.deleteSuccess'),
+                type: 'success',
+                duration: 3 * 1000,
+                showClose: true
+              })
               this.cancelDelete()
               resolve()
             })

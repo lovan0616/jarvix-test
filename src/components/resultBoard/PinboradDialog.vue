@@ -72,7 +72,7 @@
 </template>
 <script>
 import { getWarRoomList, createWarRoom } from '@/API/WarRoom'
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'PinboardDialog',
@@ -91,6 +91,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['hasPermission']),
     ...mapState('userManagement', ['userId']),
     boardList () {
       if(this.choosedBoard === 'personalPinboard') 
@@ -110,7 +111,9 @@ export default {
   mounted () {
     document.addEventListener('click', this.autoHide, false)
     this.getPinboardInfo()
-    this.getWarRoomList()
+    if (this.hasPermission('war_room')) {
+      this.getWarRoomList()
+    }
   },
   destroyed () {
     document.removeEventListener('click', this.autoHide, false)
@@ -180,8 +183,8 @@ export default {
 .pinboard-dialog {
   width: 200px;
   position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
+  top: 60px;
+  right: 28px;
   background-color: rgba(60, 60, 60, 0.95);
   box-shadow: 0px 4px 10px rgba(58, 178, 189, 0.5);
   border-radius: 8px;

@@ -3,7 +3,6 @@
     <h1 class="list-page__title">{{ $t('warRoom.warRoom') }}</h1>
     <div class="list-page__action-container">
       <button
-        v-if="hasPermission('group_create_data')"
         class="btn-m btn-default btn-has-icon add-btn" 
         @click="showAdd">
         <svg-icon 
@@ -120,7 +119,6 @@ import {
   publishWarRoom,
   unpublishWarRoom } from '@/API/WarRoom'
 import { Message } from 'element-ui'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'WarRoomList',
@@ -169,7 +167,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     },
@@ -189,6 +186,7 @@ export default {
       this.isLoading = true
       getWarRoomList(this.groupId).then(res => {
         this.warRoomList = res
+      }).finally(() => {
         this.isLoading = false
       })
     },

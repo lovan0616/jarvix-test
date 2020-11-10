@@ -1,18 +1,21 @@
-.el-time-panel.el-popper {
-  background-color: var(--color-black);
-}
-
-.el-time-spinner__list .el-time-spinner__item:hover:not(.disabled):not(.active) {
-  color: var(--color-theme);
-  background-color: transparent;
-}
-
-.el-picker-panel.el-date-range-picker {
+.ss-picker.el-picker-panel.el-date-range-picker {
   .el-date-table td.in-range div {
     background-color: #2B4D51;
 
     &:hover {
       background-color: #2B4D51;
     }
+  }
+  .el-time-panel.el-popper {
+    background-color: var(--color-black);
+  }
+  
+  .el-time-spinner__list .el-time-spinner__item:hover:not(.disabled):not(.active) {
+    color: var(--color-theme);
+    background-color: transparent;
+  }
+
+  .el-input__inner {
+    color: var(--color-text);
   }
 }

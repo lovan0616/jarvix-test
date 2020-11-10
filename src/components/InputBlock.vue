@@ -6,6 +6,7 @@
     <input 
       :class="{valid: inputValue !== null && inputValue !== '' }"
       :type="type"
+      :placeholder="placeholder"
       :name="name"
       v-model.trim="inputValue"
       class="input"
@@ -37,6 +38,10 @@ export default {
       default: 'text'
     },
     value: {
+      type: String,
+      default: ''
+    },
+    placeholder: {
       type: String,
       default: ''
     }

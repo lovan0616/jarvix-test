@@ -174,18 +174,12 @@ const router = new Router({
                         {
                           path: '/',
                           name: 'WarRoomList',
-                          component: () => import('@/pages/warRoom/WarRoomList'),
-                          meta: {
-                            permission: ['group_read_data']
-                          }
+                          component: () => import('@/pages/warRoom/WarRoomList')
                         },
                         {
                           path: ':war_room_id',
                           name: 'WarRoom',
-                          component: () => import('@/pages/warRoom/WarRoom'),
-                          meta: {
-                            permission: ['group_edit_data']
-                          }
+                          component: () => import('@/pages/warRoom/WarRoom')
                         }
                       ]
                     },
@@ -386,12 +380,15 @@ router.beforeEach(async (to, from, next) => {
     // 處理路由的 group 和 account id 與 store 中 default 不相同時：切換成路由的 id
     const { account_id: paramsAccountId, group_id: paramsGroupId } = to.params
     const currentAccountId = Number(store.getters['userManagement/getCurrentAccountId'])
-    const currentGroupId = Number(store.getters['userManagement/getCurrentGroupId'])
     if ((paramsAccountId) && (Number(paramsAccountId) !== currentAccountId)) {
       try {
         await store.dispatch('userManagement/switchAccountById', {
           accountId: paramsAccountId,
-          defaultGroupId: paramsGroupId
+          defaultGroupId: paramsGroupId,
+          ...(to.query.dataSourceId && {
+            dataSourceId: parseInt(to.query.dataSourceId),
+            dataFrameId: to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId)
+          })
         })
       } catch (error) {
         // 當想去的 account 人數已達上限
@@ -420,10 +417,24 @@ router.beforeEach(async (to, from, next) => {
       }
     }
     
-    if ((paramsGroupId) && (Number(paramsGroupId) !== currentGroupId)) {
+    const currentGroupId = Number(store.getters['userManagement/getCurrentGroupId'])
+    if (paramsGroupId && (Number(paramsGroupId) !== currentGroupId)) {
       await store.dispatch('userManagement/switchGroupById', {
         accountId: paramsAccountId,
-        groupId: paramsGroupId
+        groupId: paramsGroupId,
+        ...(to.query.dataSourceId && {
+          dataSourceId: parseInt(to.query.dataSourceId),
+          dataFrameId: to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId)
+        })
+      })
+    } else if (currentGroupId) {
+      // 若使用者指定的群組和 default 相同，不切換，但仍需取得資料表
+      // 若使用者不指定群組，但當前有 default group 時，仍需取得資料表
+      await store.dispatch('dataSource/getDataSourceList', {
+        dataSourceId: to.query.dataSourceId ? parseInt(to.query.dataSourceId) : null,
+        dataFrameId: to.query.dataFrameId
+          ? to.query.dataFrameId === 'all' ? 'all' : parseInt(to.query.dataFrameId)
+          : null
       })
     }
 

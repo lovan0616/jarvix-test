@@ -110,7 +110,7 @@ export default {
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['columnList', 'isInit', 'displaySection']),
-    ...mapState('dataSource', ['filterList', 'currentQuestionId']),
+    ...mapState('dataSource', ['filterList', 'shouldAdvanceDataFrameSettingRefetchDataColumn']),
     hasSettingChanged () {
       const isColumnListUntouched = this.tempColumnList.every(tempColumn => {
         if (this.columnList === null) return true
@@ -146,10 +146,17 @@ export default {
       if (!newValue || !oldValue|| Number(newValue) === Number(oldValue)) return
       this.closeAdvanceDataFrameSetting()
     },
+    shouldAdvanceDataFrameSettingRefetchDataColumn (value) {
+      if (value) {
+        this.toggleIsInit(false)
+        const { dataFrameId } = this.$route.query
+        this.fetchDataColumns(dataFrameId, this.columnList)
+      }
+    }
   },
   mounted () {
     const { dataFrameId } = this.$route.query
-    this.fetchDataColumns(dataFrameId)
+    this.fetchDataColumns(dataFrameId, this.shouldAdvanceDataFrameSettingRefetchDataColumn ? this.columnList : [])
     this.tempFilterList = JSON.parse(JSON.stringify(this.filterList))
   },
   destroyed () {
@@ -182,6 +189,7 @@ export default {
           this.setColumnList(formatedColumnList)
           this.toggleIsInit(true)
           this.isLoading = false
+          this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', false)
         })
         .catch(error => this.isLoading = false)
     },

@@ -10,6 +10,7 @@
       :format="format"
       :value-format="valueFormat"
       :picker-options="pickerOptions"
+      popper-class="ss-picker"
     />
     <i
       v-if="deletable"

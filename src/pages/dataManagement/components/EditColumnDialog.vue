@@ -14,23 +14,83 @@
           placement="bottom">
           <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ tableInfo.primaryAlias }}</div>
         </el-tooltip>
-        <div
-          v-if="userEditInfo.userEditedColumnInputList.length > 0"
-          class="button-block"
-        >
-          <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
-          <button 
-            :disabled="isProcessing"
-            class="btn-m btn-default"
-            @click="buildAlias"
-          >{{ $t('button.build') }}</button>
-        </div>
       </div>
       <div class="edit-table-block">
+        <div class="data-template-block">
+          <el-tooltip :content="$t('editing.downloadDisplayNameTemplate')">
+            <button
+              :disabled="isLoadingPrimaryAliasTemplate"
+              class="btn btn-secondary"
+              @click="getPrimaryAliasTemplate">
+              <svg-icon 
+                v-show="isLoadingPrimaryAliasTemplate" 
+                icon-class="spinner"/>
+              {{ $t('editing.downloadAliasTemplate') }}
+            </button>
+          </el-tooltip>
+          <el-popover
+            v-model="isUploadPopoverVisible"
+            trigger="click"
+            popper-class="el-popover--value-alias-template-uploader"
+          >
+            <label
+              for="primaryAliasTemplateInput"
+              class="data-template-block__input-label"
+            >
+              <span class="file-name">{{ primaryAliasTemplateInput ? primaryAliasTemplateInput.name : this.$t('editing.chooseFile') }}</span>
+              <input
+                id="primaryAliasTemplateInput"
+                :key="primaryAliasTemplateInput ? primaryAliasTemplateInput.name : 'empty'"
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                type="file"
+                hidden
+                @change="onInputPrimaryAliasTemplate($event.target.files)"
+              >
+            </label>
+            <div 
+              v-show="primaryAliasTemplateInput" 
+              class="button-block">
+              <a
+                href="javascript:void(0);"
+                class="link btn-cancel" 
+                @click="onCancelUploadPrimaryAliasTemplate">{{ $t('button.cancel') }}</a>
+              <a
+                :disabled="isUploadingPrimaryAliasTemplate" 
+                href="javascript:void(0);"
+                class="link btn-confirm"
+                @click="updatePrimaryAliasTemplate"
+              > 
+                <svg-icon
+                  v-show="isUploadingPrimaryAliasTemplate"
+                  icon-class="spinner"/>
+                {{ $t('button.upload') }}
+              </a>
+            </div>
+            <el-tooltip
+              slot="reference"
+              :content="$t('editing.uploadDisplayNameTemplate')"
+            >
+              <button
+                class="btn btn-secondary"
+              >{{ $t('editing.uploadAliasTemplate') }}</button>
+            </el-tooltip>
+          </el-popover>
+          <div
+            v-if="userEditInfo.userEditedColumnInputList.length > 0"
+            class="button-block"
+          >
+            <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
+            <button 
+              :disabled="isProcessing"
+              class="btn-m btn-default"
+              @click="buildAlias"
+            >{{ $t('button.build') }}</button>
+          </div>
+        </div>
         <div class="data-table">
           <div class="data-table-head is-scrolling">
             <div class="data-table-row table-head">
-              <div class="data-table-cell name">{{ $t('editing.columnName') }}</div>
+              <div class="data-table-cell name">{{ $t('editing.columnDisplayName') }}</div>
               <div 
                 v-if="isJoinTable"
                 class="data-table-cell source"
@@ -207,7 +267,9 @@ import {
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
+import { fetchPrimaryAliasTemplate, updatePrimaryAliasTemplate } from '@/API/AutomationScript'
 import InputVerify from '@/components/InputVerify'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'EditColumnDialog',
@@ -245,11 +307,18 @@ export default {
         userEditedColumnInputList: []
       },
       isLoading: false,
+      isLoadingPrimaryAliasTemplate: false,
+      isUploadingPrimaryAliasTemplate: false,
       isProcessing: false,
-      showConfirmDeleteDialog: false
+      showConfirmDeleteDialog: false,
+      primaryAliasTemplateInput: null,
+      isUploadPopoverVisible: false
     }
   },
   computed: {
+    ...mapGetters('dataSource', ['currentDataFrameId']),
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
+    ...mapState('dataFrameAdvanceSetting', ['isInit']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     },
@@ -428,8 +497,72 @@ export default {
           })
           this.closeDeleteDialog()
           this.fetchData()
+          // 若基表設定已儲存同張表的欄位，要重新init以取得新欄位列表
+          if (this.currentDataFrameId === this.tableId && this.isInit) {
+            this.$store.commit('dataFrameAdvanceSetting/toggleIsInit', false)
+            this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
+          }
         })
         .finally(() => { this.isProcessing = false })
+    },
+    getPrimaryAliasTemplate () {
+      this.isLoadingPrimaryAliasTemplate = true
+      fetchPrimaryAliasTemplate(this.tableId)
+        .then(({ data }) => {
+          const blob = new Blob([data], { type: 'application/vnd.ms-excel;' })
+          if (navigator.msSaveBlob) {
+            // IE 10+
+            navigator.msSaveBlob(blob, this.tableInfo.primaryAlias)
+          } else {
+            const link = document.createElement('a')
+            if (link.download !== undefined) {
+              // Browsers that support HTML5 download attribute
+              const url = URL.createObjectURL(blob)
+              link.setAttribute('href', url)
+              link.setAttribute('download', `${this.tableInfo.primaryAlias}_${this.$t('editing.columnAliasTemplate')}.xlsx`)
+              link.style.visibility = 'hidden'
+              document.body.appendChild(link)
+              link.click()
+              document.body.removeChild(link)
+              URL.revokeObjectURL(url)
+            }
+          }
+        })
+        .catch(error => {})
+        .finally(() => {
+          this.isLoadingPrimaryAliasTemplate = false
+        })
+    },
+    onInputPrimaryAliasTemplate (file) {
+      if (file) this.primaryAliasTemplateInput = file[0]
+    },
+    updatePrimaryAliasTemplate () {
+      if (!this.primaryAliasTemplateInput) return
+
+      this.isUploadingPrimaryAliasTemplate = true
+      let formData = new FormData()
+      formData.append('file', this.primaryAliasTemplateInput)
+      formData.append('groupId', this.getCurrentGroupId)
+      updatePrimaryAliasTemplate(formData, this.tableId)
+        .then(res => {
+          Message({
+            message: this.$t('editing.uploadSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+          this.fetchData()
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.primaryAliasTemplateInput = null
+          this.isUploadingPrimaryAliasTemplate = false
+          this.isUploadPopoverVisible = false
+        })
+    },
+    onCancelUploadPrimaryAliasTemplate () {
+      this.isUploadPopoverVisible = false
+      this.primaryAliasTemplateInput = null
     }
   },
 }
@@ -439,6 +572,7 @@ export default {
   .dialog-header-block {
     margin-bottom: 12px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     line-height: 30px;
 

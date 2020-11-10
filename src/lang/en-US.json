@@ -199,6 +199,7 @@
     "editTable": "Edit Table",
     "editTableColumn": "Edit Table Column",
     "columnName": "Column Name",
+    "columnDisplayName": "Display Name",
     "columnSource": "Column Source",
     "columnSourceRemind": "Database information about field sources will only be displayed for tables built through association.",
     "alias": "Alias",
@@ -401,8 +402,9 @@
     "dragAndSort": "Please hold the item and drag it up and down to move the sorting position. The item sorting will take effect after the change.",
     "lastUpdateResult": "Latest Update Result",
     "startTime": "Start Time",
-    "endTime": "Elapsed Time",
-    "elapsedTime": "Start Time",
+    "endTime": "End Time",
+    "elapsedTime": "Elapsed Time",
+    "errorReason": "Fail Reason",
     "noData": "No Data",
     "SQLSyntax": "SQL Syntax",
     "copyTableFromDatabase": "Copied existing table from database",
@@ -411,7 +413,18 @@
     "featureColumn": "Custom Field",
     "tagColumn": "Tagged Field",
     "originalField": "Original Field",
-    "createdMethod": "Created Method"
+    "createdMethod": "Created Method",
+    "buildingNewColumn": "Building New Column",
+    "downloadAliasTemplate": "Download Aliases",
+    "uploadAliasTemplate": "Upload Aliases",
+    "downloadDisplayNameTemplate": "Download Display Name Template",
+    "uploadDisplayNameTemplate": "Upload Edited Display Name",
+    "downloadValueAliasTemplate": "Download Value Alias Template",
+    "uploadValueAliasTemplate": "Upload Edited Value Alias",
+    "chooseFile": "Choose File",
+    "columnAliasTemplate": "ColumnAliasTemplate",
+    "valueAliasTemplate": "ValueAliasTemplate",
+    "searchDataSourceOrDataFrame": "Search DataSource or DataFrame"
   },
   "algorithm": {
     "name": "Algorithm",
@@ -541,12 +554,15 @@
     "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field from each table."
   },
   "pinboard": {
+    "intelligentAnalysis": "Intelligent Analysis",
     "source": "Source",
     "restrict": "Filter Restriction",
     "dataFrame":"Data Set",
     "relativeDataColun":"Data Columns",
     "allColumns": "All Columns",
-    "emptyInfo": "{name} not exists."
+    "emptyInfo": "{name} not exists.",
+    "reminding": "Reminding",
+    "switchAccountReminding": "This pinboard is belong to account '{accountName}', opening the analytic page will also change your default account. Are you sure to continue?"
   },
   "batchLoad": {
     "primaryKeyColumns": "Primary Keys",
@@ -558,6 +574,7 @@
     "setBatchLoad": "Data Update",
     "batchLoad": "Batch Load",
     "basicSetting": "Basic Setting",
+    "advancedSetting": "Advanced Setting",
     "chooseCycle": "Select Cycle",
     "on": "On",
     "off": "Off",
@@ -578,7 +595,26 @@
     "updateContent": "Update Content",
     "updateMode": "Update Mode",
     "dataFrameUpdate": "Update Existing Table",
-    "rebuild": "Rebuild Table"
+    "rebuild": "Rebuild Table",
+    "minute": "Minute",
+    "hour": "Hour",
+    "day": "Day of Month",
+    "month": "Month",
+    "week": "Day of Week",
+    "settingInfo": {
+      "value": "Setting Description",
+      "minute": "Minute：0 to 59",
+      "hour": "Hour：0 to 23",
+      "day": "Day of Month：1 to 31",
+      "month": "Month：1 to 12，Can also use abbreviation: 'Jan' for 'January'.",
+      "week": "Day of Week：0 (Sunday) to 6 (Saturday), 7 is Sunday。Can also use abbreviation: 'Sun' for 'Sunday'。",
+      "specialCharacters": "Special Character Description",
+      "star": "Asterisk(*)：Means every timeframe. E.g. adding a asterisk in 'Month', this means every month.",
+      "comma": "Comma(,)：Represents multiple times. E.g. 3, 6, 9 For 3:00, 6:00, 9:00.",
+      "minus": "Dash(-)：Represents a timeframe. E.g. 8-12 for 8:00, 9:00, 10:00, 11:00, 12:00.",
+      "slash": "Forward Slash with Number(/n)：n is a number, meaning dividing the timeframe by desired interval. E.g. */5 means execute once every 5 minutes."
+    },
+    "checkDatarowDeletable": "Check if any datarow is deleted."
   },
   "fileDataUpdate": {
     "dataUpdateSetting": "Data update settings",
@@ -901,7 +937,8 @@
     "updateImmediately": "Update Immediately",
     "AddNewWarRoom": "Add war room",
     "sendInvitation": "Send Invitation",
-    "downloadPage": "Download"
+    "downloadPage": "Download Image",
+    "changeDiagram": "Change Diagram"
   },
   "timeScopeUnit": {
     "second": "seconds",
@@ -913,9 +950,9 @@
     "season": "seasons",
     "year": "years",
     "allowArg": {
-      "second": "1 sec | {n} secs",
-      "minute": "1 min | {n} mins",
-      "hour": "1 hr | {n} hrs"
+      "second": "0 sec | 1 sec | {n} secs",
+      "minute": "0 min | 1 min | {n} mins",
+      "hour": "0 hr | 1 hr | {n} hrs"
     }
   },
   "aggregation": {

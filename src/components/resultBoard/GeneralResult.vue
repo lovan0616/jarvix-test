@@ -5,6 +5,8 @@
     :result-info="resultInfo"
     :restrictions="restrictions"
     :is-war-room-addable="isWarRoomAddable"
+    :pinboard-group-id="pinboardGroupId"
+    :pinboard-account-id="pinboardAccountId"
     class="general-result"
     @refresh="refreshPinboardData"
     @unPin="unPin"
@@ -30,6 +32,10 @@
               <spinner 
                 v-if="typeInfo.isProcessing" 
                 size="16"/>
+              <svg-icon 
+                v-else-if="typeInfo.isFailed"
+                class="exclamation-triangle-icon"
+                icon-class="exclamation-triangle" />
               <div
                 v-else-if="hasFetchedClustering(index)"
                 class="multi-analysis__item-dropdownlist"
@@ -62,6 +68,7 @@
           :component-id="componentId"
           :data-frame-id="dataFrameId"
           intend="key_result"
+          @failed="setTaskFailed"
         />
       </template>
       <template
@@ -168,6 +175,14 @@ export default {
     isWarRoomAddable: {
       type: Boolean,
       default: false
+    },
+    pinboardGroupId: {
+      type: Number,
+      default: null
+    },
+    pinboardAccountId: {
+      type: Number,
+      default: null
     }
   },
   data: () => {
@@ -216,7 +231,8 @@ export default {
         denotation: type,
         ...this.getSwitchTypeInfoList(type),
         isProcessing: false,
-        cachedResultId: type === this.intent ? this.currentResultId : null
+        cachedResultId: type === this.intent ? this.currentResultId : null,
+        isFailed: false
       }))
     }
   },
@@ -286,7 +302,16 @@ export default {
     },
     hasFetchedClustering (index) {
       return this.switchTypeList[index].denotation === this.intentType.CLUSTERING && (this.intent === this.intentType.CLUSTERING || this.switchTypeList[index].cachedResultId)
-    },
+    },  
+    setTaskFailed () {
+      this.switchTypeList.forEach((type, index) => { 
+        if (type.denotation !== this.activeTab) return
+        this.$set(this.switchTypeList, index, {
+          ...type,
+          isFailed: true
+        })
+      })
+    }
   }
 }
 </script>
@@ -298,11 +323,8 @@ export default {
     align-items: center;
     height: 100%;
   }
-  .task {
+  .task[data-intend="key_result"] {
     padding-top: 30px;
-    &:first-child {
-      padding-top: 40px;
-    }
   }
 }
 </style>
