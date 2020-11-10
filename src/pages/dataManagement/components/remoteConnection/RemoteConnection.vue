@@ -152,6 +152,10 @@ export default {
         {
           name: 'ORACLE',
           value: 'ORACLE'
+        },
+        {
+          name: 'MySQL',
+          value: 'MySQL'
         }
       ],
       dataSourceId: this.$route.params ? parseInt(this.$route.params.id) : null,
