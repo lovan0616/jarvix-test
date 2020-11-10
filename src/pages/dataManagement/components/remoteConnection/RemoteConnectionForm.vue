@@ -55,8 +55,8 @@
     <input-block 
       v-validate="'required'"
       v-model="connectInfo.database"
+      :label="connectInfo.databaseType === 'ORACLE' ? 'SID' : 'Database'"
       class="dialog-input"
-      label="Database"
       name="database"
     />
     <input-block 
