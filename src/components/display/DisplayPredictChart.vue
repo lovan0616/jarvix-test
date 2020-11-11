@@ -190,10 +190,10 @@ export default {
         // 排除 null 值和區間值
         const datasetWithoutNull = dataset.filter((data, index) => data !== null && index !== 4)
         const datasetMinValue = Math.min(...datasetWithoutNull)
-        yAxisMinValue = Math.min(yAxisMinValue, datasetMinValue)
+        yAxisMinValue = this.roundNumber(Math.min(yAxisMinValue, datasetMinValue))
       })
       // y 軸初始值和最小值的點產生一個間隔
-      config.yAxis.min = yAxisMinValue === Infinity ? 0 : yAxisMinValue * 0.9
+      config.yAxis.min = yAxisMinValue === Infinity ? 0 : yAxisMinValue
 
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
       config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
@@ -203,7 +203,7 @@ export default {
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
           let tableData = dataset[i].reduce((acc, cur) => {
-            // 判斷是不是後端捕 0 的地方，這邊不用三元表示式純粹因為排版不好看
+            // 判斷是不是後端補 0 的地方，這邊不用三元表示式純粹因為排版不好看
             if (cur === 0 && dataset[i][2] === 0 && dataset[i][3] === 0 && dataset[i][4] === null) {
               return acc + '<td style="padding: 4px 12px;">' + null + '</td>'
             } else {
