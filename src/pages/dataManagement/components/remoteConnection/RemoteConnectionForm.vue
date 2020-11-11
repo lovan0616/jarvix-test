@@ -136,8 +136,8 @@ export default {
           value: 'ORACLE'
         },
         {
-          name: 'MySQL',
-          value: 'MySQL'
+          name: 'MYSQL',
+          value: 'MYSQL'
         }
       ]
     }
