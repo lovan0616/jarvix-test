@@ -737,6 +737,13 @@
     "all": "全部",
     "displaySetting": "顯示設定"
   },
+  "miniApp": {
+    "dashboard": "儀表版",
+    "dashboardList": "儀表版列表",
+    "exit": "離開",
+    "noneDashboard": "尚未建立@:miniApp.dashboard",
+    "createDashboard": "新增@:miniApp.dashboard"
+  },
   "clustering": {
     "cluster": "群體",
     "dataOverview": "資料概況",

@@ -3,11 +3,13 @@
     :class="{ 'app-layout--loading': isAppLoading }"
     class="app-layout"
   >
-    <app-header>
+    <app-header v-if="!$route.meta.isHeaderHidden">
       <HeaderNav slot="nav" />
     </app-header>
-    <AppSideNav />
-    <main class="main">
+    <AppSideNav v-if="!$route.meta.isSideNavHidden"/>
+    <main 
+      :class="{'with-side-nav': !$route.meta.isSideNavHidden}" 
+      class="main">
       <transition
         name="fade" 
         mode="out-in">
@@ -137,9 +139,11 @@ export default {
   }
 
   .main {
-    width: calc(100% - #{$app-side-nav-closed-width});
     position: absolute;
     right: 0;
+    &.with-side-nav {
+      width: calc(100% - #{$app-side-nav-closed-width});
+    }
   }
 
   .spinner {
