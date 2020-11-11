@@ -219,6 +219,18 @@
                   v-show="errors.has('lowerBound')"
                   class="error-text"
                 >{{ errors.first('lowerBound') }}</div>
+                <template v-if="componentData.canAlert">
+                  <label class="war-room-setting__block-text-label">
+                    {{ $t('warRoom.waringMail') }}
+                  </label>
+                  <el-switch
+                    v-model="componentData.config.alertSwitch"
+                    :width="Number('32')"
+                    active-color="#2AD2E2"
+                    inactive-color="#324B4E"
+                    @change="updateBoundSwitch"
+                  />
+                </template>
               </div>
             </div>
           </template>
@@ -300,8 +312,10 @@ export default {
           recentTimeIntervalAmount: null,
           recentTimeIntervalUnit: null,
           refreshFrequency: null,
-          upperBound: null
+          upperBound: null,
+          alertSwitch: null
         },
+        canAlert: null,
         diagramData: {},
         diagramName: null,
         orderSequence: null,
@@ -333,8 +347,10 @@ export default {
           recentTimeIntervalAmount: null,
           recentTimeIntervalUnit: null,
           refreshFrequency: null,
-          upperBound: null
+          upperBound: null,
+          alertSwitch: null
         },
+        canAlert: null,
         diagramData: {},
         diagramName: null,
         orderSequence: null,

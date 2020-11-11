@@ -697,6 +697,7 @@
     "thresholdSetting": "上下限標記",
     "maxThreshold": "上限設定",
     "minThreshold": "下限設定",
+    "waringMail": "是否收到示警郵件",
     "pleaseEnterValue": "請輸入數值",
     "notChosen": "未選擇",
     "indexTypeContent": "指標型內容",
