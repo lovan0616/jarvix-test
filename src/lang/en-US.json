@@ -12,7 +12,8 @@
     "projectManagement": "Project Management",
     "algorithm": "Algorithm",
     "helper": "Help",
-    "warRoom": "War Room"
+    "warRoom": "War Room",
+    "application": "Application"
   },
   "sideNav": {
     "functionList": "Functions",
@@ -736,6 +737,17 @@
     "goToLivePage": "To publish page",
     "all": "All",
     "displaySetting": "Show Setting"
+  },
+  "miniApp": {
+    "application": "Application",
+    "createNewApplication": "Create new application",
+    "emptyApplication": "There is currently no content.",
+    "editContent": "Edit App",
+    "goToApp": "Go to app",
+    "editInfo": "Edit Info",
+    "deleteApp": "Delete App",
+    "getAppUrl": "Get App URL",
+    "editApp": "Edit App"
   },
   "clustering": {
     "cluster": "Cluster",

@@ -12,7 +12,8 @@
     "projectManagement": "專案管理",
     "algorithm": "演算法",
     "helper": "幫助",
-    "warRoom": "戰情室"
+    "warRoom": "戰情室",
+    "application": "應用程式"
   },
   "sideNav": {
     "functionList": "功能選單",
@@ -736,6 +737,17 @@
     "goToLivePage": "前往發布頁面",
     "all": "全部",
     "displaySetting": "顯示設定"
+  },
+  "miniApp": {
+    "application": "應用程式",
+    "createNewApplication": "新增應用程式",
+    "emptyApplication": "目前無任何內容",
+    "editContent": "編輯內容",
+    "goToApp": "前往應用程式",
+    "editInfo": "編輯資料",
+    "deleteApp": "刪除應用程式",
+    "getAppUrl": "取得分享連結",
+    "editApp": "編輯應用程式"
   },
   "clustering": {
     "cluster": "群體",
