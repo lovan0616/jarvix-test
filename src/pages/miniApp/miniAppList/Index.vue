@@ -42,13 +42,48 @@
       @closeDialog="closeEdit"
       @confirmBtn="tempEditInfo.id ? confirmEdit : createMiniApp"
     >
-      <input-verify
-        v-validate="`required|max:${max}`"
-        v-model="tempEditInfo.name"
-        :placeholder="$t('editing.pleaseEnterName')"
-        type="text"
-        name="tempEditInfoName"
-      />
+      <div class="dialog__input-block">
+        <label class="dialog__label">
+          {{ $t('miniApp.miniAppName') }}
+          <input-verify
+            v-validate="`required|max:${max}`"
+            v-model="tempEditInfo.name"
+            :placeholder="$t('miniApp.pleaseEnterName')"
+            type="text"
+            name="tempEditInfoName"
+          />
+        </label>
+      </div>
+      <div class="dialog__input-block">
+        <label class="dialog__label">
+          {{ $t('miniApp.description') }}
+          <input-verify
+            v-validate="`required|max:${max}`"
+            v-model="tempEditInfo.description"
+            :placeholder="$t('miniApp.pleaseEnterDescription')"
+            type="text"
+            name="tempEditInfoDescription"
+          />
+        </label>
+      </div>
+      <div class="dialog__icons-block">
+        <label class="dialog__label">
+          {{ $t('miniApp.chooseIcon') }}
+        </label>
+        <div class="dialog__icons-wrapper">
+          <div
+            v-for="(icon, index) in iconList"
+            :key="index"
+            :class="{ 'active': tempEditInfo.icon === icon }"
+            class="dialog__icon-box"
+            @click="selectIcon(icon)"
+          >
+            <svg-icon 
+              :icon-class="icon" 
+              class="icon"/>
+          </div>
+        </div>
+      </div>
     </writing-dialog>
     <decide-dialog
       v-if="isShowDelete"
@@ -135,7 +170,20 @@ export default {
         description: null
       },
       confirmDeleteText: this.$t('editing.confirmDelete'),
-      isProcessing: false
+      isProcessing: false,
+      iconList: [
+        'jarvix-app',
+        'jarvix-app',
+        'jarvix-app',
+        'jarvix-app',
+        'jarvix-app',
+        'jarvix-app',
+        'jarvix-app',
+        'jarvix-app',
+        'jarvix-app',
+        'jarvix-app'
+      ],
+      selectedIcon: null
     }
   },
   computed: {
@@ -168,6 +216,7 @@ export default {
     createMiniApp () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
+         // TODO: varify icons
         this.isProcessing = true
         createApp({
           settings: {},
@@ -212,6 +261,7 @@ export default {
     confirmEdit () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
+        // TODO: varify icons
         this.isProcessing = true
         updateAppSetting(this.tempEditInfo.id, {
           settings: this.tempEditInfo.settings,
@@ -272,6 +322,9 @@ export default {
     },
     closeShare () {
       this.isShowShare = false
+    },
+    selectIcon(icon) {
+      this.tempEditInfo.icon = icon
     }
   },
 }
@@ -299,6 +352,61 @@ export default {
   .name-input {
     margin: 24px 0px;
     padding-bottom: 8px;
+  }
+
+  /deep/ .dialog-inner-box {
+    .dialog-select-text {
+      margin-bottom: 24px;
+    }
+    .input-verify-text {
+      margin-bottom: 24px;
+    }
+  }
+
+  .dialog {
+    &__input-block,
+    &__icons-block {
+      text-align: left;
+    }
+
+    &__label {
+      color: #CCCCCC;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    &__icons-wrapper {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    &__icons-block {
+      margin-bottom: 15px;
+    }
+
+    &__icon-box {
+      width: 84px;
+      height: 75px;
+      border: 2px solid #485454;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all .1s linear;
+      font-size: 32px;
+      color: #CCCCCC;
+
+      &.active,
+      &:hover {
+        background: #485454;
+        border: 2px solid #2AD2E2;
+        color: #FFFFFF;
+      }
+    }
   }
 }
 

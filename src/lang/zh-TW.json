@@ -747,7 +747,12 @@
     "editInfo": "編輯資料",
     "deleteApp": "刪除應用程式",
     "getAppUrl": "取得分享連結",
-    "editApp": "編輯應用程式"
+    "editApp": "編輯應用程式",
+    "miniAppName": "應用程式名稱",
+    "description": "描述",
+    "chooseIcon": "選擇圖示",
+    "pleaseEnterName": "請輸入名稱",
+    "pleaseEnterDescription": "請輸入描述"
   },
   "clustering": {
     "cluster": "群體",

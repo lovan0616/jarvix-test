@@ -742,12 +742,17 @@
     "application": "Application",
     "createNewApplication": "Create new application",
     "emptyApplication": "There is currently no content.",
-    "editContent": "Edit App",
-    "goToApp": "Go to app",
+    "editContent": "Edit Application",
+    "goToApp": "Go to application",
     "editInfo": "Edit Info",
-    "deleteApp": "Delete App",
-    "getAppUrl": "Get App URL",
-    "editApp": "Edit App"
+    "deleteApp": "Delete application",
+    "getAppUrl": "Get Application URL",
+    "editApp": "Edit Application",
+    "miniAppName": "Application Name",
+    "description": "Description",
+    "chooseIcon": "Choose an icon",
+    "pleaseEnterName": "Please enter a name",
+    "pleaseEnterDescription": "Please enter some description"
   },
   "clustering": {
     "cluster": "Cluster",

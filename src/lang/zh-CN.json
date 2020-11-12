@@ -747,7 +747,12 @@
     "editInfo": "编辑资料",
     "deleteApp": "删除应用程式",
     "getAppUrl": "取得分享连结",
-    "editApp": "编辑应用程式"
+    "editApp": "编辑应用程式",
+    "miniAppName": "应用程式名称",
+    "description": "描述",
+    "chooseIcon": "选择图示",
+    "pleaseEnterName": "请输入名称",
+    "pleaseEnterDescription": "请输入描述"
   },
   "clustering": {
     "cluster": "群體",
