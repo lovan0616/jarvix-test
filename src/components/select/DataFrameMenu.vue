@@ -126,6 +126,13 @@ export default {
   components: {
     InputBlock
   },
+  props: {
+    // 因應 Dashboard 問問題後不需要轉址
+    redirectOnChange: {
+      type: Boolean,
+      default: true
+    }
+  },
   data: () => {
     return {
       isShowMenu: false,
@@ -255,6 +262,7 @@ export default {
       if (this.isShowPreviewDataSource) this.togglePreviewDataSource(false)
       this.$store.dispatch('dataSource/changeDataSourceById', { dataSourceId, dataFrameId })
       .then(() => {
+        if (!this.redirectOnChange) return
         this.$router.push({
           name: 'PageIndex', 
           params: { 
@@ -319,6 +327,7 @@ export default {
   border-radius: 5px;
   border: 1px solid #292C2E;
   background-color: rgba(0, 0, 0, 0.55);
+  z-index: 1;
 
   .preview-datasource-btn, .dataframe-setting-btn {
     width: 40px;

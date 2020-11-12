@@ -115,6 +115,11 @@ export default {
     resultInfo: {
       type: Object,
       required: true
+    },
+    // 因應 Dashboard 問問題後不需要轉址
+    redirectOnSelect: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -166,7 +171,7 @@ export default {
     askQuestion (questionInfo) {
       this.$store.commit('dataSource/setAppQuestion', this.resultInfo.question)
       this.$store.commit('dataSource/setCurrentQuestionInfo', questionInfo)
-      this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
+      if (this.redirectOnSelect) this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
     },
     isMeaningFul (value) {
       switch (value) {

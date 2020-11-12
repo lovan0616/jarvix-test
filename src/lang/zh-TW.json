@@ -739,10 +739,14 @@
   },
   "miniApp": {
     "dashboard": "儀表版",
+    "component": "圖表元件",
     "dashboardList": "儀表版列表",
     "exit": "離開",
     "noneDashboard": "尚未建立@:miniApp.dashboard",
-    "createDashboard": "新增@:miniApp.dashboard"
+    "noneComponent": "尚未建立@:miniApp.component",
+    "createDashboard": "新增@:miniApp.dashboard",
+    "createComponent": "新增@:miniApp.component",
+    "pleaseTypeDashboardName": "請輸入@:miniApp.dashboard名稱"
   },
   "clustering": {
     "cluster": "群體",

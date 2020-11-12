@@ -6,23 +6,48 @@
     @closeDialog="$emit('closeDialog')"
     @confirmBtn="createDashboard"
   >
-    哈哈哈阿哈哈
+    <input-verify
+      v-validate="`required|max:${max}`"
+      v-model="dashboardName"
+      :placeholder="$t('miniApp.pleaseTypeDashboardName')"
+      name="dashboardName"
+    />
   </writing-dialog>
 </template>
 
 <script>
 import WritingDialog from '@/components/dialog/WritingDialog'
+import InputVerify from '@/components/InputVerify'
 
 export default {
+  inject: ['$validator'],
   name: 'CreateDashboardDialog',
   components: {
-    WritingDialog
+    WritingDialog,
+    InputVerify
   },
   data () {
-    return {}
+    return {
+      dashboardName: null
+    }
+  },
+  computed: {
+    max () {
+      return this.$store.getters['validation/fieldCommonMaxLength']
+    }
   },
   methods: {
-    createDashboard () {}
+    createDashboard () {
+      this.$validator.validateAll().then(valid => {
+        if (!valid) return
+
+        this.$emit('create', {
+          name: this.dashboardName,
+          // 目前由前端產 dashboard id
+          id: new Date().getTime()
+        })
+      })
+    }
   }
 }
 </script>
