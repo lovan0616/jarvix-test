@@ -697,6 +697,8 @@
     "thresholdSetting": "Upper and lower bound setting",
     "maxThreshold": "Upper bound setting",
     "minThreshold": "Lower bound setting",
+    "waringMail": "Waring Mail Notification",
+    "mailReceiversetting": "*Please choose receiver in war room setting",
     "pleaseEnterValue": "Please enter values",
     "notChosen": "Not chosen",
     "indexTypeContent": "Index",

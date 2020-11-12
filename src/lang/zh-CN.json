@@ -697,6 +697,8 @@
     "thresholdSetting": "上下限标记",
     "maxThreshold": "上限设定",
     "minThreshold": "下限设定",
+    "waringMail": "示警邮件通知",
+    "mailReceiversetting": "*至战情室设定选择收件人信箱",
     "pleaseEnterValue": "请输入数值",
     "notChosen": "未选择",
     "indexTypeContent": "指标型内容",

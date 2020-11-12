@@ -230,6 +230,11 @@
                     inactive-color="#324B4E"
                     @change="updateBoundSwitch"
                   />
+                  <span 
+                    v-if="componentData.config.alertSwitch"
+                    class="war-room-setting__block-text-description">
+                    {{ $t('warRoom.mailReceiversetting') }} 
+                  </span>
                 </template>
               </div>
             </div>
