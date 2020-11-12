@@ -33,6 +33,14 @@
                 icon-class="dashboard" 
                 class="label-icon"/>
               <span class="label-name">{{ $t('miniApp.dashboardList') }}</span>
+              <div
+                class="create-dashboard-icon-block"
+                @click="isShowCreateDashboardDialog = true"
+              >
+                <svg-icon 
+                  icon-class="plus" 
+                  class="create-dashboard-icon"/>
+              </div>
             </div>
             <ul class="item-wrapper">
               <li
@@ -148,6 +156,7 @@ export default {
         ...newDashBoardInfo,
         componentList: []
       })
+      this.currentDashboardId = newDashBoardInfo.id
       this.isShowCreateDashboardDialog = false
     },
     createComponent (newComponentInfo) {
@@ -215,11 +224,15 @@ export default {
     border-right: 1px solid #232C2E;
     .title {
       padding-left: 26px;
+      padding-right: 20px;
       color: $theme-color-primary;
       flex: 0 0 48px;
       line-height: 48px;
+      display: flex;
+      align-items: center;
       .label-name {
         padding-left: 6px;
+        flex: 1;
       }
     }
     .item-wrapper {
@@ -254,6 +267,11 @@ export default {
           }
         }
       }
+    }
+    .create-dashboard-icon-block {
+      flex: 0 0 48px;
+      cursor: pointer;
+      text-align: right;
     }
   }
   &__dashbaord {
