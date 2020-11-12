@@ -273,6 +273,8 @@ export default {
         // 用來控制預測線和上下限顏色，原始值獨立在 serie 裡設定
         color: chartVariable['intervalLineColor']
       }
+      console.log(config.dataset)
+      console.log(this.dataset)
 
       // 不顯示上下限和實際資料的 legend 選項
       config.legend.data = [this.seriesName[4], this.seriesName[5]]
