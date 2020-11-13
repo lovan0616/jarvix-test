@@ -1,21 +1,26 @@
 <template>
-  <div
-    class="single-mini-app mini-app"
-    @click.stop="edit"
-  >
+  <div class="single-mini-app mini-app">
     <div class="mini-app__badge">
       <svg-icon 
-        icon-class="jarvix-app" 
+        :icon-class="miniAppInfo.icon" 
         class="icon mini-app__icon"/>
     </div>
     <div class="mini-app__name">{{ miniAppInfo.name }}</div>
-    <div class="mini-app__description">{{ miniAppInfo.description || 'description' }}</div>
+    <div class="mini-app__description">{{ miniAppInfo.description }}</div>
     <router-link
-      :to="{}"
+      :to="{
+        name: 'MiniApp',
+        params: { 'mini_app_id': miniAppInfo.id },
+        query: { mode: 'edit' }
+      }"
       class="link action-link"
     >{{ $t('miniApp.editContent') }}</router-link>
     <router-link
-      :to="{}"
+      :to="{
+        name: 'MiniApp',
+        params: { 'mini_app_id': miniAppInfo.id },
+        query: { mode: 'view' }
+      }"
       class="link action-link"
     >{{ $t('miniApp.goToApp') }}</router-link>
     <div class="mini-app__action-block">

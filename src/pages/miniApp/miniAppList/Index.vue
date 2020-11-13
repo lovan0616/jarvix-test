@@ -83,6 +83,7 @@
               :value="index"
               name="icon_group"
               type="radio"
+              class="dialog__icon-box-radio"
             >
             <svg-icon 
               :icon-class="icon" 
@@ -135,21 +136,6 @@ import {
   deleteMiniApp
 } from '@/API/MiniApp'
 
-const dummyAppList = [
-  {
-    id: 1,
-    name: '營運分析',
-    description: '營運分析應用程式',
-    icon: 'icon 1'
-  },
-  {
-    id: 2,
-    name: '會計報表',
-    description: '會計報表應用程式',
-    icon: 'icon 2'
-  }
-]
-
 export default {
   name: 'MiniAppList',
   inject: ['$validator'],
@@ -169,31 +155,36 @@ export default {
       isShowDelete: false,
       isShowShare: false,
       shareLink: '',
-      tempEditInfo: {
-        id: null,
-        name: null,
-        icon: null,
-        description: null
-      },
+      tempEditInfo: null,
       miniAppInfoTemplate: {
-        id: null,
         name: null,
         icon: null,
-        description: null
+        description: null,
+        status: 'Enable',
+        settings: {
+          editModeData: {
+            dashboards: []
+          },
+          viewModeData: {
+            dashboards: [],
+            updateDate: null,
+            isPublishing: false
+          }
+        }
       },
       confirmDeleteText: this.$t('editing.confirmDelete'),
       isProcessing: false,
       iconList: [
         'jarvix-app',
-        'jarvix-app',
-        'jarvix-app',
-        'jarvix-app',
-        'jarvix-app',
-        'jarvix-app',
-        'jarvix-app',
-        'jarvix-app',
-        'jarvix-app',
-        'jarvix-app'
+        'global',
+        'home',
+        'anomaly-analysis',
+        'bar-chart',
+        'clock',
+        'folder',
+        'feature',
+        'key',
+        'len-with-line-chart'
       ]
     }
   },
@@ -215,7 +206,7 @@ export default {
     fetchData () {
       this.isLoading = true
       getMiniAppList(this.groupId)
-        .then(res => this.miniAppList = dummyAppList)
+        .then(res => this.miniAppList = res)
         .finally(() => this.isLoading = false)
     },
     createMiniApp () {
@@ -223,10 +214,7 @@ export default {
         if (!isValidate) return
         this.isProcessing = true
         createApp({
-          settings: {},
-          name: this.tempEditInfo.name,
-          description: this.tempEditInfo.description,
-          icon: this.tempEditInfo.icon,
+          ...this.tempEditInfo,
           groupId: this.groupId
         })
           .then(response => {
@@ -266,23 +254,18 @@ export default {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
         this.isProcessing = true
-        updateAppSetting(this.tempEditInfo.id, {
-          settings: this.tempEditInfo.settings,
-          description: this.tempEditInfo.description,
-          icon: this.tempEditInfo.icon,
-          name: this.tempEditInfo.name
-        })
-        .then(() => {
-          Message({
-            message: this.$t('message.editNameSuccess'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
+        updateAppSetting(this.tempEditInfo.id, this.tempEditInfo)
+          .then(() => {
+            Message({
+              message: this.$t('message.editNameSuccess'),
+              type: 'success',
+              duration: 3 * 1000,
+              showClose: true
+            })
+            this.isShowEdit = false
+            this.fetchData()
           })
-          this.isShowEdit = false
-          this.fetchData()
-        })
-        .finally(() => { this.isProcessing = false })
+          .finally(() => { this.isProcessing = false })
       })
     },
     confirmDelete () {
@@ -416,6 +399,10 @@ export default {
         border: 2px solid #2AD2E2;
         color: #FFFFFF;
       }
+    }
+
+    &__icon-box-radio {
+      display: none;
     }
   }
 }

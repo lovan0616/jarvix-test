@@ -6,7 +6,7 @@ import request from '@/utils/publicRequest'
  */
 export function getMiniAppList(groupId) {
   return request({
-    url: `/app`,
+    url: `/app/`,
     method: 'GET',
     params: {
       groupId
