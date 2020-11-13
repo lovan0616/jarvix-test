@@ -12,7 +12,8 @@
     "projectManagement": "專案管理",
     "algorithm": "演算法",
     "helper": "幫助",
-    "warRoom": "戰情室"
+    "warRoom": "戰情室",
+    "application": "應用程式"
   },
   "sideNav": {
     "functionList": "功能選單",
@@ -746,7 +747,22 @@
     "noneComponent": "尚未建立@:miniApp.component",
     "createDashboard": "新增@:miniApp.dashboard",
     "createComponent": "新增@:miniApp.component",
-    "pleaseTypeDashboardName": "請輸入@:miniApp.dashboard名稱"
+    "pleaseTypeDashboardName": "請輸入@:miniApp.dashboard名稱",
+    "application": "應用程式",
+    "createNewApplication": "新增應用程式",
+    "emptyApplication": "目前無任何內容",
+    "editContent": "編輯內容",
+    "goToApp": "前往應用程式",
+    "editInfo": "編輯資料",
+    "deleteApp": "刪除應用程式",
+    "getAppUrl": "取得分享連結",
+    "editApp": "編輯應用程式",
+    "miniAppName": "應用程式名稱",
+    "description": "描述",
+    "chooseIcon": "選擇圖示",
+    "pleaseEnterName": "請輸入名稱",
+    "pleaseEnterDescription": "請輸入描述",
+    "pleaseSelectAnIcon": "請選擇一個圖示"
   },
   "clustering": {
     "cluster": "群體",
