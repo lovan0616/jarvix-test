@@ -1,6 +1,12 @@
 <template>
   <div class="wrapper wrapper--without-nav-header">
-    <main class="mini-app__page">
+    <spinner
+      v-if="isLoading"
+      :title="$t('editing.loading')"
+      size="50"/>
+    <main 
+      v-else 
+      class="mini-app__page">
       <nav class="mini-app__nav">
         <div class="nav--left">
           <div
@@ -8,7 +14,8 @@
             @click="$router.push({ name: 'MiniAppList' })">
             <svg-icon icon-class="arrow-left" />
           </div>
-          <div class="dashboard-name">{{ miniApp.name }}</div>
+          <!-- TODO: API 缺 miniApp.name -->
+          <div class="dashboard-name">{{ miniApp.name || 'App名字' }}</div>
         </div>
         <div class="nav--right">
           <!-- TODO -->
@@ -112,6 +119,7 @@
 </template>
 
 <script>
+import { getMiniAppInfo, updateAppSetting } from '@/API/MiniApp'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
 
@@ -123,69 +131,52 @@ export default {
   },
   data () {
     return {
-      miniApp: {
-        id: 0,
-        name: '營運分析',
-        settings: {
-          editModeData: {
-            dashboards: [
-              {
-                id: 0,
-                name: 'Dashboard 1',
-                components: [
-                  {
-                    id: 0,
-                    keyResultId: 363600,
-                    resultId: 72781,
-                    orderSequence: 1,
-                    config: {
-                      diaplayedName: 'Component1',
-                      question: "利潤前十"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          viewModeData: {
-            dashboards: [],
-            update_date: null,
-            isPublishing: false
-          }
-        },
-        description: '營運分析應用程式',
-        icon: 'icon-name',
-        group_id: 1,
-        create_date: "2020-11-10T09:48:40.511+0000",
-        update_date: "2020-11-10T09:48:40.511+0000",
-      },
+      miniApp: {},
+      isLoading: false,
       currentDashboardId: null,
       isShowCreateDashboardDialog: false,
       isShowCreateComponentDialog: false
     }
   },
   computed: {
+    miniAppId() {
+      return this.$route.params.mini_app_id
+    },
     dashboardList () {
-      return this.miniApp.settings.editModeData.dashboards
+      return this.miniApp && this.miniApp.settings[this.mode].dashboards
     },
     currentDashboard () {
-      return this.dashboardList.find(item => item.id === this.currentDashboardId)
+      return this.dashboardList.length > 0 ? this.dashboardList.find(item => item.id === this.currentDashboardId) : null
+    },
+    mode () {
+      return `${this.$route.query.mode}ModeData`
     }
   },
-  mounted () {
-    // 預設 focus 在第一個 Dashboard
-    if (this.dashboardList.length > 0) {
-      this.currentDashboardId = this.dashboardList[0].id
-    }
+  created () {
+    const miniAppId = this.$route.params.mini_app_id
+    this.isLoading = true
+    getMiniAppInfo(miniAppId)
+      .then(miniAppInfo => {
+        this.miniApp = miniAppInfo
+        
+        // 如果有 dashboard, focus 在第一個
+        if (miniAppInfo.settings[this.mode].dashboards.length > 0) {
+          this.currentDashboardId = miniAppInfo.settings.editModeData.dashboards[0].id
+        }
+      })
+      .catch(() => {})
+      .finally(() => this.isLoading = false )
+    
   },
   methods: {
     createDashboard (newDashBoardInfo) {
-      this.miniApp.dashboardList.push({
+      this.miniApp.settings.editModeData.dashboards.push({
         ...newDashBoardInfo,
-        componentList: []
+        components: []
       })
       this.currentDashboardId = newDashBoardInfo.id
       this.isShowCreateDashboardDialog = false
+      this.updateAppSetting(this.miniAppId, this.miniApp)
     },
     createComponent (newComponentInfo) {
       this.dashboardList.forEach(board => {
@@ -194,6 +185,19 @@ export default {
         }
       })
       this.isShowCreateComponentDialog = false
+      this.updateAppSetting(this.miniAppId, this.miniApp)
+    },
+    updateAppSetting (id, info) {
+      updateAppSetting(id, {
+        // TODO: API 缺這些資訊
+        "description": "string",
+        "icon": "string",
+        "name": "string",
+        "status": "Enable",
+        ...info
+      })
+        .then(() => {})
+        .catch(() => {})
     }
   }
 }
@@ -347,5 +351,9 @@ export default {
       }
     }
   }
+}
+
+.spinner-block {
+  margin-top: 30vh;
 }
 </style>

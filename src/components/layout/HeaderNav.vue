@@ -75,8 +75,6 @@
           :to="{name: 'MiniAppList', params: { 'account_id': getCurrentAccountId, 'group_id': getCurrentGroupId }}" 
           class="nav-item">{{ $t('nav.application') }}</router-link>
       </template>
-      <!-- MOCK DATA -->
-      <button @click="$router.push({ path: '/account/2/group/2/mini-apps/1' })">MiniApp</button>
     </section>
     <section
       v-if="$route.meta.isModule"
