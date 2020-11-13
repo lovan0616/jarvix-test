@@ -49,7 +49,8 @@
           <svg-icon icon-class="go-right"/>
         </a>
       </div>
-      <div 
+      <div
+        v-if="isShowAskHelperEntry"
         :class="{ 'disabled': availableDataSourceList.length === 0 }" 
         class="ask-remark-block"
         @click="openAskHelperDialog">
@@ -109,6 +110,10 @@ export default {
   props: {
     // 因應 Dashboard 問問題後不需要轉址
     redirectOnAsk: {
+      type: Boolean,
+      default: true
+    },
+    isShowAskHelperEntry: {
       type: Boolean,
       default: true
     }
@@ -427,8 +432,7 @@ export default {
   .user-question-block {
     display: flex;
     align-items: center;
-    width: calc(100% - 54px);
-    margin-right: 16px;
+    width: 100%;
     padding-right: 16px;
     background-color: #1D2424;
     border: 1px solid #1D2424;
@@ -494,6 +498,11 @@ export default {
       flex-basis: 16px;
       font-size: 20px;
       color: $theme-color-primary;
+    }
+
+    &:not(:last-child) {
+      width: calc(100% - 54px);
+      margin-right: 16px;
     }
   }
 

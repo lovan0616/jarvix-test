@@ -69,7 +69,7 @@
             </div>
             <div class="mini-app__dashbaord-components">
               <div 
-                v-if="!currentDashboard.componentList || currentDashboard.componentList.length === 0" 
+                v-if="!currentDashboard.components || currentDashboard.components.length === 0" 
                 class="empty-block">
                 {{ $t('miniApp.noneComponent') }}
                 <button 
@@ -81,14 +81,14 @@
               </div>
               <template v-else>
                 <div 
-                  v-for="component in currentDashboard.componentList"
-                  :key="component.id"
+                  v-for="component in currentDashboard.components"
+                  :key="component.keyResultId"
                   class="component-item">
                   <span class="item-title">
-                    {{ component.title }}
+                    {{ component.config.diaplayedName }}
                   </span>
                   <task
-                    :component-id="component.id"
+                    :component-id="component.keyResultId"
                     intend="key_result"
                   />
                 </div>
@@ -112,8 +112,8 @@
 </template>
 
 <script>
-import CreateDashboardDialog from './CreateDashboardDialog.vue'
-import CreateComponentDialog from './CreateComponentDialog.vue'
+import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
+import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
 
 export default {
   name: 'MiniApp',
@@ -124,30 +124,58 @@ export default {
   data () {
     return {
       miniApp: {
-        // MOCK DATA
-        name: 'APP的名稱唷唷唷',
-        dashboardList: [
-          // { id: 2,
-          //   name: '嘎嘎',
-          //   componentList: [
-          //     // { id: 363600, title: '哈哈哈哈哈哈' },
-          //     // { id: 363603, title: 'ㄏ呵呵呵呵呵ㄏ呵呵呵呵呵' },
-          //     // { id: 363623, title: '嘿嘿嘿嘿' }
-          //   ]
-          // },
-        ],
+        id: 0,
+        name: '營運分析',
+        settings: {
+          editModeData: {
+            dashboards: [
+              {
+                id: 0,
+                name: 'Dashboard 1',
+                components: [
+                  {
+                    id: 0,
+                    keyResultId: 363600,
+                    resultId: 72781,
+                    orderSequence: 1,
+                    config: {
+                      diaplayedName: 'Component1',
+                      question: "利潤前十"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          viewModeData: {
+            dashboards: [],
+            update_date: null,
+            isPublishing: false
+          }
+        },
+        description: '營運分析應用程式',
+        icon: 'icon-name',
+        group_id: 1,
+        create_date: "2020-11-10T09:48:40.511+0000",
+        update_date: "2020-11-10T09:48:40.511+0000",
       },
-      currentDashboardId: 2,
+      currentDashboardId: null,
       isShowCreateDashboardDialog: false,
       isShowCreateComponentDialog: false
     }
   },
   computed: {
     dashboardList () {
-      return this.miniApp.dashboardList
+      return this.miniApp.settings.editModeData.dashboards
     },
     currentDashboard () {
       return this.dashboardList.find(item => item.id === this.currentDashboardId)
+    }
+  },
+  mounted () {
+    // 預設 focus 在第一個 Dashboard
+    if (this.dashboardList.length > 0) {
+      this.currentDashboardId = this.dashboardList[0].id
     }
   },
   methods: {
@@ -162,7 +190,7 @@ export default {
     createComponent (newComponentInfo) {
       this.dashboardList.forEach(board => {
         if (board.id === this.currentDashboardId) {
-          board.componentList.push(newComponentInfo)
+          board.components.push(newComponentInfo)
         }
       })
       this.isShowCreateComponentDialog = false
@@ -276,18 +304,25 @@ export default {
   }
   &__dashbaord {
     flex: 1;
-    padding: 20px;
-    overflow: overlay;
+    padding: 20px 0 0 20px;
+    display: flex;
+    flex-direction: column;
     &-header {
+      flex: 0 0 30px;
       display: flex;
       justify-content: space-between;
       margin-bottom: 20px;
+      padding-right: 20px;
       .name {
         font-size: 20px;
         line-height: 28px;
       }
     }
     &-components {
+      flex: 1;
+      height: 0;
+      overflow: overlay;
+      padding-right: 20px;
       .component-item {
         width: calc(50% - 8px);
         float: left;
@@ -304,6 +339,11 @@ export default {
         .task {
           width: 100%;
         }
+      }
+      &:after {
+        content: '';
+        display: block;
+        clear: both;
       }
     }
   }

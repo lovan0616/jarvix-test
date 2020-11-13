@@ -18,6 +18,7 @@
 <script>
 import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inject: ['$validator'],
@@ -43,8 +44,7 @@ export default {
 
         this.$emit('create', {
           name: this.dashboardName,
-          // 目前由前端產 dashboard id
-          id: new Date().getTime()
+          id: uuidv4()
         })
       })
     }
