@@ -752,7 +752,8 @@
     "description": "Description",
     "chooseIcon": "Choose an icon",
     "pleaseEnterName": "Please enter a name",
-    "pleaseEnterDescription": "Please enter some description"
+    "pleaseEnterDescription": "Please enter some description",
+    "pleaseSelectAnIcon": "Please select an icon"
   },
   "clustering": {
     "cluster": "Cluster",

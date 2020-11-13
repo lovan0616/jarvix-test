@@ -752,7 +752,8 @@
     "description": "描述",
     "chooseIcon": "選擇圖示",
     "pleaseEnterName": "請輸入名稱",
-    "pleaseEnterDescription": "請輸入描述"
+    "pleaseEnterDescription": "請輸入描述",
+    "pleaseSelectAnIcon": "請選擇一個圖示"
   },
   "clustering": {
     "cluster": "群體",

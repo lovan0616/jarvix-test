@@ -40,7 +40,7 @@
       :show-both="true"
       :is-loading="isProcessing"
       @closeDialog="closeEdit"
-      @confirmBtn="tempEditInfo.id ? confirmEdit : createMiniApp"
+      @confirmBtn="tempEditInfo.id ? confirmEdit() : createMiniApp()"
     >
       <div class="dialog__input-block">
         <label class="dialog__label">
@@ -71,17 +71,29 @@
           {{ $t('miniApp.chooseIcon') }}
         </label>
         <div class="dialog__icons-wrapper">
-          <div
+          <label
             v-for="(icon, index) in iconList"
             :key="index"
             :class="{ 'active': tempEditInfo.icon === icon }"
             class="dialog__icon-box"
             @click="selectIcon(icon)"
           >
+            <input
+              v-validate="index === 0 ? getValidationRules(iconList.length) : null"
+              :value="index"
+              name="icon_group"
+              type="radio"
+            >
             <svg-icon 
               :icon-class="icon" 
               class="icon"/>
-          </div>
+          </label>
+        </div>
+        <div
+          v-show="errors.has('icon_group')"
+          class="input-error error-text"
+        >
+          {{ $t('miniApp.pleaseSelectAnIcon') }}
         </div>
       </div>
     </writing-dialog>
@@ -182,8 +194,7 @@ export default {
         'jarvix-app',
         'jarvix-app',
         'jarvix-app'
-      ],
-      selectedIcon: null
+      ]
     }
   },
   computed: {
@@ -202,21 +213,14 @@ export default {
   },
   methods: {
     fetchData () {
-      // TODO: 待串 API
-      // this.isLoading = true
-      // getMiniAppList(this.groupId)
-      //   .then(res => {
-      //     this.miniAppList = dummyAppList
-      //   }).finally(() => {
-      //     this.isLoading = false
-      //   })
-      this.miniAppList = dummyAppList
-      this.isLoading = false
+      this.isLoading = true
+      getMiniAppList(this.groupId)
+        .then(res => this.miniAppList = dummyAppList)
+        .finally(() => this.isLoading = false)
     },
     createMiniApp () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
-         // TODO: varify icons
         this.isProcessing = true
         createApp({
           settings: {},
@@ -261,7 +265,6 @@ export default {
     confirmEdit () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
-        // TODO: varify icons
         this.isProcessing = true
         updateAppSetting(this.tempEditInfo.id, {
           settings: this.tempEditInfo.settings,
@@ -325,6 +328,9 @@ export default {
     },
     selectIcon(icon) {
       this.tempEditInfo.icon = icon
+    },
+    getValidationRules (listLength) {
+      return`required|included:${[...Array(listLength).keys()].join()}`
     }
   },
 }
@@ -359,7 +365,11 @@ export default {
       margin-bottom: 24px;
     }
     .input-verify-text {
-      margin-bottom: 24px;
+      margin-bottom: 26px;
+    }
+
+    .input-error {
+      bottom: 9px;
     }
   }
 
