@@ -228,7 +228,6 @@ export default {
   },
   mounted () {
     this.warRoomData = JSON.parse(JSON.stringify(this.configData))
-    this.warRoomData.alertUserIdList = [18, 21]
     this.tempAlertUserIdList = this.warRoomData.alertUserIdList
     this.fetchData()
   },
@@ -333,7 +332,7 @@ export default {
       })
     },
     hasRemovePermission (removeUserId) {
-      return !this.isGroupViewer 
+      return this.isGroupViewer 
         ? this.userId === removeUserId
         : true
     },
