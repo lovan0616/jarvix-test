@@ -332,7 +332,7 @@ export default {
       })
     },
     hasRemovePermission (removeUserId) {
-      return this.isGroupViewer 
+      return !this.isGroupViewer 
         ? this.userId === removeUserId
         : true
     },

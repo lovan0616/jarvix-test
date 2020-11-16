@@ -378,6 +378,13 @@
           border-color: #1EB8C7;
         }
       }
+
+      &.selected.is-disabled {
+        &::after {
+          background-color: #CCC;
+          border-color: #CCC;
+        }
+      }
     }
   }
 }
