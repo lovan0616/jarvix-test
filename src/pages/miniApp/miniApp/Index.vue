@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper wrapper--without-nav-header">
+  <div class="wrapper wrapper--without-nav-header mini-app">
     <main class="mini-app__page">
       <nav class="mini-app__nav">
         <div class="nav--left">
@@ -8,10 +8,68 @@
             @click="$router.push({ name: 'MiniAppList' })">
             <svg-icon icon-class="arrow-left" />
           </div>
-          <div class="dashboard-name">{{ miniApp.name }}</div>
+          <div class="dashboard-name">{{ appData.displayedName }}</div>
         </div>
         <div class="nav--right">
-          <!-- TODO -->
+          <div class="button-container"> 
+            <span
+              v-if="miniApp.settings.viewModeData.updateDate"
+              class="button-container__time"
+            >
+              {{ $t('miniApp.updateTime') + '：' + formatTimeStamp(miniApp.settings.viewModeData.updateDate) }}
+            </span>
+            <template v-if="isEditMode">
+              <span
+                :class="{ 'button-container__status--active': appData.isPublishing }"
+                class="button-container__status"
+              >
+                {{ appData.isPublishing ? $t('miniApp.hasPublished') : $t('miniApp.notPublished') }}
+              </span>
+              <button
+                v-if="!appData.isPublishing"
+                :disabled="isProcessing"
+                type="button"
+                class="btn-m btn-default button-container__button"
+                @click="publishMiniApp"
+              >{{ $t('miniApp.publish') }}</button>
+              <template v-if="appData.isPublishing">
+                <button
+                  :disabled="isProcessing"
+                  type="button"
+                  class="btn-m btn-default button-container__button"
+                  @click="publishMiniApp"
+                >{{ $t('button.update') }}</button>
+                <button
+                  :disabled="isProcessing"
+                  type="button"
+                  class="btn-m btn-secondary button-container__button"
+                  @click="unpublishMiniApp"
+                >{{ $t('miniApp.unpublish') }}</button>
+              </template>
+              <button 
+                type="button"
+                class="btn-m btn-secondary button-container__button"
+                @click="previewMiniApp"
+              >{{ $t('miniApp.preview') }}</button>
+
+              <custom-dropdown-select
+                :data-list="otherFeatureList"
+                trigger="hover"
+                @select="doOtherFeature"
+              >
+                <template #display>
+                  <button
+                    type="button"
+                    class="btn-m btn-secondary button-container__button"
+                  >
+                    <svg-icon 
+                      icon-class="more" 
+                      class="icon"/>
+                  </button>
+                </template>
+              </custom-dropdown-select>
+            </template>
+          </div>
         </div>
       </nav>
       <div class="mini-app__content">
@@ -108,47 +166,141 @@
       @closeDialog="isShowCreateComponentDialog = false"
       @create="createComponent"
     />
+    <writing-dialog
+      v-if="isShowShare"
+      :title="$t('miniApp.getPublishedUrl')"
+      :button="$t('button.copy')"
+      :show-both="false"
+      @closeDialog="closeShare"
+      @confirmBtn="copyLink"
+    >
+      <input
+        ref="shareInput"
+        v-model="shareLink" 
+        readonly 
+        type="text" 
+        class="input mini-app__dialog-input">
+    </writing-dialog>
+    <decide-dialog
+      v-if="isShowDelete"
+      :is-processing="isProcessing"
+      :title="`${confirmDeleteText} ${appData.displayedName}？`"
+      :type="'delete'"
+      @closeDialog="closeDelete"
+      @confirmBtn="confirmDelete"
+    />
   </div>
 </template>
 
 <script>
 import CreateDashboardDialog from './CreateDashboardDialog.vue'
 import CreateComponentDialog from './CreateComponentDialog.vue'
+import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
+import moment from 'moment'
+import DecideDialog from '@/components/dialog/DecideDialog'
+import WritingDialog from '@/components/dialog/WritingDialog'
+import { Message } from 'element-ui'
 
 export default {
   name: 'MiniApp',
   components: {
     CreateDashboardDialog,
-    CreateComponentDialog
+    CreateComponentDialog,
+    CustomDropdownSelect,
+    WritingDialog,
+    DecideDialog
   },
   data () {
     return {
       miniApp: {
-        // MOCK DATA
-        name: 'APP的名稱唷唷唷',
-        dashboardList: [
-          // { id: 2,
-          //   name: '嘎嘎',
-          //   componentList: [
-          //     // { id: 363600, title: '哈哈哈哈哈哈' },
-          //     // { id: 363603, title: 'ㄏ呵呵呵呵呵ㄏ呵呵呵呵呵' },
-          //     // { id: 363623, title: '嘿嘿嘿嘿' }
-          //   ]
-          // },
-        ],
+        id: 0,
+        name: '營運分析',
+        settings: {
+          editModeData: {
+            dashboards: [
+              {
+                id: 0,
+                name: 'Dashboard 1',
+                components: [
+                  {
+                    id: 0,
+                    keyResultId: 222,
+                    resultId: 72781,
+                    orderSequence: 1,
+                    config: {
+                      displayedName: 'Component1',
+                      question: "利潤前十"
+                    }
+                  }
+                ]
+              }
+            ],
+            displayedName: 'App1',
+            isPublishing: true
+          },
+          viewModeData: {
+            dashboards: [],
+            updateDate: null,
+            isPublishing: true,
+            displayedName: 'App1'
+          }
+        },
+        description: '營運分析應用程式',
+        icon: 'icon-name',
+        group_id: 1,
+        createDate: "2020-11-10T09:48:40.511+0000",
+        updateDate: "2020-11-10T09:48:40.511+0000",
       },
-      currentDashboardId: 2,
+      currentDashboardId: 0,
       isShowCreateDashboardDialog: false,
-      isShowCreateComponentDialog: false
+      isShowCreateComponentDialog: false,
+      isLoading: false,
+      isProcessing: false,
+      isShowShare: false,
+      shareLink: null,
+      confirmDeleteText: this.$t('editing.confirmDelete'),
+      isShowDelete: false
     }
   },
   computed: {
+    mode () {
+      return this.$route.query.mode
+    },
+    isEditMode () {
+      return this.mode && this.mode === 'edit'
+    },
+    isViewMode () {
+      return this.mode && this.mode === 'view'
+    },
+    isPreviewMode () {
+      return this.mode && this.mode === 'preview'
+    },
+    appData () {
+      if (!this.miniApp.settings) return false
+      const { editModeData, viewModeData } = this.miniApp.settings
+      return this.isEditMode ? editModeData : viewModeData
+    },
     dashboardList () {
-      return this.miniApp.dashboardList
+      if (!this.appData) return []
+      return this.appData.dashboards
     },
     currentDashboard () {
+      if (this.dashboardList.length === 0) return {}
       return this.dashboardList.find(item => item.id === this.currentDashboardId)
-    }
+    },
+    otherFeatureList () {
+      if (!this.isEditMode || !this.appData) return []
+      return [
+        ...(this.appData.isPublishing && [{
+          id: 'shareUrl',
+          name: this.$t('miniApp.getPublishedUrl')
+        }]),
+        {
+          id: 'deleteMiniApp',
+          name: this.$t('miniApp.deleteApplication')
+        }
+      ]
+    }                             
   },
   methods: {
     createDashboard (newDashBoardInfo) {
@@ -166,7 +318,85 @@ export default {
         }
       })
       this.isShowCreateComponentDialog = false
-    }
+    },
+    publishMiniApp () {
+      this.miniApp.settings.viewModeData = {
+        dashboards: this.miniApp.settings.editModeData.dashboards,
+        updateDate: new Date(),
+        isPublishing: true,
+        displayedName: this.miniApp.settings.editModeData.displayedName
+      }
+      // TODO: connect to API
+      this.miniApp.settings.editModeData.isPublishing = true
+    },
+    unpublishMiniApp () {
+      this.miniApp.settings.viewModeData = {
+        dashboards: [],
+        updateDate: new Date(),
+        isPublishing: false,
+        displayedName: null
+      }
+      // TODO: connect to API
+      this.miniApp.settings.editModeData.isPublishing = false
+    },
+    formatTimeStamp (timestampe) {
+      return moment(timestampe).format('YYYY/M/D')
+    },
+    previewMiniApp () {
+      const { name, params } = this.$route
+      const routeData = this.$router.resolve({
+        name, 
+        params, 
+        query: { mode: 'preview' } })
+      window.open(routeData.href, '_blank')
+    },
+    showShareDialog () {
+      this.isShowShare = true
+      this.shareLink = `${window.location.origin}${this.$route.path}?mode=view`
+    },
+    closeShare () {
+      this.isShowShare = false
+    },
+    copyLink () {
+      let input = this.$refs.shareInput
+      input.select()
+      /* For mobile devices */
+      input.setSelectionRange(0, 99999)
+      document.execCommand('copy')
+
+      Message({
+        message: this.$t('message.copiedToBoard'),
+        type: 'success',
+        duration: 3 * 1000,
+        showClose: true
+      })
+      this.isShowShare = false
+    },
+    doOtherFeature (action) {
+      if (action === 'shareUrl') return this.showShareDialog()
+      if (action === 'deleteMiniApp') return this.showDeleteDialog()
+    },
+    showDeleteDialog (miniAppInfo) {
+      this.isShowDelete = true
+    },
+    closeDelete () {
+      this.isShowDelete = false
+    },
+    confirmDelete () {
+      this.isProcessing = true
+      // deleteMiniApp(this.tempEditInfo.id)
+      //   .then(() => {
+      //     Message({
+      //       message: this.$t('message.deleteSuccess'),
+      //       type: 'success',
+      //       duration: 3 * 1000,
+      //       showClose: true
+      //     })
+      //     this.isShowDelete = false
+      //     this.fetchData()
+      //   })
+      //   .finally(() => { this.isProcessing = false })
+    },
   }
 }
 </script>
@@ -303,6 +533,110 @@ export default {
         }
         .task {
           width: 100%;
+        }
+      }
+    }
+  }
+  &__dialog-input {
+    margin: 24px 0px;
+    padding-bottom: 8px;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+
+    &__button {
+      padding: 5px 10px;
+      min-width: unset;
+      line-height: 20px;
+      &:not(:first-child) {
+        margin-left: 8px;
+      }
+    }
+
+    &__time {
+      font-size: 12px;
+      color: #DDDDDD;
+    }
+
+    &__status {
+      display: inline-block;
+      padding: 4px 8px;
+      background: #333333;
+      border-radius: 24px;
+      margin-left: 16px;
+      font-size: 12px;
+      color: #FFFFFF;
+
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border: 1px solid #999999;
+        background: transparent;
+        border-radius: 50%;
+        margin: auto 0;
+      }
+
+      &--active {
+        &::before {
+          border: none;
+          background: #2FECB3;
+        }
+      }
+    }
+
+    &__description {
+      font-size: 14px;
+      line-height: 32px;
+      [lang="en"] & {
+        text-align: right;
+        line-height: 24px;
+      }
+      .question-lamp {
+        color: $theme-color-warning;
+      }
+    }
+
+    /deep/ .dropdown {
+      margin-left: 8px;
+      &__list-container {
+        left: -109px;
+        top: calc(100% + 10px);
+        text-align: left;
+        z-index: 1;
+        width: 160px;
+
+        &::before {
+          position: absolute;
+          content: "";
+          bottom: 100%;
+          left: 0;
+          width: 100%;
+          background-color: transparent;
+          height: 12px;
+        }
+
+        &::after {
+          position: absolute;
+          content: "";
+          bottom: 100%;
+          left: 72%;
+          border-bottom: 12px solid #2B3839;
+          border-left: 12px solid transparent;
+          border-right: 12px solid transparent;
+        }
+      }
+
+      &__link {
+        font-size: 14px;
+        line-height: 40px;
+        &::before {
+          display: none;
         }
       }
     }
