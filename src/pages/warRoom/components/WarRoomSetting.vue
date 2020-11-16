@@ -114,7 +114,8 @@
             filterable
             popper-class="multiple-selector__popper"
             class="multiple-selector"
-            @remove-tag="removeTag">
+            @remove-tag="removeTag"
+            @change="listChange">
             <el-option
               v-for="item in alertUserIdList"
               :disabled="!hasRemovePermission(item.value)"
@@ -189,6 +190,7 @@ export default {
       isLoading: false,
       isProcessing: false,
       userList: null,
+      tempAlertUserIdList: null,
       alertUserIdList: null,
       customTimeInterval: {
         startTime: '',
@@ -226,6 +228,8 @@ export default {
   },
   mounted () {
     this.warRoomData = JSON.parse(JSON.stringify(this.configData))
+    this.warRoomData.alertUserIdList = [18, 21]
+    this.tempAlertUserIdList = this.warRoomData.alertUserIdList
     this.fetchData()
   },
   methods: {
@@ -329,14 +333,21 @@ export default {
       })
     },
     hasRemovePermission (removeUserId) {
-      return this.isGroupViewer 
+      return !this.isGroupViewer 
         ? this.userId === removeUserId
         : true
     },
+    listChange (newList) {
+      const isRemoveSelf = (newList.length < this.tempAlertUserIdList.length) && !newList.includes(this.userId) && this.tempAlertUserIdList.includes(this.userId)
+      // 表示加入的是使用者自己，故需要被存起來
+      if(newList.length > this.tempAlertUserIdList.length || isRemoveSelf) {
+        this.tempAlertUserIdList = newList
+      }
+    },
     removeTag (removeUserId) {
       if(this.hasRemovePermission(removeUserId)) return
-      //  非 group__viewer 無權限可移除其他使用者，故要將其加回來
-      this.warRoomData.alertUserIdList.push(removeUserId)
+      //  非 group__viewer 無權限可移除其他使用者，故要用 temp 覆蓋
+      this.warRoomData.alertUserIdList = this.tempAlertUserIdList
     }
   }
 }
