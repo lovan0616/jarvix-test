@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper wrapper--without-nav-header">
+  <div class="wrapper wrapper--without-nav-header mini-app">
     <spinner
       v-if="isLoading"
       :title="$t('editing.loading')"
@@ -14,8 +14,42 @@
             @click="$router.push({ name: 'MiniAppList' })">
             <svg-icon icon-class="arrow-left" />
           </div>
-          <!-- TODO: API 缺 miniApp.name -->
-          <div class="dashboard-name">{{ miniApp.name || 'App名字' }}</div>
+          <div class="app-name">
+            <template v-if="isEditingAppName">
+              <input-verify
+                v-validate="`required|max:${max}`"
+                key="appNameInput"
+                v-model="newAppName"
+                class="new-name-input"
+                name="appNameInput"
+              />
+              <button
+                class="btn-m btn-default" 
+                @click="updateAppName">
+                <svg-icon
+                  v-if="isProcessing"
+                  icon-class="spinner"/>
+                {{ $t('button.save') }}
+              </button>
+              <button
+                class="btn-m btn-outline cancel-btn"
+                @click="isEditingAppName = false"
+              >
+                {{ $t('button.cancel') }}
+              </button>
+            </template>
+            <template v-else>
+              {{ miniApp.name }}
+              <div
+                class="edit-app-name"
+                @click="isEditingAppName = true"
+              >
+                <svg-icon 
+                  icon-class="edit" 
+                  class="icon-edit"/>
+              </div>
+            </template>
+          </div>
         </div>
         <div class="nav--right">
           <!-- TODO -->
@@ -55,7 +89,7 @@
                 :key="dashboard.id"
                 :class="{'is-active': dashboard.id === currentDashboardId}"
                 class="item"
-                @click="currentDashboardId = dashboard.id"
+                @click="activeCertainDashboard(dashboard.id)"
               >
                 <svg-icon 
                   class="item-icon" 
@@ -66,9 +100,37 @@
           </div>
           <main class="mini-app__dashbaord">
             <div class="mini-app__dashbaord-header">
-              <span class="name">{{ currentDashboard.name }}</span>
+              <template v-if="isEditingDashboardName">
+                <input-verify
+                  v-validate="`required|max:${max}`"
+                  key="dashboardNameInput"
+                  v-model="newDashboardName"
+                  class="new-name-input"
+                  name="dashboardNameInput"
+                />
+                <button
+                  class="btn-m btn-default"
+                  @click="updateDashboardName"
+                >
+                  {{ $t('button.save') }}
+                </button>
+                <button
+                  class="btn-m btn-outline cancel-btn"
+                  @click="isEditingDashboardName = false"
+                >
+                  {{ $t('button.cancel') }}
+                </button>
+              </template>
+              <template v-else>
+                <span class="name">{{ currentDashboard.name }}</span>
+                <div @click="isEditingDashboardName = true">
+                  <svg-icon 
+                    icon-class="edit" 
+                    class="icon-edit"/>
+                </div>
+              </template>
               <button 
-                class="btn-m btn-outline btn-has-icon" 
+                class="btn-m btn-outline btn-has-icon create-component-btn" 
                 @click="isShowCreateComponentDialog = true">
                 <svg-icon icon-class="plus"/>
                 {{ $t('miniApp.createComponent') }}
@@ -76,7 +138,7 @@
             </div>
             <div class="mini-app__dashbaord-components">
               <div 
-                v-if="!currentDashboard.components || currentDashboard.components.length === 0" 
+                v-if="currentDashboard.components.length === 0" 
                 class="empty-block">
                 {{ $t('miniApp.noneComponent') }}
                 <button 
@@ -105,6 +167,12 @@
         </template>
       </div>
     </main>
+    <div 
+      v-show="isProcessing" 
+      class="dialog">
+      <spinner size="50"/>
+      {{ $t('button.processing') }}
+    </div>
     <create-dashboard-dialog
       v-if="isShowCreateDashboardDialog"
       @closeDialog="isShowCreateDashboardDialog = false"
@@ -119,27 +187,36 @@
 </template>
 
 <script>
-import { getMiniAppInfo, updateAppSetting } from '@/API/MiniApp'
+import { getMiniAppInfo, updateAppSetting, updateAppName } from '@/API/MiniApp'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
+import InputVerify from '@/components/InputVerify'
+import { Message } from 'element-ui'
 
 export default {
+  inject: ['$validator'],
   name: 'MiniApp',
   components: {
     CreateDashboardDialog,
-    CreateComponentDialog
+    CreateComponentDialog,
+    InputVerify
   },
   data () {
     return {
       miniApp: {},
       isLoading: false,
+      isProcessing: false,
       currentDashboardId: null,
       isShowCreateDashboardDialog: false,
-      isShowCreateComponentDialog: false
+      isShowCreateComponentDialog: false,
+      newAppName: '',
+      isEditingAppName: false,
+      newDashboardName: '',
+      isEditingDashboardName: false
     }
   },
   computed: {
-    miniAppId() {
+    miniAppId () {
       return this.$route.params.mini_app_id
     },
     dashboardList () {
@@ -150,25 +227,31 @@ export default {
     },
     mode () {
       return `${this.$route.query.mode}ModeData`
+    },
+    max () {
+      return this.$store.getters['validation/fieldCommonMaxLength']
     }
   },
   created () {
-    const miniAppId = this.$route.params.mini_app_id
-    this.isLoading = true
-    getMiniAppInfo(miniAppId)
-      .then(miniAppInfo => {
-        this.miniApp = miniAppInfo
-        
-        // 如果有 dashboard, focus 在第一個
-        if (miniAppInfo.settings[this.mode].dashboards.length > 0) {
-          this.currentDashboardId = miniAppInfo.settings.editModeData.dashboards[0].id
-        }
-      })
-      .catch(() => {})
-      .finally(() => this.isLoading = false )
-    
+    this.getMiniAppInfo()  
   },
   methods: {
+    getMiniAppInfo () {
+      this.isLoading = true
+      getMiniAppInfo(this.miniAppId)
+        .then(miniAppInfo => {
+          this.miniApp = miniAppInfo
+          this.newAppName = miniAppInfo.name
+
+          // 如果有 dashboard, focus 在第一個
+          if (miniAppInfo.settings[this.mode].dashboards.length > 0) {
+            this.currentDashboardId = miniAppInfo.settings.editModeData.dashboards[0].id
+            this.newDashboardName = this.currentDashboard.name
+          }
+        })
+        .catch(() => {})
+        .finally(() => this.isLoading = false )
+    },
     createDashboard (newDashBoardInfo) {
       this.miniApp.settings.editModeData.dashboards.push({
         ...newDashBoardInfo,
@@ -176,28 +259,71 @@ export default {
       })
       this.currentDashboardId = newDashBoardInfo.id
       this.isShowCreateDashboardDialog = false
-      this.updateAppSetting(this.miniAppId, this.miniApp)
+      this.updateAppSetting()
     },
     createComponent (newComponentInfo) {
-      this.dashboardList.forEach(board => {
+      this.miniApp.settings.editModeData.dashboards.forEach(board => {
         if (board.id === this.currentDashboardId) {
           board.components.push(newComponentInfo)
         }
       })
       this.isShowCreateComponentDialog = false
-      this.updateAppSetting(this.miniAppId, this.miniApp)
+      this.updateAppSetting()
     },
-    updateAppSetting (id, info) {
-      updateAppSetting(id, {
-        // TODO: API 缺這些資訊
-        "description": "string",
-        "icon": "string",
-        "name": "string",
-        "status": "Enable",
-        ...info
+    updateAppName () {
+      this.$validator.validate('appNameInput')
+        .then(valid => {
+          if (!valid) return
+          
+          this.isProcessing = true
+          updateAppName(this.miniAppId, { name: this.newAppName })
+            .then(() => {
+              Message({
+                message: this.$t('message.saveSuccess'),
+                type: 'success',
+                duration: 3 * 1000,
+                showClose: true
+              })
+            })
+            .catch(() => {})
+            .finally(() => {
+              this.miniApp.name = this.newAppName
+              this.isEditingAppName = false
+              this.isProcessing = false
+            } )
+        })
+    },
+    updateDashboardName () {
+      this.$validator.validate('dashboardNameInput').then(valid => {
+        if (!valid) return
+
+        this.isProcessing = true
+        this.miniApp.settings.editModeData.dashboards.forEach(board => {
+          if (board.id === this.currentDashboardId) board.name = this.newDashboardName
+        })
+        
+        this.updateAppSetting(this.miniApp)
+          .then(() => { this.isEditingDashboardName = false })
+          .catch(() => {})
+          .finally(() => { this.isProcessing = false })
       })
-        .then(() => {})
+    },
+    updateAppSetting (appInfo = this.miniApp, miniAppId = this.miniAppId) {
+      return updateAppSetting(miniAppId, { ...appInfo })
+        .then(() => {
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
         .catch(() => {})
+    },
+    activeCertainDashboard (dashboardId) {
+      this.isEditingDashboardName = false
+      this.currentDashboardId = dashboardId
+      this.newDashboardName = this.currentDashboard.name
     }
   }
 }
@@ -205,27 +331,55 @@ export default {
 
 <style lang="scss" scoped>
 .mini-app {
+  .spinner-block {
+    margin-top: 30vh;
+  }
+  .dialog {
+    text-align: center;
+  }
   &__page {
     height: 100%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    /deep/ .new-name-input {
+      margin-right: 16px;
+      .input-verify-text {
+        height: 30px;
+        margin-bottom: 0;
+      }
+      .input-error {
+        bottom: -16px;
+      }
+    }
   }
   &__nav {
     flex: 0 0 56px;
     padding: 0 24px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     background: rgba(0, 0, 0, 0.55);
     border-bottom: 1px solid #232C2E;
     .nav--left {
       display: flex;
       align-items: center;
+      .app-name {
+        display: flex;
+        align-self: center;
+        font-size: 20px;
+      }
       .icon-arrow {
         cursor: pointer;
         color: $theme-color-primary;
         margin-right: 20px;
+      }
+      .icon-edit {
+        margin-left: 12px;
+        color: $theme-color-primary;
+        font-size: 16px;
+      }
+      .cancel-btn {
+        margin-left: 6px;
       }
     }
     .nav--right {
@@ -315,11 +469,23 @@ export default {
       flex: 0 0 30px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 20px;
       padding-right: 20px;
       .name {
         font-size: 20px;
         line-height: 28px;
+      }
+      .icon-edit {
+        color: $theme-color-primary;
+        margin-left: 12px;
+        cursor: pointer;
+      }
+      .create-component-btn {
+        margin-left: auto;
+      }
+      .cancel-btn {
+        margin-left: 6px;
       }
     }
     &-components {
@@ -351,9 +517,5 @@ export default {
       }
     }
   }
-}
-
-.spinner-block {
-  margin-top: 30vh;
 }
 </style>
