@@ -233,6 +233,7 @@
 import UploadBlock from '@/components/UploadBlock'
 import orderBy from 'lodash.orderby'
 import DropdownSelect from '@/components/select/DropdownSelect'
+import { mapGetters } from 'vuex'
 
 /**
  * Data table 可傳入屬性
@@ -316,6 +317,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['hasPermission']),
     showCreateDataSourceDialog () {
       return this.$store.state.dataManagement.showCreateDataSourceDialog
     },
@@ -472,9 +474,14 @@ export default {
     },
     showSubAction (subAction, data) {
       return subAction.filter(action => {
+        let hasPermission = true
+        if (action.checkPermission) {
+          // 需要擁有權限或是是自己建立的表
+          hasPermission = this.hasPermission(action.checkPermission) || Number(data.createBy) === this.$store.state.userManagement.userId
+        }
         if (action.dialogName === 'etlSetting') return data.etlExists
-        if (action.dialogName === 'createdInfo') return data.originType === 'database'
-        return true
+        if (action.dialogName === 'createdInfo') return data.originType === 'database' && hasPermission
+        return hasPermission
       })
     },
     isInProcess (data) {

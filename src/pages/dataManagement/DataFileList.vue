@@ -287,8 +287,8 @@ export default {
                 { icon: '', title: 'button.editColumnSet', dialogName: 'columnSet' },
                 { icon: '', title: 'button.editEtlSetting', dialogName: 'etlSetting' },
                 { icon: '', title: 'button.dateTimeColumnSetting', dialogName: 'dateTime' },
-                { icon: '', title: 'button.batchLoadSetting', dialogName: 'batchLoad' },
-                { icon: '', title: 'button.tableCreatedInfo', dialogName: 'createdInfo' }
+                { icon: '', title: 'button.batchLoadSetting', dialogName: 'batchLoad', checkPermission: ['group_edit_data'] },
+                { icon: '', title: 'button.tableCreatedInfo', dialogName: 'createdInfo', checkPermission: ['group_edit_data'] }
               ]
             },
             {
