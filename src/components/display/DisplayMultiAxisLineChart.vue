@@ -173,7 +173,8 @@ export default {
         return res
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
-      config.toolbox.feature.magicType.show = false
+      config.toolbox.feature.magicType.show = true
+      config.toolbox.feature.magicType.type = ['bar', 'line']
       // 座標軸名稱
       config.xAxis = this.title.xAxis.map(axis => {
         return {
