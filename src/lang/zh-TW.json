@@ -699,6 +699,7 @@
     "minThreshold": "下限設定",
     "waringMail": "示警郵件通知",
     "mailReceiversetting": "*請至戰情室設定選擇收件人信箱",
+    "recipientList": "收件人名單",
     "pleaseEnterValue": "請輸入數值",
     "notChosen": "未選擇",
     "indexTypeContent": "指標型內容",

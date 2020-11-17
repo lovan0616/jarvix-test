@@ -219,7 +219,7 @@
                   v-show="errors.has('lowerBound')"
                   class="error-text"
                 >{{ errors.first('lowerBound') }}</div>
-                <template v-if="componentData.canAlert">
+                <template v-if="selectedDataSource.canAlert || componentData.canAlert">
                   <label class="war-room-setting__block-text-label">
                     {{ $t('warRoom.waringMail') }}
                   </label>
@@ -231,7 +231,7 @@
                     @change="updateBoundSwitch"
                   />
                   <span 
-                    v-if="componentData.config.alertSwitch"
+                    v-if="componentData.config.alertSwitch" 
                     class="war-room-setting__block-text-description">
                     {{ $t('warRoom.mailReceiversetting') }} 
                   </span>
@@ -528,7 +528,8 @@ export default {
         updateComponent(warRoomId, this.componentData.componentId, {
           ...config,
           upperBound: config.upperBound || null,
-          lowerBound: config.lowerBound || null
+          lowerBound: config.lowerBound || null,
+          alertSwitch: config.boundSwitch && config.alertSwitch
         })
           .then(() => {
             this.$emit('close')
