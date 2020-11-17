@@ -4,7 +4,7 @@
       <div class="nav--left">
         <div
           class="icon-arrow"
-          @click="$emit('closeDialog')">
+          @click="$emit('close')">
           <svg-icon icon-class="arrow-left" />
         </div>
         {{ $t('miniApp.createComponent') }}

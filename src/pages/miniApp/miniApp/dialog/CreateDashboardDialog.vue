@@ -3,7 +3,7 @@
     :title="$t('miniApp.createDashboard')"
     :button="$t('button.create')"
     :show-both="true"
-    @closeDialog="$emit('closeDialog')"
+    @closeDialog="$emit('close')"
     @confirmBtn="createDashboard"
   >
     <input-verify

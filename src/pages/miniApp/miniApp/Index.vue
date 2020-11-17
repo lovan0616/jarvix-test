@@ -160,10 +160,19 @@
               <template v-else>
                 <div 
                   v-for="component in currentDashboard.components"
-                  :key="component.keyResultId"
+                  :key="component.id"
                   class="component-item">
-                  <span class="item-title">
-                    {{ component.config.diaplayedName }}
+                  <span class="item-header">
+                    <span class="item-title">{{ component.config.diaplayedName }}</span>
+                    <div class="component-setting-box">
+                      <svg-icon 
+                        icon-class="more"
+                        class="more-icon" />
+                      <dropdown-select
+                        :bar-data="componentSettingOptions"
+                        @switchDialogName="switchDialogName($event, component.id)"
+                      />
+                    </div>
                   </span>
                   <task
                     :component-id="component.keyResultId"
@@ -179,24 +188,30 @@
     <div 
       v-show="isProcessing" 
       class="dialog">
-      <spinner size="50"/>
-      {{ $t('button.processing') }}
+      <spinner 
+        :title="$t('button.processing')"
+        size="50"/>
     </div>
     <create-dashboard-dialog
       v-if="isShowCreateDashboardDialog"
-      @closeDialog="isShowCreateDashboardDialog = false"
+      @close="isShowCreateDashboardDialog = false"
       @create="createDashboard"
     />
     <create-component-dialog
       v-if="isShowCreateComponentDialog"
-      @closeDialog="isShowCreateComponentDialog = false"
+      @close="isShowCreateComponentDialog = false"
       @create="createComponent"
     />
     <delete-dashboard-dialog
       v-if="isShowDeleteDashboardDialog"
       :dashboard-name="currentDashboard.name"
-      @closeDialog="isShowDeleteDashboardDialog = false"
-      @confirmBtn="deleteDashboard"
+      @close="isShowDeleteDashboardDialog = false"
+      @confirm="deleteDashboard"
+    />
+    <delete-component-dialog
+      v-if="isShowDeleteComponentDialog"
+      @close="isShowDeleteComponentDialog = false"
+      @confirm="deleteComponent"
     />
   </div>
 </template>
@@ -206,6 +221,7 @@ import { getMiniAppInfo, updateAppSetting, updateAppName } from '@/API/MiniApp'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
 import DeleteDashboardDialog from './dialog/DeleteDashboardDialog.vue'
+import DeleteComponentDialog from './dialog/DeleteComponentDialog.vue'
 import InputVerify from '@/components/InputVerify'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import { Message } from 'element-ui'
@@ -217,6 +233,7 @@ export default {
     CreateDashboardDialog,
     CreateComponentDialog,
     DeleteDashboardDialog,
+    DeleteComponentDialog,
     InputVerify,
     DropdownSelect
   },
@@ -226,9 +243,11 @@ export default {
       isLoading: false,
       isProcessing: false,
       currentDashboardId: null,
+      currentComponentId: null,
       isShowCreateDashboardDialog: false,
       isShowCreateComponentDialog: false,
       isShowDeleteDashboardDialog: false,
+      isShowDeleteComponentDialog: false,
       newAppName: '',
       isEditingAppName: false,
       newDashboardName: '',
@@ -257,6 +276,21 @@ export default {
           title: 'miniApp.deleteDashboard',
           icon: 'delete',
           dialogName: 'DeleteDashboard'
+        }
+      ]
+    },
+    componentSettingOptions () {
+      return [
+        // TODO 重新設定元件的功能
+        // {
+        //   title: 'button.setting',
+        //   icon: 'filter-setting',
+        //   dialogName: 'DeleteComponent'
+        // },
+        {
+          title: 'button.delete',
+          icon: 'delete',
+          dialogName: 'DeleteComponent'
         }
       ]
     }
@@ -359,6 +393,28 @@ export default {
         .catch(() => {})
         .finally(() => this.isShowDeleteDashboardDialog = false)
     },
+    deleteComponent () {
+      const componentIndex = this.currentDashboard.components.findIndex(comp => comp.id === this.currentComponentId)
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      editedMiniApp.settings.editModeData.dashboards.forEach(board => {
+        if (board.id === this.currentDashboardId) board.components.splice(componentIndex, 1)
+      })
+
+      this.updateAppSetting(editedMiniApp)
+        .then(() => {
+          this.currentComponentId = null
+          this.miniApp = editedMiniApp
+
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .catch(() => {})
+        .finally(() => this.isShowDeleteComponentDialog = false)
+    },
     updateAppSetting (appInfo = this.miniApp, miniAppId = this.miniAppId) {
       return updateAppSetting(miniAppId, { ...appInfo })
         .catch(() => {})
@@ -368,20 +424,34 @@ export default {
       this.currentDashboardId = dashboardId
       this.newDashboardName = this.currentDashboard.name
     },
-    switchDialogName (eventName) {
+    switchDialogName (eventName, id) {
       this[`isShow${eventName}Dialog`] = true
+      if (eventName === 'DeleteComponent') this.currentComponentId = id
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@mixin dropdown-select-controller {
+  &:hover {
+    .dropdown-select { visibility: visible; }
+  }
+}
+@mixin dropdown-select-position ($top: 0, $right: 0, $left: 0, $before: 0) {
+  box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
+  top: calc(50% + 17px);
+  right: -3px;
+  left: unset;
+  &:before { right: 7px; }
+  .dropdown-flex {
+    min-width: unset;
+  }
+}
+
 .mini-app {
   .spinner-block {
     margin-top: 30vh;
-  }
-  .dialog {
-    text-align: center;
   }
   &__page {
     height: 100%;
@@ -530,6 +600,34 @@ export default {
       .create-component-btn {
         margin-left: auto;
       }
+      .dashboard-setting-box {
+        flex: 0 0 30px;
+        height: 30px;
+        margin-left: 6px;
+        cursor: pointer;
+        border: 1px solid #FFF;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        @include dropdown-select-controller;
+        .dropdown-select {
+          /deep/ .dropdown-select-box {
+            box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
+            top: calc(50% + 17px);
+            right: -3px;
+            left: unset;
+            &:before { right: 7px; }
+            .svg-icon {
+              color: $theme-color-primary;
+            }
+            .dropdown-flex {
+              min-width: unset;
+            }
+          }
+        }
+      }
       .cancel-btn {
         margin-left: 6px;
       }
@@ -549,8 +647,45 @@ export default {
         &:nth-child(odd) {
           margin-right: 16px;
         }
-        .item-title {
-          color: #DDD;
+        .item-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .item-title {
+            color: #DDD;
+            @include text-hidden;
+          }
+          .component-setting-box {
+            position: relative;
+            color: $theme-color-primary;
+            flex: 0 0 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: .2s all ease;
+            cursor: pointer;
+            @include dropdown-select-controller;
+            &:hover {
+              background-color: $theme-color-primary;
+              color: #FFF;
+              border-radius: 4px;
+            }
+            .dropdown-select {
+              z-index: 1;
+              /deep/ .dropdown-select-box {
+                box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
+                top: 31px;
+                left: -29px;
+                .svg-icon {
+                  color: $theme-color-primary;
+                }
+                .dropdown-flex {
+                  min-width: unset;
+                }
+              }
+            }
+          }
         }
         .task {
           width: 100%;
@@ -563,5 +698,9 @@ export default {
       }
     }
   }
+}
+
+.dropdown-select {
+  visibility: hidden;
 }
 </style>

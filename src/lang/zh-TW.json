@@ -739,9 +739,9 @@
     "displaySetting": "顯示設定"
   },
   "miniApp": {
-    "dashboard": "儀表版",
-    "component": "圖表元件",
-    "dashboardList": "儀表版列表",
+    "dashboard": "分析看板",
+    "component": "元件",
+    "dashboardList": "@:miniApp.dashboard列表",
     "exit": "離開",
     "noneDashboard": "尚未建立@:miniApp.dashboard",
     "noneComponent": "尚未建立@:miniApp.component",
@@ -763,8 +763,9 @@
     "pleaseEnterName": "請輸入名稱",
     "pleaseEnterDescription": "請輸入描述",
     "pleaseSelectAnIcon": "請選擇一個圖示",
-    "confirmDeletingDashboad": "確定刪除儀表版 {name} ？",
-    "deleteDashboard": "刪除@:miniApp.dashboard"
+    "confirmDeletingDashboad": "確定刪除@:miniApp.dashboard {name} ？",
+    "deleteDashboard": "刪除@:miniApp.dashboard",
+    "confirmDeletingComponent": "確定刪除此元件？"
   },
   "clustering": {
     "cluster": "群體",
