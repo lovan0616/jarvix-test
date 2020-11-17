@@ -188,6 +188,7 @@
     "editTable": "編輯資料表",
     "editTableColumn": "編輯資料表欄位",
     "columnName": "欄位名稱",
+    "columnDisplayName": "顯示名稱",
     "columnSource": "欄位來源",
     "columnSourceRemind": "透過關聯方式建置的資料表才會顯示欄位來源資料表資訊",
     "alias": "別名",
@@ -391,7 +392,8 @@
     "lastUpdateResult": "近一次更新結果",
     "startTime": "開始時間",
     "endTime": "結束時間",
-    "elapsedTime": "更新花費時間",
+    "elapsedTime": "花費時間",
+    "errorReason": "失敗原因",
     "noData": "暫無數據",
     "SQLSyntax": "SQL語法",
     "copyTableFromDatabase": "複製資料庫資料表",
@@ -401,7 +403,17 @@
     "tagColumn": "標籤欄位",
     "originalField": "原始欄位",
     "createdMethod": "建立方式",
-    "buildingNewColumn": "建置新欄位"
+    "buildingNewColumn": "建置新欄位",
+    "downloadAliasTemplate": "下載別名",
+    "uploadAliasTemplate": "上傳別名",
+    "downloadDisplayNameTemplate": "下載顯示名稱範本",
+    "uploadDisplayNameTemplate": "批次修改顯示名稱",
+    "downloadValueAliasTemplate": "下載數據別名範本",
+    "uploadValueAliasTemplate": "批次修改數據別名",
+    "chooseFile": "選擇檔案",
+    "columnAliasTemplate": "欄位別名範例檔",
+    "valueAliasTemplate": "數據別名範例檔",
+    "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表"
   },
   "algorithm": {
     "name": "演算法",
@@ -531,12 +543,15 @@
     "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位"
   },
   "pinboard": {
+    "intelligentAnalysis": "智能分析",
     "source": "資料來源",
     "restrict": "分析條件限制",
     "dataFrame":"來源資料表",
     "relativeDataColun":"資料相關欄位",
     "allColumns": "所有欄位",
-    "emptyInfo": "{name} 資料已不存在"
+    "emptyInfo": "{name} 資料已不存在",
+    "reminding": "提示",
+    "switchAccountReminding": "此釘版屬於帳戶「{accountName}」，前往智能分析頁面將同時切換您的預設帳戶，確定是否繼續？"
   },
   "batchLoad": {
     "primaryKeyColumns": "主鍵（可複選）",
@@ -548,6 +563,7 @@
     "setBatchLoad": "更新資料",
     "batchLoad": "批次更新資料",
     "basicSetting": "基本設定",
+    "advancedSetting": "進階設定",
     "chooseCycle": "選擇週期",
     "on": "開啟",
     "off": "關閉",
@@ -568,7 +584,26 @@
     "updateContent": "更新內容",
     "updateMode": "更新模式",
     "dataFrameUpdate": "資料表更新",
-    "rebuild": "重新建置"
+    "rebuild": "重新建置",
+    "minute": "分鐘",
+    "hour": "小時",
+    "day": "日期",
+    "month": "月份",
+    "week": "星期",
+    "settingInfo": {
+      "value": "設定值說明",
+      "minute": "分鐘：0 到 59",
+      "hour": "小時：0 到 23",
+      "day": "日期：1 到 31",
+      "month": "月份：1 到 12，亦可用英文簡稱取代，例如一月也可以寫 Jan。",
+      "week": "星期：0(週日) 到6(週六), 7也代表週日。亦可用英文簡稱取代，例如週日可以寫 Sun。",
+      "specialCharacters": "特殊字元代表意義",
+      "star": "星號(*)：代表任意時刻，例如若在月份那一欄填入星號，則代表任一月份皆可。",
+      "comma": "逗號(,)：分隔多個不同時間點。例如若要指定 3:00、6:00 與 9:00 三個時間點執行指令，就填入 3,6,9。",
+      "minus": "減號(-)：代表一段時間區間，例如填入 8-12 就代表從 8 點到 12 點的意思，也就是等同於 8,9,10,11,12。",
+      "slash": "斜線加數字(/n)：n 代表數字，這樣寫的意思就是「每隔 n 的單位」的意思，例如填入 */5 就代表每間隔五分鐘執行一次的意思，也可以寫成 0-59/5。"
+    },
+    "checkDatarowDeletable": "檢查有無資料刪除"
   },
   "fileDataUpdate": {
     "dataUpdateSetting": "資料更新設定",
@@ -890,7 +925,8 @@
     "updateImmediately": "立即更新",
     "AddNewWarRoom": "新增戰情室",
     "sendInvitation": "寄送邀請信",
-    "downloadPage": "下載"
+    "downloadPage": "下載圖片",
+    "changeDiagram": "切換圖表"
   },
   "timeScopeUnit": {
     "second": "秒",

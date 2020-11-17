@@ -5,6 +5,8 @@
     :result-info="resultInfo"
     :restrictions="restrictions"
     :is-war-room-addable="isWarRoomAddable"
+    :pinboard-group-id="pinboardGroupId"
+    :pinboard-account-id="pinboardAccountId"
     class="general-result"
     @refresh="refreshPinboardData"
     @unPin="unPin"
@@ -190,6 +192,14 @@ export default {
     isWarRoomAddable: {
       type: Boolean,
       default: false
+    },
+    pinboardGroupId: {
+      type: Number,
+      default: null
+    },
+    pinboardAccountId: {
+      type: Number,
+      default: null
     }
   },
   data: () => {
@@ -320,7 +330,7 @@ export default {
     align-items: center;
     height: 100%;
   }
-  .task {
+  .task[data-intend="key_result"] {
     padding-top: 30px;
   }
 }

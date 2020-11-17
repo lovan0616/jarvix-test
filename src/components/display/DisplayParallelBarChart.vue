@@ -1,6 +1,17 @@
 <template>
   <div class="display-basic-chart">
+    <button 
+      v-if="lineChartData"
+      class="btn-m btn-default change-diagram-btn"
+      @click="changeDiagram"
+    >{{ $t('button.changeDiagram') }}</button>
+    <display-line-chart
+      v-if="showLineChart && lineChartData"
+      :dataset="lineChartData.dataset"
+      :title="lineChartData.title"
+    />
     <v-echart
+      v-else
       :style="chartStyle"
       :options="options"
       auto-resize
@@ -113,7 +124,8 @@ export default {
       addonSeriesItem: JSON.parse(JSON.stringify(echartAddon.seriesItem)),
       addonSeriesItems: JSON.parse(JSON.stringify(echartAddon.seriesItems)),
       selectedData: [],
-      showPagination: true
+      showPagination: true,
+      showLineChart: false
     }
   },
   computed: {
@@ -223,12 +235,62 @@ export default {
     },
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
+    },
+    lineChartData () {
+      // 判斷是否為 2c1t
+      if (this.dataset.index.length === 0) return false
+      if (this.dataset.index[0].length !== 2) return false
+      if (this.dataset.columns.length > 1) return false
+
+      let lineChartIndex = []
+      let lineChartColumns = []
+      let lineChartData = []
+      this.dataset.index.forEach((element, index) => {
+        let xAxisIndex = lineChartIndex.findIndex(value => value === element[0])
+        let currentIndexLength = lineChartIndex.length
+        let seriesIndex = lineChartColumns.findIndex(value => value === element[1])
+        let currentSeriesLength = lineChartColumns.length
+        if (xAxisIndex < 0) {
+          lineChartIndex.push(element[0])
+          xAxisIndex = currentIndexLength
+          currentIndexLength += 1
+          lineChartData.push(Array(currentSeriesLength).fill(null))
+        }
+        if (seriesIndex < 0) {
+          lineChartColumns.push(element[1])
+          seriesIndex = currentSeriesLength
+          currentSeriesLength += 1
+
+          for (let i = 0; i < currentIndexLength; i++) {
+            lineChartData[i].push(null)
+          }
+        }
+        lineChartData[xAxisIndex][seriesIndex] += this.dataset.data[index][0]
+      })
+      // 關掉 drill down
+      let xAxis = {...this.title.xAxis[0]}
+      xAxis.drillable = false
+
+      return {
+        dataset: {
+          index: lineChartIndex,
+          data: lineChartData,
+          columns: lineChartColumns
+        },
+        title: {
+          xAxis: [xAxis],
+          yAxis: this.title.yAxis
+        }
+      }
     }
   },
   mounted () {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
+    changeDiagram () {
+      this.showLineChart = !this.showLineChart
+    },
     composeColumn (element, colIndex) {
       const shortenNumberMethod = this.shortenNumber
       return {
@@ -298,3 +360,14 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.display-basic-chart {
+  position: relative;
+
+  .change-diagram-btn {
+    position: absolute;
+    top: -32px;
+    right: 0;
+  }
+}
+</style>

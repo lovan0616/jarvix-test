@@ -26,16 +26,76 @@
           >
             <div class="data-frame-name">{{ $t('editing.dataFrame') }}：{{ dataFrameInfo.primaryAlias }}</div>
           </el-tooltip>
-          <div class="button-block">
-            <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
-            <button 
-              type="button" 
-              class="btn-m btn-default"
-              @click="buildAlias"
-            >{{ $t('button.build') }}</button>
-          </div>
         </div>
         <div class="dialog-content-block">
+          <div class="data-template-block">
+            <el-tooltip :content="$t('editing.downloadValueAliasTemplate')">
+              <button
+                :disabled="isLoadingValueAliasTemplate"
+                class="btn btn-secondary"
+                @click="getValueAliasTemplate">
+                <svg-icon 
+                  v-show="isLoadingValueAliasTemplate" 
+                  icon-class="spinner"/>
+                {{ $t('editing.downloadAliasTemplate') }}
+              </button>
+            </el-tooltip>
+            <el-popover
+              v-model="isUploadPopoverVisible"
+              trigger="click"
+              popper-class="el-popover--value-alias-template-uploader"
+            >
+              <label
+                for="valueAliasTemplateInput"
+                class="data-template-block__input-label"
+              >
+                <span class="file-name">{{ valueAliasTemplateInput ? valueAliasTemplateInput.name : this.$t('editing.chooseFile') }}</span>
+                <input
+                  id="valueAliasTemplateInput" 
+                  :key="valueAliasTemplateInput ? valueAliasTemplateInput.name : 'empty'"
+                  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                  type="file"
+                  hidden
+                  @change="onInputValueAliasTemplate($event.target.files)"
+                >
+              </label>
+              <div 
+                v-show="valueAliasTemplateInput" 
+                class="button-block">
+                <a 
+                  href="javascript:void(0);" 
+                  class="link btn-cancel"
+                  @click="onCancelUploadValueAliasTemplate"
+                >{{ $t('button.cancel') }}</a>
+                <a
+                  :disabled="isUploadingValueAliasTemplate" 
+                  href="javascript:void(0);"
+                  class="link btn-confirm"
+                  @click="updateBooleanAndCategoryValueAliasTemplate"
+                > 
+                  <svg-icon
+                    v-show="isUploadingValueAliasTemplate"
+                    icon-class="spinner"/>
+                  {{ $t('button.upload') }}
+                </a>
+              </div>
+              <el-tooltip
+                slot="reference"
+                :content="$t('editing.uploadValueAliasTemplate')" >
+                <button
+                  class="btn btn-secondary"
+                >{{ $t('editing.uploadAliasTemplate') }}</button>
+              </el-tooltip>
+            </el-popover>
+            <div class="button-block">
+              <span class="remark-text">{{ $t('editing.rebuildRemark') }}</span>
+              <button 
+                type="button" 
+                class="btn-m btn-default"
+                @click="buildAlias"
+              >{{ $t('button.build') }}</button>
+            </div>
+          </div>
           <div class="data-column-block">
             <div class="block-title">{{ $t('editing.columnName') }}</div>
             <div class="data-column-block-body">
@@ -176,8 +236,10 @@
 <script>
 import { getDataColumnDataValue } from '@/API/DataSource'
 import { getValueAlias, saveValueAlias } from '@/API/Alias'
+import { fetchBooleanAndCategoryValueAliasTemplate, updateBooleanAndCategoryValueAliasTemplate } from '@/API/AutomationScript'
 import { getSelfInfo } from '@/API/User'
 import { Message } from 'element-ui'
+import { mapGetters } from 'vuex'
 import DataInputVerify from '../DataInputVerify'
 
 export default {
@@ -204,10 +266,15 @@ export default {
       },
       userId: null,
       isSaving: false,
-      isLoading: true
+      isLoading: true,
+      isLoadingValueAliasTemplate: false,
+      isUploadingValueAliasTemplate: false,
+      valueAliasTemplateInput: null,
+      isUploadPopoverVisible: false
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     }
@@ -362,8 +429,67 @@ export default {
     },
     closeDialog () {
       this.$emit('close')
+    },
+    getValueAliasTemplate () {
+      this.isLoadingValueAliasTemplate = true
+      fetchBooleanAndCategoryValueAliasTemplate(this.dataFrameInfo.id)
+        .then(({ data }) => {
+          const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+          if (navigator.msSaveBlob) {
+            // IE 10+
+            navigator.msSaveBlob(blob, this.dataFrameInfo.primaryAlias)
+          } else {
+            const link = document.createElement('a')
+            if (link.download !== undefined) {
+              // Browsers that support HTML5 download attribute
+              const url = URL.createObjectURL(blob)
+              link.setAttribute('href', url)
+              link.setAttribute('download', `${this.dataFrameInfo.primaryAlias}_${this.$t('editing.valueAliasTemplate')}.xlsx`)
+              link.style.visibility = 'hidden'
+              document.body.appendChild(link)
+              link.click()
+              document.body.removeChild(link)
+              URL.revokeObjectURL(url)
+            }
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.isLoadingValueAliasTemplate = false
+        })
+    },
+    onInputValueAliasTemplate (file) {
+      if (file) this.valueAliasTemplateInput = file[0]
+    },
+    updateBooleanAndCategoryValueAliasTemplate () {
+      if (!this.valueAliasTemplateInput) return
+      if (this.isUploadingValueAliasTemplate) return
+
+      this.isUploadingValueAliasTemplate = true
+      let formData = new FormData()
+      formData.append('file', this.valueAliasTemplateInput)
+      updateBooleanAndCategoryValueAliasTemplate(formData, this.getCurrentGroupId, this.dataFrameInfo.id)
+        .then(res => {
+          Message({
+            message: this.$t('editing.uploadSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+          this.fetchColumnInfo()
+        })
+        .catch(error => {})
+        .finally(() => {
+          this.valueAliasTemplateInput = null
+          this.isUploadingValueAliasTemplate = false
+          this.isUploadPopoverVisible = false
+        })
+    },
+    onCancelUploadValueAliasTemplate () {
+      this.isUploadPopoverVisible = false
+      this.valueAliasTemplateInput = null
     }
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -371,23 +497,18 @@ export default {
   .dialog-header-block {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 
     .data-frame-name {
       font-size: 14px;
       @include text-hidden
     }
-
-    .remark-text {
-      color: $theme-color-warning;
-      font-size: 14px;
-      margin-right: 12px;
-      white-space: nowrap;
-    }
   }
   .dialog-content-block {
     display: flex;
+    flex-wrap: wrap;
     max-height: 70vh;
 
     .data-column-block {

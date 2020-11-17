@@ -203,13 +203,24 @@
                   :key="info.title"
                   class="db-connection-log-info info"
                 >
-                  <p class="info__label">{{ info.label }}: </p>
+                  <p class="info__label">{{ info.label }}</p>
                   <p class="info__description">
                     {{ info.title === "dbConnectionElapsedTime" ? elapsedTimeFormat(data[info.title]) : timeToDateTimeSecondPrecision(data[info.title]) }}
                   </p>
                 </div>
+                <div 
+                  v-if="data.dataImportErrorMessage" 
+                  class="db-connection-log-info">
+                  <p class="info__label">{{ $t('editing.errorReason') }}</p>
+                  <p class="info__description">{{ data.dataImportErrorMessage }}</p>
+                </div>
               </template>
-              <span>{{ batchLoadStatus(data) }}</span>
+              <span :class="data.latestImportStatus ? `db-connection-status--${data.latestImportStatus.toLowerCase()}` : null">
+                {{ batchLoadStatus(data) }}
+                <svg-icon
+                  v-show="data['dbConnectionStartTime'] && data['dbConnectionEndTime'] && data['dbConnectionElapsedTime']"
+                  icon-class="information-circle" />
+              </span>
             </el-tooltip>
           </span>
           <span v-else>{{ headInfo.time ? timeFormat(data[headInfo.value], headInfo.time) : data[headInfo.value] }}</span>
@@ -420,13 +431,13 @@ export default {
      */
     buildStatus (value) {
       switch (value) {
-        case 'Warn':
-        case 'WARN':
         case 'Ready':
         case 'READY':
         case 'Enable':
         case 'ENABLE':
           return i18n.t('editing.dataManageable')
+        case 'Warn':
+        case 'WARN':
         case 'Fail':
         case 'FAIL':
         case 'Delete':
@@ -473,12 +484,12 @@ export default {
       return data['state'] === 'Pending'
     },
     isFail (data) {
-      return data['state'] === 'Disable' || data['type'] === 'DISABLE' || data['state'] === 'Fail' || data['type'] === 'FAIL'
+      return data['state'] === 'Disable' || data['type'] === 'DISABLE' || data['state'] === 'Fail' || data['type'] === 'FAIL' || data['state'] === 'Warn' || data['type'] === 'WARN'
     },
     elapsedTimeFormat (time) {
-      let hour = this.$t('timeScopeUnit.allowArg.hour', {n: Math.floor(time / 3600)}) + ' '
-      let minute = this.$t('timeScopeUnit.allowArg.minute', {n: Math.floor(time % 3600 / 60)}) + ' '
-      let second = this.$t('timeScopeUnit.allowArg.second', {n: time % 60})
+      let hour = this.$tc('timeScopeUnit.allowArg.hour', Math.floor(time / 3600)) + ' '
+      let minute = this.$tc('timeScopeUnit.allowArg.minute', Math.floor(time % 3600 / 60)) + ' '
+      let second = this.$tc('timeScopeUnit.allowArg.second', time % 60)
       return  hour + minute + second
     }
   },
@@ -528,6 +539,14 @@ export default {
     }
     .dataframe-name {
       @include text-hidden;
+    }
+    .db-connection-status {
+      &--fail {
+        color: #FF5C46;
+      }
+      &--complete {
+        color: #2FECB3;
+      }
     }
   }
   .hasWidth {

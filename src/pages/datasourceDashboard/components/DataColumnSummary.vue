@@ -83,7 +83,7 @@ export default {
     dataTypeDescriptionList () {
       const distinctCount = this.summaryData.distinct_count
       if (distinctCount <= 1) return
-      const totlaRowsWithData = this.summaryData.total_count + this.summaryData.null_count
+      const totlaRowsWithData = this.summaryData.total_count
       switch (this.summaryData.statsType) {
         case 'CATEGORY': {
           const {

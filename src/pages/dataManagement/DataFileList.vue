@@ -163,6 +163,7 @@ import { getDataFrameById, checkDataSourceStatusById, deleteDataFrameById } from
 import FeatureManagementDialog from './components/feature/FeatureManagementDialog'
 import { getAccountInfo } from '@/API/Account'
 import { mapState } from 'vuex'
+import { Message } from 'element-ui'
 
 export default {
   name: 'DataFileList',
@@ -234,6 +235,11 @@ export default {
     tableHeaders () {
       return [
         {
+          text: 'ID',
+          value: 'id',
+          width: '65px'
+        },
+        {
           text: this.$t('editing.tableName'),
           value: 'primaryAlias',
           sort: true
@@ -247,25 +253,25 @@ export default {
           text: this.$t('editing.createDate'),
           value: 'createDate',
           sort: true,
-          width: '140px',
+          width: '135px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: this.$t('editing.updateDate'),
           value: 'updateDate',
           sort: true,
-          width: '140px',
+          width: '135px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: this.$t('editing.status'),
           value: 'state',
-          width: '115px'
+          width: '90px'
         },
         {
           text: this.$t('editing.lastUpdateResult'),
           value: 'latestImportStatus',
-          width: '140px'
+          width: '160px'
         },
         {
           text: this.$t('editing.action'),
@@ -426,6 +432,12 @@ export default {
       const {id: dataframeId, dataSourceId: selectedDataSourceId} = this.selectList[0]
       deleteDataFrameById(dataframeId)
         .then(res => {
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
           this.dataList = this.dataList.filter(dataframe => dataframe.id !== dataframeId)
           this.fetchData()
           this.deleteFinish()
@@ -569,6 +581,10 @@ export default {
     color: #979797;
   }
 
+  /deep/ .data-table .data-table-cell {
+    min-width: 65px;
+  }
+
   .dataframe-action {
     justify-content: flex-end;
     margin-right: 12px;
@@ -589,6 +605,25 @@ export default {
 
     .spinner-icon {
       margin-right: 8px;
+    }
+  }
+}
+
+// 別名範本下載與上傳 共用樣式
+/deep/ .data-template-block {
+  flex-basis: 100%;
+  display: flex;
+  margin-bottom: 12px;
+  & > .btn-secondary {
+    margin-right: 8px;
+  }
+  .button-block {
+    margin-left: auto;
+    .remark-text {
+      color: $theme-color-warning;
+      font-size: 14px;
+      margin-right: 12px;
+      white-space: nowrap;
     }
   }
 }

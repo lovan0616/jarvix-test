@@ -17,7 +17,6 @@
         @click.stop="viewDetail"
       >{{ $t('warRoom.goToLivePage') }}</a>
       <a
-        v-if="hasPermission('group_edit_data')"
         href="javascript:void(0);" 
         class="link action-link"
         @click.stop="edit"
@@ -36,13 +35,13 @@
           :class="{'war-room__popup--published': warRoomInfo.isPublishing}"
           class="war-room__popup">
           <div
-            v-if="warRoomInfo.isPublishing && hasPermission('group_edit_data')"
+            v-if="warRoomInfo.isPublishing"
             class="popup-box" 
             @click.stop="unpublish">
             <div class="popup-text">{{ $t('warRoom.unpublish') }}</div>
           </div>
           <div 
-            v-else-if="!warRoomInfo.isPublishing && hasPermission('group_edit_data')"
+            v-else-if="!warRoomInfo.isPublishing"
             class="popup-box" 
             @click.stop="publish">
             <div class="popup-text">{{ $t('warRoom.publish') }}</div>
@@ -54,13 +53,11 @@
             <div class="popup-text">{{ $t('warRoom.getPublishedUrl') }}</div>
           </div>
           <div
-            v-if="hasPermission('group_edit_data')"
             class="popup-box" 
             @click.stop="renameWarRoom">
             <div class="popup-text">{{ $t('warRoom.rename') }}</div>
           </div>
           <div
-            v-if="hasPermission('group_delete_data')"
             class="popup-box" 
             @click.stop="deleteWarRoom">
             <div class="popup-text">{{ $t('warRoom.delete') }}</div>
@@ -72,7 +69,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
   name: 'SingleWarRoom',
   props: {
@@ -87,9 +83,6 @@ export default {
          }
       }
     }
-  },
-  computed: {
-    ...mapGetters('userManagement', ['hasPermission'])
   },
   methods: {
     viewDetail () {

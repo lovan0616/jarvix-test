@@ -103,6 +103,12 @@ export default {
       return dataFrame.dataFrameId !== data.id
     })
   },
+  // 刪除資料源後，去檢查正在建置的資料表當中是不是有被刪除資料源的表
+  updateProcessingDataFrameListAfterDeleteDataSource (state, data) {
+    state.processingDataFrameList = state.processingDataFrameList.filter(dataFrame => {
+      return dataFrame.dataSourceId !== data
+    })
+  },
   clearProcessingDataFrameList (state, data) {
     state.processingDataFrameList = []
   },

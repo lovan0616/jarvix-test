@@ -141,7 +141,6 @@
               {{ $t('warRoom.warRoomSetting') }}
             </button>
             <custom-dropdown-select
-              v-if="hasPermission('group_create_data')"
               :data-list="addComponentList"
               trigger="hover"
               @select="addComponent"
@@ -291,7 +290,7 @@ import {
   unpublishWarRoom,
   updateWarRoomLayout
 } from '@/API/WarRoom'
-import { mapGetters } from 'vuex'
+
 export default {
   name: 'WarRoom',
   inject: ['$validator'],
@@ -358,7 +357,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('userManagement', ['hasPermission']),
     addComponentList () {
       return [
         ...(this.chartComponent && this.chartComponent.length < 8) && [{
