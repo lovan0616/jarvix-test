@@ -85,7 +85,8 @@
         >{{ $t('editing.emptyKey') }}</div>
       </div>
     </transition>
-    <button 
+    <button
+      v-if="isShowPreviewEntry"
       :disabled="isDisablePreviewDataSource"
       class="preview-datasource-btn"
       @click="togglePreviewDataSource"
@@ -101,6 +102,7 @@
       </el-tooltip>
     </button>
     <button
+      v-if="isShowAdvanceSettingEntry"
       :disabled="isDisableDataFrameAdvanceSetting" 
       class="dataframe-setting-btn"
       @click="toggleAdvanceDataFrameSetting"
@@ -129,6 +131,14 @@ export default {
   props: {
     // 因應 Dashboard 問問題後不需要轉址
     redirectOnChange: {
+      type: Boolean,
+      default: true
+    },
+    isShowPreviewEntry: {
+      type: Boolean,
+      default: true
+    },
+    isShowAdvanceSettingEntry: {
       type: Boolean,
       default: true
     }

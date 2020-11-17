@@ -22,7 +22,6 @@
       :transcript="transcript"
       :intent="intent"
       :is-war-room-addable="isWarRoomAddable"
-      :redirect-on-select="redirectOnSelect"
       mode="display"
       @fetch-new-components-list="getComponentV2"
     />
@@ -51,13 +50,6 @@ export default {
   components: {
     UnknownInfoBlock
   },
-  props: {
-    // 因應 Dashboard 問問題後不需要轉址
-    redirectOnSelect: {
-      type: Boolean,
-      default: true
-    }
-  },
   data () {
     return {
       isLoading: true,
@@ -85,7 +77,6 @@ export default {
   },
   computed: {
     ...mapState('result', ['currentResultId']),
-    ...mapState('dataSource', ['appQuestion']),
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
     dataSourceId () {
       return this.$store.state.dataSource.dataSourceId
@@ -107,12 +98,9 @@ export default {
     }
   },
   watch: {
-    '$route.query' ({ question }) {
-      this.fetchApiAsk({
-        'question': question || this.appQuestion,
-        'dataSourceId': this.dataSourceId,
-        'dataFrameId': this.dataFrameId}
-      )
+    '$route.query' ({ question, action, stamp }) {
+      if (!question) return false
+      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'dataFrameId': this.dataFrameId})
     },
     askCondition: {
       deep: true,
@@ -146,10 +134,11 @@ export default {
     // ...mapActions('dataSource', ['triggerColumnDataCalculation']),
     fetchData () {
       const {dataSourceId, dataFrameId, question} = this.$route.query
+      if (!question) return
       this.fetchApiAsk({
-        dataSourceId: dataSourceId || this.dataSourceId,
-        dataFrameId: dataFrameId || this.dataFrameId,
-        question: question || this.appQuestion
+        dataSourceId, 
+        dataFrameId,
+        question
       })
     },
     clearLayout () {
@@ -298,10 +287,6 @@ export default {
               this.isWarRoomAddable = componentResponse.isWarRoomAddable
               this.currentQuestionDataFrameId = this.transcript.dataFrame.dataFrameId
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
-              this.$store.commit('result/updateCurrentResultInfo', {
-                ...componentResponse.componentIds,
-                question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
-              })
               this.isLoading = false
               break
             case 'Disable':

@@ -12,7 +12,8 @@
     "projectManagement": "专案管理",
     "algorithm": "演算法",
     "helper": "帮助",
-    "warRoom": "战情室"
+    "warRoom": "战情室",
+    "application": "应用程式"
   },
   "sideNav": {
     "functionList": "功能选单",
@@ -736,6 +737,23 @@
     "goToLivePage": "前往发布页面",
     "all": "全部",
     "displaySetting": "显示设定"
+  },
+  "miniApp": {
+    "application": "应用程式",
+    "createNewApplication": "新增应用程式",
+    "emptyApplication": "目前无任何内容",
+    "editContent": "编辑内容",
+    "goToApp": "前往应用程式",
+    "editInfo": "编辑资料",
+    "deleteApp": "删除应用程式",
+    "getAppUrl": "取得分享连结",
+    "editApp": "编辑应用程式",
+    "miniAppName": "应用程式名称",
+    "description": "描述",
+    "chooseIcon": "选择图示",
+    "pleaseEnterName": "请输入名称",
+    "pleaseEnterDescription": "请输入描述",
+    "pleaseSelectAnIcon": "请选择一个图示"
   },
   "clustering": {
     "cluster": "群體",

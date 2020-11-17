@@ -1,6 +1,12 @@
 <template>
   <div class="wrapper wrapper--without-nav-header mini-app">
-    <main class="mini-app__page">
+    <spinner
+      v-if="isLoading"
+      :title="$t('editing.loading')"
+      size="50"/>
+    <main 
+      v-else 
+      class="mini-app__page">
       <nav class="mini-app__nav">
         <div class="nav--left">
           <div
@@ -8,7 +14,42 @@
             @click="$router.push({ name: 'MiniAppList' })">
             <svg-icon icon-class="arrow-left" />
           </div>
-          <div class="dashboard-name">{{ appData.displayedName }}</div>
+          <div class="app-name">
+            <template v-if="isEditingAppName">
+              <input-verify
+                v-validate="`required|max:${max}`"
+                key="appNameInput"
+                v-model="newAppName"
+                class="new-name-input"
+                name="appNameInput"
+              />
+              <button
+                class="btn-m btn-default" 
+                @click="updateAppName">
+                <svg-icon
+                  v-if="isProcessing"
+                  icon-class="spinner"/>
+                {{ $t('button.save') }}
+              </button>
+              <button
+                class="btn-m btn-outline cancel-btn"
+                @click="isEditingAppName = false"
+              >
+                {{ $t('button.cancel') }}
+              </button>
+            </template>
+            <template v-else>
+              {{ miniApp.name }}
+              <div
+                class="edit-app-name"
+                @click="isEditingAppName = true"
+              >
+                <svg-icon 
+                  icon-class="edit" 
+                  class="icon-edit"/>
+              </div>
+            </template>
+          </div>
         </div>
         <div class="nav--right">
           <div class="button-container"> 
@@ -106,7 +147,7 @@
                 :key="dashboard.id"
                 :class="{'is-active': dashboard.id === currentDashboardId}"
                 class="item"
-                @click="currentDashboardId = dashboard.id"
+                @click="activeCertainDashboard(dashboard.id)"
               >
                 <svg-icon 
                   class="item-icon" 
@@ -117,9 +158,37 @@
           </div>
           <main class="mini-app__dashbaord">
             <div class="mini-app__dashbaord-header">
-              <span class="name">{{ currentDashboard.name }}</span>
+              <template v-if="isEditingDashboardName">
+                <input-verify
+                  v-validate="`required|max:${max}`"
+                  key="dashboardNameInput"
+                  v-model="newDashboardName"
+                  class="new-name-input"
+                  name="dashboardNameInput"
+                />
+                <button
+                  class="btn-m btn-default"
+                  @click="updateDashboardName"
+                >
+                  {{ $t('button.save') }}
+                </button>
+                <button
+                  class="btn-m btn-outline cancel-btn"
+                  @click="isEditingDashboardName = false"
+                >
+                  {{ $t('button.cancel') }}
+                </button>
+              </template>
+              <template v-else>
+                <span class="name">{{ currentDashboard.name }}</span>
+                <div @click="isEditingDashboardName = true">
+                  <svg-icon 
+                    icon-class="edit" 
+                    class="icon-edit"/>
+                </div>
+              </template>
               <button 
-                class="btn-m btn-outline btn-has-icon" 
+                class="btn-m btn-outline btn-has-icon create-component-btn" 
                 @click="isShowCreateComponentDialog = true">
                 <svg-icon icon-class="plus"/>
                 {{ $t('miniApp.createComponent') }}
@@ -127,7 +196,7 @@
             </div>
             <div class="mini-app__dashbaord-components">
               <div 
-                v-if="!currentDashboard.componentList || currentDashboard.componentList.length === 0" 
+                v-if="currentDashboard.components.length === 0" 
                 class="empty-block">
                 {{ $t('miniApp.noneComponent') }}
                 <button 
@@ -139,14 +208,14 @@
               </div>
               <template v-else>
                 <div 
-                  v-for="component in currentDashboard.componentList"
-                  :key="component.id"
+                  v-for="component in currentDashboard.components"
+                  :key="component.keyResultId"
                   class="component-item">
                   <span class="item-title">
-                    {{ component.title }}
+                    {{ component.config.diaplayedName }}
                   </span>
                   <task
-                    :component-id="component.id"
+                    :component-id="component.keyResultId"
                     intend="key_result"
                   />
                 </div>
@@ -156,6 +225,12 @@
         </template>
       </div>
     </main>
+    <div 
+      v-show="isProcessing" 
+      class="dialog">
+      <spinner size="50"/>
+      {{ $t('button.processing') }}
+    </div>
     <create-dashboard-dialog
       v-if="isShowCreateDashboardDialog"
       @closeDialog="isShowCreateDashboardDialog = false"
@@ -193,65 +268,31 @@
 </template>
 
 <script>
-import CreateDashboardDialog from './CreateDashboardDialog.vue'
-import CreateComponentDialog from './CreateComponentDialog.vue'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import moment from 'moment'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import { getMiniAppInfo, updateAppSetting, updateAppName } from '@/API/MiniApp'
+import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
+import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
+import InputVerify from '@/components/InputVerify'
 import { Message } from 'element-ui'
 
 export default {
+  inject: ['$validator'],
   name: 'MiniApp',
   components: {
     CreateDashboardDialog,
     CreateComponentDialog,
+    InputVerify,
     CustomDropdownSelect,
     WritingDialog,
     DecideDialog
   },
   data () {
     return {
-      miniApp: {
-        id: 0,
-        name: '營運分析',
-        settings: {
-          editModeData: {
-            dashboards: [
-              {
-                id: 0,
-                name: 'Dashboard 1',
-                components: [
-                  {
-                    id: 0,
-                    keyResultId: 222,
-                    resultId: 72781,
-                    orderSequence: 1,
-                    config: {
-                      displayedName: 'Component1',
-                      question: "利潤前十"
-                    }
-                  }
-                ]
-              }
-            ],
-            displayedName: 'App1',
-            isPublishing: true
-          },
-          viewModeData: {
-            dashboards: [],
-            updateDate: null,
-            isPublishing: true,
-            displayedName: 'App1'
-          }
-        },
-        description: '營運分析應用程式',
-        icon: 'icon-name',
-        group_id: 1,
-        createDate: "2020-11-10T09:48:40.511+0000",
-        updateDate: "2020-11-10T09:48:40.511+0000",
-      },
-      currentDashboardId: 0,
+      miniApp: {},
+      currentDashboardId: null,
       isShowCreateDashboardDialog: false,
       isShowCreateComponentDialog: false,
       isLoading: false,
@@ -259,7 +300,11 @@ export default {
       isShowShare: false,
       shareLink: null,
       confirmDeleteText: this.$t('editing.confirmDelete'),
-      isShowDelete: false
+      isShowDelete: false,
+      newAppName: '',
+      isEditingAppName: false,
+      newDashboardName: '',
+      isEditingDashboardName: false
     }
   },
   computed: {
@@ -285,8 +330,7 @@ export default {
       return this.appData.dashboards
     },
     currentDashboard () {
-      if (this.dashboardList.length === 0) return {}
-      return this.dashboardList.find(item => item.id === this.currentDashboardId)
+      return this.dashboardList.length > 0 ? this.dashboardList.find(item => item.id === this.currentDashboardId) : {}
     },
     otherFeatureList () {
       if (!this.isEditMode || !this.appData) return []
@@ -300,24 +344,51 @@ export default {
           name: this.$t('miniApp.deleteApplication')
         }
       ]
-    }                             
+    },
+    max () {
+      return this.$store.getters['validation/fieldCommonMaxLength']
+    },
+    miniAppId () {
+      return this.$route.params.mini_app_id
+    }                        
+  },
+  created () {
+    this.getMiniAppInfo()  
   },
   methods: {
+    getMiniAppInfo () {
+      this.isLoading = true
+      getMiniAppInfo(this.miniAppId)
+        .then(miniAppInfo => {
+          this.miniApp = miniAppInfo
+          this.newAppName = miniAppInfo.name
+
+          // 如果有 dashboard, focus 在第一個
+          if (this.dashboardList.length > 0) {
+            this.currentDashboardId = this.dashboardList[0].id
+            this.newDashboardName = this.currentDashboard.name
+          }
+        })
+        .catch(() => {})
+        .finally(() => this.isLoading = false )
+    },
     createDashboard (newDashBoardInfo) {
-      this.miniApp.dashboardList.push({
+      this.miniApp.settings.editModeData.dashboards.push({
         ...newDashBoardInfo,
-        componentList: []
+        components: []
       })
       this.currentDashboardId = newDashBoardInfo.id
       this.isShowCreateDashboardDialog = false
+      this.updateAppSetting()
     },
     createComponent (newComponentInfo) {
-      this.dashboardList.forEach(board => {
+      this.miniApp.settings.editModeData.dashboards.forEach(board => {
         if (board.id === this.currentDashboardId) {
-          board.componentList.push(newComponentInfo)
+          board.components.push(newComponentInfo)
         }
       })
       this.isShowCreateComponentDialog = false
+      this.updateAppSetting()
     },
     publishMiniApp () {
       this.miniApp.settings.viewModeData = {
@@ -397,33 +468,117 @@ export default {
       //   })
       //   .finally(() => { this.isProcessing = false })
     },
+    updateAppName () {
+      this.$validator.validate('appNameInput')
+        .then(valid => {
+          if (!valid) return
+          
+          this.isProcessing = true
+          updateAppName(this.miniAppId, { name: this.newAppName })
+            .then(() => {
+              Message({
+                message: this.$t('message.saveSuccess'),
+                type: 'success',
+                duration: 3 * 1000,
+                showClose: true
+              })
+            })
+            .catch(() => {})
+            .finally(() => {
+              this.miniApp.name = this.newAppName
+              this.isEditingAppName = false
+              this.isProcessing = false
+            } )
+        })
+    },
+    updateDashboardName () {
+      this.$validator.validate('dashboardNameInput').then(valid => {
+        if (!valid) return
+
+        this.isProcessing = true
+        this.miniApp.settings.editModeData.dashboards.forEach(board => {
+          if (board.id === this.currentDashboardId) board.name = this.newDashboardName
+        })
+        
+        this.updateAppSetting(this.miniApp)
+          .then(() => { this.isEditingDashboardName = false })
+          .catch(() => {})
+          .finally(() => { this.isProcessing = false })
+      })
+    },
+    updateAppSetting (appInfo = this.miniApp, miniAppId = this.miniAppId) {
+      return updateAppSetting(miniAppId, { ...appInfo })
+        .then(() => {
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .catch(() => {})
+    },
+    activeCertainDashboard (dashboardId) {
+      this.isEditingDashboardName = false
+      this.currentDashboardId = dashboardId
+      this.newDashboardName = this.currentDashboard.name
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .mini-app {
+  .spinner-block {
+    margin-top: 30vh;
+  }
+  .dialog {
+    text-align: center;
+  }
   &__page {
     height: 100%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    /deep/ .new-name-input {
+      margin-right: 16px;
+      .input-verify-text {
+        height: 30px;
+        margin-bottom: 0;
+      }
+      .input-error {
+        bottom: -16px;
+      }
+    }
   }
   &__nav {
     flex: 0 0 56px;
     padding: 0 24px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     background: rgba(0, 0, 0, 0.55);
     border-bottom: 1px solid #232C2E;
+    justify-content: space-between;
     .nav--left {
       display: flex;
       align-items: center;
+      .app-name {
+        display: flex;
+        align-self: center;
+        font-size: 20px;
+      }
       .icon-arrow {
         cursor: pointer;
         color: $theme-color-primary;
         margin-right: 20px;
+      }
+      .icon-edit {
+        margin-left: 12px;
+        color: $theme-color-primary;
+        font-size: 16px;
+      }
+      .cancel-btn {
+        margin-left: 6px;
       }
     }
     .nav--right {
@@ -506,18 +661,37 @@ export default {
   }
   &__dashbaord {
     flex: 1;
-    padding: 20px;
-    overflow: overlay;
+    padding: 20px 0 0 20px;
+    display: flex;
+    flex-direction: column;
     &-header {
+      flex: 0 0 30px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 20px;
+      padding-right: 20px;
       .name {
         font-size: 20px;
         line-height: 28px;
       }
+      .icon-edit {
+        color: $theme-color-primary;
+        margin-left: 12px;
+        cursor: pointer;
+      }
+      .create-component-btn {
+        margin-left: auto;
+      }
+      .cancel-btn {
+        margin-left: 6px;
+      }
     }
     &-components {
+      flex: 1;
+      height: 0;
+      overflow: overlay;
+      padding-right: 20px;
       .component-item {
         width: calc(50% - 8px);
         float: left;
@@ -534,6 +708,11 @@ export default {
         .task {
           width: 100%;
         }
+      }
+      &:after {
+        content: '';
+        display: block;
+        clear: both;
       }
     }
   }
