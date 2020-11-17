@@ -173,7 +173,7 @@ export default {
         return res
       }
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
-      config.toolbox.feature.magicType.show = true
+      config.toolbox.feature.magicType.show = false
       // 座標軸名稱
       config.xAxis = this.title.xAxis.map(axis => {
         return {
@@ -244,7 +244,7 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+            formatter (value) { return shortenNumberMethod(value.data[colIndex+1], 0) }
           }
         })
       }
