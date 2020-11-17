@@ -272,7 +272,12 @@ import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import moment from 'moment'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
-import { getMiniAppInfo, updateAppSetting, updateAppName } from '@/API/MiniApp'
+import {
+  getMiniAppInfo,
+  updateAppSetting,
+  updateAppName,
+  deleteMiniApp
+} from '@/API/MiniApp'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
 import InputVerify from '@/components/InputVerify'
@@ -391,24 +396,34 @@ export default {
       this.updateAppSetting()
     },
     publishMiniApp () {
-      this.miniApp.settings.viewModeData = {
+      this.isProcessing = true
+      const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
+      // 更新發佈狀態
+      updatedMiniAppData.settings.editModeData.isPublishing = true
+      // 更新發佈區資料
+      updatedMiniAppData.settings.viewModeData = {
         dashboards: this.miniApp.settings.editModeData.dashboards,
         updateDate: new Date(),
-        isPublishing: true,
         displayedName: this.miniApp.settings.editModeData.displayedName
       }
-      // TODO: connect to API
-      this.miniApp.settings.editModeData.isPublishing = true
+      this.updateAppSetting(updatedMiniAppData)
+        .then(() => { this.miniApp = updatedMiniAppData })
+        .finally(() => this.isProcessing = false)
     },
     unpublishMiniApp () {
-      this.miniApp.settings.viewModeData = {
+      this.isProcessing = true
+      const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
+      // 更新發佈狀態
+      updatedMiniAppData.settings.editModeData.isPublishing = false
+      // 更新發佈區資料
+      updatedMiniAppData.settings.viewModeData = {
         dashboards: [],
         updateDate: new Date(),
-        isPublishing: false,
-        displayedName: null
+        isPublishing: false
       }
-      // TODO: connect to API
-      this.miniApp.settings.editModeData.isPublishing = false
+      this.updateAppSetting(updatedMiniAppData)
+        .then(() => { this.miniApp = updatedMiniAppData })
+        .finally(() => this.isProcessing = false)
     },
     formatTimeStamp (timestampe) {
       return moment(timestampe).format('YYYY/M/D')
@@ -455,18 +470,18 @@ export default {
     },
     confirmDelete () {
       this.isProcessing = true
-      // deleteMiniApp(this.tempEditInfo.id)
-      //   .then(() => {
-      //     Message({
-      //       message: this.$t('message.deleteSuccess'),
-      //       type: 'success',
-      //       duration: 3 * 1000,
-      //       showClose: true
-      //     })
-      //     this.isShowDelete = false
-      //     this.fetchData()
-      //   })
-      //   .finally(() => { this.isProcessing = false })
+      deleteMiniApp(this.miniAppId)
+        .then(() => {
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+          this.isShowDelete = false
+          this.$router.push({ name: 'MiniAppList' })
+        })
+        .finally(() => { this.isProcessing = false })
     },
     updateAppName () {
       this.$validator.validate('appNameInput')
