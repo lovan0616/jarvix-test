@@ -120,6 +120,10 @@ export default {
     lowerBoundList () {
       return this.dataset.predictDataList.map(item => item - this.zValue * this.dataset.sigma)
     },
+    yAxisMinValue () {
+      const invalidDataList = this.actualDataList.invalidDataList.filter(item => item !== null)
+      return Math.floor(this.adjustValueWithOffsetValue(Math.min(...this.lowerBoundList, ...invalidDataList)))*0.9
+    },
     yAxisOffsetValue () {
       return Math.floor(Math.min(0, ...this.lowerBoundList))
     },
@@ -174,7 +178,8 @@ export default {
           },
           symbol: 'none',
           lineStyle: {
-            type: 'dashed'
+            type: 'dashed',
+            opacity: 0
           },
           markLine: {
             symbol: 'none',
@@ -214,7 +219,8 @@ export default {
             opacity: 0.2
           },
           lineStyle: {
-            type: 'dashed'
+            type: 'dashed',
+            opacity: 0
           },
         },
         // valid data
@@ -259,6 +265,7 @@ export default {
         },
         yAxis: {
           ...yAxisDefault(),
+          min: this.yAxisMinValue,
           name: this.title.yAxis[0].display_name,
           axisLabel: {
             formatter: value => this.yAxisOffsetValue + value
