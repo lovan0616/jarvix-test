@@ -10,11 +10,21 @@
       <nav class="mini-app__nav">
         <div class="nav--left">
           <div
+            v-if="isEditMode"
             class="icon-arrow"
             @click="$router.push({ name: 'MiniAppList' })">
             <svg-icon icon-class="arrow-left" />
           </div>
-          <div class="app-name">
+          <div
+            v-else
+            class="app-logo"
+          >
+            <img src="@/assets/images/logo-light.svg">
+          </div>
+          <div
+            :class="{ 'is-live': !isEditMode }"
+            class="app-name"
+          >
             <template v-if="isEditingAppName">
               <input-verify
                 v-validate="`required|max:${max}`"
@@ -41,6 +51,7 @@
             <template v-else>
               {{ miniApp.name }}
               <div
+                v-if="isEditMode"
                 class="edit-app-name"
                 @click="isEditingAppName = true"
               >
@@ -51,7 +62,10 @@
             </template>
           </div>
         </div>
-        <div class="nav--right">
+        <div
+          v-if="isEditMode"
+          class="nav--right"
+        >
           <div class="button-container"> 
             <span
               v-if="miniApp.settings.viewModeData.updateDate"
@@ -114,116 +128,130 @@
         </div>
       </nav>
       <div class="mini-app__content">
-        <div 
-          v-if="dashboardList.length === 0" 
-          class="empty-block">
-          {{ $t('miniApp.noneDashboard') }}
-          <button 
-            class="btn-m btn-default btn-has-icon create-btn" 
-            @click="isShowCreateDashboardDialog = true">
-            <svg-icon icon-class="plus"/>
-            {{ $t('miniApp.createDashboard') }}
-          </button>
-        </div>
-        <template v-else>
-          <div class="mini-app__dashboard-list">
-            <div class="title">
-              <svg-icon 
-                icon-class="dashboard" 
-                class="label-icon"/>
-              <span class="label-name">{{ $t('miniApp.dashboardList') }}</span>
-              <div
-                class="create-dashboard-icon-block"
-                @click="isShowCreateDashboardDialog = true"
-              >
-                <svg-icon 
-                  icon-class="plus" 
-                  class="create-dashboard-icon"/>
-              </div>
-            </div>
-            <ul class="item-wrapper">
-              <li
-                v-for="dashboard in dashboardList" 
-                :key="dashboard.id"
-                :class="{'is-active': dashboard.id === currentDashboardId}"
-                class="item"
-                @click="activeCertainDashboard(dashboard.id)"
-              >
-                <svg-icon 
-                  class="item-icon" 
-                  icon-class="triangle"/>
-                <span class="item-name">{{ dashboard.name }}</span>
-              </li>
-            </ul>
+        <template v-if="!isEditMode && !miniApp.settings.editModeData.isPublishing">
+          <div class="empty-block">
+            {{ $t('miniApp.noData') }}
           </div>
-          <main class="mini-app__dashbaord">
-            <div class="mini-app__dashbaord-header">
-              <template v-if="isEditingDashboardName">
-                <input-verify
-                  v-validate="`required|max:${max}`"
-                  key="dashboardNameInput"
-                  v-model="newDashboardName"
-                  class="new-name-input"
-                  name="dashboardNameInput"
-                />
-                <button
-                  class="btn-m btn-default"
-                  @click="updateDashboardName"
+        </template>
+        <template v-else>
+          <div 
+            v-if="dashboardList.length === 0" 
+            class="empty-block">
+            {{ $t('miniApp.noneDashboard') }}
+            <button
+              v-if="isEditMode"
+              class="btn-m btn-default btn-has-icon create-btn" 
+              @click="isShowCreateDashboardDialog = true">
+              <svg-icon icon-class="plus"/>
+              {{ $t('miniApp.createDashboard') }}
+            </button>
+          </div>
+          <template v-else>
+            <div class="mini-app__dashboard-list">
+              <div class="title">
+                <svg-icon 
+                  icon-class="dashboard" 
+                  class="label-icon"/>
+                <span class="label-name">{{ $t('miniApp.dashboardList') }}</span>
+                <div
+                  v-if="isEditMode"
+                  class="create-dashboard-icon-block"
+                  @click="isShowCreateDashboardDialog = true"
                 >
-                  {{ $t('button.save') }}
-                </button>
-                <button
-                  class="btn-m btn-outline cancel-btn"
-                  @click="isEditingDashboardName = false"
-                >
-                  {{ $t('button.cancel') }}
-                </button>
-              </template>
-              <template v-else>
-                <span class="name">{{ currentDashboard.name }}</span>
-                <div @click="isEditingDashboardName = true">
                   <svg-icon 
-                    icon-class="edit" 
-                    class="icon-edit"/>
+                    icon-class="plus" 
+                    class="create-dashboard-icon"/>
                 </div>
-              </template>
-              <button 
-                class="btn-m btn-outline btn-has-icon create-component-btn" 
-                @click="isShowCreateComponentDialog = true">
-                <svg-icon icon-class="plus"/>
-                {{ $t('miniApp.createComponent') }}
-              </button>
+              </div>
+              <ul class="item-wrapper">
+                <li
+                  v-for="dashboard in dashboardList" 
+                  :key="dashboard.id"
+                  :class="{'is-active': dashboard.id === currentDashboardId}"
+                  class="item"
+                  @click="activeCertainDashboard(dashboard.id)"
+                >
+                  <svg-icon 
+                    class="item-icon" 
+                    icon-class="triangle"/>
+                  <span class="item-name">{{ dashboard.name }}</span>
+                </li>
+              </ul>
             </div>
-            <div class="mini-app__dashbaord-components">
-              <div 
-                v-if="currentDashboard.components.length === 0" 
-                class="empty-block">
-                {{ $t('miniApp.noneComponent') }}
-                <button 
-                  class="btn-m btn-default btn-has-icon create-btn" 
+            <main class="mini-app__dashbaord">
+              <div class="mini-app__dashbaord-header">
+                <template v-if="isEditingDashboardName">
+                  <input-verify
+                    v-validate="`required|max:${max}`"
+                    key="dashboardNameInput"
+                    v-model="newDashboardName"
+                    class="new-name-input"
+                    name="dashboardNameInput"
+                  />
+                  <button
+                    class="btn-m btn-default"
+                    @click="updateDashboardName"
+                  >
+                    {{ $t('button.save') }}
+                  </button>
+                  <button
+                    class="btn-m btn-outline cancel-btn"
+                    @click="isEditingDashboardName = false"
+                  >
+                    {{ $t('button.cancel') }}
+                  </button>
+                </template>
+                <template v-else>
+                  <span class="name">{{ currentDashboard.name }}</span>
+                  <div 
+                    v-if="isEditMode" 
+                    @click="isEditingDashboardName = true"
+                  >
+                    <svg-icon 
+                      icon-class="edit" 
+                      class="icon-edit"/>
+                  </div>
+                </template>
+                <button
+                  v-if="isEditMode"
+                  class="btn-m btn-outline btn-has-icon create-component-btn" 
                   @click="isShowCreateComponentDialog = true">
                   <svg-icon icon-class="plus"/>
                   {{ $t('miniApp.createComponent') }}
                 </button>
               </div>
-              <template v-else>
+              <div class="mini-app__dashbaord-components">
                 <div 
-                  v-for="component in currentDashboard.components"
-                  :key="component.keyResultId"
-                  class="component-item">
-                  <span class="item-title">
-                    {{ component.config.diaplayedName }}
-                  </span>
-                  <task
-                    :component-id="component.keyResultId"
-                    intend="key_result"
-                  />
+                  v-if="currentDashboard.components.length === 0" 
+                  class="empty-block">
+                  {{ $t('miniApp.noneComponent') }}
+                  <button
+                    v-if="isEditMode"
+                    class="btn-m btn-default btn-has-icon create-btn" 
+                    @click="isShowCreateComponentDialog = true">
+                    <svg-icon icon-class="plus"/>
+                    {{ $t('miniApp.createComponent') }}
+                  </button>
                 </div>
-              </template>
-            </div>
-          </main>
-        </template>
-      </div>
+                <template v-else>
+                  <div 
+                    v-for="component in currentDashboard.components"
+                    :key="component.keyResultId"
+                    class="component-item">
+                    <span class="item-title">
+                      {{ component.config.diaplayedName }}
+                    </span>
+                    <task
+                      :component-id="component.keyResultId"
+                      intend="key_result"
+                    />
+                  </div>
+                </template>
+              </div>
+            </main>
+          </template>
+          <template/>
+      </template></div>
     </main>
     <div 
       v-show="isProcessing" 
@@ -577,10 +605,21 @@ export default {
     .nav--left {
       display: flex;
       align-items: center;
+      .app-logo {
+        padding-right: 24px;
+      }
       .app-name {
         display: flex;
         align-self: center;
         font-size: 20px;
+        &.is-live {
+          line-height: 30px;
+          border-left: 1px solid #404949;
+          padding-left: 24px;
+          line-height: 30px;
+          font-weight: 600;
+          letter-spacing: 4px;
+        }
       }
       .icon-arrow {
         cursor: pointer;
@@ -611,6 +650,8 @@ export default {
       flex-direction: column;
       align-items: center;
       margin-top: 30vh;
+      color: #DDDDDD;
+      font-size: 18px;
       .create-btn {
         margin-top: 20px;
       }
