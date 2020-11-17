@@ -46,6 +46,8 @@ export default {
   watch: {
     appQuestion (question) {
       if (!question) return
+      // 關閉介紹資料集
+      this.closePreviewDataSource()
       this.$store.dispatch('chatBot/askQuestion', {
         question,
         dataSourceId: this.dataSourceId,
@@ -136,6 +138,9 @@ export default {
         description: res.noAnswerDescription
       }
     },
+    closePreviewDataSource () {
+      this.$store.commit('previewDataSource/togglePreviewDataSource', false)
+    }
   }
 }
 </script>

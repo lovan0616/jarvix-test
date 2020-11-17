@@ -23,7 +23,7 @@
         <div class="search-bar">
           <data-frame-menu
             :redirect-on-change="false"
-            :is-show-preview-entry="false"
+            :is-show-preview-entry="true"
             :is-show-advance-setting-entry="false"
           />
           <ask-block
@@ -32,6 +32,21 @@
           />
         </div>
         <dashboard-component />
+        <transition name="fast-fade-in">
+          <section 
+            v-if="isShowPreviewDataSource"
+            class="preview-datasource">
+            <preview-data-source
+              :is-previewing="true"
+              mode="popup"
+            />
+            <a 
+              href="javascript:void(0)" 
+              class="preview-datasource__close-btn"
+              @click="closePreviewDataSource"
+            ><svg-icon icon-class="close"/></a>
+          </section>
+        </transition>
       </div>
       <div
         v-if="currentResultInfo && currentResultInfo.key_result"
@@ -84,6 +99,9 @@ export default {
     ...mapState('dataSource', ['appQuestion']),
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
+    },
+    isShowPreviewDataSource () {
+      return this.$store.state.previewDataSource.isShowPreviewDataSource
     }
   },
   mounted () {
@@ -92,6 +110,7 @@ export default {
     this.$store.commit('result/updateCurrentResultInfo', null)
     this.$store.commit('result/updateCurrentResultId', null)
     this.$store.commit('dataSource/setAppQuestion', null)
+    if (this.isShowPreviewDataSource) this.closePreviewDataSource()
   },
   methods: {
     createComponent () {
@@ -109,8 +128,11 @@ export default {
           }
         })
       })
+    },
+    closePreviewDataSource () {
+      this.$store.commit('previewDataSource/togglePreviewDataSource', false)
     }
-  }
+  },
 }
 </script>
 
@@ -149,9 +171,12 @@ export default {
     display: flex;
     
     .key-result-chart {
+      position: relative;
       flex: 1;
       border-right: 1px solid #232C2E;
       .search-bar {
+        position: relative;
+        z-index: 4;
         height: 60px;
         display: flex;
         padding: 8px 24px;
@@ -181,6 +206,26 @@ export default {
           padding: 16px 24px;
           border-bottom: 1px solid #232C2E;
         }
+      }
+    }
+
+    .preview-datasource {
+      height: calc(100vh - 56px - 60px);
+      position: absolute;
+      top: 60px;
+      right: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.89);
+      overflow: auto;
+      padding: 40px;
+      text-align: left;
+
+      &__close-btn {
+        position: absolute;
+        top: 32px;
+        right: 40px;
+        color: #fff;
+        font-size: 14px;
       }
     }
   }
