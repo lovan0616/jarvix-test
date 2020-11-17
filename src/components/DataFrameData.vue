@@ -27,12 +27,11 @@
         </div>
         <pagination-table
           v-if="dataSourceTableData && dataSourceTableData.columns.titles.length > 0"
-          ref="paginationtable"
           :is-processing="isProcessing"
           :dataset="dataSourceTableData"
           :pagination-info="pagination"
           :min-column-width="'270px'"
-          fixed-index
+          :fixed-index="fixedIndex"
           @change-page="updatePage"
         >
           <template #columns-header="{ column, index }">
@@ -67,7 +66,7 @@
                 </span>
               </div>
               <div
-                v-if="showDataSummary"
+                v-show="showDataSummary"
                 class="summary"
               >
                 <data-column-summary
@@ -146,7 +145,8 @@ export default {
       showColumnSummaryRow: true,
       tableSummaryList: [],
       timeoutFunction: null,
-      showDataSummary: false
+      showDataSummary: true,
+      fixedIndex: true
     }
   },
   computed: {
@@ -191,12 +191,11 @@ export default {
   methods: {
     ...mapMutations('chatBot', ['setCopiedColumnName']),
     toggleShowSummaryInfo () {
+      this.fixedIndex = false
       this.showDataSummary = !this.showDataSummary
+      // 為了第一欄的 index 高度，只好先解除 fixed 再重新綁上去
       this.$nextTick(() => {
-        console.log(this.$refs.paginationtable, 'test')
-        setTimeout(() => {
-          this.$refs.paginationtable.doLayout()
-        }, 500)
+        this.fixedIndex = true
       })
     },
     fetchDataFrameData (id, page = 0, resetPagination = false, isOnlyFetchSummary = false) {
