@@ -106,8 +106,7 @@
           <div class="war-room-setting__block-title">
             {{ $t('warRoom.recipientList') }}
           </div>
-          <el-select 
-            v-show="alertUserIdList"
+          <el-select
             v-model="warRoomData.alertUserIdList" 
             :placeholder="$t('editing.defaultOption')" 
             multiple
