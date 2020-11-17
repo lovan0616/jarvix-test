@@ -135,6 +135,15 @@
                 <svg-icon icon-class="plus"/>
                 {{ $t('miniApp.createComponent') }}
               </button>
+              <div class="dashboard-setting-box">
+                <svg-icon 
+                  icon-class="more"
+                  class="more-icon" />
+                <dropdown-select
+                  :bar-data="dashboardSettingOptions"
+                  @switchDialogName="switchDialogName($event)"
+                />
+              </div>
             </div>
             <div class="mini-app__dashbaord-components">
               <div 
@@ -183,6 +192,12 @@
       @closeDialog="isShowCreateComponentDialog = false"
       @create="createComponent"
     />
+    <delete-dashboard-dialog
+      v-if="isShowDeleteDashboardDialog"
+      :dashboard-name="currentDashboard.name"
+      @closeDialog="isShowDeleteDashboardDialog = false"
+      @confirmBtn="deleteDashboard"
+    />
   </div>
 </template>
 
@@ -190,7 +205,9 @@
 import { getMiniAppInfo, updateAppSetting, updateAppName } from '@/API/MiniApp'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
+import DeleteDashboardDialog from './dialog/DeleteDashboardDialog.vue'
 import InputVerify from '@/components/InputVerify'
+import DropdownSelect from '@/components/select/DropdownSelect'
 import { Message } from 'element-ui'
 
 export default {
@@ -199,7 +216,9 @@ export default {
   components: {
     CreateDashboardDialog,
     CreateComponentDialog,
-    InputVerify
+    DeleteDashboardDialog,
+    InputVerify,
+    DropdownSelect
   },
   data () {
     return {
@@ -209,6 +228,7 @@ export default {
       currentDashboardId: null,
       isShowCreateDashboardDialog: false,
       isShowCreateComponentDialog: false,
+      isShowDeleteDashboardDialog: false,
       newAppName: '',
       isEditingAppName: false,
       newDashboardName: '',
@@ -230,6 +250,15 @@ export default {
     },
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
+    },
+    dashboardSettingOptions () {
+      return [
+        {
+          title: 'miniApp.deleteDashboard',
+          icon: 'delete',
+          dialogName: 'DeleteDashboard'
+        }
+      ]
     }
   },
   created () {
@@ -308,22 +337,39 @@ export default {
           .finally(() => { this.isProcessing = false })
       })
     },
-    updateAppSetting (appInfo = this.miniApp, miniAppId = this.miniAppId) {
-      return updateAppSetting(miniAppId, { ...appInfo })
+    deleteDashboard () {
+      const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      editedMiniApp.settings.editModeData.dashboards.splice(dashboradIndex, 1)
+      
+      this.updateAppSetting(editedMiniApp)
         .then(() => {
+          // 預設 focus 到剩餘 Dashboard 的第一個，若刪光了就 null
+          const newDashboards = editedMiniApp.settings.editModeData.dashboards
+          this.currentDashboardId = newDashboards.length ? newDashboards[0].id : null
+          this.miniApp = editedMiniApp
+
           Message({
-            message: this.$t('message.saveSuccess'),
+            message: this.$t('message.deleteSuccess'),
             type: 'success',
             duration: 3 * 1000,
             showClose: true
           })
         })
         .catch(() => {})
+        .finally(() => this.isShowDeleteDashboardDialog = false)
+    },
+    updateAppSetting (appInfo = this.miniApp, miniAppId = this.miniAppId) {
+      return updateAppSetting(miniAppId, { ...appInfo })
+        .catch(() => {})
     },
     activeCertainDashboard (dashboardId) {
       this.isEditingDashboardName = false
       this.currentDashboardId = dashboardId
       this.newDashboardName = this.currentDashboard.name
+    },
+    switchDialogName (eventName) {
+      this[`isShow${eventName}Dialog`] = true
     }
   }
 }

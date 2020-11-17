@@ -762,7 +762,9 @@
     "chooseIcon": "選擇圖示",
     "pleaseEnterName": "請輸入名稱",
     "pleaseEnterDescription": "請輸入描述",
-    "pleaseSelectAnIcon": "請選擇一個圖示"
+    "pleaseSelectAnIcon": "請選擇一個圖示",
+    "confirmDeletingDashboad": "確定刪除儀表版 {name} ？",
+    "deleteDashboard": "刪除@:miniApp.dashboard"
   },
   "clustering": {
     "cluster": "群體",
