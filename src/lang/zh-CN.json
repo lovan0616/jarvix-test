@@ -1,5 +1,9 @@
 {
   "lang": "简中",
+  "common": {
+    "show": "显示",
+    "hide": "隐藏"
+  },
   "nav": {
     "index": "智能分析",
     "pinboard": "个人钉板",
@@ -926,7 +930,8 @@
     "AddNewWarRoom": "新增战情室",
     "sendInvitation": "寄送邀请信",
     "downloadPage": "下载图片",
-    "changeDiagram": "切换图表"
+    "changeDiagram": "切换图表",
+    "columnSummaryInfo": "栏位统计资讯"
   },
   "timeScopeUnit": {
     "second": "秒",

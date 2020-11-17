@@ -1,5 +1,9 @@
 {
   "lang": "English",
+  "common": {
+    "show": "Show ",
+    "hide": "Hide "
+  },
   "nav": {
     "index": "Intelligent Analysis",
     "pinboard": "Personal Pinboard",
@@ -926,7 +930,8 @@
     "AddNewWarRoom": "Add war room",
     "sendInvitation": "Send Invitation",
     "downloadPage": "Download Image",
-    "changeDiagram": "Change Diagram"
+    "changeDiagram": "Change Diagram",
+    "columnSummaryInfo": "Column Summary Info"
   },
   "timeScopeUnit": {
     "second": "seconds",

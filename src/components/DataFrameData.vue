@@ -20,9 +20,14 @@
               {{ $t('resultDescription.totalDataColumns') + ': ' + formatComma(dataFrameOverviewData.totalColumns) }}
             </div>
           </div>
+          <button 
+            class="btn-m btn-default"
+            @click="toggleShowSummaryInfo"
+          >{{ showDataSummary ? $t('common.hide') : $t('common.show') }}{{ $t('button.columnSummaryInfo') }}</button>
         </div>
         <pagination-table
           v-if="dataSourceTableData && dataSourceTableData.columns.titles.length > 0"
+          ref="paginationtable"
           :is-processing="isProcessing"
           :dataset="dataSourceTableData"
           :pagination-info="pagination"
@@ -61,7 +66,10 @@
                   </el-tooltip>
                 </span>
               </div>
-              <div class="summary">
+              <div
+                v-if="showDataSummary"
+                class="summary"
+              >
                 <data-column-summary
                   v-if="showColumnSummaryRow"
                   :summary-data="tableSummaryList[index]"
@@ -137,7 +145,8 @@ export default {
       },
       showColumnSummaryRow: true,
       tableSummaryList: [],
-      timeoutFunction: null
+      timeoutFunction: null,
+      showDataSummary: false
     }
   },
   computed: {
@@ -181,6 +190,15 @@ export default {
   },
   methods: {
     ...mapMutations('chatBot', ['setCopiedColumnName']),
+    toggleShowSummaryInfo () {
+      this.showDataSummary = !this.showDataSummary
+      this.$nextTick(() => {
+        console.log(this.$refs.paginationtable, 'test')
+        setTimeout(() => {
+          this.$refs.paginationtable.doLayout()
+        }, 500)
+      })
+    },
     fetchDataFrameData (id, page = 0, resetPagination = false, isOnlyFetchSummary = false) {
       if (resetPagination) {
         this.isLoading = true
@@ -384,6 +402,16 @@ export default {
     }
   }
 
+  /deep/ .el-table {
+    td {
+      padding: 4px 0;
+    }
+    .cell {
+      font-size: 14px;
+      line-height: 18px;
+    }
+  }
+
   .header-block {
     .header {
       padding: 10px;
@@ -416,6 +444,9 @@ export default {
 }
 
 .overview {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
   margin-bottom: 17px;
   font-size: 14px;
   color: #CCCCCC;
