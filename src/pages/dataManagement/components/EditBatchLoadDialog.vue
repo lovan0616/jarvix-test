@@ -313,11 +313,11 @@ export default {
       cronSettingValueAdvanced: [
         {
           unit: this.$t('batchLoad.minute'),
-          value: '*'
+          value: '0'
         },
         {
           unit: this.$t('batchLoad.hour'),
-          value: '*'
+          value: '0'
         },
         {
           unit: this.$t('batchLoad.day'),
@@ -374,10 +374,6 @@ export default {
           {
             value: '*/30 * * * *',
             name: this.$t('batchLoad.everyMinute', { number: 30 })
-          },
-          {
-            value: '*/45 * * * *',
-            name: this.$t('batchLoad.everyMinute', { number: 45 })
           },
           {
             value: '0 * * * *',
@@ -452,6 +448,11 @@ export default {
             this.cronSettingValueAdvanced.forEach((item, index) => item.value = crons[index])
             const matchedOption = this.scheduleInfo.basicScheduleList.find(item => item.value === crontabConfigContent.cron)
             this.cronSettingValueBasic = matchedOption ? crontabConfigContent.cron : null
+            // 為了如果有基本設定被移除的話能夠向下兼容
+            if (!matchedOption && crontabConfigContent.mode === 'BASIC') {
+              this.columnInfo.mode = 'ADVANCED'
+              this.originalColumnInfo.mode = 'ADVANCED'
+            }
           }
 
           this.fetchDataColumnList()
