@@ -76,11 +76,11 @@
             :key="index"
             :class="{ 'active': tempEditInfo.icon === icon }"
             class="dialog__icon-box"
-            @click="selectIcon(icon)"
           >
             <input
-              v-validate="index === 0 ? getValidationRules(iconList.length) : null"
-              :value="index"
+              v-validate="index === 0 ? getValidationRules(iconList) : null"
+              :value="icon"
+              v-model="tempEditInfo.icon"
               name="icon_group"
               type="radio"
               class="dialog__icon-box-radio"
@@ -317,8 +317,8 @@ export default {
     selectIcon(icon) {
       this.tempEditInfo.icon = icon
     },
-    getValidationRules (listLength) {
-      return`required|included:${[...Array(listLength).keys()].join()}`
+    getValidationRules (iconList) {
+      return`required|included:${iconList.join()}`
     }
   },
 }
