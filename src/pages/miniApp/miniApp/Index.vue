@@ -49,7 +49,7 @@
               </button>
             </template>
             <template v-else>
-              {{ miniApp.name }}
+              {{ appData.displayedName }}
               <div
                 v-if="isEditMode"
                 class="edit-app-name"
@@ -219,7 +219,9 @@
                   <svg-icon icon-class="plus"/>
                   {{ $t('miniApp.createComponent') }}
                 </button>
-                <div class="dashboard-setting-box">
+                <div 
+                  v-if="isEditMode" 
+                  class="dashboard-setting-box">
                   <svg-icon 
                     icon-class="more"
                     class="more-icon" />
@@ -230,27 +232,43 @@
                 </div>
               </div>
               <div class="mini-app__dashbaord-components">
-                <div 
-                  v-for="component in currentDashboard.components"
-                  :key="component.id"
-                  class="component-item">
-                  <span class="item-header">
-                    <span class="item-title">{{ component.config.diaplayedName }}</span>
-                    <div class="component-setting-box">
-                      <svg-icon 
-                        icon-class="more"
-                        class="more-icon" />
-                      <dropdown-select
-                        :bar-data="componentSettingOptions"
-                        @switchDialogName="switchDialogName($event, component.id)"
-                      />
-                    </div>
-                  </span>
-                  <task
-                    :component-id="component.keyResultId"
-                    intend="key_result"
-                  />
-                </div>
+                <template v-if="currentDashboard.components.length > 0">
+                  <div 
+                    v-for="component in currentDashboard.components"
+                    :key="component.id"
+                    class="component-item">
+                    <span class="item-header">
+                      <span class="item-title">{{ component.config.diaplayedName }}</span>
+                      <div 
+                        v-if="isEditMode" 
+                        class="component-setting-box">
+                        <svg-icon 
+                          icon-class="more"
+                          class="more-icon" />
+                        <dropdown-select
+                          :bar-data="componentSettingOptions"
+                          @switchDialogName="switchDialogName($event, component.id)"
+                        />
+                      </div>
+                    </span>
+                    <task
+                      :component-id="component.keyResultId"
+                      intend="key_result"
+                    />
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="empty-block">
+                    {{ $t('miniApp.noneComponent') }}
+                    <button
+                      v-if="isEditMode"
+                      class="btn-m btn-default btn-has-icon create-btn" 
+                      @click="isShowCreateComponentDialog = true">
+                      <svg-icon icon-class="plus"/>
+                      {{ $t('miniApp.createComponent') }}
+                    </button>
+                  </div>
+                </template>
               </div>
             </main>
           </template>
@@ -455,22 +473,27 @@ export default {
         .finally(() => this.isLoading = false )
     },
     createDashboard (newDashBoardInfo) {
-      this.miniApp.settings.editModeData.dashboards.push({
+      const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
+      updatedMiniAppData.settings.editModeData.dashboards.push({
         ...newDashBoardInfo,
         components: []
       })
       this.currentDashboardId = newDashBoardInfo.id
       this.isShowCreateDashboardDialog = false
-      this.updateAppSetting()
+      this.updateAppSetting(updatedMiniAppData)
+        .then(() => { this.miniApp = updatedMiniAppData })
     },
     createComponent (newComponentInfo) {
-      this.miniApp.settings.editModeData.dashboards.forEach(board => {
+      const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
+      updatedMiniAppData.settings.editModeData.dashboards.forEach(board => {
         if (board.id === this.currentDashboardId) {
           board.components.push(newComponentInfo)
         }
       })
       this.isShowCreateComponentDialog = false
-      this.updateAppSetting()
+      this.updateAppSetting(updatedMiniAppData)
+        .then(() => { this.miniApp = updatedMiniAppData })
+        .finally(() => this.isProcessing = false)
     },
     publishMiniApp () {
       this.isProcessing = true
@@ -588,12 +611,16 @@ export default {
         if (!valid) return
 
         this.isProcessing = true
-        this.miniApp.settings.editModeData.dashboards.forEach(board => {
+        const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+        editedMiniApp.settings.editModeData.dashboards.forEach(board => {
           if (board.id === this.currentDashboardId) board.name = this.newDashboardName
         })
         
-        this.updateAppSetting(this.miniApp)
-          .then(() => { this.isEditingDashboardName = false })
+        this.updateAppSetting(editedMiniApp)
+          .then(() => {
+            this.isEditingDashboardName = false
+            this.miniApp = editedMiniApp
+          })
           .catch(() => {})
           .finally(() => { this.isProcessing = false })
       })
@@ -642,7 +669,7 @@ export default {
         .catch(() => {})
         .finally(() => this.isShowDeleteComponentDialog = false)
     },
-    updateAppSetting (appInfo = this.miniApp, miniAppId = this.miniAppId) {
+    updateAppSetting (appInfo, miniAppId = this.miniAppId) {
       return updateAppSetting(miniAppId, { ...appInfo })
         .catch(() => {})
     },
