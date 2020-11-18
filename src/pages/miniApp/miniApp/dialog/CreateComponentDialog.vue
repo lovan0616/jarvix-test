@@ -45,23 +45,23 @@
         <dashboard-component
           :is-addable.sync="isAddable"
           :is-loading.sync="isLoading"
-        >
-          <transition name="fast-fade-in">
-            <section 
-              v-if="isShowPreviewDataSource"
-              class="preview-datasource">
-              <preview-data-source
-                :is-previewing="true"
-                mode="popup"
-              />
-              <a 
-                href="javascript:void(0)" 
-                class="preview-datasource__close-btn"
-                @click="closePreviewDataSource"
-              ><svg-icon icon-class="close"/></a>
-            </section>
-          </transition>
-      </dashboard-component></div>
+        />
+        <transition name="fast-fade-in">
+          <section 
+            v-if="isShowPreviewDataSource"
+            class="preview-datasource">
+            <preview-data-source
+              :is-previewing="true"
+              mode="popup"
+            />
+            <a 
+              href="javascript:void(0)" 
+              class="preview-datasource__close-btn"
+              @click="closePreviewDataSource"
+            ><svg-icon icon-class="close"/></a>
+          </section>
+        </transition>
+      </div>
       <div
         v-if="currentResultInfo && currentResultInfo.key_result"
         class="key-result-setting">
