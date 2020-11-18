@@ -437,7 +437,6 @@ export default {
     background-color: #1D2424;
     border: 1px solid #1D2424;
     border-radius: 5px;
-    overflow: hidden;
     transition: all .1s;
 
     &.has-filter {
