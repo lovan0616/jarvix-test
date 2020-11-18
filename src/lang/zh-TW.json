@@ -748,6 +748,14 @@
     "createDashboard": "新增@:miniApp.dashboard",
     "createComponent": "新增@:miniApp.component",
     "pleaseTypeDashboardName": "請輸入@:miniApp.dashboard名稱",
+    "updateTime": "更新時間",
+    "notPublished": "未發佈",
+    "hasPublished": "已發佈",
+    "getPublishedUrl": "取得發布連結",
+    "deleteApplication": "刪除應用程式",
+    "publish": "發布",
+    "unpublish": "取消發布",
+    "preview": "預覽",
     "application": "應用程式",
     "createNewApplication": "新增應用程式",
     "emptyApplication": "目前無任何內容",
@@ -765,7 +773,9 @@
     "pleaseSelectAnIcon": "請選擇一個圖示",
     "confirmDeletingDashboad": "確定刪除@:miniApp.dashboard {name} ？",
     "deleteDashboard": "刪除@:miniApp.dashboard",
-    "confirmDeletingComponent": "確定刪除此元件？"
+    "confirmDeletingComponent": "確定刪除此元件？",
+    "noData": "應用程式當前沒有資料",
+    "componentNotAddable": "此內容尚未支援成為元件，請變更其他內容。"
   },
   "clustering": {
     "cluster": "群體",
