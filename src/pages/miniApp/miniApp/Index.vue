@@ -303,6 +303,12 @@
       @close="isShowDeleteComponentDialog = false"
       @confirm="deleteComponent"
     />
+    <update-dashboard-name-dialog
+      v-if="isShowUpdateDashboardNameDialog"
+      :original-dashboard-name="currentDashboard.name"
+      @close="isShowUpdateDashboardNameDialog = false"
+      @confirm="updateDashboardNameByDialog"
+    />
     <writing-dialog
       v-if="isShowShare"
       :title="$t('miniApp.getPublishedUrl')"
@@ -344,6 +350,7 @@ import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
 import DeleteDashboardDialog from './dialog/DeleteDashboardDialog.vue'
 import DeleteComponentDialog from './dialog/DeleteComponentDialog.vue'
+import UpdateDashboardNameDialog from './dialog/UpdateDashboardNameDialog.vue'
 import InputVerify from '@/components/InputVerify'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import { Message } from 'element-ui'
@@ -356,6 +363,7 @@ export default {
     CreateComponentDialog,
     DeleteDashboardDialog,
     DeleteComponentDialog,
+    UpdateDashboardNameDialog,
     InputVerify,
     DropdownSelect,
     CustomDropdownSelect,
@@ -371,6 +379,7 @@ export default {
       isShowCreateComponentDialog: false,
       isShowDeleteDashboardDialog: false,
       isShowDeleteComponentDialog: false,
+      isShowUpdateDashboardNameDialog: false,
       isLoading: false,
       isProcessing: false,
       isShowShare: false,
@@ -426,6 +435,11 @@ export default {
     },
     dashboardSettingOptions () {
       return [
+        {
+          title: 'miniApp.updateDashboardName',
+          icon: 'edit',
+          dialogName: 'UpdateDashboardName'
+        },
         {
           title: 'miniApp.deleteDashboard',
           icon: 'delete',
@@ -624,6 +638,24 @@ export default {
           .catch(() => {})
           .finally(() => { this.isProcessing = false })
       })
+    },
+    updateDashboardNameByDialog (newDashboardName) {
+        this.isProcessing = true
+        const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+        editedMiniApp.settings.editModeData.dashboards.forEach(board => {
+          if (board.id === this.currentDashboardId) board.name = newDashboardName
+        })
+        
+        this.updateAppSetting(editedMiniApp)
+          .then(() => {
+            this.miniApp = editedMiniApp
+            this.newDashboardName = newDashboardName
+          })
+          .catch(() => {})
+          .finally(() => {
+            this.isShowUpdateDashboardNameDialog = false
+            this.isProcessing = false
+          })
     },
     deleteDashboard () {
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
