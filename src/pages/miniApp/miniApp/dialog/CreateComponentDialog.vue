@@ -10,7 +10,18 @@
         {{ $t('miniApp.createComponent') }}
       </div>
       <div class="nav--right">
+        <div
+          v-if="!isLoading && isAddable === false"
+          class="message"
+        >
+          <svg-icon
+            class="icon"
+            icon-class="information-circle"
+          />
+          {{ $t('miniApp.componentNotAddable') }}
+        </div>
         <button
+          :disabled="!isAddable"
           class="btn btn-default"
           @click="createComponent"
         >
@@ -31,23 +42,26 @@
             :is-show-ask-helper-entry="false"
           />
         </div>
-        <dashboard-component />
-        <transition name="fast-fade-in">
-          <section 
-            v-if="isShowPreviewDataSource"
-            class="preview-datasource">
-            <preview-data-source
-              :is-previewing="true"
-              mode="popup"
-            />
-            <a 
-              href="javascript:void(0)" 
-              class="preview-datasource__close-btn"
-              @click="closePreviewDataSource"
-            ><svg-icon icon-class="close"/></a>
-          </section>
-        </transition>
-      </div>
+        <dashboard-component
+          :is-addable.sync="isAddable"
+          :is-loading.sync="isLoading"
+        >
+          <transition name="fast-fade-in">
+            <section 
+              v-if="isShowPreviewDataSource"
+              class="preview-datasource">
+              <preview-data-source
+                :is-previewing="true"
+                mode="popup"
+              />
+              <a 
+                href="javascript:void(0)" 
+                class="preview-datasource__close-btn"
+                @click="closePreviewDataSource"
+              ><svg-icon icon-class="close"/></a>
+            </section>
+          </transition>
+      </dashboard-component></div>
       <div
         v-if="currentResultInfo && currentResultInfo.key_result"
         class="key-result-setting">
@@ -91,7 +105,9 @@ export default {
   },
   data () {
     return {
-      componentDisplayName: ''
+      componentDisplayName: '',
+      isAddable: null,
+      isLoading: false
     }
   },
   computed: {
@@ -161,6 +177,15 @@ export default {
         cursor: pointer;
         color: $theme-color-primary;
         margin-right: 20px;
+      }
+    }
+    .nav--right {
+      display: flex;
+      .message {
+        font-size: 12px;
+        line-height: 36px;
+        color: #FFDF6F;
+        margin-right: 6px;
       }
     }
   }
