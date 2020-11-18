@@ -85,6 +85,7 @@ export default {
           questionId: this.currentQuestionId,
           segmentation: this.currentQuestionInfo
         }).then(res => {
+          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.$store.commit('result/updateCurrentResultId', res.resultId)
           if (res.layout === 'no_answer') {
             this.setEmptyLayout(res)
