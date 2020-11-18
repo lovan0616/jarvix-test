@@ -27,6 +27,7 @@
         :is="layout || 'EmptyResult'"
         :key="appQuestion"
         :result-info="resultInfo"
+        :redirect-on-select="false"
       />
       <div
         v-if="!isLoading && isAddable === false"
@@ -66,9 +67,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion']),
-    ...mapGetters('dataSource', ['filterRestrictionList']),
-
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo']),
+    ...mapGetters('dataSource', ['filterRestrictionList'])
   },
   watch: {
     appQuestion (question) {
@@ -78,6 +78,31 @@ export default {
       // 恢復新增元件的狀態
       this.$emit('update:isAddable', null)
       this.$emit('update:isLoading', true)
+
+
+      if (this.currentQuestionInfo) {
+        this.$store.dispatch('chatBot/askResult', {
+          questionId: this.currentQuestionId,
+          segmentation: this.currentQuestionInfo
+        }).then(res => {
+          this.$store.commit('result/updateCurrentResultId', res.resultId)
+          if (res.layout === 'no_answer') {
+            this.setEmptyLayout(res)
+            this.$emit('update:isLoading', false)
+            this.$emit('update:isAddable', null)
+            return
+          }
+          this.getComponentV2(res.resultId)
+          // this.getRelatedQuestion(res.resultId)
+        }).catch(() => {
+          this.$emit('update:isLoading', false)
+          this.$emit('update:isAddable', null)
+          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
+        })
+        return
+      }
+
+
       this.$store.dispatch('chatBot/askQuestion', {
         question,
         dataSourceId: this.dataSourceId,
@@ -112,9 +137,15 @@ export default {
             .then(res => this.getComponentV2(res.resultId))
             .catch((error) => {})
         } else {
-          // TODO: 多個結果
+          // 多個結果
+          this.$store.commit('dataSource/setAppQuestion', null)
+          this.layout = 'MultiResultV2'
+          this.resultInfo = {...response, question: question}
+          this.$emit('update:isLoading', false)
+          this.$emit('update:isAddable', null)
         }
       }).catch((error) => {
+        this.$emit('update:isLoading', false)
         this.$emit('update:isAddable', null)
         // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
         this.$store.commit('dataSource/setCurrentQuestionInfo', null)
@@ -148,7 +179,7 @@ export default {
                 question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
               })
               this.$emit('update:isAddable', componentResponse.isWarRoomAddable || false)
-             this.$emit('update:isLoading', false)
+              this.$emit('update:isLoading', false)
               break
             case 'Disable':
             case 'Delete':
