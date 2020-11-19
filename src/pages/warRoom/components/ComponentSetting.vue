@@ -238,6 +238,26 @@
                 </template>
               </div>
             </div>
+            <div 
+              v-if="selectedDataSource.config.maxDataCount || originalComponentData.config.maxDataCount"
+              class="war-room-setting__block">
+              <div class="war-room-setting__block-title">
+                {{ $t('warRoom.maxDataCount') }}
+              </div>
+              <input
+                v-validate="`required|numeric|between:1,200`"
+                ref="maxDataCount"
+                :disabled="isProcessing"
+                v-model.trim="componentData.config.maxDataCount"
+                :placeholder="$t('warRoom.pleaseEnterValue')"
+                name="maxDataCount"
+                class="input war-room-setting__block-text-input"
+              >
+              <div 
+                v-show="errors.has('maxDataCount')"
+                class="error-text"  
+              >{{ errors.first('maxDataCount') }}</div>
+            </div>
           </template>
         </section>
       </div>
@@ -318,7 +338,8 @@ export default {
           recentTimeIntervalUnit: null,
           refreshFrequency: null,
           upperBound: null,
-          alertSwitch: null
+          alertSwitch: null,
+          maxDataCount: null
         },
         canAlert: null,
         diagramData: {},
@@ -353,7 +374,8 @@ export default {
           recentTimeIntervalUnit: null,
           refreshFrequency: null,
           upperBound: null,
-          alertSwitch: null
+          alertSwitch: null,
+          maxDataCount: null
         },
         canAlert: null,
         diagramData: {},

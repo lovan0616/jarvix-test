@@ -122,6 +122,10 @@
               :label="item.name"
               :value="item.value"/>
           </el-select>
+          <span 
+            class="war-room-setting__block-text-description">
+            {{ $t('warRoom.recipientListSettingWarning') }} 
+          </span>
         </div>
       </div>
       <div class="war-room-setting__button-block">

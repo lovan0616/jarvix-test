@@ -139,7 +139,8 @@
     "lowerBoundShouldBeSmallerThanUpperBound": "Lower bound value should be smaller than upper bound value",
     "and": "and",
     "upperBound": "Upper bound value",
-    "lowerBound": "Lower bound value"
+    "lowerBound": "Lower bound value",
+    "numericShouldBeBetween": "Numeric should be between"
   },
   "guiding": {
     "prevStep": "Prev Step",
@@ -704,6 +705,8 @@
     "waringMail": "Alert Email",
     "mailReceiversetting": "*Please choose email recipient in War Room Settings.",
     "recipientList": "Recipient List",
+    "recipientListSettingWarning":"*一般使用者只能设定自己",
+    "maxDataCount":"顯示的資料筆數",
     "pleaseEnterValue": "Please enter values",
     "notChosen": "Not chosen",
     "indexTypeContent": "Index",
