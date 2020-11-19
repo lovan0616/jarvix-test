@@ -152,7 +152,7 @@
 </template>
 
 <script>
-import { getGroupUserList } from '@/API/Group'
+import { getGroupMemberList } from '@/API/Group'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
@@ -211,7 +211,7 @@ export default {
   computed: {
     ...mapState('userManagement', ['userId']),
     isGroupViewer () {
-      return this.userList.filter(user => user.id === this.userId)['role'] === 'group_viewer'
+      return this.userList.filter(user => user.id === this.userId)[0]['role'] === 'group_viewer'
     },
     selectedTimeInterval () {
       if (!this.warRoomData || !this.warRoomData.displayDateRangeSwitch) return null
@@ -234,7 +234,7 @@ export default {
     fetchData () {
       this.isLoading = true
       const currentGroupId = this.$route.params.group_id
-      getGroupUserList(currentGroupId)
+      getGroupMemberList(currentGroupId)
         .then(userList => {
           this.userList = userList
           this.alertUserIdList = userList.map(user => {
@@ -366,6 +366,10 @@ export default {
 
     .multiple-selector {
       margin-top: 12px;
+      
+      /deep/ .el-select-dropdown__wrap .el-select-dropdown__item::after {
+        border: 1.2px solid #FFF;
+      }
     }
   }
 
