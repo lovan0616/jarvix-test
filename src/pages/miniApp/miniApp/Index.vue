@@ -29,7 +29,7 @@
               <input-verify
                 v-validate="`required|max:${max}`"
                 key="appNameInput"
-                v-model="newAppName"
+                v-model="newAppEditModeName"
                 class="new-name-input"
                 name="appNameInput"
               />
@@ -180,55 +180,59 @@
             </div>
             <main class="mini-app__dashbaord">
               <div class="mini-app__dashbaord-header">
-                <template v-if="isEditingDashboardName">
-                  <input-verify
-                    v-validate="`required|max:${max}`"
-                    key="dashboardNameInput"
-                    v-model="newDashboardName"
-                    class="new-name-input"
-                    name="dashboardNameInput"
-                  />
+                <div class="header-left">
+                  <template v-if="isEditingDashboardName">
+                    <input-verify
+                      v-validate="`required|max:${max}`"
+                      key="dashboardNameInput"
+                      v-model="newDashboardName"
+                      class="new-name-input"
+                      name="dashboardNameInput"
+                    />
+                    <button
+                      class="btn-m btn-default"
+                      @click="updateDashboardName"
+                    >
+                      {{ $t('button.save') }}
+                    </button>
+                    <button
+                      class="btn-m btn-outline cancel-btn"
+                      @click="isEditingDashboardName = false"
+                    >
+                      {{ $t('button.cancel') }}
+                    </button>
+                  </template>
+                  <template v-else>
+                    <span class="name">{{ currentDashboard.name }}</span>
+                    <div
+                      v-if="isEditMode"
+                      @click="isEditingDashboardName = true"
+                    >
+                      <svg-icon
+                        icon-class="edit"
+                        class="icon-edit"/>
+                    </div>
+                  </template>
+                </div>
+                <div class="header-right">
                   <button
-                    class="btn-m btn-default"
-                    @click="updateDashboardName"
-                  >
-                    {{ $t('button.save') }}
+                    v-if="isEditMode"
+                    class="btn-m btn-outline btn-has-icon create-component-btn" 
+                    @click="isShowCreateComponentDialog = true">
+                    <svg-icon icon-class="plus"/>
+                    {{ $t('miniApp.createComponent') }}
                   </button>
-                  <button
-                    class="btn-m btn-outline cancel-btn"
-                    @click="isEditingDashboardName = false"
-                  >
-                    {{ $t('button.cancel') }}
-                  </button>
-                </template>
-                <template v-else>
-                  <span class="name">{{ currentDashboard.name }}</span>
-                  <div 
-                    v-if="isEditMode" 
-                    @click="isEditingDashboardName = true"
-                  >
-                    <svg-icon 
-                      icon-class="edit" 
-                      class="icon-edit"/>
+                  <div
+                    v-if="isEditMode"
+                    class="dashboard-setting-box">
+                    <svg-icon
+                      icon-class="more"
+                      class="more-icon" />
+                    <dropdown-select
+                      :bar-data="dashboardSettingOptions"
+                      @switchDialogName="switchDialogName($event)"
+                    />
                   </div>
-                </template>
-                <button
-                  v-if="isEditMode"
-                  class="btn-m btn-outline btn-has-icon create-component-btn" 
-                  @click="isShowCreateComponentDialog = true">
-                  <svg-icon icon-class="plus"/>
-                  {{ $t('miniApp.createComponent') }}
-                </button>
-                <div 
-                  v-if="isEditMode" 
-                  class="dashboard-setting-box">
-                  <svg-icon 
-                    icon-class="more"
-                    class="more-icon" />
-                  <dropdown-select
-                    :bar-data="dashboardSettingOptions"
-                    @switchDialogName="switchDialogName($event)"
-                  />
                 </div>
               </div>
               <div class="mini-app__dashbaord-components">
@@ -386,7 +390,7 @@ export default {
       shareLink: null,
       confirmDeleteText: this.$t('editing.confirmDelete'),
       isShowDelete: false,
-      newAppName: '',
+      newAppEditModeName: '',
       isEditingAppName: false,
       newDashboardName: '',
       isEditingDashboardName: false
@@ -475,7 +479,7 @@ export default {
       getMiniAppInfo(this.miniAppId)
         .then(miniAppInfo => {
           this.miniApp = miniAppInfo
-          this.newAppName = miniAppInfo.name
+          this.newAppEditModeName = this.appData.displayedName
 
           // 如果有 dashboard, focus 在第一個
           if (this.dashboardList.length > 0) {
@@ -602,22 +606,17 @@ export default {
         .then(valid => {
           if (!valid) return
           
+          const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+          editedMiniApp.settings.editModeData.displayedName = this.newAppEditModeName
+
           this.isProcessing = true
-          updateAppName(this.miniAppId, { name: this.newAppName })
-            .then(() => {
-              Message({
-                message: this.$t('message.saveSuccess'),
-                type: 'success',
-                duration: 3 * 1000,
-                showClose: true
-              })
-            })
+          this.updateAppSetting(editedMiniApp)
+            .then(() => this.miniApp = editedMiniApp)
             .catch(() => {})
             .finally(() => {
-              this.miniApp.name = this.newAppName
               this.isEditingAppName = false
               this.isProcessing = false
-            } )
+            })
         })
     },
     updateDashboardName () {
@@ -781,6 +780,11 @@ export default {
           font-weight: 600;
           letter-spacing: 4px;
         }
+        &:hover {
+          .icon-edit {
+            visibility: visible;
+          }
+        }
       }
       .icon-arrow {
         cursor: pointer;
@@ -791,6 +795,8 @@ export default {
         margin-left: 12px;
         color: $theme-color-primary;
         font-size: 16px;
+        cursor: pointer;
+        visibility: hidden;
       }
       .cancel-btn {
         margin-left: 6px;
@@ -888,42 +894,56 @@ export default {
       align-items: center;
       margin-bottom: 20px;
       padding-right: 20px;
-      .name {
-        font-size: 20px;
-        line-height: 28px;
-      }
-      .icon-edit {
-        color: $theme-color-primary;
-        margin-left: 12px;
-        cursor: pointer;
-      }
-      .create-component-btn {
-        margin-left: auto;
-      }
-      .dashboard-setting-box {
-        flex: 0 0 30px;
-        height: 30px;
-        margin-left: 6px;
-        cursor: pointer;
-        border: 1px solid #FFF;
-        border-radius: 4px;
+      .header-left {
         display: flex;
         align-items: center;
-        justify-content: center;
-        position: relative;
-        @include dropdown-select-controller;
-        .dropdown-select {
-          /deep/ .dropdown-select-box {
-            box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
-            top: calc(50% + 17px);
-            right: -3px;
-            left: unset;
-            &:before { right: 7px; }
-            .svg-icon {
-              color: $theme-color-primary;
-            }
-            .dropdown-flex {
-              min-width: unset;
+        .name {
+          font-size: 20px;
+          line-height: 28px;
+        }
+        &:hover {
+          .icon-edit {
+            visibility: visible;
+          }
+        }
+        .icon-edit {
+          color: $theme-color-primary;
+          margin-left: 12px;
+          cursor: pointer;
+          visibility: hidden;
+          &:hover {
+            visibility: visible;
+          }
+        }
+      }
+      .header-right {
+        display: flex;
+        align-items: center;
+        .dashboard-setting-box {
+          flex: 0 0 30px;
+          height: 30px;
+          margin-left: 6px;
+          cursor: pointer;
+          border: 1px solid #FFF;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          @include dropdown-select-controller;
+          .dropdown-select {
+            /deep/ .dropdown-select-box {
+              box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
+              top: calc(50% + 17px);
+              right: -3px;
+              left: unset;
+              &:before { right: 7px; }
+              .svg-icon {
+                color: $theme-color-primary;
+              }
+              .dropdown-flex {
+                min-width: unset;
+              }
             }
           }
         }
