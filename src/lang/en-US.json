@@ -140,7 +140,7 @@
     "and": "and",
     "upperBound": "Upper bound value",
     "lowerBound": "Lower bound value",
-    "numericShouldBeBetween": "Numeric should be between"
+    "numericShouldBeBetween": "Numeric should be between {min} and {max}"
   },
   "guiding": {
     "prevStep": "Prev Step",
