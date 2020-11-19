@@ -239,7 +239,7 @@
               </div>
             </div>
             <div 
-              v-if="selectedDataSource.config.maxDataCount || originalComponentData.config.maxDataCount"
+              v-if="selectedDataSource.maxDataCount || originalComponentData.config.maxDataCount"
               class="war-room-setting__block">
               <div class="war-room-setting__block-title">
                 {{ $t('warRoom.maxDataCount') }}
@@ -600,6 +600,7 @@ export default {
     },
     updateSelectedDataSource (item) {
       this.selectedDataSource = item
+      this.componentData.config.maxDataCount = this.selectedDataSource.maxDataCount
       this.hideComponentDataSourceList()
     },
     updateRefreshFrequency (isTurnedOn) {
