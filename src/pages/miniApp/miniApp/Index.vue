@@ -215,6 +215,7 @@
                   </template>
                 </div>
                 <div class="header-right">
+                  <button @click="testAddFilter">篩!</button>
                   <button
                     v-if="isEditMode"
                     class="btn-m btn-outline btn-has-icon create-component-btn" 
@@ -237,29 +238,20 @@
               </div>
               <div class="mini-app__dashbaord-components">
                 <template v-if="currentDashboard.components.length > 0">
-                  <div 
-                    v-for="component in currentDashboard.components"
-                    :key="component.id"
-                    class="component-item">
-                    <span class="item-header">
-                      <span class="item-title">{{ component.config.diaplayedName }}</span>
-                      <div 
-                        v-if="isEditMode" 
-                        class="component-setting-box">
-                        <svg-icon 
-                          icon-class="more"
-                          class="more-icon" />
-                        <dropdown-select
-                          :bar-data="componentSettingOptions"
-                          @switchDialogName="switchDialogName($event, component.id)"
-                        />
-                      </div>
-                    </span>
-                    <task
-                      :component-id="component.keyResultId"
-                      intend="key_result"
-                    />
-                  </div>
+                  <dashboard-task
+                    v-for="componentData in currentDashboard.components"
+                    :key="componentData.id"
+                    :restrictions="restrictions"
+                    :component-data="componentData"
+                    :is-edit-mode="isEditMode"
+                  >
+                    <template slot="drowdown">
+                      <dropdown-select
+                        :bar-data="componentSettingOptions"
+                        @switchDialogName="switchDialogName($event, componentData.id)"
+                      />
+                    </template>
+                  </dashboard-task>
                 </template>
                 <template v-else>
                   <div class="empty-block">
@@ -347,9 +339,9 @@ import WritingDialog from '@/components/dialog/WritingDialog'
 import {
   getMiniAppInfo,
   updateAppSetting,
-  updateAppName,
   deleteMiniApp
 } from '@/API/MiniApp'
+import DashboardTask from './components/DashboardTask'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
 import DeleteDashboardDialog from './dialog/DeleteDashboardDialog.vue'
@@ -363,6 +355,7 @@ export default {
   inject: ['$validator'],
   name: 'MiniApp',
   components: {
+    DashboardTask,
     CreateDashboardDialog,
     CreateComponentDialog,
     DeleteDashboardDialog,
@@ -393,7 +386,8 @@ export default {
       newAppEditModeName: '',
       isEditingAppName: false,
       newDashboardName: '',
-      isEditingDashboardName: false
+      isEditingDashboardName: false,
+      filterInfoList: []
     }
   },
   computed: {
@@ -468,12 +462,64 @@ export default {
     },
     miniAppId () {
       return this.$route.params.mini_app_id
-    }                        
+    },
+    filterColumnIds () {
+      return this.filterInfoList.map(filter => filter.columnId)
+    },
+    restrictions () {
+      return this.filterInfoList.map(filter => {
+        let type = ''
+        switch (filter.dataType) {
+          case ('string'):
+            type = 'enum'
+            break
+          case ('int'):
+            type = 'range'
+            break
+        }
+        return [{
+          type,
+          proterties: {
+            data_type: filter.dataType,
+            dc_id: filter.columnId,
+            display_name: filter.displayName,
+            ...(filter.dataType === 'string' && {
+              datavalues: filter.dataValues,
+              display_datavalues: filter.displayDataValues
+            }),
+            ...(filter.dataType === 'int' && {
+              start: filter.start,
+              end: filter.end
+            })
+          }
+        }]
+      })
+    }
   },
   created () {
     this.getMiniAppInfo()  
   },
   methods: {
+    testAddFilter () {
+      // MOCK DATA
+      this.filterInfoList = [
+        {
+          columnId: 689,
+          dataType: 'string',
+          displayName: '客戶性別',
+          dataValues: ['F'],
+          displayDataValues: ['F']
+        },
+        {
+          columnId: 689,
+          dataType: 'int',
+          displayName: '利潤',
+          start: 327.93722487001753,
+          end: 680.5174891681111
+        }
+      ]
+      this.filterMethod()
+    },
     getMiniAppInfo () {
       this.isLoading = true
       getMiniAppInfo(this.miniAppId)
@@ -712,6 +758,21 @@ export default {
     switchDialogName (eventName, id) {
       this[`isShow${eventName}Dialog`] = true
       if (eventName === 'DeleteComponent') this.currentComponentId = id
+    },
+    shouldComponentBeFiltered (columnList) {
+      // 判斷元件是否需要因應 filter 異動而重做
+      let columnIdList = []
+      columnList.forEach(item => columnIdList.push(item.columnId))
+      return this.filterColumnIds.some(filterColumnId => columnIdList.includes(filterColumnId))
+    },
+    filterMethod () {
+      // 將需要因應 filter 變化的元件，加上 restriction 資訊
+      const currentDashboard = this.miniApp.settings.editModeData.dashboards.find(d => d.id === this.currentDashboardId)
+      currentDashboard.components.forEach(component => {
+        if (this.shouldComponentBeFiltered(component.dataColumns)) {
+          component.restrictions = this.restrictions
+        }
+      })
     }
   }
 }
@@ -937,6 +998,7 @@ export default {
               top: calc(50% + 17px);
               right: -3px;
               left: unset;
+              z-index: 1;
               &:before { right: 7px; }
               .svg-icon {
                 color: $theme-color-primary;
@@ -957,7 +1019,7 @@ export default {
       height: 0;
       overflow: overlay;
       padding-right: 20px;
-      .component-item {
+      /deep/ .component-item {
         width: calc(50% - 8px);
         float: left;
         padding: 16px;

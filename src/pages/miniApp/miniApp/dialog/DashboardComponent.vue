@@ -176,8 +176,15 @@ export default {
               this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
               this.$store.commit('result/updateCurrentResultId', resultId)
               this.$store.commit('result/updateCurrentResultInfo', {
-                ...componentResponse.componentIds,
-                question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
+                keyResultId: componentResponse.componentIds.key_result[0],
+                dataColumns: componentResponse.segmentationPayload.transcript.subjectList.map(item => ({
+                  columnId: item.dataColumn.dataColumnId,
+                  statsType: item.dataColumn.statsType,
+                  dataType: item.dataColumn.dataType
+                })),
+                segmentation: componentResponse.segmentationPayload,
+                question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
+                questionId: componentResponse.questionId
               })
               this.$emit('update:isAddable', componentResponse.isWarRoomAddable || false)
               this.$emit('update:isLoading', false)

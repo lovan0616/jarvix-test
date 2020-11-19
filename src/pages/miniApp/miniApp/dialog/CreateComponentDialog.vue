@@ -63,7 +63,7 @@
         </transition>
       </div>
       <div
-        v-if="currentResultInfo && currentResultInfo.key_result"
+        v-if="currentResultInfo && currentResultInfo.keyResultId"
         class="key-result-setting">
         <div class="setting__header">
           <svg-icon icon-class="filter-setting"/>
@@ -135,13 +135,15 @@ export default {
         
         this.$emit('create', {
           id: uuidv4(),
-          keyResultId: this.currentResultInfo.key_result[0],
           resultId: this.currentResultId,
           orderSequence: null, // 由 Dashboard 層給定
           config: {
             diaplayedName: this.componentDisplayName,
             question: this.currentResultInfo.question
-          }
+          },
+          // 將來 增/刪 filter 時，重打 askResult 所需的 request body
+          ...this.currentResultInfo, //keyResultId,dataColumns,questionId,segmentation,dataColumns
+          restrictions: [],
         })
       })
     },
