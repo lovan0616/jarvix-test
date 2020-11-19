@@ -152,7 +152,7 @@
 </template>
 
 <script>
-import { getGroupUserList } from '@/API/Group'
+import { getGroupMemberList } from '@/API/Group'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import { Message } from 'element-ui'
@@ -234,7 +234,7 @@ export default {
     fetchData () {
       this.isLoading = true
       const currentGroupId = this.$route.params.group_id
-      getGroupUserList(currentGroupId)
+      getGroupMemberList(currentGroupId)
         .then(userList => {
           this.userList = userList
           this.alertUserIdList = userList.map(user => {
