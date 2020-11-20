@@ -63,7 +63,8 @@ export default {
       timeoutFunction: null,
       totalSec: 50,
       periodSec: 200,
-      question: ''
+      question: '',
+      segmentation: null
     }
   },
   computed: {
@@ -80,30 +81,6 @@ export default {
       this.$emit('update:isLoading', true)
 
 
-      if (this.currentQuestionInfo) {
-        this.$store.dispatch('chatBot/askResult', {
-          questionId: this.currentQuestionId,
-          segmentation: this.currentQuestionInfo
-        }).then(res => {
-          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
-          this.$store.commit('result/updateCurrentResultId', res.resultId)
-          if (res.layout === 'no_answer') {
-            this.setEmptyLayout(res)
-            this.$emit('update:isLoading', false)
-            this.$emit('update:isAddable', null)
-            return
-          }
-          this.getComponentV2(res.resultId)
-          // this.getRelatedQuestion(res.resultId)
-        }).catch(() => {
-          this.$emit('update:isLoading', false)
-          this.$emit('update:isAddable', null)
-          this.$store.commit('dataSource/setCurrentQuestionInfo', null)
-        })
-        return
-      }
-
-
       this.$store.dispatch('chatBot/askQuestion', {
         question,
         dataSourceId: this.dataSourceId,
@@ -115,11 +92,10 @@ export default {
         // 無結果
         if (segmentationList[0].denotation === 'NO_ANSWER') {
           this.$store.commit('result/updateCurrentResultInfo', null)
-          let segmentation = segmentationList[0]
           this.layout = 'EmptyResult'
           this.resultInfo = {
-            title: segmentation.errorCategory,
-            description: segmentation.errorMessage
+            title: this.segmentation.errorCategory,
+            description: this.segmentation.errorMessage
           }
           this.$emit('update:isLoading', false)
           this.$emit('update:isAddable', null)
@@ -128,9 +104,10 @@ export default {
 
         // 一個結果
         if (segmentationList.length === 1) {
+          this.segmentation = segmentationList[0]
           this.$store.dispatch('chatBot/askResult', {
             questionId,
-            segmentation: segmentationList[0],
+            segmentation: this.segmentation,
             // TODO: 處理 filter, drill down
             restrictions: null,
             selectedColumnList: null
@@ -184,7 +161,9 @@ export default {
                 })),
                 segmentation: componentResponse.segmentationPayload,
                 question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
-                questionId: componentResponse.questionId
+                questionId: componentResponse.questionId,
+                dataSourceId: this.dataSourceId,
+                dataFrameId: this.dataFrameId
               })
               this.$emit('update:isAddable', componentResponse.isWarRoomAddable || false)
               this.$emit('update:isLoading', false)

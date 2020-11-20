@@ -4,13 +4,16 @@ import i18n from '@/lang/index.js'
 
 export default {
   askQuestion ({dispatch, commit, state, rootState, rootGetters}, data) {
-    dispatch('cancelRequest')
-    state.askCancelToken = axios.CancelToken.source()
+    const shouldCancelToken = !data.hasOwnProperty('shouldCancelToken') || data.shouldCancelToken
+    if (shouldCancelToken) {
+      dispatch('cancelRequest')
+      state.askCancelToken = axios.CancelToken.source()
+    }
     const dataFrameId = rootState.dataSource.dataFrameId || data.dataFrameId
     let askCondition = {
       question: data.question === rootState.dataSource.appQuestion ? rootState.dataSource.appQuestion : data.question,
       dataSourceId: rootState.dataSource.dataSourceId || data.dataSourceId,
-      previewQuestionId: rootGetters['dataSource/drillDownQuestionId'],
+      previewQuestionId: data.previewQuestionId || rootGetters['dataSource/drillDownQuestionId'],
       domain: 'GENERAL',
       isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null,
       dataFrameId: dataFrameId === 'all' ? '' : dataFrameId,

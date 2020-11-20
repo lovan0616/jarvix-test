@@ -241,9 +241,10 @@
                   <dashboard-task
                     v-for="componentData in currentDashboard.components"
                     :key="componentData.id"
-                    :restrictions="restrictions"
+                    :filters="filterInfoList"
                     :component-data="componentData"
                     :is-edit-mode="isEditMode"
+                    @restricted="conComponentRestricted"
                   >
                     <template slot="drowdown">
                       <dropdown-select
@@ -415,6 +416,9 @@ export default {
     currentDashboard () {
       return this.dashboardList.length > 0 ? this.dashboardList.find(item => item.id === this.currentDashboardId) : {}
     },
+    currentDashboardIndex () {
+      return this.currentDashboard ? this.dashboardList.findIndex(d => d.id === this.currentDashboardId) : -1
+    },
     otherFeatureList () {
       if (!this.isEditMode || !this.appData) return []
       return [
@@ -465,35 +469,6 @@ export default {
     },
     filterColumnIds () {
       return this.filterInfoList.map(filter => filter.columnId)
-    },
-    restrictions () {
-      return this.filterInfoList.map(filter => {
-        let type = ''
-        switch (filter.dataType) {
-          case ('string'):
-            type = 'enum'
-            break
-          case ('int'):
-            type = 'range'
-            break
-        }
-        return [{
-          type,
-          proterties: {
-            data_type: filter.dataType,
-            dc_id: filter.columnId,
-            display_name: filter.displayName,
-            ...(filter.dataType === 'string' && {
-              datavalues: filter.dataValues,
-              display_datavalues: filter.displayDataValues
-            }),
-            ...(filter.dataType === 'int' && {
-              start: filter.start,
-              end: filter.end
-            })
-          }
-        }]
-      })
     }
   },
   created () {
@@ -504,16 +479,23 @@ export default {
       // MOCK DATA
       this.filterInfoList = [
         {
+          dataSourceId: 1,
+          dataSourcName: '',
+          dataFrameId: 1,
+          dataFrameName: '',
           columnId: 689,
           dataType: 'string',
-          displayName: '客戶性別',
-          dataValues: ['F'],
-          displayDataValues: ['F']
+          columnName: '客戶性別',
+          dataValues: ['F']
         },
         {
-          columnId: 689,
+          dataSourceId: 1,
+          dataSourcName: '',
+          dataFrameId: 1,
+          dataFrameName: '',
+          columnId: 699,
           dataType: 'int',
-          displayName: '利潤',
+          columnName: '利潤',
           start: 327.93722487001753,
           end: 680.5174891681111
         }
@@ -766,13 +748,35 @@ export default {
       return this.filterColumnIds.some(filterColumnId => columnIdList.includes(filterColumnId))
     },
     filterMethod () {
+      // 清空全域設定，使用各自 component 的資料源、資料表 id
+      this.$store.commit('dataSource/setDataSourceId', null)
+      this.$store.commit('dataSource/setDataFrameId', null)
+
       // 將需要因應 filter 變化的元件，加上 restriction 資訊
       const currentDashboard = this.miniApp.settings.editModeData.dashboards.find(d => d.id === this.currentDashboardId)
       currentDashboard.components.forEach(component => {
         if (this.shouldComponentBeFiltered(component.dataColumns)) {
+          // console.log('異動元件的 restrictions')
           component.restrictions = this.restrictions
         }
       })
+    },
+    conComponentRestricted ({ componentId, questionId, resultId, keyResultId }) {
+      // console.log('conComponentRestricted', componentId, questionId, resultId, keyResultId)
+      // 做完 filter 之後，更新 Component 資訊
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      const editedComponents = editedMiniApp.settings.editModeData.dashboards[this.currentDashboardIndex].components
+      // console.log(editedComponents)
+      const editedComponent = editedComponents.find(item => item.id === componentId)
+      // console.log(editedComponent)
+      editedComponent.questionId = questionId
+      editedComponent.resultId = resultId
+      editedComponent.keyResultId = keyResultId
+
+      this.updateAppSetting(editedMiniApp)
+        .then(() => { this.miniApp = editedMiniApp })
+        .catch(() => {})
+        .finally(() => {})
     }
   }
 }
