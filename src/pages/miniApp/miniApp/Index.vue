@@ -136,6 +136,20 @@
                 {{ $t('miniApp.createComponent') }}
               </button>
             </div>
+            <!--Filters-->
+            <div class="mini-app__dashbaord-filters">
+              <div class="mini-app__dashbaord-filters--left">
+                <!--Filter criteria-->
+              </div>
+              <div class="mini-app__dashbaord-filters--right">
+                <button 
+                  class="btn-m btn-outline btn-has-icon create-filter-btn" 
+                  @click="isShowCreateFilterDialog = true">
+                  <svg-icon icon-class="plus"/>
+                  新增篩選條件
+                </button>
+              </div>
+            </div>
             <div class="mini-app__dashbaord-components">
               <div 
                 v-if="currentDashboard.components.length === 0" 
@@ -183,6 +197,12 @@
       @closeDialog="isShowCreateComponentDialog = false"
       @create="createComponent"
     />
+    <create-filter-dialog
+      v-if="isShowCreateFilterDialog"
+      @closeDialog="isShowCreateFilterDialog = false"
+      @create="createFilters"
+      @filterCreated="filterCreated"
+    />
   </div>
 </template>
 
@@ -190,6 +210,7 @@
 import { getMiniAppInfo, updateAppSetting, updateAppName } from '@/API/MiniApp'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
+import CreateFilterDialog from './dialog/CreateFilterDialog.vue'
 import InputVerify from '@/components/InputVerify'
 import { Message } from 'element-ui'
 
@@ -199,6 +220,7 @@ export default {
   components: {
     CreateDashboardDialog,
     CreateComponentDialog,
+    CreateFilterDialog,
     InputVerify
   },
   data () {
@@ -212,7 +234,8 @@ export default {
       newAppName: '',
       isEditingAppName: false,
       newDashboardName: '',
-      isEditingDashboardName: false
+      isEditingDashboardName: false,
+      isShowCreateFilterDialog: false
     }
   },
   computed: {
@@ -324,6 +347,17 @@ export default {
       this.isEditingDashboardName = false
       this.currentDashboardId = dashboardId
       this.newDashboardName = this.currentDashboard.name
+    },
+    createFilters () {
+      // TODO: connect to api
+      this.isShowCreateFilterDialog = false
+    },
+    filterCreated (filterList) {
+      const currentDashboardIndex = this.miniApp.settings.editModeData.dashboards.findIndex(dashboard => dashboard.id === this.currentDashboardId)
+      this.miniApp.settings.editModeData.dashboards[currentDashboardIndex].filterList = filterList
+      this.updateAppSetting()
+      this.isShowCreateFilterDialog = false
+      // TODO: 加狀態
     }
   }
 }
@@ -488,6 +522,13 @@ export default {
         margin-left: 6px;
       }
     }
+
+    &-filters {
+      display: flex;
+      justify-content: space-between;
+      padding-right: 20px;
+    }
+
     &-components {
       flex: 1;
       height: 0;
