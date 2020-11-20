@@ -63,6 +63,15 @@
       }
     }
   }
+  
+  .el-date-picker__header {
+    border-bottom: solid 1px #3F4546;
+
+    &-label {
+      color: #FFF;
+    }
+  }
+
 
   .el-picker-panel__content {
     th {
@@ -72,6 +81,20 @@
     
     td {
       padding: 0;
+      
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .el-date-table__row {
+      .prev-month, .next-month {
+        color: #606266;
+      }
+
+      .available {
+        color: #C0C4CC;
+      }
     }
   }
 
