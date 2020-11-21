@@ -76,11 +76,11 @@
             :key="index"
             :class="{ 'active': tempEditInfo.icon === icon }"
             class="dialog__icon-box"
-            @click="selectIcon(icon)"
           >
             <input
-              v-validate="index === 0 ? getValidationRules(iconList.length) : null"
-              :value="index"
+              v-validate="index === 0 ? getValidationRules(iconList) : null"
+              :value="icon"
+              v-model="tempEditInfo.icon"
               name="icon_group"
               type="radio"
               class="dialog__icon-box-radio"
@@ -163,12 +163,14 @@ export default {
         status: 'Enable',
         settings: {
           editModeData: {
-            dashboards: []
+            dashboards: [],
+            displayedName: null,
+            isPublishing: false
           },
           viewModeData: {
             dashboards: [],
             updateDate: null,
-            isPublishing: false
+            displayedName: null
           }
         }
       },
@@ -213,8 +215,11 @@ export default {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
         this.isProcessing = true
+        const editInfo = this.tempEditInfo
+        // 編輯模式下的名稱預設為 app 名稱
+        editInfo.settings.editModeData.displayedName = editInfo.name
         createApp({
-          ...this.tempEditInfo,
+          ...editInfo,
           groupId: this.groupId
         })
           .then(response => {
@@ -312,8 +317,8 @@ export default {
     selectIcon(icon) {
       this.tempEditInfo.icon = icon
     },
-    getValidationRules (listLength) {
-      return`required|included:${[...Array(listLength).keys()].join()}`
+    getValidationRules (iconList) {
+      return`required|included:${iconList.join()}`
     }
   },
 }
