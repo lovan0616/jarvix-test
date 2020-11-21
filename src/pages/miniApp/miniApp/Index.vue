@@ -135,20 +135,12 @@
                 <svg-icon icon-class="plus"/>
                 {{ $t('miniApp.createComponent') }}
               </button>
-            </div>
-            <!--Filters-->
-            <div class="mini-app__dashbaord-filters">
-              <div class="mini-app__dashbaord-filters--left">
-                <!--Filter criteria-->
-              </div>
-              <div class="mini-app__dashbaord-filters--right">
-                <button 
-                  class="btn-m btn-outline btn-has-icon create-filter-btn" 
-                  @click="isShowCreateFilterDialog = true">
-                  <svg-icon icon-class="plus"/>
-                  新增篩選條件
-                </button>
-              </div>
+              <button 
+                class="btn-m btn-outline btn-has-icon create-filter-btn" 
+                @click="isShowCreateFilterDialog = true">
+                <svg-icon icon-class="plus"/>
+                新增篩選條件
+              </button>
             </div>
             <div class="mini-app__dashbaord-components">
               <div 
@@ -517,6 +509,9 @@ export default {
       }
       .create-component-btn {
         margin-left: auto;
+      }
+      .create-filter-btn {
+        margin-left: 8px;
       }
       .cancel-btn {
         margin-left: 6px;
