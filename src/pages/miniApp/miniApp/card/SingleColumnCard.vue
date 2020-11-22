@@ -2,8 +2,9 @@
   <div class="card">
     <div
       v-if="filterInfoList.length > 1"
+      :class="{ 'disabled': isProcessing || isLoading }"
       class="card__delete-icon"
-      @click="$emit('remove', filterInfo.id)">
+      @click="removeColumn">
       <svg-icon 
         icon-class="delete" 
         class="icon"/>
@@ -15,7 +16,7 @@
           v-validate="'required'"
           :option-list="dataColumnOptionList"
           :placeholder="$t('batchLoad.chooseColumn')"
-          :is-disabled="isProcessing"
+          :is-disabled="isProcessing || isLoading"
           v-model="filterInfo.columnId"
           :name="name"
           filterable
@@ -56,12 +57,20 @@ export default {
     name: {
       type: String,
       required: true
+    },
+    isProcessing: {
+      type: Boolean,
+      default: false
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   },
-  data() {
-    return {
-      isLoading: true,
-      isProcessing: false
+  methods: {
+    removeColumn () {
+      if (this.isProcessing || this.isLoading) return
+      this.$emit('remove', this.filterInfo.id)
     }
   }
 }
@@ -80,6 +89,11 @@ export default {
     top: 16px;
     right: 16px;
     cursor: pointer;
+
+    &.disabled {
+      opacity: .7;
+      cursor: not-allowed;
+    }
   }
 }
 </style>

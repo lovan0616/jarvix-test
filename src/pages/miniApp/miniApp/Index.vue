@@ -177,7 +177,6 @@
                 </li>
               </ul>
             </div>
-            
             <main class="mini-app__dashbaord">
               <div class="mini-app__dashbaord-header">
                 <div class="header-left">
@@ -305,9 +304,9 @@
     />
     <create-filter-dialog
       v-if="isShowCreateFilterDialog"
+      :is-processing="isProcessing"
       @closeDialog="isShowCreateFilterDialog = false"
-      @create="createFilters"
-      @filterCreated="filterCreated"
+      @filterCreated="saveCreatedFilter"
     />
     <delete-dashboard-dialog
       v-if="isShowDeleteDashboardDialog"
@@ -509,7 +508,8 @@ export default {
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
       updatedMiniAppData.settings.editModeData.dashboards.push({
         ...newDashBoardInfo,
-        components: []
+        components: [],
+        filterList: []
       })
       this.currentDashboardId = newDashBoardInfo.id
       this.isShowCreateDashboardDialog = false
@@ -717,23 +717,23 @@ export default {
     },
     updateAppSetting (appInfo, miniAppId = this.miniAppId) {
       return updateAppSetting(miniAppId, { ...appInfo })
-        .catch(() => {})
     },
     activeCertainDashboard (dashboardId) {
       this.isEditingDashboardName = false
       this.currentDashboardId = dashboardId
       this.newDashboardName = this.currentDashboard.name
     },
-    createFilters () {
-      // TODO: connect to api
-      this.isShowCreateFilterDialog = false
-    },
-    filterCreated (filterList) {
-      const currentDashboardIndex = this.miniApp.settings.editModeData.dashboards.findIndex(dashboard => dashboard.id === this.currentDashboardId)
-      this.miniApp.settings.editModeData.dashboards[currentDashboardIndex].filterList = filterList
-      this.updateAppSetting()
-      this.isShowCreateFilterDialog = false
-      // TODO: 加狀態
+    saveCreatedFilter (filterList) {
+      this.isProcessing = true
+      const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList.push(...filterList)
+      this.updateAppSetting(editedMiniApp)
+        .then(() => {
+          this.isShowCreateFilterDialog = false
+          this.getMiniAppInfo() 
+        })
+        .finally(() => this.isProcessing = false)
     },
     switchDialogName (eventName, id) {
       this[`isShow${eventName}Dialog`] = true

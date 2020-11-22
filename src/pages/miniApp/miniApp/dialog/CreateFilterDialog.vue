@@ -9,16 +9,16 @@
           @click="closeDialog"
         ><svg-icon icon-class="close"/></a>
       </div>
-      <spinner 
+      <!-- <spinner 
         v-if="isLoading"
         :title="$t('editing.loading')"
         size="50"
-      />
-      <empty-info-block
+      /> -->
+      <!-- <empty-info-block
         v-else-if="hasError"
         :msg="$t('message.systemIsError')"
-      /> 
-      <template v-else>
+      />  -->
+      <template>
         <div class="setting-block">
           <div class="input-field">
             <label class="input-field__label">資料源</label>
@@ -27,7 +27,7 @@
                 v-validate="'required'"
                 :option-list="dataSourceOptionList"
                 :placeholder="$t('batchLoad.chooseColumn')"
-                :is-disabled="isProcessing"
+                :is-disabled="isProcessing || isLoading"
                 v-model="selectedBasicInfo.dataSourceId"
                 filterable
                 class="input-field__select"
@@ -47,7 +47,7 @@
                 v-validate="'required'"
                 :option-list="dataFrameOptionList"
                 :placeholder="$t('batchLoad.chooseColumn')"
-                :is-disabled="isProcessing"
+                :is-disabled="isProcessing || isLoading"
                 v-model="selectedBasicInfo.dataFrameId"
                 filterable
                 class="input-field__select"
@@ -63,13 +63,15 @@
           <template v-if="selectedBasicInfo.dataFrameId">
             <div class="card__wrapper">
               <div class="card__wrapper-title">欄位與欄位值組合</div>
-              <single-filter-card
+              <single-column-card
                 v-for="(filter, index) in filterInfoList"
                 :filter-info="filter"
                 :data-column-option-list="dataColumnOptionList"
                 :filter-info-list="filterInfoList"
                 :key="filter.id"
                 :name="index.toString()"
+                :is-loading="isLoading"
+                :is-processing="isProcessing"
                 @updateDataColumn="updateDataColumn($event, filter.id)"
                 @remove="removeColumnCard"
               />
@@ -105,7 +107,7 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import DefaultMultiSelect from '@/components/select/DefaultMultiSelect'
 import InputBlock from '@/components/InputBlock'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
-import SingleFilterCard from '../card/SingleFilterCard'
+import SingleColumnCard from '../card/SingleColumnCard'
 import { mapGetters } from 'vuex'
 import { 
   getDataFrameById, 
@@ -120,7 +122,13 @@ export default {
     InputBlock,
     DefaultMultiSelect,
     EmptyInfoBlock,
-    SingleFilterCard
+    SingleColumnCard
+  },
+  props: {
+    isProcessing: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
@@ -149,7 +157,6 @@ export default {
         end: null
       },
       isLoading: false,
-      isProcessing: false,
       hasError: false,
       dataSourceOptionList: [],
       dataFrameOptionList: [],
@@ -161,13 +168,6 @@ export default {
   },
   mounted () {
     this.fetchDataSourceList()
-    // 預先產生一組 column 組合
-    if (this.filterInfo.criteria.length === 0) {
-      this.filterInfo.criteria.push({
-        ...this.criteriaTemplate,
-        id: new Date().toString()
-      })
-    }
   },
   methods: {
     fetchDataSourceList () {
@@ -181,6 +181,7 @@ export default {
       }, [])
     },
     fetchDataFrameList (dataSourceId) {
+      this.isLoading = true
       // 清空原資料
       this.dataFrameOptionList = []
       this.filterInfoList = []
@@ -195,8 +196,10 @@ export default {
             value: dataFrame.id
           }))
         })
+        .finally(() => this.isLoading = false)
     },
     fetchDataColumnList (dataFrameId) {
+      this.isLoading = true
       // 清空原資料
       this.filterInfoList = []
       this.dataColumnOptionList = []
@@ -218,6 +221,7 @@ export default {
           return acc
         }, [])
       })
+      .finally(() => this.isLoading = false)
       this.addNewColumnCard()
     },
     addNewColumnCard () {
