@@ -15,14 +15,11 @@
       }"
       class="link action-link"
     >{{ $t('miniApp.editContent') }}</router-link>
-    <router-link
-      :to="{
-        name: 'MiniApp',
-        params: { 'mini_app_id': miniAppInfo.id },
-        query: { mode: 'view' }
-      }"
+    <a 
+      href="javascript:void(0);" 
       class="link action-link"
-    >{{ $t('miniApp.goToApp') }}</router-link>
+      @click="openMiniApp"
+    >{{ $t('miniApp.goToApp') }}</a>
     <div class="mini-app__action-block">
       <div class="mini-app__hover-box">
         <svg-icon 
@@ -90,7 +87,15 @@ export default {
     },
     deleteApp () {
       this.$emit('showDelete')
-    }
+    },
+    openMiniApp () {
+      const { name, params } = this.$route
+      const routeData = this.$router.resolve({
+        name, 
+        params, 
+        query: { mode: 'view' } })
+      window.open(routeData.href, '_blank')
+    },
   }
 }
 </script>

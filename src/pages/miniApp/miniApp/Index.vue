@@ -106,7 +106,6 @@
                 class="btn-m btn-secondary button-container__button"
                 @click="previewMiniApp"
               >{{ $t('miniApp.preview') }}</button>
-
               <custom-dropdown-select
                 :data-list="otherFeatureList"
                 trigger="hover"
@@ -223,7 +222,8 @@
                     <svg-icon icon-class="plus"/>
                     {{ $t('miniApp.createComponent') }}
                   </button>
-                  <button 
+                  <button
+                    v-if="isEditMode"
                     class="btn-m btn-outline btn-has-icon create-filter-btn" 
                     @click="isShowCreateFilterDialog = true">
                     <svg-icon icon-class="plus"/>
@@ -360,7 +360,6 @@ import WritingDialog from '@/components/dialog/WritingDialog'
 import {
   getMiniAppInfo,
   updateAppSetting,
-  updateAppName,
   deleteMiniApp
 } from '@/API/MiniApp'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
