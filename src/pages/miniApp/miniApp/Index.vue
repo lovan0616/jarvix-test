@@ -496,7 +496,7 @@ export default {
           this.newAppEditModeName = this.appData.displayedName
 
           // 如果有 dashboard, focus 在第一個
-          if (this.dashboardList.length > 0) {
+          if (this.dashboardList.length > 0 && !this.currentDashboardId) {
             this.currentDashboardId = this.dashboardList[0].id
             this.newDashboardName = this.currentDashboard.name
           }
