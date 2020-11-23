@@ -57,6 +57,11 @@ export function isArray (target) {
   return Array.isArray(target)
 }
 
+// 英數字或是空白
+export function isEnOrEnum (target) {
+  return /^[a-zA-Z0-9_]+( [a-zA-Z0-9_]+)*$/.test(target)
+}
+
 // 檔案狀態
 export const uploadStatus = {
   // 等待上傳
