@@ -106,7 +106,6 @@
                 class="btn-m btn-secondary button-container__button"
                 @click="previewMiniApp"
               >{{ $t('miniApp.preview') }}</button>
-
               <custom-dropdown-select
                 :data-list="otherFeatureList"
                 trigger="hover"
@@ -223,6 +222,13 @@
                     <svg-icon icon-class="plus"/>
                     {{ $t('miniApp.createComponent') }}
                   </button>
+                  <button
+                    v-if="isEditMode"
+                    class="btn-m btn-outline btn-has-icon create-filter-btn" 
+                    @click="isShowCreateFilterDialog = true">
+                    <svg-icon icon-class="plus"/>
+                    新增篩選條件
+                  </button>
                   <div
                     v-if="isEditMode"
                     class="dashboard-setting-box">
@@ -289,6 +295,12 @@
       @close="isShowCreateComponentDialog = false"
       @create="createComponent"
     />
+    <create-filter-dialog
+      v-if="isShowCreateFilterDialog"
+      :is-processing="isProcessing"
+      @closeDialog="isShowCreateFilterDialog = false"
+      @filterCreated="saveCreatedFilter"
+    />
     <delete-dashboard-dialog
       v-if="isShowDeleteDashboardDialog"
       :dashboard-name="currentDashboard.name"
@@ -345,6 +357,7 @@ import {
 import DashboardTask from './components/DashboardTask'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
+import CreateFilterDialog from './dialog/CreateFilterDialog.vue'
 import DeleteDashboardDialog from './dialog/DeleteDashboardDialog.vue'
 import DeleteComponentDialog from './dialog/DeleteComponentDialog.vue'
 import UpdateDashboardNameDialog from './dialog/UpdateDashboardNameDialog.vue'
@@ -359,6 +372,7 @@ export default {
     DashboardTask,
     CreateDashboardDialog,
     CreateComponentDialog,
+    CreateFilterDialog,
     DeleteDashboardDialog,
     DeleteComponentDialog,
     UpdateDashboardNameDialog,
@@ -388,7 +402,8 @@ export default {
       isEditingAppName: false,
       newDashboardName: '',
       isEditingDashboardName: false,
-      filterInfoList: []
+      filterInfoList: [],
+      isShowCreateFilterDialog: false
     }
   },
   computed: {
@@ -522,7 +537,8 @@ export default {
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
       updatedMiniAppData.settings.editModeData.dashboards.push({
         ...newDashBoardInfo,
-        components: []
+        components: [],
+        filterList: []
       })
       this.currentDashboardId = newDashBoardInfo.id
       this.isShowCreateDashboardDialog = false
@@ -730,12 +746,23 @@ export default {
     },
     updateAppSetting (appInfo, miniAppId = this.miniAppId) {
       return updateAppSetting(miniAppId, { ...appInfo })
-        .catch(() => {})
     },
     activeCertainDashboard (dashboardId) {
       this.isEditingDashboardName = false
       this.currentDashboardId = dashboardId
       this.newDashboardName = this.currentDashboard.name
+    },
+    saveCreatedFilter (filterList) {
+      this.isProcessing = true
+      const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList.push(...filterList)
+      this.updateAppSetting(editedMiniApp)
+        .then(() => {
+          this.isShowCreateFilterDialog = false
+          this.getMiniAppInfo() 
+        })
+        .finally(() => this.isProcessing = false)
     },
     switchDialogName (eventName, id) {
       this[`isShow${eventName}Dialog`] = true
@@ -997,6 +1024,7 @@ export default {
           position: relative;
           @include dropdown-select-controller;
           .dropdown-select {
+            z-index: 1;
             /deep/ .dropdown-select-box {
               box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
               top: calc(50% + 17px);
@@ -1014,10 +1042,20 @@ export default {
           }
         }
       }
+      .create-filter-btn {
+        margin-left: 8px;
+      }
       .cancel-btn {
         margin-left: 6px;
       }
     }
+
+    &-filters {
+      display: flex;
+      justify-content: space-between;
+      padding-right: 20px;
+    }
+
     &-components {
       flex: 1;
       height: 0;
