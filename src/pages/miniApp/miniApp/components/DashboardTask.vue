@@ -46,6 +46,7 @@ export default {
     }
   },
   computed: {
+    // 到時候傳進來的會直接 format 好這邊就不用再做
     restrictions () {
       return this.filters.map(filter => {
         let type = ''
@@ -78,14 +79,13 @@ export default {
     }
   },
   watch: {
-    // 當Dashboard的fitler變動時，由元件內部去重新問問題
-    // 再把新的question, questionId, result,key_result,questionId傳出去更新外部components資訊
+    // 當 Dashboard的 fitler 變動時，由元件內部去重新問問題
     filters: {
       immediate: false,
       deep: false,
       handler (filters) {
         
-        // 判斷是否需要重做 result
+        // 判斷 component 是否有相關欄位而需要重做 result
         if (!this.shouldComponentBeFiltered()) return
 
         this.$store.dispatch('chatBot/askQuestion', {
@@ -106,15 +106,10 @@ export default {
               selectedColumnList: null
             }).then(res => {
               this.getComponentV2(res.resultId)
-            }).catch(error => {
-              console.log(error)
-            })
+            }).catch(error => {})
           }
           // TODO 無結果和多個結果
-        }).catch(error => {
-          console.log(this.componentData.config.question)
-          console.log(error)
-        })
+        }).catch(error => {})
       }
     }
   },
@@ -136,7 +131,6 @@ export default {
             case 'Complete':
               this.totalSec = 50
               this.periodSec = 200
-              // console.log('最後一哩路')
               this.$emit('restricted', {
                 componentId: this.componentData.id,
                 questionId: componentResponse.questionId,
@@ -153,16 +147,10 @@ export default {
         }).catch((error) => {})
     },
     shouldComponentBeFiltered () {
-      // console.log('shouldComponentBeFiltered')
       // 判斷元件是否需要因應 filter 異動而重做
       let filterColumnIds = this.filters.reduce((acc, cur) => acc.concat(cur.columnId), [])
-      // console.log(filterColumnIds)
       let componentColumnIds = this.componentData.dataColumns.reduce((acc, cur) => acc.concat(cur.columnId), [])
-      // console.log(componentColumnIds)
-      let shouldComponentBeFiltered = false
-      shouldComponentBeFiltered = filterColumnIds.some(filter => componentColumnIds.includes(filter))
-      // console.log('shouldComponentBeFiltered', shouldComponentBeFiltered)
-      return shouldComponentBeFiltered
+      return filterColumnIds.some(filter => componentColumnIds.includes(filter))
     }
   }
 }

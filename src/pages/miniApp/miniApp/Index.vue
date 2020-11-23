@@ -247,7 +247,7 @@
                   <dashboard-task
                     v-for="componentData in currentDashboard.components"
                     :key="componentData.id"
-                    :filters="filterInfoList"
+                    :filters="filterColumnValueInfoList"
                     :component-data="componentData"
                     :is-edit-mode="isEditMode"
                     @restricted="conComponentRestricted"
@@ -402,7 +402,7 @@ export default {
       isEditingAppName: false,
       newDashboardName: '',
       isEditingDashboardName: false,
-      filterInfoList: [],
+      filterColumnValueInfoList : [],
       isShowCreateFilterDialog: false
     }
   },
@@ -483,7 +483,9 @@ export default {
       return this.$route.params.mini_app_id
     },
     filterColumnIds () {
-      return this.filterInfoList.map(filter => filter.columnId)
+      return this.filterColumnValueInfoList
+        ? this.filterColumnValueInfoList.map(filter => filter.columnId)
+        : []
     }
   },
   created () {
@@ -492,11 +494,9 @@ export default {
   methods: {
     testAddFilter () {
       // MOCK DATA
-      this.filterInfoList = [
+      this.filterColumnValueInfoList = [
         {
-          dataSourceId: 1,
           dataSourcName: '',
-          dataFrameId: 1,
           dataFrameName: '',
           columnId: 689,
           dataType: 'string',
@@ -504,9 +504,7 @@ export default {
           dataValues: ['F']
         },
         {
-          dataSourceId: 1,
           dataSourcName: '',
-          dataFrameId: 1,
           dataFrameName: '',
           columnId: 699,
           dataType: 'int',
@@ -515,7 +513,6 @@ export default {
           end: 680.5174891681111
         }
       ]
-      this.filterMethod()
     },
     getMiniAppInfo () {
       this.isLoading = true
@@ -768,42 +765,14 @@ export default {
       this[`isShow${eventName}Dialog`] = true
       if (eventName === 'DeleteComponent') this.currentComponentId = id
     },
-    shouldComponentBeFiltered (columnList) {
-      // 判斷元件是否需要因應 filter 異動而重做
-      let columnIdList = []
-      columnList.forEach(item => columnIdList.push(item.columnId))
-      return this.filterColumnIds.some(filterColumnId => columnIdList.includes(filterColumnId))
-    },
-    filterMethod () {
-      // 清空全域設定，使用各自 component 的資料源、資料表 id
-      this.$store.commit('dataSource/setDataSourceId', null)
-      this.$store.commit('dataSource/setDataFrameId', null)
-
-      // 將需要因應 filter 變化的元件，加上 restriction 資訊
-      const currentDashboard = this.miniApp.settings.editModeData.dashboards.find(d => d.id === this.currentDashboardId)
-      currentDashboard.components.forEach(component => {
-        if (this.shouldComponentBeFiltered(component.dataColumns)) {
-          // console.log('異動元件的 restrictions')
-          component.restrictions = this.restrictions
-        }
-      })
-    },
     conComponentRestricted ({ componentId, questionId, resultId, keyResultId }) {
-      // console.log('conComponentRestricted', componentId, questionId, resultId, keyResultId)
       // 做完 filter 之後，更新 Component 資訊
-      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
-      const editedComponents = editedMiniApp.settings.editModeData.dashboards[this.currentDashboardIndex].components
-      // console.log(editedComponents)
+      const editedComponents = this.miniApp.settings.editModeData.dashboards[this.currentDashboardIndex].components
       const editedComponent = editedComponents.find(item => item.id === componentId)
-      // console.log(editedComponent)
       editedComponent.questionId = questionId
       editedComponent.resultId = resultId
       editedComponent.keyResultId = keyResultId
 
-      this.updateAppSetting(editedMiniApp)
-        .then(() => { this.miniApp = editedMiniApp })
-        .catch(() => {})
-        .finally(() => {})
     }
   }
 }
