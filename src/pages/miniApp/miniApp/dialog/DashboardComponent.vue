@@ -84,7 +84,8 @@ export default {
       this.$store.dispatch('chatBot/askQuestion', {
         question,
         dataSourceId: this.dataSourceId,
-        dataFrameId: this.dataFrameId
+        dataFrameId: this.dataFrameId,
+        shouldCancelToken: true
       }).then(response => {
         let questionId = response.questionId
         let segmentationList = response.segmentationList

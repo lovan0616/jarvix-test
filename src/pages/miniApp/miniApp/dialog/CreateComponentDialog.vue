@@ -142,8 +142,8 @@ export default {
             question: this.currentResultInfo.question
           },
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
-          ...this.currentResultInfo, //keyResultId,dataColumns,questionId,segmentation,dataColumns
-          restrictions: [],
+          ...this.currentResultInfo,
+          restrictedResultInfo: {}
         })
       })
     },

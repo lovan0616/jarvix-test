@@ -12,8 +12,8 @@
       </div>
     </span>
     <task
-      :key="componentData.keyResultId"
-      :component-id="componentData.keyResultId"
+      :key="keyResultId"
+      :component-id="keyResultId"
       intend="key_result"
     />
   </div>
@@ -76,6 +76,15 @@ export default {
           }
         }]
       })
+    },
+    shouldComponentBeFiltered () {
+      // 判斷元件是否需要因應 filter 異動而重做
+      let filterColumnIds = this.filters.reduce((acc, cur) => acc.concat(cur.columnId), [])
+      let componentColumnIds = this.componentData.dataColumns.reduce((acc, cur) => acc.concat(cur.columnId), [])
+      return filterColumnIds.some(filter => componentColumnIds.includes(filter))
+    },
+    keyResultId () {
+      return this.componentData.restrictedResultInfo.keyResultId || this.componentData.keyResultId
     }
   },
   watch: {
@@ -86,7 +95,10 @@ export default {
       handler (filters) {
         
         // 判斷 component 是否有相關欄位而需要重做 result
-        if (!this.shouldComponentBeFiltered()) return
+        if (!this.shouldComponentBeFiltered) return
+
+        this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
+        this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
 
         this.$store.dispatch('chatBot/askQuestion', {
           question: this.componentData.config.question,
@@ -98,6 +110,7 @@ export default {
           let questionId = response.questionId
           let segmentationList = response.segmentationList
 
+          // TODO 處理 NO_ANSWER
           if (segmentationList.length === 1) {
             this.$store.dispatch('chatBot/askResult', {
               questionId,
@@ -146,12 +159,6 @@ export default {
           }
         }).catch((error) => {})
     },
-    shouldComponentBeFiltered () {
-      // 判斷元件是否需要因應 filter 異動而重做
-      let filterColumnIds = this.filters.reduce((acc, cur) => acc.concat(cur.columnId), [])
-      let componentColumnIds = this.componentData.dataColumns.reduce((acc, cur) => acc.concat(cur.columnId), [])
-      return filterColumnIds.some(filter => componentColumnIds.includes(filter))
-    }
   }
 }
 </script>

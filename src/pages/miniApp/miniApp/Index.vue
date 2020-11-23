@@ -742,6 +742,10 @@ export default {
         .finally(() => this.isShowDeleteComponentDialog = false)
     },
     updateAppSetting (appInfo, miniAppId = this.miniAppId) {
+      // 將各 component 中暫存，僅供操作瀏覽用 restrictedInfo 資訊清除
+      appInfo.settings.editModeData.dashboards.forEach(d => {
+        d.components.forEach(c => c.restrictedResultInfo = {})
+      })
       return updateAppSetting(miniAppId, { ...appInfo })
     },
     activeCertainDashboard (dashboardId) {
@@ -766,13 +770,10 @@ export default {
       if (eventName === 'DeleteComponent') this.currentComponentId = id
     },
     conComponentRestricted ({ componentId, questionId, resultId, keyResultId }) {
-      // 做完 filter 之後，更新 Component 資訊
-      const editedComponents = this.miniApp.settings.editModeData.dashboards[this.currentDashboardIndex].components
+      // 做完 filter 之後，更新 Component restrictedInfo 資訊
+      const editedComponents = this.miniApp.settings[`${this.mode}ModeData`].dashboards[this.currentDashboardIndex].components
       const editedComponent = editedComponents.find(item => item.id === componentId)
-      editedComponent.questionId = questionId
-      editedComponent.resultId = resultId
-      editedComponent.keyResultId = keyResultId
-
+      editedComponent.restrictedResultInfo = { questionId, resultId, keyResultId }
     }
   }
 }

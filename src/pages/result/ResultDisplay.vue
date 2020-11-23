@@ -100,7 +100,11 @@ export default {
   watch: {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
-      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'dataFrameId': this.dataFrameId})
+      this.fetchApiAsk({
+        question, 'dataSourceId': this.dataSourceId,
+        'dataFrameId': this.dataFrameId,
+        shouldCancelToken: true
+      })
     },
     askCondition: {
       deep: true,
@@ -117,7 +121,8 @@ export default {
         this.fetchApiAsk({
           question: this.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
           'dataSourceId': this.$route.query.dataSourceId, 
-          'dataFrameId': this.$route.query.dataFrameId
+          'dataFrameId': this.$route.query.dataFrameId,
+          shouldCancelToken: true
         })
       }
     }
@@ -138,7 +143,8 @@ export default {
       this.fetchApiAsk({
         dataSourceId, 
         dataFrameId,
-        question
+        question,
+        shouldCancelToken: true
       })
     },
     clearLayout () {
