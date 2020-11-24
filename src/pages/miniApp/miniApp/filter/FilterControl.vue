@@ -4,7 +4,7 @@
     class="filter-control"
   >
     <svg-icon
-      icon-class="filter" 
+      icon-class="filter-outline" 
       class="filter-control__filter-icon"/>
     <single-filter-badge
       v-for="(filter, index) in filterlist"
