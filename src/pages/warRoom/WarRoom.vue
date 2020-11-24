@@ -346,8 +346,10 @@ export default {
           recentTimeIntervalAmount: null,
           recentTimeIntervalUnit: null,
           refreshFrequency: null,
-          upperBound: null
+          upperBound: null,
+          alertSwitch: null
         },
+        canAlert: null,
         diagramData: {},
         diagramName: null,
         orderSequence: null,

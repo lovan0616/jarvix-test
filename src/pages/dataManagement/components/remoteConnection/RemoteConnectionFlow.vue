@@ -43,7 +43,6 @@
 </template>
 <script>
 import ChooseConnection from './ChooseConnection'
-import RemoteConnection from './RemoteConnection'
 import NewRemoteConnection from './NewRemoteConnection'
 import EditRemoteConnection from './EditRemoteConnection'
 import RemoteConnectionFinished from './RemoteConnectionFinished'
@@ -53,7 +52,6 @@ import ColumnSetting from './ColumnSetting'
 export default {
   name: 'RemoteConnectionFlow',
   components: {
-    RemoteConnection,
     NewRemoteConnection,
     EditRemoteConnection,
     RemoteConnectionFinished,

@@ -1,5 +1,9 @@
 {
   "lang": "简中",
+  "common": {
+    "show": "显示",
+    "hide": "隐藏"
+  },
   "nav": {
     "index": "智能分析",
     "pinboard": "个人钉板",
@@ -697,6 +701,9 @@
     "thresholdSetting": "上下限标记",
     "maxThreshold": "上限设定",
     "minThreshold": "下限设定",
+    "waringMail": "示警邮件通知",
+    "mailReceiversetting": "*至战情室设定选择收件人信箱",
+    "recipientList": "收件人名单",
     "pleaseEnterValue": "请输入数值",
     "notChosen": "未选择",
     "indexTypeContent": "指标型内容",
@@ -926,7 +933,8 @@
     "AddNewWarRoom": "新增战情室",
     "sendInvitation": "寄送邀请信",
     "downloadPage": "下载图片",
-    "changeDiagram": "切换图表"
+    "changeDiagram": "切换图表",
+    "columnSummaryInfo": "栏位统计资讯"
   },
   "timeScopeUnit": {
     "second": "秒",
