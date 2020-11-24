@@ -493,7 +493,7 @@ export default {
     },
     currentFilterList () {
       const currentDashboard = this.miniApp.settings.editModeData.dashboards.find(dashboard => dashboard.id === this.currentDashboardId)
-      return currentDashboard.filterList
+      return currentDashboard ? currentDashboard.filterList : []
     }                        
   },
   created () {
@@ -833,8 +833,16 @@ export default {
       editedComponent.restrictedResultInfo = { questionId, resultId, keyResultId }
     },
     removeFilter (updatedFilterList) {
-      console.log(updatedFilterList)
-      // TODO: 更新前端暫存
+      this.isProcessing = true
+      const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList = updatedFilterList
+      this.updateAppSetting(editedMiniApp)
+        .then(() => {
+          this.isShowCreateFilterDialog = false
+          this.miniApp = editedMiniApp
+        })
+        .finally(() => this.isProcessing = false)
     }
   }
 }

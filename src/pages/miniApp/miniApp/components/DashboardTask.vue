@@ -48,38 +48,55 @@ export default {
   computed: {
     // 到時候傳進來的會直接 format 好這邊就不用再做
     restrictions () {
-      return this.filters.map(filter => {
-        let type = ''
-        switch (filter.dataType) {
-          case ('string'):
-          case ('boolean'):
-            type = 'enum'
-            break
-          case ('int'):
-            type = 'range'
-            break
-        }
-        return [{
-          type,
-          properties: {
-            data_type: filter.dataType,
-            dc_id: filter.columnId,
-            display_name: filter.columnName,
-            ...((filter.dataType === 'string' || filter.dataType === 'boolean')  && {
-              datavalues: filter.dataValues,
-              display_datavalues: filter.dataValues
-            }),
-            ...(filter.dataType === 'int' && {
-              start: filter.start,
-              end: filter.end
-            })
+      return this.filters
+        .filter(filter => filter.datavalues.length > 0)
+        .map(filter => {
+          let type = ''
+          switch (filter.statsType) {
+            case ('STRING'):
+            case ('BOOLEAN'):
+            case ('CATEGORY'):
+              type = 'enum'
+              break
+            case ('NUMERIC'):
+              type = 'range'
+              break
           }
-        }]
-      })
+          let data_type = ''
+          switch (filter.statsType) {
+            case ('STRING'):
+            case ('BOOLEAN'):
+            case ('CATEGORY'):
+              data_type = 'string'
+              break
+            case ('FLOAT'):
+            case ('NUMERIC'):
+              data_type = 'int'
+              break
+          }
+          return [{
+            type,
+            properties: {
+              data_type,
+              dc_id: filter.columnId,
+              display_name: filter.columnName,
+              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
+                datavalues: filter.datavalues,
+                display_datavalues: filter.datavalues
+              }),
+              ...(filter.statsType === 'NUMERIC' && {
+                start: filter.start,
+                end: filter.end
+              })
+            }
+          }]
+        })
     },
     shouldComponentBeFiltered () {
       // 判斷元件是否需要因應 filter 異動而重做
-      let filterColumnIds = this.filters.reduce((acc, cur) => acc.concat(cur.columnId), [])
+      let filterColumnIds = this.filters
+        .filter(filter => filter.datavalues.length > 0)
+        .reduce((acc, cur) => acc.concat(cur.columnId), [])
       let componentColumnIds = this.componentData.dataColumns.reduce((acc, cur) => acc.concat(cur.columnId), [])
       return filterColumnIds.some(filter => componentColumnIds.includes(filter))
     },
@@ -91,9 +108,9 @@ export default {
     // 當 Dashboard的 fitler 變動時，由元件內部去重新問問題
     filters: {
       immediate: false,
-      deep: false,
+      deep: true,
       handler (filters) {
-        
+
         // 判斷 component 是否有相關欄位而需要重做 result
         if (!this.shouldComponentBeFiltered) return
 
