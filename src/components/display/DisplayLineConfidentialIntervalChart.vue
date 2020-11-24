@@ -386,7 +386,7 @@ export default {
 <style lang="scss" scoped>
 .display-line-confidential-interval-chart {
   .description {
-    margin-top: 40px;
+    margin-top: 20px;
     background: #141C1D;
     border-radius: 8px;
     padding: 10px 20px;
