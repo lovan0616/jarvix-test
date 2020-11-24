@@ -299,6 +299,9 @@ Vue.use(VeeValidate, {
         decimal(field, params) {
           if (params.length === 0) return i18n.t('message.formDecimal')
           return i18n.t('message.formDecimalWithMaxDecimalPointNumbers', { max: params[0] })
+        },
+        between(field, params) {
+          return i18n.t('message.numericShouldBeBetween', { min: params[0], max: params[1] })
         }
       }
     },
@@ -340,6 +343,9 @@ Vue.use(VeeValidate, {
         decimal(field, params) {
           if (params.length === 0) return i18n.t('message.formDecimal')
           return i18n.t('message.formDecimalWithMaxDecimalPointNumbers', { max: params[0] })
+        },
+        between(field, params) {
+          return i18n.t('message.numericShouldBeBetween', { min: params[0], max: params[1] })
         }
       }
     }
