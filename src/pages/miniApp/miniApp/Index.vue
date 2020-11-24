@@ -246,6 +246,7 @@
                 :is-edit-mode="isEditMode"
                 :initial-filter-list.sync="filterColumnValueInfoList"
                 class="mini-app__dashboard-filter"
+                @removeFilter="removeFilter"
               />
               <div class="mini-app__dashbaord-components">
                 <template v-if="currentDashboard.components.length > 0">
@@ -800,6 +801,10 @@ export default {
     switchDialogName (eventName, id) {
       this[`isShow${eventName}Dialog`] = true
       if (eventName === 'DeleteComponent') this.currentComponentId = id
+    },
+    removeFilter (updatedFilterList) {
+      console.log(updatedFilterList)
+      // TODO: 更新前端暫存
     }
   }
 }

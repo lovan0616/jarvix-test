@@ -10,12 +10,13 @@
     @click="toggleFilterPanel"
   >
     <div class="filter__title">{{ filter.columnName }}</div>
-    <div 
-      v-if="isEditMode" 
-      class="filter__close-icon-box">
+    <div
+      v-if="isEditMode"
+      class="filter__delete-icon-box" 
+      @click="removeFilter">
       <svg-icon
         icon-class="close" 
-        class="filter__close-icon"/>
+        class="filter__delete-icon"/>
     </div>
     <svg-icon
       v-else
@@ -257,6 +258,9 @@ export default {
     },
     checkValueIsChecked (value) {
       return this.filter.datavalues.includes(value)
+    },
+    removeFilter () {
+      this.$emit('removeFilter')
     }
   }
 }
@@ -278,7 +282,7 @@ export default {
     margin-right: 4px;
   }
 
-  &__close-icon-box {
+  &__delete-icon-box {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -289,7 +293,7 @@ export default {
     cursor: pointer;
   }
 
-  &__close-icon,
+  &__delete-icon,
   &__dropdown-icon {
     font-size: 4px;
   }

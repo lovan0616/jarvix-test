@@ -12,6 +12,7 @@
       :initial-filter="filter"
       :is-edit-mode="isEditMode"
       @updateFilter="updateFilter($event, index)"
+      @removeFilter="removeFilter(index)"
     />
   </section>
 </template>
@@ -57,6 +58,11 @@ export default {
         return index === filterIndex ? updatedFilter : filter
       })
       this.$emit('update:initial-filter-list', updatedFilterList)
+    },
+    removeFilter (filterIndex) {
+      const updatedFilterList = this.filterlist.filter((filter, index) => index !== filterIndex)
+      this.$emit('update:initial-filter-list', updatedFilterList)
+      this.$emit('removeFilter', updatedFilterList)
     }
   }
 }
