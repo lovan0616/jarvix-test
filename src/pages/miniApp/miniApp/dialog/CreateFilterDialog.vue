@@ -173,7 +173,7 @@ export default {
   methods: {
     fetchDataSourceList () {
       this.dataSourceOptionList = this.dataSourceList.reduce((acc, cur) => {
-        if (cur.state !== 'ENABLE' || cur.enableDataFrameCount < 1) return
+        if (cur.state !== 'ENABLE' || cur.enableDataFrameCount < 1) return acc
         acc.push({
           name: cur.name,
           value: cur.id

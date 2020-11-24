@@ -21,58 +21,106 @@
       v-else
       icon-class="dropdown" 
       class="filter__dropdown-icon"/>
+    <!--Range-->
     <div
       v-if="isShowFilterPanel && filter.statsType === 'NUMERIC'"
       class="filter__input-panel input-panel"
       @click.stop
     >
-      <div class="input-panel__input-group">
-        <label 
-          class="input-panel__label" 
-          for="max">{{ `上限值(max: ${filter.dataMax}` }}</label>
-        <input
-          v-validate="upperBoundRules"
-          id="max"
-          ref="upperBound"
-          v-model.trim="tempFilter.start"
-          name="upperBound"
-          placeholder="請填入數字" 
-          class="input-panel__input input" 
-          type="text">
+      <spinner 
+        v-if="isLoading"
+        class="filter-spinner"
+      />
+      <template v-else>
+        <div class="input-panel__input-group">
+          <label 
+            class="input-panel__label" 
+            for="max">{{ `上限值(max: ${filter.dataMax}` }}</label>
+          <input
+            v-validate="upperBoundRules"
+            id="max"
+            ref="upperBound"
+            v-model.trim="tempFilter.start"
+            name="upperBound"
+            placeholder="請填入數字" 
+            class="input-panel__input input" 
+            type="text">
+          <div 
+            v-show="errors.has('upperBound')"
+            class="error-text"
+          >{{ errors.first('upperBound') }}</div>
+        </div>
+        <div class="input-panel__input-group">
+          <label 
+            class="input-panel__label" 
+            for="min">{{ `下限值(min: ${filter.dataMin}` }}</label>
+          <input 
+            v-validate="lowerBoundRules"
+            id="min"
+            ref="lowerBound"
+            v-model.trim="tempFilter.end"
+            name="lowerBound" 
+            placeholder="請填入數字"
+            class="input-panel__input input" 
+            type="text">
+          <div 
+            v-show="errors.has('lowerBound')"
+            class="error-text"
+          >{{ errors.first('lowerBound') }}</div>
+        </div>
+        <div class="button__block">
+          <button 
+            class="btn btn-outline"
+            @click="toggleFilterPanel"
+          >{{ $t('button.cancel') }}</button>
+          <button 
+            :disabled="isProcessing"
+            class="btn btn-default"
+            @click="updateRangeFilteredColumnValue"
+          >{{ $t('button.save') }}</button>
+        </div>
+      </template>
+    </div>
+    <!--Enum-->
+    <div 
+      v-if="isShowFilterPanel && (filter.statsType === 'CATEGORY' || filter.statsType === 'BOOLEAN')"
+      class="filter__selector-panel selector"
+      @click.stop>
+      <input
+        v-model.trim="searchInput"
+        :placeholder="$t('dataFrameAdvanceSetting.searchColumn')"
+        class="selector__input-block"
+        type="text"
+      >
+      <spinner
+        v-if="isLoading"
+        class="filter-spinner"
+        size="20"
+      />
+      <template v-else>
         <div 
-          v-show="errors.has('upperBound')"
-          class="error-text"
-        >{{ errors.first('upperBound') }}</div>
-      </div>
-      <div class="input-panel__input-group">
-        <label 
-          class="input-panel__label" 
-          for="min">{{ `下限值(min: ${filter.dataMin}` }}</label>
-        <input 
-          v-validate="lowerBoundRules"
-          id="min"
-          ref="lowerBound"
-          v-model.trim="tempFilter.end"
-          name="lowerBound" 
-          placeholder="請填入數字"
-          class="input-panel__input input" 
-          type="text">
-        <div 
-          v-show="errors.has('lowerBound')"
-          class="error-text"
-        >{{ errors.first('lowerBound') }}</div>
-      </div>
-      <div class="button__block">
-        <button 
-          class="btn btn-outline"
-          @click="toggleFilterPanel"
-        >{{ $t('button.cancel') }}</button>
-        <button 
-          :disabled="isProcessing"
-          class="btn btn-default"
-          @click="updateRangeFilteredColumnValue"
-        >{{ $t('button.save') }}</button>
-      </div>
+          v-if="filter.dataValueOptionList.length === 0" 
+          class="empty-message">
+          {{ $t('message.emptyResult') }}
+        </div>
+        <div class="selector__list-block">
+          <template v-for="(value, index) in filter.dataValueOptionList">
+            <label 
+              :key="index"
+              class="checkbox">
+              <div class="checkbox-label">
+                <input
+                  :checked="checkValueIsChecked(value.name)"
+                  type="checkbox"
+                  @input="updateEnumFilteredColumnValue($event, value.name)"
+                >
+                <div class="checkbox-square"/>
+              </div>
+              <span>{{ value.name }}</span>
+            </label>
+          </template>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -117,6 +165,9 @@ export default {
       handler (val) {
         this.filter = JSON.parse(JSON.stringify(val))
       }
+    },
+    searchInput () {
+      this.searchValue()
     }
   },
   mounted () {
@@ -130,7 +181,7 @@ export default {
   methods: {
     autoHide (evt) {
       if (!this.isShowFilterPanel) return false
-      if (!this.$el.contains(evt.target))  this.isShowFilterPanel = false
+      if (!this.$el.contains(evt.target))  this.toggleFilterPanel()
     },
     fetchData () {
       this.isLoading = true
@@ -145,12 +196,12 @@ export default {
             return this.isLoading = false
           }
 
-          if (statsType === 'NUMERIC' && !valueList) return this.searchValue()
+          if (statsType === 'CATEGORY' && !valueList) return this.searchValue()
 
           this.filter.dataValueOptionList = valueList.map(value => ({
             value: value,
             name: value,
-            isSelected: this.initialFilter.dataValues.includes(value)
+            isSelected: this.initialFilter.datavalues.includes(value)
           }))
           return this.isLoading = false
 
@@ -165,17 +216,23 @@ export default {
           this.filter.dataValueOptionList = response.fuzzySearchResult.map(value => ({
             value: value,
             name: value,
-            isSelected: this.initialFilter.dataValues.includes(value)
+            isSelected: this.initialFilter.datavalues.includes(value)
           }))
+          this.isLoading = false
         })
-      this.isLoading = false
     },
     toggleFilterPanel () {
       if (this.isEditMode) return
       if (!this.isShowFilterPanel) {
         this.createTempFilter()
       } else {
-        this.tempFilter = {}
+        if (this.filter.statsType === "NUMERIC") {
+          this.$validator.detach('upperBound')
+          this.$validator.detach('lowerBound')
+          this.$nextTick(() => this.tempFilter = {})
+        } else if (this.filter.statsType === 'CATEGORY' || this.filter.statsType === 'BOOLEAN') {
+          this.searchInput = ''
+        }
       }
       this.isShowFilterPanel = !this.isShowFilterPanel
     },
@@ -183,13 +240,23 @@ export default {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
         this.$emit('updateFilter', this.tempFilter)
-        this.$validator.detach('upperBound')
-        this.$validator.detach('lowerBound')
-        this.$nextTick(() => this.toggleFilterPanel())
+        this.toggleFilterPanel()
       })
     },
     createTempFilter () {
       this.tempFilter = JSON.parse(JSON.stringify(this.filter))
+    },
+    updateEnumFilteredColumnValue ({ target: { checked } }, columnValue) {
+      const isInDataValueList = this.filter.datavalues.includes(columnValue)
+      if (checked && !isInDataValueList) {
+        this.filter.datavalues.push(columnValue)
+      } else {
+        this.filter.datavalues = this.filter.datavalues.filter(value => value !== columnValue)
+      }
+      this.$emit('updateFilter', this.filter)
+    },
+    checkValueIsChecked (value) {
+      return this.filter.datavalues.includes(value)
     }
   }
 }
@@ -227,11 +294,16 @@ export default {
     font-size: 4px;
   }
 
-  &__input-panel {
+  &__input-panel,
+  &__selector-panel {
     position: absolute;
     left: 0;
     top: 100%;
     width: 215px;
+    background-color: var(--color-bg-gray);
+    border-radius: 5px;
+    overflow: hidden;
+    filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
   }
 
   &:not(:last-of-type) {
@@ -288,134 +360,86 @@ export default {
   }
 }
 
-.filter-control {
-  padding: 16px 19px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
-  border-radius: 8px;
-  margin-right: 20px;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
+.selector {
+  &__input-block {
+    margin: 12px 12px 8px 12px;
+    padding: 9px 12px;
+    width: calc(100% - 24px);
+    font-size: 14px;
+    color: #888888;
+    border: none;
+    border-radius: 8px;
+    background-color: #141C1D;
 
-  &__filter-icon {
-    margin-right: 11px;
-  }
-
-  &.has-background {
-    background: #1C292B;
-  }
-
-  
-
-
-  &__selector {
-    position: absolute;
-    top: 30px;
-    left: 0;
-    padding-top: 12px;
-    width: 100%;
-    border-radius: 5px;
-    background-color: var(--color-bg-gray);
-    filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
-    z-index: 2;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: -10px;
-      right: 6px;
-      border-bottom: 12px solid #2B3839;
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
+    &:focus {
+      outline: none;
     }
-  }
-
-  .selector {
-    &__input-block {
-      margin: 0 12px 8px 12px;
-      padding: 9px 12px;
-      width: calc(100% - 24px);
-      font-size: 14px;
-      color: #888888;
-      border: none;
-      border-radius: 8px;
-      background-color: #141C1D;
-
-      &:focus {
-        outline: none;
-      }
       
-      .placeholder {
+    .placeholder {
+      font-size: 14px;
+      line-height: 22px;
+      color: #888888;
+    }
+  }
+
+  &__list-block {
+    max-height: 220px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.7);
+    }  
+
+    .checkbox {
+      display: flex;
+      flex-direction: row;
+      padding: 8px 12px;
+      min-height: 32px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, .6);
+      }
+
+      &:not(:first-child) {
+        border-top: 1px solid #3F4546;
+      }
+
+      &-label {
+        margin: 0 22px 0 2px;
+
+        & input:checked ~ .checkbox-square {
+          background: #777777;
+          border-color: #DCDFE6;
+        }
+
+        & input:disabled ~ .checkbox-square:after {
+          border-color: #C0C4CC;
+        }
+      }
+
+      & > span {
         font-size: 14px;
-        line-height: 22px;
-        color: #888888;
+        line-height: 16px;
+        color: #CCC;
       }
     }
+  }
 
-    &__list-block {
-      max-height: 220px;
-      overflow-y: auto;
-
-      &::-webkit-scrollbar {
-        width: 8px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background-color: transparent;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.7);
-      }  
-
-      .checkbox {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        height: 32px;
-        cursor: pointer;
-
-        &:hover {
-          background-color: rgba(0, 0, 0, .6);
-        }
-
-        &--active {
-          cursor: not-allowed;
-        }
-
-        &:not(:first-child) {
-          border-top: 1px solid #3F4546;
-        }
-
-        &-label {
-          margin: 0 8px 0 12px;
-
-          & input:checked ~ .checkbox-square {
-            background: #777777;
-            border-color: #DCDFE6;
-          }
-
-          & input:disabled ~ .checkbox-square:after {
-            border-color: #C0C4CC;
-          }
-        }
-
-        & > span {
-          font-size: 14px;
-          line-height: 20px;
-          color: #CCC;
-        }
-      }
-    }
-
-    .empty-message {
-      margin-bottom: 12px;
-      padding: 0 12px;
-      font-size: 12px;
-      line-height: 20px;
-      color: #CCC;
-    }
-
+  .empty-message {
+    margin-bottom: 12px;
+    padding: 0 12px;
+    font-size: 12px;
+    line-height: 20px;
+    color: #CCC;
   }
 }
 </style>
