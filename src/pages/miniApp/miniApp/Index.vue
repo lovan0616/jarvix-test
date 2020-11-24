@@ -214,7 +214,6 @@
                   </template>
                 </div>
                 <div class="header-right">
-                  <button @click="testAddFilter">篩!</button>
                   <button
                     v-if="isEditMode"
                     class="btn-m btn-outline btn-has-icon create-component-btn" 
@@ -500,28 +499,6 @@ export default {
     this.getMiniAppInfo()  
   },
   methods: {
-    testAddFilter () {
-      // MOCK DATA
-      this.filterColumnValueInfoList = [
-        {
-          dataSourcName: '',
-          dataFrameName: '',
-          columnId: 689,
-          dataType: 'string',
-          columnName: '客戶性別',
-          dataValues: ['F']
-        },
-        {
-          dataSourcName: '',
-          dataFrameName: '',
-          columnId: 699,
-          dataType: 'int',
-          columnName: '利潤',
-          start: 327.93722487001753,
-          end: 680.5174891681111
-        }
-      ]
-    },
     getMiniAppInfo () {
       this.isLoading = true
       getMiniAppInfo(this.miniAppId)
@@ -556,7 +533,7 @@ export default {
         case 'CATEGORY':
           filter = {
             ...filter,
-            datavalues: [],
+            dataValues: [],
             dataValueOptionList: []
           }
           break

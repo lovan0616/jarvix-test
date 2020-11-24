@@ -202,7 +202,7 @@ export default {
           this.filter.dataValueOptionList = valueList.map(value => ({
             value: value,
             name: value,
-            isSelected: this.initialFilter.datavalues.includes(value)
+            isSelected: this.initialFilter.dataValues.includes(value)
           }))
           return this.isLoading = false
 
@@ -217,7 +217,7 @@ export default {
           this.filter.dataValueOptionList = response.fuzzySearchResult.map(value => ({
             value: value,
             name: value,
-            isSelected: this.initialFilter.datavalues.includes(value)
+            isSelected: this.initialFilter.dataValues.includes(value)
           }))
           this.isLoading = false
         })
@@ -248,16 +248,16 @@ export default {
       this.tempFilter = JSON.parse(JSON.stringify(this.filter))
     },
     updateEnumFilteredColumnValue ({ target: { checked } }, columnValue) {
-      const isInDataValueList = this.filter.datavalues.includes(columnValue)
+      const isInDataValueList = this.filter.dataValues.includes(columnValue)
       if (checked && !isInDataValueList) {
-        this.filter.datavalues.push(columnValue)
+        this.filter.dataValues.push(columnValue)
       } else {
-        this.filter.datavalues = this.filter.datavalues.filter(value => value !== columnValue)
+        this.filter.dataValues = this.filter.dataValues.filter(value => value !== columnValue)
       }
       this.$emit('updateFilter', this.filter)
     },
     checkValueIsChecked (value) {
-      return this.filter.datavalues.includes(value)
+      return this.filter.dataValues.includes(value)
     },
     removeFilter () {
       this.$emit('removeFilter')

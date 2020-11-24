@@ -49,7 +49,7 @@ export default {
     // 到時候傳進來的會直接 format 好這邊就不用再做
     restrictions () {
       return this.filters
-        .filter(filter => filter.datavalues.length > 0)
+        .filter(filter => filter.dataValues.length > 0)
         .map(filter => {
           let type = ''
           switch (filter.statsType) {
@@ -81,8 +81,8 @@ export default {
               dc_id: filter.columnId,
               display_name: filter.columnName,
               ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
-                datavalues: filter.datavalues,
-                display_datavalues: filter.datavalues
+                datavalues: filter.dataValues,
+                display_datavalues: filter.dataValues
               }),
               ...(filter.statsType === 'NUMERIC' && {
                 start: filter.start,
@@ -95,7 +95,7 @@ export default {
     shouldComponentBeFiltered () {
       // 判斷元件是否需要因應 filter 異動而重做
       let filterColumnIds = this.filters
-        .filter(filter => filter.datavalues.length > 0)
+        .filter(filter => filter.dataValues.length > 0)
         .reduce((acc, cur) => acc.concat(cur.columnId), [])
       let componentColumnIds = this.componentData.dataColumns.reduce((acc, cur) => acc.concat(cur.columnId), [])
       return filterColumnIds.some(filter => componentColumnIds.includes(filter))

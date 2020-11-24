@@ -7,7 +7,7 @@
       icon-class="filter-outline" 
       class="filter-control__filter-icon"/>
     <single-filter-badge
-      v-for="(filter, index) in filterlist"
+      v-for="(filter, index) in filterList"
       :key="index"
       :initial-filter="filter"
       :is-edit-mode="isEditMode"
@@ -37,7 +37,7 @@ export default {
   },
   data () {
     return {
-      filterlist: [],
+      filterList: [],
       isShowSeletor: false
     }
   },
@@ -45,22 +45,22 @@ export default {
     initialFilterList: {
       deep: true,
       handler (updatedFilterList) {
-        this.filterlist = updatedFilterList
+        this.filterList = updatedFilterList
       }
     }
   },
   mounted () {
-    this.filterlist = JSON.parse(JSON.stringify(this.initialFilterList))
+    this.filterList = JSON.parse(JSON.stringify(this.initialFilterList))
   },
   methods: {
     updateFilter (updatedFilter, filterIndex) {
-      const updatedFilterList = this.filterlist.map((filter, index) => {
+      const updatedFilterList = this.filterList.map((filter, index) => {
         return index === filterIndex ? updatedFilter : filter
       })
       this.$emit('update:initial-filter-list', updatedFilterList)
     },
     removeFilter (filterIndex) {
-      const updatedFilterList = this.filterlist.filter((filter, index) => index !== filterIndex)
+      const updatedFilterList = this.filterList.filter((filter, index) => index !== filterIndex)
       this.$emit('update:initial-filter-list', updatedFilterList)
       this.$emit('removeFilter', updatedFilterList)
     }
