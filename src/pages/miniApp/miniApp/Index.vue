@@ -241,6 +241,12 @@
                   </div>
                 </div>
               </div>
+              <filter-control
+                v-if="filterColumnValueInfoList.length > 0"
+                :is-edit-mode="isEditMode"
+                :initial-filter-list.sync="filterColumnValueInfoList"
+                class="mini-app__dashboard-filter"
+              />
               <div class="mini-app__dashbaord-components">
                 <template v-if="currentDashboard.components.length > 0">
                   <div 
@@ -369,6 +375,7 @@ import DeleteComponentDialog from './dialog/DeleteComponentDialog.vue'
 import UpdateDashboardNameDialog from './dialog/UpdateDashboardNameDialog.vue'
 import InputVerify from '@/components/InputVerify'
 import DropdownSelect from '@/components/select/DropdownSelect'
+import FilterControl from './filter/FilterControl'
 import { Message } from 'element-ui'
 
 export default {
@@ -385,7 +392,8 @@ export default {
     DropdownSelect,
     CustomDropdownSelect,
     WritingDialog,
-    DecideDialog
+    DecideDialog,
+    FilterControl
   },
   data () {
     return {
@@ -407,7 +415,8 @@ export default {
       isEditingAppName: false,
       newDashboardName: '',
       isEditingDashboardName: false,
-      isShowCreateFilterDialog: false
+      isShowCreateFilterDialog: false,
+      filterColumnValueInfoList: []
     }
   },
   computed: {
@@ -482,6 +491,10 @@ export default {
     },
     miniAppId () {
       return this.$route.params.mini_app_id
+    },
+    currentFilterList () {
+      const currentDashboard = this.miniApp.settings.editModeData.dashboards.find(dashboard => dashboard.id === this.currentDashboardId)
+      return currentDashboard.filterList
     }                        
   },
   created () {
@@ -500,9 +513,56 @@ export default {
             this.currentDashboardId = this.dashboardList[0].id
             this.newDashboardName = this.currentDashboard.name
           }
+
+          this.initFilters()
         })
         .catch(() => {})
         .finally(() => this.isLoading = false )
+    },
+    formatRestraint (filterInfo) {
+      const columnStatsType = filterInfo.statsType      
+      let filter = {
+        dataSourceName: filterInfo.dataSourceName,
+        dataFrameName: filterInfo.dataFrameName,
+        columnId: filterInfo.columnId,
+        dataType: filterInfo.dataType,
+        statsType: filterInfo.statsType,
+        columnName: filterInfo.columnName
+      }
+
+      switch (columnStatsType) {
+        case 'BOOLEAN':
+        case 'CATEGORY':
+          filter = {
+            ...filter,
+            datavalues: [],
+            dataValueOptionList: []
+          }
+          break
+        // case 'DATETIME':
+        //   subStraintType = 'range'
+        //   subStraintProperties = {
+        //     data_type: columnDataType.toLowerCase(),
+        //     dc_id: selectColumn.id,
+        //     display_name: selectColumn.name,
+        //     end: null,
+        //     start: null 
+        //   }
+        //   break
+        case 'NUMERIC':
+          filter = {
+            ...filter,
+            dataMax: null,
+            dataMin: null,
+            start: null,
+            end: null
+          }
+          break
+      }
+      return filter
+    },
+    initFilters () {
+      this.filterColumnValueInfoList = this.currentFilterList.map(filter => this.formatRestraint(filter))
     },
     createDashboard (newDashBoardInfo) {
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
@@ -512,6 +572,7 @@ export default {
         filterList: []
       })
       this.currentDashboardId = newDashBoardInfo.id
+      this.initFilters()
       this.isShowCreateDashboardDialog = false
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
@@ -721,6 +782,7 @@ export default {
     activeCertainDashboard (dashboardId) {
       this.isEditingDashboardName = false
       this.currentDashboardId = dashboardId
+      this.initFilters()
       this.newDashboardName = this.currentDashboard.name
     },
     saveCreatedFilter (filterList) {

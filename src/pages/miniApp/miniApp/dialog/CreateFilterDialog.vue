@@ -147,6 +147,7 @@ export default {
         dataFrameName: null,
         columnId: null,
         dataType: null,
+        statsType: null,
         columnName: null
       },
       enumColumnValueTemplate: {
@@ -241,6 +242,7 @@ export default {
       const filterInfo = this.filterInfoList.find(filter => filter.id === filterId)
       const dataColumnInfo = this.dataColumnOptionList.find(column => column.id === columnId)
       filterInfo.dataType = dataColumnInfo.dataType
+      filterInfo.statsType = dataColumnInfo.statsType
       filterInfo.columnName = dataColumnInfo.originalName
     },
     createFilter () {
