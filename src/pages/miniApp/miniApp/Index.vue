@@ -243,6 +243,7 @@
               </div>
               <filter-control
                 v-if="filterColumnValueInfoList.length > 0"
+                :key="currentDashboardId"
                 :is-edit-mode="isEditMode"
                 :initial-filter-list.sync="filterColumnValueInfoList"
                 class="mini-app__dashboard-filter"
@@ -436,7 +437,7 @@ export default {
     appData () {
       if (!this.miniApp.settings) return false
       const { editModeData, viewModeData } = this.miniApp.settings
-      return this.isEditMode ? editModeData : viewModeData
+      return this.isEditMode || this.isPreviewMode ? editModeData : viewModeData
     },
     dashboardList () {
       if (!this.appData) return []
