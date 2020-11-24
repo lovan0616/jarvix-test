@@ -94,9 +94,7 @@ export default {
     },
     shouldComponentBeFiltered () {
       // 判斷元件是否需要因應 filter 異動而重做
-      let filterColumnIds = this.filters
-        .filter(filter => filter.dataValues.length > 0)
-        .reduce((acc, cur) => acc.concat(cur.columnId), [])
+      let filterColumnIds = this.filters.reduce((acc, cur) => acc.concat(cur.columnId), [])
       let componentColumnIds = this.componentData.dataColumns.reduce((acc, cur) => acc.concat(cur.columnId), [])
       return filterColumnIds.some(filter => componentColumnIds.includes(filter))
     },
