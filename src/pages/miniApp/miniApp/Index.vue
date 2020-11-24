@@ -981,6 +981,8 @@ export default {
     display: flex;
     flex-direction: column;
     &-header {
+      position: relative;
+      z-index: 2;
       flex: 0 0 30px;
       display: flex;
       justify-content: space-between;
