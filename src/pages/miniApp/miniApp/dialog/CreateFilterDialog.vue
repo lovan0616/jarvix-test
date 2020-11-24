@@ -147,6 +147,7 @@ export default {
         dataFrameName: null,
         columnId: null,
         dataType: null,
+        statsType: null,
         columnName: null
       },
       enumColumnValueTemplate: {
@@ -172,7 +173,7 @@ export default {
   methods: {
     fetchDataSourceList () {
       this.dataSourceOptionList = this.dataSourceList.reduce((acc, cur) => {
-        if (cur.state !== 'ENABLE' || cur.enableDataFrameCount < 1) return
+        if (cur.state !== 'ENABLE' || cur.enableDataFrameCount < 1) return acc
         acc.push({
           name: cur.name,
           value: cur.id
@@ -241,6 +242,7 @@ export default {
       const filterInfo = this.filterInfoList.find(filter => filter.id === filterId)
       const dataColumnInfo = this.dataColumnOptionList.find(column => column.id === columnId)
       filterInfo.dataType = dataColumnInfo.dataType
+      filterInfo.statsType = dataColumnInfo.statsType
       filterInfo.columnName = dataColumnInfo.originalName
     },
     createFilter () {
