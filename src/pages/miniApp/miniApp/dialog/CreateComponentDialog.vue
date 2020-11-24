@@ -143,7 +143,11 @@ export default {
           },
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
           ...this.currentResultInfo,
-          restrictedResultInfo: {}
+          restrictedResultInfo: {},
+          relatedDashboard: {
+            id: null,
+            name: null
+          }
         })
       })
     },
