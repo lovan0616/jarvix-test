@@ -1,5 +1,9 @@
 {
   "lang": "English",
+  "common": {
+    "show": "Show ",
+    "hide": "Hide "
+  },
   "nav": {
     "index": "Intelligent Analysis",
     "pinboard": "Personal Pinboard",
@@ -708,6 +712,9 @@
     "thresholdSetting": "Upper and lower bound setting",
     "maxThreshold": "Upper bound setting",
     "minThreshold": "Lower bound setting",
+    "waringMail": "Alert Email",
+    "mailReceiversetting": "*Please choose email recipient in War Room Settings.",
+    "recipientList": "Recipient List",
     "pleaseEnterValue": "Please enter values",
     "notChosen": "Not chosen",
     "indexTypeContent": "Index",
@@ -938,7 +945,8 @@
     "AddNewWarRoom": "Add war room",
     "sendInvitation": "Send Invitation",
     "downloadPage": "Download Image",
-    "changeDiagram": "Change Diagram"
+    "changeDiagram": "Change Diagram",
+    "columnSummaryInfo": "Column Summary Info"
   },
   "timeScopeUnit": {
     "second": "seconds",

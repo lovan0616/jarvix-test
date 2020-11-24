@@ -11,6 +11,16 @@ export function getGroupUserList (groupId) {
 }
 
 /**
+ * 取得帳戶下所有使用者(包含隱性的 account_owner)
+ */
+export function getGroupMemberList (groupId) {
+  return request({
+    url: `/group/${groupId}/members`,
+    method: 'GET'
+  })
+}
+
+/**
  * 取得帳戶下所有使用者的帳戶角色
  */
 export function getGroupRoles (groupId) {

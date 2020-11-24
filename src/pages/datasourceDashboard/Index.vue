@@ -5,7 +5,7 @@
       mode="display"
     />
     <quick-start
-      v-if="quickStartQuestionList.length > 0"
+      v-if="quickStartQuestionList && quickStartQuestionList.length > 0"
       :question-list="quickStartQuestionList"
     />
   </div>
