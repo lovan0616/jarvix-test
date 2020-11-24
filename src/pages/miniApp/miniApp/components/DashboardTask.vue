@@ -11,13 +11,16 @@
         <slot name="drowdown"/>
       </div>
       <div 
-        v-else 
+        v-else-if="componentData.relatedDashboard.id" 
         class="component-setting-box"
-        @click="$emit('redirect', componentData.relatedDashboard.id)"
       >
-        <div v-if="componentData.relatedDashboard.id">
-          <svg-icon icon-class="relation"/>
-        </div>
+        <el-tooltip 
+          :content="componentData.relatedDashboard.name" 
+          placement="bottom">
+          <div @click="$emit('redirect', componentData.relatedDashboard.id)">
+            <svg-icon icon-class="relation"/>
+          </div>
+        </el-tooltip>
       </div>
     </span>
     <task
@@ -28,11 +31,15 @@
     <div 
       v-if="componentData.relatedDashboard.id && isEditMode" 
       class="item-action">
-      <!-- TODO 套用樣式 -->
-      <div class="tag">
-        <div>{{ $t('miniApp.relatedDashboard') }}：{{ componentData.relatedDashboard.name }}</div>
+      <div class="related-item">
+        <div class="related-item__title">
+          {{ $t('miniApp.relatedDashboard') }}：
+        </div>
+        <div class="related-item__name">
+          {{ componentData.relatedDashboard.name }}
+        </div>
         <div 
-          class="close-box" 
+          class="related-item__close" 
           @click="isShowConfirmDelete = true">
           <svg-icon icon-class="close"/>
         </div>
@@ -258,14 +265,31 @@ export default {
       }
     }
   }
-  // TODO 套用樣式
   .item-action {
-    .tag {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      .close-box {
+    .related-item {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      &__title {
+        font-weight: bold;
+      }
+      &__close {
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #A7A7A7;
+        margin-left: 6px;
+        cursor: pointer;
+        .svg-icon {
+          width: 4px;
+        }
       }
     }
   }
