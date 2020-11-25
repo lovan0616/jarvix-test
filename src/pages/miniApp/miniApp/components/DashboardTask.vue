@@ -2,13 +2,25 @@
   <div class="component-item">
     <span class="item-header">
       <span class="item-title">{{ componentData.config.diaplayedName }}</span>
-      <div 
-        v-if="isEditMode" 
+      <div
+        v-if="isEditMode"
         class="component-setting-box">
         <svg-icon 
           icon-class="more"
           class="more-icon" />
         <slot name="drowdown"/>
+      </div>
+      <div 
+        v-else-if="componentData.relatedDashboard.id" 
+        class="component-setting-box"
+      >
+        <el-tooltip 
+          :content="componentData.relatedDashboard.name" 
+          placement="bottom">
+          <div @click="$emit('redirect', componentData.relatedDashboard.id)">
+            <svg-icon icon-class="relation"/>
+          </div>
+        </el-tooltip>
       </div>
     </span>
     <task
@@ -16,12 +28,41 @@
       :component-id="keyResultId"
       intend="key_result"
     />
+    <div 
+      v-if="componentData.relatedDashboard.id && isEditMode" 
+      class="item-action">
+      <div class="related-item">
+        <div class="related-item__title">
+          {{ $t('miniApp.relatedDashboard') }}：
+        </div>
+        <div class="related-item__name">
+          {{ componentData.relatedDashboard.name }}
+        </div>
+        <div 
+          class="related-item__close" 
+          @click="isShowConfirmDelete = true">
+          <svg-icon icon-class="close"/>
+        </div>
+      </div>
+    </div>
+    <decide-dialog
+      v-if="isShowConfirmDelete"
+      :title="$t('miniApp.confirmDeletingComponentRelation', { name: componentData.relatedDashboard.name })"
+      :type="'delete'"
+      @closeDialog="isShowConfirmDelete = false"
+      @confirmBtn="confirmDelete"
+    />
   </div>
 </template>
 
 <script>
+import DecideDialog from '@/components/dialog/DecideDialog'
+
 export default {
   name: 'DashboardTask',
+  components: {
+    DecideDialog
+  },
   props: {
     componentData: {
       type: Object,
@@ -42,7 +83,8 @@ export default {
     return {
       timeoutFunction: null,
       totalSec: 0,
-      periodSec: 0
+      periodSec: 0,
+      isShowConfirmDelete: false
     }
   },
   computed: {
@@ -169,6 +211,101 @@ export default {
           }
         }).catch((error) => {})
     },
+    confirmDelete () {
+      this.isShowConfirmDelete = false
+      this.$emit('deleteComponentRelation', this.componentData.id)
+    }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@mixin dropdown-select-controller {
+  &:hover {
+    .dropdown-select { visibility: visible; }
+  }
+}
+.component-item {
+  width: calc(50% - 8px);
+  float: left;
+  padding: 16px;
+  background-color: #192323;
+  border-radius: 5px;
+  margin-bottom: 16px;
+  &:nth-child(odd) {
+    margin-right: 16px;
+  }
+  .item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .item-title {
+      color: #DDD;
+      @include text-hidden;
+    }
+    .component-setting-box {
+      position: relative;
+      color: $theme-color-primary;
+      flex: 0 0 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: .2s all ease;
+      cursor: pointer;
+      @include dropdown-select-controller;
+      &:hover {
+        background-color: $theme-color-primary;
+        color: #FFF;
+        border-radius: 4px;
+      }
+      .dropdown-select {
+        z-index: 1;
+        /deep/ .dropdown-select-box {
+          box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
+          top: 31px;
+          right: -28px;
+          .svg-icon {
+            color: $theme-color-primary;
+          }
+          .dropdown-flex {
+            min-width: unset;
+          }
+        }
+      }
+    }
+  }
+  .item-action {
+    .related-item {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      &__title {
+        font-weight: bold;
+      }
+      &__close {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #A7A7A7;
+        margin-left: 6px;
+        cursor: pointer;
+        .svg-icon {
+          width: 4px;
+        }
+      }
+    }
+  }
+  .task {
+    width: 100%;
+  }
+}
+
+</style>

@@ -777,7 +777,10 @@
     "deleteDashboard": "删除@:miniApp.dashboard",
     "confirmDeletingComponent": "确定删除此元件？",
     "noData": "应用程式当前没有资料",
-    "componentNotAddable": "此内容尚未支援成为元件，请变更其他内容。"
+    "componentNotAddable": "此内容尚未支援成为元件，请变更其他内容。",
+    "createRelation": "建立关联",
+    "relatedDashboard": "关联看板",
+    "confirmDeletingComponentRelation": "确定删除此元件与分析看板 \"{name}\" 的关联？"
   },
   "clustering": {
     "cluster": "群體",

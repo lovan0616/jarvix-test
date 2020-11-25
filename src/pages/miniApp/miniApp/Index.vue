@@ -257,6 +257,9 @@
                     :filters="filterColumnValueInfoList"
                     :component-data="componentData"
                     :is-edit-mode="isEditMode"
+                    @restricted="conComponentRestricted"
+                    @redirect="currentDashboardId = $event"
+                    @deleteComponentRelation="deleteComponentRelation"
                   >
                     <template slot="drowdown">
                       <dropdown-select
@@ -324,6 +327,14 @@
       @close="isShowUpdateDashboardNameDialog = false"
       @confirm="updateDashboardNameByDialog"
     />
+    <create-component-relation-dialog
+      v-if="isShowCreateComponentRelationDialog"
+      :dashboard-list="dashboardList"
+      :dashboard-id="currentDashboardId"
+      :related-dashboard="currentComponent.relatedDashboard"
+      @close="isShowCreateComponentRelationDialog = false"
+      @create="createComponentRelation"
+    />
     <writing-dialog
       v-if="isShowShare"
       :title="$t('miniApp.getPublishedUrl')"
@@ -364,6 +375,7 @@ import DashboardTask from './components/DashboardTask'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
 import CreateFilterDialog from './dialog/CreateFilterDialog.vue'
+import CreateComponentRelationDialog from './dialog/CreateComponentRelationDialog.vue'
 import DeleteDashboardDialog from './dialog/DeleteDashboardDialog.vue'
 import DeleteComponentDialog from './dialog/DeleteComponentDialog.vue'
 import UpdateDashboardNameDialog from './dialog/UpdateDashboardNameDialog.vue'
@@ -380,6 +392,7 @@ export default {
     CreateDashboardDialog,
     CreateComponentDialog,
     CreateFilterDialog,
+    CreateComponentRelationDialog,
     DeleteDashboardDialog,
     DeleteComponentDialog,
     UpdateDashboardNameDialog,
@@ -397,6 +410,7 @@ export default {
       currentComponentId: null,
       isShowCreateDashboardDialog: false,
       isShowCreateComponentDialog: false,
+      isShowCreateComponentRelationDialog: false,
       isShowDeleteDashboardDialog: false,
       isShowDeleteComponentDialog: false,
       isShowUpdateDashboardNameDialog: false,
@@ -442,6 +456,9 @@ export default {
     currentDashboardIndex () {
       return this.currentDashboard ? this.dashboardList.findIndex(d => d.id === this.currentDashboardId) : -1
     },
+    currentComponent () {
+      return this.currentDashboard ? this.currentDashboard.components.find(comp => comp.id === this.currentComponentId) : {}
+    },
     otherFeatureList () {
       if (!this.isEditMode || !this.appData) return []
       return [
@@ -474,12 +491,11 @@ export default {
     },
     componentSettingOptions () {
       return [
-        // TODO 重新設定元件的功能
-        // {
-        //   title: 'button.setting',
-        //   icon: 'filter-setting',
-        //   dialogName: 'DeleteComponent'
-        // },
+        {
+          title: 'miniApp.createRelation',
+          icon: 'filter-setting',
+          dialogName: 'CreateComponentRelation'
+        },
         {
           title: 'button.delete',
           icon: 'delete',
@@ -586,6 +602,41 @@ export default {
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
         .finally(() => this.isProcessing = false)
+    },
+    createComponentRelation (relatedDashboard) {
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      const component = editedMiniApp.settings.editModeData.dashboards[this.currentDashboardIndex].components.find(comp => comp.id === this.currentComponentId)
+      component.relatedDashboard = relatedDashboard
+
+      this.updateAppSetting(editedMiniApp)
+        .then(() => {
+          this.currentComponentId = null
+          this.miniApp = editedMiniApp
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => this.isShowCreateComponentRelationDialog = false)
+    },
+    deleteComponentRelation (componentId) {
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      const component = editedMiniApp.settings.editModeData.dashboards[this.currentDashboardIndex].components.find(comp => comp.id === componentId)
+      component.relatedDashboard = { id: null, name: null }
+
+      this.updateAppSetting(editedMiniApp)
+        .then(() => {
+          this.miniApp = editedMiniApp
+          Message({
+            message: this.$t('message.deleteSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .catch(() => {})
     },
     publishMiniApp () {
       this.isProcessing = true
@@ -802,6 +853,7 @@ export default {
     switchDialogName (eventName, id) {
       this[`isShow${eventName}Dialog`] = true
       if (eventName === 'DeleteComponent') this.currentComponentId = id
+      if (eventName === 'CreateComponentRelation') this.currentComponentId = id
     },
     removeFilter (updatedFilterList) {
       this.isProcessing = true
@@ -1075,60 +1127,6 @@ export default {
       height: 0;
       overflow: overlay;
       padding-right: 20px;
-      /deep/ .component-item {
-        width: calc(50% - 8px);
-        float: left;
-        padding: 16px;
-        background-color: #192323;
-        border-radius: 5px;
-        margin-bottom: 16px;
-        &:nth-child(odd) {
-          margin-right: 16px;
-        }
-        .item-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          .item-title {
-            color: #DDD;
-            @include text-hidden;
-          }
-          .component-setting-box {
-            position: relative;
-            color: $theme-color-primary;
-            flex: 0 0 30px;
-            height: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: .2s all ease;
-            cursor: pointer;
-            @include dropdown-select-controller;
-            &:hover {
-              background-color: $theme-color-primary;
-              color: #FFF;
-              border-radius: 4px;
-            }
-            .dropdown-select {
-              z-index: 1;
-              /deep/ .dropdown-select-box {
-                box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
-                top: 31px;
-                left: -29px;
-                .svg-icon {
-                  color: $theme-color-primary;
-                }
-                .dropdown-flex {
-                  min-width: unset;
-                }
-              }
-            }
-          }
-        }
-        .task {
-          width: 100%;
-        }
-      }
       &:after {
         content: '';
         display: block;
