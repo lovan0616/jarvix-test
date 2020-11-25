@@ -36,14 +36,14 @@
         <div class="input-panel__input-group">
           <label 
             class="input-panel__label" 
-            for="max">{{ `上限值(max: ${filter.dataMax}` }}</label>
+            for="max">{{ `${$t('miniApp.upperBound')}(max: ${filter.dataMax})` }}</label>
           <input
             v-validate="upperBoundRules"
             id="max"
             ref="upperBound"
             v-model.trim="tempFilter.end"
-            name="upperBound"
-            placeholder="請填入數字" 
+            :placeholder="$t('miniApp.pleaseEnterNumber')"
+            name="upperBound" 
             class="input-panel__input input" 
             type="text">
           <div 
@@ -54,14 +54,14 @@
         <div class="input-panel__input-group">
           <label 
             class="input-panel__label" 
-            for="min">{{ `下限值(min: ${filter.dataMin}` }}</label>
+            for="min">{{ `${$t('miniApp.lowerBound')}(min: ${filter.dataMin})` }}</label>
           <input 
             v-validate="lowerBoundRules"
             id="min"
             ref="lowerBound"
             v-model.trim="tempFilter.start"
-            name="lowerBound" 
-            placeholder="請填入數字"
+            :placeholder="$t('miniApp.pleaseEnterNumber')" 
+            name="lowerBound"
             class="input-panel__input input" 
             type="text">
           <div 
