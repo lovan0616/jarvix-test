@@ -46,34 +46,30 @@ export default {
     }
   },
   computed: {
-    // 到時候傳進來的會直接 format 好這邊就不用再做
     restrictions () {
       return this.filters
-        .filter(filter => filter.dataValues.length > 0)
+        .filter(filter => {
+          if (filter.statsType === 'NUMERIC') return true
+          return filter.dataValues.length > 0
+        })
         .map(filter => {
+
           let type = ''
-          switch (filter.statsType) {
-            case ('STRING'):
-            case ('BOOLEAN'):
-            case ('CATEGORY'):
-              type = 'enum'
-              break
-            case ('NUMERIC'):
-              type = 'range'
-              break
-          }
           let data_type = ''
           switch (filter.statsType) {
             case ('STRING'):
             case ('BOOLEAN'):
             case ('CATEGORY'):
               data_type = 'string'
+              type = 'enum'
               break
             case ('FLOAT'):
             case ('NUMERIC'):
               data_type = 'int'
+              type = 'range'
               break
           }
+
           return [{
             type,
             properties: {
@@ -159,12 +155,11 @@ export default {
             case 'Complete':
               this.totalSec = 50
               this.periodSec = 200
-              this.$emit('restricted', {
-                componentId: this.componentData.id,
+              this.componentData.restrictedResultInfo = {
                 questionId: componentResponse.questionId,
                 resultId: componentResponse.id,
                 keyResultId: componentResponse.componentIds.key_result[0]
-              })
+              }
               break
             case 'Disable':
             case 'Delete':

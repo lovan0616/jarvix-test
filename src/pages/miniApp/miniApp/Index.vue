@@ -257,7 +257,6 @@
                     :filters="filterColumnValueInfoList"
                     :component-data="componentData"
                     :is-edit-mode="isEditMode"
-                    @restricted="conComponentRestricted"
                   >
                     <template slot="drowdown">
                       <dropdown-select
@@ -803,12 +802,6 @@ export default {
     switchDialogName (eventName, id) {
       this[`isShow${eventName}Dialog`] = true
       if (eventName === 'DeleteComponent') this.currentComponentId = id
-    },
-    conComponentRestricted ({ componentId, questionId, resultId, keyResultId }) {
-      // 做完 filter 之後，更新 Component restrictedInfo 資訊
-      const editedComponents = this.miniApp.settings[`${this.mode}ModeData`].dashboards[this.currentDashboardIndex].components
-      const editedComponent = editedComponents.find(item => item.id === componentId)
-      editedComponent.restrictedResultInfo = { questionId, resultId, keyResultId }
     },
     removeFilter (updatedFilterList) {
       this.isProcessing = true
