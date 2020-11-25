@@ -36,6 +36,10 @@
       v-if="dataset.descriptions && dataset.descriptions.length > 0"
       class="description"
     >
+      <div class="description__title"> 
+        <svg-icon icon-class="len-with-line-chart"/>
+        {{ $t("resultDescription.dataInsight") }}
+      </div>
       <span 
         v-for="(description, index) in dataset.descriptions" 
         :key="index" 
@@ -43,8 +47,12 @@
     </div>
     <div 
       v-if="dataset.warnings && dataset.warnings.length > 0"
-      class="description"
+      class="description warning"
     >
+      <div class="warning__title"> 
+        <svg-icon icon-class="alert-circle"/>
+        {{ $t("resultDescription.warning") }}
+      </div>
       <span 
         v-for="(message, index) in dataset.warnings" 
         :key="index"
@@ -395,15 +403,32 @@ export default {
       margin-top: 20px;
     }
 
+    &__title {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 24px;
+      color: #EEE;
+    }
+
     &__item {
       font-size: 14px;
       letter-spacing: 0.1em;
       display: block;
       line-height: 24px;
+      color: #CCC;
 
       &--warning {
-        color: #FF5C46;
+        color: #FFDF6F;
       }
+    }
+  }
+
+  .warning {
+    background: rgba(255, 223, 111, 0.08);
+
+    &__title {
+      font-size: 14px;
+      color: #FFDF6F;
     }
   }
 }

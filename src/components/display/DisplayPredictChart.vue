@@ -46,6 +46,19 @@
         </div>
       </div>
     </div>
+    <div 
+      v-if="dataset.warnings && dataset.warnings.length > 0"
+      class="warning"
+    >
+      <div class="warning__title"> 
+        <svg-icon icon-class="alert-circle"/>
+        {{ $t("resultDescription.warning") }}
+      </div>
+      <span 
+        v-for="(message, index) in dataset.warnings" 
+        :key="index"
+        class="warning__item">{{ dataset.warnings.length > 1 ? (index + 1) + '. ' + message : message }}</span>
+    </div>
   </div>
 </template>
 <script>
@@ -405,6 +418,28 @@ export default {
   .info-target {
     color: $theme-color-primary;
     margin-bottom: 8px;
+  }
+
+  .warning {
+    margin-top: 20px;
+    border-radius: 8px;
+    padding: 10px 20px;
+    background: rgba(255, 223, 111, 0.08);
+
+    &__title {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 24px;
+      color: #FFDF6F;
+    }
+
+    &__item {
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      display: block;
+      line-height: 24px;
+      color: #FFDF6F;
+    }
   }
 }
 </style>

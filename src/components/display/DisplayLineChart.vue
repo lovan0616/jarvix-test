@@ -50,18 +50,26 @@
       v-if="dataset.descriptions && dataset.descriptions.length > 0"
       class="description"
     >
+      <div class="description__title"> 
+        <svg-icon icon-class="len-with-line-chart"/>
+        {{ $t("resultDescription.dataInsight") }}
+      </div>
       <span 
         v-for="(description, index) in dataset.descriptions" 
         :key="index" 
-        class="description__item">{{ description }}</span>
+        class="description__item">{{ dataset.descriptions.length > 1 ? (index + 1) + '. ' + description : description }}</span>
     </div>
     <div 
-      v-if="dataset.warnings && dataset.warnings.length > 0"
-      class="description"
+      v-if="showWarning && dataset.warnings && dataset.warnings.length > 0"
+      class="description warning"
     >
+      <div class="warning__title"> 
+        <svg-icon icon-class="alert-circle"/>
+        {{ $t("resultDescription.warning") }}
+      </div>
       <span 
         v-for="(message, index) in dataset.warnings" 
-        :key="index" 
+        :key="index"
         class="description__item description__item--warning">{{ dataset.warnings.length > 1 ? (index + 1) + '. ' + message : message }}</span>
     </div>
   </div>
@@ -115,6 +123,10 @@ export default {
       default: false
     },
     showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    showWarning: {
       type: Boolean,
       default: true
     },
@@ -553,13 +565,32 @@ export default {
     border-radius: 8px;
     padding: 10px 20px;
 
+    &__title {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 24px;
+      color: #EEE;
+    }
+
     &__item {
       font-size: 14px;
       letter-spacing: 0.1em;
+      display: block;
+      line-height: 24px;
+      color: #CCC;
 
       &--warning {
-        color: #FF5C46;
+        color: #FFDF6F;
       }
+    }
+  }
+
+  .warning {
+    background: rgba(255, 223, 111, 0.08);
+
+    &__title {
+      font-size: 14px;
+      color: #FFDF6F;
     }
   }
 }
