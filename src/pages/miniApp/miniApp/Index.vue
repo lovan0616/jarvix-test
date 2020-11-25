@@ -127,7 +127,7 @@
         </div>
       </nav>
       <div class="mini-app__content">
-        <template v-if="!isEditMode && !miniApp.settings.editModeData.isPublishing">
+        <template v-if="(isViewMode && !miniApp.settings.editModeData.isPublishing)">
           <div class="empty-block">
             {{ $t('miniApp.noData') }}
           </div>
