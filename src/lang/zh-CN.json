@@ -53,7 +53,17 @@
     "clearCriteria": "清除条件",
     "noCriteriaYet": "尚未加入筛选条件",
     "allColumns": "全部栏位",
-    "dataColumns": "资料栏位"
+    "dataColumns": "资料栏位",
+    "addFilter": "新增条件",
+    "restrictionSetting": "条件限制",
+    "addRestriction": "新增限制",
+    "noRestrictionYet": "尚未设定任何条件",
+    "restraintSetting": "限制设定",
+    "noRestraintYet": "尚未设定任何项目",
+    "emptyValueMsg": "*空值将採用当前资料的上下限。",
+    "chooseValue": "选择资料",
+    "selectDate": "选择日期",
+    "selectTime": "选择时间"
   },
   "message": {
     "joinTableBuilding": "资料表建置中，建置完成即可使用",
@@ -140,6 +150,7 @@
     "and": "和",
     "upperBound": "上限",
     "lowerBound": "下限",
+    "noPeriodicResult": "没有找到周期结果",
     "numericShouldBeBetween": "数字需介在 {min} 到 {max} 之间"
   },
   "guiding": {
@@ -737,6 +748,7 @@
     "displaySetting": "显示设定"
   },
   "clustering": {
+    "cluster": "群體",
     "dataOverview": "资料概况",
     "clusteringAnalysis": "分群分析",
     "saveClusteringResultAsColumn": "储存分群结果为标签栏位",
@@ -1952,7 +1964,21 @@
     "rangeEnd": "范围结束",
     "count": "统计数量",
     "download": "下载图片",
-    "showLabel": "显示标籤"
+    "showLabel": "显示标籤",
+    "forecastValue": "预测值",
+    "upperBoundValue": "上限值",
+    "lowerBoundValue": "下限值",
+    "normalValue": "正常值",
+    "anomalousValue": "异常值"
+  },
+  "denotation": {
+    "dataOverview": "资料概况",
+    "clusteringAnalysis": "分群分析",
+    "correlationAnalysis": "关联分析",
+    "predictionAnalysis": "预测分析",
+    "trendAnalysis": "趋势分析",
+    "anomalyAnalysis": "异常分析",
+    "periodicityAnalysis": "周期分析"
   },
   "errorMessage": {
     "SYERR0001": "系统发生非预期错误",

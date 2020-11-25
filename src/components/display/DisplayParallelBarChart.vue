@@ -330,7 +330,7 @@ export default {
           return {
             type: 'enum',
             properties: {
-              dc_name: axis.dc_name,
+              dc_id: axis.dc_id,
               data_type: axis.data_type,
               display_name: axis.display_name,
               datavalues: [this.dataset.index[indexValue][index]],
@@ -348,7 +348,7 @@ export default {
       }).filter((element, index, self) => {
         return self.findIndex((item, restrictionIndex) => {
           let mapArray = item.restraints.filter((restrict, restrictIndex) => {
-            return restrict.properties.dc_name === element.restraints[restrictIndex].properties.dc_name && restrict.properties.datavalues[0] === element.restraints[restrictIndex].properties.datavalues[0]
+            return restrict.properties.dc_id === element.restraints[restrictIndex].properties.dc_id && restrict.properties.datavalues[0] === element.restraints[restrictIndex].properties.datavalues[0]
           })
           return mapArray.length === item.restraints.length
         }) === index

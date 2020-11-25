@@ -46,6 +46,24 @@
         </div>
       </div>
     </selected-region>
+    <div 
+      v-if="dataset.descriptions && dataset.descriptions.length > 0"
+      class="description"
+    >
+      <span 
+        v-for="(description, index) in dataset.descriptions" 
+        :key="index" 
+        class="description__item">{{ description }}</span>
+    </div>
+    <div 
+      v-if="dataset.warnings && dataset.warnings.length > 0"
+      class="description"
+    >
+      <span 
+        v-for="(message, index) in dataset.warnings" 
+        :key="index" 
+        class="description__item description__item--warning">{{ dataset.warnings.length > 1 ? (index + 1) + '. ' + message : message }}</span>
+    </div>
   </div>
 </template>
 
@@ -115,7 +133,15 @@ export default {
     isShowLabelData: {
       type: Boolean,
       default: false
-    }
+    },
+    coefficients: {
+      type: Array,
+      default: null
+    },
+    formula: {
+      type: Array,
+      default: null
+    },
   },
   data () {
     echartAddon.mapping({
@@ -329,6 +355,72 @@ export default {
         // }
       }
 
+      if (this.coefficients) {
+        let lineData = []
+        let expression = ''
+        if (this.coefficients.length === 2) {
+          // ax + b
+          let offset = this.coefficients[0]
+          let gradient = this.coefficients[1]
+          // 迴歸線點
+          for (let i = 1; i <= this.dataset.index.length; i++) {
+            lineData.push(this.roundNumber(gradient * i + offset, 4))
+          }
+          let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
+          let displayGradient = this.formula ? this.formula[1] : Number((gradient).toFixed(4))
+          expression = `y = ${displayOffset} ${displayGradient > 0 ? '+' : '-'} ${Math.abs(displayGradient)}x`
+        } else {
+          // ax^2 + bx + c
+          let offset = this.coefficients[0]
+          let firstDegree = this.coefficients[1]
+          let secondDegree = this.coefficients[2]
+          // 迴歸線點
+          for (let i = 0; i < this.dataset.index.length; i++) {
+            lineData.push(secondDegree * i * i + firstDegree * i + offset)
+          }
+          let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
+          let displayFirstDegree = this.formula ? this.formula[1] : Number((firstDegree).toFixed(4))
+          let displaySecondDegree = this.formula ? this.formula[2] : Number((secondDegree).toFixed(4))
+          expression = `y = ${this.formatComma(displayOffset)} ${displayFirstDegree > 0 ? '+' : '-'} ${this.formatComma(Math.abs(displayFirstDegree))}x ${displaySecondDegree > 0 ? '+' : '-'} ${this.formatComma(Math.abs(displaySecondDegree))}x^2`
+        }
+
+        // markLine
+        config.series.push({
+          name: '',
+          type: 'line',
+          showSymbol: false,
+          smooth: true,
+          color: '#FF9559',
+          symbol: 'none',
+          data: lineData,
+          markPoint: {
+            itemStyle: {
+              normal: {
+                color: 'transparent'
+              }
+            },
+            label: {
+              show: true,
+              position: 'left',
+              formatter: expression,
+              width: '100%',
+              lineHeight: 14,
+              padding: this.coefficients.length === 2 ? [1, 2, 1, 22] : [1, 2, 1, 50],
+              textStyle: {
+                color: '#FF9559',
+                fontSize: 14
+              },
+              backgroundColor: '#000'
+            },
+            data: [
+              {
+                coord: [lineData.length - 1, lineData[lineData.length - 1]]
+              }
+            ]
+          }
+        })
+      }
+
       return config
     },
     colorList () {
@@ -436,7 +528,7 @@ export default {
         return {
           type: 'range',
           properties: {
-            dc_name: this.title.xAxis[0].dc_name,
+            dc_id: this.title.xAxis[0].dc_id,
             data_type: this.title.xAxis[0].data_type,
             display_name: this.title.xAxis[0].display_name,
             start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],
@@ -451,3 +543,24 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.display-line-chart {
+  height: 100%;
+  .description {
+    margin-top: 16px;
+    background: #141C1D;
+    border-radius: 8px;
+    padding: 10px 20px;
+
+    &__item {
+      font-size: 14px;
+      letter-spacing: 0.1em;
+
+      &--warning {
+        color: #FF5C46;
+      }
+    }
+  }
+}
+</style>

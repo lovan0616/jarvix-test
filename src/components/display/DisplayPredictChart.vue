@@ -50,6 +50,7 @@
 </template>
 <script>
 import { commonChartOptions } from '@/components/display/common/chart-addon'
+import chartVariable from '@/styles/chart/variables.scss'
 import {
   getDrillDownTool,
   colorOnly1,
@@ -96,40 +97,115 @@ export default {
         height: '420px'
       }
     },
+    yAxisOffsetValue () {
+      let yAxisMinValue = Infinity
+      this.dataset.data.forEach(dataset => {
+        // 排除 null 值和區間值
+        const datasetWithoutNull = dataset.filter((data, index) => data !== null && index !== 4)
+        const datasetMinValue = Math.min(...datasetWithoutNull)
+        yAxisMinValue = this.roundNumber(Math.min(0, yAxisMinValue, datasetMinValue))
+      })
+      return yAxisMinValue
+    },
+    seriesName () {
+     return [
+        this.title.xAxis[0].display_name,
+        ...this.dataset.columns
+      ]
+   },
+    transformedData () {
+      const source = []
+      source.push(this.seriesName)
+      this.dataset.index.forEach((value, index) => {
+        source.push([
+          value,
+          ...this.dataset.data[index].map((data, index) => {
+              // 誤差區間值不用調整
+              if(index === 4) return data
+              return this.adjustValueWithOffsetValue(data)
+            }) 
+        ])
+      })
+      return source
+    },
     series () {
       return this.dataset.columns.map((v, colIndex) => {
         let item = {
           name: v,
-          type: 'line'
+          type: 'line',
+          symbol: 'circle',
+          markLine: {
+            symbol: 'none',
+            lineStyle: {
+              color: chartVariable['xAxisColor'],
+              type: 'solid'
+            },
+            animation: false,
+            data: [
+              // 暫時不顯示左側 0 以避免和自動產生的 label 重疊
+              // {
+              //   yAxis: Math.abs(this.yAxisOffsetValue),
+              //   label: {
+              //     position: 'start',
+              //     formatter: '0',
+              //   },
+              // }, 
+              {
+                yAxis: Math.abs(this.yAxisOffsetValue),
+                label: {
+                  position: 'end',
+                  formatter: this.title.xAxis[0].display_name
+                },
+              }
+            ],
+            silent: true
+          }
         }
         switch (colIndex) {
-          case 0:
-            item['stack'] = 'predict'
-            item['areaStyle'] = {
-              color: 'transparent'
-            }
-            break
           case 1:
-            item['stack'] = 'predict'
-            item['areaStyle'] = {
-              color: 'transparent'
-            }
-            item['lineStyle'] = {
-              type: 'dashed'
+            item['itemStyle'] = {
+              color: color12[2]
             }
             break
           case 2:
-            item['stack'] = 'predict'
             item['areaStyle'] = {
-              color: colorOnly1
+              color: 'transparent'
+            }
+            item['itemStyle'] = {
+              color: color12[2]
             }
             item['lineStyle'] = {
               type: 'dashed'
             }
             break
           case 3:
+            item['stack'] = 'predict'
+            item['areaStyle'] = {
+              color: 'transparent'
+            }
+            item['itemStyle'] = {
+              color: color12[3]
+            }
             item['lineStyle'] = {
               type: 'dashed'
+            }
+            break
+          case 4:
+            item['stack'] = 'predict'
+            item['areaStyle'] = {
+              color: color12[3],
+              opacity: 0.2
+            }
+            item['lineStyle'] = {
+              type: 'dashed'
+            }
+            break
+          case 5:
+            item['lineStyle'] = {
+              type: 'dashed'
+            }
+            item['itemStyle'] = {
+              color: color12[3]
             }
             break
         }
@@ -151,11 +227,17 @@ export default {
     options () {
       let config = {
         xAxis: xAxisDefault(),
-        yAxis: yAxisDefault(),
+        yAxis: {
+          ...yAxisDefault(),
+          name: this.title.yAxis[0].display_name,
+          axisLabel: {
+            formatter: value => this.roundNumber(this.yAxisOffsetValue + value)
+          }
+        },
         ...JSON.parse(JSON.stringify(commonChartOptions())),
         ...getDrillDownTool(this.$route.name, this.title),
         dataset: {
-          source: this.datasetTransform(this.dataset)
+          source: this.transformedData
         },
         series: this.series,
         color: this.colorList
@@ -167,18 +249,22 @@ export default {
       }
 
       // 為了讓只有 line chart 跟 bar chart 才顯示，所以加在這邊
-      config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
+      // xAxis.name 先不顯示，原因是y軸會因處理 offset 重新畫
+      // config.xAxis.name = this.title.xAxis[0].display_name ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : this.title.xAxis[0].display_name
       config.yAxis.name = this.title.yAxis[0].display_name
       config.toolbox.feature.dataView.optionToContent = (opt) => {
         let dataset = opt.dataset[0].source
         let table = '<div style="text-align: text;padding: 0 16px;position: absolute;width: 100%;"><button style="width: 100%;" class="btn btn-m btn-default" type="button" id="export-btn">' + this.$t('chart.export') + '</button></div><table style="width:100%;padding: 0 16px;white-space:nowrap;margin-top: 48px;"><tbody>'
         for (let i = 0; i < dataset.length; i++) {
-          let tableData = dataset[i].reduce((acc, cur) => {
-            // 判斷是不是後端捕 0 的地方，這邊不用三元表示式純粹因為排版不好看
+          let tableData = dataset[i].reduce((acc, cur, index) => {
+            let displayedValue = cur
+            // 判斷是不是後端補 0 的地方，這邊不用三元表示式純粹因為排版不好看
             if (cur === 0 && dataset[i][2] === 0 && dataset[i][3] === 0 && dataset[i][4] === null) {
               return acc + '<td style="padding: 4px 12px;">' + null + '</td>'
             } else {
-              return acc + '<td style="padding: 4px 12px;">' + cur + '</td>'
+              // 如果畫圖表時有因為 offset 做調整，欲顯示原始資訊時，需要 undo
+              if (i !== 0 && index !== 5 && displayedValue && displayedValue !== '') displayedValue += this.yAxisOffsetValue
+              return acc + '<td style="padding: 4px 12px;">' + displayedValue + '</td>'
             }
           }, '')
           table += `<tr style='background-color:${i % 2 !== 0 ? 'rgba(35, 61, 64, 0.6)' : 'background: rgba(50, 75, 78, 0.6)'}'>${tableData}</tr>`
@@ -192,10 +278,13 @@ export default {
         let res = datas[0].name + '<br/>'
         for (let i = 0, length = datas.length; i < length; i++) {
           let componentIndex = datas[i].componentIndex + 1
-          // 過濾掉 null、undefined、以及 為了 stck 的 0
-          if (datas[i].value[componentIndex] === null || datas[i].value[componentIndex] === undefined || (datas[i].value[componentIndex] === 0 && datas[i].value[2] === 0 && datas[i].value[3] === 0 && datas[i].value[4] === null)) continue
+          // 過濾掉 null、undefined、以及 為了 stck 的 0 和模擬預測的第一個點
+          if (datas[i].value[componentIndex] === null || datas[i].value[componentIndex] === undefined || (datas[i].value[componentIndex] === 0 && datas[i].value[2] === 0 && datas[i].value[3] === 0 && datas[i].value[4] === null) || (componentIndex === 3 && datas[i].value[componentIndex] && datas[i].value[componentIndex - 1])) continue
+          // 如果畫圖表時有因為 offset 做調整，欲顯示原始資訊時，需要 undo
+          let displayValue = datas[i].value[componentIndex]
+          displayValue += (i === 4) ? 0 :this.yAxisOffsetValue
           let marker = datas[i].marker ? datas[i].marker : `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${datas[i].color.colorStops[0].color};"></span>`
-          res += marker + datas[i].seriesName + '：' + this.formatComma(datas[i].value[componentIndex]) + '<br/>'
+          res += marker + datas[i].seriesName + '：' + this.formatComma(displayValue) + '<br/>'
         }
         return res
       }
@@ -205,10 +294,12 @@ export default {
         if (this.$el.getAttribute('listener') !== 'true') {
           this.$el.addEventListener('click', (e) => {
             if (e.target && e.target.id === 'export-btn') {
-              let exportData = this.options.dataset.source.map(element => {
+              let exportData = this.options.dataset.source.map((element, row) => {
                 if (element[2] === 0 && element[3] === 0 && element[4] === null) {
-                  return [element[0], element[1], null, null, null]
+                  return [element[0]+ this.yAxisOffsetValue, element[1]+ this.yAxisOffsetValue, null, null, null]
                 } else {
+                  if(row === 0) return element 
+                  element = element.map((item, index) => (index === 0 || index === 5 || item === null) ? item : item + this.yAxisOffsetValue)
                   return element
                 }
               })
@@ -241,6 +332,13 @@ export default {
     }
   },
   methods: {
+    // 處理堆疊圖目前無法處理橫跨正負的計算：正值只能加正值的區間值，負值只能加負值的區間值
+    // 追蹤當前 echarts issue: https://github.com/apache/incubator-echarts/issues/9317
+    adjustValueWithOffsetValue (value) {
+      // 如果堆疊區間沒有橫跨正負值或當前的值是空值則保留原狀
+      if (this.yAxisOffsetValue === 0 || value === null) return value
+      return value +  Math.abs(this.yAxisOffsetValue)
+    },
     brushRegionSelected (params) {
       if (params.batch[0].areas.length === 0) {
         this.selectedData = []
@@ -251,7 +349,7 @@ export default {
         return {
           type: 'range',
           properties: {
-            dc_name: this.title.xAxis[0].dc_name,
+            dc_id: this.title.xAxis[0].dc_id,
             data_type: this.title.xAxis[0].data_type,
             display_name: this.title.xAxis[0].display_name,
             start: this.dataset.index[coordRange[0] < 0 ? 0 : coordRange[0]],

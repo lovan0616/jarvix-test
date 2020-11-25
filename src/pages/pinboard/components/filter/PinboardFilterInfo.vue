@@ -18,10 +18,10 @@
           class="filter-description"
         >
           <template v-if="sub_restraint.type === 'enum'">
-            {{ sub_restraint.properties.dc_name }} = {{ sub_restraint.properties['datavalues'].join(', ') }}
+            {{ sub_restraint.properties.dc_id }} = {{ sub_restraint.properties['datavalues'].join(', ') }}
           </template>
           <template v-if="sub_restraint.type === 'range'">
-            {{ sub_restraint.properties.dc_name }} =
+            {{ sub_restraint.properties.dc_id }} =
             {{ $t('resultDescription.between', {
               start: isNaN(sub_restraint.properties.start) ? sub_restraint.properties.start : roundNumber(sub_restraint.properties.start),
               end: isNaN(sub_restraint.properties.end) ? sub_restraint.properties.end : roundNumber(sub_restraint.properties.end)
@@ -73,12 +73,12 @@ export default {
       if (!this.restriction.length) return
       if (this.restriction[0].type === 'compound') {
         return this.restriction[0].restraints.reduce((result, curr) => {
-          let dcName = curr.properties.dc_name
+          let dcName = curr.properties.dc_id
           result.push(this.getDataInfo.dataColumnMap[dcName].primary_alias)
           return result
         }, []).join(' & ')
       } else {
-        let dcName = this.restriction[0].properties['dc_name']
+        let dcName = this.restriction[0].properties['dc_id']
         return this.getDataInfo.dataColumnMap[dcName].primary_alias
       }
     }

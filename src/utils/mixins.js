@@ -223,6 +223,10 @@ Vue.mixin({
           return 'DisplayCompositionLineChart'
         case 'predict_line_chart':
           return 'DisplayPredictChart'
+        case 'line_confidential_interval_chart':
+          return 'DisplayLineConfidentialIntervalChart'
+        case 'periodic_line_charts':
+          return 'DisplayPeriodicLineCharts'
         case 'pie_chart':
           return 'DisplayPieChart'
         case 'scatter_correlation_chart':
@@ -230,6 +234,8 @@ Vue.mixin({
           return 'DisplayScatterChart'
         case 'scatter_probability_density_chart':
           return 'DisplayScatterProbabilityDensityChart'
+        case 'scatter_cluster_chart':
+          return 'DisplayScatterClusterChart'
         case 'table':
           return 'SyTable'
         case 'tree_map':
@@ -267,6 +273,25 @@ Vue.mixin({
           return 'DisplayNoAnswerInfo'
         case 'index_info':
           return 'DisplayIndexInfo'
+      }
+    },
+    // 藉由後端的 result denotation 名稱取得前端的顯示資訊
+    getSwitchTypeInfoList (denotation) {
+      switch (denotation) {
+        case 'OVERVIEW':
+          return { name: i18n.t('denotation.dataOverview'), icon: 'basic-info' }
+        case 'CLUSTERING': 
+          return { name: i18n.t('denotation.clusteringAnalysis'), icon: 'clustering' }
+        case 'CORRELATION_VERIFICATION':
+          return { name: i18n.t('denotation.correlationAnalysis'), icon: 'correlation-analysis' }
+        case 'PREDICTION':
+          return { name: i18n.t('denotation.predictionAnalysis'), icon: 'telescope' }
+        case 'TREND':
+          return { name: i18n.t('denotation.trendAnalysis'), icon: 'trend' }
+        case 'ANOMALY':
+          return { name: i18n.t('denotation.anomalyAnalysis'), icon: 'anomaly-analysis' }
+        case 'SEASONALITY':
+          return { name: i18n.t('denotation.periodicityAnalysis'), icon: 'cycle' }
       }
     },
     // 整個結果頁的 layout

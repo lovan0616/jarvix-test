@@ -187,6 +187,34 @@ export function deleteDataColumnById(dataColumnId) {
 }
 
 /**
+ * fuzzy search dataColumn value by id
+ * @param {Number} dataColumnId - id
+ */
+export function dataValueFuzzySearch(dataColumnId, searchString, page=0, size=200) {
+  return request({
+    url: `/dataColumn/${dataColumnId}/dataValue-search`,
+    method: 'GET',
+    params: {
+      page,
+      size,
+      searchString
+    }
+  })
+}
+
+/**
+ * get dataColumn value by id
+ * @param {Number} dataColumnId - id
+ * @param {String} searchString - query
+ */
+export function getDataColumnValue(dataColumnId) {
+  return request({
+    url: `/dataColumn/${dataColumnId}/value-and-alias`,
+    method: 'GET'
+  })
+}
+
+/**
  * update dataFrame alias
  * @param {Object} userEditedInput - 欲更新的資料
  * @param {Number} userEditedInput.dataFrameId - dataFrameId

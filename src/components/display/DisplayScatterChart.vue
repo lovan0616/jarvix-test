@@ -172,8 +172,8 @@ export default {
       let displayYaxisMax
       let yAxisBuffer = (maxY - minY) / 2
 
-      displayYaxisMax = maxY + yAxisBuffer < 0 ? 0 : maxY + yAxisBuffer
-      displayYaxisMin = minY - yAxisBuffer > 0 ? 0 : minY - yAxisBuffer
+      displayYaxisMax = maxY + yAxisBuffer
+      displayYaxisMin = minY - yAxisBuffer
 
       scatterOptions.chartData.data = this.dataset.data
       scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)
@@ -215,7 +215,7 @@ export default {
           let offset = this.coefficients[0]
           let gradient = this.coefficients[1]
           // 迴歸線點
-          for (let i = 0; i < this.correlationLinePoint; i++) {
+          for (let i = 0; i <= this.correlationLinePoint; i++) {
             let xPoint = minX + interval * i
             lineData.push([xPoint, this.roundNumber(gradient * xPoint + offset, 4)])
           }
@@ -333,7 +333,7 @@ export default {
             {
               type: 'range',
               properties: {
-                dc_name: this.title.xAxis[0].dc_name,
+                dc_id: this.title.xAxis[0].dc_id,
                 data_type: this.title.xAxis[0].data_type,
                 display_name: this.title.xAxis[0].display_name,
                 start: this.title.xAxis[0].stats_type === 'numeric' ? coordRange[0][0] : this.dataset.index[coordRange[0][0]],
@@ -343,7 +343,7 @@ export default {
             {
               type: 'range',
               properties: {
-                dc_name: this.title.yAxis[0].dc_name,
+                dc_id: this.title.yAxis[0].dc_id,
                 data_type: this.title.yAxis[0].data_type,
                 display_name: this.title.yAxis[0].display_name,
                 start: coordRange[1][0],

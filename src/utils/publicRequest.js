@@ -4,6 +4,7 @@ import router from '../router'
 import store from '../store'
 import { Message } from 'element-ui'
 import i18n from '@/lang/index.js'
+import { v4 as uuidv4 } from 'uuid'
 
 /**
  * 注意這邊 headers 取 token 的寫法
@@ -25,7 +26,12 @@ const service = axios.create({
       toString () {
         return localStorage.getItem('locale')
       }
-    }
+    },
+    trace_key: {
+      toString() {
+        return uuidv4()
+      }
+    },
   }
 })
 

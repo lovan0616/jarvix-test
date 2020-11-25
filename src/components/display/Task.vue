@@ -45,6 +45,7 @@
         :item-count="componentData.item_count"
         :coeffs="componentData.coeffs"
         :cluster-infos="componentData.clusterInfos"
+        :sub-components="componentData.subComponents"
         :key="componentId"
         :show-toolbox="showToolbox"
         :custom-chart-style="customChartStyle"
@@ -390,6 +391,9 @@ export default {
         this.componentData.dataset.index = this.componentData.dataset.index.concat(taskData.dataset.index)
         if (this.componentData.dataset.display_index) {
           this.componentData.dataset.display_index = this.componentData.dataset.display_index.concat(taskData.dataset.display_index)
+        }
+        if (this.componentData.dataset.predictDataList) {
+          this.componentData.dataset.predictDataList = this.componentData.dataset.predictDataList.concat(taskData.dataset.predictDataList)
         }
       }
     },

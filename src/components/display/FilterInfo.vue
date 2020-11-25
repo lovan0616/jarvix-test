@@ -23,7 +23,20 @@
         :restriction="filter.restriction"
         :status="filter.status"
         @status-change="onFilterStatusChange(index, $event)"
+        @filter-edit="editFilter(index)"
+        @filter-delete="deleteFilter(index)"
       />
+    </div>
+    <div class="filter-block__button-block">
+      <button 
+        type="button"
+        class="btn-m btn-outline"
+        @click="$emit('addRestriction')"
+      ><span>
+        <svg-icon icon-class="plus" />
+        {{ $t('dataFrameAdvanceSetting.addFilter') }}
+      </span>
+      </button>
     </div>
   </div>
 </template>
@@ -56,6 +69,12 @@ export default {
       })
       this.$emit('update:tempFilterList', updatedTempFilterList)
     },
+    editFilter(index) {
+      this.$emit('editRestriction', index)
+    },
+    deleteFilter (index) {
+      this.$emit('update:tempFilterList', this.tempFilterList.filter((filter, i) => i !== index))
+    },
     onClearAll () {
       this.$emit('update:tempFilterList', [])
     }
@@ -69,9 +88,18 @@ export default {
   }
 
   &__select-box {
+    margin-bottom: 15px;
     .empty-message {
       color: #AAAAAA;
       font-size: 12px;
+    }
+  }
+
+  &__button-block {
+    margin: auto 0 0 0;
+    .btn-m {
+      width: 100%;
+      height: 28px;
     }
   }
 

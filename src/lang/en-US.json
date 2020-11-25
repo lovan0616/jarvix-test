@@ -53,7 +53,17 @@
     "clearCriteria": "Clear Filter Conditions",
     "noCriteriaYet": "No filter condition has been set",
     "allColumns": "All Columns",
-    "dataColumns": "Columns"
+    "dataColumns": "Columns",
+    "addFilter": "Add Filter",
+    "restrictionSetting": "Filter Limits",
+    "addRestriction": "Add limit",
+    "noRestrictionYet": "No Filter Set",
+    "restraintSetting": "Limit Setting",
+    "noRestraintYet": "No Limit Set",
+    "emptyValueMsg": "*If no value is entered, the upper and lower limits of the current data will be used.",
+    "chooseValue": "Select Data",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time"
   },
   "message": {
     "joinTableBuilding": "Data Set will be available for analysis once it is processed.",
@@ -140,6 +150,7 @@
     "and": "and",
     "upperBound": "Upper bound value",
     "lowerBound": "Lower bound value",
+    "noPeriodicResult": "No cycle found",
     "numericShouldBeBetween": "Number should be between {min} and {max}"
   },
   "guiding": {
@@ -737,6 +748,7 @@
     "displaySetting": "Show Setting"
   },
   "clustering": {
+    "cluster": "Cluster",
     "dataOverview": "Overview",
     "clusteringAnalysis": "Clustering",
     "saveClusteringResultAsColumn": "Save clustering result as a new column",
@@ -1952,7 +1964,21 @@
     "rangeEnd": "rangeEnd",
     "count": "Count",
     "download": "Download image",
-    "showLabel": "Show Label"
+    "showLabel": "Show Label",
+    "forecastValue": "Forecasted value",
+    "upperBoundValue": "Upper bound",
+    "lowerBoundValue": "Lower bound",
+    "normalValue": "Normal values",
+    "anomalousValue": "Anomalous values"
+  },
+  "denotation": {
+    "dataOverview": "Overview",
+    "clusteringAnalysis": "Clustering",
+    "correlationAnalysis": "Correlation",
+    "predictionAnalysis": "Prediction",
+    "trendAnalysis": "Trend",
+    "anomalyAnalysis": "Anomaly",
+    "periodicityAnalysis": "Seasonality"
   },
   "errorMessage": {
     "SYERR0001": "Unexpected error occurred in the system",
