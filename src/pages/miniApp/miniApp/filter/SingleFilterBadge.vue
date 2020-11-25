@@ -162,8 +162,8 @@ export default {
     displayName () {
       if (this.isEditMode) return this.filter.columnName 
       if (this.filter.statsType === 'CATEGORY' || this.filter.statsType === 'BOOLEAN') {
-        const selectedAmount = this.filter.datavalues.length
-        return selectedAmount === 0 ? this.filter.columnName :`${this.filter.columnName} (${ this.filter.datavalues.length})`
+        const selectedAmount = this.filter.dataValues.length
+        return selectedAmount === 0 ? this.filter.columnName :`${this.filter.columnName} (${ this.filter.dataValues.length})`
       } else if (this.filter.statsType === 'NUMERIC') {
         return this.filter.start === null || this.filter.start === '' ? this.filter.columnName :`${this.filter.columnName} (${ this.filter.start} - ${this.filter.end})`
       }
