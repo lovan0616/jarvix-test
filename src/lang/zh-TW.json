@@ -777,7 +777,10 @@
     "deleteDashboard": "刪除@:miniApp.dashboard",
     "confirmDeletingComponent": "確定刪除此元件？",
     "noData": "應用程式當前沒有資料",
-    "componentNotAddable": "此內容尚未支援成為元件，請變更其他內容。"
+    "componentNotAddable": "此內容尚未支援成為元件，請變更其他內容。",
+    "upperBound": "上限值",
+    "lowerBound": "下限值",
+    "pleaseEnterNumber": "請填入數字"
   },
   "clustering": {
     "cluster": "群體",
