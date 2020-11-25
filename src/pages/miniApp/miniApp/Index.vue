@@ -257,7 +257,6 @@
                     :filters="filterColumnValueInfoList"
                     :component-data="componentData"
                     :is-edit-mode="isEditMode"
-                    @restricted="conComponentRestricted"
                     @redirect="currentDashboardId = $event"
                     @deleteComponentRelation="deleteComponentRelation"
                   >
@@ -537,7 +536,9 @@ export default {
       const columnStatsType = filterInfo.statsType      
       let filter = {
         dataSourceName: filterInfo.dataSourceName,
+        dataSourceId: filterInfo.dataSourceId,
         dataFrameName: filterInfo.dataFrameName,
+        dataFrameId: filterInfo.dataFrameId,
         columnId: filterInfo.columnId,
         dataType: filterInfo.dataType,
         statsType: filterInfo.statsType,
