@@ -89,10 +89,13 @@ export default {
       this.$emit('showDelete')
     },
     openMiniApp () {
-      const { name, params } = this.$route
+      const { params } = this.$route
       const routeData = this.$router.resolve({
-        name, 
-        params, 
+        name: 'MiniApp', 
+        params: {
+          ...params,
+          'mini_app_id': this.miniAppInfo.id
+        },
         query: { mode: 'view' } })
       window.open(routeData.href, '_blank')
     },

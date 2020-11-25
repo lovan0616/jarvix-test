@@ -849,6 +849,8 @@ export default {
     }
   }
   &__nav {
+    position: relative;
+    z-index: 3;
     flex: 0 0 56px;
     padding: 0 24px;
     display: flex;
