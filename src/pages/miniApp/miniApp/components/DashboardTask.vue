@@ -49,7 +49,7 @@ export default {
     restrictions () {
       return this.filters
         .filter(filter => {
-          if (filter.statsType === 'NUMERIC') return true
+          if (filter.statsType === 'NUMERIC') return filter.start && filter.end
           return filter.dataValues.length > 0
         })
         .map(filter => {
