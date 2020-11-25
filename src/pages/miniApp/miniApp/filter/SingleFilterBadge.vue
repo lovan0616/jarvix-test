@@ -9,7 +9,7 @@
     class="filter"
     @click="toggleFilterPanel"
   >
-    <div class="filter__title">{{ filter.columnName }}</div>
+    <div class="filter__title">{{ displayName }}</div>
     <div
       v-if="isEditMode"
       class="filter__delete-icon-box" 
@@ -159,6 +159,15 @@ export default {
     lowerBoundRules () {
       return 'required|decimal|validLowerBound:upperBound'
     },
+    displayName () {
+      if (this.isEditMode) return this.filter.columnName 
+      if (this.filter.statsType === 'CATEGORY' || this.filter.statsType === 'BOOLEAN') {
+        const selectedAmount = this.filter.datavalues.length
+        return selectedAmount === 0 ? this.filter.columnName :`${this.filter.columnName} (${ this.filter.datavalues.length})`
+      } else if (this.filter.statsType === 'NUMERIC') {
+        return this.filter.start === null || this.filter.start === '' ? this.filter.columnName :`${this.filter.columnName} (${ this.filter.start} - ${this.filter.end})`
+      }
+    }
   },
   watch: {
     initialFilter: {
