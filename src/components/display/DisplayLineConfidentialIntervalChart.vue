@@ -41,15 +41,15 @@
         :key="index" 
         class="description__item">{{ dataset.descriptions.length > 1 ? (index + 1) + '. ' + description : description }}</span>
     </div>
-    <!-- <div 
-      v-if="dataset.errorMessage && dataset.errorMessage.length > 0"
+    <div 
+      v-if="dataset.warnings && dataset.warnings.length > 0"
       class="description"
     >
       <span 
-        v-for="(message, index) in dataset.errorMessage" 
-        :key="index" 
-        class="description__item description__item--warning">{{ dataset.errorMessage.length > 1 ? (index + 1) + '. ' + message : message }}</span>
-    </div> -->
+        v-for="(message, index) in dataset.warnings" 
+        :key="index"
+        class="description__item description__item--warning">{{ dataset.warnings.length > 1 ? (index + 1) + '. ' + message : message }}</span>
+    </div>
   </div>
 </template>
 <script>
@@ -386,7 +386,7 @@ export default {
 <style lang="scss" scoped>
 .display-line-confidential-interval-chart {
   .description {
-    margin-top: 40px;
+    margin-top: 20px;
     background: #141C1D;
     border-radius: 8px;
     padding: 10px 20px;
