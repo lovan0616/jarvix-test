@@ -46,37 +46,24 @@
         </div>
       </div>
     </selected-region>
-    <div 
-      v-if="dataset.descriptions && dataset.descriptions.length > 0"
-      class="description"
-    >
-      <div class="description__title"> 
-        <svg-icon icon-class="len-with-line-chart"/>
-        {{ $t("resultDescription.dataInsight") }}
-      </div>
-      <span 
-        v-for="(description, index) in dataset.descriptions" 
-        :key="index" 
-        class="description__item">{{ dataset.descriptions.length > 1 ? (index + 1) + '. ' + description : description }}</span>
-    </div>
-    <div 
-      v-if="showWarning && dataset.warnings && dataset.warnings.length > 0"
-      class="description warning"
-    >
-      <div class="warning__title"> 
-        <svg-icon icon-class="alert-circle"/>
-        {{ $t("resultDescription.warning") }}
-      </div>
-      <span 
-        v-for="(message, index) in dataset.warnings" 
-        :key="index"
-        class="description__item description__item--warning">{{ dataset.warnings.length > 1 ? (index + 1) + '. ' + message : message }}</span>
-    </div>
+    <insight-description-block
+      :title="$t('resultDescription.dataInsight')"
+      :message-list="dataset.descriptions"
+      icon-name="len-with-line-chart"
+    />
+    <insight-description-block
+      v-if="showWarning"
+      :title="$t('resultDescription.dataInsight')"
+      :message-list="dataset.warnings"
+      :message-type="warning"
+      icon-name="alert-circle"
+    />
   </div>
 </template>
 
 <script>
 import EchartAddon from './common/addon.js'
+import InsightDescriptionBlock from './InsightDescriptionBlock'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import { getDrillDownTool, monitorMarkLine, lineChartMonitorVisualMap } from '@/components/display/common/addons'
 import {
@@ -99,6 +86,9 @@ const echartAddon = new EchartAddon({
 
 export default {
   name: 'DisplayLineChart',
+  components: {
+    InsightDescriptionBlock
+  },
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     title: {
