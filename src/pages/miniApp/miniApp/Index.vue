@@ -873,10 +873,6 @@ export default {
         .finally(() => this.isShowDeleteComponentDialog = false)
     },
     updateAppSetting (appInfo, miniAppId = this.miniAppId) {
-      // 將各 component 中暫存，僅供操作瀏覽用 restrictedInfo 資訊清除
-      appInfo.settings.editModeData.dashboards.forEach(d => {
-        d.components.forEach(c => c.restrictedResultInfo = {})
-      })
       return updateAppSetting(miniAppId, { ...appInfo })
     },
     activeCertainDashboard (dashboardId) {
