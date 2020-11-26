@@ -71,15 +71,21 @@
             <label class="item__label"> 
               {{ $t('message.upperBound') }}
             </label>
-            <el-date-picker
+            <!-- <el-date-picker
               v-validate="datatimeUpperBoundRules"
               ref="datatimeUpperBound"
               v-model="subRestraint.properties.end"
-              :format="datePickerOptions.format"
+              
               :name="index + '-' + 'datatimeUpperBound'"
-              :type="datePickerOptions.type"
+              type="week"
               value-format="timestamp"
-              class="date-picker" />
+              class="date-picker" /> -->
+            <el-date-picker
+              v-model="subRestraint.properties.end"
+              type="week"
+              value-format="timestamp"
+              placeholder="Pick a week"
+              @change="handleWeek"/>
           </div>
           <div 
             v-show="errors.has(index + '-' + 'datatimeUpperBound')"
@@ -97,9 +103,9 @@
               v-validate="datatimeLowerBoundRules"
               ref="datatimeLowerBound"
               v-model="subRestraint.properties.start"
-              :format="datePickerOptions.format"
+              
               :name="index + '-' + 'datatimeLowerBound'"
-              :type="datePickerOptions.type"
+              type="week"
               value-format="timestamp"
               class="date-picker" />
           </div>
@@ -225,9 +231,13 @@ export default {
       return 'required|decimal|validLowerBound:upperBound'
     },
     datatimeUpperBoundRules () {
+      if (this.subRestraint.properties.timeScope === 'WEEK')
+        return 'required|validUpperBound:datatimeLowerBound'
       return 'required|decimal|validUpperBound:datatimeLowerBound'
     },
     datatimeLowerBoundRules () {
+      if (this.subRestraint.properties.timeScope === 'WEEK')
+        return 'required|validLowerBound:datatimeUpperBound'
       return 'required|decimal|validLowerBound:datatimeUpperBound'
     },
     datePickerOptions () {
@@ -348,6 +358,13 @@ export default {
     },
     deleteSubRestraint () {
       this.$emit('delete')
+    },
+    handleWeek () {
+      if(this.subRestraint.properties.timeScope !== 'WEEK') return
+
+      // this.weekVal= moment(this.weekNum).utcOffset(480).format("WW")
+      // console.log(this.weekVal)  
+      // this.$emit('transferweekNum',this.weekVal)
     }
   },
 

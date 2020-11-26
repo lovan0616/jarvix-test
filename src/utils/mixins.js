@@ -174,7 +174,7 @@ Vue.mixin({
         case "WEEK":
           return {
             type: "week",
-            format: "Week WW"
+            format: "yyyy-W WW"
           }
         case "MONTH":
         case "SEASON":

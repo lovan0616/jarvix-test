@@ -952,7 +952,8 @@
     "allowArg": {
       "second": "0 sec | 1 sec | {n} secs",
       "minute": "0 min | 1 min | {n} mins",
-      "hour": "0 hr | 1 hr | {n} hrs"
+      "hour": "0 hr | 1 hr | {n} hrs",
+      "week": "W{n}"
     }
   },
   "aggregation": {

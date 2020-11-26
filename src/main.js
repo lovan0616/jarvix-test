@@ -237,6 +237,7 @@ Validator.extend('letterSpace', function (value) {
 })
 
 Validator.extend('validUpperBound', (upperBoundValue, [lowerBoundValue]) => {
+  console.log(upperBoundValue, lowerBoundValue)
   return Number(upperBoundValue) > Number(lowerBoundValue)
 }, {
   hasTarget: true
