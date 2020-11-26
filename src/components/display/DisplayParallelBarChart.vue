@@ -241,6 +241,8 @@ export default {
       if (this.dataset.index.length === 0) return false
       if (this.dataset.index[0].length !== 2) return false
       if (this.dataset.columns.length > 1) return false
+      // 在戰情室的話也不讓他切換圖表
+      if (!this.showToolbox) return false
 
       let lineChartIndex = []
       let lineChartColumns = []
