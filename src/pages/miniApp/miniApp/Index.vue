@@ -300,8 +300,10 @@
     />
     <create-component-dialog
       v-if="isShowCreateComponentDialog"
-      @close="isShowCreateComponentDialog = false"
+      :current-component="currentComponent"
+      @close="closeCreateComponentDialog"
       @create="createComponent"
+      @updateSetting="updateComponentSetting"
     />
     <create-filter-dialog
       v-if="isShowCreateFilterDialog"
@@ -491,6 +493,11 @@ export default {
     componentSettingOptions () {
       return [
         {
+          title: 'miniApp.componentSetting',
+          icon: 'filter-setting',
+          dialogName: 'CreateComponent'
+        },
+        {
           title: 'miniApp.createRelation',
           icon: 'filter-setting',
           dialogName: 'CreateComponentRelation'
@@ -604,6 +611,22 @@ export default {
         .then(() => { this.miniApp = updatedMiniAppData })
         .finally(() => this.isProcessing = false)
     },
+    updateComponentSetting (updatedComponentInfo) {
+      const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
+      updatedMiniAppData.settings.editModeData.dashboards.forEach(board => {
+        if (board.id === this.currentDashboardId) {
+          board.components.forEach(component => {
+            if (component.id === this.currentComponentId) {
+              component = updatedComponentInfo
+            }
+          })
+        }
+      })
+      this.isShowCreateComponentDialog = false
+      this.updateAppSetting(updatedMiniAppData)
+        .then(() => { this.miniApp = updatedMiniAppData })
+        .catch(() => {})
+    },
     createComponentRelation (relatedDashboard) {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
       const component = editedMiniApp.settings.editModeData.dashboards[this.currentDashboardIndex].components.find(comp => comp.id === this.currentComponentId)
@@ -686,6 +709,10 @@ export default {
     },
     closeShare () {
       this.isShowShare = false
+    },
+    closeCreateComponentDialog () {
+      this.currentComponentId = null
+      this.isShowCreateComponentDialog = false
     },
     copyLink () {
       let input = this.$refs.shareInput
@@ -853,8 +880,12 @@ export default {
     },
     switchDialogName (eventName, id) {
       this[`isShow${eventName}Dialog`] = true
-      if (eventName === 'DeleteComponent') this.currentComponentId = id
-      if (eventName === 'CreateComponentRelation') this.currentComponentId = id
+      switch(eventName) {
+        case 'DeleteComponent':
+        case 'CreateComponentRelation':
+        case 'CreateComponent':
+          this.currentComponentId = id
+      }
     },
     removeFilter (updatedFilterList) {
       this.isProcessing = true

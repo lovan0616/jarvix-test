@@ -21,6 +21,14 @@
           {{ $t('miniApp.componentNotAddable') }}
         </div>
         <button
+          v-if="currentComponent.init"
+          class="btn btn-default"
+          @click="$emit('updateSetting', currentComponent)"
+        >
+          {{ $t('button.save') }}
+        </button>
+        <button
+          v-else
           :disabled="!isAddable"
           class="btn btn-default"
           @click="createComponent"
@@ -31,7 +39,9 @@
     </nav>
     <div class="dialog__content">
       <div class="key-result-chart">
-        <div class="search-bar">
+        <div 
+          v-if="!currentComponent.init" 
+          class="search-bar">
           <data-frame-menu
             :redirect-on-change="false"
             :is-show-preview-entry="true"
@@ -43,6 +53,7 @@
           />
         </div>
         <dashboard-component
+          :current-component="currentComponent"
           :is-addable.sync="isAddable"
           :is-loading.sync="isLoading"
         />
@@ -63,7 +74,7 @@
         </transition>
       </div>
       <div
-        v-if="currentResultInfo && currentResultInfo.keyResultId"
+        v-if="currentComponent.init || (currentResultInfo && currentResultInfo.keyResultId)"
         class="key-result-setting">
         <div class="setting__header">
           <svg-icon icon-class="filter-setting"/>
@@ -74,7 +85,7 @@
             <div class="input-label">圖表名稱</div>
             <input-verify
               v-validate="`required|max:${max}`"
-              v-model="componentDisplayName"
+              v-model="currentComponent.config.diaplayedName"
               name="componentDisplayName"
             />
           </div>
@@ -102,6 +113,27 @@ export default {
     ResultDisplay,
     DashboardComponent,
     InputVerify
+  },
+  props: {
+    currentComponent: {
+      type: Object,
+      default: () => {
+        return {
+          init: false,
+          id: null,
+          resultId: null,
+          orderSequence: null,
+          restrictedResultInfo: {},
+          relatedDashboard: {
+            id: null,
+            name: null
+          },
+          config: {
+            diaplayedName: '',
+          }
+        }
+      }
+    }
   },
   data () {
     return {
@@ -134,20 +166,12 @@ export default {
         if (!valid) return
         
         this.$emit('create', {
+          ...this.currentComponent,
+          init: true,
           id: uuidv4(),
           resultId: this.currentResultId,
-          orderSequence: null, // 由 Dashboard 層給定
-          config: {
-            diaplayedName: this.componentDisplayName,
-            question: this.currentResultInfo.question
-          },
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
-          ...this.currentResultInfo,
-          restrictedResultInfo: {},
-          relatedDashboard: {
-            id: null,
-            name: null
-          }
+          ...this.currentResultInfo
         })
       })
     },
