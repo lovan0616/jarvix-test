@@ -531,13 +531,28 @@ export default {
       return this.$route.params.mini_app_id
     },
     currentFilterList () {
-      const currentDashboard = this.miniApp.settings.editModeData.dashboards.find(dashboard => dashboard.id === this.currentDashboardId)
-      return currentDashboard ? currentDashboard.filterList : []
+      return this.currentDashboard ? this.currentDashboard.filterList : []
     },
     currentControlList () {
-      const currentDashboard = this.miniApp.settings.editModeData.dashboards.find(dashboard => dashboard.id === this.currentDashboardId)
-      return currentDashboard ? currentDashboard.controlList : []
-    }                           
+      return this.currentDashboard ? this.currentDashboard.controlList : []
+    },
+    currentModeDataType () {
+      return this.isViewMode ? 'viewModeData' : 'editModeData'
+    }                       
+  },
+  watch: {
+    filterColumnValueInfoList: {
+      deep: true,
+      handler (filterList) {
+        this.miniApp.settings[this.currentModeDataType].dashboards[this.currentDashboardIndex].filterList = filterList
+      }
+    },
+    controlColumnValueInfoList: {
+      deep: true,
+      handler (controlList) {
+        this.miniApp.settings[this.currentModeDataType].dashboards[this.currentDashboardIndex].controlList = controlList
+      }
+    }
   },
   created () {
     this.getMiniAppInfo()  
@@ -579,8 +594,8 @@ export default {
         case 'CATEGORY':
           filter = {
             ...filter,
-            dataValues: [],
-            dataValueOptionList: []
+            dataValues: filterInfo.dataValues || [],
+            dataValueOptionList: filterInfo.dataValueOptionList || []
           }
           break
         // case 'DATETIME':
@@ -596,10 +611,10 @@ export default {
         case 'NUMERIC':
           filter = {
             ...filter,
-            dataMax: null,
-            dataMin: null,
-            start: null,
-            end: null
+            dataMax: filterInfo.dataMax || null,
+            dataMin: filterInfo.dataMin || null,
+            start: filterInfo.start || null,
+            end: filterInfo.end || null
           }
           break
       }
