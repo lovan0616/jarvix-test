@@ -2,7 +2,7 @@
   <div class="create-filter-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="dialog-title">
-        新增篩選條件
+        {{ title }}
         <a 
           href="javascript:void(0)" 
           class="close-btn"
@@ -128,6 +128,10 @@ export default {
     isProcessing: {
       type: Boolean,
       default: false
+    },
+    title: {
+      type: String,
+      required: true
     }
   },
   data () {

@@ -73,6 +73,10 @@ export default {
       type: Array,
       default: () => []
     },
+    controls: {
+      type: Array,
+      default: () => []
+    },
     isEditMode: {
       type: Boolean,
       default: false,
@@ -89,7 +93,7 @@ export default {
   },
   computed: {
     restrictions () {
-      return this.filters
+      return this.allFilterList
         .filter(filter => {
           if (filter.statsType === 'NUMERIC') return filter.start && filter.end
           return filter.dataValues.length > 0
@@ -132,17 +136,20 @@ export default {
     },
     shouldComponentBeFiltered () {
       // 判斷元件是否需要因應 filter 異動而重做
-      let filterColumnIds = this.filters.reduce((acc, cur) => acc.concat(cur.columnId), [])
+      let filterColumnIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.columnId), [])
       let componentColumnIds = this.componentData.dataColumns.reduce((acc, cur) => acc.concat(cur.columnId), [])
       return filterColumnIds.some(filter => componentColumnIds.includes(filter))
     },
     keyResultId () {
       return this.componentData.restrictedResultInfo.keyResultId || this.componentData.keyResultId
+    },
+    allFilterList () {
+      return [...this.filters, ...this.controls]
     }
   },
   watch: {
     // 當 Dashboard的 fitler 變動時，由元件內部去重新問問題
-    filters: {
+    allFilterList: {
       immediate: false,
       deep: true,
       handler (filters) {
