@@ -2019,7 +2019,7 @@
     "accountViewer": "一般使用者",
     "groupOwner": "專案擁有者",
     "groupMaintainer": "專案管理者",
-    "groupViewer": "一般使用者",
+    "groupViewer": "專案成員",
     "accountRoleDesc": "角色權限說明",
     "accountOwnerDesc": "無任何使用限制",
     "accountMaintainerDesc": "擁有帳戶管理權限",
