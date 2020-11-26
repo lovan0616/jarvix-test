@@ -53,9 +53,9 @@
     />
     <insight-description-block
       v-if="showWarning"
-      :title="$t('resultDescription.dataInsight')"
+      :title="$t('resultDescription.warning')"
       :message-list="dataset.warnings"
-      :message-type="warning"
+      message-type="warning"
       icon-name="alert-circle"
     />
   </div>
@@ -549,39 +549,5 @@ export default {
 <style lang="scss" scoped>
 .display-line-chart {
   height: 100%;
-  .description {
-    margin-top: 16px;
-    background: #141C1D;
-    border-radius: 8px;
-    padding: 10px 20px;
-
-    &__title {
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 24px;
-      color: #EEE;
-    }
-
-    &__item {
-      font-size: 14px;
-      letter-spacing: 0.1em;
-      display: block;
-      line-height: 24px;
-      color: #CCC;
-
-      &--warning {
-        color: #FFDF6F;
-      }
-    }
-  }
-
-  .warning {
-    background: rgba(255, 223, 111, 0.08);
-
-    &__title {
-      font-size: 14px;
-      color: #FFDF6F;
-    }
-  }
 }
 </style>

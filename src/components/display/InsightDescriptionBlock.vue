@@ -46,6 +46,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .description {
+  width: 100%;
   margin-top: 16px;
   background: #141C1D;
   border-radius: 8px;
@@ -62,7 +63,7 @@ export default {
     color: #EEE;
 
     &--warning {
-      background: #FFDF6F;
+      color: #FFDF6F;
     }
   }
 
