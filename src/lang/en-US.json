@@ -2045,7 +2045,7 @@
     "accountViewer": "General User",
     "groupOwner": "Project Owner",
     "groupMaintainer": "Project Manager",
-    "groupViewer": "General User",
+    "groupViewer": "Project Member",
     "accountRoleDesc": "Description",
     "accountOwnerDesc": "No restrictions on use",
     "accountMaintainerDesc": "With account management permissions",
