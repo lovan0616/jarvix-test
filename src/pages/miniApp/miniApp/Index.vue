@@ -564,7 +564,9 @@ export default {
       const columnStatsType = filterInfo.statsType      
       let filter = {
         dataSourceName: filterInfo.dataSourceName,
+        dataSourceId: filterInfo.dataSourceId,
         dataFrameName: filterInfo.dataFrameName,
+        dataFrameId: filterInfo.dataFrameId,
         columnId: filterInfo.columnId,
         dataType: filterInfo.dataType,
         statsType: filterInfo.statsType,
@@ -1297,9 +1299,11 @@ export default {
   &__dashboard-filter {
     &--top {
       z-index: 2;
+      margin-bottom: 12px;
     }
     &--bottom {
       z-index: 1;
+      margin-bottom: 20px;
     }
   }
 }

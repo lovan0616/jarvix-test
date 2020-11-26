@@ -1,6 +1,6 @@
 <template>
   <section
-    :class="{ 'has-background': isEditMode }"
+    :class="{ 'editing': isEditMode }"
     class="filter-control"
   >
     <svg-icon
@@ -76,11 +76,9 @@ export default {
 <style lang="scss" scoped>
 .filter-control {
   position: relative;
-  padding: 16px 19px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   margin-right: 20px;
-  margin-bottom: 16px;
   display: flex;
   align-items: center;
 
@@ -88,7 +86,8 @@ export default {
     margin-right: 11px;
   }
 
-  &.has-background {
+  &.editing {
+    padding: 16px 19px;
     background: #1C292B;
   }
 

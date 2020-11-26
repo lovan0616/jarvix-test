@@ -136,9 +136,8 @@ export default {
     },
     shouldComponentBeFiltered () {
       // 判斷元件是否需要因應 filter 異動而重做
-      let filterColumnIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.columnId), [])
-      let componentColumnIds = this.componentData.dataColumns.reduce((acc, cur) => acc.concat(cur.columnId), [])
-      return filterColumnIds.some(filter => componentColumnIds.includes(filter))
+      let filterDataFrameIds = this.filters.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
+      return filterDataFrameIds.includes(this.componentData.dataFrameId)
     },
     keyResultId () {
       return this.componentData.restrictedResultInfo.keyResultId || this.componentData.keyResultId
