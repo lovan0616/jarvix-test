@@ -214,6 +214,15 @@
                   </template>
                 </div>
                 <div class="header-right">
+                  <button 
+                    style="width: 100px;" 
+                    @click="testController('單位利潤')">單位利潤</button>
+                  <button 
+                    style="width: 80px;" 
+                    @click="testController('成本')">成本</button>
+                  <button 
+                    style="width: 80px;" 
+                    @click="testController('收入')">收入</button>
                   <button
                     v-if="isEditMode"
                     class="btn-m btn-outline btn-has-icon create-component-btn" 
@@ -255,6 +264,7 @@
                     v-for="componentData in currentDashboard.components"
                     :key="componentData.id"
                     :filters="filterColumnValueInfoList"
+                    :y-axis-control-list="yAxisControlList"
                     :component-data="componentData"
                     :is-edit-mode="isEditMode"
                     @redirect="currentDashboardId = $event"
@@ -424,7 +434,29 @@ export default {
       newDashboardName: '',
       isEditingDashboardName: false,
       filterColumnValueInfoList : [],
-      isShowCreateFilterDialog: false
+      isShowCreateFilterDialog: false,
+      yAxisControlList: [
+        {
+          isSelected: true,
+          dataSourceId: 12,
+          dataSourceName: '',
+          dataFrameId: 45,
+          dataFrameName: '',
+          columnId: 689,
+          dataType: '',
+          columnName: '收入'
+        },
+        {
+          isSelected: false,
+          dataSourceId: 12,
+          dataSourceName: '',
+          dataFrameId: 45,
+          dataFrameName: '',
+          columnId: 689,
+          dataType: '',
+          columnName: '成本'
+        }
+      ]
     }
   },
   computed: {
@@ -514,6 +546,40 @@ export default {
     this.getMiniAppInfo()  
   },
   methods: {
+    testController (string) {
+      this.yAxisControlList = [
+        {
+          isSelected: '收入' === string,
+          dataSourceId: 12,
+          dataSourceName: '',
+          dataFrameId: 45,
+          dataFrameName: '',
+          columnId: 689,
+          dataType: '',
+          columnName: '收入'
+        },
+        {
+          isSelected: '成本' === string,
+          dataSourceId: 12,
+          dataSourceName: '',
+          dataFrameId: 45,
+          dataFrameName: '',
+          columnId: 689,
+          dataType: '',
+          columnName: '成本'
+        },
+        {
+          isSelected: '單位利潤' === string,
+          dataSourceId: 12,
+          dataSourceName: '',
+          dataFrameId: 45,
+          dataFrameName: '',
+          columnId: 689,
+          dataType: '',
+          columnName: '單位利潤'
+        }
+      ]
+    },
     getMiniAppInfo () {
       this.isLoading = true
       getMiniAppInfo(this.miniAppId)

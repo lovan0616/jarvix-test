@@ -1,7 +1,9 @@
 <template>
   <div class="component-item">
     <span class="item-header">
-      <span class="item-title">{{ componentData.config.diaplayedName }}</span>
+      <span class="item-title">
+        {{ isControlled ? controllerMutatedQuestion : componentData.config.diaplayedName }}
+      </span>
       <div
         v-if="isEditMode"
         class="component-setting-box">
@@ -73,6 +75,10 @@ export default {
       type: Array,
       default: () => []
     },
+    yAxisControlList: {
+      type: Array,
+      default: () => []
+    },
     isEditMode: {
       type: Boolean,
       default: false,
@@ -84,7 +90,8 @@ export default {
       timeoutFunction: null,
       totalSec: 0,
       periodSec: 0,
-      isShowConfirmDelete: false
+      isShowConfirmDelete: false,
+      isControlled: false
     }
   },
   computed: {
@@ -135,8 +142,21 @@ export default {
       let filterDataFrameIds = this.filters.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
       return filterDataFrameIds.includes(this.componentData.dataFrameId)
     },
+    shouldComponentBeControlled () {
+      return this.selectedController && this.selectedController.dataFrameId === this.componentData.dataFrameId
+    },
+    selectedController () {
+      return this.yAxisControlList.find(item => item.isSelected)
+    },
     keyResultId () {
       return this.componentData.restrictedResultInfo.keyResultId || this.componentData.keyResultId
+    },
+    dataColumnAlias () {
+      return this.componentData.segmentation.transcript.subjectList[0].dataColumn.dataColumnAlias
+    },
+    controllerMutatedQuestion () {
+      if (!this.selectedController) return null
+      return this.componentData.config.question.replace(this.dataColumnAlias, this.selectedController.columnName)
     }
   },
   watch: {
@@ -144,41 +164,53 @@ export default {
     filters: {
       immediate: false,
       deep: true,
-      handler (filters) {
-
-        // 判斷 component 是否有相關欄位而需要重做 result
+      handler () {
         if (!this.shouldComponentBeFiltered) return
-
-        this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
-        this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
-
-        this.$store.dispatch('chatBot/askQuestion', {
-          question: this.componentData.config.question,
-          dataSourceId: this.componentData.dataSourceId,
-          dataFrameId: this.componentData.dataFrameId,
-          previewQuestionId: this.componentData.questionId,
-          shouldCancelToken: false
-        }).then(response => {
-          let questionId = response.questionId
-          let segmentationList = response.segmentationList
-
-          // TODO 處理 NO_ANSWER
-          if (segmentationList.length === 1) {
-            this.$store.dispatch('chatBot/askResult', {
-              questionId,
-              segmentation: segmentationList[0],
-              restrictions: this.restrictions,
-              selectedColumnList: null
-            }).then(res => {
-              this.getComponentV2(res.resultId)
-            }).catch(error => {})
-          }
-          // TODO 無結果和多個結果
-        }).catch(error => {})
+        this.askQuestion(this.componentData.config.question)
+      }
+    },
+    yAxisControlList: {
+      immediate: false,
+      deep: true,
+      handler () {
+        if (this.shouldComponentBeControlled) {
+          this.isControlled = true
+          this.askQuestion(this.controllerMutatedQuestion)
+        } else {
+          this.isControlled = false
+        }
       }
     }
   },
   methods: {
+    askQuestion (question) {
+      this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
+      this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
+
+      this.$store.dispatch('chatBot/askQuestion', {
+        question,
+        dataSourceId: this.componentData.dataSourceId,
+        dataFrameId: this.componentData.dataFrameId,
+        previewQuestionId: this.componentData.questionId,
+        shouldCancelToken: false
+      }).then(response => {
+        let questionId = response.questionId
+        let segmentationList = response.segmentationList
+
+        // TODO 處理 NO_ANSWER
+        if (segmentationList.length === 1) {
+          this.$store.dispatch('chatBot/askResult', {
+            questionId,
+            segmentation: segmentationList[0],
+            restrictions: this.restrictions,
+            selectedColumnList: null
+          }).then(res => {
+            this.getComponentV2(res.resultId)
+          }).catch(error => {})
+        }
+        // TODO 無結果和多個結果
+      }).catch(error => {})
+    },
     getComponentV2 (resultId) {
       window.clearTimeout(this.timeoutFunction)
       this.$store.dispatch('chatBot/getComponentList', resultId)
