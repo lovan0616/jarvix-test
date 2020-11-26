@@ -53,6 +53,7 @@
           />
         </div>
         <dashboard-component
+          v-if="currentComponent.init"
           :current-component="currentComponent"
           :is-addable.sync="isAddable"
           :is-loading.sync="isLoading"
