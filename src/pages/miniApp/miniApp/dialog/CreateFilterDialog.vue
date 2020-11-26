@@ -132,6 +132,10 @@ export default {
     title: {
       type: String,
       required: true
+    },
+    isSingleChoiceFilter: {
+      type: Boolean,
+      required: true
     }
   },
   data () {
@@ -217,9 +221,10 @@ export default {
       getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn, false, hasBlockClustering).then(response => {
         this.dataColumnOptionList = response.reduce((acc, cur) => {
           if (cur.statsType === 'DATETIME') return acc
+          if (this.isSingleChoiceFilter && cur.statsType !== 'CATEGORY') return acc
           acc.push({
             ...cur,
-            name: `${cur.primaryAlias || cur.name}（${cur.dataType}）`,
+            name: `${cur.primaryAlias || cur.name}（${cur.statsType}）`,
             value: cur.id,
             originalName: cur.primaryAlias  || cur.name
           })

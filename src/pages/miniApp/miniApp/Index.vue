@@ -327,6 +327,7 @@
       v-if="isShowCreateFilterDialog"
       :is-processing="isProcessing"
       :title="filterCreationDialogTitle"
+      :is-single-choice-filter="isSingleChoiceFilter"
       @closeDialog="isShowCreateFilterDialog = false"
       @filterCreated="saveCreatedFilter"
     />
