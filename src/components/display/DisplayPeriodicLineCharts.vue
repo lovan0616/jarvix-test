@@ -12,9 +12,17 @@
           :title="component.title"
           :question="component.question"
           :show-toolbox="isShowToolbox"
+          :show-warning="false"
           :height="chartHeight"
         />
       </div>
+      <!-- 週期性分析的每種圖的 warning 都會一樣，只需要顯示其中一個 -->
+      <insight-description-block
+        :title="$t('resultDescription.warning')"
+        :message-list="preriodicWarnings"
+        message-type="warning"
+        icon-name="alert-circle"
+      />
     </template>
     <no-result 
       v-else 
@@ -23,8 +31,13 @@
 </template>
 
 <script>
+import InsightDescriptionBlock from './InsightDescriptionBlock'
+
 export default {
   name: 'DisplayPeriodicLineCharts',
+  components: {
+    InsightDescriptionBlock
+  },
   props: {
     subComponents: {
       type: Array,
@@ -41,6 +54,9 @@ export default {
   computed: {
     chartHeight () {
       return this.subComponents.length > 2 ? '230px' : '420px'
+    },
+    preriodicWarnings () {
+      return this.subComponents[0].dataset.warnings
     }
   }
 }

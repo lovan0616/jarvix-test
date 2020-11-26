@@ -46,9 +46,16 @@
         </div>
       </div>
     </div>
+    <insight-description-block
+      :title="$t('resultDescription.warning')"
+      :message-list="dataset.warnings"
+      message-type="warning"
+      icon-name="alert-circle"
+    />
   </div>
 </template>
 <script>
+import InsightDescriptionBlock from './InsightDescriptionBlock'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import chartVariable from '@/styles/chart/variables.scss'
 import {
@@ -63,6 +70,9 @@ import {
 
 export default {
   name: 'DisplayPredictChart',
+  components: {
+    InsightDescriptionBlock
+  },
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     title: {
