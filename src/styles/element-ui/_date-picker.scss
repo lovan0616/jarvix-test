@@ -52,6 +52,12 @@
         &.active {
           color: #FFF;
         }
+
+        &:hover:not(.disabled):not(.active) {
+          background: transparent;
+          color: #FFF;
+          cursor: pointer;
+        }
       }
 
       &__footer {

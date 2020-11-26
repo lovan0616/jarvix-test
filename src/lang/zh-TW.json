@@ -952,7 +952,8 @@
     "allowArg": {
       "second": "{n} 秒",
       "minute": "{n} 分",
-      "hour": "{n} 時"
+      "hour": "{n} 時",
+      "week": "第 {n} 週"
     }
   },
   "aggregation": {

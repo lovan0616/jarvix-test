@@ -113,7 +113,7 @@ export default {
       return this.columnList.filter(column => column.statsType !== "DATETIME")
     },
     columnOption () {
-      return this.NoDatetimeColumn.map((column, index) => {
+      return this.columnList.map((column, index) => {
         return {
           id: column.id,
           name: column.name,
@@ -189,7 +189,8 @@ export default {
             dc_id: selectColumn.id,
             display_name: selectColumn.name,
             end: null,
-            start: null 
+            start: null,
+            timeScope: 'second'
           }
           break
         case 'NUMERIC':

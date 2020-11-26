@@ -151,6 +151,49 @@ Vue.mixin({
     timeToDateTimeSecondPrecision (time) {
       return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
+    customerTimeFormatter (time, timeScope) {
+      if(timeScope === "WEEK") return `${moment(time).format('YYYY')}-${i18n.tc('timeScopeUnit.allowArg.week', moment(time).format('WW'))}`
+      const format = this.getDatePickerOptions(timeScope).format
+      return moment(time).format(format)
+    },
+    // 在使用 TimePicker 時，把後端的 timeScope 對印到 element-ui 的 type, format
+    getDatePickerOptions (timeScope) {
+      switch(timeScope) {
+        case "SECOND":
+        case "MINUTE":
+        case "HOUR":
+          return {
+            type: "datetime",
+            format: "yyyy-MM-DD HH:mm:ss"
+          }
+        case "DAY":
+          return {
+            type: "date",
+            format: "yyyy-MM-DD"
+          }
+        case "WEEK":
+          return {
+            type: "week",
+            format: "Week WW"
+          }
+        case "MONTH":
+        case "SEASON":
+          return {
+            type: "month",
+            format: "yyyy-MM"
+          }
+        case "YEAR":
+          return {
+            type: "year",
+            format: "yyyy"
+          }
+        default:
+          return {
+            type: "datetime",
+            format: "yyyy-MM-DD HH:mm:ss"
+          }
+      }
+    },
     // 時間補十分位，為了滿足 YYYY-MM-DD 格式
     paddingZero (n) {
       return n < 10 ? '0' + n : n

@@ -75,10 +75,10 @@
               v-validate="datatimeUpperBoundRules"
               ref="datatimeUpperBound"
               v-model="subRestraint.properties.end"
-              :format="valueList.datePattern"
+              :format="datePickerOptions.format"
               :name="index + '-' + 'datatimeUpperBound'"
+              :type="datePickerOptions.type"
               value-format="timestamp"
-              type="datetime"
               class="date-picker" />
           </div>
           <div 
@@ -97,10 +97,10 @@
               v-validate="datatimeLowerBoundRules"
               ref="datatimeLowerBound"
               v-model="subRestraint.properties.start"
-              :format="valueList.datePattern"
+              :format="datePickerOptions.format"
               :name="index + '-' + 'datatimeLowerBound'"
+              :type="datePickerOptions.type"
               value-format="timestamp"
-              type="datetime"
               class="date-picker" />
           </div>
           <div 
@@ -225,14 +225,47 @@ export default {
       return 'required|decimal|validLowerBound:upperBound'
     },
     datatimeUpperBoundRules () {
-      return this.subRestraint.properties.start 
-        ? 'required|validUpperBound:datatimeLowerBound'
-        : 'required'
+      return 'required|decimal|validUpperBound:datatimeLowerBound'
     },
     datatimeLowerBoundRules () {
-      return this.subRestraint.properties.end
-        ? 'required|validLowerBound:datatimeUpperBound'
-        : 'required'
+      return 'required|decimal|validLowerBound:datatimeUpperBound'
+    },
+    datePickerOptions () {
+      let timeScope = this.subRestraint.properties.timeScope
+      switch(timeScope) {
+        case "SECOND":
+        case "MINUTE":
+        case "HOUR":
+          return {
+            type: "datetime",
+            format: "yyyy-MM-dd HH:mm:ss"
+          }
+        case "DAY":
+          return {
+            type: "date",
+            format: "yyyy-MM-dd"
+          }
+        case "WEEK":
+          return {
+            type: "week",
+            format: "Week WW"
+          }
+        case "MONTH":
+          return {
+            type: "month",
+            format: "yyyy-MM"
+          }
+        case "YEAR":
+          return {
+            type: "year",
+            format: "yyyy"
+          }
+        default:
+          return {
+            type: "datetime",
+            format: "yyyy-MM-dd HH:mm:ss"
+          }
+      }
     }
   },
   mounted () {
@@ -244,8 +277,8 @@ export default {
       this.columnId = this.subRestraint.properties['dc_id']
       getDataColumnValue(this.columnId).then(response => {
         this.statsType = response.type
-        this.valueList = this.statsType === 'BOOLEAN' && response['bool']
-          ? ["true", "false"]
+        this.valueList = this.statsType === 'BOOLEAN'
+          ? response['bool']
           : response[this.statsType.toLowerCase()]
 
         if(this.statsType === 'CATEGORY') {
