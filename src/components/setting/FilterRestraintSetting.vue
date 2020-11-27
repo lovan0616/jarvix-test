@@ -109,9 +109,6 @@ export default {
   },
   computed: {
     ...mapState('dataFrameAdvanceSetting', ['columnList']),
-    NoDatetimeColumn () {
-      return this.columnList.filter(column => column.statsType !== "DATETIME")
-    },
     columnOption () {
       return this.columnList.map((column, index) => {
         return {
