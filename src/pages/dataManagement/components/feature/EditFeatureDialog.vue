@@ -144,9 +144,13 @@
           @click="cancelEdit"
         >{{ $t('button.cancel') }}</button>
         <button 
+          :disabled="isLoading"
           class="btn btn-default"
           @click="saveFeature"
-        >{{ $t('button.create') }}</button>
+        >
+          <span v-if="isLoading"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
+          <span v-else>{{ $t('button.create') }}</span>
+        </button>
       </div>
     </div>
   </div>
@@ -197,7 +201,8 @@ export default {
         operator: null
       },
       numericColumnList: [],
-      featureFormula: []
+      featureFormula: [],
+      isLoading: false
     }
   },
   computed: {
@@ -265,6 +270,7 @@ export default {
       return true
     },
     saveFeature () {
+      if (this.isLoading) return
       this.$validator.validateAll().then(result => {
         if (result) {
           this.featureInfo.description = JSON.stringify(this.featureFormula)
@@ -279,6 +285,7 @@ export default {
 
           if (!this.validFeatureFormula()) return
 
+          this.isLoading = true
           let promise = this.featureInfo.id ? updateCustomFeature(this.featureInfo) : createCustomFeature(this.featureInfo)
           promise.then(() => {
             Message({
@@ -288,7 +295,9 @@ export default {
               showClose: true
             })
             this.$emit('update', { dataFrameId: this.featureInfo.dataFrameId })
-          }).catch(() => {})
+          }).catch(() => {}).finally(() => {
+            this.isLoading = false
+          })
         }
       })
     },
