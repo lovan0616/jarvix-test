@@ -215,14 +215,14 @@
                 </div>
                 <div class="header-right">
                   <button 
-                    style="width: 100px;" 
-                    @click="testController('單位利潤')">單位利潤</button>
+                    style="width: 80px;" 
+                    @click="testYController('利潤')">利潤</button>
                   <button 
                     style="width: 80px;" 
-                    @click="testController('成本')">成本</button>
+                    @click="testYController('成本')">成本</button>
                   <button 
                     style="width: 80px;" 
-                    @click="testController('收入')">收入</button>
+                    @click="testYController('收入')">收入</button>
                   <button
                     v-if="isEditMode"
                     class="btn-m btn-outline btn-has-icon create-component-btn" 
@@ -283,7 +283,7 @@
                     v-for="componentData in currentDashboard.components"
                     :key="componentData.id"
                     :filters="filterColumnValueInfoList"
-                    :y-axis-control-list="yAxisControlList"
+                    :y-axis-controller="yAxisController"
                     :controls="controlColumnValueInfoList"
                     :component-data="componentData"
                     :is-edit-mode="isEditMode"
@@ -531,6 +531,11 @@ export default {
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
     },
+    yAxisController () {
+      return this.yAxisControlList.length > 0
+        ? this.yAxisControlList.find(item => item.isSelected)
+        : null
+    },
     dashboardSettingOptions () {
       return [
         {
@@ -590,7 +595,7 @@ export default {
     this.getMiniAppInfo()  
   },
   methods: {
-    testController (string) {
+    testYController (string) {
       this.yAxisControlList = [
         {
           isSelected: '收入' === string,
@@ -613,14 +618,14 @@ export default {
           columnName: '成本'
         },
         {
-          isSelected: '單位利潤' === string,
+          isSelected: '利潤' === string,
           dataSourceId: 12,
           dataSourceName: '',
           dataFrameId: 45,
           dataFrameName: '',
           columnId: 689,
           dataType: '',
-          columnName: '單位利潤'
+          columnName: '利潤'
         }
       ]
     },

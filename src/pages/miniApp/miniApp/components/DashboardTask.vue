@@ -1,9 +1,9 @@
 <template>
   <div class="component-item">
     <span class="item-header">
-      <span class="item-title">
-        {{ isControlled ? controllerMutatedQuestion : componentData.config.diaplayedName }}
-      </span>
+      <span 
+        class="item-title" 
+        v-html="dashboardTaskTitle" />
       <div
         v-if="isEditMode"
         class="component-setting-box">
@@ -75,9 +75,9 @@ export default {
       type: Array,
       default: () => []
     },
-    yAxisControlList: {
-      type: Array,
-      default: () => []
+    yAxisController: {
+      type: Object,
+      default: () => {}
     },
     controls: {
       type: Array,
@@ -94,8 +94,7 @@ export default {
       timeoutFunction: null,
       totalSec: 0,
       periodSec: 0,
-      isShowConfirmDelete: false,
-      isControlled: false
+      isShowConfirmDelete: false
     }
   },
   computed: {
@@ -147,20 +146,27 @@ export default {
       return filterDataFrameIds.includes(this.componentData.dataFrameId)
     },
     shouldComponentBeControlled () {
-      return this.selectedController && this.selectedController.dataFrameId === this.componentData.dataFrameId
-    },
-    selectedController () {
-      return this.yAxisControlList.find(item => item.isSelected)
+      return Boolean(this.yAxisController && this.yAxisController.dataFrameId === this.componentData.dataFrameId)
     },
     keyResultId () {
-      return this.componentData.restrictedResultInfo.keyResultId || this.componentData.keyResultId
+      return this.componentData.tempResultInfo ? this.componentData.tempResultInfo.keyResultId : this.componentData.keyResultId
     },
     dataColumnAlias () {
       return this.componentData.segmentation.transcript.subjectList[0].dataColumn.dataColumnAlias
     },
     controllerMutatedQuestion () {
-      if (!this.selectedController) return null
-      return this.componentData.config.question.replace(this.dataColumnAlias, this.selectedController.columnName)
+      if (!this.yAxisController) return null
+      return this.componentData.question.replace(this.dataColumnAlias,this.yAxisController.columnName)
+    },
+    controllerMutatedQuestionWithStyleTag () {
+      if (!this.yAxisController) return null
+      return this.componentData.question.replace(this.dataColumnAlias, `<span style="color: #FFDF6F">${this.yAxisController.columnName}<span>`)
+    },
+    dashboardTaskTitle () {
+      if (this.isEditMode) return this.componentData.config.diaplayedName
+      return this.shouldComponentBeControlled && this.yAxisController && this.componentData.tempResultInfo
+        ? this.controllerMutatedQuestionWithStyleTag + `<span style="color: #FFF">(${this.componentData.config.diaplayedName})</span>`
+        : this.componentData.config.diaplayedName
     },
     allFilterList () {
       return [...this.filters, ...this.controls]
@@ -176,16 +182,13 @@ export default {
         this.askQuestion(this.componentData.config.question)
       }
     },
-    yAxisControlList: {
-      immediate: false,
+    yAxisController: {
+      immediate: true,
       deep: true,
       handler () {
-        if (this.shouldComponentBeControlled) {
-          this.isControlled = true
-          this.askQuestion(this.controllerMutatedQuestion)
-        } else {
-          this.isControlled = false
-        }
+        if (this.isEditMode) return
+        if (!this.shouldComponentBeControlled) return
+        this.askQuestion(this.controllerMutatedQuestion)
       }
     }
   },
@@ -235,7 +238,7 @@ export default {
             case 'Complete':
               this.totalSec = 50
               this.periodSec = 200
-              this.componentData.restrictedResultInfo = {
+              this.componentData.tempResultInfo = {
                 questionId: componentResponse.questionId,
                 resultId: componentResponse.id,
                 keyResultId: componentResponse.componentIds.key_result[0]

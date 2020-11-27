@@ -143,7 +143,8 @@ export default {
           },
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
           ...this.currentResultInfo,
-          restrictedResultInfo: {},
+          // 因應 filter, controller 條件變化，而產生的暫時的 result 資訊，不會存起來
+          tempResultInfo: null,
           relatedDashboard: {
             id: null,
             name: null
