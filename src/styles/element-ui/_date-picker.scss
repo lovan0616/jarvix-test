@@ -94,20 +94,22 @@
     }
 
     .el-date-table__row {
-      &.current div {
-        background-color: #AAA;
-      }
-
-      &:hover div {
-        background-color: #AAA;
-      }
-
       .prev-month, .next-month {
         color: #606266;
       }
 
       .available {
         color: #C0C4CC;
+      }
+    }
+
+    .is-week-mode .el-date-table__row {
+      &.current div {
+        background-color: #AAA;
+      }
+
+      &:hover div {
+        background-color: #AAA;
       }
     }
   }

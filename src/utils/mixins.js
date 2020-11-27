@@ -153,7 +153,7 @@ Vue.mixin({
     },
     customerTimeFormatter (time, timeScope) {
       if(timeScope === "WEEK") return `${moment(time).format('YYYY')}-${i18n.tc('timeScopeUnit.allowArg.week', moment(time).format('WW'))}`
-      const format = this.getDatePickerOptions(timeScope).format
+      const format = this.getDatePickerOptions(timeScope).format.replace('dd', 'DD')
       return moment(time).format(format)
     },
     // 在使用 TimePicker 時，把後端的 timeScope 對印到 element-ui 的 type, format
@@ -164,12 +164,12 @@ Vue.mixin({
         case "HOUR":
           return {
             type: "datetime",
-            format: "yyyy-MM-DD HH:mm:ss"
+            format: "yyyy-MM-dd HH:mm:ss"
           }
         case "DAY":
           return {
             type: "date",
-            format: "yyyy-MM-DD"
+            format: "yyyy-MM-dd"
           }
         case "WEEK":
           return {
@@ -190,7 +190,7 @@ Vue.mixin({
         default:
           return {
             type: "datetime",
-            format: "yyyy-MM-DD HH:mm:ss"
+            format: "yyyy-MM-dd HH:mm:ss"
           }
       }
     },

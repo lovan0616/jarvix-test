@@ -71,21 +71,16 @@
             <label class="item__label"> 
               {{ $t('message.upperBound') }}
             </label>
-            <!-- <el-date-picker
+            <el-date-picker
               v-validate="datatimeUpperBoundRules"
               ref="datatimeUpperBound"
               v-model="subRestraint.properties.end"
-              
               :name="index + '-' + 'datatimeUpperBound'"
-              type="week"
-              value-format="timestamp"
-              class="date-picker" /> -->
-            <el-date-picker
-              v-model="subRestraint.properties.end"
-              type="week"
-              value-format="timestamp"
-              placeholder="Pick a week"
-              @change="handleWeek"/>
+              :type="getDatePickerOptions(subRestraint.properties.timeScope).type"
+              :format="getDatePickerOptions(subRestraint.properties.timeScope).format"
+              :value-format="subRestraint.properties.timeScope === 'WEEK' ? '' : 'timestamp'"
+              class="date-picker"
+              @change="handleWeekEnd"/>
           </div>
           <div 
             v-show="errors.has(index + '-' + 'datatimeUpperBound')"
@@ -103,11 +98,12 @@
               v-validate="datatimeLowerBoundRules"
               ref="datatimeLowerBound"
               v-model="subRestraint.properties.start"
-              
               :name="index + '-' + 'datatimeLowerBound'"
-              type="week"
-              value-format="timestamp"
-              class="date-picker" />
+              :type="getDatePickerOptions(subRestraint.properties.timeScope).type"
+              :format="getDatePickerOptions(subRestraint.properties.timeScope).format"
+              :value-format="subRestraint.properties.timeScope === 'WEEK' ? '' : 'timestamp'"
+              class="date-picker" 
+              @change="handleWeekStart"/>
           </div>
           <div 
             v-show="errors.has(index + '-' + 'datatimeLowerBound')"
@@ -231,51 +227,10 @@ export default {
       return 'required|decimal|validLowerBound:upperBound'
     },
     datatimeUpperBoundRules () {
-      if (this.subRestraint.properties.timeScope === 'WEEK')
-        return 'required|validUpperBound:datatimeLowerBound'
-      return 'required|decimal|validUpperBound:datatimeLowerBound'
+      return 'required|validUpperBound:datatimeLowerBound'
     },
     datatimeLowerBoundRules () {
-      if (this.subRestraint.properties.timeScope === 'WEEK')
-        return 'required|validLowerBound:datatimeUpperBound'
-      return 'required|decimal|validLowerBound:datatimeUpperBound'
-    },
-    datePickerOptions () {
-      let timeScope = this.subRestraint.properties.timeScope
-      switch(timeScope) {
-        case "SECOND":
-        case "MINUTE":
-        case "HOUR":
-          return {
-            type: "datetime",
-            format: "yyyy-MM-dd HH:mm:ss"
-          }
-        case "DAY":
-          return {
-            type: "date",
-            format: "yyyy-MM-dd"
-          }
-        case "WEEK":
-          return {
-            type: "week",
-            format: "Week WW"
-          }
-        case "MONTH":
-          return {
-            type: "month",
-            format: "yyyy-MM"
-          }
-        case "YEAR":
-          return {
-            type: "year",
-            format: "yyyy"
-          }
-        default:
-          return {
-            type: "datetime",
-            format: "yyyy-MM-dd HH:mm:ss"
-          }
-      }
+      return 'required|validLowerBound:datatimeUpperBound'
     }
   },
   mounted () {
@@ -359,13 +314,17 @@ export default {
     deleteSubRestraint () {
       this.$emit('delete')
     },
-    handleWeek () {
+    /* timePicker 單位是 week 時，不能使用 value-format 
+     * https://github.com/ElemeFE/element/issues/8783
+    */
+    handleWeekEnd (time) {
       if(this.subRestraint.properties.timeScope !== 'WEEK') return
-
-      // this.weekVal= moment(this.weekNum).utcOffset(480).format("WW")
-      // console.log(this.weekVal)  
-      // this.$emit('transferweekNum',this.weekVal)
-    }
+      this.subRestraint.properties.end = time.getTime()
+    },
+    handleWeekStart (time) {
+      if(this.subRestraint.properties.timeScope !== 'WEEK') return
+      this.subRestraint.properties.start = time.getTime()
+    },
   },
 
 }
