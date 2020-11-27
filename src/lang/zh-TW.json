@@ -785,7 +785,9 @@
     "relatedDashboard": "關聯看板",
     "confirmDeletingComponentRelation": "確定刪除此元件與分析看板 \"{name}\" 的關聯？",
     "createFilterCondition": "新增篩選條件",
-    "createPanelControl": "新增看板控制項"
+    "createPanelControl": "新增看板控制項",
+    "createYAxisController": "新增 Y 軸控制器",
+    "createSingleYAxisController": "新增一個 Y 軸控制器"
   },
   "clustering": {
     "cluster": "群體",
