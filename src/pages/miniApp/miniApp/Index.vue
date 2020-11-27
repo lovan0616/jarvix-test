@@ -233,7 +233,14 @@
                   <button
                     v-if="isEditMode"
                     class="btn-m btn-outline btn-has-icon create-filter-btn" 
-                    @click="isShowCreateFilterDialog = true">
+                    @click="createSingleChoiceFilter">
+                    <svg-icon icon-class="plus"/>
+                    新增看板控制項
+                  </button>
+                  <button
+                    v-if="isEditMode"
+                    class="btn-m btn-outline btn-has-icon create-filter-btn" 
+                    @click="createMulitipleChoiceFilter">
                     <svg-icon icon-class="plus"/>
                     新增篩選條件
                   </button>
@@ -250,13 +257,25 @@
                   </div>
                 </div>
               </div>
+              <!--Control panel-->
+              <filter-control
+                v-if="controlColumnValueInfoList.length > 0"
+                :key="'control' + currentDashboardId"
+                :is-edit-mode="isEditMode"
+                :initial-filter-list.sync="controlColumnValueInfoList"
+                :is-single-choice-filter="true"
+                class="mini-app__dashboard-filter mini-app__dashboard-filter--top"
+                @removeFilter="removeFilter($event, 'single')"
+              />
+              <!--Filter Panel-->
               <filter-control
                 v-if="filterColumnValueInfoList.length > 0"
-                :key="currentDashboardId"
+                :key="'filter' + currentDashboardId"
                 :is-edit-mode="isEditMode"
                 :initial-filter-list.sync="filterColumnValueInfoList"
-                class="mini-app__dashboard-filter"
-                @removeFilter="removeFilter"
+                :is-single-choice-filter="false"
+                class="mini-app__dashboard-filter mini-app__dashboard-filter--bottom"
+                @removeFilter="removeFilter($event, 'multiple')"
               />
               <div class="mini-app__dashbaord-components">
                 <template v-if="currentDashboard.components.length > 0">
@@ -265,6 +284,7 @@
                     :key="componentData.id"
                     :filters="filterColumnValueInfoList"
                     :y-axis-control-list="yAxisControlList"
+                    :controls="controlColumnValueInfoList"
                     :component-data="componentData"
                     :is-edit-mode="isEditMode"
                     @redirect="currentDashboardId = $event"
@@ -316,6 +336,8 @@
     <create-filter-dialog
       v-if="isShowCreateFilterDialog"
       :is-processing="isProcessing"
+      :title="filterCreationDialogTitle"
+      :is-single-choice-filter="isSingleChoiceFilter"
       @closeDialog="isShowCreateFilterDialog = false"
       @filterCreated="saveCreatedFilter"
     />
@@ -456,7 +478,10 @@ export default {
           dataType: '',
           columnName: '成本'
         }
-      ]
+      ],
+      controlColumnValueInfoList: [],
+      isSingleChoiceFilter: false,
+      filterCreationDialogTitle: null
     }
   },
   computed: {
@@ -538,9 +563,28 @@ export default {
       return this.$route.params.mini_app_id
     },
     currentFilterList () {
-      const currentDashboard = this.miniApp.settings.editModeData.dashboards.find(dashboard => dashboard.id === this.currentDashboardId)
-      return currentDashboard ? currentDashboard.filterList : []
-    }                        
+      return this.currentDashboard ? this.currentDashboard.filterList : []
+    },
+    currentControlList () {
+      return this.currentDashboard ? this.currentDashboard.controlList : []
+    },
+    currentModeDataType () {
+      return this.isViewMode ? 'viewModeData' : 'editModeData'
+    }                       
+  },
+  watch: {
+    filterColumnValueInfoList: {
+      deep: true,
+      handler (filterList) {
+        this.miniApp.settings[this.currentModeDataType].dashboards[this.currentDashboardIndex].filterList = filterList
+      }
+    },
+    controlColumnValueInfoList: {
+      deep: true,
+      handler (controlList) {
+        this.miniApp.settings[this.currentModeDataType].dashboards[this.currentDashboardIndex].controlList = controlList
+      }
+    }
   },
   created () {
     this.getMiniAppInfo()  
@@ -616,8 +660,8 @@ export default {
         case 'CATEGORY':
           filter = {
             ...filter,
-            dataValues: [],
-            dataValueOptionList: []
+            dataValues: filterInfo.dataValues || [],
+            dataValueOptionList: filterInfo.dataValueOptionList || []
           }
           break
         // case 'DATETIME':
@@ -633,10 +677,10 @@ export default {
         case 'NUMERIC':
           filter = {
             ...filter,
-            dataMax: null,
-            dataMin: null,
-            start: null,
-            end: null
+            dataMax: filterInfo.dataMax || null,
+            dataMin: filterInfo.dataMin || null,
+            start: filterInfo.start || null,
+            end: filterInfo.end || null
           }
           break
       }
@@ -644,13 +688,15 @@ export default {
     },
     initFilters () {
       this.filterColumnValueInfoList = this.currentFilterList.map(filter => this.formatRestraint(filter))
+      this.controlColumnValueInfoList = this.currentControlList.map(filter => this.formatRestraint(filter))
     },
     createDashboard (newDashBoardInfo) {
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
       updatedMiniAppData.settings.editModeData.dashboards.push({
         ...newDashBoardInfo,
         components: [],
-        filterList: []
+        filterList: [],
+        controlList: []
       })
       this.currentDashboardId = newDashBoardInfo.id
       this.initFilters()
@@ -893,10 +939,6 @@ export default {
         .finally(() => this.isShowDeleteComponentDialog = false)
     },
     updateAppSetting (appInfo, miniAppId = this.miniAppId) {
-      // 將各 component 中暫存，僅供操作瀏覽用 restrictedInfo 資訊清除
-      appInfo.settings.editModeData.dashboards.forEach(d => {
-        d.components.forEach(c => c.restrictedResultInfo = {})
-      })
       return updateAppSetting(miniAppId, { ...appInfo })
     },
     activeCertainDashboard (dashboardId) {
@@ -909,7 +951,15 @@ export default {
       this.isProcessing = true
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
-      editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList.push(...filterList)
+
+      // 決定要新增到控制項或篩選條件中
+      if (this.isSingleChoiceFilter) {
+        editedMiniApp.settings.editModeData.dashboards[dashboradIndex].controlList.push(...filterList)
+      } else {
+        editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList.push(...filterList)
+      }
+
+      // 更新 app 資料
       this.updateAppSetting(editedMiniApp)
         .then(() => {
           this.isShowCreateFilterDialog = false
@@ -922,17 +972,35 @@ export default {
       if (eventName === 'DeleteComponent') this.currentComponentId = id
       if (eventName === 'CreateComponentRelation') this.currentComponentId = id
     },
-    removeFilter (updatedFilterList) {
+    removeFilter (updatedFilterList, type) {
       this.isProcessing = true
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
-      editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList = updatedFilterList
+
+      // 決定要新增到控制項或篩選條件中
+      if (type === 'single') {
+        editedMiniApp.settings.editModeData.dashboards[dashboradIndex].controlList = updatedFilterList
+      } else {
+        editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList = updatedFilterList
+      }
+
+      // 更新 app
       this.updateAppSetting(editedMiniApp)
         .then(() => {
           this.isShowCreateFilterDialog = false
           this.miniApp = editedMiniApp
         })
         .finally(() => this.isProcessing = false)
+    },
+    createMulitipleChoiceFilter () {
+      this.isShowCreateFilterDialog = true
+      this.isSingleChoiceFilter = false
+      this.filterCreationDialogTitle = this.$t('miniApp.createFilterCondition')
+    },
+    createSingleChoiceFilter () {
+      this.isShowCreateFilterDialog = true
+      this.isSingleChoiceFilter = true
+      this.filterCreationDialogTitle = this.$t('miniApp.createPanelControl')
     }
   }
 }
@@ -977,7 +1045,7 @@ export default {
   }
   &__nav {
     position: relative;
-    z-index: 3;
+    z-index: 4;
     flex: 0 0 56px;
     padding: 0 24px;
     display: flex;
@@ -1112,7 +1180,7 @@ export default {
     flex-direction: column;
     &-header {
       position: relative;
-      z-index: 2;
+      z-index: 3;
       flex: 0 0 30px;
       display: flex;
       justify-content: space-between;
@@ -1157,7 +1225,7 @@ export default {
           position: relative;
           @include dropdown-select-controller;
           .dropdown-select {
-            z-index: 1;
+            z-index: 2;
             /deep/ .dropdown-select-box {
               box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
               top: calc(50% + 17px);
@@ -1303,6 +1371,17 @@ export default {
           display: none;
         }
       }
+    }
+  }
+
+  &__dashboard-filter {
+    &--top {
+      z-index: 2;
+      margin-bottom: 12px;
+    }
+    &--bottom {
+      z-index: 1;
+      margin-bottom: 20px;
     }
   }
 }

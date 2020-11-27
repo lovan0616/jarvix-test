@@ -1,16 +1,17 @@
 <template>
   <section
-    :class="{ 'has-background': isEditMode }"
+    :class="{ 'editing': isEditMode }"
     class="filter-control"
   >
     <svg-icon
-      icon-class="filter-outline" 
+      :icon-class="isSingleChoiceFilter ? 'adjuster' : 'filter-outline'" 
       class="filter-control__filter-icon"/>
     <single-filter-badge
       v-for="(filter, index) in filterList"
       :key="index"
       :initial-filter="filter"
       :is-edit-mode="isEditMode"
+      :is-single-choice-filter="isSingleChoiceFilter"
       @updateFilter="updateFilter($event, index)"
       @removeFilter="removeFilter(index)"
     />
@@ -33,6 +34,10 @@ export default {
     isEditMode: {
       type: Boolean,
       required: true
+    },
+    isSingleChoiceFilter: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -71,12 +76,9 @@ export default {
 <style lang="scss" scoped>
 .filter-control {
   position: relative;
-  z-index: 1;
-  padding: 16px 19px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   margin-right: 20px;
-  margin-bottom: 16px;
   display: flex;
   align-items: center;
 
@@ -84,7 +86,8 @@ export default {
     margin-right: 11px;
   }
 
-  &.has-background {
+  &.editing {
+    padding: 16px 19px;
     background: #1C292B;
   }
 

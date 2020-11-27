@@ -79,6 +79,10 @@ export default {
       type: Array,
       default: () => []
     },
+    controls: {
+      type: Array,
+      default: () => []
+    },
     isEditMode: {
       type: Boolean,
       default: false,
@@ -96,7 +100,7 @@ export default {
   },
   computed: {
     restrictions () {
-      return this.filters
+      return this.allFilterList
         .filter(filter => {
           if (filter.statsType === 'NUMERIC') return filter.start && filter.end
           return filter.dataValues.length > 0
@@ -157,11 +161,14 @@ export default {
     controllerMutatedQuestion () {
       if (!this.selectedController) return null
       return this.componentData.config.question.replace(this.dataColumnAlias, this.selectedController.columnName)
+    },
+    allFilterList () {
+      return [...this.filters, ...this.controls]
     }
   },
   watch: {
     // 當 Dashboard的 fitler 變動時，由元件內部去重新問問題
-    filters: {
+    allFilterList: {
       immediate: false,
       deep: true,
       handler () {

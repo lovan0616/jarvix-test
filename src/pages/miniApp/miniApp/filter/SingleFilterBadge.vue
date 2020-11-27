@@ -83,7 +83,7 @@
       </template>
     </div>
     <!--Enum-->
-    <div 
+    <div
       v-if="isShowFilterPanel && (filter.statsType === 'CATEGORY' || filter.statsType === 'BOOLEAN')"
       class="filter__selector-panel selector"
       @click.stop>
@@ -106,18 +106,34 @@
         </div>
         <div class="selector__list-block">
           <template v-for="(value, index) in filter.dataValueOptionList">
-            <label 
+            <!--Control panel filter-->
+            <label
+              v-if="isSingleChoiceFilter"
+              :key="index"
+              name="control"
+              class="radio">
+              <input
+                :checked="checkValueIsChecked(value.name)"
+                class="radio__input"
+                type="radio"
+                @input="updateSingleEnumFilteredColumnValue($event, value.name)"
+              >
+              <span class="radio__name">{{ value.name }}</span>
+            </label>
+            <!--: Multiple choice Filter-->
+            <label
+              v-else
               :key="index"
               class="checkbox">
               <div class="checkbox-label">
                 <input
                   :checked="checkValueIsChecked(value.name)"
                   type="checkbox"
-                  @input="updateEnumFilteredColumnValue($event, value.name)"
+                  @input="updateMultipleEnumFilteredColumnValue($event, value.name)"
                 >
                 <div class="checkbox-square"/>
               </div>
-              <span>{{ value.name }}</span>
+              <span class="radio__name">{{ value.name }}</span>
             </label>
           </template>
         </div>
@@ -140,6 +156,10 @@ export default {
     isEditMode: {
       type: Boolean,
       required: true
+    },
+    isSingleChoiceFilter: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -163,7 +183,8 @@ export default {
       if (this.isEditMode) return this.filter.columnName 
       if (this.filter.statsType === 'CATEGORY' || this.filter.statsType === 'BOOLEAN') {
         const selectedAmount = this.filter.dataValues.length
-        return selectedAmount === 0 ? this.filter.columnName :`${this.filter.columnName} (${ this.filter.dataValues.length})`
+        if (selectedAmount === 0) return this.filter.columnName
+        return this.isSingleChoiceFilter ? `${this.filter.columnName}: ${ this.filter.dataValues[0] }` : `${this.filter.columnName} (${ this.filter.dataValues.length })`
       } else if (this.filter.statsType === 'NUMERIC') {
         return this.filter.start === null || this.filter.start === '' ? this.filter.columnName :`${this.filter.columnName} (${ this.filter.start} - ${this.filter.end})`
       }
@@ -208,10 +229,10 @@ export default {
 
           if (statsType === 'CATEGORY' && !valueList) return this.searchValue()
 
-          this.filter.dataValueOptionList = valueList.map(value => ({
+          this.filter.dataValueOptionList = valueList.map((value, index) => ({
             value: value,
             name: value,
-            isSelected: this.initialFilter.dataValues.includes(value)
+            isSelected: this.isSingleChoiceFilter && this.filter.dataValues.length === 0 ? index === 0 : this.filter.dataValues.includes(value)
           }))
           return this.isLoading = false
 
@@ -222,11 +243,11 @@ export default {
     searchValue () {
       this.isLoading = true
       dataValueFuzzySearch(this.filter.columnId, this.searchInput)
-        .then(response => {
+        .then((response, index) => {
           this.filter.dataValueOptionList = response.fuzzySearchResult.map(value => ({
             value: value,
             name: value,
-            isSelected: this.initialFilter.dataValues.includes(value)
+            isSelected: this.isSingleChoiceFilter && this.filter.dataValues.length === 0 ? index === 0 : this.filter.dataValues.includes(value)
           }))
           this.isLoading = false
         })
@@ -256,13 +277,17 @@ export default {
     createTempFilter () {
       this.tempFilter = JSON.parse(JSON.stringify(this.filter))
     },
-    updateEnumFilteredColumnValue ({ target: { checked } }, columnValue) {
+    updateMultipleEnumFilteredColumnValue ({ target: { checked } }, columnValue) {
       const isInDataValueList = this.filter.dataValues.includes(columnValue)
       if (checked && !isInDataValueList) {
         this.filter.dataValues.push(columnValue)
       } else {
         this.filter.dataValues = this.filter.dataValues.filter(value => value !== columnValue)
       }
+      this.$emit('updateFilter', this.filter)
+    },
+    updateSingleEnumFilteredColumnValue ({ target: { checked } }, columnValue) {
+      this.filter.dataValues = [columnValue]
       this.$emit('updateFilter', this.filter)
     },
     checkValueIsChecked (value) {
@@ -443,6 +468,28 @@ export default {
         font-size: 14px;
         line-height: 16px;
         color: #CCC;
+      }
+    }
+
+    .radio {
+      padding: 8px 12px;
+      min-height: 32px;
+      cursor: pointer;
+      display: block;
+      font-size: 14px;
+      color: #CCCCCC;
+
+      &__input {
+        display: none;
+        &:checked {
+          & + .radio__name {
+            color: #2AD2E2;
+          }
+        }
+      }
+
+      &:hover {
+        color: #2AD2E2;
       }
     }
   }
