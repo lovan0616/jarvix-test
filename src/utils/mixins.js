@@ -177,7 +177,7 @@ Vue.mixin({
             format: "yyyy-W WW"
           }
         case "MONTH":
-        case "SEASON":
+        case "QUARTER":
           return {
             type: "month",
             format: "yyyy-MM"
