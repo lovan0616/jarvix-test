@@ -250,8 +250,8 @@ export default {
       const hasBlockClustering = false
       getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn, false, hasBlockClustering).then(response => {
         this.dataColumnOptionList = response.reduce((acc, cur) => {
-          if (cur.statsType === 'DATETIME') return acc
-          if (this.isSingleChoiceFilter && cur.statsType !== 'CATEGORY') return acc
+          // 篩選不同情境下顯示的選項
+          if (this.isUnavailableOption(cur)) return acc
           acc.push({
             ...cur,
             name: `${cur.primaryAlias || cur.name}（${cur.statsType}）`,
@@ -262,7 +262,13 @@ export default {
         }, [])
       })
       .finally(() => this.isLoading = false)
+      // 預先新增一個欄位選擇器
       if (!this.isYAxisController) this.addNewColumnCard()
+    },
+    isUnavailableOption (option) {
+      return option.statsType === 'DATETIME'
+        || this.isSingleChoiceFilter && option.statsType !== 'CATEGORY'
+        || this.isYAxisController && option.statsType !== 'NUMERIC'
     },
     addNewColumnCard () {
       this.filterInfoList.push({
