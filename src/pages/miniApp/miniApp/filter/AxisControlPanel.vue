@@ -4,7 +4,7 @@
     class="axis-control"
   >
     <svg-icon
-      icon-class="adjuster" 
+      icon-class="adjuster-horizontal" 
       class="axis-control__filter-icon"/>
     <single-axis-control-badge
       v-for="(controlOptionList, index) in controlList"

@@ -86,7 +86,8 @@ export default {
     displayName () {
       if (this.isEditMode) return '自變項目'
       const selectedOption = this.initialControlOptionList.find(option => option.isSelected)
-      return `自變項目: ${selectedOption ? selectedOption.columnName : this.initialControlOptionList[0].columnName}`
+      // 設定預設前，會沒有被選取的對象，因此需暫時給定空值
+      return `自變項目: ${selectedOption ? selectedOption.columnName : ''}`
     }
   },
   watch: {
@@ -115,14 +116,16 @@ export default {
       this.controlOptionList = this.initialControlOptionList.map((option, index) => ({
         value: option.columnName,
         name: option.columnName,
-        isSelected: selectedOption ? option.isSelected : index === 0
+        isSelected: option.isSelected
       }))
+      // 控制項預設為第一個值，各組建結果需要立即套用該控制項
+      if (!selectedOption) this.updateControlOptionList(null, 0)
     },
     toggleControlOptionList () {
       if (this.isEditMode) return
       this.isShowControlOptionList = !this.isShowControlOptionList
     },
-    updateControlOptionList ({ target: { checked } }, index, columnValue) {
+    updateControlOptionList (event, index) {
       const updatedOptionList = this.initialControlOptionList.map((option, optionIndex) => ({
         ...option,
         isSelected: optionIndex === index
@@ -271,41 +274,6 @@ export default {
     &::-webkit-scrollbar-thumb {
       background-color: rgba(0, 0, 0, 0.7);
     }  
-
-    .checkbox {
-      display: flex;
-      flex-direction: row;
-      padding: 8px 12px;
-      min-height: 32px;
-      cursor: pointer;
-
-      &:hover {
-        background-color: rgba(0, 0, 0, .6);
-      }
-
-      &:not(:first-child) {
-        border-top: 1px solid #3F4546;
-      }
-
-      &-label {
-        margin: 0 22px 0 2px;
-
-        & input:checked ~ .checkbox-square {
-          background: #777777;
-          border-color: #DCDFE6;
-        }
-
-        & input:disabled ~ .checkbox-square:after {
-          border-color: #C0C4CC;
-        }
-      }
-
-      & > span {
-        font-size: 14px;
-        line-height: 16px;
-        color: #CCC;
-      }
-    }
 
     .radio {
       padding: 8px 12px;
