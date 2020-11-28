@@ -199,6 +199,7 @@ export default {
     },
     searchInput () {
       this.searchValue()
+        .finally(() => this.isLoading = false)
     }
   },
   mounted () {
@@ -214,43 +215,47 @@ export default {
       if (!this.isShowFilterPanel) return false
       if (!this.$el.contains(evt.target))  this.toggleFilterPanel()
     },
-    fetchData () {
+    async fetchData () {
       this.isLoading = true
-      getDataColumnValue(this.filter.columnId)
+
+      try {
+        if (this.filter.statsType === 'NUMERIC') return await this.getDataColumnValue()
+
+        // category 和 boolean 欄位如果直接打 getDataColumnValue api 會取到 alias，所以直接打搜尋 api 就能避免
+        await this.searchValue()
+
+        // 控制項須確保至少選定其中一個項目，如果沒有則預設第一個選項
+        const isNeedDefaultSelect = this.isSingleChoiceFilter && this.filter.dataValues.length === 0
+        if (isNeedDefaultSelect) this.updateSingleEnumFilteredColumnValue(null, this.filter.dataValueOptionList[0].name)
+      } finally {
+        this.isLoading = false
+      }
+    },
+    getDataColumnValue () {
+      return getDataColumnValue(this.filter.columnId)
         .then(response => {
           const statsType = response.type
-          const valueList = statsType === 'BOOLEAN' ? response['bool'] : response[statsType.toLowerCase()]
+          const valueList = response[statsType.toLowerCase()]
 
           if (statsType === 'NUMERIC') {
             this.filter.dataMin = valueList.min
             this.filter.dataMax = valueList.max
-            return this.isLoading = false
+            return 
           }
-
-          if (statsType === 'CATEGORY' && !valueList) return this.searchValue()
-
-          this.filter.dataValueOptionList = valueList.map((value, index) => ({
-            value: value,
-            name: value,
-            isSelected: this.isSingleChoiceFilter && this.filter.dataValues.length === 0 ? index === 0 : this.filter.dataValues.includes(value)
-          }))
-          return this.isLoading = false
-
           // TODO: 實作 date time
         })
-        .catch(() => this.isLoading = false)
     },
     searchValue () {
-      this.isLoading = true
-      dataValueFuzzySearch(this.filter.columnId, this.searchInput)
+      // this.isLoading = true
+      return dataValueFuzzySearch(this.filter.columnId, this.searchInput)
         .then((response, index) => {
           this.filter.dataValueOptionList = response.fuzzySearchResult.map(value => ({
             value: value,
             name: value,
-            isSelected: this.isSingleChoiceFilter && this.filter.dataValues.length === 0 ? index === 0 : this.filter.dataValues.includes(value)
+            isSelected: this.filter.dataValues.includes(value)
           }))
-          this.isLoading = false
         })
+        // .finally(() => this.isLoading = false)
     },
     toggleFilterPanel () {
       if (this.isEditMode) return
@@ -286,7 +291,7 @@ export default {
       }
       this.$emit('updateFilter', this.filter)
     },
-    updateSingleEnumFilteredColumnValue ({ target: { checked } }, columnValue) {
+    updateSingleEnumFilteredColumnValue (event, columnValue) {
       this.filter.dataValues = [columnValue]
       this.$emit('updateFilter', this.filter)
     },
