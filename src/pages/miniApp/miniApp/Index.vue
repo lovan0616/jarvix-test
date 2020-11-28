@@ -221,26 +221,27 @@
                     <svg-icon icon-class="plus"/>
                     {{ $t('miniApp.createComponent') }}
                   </button>
-                  <button
+                  <custom-dropdown-select
                     v-if="isEditMode"
-                    class="btn-m btn-outline btn-has-icon create-filter-btn" 
-                    @click="createSingleChoiceFilter">
-                    <svg-icon icon-class="plus"/>
-                    {{ $t('miniApp.createPanelControl') }}
-                  </button>
+                    :data-list="controlTypeOptions"
+                    :has-bullet-point="false"
+                    trigger="hover"
+                    @select="createControlType"
+                  >
+                    <template #display>
+                      <button
+                        class="btn-m btn-outline btn-has-icon create-filter-btn" 
+                        @click.prevent>
+                        <svg-icon icon-class="plus"/>看板控制項
+                      </button>
+                    </template>
+                  </custom-dropdown-select>
                   <button
                     v-if="isEditMode"
                     class="btn-m btn-outline btn-has-icon create-filter-btn" 
                     @click="createMulitipleChoiceFilter">
                     <svg-icon icon-class="plus"/>
                     {{ $t('miniApp.createFilterCondition') }}
-                  </button>
-                  <button
-                    v-if="isEditMode"
-                    class="btn-m btn-outline btn-has-icon create-filter-btn" 
-                    @click="createYAxisController">
-                    <svg-icon icon-class="plus"/>
-                    {{ $t('miniApp.createYAxisController') }}
                   </button>
                   <div
                     v-if="isEditMode"
@@ -545,6 +546,18 @@ export default {
           title: 'button.delete',
           icon: 'delete',
           dialogName: 'DeleteComponent'
+        }
+      ]
+    },
+    controlTypeOptions () {
+      return [
+        {
+          name: this.$t('miniApp.generalControl'),
+          id: 'SingleChoiceFilter'
+        },
+        {
+          name: this.$t('miniApp.yAxisControl'),
+          id: 'YAxisController'
         }
       ]
     },
@@ -1000,6 +1013,9 @@ export default {
       this.isShowCreateFilterDialog = true
       this.isYAxisController = true
       this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
+    },
+    createControlType (type) {
+      this[`create${type}`]()
     }
   }
 }
@@ -1247,6 +1263,41 @@ export default {
       }
       .cancel-btn {
         margin-left: 6px;
+      }
+
+      /deep/ .dropdown {
+        &__list-container {
+          left: 0;
+          top: calc(100% + 10px);
+          text-align: left;
+          width: 136px;
+
+          &::before {
+            position: absolute;
+            content: "";
+            bottom: 100%;
+            left: 0;
+            width: 100%;
+            background-color: transparent;
+            height: 12px;
+          }
+
+          &::after {
+            position: absolute;
+            content: "";
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom: 8px solid #2B3839;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+          }
+        }
+        &__link {
+          line-height: 39px;
+          font-weight: 600;
+          font-size: 14px;
+        }
       }
     }
 
