@@ -219,7 +219,7 @@
                     class="btn-m btn-outline btn-has-icon create-component-btn" 
                     @click="isShowCreateComponentDialog = true">
                     <svg-icon icon-class="plus"/>
-                    {{ $t('miniApp.createComponent') }}
+                    {{ $t('miniApp.component') }}
                   </button>
                   <custom-dropdown-select
                     v-if="isEditMode"
@@ -241,7 +241,7 @@
                     class="btn-m btn-outline btn-has-icon create-filter-btn" 
                     @click="createMulitipleChoiceFilter">
                     <svg-icon icon-class="plus"/>
-                    {{ $t('miniApp.createFilterCondition') }}
+                    {{ $t('miniApp.filterCondition') }}
                   </button>
                   <div
                     v-if="isEditMode"
@@ -1260,6 +1260,9 @@ export default {
       }
       .create-filter-btn {
         margin-left: 8px;
+        .svg-icon {
+          width: 24px;
+        }
       }
       .cancel-btn {
         margin-left: 6px;
@@ -1270,6 +1273,7 @@ export default {
           left: 0;
           top: calc(100% + 10px);
           text-align: left;
+          z-index: 1;
           width: 136px;
 
           &::before {
