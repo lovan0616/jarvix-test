@@ -784,7 +784,8 @@
     "createRelation": "建立關聯",
     "relatedDashboard": "關聯看板",
     "confirmDeletingComponentRelation": "確定刪除此元件與分析看板 \"{name}\" 的關聯？",
-    "componentSetting": "元件設定"
+    "componentSetting": "元件設定",
+    "updateFrequency": "更新頻率"
   },
   "clustering": {
     "cluster": "群體",

@@ -300,7 +300,7 @@
     />
     <create-component-dialog
       v-if="isShowCreateComponentDialog"
-      :current-component="currentComponent"
+      :initial-current-component="currentComponent"
       @close="closeCreateComponentDialog"
       @create="createComponent"
       @updateSetting="updateComponentSetting"
@@ -613,11 +613,11 @@ export default {
     },
     updateComponentSetting (updatedComponentInfo) {
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
-      updatedMiniAppData.settings.editModeData.dashboards.forEach(board => {
+      updatedMiniAppData.settings.editModeData.dashboards.forEach((board, boardIndex) => {
         if (board.id === this.currentDashboardId) {
-          board.components.forEach(component => {
+          board.components.forEach((component, componentIndex) => {
             if (component.id === this.currentComponentId) {
-              component = updatedComponentInfo
+              updatedMiniAppData.settings.editModeData.dashboards[boardIndex].components[componentIndex] = updatedComponentInfo
             }
           })
         }
