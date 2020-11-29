@@ -99,7 +99,6 @@ export default {
     },
   },
   mounted () {
-    // this.controlOptionList = JSON.parse(JSON.stringify(this.initialControlOptionList))
     this.formatOptionList()
     document.addEventListener('click', this.autoHide, false)
   },
@@ -118,8 +117,8 @@ export default {
         name: option.columnName,
         isSelected: option.isSelected
       }))
-      // 控制項預設為第一個值，各組建結果需要立即套用該控制項
-      if (!selectedOption) this.updateControlOptionList(null, 0)
+      // preview 和 view 模式下，控制項預設為第一個值，各組建結果需要立即套用該控制項
+      if (!this.isEditMode && !selectedOption) this.updateControlOptionList(null, 0)
     },
     toggleControlOptionList () {
       if (this.isEditMode) return

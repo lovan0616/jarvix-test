@@ -224,9 +224,9 @@ export default {
         // category 和 boolean 欄位如果直接打 getDataColumnValue api 會取到 alias，所以直接打搜尋 api 就能避免
         await this.searchValue()
 
-        // 控制項須確保至少選定其中一個項目，如果沒有則預設第一個選項
+        // preview 和 view 模式下，控制項須確保至少選定其中一個項目，如果沒有則預設第一個選項
         const isNeedDefaultSelect = this.isSingleChoiceFilter && this.filter.dataValues.length === 0
-        if (isNeedDefaultSelect) this.updateSingleEnumFilteredColumnValue(null, this.filter.dataValueOptionList[0].name)
+        if (!this.isEditMode && isNeedDefaultSelect) this.updateSingleEnumFilteredColumnValue(null, this.filter.dataValueOptionList[0].name)
       } finally {
         this.isLoading = false
       }
