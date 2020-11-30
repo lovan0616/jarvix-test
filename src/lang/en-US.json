@@ -149,6 +149,8 @@
     "eitherBoundIsRequired": "At least one of the upper and lower bound should be set.",
     "upperBoundShouldBeLargerThanLowerBound": "Upper bound value should be larger than lower bound value",
     "lowerBoundShouldBeSmallerThanUpperBound": "Lower bound value should be smaller than upper bound value",
+    "endTimeShouldBeLargerThanStartTime": "End time should be larger than start Time",
+    "StartTimeShouldBeSmallerThanEndTime": "Start time should be smaller than end Time",
     "and": "and",
     "upperBound": "Upper bound value",
     "lowerBound": "Lower bound value",

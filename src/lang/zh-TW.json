@@ -149,6 +149,8 @@
     "eitherOneIsRequired": "至少需填寫一個",
     "upperBoundShouldBeLargerThanLowerBound": "上限值需大於下限值",
     "lowerBoundShouldBeSmallerThanUpperBound": "下限值需小於上限值",
+    "endTimeShouldBeLargerThanStartTime": "結束時間需大於開始時間",
+    "StartTimeShouldBeSmallerThanEndTime": "開始時間需小於結束時間",
     "and": "和",
     "upperBound": "上限",
     "lowerBound": "下限",

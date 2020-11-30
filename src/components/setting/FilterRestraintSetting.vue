@@ -142,6 +142,12 @@ export default {
       this.tempRestraintList = JSON.parse(JSON.stringify(this.restraint.restraints))
     } else {
       this.tempRestraintList = [JSON.parse(JSON.stringify(this.restraint))]
+      this.tempRestraintList.forEach(restraint => {
+        if(restraint.properties.data_type === 'datetime'){
+          restraint.properties.start = this.customerTimeFormatter(restraint.properties.start, 'SECOND')
+          restraint.properties.end = this.customerTimeFormatter(restraint.properties.end, 'SECOND')
+        }
+      })
     }
   },
   destroyed () {
