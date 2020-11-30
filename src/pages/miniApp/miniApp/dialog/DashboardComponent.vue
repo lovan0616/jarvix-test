@@ -6,7 +6,7 @@
       class="layout-spinner"
       size="50"
     />
-    <template v-else>
+    <template v-else-if="isShowKeyResultContent">
       <!-- 有 key result -->
       <div 
         v-if="computedKeyResultId" 
@@ -75,10 +75,13 @@ export default {
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo']),
     ...mapGetters('dataSource', ['filterRestrictionList']),
     computedKeyResultId () {
-      return (this.resultInfo && this.resultInfo.key_result[0]) || this.currentComponent.keyResultId
+      return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0]) || this.currentComponent.keyResultId
     },
     computedQuestion () {
       return this.question || this.currentComponent.question
+    },
+    isShowKeyResultContent () {
+      return this.computedKeyResultId || this.layout
     }
   },
   watch: {

@@ -53,7 +53,6 @@
           />
         </div>
         <dashboard-component
-          
           :current-component="currentComponent"
           :is-addable.sync="isAddable"
           :is-loading.sync="isLoading"
