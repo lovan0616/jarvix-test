@@ -59,7 +59,9 @@
     "emptyValueMsg": "*空值将採用当前资料的上下限。",
     "chooseValue": "选择资料",
     "selectDate": "选择日期",
-    "selectTime": "选择时间"
+    "selectTime": "选择时间",
+    "start":"开始",
+    "end": "結束"
   },
   "message": {
     "joinTableBuilding": "资料表建置中，建置完成即可使用",

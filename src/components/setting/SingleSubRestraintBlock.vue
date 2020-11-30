@@ -69,13 +69,14 @@
           class="datetime-block__item item">
           <div class="item__input-block">
             <label class="item__label"> 
-              {{ $t('message.upperBound') }}
+              {{ $t('dataFrameAdvanceSetting.end') }}
             </label>
             <el-date-picker
               v-validate="datatimeUpperBoundRules"
               ref="datatimeUpperBound"
               v-model="subRestraint.properties.end"
               :name="index + '-' + 'datatimeUpperBound'"
+              :picker-options="endTimePickerOptions"
               :type="getDatePickerOptions(subRestraint.properties.timeScope).type"
               :format="getDatePickerOptions(subRestraint.properties.timeScope).format"
               :value-format="subRestraint.properties.timeScope === 'WEEK' ? '' : 'timestamp'"
@@ -92,7 +93,7 @@
           class="item">
           <div class="item__input-block">
             <label class="item__label"> 
-              {{ $t('message.lowerBound') }}
+              {{ $t('dataFrameAdvanceSetting.start') }}
             </label>
             <el-date-picker
               v-validate="datatimeLowerBoundRules"
@@ -211,6 +212,9 @@ export default {
     return {
       isLoading: false,
       isProcessing: false,
+      endTimePickerOptions: {
+        disabledDate: this.disabledDueDate
+      },
       columnId: null,
       valueList: [],
       tempValueList: [],
@@ -325,6 +329,9 @@ export default {
       if(this.subRestraint.properties.timeScope !== 'WEEK') return
       this.subRestraint.properties.start = time.getTime()
     },
+    disabledDueDate (time) {
+      return time.getTime() < new Date(this.subRestraint.properties.start).getTime()
+    }
   },
 
 }
