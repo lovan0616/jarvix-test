@@ -291,7 +291,7 @@
                     v-for="componentData in currentDashboard.components"
                     :key="componentData.id"
                     :filters="filterColumnValueInfoList"
-                    :y-axis-controller="yAxisController"
+                    :y-axis-controls="yAxisControlColumnValueInfoList"
                     :controls="controlColumnValueInfoList"
                     :component-data="componentData"
                     :is-edit-mode="isEditMode"
@@ -523,11 +523,6 @@ export default {
     },
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
-    },
-    yAxisController () {
-      return this.yAxisControlList.length > 0
-        ? this.yAxisControlList.find(item => item.isSelected)
-        : null
     },
     dashboardSettingOptions () {
       return [
