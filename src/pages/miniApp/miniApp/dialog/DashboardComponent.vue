@@ -6,18 +6,18 @@
       class="layout-spinner"
       size="50"
     />
-    <template v-else>
+    <template v-else-if="isShowKeyResultContent">
       <!-- 有 key result -->
       <div 
-        v-if="resultInfo.key_result" 
+        v-if="computedKeyResultId" 
         class="key-result__content">
         <div class="key-result__question">
           <span class="question-mark">Q</span>
-          {{ question }}
+          {{ computedQuestion }}
         </div>
         <task
-          :key="resultInfo.key_result[0]"
-          :component-id="resultInfo.key_result[0]"
+          :key="computedKeyResultId"
+          :component-id="computedKeyResultId"
           intend="key_result"
         />
       </div>
@@ -47,6 +47,10 @@ import { mapState, mapGetters } from 'vuex'
 
 export default {
   props: {
+    currentComponent: {
+      type: Object,
+      default: null
+    },
     isLoading: {
       type: Boolean,
       default: false
@@ -69,7 +73,16 @@ export default {
   },
   computed: {
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo']),
-    ...mapGetters('dataSource', ['filterRestrictionList'])
+    ...mapGetters('dataSource', ['filterRestrictionList']),
+    computedKeyResultId () {
+      return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0]) || this.currentComponent.keyResultId
+    },
+    computedQuestion () {
+      return this.question || this.currentComponent.question
+    },
+    isShowKeyResultContent () {
+      return this.computedKeyResultId || this.layout
+    }
   },
   watch: {
     appQuestion (question) {

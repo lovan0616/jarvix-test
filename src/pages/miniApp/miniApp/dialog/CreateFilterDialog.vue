@@ -61,29 +61,54 @@
             </div>
           </div>
           <template v-if="selectedBasicInfo.dataFrameId">
-            <div class="card__wrapper">
-              <div class="card__wrapper-title">欄位與欄位值組合</div>
-              <single-column-card
-                v-for="(filter, index) in filterInfoList"
-                :filter-info="filter"
-                :data-column-option-list="dataColumnOptionList"
-                :filter-info-list="filterInfoList"
-                :key="filter.id"
-                :name="index.toString()"
-                :is-loading="isLoading"
-                :is-processing="isProcessing"
-                @updateDataColumn="updateDataColumn($event, filter.id)"
-                @remove="removeColumnCard"
-              />
+            <template v-if="!isYAxisController">
+              <div class="card__wrapper">
+                <div class="card__wrapper-title">篩選條件項目</div>
+                <single-column-card
+                  v-for="(filter, index) in filterInfoList"
+                  :filter-info="filter"
+                  :data-column-option-list="dataColumnOptionList"
+                  :filter-info-list="filterInfoList"
+                  :key="filter.id"
+                  :name="index.toString()"
+                  :is-loading="isLoading"
+                  :is-processing="isProcessing"
+                  @updateDataColumn="updateDataColumn($event, filter.id)"
+                  @remove="removeColumnCard"
+                />
+              </div>
+              <button
+                class="btn btn-m btn-outline"
+                @click="addNewColumnCard()"
+              >
+                <svg-icon 
+                  icon-class="plus" 
+                  class="icon" />{{ $t('button.add') }}
+              </button>
+            </template>
+            <div 
+              v-else 
+              class="input-field">
+              <label class="input-field__label">Y 軸控制器欄位選項</label>
+              <div class="input-field__input">
+                <default-multi-select
+                  v-validate="'required'"
+                  :value="yAxisControllerList"
+                  :option-list="dataColumnOptionList"
+                  :placeholder="$t('batchLoad.chooseColumn')"
+                  :is-disabled="isProcessing || isLoading"
+                  filterable
+                  multiple
+                  class="input-field__multi-select"
+                  name="yAxisController"
+                  @input="updateYAxisControllerList"
+                />
+                <div 
+                  v-show="errors.has('yAxisController')"
+                  class="error-text"
+                >{{ errors.first('yAxisController') }}</div>
+              </div>
             </div>
-            <button
-              class="btn btn-m btn-outline"
-              @click="addNewColumnCard()"
-            >
-              <svg-icon 
-                icon-class="plus" 
-                class="icon" />{{ $t('button.add') }}
-            </button>
           </template>
         </div>
         <div class="button__block">
@@ -135,7 +160,11 @@ export default {
     },
     isSingleChoiceFilter: {
       type: Boolean,
-      required: true
+      default: false
+    },
+    isYAxisController : {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -169,7 +198,8 @@ export default {
       hasError: false,
       dataSourceOptionList: [],
       dataFrameOptionList: [],
-      dataColumnOptionList: []
+      dataColumnOptionList: [],
+      yAxisControllerList: []
     }
   },
   computed: {
@@ -220,8 +250,8 @@ export default {
       const hasBlockClustering = false
       getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn, false, hasBlockClustering).then(response => {
         this.dataColumnOptionList = response.reduce((acc, cur) => {
-          if (cur.statsType === 'DATETIME') return acc
-          if (this.isSingleChoiceFilter && cur.statsType !== 'CATEGORY') return acc
+          // 篩選不同情境下顯示的選項
+          if (this.isUnavailableOption(cur)) return acc
           acc.push({
             ...cur,
             name: `${cur.primaryAlias || cur.name}（${cur.statsType}）`,
@@ -232,13 +262,19 @@ export default {
         }, [])
       })
       .finally(() => this.isLoading = false)
-      this.addNewColumnCard()
+      // 預先新增一個欄位選擇器
+      if (!this.isYAxisController) this.addNewColumnCard()
+    },
+    isUnavailableOption (option) {
+      return option.statsType === 'DATETIME'
+        || this.isSingleChoiceFilter && option.statsType !== 'CATEGORY'
+        || this.isYAxisController && option.statsType !== 'NUMERIC'
     },
     addNewColumnCard () {
       this.filterInfoList.push({
         ...this.singleFilterGeneralTemplate,
         ...this.selectedBasicInfo,
-        id: new Date().toString()
+        id: Date.now().toString()
       })
     },
     removeColumnCard(cardId) {
@@ -258,6 +294,21 @@ export default {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
         this.$emit('filterCreated', this.filterInfoList)
+      })
+    },
+    updateYAxisControllerList (columnIdList) {
+      this.yAxisControllerList = columnIdList
+      this.filterInfoList = columnIdList.map(id => {
+        const dataColumnInfo = this.dataColumnOptionList.find(column => column.id === id)
+        return {
+          ...this.singleFilterGeneralTemplate,
+          ...this.selectedBasicInfo,
+          id: Date.now().toString(),
+          columnId: id,
+          dataType: dataColumnInfo.dataType,
+          statsType: dataColumnInfo.statsType,
+          columnName: dataColumnInfo.originalName
+        }
       })
     }
   }

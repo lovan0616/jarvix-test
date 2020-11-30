@@ -214,35 +214,34 @@
                   </template>
                 </div>
                 <div class="header-right">
-                  <button 
-                    style="width: 80px;" 
-                    @click="testYController('利潤')">利潤</button>
-                  <button 
-                    style="width: 80px;" 
-                    @click="testYController('成本')">成本</button>
-                  <button 
-                    style="width: 80px;" 
-                    @click="testYController('收入')">收入</button>
                   <button
                     v-if="isEditMode"
                     class="btn-m btn-outline btn-has-icon create-component-btn" 
                     @click="isShowCreateComponentDialog = true">
                     <svg-icon icon-class="plus"/>
-                    {{ $t('miniApp.createComponent') }}
+                    {{ $t('miniApp.component') }}
                   </button>
-                  <button
+                  <custom-dropdown-select
                     v-if="isEditMode"
-                    class="btn-m btn-outline btn-has-icon create-filter-btn" 
-                    @click="createSingleChoiceFilter">
-                    <svg-icon icon-class="plus"/>
-                    新增看板控制項
-                  </button>
+                    :data-list="controlTypeOptions"
+                    :has-bullet-point="false"
+                    trigger="hover"
+                    @select="createControlType"
+                  >
+                    <template #display>
+                      <button
+                        class="btn-m btn-outline btn-has-icon create-filter-btn" 
+                        @click.prevent>
+                        <svg-icon icon-class="plus"/>看板控制項
+                      </button>
+                    </template>
+                  </custom-dropdown-select>
                   <button
                     v-if="isEditMode"
                     class="btn-m btn-outline btn-has-icon create-filter-btn" 
                     @click="createMulitipleChoiceFilter">
                     <svg-icon icon-class="plus"/>
-                    新增篩選條件
+                    {{ $t('miniApp.filterCondition') }}
                   </button>
                   <div
                     v-if="isEditMode"
@@ -258,7 +257,7 @@
                 </div>
               </div>
               <!--Control panel-->
-              <filter-control
+              <filter-control-panel
                 v-if="controlColumnValueInfoList.length > 0"
                 :key="'control' + currentDashboardId"
                 :is-edit-mode="isEditMode"
@@ -267,8 +266,17 @@
                 class="mini-app__dashboard-filter mini-app__dashboard-filter--top"
                 @removeFilter="removeFilter($event, 'single')"
               />
+              <!--Y Axis Control panel-->
+              <axis-control-panel
+                v-if="yAxisControlColumnValueInfoList.length > 0"
+                :key="'yAxisControl' + currentDashboardId"
+                :is-edit-mode="isEditMode"
+                :initial-control-list.sync="yAxisControlColumnValueInfoList"
+                class="mini-app__dashboard-filter mini-app__dashboard-filter--middle"
+                @removeControl="removeControl"
+              />
               <!--Filter Panel-->
-              <filter-control
+              <filter-control-panel
                 v-if="filterColumnValueInfoList.length > 0"
                 :key="'filter' + currentDashboardId"
                 :is-edit-mode="isEditMode"
@@ -330,15 +338,18 @@
     />
     <create-component-dialog
       v-if="isShowCreateComponentDialog"
-      @close="isShowCreateComponentDialog = false"
+      :initial-current-component="currentComponent"
+      @close="closeCreateComponentDialog"
       @create="createComponent"
+      @updateSetting="updateComponentSetting"
     />
     <create-filter-dialog
       v-if="isShowCreateFilterDialog"
       :is-processing="isProcessing"
       :title="filterCreationDialogTitle"
       :is-single-choice-filter="isSingleChoiceFilter"
-      @closeDialog="isShowCreateFilterDialog = false"
+      :is-y-axis-controller="isYAxisController"
+      @closeDialog="closeFilterCreationDialog"
       @filterCreated="saveCreatedFilter"
     />
     <delete-dashboard-dialog
@@ -412,7 +423,8 @@ import DeleteComponentDialog from './dialog/DeleteComponentDialog.vue'
 import UpdateDashboardNameDialog from './dialog/UpdateDashboardNameDialog.vue'
 import InputVerify from '@/components/InputVerify'
 import DropdownSelect from '@/components/select/DropdownSelect'
-import FilterControl from './filter/FilterControl'
+import FilterControlPanel from './filter/FilterControlPanel'
+import AxisControlPanel from './filter/AxisControlPanel'
 import { Message } from 'element-ui'
 
 export default {
@@ -432,7 +444,8 @@ export default {
     CustomDropdownSelect,
     WritingDialog,
     DecideDialog,
-    FilterControl
+    FilterControlPanel,
+    AxisControlPanel
   },
   data () {
     return {
@@ -456,31 +469,11 @@ export default {
       newDashboardName: '',
       isEditingDashboardName: false,
       filterColumnValueInfoList : [],
-      isShowCreateFilterDialog: false,
-      yAxisControlList: [
-        {
-          isSelected: true,
-          dataSourceId: 12,
-          dataSourceName: '',
-          dataFrameId: 45,
-          dataFrameName: '',
-          columnId: 689,
-          dataType: '',
-          columnName: '收入'
-        },
-        {
-          isSelected: false,
-          dataSourceId: 12,
-          dataSourceName: '',
-          dataFrameId: 45,
-          dataFrameName: '',
-          columnId: 689,
-          dataType: '',
-          columnName: '成本'
-        }
-      ],
       controlColumnValueInfoList: [],
+      yAxisControlColumnValueInfoList: [],
+      isShowCreateFilterDialog: false,
       isSingleChoiceFilter: false,
+      isYAxisController: null,
       filterCreationDialogTitle: null
     }
   },
@@ -507,7 +500,7 @@ export default {
       return this.appData.dashboards
     },
     currentDashboard () {
-      return this.dashboardList.length > 0 ? this.dashboardList.find(item => item.id === this.currentDashboardId) : {}
+      return this.dashboardList.length > 0 ? this.dashboardList.find(item => item.id === this.currentDashboardId) : null
     },
     currentDashboardIndex () {
       return this.currentDashboard ? this.dashboardList.findIndex(d => d.id === this.currentDashboardId) : -1
@@ -553,6 +546,11 @@ export default {
     componentSettingOptions () {
       return [
         {
+          title: 'miniApp.componentSetting',
+          icon: 'filter-setting',
+          dialogName: 'CreateComponent'
+        },
+        {
           title: 'miniApp.createRelation',
           icon: 'filter-setting',
           dialogName: 'CreateComponentRelation'
@@ -564,6 +562,18 @@ export default {
         }
       ]
     },
+    controlTypeOptions () {
+      return [
+        {
+          name: this.$t('miniApp.generalControl'),
+          id: 'SingleChoiceFilter'
+        },
+        {
+          name: this.$t('miniApp.yAxisControl'),
+          id: 'YAxisController'
+        }
+      ]
+    },
     miniAppId () {
       return this.$route.params.mini_app_id
     },
@@ -572,6 +582,9 @@ export default {
     },
     currentControlList () {
       return this.currentDashboard ? this.currentDashboard.controlList : []
+    },
+    yAxisControlList () {
+      return this.currentDashboard ? this.currentDashboard.yAxisControlList : []
     },
     currentModeDataType () {
       return this.isViewMode ? 'viewModeData' : 'editModeData'
@@ -589,46 +602,18 @@ export default {
       handler (controlList) {
         this.miniApp.settings[this.currentModeDataType].dashboards[this.currentDashboardIndex].controlList = controlList
       }
+    },
+    yAxisControlColumnValueInfoList: {
+      deep: true,
+      handler (controlList) {
+        this.miniApp.settings[this.currentModeDataType].dashboards[this.currentDashboardIndex].yAxisControlList = controlList
+      }
     }
   },
   created () {
     this.getMiniAppInfo()  
   },
   methods: {
-    testYController (string) {
-      this.yAxisControlList = [
-        {
-          isSelected: '收入' === string,
-          dataSourceId: 12,
-          dataSourceName: '',
-          dataFrameId: 45,
-          dataFrameName: '',
-          columnId: 689,
-          dataType: '',
-          columnName: '收入'
-        },
-        {
-          isSelected: '成本' === string,
-          dataSourceId: 12,
-          dataSourceName: '',
-          dataFrameId: 45,
-          dataFrameName: '',
-          columnId: 689,
-          dataType: '',
-          columnName: '成本'
-        },
-        {
-          isSelected: '利潤' === string,
-          dataSourceId: 12,
-          dataSourceName: '',
-          dataFrameId: 45,
-          dataFrameName: '',
-          columnId: 689,
-          dataType: '',
-          columnName: '利潤'
-        }
-      ]
-    },
     getMiniAppInfo () {
       this.isLoading = true
       getMiniAppInfo(this.miniAppId)
@@ -657,7 +642,8 @@ export default {
         columnId: filterInfo.columnId,
         dataType: filterInfo.dataType,
         statsType: filterInfo.statsType,
-        columnName: filterInfo.columnName
+        columnName: filterInfo.columnName,
+        ...(filterInfo.isSelected && { isSelected: filterInfo.isSelected })
       }
 
       switch (columnStatsType) {
@@ -692,8 +678,12 @@ export default {
       return filter
     },
     initFilters () {
+      // 一般篩選條件
       this.filterColumnValueInfoList = this.currentFilterList.map(filter => this.formatRestraint(filter))
+      // 看板控制項
       this.controlColumnValueInfoList = this.currentControlList.map(filter => this.formatRestraint(filter))
+      // Y 軸控制器
+      this.yAxisControlColumnValueInfoList = this.yAxisControlList.map(control => control.map(filter => this.formatRestraint(filter)))
     },
     createDashboard (newDashBoardInfo) {
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
@@ -701,7 +691,8 @@ export default {
         ...newDashBoardInfo,
         components: [],
         filterList: [],
-        controlList: []
+        controlList: [],
+        yAxisControlList: []
       })
       this.currentDashboardId = newDashBoardInfo.id
       this.initFilters()
@@ -720,6 +711,22 @@ export default {
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
         .finally(() => this.isProcessing = false)
+    },
+    updateComponentSetting (updatedComponentInfo) {
+      const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
+      updatedMiniAppData.settings.editModeData.dashboards.forEach((board, boardIndex) => {
+        if (board.id === this.currentDashboardId) {
+          board.components.forEach((component, componentIndex) => {
+            if (component.id === this.currentComponentId) {
+              updatedMiniAppData.settings.editModeData.dashboards[boardIndex].components[componentIndex] = updatedComponentInfo
+            }
+          })
+        }
+      })
+      this.isShowCreateComponentDialog = false
+      this.updateAppSetting(updatedMiniAppData)
+        .then(() => { this.miniApp = updatedMiniAppData })
+        .catch(() => {})
     },
     createComponentRelation (relatedDashboard) {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
@@ -803,6 +810,10 @@ export default {
     },
     closeShare () {
       this.isShowShare = false
+    },
+    closeCreateComponentDialog () {
+      this.currentComponentId = null
+      this.isShowCreateComponentDialog = false
     },
     copyLink () {
       let input = this.$refs.shareInput
@@ -958,24 +969,32 @@ export default {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
       // 決定要新增到控制項或篩選條件中
-      if (this.isSingleChoiceFilter) {
+      if (this.isYAxisController) {
+        editedMiniApp.settings.editModeData.dashboards[dashboradIndex].yAxisControlList.push(filterList)
+      } else if (this.isSingleChoiceFilter) {
         editedMiniApp.settings.editModeData.dashboards[dashboradIndex].controlList.push(...filterList)
       } else {
         editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList.push(...filterList)
-      }
+      } 
 
       // 更新 app 資料
       this.updateAppSetting(editedMiniApp)
         .then(() => {
           this.isShowCreateFilterDialog = false
+          this.isSingleChoiceFilter = null
+          this.isYAxisController = null
           this.getMiniAppInfo() 
         })
         .finally(() => this.isProcessing = false)
     },
     switchDialogName (eventName, id) {
       this[`isShow${eventName}Dialog`] = true
-      if (eventName === 'DeleteComponent') this.currentComponentId = id
-      if (eventName === 'CreateComponentRelation') this.currentComponentId = id
+      switch(eventName) {
+        case 'DeleteComponent':
+        case 'CreateComponentRelation':
+        case 'CreateComponent':
+          this.currentComponentId = id
+      }
     },
     removeFilter (updatedFilterList, type) {
       this.isProcessing = true
@@ -997,6 +1016,26 @@ export default {
         })
         .finally(() => this.isProcessing = false)
     },
+    removeControl (updatedControlList) {
+      this.isProcessing = true
+      const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+
+      editedMiniApp.settings.editModeData.dashboards[dashboradIndex].yAxisControlList = updatedControlList
+
+      // 更新 app
+      this.updateAppSetting(editedMiniApp)
+        .then(() => {
+          this.isShowCreateFilterDialog = false
+          this.miniApp = editedMiniApp
+        })
+        .finally(() => this.isProcessing = false)
+    },
+    closeFilterCreationDialog () {
+      this.isShowCreateFilterDialog = false
+      this.isSingleChoiceFilter = null
+      this.isYAxisController = null
+    },
     createMulitipleChoiceFilter () {
       this.isShowCreateFilterDialog = true
       this.isSingleChoiceFilter = false
@@ -1006,6 +1045,14 @@ export default {
       this.isShowCreateFilterDialog = true
       this.isSingleChoiceFilter = true
       this.filterCreationDialogTitle = this.$t('miniApp.createPanelControl')
+    },
+    createYAxisController () {
+      this.isShowCreateFilterDialog = true
+      this.isYAxisController = true
+      this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
+    },
+    createControlType (type) {
+      this[`create${type}`]()
     }
   }
 }
@@ -1050,7 +1097,7 @@ export default {
   }
   &__nav {
     position: relative;
-    z-index: 4;
+    z-index: 5;
     flex: 0 0 56px;
     padding: 0 24px;
     display: flex;
@@ -1185,7 +1232,7 @@ export default {
     flex-direction: column;
     &-header {
       position: relative;
-      z-index: 3;
+      z-index: 4;
       flex: 0 0 30px;
       display: flex;
       justify-content: space-between;
@@ -1250,9 +1297,48 @@ export default {
       }
       .create-filter-btn {
         margin-left: 8px;
+        .svg-icon {
+          width: 24px;
+        }
       }
       .cancel-btn {
         margin-left: 6px;
+      }
+
+      /deep/ .dropdown {
+        &__list-container {
+          left: 0;
+          top: calc(100% + 10px);
+          text-align: left;
+          z-index: 1;
+          width: 136px;
+
+          &::before {
+            position: absolute;
+            content: "";
+            bottom: 100%;
+            left: 0;
+            width: 100%;
+            background-color: transparent;
+            height: 12px;
+          }
+
+          &::after {
+            position: absolute;
+            content: "";
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom: 8px solid #2B3839;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+          }
+        }
+        &__link {
+          line-height: 39px;
+          font-weight: 600;
+          font-size: 14px;
+        }
       }
     }
 
@@ -1381,6 +1467,10 @@ export default {
 
   &__dashboard-filter {
     &--top {
+      z-index: 3;
+      margin-bottom: 12px;
+    }
+    &--middle {
       z-index: 2;
       margin-bottom: 12px;
     }

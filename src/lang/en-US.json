@@ -780,7 +780,8 @@
     "componentNotAddable": "This content is not supported as a component.",
     "createRelation": "Relation",
     "relatedDashboard": "Related @:miniApp.dashboard",
-    "confirmDeletingComponentRelation": "Confirm deleting the linking of this component with dashboard '{name}' ?"
+    "confirmDeletingComponentRelation": "Confirm deleting the linking of this component with dashboard '{name}' ?",
+    "componentSetting": "Setting"
   },
   "clustering": {
     "cluster": "Cluster",
