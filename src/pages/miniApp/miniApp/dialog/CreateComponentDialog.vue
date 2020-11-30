@@ -21,6 +21,14 @@
           {{ $t('miniApp.componentNotAddable') }}
         </div>
         <button
+          v-if="currentComponent.init"
+          class="btn btn-default"
+          @click="saveComponent"
+        >
+          {{ $t('button.save') }}
+        </button>
+        <button
+          v-else
           :disabled="!isAddable"
           class="btn btn-default"
           @click="createComponent"
@@ -31,7 +39,9 @@
     </nav>
     <div class="dialog__content">
       <div class="key-result-chart">
-        <div class="search-bar">
+        <div 
+          v-if="!currentComponent.init" 
+          class="search-bar">
           <data-frame-menu
             :redirect-on-change="false"
             :is-show-preview-entry="true"
@@ -43,6 +53,7 @@
           />
         </div>
         <dashboard-component
+          :current-component="currentComponent"
           :is-addable.sync="isAddable"
           :is-loading.sync="isLoading"
         />
@@ -63,7 +74,7 @@
         </transition>
       </div>
       <div
-        v-if="currentResultInfo && currentResultInfo.keyResultId"
+        v-if="currentComponent.init || (currentResultInfo && currentResultInfo.keyResultId)"
         class="key-result-setting">
         <div class="setting__header">
           <svg-icon icon-class="filter-setting"/>
@@ -71,12 +82,44 @@
         </div>
         <div class="setting__content">
           <div class="setting__block">
-            <div class="input-label">圖表名稱</div>
+            <div class="setting__label-block">圖表名稱</div>
             <input-verify
               v-validate="`required|max:${max}`"
-              v-model="componentDisplayName"
+              v-model="currentComponent.config.diaplayedName"
               name="componentDisplayName"
             />
+          </div>
+        </div>
+        <!--Update frequency-->
+        <div class="setting__content">
+          <div class="setting__block">
+            <div class="setting__label-block">
+              {{ $t('warRoom.updateFrequency') }}
+              <el-switch
+                v-model="currentComponent.config.isAutoRefresh"
+                :width="Number('32')"
+                active-color="#2AD2E2"
+                inactive-color="#324B4E"
+                @change="updateRefreshFrequency"
+              />
+            </div>
+            <div
+              v-if="currentComponent.config.isAutoRefresh"
+              class="setting__block-select-field"
+            >
+              <default-select 
+                v-validate="'required'"
+                v-model="currentComponent.config.refreshFrequency"
+                :option-list="updateFrequency"
+                :placeholder="$t('warRoom.chooseUpdateFrequency')"
+                class="setting__block-select"
+                name="updateFrequency"
+              />
+              <div 
+                v-show="errors.has('updateFrequency')"
+                class="error-text"
+              >{{ errors.first('updateFrequency') }}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -86,6 +129,7 @@
 
 <script>
 import DataFrameMenu from '@/components/select/DataFrameMenu'
+import DefaultSelect from '@/components/select/DefaultSelect'
 import AskBlock from '@/components/chatBot/AskBlock'
 import ResultDisplay from '@/pages/result/ResultDisplay'
 import DashboardComponent from './DashboardComponent'
@@ -98,16 +142,40 @@ export default {
   name: 'CreateComponentDialog',
   components: {
     DataFrameMenu,
+    DefaultSelect,
     AskBlock,
     ResultDisplay,
     DashboardComponent,
     InputVerify
   },
+  props: {
+    initialCurrentComponent: {
+      type: Object,
+      default: () => {
+        return {
+          init: false,
+          id: null,
+          resultId: null,
+          orderSequence: null,
+          restrictedResultInfo: {},
+          relatedDashboard: {
+            id: null,
+            name: null
+          },
+          config: {
+            diaplayedName: '',
+            isAutoRefresh: false,
+            refreshFrequency: null
+          }
+        }
+      }
+    }
+  },
   data () {
     return {
-      componentDisplayName: '',
       isAddable: null,
-      isLoading: false
+      isLoading: false,
+      currentComponent: null
     }
   },
   computed: {
@@ -118,9 +186,50 @@ export default {
     },
     isShowPreviewDataSource () {
       return this.$store.state.previewDataSource.isShowPreviewDataSource
+    },
+    updateFrequency () {
+      return [
+        {
+          value: '* * * * *',
+          name: this.$t('warRoom.everyMinute', { number: 1 })
+        },
+        {
+          value: '*/5 * * * *',
+          name: this.$t('warRoom.everyMinute', { number: 5 })
+        },
+        {
+          value: '*/15 * * * *',
+          name: this.$t('warRoom.everyMinute', { number: 15 })
+        },
+        {
+          value: '*/30 * * * *',
+          name: this.$t('warRoom.everyMinute', { number: 30 })
+        },
+        {
+          value: '*/45 * * * *',
+          name: this.$t('warRoom.everyMinute', { number: 45 })
+        },
+        {
+          value: '0 * * * *',
+          name: this.$t('warRoom.everyHour')
+        },
+        {
+          value: '0 0 * * *',
+          name: this.$t('warRoom.everyDay')
+        },
+        {
+          value: '0 0 * * 0',
+          name: this.$t('warRoom.everyWeek')
+        },
+        {
+          value: '0 0 1 * *',
+          name: this.$t('warRoom.everyMonth')
+        }
+      ]
     }
   },
   mounted () {
+    this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
   },
   destroyed () {
     this.$store.commit('result/updateCurrentResultInfo', null)
@@ -134,26 +243,33 @@ export default {
         if (!valid) return
         
         this.$emit('create', {
+          ...this.currentComponent,
+          init: true,
           id: uuidv4(),
           resultId: this.currentResultId,
-          orderSequence: null, // 由 Dashboard 層給定
-          config: {
-            diaplayedName: this.componentDisplayName,
-            question: this.currentResultInfo.question
-          },
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
-          ...this.currentResultInfo,
-          restrictedResultInfo: {},
-          relatedDashboard: {
-            id: null,
-            name: null
-          }
+          ...this.currentResultInfo
         })
+      })
+    },
+    saveComponent () {
+      this.$validator.validateAll().then(valid => {
+        if (!valid) return
+        this.$emit('updateSetting', this.currentComponent)
       })
     },
     closePreviewDataSource () {
       this.$store.commit('previewDataSource/togglePreviewDataSource', false)
-    }
+    },
+    updateRefreshFrequency (isTurnedOn) {
+      if(isTurnedOn) return
+      const { refreshFrequency } = JSON.parse(JSON.stringify(this.initialCurrentComponent.config))
+
+      // 關閉時，恢復原本預設，避免存取時送錯的格式給後端
+      this.$nextTick(() => {
+        this.currentComponent.config.refreshFrequency = refreshFrequency
+      })
+    },
   },
 }
 </script>
@@ -236,6 +352,23 @@ export default {
         &__content {
           padding: 16px 24px;
           border-bottom: 1px solid #232C2E;
+        }
+        &__label-block {
+          display: flex;
+          justify-content: space-between;
+          font-size: 14px;
+          color: #AAAAAA;
+          font-weight: 600;
+        }
+        &__block-select-field {
+          margin-top: 8px;
+        }
+        &__block-select {
+          width: 100%;
+          /deep/ .el-input__inner {
+            padding-left: 0;
+            border-bottom: 1px solid #FFFFFF;
+          }
         }
       }
     }

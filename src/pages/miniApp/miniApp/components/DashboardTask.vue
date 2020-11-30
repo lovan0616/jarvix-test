@@ -88,7 +88,8 @@ export default {
       timeoutFunction: null,
       totalSec: 0,
       periodSec: 0,
-      isShowConfirmDelete: false
+      isShowConfirmDelete: false,
+      autoRefreshFunction: null,
     }
   },
   computed: {
@@ -152,40 +153,47 @@ export default {
       immediate: false,
       deep: true,
       handler (filters) {
-
         // 判斷 component 是否有相關欄位而需要重做 result
         if (!this.shouldComponentBeFiltered) return
-
-        this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
-        this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
-
-        this.$store.dispatch('chatBot/askQuestion', {
-          question: this.componentData.config.question,
-          dataSourceId: this.componentData.dataSourceId,
-          dataFrameId: this.componentData.dataFrameId,
-          previewQuestionId: this.componentData.questionId,
-          shouldCancelToken: false
-        }).then(response => {
-          let questionId = response.questionId
-          let segmentationList = response.segmentationList
-
-          // TODO 處理 NO_ANSWER
-          if (segmentationList.length === 1) {
-            this.$store.dispatch('chatBot/askResult', {
-              questionId,
-              segmentation: segmentationList[0],
-              restrictions: this.restrictions,
-              selectedColumnList: null
-            }).then(res => {
-              this.getComponentV2(res.resultId)
-            }).catch(error => {})
-          }
-          // TODO 無結果和多個結果
-        }).catch(error => {})
+        this.askQuestion()
       }
     }
   },
+  mounted () {
+    if(this.componentData.config.isAutoRefresh && !this.isEditMode) this.setComponentRefresh()
+  },
+  destroyed () {
+    if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
+  },
   methods: {
+    askQuestion () {
+      if(this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
+      this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
+      this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
+      this.$store.dispatch('chatBot/askQuestion', {
+        question: this.componentData.question,
+        dataSourceId: this.componentData.dataSourceId,
+        dataFrameId: this.componentData.dataFrameId,
+        previewQuestionId: this.componentData.questionId,
+        shouldCancelToken: false
+      }).then(response => {
+        let questionId = response.questionId
+        let segmentationList = response.segmentationList
+
+        // TODO 處理 NO_ANSWER
+        if (segmentationList.length === 1) {
+          this.$store.dispatch('chatBot/askResult', {
+            questionId,
+            segmentation: segmentationList[0],
+            restrictions: this.restrictions,
+            selectedColumnList: null
+          }).then(res => {
+            this.getComponentV2(res.resultId)
+          }).catch(error => {})
+        }
+        // TODO 無結果和多個結果
+      }).catch(error => {})
+    },
     getComponentV2 (resultId) {
       window.clearTimeout(this.timeoutFunction)
       this.$store.dispatch('chatBot/getComponentList', resultId)
@@ -208,6 +216,8 @@ export default {
                 resultId: componentResponse.id,
                 keyResultId: componentResponse.componentIds.key_result[0]
               }
+              // 定期更新 component 資料
+              if(this.componentData.config.isAutoRefresh && !this.isEditMode) this.setComponentRefresh()
               break
             case 'Disable':
             case 'Delete':
@@ -215,11 +225,38 @@ export default {
             case 'Fail':
               break
           }
-        }).catch((error) => {})
+        }).catch((error) => window.clearTimeout(this.autoRefreshFunction))
     },
     confirmDelete () {
       this.isShowConfirmDelete = false
       this.$emit('deleteComponentRelation', this.componentData.id)
+    },
+    setComponentRefresh () {
+      this.autoRefreshFunction = window.setTimeout(() => {
+        this.askQuestion()
+      }, this.convertRefreshFrequency(this.componentData.config.refreshFrequency))
+    },
+    convertRefreshFrequency (cronTab) {
+      switch (cronTab) {
+        case '* * * * *':
+          return 60 * 1000
+        case '*/5 * * * *':
+          return 5 * 60 * 1000
+        case '*/15 * * * *':
+          return 15 * 60 * 1000
+        case '*/30 * * * *':
+          return 30 * 60 * 1000
+        case '*/45 * * * *':
+          return 45 * 60 * 1000
+        case '0 * * * *':
+          return 60 * 60 * 1000
+        case '0 0 * * *':
+          return 24 * 60 * 60 * 1000
+        case '0 0 * * 0':
+          return 7 * 24 * 60 * 1000
+        case '0 0 1 * *':
+          return 30 * 7 * 24 * 60 * 1000
+      }
     }
   }
 }
