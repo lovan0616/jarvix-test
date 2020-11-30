@@ -1,5 +1,9 @@
 {
   "lang": "English",
+  "common": {
+    "show": "Show ",
+    "hide": "Hide "
+  },
   "nav": {
     "index": "Intelligent Analysis",
     "pinboard": "Personal Pinboard",
@@ -148,7 +152,8 @@
     "and": "and",
     "upperBound": "Upper bound value",
     "lowerBound": "Lower bound value",
-    "noPeriodicResult": "No cycle found"
+    "noPeriodicResult": "No cycle found",
+    "numericShouldBeBetween": "Number should be between {min} and {max}"
   },
   "guiding": {
     "prevStep": "Prev Step",
@@ -710,6 +715,11 @@
     "thresholdSetting": "Upper and lower bound setting",
     "maxThreshold": "Upper bound setting",
     "minThreshold": "Lower bound setting",
+    "waringMail": "Alert Email",
+    "mailReceiversetting": "*Please choose email recipient in War Room Settings.",
+    "recipientList": "Recipient List",
+    "recipientListSettingWarning":"*General Users aren't authorized to add others",
+    "maxDataCount":"Maximum Data Count",
     "pleaseEnterValue": "Please enter values",
     "notChosen": "Not chosen",
     "indexTypeContent": "Index",
@@ -940,7 +950,8 @@
     "AddNewWarRoom": "Add war room",
     "sendInvitation": "Send Invitation",
     "downloadPage": "Download Image",
-    "changeDiagram": "Change Diagram"
+    "changeDiagram": "Change Diagram",
+    "columnSummaryInfo": "Column Summary Info"
   },
   "timeScopeUnit": {
     "second": "seconds",
@@ -1784,6 +1795,7 @@
     "pivotTable": "Pivot Analysis",
     "weight": "Weight",
     "dataInsight": "Data Insight",
+    "warning": "Warnings",
     "recommendedInsight": "Recommended Insight",
     "keyInsight": "Key Insight",
     "total": "Total",

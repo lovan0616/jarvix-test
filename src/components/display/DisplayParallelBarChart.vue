@@ -305,7 +305,7 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { return shortenNumberMethod(value.data[1], 0) }
+            formatter (value) { return shortenNumberMethod(value.data[colIndex + 1], 0) }
           }
         })
       }

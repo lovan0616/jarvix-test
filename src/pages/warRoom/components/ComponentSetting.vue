@@ -219,7 +219,44 @@
                   v-show="errors.has('lowerBound')"
                   class="error-text"
                 >{{ errors.first('lowerBound') }}</div>
+                <template v-if="selectedDataSource.canAlert || componentData.canAlert">
+                  <label class="war-room-setting__block-text-label">
+                    {{ $t('warRoom.waringMail') }}
+                  </label>
+                  <el-switch
+                    v-model="componentData.config.alertSwitch"
+                    :width="Number('32')"
+                    active-color="#2AD2E2"
+                    inactive-color="#324B4E"
+                    @change="updateBoundSwitch"
+                  />
+                  <span 
+                    v-if="componentData.config.alertSwitch" 
+                    class="war-room-setting__block-text-description">
+                    {{ $t('warRoom.mailReceiversetting') }} 
+                  </span>
+                </template>
               </div>
+            </div>
+            <div 
+              v-if="selectedDataSource.maxDataCount || originalComponentData.config.maxDataCount"
+              class="war-room-setting__block">
+              <div class="war-room-setting__block-title">
+                {{ $t('warRoom.maxDataCount') }}
+              </div>
+              <input
+                v-validate="`required|numeric|between:1,200`"
+                ref="maxDataCount"
+                :disabled="isProcessing"
+                v-model.trim="componentData.config.maxDataCount"
+                :placeholder="$t('warRoom.pleaseEnterValue')"
+                name="maxDataCount"
+                class="input war-room-setting__block-text-input"
+              >
+              <div 
+                v-show="errors.has('maxDataCount')"
+                class="error-text"  
+              >{{ errors.first('maxDataCount') }}</div>
             </div>
           </template>
         </section>
@@ -300,8 +337,11 @@ export default {
           recentTimeIntervalAmount: null,
           recentTimeIntervalUnit: null,
           refreshFrequency: null,
-          upperBound: null
+          upperBound: null,
+          alertSwitch: null,
+          maxDataCount: null
         },
+        canAlert: null,
         diagramData: {},
         diagramName: null,
         orderSequence: null,
@@ -333,8 +373,11 @@ export default {
           recentTimeIntervalAmount: null,
           recentTimeIntervalUnit: null,
           refreshFrequency: null,
-          upperBound: null
+          upperBound: null,
+          alertSwitch: null,
+          maxDataCount: null
         },
+        canAlert: null,
         diagramData: {},
         diagramName: null,
         orderSequence: null,
@@ -507,7 +550,8 @@ export default {
         updateComponent(warRoomId, this.componentData.componentId, {
           ...config,
           upperBound: config.upperBound || null,
-          lowerBound: config.lowerBound || null
+          lowerBound: config.lowerBound || null,
+          alertSwitch: config.boundSwitch && config.alertSwitch
         })
           .then(() => {
             this.$emit('close')
@@ -556,6 +600,7 @@ export default {
     },
     updateSelectedDataSource (item) {
       this.selectedDataSource = item
+      this.componentData.config.maxDataCount = this.selectedDataSource.maxDataCount
       this.hideComponentDataSourceList()
     },
     updateRefreshFrequency (isTurnedOn) {
