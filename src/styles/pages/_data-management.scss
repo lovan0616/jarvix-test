@@ -23,6 +23,7 @@
     &:first-child {
       flex: 1;
     }
+
     &+.button-block {
       margin-left: 16px;
     }
@@ -33,6 +34,31 @@
 
     .icon {
       font-size: 18px;
+    }
+  }
+
+  .input-group {
+    background: rgba(35, 61, 64, 0.6);
+    margin-left: 16px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    width: 150px;
+    border-radius: 5px;
+
+    &__icon {
+      margin-right: 6px;
+    }
+
+    &__field {
+      font-size: 14px;
+      line-height: 18px;
+      border-bottom: none;
+        
+      &::placeholder {
+        color: #888888;
+        font-size: 14px;
+      }
     }
   }
 
@@ -53,6 +79,12 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
+
+    &__left {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+    }
   }
 
   .limit-notification {

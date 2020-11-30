@@ -8,30 +8,47 @@
     </div>
     <div class="table-board">
       <div class="board-title-row">
-        <div class="button-block">
-          <button 
-            class="btn-m btn-default btn-has-icon"
-            @click="createDataSource"
-          >
-            <svg-icon 
-              icon-class="folder-plus" 
-              class="icon"/>{{ $t('editing.newDataSource') }}
-          </button>
-          <!-- <button class="btn-m btn-default btn-has-icon"
-            :disabled="reachUploadLimit"
-            @click="createDataSource"
-          >
-            <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('editing.newDataSource') }}
-          </button> -->
-          <!-- <div class="reach-limit"
-            v-if="reachUploadLimit"
-          >{{ $t('notification.uploadLimitNotification') }}</div> -->
+        <div class="board-title-row__left">
+          <div class="button-block">
+            <button 
+              class="btn-m btn-default btn-has-icon"
+              @click="createDataSource"
+            >
+              <svg-icon 
+                icon-class="folder-plus" 
+                class="icon"/>{{ $t('editing.newDataSource') }}
+            </button>
+
+            <!-- <button class="btn-m btn-default btn-has-icon"
+              :disabled="reachUploadLimit"
+              @click="createDataSource"
+            >
+              <svg-icon icon-class="folder-plus" class="icon"></svg-icon>{{ $t('editing.newDataSource') }}
+            </button> -->
+            <!-- <div class="reach-limit"
+              v-if="reachUploadLimit"
+            >{{ $t('notification.uploadLimitNotification') }}</div> -->
+          </div>
+          <div class="search-box">
+            <div class="input-group">
+              <svg-icon
+                icon-class="search"
+                class="input-group__icon" />
+              <input
+                v-model.trim="searchedDataSourceName"
+                :placeholder="$t('editing.searchDataSource')"
+                class="input input-group__field"
+                autocomplete="off"
+              >
+            </div>
+          </div>
         </div>
+        
         <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: dataSourceLimitCount}) }}</div> -->
       </div>
       <data-table
         :headers="tableHeaders"
-        :data-list.sync="dataList"
+        :data-list.sync="filterDataList"
         :empty-message="$t('editing.clickToCreateDataSource')"
         :loading="isLoading"
         @create="createDataSource"
@@ -87,6 +104,7 @@ export default {
       deleteId: null,
       editDataSource: null,
       dataList: [],
+      searchedDataSourceName: '',
       // 資料處理中
       isProcessing: false,
       isLoading: false
@@ -97,6 +115,9 @@ export default {
     // reachUploadLimit () {
     //   return this.dataList.length >= this.dataSourceLimitCount
     // },
+    filterDataList() {
+      return this.dataList.filter(data => data.name.includes(this.searchedDataSourceName))
+    },
     tableHeaders () {
       return [
         {

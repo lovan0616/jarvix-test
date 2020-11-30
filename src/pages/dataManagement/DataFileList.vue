@@ -19,20 +19,35 @@
     </div>
     <div class="table-board">
       <div class="board-title-row">
-        <div class="button-block">
-          <button 
-            :disabled="isProcessing || reachLimit"
-            class="btn-m btn-default btn-has-icon"
-            @click="createDataSource"
-          >
-            <svg-icon 
-              icon-class="file-plus" 
-              class="icon"/>{{ $t('editing.newTable') }}
-          </button>
-          <div 
-            v-if="reachLimit"
-            class="reach-limit"
-          >{{ $t('notification.uploadLimitNotification') }}</div>
+        <div class="board-title-row__left">
+          <div class="button-block">
+            <button 
+              :disabled="isProcessing || reachLimit"
+              class="btn-m btn-default btn-has-icon"
+              @click="createDataSource"
+            >
+              <svg-icon 
+                icon-class="file-plus" 
+                class="icon"/>{{ $t('editing.newTable') }}
+            </button>
+            <div 
+              v-if="reachLimit"
+              class="reach-limit"
+            >{{ $t('notification.uploadLimitNotification') }}</div>
+          </div>
+          <div class="search-box">
+            <div class="input-group">
+              <svg-icon
+                icon-class="search"
+                class="input-group__icon" />
+              <input
+                v-model.trim="searchedDataSourceName"
+                :placeholder="$t('editing.searchDataSource')"
+                class="input input-group__field"
+                autocomplete="off"
+              >
+            </div>
+          </div>
         </div>
         <div class="button-block dataframe-action">
           <button 
