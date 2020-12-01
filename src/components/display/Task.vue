@@ -103,6 +103,10 @@ export default {
     arrowBtnRight: {
       type: Number,
       default: 80
+    },
+    convertedType: {
+      type: String,
+      default: null
     }
   },
   data () {
@@ -169,7 +173,7 @@ export default {
               break
             case 'Complete': {
               window.clearTimeout(this.timeoutFunction)
-              this.diagram = response.diagram
+              this.diagram = this.convertedType || response.diagram
               this.resultId = response.resultId
               this.componentName = this.getChartTemplate(this.diagram)
               let responseData = response.data

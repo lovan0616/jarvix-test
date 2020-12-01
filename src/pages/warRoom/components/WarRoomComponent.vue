@@ -103,13 +103,9 @@ import {
   checkPublishedComponentUpdateStatus
 } from '@/API/WarRoom'
 import moment from 'moment'
-import DisplayIndexInfo from './DisplayIndexInfo'
 
 export default {
   name: 'WarRoomComponent',
-  components: {
-    DisplayIndexInfo
-  },
   props: {
     componentId: {
       type: Number,

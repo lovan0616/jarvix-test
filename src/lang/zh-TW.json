@@ -791,7 +791,10 @@
     "createSingleYAxisController": "新增看板自變控制項",
     "generalControl": "一般控制項目",
     "componentSetting": "元件設定",
-    "updateFrequency": "更新頻率"
+    "updateFrequency": "更新頻率",
+    "index": "數值",
+    "displayedUnit": "顯示單位",
+    "pleaseEnterUnitName": "請輸入單位名稱"
   },
   "clustering": {
     "cluster": "群體",

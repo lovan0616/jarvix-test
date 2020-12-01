@@ -57,6 +57,7 @@ export default {
         if (index === controlIndex) return updatedControlOptionList
         return control
       })
+      this.controlList = updatedControlList
       this.$emit('update:initial-control-list', updatedControlList)
     },
     removeControl (controlIndex) {

@@ -15,11 +15,61 @@
           <span class="question-mark">Q</span>
           {{ computedQuestion }}
         </div>
-        <task
-          :key="computedKeyResultId"
-          :component-id="computedKeyResultId"
-          intend="key_result"
-        />
+        <div 
+          :class="{ 'active': currentComponent.type === 'chart' }" 
+          class="key-result__card card"
+          @click="switchComponentType('chart')">
+          <div class="card__header">
+            <div class="card__header-icon-box">
+              <svg-icon 
+                class="icon" 
+                icon-class="check-circle" />
+            </div>
+            <div class="card__header-text">{{ displayedHeaderText('chart') }}</div>
+          </div>
+          <div class="card__content">
+            <task
+              :key="'chart-' + computedKeyResultId"
+              :component-id="computedKeyResultId"
+              intend="key_result"
+            />
+          </div>
+        </div>
+        <div
+          v-if="isIndexTypeComponent" 
+          :class="{ 'active': currentComponent.type === 'index' }" 
+          class="key-result__card card"
+          @click="switchComponentType('index')">
+          <div class="card__header">
+            <div class="card__header-icon-box">
+              <svg-icon 
+                class="icon" 
+                icon-class="check-circle" />
+            </div>
+            <div class="card__header-text">{{ displayedHeaderText('index') }}</div>
+          </div>
+          <div class="card__content">
+            <div class="setting">
+              <div class="setting__label">{{ $t('miniApp.index') }}</div>
+              <task
+                :key="'index-' + computedKeyResultId"
+                :component-id="computedKeyResultId"
+                :converted-type="'index_info'"
+                class="setting__input"
+                intend="key_result"
+              />
+            </div>
+            <div class="setting">
+              <div class="setting__label">{{ $t('miniApp.displayedIndex') }}</div>
+              <input
+                :disabled="isLoading"
+                v-model.trim="currentComponent.indexInfo.unit"
+                :placeholder="$t('miniApp.pleaseEnterUnitName')"
+                class="input setting__input"
+              >
+            </div>
+          </div>
+        </div>
       </div>
       <!-- 其餘狀況 MultiResult, NoResult, ErrorMessage -->
       <component
@@ -49,7 +99,7 @@ export default {
   props: {
     currentComponent: {
       type: Object,
-      default: null
+      required: true
     },
     isLoading: {
       type: Boolean,
@@ -68,7 +118,8 @@ export default {
       totalSec: 50,
       periodSec: 200,
       question: '',
-      segmentation: null
+      segmentation: null,
+      isIndexTypeComponent: false
     }
   },
   computed: {
@@ -92,6 +143,8 @@ export default {
       // 恢復新增元件的狀態
       this.$emit('update:isAddable', null)
       this.$emit('update:isLoading', true)
+      // 恢復預設
+      this.isIndexTypeComponent = false
 
 
       this.$store.dispatch('chatBot/askQuestion', {
@@ -163,6 +216,7 @@ export default {
               this.totalSec = 50
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
+              this.isIndexTypeComponent = componentResponse.isIndexTypeComponent
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
               this.$store.commit('result/updateCurrentResultId', resultId)
@@ -211,6 +265,12 @@ export default {
     },
     closePreviewDataSource () {
       this.$store.commit('previewDataSource/togglePreviewDataSource', false)
+    },
+    switchComponentType (type) {
+      this.currentComponent.type = type
+    },
+    displayedHeaderText (type) {
+      return this.currentComponent.type === type ? '當前顯示' : '設為顯示'
     }
   }
 }
@@ -233,6 +293,69 @@ export default {
       text-align: center;
       line-height: 30px;
       font-weight: bold;
+    }
+  }
+
+  &__card {
+    &:not(:last-of-type) {
+      margin-bottom: 16px;
+    }
+  }
+
+  .card {
+    background: #1C292B;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 18.5px;
+    cursor: pointer;
+    
+    &__header {
+      display: flex;
+      margin-bottom: 20px;
+      color: #6C7678;
+    }
+    &__header-icon-box {
+      margin-right: 6.5px;
+      height: 25px;
+      .icon {
+        font-size: 25px;
+      }
+    }
+    &__header-text {
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 25px;
+    }
+
+    &.active {
+      border: 2px solid #2AD2E2;
+      .card__header {
+        color: #2AD2E2;
+      }
+    }
+
+    &__content {
+      display: flex;
+    }
+    
+    .setting {
+      &__label {
+        font-size: 14px;
+        color: #AAAAAA;
+      }
+      &__input {
+        height: 39px;
+        font-size: 16px;
+        border-color: #FFFFFF;
+
+        &::placeholder {
+          color: #AAAAAA;
+        }
+      }
+
+      &:not(:last-of-type) {
+        margin-right: 100px;
+      }
     }
   }
 

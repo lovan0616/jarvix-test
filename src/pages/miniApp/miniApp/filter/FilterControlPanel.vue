@@ -66,6 +66,7 @@ export default {
       const updatedFilterList = this.filterList.map((filter, index) => {
         return index === filterIndex ? updatedFilter : filter
       })
+      this.filterList = updatedFilterList
       this.$emit('update:initial-filter-list', updatedFilterList)
     },
     removeFilter (filterIndex) {

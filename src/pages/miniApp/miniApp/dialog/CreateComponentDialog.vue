@@ -155,6 +155,7 @@ export default {
         return {
           init: false,
           id: null,
+          type: 'chart',
           resultId: null,
           orderSequence: null,
           restrictedResultInfo: {},
@@ -166,6 +167,9 @@ export default {
             diaplayedName: '',
             isAutoRefresh: false,
             refreshFrequency: null
+          },
+          indexInfo: {
+            unit: ''
           }
         }
       }

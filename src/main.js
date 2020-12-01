@@ -118,6 +118,7 @@ import RootCauseDescription from '@/components/display/RootCauseDescription'
 import Spinner from '@/components/Spinner'
 import ArrowButton from '@/components/resultBoard/ArrowButton'
 import DisplayNoAnswerInfo from '@/components/display/DisplayNoAnswerInfo'
+import DisplayIndexInfo from '@/components/display/DisplayIndexInfo'
 
 // 排程
 import vGanttChart from 'v-gantt-chart'
@@ -219,6 +220,7 @@ Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(Spinner.name, Spinner)
 Vue.component(ArrowButton.name, ArrowButton)
 Vue.component(DisplayNoAnswerInfo.name, DisplayNoAnswerInfo)
+Vue.component(DisplayIndexInfo.name, DisplayIndexInfo)
 
 Vue.component('DefaultButton', DefaultButton)
 Vue.component('DefaultInput', DefaultInput)
