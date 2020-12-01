@@ -38,13 +38,17 @@
       class="item-content index">
       <div class="index-data">
         <task
+          :class="{ 'not-empty': !isEmptyData }"
           :custom-chart-style="indexComponentStyle"
           :key="'index-' + keyResultId"
           :component-id="keyResultId"
           :converted-type="'index_info'"
           intend="key_result"
+          @isEmpty="isEmptyData = true"
         />
-        <span class="index-unit">{{ componentData.indexInfo.unit }}</span>
+        <span 
+          v-if="!isEmptyData" 
+          class="index-unit">{{ componentData.indexInfo.unit }}</span>
       </div>
     </div>
     <div 
@@ -109,6 +113,7 @@ export default {
       periodSec: 0,
       isShowConfirmDelete: false,
       autoRefreshFunction: null,
+      isEmptyData: false,
       indexComponentStyle: {
         'font-size': '64px', 
         'height': '69px', 
@@ -199,6 +204,7 @@ export default {
       if(this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
       this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
       this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
+      this.isEmptyData = false
       this.$store.dispatch('chatBot/askQuestion', {
         question: this.componentData.question,
         dataSourceId: this.componentData.dataSourceId,
@@ -380,9 +386,9 @@ export default {
     height: 260px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    // justify-content: center;
     &.index {
-      /deep/ .task {
+      /deep/ .not-empty {
         width: auto;
         max-width: 100%;
       }
@@ -394,7 +400,7 @@ export default {
       .index-data {
         display: flex;
         align-items: flex-end;
-        max-width: 100%;
+        width: 100%;
         flex-wrap: wrap;
         justify-content: center;
       }
