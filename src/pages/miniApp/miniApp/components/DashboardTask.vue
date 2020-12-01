@@ -172,7 +172,9 @@ export default {
       return this.componentData.question.replace(this.dataColumnAlias, this.newYAxisColumnNames)
     },
     controllerMutatedQuestionWithStyleTag () {
-      return this.componentData.question.replace(this.dataColumnAlias, `<div style="text-decoration: underline; margin-left: 4px;">${this.newYAxisColumnNames}<div>`)
+      return this.componentData.question.replace(this.dataColumnAlias, `
+        <div style="text-decoration: underline; margin-left: 4px; white-space: nowrap; display: flex;">${this.newYAxisColumnNames}<div>
+      `)
     },
     dashboardTaskTitle () {
       if (this.isEditMode) return this.componentData.config.diaplayedName
@@ -187,9 +189,9 @@ export default {
         if (cur[0].dataFrameId === this.componentData.dataFrameId) {
           // 找出被選到的 controller
           const option = cur.find(item => item.isSelected)
-          return acc.concat(option)
+          return option ? acc.concat(option) : acc
         }
-        return acc.concat([])
+        return acc
       }, [])
     }
   },

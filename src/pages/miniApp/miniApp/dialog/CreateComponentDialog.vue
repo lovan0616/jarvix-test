@@ -157,7 +157,7 @@ export default {
           id: null,
           resultId: null,
           orderSequence: null,
-          restrictedResultInfo: {},
+          tempResultInfo: {},
           relatedDashboard: {
             id: null,
             name: null
