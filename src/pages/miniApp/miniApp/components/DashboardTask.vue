@@ -1,7 +1,13 @@
 <template>
-  <div class="component-item">
-    <span class="item-header">
-      <span class="item-title">{{ componentData.config.diaplayedName }}</span>
+  <div class="component__item">
+    <span class="component__item-header">
+      <el-tooltip 
+        :content="componentData.config.diaplayedName" 
+        placement="bottom">
+        <span 
+          class="item-title" 
+          v-html="dashboardTaskTitle" />
+      </el-tooltip>
       <div
         v-if="isEditMode"
         class="component-setting-box">
@@ -23,14 +29,18 @@
         </el-tooltip>
       </div>
     </span>
-    <task
-      :key="keyResultId"
-      :component-id="keyResultId"
-      intend="key_result"
-    />
+    <div class="component__item-content">
+      <spinner v-if="shouldComponentYAxisBeControlled && isProcessingYController"/>
+      <task
+        v-else
+        :key="keyResultId"
+        :component-id="keyResultId"
+        intend="key_result"
+      />
+    </div>
     <div 
       v-if="componentData.relatedDashboard.id && isEditMode" 
-      class="item-action">
+      class="component__item-content">
       <div class="related-item">
         <div class="related-item__title">
           {{ $t('miniApp.relatedDashboard') }}：
@@ -73,6 +83,10 @@ export default {
       type: Array,
       default: () => []
     },
+    yAxisControls: {
+      type: Array,
+      default: () => {}
+    },
     controls: {
       type: Array,
       default: () => []
@@ -89,6 +103,7 @@ export default {
       totalSec: 0,
       periodSec: 0,
       isShowConfirmDelete: false,
+      isProcessingYController: false,
       autoRefreshFunction: null,
     }
   },
@@ -137,14 +152,47 @@ export default {
     },
     shouldComponentBeFiltered () {
       // 判斷元件是否需要因應 filter 異動而重做
-      let filterDataFrameIds = this.filters.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
+      let filterDataFrameIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
       return filterDataFrameIds.includes(this.componentData.dataFrameId)
     },
+    shouldComponentYAxisBeControlled () {
+      const yAxisControlsDataFrames = this.selectedYAxisControls.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
+      return yAxisControlsDataFrames.includes(this.componentData.dataFrameId)
+    },
     keyResultId () {
-      return this.componentData.restrictedResultInfo.keyResultId || this.componentData.keyResultId
+      return this.componentData.tempResultInfo.keyResultId || this.componentData.keyResultId
+    },
+    dataColumnAlias () {
+      return this.componentData.segmentation.transcript.subjectList[0].dataColumn.dataColumnAlias
+    },
+    newYAxisColumnNames () {
+      return this.selectedYAxisControls.reduce((acc, cur) => acc.concat(` ${cur.columnName}`), '')
+    },
+    controllerMutatedQuestion () {
+      return this.componentData.question.replace(this.dataColumnAlias, this.newYAxisColumnNames)
+    },
+    controllerMutatedQuestionWithStyleTag () {
+      return this.componentData.question.replace(this.dataColumnAlias, `
+        <div style="text-decoration: underline; margin-left: 4px; white-space: nowrap; display: flex;">${this.newYAxisColumnNames}<div>
+      `)
+    },
+    dashboardTaskTitle () {
+      if (this.isEditMode) return this.componentData.config.diaplayedName
+      return this.shouldComponentYAxisBeControlled ? this.controllerMutatedQuestionWithStyleTag : this.componentData.config.diaplayedName
     },
     allFilterList () {
       return [...this.filters, ...this.controls]
+    },
+    selectedYAxisControls () {
+      return this.yAxisControls.reduce((acc, cur) => {
+        // 只有相同 dataFrame 才有作用
+        if (cur[0].dataFrameId === this.componentData.dataFrameId) {
+          // 找出被選到的 controller
+          const option = cur.find(item => item.isSelected)
+          return option ? acc.concat(option) : acc
+        }
+        return acc
+      }, [])
     }
   },
   watch: {
@@ -152,10 +200,19 @@ export default {
     allFilterList: {
       immediate: false,
       deep: true,
-      handler (filters) {
-        // 判斷 component 是否有相關欄位而需要重做 result
+      handler () {
         if (!this.shouldComponentBeFiltered) return
         this.askQuestion()
+      }
+    },
+    selectedYAxisControls: {
+      immediate: true,
+      deep: true,
+      handler () {
+        if (this.isEditMode) return
+        if (!this.shouldComponentYAxisBeControlled) return
+        this.isProcessingYController = true
+        this.askQuestion(this.controllerMutatedQuestion)
       }
     }
   },
@@ -166,12 +223,12 @@ export default {
     if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
   },
   methods: {
-    askQuestion () {
-      if(this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
+    askQuestion (question = this.componentData.question) {
       this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
       this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
+
       this.$store.dispatch('chatBot/askQuestion', {
-        question: this.componentData.question,
+        question,
         dataSourceId: this.componentData.dataSourceId,
         dataFrameId: this.componentData.dataFrameId,
         previewQuestionId: this.componentData.questionId,
@@ -211,11 +268,12 @@ export default {
             case 'Complete':
               this.totalSec = 50
               this.periodSec = 200
-              this.componentData.restrictedResultInfo = {
+              this.componentData.tempResultInfo = {
                 questionId: componentResponse.questionId,
                 resultId: componentResponse.id,
                 keyResultId: componentResponse.componentIds.key_result[0]
               }
+              this.isProcessingYController = false
               // 定期更新 component 資料
               if(this.componentData.config.isAutoRefresh && !this.isEditMode) this.setComponentRefresh()
               break
@@ -268,7 +326,8 @@ export default {
     .dropdown-select { visibility: visible; }
   }
 }
-.component-item {
+
+.component__item {
   width: calc(50% - 8px);
   float: left;
   padding: 16px;
@@ -278,13 +337,14 @@ export default {
   &:nth-child(odd) {
     margin-right: 16px;
   }
-  .item-header {
+  &-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     .item-title {
       color: #DDD;
       @include text-hidden;
+      display: flex;
     }
     .component-setting-box {
       position: relative;
@@ -318,7 +378,12 @@ export default {
       }
     }
   }
-  .item-action {
+  &-content {
+    .spinner-block {
+      height: 420px;
+    }
+  }
+  &-action {
     .related-item {
       display: inline-flex;
       align-items: center;

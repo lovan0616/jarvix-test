@@ -291,6 +291,7 @@
                     v-for="componentData in currentDashboard.components"
                     :key="componentData.id"
                     :filters="filterColumnValueInfoList"
+                    :y-axis-controls="yAxisControlColumnValueInfoList"
                     :controls="controlColumnValueInfoList"
                     :component-data="componentData"
                     :is-edit-mode="isEditMode"
