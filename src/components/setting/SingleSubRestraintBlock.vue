@@ -199,7 +199,6 @@
 import { getDataColumnValue, dataValueFuzzySearch } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import { mapState } from 'vuex'
-import moment from 'moment'
 
 export default {
   inject: ['$validator'],
