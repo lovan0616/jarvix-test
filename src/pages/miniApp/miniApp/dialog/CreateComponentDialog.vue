@@ -170,7 +170,8 @@ export default {
           },
           indexInfo: {
             unit: ''
-          }
+          },
+          isIndexTypeAvailable: false
         }
       }
     }

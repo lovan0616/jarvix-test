@@ -23,11 +23,30 @@
         </el-tooltip>
       </div>
     </span>
-    <task
-      :key="keyResultId"
-      :component-id="keyResultId"
-      intend="key_result"
-    />
+    <div 
+      v-if="componentData.type === 'chart'" 
+      class="item-content chart">
+      <task
+        :custom-chart-style="chartComponentStyle"
+        :key="'chart' + keyResultId"
+        :component-id="keyResultId"
+        intend="key_result"
+      />
+    </div>
+    <div
+      v-if="componentData.type === 'index'" 
+      class="item-content index">
+      <div class="index-data">
+        <task
+          :custom-chart-style="indexComponentStyle"
+          :key="'index-' + keyResultId"
+          :component-id="keyResultId"
+          :converted-type="'index_info'"
+          intend="key_result"
+        />
+        <span class="index-unit">{{ componentData.indexInfo.unit }}</span>
+      </div>
+    </div>
     <div 
       v-if="componentData.relatedDashboard.id && isEditMode" 
       class="item-action">
@@ -90,6 +109,16 @@ export default {
       periodSec: 0,
       isShowConfirmDelete: false,
       autoRefreshFunction: null,
+      indexComponentStyle: {
+        'font-size': '64px', 
+        'height': '69px', 
+        'line-height': '64px', 
+        'color': '#2AD2E2'
+      },
+      chartComponentStyle: {
+        'width': '100%',
+        'height': '260px'
+      }
     }
   },
   computed: {
@@ -346,6 +375,32 @@ export default {
       }
     }
   }
+
+  .item-content {
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &.index {
+      /deep/ .task {
+        width: auto;
+        max-width: 100%;
+      }
+      .index-unit {
+        font-weight: 600;
+        font-size: 36px;
+        color: #2AD2E2;
+      }
+      .index-data {
+        display: flex;
+        align-items: flex-end;
+        max-width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  }
+
   .task {
     width: 100%;
   }

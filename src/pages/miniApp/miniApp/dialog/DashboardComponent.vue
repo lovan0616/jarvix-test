@@ -36,7 +36,7 @@
           </div>
         </div>
         <div
-          v-if="isIndexTypeComponent" 
+          v-if="currentComponent.isIndexTypeAvailable" 
           :class="{ 'active': currentComponent.type === 'index' }" 
           class="key-result__card card"
           @click="switchComponentType('index')">
@@ -118,8 +118,7 @@ export default {
       totalSec: 50,
       periodSec: 200,
       question: '',
-      segmentation: null,
-      isIndexTypeComponent: false
+      segmentation: null
     }
   },
   computed: {
@@ -143,9 +142,6 @@ export default {
       // 恢復新增元件的狀態
       this.$emit('update:isAddable', null)
       this.$emit('update:isLoading', true)
-      // 恢復預設
-      this.isIndexTypeComponent = false
-
 
       this.$store.dispatch('chatBot/askQuestion', {
         question,
@@ -216,7 +212,7 @@ export default {
               this.totalSec = 50
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
-              this.isIndexTypeComponent = componentResponse.isIndexTypeComponent
+              this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
               this.$store.commit('result/updateCurrentResultId', resultId)
