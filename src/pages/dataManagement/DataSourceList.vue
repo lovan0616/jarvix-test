@@ -29,21 +29,12 @@
               v-if="reachUploadLimit"
             >{{ $t('notification.uploadLimitNotification') }}</div> -->
           </div>
-          <div class="search-box">
-            <div class="input-group">
-              <svg-icon
-                icon-class="search"
-                class="input-group__icon" />
-              <input
-                v-model.trim="searchedDataSourceName"
-                :placeholder="$t('editing.searchDataSource')"
-                class="input input-group__field"
-                autocomplete="off"
-              >
-            </div>
-          </div>
+          <search-block
+            v-model="searchedDataSourceName"
+            :placeholder="$t('editing.searchDataSource')"
+            class="search-block"
+          />
         </div>
-        
         <!-- <div class="limit-notification">{{ $t('notification.uploadLimit', {count: dataSourceLimitCount}) }}</div> -->
       </div>
       <data-table
@@ -78,6 +69,7 @@
   </div>
 </template>
 <script>
+import SearchBlock from '@/components/SearchBlock'
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import CreateDataSource from './components/CreateDataSource'
@@ -90,6 +82,7 @@ import { Message } from 'element-ui'
 export default {
   name: 'DataSourceList',
   components: {
+    SearchBlock,
     DataTable,
     FileUploadDialog,
     CreateDataSource,

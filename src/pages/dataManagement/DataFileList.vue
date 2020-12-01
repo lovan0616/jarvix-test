@@ -35,19 +35,11 @@
               class="reach-limit"
             >{{ $t('notification.uploadLimitNotification') }}</div>
           </div>
-          <div class="search-box">
-            <div class="input-group">
-              <svg-icon
-                icon-class="search"
-                class="input-group__icon" />
-              <input
-                v-model.trim="searchedDataSourceName"
-                :placeholder="$t('editing.searchDataSource')"
-                class="input input-group__field"
-                autocomplete="off"
-              >
-            </div>
-          </div>
+          <search-block
+            v-model="searchedDataFileName"
+            :placeholder="$t('etl.tableSearch')"
+            class="search-block"
+          />
         </div>
         <div class="button-block dataframe-action">
           <button 
@@ -73,7 +65,7 @@
       </div>
       <data-table
         :headers="tableHeaders"
-        :data-list.sync="dataList"
+        :data-list.sync="filterDataList"
         :selection.sync="selectList"
         :is-processing="isProcessing"
         :loading="isLoading"
@@ -161,6 +153,7 @@
   </div>
 </template>
 <script>
+import SearchBlock from '@/components/SearchBlock'
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteDataFrameDialog from './components/ConfirmDeleteDataFrameDialog'
@@ -183,6 +176,7 @@ import { Message } from 'element-ui'
 export default {
   name: 'DataFileList',
   components: {
+    SearchBlock,
     DataTable,
     FileUploadDialog,
     ConfirmDeleteDataFrameDialog,
@@ -215,6 +209,7 @@ export default {
       isProcessing: false,
       dataList: [],
       tableList: [],
+      searchedDataFileName: '',
       // checkbox 所選擇的檔案列表
       selectList: [],
       // 目前正在編輯的資料表
@@ -245,6 +240,9 @@ export default {
     },
     reachFileLengthLimit () {
       return this.dataList.length >= this.fileCountLimit
+    },
+    filterDataList() {
+      return this.dataList.filter(data => data.primaryAlias.includes(this.searchedDataFileName))
     },
     // 用來生成 data table
     tableHeaders () {

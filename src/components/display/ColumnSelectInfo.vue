@@ -6,21 +6,11 @@
       size="30"
     />
     <template v-else>
-      <div class="filter-block__search-box">
-        <div class="input-group">
-          <svg-icon 
-            icon-class="search" 
-            class="input-group__icon" />
-          <input
-            ref="columnSearchInput"
-            v-model.trim="searchedColumn"
-            :placeholder="$t('dataFrameAdvanceSetting.searchColumn')"
-            :disabled="false"
-            class="input input-group__field"
-            autocomplete="off"
-          >
-        </div>
-      </div>
+      <search-block
+        v-model="searchedColumn"
+        :placeholder="$t('dataFrameAdvanceSetting.searchColumn')"
+        class="filter-block__search-box"
+      />
       <div class="filter-block__action-box">
         <a 
           href="javascript:void(0);" 
@@ -71,11 +61,13 @@
 </template>
 
 <script>
+import SearchBlock from '@/components/SearchBlock'
 import EditFeatureDialog from '@/pages/dataManagement/components/feature/EditFeatureDialog'
 
 export default {
   name: 'ColumnSelectInfo',
   components: {
+    SearchBlock,
     EditFeatureDialog
   },
   props: {
@@ -138,7 +130,8 @@ export default {
 <style lang="scss" scoped>
 .filter-block {
   &__search-box {
-    padding-bottom: 12px;
+    width: 100%;
+    margin-bottom: 12px;
   }
 
   &__action-box {
@@ -170,26 +163,5 @@ export default {
     }
   }
 
-  .input-group {
-    background: rgba(35, 61, 64, 0.6);
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    border-radius: 5px;
-
-    &__icon {
-      margin-right: 6px;
-    }
-
-    &__field {
-      line-height: 22px;
-      border-bottom: none;
-        
-      &::placeholder {
-        color: #888888;
-        font-size: 14px;
-      }
-    }
-  }
 }
 </style>
