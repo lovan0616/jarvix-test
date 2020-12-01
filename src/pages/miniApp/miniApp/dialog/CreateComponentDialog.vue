@@ -158,7 +158,7 @@ export default {
           type: 'chart',
           resultId: null,
           orderSequence: null,
-          restrictedResultInfo: {},
+          tempResultInfo: {},
           relatedDashboard: {
             id: null,
             name: null
@@ -253,7 +253,13 @@ export default {
           id: uuidv4(),
           resultId: this.currentResultId,
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
-          ...this.currentResultInfo
+          ...this.currentResultInfo,
+          // 因應 filter, controller 條件變化，而產生的暫時的 result 資訊，不會存起來
+          tempResultInfo: {},
+          relatedDashboard: {
+            id: null,
+            name: null
+          }
         })
       })
     },
