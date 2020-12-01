@@ -179,7 +179,7 @@ export default {
                 dataSourceId: this.dataSourceId,
                 dataFrameId: this.dataFrameId
               })
-              this.$emit('update:isAddable', componentResponse.isWarRoomAddable || false)
+              this.$emit('update:isAddable', componentResponse.layout === 'general' || false)
               this.$emit('update:isLoading', false)
               break
             case 'Disable':
@@ -221,7 +221,7 @@ export default {
   padding: 24px;
   &__question {
     font-size: 18px;
-    margin-bottom: 16px;
+    margin-bottom: 40px;
     .question-mark {
       display: inline-block;
       width: 30px;
