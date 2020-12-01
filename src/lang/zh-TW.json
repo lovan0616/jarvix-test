@@ -794,7 +794,9 @@
     "updateFrequency": "更新頻率",
     "index": "數值",
     "displayedUnit": "顯示單位",
-    "pleaseEnterUnitName": "請輸入單位名稱"
+    "pleaseEnterUnitName": "請輸入單位名稱",
+    "currentlyDisplayed": "當前顯示",
+    "setForDisplay": "設為顯示"
   },
   "clustering": {
     "cluster": "群體",

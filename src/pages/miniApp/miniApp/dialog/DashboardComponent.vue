@@ -60,7 +60,7 @@
               />
             </div>
             <div class="setting">
-              <div class="setting__label">{{ $t('miniApp.displayedIndex') }}</div>
+              <div class="setting__label">{{ $t('miniApp.displayedUnit') }}</div>
               <input
                 :disabled="isLoading"
                 v-model.trim="currentComponent.indexInfo.unit"
@@ -270,7 +270,7 @@ export default {
       this.currentComponent.type = type
     },
     displayedHeaderText (type) {
-      return this.currentComponent.type === type ? '當前顯示' : '設為顯示'
+      return this.currentComponent.type === type ? this.$t('miniApp.currentlyDisplayed') : this.$t('miniApp.setForDisplay')
     }
   }
 }
