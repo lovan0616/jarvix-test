@@ -220,6 +220,7 @@ export default {
                 keyResultId: componentResponse.componentIds.key_result[0],
                 dataColumns: componentResponse.segmentationPayload.transcript.subjectList.map(item => ({
                   columnId: item.dataColumn.dataColumnId,
+                  columnName: item.dataColumn.dataColumnAlias,
                   statsType: item.dataColumn.statsType,
                   dataType: item.dataColumn.dataType
                 })),
@@ -307,7 +308,7 @@ export default {
     
     &__header {
       display: flex;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
       color: #6C7678;
     }
     &__header-icon-box {

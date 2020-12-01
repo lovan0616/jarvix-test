@@ -171,7 +171,7 @@ export default {
             type,
             properties: {
               data_type,
-              dc_id: filter.columnId,
+              dc_id: this.columnIdMacthedWithFilter,
               display_name: filter.columnName,
               ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
                 datavalues: filter.dataValues,
@@ -184,11 +184,6 @@ export default {
             }
           }]
         })
-    },
-    shouldComponentBeFiltered () {
-      // 判斷元件是否需要因應 filter 異動而重做
-      let filterDataFrameIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
-      return filterDataFrameIds.includes(this.componentData.dataFrameId)
     },
     shouldComponentYAxisBeControlled () {
       const yAxisControlsDataFrames = this.selectedYAxisControls.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
@@ -212,8 +207,9 @@ export default {
       `)
     },
     dashboardTaskTitle () {
-      if (this.isEditMode) return this.componentData.config.diaplayedName
-      return this.shouldComponentYAxisBeControlled ? this.controllerMutatedQuestionWithStyleTag : this.componentData.config.diaplayedName
+      return !this.isEditMode && this.shouldComponentYAxisBeControlled
+        ? this.controllerMutatedQuestionWithStyleTag
+        : this.componentData.config.diaplayedName
     },
     allFilterList () {
       return [...this.filters, ...this.controls]
@@ -236,7 +232,7 @@ export default {
       immediate: false,
       deep: true,
       handler () {
-        if (!this.shouldComponentBeFiltered) return
+        if (!this.shouldComponentBeFiltered()) return
         this.askQuestion()
       }
     },
@@ -354,6 +350,18 @@ export default {
         case '0 0 1 * *':
           return 30 * 7 * 24 * 60 * 1000
       }
+    },
+    shouldComponentBeFiltered () {
+      // 判斷元件是否需要因應 filter 異動而重做
+      let filterDataColumnNames = this.allFilterList.reduce((acc, cur) => acc.concat(cur.columnName), [])
+      const columns = this.componentData.dataColumns
+      for (let i = 0; i < columns.length; i++) {
+        if (filterDataColumnNames.includes(columns[i].columnName)) {
+          this.columnIdMacthedWithFilter = columns[i].columnId
+          return true
+        }
+      }
+      return false
     }
   }
 }
