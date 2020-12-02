@@ -90,7 +90,6 @@
         <div class="data-table">
           <div class="data-table-head is-scrolling">
             <div class="data-table-row table-head">
-              <div class="data-table-cell name">{{ $t('editing.originalName') }}</div>
               <div class="data-table-cell name">{{ $t('editing.columnDisplayName') }}</div>
               <div 
                 v-if="isJoinTable"
@@ -120,14 +119,22 @@
               :key="column.id"
               class="data-table-row"
             >
-              <div class="data-table-cell created-method">
-                <span>{{ column.originalName }}</span>
-              </div>
               <div class="data-table-cell name">
-                <span
+                <el-tooltip
                   v-show="!isEditing(column.id)"
-                  :class="{'is-modified': column.name.isModified}"
-                >{{ column.name.primaryAlias }}</span>
+                  :disabled="column.originalName === column.name.primaryAlias" 
+                  placement="bottom-start">
+                  <template #content>
+                    {{ $t('editing.originalName') }}：{{ column.originalName }}
+                  </template>
+                  <span :class="{'is-modified': column.name.isModified}">
+                    {{ column.name.primaryAlias }}
+                    <svg-icon
+                      v-show="column.originalName !== column.name.primaryAlias"
+                      icon-class="information-circle"
+                      class="name-info-icon" />
+                  </span>
+                </el-tooltip>
                 <input-verify
                   v-validate="'required'"
                   v-show="isEditing(column.id)"
@@ -348,8 +355,7 @@ export default {
             primaryAlias: element.name,
             isModified: false
           }
-          //test
-          element.originalName = 'originalName'
+          element.originalName = element.originalName
 
           if (element.isClustering) {
             element.createdMethod = this.$t('editing.tagColumn')
@@ -598,7 +604,7 @@ export default {
 
     .data-table-row {
       align-items: flex-start;
-      .is-modified {
+      .is-modified, .name-info-icon {
         color: $theme-color-warning;
       }
     }
