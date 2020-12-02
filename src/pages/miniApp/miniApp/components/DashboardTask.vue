@@ -29,18 +29,6 @@
         </el-tooltip>
       </div>
     </span>
-    <div 
-      v-if="componentData.type === 'chart'" 
-      class="item-content chart">
-      <spinner v-if="isProcessing"/>
-      <task
-        v-else
-        :custom-chart-style="chartComponentStyle"
-        :key="'chart' + keyResultId"
-        :component-id="keyResultId"
-        intend="key_result"
-      />
-    </div>
     <div
       v-if="componentData.type === 'index'" 
       class="item-content index">
@@ -61,6 +49,18 @@
             class="index-unit">{{ componentData.indexInfo.unit }}</span>
         </template>
       </div>
+    </div>
+    <div 
+      v-else
+      class="item-content chart">
+      <spinner v-if="isProcessing"/>
+      <task
+        v-else
+        :custom-chart-style="chartComponentStyle"
+        :key="'chart' + keyResultId"
+        :component-id="keyResultId"
+        intend="key_result"
+      />
     </div>
     <div 
       v-if="componentData.relatedDashboard.id && isEditMode" 
