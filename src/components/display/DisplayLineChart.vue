@@ -47,7 +47,7 @@
       </div>
     </selected-region>
     <div 
-      v-if="dataset.descriptions && dataset.descriptions.length > 0"
+      v-if="isShowDescription && dataset.descriptions && dataset.descriptions.length > 0"
       class="description"
     >
       <span 
@@ -106,6 +106,14 @@ export default {
       default: false
     },
     showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    isShowDescription: {
+      type: Boolean,
+      default: true
+    },
+    isShowCoefficients: {
       type: Boolean,
       default: true
     },
@@ -346,7 +354,7 @@ export default {
         // }
       }
 
-      if (this.coefficients) {
+      if (this.isShowCoefficients && this.coefficients) {
         let lineData = []
         let expression = ''
         if (this.coefficients.length === 2) {
