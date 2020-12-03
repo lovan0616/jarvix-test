@@ -266,8 +266,7 @@ export default {
       if (!this.isYAxisController) this.addNewColumnCard()
     },
     isUnavailableOption (option) {
-      return option.statsType === 'DATETIME'
-        || this.isSingleChoiceFilter && option.statsType !== 'CATEGORY'
+      return this.isSingleChoiceFilter && option.statsType !== 'CATEGORY'
         || this.isYAxisController && option.statsType !== 'NUMERIC'
     },
     addNewColumnCard () {

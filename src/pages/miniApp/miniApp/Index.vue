@@ -650,16 +650,15 @@ export default {
             dataValueOptionList: filterInfo.dataValueOptionList || []
           }
           break
-        // case 'DATETIME':
-        //   subStraintType = 'range'
-        //   subStraintProperties = {
-        //     data_type: columnDataType.toLowerCase(),
-        //     dc_id: selectColumn.id,
-        //     display_name: selectColumn.name,
-        //     end: null,
-        //     start: null 
-        //   }
-        //   break
+        case 'DATETIME':
+          filter = {
+            ...filter,
+            dataMax: filterInfo.dataMax || null,
+            dataMin: filterInfo.dataMin || null,
+            start: filterInfo.start || null,
+            end: filterInfo.end || null
+          }
+          break
         case 'NUMERIC':
           filter = {
             ...filter,
