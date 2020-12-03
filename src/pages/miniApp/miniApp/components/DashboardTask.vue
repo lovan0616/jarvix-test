@@ -174,7 +174,7 @@ export default {
             type,
             properties: {
               data_type,
-              dc_id: this.columnIdMacthedWithFilter,
+              dc_id: filter.columnId,
               display_name: filter.columnName,
               ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
                 datavalues: filter.dataValues,
@@ -187,6 +187,10 @@ export default {
             }
           }]
         })
+    },
+    shouldComponentBeFiltered () {
+      // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
+      return this.includeSameColumnPrimaryAliasFilter || this.includeSameDataFrameFilter
     },
     shouldComponentYAxisBeControlled () {
       const yAxisControlsDataFrames = this.selectedYAxisControls.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
@@ -227,6 +231,18 @@ export default {
         }
         return acc
       }, [])
+    },
+    includeSameDataFrameFilter () {
+      let filterDataFrameIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
+      return filterDataFrameIds.includes(this.componentData.dataFrameId)
+    },
+    includeSameColumnPrimaryAliasFilter () {
+      let filterDataColumnNames = this.allFilterList.reduce((acc, cur) => acc.concat(cur.columnName), [])
+      const componentColumns = this.componentData.dataColumns
+      for (let i = 0; i < componentColumns.length; i++) {
+        if (filterDataColumnNames.includes(componentColumns[i].columnName)) return true
+        return false
+      }
     }
   },
   watch: {
@@ -235,7 +251,7 @@ export default {
       immediate: false,
       deep: true,
       handler () {
-        if (!this.shouldComponentBeFiltered()) return
+        if (!this.shouldComponentBeFiltered) return
         this.askQuestion()
       }
     },
@@ -353,18 +369,6 @@ export default {
         case '0 0 1 * *':
           return 30 * 7 * 24 * 60 * 1000
       }
-    },
-    shouldComponentBeFiltered () {
-      // 判斷元件是否需要因應 filter 異動而重做
-      let filterDataColumnNames = this.allFilterList.reduce((acc, cur) => acc.concat(cur.columnName), [])
-      const columns = this.componentData.dataColumns
-      for (let i = 0; i < columns.length; i++) {
-        if (filterDataColumnNames.includes(columns[i].columnName)) {
-          this.columnIdMacthedWithFilter = columns[i].columnId
-          return true
-        }
-      }
-      return false
     }
   }
 }

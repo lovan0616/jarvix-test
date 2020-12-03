@@ -228,7 +228,7 @@ export default {
                 question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
                 questionId: componentResponse.questionId,
                 dataSourceId: this.dataSourceId,
-                dataFrameId: this.dataFrameId
+                dataFrameId: componentResponse.segmentationPayload.transcript.dataFrame.dataFrameId
               })
               this.$emit('update:isAddable', componentResponse.layout === 'general' || false)
               this.$emit('update:isLoading', false)
