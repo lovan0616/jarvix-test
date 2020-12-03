@@ -73,13 +73,13 @@ export default {
       if (!this.restriction.length) return
       if (this.restriction[0].type === 'compound') {
         return this.restriction[0].restraints.reduce((result, curr) => {
-          let dcName = curr.properties.dc_id
-          result.push(this.getDataInfo.dataColumnMap[dcName].primary_alias)
+          let dcId = curr.properties.dc_id
+          result.push(Object.values(this.getDataInfo.dataColumnMap).filter(item => item.id === dcId)[0].primary_alias)
           return result
         }, []).join(' & ')
       } else {
-        let dcName = this.restriction[0].properties['dc_id']
-        return this.getDataInfo.dataColumnMap[dcName].primary_alias
+        let dcId = this.restriction[0].properties['dc_id']
+        return Object.values(this.getDataInfo.dataColumnMap).filter(item => item.id === dcId)[0].primary_alias
       }
     }
   }
