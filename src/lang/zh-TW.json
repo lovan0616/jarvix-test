@@ -796,7 +796,9 @@
     "displayedUnit": "顯示單位",
     "pleaseEnterUnitName": "請輸入單位名稱",
     "currentlyDisplayed": "當前顯示",
-    "setForDisplay": "設為顯示"
+    "setForDisplay": "設為顯示",
+    "generalComponent": "一般元件",
+    "realTimeMonitorWarningComponent": "即時監控示警"
   },
   "clustering": {
     "cluster": "群體",

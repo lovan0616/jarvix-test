@@ -50,6 +50,9 @@
         </template>
       </div>
     </div>
+    <div v-else-if="componentData.type === 'monitor-warning-table'">
+      <monitor-warning-table/>
+    </div>
     <div 
       v-else
       class="item-content chart">
@@ -91,11 +94,13 @@
 
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
+import MonitorWarningTable from './MonitorWarningTable'
 
 export default {
   name: 'DashboardTask',
   components: {
-    DecideDialog
+    DecideDialog,
+    MonitorWarningTable
   },
   props: {
     componentData: {
@@ -146,11 +151,7 @@ export default {
     restrictions () {
       return this.allFilterList
         .filter(filter => {
-          if (
-            filter.statsType === 'NUMERIC'
-            || filter.statsType === 'FLOAT'
-            || filter.statsType === 'DATETIME'
-          ) return filter.start && filter.end
+          if (filter.statsType === 'NUMERIC') return filter.start && filter.end
           return filter.dataValues.length > 0
         })
         .map(filter => {
@@ -169,10 +170,6 @@ export default {
               data_type = 'int'
               type = 'range'
               break
-            case ('DATETIME'):
-              data_type = 'datetime'
-              type = 'range'
-              break
           }
 
           return [{
@@ -185,7 +182,7 @@ export default {
                 datavalues: filter.dataValues,
                 display_datavalues: filter.dataValues
               }),
-              ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
+              ...(filter.statsType === 'NUMERIC' && {
                 start: filter.start,
                 end: filter.end
               })
@@ -194,8 +191,9 @@ export default {
         })
     },
     shouldComponentBeFiltered () {
-      // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
-      return this.includeSameColumnPrimaryAliasFilter || this.includeSameDataFrameFilter
+      // 判斷元件是否需要因應 filter 異動而重做
+      let filterDataFrameIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
+      return filterDataFrameIds.includes(this.componentData.dataFrameId)
     },
     shouldComponentYAxisBeControlled () {
       const yAxisControlsDataFrames = this.selectedYAxisControls.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
@@ -219,9 +217,8 @@ export default {
       `)
     },
     dashboardTaskTitle () {
-      return !this.isEditMode && this.shouldComponentYAxisBeControlled
-        ? this.controllerMutatedQuestionWithStyleTag
-        : this.componentData.config.diaplayedName
+      if (this.isEditMode) return this.componentData.config.diaplayedName
+      return this.shouldComponentYAxisBeControlled ? this.controllerMutatedQuestionWithStyleTag : this.componentData.config.diaplayedName
     },
     allFilterList () {
       return [...this.filters, ...this.controls]
@@ -236,18 +233,6 @@ export default {
         }
         return acc
       }, [])
-    },
-    includeSameDataFrameFilter () {
-      let filterDataFrameIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
-      return filterDataFrameIds.includes(this.componentData.dataFrameId)
-    },
-    includeSameColumnPrimaryAliasFilter () {
-      let filterDataColumnNames = this.allFilterList.reduce((acc, cur) => acc.concat(cur.columnName), [])
-      const componentColumns = this.componentData.dataColumns
-      for (let i = 0; i < componentColumns.length; i++) {
-        if (filterDataColumnNames.includes(componentColumns[i].columnName)) return true
-        return false
-      }
     }
   },
   watch: {

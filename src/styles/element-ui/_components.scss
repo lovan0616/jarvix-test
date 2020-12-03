@@ -101,6 +101,15 @@
     &::before {
       background-color: transparent;
     }
+    &-right {
+      &::before {
+        background-color: transparent;
+      }
+    }
+    &-right-patch {
+      background-color: transparent;
+      border-bottom: 1px solid transparent;
+    }
     .el-table__fixed-header-wrapper {
       tr {
         background: rgb(41, 64, 66);
