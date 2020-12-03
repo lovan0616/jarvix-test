@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { mapState, mapMutations } from 'vuex'
 import moment from 'moment'
 import i18n from '@/lang/index.js'
 
@@ -306,6 +307,15 @@ Vue.mixin({
       return parseFloat((value).toFixed(count))
     },
     // export data
+    addCSVDownloadTask (question, componentId) {
+      let taskList = this.$store.state.result.tableDataCSVDownloadList
+      if (taskList.some(task => task.componentId === componentId)) return
+      this.$store.commit('result/updateTableDataCSVDownloadList', {
+        title: question,
+        componentId: componentId,
+        status: 'Ready'
+      })
+    },
     exportCSVFile (el, question, data) {
       let exportFunction = (e) => {
         if (e.target && e.target.id === 'export-btn') {
@@ -315,6 +325,9 @@ Vue.mixin({
            * 註冊事件當下由 function 傳進的 data，遇到 pagination 更新資料後
            * 便不再拿取新的 data，所以暫時改由 vue instance 內的 computed options 去拿
            */
+          // 還有資料沒有拿回，直接打 API 下載所有資料
+          if (data.hasPagination) return this.addCSVDownloadTask(question, data.componentId)
+
           this.exportToCSV(question, data.options.dataset.source)
         }
       }

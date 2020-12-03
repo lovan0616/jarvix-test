@@ -91,6 +91,10 @@ export default {
   },
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
+    componentId: {
+      type: Number,
+      default: null
+    },
     title: {
       type: Object,
       default: () => {

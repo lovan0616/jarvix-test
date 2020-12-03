@@ -26,6 +26,7 @@
       <!-- TODO: 調整寫法 -->
       <component
         :is="componentName"
+        :component-id="componentId"
         :has-pagination="hasNextPage"
         :dataset="componentData.dataset"
         :title="componentData.title"

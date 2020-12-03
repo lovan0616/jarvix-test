@@ -72,7 +72,7 @@ export function getComponentData (componentInfo, cancelFunction) {
 /**
  * component data csv download
  */
-export function getComponentDataCSV (componentId, limit) {
+export function getComponentDataCSV (componentId, limit=null) {
   return request({
     url: `/ask/component/${componentId}/download/csv`,
     method: 'GET',
