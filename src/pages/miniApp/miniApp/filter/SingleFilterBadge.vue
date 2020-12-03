@@ -82,6 +82,24 @@
         </div>
       </template>
     </div>
+    <!--Datetime-->
+    <div 
+      v-else-if="filter.statsType === 'DATETIME'"
+      :class="{ 'hidden': isShowFilterPanel || isEditMode }"
+      class="filter__datetime-picker-panel"
+    >
+      <el-date-picker
+        ref="datepicker"
+        :value="dateTimeRange"
+        :format="'yyyy-MM-dd HH:mm'"
+        :picker-options="pickerOptions"
+        :editable="false"
+        :clearable="false" 
+        type="datetimerange"
+        value-format="yyyy-MM-dd HH:mm"
+        @input="updateDateTimeFilteredColumnValue"
+      />
+    </div>
     <!--Enum-->
     <div
       v-if="isShowFilterPanel && (filter.statsType === 'CATEGORY' || filter.statsType === 'BOOLEAN')"
@@ -187,6 +205,20 @@ export default {
         return this.isSingleChoiceFilter ? `${this.filter.columnName}: ${ this.filter.dataValues[0] }` : `${this.filter.columnName} (${ this.filter.dataValues.length })`
       } else if (this.filter.statsType === 'NUMERIC') {
         return this.filter.start === null || this.filter.start === '' ? this.filter.columnName :`${this.filter.columnName} (${ this.filter.start} - ${this.filter.end})`
+      } else if (this.filter.statsType === 'DATETIME') {
+        return this.filter.start === null || this.filter.start === '' ? this.filter.columnName :`${this.filter.columnName}: ${ this.filter.start} - ${this.filter.end}`
+      }
+    },
+    dateTimeRange () {
+      if (!this.filter.start && !this.filter.end) return []
+      return [this.filter.start, this.filter.end]
+    },
+    pickerOptions () {
+      const vm = this
+      return {
+        disabledDate(time) {
+          return time.getTime() < new Date(vm.filter.dataMin).getTime() || time.getTime() > new Date(vm.filter.dataMax).getTime()
+        }
       }
     }
   },
@@ -219,7 +251,7 @@ export default {
       this.isLoading = true
 
       try {
-        if (this.filter.statsType === 'NUMERIC') return await this.getDataColumnValue()
+        if (this.filter.statsType === 'NUMERIC' || this.filter.statsType === 'DATETIME') return await this.getDataColumnValue()
 
         // category 和 boolean 欄位如果直接打 getDataColumnValue api 會取到 alias，所以直接打搜尋 api 就能避免
         await this.searchValue()
@@ -242,7 +274,13 @@ export default {
             this.filter.dataMax = valueList.max
             return 
           }
-          // TODO: 實作 date time
+          
+          if (statsType === 'DATETIME') {
+            // 目前後端有用到 13 種日期格式，先預設所有日期最小單位都到秒
+            valueList.datePattern = 'yyyy-MM-dd HH:mm:ss'
+            this.filter.dataMin = this.customerTimeFormatter(valueList.start, 'SECOND')
+            this.filter.dataMax = this.customerTimeFormatter(valueList.end, 'SECOND')
+          }
         })
     },
     searchValue () {
@@ -278,6 +316,12 @@ export default {
         this.$emit('updateFilter', this.tempFilter)
         this.toggleFilterPanel()
       })
+    },
+    updateDateTimeFilteredColumnValue ([start, end]) {
+      this.filter.start = start
+      this.filter.end = end
+      this.$emit('updateFilter', this.filter)
+      this.toggleFilterPanel()
     },
     createTempFilter () {
       this.tempFilter = JSON.parse(JSON.stringify(this.filter))
@@ -347,6 +391,23 @@ export default {
     border-radius: 5px;
     overflow: hidden;
     filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
+  }
+
+  /*透過透明度隱藏預設的結果顯示，但仍保留點擊時要能被開啟的功能*/
+  &__datetime-picker-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    overflow: hidden;
+
+    /*大小為零時，使用找點任何一處可觸發選擇匡被關閉*/
+    &.hidden {
+      width: 0;
+      height: 0;
+    }
   }
 
   &:not(:last-of-type) {

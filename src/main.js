@@ -39,6 +39,8 @@ import {
   MenuItem,
   Badge
 } from 'element-ui'
+// 針對 on-demand 掛載 element ui 元件情境下設定語系用
+import ElementLocale from 'element-ui/lib/locale'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
@@ -156,6 +158,9 @@ Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
 Vue.use(Badge)
+// element ui 帶入 i18n 語系
+// reference: https://element.eleme.io/#/en-US/component/i18n#custom-i18n-in-on-demand-components
+ElementLocale.i18n((key, value) => i18n.t(key, value))
 
 Vue.use(vGanttChart)
 

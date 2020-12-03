@@ -151,6 +151,57 @@ Vue.mixin({
     timeToDateTimeSecondPrecision (time) {
       return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
+    customerTimeFormatter(time, timeScope) {
+      if (timeScope === "WEEK") {
+        /* 當一年最後一週跨到下一年
+         * moment js 與後端回傳的 week 不同
+         * EX: 2018-12-30(日)禮拜天落在 2018年第52週，但後端會傳 2019年第一週
+        */
+        let weekCrossYear = moment.utc(time).format('YYYY') !== moment.utc(time).add(1, 'weeks').format('YYYY')
+        let year = weekCrossYear ? moment.utc(time).add(1, 'weeks').format('YYYY') : moment.utc(time).format('YYYY')
+        return `${year}-${i18n.tc('timeScopeUnit.allowArg.week', moment.utc(time).week())}`
+      }
+      const format = this.getDatePickerOptions(timeScope).format.replace('dd', 'DD').replace('yyyy', 'YYYY')
+      return moment.utc(time).format(format)
+    },
+    // 在使用 TimePicker 時，把後端的 timeScope 對印到 element-ui 的 type, format
+    getDatePickerOptions(timeScope) {
+      switch (timeScope) {
+        case "SECOND":
+        case "MINUTE":
+        case "HOUR":
+          return {
+            type: "datetime",
+            format: "yyyy-MM-dd HH:mm:ss"
+          }
+        case "DAY":
+          return {
+            type: "date",
+            format: "yyyy-MM-dd"
+          }
+        case "WEEK":
+          return {
+            type: "week",
+            format: "yyyy-W WW"
+          }
+        case "MONTH":
+        case "QUARTER":
+          return {
+            type: "month",
+            format: "yyyy-MM"
+          }
+        case "YEAR":
+          return {
+            type: "year",
+            format: "yyyy"
+          }
+        default:
+          return {
+            type: "datetime",
+            format: "yyyy-MM-dd HH:mm:ss"
+          }
+      }
+    },
     // 時間補十分位，為了滿足 YYYY-MM-DD 格式
     paddingZero (n) {
       return n < 10 ? '0' + n : n

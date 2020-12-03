@@ -146,7 +146,11 @@ export default {
     restrictions () {
       return this.allFilterList
         .filter(filter => {
-          if (filter.statsType === 'NUMERIC') return filter.start && filter.end
+          if (
+            filter.statsType === 'NUMERIC'
+            || filter.statsType === 'FLOAT'
+            || filter.statsType === 'DATETIME'
+          ) return filter.start && filter.end
           return filter.dataValues.length > 0
         })
         .map(filter => {
@@ -165,6 +169,10 @@ export default {
               data_type = 'int'
               type = 'range'
               break
+            case ('DATETIME'):
+              data_type = 'datetime'
+              type = 'range'
+              break
           }
 
           return [{
@@ -177,7 +185,7 @@ export default {
                 datavalues: filter.dataValues,
                 display_datavalues: filter.dataValues
               }),
-              ...(filter.statsType === 'NUMERIC' && {
+              ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
                 start: filter.start,
                 end: filter.end
               })
