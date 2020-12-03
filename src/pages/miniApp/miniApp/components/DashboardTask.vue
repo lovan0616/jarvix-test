@@ -59,6 +59,9 @@
         :custom-chart-style="chartComponentStyle"
         :key="'chart' + keyResultId"
         :component-id="keyResultId"
+        :is-show-description="false"
+        :is-show-coefficients="false"
+        :show-toolbox="false"
         intend="key_result"
       />
     </div>
