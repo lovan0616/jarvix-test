@@ -220,6 +220,7 @@ export default {
                 keyResultId: componentResponse.componentIds.key_result[0],
                 dataColumns: componentResponse.segmentationPayload.transcript.subjectList.map(item => ({
                   columnId: item.dataColumn.dataColumnId,
+                  columnName: item.dataColumn.dataColumnAlias,
                   statsType: item.dataColumn.statsType,
                   dataType: item.dataColumn.dataType
                 })),
@@ -227,7 +228,7 @@ export default {
                 question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
                 questionId: componentResponse.questionId,
                 dataSourceId: this.dataSourceId,
-                dataFrameId: this.dataFrameId
+                dataFrameId: componentResponse.segmentationPayload.transcript.dataFrame.dataFrameId
               })
               this.$emit('update:isAddable', componentResponse.layout === 'general' || false)
               this.$emit('update:isLoading', false)
@@ -307,7 +308,7 @@ export default {
     
     &__header {
       display: flex;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
       color: #6C7678;
     }
     &__header-icon-box {

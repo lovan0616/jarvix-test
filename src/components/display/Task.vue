@@ -51,6 +51,8 @@
         :custom-chart-style="customChartStyle"
         :arrow-btn-right="arrowBtnRight"
         :is-show-label-data="isShowLabelData"
+        :is-show-description="isShowDescription"
+        :is-show-coefficients="isShowCoefficients"
         @next="getNewPageInfo"
         @toggleLabel="toggleLabel"
       />
@@ -93,6 +95,14 @@ export default {
       default: null
     },
     showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    isShowDescription: {
+      type: Boolean,
+      default: true
+    },
+    isShowCoefficients: {
       type: Boolean,
       default: true
     },

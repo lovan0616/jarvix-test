@@ -194,9 +194,8 @@ export default {
         })
     },
     shouldComponentBeFiltered () {
-      // 判斷元件是否需要因應 filter 異動而重做
-      let filterDataFrameIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
-      return filterDataFrameIds.includes(this.componentData.dataFrameId)
+      // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
+      return this.includeSameColumnPrimaryAliasFilter || this.includeSameDataFrameFilter
     },
     shouldComponentYAxisBeControlled () {
       const yAxisControlsDataFrames = this.selectedYAxisControls.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
@@ -220,8 +219,9 @@ export default {
       `)
     },
     dashboardTaskTitle () {
-      if (this.isEditMode) return this.componentData.config.diaplayedName
-      return this.shouldComponentYAxisBeControlled ? this.controllerMutatedQuestionWithStyleTag : this.componentData.config.diaplayedName
+      return !this.isEditMode && this.shouldComponentYAxisBeControlled
+        ? this.controllerMutatedQuestionWithStyleTag
+        : this.componentData.config.diaplayedName
     },
     allFilterList () {
       return [...this.filters, ...this.controls]
@@ -236,6 +236,18 @@ export default {
         }
         return acc
       }, [])
+    },
+    includeSameDataFrameFilter () {
+      let filterDataFrameIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
+      return filterDataFrameIds.includes(this.componentData.dataFrameId)
+    },
+    includeSameColumnPrimaryAliasFilter () {
+      let filterDataColumnNames = this.allFilterList.reduce((acc, cur) => acc.concat(cur.columnName), [])
+      const componentColumns = this.componentData.dataColumns
+      for (let i = 0; i < componentColumns.length; i++) {
+        if (filterDataColumnNames.includes(componentColumns[i].columnName)) return true
+        return false
+      }
     }
   },
   watch: {
