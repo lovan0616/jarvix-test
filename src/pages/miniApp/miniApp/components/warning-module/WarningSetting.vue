@@ -135,6 +135,7 @@ export default {
     display: flex;
     justify-content: space-between;
     margin-bottom: 12px;
+    margin-right: 20px;
     .nav-left {
       font-size: 20px;
     }
