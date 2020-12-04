@@ -313,7 +313,7 @@
               class="mini-app__dashboard-filter mini-app__dashboard-filter--bottom"
               @removeFilter="removeFilter($event, 'multiple')"
             />
-            <div class="mini-app__dashbaord-components">
+            <div class="mini-app__dashboard-components">
               <template v-if="currentDashboard.components.length > 0">
                 <dashboard-task
                   v-for="componentData in currentDashboard.components"
@@ -328,9 +328,16 @@
                 >
                   <template slot="drowdown">
                     <dropdown-select
-                      :bar-data="componentSettingOptions"
+                      :bar-data="componentSettingOptions(componentData)"
                       @switchDialogName="switchDialogName($event, componentData.id)"
                     />
+                  </template>
+                  <template 
+                    v-if="componentData.type === 'monitor-warning-list'" 
+                    slot="icon">
+                    <svg-icon 
+                      icon-class="warning" 
+                      class="warning-icon"/>
                   </template>
                 </dashboard-task>
               </template>
@@ -568,25 +575,6 @@ export default {
         }
       ]
     },
-    componentSettingOptions () {
-      return [
-        {
-          title: 'miniApp.componentSetting',
-          icon: 'filter-setting',
-          dialogName: 'CreateComponent'
-        },
-        {
-          title: 'miniApp.createRelation',
-          icon: 'filter-setting',
-          dialogName: 'CreateComponentRelation'
-        },
-        {
-          title: 'button.delete',
-          icon: 'delete',
-          dialogName: 'DeleteComponent'
-        }
-      ]
-    },
     controlTypeOptions () {
       return [
         {
@@ -606,7 +594,7 @@ export default {
           id: 'General'
         },
         {
-          name: this.$t('miniApp.realTimeMonitorWarningComponent'),
+          name: this.$t('miniApp.monitorComponent'),
           id: 'MonitorWarning'
         }
       ]
@@ -1102,7 +1090,7 @@ export default {
           board.components.push({
             init: true,
             id: null,
-            type: 'monitor-warning-table',
+            type: 'monitor-warning-list',
             resultId: null,
             orderSequence: null,
             tempResultInfo: {},
@@ -1111,7 +1099,7 @@ export default {
               name: null
             },
             config: {
-              diaplayedName: this.$t('miniApp.realTimeMonitorWarningComponent'),
+              diaplayedName: this.$t('miniApp.realTimeMonitorWarning'),
               isAutoRefresh: false,
               refreshFrequency: null
             },
@@ -1136,7 +1124,26 @@ export default {
     openWarningModule () {
       this.isWarningModule = true
       this.currentDashboardId = null
-    }
+    },
+    componentSettingOptions (component) {
+      return [
+        ...(component.type !== 'monitor-warning-list' && [{
+          title: 'miniApp.componentSetting',
+          icon: 'filter-setting',
+          dialogName: 'CreateComponent'
+        }]),
+        {
+          title: 'miniApp.createRelation',
+          icon: 'filter-setting',
+          dialogName: 'CreateComponentRelation'
+        },
+        {
+          title: 'button.delete',
+          icon: 'delete',
+          dialogName: 'DeleteComponent'
+        }
+      ]
+    },
   }
 }
 </script>
@@ -1320,6 +1327,7 @@ export default {
     padding: 20px 0 0 20px;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
     &.warning {
       padding-right: 20px;
     }
@@ -1582,6 +1590,13 @@ export default {
     &--bottom {
       z-index: 1;
       margin-bottom: 20px;
+    }
+  }
+
+  &__dashboard-components {
+    margin-right: 20px;
+    .warning-icon {
+      color: #FF5C46;
     }
   }
 }
