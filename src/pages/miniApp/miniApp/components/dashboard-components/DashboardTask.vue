@@ -16,6 +16,9 @@
           class="more-icon" />
         <slot name="drowdown"/>
       </div>
+      <slot 
+        v-if="!isEditMode" 
+        name="icon"/>
       <div 
         v-else-if="componentData.relatedDashboard.id" 
         class="component-setting-box"
@@ -50,9 +53,7 @@
         </template>
       </div>
     </div>
-    <div v-else-if="componentData.type === 'monitor-warning-table'">
-      <monitor-warning-table/>
-    </div>
+    <monitor-warning-list v-else-if="componentData.type === 'monitor-warning-list'" />
     <div 
       v-else
       class="item-content chart">
@@ -97,13 +98,13 @@
 
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
-import MonitorWarningTable from './MonitorWarningTable'
+import MonitorWarningList from './MonitorWarningList'
 
 export default {
   name: 'DashboardTask',
   components: {
     DecideDialog,
-    MonitorWarningTable
+    MonitorWarningList
   },
   props: {
     componentData: {
@@ -381,6 +382,9 @@ export default {
   background-color: #192323;
   border-radius: 5px;
   margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  height: 338px;
   &:nth-child(odd) {
     margin-right: 16px;
   }
@@ -388,6 +392,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 16px;
     .item-title {
       color: #DDD;
       @include text-hidden;

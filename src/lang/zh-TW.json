@@ -798,7 +798,8 @@
     "currentlyDisplayed": "當前顯示",
     "setForDisplay": "設為顯示",
     "generalComponent": "一般元件",
-    "realTimeMonitorWarningComponent": "即時監控示警"
+    "realTimeMonitorWarning": "即時監控示警",
+    "monitorComponent": "監控示警元件"
   },
   "clustering": {
     "cluster": "群體",
