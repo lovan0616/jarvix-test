@@ -175,7 +175,9 @@
           <main 
             v-if="isWarningModule && !currentDashboardId"
             class="mini-app__main warning">
-            <warning-module/>
+            <warning-module
+              :dashboard-list="dashboardList"
+            />
           </main>
           <div 
             v-else-if="dashboardList.length === 0" 
@@ -191,8 +193,8 @@
           </div>
           <main 
             v-else
-            class="mini-app__main dashbaord">
-            <div class="dashbaord__header">
+            class="mini-app__main dashboard">
+            <div class="dashboard__header">
               <div class="header-left">
                 <template v-if="isEditingDashboardName">
                   <input-verify
@@ -313,7 +315,7 @@
               class="mini-app__dashboard-filter mini-app__dashboard-filter--bottom"
               @removeFilter="removeFilter($event, 'multiple')"
             />
-            <div class="mini-app__dashbaord-components">
+            <div class="mini-app__dashboard-components">
               <template v-if="currentDashboard.components.length > 0">
                 <dashboard-task
                   v-for="componentData in currentDashboard.components"
@@ -1320,11 +1322,9 @@ export default {
     padding: 20px 0 0 20px;
     display: flex;
     flex-direction: column;
-    &.warning {
-      padding-right: 20px;
-    }
-    .dashbaord {
-      &__header {
+    &.warning {}
+    &.dashboard {
+      .dashboard__header {
         position: relative;
         z-index: 4;
         flex: 0 0 30px;
@@ -1445,23 +1445,18 @@ export default {
           }
         }
       }
-
-      &-filters {
-        display: flex;
-        justify-content: space-between;
-        padding-right: 20px;
-      }
-
-      &-components {
-        flex: 1;
-        height: 0;
-        overflow: overlay;
-        padding-right: 20px;
-        &:after {
-          content: '';
-          display: block;
-          clear: both;
-        }
+    }
+  }
+  &__dashboard {
+    &-components {
+      flex: 1;
+      height: 0;
+      overflow: overlay;
+      padding-right: 20px;
+      &:after {
+        content: '';
+        display: block;
+        clear: both;
       }
     }
   }
