@@ -236,6 +236,13 @@ export default {
     appQuestion () {
       return this.$store.state.dataSource.appQuestion
     },
+    dataMax () {
+      let maxValue = Number.MIN_SAFE_INTEGER
+      this.dataset.data.forEach(data => {
+        maxValue = Math.max(...data) > maxValue ? Math.max(...data) : maxValue
+      })
+      return maxValue
+    },
     lineChartData () {
       // 判斷是否為 2c1t
       if (this.dataset.index.length === 0) return false
@@ -295,6 +302,7 @@ export default {
     },
     composeColumn (element, colIndex) {
       const shortenNumberMethod = this.shortenNumber
+      const maxValue = this.dataMax
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
@@ -307,7 +315,16 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { return shortenNumberMethod(value.data[colIndex + 1], 0) }
+            formatter (value) { 
+              let num = value.data[colIndex + 1]
+              /* format value 的規則是
+               * 數線上用到最大單位的數值需要到小數點後第 2 位（因為量級有差距時，小單位的數值其實在數線上看起來不會有明顯差別）
+               * EX: 若同時有 aM, bK，只有單位是 aM 的要顯示到小數點後第 2 位
+               *     若所有的單位都是 K，則全部有 bK 都要顯示到小數點後第 2 位
+               */ 
+              let numberFixedDigits = (num >= 1000 && Math.round(num, 0).toString().length === Math.round(maxValue, 0).toString().length) << 1
+              return shortenNumberMethod(num, numberFixedDigits) 
+            }
           }
         })
       }
