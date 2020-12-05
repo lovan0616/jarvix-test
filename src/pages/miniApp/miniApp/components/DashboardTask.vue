@@ -235,7 +235,7 @@ export default {
       `)
     },
     dashboardTaskTitle () {
-      return !this.isEditMode && this.shouldComponentYAxisBeControlled
+      return this.shouldComponentYAxisBeControlled
         ? this.controllerMutatedQuestionWithStyleTag
         : this.componentData.config.diaplayedName
     },
@@ -283,7 +283,6 @@ export default {
       immediate: true,
       deep: true,
       handler () {
-        if (this.isEditMode) return
         if (!this.shouldComponentYAxisBeControlled) return
         this.askQuestion(this.controllerMutatedQuestion)
       }

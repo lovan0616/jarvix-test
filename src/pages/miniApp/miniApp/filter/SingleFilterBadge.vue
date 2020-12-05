@@ -85,7 +85,7 @@
     <!--Datetime-->
     <div 
       v-else-if="filter.statsType === 'DATETIME'"
-      :class="{ 'hidden': isShowFilterPanel || isEditMode }"
+      :class="{ 'hidden': isShowFilterPanel }"
       class="filter__datetime-picker-panel"
     >
       <el-date-picker
@@ -228,7 +228,6 @@ export default {
       return 'required|decimal|validLowerBound:upperBound'
     },
     displayName () {
-      if (this.isEditMode) return this.filter.columnName 
       if (this.filter.statsType === 'CATEGORY' || this.filter.statsType === 'BOOLEAN' || this.filter.statsType === 'RELATIVEDATETIME') {
         const selectedAmount = this.filter.dataValues.length
         if (selectedAmount === 0) return this.filter.columnName
@@ -289,7 +288,7 @@ export default {
 
         // preview 和 view 模式下，控制項須確保至少選定其中一個項目，如果沒有則預設第一個選項
         const isNeedDefaultSelect = this.isSingleChoiceFilter && this.filter.dataValues.length === 0
-        if (!this.isEditMode && isNeedDefaultSelect) this.updateSingleEnumFilteredColumnValue(null, this.filter.dataValueOptionList[0].name)
+        if (isNeedDefaultSelect) this.updateSingleEnumFilteredColumnValue(null, this.filter.dataValueOptionList[0].name)
       } finally {
         this.isLoading = false
       }
@@ -334,7 +333,6 @@ export default {
         // .finally(() => this.isLoading = false)
     },
     toggleFilterPanel () {
-      if (this.isEditMode) return
       if (!this.isShowFilterPanel) {
         this.createTempFilter()
       } else {

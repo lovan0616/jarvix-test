@@ -273,7 +273,7 @@
                 :initial-filter-list.sync="controlColumnValueInfoList"
                 :is-single-choice-filter="true"
                 class="mini-app__dashboard-filter mini-app__dashboard-filter--top"
-                @removeFilter="removeFilter($event, 'single')"
+                @updateFilter="updateFilter($event, 'single')"
               />
               <!--Y Axis Control panel-->
               <axis-control-panel
@@ -282,7 +282,7 @@
                 :is-edit-mode="isEditMode"
                 :initial-control-list.sync="yAxisControlColumnValueInfoList"
                 class="mini-app__dashboard-filter mini-app__dashboard-filter--middle"
-                @removeControl="removeControl"
+                @updateControl="updateControl"
               />
               <!--Filter Panel-->
               <filter-control-panel
@@ -292,7 +292,7 @@
                 :initial-filter-list.sync="filterColumnValueInfoList"
                 :is-single-choice-filter="false"
                 class="mini-app__dashboard-filter mini-app__dashboard-filter--bottom"
-                @removeFilter="removeFilter($event, 'multiple')"
+                @updateFilter="updateFilter($event, 'multiple')"
               />
               <div class="mini-app__dashbaord-components">
                 <template v-if="currentDashboard.components.length > 0">
@@ -1020,7 +1020,7 @@ export default {
           this.currentComponentId = id
       }
     },
-    removeFilter (updatedFilterList, type) {
+    updateFilter (updatedFilterList, type) {
       this.isProcessing = true
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
@@ -1031,28 +1031,28 @@ export default {
       } else {
         editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList = updatedFilterList
       }
+      
+      // edit mode 下可以賦予預設值，其餘模式則無法
+      if (!this.isEditMode) return this.isProcessing = false
 
       // 更新 app
       this.updateAppSetting(editedMiniApp)
-        .then(() => {
-          this.isShowCreateFilterDialog = false
-          this.miniApp = editedMiniApp
-        })
+        .then(() => this.miniApp = editedMiniApp)
         .finally(() => this.isProcessing = false)
     },
-    removeControl (updatedControlList) {
+    updateControl (updatedControlList) {
       this.isProcessing = true
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
       editedMiniApp.settings.editModeData.dashboards[dashboradIndex].yAxisControlList = updatedControlList
 
+      // edit mode 下可以賦予預設值，其餘模式則無法
+      if (!this.isEditMode) return this.isProcessing = false
+
       // 更新 app
       this.updateAppSetting(editedMiniApp)
-        .then(() => {
-          this.isShowCreateFilterDialog = false
-          this.miniApp = editedMiniApp
-        })
+        .then(() => this.miniApp = editedMiniApp)
         .finally(() => this.isProcessing = false)
     },
     closeFilterCreationDialog () {
