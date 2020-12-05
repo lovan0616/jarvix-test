@@ -134,6 +134,7 @@ import AskBlock from '@/components/chatBot/AskBlock'
 import ResultDisplay from '@/pages/result/ResultDisplay'
 import DashboardComponent from './DashboardComponent'
 import InputVerify from '@/components/InputVerify'
+import { getDateTimeColumns } from '@/API/DataSource'
 import { mapState } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -244,9 +245,13 @@ export default {
   },
   methods: {
     createComponent () {
-      this.$validator.validateAll().then(valid => {
+      this.$validator.validateAll()
+      .then(valid => {
         if (!valid) return
-        
+        // 取得預設時間欄位
+        return getDateTimeColumns(this.currentResultInfo.dataFrameId)
+      })
+      .then(columnList => {
         this.$emit('create', {
           ...this.currentComponent,
           init: true,
@@ -259,7 +264,8 @@ export default {
           relatedDashboard: {
             id: null,
             name: null
-          }
+          },
+          dateTimeColumn: columnList.find(column => column.isDefault)
         })
       })
     },

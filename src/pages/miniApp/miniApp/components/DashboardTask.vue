@@ -94,6 +94,7 @@
 
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
+import moment from 'moment'
 
 export default {
   name: 'DashboardTask',
@@ -173,10 +174,22 @@ export default {
               type = 'range'
               break
             case ('DATETIME'):
+            case ('RELATIVEDATETIME'):
               data_type = 'datetime'
               type = 'range'
-              break
+              break  
           }
+
+          // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
+          if (filter.statsType === 'RELATIVEDATETIME') return [{
+            type,
+            properties: {
+              data_type,
+              dc_id: this.componentData.dateTimeColumn.dataColumnId,
+              display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
+              ...this.formatRelativeDatetime(filter.dataValues)
+            }
+          }]
 
           return [{
             type,
@@ -191,14 +204,14 @@ export default {
               ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
                 start: filter.start,
                 end: filter.end
-              })
+              }),
             }
           }]
         })
     },
     shouldComponentBeFiltered () {
       // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
-      return this.includeSameColumnPrimaryAliasFilter || this.includeSameDataFrameFilter
+      return this.includeSameColumnPrimaryAliasFilter || this.includeSameDataFrameFilter || this.includeRelativeDatetimeFilter
     },
     shouldComponentYAxisBeControlled () {
       const yAxisControlsDataFrames = this.selectedYAxisControls.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
@@ -251,6 +264,9 @@ export default {
         if (filterDataColumnNames.includes(componentColumns[i].columnName)) return true
         return false
       }
+    },
+    includeRelativeDatetimeFilter () {
+      return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
     }
   },
   watch: {
@@ -281,6 +297,7 @@ export default {
   },
   methods: {
     askQuestion (question = this.componentData.question) {
+      window.clearTimeout(this.timeoutFunction)
       this.isProcessing = true
       this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
       this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
@@ -310,7 +327,6 @@ export default {
       }).catch(error => { this.isProcessing = false })
     },
     getComponentV2 (resultId) {
-      window.clearTimeout(this.timeoutFunction)
       this.$store.dispatch('chatBot/getComponentList', resultId)
         .then(componentResponse => {
           switch (componentResponse.status) {
@@ -377,7 +393,28 @@ export default {
         case '0 0 1 * *':
           return 30 * 7 * 24 * 60 * 1000
       }
-    }
+    },
+    formatRelativeDatetime (dataValues) {
+      const properties = {
+        start: null,
+        end: null
+      }
+      
+      // update datetime range
+      if (dataValues.includes('today')) {
+        properties.start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
+        properties.end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
+      } else if (dataValues.some(value => RegExp('^.*hour.*$').test(value))) {
+        const hour = Math.max(...dataValues.map(value => Number(value.split('hour')[0])))
+        properties.start = moment().subtract(hour, 'hours').format('YYYY-MM-DD HH:mm')
+        properties.end = moment().format('YYYY-MM-DD HH:mm')
+      } else {
+        properties.start = null
+        properties.end = null
+      }
+
+      return properties
+    },
   }
 }
 </script>

@@ -158,6 +158,34 @@
         </div>
       </template>
     </div>
+    <!--Relative Datetime-->
+    <div
+      v-if="isShowFilterPanel && (filter.statsType === 'RELATIVEDATETIME')"
+      class="filter__selector-panel selector"
+      @click.stop>
+      <div 
+        v-if="filter.dataValueOptionList.length === 0" 
+        class="empty-message">
+        {{ $t('message.emptyResult') }}
+      </div>
+      <div class="selector__list-block">
+        <template v-for="(option, index) in filter.dataValueOptionList">
+          <label
+            :key="index"
+            class="checkbox">
+            <div class="checkbox-label">
+              <input
+                :checked="checkValueIsChecked(option.value)"
+                type="checkbox"
+                @input="updateMultipleEnumFilteredColumnValue($event, option.value)"
+              >
+              <div class="checkbox-square"/>
+            </div>
+            <span class="radio__name">{{ option.name }}</span>
+          </label>
+        </template>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -188,7 +216,8 @@ export default {
       searchInput: '',
       isShowFilterPanel: false,
       isProcessing: false,
-      tempFilter: {}
+      tempFilter: {},
+      relativeDatetimeOptions: ['today', '6hour', '3hour', '1hour']
     }
   },
   computed: {
@@ -200,7 +229,7 @@ export default {
     },
     displayName () {
       if (this.isEditMode) return this.filter.columnName 
-      if (this.filter.statsType === 'CATEGORY' || this.filter.statsType === 'BOOLEAN') {
+      if (this.filter.statsType === 'CATEGORY' || this.filter.statsType === 'BOOLEAN' || this.filter.statsType === 'RELATIVEDATETIME') {
         const selectedAmount = this.filter.dataValues.length
         if (selectedAmount === 0) return this.filter.columnName
         return this.isSingleChoiceFilter ? `${this.filter.columnName}: ${ this.filter.dataValues[0] }` : `${this.filter.columnName} (${ this.filter.dataValues.length })`
@@ -252,6 +281,7 @@ export default {
       this.isLoading = true
 
       try {
+        if (this.filter.statsType === 'RELATIVEDATETIME') return this.getRelativeDatetimeOption()
         if (this.filter.statsType === 'NUMERIC' || this.filter.statsType === 'DATETIME') return await this.getDataColumnValue()
 
         // category 和 boolean 欄位如果直接打 getDataColumnValue api 會取到 alias，所以直接打搜尋 api 就能避免
@@ -263,6 +293,13 @@ export default {
       } finally {
         this.isLoading = false
       }
+    },
+    getRelativeDatetimeOption () {
+      this.filter.dataValueOptionList = this.relativeDatetimeOptions.map(value => ({
+        value: value,
+        name: value,
+        isSelected: this.filter.dataValues.includes(value)
+      }))
     },
     getDataColumnValue () {
       return getDataColumnValue(this.filter.columnId)

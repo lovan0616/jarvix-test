@@ -796,7 +796,9 @@
     "displayedUnit": "顯示單位",
     "pleaseEnterUnitName": "請輸入單位名稱",
     "currentlyDisplayed": "當前顯示",
-    "setForDisplay": "設為顯示"
+    "setForDisplay": "設為顯示",
+    "generalFilter": "一般篩選條件",
+    "dateTimeFilter": "時間條件"
   },
   "clustering": {
     "cluster": "群體",
