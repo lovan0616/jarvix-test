@@ -310,7 +310,7 @@ Vue.mixin({
       let taskList = this.$store.state.result.tableDataCSVDownloadList
       if (taskList.some(task => task.componentId === componentId)) return
       this.$store.commit('result/updateTableDataCSVDownloadList', {
-        title: question,
+        question: question,
         componentId: componentId,
         status: 'Ready'
       })

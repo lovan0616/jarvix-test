@@ -138,7 +138,10 @@ export default {
       for (let i = 0; i < readyList.length; i++) {
         if(i >= availableDownloadingCapacity - 1) break
         readyList[i].status = 'Process'
-        this.getComponentDataCSV(readyList[i].componentId)
+        getComponentDataCSV(readyList[i].componentId)
+          .then(res => {
+            this.exportToCSV(readyList[i].question, res)
+          })
           .finally(() => {
             let taskIndex = this.tableDataCSVDownloadList.find(item => item.componentId === readyList[i].componentId)
             this.tableDataCSVDownloadList.splice(taskIndex, 1)
@@ -155,6 +158,7 @@ export default {
     clearInterval(this.intervalTimer)
   },
   methods: {
+    // 測試用
     getComponentDataCSV () {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
