@@ -252,7 +252,7 @@
                   :data-list="controlTypeOptions"
                   :has-bullet-point="false"
                   trigger="hover"
-                  @select="createControlType"
+                  @select="createFilterAndControl"
                 >
                   <template #display>
                     <button
@@ -266,13 +266,22 @@
                     </button>
                   </template>
                 </custom-dropdown-select>
-                <button
+                <!--Filter-->
+                <custom-dropdown-select
                   v-if="isEditMode"
-                  class="btn-m btn-outline btn-has-icon create-filter-btn" 
-                  @click="createMulitipleChoiceFilter">
-                  <svg-icon icon-class="plus"/>
-                  <span class="button-label">{{ $t('miniApp.filterCondition') }}</span>
-                </button>
+                  :data-list="filterTypeOptions"
+                  :has-bullet-point="false"
+                  trigger="hover"
+                  @select="createFilterAndControl"
+                >
+                  <template #display>
+                    <button
+                      class="btn-m btn-outline btn-has-icon create-filter-btn" 
+                      @click.prevent>
+                      <svg-icon icon-class="plus"/>{{ $t('miniApp.filterCondition') }}
+                    </button>
+                  </template>
+                </custom-dropdown-select>
                 <div
                   v-if="isEditMode"
                   class="dashboard-setting-box">
@@ -601,6 +610,18 @@ export default {
         }
       ]
     },
+    filterTypeOptions () {
+      return [
+        {
+          name: this.$t('miniApp.generalFilter'),
+          id: 'MulitipleChoiceFilter'
+        },
+        {
+          name: this.$t('miniApp.dateTimeFilter'),
+          id: 'TimeFilter'
+        }
+      ]
+    },
     miniAppId () {
       return this.$route.params.mini_app_id
     },
@@ -696,6 +717,15 @@ export default {
             ...filter,
             dataMax: filterInfo.dataMax || null,
             dataMin: filterInfo.dataMin || null,
+            start: filterInfo.start || null,
+            end: filterInfo.end || null
+          }
+          break
+        case 'RELATIVEDATETIME':
+          filter = {
+            ...filter,
+            dataValues: filterInfo.dataValues || [],
+            dataValueOptionList: filterInfo.dataValueOptionList || [],
             start: filterInfo.start || null,
             end: filterInfo.end || null
           }
@@ -1026,7 +1056,7 @@ export default {
           this.currentComponentId = id
       }
     },
-    removeFilter (updatedFilterList, type) {
+    updateFilter (updatedFilterList, type) {
       this.isProcessing = true
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
@@ -1037,28 +1067,28 @@ export default {
       } else {
         editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList = updatedFilterList
       }
+      
+      // edit mode 下可以賦予預設值，其餘模式則無法
+      if (!this.isEditMode) return this.isProcessing = false
 
       // 更新 app
       this.updateAppSetting(editedMiniApp)
-        .then(() => {
-          this.isShowCreateFilterDialog = false
-          this.miniApp = editedMiniApp
-        })
+        .then(() => this.miniApp = editedMiniApp)
         .finally(() => this.isProcessing = false)
     },
-    removeControl (updatedControlList) {
+    updateControl (updatedControlList) {
       this.isProcessing = true
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
       editedMiniApp.settings.editModeData.dashboards[dashboradIndex].yAxisControlList = updatedControlList
 
+      // edit mode 下可以賦予預設值，其餘模式則無法
+      if (!this.isEditMode) return this.isProcessing = false
+
       // 更新 app
       this.updateAppSetting(editedMiniApp)
-        .then(() => {
-          this.isShowCreateFilterDialog = false
-          this.miniApp = editedMiniApp
-        })
+        .then(() => this.miniApp = editedMiniApp)
         .finally(() => this.isProcessing = false)
     },
     closeFilterCreationDialog () {
@@ -1117,7 +1147,21 @@ export default {
         .then(() => { this.miniApp = updatedMiniAppData })
         .finally(() => this.isProcessing = false)
     },
-    createControlType (type) {
+    createTimeFilter () {
+      this.isSingleChoiceFilter = false
+      this.saveCreatedFilter([{
+        id: Date.now().toString(),
+        dataSourceId: null,
+        dataSourceName: null,
+        dataFrameId: null,
+        dataFrameName: null,
+        columnId: null,
+        dataType: null,
+        statsType: 'RELATIVEDATETIME',
+        columnName: this.$t('miniApp.dateTimeFilter'),
+      }])
+    },
+    createFilterAndControl (type) {
       this[`create${type}`]()
     },
     createComponentType (type) {

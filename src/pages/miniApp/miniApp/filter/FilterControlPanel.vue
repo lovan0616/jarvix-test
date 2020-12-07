@@ -68,11 +68,12 @@ export default {
       })
       this.filterList = updatedFilterList
       this.$emit('update:initial-filter-list', updatedFilterList)
+      this.$emit('updateFilter', updatedFilterList)
     },
     removeFilter (filterIndex) {
       const updatedFilterList = this.filterList.filter((filter, index) => index !== filterIndex)
       this.$emit('update:initial-filter-list', updatedFilterList)
-      this.$emit('removeFilter', updatedFilterList)
+      this.$emit('updateFilter', updatedFilterList)
     }
   }
 }

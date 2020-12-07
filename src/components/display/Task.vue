@@ -26,6 +26,7 @@
       <!-- TODO: 調整寫法 -->
       <component
         :is="componentName"
+        :diagram="diagram"
         :has-pagination="hasNextPage"
         :dataset="componentData.dataset"
         :title="componentData.title"
@@ -183,9 +184,9 @@ export default {
               break
             case 'Complete': {
               window.clearTimeout(this.timeoutFunction)
-              this.diagram = this.convertedType || response.diagram
+              this.diagram = response.diagram
               this.resultId = response.resultId
-              this.componentName = this.getChartTemplate(this.diagram)
+              this.componentName = this.getChartTemplate(this.convertedType || this.diagram)
               let responseData = response.data
               
               // 推薦洞察 需要將 question 傳給外層組件顯示用

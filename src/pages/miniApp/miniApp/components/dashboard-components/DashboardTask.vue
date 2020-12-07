@@ -54,6 +54,25 @@
       </div>
     </div>
     <monitor-warning-list v-else-if="componentData.type === 'monitor-warning-list'" />
+    <div
+      v-else-if="componentData.type === 'text'" 
+      class="item-content text">
+      <spinner v-if="isProcessing"/>
+      <template v-else>
+        <task
+          :class="{ 'not-empty': !isEmptyData }"
+          :custom-chart-style="textComponentStyle"
+          :key="'text-' + keyResultId"
+          :component-id="keyResultId"
+          :converted-type="'text_info'"
+          intend="key_result"
+          @isEmpty="isEmptyData = true"
+        />
+        <span 
+          v-if="!isEmptyData" 
+          class="index-unit">{{ componentData.indexInfo.unit }}</span>
+      </template>
+    </div>
     <div 
       v-else
       class="item-content chart">
@@ -99,6 +118,7 @@
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
 import MonitorWarningList from './MonitorWarningList'
+import moment from 'moment'
 
 export default {
   name: 'DashboardTask',
@@ -144,6 +164,11 @@ export default {
         'line-height': '64px', 
         'color': '#2AD2E2'
       },
+      textComponentStyle: {
+        'font-size': '20px',
+        'color': '#DDDDDD',
+        'text-align': 'center'
+      },
       chartComponentStyle: {
         'width': '100%',
         'height': '260px'
@@ -156,6 +181,13 @@ export default {
       return this.allFilterList
         .filter(filter => {
           if (filter.statsType === 'NUMERIC') return filter.start && filter.end
+          // 相對時間有全選的情境，不需帶入限制中
+          if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues[0] !== 'unset'
+          if (
+            filter.statsType === 'NUMERIC'
+            || filter.statsType === 'FLOAT'
+            || filter.statsType === 'DATETIME'
+          ) return filter.start && filter.end
           return filter.dataValues.length > 0
         })
         .map(filter => {
@@ -174,7 +206,23 @@ export default {
               data_type = 'int'
               type = 'range'
               break
+            case ('DATETIME'):
+            case ('RELATIVEDATETIME'):
+              data_type = 'datetime'
+              type = 'range'
+              break  
           }
+
+          // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
+          if (filter.statsType === 'RELATIVEDATETIME') return [{
+            type,
+            properties: {
+              data_type,
+              dc_id: this.componentData.dateTimeColumn.dataColumnId,
+              display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
+              ...this.formatRelativeDatetime(filter.dataValues[0])
+            }
+          }]
 
           return [{
             type,
@@ -189,15 +237,14 @@ export default {
               ...(filter.statsType === 'NUMERIC' && {
                 start: filter.start,
                 end: filter.end
-              })
+              }),
             }
           }]
         })
     },
     shouldComponentBeFiltered () {
-      // 判斷元件是否需要因應 filter 異動而重做
-      let filterDataFrameIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
-      return filterDataFrameIds.includes(this.componentData.dataFrameId)
+      // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
+      return this.includeSameColumnPrimaryAliasFilter || this.includeSameDataFrameFilter || this.includeRelativeDatetimeFilter
     },
     shouldComponentYAxisBeControlled () {
       const yAxisControlsDataFrames = this.selectedYAxisControls.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
@@ -221,8 +268,9 @@ export default {
       `)
     },
     dashboardTaskTitle () {
-      if (this.isEditMode) return this.componentData.config.diaplayedName
-      return this.shouldComponentYAxisBeControlled ? this.controllerMutatedQuestionWithStyleTag : this.componentData.config.diaplayedName
+      return this.shouldComponentYAxisBeControlled
+        ? this.controllerMutatedQuestionWithStyleTag
+        : this.componentData.config.diaplayedName
     },
     allFilterList () {
       return [...this.filters, ...this.controls]
@@ -237,6 +285,21 @@ export default {
         }
         return acc
       }, [])
+    },
+    includeSameDataFrameFilter () {
+      let filterDataFrameIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
+      return filterDataFrameIds.includes(this.componentData.dataFrameId)
+    },
+    includeSameColumnPrimaryAliasFilter () {
+      let filterDataColumnNames = this.allFilterList.reduce((acc, cur) => acc.concat(cur.columnName), [])
+      const componentColumns = this.componentData.dataColumns
+      for (let i = 0; i < componentColumns.length; i++) {
+        if (filterDataColumnNames.includes(componentColumns[i].columnName)) return true
+        return false
+      }
+    },
+    includeRelativeDatetimeFilter () {
+      return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
     }
   },
   watch: {
@@ -253,7 +316,6 @@ export default {
       immediate: true,
       deep: true,
       handler () {
-        if (this.isEditMode) return
         if (!this.shouldComponentYAxisBeControlled) return
         this.askQuestion(this.controllerMutatedQuestion)
       }
@@ -267,6 +329,7 @@ export default {
   },
   methods: {
     askQuestion (question = this.componentData.question) {
+      window.clearTimeout(this.timeoutFunction)
       this.isProcessing = true
       this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
       this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
@@ -296,7 +359,6 @@ export default {
       }).catch(error => { this.isProcessing = false })
     },
     getComponentV2 (resultId) {
-      window.clearTimeout(this.timeoutFunction)
       this.$store.dispatch('chatBot/getComponentList', resultId)
         .then(componentResponse => {
           switch (componentResponse.status) {
@@ -363,7 +425,28 @@ export default {
         case '0 0 1 * *':
           return 30 * 7 * 24 * 60 * 1000
       }
-    }
+    },
+    formatRelativeDatetime (dataValue) {
+      const properties = {
+        start: null,
+        end: null
+      }
+      
+      // update datetime range
+      if (dataValue === 'today') {
+        properties.start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
+        properties.end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
+      } else if (RegExp('^.*hour.*$').test(dataValue)) {
+        const hour = Number(dataValue.split('hour')[0])
+        properties.start = moment().subtract(hour, 'hours').format('YYYY-MM-DD HH:mm')
+        properties.end = moment().format('YYYY-MM-DD HH:mm')
+      } else {
+        properties.start = null
+        properties.end = null
+      }
+
+      return properties
+    },
   }
 }
 </script>
@@ -469,6 +552,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: auto;
     &.index {
       /deep/ .not-empty {
         width: auto;

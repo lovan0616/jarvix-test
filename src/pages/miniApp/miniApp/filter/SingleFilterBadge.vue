@@ -85,7 +85,7 @@
     <!--Datetime-->
     <div 
       v-else-if="filter.statsType === 'DATETIME'"
-      :class="{ 'hidden': isShowFilterPanel || isEditMode }"
+      :class="{ 'hidden': isShowFilterPanel }"
       class="filter__datetime-picker-panel"
     >
       <el-date-picker
@@ -94,7 +94,8 @@
         :format="'yyyy-MM-dd HH:mm'"
         :picker-options="pickerOptions"
         :editable="false"
-        :clearable="false" 
+        :clearable="false"
+        :default-value="filter.dataMin"
         type="datetimerange"
         value-format="yyyy-MM-dd HH:mm"
         @input="updateDateTimeFilteredColumnValue"
@@ -157,6 +158,33 @@
         </div>
       </template>
     </div>
+    <!--Relative Datetime-->
+    <div
+      v-if="isShowFilterPanel && (filter.statsType === 'RELATIVEDATETIME')"
+      class="filter__selector-panel selector"
+      @click.stop>
+      <div 
+        v-if="filter.dataValueOptionList.length === 0" 
+        class="empty-message">
+        {{ $t('message.emptyResult') }}
+      </div>
+      <div class="selector__list-block">
+        <template v-for="(option, index) in filter.dataValueOptionList">
+          <label
+            :key="index"
+            name="control"
+            class="radio">
+            <input
+              :checked="checkValueIsChecked(option.value)"
+              class="radio__input"
+              type="radio"
+              @input="updateSingleEnumFilteredColumnValue($event, option.value)"
+            >
+            <span class="radio__name">{{ $t('miniApp.' + option.name) }}</span>
+          </label>
+        </template>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -187,7 +215,8 @@ export default {
       searchInput: '',
       isShowFilterPanel: false,
       isProcessing: false,
-      tempFilter: {}
+      tempFilter: {},
+      relativeDatetimeOptions: ['unset', 'today', '6hour', '3hour', '1hour']
     }
   },
   computed: {
@@ -198,11 +227,13 @@ export default {
       return 'required|decimal|validLowerBound:upperBound'
     },
     displayName () {
-      if (this.isEditMode) return this.filter.columnName 
       if (this.filter.statsType === 'CATEGORY' || this.filter.statsType === 'BOOLEAN') {
         const selectedAmount = this.filter.dataValues.length
         if (selectedAmount === 0) return this.filter.columnName
         return this.isSingleChoiceFilter ? `${this.filter.columnName}: ${ this.filter.dataValues[0] }` : `${this.filter.columnName} (${ this.filter.dataValues.length })`
+      } else if (this.filter.statsType === 'RELATIVEDATETIME') {
+        if (this.filter.dataValues.length === 0) return this.filter.columnName
+        return `${this.filter.columnName}: ${ this.$t('miniApp.' + this.filter.dataValues[0]) }`
       } else if (this.filter.statsType === 'NUMERIC') {
         return this.filter.start === null || this.filter.start === '' ? this.filter.columnName :`${this.filter.columnName} (${ this.filter.start} - ${this.filter.end})`
       } else if (this.filter.statsType === 'DATETIME') {
@@ -251,6 +282,7 @@ export default {
       this.isLoading = true
 
       try {
+        if (this.filter.statsType === 'RELATIVEDATETIME') return this.getRelativeDatetimeOption()
         if (this.filter.statsType === 'NUMERIC' || this.filter.statsType === 'DATETIME') return await this.getDataColumnValue()
 
         // category 和 boolean 欄位如果直接打 getDataColumnValue api 會取到 alias，所以直接打搜尋 api 就能避免
@@ -258,10 +290,17 @@ export default {
 
         // preview 和 view 模式下，控制項須確保至少選定其中一個項目，如果沒有則預設第一個選項
         const isNeedDefaultSelect = this.isSingleChoiceFilter && this.filter.dataValues.length === 0
-        if (!this.isEditMode && isNeedDefaultSelect) this.updateSingleEnumFilteredColumnValue(null, this.filter.dataValueOptionList[0].name)
+        if (isNeedDefaultSelect) this.updateSingleEnumFilteredColumnValue(null, this.filter.dataValueOptionList[0].name)
       } finally {
         this.isLoading = false
       }
+    },
+    getRelativeDatetimeOption () {
+      this.filter.dataValueOptionList = this.relativeDatetimeOptions.map(value => ({
+        value: value,
+        name: value,
+        isSelected: this.filter.dataValues.includes(value)
+      }))
     },
     getDataColumnValue () {
       return getDataColumnValue(this.filter.columnId)
@@ -285,7 +324,13 @@ export default {
     },
     searchValue () {
       // this.isLoading = true
-      return dataValueFuzzySearch(this.filter.columnId, this.searchInput)
+      return dataValueFuzzySearch(this.filter.columnId, {
+        page: 0,
+        searchString: this.searchInput,
+        size: 200,
+        // TODO: 帶入父層級條件
+        restrictions: null
+      })
         .then((response, index) => {
           this.filter.dataValueOptionList = response.fuzzySearchResult.map(value => ({
             value: value,
@@ -296,7 +341,6 @@ export default {
         // .finally(() => this.isLoading = false)
     },
     toggleFilterPanel () {
-      if (this.isEditMode) return
       if (!this.isShowFilterPanel) {
         this.createTempFilter()
       } else {

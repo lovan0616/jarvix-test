@@ -84,7 +84,6 @@ export default {
   },
   computed: {
     displayName () {
-      if (this.isEditMode) return '自變項目'
       const selectedOption = this.initialControlOptionList.find(option => option.isSelected)
       // 設定預設前，會沒有被選取的對象，因此需暫時給定空值
       return `自變項目: ${selectedOption ? selectedOption.columnName : ''}`
@@ -118,10 +117,9 @@ export default {
         isSelected: option.isSelected
       }))
       // preview 和 view 模式下，控制項預設為第一個值，各組建結果需要立即套用該控制項
-      if (!this.isEditMode && !selectedOption) this.updateControlOptionList(null, 0)
+      if (!selectedOption) this.updateControlOptionList(null, 0)
     },
     toggleControlOptionList () {
-      if (this.isEditMode) return
       this.isShowControlOptionList = !this.isShowControlOptionList
     },
     updateControlOptionList (event, index) {

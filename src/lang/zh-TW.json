@@ -799,7 +799,14 @@
     "setForDisplay": "設為顯示",
     "generalComponent": "一般元件",
     "realTimeMonitorWarning": "即時監控示警",
-    "monitorComponent": "監控示警元件"
+    "monitorComponent": "監控示警元件",
+    "generalFilter": "一般篩選條件",
+    "dateTimeFilter": "時間條件",
+    "unset": "不限",
+    "today": "今天",
+    "6hour": "近六小時",
+    "3hour": "近三小時",
+    "1hour": "近一小時"
   },
   "clustering": {
     "cluster": "群體",
