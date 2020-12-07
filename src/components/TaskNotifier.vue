@@ -10,7 +10,7 @@
   >
     <div>
       <div 
-        v-show="badgeNumber === 0" 
+        v-show="taskCount === 0" 
         class="task-notifier__content--empty">{{ $t('resultDescription.noData') }}</div>
       <div
         v-show="processingTasks.length > 0"
@@ -70,8 +70,8 @@
       class="task-notifier__icon"
     >
       <el-badge
-        :value="badgeNumber"
-        :hidden="badgeNumber === 0">
+        :value="taskCount"
+        :hidden="taskCount === 0">
         <svg-icon icon-class="task" />
       </el-badge>
     </div>
@@ -99,7 +99,7 @@ export default {
     ...mapGetters('userManagement', ['getCurrentAccountId']),
     ...mapState('dataFrameAdvanceSetting', ['isInit']),
     ...mapState('result', ['tableDataCSVDownloadMaximumCount', 'tableDataCSVDownloadList']),
-    badgeNumber () {
+    taskCount () {
       return this.processingTasks.length + this.tableDataCSVDownloadList.length
     },
     CSVDownloadProcessingTaskCount () {
