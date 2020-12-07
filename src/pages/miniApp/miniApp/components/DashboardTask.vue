@@ -50,6 +50,25 @@
         </template>
       </div>
     </div>
+    <div
+      v-else-if="componentData.type === 'text'" 
+      class="item-content text">
+      <spinner v-if="isProcessing"/>
+      <template v-else>
+        <task
+          :class="{ 'not-empty': !isEmptyData }"
+          :custom-chart-style="textComponentStyle"
+          :key="'text-' + keyResultId"
+          :component-id="keyResultId"
+          :converted-type="'text_info'"
+          intend="key_result"
+          @isEmpty="isEmptyData = true"
+        />
+        <span 
+          v-if="!isEmptyData" 
+          class="index-unit">{{ componentData.indexInfo.unit }}</span>
+      </template>
+    </div>
     <div 
       v-else
       class="item-content chart">
@@ -138,6 +157,11 @@ export default {
         'height': '69px', 
         'line-height': '64px', 
         'color': '#2AD2E2'
+      },
+      textComponentStyle: {
+        'font-size': '20px',
+        'color': '#DDDDDD',
+        'text-align': 'center'
       },
       chartComponentStyle: {
         'width': '100%',
@@ -515,6 +539,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: auto;
     &.index {
       /deep/ .not-empty {
         width: auto;

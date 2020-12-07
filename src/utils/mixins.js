@@ -324,6 +324,8 @@ Vue.mixin({
           return 'DisplayNoAnswerInfo'
         case 'index_info':
           return 'DisplayIndexInfo'
+        case 'text_info':
+          return 'DisplayTextInfo'
       }
     },
     // 藉由後端的 result denotation 名稱取得前端的顯示資訊

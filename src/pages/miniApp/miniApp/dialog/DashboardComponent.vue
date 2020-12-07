@@ -70,6 +70,29 @@
             </div>
           </div>
         </div>
+        <!--Text Type Component-->
+        <div
+          v-if="currentComponent.isTextTypeAvailable" 
+          :class="{ 'active': currentComponent.type === 'text' }" 
+          class="key-result__card card"
+          @click="switchComponentType('text')">
+          <div class="card__header">
+            <div class="card__header-icon-box">
+              <svg-icon 
+                class="icon" 
+                icon-class="check-circle" />
+            </div>
+            <div class="card__header-text">{{ displayedHeaderText('text') }}</div>
+          </div>
+          <div class="card__content">
+            <task
+              :key="'text-' + computedKeyResultId"
+              :component-id="computedKeyResultId"
+              :converted-type="'text_info'"
+              intend="key_result"
+            />
+          </div>
+        </div>
       </div>
       <!-- 其餘狀況 MultiResult, NoResult, ErrorMessage -->
       <component
@@ -194,6 +217,15 @@ export default {
     }
   },
   methods: {
+    checkIsTextTypeAvailable (transcript) {
+      // 以下需確保問句中只帶有一個 category 欄位
+      const isSingleSubject = transcript.subjectList && transcript.subjectList.length === 1
+      const isSingleCategoryDataColumn = transcript.subjectList[0].categoryDataColumnList && transcript.subjectList[0].categoryDataColumnList.length === 1
+      const haveSameDataColumn = isSingleCategoryDataColumn && transcript.subjectList[0].categoryDataColumnList[0].dataColumnId === transcript.subjectList[0].dataColumn.dataColumnId
+      // 確保不是該 category 欄位中的值，因為他會被視為該欄位下的 filter 條件
+      const isEmptyFilterList = transcript.subjectList[0].filterList === null
+      return isSingleSubject && isEmptyFilterList && isSingleCategoryDataColumn && haveSameDataColumn 
+    },
     getComponentV2 (resultId) {
       window.clearTimeout(this.timeoutFunction)
       this.$store.dispatch('chatBot/getComponentList', resultId)
@@ -213,6 +245,7 @@ export default {
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
               this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
+              this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
               this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
               this.$store.commit('result/updateCurrentResultId', resultId)
