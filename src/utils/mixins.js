@@ -341,7 +341,14 @@ Vue.mixin({
         el.setAttribute('listener', true)
       }
     },
-    downloadCSV (fileName, csvFile) {
+    downloadCSV (question, csvFile) {
+      /**
+       * 在結果頁下載資料可以從 url 上拿到時間資訊
+       * 但是 pinboard 頁無法
+       */
+      let fileName = window.location.search.split('&')[1]
+        ? this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + question + '.csv'
+        : this.timeToFileName(new Date().getTime()) + '.csv'
       // 前置的 '\uFEFF' 為零寬不換行空格，處理中文亂碼問題
       let blob = new Blob(['\uFEFF' + csvFile], { type: 'text/csv;charset=utf-8;' })
       if (navigator.msSaveBlob) {
@@ -362,13 +369,6 @@ Vue.mixin({
       }
     },
     exportToCSV (question, rows) {
-      /**
-       * 在結果頁下載資料可以從 url 上拿到時間資訊
-       * 但是 pinboard 頁無法
-       */
-      let fileName = window.location.search.split('&')[1]
-        ? this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + question + '.csv'
-        : this.timeToFileName(new Date().getTime()) + '.csv'
       let processRow = (row) => {
         let finalVal = ''
         for (let j = 0; j < row.length; j++) {
@@ -396,7 +396,7 @@ Vue.mixin({
         csvFile += processRow(rows[i])
       }
 
-      this.downloadCSV(fileName, csvFile)
+      this.downloadCSV(question, csvFile)
     },
     // 圖表在preview 時，不顯示 legend、tooltip
     previewChartSetting (config) {
