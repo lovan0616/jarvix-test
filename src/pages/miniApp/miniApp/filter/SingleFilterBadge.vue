@@ -322,7 +322,13 @@ export default {
     },
     searchValue () {
       // this.isLoading = true
-      return dataValueFuzzySearch(this.filter.columnId, this.searchInput)
+      return dataValueFuzzySearch(this.filter.columnId, {
+        page: 0,
+        searchString: this.searchInput,
+        size: 200,
+        // TODO: 帶入父層級條件
+        restrictions: null
+      })
         .then((response, index) => {
           this.filter.dataValueOptionList = response.fuzzySearchResult.map(value => ({
             value: value,

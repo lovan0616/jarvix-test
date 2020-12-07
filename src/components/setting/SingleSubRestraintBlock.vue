@@ -293,7 +293,12 @@ export default {
       if(!this.isCategoryValueEmpty) {
         this.valueList = this.tempValueList.filter(element => !this.queryString || element.name === this.queryString)
       } else {
-        dataValueFuzzySearch(this.columnId, this.queryString)
+        dataValueFuzzySearch(this.columnId, {
+          page: 0,
+          searchString: this.queryString,
+          size: 200,
+          restrictions: null
+        })
         .then(response => {
           this.valueList = response.fuzzySearchResult
           this.valueList = this.valueList.map(element => {
