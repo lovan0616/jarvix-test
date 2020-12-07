@@ -751,6 +751,7 @@ export default {
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
         .catch(() => {})
+        .finally(() => this.currentComponentId = null)
     },
     createComponentRelation (relatedDashboard) {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
@@ -1037,7 +1038,7 @@ export default {
 
       // 更新 app
       this.updateAppSetting(editedMiniApp)
-        .then(() => this.miniApp = editedMiniApp)
+        .then(() => this.getMiniAppInfo())
         .finally(() => this.isProcessing = false)
     },
     updateControl (updatedControlList) {
@@ -1052,7 +1053,7 @@ export default {
 
       // 更新 app
       this.updateAppSetting(editedMiniApp)
-        .then(() => this.miniApp = editedMiniApp)
+        .then(() => this.getMiniAppInfo())
         .finally(() => this.isProcessing = false)
     },
     closeFilterCreationDialog () {

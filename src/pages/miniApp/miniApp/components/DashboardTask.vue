@@ -167,7 +167,8 @@ export default {
         'width': '100%',
         'height': '260px'
       },
-      isProcessing: false
+      isProcessing: false,
+      tempFilteredKeyResultId: null
     }
   },
   computed: {
@@ -244,7 +245,7 @@ export default {
       return yAxisControlsDataFrames.includes(this.componentData.dataFrameId)
     },
     keyResultId () {
-      return this.componentData.tempResultInfo.keyResultId || this.componentData.keyResultId
+      return this.tempFilteredKeyResultId || this.componentData.keyResultId
     },
     dataColumnAlias () {
       return this.componentData.segmentation.transcript.subjectList[0].dataColumn.dataColumnAlias
@@ -298,7 +299,7 @@ export default {
   watch: {
     // 當 Dashboard的 fitler 變動時，由元件內部去重新問問題
     allFilterList: {
-      immediate: false,
+      immediate: true,
       deep: true,
       handler () {
         if (!this.shouldComponentBeFiltered) return
@@ -308,9 +309,13 @@ export default {
     selectedYAxisControls: {
       immediate: true,
       deep: true,
-      handler () {
-        if (!this.shouldComponentYAxisBeControlled) return
-        this.askQuestion(this.controllerMutatedQuestion)
+      handler (controls) {
+        if (this.shouldComponentYAxisBeControlled) {
+          this.askQuestion(this.controllerMutatedQuestion)
+        } else if (controls.length === 0) {
+          // 拔除所有Y軸控制器時，清除暫存 filtered info
+          this.tempFilteredKeyResultId = null
+        }
       }
     }
   },
@@ -367,11 +372,7 @@ export default {
             case 'Complete':
               this.totalSec = 50
               this.periodSec = 200
-              this.componentData.tempResultInfo = {
-                questionId: componentResponse.questionId,
-                resultId: componentResponse.id,
-                keyResultId: componentResponse.componentIds.key_result[0]
-              }
+              this.tempFilteredKeyResultId = componentResponse.componentIds.key_result[0]
               this.isProcessing = false
               // 定期更新 component 資料
               if(this.componentData.config.isAutoRefresh && !this.isEditMode) this.setComponentRefresh()
