@@ -25,7 +25,7 @@
           @click="downloadResult"
         >
           <svg-icon 
-            :icon-class="isImageDownloading ? 'spinner' : 'download'" 
+            :icon-class="isDownloading ? 'spinner' : 'download'" 
             class="icon"/>
           {{ $t('button.downloadPage') }}
         </button>
@@ -82,7 +82,7 @@
                 class="popup-box border-line" 
                 @click.stop="downloadResult">
                 <svg-icon 
-                  :icon-class="isImageDownloading ? 'spinner' : 'download'" 
+                  :icon-class="isDownloading ? 'spinner' : 'download'" 
                   class="icon popup-icon"/>
                 <div class="popup-text">{{ $t('button.downloadPage') }}</div>
               </div>
@@ -225,8 +225,7 @@ export default {
   data () {
     return {
       isLoading: false,
-      isTableDataDownloading: false,
-      isImageDownloading: false,
+      isDownloading: false,
       isRefreshing: false,
       pinBoardId: null,
       dataSourceId: null,
@@ -287,15 +286,15 @@ export default {
   },
   methods: {
     downloadResult () {
-      if(this.isImageDownloading) return
-      this.isImageDownloading = true
+      if(this.isDownloading) return
+      this.isDownloading = true
       const node = this.$el
       const fileName = this.question
 
       const excludeNode = node => node.tagName !== 'BUTTON'
       toPng(node, { filter: excludeNode })
         .then(dataUrl => {
-          this.isImageDownloading = !download(dataUrl, fileName)
+          this.isDownloading = !download(dataUrl, fileName)
         })
         .catch(() => {})
     },

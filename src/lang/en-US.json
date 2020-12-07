@@ -194,6 +194,7 @@
     "questionPlaceHolder": "Please enter a question, for example: the correlation between price and cost",
     "askPlaceHolder": "Ask JarviX",
     "dataBuilding": "Data Processing",
+    "dataDownloading": "Data Downloading...",
     "dataManageable": "Completed",
     "dataInQueue": "Waiting for Processing",
     "dataDisable": "Unable to use",
