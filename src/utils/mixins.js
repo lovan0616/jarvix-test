@@ -383,8 +383,8 @@ Vue.mixin({
       * EX: 若同時有 aM, bK，只有單位是 aM 且和 maxValue 差不到十倍的要顯示到小數點後第 2 位
       *     若所有的單位都是 K，則全部和 maxValue 差不到十倍的 bK 都要顯示到小數點後第 2 位
       */
-      let magnification =  maxValue / num <= 10
-      let numberFixedDigits = (num >= 1000 && magnification) << 1
+      let lessThanTenTimes =  maxValue / num <= 10
+      let numberFixedDigits = (num >= 1000 && lessThanTenTimes) << 1
       return this.shortenNumber(num, numberFixedDigits) 
     },
     objectToArray (obj) {
