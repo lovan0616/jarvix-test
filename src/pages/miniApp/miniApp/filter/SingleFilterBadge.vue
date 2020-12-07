@@ -172,16 +172,15 @@
         <template v-for="(option, index) in filter.dataValueOptionList">
           <label
             :key="index"
-            class="checkbox">
-            <div class="checkbox-label">
-              <input
-                :checked="checkValueIsChecked(option.value)"
-                type="checkbox"
-                @input="updateMultipleEnumFilteredColumnValue($event, option.value)"
-              >
-              <div class="checkbox-square"/>
-            </div>
-            <span class="radio__name">{{ option.name }}</span>
+            name="control"
+            class="radio">
+            <input
+              :checked="checkValueIsChecked(option.value)"
+              class="radio__input"
+              type="radio"
+              @input="updateSingleEnumFilteredColumnValue($event, option.value)"
+            >
+            <span class="radio__name">{{ $t('miniApp.' + option.name) }}</span>
           </label>
         </template>
       </div>
@@ -217,7 +216,7 @@ export default {
       isShowFilterPanel: false,
       isProcessing: false,
       tempFilter: {},
-      relativeDatetimeOptions: ['today', '6hour', '3hour', '1hour']
+      relativeDatetimeOptions: ['unset', 'today', '6hour', '3hour', '1hour']
     }
   },
   computed: {
@@ -228,10 +227,13 @@ export default {
       return 'required|decimal|validLowerBound:upperBound'
     },
     displayName () {
-      if (this.filter.statsType === 'CATEGORY' || this.filter.statsType === 'BOOLEAN' || this.filter.statsType === 'RELATIVEDATETIME') {
+      if (this.filter.statsType === 'CATEGORY' || this.filter.statsType === 'BOOLEAN') {
         const selectedAmount = this.filter.dataValues.length
         if (selectedAmount === 0) return this.filter.columnName
         return this.isSingleChoiceFilter ? `${this.filter.columnName}: ${ this.filter.dataValues[0] }` : `${this.filter.columnName} (${ this.filter.dataValues.length })`
+      } else if (this.filter.statsType === 'RELATIVEDATETIME') {
+        if (this.filter.dataValues.length === 0) return this.filter.columnName
+        return `${this.filter.columnName}: ${ this.$t('miniApp.' + this.filter.dataValues[0]) }`
       } else if (this.filter.statsType === 'NUMERIC') {
         return this.filter.start === null || this.filter.start === '' ? this.filter.columnName :`${this.filter.columnName} (${ this.filter.start} - ${this.filter.end})`
       } else if (this.filter.statsType === 'DATETIME') {

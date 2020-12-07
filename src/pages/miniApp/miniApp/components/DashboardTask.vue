@@ -174,6 +174,8 @@ export default {
     restrictions () {
       return this.allFilterList
         .filter(filter => {
+          // 相對時間有全選的情境，不需帶入限制中
+          if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues[0] !== 'unset'
           if (
             filter.statsType === 'NUMERIC'
             || filter.statsType === 'FLOAT'
@@ -211,7 +213,7 @@ export default {
               data_type,
               dc_id: this.componentData.dateTimeColumn.dataColumnId,
               display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
-              ...this.formatRelativeDatetime(filter.dataValues)
+              ...this.formatRelativeDatetime(filter.dataValues[0])
             }
           }]
 
@@ -417,18 +419,18 @@ export default {
           return 30 * 7 * 24 * 60 * 1000
       }
     },
-    formatRelativeDatetime (dataValues) {
+    formatRelativeDatetime (dataValue) {
       const properties = {
         start: null,
         end: null
       }
       
       // update datetime range
-      if (dataValues.includes('today')) {
+      if (dataValue === 'today') {
         properties.start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
         properties.end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
-      } else if (dataValues.some(value => RegExp('^.*hour.*$').test(value))) {
-        const hour = Math.max(...dataValues.map(value => Number(value.split('hour')[0])))
+      } else if (RegExp('^.*hour.*$').test(dataValue)) {
+        const hour = Number(dataValue.split('hour')[0])
         properties.start = moment().subtract(hour, 'hours').format('YYYY-MM-DD HH:mm')
         properties.end = moment().format('YYYY-MM-DD HH:mm')
       } else {
