@@ -341,6 +341,26 @@ Vue.mixin({
         el.setAttribute('listener', true)
       }
     },
+    downloadCSV (fileName, csvFile) {
+      // 前置的 '\uFEFF' 為零寬不換行空格，處理中文亂碼問題
+      let blob = new Blob(['\uFEFF' + csvFile], { type: 'text/csv;charset=utf-8;' })
+      if (navigator.msSaveBlob) {
+        // IE 10+
+        navigator.msSaveBlob(blob, fileName)
+      } else {
+        let link = document.createElement('a')
+        if (link.download !== undefined) {
+          // Browsers that support HTML5 download attribute
+          let url = URL.createObjectURL(blob)
+          link.setAttribute('href', url)
+          link.setAttribute('download', fileName)
+          link.style.visibility = 'hidden'
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }
+      }
+    },
     exportToCSV (question, rows) {
       /**
        * 在結果頁下載資料可以從 url 上拿到時間資訊
@@ -376,24 +396,7 @@ Vue.mixin({
         csvFile += processRow(rows[i])
       }
 
-      // 前置的 '\uFEFF' 為零寬不換行空格，處理中文亂碼問題
-      let blob = new Blob(['\uFEFF' + csvFile], { type: 'text/csv;charset=utf-8;' })
-      if (navigator.msSaveBlob) {
-        // IE 10+
-        navigator.msSaveBlob(blob, fileName)
-      } else {
-        let link = document.createElement('a')
-        if (link.download !== undefined) {
-          // Browsers that support HTML5 download attribute
-          let url = URL.createObjectURL(blob)
-          link.setAttribute('href', url)
-          link.setAttribute('download', fileName)
-          link.style.visibility = 'hidden'
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-        }
-      }
+      this.downloadCSV(fileName, csvFile)
     },
     // 圖表在preview 時，不顯示 legend、tooltip
     previewChartSetting (config) {

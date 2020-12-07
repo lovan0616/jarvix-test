@@ -57,7 +57,7 @@
             class="task__icon"/>
           <div class="task__content">
             <span class="task__title task__title--highlight">
-              {{ task.title }}
+              {{ task.question }}
             </span>
             {{ $t('editing.dataDownloading') }}
           </div>
@@ -124,24 +124,15 @@ export default {
     },
     tableDataCSVDownloadList (newList, oldList) {
       let availableDownloadingCapacity = this.tableDataCSVDownloadMaximumCount - this.CSVDownloadProcessingTaskCount
-      // if (availableDownloadingCapacity <= 0) {
-      //   return Message({
-      //     message: this.$t('message.downloadCountOverMax', {
-      //       maxDownloadCount: this.tableDataCSVDownloadMaximumCount
-      //     }),
-      //     type: 'warning',
-      //     duration: 3 * 1000,
-      //     showClose: true
-      //   })
-      // }
       let readyList = newList.filter(task => task.status === 'Ready')
       for (let i = 0; i < readyList.length; i++) {
-        if(i >= availableDownloadingCapacity - 1) break
+        if(i >= availableDownloadingCapacity) break
         readyList[i].status = 'Process'
         getComponentDataCSV(readyList[i].componentId)
           .then(res => {
-            this.exportToCSV(readyList[i].question, res)
+            this.downloadCSV(readyList[i].question, res.data)
           })
+          .catch(res => {})
           .finally(() => {
             let taskIndex = this.tableDataCSVDownloadList.find(item => item.componentId === readyList[i].componentId)
             this.tableDataCSVDownloadList.splice(taskIndex, 1)
@@ -158,14 +149,6 @@ export default {
     clearInterval(this.intervalTimer)
   },
   methods: {
-    // 測試用
-    getComponentDataCSV () {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve('OK')
-        }, 50* 1000)
-      })
-    },
     startTaskPolling () {
       this.intervalTimer = setInterval(() => {
         this.getBgColumnTasksFromStorage()
