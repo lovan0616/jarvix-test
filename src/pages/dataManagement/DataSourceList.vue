@@ -42,6 +42,7 @@
         :data-list.sync="filterDataList"
         :empty-message="$t('editing.clickToCreateDataSource')"
         :loading="isLoading"
+        :is-search-result-empty="searchedDataSourceName.length > 0 && filterDataList.length === 0"
         @create="createDataSource"
         @rename="confirmRename"
         @delete="confirmDelete"

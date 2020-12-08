@@ -68,6 +68,7 @@
         :data-list.sync="filterDataList"
         :selection.sync="selectList"
         :is-processing="isProcessing"
+        :is-search-result-empty="searchedDataFileName.length > 0 && filterDataList.length === 0"
         :loading="isLoading"
         :empty-message="$t('editing.clickToUploadTable')"
         @create="createDataSource"
@@ -154,6 +155,7 @@
 </template>
 <script>
 import SearchBlock from '@/components/SearchBlock'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteDataFrameDialog from './components/ConfirmDeleteDataFrameDialog'
@@ -177,6 +179,7 @@ export default {
   name: 'DataFileList',
   components: {
     SearchBlock,
+    EmptyInfoBlock,
     DataTable,
     FileUploadDialog,
     ConfirmDeleteDataFrameDialog,
