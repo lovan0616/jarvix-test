@@ -54,6 +54,7 @@
         :is-show-label-data="isShowLabelData"
         :is-show-description="isShowDescription"
         :is-show-coefficients="isShowCoefficients"
+        class="task-component"
         @next="getNewPageInfo"
         @toggleLabel="toggleLabel"
       />
