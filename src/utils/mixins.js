@@ -384,7 +384,7 @@ Vue.mixin({
       *     若所有的單位都是 K，則全部和 maxValue 差不到十倍的 bK 都要顯示到小數點後第 2 位
       */
       let lessThanTenTimes =  maxValue / num <= 10
-      let numberFixedDigits = (num >= 1000 && lessThanTenTimes) << 1
+      let numberFixedDigits = num >= 1000 && lessThanTenTimes ? 2 : 0
       return this.shortenNumber(num, numberFixedDigits) 
     },
     objectToArray (obj) {
