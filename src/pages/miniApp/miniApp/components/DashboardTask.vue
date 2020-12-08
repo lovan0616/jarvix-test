@@ -500,7 +500,7 @@ $direction-span: ("col": 8, "row": 6);
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden auto;
+    overflow: hidden;
   }
   &-header {
     display: flex;
@@ -576,19 +576,21 @@ $direction-span: ("col": 8, "row": 6);
     flex: 1;
     min-height: 0;
     display: flex;
-      align-items: center;
-      justify-content: center;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
     /deep/ .task,
     /deep/ .task-component {
+      position: relative;
       height: 100%;
       width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     /deep/ .no-result-block {
       width: 100%;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
     }
 
     &.index {
