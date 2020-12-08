@@ -355,7 +355,6 @@ export default {
             primaryAlias: element.name,
             isModified: false
           }
-          element.originalName = element.originalName
 
           if (element.isClustering) {
             element.createdMethod = this.$t('editing.tagColumn')
