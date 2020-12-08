@@ -2,14 +2,10 @@
   <div class="edit-feature-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="dialog-title">
-        {{ $t('clustering.createClusteringColumn') }}
+        {{ $t('prediction.predictionIntervalSetting') }}
       </div>
       <div class="feature-block">
-        <div class="block-title">{{ $t('editing.tableName') }}</div>
-        {{ dataFrameAlias }}
-      </div>
-      <div class="feature-block">
-        <div class="block-title">{{ $t('clustering.clusteringColumnName') }}（{{ $t('editing.isRequired') }}）</div>
+        <div class="block-title">{{ $t('prediction.predictionIntervalLength') }}</div>
         <div class="input-block name">
           <input-block
             v-validate="`required|max:${max}`"
@@ -44,7 +40,7 @@ import { mapState, mapGetters } from 'vuex'
 import InputBlock from '@/components/InputBlock'
 
 export default {
-  name: 'SaveClusteringDialog',
+  name: 'PredictionIntervalSettingDialog',
   inject: ['$validator'],
   components: {
     InputBlock
@@ -53,10 +49,6 @@ export default {
     resultId: {
       type: Number,
       default: null
-    },
-    dataFrameAlias: {
-      type: String,
-      default: ''
     }
   },
   data () {

@@ -138,7 +138,6 @@
       />
       <prediction-interval-setting-dialog
         v-if="currentResultId && isShowPredictionIntervalSettingDialog"
-        :data-frame-alias="transcript.dataFrame.dataFrameAlias"
         :result-id="selectedTypeInfo.cachedResultId"
         @close="closeDialog"
       />
