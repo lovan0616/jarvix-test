@@ -245,7 +245,7 @@ export default {
       return this.dataList.length >= this.fileCountLimit
     },
     filterDataList() {
-      return this.dataList.filter(data => data.primaryAlias.includes(this.searchedDataFileName))
+      return this.dataList.filter(data => data.primaryAlias.toLowerCase().includes(this.searchedDataFileName.toLowerCase()))
     },
     // 用來生成 data table
     tableHeaders () {

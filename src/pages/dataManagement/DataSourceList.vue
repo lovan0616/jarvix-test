@@ -110,7 +110,7 @@ export default {
     //   return this.dataList.length >= this.dataSourceLimitCount
     // },
     filterDataList() {
-      return this.dataList.filter(data => data.name.includes(this.searchedDataSourceName))
+      return this.dataList.filter(data => data.name.toLowerCase().includes(this.searchedDataSourceName.toLowerCase()))
     },
     tableHeaders () {
       return [
