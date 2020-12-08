@@ -207,6 +207,7 @@
     "columnDisplayName": "顯示名稱",
     "columnSource": "欄位來源",
     "columnSourceRemind": "透過關聯方式建置的資料表才會顯示欄位來源資料表資訊",
+    "originalName": "原始名稱",
     "alias": "別名",
     "columnTag": "標籤",
     "columnDomain": "領域",

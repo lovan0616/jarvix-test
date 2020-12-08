@@ -207,6 +207,7 @@
     "columnDisplayName": "Display Name",
     "columnSource": "Column Source",
     "columnSourceRemind": "Database information about field sources will only be displayed for tables built through association.",
+    "originalName": "Original Name",
     "alias": "Alias",
     "columnTag": "Tag",
     "columnDomain": "Domain",
