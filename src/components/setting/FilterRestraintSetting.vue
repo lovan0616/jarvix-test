@@ -306,23 +306,23 @@ export default {
 
   &__selector {
     position: absolute;
-    top: 30px;
-    left: 0;
+    top: -6px;
+    left: 100%;
     padding-top: 12px;
     width: 100%;
     border-radius: 5px;
     background-color: var(--color-bg-gray);
     filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
-    z-index: 2;
+    z-index: 4;
 
     &::before {
       content: '';
       position: absolute;
-      top: -10px;
-      right: 6px;
-      border-bottom: 12px solid #2B3839;
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
+      top: 8px;
+      left: -10px;
+      border-right: 12px solid #2B3839;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
     }
   }
 
