@@ -6,11 +6,11 @@
       </div>
       <div class="feature-block">
         <div class="block-title">{{ $t('prediction.predictionIntervalLength') }}</div>
-        <div class="input-block name">
+        <div class="input-block">
           <input-block
-            v-validate="`required|max:${max}`"
-            v-model="columnPrimaryAlias"
-            name="columnPrimaryAlias"
+            v-validate="`required|numeric`"
+            v-model="predictionIntervalLength"
+            name="predictionInterval"
           />
         </div>
       </div>
@@ -23,10 +23,10 @@
         <button
           :disabled="isProcessing"
           class="btn btn-default"
-          @click="save"
+          @click="rePredict"
         >
           <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
-          <span v-else>{{ $t('button.create') }}</span>
+          <span v-else>{{ $t('prediction.rePredict') }}</span>
         </button>
       </div>
     </div>
@@ -53,7 +53,7 @@ export default {
   },
   data () {
     return {
-      columnPrimaryAlias: '',
+      predictionInterval: null,
       isProcessing: false
     }
   },
@@ -65,7 +65,7 @@ export default {
     }
   },
   methods: {
-    save () {
+    rePredict () {
       this.$validator.validate('columnPrimaryAlias')
         .then(isValid => {
           if (!isValid) return
@@ -99,3 +99,8 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.input-block {
+  width: 200px;
+}
+</style>

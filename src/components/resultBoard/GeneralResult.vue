@@ -333,7 +333,14 @@ export default {
       }
     },
     closeDialog () {
-      this.isShowSaveClusteringDialog = false
+      switch (this.activeTab) {
+        case 'CLUSTERING':
+          this.isShowSaveClusteringDialog = false
+          break
+        case 'PREDICTION':
+          this.isShowPredictionIntervalSettingDialog = false
+          break
+      }
       this.selectedTypeInfo = null
     },
     clearAllProcessingStatus () {
