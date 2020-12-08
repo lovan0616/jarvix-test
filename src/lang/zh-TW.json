@@ -803,7 +803,15 @@
     "today": "今天",
     "6hour": "近六小時",
     "3hour": "近三小時",
-    "1hour": "近一小時"
+    "1hour": "近一小時",
+    "sizeSetting": "大小設定",
+    "chooseUpdateFrequency": "選擇更新頻率",
+    "chooseRowSize": "請選擇列數",
+    "chooseColumnSize": "請選擇行數",
+    "rowSpan": "列數",
+    "columnSpan": "行數",
+    "rowSpanAmount": "{number} 列",
+    "columnSpanAmount": "{number} 行"
   },
   "clustering": {
     "cluster": "群體",

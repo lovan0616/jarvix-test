@@ -1137,7 +1137,7 @@ export default {
     position: relative;
     z-index: 5;
     flex: 0 0 56px;
-    padding: 0 24px;
+    padding: 0 16px 0 24px;
     display: flex;
     align-items: center;
     background: rgba(0, 0, 0, 0.55);
@@ -1268,6 +1268,7 @@ export default {
     padding: 20px 0 0 20px;
     display: flex;
     flex-direction: column;
+    min-width: 0;
     &-header {
       position: relative;
       z-index: 4;
@@ -1306,6 +1307,7 @@ export default {
           flex: 0 0 30px;
           height: 30px;
           margin-left: 6px;
+          margin-right: 7px;
           cursor: pointer;
           border: 1px solid #FFF;
           border-radius: 4px;
@@ -1387,10 +1389,8 @@ export default {
     }
 
     &-components {
-      flex: 1;
-      height: 0;
+      height: calc(100vh - 56px - 20px - 50px);
       overflow: overlay;
-      padding-right: 20px;
       &:after {
         content: '';
         display: block;

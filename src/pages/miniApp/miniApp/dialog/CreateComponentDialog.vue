@@ -94,7 +94,7 @@
         <div class="setting__content">
           <div class="setting__block">
             <div class="setting__label-block">
-              {{ $t('warRoom.updateFrequency') }}
+              {{ $t('miniApp.updateFrequency') }}
               <el-switch
                 v-model="currentComponent.config.isAutoRefresh"
                 :width="Number('32')"
@@ -111,7 +111,7 @@
                 v-validate="'required'"
                 v-model="currentComponent.config.refreshFrequency"
                 :option-list="updateFrequency"
-                :placeholder="$t('warRoom.chooseUpdateFrequency')"
+                :placeholder="$t('miniApp.chooseUpdateFrequency')"
                 class="setting__block-select"
                 name="updateFrequency"
               />
@@ -119,6 +119,34 @@
                 v-show="errors.has('updateFrequency')"
                 class="error-text"
               >{{ errors.first('updateFrequency') }}</div>
+            </div>
+          </div>
+        </div>
+        <!--Layout Setting-->
+        <div class="setting__content">
+          <div class="setting__block">
+            <div class="setting__label-block">
+              {{ $t('miniApp.sizeSetting') }}
+            </div>
+            <div class="setting__block-select-field">
+              <label class="setting__block-select-label">{{ $t('miniApp.columnSpan') }}</label>
+              <default-select 
+                v-model.number="currentComponent.config.size.column"
+                :option-list="columnSpanOption"
+                :placeholder="$t('miniApp.chooseColumnSize')"
+                class="setting__block-select"
+                name="columnSpan"
+              />
+            </div>
+            <div class="setting__block-select-field">
+              <label class="setting__block-select-label">{{ $t('miniApp.rowSpan') }}</label>
+              <default-select 
+                v-model.number="currentComponent.config.size.row"
+                :option-list="rowSpanOption"
+                :placeholder="$t('miniApp.chooseRowSize')"
+                class="setting__block-select"
+                name="rowSpan"
+              />
             </div>
           </div>
         </div>
@@ -167,7 +195,11 @@ export default {
           config: {
             diaplayedName: '',
             isAutoRefresh: false,
-            refreshFrequency: null
+            refreshFrequency: null,
+            size: {
+              row: 2,
+              column: 2
+            }
           },
           indexInfo: {
             unit: ''
@@ -232,6 +264,20 @@ export default {
           name: this.$t('warRoom.everyMonth')
         }
       ]
+    },
+    columnSpanOption () {
+      // 最小值為 2, 最大值為 8
+      return [...Array(7).keys()].map(value => ({
+        value: value + 2,
+        name: this.$t('miniApp.columnSpanAmount', { number: value + 2 })
+      }))
+    },
+    rowSpanOption () {
+      // 最小值為 2, 最大值為 6
+      return [...Array(5).keys()].map(value => ({
+        value: value + 2,
+        name: this.$t('miniApp.rowSpanAmount', { number: value + 2 })
+      }))
     }
   },
   mounted () {
@@ -374,11 +420,18 @@ export default {
           display: flex;
           justify-content: space-between;
           font-size: 14px;
-          color: #AAAAAA;
+          color: #FFFFFF;
           font-weight: 600;
         }
         &__block-select-field {
           margin-top: 8px;
+        }
+        &__block-select-label {
+          display: block;
+          color: #AAAAAA;
+          font-weight: 600;
+          font-size: 14px;
+          padding-top: 8px;
         }
         &__block-select {
           width: 100%;

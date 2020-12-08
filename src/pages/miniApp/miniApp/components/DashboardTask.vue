@@ -1,46 +1,73 @@
 <template>
-  <div class="component__item">
-    <span class="component__item-header">
-      <el-tooltip 
-        :content="componentData.config.diaplayedName" 
-        placement="bottom">
-        <span 
-          class="item-title" 
-          v-html="dashboardTaskTitle" />
-      </el-tooltip>
-      <div
-        v-if="isEditMode"
-        class="component-setting-box">
-        <svg-icon 
-          icon-class="more"
-          class="more-icon" />
-        <slot name="drowdown"/>
-      </div>
-      <div 
-        v-else-if="componentData.relatedDashboard.id" 
-        class="component-setting-box"
-      >
+  <div 
+    :class="[
+      `col-${componentData.config.size.column}`,
+      `row-${componentData.config.size.row}`
+    ]"
+    class="component__item"
+  >
+    <div class="component__item-inner-container">
+      <span class="component__item-header">
         <el-tooltip 
-          :content="componentData.relatedDashboard.name" 
+          :content="componentData.config.diaplayedName" 
           placement="bottom">
-          <div @click="$emit('redirect', componentData.relatedDashboard.id)">
-            <svg-icon icon-class="relation"/>
-          </div>
+          <span 
+            class="item-title" 
+            v-html="dashboardTaskTitle" />
         </el-tooltip>
+        <div
+          v-if="isEditMode"
+          class="component-setting-box">
+          <svg-icon 
+            icon-class="more"
+            class="more-icon" />
+          <slot name="drowdown"/>
+        </div>
+        <div 
+          v-else-if="componentData.relatedDashboard.id" 
+          class="component-setting-box"
+        >
+          <el-tooltip 
+            :content="componentData.relatedDashboard.name" 
+            placement="bottom">
+            <div @click="$emit('redirect', componentData.relatedDashboard.id)">
+              <svg-icon icon-class="relation"/>
+            </div>
+          </el-tooltip>
+        </div>
+      </span>
+      <div
+        v-if="componentData.type === 'index'" 
+        class="component__item-content index">
+        <div class="index-data">
+          <spinner v-if="isProcessing"/>
+          <template v-else>
+            <task
+              :class="{ 'not-empty': !isEmptyData }"
+              :custom-chart-style="indexComponentStyle"
+              :key="'index-' + keyResultId"
+              :component-id="keyResultId"
+              :converted-type="'index_info'"
+              intend="key_result"
+              @isEmpty="isEmptyData = true"
+            />
+            <span 
+              v-if="!isEmptyData" 
+              class="index-unit">{{ componentData.indexInfo.unit }}</span>
+          </template>
+        </div>
       </div>
-    </span>
-    <div
-      v-if="componentData.type === 'index'" 
-      class="item-content index">
-      <div class="index-data">
+      <div
+        v-else-if="componentData.type === 'text'" 
+        class="component__item-content text">
         <spinner v-if="isProcessing"/>
         <template v-else>
           <task
             :class="{ 'not-empty': !isEmptyData }"
-            :custom-chart-style="indexComponentStyle"
-            :key="'index-' + keyResultId"
+            :custom-chart-style="textComponentStyle"
+            :key="'text-' + keyResultId"
             :component-id="keyResultId"
-            :converted-type="'index_info'"
+            :converted-type="'text_info'"
             intend="key_result"
             @isEmpty="isEmptyData = true"
           />
@@ -49,55 +76,36 @@
             class="index-unit">{{ componentData.indexInfo.unit }}</span>
         </template>
       </div>
-    </div>
-    <div
-      v-else-if="componentData.type === 'text'" 
-      class="item-content text">
-      <spinner v-if="isProcessing"/>
-      <template v-else>
-        <task
-          :class="{ 'not-empty': !isEmptyData }"
-          :custom-chart-style="textComponentStyle"
-          :key="'text-' + keyResultId"
-          :component-id="keyResultId"
-          :converted-type="'text_info'"
-          intend="key_result"
-          @isEmpty="isEmptyData = true"
-        />
-        <span 
-          v-if="!isEmptyData" 
-          class="index-unit">{{ componentData.indexInfo.unit }}</span>
-      </template>
-    </div>
-    <div 
-      v-else
-      class="item-content chart">
-      <spinner v-if="isProcessing"/>
-      <task
+      <div 
         v-else
-        :custom-chart-style="chartComponentStyle"
-        :key="'chart' + keyResultId"
-        :component-id="keyResultId"
-        :is-show-description="false"
-        :is-show-coefficients="false"
-        :show-toolbox="false"
-        intend="key_result"
-      />
-    </div>
-    <div 
-      v-if="componentData.relatedDashboard.id && isEditMode" 
-      class="component__item-content">
-      <div class="related-item">
-        <div class="related-item__title">
-          {{ $t('miniApp.relatedDashboard') }}：
-        </div>
-        <div class="related-item__name">
-          {{ componentData.relatedDashboard.name }}
-        </div>
-        <div 
-          class="related-item__close" 
-          @click="isShowConfirmDelete = true">
-          <svg-icon icon-class="close"/>
+        class="component__item-content chart">
+        <spinner v-if="isProcessing"/>
+        <task
+          v-else
+          :custom-chart-style="chartComponentStyle"
+          :key="'chart' + keyResultId"
+          :component-id="keyResultId"
+          :is-show-description="false"
+          :is-show-coefficients="false"
+          :show-toolbox="false"
+          intend="key_result"
+        />
+      </div>
+      <div 
+        v-if="componentData.relatedDashboard.id && isEditMode" 
+        class="component__item-content">
+        <div class="related-item">
+          <div class="related-item__title">
+            {{ $t('miniApp.relatedDashboard') }}：
+          </div>
+          <div class="related-item__name">
+            {{ componentData.relatedDashboard.name }}
+          </div>
+          <div 
+            class="related-item__close" 
+            @click="isShowConfirmDelete = true">
+            <svg-icon icon-class="close"/>
+          </div>
         </div>
       </div>
     </div>
@@ -161,11 +169,14 @@ export default {
       textComponentStyle: {
         'font-size': '20px',
         'color': '#DDDDDD',
-        'text-align': 'center'
+        'text-align': 'center',
+        'display': 'flex',
+        'align-items': 'center',
+        'justify-content': 'center',
       },
       chartComponentStyle: {
         'width': '100%',
-        'height': '260px'
+        'height': '100%'
       },
       isProcessing: false
     }
@@ -445,6 +456,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/*定義欄和列的尺寸*/
+$direction-size: ("col": 100%, "row": 100%);
+/*定義每欄和每列要切幾等分*/
+$direction-span: ("col": 8, "row": 6);
+/*依照已定義好的尺寸和等份，製作欄和列使用的 class */
+@each $direction, $size in $direction-size {
+  $span-amount: map-get($direction-span, $direction);
+  @for $span from 1 through $span-amount {
+    $property: if($direction == 'col', 'width', 'height');
+    .#{$direction}-#{$span} {
+      #{$property}: to-fixed(($size / $span-amount) * $span);
+    }
+  }
+}
+
 @mixin dropdown-select-controller {
   &:hover {
     .dropdown-select { visibility: visible; }
@@ -452,14 +478,21 @@ export default {
 }
 
 .component__item {
-  width: calc(50% - 8px);
-  float: left;
-  padding: 16px;
-  background-color: #192323;
+  padding-right: 16px;
   border-radius: 5px;
-  margin-bottom: 16px;
-  &:nth-child(odd) {
-    margin-right: 16px;
+  padding-bottom: 16px;
+  float: left;
+  transition: all .2s linear;
+
+  &-inner-container {
+    background-color: #192323;
+    border-radius: 5px;
+    padding: 16px; 
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden auto;
   }
   &-header {
     display: flex;
@@ -502,11 +535,6 @@ export default {
       }
     }
   }
-  &-content {
-    .spinner-block {
-      height: 420px;
-    }
-  }
   &-action {
     .related-item {
       display: inline-flex;
@@ -536,12 +564,25 @@ export default {
     }
   }
 
-  .item-content {
-    height: 260px;
+  &-content {
+    flex: 1;
+    min-height: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: auto;
+      align-items: center;
+      justify-content: center;
+    /deep/ .task,
+    /deep/ .task-component {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /deep/ .no-result-block {
+      width: 100%;
+    }
+
     &.index {
       /deep/ .not-empty {
         width: auto;
@@ -560,10 +601,9 @@ export default {
         justify-content: center;
       }
     }
-  }
-
-  .task {
-    width: 100%;
+    .spinner-block {
+      flex: 1;
+    } 
   }
 }
 

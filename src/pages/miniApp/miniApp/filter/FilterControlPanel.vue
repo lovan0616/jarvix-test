@@ -84,7 +84,7 @@ export default {
   position: relative;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
-  margin-right: 20px;
+  margin-right: 16px;
   display: flex;
   align-items: center;
 
