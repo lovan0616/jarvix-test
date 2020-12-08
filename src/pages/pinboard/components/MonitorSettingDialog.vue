@@ -136,7 +136,7 @@
   </writing-dialog>
 </template>
 <script>
-import { getMonitorSetting, newMonitorSetting, updateMonitorSetting } from '@/API/Monitor'
+import { getMonitorSetting, newMonitorSetting, updateMonitorSetting } from '@/API/PinboardMonitor'
 import { getDataFrameColumnInfoById } from '@/API/DataSource'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'

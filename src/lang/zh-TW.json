@@ -806,7 +806,13 @@
     "today": "今天",
     "6hour": "近六小時",
     "3hour": "近三小時",
-    "1hour": "近一小時"
+    "1hour": "近一小時",
+    "warningManagement": "示警管理",
+    "enableWarningModule": "啟用設定",
+    "activate": "啟用",
+    "inactivate": "關閉",
+    "selectDashboard": "選擇@:miniApp.dashboard",
+    "noRelation": "無關聯"
   },
   "clustering": {
     "cluster": "群體",

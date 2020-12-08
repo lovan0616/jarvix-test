@@ -1,7 +1,7 @@
 <template>
   <div class="warning-module">
     <nav class="warning-module__nav">
-      <div class="nav-left">示警管理</div>
+      <div class="nav-left">{{ $t('miniApp.warningManagement') }}</div>
       <div class="nav-right">
         <button class="btn btn-m btn-default">
           {{ $t('button.save') }}
@@ -11,65 +11,69 @@
     <main class="warning-module__content">
       <div class="warning-module__content-enable">
         <section class="setting-block">
-          啟用設定：
+          {{ $t('miniApp.enableWarningModule') }}：
           <div class="input-radio-group">
             <input
               id="activate"
-              :checked="warningModule.activate"
-              :value="warningModule.activate"
+              :checked="isWarningModuleActivate"
+              :value="isWarningModuleActivate"
               name="status"
               class="input-radio"
               type="radio"
-              @change="warningModule.activate = true"
+              @change="isWarningModuleActivate = true"
             >
             <label
               for="activate"
               class="input-radio-label"
-            >啟用</label>
+            >{{ $t('miniApp.activate') }}</label>
           </div>
           <div class="input-radio-group">
             <input
               id="inactivate"
-              :checked="!warningModule.activate"
-              :value="!warningModule.activate"
+              :checked="!isWarningModuleActivate"
+              :value="!isWarningModuleActivate"
               name="status"
               class="input-radio"
               type="radio"
-              @change="warningModule.activate = false"
+              @change="isWarningModuleActivate = false"
             >
             <label
               for="inactivate"
               class="input-radio-label"
-            >關閉</label>
+            >{{ $t('miniApp.inactivate') }}</label>
           </div>
         </section>
       </div>
       <div class="warning-module__content-rule">
         <div class="title">
-          <span class="col-enable">是否使用</span>
-          <span class="col-content">示警內容</span>
-          <span class="col-relation">關聯看板</span>
+          <span class="col col-enable">是否使用</span>
+          <span class="col col-message">示警訊息</span>
+          <span class="col col-condition">示警條件</span>
+          <span class="col col-relation">關聯看板</span>
         </div>
         <section 
-          v-for="(rule, index) in warningModule.rules" 
+          v-for="(condition, index) in warningConditions" 
           :key="index" 
           class="setting-block">
-          <div class="col-enable">
+          <div class="col col-enable">
             <el-switch
-              v-model="rule.activate"
+              v-model="condition.activate"
               :width="Number('32')"
               active-color="#2AD2E2"
               inactive-color="#324B4E"
             />
           </div>
-          <div class="col-content">
-            <span class="rule-name">{{ rule.ruleName }}</span>
+          <div class="col-message">
+            <span>{{ condition.name }}</span>
+          </div>
+          <div class="col-condition">
+            <span v-html="displayedConditionMessage(condition.targetConfig.displayName, condition.comparingValues)"/>
           </div>
           <div class="col-relation">
             <default-select
-              v-model="rule.relatedDashboard.id"
+              v-model="condition.relatedDashboardId"
               :option-list="dashboardOptions"
-              placeholder="請選擇分析看板"
+              :placeholder="$t('miniApp.selectDashboard')"
               class="dashboard-select"
             />
           </div>
@@ -80,6 +84,7 @@
 </template>
 
 <script>
+import { getAlertConditions } from '@/API/Alert'
 import DefaultSelect from '@/components/select/DefaultSelect'
 
 export default {
@@ -95,32 +100,52 @@ export default {
   },
   data () {
     return {
-      warningModule: {
-        activate: false,
-        // TODO 串 API
-        rules: []  
-      }
+      isWarningModuleActivate: false,
+      warningConditions: []
     }
   },
   computed: {
     dashboardOptions () {
-      return this.dashboardList
-        .map(item => ({
-          value: item.id,
-          name: item.name
-        }))
-    },
+      let options = []
+      const defaultOption = {
+        value: null,
+        name: this.$t('miniApp.noRelation')
+      }
+      options = this.dashboardList.map(item => ({ value: item.id, name: item.name }))
+      options.unshift(defaultOption)
+      return options
+    }
+  },
+  created () {
+    getAlertConditions().then(conditions => {
+      conditions.forEach(condition => {
+        this.warningConditions.push({
+          ...condition,
+          activate: false,
+          relatedDashboardId: null
+        })
+      })
+    })
   },
   mounted () {
-    while (this.warningModule.rules.length < 12) {
-      this.warningModule.rules.push({
-        ruleName: '(1)功率過大',
-        activate: false,
-        relatedDashboard: {
-          id: null,
-          name: null
+  },
+  methods: {
+    displayedConditionMessage (targetColumnName, comparingValues) {
+      return comparingValues.reduce((acc, cur) => {
+        let comparisonOperator = ''
+        switch (cur.comparisonOperator) {
+          case 'GREATER_THAN':
+            comparisonOperator = '>'
+            break
+          case 'LOWER_THAN':
+            comparisonOperator = '<'
+            break
+          case 'EQUAL':
+            comparisonOperator = '='
         }
-      })
+        return acc.concat(`${targetColumnName}${comparisonOperator}${cur.value}<br>`)
+      }, '')
+      
     }
   }
 }
@@ -175,6 +200,7 @@ export default {
       flex: 1;
       .title {
         display: flex;
+        margin-right: 24px;
         padding: 0 24px 12px 24px;
       }
       /deep/ .dashboard-select {
@@ -189,7 +215,10 @@ export default {
       &-enable {
         flex: 0 0 140px;
       }
-      &-content {
+      &-message {
+        flex: 0 0 140px;
+      }
+      &-condition {
         flex: 1;
       }
       &-relation {
