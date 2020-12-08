@@ -182,7 +182,14 @@ export default {
             || filter.statsType === 'FLOAT'
             || filter.statsType === 'DATETIME'
           ) return filter.start && filter.end
-          return filter.dataValues.length > 0
+          // filter 必須有值
+          if (filter.dataValues.length > 0) {
+            // 並且是同 DataFrame
+            if (this.componentData.dataFrameId === filter.dataFrameId) return true
+            // 或者含相同 columnName
+            if (this.includeSameColumnPrimaryAliasFilter) return true
+          }
+          return false
         })
         .map(filter => {
 
@@ -309,10 +316,10 @@ export default {
     selectedYAxisControls: {
       immediate: true,
       deep: true,
-      handler (controls) {
+      handler (controls, oldControls) {
         if (this.shouldComponentYAxisBeControlled) {
           this.askQuestion(this.controllerMutatedQuestion)
-        } else if (controls.length === 0) {
+        } else if (controls.length === 0 && oldControls.length === 1) {
           // 拔除所有Y軸控制器時，清除暫存 filtered info
           this.tempFilteredKeyResultId = null
         }
