@@ -44,7 +44,20 @@
                   icon-class="more"
                   class="more-icon" />
                 <dropdown-select
-                  :bar-data="barData"
+                  :bar-data="barData[typeInfo.denotation]"
+                  class="dropdown"
+                  @switchDialogName="switchDialogName($event, typeInfo)"
+                />
+              </div>
+              <div
+                v-else-if="isPrediction(index)"
+                class="multi-analysis__item-dropdownlist"
+              >
+                <svg-icon 
+                  icon-class="more"
+                  class="more-icon" />
+                <dropdown-select
+                  :bar-data="barData[typeInfo.denotation]"
                   class="dropdown"
                   @switchDialogName="switchDialogName($event, typeInfo)"
                 />
@@ -123,6 +136,12 @@
         :result-id="selectedTypeInfo.cachedResultId"
         @close="closeDialog"
       />
+      <prediction-interval-setting-dialog
+        v-if="currentResultId && isShowPredictionIntervalSettingDialog"
+        :data-frame-alias="transcript.dataFrame.dataFrameAlias"
+        :result-id="selectedTypeInfo.cachedResultId"
+        @close="closeDialog"
+      />
     </template>
   </result-board>
 </template>
@@ -130,6 +149,7 @@
 import RecommendedInsight from '@/components/display/RecommendedInsight'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import SaveClusteringDialog from '@/components/dialog/SaveClusteringDialog'
+import PredictionIntervalSettingDialog from '@/components/dialog/PredictionIntervalSettingDialog'
 import { Message } from 'element-ui'
 import { intentType } from '@/utils/general'
 import { mapState } from 'vuex'
@@ -141,6 +161,7 @@ export default {
     RecommendedInsight,
     DropdownSelect,
     SaveClusteringDialog,
+    PredictionIntervalSettingDialog,
     NotifyInfoBlock
   },
   props: {
@@ -189,6 +210,7 @@ export default {
     return {
       activeTab: null,
       isShowSaveClusteringDialog: false,
+      isShowPredictionIntervalSettingDialog: false,
       intentType,
       switchTypeList: [],
       selectedTypeInfo: null
@@ -197,13 +219,22 @@ export default {
   computed: {
     ...mapState('result', ['currentResultId']),
     barData () {
-      return [
-        {
-          title: 'clustering.saveClusteringResultAsColumn',
-          icon: 'feature',
-          dialogName: 'saveClustering'
-        },
-      ]
+      return {
+        CLUSTERING: [
+          {
+            title: 'clustering.saveClusteringResultAsColumn',
+            icon: 'feature',
+            dialogName: 'saveClustering'
+          },
+        ],
+        PREDICTION: [
+          {
+            title: 'prediction.predictionIntervalSetting',
+            icon: 'add-feature',
+            dialogName: 'editPredictionInterval'
+          },
+        ]
+      }
     },
     isShowInfo () {
       const intentsWithInfo = ['CLUSTERING']
@@ -283,17 +314,24 @@ export default {
       this.fetchSpecificType(tabName, index)
     },
     switchDialogName (action, typeInfo) {
-      if (action !== 'saveClustering') return
-      if (!this.resultInfo.canSaveResult) {
-        return Message({
-          message: this.$t('clustering.reasonsOfnotAllowedToSaveClusteringResultAsColumn'),
-          type: 'warning',
-          duration: 3 * 1000,
-          showClose: true
-        })
+      switch (action) {
+        case 'saveClustering':
+          if (!this.resultInfo.canSaveResult) {
+            return Message({
+              message: this.$t('clustering.reasonsOfnotAllowedToSaveClusteringResultAsColumn'),
+              type: 'warning',
+              duration: 3 * 1000,
+              showClose: true
+            })
+          }
+          this.selectedTypeInfo = typeInfo
+          this.isShowSaveClusteringDialog = true
+          break
+        
+        case 'editPredictionInterval':
+          this.selectedTypeInfo = typeInfo
+          this.isShowPredictionIntervalSettingDialog = true
       }
-      this.selectedTypeInfo = typeInfo
-      this.isShowSaveClusteringDialog = true
     },
     closeDialog () {
       this.isShowSaveClusteringDialog = false
@@ -304,6 +342,9 @@ export default {
     },
     hasFetchedClustering (index) {
       return this.switchTypeList[index].denotation === this.intentType.CLUSTERING && (this.intent === this.intentType.CLUSTERING || this.switchTypeList[index].cachedResultId)
+    },
+    isPrediction (index) {
+      return this.switchTypeList[index].denotation === this.intentType.PREDICTION && (this.intent === this.intentType.PREDICTION || this.switchTypeList[index].cachedResultId)
     },  
     setTaskFailed () {
       this.switchTypeList.forEach((type, index) => { 
