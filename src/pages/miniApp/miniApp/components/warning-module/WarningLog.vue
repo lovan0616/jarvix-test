@@ -59,6 +59,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        v-if="paginationInfo.totalPages > 1"
+        :total="paginationInfo.totalItems"
+        :page-size="paginationInfo.itemPerPage"
+        :current-page="paginationInfo.currentPage + 1"
+        class="table-pagination"
+        layout="prev, pager, next"
+        @current-change="changePage"
+      />
     </div>
   </div>
 </template>
@@ -78,7 +87,13 @@ export default {
     return {
       isLoading: false,
       warningLogs: [],
-      isProcessing: false
+      isProcessing: false,
+      paginationInfo: {
+        currentPage: 0,
+        totalPages: 0,
+        totalItems: 0,
+        itemPerPage: 0
+      },
     }
   },
   computed: {
@@ -91,9 +106,10 @@ export default {
     this.activeConditionIds.length > 0 && this.getWarningLogs(this.activeConditionIds)
   },
   methods: {
-    getWarningLogs (activeConditionIds) {
+    getWarningLogs (page = 0) {
       this.isLoading = true
-      getAlertLogs({ conditionIds: activeConditionIds }).then(response => {
+      getAlertLogs({ conditionIds: this.activeConditionIds, page }).then(response => {
+        this.paginationInfo = response.pagination
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
           return {
@@ -110,6 +126,9 @@ export default {
       patchAlertLogActiveness(logId, { "active" : isActive })
         .then(() => this.getWarningLogs(this.activeConditionIds))
         .finally(() => this.isProcessing = false)
+    },
+    changePage (pageNumber) {
+      this.getWarningLogs(pageNumber - 1)
     }
   }
 }
@@ -132,7 +151,15 @@ export default {
     height: 0;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     padding: 0 20px 20px 0;
+    .warning-log-table {
+      flex: 1;
+      min-height: 0
+    }
+    .el-pagination {
+      text-align: right;
+    }
     &-empty {
       padding-top: 30vh;
       text-align: center;

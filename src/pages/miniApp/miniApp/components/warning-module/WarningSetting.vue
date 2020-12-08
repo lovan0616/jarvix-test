@@ -151,8 +151,7 @@ export default {
           relatedDashboardId: prevConditionSetting ? prevConditionSetting.relatedDashboardId : null
         })
       })
-      this.isLoading = false
-    })
+    }).finally(() => this.isLoading = false )
   },
   methods: {
     saveWarningModuleSetting () {
