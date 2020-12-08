@@ -1,9 +1,15 @@
 <template>
   <warning-setting 
     v-if="isEditMode"
+    :setting="setting"
     :dashboard-list="dashboardList"
+    @update="$emit('update', $event)"
   />
-  <warning-log v-else/>
+  <warning-log 
+    v-else
+    :setting="setting"
+    @goToCertainDashboard="$emit('goToCertainDashboard', $event)"
+  />
 </template>
 
 <script>
@@ -17,6 +23,10 @@ export default {
     WarningLog
   },
   props: {
+    setting: {
+      type: Object,
+      default: () => {}
+    },
     dashboardList: {
       type: Array,
       default: () => []
@@ -34,16 +44,11 @@ export default {
       return this.mode && this.mode === 'edit'
     }
   },
-  mounted () {
-    while (this.tableData.length < 20) {
-      this.tableData.push({
-        warningRule: '2330 + 0050總和低於490',
-        warningMessage: '危機入市',
-        detail: '399, 89'
-      })
-    }
-  },
+  mounted () {},
   methods: {
+    openDashboard (dashboardId) {
+      this.$emit('openDashboard', dashboardId)
+    }
   }
 }
 </script>

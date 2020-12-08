@@ -1,26 +1,28 @@
 <template>
-  <div class="warning-module">
-    <nav class="warning-module__nav">
+  <div class="warning-setting">
+    <nav class="warning-setting__nav">
       <div class="nav-left">{{ $t('miniApp.warningManagement') }}</div>
       <div class="nav-right">
-        <button class="btn btn-m btn-default">
+        <button 
+          class="btn btn-m btn-default" 
+          @click="saveWarningModuleSetting">
           {{ $t('button.save') }}
         </button>
       </div>
     </nav>
-    <main class="warning-module__content">
-      <div class="warning-module__content-enable">
+    <main class="warning-setting__content">
+      <div class="warning-setting__content-enable">
         <section class="setting-block">
           {{ $t('miniApp.enableWarningModule') }}：
           <div class="input-radio-group">
             <input
               id="activate"
-              :checked="isWarningModuleActivate"
-              :value="isWarningModuleActivate"
+              :checked="warningModuleConfig.activate"
+              :value="warningModuleConfig.activate"
               name="status"
               class="input-radio"
               type="radio"
-              @change="isWarningModuleActivate = true"
+              @change="warningModuleConfig.activate = true"
             >
             <label
               for="activate"
@@ -30,12 +32,12 @@
           <div class="input-radio-group">
             <input
               id="inactivate"
-              :checked="!isWarningModuleActivate"
-              :value="!isWarningModuleActivate"
+              :checked="!warningModuleConfig.activate"
+              :value="!warningModuleConfig.activate"
               name="status"
               class="input-radio"
               type="radio"
-              @change="isWarningModuleActivate = false"
+              @change="warningModuleConfig.activate = false"
             >
             <label
               for="inactivate"
@@ -44,15 +46,20 @@
           </div>
         </section>
       </div>
-      <div class="warning-module__content-rule">
+      <div class="warning-setting__content-rule">
         <div class="title">
           <span class="col col-enable">是否使用</span>
           <span class="col col-message">示警訊息</span>
           <span class="col col-condition">示警條件</span>
           <span class="col col-relation">關聯看板</span>
         </div>
-        <section 
-          v-for="(condition, index) in warningConditions" 
+        <spinner 
+          v-if="isLoading" 
+          :title="$t('button.download')" 
+          size="50"/>
+        <section
+          v-for="(condition, index) in warningModuleConfig.conditions"
+          v-else 
           :key="index" 
           class="setting-block">
           <div class="col col-enable">
@@ -93,6 +100,10 @@ export default {
     DefaultSelect
   },
   props: {
+    setting: {
+      type: Object,
+      default: () => {}
+    },
     dashboardList: {
       type: Array,
       default: () => []
@@ -100,8 +111,13 @@ export default {
   },
   data () {
     return {
-      isWarningModuleActivate: false,
-      warningConditions: []
+      isLoading: false,
+      allConditions: [],
+      originalWarningModuleConfig: {},
+      warningModuleConfig: {
+        activate: false,
+        conditions: []
+      }
     }
   },
   computed: {
@@ -117,19 +133,38 @@ export default {
     }
   },
   created () {
+    this.isLoading = true
+
+    // 示警模組是否啟用
+    this.warningModuleConfig.activate = this.setting.activate
+
     getAlertConditions().then(conditions => {
+      // 存放所有示警條件
+      this.allConditions = conditions
+
+      // 還原之前的設定到示警條件上
       conditions.forEach(condition => {
-        this.warningConditions.push({
+        const prevConditionSetting = this.setting.conditions.find(item => item.id === condition.id)
+        this.warningModuleConfig.conditions.push({
           ...condition,
-          activate: false,
-          relatedDashboardId: null
+          activate: prevConditionSetting ? prevConditionSetting.activate : false,
+          relatedDashboardId: prevConditionSetting ? prevConditionSetting.relatedDashboardId : null
         })
       })
+      this.isLoading = false
     })
   },
-  mounted () {
-  },
   methods: {
+    saveWarningModuleSetting () {
+      this.$emit('update', {
+        activate: this.warningModuleConfig.activate,
+        conditions: this.warningModuleConfig.conditions.map(item => ({
+          id: item.id,
+          activate: item.activate,
+          relatedDashboardId: item.relatedDashboardId
+        }))
+      })
+    },
     displayedConditionMessage (targetColumnName, comparingValues) {
       return comparingValues.reduce((acc, cur) => {
         let comparisonOperator = ''
@@ -137,11 +172,20 @@ export default {
           case 'GREATER_THAN':
             comparisonOperator = '>'
             break
-          case 'LOWER_THAN':
+          case 'GREATER_THAN_OR_EQUAL_TO':
+            comparisonOperator = '≥'
+            break
+          case 'LESS_THAN':
             comparisonOperator = '<'
+            break
+          case 'LESS_THAN_OR_EQUAL_TO':
+            comparisonOperator = '≤'
             break
           case 'EQUAL':
             comparisonOperator = '='
+            break
+          case 'NOT_EQUAL':
+            comparisonOperator = '≠'
         }
         return acc.concat(`${targetColumnName}${comparisonOperator}${cur.value}<br>`)
       }, '')
@@ -152,7 +196,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.warning-module {
+.warning-setting {
   height: 100%;
   display: flex;
   flex-direction: column;

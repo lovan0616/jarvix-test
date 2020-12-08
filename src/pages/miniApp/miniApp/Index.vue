@@ -176,7 +176,10 @@
             v-if="isWarningModule && !currentDashboardId"
             class="mini-app__main warning">
             <warning-module
+              :setting="appData.warningModule"
               :dashboard-list="dashboardList"
+              @update="updateWarningModuleSetting"
+              @goToCertainDashboard="activeCertainDashboard"
             />
           </main>
           <div 
@@ -831,7 +834,8 @@ export default {
       updatedMiniAppData.settings.viewModeData = {
         dashboards: this.miniApp.settings.editModeData.dashboards,
         updateDate: new Date(),
-        displayedName: this.miniApp.settings.editModeData.displayedName
+        displayedName: this.miniApp.settings.editModeData.displayedName,
+        warningModule: this.miniApp.settings.editModeData.warningModule
       }
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
@@ -1012,6 +1016,23 @@ export default {
         })
         .catch(() => {})
         .finally(() => this.isShowDeleteComponentDialog = false)
+    },
+    updateWarningModuleSetting (warningModule) {
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      editedMiniApp.settings.editModeData.warningModule = warningModule
+
+      this.updateAppSetting(editedMiniApp)
+        .then(() => {
+          this.miniApp = editedMiniApp
+
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .catch(() => {})
     },
     updateAppSetting (appInfo, miniAppId = this.miniAppId) {
       return updateAppSetting(miniAppId, { ...appInfo })
@@ -1373,6 +1394,7 @@ export default {
     padding: 20px 0 0 20px;
     display: flex;
     flex-direction: column;
+    width: 0;
     &.warning {}
     &.dashboard {
       .dashboard__header {

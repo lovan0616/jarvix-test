@@ -1,64 +1,118 @@
 <template>
-  <div>
-    <div class="sy-table-block">
-      <el-table
-        :data="tableData"
-        height="500px"
-        class="sy-table"
-        style="width: 100%"
-        @row-click="rowClick">
-        <el-table-column
-          prop="datetime"
-          label="時間"
-          width="220"/>
-        <el-table-column
-          prop="warningRule"
-          label="警示條件"/>
-        <el-table-column
-          prop="warningMessage"
-          label="警示訊息"/>
-        <el-table-column
-          prop="warningCode"
-          label="警示代號"
-          width="120px"/>
-        <el-table-column
-          label="前往關聯"
-          width="100">
-          <template slot-scope="scope">
-            <a 
-              class="link" 
-              @click="handleClick">前往看版</a>
-          </template>
-        </el-table-column>
-      </el-table>
+  <div class="warning-log">
+    <nav class="warning-log__nav">
+      {{ $t('miniApp.warningLogs') }}
+    </nav>
+    <div class="warning-log__content">
+      <template v-if="setting.activate">
+        <spinner 
+          v-if="isLoading" 
+          :title="$t('button.download')" 
+          size="50"/>
+        <el-table
+          v-else
+          :data="warningLogs"
+          class="sy-table"
+          style="width: 100%">
+          <div slot="empty">{{ $t('miniApp.emptyLogs') }}</div>
+          <el-table-column
+            :label="$t('miniApp.warningLogCreateTime')"
+            prop="createDate"
+            width="220">
+            <template slot-scope="scope">
+              <span>{{ scope.row.createDate | convertTimeStamp }}</span>
+            </template>  
+          </el-table-column>
+          <el-table-column
+            :label="$t('miniApp.warningLogMessage')"
+            prop="conditionMetMessage"/>
+          <el-table-column
+            :label="$t('miniApp.goToDashborad')"
+            prop="relatedDashboardId"
+            width="120">
+            <template slot-scope="scope">
+              <a 
+                class="link" 
+                @click.stop="$emit('goToCertainDashboard', scope.row.relatedDashboardId)">
+                {{ $t('miniApp.link') }}
+              </a>
+            </template>
+          </el-table-column>
+        </el-table>
+      </template>
+      <div 
+        v-else 
+        class="warning-log__content-empty">{{ $t('miniApp.warningModuleIsInactive') }}</div>
     </div>
   </div>
 </template>
 
 <script>
+import { getAlertLogs } from '@/API/Alert'
+
 export default {
   name: 'WarningLog',
-  data() {
+  props: {
+    setting: {
+      type: Object,
+      default: () => {}
+    },
+  },
+  data () {
     return {
-      // MOCK DATA，之後改成呼叫示警 API
-      tableData: []
+      isLoading: false,
+      warningLogs: []
     }
   },
-  mounted () {
-    while (this.tableData.length < 20) {
-      this.tableData.push({
-        datetime: '2020/11/03 13:44:56',
-        warningRule: 'X < 0',
-        warningMessage: '異物遮擋',
-        warningCode: "ERR001"
-      })
+  created () {
+    const activeConditionIds = this.setting.conditions.filter(item => item.activate).map(item => item.id )
+    if (activeConditionIds.length > 0) {
+      this.getWarningLogs(activeConditionIds)
     }
   },
   methods: {
-    handleClick () {},
-    rowClick (warningInfo) {
-      console.log(warningInfo)
+    getWarningLogs (activeConditionIds) {
+      this.isLoading = true
+      getAlertLogs({ conditionIds: activeConditionIds }).then(response => {
+        response.data.forEach(log => {
+          const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
+          this.warningLogs.push({
+            ...log,
+            relatedDashboardId: prevSettingCondition ? prevSettingCondition.relatedDashboardId : null
+          })
+        })
+      })
+        .catch(() => {})
+        .finally(() => this.isLoading = false )
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.warning-log {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  &__nav {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    margin-right: 20px;
+    font-size: 20px;
+  }
+  &__content {
+    flex: 1;
+    height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px 20px 0;
+    &-empty {
+      padding-top: 30vh;
+      text-align: center;
+      color: #A4A4A4;
+    }
+  }
+}
+  
+</style>

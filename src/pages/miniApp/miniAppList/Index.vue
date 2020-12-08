@@ -165,12 +165,20 @@ export default {
           editModeData: {
             dashboards: [],
             displayedName: null,
-            isPublishing: false
+            isPublishing: false,
+            warningModule: {
+              activate: false,
+              conditions: [] // { id: 1, relatedDashboardId: null }
+            }
           },
           viewModeData: {
             dashboards: [],
             updateDate: null,
-            displayedName: null
+            displayedName: null,
+            warningModule: {
+              activate: false,
+              conditions: []
+            }
           }
         }
       },
