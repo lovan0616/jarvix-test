@@ -47,6 +47,16 @@ Vue.mixin({
           value: 'others',
           name: i18n.t('warRoom.customize')
         }
+      ],
+      timeScopeUnitOptionList: [
+        { value: 'Second', name: i18n.t('timeScopeUnit.second') },
+        { value: 'Minute', name: i18n.t('timeScopeUnit.minute') },
+        { value: 'Hour', name: i18n.t('timeScopeUnit.hour') },
+        { value: 'Day', name: i18n.t('timeScopeUnit.day') },
+        { value: 'Week', name: i18n.t('timeScopeUnit.week') },
+        { value: 'Month', name: i18n.t('timeScopeUnit.month') },
+        { value: 'Season', name: i18n.t('timeScopeUnit.season') },
+        { value: 'Year', name: i18n.t('timeScopeUnit.year') }
       ]
     }
   },
