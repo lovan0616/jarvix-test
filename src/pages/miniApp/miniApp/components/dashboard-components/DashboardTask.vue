@@ -93,31 +93,31 @@
           @clickCell="columnTriggered($event)"
         />
       </div>
-    </div>
-    <div class="component__item-action">
-      <div
-        v-if="componentData.relatedDashboard.id && isEditMode"
-        class="related-item"
-      >
-        <div class="related-item__title">
-          {{ $t('miniApp.relatedDashboard') }}：
+      <div class="component__item-action">
+        <div
+          v-if="componentData.relatedDashboard.id && isEditMode"
+          class="related-item"
+        >
+          <div class="related-item__title">
+            {{ $t('miniApp.relatedDashboard') }}：
+          </div>
+          <div class="related-item__name">
+            {{ componentData.relatedDashboard.name }}
+          </div>
+          <div 
+            class="related-item__close" 
+            @click="isShowConfirmDelete = true">
+            <svg-icon icon-class="close"/>
+          </div>
         </div>
-        <div class="related-item__name">
-          {{ componentData.relatedDashboard.name }}
+        <div
+          v-if="componentData.config.relation.relatedDashboardId"
+          class="related-item"
+        >
+          {{ $t('miniApp.clickColumnToSeeMore', {
+            columnName: componentData.config.relation.triggerColumn.info.dataColumnAlias
+          }) }}
         </div>
-        <div 
-          class="related-item__close" 
-          @click="isShowConfirmDelete = true">
-          <svg-icon icon-class="close"/>
-        </div>
-      </div>
-      <div
-        v-if="componentData.config.relation.relatedDashboardId"
-        class="related-item"
-      >
-        {{ $t('miniApp.clickColumnToSeeMore', {
-          columnName: componentData.config.relation.triggerColumn.info.dataColumnAlias
-        }) }}
       </div>
     </div>
     <decide-dialog

@@ -172,6 +172,7 @@
               </li>
             </ul>
           </aside>
+          <!-- 監控示警模組 -->
           <main 
             v-if="isWarningModule && !currentDashboardId"
             class="mini-app__main warning">
@@ -182,6 +183,7 @@
               @goToCertainDashboard="activeCertainDashboard"
             />
           </main>
+          <!-- 分析看板模組 -->
           <div 
             v-else-if="dashboardList.length === 0" 
             class="empty-block">
@@ -306,7 +308,7 @@
               :initial-filter-list.sync="controlColumnValueInfoList"
               :is-single-choice-filter="true"
               class="mini-app__dashboard-filter mini-app__dashboard-filter--top"
-              @removeFilter="removeFilter($event, 'single')"
+              @updateFilter="updateFilter($event, 'single')"
             />
             <!--Y Axis Control panel-->
             <axis-control-panel
@@ -315,7 +317,7 @@
               :is-edit-mode="isEditMode"
               :initial-control-list.sync="yAxisControlColumnValueInfoList"
               class="mini-app__dashboard-filter mini-app__dashboard-filter--middle"
-              @removeControl="removeControl"
+              @updateControl="updateControl"
             />
             <!--Filter Panel-->
             <filter-control-panel
@@ -325,7 +327,7 @@
               :initial-filter-list.sync="filterColumnValueInfoList"
               :is-single-choice-filter="false"
               class="mini-app__dashboard-filter mini-app__dashboard-filter--bottom"
-              @removeFilter="removeFilter($event, 'multiple')"
+              @updateFilter="updateFilter($event, 'multiple')"
             />
             <div class="mini-app__dashboard-components">
               <template v-if="currentDashboard.components.length > 0">
@@ -339,6 +341,7 @@
                   :is-edit-mode="isEditMode"
                   @redirect="currentDashboardId = $event"
                   @deleteComponentRelation="deleteComponentRelation"
+                  @columnTriggered="columnTriggered"
                 >
                   <template slot="drowdown">
                     <dropdown-select
@@ -1133,9 +1136,6 @@ export default {
       this.isShowCreateFilterDialog = true
       this.isYAxisController = true
       this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
-    },
-    createGeneralComponent () {
-      this.isShowCreateComponentDialog = true
     },
     createMonitorWarningComponent () {
       this.isProcessing = true
