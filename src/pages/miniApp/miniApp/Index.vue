@@ -134,7 +134,8 @@
         </template>
         <template v-else>
           <aside class="mini-app__side-nav">
-            <div 
+            <div
+              v-if="isEditMode || appData.warningModule.activate"
               class="title warning-module-entry"
               @click="openWarningModule">
               <svg-icon 
