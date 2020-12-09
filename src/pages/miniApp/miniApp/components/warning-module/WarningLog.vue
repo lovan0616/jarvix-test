@@ -27,7 +27,7 @@
             :label="$t('miniApp.warningLogMessage')"
             prop="conditionMetMessage"/>
           <el-table-column
-            :label="$t('miniApp.goToDashborad')"
+            :label="$t('miniApp.goToDashboard')"
             prop="relatedDashboardId"
             width="120">
             <template slot-scope="scope">
@@ -36,6 +36,27 @@
                 @click.stop="$emit('goToCertainDashboard', scope.row.relatedDashboardId)">
                 {{ $t('miniApp.link') }}
               </a>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$t('miniApp.updateState')"
+            prop="active"
+            width="120">
+            <template slot-scope="scope">
+              <button
+                v-if="scope.row.active"
+                :disabled="isProcessing"
+                type="button"
+                class="btn-m btn-default button-container__button"
+                @click="updateLogActiveness(scope.row.conditionMetLogId, true)"
+              >{{ $t('miniApp.markAsFinished') }}</button>
+              <button
+                v-else
+                :disabled="isProcessing"
+                type="button"
+                class="btn-m btn-secondary button-container__button"
+                @click="updateLogActiveness(scope.row.conditionMetLogId, false)"
+              >{{ $t('miniApp.markAsUnfinished') }}</button>
             </template>
           </el-table-column>
         </el-table>
@@ -48,7 +69,7 @@
 </template>
 
 <script>
-import { getAlertLogs } from '@/API/Alert'
+import { getAlertLogs, patchAlertLogActiveness } from '@/API/Alert'
 
 export default {
   name: 'WarningLog',
@@ -61,29 +82,39 @@ export default {
   data () {
     return {
       isLoading: false,
-      warningLogs: []
+      warningLogs: [],
+      isProcessing: false
+    }
+  },
+  computed: {
+    activeConditionIds () {
+      if (!this.setting.conditions) return []
+      return this.setting.conditions.filter(item => item.activate).map(item => item.id)
     }
   },
   created () {
-    const activeConditionIds = this.setting.conditions.filter(item => item.activate).map(item => item.id )
-    if (activeConditionIds.length > 0) {
-      this.getWarningLogs(activeConditionIds)
-    }
+    this.activeConditionIds.length > 0 && this.getWarningLogs(this.activeConditionIds)
   },
   methods: {
     getWarningLogs (activeConditionIds) {
       this.isLoading = true
       getAlertLogs({ conditionIds: activeConditionIds }).then(response => {
-        response.data.forEach(log => {
+        this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
-          this.warningLogs.push({
+          return {
             ...log,
             relatedDashboardId: prevSettingCondition ? prevSettingCondition.relatedDashboardId : null
-          })
+          }
         })
       })
         .catch(() => {})
         .finally(() => this.isLoading = false )
+    },
+    updateLogActiveness (logId, isActive) {
+      this.isProcessing = true
+      patchAlertLogActiveness(logId, { "active" : isActive })
+        .then(() => this.getWarningLogs(this.activeConditionIds))
+        .finally(() => this.isProcessing = false)
     }
   }
 }
