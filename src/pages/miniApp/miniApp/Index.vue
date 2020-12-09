@@ -133,20 +133,16 @@
           </div>
         </template>
         <template v-else>
-          <div 
-            v-if="dashboardList.length === 0" 
-            class="empty-block">
-            {{ $t('miniApp.noneDashboard') }}
-            <button
-              v-if="isEditMode"
-              class="btn-m btn-default btn-has-icon create-btn" 
-              @click="isShowCreateDashboardDialog = true">
-              <svg-icon icon-class="plus"/>
-              {{ $t('miniApp.createDashboard') }}
-            </button>
-          </div>
-          <template v-else>
-            <div class="mini-app__dashboard-list">
+          <aside class="mini-app__side-nav">
+            <div 
+              class="title warning-module-entry"
+              @click="openWarningModule">
+              <svg-icon 
+                icon-class="warning" 
+                class="label-icon"/>
+              <span class="label-name">監控示警</span>
+            </div>
+            <ul class="item-wrapper">
               <div class="title">
                 <svg-icon 
                   icon-class="dashboard" 
@@ -162,174 +158,220 @@
                     class="create-dashboard-icon"/>
                 </div>
               </div>
-              <ul class="item-wrapper">
-                <li
-                  v-for="dashboard in dashboardList" 
-                  :key="dashboard.id"
-                  :class="{'is-active': dashboard.id === currentDashboardId}"
-                  class="item"
-                  @click="activeCertainDashboard(dashboard.id)"
-                >
-                  <svg-icon 
-                    class="item-icon" 
-                    icon-class="triangle"/>
-                  <span class="item-name">{{ dashboard.name }}</span>
-                </li>
-              </ul>
-            </div>
-            <main class="mini-app__dashbaord">
-              <div class="mini-app__dashbaord-header">
-                <div class="header-left">
-                  <template v-if="isEditingDashboardName">
-                    <input-verify
-                      v-validate="`required|max:${max}`"
-                      key="dashboardNameInput"
-                      v-model="newDashboardName"
-                      class="new-name-input"
-                      name="dashboardNameInput"
-                    />
-                    <button
-                      class="btn-m btn-default"
-                      @click="updateDashboardName"
-                    >
-                      {{ $t('button.save') }}
-                    </button>
-                    <button
-                      class="btn-m btn-outline cancel-btn"
-                      @click="isEditingDashboardName = false"
-                    >
-                      {{ $t('button.cancel') }}
-                    </button>
-                  </template>
-                  <template v-else>
-                    <span class="name">{{ currentDashboard.name }}</span>
-                    <div
-                      v-if="isEditMode"
-                      @click="isEditingDashboardName = true"
-                    >
-                      <svg-icon
-                        icon-class="edit"
-                        class="icon-edit"/>
-                    </div>
-                  </template>
-                </div>
-                <div class="header-right">
+              <li
+                v-for="dashboard in dashboardList" 
+                :key="dashboard.id"
+                :class="{'is-active': dashboard.id === currentDashboardId}"
+                class="item"
+                @click="activeCertainDashboard(dashboard.id)"
+              >
+                <svg-icon 
+                  class="item-icon" 
+                  icon-class="triangle"/>
+                <span class="item-name">{{ dashboard.name }}</span>
+              </li>
+            </ul>
+          </aside>
+          <!-- 監控示警模組 -->
+          <main 
+            v-if="isWarningModule && !currentDashboardId"
+            class="mini-app__main warning">
+            <warning-module
+              :setting="appData.warningModule"
+              :dashboard-list="dashboardList"
+              @update="updateWarningModuleSetting"
+              @goToCertainDashboard="activeCertainDashboard"
+            />
+          </main>
+          <!-- 分析看板模組 -->
+          <div 
+            v-else-if="dashboardList.length === 0" 
+            class="empty-block">
+            {{ $t('miniApp.noneDashboard') }}
+            <button
+              v-if="isEditMode"
+              class="btn-m btn-default btn-has-icon create-btn" 
+              @click="isShowCreateDashboardDialog = true">
+              <svg-icon icon-class="plus"/>
+              {{ $t('miniApp.createDashboard') }}
+            </button>
+          </div>
+          <main 
+            v-else
+            class="mini-app__main dashboard">
+            <div class="dashboard__header">
+              <div class="header-left">
+                <template v-if="isEditingDashboardName">
+                  <input-verify
+                    v-validate="`required|max:${max}`"
+                    key="dashboardNameInput"
+                    v-model="newDashboardName"
+                    class="new-name-input"
+                    name="dashboardNameInput"
+                  />
                   <button
-                    v-if="isEditMode"
-                    class="btn-m btn-outline btn-has-icon create-component-btn" 
-                    @click="isShowCreateComponentDialog = true">
-                    <svg-icon icon-class="plus"/>
-                    {{ $t('miniApp.component') }}
+                    class="btn-m btn-default"
+                    @click="updateDashboardName"
+                  >
+                    {{ $t('button.save') }}
                   </button>
-                  <custom-dropdown-select
-                    v-if="isEditMode"
-                    :data-list="controlTypeOptions"
-                    :has-bullet-point="false"
-                    trigger="hover"
-                    @select="createFilterAndControl"
+                  <button
+                    class="btn-m btn-outline cancel-btn"
+                    @click="isEditingDashboardName = false"
                   >
-                    <template #display>
-                      <button
-                        class="btn-m btn-outline btn-has-icon create-filter-btn" 
-                        @click.prevent>
-                        <svg-icon icon-class="plus"/>看板控制項
-                      </button>
-                    </template>
-                  </custom-dropdown-select>
-                  <!--Filter-->
-                  <custom-dropdown-select
-                    v-if="isEditMode"
-                    :data-list="filterTypeOptions"
-                    :has-bullet-point="false"
-                    trigger="hover"
-                    @select="createFilterAndControl"
-                  >
-                    <template #display>
-                      <button
-                        class="btn-m btn-outline btn-has-icon create-filter-btn" 
-                        @click.prevent>
-                        <svg-icon icon-class="plus"/>{{ $t('miniApp.filterCondition') }}
-                      </button>
-                    </template>
-                  </custom-dropdown-select>
-                  <div
-                    v-if="isEditMode"
-                    class="dashboard-setting-box">
-                    <svg-icon
-                      icon-class="more"
-                      class="more-icon" />
-                    <dropdown-select
-                      :bar-data="dashboardSettingOptions"
-                      @switchDialogName="switchDialogName($event)"
-                    />
-                  </div>
-                </div>
-              </div>
-              <!--Control panel-->
-              <filter-control-panel
-                v-if="controlColumnValueInfoList.length > 0"
-                :key="'control' + currentDashboardId"
-                :is-edit-mode="isEditMode"
-                :initial-filter-list.sync="controlColumnValueInfoList"
-                :is-single-choice-filter="true"
-                class="mini-app__dashboard-filter mini-app__dashboard-filter--top"
-                @updateFilter="updateFilter($event, 'single')"
-              />
-              <!--Y Axis Control panel-->
-              <axis-control-panel
-                v-if="yAxisControlColumnValueInfoList.length > 0"
-                :key="'yAxisControl' + currentDashboardId"
-                :is-edit-mode="isEditMode"
-                :initial-control-list.sync="yAxisControlColumnValueInfoList"
-                class="mini-app__dashboard-filter mini-app__dashboard-filter--middle"
-                @updateControl="updateControl"
-              />
-              <!--Filter Panel-->
-              <filter-control-panel
-                v-if="filterColumnValueInfoList.length > 0"
-                :key="'filter' + currentDashboardId"
-                :is-edit-mode="isEditMode"
-                :initial-filter-list.sync="filterColumnValueInfoList"
-                :is-single-choice-filter="false"
-                class="mini-app__dashboard-filter mini-app__dashboard-filter--bottom"
-                @updateFilter="updateFilter($event, 'multiple')"
-              />
-              <div class="mini-app__dashbaord-components">
-                <template v-if="currentDashboard.components.length > 0">
-                  <dashboard-task
-                    v-for="componentData in currentDashboard.components"
-                    :key="componentData.id"
-                    :filters="filterColumnValueInfoList"
-                    :y-axis-controls="yAxisControlColumnValueInfoList"
-                    :controls="controlColumnValueInfoList"
-                    :component-data="componentData"
-                    :is-edit-mode="isEditMode"
-                    @redirect="currentDashboardId = $event"
-                    @deleteComponentRelation="deleteComponentRelation"
-                  >
-                    <template slot="drowdown">
-                      <dropdown-select
-                        :bar-data="componentSettingOptions"
-                        @switchDialogName="switchDialogName($event, componentData.id)"
-                      />
-                    </template>
-                  </dashboard-task>
+                    {{ $t('button.cancel') }}
+                  </button>
                 </template>
                 <template v-else>
-                  <div class="empty-block">
-                    {{ $t('miniApp.noneComponent') }}
-                    <button
-                      v-if="isEditMode"
-                      class="btn-m btn-default btn-has-icon create-btn" 
-                      @click="isShowCreateComponentDialog = true">
-                      <svg-icon icon-class="plus"/>
-                      {{ $t('miniApp.createComponent') }}
-                    </button>
+                  <span class="name">{{ currentDashboard.name }}</span>
+                  <div
+                    v-if="isEditMode"
+                    @click="isEditingDashboardName = true"
+                  >
+                    <svg-icon
+                      icon-class="edit"
+                      class="icon-edit"/>
                   </div>
                 </template>
               </div>
-            </main>
-          </template>
+              <div class="header-right">
+                <custom-dropdown-select
+                  v-if="isEditMode"
+                  :data-list="componentTypeOptions"
+                  :has-bullet-point="false"
+                  trigger="hover"
+                  @select="createComponentType"
+                >
+                  <template #display>
+                    <button class="btn-m btn-outline btn-has-icon create-component-btn">
+                      <svg-icon icon-class="plus"/>
+                      <span class="button-label">{{ $t('miniApp.component') }}</span>
+                      <svg-icon 
+                        icon-class="triangle" 
+                        class="icon-triangle"/>
+                    </button>
+                  </template>
+                </custom-dropdown-select>
+                <custom-dropdown-select
+                  v-if="isEditMode"
+                  :data-list="controlTypeOptions"
+                  :has-bullet-point="false"
+                  trigger="hover"
+                  @select="createFilterAndControl"
+                >
+                  <template #display>
+                    <button
+                      class="btn-m btn-outline btn-has-icon create-filter-btn" 
+                      @click.prevent>
+                      <svg-icon icon-class="plus"/>
+                      <span class="button-label">看板控制項</span>
+                      <svg-icon 
+                        icon-class="triangle" 
+                        class="icon-triangle"/>
+                    </button>
+                  </template>
+                </custom-dropdown-select>
+                <!--Filter-->
+                <custom-dropdown-select
+                  v-if="isEditMode"
+                  :data-list="filterTypeOptions"
+                  :has-bullet-point="false"
+                  trigger="hover"
+                  @select="createFilterAndControl"
+                >
+                  <template #display>
+                    <button
+                      class="btn-m btn-outline btn-has-icon create-filter-btn" 
+                      @click.prevent>
+                      <svg-icon icon-class="plus"/>{{ $t('miniApp.filterCondition') }}
+                    </button>
+                  </template>
+                </custom-dropdown-select>
+                <div
+                  v-if="isEditMode"
+                  class="dashboard-setting-box">
+                  <svg-icon
+                    icon-class="more"
+                    class="more-icon" />
+                  <dropdown-select
+                    :bar-data="dashboardSettingOptions"
+                    @switchDialogName="switchDialogName($event)"
+                  />
+                </div>
+              </div>
+            </div>
+            <!--Control panel-->
+            <filter-control-panel
+              v-if="controlColumnValueInfoList.length > 0"
+              :key="'control' + currentDashboardId"
+              :is-edit-mode="isEditMode"
+              :initial-filter-list.sync="controlColumnValueInfoList"
+              :is-single-choice-filter="true"
+              class="mini-app__dashboard-filter mini-app__dashboard-filter--top"
+              @updateFilter="updateFilter($event, 'single')"
+            />
+            <!--Y Axis Control panel-->
+            <axis-control-panel
+              v-if="yAxisControlColumnValueInfoList.length > 0"
+              :key="'yAxisControl' + currentDashboardId"
+              :is-edit-mode="isEditMode"
+              :initial-control-list.sync="yAxisControlColumnValueInfoList"
+              class="mini-app__dashboard-filter mini-app__dashboard-filter--middle"
+              @updateControl="updateControl"
+            />
+            <!--Filter Panel-->
+            <filter-control-panel
+              v-if="filterColumnValueInfoList.length > 0"
+              :key="'filter' + currentDashboardId"
+              :is-edit-mode="isEditMode"
+              :initial-filter-list.sync="filterColumnValueInfoList"
+              :is-single-choice-filter="false"
+              class="mini-app__dashboard-filter mini-app__dashboard-filter--bottom"
+              @updateFilter="updateFilter($event, 'multiple')"
+            />
+            <div class="mini-app__dashboard-components">
+              <template v-if="currentDashboard.components.length > 0">
+                <dashboard-task
+                  v-for="componentData in currentDashboard.components"
+                  :key="componentData.id"
+                  :filters="filterColumnValueInfoList"
+                  :y-axis-controls="yAxisControlColumnValueInfoList"
+                  :controls="controlColumnValueInfoList"
+                  :component-data="componentData"
+                  :is-edit-mode="isEditMode"
+                  @redirect="currentDashboardId = $event"
+                  @deleteComponentRelation="deleteComponentRelation"
+                  @columnTriggered="columnTriggered"
+                >
+                  <template slot="drowdown">
+                    <dropdown-select
+                      :bar-data="componentSettingOptions(componentData)"
+                      @switchDialogName="switchDialogName($event, componentData.id)"
+                    />
+                  </template>
+                  <template 
+                    v-if="componentData.type === 'monitor-warning-list'" 
+                    slot="icon">
+                    <svg-icon 
+                      icon-class="warning" 
+                      class="warning-icon"/>
+                  </template>
+                </dashboard-task>
+              </template>
+              <template v-else>
+                <div class="empty-block">
+                  {{ $t('miniApp.noneComponent') }}
+                  <button
+                    v-if="isEditMode"
+                    class="btn-m btn-default btn-has-icon create-btn" 
+                    @click="isShowCreateComponentDialog = true">
+                    <svg-icon icon-class="plus"/>
+                    {{ $t('miniApp.createComponent') }}
+                  </button>
+                </div>
+              </template>
+            </div>
+          </main>
         </template>
       </div>
     </main>
@@ -348,6 +390,7 @@
     <create-component-dialog
       v-if="isShowCreateComponentDialog"
       :initial-current-component="currentComponent"
+      :dashboard-list="dashboardList"
       @close="closeCreateComponentDialog"
       @create="createComponent"
       @updateSetting="updateComponentSetting"
@@ -422,7 +465,7 @@ import {
   updateAppSetting,
   deleteMiniApp
 } from '@/API/MiniApp'
-import DashboardTask from './components/DashboardTask'
+import DashboardTask from './components/dashboard-components/DashboardTask'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
 import CreateFilterDialog from './dialog/CreateFilterDialog.vue'
@@ -434,6 +477,7 @@ import InputVerify from '@/components/InputVerify'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import FilterControlPanel from './filter/FilterControlPanel'
 import AxisControlPanel from './filter/AxisControlPanel'
+import WarningModule from './components/warning-module/WarningModule'
 import { Message } from 'element-ui'
 
 export default {
@@ -454,7 +498,8 @@ export default {
     WritingDialog,
     DecideDialog,
     FilterControlPanel,
-    AxisControlPanel
+    AxisControlPanel,
+    WarningModule
   },
   data () {
     return {
@@ -470,6 +515,7 @@ export default {
       isLoading: false,
       isProcessing: false,
       isShowShare: false,
+      isWarningModule: false,
       shareLink: null,
       confirmDeleteText: this.$t('editing.confirmDelete'),
       isShowDelete: false,
@@ -547,25 +593,6 @@ export default {
         }
       ]
     },
-    componentSettingOptions () {
-      return [
-        {
-          title: 'miniApp.componentSetting',
-          icon: 'filter-setting',
-          dialogName: 'CreateComponent'
-        },
-        {
-          title: 'miniApp.createRelation',
-          icon: 'filter-setting',
-          dialogName: 'CreateComponentRelation'
-        },
-        {
-          title: 'button.delete',
-          icon: 'delete',
-          dialogName: 'DeleteComponent'
-        }
-      ]
-    },
     controlTypeOptions () {
       return [
         {
@@ -575,6 +602,18 @@ export default {
         {
           name: this.$t('miniApp.yAxisControl'),
           id: 'YAxisController'
+        }
+      ]
+    },
+    componentTypeOptions () {
+      return [
+        {
+          name: this.$t('miniApp.generalComponent'),
+          id: 'General'
+        },
+        {
+          name: this.$t('miniApp.monitorComponent'),
+          id: 'MonitorWarning'
         }
       ]
     },
@@ -734,7 +773,10 @@ export default {
       this.isShowCreateComponentDialog = false
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
-        .finally(() => this.isProcessing = false)
+        .finally(() => {
+          this.isProcessing = false
+          this.currentComponentId = null
+        })
     },
     updateComponentSetting (updatedComponentInfo) {
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
@@ -797,7 +839,8 @@ export default {
       updatedMiniAppData.settings.viewModeData = {
         dashboards: this.miniApp.settings.editModeData.dashboards,
         updateDate: new Date(),
-        displayedName: this.miniApp.settings.editModeData.displayedName
+        displayedName: this.miniApp.settings.editModeData.displayedName,
+        warningModule: this.miniApp.settings.editModeData.warningModule
       }
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
@@ -979,11 +1022,29 @@ export default {
         .catch(() => {})
         .finally(() => this.isShowDeleteComponentDialog = false)
     },
+    updateWarningModuleSetting (warningModule) {
+      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
+      editedMiniApp.settings.editModeData.warningModule = warningModule
+
+      this.updateAppSetting(editedMiniApp)
+        .then(() => {
+          this.miniApp = editedMiniApp
+
+          Message({
+            message: this.$t('message.saveSuccess'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .catch(() => {})
+    },
     updateAppSetting (appInfo, miniAppId = this.miniAppId) {
       return updateAppSetting(miniAppId, { ...appInfo })
     },
     activeCertainDashboard (dashboardId) {
       this.isEditingDashboardName = false
+      this.isWarningModule = false
       this.currentDashboardId = dashboardId
       this.initFilters()
       this.newDashboardName = this.currentDashboard.name
@@ -1076,6 +1137,39 @@ export default {
       this.isYAxisController = true
       this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
     },
+    createMonitorWarningComponent () {
+      this.isProcessing = true
+      const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
+      updatedMiniAppData.settings.editModeData.dashboards.forEach(board => {
+        if (board.id === this.currentDashboardId) {
+          board.components.push({
+            init: true,
+            id: null,
+            type: 'monitor-warning-list',
+            resultId: null,
+            orderSequence: null,
+            tempResultInfo: {},
+            relatedDashboard: {
+              id: null,
+              name: null
+            },
+            config: {
+              diaplayedName: this.$t('miniApp.realTimeMonitorWarning'),
+              isAutoRefresh: false,
+              refreshFrequency: null
+            },
+            indexInfo: {
+              unit: ''
+            },
+            isIndexTypeAvailable: false
+          })
+        }
+      })
+      this.isShowCreateComponentDialog = false
+      this.updateAppSetting(updatedMiniAppData)
+        .then(() => { this.miniApp = updatedMiniAppData })
+        .finally(() => this.isProcessing = false)
+    },
     createTimeFilter () {
       this.isSingleChoiceFilter = false
       this.saveCreatedFilter([{
@@ -1092,7 +1186,42 @@ export default {
     },
     createFilterAndControl (type) {
       this[`create${type}`]()
-    }
+    },
+    columnTriggered ({ relatedDashboardId, cellValue, columnId }) {
+      this.activeCertainDashboard(relatedDashboardId)
+      this.controlColumnValueInfoList.forEach(item => {
+        // 如果目標 Dashboard 已設定該欄位 filter，就將預設值設定為剛剛使用者點的 cell 的值
+        if (item.columnId === columnId) {
+          item.dataValues = [cellValue]
+        }
+      })
+    },
+    createComponentType (type) {
+      this[`create${type}Component`]()
+    },
+    openWarningModule () {
+      this.isWarningModule = true
+      this.currentDashboardId = null
+    },
+    componentSettingOptions (component) {
+      return [
+        ...(component.type !== 'monitor-warning-list' && [{
+          title: 'miniApp.componentSetting',
+          icon: 'filter-setting',
+          dialogName: 'CreateComponent'
+        }]),
+        {
+          title: 'miniApp.createRelation',
+          icon: 'filter-setting',
+          dialogName: 'CreateComponentRelation'
+        },
+        {
+          title: 'button.delete',
+          icon: 'delete',
+          dialogName: 'DeleteComponent'
+        }
+      ]
+    },
   }
 }
 </script>
@@ -1206,7 +1335,7 @@ export default {
       }
     }
   }
-  &__dashboard-list {
+  &__side-nav {
     flex: 0 0 240px;
     display: flex;
     flex-direction: column;
@@ -1220,6 +1349,12 @@ export default {
       line-height: 48px;
       display: flex;
       align-items: center;
+      &.warning-module-entry {
+        cursor: pointer;
+      }
+      .label-icon {
+        margin-right: 4px;
+      }
       .label-name {
         padding-left: 6px;
         flex: 1;
@@ -1264,8 +1399,9 @@ export default {
       text-align: right;
     }
   }
-  &__dashbaord {
+  &__main {
     flex: 1;
+    // TODO 調整 Layout 時理想上讓 padding 統一為 20
     padding: 20px 0 0 20px;
     display: flex;
     flex-direction: column;
@@ -1279,116 +1415,133 @@ export default {
       align-items: center;
       margin-bottom: 20px;
       padding-right: 20px;
-      .header-left {
+    }
+    &.warning {}
+    &.dashboard {
+      .dashboard__header {
+        position: relative;
+        z-index: 4;
+        flex: 0 0 30px;
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        .name {
-          font-size: 20px;
-          line-height: 28px;
-        }
-        &:hover {
-          .icon-edit {
-            visibility: visible;
-          }
-        }
-        .icon-edit {
-          color: $theme-color-primary;
-          margin-left: 12px;
-          cursor: pointer;
-          visibility: hidden;
-          &:hover {
-            visibility: visible;
-          }
-        }
-      }
-      .header-right {
-        display: flex;
-        align-items: center;
-        .dashboard-setting-box {
-          flex: 0 0 30px;
-          height: 30px;
-          margin-left: 6px;
-          margin-right: 7px;
-          cursor: pointer;
-          border: 1px solid #FFF;
-          border-radius: 4px;
+        margin-bottom: 20px;
+        padding-right: 20px;
+        .header-left {
           display: flex;
           align-items: center;
-          justify-content: center;
-          position: relative;
-          @include dropdown-select-controller;
-          .dropdown-select {
-            z-index: 2;
-            /deep/ .dropdown-select-box {
-              box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
-              top: calc(50% + 17px);
-              right: -3px;
-              left: unset;
-              z-index: 1;
-              &:before { right: 7px; }
-              .svg-icon {
-                color: $theme-color-primary;
-              }
-              .dropdown-flex {
-                min-width: unset;
-              }
+          .name {
+            font-size: 20px;
+            line-height: 28px;
+          }
+          &:hover {
+            .icon-edit {
+              visibility: visible;
+            }
+          }
+          .icon-edit {
+            color: $theme-color-primary;
+            margin-left: 12px;
+            cursor: pointer;
+            visibility: hidden;
+            &:hover {
+              visibility: visible;
             }
           }
         }
-      }
-      .create-filter-btn {
-        margin-left: 8px;
-        .svg-icon {
-          width: 24px;
+        .header-right {
+          display: flex;
+          align-items: center;
+          .dashboard-setting-box {
+            flex: 0 0 30px;
+            height: 30px;
+            margin-left: 6px;
+            cursor: pointer;
+            border: 1px solid #FFF;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            @include dropdown-select-controller;
+            .dropdown-select {
+              z-index: 2;
+              /deep/ .dropdown-select-box {
+                box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
+                top: calc(50% + 17px);
+                right: -3px;
+                left: unset;
+                z-index: 1;
+                &:before { right: 7px; }
+                .svg-icon {
+                  color: $theme-color-primary;
+                }
+                .dropdown-flex {
+                  min-width: unset;
+                }
+              }
+            }
+          }
+          .icon-triangle {
+            font-size: 8px;
+            transform: rotate(180deg);
+          }
+          .button-label {
+            margin: 0 6px;
+            &:last-child {
+              margin-right: 16px;
+            }
+          }
+          .svg-icon {
+            flex: 0 0 14px;
+          }
         }
-      }
-      .cancel-btn {
-        margin-left: 6px;
-      }
+        .create-filter-btn {
+          margin-left: 8px;
+        }
+        .cancel-btn {
+          margin-left: 6px;
+        }
 
-      /deep/ .dropdown {
-        &__list-container {
-          left: 0;
-          top: calc(100% + 10px);
-          text-align: left;
-          z-index: 1;
-          width: 136px;
-
-          &::before {
-            position: absolute;
-            content: "";
-            bottom: 100%;
+        /deep/ .dropdown {
+          &__list-container {
             left: 0;
-            width: 100%;
-            background-color: transparent;
-            height: 12px;
-          }
+            top: calc(100% + 10px);
+            text-align: left;
+            z-index: 1;
+            width: 136px;
 
-          &::after {
-            position: absolute;
-            content: "";
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border-bottom: 8px solid #2B3839;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
+            &::before {
+              position: absolute;
+              content: "";
+              bottom: 100%;
+              left: 0;
+              width: 100%;
+              background-color: transparent;
+              height: 12px;
+            }
+
+            &::after {
+              position: absolute;
+              content: "";
+              bottom: 100%;
+              left: 50%;
+              transform: translateX(-50%);
+              border-bottom: 8px solid #2B3839;
+              border-left: 8px solid transparent;
+              border-right: 8px solid transparent;
+            }
           }
-        }
-        &__link {
-          line-height: 39px;
-          font-weight: 600;
-          font-size: 14px;
+          &__link {
+            line-height: 39px;
+            font-weight: 600;
+            font-size: 14px;
+          }
         }
       }
     }
-
-    &-filters {
-      display: flex;
-      justify-content: space-between;
-      padding-right: 20px;
-    }
-
+  }
+  &__dashboard {
     &-components {
       height: calc(100vh - 56px - 20px - 50px);
       overflow: overlay;
@@ -1516,6 +1669,13 @@ export default {
     &--bottom {
       z-index: 1;
       margin-bottom: 20px;
+    }
+  }
+
+  &__dashboard-components {
+    margin-right: 20px;
+    .warning-icon {
+      color: #FF5C46;
     }
   }
 }

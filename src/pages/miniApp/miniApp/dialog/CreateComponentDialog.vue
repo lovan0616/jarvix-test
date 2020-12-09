@@ -56,6 +56,7 @@
           :current-component="currentComponent"
           :is-addable.sync="isAddable"
           :is-loading.sync="isLoading"
+          @setDiagram="currentComponent.diagram = $event" 
         />
         <transition name="fast-fade-in">
           <section 
@@ -78,16 +79,46 @@
         class="key-result-setting">
         <div class="setting__header">
           <svg-icon icon-class="filter-setting"/>
-          圖表設定
+          {{ $t('miniApp.chartSetting') }}
         </div>
+        <!-- Title Setting -->
         <div class="setting__content">
           <div class="setting__block">
-            <div class="setting__label-block">圖表名稱</div>
+            <div class="setting__label-block">{{ $t('miniApp.chartName') }}</div>
             <input-verify
               v-validate="`required|max:${max}`"
               v-model="currentComponent.config.diaplayedName"
               name="componentDisplayName"
             />
+          </div>
+        </div>
+        <!-- Table Component Column Relation Setting -->
+        <div
+          v-if="currentComponent.diagram === 'table'"
+          class="setting__content"
+        >
+          <div class="setting__block">
+            <div class="setting__label-block">{{ $t('miniApp.relatedDashboardSetting') }}</div>
+            <div class="setting__block-select-field">
+              <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
+              <default-select 
+                v-model="currentComponent.config.relation.triggerColumn.id"
+                :option-list="triggerColumnOption"
+                :placeholder="$t('miniApp.chooseColumn')"
+                class="setting__block-select"
+                name="triggerColumn"
+              />
+            </div>
+            <div class="setting__block-select-field">
+              <label class="setting__block-select-label">{{ $t('miniApp.relatedDashboard') }}</label>
+              <default-select 
+                v-model="currentComponent.config.relation.relatedDashboardId"
+                :option-list="dashboardOption"
+                :placeholder="$t('miniApp.chooseDashboard')"
+                class="setting__block-select"
+                name="relatedDashboard"
+              />
+            </div>
           </div>
         </div>
         <!--Update frequency-->
@@ -187,6 +218,7 @@ export default {
           type: 'chart',
           resultId: null,
           orderSequence: null,
+          diagram: '',
           relatedDashboard: {
             id: null,
             name: null
@@ -198,6 +230,12 @@ export default {
             size: {
               row: 2,
               column: 2
+            },
+            relation: {
+              triggerColumn: {
+                id: null
+              },
+              relatedDashboardId: null
             }
           },
           indexInfo: {
@@ -206,6 +244,10 @@ export default {
           isIndexTypeAvailable: false
         }
       }
+    },
+    dashboardList: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
@@ -277,6 +319,23 @@ export default {
         value: value + 2,
         name: this.$t('miniApp.rowSpanAmount', { number: value + 2 })
       }))
+    },
+    triggerColumnOption () {
+      const origin = this.currentResultInfo || this.initialCurrentComponent
+      let options = origin.segmentation.transcript.subjectList[0].categoryDataColumnList.map(item => ({
+        value: item.dataColumnId,
+        name: item.dataColumnAlias
+      }))
+      options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseColumn')))
+      return options
+    },
+    dashboardOption () {
+      let options = this.dashboardList.map(item => ({
+        value: item.id,
+        name: item.name
+      }))
+      options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseDashboard')))
+      return options
     }
   },
   mounted () {
@@ -297,6 +356,10 @@ export default {
         return getDateTimeColumns(this.currentResultInfo.dataFrameId)
       })
       .then(columnList => {
+
+        // 紀錄 trigger column info
+        this.updateTriggerColumnInfo()
+
         this.$emit('create', {
           ...this.currentComponent,
           init: true,
@@ -315,6 +378,7 @@ export default {
     saveComponent () {
       this.$validator.validateAll().then(valid => {
         if (!valid) return
+        this.updateTriggerColumnInfo()
         this.$emit('updateSetting', this.currentComponent)
       })
     },
@@ -330,6 +394,20 @@ export default {
         this.currentComponent.config.refreshFrequency = refreshFrequency
       })
     },
+    updateTriggerColumnInfo () {
+      let triggerColumn = this.currentComponent.config.relation.triggerColumn
+      const relatedDashboard = this.currentComponent.config.relation.relatedDashboardId
+      const origin = this.currentResultInfo || this.initialCurrentComponent
+      if (triggerColumn.id && relatedDashboard) {
+        triggerColumn.info = origin.segmentation.transcript.subjectList[0].categoryDataColumnList.find(item => item.dataColumnId === triggerColumn.id)
+      }
+    },
+    defaultOptionFactory (placholder) {
+      return {
+        value: null,
+        name: placholder
+      }
+    }
   },
 }
 </script>
@@ -380,6 +458,7 @@ export default {
     .key-result-chart {
       position: relative;
       flex: 1;
+      min-width: 0;
       border-right: 1px solid #232C2E;
       .search-bar {
         position: relative;

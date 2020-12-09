@@ -76,6 +76,7 @@
             class="index-unit">{{ componentData.indexInfo.unit }}</span>
         </template>
       </div>
+      <monitor-warning-list v-else-if="componentData.type === 'monitor-warning-list'" />
       <div 
         v-else
         class="component__item-content chart">
@@ -89,12 +90,14 @@
           :is-show-coefficients="false"
           :show-toolbox="false"
           intend="key_result"
+          @clickCell="columnTriggered($event)"
         />
       </div>
-      <div 
-        v-if="componentData.relatedDashboard.id && isEditMode" 
-        class="component__item-content">
-        <div class="related-item">
+      <div class="component__item-action">
+        <div
+          v-if="componentData.relatedDashboard.id && isEditMode"
+          class="related-item"
+        >
           <div class="related-item__title">
             {{ $t('miniApp.relatedDashboard') }}：
           </div>
@@ -106,6 +109,14 @@
             @click="isShowConfirmDelete = true">
             <svg-icon icon-class="close"/>
           </div>
+        </div>
+        <div
+          v-if="componentData.config.relation.relatedDashboardId"
+          class="related-item"
+        >
+          {{ $t('miniApp.clickColumnToSeeMore', {
+            columnName: componentData.config.relation.triggerColumn.info.dataColumnAlias
+          }) }}
         </div>
       </div>
     </div>
@@ -121,12 +132,14 @@
 
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
+import MonitorWarningList from './MonitorWarningList'
 import moment from 'moment'
 
 export default {
   name: 'DashboardTask',
   components: {
-    DecideDialog
+    DecideDialog,
+    MonitorWarningList
   },
   props: {
     componentData: {
@@ -458,6 +471,14 @@ export default {
 
       return properties
     },
+    columnTriggered ({ row, column }) {
+      if (column.label !== this.componentData.config.relation.triggerColumn.info.dataColumnAlias) return
+      this.$emit('columnTriggered', {
+        relatedDashboardId: this.componentData.config.relation.relatedDashboardId,
+        columnId: this.componentData.config.relation.triggerColumn.info.dataColumnId,
+        cellValue: row[column.index - 1]
+      })
+    }
   }
 }
 </script>
@@ -505,6 +526,7 @@ $direction-span: ("col": 8, "row": 6);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 16px;
     .item-title {
       color: #DDD;
       @include text-hidden;

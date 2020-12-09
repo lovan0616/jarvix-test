@@ -57,6 +57,7 @@
         class="task-component"
         @next="getNewPageInfo"
         @toggleLabel="toggleLabel"
+        @clickCell="$emit('clickCell', $event)"
       />
       <div
         v-for="(note, index) in notes"
@@ -194,6 +195,8 @@ export default {
               if (responseData.question) {
                 this.$emit('setQuestion', responseData.question)
               }
+              // miniApp 需要將 diagram 傳給外層以顯示不同新增元件設定項
+              this.$emit('setDiagram', response.diagram)
 
               let isAutoRefresh = response.isAutoRefresh
               if(isAutoRefresh && this.isPinboardPage) {

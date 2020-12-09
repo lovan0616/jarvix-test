@@ -9,7 +9,7 @@
     <default-select
       v-model="selectedDashboardId"
       :option-list="dashboardOptions"
-      placeholder="請選擇分析看板"
+      :placeholder="$t('miniApp.selectDashboard')"
       class="dialog-select"
     />
   </writing-dialog>
