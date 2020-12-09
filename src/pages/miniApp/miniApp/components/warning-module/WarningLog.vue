@@ -32,7 +32,7 @@
           <template slot-scope="scope">
             <a 
               class="link" 
-              @click.stop="$emit('goToCertainDashboard', scope.row.relatedDashboardId)">
+              @click.stop="goToCertainDashboard(scope.row.relatedDashboardId, scope.row.monitoredData)">
               {{ $t('miniApp.link') }}
             </a>
           </template>
@@ -129,6 +129,12 @@ export default {
     },
     changePage (pageNumber) {
       this.getWarningLogs(pageNumber - 1)
+    },
+    goToCertainDashboard (relatedDashboardId, rowData) {
+      this.$emit('goToCertainDashboard', {
+        relatedDashboardId,
+        rowData: rowData.filter(item => item.statsType === 'CATEGORY')
+      })
     }
   }
 }
