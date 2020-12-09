@@ -92,7 +92,11 @@ export default {
         rootMargin: '130px',
         columnPerScroll: 16
       })
-    }
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
+    },
   },
   data () {
     return {
@@ -125,8 +129,9 @@ export default {
     tableProps () {
       if (this.autoMerge) return { ...this.$props, data: this.tableData, spanMethod: this.tableSpanMethod }
       else {
-        let tableProps = { ...this.$props, data: this.tableData }
-        if (!this.$props.maxHeight) {
+        let tableProps = { ...this.$props, data: this.tableData, ...this.customChartStyle }
+        console.log(this.customChartStyle)
+        if ((!this.customChartStyle && !this.$props.maxHeight) || (this.customChartStyle && !this.$props.maxHeight && !this.customChartStyle.height)) {
           this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 400)
         }
         return tableProps

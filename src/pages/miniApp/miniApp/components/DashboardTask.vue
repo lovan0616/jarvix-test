@@ -1,5 +1,6 @@
 <template>
   <div 
+    ref="component"
     :class="[
       `col-${componentData.config.size.column}`,
       `row-${componentData.config.size.row}`
@@ -264,10 +265,16 @@ export default {
           this.tempFilteredKeyResultId = null
         }
       }
-    }
+    },
+    'componentData.config.size' ({ row }) {
+      // 需等到元件樣式被更新後才重新計算
+      window.setTimeout(() => this.adjustToTableComponentStyle(), 300)
+    },
   },
   mounted () {
-    if(this.componentData.config.isAutoRefresh && !this.isEditMode) this.setComponentRefresh()
+    if (this.componentData.config.isAutoRefresh && !this.isEditMode) this.setComponentRefresh()
+    // table 需要設定額外設定樣式
+    if (this.componentData.diagram === 'table') this.adjustToTableComponentStyle()
   },
   destroyed () {
     if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
@@ -458,6 +465,11 @@ export default {
 
       return properties
     },
+    adjustToTableComponentStyle () {
+      // 取當前元件中，擺放 table 空間的高度（扣除 pagination）
+      const maxHeight = this.$refs.component.getBoundingClientRect().height - 128
+      this.$set(this.chartComponentStyle, 'height', maxHeight + 'px')
+    }
   }
 }
 </script>
@@ -490,6 +502,7 @@ $direction-span: ("col": 8, "row": 6);
   padding-bottom: 16px;
   float: left;
   transition: all .2s linear;
+  overflow: hidden;
 
   &-inner-container {
     background-color: #192323;
@@ -577,7 +590,7 @@ $direction-span: ("col": 8, "row": 6);
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: auto;
+    overflow: hidden;
     /deep/ .task,
     /deep/ .task-component {
       position: relative;
