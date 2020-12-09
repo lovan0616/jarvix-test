@@ -8,8 +8,10 @@
     >{{ $t('button.download') }}</button>
     <el-table 
       v-bind="tableProps"
+      :cell-class-name="getCellIndex"
       class="sy-table"
       style="width: 100%;"
+      @cell-click="onClickCell"
     >
       <el-table-column
         :width="indexWidth"
@@ -207,6 +209,13 @@ export default {
       tableData.unshift(this.dataset.columns)
       let fileName = this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + this.appQuestion
       this.exportToCSV(fileName, tableData)
+    },
+    getCellIndex ({ row, column, rowIndex, columnIndex }) {
+      row.index = rowIndex;
+      column.index = columnIndex;
+    },
+    onClickCell (row, column) {
+      this.$emit('clickCell', { row, column })
     }
   },
 }

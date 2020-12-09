@@ -89,12 +89,14 @@
           :is-show-coefficients="false"
           :show-toolbox="false"
           intend="key_result"
+          @clickCell="columnTriggered($event)"
         />
       </div>
-      <div 
-        v-if="componentData.relatedDashboard.id && isEditMode" 
-        class="component__item-content">
-        <div class="related-item">
+      <div class="component__item-action">
+        <div
+          v-if="componentData.relatedDashboard.id && isEditMode"
+          class="related-item"
+        >
           <div class="related-item__title">
             {{ $t('miniApp.relatedDashboard') }}：
           </div>
@@ -106,6 +108,12 @@
             @click="isShowConfirmDelete = true">
             <svg-icon icon-class="close"/>
           </div>
+        </div>
+        <div
+          v-if="componentData.config.relation.relatedDashboardId"
+          class="related-item"
+        >
+          點擊"{{ componentData.config.relation.triggerColumn.info.dataColumnAlias }}"欄位可看到更詳細內容
         </div>
       </div>
     </div>
@@ -459,6 +467,14 @@ export default {
 
       return properties
     },
+    columnTriggered ({ row, column }) {
+      if (column.label !== this.componentData.config.relation.triggerColumn.info.dataColumnAlias) return
+      this.$emit('columnTriggered', {
+        relatedDashboardId: this.componentData.config.relation.relatedDashboardId,
+        columnId: this.componentData.config.relation.triggerColumn.info.dataColumnId,
+        cellValue: row[column.index - 1]
+      })
+    }
   }
 }
 </script>

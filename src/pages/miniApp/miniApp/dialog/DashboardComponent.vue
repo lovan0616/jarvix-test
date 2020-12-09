@@ -32,6 +32,7 @@
               :key="'chart-' + computedKeyResultId"
               :component-id="computedKeyResultId"
               intend="key_result"
+              @setDiagram="$emit('setDiagram', $event)"
             />
           </div>
         </div>

@@ -306,6 +306,7 @@
                     :is-edit-mode="isEditMode"
                     @redirect="currentDashboardId = $event"
                     @deleteComponentRelation="deleteComponentRelation"
+                    @columnTriggered="columnTriggered"
                   >
                     <template slot="drowdown">
                       <dropdown-select
@@ -348,6 +349,7 @@
     <create-component-dialog
       v-if="isShowCreateComponentDialog"
       :initial-current-component="currentComponent"
+      :dashboard-list="dashboardList"
       @close="closeCreateComponentDialog"
       @create="createComponent"
       @updateSetting="updateComponentSetting"
@@ -734,7 +736,10 @@ export default {
       this.isShowCreateComponentDialog = false
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
-        .finally(() => this.isProcessing = false)
+        .finally(() => {
+          this.isProcessing = false
+          this.currentComponentId = null
+        })
     },
     updateComponentSetting (updatedComponentInfo) {
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
@@ -1092,6 +1097,15 @@ export default {
     },
     createFilterAndControl (type) {
       this[`create${type}`]()
+    },
+    columnTriggered ({ relatedDashboardId, cellValue, columnId }) {
+      this.activeCertainDashboard(relatedDashboardId)
+      this.controlColumnValueInfoList.forEach(item => {
+        // 如果目標 Dashboard 已設定該欄位 filter，就將預設值設定為剛剛使用者點的 cell 的值
+        if (item.columnId === columnId) {
+          item.dataValues = [cellValue]
+        }
+      })
     }
   }
 }
