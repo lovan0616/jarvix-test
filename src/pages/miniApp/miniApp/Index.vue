@@ -1170,6 +1170,9 @@ export default {
         .then(() => { this.miniApp = updatedMiniAppData })
         .finally(() => this.isProcessing = false)
     },
+    createGeneralComponent () {
+      this.isShowCreateComponentDialog = true
+    },
     createTimeFilter () {
       this.isSingleChoiceFilter = false
       this.saveCreatedFilter([{
