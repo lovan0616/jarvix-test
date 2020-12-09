@@ -183,77 +183,6 @@ export default {
     }
   },
   computed: {
-    restrictions () {
-      return this.allFilterList
-        .filter(filter => {
-          // 相對時間有全選的情境，不需帶入限制中
-          if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues[0] !== 'unset'
-          if (
-            filter.statsType === 'NUMERIC'
-            || filter.statsType === 'FLOAT'
-            || filter.statsType === 'DATETIME'
-          ) return filter.start && filter.end
-          // filter 必須有值
-          if (filter.dataValues.length > 0) {
-            // 並且是同 DataFrame
-            if (this.componentData.dataFrameId === filter.dataFrameId) return true
-            // 或者含相同 columnName
-            if (this.includeSameColumnPrimaryAliasFilter) return true
-          }
-          return false
-        })
-        .map(filter => {
-
-          let type = ''
-          let data_type = ''
-          switch (filter.statsType) {
-            case ('STRING'):
-            case ('BOOLEAN'):
-            case ('CATEGORY'):
-              data_type = 'string'
-              type = 'enum'
-              break
-            case ('FLOAT'):
-            case ('NUMERIC'):
-              data_type = 'int'
-              type = 'range'
-              break
-            case ('DATETIME'):
-            case ('RELATIVEDATETIME'):
-              data_type = 'datetime'
-              type = 'range'
-              break  
-          }
-
-          // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
-          if (filter.statsType === 'RELATIVEDATETIME') return [{
-            type,
-            properties: {
-              data_type,
-              dc_id: this.componentData.dateTimeColumn.dataColumnId,
-              display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
-              ...this.formatRelativeDatetime(filter.dataValues[0])
-            }
-          }]
-
-          return [{
-            type,
-            properties: {
-              data_type,
-              dc_id: filter.columnId,
-              display_name: filter.columnName,
-              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
-                datavalues: filter.dataValues,
-                display_datavalues: filter.dataValues
-              }),
-              ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
-                start: filter.start,
-                end: filter.end
-              }),
-            }
-          }]
-        })
-    },
     shouldComponentBeFiltered () {
       // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
       return this.includeSameColumnPrimaryAliasFilter || this.includeSameDataFrameFilter || this.includeRelativeDatetimeFilter
@@ -359,13 +288,12 @@ export default {
       }).then(response => {
         let questionId = response.questionId
         let segmentationList = response.segmentationList
-
         // TODO 處理 NO_ANSWER
         if (segmentationList.length === 1) {
           this.$store.dispatch('chatBot/askResult', {
             questionId,
             segmentation: segmentationList[0],
-            restrictions: this.restrictions,
+            restrictions: this.restrictions(),
             selectedColumnList: null
           }).then(res => {
             this.getComponentV2(res.resultId)
@@ -405,6 +333,77 @@ export default {
         }).catch((error) => {
           this.isProcessing = false
           window.clearTimeout(this.autoRefreshFunction)
+        })
+    },
+    restrictions () {
+      return this.allFilterList
+        .filter(filter => {
+          // 相對時間有全選的情境，不需帶入限制中
+          if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
+          if (
+            filter.statsType === 'NUMERIC'
+            || filter.statsType === 'FLOAT'
+            || filter.statsType === 'DATETIME'
+          ) return filter.start && filter.end
+          // filter 必須有值
+          if (filter.dataValues.length > 0) {
+            // 並且是同 DataFrame
+            if (this.componentData.dataFrameId === filter.dataFrameId) return true
+            // 或者含相同 columnName
+            if (this.includeSameColumnPrimaryAliasFilter) return true
+          }
+          return false
+        })
+        .map(filter => {
+
+          let type = ''
+          let data_type = ''
+          switch (filter.statsType) {
+            case ('STRING'):
+            case ('BOOLEAN'):
+            case ('CATEGORY'):
+              data_type = 'string'
+              type = 'enum'
+              break
+            case ('FLOAT'):
+            case ('NUMERIC'):
+              data_type = 'int'
+              type = 'range'
+              break
+            case ('DATETIME'):
+            case ('RELATIVEDATETIME'):
+              data_type = 'datetime'
+              type = 'range'
+              break  
+          }
+
+          // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
+          if (filter.statsType === 'RELATIVEDATETIME') return [{
+            type,
+            properties: {
+              data_type,
+              dc_id: this.componentData.dateTimeColumn.dataColumnId,
+              display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
+              ...this.formatRelativeDatetime(filter.dataValues[0])
+            }
+          }]
+
+          return [{
+            type,
+            properties: {
+              data_type,
+              dc_id: filter.columnId,
+              display_name: filter.columnName,
+              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
+                datavalues: filter.dataValues,
+                display_datavalues: filter.dataValues
+              }),
+              ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
+                start: filter.start,
+                end: filter.end
+              }),
+            }
+          }]
         })
     },
     confirmDelete () {
