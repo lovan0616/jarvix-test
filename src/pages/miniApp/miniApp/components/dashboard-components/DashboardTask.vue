@@ -76,6 +76,7 @@
             class="index-unit">{{ componentData.indexInfo.unit }}</span>
         </template>
       </div>
+      <monitor-warning-list v-else-if="componentData.type === 'monitor-warning-list'" />
       <div 
         v-else
         class="component__item-content chart">
@@ -92,31 +93,31 @@
           @clickCell="columnTriggered($event)"
         />
       </div>
-      <div class="component__item-action">
-        <div
-          v-if="componentData.relatedDashboard.id && isEditMode"
-          class="related-item"
-        >
-          <div class="related-item__title">
-            {{ $t('miniApp.relatedDashboard') }}：
-          </div>
-          <div class="related-item__name">
-            {{ componentData.relatedDashboard.name }}
-          </div>
-          <div 
-            class="related-item__close" 
-            @click="isShowConfirmDelete = true">
-            <svg-icon icon-class="close"/>
-          </div>
+    </div>
+    <div class="component__item-action">
+      <div
+        v-if="componentData.relatedDashboard.id && isEditMode"
+        class="related-item"
+      >
+        <div class="related-item__title">
+          {{ $t('miniApp.relatedDashboard') }}：
         </div>
-        <div
-          v-if="componentData.config.relation.relatedDashboardId"
-          class="related-item"
-        >
-          {{ $t('miniApp.clickColumnToSeeMore', {
-            columnName: componentData.config.relation.triggerColumn.info.dataColumnAlias
-          }) }}
+        <div class="related-item__name">
+          {{ componentData.relatedDashboard.name }}
         </div>
+        <div 
+          class="related-item__close" 
+          @click="isShowConfirmDelete = true">
+          <svg-icon icon-class="close"/>
+        </div>
+      </div>
+      <div
+        v-if="componentData.config.relation.relatedDashboardId"
+        class="related-item"
+      >
+        {{ $t('miniApp.clickColumnToSeeMore', {
+          columnName: componentData.config.relation.triggerColumn.info.dataColumnAlias
+        }) }}
       </div>
     </div>
     <decide-dialog
@@ -131,12 +132,14 @@
 
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
+import MonitorWarningList from './MonitorWarningList'
 import moment from 'moment'
 
 export default {
   name: 'DashboardTask',
   components: {
-    DecideDialog
+    DecideDialog,
+    MonitorWarningList
   },
   props: {
     componentData: {
@@ -196,6 +199,7 @@ export default {
     restrictions () {
       return this.allFilterList
         .filter(filter => {
+          if (filter.statsType === 'NUMERIC') return filter.start && filter.end
           // 相對時間有全選的情境，不需帶入限制中
           if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues[0] !== 'unset'
           if (
@@ -256,7 +260,7 @@ export default {
                 datavalues: filter.dataValues,
                 display_datavalues: filter.dataValues
               }),
-              ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
+              ...(filter.statsType === 'NUMERIC' && {
                 start: filter.start,
                 end: filter.end
               }),
@@ -524,6 +528,7 @@ $direction-span: ("col": 8, "row": 6);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 16px;
     .item-title {
       color: #DDD;
       @include text-hidden;

@@ -5,7 +5,7 @@ import request from '@/utils/publicRequest'
  */
 export function getMonitorSetting (componentId) {
   return request({
-    url: '/monitor',
+    url: '/pinBoard/monitor',
     method: 'GET',
     params: {
       componentId
@@ -18,7 +18,7 @@ export function getMonitorSetting (componentId) {
  */
 export function newMonitorSetting (data) {
   return request({
-    url: '/monitor',
+    url: '/pinBoard/monitor',
     method: 'POST',
     data
   })
@@ -29,7 +29,7 @@ export function newMonitorSetting (data) {
  */
 export function updateMonitorSetting (data) {
   return request({
-    url: '/monitor',
+    url: '/pinBoard/monitor',
     method: 'PATCH',
     data
   })
