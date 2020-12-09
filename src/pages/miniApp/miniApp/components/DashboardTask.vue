@@ -113,7 +113,9 @@
           v-if="componentData.config.relation.relatedDashboardId"
           class="related-item"
         >
-          點擊"{{ componentData.config.relation.triggerColumn.info.dataColumnAlias }}"欄位可看到更詳細內容
+          {{ $t('miniApp.clickColumnToSeeMore', {
+            columnName: componentData.config.relation.triggerColumn.info.dataColumnAlias
+          }) }}
         </div>
       </div>
     </div>

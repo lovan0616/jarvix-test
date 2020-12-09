@@ -783,6 +783,7 @@
     "pleaseEnterNumber": "請填入數字",
     "createRelation": "建立關聯",
     "relatedDashboard": "關聯看板",
+    "relatedDashboardSetting": "關聯看板設定",
     "confirmDeletingComponentRelation": "確定刪除此元件與分析看板 \"{name}\" 的關聯？",
     "createFilterCondition": "新增篩選條件",
     "filterCondition": "篩選條件",
@@ -808,10 +809,16 @@
     "chooseUpdateFrequency": "選擇更新頻率",
     "chooseRowSize": "請選擇列數",
     "chooseColumnSize": "請選擇行數",
+    "chooseColumn": "請選擇欄位",
+    "chooseDashboard": "請選擇看板",
     "rowSpan": "列數",
     "columnSpan": "行數",
     "rowSpanAmount": "{number} 列",
-    "columnSpanAmount": "{number} 行"
+    "columnSpanAmount": "{number} 行",
+    "clickColumnToSeeMore": "點擊\"{columnName}\"欄位可看到更詳細內容",
+    "chartSetting": "圖表設定",
+    "chartName": "圖表名稱",
+    "triggerColumn": "觸發欄位"
   },
   "clustering": {
     "cluster": "群體",

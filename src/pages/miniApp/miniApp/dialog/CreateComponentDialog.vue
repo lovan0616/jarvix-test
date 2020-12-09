@@ -79,12 +79,12 @@
         class="key-result-setting">
         <div class="setting__header">
           <svg-icon icon-class="filter-setting"/>
-          圖表設定
+          {{ $t('miniApp.chartSetting') }}
         </div>
         <!-- Title Setting -->
         <div class="setting__content">
           <div class="setting__block">
-            <div class="setting__label-block">圖表名稱</div>
+            <div class="setting__label-block">{{ $t('miniApp.chartName') }}</div>
             <input-verify
               v-validate="`required|max:${max}`"
               v-model="currentComponent.config.diaplayedName"
@@ -98,23 +98,23 @@
           class="setting__content"
         >
           <div class="setting__block">
-            <div class="setting__label-block">關聯看版設定</div>
+            <div class="setting__label-block">{{ $t('miniApp.relatedDashboardSetting') }}</div>
             <div class="setting__block-select-field">
-              <label class="setting__block-select-label">觸發欄位</label>
+              <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
               <default-select 
                 v-model="currentComponent.config.relation.triggerColumn.id"
                 :option-list="triggerColumnOption"
-                placeholder="請選擇欄位"
+                :placeholder="$t('miniApp.chooseColumn')"
                 class="setting__block-select"
                 name="triggerColumn"
               />
             </div>
             <div class="setting__block-select-field">
-              <label class="setting__block-select-label">關聯看板</label>
+              <label class="setting__block-select-label">{{ $t('miniApp.relatedDashboard') }}</label>
               <default-select 
                 v-model="currentComponent.config.relation.relatedDashboardId"
                 :option-list="dashboardOption"
-                placeholder="請選擇看板"
+                :placeholder="$t('miniApp.chooseDashboard')"
                 class="setting__block-select"
                 name="relatedDashboard"
               />
@@ -326,7 +326,7 @@ export default {
         value: item.dataColumnId,
         name: item.dataColumnAlias
       }))
-      options.unshift(this.defaultOptionFactory('請選擇欄位'))
+      options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseColumn')))
       return options
     },
     dashboardOption () {
@@ -334,7 +334,7 @@ export default {
         value: item.id,
         name: item.name
       }))
-      options.unshift(this.defaultOptionFactory('請選擇看板'))
+      options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseDashboard')))
       return options
     }
   },
