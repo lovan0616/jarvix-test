@@ -95,6 +95,7 @@
           :is-show-description="false"
           :is-show-coefficients="false"
           :show-toolbox="false"
+          :custom-cell-class-name="customCellClassName"
           intend="key_result"
           @clickCell="columnTriggered($event)"
         />
@@ -264,6 +265,16 @@ export default {
     },
     includeRelativeDatetimeFilter () {
       return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
+    },
+    customCellClassName () {
+      const triggerColumn = this.componentData.config.relation.triggerColumn.info
+      if (!triggerColumn) return []
+      const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === triggerColumn.dataColumnAlias)
+      return [{
+        type: 'column',
+        index: index + 1,
+        className: 'underline'
+      }]
     }
   },
   watch: {

@@ -54,6 +54,7 @@
         :is-show-label-data="isShowLabelData"
         :is-show-description="isShowDescription"
         :is-show-coefficients="isShowCoefficients"
+        :custom-cell-class-name="customCellClassName"
         class="task-component"
         @next="getNewPageInfo"
         @toggleLabel="toggleLabel"
@@ -120,7 +121,11 @@ export default {
     convertedType: {
       type: String,
       default: null
-    }
+    },
+    customCellClassName: {
+      type: Array,
+      default: () => []
+    },
   },
   data () {
     return {
