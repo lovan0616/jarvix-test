@@ -27,6 +27,32 @@
             :label="$t('miniApp.warningLogMessage')"
             prop="conditionMetMessage"/>
           <el-table-column
+            :label="$t('miniApp.state')"
+            prop="active"
+            width="120">
+            <template slot-scope="scope">
+              <custom-dropdown-select
+                :data-list="stateOptions"
+                :has-bullet-point="false"
+                trigger="hover"
+                @select="updateLogActiveness(scope.row.conditionMetLogId, $event)"
+              >
+                <template #display>
+                  <div 
+                    :class="scope.row.active ? 'button--active' : 'button--inactive'" 
+                    class="button">
+                    <span class="button-label">
+                      {{ scope.row.active ? $t('miniApp.finished') : $t('miniApp.unfinished') }}
+                    </span>
+                    <svg-icon 
+                      icon-class="triangle" 
+                      class="icon-triangle"/>
+                  </div>
+                </template>
+              </custom-dropdown-select>
+            </template>
+          </el-table-column>
+          <el-table-column
             :label="$t('miniApp.goToDashboard')"
             prop="relatedDashboardId"
             width="120">
@@ -36,27 +62,6 @@
                 @click.stop="$emit('goToCertainDashboard', scope.row.relatedDashboardId)">
                 {{ $t('miniApp.link') }}
               </a>
-            </template>
-          </el-table-column>
-          <el-table-column
-            :label="$t('miniApp.updateState')"
-            prop="active"
-            width="120">
-            <template slot-scope="scope">
-              <button
-                v-if="scope.row.active"
-                :disabled="isProcessing"
-                type="button"
-                class="btn-m btn-default button-container__button"
-                @click="updateLogActiveness(scope.row.conditionMetLogId, true)"
-              >{{ $t('miniApp.markAsFinished') }}</button>
-              <button
-                v-else
-                :disabled="isProcessing"
-                type="button"
-                class="btn-m btn-secondary button-container__button"
-                @click="updateLogActiveness(scope.row.conditionMetLogId, false)"
-              >{{ $t('miniApp.markAsUnfinished') }}</button>
             </template>
           </el-table-column>
         </el-table>
@@ -70,9 +75,13 @@
 
 <script>
 import { getAlertLogs, patchAlertLogActiveness } from '@/API/Alert'
+import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 
 export default {
   name: 'WarningLog',
+  components: {
+    CustomDropdownSelect
+  },
   props: {
     setting: {
       type: Object,
@@ -90,6 +99,18 @@ export default {
     activeConditionIds () {
       if (!this.setting.conditions) return []
       return this.setting.conditions.filter(item => item.activate).map(item => item.id)
+    },
+    stateOptions () {
+      return [
+        {
+          name: this.$t('miniApp.finished'),
+          id: true
+        },
+        {
+          name: this.$t('miniApp.unfinished'),
+          id: false
+        }
+      ]
     }
   },
   created () {
@@ -142,6 +163,72 @@ export default {
       padding-top: 30vh;
       text-align: center;
       color: #A4A4A4;
+    }
+  }
+
+  /deep/ .dropdown {
+    &__list-container {
+      left: -40%;
+      top: 115%;
+      text-align: left;
+      z-index: 1;
+      width: 136px;
+
+      &::before {
+        position: absolute;
+        content: "";
+        bottom: 100%;
+        left: 0;
+        width: 100%;
+        background-color: transparent;
+        height: 12px;
+      }
+
+      &::after {
+        position: absolute;
+        content: "";
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-bottom: 8px solid #2B3839;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+      }
+    }
+    &__link {
+      line-height: 39px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .icon-triangle {
+      transform: rotate(180deg);
+      font-size: 8px;
+    }
+    .button {
+      cursor: pointer;
+      padding: 0 8px;
+      border-radius: 5px;
+      font-weight: 600;
+      font-size: 12px;
+      display: inline-block;
+      &--inactive {
+        background: rgba(255, 255, 255, 0.2);
+        color: #DDDDDD;
+
+      }
+      &--active {
+        background: #2FECB3;
+        color: #2E2E2E;
+      }
+    }
+  }
+
+  /deep/ .el-table {
+    /deep/.cell {
+      overflow: unset;
+    }
+    &__body-wrapper {
+      overflow: unset;
     }
   }
 }

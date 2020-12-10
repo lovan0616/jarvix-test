@@ -833,11 +833,11 @@
     "warningLogCreateTime": "示警時間",
     "warningLogMessage": "示警訊息",
     "goToDashboard": "前往@:miniApp.dashboard",
-    "updateState": "更新狀態",
     "link": "連結",
     "warningModuleIsInactive": "此應用程式未開啟示警模組",
-    "markAsFinished": "標示已處理",
-    "markAsUnfinished": "標示未處理"
+    "finished": "已處理",
+    "unfinished": "未處理",
+    "state": "處理狀態"
   },
   "clustering": {
     "cluster": "群體",
