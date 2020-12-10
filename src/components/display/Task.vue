@@ -58,6 +58,7 @@
         @next="getNewPageInfo"
         @toggleLabel="toggleLabel"
         @clickCell="$emit('clickCell', $event)"
+        @clickChart="$emit('clickChart', $event)"
       />
       <div
         v-for="(note, index) in notes"

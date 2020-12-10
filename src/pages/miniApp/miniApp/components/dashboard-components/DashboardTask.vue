@@ -92,6 +92,7 @@
           :show-toolbox="false"
           intend="key_result"
           @clickCell="columnTriggered($event)"
+          @clickChart="chartriggered($event)"
         />
       </div>
       <div class="component__item-action">
@@ -486,9 +487,15 @@ export default {
         cellValue: row[column.index - 1]
       })
     },
+    chartriggered (restrictions) {
+      this.$emit('chartTriggered', {
+        relatedDashboardId: this.componentData.relatedDashboard.id,
+        restrictions
+      })
+    },
     adjustToTableComponentStyle () {
       // 取當前元件中，擺放 table 空間的高度（扣除 pagination）
-      const maxHeight = this.$refs.component.getBoundingClientRect().height - 128
+      const maxHeight = this.$refs.component.getBoundingClientRect().height - 135
       this.$set(this.chartComponentStyle, 'height', maxHeight + 'px')
     }
   }

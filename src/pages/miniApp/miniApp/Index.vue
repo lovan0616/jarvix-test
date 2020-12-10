@@ -342,6 +342,7 @@
                   @redirect="currentDashboardId = $event"
                   @deleteComponentRelation="deleteComponentRelation"
                   @columnTriggered="columnTriggered"
+                  @chartTriggered="chartTriggered"
                 >
                   <template slot="drowdown">
                     <dropdown-select
@@ -1197,6 +1198,14 @@ export default {
         if (item.columnId === columnId) {
           item.dataValues = [cellValue]
         }
+      })
+    },
+    chartTriggered ({ relatedDashboardId, restrictions }) {
+      this.activeCertainDashboard(relatedDashboardId)
+      this.controlColumnValueInfoList.forEach(item => {
+        // 確認有無對應到欲前往的 dashboard 中的任一控制項
+        const targetRestriction = restrictions.find(restriction => item.columnId === restriction.dc_id)
+        if (targetRestriction) item.dataValues = [targetRestriction.value]
       })
     },
     createComponentType (type) {
