@@ -274,7 +274,8 @@ export default {
                 this.getComponentV2(resultId)
               }, this.totalSec)
 
-              this.totalSec += this.periodSec
+              // request 間隔最多三秒
+              this.totalSec = this.totalSec + this.periodSec > 3000 ? 3000 : this.totalSec + this.periodSec
               this.periodSec = this.totalSec
               break
             case 'Complete':

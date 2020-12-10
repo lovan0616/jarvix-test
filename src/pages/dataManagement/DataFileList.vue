@@ -266,12 +266,12 @@ export default {
         {
           text: this.$t('editing.status'),
           value: 'state',
-          width: '90px'
+          width: '120px'
         },
         {
           text: this.$t('editing.lastUpdateResult'),
           value: 'latestImportStatus',
-          width: '160px'
+          width: '130px'
         },
         {
           text: this.$t('editing.action'),

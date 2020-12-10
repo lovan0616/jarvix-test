@@ -199,7 +199,7 @@
             >
               <template #content>
                 <div 
-                  v-for="info in dbConnectionLogInfo"
+                  v-for="info in dbConnectionLogInfo(data[headInfo.value])"
                   :key="info.title"
                   class="db-connection-log-info info"
                 >
@@ -301,19 +301,7 @@ export default {
   },
   data () {
     return {
-      sortStatus: null,
-      dbConnectionLogInfo: [{
-        title: 'dbConnectionStartTime',
-        label: this.$t('editing.startTime')
-      },
-      {
-        title: 'dbConnectionEndTime',
-        label: this.$t('editing.endTime')
-      },
-      {
-        title: 'dbConnectionElapsedTime',
-        label: this.$t('editing.elapsedTime')
-      }]
+      sortStatus: null
     }
   },
   computed: {
@@ -347,6 +335,25 @@ export default {
     this.setSortStatus()
   },
   methods: {
+    dbConnectionLogInfo (status) {
+      return status === 'Process'
+      ? [{
+        title: 'dbConnectionStartTime',
+        label: this.$t('editing.startTime')
+      }]
+      : [{
+        title: 'dbConnectionStartTime',
+        label: this.$t('editing.startTime')
+      },
+      {
+        title: 'dbConnectionEndTime',
+        label: this.$t('editing.endTime')
+      },
+      {
+        title: 'dbConnectionElapsedTime',
+        label: this.$t('editing.elapsedTime')
+      }]
+    },
     setSortStatus () {
       let sortObj = {}
       this.headers.forEach(element => {
