@@ -618,15 +618,16 @@ export default {
       ]
     },
     filterTypeOptions () {
+      const hasRelativeDateTimeFilter = this.filterColumnValueInfoList.find(filter => filter.statsType === "RELATIVEDATETIME")
       return [
         {
           name: this.$t('miniApp.generalFilter'),
           id: 'MulitipleChoiceFilter'
         },
-        {
+        ...(!hasRelativeDateTimeFilter && [{
           name: this.$t('miniApp.dateTimeFilter'),
           id: 'TimeFilter'
-        }
+        }])
       ]
     },
     miniAppId () {
