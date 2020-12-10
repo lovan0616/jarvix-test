@@ -181,7 +181,7 @@
               :setting="appData.warningModule"
               :dashboard-list="dashboardList"
               @update="updateWarningModuleSetting"
-              @goToCertainDashboard="activeCertainDashboard"
+              @goToCertainDashboard="warningLogTriggered($event)"
             />
           </main>
           <!-- 分析看板模組 -->
@@ -1191,13 +1191,19 @@ export default {
     createFilterAndControl (type) {
       this[`create${type}`]()
     },
+    warningLogTriggered ({ relatedDashboardId, rowData }) {
+      this.activeCertainDashboard(relatedDashboardId)
+      this.controlColumnValueInfoList.forEach(item => {
+        // 如果 log rowData 有欄位同 controller 欄位，就將預設值設定為該筆 rowData 該 column 的值
+        const sameColumnRow = rowData.find(rowDataColumn => rowDataColumn.dataColumnId === item.columnId)
+        if (sameColumnRow) item.dataValues = [sameColumnRow.datum]
+      })
+    },
     columnTriggered ({ relatedDashboardId, cellValue, columnId }) {
       this.activeCertainDashboard(relatedDashboardId)
       this.controlColumnValueInfoList.forEach(item => {
-        // 如果目標 Dashboard 已設定該欄位 filter，就將預設值設定為剛剛使用者點的 cell 的值
-        if (item.columnId === columnId) {
-          item.dataValues = [cellValue]
-        }
+        // 如果目標 Dashboard 已設定該欄位 controller，就將預設值設定為剛剛使用者點的 cell 的值
+        if (item.columnId === columnId) item.dataValues = [cellValue]
       })
     },
     createComponentType (type) {

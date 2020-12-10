@@ -832,9 +832,12 @@
     "emptyLogs": "沒有任何@:miniApp.warningLogs",
     "warningLogCreateTime": "示警時間",
     "warningLogMessage": "示警訊息",
-    "goToDashborad": "前往@:miniApp.dashboard",
+    "goToDashboard": "前往@:miniApp.dashboard",
+    "updateState": "更新狀態",
     "link": "連結",
-    "warningModuleIsInactive": "此應用程式未開啟示警模組"
+    "warningModuleIsInactive": "此應用程式未開啟示警模組",
+    "markAsFinished": "標示已處理",
+    "markAsUnfinished": "標示未處理"
   },
   "clustering": {
     "cluster": "群體",

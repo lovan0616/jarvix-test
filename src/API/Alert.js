@@ -45,3 +45,15 @@ export function getAlertLogs ({ conditionIds, page = 0, size = 20 }) {
     method: 'GET',
   })
 }
+
+/**
+ * 變更示警紀錄尚未處理狀態
+ * @param {string} id - log id
+ */
+export function patchAlertLogActiveness(logId, stateInfo) {
+  return request({
+    url: `/alert/log/${logId}/activeness`,
+    method: 'PATCH',
+    data: stateInfo
+  })
+}

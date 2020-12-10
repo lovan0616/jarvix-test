@@ -145,14 +145,15 @@ export default {
       // 還原之前的設定到示警條件上
       conditions.forEach(condition => {
         const prevConditionSetting = this.setting.conditions.find(item => item.id === condition.id)
+        let isRelatedDashbaordExist = false
+        if (prevConditionSetting) isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
         this.warningModuleConfig.conditions.push({
           ...condition,
           activate: prevConditionSetting ? prevConditionSetting.activate : false,
-          relatedDashboardId: prevConditionSetting ? prevConditionSetting.relatedDashboardId : null
+          relatedDashboardId: isRelatedDashbaordExist ? prevConditionSetting.relatedDashboardId : null
         })
       })
-      this.isLoading = false
-    })
+    }).finally(() => this.isLoading = false )
   },
   methods: {
     saveWarningModuleSetting () {
