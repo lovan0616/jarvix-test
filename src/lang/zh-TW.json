@@ -837,7 +837,9 @@
     "link": "連結",
     "warningModuleIsInactive": "此應用程式未開啟示警模組",
     "markAsFinished": "標示已處理",
-    "markAsUnfinished": "標示未處理"
+    "markAsUnfinished": "標示未處理",
+    "hierarchicalFilter": "階層控制群",
+    "createHierarchicalFilter": "新增看板階層控制項"
   },
   "clustering": {
     "cluster": "群體",

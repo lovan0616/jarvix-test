@@ -401,6 +401,7 @@
       :title="filterCreationDialogTitle"
       :is-single-choice-filter="isSingleChoiceFilter"
       :is-y-axis-controller="isYAxisController"
+      :is-hierarchical-filter="isHierarchicalFilter"
       @closeDialog="closeFilterCreationDialog"
       @filterCreated="saveCreatedFilter"
     />
@@ -528,6 +529,7 @@ export default {
       yAxisControlColumnValueInfoList: [],
       isShowCreateFilterDialog: false,
       isSingleChoiceFilter: null,
+      isHierarchicalFilter: null,
       isYAxisController: null,
       filterCreationDialogTitle: null
     }
@@ -598,6 +600,10 @@ export default {
         {
           name: this.$t('miniApp.generalControl'),
           id: 'SingleChoiceFilter'
+        },
+        {
+          name: this.$t('miniApp.hierarchicalFilter'),
+          id: 'HierarchicalFilter'
         },
         {
           name: this.$t('miniApp.yAxisControl'),
@@ -1120,21 +1126,31 @@ export default {
     },
     closeFilterCreationDialog () {
       this.isShowCreateFilterDialog = false
+      this.isHierarchicalFilter = false
       this.isSingleChoiceFilter = null
       this.isYAxisController = null
     },
     createMulitipleChoiceFilter () {
       this.isShowCreateFilterDialog = true
+      this.isHierarchicalFilter = false
       this.isSingleChoiceFilter = false
       this.filterCreationDialogTitle = this.$t('miniApp.createFilterCondition')
     },
     createSingleChoiceFilter () {
       this.isShowCreateFilterDialog = true
+      this.isHierarchicalFilter = false
       this.isSingleChoiceFilter = true
       this.filterCreationDialogTitle = this.$t('miniApp.createPanelControl')
     },
+    createHierarchicalFilter () {
+      this.isShowCreateFilterDialog = true
+      this.isSingleChoiceFilter = true
+      this.isHierarchicalFilter = true
+      this.filterCreationDialogTitle = this.$t('miniApp.createHierarchicalFilter')
+    },
     createYAxisController () {
       this.isShowCreateFilterDialog = true
+      this.isHierarchicalFilter = null
       this.isYAxisController = true
       this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
     },
