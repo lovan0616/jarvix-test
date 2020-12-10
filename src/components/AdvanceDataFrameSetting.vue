@@ -280,7 +280,8 @@ export default {
   width: $basic-df-setting-width;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  // 調整限制調整欄位選單的時候註解掉的，沒看出來當初的用途
+  // overflow: hidden;
   background-color: rgba(0, 0, 0, 0.55);
   border: 1px solid #2B3638;
 
