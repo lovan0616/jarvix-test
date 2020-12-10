@@ -1,13 +1,16 @@
 <template>
-  <ul class="list">
+  <ul 
+    :class="{'is-view-mode': !isEditMode}"
+    class="list"
+    @click="goToWarningLogPage">
     <spinner 
       v-if="isLoading"
       class="list__spinner"
       size="50"
     />
-    <template v-else>
+    <template v-else-if="warningLogs.length > 0">
       <li 
-        v-for="(log, index) in warningLog"
+        v-for="(log, index) in warningLogs"
         :key="index"
         class="list__item">
         <div class="list__item--left">
@@ -17,61 +20,104 @@
         </div>
         <div class="list__item--right">
           <div class="list__item-title">
-            {{ log.title }}
+            {{ log.conditionMetMessage }}
           </div>
           <div class="list__item-description">
-            {{ log.time }}
+            {{ log.createDate | convertTimeStamp }}
           </div>
         </div>
       </li>
+    </template>
+    <template v-else>
+      <div class="empty-text">暫無任何示警內容</div>
     </template>
   </ul>
 </template>
 
 <script>
-const dummyWaningLog = [
-  {
-    title: '案場(A) / Inverter(01) / CH(05)發現異常，異常代碼為(1)',
-    time: '2020/11/03 13:44:56'
-  },
-  {
-    title: '案場(A) / Inverter(01) / CH(05)發現異常，異常代碼為(1)',
-    time: '2020/11/03 13:44:56'
-  },
-  {
-    title: '案場(A) / Inverter(01) / CH(05)發現異常，異常代碼為(1)、(2)',
-    time: '2020/11/03 13:44:56'
-  },
-  {
-    title: '案場(A) / Inverter(01) / CH(05)發現異常，異常代碼為(1)、(2)',
-    time: '2020/11/03 13:44:56'
-  },
-  {
-    title: '案場(A) / Inverter(01) / CH(05)發現異常，異常代碼為(1)、(2)',
-    time: '2020/11/03 13:44:56'
-  },
-  {
-    title: '案場(A) / Inverter(01) / CH(05)發現異常，異常代碼為(1)、(2)',
-    time: '2020/11/03 13:44:56'
-  }
-]
+import { getAlertLogs } from '@/API/Alert'
 
 export default {
   name: 'MonitorWarningList',
-  data () {
-    return {
-      warningLog: [],
-      isLoading: false
+  props: {
+    setting: {
+      type: Object,
+      default: () => {}
+    },
+    isEditMode: {
+      type: Boolean,
+      default: false,
     }
   },
-  mounted() {
-    this.fetchData()
+  data () {
+    return {
+      warningLogs: [],
+      isLoading: false,
+      autoRefreshFunction: null
+    }
+  },
+  computed: {
+    activeConditionIds () {
+      if (!this.setting.conditions) return []
+      return this.setting.conditions.filter(item => item.activate).map(item => item.id)
+    }
+  },
+  created () {
+    if (this.activeConditionIds.length > 0) {
+      this.getWarningLogs()
+      this.setComponentRefresh()
+    }
+  },
+  destroyed () {
+    window.clearInterval(this.autoRefreshFunction)
   },
   methods: {
-    fetchData () {
+    setComponentRefresh () {
+      this.autoRefreshFunction = window.setInterval(() => {
+        this.getWarningLogs()
+      }, this.convertRefreshFrequency(this.setting.updateFrequency))
+    },
+    getWarningLogs () {
       this.isLoading = true
-      this.warningLog = dummyWaningLog
-      this.isLoading = false
+      getAlertLogs({ conditionIds: this.activeConditionIds }).then(response => {
+        this.warningLogs = response.data.map(log => {
+          const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
+          return {
+            ...log,
+            relatedDashboardId: prevSettingCondition ? prevSettingCondition.relatedDashboardId : null,
+          }
+        })
+      })
+        .catch(() => {})
+        .finally(() => setTimeout(() => {
+          this.isLoading = false
+        }, 1000) )
+    },
+    convertRefreshFrequency (cronTab) {
+      switch (cronTab) {
+        case '* * * * *':
+          return 60 * 1000
+        case '*/5 * * * *':
+          return 5 * 60 * 1000
+        case '*/15 * * * *':
+          return 15 * 60 * 1000
+        case '*/30 * * * *':
+          return 30 * 60 * 1000
+        case '*/45 * * * *':
+          return 45 * 60 * 1000
+        case '0 * * * *':
+          return 60 * 60 * 1000
+        case '0 0 * * *':
+          return 24 * 60 * 60 * 1000
+        case '0 0 * * 0':
+          return 7 * 24 * 60 * 1000
+        case '0 0 1 * *':
+          return 30 * 7 * 24 * 60 * 1000
+      }
+    },
+    goToWarningLogPage () {
+      if (this.isEditMode) return
+      this.$emit('goToWarningLogPage')
     }
   }
 }
@@ -84,6 +130,9 @@ export default {
   overflow: auto;
   padding: 0;
   margin: 0;
+  &.is-view-mode {
+    cursor: pointer;
+  }
   &__item {
     width: 100%;
     min-height: 62px;
@@ -121,6 +170,14 @@ export default {
       color: #A7A7A7;
       font-size: 12px;
     }
+  }
+  .empty-text {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #999;
   }
 }
 </style>

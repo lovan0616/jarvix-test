@@ -77,7 +77,12 @@
             class="index-unit">{{ componentData.indexInfo.unit }}</span>
         </template>
       </div>
-      <monitor-warning-list v-else-if="componentData.type === 'monitor-warning-list'" />
+      <monitor-warning-list
+        v-else-if="componentData.type === 'monitor-warning-list'"
+        :setting="warningModuleSetting"
+        :is-edit-mode="isEditMode"
+        @goToWarningLogPage="$emit('goToWarningLogPage')"
+      />
       <div 
         v-else
         class="component__item-content chart">
@@ -164,7 +169,11 @@ export default {
       type: Boolean,
       default: false,
       required: true
-    }
+    },
+    warningModuleSetting: {
+      type: Object,
+      default: () => {}
+    },
   },
   data () {
     return {
