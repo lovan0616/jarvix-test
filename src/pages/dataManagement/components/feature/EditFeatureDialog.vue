@@ -242,15 +242,13 @@
           class="btn btn-outline"
           @click="cancelEdit"
         >{{ $t('button.cancel') }}</button>
-        <button 
+        <button
           :disabled="isProcessing"
           class="btn btn-default"
           @click="saveFeature"
         >
-          <svg-icon 
-            v-if="isProcessing" 
-            icon-class="spinner"/>
-          {{ $t('button.create') }}
+          <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
+          <span v-else>{{ $t('button.create') }}</span>
         </button>
       </div>
     </div>
@@ -395,9 +393,9 @@ export default {
       return true
     },
     saveFeature () {
+      if (this.isProcessing) return
       this.$validator.validateAll().then(result => {
         if (result) {
-          this.isProcessing = true
           this.featureInfo.description = JSON.stringify(this.featureFormula[this.featureInfo.type])
           this.featureInfo.dataColumnIdList = this.featureFormula[this.featureInfo.type].filter(element => element.type === 'column').map(element => element.value)
           this.featureInfo.operator = this.featureFormula[this.featureInfo.type].reduce((acc, cur) => {
@@ -408,10 +406,9 @@ export default {
             }
           }, '')
 
-          if (!this.validFeatureFormula()) {
-            this.isProcessing = false
-            return
-          }
+          if (!this.validFeatureFormula()) return
+
+          this.isProcessing = true
           let promise = this.featureInfo.id ? updateCustomFeature(this.featureInfo) : createCustomFeature(this.featureInfo)
           promise.then(() => {
             Message({

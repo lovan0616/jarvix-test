@@ -214,10 +214,12 @@ export default {
           // ax + b
           let offset = this.coefficients[0]
           let gradient = this.coefficients[1]
+          // 因應 offet 的小數位數來決定等等要 round 到第幾位
+          let floatLength = String(offset).split('.')[1] ? String(offset).split('.')[1].length + 1 : 4
           // 迴歸線點
           for (let i = 0; i < this.correlationLinePoint; i++) {
             let xPoint = minX + interval * i
-            lineData.push([xPoint, this.roundNumber(gradient * xPoint + offset, 4)])
+            lineData.push([xPoint, this.roundNumber(gradient * xPoint + offset, floatLength)])
           }
           let displayOffset = this.formula ? this.formula[0] : Number((offset).toFixed(4))
           let displayGradient = this.formula ? this.formula[1] : Number((gradient).toFixed(4))
