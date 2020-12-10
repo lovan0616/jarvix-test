@@ -311,10 +311,8 @@ export default {
         .catch(() => this.clearAllProcessingStatus())
     },
     clickTab (tabName, index) {
-      console.log(this.activeTab, tabName)
       if (this.activeTab === tabName) return
       this.fetchSpecificType(tabName, index)
-      console.log('fetchSpecificType')
     },
     switchDialogName (action, typeInfo) {
       switch (action) {
@@ -337,9 +335,10 @@ export default {
       }
     },
     rePredict () {
-      let index = this.switchTypeList.findIndex(item => item.denotation === this.intentType.PREDICTION)
+      // let index = this.switchTypeList.findIndex(item => item.denotation === this.intentType.PREDICTION)
       // this.switchTypeList[index].cachedResultId = null
-      this.fetchSpecificType(this.intentType.PREDICTION, index)
+      // this.fetchSpecificType(this.intentType.PREDICTION, index)
+      this.$emit('re-predict')
       this.isShowPredictionIntervalSettingDialog = false
     },
     closeDialog () {

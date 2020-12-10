@@ -269,7 +269,6 @@ export default {
               this.periodSec = this.totalSec
               break
             case 'Complete':
-              console.log("getComponentV2 Complete")
               this.totalSec = 50
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
