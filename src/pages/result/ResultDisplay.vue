@@ -14,7 +14,6 @@
     <component
       v-else
       :is="layout || 'EmptyResult'"
-      :data-result-id="currentResultId"
       :data-frame-id="currentQuestionDataFrameId"
       :result-info="resultInfo"
       :restrictions="restrictInfo"
@@ -44,7 +43,7 @@
 <script>
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
 import { mapState, mapGetters } from 'vuex'
-import { isEnOrEnum } from '@/utils/general'
+import { isEnOrEnum, intentType } from '@/utils/general'
 
 export default {
   name: 'ResultDisplay',
@@ -73,24 +72,14 @@ export default {
       currentQuestionDataFrameId: null,
       totalSec: 50,
       periodSec: 200,
-      intent: null
+      intent: null,
+      intentType
     }
   },
   computed: {
     ...mapState('result', ['currentResultId']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'currentQuestionId', 'currentQuestionInfo', 'algoConfig']),
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
-    dataFrameId () {
-      return this.$store.state.dataSource.dataFrameId
-    },
-    currentQuestionInfo () {
-      return this.$store.state.dataSource.currentQuestionInfo
-    },
-    currentQuestionId () {
-      return this.$store.state.dataSource.currentQuestionId
-    },
     currentResultId () {
       return this.$store.state.result.currentResultId
     },
@@ -168,6 +157,7 @@ export default {
 
       if (this.currentQuestionInfo) {
         this.$store.dispatch('chatBot/askResult', {
+          algoConfig: this.algoConfig,
           questionId: this.currentQuestionId,
           segmentation: this.currentQuestionInfo,
           restrictions: this.filterRestrictionList,
@@ -222,6 +212,7 @@ export default {
             
             this.$store.dispatch('chatBot/askResult', {
               questionId,
+              algoConfig: this.algoConfig,
               segmentation: segmentationList[0],
               restrictions: this.filterRestrictionList,
               selectedColumnList: this.selectedColumnList
@@ -278,6 +269,7 @@ export default {
               this.periodSec = this.totalSec
               break
             case 'Complete':
+              console.log("getComponentV2 Complete")
               this.totalSec = 50
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds

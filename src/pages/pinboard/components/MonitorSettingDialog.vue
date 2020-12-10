@@ -306,10 +306,6 @@ export default {
       border-bottom: 1px solid #F1616D;
     }
 
-    .error-text {
-
-    }
-
     /deep/ .input-verify {
       width: 150px;
       height: 30px;

@@ -139,6 +139,7 @@
       <prediction-interval-setting-dialog
         v-if="currentResultId && isShowPredictionIntervalSettingDialog"
         :result-id="selectedTypeInfo.cachedResultId"
+        @re-predict="rePredict"
         @close="closeDialog"
       />
     </template>
@@ -217,6 +218,7 @@ export default {
   },
   computed: {
     ...mapState('result', ['currentResultId']),
+    ...mapState('dataSource', ['algoConfig']),
     barData () {
       return {
         CLUSTERING: [
@@ -309,8 +311,10 @@ export default {
         .catch(() => this.clearAllProcessingStatus())
     },
     clickTab (tabName, index) {
+      console.log(this.activeTab, tabName)
       if (this.activeTab === tabName) return
       this.fetchSpecificType(tabName, index)
+      console.log('fetchSpecificType')
     },
     switchDialogName (action, typeInfo) {
       switch (action) {
@@ -331,6 +335,12 @@ export default {
           this.selectedTypeInfo = typeInfo
           this.isShowPredictionIntervalSettingDialog = true
       }
+    },
+    rePredict () {
+      let index = this.switchTypeList.findIndex(item => item.denotation === this.intentType.PREDICTION)
+      // this.switchTypeList[index].cachedResultId = null
+      this.fetchSpecificType(this.intentType.PREDICTION, index)
+      this.isShowPredictionIntervalSettingDialog = false
     },
     closeDialog () {
       switch (this.activeTab) {

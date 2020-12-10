@@ -8,9 +8,10 @@
         <div class="block-title">{{ $t('prediction.predictionIntervalLength') }}</div>
         <div class="input-block">
           <input-block
-            v-validate="`required|numeric`"
+            v-validate="'required|numeric'"
+            :placeholder="$t('editing.numericOnly')"
             v-model="predictionIntervalLength"
-            name="predictionInterval"
+            name="predictionIntervalLength"
           />
         </div>
       </div>
@@ -34,9 +35,7 @@
 </template>
 
 <script>
-import { saveClusteringColumn } from '@/API/DataSource'
-import { Message } from 'element-ui'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import InputBlock from '@/components/InputBlock'
 
 export default {
@@ -53,47 +52,33 @@ export default {
   },
   data () {
     return {
-      predictionInterval: null,
+      predictionIntervalLength: '',
+      tempPredictionIntervalLength: '',
       isProcessing: false
     }
   },
   computed: {
-    ...mapState('userManagement', ['userId']),
-    ...mapGetters('userManagement', ['getCurrentAccountId', 'getCurrentGroupId', 'getCurrentGroupName']),
-    max () {
-      return this.$store.getters['validation/fieldCommonMaxLength']
-    }
+    ...mapState('dataSource', ['algoConfig'])
+  },
+  mounted () {
+    this.predictionIntervalLength = this.algoConfig.predictionIntervalLength || ''
+    this.tempPredictionIntervalLength = this.predictionIntervalLength
   },
   methods: {
+    ...mapMutations('dataSource', ['setAlgoConfig']),
     rePredict () {
-      this.$validator.validate('columnPrimaryAlias')
+      this.$validator.validate('predictionIntervalLength')
         .then(isValid => {
           if (!isValid) return
-
           this.isProcessing = true
-          saveClusteringColumn({
-            primaryAlias: this.columnPrimaryAlias,
-            askResultId: this.resultId
-          }).then(({ taskId }) => {
-              Message({
-                message: this.$t('clustering.buildingClusteringColumn'),
-                type: 'success',
-                duration: 3 * 1000,
-                showClose: true
-              })
-              this.$store.commit('dataSource/addProcessingDataColumnList', {
-                taskId,
-                userId: this.userId,
-                accountId: this.getCurrentAccountId,
-                groupId: this.getCurrentGroupId,
-                groupName: this.getCurrentGroupName
-              })
-            })
-            .catch(() => {})
-            .finally(() => {
-              this.$emit('close')
-              this.isProcessing = false
-            })
+
+          if (this.tempPredictionIntervalLength === this.predictionIntervalLength) this.$emit('close')
+
+          let tempAlgoConfig = { 
+            predictionIntervalLength: this.predictionIntervalLength 
+          }
+          this.setAlgoConfig(tempAlgoConfig)
+          this.$emit('re-predict')
         })
     }
   }
