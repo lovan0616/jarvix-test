@@ -175,7 +175,7 @@
           </aside>
           <!-- 監控示警模組 -->
           <main 
-            v-if="isWarningModule && !currentDashboardId"
+            v-if="isShowWarningModule && !currentDashboardId"
             class="mini-app__main warning">
             <warning-module
               :setting="appData.warningModule"
@@ -340,9 +340,11 @@
                   :controls="controlColumnValueInfoList"
                   :component-data="componentData"
                   :is-edit-mode="isEditMode"
+                  :warning-module-setting="appData.warningModule"
                   @redirect="currentDashboardId = $event"
                   @deleteComponentRelation="deleteComponentRelation"
                   @columnTriggered="columnTriggered"
+                  @goToWarningLogPage="openWarningModule"
                 >
                   <template slot="drowdown">
                     <dropdown-select
@@ -390,7 +392,7 @@
     />
     <create-component-dialog
       v-if="isShowCreateComponentDialog"
-      :initial-current-component="currentComponent"
+      :initial-current-component="currentComponent || componentTemplateFactory()"
       :dashboard-list="dashboardList"
       @close="closeCreateComponentDialog"
       @create="createComponent"
@@ -480,6 +482,7 @@ import FilterControlPanel from './filter/FilterControlPanel'
 import AxisControlPanel from './filter/AxisControlPanel'
 import WarningModule from './components/warning-module/WarningModule'
 import { Message } from 'element-ui'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inject: ['$validator'],
@@ -507,6 +510,7 @@ export default {
       miniApp: {},
       currentDashboardId: null,
       currentComponentId: null,
+      isShowWarningModule: false,
       isShowCreateDashboardDialog: false,
       isShowCreateComponentDialog: false,
       isShowCreateComponentRelationDialog: false,
@@ -516,7 +520,6 @@ export default {
       isLoading: false,
       isProcessing: false,
       isShowShare: false,
-      isWarningModule: false,
       shareLink: null,
       confirmDeleteText: this.$t('editing.confirmDelete'),
       isShowDelete: false,
@@ -644,7 +647,7 @@ export default {
     },
     currentModeDataType () {
       return this.isViewMode ? 'viewModeData' : 'editModeData'
-    }                       
+    }
   },
   watch: {
     filterColumnValueInfoList: {
@@ -1045,7 +1048,7 @@ export default {
     },
     activeCertainDashboard (dashboardId) {
       this.isEditingDashboardName = false
-      this.isWarningModule = false
+      this.isShowWarningModule = false
       this.currentDashboardId = dashboardId
       this.initFilters()
       this.newDashboardName = this.currentDashboard.name
@@ -1140,30 +1143,11 @@ export default {
     },
     createMonitorWarningComponent () {
       this.isProcessing = true
+      this.currentComponentId = null
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
       updatedMiniAppData.settings.editModeData.dashboards.forEach(board => {
         if (board.id === this.currentDashboardId) {
-          board.components.push({
-            init: true,
-            id: null,
-            type: 'monitor-warning-list',
-            resultId: null,
-            orderSequence: null,
-            tempResultInfo: {},
-            relatedDashboard: {
-              id: null,
-              name: null
-            },
-            config: {
-              diaplayedName: this.$t('miniApp.realTimeMonitorWarning'),
-              isAutoRefresh: false,
-              refreshFrequency: null
-            },
-            indexInfo: {
-              unit: ''
-            },
-            isIndexTypeAvailable: false
-          })
+          board.components.push(this.componentTemplateFactory('monitor-warning-list'))
         }
       })
       this.isShowCreateComponentDialog = false
@@ -1210,16 +1194,16 @@ export default {
       this[`create${type}Component`]()
     },
     openWarningModule () {
-      this.isWarningModule = true
+      this.isShowWarningModule = true
       this.currentDashboardId = null
     },
     componentSettingOptions (component) {
       return [
-        ...(component.type !== 'monitor-warning-list' && [{
+        {
           title: 'miniApp.componentSetting',
           icon: 'filter-setting',
           dialogName: 'CreateComponent'
-        }]),
+        },
         {
           title: 'miniApp.createRelation',
           icon: 'filter-setting',
@@ -1232,6 +1216,39 @@ export default {
         }
       ]
     },
+    componentTemplateFactory (type = null) {
+
+      const generalConfig = {
+        size: { row: 3, column: 4 },
+        relation: { triggerColumn: { id: null }, relatedDashboardId: null }
+      }
+
+      // 一般元件
+      return {
+        init: false,
+        id: uuidv4(),
+        type,
+        resultId: null,
+        orderSequence: null,
+        diagram: type,
+        indexInfo: { unit: '' },
+        relatedDashboard: { id: null, name: null },
+        config: {
+          ...generalConfig,
+          diaplayedName: '',
+          isAutoRefresh: false,
+          refreshFrequency: null,
+        },
+        // 監控示警元件
+        ...(type === 'monitor-warning-list' && {
+          init: true,
+          config: {
+            ...generalConfig,
+            diaplayedName: this.$t('miniApp.realTimeMonitorWarning'),
+          },
+        })
+      }
+    }
   }
 }
 </script>

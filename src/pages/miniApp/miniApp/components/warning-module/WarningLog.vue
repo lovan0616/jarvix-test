@@ -23,6 +23,9 @@
           </template>  
         </el-table-column>
         <el-table-column
+          :label="$t('miniApp.warningName')"
+          prop="conditionName"/>
+        <el-table-column
           :label="$t('miniApp.warningLogMessage')"
           prop="conditionMetMessage"/>
         <el-table-column
@@ -88,6 +91,7 @@ export default {
       isLoading: false,
       warningLogs: [],
       isProcessing: false,
+      autoRefreshFunction: null,
       paginationInfo: {
         currentPage: 0,
         totalPages: 0,
@@ -103,9 +107,20 @@ export default {
     }
   },
   created () {
-    this.activeConditionIds.length > 0 && this.getWarningLogs(this.activeConditionIds)
+    if (this.activeConditionIds.length > 0) {
+      this.getWarningLogs()
+      this.setComponentRefresh()
+    }
+  },
+  destroyed () {
+    window.clearInterval(this.autoRefreshFunction)
   },
   methods: {
+    setComponentRefresh () {
+      this.autoRefreshFunction = window.setInterval(() => {
+        this.getWarningLogs()
+      }, this.convertRefreshFrequency(this.setting.updateFrequency))
+    },
     getWarningLogs (page = 0) {
       this.isLoading = true
       getAlertLogs({ conditionIds: this.activeConditionIds, page }).then(response => {
@@ -114,12 +129,39 @@ export default {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
           return {
             ...log,
-            relatedDashboardId: prevSettingCondition ? prevSettingCondition.relatedDashboardId : null
+            relatedDashboardId: prevSettingCondition ? prevSettingCondition.relatedDashboardId : null,
+            // MOCK DATA
+            conditionName: '成本過高',
+            monitoredData: [
+              {
+                dataColumnId: 1,
+                dataType: 'INT',
+                datum: '1001',
+                displayName: '成本',
+                statsType: 'NUMERIC',
+              },
+              {
+                dataColumnId: 691,
+                dataType: 'STRING',
+                datum: '甘肅',
+                displayName: '省',
+                statsType: 'CATEGORY',
+              },
+              {
+                dataColumnId: 693,
+                dataType: 'STRING',
+                datum: 'Helmets',
+                displayName: '產品',
+                statsType: 'CATEGORY',
+              }
+            ]
           }
         })
       })
         .catch(() => {})
-        .finally(() => this.isLoading = false )
+        .finally(() => setTimeout(() => {
+          this.isLoading = false
+        }, 1000) )
     },
     updateLogActiveness (logId, isActive) {
       this.isProcessing = true
@@ -135,6 +177,28 @@ export default {
         relatedDashboardId,
         rowData: rowData.filter(item => item.statsType === 'CATEGORY')
       })
+    },
+    convertRefreshFrequency (cronTab) {
+      switch (cronTab) {
+        case '* * * * *':
+          return 60 * 1000
+        case '*/5 * * * *':
+          return 5 * 60 * 1000
+        case '*/15 * * * *':
+          return 15 * 60 * 1000
+        case '*/30 * * * *':
+          return 30 * 60 * 1000
+        case '*/45 * * * *':
+          return 45 * 60 * 1000
+        case '0 * * * *':
+          return 60 * 60 * 1000
+        case '0 0 * * *':
+          return 24 * 60 * 60 * 1000
+        case '0 0 * * 0':
+          return 7 * 24 * 60 * 1000
+        case '0 0 1 * *':
+          return 30 * 7 * 24 * 60 * 1000
+      }
     }
   }
 }
