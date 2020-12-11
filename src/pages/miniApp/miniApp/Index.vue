@@ -1192,7 +1192,7 @@ export default {
         }
       ]
     },
-    componentTemplateFactory (type = null) {
+    componentTemplateFactory (type = 'chart') {
 
       const generalConfig = {
         size: { row: 3, column: 4 },
