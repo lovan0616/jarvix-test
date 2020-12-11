@@ -25,13 +25,13 @@
           <slot name="drowdown"/>
         </div>
         <div 
-          v-else-if="componentData.relatedDashboard.id" 
+          v-else-if="componentData.config.relatedDashboard"
           class="component-setting-box"
         >
           <el-tooltip 
-            :content="componentData.relatedDashboard.name" 
+            :content="componentData.config.relatedDashboard.name" 
             placement="bottom">
-            <div @click="$emit('redirect', componentData.relatedDashboard.id)">
+            <div @click="$emit('redirect', componentData.config.relatedDashboard.id)">
               <svg-icon icon-class="relation"/>
             </div>
           </el-tooltip>
@@ -102,14 +102,14 @@
       </div>
       <div class="component__item-action">
         <div
-          v-if="componentData.relatedDashboard.id && isEditMode"
+          v-if="componentData.config.relatedDashboard && isEditMode"
           class="related-item"
         >
           <div class="related-item__title">
             {{ $t('miniApp.relatedDashboard') }}：
           </div>
           <div class="related-item__name">
-            {{ componentData.relatedDashboard.name }}
+            {{ componentData.config.relatedDashboard.name }}
           </div>
           <div 
             class="related-item__close" 
@@ -129,7 +129,7 @@
     </div>
     <decide-dialog
       v-if="isShowConfirmDelete"
-      :title="$t('miniApp.confirmDeletingComponentRelation', { name: componentData.relatedDashboard.name })"
+      :title="$t('miniApp.confirmDeletingComponentRelation', { name: componentData.config.relatedDashboard.name })"
       :type="'delete'"
       @closeDialog="isShowConfirmDelete = false"
       @confirmBtn="confirmDelete"
@@ -289,9 +289,10 @@ export default {
         }
       }
     },
-    'componentData.config.size' ({ row }) {
+    'componentData.config.size' ({ row: newRow }, { row: oldRow }) {
+      if (newRow === oldRow) return
       // 需等到元件樣式被更新後才重新計算
-      window.setTimeout(() => this.adjustToTableComponentStyle(), 300)
+      if (this.componentData.diagram === 'table') window.setTimeout(() => this.adjustToTableComponentStyle(), 300)
     },
   },
   mounted () {
@@ -497,8 +498,9 @@ export default {
       })
     },
     chartriggered (restrictions) {
+      if (!this.componentData.config.relatedDashboard) return
       this.$emit('chartTriggered', {
-        relatedDashboardId: this.componentData.relatedDashboard.id,
+        relatedDashboardId: this.componentData.config.relatedDashboard.id,
         restrictions
       })
     },

@@ -341,7 +341,7 @@
                   :component-data="componentData"
                   :is-edit-mode="isEditMode"
                   :warning-module-setting="appData.warningModule"
-                  @redirect="currentDashboardId = $event"
+                  @redirect="activeCertainDashboard($event)"
                   @deleteComponentRelation="deleteComponentRelation"
                   @columnTriggered="columnTriggered"
                   @chartTriggered="chartTriggered"
@@ -425,14 +425,6 @@
       @close="isShowUpdateDashboardNameDialog = false"
       @confirm="updateDashboardNameByDialog"
     />
-    <create-component-relation-dialog
-      v-if="isShowCreateComponentRelationDialog"
-      :dashboard-list="dashboardList"
-      :dashboard-id="currentDashboardId"
-      :related-dashboard="currentComponent.relatedDashboard"
-      @close="isShowCreateComponentRelationDialog = false"
-      @create="createComponentRelation"
-    />
     <writing-dialog
       v-if="isShowShare"
       :title="$t('miniApp.getPublishedUrl')"
@@ -473,7 +465,6 @@ import DashboardTask from './components/dashboard-components/DashboardTask'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
 import CreateFilterDialog from './dialog/CreateFilterDialog.vue'
-import CreateComponentRelationDialog from './dialog/CreateComponentRelationDialog.vue'
 import DeleteDashboardDialog from './dialog/DeleteDashboardDialog.vue'
 import DeleteComponentDialog from './dialog/DeleteComponentDialog.vue'
 import UpdateDashboardNameDialog from './dialog/UpdateDashboardNameDialog.vue'
@@ -493,7 +484,6 @@ export default {
     CreateDashboardDialog,
     CreateComponentDialog,
     CreateFilterDialog,
-    CreateComponentRelationDialog,
     DeleteDashboardDialog,
     DeleteComponentDialog,
     UpdateDashboardNameDialog,
@@ -514,7 +504,6 @@ export default {
       isShowWarningModule: false,
       isShowCreateDashboardDialog: false,
       isShowCreateComponentDialog: false,
-      isShowCreateComponentRelationDialog: false,
       isShowDeleteDashboardDialog: false,
       isShowDeleteComponentDialog: false,
       isShowUpdateDashboardNameDialog: false,
@@ -801,28 +790,11 @@ export default {
         .catch(() => {})
         .finally(() => this.currentComponentId = null)
     },
-    createComponentRelation (relatedDashboard) {
-      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
-      const component = editedMiniApp.settings.editModeData.dashboards[this.currentDashboardIndex].components.find(comp => comp.id === this.currentComponentId)
-      component.relatedDashboard = relatedDashboard
-
-      this.updateAppSetting(editedMiniApp)
-        .then(() => {
-          this.currentComponentId = null
-          this.miniApp = editedMiniApp
-          Message({
-            message: this.$t('message.saveSuccess'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
-          })
-        })
-        .finally(() => this.isShowCreateComponentRelationDialog = false)
-    },
     deleteComponentRelation (componentId) {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
       const component = editedMiniApp.settings.editModeData.dashboards[this.currentDashboardIndex].components.find(comp => comp.id === componentId)
-      component.relatedDashboard = { id: null, name: null }
+      component.config.hasRelatedDashboard = false
+      component.config.relatedDashboard = null
 
       this.updateAppSetting(editedMiniApp)
         .then(() => {
@@ -1083,7 +1055,6 @@ export default {
       this[`isShow${eventName}Dialog`] = true
       switch(eventName) {
         case 'DeleteComponent':
-        case 'CreateComponentRelation':
         case 'CreateComponent':
           this.currentComponentId = id
       }
@@ -1215,11 +1186,6 @@ export default {
           dialogName: 'CreateComponent'
         },
         {
-          title: 'miniApp.createRelation',
-          icon: 'filter-setting',
-          dialogName: 'CreateComponentRelation'
-        },
-        {
           title: 'button.delete',
           icon: 'delete',
           dialogName: 'DeleteComponent'
@@ -1248,6 +1214,8 @@ export default {
           diaplayedName: '',
           isAutoRefresh: false,
           refreshFrequency: null,
+          hasRelatedDashboard: false,
+          relatedDashboard: null
         },
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {
