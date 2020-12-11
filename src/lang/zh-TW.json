@@ -747,6 +747,7 @@
     "noneComponent": "尚未建立@:miniApp.component",
     "createDashboard": "新增@:miniApp.dashboard",
     "createComponent": "新增@:miniApp.component",
+    "editComponent": "編輯@:miniApp.component",
     "updateDashboardName": "編輯@:miniApp.dashboard",
     "updateComponentName": "編輯@:miniApp.component名稱",
     "pleaseTypeDashboardName": "請輸入@:miniApp.dashboard名稱",

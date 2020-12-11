@@ -32,7 +32,7 @@
             :content="componentData.relatedDashboard.name" 
             placement="bottom">
             <div @click="$emit('redirect', componentData.relatedDashboard.id)">
-              <svg-icon icon-class="relation"/>
+              <svg-icon icon-class="open-link"/>
             </div>
           </el-tooltip>
         </div>
@@ -586,7 +586,10 @@ $direction-span: ("col": 8, "row": 6);
         /deep/ .dropdown-select-box {
           box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
           top: 31px;
-          right: -28px;
+          right: 0;
+          &::before {
+            right: 5px;
+          }
           .svg-icon {
             color: $theme-color-primary;
           }
