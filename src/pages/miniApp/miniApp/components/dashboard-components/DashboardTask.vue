@@ -32,7 +32,7 @@
             :content="componentData.config.relatedDashboard.name" 
             placement="bottom">
             <div @click="$emit('redirect', componentData.config.relatedDashboard.id)">
-              <svg-icon icon-class="relation"/>
+              <svg-icon icon-class="open-link"/>
             </div>
           </el-tooltip>
         </div>
@@ -95,6 +95,7 @@
           :is-show-description="false"
           :is-show-coefficients="false"
           :show-toolbox="false"
+          :custom-cell-class-name="customCellClassName"
           intend="key_result"
           @clickCell="columnTriggered($event)"
           @clickChart="chartriggered($event)"
@@ -265,6 +266,16 @@ export default {
     },
     includeRelativeDatetimeFilter () {
       return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
+    },
+    customCellClassName () {
+      const triggerColumn = this.componentData.config.relation.triggerColumn.info
+      if (!triggerColumn) return []
+      const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === triggerColumn.dataColumnAlias)
+      return [{
+        type: 'column',
+        index: index + 1,
+        className: 'underline'
+      }]
     }
   },
   watch: {
@@ -584,7 +595,10 @@ $direction-span: ("col": 8, "row": 6);
         /deep/ .dropdown-select-box {
           box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
           top: 31px;
-          right: -28px;
+          right: 0;
+          &::before {
+            right: 5px;
+          }
           .svg-icon {
             color: $theme-color-primary;
           }

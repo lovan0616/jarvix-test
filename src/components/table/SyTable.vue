@@ -99,6 +99,22 @@ export default {
       type: Object,
       default: () => {}
     },
+    customCellClassName: {
+      type: Array,
+      default: () => [
+        // 為指定的行或列加上 cellClassName
+        // { 
+        //   type: 'row',
+        //   index: 1,
+        //   className: 'myClassName'
+        // },
+        // {
+        //   type: 'column',
+        //   index: 3,
+        //   className: 'myClassName'
+        // }
+      ]
+    },
   },
   data () {
     return {
@@ -215,8 +231,17 @@ export default {
       this.exportToCSV(fileName, tableData)
     },
     getCellIndex ({ row, column, rowIndex, columnIndex }) {
+      // 為 行/列 增加 index 屬性，供 clickCell 事件使用 
       row.index = rowIndex;
       column.index = columnIndex;
+      
+      // 回傳 cellClassName
+      let colSetting = this.customCellClassName.find(item => item.index === columnIndex && item.type === 'column')
+      let rowSetting = this.customCellClassName.find(item => item.index === rowIndex && item.type === 'row')
+      
+      if (colSetting && rowSetting) return [colSetting.className, rowSetting.className]
+      if (colSetting) return colSetting.className
+      if (rowSetting) return rowSetting.className
     },
     onClickCell (row, column) {
       this.$emit('clickCell', { row, column })

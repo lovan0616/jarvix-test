@@ -7,7 +7,7 @@
           @click="$emit('close')">
           <svg-icon icon-class="arrow-left" />
         </div>
-        {{ $t('miniApp.createComponent') }}
+        {{ currentComponent.init ? $t('miniApp.editComponent') : $t('miniApp.createComponent') }}
       </div>
       <div class="nav--right">
         <div
