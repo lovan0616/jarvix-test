@@ -122,7 +122,9 @@
           </div>
         </div>
         <!--Update frequency-->
-        <div class="setting__content">
+        <div 
+          v-if="currentComponent.type !== 'monitor-warning-list'" 
+          class="setting__content">
           <div class="setting__block">
             <div class="setting__label-block">
               {{ $t('miniApp.updateFrequency') }}
@@ -195,7 +197,6 @@ import DashboardComponent from './DashboardComponent'
 import InputVerify from '@/components/InputVerify'
 import { getDateTimeColumns } from '@/API/DataSource'
 import { mapState } from 'vuex'
-import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inject: ['$validator'],
@@ -211,39 +212,7 @@ export default {
   props: {
     initialCurrentComponent: {
       type: Object,
-      default: () => {
-        return {
-          init: false,
-          id: null,
-          type: 'chart',
-          resultId: null,
-          orderSequence: null,
-          diagram: '',
-          relatedDashboard: {
-            id: null,
-            name: null
-          },
-          config: {
-            diaplayedName: '',
-            isAutoRefresh: false,
-            refreshFrequency: null,
-            size: {
-              row: 2,
-              column: 2
-            },
-            relation: {
-              triggerColumn: {
-                id: null
-              },
-              relatedDashboardId: null
-            }
-          },
-          indexInfo: {
-            unit: ''
-          },
-          isIndexTypeAvailable: false
-        }
-      }
+      default: () => {}
     },
     dashboardList: {
       type: Array,
@@ -363,14 +332,9 @@ export default {
         this.$emit('create', {
           ...this.currentComponent,
           init: true,
-          id: uuidv4(),
           resultId: this.currentResultId,
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
           ...this.currentResultInfo,
-          relatedDashboard: {
-            id: null,
-            name: null
-          },
           dateTimeColumn: columnList.find(column => column.isDefault)
         })
       })
@@ -498,6 +462,16 @@ export default {
           font-size: 14px;
           color: #FFFFFF;
           font-weight: 600;
+        }
+        &__block {
+          /deep/ .input-verify {
+            .input-verify-text {
+              margin-bottom: 10px;
+            }
+            .input-error.error-text {
+              bottom: -10px;
+            }
+          }
         }
         &__block-select-field {
           margin-top: 8px;
