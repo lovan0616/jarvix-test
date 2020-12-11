@@ -1192,13 +1192,13 @@ export default {
         }
       ]
     },
-    componentTemplateFactory (type = null) {
+    componentTemplateFactory (type = 'chart') {
 
       const generalConfig = {
         size: { row: 3, column: 4 },
-        relation: { triggerColumn: { id: null }, relatedDashboardId: null },
         hasRelatedDashboard: false,
-        relatedDashboard: null
+        relatedDashboard: null,
+        hasColumnRelatedDashboard: false // 目前只給 table 元件使用
       }
 
       // 一般元件
@@ -1215,7 +1215,8 @@ export default {
           ...generalConfig,
           diaplayedName: '',
           isAutoRefresh: false,
-          refreshFrequency: null
+          refreshFrequency: null,
+          columnRelations: [{ relatedDashboardId: null, columnInfo: null }]
         },
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {

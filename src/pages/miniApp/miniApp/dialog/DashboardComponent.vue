@@ -113,6 +113,16 @@
         />{{ $t('miniApp.componentNotAddable') }}
       </div>
     </template>
+    <!-- Error -->
+    <empty-result 
+      v-if="hasError"
+      :key="appQuestion"
+      :result-info="{
+        title: '語句暫不支援',
+        description: '不支援此類型概況語句',
+      }"
+      :redirect-on-select="false"
+    />
   </div>
 </template>
 
@@ -142,7 +152,8 @@ export default {
       totalSec: 50,
       periodSec: 200,
       question: '',
-      segmentation: null
+      segmentation: null,
+      hasError: false
     }
   },
   computed: {
@@ -252,12 +263,14 @@ export default {
               this.$store.commit('result/updateCurrentResultId', resultId)
               this.$store.commit('result/updateCurrentResultInfo', {
                 keyResultId: componentResponse.componentIds.key_result[0],
-                dataColumns: componentResponse.segmentationPayload.transcript.subjectList.map(item => ({
-                  columnId: item.dataColumn.dataColumnId,
-                  columnName: item.dataColumn.dataColumnAlias,
-                  statsType: item.dataColumn.statsType,
-                  dataType: item.dataColumn.dataType
-                })),
+                dataColumns: componentResponse.segmentationPayload.transcript.subjectList
+                  .filter(item => item.dataColumn)
+                  .map(item => ({
+                    columnId: item.dataColumn.dataColumnId,
+                    columnName: item.dataColumn.dataColumnAlias,
+                    statsType: item.dataColumn.statsType,
+                    dataType: item.dataColumn.dataType
+                  })),
                 segmentation: componentResponse.segmentationPayload,
                 question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
                 questionId: componentResponse.questionId,
@@ -284,6 +297,7 @@ export default {
           this.$emit('update:isLoading', false)
           this.$store.commit('result/updateCurrentResultId', null)
           this.$store.commit('result/updateCurrentResultInfo', null)
+          this.hasError = true
           if (error.message !== 'cancel') this.resultInfo = null
         })
     },

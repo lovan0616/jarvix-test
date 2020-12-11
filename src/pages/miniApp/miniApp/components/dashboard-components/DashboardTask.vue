@@ -119,11 +119,11 @@
           </div>
         </div>
         <div
-          v-if="componentData.config.relation.relatedDashboardId"
+          v-if="componentData.config.columnRelations[0].columnInfo"
           class="related-item"
         >
           {{ $t('miniApp.clickColumnToSeeMore', {
-            columnName: componentData.config.relation.triggerColumn.info.dataColumnAlias
+            columnName: componentData.config.columnRelations[0].columnInfo.dataColumnAlias
           }) }}
         </div>
       </div>
@@ -220,7 +220,8 @@ export default {
       return this.tempFilteredKeyResultId || this.componentData.keyResultId
     },
     dataColumnAlias () {
-      return this.componentData.segmentation.transcript.subjectList[0].dataColumn.dataColumnAlias
+      const dataColumn = this.componentData.segmentation.transcript.subjectList[0].dataColumn
+      return dataColumn ? dataColumn.dataColumnAlias : ''
     },
     newYAxisColumnNames () {
       return this.selectedYAxisControls.reduce((acc, cur) => acc.concat(` ${cur.columnName}`), '')
@@ -268,9 +269,9 @@ export default {
       return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
     },
     customCellClassName () {
-      const triggerColumn = this.componentData.config.relation.triggerColumn.info
-      if (!triggerColumn) return []
-      const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === triggerColumn.dataColumnAlias)
+      const relation = this.componentData.config.columnRelations[0].columnInfo
+      if (!relation) return []
+      const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === relation.dataColumnAlias)
       return [{
         type: 'column',
         index: index + 1,
@@ -501,10 +502,12 @@ export default {
       return properties
     },
     columnTriggered ({ row, column }) {
-      if (column.label !== this.componentData.config.relation.triggerColumn.info.dataColumnAlias) return
+      const { relatedDashboardId, columnInfo } = this.componentData.config.columnRelations[0]
+      if (column.label !== columnInfo.dataColumnAlias) return
+
       this.$emit('columnTriggered', {
-        relatedDashboardId: this.componentData.config.relation.relatedDashboardId,
-        columnId: this.componentData.config.relation.triggerColumn.info.dataColumnId,
+        relatedDashboardId,
+        columnId: columnInfo.dataColumnId,
         cellValue: row[column.index - 1]
       })
     },
