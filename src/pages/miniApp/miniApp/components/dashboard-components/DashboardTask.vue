@@ -321,11 +321,21 @@ export default {
         let segmentationList = response.segmentationList
         // TODO 處理 NO_ANSWER
         if (segmentationList.length === 1) {
+          // 確認是否為趨勢類型問題
+          const isTrendQuestion = segmentationList[0].denotation === 'TREND'
           this.$store.dispatch('chatBot/askResult', {
             questionId,
             segmentation: segmentationList[0],
             restrictions: this.restrictions(),
-            selectedColumnList: null
+            selectedColumnList: null,
+            ...(isTrendQuestion && {
+              sortOrders: [
+                {
+                  dataColumnId: segmentationList[0].transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
+                  sortType: 'DESC'
+                }
+              ]
+            })
           }).then(res => {
             this.getComponentV2(res.resultId)
           }).catch(error => {})
@@ -499,6 +509,8 @@ export default {
     },
     chartriggered (restrictions) {
       if (!this.componentData.config.relatedDashboard) return
+      const acceptedColumnStatesTypeList = ['category']
+      if (!restrictions.some(restriction => acceptedColumnStatesTypeList.includes(restriction.stats_type))) return
       this.$emit('chartTriggered', {
         relatedDashboardId: this.componentData.config.relatedDashboard.id,
         restrictions
