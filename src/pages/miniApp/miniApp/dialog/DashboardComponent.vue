@@ -192,12 +192,23 @@ export default {
         // 一個結果
         if (segmentationList.length === 1) {
           this.segmentation = segmentationList[0]
+          // 確認是否為趨勢類型問題
+          const isTrendQuestion = this.segmentation.denotation === 'TREND'
+
           this.$store.dispatch('chatBot/askResult', {
             questionId,
             segmentation: this.segmentation,
             // TODO: 處理 filter, drill down
             restrictions: null,
-            selectedColumnList: null
+            selectedColumnList: null,
+            ...(isTrendQuestion && {
+              sortOrders: [
+                {
+                  dataColumnId: this.segmentation.transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
+                  sortType: 'DESC'
+                }
+              ]
+            })
           })
             .then(res => this.getComponentV2(res.resultId))
             .catch((error) => {})
