@@ -1196,7 +1196,9 @@ export default {
 
       const generalConfig = {
         size: { row: 3, column: 4 },
-        relation: { triggerColumn: { id: null }, relatedDashboardId: null }
+        relation: { triggerColumn: { id: null }, relatedDashboardId: null },
+        hasRelatedDashboard: false,
+        relatedDashboard: null
       }
 
       // 一般元件
@@ -1213,9 +1215,7 @@ export default {
           ...generalConfig,
           diaplayedName: '',
           isAutoRefresh: false,
-          refreshFrequency: null,
-          hasRelatedDashboard: false,
-          relatedDashboard: null
+          refreshFrequency: null
         },
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {

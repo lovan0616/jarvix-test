@@ -838,7 +838,11 @@
     "warningModuleIsInactive": "此應用程式未開啟示警模組",
     "finished": "已處理",
     "unfinished": "未處理",
-    "state": "處理狀態"
+    "state": "處理狀態",
+    "chooseDataSource": "選擇資料源",
+    "chooseDataFrame": "選擇資料表",
+    "dataSource": "資料源",
+    "dataFrame": "資料表"
   },
   "clustering": {
     "cluster": "群體",

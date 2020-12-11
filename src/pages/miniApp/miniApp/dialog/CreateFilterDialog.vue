@@ -21,12 +21,12 @@
       <template>
         <div class="setting-block">
           <div class="input-field">
-            <label class="input-field__label">資料源</label>
+            <label class="input-field__label">{{ $t('miniApp.dataSource') }}</label>
             <div class="input-field__input">
               <default-select 
                 v-validate="'required'"
                 :option-list="dataSourceOptionList"
-                :placeholder="$t('batchLoad.chooseColumn')"
+                :placeholder="$t('miniApp.chooseDataSource')"
                 :is-disabled="isProcessing || isLoading"
                 v-model="selectedBasicInfo.dataSourceId"
                 filterable
@@ -41,12 +41,12 @@
             </div>
           </div>
           <div class="input-field">
-            <label class="input-field__label">資料表</label>
+            <label class="input-field__label">{{ $t('miniApp.dataFrame') }}</label>
             <div class="input-field__input">
               <default-select 
                 v-validate="'required'"
                 :option-list="dataFrameOptionList"
-                :placeholder="$t('batchLoad.chooseColumn')"
+                :placeholder="$t('miniApp.chooseDataFrame')"
                 :is-disabled="isProcessing || isLoading"
                 v-model="selectedBasicInfo.dataFrameId"
                 filterable

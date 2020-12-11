@@ -58,7 +58,7 @@
         <label class="dialog__label">
           {{ $t('miniApp.description') }}
           <input-verify
-            v-validate="`required|max:${max}`"
+            v-validate="`max:${max}`"
             v-model="tempEditInfo.description"
             :placeholder="$t('miniApp.pleaseEnterDescription')"
             type="text"
