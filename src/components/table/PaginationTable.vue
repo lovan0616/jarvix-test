@@ -249,4 +249,3 @@ export default {
   }
 }
 </style>
-<style src="@/styles/element-ui/el-pagination.scss" lang="scss"></style>

@@ -25,14 +25,14 @@
           <slot name="drowdown"/>
         </div>
         <div 
-          v-else-if="componentData.relatedDashboard.id" 
+          v-else-if="componentData.config.relatedDashboard"
           class="component-setting-box"
         >
           <el-tooltip 
-            :content="componentData.relatedDashboard.name" 
+            :content="componentData.config.relatedDashboard.name" 
             placement="bottom">
-            <div @click="$emit('redirect', componentData.relatedDashboard.id)">
-              <svg-icon icon-class="relation"/>
+            <div @click="$emit('redirect', componentData.config.relatedDashboard.id)">
+              <svg-icon icon-class="open-link"/>
             </div>
           </el-tooltip>
         </div>
@@ -77,7 +77,12 @@
             class="index-unit">{{ componentData.indexInfo.unit }}</span>
         </template>
       </div>
-      <monitor-warning-list v-else-if="componentData.type === 'monitor-warning-list'" />
+      <monitor-warning-list
+        v-else-if="componentData.type === 'monitor-warning-list'"
+        :setting="warningModuleSetting"
+        :is-edit-mode="isEditMode"
+        @goToWarningLogPage="$emit('goToWarningLogPage')"
+      />
       <div 
         v-else
         class="component__item-content chart">
@@ -90,20 +95,22 @@
           :is-show-description="false"
           :is-show-coefficients="false"
           :show-toolbox="false"
+          :custom-cell-class-name="customCellClassName"
           intend="key_result"
           @clickCell="columnTriggered($event)"
+          @clickChart="chartriggered($event)"
         />
       </div>
       <div class="component__item-action">
         <div
-          v-if="componentData.relatedDashboard.id && isEditMode"
+          v-if="componentData.config.relatedDashboard && isEditMode"
           class="related-item"
         >
           <div class="related-item__title">
             {{ $t('miniApp.relatedDashboard') }}：
           </div>
           <div class="related-item__name">
-            {{ componentData.relatedDashboard.name }}
+            {{ componentData.config.relatedDashboard.name }}
           </div>
           <div 
             class="related-item__close" 
@@ -123,7 +130,7 @@
     </div>
     <decide-dialog
       v-if="isShowConfirmDelete"
-      :title="$t('miniApp.confirmDeletingComponentRelation', { name: componentData.relatedDashboard.name })"
+      :title="$t('miniApp.confirmDeletingComponentRelation', { name: componentData.config.relatedDashboard.name })"
       :type="'delete'"
       @closeDialog="isShowConfirmDelete = false"
       @confirmBtn="confirmDelete"
@@ -164,7 +171,11 @@ export default {
       type: Boolean,
       default: false,
       required: true
-    }
+    },
+    warningModuleSetting: {
+      type: Object,
+      default: () => {}
+    },
   },
   data () {
     return {
@@ -255,6 +266,16 @@ export default {
     },
     includeRelativeDatetimeFilter () {
       return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
+    },
+    customCellClassName () {
+      const triggerColumn = this.componentData.config.relation.triggerColumn.info
+      if (!triggerColumn) return []
+      const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === triggerColumn.dataColumnAlias)
+      return [{
+        type: 'column',
+        index: index + 1,
+        className: 'underline'
+      }]
     }
   },
   watch: {
@@ -279,9 +300,10 @@ export default {
         }
       }
     },
-    'componentData.config.size' ({ row }) {
+    'componentData.config.size' ({ row: newRow }, { row: oldRow }) {
+      if (newRow === oldRow) return
       // 需等到元件樣式被更新後才重新計算
-      window.setTimeout(() => this.adjustToTableComponentStyle(), 300)
+      if (this.componentData.diagram === 'table') window.setTimeout(() => this.adjustToTableComponentStyle(), 300)
     },
   },
   mounted () {
@@ -310,11 +332,21 @@ export default {
         let segmentationList = response.segmentationList
         // TODO 處理 NO_ANSWER
         if (segmentationList.length === 1) {
+          // 確認是否為趨勢類型問題
+          const isTrendQuestion = segmentationList[0].denotation === 'TREND'
           this.$store.dispatch('chatBot/askResult', {
             questionId,
             segmentation: segmentationList[0],
             restrictions: this.restrictions(),
-            selectedColumnList: null
+            selectedColumnList: null,
+            ...(isTrendQuestion && {
+              sortOrders: [
+                {
+                  dataColumnId: segmentationList[0].transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
+                  sortType: 'DESC'
+                }
+              ]
+            })
           }).then(res => {
             this.getComponentV2(res.resultId)
           }).catch(error => {})
@@ -486,9 +518,18 @@ export default {
         cellValue: row[column.index - 1]
       })
     },
+    chartriggered (restrictions) {
+      if (!this.componentData.config.relatedDashboard) return
+      const acceptedColumnStatesTypeList = ['category']
+      if (!restrictions.some(restriction => acceptedColumnStatesTypeList.includes(restriction.stats_type))) return
+      this.$emit('chartTriggered', {
+        relatedDashboardId: this.componentData.config.relatedDashboard.id,
+        restrictions
+      })
+    },
     adjustToTableComponentStyle () {
       // 取當前元件中，擺放 table 空間的高度（扣除 pagination）
-      const maxHeight = this.$refs.component.getBoundingClientRect().height - 128
+      const maxHeight = this.$refs.component.getBoundingClientRect().height - 135
       this.$set(this.chartComponentStyle, 'height', maxHeight + 'px')
     }
   }
@@ -566,7 +607,10 @@ $direction-span: ("col": 8, "row": 6);
         /deep/ .dropdown-select-box {
           box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
           top: 31px;
-          right: -28px;
+          right: 0;
+          &::before {
+            right: 5px;
+          }
           .svg-icon {
             color: $theme-color-primary;
           }

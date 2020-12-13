@@ -14,44 +14,21 @@
       <div class="warning-setting__content-enable">
         <section class="setting-block">
           {{ $t('miniApp.enableWarningModule') }}：
-          <div class="input-radio-group">
-            <input
-              id="activate"
-              :checked="warningModuleConfig.activate"
-              :value="warningModuleConfig.activate"
-              name="status"
-              class="input-radio"
-              type="radio"
-              @change="warningModuleConfig.activate = true"
-            >
-            <label
-              for="activate"
-              class="input-radio-label"
-            >{{ $t('miniApp.activate') }}</label>
-          </div>
-          <div class="input-radio-group">
-            <input
-              id="inactivate"
-              :checked="!warningModuleConfig.activate"
-              :value="!warningModuleConfig.activate"
-              name="status"
-              class="input-radio"
-              type="radio"
-              @change="warningModuleConfig.activate = false"
-            >
-            <label
-              for="inactivate"
-              class="input-radio-label"
-            >{{ $t('miniApp.inactivate') }}</label>
-          </div>
+          <el-switch
+            v-model="warningModuleConfig.activate"
+            :width="Number('32')"
+            class="module-activate-controller"
+            active-color="#2AD2E2"
+            inactive-color="#324B4E"
+          />
+          {{ warningModuleConfig.activate ? $t('miniApp.activate') : $t('miniApp.inactivate') }}
         </section>
       </div>
       <div class="warning-setting__content-rule">
         <div class="title">
-          <span class="col col-enable">是否使用</span>
-          <span class="col col-message">示警訊息</span>
-          <span class="col col-condition">示警條件</span>
-          <span class="col col-relation">關聯看板</span>
+          <span class="col col-enable">{{ $t('miniApp.enableWarningModule') }}</span>
+          <span class="col col-condition">{{ $t('miniApp.warningName') }}</span>
+          <span class="col col-relation">{{ $t('miniApp.relatedDashboard') }}</span>
         </div>
         <spinner 
           v-if="isLoading" 
@@ -70,11 +47,11 @@
               inactive-color="#324B4E"
             />
           </div>
-          <div class="col-message">
-            <span>{{ condition.name }}</span>
-          </div>
           <div class="col-condition">
-            <span v-html="displayedConditionMessage(condition.targetConfig.displayName, condition.comparingValues)"/>
+            <div>{{ condition.name }}</div>
+            <div 
+              class="comparing-values" 
+              v-html="displayedConditionMessage(condition.targetConfig.displayName, condition.comparingValues)"/>
           </div>
           <div class="col-relation">
             <default-select
@@ -113,10 +90,10 @@ export default {
     return {
       isLoading: false,
       allConditions: [],
-      originalWarningModuleConfig: {},
       warningModuleConfig: {
         activate: false,
-        conditions: []
+        conditions: [],
+        updateFrequency: '* * * * *'
       }
     }
   },
@@ -145,19 +122,21 @@ export default {
       // 還原之前的設定到示警條件上
       conditions.forEach(condition => {
         const prevConditionSetting = this.setting.conditions.find(item => item.id === condition.id)
+        let isRelatedDashbaordExist = false
+        if (prevConditionSetting) isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
         this.warningModuleConfig.conditions.push({
           ...condition,
           activate: prevConditionSetting ? prevConditionSetting.activate : false,
-          relatedDashboardId: prevConditionSetting ? prevConditionSetting.relatedDashboardId : null
+          relatedDashboardId: isRelatedDashbaordExist ? prevConditionSetting.relatedDashboardId : null
         })
       })
-      this.isLoading = false
-    })
+    }).finally(() => this.isLoading = false )
   },
   methods: {
     saveWarningModuleSetting () {
       this.$emit('update', {
         activate: this.warningModuleConfig.activate,
+        updateFrequency: '* * * * *',
         conditions: this.warningModuleConfig.conditions.map(item => ({
           id: item.id,
           activate: item.activate,
@@ -187,7 +166,7 @@ export default {
           case 'NOT_EQUAL':
             comparisonOperator = '≠'
         }
-        return acc.concat(`${targetColumnName}${comparisonOperator}${cur.value}<br>`)
+        return acc.concat(`- ${targetColumnName}${comparisonOperator}${cur.value}<br>`)
       }, '')
       
     }
@@ -222,7 +201,7 @@ export default {
     flex-direction: column;
     .setting-block {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       padding: 24px;
       background-color: #192323;
       border-radius: 5px;
@@ -236,6 +215,9 @@ export default {
     &-enable {
       .setting-block {
         margin-bottom: 24px;
+        .module-activate-controller {
+          margin: 0 12px;
+        }
       }
     }
     &-rule {
@@ -259,11 +241,16 @@ export default {
       &-enable {
         flex: 0 0 140px;
       }
-      &-message {
-        flex: 0 0 140px;
-      }
       &-condition {
         flex: 1;
+        .comparing-values {
+          font-size: 12px;
+          color: #999;
+          margin-top: 6px;
+          & ~ .comparing-values {
+            margin-top: 2px;
+          }
+        }
       }
       &-relation {
         flex: 0 0 200px;

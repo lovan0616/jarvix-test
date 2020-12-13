@@ -134,7 +134,8 @@
         </template>
         <template v-else>
           <aside class="mini-app__side-nav">
-            <div 
+            <div
+              v-if="isEditMode || appData.warningModule.activate"
               class="title warning-module-entry"
               @click="openWarningModule">
               <svg-icon 
@@ -174,13 +175,13 @@
           </aside>
           <!-- 監控示警模組 -->
           <main 
-            v-if="isWarningModule && !currentDashboardId"
+            v-if="isShowWarningModule && !currentDashboardId"
             class="mini-app__main warning">
             <warning-module
               :setting="appData.warningModule"
               :dashboard-list="dashboardList"
               @update="updateWarningModuleSetting"
-              @goToCertainDashboard="activeCertainDashboard"
+              @goToCertainDashboard="warningLogTriggered($event)"
             />
           </main>
           <!-- 分析看板模組 -->
@@ -339,9 +340,12 @@
                   :controls="controlColumnValueInfoList"
                   :component-data="componentData"
                   :is-edit-mode="isEditMode"
-                  @redirect="currentDashboardId = $event"
+                  :warning-module-setting="appData.warningModule"
+                  @redirect="activeCertainDashboard($event)"
                   @deleteComponentRelation="deleteComponentRelation"
                   @columnTriggered="columnTriggered"
+                  @chartTriggered="chartTriggered"
+                  @goToWarningLogPage="openWarningModule"
                 >
                   <template slot="drowdown">
                     <dropdown-select
@@ -389,7 +393,7 @@
     />
     <create-component-dialog
       v-if="isShowCreateComponentDialog"
-      :initial-current-component="currentComponent"
+      :initial-current-component="currentComponent || componentTemplateFactory()"
       :dashboard-list="dashboardList"
       @close="closeCreateComponentDialog"
       @create="createComponent"
@@ -421,14 +425,6 @@
       :original-dashboard-name="currentDashboard.name"
       @close="isShowUpdateDashboardNameDialog = false"
       @confirm="updateDashboardNameByDialog"
-    />
-    <create-component-relation-dialog
-      v-if="isShowCreateComponentRelationDialog"
-      :dashboard-list="dashboardList"
-      :dashboard-id="currentDashboardId"
-      :related-dashboard="currentComponent.relatedDashboard"
-      @close="isShowCreateComponentRelationDialog = false"
-      @create="createComponentRelation"
     />
     <writing-dialog
       v-if="isShowShare"
@@ -470,7 +466,6 @@ import DashboardTask from './components/dashboard-components/DashboardTask'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
 import CreateFilterDialog from './dialog/CreateFilterDialog.vue'
-import CreateComponentRelationDialog from './dialog/CreateComponentRelationDialog.vue'
 import DeleteDashboardDialog from './dialog/DeleteDashboardDialog.vue'
 import DeleteComponentDialog from './dialog/DeleteComponentDialog.vue'
 import UpdateDashboardNameDialog from './dialog/UpdateDashboardNameDialog.vue'
@@ -480,6 +475,7 @@ import FilterControlPanel from './filter/FilterControlPanel'
 import AxisControlPanel from './filter/AxisControlPanel'
 import WarningModule from './components/warning-module/WarningModule'
 import { Message } from 'element-ui'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inject: ['$validator'],
@@ -489,7 +485,6 @@ export default {
     CreateDashboardDialog,
     CreateComponentDialog,
     CreateFilterDialog,
-    CreateComponentRelationDialog,
     DeleteDashboardDialog,
     DeleteComponentDialog,
     UpdateDashboardNameDialog,
@@ -507,16 +502,15 @@ export default {
       miniApp: {},
       currentDashboardId: null,
       currentComponentId: null,
+      isShowWarningModule: false,
       isShowCreateDashboardDialog: false,
       isShowCreateComponentDialog: false,
-      isShowCreateComponentRelationDialog: false,
       isShowDeleteDashboardDialog: false,
       isShowDeleteComponentDialog: false,
       isShowUpdateDashboardNameDialog: false,
       isLoading: false,
       isProcessing: false,
       isShowShare: false,
-      isWarningModule: false,
       shareLink: null,
       confirmDeleteText: this.$t('editing.confirmDelete'),
       isShowDelete: false,
@@ -650,7 +644,7 @@ export default {
     },
     currentModeDataType () {
       return this.isViewMode ? 'viewModeData' : 'editModeData'
-    }                       
+    }
   },
   watch: {
     filterColumnValueInfoList: {
@@ -802,28 +796,11 @@ export default {
         .catch(() => {})
         .finally(() => this.currentComponentId = null)
     },
-    createComponentRelation (relatedDashboard) {
-      const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
-      const component = editedMiniApp.settings.editModeData.dashboards[this.currentDashboardIndex].components.find(comp => comp.id === this.currentComponentId)
-      component.relatedDashboard = relatedDashboard
-
-      this.updateAppSetting(editedMiniApp)
-        .then(() => {
-          this.currentComponentId = null
-          this.miniApp = editedMiniApp
-          Message({
-            message: this.$t('message.saveSuccess'),
-            type: 'success',
-            duration: 3 * 1000,
-            showClose: true
-          })
-        })
-        .finally(() => this.isShowCreateComponentRelationDialog = false)
-    },
     deleteComponentRelation (componentId) {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
       const component = editedMiniApp.settings.editModeData.dashboards[this.currentDashboardIndex].components.find(comp => comp.id === componentId)
-      component.relatedDashboard = { id: null, name: null }
+      component.config.hasRelatedDashboard = false
+      component.config.relatedDashboard = null
 
       this.updateAppSetting(editedMiniApp)
         .then(() => {
@@ -1051,7 +1028,7 @@ export default {
     },
     activeCertainDashboard (dashboardId) {
       this.isEditingDashboardName = false
-      this.isWarningModule = false
+      this.isShowWarningModule = false
       this.currentDashboardId = dashboardId
       this.initFilters()
       this.newDashboardName = this.currentDashboard.name
@@ -1084,7 +1061,6 @@ export default {
       this[`isShow${eventName}Dialog`] = true
       switch(eventName) {
         case 'DeleteComponent':
-        case 'CreateComponentRelation':
         case 'CreateComponent':
           this.currentComponentId = id
       }
@@ -1156,30 +1132,11 @@ export default {
     },
     createMonitorWarningComponent () {
       this.isProcessing = true
+      this.currentComponentId = null
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
       updatedMiniAppData.settings.editModeData.dashboards.forEach(board => {
         if (board.id === this.currentDashboardId) {
-          board.components.push({
-            init: true,
-            id: null,
-            type: 'monitor-warning-list',
-            resultId: null,
-            orderSequence: null,
-            tempResultInfo: {},
-            relatedDashboard: {
-              id: null,
-              name: null
-            },
-            config: {
-              diaplayedName: this.$t('miniApp.realTimeMonitorWarning'),
-              isAutoRefresh: false,
-              refreshFrequency: null
-            },
-            indexInfo: {
-              unit: ''
-            },
-            isIndexTypeAvailable: false
-          })
+          board.components.push(this.componentTemplateFactory('monitor-warning-list'))
         }
       })
       this.isShowCreateComponentDialog = false
@@ -1207,33 +1164,42 @@ export default {
     createFilterAndControl (type) {
       this[`create${type}`]()
     },
+    warningLogTriggered ({ relatedDashboardId, rowData }) {
+      this.activeCertainDashboard(relatedDashboardId)
+      this.controlColumnValueInfoList.forEach(item => {
+        // 如果 log rowData 有欄位同 controller 欄位，就將預設值設定為該筆 rowData 該 column 的值
+        const sameColumnRow = rowData.find(rowDataColumn => rowDataColumn.dataColumnId === item.columnId)
+        if (sameColumnRow) item.dataValues = [sameColumnRow.datum]
+      })
+    },
     columnTriggered ({ relatedDashboardId, cellValue, columnId }) {
       this.activeCertainDashboard(relatedDashboardId)
       this.controlColumnValueInfoList.forEach(item => {
-        // 如果目標 Dashboard 已設定該欄位 filter，就將預設值設定為剛剛使用者點的 cell 的值
-        if (item.columnId === columnId) {
-          item.dataValues = [cellValue]
-        }
+        // 如果目標 Dashboard 已設定該欄位 controller，就將預設值設定為剛剛使用者點的 cell 的值
+        if (item.columnId === columnId) item.dataValues = [cellValue]
+      })
+    },
+    chartTriggered ({ relatedDashboardId, restrictions }) {
+      this.activeCertainDashboard(relatedDashboardId)
+      this.controlColumnValueInfoList.forEach(item => {
+        // 確認有無對應到欲前往的 dashboard 中的任一控制項
+        const targetRestriction = restrictions.find(restriction => item.columnId === restriction.dc_id)
+        if (targetRestriction) item.dataValues = [targetRestriction.value]
       })
     },
     createComponentType (type) {
       this[`create${type}Component`]()
     },
     openWarningModule () {
-      this.isWarningModule = true
+      this.isShowWarningModule = true
       this.currentDashboardId = null
     },
     componentSettingOptions (component) {
       return [
-        ...(component.type !== 'monitor-warning-list' && [{
+        {
           title: 'miniApp.componentSetting',
           icon: 'filter-setting',
           dialogName: 'CreateComponent'
-        }]),
-        {
-          title: 'miniApp.createRelation',
-          icon: 'filter-setting',
-          dialogName: 'CreateComponentRelation'
         },
         {
           title: 'button.delete',
@@ -1242,6 +1208,41 @@ export default {
         }
       ]
     },
+    componentTemplateFactory (type = null) {
+
+      const generalConfig = {
+        size: { row: 3, column: 4 },
+        relation: { triggerColumn: { id: null }, relatedDashboardId: null },
+        hasRelatedDashboard: false,
+        relatedDashboard: null
+      }
+
+      // 一般元件
+      return {
+        init: false,
+        id: uuidv4(),
+        type,
+        resultId: null,
+        orderSequence: null,
+        diagram: type,
+        indexInfo: { unit: '' },
+        relatedDashboard: { id: null, name: null },
+        config: {
+          ...generalConfig,
+          diaplayedName: '',
+          isAutoRefresh: false,
+          refreshFrequency: null
+        },
+        // 監控示警元件
+        ...(type === 'monitor-warning-list' && {
+          init: true,
+          config: {
+            ...generalConfig,
+            diaplayedName: this.$t('miniApp.realTimeMonitorWarning'),
+          },
+        })
+      }
+    }
   }
 }
 </script>

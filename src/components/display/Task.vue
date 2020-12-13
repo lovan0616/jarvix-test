@@ -54,10 +54,12 @@
         :is-show-label-data="isShowLabelData"
         :is-show-description="isShowDescription"
         :is-show-coefficients="isShowCoefficients"
+        :custom-cell-class-name="customCellClassName"
         class="task-component"
         @next="getNewPageInfo"
         @toggleLabel="toggleLabel"
         @clickCell="$emit('clickCell', $event)"
+        @clickChart="$emit('clickChart', $event)"
       />
       <div
         v-for="(note, index) in notes"
@@ -120,7 +122,11 @@ export default {
     convertedType: {
       type: String,
       default: null
-    }
+    },
+    customCellClassName: {
+      type: Array,
+      default: () => []
+    },
   },
   data () {
     return {

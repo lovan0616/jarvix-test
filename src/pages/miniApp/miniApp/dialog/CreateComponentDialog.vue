@@ -7,7 +7,7 @@
           @click="$emit('close')">
           <svg-icon icon-class="arrow-left" />
         </div>
-        {{ $t('miniApp.createComponent') }}
+        {{ currentComponent.init ? $t('miniApp.editComponent') : $t('miniApp.createComponent') }}
       </div>
       <div class="nav--right">
         <div
@@ -92,6 +92,41 @@
             />
           </div>
         </div>
+        <!--Related dashboard of current component-->
+        <div 
+          v-if="currentComponent.type !== 'monitor-warning-list'" 
+          class="setting__content">
+          <div class="setting__block">
+            <div class="setting__label-block">
+              {{ $t('miniApp.selectDashboard') }}
+              <el-switch
+                v-model="currentComponent.config.hasRelatedDashboard"
+                :width="Number('32')"
+                active-color="#2AD2E2"
+                inactive-color="#324B4E"
+                @change="updateHasRelatedDashboard"
+              />
+            </div>
+            <div
+              v-if="currentComponent.config.hasRelatedDashboard"
+              class="setting__block-select-field"
+            >
+              <default-select 
+                v-validate="'required'"
+                :value="currentComponent.config.relatedDashboard.id"
+                :option-list="dashboardOptions"
+                :placeholder="$t('miniApp.selectDashboard')"
+                class="setting__block-select"
+                name="relatedDashboard"
+                @change="updateRelatedDashboard"
+              />
+              <div 
+                v-show="errors.has('relatedDashboard')"
+                class="error-text"
+              >{{ errors.first('relatedDashboard') }}</div>
+            </div>
+          </div>
+        </div>
         <!-- Table Component Column Relation Setting -->
         <div
           v-if="currentComponent.diagram === 'table'"
@@ -122,7 +157,9 @@
           </div>
         </div>
         <!--Update frequency-->
-        <div class="setting__content">
+        <div 
+          v-if="currentComponent.type !== 'monitor-warning-list'" 
+          class="setting__content">
           <div class="setting__block">
             <div class="setting__label-block">
               {{ $t('miniApp.updateFrequency') }}
@@ -195,7 +232,6 @@ import DashboardComponent from './DashboardComponent'
 import InputVerify from '@/components/InputVerify'
 import { getDateTimeColumns } from '@/API/DataSource'
 import { mapState } from 'vuex'
-import { v4 as uuidv4 } from 'uuid'
 
 export default {
   inject: ['$validator'],
@@ -211,39 +247,7 @@ export default {
   props: {
     initialCurrentComponent: {
       type: Object,
-      default: () => {
-        return {
-          init: false,
-          id: null,
-          type: 'chart',
-          resultId: null,
-          orderSequence: null,
-          diagram: '',
-          relatedDashboard: {
-            id: null,
-            name: null
-          },
-          config: {
-            diaplayedName: '',
-            isAutoRefresh: false,
-            refreshFrequency: null,
-            size: {
-              row: 2,
-              column: 2
-            },
-            relation: {
-              triggerColumn: {
-                id: null
-              },
-              relatedDashboardId: null
-            }
-          },
-          indexInfo: {
-            unit: ''
-          },
-          isIndexTypeAvailable: false
-        }
-      }
+      default: () => {}
     },
     dashboardList: {
       type: Array,
@@ -254,7 +258,11 @@ export default {
     return {
       isAddable: null,
       isLoading: false,
-      currentComponent: null
+      currentComponent: null,
+      relatedDashboardTemplate: {
+        id: null,
+        name: null
+      }
     }
   },
   computed: {
@@ -336,7 +344,15 @@ export default {
       }))
       options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseDashboard')))
       return options
-    }
+    },
+    dashboardOptions () {
+      return this.dashboardList
+        .filter(item => item.id !== this.dashboardId)
+        .map(item => ({
+          value: item.id,
+          name: item.name
+        }))
+    },
   },
   mounted () {
     this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
@@ -363,14 +379,9 @@ export default {
         this.$emit('create', {
           ...this.currentComponent,
           init: true,
-          id: uuidv4(),
           resultId: this.currentResultId,
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
           ...this.currentResultInfo,
-          relatedDashboard: {
-            id: null,
-            name: null
-          },
           dateTimeColumn: columnList.find(column => column.isDefault)
         })
       })
@@ -394,6 +405,19 @@ export default {
         this.currentComponent.config.refreshFrequency = refreshFrequency
       })
     },
+    updateHasRelatedDashboard (isTurnedOn) {
+      if(isTurnedOn) {
+        if (this.currentComponent.config.relatedDashboard) return
+        return this.currentComponent.config.relatedDashboard = this.relatedDashboardTemplate
+      }
+
+      const { relatedDashboard } = JSON.parse(JSON.stringify(this.initialCurrentComponent.config))
+
+      // 關閉時，恢復原本預設，避免存取時送錯的格式給後端
+      this.$nextTick(() => {
+        this.currentComponent.config.relatedDashboard = relatedDashboard
+      })
+    },
     updateTriggerColumnInfo () {
       let triggerColumn = this.currentComponent.config.relation.triggerColumn
       const relatedDashboard = this.currentComponent.config.relation.relatedDashboardId
@@ -407,6 +431,10 @@ export default {
         value: null,
         name: placholder
       }
+    },
+    updateRelatedDashboard (selectedDashboardId) {
+      const { id, name } = this.dashboardList.find(dashboard => dashboard.id === selectedDashboardId)
+      this.currentComponent.config.relatedDashboard = { id, name }
     }
   },
 }
@@ -498,6 +526,16 @@ export default {
           font-size: 14px;
           color: #FFFFFF;
           font-weight: 600;
+        }
+        &__block {
+          /deep/ .input-verify {
+            .input-verify-text {
+              margin-bottom: 10px;
+            }
+            .input-error.error-text {
+              bottom: -10px;
+            }
+          }
         }
         &__block-select-field {
           margin-top: 8px;

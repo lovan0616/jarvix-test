@@ -84,6 +84,12 @@
 
   td {
     border-bottom: none;
+    &.underline {
+      text-decoration: underline;
+      text-decoration-style: double;
+      line-height: 2;
+      cursor: pointer;
+    }
   }
 
   tr.el-table__row.hover-row > td {
