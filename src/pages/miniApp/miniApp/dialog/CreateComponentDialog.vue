@@ -161,9 +161,9 @@
                   @change="updateTriggerColumnInfo"
                 />
                 <div 
-                  v-show="errors.has('relatedDashboard')"
+                  v-show="errors.has('triggerColumn')"
                   class="error-text"
-                >{{ errors.first('relatedDashboard') }}</div>
+                >{{ errors.first('triggerColumn') }}</div>
               </div>
               <div class="setting__block-select-field">
                 <label class="setting__block-select-label">{{ $t('miniApp.relatedDashboard') }}</label>
@@ -173,12 +173,12 @@
                   :option-list="dashboardOptions"
                   :placeholder="$t('miniApp.chooseDashboard')"
                   class="setting__block-select"
-                  name="relatedDashboard"
+                  name="columnRelatedDashboard"
                 />
                 <div 
-                  v-show="errors.has('relatedDashboard')"
+                  v-show="errors.has('columnRelatedDashboard')"
                   class="error-text"
-                >{{ errors.first('relatedDashboard') }}</div>
+                >{{ errors.first('columnRelatedDashboard') }}</div>
               </div>
             </template>
           </div>
@@ -379,6 +379,9 @@ export default {
   },
   mounted () {
     this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
+    
+    const columnInfo = this.currentComponent.config.columnRelations[0].columnInfo
+    this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId
   },
   destroyed () {
     this.$store.commit('result/updateCurrentResultInfo', null)

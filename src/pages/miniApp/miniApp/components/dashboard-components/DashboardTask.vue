@@ -184,6 +184,7 @@ export default {
       periodSec: 0,
       isShowConfirmDelete: false,
       autoRefreshFunction: null,
+      debouncedAskFunction: null,
       isEmptyData: false,
       indexComponentStyle: {
         'font-size': '64px', 
@@ -284,19 +285,23 @@ export default {
     allFilterList: {
       immediate: true,
       deep: true,
-      handler () {
-        if (!this.shouldComponentBeFiltered) return
-        this.askQuestion()
+      handler (controls) {
+        if (this.shouldComponentYAxisBeControlled) {
+          this.deboucedAskQuestion()
+        } else if (controls.length === 0 && this.tempFilteredKeyResultId) {
+          // 拔除所有 Y軸控制器 時，清除暫存 filtered info
+          this.tempFilteredKeyResultId = null
+        }
       }
     },
-    selectedYAxisControls: {
+    yAxisControls: {
       immediate: true,
       deep: true,
-      handler (controls, oldControls) {
+      handler (controls) {
         if (this.shouldComponentYAxisBeControlled) {
-          this.askQuestion(this.controllerMutatedQuestion)
-        } else if (controls.length === 0 && oldControls.length === 1) {
-          // 拔除所有Y軸控制器時，清除暫存 filtered info
+          this.deboucedAskQuestion()
+        } else if (controls.length === 0 && this.tempFilteredKeyResultId) {
+          // 拔除所有 Y軸控制器 時，清除暫存 filtered info
           this.tempFilteredKeyResultId = null
         }
       }
@@ -314,9 +319,14 @@ export default {
   },
   destroyed () {
     if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
+    if (this.debouncedAskFunction) window.clearTimeout(this.debouncedAskFunction)
   },
   methods: {
-    askQuestion (question = this.componentData.question) {
+    deboucedAskQuestion (question) {
+      window.clearTimeout(this.debouncedAskFunction)
+      this.debouncedAskFunction = window.setTimeout(() => this.askQuestion(), 0)
+    },
+    askQuestion (question = this.controllerMutatedQuestion || this.componentData.question) {
       window.clearTimeout(this.timeoutFunction)
       this.isProcessing = true
       this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)

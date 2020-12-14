@@ -1060,7 +1060,6 @@ export default {
       }
     },
     updateFilter (updatedFilterList, type) {
-      this.isProcessing = true
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
@@ -1076,11 +1075,10 @@ export default {
 
       // 更新 app
       this.updateAppSetting(editedMiniApp)
-        .then(() => this.getMiniAppInfo())
-        .finally(() => this.isProcessing = false)
+        .then(() => this.miniApp = editedMiniApp)
+        .catch(() => {})
     },
     updateControl (updatedControlList) {
-      this.isProcessing = true
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
@@ -1091,8 +1089,8 @@ export default {
 
       // 更新 app
       this.updateAppSetting(editedMiniApp)
-        .then(() => this.getMiniAppInfo())
-        .finally(() => this.isProcessing = false)
+        .then(() => this.miniApp = editedMiniApp)
+        .catch(() => {})
     },
     closeFilterCreationDialog () {
       this.isShowCreateFilterDialog = false
@@ -1273,7 +1271,7 @@ export default {
     position: relative;
     z-index: 5;
     flex: 0 0 56px;
-    padding: 0 16px 0 24px;
+    padding: 0 20px 0 24px;
     display: flex;
     align-items: center;
     background: rgba(0, 0, 0, 0.55);
@@ -1407,7 +1405,6 @@ export default {
   }
   &__main {
     flex: 1;
-    // TODO 調整 Layout 時理想上讓 padding 統一為 20
     padding: 20px 0 0 20px;
     display: flex;
     flex-direction: column;
@@ -1432,7 +1429,7 @@ export default {
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
-        padding-right: 20px;
+        margin-right: 20px;
         .header-left {
           display: flex;
           align-items: center;
@@ -1457,6 +1454,7 @@ export default {
         }
         .header-right {
           display: flex;
+          justify-content: flex-end;
           align-items: center;
           .dashboard-setting-box {
             flex: 0 0 30px;
@@ -1679,7 +1677,7 @@ export default {
   }
 
   &__dashboard-components {
-    margin-right: 20px;
+    margin-right: 4px;
     .warning-icon {
       color: #FF5C46;
     }
