@@ -1,5 +1,5 @@
 <template>
-  <div class="search-box search-box">
+  <div class="search-box">
     <svg-icon
       icon-class="search"
       class="search-box__icon" />
@@ -9,6 +9,13 @@
       class="input search-box__field"
       autocomplete="off"
     >
+    <a
+      v-show="value !== null && value !== ''"
+      class="clear-btn"
+      href="javascript:void(0)" 
+      @click.prevent="clear">
+      <svg-icon icon-class="remove-circle" />
+    </a>
   </div>
 </template>
 <script>
@@ -33,6 +40,11 @@ export default {
         this.$emit('input', value)
       }
     }
+  },
+  methods: {
+    clear () {
+      this.$emit('input', '')
+    }
   }
 }
 </script>
@@ -52,10 +64,20 @@ export default {
     font-size: 14px;
     line-height: 18px;
     border-bottom: none;
+    margin-right: 4px;
       
     &::placeholder {
       color: #888888;
       font-size: 14px;
+    }
+  }
+
+  .clear-btn {
+    display: flex;
+    color: rgba(255, 255, 255, .5);
+
+    &:hover {
+      color: rgba(255, 255, 255, .8);
     }
   }
 }
