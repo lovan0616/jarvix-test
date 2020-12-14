@@ -419,7 +419,8 @@
     "chooseFile": "選擇檔案",
     "columnAliasTemplate": "欄位別名範例檔",
     "valueAliasTemplate": "數據別名範例檔",
-    "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表"
+    "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表",
+    "searchDataSource": "搜尋資料源"
   },
   "algorithm": {
     "name": "演算法",

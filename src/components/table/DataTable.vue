@@ -49,8 +49,12 @@
       v-else
       class="data-table-body"
     >
+      <empty-info-block 
+        v-if="isSearchResultEmpty"
+        :msg="this.$t('message.emptyResult')"
+      />
       <upload-block
-        v-if="dataList.length === 0"
+        v-else-if="dataList.length === 0"
         :class="{'is-processing': isProcessing}"
         :bottom-message="emptyMessage"
         class="empty-status"
@@ -233,6 +237,7 @@
 import UploadBlock from '@/components/UploadBlock'
 import orderBy from 'lodash.orderby'
 import DropdownSelect from '@/components/select/DropdownSelect'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import { mapGetters } from 'vuex'
 
 /**
@@ -266,7 +271,8 @@ export default {
   name: 'DataTable',
   components: {
     UploadBlock,
-    DropdownSelect
+    DropdownSelect,
+    EmptyInfoBlock
   },
   props: {
     headers: {
@@ -295,6 +301,10 @@ export default {
       default: false
     },
     loading: {
+      type: Boolean,
+      default: false
+    },
+    isSearchResultEmpty: {
       type: Boolean,
       default: false
     }
