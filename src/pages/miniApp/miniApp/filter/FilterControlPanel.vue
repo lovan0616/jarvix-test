@@ -1,8 +1,5 @@
 <template>
-  <section
-    :class="{ 'editing': isEditMode }"
-    class="filter-control"
-  >
+  <section class="filter-control">
     <svg-icon
       :icon-class="isSingleChoiceFilter ? 'adjuster' : 'filter-outline'" 
       class="filter-control__filter-icon"/>
@@ -164,9 +161,6 @@ export default {
 <style lang="scss" scoped>
 .filter-control {
   position: relative;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
-  border-radius: 8px;
-  margin-right: 16px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -210,11 +204,6 @@ export default {
         height: 5px;
       }
     }    
-  }
-
-  &.editing {
-    padding: 16px 19px 0 19px;
-    background: #1C292B;
   }
 }
 </style>

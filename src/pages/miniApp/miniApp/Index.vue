@@ -301,35 +301,44 @@
                 </div>
               </div>
             </div>
-            <!--Control panel-->
-            <filter-control-panel
-              v-if="controlColumnValueInfoList.length > 0"
-              :key="'control' + currentDashboardId"
-              :is-edit-mode="isEditMode"
-              :initial-filter-list.sync="controlColumnValueInfoList"
-              :is-single-choice-filter="true"
-              class="mini-app__dashboard-filter mini-app__dashboard-filter--top"
-              @updateFilter="updateFilter($event, 'single')"
-            />
-            <!--Y Axis Control panel-->
-            <axis-control-panel
-              v-if="yAxisControlColumnValueInfoList.length > 0"
-              :key="'yAxisControl' + currentDashboardId"
-              :is-edit-mode="isEditMode"
-              :initial-control-list.sync="yAxisControlColumnValueInfoList"
-              class="mini-app__dashboard-filter mini-app__dashboard-filter--middle"
-              @updateControl="updateControl"
-            />
-            <!--Filter Panel-->
-            <filter-control-panel
+            <div
+              v-if="controlColumnValueInfoList.length > 0 || yAxisControlColumnValueInfoList.length > 0"
+              :class="{ 'editing': isEditMode }" 
+              class="mini-app__dashboard-control mini-app__dashboard-control--top">
+              <!--Control panel-->
+              <filter-control-panel
+                v-if="controlColumnValueInfoList.length > 0"
+                :key="'control' + currentDashboardId"
+                :is-edit-mode="isEditMode"
+                :initial-filter-list.sync="controlColumnValueInfoList"
+                :is-single-choice-filter="true"
+                class="mini-app__dashboard-filter"
+                @updateFilter="updateFilter($event, 'single')"
+              />
+              <!--Y Axis Control panel-->
+              <axis-control-panel
+                v-if="yAxisControlColumnValueInfoList.length > 0"
+                :key="'yAxisControl' + currentDashboardId"
+                :is-edit-mode="isEditMode"
+                :initial-control-list.sync="yAxisControlColumnValueInfoList"
+                class="mini-app__dashboard-filter"
+                @updateControl="updateControl"
+              />
+            </div>
+            <div
               v-if="filterColumnValueInfoList.length > 0"
-              :key="'filter' + currentDashboardId"
-              :is-edit-mode="isEditMode"
-              :initial-filter-list.sync="filterColumnValueInfoList"
-              :is-single-choice-filter="false"
-              class="mini-app__dashboard-filter mini-app__dashboard-filter--bottom"
-              @updateFilter="updateFilter($event, 'multiple')"
-            />
+              :class="{ 'editing': isEditMode }" 
+              class="mini-app__dashboard-control mini-app__dashboard-control--bottom">
+              <!--Filter Panel-->
+              <filter-control-panel
+                :key="'filter' + currentDashboardId"
+                :is-edit-mode="isEditMode"
+                :initial-filter-list.sync="filterColumnValueInfoList"
+                :is-single-choice-filter="false"
+                class="mini-app__dashboard-filter"
+                @updateFilter="updateFilter($event, 'multiple')"
+              />
+            </div>
             <div class="mini-app__dashboard-components">
               <template v-if="currentDashboard.components.length > 0">
                 <dashboard-task
@@ -618,7 +627,7 @@ export default {
       ]
     },
     filterTypeOptions () {
-      const hasRelativeDateTimeFilter = this.filterColumnValueInfoList.find(filter => filter.statsType === "RELATIVEDATETIME")
+      const hasRelativeDateTimeFilter = this.filterColumnValueInfoList.find(filterSet => filterSet.find(filter => filter.statsType === "RELATIVEDATETIME"))
       return [
         {
           name: this.$t('miniApp.generalFilter'),
@@ -1149,7 +1158,7 @@ export default {
     },
     createTimeFilter () {
       this.isSingleChoiceFilter = false
-      this.saveCreatedFilter([{
+      this.saveCreatedFilter([[{
         id: Date.now().toString(),
         dataSourceId: null,
         dataSourceName: null,
@@ -1159,7 +1168,7 @@ export default {
         dataType: null,
         statsType: 'RELATIVEDATETIME',
         columnName: this.$t('miniApp.dateTimeFilter'),
-      }])
+      }]])
     },
     createFilterAndControl (type) {
       this[`create${type}`]()
@@ -1678,18 +1687,30 @@ export default {
     }
   }
 
-  &__dashboard-filter {
+  &__dashboard-control {
+    display: flex;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    margin-right: 16px;
+    flex-wrap: wrap;
     &--top {
-      z-index: 3;
-      margin-bottom: 12px;
-    }
-    &--middle {
       z-index: 2;
       margin-bottom: 12px;
     }
     &--bottom {
       z-index: 1;
       margin-bottom: 20px;
+    }
+
+    &.editing {
+      padding: 16px 19px 0 19px;
+      background: #1C292B;
+    }
+  }
+
+  &__dashboard-filter {
+    &:not(:last-of-type) {
+      margin-right: 20px;
     }
   }
 

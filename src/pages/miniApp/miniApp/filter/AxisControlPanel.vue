@@ -1,8 +1,5 @@
 <template>
-  <section
-    :class="{ 'editing': isEditMode }"
-    class="axis-control"
-  >
+  <section class="axis-control">
     <svg-icon
       icon-class="adjuster-horizontal" 
       class="axis-control__filter-icon"/>
@@ -11,6 +8,7 @@
       :key="index"
       :initial-control-option-list="controlOptionList"
       :is-edit-mode="isEditMode"
+      class="axis-control__list"
       @updateControlOptionList="updateControlOptionList($event, index)"
       @removeControl="removeControl(index)"
     />
@@ -73,19 +71,16 @@ export default {
 <style lang="scss" scoped>
 .axis-control {
   position: relative;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
-  border-radius: 8px;
-  margin-right: 16px;
   display: flex;
   align-items: center;
 
   &__filter-icon {
     margin-right: 11px;
+    margin-bottom: 16px;
   }
 
-  &.editing {
-    padding: 16px 19px;
-    background: #1C292B;
+  /deep/ .control {
+    margin-bottom: 16px;
   }
 }
 </style>
