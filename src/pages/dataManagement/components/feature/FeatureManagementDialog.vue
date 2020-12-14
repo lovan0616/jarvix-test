@@ -76,6 +76,7 @@
         v-if="isShowDelete"
         :title="`${$t('editing.confirmDelete')}？`"
         :type="'delete'"
+        :is-processing="isProcessing"
         @closeDialog="closeDelete"
         @confirmBtn="confirmDelete"
       />
@@ -107,7 +108,8 @@ export default {
       showEditFeatureDialog: false,
       isShowDelete: false,
       editFeatureInfo: null,
-      deleteFeatureId: null
+      deleteFeatureId: null,
+      isProcessing: false
     }
   },
   computed: {
@@ -154,10 +156,13 @@ export default {
       this.deleteFeatureId = id
     },
     confirmDelete () {
+      this.isProcessing = true
       deleteCustomFeature(this.deleteFeatureId).then(() => {
         const sliceIndex = this.featureList.findIndex(item => item.dataColumnId === this.deleteFeatureId)
         this.featureList.splice(sliceIndex, 1)
         this.isShowDelete = false
+      }).finally(() => {
+        this.isProcessing = false
       })
     },
     closeEditDialog () {
