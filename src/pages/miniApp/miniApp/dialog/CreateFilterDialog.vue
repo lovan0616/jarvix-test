@@ -305,7 +305,13 @@ export default {
     createFilter () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
-        this.$emit('filterCreated', this.filterInfoList)
+        if (this.isYAxisController) {
+          this.$emit('filterCreated', this.filterInfoList)
+        } else if (this.isHierarchicalFilter) {
+          this.$emit('filterCreated', [this.filterInfoList])
+        } else {
+          this.$emit('filterCreated', this.filterInfoList.map(filter => ([filter])))
+        }
       })
     },
     updateYAxisControllerList (columnIdList) {

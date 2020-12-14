@@ -206,6 +206,10 @@ export default {
     isSingleChoiceFilter: {
       type: Boolean,
       default: false
+    },
+    restrictions: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
@@ -280,7 +284,6 @@ export default {
     },
     async fetchData () {
       this.isLoading = true
-
       try {
         if (this.filter.statsType === 'RELATIVEDATETIME') return this.getRelativeDatetimeOption()
         if (this.filter.statsType === 'NUMERIC' || this.filter.statsType === 'DATETIME') return await this.getDataColumnValue()
@@ -328,8 +331,7 @@ export default {
         page: 0,
         searchString: this.searchInput,
         size: 200,
-        // TODO: 帶入父層級條件
-        restrictions: null
+        restrictions: this.restrictions.length > 0 ? this.restrictions : null
       })
         .then((response, index) => {
           this.filter.dataValueOptionList = response.fuzzySearchResult.map(value => ({
@@ -452,10 +454,6 @@ export default {
       width: 0;
       height: 0;
     }
-  }
-
-  &:not(:last-of-type) {
-    margin-right: 8px;
   }
 
   &.grey-bg {

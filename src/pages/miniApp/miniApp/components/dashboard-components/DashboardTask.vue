@@ -239,7 +239,8 @@ export default {
         : this.componentData.config.diaplayedName
     },
     allFilterList () {
-      return [...this.filters, ...this.controls]
+      // 可能會有階層，因此需要完全攤平
+      return [].concat.apply([], [...this.filters, ...this.controls])
     },
     selectedYAxisControls () {
       return this.yAxisControls.reduce((acc, cur) => {

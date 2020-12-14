@@ -743,9 +743,9 @@ export default {
     },
     initFilters () {
       // 一般篩選條件
-      this.filterColumnValueInfoList = this.currentFilterList.map(filter => this.formatRestraint(filter))
+      this.filterColumnValueInfoList = this.currentFilterList.map(filterSet => filterSet.map(filter => this.formatRestraint(filter)))
       // 看板控制項
-      this.controlColumnValueInfoList = this.currentControlList.map(filter => this.formatRestraint(filter))
+      this.controlColumnValueInfoList = this.currentControlList.map(filterSet => filterSet.map(filter => this.formatRestraint(filter)))
       // Y 軸控制器
       this.yAxisControlColumnValueInfoList = this.yAxisControlList.map(control => control.map(filter => this.formatRestraint(filter)))
     },
