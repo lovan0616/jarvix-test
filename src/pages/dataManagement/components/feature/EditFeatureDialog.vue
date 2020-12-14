@@ -229,11 +229,17 @@
           </div>
           <div class="feature-select-block">
             {{ $t('feature.columnUnit') }}
-            <default-select 
+            <default-select
+              v-validate="`required`"
               v-model="featureInfo.timeScope"
               :option-list="timeScopeUnitOptionList"
               :placeholder="$t('editing.defaultOption')"
-              class="timescopeUnit-select"/>
+              class="timescopeUnit-select"
+              name="timeScope"/>
+            <div 
+              v-show="errors.has('timeScope')"
+              class="error-text"
+            >{{ errors.first('timeScope') }}</div>
           </div>
         </template>
       </div>
@@ -412,6 +418,7 @@ export default {
             this.isProcessing = false
             return
           }
+          if(this.featureInfo.type === 'NUMERIC') this.featureInfo.timeScope = null
           let promise = this.featureInfo.id ? updateCustomFeature(this.featureInfo) : createCustomFeature(this.featureInfo)
           promise.then(() => {
             Message({
