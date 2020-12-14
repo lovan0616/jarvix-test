@@ -412,17 +412,11 @@ export default {
             }
           }, '')
 
-<<<<<<< HEAD
           if (!this.validFeatureFormula()) {
             this.isProcessing = false
             return
           }
           if(this.featureInfo.type === 'NUMERIC') this.featureInfo.timeScope = null
-=======
-          if (!this.validFeatureFormula()) return
-
-          this.isProcessing = true
->>>>>>> c67ca14b1bc9255a843df64dafcb4485ce1e1ab8
           let promise = this.featureInfo.id ? updateCustomFeature(this.featureInfo) : createCustomFeature(this.featureInfo)
           promise.then(() => {
             Message({
