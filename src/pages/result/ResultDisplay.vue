@@ -80,9 +80,6 @@ export default {
     ...mapState('result', ['currentResultId']),
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'currentQuestionId', 'currentQuestionInfo', 'algoConfig']),
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
-    currentResultId () {
-      return this.$store.state.result.currentResultId
-    },
     filterRestrictionList () {
       return this.$store.getters['dataSource/filterRestrictionList']
     }
