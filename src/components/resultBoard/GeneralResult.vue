@@ -296,7 +296,8 @@ export default {
       targetTypeInfo.isProcessing = true
       this.$store.dispatch('chatBot/askSpecificType', {
         resultId: this.currentResultId,
-        type: type
+        type: type,
+        algoConfig: this.algoConfig
       })
         .then(({ resultId }) => {
           this.switchTypeList[index] = {
@@ -335,9 +336,9 @@ export default {
       }
     },
     rePredict () {
-      // let index = this.switchTypeList.findIndex(item => item.denotation === this.intentType.PREDICTION)
-      // this.switchTypeList[index].cachedResultId = null
-      // this.fetchSpecificType(this.intentType.PREDICTION, index)
+      let index = this.switchTypeList.findIndex(item => item.denotation === this.intentType.PREDICTION)
+      this.switchTypeList[index].cachedResultId = null
+      this.fetchSpecificType(this.intentType.PREDICTION, index)
       this.$emit('re-predict')
       this.isShowPredictionIntervalSettingDialog = false
     },
@@ -369,7 +370,8 @@ export default {
           isFailed: true
         })
       })
-    }
+
+}
   }
 }
 </script>

@@ -14,7 +14,10 @@ export default {
     currentQuestionInfo: null,
     currentQuestionId: null,
     currentQuestionDataFrameId: null,
-    algoConfig: null,
+    algoConfig: {
+      clusteringCount: null,
+      predictionIntervalLength: null
+    },
     historyQuestionList: [],
     filterList: [],
     dataFrameId: null,
