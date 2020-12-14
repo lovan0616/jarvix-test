@@ -1805,7 +1805,7 @@
         "name": "时间筛选问句",
         "questionList": [
           {
-            "questionText": "Y 年 M月 和 M月 的 Numeric",
+            "questionText": "Y 年 M 月 和 M 月 的 Numeric",
             "questionExample": [
               [
                 {"text": "2018年3月", "type": "filter"},
@@ -1824,7 +1824,7 @@
             ]
           },
           {
-            "questionText": "Y 年 M月 和 M月 Category 值的 Category",
+            "questionText": "Y 年 M 月 和 M 月 Category 值的 Category",
             "questionExample": [
               [
                 {"text": "2019年10月", "type": "filter"},
@@ -1837,7 +1837,7 @@
             ]
           },
           {
-            "questionText": "Y 年 M月 的 Category",
+            "questionText": "Y 年 M 月 的 Category",
             "questionExample": [
               [
                 {"text": "2019年6月", "type": "filter"},
@@ -1955,15 +1955,15 @@
         ]
       },
       {
-        "name": "划像分析问句",
+        "name": "画像分析问句",
         "questionList": [
           {
-            "questionText": "Category 值的划像分析",
+            "questionText": "Category 值的画像分析",
             "questionExample": [
               [
                 {"text": "产品 A ", "type": "value"},
                 {"text": "的", "type": ""},
-                {"text": "划像分析", "type": ""}
+                {"text": "画像分析", "type": ""}
               ]
             ]
           }
