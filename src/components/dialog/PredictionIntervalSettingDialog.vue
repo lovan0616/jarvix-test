@@ -8,9 +8,9 @@
         <div class="block-title">{{ $t('prediction.predictionIntervalLength') }}</div>
         <div class="input-block">
           <input-block
-            v-validate="'required|numeric'"
+            v-validate="'required|numeric|between:1,50'"
             :placeholder="$t('editing.numericOnly')"
-            v-model="predictionIntervalLength"
+            v-model="tempAlgoConfig.predictionIntervalLength"
             name="predictionIntervalLength"
           />
         </div>
@@ -52,8 +52,7 @@ export default {
   },
   data () {
     return {
-      predictionIntervalLength: '',
-      tempPredictionIntervalLength: '',
+      tempAlgoConfig: null,
       isProcessing: false
     }
   },
@@ -61,8 +60,7 @@ export default {
     ...mapState('dataSource', ['algoConfig'])
   },
   mounted () {
-    this.predictionIntervalLength = this.algoConfig.predictionIntervalLength || ''
-    this.tempPredictionIntervalLength = this.predictionIntervalLength
+    this.tempAlgoConfig = JSON.parse(JSON.stringify(this.algoConfig))
   },
   methods: {
     ...mapMutations('dataSource', ['setAlgoConfig']),
@@ -72,12 +70,9 @@ export default {
           if (!isValid) return
           this.isProcessing = true
 
-          if (this.tempPredictionIntervalLength === this.predictionIntervalLength) this.$emit('close')
+          if (this.tempAlgoConfig.predictionIntervalLength === this.algoConfig.predictionIntervalLength) return this.$emit('close')
 
-          let tempAlgoConfig = { 
-            predictionIntervalLength: this.predictionIntervalLength 
-          }
-          this.setAlgoConfig(tempAlgoConfig)
+          this.setAlgoConfig(this.tempAlgoConfig)
           this.$emit('re-predict')
         })
     }

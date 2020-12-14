@@ -196,6 +196,7 @@ export default {
             item['itemStyle'] = {
               color: color12[3]
             }
+            item['symbol'] = 'none',
             item['lineStyle'] = {
               type: 'dashed'
             }
@@ -206,6 +207,7 @@ export default {
               color: color12[3],
               opacity: 0.2
             }
+            item['symbol'] = 'none',
             item['lineStyle'] = {
               type: 'dashed'
             }
@@ -214,6 +216,7 @@ export default {
             item['lineStyle'] = {
               type: 'dashed'
             }
+            item['symbol'] = 'none',
             item['itemStyle'] = {
               color: color12[3]
             }
