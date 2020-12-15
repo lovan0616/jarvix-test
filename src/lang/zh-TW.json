@@ -845,7 +845,9 @@
     "dataSource": "資料源",
     "dataFrame": "資料表",
     "dataColumnRelationSetting": "表格內容關聯設定",
-    "dataColumnRelationSettingReminding": "使用者點擊內容時，會將內容帶入看板作為控制條件參數。"
+    "dataColumnRelationSettingReminding": "使用者點擊內容時，會將內容帶入看板作為控制條件參數。",
+    "notBeingSet": "未設定",
+    "orderUpdated": "{target}排序已更新"
   },
   "clustering": {
     "cluster": "群體",

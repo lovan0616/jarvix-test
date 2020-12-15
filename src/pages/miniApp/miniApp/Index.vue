@@ -133,46 +133,17 @@
           </div>
         </template>
         <template v-else>
-          <aside class="mini-app__side-nav">
-            <div
-              v-if="isEditMode || appData.warningModule.activate"
-              class="title warning-module-entry"
-              @click="openWarningModule">
-              <svg-icon 
-                icon-class="warning" 
-                class="label-icon"/>
-              <span class="label-name">監控示警</span>
-            </div>
-            <ul class="item-wrapper">
-              <div class="title">
-                <svg-icon 
-                  icon-class="dashboard" 
-                  class="label-icon"/>
-                <span class="label-name">{{ $t('miniApp.dashboardList') }}</span>
-                <div
-                  v-if="isEditMode"
-                  class="create-dashboard-icon-block"
-                  @click="isShowCreateDashboardDialog = true"
-                >
-                  <svg-icon 
-                    icon-class="plus" 
-                    class="create-dashboard-icon"/>
-                </div>
-              </div>
-              <li
-                v-for="dashboard in dashboardList" 
-                :key="dashboard.id"
-                :class="{'is-active': dashboard.id === currentDashboardId}"
-                class="item"
-                @click="activeCertainDashboard(dashboard.id)"
-              >
-                <svg-icon 
-                  class="item-icon" 
-                  icon-class="triangle"/>
-                <span class="item-name">{{ dashboard.name }}</span>
-              </li>
-            </ul>
-          </aside>
+          <mini-app-side-nav
+            :is-edit-mode="isEditMode"
+            :dashboard-list="dashboardList"
+            :current-dashboard-id="currentDashboardId"
+            :is-warning-module-activate="appData.warningModule.activate"
+            :is-show-warning-module="isShowWarningModule"
+            @openWarningModule="openWarningModule"
+            @activeCertainDashboard="activeCertainDashboard($event)"
+            @showCreateDashboardDialog="isShowCreateDashboardDialog = true"
+            @updateDashboardOrder="updateOrder($t('miniApp.dashboard'))"
+          />
           <!-- 監控示警模組 -->
           <main 
             v-if="isShowWarningModule && !currentDashboardId"
@@ -332,35 +303,43 @@
             />
             <div class="mini-app__dashboard-components">
               <template v-if="currentDashboard.components.length > 0">
-                <dashboard-task
-                  v-for="componentData in currentDashboard.components"
-                  :key="componentData.id"
-                  :filters="filterColumnValueInfoList"
-                  :y-axis-controls="yAxisControlColumnValueInfoList"
-                  :controls="controlColumnValueInfoList"
-                  :component-data="componentData"
-                  :is-edit-mode="isEditMode"
-                  :warning-module-setting="appData.warningModule"
-                  @redirect="activeCertainDashboard($event)"
-                  @deleteComponentRelation="deleteComponentRelation"
-                  @columnTriggered="columnTriggered"
-                  @chartTriggered="chartTriggered"
-                  @goToWarningLogPage="openWarningModule"
+                <draggable
+                  :list="currentDashboard.components"
+                  :move="logDraggingMovement"
+                  ghost-class="dragging-ghost"
+                  style="height: 100%"
+                  @end="updateOrder($t('miniApp.component'))"
                 >
-                  <template slot="drowdown">
-                    <dropdown-select
-                      :bar-data="componentSettingOptions(componentData)"
-                      @switchDialogName="switchDialogName($event, componentData.id)"
-                    />
-                  </template>
-                  <template 
-                    v-if="componentData.type === 'monitor-warning-list'" 
-                    slot="icon">
-                    <svg-icon 
-                      icon-class="warning" 
-                      class="warning-icon"/>
-                  </template>
-                </dashboard-task>
+                  <dashboard-task
+                    v-for="componentData in currentDashboard.components"
+                    :key="componentData.id"
+                    :filters="filterColumnValueInfoList"
+                    :y-axis-controls="yAxisControlColumnValueInfoList"
+                    :controls="controlColumnValueInfoList"
+                    :component-data="componentData"
+                    :is-edit-mode="isEditMode"
+                    :warning-module-setting="appData.warningModule"
+                    @redirect="activeCertainDashboard($event)"
+                    @deleteComponentRelation="deleteComponentRelation"
+                    @columnTriggered="columnTriggered"
+                    @chartTriggered="chartTriggered"
+                    @goToWarningLogPage="openWarningModule"
+                  >
+                    <template slot="drowdown">
+                      <dropdown-select
+                        :bar-data="componentSettingOptions(componentData)"
+                        @switchDialogName="switchDialogName($event, componentData.id)"
+                      />
+                    </template>
+                    <template 
+                      v-if="componentData.type === 'monitor-warning-list'" 
+                      slot="icon">
+                      <svg-icon 
+                        icon-class="warning" 
+                        class="warning-icon"/>
+                    </template>
+                  </dashboard-task>
+                </draggable>
               </template>
               <template v-else>
                 <div class="empty-block">
@@ -461,6 +440,7 @@ import {
   updateAppSetting,
   deleteMiniApp
 } from '@/API/MiniApp'
+import MiniAppSideNav from './components/MiniAppSideNav'
 import DashboardTask from './components/dashboard-components/DashboardTask'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
@@ -475,11 +455,13 @@ import AxisControlPanel from './filter/AxisControlPanel'
 import WarningModule from './components/warning-module/WarningModule'
 import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
+import draggable from 'vuedraggable'
 
 export default {
   inject: ['$validator'],
   name: 'MiniApp',
   components: {
+    MiniAppSideNav,
     DashboardTask,
     CreateDashboardDialog,
     CreateComponentDialog,
@@ -494,7 +476,8 @@ export default {
     DecideDialog,
     FilterControlPanel,
     AxisControlPanel,
-    WarningModule
+    WarningModule,
+    draggable
   },
   data () {
     return {
@@ -523,7 +506,8 @@ export default {
       isShowCreateFilterDialog: false,
       isSingleChoiceFilter: null,
       isYAxisController: null,
-      filterCreationDialogTitle: null
+      filterCreationDialogTitle: null,
+      draggedContext: { index: -1, futureIndex: -1 }
     }
   },
   computed: {
@@ -1224,7 +1208,22 @@ export default {
           },
         })
       }
-    }
+    },
+    logDraggingMovement (e) {
+      const { index, futureIndex } = e.draggedContext
+      this.draggedContext = { index, futureIndex }
+    },
+    updateOrder (target) {
+      this.updateAppSetting(this.miniApp).then(() => {
+        Message({
+          message: this.$t('miniApp.orderUpdated', { target }),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      })
+    },
+    
   }
 }
 </script>
@@ -1336,70 +1335,6 @@ export default {
       .create-btn {
         margin-top: 20px;
       }
-    }
-  }
-  &__side-nav {
-    flex: 0 0 240px;
-    display: flex;
-    flex-direction: column;
-    background-color: #000;
-    border-right: 1px solid #232C2E;
-    .title {
-      padding-left: 26px;
-      padding-right: 20px;
-      color: $theme-color-primary;
-      flex: 0 0 48px;
-      line-height: 48px;
-      display: flex;
-      align-items: center;
-      &.warning-module-entry {
-        cursor: pointer;
-      }
-      .label-icon {
-        margin-right: 4px;
-      }
-      .label-name {
-        padding-left: 6px;
-        flex: 1;
-      }
-    }
-    .item-wrapper {
-      overflow: overlay;
-      flex: 1;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      .item {
-        min-height: 48px;
-        padding: 12px 0;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        color: #8B9B9C;
-        &:hover {
-          color: #FFF;
-        }
-        &-icon {
-          visibility: hidden;
-          height: 12px;
-          margin: 0 16px 0 24px;
-          transform: translate(-1px, -1px) rotate(-30deg);
-          flex-shrink: 0;
-        }
-        &-name {}
-        &.is-active {
-          background-color: #42A5B3;
-          color: #FFF;
-          .item-icon {
-            visibility: visible;
-          }
-        }
-      }
-    }
-    .create-dashboard-icon-block {
-      flex: 0 0 48px;
-      cursor: pointer;
-      text-align: right;
     }
   }
   &__main {
@@ -1685,5 +1620,10 @@ export default {
 
 .dropdown-select {
   visibility: hidden;
+}
+
+.dragging-ghost {
+  opacity: 0.5;
+  background: #192323;
 }
 </style>
