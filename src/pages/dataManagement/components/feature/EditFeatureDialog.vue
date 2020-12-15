@@ -229,17 +229,20 @@
           </div>
           <div class="feature-select-block">
             {{ $t('feature.columnUnit') }}
-            <default-select
-              v-validate="`required`"
-              v-model="featureInfo.timeScope"
-              :option-list="timeScopeUnitOptionList"
-              :placeholder="$t('editing.defaultOption')"
-              class="timescopeUnit-select"
-              name="timeScope"/>
-            <div 
-              v-show="errors.has('timeScope')"
-              class="error-text"
-            >{{ errors.first('timeScope') }}</div>
+            <div>
+              <default-select
+                v-validate="`required`"
+                v-model="featureInfo.timeScope"
+                :option-list="timeScopeUnitOptionList"
+                :placeholder="$t('editing.defaultOption')"
+                :class="{'has-error': errors.has('timeScope')}"
+                class="time-scope-select"
+                name="timeScope"/>
+              <div 
+                v-show="errors.has('timeScope')"
+                class="error-text"
+              >{{ errors.first('timeScope') }}</div>
+            </div>
           </div>
         </template>
       </div>

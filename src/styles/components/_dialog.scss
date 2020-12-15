@@ -233,6 +233,7 @@
   }
 
   .feature-select-block {
+    display: flex;
     margin-top: 10px;
     font-size: 14px;
     line-height: 40px;
@@ -242,9 +243,13 @@
       color: #aaa;
     }
 
-    .timescopeUnit-select {
+    .time-scope-select {
       width: 100px;
       border-bottom: 1px solid $theme-color-white;
+
+      &.has-error {
+        border-bottom: 1px solid $theme-color-danger;
+      }
     }
   }
 
