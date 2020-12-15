@@ -102,6 +102,10 @@ export default {
     },
     addons: { type: [Object, Array], default: () => ([]) },
     height: {type: String, default: '420px'},
+    canDownloadCsv: {
+      type: Boolean,
+      default: false
+    },
     hasPagination: {
       type: Boolean,
       default: false

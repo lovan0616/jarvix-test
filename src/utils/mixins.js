@@ -325,7 +325,7 @@ Vue.mixin({
            * 便不再拿取新的 data，所以暫時改由 vue instance 內的 computed options 去拿
            */
           // 還有資料沒有拿回，直接打 API 下載所有資料
-          if (data.hasPagination) return this.addCSVDownloadTask(question, data.componentId)
+          if (data.hasPagination && data.canDownloadCsv) return this.addCSVDownloadTask(question, data.componentId)
 
           this.exportToCSV(question, data.options.dataset.source)
         }

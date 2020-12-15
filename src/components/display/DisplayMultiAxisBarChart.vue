@@ -96,6 +96,10 @@ export default {
       type: Boolean,
       default: false
     },
+    canDownloadCsv: {
+      type: Boolean,
+      default: false
+    },
     isShowLabelData: {
       type: Boolean,
       default: false

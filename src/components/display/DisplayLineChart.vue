@@ -116,6 +116,10 @@ export default {
       type: Boolean,
       default: false
     },
+    canDownloadCsv: {
+      type: Boolean,
+      default: false
+    },
     showToolbox: {
       type: Boolean,
       default: true
