@@ -106,7 +106,7 @@ export default {
         // { 
         //   type: 'row',
         //   index: 1,
-        //   className: 'myClassName'
+        //   className: 'myClassName moreClassName' // 欲帶入多個 class 時以空格隔開即可
         // },
         // {
         //   type: 'column',

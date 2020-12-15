@@ -673,8 +673,7 @@ export default {
 
           // 如果有 dashboard, focus 在第一個
           if (this.dashboardList.length > 0 && !this.currentDashboardId) {
-            this.currentDashboardId = this.dashboardList[0].id
-            this.newDashboardName = this.currentDashboard.name
+            this.activeCertainDashboard(this.dashboardList[0].id)
           }
 
           this.initFilters()
@@ -752,8 +751,7 @@ export default {
         controlList: [],
         yAxisControlList: []
       })
-      this.currentDashboardId = newDashBoardInfo.id
-      this.initFilters()
+      this.activeCertainDashboard(newDashBoardInfo.id, newDashBoardInfo.name)
       this.isShowCreateDashboardDialog = false
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
@@ -1020,12 +1018,13 @@ export default {
     updateAppSetting (appInfo, miniAppId = this.miniAppId) {
       return updateAppSetting(miniAppId, { ...appInfo })
     },
-    activeCertainDashboard (dashboardId) {
+    activeCertainDashboard (dashboardId, dashboardName) {
+      if (this.currentDashboardId === dashboardId) return
       this.isEditingDashboardName = false
       this.isShowWarningModule = false
       this.currentDashboardId = dashboardId
       this.initFilters()
-      this.newDashboardName = this.currentDashboard.name
+      this.newDashboardName = dashboardName || this.currentDashboard.name
     },
     saveCreatedFilter (filterList) {
       this.isProcessing = true
@@ -1060,7 +1059,6 @@ export default {
       }
     },
     updateFilter (updatedFilterList, type) {
-      this.isProcessing = true
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
@@ -1076,11 +1074,10 @@ export default {
 
       // 更新 app
       this.updateAppSetting(editedMiniApp)
-        .then(() => this.getMiniAppInfo())
-        .finally(() => this.isProcessing = false)
+        .then(() => this.miniApp = editedMiniApp)
+        .catch(() => {})
     },
     updateControl (updatedControlList) {
-      this.isProcessing = true
       const dashboradIndex = this.dashboardList.findIndex(board => board.id === this.currentDashboardId)
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
@@ -1091,8 +1088,8 @@ export default {
 
       // 更新 app
       this.updateAppSetting(editedMiniApp)
-        .then(() => this.getMiniAppInfo())
-        .finally(() => this.isProcessing = false)
+        .then(() => this.miniApp = editedMiniApp)
+        .catch(() => {})
     },
     closeFilterCreationDialog () {
       this.isShowCreateFilterDialog = false
@@ -1196,7 +1193,6 @@ export default {
 
       const generalConfig = {
         size: { row: 3, column: 4 },
-        relation: { triggerColumn: { id: null }, relatedDashboardId: null },
         hasRelatedDashboard: false,
         relatedDashboard: null
       }
@@ -1215,7 +1211,9 @@ export default {
           ...generalConfig,
           diaplayedName: '',
           isAutoRefresh: false,
-          refreshFrequency: null
+          refreshFrequency: null,
+          hasColumnRelatedDashboard: false, // 目前只給 table 元件使用
+          columnRelations: [{ relatedDashboardId: null, columnInfo: null }]
         },
         // 監控示警元件
         ...(type === 'monitor-warning-list' && {
@@ -1272,7 +1270,7 @@ export default {
     position: relative;
     z-index: 5;
     flex: 0 0 56px;
-    padding: 0 16px 0 24px;
+    padding: 0 20px 0 24px;
     display: flex;
     align-items: center;
     background: rgba(0, 0, 0, 0.55);
@@ -1406,7 +1404,6 @@ export default {
   }
   &__main {
     flex: 1;
-    // TODO 調整 Layout 時理想上讓 padding 統一為 20
     padding: 20px 0 0 20px;
     display: flex;
     flex-direction: column;
@@ -1431,7 +1428,7 @@ export default {
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
-        padding-right: 20px;
+        margin-right: 20px;
         .header-left {
           display: flex;
           align-items: center;
@@ -1456,6 +1453,7 @@ export default {
         }
         .header-right {
           display: flex;
+          justify-content: flex-end;
           align-items: center;
           .dashboard-setting-box {
             flex: 0 0 30px;
@@ -1678,7 +1676,7 @@ export default {
   }
 
   &__dashboard-components {
-    margin-right: 20px;
+    margin-right: 4px;
     .warning-icon {
       color: #FF5C46;
     }

@@ -843,7 +843,9 @@
     "chooseDataSource": "選擇資料源",
     "chooseDataFrame": "選擇資料表",
     "dataSource": "資料源",
-    "dataFrame": "資料表"
+    "dataFrame": "資料表",
+    "dataColumnRelationSetting": "表格內容關聯設定",
+    "dataColumnRelationSettingReminding": "使用者點擊內容時，會將內容帶入看板作為控制條件參數。"
   },
   "clustering": {
     "cluster": "群體",

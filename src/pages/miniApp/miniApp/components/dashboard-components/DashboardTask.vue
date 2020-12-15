@@ -118,14 +118,6 @@
             <svg-icon icon-class="close"/>
           </div>
         </div>
-        <div
-          v-if="componentData.config.relation.relatedDashboardId"
-          class="related-item"
-        >
-          {{ $t('miniApp.clickColumnToSeeMore', {
-            columnName: componentData.config.relation.triggerColumn.info.dataColumnAlias
-          }) }}
-        </div>
       </div>
     </div>
     <decide-dialog
@@ -184,6 +176,7 @@ export default {
       periodSec: 0,
       isShowConfirmDelete: false,
       autoRefreshFunction: null,
+      debouncedAskFunction: null,
       isEmptyData: false,
       indexComponentStyle: {
         'font-size': '64px', 
@@ -209,6 +202,7 @@ export default {
   },
   computed: {
     shouldComponentBeFiltered () {
+      if (this.componentData.type === 'monitor-warning-list') return false
       // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
       return this.includeSameColumnPrimaryAliasFilter || this.includeSameDataFrameFilter || this.includeRelativeDatetimeFilter
     },
@@ -220,15 +214,19 @@ export default {
       return this.tempFilteredKeyResultId || this.componentData.keyResultId
     },
     dataColumnAlias () {
-      return this.componentData.segmentation.transcript.subjectList[0].dataColumn.dataColumnAlias
+      if (this.componentData.type === 'monitor-warning-list') return ''
+      const dataColumn = this.componentData.segmentation.transcript.subjectList[0].dataColumn
+      return dataColumn ? dataColumn.dataColumnAlias : ''
     },
     newYAxisColumnNames () {
       return this.selectedYAxisControls.reduce((acc, cur) => acc.concat(` ${cur.columnName}`), '')
     },
     controllerMutatedQuestion () {
+      if (this.componentData.type === 'monitor-warning-list') return ''
       return this.componentData.question.replace(this.dataColumnAlias, this.newYAxisColumnNames)
     },
     controllerMutatedQuestionWithStyleTag () {
+      if (this.componentData.type === 'monitor-warning-list') return ''
       return this.componentData.question.replace(this.dataColumnAlias, `
         <div style="text-decoration: underline; margin-left: 4px; white-space: nowrap; display: flex;">${this.newYAxisColumnNames}<div>
       `)
@@ -268,13 +266,14 @@ export default {
       return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
     },
     customCellClassName () {
-      const triggerColumn = this.componentData.config.relation.triggerColumn.info
-      if (!triggerColumn) return []
-      const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === triggerColumn.dataColumnAlias)
+      if (this.componentData.type === 'monitor-warning-list') return []
+      const relation = this.componentData.config.columnRelations[0].columnInfo
+      if (!relation) return []
+      const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === relation.dataColumnAlias)
       return [{
         type: 'column',
         index: index + 1,
-        className: 'underline'
+        className: 'has-underline is-text-blue'
       }]
     }
   },
@@ -283,19 +282,23 @@ export default {
     allFilterList: {
       immediate: true,
       deep: true,
-      handler () {
-        if (!this.shouldComponentBeFiltered) return
-        this.askQuestion()
+      handler (controls) {
+        if (this.shouldComponentYAxisBeControlled) {
+          this.deboucedAskQuestion()
+        } else if (controls.length === 0 && this.tempFilteredKeyResultId) {
+          // 拔除所有 Y軸控制器 時，清除暫存 filtered info
+          this.tempFilteredKeyResultId = null
+        }
       }
     },
-    selectedYAxisControls: {
+    yAxisControls: {
       immediate: true,
       deep: true,
-      handler (controls, oldControls) {
+      handler (controls) {
         if (this.shouldComponentYAxisBeControlled) {
-          this.askQuestion(this.controllerMutatedQuestion)
-        } else if (controls.length === 0 && oldControls.length === 1) {
-          // 拔除所有Y軸控制器時，清除暫存 filtered info
+          this.deboucedAskQuestion()
+        } else if (controls.length === 0 && this.tempFilteredKeyResultId) {
+          // 拔除所有 Y軸控制器 時，清除暫存 filtered info
           this.tempFilteredKeyResultId = null
         }
       }
@@ -313,9 +316,16 @@ export default {
   },
   destroyed () {
     if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
+    if (this.debouncedAskFunction) window.clearTimeout(this.debouncedAskFunction)
   },
   methods: {
-    askQuestion (question = this.componentData.question) {
+    deboucedAskQuestion (question) {
+      // 避免在極短時間內，因 filter/controller 變動而多次觸發 askQuestion
+      // Ex: 當外層 initFilters 的情境
+      window.clearTimeout(this.debouncedAskFunction)
+      this.debouncedAskFunction = window.setTimeout(this.askQuestion, 0)
+    },
+    askQuestion (question = this.controllerMutatedQuestion || this.componentData.question) {
       window.clearTimeout(this.timeoutFunction)
       this.isProcessing = true
       this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
@@ -511,10 +521,12 @@ export default {
       return properties
     },
     columnTriggered ({ row, column }) {
-      if (column.label !== this.componentData.config.relation.triggerColumn.info.dataColumnAlias) return
+      const { relatedDashboardId, columnInfo } = this.componentData.config.columnRelations[0]
+      if (column.label !== columnInfo.dataColumnAlias) return
+
       this.$emit('columnTriggered', {
-        relatedDashboardId: this.componentData.config.relation.relatedDashboardId,
-        columnId: this.componentData.config.relation.triggerColumn.info.dataColumnId,
+        relatedDashboardId,
+        columnId: columnInfo.dataColumnId,
         cellValue: row[column.index - 1]
       })
     },

@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     activeConditionIds () {
-      if (!this.setting.conditions) return []
+      if (!this.setting.activate || !this.setting.conditions) return []
       return this.setting.conditions.filter(item => item.activate).map(item => item.id)
     }
   },

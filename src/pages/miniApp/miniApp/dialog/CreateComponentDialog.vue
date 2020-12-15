@@ -127,33 +127,60 @@
             </div>
           </div>
         </div>
-        <!-- Table Component Column Relation Setting -->
+        <!-- Related dashboard of component columns -->
         <div
           v-if="currentComponent.diagram === 'table'"
           class="setting__content"
         >
           <div class="setting__block">
-            <div class="setting__label-block">{{ $t('miniApp.relatedDashboardSetting') }}</div>
-            <div class="setting__block-select-field">
-              <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
-              <default-select 
-                v-model="currentComponent.config.relation.triggerColumn.id"
-                :option-list="triggerColumnOption"
-                :placeholder="$t('miniApp.chooseColumn')"
-                class="setting__block-select"
-                name="triggerColumn"
+            <div class="setting__label-block">
+              <span class="setting__label-block-label">
+                {{ $t('miniApp.dataColumnRelationSetting') }}
+              </span>
+              <el-switch
+                v-model="currentComponent.config.hasColumnRelatedDashboard"
+                :width="Number('32')"
+                active-color="#2AD2E2"
+                inactive-color="#324B4E"
+                @change="updateHasColumnRelatedDashboard"
               />
+              <span class="setting__label-block-description">
+                {{ $t('miniApp.dataColumnRelationSettingReminding') }}
+              </span>
             </div>
-            <div class="setting__block-select-field">
-              <label class="setting__block-select-label">{{ $t('miniApp.relatedDashboard') }}</label>
-              <default-select 
-                v-model="currentComponent.config.relation.relatedDashboardId"
-                :option-list="dashboardOption"
-                :placeholder="$t('miniApp.chooseDashboard')"
-                class="setting__block-select"
-                name="relatedDashboard"
-              />
-            </div>
+            <template v-if="currentComponent.config.hasColumnRelatedDashboard">
+              <div class="setting__block-select-field">
+                <label class="setting__block-select-label">{{ $t('miniApp.triggerColumn') }}</label>
+                <default-select 
+                  v-validate="'required'"
+                  v-model="selectedTriggerColumn"
+                  :option-list="categoryColumnOptions"
+                  :placeholder="$t('miniApp.chooseColumn')"
+                  class="setting__block-select"
+                  name="triggerColumn"
+                  @change="updateTriggerColumnInfo"
+                />
+                <div 
+                  v-show="errors.has('triggerColumn')"
+                  class="error-text"
+                >{{ errors.first('triggerColumn') }}</div>
+              </div>
+              <div class="setting__block-select-field">
+                <label class="setting__block-select-label">{{ $t('miniApp.relatedDashboard') }}</label>
+                <default-select
+                  v-validate="'required'"
+                  v-model="currentComponent.config.columnRelations[0].relatedDashboardId"
+                  :option-list="dashboardOptions"
+                  :placeholder="$t('miniApp.chooseDashboard')"
+                  class="setting__block-select"
+                  name="columnRelatedDashboard"
+                />
+                <div 
+                  v-show="errors.has('columnRelatedDashboard')"
+                  class="error-text"
+                >{{ errors.first('columnRelatedDashboard') }}</div>
+              </div>
+            </template>
           </div>
         </div>
         <!--Update frequency-->
@@ -259,6 +286,7 @@ export default {
       isAddable: null,
       isLoading: false,
       currentComponent: null,
+      selectedTriggerColumn: null,
       relatedDashboardTemplate: {
         id: null,
         name: null
@@ -328,34 +356,32 @@ export default {
         name: this.$t('miniApp.rowSpanAmount', { number: value + 2 })
       }))
     },
-    triggerColumnOption () {
+    categoryColumnOptions () {
       const origin = this.currentResultInfo || this.initialCurrentComponent
       let options = origin.segmentation.transcript.subjectList[0].categoryDataColumnList.map(item => ({
+        ...item,
         value: item.dataColumnId,
         name: item.dataColumnAlias
       }))
       options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseColumn')))
       return options
     },
-    dashboardOption () {
-      let options = this.dashboardList.map(item => ({
-        value: item.id,
-        name: item.name
-      }))
-      options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseDashboard')))
-      return options
-    },
     dashboardOptions () {
-      return this.dashboardList
+      let options = this.dashboardList
         .filter(item => item.id !== this.dashboardId)
         .map(item => ({
           value: item.id,
           name: item.name
         }))
+      options.unshift(this.defaultOptionFactory(this.$t('miniApp.chooseDashboard')))
+      return options
     },
   },
   mounted () {
     this.currentComponent = JSON.parse(JSON.stringify(this.initialCurrentComponent))
+    
+    const columnInfo = this.currentComponent.config.columnRelations[0].columnInfo
+    this.selectedTriggerColumn = columnInfo && columnInfo.dataColumnId
   },
   destroyed () {
     this.$store.commit('result/updateCurrentResultInfo', null)
@@ -373,23 +399,19 @@ export default {
       })
       .then(columnList => {
 
-        // 紀錄 trigger column info
-        this.updateTriggerColumnInfo()
-
         this.$emit('create', {
           ...this.currentComponent,
           init: true,
           resultId: this.currentResultId,
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
           ...this.currentResultInfo,
-          dateTimeColumn: columnList.find(column => column.isDefault)
+          // dateTimeColumn: columnList.find(column => column.isDefault)
         })
       })
     },
     saveComponent () {
       this.$validator.validateAll().then(valid => {
         if (!valid) return
-        this.updateTriggerColumnInfo()
         this.$emit('updateSetting', this.currentComponent)
       })
     },
@@ -406,7 +428,7 @@ export default {
       })
     },
     updateHasRelatedDashboard (isTurnedOn) {
-      if(isTurnedOn) {
+      if (isTurnedOn) {
         if (this.currentComponent.config.relatedDashboard) return
         return this.currentComponent.config.relatedDashboard = this.relatedDashboardTemplate
       }
@@ -418,12 +440,9 @@ export default {
         this.currentComponent.config.relatedDashboard = relatedDashboard
       })
     },
-    updateTriggerColumnInfo () {
-      let triggerColumn = this.currentComponent.config.relation.triggerColumn
-      const relatedDashboard = this.currentComponent.config.relation.relatedDashboardId
-      const origin = this.currentResultInfo || this.initialCurrentComponent
-      if (triggerColumn.id && relatedDashboard) {
-        triggerColumn.info = origin.segmentation.transcript.subjectList[0].categoryDataColumnList.find(item => item.dataColumnId === triggerColumn.id)
+    updateHasColumnRelatedDashboard (isTurnedOn) {
+      if (!isTurnedOn) {
+        this.currentComponent.config.columnRelations[0] = { relatedDashboardId: null, columnInfo: null }
       }
     },
     defaultOptionFactory (placholder) {
@@ -435,6 +454,10 @@ export default {
     updateRelatedDashboard (selectedDashboardId) {
       const { id, name } = this.dashboardList.find(dashboard => dashboard.id === selectedDashboardId)
       this.currentComponent.config.relatedDashboard = { id, name }
+    },
+    updateTriggerColumnInfo () {
+      const column = this.categoryColumnOptions.find(item => item.dataColumnId === this.selectedTriggerColumn)
+      this.currentComponent.config.columnRelations[0].columnInfo = column
     }
   },
 }
@@ -522,10 +545,16 @@ export default {
         }
         &__label-block {
           display: flex;
+          flex-wrap: wrap;
           justify-content: space-between;
           font-size: 14px;
           color: #FFFFFF;
           font-weight: 600;
+          &-description {
+            font-size: 12px;
+            color: #AAA;
+            margin-top: 12px;
+          }
         }
         &__block {
           /deep/ .input-verify {
