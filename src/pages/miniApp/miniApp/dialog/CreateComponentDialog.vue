@@ -405,7 +405,7 @@ export default {
           resultId: this.currentResultId,
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
           ...this.currentResultInfo,
-          // dateTimeColumn: columnList.find(column => column.isDefault)
+          dateTimeColumn: columnList.find(column => column.isDefault)
         })
       })
     },
