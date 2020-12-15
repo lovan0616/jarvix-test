@@ -118,14 +118,6 @@
             <svg-icon icon-class="close"/>
           </div>
         </div>
-        <div
-          v-if="!componentData.type === 'monitor-warning-list' && componentData.config.columnRelations[0].columnInfo"
-          class="related-item"
-        >
-          {{ $t('miniApp.clickColumnToSeeMore', {
-            columnName: componentData.config.columnRelations[0].columnInfo.dataColumnAlias
-          }) }}
-        </div>
       </div>
     </div>
     <decide-dialog
