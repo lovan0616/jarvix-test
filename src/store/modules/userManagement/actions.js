@@ -86,18 +86,12 @@ export default {
       commit('setLicenseInfo', accountInfo.license)
       
       const account_id = rootGetters['userManagement/getCurrentAccountId']
-      const group_id = rootGetters['userManagement/getCurrentGroupId']
-      if (defaultGroup) {
-        router.push({
-          name: 'PageIndex', 
-          params: { account_id, group_id }
-        })
-      } else {
-        router.push({ 
+      if (!defaultGroup) {
+        return router.push({
           name: 'PageGrouplessGuidance',
           params: { account_id }
         })
-      }
+      } 
       // refresh token
       // const { accessToken } = await refreshToken()
       // localStorage.setItem('token', accessToken)
