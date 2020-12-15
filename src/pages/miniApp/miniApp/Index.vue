@@ -673,8 +673,7 @@ export default {
 
           // 如果有 dashboard, focus 在第一個
           if (this.dashboardList.length > 0 && !this.currentDashboardId) {
-            this.currentDashboardId = this.dashboardList[0].id
-            this.newDashboardName = this.currentDashboard.name
+            this.activeCertainDashboard(this.dashboardList[0].id)
           }
 
           this.initFilters()
@@ -752,8 +751,7 @@ export default {
         controlList: [],
         yAxisControlList: []
       })
-      this.currentDashboardId = newDashBoardInfo.id
-      this.initFilters()
+      this.activeCertainDashboard(newDashBoardInfo.id, newDashBoardInfo.name)
       this.isShowCreateDashboardDialog = false
       this.updateAppSetting(updatedMiniAppData)
         .then(() => { this.miniApp = updatedMiniAppData })
@@ -1020,12 +1018,13 @@ export default {
     updateAppSetting (appInfo, miniAppId = this.miniAppId) {
       return updateAppSetting(miniAppId, { ...appInfo })
     },
-    activeCertainDashboard (dashboardId) {
+    activeCertainDashboard (dashboardId, dashboardName) {
+      if (this.currentDashboardId === dashboardId) return
       this.isEditingDashboardName = false
       this.isShowWarningModule = false
       this.currentDashboardId = dashboardId
       this.initFilters()
-      this.newDashboardName = this.currentDashboard.name
+      this.newDashboardName = dashboardName || this.currentDashboard.name
     },
     saveCreatedFilter (filterList) {
       this.isProcessing = true
@@ -1195,8 +1194,7 @@ export default {
       const generalConfig = {
         size: { row: 3, column: 4 },
         hasRelatedDashboard: false,
-        relatedDashboard: null,
-        hasColumnRelatedDashboard: false // 目前只給 table 元件使用
+        relatedDashboard: null
       }
 
       // 一般元件
@@ -1214,6 +1212,7 @@ export default {
           diaplayedName: '',
           isAutoRefresh: false,
           refreshFrequency: null,
+          hasColumnRelatedDashboard: false, // 目前只給 table 元件使用
           columnRelations: [{ relatedDashboardId: null, columnInfo: null }]
         },
         // 監控示警元件

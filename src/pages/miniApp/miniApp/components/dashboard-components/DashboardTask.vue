@@ -119,7 +119,7 @@
           </div>
         </div>
         <div
-          v-if="componentData.config.columnRelations[0].columnInfo"
+          v-if="!componentData.type === 'monitor-warning-list' && componentData.config.columnRelations[0].columnInfo"
           class="related-item"
         >
           {{ $t('miniApp.clickColumnToSeeMore', {
@@ -210,6 +210,7 @@ export default {
   },
   computed: {
     shouldComponentBeFiltered () {
+      if (this.componentData.type === 'monitor-warning-list') return false
       // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
       return this.includeSameColumnPrimaryAliasFilter || this.includeSameDataFrameFilter || this.includeRelativeDatetimeFilter
     },
@@ -221,6 +222,7 @@ export default {
       return this.tempFilteredKeyResultId || this.componentData.keyResultId
     },
     dataColumnAlias () {
+      if (this.componentData.type === 'monitor-warning-list') return ''
       const dataColumn = this.componentData.segmentation.transcript.subjectList[0].dataColumn
       return dataColumn ? dataColumn.dataColumnAlias : ''
     },
@@ -228,9 +230,11 @@ export default {
       return this.selectedYAxisControls.reduce((acc, cur) => acc.concat(` ${cur.columnName}`), '')
     },
     controllerMutatedQuestion () {
+      if (this.componentData.type === 'monitor-warning-list') return ''
       return this.componentData.question.replace(this.dataColumnAlias, this.newYAxisColumnNames)
     },
     controllerMutatedQuestionWithStyleTag () {
+      if (this.componentData.type === 'monitor-warning-list') return ''
       return this.componentData.question.replace(this.dataColumnAlias, `
         <div style="text-decoration: underline; margin-left: 4px; white-space: nowrap; display: flex;">${this.newYAxisColumnNames}<div>
       `)
@@ -270,13 +274,14 @@ export default {
       return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
     },
     customCellClassName () {
+      if (this.componentData.type === 'monitor-warning-list') return []
       const relation = this.componentData.config.columnRelations[0].columnInfo
       if (!relation) return []
       const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === relation.dataColumnAlias)
       return [{
         type: 'column',
         index: index + 1,
-        className: 'underline'
+        className: 'has-underline is-text-blue'
       }]
     }
   },
@@ -323,8 +328,10 @@ export default {
   },
   methods: {
     deboucedAskQuestion (question) {
+      // 避免在極短時間內，因 filter/controller 變動而多次觸發 askQuestion
+      // Ex: 當外層 initFilters 的情境
       window.clearTimeout(this.debouncedAskFunction)
-      this.debouncedAskFunction = window.setTimeout(() => this.askQuestion(), 0)
+      this.debouncedAskFunction = window.setTimeout(this.askQuestion, 0)
     },
     askQuestion (question = this.controllerMutatedQuestion || this.componentData.question) {
       window.clearTimeout(this.timeoutFunction)
