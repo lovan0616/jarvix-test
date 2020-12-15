@@ -3,9 +3,9 @@ import request from '@/utils/publicRequest'
 /**
  * 取得 所有示警條件
  */
-export function getAlertConditions () {
+export function getAlertConditions (groupId) {
   return request({
-    url: '/alert/conditions',
+    url: `/alert/conditions?groupId=${groupId}`,
     method: 'GET'
   })
 }
@@ -38,10 +38,10 @@ export function getAlertConditionMessageById (conditionId) {
  * @param {Number} page
  * @param {Number} size
  */
-export function getAlertLogs ({ conditionIds, page = 0, size = 20 }) {
+export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId }) {
   const encodeConditionIds = encodeURI(`[${conditionIds}]`)
   return request({
-    url: `/alert/logs?conditionIds=${encodeConditionIds}&page=${page}&size=${size}`,
+    url: `/alert/logs?conditionIds=${encodeConditionIds}&groupId=${groupId}&page=${page}&size=${size}`,
     method: 'GET',
   })
 }

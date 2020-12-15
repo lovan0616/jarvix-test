@@ -3,6 +3,7 @@
     :title="$t('miniApp.createDashboard')"
     :button="$t('button.create')"
     :show-both="true"
+    :is-loading="isProcessing"
     @closeDialog="$emit('close')"
     @confirmBtn="createDashboard"
   >
@@ -26,6 +27,12 @@ export default {
   components: {
     WritingDialog,
     InputVerify
+  },
+  props: {
+    isProcessing: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {

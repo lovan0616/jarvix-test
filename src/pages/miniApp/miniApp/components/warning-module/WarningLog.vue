@@ -17,7 +17,7 @@
         <el-table-column
           :label="$t('miniApp.warningLogCreateTime')"
           prop="createDate"
-          width="220">
+          width="180">
           <template slot-scope="scope">
             <span>{{ scope.row.createDate | convertTimeStamp }}</span>
           </template>  
@@ -55,15 +55,27 @@
           </template>
         </el-table-column>
         <el-table-column
+          :label="$t('miniApp.monitorLogUpdateTime')"
+          prop="updateDate"
+          width="180">
+          <template slot-scope="scope">
+            <span>{{ scope.row.updateDate | convertTimeStamp }}</span>
+          </template>  
+        </el-table-column>
+        <el-table-column
           :label="$t('miniApp.goToDashboard')"
           prop="relatedDashboardId"
           width="120">
           <template slot-scope="scope">
-            <a 
+            <a
+              v-if="scope.row.relatedDashboardId"
               class="link" 
               @click.stop="goToCertainDashboard(scope.row.relatedDashboardId, scope.row.monitoredData)">
               {{ $t('miniApp.link') }}
             </a>
+            <span 
+              v-else 
+              class="reminding">{{ $t('miniApp.notBeingSet') }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -83,6 +95,7 @@
 <script>
 import { getAlertLogs, patchAlertLogActiveness } from '@/API/Alert'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'WarningLog',
@@ -110,6 +123,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
     activeConditionIds () {
       if (!this.setting.conditions) return []
       return this.setting.conditions.filter(item => item.activate).map(item => item.id)
@@ -144,7 +158,7 @@ export default {
     },
     getWarningLogs (page = 0) {
       this.isLoading = true
-      getAlertLogs({ conditionIds: this.activeConditionIds, page }).then(response => {
+      getAlertLogs({ conditionIds: this.activeConditionIds, page, groupId: this.getCurrentGroupId }).then(response => {
         this.paginationInfo = response.pagination
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
@@ -209,16 +223,8 @@ export default {
           return 15 * 60 * 1000
         case '*/30 * * * *':
           return 30 * 60 * 1000
-        case '*/45 * * * *':
-          return 45 * 60 * 1000
-        case '0 * * * *':
-          return 60 * 60 * 1000
-        case '0 0 * * *':
-          return 24 * 60 * 60 * 1000
-        case '0 0 * * 0':
-          return 7 * 24 * 60 * 1000
-        case '0 0 1 * *':
-          return 30 * 7 * 24 * 60 * 1000
+        default:
+          return 60 * 1000
       }
     }
   }
@@ -244,9 +250,8 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     padding: 0 20px 20px 0;
-    .warning-log-table {
-      flex: 1;
-      min-height: 0
+    .reminding {
+      color: #999;
     }
     .el-pagination {
       text-align: right;

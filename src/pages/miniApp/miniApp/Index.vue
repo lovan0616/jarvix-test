@@ -134,31 +134,22 @@
         </template>
         <template v-else>
           <aside class="mini-app__side-nav">
-            <div
-              v-if="isEditMode || appData.warningModule.activate"
-              class="title warning-module-entry"
-              @click="openWarningModule">
+            <div class="title">
               <svg-icon 
-                icon-class="warning" 
+                icon-class="dashboard" 
                 class="label-icon"/>
-              <span class="label-name">監控示警</span>
+              <span class="label-name">{{ $t('miniApp.dashboardList') }}</span>
+              <div
+                v-if="isEditMode"
+                class="create-dashboard-icon-block"
+                @click="isShowCreateDashboardDialog = true"
+              >
+                <svg-icon 
+                  icon-class="plus" 
+                  class="create-dashboard-icon"/>
+              </div>
             </div>
             <ul class="item-wrapper">
-              <div class="title">
-                <svg-icon 
-                  icon-class="dashboard" 
-                  class="label-icon"/>
-                <span class="label-name">{{ $t('miniApp.dashboardList') }}</span>
-                <div
-                  v-if="isEditMode"
-                  class="create-dashboard-icon-block"
-                  @click="isShowCreateDashboardDialog = true"
-                >
-                  <svg-icon 
-                    icon-class="plus" 
-                    class="create-dashboard-icon"/>
-                </div>
-              </div>
               <li
                 v-for="dashboard in dashboardList" 
                 :key="dashboard.id"
@@ -172,6 +163,16 @@
                 <span class="item-name">{{ dashboard.name }}</span>
               </li>
             </ul>
+            <div
+              v-if="isEditMode || appData.warningModule.activate"
+              :class="{'is-active': isShowWarningModule && !currentDashboardId}"
+              class="title warning-module-entry"
+              @click="openWarningModule">
+              <svg-icon 
+                icon-class="warning" 
+                class="label-icon"/>
+              <span class="label-name">{{ $t('miniApp.monitorWarning') }}</span>
+            </div>
           </aside>
           <!-- 監控示警模組 -->
           <main 
@@ -265,7 +266,7 @@
                       class="btn-m btn-outline btn-has-icon create-filter-btn" 
                       @click.prevent>
                       <svg-icon icon-class="plus"/>
-                      <span class="button-label">看板控制項</span>
+                      <span class="button-label">{{ $t('miniApp.panelControl') }}</span>
                       <svg-icon 
                         icon-class="triangle" 
                         class="icon-triangle"/>
@@ -388,6 +389,7 @@
     </div>
     <create-dashboard-dialog
       v-if="isShowCreateDashboardDialog"
+      :is-processing="isProcessingCreateDashboard"
       @close="isShowCreateDashboardDialog = false"
       @create="createDashboard"
     />
@@ -509,6 +511,7 @@ export default {
       isShowUpdateDashboardNameDialog: false,
       isLoading: false,
       isProcessing: false,
+      isProcessingCreateDashboard: false,
       isShowShare: false,
       shareLink: null,
       confirmDeleteText: this.$t('editing.confirmDelete'),
@@ -751,10 +754,14 @@ export default {
         controlList: [],
         yAxisControlList: []
       })
-      this.activeCertainDashboard(newDashBoardInfo.id, newDashBoardInfo.name)
-      this.isShowCreateDashboardDialog = false
+      this.isProcessingCreateDashboard = true
       this.updateAppSetting(updatedMiniAppData)
-        .then(() => { this.miniApp = updatedMiniAppData })
+        .then(() => {
+          this.miniApp = updatedMiniAppData
+          this.activeCertainDashboard(newDashBoardInfo.id, newDashBoardInfo.name)
+          this.isShowCreateDashboardDialog = false
+          this.isProcessingCreateDashboard = false
+        })
     },
     createComponent (newComponentInfo) {
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
@@ -1172,8 +1179,15 @@ export default {
       this[`create${type}Component`]()
     },
     openWarningModule () {
-      this.isShowWarningModule = true
-      this.currentDashboardId = null
+      this.isProcessing = true
+      getMiniAppInfo(this.miniAppId)
+        .then(miniAppInfo => {
+          this.miniApp = miniAppInfo
+          this.isShowWarningModule = true
+          this.currentDashboardId = null
+        })
+        .catch(() => {})
+        .finally(() => this.isProcessing = false )
     },
     componentSettingOptions (component) {
       return [
@@ -1387,19 +1401,19 @@ export default {
           flex-shrink: 0;
         }
         &-name {}
-        &.is-active {
-          background-color: #42A5B3;
-          color: #FFF;
-          .item-icon {
-            visibility: visible;
-          }
-        }
       }
     }
     .create-dashboard-icon-block {
       flex: 0 0 48px;
       cursor: pointer;
       text-align: right;
+    }
+    .item.is-active, .title.is-active {
+      background-color: #42A5B3;
+      color: #FFF;
+      .item-icon {
+        visibility: visible;
+      }
     }
   }
   &__main {

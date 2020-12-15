@@ -36,6 +36,11 @@
             </div>
           </el-tooltip>
         </div>
+        <div v-else-if="componentData.type === 'monitor-warning-list'">
+          <svg-icon 
+            icon-class="warning" 
+            class="icon-warning"/>
+        </div>
       </span>
       <div
         v-if="componentData.type === 'index'" 
@@ -283,7 +288,7 @@ export default {
       immediate: true,
       deep: true,
       handler (controls) {
-        if (this.shouldComponentYAxisBeControlled) {
+        if (this.shouldComponentBeFiltered) {
           this.deboucedAskQuestion()
         } else if (controls.length === 0 && this.tempFilteredKeyResultId) {
           // 拔除所有 Y軸控制器 時，清除暫存 filtered info
@@ -569,6 +574,11 @@ $direction-span: ("col": 8, "row": 6);
     .dropdown-select { visibility: visible; }
   }
 }
+@keyframes flash {
+	0% { opacity: 0 }
+	50% { opacity: 1 }
+  100% { opacity: 0 }
+}
 
 .component__item {
   padding-right: 16px;
@@ -631,6 +641,10 @@ $direction-span: ("col": 8, "row": 6);
           }
         }
       }
+    }
+    .icon-warning {
+      color: $theme-color-danger;
+      animation: flash 1s infinite;
     }
   }
   &-action {

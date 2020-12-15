@@ -15,13 +15,25 @@
         <section class="setting-block">
           {{ $t('miniApp.enableWarningModule') }}：
           <el-switch
-            v-model="warningModuleConfig.activate"
+            v-model="tempWarningModuleConfig.activate"
             :width="Number('32')"
             class="module-activate-controller"
             active-color="#2AD2E2"
             inactive-color="#324B4E"
           />
-          {{ warningModuleConfig.activate ? $t('miniApp.activate') : $t('miniApp.inactivate') }}
+          {{ tempWarningModuleConfig.activate ? $t('miniApp.activate') : $t('miniApp.inactivate') }}
+        </section>
+      </div>
+      <div class="warning-setting__content-frequency">
+        <section class="setting-block">
+          {{ $t('miniApp.monitorUpdateFrequency') }}：
+          <default-select 
+            v-model="tempWarningModuleConfig.updateFrequency"
+            :option-list="updateFrequency"
+            :placeholder="$t('miniApp.chooseUpdateFrequency')"
+            class="setting__block-select"
+            name="updateFrequency"
+          />
         </section>
       </div>
       <div class="warning-setting__content-rule">
@@ -35,7 +47,7 @@
           :title="$t('button.download')" 
           size="50"/>
         <section
-          v-for="(condition, index) in warningModuleConfig.conditions"
+          v-for="(condition, index) in tempWarningModuleConfig.conditions"
           v-else 
           :key="index" 
           class="setting-block">
@@ -70,6 +82,7 @@
 <script>
 import { getAlertConditions } from '@/API/Alert'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'WarningSetting',
@@ -90,14 +103,11 @@ export default {
     return {
       isLoading: false,
       allConditions: [],
-      warningModuleConfig: {
-        activate: false,
-        conditions: [],
-        updateFrequency: '* * * * *'
-      }
+      tempWarningModuleConfig: {}
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
     dashboardOptions () {
       let options = []
       const defaultOption = {
@@ -107,24 +117,49 @@ export default {
       options = this.dashboardList.map(item => ({ value: item.id, name: item.name }))
       options.unshift(defaultOption)
       return options
+    },
+    updateFrequency () {
+      return [
+        {
+          value: '* * * * *',
+          name: this.$t('warRoom.everyMinute', { number: 1 })
+        },
+        {
+          value: '*/2 * * * *',
+          name: this.$t('warRoom.everyMinute', { number: 2 })
+        },
+        {
+          value: '*/5 * * * *',
+          name: this.$t('warRoom.everyMinute', { number: 5 })
+        },
+        {
+          value: '*/15 * * * *',
+          name: this.$t('warRoom.everyMinute', { number: 15 })
+        },
+        {
+          value: '*/30 * * * *',
+          name: this.$t('warRoom.everyMinute', { number: 30 })
+        }
+      ]
     }
   },
   created () {
     this.isLoading = true
 
-    // 示警模組是否啟用
-    this.warningModuleConfig.activate = this.setting.activate
+    // 示警模組設定
+    const { activate, updateFrequency } = this.setting
+    this.tempWarningModuleConfig = { activate, updateFrequency, conditions: [] }
 
-    getAlertConditions().then(conditions => {
+    getAlertConditions(this.getCurrentGroupId).then(conditions => {
       // 存放所有示警條件
       this.allConditions = conditions
 
       // 還原之前的設定到示警條件上
       conditions.forEach(condition => {
         const prevConditionSetting = this.setting.conditions.find(item => item.id === condition.id)
-        let isRelatedDashbaordExist = false
-        if (prevConditionSetting) isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
-        this.warningModuleConfig.conditions.push({
+        if (!prevConditionSetting) return
+        const isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
+        this.tempWarningModuleConfig.conditions.push({
           ...condition,
           activate: prevConditionSetting ? prevConditionSetting.activate : false,
           relatedDashboardId: isRelatedDashbaordExist ? prevConditionSetting.relatedDashboardId : null
@@ -135,9 +170,8 @@ export default {
   methods: {
     saveWarningModuleSetting () {
       this.$emit('update', {
-        activate: this.warningModuleConfig.activate,
-        updateFrequency: '* * * * *',
-        conditions: this.warningModuleConfig.conditions.map(item => ({
+        ...this.tempWarningModuleConfig,
+        conditions: this.tempWarningModuleConfig.conditions.map(item => ({
           id: item.id,
           activate: item.activate,
           relatedDashboardId: item.relatedDashboardId
@@ -201,20 +235,26 @@ export default {
     flex-direction: column;
     .setting-block {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       padding: 24px;
       background-color: #192323;
       border-radius: 5px;
-      margin-bottom: 8px;
+      margin-bottom: 24px;
       margin-right: 20px;
       font-size: 14px;
       .input-radio-group {
         margin-left: 24px;
       }
+      /deep/ .sy-select {
+        .el-input__inner {
+          padding-left: 0;
+          border-bottom: 1px solid #FFF;
+          font-size: 14px;
+        }
+      }
     }
     &-enable {
       .setting-block {
-        margin-bottom: 24px;
         .module-activate-controller {
           margin: 0 12px;
         }
@@ -228,13 +268,6 @@ export default {
         display: flex;
         margin-right: 24px;
         padding: 0 24px 12px 24px;
-      }
-      /deep/ .dashboard-select {
-        .el-input__inner {
-          padding-left: 0;
-          border-bottom: 1px solid #FFF;
-          font-size: 14px;
-        }
       }
     }
     .col {
