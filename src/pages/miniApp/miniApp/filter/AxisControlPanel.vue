@@ -56,12 +56,10 @@ export default {
         return control
       })
       this.controlList = updatedControlList
-      this.$emit('update:initial-control-list', updatedControlList)
       this.$emit('updateControl', updatedControlList)
     },
     removeControl (controlIndex) {
       const updatedControlList = this.controlList.filter((filter, index) => index !== controlIndex)
-      this.$emit('update:initial-control-list', updatedControlList)
       this.$emit('updateControl', updatedControlList)
     }
   }

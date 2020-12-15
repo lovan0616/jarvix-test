@@ -70,7 +70,6 @@ export default {
         return index === filterIndex ? updatedFilter : filter
       })
       this.filterList[filterSetIndex] = updatedFilterSet
-      this.$emit('update:initial-filter-list', this.filterList)
       this.$emit('updateFilter', this.filterList)
     },
     removeFilter (filterSetIndex, filterIndex) {
@@ -84,7 +83,6 @@ export default {
           return updatedFilterSet
         })
       }
-      this.$emit('update:initial-filter-list', updatedFilterList)
       this.$emit('updateFilter', updatedFilterList)
     },
     restrictions (filterSet, index) {

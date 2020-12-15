@@ -310,7 +310,7 @@
                 v-if="controlColumnValueInfoList.length > 0"
                 :key="'control' + currentDashboardId"
                 :is-edit-mode="isEditMode"
-                :initial-filter-list.sync="controlColumnValueInfoList"
+                :initial-filter-list="controlColumnValueInfoList"
                 :is-single-choice-filter="true"
                 class="mini-app__dashboard-filter"
                 @updateFilter="updateFilter($event, 'single')"
@@ -320,7 +320,7 @@
                 v-if="yAxisControlColumnValueInfoList.length > 0"
                 :key="'yAxisControl' + currentDashboardId"
                 :is-edit-mode="isEditMode"
-                :initial-control-list.sync="yAxisControlColumnValueInfoList"
+                :initial-control-list="yAxisControlColumnValueInfoList"
                 class="mini-app__dashboard-filter"
                 @updateControl="updateControl"
               />
@@ -333,7 +333,7 @@
               <filter-control-panel
                 :key="'filter' + currentDashboardId"
                 :is-edit-mode="isEditMode"
-                :initial-filter-list.sync="filterColumnValueInfoList"
+                :initial-filter-list="filterColumnValueInfoList"
                 :is-single-choice-filter="false"
                 class="mini-app__dashboard-filter"
                 @updateFilter="updateFilter($event, 'multiple')"
