@@ -218,7 +218,7 @@ export default {
     },
     isNeedUpdate: {
       type: Boolean,
-      required: true
+      default: false
     },
     isProcessing: {
       type: Boolean,
@@ -288,7 +288,7 @@ export default {
   },
   mounted () {
     this.filter = JSON.parse(JSON.stringify(this.initialFilter))
-    if (this.isNeedUpdate) this.fetchData()
+    if (!this.isSingleChoiceFilter || this.isNeedUpdate) this.fetchData()
     document.addEventListener('click', this.autoHide, false)
   },
   destroyed () {

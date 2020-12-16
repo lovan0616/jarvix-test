@@ -1078,6 +1078,7 @@ export default {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
       editedMiniApp.settings.editModeData.dashboards[dashboradIndex].yAxisControlList = updatedControlList
+      this['yAxisControlColumnValueInfoList'] = [...updatedControlList]
 
       // edit mode 下可以賦予預設值，其餘模式則無法
       if (!this.isEditMode) return this.isProcessing = false
