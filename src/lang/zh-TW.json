@@ -801,6 +801,7 @@
     "setForDisplay": "設為顯示",
     "generalComponent": "一般元件",
     "realTimeMonitorWarning": "即時監控示警",
+    "monitorWarning": "監控示警",
     "monitorComponent": "監控示警元件",
     "generalFilter": "一般篩選條件",
     "dateTimeFilter": "時間條件",
