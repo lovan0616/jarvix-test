@@ -47,6 +47,16 @@ Vue.mixin({
           value: 'others',
           name: i18n.t('warRoom.customize')
         }
+      ],
+      timeScopeUnitOptionList: [
+        { value: 'Second', name: i18n.t('timeScopeUnit.second') },
+        { value: 'Minute', name: i18n.t('timeScopeUnit.minute') },
+        { value: 'Hour', name: i18n.t('timeScopeUnit.hour') },
+        { value: 'Day', name: i18n.t('timeScopeUnit.day') },
+        { value: 'Week', name: i18n.t('timeScopeUnit.week') },
+        { value: 'Month', name: i18n.t('timeScopeUnit.month') },
+        { value: 'Season', name: i18n.t('timeScopeUnit.season') },
+        { value: 'Year', name: i18n.t('timeScopeUnit.year') }
       ]
     }
   },
@@ -77,7 +87,7 @@ Vue.mixin({
     },
     // 標註千分位
     formatComma (str) {
-      if (!str) return str
+      if (!str || str === 'NaN') return str
       // 只處理整數位，不處理小數點位
       const isInt = Number.isInteger(Number(str))
       if (isInt) return str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
