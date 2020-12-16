@@ -101,7 +101,11 @@ export default {
   watch: {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
-      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'dataFrameId': this.dataFrameId})
+      this.fetchApiAsk({
+        question, 'dataSourceId': this.dataSourceId,
+        'dataFrameId': this.dataFrameId,
+        shouldCancelToken: true
+      })
     },
     askCondition: {
       deep: true,
@@ -122,7 +126,8 @@ export default {
             return acc + ((index !== 0 && isEnOrEnum(currentWord)) ? ` ${currentWord}` : currentWord)
           }, ''),
           'dataSourceId': this.$route.query.dataSourceId, 
-          'dataFrameId': this.$route.query.dataFrameId
+          'dataFrameId': this.$route.query.dataFrameId,
+          shouldCancelToken: true
         })
       }
     }
@@ -143,7 +148,8 @@ export default {
       this.fetchApiAsk({
         dataSourceId, 
         dataFrameId,
-        question
+        question,
+        shouldCancelToken: true
       })
     },
     clearLayout () {

@@ -4,7 +4,8 @@ export default {
   namespaced: true,
   state: {
     displayFactorIndex: 0,
-    currentResultId: null
+    currentResultId: null,
+    currentResultInfo: null
   },
   mutations
 }

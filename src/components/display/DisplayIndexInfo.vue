@@ -1,5 +1,6 @@
 <template>
   <div
+    :style="customChartStyle"
     :class="{ 'index-info--warning': isShowAlert }"
     class="index-info"
   >
@@ -18,7 +19,11 @@ export default {
     isShowAlert: {
       type: Boolean,
       default: false
-    }
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
+    },
   }
 }
 </script>
