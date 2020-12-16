@@ -32,27 +32,21 @@
         </div>
       </div>
     </selected-region>
-    <div 
-      v-if="dataset.descriptions && dataset.descriptions.length > 0"
-      class="description"
-    >
-      <span 
-        v-for="(description, index) in dataset.descriptions" 
-        :key="index" 
-        class="description__item">{{ dataset.descriptions.length > 1 ? (index + 1) + '. ' + description : description }}</span>
-    </div>
-    <!-- <div 
-      v-if="dataset.errorMessage && dataset.errorMessage.length > 0"
-      class="description"
-    >
-      <span 
-        v-for="(message, index) in dataset.errorMessage" 
-        :key="index" 
-        class="description__item description__item--warning">{{ dataset.errorMessage.length > 1 ? (index + 1) + '. ' + message : message }}</span>
-    </div> -->
+    <insight-description-block
+      :title="$t('resultDescription.dataInsight')"
+      :message-list="dataset.descriptions"
+      icon-name="len-with-line-chart"
+    />
+    <insight-description-block
+      :title="$t('resultDescription.warning')"
+      :message-list="dataset.warnings"
+      message-type="warning"
+      icon-name="alert-circle"
+    />
   </div>
 </template>
 <script>
+import InsightDescriptionBlock from './InsightDescriptionBlock'
 import { commonChartOptions } from '@/components/display/common/chart-addon'
 import chartVariable from '@/styles/chart/variables.scss'
 import {
@@ -63,6 +57,9 @@ import {
 
 export default {
   name: 'DisplayLineConfidentialIntervalChart',
+  components: {
+    InsightDescriptionBlock
+  },
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
     title: {
@@ -120,6 +117,10 @@ export default {
     lowerBoundList () {
       return this.dataset.predictDataList.map(item => item - this.zValue * this.dataset.sigma)
     },
+    yAxisMinValue () {
+      const invalidDataList = this.actualDataList.invalidDataList.filter(item => item !== null)
+      return Math.floor(this.adjustValueWithOffsetValue(Math.min(...this.lowerBoundList, ...invalidDataList)))*0.9
+    },
     yAxisOffsetValue () {
       return Math.floor(Math.min(0, ...this.lowerBoundList))
     },
@@ -174,7 +175,8 @@ export default {
           },
           symbol: 'none',
           lineStyle: {
-            type: 'dashed'
+            type: 'dashed',
+            opacity: 0
           },
           markLine: {
             symbol: 'none',
@@ -214,7 +216,8 @@ export default {
             opacity: 0.2
           },
           lineStyle: {
-            type: 'dashed'
+            type: 'dashed',
+            opacity: 0
           },
         },
         // valid data
@@ -259,6 +262,7 @@ export default {
         },
         yAxis: {
           ...yAxisDefault(),
+          min: this.yAxisMinValue,
           name: this.title.yAxis[0].display_name,
           axisLabel: {
             formatter: value => this.yAxisOffsetValue + value
@@ -375,29 +379,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.display-line-confidential-interval-chart {
-  .description {
-    margin-top: 40px;
-    background: #141C1D;
-    border-radius: 8px;
-    padding: 10px 20px;
-
-    &:nth-of-type(2n+1) {
-      margin-top: 20px;
-    }
-
-    &__item {
-      font-size: 14px;
-      letter-spacing: 0.1em;
-      display: block;
-      line-height: 24px;
-
-      &--warning {
-        color: #FF5C46;
-      }
-    }
-  }
-}
-</style>

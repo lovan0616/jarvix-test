@@ -44,6 +44,7 @@
 <script>
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
 import { mapState, mapGetters } from 'vuex'
+import { isEnOrEnum } from '@/utils/general'
 
 export default {
   name: 'ResultDisplay',
@@ -114,12 +115,16 @@ export default {
           newValue.columnList === null && newValue.filterList.length === 0
           // 開啟進階設定取得欄位資料時也不重新問問題
           || oldValue.columnList === null && (oldValue.filterList.length === newValue.filterList.length)
+          || this.segmentationPayload === null
         ) return
 
         // 預先觸發重新計算 column summary 和 column correlation
         // this.triggerColumnDataCalculation()
         this.fetchApiAsk({
-          question: this.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
+          question: this.segmentationPayload.sentence.reduce((acc, cur, index) => {
+            let currentWord = cur.word
+            return acc + ((index !== 0 && isEnOrEnum(currentWord)) ? ` ${currentWord}` : currentWord)
+          }, ''),
           'dataSourceId': this.$route.query.dataSourceId, 
           'dataFrameId': this.$route.query.dataFrameId,
           shouldCancelToken: true

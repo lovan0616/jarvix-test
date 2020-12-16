@@ -176,8 +176,8 @@ export default {
       let displayYaxisMax
       let yAxisBuffer = (maxY - minY) / 2
 
-      displayYaxisMax = maxY + yAxisBuffer < 0 ? 0 : maxY + yAxisBuffer
-      displayYaxisMin = minY - yAxisBuffer > 0 ? 0 : minY - yAxisBuffer
+      displayYaxisMax = maxY + yAxisBuffer
+      displayYaxisMin = minY - yAxisBuffer
 
       scatterOptions.chartData.data = this.dataset.data
       scatterOptions.chartData.symbolSize = this.dotSize(this.dataset.data.length)

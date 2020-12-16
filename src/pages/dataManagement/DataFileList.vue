@@ -235,6 +235,11 @@ export default {
     tableHeaders () {
       return [
         {
+          text: 'ID',
+          value: 'id',
+          width: '65px'
+        },
+        {
           text: this.$t('editing.tableName'),
           value: 'primaryAlias',
           sort: true
@@ -248,20 +253,20 @@ export default {
           text: this.$t('editing.createDate'),
           value: 'createDate',
           sort: true,
-          width: '140px',
+          width: '135px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: this.$t('editing.updateDate'),
           value: 'updateDate',
           sort: true,
-          width: '140px',
+          width: '135px',
           time: 'YYYY-MM-DD HH:mm'
         },
         {
           text: this.$t('editing.status'),
           value: 'state',
-          width: '115px'
+          width: '90px'
         },
         {
           text: this.$t('editing.lastUpdateResult'),
@@ -282,8 +287,8 @@ export default {
                 { icon: '', title: 'button.editColumnSet', dialogName: 'columnSet' },
                 { icon: '', title: 'button.editEtlSetting', dialogName: 'etlSetting' },
                 { icon: '', title: 'button.dateTimeColumnSetting', dialogName: 'dateTime' },
-                { icon: '', title: 'button.batchLoadSetting', dialogName: 'batchLoad' },
-                { icon: '', title: 'button.tableCreatedInfo', dialogName: 'createdInfo' }
+                { icon: '', title: 'button.batchLoadSetting', dialogName: 'batchLoad', checkPermission: ['group_edit_data'] },
+                { icon: '', title: 'button.tableCreatedInfo', dialogName: 'createdInfo', checkPermission: ['group_edit_data'] }
               ]
             },
             {
@@ -574,6 +579,10 @@ export default {
   .divider {
     margin: 0 8px;
     color: #979797;
+  }
+
+  /deep/ .data-table .data-table-cell {
+    min-width: 65px;
   }
 
   .dataframe-action {
