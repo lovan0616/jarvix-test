@@ -102,7 +102,6 @@ export default {
   data () {
     return {
       isLoading: false,
-      allConditions: [],
       tempWarningModuleConfig: {}
     }
   },
@@ -150,15 +149,17 @@ export default {
     const { activate, updateFrequency } = this.setting
     this.tempWarningModuleConfig = { activate, updateFrequency, conditions: [] }
 
-    getAlertConditions(this.getCurrentGroupId).then(conditions => {
-      // 存放所有示警條件
-      this.allConditions = conditions
-
-      // 還原之前的設定到示警條件上
+    getAlertConditions(this.getCurrentGroupId).then(conditions => {      
       conditions.forEach(condition => {
+
+        // 尋找之前是否有針對此示警條件做過設定
         const prevConditionSetting = this.setting.conditions.find(item => item.id === condition.id)
-        if (!prevConditionSetting) return
-        const isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
+        
+        // 若有，檢查所設定關聯看板是否還存在
+        let isRelatedDashbaordExist = false
+        if (prevConditionSetting) isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
+        
+        // 組成示警條件列表
         this.tempWarningModuleConfig.conditions.push({
           ...condition,
           activate: prevConditionSetting ? prevConditionSetting.activate : false,
