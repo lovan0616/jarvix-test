@@ -84,11 +84,12 @@
 
   td {
     border-bottom: none;
-    &.underline {
+    &.has-underline {
       text-decoration: underline;
-      text-decoration-style: double;
-      line-height: 2;
       cursor: pointer;
+    }
+    &.is-text-blue {
+      color: $theme-color-primary;
     }
   }
 

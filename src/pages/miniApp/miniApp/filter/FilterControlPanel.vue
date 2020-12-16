@@ -3,21 +3,26 @@
     <svg-icon
       :icon-class="isSingleChoiceFilter ? 'adjuster' : 'filter-outline'" 
       class="filter-control__filter-icon"/>
-    <div 
-      v-for="(filterSet, setIndex) in filterList" 
-      :key="setIndex" 
-      class="filter-control__list">
-      <single-filter-badge
-        v-for="(filter, index) in filterSet"
-        :key="index"
-        :initial-filter="filter"
-        :is-edit-mode="isEditMode"
-        :is-single-choice-filter="isSingleChoiceFilter"
-        :restrictions="restrictions(filterSet, index)"
-        @updateFilter="updateFilter($event, setIndex, index)"
-        @removeFilter="removeFilter(setIndex, index)"
-      />
-    </div>
+    <template v-if="filterList.length > 0" >
+      <div 
+        v-for="(filterSet, setIndex) in filterList"
+        :key="setIndex" 
+        class="filter-control__list">
+        <single-filter-badge
+          v-for="(filter, index) in filterSet"
+          :key="index"
+          :initial-filter="filter"
+          :is-edit-mode="isEditMode"
+          :is-single-choice-filter="isSingleChoiceFilter"
+          :filter-set="filterSet"
+          :is-need-update.sync="filter.isNeedUpdate"
+          :is-processing.sync="filter.isProcessing"
+          @updateFilter="updateFilter($event, setIndex, index)"
+          @removeFilter="removeFilter(setIndex, index)"
+        />
+      </div>
+    </template>
+    
   </section>
 </template>
 
@@ -53,24 +58,48 @@ export default {
       isShowSeletor: false
     }
   },
-  watch: {
-    initialFilterList: {
-      deep: true,
-      handler (updatedFilterList) {
-        this.filterList = updatedFilterList
-      }
-    }
-  },
   mounted () {
-    this.filterList = JSON.parse(JSON.stringify(this.initialFilterList))
+    if (this.isYAxisController || !this.isSingleChoiceFilter) return this.filterList = JSON.parse(JSON.stringify(this.initialFilterList))
+    this.filterList = this.initialFilterList.map(filterSet => {
+      // const isNewFilterSet = filterSet.some(filter => filter.dataValues.length === 0)
+      return filterSet.map((filter, index) => ({ 
+        ...filter,
+        isNeedUpdate: index === 0,
+        isProcessing: true
+      }))
+    })
   },
   methods: {
     updateFilter (updatedFilter, filterSetIndex, filterIndex) {
+      // 先確認是否為該 filter set 最後一個 filter, 如果不是需要等後面都完成再一起 emit 出去更新
+      const isLastFilterInSet = filterIndex === this.filterList[filterSetIndex].length - 1
       const updatedFilterSet = this.filterList[filterSetIndex].map((filter, index) => {
         return index === filterIndex ? updatedFilter : filter
       })
+
+      updatedFilterSet[filterIndex].isNeedUpdate = false
+      updatedFilterSet[filterIndex].isProcessing = false
       this.filterList[filterSetIndex] = updatedFilterSet
-      this.$emit('updateFilter', this.filterList)
+      this.$set(this.filterList, filterSetIndex, updatedFilterSet)
+      
+      if (isLastFilterInSet) {
+        const updatedFilterList = this.filterList.map(filterSet => {
+          return filterSet.map(filter => {
+            const { isProcessing, isNeedUpdate, ...otherData } = filter
+            return otherData
+          })
+        })
+        this.$emit('updateFilter', updatedFilterList)
+        return
+      }
+      
+      // 如果不是該 set 最後一個，則觸發下一個 filter 重新取資料
+      const updatedFilterList = this.filterList
+      updatedFilterList[filterSetIndex][filterIndex + 1].isNeedUpdate = true
+      for (let i = filterIndex + 1; i < updatedFilterList[filterSetIndex].length; i++) {
+        updatedFilterList[filterSetIndex][i].isProcessing = true
+      }
+      this.filterList = [...updatedFilterList]
     },
     removeFilter (filterSetIndex, filterIndex) {
       const updatedFilterSet = this.filterList[filterSetIndex].filter((filter, index) => index !== filterIndex)
@@ -83,75 +112,15 @@ export default {
           return updatedFilterSet
         })
       }
-      this.$emit('updateFilter', updatedFilterList)
-    },
-    restrictions (filterSet, index) {
-      return filterSet
-        .slice(0, index)
-        .filter(filter => {
-          // 相對時間有全選的情境，不需帶入限制中
-          if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
-          if (
-            filter.statsType === 'NUMERIC'
-            || filter.statsType === 'FLOAT'
-            || filter.statsType === 'DATETIME'
-          ) return filter.start && filter.end
-          // filter 必須有值
-          if (filter.dataValues.length > 0) return true
-          return false
+      this.filterList = updatedFilterList
+      this.$emit('updateFilter', updatedFilterList.map(filterSet => {
+        return filterSet.map(filter => {
+          delete filter.isProcessing
+          delete filter.isNeedUpdate
+          return filter
         })
-        .map(filter => {
-
-          let type = ''
-          let data_type = ''
-          switch (filter.statsType) {
-            case ('STRING'):
-            case ('BOOLEAN'):
-            case ('CATEGORY'):
-              data_type = 'string'
-              type = 'enum'
-              break
-            case ('FLOAT'):
-            case ('NUMERIC'):
-              data_type = 'int'
-              type = 'range'
-              break
-            case ('DATETIME'):
-            case ('RELATIVEDATETIME'):
-              data_type = 'datetime'
-              type = 'range'
-              break  
-          }
-
-          // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
-          if (filter.statsType === 'RELATIVEDATETIME') return [{
-            type,
-            properties: {
-              data_type,
-              dc_id: this.componentData.dateTimeColumn.dataColumnId,
-              display_name: this.componentData.dateTimeColumn.dataColumnPrimaryAlias,
-              ...this.formatRelativeDatetime(filter.dataValues[0])
-            }
-          }]
-          
-          return [{
-            type,
-            properties: {
-              data_type,
-              dc_id: filter.columnId,
-              display_name: filter.columnName,
-              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
-                datavalues: filter.dataValues,
-                display_datavalues: filter.dataValues
-              }),
-              ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
-                start: filter.start,
-                end: filter.end
-              }),
-            }
-          }]
-        })
-    },
+      }))
+    }
   }
 }
 </script>
