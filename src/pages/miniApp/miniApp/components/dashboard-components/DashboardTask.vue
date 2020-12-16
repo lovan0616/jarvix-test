@@ -244,7 +244,8 @@ export default {
         : this.componentData.config.diaplayedName
     },
     allFilterList () {
-      return [...this.filters, ...this.controls]
+      // 可能會有階層，因此需要完全攤平
+      return [].concat.apply([], [...this.filters, ...this.controls])
     },
     selectedYAxisControls () {
       return this.yAxisControls.reduce((acc, cur) => {
@@ -302,7 +303,7 @@ export default {
       immediate: true,
       deep: true,
       handler (controls) {
-        if (this.shouldComponentYAxisBeControlled) {
+        if (this.shouldComponentBeFiltered) {
           this.deboucedAskQuestion()
         } else if (controls.length === 0 && this.tempFilteredKeyResultId) {
           // 拔除所有 Y軸控制器 時，清除暫存 filtered info

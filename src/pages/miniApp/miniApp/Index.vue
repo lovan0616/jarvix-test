@@ -272,35 +272,44 @@
                 </div>
               </div>
             </div>
-            <!--Control panel-->
-            <filter-control-panel
-              v-if="controlColumnValueInfoList.length > 0"
-              :key="'control' + currentDashboardId"
-              :is-edit-mode="isEditMode"
-              :initial-filter-list.sync="controlColumnValueInfoList"
-              :is-single-choice-filter="true"
-              class="mini-app__dashboard-filter mini-app__dashboard-filter--top"
-              @updateFilter="updateFilter($event, 'single')"
-            />
-            <!--Y Axis Control panel-->
-            <axis-control-panel
-              v-if="yAxisControlColumnValueInfoList.length > 0"
-              :key="'yAxisControl' + currentDashboardId"
-              :is-edit-mode="isEditMode"
-              :initial-control-list.sync="yAxisControlColumnValueInfoList"
-              class="mini-app__dashboard-filter mini-app__dashboard-filter--middle"
-              @updateControl="updateControl"
-            />
-            <!--Filter Panel-->
-            <filter-control-panel
+            <div
+              v-if="controlColumnValueInfoList.length > 0 || yAxisControlColumnValueInfoList.length > 0"
+              :class="{ 'editing': isEditMode }" 
+              class="mini-app__dashboard-control mini-app__dashboard-control--top">
+              <!--Control panel-->
+              <filter-control-panel
+                v-if="controlColumnValueInfoList.length > 0"
+                :key="'control' + currentDashboardId"
+                :is-edit-mode="isEditMode"
+                :initial-filter-list="controlColumnValueInfoList"
+                :is-single-choice-filter="true"
+                class="mini-app__dashboard-filter"
+                @updateFilter="updateFilter($event, 'single')"
+              />
+              <!--Y Axis Control panel-->
+              <axis-control-panel
+                v-if="yAxisControlColumnValueInfoList.length > 0"
+                :key="'yAxisControl' + currentDashboardId"
+                :is-edit-mode="isEditMode"
+                :initial-control-list="yAxisControlColumnValueInfoList"
+                class="mini-app__dashboard-filter"
+                @updateControl="updateControl"
+              />
+            </div>
+            <div
               v-if="filterColumnValueInfoList.length > 0"
-              :key="'filter' + currentDashboardId"
-              :is-edit-mode="isEditMode"
-              :initial-filter-list.sync="filterColumnValueInfoList"
-              :is-single-choice-filter="false"
-              class="mini-app__dashboard-filter mini-app__dashboard-filter--bottom"
-              @updateFilter="updateFilter($event, 'multiple')"
-            />
+              :class="{ 'editing': isEditMode }" 
+              class="mini-app__dashboard-control mini-app__dashboard-control--bottom">
+              <!--Filter Panel-->
+              <filter-control-panel
+                :key="'filter' + currentDashboardId"
+                :is-edit-mode="isEditMode"
+                :initial-filter-list="filterColumnValueInfoList"
+                :is-single-choice-filter="false"
+                class="mini-app__dashboard-filter"
+                @updateFilter="updateFilter($event, 'multiple')"
+              />
+            </div>
             <div class="mini-app__dashboard-components">
               <template v-if="currentDashboard.components.length > 0">
                 <draggable
@@ -384,6 +393,7 @@
       :title="filterCreationDialogTitle"
       :is-single-choice-filter="isSingleChoiceFilter"
       :is-y-axis-controller="isYAxisController"
+      :is-hierarchical-filter="isHierarchicalFilter"
       @closeDialog="closeFilterCreationDialog"
       @filterCreated="saveCreatedFilter"
     />
@@ -505,6 +515,7 @@ export default {
       yAxisControlColumnValueInfoList: [],
       isShowCreateFilterDialog: false,
       isSingleChoiceFilter: null,
+      isHierarchicalFilter: null,
       isYAxisController: null,
       filterCreationDialogTitle: null,
       draggedContext: { index: -1, futureIndex: -1 }
@@ -578,6 +589,10 @@ export default {
           id: 'SingleChoiceFilter'
         },
         {
+          name: this.$t('miniApp.hierarchicalFilter'),
+          id: 'HierarchicalFilter'
+        },
+        {
           name: this.$t('miniApp.yAxisControl'),
           id: 'YAxisController'
         }
@@ -596,7 +611,7 @@ export default {
       ]
     },
     filterTypeOptions () {
-      const hasRelativeDateTimeFilter = this.filterColumnValueInfoList.find(filter => filter.statsType === "RELATIVEDATETIME")
+      const hasRelativeDateTimeFilter = this.filterColumnValueInfoList.find(filterSet => filterSet.find(filter => filter.statsType === "RELATIVEDATETIME"))
       return [
         {
           name: this.$t('miniApp.generalFilter'),
@@ -720,9 +735,9 @@ export default {
     },
     initFilters () {
       // 一般篩選條件
-      this.filterColumnValueInfoList = this.currentFilterList.map(filter => this.formatRestraint(filter))
+      this.filterColumnValueInfoList = this.currentFilterList.map(filterSet => filterSet.map(filter => this.formatRestraint(filter)))
       // 看板控制項
-      this.controlColumnValueInfoList = this.currentControlList.map(filter => this.formatRestraint(filter))
+      this.controlColumnValueInfoList = this.currentControlList.map(filterSet => filterSet.map(filter => this.formatRestraint(filter)))
       // Y 軸控制器
       this.yAxisControlColumnValueInfoList = this.yAxisControlList.map(control => control.map(filter => this.formatRestraint(filter)))
     },
@@ -1047,11 +1062,8 @@ export default {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
       // 決定要新增到控制項或篩選條件中
-      if (type === 'single') {
-        editedMiniApp.settings.editModeData.dashboards[dashboradIndex].controlList = updatedFilterList
-      } else {
-        editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList = updatedFilterList
-      }
+      editedMiniApp.settings.editModeData.dashboards[dashboradIndex][type === 'single' ? 'controlList' : 'filterList'] = updatedFilterList
+      this[type === 'single' ? 'controlColumnValueInfoList' : 'filterColumnValueInfoList'] = [...updatedFilterList]
       
       // edit mode 下可以賦予預設值，其餘模式則無法
       if (!this.isEditMode) return this.isProcessing = false
@@ -1077,21 +1089,31 @@ export default {
     },
     closeFilterCreationDialog () {
       this.isShowCreateFilterDialog = false
+      this.isHierarchicalFilter = false
       this.isSingleChoiceFilter = null
       this.isYAxisController = null
     },
     createMulitipleChoiceFilter () {
       this.isShowCreateFilterDialog = true
+      this.isHierarchicalFilter = false
       this.isSingleChoiceFilter = false
       this.filterCreationDialogTitle = this.$t('miniApp.createFilterCondition')
     },
     createSingleChoiceFilter () {
       this.isShowCreateFilterDialog = true
+      this.isHierarchicalFilter = false
       this.isSingleChoiceFilter = true
       this.filterCreationDialogTitle = this.$t('miniApp.createPanelControl')
     },
+    createHierarchicalFilter () {
+      this.isShowCreateFilterDialog = true
+      this.isSingleChoiceFilter = true
+      this.isHierarchicalFilter = true
+      this.filterCreationDialogTitle = this.$t('miniApp.createHierarchicalFilter')
+    },
     createYAxisController () {
       this.isShowCreateFilterDialog = true
+      this.isHierarchicalFilter = null
       this.isYAxisController = true
       this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
     },
@@ -1114,7 +1136,7 @@ export default {
     },
     createTimeFilter () {
       this.isSingleChoiceFilter = false
-      this.saveCreatedFilter([{
+      this.saveCreatedFilter([[{
         id: Date.now().toString(),
         dataSourceId: null,
         dataSourceName: null,
@@ -1124,7 +1146,7 @@ export default {
         dataType: null,
         statsType: 'RELATIVEDATETIME',
         columnName: this.$t('miniApp.dateTimeFilter'),
-      }])
+      }]])
     },
     createFilterAndControl (type) {
       this[`create${type}`]()
@@ -1595,18 +1617,30 @@ export default {
     }
   }
 
-  &__dashboard-filter {
+  &__dashboard-control {
+    display: flex;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    margin-right: 16px;
+    flex-wrap: wrap;
     &--top {
-      z-index: 3;
-      margin-bottom: 12px;
-    }
-    &--middle {
       z-index: 2;
       margin-bottom: 12px;
     }
     &--bottom {
       z-index: 1;
       margin-bottom: 20px;
+    }
+
+    &.editing {
+      padding: 16px 19px 0 19px;
+      background: #1C292B;
+    }
+  }
+
+  &__dashboard-filter {
+    &:not(:last-of-type) {
+      margin-right: 20px;
     }
   }
 
