@@ -256,8 +256,8 @@ export default {
           } else {
             this.valueList = this.valueList.map(element => {
               return {
-                value: element,
-                name: element,
+                value: element.columnValue,
+                name: element.displayColumnValue,
                 active: this.subRestraint.properties.datavalues.includes(element)
               }
             })
@@ -291,19 +291,18 @@ export default {
       this.isProcessing = true
       // category value 如果一開始有值，表示資料筆數小於 200，不需用後端的 search
       if(!this.isCategoryValueEmpty) {
-        this.valueList = this.tempValueList.filter(element => !this.queryString || element.name === this.queryString)
+        this.valueList = this.tempValueList.filter(element => !this.queryString || element.name.toLowerCase().includes(this.queryString.toLowerCase()))
       } else {
         dataValueFuzzySearch(this.columnId, this.queryString)
-        .then(response => {
-          this.valueList = response.fuzzySearchResult
-          this.valueList = this.valueList.map(element => {
-            return {
-              value: element,
-              name: element,
-              active: this.subRestraint.properties.datavalues.includes(element)
-            }
+          .then(({fuzzySearchResult}) => {
+            this.valueList = fuzzySearchResult.map(element => {
+              return {
+                value: element,
+                name: element,
+                active: this.subRestraint.properties.datavalues.includes(element)
+              }
+            })
           })
-        })
       }
       this.isProcessing = false
       this.queryString = ''
@@ -344,6 +343,7 @@ export default {
     font-size:14px;
     line-height: 22px;
     color: #CCC;
+    @include text-hidden;
   }
 
   &__content {
@@ -451,6 +451,9 @@ export default {
 
       /deep/ .el-select__tags {
         .el-tag.el-tag--info {
+          display: flex;
+          align-items: center;
+          max-width: 200px;
           height: 26px;
           font-weight: 600;
           font-size: 14px;
@@ -458,6 +461,10 @@ export default {
           background-color: transparent;
           border-color: $theme-color-primary;
           color: $theme-color-primary;
+
+          .el-select__tags-text {
+            @include text-hidden;
+          }
         }
 
         .el-tag__close {
@@ -480,6 +487,8 @@ export default {
       }
 
       /deep/ .el-select-dropdown {
+        width: 100%;
+
         .el-select-dropdown__item {
           padding: 0 20px 0 36px;
           font-weight: normal;
