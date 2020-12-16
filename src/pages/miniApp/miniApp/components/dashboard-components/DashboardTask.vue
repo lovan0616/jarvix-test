@@ -315,7 +315,6 @@ export default {
       immediate: true,
       deep: true,
       handler (controls) {
-        console.log('ycon')
         if (this.shouldComponentYAxisBeControlled) {
           this.deboucedAskQuestion()
         } else if (controls.length === 0 && this.tempFilteredKeyResultId) {
