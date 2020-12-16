@@ -1078,6 +1078,7 @@ export default {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
       editedMiniApp.settings.editModeData.dashboards[dashboradIndex].yAxisControlList = updatedControlList
+      this['yAxisControlColumnValueInfoList'] = [...updatedControlList]
 
       // edit mode 下可以賦予預設值，其餘模式則無法
       if (!this.isEditMode) return this.isProcessing = false
@@ -1153,25 +1154,31 @@ export default {
     },
     warningLogTriggered ({ relatedDashboardId, rowData }) {
       this.activeCertainDashboard(relatedDashboardId)
-      this.controlColumnValueInfoList.forEach(item => {
-        // 如果 log rowData 有欄位同 controller 欄位，就將預設值設定為該筆 rowData 該 column 的值
-        const sameColumnRow = rowData.find(rowDataColumn => rowDataColumn.dataColumnId === item.columnId)
-        if (sameColumnRow) item.dataValues = [sameColumnRow.datum]
+      this.controlColumnValueInfoList.forEach(filterSet => {
+        filterSet.forEach(filter => {
+          // 如果 log rowData 有欄位同 controller 欄位，就將預設值設定為該筆 rowData 該 column 的值
+          const sameColumnRow = rowData.find(rowDataColumn => rowDataColumn.dataColumnId === filter.columnId)
+          if (sameColumnRow) filter.dataValues = [sameColumnRow.datum]
+        })
       })
     },
     columnTriggered ({ relatedDashboardId, cellValue, columnId }) {
       this.activeCertainDashboard(relatedDashboardId)
-      this.controlColumnValueInfoList.forEach(item => {
-        // 如果目標 Dashboard 已設定該欄位 controller，就將預設值設定為剛剛使用者點的 cell 的值
-        if (item.columnId === columnId) item.dataValues = [cellValue]
+      this.controlColumnValueInfoList.forEach(filterSet => {
+        filterSet.forEach(filter => {
+          // 如果目標 Dashboard 已設定該欄位 controller，就將預設值設定為剛剛使用者點的 cell 的值
+          if (filter.columnId === columnId) filter.dataValues = [cellValue]
+        })
       })
     },
     chartTriggered ({ relatedDashboardId, restrictions }) {
       this.activeCertainDashboard(relatedDashboardId)
-      this.controlColumnValueInfoList.forEach(item => {
-        // 確認有無對應到欲前往的 dashboard 中的任一控制項
-        const targetRestriction = restrictions.find(restriction => item.columnId === restriction.dc_id)
-        if (targetRestriction) item.dataValues = [targetRestriction.value]
+      this.controlColumnValueInfoList.forEach(filterSet => {
+        filterSet.forEach(item => {
+          // 確認有無對應到欲前往的 dashboard 中的任一控制項
+          const targetRestriction = restrictions.find(restriction => item.columnId === restriction.dc_id)
+          if (targetRestriction) item.dataValues = [targetRestriction.value]
+        })
       })
     },
     createComponentType (type) {
