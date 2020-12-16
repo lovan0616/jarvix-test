@@ -1,5 +1,9 @@
 {
   "lang": "繁中",
+  "common": {
+    "show": "顯示",
+    "hide": "隱藏"
+  },
   "nav": {
     "index": "智能分析",
     "pinboard": "個人釘板",
@@ -147,7 +151,8 @@
     "and": "和",
     "upperBound": "上限",
     "lowerBound": "下限",
-    "noPeriodicResult": "沒有找到週期結果"
+    "noPeriodicResult": "沒有找到週期結果",
+    "numericShouldBeBetween": "數字需介在 {min} 到 {max} 之間"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -709,6 +714,11 @@
     "thresholdSetting": "上下限標記",
     "maxThreshold": "上限設定",
     "minThreshold": "下限設定",
+    "waringMail": "示警郵件通知",
+    "mailReceiversetting": "*請至戰情室設定選擇收件人信箱",
+    "recipientList": "收件人名單",
+    "recipientListSettingWarning":"*一般使用者只能設定自己",
+    "maxDataCount":"顯示的資料筆數",
     "pleaseEnterValue": "請輸入數值",
     "notChosen": "未選擇",
     "indexTypeContent": "指標型內容",
@@ -841,6 +851,10 @@
     "goToDashboard": "前往@:miniApp.dashboard",
     "link": "連結",
     "warningModuleIsInactive": "此應用程式未開啟示警模組",
+    "markAsFinished": "標示已處理",
+    "markAsUnfinished": "標示未處理",
+    "hierarchicalFilter": "階層控制群",
+    "createHierarchicalFilter": "新增看板階層控制項",
     "finished": "已處理",
     "unfinished": "未處理",
     "state": "處理狀態",
@@ -850,7 +864,8 @@
     "dataFrame": "資料表",
     "dataColumnRelationSetting": "表格內容關聯設定",
     "dataColumnRelationSettingReminding": "使用者點擊內容時，會將內容帶入看板作為控制條件參數。",
-    "notBeingSet": "未設定"
+    "notBeingSet": "未設定",
+    "orderUpdated": "{target}排序已更新"
   },
   "clustering": {
     "cluster": "群體",
@@ -1053,7 +1068,8 @@
     "AddNewWarRoom": "新增戰情室",
     "sendInvitation": "寄送邀請信",
     "downloadPage": "下載圖片",
-    "changeDiagram": "切換圖表"
+    "changeDiagram": "切換圖表",
+    "columnSummaryInfo": "欄位統計資訊"
   },
   "timeScopeUnit": {
     "second": "秒",
@@ -1898,6 +1914,7 @@
     "dataInsight": "資料洞察",
     "recommendedInsight": "推薦洞察",
     "keyInsight": "關鍵洞察",
+    "warning": "提醒",
     "total": "整體",
     "is": "為",
     "dataRowCount": "資料筆數",

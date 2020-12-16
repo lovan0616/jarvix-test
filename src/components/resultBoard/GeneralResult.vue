@@ -227,6 +227,8 @@ export default {
   mounted () {
     if (this.currentResultId) {
       this.activeTab = this.intent
+      const OverViewIndex = this.resultInfo.canDoList.indexOf('OVERVIEW')
+      if(OverViewIndex !== -1) this.resultInfo.canDoList.splice(0, 0, this.resultInfo.canDoList.splice(OverViewIndex, 1)[0])
       this.switchTypeList = this.resultInfo.canDoList.map(type => ({
         denotation: type,
         ...this.getSwitchTypeInfoList(type),

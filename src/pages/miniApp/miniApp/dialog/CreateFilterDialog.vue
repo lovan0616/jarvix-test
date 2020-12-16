@@ -63,7 +63,16 @@
           <template v-if="selectedBasicInfo.dataFrameId">
             <template v-if="!isYAxisController">
               <div class="card__wrapper">
-                <div class="card__wrapper-title">篩選條件項目</div>
+                <div class="card__wrapper-title">
+                  <div class="card__wrapper-title--left">
+                    篩選條件項目
+                  </div>
+                  <div 
+                    v-if="isHierarchicalFilter" 
+                    class="card__wrapper-title--right">
+                    *階層關係由上至下
+                  </div>
+                </div>
                 <single-column-card
                   v-for="(filter, index) in filterInfoList"
                   :filter-info="filter"
@@ -163,6 +172,10 @@ export default {
       default: false
     },
     isYAxisController : {
+      type: Boolean,
+      default: false
+    },
+    isHierarchicalFilter: {
       type: Boolean,
       default: false
     }
@@ -292,7 +305,13 @@ export default {
     createFilter () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
-        this.$emit('filterCreated', this.filterInfoList)
+        if (this.isYAxisController) {
+          this.$emit('filterCreated', this.filterInfoList)
+        } else if (this.isHierarchicalFilter) {
+          this.$emit('filterCreated', [this.filterInfoList])
+        } else {
+          this.$emit('filterCreated', this.filterInfoList.map(filter => ([filter])))
+        }
       })
     },
     updateYAxisControllerList (columnIdList) {
@@ -501,9 +520,19 @@ export default {
 
   .card {
     &__wrapper-title {
-      font-size: 14px;
-      color: #CCCCCC;
-      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      &--left {
+        line-height: 25px;
+        font-size: 14px;
+        color: #CCCCCC;
+        margin-bottom: 15px;
+      }
+      &--right {
+        line-height: 25px;
+        font-size: 12px;
+        color: #FFFFFF;
+      }
     }
   }
 

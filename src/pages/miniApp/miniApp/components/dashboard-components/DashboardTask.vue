@@ -9,37 +9,56 @@
   >
     <div class="component__item-inner-container">
       <span class="component__item-header">
-        <el-tooltip 
-          :content="componentData.config.diaplayedName" 
-          placement="bottom">
-          <span 
-            class="item-title" 
-            v-html="dashboardTaskTitle" />
-        </el-tooltip>
-        <div
-          v-if="isEditMode"
-          class="component-setting-box">
-          <svg-icon 
-            icon-class="more"
-            class="more-icon" />
-          <slot name="drowdown"/>
-        </div>
-        <div 
-          v-else-if="componentData.config.relatedDashboard"
-          class="component-setting-box"
-        >
+        <div class="header-left">
           <el-tooltip 
-            :content="componentData.config.relatedDashboard.name" 
+            :content="componentData.config.diaplayedName" 
             placement="bottom">
-            <div @click="$emit('redirect', componentData.config.relatedDashboard.id)">
-              <svg-icon icon-class="open-link"/>
-            </div>
+            <span 
+              class="item-title" 
+              v-html="dashboardTaskTitle" />
           </el-tooltip>
         </div>
-        <div v-else-if="componentData.type === 'monitor-warning-list'">
-          <svg-icon 
-            icon-class="warning" 
-            class="icon-warning"/>
+        <div class="header-right">
+          <div class="component-property-box" >
+            <el-tooltip
+              v-if="componentData.config.relatedDashboard" 
+              :content="displayedRelatedDashboard"
+            >
+              <div
+                class="property__item"
+                @click="$emit('redirect', componentData.config.relatedDashboard.id)"
+              >
+                <svg-icon
+                  icon-class="chain"
+                  class="icon-chain"
+                />
+              </div>
+            </el-tooltip>
+            <el-tooltip
+              v-if="componentData.config.isAutoRefresh"
+              :content="displayedUpdateFrequency"
+            >
+              <div class="property__item">
+                <svg-icon 
+                  icon-class="auto-refresh"
+                  class="icon-refresh"
+                />
+              </div>
+            </el-tooltip>
+          </div>
+          <div
+            v-if="isEditMode"
+            class="component-setting-box">
+            <svg-icon 
+              icon-class="more"
+              class="more-icon" />
+            <slot name="drowdown"/>
+          </div>
+          <div v-else-if="componentData.type === 'monitor-warning-list'">
+            <svg-icon 
+              icon-class="warning" 
+              class="icon-warning"/>
+          </div>
         </div>
       </span>
       <div
@@ -105,24 +124,6 @@
           @clickCell="columnTriggered($event)"
           @clickChart="chartriggered($event)"
         />
-      </div>
-      <div class="component__item-action">
-        <div
-          v-if="componentData.config.relatedDashboard && isEditMode"
-          class="related-item"
-        >
-          <div class="related-item__title">
-            {{ $t('miniApp.relatedDashboard') }}：
-          </div>
-          <div class="related-item__name">
-            {{ componentData.config.relatedDashboard.name }}
-          </div>
-          <div 
-            class="related-item__close" 
-            @click="isShowConfirmDelete = true">
-            <svg-icon icon-class="close"/>
-          </div>
-        </div>
       </div>
     </div>
     <decide-dialog
@@ -212,6 +213,9 @@ export default {
       return this.includeSameColumnPrimaryAliasFilter || this.includeSameDataFrameFilter || this.includeRelativeDatetimeFilter
     },
     shouldComponentYAxisBeControlled () {
+      // 表格型元件 不受 Y軸控制器 影響
+      if (this.componentData.diagram === 'table') return false
+
       const yAxisControlsDataFrames = this.selectedYAxisControls.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
       return yAxisControlsDataFrames.includes(this.componentData.dataFrameId)
     },
@@ -224,14 +228,17 @@ export default {
       return dataColumn ? dataColumn.dataColumnAlias : ''
     },
     newYAxisColumnNames () {
+      if (!this.shouldComponentYAxisBeControlled) return null
       return this.selectedYAxisControls.reduce((acc, cur) => acc.concat(` ${cur.columnName}`), '')
     },
     controllerMutatedQuestion () {
       if (this.componentData.type === 'monitor-warning-list') return ''
+      if (!this.shouldComponentYAxisBeControlled) return ''
       return this.componentData.question.replace(this.dataColumnAlias, this.newYAxisColumnNames)
     },
     controllerMutatedQuestionWithStyleTag () {
       if (this.componentData.type === 'monitor-warning-list') return ''
+      if (!this.shouldComponentYAxisBeControlled) return ''
       return this.componentData.question.replace(this.dataColumnAlias, `
         <div style="text-decoration: underline; margin-left: 4px; white-space: nowrap; display: flex;">${this.newYAxisColumnNames}<div>
       `)
@@ -242,7 +249,8 @@ export default {
         : this.componentData.config.diaplayedName
     },
     allFilterList () {
-      return [...this.filters, ...this.controls]
+      // 可能會有階層，因此需要完全攤平
+      return [].concat.apply([], [...this.filters, ...this.controls])
     },
     selectedYAxisControls () {
       return this.yAxisControls.reduce((acc, cur) => {
@@ -280,6 +288,18 @@ export default {
         index: index + 1,
         className: 'has-underline is-text-blue'
       }]
+    },
+    displayedRelatedDashboard () {
+      return `
+        ${this.$t('miniApp.relatedDashboard')}：
+        ${this.componentData.config.relatedDashboard.name}
+      `
+    },
+    displayedUpdateFrequency () {
+      return `
+        ${this.$t('miniApp.updateFrequency')}：
+        ${this.$t('warRoom.everyMinute', { number: this.convertRefreshFrequency(this.componentData.config.refreshFrequency) / (60 * 1000) })}
+      `
     }
   },
   watch: {
@@ -603,43 +623,87 @@ $direction-span: ("col": 8, "row": 6);
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
-    .item-title {
-      color: #DDD;
-      @include text-hidden;
+    .header-left {
       display: flex;
-    }
-    .component-setting-box {
-      position: relative;
-      color: $theme-color-primary;
-      flex: 0 0 30px;
-      height: 30px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: .2s all ease;
-      cursor: pointer;
-      @include dropdown-select-controller;
-      &:hover {
-        background-color: $theme-color-primary;
-        color: #FFF;
-        border-radius: 4px;
+      .item-title {
+        color: #DDD;
+        @include text-hidden;
+        display: flex;
       }
-      .dropdown-select {
-        z-index: 1;
-        /deep/ .dropdown-select-box {
-          box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
-          top: 31px;
-          right: 0;
-          &::before {
-            right: 5px;
+    }
+    .header-right {
+      display: flex;
+      justify-content: flex-end;
+      .component-property-box {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        cursor: pointer;
+        .property__item {
+          height: 24px;
+          flex: 0 0 24px;
+          background-color: #474F4F;
+          border: 1px solid #192323;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: .1s all cubic-bezier(1, -0.9, .89, 1.34);
+          &:not(:last-child) {
+            margin-right: -5px;
           }
-          .svg-icon {
-            color: $theme-color-primary;
+          .svg-icon { 
+            width: 14px;
           }
-          .dropdown-flex {
-            min-width: unset;
+          .icon-refresh {
+            // 為了讓此 icon 與相鄰的 icon 視覺面積較為一致
+            transform: scale(1.1);
           }
         }
+        &:hover {
+          .property__item {
+            &:not(:last-child) {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+      .component-setting-box {
+        position: relative;
+        color: $theme-color-primary;
+        flex: 0 0 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: .2s all ease;
+        cursor: pointer;
+        @include dropdown-select-controller;
+        &:hover {
+          background-color: $theme-color-primary;
+          color: #FFF;
+          border-radius: 4px;
+        }
+        .dropdown-select {
+          z-index: 1;
+          /deep/ .dropdown-select-box {
+            box-shadow: 0px 2px 5px rgba(34, 117, 125, 0.5);
+            top: 31px;
+            right: 0;
+            &::before {
+              right: 5px;
+            }
+            .svg-icon {
+              color: $theme-color-primary;
+            }
+            .dropdown-flex {
+              min-width: unset;
+            }
+          }
+        }
+      }
+      .component-property-box ~ .component-setting-box {
+        margin-left: 8px;
       }
     }
     .icon-warning {

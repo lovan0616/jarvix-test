@@ -133,47 +133,17 @@
           </div>
         </template>
         <template v-else>
-          <aside class="mini-app__side-nav">
-            <div class="title">
-              <svg-icon 
-                icon-class="dashboard" 
-                class="label-icon"/>
-              <span class="label-name">{{ $t('miniApp.dashboardList') }}</span>
-              <div
-                v-if="isEditMode"
-                class="create-dashboard-icon-block"
-                @click="isShowCreateDashboardDialog = true"
-              >
-                <svg-icon 
-                  icon-class="plus" 
-                  class="create-dashboard-icon"/>
-              </div>
-            </div>
-            <ul class="item-wrapper">
-              <li
-                v-for="dashboard in dashboardList" 
-                :key="dashboard.id"
-                :class="{'is-active': dashboard.id === currentDashboardId}"
-                class="item"
-                @click="activeCertainDashboard(dashboard.id)"
-              >
-                <svg-icon 
-                  class="item-icon" 
-                  icon-class="triangle"/>
-                <span class="item-name">{{ dashboard.name }}</span>
-              </li>
-            </ul>
-            <div
-              v-if="isEditMode || appData.warningModule.activate"
-              :class="{'is-active': isShowWarningModule && !currentDashboardId}"
-              class="title warning-module-entry"
-              @click="openWarningModule">
-              <svg-icon 
-                icon-class="warning" 
-                class="label-icon"/>
-              <span class="label-name">{{ $t('miniApp.monitorWarning') }}</span>
-            </div>
-          </aside>
+          <mini-app-side-nav
+            :is-edit-mode="isEditMode"
+            :dashboard-list="dashboardList"
+            :current-dashboard-id="currentDashboardId"
+            :is-warning-module-activate="appData.warningModule.activate"
+            :is-show-warning-module="isShowWarningModule"
+            @openWarningModule="openWarningModule"
+            @activeCertainDashboard="activeCertainDashboard($event)"
+            @showCreateDashboardDialog="isShowCreateDashboardDialog = true"
+            @updateDashboardOrder="updateOrder($t('miniApp.dashboard'))"
+          />
           <!-- 監控示警模組 -->
           <main 
             v-if="isShowWarningModule && !currentDashboardId"
@@ -302,66 +272,83 @@
                 </div>
               </div>
             </div>
-            <!--Control panel-->
-            <filter-control-panel
-              v-if="controlColumnValueInfoList.length > 0"
-              :key="'control' + currentDashboardId"
-              :is-edit-mode="isEditMode"
-              :initial-filter-list.sync="controlColumnValueInfoList"
-              :is-single-choice-filter="true"
-              class="mini-app__dashboard-filter mini-app__dashboard-filter--top"
-              @updateFilter="updateFilter($event, 'single')"
-            />
-            <!--Y Axis Control panel-->
-            <axis-control-panel
-              v-if="yAxisControlColumnValueInfoList.length > 0"
-              :key="'yAxisControl' + currentDashboardId"
-              :is-edit-mode="isEditMode"
-              :initial-control-list.sync="yAxisControlColumnValueInfoList"
-              class="mini-app__dashboard-filter mini-app__dashboard-filter--middle"
-              @updateControl="updateControl"
-            />
-            <!--Filter Panel-->
-            <filter-control-panel
+            <div
+              v-if="controlColumnValueInfoList.length > 0 || yAxisControlColumnValueInfoList.length > 0"
+              :class="{ 'editing': isEditMode }" 
+              class="mini-app__dashboard-control mini-app__dashboard-control--top">
+              <!--Control panel-->
+              <filter-control-panel
+                v-if="controlColumnValueInfoList.length > 0"
+                :key="'control' + currentDashboardId"
+                :is-edit-mode="isEditMode"
+                :initial-filter-list="controlColumnValueInfoList"
+                :is-single-choice-filter="true"
+                class="mini-app__dashboard-filter"
+                @updateFilter="updateFilter($event, 'single')"
+              />
+              <!--Y Axis Control panel-->
+              <axis-control-panel
+                v-if="yAxisControlColumnValueInfoList.length > 0"
+                :key="'yAxisControl' + currentDashboardId"
+                :is-edit-mode="isEditMode"
+                :initial-control-list="yAxisControlColumnValueInfoList"
+                class="mini-app__dashboard-filter"
+                @updateControl="updateControl"
+              />
+            </div>
+            <div
               v-if="filterColumnValueInfoList.length > 0"
-              :key="'filter' + currentDashboardId"
-              :is-edit-mode="isEditMode"
-              :initial-filter-list.sync="filterColumnValueInfoList"
-              :is-single-choice-filter="false"
-              class="mini-app__dashboard-filter mini-app__dashboard-filter--bottom"
-              @updateFilter="updateFilter($event, 'multiple')"
-            />
+              :class="{ 'editing': isEditMode }" 
+              class="mini-app__dashboard-control mini-app__dashboard-control--bottom">
+              <!--Filter Panel-->
+              <filter-control-panel
+                :key="'filter' + currentDashboardId"
+                :is-edit-mode="isEditMode"
+                :initial-filter-list="filterColumnValueInfoList"
+                :is-single-choice-filter="false"
+                class="mini-app__dashboard-filter"
+                @updateFilter="updateFilter($event, 'multiple')"
+              />
+            </div>
             <div class="mini-app__dashboard-components">
               <template v-if="currentDashboard.components.length > 0">
-                <dashboard-task
-                  v-for="componentData in currentDashboard.components"
-                  :key="componentData.id"
-                  :filters="filterColumnValueInfoList"
-                  :y-axis-controls="yAxisControlColumnValueInfoList"
-                  :controls="controlColumnValueInfoList"
-                  :component-data="componentData"
-                  :is-edit-mode="isEditMode"
-                  :warning-module-setting="appData.warningModule"
-                  @redirect="activeCertainDashboard($event)"
-                  @deleteComponentRelation="deleteComponentRelation"
-                  @columnTriggered="columnTriggered"
-                  @chartTriggered="chartTriggered"
-                  @goToWarningLogPage="openWarningModule"
+                <draggable
+                  :list="currentDashboard.components"
+                  :move="logDraggingMovement"
+                  ghost-class="dragging-ghost"
+                  style="height: 100%"
+                  @end="updateOrder($t('miniApp.component'))"
                 >
-                  <template slot="drowdown">
-                    <dropdown-select
-                      :bar-data="componentSettingOptions(componentData)"
-                      @switchDialogName="switchDialogName($event, componentData.id)"
-                    />
-                  </template>
-                  <template 
-                    v-if="componentData.type === 'monitor-warning-list'" 
-                    slot="icon">
-                    <svg-icon 
-                      icon-class="warning" 
-                      class="warning-icon"/>
-                  </template>
-                </dashboard-task>
+                  <dashboard-task
+                    v-for="componentData in currentDashboard.components"
+                    :key="componentData.id"
+                    :filters="filterColumnValueInfoList"
+                    :y-axis-controls="yAxisControlColumnValueInfoList"
+                    :controls="controlColumnValueInfoList"
+                    :component-data="componentData"
+                    :is-edit-mode="isEditMode"
+                    :warning-module-setting="appData.warningModule"
+                    @redirect="activeCertainDashboard($event)"
+                    @deleteComponentRelation="deleteComponentRelation"
+                    @columnTriggered="columnTriggered"
+                    @chartTriggered="chartTriggered"
+                    @goToWarningLogPage="openWarningModule"
+                  >
+                    <template slot="drowdown">
+                      <dropdown-select
+                        :bar-data="componentSettingOptions(componentData)"
+                        @switchDialogName="switchDialogName($event, componentData.id)"
+                      />
+                    </template>
+                    <template 
+                      v-if="componentData.type === 'monitor-warning-list'" 
+                      slot="icon">
+                      <svg-icon 
+                        icon-class="warning" 
+                        class="warning-icon"/>
+                    </template>
+                  </dashboard-task>
+                </draggable>
               </template>
               <template v-else>
                 <div class="empty-block">
@@ -407,6 +394,7 @@
       :title="filterCreationDialogTitle"
       :is-single-choice-filter="isSingleChoiceFilter"
       :is-y-axis-controller="isYAxisController"
+      :is-hierarchical-filter="isHierarchicalFilter"
       @closeDialog="closeFilterCreationDialog"
       @filterCreated="saveCreatedFilter"
     />
@@ -463,6 +451,7 @@ import {
   updateAppSetting,
   deleteMiniApp
 } from '@/API/MiniApp'
+import MiniAppSideNav from './components/MiniAppSideNav'
 import DashboardTask from './components/dashboard-components/DashboardTask'
 import CreateDashboardDialog from './dialog/CreateDashboardDialog.vue'
 import CreateComponentDialog from './dialog/CreateComponentDialog.vue'
@@ -477,11 +466,13 @@ import AxisControlPanel from './filter/AxisControlPanel'
 import WarningModule from './components/warning-module/WarningModule'
 import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
+import draggable from 'vuedraggable'
 
 export default {
   inject: ['$validator'],
   name: 'MiniApp',
   components: {
+    MiniAppSideNav,
     DashboardTask,
     CreateDashboardDialog,
     CreateComponentDialog,
@@ -496,7 +487,8 @@ export default {
     DecideDialog,
     FilterControlPanel,
     AxisControlPanel,
-    WarningModule
+    WarningModule,
+    draggable
   },
   data () {
     return {
@@ -525,8 +517,10 @@ export default {
       yAxisControlColumnValueInfoList: [],
       isShowCreateFilterDialog: false,
       isSingleChoiceFilter: null,
+      isHierarchicalFilter: null,
       isYAxisController: null,
-      filterCreationDialogTitle: null
+      filterCreationDialogTitle: null,
+      draggedContext: { index: -1, futureIndex: -1 }
     }
   },
   computed: {
@@ -597,6 +591,10 @@ export default {
           id: 'SingleChoiceFilter'
         },
         {
+          name: this.$t('miniApp.hierarchicalFilter'),
+          id: 'HierarchicalFilter'
+        },
+        {
           name: this.$t('miniApp.yAxisControl'),
           id: 'YAxisController'
         }
@@ -615,7 +613,7 @@ export default {
       ]
     },
     filterTypeOptions () {
-      const hasRelativeDateTimeFilter = this.filterColumnValueInfoList.find(filter => filter.statsType === "RELATIVEDATETIME")
+      const hasRelativeDateTimeFilter = this.filterColumnValueInfoList.find(filterSet => filterSet.find(filter => filter.statsType === "RELATIVEDATETIME"))
       return [
         {
           name: this.$t('miniApp.generalFilter'),
@@ -739,9 +737,9 @@ export default {
     },
     initFilters () {
       // 一般篩選條件
-      this.filterColumnValueInfoList = this.currentFilterList.map(filter => this.formatRestraint(filter))
+      this.filterColumnValueInfoList = this.currentFilterList.map(filterSet => filterSet.map(filter => this.formatRestraint(filter)))
       // 看板控制項
-      this.controlColumnValueInfoList = this.currentControlList.map(filter => this.formatRestraint(filter))
+      this.controlColumnValueInfoList = this.currentControlList.map(filterSet => filterSet.map(filter => this.formatRestraint(filter)))
       // Y 軸控制器
       this.yAxisControlColumnValueInfoList = this.yAxisControlList.map(control => control.map(filter => this.formatRestraint(filter)))
     },
@@ -1070,11 +1068,8 @@ export default {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
       // 決定要新增到控制項或篩選條件中
-      if (type === 'single') {
-        editedMiniApp.settings.editModeData.dashboards[dashboradIndex].controlList = updatedFilterList
-      } else {
-        editedMiniApp.settings.editModeData.dashboards[dashboradIndex].filterList = updatedFilterList
-      }
+      editedMiniApp.settings.editModeData.dashboards[dashboradIndex][type === 'single' ? 'controlList' : 'filterList'] = updatedFilterList
+      this[type === 'single' ? 'controlColumnValueInfoList' : 'filterColumnValueInfoList'] = [...updatedFilterList]
       
       // edit mode 下可以賦予預設值，其餘模式則無法
       if (!this.isEditMode) return this.isProcessing = false
@@ -1089,6 +1084,7 @@ export default {
       const editedMiniApp = JSON.parse(JSON.stringify(this.miniApp))
 
       editedMiniApp.settings.editModeData.dashboards[dashboradIndex].yAxisControlList = updatedControlList
+      this['yAxisControlColumnValueInfoList'] = [...updatedControlList]
 
       // edit mode 下可以賦予預設值，其餘模式則無法
       if (!this.isEditMode) return this.isProcessing = false
@@ -1100,21 +1096,31 @@ export default {
     },
     closeFilterCreationDialog () {
       this.isShowCreateFilterDialog = false
+      this.isHierarchicalFilter = false
       this.isSingleChoiceFilter = null
       this.isYAxisController = null
     },
     createMulitipleChoiceFilter () {
       this.isShowCreateFilterDialog = true
+      this.isHierarchicalFilter = false
       this.isSingleChoiceFilter = false
       this.filterCreationDialogTitle = this.$t('miniApp.createFilterCondition')
     },
     createSingleChoiceFilter () {
       this.isShowCreateFilterDialog = true
+      this.isHierarchicalFilter = false
       this.isSingleChoiceFilter = true
       this.filterCreationDialogTitle = this.$t('miniApp.createPanelControl')
     },
+    createHierarchicalFilter () {
+      this.isShowCreateFilterDialog = true
+      this.isSingleChoiceFilter = true
+      this.isHierarchicalFilter = true
+      this.filterCreationDialogTitle = this.$t('miniApp.createHierarchicalFilter')
+    },
     createYAxisController () {
       this.isShowCreateFilterDialog = true
+      this.isHierarchicalFilter = null
       this.isYAxisController = true
       this.filterCreationDialogTitle = this.$t('miniApp.createSingleYAxisController')
     },
@@ -1137,7 +1143,7 @@ export default {
     },
     createTimeFilter () {
       this.isSingleChoiceFilter = false
-      this.saveCreatedFilter([{
+      this.saveCreatedFilter([[{
         id: Date.now().toString(),
         dataSourceId: null,
         dataSourceName: null,
@@ -1147,32 +1153,38 @@ export default {
         dataType: null,
         statsType: 'RELATIVEDATETIME',
         columnName: this.$t('miniApp.dateTimeFilter'),
-      }])
+      }]])
     },
     createFilterAndControl (type) {
       this[`create${type}`]()
     },
     warningLogTriggered ({ relatedDashboardId, rowData }) {
       this.activeCertainDashboard(relatedDashboardId)
-      this.controlColumnValueInfoList.forEach(item => {
-        // 如果 log rowData 有欄位同 controller 欄位，就將預設值設定為該筆 rowData 該 column 的值
-        const sameColumnRow = rowData.find(rowDataColumn => rowDataColumn.dataColumnId === item.columnId)
-        if (sameColumnRow) item.dataValues = [sameColumnRow.datum]
+      this.controlColumnValueInfoList.forEach(filterSet => {
+        filterSet.forEach(filter => {
+          // 如果 log rowData 有欄位同 controller 欄位，就將預設值設定為該筆 rowData 該 column 的值
+          const sameColumnRow = rowData.find(rowDataColumn => rowDataColumn.dataColumnId === filter.columnId)
+          if (sameColumnRow) filter.dataValues = [sameColumnRow.datum]
+        })
       })
     },
     columnTriggered ({ relatedDashboardId, cellValue, columnId }) {
       this.activeCertainDashboard(relatedDashboardId)
-      this.controlColumnValueInfoList.forEach(item => {
-        // 如果目標 Dashboard 已設定該欄位 controller，就將預設值設定為剛剛使用者點的 cell 的值
-        if (item.columnId === columnId) item.dataValues = [cellValue]
+      this.controlColumnValueInfoList.forEach(filterSet => {
+        filterSet.forEach(filter => {
+          // 如果目標 Dashboard 已設定該欄位 controller，就將預設值設定為剛剛使用者點的 cell 的值
+          if (filter.columnId === columnId) filter.dataValues = [cellValue]
+        })
       })
     },
     chartTriggered ({ relatedDashboardId, restrictions }) {
       this.activeCertainDashboard(relatedDashboardId)
-      this.controlColumnValueInfoList.forEach(item => {
-        // 確認有無對應到欲前往的 dashboard 中的任一控制項
-        const targetRestriction = restrictions.find(restriction => item.columnId === restriction.dc_id)
-        if (targetRestriction) item.dataValues = [targetRestriction.value]
+      this.controlColumnValueInfoList.forEach(filterSet => {
+        filterSet.forEach(item => {
+          // 確認有無對應到欲前往的 dashboard 中的任一控制項
+          const targetRestriction = restrictions.find(restriction => item.columnId === restriction.dc_id)
+          if (targetRestriction) item.dataValues = [targetRestriction.value]
+        })
       })
     },
     createComponentType (type) {
@@ -1238,7 +1250,22 @@ export default {
           },
         })
       }
-    }
+    },
+    logDraggingMovement (e) {
+      const { index, futureIndex } = e.draggedContext
+      this.draggedContext = { index, futureIndex }
+    },
+    updateOrder (target) {
+      this.updateAppSetting(this.miniApp).then(() => {
+        Message({
+          message: this.$t('miniApp.orderUpdated', { target }),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      })
+    },
+    
   }
 }
 </script>
@@ -1349,70 +1376,6 @@ export default {
       font-size: 18px;
       .create-btn {
         margin-top: 20px;
-      }
-    }
-  }
-  &__side-nav {
-    flex: 0 0 240px;
-    display: flex;
-    flex-direction: column;
-    background-color: #000;
-    border-right: 1px solid #232C2E;
-    .title {
-      padding-left: 26px;
-      padding-right: 20px;
-      color: $theme-color-primary;
-      flex: 0 0 48px;
-      line-height: 48px;
-      display: flex;
-      align-items: center;
-      &.warning-module-entry {
-        cursor: pointer;
-      }
-      .label-icon {
-        margin-right: 4px;
-      }
-      .label-name {
-        padding-left: 6px;
-        flex: 1;
-      }
-    }
-    .item-wrapper {
-      overflow: overlay;
-      flex: 1;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      .item {
-        min-height: 48px;
-        padding: 12px 0;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        color: #8B9B9C;
-        &:hover {
-          color: #FFF;
-        }
-        &-icon {
-          visibility: hidden;
-          height: 12px;
-          margin: 0 16px 0 24px;
-          transform: translate(-1px, -1px) rotate(-30deg);
-          flex-shrink: 0;
-        }
-        &-name {}
-      }
-    }
-    .create-dashboard-icon-block {
-      flex: 0 0 48px;
-      cursor: pointer;
-      text-align: right;
-    }
-    .item.is-active, .title.is-active {
-      background-color: #42A5B3;
-      color: #FFF;
-      .item-icon {
-        visibility: visible;
       }
     }
   }
@@ -1674,18 +1637,30 @@ export default {
     }
   }
 
-  &__dashboard-filter {
+  &__dashboard-control {
+    display: flex;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    margin-right: 16px;
+    flex-wrap: wrap;
     &--top {
-      z-index: 3;
-      margin-bottom: 12px;
-    }
-    &--middle {
       z-index: 2;
       margin-bottom: 12px;
     }
     &--bottom {
       z-index: 1;
       margin-bottom: 20px;
+    }
+
+    &.editing {
+      padding: 16px 19px 0 19px;
+      background: #1C292B;
+    }
+  }
+
+  &__dashboard-filter {
+    &:not(:last-of-type) {
+      margin-right: 20px;
     }
   }
 
@@ -1699,5 +1674,10 @@ export default {
 
 .dropdown-select {
   visibility: hidden;
+}
+
+.dragging-ghost {
+  opacity: 0.5;
+  background: #192323;
 }
 </style>
