@@ -557,7 +557,9 @@
     "tableSearch": "Search Table",
     "null": "Null",
     "columnSelected": "Number of columns selected",
-    "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field from each table."
+    "pleaseSelectAtLeastOneColumnPerTable": "Please select at least one field from each table.",
+    "isDistributed": "Distributed",
+    "distributedColumnName": "DistributedColumnName"
   },
   "pinboard": {
     "intelligentAnalysis": "Intelligent Analysis",
