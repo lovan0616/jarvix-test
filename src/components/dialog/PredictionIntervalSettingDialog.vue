@@ -57,7 +57,6 @@ export default {
     ...mapState('dataSource', ['algoConfig'])
   },
   mounted () {
-    this.algoConfig.predictionIntervalLength = this.algoConfig.predictionIntervalLength || '4'
     this.tempAlgoConfig = JSON.parse(JSON.stringify(this.algoConfig))
   },
   methods: {
