@@ -557,7 +557,9 @@
     "tableSearch": "搜尋資料表",
     "null": "Null",
     "columnSelected": "已選擇欄位數",
-    "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位"
+    "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位",
+    "isDistributed": "是否進行分片",
+    "distributedColumnName": "分片欄位"
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",
