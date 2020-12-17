@@ -58,10 +58,10 @@ export default {
   computed: {
     ...mapState('dataSource', ['algoConfig']),
     clusteringOptionList () {
-      // 設定數量介於 1-10 之間
-      return [...Array(10).keys()].map(value => ({
-        value: value + 1,
-        name: value + 1
+      // 設定數量介於 2-10 之間
+      return [...Array(9).keys()].map(value => ({
+        value: value + 2,
+        name: value + 2
       }))
     }
   },
