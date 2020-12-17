@@ -58,6 +58,11 @@
                 class="more-icon" />
               <slot name="drowdown"/>
             </div>
+            <div v-if="!isEditMode && componentData.type === 'monitor-warning-list'">
+              <svg-icon 
+                icon-class="warning" 
+                class="icon-warning"/>
+            </div>
           </div>
         </span>
         <div
@@ -79,11 +84,6 @@
                 v-if="!isEmptyData" 
                 class="index-unit">{{ componentData.indexInfo.unit }}</span>
             </template>
-          </div>
-          <div v-else-if="componentData.type === 'monitor-warning-list'">
-            <svg-icon 
-              icon-class="warning" 
-              class="icon-warning"/>
           </div>
         </div>
         <div
@@ -729,34 +729,6 @@ $direction-span: ("col": 8, "row": 6);
     .icon-warning {
       color: $theme-color-danger;
       animation: flash 1s infinite;
-    }
-  }
-  &-action {
-    .related-item {
-      display: inline-flex;
-      align-items: center;
-      font-size: 12px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.2);
-      &__title {
-        font-weight: bold;
-      }
-      &__close {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #A7A7A7;
-        margin-left: 6px;
-        cursor: pointer;
-        .svg-icon {
-          width: 4px;
-        }
-      }
     }
   }
 

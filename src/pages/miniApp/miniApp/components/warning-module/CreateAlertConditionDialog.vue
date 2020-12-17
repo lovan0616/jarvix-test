@@ -38,7 +38,6 @@
                 :placeholder="$t('miniApp.chooseDataSource')"
                 :is-disabled="isProcessing"
                 v-model="tempConditionSetting.dataSourceId"
-                filterable
                 class="input-field__select"
                 name="dataSourceId"
                 @change="fetchDataFrameList"
@@ -58,7 +57,6 @@
                 :placeholder="$t('miniApp.chooseDataFrame')"
                 :is-disabled="isLoadingDataFrameList"
                 v-model="newConditionSetting.dataFrameId"
-                filterable
                 class="input-field__select"
                 name="dataFrameId"
                 @change="fetchDataColumnList"
@@ -100,6 +98,7 @@
             :comparison-operator-option-list="comparisonOperatorOptionList"
             @delete="deleteComparingSet"
           />
+          <!-- TODO 確認這版本有沒有要做多個 comparingValues -->
           <!-- <button 
             class="btn-m btn-outline btn-has-icon create-comparing-btn" 
             @click="createComparingSet">
@@ -226,9 +225,9 @@ export default {
       const hasBlockClustering = false
       getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn, false, hasBlockClustering).then(response => {
         this.dataColumnOptionList = response.reduce((acc, cur) => {
+          // 這版本示警只做針對數值型欄位做監控
           if (cur.statsType !== 'NUMERIC') return acc
           acc.push({
-            ...cur,
             name: `${cur.primaryAlias || cur.name}（${cur.statsType}）`,
             value: cur.id,
             originalName: cur.primaryAlias  || cur.name
@@ -257,7 +256,6 @@ export default {
       this.newConditionSetting.comparingValues.splice(index, 1)
     },
     createAlertCondition () {
-
       this.$validator.validateAll().then(isValid => {
         if (!isValid) return
 
@@ -265,7 +263,7 @@ export default {
         postAlertCondition(this.newConditionSetting)
           .then(() => {
             Message({
-              message: '示警條件創建成功',
+              message: this.$t('alert.alertConditionSuccessfullyCreated'),
               type: 'success',
               duration: 3 * 1000,
               showClose: true

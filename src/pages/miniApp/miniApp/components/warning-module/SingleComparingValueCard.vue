@@ -24,6 +24,7 @@
           type="number"
         />
       </div>
+      <!-- TODO 確認這版本有沒有要做多個 comparingValues -->
       <!-- <div 
         class="delete-btn" 
         @click="$emit('delete', id)">
