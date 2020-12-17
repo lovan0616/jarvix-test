@@ -8,51 +8,77 @@
     class="component__item"
   >
     <div class="component__item-inner-container">
-      <span class="component__item-header">
-        <div class="header-left">
-          <el-tooltip 
-            :content="componentData.config.diaplayedName" 
-            placement="bottom">
-            <span 
-              class="item-title" 
-              v-html="dashboardTaskTitle" />
-          </el-tooltip>
-        </div>
-        <div class="header-right">
-          <div class="component-property-box" >
-            <el-tooltip
-              v-if="componentData.config.relatedDashboard" 
-              :content="displayedRelatedDashboard"
-            >
-              <div
-                class="property__item"
-                @click="$emit('redirect', componentData.config.relatedDashboard.id)"
-              >
-                <svg-icon
-                  icon-class="chain"
-                  class="icon-chain"
-                />
-              </div>
-            </el-tooltip>
-            <el-tooltip
-              v-if="componentData.config.isAutoRefresh"
-              :content="displayedUpdateFrequency"
-            >
-              <div class="property__item">
-                <svg-icon 
-                  icon-class="auto-refresh"
-                  class="icon-refresh"
-                />
-              </div>
+      <spinner 
+        v-if="isInitializing" 
+        class="component__item-init-spinner"/>
+      <template v-else>
+        <span class="component__item-header">
+          <div class="header-left">
+            <el-tooltip 
+              :content="componentData.config.diaplayedName" 
+              placement="bottom">
+              <span 
+                class="item-title" 
+                v-html="dashboardTaskTitle" />
             </el-tooltip>
           </div>
-          <div
-            v-if="isEditMode"
-            class="component-setting-box">
-            <svg-icon 
-              icon-class="more"
-              class="more-icon" />
-            <slot name="drowdown"/>
+          <div class="header-right">
+            <div class="component-property-box" >
+              <el-tooltip
+                v-if="componentData.config.relatedDashboard" 
+                :content="displayedRelatedDashboard"
+              >
+                <div
+                  class="property__item"
+                  @click="$emit('redirect', componentData.config.relatedDashboard.id)"
+                >
+                  <svg-icon
+                    icon-class="chain"
+                    class="icon-chain"
+                  />
+                </div>
+              </el-tooltip>
+              <el-tooltip
+                v-if="componentData.config.isAutoRefresh"
+                :content="displayedUpdateFrequency"
+              >
+                <div class="property__item">
+                  <svg-icon 
+                    icon-class="auto-refresh"
+                    class="icon-refresh"
+                  />
+                </div>
+              </el-tooltip>
+            </div>
+            <div
+              v-if="isEditMode"
+              class="component-setting-box">
+              <svg-icon 
+                icon-class="more"
+                class="more-icon" />
+              <slot name="drowdown"/>
+            </div>
+          </div>
+        </span>
+        <div
+          v-if="componentData.type === 'index'" 
+          class="component__item-content index">
+          <div class="index-data">
+            <spinner v-if="isProcessing"/>
+            <template v-else>
+              <task
+                :class="{ 'not-empty': !isEmptyData }"
+                :custom-chart-style="indexComponentStyle"
+                :key="'index-' + keyResultId"
+                :component-id="keyResultId"
+                :converted-type="'index_info'"
+                intend="key_result"
+                @isEmpty="isEmptyData = true"
+              />
+              <span 
+                v-if="!isEmptyData" 
+                class="index-unit">{{ componentData.indexInfo.unit }}</span>
+            </template>
           </div>
           <div v-else-if="componentData.type === 'monitor-warning-list'">
             <svg-icon 
@@ -60,19 +86,17 @@
               class="icon-warning"/>
           </div>
         </div>
-      </span>
-      <div
-        v-if="componentData.type === 'index'" 
-        class="component__item-content index">
-        <div class="index-data">
+        <div
+          v-else-if="componentData.type === 'text'" 
+          class="component__item-content text">
           <spinner v-if="isProcessing"/>
           <template v-else>
             <task
               :class="{ 'not-empty': !isEmptyData }"
-              :custom-chart-style="indexComponentStyle"
-              :key="'index-' + keyResultId"
+              :custom-chart-style="textComponentStyle"
+              :key="'text-' + keyResultId"
               :component-id="keyResultId"
-              :converted-type="'index_info'"
+              :converted-type="'text_info'"
               intend="key_result"
               @isEmpty="isEmptyData = true"
             />
@@ -81,50 +105,31 @@
               class="index-unit">{{ componentData.indexInfo.unit }}</span>
           </template>
         </div>
-      </div>
-      <div
-        v-else-if="componentData.type === 'text'" 
-        class="component__item-content text">
-        <spinner v-if="isProcessing"/>
-        <template v-else>
-          <task
-            :class="{ 'not-empty': !isEmptyData }"
-            :custom-chart-style="textComponentStyle"
-            :key="'text-' + keyResultId"
-            :component-id="keyResultId"
-            :converted-type="'text_info'"
-            intend="key_result"
-            @isEmpty="isEmptyData = true"
-          />
-          <span 
-            v-if="!isEmptyData" 
-            class="index-unit">{{ componentData.indexInfo.unit }}</span>
-        </template>
-      </div>
-      <monitor-warning-list
-        v-else-if="componentData.type === 'monitor-warning-list'"
-        :setting="warningModuleSetting"
-        :is-edit-mode="isEditMode"
-        @goToWarningLogPage="$emit('goToWarningLogPage')"
-      />
-      <div 
-        v-else
-        class="component__item-content chart">
-        <spinner v-if="isProcessing"/>
-        <task
-          v-else
-          :custom-chart-style="chartComponentStyle"
-          :key="'chart' + keyResultId"
-          :component-id="keyResultId"
-          :is-show-description="false"
-          :is-show-coefficients="false"
-          :show-toolbox="false"
-          :custom-cell-class-name="customCellClassName"
-          intend="key_result"
-          @clickCell="columnTriggered($event)"
-          @clickChart="chartriggered($event)"
+        <monitor-warning-list
+          v-else-if="componentData.type === 'monitor-warning-list'"
+          :setting="warningModuleSetting"
+          :is-edit-mode="isEditMode"
+          @goToWarningLogPage="$emit('goToWarningLogPage')"
         />
-      </div>
+        <div 
+          v-else
+          class="component__item-content chart">
+          <spinner v-if="isProcessing"/>
+          <task
+            v-else
+            :custom-chart-style="chartComponentStyle"
+            :key="'chart' + keyResultId"
+            :component-id="keyResultId"
+            :is-show-description="false"
+            :is-show-coefficients="false"
+            :show-toolbox="false"
+            :custom-cell-class-name="customCellClassName"
+            intend="key_result"
+            @clickCell="columnTriggered($event)"
+            @clickChart="chartriggered($event)"
+          />
+        </div>
+      </template>
     </div>
     <decide-dialog
       v-if="isShowConfirmDelete"
@@ -174,6 +179,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    isCurrentDashboardInit: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
@@ -203,7 +212,8 @@ export default {
         'height': '100%'
       },
       isProcessing: false,
-      tempFilteredKeyResultId: null
+      tempFilteredKeyResultId: null,
+      isInitializing: true
     }
   },
   computed: {
@@ -303,9 +313,16 @@ export default {
     }
   },
   watch: {
+    isCurrentDashboardInit: {
+      immediate: true,
+      handler (isInit) {
+        if (!isInit) return
+        this.isInitializing = false
+        this.deboucedAskQuestion()
+      }
+    },
     // 當 Dashboard的 fitler 變動時，由元件內部去重新問問題
     allFilterList: {
-      immediate: true,
       deep: true,
       handler (controls) {
         if (this.shouldComponentBeFiltered) {
@@ -317,7 +334,6 @@ export default {
       }
     },
     yAxisControls: {
-      immediate: true,
       deep: true,
       handler (controls) {
         if (this.shouldComponentYAxisBeControlled) {
@@ -607,6 +623,10 @@ $direction-span: ("col": 8, "row": 6);
   float: left;
   transition: all .2s linear;
   overflow: hidden;
+
+  &-init-spinner {
+    margin: auto;
+  }
 
   &-inner-container {
     background-color: #192323;
