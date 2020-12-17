@@ -233,7 +233,7 @@
               <default-select
                 v-validate="`required`"
                 v-model="featureInfo.timeScope"
-                :option-list="timeScopeUnitOptionList"
+                :option-list="featureSettingTimeScopeUnitOptionList"
                 :placeholder="$t('editing.defaultOption')"
                 :class="{'has-error': errors.has('timeScope')}"
                 class="time-scope-select"
@@ -328,7 +328,7 @@ export default {
           name: this.$t('feature.datetimeOperation')
         },
       ],
-      timeScopeUnitOptionList: [
+      featureSettingTimeScopeUnitOptionList: [
         { value: 'Second', name: this.$t('timeScopeUnit.second') },
         { value: 'Minute', name: this.$t('timeScopeUnit.minute') },
         { value: 'Hour', name: this.$t('timeScopeUnit.hour') },
