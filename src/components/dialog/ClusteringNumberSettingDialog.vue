@@ -15,6 +15,10 @@
             :class="{'has-error': errors.has('timeScope')}"
             name="clusteringNumber"/>
         </div>
+        <div 
+          v-show="errors.has('clusteringNumber')"
+          class="error-text"
+        >{{ errors.first('clusteringNumber') }}</div>
       </div>
       <div class="button-block">
         <button
