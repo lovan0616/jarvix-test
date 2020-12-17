@@ -291,7 +291,7 @@ export default {
       default: () => { 
         return {
           name: '',
-          value: null
+          value: null,
         }
       }
     }
