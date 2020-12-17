@@ -291,7 +291,7 @@ export default {
       default: () => { 
         return {
           name: '',
-          value: null
+          value: null,
         }
       }
     }
@@ -327,6 +327,13 @@ export default {
           type: 'DATETIME',
           name: this.$t('feature.datetimeOperation')
         },
+      ],
+      timeScopeUnitOptionList: [
+        { value: 'Second', name: this.$t('timeScopeUnit.second') },
+        { value: 'Minute', name: this.$t('timeScopeUnit.minute') },
+        { value: 'Hour', name: this.$t('timeScopeUnit.hour') },
+        { value: 'Day', name: this.$t('timeScopeUnit.day') },
+        { value: 'Week', name: this.$t('timeScopeUnit.week') }
       ]
     }
   },
