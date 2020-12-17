@@ -49,12 +49,6 @@ export default {
   components: {
     DefaultSelect
   },
-  props: {
-    resultId: {
-      type: Number,
-      default: null
-    }
-  },
   data () {
     return {
       tempAlgoConfig: null,
@@ -91,8 +85,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.input-block {
-  width: 200px;
-}
-</style>
