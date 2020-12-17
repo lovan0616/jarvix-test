@@ -32,7 +32,7 @@
       </li>
     </template>
     <template v-else>
-      <div class="empty-text">暫無任何示警內容</div>
+      <div class="empty-text">{{ $t('alert.emptyLogs') }}</div>
     </template>
   </ul>
 </template>
@@ -90,8 +90,6 @@ export default {
           return {
             ...log,
             relatedDashboardId: prevSettingCondition ? prevSettingCondition.relatedDashboardId : null,
-            // MOCK DATA
-            conditionName: '成本過高'
           }
         })
       })

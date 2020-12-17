@@ -1,6 +1,17 @@
 import request from '@/utils/publicRequest'
 
 /**
+ * 創建 示警條件
+ */
+export function postAlertCondition (data) {
+  return request({
+    url: '/alert/condition',
+    method: 'POST',
+    data
+  })
+}
+
+/**
  * 取得 所有示警條件
  */
 export function getAlertConditions (groupId) {

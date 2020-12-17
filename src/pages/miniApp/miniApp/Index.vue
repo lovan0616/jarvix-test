@@ -1269,7 +1269,7 @@ export default {
           init: true,
           config: {
             ...generalConfig,
-            diaplayedName: this.$t('miniApp.realTimeMonitorWarning'),
+            diaplayedName: this.$t('alert.realTimeMonitorAlert'),
           },
         })
       }

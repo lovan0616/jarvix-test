@@ -1,7 +1,7 @@
 <template>
   <div class="warning-log">
     <nav class="warning-log__nav">
-      {{ $t('miniApp.warningLogs') }}
+      {{ $t('alert.alertLogs') }}
     </nav>
     <div class="warning-log__content">
       <spinner 
@@ -13,9 +13,9 @@
         :data="warningLogs"
         class="sy-table"
         style="width: 100%">
-        <div slot="empty">{{ $t('miniApp.emptyLogs') }}</div>
+        <div slot="empty">{{ $t('alert.emptyLogs') }}</div>
         <el-table-column
-          :label="$t('miniApp.warningLogCreateTime')"
+          :label="$t('alert.alertLogCreateTime')"
           prop="createDate"
           width="180">
           <template slot-scope="scope">
@@ -23,10 +23,10 @@
           </template>  
         </el-table-column>
         <el-table-column
-          :label="$t('miniApp.warningName')"
+          :label="$t('alert.alertName')"
           prop="conditionName"/>
         <el-table-column
-          :label="$t('miniApp.warningLogMessage')"
+          :label="$t('alert.alertLogMessage')"
           prop="conditionMetMessage"/>
         <el-table-column
           :label="$t('miniApp.state')"
@@ -159,37 +159,13 @@ export default {
     getWarningLogs (page = 0) {
       this.isLoading = true
       getAlertLogs({ conditionIds: this.activeConditionIds, page, groupId: this.getCurrentGroupId }).then(response => {
-        this.paginationInfo = response.pagination
+        // TODO 後端目前沒吐分頁資訊，之後會補上
+        // this.paginationInfo = response.pagination
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
           return {
             ...log,
-            relatedDashboardId: prevSettingCondition ? prevSettingCondition.relatedDashboardId : null,
-            // MOCK DATA
-            conditionName: '成本過高',
-            monitoredData: [
-              {
-                dataColumnId: 1,
-                dataType: 'INT',
-                datum: '1001',
-                displayName: '成本',
-                statsType: 'NUMERIC',
-              },
-              {
-                dataColumnId: 691,
-                dataType: 'STRING',
-                datum: '甘肅',
-                displayName: '省',
-                statsType: 'CATEGORY',
-              },
-              {
-                dataColumnId: 693,
-                dataType: 'STRING',
-                datum: 'Helmets',
-                displayName: '產品',
-                statsType: 'CATEGORY',
-              }
-            ]
+            relatedDashboardId: prevSettingCondition ? prevSettingCondition.relatedDashboardId : null
           }
         })
       })

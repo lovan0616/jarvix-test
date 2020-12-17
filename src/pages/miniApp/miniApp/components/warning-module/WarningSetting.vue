@@ -1,25 +1,25 @@
 <template>
   <div class="warning-setting">
     <nav class="warning-setting__nav">
-      <div class="nav-left">{{ $t('miniApp.warningManagement') }}</div>
+      <div class="nav-left">{{ $t('alert.alertManagement') }}</div>
       <div class="nav-right">
-        <button 
-          class="btn btn-m btn-default" 
-          @click="saveWarningModuleSetting">
-          {{ $t('button.save') }}
-        </button>
+        <button
+          class="btn-m btn-secondary button-container__button"
+          @click="isShowConditionCreateDialog = true"
+        >新增示警條件</button>
       </div>
     </nav>
     <main class="warning-setting__content">
       <div class="warning-setting__content-enable">
         <section class="setting-block">
-          {{ $t('miniApp.enableWarningModule') }}：
+          {{ $t('alert.enableAlertModule') }}：
           <el-switch
             v-model="tempWarningModuleConfig.activate"
             :width="Number('32')"
             class="module-activate-controller"
             active-color="#2AD2E2"
             inactive-color="#324B4E"
+            @change="saveWarningModuleSetting"
           />
           {{ tempWarningModuleConfig.activate ? $t('miniApp.activate') : $t('miniApp.inactivate') }}
         </section>
@@ -33,13 +33,14 @@
             :placeholder="$t('miniApp.chooseUpdateFrequency')"
             class="setting__block-select"
             name="updateFrequency"
+            @change="saveWarningModuleSetting"
           />
         </section>
       </div>
-      <div class="warning-setting__content-rule">
+      <div class="warning-setting__content-condition">
         <div class="title">
-          <span class="col col-enable">{{ $t('miniApp.enableWarningModule') }}</span>
-          <span class="col col-condition">{{ $t('miniApp.warningName') }}</span>
+          <span class="col col-enable">{{ $t('alert.enableAlertModule') }}</span>
+          <span class="col col-condition">{{ $t('alert.alertCondition') }}</span>
           <span class="col col-relation">{{ $t('miniApp.relatedDashboard') }}</span>
         </div>
         <spinner 
@@ -57,6 +58,7 @@
               :width="Number('32')"
               active-color="#2AD2E2"
               inactive-color="#324B4E"
+              @change="saveWarningModuleSetting"
             />
           </div>
           <div class="col-condition">
@@ -76,18 +78,25 @@
         </section>
       </div>
     </main>
+    <create-alert-condition-dialog
+      v-if="isShowConditionCreateDialog"
+      @close="isShowConditionCreateDialog = false"
+      @created="alertConditionCreated"
+    />
   </div>
 </template>
 
 <script>
 import { getAlertConditions } from '@/API/Alert'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import CreateAlertConditionDialog from './CreateAlertConditionDialog'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'WarningSetting',
   components: {
-    DefaultSelect
+    DefaultSelect,
+    CreateAlertConditionDialog
   },
   props: {
     setting: {
@@ -102,7 +111,8 @@ export default {
   data () {
     return {
       isLoading: false,
-      tempWarningModuleConfig: {}
+      tempWarningModuleConfig: {},
+      isShowConditionCreateDialog: false
     }
   },
   computed: {
@@ -143,32 +153,35 @@ export default {
     }
   },
   created () {
-    this.isLoading = true
-
-    // 示警模組設定
-    const { activate, updateFrequency } = this.setting
-    this.tempWarningModuleConfig = { activate, updateFrequency, conditions: [] }
-
-    getAlertConditions(this.getCurrentGroupId).then(conditions => {      
-      conditions.forEach(condition => {
-
-        // 尋找之前是否有針對此示警條件做過設定
-        const prevConditionSetting = this.setting.conditions.find(item => item.id === condition.id)
-        
-        // 若有，檢查所設定關聯看板是否還存在
-        let isRelatedDashbaordExist = false
-        if (prevConditionSetting) isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
-        
-        // 組成示警條件列表
-        this.tempWarningModuleConfig.conditions.push({
-          ...condition,
-          activate: prevConditionSetting ? prevConditionSetting.activate : false,
-          relatedDashboardId: isRelatedDashbaordExist ? prevConditionSetting.relatedDashboardId : null
-        })
-      })
-    }).finally(() => this.isLoading = false )
+    this.fetchAlertConditions()
   },
   methods: {
+    fetchAlertConditions () {
+      this.isLoading = true
+
+      // 示警模組設定
+      const { activate, updateFrequency } = this.setting
+      this.tempWarningModuleConfig = { activate, updateFrequency, conditions: [] }
+
+      getAlertConditions(this.getCurrentGroupId).then(conditions => {      
+        conditions.forEach(condition => {
+
+          // 尋找之前是否有針對此示警條件做過設定
+          const prevConditionSetting = this.setting.conditions.find(item => item.id === condition.id)
+          
+          // 若有，檢查所設定關聯看板是否還存在
+          let isRelatedDashbaordExist = false
+          if (prevConditionSetting) isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
+          
+          // 組成示警條件列表
+          this.tempWarningModuleConfig.conditions.push({
+            ...condition,
+            activate: prevConditionSetting ? prevConditionSetting.activate : false,
+            relatedDashboardId: isRelatedDashbaordExist ? prevConditionSetting.relatedDashboardId : null
+          })
+        })
+      }).finally(() => this.isLoading = false )
+    },
     saveWarningModuleSetting () {
       this.$emit('update', {
         ...this.tempWarningModuleConfig,
@@ -204,6 +217,10 @@ export default {
         return acc.concat(`- ${targetColumnName}${comparisonOperator}${cur.value}<br>`)
       }, '')
       
+    },
+    alertConditionCreated () {
+      this.isShowConditionCreateDialog()
+      this.fetchAlertConditions()
     }
   }
 }
@@ -261,7 +278,7 @@ export default {
         }
       }
     }
-    &-rule {
+    &-condition {
       overflow: auto;
       height: 0;
       flex: 1;
@@ -269,6 +286,12 @@ export default {
         display: flex;
         margin-right: 24px;
         padding: 0 24px 12px 24px;
+      }
+      .setting-block {
+        margin-bottom: 8px;
+        &:last-child {
+          margin-bottom: 24px;
+        }
       }
     }
     .col {
