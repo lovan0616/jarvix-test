@@ -2,7 +2,7 @@
   <div
     ref="container"
     :class="{
-      'grey-bg': isEditMode,
+      'grey-bg': isSingleChoiceFilter,
       'blue-bg': !isEditMode && isShowFilterPanel,
       'hoverable': !isEditMode 
     }"
@@ -25,7 +25,7 @@
       </div>
       <svg-icon
         v-else
-        icon-class="dropdown" 
+        icon-class="triangle"
         class="filter__dropdown-icon"/>
       <!--Range-->
       <div
@@ -223,6 +223,10 @@ export default {
     isProcessing: {
       type: Boolean,
       default: false
+    },
+    isFilterListNeedUpdate: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -288,7 +292,7 @@ export default {
   },
   mounted () {
     this.filter = JSON.parse(JSON.stringify(this.initialFilter))
-    if (!this.isSingleChoiceFilter || this.isNeedUpdate) this.fetchData()
+    this.fetchData()
     document.addEventListener('click', this.autoHide, false)
   },
   destroyed () {
@@ -383,6 +387,7 @@ export default {
     updateRangeFilteredColumnValue () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
+        this.$emit('update:isFilterListNeedUpdate', true)
         this.$emit('updateFilter', this.tempFilter)
         this.toggleFilterPanel()
       })
@@ -390,6 +395,7 @@ export default {
     updateDateTimeFilteredColumnValue ([start, end]) {
       this.filter.start = start
       this.filter.end = end
+      this.$emit('update:isFilterListNeedUpdate', true)
       this.$emit('updateFilter', this.filter)
       this.toggleFilterPanel()
     },
@@ -403,10 +409,12 @@ export default {
       } else {
         this.filter.dataValues = this.filter.dataValues.filter(value => value !== columnValue)
       }
+      this.$emit('update:isFilterListNeedUpdate', true)
       this.$emit('updateFilter', this.filter)
     },
     updateSingleEnumFilteredColumnValue (event, columnValue) {
       this.filter.dataValues = [columnValue]
+      this.$emit('update:isFilterListNeedUpdate', true)
       this.$emit('updateFilter', this.filter)
     },
     checkValueIsChecked (value) {
@@ -491,7 +499,7 @@ export default {
 <style lang="scss" scoped>
 .filter {
   position: relative;
-  border: 1px solid #DEDEDE;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   padding: 6px 12px;
   display: flex;
@@ -515,9 +523,13 @@ export default {
     cursor: pointer;
   }
 
-  &__delete-icon,
-  &__dropdown-icon {
+  &__delete-icon {
     font-size: 4px;
+  }
+
+  &__dropdown-icon {
+    transform: rotate(180deg);
+    font-size: 6px;
   }
 
   &__input-panel,
