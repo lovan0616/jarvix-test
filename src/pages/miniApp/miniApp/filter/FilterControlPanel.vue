@@ -58,7 +58,8 @@ export default {
       filterList: [],
       filterSetInitList: {},
       isShowSeletor: false,
-      isFilterListNeedUpdate: false
+      isFilterListNeedUpdate: false,
+      hasFilterSetNeedInit: false
     }
   },
   mounted () {
@@ -77,6 +78,8 @@ export default {
     })
     // 如果有剛創完的控制項須給定預設值時，代表設定完成後，filtet list 需傳出去更新
     this.isFilterListNeedUpdate = !Object.keys(this.filterSetInitList).every(filterSet => this.filterSetInitList[filterSet])
+    // 如果有需要初始化的控制項，需在完成後告知外層，Dashboard 初始化狀態才會改變，讓 task 展開問問題流程
+    this.hasFilterSetNeedInit = this.isFilterListNeedUpdate
   },
   methods: {
     updateFilter (updatedFilter, filterSetIndex, filterIndex) {
@@ -115,6 +118,10 @@ export default {
           })
           this.isFilterListNeedUpdate = false
           this.$emit('updateFilter', updatedFilterList)
+          if (this.hasFilterSetNeedInit) {
+            this.hasFilterSetNeedInit = false
+            this.$emit('updateInit', true)
+          }
           return
         }
       }
