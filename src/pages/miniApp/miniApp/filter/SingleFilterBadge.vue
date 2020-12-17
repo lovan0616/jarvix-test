@@ -2,7 +2,7 @@
   <div
     ref="container"
     :class="{
-      'grey-bg': isEditMode,
+      'grey-bg': isSingleChoiceFilter,
       'blue-bg': !isEditMode && isShowFilterPanel,
       'hoverable': !isEditMode 
     }"
@@ -25,7 +25,7 @@
       </div>
       <svg-icon
         v-else
-        icon-class="dropdown" 
+        icon-class="triangle"
         class="filter__dropdown-icon"/>
       <!--Range-->
       <div
@@ -499,7 +499,7 @@ export default {
 <style lang="scss" scoped>
 .filter {
   position: relative;
-  border: 1px solid #DEDEDE;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   padding: 6px 12px;
   display: flex;
@@ -523,9 +523,13 @@ export default {
     cursor: pointer;
   }
 
-  &__delete-icon,
-  &__dropdown-icon {
+  &__delete-icon {
     font-size: 4px;
+  }
+
+  &__dropdown-icon {
+    transform: rotate(180deg);
+    font-size: 6px;
   }
 
   &__input-panel,

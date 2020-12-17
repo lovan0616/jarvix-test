@@ -208,8 +208,8 @@ export default {
         position: absolute;
         content: '';
         left: calc(100% + 5px);
-        border-top: 1px solid rgba(255, 255, 255, 0.3);
-        border-right: 1px solid rgba(255, 255, 255, 0.3);
+        border-top: 1px solid #ffffff;
+        border-right: 1px solid #ffffff;
         transform: rotate(45deg);
         width: 5px;
         height: 5px;
