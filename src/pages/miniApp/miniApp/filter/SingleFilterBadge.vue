@@ -223,6 +223,10 @@ export default {
     isProcessing: {
       type: Boolean,
       default: false
+    },
+    isFilterListNeedUpdate: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -288,7 +292,7 @@ export default {
   },
   mounted () {
     this.filter = JSON.parse(JSON.stringify(this.initialFilter))
-    if (!this.isSingleChoiceFilter || this.isNeedUpdate) this.fetchData()
+    this.fetchData()
     document.addEventListener('click', this.autoHide, false)
   },
   destroyed () {
@@ -383,6 +387,7 @@ export default {
     updateRangeFilteredColumnValue () {
       this.$validator.validateAll().then(isValidate => {
         if (!isValidate) return
+        this.$emit('update:isFilterListNeedUpdate', true)
         this.$emit('updateFilter', this.tempFilter)
         this.toggleFilterPanel()
       })
@@ -390,6 +395,7 @@ export default {
     updateDateTimeFilteredColumnValue ([start, end]) {
       this.filter.start = start
       this.filter.end = end
+      this.$emit('update:isFilterListNeedUpdate', true)
       this.$emit('updateFilter', this.filter)
       this.toggleFilterPanel()
     },
@@ -403,10 +409,12 @@ export default {
       } else {
         this.filter.dataValues = this.filter.dataValues.filter(value => value !== columnValue)
       }
+      this.$emit('update:isFilterListNeedUpdate', true)
       this.$emit('updateFilter', this.filter)
     },
     updateSingleEnumFilteredColumnValue (event, columnValue) {
       this.filter.dataValues = [columnValue]
+      this.$emit('update:isFilterListNeedUpdate', true)
       this.$emit('updateFilter', this.filter)
     },
     checkValueIsChecked (value) {

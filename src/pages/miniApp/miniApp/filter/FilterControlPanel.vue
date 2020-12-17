@@ -17,6 +17,7 @@
           :filter-set="filterSet"
           :is-need-update.sync="filter.isNeedUpdate"
           :is-processing.sync="filter.isProcessing"
+          :is-filter-list-need-update.sync="isFilterListNeedUpdate"
           @updateFilter="updateFilter($event, setIndex, index)"
           @removeFilter="removeFilter(setIndex, index)"
         />
@@ -55,55 +56,87 @@ export default {
   data () {
     return {
       filterList: [],
-      isShowSeletor: false
+      filterSetInitList: {},
+      isShowSeletor: false,
+      isFilterListNeedUpdate: false
     }
   },
   mounted () {
     if (this.isYAxisController || !this.isSingleChoiceFilter) return this.filterList = JSON.parse(JSON.stringify(this.initialFilterList))
-    this.filterList = this.initialFilterList.map(filterSet => {
-      // const isNewFilterSet = filterSet.some(filter => filter.dataValues.length === 0)
+    // 控制項有階層，且創立完後需要給定預設值，所以須額外處理
+    this.filterList = this.initialFilterList.map((filterSet, setIndex) => {
+      // 確認當前組是否剛被創出來，需要給 filter 預設值
+      this.filterSetInitList[`${setIndex}`] = filterSet.some(filter => filter.dataValues.length > 0)
       return filterSet.map((filter, index) => ({ 
         ...filter,
-        isNeedUpdate: index === 0,
+        // 階層情況下，filter 需戴上前面所有 filter 的 restriction，因此由左至右每次只處理一個 filter 
+        isNeedUpdate: index === 0 && filter.dataValues.length === 0,
+        // 給定處理狀態，如果有 filter 在處理中，其以後的 filter 都需押處理中
         isProcessing: true
       }))
     })
+    // 如果有剛創完的控制項須給定預設值時，代表設定完成後，filtet list 需傳出去更新
+    this.isFilterListNeedUpdate = !Object.keys(this.filterSetInitList).every(filterSet => this.filterSetInitList[filterSet])
   },
   methods: {
     updateFilter (updatedFilter, filterSetIndex, filterIndex) {
-      // 先確認是否為該 filter set 最後一個 filter, 如果不是需要等後面都完成再一起 emit 出去更新
+      // 可能遇到階層，所以需要先確認當前更新的 filter 是否為該組最後一個
       const isLastFilterInSet = filterIndex === this.filterList[filterSetIndex].length - 1
-      const updatedFilterSet = this.filterList[filterSetIndex].map((filter, index) => {
-        return index === filterIndex ? updatedFilter : filter
-      })
 
-      updatedFilterSet[filterIndex].isNeedUpdate = false
-      updatedFilterSet[filterIndex].isProcessing = false
-      this.filterList[filterSetIndex] = updatedFilterSet
+      // 更新 filter 中的狀態，並存到隸屬的組中
+      let updatedFilterSet = this.filterList[filterSetIndex].map((filter, index) => {
+        if (index < filterIndex) return filter
+        if (index === filterIndex) return { 
+          ...updatedFilter, 
+          isNeedUpdate: false, 
+          isProcessing: false
+        }
+        // 如果當前更新的 filter 不是該組最後一個時，繼續觸發下一個 filter 帶上最新 reestriction 重新取資料
+        return {
+          ...filter, 
+          isNeedUpdate: index - filterIndex === 1, 
+          isProcessing: true
+        }
+      })
+      
+      // 更新 filter 清單資料
       this.$set(this.filterList, filterSetIndex, updatedFilterSet)
-      
+
+      // 只有當前更新的 filter 為該組最後一個時，才考慮將更新後的 filter list 全部傳出去更新
       if (isLastFilterInSet) {
-        const updatedFilterList = this.filterList.map(filterSet => {
-          return filterSet.map(filter => {
-            const { isProcessing, isNeedUpdate, ...otherData } = filter
-            return otherData
+        if (this.isFilterListNeedUpdate) {
+          const updatedFilterList = this.filterList.map(filterSet => {
+            // 把只在這層使用的暫用資料刪除
+            return filterSet.map(filter => {
+              filter.isNeedInit = false
+              const { isProcessing, isNeedUpdate, isNeedInit, ...otherData } = filter
+              return otherData
+            })
           })
-        })
-        this.$emit('updateFilter', updatedFilterList)
-        return
+          this.isFilterListNeedUpdate = false
+          this.$emit('updateFilter', updatedFilterList)
+          return
+        }
       }
-      
-      // 如果不是該 set 最後一個，則觸發下一個 filter 重新取資料
-      const updatedFilterList = this.filterList
-      updatedFilterList[filterSetIndex][filterIndex + 1].isNeedUpdate = true
-      for (let i = filterIndex + 1; i < updatedFilterList[filterSetIndex].length; i++) {
-        updatedFilterList[filterSetIndex][i].isProcessing = true
-      }
-      this.filterList = [...updatedFilterList]
     },
     removeFilter (filterSetIndex, filterIndex) {
+      // 可能遇到階層，所以需要先確認刪掉的選項是否為最後一個
+      const isLastFilterInSet = filterIndex === this.filterList[filterSetIndex].length - 1
+
+      // 找到要更新的組合
       const updatedFilterSet = this.filterList[filterSetIndex].filter((filter, index) => index !== filterIndex)
-      let updatedFilterList = []
+      let updatedFilterList = [...this.filterList]
+
+      // 如果不是該組最後一個，則觸發下一個 filter 帶新的 restriction 去重新取資料
+      if (!isLastFilterInSet) {
+        updatedFilterList[filterSetIndex][filterIndex + 1].isNeedUpdate = true
+        // 先把後面所有 filter 狀態更改成處理中
+        for (let i = filterIndex + 1; i < updatedFilterList[filterSetIndex].length; i++) {
+          updatedFilterList[filterSetIndex][i].isProcessing = true
+        }
+      }
+      
+      // 如果該組已經為空，則從清單中刪除該組，否則將更新完的組資料更新到清單中
       if (updatedFilterSet.length === 0) {
         updatedFilterList = this.filterList.filter((filterSet, index) => index !== filterSetIndex)
       } else {
@@ -112,12 +145,16 @@ export default {
           return updatedFilterSet
         })
       }
-      this.filterList = updatedFilterList
+
+      // 更新清單
+      this.filterList = [...updatedFilterList]
+      
+      // 把所有 filter 資料更新到外層
       this.$emit('updateFilter', updatedFilterList.map(filterSet => {
         return filterSet.map(filter => {
-          delete filter.isProcessing
-          delete filter.isNeedUpdate
-          return filter
+          // 把只在這層使用的暫用資料刪除
+          const { isProcessing, isNeedUpdate, isNeedInit, ...otherData } = filter
+          return otherData
         })
       }))
     }
