@@ -322,6 +322,7 @@ export default {
       this.$refs[`${this.index}-select`] && this.$refs[`${this.index}-select`].focusInput()
     },
     updateDataValue (value) {
+      // TODO:每次都要重新取值，有點沒效率
       this.subRestraint.properties.datavalues = []
       this.tempValueList.forEach(item => {
         if(value.includes(item.name)) this.subRestraint.properties.datavalues.push(item.value)
