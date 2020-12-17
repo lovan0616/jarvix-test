@@ -101,6 +101,12 @@ export default {
     }
   },
   computed: {
+    algoConfig () {
+      return this.$store.state.dataSource.algoConfig
+    },
+    lineSymbol () {
+      return this.algoConfig.predictionIntervalLength || this.algoConfig.predictionIntervalLength === 1 ? 'circle' : 'none'
+    },
     chartStyle () {
       return {
         width: '100%',
@@ -196,7 +202,7 @@ export default {
             item['itemStyle'] = {
               color: color12[3]
             }
-            item['symbol'] = 'none',
+            item['symbol'] = this.lineSymbol
             item['lineStyle'] = {
               type: 'dashed'
             }
@@ -207,7 +213,7 @@ export default {
               color: color12[3],
               opacity: 0.2
             }
-            item['symbol'] = 'none',
+            item['symbol'] = this.lineSymbol
             item['lineStyle'] = {
               type: 'dashed'
             }
@@ -216,7 +222,7 @@ export default {
             item['lineStyle'] = {
               type: 'dashed'
             }
-            item['symbol'] = 'none',
+            item['symbol'] = this.lineSymbol
             item['itemStyle'] = {
               color: color12[3]
             }

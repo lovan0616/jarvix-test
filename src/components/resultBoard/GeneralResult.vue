@@ -136,10 +136,14 @@
         :result-id="selectedTypeInfo.cachedResultId"
         @close="closeDialog"
       />
+      <clustering-number-setting-dialog
+        v-if="currentResultId && isShowClusteringNumberSettingDialog"
+        @re-analyze="reAnalyze"
+        @close="closeDialog"
+      />
       <prediction-interval-setting-dialog
         v-if="currentResultId && isShowPredictionIntervalSettingDialog"
-        :result-id="selectedTypeInfo.cachedResultId"
-        @re-predict="rePredict"
+        @re-analyze="reAnalyze"
         @close="closeDialog"
       />
     </template>
@@ -149,6 +153,7 @@
 import RecommendedInsight from '@/components/display/RecommendedInsight'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import SaveClusteringDialog from '@/components/dialog/SaveClusteringDialog'
+import ClusteringNumberSettingDialog from '@/components/dialog/ClusteringNumberSettingDialog'
 import PredictionIntervalSettingDialog from '@/components/dialog/PredictionIntervalSettingDialog'
 import { Message } from 'element-ui'
 import { intentType } from '@/utils/general'
@@ -161,6 +166,7 @@ export default {
     RecommendedInsight,
     DropdownSelect,
     SaveClusteringDialog,
+    ClusteringNumberSettingDialog,
     PredictionIntervalSettingDialog,
     NotifyInfoBlock
   },
@@ -210,6 +216,7 @@ export default {
     return {
       activeTab: null,
       isShowSaveClusteringDialog: false,
+      isShowClusteringNumberSettingDialog: false,
       isShowPredictionIntervalSettingDialog: false,
       intentType,
       switchTypeList: [],
@@ -223,6 +230,11 @@ export default {
       return {
         CLUSTERING: [
           {
+            title: 'clustering.clusteringNumberSetting',
+            icon: 'filter-setting',
+            dialogName: 'clusteringNumberSetting'
+          },
+          {
             title: 'clustering.saveClusteringResultAsColumn',
             icon: 'feature',
             dialogName: 'saveClustering'
@@ -232,7 +244,7 @@ export default {
           {
             title: 'prediction.predictionIntervalSetting',
             icon: 'add-feature',
-            dialogName: 'editPredictionInterval'
+            dialogName: 'predictionIntervalSetting'
           },
         ]
       }
@@ -316,6 +328,7 @@ export default {
       this.fetchSpecificType(tabName, index)
     },
     switchDialogName (action, typeInfo) {
+      this.selectedTypeInfo = typeInfo
       switch (action) {
         case 'saveClustering':
           if (!this.resultInfo.canSaveResult) {
@@ -326,26 +339,29 @@ export default {
               showClose: true
             })
           }
-          this.selectedTypeInfo = typeInfo
+          
           this.isShowSaveClusteringDialog = true
           break
+
+        case 'clusteringNumberSetting':
+          this.isShowClusteringNumberSettingDialog = true
+          break
         
-        case 'editPredictionInterval':
-          this.selectedTypeInfo = typeInfo
+        case 'predictionIntervalSetting':
           this.isShowPredictionIntervalSettingDialog = true
       }
     },
-    rePredict () {
-      let index = this.switchTypeList.findIndex(item => item.denotation === this.intentType.PREDICTION)
+    reAnalyze (TYPE) {
+      let index = this.switchTypeList.findIndex(item => item.denotation === this.intentType[TYPE])
       this.switchTypeList[index].cachedResultId = null
-      this.fetchSpecificType(this.intentType.PREDICTION, index)
-      this.$emit('re-predict')
-      this.isShowPredictionIntervalSettingDialog = false
+      this.fetchSpecificType(this.intentType[TYPE], index)
+      this.closeDialog()
     },
     closeDialog () {
       switch (this.activeTab) {
         case 'CLUSTERING':
           this.isShowSaveClusteringDialog = false
+          this.isShowClusteringNumberSettingDialog = false
           break
         case 'PREDICTION':
           this.isShowPredictionIntervalSettingDialog = false
@@ -370,8 +386,7 @@ export default {
           isFailed: true
         })
       })
-
-}
+    }
   }
 }
 </script>

@@ -2,20 +2,18 @@
   <div class="edit-feature-dialog full-page-dialog">
     <div class="dialog-container">
       <div class="dialog-title">
-        {{ $t('prediction.predictionIntervalSetting') }}
+        {{ $t('clustering.clusteringNumberSetting') }}
       </div>
       <div class="feature-block">
-        <div class="block-title">
-          {{ $t('prediction.predictionIntervalLength') }}
-          <span class="block-title__description"> ({{ $t('message.numericShouldBeBetween', {min: 1, max: 50}) }})</span>
-        </div>
+        <div class="block-title">{{ $t('clustering.clusteringNumber') }}</div>
         <div class="input-block">
-          <input-block
-            v-validate="'required|numeric|between:1,50'"
-            :placeholder="$t('editing.numericOnly')"
-            v-model="tempAlgoConfig.predictionIntervalLength"
-            name="predictionIntervalLength"
-          />
+          <default-select
+            v-validate="`required`"
+            v-model="tempAlgoConfig.clusteringCount"
+            :option-list="clusteringOptionList"
+            :placeholder="$t('editing.defaultOption')"
+            :class="{'has-error': errors.has('timeScope')}"
+            name="clusteringNumber"/>
         </div>
       </div>
       <div class="button-block">
@@ -30,7 +28,7 @@
           @click="reAnalyze"
         >
           <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
-          <span v-else>{{ $t('prediction.rePredict') }}</span>
+          <span v-else>{{ $t('button.reAnalyze') }}</span>
         </button>
       </div>
     </div>
@@ -39,13 +37,19 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import InputBlock from '@/components/InputBlock'
+import DefaultSelect from '@/components/select/DefaultSelect'
 
 export default {
-  name: 'PredictionIntervalSettingDialog',
+  name: 'ClusteringNumberSettingDialog',
   inject: ['$validator'],
   components: {
-    InputBlock
+    DefaultSelect
+  },
+  props: {
+    resultId: {
+      type: Number,
+      default: null
+    }
   },
   data () {
     return {
@@ -54,25 +58,30 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataSource', ['algoConfig'])
+    ...mapState('dataSource', ['algoConfig']),
+    clusteringOptionList () {
+      // 設定數量介於 1-10 之間
+      return [...Array(10).keys()].map(value => ({
+        value: value + 1,
+        name: value + 1
+      }))
+    }
   },
   mounted () {
-    this.algoConfig.predictionIntervalLength = this.algoConfig.predictionIntervalLength || '4'
     this.tempAlgoConfig = JSON.parse(JSON.stringify(this.algoConfig))
   },
   methods: {
     ...mapMutations('dataSource', ['setAlgoConfig']),
     reAnalyze () {
-      this.$validator.validate('predictionIntervalLength')
+      this.$validator.validate('clusteringNumber')
         .then(isValid => {
           if (!isValid) return
           this.isProcessing = true
 
-          if (this.tempAlgoConfig.predictionIntervalLength === this.algoConfig.predictionIntervalLength) return this.$emit('close')
+          if (this.tempAlgoConfig.clusteringCount === this.algoConfig.clusteringCount) return this.$emit('close')
 
           this.setAlgoConfig(this.tempAlgoConfig)
-          this.$emit('re-analyze', 'PREDICTION')
-          
+          this.$emit('re-analyze', 'CLUSTERING')
         })
     }
   }
