@@ -256,7 +256,7 @@ export default {
           } else {
             this.valueList = this.valueList.map(element => {
               return {
-                value: element.columnValue,
+                value: element.displayColumnValue,
                 name: element.displayColumnValue,
                 active: this.subRestraint.properties.datavalues.includes(element)
               }
@@ -451,8 +451,6 @@ export default {
 
       /deep/ .el-select__tags {
         .el-tag.el-tag--info {
-          display: flex;
-          align-items: center;
           max-width: 200px;
           height: 26px;
           font-weight: 600;
@@ -463,7 +461,12 @@ export default {
           color: $theme-color-primary;
 
           .el-select__tags-text {
-            @include text-hidden;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+            vertical-align: middle;
           }
         }
 
