@@ -31,6 +31,9 @@
             <task
               :key="'chart-' + computedKeyResultId"
               :component-id="computedKeyResultId"
+              :is-show-description="false"
+              :is-show-coefficients="false"
+              :show-toolbox="false"
               intend="key_result"
               @setDiagram="$emit('setDiagram', $event)"
             />

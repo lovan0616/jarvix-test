@@ -85,14 +85,14 @@
                 :disabled="isProcessing"
                 type="button"
                 class="btn-m btn-default button-container__button"
-                @click="publishMiniApp"
+                @click="publishMiniApp('publish')"
               >{{ $t('miniApp.publish') }}</button>
               <template v-if="appData.isPublishing">
                 <button
                   :disabled="isProcessing"
                   type="button"
                   class="btn-m btn-default button-container__button"
-                  @click="publishMiniApp"
+                  @click="publishMiniApp('update')"
                 >{{ $t('button.update') }}</button>
                 <button
                   :disabled="isProcessing"
@@ -639,6 +639,9 @@ export default {
     },
     currentModeDataType () {
       return this.isViewMode ? 'viewModeData' : 'editModeData'
+    },
+    isComponentOrderChanged () {
+      return this.draggedContext.index !== this.draggedContext.futureIndex
     }
   },
   watch: {
@@ -811,7 +814,7 @@ export default {
         })
         .catch(() => {})
     },
-    publishMiniApp () {
+    publishMiniApp (type) {
       this.isProcessing = true
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
       // 更新發佈狀態
@@ -824,8 +827,18 @@ export default {
         warningModule: this.miniApp.settings.editModeData.warningModule
       }
       this.updateAppSetting(updatedMiniAppData)
-        .then(() => { this.miniApp = updatedMiniAppData })
-        .finally(() => this.isProcessing = false)
+        .then(() => {
+          this.miniApp = updatedMiniAppData
+          Message({
+            message: type === 'publish' ? this.$t('miniApp.appSuccessfullyPublished') : this.$t('miniApp.appSuccessfullyUpdated'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => setTimeout(() => {
+          this.isProcessing = false
+        }, 1000))
     },
     unpublishMiniApp () {
       this.isProcessing = true
@@ -839,8 +852,18 @@ export default {
         isPublishing: false
       }
       this.updateAppSetting(updatedMiniAppData)
-        .then(() => { this.miniApp = updatedMiniAppData })
-        .finally(() => this.isProcessing = false)
+        .then(() => {
+          this.miniApp = updatedMiniAppData
+          Message({
+            message: this.$t('miniApp.appSuccessfullyUnpublished'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => setTimeout(() => {
+          this.isProcessing = false
+        }, 1000))
     },
     formatTimeStamp (timestampe) {
       return moment(timestampe).format('YYYY/M/D')
@@ -1256,6 +1279,7 @@ export default {
       this.draggedContext = { index, futureIndex }
     },
     updateOrder (target) {
+      if (!this.isComponentOrderChanged) return
       this.updateAppSetting(this.miniApp).then(() => {
         Message({
           message: this.$t('miniApp.orderUpdated', { target }),
@@ -1264,8 +1288,7 @@ export default {
           showClose: true
         })
       })
-    },
-    
+    }
   }
 }
 </script>
