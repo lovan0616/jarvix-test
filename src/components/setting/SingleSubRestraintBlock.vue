@@ -256,9 +256,8 @@ export default {
           } else {
             this.valueList = this.valueList.map(element => {
               return {
-                value: element.displayColumnValue,
-                name: element.displayColumnValue,
-                active: this.subRestraint.properties.datavalues.includes(element)
+                value: element.columnValue,
+                name: element.displayColumnValue
               }
             })
             this.tempValueList = JSON.parse(JSON.stringify(this.valueList))
@@ -298,8 +297,7 @@ export default {
             this.valueList = fuzzySearchResult.map(element => {
               return {
                 value: element,
-                name: element,
-                active: this.subRestraint.properties.datavalues.includes(element)
+                name: element
               }
             })
           })
