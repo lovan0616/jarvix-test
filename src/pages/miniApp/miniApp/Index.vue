@@ -285,6 +285,7 @@
                 :is-single-choice-filter="true"
                 class="mini-app__dashboard-filter"
                 @updateFilter="updateFilter($event, 'single')"
+                @updateInit="isCurrentDashboardInit = $event"
               />
               <!--Y Axis Control panel-->
               <axis-control-panel
@@ -328,6 +329,7 @@
                     :component-data="componentData"
                     :is-edit-mode="isEditMode"
                     :warning-module-setting="appData.warningModule"
+                    :is-current-dashboard-init="isCurrentDashboardInit"
                     @redirect="activeCertainDashboard($event)"
                     @deleteComponentRelation="deleteComponentRelation"
                     @columnTriggered="columnTriggered"
@@ -518,7 +520,8 @@ export default {
       isHierarchicalFilter: null,
       isYAxisController: null,
       filterCreationDialogTitle: null,
-      draggedContext: { index: -1, futureIndex: -1 }
+      draggedContext: { index: -1, futureIndex: -1 },
+      isCurrentDashboardInit: false
     }
   },
   computed: {
@@ -674,8 +677,11 @@ export default {
           if (this.dashboardList.length > 0 && !this.currentDashboardId) {
             this.activeCertainDashboard(this.dashboardList[0].id)
           }
-
+          
           this.initFilters()
+          // 確認當前 Dashboard 有無控制項是剛被創完需被設定預設值
+          // 有的話 component 應等待控制項更新完成後帶上新 reestriction 問問題
+          this.isCurrentDashboardInit = !this.controlColumnValueInfoList.some(controlSet => controlSet.some(control => control.dataValues.length === 0))
         })
         .catch(() => {})
         .finally(() => this.isLoading = false )
@@ -750,10 +756,12 @@ export default {
         controlList: [],
         yAxisControlList: []
       })
-      this.activeCertainDashboard(newDashBoardInfo.id, newDashBoardInfo.name)
       this.isShowCreateDashboardDialog = false
       this.updateAppSetting(updatedMiniAppData)
-        .then(() => { this.miniApp = updatedMiniAppData })
+        .then(() => { 
+            this.miniApp = updatedMiniAppData
+            this.activeCertainDashboard(newDashBoardInfo.id, newDashBoardInfo.name)
+         })
     },
     createComponent (newComponentInfo) {
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
