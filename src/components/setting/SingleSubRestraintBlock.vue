@@ -165,7 +165,7 @@
         v-validate="'required'"
         v-show="valueList"
         :ref="index + '-select'"
-        v-model="subRestraint.properties.datavalues"
+        v-model="selectedList"
         :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
         :option-list="valueList"
         :name="index + '-select'"
@@ -210,8 +210,10 @@ export default {
       isLoading: false,
       isProcessing: false,
       columnId: null,
+      selectedList: [],
       valueList: [],
       tempValueList: [],
+      tempAliasList:[],
       statsType: null,
       queryString: ''
     }
@@ -236,6 +238,7 @@ export default {
     }
   },
   mounted () {
+    this.selectedList = JSON.parse(JSON.stringify(this.subRestraint.properties.display_datavalues))
     this.fetchData()
   },
   methods: {
@@ -254,13 +257,24 @@ export default {
             this.isCategoryValueEmpty = true
             this.searchValue(this.columnId, '')
           } else {
-            this.valueList = this.valueList.map(element => {
+            /* 當多個 alias (display value) 對到同樣的 value
+             * 在多選的時候會有 tag 對不到剛剛選的 alias，因此先都用 alias(不會重複)
+             * (因為 element ui 會用 value 去對，對到的 alias 不一定是剛剛點選的)
+             */
+            this.tempValueList = this.valueList.map(element => {
               return {
                 value: element.columnValue,
                 name: element.displayColumnValue
               }
             })
-            this.tempValueList = JSON.parse(JSON.stringify(this.valueList))
+
+            this.valueList = this.valueList.map(element => {
+              return {
+                value: element.displayColumnValue,
+                name: element.displayColumnValue
+              }
+            })
+            this.tempAliasList = JSON.parse(JSON.stringify(this.valueList))
           }
         } else if (this.statsType === 'DATETIME') {
           // 目前後端有用到 13 種日期格式，先預設所有日期最小單位都到秒
@@ -290,7 +304,8 @@ export default {
       this.isProcessing = true
       // category value 如果一開始有值，表示資料筆數小於 200，不需用後端的 search
       if(!this.isCategoryValueEmpty) {
-        this.valueList = this.tempValueList.filter(element => !this.queryString || element.name.toLowerCase().includes(this.queryString.toLowerCase()))
+        this.valueList = this.tempAliasList
+          .filter(element => !this.queryString || element.name.toLowerCase().includes(this.queryString.toLowerCase()))
       } else {
         dataValueFuzzySearch(this.columnId, this.queryString)
           .then(({fuzzySearchResult}) => {
@@ -307,6 +322,10 @@ export default {
       this.$refs[`${this.index}-select`] && this.$refs[`${this.index}-select`].focusInput()
     },
     updateDataValue (value) {
+      this.subRestraint.properties.datavalues = []
+      this.tempValueList.forEach(item => {
+        if(value.includes(item.name)) this.subRestraint.properties.datavalues.push(item.value)
+      })
       this.subRestraint.properties.display_datavalues = value
       this.$refs[`${this.index}-select`].blurInput()
     },
