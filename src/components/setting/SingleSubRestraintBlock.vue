@@ -467,6 +467,8 @@ export default {
       border-radius: 5px;
       background-color: #141C1D;
 
+      /deep/ .el-select .el-input { overflow: scroll; padding-bottom: 1px; }
+
       /deep/ .el-select__tags {
         .el-tag.el-tag--info {
           max-width: 200px;
