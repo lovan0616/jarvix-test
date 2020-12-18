@@ -33,6 +33,7 @@
               :component-id="computedKeyResultId"
               :is-show-description="false"
               :is-show-coefficients="false"
+              :is-show-donwnload-btn="false"
               :show-toolbox="false"
               intend="key_result"
               @setDiagram="$emit('setDiagram', $event)"
@@ -117,7 +118,7 @@
       </div>
     </template>
     <!-- Error -->
-    <empty-result 
+    <!-- <empty-result 
       v-if="hasError"
       :key="appQuestion"
       :result-info="{
@@ -125,7 +126,7 @@
         description: '不支援此類型概況語句',
       }"
       :redirect-on-select="false"
-    />
+    /> -->
   </div>
 </template>
 
@@ -166,8 +167,8 @@ export default {
       periodSec: 200,
       question: '',
       segmentation: null,
-      hasError: false,
       mainDateColumn: null
+      // hasError: false
     }
   },
   computed: {
@@ -335,7 +336,7 @@ export default {
           this.$emit('update:isLoading', false)
           this.$store.commit('result/updateCurrentResultId', null)
           this.$store.commit('result/updateCurrentResultInfo', null)
-          this.hasError = true
+          // this.hasError = true
           if (error.message !== 'cancel') this.resultInfo = null
         })
     },
