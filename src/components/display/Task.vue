@@ -197,12 +197,8 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.diagram = response.diagram
               this.resultId = response.resultId
-<<<<<<< HEAD
               this.canDownloadCsv = response.canDownloadCsv
-              this.componentName = this.getChartTemplate(this.diagram)
-=======
               this.componentName = this.getChartTemplate(this.convertedType || this.diagram)
->>>>>>> sprint1
               let responseData = response.data
               
               // 推薦洞察 需要將 question 傳給外層組件顯示用
