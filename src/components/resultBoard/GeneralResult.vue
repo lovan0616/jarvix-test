@@ -37,20 +37,7 @@
                 class="exclamation-triangle-icon"
                 icon-class="exclamation-triangle" />
               <div
-                v-else-if="hasFetchedClustering(index)"
-                class="multi-analysis__item-dropdownlist"
-              >
-                <svg-icon 
-                  icon-class="more"
-                  class="more-icon" />
-                <dropdown-select
-                  :bar-data="barData[typeInfo.denotation]"
-                  class="dropdown"
-                  @switchDialogName="switchDialogName($event, typeInfo)"
-                />
-              </div>
-              <div
-                v-else-if="isPrediction(index)"
+                v-else-if="hasAdvancedSetting(index)"
                 class="multi-analysis__item-dropdownlist"
               >
                 <svg-icon 
@@ -359,11 +346,11 @@ export default {
     },
     closeDialog () {
       switch (this.activeTab) {
-        case 'CLUSTERING':
+        case this.intentType.CLUSTERING:
           this.isShowSaveClusteringDialog = false
           this.isShowClusteringNumberSettingDialog = false
           break
-        case 'PREDICTION':
+        case this.intentType.PREDICTION:
           this.isShowPredictionIntervalSettingDialog = false
           break
       }
@@ -372,12 +359,16 @@ export default {
     clearAllProcessingStatus () {
       this.switchTypeList.forEach(type => type.isProcessing = false)
     },
-    hasFetchedClustering (index) {
-      return this.switchTypeList[index].denotation === this.intentType.CLUSTERING && (this.intent === this.intentType.CLUSTERING || this.switchTypeList[index].cachedResultId)
+    hasAdvancedSetting (index) {
+      let currentType = this.switchTypeList[index].denotation
+      switch (currentType) {
+        case this.intentType.CLUSTERING:
+        case this.intentType.PREDICTION:
+          return this.intent === this.intentType.CLUSTERING || this.switchTypeList[index].cachedResultId
+        default:
+          return false
+      }
     },
-    isPrediction (index) {
-      return this.switchTypeList[index].denotation === this.intentType.PREDICTION && (this.intent === this.intentType.PREDICTION || this.switchTypeList[index].cachedResultId)
-    },  
     setTaskFailed () {
       this.switchTypeList.forEach((type, index) => { 
         if (type.denotation !== this.activeTab) return
