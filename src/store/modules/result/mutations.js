@@ -7,5 +7,8 @@ export default {
   },
   updateCurrentResultId (state, data) {
     state.currentResultId = data
+  },
+  updateCurrentResultInfo (state, data) {
+    state.currentResultInfo = data
   }
 }

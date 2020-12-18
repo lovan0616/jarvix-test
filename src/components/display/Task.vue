@@ -28,6 +28,7 @@
         :is="componentName"
         :component-id="componentId"
         :can-download-csv="canDownloadCsv"
+        :diagram="diagram"
         :has-pagination="hasNextPage"
         :dataset="componentData.dataset"
         :title="componentData.title"
@@ -53,8 +54,14 @@
         :custom-chart-style="customChartStyle"
         :arrow-btn-right="arrowBtnRight"
         :is-show-label-data="isShowLabelData"
+        :is-show-description="isShowDescription"
+        :is-show-coefficients="isShowCoefficients"
+        :custom-cell-class-name="customCellClassName"
+        class="task-component"
         @next="getNewPageInfo"
         @toggleLabel="toggleLabel"
+        @clickCell="$emit('clickCell', $event)"
+        @clickChart="$emit('clickChart', $event)"
       />
       <div
         v-for="(note, index) in notes"
@@ -98,6 +105,14 @@ export default {
       type: Boolean,
       default: true
     },
+    isShowDescription: {
+      type: Boolean,
+      default: true
+    },
+    isShowCoefficients: {
+      type: Boolean,
+      default: true
+    },
     customChartStyle: {
       type: Object,
       default: () => {}
@@ -105,7 +120,15 @@ export default {
     arrowBtnRight: {
       type: Number,
       default: 80
-    }
+    },
+    convertedType: {
+      type: String,
+      default: null
+    },
+    customCellClassName: {
+      type: Array,
+      default: () => []
+    },
   },
   data () {
     return {
@@ -174,14 +197,20 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.diagram = response.diagram
               this.resultId = response.resultId
+<<<<<<< HEAD
               this.canDownloadCsv = response.canDownloadCsv
               this.componentName = this.getChartTemplate(this.diagram)
+=======
+              this.componentName = this.getChartTemplate(this.convertedType || this.diagram)
+>>>>>>> sprint1
               let responseData = response.data
               
               // 推薦洞察 需要將 question 傳給外層組件顯示用
               if (responseData.question) {
                 this.$emit('setQuestion', responseData.question)
               }
+              // miniApp 需要將 diagram 傳給外層以顯示不同新增元件設定項
+              this.$emit('setDiagram', response.diagram)
 
               let isAutoRefresh = response.isAutoRefresh
               if(isAutoRefresh && this.isPinboardPage) {
@@ -200,7 +229,7 @@ export default {
               // 判斷是否為 圖表
               if (responseData.dataset) {
                 // 如果拿到的資料為空陣列 表示這一頁已經是最後一頁了
-                if (responseData.dataset.data && responseData.dataset.data.length === 0) {
+                if (!responseData.dataset.data || responseData.dataset.data && responseData.dataset.data.length === 0) {
                   this.loading = false
                   this.hasNextPage = false
                   this.nextPageData = null
@@ -209,6 +238,7 @@ export default {
                   if (page === 0) {
                     this.isError = true
                     this.errorMessage = this.$t('message.emptyResult')
+                    this.$emit('isEmpty')
                   }
                 } else {
                   resolve(responseData)

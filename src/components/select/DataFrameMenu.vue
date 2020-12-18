@@ -85,7 +85,8 @@
         >{{ $t('editing.emptyKey') }}</div>
       </div>
     </transition>
-    <button 
+    <button
+      v-if="isShowPreviewEntry"
       :disabled="isDisablePreviewDataSource"
       class="preview-datasource-btn"
       @click="togglePreviewDataSource"
@@ -101,6 +102,7 @@
       </el-tooltip>
     </button>
     <button
+      v-if="isShowAdvanceSettingEntry"
       :disabled="isDisableDataFrameAdvanceSetting" 
       class="dataframe-setting-btn"
       @click="toggleAdvanceDataFrameSetting"
@@ -125,6 +127,21 @@ export default {
   name: 'DataFrameMenu',
   components: {
     InputBlock
+  },
+  props: {
+    // 因應 Dashboard 問問題後不需要轉址
+    redirectOnChange: {
+      type: Boolean,
+      default: true
+    },
+    isShowPreviewEntry: {
+      type: Boolean,
+      default: true
+    },
+    isShowAdvanceSettingEntry: {
+      type: Boolean,
+      default: true
+    }
   },
   data: () => {
     return {
@@ -252,9 +269,10 @@ export default {
     },
     onDataFrameChange (dataSourceId, dataFrameId) {
       // 避免首頁和預覽的資料集介紹重複打 API 前一隻被取消導致 error
-      if (this.isShowPreviewDataSource) this.togglePreviewDataSource(false)
+      if (this.isShowPreviewDataSource && this.redirectOnChange) this.togglePreviewDataSource(false)
       this.$store.dispatch('dataSource/changeDataSourceById', { dataSourceId, dataFrameId })
       .then(() => {
+        if (!this.redirectOnChange) return
         this.$router.push({
           name: 'PageIndex', 
           params: { 
@@ -319,6 +337,7 @@ export default {
   border-radius: 5px;
   border: 1px solid #292C2E;
   background-color: rgba(0, 0, 0, 0.55);
+  z-index: 1;
 
   .preview-datasource-btn, .dataframe-setting-btn {
     width: 40px;

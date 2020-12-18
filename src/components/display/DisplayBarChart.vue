@@ -6,6 +6,7 @@
       auto-resize
       @magictypechanged="magicTypeChanged"
       @brushselected="brushRegionSelected"
+      @click="chartClicked"
     />
     <arrow-button
       v-show="showPagination"
@@ -220,6 +221,9 @@ export default {
       }
       config.xAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis[0].display_name.replace(/ /g, '\r\n') : null
       config.yAxis.name = this.title.yAxis.length > 0 ? this.title.yAxis[0].display_name : null
+      // 開啟點擊觸發事件
+      config.xAxis.triggerEvent = true
+      config.yAxis.triggerEvent = true
 
       // 數量大的時候出現 scroll bar
       if (this.dataset.data.length > 30) {
@@ -268,6 +272,28 @@ export default {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
+    chartClicked (params) {
+      let dataInfo = []
+      // handle click event from axis label
+      if ((params.componentType === 'xAxis' || params.componentType === 'yAxis') && params.targetType === 'axisLabel') {
+        dataInfo.push({
+          ...this.title[params.componentType][0],
+          value: params.value
+        })
+      }
+
+      // handle click event from a bar on the chart
+      if (params.componentType === 'series') {
+        params.dimensionNames.forEach((name, index) => {
+          dataInfo.push({
+            ...this.title[index === 0 ? 'xAxis' : 'yAxis'][0],
+            value: params.value[index]
+          })
+        })
+      }
+      dataInfo = dataInfo.filter(data => data.dc_id && data.stats_type)
+      if (dataInfo.length > 0) this.$emit('clickChart', dataInfo)
+    },
     composeColumn (element, colIndex) {
       const shortenNumberMethod = this.shortenNumber
       return {

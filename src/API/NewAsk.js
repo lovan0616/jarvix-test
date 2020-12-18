@@ -8,7 +8,7 @@ export function askQuestion (askInfo, cancelFunction) {
     url: '/ask/question',
     method: 'POST',
     data: askInfo,
-    cancelToken: cancelFunction
+    ...(cancelFunction && { cancelToken: cancelFunction })
   })
 }
 

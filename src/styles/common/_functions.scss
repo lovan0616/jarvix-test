@@ -2,3 +2,25 @@
   $remSize: $size / 16px;
   @return #{$remSize}rem;
 }
+
+@function pow($base, $exponent) {
+  $current-value: 1;
+    
+  @if $exponent >= 0 {
+    @for $i from 1 through $exponent {
+      $current-value: $current-value * $base;
+    } 
+  } @else {
+    @for $i from $exponent to 0 {
+      $current-value: $current-value / $base;
+    }
+  }
+  
+  @return $current-value;
+}
+
+/*解決 SASS 使用 ceil 或 floor 功能時無法指定 round 到小數特定位數*/
+@function to-fixed($float, $digits: 2) {
+  $pow: pow(10, $digits);
+  @return floor($float * $pow) / $pow;
+}

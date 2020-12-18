@@ -4,6 +4,7 @@
       :style="chartStyle"
       :options="options"
       auto-resize
+      @click="chartClicked"
     />
     <arrow-button
       v-show="showPagination"
@@ -166,6 +167,28 @@ export default {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
+    chartClicked (params) {
+      let dataInfo = []
+
+      // handle click event from a piece of pie
+      if (params.componentType === 'series') {
+        for (let i = 0; i < 2; i++) {
+          if (params.dimensionNames[i] === 'index') {
+            dataInfo.push({
+              ...this.title['xAxis'][0],
+              value: params.value[i]
+            })
+          } else {
+            dataInfo.push({
+              ...this.title['yAxis'][0],
+              value: params.value[i]
+            })
+          }
+        }
+      }
+      dataInfo = dataInfo.filter(data => data.dc_id && data.stats_type)
+      if (dataInfo.length > 0) this.$emit('clickChart', dataInfo)
+    },
     controlPagination () {
       let exportBtn = document.getElementById('export-btn')
       if (exportBtn) {

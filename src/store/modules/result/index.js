@@ -6,7 +6,8 @@ export default {
     tableDataCSVDownloadMaximumCount: 4,
     tableDataCSVDownloadList: [],
     displayFactorIndex: 0,
-    currentResultId: null
+    currentResultId: null,
+    currentResultInfo: null
   },
   mutations
 }

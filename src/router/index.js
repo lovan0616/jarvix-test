@@ -183,6 +183,26 @@ const router = new Router({
                         }
                       ]
                     },
+                    {
+                      path: 'mini-apps',
+                      component: () => import('@/pages/miniApp/Index'),
+                      children: [
+                        {
+                          path: '/',
+                          name: 'MiniAppList',
+                          component: () => import('@/pages/miniApp/miniAppList/Index')
+                        },
+                        {
+                          path: ':mini_app_id',
+                          name: 'MiniApp',
+                          component: () => import('@/pages/miniApp/miniApp/Index'),
+                          meta: {
+                            isHeaderHidden: true,
+                            isSideNavHidden: true
+                          }
+                        }
+                      ]
+                    },
                     // FIXME for poc/foxconn_molding
                     {
                       path: 'algorithm',

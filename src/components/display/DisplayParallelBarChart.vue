@@ -16,6 +16,7 @@
       :options="options"
       auto-resize
       @brushselected="brushRegionSelected"
+      @click="chartClicked"
     />
     <arrow-button
       v-show="showPagination"
@@ -205,6 +206,9 @@ export default {
       config.yAxis.name = this.title.xAxis.length > 0 ? this.title.xAxis.reduce((acc, cur, index) => acc + (index !== 0 ? ', ' : '') + cur.display_name.replace(/ /g, '\r\n'), '') : null
       // 如果是 bar chart
       config.yAxis.scale = true
+      // 開啟點擊觸發事件
+      config.xAxis. triggerEvent = true
+      config.yAxis. triggerEvent = true
 
       // 數量大的時候出現 scroll bar
       if (this.dataset.data.length > 20) {
@@ -296,6 +300,41 @@ export default {
     this.exportCSVFile(this.$el, this.appQuestion, this)
   },
   methods: {
+    chartClicked (params) {
+      let dataInfo = []
+      // handle click event from axis label
+      if ((params.componentType === 'xAxis' || params.componentType === 'yAxis') && params.targetType === 'axisLabel') {
+        const columnList = params.value.split(',')
+        columnList.forEach((name, index) => {
+          const axis = params.componentType === 'xAxis' ? 'yAxis' : 'xAxis'
+          dataInfo.push({
+            ...this.title[axis][index],
+            value: name
+          })
+        })
+      }
+
+      // handle click event from a bar on the chart
+      if (params.componentType === 'series') {
+        params.dimensionNames.forEach((name, index) => {
+          if (name === 'index') {
+            params.value[index].split(',').forEach((column, columnIndex) => {
+              dataInfo.push({
+                ...this.title['xAxis'][columnIndex],
+                value: column
+              })
+            })
+          } else {
+            dataInfo.push({
+              ...this.title['yAxis'][0],
+              value: params.value[index]
+            })
+          }
+        })
+      }
+      dataInfo = dataInfo.filter(data => data.dc_id && data.stats_type)
+      if (dataInfo.length > 0) this.$emit('clickChart', dataInfo)
+    },
     changeDiagram () {
       this.showLineChart = !this.showLineChart
     },
