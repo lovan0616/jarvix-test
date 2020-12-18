@@ -799,6 +799,8 @@
     "dataOverview": "Overview",
     "clusteringAnalysis": "Clustering",
     "saveClusteringResultAsColumn": "Save clustering result as a new column",
+    "clusteringNumberSetting": "Clustering Number Settings",
+    "clusteringNumber": "Clustering Number",
     "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "Featrue columns or columns coming from any joined table cannot be saved as a new column.",
     "createClusteringColumn": "New Clustering Field",
     "clusteringColumnName": "Clustering Column Name",
@@ -808,6 +810,11 @@
     "buildingClusteringColumnSuccess": "The label field '{columnName}' was successfully created.",
     "buildingClusteringColumnFailed": "Failed to build label field '{columnName}'.",
     "clusteringColumnOriginFrom": "(From [DataSource]{dataSourceName} [DataFrame]{dataFrameName})"
+  },
+  "prediction": {
+    "predictionIntervalSetting": "Prediction Interval Settings",
+    "predictionIntervalLength": "Prediction Interval Length",
+    "rePredict": "Repredict"
   },
   "description": {
     "basic": {
@@ -984,6 +991,7 @@
     "featureManagement": "Custom Field",
     "setting": "Settings",
     "reset": "Reset",
+    "reAnalyze": "Reanalyze",
     "confirmBuild": "Confirm Build",
     "selectAll": "Select All",
     "resumeDefault": "Restore Default",

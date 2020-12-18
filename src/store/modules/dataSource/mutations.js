@@ -32,6 +32,9 @@ export default {
   setCurrentQuestionDataFrameId(state, data) {
     state.currentQuestionDataFrameId = data
   },
+  setAlgoConfig(state, data) {
+    state.algoConfig = data
+  },
   setFilterList (state, data) {
     if (data.length === 0) return false
     // 判斷要從哪邊開始取代新的

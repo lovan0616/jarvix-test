@@ -887,6 +887,8 @@
     "dataOverview": "資料概況",
     "clusteringAnalysis": "分群分析",
     "saveClusteringResultAsColumn": "儲存分群結果為標籤欄位",
+    "clusteringNumberSetting": "設定分群數量",
+    "clusteringNumber": "分群數量",
     "reasonsOfnotAllowedToSaveClusteringResultAsColumn": "自定義欄位或來自關聯資料表的欄位，無法儲存為標籤欄位。",
     "createClusteringColumn": "新增標籤欄位",
     "clusteringColumnName": "標籤欄位名稱",
@@ -896,6 +898,11 @@
     "buildingClusteringColumnSuccess": "標籤欄位「{columnName}」建置成功。",
     "buildingClusteringColumnFailed": "標籤欄位「{columnName}」建置失敗。",
     "clusteringColumnOriginFrom": "(來自 [資料源]{dataSourceName} [資料表]{dataFrameName})"
+  },
+  "prediction": {
+    "predictionIntervalSetting": "設定預測區間",
+    "predictionIntervalLength": "預測區間長度",
+    "rePredict": "重新預測"
   },
   "description": {
     "basic": {
@@ -1072,6 +1079,7 @@
     "featureManagement": "自定義欄位",
     "setting": "設定",
     "reset": "重新設定",
+    "reAnalyze": "重新分析",
     "confirmBuild": "確認建置",
     "selectAll": "全選",
     "resumeDefault": "恢復預設值",
