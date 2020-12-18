@@ -238,7 +238,6 @@ export default {
     }
   },
   mounted () {
-    this.selectedList = JSON.parse(JSON.stringify(this.subRestraint.properties.display_datavalues))
     this.fetchData()
   },
   methods: {
@@ -252,6 +251,7 @@ export default {
           : response[this.statsType.toLowerCase()]
 
         if(this.statsType === 'CATEGORY') {
+          this.selectedList = JSON.parse(JSON.stringify(this.subRestraint.properties.display_datavalues))
           /// CATEGORY 值超過 200 筆時候會回傳 null
           if(!this.valueList) {
             this.isCategoryValueEmpty = true
