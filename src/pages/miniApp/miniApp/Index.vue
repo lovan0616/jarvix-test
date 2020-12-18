@@ -385,6 +385,8 @@
       v-if="isShowCreateComponentDialog"
       :initial-current-component="currentComponent || componentTemplateFactory()"
       :dashboard-list="dashboardList"
+      :filters="filterColumnValueInfoList"
+      :controls="controlColumnValueInfoList"
       @close="closeCreateComponentDialog"
       @create="createComponent"
       @updateSetting="updateComponentSetting"
