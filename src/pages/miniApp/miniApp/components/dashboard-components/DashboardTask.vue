@@ -318,7 +318,7 @@ export default {
       handler (isInit) {
         if (!isInit) return
         this.isInitializing = false
-        this.deboucedAskQuestion()
+        if (this.shouldComponentBeFiltered || this.shouldComponentYAxisBeControlled) this.deboucedAskQuestion()
       }
     },
     // 當 Dashboard的 fitler 變動時，由元件內部去重新問問題
