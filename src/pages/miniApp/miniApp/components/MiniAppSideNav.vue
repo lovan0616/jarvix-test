@@ -1,5 +1,15 @@
 <template>
   <aside class="mini-app__side-nav">
+    <div
+      v-if="isEditMode || isWarningModuleActivate"
+      :class="{'is-active': isShowWarningModule && !currentDashboardId}"
+      class="title warning-module-entry"
+      @click="$emit('openWarningModule')">
+      <svg-icon 
+        icon-class="warning" 
+        class="label-icon"/>
+      <span class="label-name">{{ $t('alert.monitorAlert') }}</span>
+    </div>
     <div class="title">
       <svg-icon 
         icon-class="dashboard" 
@@ -36,16 +46,6 @@
         </li>
       </draggable>
     </ul>
-    <div
-      v-if="isEditMode || isWarningModuleActivate"
-      :class="{'is-active': isShowWarningModule && !currentDashboardId}"
-      class="title warning-module-entry"
-      @click="$emit('openWarningModule')">
-      <svg-icon 
-        icon-class="warning" 
-        class="label-icon"/>
-      <span class="label-name">{{ $t('miniApp.monitorWarning') }}</span>
-    </div>
   </aside>
 </template>
 

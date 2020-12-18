@@ -56,6 +56,8 @@
           :current-component="currentComponent"
           :is-addable.sync="isAddable"
           :is-loading.sync="isLoading"
+          :filters="filters"
+          :controls="controls"
           @setDiagram="currentComponent.diagram = $event" 
         />
         <transition name="fast-fade-in">
@@ -257,7 +259,6 @@ import AskBlock from '@/components/chatBot/AskBlock'
 import ResultDisplay from '@/pages/result/ResultDisplay'
 import DashboardComponent from './DashboardComponent'
 import InputVerify from '@/components/InputVerify'
-import { getDateTimeColumns } from '@/API/DataSource'
 import { mapState } from 'vuex'
 
 export default {
@@ -279,7 +280,15 @@ export default {
     dashboardList: {
       type: Array,
       default: () => []
-    }
+    },
+    filters: {
+      type: Array,
+      default: () => []
+    },
+    controls: {
+      type: Array,
+      default: () => []
+    },
   },
   data () {
     return {
@@ -394,18 +403,12 @@ export default {
       this.$validator.validateAll()
       .then(valid => {
         if (!valid) return
-        // 取得預設時間欄位
-        return getDateTimeColumns(this.currentResultInfo.dataFrameId)
-      })
-      .then(columnList => {
-
         this.$emit('create', {
           ...this.currentComponent,
           init: true,
           resultId: this.currentResultId,
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
-          ...this.currentResultInfo,
-          dateTimeColumn: columnList.find(column => column.isDefault)
+          ...this.currentResultInfo
         })
       })
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="warning-log">
     <nav class="warning-log__nav">
-      {{ $t('miniApp.warningLogs') }}
+      {{ $t('alert.alertLogs') }}
     </nav>
     <div class="warning-log__content">
       <spinner 
@@ -13,20 +13,20 @@
         :data="warningLogs"
         class="sy-table"
         style="width: 100%">
-        <div slot="empty">{{ $t('miniApp.emptyLogs') }}</div>
+        <div slot="empty">{{ $t('alert.emptyLogs') }}</div>
         <el-table-column
-          :label="$t('miniApp.warningLogCreateTime')"
+          :label="$t('alert.alertLogCreateTime')"
           prop="createDate"
-          width="220">
+          width="180">
           <template slot-scope="scope">
             <span>{{ scope.row.createDate | convertTimeStamp }}</span>
           </template>  
         </el-table-column>
         <el-table-column
-          :label="$t('miniApp.warningName')"
+          :label="$t('alert.alertName')"
           prop="conditionName"/>
         <el-table-column
-          :label="$t('miniApp.warningLogMessage')"
+          :label="$t('alert.alertLogMessage')"
           prop="conditionMetMessage"/>
         <el-table-column
           :label="$t('miniApp.state')"
@@ -55,15 +55,27 @@
           </template>
         </el-table-column>
         <el-table-column
+          :label="$t('miniApp.monitorLogUpdateTime')"
+          prop="updateDate"
+          width="180">
+          <template slot-scope="scope">
+            <span>{{ scope.row.updateDate | convertTimeStamp }}</span>
+          </template>  
+        </el-table-column>
+        <el-table-column
           :label="$t('miniApp.goToDashboard')"
           prop="relatedDashboardId"
           width="120">
           <template slot-scope="scope">
-            <a 
+            <a
+              v-if="scope.row.relatedDashboardId"
               class="link" 
               @click.stop="goToCertainDashboard(scope.row.relatedDashboardId, scope.row.monitoredData)">
               {{ $t('miniApp.link') }}
             </a>
+            <span 
+              v-else 
+              class="reminding">{{ $t('miniApp.notBeingSet') }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -83,6 +95,7 @@
 <script>
 import { getAlertLogs, patchAlertLogActiveness } from '@/API/Alert'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'WarningLog',
@@ -110,6 +123,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
     activeConditionIds () {
       if (!this.setting.conditions) return []
       return this.setting.conditions.filter(item => item.activate).map(item => item.id)
@@ -144,38 +158,13 @@ export default {
     },
     getWarningLogs (page = 0) {
       this.isLoading = true
-      getAlertLogs({ conditionIds: this.activeConditionIds, page }).then(response => {
+      getAlertLogs({ conditionIds: this.activeConditionIds, page, groupId: this.getCurrentGroupId }).then(response => {
         this.paginationInfo = response.pagination
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
           return {
             ...log,
-            relatedDashboardId: prevSettingCondition ? prevSettingCondition.relatedDashboardId : null,
-            // MOCK DATA
-            conditionName: '成本過高',
-            monitoredData: [
-              {
-                dataColumnId: 1,
-                dataType: 'INT',
-                datum: '1001',
-                displayName: '成本',
-                statsType: 'NUMERIC',
-              },
-              {
-                dataColumnId: 691,
-                dataType: 'STRING',
-                datum: '甘肅',
-                displayName: '省',
-                statsType: 'CATEGORY',
-              },
-              {
-                dataColumnId: 693,
-                dataType: 'STRING',
-                datum: 'Helmets',
-                displayName: '產品',
-                statsType: 'CATEGORY',
-              }
-            ]
+            relatedDashboardId: prevSettingCondition ? prevSettingCondition.relatedDashboardId : null
           }
         })
       })
@@ -209,16 +198,8 @@ export default {
           return 15 * 60 * 1000
         case '*/30 * * * *':
           return 30 * 60 * 1000
-        case '*/45 * * * *':
-          return 45 * 60 * 1000
-        case '0 * * * *':
-          return 60 * 60 * 1000
-        case '0 0 * * *':
-          return 24 * 60 * 60 * 1000
-        case '0 0 * * 0':
-          return 7 * 24 * 60 * 1000
-        case '0 0 1 * *':
-          return 30 * 7 * 24 * 60 * 1000
+        default:
+          return 60 * 1000
       }
     }
   }
@@ -244,9 +225,8 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     padding: 0 20px 20px 0;
-    .warning-log-table {
-      flex: 1;
-      min-height: 0
+    .reminding {
+      color: #999;
     }
     .el-pagination {
       text-align: right;

@@ -31,6 +31,10 @@
             <task
               :key="'chart-' + computedKeyResultId"
               :component-id="computedKeyResultId"
+              :is-show-description="false"
+              :is-show-coefficients="false"
+              :is-show-donwnload-btn="false"
+              :show-toolbox="false"
               intend="key_result"
               @setDiagram="$emit('setDiagram', $event)"
             />
@@ -114,7 +118,7 @@
       </div>
     </template>
     <!-- Error -->
-    <empty-result 
+    <!-- <empty-result 
       v-if="hasError"
       :key="appQuestion"
       :result-info="{
@@ -122,12 +126,14 @@
         description: '不支援此類型概況語句',
       }"
       :redirect-on-select="false"
-    />
+    /> -->
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { getDateTimeColumns } from '@/API/DataSource'
+import moment from 'moment'
 
 export default {
   props: {
@@ -142,7 +148,15 @@ export default {
     isAddable: {
       type: Boolean,
       default: null
-    }
+    },
+    filters: {
+      type: Array,
+      default: () => []
+    },
+    controls: {
+      type: Array,
+      default: () => []
+    },
   },
   data () {
     return {
@@ -153,31 +167,52 @@ export default {
       periodSec: 200,
       question: '',
       segmentation: null,
-      hasError: false
+      mainDateColumn: null
+      // hasError: false
     }
   },
   computed: {
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo']),
     ...mapGetters('dataSource', ['filterRestrictionList']),
     computedKeyResultId () {
-      return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0]) || this.currentComponent.keyResultId
+      return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0])
     },
     computedQuestion () {
       return this.question || this.currentComponent.question
     },
     isShowKeyResultContent () {
       return this.computedKeyResultId || this.layout
-    }
+    },
+    allFilterList () {
+      // 可能會有階層，因此需要完全攤平
+      return [].concat.apply([], [...this.filters, ...this.controls])
+    },
   },
   watch: {
     appQuestion (question) {
       if (!question) return
+      this.askQuestion(question)
+    }
+  },
+  mounted () {
+    if (this.currentComponent.keyResultId) this.askQuestion(this.currentComponent.question)
+  },
+  methods: {
+    checkIsTextTypeAvailable (transcript) {
+      // 以下需確保問句中只帶有一個 category 欄位
+      const isSingleSubject = transcript.subjectList && transcript.subjectList.length === 1
+      const isSingleCategoryDataColumn = transcript.subjectList[0].categoryDataColumnList && transcript.subjectList[0].categoryDataColumnList.length === 1
+      const haveSameDataColumn = isSingleCategoryDataColumn && transcript.subjectList[0].categoryDataColumnList[0].dataColumnId === transcript.subjectList[0].dataColumn.dataColumnId
+      // 確保不是該 category 欄位中的值，因為他會被視為該欄位下的 filter 條件
+      const isEmptyFilterList = transcript.subjectList[0].filterList === null
+      return isSingleSubject && isEmptyFilterList && isSingleCategoryDataColumn && haveSameDataColumn 
+    },
+    askQuestion (question) {
       // 關閉介紹資料集
       this.closePreviewDataSource()
       // 恢復新增元件的狀態
       this.$emit('update:isAddable', null)
       this.$emit('update:isLoading', true)
-
       this.$store.dispatch('chatBot/askQuestion', {
         question,
         dataSourceId: this.dataSourceId,
@@ -203,24 +238,27 @@ export default {
         // 一個結果
         if (segmentationList.length === 1) {
           this.segmentation = segmentationList[0]
-          // 確認是否為趨勢類型問題
-          const isTrendQuestion = this.segmentation.denotation === 'TREND'
-
-          this.$store.dispatch('chatBot/askResult', {
-            questionId,
-            segmentation: this.segmentation,
-            // TODO: 處理 filter, drill down
-            restrictions: null,
-            selectedColumnList: null,
-            ...(isTrendQuestion && {
-              sortOrders: [
-                {
-                  dataColumnId: this.segmentation.transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
-                  sortType: 'DESC'
-                }
-              ]
+          // 取得 dataframe 預設日期欄位資訊
+          getDateTimeColumns(this.segmentation.transcript.dataFrame.dataFrameId)
+            .then(columnList => {
+              this.mainDateColumn = columnList.find(column => column.isDefault)
+              // 確認是否為趨勢類型問題
+              const isTrendQuestion = this.segmentation.denotation === 'TREND'
+              return this.$store.dispatch('chatBot/askResult', {
+                questionId,
+                segmentation: this.segmentation,
+                restrictions: this.restrictions(),
+                selectedColumnList: null,
+                ...(isTrendQuestion && {
+                  sortOrders: [
+                    {
+                      dataColumnId: this.segmentation.transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
+                      sortType: 'DESC'
+                    }
+                  ]
+                })
+              })
             })
-          })
             .then(res => this.getComponentV2(res.resultId))
             .catch((error) => {})
         } else {
@@ -237,17 +275,6 @@ export default {
         // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
         this.$store.commit('dataSource/setCurrentQuestionInfo', null)
       })
-    }
-  },
-  methods: {
-    checkIsTextTypeAvailable (transcript) {
-      // 以下需確保問句中只帶有一個 category 欄位
-      const isSingleSubject = transcript.subjectList && transcript.subjectList.length === 1
-      const isSingleCategoryDataColumn = transcript.subjectList[0].categoryDataColumnList && transcript.subjectList[0].categoryDataColumnList.length === 1
-      const haveSameDataColumn = isSingleCategoryDataColumn && transcript.subjectList[0].categoryDataColumnList[0].dataColumnId === transcript.subjectList[0].dataColumn.dataColumnId
-      // 確保不是該 category 欄位中的值，因為他會被視為該欄位下的 filter 條件
-      const isEmptyFilterList = transcript.subjectList[0].filterList === null
-      return isSingleSubject && isEmptyFilterList && isSingleCategoryDataColumn && haveSameDataColumn 
     },
     getComponentV2 (resultId) {
       window.clearTimeout(this.timeoutFunction)
@@ -286,7 +313,8 @@ export default {
                 question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
                 questionId: componentResponse.questionId,
                 dataSourceId: this.dataSourceId,
-                dataFrameId: componentResponse.segmentationPayload.transcript.dataFrame.dataFrameId
+                dataFrameId: componentResponse.segmentationPayload.transcript.dataFrame.dataFrameId,
+                dateTimeColumn: this.mainDateColumn
               })
               this.$emit('update:isAddable', componentResponse.layout === 'general' || false)
               this.$emit('update:isLoading', false)
@@ -308,7 +336,7 @@ export default {
           this.$emit('update:isLoading', false)
           this.$store.commit('result/updateCurrentResultId', null)
           this.$store.commit('result/updateCurrentResultInfo', null)
-          this.hasError = true
+          // this.hasError = true
           if (error.message !== 'cancel') this.resultInfo = null
         })
     },
@@ -327,7 +355,93 @@ export default {
     },
     displayedHeaderText (type) {
       return this.currentComponent.type === type ? this.$t('miniApp.currentlyDisplayed') : this.$t('miniApp.setForDisplay')
-    }
+    },
+    restrictions () {
+      return this.allFilterList
+        .filter(filter => {
+          // 相對時間有全選的情境，不需帶入限制中
+          if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
+          if (
+            filter.statsType === 'NUMERIC'
+            || filter.statsType === 'FLOAT'
+            || filter.statsType === 'DATETIME'
+          ) return filter.start && filter.end
+          // filter 必須有值
+          if (filter.dataValues.length > 0) return true
+          return false
+        })
+        .map(filter => {
+          let type = ''
+          let data_type = ''
+          switch (filter.statsType) {
+            case ('STRING'):
+            case ('BOOLEAN'):
+            case ('CATEGORY'):
+              data_type = 'string'
+              type = 'enum'
+              break
+            case ('FLOAT'):
+            case ('NUMERIC'):
+              data_type = 'int'
+              type = 'range'
+              break
+            case ('DATETIME'):
+            case ('RELATIVEDATETIME'):
+              data_type = 'datetime'
+              type = 'range'
+              break  
+          }
+
+          // 相對時間 filter 需取當前元件所屬 dataframe 的預設時間欄位和當前時間來套用
+          if (filter.statsType === 'RELATIVEDATETIME') return [{
+            type,
+            properties: {
+              data_type,
+              dc_id: this.mainDateColumn.dataColumnId,
+              display_name: this.mainDateColumn.dataColumnPrimaryAlias,
+              ...this.formatRelativeDatetime(filter.dataValues[0])
+            }
+          }]
+
+          return [{
+            type,
+            properties: {
+              data_type,
+              dc_id: filter.columnId,
+              display_name: filter.columnName,
+              ...((filter.statsType === 'STRING' || filter.statsType === 'BOOLEAN' || filter.statsType === 'CATEGORY')  && {
+                datavalues: filter.dataValues,
+                display_datavalues: filter.dataValues
+              }),
+              ...((filter.statsType === 'NUMERIC' || filter.statsType === 'FLOAT' || filter.statsType === 'DATETIME') && {
+                start: filter.start,
+                end: filter.end
+              }),
+            }
+          }]
+        })
+    },
+    formatRelativeDatetime (dataValue) {
+      const properties = {
+        start: null,
+        end: null
+      }
+      
+      // update datetime range
+      if (dataValue === 'today') {
+        properties.start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
+        properties.end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
+      } else if (RegExp('^.*hour.*$').test(dataValue)) {
+        const hour = Number(dataValue.split('hour')[0])
+        properties.start = moment().subtract(hour, 'hours').format('YYYY-MM-DD HH:mm')
+        properties.end = moment().format('YYYY-MM-DD HH:mm')
+      } else {
+        properties.start = null
+        properties.end = null
+      }
+
+      return properties
+    },
   }
 }
 </script>

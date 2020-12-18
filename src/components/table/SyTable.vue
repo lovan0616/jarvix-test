@@ -1,7 +1,7 @@
 <template>
   <div class="sy-table-block">
     <button 
-      v-if="appQuestion" 
+      v-if="isShowDonwnloadBtn && appQuestion" 
       type="button"
       class="btn-m btn-default btn-download"
       @click="downloadData"
@@ -87,6 +87,10 @@ export default {
     hasPagination: {
       type: Boolean,
       default: false
+    },
+    isShowDonwnloadBtn: {
+      type: Boolean,
+      default: true
     },
     lazyLoadInfo: {
       type: Object,

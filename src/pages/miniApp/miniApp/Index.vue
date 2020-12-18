@@ -85,14 +85,14 @@
                 :disabled="isProcessing"
                 type="button"
                 class="btn-m btn-default button-container__button"
-                @click="publishMiniApp"
+                @click="publishMiniApp('publish')"
               >{{ $t('miniApp.publish') }}</button>
               <template v-if="appData.isPublishing">
                 <button
                   :disabled="isProcessing"
                   type="button"
                   class="btn-m btn-default button-container__button"
-                  @click="publishMiniApp"
+                  @click="publishMiniApp('update')"
                 >{{ $t('button.update') }}</button>
                 <button
                   :disabled="isProcessing"
@@ -236,7 +236,7 @@
                       class="btn-m btn-outline btn-has-icon create-filter-btn" 
                       @click.prevent>
                       <svg-icon icon-class="plus"/>
-                      <span class="button-label">看板控制項</span>
+                      <span class="button-label">{{ $t('miniApp.panelControl') }}</span>
                       <svg-icon 
                         icon-class="triangle" 
                         class="icon-triangle"/>
@@ -378,6 +378,7 @@
     </div>
     <create-dashboard-dialog
       v-if="isShowCreateDashboardDialog"
+      :is-processing="isProcessingCreateDashboard"
       @close="isShowCreateDashboardDialog = false"
       @create="createDashboard"
     />
@@ -385,6 +386,8 @@
       v-if="isShowCreateComponentDialog"
       :initial-current-component="currentComponent || componentTemplateFactory()"
       :dashboard-list="dashboardList"
+      :filters="filterColumnValueInfoList"
+      :controls="controlColumnValueInfoList"
       @close="closeCreateComponentDialog"
       @create="createComponent"
       @updateSetting="updateComponentSetting"
@@ -504,6 +507,7 @@ export default {
       isShowUpdateDashboardNameDialog: false,
       isLoading: false,
       isProcessing: false,
+      isProcessingCreateDashboard: false,
       isShowShare: false,
       shareLink: null,
       confirmDeleteText: this.$t('editing.confirmDelete'),
@@ -640,6 +644,9 @@ export default {
     },
     currentModeDataType () {
       return this.isViewMode ? 'viewModeData' : 'editModeData'
+    },
+    isComponentOrderChanged () {
+      return this.draggedContext.index !== this.draggedContext.futureIndex
     }
   },
   watch: {
@@ -756,12 +763,14 @@ export default {
         controlList: [],
         yAxisControlList: []
       })
-      this.isShowCreateDashboardDialog = false
+      this.isProcessingCreateDashboard = true
       this.updateAppSetting(updatedMiniAppData)
-        .then(() => { 
-            this.miniApp = updatedMiniAppData
-            this.activeCertainDashboard(newDashBoardInfo.id, newDashBoardInfo.name)
-         })
+        .then(() => {
+          this.miniApp = updatedMiniAppData
+          this.activeCertainDashboard(newDashBoardInfo.id, newDashBoardInfo.name)
+          this.isShowCreateDashboardDialog = false
+          this.isProcessingCreateDashboard = false
+        })
     },
     createComponent (newComponentInfo) {
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
@@ -813,7 +822,7 @@ export default {
         })
         .catch(() => {})
     },
-    publishMiniApp () {
+    publishMiniApp (type) {
       this.isProcessing = true
       const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
       // 更新發佈狀態
@@ -826,8 +835,18 @@ export default {
         warningModule: this.miniApp.settings.editModeData.warningModule
       }
       this.updateAppSetting(updatedMiniAppData)
-        .then(() => { this.miniApp = updatedMiniAppData })
-        .finally(() => this.isProcessing = false)
+        .then(() => {
+          this.miniApp = updatedMiniAppData
+          Message({
+            message: type === 'publish' ? this.$t('miniApp.appSuccessfullyPublished') : this.$t('miniApp.appSuccessfullyUpdated'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => setTimeout(() => {
+          this.isProcessing = false
+        }, 1000))
     },
     unpublishMiniApp () {
       this.isProcessing = true
@@ -841,8 +860,18 @@ export default {
         isPublishing: false
       }
       this.updateAppSetting(updatedMiniAppData)
-        .then(() => { this.miniApp = updatedMiniAppData })
-        .finally(() => this.isProcessing = false)
+        .then(() => {
+          this.miniApp = updatedMiniAppData
+          Message({
+            message: this.$t('miniApp.appSuccessfullyUnpublished'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        })
+        .finally(() => setTimeout(() => {
+          this.isProcessing = false
+        }, 1000))
     },
     formatTimeStamp (timestampe) {
       return moment(timestampe).format('YYYY/M/D')
@@ -1193,8 +1222,15 @@ export default {
       this[`create${type}Component`]()
     },
     openWarningModule () {
-      this.isShowWarningModule = true
-      this.currentDashboardId = null
+      this.isProcessing = true
+      getMiniAppInfo(this.miniAppId)
+        .then(miniAppInfo => {
+          this.miniApp = miniAppInfo
+          this.isShowWarningModule = true
+          this.currentDashboardId = null
+        })
+        .catch(() => {})
+        .finally(() => this.isProcessing = false )
     },
     componentSettingOptions (component) {
       return [
@@ -1241,7 +1277,7 @@ export default {
           init: true,
           config: {
             ...generalConfig,
-            diaplayedName: this.$t('miniApp.realTimeMonitorWarning'),
+            diaplayedName: this.$t('alert.realTimeMonitorAlert'),
           },
         })
       }
@@ -1251,6 +1287,7 @@ export default {
       this.draggedContext = { index, futureIndex }
     },
     updateOrder (target) {
+      if (!this.isComponentOrderChanged) return
       this.updateAppSetting(this.miniApp).then(() => {
         Message({
           message: this.$t('miniApp.orderUpdated', { target }),
@@ -1259,8 +1296,7 @@ export default {
           showClose: true
         })
       })
-    },
-    
+    }
   }
 }
 </script>

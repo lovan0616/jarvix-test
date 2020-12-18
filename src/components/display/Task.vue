@@ -56,6 +56,7 @@
         :is-show-label-data="isShowLabelData"
         :is-show-description="isShowDescription"
         :is-show-coefficients="isShowCoefficients"
+        :is-show-donwnload-btn="isShowDonwnloadBtn"
         :custom-cell-class-name="customCellClassName"
         class="task-component"
         @next="getNewPageInfo"
@@ -110,6 +111,10 @@ export default {
       default: true
     },
     isShowCoefficients: {
+      type: Boolean,
+      default: true
+    },
+    isShowDonwnloadBtn: {
       type: Boolean,
       default: true
     },

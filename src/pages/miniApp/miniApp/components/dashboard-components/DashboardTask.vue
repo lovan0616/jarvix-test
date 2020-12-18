@@ -58,6 +58,11 @@
                 class="more-icon" />
               <slot name="drowdown"/>
             </div>
+            <div v-if="!isEditMode && componentData.type === 'monitor-warning-list'">
+              <svg-icon 
+                icon-class="warning" 
+                class="icon-warning"/>
+            </div>
           </div>
         </span>
         <div
@@ -313,7 +318,7 @@ export default {
       handler (isInit) {
         if (!isInit) return
         this.isInitializing = false
-        this.deboucedAskQuestion()
+        if (this.shouldComponentBeFiltered || this.shouldComponentYAxisBeControlled) this.deboucedAskQuestion()
       }
     },
     // 當 Dashboard的 fitler 變動時，由元件內部去重新問問題
@@ -605,6 +610,11 @@ $direction-span: ("col": 8, "row": 6);
     .dropdown-select { visibility: visible; }
   }
 }
+@keyframes flash {
+	0% { opacity: 0 }
+	50% { opacity: 1 }
+  100% { opacity: 0 }
+}
 
 .component__item {
   padding-right: 16px;
@@ -716,33 +726,9 @@ $direction-span: ("col": 8, "row": 6);
         margin-left: 8px;
       }
     }
-  }
-  &-action {
-    .related-item {
-      display: inline-flex;
-      align-items: center;
-      font-size: 12px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.2);
-      &__title {
-        font-weight: bold;
-      }
-      &__close {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #A7A7A7;
-        margin-left: 6px;
-        cursor: pointer;
-        .svg-icon {
-          width: 4px;
-        }
-      }
+    .icon-warning {
+      color: $theme-color-danger;
+      animation: flash 1s infinite;
     }
   }
 

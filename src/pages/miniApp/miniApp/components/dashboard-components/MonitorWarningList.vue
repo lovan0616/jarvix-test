@@ -20,6 +20,9 @@
         </div>
         <div class="list__item--right">
           <div class="list__item-title">
+            {{ log.conditionName }}
+          </div>
+          <div class="list__item-sub-title">
             {{ log.conditionMetMessage }}
           </div>
           <div class="list__item-description">
@@ -29,13 +32,14 @@
       </li>
     </template>
     <template v-else>
-      <div class="empty-text">暫無任何示警內容</div>
+      <div class="empty-text">{{ $t('alert.emptyLogs') }}</div>
     </template>
   </ul>
 </template>
 
 <script>
 import { getAlertLogs } from '@/API/Alert'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'MonitorWarningList',
@@ -57,6 +61,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('userManagement', ['getCurrentGroupId']),
     activeConditionIds () {
       if (!this.setting.activate || !this.setting.conditions) return []
       return this.setting.conditions.filter(item => item.activate).map(item => item.id)
@@ -79,7 +84,7 @@ export default {
     },
     getWarningLogs () {
       this.isLoading = true
-      getAlertLogs({ conditionIds: this.activeConditionIds }).then(response => {
+      getAlertLogs({ conditionIds: this.activeConditionIds, groupId: this.getCurrentGroupId }).then(response => {
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
           return {
@@ -161,6 +166,12 @@ export default {
     }
 
     &-title {
+      color: #FFFFFF;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    &-sub-title {
       color: #FFFFFF;
       font-size: 12px;
       margin-bottom: 5px;
