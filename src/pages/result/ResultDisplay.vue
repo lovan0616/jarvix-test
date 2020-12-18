@@ -14,6 +14,7 @@
     <component
       v-else
       :is="layout || 'EmptyResult'"
+      :data-result-id="currentResultId"
       :data-frame-id="currentQuestionDataFrameId"
       :result-info="resultInfo"
       :restrictions="restrictInfo"
