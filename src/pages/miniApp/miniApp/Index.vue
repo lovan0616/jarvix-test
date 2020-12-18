@@ -1269,7 +1269,10 @@ export default {
         resultId: null,
         orderSequence: null,
         diagram: type,
-        indexInfo: { unit: '' },
+        indexInfo: { 
+          unit: '',
+          size: 'middle'
+        },
         relatedDashboard: { id: null, name: null },
         config: {
           ...generalConfig,

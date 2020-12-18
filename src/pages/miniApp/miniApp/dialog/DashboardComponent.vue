@@ -73,6 +73,15 @@
                 class="input setting__input"
               >
             </div>
+            <div class="setting">
+              <div class="setting__label">顯示大小</div>
+              <default-select 
+                v-model="currentComponent.indexInfo.size"
+                :option-list="indexSizeOptionList"
+                :placeholder="$t('miniApp.chooseColumnSize')"
+                class="input setting__input"
+              />
+            </div>
           </div>
         </div>
         <!--Text Type Component-->
@@ -133,9 +142,13 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { getDateTimeColumns } from '@/API/DataSource'
+import DefaultSelect from '@/components/select/DefaultSelect'
 import moment from 'moment'
 
 export default {
+  components: {
+    DefaultSelect
+  },
   props: {
     currentComponent: {
       type: Object,
@@ -167,8 +180,25 @@ export default {
       periodSec: 200,
       question: '',
       segmentation: null,
-      mainDateColumn: null
-      // hasError: false
+      mainDateColumn: null,
+      indexSizeOptionList: [
+        {
+          value: 'large',
+          name: '大'
+        },
+        {
+          value: 'middle',
+          name: '中'
+        },
+        {
+          value: 'small',
+          name: '小'
+        },
+        {
+          value: 'mini',
+          name: '迷你'
+        }
+      ]
     }
   },
   computed: {
@@ -520,6 +550,9 @@ export default {
 
         &::placeholder {
           color: #AAAAAA;
+        }
+        /deep/ .el-input__inner {
+          padding-left: 0;
         }
       }
 

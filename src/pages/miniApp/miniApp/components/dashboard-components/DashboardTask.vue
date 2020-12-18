@@ -81,7 +81,8 @@
                 @isEmpty="isEmptyData = true"
               />
               <span 
-                v-if="!isEmptyData" 
+                v-if="!isEmptyData"
+                :class="[componentData.indexInfo.size || 'middle']" 
                 class="index-unit">{{ componentData.indexInfo.unit }}</span>
             </template>
           </div>
@@ -193,12 +194,6 @@ export default {
       autoRefreshFunction: null,
       debouncedAskFunction: null,
       isEmptyData: false,
-      indexComponentStyle: {
-        'font-size': '64px', 
-        'height': '69px', 
-        'line-height': '64px', 
-        'color': '#2AD2E2'
-      },
       textComponentStyle: {
         'font-size': '20px',
         'color': '#DDDDDD',
@@ -310,6 +305,34 @@ export default {
         ${this.$t('miniApp.updateFrequency')}：
         ${this.$t('warRoom.everyMinute', { number: this.convertRefreshFrequency(this.componentData.config.refreshFrequency) / (60 * 1000) })}
       `
+    },
+    indexComponentStyle () {
+      const sizeTable = {
+        large: {
+          'font-size': '80px', 
+          'height': '83px', 
+          'line-height': '80px'
+        },
+        middle: {
+          'font-size': '54px', 
+          'height': '54px', 
+          'line-height': '54px'
+        },
+        small: {
+          'font-size': '36px', 
+          'height': '36px', 
+          'line-height': '36px'
+        },
+        mini: {
+          'font-size': '28px', 
+          'height': '28px', 
+          'line-height': '28px'
+        },
+      }
+      return {
+        ...sizeTable[this.componentData.indexInfo.size || 'middle'],
+        'color': '#2AD2E2'
+      }
     }
   },
   watch: {
@@ -762,6 +785,10 @@ $direction-span: ("col": 8, "row": 6);
         font-weight: 600;
         font-size: 36px;
         color: #2AD2E2;
+        &.large { font-size: 36px }
+        &.middle { font-size: 24px }
+        &.small { font-size: 18px }
+        &.mini { font-size: 18px }
       }
       .index-data {
         display: flex;
