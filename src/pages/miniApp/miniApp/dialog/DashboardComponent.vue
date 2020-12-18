@@ -174,7 +174,7 @@ export default {
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo']),
     ...mapGetters('dataSource', ['filterRestrictionList']),
     computedKeyResultId () {
-      return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0]) || this.currentComponent.keyResultId
+      return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0])
     },
     computedQuestion () {
       return this.question || this.currentComponent.question
@@ -190,6 +190,23 @@ export default {
   watch: {
     appQuestion (question) {
       if (!question) return
+      this.askQuestion(question)
+    }
+  },
+  mounted () {
+    if (this.currentComponent.keyResultId) this.askQuestion(this.currentComponent.question)
+  },
+  methods: {
+    checkIsTextTypeAvailable (transcript) {
+      // 以下需確保問句中只帶有一個 category 欄位
+      const isSingleSubject = transcript.subjectList && transcript.subjectList.length === 1
+      const isSingleCategoryDataColumn = transcript.subjectList[0].categoryDataColumnList && transcript.subjectList[0].categoryDataColumnList.length === 1
+      const haveSameDataColumn = isSingleCategoryDataColumn && transcript.subjectList[0].categoryDataColumnList[0].dataColumnId === transcript.subjectList[0].dataColumn.dataColumnId
+      // 確保不是該 category 欄位中的值，因為他會被視為該欄位下的 filter 條件
+      const isEmptyFilterList = transcript.subjectList[0].filterList === null
+      return isSingleSubject && isEmptyFilterList && isSingleCategoryDataColumn && haveSameDataColumn 
+    },
+    askQuestion (question) {
       // 關閉介紹資料集
       this.closePreviewDataSource()
       // 恢復新增元件的狀態
@@ -257,17 +274,6 @@ export default {
         // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
         this.$store.commit('dataSource/setCurrentQuestionInfo', null)
       })
-    }
-  },
-  methods: {
-    checkIsTextTypeAvailable (transcript) {
-      // 以下需確保問句中只帶有一個 category 欄位
-      const isSingleSubject = transcript.subjectList && transcript.subjectList.length === 1
-      const isSingleCategoryDataColumn = transcript.subjectList[0].categoryDataColumnList && transcript.subjectList[0].categoryDataColumnList.length === 1
-      const haveSameDataColumn = isSingleCategoryDataColumn && transcript.subjectList[0].categoryDataColumnList[0].dataColumnId === transcript.subjectList[0].dataColumn.dataColumnId
-      // 確保不是該 category 欄位中的值，因為他會被視為該欄位下的 filter 條件
-      const isEmptyFilterList = transcript.subjectList[0].filterList === null
-      return isSingleSubject && isEmptyFilterList && isSingleCategoryDataColumn && haveSameDataColumn 
     },
     getComponentV2 (resultId) {
       window.clearTimeout(this.timeoutFunction)
