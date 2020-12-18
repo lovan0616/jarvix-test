@@ -125,14 +125,14 @@ export default {
     tableDataCSVDownloadList (newList, oldList) {
       let availableDownloadingCapacity = this.tableDataCSVDownloadMaximumCount - this.CSVDownloadProcessingTaskCount
       let readyList = newList.filter(task => task.status === 'Ready')
-      for (let i = 0; i < readyList.length; i++) {
-        if(i >= availableDownloadingCapacity) break
+      let downloadingTaskNumber = Math.min(readyList.length, availableDownloadingCapacity)
+      for (let i = 0; i < downloadingTaskNumber; i++) {
         readyList[i].status = 'Process'
         getComponentDataCSV(readyList[i].componentId)
-          .then(res => {
-            this.downloadCSV(readyList[i].question, res.data)
+          .then(({data}) => {
+            this.downloadCSV(readyList[i].question, data)
           })
-          .catch(res => {})
+          .catch(() => {})
           .finally(() => {
             let taskIndex = this.tableDataCSVDownloadList.find(item => item.componentId === readyList[i].componentId)
             this.tableDataCSVDownloadList.splice(taskIndex, 1)
