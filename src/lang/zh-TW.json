@@ -858,7 +858,8 @@
     "dataColumnRelationSettingReminding": "使用者點擊內容時，會將內容帶入看板作為控制條件參數。",
     "notBeingSet": "未設定",
     "orderUpdated": "{target}排序已更新",
-    "monitorUpdateFrequency": "示警更新頻率"
+    "monitorUpdateFrequency": "示警更新頻率",
+    "monitorComponent": "監控示警元件"
   },
   "alert": {
     "alertLogs": "示警紀錄",
@@ -870,7 +871,6 @@
     "alertCondition": "示警條件",
     "createAlertCondition": "新增示警條件",
     "alertManagement": "示警管理",
-    "monitorComponent": "監控示警元件",
     "realTimeMonitorAlert": "即時監控示警",
     "monitorAlert": "監控示警",
     "alertConditionSuccessfullyCreated": "示警條件創建成功",

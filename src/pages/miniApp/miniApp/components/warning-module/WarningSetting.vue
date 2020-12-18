@@ -73,6 +73,7 @@
               :option-list="dashboardOptions"
               :placeholder="$t('miniApp.selectDashboard')"
               class="dashboard-select"
+              @change="saveWarningModuleSetting"
             />
           </div>
         </section>

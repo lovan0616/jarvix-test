@@ -159,8 +159,7 @@ export default {
     getWarningLogs (page = 0) {
       this.isLoading = true
       getAlertLogs({ conditionIds: this.activeConditionIds, page, groupId: this.getCurrentGroupId }).then(response => {
-        // TODO 後端目前沒吐分頁資訊，之後會補上
-        // this.paginationInfo = response.pagination
+        this.paginationInfo = response.pagination
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
           return {
