@@ -467,7 +467,10 @@ export default {
       border-radius: 5px;
       background-color: #141C1D;
 
-      /deep/ .el-select .el-input { overflow: scroll; padding-bottom: 1px; }
+      /* [Bug 未解] el-select selects multiple window jitter.
+       * https://github.com/ElemeFE/element/issues/8731
+       * https://github.com/ElemeFE/element/issues/13173
+       */
 
       /deep/ .el-select__tags {
         .el-tag.el-tag--info {
