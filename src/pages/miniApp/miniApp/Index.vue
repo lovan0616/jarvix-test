@@ -104,7 +104,7 @@
               <button 
                 type="button"
                 class="btn-m btn-secondary button-container__button"
-                @click="previewMiniApp"
+                @click="directToCertainModeMiniApp('preview')"
               >{{ $t('miniApp.preview') }}</button>
               <custom-dropdown-select
                 :data-list="otherFeatureList"
@@ -562,10 +562,16 @@ export default {
     otherFeatureList () {
       if (!this.isEditMode || !this.appData) return []
       return [
-        ...(this.appData.isPublishing && [{
-          id: 'shareUrl',
-          name: this.$t('miniApp.getPublishedUrl')
-        }]),
+        ...(this.appData.isPublishing && [
+          {
+            id: 'shareUrl',
+            name: this.$t('miniApp.getPublishedUrl')
+          },
+          {
+            id: 'goToLivePage',
+            name: this.$t('miniApp.goToLivePage')
+          },
+        ]),
         {
           id: 'deleteMiniApp',
           name: this.$t('miniApp.deleteApplication')
@@ -876,12 +882,12 @@ export default {
     formatTimeStamp (timestampe) {
       return moment(timestampe).format('YYYY/M/D')
     },
-    previewMiniApp () {
+    directToCertainModeMiniApp (mode) {
       const { name, params } = this.$route
       const routeData = this.$router.resolve({
         name, 
         params, 
-        query: { mode: 'preview' } })
+        query: { mode: mode } })
       window.open(routeData.href, '_blank')
     },
     showShareDialog () {
@@ -913,6 +919,7 @@ export default {
     doOtherFeature (action) {
       if (action === 'shareUrl') return this.showShareDialog()
       if (action === 'deleteMiniApp') return this.showDeleteDialog()
+      if (action === 'goToLivePage') return this.directToCertainModeMiniApp('view')
     },
     showDeleteDialog (miniAppInfo) {
       this.isShowDelete = true
