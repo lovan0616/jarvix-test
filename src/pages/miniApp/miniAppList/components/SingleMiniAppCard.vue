@@ -151,6 +151,7 @@ export default {
     font-size: 13px;
     color: #DDDDDD;
     margin-bottom: 15px;
+    min-height: 19px;
   }
 
   &__action-block {
