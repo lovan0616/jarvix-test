@@ -219,7 +219,7 @@ export default {
       
     },
     alertConditionCreated () {
-      this.isShowConditionCreateDialog()
+      this.isShowConditionCreateDialog = false
       this.fetchAlertConditions()
     }
   }

@@ -6,30 +6,24 @@
           v-validate="'required'"
           v-model="comparingSet.comparisonOperator"
           :option-list="comparisonOperatorOptionList"
-          :name="`comparingOperator-${id}`"
           :placeholder="$t('alert.chooseComparisionOperator')"
+          name="comparingOperator`"
           class="input-field__select"
         />
         <div 
-          v-show="errors.has(`comparingOperator-${id}`)"
+          v-show="errors.has('comparingOperator')"
           class="error-text"
-        >{{ errors.first(`comparingOperator-${id}`) }}</div>
+        >{{ errors.first('comparingOperator') }}</div>
       </div>
       <div class="input-field">
         <input-block
           v-validate="'required'"
           v-model="comparingSet.value"
-          :name="`comparingValue-${id}`"
           :placeholder="$t('alert.value')"
+          name="comparingValue"
           type="number"
         />
       </div>
-      <!-- TODO 確認這版本有沒有要做多個 comparingValues -->
-      <!-- <div 
-        class="delete-btn" 
-        @click="$emit('delete', id)">
-        <svg-icon icon-class="delete"/>
-      </div> -->
     </div>
   </div>
 </template>
@@ -53,14 +47,6 @@ export default {
     comparingSet: {
       type: Object,
       default: () => {}
-    },
-    id: {
-      type: Number,
-      default: null
-    }
-  },
-  data () {
-    return {
     }
   }
 }

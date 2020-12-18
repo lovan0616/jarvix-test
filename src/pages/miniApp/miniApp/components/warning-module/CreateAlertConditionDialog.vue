@@ -93,18 +93,9 @@
           <single-comparing-value-card
             v-for="(comparingSet, index) in newConditionSetting.comparingValues"
             :key="index"
-            :id="comparingSet.id"
             :comparing-set="newConditionSetting.comparingValues[index]"
             :comparison-operator-option-list="comparisonOperatorOptionList"
-            @delete="deleteComparingSet"
           />
-          <!-- TODO 確認這版本有沒有要做多個 comparingValues -->
-          <!-- <button 
-            class="btn-m btn-outline btn-has-icon create-comparing-btn" 
-            @click="createComparingSet">
-            <svg-icon icon-class="plus"/>
-            <span class="button-label" >{{ $t('button.add') }}</span>
-          </button> -->
         </div>
         <div class="button__block">
           <button
@@ -135,8 +126,6 @@ import {
 } from '@/API/DataSource'
 import { postAlertCondition } from '@/API/Alert'
 
-let id = 0
-
 export default {
   name: 'CreateAlertConditionDialog',
   inject: ['$validator'],
@@ -159,7 +148,6 @@ export default {
         },
         comparingValues: [
           {
-            id,
             comparisonOperator: null,
             dataType: 'INT',
             value: ''
@@ -241,19 +229,6 @@ export default {
       // 補上送到後端所需的欄位名稱
       const column = this.dataColumnOptionList.find(item => item.value === this.newConditionSetting.targetConfig.dataColumnId)
       this.newConditionSetting.targetConfig.displayName = column.originalName
-    },
-    createComparingSet () {
-      id += 1
-      this.newConditionSetting.comparingValues.push({
-        id,
-        comparisonOperator: null,
-        dataType: 'INT', // 先只監控數值型欄位
-        value: ''
-      })
-    },
-    deleteComparingSet (id) {
-      const index = this.newConditionSetting.comparingValues.findIndex(item => item.id === id)
-      this.newConditionSetting.comparingValues.splice(index, 1)
     },
     createAlertCondition () {
       this.$validator.validateAll().then(isValid => {
