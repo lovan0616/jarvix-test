@@ -10,7 +10,7 @@
   >
     <div>
       <div 
-        v-show="processingTasks.length === 0" 
+        v-show="taskCount === 0" 
         class="task-notifier__content--empty">{{ $t('resultDescription.noData') }}</div>
       <div
         v-show="processingTasks.length > 0"
@@ -42,7 +42,25 @@
               <span class="task__desc-content">{{ task.dataColumnPrimaryAlias }}</span>
             </li>
           </ul>
-          
+        </div>
+      </div>
+      <div
+        v-show="tableDataCSVDownloadList.length > 0"
+        class="task-notifier__content">
+        <div
+          v-for="(task, index) in tableDataCSVDownloadList"
+          :key="index"
+          class="task-notifier__single-task"
+        >
+          <svg-icon 
+            icon-class="spinner" 
+            class="task__icon"/>
+          <div class="task__content">
+            <span class="task__title task__title--highlight">
+              {{ task.question }}
+            </span>
+            {{ $t('editing.dataDownloading') }}
+          </div>
         </div>
       </div>
     </div>
@@ -52,8 +70,8 @@
       class="task-notifier__icon"
     >
       <el-badge
-        :value="processingTasks.length"
-        :hidden="processingTasks.length === 0">
+        :value="taskCount"
+        :hidden="taskCount === 0">
         <svg-icon icon-class="task" />
       </el-badge>
     </div>
@@ -61,6 +79,7 @@
 </template>
 
 <script>
+import { getComponentDataCSV } from '@/API/NewAsk'
 import { checkClusteringColumnStatus } from '@/API/DataSource'
 import { mapState, mapGetters } from 'vuex'
 import { Message } from 'element-ui'
@@ -79,6 +98,13 @@ export default {
     ...mapGetters('dataSource', ['getOwnProcessingTasks', 'currentDataFrameId']),
     ...mapGetters('userManagement', ['getCurrentAccountId']),
     ...mapState('dataFrameAdvanceSetting', ['isInit']),
+    ...mapState('result', ['tableDataCSVDownloadMaximumCount', 'tableDataCSVDownloadList']),
+    taskCount () {
+      return this.processingTasks.length + this.tableDataCSVDownloadList.length
+    },
+    CSVDownloadProcessingTaskCount () {
+      return this.tableDataCSVDownloadList.filter(task => task.status === 'Process').length
+    }
   },
   watch: {
     getOwnProcessingTasks (newList, oldList) {
@@ -95,6 +121,23 @@ export default {
     },
     processingDataColumnList (value) {
       localStorage.setItem('bgColumnTasks', JSON.stringify(value))
+    },
+    tableDataCSVDownloadList (newList, oldList) {
+      let availableDownloadingCapacity = this.tableDataCSVDownloadMaximumCount - this.CSVDownloadProcessingTaskCount
+      let readyList = newList.filter(task => task.status === 'Ready')
+      for (let i = 0; i < readyList.length; i++) {
+        if(i >= availableDownloadingCapacity) break
+        readyList[i].status = 'Process'
+        getComponentDataCSV(readyList[i].componentId)
+          .then(res => {
+            this.downloadCSV(readyList[i].question, res.data)
+          })
+          .catch(res => {})
+          .finally(() => {
+            let taskIndex = this.tableDataCSVDownloadList.find(item => item.componentId === readyList[i].componentId)
+            this.tableDataCSVDownloadList.splice(taskIndex, 1)
+          })
+      }
     }
   },
   mounted () {

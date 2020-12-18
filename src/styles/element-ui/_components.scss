@@ -224,6 +224,10 @@
           }
           &__title {
             line-height: 1.5;
+            
+            &--highlight {
+              color: #FFDF6F;
+            }
           }
           &__desc {
             margin-top: 8px;

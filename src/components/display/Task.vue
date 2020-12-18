@@ -26,6 +26,8 @@
       <!-- TODO: 調整寫法 -->
       <component
         :is="componentName"
+        :component-id="componentId"
+        :can-download-csv="canDownloadCsv"
         :diagram="diagram"
         :has-pagination="hasNextPage"
         :dataset="componentData.dataset"
@@ -133,6 +135,7 @@ export default {
       resultId: null,
       diagram: null,
       loading: true,
+      canDownloadCsv: false,
       componentName: null,
       componentData: null,
       isError: false,
@@ -194,6 +197,7 @@ export default {
               window.clearTimeout(this.timeoutFunction)
               this.diagram = response.diagram
               this.resultId = response.resultId
+              this.canDownloadCsv = response.canDownloadCsv
               this.componentName = this.getChartTemplate(this.convertedType || this.diagram)
               let responseData = response.data
               

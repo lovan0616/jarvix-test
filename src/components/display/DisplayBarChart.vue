@@ -88,6 +88,10 @@ export default {
   name: 'DisplayBarChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
+    componentId: {
+      type: Number,
+      default: null
+    },
     title: {
       type: Object,
       default: () => {
@@ -99,6 +103,10 @@ export default {
     },
     addons: { type: [Object, Array], default: () => ([]) },
     height: {type: String, default: '420px'},
+    canDownloadCsv: {
+      type: Boolean,
+      default: false
+    },
     hasPagination: {
       type: Boolean,
       default: false

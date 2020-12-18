@@ -359,6 +359,15 @@ Vue.mixin({
       return parseFloat((value).toFixed(count))
     },
     // export data
+    addCSVDownloadTask (question, componentId) {
+      let taskList = this.$store.state.result.tableDataCSVDownloadList
+      if (taskList.some(task => task.componentId === componentId)) return
+      this.$store.commit('result/updateTableDataCSVDownloadList', {
+        question: question,
+        componentId: componentId,
+        status: 'Ready'
+      })
+    },
     exportCSVFile (el, question, data) {
       let exportFunction = (e) => {
         if (e.target && e.target.id === 'export-btn') {
@@ -368,6 +377,9 @@ Vue.mixin({
            * 註冊事件當下由 function 傳進的 data，遇到 pagination 更新資料後
            * 便不再拿取新的 data，所以暫時改由 vue instance 內的 computed options 去拿
            */
+          // 還有資料沒有拿回，直接打 API 下載所有資料
+          if (data.hasPagination && data.canDownloadCsv) return this.addCSVDownloadTask(question, data.componentId)
+
           this.exportToCSV(question, data.options.dataset.source)
         }
       }
@@ -382,7 +394,7 @@ Vue.mixin({
         el.setAttribute('listener', true)
       }
     },
-    exportToCSV (question, rows) {
+    downloadCSV (question, csvFile) {
       /**
        * 在結果頁下載資料可以從 url 上拿到時間資訊
        * 但是 pinboard 頁無法
@@ -390,6 +402,26 @@ Vue.mixin({
       let fileName = window.location.search.split('&')[1]
         ? this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + question + '.csv'
         : this.timeToFileName(new Date().getTime()) + '.csv'
+      // 前置的 '\uFEFF' 為零寬不換行空格，處理中文亂碼問題
+      let blob = new Blob(['\uFEFF' + csvFile], { type: 'text/csv;charset=utf-8;' })
+      if (navigator.msSaveBlob) {
+        // IE 10+
+        navigator.msSaveBlob(blob, fileName)
+      } else {
+        let link = document.createElement('a')
+        if (link.download !== undefined) {
+          // Browsers that support HTML5 download attribute
+          let url = URL.createObjectURL(blob)
+          link.setAttribute('href', url)
+          link.setAttribute('download', fileName)
+          link.style.visibility = 'hidden'
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }
+      }
+    },
+    exportToCSV (question, rows) {
       let processRow = (row) => {
         let finalVal = ''
         for (let j = 0; j < row.length; j++) {
@@ -417,24 +449,7 @@ Vue.mixin({
         csvFile += processRow(rows[i])
       }
 
-      // 前置的 '\uFEFF' 為零寬不換行空格，處理中文亂碼問題
-      let blob = new Blob(['\uFEFF' + csvFile], { type: 'text/csv;charset=utf-8;' })
-      if (navigator.msSaveBlob) {
-        // IE 10+
-        navigator.msSaveBlob(blob, fileName)
-      } else {
-        let link = document.createElement('a')
-        if (link.download !== undefined) {
-          // Browsers that support HTML5 download attribute
-          let url = URL.createObjectURL(blob)
-          link.setAttribute('href', url)
-          link.setAttribute('download', fileName)
-          link.style.visibility = 'hidden'
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-        }
-      }
+      this.downloadCSV(question, csvFile)
     },
     // 圖表在preview 時，不顯示 legend、tooltip
     previewChartSetting (config) {

@@ -195,6 +195,7 @@
     "questionPlaceHolder": "請輸入問題，例如：價格和成本的相關性",
     "askPlaceHolder": "請輸入問句後按Enter送出",
     "dataBuilding": "資料處理中",
+    "dataDownloading": "資料下載中...",
     "dataManageable": "可管理",
     "dataInQueue": "等待處理中",
     "dataDisable": "無法使用",

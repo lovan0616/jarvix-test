@@ -79,6 +79,10 @@ export default {
   name: 'DisplayParallelBarChart',
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
+    componentId: {
+      type: Number,
+      default: null
+    },
     title: {
       type: Object,
       default: () => {
@@ -90,6 +94,10 @@ export default {
     },
     height: {type: String, default: '420px'},
     hasPagination: {
+      type: Boolean,
+      default: false
+    },
+    canDownloadCsv: {
       type: Boolean,
       default: false
     },
