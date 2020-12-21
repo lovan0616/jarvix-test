@@ -295,6 +295,7 @@ export default {
               showClose: true
             })
             this.$emit('update', { dataFrameId: this.featureInfo.dataFrameId })
+            this.$store.commit('dataSource/setShouldAdvanceDataFrameSettingRefetchDataColumn', true)
           }).catch(() => {}).finally(() => {
             this.isLoading = false
           })
