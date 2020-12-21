@@ -62,6 +62,10 @@ export default {
   },
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
+    componentId: {
+      type: Number,
+      default: null
+    },
     title: {
       type: Object,
       default: () => {
@@ -72,6 +76,10 @@ export default {
       }
     },
     hasPagination: {
+      type: Boolean,
+      default: false
+    },
+    canDownloadCsv: {
       type: Boolean,
       default: false
     },
@@ -333,6 +341,7 @@ export default {
                 element = element.map((item, index) => (index === 0 || item === null) ? item : item + this.yAxisOffsetValue)
                 return element
               })
+              if (this.hasPagination && this.canDownloadCsv) return this.addCSVDownloadTask(this.appQuestion + this.$t('denotation.anomalyAnalysis'), this.componentId)
               this.exportToCSV(this.appQuestion, exportData)
             }
           }, false)

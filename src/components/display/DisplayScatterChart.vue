@@ -82,7 +82,11 @@ export default {
     coefficients: {
       type: Array,
       default: null
-    }
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
+    },
   },
   data () {
     return {
@@ -301,7 +305,8 @@ export default {
     chartStyle () {
       return {
         width: '100%',
-        height: '420px'
+        height: '420px',
+        ...this.customChartStyle
       }
     },
     appQuestion () {

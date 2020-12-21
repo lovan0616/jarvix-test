@@ -147,6 +147,11 @@
       font-size: 18px;
       line-height: 1;
       margin-bottom: 10px;
+
+      &__description {
+        font-size: 14px;
+        color: #CCC;
+      }
     }
 
     & >>> .input-block {

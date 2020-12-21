@@ -44,7 +44,7 @@
 <script>
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
 import { mapState, mapGetters } from 'vuex'
-import { isEnOrEnum } from '@/utils/general'
+import { isEnOrEnum, intentType } from '@/utils/general'
 
 export default {
   name: 'ResultDisplay',
@@ -73,27 +73,14 @@ export default {
       currentQuestionDataFrameId: null,
       totalSec: 50,
       periodSec: 200,
-      intent: null
+      intent: null,
+      intentType
     }
   },
   computed: {
     ...mapState('result', ['currentResultId']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'currentQuestionId', 'currentQuestionInfo', 'algoConfig']),
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
-    dataSourceId () {
-      return this.$store.state.dataSource.dataSourceId
-    },
-    dataFrameId () {
-      return this.$store.state.dataSource.dataFrameId
-    },
-    currentQuestionInfo () {
-      return this.$store.state.dataSource.currentQuestionInfo
-    },
-    currentQuestionId () {
-      return this.$store.state.dataSource.currentQuestionId
-    },
-    currentResultId () {
-      return this.$store.state.result.currentResultId
-    },
     filterRestrictionList () {
       return this.$store.getters['dataSource/filterRestrictionList']
     }
@@ -101,7 +88,11 @@ export default {
   watch: {
     '$route.query' ({ question, action, stamp }) {
       if (!question) return false
-      this.fetchApiAsk({question, 'dataSourceId': this.dataSourceId, 'dataFrameId': this.dataFrameId})
+      this.fetchApiAsk({
+        question, 'dataSourceId': this.dataSourceId,
+        'dataFrameId': this.dataFrameId,
+        shouldCancelToken: true
+      })
     },
     askCondition: {
       deep: true,
@@ -122,7 +113,8 @@ export default {
             return acc + ((index !== 0 && isEnOrEnum(currentWord)) ? ` ${currentWord}` : currentWord)
           }, ''),
           'dataSourceId': this.$route.query.dataSourceId, 
-          'dataFrameId': this.$route.query.dataFrameId
+          'dataFrameId': this.$route.query.dataFrameId,
+          shouldCancelToken: true
         })
       }
     }
@@ -143,7 +135,8 @@ export default {
       this.fetchApiAsk({
         dataSourceId, 
         dataFrameId,
-        question
+        question,
+        shouldCancelToken: true
       })
     },
     clearLayout () {
@@ -168,6 +161,7 @@ export default {
 
       if (this.currentQuestionInfo) {
         this.$store.dispatch('chatBot/askResult', {
+          algoConfig: this.algoConfig,
           questionId: this.currentQuestionId,
           segmentation: this.currentQuestionInfo,
           restrictions: this.filterRestrictionList,
@@ -222,6 +216,7 @@ export default {
             
             this.$store.dispatch('chatBot/askResult', {
               questionId,
+              algoConfig: this.algoConfig,
               segmentation: segmentationList[0],
               restrictions: this.filterRestrictionList,
               selectedColumnList: this.selectedColumnList

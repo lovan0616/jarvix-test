@@ -99,5 +99,6 @@ export const booleanOptionList = [
 
 export const intentType = {
   OVERVIEW: 'OVERVIEW',
-  CLUSTERING: 'CLUSTERING'
+  CLUSTERING: 'CLUSTERING',
+  PREDICTION: "PREDICTION"
 }

@@ -15,6 +15,11 @@
     &--has-basic-df-setting {
       width: calc(100% - #{$basic-df-setting-width});
     }
+
+    &--without-nav-header {
+      top: 0;
+      height: 100vh;
+    }
   }
 
   .container {

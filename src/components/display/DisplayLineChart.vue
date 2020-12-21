@@ -47,6 +47,7 @@
       </div>
     </selected-region>
     <insight-description-block
+      v-if="isShowDescription"
       :title="$t('resultDescription.dataInsight')"
       :message-list="dataset.descriptions"
       icon-name="len-with-line-chart"
@@ -91,6 +92,10 @@ export default {
   },
   props: {
     dataset: { type: [Object, Array, String], default: () => ([]) },
+    componentId: {
+      type: Number,
+      default: null
+    },
     title: {
       type: Object,
       default: () => {
@@ -112,7 +117,19 @@ export default {
       type: Boolean,
       default: false
     },
+    canDownloadCsv: {
+      type: Boolean,
+      default: false
+    },
     showToolbox: {
+      type: Boolean,
+      default: true
+    },
+    isShowDescription: {
+      type: Boolean,
+      default: true
+    },
+    isShowCoefficients: {
       type: Boolean,
       default: true
     },
@@ -357,7 +374,7 @@ export default {
         // }
       }
 
-      if (this.coefficients) {
+      if (this.isShowCoefficients && this.coefficients) {
         let lineData = []
         let expression = ''
         if (this.coefficients.length === 2) {

@@ -72,6 +72,10 @@ export default {
     isParallel: {
       type: Boolean,
       default: false
+    },
+    canDownloadCsv: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

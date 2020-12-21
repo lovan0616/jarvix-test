@@ -22,7 +22,10 @@
           class="dropdown__item"
         >
           <a
-            :class="{ 'dropdown__link--selected': isSelectedItem(item.id) }" 
+            :class="{
+              'dropdown__link--selected': isSelectedItem(item.id),
+              'dropdown__link--point': hasBulletPoint
+            }" 
             href="javascript:void(0);"
             class="dropdown__link"
             @click="selectItem(item.id)"
@@ -55,6 +58,10 @@ export default {
     isLoading: {
       type: Boolean,
       default: false
+    },
+    hasBulletPoint: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -142,12 +149,14 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    &::before {
-      content: "\2022";
-      color: #687072;
-      font-weight: bold;
-      display: inline-block;
-      padding: 0 6px;
+    &--point {
+      &::before {
+        content: "\2022";
+        color: #687072;
+        font-weight: bold;
+        display: inline-block;
+        padding: 0 6px;
+      }
     }
 
     &:hover,

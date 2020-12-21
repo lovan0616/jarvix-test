@@ -4,20 +4,27 @@ import i18n from '@/lang/index.js'
 
 export default {
   askQuestion ({dispatch, commit, state, rootState, rootGetters}, data) {
-    dispatch('cancelRequest')
-    state.askCancelToken = axios.CancelToken.source()
+
+    let cancelToken = null
+    // 當同時問多個問題時，不去 cancel 前一個問題的 request
+    if (data.shouldCancelToken) {
+      dispatch('cancelRequest')
+      state.askCancelToken = axios.CancelToken.source()
+      cancelToken = state.askCancelToken.token
+    }
+
     const dataFrameId = rootState.dataSource.dataFrameId || data.dataFrameId
     let askCondition = {
       question: data.question === rootState.dataSource.appQuestion ? rootState.dataSource.appQuestion : data.question,
       dataSourceId: rootState.dataSource.dataSourceId || data.dataSourceId,
-      previewQuestionId: rootGetters['dataSource/drillDownQuestionId'],
+      previewQuestionId: data.previewQuestionId || rootGetters['dataSource/drillDownQuestionId'],
       domain: 'GENERAL',
       isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null,
       dataFrameId: dataFrameId === 'all' ? '' : dataFrameId,
       selectedColumnList: rootGetters['dataFrameAdvanceSetting/selectedColumnList']
     }
 
-    return askQuestion({...askCondition, language: state.parserLanguage}, state.askCancelToken.token)
+    return askQuestion({...askCondition, language: state.parserLanguage}, cancelToken)
   },
   askResult ({dispatch, state}, data) {
     let cancelToken = state.askCancelToken ? state.askCancelToken.token : null

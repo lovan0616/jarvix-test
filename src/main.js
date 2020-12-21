@@ -40,6 +40,8 @@ import {
   MenuItem,
   Badge
 } from 'element-ui'
+// 針對 on-demand 掛載 element ui 元件情境下設定語系用
+import ElementLocale from 'element-ui/lib/locale'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
@@ -119,6 +121,8 @@ import RootCauseDescription from '@/components/display/RootCauseDescription'
 import Spinner from '@/components/Spinner'
 import ArrowButton from '@/components/resultBoard/ArrowButton'
 import DisplayNoAnswerInfo from '@/components/display/DisplayNoAnswerInfo'
+import DisplayIndexInfo from '@/components/display/DisplayIndexInfo'
+import DisplayTextInfo from '@/components/display/DisplayTextInfo'
 
 // 排程
 import vGanttChart from 'v-gantt-chart'
@@ -156,6 +160,9 @@ Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
 Vue.use(Badge)
+// element ui 帶入 i18n 語系
+// reference: https://element.eleme.io/#/en-US/component/i18n#custom-i18n-in-on-demand-components
+ElementLocale.i18n((key, value) => i18n.t(key, value))
 
 Vue.use(vGanttChart)
 
@@ -220,6 +227,8 @@ Vue.component(RootCauseDescription.name, RootCauseDescription)
 Vue.component(Spinner.name, Spinner)
 Vue.component(ArrowButton.name, ArrowButton)
 Vue.component(DisplayNoAnswerInfo.name, DisplayNoAnswerInfo)
+Vue.component(DisplayIndexInfo.name, DisplayIndexInfo)
+Vue.component(DisplayTextInfo.name, DisplayTextInfo)
 
 Vue.component('DefaultButton', DefaultButton)
 Vue.component('DefaultInput', DefaultInput)

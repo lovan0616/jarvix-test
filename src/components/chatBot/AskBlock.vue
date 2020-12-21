@@ -49,7 +49,8 @@
           <svg-icon icon-class="go-right"/>
         </a>
       </div>
-      <div 
+      <div
+        v-if="isShowAskHelperEntry"
         :class="{ 'disabled': availableDataSourceList.length === 0 }" 
         class="ask-remark-block"
         @click="openAskHelperDialog">
@@ -70,8 +71,8 @@
       class="history-question-block"
     >
       <div 
-        v-for="singleHistory in historyQuestionList"
-        :key="singleHistory.id"
+        v-for="(singleHistory, index) in historyQuestionList"
+        :key="index"
         class="history-question"
         @click="copyQuestion(singleHistory.question)"
       >
@@ -105,6 +106,17 @@ export default {
   components: {
     AskHelperDialog,
     DefaultSelect
+  },
+  props: {
+    // 因應 Dashboard 問問題後不需要轉址
+    redirectOnAsk: {
+      type: Boolean,
+      default: true
+    },
+    isShowAskHelperEntry: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {
@@ -340,7 +352,7 @@ export default {
     enterQuestion () {
       if (this.availableDataSourceList.length === 0) return
       this.$store.commit('dataSource/setAppQuestion', this.userQuestion)
-      this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
+      if (this.redirectOnAsk) this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
       this.hideHistory()
       this.closeHelper()
     },
@@ -420,13 +432,11 @@ export default {
   .user-question-block {
     display: flex;
     align-items: center;
-    width: calc(100% - 54px);
-    margin-right: 16px;
+    width: 100%;
     padding-right: 16px;
     background-color: #1D2424;
     border: 1px solid #1D2424;
     border-radius: 5px;
-    overflow: hidden;
     transition: all .1s;
 
     &.has-filter {
@@ -487,6 +497,11 @@ export default {
       flex-basis: 16px;
       font-size: 20px;
       color: $theme-color-primary;
+    }
+
+    &:not(:last-child) {
+      width: calc(100% - 54px);
+      margin-right: 16px;
     }
   }
 

@@ -8,7 +8,7 @@ export function askQuestion (askInfo, cancelFunction) {
     url: '/ask/question',
     method: 'POST',
     data: askInfo,
-    cancelToken: cancelFunction
+    ...(cancelFunction && { cancelToken: cancelFunction })
   })
 }
 
@@ -69,6 +69,19 @@ export function getComponentData (componentInfo, cancelFunction) {
     method: 'POST',
     data: componentInfo,
     cancelToken: cancelFunction
+  })
+}
+
+/**
+ * component data csv download
+ */
+export function getComponentDataCSV (componentId, limit=null) {
+  return request({
+    url: `/ask/component/${componentId}/download/csv`,
+    method: 'GET',
+    params: {
+      limit
+    }
   })
 }
 

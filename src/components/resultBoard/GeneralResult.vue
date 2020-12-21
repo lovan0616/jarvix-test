@@ -37,14 +37,14 @@
                 class="exclamation-triangle-icon"
                 icon-class="exclamation-triangle" />
               <div
-                v-else-if="hasFetchedClustering(index)"
+                v-else-if="hasAdvancedSetting(index)"
                 class="multi-analysis__item-dropdownlist"
               >
                 <svg-icon 
                   icon-class="more"
                   class="more-icon" />
                 <dropdown-select
-                  :bar-data="barData"
+                  :bar-data="barData[typeInfo.denotation]"
                   class="dropdown"
                   @switchDialogName="switchDialogName($event, typeInfo)"
                 />
@@ -123,6 +123,16 @@
         :result-id="selectedTypeInfo.cachedResultId"
         @close="closeDialog"
       />
+      <clustering-number-setting-dialog
+        v-if="currentResultId && isShowClusteringNumberSettingDialog"
+        @re-analyze="reAnalyze"
+        @close="closeDialog"
+      />
+      <prediction-interval-setting-dialog
+        v-if="currentResultId && isShowPredictionIntervalSettingDialog"
+        @re-analyze="reAnalyze"
+        @close="closeDialog"
+      />
     </template>
   </result-board>
 </template>
@@ -130,6 +140,8 @@
 import RecommendedInsight from '@/components/display/RecommendedInsight'
 import DropdownSelect from '@/components/select/DropdownSelect'
 import SaveClusteringDialog from '@/components/dialog/SaveClusteringDialog'
+import ClusteringNumberSettingDialog from '@/components/dialog/ClusteringNumberSettingDialog'
+import PredictionIntervalSettingDialog from '@/components/dialog/PredictionIntervalSettingDialog'
 import { Message } from 'element-ui'
 import { intentType } from '@/utils/general'
 import { mapState } from 'vuex'
@@ -141,6 +153,8 @@ export default {
     RecommendedInsight,
     DropdownSelect,
     SaveClusteringDialog,
+    ClusteringNumberSettingDialog,
+    PredictionIntervalSettingDialog,
     NotifyInfoBlock
   },
   props: {
@@ -189,6 +203,8 @@ export default {
     return {
       activeTab: null,
       isShowSaveClusteringDialog: false,
+      isShowClusteringNumberSettingDialog: false,
+      isShowPredictionIntervalSettingDialog: false,
       intentType,
       switchTypeList: [],
       selectedTypeInfo: null
@@ -196,14 +212,29 @@ export default {
   },
   computed: {
     ...mapState('result', ['currentResultId']),
+    ...mapState('dataSource', ['algoConfig']),
     barData () {
-      return [
-        {
-          title: 'clustering.saveClusteringResultAsColumn',
-          icon: 'feature',
-          dialogName: 'saveClustering'
-        },
-      ]
+      return {
+        CLUSTERING: [
+          {
+            title: 'clustering.clusteringNumberSetting',
+            icon: 'filter-setting',
+            dialogName: 'clusteringNumberSetting'
+          },
+          {
+            title: 'clustering.saveClusteringResultAsColumn',
+            icon: 'feature',
+            dialogName: 'saveClustering'
+          },
+        ],
+        PREDICTION: [
+          {
+            title: 'prediction.predictionIntervalSetting',
+            icon: 'add-feature',
+            dialogName: 'predictionIntervalSetting'
+          },
+        ]
+      }
     },
     isShowInfo () {
       const intentsWithInfo = ['CLUSTERING']
@@ -264,7 +295,8 @@ export default {
       targetTypeInfo.isProcessing = true
       this.$store.dispatch('chatBot/askSpecificType', {
         resultId: this.currentResultId,
-        type: type
+        type: type,
+        algoConfig: this.algoConfig
       })
         .then(({ resultId }) => {
           this.switchTypeList[index] = {
@@ -283,28 +315,60 @@ export default {
       this.fetchSpecificType(tabName, index)
     },
     switchDialogName (action, typeInfo) {
-      if (action !== 'saveClustering') return
-      if (!this.resultInfo.canSaveResult) {
-        return Message({
-          message: this.$t('clustering.reasonsOfnotAllowedToSaveClusteringResultAsColumn'),
-          type: 'warning',
-          duration: 3 * 1000,
-          showClose: true
-        })
-      }
       this.selectedTypeInfo = typeInfo
-      this.isShowSaveClusteringDialog = true
+      switch (action) {
+        case 'saveClustering':
+          if (!this.resultInfo.canSaveResult) {
+            return Message({
+              message: this.$t('clustering.reasonsOfnotAllowedToSaveClusteringResultAsColumn'),
+              type: 'warning',
+              duration: 3 * 1000,
+              showClose: true
+            })
+          }
+          
+          this.isShowSaveClusteringDialog = true
+          break
+
+        case 'clusteringNumberSetting':
+          this.isShowClusteringNumberSettingDialog = true
+          break
+        
+        case 'predictionIntervalSetting':
+          this.isShowPredictionIntervalSettingDialog = true
+      }
+    },
+    reAnalyze (TYPE) {
+      let index = this.switchTypeList.findIndex(item => item.denotation === this.intentType[TYPE])
+      this.switchTypeList[index].cachedResultId = null
+      this.fetchSpecificType(this.intentType[TYPE], index)
+      this.closeDialog()
     },
     closeDialog () {
-      this.isShowSaveClusteringDialog = false
+      switch (this.activeTab) {
+        case this.intentType.CLUSTERING:
+          this.isShowSaveClusteringDialog = false
+          this.isShowClusteringNumberSettingDialog = false
+          break
+        case this.intentType.PREDICTION:
+          this.isShowPredictionIntervalSettingDialog = false
+          break
+      }
       this.selectedTypeInfo = null
     },
     clearAllProcessingStatus () {
       this.switchTypeList.forEach(type => type.isProcessing = false)
     },
-    hasFetchedClustering (index) {
-      return this.switchTypeList[index].denotation === this.intentType.CLUSTERING && (this.intent === this.intentType.CLUSTERING || this.switchTypeList[index].cachedResultId)
-    },  
+    hasAdvancedSetting (index) {
+      let currentType = this.switchTypeList[index].denotation
+      switch (currentType) {
+        case this.intentType.CLUSTERING:
+        case this.intentType.PREDICTION:
+          return this.intent === this.intentType.CLUSTERING || this.switchTypeList[index].cachedResultId
+        default:
+          return false
+      }
+    },
     setTaskFailed () {
       this.switchTypeList.forEach((type, index) => { 
         if (type.denotation !== this.activeTab) return

@@ -1,15 +1,17 @@
 <template>
   <div class="sy-table-block">
     <button 
-      v-if="appQuestion" 
+      v-if="isShowDonwnloadBtn && appQuestion" 
       type="button"
       class="btn-m btn-default btn-download"
       @click="downloadData"
     >{{ $t('button.download') }}</button>
     <el-table 
       v-bind="tableProps"
+      :cell-class-name="getCellIndex"
       class="sy-table"
       style="width: 100%;"
+      @cell-click="onClickCell"
     >
       <el-table-column
         :width="indexWidth"
@@ -86,13 +88,37 @@ export default {
       type: Boolean,
       default: false
     },
+    isShowDonwnloadBtn: {
+      type: Boolean,
+      default: true
+    },
     lazyLoadInfo: {
       type: Object,
       default: () => ({
         rootMargin: '130px',
         columnPerScroll: 16
       })
-    }
+    },
+    customChartStyle: {
+      type: Object,
+      default: () => {}
+    },
+    customCellClassName: {
+      type: Array,
+      default: () => [
+        // 為指定的行或列加上 cellClassName
+        // { 
+        //   type: 'row',
+        //   index: 1,
+        //   className: 'myClassName moreClassName' // 欲帶入多個 class 時以空格隔開即可
+        // },
+        // {
+        //   type: 'column',
+        //   index: 3,
+        //   className: 'myClassName'
+        // }
+      ]
+    },
   },
   data () {
     return {
@@ -125,8 +151,8 @@ export default {
     tableProps () {
       if (this.autoMerge) return { ...this.$props, data: this.tableData, spanMethod: this.tableSpanMethod }
       else {
-        let tableProps = { ...this.$props, data: this.tableData }
-        if (!this.$props.maxHeight) {
+        let tableProps = { ...this.$props, data: this.tableData, ...this.customChartStyle }
+        if ((!this.customChartStyle && !this.$props.maxHeight) || (this.customChartStyle && !this.$props.maxHeight && !this.customChartStyle.height)) {
           this.$set(tableProps, 'maxHeight', this.$attrs['is-preview'] ? 200 : 400)
         }
         return tableProps
@@ -207,6 +233,22 @@ export default {
       tableData.unshift(this.dataset.columns)
       let fileName = this.timeToFileName(window.location.search.split('&')[1].split('stamp=')[1]) + '_' + this.appQuestion
       this.exportToCSV(fileName, tableData)
+    },
+    getCellIndex ({ row, column, rowIndex, columnIndex }) {
+      // 為 行/列 增加 index 屬性，供 clickCell 事件使用 
+      row.index = rowIndex;
+      column.index = columnIndex;
+      
+      // 回傳 cellClassName
+      let colSetting = this.customCellClassName.find(item => item.index === columnIndex && item.type === 'column')
+      let rowSetting = this.customCellClassName.find(item => item.index === rowIndex && item.type === 'row')
+      
+      if (colSetting && rowSetting) return [colSetting.className, rowSetting.className]
+      if (colSetting) return colSetting.className
+      if (rowSetting) return rowSetting.className
+    },
+    onClickCell (row, column) {
+      this.$emit('clickCell', { row, column })
     }
   },
 }
@@ -243,4 +285,3 @@ export default {
   }
 }
 </style>
-<style src="@/styles/element-ui/el-pagination.scss" lang="scss"></style>

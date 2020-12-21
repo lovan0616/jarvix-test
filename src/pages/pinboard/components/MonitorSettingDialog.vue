@@ -136,7 +136,7 @@
   </writing-dialog>
 </template>
 <script>
-import { getMonitorSetting, newMonitorSetting, updateMonitorSetting } from '@/API/Monitor'
+import { getMonitorSetting, newMonitorSetting, updateMonitorSetting } from '@/API/PinboardMonitor'
 import { getDataFrameColumnInfoById } from '@/API/DataSource'
 import WritingDialog from '@/components/dialog/WritingDialog'
 import InputVerify from '@/components/InputVerify'
@@ -304,10 +304,6 @@ export default {
 
     .has-error {
       border-bottom: 1px solid #F1616D;
-    }
-
-    .error-text {
-
     }
 
     /deep/ .input-verify {
