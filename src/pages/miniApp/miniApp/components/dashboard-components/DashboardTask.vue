@@ -225,7 +225,7 @@ export default {
       return yAxisControlsDataFrames.includes(this.componentData.dataFrameId)
     },
     keyResultId () {
-      return this.tempFilteredKeyResultId || this.componentData.keyResultId
+      return this.tempFilteredKeyResultId
     },
     dataColumnAlias () {
       if (this.componentData.type === 'monitor-warning-list') return ''
@@ -340,31 +340,24 @@ export default {
       immediate: true,
       handler (isInit) {
         if (!isInit) return
+        if (this.componentData.type !== 'monitor-warning-list') {
+          this.isProcessing = true
+          this.deboucedAskQuestion()
+        }
         this.isInitializing = false
-        if (this.shouldComponentBeFiltered || this.shouldComponentYAxisBeControlled) this.deboucedAskQuestion()
       }
     },
     // 當 Dashboard的 fitler 變動時，由元件內部去重新問問題
     allFilterList: {
       deep: true,
       handler (controls) {
-        if (this.shouldComponentBeFiltered) {
-          this.deboucedAskQuestion()
-        } else if (controls.length === 0 && this.tempFilteredKeyResultId) {
-          // 拔除所有 Y軸控制器 時，清除暫存 filtered info
-          this.tempFilteredKeyResultId = null
-        }
+        if (controls.length === 0 || this.shouldComponentBeFiltered) this.deboucedAskQuestion()
       }
     },
     yAxisControls: {
       deep: true,
       handler (controls) {
-        if (this.shouldComponentYAxisBeControlled) {
-          this.deboucedAskQuestion()
-        } else if (controls.length === 0 && this.tempFilteredKeyResultId) {
-          // 拔除所有 Y軸控制器 時，清除暫存 filtered info
-          this.tempFilteredKeyResultId = null
-        }
+        if (controls.length === 0 || this.shouldComponentYAxisBeControlled) this.deboucedAskQuestion()
       }
     },
     'componentData.config.size' ({ row: newRow }, { row: oldRow }) {
