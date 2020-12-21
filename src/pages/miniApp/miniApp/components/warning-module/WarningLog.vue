@@ -12,6 +12,7 @@
         v-else
         :data="warningLogs"
         class="sy-table"
+        height="100%"
         style="width: 100%">
         <div slot="empty">{{ $t('alert.emptyLogs') }}</div>
         <el-table-column
@@ -300,7 +301,7 @@ export default {
       overflow: unset;
     }
     &__body-wrapper {
-      overflow: unset;
+      // overflow: unset;
     }
   }
 }

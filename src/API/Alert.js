@@ -50,10 +50,17 @@ export function getAlertConditionMessageById (conditionId) {
  * @param {Number} size
  */
 export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId }) {
-  const encodeConditionIds = encodeURI(`[${conditionIds}]`)
   return request({
-    url: `/alert/logs?conditionIds=${encodeConditionIds}&groupId=${groupId}&page=${page}&size=${size}`,
-    method: 'GET',
+    url: `/alert/logs/search?page=${page}&size=${size}`,
+    method: 'POST',
+    data: {
+      conditionIdsString: `[${conditionIds.toString()}]`,
+      groupId,
+      // TODO 待串接
+      // "active": true,
+      // "endTime": "string",
+      // "startTime": "string"
+    }
   })
 }
 

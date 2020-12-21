@@ -1,35 +1,42 @@
 <template>
-  <ul 
-    :class="{'is-view-mode': !isEditMode}"
-    class="list"
-    @click="goToWarningLogPage">
+  <ul class="list">
     <spinner 
       v-if="isLoading"
       class="list__spinner"
       size="50"
     />
     <template v-else-if="warningLogs.length > 0">
-      <li 
+      <el-tooltip
         v-for="(log, index) in warningLogs"
         :key="index"
-        class="list__item">
-        <div class="list__item--left">
-          <svg-icon 
-            icon-class="alert" 
-            class="list__item-icon"/>
-        </div>
-        <div class="list__item--right">
-          <div class="list__item-title">
-            {{ log.conditionName }}
+        placement="left"
+      >
+        <div
+          slot="content"
+          style="max-height: 300px; overflow: auto"
+          v-html="logMonitoredData(log.monitoredData)"/>
+        <li
+          :class="log.relatedDashboardId ? 'is-linkable' : ''"
+          class="list__item"
+        >
+          <div class="list__item--left">
+            <svg-icon 
+              icon-class="alert" 
+              class="list__item-icon"/>
           </div>
-          <div class="list__item-sub-title">
-            {{ log.conditionMetMessage }}
+          <div class="list__item--right">
+            <div class="list__item-title">
+              {{ log.conditionName }}
+            </div>
+            <div class="list__item-sub-title">
+              {{ log.conditionMetMessage }}
+            </div>
+            <div class="list__item-description">
+              {{ log.createDate | convertTimeStamp }}
+            </div>
           </div>
-          <div class="list__item-description">
-            {{ log.createDate | convertTimeStamp }}
-          </div>
-        </div>
-      </li>
+        </li>
+      </el-tooltip>
     </template>
     <template v-else>
       <div class="empty-text">{{ $t('alert.emptyLogs') }}</div>
@@ -123,6 +130,9 @@ export default {
     goToWarningLogPage () {
       if (this.isEditMode) return
       this.$emit('goToWarningLogPage')
+    },
+    logMonitoredData (rowData) {
+      return rowData.reduce((acc, cur) => acc.concat(`${cur.displayName}: ${cur.datum[0]}<br>`), '')
     }
   }
 }
@@ -135,9 +145,6 @@ export default {
   overflow: auto;
   padding: 0;
   margin: 0;
-  &.is-view-mode {
-    cursor: pointer;
-  }
   &__item {
     width: 100%;
     min-height: 62px;
@@ -149,7 +156,9 @@ export default {
     &:not(:last-of-type) {
       margin-bottom: 8px;
     }
-
+    &.is-linkable {
+      cursor: pointer;
+    }
     &--left {
       display: flex;
       align-items: center;
