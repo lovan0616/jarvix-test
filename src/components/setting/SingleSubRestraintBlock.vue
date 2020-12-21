@@ -161,7 +161,7 @@
         class="empty-message">
         {{ $t('editing.emptyKey') }}
       </div>
-      <default-select
+      <!-- <default-select
         v-validate="'required'"
         v-show="valueList"
         :ref="index + '-select'"
@@ -175,7 +175,23 @@
         class="category-block__selector"
         @input="updateDataValue"
         @filter="categoryFilter"
-      />
+      /> -->
+      <div class="input-field__input">
+        <default-multi-select
+          v-validate="'required'"
+          v-show="valueList"
+          :ref="index + '-select'"
+          v-model="selectedList"
+          :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
+          :option-list="valueList"
+          :name="index + '-select'"
+          filterable
+          multiple
+          class="input-field__multi-select"
+          @input="updateDataValue"
+        />
+      </div>
+
       <div 
         v-show="errors.has(index + '-' + 'select')"
         class="error-text"
@@ -187,13 +203,15 @@
 <script>
 import { getDataColumnValue, dataValueFuzzySearch } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
+import DefaultMultiSelect from '@/components/select/DefaultMultiSelect'
 import { mapState } from 'vuex'
 
 export default {
   inject: ['$validator'],
   name: "SingleSubRestraintBlock",
   components: {
-    DefaultSelect
+    DefaultSelect,
+    DefaultMultiSelect
   },
   props: {
     index: {
@@ -548,6 +566,59 @@ export default {
         }
       }
     }
+
+        /deep/ .input-field {
+      display: flex;
+      flex-direction: column;
+
+      &:not(:last-of-type) {
+        margin-bottom: 24px;
+      }
+      
+      &__multi-select {
+        width: 100%;
+      }
+
+      &__label {
+        font-size: 14px;
+        color: #CCCCCC;
+      }
+
+      &__select,
+      &__multi-select {
+        border-bottom: 1px solid #fff;
+      }
+
+      &__input-wrapper {
+        margin-top: 8px;
+      }
+      
+      .deletable-checkbox {
+        display: flex;
+        align-items: center;
+        width: fit-content;
+        .checkbox-label {
+          margin-right: 12px;
+        }
+      }
+      /deep/ .el-input__inner {
+        font-size: 14px;
+        padding-left: 0;
+
+        &::placeholder {
+          color: #AAAAAA;
+        }
+      }
+
+      /deep/ .el-input {
+        &.is-disabled {
+          .el-input__inner {
+            background-color: transparent;
+          }
+        }
+      }
+    }
+
 
     .checkbox-label {
       margin-right: 8px;
