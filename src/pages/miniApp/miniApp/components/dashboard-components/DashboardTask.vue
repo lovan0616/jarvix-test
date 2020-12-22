@@ -459,18 +459,16 @@ export default {
         .filter(filter => {
           // 相對時間有全選的情境，不需帶入限制中
           if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
+          // 只處理相同 datafram 或欄位名稱相同的 filter
+          if (this.componentData.dataFrameId !== filter.dataFrameId && !this.includeSameColumnPrimaryAliasFilter) return false
+          // 時間欄位要有開始和結束時間
           if (
             filter.statsType === 'NUMERIC'
             || filter.statsType === 'FLOAT'
             || filter.statsType === 'DATETIME'
           ) return filter.start && filter.end
           // filter 必須有值
-          if (filter.dataValues.length > 0) {
-            // 並且是同 DataFrame
-            if (this.componentData.dataFrameId === filter.dataFrameId) return true
-            // 或者含相同 columnName
-            if (this.includeSameColumnPrimaryAliasFilter) return true
-          }
+          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
           return false
         })
         .map(filter => {

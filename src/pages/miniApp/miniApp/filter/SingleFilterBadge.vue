@@ -318,9 +318,8 @@ export default {
           && this.filter.dataValueOptionList.length > 0
         //  將預設選項更新出去
         if (isNeedDefaultSelect) return this.updateSingleEnumFilteredColumnValue(null, this.filter.dataValueOptionList[0].name)
-
         // 如果是因為階層被觸發去重新取選單資料，須把取完後的結果更新出去，並由外層委派下一個 filter 去更新
-        this.isNeedUpdate ? this.$emit('updateFilter', this.filter) : this.$emit('update:isProcessing', false)
+        this.isNeedUpdate || this.filter.dataValues.length === 0 ? this.$emit('updateFilter', this.filter) : this.$emit('update:isProcessing', false)
       } finally {
         this.isLoading = false
       }

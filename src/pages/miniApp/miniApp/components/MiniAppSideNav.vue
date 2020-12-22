@@ -29,6 +29,7 @@
       <draggable
         :list="dashboardList"
         :move="logDraggingMovement"
+        :disabled="!isEditMode"
         ghost-class="dragging-ghost"
         @end="updateDashboardOrder"
       >

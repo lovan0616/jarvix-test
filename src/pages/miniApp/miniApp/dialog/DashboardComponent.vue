@@ -245,8 +245,8 @@ export default {
       this.$emit('update:isLoading', true)
       this.$store.dispatch('chatBot/askQuestion', {
         question,
-        dataSourceId: this.dataSourceId,
-        dataFrameId: this.dataFrameId,
+        dataSourceId: this.currentComponent.dataSourceId || this.dataSourceId,
+        dataFrameId: this.currentComponent.dataFrameId || this.dataFrameId,
         shouldCancelToken: true
       }).then(response => {
         let questionId = response.questionId

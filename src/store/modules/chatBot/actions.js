@@ -13,10 +13,10 @@ export default {
       cancelToken = state.askCancelToken.token
     }
 
-    const dataFrameId = rootState.dataSource.dataFrameId || data.dataFrameId
+    const dataFrameId = data.dataFrameId || rootState.dataSource.dataFrameId
     let askCondition = {
       question: data.question === rootState.dataSource.appQuestion ? rootState.dataSource.appQuestion : data.question,
-      dataSourceId: rootState.dataSource.dataSourceId || data.dataSourceId,
+      dataSourceId: data.dataSourceId || rootState.dataSource.dataSourceId,
       previewQuestionId: data.previewQuestionId || rootGetters['dataSource/drillDownQuestionId'],
       domain: 'GENERAL',
       isIgnoreAlgorithm: state.isUseAlgorithm ? !state.isUseAlgorithm : null,
