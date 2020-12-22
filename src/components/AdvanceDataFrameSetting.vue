@@ -146,12 +146,14 @@ export default {
       if (!newValue || !oldValue|| Number(newValue) === Number(oldValue)) return
       this.closeAdvanceDataFrameSetting()
     },
-    shouldAdvanceDataFrameSettingRefetchDataColumn (value) {
-      if (value) {
+    shouldAdvanceDataFrameSettingRefetchDataColumn: {
+      handler (value) {
+        if (!value) return
         this.toggleIsInit(false)
         const { dataFrameId } = this.$route.query
         this.fetchDataColumns(dataFrameId, this.columnList)
-      }
+      },
+      immediate: true
     }
   },
   mounted () {
