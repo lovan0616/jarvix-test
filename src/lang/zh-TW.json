@@ -861,7 +861,8 @@
     "notBeingSet": "未設定",
     "orderUpdated": "{target}排序已更新",
     "monitorUpdateFrequency": "示警更新頻率",
-    "monitorComponent": "監控示警元件"
+    "monitorComponent": "監控示警元件",
+    "timeScope": "時間範圍"
   },
   "alert": {
     "alertLogs": "示警紀錄",

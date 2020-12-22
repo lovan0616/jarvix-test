@@ -3,6 +3,35 @@
     <nav class="warning-log__nav">
       {{ $t('alert.alertLogs') }}
     </nav>
+    <div class="warning-log__filter">
+      <div class="filter__datetime-picker-panel">
+        <svg-icon icon-class="clock"/>
+        <div class="filter__title">
+          {{ logTimeFilterDisplayName }}
+          <div
+            v-if="isDatetimeRangeSelected"
+            class="filter__delete-icon-box"
+            @click.stop="resetTimeFilter"
+          >
+            <svg-icon
+              icon-class="close" 
+              class="filter__delete-icon"/>
+          </div>
+          <svg-icon
+            v-else
+            icon-class="triangle"
+            class="filter__dropdown-icon"/>
+        </div>
+        <el-date-picker
+          v-model="dateTimeRange"
+          :picker-options="pickerOptions"
+          class="filter__editor-panel"
+          type="datetimerange"
+          value-format="yyyy-MM-dd HH:mm"
+          @input="getWarningLogs"
+        />
+      </div>
+    </div>
     <div class="warning-log__content">
       <spinner 
         v-if="isLoading" 
@@ -97,6 +126,7 @@
 import { getAlertLogs, patchAlertLogActiveness } from '@/API/Alert'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'WarningLog',
@@ -121,7 +151,35 @@ export default {
         totalItems: 0,
         itemPerPage: 0
       },
-    }
+      dateTimeRange: [],
+      pickerOptions: {
+        shortcuts: [{
+          text: 'Last week',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: 'Last month',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: 'Last 3 months',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
+    }    
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentGroupId']),
@@ -140,6 +198,12 @@ export default {
           id: false
         }
       ]
+    },
+    isDatetimeRangeSelected () {
+      return this.dateTimeRange.length === 2
+    },
+    logTimeFilterDisplayName () {
+      return this.$t('miniApp.timeScope') + (this.isDatetimeRangeSelected ? ` : ${this.dateTimeRange[0]} - ${this.dateTimeRange[1]}` : '')
     }
   },
   created () {
@@ -159,7 +223,17 @@ export default {
     },
     getWarningLogs (page = 0) {
       this.isLoading = true
-      getAlertLogs({ conditionIds: this.activeConditionIds, page, groupId: this.getCurrentGroupId }).then(response => {
+      getAlertLogs({
+        conditionIds: this.activeConditionIds,
+        page,
+        groupId: this.getCurrentGroupId,
+        ...(this.isDatetimeRangeSelected && {
+          // 資料庫 log 時間均為 UTC+0, 前端使用 convertTimeStamp 轉換後會變為 UTC+8
+          // 這邊送進 time filter 需再調整為 UTC+0
+          startTime: moment(new Date(this.dateTimeRange[0])),
+          endTime: moment(new Date(this.dateTimeRange[1]))
+        })
+      }).then(response => {
         this.paginationInfo = response.pagination
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
@@ -188,6 +262,9 @@ export default {
         relatedDashboardId,
         rowData: rowData.filter(item => item.statsType === 'CATEGORY')
       })
+    },
+    resetTimeFilter () {
+      this.dateTimeRange = []
     },
     convertRefreshFrequency (cronTab) {
       switch (cronTab) {
@@ -218,6 +295,54 @@ export default {
     margin-bottom: 12px;
     margin-right: 20px;
     font-size: 20px;
+  }
+  &__filter {
+    margin-bottom: 12px;
+
+    .filter {
+      &__datetime-picker-panel {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        user-select: none;
+      }
+      
+      &__title {
+        font-size: 12px;
+        line-height: 17px;
+        margin-left: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 6px 12px;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+      }
+      &__delete-icon-box {
+        margin-left: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #A7A7A7;
+        cursor: pointer;
+      }
+      &__delete-icon {
+        font-size: 4px;
+      }
+
+      &__editor-panel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        overflow: hidden;
+      }
+    }
   }
   &__content {
     flex: 1;

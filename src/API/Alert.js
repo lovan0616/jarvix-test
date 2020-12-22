@@ -49,17 +49,15 @@ export function getAlertConditionMessageById (conditionId) {
  * @param {Number} page
  * @param {Number} size
  */
-export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId }) {
+export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId, startTime, endTime }) {
   return request({
     url: `/alert/logs/search?page=${page}&size=${size}`,
     method: 'POST',
     data: {
       conditionIdsString: `[${conditionIds.toString()}]`,
       groupId,
-      // TODO 待串接
-      // "active": true,
-      // "endTime": "string",
-      // "startTime": "string"
+      startTime,
+      endTime
     }
   })
 }
