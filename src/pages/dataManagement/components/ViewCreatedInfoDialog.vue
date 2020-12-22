@@ -81,8 +81,10 @@ export default {
   computed: {
     getTextAreaHeight () {
       const textAreaLineHeight = 20
+      const minHeight = 80
+      const calculatingHeight = this.createdInfo.sql.split('\n').length * textAreaLineHeight
       return {
-        height: this.createdInfo.sql.split('\n').length * textAreaLineHeight + 'px'
+        height: Math.max(minHeight, calculatingHeight) + 'px'
       }
     }
   },
