@@ -286,6 +286,7 @@ export default {
             this.hasNextPage = false
           }
         })
+        .finally(() => this.$emit('finished'))
       })
     },
     handleTaskInitData () {

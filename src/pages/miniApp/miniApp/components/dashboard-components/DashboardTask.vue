@@ -72,16 +72,18 @@
             <spinner v-if="isProcessing"/>
             <template v-else>
               <task
-                :class="{ 'not-empty': !isEmptyData }"
+                :class="{ 'not-empty': !isEmptyData && !isComponentFailed }"
                 :custom-chart-style="indexComponentStyle"
                 :key="'index-' + keyResultId"
                 :component-id="keyResultId"
                 :converted-type="'index_info'"
                 intend="key_result"
                 @isEmpty="isEmptyData = true"
+                @failed="isComponentFailed = true"
+                @finished="isIndexTypeComponentLoading = false"
               />
               <span 
-                v-if="!isEmptyData"
+                v-if="!isIndexTypeComponentLoading && (!isEmptyData && !isComponentFailed)"
                 :class="[componentData.indexInfo.size || 'middle']" 
                 class="index-unit">{{ componentData.indexInfo.unit }}</span>
             </template>
@@ -194,6 +196,8 @@ export default {
       autoRefreshFunction: null,
       debouncedAskFunction: null,
       isEmptyData: false,
+      isComponentFailed: false,
+      isIndexTypeComponentLoading: true,
       textComponentStyle: {
         'font-size': '20px',
         'color': '#DDDDDD',
@@ -385,6 +389,8 @@ export default {
     askQuestion (question = this.controllerMutatedQuestion || this.componentData.question) {
       window.clearTimeout(this.timeoutFunction)
       this.isProcessing = true
+      this.isIndexTypeComponentLoading = true
+      this.isComponentFailed = false
       this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
       this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
       this.isEmptyData = false
@@ -416,7 +422,7 @@ export default {
             })
           }).then(res => {
             this.getComponentV2(res.resultId)
-          }).catch(error => {})
+          }).catch(error => {this.isProcessing = false})
         }
         // TODO 無結果和多個結果
       }).catch(error => { this.isProcessing = false })
@@ -792,6 +798,12 @@ $direction-span: ("col": 8, "row": 6);
     .spinner-block {
       flex: 1;
     } 
+  }
+
+  /deep/ .task {
+    .task-spinner.key-result-spinner {
+      height: 100%;
+    }
   }
 }
 
