@@ -164,14 +164,16 @@
         :loading-text="$t('message.dataLoading')"
         :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
         :remote-method="remoteMethod"
+        :filter-method="filterMethod"
+        :popper-append-to-body="false"
         remote
         multiple
         filterable
         reserve-keyword
         class="sy-select theme-dark category-block__selector">
         <el-option
-          v-for="item in valueList"
-          :key="item.value"
+          v-for="(item, index) in valueList"
+          :key="index"
           :label="item.label"
           :value="item.value"/>
       </el-select>
@@ -187,15 +189,13 @@
 <script>
 import { getDataColumnValue, dataValueSearch } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
-import DefaultMultiSelect from '@/components/select/DefaultMultiSelect'
 import { mapState } from 'vuex'
 
 export default {
   inject: ['$validator'],
   name: "SingleSubRestraintBlock",
   components: {
-    DefaultSelect,
-    DefaultMultiSelect
+    DefaultSelect
   },
   props: {
     index: {
@@ -333,7 +333,8 @@ export default {
           })
       }
     },
-    updateDataValue (value) {
+    filterMethod (value) {
+      console.log(value)
       // TODO:每次都要重新取值，有點沒效率
       this.subRestraint.properties.datavalues = []
       this.tempValueList.forEach(item => {
@@ -518,6 +519,51 @@ export default {
         line-height: 22px;
         color: #888888;
       }
+
+      /deep/ .el-select-dropdown {
+        width: 100%;
+        left: 0px !important;
+
+        .el-select-dropdown__item {
+          padding: 0 20px 0 36px;
+          font-weight: normal;
+          color: #CCC;
+          background-color: transparent;
+
+          &:hover {
+            background-color: rgba(0, 0, 0, .6);
+          }
+
+          &::after {
+            content: '\E6DA';
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            width: 14px;
+            height: 14px;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 15px;
+            border: 1.1px solid #FFF;
+          }
+
+          &.selected {
+            color: #CCC;
+            background-color: transparent;
+
+            &.hover {
+              background-color: rgba(0, 0, 0, .6)
+            }
+
+            &::after {
+              color: #FFF;
+              background-color: #1EB8C7;
+              border-color: #1EB8C7;
+            }
+          }
+        }
+      } 
+      
     }
 
     .checkbox-label {
@@ -537,47 +583,4 @@ export default {
   }
 
 }
-
-.el-select-dropdown {
-  width: 100%;
-
-  .el-select-dropdown__item {
-    padding: 0 20px 0 36px;
-    font-weight: normal;
-    color: #CCC;
-    background-color: transparent;
-
-    &:hover {
-      background-color: rgba(0, 0, 0, .6);
-    }
-
-    &::after {
-      content: '\E6DA';
-      position: absolute;
-      top: 8px;
-      left: 12px;
-      width: 14px;
-      height: 14px;
-      font-size: 12px;
-      font-weight: bold;
-      line-height: 15px;
-      border: 1.1px solid #FFF;
-    }
-
-    &.selected {
-      color: #CCC;
-      background-color: transparent;
-
-      &.hover {
-        background-color: rgba(0, 0, 0, .6)
-      }
-
-      &::after {
-        color: #FFF;
-        background-color: #1EB8C7;
-        border-color: #1EB8C7;
-      }
-    }
-  }
-} 
 </style>

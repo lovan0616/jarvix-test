@@ -21,12 +21,11 @@
         v-show="isShowSeletor"
         ref="selectList"
         class="restraint-setting__selector selector">
-        <input
+        <search-block
           v-model="queryColumnName"
           :placeholder="$t('dataFrameAdvanceSetting.searchColumn')"
           class="selector__input-block"
-          type="text"
-        >
+        />
         <div 
           v-if="columnFilterOption.length === 0" 
           class="empty-message">
@@ -81,7 +80,7 @@
   </div>
 </template>
 <script>
-// import { getDataColumnValue } from '@/API/DataSource'
+import SearchBlock from '@/components/SearchBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import SingleSubRestraintBlock from '@/components/setting/SingleSubRestraintBlock'
 import { mapState } from 'vuex'
@@ -90,6 +89,7 @@ export default {
   name: 'FilterRestraintSetting',
   inject: ['$validator'],
   components: {
+    SearchBlock,
     DefaultSelect,
     SingleSubRestraintBlock
   },
@@ -231,22 +231,6 @@ export default {
             updatedRestraint = {}
           }
           this.$emit('updated:restraint', updatedRestraint)
-
-        // handle empty range value 先拿掉，現在強制都要有值
-
-        // const tempRestraintRangeList = this.tempRestraintList.filter(restraint => restraint.type === 'range')
-        // Promise.all(tempRestraintRangeList.map(async(restraint) => await getDataColumnValue(restraint.properties.dc_id)))
-        //   .then(response => {
-        //     let responseIndex = 0
-        //     this.tempRestraintList.forEach(restraint =>{
-        //       if(restraint.type === 'range') {
-        //         const valueBound = response[responseIndex][response[responseIndex].type.toLowerCase()]
-        //         restraint.properties.end = restraint.properties.end || valueBound.max
-        //         restraint.properties.start = restraint.properties.start || valueBound.min
-        //         responseIndex += 1
-        //       }
-        //     })
-        //   })
       })
     }
   },
@@ -325,23 +309,9 @@ export default {
   .selector {
     &__input-block {
       margin: 0 12px 8px 12px;
-      padding: 9px 12px;
-      width: calc(100% - 24px);
       font-size: 14px;
       color: #888888;
-      border: none;
-      border-radius: 8px;
       background-color: #141C1D;
-
-      &:focus {
-        outline: none;
-      }
-      
-      .placeholder {
-        font-size: 14px;
-        line-height: 22px;
-        color: #888888;
-      }
     }
 
     &__list-block {
