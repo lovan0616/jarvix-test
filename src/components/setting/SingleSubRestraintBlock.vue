@@ -458,12 +458,6 @@ export default {
     position: relative;
     overflow: unset;
 
-    .has-error {
-      .category-block__icon {
-        top: calc(50% - 16px);
-      }
-    }
-    
     .warning-text {
       margin-top: 4px;
       font-size: 12px;
@@ -487,7 +481,7 @@ export default {
           height: 26px;
           font-weight: 600;
           font-size: 14px;
-          line-height: 26px;
+          line-height: 22px;
           background-color: transparent;
           border-color: $theme-color-primary;
           color: $theme-color-primary;
@@ -500,6 +494,10 @@ export default {
             display: inline-block;
             vertical-align: middle;
           }
+        }
+
+        .el-select__input {
+          color: #CCC;
         }
 
         .el-tag__close {
