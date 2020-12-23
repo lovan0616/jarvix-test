@@ -170,7 +170,9 @@
         multiple
         filterable
         reserve-keyword
-        class="sy-select theme-dark category-block__selector">
+        class="sy-select theme-dark category-block__selector"
+        @change="updateDataValue"
+      >
         <el-option
           v-for="(item, index) in valueList"
           :key="index"
@@ -333,8 +335,7 @@ export default {
           })
       }
     },
-    filterMethod (value) {
-      console.log(value)
+    updateDataValue (value) {
       // TODO:每次都要重新取值，有點沒效率
       this.subRestraint.properties.datavalues = []
       this.tempValueList.forEach(item => {
