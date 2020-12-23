@@ -173,6 +173,7 @@ export default {
   },
   data () {
     return {
+      questionInfo: null,
       resultInfo: null,
       layout: '',
       timeoutFunction: null,
@@ -272,6 +273,13 @@ export default {
           getDateTimeColumns(this.segmentation.transcript.dataFrame.dataFrameId)
             .then(columnList => {
               this.mainDateColumn = columnList.find(column => column.isDefault)
+
+              // 存取問句結果讓 restriction 使用
+              this.questionInfo = {
+                dataFrameId: segmentationList[0].transcript.dataFrame.dataFrameId,
+                dataColumns: this.getDataColumnlist(segmentationList[0].transcript.subjectList)
+              }
+
               // 確認是否為趨勢類型問題
               const isTrendQuestion = this.segmentation.denotation === 'TREND'
               return this.$store.dispatch('chatBot/askResult', {
@@ -326,19 +334,14 @@ export default {
               this.resultInfo = componentResponse.componentIds
               this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
               this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
-              this.$store.commit('dataSource/setCurrentQuestionDataFrameId', this.currentQuestionDataFrameId)
               this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
               this.$store.commit('result/updateCurrentResultId', resultId)
+
+              // data columns 重新處理是因為 ask question 取得的是建議的句子切法
+              // 最終切法和辨別結果要以 get component list 為主
               this.$store.commit('result/updateCurrentResultInfo', {
                 keyResultId: componentResponse.componentIds.key_result[0],
-                dataColumns: componentResponse.segmentationPayload.transcript.subjectList
-                  .filter(item => item.dataColumn)
-                  .map(item => ({
-                    columnId: item.dataColumn.dataColumnId,
-                    columnName: item.dataColumn.dataColumnAlias,
-                    statsType: item.dataColumn.statsType,
-                    dataType: item.dataColumn.dataType
-                  })),
+                dataColumns: this.getDataColumnlist(componentResponse.segmentationPayload.transcript.subjectList),
                 segmentation: componentResponse.segmentationPayload,
                 question: componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, ''),
                 questionId: componentResponse.questionId,
@@ -370,6 +373,29 @@ export default {
           if (error.message !== 'cancel') this.resultInfo = null
         })
     },
+    getDataColumnlist (subjectList) {
+      return subjectList
+        .filter(item => item.dataColumn || item.categoryDataColumnList || item.filterList || item.dateTime)
+        .reduce((acc, cur, index, filteredSubjectList) => {
+          // 匯集所有欄位
+          const columnList = [
+            ...(cur.categoryDataColumnList || []),
+            ...(cur.dataColumn !== null && [cur.dataColumn]),
+            ...(cur.filterList !== null && cur.filterList.map(filter => filter.dataColumn) || []),
+            ...(cur.dateTime !== null && [cur.dateTime.dataColumn])
+          ]
+          // 將不重複的欄位存起來
+          columnList.forEach(column => { if (!acc[column.dataColumnId]) acc[column.dataColumnId] = column })
+          // 最後一筆時，回傳所有不重複的欄位清單
+          return index === filteredSubjectList.length - 1 ? Object.keys(acc).map(key => acc[key]) : acc
+        }, {})
+        .map((item, index, list) => ({
+          columnId: item.dataColumnId,
+          columnName: item.dataColumnAlias,
+          statsType: item.statsType,
+          dataType: item.dataType
+        }))
+    },
     setEmptyLayout (res) {
       this.layout = 'EmptyResult'
       this.resultInfo = {
@@ -386,18 +412,24 @@ export default {
     displayedHeaderText (type) {
       return this.currentComponent.type === type ? this.$t('miniApp.currentlyDisplayed') : this.$t('miniApp.setForDisplay')
     },
+    includeSameColumnPrimaryAliasFilter (filterName) {
+      return this.questionInfo.dataColumns.find(column => column.columnName === filterName)
+    },
     restrictions () {
       return this.allFilterList
         .filter(filter => {
           // 相對時間有全選的情境，不需帶入限制中
           if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
+
+          // 時間欄位要有開始和結束時間// 只處理相同 datafram 或欄位名稱相同的 filter
+          if (this.questionInfo.dataFrameId !== filter.dataFrameId && !this.includeSameColumnPrimaryAliasFilter(filter.columnName)) return false
           if (
             filter.statsType === 'NUMERIC'
             || filter.statsType === 'FLOAT'
             || filter.statsType === 'DATETIME'
           ) return filter.start && filter.end
           // filter 必須有值
-          if (filter.dataValues.length > 0) return true
+          if (filter.statsType === 'CATEGORY') return filter.dataValues.length > 0
           return false
         })
         .map(filter => {

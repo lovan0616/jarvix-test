@@ -219,7 +219,9 @@ export default {
     shouldComponentBeFiltered () {
       if (this.componentData.type === 'monitor-warning-list') return false
       // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
-      return this.includeSameColumnPrimaryAliasFilter || this.includeSameDataFrameFilter || this.includeRelativeDatetimeFilter
+      return this.allFilterList.find(filter => this.includeSameColumnPrimaryAliasFilter(filter.columnName))
+        || this.includeSameDataFrameFilter 
+        || this.includeRelativeDatetimeFilter
     },
     shouldComponentYAxisBeControlled () {
       // 表格型元件 不受 Y軸控制器 影響
@@ -275,14 +277,6 @@ export default {
     includeSameDataFrameFilter () {
       let filterDataFrameIds = this.allFilterList.reduce((acc, cur) => acc.concat(cur.dataFrameId), [])
       return filterDataFrameIds.includes(this.componentData.dataFrameId)
-    },
-    includeSameColumnPrimaryAliasFilter () {
-      let filterDataColumnNames = this.allFilterList.reduce((acc, cur) => acc.concat(cur.columnName), [])
-      const componentColumns = this.componentData.dataColumns
-      for (let i = 0; i < componentColumns.length; i++) {
-        if (filterDataColumnNames.includes(componentColumns[i].columnName)) return true
-        return false
-      }
     },
     includeRelativeDatetimeFilter () {
       return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
@@ -352,7 +346,13 @@ export default {
       }
     },
     // 當 Dashboard的 fitler 變動時，由元件內部去重新問問題
-    allFilterList: {
+    filters: {
+      deep: true,
+      handler (controls) {
+        if (controls.length === 0 || this.shouldComponentBeFiltered) this.deboucedAskQuestion()
+      }
+    },
+    controls: {
       deep: true,
       handler (controls) {
         if (controls.length === 0 || this.shouldComponentBeFiltered) this.deboucedAskQuestion()
@@ -466,7 +466,7 @@ export default {
           // 相對時間有全選的情境，不需帶入限制中
           if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
           // 只處理相同 datafram 或欄位名稱相同的 filter
-          if (this.componentData.dataFrameId !== filter.dataFrameId && !this.includeSameColumnPrimaryAliasFilter) return false
+          if (this.componentData.dataFrameId !== filter.dataFrameId && !this.includeSameColumnPrimaryAliasFilter(filter.columnName)) return false
           // 時間欄位要有開始和結束時間
           if (
             filter.statsType === 'NUMERIC'
@@ -478,7 +478,6 @@ export default {
           return false
         })
         .map(filter => {
-
           let type = ''
           let data_type = ''
           switch (filter.statsType) {
@@ -528,6 +527,9 @@ export default {
             }
           }]
         })
+    },
+    includeSameColumnPrimaryAliasFilter (filterName) {
+      return this.componentData.dataColumns.find(column => column.columnName === filterName)
     },
     confirmDelete () {
       this.isShowConfirmDelete = false
