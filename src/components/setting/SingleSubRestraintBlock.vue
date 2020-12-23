@@ -156,7 +156,7 @@
       <el-select
         v-validate="'required'"
         v-show="valueList"
-        v-model="selectedList"
+        :value="selectedList"
         :name="index + '-select'"
         :no-data-text="$t('message.noData')"
         :no-match-text="$t('message.noMatchData')"
@@ -165,18 +165,20 @@
         :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
         :remote-method="remoteMethod"
         :popper-append-to-body="false"
+        :disable="true"
         remote
         multiple
         filterable
         reserve-keyword
         class="sy-select theme-dark category-block__selector"
-        @change="updateDataValue"
+        @input="updateDataValue"
       >
         <el-option
           v-for="(item, index) in valueList"
-          :key="index"
+          :key="`${index}-${item.value}`"
           :label="item.label"
-          :value="item.value"/>
+          :value="item.value"
+        />
       </el-select>
       <div class="warning-text">{{ $t('editing.onlyPrefixMatching') }}</div>
       <div 
@@ -239,11 +241,6 @@ export default {
       return this.subRestraint.properties.end
         ? 'required|validLowerBound:datatimeUpperBound'
         : 'required'
-    }
-  },
-  watch: {
-    selectedList () {
-      console.log('watch')
     }
   },
   mounted () {
@@ -339,13 +336,15 @@ export default {
           })
       }
     },
-    updateDataValue () {
+    updateDataValue (value) {
+      if (event.keyCode === 13) return
+      this.selectedList = value
       // TODO:每次都要重新取值，有點沒效率
       this.subRestraint.properties.datavalues = []
       this.tempValueList.forEach(item => {
-        if(this.selectedList.includes(item.name)) this.subRestraint.properties.datavalues.push(item.value)
+        if(value.includes(item.name)) this.subRestraint.properties.datavalues.push(item.value)
       })
-      this.subRestraint.properties.display_datavalues = this.selectedList
+      this.subRestraint.properties.display_datavalues = value
     },
     deleteSubRestraint () {
       this.$emit('delete')
