@@ -164,7 +164,6 @@
         :loading-text="$t('message.dataLoading')"
         :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
         :remote-method="remoteMethod"
-        :filter-method="filterMethod"
         :popper-append-to-body="false"
         remote
         multiple
@@ -242,6 +241,11 @@ export default {
         : 'required'
     }
   },
+  watch: {
+    selectedList () {
+      console.log('watch')
+    }
+  },
   mounted () {
     this.fetchData()
   },
@@ -308,7 +312,7 @@ export default {
     remoteMethod(query) {
       this.queryString = query
       this.isSearching = true
-      this.searchTimer = null
+      clearTimeout(this.searchTimer)
       this.searchTimer = setTimeout(() => {
         this.searchValue()
       }, 1000)
@@ -335,13 +339,13 @@ export default {
           })
       }
     },
-    updateDataValue (value) {
+    updateDataValue () {
       // TODO:每次都要重新取值，有點沒效率
       this.subRestraint.properties.datavalues = []
       this.tempValueList.forEach(item => {
-        if(value.includes(item.name)) this.subRestraint.properties.datavalues.push(item.value)
+        if(this.selectedList.includes(item.name)) this.subRestraint.properties.datavalues.push(item.value)
       })
-      this.subRestraint.properties.display_datavalues = value
+      this.subRestraint.properties.display_datavalues = this.selectedList
     },
     deleteSubRestraint () {
       this.$emit('delete')
@@ -549,13 +553,6 @@ export default {
           }
 
           &.selected {
-            color: #CCC;
-            background-color: transparent;
-
-            &.hover {
-              background-color: rgba(0, 0, 0, .6)
-            }
-
             &::after {
               color: #FFF;
               background-color: #1EB8C7;
