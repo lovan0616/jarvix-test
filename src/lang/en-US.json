@@ -430,7 +430,8 @@
     "chooseFile": "Choose File",
     "columnAliasTemplate": "ColumnAliasTemplate",
     "valueAliasTemplate": "ValueAliasTemplate",
-    "searchDataSourceOrDataFrame": "Search DataSource or DataFrame"
+    "searchDataSourceOrDataFrame": "Search DataSource or DataFrame",
+    "onlyPrefixMatching": "Only support prefix match"
   },
   "algorithm": {
     "name": "Algorithm",

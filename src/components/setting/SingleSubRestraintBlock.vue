@@ -149,49 +149,33 @@
       v-else-if="statsType === 'CATEGORY'"
       class="single-sub-restraint__content category-block">
       <div 
-        v-if="valueList"
-        :class="{'has-error': errors.has(index + '-' + 'select')}"
-        @click="searchValue">
-        <svg-icon
-          :icon-class="isProcessing ? 'spinner' : 'search'" 
-          class="category-block__icon" />
-      </div>
-      <div 
         v-if="!valueList" 
         class="empty-message">
         {{ $t('editing.emptyKey') }}
       </div>
-      <!-- <default-select
+      <el-select
         v-validate="'required'"
         v-show="valueList"
-        :ref="index + '-select'"
         v-model="selectedList"
-        :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
-        :option-list="valueList"
         :name="index + '-select'"
-        filterable
-        filter-method
+        :no-data-text="$t('message.noData')"
+        :no-match-text="$t('message.noMatchData')"
+        :loading="isSearching"
+        :loading-text="$t('message.dataLoading')"
+        :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
+        :remote-method="remoteMethod"
+        remote
         multiple
-        class="category-block__selector"
-        @input="updateDataValue"
-        @filter="categoryFilter"
-      /> -->
-      <div class="input-field__input">
-        <default-multi-select
-          v-validate="'required'"
-          v-show="valueList"
-          :ref="index + '-select'"
-          v-model="selectedList"
-          :placeholder="$t('dataFrameAdvanceSetting.chooseValue')"
-          :option-list="valueList"
-          :name="index + '-select'"
-          filterable
-          multiple
-          class="input-field__multi-select"
-          @input="updateDataValue"
-        />
-      </div>
-
+        filterable
+        reserve-keyword
+        class="sy-select theme-dark category-block__selector">
+        <el-option
+          v-for="item in valueList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"/>
+      </el-select>
+      <div class="warning-text">{{ $t('editing.onlyPrefixMatching') }}</div>
       <div 
         v-show="errors.has(index + '-' + 'select')"
         class="error-text"
@@ -201,7 +185,7 @@
 </template>
 
 <script>
-import { getDataColumnValue, dataValueFuzzySearch } from '@/API/DataSource'
+import { getDataColumnValue, dataValueSearch } from '@/API/DataSource'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import DefaultMultiSelect from '@/components/select/DefaultMultiSelect'
 import { mapState } from 'vuex'
@@ -225,15 +209,16 @@ export default {
   },
   data () {
     return {
+      isSearching: false,
       isLoading: false,
-      isProcessing: false,
       columnId: null,
       selectedList: [],
       valueList: [],
       tempValueList: [],
       tempAliasList:[],
       statsType: null,
-      queryString: ''
+      queryString: '',
+      searchTimer: null
     }
   },
   computed: {
@@ -270,10 +255,10 @@ export default {
 
         if(this.statsType === 'CATEGORY') {
           this.selectedList = JSON.parse(JSON.stringify(this.subRestraint.properties.display_datavalues))
-          /// CATEGORY 值超過 200 筆時候會回傳 null
+          // CATEGORY 值超過 200 筆時候會回傳 null，因此需要由後端做 value search
           if(!this.valueList) {
-            this.isCategoryValueEmpty = true
-            this.searchValue(this.columnId, '')
+            this.isCategoryValueSearch = true
+            this.searchValue()
           } else {
             /* 當多個 alias (display value) 對到同樣的 value
              * 在多選的時候會有 tag 對不到剛剛選的 alias，因此先都用 alias(不會重複)
@@ -318,14 +303,23 @@ export default {
       this.subRestraint.properties.datavalues = [option]
       this.subRestraint.properties.display_datavalues = [option]
     },
+    remoteMethod(query) {
+      this.queryString = query
+      this.isSearching = true
+      this.searchTimer = null
+      this.searchTimer = setTimeout(() => {
+        this.searchValue()
+      }, 1000)
+    },
     searchValue () {
-      this.isProcessing = true
       // category value 如果一開始有值，表示資料筆數小於 200，不需用後端的 search
-      if(!this.isCategoryValueEmpty) {
+      if(!this.isCategoryValueSearch) {
+        // 這裡字串比對用 startsWith 是為了和後端一致
         this.valueList = this.tempAliasList
-          .filter(element => !this.queryString || element.name.toLowerCase().includes(this.queryString.toLowerCase()))
+          .filter(element => !this.queryString || element.name.startsWith(this.queryString))
+        this.isSearching = false
       } else {
-        dataValueFuzzySearch(this.columnId, this.queryString)
+        dataValueSearch(this.columnId, this.queryString)
           .then(({fuzzySearchResult}) => {
             this.valueList = fuzzySearchResult.map(element => {
               return {
@@ -334,10 +328,10 @@ export default {
               }
             })
           })
+          .finally(() => {
+            this.isSearching = false
+          })
       }
-      this.isProcessing = false
-      this.queryString = ''
-      this.$refs[`${this.index}-select`] && this.$refs[`${this.index}-select`].focusInput()
     },
     updateDataValue (value) {
       // TODO:每次都要重新取值，有點沒效率
@@ -346,7 +340,6 @@ export default {
         if(value.includes(item.name)) this.subRestraint.properties.datavalues.push(item.value)
       })
       this.subRestraint.properties.display_datavalues = value
-      this.$refs[`${this.index}-select`].blurInput()
     },
     deleteSubRestraint () {
       this.$emit('delete')
@@ -470,14 +463,12 @@ export default {
         top: calc(50% - 16px);
       }
     }
-
-    &__icon {
-      position: absolute;
-      top: calc(50% - 8px);
-      right: 9px;
-      background: #141C1D;
-      cursor: pointer;
-      z-index: 1;
+    
+    .warning-text {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 22px;
+      color: $theme-color-warning;
     }
 
     &__selector {
@@ -529,96 +520,7 @@ export default {
         line-height: 22px;
         color: #888888;
       }
-
-      /deep/ .el-select-dropdown {
-        width: 100%;
-
-        .el-select-dropdown__item {
-          padding: 0 20px 0 36px;
-          font-weight: normal;
-          color: #CCC;
-          background-color: transparent;
-
-          &:hover {
-            background-color: rgba(0, 0, 0, .6);
-          }
-
-          &::after {
-            content: '\E6DA';
-            position: absolute;
-            top: 8px;
-            left: 12px;
-            width: 14px;
-            height: 14px;
-            font-size: 12px;
-            font-weight: bold;
-            line-height: 15px;
-            border: 1.1px solid #FFF;
-          }
-
-          &.selected {
-            &::after {
-              color: #FFF;
-              background-color: #1EB8C7;
-              border-color: #1EB8C7;
-            }
-          }
-        }
-      }
     }
-
-        /deep/ .input-field {
-      display: flex;
-      flex-direction: column;
-
-      &:not(:last-of-type) {
-        margin-bottom: 24px;
-      }
-      
-      &__multi-select {
-        width: 100%;
-      }
-
-      &__label {
-        font-size: 14px;
-        color: #CCCCCC;
-      }
-
-      &__select,
-      &__multi-select {
-        border-bottom: 1px solid #fff;
-      }
-
-      &__input-wrapper {
-        margin-top: 8px;
-      }
-      
-      .deletable-checkbox {
-        display: flex;
-        align-items: center;
-        width: fit-content;
-        .checkbox-label {
-          margin-right: 12px;
-        }
-      }
-      /deep/ .el-input__inner {
-        font-size: 14px;
-        padding-left: 0;
-
-        &::placeholder {
-          color: #AAAAAA;
-        }
-      }
-
-      /deep/ .el-input {
-        &.is-disabled {
-          .el-input__inner {
-            background-color: transparent;
-          }
-        }
-      }
-    }
-
 
     .checkbox-label {
       margin-right: 8px;
@@ -637,4 +539,47 @@ export default {
   }
 
 }
+
+.el-select-dropdown {
+  width: 100%;
+
+  .el-select-dropdown__item {
+    padding: 0 20px 0 36px;
+    font-weight: normal;
+    color: #CCC;
+    background-color: transparent;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, .6);
+    }
+
+    &::after {
+      content: '\E6DA';
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      width: 14px;
+      height: 14px;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 15px;
+      border: 1.1px solid #FFF;
+    }
+
+    &.selected {
+      color: #CCC;
+      background-color: transparent;
+
+      &.hover {
+        background-color: rgba(0, 0, 0, .6)
+      }
+
+      &::after {
+        color: #FFF;
+        background-color: #1EB8C7;
+        border-color: #1EB8C7;
+      }
+    }
+  }
+} 
 </style>

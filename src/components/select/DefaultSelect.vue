@@ -8,6 +8,7 @@
     :disabled="isDisabled"
     :popper-append-to-body="false"
     :size="size"
+    :remote="remote"
     :multiple="multiple"
     :collapse-tags="collapseTags"
     :filterable="filterable"
@@ -41,6 +42,7 @@ export default {
     placeholder: { type: String, default: '' },
     isDisabled: {type: Boolean, default: false},
     size: { type: String, default: '' },
+    remote: { type: Boolean, default: false },
     multiple: {type: Boolean, default: false},
     collapseTags: {type: Boolean, default: false},
     filterable: {type: Boolean, default: false},
