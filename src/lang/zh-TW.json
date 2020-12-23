@@ -878,9 +878,11 @@
     "monitorAlert": "監控示警",
     "alertConditionSuccessfullyCreated": "示警條件創建成功",
     "chooseComparisionOperator": "選擇比較運算符",
+    "chooseMessageParam": "選擇訊息參數",
     "value": "數值",
     "sourceSetting": "來源設定",
     "conditionSetting": "條件設定",
+    "conditionMessageSetting": "示警訊息設定",
     "dataColumn": "資料欄位",
     "selectDataColumn": "資料欄位"
   },

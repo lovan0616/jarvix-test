@@ -72,7 +72,7 @@
             <div class="input-field__input">
               <default-select 
                 v-validate="'required'"
-                :option-list="dataColumnOptionList"
+                :option-list="dataColumnNumericOptionList"
                 :is-disabled="isLoadingDataColumnList"
                 v-model="newConditionSetting.targetConfig.dataColumnId"
                 :placeholder="$t('alert.selectDataColumn')"
@@ -97,6 +97,11 @@
             :comparison-operator-option-list="comparisonOperatorOptionList"
           />
         </div>
+        <!-- Condition Message Settings -->
+        <div class="setting-block">
+          <div class="setting-block__title">{{ $t('alert.conditionMessageSetting') }}</div>
+          
+        </div>
         <div class="button__block">
           <button
             :disabled="isProcessing"
@@ -118,13 +123,17 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputBlock from '@/components/InputBlock'
 import SingleComparingValueCard from './SingleComparingValueCard'
+import SingleMessageParamCard from './SingleMessageParamCard'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
 import { 
   getDataFrameById, 
   getDataFrameColumnInfoById
 } from '@/API/DataSource'
-import { postAlertCondition } from '@/API/Alert'
+import {
+  postAlertCondition,
+  patchConditionMessageParams
+} from '@/API/Alert'
 
 export default {
   name: 'CreateAlertConditionDialog',
@@ -132,7 +141,8 @@ export default {
   components: {
     DefaultSelect,
     InputBlock,
-    SingleComparingValueCard
+    SingleComparingValueCard,
+    SingleMessageParamCard
   },
   data () {
     return {
@@ -155,12 +165,14 @@ export default {
         ],
         triggerEvent: 'DATA_CHANGE'
       },
+      // 變更示警訊息中 要動態呈現實際值的欄位陣列
+      messageParams: [],
       // 前端畫面暫存
       tempConditionSetting: {
         dataSourceId: null,
       },
       dataFrameOptionList: [],
-      dataColumnOptionList: [],
+      dataColumnAllOptionList: [],
       isLoadingDataFrameList: false,
       isLoadingDataColumnList: false,
       isProcessing: false,
@@ -187,6 +199,12 @@ export default {
     },
     max () {
       return this.$store.getters['validation/fieldCommonMaxLength']
+    },
+    dataColumnNumericOptionList () {
+      return this.dataColumnAllOptionList.filter(item => {
+        // 這版本示警只做針對數值型欄位做監控
+        return item.statsType === 'NUMERIC'
+      })
     }
   },
   methods: {
@@ -207,18 +225,17 @@ export default {
     fetchDataColumnList (dataFrameId) {
       this.isLoadingDataColumnList = true
       // 清空原資料
-      this.dataColumnOptionList = []
+      this.dataColumnAllOptionList = []
       const hasFeatureColumn = true
       // 過濾掉分群欄位
       const hasBlockClustering = false
       getDataFrameColumnInfoById(dataFrameId, hasFeatureColumn, false, hasBlockClustering).then(response => {
-        this.dataColumnOptionList = response.reduce((acc, cur) => {
-          // 這版本示警只做針對數值型欄位做監控
-          if (cur.statsType !== 'NUMERIC') return acc
+        this.dataColumnAllOptionList = response.reduce((acc, cur) => {
           acc.push({
             name: `${cur.primaryAlias || cur.name}（${cur.statsType}）`,
             value: cur.id,
-            originalName: cur.primaryAlias  || cur.name
+            originalName: cur.primaryAlias  || cur.name,
+            statsType: cur.statsType
           })
           return acc
         }, [])
@@ -227,30 +244,50 @@ export default {
     },
     onSelectDataColumn () {
       // 補上送到後端所需的欄位名稱
-      const column = this.dataColumnOptionList.find(item => item.value === this.newConditionSetting.targetConfig.dataColumnId)
+      const column = this.dataColumnAllOptionList.find(item => item.value === this.newConditionSetting.targetConfig.dataColumnId)
       this.newConditionSetting.targetConfig.displayName = column.originalName
     },
+    // addMessageParam () {
+    //   this.messageParams.push(null)
+    // },
+    // updateMessageParams (index, columnId) {
+    //   this.messageParams[index] = columnId
+    // },
+    // deleteMessageParams (index) {
+    //   this.messageParams.splice(index, 1)
+    // },
     createAlertCondition () {
-      this.$validator.validateAll().then(isValid => {
+      this.$validator.validateAll().then(async (isValid) => {
         if (!isValid) return
 
         this.isProcessing = true
-        postAlertCondition(this.newConditionSetting)
-          .then(() => {
-            Message({
-              message: this.$t('alert.alertConditionSuccessfullyCreated'),
-              type: 'success',
-              duration: 3 * 1000,
-              showClose: true
-            })
+
+        try {
+          // 創造示警條件
+          const conditionId = await postAlertCondition(this.newConditionSetting)
+          
+          // 成功創建示警條件後，會有預設的 message
+          // 以下用 patch 去更新 示警訊息參數
+          await patchConditionMessageParams({
+            conditionId,
+            dataColumnIds: this.messageParams
           })
-          .catch(() => {})
-          .finally(() => {
-            this.isProcessing = false
-            this.$emit('created')
+
+          Message({
+            message: this.$t('alert.alertConditionSuccessfullyCreated'),
+            type: 'success',
+            duration: 3 * 1000,
+            showClose: true
           })
+          this.$emit('created')
+
+        } catch (error) {
+          this.$emit('close')
+        } finally {
+          this.isProcessing = false
+        }
       })
-    }
+    },
   }
 }
 </script>
@@ -279,8 +316,6 @@ export default {
     }
 
     /deep/ .input-field {
-      display: flex;
-      flex-direction: column;
 
       &:not(:last-of-type) {
         margin-bottom: 24px;

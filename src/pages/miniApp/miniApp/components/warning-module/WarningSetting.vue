@@ -37,14 +37,22 @@
           />
         </section>
       </div>
+      <div class="warning-setting__reminding">
+        <span class="column-lamp">
+          <svg-icon icon-class="lamp"/>
+          {{ $t('askHelper.description') }}:
+        </span>
+        示警條件將同步提供給其他應用程式進行使用
+      </div>
       <div class="warning-setting__content-condition">
         <div class="title">
-          <span class="col col-enable">{{ $t('alert.enableAlertModule') }}</span>
-          <span class="col col-condition">{{ $t('alert.alertCondition') }}</span>
-          <span class="col col-relation">{{ $t('miniApp.relatedDashboard') }}</span>
+          <span class="col-enable">{{ $t('alert.enableAlertModule') }}</span>
+          <span class="col-condition">{{ $t('alert.alertCondition') }}</span>
+          <span class="col-relation">{{ $t('miniApp.relatedDashboard') }}</span>
+          <span class="col-deletion"/>
         </div>
         <spinner 
-          v-if="isLoading" 
+          v-if="isLoading || isProcessing" 
           :title="$t('button.download')" 
           size="50"/>
         <section
@@ -52,7 +60,7 @@
           v-else 
           :key="index" 
           class="setting-block">
-          <div class="col col-enable">
+          <div class="col-enable">
             <el-switch
               v-model="condition.activate"
               :width="Number('32')"
@@ -76,6 +84,12 @@
               @change="saveWarningModuleSetting"
             />
           </div>
+          <div class="col-deletion">
+            <alert-condition-deleter
+              :condition="condition"
+              @deleted="fetchAlertConditions"
+            />
+          </div>
         </section>
       </div>
     </main>
@@ -91,13 +105,15 @@
 import { getAlertConditions } from '@/API/Alert'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import CreateAlertConditionDialog from './CreateAlertConditionDialog'
+import AlertConditionDeleter from './AlertConditionDeleter'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'WarningSetting',
   components: {
     DefaultSelect,
-    CreateAlertConditionDialog
+    CreateAlertConditionDialog,
+    AlertConditionDeleter
   },
   props: {
     setting: {
@@ -112,6 +128,7 @@ export default {
   data () {
     return {
       isLoading: false,
+      isProcessing: false,
       tempWarningModuleConfig: {},
       isShowConditionCreateDialog: false
     }
@@ -258,7 +275,7 @@ export default {
       padding: 24px;
       background-color: #192323;
       border-radius: 5px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       margin-right: 20px;
       font-size: 14px;
       .input-radio-group {
@@ -289,6 +306,7 @@ export default {
         padding: 0 24px 12px 24px;
       }
       .setting-block {
+        position: relative;
         margin-bottom: 8px;
         &:last-child {
           margin-bottom: 24px;
@@ -313,6 +331,28 @@ export default {
       &-relation {
         flex: 0 0 200px;
       }
+      &-deletion {
+        flex: 0 0 20px;
+        .alert-condition-deleter {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+        }
+      }
+    }
+  }
+  &__reminding {
+    font-size: 12px;
+    line-height: 32px;
+    padding-left: 16px;
+    margin-bottom: 12px;
+    margin-right: 20px;
+    word-break: keep-all;
+    background-color: rgba(255, 223, 111, 0.1);
+    border-radius: 5px;
+
+    .column-lamp {
+      color: $theme-color-warning;
     }
   }
 }

@@ -7,9 +7,9 @@
       <div class="filter__datetime-picker-panel">
         <svg-icon icon-class="clock"/>
         <div class="filter__title">
-          {{ logTimeFilterDisplayName }}
+          {{ timeFilterDisplayName }}
           <div
-            v-if="isDatetimeRangeSelected"
+            v-if="timeFilterSelected"
             class="filter__delete-icon-box"
             @click.stop="resetTimeFilter"
           >
@@ -23,12 +23,13 @@
             class="filter__dropdown-icon"/>
         </div>
         <el-date-picker
-          v-model="dateTimeRange"
+          v-model="timeFilterValue"
           :picker-options="pickerOptions"
           class="filter__editor-panel"
           type="datetimerange"
+          format="yyyy-MM-dd HH:mm"
           value-format="yyyy-MM-dd HH:mm"
-          @input="getWarningLogs"
+          @input="onTimeFilterChanged"
         />
       </div>
     </div>
@@ -67,7 +68,7 @@
               :data-list="stateOptions"
               :has-bullet-point="false"
               trigger="hover"
-              @select="updateLogActiveness(scope.row.conditionMetLogId, $event)"
+              @select="updateLogActiveness(scope.row, $event)"
             >
               <template #display>
                 <div 
@@ -151,30 +152,34 @@ export default {
         totalItems: 0,
         itemPerPage: 0
       },
-      dateTimeRange: [],
+      timeFilterValue: [],
       pickerOptions: {
         shortcuts: [{
-          text: 'Last week',
+          text: this.$t('miniApp.today'),
           onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            const start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
+            const end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: this.$t('miniApp.6hour'),
+          onClick(picker) {
+            const start = moment().subtract(6, 'hours').format('YYYY-MM-DD HH:mm');
+            const end = moment().format('YYYY-MM-DD HH:mm');
             picker.$emit('pick', [start, end]);
           }
         }, {
-          text: 'Last month',
+          text: this.$t('miniApp.3hour'),
           onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            const start = moment().subtract(3, 'hours').format('YYYY-MM-DD HH:mm');
+            const end = moment().format('YYYY-MM-DD HH:mm');
             picker.$emit('pick', [start, end]);
           }
         }, {
-          text: 'Last 3 months',
+          text: this.$t('miniApp.1hour'),
           onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            const start = moment().subtract(1, 'hours').format('YYYY-MM-DD HH:mm');
+            const end = moment().format('YYYY-MM-DD HH:mm');
             picker.$emit('pick', [start, end]);
           }
         }]
@@ -199,27 +204,25 @@ export default {
         }
       ]
     },
-    isDatetimeRangeSelected () {
-      return this.dateTimeRange.length === 2
+    timeFilterSelected () {
+      return this.timeFilterValue.length === 2
     },
-    logTimeFilterDisplayName () {
-      return this.$t('miniApp.timeScope') + (this.isDatetimeRangeSelected ? ` : ${this.dateTimeRange[0]} - ${this.dateTimeRange[1]}` : '')
+    timeFilterDisplayName () {
+      return this.$t('miniApp.timeScope') + (this.timeFilterSelected ? ` : ${this.timeFilterValue[0]} - ${this.timeFilterValue[1]}` : '')
     }
   },
   created () {
     if (this.activeConditionIds.length > 0) {
       this.getWarningLogs()
-      this.setComponentRefresh()
+      this.setLogRefresh()
     }
   },
   destroyed () {
     window.clearInterval(this.autoRefreshFunction)
   },
   methods: {
-    setComponentRefresh () {
-      this.autoRefreshFunction = window.setInterval(() => {
-        this.getWarningLogs()
-      }, this.convertRefreshFrequency(this.setting.updateFrequency))
+    setLogRefresh () {
+      this.autoRefreshFunction = window.setInterval(this.getWarningLogs, this.convertRefreshFrequency(this.setting.updateFrequency))
     },
     getWarningLogs (page = 0) {
       this.isLoading = true
@@ -227,11 +230,11 @@ export default {
         conditionIds: this.activeConditionIds,
         page,
         groupId: this.getCurrentGroupId,
-        ...(this.isDatetimeRangeSelected && {
+        ...(this.timeFilterSelected && {
           // 資料庫 log 時間均為 UTC+0, 前端使用 convertTimeStamp 轉換後會變為 UTC+8
           // 這邊送進 time filter 需再調整為 UTC+0
-          startTime: moment(new Date(this.dateTimeRange[0])),
-          endTime: moment(new Date(this.dateTimeRange[1]))
+          startTime: moment(new Date(this.timeFilterValue[0])),
+          endTime: moment(new Date(this.timeFilterValue[1]))
         })
       }).then(response => {
         this.paginationInfo = response.pagination
@@ -248,11 +251,11 @@ export default {
           this.isLoading = false
         }, 1000) )
     },
-    updateLogActiveness (logId, isActive) {
-      this.isProcessing = true
-      patchAlertLogActiveness(logId, { "active" : isActive })
-        .then(() => this.getWarningLogs(this.activeConditionIds))
-        .finally(() => this.isProcessing = false)
+    updateLogActiveness (logData, isActive) {
+      if (logData.active === isActive) return
+      patchAlertLogActiveness(logData.conditionMetLogId, { "active" : isActive })
+        .then(() => logData.active = !logData.active)
+        .catch(() => {})
     },
     changePage (pageNumber) {
       this.getWarningLogs(pageNumber - 1)
@@ -264,7 +267,13 @@ export default {
       })
     },
     resetTimeFilter () {
-      this.dateTimeRange = []
+      this.timeFilterValue = []
+      this.onTimeFilterChanged()
+    },
+    onTimeFilterChanged () {
+      window.clearInterval(this.autoRefreshFunction)
+      this.getWarningLogs()
+      this.setLogRefresh()
     },
     convertRefreshFrequency (cronTab) {
       switch (cronTab) {
@@ -328,9 +337,15 @@ export default {
         border-radius: 50%;
         background: #A7A7A7;
         cursor: pointer;
+        z-index: 1;
       }
       &__delete-icon {
         font-size: 4px;
+      }
+      &__dropdown-icon {
+        transform: rotate(60deg);
+        font-size: 4px;
+        margin-left: 4px;
       }
 
       &__editor-panel {

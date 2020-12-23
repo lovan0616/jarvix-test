@@ -12,6 +12,16 @@ export function postAlertCondition (data) {
 }
 
 /**
+ * 創建 示警條件
+ */
+export function deleteAlertCondition (conditionId) {
+  return request({
+    url: `/alert/condition/${conditionId}`,
+    method: 'DELETE'
+  })
+}
+
+/**
  * 取得 所有示警條件
  */
 export function getAlertConditions (groupId) {
@@ -72,4 +82,21 @@ export function patchAlertLogActiveness(logId, stateInfo) {
     method: 'PATCH',
     data: stateInfo
   })
+}
+
+/**
+ * 變更示警訊息中 要動態呈現實際值的欄位陣列
+ * @param {Number} id - condition id
+ * @param {Array} ids - dataColumn ids
+ */
+export function patchConditionMessageParams(conditionId, dataColumnIds) {
+  console.log(conditionId, dataColumnIds)
+  return new Promise(resolve => {
+    resolve('hey')
+  })
+  // return request({
+  //   url: `/alert/condition/${conditionId}/message-templates`,
+  //   method: 'PATCH',
+  //   data: { dataColumnIds }
+  // })
 }
