@@ -431,7 +431,7 @@
     "columnAliasTemplate": "ColumnAliasTemplate",
     "valueAliasTemplate": "ValueAliasTemplate",
     "searchDataSourceOrDataFrame": "Search DataSource or DataFrame",
-    "onlyPrefixMatching": "The search only support prefix matching"
+    "onlyPrefixMatching": "The search only supports prefix matching"
   },
   "algorithm": {
     "name": "Algorithm",
