@@ -337,7 +337,10 @@ export default {
       }
     },
     updateDataValue (value) {
-      if (event.keyCode === 13) return
+      /* 使用中文輸入法時，按 enter 剛好會也會觸發到滑鼠左鍵的點擊，讓選項誤選 
+       * 這時時候 keyPress 不會有值，keyDown 則會回傳 229
+      */
+      if (event.keyCode === 13 || event.keyCode === 229) return
       this.selectedList = value
       // TODO:每次都要重新取值，有點沒效率
       this.subRestraint.properties.datavalues = []
