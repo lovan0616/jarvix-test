@@ -219,7 +219,8 @@ export default {
             }
             break
         }
-        const shortenNumberMethod = this.shortenNumber
+        const labelFormatter = this.chartLabelFormatter
+        const maxValue = this.getChartMaxData(this.dataset.data)
         return {
           ...item,
           ...(this.isShowLabelData && colIndex !== 2 && {
@@ -228,7 +229,10 @@ export default {
               show: true,
               fontSize: 10,
               color: '#fff',
-              formatter (value) { return shortenNumberMethod(value.data[colIndex + 1], 0) }
+              formatter (value) { 
+                let num = value.data[colIndex + 1]
+                return labelFormatter(num, maxValue) 
+              }
             }
           })
         }

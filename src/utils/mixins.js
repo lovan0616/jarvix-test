@@ -395,6 +395,25 @@ Vue.mixin({
 
       return config
     },
+    getChartMaxData (data) {
+      let maxValue = data[0]
+      data.forEach(data => {
+        maxValue = Math.max(...data) > maxValue ? Math.max(...data) : maxValue
+      })
+      return maxValue
+    },
+    chartLabelFormatter (num, maxValue) {
+      if (num === 0) return num
+      /* format value 的規則是
+      * 數線上用到最大單位的數值需要到小數點後第 2 位（因為量級有差距時，小單位的數值其實在數線上看起來不會有明顯差別）
+      * EX: 若同時有 aM, bK，只有單位是 aM 且和 maxValue 差不到十倍的要顯示到小數點後第 2 位
+      *     若所有的單位都是 K，則全部和 maxValue 差不到十倍的 bK 都要顯示到小數點後第 2 位
+      */
+      let lessThanTenTimes =  maxValue / num <= 10
+      let numberFixedDigits = lessThanTenTimes ? 2 : 0
+
+      return this.shortenNumber(num, numberFixedDigits)
+    },
     objectToArray (obj) {
       return Object.keys(obj).map(element => {
         obj[element].id = element
