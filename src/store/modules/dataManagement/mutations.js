@@ -99,5 +99,16 @@ export default {
   updateSummaryInfo (state, data) {
     let {tableIndex, columnIndex, dataSummary} = data
     Vue.set(state.etlTableList[tableIndex].columns[columnIndex], 'dataSummary', dataSummary)
+  },
+  updateCurrentUploadScriptInfo (state, data) {
+    state.currentUploadScriptInfo = data
+  },
+  clearCurrentUploadScriptInfo(state) {
+    state.currentUploadScriptInfo = {
+      scriptId: null,
+      dataframeId: null,
+      type: null,
+      ioArgs: {}
+    }
   }
 }
