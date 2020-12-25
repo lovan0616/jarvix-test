@@ -5,8 +5,8 @@
       <div class="nav-right">
         <button
           class="btn-m btn-secondary button-container__button"
-          @click="isShowConditionCreateDialog = true"
-        >新增示警條件</button>
+          @click="isShowCreateConditionDialog = true"
+        >{{ $t('alert.createAlertCondition') }}</button>
       </div>
     </nav>
     <main class="warning-setting__content">
@@ -42,7 +42,7 @@
           <svg-icon icon-class="lamp"/>
           {{ $t('askHelper.description') }}:
         </span>
-        示警條件將同步提供給其他應用程式進行使用
+        {{ $t('alert.alertSettingIsSharingByAllGroupApplications') }}
       </div>
       <div class="warning-setting__content-condition">
         <div class="title">
@@ -56,9 +56,9 @@
           :title="$t('button.download')" 
           size="50"/>
         <section
-          v-for="(condition, index) in tempWarningModuleConfig.conditions"
+          v-for="condition in tempWarningModuleConfig.conditions"
           v-else 
-          :key="index" 
+          :key="condition.id" 
           class="setting-block">
           <div class="col-enable">
             <el-switch
@@ -74,6 +74,15 @@
             <div 
               class="comparing-values" 
               v-html="displayedConditionMessage(condition.targetConfig.displayName, condition.comparingValues)"/>
+            <div class="message-template">
+              <span class="message-template__label">{{ $t('alert.alertLogMessage') }}</span>
+              <span class="message-template__content">{{ condition.message }}</span>
+              <a
+                href="javascript:void(0)"
+                class="link message-template__edit-btn"
+                @click="openAlertConditionMessageDialog(condition)"
+              >編輯內容</a>
+            </div>
           </div>
           <div class="col-relation">
             <default-select
@@ -94,25 +103,36 @@
       </div>
     </main>
     <create-alert-condition-dialog
-      v-if="isShowConditionCreateDialog"
-      @close="isShowConditionCreateDialog = false"
-      @created="alertConditionCreated"
+      v-if="isShowCreateConditionDialog"
+      @close="isShowCreateConditionDialog = false"
+      @created="alertConditionUpdated('CreateCondition')"
+    />
+    <alert-condition-message-editor-dialog
+      v-if="isShowEditConditionMessageDialog"
+      :condition="currentEditingCondition"
+      @close="isShowEditConditionMessageDialog = false"
+      @done="alertConditionUpdated('EditConditionMessage')"
     />
   </div>
 </template>
 
 <script>
-import { getAlertConditions } from '@/API/Alert'
+import {
+  getAlertConditions,
+  getAlertConditionMessageById
+} from '@/API/Alert'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import CreateAlertConditionDialog from './CreateAlertConditionDialog'
 import AlertConditionDeleter from './AlertConditionDeleter'
-import { mapGetters } from 'vuex'
+import AlertConditionMessageEditorDialog from './AlertConditionMessageEditorDialog'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'WarningSetting',
   components: {
     DefaultSelect,
     CreateAlertConditionDialog,
+    AlertConditionMessageEditorDialog,
     AlertConditionDeleter
   },
   props: {
@@ -130,11 +150,14 @@ export default {
       isLoading: false,
       isProcessing: false,
       tempWarningModuleConfig: {},
-      isShowConditionCreateDialog: false
+      currentEditingCondition: null,
+      isShowCreateConditionDialog: false,
+      isShowEditConditionMessageDialog: false
     }
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentGroupId']),
+    ...mapState('setting', ['locale']),
     dashboardOptions () {
       let options = []
       const defaultOption = {
@@ -182,7 +205,7 @@ export default {
       this.tempWarningModuleConfig = { activate, updateFrequency, conditions: [] }
 
       getAlertConditions(this.getCurrentGroupId).then(conditions => {      
-        conditions.forEach(condition => {
+        conditions.forEach(async (condition) => {
 
           // 尋找之前是否有針對此示警條件做過設定
           const prevConditionSetting = this.setting.conditions.find(item => item.id === condition.id)
@@ -191,14 +214,31 @@ export default {
           let isRelatedDashbaordExist = false
           if (prevConditionSetting) isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
           
+          // 取得示警訊息
+          // TODO 之後 GET all condiotion API 會直接給 message
+          const message = await this.fetchAlertConditionMessage(condition)
+
           // 組成示警條件列表
           this.tempWarningModuleConfig.conditions.push({
             ...condition,
+            message,
             activate: prevConditionSetting ? prevConditionSetting.activate : false,
             relatedDashboardId: isRelatedDashbaordExist ? prevConditionSetting.relatedDashboardId : null
           })
         })
       }).finally(() => this.isLoading = false )
+    },
+    fetchAlertConditionMessage (condition) {
+      return getAlertConditionMessageById(condition.id)
+        .then(messagesOfAllLangs => {
+          const currentLangMessage = messagesOfAllLangs.find(item => item.language.replace('_', '-') === this.locale)
+          return currentLangMessage ? currentLangMessage.messageTemplate : '-'
+        })
+        .catch(() => '-')
+    },
+    openAlertConditionMessageDialog (condition) {
+      this.currentEditingCondition = { ...condition }
+      this.isShowEditConditionMessageDialog = true
     },
     saveWarningModuleSetting () {
       this.$emit('update', {
@@ -236,9 +276,10 @@ export default {
       }, '')
       
     },
-    alertConditionCreated () {
-      this.isShowConditionCreateDialog = false
+    alertConditionUpdated (action) {
+      this[`isShow${action}Dialog`] = false
       this.fetchAlertConditions()
+      if (action === 'EditConditionMessage') this.currentEditingCondition = null
     }
   }
 }
@@ -319,12 +360,24 @@ export default {
       }
       &-condition {
         flex: 1;
+        padding-right: 16px;
         .comparing-values {
           font-size: 12px;
           color: #999;
           margin-top: 6px;
+          margin-bottom: 6px;
           & ~ .comparing-values {
             margin-top: 2px;
+          }
+        }
+        .message-template {
+          width: fit-content;
+          font-size: 12px;
+          background-color: #101919;
+          border-radius: 5px;
+          padding: 4px 8px;
+          &__edit-btn {
+            margin-left: 7.5px;
           }
         }
       }

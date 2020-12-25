@@ -877,6 +877,7 @@
     "realTimeMonitorAlert": "即時監控示警",
     "monitorAlert": "監控示警",
     "alertConditionSuccessfullyCreated": "示警條件創建成功",
+    "alertMessageSuccessfullyPatched": "示警訊息設定成功",
     "chooseComparisionOperator": "選擇比較運算符",
     "chooseMessageParam": "選擇訊息參數",
     "value": "數值",
@@ -884,7 +885,19 @@
     "conditionSetting": "條件設定",
     "conditionMessageSetting": "示警訊息設定",
     "dataColumn": "資料欄位",
-    "selectDataColumn": "資料欄位"
+    "selectDataColumn": "資料欄位",
+    "messageExampleDescription": "範例說明",
+    "messageParamSyntaxDescription": "欄位參數語法 = ${欄位名稱}",
+    "messageTemplateSettingExample": "訊息設定：廠房:{0},出現電流異常(電流:{1}μA)。",
+    "messageTemplatePreviewExample": "訊息預覽：廠房:{0},出現電流異常(電流:{1}μA)。",
+    "param1NameExample": "${廠編}",
+    "param1ValueExample": "F00088",
+    "param2NameExample": "${電流}",
+    "param2ValueExample": "300",
+    "alertMessageContent": "訊息內容",
+    "inserColumnAsParams": "插入欄位參數",
+    "enterAlertMessage": "請輸入示警訊息",
+    "alertSettingIsSharingByAllGroupApplications": "示警條件將同步提供給其他應用程式進行使用"
   },
   "clustering": {
     "cluster": "群體",

@@ -114,7 +114,7 @@
         v-if="paginationInfo.totalPages > 1"
         :total="paginationInfo.totalItems"
         :page-size="paginationInfo.itemPerPage"
-        :current-page="paginationInfo.currentPage + 1"
+        :current-page="paginationInfo.currentPage"
         class="table-pagination"
         layout="prev, pager, next"
         @current-change="changePage"

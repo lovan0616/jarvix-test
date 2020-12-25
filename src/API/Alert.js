@@ -12,7 +12,7 @@ export function postAlertCondition (data) {
 }
 
 /**
- * 創建 示警條件
+ * 刪除 示警條件
  */
 export function deleteAlertCondition (conditionId) {
   return request({
@@ -85,18 +85,16 @@ export function patchAlertLogActiveness(logId, stateInfo) {
 }
 
 /**
- * 變更示警訊息中 要動態呈現實際值的欄位陣列
+ * 修改示警訊息中
  * @param {Number} id - condition id
- * @param {Array} ids - dataColumn ids
+ * @param {Object} dataColumnIds - 參數欄位
+ * @param {Object} language - 欲修改的語言
+ * @param {Object} message - 示警訊息
  */
-export function patchConditionMessageParams(conditionId, dataColumnIds) {
-  console.log(conditionId, dataColumnIds)
-  return new Promise(resolve => {
-    resolve('hey')
+export function patchConditionMessageParams(conditionId, data) {
+  return request({
+    url: `/alert/condition/${conditionId}/message-templates`,
+    method: 'PATCH',
+    data
   })
-  // return request({
-  //   url: `/alert/condition/${conditionId}/message-templates`,
-  //   method: 'PATCH',
-  //   data: { dataColumnIds }
-  // })
 }

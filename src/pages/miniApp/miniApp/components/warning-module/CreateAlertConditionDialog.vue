@@ -100,7 +100,11 @@
         <!-- Condition Message Settings -->
         <div class="setting-block">
           <div class="setting-block__title">{{ $t('alert.conditionMessageSetting') }}</div>
-          
+          <alert-condition-message-editor
+            :condition-id="conditionId"
+            :prop-param-options="dataColumnAllOptionList"
+            @done="onAlertMessageProcessFinished"
+          />
         </div>
         <div class="button__block">
           <button
@@ -123,7 +127,7 @@
 import DefaultSelect from '@/components/select/DefaultSelect'
 import InputBlock from '@/components/InputBlock'
 import SingleComparingValueCard from './SingleComparingValueCard'
-import SingleMessageParamCard from './SingleMessageParamCard'
+import AlertConditionMessageEditor from './AlertConditionMessageEditor'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
 import { 
@@ -131,8 +135,7 @@ import {
   getDataFrameColumnInfoById
 } from '@/API/DataSource'
 import {
-  postAlertCondition,
-  patchConditionMessageParams
+  postAlertCondition
 } from '@/API/Alert'
 
 export default {
@@ -142,7 +145,7 @@ export default {
     DefaultSelect,
     InputBlock,
     SingleComparingValueCard,
-    SingleMessageParamCard
+    AlertConditionMessageEditor
   },
   data () {
     return {
@@ -171,6 +174,8 @@ export default {
       tempConditionSetting: {
         dataSourceId: null,
       },
+      conditionId: null,
+      isPatchingConditionMessage: false,
       dataFrameOptionList: [],
       dataColumnAllOptionList: [],
       isLoadingDataFrameList: false,
@@ -210,9 +215,13 @@ export default {
   methods: {
     fetchDataFrameList (dataSourceId) {
       this.isLoadingDataFrameList = true
+
       // 清空原資料
       this.dataFrameOptionList = []
-      this.tempConditionSetting.dataFrameId = null
+      this.dataColumnAllOptionList = []
+      this.newConditionSetting.dataFrameId = null
+      this.newConditionSetting.targetConfig.dataColumnId = null
+
       getDataFrameById(this.tempConditionSetting.dataSourceId, ['Enable'])
         .then(response => {
           this.dataFrameOptionList = response.map(dataFrame => ({
@@ -224,8 +233,11 @@ export default {
     },
     fetchDataColumnList (dataFrameId) {
       this.isLoadingDataColumnList = true
+
       // 清空原資料
       this.dataColumnAllOptionList = []
+      this.newConditionSetting.targetConfig.dataColumnId = null
+
       const hasFeatureColumn = true
       // 過濾掉分群欄位
       const hasBlockClustering = false
@@ -247,44 +259,26 @@ export default {
       const column = this.dataColumnAllOptionList.find(item => item.value === this.newConditionSetting.targetConfig.dataColumnId)
       this.newConditionSetting.targetConfig.displayName = column.originalName
     },
-    // addMessageParam () {
-    //   this.messageParams.push(null)
-    // },
-    // updateMessageParams (index, columnId) {
-    //   this.messageParams[index] = columnId
-    // },
-    // deleteMessageParams (index) {
-    //   this.messageParams.splice(index, 1)
-    // },
+    onAlertMessageProcessFinished () {
+      this.isProcessing = false
+      this.$emit('created')
+    },
     createAlertCondition () {
       this.$validator.validateAll().then(async (isValid) => {
         if (!isValid) return
 
         this.isProcessing = true
-
         try {
           // 創造示警條件
-          const conditionId = await postAlertCondition(this.newConditionSetting)
-          
-          // 成功創建示警條件後，會有預設的 message
-          // 以下用 patch 去更新 示警訊息參數
-          await patchConditionMessageParams({
-            conditionId,
-            dataColumnIds: this.messageParams
-          })
-
+          this.conditionId = await postAlertCondition(this.newConditionSetting)
           Message({
             message: this.$t('alert.alertConditionSuccessfullyCreated'),
             type: 'success',
             duration: 3 * 1000,
             showClose: true
           })
-          this.$emit('created')
-
         } catch (error) {
           this.$emit('close')
-        } finally {
-          this.isProcessing = false
         }
       })
     },
