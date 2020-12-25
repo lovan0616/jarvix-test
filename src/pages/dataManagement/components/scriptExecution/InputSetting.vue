@@ -135,9 +135,7 @@ export default {
       getDataFrameById(this.$route.params.id, isGetAllStatesDataframe)
         .then(response => {
           this.dataFrameOptionList = response.reduce((acc, cur) => {
-            // 待捕：後端會新增一個屬性和值來告知是否可使用
-            // 不能單純靠是否為 database 建立和設定 crontab 來判定
-            if (cur.originType !== 'database') return acc
+            if (!cur.hasPrimaryKey) return acc
             acc.push({
               name: cur.primaryAlias,
               value: cur.id
