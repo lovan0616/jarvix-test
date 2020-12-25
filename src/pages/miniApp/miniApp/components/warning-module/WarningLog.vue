@@ -34,13 +34,11 @@
       </div>
     </div>
     <div class="warning-log__content">
-      <spinner 
-        v-if="isLoading" 
-        :title="$t('button.download')" 
-        size="50"/>
       <el-table
-        v-else
+        v-loading="isLoading"
         :data="warningLogs"
+        :element-loading-text="$t('button.download')"
+        element-loading-background="rgba(15, 20, 20, .8)"
         class="sy-table"
         height="100%"
         style="width: 100%">
@@ -111,10 +109,11 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        v-if="paginationInfo.totalPages > 1"
+        :disabled="isLoading"
         :total="paginationInfo.totalItems"
         :page-size="paginationInfo.itemPerPage"
         :current-page="paginationInfo.currentPage"
+        :hide-on-single-page="true"
         class="table-pagination"
         layout="prev, pager, next"
         @current-change="changePage"
@@ -247,9 +246,7 @@ export default {
         })
       })
         .catch(() => {})
-        .finally(() => setTimeout(() => {
-          this.isLoading = false
-        }, 1000) )
+        .finally(() => setTimeout(() => this.isLoading = false, 800) )
     },
     updateLogActiveness (logData, isActive) {
       if (logData.active === isActive) return
