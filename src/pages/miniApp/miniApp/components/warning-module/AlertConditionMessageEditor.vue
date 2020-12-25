@@ -143,20 +143,24 @@ export default {
       for (let language in this.messageOfAllLangs) {
         const message = this.messageOfAllLangs[language].message
         if (message.length > 0) {
-          const regex = /(?<=\$\{)[^{}]*?(?=\})/g
+          const regex = /\${.*?}/g
           const hasParams = regex.test(message)
-          const params = message.match(regex)
+          let paramsWithToken = []
+          let params = []
+          if (hasParams) {
+            paramsWithToken = message.match(regex)
+            params = paramsWithToken.map(item => item.substring(2, item.length - 1))
+          }
           this.messageOfAllLangsAsArray.push({
             language: language.replace('-', '_'),
-            message: hasParams ? this.formatMessage(message, params) : message,
+            message: hasParams ? this.formatMessage(message, paramsWithToken) : message,
             ...(hasParams && {dataColumnIds: this.getColumnIdsByColumnNames(params)})
           })
         }
       }
     },
-    formatMessage (message) {
-      const matches = message.match(/\${.*?}/g)
-      matches.forEach(match => message = message.replace(match, '${}'))
+    formatMessage (message, paramsWithToken) {
+      paramsWithToken.forEach(match => message = message.replace(match, '${}'))
       return message
     },
     getColumnIdsByColumnNames (columnNames) {
