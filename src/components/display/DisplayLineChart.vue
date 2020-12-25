@@ -414,7 +414,7 @@ export default {
             color: '#fff',
             formatter (value) { 
               let num = value.data[colIndex + 1]
-              return labelFormatter(num, maxValue) 
+              return labelFormatter(num, maxValue[colIndex]) 
             }
           }
         })
