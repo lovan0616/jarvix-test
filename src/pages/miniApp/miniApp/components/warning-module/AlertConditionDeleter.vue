@@ -11,7 +11,7 @@
       class="alert-condition-deleter__confirm-pop"
     >
       <div class="confirm__message">
-        {{ $t('message.confirmColumnStateTypeChange') }}
+        {{ $t('alert.alertConditionDeletionWillImpactOtherApplicationConfirmMsg') }}
       </div>
       <div class="confirm__buttons">
         <a

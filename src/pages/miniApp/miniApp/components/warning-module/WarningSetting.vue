@@ -350,7 +350,7 @@ export default {
     }
     .col {
       &-enable {
-        flex: 0 0 140px;
+        flex: 0 0 100px;
       }
       &-condition {
         flex: 1;

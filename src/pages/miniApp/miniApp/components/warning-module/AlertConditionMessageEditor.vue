@@ -82,12 +82,7 @@ export default {
     },
     condition: {
       type: Object,
-      default: () => {
-        return {
-          id: null,
-          dataFrameId: null
-        }
-      }
+      default: null
     },
     propParamOptions: {
       type: Array,
@@ -141,7 +136,7 @@ export default {
     },
     insertParam (lang, columnId) {
       const column = this.paramOptions.find(item => item.value === columnId)
-      this.messageOfAllLangs[lang].message += ' ${' + column.originalName + '}'
+      this.messageOfAllLangs[lang].message += '${' + column.originalName + '}'
     },
     formatPatchMessageParams () {
       this.messageOfAllLangsAsArray = []
