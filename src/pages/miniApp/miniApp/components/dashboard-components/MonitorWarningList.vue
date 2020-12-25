@@ -6,37 +6,30 @@
       size="50"
     />
     <template v-else-if="warningLogs.length > 0">
-      <el-tooltip
+      <li
         v-for="(log, index) in warningLogs"
         :key="index"
-        placement="left"
+        :class="log.relatedDashboardId ? 'is-linkable' : ''"
+        class="list__item"
+        @click="log.relatedDashboardId ? $emit('goToCertainDashboard', log.relatedDashboardId) : null"
       >
-        <div
-          slot="content"
-          style="max-height: 300px; overflow: auto"
-          v-html="logMonitoredData(log.monitoredData)"/>
-        <li
-          :class="log.relatedDashboardId ? 'is-linkable' : ''"
-          class="list__item"
-        >
-          <div class="list__item--left">
-            <svg-icon 
-              icon-class="alert" 
-              class="list__item-icon"/>
+        <div class="list__item--left">
+          <svg-icon 
+            icon-class="alert" 
+            class="list__item-icon"/>
+        </div>
+        <div class="list__item--right">
+          <div class="list__item-title">
+            {{ log.conditionName }}
           </div>
-          <div class="list__item--right">
-            <div class="list__item-title">
-              {{ log.conditionName }}
-            </div>
-            <div class="list__item-sub-title">
-              {{ log.conditionMetMessage }}
-            </div>
-            <div class="list__item-description">
-              {{ log.createDate | convertTimeStamp }}
-            </div>
+          <div class="list__item-sub-title">
+            {{ log.conditionMetMessage }}
           </div>
-        </li>
-      </el-tooltip>
+          <div class="list__item-description">
+            {{ log.createDate | convertTimeStamp }}
+          </div>
+        </div>
+      </li>
     </template>
     <template v-else>
       <div class="empty-text">{{ $t('alert.emptyLogs') }}</div>
@@ -101,9 +94,7 @@ export default {
         })
       })
         .catch(() => {})
-        .finally(() => setTimeout(() => {
-          this.isLoading = false
-        }, 1000) )
+        .finally(() => setTimeout(() => this.isLoading = false, 800))
     },
     convertRefreshFrequency (cronTab) {
       switch (cronTab) {
@@ -126,10 +117,6 @@ export default {
         case '0 0 1 * *':
           return 30 * 7 * 24 * 60 * 1000
       }
-    },
-    goToWarningLogPage () {
-      if (this.isEditMode) return
-      this.$emit('goToWarningLogPage')
     },
     logMonitoredData (rowData) {
       return rowData.reduce((acc, cur) => acc.concat(`${cur.displayName}: ${cur.datum[0]}<br>`), '')
