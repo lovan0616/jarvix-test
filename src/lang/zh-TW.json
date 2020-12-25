@@ -862,7 +862,8 @@
     "orderUpdated": "{target}排序已更新",
     "monitorUpdateFrequency": "示警更新頻率",
     "monitorComponent": "監控示警元件",
-    "timeScope": "時間範圍"
+    "timeScope": "時間範圍",
+    "dashboardNoLongerExist": "關聯看板已不存在"
   },
   "alert": {
     "alertLogs": "示警紀錄",
@@ -897,7 +898,9 @@
     "alertMessageContent": "訊息內容",
     "inserColumnAsParams": "插入欄位參數",
     "enterAlertMessage": "請輸入示警訊息",
-    "alertSettingIsSharingByAllGroupApplications": "示警條件將同步提供給其他應用程式進行使用"
+    "alertSettingIsSharingByAllGroupApplications": "示警條件將同步提供給其他應用程式進行使用",
+    "allMessageSettingsAreEmpty": "未輸入任何示警訊息設定",
+    "editAlertMessage": "編輯內容"
   },
   "clustering": {
     "cluster": "群體",

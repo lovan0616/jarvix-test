@@ -94,6 +94,7 @@ export default {
       default: () => null
     },
     isEdit: {
+      // 再編輯示警訊息
       type: Boolean,
       default: false
     }
@@ -116,8 +117,8 @@ export default {
   },
   watch: {
     conditionId (id) {
-      // 當外層創建示警條件後，這邊拿到 condition id，要去 PATCH 示警訊息
-      this.patchAlertMessage()
+      // 當外層創建示警條件後，這邊會拿到 condition id，要去 PATCH 示警訊息
+      if (typeof id === 'number') this.patchAlertMessage()
     },
     propParamOptions: {
       deep: true,
@@ -133,14 +134,14 @@ export default {
   methods: {
     initMessageTemplates () {
       this.messageOfAllLangs = {
-        'zh-TW': { message: '' },
-        'zh-CN': { message: '' },
-        ...(this.hasPermission('english_ui') && {'en-US': { message: '' }})
+        'zh-TW': { message: this.condition ? this.condition.alertMessageTW : '' },
+        'zh-CN': { message: this.condition ? this.condition.alertMessageCN : '' },
+        ...(this.hasPermission('english_ui') && {'en-US': { message: this.condition ? this.condition.alertMessageUS : '' }})
       }
     },
     insertParam (lang, columnId) {
       const column = this.paramOptions.find(item => item.value === columnId)
-      this.messageOfAllLangs[lang].message += '${' + column.originalName + '}'
+      this.messageOfAllLangs[lang].message += ' ${' + column.originalName + '}'
     },
     formatPatchMessageParams () {
       this.messageOfAllLangsAsArray = []
@@ -153,14 +154,14 @@ export default {
           this.messageOfAllLangsAsArray.push({
             language: language.replace('-', '_'),
             message: hasParams ? this.formatMessage(message, params) : message,
-            ...(hasParams && {dataColumnId: this.getColumnIdsByColumnNames(params)})
+            ...(hasParams && {dataColumnIds: this.getColumnIdsByColumnNames(params)})
           })
         }
       }
     },
-    formatMessage (message, params) {
-      // TODO Refactor
-      params.forEach(param => message = message.replace(param, ''))
+    formatMessage (message) {
+      const matches = message.match(/\${.*?}/g)
+      matches.forEach(match => message = message.replace(match, '${}'))
       return message
     },
     getColumnIdsByColumnNames (columnNames) {
@@ -191,7 +192,17 @@ export default {
     },
     patchAlertMessage () {
       this.formatPatchMessageParams()
-      if (this.messageOfAllLangsAsArray.length === 0) return this.$emit('done')
+      if (this.messageOfAllLangsAsArray.length === 0) {
+        if (this.isEdit) {
+          return Message({
+            message: this.$t('miniApp.allMessageSettingsAreEmpty'),
+            type: 'warning',
+            duration: 3 * 1000,
+            showClose: true
+          })
+        }
+        return this.$emit('done')
+      }
 
       const patchPromises = this.messageOfAllLangsAsArray.map(item => patchConditionMessageParams(this.conditionId || this.condition.id, item))
       Promise.all(patchPromises)
