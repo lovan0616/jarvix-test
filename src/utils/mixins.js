@@ -395,10 +395,13 @@ Vue.mixin({
 
       return config
     },
-    getChartMaxData (data) {
-      let maxValue = data[0]
-      data.forEach(data => {
-        maxValue = Math.max(...data) > maxValue ? Math.max(...data) : maxValue
+    getChartMaxData (dataset) {
+      let maxValue = [...dataset[0]]
+      // 多組數據，需要存多組 maxValue
+      dataset.forEach(row => {
+        row.forEach((data, index) => {
+          maxValue[index] = Math.max(data, maxValue[index])
+        })
       })
       return maxValue
     },
@@ -411,7 +414,6 @@ Vue.mixin({
       */
       let lessThanTenTimes =  maxValue / num <= 10
       let numberFixedDigits = lessThanTenTimes ? 2 : 0
-
       return this.shortenNumber(num, numberFixedDigits)
     },
     objectToArray (obj) {
