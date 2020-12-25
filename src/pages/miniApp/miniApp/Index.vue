@@ -335,7 +335,7 @@
                     @deleteComponentRelation="deleteComponentRelation"
                     @columnTriggered="columnTriggered"
                     @chartTriggered="chartTriggered"
-                    @goToWarningLogPage="openWarningModule"
+                    @goToCertainDashboard="activeCertainDashboard($event)"
                   >
                     <template slot="drowdown">
                       <dropdown-select
@@ -1064,6 +1064,14 @@ export default {
     },
     activeCertainDashboard (dashboardId, dashboardName) {
       if (this.currentDashboardId === dashboardId) return
+      if (!this.dashboardList.find(item => item.id === dashboardId)) {
+        return Message({
+          message: this.$t('miniApp.dashboardNoLongerExist'),
+          type: 'warning',
+          duration: 3 * 1000,
+          showClose: true
+        })
+      }
       this.isEditingDashboardName = false
       this.isShowWarningModule = false
       this.currentDashboardId = dashboardId

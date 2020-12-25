@@ -18,6 +18,7 @@
         <li
           :class="log.relatedDashboardId ? 'is-linkable' : ''"
           class="list__item"
+          @click="log.relatedDashboardId ? $emit('goToCertainDashboard', log.relatedDashboardId) : null"
         >
           <div class="list__item--left">
             <svg-icon 
@@ -101,9 +102,7 @@ export default {
         })
       })
         .catch(() => {})
-        .finally(() => setTimeout(() => {
-          this.isLoading = false
-        }, 1000) )
+        .finally(() => setTimeout(() => this.isLoading = false, 800))
     },
     convertRefreshFrequency (cronTab) {
       switch (cronTab) {
@@ -126,10 +125,6 @@ export default {
         case '0 0 1 * *':
           return 30 * 7 * 24 * 60 * 1000
       }
-    },
-    goToWarningLogPage () {
-      if (this.isEditMode) return
-      this.$emit('goToWarningLogPage')
     },
     logMonitoredData (rowData) {
       return rowData.reduce((acc, cur) => acc.concat(`${cur.displayName}: ${cur.datum[0]}<br>`), '')

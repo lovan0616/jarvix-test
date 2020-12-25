@@ -3,14 +3,42 @@
     <nav class="warning-log__nav">
       {{ $t('alert.alertLogs') }}
     </nav>
+    <div class="warning-log__filter">
+      <div class="filter__datetime-picker-panel">
+        <svg-icon icon-class="clock"/>
+        <div class="filter__title">
+          {{ timeFilterDisplayName }}
+          <div
+            v-if="timeFilterSelected"
+            class="filter__delete-icon-box"
+            @click.stop="resetTimeFilter"
+          >
+            <svg-icon
+              icon-class="close" 
+              class="filter__delete-icon"/>
+          </div>
+          <svg-icon
+            v-else
+            icon-class="triangle"
+            class="filter__dropdown-icon"/>
+        </div>
+        <el-date-picker
+          v-model="timeFilterValue"
+          :picker-options="pickerOptions"
+          class="filter__editor-panel"
+          type="datetimerange"
+          format="yyyy-MM-dd HH:mm"
+          value-format="yyyy-MM-dd HH:mm"
+          @input="onTimeFilterChanged"
+        />
+      </div>
+    </div>
     <div class="warning-log__content">
-      <spinner 
-        v-if="isLoading" 
-        :title="$t('button.download')" 
-        size="50"/>
       <el-table
-        v-else
+        v-loading="isLoading"
         :data="warningLogs"
+        :element-loading-text="$t('button.download')"
+        element-loading-background="rgba(15, 20, 20, .8)"
         class="sy-table"
         height="100%"
         style="width: 100%">
@@ -38,7 +66,7 @@
               :data-list="stateOptions"
               :has-bullet-point="false"
               trigger="hover"
-              @select="updateLogActiveness(scope.row.conditionMetLogId, $event)"
+              @select="updateLogActiveness(scope.row, $event)"
             >
               <template #display>
                 <div 
@@ -81,10 +109,11 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        v-if="paginationInfo.totalPages > 1"
+        :disabled="isLoading"
         :total="paginationInfo.totalItems"
         :page-size="paginationInfo.itemPerPage"
-        :current-page="paginationInfo.currentPage + 1"
+        :current-page="paginationInfo.currentPage"
+        :hide-on-single-page="true"
         class="table-pagination"
         layout="prev, pager, next"
         @current-change="changePage"
@@ -97,6 +126,7 @@
 import { getAlertLogs, patchAlertLogActiveness } from '@/API/Alert'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'WarningLog',
@@ -121,7 +151,39 @@ export default {
         totalItems: 0,
         itemPerPage: 0
       },
-    }
+      timeFilterValue: [],
+      pickerOptions: {
+        shortcuts: [{
+          text: this.$t('miniApp.today'),
+          onClick(picker) {
+            const start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
+            const end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: this.$t('miniApp.6hour'),
+          onClick(picker) {
+            const start = moment().subtract(6, 'hours').format('YYYY-MM-DD HH:mm');
+            const end = moment().format('YYYY-MM-DD HH:mm');
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: this.$t('miniApp.3hour'),
+          onClick(picker) {
+            const start = moment().subtract(3, 'hours').format('YYYY-MM-DD HH:mm');
+            const end = moment().format('YYYY-MM-DD HH:mm');
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: this.$t('miniApp.1hour'),
+          onClick(picker) {
+            const start = moment().subtract(1, 'hours').format('YYYY-MM-DD HH:mm');
+            const end = moment().format('YYYY-MM-DD HH:mm');
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
+    }    
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentGroupId']),
@@ -140,26 +202,40 @@ export default {
           id: false
         }
       ]
+    },
+    timeFilterSelected () {
+      return this.timeFilterValue.length === 2
+    },
+    timeFilterDisplayName () {
+      return this.$t('miniApp.timeScope') + (this.timeFilterSelected ? ` : ${this.timeFilterValue[0]} - ${this.timeFilterValue[1]}` : '')
     }
   },
   created () {
     if (this.activeConditionIds.length > 0) {
       this.getWarningLogs()
-      this.setComponentRefresh()
+      this.setLogRefresh()
     }
   },
   destroyed () {
     window.clearInterval(this.autoRefreshFunction)
   },
   methods: {
-    setComponentRefresh () {
-      this.autoRefreshFunction = window.setInterval(() => {
-        this.getWarningLogs()
-      }, this.convertRefreshFrequency(this.setting.updateFrequency))
+    setLogRefresh () {
+      this.autoRefreshFunction = window.setInterval(this.getWarningLogs, this.convertRefreshFrequency(this.setting.updateFrequency))
     },
     getWarningLogs (page = 0) {
       this.isLoading = true
-      getAlertLogs({ conditionIds: this.activeConditionIds, page, groupId: this.getCurrentGroupId }).then(response => {
+      getAlertLogs({
+        conditionIds: this.activeConditionIds,
+        page,
+        groupId: this.getCurrentGroupId,
+        ...(this.timeFilterSelected && {
+          // 資料庫 log 時間均為 UTC+0, 前端使用 convertTimeStamp 轉換後會變為 UTC+8
+          // 這邊送進 time filter 需再調整為 UTC+0
+          startTime: moment(new Date(this.timeFilterValue[0])),
+          endTime: moment(new Date(this.timeFilterValue[1]))
+        })
+      }).then(response => {
         this.paginationInfo = response.pagination
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
@@ -170,15 +246,13 @@ export default {
         })
       })
         .catch(() => {})
-        .finally(() => setTimeout(() => {
-          this.isLoading = false
-        }, 1000) )
+        .finally(() => setTimeout(() => this.isLoading = false, 800) )
     },
-    updateLogActiveness (logId, isActive) {
-      this.isProcessing = true
-      patchAlertLogActiveness(logId, { "active" : isActive })
-        .then(() => this.getWarningLogs(this.activeConditionIds))
-        .finally(() => this.isProcessing = false)
+    updateLogActiveness (logData, isActive) {
+      if (logData.active === isActive) return
+      patchAlertLogActiveness(logData.conditionMetLogId, { "active" : isActive })
+        .then(() => logData.active = !logData.active)
+        .catch(() => {})
     },
     changePage (pageNumber) {
       this.getWarningLogs(pageNumber - 1)
@@ -188,6 +262,15 @@ export default {
         relatedDashboardId,
         rowData: rowData.filter(item => item.statsType === 'CATEGORY')
       })
+    },
+    resetTimeFilter () {
+      this.timeFilterValue = []
+      this.onTimeFilterChanged()
+    },
+    onTimeFilterChanged () {
+      window.clearInterval(this.autoRefreshFunction)
+      this.getWarningLogs()
+      this.setLogRefresh()
     },
     convertRefreshFrequency (cronTab) {
       switch (cronTab) {
@@ -218,6 +301,60 @@ export default {
     margin-bottom: 12px;
     margin-right: 20px;
     font-size: 20px;
+  }
+  &__filter {
+    margin-bottom: 12px;
+
+    .filter {
+      &__datetime-picker-panel {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        user-select: none;
+      }
+      
+      &__title {
+        font-size: 12px;
+        line-height: 17px;
+        margin-left: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 6px 12px;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+      }
+      &__delete-icon-box {
+        margin-left: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #A7A7A7;
+        cursor: pointer;
+        z-index: 1;
+      }
+      &__delete-icon {
+        font-size: 4px;
+      }
+      &__dropdown-icon {
+        transform: rotate(60deg);
+        font-size: 4px;
+        margin-left: 4px;
+      }
+
+      &__editor-panel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        overflow: hidden;
+      }
+    }
   }
   &__content {
     flex: 1;
