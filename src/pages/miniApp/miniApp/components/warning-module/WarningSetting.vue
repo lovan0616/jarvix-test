@@ -71,17 +71,22 @@
           </div>
           <div class="col-condition">
             <div>{{ condition.name }}</div>
+            <div class="datasource-info">
+              <svg-icon icon-class="data-source"/>{{ condition.dataSourceName }}
+              <svg-icon icon-class="table"/>{{ condition.dataFrameName }}
+              <svg-icon icon-class="column"/>{{ condition.targetConfig.displayName }}
+            </div>
             <div 
               class="comparing-values" 
               v-html="displayedConditionMessage(condition.targetConfig.displayName, condition.comparingValues)"/>
             <div class="message-template">
-              <span class="message-template__label">{{ $t('alert.alertLogMessage') }}</span>
-              <span class="message-template__content">{{ condition.message }}</span>
+              <span class="message-template__label">{{ $t('alert.alertLogMessage') }}:</span>
+              <span class="message-template__content">{{ condition[`alertMessage${locale.split('-')[1]}`] }}</span>
               <a
                 href="javascript:void(0)"
                 class="link message-template__edit-btn"
                 @click="openAlertConditionMessageDialog(condition)"
-              >編輯內容</a>
+              >{{ $t('alert.editAlertMessage') }}</a>
             </div>
           </div>
           <div class="col-relation">
@@ -117,10 +122,7 @@
 </template>
 
 <script>
-import {
-  getAlertConditions,
-  getAlertConditionMessageById
-} from '@/API/Alert'
+import { getAlertConditions } from '@/API/Alert'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import CreateAlertConditionDialog from './CreateAlertConditionDialog'
 import AlertConditionDeleter from './AlertConditionDeleter'
@@ -204,37 +206,29 @@ export default {
       const { activate, updateFrequency } = this.setting
       this.tempWarningModuleConfig = { activate, updateFrequency, conditions: [] }
 
-      getAlertConditions(this.getCurrentGroupId).then(conditions => {      
-        conditions.forEach(async (condition) => {
+      getAlertConditions(this.getCurrentGroupId)
+        .then(conditions => {      
+          conditions
+            .sort((a, b) => a.id - b.id)
+            .forEach(async (condition) => {
 
-          // 尋找之前是否有針對此示警條件做過設定
-          const prevConditionSetting = this.setting.conditions.find(item => item.id === condition.id)
-          
-          // 若有，檢查所設定關聯看板是否還存在
-          let isRelatedDashbaordExist = false
-          if (prevConditionSetting) isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
-          
-          // 取得示警訊息
-          // TODO 之後 GET all condiotion API 會直接給 message
-          const message = await this.fetchAlertConditionMessage(condition)
-
-          // 組成示警條件列表
-          this.tempWarningModuleConfig.conditions.push({
-            ...condition,
-            message,
-            activate: prevConditionSetting ? prevConditionSetting.activate : false,
-            relatedDashboardId: isRelatedDashbaordExist ? prevConditionSetting.relatedDashboardId : null
+              // 尋找之前是否有針對此示警條件做過設定
+              const prevConditionSetting = this.setting.conditions.find(item => item.id === condition.id)
+              
+              // 若有，檢查所設定關聯看板是否還存在
+              let isRelatedDashbaordExist = false
+              if (prevConditionSetting) isRelatedDashbaordExist = this.dashboardList.map(item => item.id).includes(prevConditionSetting.relatedDashboardId)
+              
+              // 組成示警條件列表
+              this.tempWarningModuleConfig.conditions.push({
+                ...condition,
+                activate: prevConditionSetting ? prevConditionSetting.activate : false,
+                relatedDashboardId: isRelatedDashbaordExist ? prevConditionSetting.relatedDashboardId : null
+              })
+            })
           })
-        })
-      }).finally(() => this.isLoading = false )
-    },
-    fetchAlertConditionMessage (condition) {
-      return getAlertConditionMessageById(condition.id)
-        .then(messagesOfAllLangs => {
-          const currentLangMessage = messagesOfAllLangs.find(item => item.language.replace('_', '-') === this.locale)
-          return currentLangMessage ? currentLangMessage.messageTemplate : '-'
-        })
-        .catch(() => '-')
+          .catch(() => '-')
+          .finally(() => this.isLoading = false )
     },
     openAlertConditionMessageDialog (condition) {
       this.currentEditingCondition = { ...condition }
@@ -361,6 +355,21 @@ export default {
       &-condition {
         flex: 1;
         padding-right: 16px;
+        .datasource-info {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          white-space: nowrap;
+          font-size: 12px;
+          color: #CCC;
+          margin: 6px 0;
+          .svg-icon {
+            margin-right: 6px;
+            &:not(:first-child) {
+              margin-left: 6px;
+            }
+          }
+        }
         .comparing-values {
           font-size: 12px;
           color: #999;
