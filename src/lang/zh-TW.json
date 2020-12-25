@@ -180,6 +180,8 @@
     "localUploadDescription": "透過電腦上傳.xlsx .xls .csv<br>檔案資料並進行建置",
     "remoteConnection": "連接資料庫建置",
     "remoteConnectionDescription": "直接讀取您的資料庫資料<br>並進行資料複製和建置",
+    "runScript": "資料表演算",
+    "runScriptDescription": "使用系統的資料進行演算處理並建置出新的資料表",
     "confirmDeleteForeign": "確認刪除此關聯嗎？",
     "chooseDataSource": "請選擇資料源",
     "allDataFrames": "全部資料表",
@@ -431,7 +433,10 @@
     "chooseFile": "選擇檔案",
     "columnAliasTemplate": "欄位別名範例檔",
     "valueAliasTemplate": "數據別名範例檔",
-    "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表"
+    "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表",
+    "scriptExecutionStep1": "上傳檔案",
+    "scriptExecutionStep2": "選擇輸入欄位",
+    "scriptExecutionStep3": "設定輸出類型"
   },
   "algorithm": {
     "name": "演算法",
@@ -559,6 +564,14 @@
     "null": "Null",
     "columnSelected": "已選擇欄位數",
     "pleaseSelectAtLeastOneColumnPerTable": "每張表格請至少選擇一個欄位"
+  },
+  "script": {
+    "dataFrame": "來源資料表",
+    "selectInputColumn": "設定輸入欄位",
+    "scriptColumnReminder": "欄位具有順序性，優先順序為由上至下",
+    "selectOutputColumn": "設定輸出欄位類型",
+    "columnDataType": "欄位類型",
+    "columnDataName": "欄位名稱"
   },
   "pinboard": {
     "intelligentAnalysis": "智能分析",

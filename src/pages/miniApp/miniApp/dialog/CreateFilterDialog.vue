@@ -75,9 +75,9 @@
                 </div>
                 <single-column-card
                   v-for="(filter, index) in filterInfoList"
-                  :filter-info="filter"
+                  :column-info="filter"
                   :data-column-option-list="dataColumnOptionList"
-                  :filter-info-list="filterInfoList"
+                  :column-list="filterInfoList"
                   :key="filter.id"
                   :name="index.toString()"
                   :is-loading="isLoading"
@@ -141,7 +141,7 @@ import DefaultSelect from '@/components/select/DefaultSelect'
 import DefaultMultiSelect from '@/components/select/DefaultMultiSelect'
 import InputBlock from '@/components/InputBlock'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
-import SingleColumnCard from '../card/SingleColumnCard'
+import SingleColumnCard from '@/components/card/SingleColumnCard'
 import { mapGetters } from 'vuex'
 import { 
   getDataFrameById, 
@@ -241,7 +241,8 @@ export default {
       // 補 datasource 名稱
       const dataSourceName = this.dataSourceOptionList.find(datasource => datasource.value === dataSourceId).name
       this.selectedBasicInfo.dataSourceName = dataSourceName
-      getDataFrameById(this.selectedBasicInfo.dataSourceId, ['Enable'])
+      const isGetAllStatesDataframe = false
+      getDataFrameById(this.selectedBasicInfo.dataSourceId, isGetAllStatesDataframe)
         .then(response => {
           this.dataFrameOptionList = response.map(dataFrame => ({
             name: dataFrame.primaryAlias,

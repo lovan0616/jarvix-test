@@ -22,7 +22,13 @@ export default {
     // 當前預處理的 list
     etlTableList: [],
     currentTableIndex: 0,
-    currentColumnIndex: null
+    currentColumnIndex: null,
+    currentUploadScriptInfo: {
+      scriptId: null,
+      dataframeId: null,
+      type: null,
+      ioArgs: {}
+    }
   },
   actions,
   mutations,

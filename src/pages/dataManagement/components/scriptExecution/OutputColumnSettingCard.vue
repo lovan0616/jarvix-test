@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div
-      v-if="filterInfoList.length > 1"
+      v-if="columnList.length > 1"
       :class="{ 'disabled': isProcessing || isLoading }"
       class="card__delete-icon"
       @click="removeColumn">
@@ -10,53 +10,61 @@
         class="icon"/>
     </div>
     <div class="input-field">
-      <label class="input-field__label">欄位</label>
+      <label class="input-field__label">{{ $t('script.columnDataType') }}</label>
       <div class="input-field__input">
         <default-select 
           v-validate="'required'"
-          :option-list="dataColumnOptionList"
+          :option-list="dataTypeOptionList"
           :placeholder="$t('batchLoad.chooseColumn')"
           :is-disabled="isProcessing || isLoading"
-          v-model="filterInfo.columnId"
-          :name="name"
+          v-model="columnInfo.dataType"
+          :name="'select' + columnInfo.id"
           filterable
           class="input-field__select"
           @change="$emit('updateDataColumn', $event)"
         />
         <div 
-          v-show="errors.has(name)"
+          v-show="errors.has('select' + columnInfo.id)"
           class="error-text"
-        >{{ errors.first(name) }}</div>
+        >{{ errors.first('select' + columnInfo.id) }}</div>
       </div>
+    </div>
+    <div class="input-field">
+      <label class="input-field__label">{{ $t('script.columnDataName') }}</label>
+      <input-verify
+        v-validate="`required`"
+        v-model.trim="columnInfo.dataColumnName"
+        :placeholder="$t('editing.inputCategoryName')"
+        :name="'input' + columnInfo.id"
+        type="text"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import DefaultSelect from '@/components/select/DefaultSelect'
+import InputVerify from '@/components/InputVerify'
 
 export default {
-  name: 'SingleFilterCard',
+  name: 'OutputColumnSettingCard',
   inject: ['$validator'],
   components: {
     DefaultSelect,
+    InputVerify
   },
   props: {
-    filterInfoList: {
+    columnList: {
       type: Array,
       default: () => ([])
     },
-    dataColumnOptionList: {
+    dataTypeOptionList: {
       type: Array,
       default: () => ([])
     },
-    filterInfo: {
+    columnInfo: {
       type: Object,
       default: () => ({})
-    },
-    name: {
-      type: String,
-      required: true
     },
     isProcessing: {
       type: Boolean,
@@ -70,7 +78,7 @@ export default {
   methods: {
     removeColumn () {
       if (this.isProcessing || this.isLoading) return
-      this.$emit('remove', this.filterInfo.id)
+      this.$emit('remove', this.columnInfo.id)
     }
   }
 }
@@ -83,6 +91,7 @@ export default {
   background-color: rgba(72, 84, 84, .95);
   margin-bottom: 15px;
   position: relative;
+  display: flex;
 
   &__delete-icon {
     position: absolute;
@@ -94,6 +103,21 @@ export default {
       opacity: .7;
       cursor: not-allowed;
     }
+  }
+
+  .input-field {
+    &:not(:last-of-type) {
+      margin-right: 16px;
+    }
+  }
+
+  /deep/ .input-verify .input-verify-text {
+    margin-bottom: 0;
+  }
+
+  /deep/ .input-verify .input-error {
+    bottom: 0;
+    top: 100%;
   }
 }
 </style>
