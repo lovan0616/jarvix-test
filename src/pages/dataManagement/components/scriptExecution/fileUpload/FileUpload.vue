@@ -11,7 +11,7 @@
         @change="fileImport($event.target.files)"
       >
       <upload-block
-        v-if="uploadFileList.length === 0 && unableFileList.length === 0"
+        v-if="uploadFileList.length === 0"
         :bottom-message="$t('editing.clickToSelectFiles')"
         :drag-enter="dragEnter"
         class="empty-upload-block"
@@ -37,13 +37,6 @@
           :progress="progress"
           :currnt-upload-status="currntUploadStatus"
         />
-        <file-list-block
-          v-if="unableFileList.length > 0"
-          :title="$t('editing.unableUpload')"
-          :file-list="unableFileList"
-          :progress="progress"
-          :currnt-upload-status="currntUploadStatus"
-        />
         <div 
           v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait"
           class="file-chosen-info"
@@ -66,10 +59,10 @@
     <div class="dialog-footer">
       <div class="dialog-button-block">
         <span 
-          v-if="currntUploadStatus !== uploadStatus.wait" 
+          v-if="currntUploadStatus === uploadStatus.uploading" 
           class="uploading-reminding">{{ $t('editing.uploading') }}</span>
         <button 
-          v-if="currntUploadStatus === uploadStatus.wait"
+          v-if="currntUploadStatus === uploadStatus.wait || currntUploadStatus === uploadStatus.fail"
           class="btn btn-outline"
           @click="cancelFileUpload"
         >{{ $t('button.cancel') }}</button>
@@ -84,6 +77,12 @@
           <span v-show="currntUploadStatus === uploadStatus.wait">{{ $t('button.confirmUpload') }}</span>
           <span v-show="currntUploadStatus === uploadStatus.uploading"><svg-icon icon-class="spinner"/>{{ $t('button.uploading') }}</span>
         </button>
+        <button
+          v-if="currntUploadStatus === uploadStatus.fail"
+          class="btn btn-outline"
+          type="button"
+          @click="prev"
+        >{{ $t('button.chooseFileUpload') }}</button>
       </div>
     </div>
   </div>
@@ -95,7 +94,6 @@ import UploadProcessBlock from './UploadProcessBlock'
 import { uploadStatus } from '@/utils/general'
 import { Message } from 'element-ui'
 import { mapState, mapMutations } from 'vuex'
-import axios from 'axios'
 import { scriptUpload } from '@/API/Script'
 
 export default {
@@ -115,13 +113,12 @@ export default {
     return {
       uploadStatus,
       currntUploadStatus: uploadStatus.wait,
-      unableFileList: [],
+      formDataList: [],
       acceptFileTypes: [
         '*'
       ],
       dragEnter: false,
-      formData: null,
-      progress: 0
+      progress: 0,
     }
   },
   computed: {
@@ -176,45 +173,57 @@ export default {
     },
     // 將 input 內的檔案塞進 formData，並存到 store 中
     updateFileList (inputFileList) {
-      this.formData = new FormData()
-      const fileList = []
       for (let i = 0; i < inputFileList.length; i++) {
-        this.formData.append('script', inputFileList[i])
-        fileList.push({
-          data: {
-            'size': inputFileList[i].size,
-            'dataSourceId': this.currentUploadInfo.dataSourceId,
-            'groupId': this.currentGroupId,
-            'fileFullName': inputFileList[i].name
-          },
+        let formData = new FormData()
+        formData.append('script', inputFileList[i])
+        this.formDataList.push({
+          data: formData,
+          size: inputFileList[i].size,
+          dataSourceId: this.currentUploadInfo.dataSourceId,
+          groupId: this.currentGroupId,
+          fileFullName: inputFileList[i].name,
           id: new Date().getTime() + i
         })
       }
-      this.$store.commit('dataManagement/updateUploadFileList', this.uploadFileList.concat(fileList))
+      
+      this.$store.commit('dataManagement/updateUploadFileList', this.formDataList)
     },
-    fileUpload () {
-      let _this = this
-
+    async fileUpload () {
       // 更新狀態
       this.currntUploadStatus = uploadStatus.uploading
 
-      // 上傳檔案
-      scriptUpload(this.formData, this.onProgress, new axios.CancelToken(function executor (c) {
-        _this.askCancelFunction = c
-      }))
-        .then(response => {
-          // 存取 script id，於設定 input / output 時附上
-          this.updateCurrentUploadScriptInfo({
-            scriptId: response.scriptId
+      try {
+        // 先上傳第一筆檔案，換取 script id
+        const firstFormData = this.formDataList.shift().data
+        // 上傳檔案
+        const { scriptId } = await scriptUpload(firstFormData)
+        this.progress = 50
+        
+        // 上傳剩餘檔案
+        if (this.formDataList.length > 0) {
+          const data = Array.from(this.formDataList, formData => {
+            formData.data.append('scriptId', scriptId)
+            return scriptUpload(formData.data)
           })
-          this.$emit('next')
-        })
-        .catch((err) => {
-          this.currntUploadStatus = uploadStatus.fail
-        })
+          await Promise.all(data)
+          this.progress = 100
+        }
+
+        // 存取 script id，於設定 input / output 時附上
+        this.updateCurrentUploadScriptInfo({ scriptId: scriptId })
+        this.$nextTick(() => this.$emit('next'))
+      } catch (e) {
+        this.progress = 0
+        this.currntUploadStatus = uploadStatus.fail
+      }
     },
-    onProgress (percent) {
-      this.progress = percent
+    prev () {
+      // 清空上傳檔案
+      this.$store.commit('dataManagement/updateUploadFileList', [])
+      this.formDataList = []
+      this.progress = 0
+      this.currntUploadStatus = uploadStatus.wait
+      this.$emit('prev')
     },
     cancelFileUpload () {
       this.$emit('close')

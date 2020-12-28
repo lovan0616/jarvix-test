@@ -4,20 +4,11 @@ import request from '@/utils/publicRequest'
  * script upload
  * @param {formData} fileData - 要上傳的 script 和 modal
  */
-export function scriptUpload(fileData, onProgress, cancelFunction) {
+export function scriptUpload(fileData) {
   return request({
     url: '/scripts',
     method: 'POST',
-    data: fileData,
-    onUploadProgress(progressEvent) {
-      let percentCompleted = Math.round((progressEvent.loaded * 100) /
-        progressEvent.total)
-
-      // execute the callback
-      if (onProgress) onProgress(percentCompleted)
-      return percentCompleted
-    },
-    cancelToken: cancelFunction
+    data: fileData
   })
 }
 

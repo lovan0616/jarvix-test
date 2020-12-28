@@ -13,7 +13,7 @@
         :key="index"
         :single-file="singleFile"
         :index="index"
-        :progres="progress"
+        :progress="progress"
         :currnt-upload-status="currntUploadStatus"
       />
     </div>

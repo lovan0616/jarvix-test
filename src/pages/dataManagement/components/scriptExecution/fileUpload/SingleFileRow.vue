@@ -5,8 +5,8 @@
       class="single-file-row"
     >
       <div class="single-file-info">
-        <div class="file-info name">{{ singleFile.data.fileFullName }}</div>
-        <div class="file-info size">{{ byteToMB(singleFile.data.size) }}</div>
+        <div class="file-info name">{{ singleFile.fileFullName }}</div>
+        <div class="file-info size">{{ byteToMB(singleFile.size) }}</div>
         <div 
           v-if="currntUploadStatus === uploadStatus.uploading"
           class="single-file-progress"
@@ -18,20 +18,20 @@
         </div>
       </div>
       <div class="file-status">
-        <a 
+        <svg-icon
+          v-if="currntUploadStatus === uploadStatus.fail"
+          class="fail"
+          icon-class="alert"
+        />
+        <a
+          v-else
+          :disabled="currntUploadStatus === uploadStatus.uploading"
           class="link action-link"
           href="javascript:void(0)"
           @click="removeFile"
         >{{ $t('button.delete') }}</a>
       </div>
     </div>
-    <div 
-      v-if="singleFile.status === uploadStatus.forbidden"
-      class="error-notification"
-    >
-      <svg-icon 
-        icon-class="alert" 
-        class="alert-icon"/>{{ singleFile.msg }}</div>
   </div>
 </template>
 <script>
@@ -142,6 +142,7 @@ export default {
       height: 100%;
       background: linear-gradient(90deg, #4CE2F0 0%, #438AF8 100%);
       border-radius: 5px;
+      transition: .1s ease-in width;
     }
   }
   .file-status {
