@@ -316,7 +316,6 @@ export default {
       this.getWarningLogs(pageNumber - 1)
     },
     goToCertainDashboard (relatedDashboardId, rowData) {
-      console.log(relatedDashboardId, rowData)
       this.$emit('goToCertainDashboard', {
         relatedDashboardId,
         rowData: rowData.filter(item => item.statsType === 'CATEGORY')

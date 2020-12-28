@@ -84,7 +84,7 @@ export default {
     },
     getWarningLogs () {
       this.isLoading = true
-      getAlertLogs({ conditionIds: this.activeConditionIds, groupId: this.getCurrentGroupId, active: true }).then(response => {
+      getAlertLogs({ conditionIds: this.activeConditionIds, groupId: this.getCurrentGroupId, active: false }).then(response => {
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
           return {
