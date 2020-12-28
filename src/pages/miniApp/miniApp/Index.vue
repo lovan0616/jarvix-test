@@ -335,6 +335,7 @@
                     @deleteComponentRelation="deleteComponentRelation"
                     @columnTriggered="columnTriggered"
                     @chartTriggered="chartTriggered"
+                    @warningLogTriggered="warningLogTriggered($event)"
                     @goToCertainDashboard="activeCertainDashboard($event)"
                   >
                     <template slot="drowdown">
@@ -1211,7 +1212,7 @@ export default {
         filterSet.forEach(filter => {
           // 如果 log rowData 有欄位同 controller 欄位，就將預設值設定為該筆 rowData 該 column 的值
           const sameColumnRow = rowData.find(rowDataColumn => rowDataColumn.dataColumnId === filter.columnId)
-          if (sameColumnRow) filter.dataValues = [sameColumnRow.datum]
+          if (sameColumnRow) filter.dataValues = [sameColumnRow.datum[0]]
         })
       })
     },

@@ -4,10 +4,64 @@
       {{ $t('alert.alertLogs') }}
     </nav>
     <div class="warning-log__filter">
-      <div class="filter__datetime-picker-panel">
-        <svg-icon icon-class="clock"/>
+      <div class="single-filter activeness-panel">
+        <svg-icon 
+          icon-class="clock" 
+          class="icon-clock"/>
         <div class="filter__title">
+          {{ $t('miniApp.filterCondition') }}
+        </div>
+        <div class="filter__label">
+          <span @click="isShowStateOptions = !isShowStateOptions">
+            {{ activenessFilterDisplayName }}
+          </span>
+          <div
+            v-if="isShowStateOptions"
+            class="selector__list-block"
+          >
+            <template v-for="(option, index) in stateOptions">
+              <label
+                :key="index"
+                class="radio">
+                <input
+                  :checked="activenessFilterValue === option.value"
+                  class="radio__input"
+                  type="radio"
+                  @input="OnStateSelected(index, option.value)"
+                >
+                <span class="radio__name">{{ option.name }}</span>
+              </label>
+            </template>
+          </div>
+          <div
+            v-if="activenessFilterValue !== null"
+            class="filter__delete-icon-box"
+            @click.stop="resetActivenessFilter"
+          >
+            <svg-icon
+              icon-class="close" 
+              class="filter__delete-icon"/>
+          </div>
+        </div>
+      </div>
+      <div class="single-filter datetime-picker-panel">
+        <svg-icon 
+          icon-class="clock" 
+          class="icon-clock"/>
+        <div class="filter__title">
+          {{ $t('miniApp.timeScope') }}
+        </div>
+        <div class="filter__label">
           {{ timeFilterDisplayName }}
+          <el-date-picker
+            v-model="timeFilterValue"
+            :picker-options="pickerOptions"
+            class="filter__editor-panel"
+            type="datetimerange"
+            format="yyyy-MM-dd HH:mm"
+            value-format="yyyy-MM-dd HH:mm"
+            @input="onFilterCriteriaChanged"
+          />
           <div
             v-if="timeFilterSelected"
             class="filter__delete-icon-box"
@@ -22,15 +76,6 @@
             icon-class="triangle"
             class="filter__dropdown-icon"/>
         </div>
-        <el-date-picker
-          v-model="timeFilterValue"
-          :picker-options="pickerOptions"
-          class="filter__editor-panel"
-          type="datetimerange"
-          format="yyyy-MM-dd HH:mm"
-          value-format="yyyy-MM-dd HH:mm"
-          @input="onTimeFilterChanged"
-        />
       </div>
     </div>
     <div class="warning-log__content">
@@ -58,7 +103,7 @@
           :label="$t('alert.alertLogMessage')"
           prop="conditionMetMessage"/>
         <el-table-column
-          :label="$t('miniApp.state')"
+          :label="$t('alert.state')"
           prop="active"
           width="120">
           <template slot-scope="scope">
@@ -73,7 +118,7 @@
                   :class="scope.row.active ? 'button--active' : 'button--inactive'" 
                   class="button">
                   <span class="button-label">
-                    {{ scope.row.active ? $t('miniApp.finished') : $t('miniApp.unfinished') }}
+                    {{ scope.row.active ? $t('alert.finished') : $t('alert.unfinished') }}
                   </span>
                   <svg-icon 
                     icon-class="triangle" 
@@ -142,6 +187,7 @@ export default {
   data () {
     return {
       isLoading: false,
+      isShowStateOptions: false,
       warningLogs: [],
       isProcessing: false,
       autoRefreshFunction: null,
@@ -152,6 +198,7 @@ export default {
         itemPerPage: 0
       },
       timeFilterValue: [],
+      activenessFilterValue: null, // active, inactive, null
       pickerOptions: {
         shortcuts: [{
           text: this.$t('miniApp.today'),
@@ -194,12 +241,14 @@ export default {
     stateOptions () {
       return [
         {
-          name: this.$t('miniApp.finished'),
-          id: true
+          name: this.$t('alert.finished'),
+          value: 'active',
+          id: true,
         },
         {
-          name: this.$t('miniApp.unfinished'),
-          id: false
+          name: this.$t('alert.unfinished'),
+          value: 'inactive',
+          id: false,
         }
       ]
     },
@@ -207,7 +256,10 @@ export default {
       return this.timeFilterValue.length === 2
     },
     timeFilterDisplayName () {
-      return this.$t('miniApp.timeScope') + (this.timeFilterSelected ? ` : ${this.timeFilterValue[0]} - ${this.timeFilterValue[1]}` : '')
+      return this.timeFilterSelected ? `${this.timeFilterValue[0]} - ${this.timeFilterValue[1]}` : '時間條件'
+    },
+    activenessFilterDisplayName () {
+      return '處理狀態'
     }
   },
   created () {
@@ -220,6 +272,11 @@ export default {
     window.clearInterval(this.autoRefreshFunction)
   },
   methods: {
+    OnStateSelected (index, name) {
+      this.activenessFilterValue = name
+      this.isShowStateOptions = false
+      this.onFilterCriteriaChanged()
+    },
     setLogRefresh () {
       this.autoRefreshFunction = window.setInterval(this.getWarningLogs, this.convertRefreshFrequency(this.setting.updateFrequency))
     },
@@ -229,12 +286,13 @@ export default {
         conditionIds: this.activeConditionIds,
         page,
         groupId: this.getCurrentGroupId,
+        ...(this.activenessFilterValue !== null && {active: this.activenessFilterValue === 'active'}),
         ...(this.timeFilterSelected && {
           // 資料庫 log 時間均為 UTC+0, 前端使用 convertTimeStamp 轉換後會變為 UTC+8
           // 這邊送進 time filter 需再調整為 UTC+0
           startTime: moment(new Date(this.timeFilterValue[0])),
           endTime: moment(new Date(this.timeFilterValue[1]))
-        })
+        }),
       }).then(response => {
         this.paginationInfo = response.pagination
         this.warningLogs = response.data.map(log => {
@@ -265,9 +323,13 @@ export default {
     },
     resetTimeFilter () {
       this.timeFilterValue = []
-      this.onTimeFilterChanged()
+      this.onFilterCriteriaChanged()
     },
-    onTimeFilterChanged () {
+    resetActivenessFilter () {
+      this.activenessFilterValue = null
+      this.onFilterCriteriaChanged()
+    },
+    onFilterCriteriaChanged () {
       window.clearInterval(this.autoRefreshFunction)
       this.getWarningLogs()
       this.setLogRefresh()
@@ -304,23 +366,31 @@ export default {
   }
   &__filter {
     margin-bottom: 12px;
+    display: flex;
+    align-items: center;
 
-    .filter {
-      &__datetime-picker-panel {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        user-select: none;
+    .single-filter {
+      display: inline-flex;
+      align-items: center;
+      user-select: none;
+      & + .single-filter {
+        margin-left: 16px;
       }
-      
+    }
+    .filter {
       &__title {
         font-size: 12px;
+        margin-left: 6px;
+      }
+      &__label {
+        position: relative;
         line-height: 17px;
         margin-left: 12px;
         border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 20px;
         padding: 6px 12px;
         display: flex;
+        font-size: 12px;
         align-items: center;
         white-space: nowrap;
       }
@@ -344,7 +414,6 @@ export default {
         font-size: 4px;
         margin-left: 4px;
       }
-
       &__editor-panel {
         position: absolute;
         top: 0;
@@ -353,6 +422,42 @@ export default {
         height: 100%;
         opacity: 0;
         overflow: hidden;
+      }
+    }
+
+    .selector__list-block {
+      position: absolute;
+      left: 0;
+      top: 100%;
+      width: 100px;
+      background-color: var(--color-bg-gray);
+      border-radius: 5px;
+      overflow: hidden;
+      filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
+      max-height: 220px;
+      overflow-y: auto;
+      z-index: 1;
+
+      .radio {
+        padding: 8px 12px;
+        min-height: 37px;
+        cursor: pointer;
+        display: block;
+        font-size: 14px;
+        color: #CCCCCC;
+
+        &__input {
+          display: none;
+          &:checked {
+            & + .radio__name {
+              color: #2AD2E2;
+            }
+          }
+        }
+
+        &:hover {
+          color: #2AD2E2;
+        }
       }
     }
   }

@@ -59,13 +59,14 @@ export function getAlertConditionMessageById (conditionId) {
  * @param {Number} page
  * @param {Number} size
  */
-export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId, startTime, endTime }) {
+export function getAlertLogs ({ conditionIds, page = 0, size = 20, groupId, active, startTime, endTime }) {
   return request({
     url: `/alert/logs/search?page=${page}&size=${size}`,
     method: 'POST',
     data: {
       conditionIdsString: `[${conditionIds.toString()}]`,
       groupId,
+      active,
       startTime,
       endTime
     }

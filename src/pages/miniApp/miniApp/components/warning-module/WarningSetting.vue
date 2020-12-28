@@ -1,7 +1,19 @@
 <template>
   <div class="warning-setting">
     <nav class="warning-setting__nav">
-      <div class="nav-left">{{ $t('alert.alertManagement') }}</div>
+      <div class="nav-left">
+        {{ $t('alert.alertManagement') }}
+        <div class="module-activate-controller">
+          <el-switch
+            v-model="tempWarningModuleConfig.activate"
+            :width="Number('32')"
+            active-color="#2AD2E2"
+            inactive-color="#324B4E"
+            @change="saveWarningModuleSetting"
+          />
+          {{ tempWarningModuleConfig.activate ? $t('miniApp.activate') : $t('miniApp.inactivate') }}
+        </div>
+      </div>
       <div class="nav-right">
         <button
           class="btn-m btn-secondary button-container__button"
@@ -10,20 +22,6 @@
       </div>
     </nav>
     <main class="warning-setting__content">
-      <div class="warning-setting__content-enable">
-        <section class="setting-block">
-          {{ $t('alert.enableAlertModule') }}：
-          <el-switch
-            v-model="tempWarningModuleConfig.activate"
-            :width="Number('32')"
-            class="module-activate-controller"
-            active-color="#2AD2E2"
-            inactive-color="#324B4E"
-            @change="saveWarningModuleSetting"
-          />
-          {{ tempWarningModuleConfig.activate ? $t('miniApp.activate') : $t('miniApp.inactivate') }}
-        </section>
-      </div>
       <div class="warning-setting__content-frequency">
         <section class="setting-block">
           {{ $t('miniApp.monitorUpdateFrequency') }}：
@@ -45,66 +43,71 @@
         {{ $t('alert.alertSettingIsSharingByAllGroupApplications') }}
       </div>
       <div class="warning-setting__content-condition">
-        <div class="title">
-          <span class="col-enable">{{ $t('alert.enableAlertModule') }}</span>
-          <span class="col-condition">{{ $t('alert.alertCondition') }}</span>
-          <span class="col-relation">{{ $t('miniApp.relatedDashboard') }}</span>
-          <span class="col-deletion"/>
-        </div>
         <spinner 
           v-if="isLoading || isProcessing" 
           :title="$t('button.download')" 
           size="50"/>
-        <section
-          v-for="condition in tempWarningModuleConfig.conditions"
-          v-else 
-          :key="condition.id" 
-          class="setting-block">
-          <div class="col-enable">
-            <el-switch
-              v-model="condition.activate"
-              :width="Number('32')"
-              active-color="#2AD2E2"
-              inactive-color="#324B4E"
-              @change="saveWarningModuleSetting"
-            />
+        <empty-info-block
+          v-else-if="isEmpyAlertCondition"
+          :msg="$t('alert.emptyCondition')"
+        />
+        <template v-else>
+          <div class="title">
+            <span class="col-enable">{{ $t('alert.enableAlertModule') }}</span>
+            <span class="col-condition">{{ $t('alert.alertCondition') }}</span>
+            <span class="col-relation">{{ $t('miniApp.relatedDashboard') }}</span>
+            <span class="col-deletion"/>
           </div>
-          <div class="col-condition">
-            <div>{{ condition.name }}</div>
-            <div class="datasource-info">
-              <svg-icon icon-class="data-source"/>{{ condition.dataSourceName }}
-              <svg-icon icon-class="table"/>{{ condition.dataFrameName }}
-              <svg-icon icon-class="column"/>{{ condition.targetConfig.displayName }}
+          <section
+            v-for="condition in tempWarningModuleConfig.conditions"
+            :key="condition.id" 
+            class="setting-block">
+            <div class="col-enable">
+              <el-switch
+                v-model="condition.activate"
+                :width="Number('32')"
+                active-color="#2AD2E2"
+                inactive-color="#324B4E"
+                @change="saveWarningModuleSetting"
+              />
             </div>
-            <div 
-              class="comparing-values" 
-              v-html="displayedConditionMessage(condition.targetConfig.displayName, condition.comparingValues)"/>
-            <div class="message-template">
-              <span class="message-template__label">{{ $t('alert.alertLogMessage') }}:</span>
-              <span class="message-template__content">{{ condition[`alertMessage${locale.split('-')[1]}`] }}</span>
-              <a
-                href="javascript:void(0)"
-                class="link message-template__edit-btn"
-                @click="openAlertConditionMessageDialog(condition)"
-              >{{ $t('alert.editAlertMessage') }}</a>
+            <div class="col-condition">
+              <div>{{ condition.name }}</div>
+              <div class="datasource-info">
+                <svg-icon icon-class="data-source"/>{{ condition.dataSourceName }}
+                <svg-icon icon-class="table"/>{{ condition.dataFrameName }}
+                <svg-icon icon-class="column"/>{{ condition.targetConfig.displayName }}
+              </div>
+              <div 
+                class="comparing-values" 
+                v-html="displayedConditionMessage(condition.targetConfig.displayName, condition.comparingValues)"/>
+              <div class="message-template">
+                <span class="message-template__label">{{ $t('alert.alertLogMessage') }}:</span>
+                <span class="message-template__content">{{ condition[`alertMessage${locale.split('-')[1]}`] }}</span>
+                <a
+                  href="javascript:void(0)"
+                  class="link message-template__edit-btn"
+                  @click="openAlertConditionMessageDialog(condition)"
+                >{{ $t('alert.editAlertMessage') }}</a>
+              </div>
             </div>
-          </div>
-          <div class="col-relation">
-            <default-select
-              v-model="condition.relatedDashboardId"
-              :option-list="dashboardOptions"
-              :placeholder="$t('miniApp.selectDashboard')"
-              class="dashboard-select"
-              @change="saveWarningModuleSetting"
-            />
-          </div>
-          <div class="col-deletion">
-            <alert-condition-deleter
-              :condition="condition"
-              @deleted="fetchAlertConditions"
-            />
-          </div>
-        </section>
+            <div class="col-relation">
+              <default-select
+                v-model="condition.relatedDashboardId"
+                :option-list="dashboardOptions"
+                :placeholder="$t('miniApp.selectDashboard')"
+                class="dashboard-select"
+                @change="saveWarningModuleSetting"
+              />
+            </div>
+            <div class="col-deletion">
+              <alert-condition-deleter
+                :condition="condition"
+                @deleted="fetchAlertConditions"
+              />
+            </div>
+          </section>
+        </template>
       </div>
     </main>
     <create-alert-condition-dialog
@@ -128,6 +131,7 @@ import CreateAlertConditionDialog from './CreateAlertConditionDialog'
 import AlertConditionDeleter from './AlertConditionDeleter'
 import AlertConditionMessageEditorDialog from './AlertConditionMessageEditorDialog'
 import { mapState, mapGetters } from 'vuex'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 
 export default {
   name: 'WarningSetting',
@@ -135,7 +139,8 @@ export default {
     DefaultSelect,
     CreateAlertConditionDialog,
     AlertConditionMessageEditorDialog,
-    AlertConditionDeleter
+    AlertConditionDeleter,
+    EmptyInfoBlock
   },
   props: {
     setting: {
@@ -193,6 +198,9 @@ export default {
           name: this.$t('warRoom.everyMinute', { number: 30 })
         }
       ]
+    },
+    isEmpyAlertCondition () {
+      return this.tempWarningModuleConfig.conditions.length === 0
     }
   },
   created () {
@@ -287,16 +295,23 @@ export default {
   &__nav {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 12px;
     margin-right: 20px;
     .nav-left {
       font-size: 20px;
+      display: flex;
+      align-items: center;
     }
     .nav-right {
       .btn {
         padding: 5px 10px;
         min-width: unset;
       }
+    }
+    .module-activate-controller {
+      margin-left: 24px;
+      font-size: 14px;
     }
   }
   &__content {
@@ -324,15 +339,8 @@ export default {
         }
       }
     }
-    &-enable {
-      .setting-block {
-        .module-activate-controller {
-          margin: 0 12px;
-        }
-      }
-    }
     &-condition {
-      overflow: auto;
+      overflow: overlay;
       height: 0;
       flex: 1;
       .title {
@@ -402,12 +410,16 @@ export default {
         }
       }
     }
+    .empty-info-block {
+      margin-right: 20px;
+      background-color: #192322;
+    }
   }
   &__reminding {
     font-size: 12px;
     line-height: 32px;
     padding-left: 16px;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     margin-right: 20px;
     word-break: keep-all;
     background-color: rgba(255, 223, 111, 0.1);

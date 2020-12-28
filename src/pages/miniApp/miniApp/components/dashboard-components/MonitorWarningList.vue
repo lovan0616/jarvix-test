@@ -11,7 +11,7 @@
         :key="index"
         :class="log.relatedDashboardId ? 'is-linkable' : ''"
         class="list__item"
-        @click="log.relatedDashboardId ? $emit('goToCertainDashboard', log.relatedDashboardId) : null"
+        @click="log.relatedDashboardId ? warningLogTriggered(log) : null"
       >
         <div class="list__item--left">
           <svg-icon 
@@ -84,7 +84,7 @@ export default {
     },
     getWarningLogs () {
       this.isLoading = true
-      getAlertLogs({ conditionIds: this.activeConditionIds, groupId: this.getCurrentGroupId }).then(response => {
+      getAlertLogs({ conditionIds: this.activeConditionIds, groupId: this.getCurrentGroupId, active: false }).then(response => {
         this.warningLogs = response.data.map(log => {
           const prevSettingCondition = this.setting.conditions.find(item => item.id === log.conditionId)
           return {
@@ -120,6 +120,12 @@ export default {
     },
     logMonitoredData (rowData) {
       return rowData.reduce((acc, cur) => acc.concat(`${cur.displayName}: ${cur.datum[0]}<br>`), '')
+    },
+    warningLogTriggered (log) {
+      this.$emit('warningLogTriggered', {
+        relatedDashboardId: log.relatedDashboardId,
+        rowData: log.monitoredData
+      })
     }
   }
 }
