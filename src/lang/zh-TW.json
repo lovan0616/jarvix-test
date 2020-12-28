@@ -868,6 +868,7 @@
   "alert": {
     "alertLogs": "示警紀錄",
     "emptyLogs": "沒有任何@:alert.alertLogs",
+    "emptyCondition": "尚未設定示警條件",
     "enableAlertModule": "使用控制",
     "alertLogCreateTime": "示警時間",
     "alertLogMessage": "示警訊息",
