@@ -858,13 +858,8 @@
     "goToDashboard": "前往@:miniApp.dashboard",
     "link": "連結",
     "warningModuleIsInactive": "此應用程式未開啟示警模組",
-    "markAsFinished": "標示已處理",
-    "markAsUnfinished": "標示未處理",
     "hierarchicalFilter": "階層控制群",
     "createHierarchicalFilter": "新增看板階層控制項",
-    "finished": "已處理",
-    "unfinished": "未處理",
-    "state": "處理狀態",
     "chooseDataSource": "選擇資料源",
     "chooseDataFrame": "選擇資料表",
     "dataSource": "資料源",
@@ -881,6 +876,7 @@
   "alert": {
     "alertLogs": "示警紀錄",
     "emptyLogs": "沒有任何@:alert.alertLogs",
+    "emptyCondition": "尚未設定示警條件",
     "enableAlertModule": "使用控制",
     "alertLogCreateTime": "示警時間",
     "alertLogMessage": "示警訊息",
@@ -914,7 +910,10 @@
     "alertSettingIsSharingByAllGroupApplications": "示警條件將同步提供給其他應用程式進行使用",
     "alertConditionDeletionWillImpactOtherApplicationConfirmMsg": "此動作將會影響到其他應用程式使用，您確認要繼續刪除？",
     "allMessageSettingsAreEmpty": "未輸入任何示警訊息設定",
-    "editAlertMessage": "編輯內容"
+    "editAlertMessage": "編輯內容",
+    "finished": "已處理",
+    "unfinished": "未處理",
+    "state": "處理狀態"
   },
   "clustering": {
     "cluster": "群體",

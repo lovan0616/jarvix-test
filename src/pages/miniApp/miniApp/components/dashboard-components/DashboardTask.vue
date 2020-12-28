@@ -112,7 +112,7 @@
           v-else-if="componentData.type === 'monitor-warning-list'"
           :setting="warningModuleSetting"
           :is-edit-mode="isEditMode"
-          @goToCertainDashboard="$emit('goToCertainDashboard', $event)"
+          @warningLogTriggered="$emit('warningLogTriggered', $event)"
         />
         <div 
           v-else

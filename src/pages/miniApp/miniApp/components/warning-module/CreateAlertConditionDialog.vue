@@ -222,7 +222,7 @@ export default {
       this.newConditionSetting.dataFrameId = null
       this.newConditionSetting.targetConfig.dataColumnId = null
 
-      getDataFrameById(this.tempConditionSetting.dataSourceId, ['Enable'])
+      getDataFrameById(this.tempConditionSetting.dataSourceId, false)
         .then(response => {
           this.dataFrameOptionList = response.map(dataFrame => ({
             name: dataFrame.primaryAlias,
