@@ -234,6 +234,9 @@ export default {
   mounted () {
     if (this.currentComponent.keyResultId) this.askQuestion(this.currentComponent.question)
   },
+  destroyed () {
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
+  },
   methods: {
     checkIsTextTypeAvailable (transcript) {
       // 以下需確保問句中只帶有一個 category 欄位
@@ -250,6 +253,8 @@ export default {
       // 恢復新增元件的狀態
       this.$emit('update:isAddable', null)
       this.$emit('update:isLoading', true)
+      this.totalSec = 50
+      this.periodSec = 200
       this.resultInfo = null
       this.layout = ''
       this.$store.dispatch('chatBot/askQuestion', {

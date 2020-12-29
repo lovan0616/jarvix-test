@@ -190,8 +190,8 @@ export default {
   data () {
     return {
       timeoutFunction: null,
-      totalSec: 0,
-      periodSec: 0,
+      totalSec: 50,
+      periodSec: 200,
       isShowConfirmDelete: false,
       autoRefreshFunction: null,
       debouncedAskFunction: null,
@@ -378,6 +378,7 @@ export default {
   destroyed () {
     if (this.autoRefreshFunction) window.clearTimeout(this.autoRefreshFunction)
     if (this.debouncedAskFunction) window.clearTimeout(this.debouncedAskFunction)
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
     deboucedAskQuestion (question) {
@@ -391,6 +392,8 @@ export default {
       this.isProcessing = true
       this.isIndexTypeComponentLoading = true
       this.isComponentFailed = false
+      this.totalSec = 50
+      this.periodSec = 200
       this.$store.commit('dataSource/setDataFrameId', this.componentData.dataFrameId)
       this.$store.commit('dataSource/setDataSourceId', this.componentData.dataSourceId)
       this.isEmptyData = false
