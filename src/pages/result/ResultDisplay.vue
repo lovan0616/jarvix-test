@@ -11,6 +11,9 @@
       class="layout-spinner"
       size="50"
     />
+    <model-result
+      v-if="isModelResult"
+    />
     <component
       v-else
       :is="layout || 'EmptyResult'"
@@ -43,13 +46,15 @@
 
 <script>
 import UnknownInfoBlock from '@/components/resultBoard/UnknownInfoBlock'
+import ModelResult from './components/ModelResult'
 import { mapState, mapGetters } from 'vuex'
 import { isEnOrEnum, intentType } from '@/utils/general'
 
 export default {
   name: 'ResultDisplay',
   components: {
-    UnknownInfoBlock
+    UnknownInfoBlock,
+    ModelResult
   },
   data () {
     return {
@@ -78,7 +83,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('result', ['currentResultId']),
+    ...mapState('result', ['currentResultId', 'isModelResult']),
     ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'currentQuestionId', 'currentQuestionInfo', 'algoConfig']),
     ...mapGetters('dataFrameAdvanceSetting', ['askCondition', 'selectedColumnList']),
     filterRestrictionList () {
@@ -120,6 +125,9 @@ export default {
     }
   },
   mounted () {
+    if(this.isModelResult) {
+      console.log('isModelResult')
+    }
     this.fetchData()
   },
   destroyed () {

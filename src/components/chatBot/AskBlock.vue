@@ -350,9 +350,21 @@ export default {
       this.userQuestion = null
     },
     enterQuestion () {
+      let modelQuestionKeyWordList = ['預測', '專案', '是否', '成案']
       if (this.availableDataSourceList.length === 0) return
       this.$store.commit('dataSource/setAppQuestion', this.userQuestion)
-      if (this.redirectOnAsk) this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
+      if (this.redirectOnAsk) {
+        this.$store.dispatch('dataSource/updateResultRouter', 'key_in')
+        
+        /* For demo */
+        let correctCount = 0
+        modelQuestionKeyWordList.forEach(word => {
+          correctCount += this.userQuestion.includes(word)
+        })
+        if(correctCount >= 2) this.$store.commit('result/updateIsModelResult', true)
+        else this.$store.commit('result/updateIsModelResult', false)
+        /* For demo */
+      }
       this.hideHistory()
       this.closeHelper()
     },

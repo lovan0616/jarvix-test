@@ -212,6 +212,7 @@ export default {
      * 從 $route 拿的 query 資訊會是字串形式，為了避免資料的格式不同觸發了 Result 頁 watch 的 function
      * 所以需要做一次型別的轉換
      **/
+    console.log('hello')
     router.push({
       name: 'PageResult',
       query: {
