@@ -344,6 +344,8 @@ export default {
               this.totalSec = 50
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
+              // 初次創建時，預設元件名稱為使用者輸入的問句
+              if (!this.currentComponent.keyResultId) this.currentComponent.config.diaplayedName = this.appQuestion
               this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
               this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
               this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
