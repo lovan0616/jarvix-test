@@ -1,83 +1,25 @@
 <template>
   <div class="warning-log">
     <nav class="warning-log__nav">
-      {{ $t('alert.alertLogs') }}
+      <div class="nav-left">
+        {{ $t('alert.alertLogs') }}
+      </div>
+      <div class="nav-right">
+        <span>自動更新</span>
+        <el-switch
+          v-model="isAutoRefresh"
+          active-color="#2AD2E2"
+          inactive-color="#324B4E"
+          @change="toggleIsAutoRefresh"
+        />
+        <span>{{ isAutoRefresh ? '開啟' : '關閉' }}</span>
+      </div>
     </nav>
-    <div class="warning-log__filter">
-      <div class="single-filter activeness-panel">
-        <svg-icon 
-          icon-class="clock" 
-          class="icon-clock"/>
-        <div class="filter__title">
-          {{ $t('miniApp.filterCondition') }}
-        </div>
-        <div class="filter__label">
-          <span @click="isShowStateOptions = !isShowStateOptions">
-            {{ activenessFilterDisplayName }}
-          </span>
-          <div
-            v-if="isShowStateOptions"
-            class="selector__list-block"
-          >
-            <template v-for="(option, index) in stateOptions">
-              <label
-                :key="index"
-                class="radio">
-                <input
-                  :checked="activenessFilterValue === option.value"
-                  class="radio__input"
-                  type="radio"
-                  @input="OnStateSelected(index, option.value)"
-                >
-                <span class="radio__name">{{ option.name }}</span>
-              </label>
-            </template>
-          </div>
-          <div
-            v-if="activenessFilterValue !== null"
-            class="filter__delete-icon-box"
-            @click.stop="resetActivenessFilter"
-          >
-            <svg-icon
-              icon-class="close" 
-              class="filter__delete-icon"/>
-          </div>
-        </div>
-      </div>
-      <div class="single-filter datetime-picker-panel">
-        <svg-icon 
-          icon-class="clock" 
-          class="icon-clock"/>
-        <div class="filter__title">
-          {{ $t('miniApp.timeScope') }}
-        </div>
-        <div class="filter__label">
-          {{ timeFilterDisplayName }}
-          <el-date-picker
-            v-model="timeFilterValue"
-            :picker-options="pickerOptions"
-            class="filter__editor-panel"
-            type="datetimerange"
-            format="yyyy-MM-dd HH:mm"
-            value-format="yyyy-MM-dd HH:mm"
-            @input="onFilterCriteriaChanged"
-          />
-          <div
-            v-if="timeFilterSelected"
-            class="filter__delete-icon-box"
-            @click.stop="resetTimeFilter"
-          >
-            <svg-icon
-              icon-class="close" 
-              class="filter__delete-icon"/>
-          </div>
-          <svg-icon
-            v-else
-            icon-class="triangle"
-            class="filter__dropdown-icon"/>
-        </div>
-      </div>
-    </div>
+    <warning-log-filter
+      :filter-setting.sync="filterSetting"
+      :state-options="stateOptions"
+      @changed="onFilterCriteriaChanged"
+    />
     <div class="warning-log__content">
       <el-table
         v-loading="isLoading"
@@ -170,13 +112,15 @@
 <script>
 import { getAlertLogs, patchAlertLogActiveness } from '@/API/Alert'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
+import WarningLogFilter from './WarningLogFilter'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 
 export default {
   name: 'WarningLog',
   components: {
-    CustomDropdownSelect
+    CustomDropdownSelect,
+    WarningLogFilter
   },
   props: {
     setting: {
@@ -187,9 +131,9 @@ export default {
   data () {
     return {
       isLoading: false,
-      isShowStateOptions: false,
-      warningLogs: [],
       isProcessing: false,
+      isAutoRefresh: false, // log 頁面預設不開啟自動更新，以免使用者在閱讀 log 時畫面刷新
+      warningLogs: [],
       autoRefreshFunction: null,
       paginationInfo: {
         currentPage: 0,
@@ -197,47 +141,14 @@ export default {
         totalItems: 0,
         itemPerPage: 0
       },
-      timeFilterValue: [],
-      activenessFilterValue: null, // active, inactive, null
-      pickerOptions: {
-        shortcuts: [{
-          text: this.$t('miniApp.today'),
-          onClick(picker) {
-            const start = moment().startOf('day').format('YYYY-MM-DD HH:mm')
-            const end = moment().endOf('day').format('YYYY-MM-DD HH:mm')
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: this.$t('miniApp.6hour'),
-          onClick(picker) {
-            const start = moment().subtract(6, 'hours').format('YYYY-MM-DD HH:mm');
-            const end = moment().format('YYYY-MM-DD HH:mm');
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: this.$t('miniApp.3hour'),
-          onClick(picker) {
-            const start = moment().subtract(3, 'hours').format('YYYY-MM-DD HH:mm');
-            const end = moment().format('YYYY-MM-DD HH:mm');
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: this.$t('miniApp.1hour'),
-          onClick(picker) {
-            const start = moment().subtract(1, 'hours').format('YYYY-MM-DD HH:mm');
-            const end = moment().format('YYYY-MM-DD HH:mm');
-            picker.$emit('pick', [start, end]);
-          }
-        }]
-      },
+      filterSetting: {
+        activenessValue: null, // active, inactive, null
+        createdTimeRangeValue: []
+      }
     }    
   },
   computed: {
     ...mapGetters('userManagement', ['getCurrentGroupId']),
-    activeConditionIds () {
-      if (!this.setting.conditions) return []
-      return this.setting.conditions.filter(item => item.activate).map(item => item.id)
-    },
     stateOptions () {
       return [
         {
@@ -252,33 +163,33 @@ export default {
         }
       ]
     },
+    activeConditionIds () {
+      if (!this.setting.conditions) return []
+      return this.setting.conditions.filter(item => item.activate).map(item => item.id)
+    },
     timeFilterSelected () {
-      return this.timeFilterValue.length === 2
-    },
-    timeFilterDisplayName () {
-      return this.timeFilterSelected ? `${this.timeFilterValue[0]} - ${this.timeFilterValue[1]}` : '時間條件'
-    },
-    activenessFilterDisplayName () {
-      return '處理狀態'
+      return this.filterSetting.createdTimeRangeValue.length === 2
     }
   },
   created () {
-    if (this.activeConditionIds.length > 0) {
-      this.getWarningLogs()
-      this.setLogRefresh()
-    }
+    if (this.activeConditionIds.length > 0) this.getWarningLogs()
+    document.addEventListener('click', this.autoHide, false)
   },
   destroyed () {
-    window.clearInterval(this.autoRefreshFunction)
+    this.clearAutoRefreshTimer()
+    document.removeEventListener('click', this.autoHide, false)
   },
   methods: {
-    OnStateSelected (index, name) {
-      this.activenessFilterValue = name
-      this.isShowStateOptions = false
-      this.onFilterCriteriaChanged()
+    toggleIsAutoRefresh (isAutoRefresh) {
+      this.clearAutoRefreshTimer()
+      if (isAutoRefresh) {
+        this.getWarningLogs()
+        this.setLogRefresh()
+      }
     },
     setLogRefresh () {
-      this.autoRefreshFunction = window.setInterval(this.getWarningLogs, this.convertRefreshFrequency(this.setting.updateFrequency))
+      // this.autoRefreshFunction = window.setInterval(this.getWarningLogs, this.convertRefreshFrequency(this.setting.updateFrequency))
+      this.autoRefreshFunction = window.setInterval(this.getWarningLogs, 10000)
     },
     getWarningLogs (page = 0) {
       this.isLoading = true
@@ -286,12 +197,12 @@ export default {
         conditionIds: this.activeConditionIds,
         page,
         groupId: this.getCurrentGroupId,
-        ...(this.activenessFilterValue !== null && {active: this.activenessFilterValue === 'active'}),
+        ...(this.filterSetting.activenessValue !== null && {active: this.filterSetting.activenessValue === 'active'}),
         ...(this.timeFilterSelected && {
           // 資料庫 log 時間均為 UTC+0, 前端使用 convertTimeStamp 轉換後會變為 UTC+8
           // 這邊送進 time filter 需再調整為 UTC+0
-          startTime: moment(new Date(this.timeFilterValue[0])),
-          endTime: moment(new Date(this.timeFilterValue[1]))
+          startTime: moment(new Date(this.filterSetting.createdTimeRangeValue[0])),
+          endTime: moment(new Date(this.filterSetting.createdTimeRangeValue[1]))
         }),
       }).then(response => {
         this.paginationInfo = response.pagination
@@ -304,12 +215,12 @@ export default {
         })
       })
         .catch(() => {})
-        .finally(() => setTimeout(() => this.isLoading = false, 800) )
+        .finally(() => this.isLoading = false)
     },
     updateLogActiveness (logData, isActive) {
       if (logData.active === isActive) return
       patchAlertLogActiveness(logData.conditionMetLogId, { "active" : isActive })
-        .then(() => logData.active = !logData.active)
+        .then(() => logData.active = !logData.active) 
         .catch(() => {})
     },
     changePage (pageNumber) {
@@ -321,18 +232,10 @@ export default {
         rowData: rowData.filter(item => item.statsType === 'CATEGORY')
       })
     },
-    resetTimeFilter () {
-      this.timeFilterValue = []
-      this.onFilterCriteriaChanged()
-    },
-    resetActivenessFilter () {
-      this.activenessFilterValue = null
-      this.onFilterCriteriaChanged()
-    },
     onFilterCriteriaChanged () {
-      window.clearInterval(this.autoRefreshFunction)
+      this.clearAutoRefreshTimer()
       this.getWarningLogs()
-      this.setLogRefresh()
+      if (this.isAutoRefresh) this.setLogRefresh()
     },
     convertRefreshFrequency (cronTab) {
       switch (cronTab) {
@@ -347,6 +250,9 @@ export default {
         default:
           return 60 * 1000
       }
+    },
+    clearAutoRefreshTimer () {
+      window.clearInterval(this.autoRefreshFunction)
     }
   }
 }
@@ -363,101 +269,13 @@ export default {
     margin-bottom: 12px;
     margin-right: 20px;
     font-size: 20px;
-  }
-  &__filter {
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-
-    .single-filter {
-      display: inline-flex;
+    .nav-right {
+      display: flex;
       align-items: center;
-      user-select: none;
-      & + .single-filter {
-        margin-left: 16px;
-      }
-    }
-    .filter {
-      &__title {
-        font-size: 12px;
-        margin-left: 6px;
-      }
-      &__label {
-        position: relative;
-        line-height: 17px;
-        margin-left: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        padding: 6px 12px;
-        display: flex;
-        font-size: 12px;
-        align-items: center;
-        white-space: nowrap;
-      }
-      &__delete-icon-box {
-        margin-left: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #A7A7A7;
-        cursor: pointer;
-        z-index: 1;
-      }
-      &__delete-icon {
-        font-size: 4px;
-      }
-      &__dropdown-icon {
-        transform: rotate(60deg);
-        font-size: 4px;
-        margin-left: 4px;
-      }
-      &__editor-panel {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        overflow: hidden;
-      }
-    }
-
-    .selector__list-block {
-      position: absolute;
-      left: 0;
-      top: 100%;
-      width: 100px;
-      background-color: var(--color-bg-gray);
-      border-radius: 5px;
-      overflow: hidden;
-      filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
-      max-height: 220px;
-      overflow-y: auto;
-      z-index: 1;
-
-      .radio {
-        padding: 8px 12px;
-        min-height: 37px;
-        cursor: pointer;
-        display: block;
-        font-size: 14px;
-        color: #CCCCCC;
-
-        &__input {
-          display: none;
-          &:checked {
-            & + .radio__name {
-              color: #2AD2E2;
-            }
-          }
-        }
-
-        &:hover {
-          color: #2AD2E2;
-        }
+      font-size: 14px;
+      line-height: 1;
+      .el-switch {
+        margin: 0 12px;
       }
     }
   }
@@ -527,13 +345,12 @@ export default {
       font-size: 12px;
       display: inline-block;
       &--inactive {
-        background: rgba(255, 255, 255, 0.2);
-        color: #DDDDDD;
-
+        background: #FF5C46;
+        color: #2E2E2E;
       }
       &--active {
-        background: #2FECB3;
-        color: #2E2E2E;
+        background: rgba(255, 255, 255, 0.2);
+        color: #DDDDDD;
       }
     }
   }
