@@ -78,9 +78,7 @@ export default {
   },
   methods: {
     setComponentRefresh () {
-      this.autoRefreshFunction = window.setInterval(() => {
-        this.getWarningLogs()
-      }, this.convertRefreshFrequency(this.setting.updateFrequency))
+      this.autoRefreshFunction = window.setInterval(this.getWarningLogs, this.convertRefreshFrequency(this.setting.updateFrequency))
     },
     getWarningLogs () {
       this.isLoading = true
