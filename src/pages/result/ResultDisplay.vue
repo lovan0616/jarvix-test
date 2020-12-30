@@ -12,7 +12,7 @@
       size="50"
     />
     <model-result
-      v-if="isModelResult"
+      v-else-if="isModelResult"
     />
     <component
       v-else
@@ -126,7 +126,9 @@ export default {
   },
   mounted () {
     if(this.isModelResult) {
-      console.log('isModelResult')
+      setTimeout(() => {
+        this.isLoading = false
+      }, 2 * 1000)
     }
     this.fetchData()
   },
