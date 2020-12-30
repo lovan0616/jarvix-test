@@ -352,15 +352,15 @@ export default {
       ]
     },
     columnSpanOption () {
-      // 最小值為 2, 最大值為 12
-      return [...Array(11).keys()].map(value => ({
+      // 最小值為 2, 最大值為 10
+      return [...Array(9).keys()].map(value => ({
         value: value + 2,
         name: this.$t('miniApp.columnSpanAmount', { number: value + 2 })
       }))
     },
     rowSpanOption () {
-      // 最小值為 2, 最大值為 9
-      return [...Array(8).keys()].map(value => ({
+      // 最小值為 2, 最大值為 6
+      return [...Array(5).keys()].map(value => ({
         value: value + 2,
         name: this.$t('miniApp.rowSpanAmount', { number: value + 2 })
       }))
