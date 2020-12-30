@@ -129,7 +129,7 @@ export default {
     },
     // 總資料傳輸量
     totalTransmitDataAmount () {
-      return this.uploadFileList.reduce((acc, cur) => acc + cur.data.size, 0)
+      return this.uploadFileList.reduce((acc, cur) => acc + cur.size, 0)
     }
   },
   methods: {
