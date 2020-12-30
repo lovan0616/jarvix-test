@@ -7,7 +7,8 @@ export default {
     tableDataCSVDownloadList: [],
     displayFactorIndex: 0,
     currentResultId: null,
-    currentResultInfo: null
+    currentResultInfo: null,
+    isModelResult: false
   },
   mutations
 }

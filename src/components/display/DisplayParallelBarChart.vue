@@ -228,6 +228,8 @@ export default {
         config.visualMap = monitorVisualMap(upperLimit, lowerLimit, parallelColorOnly1[0])
         // 門檻線
         config.series[0].markLine = monitorMarkLine(upperLimit, lowerLimit, true)
+      } else {
+         config.visualMap = monitorVisualMap(null, 0, parallelColorOnly1[0])
       }
       return config
     },
