@@ -114,6 +114,11 @@
           :is-edit-mode="isEditMode"
           @warningLogTriggered="$emit('warningLogTriggered', $event)"
         />
+        <simulator
+          v-else-if="componentData.type === 'simulator'"
+          :is-edit-mode="isEditMode"
+          :script-id="componentData.scriptId"
+        />
         <div 
           v-else
           class="component__item-content chart">
@@ -147,13 +152,15 @@
 <script>
 import DecideDialog from '@/components/dialog/DecideDialog'
 import MonitorWarningList from './MonitorWarningList'
+import Simulator from './Simulator'
 import moment from 'moment'
 
 export default {
   name: 'DashboardTask',
   components: {
     DecideDialog,
-    MonitorWarningList
+    MonitorWarningList,
+    Simulator
   },
   props: {
     componentData: {
@@ -217,7 +224,7 @@ export default {
   },
   computed: {
     shouldComponentBeFiltered () {
-      if (this.componentData.type === 'monitor-warning-list') return false
+      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return false
       // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
       return this.allFilterList.find(filter => this.includeSameColumnPrimaryAliasFilter(filter.columnName))
         || this.includeSameDataFrameFilter 
@@ -234,7 +241,7 @@ export default {
       return this.tempFilteredKeyResultId
     },
     dataColumnAlias () {
-      if (this.componentData.type === 'monitor-warning-list') return ''
+      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return ''
       const dataColumn = this.componentData.segmentation.transcript.subjectList[0].dataColumn
       return dataColumn ? dataColumn.dataColumnAlias : ''
     },
@@ -243,12 +250,12 @@ export default {
       return this.selectedYAxisControls.reduce((acc, cur) => acc.concat(` ${cur.columnName}`), '')
     },
     controllerMutatedQuestion () {
-      if (this.componentData.type === 'monitor-warning-list') return ''
+      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return ''
       if (!this.shouldComponentYAxisBeControlled) return ''
       return this.componentData.question.replace(this.dataColumnAlias, this.newYAxisColumnNames)
     },
     controllerMutatedQuestionWithStyleTag () {
-      if (this.componentData.type === 'monitor-warning-list') return ''
+      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return ''
       if (!this.shouldComponentYAxisBeControlled) return ''
       return this.componentData.question.replace(this.dataColumnAlias, `
         <div style="text-decoration: underline; margin-left: 4px; white-space: nowrap; display: flex;">${this.newYAxisColumnNames}<div>
@@ -282,7 +289,7 @@ export default {
       return this.allFilterList.some(filter => filter.statsType === 'RELATIVEDATETIME')
     },
     customCellClassName () {
-      if (this.componentData.type === 'monitor-warning-list') return []
+      if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return []
       const relation = this.componentData.config.columnRelations[0].columnInfo
       if (!relation) return []
       const index = this.componentData.segmentation.transcript.subjectList[0].categoryDataColumnList.findIndex(item => item.dataColumnAlias === relation.dataColumnAlias)
@@ -338,7 +345,7 @@ export default {
       immediate: true,
       handler (isInit) {
         if (!isInit) return
-        if (this.componentData.type !== 'monitor-warning-list') {
+        if (this.componentData.type !== 'monitor-warning-list' && this.componentData.type !== 'simulator') {
           this.isProcessing = true
           this.deboucedAskQuestion()
         }

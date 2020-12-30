@@ -23,3 +23,38 @@ export function scriptInit(fileData) {
     data: fileData
   })
 }
+
+/**
+ * get script list
+ * @query {Number} groupId - group id 
+ */
+export function getScriptList(groupId) {
+  return request({
+    url: `/scripts?groupId=${groupId}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * get script Info
+ * @params {Number} scriptId - script id
+ */
+export function getScripInfo(scriptId) {
+  return request({
+    url: `/scripts/${scriptId}/input-columns`,
+    method: 'GET'
+  })
+}
+
+
+/**
+ * execute script
+ * @params {Number} scriptId - script id
+ */
+export function executeScript(scriptId, data) {
+  return request({
+    url: `/scripts/${scriptId}/simulate`,
+    method: 'POST',
+    data
+  })
+}

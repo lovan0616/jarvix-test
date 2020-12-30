@@ -870,6 +870,7 @@
     "orderUpdated": "{target}排序已更新",
     "monitorUpdateFrequency": "示警更新頻率",
     "monitorComponent": "監控示警元件",
+    "simulateComponent": "模擬元件",
     "timeScope": "時間範圍",
     "dashboardNoLongerExist": "關聯看板已不存在",
     "displayChart": "顯示圖表",
@@ -878,7 +879,14 @@
     "large": "大",
     "middle": "中",
     "small": "小",
-    "mini": "迷你"
+    "mini": "迷你",
+    "selectScript": "選擇模型",
+    "pleaseSelect": "請選擇",
+    "minAndMax": "最小:{min},最大:{max}",
+    "startSimulating": "進行模擬",
+    "simulator": "模擬器",
+    "notYetSimulate": "尚未模擬資料",
+    "simulating": "模擬中"
   },
   "alert": {
     "alertLogs": "示警紀錄",
