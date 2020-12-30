@@ -274,8 +274,7 @@ export default {
                 dataFrameId: segmentationList[0].transcript.dataFrame.dataFrameId,
                 dataColumns: this.getDataColumnlist(segmentationList[0].transcript.subjectList)
               }
-
-              return this.askResult(questionId)
+              return this.askResult(null, questionId)
             })
             .then(res => this.getComponentV2(res.resultId))
             .catch((error) => {})
@@ -303,9 +302,10 @@ export default {
       const isTrendQuestion = segmentation.denotation === 'TREND'
       return this.$store.dispatch('chatBot/askResult', {
         questionId: questionId || this.currentQuestionId,
-        segmentation: this.currentQuestionInfo,
+        segmentation,
         restrictions: this.restrictions(),
         selectedColumnList: null,
+        isFilter: true,
         ...(isTrendQuestion && {
           sortOrders: [
             {

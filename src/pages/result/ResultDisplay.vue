@@ -165,7 +165,8 @@ export default {
           questionId: this.currentQuestionId,
           segmentation: this.currentQuestionInfo,
           restrictions: this.filterRestrictionList,
-          selectedColumnList: this.selectedColumnList
+          selectedColumnList: this.selectedColumnList,
+          isFilter: false
         }).then(res => {
           this.$store.commit('dataSource/setCurrentQuestionInfo', null)
           this.$store.commit('result/updateCurrentResultId', res.resultId)
@@ -219,7 +220,8 @@ export default {
               algoConfig: this.algoConfig,
               segmentation: segmentationList[0],
               restrictions: this.filterRestrictionList,
-              selectedColumnList: this.selectedColumnList
+              selectedColumnList: this.selectedColumnList,
+              isFilter: false
             }).then(res => {
               this.$store.commit('result/updateCurrentResultId', res.resultId)
               if (res.layout === 'no_answer') {
