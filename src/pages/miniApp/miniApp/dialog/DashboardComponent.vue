@@ -15,18 +15,41 @@
           <span class="question-mark">Q</span>
           {{ computedQuestion }}
         </div>
-        <div 
-          :class="{ 'active': currentComponent.type === 'chart' }" 
-          class="key-result__card card"
-          @click="switchComponentType('chart')">
-          <div class="card__header">
-            <div class="card__header-icon-box">
-              <svg-icon 
-                class="icon" 
-                icon-class="check-circle" />
-            </div>
-            <div class="card__header-text">{{ displayedHeaderText('chart') }}</div>
+        <div class="key-result__switch-wrapper">
+          <div 
+            :class="{ 'active': currentComponent.type === 'chart' }"
+            class="key-result__switch" 
+            @click="switchComponentType('chart')" >
+            <svg-icon 
+              class="icon" 
+              icon-class="check-circle" />
+            {{ $t('miniApp.displayChart') }}
           </div>
+          <div 
+            v-if="currentComponent.isIndexTypeAvailable" 
+            :class="{ 'active': currentComponent.type === 'index' }" 
+            class="key-result__switch"
+            @click="switchComponentType('index')">
+            <svg-icon 
+              class="icon" 
+              icon-class="check-circle" />
+            {{ $t('miniApp.displayIndex') }}
+          </div>
+          <div 
+            v-if="currentComponent.isTextTypeAvailable" 
+            :class="{ 'active': currentComponent.type === 'text' }" 
+            class="key-result__switch"
+            @click="switchComponentType('text')" >
+            <svg-icon 
+              class="icon" 
+              icon-class="check-circle" />
+            {{ $t('miniApp.displayText') }}
+          </div>
+        </div>
+        <div 
+          v-show="currentComponent.type === 'chart'" 
+          class="key-result__card card"
+        >
           <div class="card__content">
             <task
               :key="'chart-' + computedKeyResultId"
@@ -41,18 +64,9 @@
           </div>
         </div>
         <div
-          v-if="currentComponent.isIndexTypeAvailable" 
-          :class="{ 'active': currentComponent.type === 'index' }" 
+          v-show="currentComponent.type === 'index'" 
           class="key-result__card card"
-          @click="switchComponentType('index')">
-          <div class="card__header">
-            <div class="card__header-icon-box">
-              <svg-icon 
-                class="icon" 
-                icon-class="check-circle" />
-            </div>
-            <div class="card__header-text">{{ displayedHeaderText('index') }}</div>
-          </div>
+        >
           <div class="card__content">
             <div class="setting">
               <div class="setting__label">{{ $t('miniApp.index') }}</div>
@@ -86,18 +100,9 @@
         </div>
         <!--Text Type Component-->
         <div
-          v-if="currentComponent.isTextTypeAvailable" 
-          :class="{ 'active': currentComponent.type === 'text' }" 
+          v-show="currentComponent.type === 'text'" 
           class="key-result__card card"
-          @click="switchComponentType('text')">
-          <div class="card__header">
-            <div class="card__header-icon-box">
-              <svg-icon 
-                class="icon" 
-                icon-class="check-circle" />
-            </div>
-            <div class="card__header-text">{{ displayedHeaderText('text') }}</div>
-          </div>
+        >
           <div class="card__content">
             <task
               :key="'text-' + computedKeyResultId"
@@ -176,19 +181,19 @@ export default {
       indexSizeOptionList: [
         {
           value: 'large',
-          name: '大'
+          name: this.$t('miniApp.large')
         },
         {
           value: 'middle',
-          name: '中'
+          name: this.$t('miniApp.middle')
         },
         {
           value: 'small',
-          name: '小'
+          name: this.$t('miniApp.small')
         },
         {
           value: 'mini',
-          name: '迷你'
+          name: this.$t('miniApp.mini')
         }
       ]
     }
@@ -213,6 +218,7 @@ export default {
   watch: {
     appQuestion (question) {
       if (!question) return
+      this.resetComponent()
       this.askQuestion(question)
     }
   },
@@ -220,7 +226,7 @@ export default {
     if (this.currentComponent.keyResultId) this.askQuestion(this.currentComponent.question)
   },
   destroyed () {
-    if (this.timeoutFunction) window.clearInterval(this.timeoutFunction)
+    if (this.timeoutFunction) window.clearTimeout(this.timeoutFunction)
   },
   methods: {
     checkIsTextTypeAvailable (transcript) {
@@ -239,6 +245,10 @@ export default {
       // 恢復新增元件的狀態
       this.$emit('update:isAddable', null)
       this.$emit('update:isLoading', true)
+      this.totalSec = 50
+      this.periodSec = 200
+      this.resultInfo = null
+      this.layout = ''
       this.$store.dispatch('chatBot/askQuestion', {
         question,
         dataSourceId: this.currentComponent.dataSourceId || this.dataSourceId,
@@ -328,7 +338,6 @@ export default {
               this.timeoutFunction = window.setTimeout(() => {
                 this.getComponentV2(resultId)
               }, this.totalSec)
-
               this.totalSec += this.periodSec
               this.periodSec = this.totalSec
               break
@@ -336,6 +345,8 @@ export default {
               this.totalSec = 50
               this.periodSec = 200
               this.resultInfo = componentResponse.componentIds
+              // 初次創建時，預設元件名稱為使用者輸入的問句
+              if (!this.currentComponent.keyResultId) this.currentComponent.config.diaplayedName = this.appQuestion
               this.currentComponent.isIndexTypeAvailable = componentResponse.isIndexTypeComponent
               this.currentComponent.isTextTypeAvailable = this.checkIsTextTypeAvailable(componentResponse.transcript)
               this.question = componentResponse.segmentationPayload.sentence.reduce((acc, cur) => acc + cur.word, '')
@@ -412,9 +423,6 @@ export default {
     },
     switchComponentType (type) {
       this.currentComponent.type = type
-    },
-    displayedHeaderText (type) {
-      return this.currentComponent.type === type ? this.$t('miniApp.currentlyDisplayed') : this.$t('miniApp.setForDisplay')
     },
     includeSameColumnPrimaryAliasFilter (filterName) {
       return this.questionInfo.dataColumns.find(column => column.columnName === filterName)
@@ -508,6 +516,13 @@ export default {
 
       return properties
     },
+    resetComponent () {
+      this.switchComponentType('chart')
+      this.currentComponent.indexInfo = { 
+        unit: '',
+        size: 'middle'
+      }
+    }
   }
 }
 </script>
@@ -517,7 +532,7 @@ export default {
   padding: 24px;
   &__question {
     font-size: 18px;
-    margin-bottom: 40px;
+    margin-bottom: 18px;
     .question-mark {
       display: inline-block;
       width: 30px;
@@ -529,6 +544,30 @@ export default {
       text-align: center;
       line-height: 30px;
       font-weight: bold;
+    }
+  }
+
+  &__switch-wrapper {
+    display: flex;
+    margin-bottom: 16px;
+  }
+
+  &__switch {
+    background: #1C292B;
+    border-radius: 12px;
+    border: 2px solid #1C292B;
+    color: #6C7678;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 16px;
+
+    &.active {
+      color: #2AD2E2;
+      border: 2px solid #2AD2E2;
+    }
+
+    &:not(:last-of-type) {
+      margin-right: 8px;
     }
   }
 
@@ -544,31 +583,6 @@ export default {
     border-radius: 12px;
     padding: 18.5px;
     cursor: pointer;
-    
-    &__header {
-      display: flex;
-      margin-bottom: 40px;
-      color: #6C7678;
-    }
-    &__header-icon-box {
-      margin-right: 6.5px;
-      height: 25px;
-      .icon {
-        font-size: 25px;
-      }
-    }
-    &__header-text {
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 25px;
-    }
-
-    &.active {
-      border: 2px solid #2AD2E2;
-      .card__header {
-        color: #2AD2E2;
-      }
-    }
 
     &__content {
       display: flex;

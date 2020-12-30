@@ -871,7 +871,14 @@
     "monitorUpdateFrequency": "示警更新頻率",
     "monitorComponent": "監控示警元件",
     "timeScope": "時間範圍",
-    "dashboardNoLongerExist": "關聯看板已不存在"
+    "dashboardNoLongerExist": "關聯看板已不存在",
+    "displayChart": "顯示圖表",
+    "displayIndex": "顯示數值",
+    "displayText": "顯示文字",
+    "large": "大",
+    "middle": "中",
+    "small": "小",
+    "mini": "迷你"
   },
   "alert": {
     "alertLogs": "示警紀錄",
