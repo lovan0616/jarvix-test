@@ -105,7 +105,7 @@ export default {
     ...mapMutations('dataManagement', ['updateCurrentUploadScriptInfo']),
     addNewColumnCard () {
       this.columnList.push({
-        dataColumnName: null,
+        primaryAlias: null,
         dataColumnId: null,
         dataType: null,
         id: uuidv4()

@@ -32,10 +32,8 @@
     <div class="input-field">
       <label class="input-field__label">{{ $t('script.columnDataName') }}</label>
       <input-verify
-        v-validate="`required`"
-        v-model.trim="columnInfo.dataColumnName"
+        v-model.trim="columnInfo.primaryAlias"
         :placeholder="$t('editing.inputCategoryName')"
-        :name="'input' + columnInfo.id"
         type="text"
       />
     </div>
