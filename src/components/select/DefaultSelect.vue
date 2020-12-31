@@ -11,7 +11,7 @@
     :multiple="multiple"
     :collapse-tags="collapseTags"
     :filterable="filterable"
-    :filter-method="categoryFilter"
+    v-bind="filterMethod ? {filterMethod: categoryFilter} : ''"
     class="sy-select theme-dark"
     style="text-align:left;"
     @change="$emit('change', $event)"
@@ -43,7 +43,8 @@ export default {
     size: { type: String, default: '' },
     multiple: {type: Boolean, default: false},
     collapseTags: {type: Boolean, default: false},
-    filterable: {type: Boolean, default: false}
+    filterable: {type: Boolean, default: false},
+    filterMethod: {type: Boolean, default: false}
   },
   computed: {
     selectedValue: {

@@ -355,6 +355,12 @@ export default {
           sequence: this.solutionSequence,
           data: this.settingInfo
         })
+        Message({
+          message: this.$t('schedule.successMessage.settingSaved'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
+        })
         return
       }
 

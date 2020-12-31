@@ -154,7 +154,7 @@ export default {
           this.messageOfAllLangsAsArray.push({
             language: language.replace('-', '_'),
             message: hasParams ? this.formatMessage(message, paramsWithToken) : message,
-            ...(hasParams && {dataColumnIds: this.getColumnIdsByColumnNames(params)})
+            dataColumnIds: this.getColumnIdsByColumnNames(params)
           })
         }
       }

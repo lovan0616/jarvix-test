@@ -99,7 +99,7 @@ export default {
     margin: auto 0 0 0;
     .btn-m {
       width: 100%;
-      height: 28px;
+      height: 30px;
     }
   }
 

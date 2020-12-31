@@ -42,10 +42,8 @@
           class="btn btn-default dialog-decide-change-delete"
           @click="confirmBtn"
         >
-          <svg-icon 
-            v-if="isProcessing" 
-            icon-class="spinner"/>
-          {{ btnText }}
+          <span v-if="isProcessing"><svg-icon icon-class="spinner"/>{{ $t('button.processing') }}</span>
+          <span v-else>{{ btnText }}</span>
         </button>
       </div>
     </div>
