@@ -316,7 +316,7 @@
                 <draggable
                   :list="currentDashboard.components"
                   :move="logDraggingMovement"
-                  :disabled="!isEditMode"
+                  :disabled="!isEditMode || currentDashboard.components.length === 1"
                   ghost-class="dragging-ghost"
                   style="height: 100%"
                   @end="updateOrder($t('miniApp.component'))"
