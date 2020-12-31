@@ -10,7 +10,7 @@
     class="page page--setting"
   >
     <div
-      v-if="isShowOrderUpload"
+      v-if="isShowOrderUpload && $route.name === 'ScheduleSetting'"
       class="setting setting--basic"
     >
       <div class="setting__header">
