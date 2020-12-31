@@ -117,8 +117,8 @@ export default {
           }
         }
         inputData.valueList = inputData.valueList.map(element => ({
-          value: element,
-          name: element
+          value: element.displayColumnValue,
+          name: element.displayColumnValue
         }))
         this.columnInfo.userInput = inputData.valueList[0].value
       } else if (inputData.statsType === 'NUMERIC') {
