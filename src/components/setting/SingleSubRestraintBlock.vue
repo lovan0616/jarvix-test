@@ -322,7 +322,10 @@ export default {
           .filter(element => !this.queryString || element.name.startsWith(this.queryString))
         this.isSearching = false
       } else {
-        dataValueSearch(this.columnId, this.queryString)
+        dataValueSearch({
+          dataColumnId: this.columnId,
+          searchString: this.queryString
+        })
           .then(({fuzzySearchResult}) => {
             this.valueList = fuzzySearchResult.map(element => {
               return {
