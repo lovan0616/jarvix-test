@@ -142,7 +142,7 @@
             @openWarningModule="openWarningModule"
             @activeCertainDashboard="activeCertainDashboard($event)"
             @showCreateDashboardDialog="isShowCreateDashboardDialog = true"
-            @updateDashboardOrder="updateOrder($t('miniApp.dashboard'))"
+            @updateDashboardOrder="updateDashboardOrder($t('miniApp.dashboard'))"
           />
           <!-- 監控示警模組 -->
           <main 
@@ -316,10 +316,10 @@
                 <draggable
                   :list="currentDashboard.components"
                   :move="logDraggingMovement"
-                  :disabled="!isEditMode"
+                  :disabled="!isEditMode || currentDashboard.components.length === 1"
                   ghost-class="dragging-ghost"
                   style="height: 100%"
-                  @end="updateOrder($t('miniApp.component'))"
+                  @end="updateComponentOrder($t('miniApp.component'))"
                 >
                   <dashboard-task
                     v-for="componentData in currentDashboard.components"
@@ -444,14 +444,38 @@
       @closeDialog="closeDelete"
       @confirmBtn="confirmDelete"
     />
+    <writing-dialog
+      v-if="isShowCreateSimulatorDialog"
+      :title="$t('miniApp.selectScript')"
+      :button="$t('button.build')"
+      :show-both="true"
+      :is-loading="isProcessing"
+      @closeDialog="isShowCreateSimulatorDialog = false"
+      @confirmBtn="createSimulator"
+    >
+      <div class="mini-app__dialog-select-wrapper">
+        <default-select 
+          :option-list="scriptOptionList"
+          :placeholder="$t('miniApp.selectScript')"
+          :is-disabled="isProcessing"
+          v-model="simulatorScriptInfo.id"
+          filterable
+          class="mini-app__dialog-select"
+          name="scriptId"
+          @change="updateSimulatorScriptInfo"
+        />
+      </div>
+    </writing-dialog>
   </div>
 </template>
 
 <script>
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
+import DefaultSelect from '@/components/select/DefaultSelect'
 import moment from 'moment'
 import DecideDialog from '@/components/dialog/DecideDialog'
 import WritingDialog from '@/components/dialog/WritingDialog'
+import SySelect from '@/components/select/SySelect'
 import {
   getMiniAppInfo,
   updateAppSetting,
@@ -473,6 +497,7 @@ import WarningModule from './components/warning-module/WarningModule'
 import { Message } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
 import draggable from 'vuedraggable'
+import { getScriptList } from '@/API/Script'
 
 export default {
   inject: ['$validator'],
@@ -490,11 +515,13 @@ export default {
     DropdownSelect,
     CustomDropdownSelect,
     WritingDialog,
+    SySelect,
     DecideDialog,
     FilterControlPanel,
     AxisControlPanel,
     WarningModule,
-    draggable
+    draggable,
+    DefaultSelect
   },
   data () {
     return {
@@ -527,7 +554,13 @@ export default {
       isYAxisController: null,
       filterCreationDialogTitle: null,
       draggedContext: { index: -1, futureIndex: -1 },
-      isCurrentDashboardInit: false
+      isCurrentDashboardInit: false,
+      isShowCreateSimulatorDialog: false,
+      scriptOptionList: [],
+      simulatorScriptInfo: {
+        id: null,
+        name: null
+      }
     }
   },
   computed: {
@@ -622,6 +655,10 @@ export default {
         {
           name: this.$t('miniApp.monitorComponent'),
           id: 'MonitorWarning'
+        },
+        {
+          name: this.$t('miniApp.simulateComponent'),
+          id: 'Simulator'
         }
       ]
     },
@@ -1186,6 +1223,48 @@ export default {
         .then(() => { this.miniApp = updatedMiniAppData })
         .finally(() => this.isProcessing = false)
     },
+    createSimulatorComponent () {
+      this.isShowCreateSimulatorDialog = true
+      this.isProcessing = true
+      getScriptList(this.$route.params.group_id)
+        .then(response => {
+          this.scriptOptionList = response.scriptIdAndName.map((script, index) => {
+            if (index === 0) {
+              this.simulatorScriptInfo.id = script.scriptId
+              this.simulatorScriptInfo.name = script.scriptName
+            }
+            return {
+              name: script.scriptName,
+              value: script.scriptId
+            }
+          })
+        })
+        .finally(() => { this.isProcessing = false })
+    },
+    updateSimulatorScriptInfo (scriptId) {
+      this.simulatorScriptInfo.name = this.scriptOptionList.find(script => script.value === scriptId).name
+    },
+    createSimulator () {
+      this.$validator.validateAll().then(isValidate => {
+        if (!isValidate) return
+        this.isProcessing = true
+        const updatedMiniAppData = JSON.parse(JSON.stringify(this.miniApp))
+        updatedMiniAppData.settings.editModeData.dashboards.forEach(board => {
+          if (board.id === this.currentDashboardId) {
+            board.components.push(this.componentTemplateFactory('simulator'))
+          }
+        })
+
+        this.updateAppSetting(updatedMiniAppData)
+          .then(() => { 
+            this.miniApp = updatedMiniAppData 
+            this.isShowCreateSimulatorDialog = false
+            this.simulatorScriptInfo.name = null
+            this.simulatorScriptInfo.id = null
+          })
+          .finally(() => this.isProcessing = false)
+      })
+    },
     createGeneralComponent () {
       this.isShowCreateComponentDialog = true
     },
@@ -1299,6 +1378,17 @@ export default {
             ...generalConfig,
             diaplayedName: this.$t('alert.realTimeMonitorAlert'),
           },
+        }),
+        // 模擬器元件
+        ...(type === 'simulator' && {
+          init: true,
+          scriptId: this.simulatorScriptInfo.id,
+          config: {
+            ...generalConfig,
+            // demo 因為有八個欄位，先設定六個列
+            size: { row: 6, column: 5 },
+            diaplayedName: `${this.$t('miniApp.simulator')} (${this.simulatorScriptInfo.name})`
+          },
         })
       }
     },
@@ -1306,8 +1396,15 @@ export default {
       const { index, futureIndex } = e.draggedContext
       this.draggedContext = { index, futureIndex }
     },
-    updateOrder (target) {
+    updateDashboardOrder (target) {
+      this.updateOrder(target)
+    },
+    updateComponentOrder (target) {
       if (!this.isComponentOrderChanged) return
+      this.updateOrder(target)
+      this.draggedContext = { index: -1, futureIndex: -1 }
+    },
+    updateOrder (target) {
       this.updateAppSetting(this.miniApp).then(() => {
         Message({
           message: this.$t('miniApp.orderUpdated', { target }),
@@ -1586,6 +1683,23 @@ export default {
   &__dialog-input {
     margin: 24px 0px;
     padding-bottom: 8px;
+  }
+
+  &__dialog-select-wrapper {
+    width: 100%;
+    margin: 24px 0;
+  }
+
+  &__dialog-select {
+    width: 100%;
+    border-bottom: 1px solid #ffffff;
+
+    /deep/ .el-input__inner {
+      padding-left: 0;
+    }
+    /deep/ .error-text {
+      text-align: left;
+    }
   }
 
   .button-container {

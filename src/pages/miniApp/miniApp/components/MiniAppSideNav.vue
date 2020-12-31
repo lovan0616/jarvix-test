@@ -29,7 +29,7 @@
       <draggable
         :list="dashboardList"
         :move="logDraggingMovement"
-        :disabled="!isEditMode"
+        :disabled="!isEditMode || dashboardList.length === 1"
         ghost-class="dragging-ghost"
         @end="updateDashboardOrder"
       >
@@ -96,7 +96,10 @@ export default {
       this.draggedContext = { index, futureIndex }
     },
     updateDashboardOrder () {
-      if (this.isDashboardOrderChanged) this.$emit('updateDashboardOrder')
+      if (this.isDashboardOrderChanged) {
+        this.$emit('updateDashboardOrder')
+        this.draggedContext = { index: -1, futureIndex: -1 }
+      }
     }
   }
 }
