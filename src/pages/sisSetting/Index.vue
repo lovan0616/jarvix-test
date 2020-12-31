@@ -16,6 +16,13 @@
       <div class="setting-block__title">排程模組設定</div>
       <div class="setting-block__content">
         <div class="input-block">
+          <label for="">開啟訂單上傳功能：</label>
+          <el-switch 
+            v-model="openOrderUpload"
+            class="setting-switch"
+          />
+        </div>
+        <div class="input-block">
           <label for="">啟用排程模組：</label>
           <el-switch 
             v-model="openScheduleModule"
@@ -120,6 +127,7 @@ export default {
   data () {
     return {
       isShowDistributedSetting: localStorage.getItem('isShowDistributedSetting'),
+      isShowOrderUpload: localStorage.getItem('isShowOrderUpload'),
       isShowScheduleModule: localStorage.getItem('isShowScheduleModule'),
       isShowAlgorithmBtn: localStorage.getItem('isShowAlgorithmBtn'),
       isDemoEnd: localStorage.getItem('isDemoEnd'),
@@ -138,6 +146,15 @@ export default {
       set (value) {
         this.isShowDistributedSetting = value
         localStorage.setItem('isShowDistributedSetting', value)
+      }
+    },
+    openOrderUpload: {
+      get () {
+        return this.isShowOrderUpload === 'true' || this.isShowOrderUpload
+      },
+      set (value) {
+        this.isShowOrderUpload = value
+        localStorage.setItem('isShowOrderUpload', value)
       }
     },
     openScheduleModule: {
