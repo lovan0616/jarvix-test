@@ -188,8 +188,7 @@ export default {
       }
     },
     setLogRefresh () {
-      // this.autoRefreshFunction = window.setInterval(this.getWarningLogs, this.convertRefreshFrequency(this.setting.updateFrequency))
-      this.autoRefreshFunction = window.setInterval(this.getWarningLogs, 10000)
+      this.autoRefreshFunction = window.setInterval(this.getWarningLogs, this.convertRefreshFrequency(this.setting.updateFrequency))
     },
     getWarningLogs (page = 0) {
       this.isLoading = true
