@@ -64,6 +64,7 @@
             v-else
             :dataset="featureDataset"
             :title="featureTitle"
+            :is-show-label-data="true"
             :height="'420px'"
           />
         </div>
@@ -116,10 +117,10 @@ export default {
       isLoading: false,
       isDownloading: false,
       isShowSaveModelDialog: false,
-      accuracyPrecision: 79,
+      accuracyPrecision: 77,
       accuracyDataset: {
         columns: ["百分比"],
-        data: [[10], [96]],
+        data: [[32], [92]],
         display_columns: ["預測率"],
         display_index: [["成交"], ["沒有成交"]],
         index: [["成交"], ["沒有成交"]],
@@ -180,7 +181,7 @@ export default {
       },
       featureDataset: {
         columns: ["欄位項目"],
-        data: [[-0.28], [-0.27], [0.14], [0.08], [-0.06]],
+        data: [[0.28], [0.27], [0.14], [0.08], [0.06]],
         display_columns: ["關係值"],
         display_index: [["有無折扣_無折扣"], ["業務人員職稱_專員"], ["業務人員性別_女"], ["業務人員職稱_主任"], ["客戶產業類別_金融投顧及保險業"]],
         index: [["有無折扣_無折扣"], ["業務人員職稱_專員"], ["業務人員性別_女"], ["業務人員職稱_主任"], ["客戶產業類別_金融投顧及保險業"]]
