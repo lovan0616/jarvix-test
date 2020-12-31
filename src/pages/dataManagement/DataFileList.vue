@@ -19,20 +19,27 @@
     </div>
     <div class="table-board">
       <div class="board-title-row">
-        <div class="button-block">
-          <button 
-            :disabled="isProcessing || reachLimit"
-            class="btn-m btn-default btn-has-icon"
-            @click="createDataSource"
-          >
-            <svg-icon 
-              icon-class="file-plus" 
-              class="icon"/>{{ $t('editing.newTable') }}
-          </button>
-          <div 
-            v-if="reachLimit"
-            class="reach-limit"
-          >{{ $t('notification.uploadLimitNotification') }}</div>
+        <div class="board-title-row__left">
+          <div class="button-block">
+            <button 
+              :disabled="isProcessing || reachLimit"
+              class="btn-m btn-default btn-has-icon"
+              @click="createDataSource"
+            >
+              <svg-icon 
+                icon-class="file-plus" 
+                class="icon"/>{{ $t('editing.newTable') }}
+            </button>
+            <div 
+              v-if="reachLimit"
+              class="reach-limit"
+            >{{ $t('notification.uploadLimitNotification') }}</div>
+          </div>
+          <search-block
+            v-model="searchedDataFileName"
+            :placeholder="$t('etl.tableSearch')"
+            class="search-block"
+          />
         </div>
         <div class="button-block dataframe-action">
           <button 
@@ -58,9 +65,10 @@
       </div>
       <data-table
         :headers="tableHeaders"
-        :data-list.sync="dataList"
+        :data-list.sync="filterDataList"
         :selection.sync="selectList"
         :is-processing="isProcessing"
+        :is-search-result-empty="searchedDataFileName.length > 0 && filterDataList.length === 0"
         :loading="isLoading"
         :empty-message="$t('editing.clickToUploadTable')"
         @create="createDataSource"
@@ -146,6 +154,8 @@
   </div>
 </template>
 <script>
+import SearchBlock from '@/components/SearchBlock'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import DataTable from '@/components/table/DataTable'
 import FileUploadDialog from './components/FileUploadDialog'
 import ConfirmDeleteDataFrameDialog from './components/ConfirmDeleteDataFrameDialog'
@@ -168,6 +178,8 @@ import { Message } from 'element-ui'
 export default {
   name: 'DataFileList',
   components: {
+    SearchBlock,
+    EmptyInfoBlock,
     DataTable,
     FileUploadDialog,
     ConfirmDeleteDataFrameDialog,
@@ -200,6 +212,7 @@ export default {
       isProcessing: false,
       dataList: [],
       tableList: [],
+      searchedDataFileName: '',
       // checkbox 所選擇的檔案列表
       selectList: [],
       // 目前正在編輯的資料表
@@ -230,6 +243,9 @@ export default {
     },
     reachFileLengthLimit () {
       return this.dataList.length >= this.fileCountLimit
+    },
+    filterDataList() {
+      return this.dataList.filter(data => data.primaryAlias.toLowerCase().includes(this.searchedDataFileName.toLowerCase()))
     },
     // 用來生成 data table
     tableHeaders () {
@@ -266,12 +282,12 @@ export default {
         {
           text: this.$t('editing.status'),
           value: 'state',
-          width: '110px'
+          width: '120px'
         },
         {
           text: this.$t('editing.lastUpdateResult'),
           value: 'latestImportStatus',
-          width: '160px'
+          width: '130px'
         },
         {
           text: this.$t('editing.action'),

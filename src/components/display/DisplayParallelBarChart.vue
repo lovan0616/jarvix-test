@@ -255,6 +255,8 @@ export default {
       if (this.dataset.index.length === 0) return false
       if (this.dataset.index[0].length !== 2) return false
       if (this.dataset.columns.length > 1) return false
+      // 在戰情室的話也不讓他切換圖表
+      if (!this.showToolbox) return false
 
       let lineChartIndex = []
       let lineChartColumns = []
@@ -341,7 +343,8 @@ export default {
       this.showLineChart = !this.showLineChart
     },
     composeColumn (element, colIndex) {
-      const shortenNumberMethod = this.shortenNumber
+      const labelFormatter = this.chartLabelFormatter
+      const maxValue = this.getChartMaxData(this.dataset.data)
       return {
         // 如果有 column 經過 Number() 後為數字 ，echart 會畫不出來，所以補個空格給他
         name: isNaN(Number(element)) ? element : ' ' + element,
@@ -354,7 +357,10 @@ export default {
             show: true,
             fontSize: 10,
             color: '#fff',
-            formatter (value) { return shortenNumberMethod(value.data[colIndex + 1], 0) }
+            formatter (value) { 
+              let num = value.data[colIndex + 1]
+              return labelFormatter(num, maxValue[colIndex]) 
+            }
           }
         })
       }
