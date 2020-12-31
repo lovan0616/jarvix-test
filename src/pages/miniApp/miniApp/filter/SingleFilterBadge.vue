@@ -194,7 +194,7 @@
 </template>
 
 <script>
-import { getDataColumnValue, dataValueFuzzySearch } from '@/API/DataSource'
+import { getDataColumnValue, dataValueSearch } from '@/API/DataSource'
 
 export default {
   name: 'SingleFilterBadge',
@@ -353,7 +353,7 @@ export default {
     },
     searchValue () {
       this.isLoading = true
-      return dataValueFuzzySearch(this.filter.columnId, {
+      return dataValueSearch(this.filter.columnId, {
         page: 0,
         searchString: this.searchInput,
         size: 200,

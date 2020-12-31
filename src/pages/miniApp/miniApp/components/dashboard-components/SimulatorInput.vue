@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { getDataColumnValue, dataValueFuzzySearch } from '@/API/DataSource'
+import { getDataColumnValue, dataValueSearch } from '@/API/DataSource'
 import { getColumnAliasInfoById } from '@/API/Alias'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
@@ -132,7 +132,7 @@ export default {
       }
     },
     searchValue (columnId, searchString) {
-      return dataValueFuzzySearch(columnId, {
+      return dataValueSearch(columnId, {
         page: 0,
         searchString,
         size: 200,
