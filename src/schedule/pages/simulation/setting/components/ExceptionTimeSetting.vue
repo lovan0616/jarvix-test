@@ -66,7 +66,7 @@ export default {
           const m = this.startDate.split('/')[1] - 1
           const d = this.startDate.split('/')[2]
           return time.getTime() < moment([y, m, d]).valueOf() ||
-                 time.getTime() > moment([y, m, d]).add(this.scheduleDays - 1, 'days').valueOf()
+                 time.getTime() > moment([y, m, d]).add(this.scheduleDays, 'days').valueOf()
         }
       }
     }
