@@ -353,7 +353,8 @@ export default {
     },
     searchValue () {
       this.isLoading = true
-      return dataValueSearch(this.filter.columnId, {
+      return dataValueSearch({
+        dataColumnId: this.filter.columnId,
         page: 0,
         searchString: this.searchInput,
         size: 200,
