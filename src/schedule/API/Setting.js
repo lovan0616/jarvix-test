@@ -53,3 +53,12 @@ export function downloadCurrentSetting (fileId) {
     method: 'GET'
   })
 }
+
+export function uploadOrder (formData, cancelFunction) {
+  return request({
+    url: '/uploadfile/upload/rawdata/order',
+    method: 'POST',
+    data: formData,
+    cancelToken: cancelFunction
+  })
+}
