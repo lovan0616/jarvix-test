@@ -151,7 +151,7 @@ export default {
             this.result = {
               // 先固定取第一筆來顯示
               name: response.outputPrimaryAlias[0],
-              value: response.outputValues && response.outputValues[0]
+              value: response.outputValues && Math.round(Number(response.outputValues[0]))
             }
           })
           .catch(() => { this.isSimulateFailed = true })
