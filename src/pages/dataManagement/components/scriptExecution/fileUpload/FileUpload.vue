@@ -129,7 +129,7 @@ export default {
     },
     // 總資料傳輸量
     totalTransmitDataAmount () {
-      return this.uploadFileList.reduce((acc, cur) => acc + cur.data.size, 0)
+      return this.uploadFileList.reduce((acc, cur) => acc + cur.size, 0)
     }
   },
   methods: {
@@ -191,24 +191,22 @@ export default {
     async fileUpload () {
       // 更新狀態
       this.currntUploadStatus = uploadStatus.uploading
-
       try {
         // 先上傳第一筆檔案，換取 script id
-        const firstFormData = this.formDataList.shift().data
+        const waitingFileList = [...this.formDataList]
+        const firstFormData = waitingFileList.shift().data
         // 上傳檔案
         const { scriptId } = await scriptUpload(firstFormData)
         this.progress = 50
-        
         // 上傳剩餘檔案
-        if (this.formDataList.length > 0) {
-          const data = Array.from(this.formDataList, formData => {
+        if (waitingFileList.length > 0) {
+          const data = Array.from(waitingFileList, formData => {
             formData.data.append('scriptId', scriptId)
             return scriptUpload(formData.data)
           })
           await Promise.all(data)
           this.progress = 100
         }
-
         // 存取 script id，於設定 input / output 時附上
         this.updateCurrentUploadScriptInfo({ scriptId: scriptId })
         this.$nextTick(() => this.$emit('next'))

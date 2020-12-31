@@ -225,10 +225,11 @@ export default {
   computed: {
     shouldComponentBeFiltered () {
       if (this.componentData.type === 'monitor-warning-list' || this.componentData.type === 'simulator') return false
-      // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
-      return this.allFilterList.find(filter => this.includeSameColumnPrimaryAliasFilter(filter.columnName))
-        || this.includeSameDataFrameFilter 
-        || this.includeRelativeDatetimeFilter
+      return true
+      // // 有任一filter 與 任一column 來自同 dataFrame，或者 任一filter 與 任一column 的 columnPrimaryAlias 相同
+      // return this.allFilterList.find(filter => this.includeSameColumnPrimaryAliasFilter(filter.columnName))
+      //   || this.includeSameDataFrameFilter 
+      //   || this.includeRelativeDatetimeFilter
     },
     shouldComponentYAxisBeControlled () {
       // 表格型元件 不受 Y軸控制器 影響
@@ -422,6 +423,7 @@ export default {
             segmentation: segmentationList[0],
             restrictions: this.restrictions(),
             selectedColumnList: null,
+            isFilter: true,
             ...(isTrendQuestion && {
               sortOrders: [
                 {
@@ -476,7 +478,7 @@ export default {
           // 相對時間有全選的情境，不需帶入限制中
           if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
           // 只處理相同 datafram 或欄位名稱相同的 filter
-          if (this.componentData.dataFrameId !== filter.dataFrameId && !this.includeSameColumnPrimaryAliasFilter(filter.columnName)) return false
+          // if (this.componentData.dataFrameId !== filter.dataFrameId && !this.includeSameColumnPrimaryAliasFilter(filter.columnName)) return false
           // 時間欄位要有開始和結束時間
           if (
             filter.statsType === 'NUMERIC'
@@ -625,7 +627,7 @@ export default {
 /*定義欄和列的尺寸*/
 $direction-size: ("col": 100%, "row": 100%);
 /*定義每欄和每列要切幾等分*/
-$direction-span: ("col": 8, "row": 6);
+$direction-span: ("col": 10, "row": 6);
 /*依照已定義好的尺寸和等份，製作欄和列使用的 class */
 @each $direction, $size in $direction-size {
   $span-amount: map-get($direction-span, $direction);

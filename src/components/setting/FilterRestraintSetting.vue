@@ -21,12 +21,11 @@
         v-show="isShowSeletor"
         ref="selectList"
         class="restraint-setting__selector selector">
-        <input
+        <search-block
           v-model="queryColumnName"
           :placeholder="$t('dataFrameAdvanceSetting.searchColumn')"
           class="selector__input-block"
-          type="text"
-        >
+        />
         <div 
           v-if="columnFilterOption.length === 0" 
           class="empty-message">
@@ -81,7 +80,7 @@
   </div>
 </template>
 <script>
-// import { getDataColumnValue } from '@/API/DataSource'
+import SearchBlock from '@/components/SearchBlock'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import SingleSubRestraintBlock from '@/components/setting/SingleSubRestraintBlock'
 import { mapState } from 'vuex'
@@ -90,6 +89,7 @@ export default {
   name: 'FilterRestraintSetting',
   inject: ['$validator'],
   components: {
+    SearchBlock,
     DefaultSelect,
     SingleSubRestraintBlock
   },
@@ -231,22 +231,6 @@ export default {
             updatedRestraint = {}
           }
           this.$emit('updated:restraint', updatedRestraint)
-
-        // handle empty range value 先拿掉，現在強制都要有值
-
-        // const tempRestraintRangeList = this.tempRestraintList.filter(restraint => restraint.type === 'range')
-        // Promise.all(tempRestraintRangeList.map(async(restraint) => await getDataColumnValue(restraint.properties.dc_id)))
-        //   .then(response => {
-        //     let responseIndex = 0
-        //     this.tempRestraintList.forEach(restraint =>{
-        //       if(restraint.type === 'range') {
-        //         const valueBound = response[responseIndex][response[responseIndex].type.toLowerCase()]
-        //         restraint.properties.end = restraint.properties.end || valueBound.max
-        //         restraint.properties.start = restraint.properties.start || valueBound.min
-        //         responseIndex += 1
-        //       }
-        //     })
-        //   })
       })
     }
   },
@@ -302,46 +286,32 @@ export default {
 
   &__selector {
     position: absolute;
-    top: 30px;
-    left: 0;
+    top: -6px;
+    left: 100%;
     padding-top: 12px;
     width: 100%;
     border-radius: 5px;
     background-color: var(--color-bg-gray);
     filter: drop-shadow(2px 2px 5px rgba(12, 209, 222, .5));
-    z-index: 2;
+    z-index: 4;
 
     &::before {
       content: '';
       position: absolute;
-      top: -10px;
-      right: 6px;
-      border-bottom: 12px solid #2B3839;
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
+      top: 8px;
+      left: -10px;
+      border-right: 12px solid #2B3839;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
     }
   }
 
   .selector {
     &__input-block {
       margin: 0 12px 8px 12px;
-      padding: 9px 12px;
-      width: calc(100% - 24px);
       font-size: 14px;
       color: #888888;
-      border: none;
-      border-radius: 8px;
       background-color: #141C1D;
-
-      &:focus {
-        outline: none;
-      }
-      
-      .placeholder {
-        font-size: 14px;
-        line-height: 22px;
-        color: #888888;
-      }
     }
 
     &__list-block {
@@ -396,6 +366,7 @@ export default {
           font-size: 14px;
           line-height: 20px;
           color: #CCC;
+          @include text-hidden;
         }
       }
     }

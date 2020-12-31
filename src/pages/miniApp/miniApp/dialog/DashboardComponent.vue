@@ -120,6 +120,7 @@
         :key="appQuestion"
         :result-info="resultInfo"
         :redirect-on-select="false"
+        @select-result="askResult($event)"
       />
       <div
         v-if="!isLoading && isAddable === false"
@@ -131,16 +132,6 @@
         />{{ $t('miniApp.componentNotAddable') }}
       </div>
     </template>
-    <!-- Error -->
-    <!-- <empty-result 
-      v-if="hasError"
-      :key="appQuestion"
-      :result-info="{
-        title: '語句暫不支援',
-        description: '不支援此類型概況語句',
-      }"
-      :redirect-on-select="false"
-    /> -->
   </div>
 </template>
 
@@ -208,7 +199,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo']),
+    ...mapState('dataSource', ['dataSourceId', 'dataFrameId', 'appQuestion', 'currentQuestionInfo', 'currentQuestionId']),
     ...mapGetters('dataSource', ['filterRestrictionList']),
     computedKeyResultId () {
       return (this.resultInfo && this.resultInfo.key_result && this.resultInfo.key_result[0])
@@ -248,6 +239,7 @@ export default {
       return isSingleSubject && isEmptyFilterList && isSingleCategoryDataColumn && haveSameDataColumn 
     },
     askQuestion (question) {
+      this.$store.commit('result/updateCurrentResultInfo', null)
       // 關閉介紹資料集
       this.closePreviewDataSource()
       // 恢復新增元件的狀態
@@ -292,29 +284,14 @@ export default {
                 dataFrameId: segmentationList[0].transcript.dataFrame.dataFrameId,
                 dataColumns: this.getDataColumnlist(segmentationList[0].transcript.subjectList)
               }
-
-              // 確認是否為趨勢類型問題
-              const isTrendQuestion = this.segmentation.denotation === 'TREND'
-              return this.$store.dispatch('chatBot/askResult', {
-                questionId,
-                segmentation: this.segmentation,
-                restrictions: this.restrictions(),
-                selectedColumnList: null,
-                ...(isTrendQuestion && {
-                  sortOrders: [
-                    {
-                      dataColumnId: this.segmentation.transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
-                      sortType: 'DESC'
-                    }
-                  ]
-                })
-              })
+              return this.askResult(null, questionId)
             })
             .then(res => this.getComponentV2(res.resultId))
             .catch((error) => {})
         } else {
           // 多個結果
           this.$store.commit('dataSource/setAppQuestion', null)
+          this.$store.commit('dataSource/setCurrentQuestionId', response.questionId)
           this.layout = 'MultiResultV2'
           this.resultInfo = {...response, question: question}
           this.$emit('update:isLoading', false)
@@ -326,6 +303,30 @@ export default {
         // 解決重新問問題，前一次請求被取消時，保持 loading 狀態
         this.$store.commit('dataSource/setCurrentQuestionInfo', null)
       })
+    },
+    askResult (selectedResultSegmentationInfo, questionId) {
+      this.$emit('update:isLoading', true)
+
+      const segmentation = this.segmentation || selectedResultSegmentationInfo
+      // 確認是否為趨勢類型問題
+      const isTrendQuestion = segmentation.denotation === 'TREND'
+      return this.$store.dispatch('chatBot/askResult', {
+        questionId: questionId || this.currentQuestionId,
+        segmentation,
+        restrictions: this.restrictions(),
+        selectedColumnList: null,
+        isFilter: true,
+        ...(isTrendQuestion && {
+          sortOrders: [
+            {
+              dataColumnId: this.segmentation.transcript.subjectList.find(subject => subject.dateTime).dateTime.dataColumn.dataColumnId,
+              sortType: 'DESC'
+            }
+          ]
+        })
+      })
+      .then(res => this.getComponentV2(res.resultId))
+      .catch(error => {})
     },
     getComponentV2 (resultId) {
       window.clearTimeout(this.timeoutFunction)
