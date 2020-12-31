@@ -142,7 +142,7 @@
             @openWarningModule="openWarningModule"
             @activeCertainDashboard="activeCertainDashboard($event)"
             @showCreateDashboardDialog="isShowCreateDashboardDialog = true"
-            @updateDashboardOrder="updateOrder($t('miniApp.dashboard'))"
+            @updateDashboardOrder="updateDashboardOrder($t('miniApp.dashboard'))"
           />
           <!-- 監控示警模組 -->
           <main 
@@ -316,10 +316,10 @@
                 <draggable
                   :list="currentDashboard.components"
                   :move="logDraggingMovement"
-                  :disabled="!isEditMode"
+                  :disabled="!isEditMode || currentDashboard.components.length === 1"
                   ghost-class="dragging-ghost"
                   style="height: 100%"
-                  @end="updateOrder($t('miniApp.component'))"
+                  @end="updateComponentOrder($t('miniApp.component'))"
                 >
                   <dashboard-task
                     v-for="componentData in currentDashboard.components"
@@ -1396,8 +1396,15 @@ export default {
       const { index, futureIndex } = e.draggedContext
       this.draggedContext = { index, futureIndex }
     },
-    updateOrder (target) {
+    updateDashboardOrder (target) {
+      this.updateOrder(target)
+    },
+    updateComponentOrder (target) {
       if (!this.isComponentOrderChanged) return
+      this.updateOrder(target)
+      this.draggedContext = { index: -1, futureIndex: -1 }
+    },
+    updateOrder (target) {
       this.updateAppSetting(this.miniApp).then(() => {
         Message({
           message: this.$t('miniApp.orderUpdated', { target }),
