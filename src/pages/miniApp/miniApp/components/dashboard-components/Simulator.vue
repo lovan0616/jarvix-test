@@ -11,7 +11,7 @@
       v-show="!isLoading && !isFetchInputFailed" 
       class="simulator__content">
       <div class="simulator__setting">
-        <div class="simulator__setting-title">大小設定</div>
+        <div class="simulator__setting-title">模擬參數設定</div>
         <div class="simulator__setting-content">
           <simulator-input
             v-for="(columnInfo, index) in scriptInfo"
@@ -22,10 +22,12 @@
             @done="updateColumnInfoState(index)"
             @failed="handleFetchInputFailed"
           />
+        </div>
+        <div class="simulator__setting-action">
           <button
             :disabled="isProcessing"
             type="button"
-            class="btn btn-default"
+            class="btn-m btn-default btn-simulate"
             @click="simulate"
           >{{ $t('miniApp.startSimulating') }}</button>
         </div>
@@ -168,7 +170,8 @@ export default {
 
 <style lang="scss" scoped>
 .simulator {
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -195,11 +198,18 @@ export default {
   }
 
   &__setting {
+    display: flex;
+    flex-direction: column;
     margin-right: 12px;
     &-content {
+      flex: 1;
       height: calc(100% - 36px);
       overflow-y: auto;
       overflow-x: hidden;
+      padding-right: 12px;
+    }
+    &-action {
+      padding-top: 12px;
     }
     &-input {
       &:not(:last-of-type) {
