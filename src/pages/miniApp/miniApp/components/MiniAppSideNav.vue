@@ -29,7 +29,7 @@
       <draggable
         :list="dashboardList"
         :move="logDraggingMovement"
-        :disabled="!isEditMode || dashboardList.length === 1"
+        :disabled="!isEditMode"
         ghost-class="dragging-ghost"
         @end="updateDashboardOrder"
       >
