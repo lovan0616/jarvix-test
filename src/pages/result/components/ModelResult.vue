@@ -64,6 +64,7 @@
             v-else
             :dataset="featureDataset"
             :title="featureTitle"
+            :is-show-label-data="true"
             :height="'420px'"
           />
         </div>
