@@ -92,8 +92,9 @@ export default {
       machineTableHeaderList: [
         { title: 'arriveTime', name: this.$t('schedule.simulation.machineResult.arriveTime'), width: '220' },
         { title: 'checkinTime', name: this.$t('schedule.simulation.machineResult.checkinTime'), width: '220' },
-        { title: 'checkoutTime', name: this.$t('schedule.simulation.machineResult.checkoutTime'), width: '220' },
+        { title: 'startTime', name: this.$t('schedule.simulation.machineResult.startTime'), width: '220' },
         { title: 'endTime', name: this.$t('schedule.simulation.machineResult.endTime'), width: '220' },
+        { title: 'checkoutTime', name: this.$t('schedule.simulation.machineResult.checkoutTime'), width: '220' },
         { title: 'equipment', name: this.$t('schedule.simulation.machineResult.equipment') },
         { title: 'factorySite', name: this.$t('schedule.simulation.machineResult.factorySite') },
         { title: 'job', name: this.$t('schedule.simulation.machineResult.job'), width: '160' },
@@ -102,7 +103,7 @@ export default {
         { title: 'order', name: this.$t('schedule.simulation.machineResult.order'), width: '160' },
         { title: 'product', name: this.$t('schedule.simulation.machineResult.product'), width: '160' },
         { title: 'stage', name: this.$t('schedule.simulation.machineResult.stage') },
-        { title: 'startTime', name: this.$t('schedule.simulation.machineResult.startTime'), width: '220' },
+
         { title: 'task', name: this.$t('schedule.simulation.machineResult.task') }
       ],
       priortyOptions: [

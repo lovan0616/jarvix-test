@@ -38,9 +38,12 @@ export default {
     state.fileUploadSuccess = data
   },
   updateEtlTableList (state, data) {
-
     // 如果為再編輯的 dataFrame 就不需要再處理，直接 set
     if (!Object.prototype.hasOwnProperty.call(data, 'enableEdit')) {
+      if (localStorage.getItem('isShowDistributedSetting') === 'true') {
+        Vue.set(data, 'isDistributed', false)
+        Vue.set(data, 'distributedColumnName', null)
+      }
       let columnList = data.columns
       if (columnList.length > 0) {
         columnList.forEach((element, index) => {
@@ -74,6 +77,12 @@ export default {
       }
     }
     state.etlTableList.push(data)
+  },
+  updateIsDistributed (state, data) {
+    state.etlTableList[state.currentTableIndex].isDistributed = data
+  },
+  updateDistributedColumnName (state, data) {
+    state.etlTableList[state.currentTableIndex].distributedColumnName = data
   },
   updateReplaceValue (state, data) {
     let {tableIndex, columnIndex, info} = data
