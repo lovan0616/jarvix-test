@@ -43,7 +43,11 @@
           prop="conditionName"/>
         <el-table-column
           :label="$t('alert.alertLogMessage')"
-          prop="conditionMetMessage"/>
+          prop="conditionMetMessage">
+          <template slot-scope="scope">
+            <span v-html="scope.row.conditionMetMessage"/>
+          </template>
+        </el-table-column>
         <el-table-column
           :label="$t('alert.state')"
           prop="active"

@@ -434,7 +434,7 @@ export default {
           if (filter.statsType === 'RELATIVEDATETIME') return filter.dataValues.length > 0 && filter.dataValues[0] !== 'unset'
 
           // 時間欄位要有開始和結束時間// 只處理相同 datafram 或欄位名稱相同的 filter
-          if (this.questionInfo.dataFrameId !== filter.dataFrameId && !this.includeSameColumnPrimaryAliasFilter(filter.columnName)) return false
+          // if (this.questionInfo.dataFrameId !== filter.dataFrameId && !this.includeSameColumnPrimaryAliasFilter(filter.columnName)) return false
           if (
             filter.statsType === 'NUMERIC'
             || filter.statsType === 'FLOAT'
