@@ -353,7 +353,7 @@ export default {
     },
     columnSpanOption () {
       // 最小值為 2, 最大值為 12
-      return [...Array(10).keys()].map(value => ({
+      return [...Array(11).keys()].map(value => ({
         value: value + 2,
         name: this.$t('miniApp.columnSpanAmount', { number: value + 2 })
       }))
