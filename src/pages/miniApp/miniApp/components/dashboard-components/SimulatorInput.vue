@@ -115,6 +115,8 @@ export default {
           } catch (e) {
             this.$emit('failed', e.message || this.$t('message.systemIsError'))
           }
+        } else {
+          inputData.valueList = inputData.valueList.map(value => value.displayColumnValue)
         }
         inputData.valueList = inputData.valueList.map(element => ({
           value: element,
