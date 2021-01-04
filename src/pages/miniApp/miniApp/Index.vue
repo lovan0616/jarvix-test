@@ -1290,7 +1290,8 @@ export default {
       this.controlColumnValueInfoList.forEach(filterSet => {
         filterSet.forEach(filter => {
           // 如果 log rowData 有欄位同 controller 欄位，就將預設值設定為該筆 rowData 該 column 的值
-          const sameColumnRow = rowData.find(rowDataColumn => rowDataColumn.dataColumnId === filter.columnId)
+          // 判斷條件：同 columnId 或同 columnName
+          const sameColumnRow = rowData.find(rowDataColumn => rowDataColumn.dataColumnId === filter.columnId || rowDataColumn.displayName === filter.columnName)
           if (sameColumnRow) filter.dataValues = [sameColumnRow.datum[0]]
         })
       })
@@ -1307,10 +1308,10 @@ export default {
     chartTriggered ({ relatedDashboardId, restrictions }) {
       this.activeCertainDashboard(relatedDashboardId)
       this.controlColumnValueInfoList.forEach(filterSet => {
-        filterSet.forEach(item => {
+        filterSet.forEach(filter => {
           // 確認有無對應到欲前往的 dashboard 中的任一控制項
-          const targetRestriction = restrictions.find(restriction => item.columnId === restriction.dc_id)
-          if (targetRestriction) item.dataValues = [targetRestriction.value]
+          const targetRestriction = restrictions.find(restriction => filter.columnId === restriction.dc_id || filter.columnName === restriction.display_name)
+          if (targetRestriction) filter.dataValues = [targetRestriction.value]
         })
       })
     },
@@ -1345,7 +1346,7 @@ export default {
     componentTemplateFactory (type = 'chart') {
 
       const generalConfig = {
-        size: { row: 3, column: 4 },
+        size: { row: 3, column: 6 },
         hasRelatedDashboard: false,
         relatedDashboard: null
       }
