@@ -1386,8 +1386,8 @@ export default {
           scriptId: this.simulatorScriptInfo.id,
           config: {
             ...generalConfig,
-            // demo 因為有八個欄位，先設定六個列
-            size: { row: 6, column: 5 },
+            // demo 因為有八個 Input，先設定六個列
+            size: { row: 6, column: 6 },
             diaplayedName: `${this.$t('miniApp.simulator')} (${this.simulatorScriptInfo.name})`
           },
         })

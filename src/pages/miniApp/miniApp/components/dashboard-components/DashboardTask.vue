@@ -627,7 +627,7 @@ export default {
 /*定義欄和列的尺寸*/
 $direction-size: ("col": 100%, "row": 100%);
 /*定義每欄和每列要切幾等分*/
-$direction-span: ("col": 10, "row": 6);
+$direction-span: ("col": 12, "row": 6);
 /*依照已定義好的尺寸和等份，製作欄和列使用的 class */
 @each $direction, $size in $direction-size {
   $span-amount: map-get($direction-span, $direction);
