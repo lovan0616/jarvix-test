@@ -51,7 +51,7 @@ export default {
 <style lang="scss" scoped>
 .search-box {
   background: rgba(35, 61, 64, 0.6);
-  padding: 10px;
+  padding: 5px 10px;
   display: flex;
   align-items: center;
   border-radius: 5px;

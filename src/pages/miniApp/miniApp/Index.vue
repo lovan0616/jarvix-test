@@ -1346,7 +1346,7 @@ export default {
     componentTemplateFactory (type = 'chart') {
 
       const generalConfig = {
-        size: { row: 3, column: 6 },
+        size: { row: 6, column: 6 },
         hasRelatedDashboard: false,
         relatedDashboard: null
       }
@@ -1387,7 +1387,7 @@ export default {
           config: {
             ...generalConfig,
             // demo 因為有八個 Input，先設定六個列
-            size: { row: 6, column: 6 },
+            size: { row: 12, column: 12 },
             diaplayedName: `${this.$t('miniApp.simulator')} (${this.simulatorScriptInfo.name})`
           },
         })
@@ -1715,6 +1715,9 @@ export default {
       line-height: 20px;
       &:not(:first-child) {
         margin-left: 8px;
+      }
+      &.btn-default {
+        color: #000;
       }
     }
 

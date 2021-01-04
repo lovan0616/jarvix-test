@@ -410,7 +410,7 @@ export default {
     flex-shrink: 0;
   }
   &__menu {
-    width: 300px;
+    width: 400px;
     position: absolute;
     top: calc(100% + 1px);
     left: -1px;

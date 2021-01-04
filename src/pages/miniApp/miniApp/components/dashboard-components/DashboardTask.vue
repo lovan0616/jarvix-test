@@ -627,7 +627,7 @@ export default {
 /*定義欄和列的尺寸*/
 $direction-size: ("col": 100%, "row": 100%);
 /*定義每欄和每列要切幾等分*/
-$direction-span: ("col": 12, "row": 6);
+$direction-span: ("col": 12, "row": 12);
 /*依照已定義好的尺寸和等份，製作欄和列使用的 class */
 @each $direction, $size in $direction-size {
   $span-amount: map-get($direction-span, $direction);
@@ -656,7 +656,6 @@ $direction-span: ("col": 12, "row": 6);
   padding-bottom: 16px;
   float: left;
   transition: all .2s linear;
-  overflow: hidden;
 
   &-init-spinner {
     margin: auto;
@@ -670,7 +669,6 @@ $direction-span: ("col": 12, "row": 6);
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
   }
   &-header {
     display: flex;
