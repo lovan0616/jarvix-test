@@ -190,14 +190,15 @@ export function deleteDataColumnById(dataColumnId) {
  * fuzzy search dataColumn value by id
  * @param {Number} dataColumnId - id
  */
-export function dataValueSearch({ dataColumnId, searchString, page = 0, size = 200 }) {
+export function dataValueSearch(dataColumnId, searchInfo) {
   return request({
     url: `/dataColumn/${dataColumnId}/dataValue-search`,
-    method: 'GET',
-    params: {
-      page,
-      size,
-      searchString
+    method: 'POST',
+    data: {
+      page: 0,
+      size: 200,
+      restrictions: null,
+      ...searchInfo
     }
   })
 }
