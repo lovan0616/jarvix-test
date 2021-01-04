@@ -359,8 +359,8 @@ export default {
       }))
     },
     rowSpanOption () {
-      // 最小值為 1, 最大值為 6
-      return [...Array(6).keys()].map(value => ({
+      // 最小值為 1, 最大值為 12
+      return [...Array(12).keys()].map(value => ({
         value: value + 1,
         name: this.$t('miniApp.rowSpanAmount', { number: value + 1 })
       }))
