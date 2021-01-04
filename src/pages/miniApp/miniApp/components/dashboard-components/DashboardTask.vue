@@ -656,7 +656,6 @@ $direction-span: ("col": 12, "row": 12);
   padding-bottom: 16px;
   float: left;
   transition: all .2s linear;
-  overflow: hidden;
 
   &-init-spinner {
     margin: auto;
@@ -670,7 +669,6 @@ $direction-span: ("col": 12, "row": 12);
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
   }
   &-header {
     display: flex;

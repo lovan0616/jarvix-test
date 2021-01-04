@@ -1716,6 +1716,9 @@ export default {
       &:not(:first-child) {
         margin-left: 8px;
       }
+      &.btn-default {
+        color: #000;
+      }
     }
 
     &__time {
