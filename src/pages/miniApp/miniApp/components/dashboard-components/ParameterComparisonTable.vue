@@ -28,13 +28,9 @@
 </template>
 
 <script>
-import DisplayParallelBarChart from '@/components/display/DisplayParallelBarChart.vue'
 
 export default {
-  name: 'ParametercomparisonTable',
-  components: {
-    DisplayParallelBarChart,
-  },
+  name: 'ParameterComparisonTable',
   props: {
     originalData: {
       type: Object,
