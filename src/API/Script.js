@@ -58,3 +58,16 @@ export function executeScript(scriptId, data) {
     data
   })
 }
+
+/**
+ * get column default value
+ * @params {Number} scriptId - script id
+ * @params {Number} dataColumnId - data column id
+ */
+export function searchColumnDefaultValue(scriptId, dataColumnId, data) {
+  return request({
+    url: `/scripts/${scriptId}/column/${dataColumnId}/search/value`,
+    method: 'POST',
+    data
+  })
+}
