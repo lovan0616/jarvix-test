@@ -117,7 +117,9 @@
         <simulator
           v-else-if="componentData.type === 'simulator'"
           :is-edit-mode="isEditMode"
+          :restrictions="restrictions()"
           :script-id="componentData.scriptId"
+          :key="JSON.stringify(allFilterList)"
         />
         <div 
           v-else
@@ -674,6 +676,7 @@ $direction-span: ("col": 12, "row": 12);
   &-header {
     display: flex;
     justify-content: space-between;
+    height: 30px;
     align-items: center;
     margin-bottom: 16px;
     .header-left {
