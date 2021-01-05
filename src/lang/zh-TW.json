@@ -891,7 +891,8 @@
     "startSimulating": "進行模擬",
     "simulator": "模擬器",
     "notYetSimulate": "尚未模擬資料",
-    "simulating": "模擬中"
+    "simulating": "模擬中",
+    "optimalParameterComparison": "的最佳參數比較"
   },
   "alert": {
     "alertLogs": "示警紀錄",
