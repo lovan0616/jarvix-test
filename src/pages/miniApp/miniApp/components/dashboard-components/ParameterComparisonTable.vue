@@ -1,15 +1,5 @@
 <template>
   <div class="parameter-comparison-table">
-    <spinner 
-      v-if="isLoading" 
-    />
-    <display-parallel-bar-chart
-      v-else
-      :dataset="parallelBarData.dataset"
-      :title="parallelBarData.title"
-      :is-show-label-data="true"
-      :height="'420px'"
-    />
     <div class="comparison-table table">
       <div class="table__header">
         <div
@@ -46,59 +36,94 @@ export default {
     DisplayParallelBarChart,
   },
   props: {
-    parallelBarData: {
+    originalData: {
       type: Object,
       default: () => { 
         return {
           dataset: {
-            columns: ['參數數值'],
-            data: [[44.3], [46.4], [45.2], [46.1], [44.4], [46.2], [45.2], [46.5]],
-            display_columns: ['參數數值'],
-            display_index: [['x1', 'ori'], ['x1', 'opt'],['x2', 'ori'], ['x2', 'opt'], ['x3', 'ori'], ['x3', 'opt'], ['x4', 'ori'], ['x4', 'opt']],
-            index: [['x1', 'ori'], ['x1', 'opt'],['x2', 'ori'], ['x2', 'opt'], ['x3', 'ori'], ['x3', 'opt'], ['x4', 'ori'], ['x4', 'opt']]
-          },
-          title: {
-            xAxis: [
-              {
-                data_type: "string",
-                dc_id: 92483,
-                dc_name: "c2",
-                display_name: "參數名稱",
-                drillable: true,
-                is_feature: null,
-                lowerLimit: null,
-                operator: null,
-                stats_type: "category",
-                upperLimit: null
-              },
-              {
-                data_type: "string",
-                dc_id: 92483,
-                dc_name: "c2",
-                display_name: "參數種類",
-                drillable: true,
-                is_feature: null,
-                lowerLimit: null,
-                operator: null,
-                stats_type: "category",
-                upperLimit: null
-              }
+            data: [
+              [
+                "有折扣",
+                "原始",
+                "有折扣"
+              ],
+              [
+                "有折扣",
+                "推薦優化",
+                "有折扣"
+              ],
+              [
+                "業務人員",
+                "原始",
+                "陳俊仁"
+              ],
+              [
+                "業務人員",
+                "推薦優化",
+                "周於倫"
+              ],
+              [
+                "拜訪次數",
+                "原始",
+                "1"
+              ],
+              [
+                "拜訪次數",
+                "推薦優化",
+                "1"
+              ],
+              [
+                "報價時間",
+                "原始",
+                "8"
+              ],
+              [
+                "報價時間",
+                "推薦優化",
+                "14"
+              ],
+              [
+                "工程師支援",
+                "原始",
+                "沒有"
+              ],
+              [
+                "工程師支援",
+                "推薦優化",
+                "沒有"
+              ],
+              [
+                "提供試用",
+                "原始",
+                "沒有"
+              ],
+              [
+                "提供試用",
+                "推薦優化",
+                "沒有"
+              ],
+              [
+                "試用時長",
+                "原始",
+                "0"
+              ],
+              [
+                "試用時長",
+                "推薦優化",
+                "14"
+              ],
+              [
+                "執行時間",
+                "原始",
+                "0"
+              ],
+              [
+                "執行時間",
+                "推薦優化",
+                "15"
+              ]
             ],
-            yAxis: [
-              {
-                data_type: null,
-                dc_id: null,
-                dc_name: "c2",
-                display_name: "電壓值",
-                drillable: true,
-                is_feature: null,
-                lowerLimit: null,
-                operator: null,
-                stats_type: null,
-                upperLimit: null
-              }
-            ]
-          },
+          }
         }
       }
     }
@@ -110,19 +135,20 @@ export default {
   },
   computed: {
     comparisonTableData () {
-      let columns =  [this.parallelBarData.title.xAxis[0]['display_name'], this.parallelBarData.dataset.display_index[0][1], this.parallelBarData.dataset.display_index[1][1]]
-      let data = []
-      for(let i=0; i<this.parallelBarData.dataset.data.length; i+=2) {
-        data.push([this.parallelBarData.dataset.display_index[i][0], this.parallelBarData.dataset.data[i][0], this.parallelBarData.dataset.data[i+1][0]])
+      let columns =  ['欄位名稱', '原始', '推薦優化']
+      let newData = []
+
+      for(let i=0; i<this.originalData.dataset.data.length; i+=2) {
+        newData.push([this.originalData.dataset.data[i][0], this.originalData.dataset.data[i][2], this.originalData.dataset.data[i+1][2]])
       }
+
       return {
         columns,
-        data
+        data: newData
       }
     }
   },
   mounted () {
-
   },
   methods: {
     isValueDifferent (data) {

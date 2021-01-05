@@ -1,6 +1,5 @@
 <template>
   <div class="wrapper wrapper--without-nav-header mini-app">
-    <parameter-comparison-table/>
     <spinner
       v-if="isLoading"
       :title="$t('editing.loading')"
@@ -471,7 +470,6 @@
 </template>
 
 <script>
-import ParameterComparisonTable from './components/dashboard-components/ParameterComparisonTable'
 import CustomDropdownSelect from '@/components/select/CustomDropdownSelect'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import moment from 'moment'
@@ -505,7 +503,6 @@ export default {
   inject: ['$validator'],
   name: 'MiniApp',
   components: {
-    ParameterComparisonTable,
     MiniAppSideNav,
     DashboardTask,
     CreateDashboardDialog,
