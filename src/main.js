@@ -122,6 +122,7 @@ import ArrowButton from '@/components/resultBoard/ArrowButton'
 import DisplayNoAnswerInfo from '@/components/display/DisplayNoAnswerInfo'
 import DisplayIndexInfo from '@/components/display/DisplayIndexInfo'
 import DisplayTextInfo from '@/components/display/DisplayTextInfo'
+import ParameterComparisonTable from '@/pages/miniApp/miniApp/components/dashboard-components/ParameterComparisonTable'
 
 // 排程
 import vGanttChart from 'v-gantt-chart'
@@ -228,6 +229,8 @@ Vue.component(ArrowButton.name, ArrowButton)
 Vue.component(DisplayNoAnswerInfo.name, DisplayNoAnswerInfo)
 Vue.component(DisplayIndexInfo.name, DisplayIndexInfo)
 Vue.component(DisplayTextInfo.name, DisplayTextInfo)
+Vue.component(ParameterComparisonTable.name, ParameterComparisonTable)
+
 
 Vue.component('DefaultButton', DefaultButton)
 Vue.component('DefaultInput', DefaultInput)
