@@ -9,6 +9,19 @@
     v-else
     class="page page--setting"
   >
+    <div
+      v-if="isShowOrderUpload && $route.name === 'ScheduleSetting'"
+      class="setting setting--basic"
+    >
+      <div class="setting__header">
+        <h2 class="header__title">
+          Order
+        </h2>
+      </div>
+      <div class="setting__body">
+        <order-upload />
+      </div>
+    </div>
     <!-- 基本設定 -->
     <div class="setting setting--basic">
       <div class="setting__header">
@@ -231,6 +244,7 @@
 </template>
 
 <script>
+import OrderUpload from './components/OrderUpload'
 import ShiftSetting from './components/shiftSetting/ShiftSetting'
 import ExcludeSetting from './components/excludeSetting/ExcludeSetting'
 import KpiSetting from './components/kpiSetting/KpiSetting'
@@ -246,6 +260,7 @@ import { validateSimulationSetting } from '@/schedule/utils/mixins'
 export default {
   name: 'ScheduleSetting',
   components: {
+    OrderUpload,
     ShiftSetting,
     ExcludeSetting,
     KpiSetting,
@@ -283,7 +298,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('simulation', ['solutions', 'planId'])
+    ...mapState('simulation', ['solutions', 'planId']),
+    isShowOrderUpload () {
+      return localStorage.getItem('isShowOrderUpload') === 'true'
+    }
   },
   mounted () {
     const defaultSetting = this.$store.state.scheduleSetting.defaultSetting
@@ -354,6 +372,12 @@ export default {
         this.$store.commit('simulation/updateSolutionBySequence', {
           sequence: this.solutionSequence,
           data: this.settingInfo
+        })
+        Message({
+          message: this.$t('schedule.successMessage.settingSaved'),
+          type: 'success',
+          duration: 3 * 1000,
+          showClose: true
         })
         return
       }
