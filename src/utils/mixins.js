@@ -326,6 +326,8 @@ Vue.mixin({
           return 'DisplayIndexInfo'
         case 'text_info':
           return 'DisplayTextInfo'
+        case 'param_comparison_table':
+          return 'ParameterComparisonTable'
       }
     },
     // 藉由後端的 result denotation 名稱取得前端的顯示資訊

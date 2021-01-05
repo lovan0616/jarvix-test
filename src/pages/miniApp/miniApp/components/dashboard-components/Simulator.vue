@@ -16,8 +16,10 @@
           <simulator-input
             v-for="(columnInfo, index) in scriptInfo"
             :is-processing="isProcessing"
+            :restrictions="restrictions"
             :column-info="columnInfo"
-            :key="columnInfo.columnId"
+            :script-id="scriptId"
+            :key="index + '-' + columnInfo.columnId"
             class="simulator__setting-input"
             @done="updateColumnInfoState(index)"
             @failed="handleFetchInputFailed"
@@ -83,6 +85,10 @@ export default {
     scriptId: {
       type: Number,
       required: true
+    },
+    restrictions: {
+      type: Array,
+      default: () => ([])
     }
   },
   data () {

@@ -348,8 +348,8 @@ export default {
       font-size: 12px;
       display: inline-block;
       &--inactive {
-        background: #FF5C46;
-        color: #2E2E2E;
+        background: rgba(255, 92, 70, 0.2);
+        color: #FF5C46;
       }
       &--active {
         background: rgba(255, 255, 255, 0.2);

@@ -1524,7 +1524,11 @@ export default {
       color: #DDDDDD;
       font-size: 18px;
       .create-btn {
+        color: #004046;
         margin-top: 20px;
+        .svg-icon {
+          margin-right: 6px;
+        }
       }
     }
   }

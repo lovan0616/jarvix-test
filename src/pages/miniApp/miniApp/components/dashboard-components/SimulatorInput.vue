@@ -40,6 +40,7 @@
 
 <script>
 import { getDataColumnValue, dataValueSearch } from '@/API/DataSource'
+import { searchColumnDefaultValue } from '@/API/Script'
 import { getColumnAliasInfoById } from '@/API/Alias'
 import DefaultSelect from '@/components/select/DefaultSelect'
 import EmptyInfoBlock from '@/components/EmptyInfoBlock'
@@ -61,6 +62,14 @@ export default {
     isProcessing: {
       type: Boolean,
       default: false
+    },
+    scriptId: {
+      type: Number,
+      required: true
+    },
+    restrictions: {
+      type: Array,
+      default: () => ([])
     }
   },
   data () {
@@ -88,17 +97,20 @@ export default {
       this.isLoading = true
       Promise.all([
         getDataColumnValue(this.columnInfo.columnId),
-        getColumnAliasInfoById(this.columnInfo.columnId)
+        getColumnAliasInfoById(this.columnInfo.columnId),
+        searchColumnDefaultValue(this.scriptId, this.columnInfo.columnId, {
+          restrictions: this.restrictions
+        })
       ])
-        .then(([columnValueInfo, columnAliasInfo]) => {
-          this.handleColumnValue(columnValueInfo)
+        .then(([columnValueInfo, columnAliasInfo, defaultValue]) => {
+          this.handleColumnValue(columnValueInfo, defaultValue)
           this.inputData.columnName = columnAliasInfo[0].dataValue
         })
         .catch(() => {
           this.$emit('failed')
         })
     },
-    async handleColumnValue (columnInfo) {
+    async handleColumnValue (columnInfo, defaultValue) {
       const inputData = {}
       inputData.statsType = columnInfo.type
       
@@ -122,9 +134,9 @@ export default {
           value: element,
           name: element
         }))
-        this.columnInfo.userInput = inputData.valueList[0].value
+        this.columnInfo.userInput = defaultValue
       } else if (inputData.statsType === 'NUMERIC') {
-        this.columnInfo.userInput = inputData.valueList.min
+        this.columnInfo.userInput = defaultValue
       }
 
       this.$emit('done')
