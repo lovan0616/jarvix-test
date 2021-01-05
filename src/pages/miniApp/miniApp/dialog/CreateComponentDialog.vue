@@ -405,12 +405,20 @@ export default {
         if (!valid) return
         this.$emit('create', {
           ...this.currentComponent,
+          // Demo 使用：為了展示參數最佳化比較，把元件名稱帶有特定字串的元件改 type
+          ...(this.isParameterComparisonTypeComponent(this.currentComponent.config.diaplayedName) && {
+            type: 'paramCompare'
+          }),
           init: true,
           resultId: this.currentResultId,
           // 將來 增/刪 filter 時，重打 askResult 所需的 request body
           ...this.currentResultInfo
         })
       })
+    },
+    isParameterComparisonTypeComponent (componentName) {
+      const regex = new RegExp(this.$t('miniApp.optimalParameterComparison'), 'g')
+      return componentName.match(regex);
     },
     saveComponent () {
       this.$validator.validateAll().then(valid => {

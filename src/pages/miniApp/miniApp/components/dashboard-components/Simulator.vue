@@ -17,7 +17,7 @@
             v-for="(columnInfo, index) in scriptInfo"
             :is-processing="isProcessing"
             :column-info="columnInfo"
-            :key="columnInfo.columnId"
+            :key="index + '-' + columnInfo.columnId"
             class="simulator__setting-input"
             @done="updateColumnInfoState(index)"
             @failed="handleFetchInputFailed"

@@ -22,9 +22,9 @@
           <div class="list__item-title">
             {{ log.conditionName }}
           </div>
-          <div class="list__item-sub-title">
-            {{ log.conditionMetMessage }}
-          </div>
+          <div 
+            class="list__item-sub-title" 
+            v-html="log.conditionMetMessage"/>
           <div class="list__item-description">
             {{ log.createDate | convertTimeStamp }}
           </div>
