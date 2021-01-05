@@ -143,7 +143,7 @@ export default {
       display: flex;
       align-items: center;
       cursor: pointer;
-      color: #FFF;
+      color: #CCC;
       &:hover {
         color: #FFF;
       }
