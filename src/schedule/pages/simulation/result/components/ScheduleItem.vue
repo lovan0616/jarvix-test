@@ -106,6 +106,7 @@ export default {
     }
 
     &--ordinary {
+      min-width: 1px;
       height: 25px;
       border-radius: 4px;
       background-color: #2AD2E2;
