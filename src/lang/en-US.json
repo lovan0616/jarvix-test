@@ -36,7 +36,8 @@
     "dataFileManagement": "Data Set",
     "dataFileList": "List",
     "schedule": "Schedule",
-    "preferences": "Settings"
+    "preferences": "Settings",
+    "updateLicense": "Update License"
   },
   "user": {
     "changePwd": "Change Password",
@@ -2289,6 +2290,10 @@
     "dataFrameAmount": "Number of Data Set",
     "pinBoardAmount": "Number of Pinboard",
     "warRoomAmount": "Number of War Room"
+  },
+  "updateLicense": {
+    "newKey": "New License Key",
+    "placeholder": "Please enter new license key."
   },
   "dataType": {
     "numeric": "Numeric",

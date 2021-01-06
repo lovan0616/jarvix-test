@@ -36,7 +36,8 @@
     "dataFileManagement": "数据表管理",
     "dataFileList": "数据表列表",
     "schedule": "生产排程",
-    "preferences": "个人设定"
+    "preferences": "个人设定",
+    "updateLicense": "更新产品金钥"
   },
   "user": {
     "changePwd": "变更密码",
@@ -2289,6 +2290,10 @@
     "dataFrameAmount":"数据集数量",
     "pinBoardAmount":"钉板数量",
     "warRoomAmount":"战情室数量"
+  },
+  "updateLicense": {
+    "newKey": "新产品金钥",
+    "placeholder": "请输入新产品金钥"
   },
   "dataType": {
     "numeric": "数值",

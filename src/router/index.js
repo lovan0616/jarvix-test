@@ -47,6 +47,15 @@ const router = new Router({
                   }
                 },
                 {
+                  path: 'update-license',
+                  component: () => import('@/pages/updateLicense/Index'),
+                  name: 'UpdateLicense',
+                  meta: {
+                    layers: ['account/:account_id', 'management'],
+                    permission: ['account_create_group']
+                  }
+                },
+                {
                   path: 'info',
                   component: () => import('@/pages/accountInformation/Index'),
                   name: 'AccountInformation',
