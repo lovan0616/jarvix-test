@@ -2293,8 +2293,9 @@
     "warRoomAmount": "戰情室數量"
   },
   "updateLicense": {
-    "newKey": "新產品金鑰",
-    "placeholder": "請輸入新產品金鑰"
+    "licenseKey": "新產品金鑰（license）",
+    "publicKey": "新公開金鑰（public key）",
+    "placeholder": "請輸入"
   },
   "dataType": {
     "numeric": "數值",

@@ -4,18 +4,16 @@
       <h1 class="title">{{ $t('sideNav.updateLicense') }}</h1>
     </div>
     <section class="license-info">
-      <h2 class="license-info__title">
-        {{ $t('updateLicense.newKey') }}
-      </h2>
       <form 
         class="license-info__form"
         @submit.prevent="confirmUpdate"
       >
         <div class="license-info__input-block">
+          <h2 class="license-info__title">{{ $t('updateLicense.licenseKey') }}</h2>
           <textarea
             v-validate="`required`"
-            v-model.trim="newLicense"
-            :placeholder="$t('updateLicense.placeholder')"
+            v-model.trim="licenseInfo.newLicense"
+            :placeholder="$t('updateLicense.placeholder') + $t('updateLicense.licenseKey')"
             :disabled="isLoading"
             class="license-info__input"
             rows="5"
@@ -25,6 +23,22 @@
             v-show="errors.has('newLicense')"
             class="error-text"
           >{{ errors.first('newLicense') }}</div>
+        </div>
+        <div class="license-info__input-block">
+          <h2 class="license-info__title">{{ $t('updateLicense.publicKey') }}</h2>
+          <textarea
+            v-validate="`required`"
+            v-model.trim="licenseInfo.newPublicKey"
+            :placeholder="$t('updateLicense.placeholder') + $t('updateLicense.publicKey')"
+            :disabled="isLoading"
+            class="license-info__input"
+            rows="5"
+            name="newPublicKey"
+          />
+          <div
+            v-show="errors.has('newPublicKey')"
+            class="error-text"
+          >{{ errors.first('newPublicKey') }}</div>
         </div>
         <div class="license-info__button-block">
           <button 
@@ -54,6 +68,10 @@ export default {
   name: 'UpdateLicensePage',
   data () {
     return {
+      licenseInfo: {
+        newLicense: null,
+        newPublicKey: null
+      },
       newLicense: null,
       isLoading: false
     }
@@ -66,7 +84,7 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return
         this.isLoading = true
-        updateLicense(this.getCurrentAccountId, this.newLicense).then(() => {
+        updateLicense(this.getCurrentAccountId, this.licenseInfo).then(() => {
           Message({
             message: this.$t('message.updateLicenseSuccess'),
             type: 'success',
