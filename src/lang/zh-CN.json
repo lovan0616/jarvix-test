@@ -36,7 +36,8 @@
     "dataFileManagement": "数据表管理",
     "dataFileList": "数据表列表",
     "schedule": "生产排程",
-    "preferences": "个人设定"
+    "preferences": "个人设定",
+    "updateLicense": "更新产品金钥"
   },
   "user": {
     "changePwd": "变更密码",
@@ -151,7 +152,8 @@
     "upperBound": "上限",
     "lowerBound": "下限",
     "noPeriodicResult": "没有找到周期结果",
-    "numericShouldBeBetween": "数字需介在 {min} 到 {max} 之间"
+    "numericShouldBeBetween": "数字需介在 {min} 到 {max} 之间",
+    "updateLicenseSuccess": "更新成功，立即为您刷新页面！"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -2319,6 +2321,11 @@
     "dataFrameAmount":"数据集数量",
     "pinBoardAmount":"钉板数量",
     "warRoomAmount":"战情室数量"
+  },
+  "updateLicense": {
+    "licenseKey": "新产品金钥（license）",
+    "publicKey": "新公开金钥（public key）",
+    "placeholder": "请输入"
   },
   "dataType": {
     "numeric": "数值",
