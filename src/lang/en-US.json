@@ -141,7 +141,8 @@
     "and": "and",
     "upperBound": "Upper bound value",
     "lowerBound": "Lower bound value",
-    "numericShouldBeBetween": "Number should be between {min} and {max}"
+    "numericShouldBeBetween": "Number should be between {min} and {max}",
+    "updateLicenseSuccess": "Successfully saved. Help you update it immediately！"
   },
   "guiding": {
     "prevStep": "Prev Step",

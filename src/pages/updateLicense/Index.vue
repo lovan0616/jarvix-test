@@ -68,7 +68,7 @@ export default {
         this.isLoading = true
         updateLicense(this.getCurrentAccountId, this.newLicense).then(() => {
           Message({
-            message: this.$t('message.updateSuccess'),
+            message: this.$t('message.updateLicenseSuccess'),
             type: 'success',
             duration: 3 * 1000,
             showClose: true
