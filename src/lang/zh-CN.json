@@ -643,12 +643,16 @@
     "chooseOptionHint": "请从下方点选您所需要的元素组成栏位，元素可拖曳替换位置",
     "maxColumn": "目前最多支援{number}个数据栏位组合",
     "inputPlaceholder": "案例：利润 = 收入 - 成本",
+    "datetimeInputPlaceholder": "@:askHelper.example：@:editing.elapsedTime = @:editing.endTime - @:editing.startTime",
     "featureManagement": "自订义栏位管理",
     "customFeature": "自订特征栏位",
     "recommendFeature": "系统推荐特征",
     "createFeature": "新增自定义栏位",
     "featureColumnName": "自定义栏位名称",
-    "featureSetting": "运算式设定"
+    "featureSetting": "运算式设定",
+    "generalOperationOperation": "一般运算式",
+    "datetimeOperation": "日期运算式",
+    "columnUnit": "栏位单位"
   },
   "bot": {
     "welcomeMessage": "Hello, 今天想分析什么样的数据？",
