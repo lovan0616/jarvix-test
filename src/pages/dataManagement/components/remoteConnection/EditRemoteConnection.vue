@@ -64,7 +64,8 @@ export default {
           password: null,
           port: null,
           database: null,
-          schema: null
+          schema: null,
+          instanceName: null
         }
       }
     }

@@ -36,7 +36,8 @@
     "dataFileManagement": "資料表管理",
     "dataFileList": "資料表列表",
     "schedule": "生產排程",
-    "preferences": "個人設定"
+    "preferences": "個人設定",
+    "updateLicense": "更新產品金鑰"
   },
   "user": {
     "changePwd": "變更密碼",
@@ -140,7 +141,8 @@
     "and": "和",
     "upperBound": "上限",
     "lowerBound": "下限",
-    "numericShouldBeBetween": "數字需介在 {min} 到 {max} 之間"
+    "numericShouldBeBetween": "數字需介在 {min} 到 {max} 之間",
+    "updateLicenseSuccess": "更新成功，立即為您刷新頁面！"
   },
   "guiding": {
     "prevStep": "上一步",
@@ -419,7 +421,8 @@
     "chooseFile": "選擇檔案",
     "columnAliasTemplate": "欄位別名範例檔",
     "valueAliasTemplate": "數據別名範例檔",
-    "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表"
+    "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表",
+    "searchDataSource": "搜尋資料源"
   },
   "algorithm": {
     "name": "演算法",
@@ -1696,7 +1699,7 @@
         ]
       },
       {
-        "name": "關聯分析",
+        "name": "關聯分析問句",
         "questionList": [
           {
             "questionText": "什麼和 Numeric 有關",
@@ -1731,7 +1734,7 @@
         ]
       },
       {
-        "name": "差異分析",
+        "name": "差異分析問句",
         "questionList": [
           {
             "questionText": "Value 和 Value 的差異",
@@ -1760,6 +1763,243 @@
               [
                 {"text": "台北", "type": "value"},
                 {"text": "和其他的差異", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "篩選問句",
+        "questionList": [
+          {
+            "questionText": "Category 值的 Numeric",
+            "questionExample": [
+              [
+                {"text": "男性", "type": "value"},
+                {"text": "的", "type": ""},
+                {"text": "收入", "type": "numeric"}
+              ],
+              [
+                {"text": "公路腳踏車", "type": "value"},
+                {"text": "的", "type": ""},
+                {"text": "成本", "type": "numeric"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 大於 X 的 Category",
+            "questionExample": [
+              [
+                {"text": "收入", "type": "numeric"},
+                {"text": "大於 1000 的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 小於 X 的 Category",
+            "questionExample": [
+              [
+                {"text": "收入", "type": "numeric"},
+                {"text": "小於 1000 的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "時間篩選問句",
+        "questionList": [
+          {
+            "questionText": "Y 年 M 月和 M 月的 Numeric",
+            "questionExample": [
+              [
+                {"text": "2018年3月", "type": "filter"},
+                {"text": "和", "type": ""},
+                {"text": "4月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "收入", "type": "numeric"}
+              ],
+              [
+                {"text": "2019年5月", "type": "filter"},
+                {"text": "和", "type": ""},
+                {"text": "6月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "收入", "type": "numeric"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年 M 月和 M 月 Category 值的 Category",
+            "questionExample": [
+              [
+                {"text": "2019年10月", "type": "filter"},
+                {"text": "和", "type": ""},
+                {"text": "11月", "type": "filter"},
+                {"text": "上海", "type": "value"},
+                {"text": "的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年 M 月的 Category",
+            "questionExample": [
+              [
+                {"text": "2019年6月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年 M 月到 Y 年 M 月的 Numeric",
+            "questionExample": [
+              [
+                {"text": "2018年1月", "type": "filter"},
+                {"text": "到", "type": ""},
+                {"text": "2018年11月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "收入", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Y 年 M 月到 Y 年 M 月的 Category",
+            "questionExample": [
+              [
+                {"text": "2019年5月", "type": "filter"},
+                {"text": "到", "type": ""},
+                {"text": "2020年11月", "type": "filter"},
+                {"text": "的", "type": ""},
+                {"text": "收入", "type": "category"}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "排序問句",
+        "questionList": [
+          {
+            "questionText": "平均 Numeric 前 X 的 Category",
+            "questionExample": [
+              [
+                {"text": "平均", "type": ""},
+                {"text": "收入", "type": "numeric"},
+                {"text": "前五的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "總和 Numeric 前 X 的 Category",
+            "questionExample": [
+              [
+                {"text": "總和", "type": ""},
+                {"text": "成本", "type": "numeric"},
+                {"text": "前十的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 前 X 的 Category",
+            "questionExample": [
+              [
+                {"text": "收入", "type": "numeric"},
+                {"text": "前五的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ],
+              [
+                {"text": "成本", "type": "numeric"},
+                {"text": "前十的", "type": ""},
+                {"text": "產品", "type": "category"}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "週期性分析問句",
+        "questionList": [
+          {
+            "questionText": "時間 Numeric 週期性分析",
+            "questionExample": [
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "收入", "type": "numeric"},
+                {"text": "週期性分析", "type": ""}
+              ],
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "成本", "type": "numeric"},
+                {"text": "週期性分析", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "異常分析問句",
+        "questionList": [
+          {
+            "questionText": "時間 Numeric 異常分析",
+            "questionExample": [
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "收入", "type": "numeric"},
+                {"text": "異常分析", "type": ""}
+              ],
+              [
+                {"text": "每月", "type": "filter"},
+                {"text": "成本", "type": "numeric"},
+                {"text": "異常分析", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "畫像分析問句",
+        "questionList": [
+          {
+            "questionText": "Category 值的畫像分析",
+            "questionExample": [
+              [
+                {"text": "產品 A ", "type": "value"},
+                {"text": "的", "type": ""},
+                {"text": "畫像分析", "type": ""}
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "分群分析問句",
+        "questionList": [
+          {
+            "questionText": "Numeric 分群分析",
+            "questionExample": [
+              [
+                {"text": "成本", "type": "numeric"},
+                {"text": "分群分析", "type": ""}
+              ],
+              [
+                {"text": "收入", "type": "numeric"},
+                {"text": "分群分析", "type": ""}
+              ]
+            ]
+          },
+          {
+            "questionText": "Numeric 和 Numeric 分群分析",
+            "questionExample": [
+              [
+                {"text": "收入", "type": "numeric"},
+                {"text": "和", "type": ""},
+                {"text": "成本", "type": "numeric"},
+                {"text": "分群分析", "type": ""}
               ]
             ]
           }
@@ -2055,6 +2295,11 @@
     "dataFrameAmount": "資料集數量",
     "pinBoardAmount": "釘板數量",
     "warRoomAmount": "戰情室數量"
+  },
+  "updateLicense": {
+    "licenseKey": "新產品金鑰（license）",
+    "publicKey": "新公開金鑰（public key）",
+    "placeholder": "請輸入"
   },
   "dataType": {
     "numeric": "數值",

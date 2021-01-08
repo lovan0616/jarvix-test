@@ -49,8 +49,12 @@
       v-else
       class="data-table-body"
     >
+      <empty-info-block 
+        v-if="isSearchResultEmpty"
+        :msg="this.$t('message.emptyResult')"
+      />
       <upload-block
-        v-if="dataList.length === 0"
+        v-else-if="dataList.length === 0"
         :class="{'is-processing': isProcessing}"
         :bottom-message="emptyMessage"
         class="empty-status"
@@ -199,7 +203,7 @@
             >
               <template #content>
                 <div 
-                  v-for="info in dbConnectionLogInfo"
+                  v-for="info in dbConnectionLogInfo(data[headInfo.value])"
                   :key="info.title"
                   class="db-connection-log-info info"
                 >
@@ -233,6 +237,7 @@
 import UploadBlock from '@/components/UploadBlock'
 import orderBy from 'lodash.orderby'
 import DropdownSelect from '@/components/select/DropdownSelect'
+import EmptyInfoBlock from '@/components/EmptyInfoBlock'
 import { mapGetters } from 'vuex'
 
 /**
@@ -266,7 +271,8 @@ export default {
   name: 'DataTable',
   components: {
     UploadBlock,
-    DropdownSelect
+    DropdownSelect,
+    EmptyInfoBlock
   },
   props: {
     headers: {
@@ -297,23 +303,15 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    isSearchResultEmpty: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
-      sortStatus: null,
-      dbConnectionLogInfo: [{
-        title: 'dbConnectionStartTime',
-        label: this.$t('editing.startTime')
-      },
-      {
-        title: 'dbConnectionEndTime',
-        label: this.$t('editing.endTime')
-      },
-      {
-        title: 'dbConnectionElapsedTime',
-        label: this.$t('editing.elapsedTime')
-      }]
+      sortStatus: null
     }
   },
   computed: {
@@ -347,6 +345,25 @@ export default {
     this.setSortStatus()
   },
   methods: {
+    dbConnectionLogInfo (status) {
+      return status === 'Process'
+      ? [{
+        title: 'dbConnectionStartTime',
+        label: this.$t('editing.startTime')
+      }]
+      : [{
+        title: 'dbConnectionStartTime',
+        label: this.$t('editing.startTime')
+      },
+      {
+        title: 'dbConnectionEndTime',
+        label: this.$t('editing.endTime')
+      },
+      {
+        title: 'dbConnectionElapsedTime',
+        label: this.$t('editing.elapsedTime')
+      }]
+    },
     setSortStatus () {
       let sortObj = {}
       this.headers.forEach(element => {
