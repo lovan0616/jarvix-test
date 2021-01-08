@@ -729,21 +729,6 @@ export default {
     }
   }
 
-  .input-radio-group {
-    display: inline-block;
-
-    &:not(:last-of-type) {
-      margin-right: 40px;
-    }
-    &:last-of-type {
-      margin-right: 16px;
-    }
-
-    .input-radio-label {
-      line-height: 40px;
-    }
-  }
-
   /deep/ .sy-multi-select.theme-dark {
     .el-tag {
       border-color: #2AD2E2;
