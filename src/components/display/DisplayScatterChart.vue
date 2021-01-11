@@ -87,6 +87,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    isShowToolbox: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {
@@ -301,6 +305,8 @@ export default {
       chartAddon.yAxis.max = this.roundNumber(displayYaxisMax, 4)
       chartAddon.yAxis.min = this.roundNumber(displayYaxisMin, 4)
       chartAddon.dataZoom = [...parallelZoomConfig, ...verticalZoomConfig]
+
+      chartAddon.toolbox.show = this.isShowToolbox
 
       return chartAddon
     },

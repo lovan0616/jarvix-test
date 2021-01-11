@@ -71,7 +71,7 @@ export default {
         }
       }
     },
-    showToolbox: {
+    isShowToolbox: {
       type: Boolean,
       default: true
     },
@@ -160,7 +160,7 @@ export default {
         return table
       }
       // 是否顯示 toolbox
-      chartAddon.toolbox.show = this.showToolbox
+      chartAddon.toolbox.show = this.isShowToolbox
       // export data
       this.$nextTick(() => {
         this.$el.addEventListener('click', (e) => {

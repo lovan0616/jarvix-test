@@ -53,7 +53,7 @@
           :total="componentData.total"
           :item-count="componentData.item_count"
           :key="componentId"
-          :show-toolbox="showToolbox"
+          :is-show-toolbox="isShowToolbox"
           :custom-chart-style="customChartStyle"
           :is-show-alert="isAboveUpperBound || isBelowLowerBound"
           :is-show-legend="false"
@@ -136,7 +136,7 @@ export default {
     return {
       question: '',
       isTaskComplete: true,
-      showToolbox: false,
+      isShowToolbox: false,
       customChartStyle: {
         width: '100%', 
         height: '100%',
