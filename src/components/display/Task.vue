@@ -50,7 +50,7 @@
         :cluster-infos="componentData.clusterInfos"
         :sub-components="componentData.subComponents"
         :key="componentId"
-        :show-toolbox="showToolbox"
+        :is-show-toolbox="isShowToolbox"
         :custom-chart-style="customChartStyle"
         :arrow-btn-right="arrowBtnRight"
         :is-show-label-data="isShowLabelData"
@@ -102,7 +102,7 @@ export default {
       type: String,
       default: null
     },
-    showToolbox: {
+    isShowToolbox: {
       type: Boolean,
       default: true
     },

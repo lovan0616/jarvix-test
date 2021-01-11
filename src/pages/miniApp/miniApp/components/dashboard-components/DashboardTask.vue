@@ -133,7 +133,7 @@
             :is-show-description="false"
             :is-show-coefficients="false"
             :converted-type="componentData.type === 'paramCompare' ? 'param_comparison_table' : null"
-            :show-toolbox="false"
+            :is-show-toolbox="false"
             :custom-cell-class-name="customCellClassName"
             intend="key_result"
             @clickCell="columnTriggered($event)"

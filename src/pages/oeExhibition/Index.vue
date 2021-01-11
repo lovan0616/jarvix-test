@@ -27,7 +27,7 @@
         <div class="chart__title">{{ chart.question }}</div>
         <div class="chart__content">
           <display-line-chart
-            :show-toolbox="false"
+            :is-show-toolbox="false"
             :height="chartHeight"
             :dataset="chart.dataset"
             :title="chart.title"
