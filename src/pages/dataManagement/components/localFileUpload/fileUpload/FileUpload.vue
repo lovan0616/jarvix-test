@@ -28,7 +28,7 @@
           <div class="conten-container">
             <div class="content">1. {{ $t('editing.uploadLimitFileType') }}</div>
             <div class="content">2. {{ $t('editing.uploadLimitCount', {countLimit: fileCountLimit}) }}</div>
-            <div class="content">3. {{ $t('editing.uploadLimitSize', {limitSize: license.showMaxDataStorageSize === -1 ? '&#8734;' : shortenDataCapacityNumber(license.showMaxDataStorageSize)}) }}</div>
+            <div class="content">3. {{ $t('editing.uploadLimitSize', {limitSize: license.maxUploadSize === -1 ? '&#8734;' : shortenDataCapacityNumber(license.maxUploadSize)}) }}</div>
           </div>
           <div class="content">4. {{ $t('editing.uploadLimitContent') }}</div>
         </div>
@@ -53,11 +53,13 @@
           :file-list="unableFileList"
         />
         <div 
-          v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait"
+          v-if="currntUploadStatus === uploadStatus.wait"
           class="file-chosen-info"
         >
-          <span class="file-chosen-remark">
-            {{ $t('editing.selectedTablesWaitingToUpload', {num: uploadFileList.length, size: byteToMB(totalTransmitDataAmount)}) }}
+          <span
+            :class="{'is-warning': isExceedRemaingDataStorageSize}"
+            class="file-chosen-remark">
+            {{ fileChosenRemark }}
           </span>
           <button 
             class="btn-m btn-secondary btn-has-icon"
@@ -86,6 +88,7 @@
           name="additionalButton"/>
         <button 
           v-if="uploadFileList.length > 0 && currntUploadStatus === uploadStatus.wait"
+          :disabled="isExceedRemaingDataStorageSize"
           class="btn btn-default"
           @click="fileUpload"
         >
@@ -122,7 +125,6 @@ export default {
     return {
       uploadStatus,
       currntUploadStatus: uploadStatus.wait,
-      uploadFileSizeLimit: null,
       unableFileList: [],
       acceptFileTypes: [
         '.csv',
@@ -150,6 +152,22 @@ export default {
       return this.uploadFileList.reduce((acc, cur) => {
         return acc + cur.data.get('file').size
       }, 0)
+    },
+    // 檢查當前上傳資料量是否大於剩餘總數據量
+    isExceedRemaingDataStorageSize () {
+      return this.totalTransmitDataAmount >= this.remainingDataStorageSize
+    },
+    remainingDataStorageSize () {
+      const remaining = this.license.maxDataStorageSize - this.license.currentDataStorageSize
+      return remaining > 0 ? remaining * 1024 * 1024 * 1024 : 0
+    },
+    fileChosenRemark () {
+      return this.isExceedRemaingDataStorageSize
+        ? this.$t('editing.uploadFilesExceedDataStorageMessage', {
+          remaining: this.byteToMB(this.remainingDataStorageSize),
+          totalFileSize: this.byteToMB(this.totalTransmitDataAmount)
+        })
+        : this.$t('editing.selectedTablesWaitingToUpload', { num: this.uploadFileList.length, size: this.byteToMB(this.totalTransmitDataAmount) })
     }
   },
   watch: {
@@ -159,20 +177,6 @@ export default {
       if (value.findIndex(element => { return element === uploadStatus.wait || element === uploadStatus.uploading }) === -1) {
         this.$emit('next')
       }
-    }
-  },
-  mounted () {
-    if (localStorage.getItem('uploadLimit')) {
-      this.uploadFileSizeLimit = parseInt(localStorage.getItem('uploadLimit'), 10)
-    } else {
-      getAccountInfo()
-        .then(accountInfo => {
-          const licenseMaxSize = accountInfo.license.maxDataStorageSize === -1 ? -1 : accountInfo.license.maxDataStorageSize * 1024
-          this.uploadFileSizeLimit = licenseMaxSize ? licenseMaxSize : 3000
-        })
-        .catch(() => {
-          this.uploadFileSizeLimit = 3000
-        })
     }
   },
   methods: {
@@ -262,12 +266,13 @@ export default {
         formData.append('fileFullName', file.name)
 
         // 判斷是否有檔案超過大小限制
-        if (file.size > this.uploadFileSizeLimit * 1024 * 1024 && this.uploadFileSizeLimit !== -1) {
+        // file size 單位為 bytes, license 單位為 GB
+        if (this.license.maxUploadSize !== -1 && file.size > 0.01 * 1024 * 1024 * 1024) {
           this.unableFileList.push({
             data: formData,
             status: uploadStatus.forbidden,
             id: new Date().getTime() + i,
-            msg: this.$t('editing.reachUploadSizeLimit', {limitSize: this.uploadFileSizeLimit})
+            msg: this.$t('editing.reachUploadSizeLimit', {limitSize: this.license.maxUploadSize * 1024})
           })
         } else {
           fileList.push({
@@ -280,6 +285,7 @@ export default {
       this.$store.commit('dataManagement/updateUploadFileList', this.uploadFileList.concat(fileList))
     },
     fileUpload () {
+      if (this.isExceedRemaingDataStorageSize) return
       let fileList = this.uploadFileList.map(element => {
         element.status = uploadStatus.uploading
         return element
@@ -349,6 +355,9 @@ export default {
 
     .file-chosen-remark {
       margin-right: 16px;
+      &.is-warning {
+        color: $theme-color-danger;
+      }
     }
   }
 
