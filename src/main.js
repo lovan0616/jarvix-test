@@ -244,8 +244,8 @@ Validator.extend('requireOneNumeric', function (value) {
 })
 
 Validator.extend('letterSpace', function (value) {
-  // 含簡繁體、英文、空格
-  return /^[\u4e00-\u9fa5_a-zA-Z0-9\s]*$/i.test(value) && !Number(value)
+  // 含簡繁體、英文、注音符號、四聲、空格
+  return /^[\u4e00-\u9fa5_a-zA-Z0-9\u3105-\u3129\u02CA\u02C7\u02CB\u02D9\s]*$/i.test(value) && !Number(value)
 })
 
 Validator.extend('validUpperBound', (upperBoundValue, [lowerBoundValue]) => {
