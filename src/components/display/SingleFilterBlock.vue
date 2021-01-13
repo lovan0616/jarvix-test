@@ -57,7 +57,7 @@
                   ? customerTimeFormatter(sub_restraint.properties.start, sub_restraint.properties.timeScope)
                   : roundNumber(sub_restraint.properties.start),
                 end: isDateTime(sub_restraint.properties.data_type)
-                  ? customerTimeFormatter(sub_restraint.properties.end, sub_restraint.properties.timeScope)
+                  ? customerTimeFormatter(sub_restraint.properties.end, sub_restraint.properties.timeScope, true)
                   : roundNumber(sub_restraint.properties.end)
               }) }}
             </template>
@@ -77,7 +77,7 @@
                   ? customerTimeFormatter(restraint.properties.start, restraint.properties.timeScope)
                   : roundNumber(restraint.properties.start),
                 end: isDateTime(restraint.properties.data_type)
-                  ? customerTimeFormatter(restraint.properties.end, restraint.properties.timeScope)
+                  ? customerTimeFormatter(restraint.properties.end, restraint.properties.timeScope, true)
                   : roundNumber(restraint.properties.end)
               }) }}
             </template>

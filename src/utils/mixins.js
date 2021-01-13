@@ -151,7 +151,14 @@ Vue.mixin({
     timeToDateTimeSecondPrecision (time) {
       return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
-    customerTimeFormatter (time, timeScope) {
+    customerTimeFormatter (time, timeScope, isRangeEnd = false) {
+      // 處理季
+      if (timeScope === 'QUARTER' && isRangeEnd) {
+        // 結束時間再加三個月
+        const format = this.getDatePickerOptions(timeScope).format.replace('dd', 'DD').replace('yyyy', 'YYYY')
+        return moment.utc(time).add(2, 'month').format(format)
+      }
+
       if(timeScope === "WEEK") {
         /* 當一年最後一週跨到下一年
          * moment js 與後端回傳的 week 不同
