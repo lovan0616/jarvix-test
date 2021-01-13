@@ -159,6 +159,7 @@ export default {
       this.transcript = null
       this.isWarRoomAddable = false
       this.intent = null
+      this.$store.commit('dataSource/resetAlgoConfig')
       this.closeUnknowInfoBlock()
     },
     fetchApiAsk (data) {
