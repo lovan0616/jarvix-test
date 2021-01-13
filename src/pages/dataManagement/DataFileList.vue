@@ -40,11 +40,12 @@
               class="reach-limit"
             >{{ $t('notification.uploadLimitNotification') }}</div>
           </div>
-          <search-block
+          <!-- 目前只允許十張表，暫時不需要搜尋 -->
+          <!-- <search-block
             v-model="searchedDataFileName"
             :placeholder="$t('etl.tableSearch')"
             class="search-block"
-          />
+          /> -->
         </div>
         <div class="button-block dataframe-action">
           <button 
