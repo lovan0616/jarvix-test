@@ -66,7 +66,7 @@
           </div>
         </span>
         <div
-          v-if="componentData.type === 'index'" 
+          v-if="componentData.type === 'index' || componentData.type === 'formula'" 
           class="component__item-content index">
           <div class="index-data">
             <spinner v-if="isProcessing"/>
@@ -84,7 +84,7 @@
               />
               <span 
                 v-if="!isIndexTypeComponentLoading && (!isEmptyData && !isComponentFailed)"
-                :class="[componentData.indexInfo.size || 'middle']" 
+                :class="[componentData.config.fontSize || 'middle']" 
                 class="index-unit">{{ componentData.indexInfo.unit }}</span>
             </template>
           </div>
@@ -339,7 +339,7 @@ export default {
         },
       }
       return {
-        ...sizeTable[this.componentData.indexInfo.size || 'middle'],
+        ...sizeTable[this.componentData.config.fontSize || 'middle'],
         'color': '#2AD2E2'
       }
     }

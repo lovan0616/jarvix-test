@@ -87,15 +87,6 @@
                 class="input setting__input"
               >
             </div>
-            <div class="setting">
-              <div class="setting__label">顯示大小</div>
-              <default-select 
-                v-model="currentComponent.indexInfo.size"
-                :option-list="indexSizeOptionList"
-                :placeholder="$t('miniApp.chooseColumnSize')"
-                class="input setting__input"
-              />
-            </div>
           </div>
         </div>
         <!--Text Type Component-->
@@ -178,24 +169,6 @@ export default {
       question: '',
       segmentation: null,
       mainDateColumn: null,
-      indexSizeOptionList: [
-        {
-          value: 'large',
-          name: this.$t('miniApp.large')
-        },
-        {
-          value: 'middle',
-          name: this.$t('miniApp.middle')
-        },
-        {
-          value: 'small',
-          name: this.$t('miniApp.small')
-        },
-        {
-          value: 'mini',
-          name: this.$t('miniApp.mini')
-        }
-      ]
     }
   },
   computed: {
@@ -519,9 +492,9 @@ export default {
     resetComponent () {
       this.switchComponentType('chart')
       this.currentComponent.indexInfo = { 
-        unit: '',
-        size: 'middle'
+        unit: ''
       }
+      this.currentComponent.config.fontSize = 'middle'
     }
   }
 }
