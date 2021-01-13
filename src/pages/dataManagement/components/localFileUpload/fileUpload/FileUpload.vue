@@ -51,6 +51,7 @@
           v-if="unableFileList.length > 0"
           :title="$t('editing.unableUpload')"
           :file-list="unableFileList"
+          @removeFile="removeUnableFile($event)"
         />
         <div 
           v-if="currntUploadStatus === uploadStatus.wait"
@@ -103,7 +104,6 @@
 import UploadBlock from '@/components/UploadBlock'
 import FileListBlock from './FileListBlock'
 import UploadProcessBlock from './UploadProcessBlock'
-import { getAccountInfo } from '@/API/Account'
 import { uploadStatus } from '@/utils/general'
 import { Message } from 'element-ui'
 import { mapState } from 'vuex'
@@ -296,6 +296,9 @@ export default {
     },
     cancelFileUpload () {
       this.$emit('close')
+    },
+    removeUnableFile (index) {
+      this.unableFileList.splice(index, 1)
     }
   }
 }
