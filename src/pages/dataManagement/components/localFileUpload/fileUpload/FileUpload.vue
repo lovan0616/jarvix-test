@@ -164,6 +164,7 @@ export default {
     fileChosenRemark () {
       return this.isExceedRemaingDataStorageSize
         ? this.$t('editing.uploadFilesExceedDataStorageMessage', {
+          count: this.uploadFileList.length,
           remaining: this.byteToMB(this.remainingDataStorageSize),
           totalFileSize: this.byteToMB(this.totalTransmitDataAmount)
         })

@@ -423,7 +423,7 @@
     "valueAliasTemplate": "ValueAliasTemplate",
     "searchDataSourceOrDataFrame": "Search DataSource or DataFrame",
     "searchDataSource": "Search DataSource",
-    "uploadFilesExceedDataStorageMessage": "Cannot upload files, total file size exceeds license data size restriction: {totalFileSize}. (Remaining size: {remaining})"
+    "uploadFilesExceedDataStorageMessage": "{count} files selected, total file size exceeds license data size restriction: {totalFileSize}. (Remaining size: {remaining})"
   },
   "algorithm": {
     "name": "Algorithm",

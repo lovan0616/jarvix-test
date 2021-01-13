@@ -423,7 +423,7 @@
     "valueAliasTemplate": "数据别名案例档",
     "searchDataSourceOrDataFrame": "搜寻数据源 / 数据表",
     "searchDataSource": "搜寻资料源",
-    "uploadFilesExceedDataStorageMessage": "剩余数据容量：{remaining}，少于总上传量：{totalFileSize}，无法上传"
+    "uploadFilesExceedDataStorageMessage": "选取 {count} 项资料表，总和 {totalFileSize}，剩余 {remaining}，已超过剩余容量"
   },
   "algorithm": {
     "name": "演算法",

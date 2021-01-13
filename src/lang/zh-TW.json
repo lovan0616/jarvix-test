@@ -423,7 +423,7 @@
     "valueAliasTemplate": "數據別名範例檔",
     "searchDataSourceOrDataFrame": "搜尋資料源 / 資料表",
     "searchDataSource": "搜尋資料源",
-    "uploadFilesExceedDataStorageMessage": "剩餘數據容量：{remaining}，少於總上傳量：{totalFileSize}，無法上傳"
+    "uploadFilesExceedDataStorageMessage": "選取 {count} 項資料表，總和 {totalFileSize}，剩餘 {remaining}，已超過剩餘容量"
   },
   "algorithm": {
     "name": "演算法",
